@@ -2,92 +2,61 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C02FC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD3AC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B1A820868
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:48:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rnsqyg44"
+	by mail.kernel.org (Postfix) with ESMTP id 3106D2184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:48:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730840AbfEWNsg (ORCPT
+        id S1730858AbfEWNsk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 09:48:36 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43174 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730684AbfEWNsg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 09:48:36 -0400
-Received: by mail-pl1-f195.google.com with SMTP id gn7so2783965plb.10;
-        Thu, 23 May 2019 06:48:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+gf6TK/DBZkbbPD59gjM5EzSFnmu0bkE4KJafULy65Y=;
-        b=rnsqyg44lH8m7taWbuklaTCCz+35oJR/l6Qvu3nboiWywtVJszAN5r1JZZHNf22TlL
-         EC6rzSjYQa/QR0ivyeZMdANgKAjULdQ8jZm65iQGs+q82LE2KLJ5xf+OjAK4S7BR91Es
-         b5zTbN82WIaV6D95qOmUz/zqRV7tuLDrhiG4juw5hDWhRZyiifIizk4b+8z67j38wZKR
-         roz6c8S7JRou1K+Hp2d8pEigq64HClfp+59fhiSKhLvwcIhL+H00WgbMyFXI9TPHSfoD
-         ZXrtrGkrt/NwdtN+K0dNuzbfEX4sRH8aTyhUQJBSLp3RtWGgpvzEhwJlbNbAH95jHOjo
-         K+7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+gf6TK/DBZkbbPD59gjM5EzSFnmu0bkE4KJafULy65Y=;
-        b=AeTmkADzHbtVlUbypbQ0DsRaKOyI5KwW387d/01TKDiAQNf3Inkq8FVyDIvI0HdtJS
-         U059whISItvkzcK5wSPV1T/l8KGPXLGohlfGuF0GpcQhl/7ikV5qfEaoraWpfGAlLg3E
-         +VpclBQQbHObMXT6MSFtqF9G7m1NO5dwA8aMxkdm/EsSJ6eih6+vBBax49vlKQOWjtbz
-         fPdSzqkiRGEma36BDyVQMXRwOihitChga+qDVUMAlR0n8s/uF9EkaSZ2QGnRpfqWuJF2
-         uq6pQHZgwbR4GDCsWy/IbAHzMOHlPaCDia5GFxmu5Ovxr0Q63YbFA1um9x53wzIAzBgT
-         nFYA==
-X-Gm-Message-State: APjAAAXqRDl9ZEW/hYnx5C6AcWh/tjPMEwygoD8CVAw9buYye4/v4irW
-        HTl/af+Gbnb5HIaVb/SU6Cw=
-X-Google-Smtp-Source: APXvYqwKUTsNLMMZr3WT+JsRYI+XStFLzKHLL4taI1RlLURXHZmDRyhRh2+PrNYZ032j2fi3xT6L8g==
-X-Received: by 2002:a17:902:728f:: with SMTP id d15mr24384602pll.167.1558619315442;
-        Thu, 23 May 2019 06:48:35 -0700 (PDT)
-Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
-        by smtp.gmail.com with ESMTPSA id y191sm2667986pfb.179.2019.05.23.06.48.34
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 May 2019 06:48:34 -0700 (PDT)
-Date:   Thu, 23 May 2019 06:48:32 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     "Y.b. Lu" <yangbo.lu@nxp.com>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next v2, 0/4] ENETC: support hardware timestamping
-Message-ID: <20190523134832.xzupnwvhhlljtoyh@localhost>
-References: <20190523023451.2933-1-yangbo.lu@nxp.com>
+        Thu, 23 May 2019 09:48:40 -0400
+Received: from ms.lwn.net ([45.79.88.28]:34472 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730843AbfEWNsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 09:48:38 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 1EF669A9;
+        Thu, 23 May 2019 13:48:38 +0000 (UTC)
+Date:   Thu, 23 May 2019 07:48:37 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Oleksandr Natalenko <oleksandr@redhat.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Markus Heiser <markus.heiser@darmarit.de>
+Subject: Re: [PATCH 0/8] docs: Fixes for recent versions of Sphinx
+Message-ID: <20190523074837.7ab98650@lwn.net>
+In-Reply-To: <20190523073830.388b4868@coco.lan>
+References: <20190522205034.25724-1-corbet@lwn.net>
+        <20190523093944.mylk5l3ginkpelfi@butterfly.localdomain>
+        <877eah7a2k.fsf@intel.com>
+        <20190523101534.cenmf7rexa7gerot@butterfly.localdomain>
+        <20190523073830.388b4868@coco.lan>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190523023451.2933-1-yangbo.lu@nxp.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 02:33:24AM +0000, Y.b. Lu wrote:
-> This patch-set is to support hardware timestamping for ENETC
-> and also to add ENETC 1588 timer device tree node for ls1028a.
+On Thu, 23 May 2019 07:38:30 -0300
+Mauro Carvalho Chehab <mchehab@kernel.org> wrote:
 
-Please, in the future, summarize the changes from the last series in
-the cover letter.  It helps the reviewers to focus.
+> It seems that this message is there since 1.8:
+> 
+> 	https://www.sphinx-doc.org/en/1.8/_modules/sphinx/application.html
 
-Thanks,
-Richard
+...which is strange, since I didn't see it until I built with 2.0.  It was
+annoying to see a new warning, but I figured we had some time still before
+needing to rush out a last-minute fix for that one :)
+
+jon
