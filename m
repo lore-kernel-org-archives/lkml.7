@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A78C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B3CC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFD772133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:48:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C95702133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:48:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640885;
-	bh=9oY+pI8ykV1BKLM3bhcwgDCHMon/QrsSj3NZSK0i6N4=;
+	s=default; t=1558640896;
+	bh=Wpgw0TDUGZYsGHzCIymzJWbj9GHxVRPuswZba+0s04s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fvOLWrwp/tRTvxLx7H3/Z2E0YEQmSpyy0DldJCbHaQu8my6EBVBZsoOCFUKtFKyG0
-	 SMlaGV2oTECzB6htf+26wND8GId2XpzHIc0HcC2Yfdz+8esBHGpKnY6DhZBqvgf2dD
-	 2K+SgKaWxQwwrfrOvwVL7GWVy+XllsaO4GS02HYc=
+	b=hhL+NFL4/svhh7+DWv1aAUCtvKKuS44O23e3CR1b3h31GNnZXQtrnl4zuGTT9RpJn
+	 bSMPFzB1j3oHUOM0kcLuXa6cMYV1JBwRSVK84xMh9rSB/c6qfBh4Cof/H7FovJOax6
+	 PExod1MtmSCyU2PB/tOZIt9j88C8Pmi4kyjnvz34=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388469AbfEWTM1 (ORCPT
+        id S2388399AbfEWTMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:12:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46156 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:12:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388427AbfEWTMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:12:23 -0400
+        id S2387571AbfEWTMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:12:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D5D420863;
-        Thu, 23 May 2019 19:12:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5E62217D7;
+        Thu, 23 May 2019 19:12:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638743;
-        bh=9oY+pI8ykV1BKLM3bhcwgDCHMon/QrsSj3NZSK0i6N4=;
+        s=default; t=1558638732;
+        bh=Wpgw0TDUGZYsGHzCIymzJWbj9GHxVRPuswZba+0s04s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CyFslSxny82JyzetEqVPJMuym57TPbiagQa8YRO+zI0o6o+L5jxQWW5SCTC0OxNWC
-         MFrEnMa5EAXqF8i45djmS/Y7f6nNJ3e+j1hZtqW2HkF+wX6HZBLnu0sVy6C4Lvsru9
-         P1T/fgWBPsyE11NXBy23wRADrXuCEOc7vvs4PG88=
+        b=cZg4LqKic+UsNQOa83Cx/kDP79PN7UR+xj4ZaWEknjwAlsF3FsawVw5ZZTp8mx4Je
+         9+BZpQTsEdUgxChaX+ErQjFp+kKhA9SZbDEAlCMnP34yHPWTC7D8PlHHCnGvRypjDT
+         yS3TmWTBUAzEJEvaHe2M+ZLPrCQHoI9+l3fLO/FQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yifeng Li <tomli@tomli.me>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Teddy Wang <teddy.wang@siliconmotion.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 4.14 48/77] fbdev: sm712fb: fix crashes and garbled display during DPMS modesetting
-Date:   Thu, 23 May 2019 21:06:06 +0200
-Message-Id: <20190523181726.698424132@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH 4.14 36/77] memory: tegra: Fix integer overflow on tick value calculation
+Date:   Thu, 23 May 2019 21:05:54 +0200
+Message-Id: <20190523181725.198933109@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181719.982121681@linuxfoundation.org>
 References: <20190523181719.982121681@linuxfoundation.org>
@@ -61,140 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yifeng Li <tomli@tomli.me>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-commit f627caf55b8e735dcec8fa6538e9668632b55276 upstream.
+commit b906c056b6023c390f18347169071193fda57dde upstream.
 
-On a Thinkpad s30 (Pentium III / i440MX, Lynx3DM), blanking the display
-or starting the X server will crash and freeze the system, or garble the
-display.
+Multiplying the Memory Controller clock rate by the tick count results
+in an integer overflow and in result the truncated tick value is being
+programmed into hardware, such that the GR3D memory client performance is
+reduced by two times.
 
-Experiments showed this problem can mostly be solved by adjusting the
-order of register writes. Also, sm712fb failed to consider the difference
-of clock frequency when unblanking the display, and programs the clock for
-SM712 to SM720.
-
-Fix them by adjusting the order of register writes, and adding an
-additional check for SM720 for programming the clock frequency.
-
-Signed-off-by: Yifeng Li <tomli@tomli.me>
-Tested-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Cc: Teddy Wang <teddy.wang@siliconmotion.com>
-Cc: <stable@vger.kernel.org>  # v4.4+
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/video/fbdev/sm712fb.c |   64 ++++++++++++++++++++++++------------------
- 1 file changed, 38 insertions(+), 26 deletions(-)
+ drivers/memory/tegra/mc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/video/fbdev/sm712fb.c
-+++ b/drivers/video/fbdev/sm712fb.c
-@@ -886,67 +886,79 @@ static inline unsigned int chan_to_field
+--- a/drivers/memory/tegra/mc.c
++++ b/drivers/memory/tegra/mc.c
+@@ -72,7 +72,7 @@ static int tegra_mc_setup_latency_allowa
+ 	u32 value;
  
- static int smtc_blank(int blank_mode, struct fb_info *info)
- {
-+	struct smtcfb_info *sfb = info->par;
-+
- 	/* clear DPMS setting */
- 	switch (blank_mode) {
- 	case FB_BLANK_UNBLANK:
- 		/* Screen On: HSync: On, VSync : On */
-+
-+		switch (sfb->chip_id) {
-+		case 0x710:
-+		case 0x712:
-+			smtc_seqw(0x6a, 0x16);
-+			smtc_seqw(0x6b, 0x02);
-+		case 0x720:
-+			smtc_seqw(0x6a, 0x0d);
-+			smtc_seqw(0x6b, 0x02);
-+			break;
-+		}
-+
-+		smtc_seqw(0x23, (smtc_seqr(0x23) & (~0xc0)));
- 		smtc_seqw(0x01, (smtc_seqr(0x01) & (~0x20)));
--		smtc_seqw(0x6a, 0x16);
--		smtc_seqw(0x6b, 0x02);
- 		smtc_seqw(0x21, (smtc_seqr(0x21) & 0x77));
- 		smtc_seqw(0x22, (smtc_seqr(0x22) & (~0x30)));
--		smtc_seqw(0x23, (smtc_seqr(0x23) & (~0xc0)));
--		smtc_seqw(0x24, (smtc_seqr(0x24) | 0x01));
- 		smtc_seqw(0x31, (smtc_seqr(0x31) | 0x03));
-+		smtc_seqw(0x24, (smtc_seqr(0x24) | 0x01));
- 		break;
- 	case FB_BLANK_NORMAL:
- 		/* Screen Off: HSync: On, VSync : On   Soft blank */
-+		smtc_seqw(0x24, (smtc_seqr(0x24) | 0x01));
-+		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
-+		smtc_seqw(0x23, (smtc_seqr(0x23) & (~0xc0)));
- 		smtc_seqw(0x01, (smtc_seqr(0x01) & (~0x20)));
-+		smtc_seqw(0x22, (smtc_seqr(0x22) & (~0x30)));
- 		smtc_seqw(0x6a, 0x16);
- 		smtc_seqw(0x6b, 0x02);
--		smtc_seqw(0x22, (smtc_seqr(0x22) & (~0x30)));
--		smtc_seqw(0x23, (smtc_seqr(0x23) & (~0xc0)));
--		smtc_seqw(0x24, (smtc_seqr(0x24) | 0x01));
--		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
- 		break;
- 	case FB_BLANK_VSYNC_SUSPEND:
- 		/* Screen On: HSync: On, VSync : Off */
-+		smtc_seqw(0x24, (smtc_seqr(0x24) & (~0x01)));
-+		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
-+		smtc_seqw(0x23, ((smtc_seqr(0x23) & (~0xc0)) | 0x20));
- 		smtc_seqw(0x01, (smtc_seqr(0x01) | 0x20));
--		smtc_seqw(0x20, (smtc_seqr(0x20) & (~0xB0)));
--		smtc_seqw(0x6a, 0x0c);
--		smtc_seqw(0x6b, 0x02);
- 		smtc_seqw(0x21, (smtc_seqr(0x21) | 0x88));
-+		smtc_seqw(0x20, (smtc_seqr(0x20) & (~0xB0)));
- 		smtc_seqw(0x22, ((smtc_seqr(0x22) & (~0x30)) | 0x20));
--		smtc_seqw(0x23, ((smtc_seqr(0x23) & (~0xc0)) | 0x20));
--		smtc_seqw(0x24, (smtc_seqr(0x24) & (~0x01)));
--		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
- 		smtc_seqw(0x34, (smtc_seqr(0x34) | 0x80));
-+		smtc_seqw(0x6a, 0x0c);
-+		smtc_seqw(0x6b, 0x02);
- 		break;
- 	case FB_BLANK_HSYNC_SUSPEND:
- 		/* Screen On: HSync: Off, VSync : On */
-+		smtc_seqw(0x24, (smtc_seqr(0x24) & (~0x01)));
-+		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
-+		smtc_seqw(0x23, ((smtc_seqr(0x23) & (~0xc0)) | 0xD8));
- 		smtc_seqw(0x01, (smtc_seqr(0x01) | 0x20));
--		smtc_seqw(0x20, (smtc_seqr(0x20) & (~0xB0)));
--		smtc_seqw(0x6a, 0x0c);
--		smtc_seqw(0x6b, 0x02);
- 		smtc_seqw(0x21, (smtc_seqr(0x21) | 0x88));
-+		smtc_seqw(0x20, (smtc_seqr(0x20) & (~0xB0)));
- 		smtc_seqw(0x22, ((smtc_seqr(0x22) & (~0x30)) | 0x10));
--		smtc_seqw(0x23, ((smtc_seqr(0x23) & (~0xc0)) | 0xD8));
--		smtc_seqw(0x24, (smtc_seqr(0x24) & (~0x01)));
--		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
- 		smtc_seqw(0x34, (smtc_seqr(0x34) | 0x80));
-+		smtc_seqw(0x6a, 0x0c);
-+		smtc_seqw(0x6b, 0x02);
- 		break;
- 	case FB_BLANK_POWERDOWN:
- 		/* Screen On: HSync: Off, VSync : Off */
-+		smtc_seqw(0x24, (smtc_seqr(0x24) & (~0x01)));
-+		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
-+		smtc_seqw(0x23, ((smtc_seqr(0x23) & (~0xc0)) | 0xD8));
- 		smtc_seqw(0x01, (smtc_seqr(0x01) | 0x20));
--		smtc_seqw(0x20, (smtc_seqr(0x20) & (~0xB0)));
--		smtc_seqw(0x6a, 0x0c);
--		smtc_seqw(0x6b, 0x02);
- 		smtc_seqw(0x21, (smtc_seqr(0x21) | 0x88));
-+		smtc_seqw(0x20, (smtc_seqr(0x20) & (~0xB0)));
- 		smtc_seqw(0x22, ((smtc_seqr(0x22) & (~0x30)) | 0x30));
--		smtc_seqw(0x23, ((smtc_seqr(0x23) & (~0xc0)) | 0xD8));
--		smtc_seqw(0x24, (smtc_seqr(0x24) & (~0x01)));
--		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
- 		smtc_seqw(0x34, (smtc_seqr(0x34) | 0x80));
-+		smtc_seqw(0x6a, 0x0c);
-+		smtc_seqw(0x6b, 0x02);
- 		break;
- 	default:
- 		return -EINVAL;
+ 	/* compute the number of MC clock cycles per tick */
+-	tick = mc->tick * clk_get_rate(mc->clk);
++	tick = (unsigned long long)mc->tick * clk_get_rate(mc->clk);
+ 	do_div(tick, NSEC_PER_SEC);
+ 
+ 	value = readl(mc->regs + MC_EMEM_ARB_CFG);
 
 
