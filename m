@@ -2,99 +2,65 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5CCC04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 05:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66511C04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 05:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6A172133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 05:36:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558589807;
-	bh=T5rbljQ/TpWOK/SheWHZacX0s9uGf+CMLU0n9yVBEw8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wsMVFSwNvdiVRkflYFJTbtKImF531pipZNo1sOyk40Jt9RhF8P5awag8TxkKve7PQ
-	 lmRP1ndVe9IHtJFZiOEZcBHYDVosK3QvK2jL1tY79oeb6fx1oCVKt7oOICV9/PACqz
-	 8acj+CbPIzJoN6keNJeJ9KXwFAZhL1Nby7Xpu8vg=
+	by mail.kernel.org (Postfix) with ESMTP id 3FDD521019
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 05:37:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727514AbfEWFgr (ORCPT
+        id S1728027AbfEWFhu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 01:36:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40570 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 01:37:50 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:47208 "EHLO deadmen.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725786AbfEWFgq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 01:36:46 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEA3620881;
-        Thu, 23 May 2019 05:36:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558589806;
-        bh=T5rbljQ/TpWOK/SheWHZacX0s9uGf+CMLU0n9yVBEw8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ooNbLRJD3kh3DFoMD5WXtuYc1PKpdqZOddzQSIG6mFIWeRNLFSAPhUwuaXMaFeirf
-         7Gv1Y/jmgQs/vzdj/BFt59+oRdT27RUSOa795l4i/SQm6xrNzpIdSLWDDBpG5ZgdTL
-         1oWZKZEsq2N2LzFa5orDlKbsZ2JdU3RtUHzIZNy0=
-Date:   Thu, 23 May 2019 07:36:43 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Geordan Neukum <gneukum1@gmail.com>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH 1/6] staging: kpc2000: make kconfig symbol 'KPC2000'
- select dependencies
-Message-ID: <20190523053643.GA14465@kroah.com>
-References: <cover.1558526487.git.gneukum1@gmail.com>
- <932843299b814f3a22dd176771b46be14ceefeea.1558526487.git.gneukum1@gmail.com>
- <20190522122714.GA2270@kroah.com>
- <CA+T6rvEXCBukwmFS-Z4DFNoFBv9OToWwAYA2AXWBVa5mUG10zA@mail.gmail.com>
+        id S1725786AbfEWFhu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 01:37:50 -0400
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1hTgQ9-0000gD-G3; Thu, 23 May 2019 13:37:41 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1hTgQ5-0006ni-1e; Thu, 23 May 2019 13:37:37 +0800
+Date:   Thu, 23 May 2019 13:37:37 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com, stefan.wahren@i2se.com,
+        wahrenst@gmx.net, linux-crypto@vger.kernel.org, mpm@selenic.com
+Subject: Re: [PATCH 0/2] hwrng: Support for 7211 in iproc-rng200
+Message-ID: <20190523053736.5jjevtz62lgddxtq@gondor.apana.org.au>
+References: <20190510173112.2196-1-f.fainelli@gmail.com>
+ <c3a3dc05-17fb-09fe-7a22-43e748f88164@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+T6rvEXCBukwmFS-Z4DFNoFBv9OToWwAYA2AXWBVa5mUG10zA@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <c3a3dc05-17fb-09fe-7a22-43e748f88164@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 01:35:02AM +0000, Geordan Neukum wrote:
-> On Wed, May 22, 2019 at 12:27 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> > depends on is better than select.  There's a change to depend on UIO for
-> > this code already in my -linus branch which will show up in Linus's tree
-> > in a week or so.
+On Mon, May 20, 2019 at 03:49:12PM -0700, Florian Fainelli wrote:
+> On 5/10/19 10:31 AM, Florian Fainelli wrote:
+> > Hi Herbert,
+> > 
+> > This patch series adds support for BCM7211 to the iproc-rng200 driver,
+> > nothing special besides matching the compatibile string and updating the
+> > binding document.
 > 
-> Noted on both accounts. Thanks for the feedback and sorry for the
-> inconvenience on the latter.
-> 
-> > Are you sure we need MFD_CORE as well for this code?
-> 
-> I noticed the build issue when working locally. I was doing
-> something along the lines of: 'make distclean && make x86_64_defconfig',
-> selecting 'CONFIG_KPC2000' and 'CONFIG_UIO' via menuconfig, then
-> running a good old 'make'. From make, I received an error along the
-> lines of:
-> 
-> ERROR: "mfd_remove_devices"
-> [drivers/staging/kpc2000/kpc2000/kpc2000.ko] undefined!
-> ERROR: "mfd_add_devices" [drivers/staging/kpc2000/kpc2000/kpc2000.ko] undefined!
-> make[1]: *** [scripts/Makefile.modpost:91: __modpost] Error 1
-> make: *** [Makefile:1290: modules] Error 2
-> 
-> which appears to indicate that those two symbols are undefined. When
-> I looked, it appeared that those symbols were exported from the
-> mfd-core which is why I also threw in a select for that Kconfig
-> symbol. Assuming that I didn't do something silly above, I'd be happy
-> to submit a new patch (with only a depends on for MFD_CORE) as I
-> continue trying to fix up the i2c driver.
+> Herbert, can you apply those patches?
 
-Yes, a depends for MFD_CORE would be good, can you base it against my
-staging-linus branch so that fix can go to Linus for this release?
+Hi Florian:
 
-thanks,
+Patch 1/2 is missing an ack from Rob.
 
-greg k-h
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
