@@ -2,171 +2,131 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B11C282DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 492F6C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A35820863
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:18:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A7D520863
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:18:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WnvWX/go"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="fh557pb9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731249AbfEWRSE (ORCPT
+        id S1731288AbfEWRS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 13:18:04 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55314 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731095AbfEWRSE (ORCPT
+        Thu, 23 May 2019 13:18:26 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38006 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731095AbfEWRSZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 13:18:04 -0400
-Received: by mail-wm1-f67.google.com with SMTP id x64so6649105wmb.5;
-        Thu, 23 May 2019 10:18:01 -0700 (PDT)
+        Thu, 23 May 2019 13:18:25 -0400
+Received: by mail-pg1-f193.google.com with SMTP id v11so3476345pgl.5
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 10:18:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jaESNs4hCLS2B67pZhYME8U2AZgN5qJKIo+PAIFx/Pc=;
-        b=WnvWX/goQFDV1XYt88cdHikALq7QfOWdheLk5BssxNMOtj5sRAUdJEkD8dJCBxwM0k
-         w4AoPUoa78Sil6NcZUe5K7b8Th4y3S9jl8oVbiaRVHYzrg3KrWzajXVJtrY6zj/MI+Rg
-         erdigxScQKDPw4WXZhSy7rBLsMBJF1V/6W2uKfCXarER+JxnfHwaSnZXsWu2FqMy7c49
-         wKNvc6g/ZK4UWe0gf5v4aZbNg9cZRvqj+TsowHbulIlivXuQp9zip9E/ensLgf+laYTW
-         3+vShQ9FFZ9mrFxdi0jzvIUBrTXQDPV4c9NMryGVABGO1xR/KWZ2A+ubkm+0QvZxRaMc
-         pLsg==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=YloeaLv8j/8CdU/rR2e95VLQQZQwEkYX+NzJuaPndDk=;
+        b=fh557pb9rJEzVtAf7S1A0gQ3SQrSKOPSNOy0iJ9MplvDyGbbcUToSF3oH3aszBWnGv
+         AEMEqWvT/GY43YQxI54XOwjq/8R97X8gM1DQUqV6IhdaQLXX4w42VJseNaeNpnFt24mA
+         Iu3m8zZvxZBPO0ZpsvSUpXU6EAiWC/iETra1JV/QYZ0zw7FERrt+WNAXKgc4sJbvxqFh
+         aDnHVh6wKGCQS04MwZpaAYaVNxC3BW5BDrlbScTfY3IC8DR3kAg7UmwCuB/FNepIlwzA
+         cgMQRhStbURFadohc8tJuhMWBrbjTurlRm8zW9/Z8jgLkQUhobpUP2K1EqR1W1GpCVh/
+         VR6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=jaESNs4hCLS2B67pZhYME8U2AZgN5qJKIo+PAIFx/Pc=;
-        b=L8r8thuXWJOosTtqdTBqUOhrhi7HmldVp6YkJ+X0KTWTct0pFArzD2hOEgMLScSReR
-         ZYk+IMC9pMM63f35dHREvY7Gl7vzKQO91EgxjElEVWTYtWbLbZJ72ZIgGV6pxOpzlx6u
-         hPoyNDUVR/vEls9laxuLx5TdsveIPBDCYNRpGnli/e3YUaBE1Ab0ZnPFGw18huZR6EaO
-         wsnxkd15OosYSik0cJUjAcPXBQb+kTdCkoOSx1m5XwMTcPsD2/nMSZu++iiKni0loK5O
-         tSp6+7IlLfl3oo3d8ilMzlL0OjTvHLVmvr3EUnck6nwlK1l1Zu+T8gHY59eXFrX3BYt6
-         t6ig==
-X-Gm-Message-State: APjAAAXFxs8A9ib7IX3Sk0rcEixGZFrqLHMbDEboJHJTIyAdP7ZyR686
-        YfaQwapMJGZcVlKZMzKW4QDwkZp8
-X-Google-Smtp-Source: APXvYqzX43VINOR3UJSYmqV3brcHiNb00GOFlWEEcQ9fMKivftcsO2vdVJ7tDvwfLy1cKEXib2MJvQ==
-X-Received: by 2002:a1c:ef05:: with SMTP id n5mr13178914wmh.149.1558631880331;
-        Thu, 23 May 2019 10:18:00 -0700 (PDT)
-Received: from [10.67.49.213] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id 16sm49321wmx.45.2019.05.23.10.17.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 10:17:59 -0700 (PDT)
-Subject: Re: [PATCH RFC] firmware: arm_scmi: Allow for better protocol
- extensibility
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     james.quinlan@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:CPU FREQUENCY SCALING FRAMEWORK" 
-        <linux-pm@vger.kernel.org>,
-        "open list:HARDWARE MONITORING" <linux-hwmon@vger.kernel.org>
-References: <20190521200110.8309-1-f.fainelli@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <f9403e7e-1b87-dc46-dfc5-62227c659e7c@gmail.com>
-Date:   Thu, 23 May 2019 10:17:50 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=YloeaLv8j/8CdU/rR2e95VLQQZQwEkYX+NzJuaPndDk=;
+        b=t5Bmuv28bphKMgl7lUQUTcvUFOM8RPMBJHY57hxiL9g1InkPxVE+vhIRXdYqlZvDQh
+         +/+P+CZsy/rZmAjRhbA3gWZKkxxoWsm2XHEPqeRtj4mnUV1VU8MZZBibFURc/GyQvBQF
+         iCNqnUguWYtI8wOHk83rOwENwm+dMKvi1TbzABuv4F5ni82+ImjAqxkOU166bjuTsbmd
+         EDoec7S6YKQrcNEaXBairNg44kj8cfzphiHXigkfoX4SrE9D72fPoXYXrkY4URV7rVa7
+         mTEXEJd/VTc7QIs8L4VnaPbXjMRG+cNe2+64OL/jLUs+uN0lQIusTk5ALntKSlB7FpEa
+         F+jA==
+X-Gm-Message-State: APjAAAXZzyLq9aNdi8mnAiMHN8y/yLAG81m1Dvk0A+JGhNRUL4cxDQms
+        II8p65gYuKKc3YBd+zm4bXVGCw==
+X-Google-Smtp-Source: APXvYqxm1N4Ih/eqOYx9sg3AgTVOm37fzlGSbcyqTWEcKx6HGuceV5W9E6JFu+pn5r2gZ6BszP2VNA==
+X-Received: by 2002:a63:234c:: with SMTP id u12mr101562576pgm.264.1558631904843;
+        Thu, 23 May 2019 10:18:24 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:ed4f:2717:3604:bb3f])
+        by smtp.googlemail.com with ESMTPSA id t7sm33669908pfh.156.2019.05.23.10.18.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 May 2019 10:18:24 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>, Andrew Lunn <andrew@lunn.ch>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org, f.fainelli@gmail.com,
+        hkallweit1@gmail.com
+Subject: Re: [PATCH v2 3/5] arm64: dts: meson: g12a: add mdio multiplexer
+In-Reply-To: <97cde329c44eade402deb517211a15fd70103f01.camel@baylibre.com>
+References: <20190520131401.11804-1-jbrunet@baylibre.com> <20190520131401.11804-4-jbrunet@baylibre.com> <CAFBinCA_XE86eqCMpEFc3xMZDH8J7wVQPRj7bFZyqDxQx-w-qw@mail.gmail.com> <20190520190533.GF22024@lunn.ch> <97cde329c44eade402deb517211a15fd70103f01.camel@baylibre.com>
+Date:   Thu, 23 May 2019 10:18:23 -0700
+Message-ID: <7h4l5l3x9c.fsf@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <20190521200110.8309-1-f.fainelli@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/21/19 1:01 PM, Florian Fainelli wrote:
-> The SCMI specific allows implementors to define their custom protocols
-> in the 0x80-0xFF space. The current scmi_handle structure requires us to
-> extend the structure with a set of operations and associated private
-> data in a way that is not quite scaling well.
-> 
-> Create a 255 bytes structure that contains an opaque pointer to a set of
-> operations and private data and create two helper functions to retrieve
-> those based on the protocol identifier. Several options were considered,
-> like using a linked list but since we could be performance sensitive in
-> some paths, using an array was faster and simpler.
-> 
-> Convert all call sites to use either scmi_protocol_get_ops() or
-> scmi_protocol_get_info().
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Jerome Brunet <jbrunet@baylibre.com> writes:
 
-On second thought, what I really need is private storage to the scmi_dev
-(the consumer side), and not so much the protocol (provider) side.
-Therefore using dev_{set,get}_drvadata() against scmi_device::dev should
-be working just fine, and if we are concerned about another part of the
-SCMI stack making use of that storage, we can always extend struct
-scmi_device with a private cookie.
--- 
-Florian
+> On Mon, 2019-05-20 at 21:05 +0200, Andrew Lunn wrote:
+>> > > +                               int_mdio: mdio@1 {
+>> > > +                                       reg = <1>;
+>> > > +                                       #address-cells = <1>;
+>> > > +                                       #size-cells = <0>;
+>> > > +
+>> > > +                                       internal_ephy: ethernet_phy@8 {
+>> > > +                                               compatible = "ethernet-phy-id0180.3301",
+>> > > +                                                            "ethernet-phy-ieee802.3-c22";
+>> > Based on your comment on v1 of this patch [0] the Ethernet PHY ID is
+>> > defined by this "mdio-multiplexer" (write arbitrary value to a
+>> > register then that's the PHY ID which will show up on the bus)
+>> > I'm fine with explicitly listing the ID which the PHY driver binds to
+>> > because I don't know a better way.
+>
+> ... 
+>
+>> 
+>> Does reading the ID registers give the correct ID, once you have poked
+>> registers in the mdio-multiplexer? If so, you don't need this
+>> compatible string.
+>
+> Hi Andrew,
+>
+> In 5.1 the mdio-mux set a wrong simply because I got it wrong. I pushed a
+> fix for that, and maybe it has already hit mainline.
+>
+> As I pointed to Martin on v1, this situation just shows that this setting is
+> weaker than the usual phy setup.
+>
+> I do understand why we don't want to put the PHY id in DT. If the PHY fitted on
+> the board changes, we want to pick it up. This particular phy is embedded in
+> SoC, we know it won't change for this SoC, whatever the mdio-mux sets.
+>
+> So yes it should (soon) work as usual, setting this id is not strictly
+> necessary but it nicely reflect that this particular phy is integrated in
+> the SoC and we know which driver to use. 
+>
+> So, if this is ok with you, I'd prefer to keep this particular id around.
+
+Seems OK to me, so I'm queuing this for v5.3 because we really need
+network support.  It can be removed later if it's really insisted on.
+
+>> 
+>> If the read is giving the wrong ID, then yes, you do want this. But
+>> then please add a comment in the DT blob. This is very unusual, so
+>> should have some explanation why it is needed.
+>
+> Sure, can add a comment. I suggest to do it in follow-up. At least it keeps
+> things aligned between the gxl, which has been like this for quite a while now,
+> and g12a.
+
+Follow-up is good for me,
+
+Kevin
