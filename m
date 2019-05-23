@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07CBFC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B748C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98C052133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA53F20879
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:34:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640083;
-	bh=DR2Hg/fRrmYxcQi0/v7BdYlawFDvUxGS549mG4XxQ/k=;
+	s=default; t=1558640087;
+	bh=wo0rAbH0ZJ53UEuPAxfUCnXzx11Ia4RZgA1x+PQCU40=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DGJVxfIGqNbiF7nZw5cZrXjqk1ibFj0xH1YjryZ/1hohbFGunZrGTgseMOv8DF1I1
-	 o1Bm6pkE4L+B7pHhfJowF20QalPElv6y1C0TwUw6A+hvVS+CEFA3KIGMVx+LKdivY3
-	 RpKa6Yi04Gja4o8529jph5dLidtvAXE2WEnvmvfA=
+	b=bky4ifSwMmihBJdTfwQPtkDkZ9Yj3OSFXOR+f288Uvpa/iRQSXEZzyiLREnDUWsjW
+	 R1jD+P+q3o3OJvoROeebaZygdCjOAP9IgMv7IolYQzpCyk5Oi+QoqTCl/erlCxapBg
+	 yAMX0HIrGLB3B6zBaNyy5T1l74zVdPXGwq2vm/Rw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391267AbfEWT1h (ORCPT
+        id S2391675AbfEWTep (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:27:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39822 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:34:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391602AbfEWT1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:27:31 -0400
+        id S2391614AbfEWT1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:27:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77A5120879;
-        Thu, 23 May 2019 19:27:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E412D2054F;
+        Thu, 23 May 2019 19:27:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639651;
-        bh=DR2Hg/fRrmYxcQi0/v7BdYlawFDvUxGS549mG4XxQ/k=;
+        s=default; t=1558639656;
+        bh=wo0rAbH0ZJ53UEuPAxfUCnXzx11Ia4RZgA1x+PQCU40=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i4z6KDybygXaEolqAabH1d7fFTQWCPytBWOywPZjkNKmMOGssWecx9XoAvOtQb2wb
-         LnQZNUSSlkrhj+cnvb6BOICrIh4FnZuPCTdn+Q9J5r2TAQ+byMprBxkqgYCl+1CkAL
-         oBoU4I95Z5M8WJwHCLfFefkRC4PRfJXZDKuJqsfA=
+        b=KJJoOyW5XXHLHThoHtl8YOfbhwpzJenei1aFI027b8jtjRmWx+LkXkxWbYjXXFY9o
+         YoXnFoLOBRS7Mvrx+98nWhzE0V4ecA1C3v6CEYbP0vyxskQipkxKFVqTyvmecT6TLn
+         wrCn9gUX1bp5M2JyNRaWwdDwKELFEGsEl906I27o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Helge Deller <deller@gmx.de>
-Subject: [PATCH 5.1 028/122] parisc: Skip registering LED when running in QEMU
-Date:   Thu, 23 May 2019 21:05:50 +0200
-Message-Id: <20190523181708.591066325@linuxfoundation.org>
+Subject: [PATCH 5.1 030/122] parisc: Allow live-patching of __meminit functions
+Date:   Thu, 23 May 2019 21:05:52 +0200
+Message-Id: <20190523181708.832938862@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -60,29 +60,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Helge Deller <deller@gmx.de>
 
-commit b438749044356dd1329c45e9b5a9377b6ea13eb2 upstream.
+commit d19a12906e5e558c0f6b6cfece7b7caf1012ef95 upstream.
 
-No need to spend CPU cycles when we run on QEMU.
+When making the text sections writeable with set_kernel_text_rw(1),
+include all text sections including those in the __init section.
+Otherwise functions marked with __meminit will stay read-only.
 
 Signed-off-by: Helge Deller <deller@gmx.de>
-CC: stable@vger.kernel.org # v4.9+
+Cc: <stable@vger.kernel.org>	# 4.20+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/parisc/led.c |    3 +++
- 1 file changed, 3 insertions(+)
+ arch/parisc/mm/init.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/parisc/led.c
-+++ b/drivers/parisc/led.c
-@@ -568,6 +568,9 @@ int __init register_led_driver(int model
- 		break;
+--- a/arch/parisc/mm/init.c
++++ b/arch/parisc/mm/init.c
+@@ -495,7 +495,7 @@ static void __init map_pages(unsigned lo
  
- 	case DISPLAY_MODEL_LASI:
-+		/* Skip to register LED in QEMU */
-+		if (running_on_qemu)
-+			return 1;
- 		LED_DATA_REG = data_reg;
- 		led_func_ptr = led_LASI_driver;
- 		printk(KERN_INFO "LED display at %lx registered\n", LED_DATA_REG);
+ void __init set_kernel_text_rw(int enable_read_write)
+ {
+-	unsigned long start = (unsigned long) _text;
++	unsigned long start = (unsigned long) __init_begin;
+ 	unsigned long end   = (unsigned long) &data_start;
+ 
+ 	map_pages(start, __pa(start), end-start,
 
 
