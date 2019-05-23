@@ -2,134 +2,104 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B30C04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F94C04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8E0920665
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:12:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2825A20665
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:14:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729857AbfEWIM6 (ORCPT
+        id S1730006AbfEWIOy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 04:12:58 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57096 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725814AbfEWIM6 (ORCPT
+        Thu, 23 May 2019 04:14:54 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:34172 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727708AbfEWIOx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 04:12:58 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4N8CroE071291
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 04:12:56 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2snmye6uda-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 04:12:56 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <tmricht@linux.ibm.com>;
-        Thu, 23 May 2019 09:12:48 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 23 May 2019 09:12:46 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4N8CjvH57278560
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 May 2019 08:12:45 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C92C74204B;
-        Thu, 23 May 2019 08:12:45 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9027542042;
-        Thu, 23 May 2019 08:12:45 +0000 (GMT)
-Received: from oc3784624756.ibm.com (unknown [9.152.212.165])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 23 May 2019 08:12:45 +0000 (GMT)
-Subject: Re: [PATCH 1/3] perf report: Fix OOM error in TUI mode on s390
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        brueckner@linux.vnet.ibm.com, heiko.carstens@de.ibm.com
-References: <20190522144601.50763-1-tmricht@linux.ibm.com>
- <20190522144601.50763-2-tmricht@linux.ibm.com>
- <20190522180812.GI30271@kernel.org>
-From:   Thomas-Mich Richter <tmricht@linux.ibm.com>
-Organization: IBM
-Date:   Thu, 23 May 2019 10:12:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 23 May 2019 04:14:53 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 7A9BC265E40;
+        Thu, 23 May 2019 09:14:52 +0100 (BST)
+Date:   Thu, 23 May 2019 10:14:49 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, George Spelvin <lkml@sdf.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrey Abramov <st5pub@yandex.ru>, kernel@collabora.com
+Subject: Re: [PATCH] lib/sort: Add the sort_r() variant
+Message-ID: <20190523101449.7ad35f46@collabora.com>
+In-Reply-To: <20190522113315.08484a3942ec07793b7d6112@linux-foundation.org>
+References: <20190522112550.31814-1-boris.brezillon@collabora.com>
+        <20190522113315.08484a3942ec07793b7d6112@linux-foundation.org>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190522180812.GI30271@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19052308-0020-0000-0000-0000033F97FB
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052308-0021-0000-0000-0000219280B2
-Message-Id: <872a9844-2464-d92d-21b9-311174c0bae4@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-23_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905230059
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/22/19 8:08 PM, Arnaldo Carvalho de Melo wrote:
-> Em Wed, May 22, 2019 at 04:45:59PM +0200, Thomas Richter escreveu:
->
+Hi Andrew,
 
+On Wed, 22 May 2019 11:33:15 -0700
+Andrew Morton <akpm@linux-foundation.org> wrote:
 
-.....
-
->>
->> This size kills the TUI interface when executing the following
->> code:
->>
->>   process_sample_event()
->>     hist_entry_iter__add()
->>       hist_iter__report_callback()
->>         hist_entry__inc_addr_samples()
->>           symbol__inc_addr_samples(symbol = __bss_stop)
->>             symbol__cycles_hist()
->>                annotated_source__alloc_histograms(...,
->> 				                symbol__size(sym),
->> 		                                ...)
->>
->> This function allocates memory to save sample histograms.
->> The symbol_size() marco is defined as sym->end - sym->start, which
->> results in above value of 0x3fe6e64a850 bytes and
->> the call to calloc() in annotated_source__alloc_histograms() fails.
+> On Wed, 22 May 2019 13:25:50 +0200 Boris Brezillon <boris.brezillon@collabora.com> wrote:
 > 
-> Humm, why are we getting samples in that area? Is it some JITted thing
-> like BPF? What is it?
+> > Some users might need extra context to compare 2 elements. This patch
+> > adds the sort_r() which is similar to the qsort_r() variant of qsort().
+> > 
+> > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> > ---
+> > Hello,
+> > 
+> > A few more details about this patch.
+> > 
+> > Even though I post it as a standalone patch, I do intend to use it in
+> > a real driver (v4l2 driver), just didn't want to have it burried in a
+> > huge patch series.
+> > 
+> > Note that sort() and sort_r() are now implemented as wrappers around
+> > do_sort() so that most of the code can be shared. I initially went for
+> > a solution that implemented sort() as a wrapper around sort_r() (which
+> > basically contained the do_sort() logic without the cmp_func arg)
+> > but realized this was adding one extra indirect call (the compare func
+> > wrapper), which I know are being chased.  
 > 
-> Why not just not consider the calloc failure as fatal, and when/if the
-> user asks for annotation on such symbol, tell the user that it wasn't
-> possible to allocate N bytes for it?
+> Please move the above text into the changelog.  It's probably useful
+> and we can afford the disk space ;)
+
+Will do.
+
 > 
-> - Arnaldo
+> > There's another option, but I'm pretty sure other people already
+> > considered it and thought it was not a good idea as it would make
+> > the code size grow: move the code to sort.h as inline funcs/macros so
+> > that the compiler can optimize things out and replace the indirect
+> > cmp_func() calls by direct ones. I just tried it, and it makes my .o
+> > file grow by 576 bytes, given that we currently have 122 users of
+> > this function, that makes the kernel code grow by ~70k (that's kind
+> > of a max estimate since not all users will be compiled in).  
+> 
+> eep, let's not do that.
+> 
+> > --- a/include/linux/sort.h
+> > +++ b/include/linux/sort.h  
+> 
+> Patch otherwise looks OK.  Please include it with the patch series
+> which uses it.  Feel free to add
+> 
+> Acked-by: Andrew Morton <akpm@linux-foundation.org>
 
+Thanks for your review.
 
-I have not debugged why this sample address was recorded. BPF code was not
-running.
-
-I have no problem with making calloc() failure no fatal, however we might
-still allocate large memory...
-
-I will send a new patch.
-
--- 
-Thomas Richter, Dept 3252, IBM s390 Linux Development, Boeblingen, Germany
---
-Vorsitzender des Aufsichtsrats: Matthias Hartmann
-Geschäftsführung: Dirk Wittkopp
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
-
+Boris
