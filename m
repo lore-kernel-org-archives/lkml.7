@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E15C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7E0C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE67A217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:14:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A55920863
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:15:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558638893;
-	bh=uK2l6iJbIsZEh6rp+uQugI8F0dbT2f9ZUREWDTQJb4Q=;
+	s=default; t=1558638900;
+	bh=W0f3EHcVEBs8UfuFtMj60PbcCvQ0hwXJbGh92iFhmzQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FlUukH7bAGPk0615Otcv6+yxsNKrMiOgGeKGMVChBF511yBTyCw5eCZ8wt1IqQR9w
-	 IzlK7XJHEvtHBT5wveI/YJfbclKPu31TETZBf3u/0L2KPdkefrYfaEOWDdKij7MskV
-	 ++djVyRUcYgQEOyY5A/58r86klEXzHDdV2Cr6pYk=
+	b=xVustmyUuvW2U054OZRPN948blKM6DcMzeaqzRRd+OUPXC+aDXLxB8tNMT3gCnOyj
+	 sgls+nDpmMy+e0GND+Ew3EGlRY8Y8R8+PuN+tTprh5YC57PVig5NozQpYm3vUu8mlt
+	 /G8xrn5kyTZIP1w4R6M9R2ae6B/Jn2gsCj1SBKZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388853AbfEWTOx (ORCPT
+        id S2387889AbfEWTO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:14:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48946 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:14:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388823AbfEWTOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:14:47 -0400
+        id S2388821AbfEWTOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:14:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B222921850;
-        Thu, 23 May 2019 19:14:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59F3F217D7;
+        Thu, 23 May 2019 19:14:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638887;
-        bh=uK2l6iJbIsZEh6rp+uQugI8F0dbT2f9ZUREWDTQJb4Q=;
+        s=default; t=1558638889;
+        bh=W0f3EHcVEBs8UfuFtMj60PbcCvQ0hwXJbGh92iFhmzQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LfWrw7wpPoGyfkaBAkQf1HBPdpwhfUDEzRTmuFmSSwBCveBpWKyTCD7Lq9vPqJ1IF
-         P41qi0kSb5DrebJb9bHdAknNy0P0Arisq3j+a61Ul1FcXRkjUOBcmZHPtMnDunoL3R
-         GcpWRfpYkJWKCgc6YmX7vES+lv1YSKsbS8EyWVtE=
+        b=yegrH1i8TNjmSIkjYrGte9k7ddeMJ8o9kMZXq+ZybymY8tGW+oUm5OrKkyrRiGEuw
+         4whPDOeQDT/w08ywuG6rQEg5spsJi7VTUg5ynLqDZkR4uMo5rYoNLf8eN2M5kaKZQi
+         vZ7Ya70zHCnbyR84RydWjsJ83PJcW95nFggEgYUo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Helge Deller <deller@gmx.de>
-Subject: [PATCH 4.19 020/114] parisc: Rename LEVEL to PA_ASM_LEVEL to avoid name clash with DRBD code
-Date:   Thu, 23 May 2019 21:05:19 +0200
-Message-Id: <20190523181733.696875349@linuxfoundation.org>
+        stable@vger.kernel.org, Tingwei Zhang <tingwei@codeaurora.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Subject: [PATCH 4.19 021/114] stm class: Fix channel free in stm output free path
+Date:   Thu, 23 May 2019 21:05:20 +0200
+Message-Id: <20190523181733.804061229@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
 References: <20190523181731.372074275@linuxfoundation.org>
@@ -59,75 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helge Deller <deller@gmx.de>
+From: Tingwei Zhang <tingwei@codeaurora.org>
 
-commit 1829dda0e87f4462782ca81be474c7890efe31ce upstream.
+commit ee496da4c3915de3232b5f5cd20e21ae3e46fe8d upstream.
 
-LEVEL is a very common word, and now after many years it suddenly
-clashed with another LEVEL define in the DRBD code.
-Rename it to PA_ASM_LEVEL instead.
+Number of free masters is not set correctly in stm
+free path. Fix this by properly adding the number
+of output channels before setting them to 0 in
+stm_output_disclaim().
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Helge Deller <deller@gmx.de>
-Cc: <stable@vger.kernel.org>
+Currently it is equivalent to doing nothing since
+master->nr_free is incremented by 0.
+
+Fixes: 7bd1d4093c2f ("stm class: Introduce an abstraction for System Trace Module devices")
+Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc: stable@vger.kernel.org # v4.4
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/parisc/include/asm/assembly.h |    6 +++---
- arch/parisc/kernel/head.S          |    4 ++--
- arch/parisc/kernel/syscall.S       |    2 +-
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/hwtracing/stm/core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/parisc/include/asm/assembly.h
-+++ b/arch/parisc/include/asm/assembly.h
-@@ -61,14 +61,14 @@
- #define LDCW		ldcw,co
- #define BL		b,l
- # ifdef CONFIG_64BIT
--#  define LEVEL		2.0w
-+#  define PA_ASM_LEVEL	2.0w
- # else
--#  define LEVEL		2.0
-+#  define PA_ASM_LEVEL	2.0
- # endif
- #else
- #define LDCW		ldcw
- #define BL		bl
--#define LEVEL		1.1
-+#define PA_ASM_LEVEL	1.1
- #endif
+--- a/drivers/hwtracing/stm/core.c
++++ b/drivers/hwtracing/stm/core.c
+@@ -218,8 +218,8 @@ stm_output_disclaim(struct stm_device *s
+ 	bitmap_release_region(&master->chan_map[0], output->channel,
+ 			      ilog2(output->nr_chans));
  
- #ifdef __ASSEMBLY__
---- a/arch/parisc/kernel/head.S
-+++ b/arch/parisc/kernel/head.S
-@@ -22,7 +22,7 @@
- #include <linux/linkage.h>
- #include <linux/init.h>
+-	output->nr_chans = 0;
+ 	master->nr_free += output->nr_chans;
++	output->nr_chans = 0;
+ }
  
--	.level	LEVEL
-+	.level	PA_ASM_LEVEL
- 
- 	__INITDATA
- ENTRY(boot_args)
-@@ -258,7 +258,7 @@ stext_pdc_ret:
- 	ldo		R%PA(fault_vector_11)(%r10),%r10
- 
- $is_pa20:
--	.level		LEVEL /* restore 1.1 || 2.0w */
-+	.level		PA_ASM_LEVEL /* restore 1.1 || 2.0w */
- #endif /*!CONFIG_64BIT*/
- 	load32		PA(fault_vector_20),%r10
- 
---- a/arch/parisc/kernel/syscall.S
-+++ b/arch/parisc/kernel/syscall.S
-@@ -48,7 +48,7 @@ registers).
- 	 */
- #define KILL_INSN	break	0,0
- 
--	.level          LEVEL
-+	.level          PA_ASM_LEVEL
- 
- 	.text
- 
+ /*
 
 
