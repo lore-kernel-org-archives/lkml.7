@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E2CC282DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C96BC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFD29217D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:02:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2335420881
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:03:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skidata.com header.i=@skidata.com header.b="kr7EZROg"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skidata.com header.i=@skidata.com header.b="X3xQbIsa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730766AbfEWMCv (ORCPT
+        id S1730785AbfEWMDH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 08:02:51 -0400
-Received: from mail1.skidata.com ([91.230.2.99]:1640 "EHLO mail1.skidata.com"
+        Thu, 23 May 2019 08:03:07 -0400
+Received: from mail1.skidata.com ([91.230.2.99]:1649 "EHLO mail1.skidata.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730718AbfEWMCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 08:02:49 -0400
+        id S1729361AbfEWMDH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 08:03:07 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=skidata.com; i=@skidata.com; q=dns/txt; s=selector1;
-  t=1558612990; x=1590148990;
+  t=1558613008; x=1590149008;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Dt1RwWKGRYAmHL3AQGW/WA+Xv9Nz3QFAbtm/2pBA4V8=;
-  b=kr7EZROgALQK3PAU5bdZTG/k65AC8oC4toCZA0o6vHQI8+h0DHFk6rFF
-   Lm220aUD+efn+6BbdkiKScptnwSX65c4LnKJabekSIL+Zxgg+dR4NU9qa
-   FIEsqRgMupAwuGXJxpqjCbntSA8wL18ve9hD5RaBAqIiTNGzuNAtOGUjc
-   y2950S8AMsT1r6iBIP4nYAilu9ot9kdeDPL61Es3xaBbu/1GWeXIcoUYg
-   ISJuHAWIla65/0ENK39g8Yf0sjrfBYN5d8FGYbvv+b48fOxSKWrXK6j4a
-   QyIoVdrcPYxbAAqvpHP9JIloRUqX4pqdgQ/mxggENiv28e4L1JWBuHeQG
-   g==;
-IronPort-SDR: XfBgvtQ6XG95VFargmwHfeGTmwywlni3u9DY3/VMccbeIT9OT6G5vz5anaLVQnNErCM46IfWP5
- 3BoO8nqsG48Qslyuxh5xrtGxLgQObJw4mgbqkLXoGDN1RflzoLQExoogRLIM9SA3D5e6bA6GD+
- 1L6liGYURFeJhNZW0RWWeCXaY3Vi5Xwy16jBgJhTtMQQcy8qHsv+oHhZG4Ze1yNFCZswLqEAar
- Bgfzn/FqLYCqVHD2k31mMvuu+lwp1RIkVeENr0QW6Laslyef3KUpMdhIwnzMxJYT19XAeRs+bo
- Y5c=
+  bh=BsXCeB/+8nXIFLIExpSSR1992V0/zCsuaE0B3Mxz00A=;
+  b=X3xQbIsaSxINQ42kztWvA6cf3uhrCGiTsGXRauPJxn6LOx4fCsALWQBC
+   xkGsFSu8qsnTLAH6UDyBNZnNw02x1VgcoyKNOs+GDup65UCpzy4OMf/Xh
+   Vc8dK9Yy66qgWSoW9WBUqg44voAUqC8eUa81BjvvS5ubNwTzb80iJxQBP
+   PIo/5LXmaVkOwQnkd5ovxBsR5R7ADWFmWGT8KMkwdGPlxUnT3SJYBIc9m
+   hUE7Ds9/gH3dYe98HFMu7xN3G4Ge/YEEMiNns/1sV0/daZFp8ufYhUEc9
+   UVvmbsyYJfXQru+fGBMw4r3tOztmlJSg+WuqlUKQkNe0vLNFbf+EA4Lqj
+   A==;
+IronPort-SDR: jVvamI5YPUJ4BjtZ/ivwpnxyAiIhKCF3881WsvJZLF24nG9EnfsT6GfkTlOM6+nZ5nbYb6ym12
+ nkofNIKS17YNeCrKgWisFiwhWlUTb5saw15vpgAmbRmTjH219w1shKRitrtW10kcz08AMNUnvL
+ hst+rY3aCgK88lhbMKXaOlAWelRMy91HXXieZ9PQW7jjjL/oBxS4lJ3irnWLrjGOh1YGYQnkDM
+ eGf+lCCY6f/p9D1xdrkno4E0DOxiyRtKNmE/uR60qr3jKLQ3jOk/cnOUwlhh2aNwRlgZcC7M2R
+ 3fg=
 X-IronPort-AV: E=Sophos;i="5.60,502,1549926000"; 
-   d="scan'208";a="17248266"
+   d="scan'208";a="17248281"
 From:   Richard Leitner <richard.leitner@skidata.com>
 To:     <a.zummo@towertech.it>, <alexandre.belloni@bootlin.com>
 CC:     <linux-rtc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Richard Leitner <richard.leitner@skidata.com>
-Subject: [PATCH v2 2/4] rtc: s35390a: set uie_unsupported
-Date:   Thu, 23 May 2019 13:54:49 +0200
-Message-ID: <20190523115451.20007-3-richard.leitner@skidata.com>
+Subject: [PATCH v2 4/4] rtc: s35390a: change FLAG defines to use BIT macro
+Date:   Thu, 23 May 2019 13:54:51 +0200
+Message-ID: <20190523115451.20007-5-richard.leitner@skidata.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190523115451.20007-1-richard.leitner@skidata.com>
 References: <20190523115451.20007-1-richard.leitner@skidata.com>
@@ -63,39 +63,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alarms are only supported on a per minute basis. This is why
-uie_unsupported is set. Furthermore issue a warning when a second based
-alarm is requested.
+To be consistent change the S35390A_FLAG defines to use the BIT
+macro (like the S35390A_INT2_MODE defines).
 
 Signed-off-by: Richard Leitner <richard.leitner@skidata.com>
 ---
- drivers/rtc/rtc-s35390a.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/rtc/rtc-s35390a.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/rtc/rtc-s35390a.c b/drivers/rtc/rtc-s35390a.c
-index fb795c454077..4ca37f281ed9 100644
+index 7293dcdea692..b18ce5610a94 100644
 --- a/drivers/rtc/rtc-s35390a.c
 +++ b/drivers/rtc/rtc-s35390a.c
-@@ -289,6 +289,9 @@ static int s35390a_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alm)
- 		alm->time.tm_min, alm->time.tm_hour, alm->time.tm_mday,
- 		alm->time.tm_mon, alm->time.tm_year, alm->time.tm_wday);
+@@ -36,14 +36,14 @@
+ #define S35390A_ALRM_BYTE_MINS	2
  
-+	if (alm->time.tm_sec != 0)
-+		dev_warn(&client->dev, "Alarms are only supported on a per minute basis!\n");
-+
- 	/* disable interrupt (which deasserts the irq line) */
- 	err = s35390a_set_reg(s35390a, S35390A_CMD_STATUS2, &sts, sizeof(sts));
- 	if (err < 0)
-@@ -500,6 +503,9 @@ static int s35390a_probe(struct i2c_client *client,
- 		goto exit_dummy;
- 	}
+ /* flags for STATUS1 */
+-#define S35390A_FLAG_POC	0x01
+-#define S35390A_FLAG_BLD	0x02
+-#define S35390A_FLAG_INT2	0x04
+-#define S35390A_FLAG_24H	0x40
+-#define S35390A_FLAG_RESET	0x80
++#define S35390A_FLAG_POC	BIT(0)
++#define S35390A_FLAG_BLD	BIT(1)
++#define S35390A_FLAG_INT2	BIT(2)
++#define S35390A_FLAG_24H	BIT(6)
++#define S35390A_FLAG_RESET	BIT(7)
  
-+	/* supports per-minute alarms only, therefore set uie_unsupported */
-+	s35390a->rtc->uie_unsupported = 1;
-+
- 	if (status1 & S35390A_FLAG_INT2)
- 		rtc_update_irq(s35390a->rtc, 1, RTC_AF);
+ /* flag for STATUS2 */
+-#define S35390A_FLAG_TEST	0x01
++#define S35390A_FLAG_TEST	BIT(0)
  
+ /* INT2 pin output mode */
+ #define S35390A_INT2_MODE_MASK		0x0E
 -- 
 2.20.1
 
