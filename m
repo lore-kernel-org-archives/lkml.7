@@ -2,120 +2,76 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F277C04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74549C04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3A6F20665
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:08:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="mGGvxHny"
+	by mail.kernel.org (Postfix) with ESMTP id 4056B204EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:09:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729519AbfEWIIy (ORCPT
+        id S1729896AbfEWIJc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 04:08:54 -0400
-Received: from mail-eopbgr40054.outbound.protection.outlook.com ([40.107.4.54]:27552
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726070AbfEWIIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 04:08:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=s7TW7SrGZyFu1JjCdwNDBFdcM4EAzwrJk58onsTZD0g=;
- b=mGGvxHnyjYxFd3dxTFWM7DJADIkjyO8kXDeyA/TQ5oFH2VQcJFfZ0NKdUQQv7oQIhhQbb/tILqB/wrn22Mm6OHk98zqISllbBaHgqWk6Q1iNGygBEKj3dWE/lmpctuGI9cl5T51/6tOFy1k+1C/eVVVLB3NoM8hyADIrGA+Ovc0=
-Received: from VI1PR04MB4445.eurprd04.prod.outlook.com (20.177.55.161) by
- VI1PR04MB5150.eurprd04.prod.outlook.com (20.177.50.203) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.15; Thu, 23 May 2019 08:08:50 +0000
-Received: from VI1PR04MB4445.eurprd04.prod.outlook.com
- ([fe80::39fd:f3c3:46fc:f872]) by VI1PR04MB4445.eurprd04.prod.outlook.com
- ([fe80::39fd:f3c3:46fc:f872%7]) with mapi id 15.20.1922.018; Thu, 23 May 2019
- 08:08:50 +0000
-From:   Iuliana Prodan <iuliana.prodan@nxp.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-CC:     Horia Geanta <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH v2 1/2] crypto: caam - fix pkcs1pad(rsa-caam, sha256)
- failure because of invalid input
-Thread-Topic: [PATCH v2 1/2] crypto: caam - fix pkcs1pad(rsa-caam, sha256)
- failure because of invalid input
-Thread-Index: AQHVCxD1/1xcZwH7eE+osRH9ZRl26A==
-Date:   Thu, 23 May 2019 08:08:50 +0000
-Message-ID: <VI1PR04MB44452D9C82BB8835DDF759298C010@VI1PR04MB4445.eurprd04.prod.outlook.com>
-References: <1557919546-360-1-git-send-email-iuliana.prodan@nxp.com>
- <20190523061202.ic2vgimgzvvm6dzc@gondor.apana.org.au>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=iuliana.prodan@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cf0ff7c2-6cf7-49e6-1d45-08d6df55e3b4
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5150;
-x-ms-traffictypediagnostic: VI1PR04MB5150:
-x-microsoft-antispam-prvs: <VI1PR04MB515086496B62B865F41A2D5E8C010@VI1PR04MB5150.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3173;
-x-forefront-prvs: 00462943DE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(376002)(136003)(366004)(346002)(396003)(199004)(189003)(66066001)(52536014)(99286004)(8676002)(25786009)(55016002)(316002)(4744005)(478600001)(76116006)(229853002)(73956011)(7696005)(64756008)(66446008)(66476007)(66946007)(66556008)(33656002)(26005)(74316002)(76176011)(186003)(5660300002)(68736007)(6116002)(6916009)(3846002)(6506007)(102836004)(53546011)(7736002)(4326008)(6436002)(486006)(44832011)(2906002)(305945005)(71190400001)(6246003)(14454004)(71200400001)(53936002)(9686003)(81166006)(81156014)(476003)(86362001)(8936002)(54906003)(446003)(256004)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5150;H:VI1PR04MB4445.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: AZFoy4EQkloD8QRcbg92lvtDMtkHRhRg/iOCa9DeOqOmfVchKcIf4rnDuF4Vrew2lYGSNdrQKZoT7eDiOMojHFp/OGLPYzCz5PV0F7K9BFwdvtwtI4YTK4vPofAn6yBY1BWEapHZ2qLLbl+JG6pmf1/ucV8J3GDeZ7pwzIhitiO7tVgmAvSC2AHLYd5bbM9CB4upxo3dTKIBEP0Ct4x906YWxKBIdNSzWhTO52ZexeQfu97EFKqb5cRthHrsSfCzVpRc4zDIHAg7ZFyS3Aixlzmpoaxd9/z/AxLjFpcawmao4kkM2xf0Ae2TUfCGBk+/94/UjGUPAVEcI3lg1KXvgxBH+9axN6LvoydUmxpDyJ37TYBKFqc9HBpYMznCGjrHPIcPZWZbb1pWWjlvluCGjBj5kj1VGgmxnH8Bk3A0Csg=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 23 May 2019 04:09:32 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:51978 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726070AbfEWIJc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 04:09:32 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 107328034E; Thu, 23 May 2019 10:09:19 +0200 (CEST)
+Date:   Thu, 23 May 2019 10:09:29 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     jacek.anaszewski@gmail.com, broonie@kernel.org,
+        lgirdwood@gmail.com, lee.jones@linaro.org,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH v4 3/6] mfd: ti-lmu: Add LM36274 support to the
+ ti-lmu
+Message-ID: <20190523080929.GA20460@amd>
+References: <20190522192733.13422-1-dmurphy@ti.com>
+ <20190522192733.13422-4-dmurphy@ti.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cf0ff7c2-6cf7-49e6-1d45-08d6df55e3b4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2019 08:08:50.3430
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: iuliana.prodan@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5150
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="3MwIy2ne0vdjdPXF"
+Content-Disposition: inline
+In-Reply-To: <20190522192733.13422-4-dmurphy@ti.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/23/2019 9:12 AM, Herbert Xu wrote:=0A=
-> On Wed, May 15, 2019 at 02:25:45PM +0300, Iuliana Prodan wrote:=0A=
->>=0A=
->> @@ -1058,6 +1105,14 @@ static int __init caam_pkc_init(void)=0A=
->>   		goto out_put_dev;=0A=
->>   	}=0A=
->>   =0A=
->> +	/* allocate zero buffer, used for padding input */=0A=
->> +	zero_buffer =3D kzalloc(CAAM_RSA_MAX_INPUT_SIZE - 1, GFP_DMA |=0A=
->> +			      GFP_KERNEL);=0A=
->> +	if (!zero_buffer) {=0A=
->> +		err =3D -ENOMEM;=0A=
->> +		goto out_put_dev;=0A=
->> +	}=0A=
->> +=0A=
->>   	err =3D crypto_register_akcipher(&caam_rsa);=0A=
->>   	if (err)=0A=
->>   		dev_warn(ctrldev, "%s alg registration failed\n",=0A=
-> =0A=
-> This patch does not apply on top of the caam patch-series from Horia.=0A=
-> You're also going to leak zero_buffer if crypto_register_akcipher=0A=
-> fails.=0A=
-> =0A=
-> Cheers,=0A=
-> =0A=
-=0A=
-I'll fix the conflicts and also the leak of zero_buffer if =0A=
-crypto_register_akcipher fails and send a new version.=0A=
-=0A=
-Regards,=0A=
-Iulia=0A=
+
+--3MwIy2ne0vdjdPXF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed 2019-05-22 14:27:30, Dan Murphy wrote:
+> Add the LM36274 register support to the ti-lmu MFD driver.
+>=20
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+
+Acked-by: Pavel Machek <pavel@ucw.cz>
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--3MwIy2ne0vdjdPXF
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlzmVTkACgkQMOfwapXb+vIPiwCgxBabqBiVB71I9eCrnTSN22OK
+TJEAn3nWXooQ4EP/zXDMQmIL9SW/XT4u
+=2s8F
+-----END PGP SIGNATURE-----
+
+--3MwIy2ne0vdjdPXF--
