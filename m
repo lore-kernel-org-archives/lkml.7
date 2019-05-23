@@ -2,109 +2,127 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B64DC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53084C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0CEB21773
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DE5A21773
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:53:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="lydjv4HV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NqB8pFlG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388322AbfEWVw6 (ORCPT
+        id S2388408AbfEWVxc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 17:52:58 -0400
-Received: from node.akkea.ca ([192.155.83.177]:49564 "EHLO node.akkea.ca"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387709AbfEWVw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 17:52:57 -0400
-Received: by node.akkea.ca (Postfix, from userid 33)
-        id EE1D44E204B; Thu, 23 May 2019 21:52:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1558648376; bh=EEx6+r+EW8Gn9LAjThkYPyrhI3Zs+zGHNmTtqinmKv4=;
-        h=To:Subject:Date:From:Cc:In-Reply-To:References;
-        b=lydjv4HV77oK6COWSrTB1aH1fzxQCpWZn3f9c5YJdUPbwSs9j4jrs+wewljakLQ7n
-         SuVyaPb07lQ5iHRWYIVaoMcXhR2PcSdEsn9Gj4eL9enTjgl4octPYeaEFmGc7eJJ+x
-         uVBAjCgayvFpSuhgomr0JoIhmwvSb+a0fFBEHF90=
-To:     Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v13 2/4] arm64: dts: fsl: librem5: Add a device tree for  the Librem5 devkit
-X-PHP-Originating-Script: 1000:rcube.php
+        Thu, 23 May 2019 17:53:32 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:36945 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387709AbfEWVxb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 17:53:31 -0400
+Received: by mail-ed1-f66.google.com with SMTP id w37so11291885edw.4;
+        Thu, 23 May 2019 14:53:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VhQSjUZmgcEW8XYx/F0uZNmJ222g1uNFRqG0lEK0f4k=;
+        b=NqB8pFlGZ7gHJ3UNbEmaDyLrJE5Xg6/abm2vfrRKeelpjhlPWdVpyrtyo4RwOia5ov
+         TJpAr1DdbC6g0Lfz8WRL7QsuQXSVj/OsIDCVi+orIY2kmLs9nqUnDe73oGgdpvKNPYvB
+         UvdzPfTV/tNQzOsvTWiK0lfREtgxexqT9e/K16p5dXF7MgbZM3oi03ydnlgLZeD5mrv9
+         YehoCjivnVIQUhmMv9gxvveTajMFULhHSZOVYckKQW7JImYDiw3WAZl2Ez0p7z9LtTVF
+         7n72mb5P8/5aqZKi+4nspkXWSRUbnrzwPsw37vNEA0gWuGO0qlkgInc7yltIUc9r8S7c
+         xKog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VhQSjUZmgcEW8XYx/F0uZNmJ222g1uNFRqG0lEK0f4k=;
+        b=jrwQ4p47ky5R3lVUTXc7oliHSAn3Xl8QwBUghfsH8cKHgfOAREsORbcXaQH8157FkO
+         6ZLfoFpIO5K9UHIfJzWCtKRiGLYA/n7WUKznPCWpAaH+dkSn2/2nOoqKapjvyBodtBBT
+         YbaJZ4ZAmemnWWvr+tcLQWvx19kaQt2e178PxB2n0XFwrdApqjhKqoKbvdMHLKU66LTS
+         7/Za/ivTt/p4Dy7Nskt3k83qR1WyEk1e7c0Cd93G1To5qBnUrcWZpuRsrFGyAx1prhV4
+         XPyJBdjzFjKDAWfoJNiRSOa6bm4Nbdwzg+fnW5aYPRdWpGMhMtLIkzt0JdnD6ex1iH3O
+         s8FA==
+X-Gm-Message-State: APjAAAVEdxJeoB3V9B+pLkJlPluOzQyUgk/4IIUnITg/5JRNOOeP2+oi
+        Ycut9qqTjzAcyNSORUmumYGK4SMBE+6/tD8rsqk=
+X-Google-Smtp-Source: APXvYqzhCQlNbnJ+1k7klU9fj1/nA1jkZp3jFI//dEQT9LK/W/F+VxpnvtrMXP4S9Q81xRNKX52jGaJpekRtRqFneks=
+X-Received: by 2002:a17:906:6a97:: with SMTP id p23mr26581568ejr.203.1558648409785;
+ Thu, 23 May 2019 14:53:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 23 May 2019 14:52:56 -0700
-From:   Angus Ainslie <angus@akkea.ca>
-Cc:     angus.ainslie@puri.sm, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-kernel-owner@vger.kernel.org
-In-Reply-To: <20190523191922.GA3803@xo-6d-61-c0.localdomain>
-References: <20190520142330.3556-1-angus@akkea.ca>
- <20190520142330.3556-3-angus@akkea.ca>
- <20190523191922.GA3803@xo-6d-61-c0.localdomain>
-Message-ID: <9626cd324eaaab2b49c37cf3c824aa5e@www.akkea.ca>
-X-Sender: angus@akkea.ca
-User-Agent: Roundcube Webmail/1.1.3
+References: <20190523210651.80902-1-fklassen@appneta.com> <20190523210651.80902-3-fklassen@appneta.com>
+In-Reply-To: <20190523210651.80902-3-fklassen@appneta.com>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Thu, 23 May 2019 17:52:53 -0400
+Message-ID: <CAF=yD-JBf6k7VLa6FQowuD5xDFbq5cB4ScTi7kb1hieQFDKnbg@mail.gmail.com>
+Subject: Re: [PATCH net 2/4] net/udpgso_bench_tx: options to exercise TX CMSG
+To:     Fred Klassen <fklassen@appneta.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        Willem de Bruijn <willemb@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel,
+On Thu, May 23, 2019 at 5:11 PM Fred Klassen <fklassen@appneta.com> wrote:
+>
+> This enhancement adds options that facilitate load testing with
+> additional TX CMSG options, and to optionally print results of
+> various send CMSG operations.
+>
+> These options are especially useful in isolating situations
+> where error-queue messages are lost when combined with other
+> CMSG operations (e.g. SO_ZEROCOPY).
+>
+> New options:
+>
+>     -T - add TX CMSG that requests TX software timestamps
+>     -H - similar to -T except request TX hardware timestamps
+>     -q - add IP_TOS/IPV6_TCLASS TX CMSG
 
+To ensure that we do not regress, when adding options, please consider
+(just a general suggestion, not a strong request for this patch set)
+updating the kselftest to run a variant of the test with the new code
+coverage. In this case, make the code pass/fail instead of only user
+interpretable and add variants to udpgso.sh.
 
-On 2019-05-23 12:19, Pavel Machek wrote:
-> Hi!
-> 
->> This is for the development kit board for the Librem 5. The current 
->> level
->> of support yields a working console and is able to boot userspace from
->> the network or eMMC.
->> 
->> Additional subsystems that are active :
-> 
->> - haptic motor
-> 
-> Haptic motor is not a LED. It should be controlled by input subsystem.
-> 
->> +	pwmleds {
->> +		compatible = "pwm-leds";
->> +
->> +		haptic {
->> +			label = "librem5::haptic";
->> +			pwms = <&pwm2 0 200000>;
->> +			active-low;
->> +			max-brightness = <255>;
->> +			power-supply = <&reg_3v3_p>;
->> +		};
->> +	};
-> 
-> You can take a look at N900, that has reasonable interface.
-> 
+>     -P - call poll() before reading error queue
+>     -v - print detailed results
+>
+> Fixes: 3a687bef148d ("selftests: udp gso benchmark")
+> Signed-off-by: Fred Klassen <fklassen@appneta.com>
 
-I wanted to control the haptic with the pwm-vibra driver but 
-"fsl,imx27-pwm" doesn't seem to respect the PWM_POLARITY_INVERTED flag 
-so when I start the system the vibrator is full on.
+> +static void flush_errqueue_recv(int fd)
+>  {
+>         struct msghdr msg = {0};        /* flush */
+> +       struct cmsghdr *cmsg;
+> +       struct iovec entry;
+> +       char control[1024];
 
-I could use gpio-vibrator but that seemed like a waste when the device 
-is connected to pwm.
+can use more precise CMSG_SPACE based on worst case expectations, like
+in udp_sendmmsg
 
-I figured the using the pwm-leds interface was a reasonable compromise 
-until I had an opportunity to make changes the the imx27-pwm driver.
+> +       char buf[1500];
 
-Thanks
-Angus
+no need for payload
 
+> +static void flush_errqueue(int fd)
+> +{
+> +       if (cfg_poll) {
+> +               struct pollfd fds = { 0 };
+> +               int ret;
+> +
+> +               fds.fd = fd;
+> +               fds.events = POLLERR;
 
-> Thanks,
-> 										Pavel
-
+no need to pass POLLERR, it is always returned in revents.
