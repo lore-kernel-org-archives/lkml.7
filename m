@@ -7,48 +7,70 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE3FC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:33:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB87C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:33:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0116320879
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:33:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCCA820881
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:33:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640007;
-	bh=bRt5aQ02+ZCB3U16y6YlI6tuHQ0IH4I6lTxjjEgaPq4=;
+	s=default; t=1558640019;
+	bh=f5Q21p3PgP0G8RPBuE9/d/I+5FsmteszRjED1pnXQbQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Br6YyjZWZ9q1IXjk+SocFA8RPY5MBGuCXxw8RFpxv86GV6rRVUUTElL0aTtU6wOtd
-	 +bgJ9cKQnlyLgkrFPS2LHfpFk83K95BtJhG1yI0jGEJ0kf2LIVFwgPIN4G5z6um2l2
-	 TpWeQkVWkoCpy8++YmlQ5FFioor4535J9OEdW5To=
+	b=vxOtpB7cbETr2C4e/470c6Uwe5zQtBbeemlwIjxU9qvWrklmI1Bgl7bmtxS3/HVIm
+	 7lAsbb2sJeDdxz65GgEXbOwQ98RP7aLYL1gohxgCLTERhrluLvMjh06H1ews8YdSp6
+	 Etqkg6UyLnGgZuzgAoDaTopgdJKxAV0GAcufRBxg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391685AbfEWTd0 (ORCPT
+        id S2403780AbfEWTdh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:33:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42068 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:33:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391408AbfEWT3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:29:06 -0400
+        id S2390656AbfEWT2z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:28:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E41C82184E;
-        Thu, 23 May 2019 19:29:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE2342133D;
+        Thu, 23 May 2019 19:28:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639745;
-        bh=bRt5aQ02+ZCB3U16y6YlI6tuHQ0IH4I6lTxjjEgaPq4=;
+        s=default; t=1558639734;
+        bh=f5Q21p3PgP0G8RPBuE9/d/I+5FsmteszRjED1pnXQbQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NoMxG6UC8womYl9YzkGgo1eo5vDKqw1lhjpHbI1pvMNYnbsP9AE47zKWANueRaUEf
-         iGBiFlIAjKCiVx7oKNduBoKbDOlDd3yVmAqkSIz2lBD0baV5MKOC2WfpeO20MXIjge
-         UVq5RW/8avBaTdbj/yor3dYXX8AU2dGf5yGOLkt4=
+        b=MuFn6HGQKk7+9MQIGf2aFwL9B9/EzJoFq9xQZC+4Fvu6hFHO1q5D9G97HUMyqFHdq
+         OZvSd32oAH5pvf/rJtIREMyBGGbZ4RLrGiQGxshGsq/JRiFg/8/IDLygqalXR3QDxJ
+         rjcWgqZ83jMZxIwxp2/Xmr02s94gMsYade94QisI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
-        Bernie Thompson <bernie@plugable.com>,
-        Ladislav Michl <ladis@linux-mips.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 5.1 063/122] udlfb: delete the unused parameter for dlfb_handle_damage
-Date:   Thu, 23 May 2019 21:06:25 +0200
-Message-Id: <20190523181713.064908535@linuxfoundation.org>
+        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 5.1 075/122] ftrace/x86_64: Emulate call function while updating in breakpoint handler
+Date:   Thu, 23 May 2019 21:06:37 +0200
+Message-Id: <20190523181714.674517884@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -61,102 +83,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-commit bd86b6c5c60711dbd4fa21bdb497a188ecb6cf63 upstream.
+commit 9e298e8604088a600d8100a111a532a9d342af09 upstream.
 
-Remove the unused parameter "data" and unused variable "ret".
+Nicolai Stange discovered[1] that if live kernel patching is enabled, and the
+function tracer started tracing the same function that was patched, the
+conversion of the fentry call site during the translation of going from
+calling the live kernel patch trampoline to the iterator trampoline, would
+have as slight window where it didn't call anything.
 
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Cc: Bernie Thompson <bernie@plugable.com>
-Cc: Ladislav Michl <ladis@linux-mips.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+As live kernel patching depends on ftrace to always call its code (to
+prevent the function being traced from being called, as it will redirect
+it). This small window would allow the old buggy function to be called, and
+this can cause undesirable results.
+
+Nicolai submitted new patches[2] but these were controversial. As this is
+similar to the static call emulation issues that came up a while ago[3].
+But after some debate[4][5] adding a gap in the stack when entering the
+breakpoint handler allows for pushing the return address onto the stack to
+easily emulate a call.
+
+[1] http://lkml.kernel.org/r/20180726104029.7736-1-nstange@suse.de
+[2] http://lkml.kernel.org/r/20190427100639.15074-1-nstange@suse.de
+[3] http://lkml.kernel.org/r/3cf04e113d71c9f8e4be95fb84a510f085aa4afa.1541711457.git.jpoimboe@redhat.com
+[4] http://lkml.kernel.org/r/CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com
+[5] http://lkml.kernel.org/r/CAHk-=wjvQxY4DvPrJ6haPgAa6b906h=MwZXO6G8OtiTGe=N7_w@mail.gmail.com
+
+[
+  Live kernel patching is not implemented on x86_32, thus the emulate
+  calls are only for x86_64.
+]
+
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Nicolai Stange <nstange@suse.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: the arch/x86 maintainers <x86@kernel.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Jiri Kosina <jikos@kernel.org>
+Cc: Miroslav Benes <mbenes@suse.cz>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Joe Lawrence <joe.lawrence@redhat.com>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Mimi Zohar <zohar@linux.ibm.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Nayna Jain <nayna@linux.ibm.com>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Joerg Roedel <jroedel@suse.de>
+Cc: "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
+Cc: stable@vger.kernel.org
+Fixes: b700e7f03df5 ("livepatch: kernel: add support for live patching")
+Tested-by: Nicolai Stange <nstange@suse.de>
+Reviewed-by: Nicolai Stange <nstange@suse.de>
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+[ Changed to only implement emulated calls for x86_64 ]
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/video/fbdev/udlfb.c |   21 +++++++++------------
- 1 file changed, 9 insertions(+), 12 deletions(-)
+ arch/x86/kernel/ftrace.c |   32 +++++++++++++++++++++++++++-----
+ 1 file changed, 27 insertions(+), 5 deletions(-)
 
---- a/drivers/video/fbdev/udlfb.c
-+++ b/drivers/video/fbdev/udlfb.c
-@@ -594,10 +594,9 @@ static int dlfb_render_hline(struct dlfb
- 	return 0;
+--- a/arch/x86/kernel/ftrace.c
++++ b/arch/x86/kernel/ftrace.c
+@@ -29,6 +29,7 @@
+ #include <asm/kprobes.h>
+ #include <asm/ftrace.h>
+ #include <asm/nops.h>
++#include <asm/text-patching.h>
+ 
+ #ifdef CONFIG_DYNAMIC_FTRACE
+ 
+@@ -231,6 +232,7 @@ int ftrace_modify_call(struct dyn_ftrace
  }
  
--static int dlfb_handle_damage(struct dlfb_data *dlfb, int x, int y,
--	       int width, int height, char *data)
-+static int dlfb_handle_damage(struct dlfb_data *dlfb, int x, int y, int width, int height)
+ static unsigned long ftrace_update_func;
++static unsigned long ftrace_update_func_call;
+ 
+ static int update_ftrace_func(unsigned long ip, void *new)
  {
--	int i, ret;
-+	int i;
- 	char *cmd;
- 	cycles_t start_cycles, end_cycles;
- 	int bytes_sent = 0;
-@@ -641,7 +640,7 @@ static int dlfb_handle_damage(struct dlf
- 			*cmd++ = 0xAF;
- 		/* Send partial buffer remaining before exiting */
- 		len = cmd - (char *) urb->transfer_buffer;
--		ret = dlfb_submit_urb(dlfb, urb, len);
-+		dlfb_submit_urb(dlfb, urb, len);
- 		bytes_sent += len;
- 	} else
- 		dlfb_urb_completion(urb);
-@@ -679,7 +678,7 @@ static ssize_t dlfb_ops_write(struct fb_
- 				(u32)info->var.yres);
+@@ -259,6 +261,8 @@ int ftrace_update_ftrace_func(ftrace_fun
+ 	unsigned char *new;
+ 	int ret;
  
- 		dlfb_handle_damage(dlfb, 0, start, info->var.xres,
--			lines, info->screen_base);
-+			lines);
- 	}
++	ftrace_update_func_call = (unsigned long)func;
++
+ 	new = ftrace_call_replace(ip, (unsigned long)func);
+ 	ret = update_ftrace_func(ip, new);
  
- 	return result;
-@@ -695,7 +694,7 @@ static void dlfb_ops_copyarea(struct fb_
- 	sys_copyarea(info, area);
+@@ -294,13 +298,28 @@ int ftrace_int3_handler(struct pt_regs *
+ 	if (WARN_ON_ONCE(!regs))
+ 		return 0;
  
- 	dlfb_handle_damage(dlfb, area->dx, area->dy,
--			area->width, area->height, info->screen_base);
-+			area->width, area->height);
+-	ip = regs->ip - 1;
+-	if (!ftrace_location(ip) && !is_ftrace_caller(ip))
+-		return 0;
++	ip = regs->ip - INT3_INSN_SIZE;
+ 
+-	regs->ip += MCOUNT_INSN_SIZE - 1;
++#ifdef CONFIG_X86_64
++	if (ftrace_location(ip)) {
++		int3_emulate_call(regs, (unsigned long)ftrace_regs_caller);
++		return 1;
++	} else if (is_ftrace_caller(ip)) {
++		if (!ftrace_update_func_call) {
++			int3_emulate_jmp(regs, ip + CALL_INSN_SIZE);
++			return 1;
++		}
++		int3_emulate_call(regs, ftrace_update_func_call);
++		return 1;
++	}
++#else
++	if (ftrace_location(ip) || is_ftrace_caller(ip)) {
++		int3_emulate_jmp(regs, ip + CALL_INSN_SIZE);
++		return 1;
++	}
++#endif
+ 
+-	return 1;
++	return 0;
  }
+ NOKPROBE_SYMBOL(ftrace_int3_handler);
  
- static void dlfb_ops_imageblit(struct fb_info *info,
-@@ -706,7 +705,7 @@ static void dlfb_ops_imageblit(struct fb
- 	sys_imageblit(info, image);
+@@ -859,6 +878,8 @@ void arch_ftrace_update_trampoline(struc
  
- 	dlfb_handle_damage(dlfb, image->dx, image->dy,
--			image->width, image->height, info->screen_base);
-+			image->width, image->height);
- }
+ 	func = ftrace_ops_get_func(ops);
  
- static void dlfb_ops_fillrect(struct fb_info *info,
-@@ -717,7 +716,7 @@ static void dlfb_ops_fillrect(struct fb_
- 	sys_fillrect(info, rect);
++	ftrace_update_func_call = (unsigned long)func;
++
+ 	/* Do a safe modify in case the trampoline is executing */
+ 	new = ftrace_call_replace(ip, (unsigned long)func);
+ 	ret = update_ftrace_func(ip, new);
+@@ -960,6 +981,7 @@ static int ftrace_mod_jmp(unsigned long
+ {
+ 	unsigned char *new;
  
- 	dlfb_handle_damage(dlfb, rect->dx, rect->dy, rect->width,
--			      rect->height, info->screen_base);
-+			      rect->height);
- }
++	ftrace_update_func_call = 0UL;
+ 	new = ftrace_jmp_replace(ip, (unsigned long)func);
  
- /*
-@@ -859,8 +858,7 @@ static int dlfb_ops_ioctl(struct fb_info
- 		if (area.y > info->var.yres)
- 			area.y = info->var.yres;
- 
--		dlfb_handle_damage(dlfb, area.x, area.y, area.w, area.h,
--			   info->screen_base);
-+		dlfb_handle_damage(dlfb, area.x, area.y, area.w, area.h);
- 	}
- 
- 	return 0;
-@@ -1065,8 +1063,7 @@ static int dlfb_ops_set_par(struct fb_in
- 			pix_framebuffer[i] = 0x37e6;
- 	}
- 
--	dlfb_handle_damage(dlfb, 0, 0, info->var.xres, info->var.yres,
--			   info->screen_base);
-+	dlfb_handle_damage(dlfb, 0, 0, info->var.xres, info->var.yres);
- 
- 	return 0;
- }
+ 	return update_ftrace_func(ip, new);
 
 
