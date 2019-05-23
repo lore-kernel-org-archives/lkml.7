@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E0DC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 621BAC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A0AC20863
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:14:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25DDD20863
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:14:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558638856;
-	bh=cmtK/sdqxsP3V+WBMc4cyAYKdWHqDGrsfVMsTV08nF8=;
+	s=default; t=1558638859;
+	bh=yAuVqjRgjW6xn6vI8RLO4YCZ8n4X7jLMhWHxvFEjw5I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K2o5JOd8WQVIEhbO7zO/1JH/35lQjMbPau1B4RQoOtXiYFE5i0OP6uNz8TwqbnGNG
-	 UHKFXCbN9l28s1bPRmu5ncrkl3djlWLR3PgortZnhV4nHhzk9yY508vVeSB4nhMKcr
-	 orcXvSZHPX5LWA0v2SttAVGI64jzX4mhUKyw39/Y=
+	b=nHXuZZiYJMxGHLg9+ylGng4roxgCFVQqdQzv5kkMZxNRhYCv1kbOABb01Aa0/N7EI
+	 nl9EfK+TlzlyKBufdI/7BLycgIks+OdLC9j8fX9H+FDcKVoSyiI01mjUc+Iiryk1ut
+	 2HOhD4tzG2AFDFUlCRglGd60CLxKl/HSYZUqafG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388714AbfEWTOO (ORCPT
+        id S2388215AbfEWTOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:14:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48166 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:14:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388698AbfEWTON (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:14:13 -0400
+        id S2388698AbfEWTOP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:14:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A57072184E;
-        Thu, 23 May 2019 19:14:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 493F421855;
+        Thu, 23 May 2019 19:14:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638852;
-        bh=cmtK/sdqxsP3V+WBMc4cyAYKdWHqDGrsfVMsTV08nF8=;
+        s=default; t=1558638854;
+        bh=yAuVqjRgjW6xn6vI8RLO4YCZ8n4X7jLMhWHxvFEjw5I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l6G91ikziQzPGcxEnhyVE2Q6w8Sd7yF+DP0uHE3L3Xnn8ZuPxutHez8ewII231dTU
-         bf2HWd9bKpqWaxe3DzyzGL80k1rDqFit/IeT0Y0UsidIT3eJL3cCQljW7NTIzXBn6E
-         UxdnjGCbSUD7/Rg5EPf1T/q+x30o9IYRmefDWA5w=
+        b=SwkIDl1NJg0lCqftX1gfTvaqt9wyf1UPpy2vyNOCTM7vxXeh1diqy/7Xglqc+YReh
+         ag/H0AoFo17zYfZnMBCMIFZ3LMb0PP533mCCb7kl5zthyj673YlWmnhr8DM5mFfBID
+         koeEIkWvQ0l8ps4RGea2NpObFfA3eQiHKjoZSfQM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.14 77/77] btrfs: Honour FITRIM range constraints during free space trim
-Date:   Thu, 23 May 2019 21:06:35 +0200
-Message-Id: <20190523181730.581872705@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+        Nigel Croxon <ncroxon@redhat.com>,
+        Song Liu <songliubraving@fb.com>
+Subject: [PATCH 4.14 73/77] md/raid: raid5 preserve the writeback action after the parity check
+Date:   Thu, 23 May 2019 21:06:31 +0200
+Message-Id: <20190523181730.064636896@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181719.982121681@linuxfoundation.org>
 References: <20190523181719.982121681@linuxfoundation.org>
@@ -59,91 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolay Borisov <nborisov@suse.com>
+From: Nigel Croxon <ncroxon@redhat.com>
 
-commit c2d1b3aae33605a61cbab445d8ae1c708ccd2698 upstream.
+commit b2176a1dfb518d870ee073445d27055fea64dfb8 upstream.
 
-Up until now trimming the freespace was done irrespective of what the
-arguments of the FITRIM ioctl were. For example fstrim's -o/-l arguments
-will be entirely ignored. Fix it by correctly handling those paramter.
-This requires breaking if the found freespace extent is after the end of
-the passed range as well as completing trim after trimming
-fstrim_range::len bytes.
+The problem is that any 'uptodate' vs 'disks' check is not precise
+in this path. Put a "WARN_ON(!test_bit(R5_UPTODATE, &dev->flags)" on the
+device that might try to kick off writes and then skip the action.
+Better to prevent the raid driver from taking unexpected action *and* keep
+the system alive vs killing the machine with BUG_ON.
 
-Fixes: 499f377f49f0 ("btrfs: iterate over unused chunk space in FITRIM")
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Note: fixed warning reported by kbuild test robot <lkp@intel.com>
+
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Nigel Croxon <ncroxon@redhat.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- fs/btrfs/extent-tree.c |   25 +++++++++++++++++++------
- 1 file changed, 19 insertions(+), 6 deletions(-)
+ drivers/md/raid5.c |   10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
---- a/fs/btrfs/extent-tree.c
-+++ b/fs/btrfs/extent-tree.c
-@@ -11058,9 +11058,9 @@ int btrfs_error_unpin_extent_range(struc
-  * transaction.
-  */
- static int btrfs_trim_free_extents(struct btrfs_device *device,
--				   u64 minlen, u64 *trimmed)
-+				   struct fstrim_range *range, u64 *trimmed)
- {
--	u64 start = 0, len = 0;
-+	u64 start = range->start, len = 0;
- 	int ret;
- 
- 	*trimmed = 0;
-@@ -11096,8 +11096,8 @@ static int btrfs_trim_free_extents(struc
- 			refcount_inc(&trans->use_count);
- 		spin_unlock(&fs_info->trans_lock);
- 
--		ret = find_free_dev_extent_start(trans, device, minlen, start,
--						 &start, &len);
-+		ret = find_free_dev_extent_start(trans, device, range->minlen,
-+						 start, &start, &len);
- 		if (trans)
- 			btrfs_put_transaction(trans);
- 
-@@ -11109,6 +11109,16 @@ static int btrfs_trim_free_extents(struc
- 			break;
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -4182,7 +4182,7 @@ static void handle_parity_checks6(struct
+ 		/* now write out any block on a failed drive,
+ 		 * or P or Q if they were recomputed
+ 		 */
+-		BUG_ON(s->uptodate < disks - 1); /* We don't need Q to recover */
++		dev = NULL;
+ 		if (s->failed == 2) {
+ 			dev = &sh->dev[s->failed_num[1]];
+ 			s->locked++;
+@@ -4207,6 +4207,14 @@ static void handle_parity_checks6(struct
+ 			set_bit(R5_LOCKED, &dev->flags);
+ 			set_bit(R5_Wantwrite, &dev->flags);
  		}
- 
-+		/* If we are out of the passed range break */
-+		if (start > range->start + range->len - 1) {
-+			mutex_unlock(&fs_info->chunk_mutex);
-+			ret = 0;
-+			break;
++		if (WARN_ONCE(dev && !test_bit(R5_UPTODATE, &dev->flags),
++			      "%s: disk%td not up to date\n",
++			      mdname(conf->mddev),
++			      dev - (struct r5dev *) &sh->dev)) {
++			clear_bit(R5_LOCKED, &dev->flags);
++			clear_bit(R5_Wantwrite, &dev->flags);
++			s->locked--;
 +		}
-+
-+		start = max(range->start, start);
-+		len = min(range->len, len);
-+
- 		ret = btrfs_issue_discard(device->bdev, start, len, &bytes);
- 		up_read(&fs_info->commit_root_sem);
- 		mutex_unlock(&fs_info->chunk_mutex);
-@@ -11119,6 +11129,10 @@ static int btrfs_trim_free_extents(struc
- 		start += len;
- 		*trimmed += bytes;
+ 		clear_bit(STRIPE_DEGRADED, &sh->state);
  
-+		/* We've trimmed enough */
-+		if (*trimmed >= range->len)
-+			break;
-+
- 		if (fatal_signal_pending(current)) {
- 			ret = -ERESTARTSYS;
- 			break;
-@@ -11202,8 +11216,7 @@ int btrfs_trim_fs(struct btrfs_fs_info *
- 	mutex_lock(&fs_info->fs_devices->device_list_mutex);
- 	devices = &fs_info->fs_devices->devices;
- 	list_for_each_entry(device, devices, dev_list) {
--		ret = btrfs_trim_free_extents(device, range->minlen,
--					      &group_trimmed);
-+		ret = btrfs_trim_free_extents(device, range, &group_trimmed);
- 		if (ret) {
- 			dev_failed++;
- 			dev_ret = ret;
+ 		set_bit(STRIPE_INSYNC, &sh->state);
 
 
