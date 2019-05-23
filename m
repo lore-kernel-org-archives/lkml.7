@@ -2,166 +2,122 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E39BC282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:55:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5241C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F047921738
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:55:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="En6Q2o1S"
+	by mail.kernel.org (Postfix) with ESMTP id A9E5D2177E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:56:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388604AbfEWXzQ (ORCPT
+        id S2388675AbfEWX4T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 19:55:16 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:46807 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388232AbfEWXzQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 19:55:16 -0400
-Received: by mail-lf1-f65.google.com with SMTP id l26so5650998lfh.13
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 16:55:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=xQh5W0I98+c3oB3ta6aEBLw922/4T4zsrZf/bWTXTzU=;
-        b=En6Q2o1SlX3M7Df2OjIoSIT3soWjKBCQy6sPnuSQE+O3wgvYsqwB4X8Q+dyzV1c1Os
-         hQ3hDMwcJ11Nxgi1u46gRXLS3CNrO57rKnfi6fe26xHKpb+46ZFXQGl1vnRKpJhcV4RM
-         Yq1GO/x+1erGD7xCvZgu/Sw09bbOPn3LrB/2IUDKO3wOv3PvXJUreex0VqicRBjnQHJq
-         cP6XZLiRepHxaS9vTHiQaj6NLxsMjmJvPSxihldmZqwb6S5mexNt34YJMhAyRz5leFqY
-         QVH76r4prK2EyCQJMHK0ttiGuZC9+vvpOar4qHvWhLyro1jBNnsExMQVV3V+bjOrU7tA
-         wBGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=xQh5W0I98+c3oB3ta6aEBLw922/4T4zsrZf/bWTXTzU=;
-        b=mwY8LDqlU+9OLjsHRj28R+ODBrLcRV9XkLpOTEbP2xYV6Sg7PL+JrW6XBrU/nfXPCV
-         kcUfIU6RSYthO0IMMrATF36md5/tcQJDVBKpErZnuoPugfhpqxomfppDwVrwVPPY5a3p
-         xk1Ts0/Bk2RCzPEqyEXDgrsaSDzsPOC1BnFAUFbgh5bYjlcJ/NujOtjv47A7LBTT5G9A
-         BP1Vx766aYj3EeS/8o1+Vif1SDkFjEhkSLK5leUDv2vrERR4Jof0eWsVCkeRqEWydS7Z
-         NYKJmEizKC14V0MBeNLMIjIUBu/ak8Y4BHa3bFLD8csXeseh1nVkYgqRNSL4xuXPzfP3
-         iuSA==
-X-Gm-Message-State: APjAAAWqduUk86yHqhLRGM956oioABY99x79HGfyTF6jAtzNHy+pig/y
-        DpSqmY4jQj5CIh0TddgvFXRBaGc8DcdM9c7IHcuUKQ==
-X-Google-Smtp-Source: APXvYqzyqqCKcK5t7puDNsK1zCocIX9J4p9I6yTdwocBXY4iGgsf4JaFzrnH5xYTIkXSMvFPo2rTIdBt4XKx+RgDGJU=
-X-Received: by 2002:ac2:4286:: with SMTP id m6mr7504444lfh.150.1558655714383;
- Thu, 23 May 2019 16:55:14 -0700 (PDT)
+        Thu, 23 May 2019 19:56:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54150 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388345AbfEWX4T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 19:56:19 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9478B21738;
+        Thu, 23 May 2019 23:56:17 +0000 (UTC)
+Date:   Thu, 23 May 2019 19:56:16 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH] tracing/kprobe: Do not run kprobe boot tests if
+ kprobe_event is on cmdline
+Message-ID: <20190523195616.2955bd3a@oasis.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <1558648540-14239-1-git-send-email-alan.mikhak@sifive.com>
-In-Reply-To: <1558648540-14239-1-git-send-email-alan.mikhak@sifive.com>
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-Date:   Thu, 23 May 2019 16:55:03 -0700
-Message-ID: <CABEDWGzHkt4p_byEihOAs9g97t450h9-Z0Qu2b2-O1pxCNPX+A@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: endpoint: Skip odd BAR when skipping 64bit BAR
-To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kishon@ti.com, lorenzo.pieralisi@arm.com,
-        linux-riscv@lists.infradead.org,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        gustavo.pimentel@synopsys.com, wen.yang99@zte.com.cn, kjlu@umn.edu
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Bjorn Helgaas, +Gustavo Pimentel, +Wen Yang, +Kangjie Lu
 
-On Thu, May 23, 2019 at 2:55 PM Alan Mikhak <alan.mikhak@sifive.com> wrote:
->
-> Always skip odd bar when skipping 64bit BARs in pci_epf_test_set_bar()
-> and pci_epf_test_alloc_space().
->
-> Otherwise, pci_epf_test_set_bar() will call pci_epc_set_bar() on odd loop
-> index when skipping reserved 64bit BAR. Moreover, pci_epf_test_alloc_space()
-> will call pci_epf_alloc_space() on bind for odd loop index when BAR is 64bit
-> but leaks on subsequent unbind by not calling pci_epf_free_space().
->
-> Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
-> Reviewed-by: Paul Walmsley <paul.walmsley@sifive.com>
-> ---
->  drivers/pci/endpoint/functions/pci-epf-test.c | 25 ++++++++++++-------------
->  1 file changed, 12 insertions(+), 13 deletions(-)
->
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index 27806987e93b..96156a537922 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -389,7 +389,7 @@ static void pci_epf_test_unbind(struct pci_epf *epf)
->
->  static int pci_epf_test_set_bar(struct pci_epf *epf)
->  {
-> -       int bar;
-> +       int bar, add;
->         int ret;
->         struct pci_epf_bar *epf_bar;
->         struct pci_epc *epc = epf->epc;
-> @@ -400,8 +400,14 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
->
->         epc_features = epf_test->epc_features;
->
-> -       for (bar = BAR_0; bar <= BAR_5; bar++) {
-> +       for (bar = BAR_0; bar <= BAR_5; bar += add) {
->                 epf_bar = &epf->bar[bar];
-> +               /*
-> +                * pci_epc_set_bar() sets PCI_BASE_ADDRESS_MEM_TYPE_64
-> +                * if the specific implementation required a 64-bit BAR,
-> +                * even if we only requested a 32-bit BAR.
-> +                */
-> +               add = (epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64) ? 2 : 1;
->
->                 if (!!(epc_features->reserved_bar & (1 << bar)))
->                         continue;
-> @@ -413,13 +419,6 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
->                         if (bar == test_reg_bar)
->                                 return ret;
->                 }
-> -               /*
-> -                * pci_epc_set_bar() sets PCI_BASE_ADDRESS_MEM_TYPE_64
-> -                * if the specific implementation required a 64-bit BAR,
-> -                * even if we only requested a 32-bit BAR.
-> -                */
-> -               if (epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64)
-> -                       bar++;
->         }
->
->         return 0;
-> @@ -431,7 +430,7 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
->         struct device *dev = &epf->dev;
->         struct pci_epf_bar *epf_bar;
->         void *base;
-> -       int bar;
-> +       int bar, add;
->         enum pci_barno test_reg_bar = epf_test->test_reg_bar;
->         const struct pci_epc_features *epc_features;
->
-> @@ -445,8 +444,10 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
->         }
->         epf_test->reg[test_reg_bar] = base;
->
-> -       for (bar = BAR_0; bar <= BAR_5; bar++) {
-> +       for (bar = BAR_0; bar <= BAR_5; bar += add) {
->                 epf_bar = &epf->bar[bar];
-> +               add = (epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64) ? 2 : 1;
-> +
->                 if (bar == test_reg_bar)
->                         continue;
->
-> @@ -459,8 +460,6 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
->                         dev_err(dev, "Failed to allocate space for BAR%d\n",
->                                 bar);
->                 epf_test->reg[bar] = base;
-> -               if (epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64)
-> -                       bar++;
->         }
->
->         return 0;
-> --
-> 2.7.4
->
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+
+When having kprobe trace event start up tests enabled and adding a
+kprobe_event on the kernel command line, it produced the following:
+
+ trace_kprobe: Testing kprobe tracing:
+ WARNING: CPU: 5 PID: 1 at kernel/trace/trace_kprobe.c:1724 kprobe_trace_self_tests_init+0x32d/0x36b
+ Modules linked in:
+ CPU: 5 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc1-test+ #249
+ Hardware name: Hewlett-Packard HP Compaq Pro 6300 SFF/339A, BIOS K01 v03.03 07/14/2016
+ RIP: 0010:kprobe_trace_self_tests_init+0x32d/0x36b
+ Code: b7 e8 4f 8d a2 fe 85 c0 74 10 0f 0b 48 c7 c7 c8 1b 0d b7 ff c3 e8 19 af 99 fe 48 c7 c7 40 93 27 b7 e8 7f 1a a5 fe 85 c0 74 10 <0f> 0b 48 c7 c7 f8 1b 0d b7 ff c3 e8 f9 ae
+9 a0 fe 85
+ RSP: 0018:ffffb36e40653e08 EFLAGS: 00010286
+ RAX: 00000000fffffff0 RBX: 0000000000000000 RCX: ffffb36e40653d5c
+ RDX: 0000000000000000 RSI: ffffffffb72776e0 RDI: 0000000000000246
+ RBP: ffff98414fe58ff8 R08: 0000000000000000 R09: 0000000000000000
+ R10: 0000000000000000 R11: ffff98415d8aa940 R12: 0000000000000000
+ R13: ffffffffb737c1b0 R14: 0000000000000000 R15: 0000000000000000
+ FS:  0000000000000000(0000) GS:ffff98415ea80000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 00007f959ce741b8 CR3: 000000011a210002 CR4: 00000000001606e0
+ Call Trace:
+  ? init_kprobe_trace+0x19e/0x19e
+  ? do_early_param+0x8e/0x8e
+  do_one_initcall+0x6f/0x2b4
+  ? do_early_param+0x8e/0x8e
+  kernel_init_freeable+0x21d/0x2c6
+  ? rest_init+0x146/0x146
+  kernel_init+0xa/0x10a
+  ret_from_fork+0x3a/0x50
+ ---[ end trace 488430c083a4c956 ]---
+
+As with the trace events, if a trace event is set on the kernel command
+line, the trace events start up tests are suspended. The kprobe start up
+tests should do the same when a kprobe is enabled on the kernel command
+line.
+
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_kprobe.c | 8 ++++++++
+ 2 files changed, 9 insertions(+)
+
+diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+index 004fffd24ec1..7958da2fd922 100644
+--- a/kernel/trace/trace_kprobe.c
++++ b/kernel/trace/trace_kprobe.c
+@@ -25,6 +25,7 @@
+ 
+ /* Kprobe early definition from command line */
+ static char kprobe_boot_events_buf[COMMAND_LINE_SIZE] __initdata;
++static bool kprobe_boot_events_enabled __initdata;
+ 
+ static int __init set_kprobe_boot_events(char *str)
+ {
+@@ -1538,6 +1539,8 @@ static __init void setup_boot_kprobe_events(void)
+ 		ret = trace_run_command(cmd, create_or_delete_trace_kprobe);
+ 		if (ret)
+ 			pr_warn("Failed to add event(%d): %s\n", ret, cmd);
++		else
++			kprobe_boot_events_enabled = true;
+ 
+ 		cmd = p;
+ 	}
+@@ -1611,6 +1614,11 @@ static __init int kprobe_trace_self_tests_init(void)
+ 	if (tracing_is_disabled())
+ 		return -ENODEV;
+ 
++	if (kprobe_boot_events_enabled) {
++		pr_info("Skipping kprobe tests due to kprobe_event on cmdline\n");
++		return 0;
++	}
++
+ 	target = kprobe_trace_selftest_target;
+ 
+ 	pr_info("Testing kprobe tracing: ");
+-- 
+2.20.1
+
