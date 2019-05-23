@@ -2,171 +2,133 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DEC0C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CFA8C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B66321019
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B6D721019
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:25:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uZJ1ml/S"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hS4Slwo3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730575AbfEWKZV (ORCPT
+        id S1730598AbfEWKZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 06:25:21 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:44829 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727434AbfEWKZV (ORCPT
+        Thu, 23 May 2019 06:25:27 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36753 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727434AbfEWKZ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 06:25:21 -0400
-Received: by mail-yw1-f66.google.com with SMTP id e74so2055017ywe.11;
-        Thu, 23 May 2019 03:25:20 -0700 (PDT)
+        Thu, 23 May 2019 06:25:27 -0400
+Received: by mail-wm1-f67.google.com with SMTP id j187so5194475wmj.1
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 03:25:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+NNHjqxy4cA1iR7igWdvYkQtAM2DdUoWQ0xcNKGlcUE=;
-        b=uZJ1ml/SqGhO6uZamvp643xn91paeHnqdxomJBvL9LrsYcy8HSgeAjB/fF6RfDeAKw
-         suZdXa7S2gd3yDtpE57xSS+ijPDHrJ5fiyz2PTg6IJI5MaViKze6osc2qKSDcTnFvFSJ
-         4/c62F8cPWHSY+JakXytNEFIvinZTDg75pTKNjZM+AMRdEPLl/03j44a1i8UV1CUU8xU
-         7nSEOqP3oWadaUwlRLXAjl2TTf1v6GaHm1KdFPEsRZ2Teo6f2Z2oV2uK1QM+TRgqTKO6
-         O1KkRhDgbnp1oQzd1h8J/L1F9bSk5O8iOo1b9AkYBGUexnd42PUu87SD8cGvbdeIs7qT
-         I1+Q==
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jhXKgTFg9TGyapt/Wg0K0EHXXYsIVuNn8IRint8KwaY=;
+        b=hS4Slwo3RwY1NewVpLWNl2+kR4blGJ/6yaEYtj7DsYTFV147VMXN4gUbn3wgwf5Wxx
+         rvn5sSr0yAN3RWEOyb7cGkMlcsGyvJtvcOB2LvmU8egwtW8DsswH3UivToQL+mEZ74KW
+         h+7Omca6Qfc8iGh/gi2UIizPRlgBtn20xP9sk3CgwzB6KDL/mnlgj9R/T5d0MAPLjG34
+         o/EPZ/9izbLqwIVYLKuA8Ie8YUbi3Y8izlvmcTftUCeRI9bQ5cLaWZWSTL9pXhi2F0lW
+         iBN+DR1qawy45dymIxfjZxaGMIjdsYZqVQtIl/Jl1OjXADQwjFU5UXvm+vMgbocHA+i9
+         3dQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+NNHjqxy4cA1iR7igWdvYkQtAM2DdUoWQ0xcNKGlcUE=;
-        b=AcGtL7x2ObQo3yF21KZ+clORQUY0BPExei6NvKBeFWUFexAzlDcLnmboKAzxSU4+GZ
-         dI/wMjYkIS6rkVf5ZmnP92NQ6y0WZBF7WjrQUtFGxkag2SAm8dOq1CGa/s95J/sO7H6v
-         84vNIqpJdylOd/8byspGZHqsP0sTxPkiQBhmMgySZpJP4+nLYQs4kG9gUQQGIfPdW0cf
-         YBgx28Sb5OXYNIeyAjiMaWggwhk2KA2yST9j8LX79LBvYkIRsmJa706MBgzN0UT6HS6A
-         igy0uVgngJ1xBXB999FvEKFKSktU9ukjUejiffzTg88U4WXFCeNrDY2tpKEwEsXCKgOH
-         A9sg==
-X-Gm-Message-State: APjAAAWirfEIa7n0nt2sfPST1e/CwKpsHX4RGNMGVaGMPMU0/79Hqe3m
-        +dfEik3tsIUeSm9AIvHHvTmbZmlX1c563TAKd8U=
-X-Google-Smtp-Source: APXvYqw7w14u3jrVFRwPHVUPg848bC02eoNql2Zpmdzv1MBhrwImOVrrYWjfI+Bfq7H2/0t3f+tF/JPZHbDa8SJnPy8=
-X-Received: by 2002:a81:4f06:: with SMTP id d6mr30466460ywb.379.1558607120083;
- Thu, 23 May 2019 03:25:20 -0700 (PDT)
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=jhXKgTFg9TGyapt/Wg0K0EHXXYsIVuNn8IRint8KwaY=;
+        b=LsxpWoH7DqzIOTgJM9ghpzPDnKYwO7r3v7Bxt2pfEEhzj21ZsKCI1M2crUgRRHcgIW
+         d3f8Mzsiw/B0XOkDq8VGcoyIC/qZwSyT9Cj8J1sisHO7l2stzJGQr4RWtmT8LIV0v1l4
+         HDHJtpS5YkLBC8FFHfrwPhOygnM4/9sOlfVhs2FaSgTrxw2uXLG557Jy3QXl4BVcFOXx
+         Y9AvUS8wsrFRJ6o4JvYXiNiS3Oxnb1eJHLYoZeVOQWKtwiYwqta8VzpMYn3SxtCAEAn8
+         z6nuxKc+W2MQNbSaubHOkBK/gTJaq4NaUDfCcvT2JR7hy7HxIZ0FkzfBvGbY4eEpDG1F
+         WtMA==
+X-Gm-Message-State: APjAAAWST8YkGATJj8Nn9hGNP9zi0vEFHm70omdRZXt1L81O/qvV4MFQ
+        eLxwRGsxGMdgDSDOVJC0r88=
+X-Google-Smtp-Source: APXvYqy6AZ8N3abqshqgIWcdkAkzE2sYArWIM4dCqSpWjtdBCh4+BA62g62qbgTWHlJU1efLcQhTWg==
+X-Received: by 2002:a05:600c:230a:: with SMTP id 10mr10567550wmo.13.1558607124467;
+        Thu, 23 May 2019 03:25:24 -0700 (PDT)
+Received: from macbookpro.malat.net (bru31-1-78-225-224-134.fbx.proxad.net. [78.225.224.134])
+        by smtp.gmail.com with ESMTPSA id s11sm51472858wrb.71.2019.05.23.03.25.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 May 2019 03:25:23 -0700 (PDT)
+Received: by macbookpro.malat.net (Postfix, from userid 1000)
+        id AC4D21146DCB; Thu, 23 May 2019 12:25:22 +0200 (CEST)
+From:   Mathieu Malaterre <malat@debian.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Mathieu Malaterre <malat@debian.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] =?UTF-8?q?powerpc:=20Remove=20variable=20=E2=80=98path?= =?UTF-8?q?=E2=80=99=20since=20not=20used?=
+Date:   Thu, 23 May 2019 12:25:20 +0200
+Message-Id: <20190523102520.20585-1-malat@debian.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190522163150.16849-1-christian@brauner.io> <CAOQ4uxjV=7=FXuyccBK9Pu1B7o-w-pbc1FQXJxY4q6z8E93KOg@mail.gmail.com>
- <EB97EF04-D44F-4320-ACDC-C536EED03BA4@brauner.io> <CAOQ4uxhodqVw0DVfcvXYH5vBf4LKcv7t388ZwXeZPBTcEMzGSw@mail.gmail.com>
- <20190523095506.nyei5nogvv63lm4a@brauner.io>
-In-Reply-To: <20190523095506.nyei5nogvv63lm4a@brauner.io>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Thu, 23 May 2019 13:25:08 +0300
-Message-ID: <CAOQ4uxiBeAzsE+b=tE7+9=25-qS7ohuTdEswYOt8DrCp6eAMuw@mail.gmail.com>
-Subject: Re: [PATCH] fanotify: remove redundant capable(CAP_SYS_ADMIN)s
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Jan Kara <jack@suse.cz>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Matthew Bobrowski <mbobrowski@mbobrowski.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 12:55 PM Christian Brauner <christian@brauner.io> wrote:
->
-> On Wed, May 22, 2019 at 11:00:22PM +0300, Amir Goldstein wrote:
-> > On Wed, May 22, 2019 at 9:57 PM Christian Brauner <christian@brauner.io> wrote:
-> > >
-> > > On May 22, 2019 8:29:37 PM GMT+02:00, Amir Goldstein <amir73il@gmail.com> wrote:
-> > > >On Wed, May 22, 2019 at 7:32 PM Christian Brauner
-> > > ><christian@brauner.io> wrote:
-> > > >>
-> > > >> This removes two redundant capable(CAP_SYS_ADMIN) checks from
-> > > >> fanotify_init().
-> > > >> fanotify_init() guards the whole syscall with capable(CAP_SYS_ADMIN)
-> > > >at the
-> > > >> beginning. So the other two capable(CAP_SYS_ADMIN) checks are not
-> > > >needed.
-> > > >
-> > > >It's intentional:
-> > > >
-> > > >commit e7099d8a5a34d2876908a9fab4952dabdcfc5909
-> > > >Author: Eric Paris <eparis@redhat.com>
-> > > >Date:   Thu Oct 28 17:21:57 2010 -0400
-> > > >
-> > > >    fanotify: limit the number of marks in a single fanotify group
-> > > >
-> > > >There is currently no limit on the number of marks a given fanotify
-> > > >group
-> > > >can have.  Since fanotify is gated on CAP_SYS_ADMIN this was not seen
-> > > >as
-> > > >a serious DoS threat.  This patch implements a default of 8192, the
-> > > >same as
-> > > >inotify to work towards removing the CAP_SYS_ADMIN gating and
-> > > >eliminating
-> > > >    the default DoS'able status.
-> > > >
-> > > >    Signed-off-by: Eric Paris <eparis@redhat.com>
-> > > >
-> > > >There idea is to eventually remove the gated CAP_SYS_ADMIN.
-> > > >There is no reason that fanotify could not be used by unprivileged
-> > > >users
-> > > >to setup inotify style watch on an inode or directories children, see:
-> > > >https://patchwork.kernel.org/patch/10668299/
-> > > >
-> > > >>
-> > > >> Fixes: 5dd03f55fd2 ("fanotify: allow userspace to override max queue
-> > > >depth")
-> > > >> Fixes: ac7e22dcfaf ("fanotify: allow userspace to override max
-> > > >marks")
-> > > >
-> > > >Fixes is used to tag bug fixes for stable.
-> > > >There is no bug.
-> > > >
-> > > >Thanks,
-> > > >Amir.
-> > >
-> > > Interesting. When do you think the gate can be removed?
-> >
-> > Nobody is working on this AFAIK.
-> > What I posted was a simple POC, but I have no use case for this.
-> > In the patchwork link above, Jan has listed the prerequisites for
-> > removing the gate.
-> >
-> > One of the prerequisites is FAN_REPORT_FID, which is now merged.
-> > When events gets reported with fid instead of fd, unprivileged user
-> > (hopefully) cannot use fid for privilege escalation.
-> >
-> > > I was looking into switching from inotify to fanotify but since it's not usable from
-> > > non-initial userns it's a no-no
-> > > since we support nested workloads.
-> >
-> > One of Jan's questions was what is the benefit of using inotify-compatible
-> > fanotify vs. using inotify.
-> > So what was the reason you were looking into switching from inotify to fanotify?
-> > Is it because of mount/filesystem watch? Because making those available for
->
-> Yeah. Well, I would need to look but you could probably do it safely for
-> filesystems mountable in user namespaces (which are few).
-> Can you do a bind-mount and then place a watch on the bind-mount or is
-> this superblock based?
->
+In commit eab00a208eb6 ("powerpc: Move `path` variable inside
+DEBUG_PROM") DEBUG_PROM sentinels were added to silence a warning
+(treated as error with W=1):
 
-Either.
-FAN_MARK_MOUNT was there from day 1 of fanotify.
-FAN_MARK_FILESYSTEM was merged to Linux Linux 4.20.
+  arch/powerpc/kernel/prom_init.c:1388:8: error: variable ‘path’ set but not used [-Werror=unused-but-set-variable]
 
-But directory modification events that are supported since v5.1 are
-not available
-with FAN_MARK_MOUNT, see:
-https://github.com/amir73il/man-pages/blob/fanotify_fid/man2/fanotify_init.2#L97
+Rework the original patch and simplify the code, by removing the
+variable ‘path’ completely. Fix line over 90 characters.
 
-Matthew,
+Suggested-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Mathieu Malaterre <malat@debian.org>
+---
+ arch/powerpc/kernel/prom_init.c | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
-Perhaps this fact is worth a mention in the linked entry for FAN_REPORT_FID
-in fanotify_init.2 in addition to the comment on the entry for FAN_MARK_MOUNT
-in fanotify_mark.2.
+diff --git a/arch/powerpc/kernel/prom_init.c b/arch/powerpc/kernel/prom_init.c
+index 7edb23861162..f6df4ddebb82 100644
+--- a/arch/powerpc/kernel/prom_init.c
++++ b/arch/powerpc/kernel/prom_init.c
+@@ -1566,9 +1566,6 @@ static void __init reserve_mem(u64 base, u64 size)
+ static void __init prom_init_mem(void)
+ {
+ 	phandle node;
+-#ifdef DEBUG_PROM
+-	char *path;
+-#endif
+ 	char type[64];
+ 	unsigned int plen;
+ 	cell_t *p, *endp;
+@@ -1590,9 +1587,6 @@ static void __init prom_init_mem(void)
+ 	prom_debug("root_size_cells: %x\n", rsc);
+ 
+ 	prom_debug("scanning memory:\n");
+-#ifdef DEBUG_PROM
+-	path = prom_scratch;
+-#endif
+ 
+ 	for (node = 0; prom_next_node(&node); ) {
+ 		type[0] = 0;
+@@ -1617,9 +1611,10 @@ static void __init prom_init_mem(void)
+ 		endp = p + (plen / sizeof(cell_t));
+ 
+ #ifdef DEBUG_PROM
+-		memset(path, 0, sizeof(prom_scratch));
+-		call_prom("package-to-path", 3, 1, node, path, sizeof(prom_scratch) - 1);
+-		prom_debug("  node %s :\n", path);
++		memset(prom_scratch, 0, sizeof(prom_scratch));
++		call_prom("package-to-path", 3, 1, node, prom_scratch,
++			  sizeof(prom_scratch) - 1);
++		prom_debug("  node %s :\n", prom_scratch);
+ #endif /* DEBUG_PROM */
+ 
+ 		while ((endp - p) >= (rac + rsc)) {
+-- 
+2.20.1
 
-Thanks,
-Amir.
