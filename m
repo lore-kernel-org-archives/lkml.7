@@ -2,319 +2,132 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D77C04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 960F6C04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51ECE2168B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:26:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58CD52168B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:27:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OjW5O6Si"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="dDhplhtn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729864AbfEWH04 (ORCPT
+        id S1729910AbfEWH07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 03:26:56 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:36422 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbfEWH0y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 03:26:54 -0400
-Received: by mail-pl1-f194.google.com with SMTP id d21so2356407plr.3;
-        Thu, 23 May 2019 00:26:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=cNcV6I85o9LrI3r/Syor12nb46xMIaIZWeU7Fq+C8Y0=;
-        b=OjW5O6Si6LlPoOnELDryN/BY6YjXJsYVEFR/3bVZotqvB1BI8fRpgvxYSBLUXQPO+m
-         EQ/yo0a3HM32Ymq7G4RJAERVDWCUAG3/WLtzC0dYgzB+6mdu9moVnEEDdgPsh6Wh5vrG
-         7p0BA28Vm9C9Uk0ZSYvpdleNkkkM7Rj3pRLbNd/ujP4aA4SzG8sykZOGfQEqz7xP2yba
-         sws8HcbzFJUxi2inOE2JUG7mpsv5749lC76KqlwEgjYf26F5nPifaxfJnNK+9/q8QQjU
-         T4S09R0lNnmg2mptx2WDKrPGXuiwG+GicSUyoh1vO29UIuj7KADPC5vmJJvKAX6lidwe
-         XNjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=cNcV6I85o9LrI3r/Syor12nb46xMIaIZWeU7Fq+C8Y0=;
-        b=V1Z3envHdnwXKzJBfEWr6XsQLc5mJamucXvOo8F2kmZ96jMSa+F4SwLZCSQZSM4bSi
-         8D6pAf8eg+21qMxzKcSnTLwEbOFlaeu6PDjl2rZo51ULx9j5aZiwB/MmpROn1re3MjGT
-         m+k9xkjtBX699p6/B8ir2EMBnG9h0/BQk7lOzcu4C9y7OsDCu8kFK0r93fvtwFLY3re/
-         Ow4pLwE8Ay/QgivEIqa8db6l+F6obUAerqyWypuEHX4mNgAm4IydbtT1nL4TDBiSU7tD
-         EcQ4gxnDpzM10x0eqOSB+RFzxRIwtwWo5oZ1Nc2nM6wc/01CH5kSYbp6IUgmWkIOihGZ
-         aQQw==
-X-Gm-Message-State: APjAAAUK4n1VkiSiINF6DdgRiZNM79zlKbDA1XpvOi/LRRZDB0GykmoP
-        EtgX4kfgjXsJnJcs/wINU1E=
-X-Google-Smtp-Source: APXvYqwvpDKnseLFR8ksWi/aDIjkUW2oxxtvQ73AKZLWnJ5tnztDthJXW5SwGdaCHSsC2d2Vft8zUQ==
-X-Received: by 2002:a17:902:6bc8:: with SMTP id m8mr94175971plt.227.1558596411932;
-        Thu, 23 May 2019 00:26:51 -0700 (PDT)
-Received: from sandstorm.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id i7sm25052054pfo.19.2019.05.23.00.26.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 00:26:51 -0700 (PDT)
-From:   john.hubbard@gmail.com
-X-Google-Original-From: jhubbard@nvidia.com
-To:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
-        LKML <linux-kernel@vger.kernel.org>, linux-rdma@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Christian Benvenuti <benve@cisco.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ira Weiny <ira.weiny@intel.com>
-Subject: [PATCH 1/1] infiniband/mm: convert put_page() to put_user_page*()
-Date:   Thu, 23 May 2019 00:25:37 -0700
-Message-Id: <20190523072537.31940-2-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190523072537.31940-1-jhubbard@nvidia.com>
-References: <20190523072537.31940-1-jhubbard@nvidia.com>
+        Thu, 23 May 2019 03:26:59 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:47349 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729781AbfEWH05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 03:26:57 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 458gzy1zmFz9v23W;
+        Thu, 23 May 2019 09:26:54 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=dDhplhtn; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id r_mYKpjo8VNy; Thu, 23 May 2019 09:26:54 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 458gzy033Rz9v23V;
+        Thu, 23 May 2019 09:26:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1558596414; bh=y0ndvATBuFeBuD1aCpeFBhYVI+2u7k6MGm7Va98zHq8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=dDhplhtnXkzFY/ATEefKFa2nsAnGJkFilJI74ov27kmHlMUaYVqU2Yxn1PJggw1Vj
+         FkFqdInH5+TEbZ+tQDPPc0vCpF9mximrMFysWuEUbDnaXQ7f06B4xd7JakVWPonEGa
+         wdcYmuMjpWQyeXrTcfQbk+m6N0tQz5rFZ/nS/qV4=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 032218B77D;
+        Thu, 23 May 2019 09:26:55 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id mYH4J9Ejz9ZD; Thu, 23 May 2019 09:26:54 +0200 (CEST)
+Received: from PO15451 (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0E6578B75A;
+        Thu, 23 May 2019 09:26:54 +0200 (CEST)
+Subject: Re: [PATCH] powerpc/powernv: fix variable "c" set but not used
+To:     Qian Cai <cai@lca.pw>, benh@kernel.crashing.org, paulus@samba.org,
+        mpe@ellerman.id.au
+Cc:     aik@ozlabs.ru, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+References: <20190523023141.2973-1-cai@lca.pw>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <d0512822-ca22-75ec-3dd9-1024001632f5@c-s.fr>
+Date:   Thu, 23 May 2019 09:26:53 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-NVConfidentiality: public
+In-Reply-To: <20190523023141.2973-1-cai@lca.pw>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Hubbard <jhubbard@nvidia.com>
 
-For infiniband code that retains pages via get_user_pages*(),
-release those pages via the new put_user_page(), or
-put_user_pages*(), instead of put_page()
 
-This is a tiny part of the second step of fixing the problem described
-in [1]. The steps are:
+Le 23/05/2019 à 04:31, Qian Cai a écrit :
+> The commit 58629c0dc349 ("powerpc/powernv/npu: Fault user page into the
+> hypervisor's pagetable") introduced a variable "c" to be used in
+> __get_user() and __get_user_nocheck() which need to stay as macros for
+> performance reasons, and "c" is not actually used in
+> pnv_npu2_handle_fault(),
+> 
+> arch/powerpc/platforms/powernv/npu-dma.c: In function 'pnv_npu2_handle_fault':
+> arch/powerpc/platforms/powernv/npu-dma.c:1122:7: warning: variable 'c'
+> set but not used [-Wunused-but-set-variable]
+> 
+> Fixed it by appending the __maybe_unused attribute, so compilers would
+> ignore it.
 
-1) Provide put_user_page*() routines, intended to be used
-   for releasing pages that were pinned via get_user_pages*().
+You are not fixing the problem, you are just hiding it.
 
-2) Convert all of the call sites for get_user_pages*(), to
-   invoke put_user_page*(), instead of put_page(). This involves dozens of
-   call sites, and will take some time.
+If the result of __get_user() is unneeded, it means __get_user() is not 
+the good function to use.
 
-3) After (2) is complete, use get_user_pages*() and put_user_page*() to
-   implement tracking of these pages. This tracking will be separate from
-   the existing struct page refcounting.
+Should use fault_in_pages_readable() instead.
 
-4) Use the tracking and identification of these pages, to implement
-   special handling (especially in writeback paths) when the pages are
-   backed by a filesystem. Again, [1] provides details as to why that is
-   desirable.
+A similar warning was fixed in commit 9f9eae5ce717 ("powerpc/kvm: Prefer 
+fault_in_pages_readable function")
 
-[1] https://lwn.net/Articles/753027/ : "The Trouble with get_user_pages()"
+See 
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/arch/powerpc?id=9f9eae5ce
 
-Cc: Doug Ledford <dledford@redhat.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Cc: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Cc: Christian Benvenuti <benve@cisco.com>
+> 
+> Signed-off-by: Qian Cai <cai@lca.pw>
 
-Reviewed-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Acked-by: Jason Gunthorpe <jgg@mellanox.com>
-Tested-by: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
- drivers/infiniband/core/umem.c              |  7 ++++---
- drivers/infiniband/core/umem_odp.c          | 10 +++++-----
- drivers/infiniband/hw/hfi1/user_pages.c     | 11 ++++-------
- drivers/infiniband/hw/mthca/mthca_memfree.c |  6 +++---
- drivers/infiniband/hw/qib/qib_user_pages.c  | 11 ++++-------
- drivers/infiniband/hw/qib/qib_user_sdma.c   |  6 +++---
- drivers/infiniband/hw/usnic/usnic_uiom.c    |  7 ++++---
- 7 files changed, 27 insertions(+), 31 deletions(-)
+You should add a Fixes: tag
 
-diff --git a/drivers/infiniband/core/umem.c b/drivers/infiniband/core/umem.c
-index e7ea819fcb11..673f0d240b3e 100644
---- a/drivers/infiniband/core/umem.c
-+++ b/drivers/infiniband/core/umem.c
-@@ -54,9 +54,10 @@ static void __ib_umem_release(struct ib_device *dev, struct ib_umem *umem, int d
- 
- 	for_each_sg_page(umem->sg_head.sgl, &sg_iter, umem->sg_nents, 0) {
- 		page = sg_page_iter_page(&sg_iter);
--		if (!PageDirty(page) && umem->writable && dirty)
--			set_page_dirty_lock(page);
--		put_page(page);
-+		if (umem->writable && dirty)
-+			put_user_pages_dirty_lock(&page, 1);
-+		else
-+			put_user_page(page);
- 	}
- 
- 	sg_free_table(&umem->sg_head);
-diff --git a/drivers/infiniband/core/umem_odp.c b/drivers/infiniband/core/umem_odp.c
-index f962b5bbfa40..17e46df3990a 100644
---- a/drivers/infiniband/core/umem_odp.c
-+++ b/drivers/infiniband/core/umem_odp.c
-@@ -487,7 +487,7 @@ void ib_umem_odp_release(struct ib_umem_odp *umem_odp)
-  * The function returns -EFAULT if the DMA mapping operation fails. It returns
-  * -EAGAIN if a concurrent invalidation prevents us from updating the page.
-  *
-- * The page is released via put_page even if the operation failed. For
-+ * The page is released via put_user_page even if the operation failed. For
-  * on-demand pinning, the page is released whenever it isn't stored in the
-  * umem.
-  */
-@@ -536,7 +536,7 @@ static int ib_umem_odp_map_dma_single_page(
- 	}
- 
- out:
--	put_page(page);
-+	put_user_page(page);
- 
- 	if (remove_existing_mapping) {
- 		ib_umem_notifier_start_account(umem_odp);
-@@ -659,7 +659,7 @@ int ib_umem_odp_map_dma_pages(struct ib_umem_odp *umem_odp, u64 user_virt,
- 					ret = -EFAULT;
- 					break;
- 				}
--				put_page(local_page_list[j]);
-+				put_user_page(local_page_list[j]);
- 				continue;
- 			}
- 
-@@ -686,8 +686,8 @@ int ib_umem_odp_map_dma_pages(struct ib_umem_odp *umem_odp, u64 user_virt,
- 			 * ib_umem_odp_map_dma_single_page().
- 			 */
- 			if (npages - (j + 1) > 0)
--				release_pages(&local_page_list[j+1],
--					      npages - (j + 1));
-+				put_user_pages(&local_page_list[j+1],
-+					       npages - (j + 1));
- 			break;
- 		}
- 	}
-diff --git a/drivers/infiniband/hw/hfi1/user_pages.c b/drivers/infiniband/hw/hfi1/user_pages.c
-index 02eee8eff1db..b89a9b9aef7a 100644
---- a/drivers/infiniband/hw/hfi1/user_pages.c
-+++ b/drivers/infiniband/hw/hfi1/user_pages.c
-@@ -118,13 +118,10 @@ int hfi1_acquire_user_pages(struct mm_struct *mm, unsigned long vaddr, size_t np
- void hfi1_release_user_pages(struct mm_struct *mm, struct page **p,
- 			     size_t npages, bool dirty)
- {
--	size_t i;
--
--	for (i = 0; i < npages; i++) {
--		if (dirty)
--			set_page_dirty_lock(p[i]);
--		put_page(p[i]);
--	}
-+	if (dirty)
-+		put_user_pages_dirty_lock(p, npages);
-+	else
-+		put_user_pages(p, npages);
- 
- 	if (mm) { /* during close after signal, mm can be NULL */
- 		atomic64_sub(npages, &mm->pinned_vm);
-diff --git a/drivers/infiniband/hw/mthca/mthca_memfree.c b/drivers/infiniband/hw/mthca/mthca_memfree.c
-index 8ff0e90d7564..edccfd6e178f 100644
---- a/drivers/infiniband/hw/mthca/mthca_memfree.c
-+++ b/drivers/infiniband/hw/mthca/mthca_memfree.c
-@@ -482,7 +482,7 @@ int mthca_map_user_db(struct mthca_dev *dev, struct mthca_uar *uar,
- 
- 	ret = pci_map_sg(dev->pdev, &db_tab->page[i].mem, 1, PCI_DMA_TODEVICE);
- 	if (ret < 0) {
--		put_page(pages[0]);
-+		put_user_page(pages[0]);
- 		goto out;
- 	}
- 
-@@ -490,7 +490,7 @@ int mthca_map_user_db(struct mthca_dev *dev, struct mthca_uar *uar,
- 				 mthca_uarc_virt(dev, uar, i));
- 	if (ret) {
- 		pci_unmap_sg(dev->pdev, &db_tab->page[i].mem, 1, PCI_DMA_TODEVICE);
--		put_page(sg_page(&db_tab->page[i].mem));
-+		put_user_page(sg_page(&db_tab->page[i].mem));
- 		goto out;
- 	}
- 
-@@ -556,7 +556,7 @@ void mthca_cleanup_user_db_tab(struct mthca_dev *dev, struct mthca_uar *uar,
- 		if (db_tab->page[i].uvirt) {
- 			mthca_UNMAP_ICM(dev, mthca_uarc_virt(dev, uar, i), 1);
- 			pci_unmap_sg(dev->pdev, &db_tab->page[i].mem, 1, PCI_DMA_TODEVICE);
--			put_page(sg_page(&db_tab->page[i].mem));
-+			put_user_page(sg_page(&db_tab->page[i].mem));
- 		}
- 	}
- 
-diff --git a/drivers/infiniband/hw/qib/qib_user_pages.c b/drivers/infiniband/hw/qib/qib_user_pages.c
-index f712fb7fa82f..bfbfbb7e0ff4 100644
---- a/drivers/infiniband/hw/qib/qib_user_pages.c
-+++ b/drivers/infiniband/hw/qib/qib_user_pages.c
-@@ -40,13 +40,10 @@
- static void __qib_release_user_pages(struct page **p, size_t num_pages,
- 				     int dirty)
- {
--	size_t i;
--
--	for (i = 0; i < num_pages; i++) {
--		if (dirty)
--			set_page_dirty_lock(p[i]);
--		put_page(p[i]);
--	}
-+	if (dirty)
-+		put_user_pages_dirty_lock(p, num_pages);
-+	else
-+		put_user_pages(p, num_pages);
- }
- 
- /**
-diff --git a/drivers/infiniband/hw/qib/qib_user_sdma.c b/drivers/infiniband/hw/qib/qib_user_sdma.c
-index 0c204776263f..ac5bdb02144f 100644
---- a/drivers/infiniband/hw/qib/qib_user_sdma.c
-+++ b/drivers/infiniband/hw/qib/qib_user_sdma.c
-@@ -317,7 +317,7 @@ static int qib_user_sdma_page_to_frags(const struct qib_devdata *dd,
- 		 * the caller can ignore this page.
- 		 */
- 		if (put) {
--			put_page(page);
-+			put_user_page(page);
- 		} else {
- 			/* coalesce case */
- 			kunmap(page);
-@@ -631,7 +631,7 @@ static void qib_user_sdma_free_pkt_frag(struct device *dev,
- 			kunmap(pkt->addr[i].page);
- 
- 		if (pkt->addr[i].put_page)
--			put_page(pkt->addr[i].page);
-+			put_user_page(pkt->addr[i].page);
- 		else
- 			__free_page(pkt->addr[i].page);
- 	} else if (pkt->addr[i].kvaddr) {
-@@ -706,7 +706,7 @@ static int qib_user_sdma_pin_pages(const struct qib_devdata *dd,
- 	/* if error, return all pages not managed by pkt */
- free_pages:
- 	while (i < j)
--		put_page(pages[i++]);
-+		put_user_page(pages[i++]);
- 
- done:
- 	return ret;
-diff --git a/drivers/infiniband/hw/usnic/usnic_uiom.c b/drivers/infiniband/hw/usnic/usnic_uiom.c
-index e312f522a66d..0b0237d41613 100644
---- a/drivers/infiniband/hw/usnic/usnic_uiom.c
-+++ b/drivers/infiniband/hw/usnic/usnic_uiom.c
-@@ -75,9 +75,10 @@ static void usnic_uiom_put_pages(struct list_head *chunk_list, int dirty)
- 		for_each_sg(chunk->page_list, sg, chunk->nents, i) {
- 			page = sg_page(sg);
- 			pa = sg_phys(sg);
--			if (!PageDirty(page) && dirty)
--				set_page_dirty_lock(page);
--			put_page(page);
-+			if (dirty)
-+				put_user_pages_dirty_lock(&page, 1);
-+			else
-+				put_user_page(page);
- 			usnic_dbg("pa: %pa\n", &pa);
- 		}
- 		kfree(chunk);
--- 
-2.21.0
+58629c0dc349 ("powerpc/powernv/npu: Fault user page into the 
+hypervisor's pagetable")
 
+Christophe
+
+> ---
+>   arch/powerpc/platforms/powernv/npu-dma.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/powerpc/platforms/powernv/npu-dma.c b/arch/powerpc/platforms/powernv/npu-dma.c
+> index 495550432f3d..5bbe59573ee6 100644
+> --- a/arch/powerpc/platforms/powernv/npu-dma.c
+> +++ b/arch/powerpc/platforms/powernv/npu-dma.c
+> @@ -1119,7 +1119,8 @@ int pnv_npu2_handle_fault(struct npu_context *context, uintptr_t *ea,
+>   	int i, is_write;
+>   	struct page *page[1];
+>   	const char __user *u;
+> -	char c;
+> +	/* To silence a -Wunused-but-set-variable warning. */
+> +	char c __maybe_unused;
+>   
+>   	/* mmap_sem should be held so the struct_mm must be present */
+>   	struct mm_struct *mm = context->mm;
+> 
