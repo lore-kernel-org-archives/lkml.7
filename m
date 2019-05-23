@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D81C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A4CC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3124C206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:31:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B4BA217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:31:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639889;
-	bh=Jfx6KeEU+O9GHSS13gWnKqZraw3gOIgsyaXRRt0RtWM=;
+	s=default; t=1558639895;
+	bh=45/JiBrYveEN+Rj7Z+64oGLJm0MNpL+7SLALyvLUOq4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qKwxxig0nxh8sGXPOQ2aRjT96YmQ33h+Db0vY+Tx0RHh5GsCvl095o+fm7jVm+X8o
-	 /ofxoSzV/Mnn8AUVHf4yWvKGgMPGxtA5/2I9a7QosQC0mUGYiReMvccJ9vKY0fx4XA
-	 I/IeP7jMSC2/lC+3iMNdCH+V/bm/GLtsU1/+RIO4=
+	b=KFFQhbaPc0h+3IlI8jmVd+6yh7QCELtJcpWTlRDGUJ6f2U9rlhapBERbSBF3Fz/bQ
+	 jiSzYUDUuLgKXxPiviQ+uVGka1TxL6qOdMeXSjtlUOp9Arbzvpk7UTUQl8y6/mDeAX
+	 P1642yFbYI1w/zhEalc0JpRBc9WEnbKDdFDaOZdM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403850AbfEWTb2 (ORCPT
+        id S2392248AbfEWTbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:31:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45246 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:31:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392017AbfEWTb0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:31:26 -0400
+        id S2403863AbfEWTbb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:31:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9C5E2054F;
-        Thu, 23 May 2019 19:31:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 404DC20879;
+        Thu, 23 May 2019 19:31:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639885;
-        bh=Jfx6KeEU+O9GHSS13gWnKqZraw3gOIgsyaXRRt0RtWM=;
+        s=default; t=1558639890;
+        bh=45/JiBrYveEN+Rj7Z+64oGLJm0MNpL+7SLALyvLUOq4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S1GhhxowjzyHBUGmDvU1/l70m+Pa/MSaIFQI+KwBEIDG4a0Uy4O01qj36AdZgItHW
-         UWq1Y5NY7Ws5k08kseqJukBzwvZ8SsjN8v1pdb7hDJKLvFhmZuIY9BulOg/qamysIj
-         Gt7Hze7njXTAqtr9eYPDq3xadqkzmdWcNlY28ao8=
+        b=S02OvLU6jCQ/QC3lDM1tuBuwxaJTjP+AKLZauUPemWE28yYYnjfxd8TSq0hrub2LP
+         a8kqpPPshKdAYhUSF03NTbmi3ttXE/5c7PHKdcl45TCODcz0PMTJodtgV5Uoyj8odz
+         xbMGugWUNXO0H7sr0J7fVjPv+5rrJINmhsAcsGjQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.1 120/122] btrfs: reloc: Fix NULL pointer dereference due to expanded reloc_root lifespan
-Date:   Thu, 23 May 2019 21:07:22 +0200
-Message-Id: <20190523181721.457475819@linuxfoundation.org>
+        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH 5.1 122/122] ARM: dts: imx6q-logicpd: Reduce inrush current on start
+Date:   Thu, 23 May 2019 21:07:24 +0200
+Message-Id: <20190523181721.785614665@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -59,85 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Adam Ford <aford173@gmail.com>
 
-commit 10995c0491204c861948c9850939a7f4e90760a4 upstream.
+commit dbb58e291cd47e594b64293bd91a4ce40626513c upstream.
 
-Commit d2311e698578 ("btrfs: relocation: Delay reloc tree deletion after
-merge_reloc_roots()") expands the life span of root->reloc_root.
+The main 3.3V regulator sources a series of additional regulators.
+This patch adds a small delay, so when the 3.3V regulator comes
+on it delays a bit before the subsequent regulators can come on.
+This reduces the inrush current a bit on the external DC power
+supply to help prevent a situation where the sourcing power supply
+cannot source enough current and overloads and the kit fails to
+start.
 
-This breaks certain checs of fs_info->reloc_ctl.  Before that commit, if
-we have a root with valid reloc_root, then it's ensured to have
-fs_info->reloc_ctl.
-
-But now since reloc_root doesn't always mean a valid fs_info->reloc_ctl,
-such check is unreliable and can cause the following NULL pointer
-dereference:
-
-  BUG: unable to handle kernel NULL pointer dereference at 00000000000005c1
-  IP: btrfs_reloc_pre_snapshot+0x20/0x50 [btrfs]
-  PGD 0 P4D 0
-  Oops: 0000 [#1] SMP PTI
-  CPU: 0 PID: 10379 Comm: snapperd Not tainted
-  Call Trace:
-   create_pending_snapshot+0xd7/0xfc0 [btrfs]
-   create_pending_snapshots+0x8e/0xb0 [btrfs]
-   btrfs_commit_transaction+0x2ac/0x8f0 [btrfs]
-   btrfs_mksubvol+0x561/0x570 [btrfs]
-   btrfs_ioctl_snap_create_transid+0x189/0x190 [btrfs]
-   btrfs_ioctl_snap_create_v2+0x102/0x150 [btrfs]
-   btrfs_ioctl+0x5c9/0x1e60 [btrfs]
-   do_vfs_ioctl+0x90/0x5f0
-   SyS_ioctl+0x74/0x80
-   do_syscall_64+0x7b/0x150
-   entry_SYSCALL_64_after_hwframe+0x3d/0xa2
-  RIP: 0033:0x7fd7cdab8467
-
-Fix it by explicitly checking fs_info->reloc_ctl other than using the
-implied root->reloc_root.
-
-Fixes: d2311e698578 ("btrfs: relocation: Delay reloc tree deletion after merge_reloc_roots")
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: 1c207f911fe9 ("ARM: dts: imx: Add support for Logic PD i.MX6QD EVM")
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/relocation.c |   12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/btrfs/relocation.c
-+++ b/fs/btrfs/relocation.c
-@@ -4667,14 +4667,12 @@ int btrfs_reloc_cow_block(struct btrfs_t
- void btrfs_reloc_pre_snapshot(struct btrfs_pending_snapshot *pending,
- 			      u64 *bytes_to_reserve)
- {
--	struct btrfs_root *root;
--	struct reloc_control *rc;
-+	struct btrfs_root *root = pending->root;
-+	struct reloc_control *rc = root->fs_info->reloc_ctl;
- 
--	root = pending->root;
--	if (!root->reloc_root)
-+	if (!root->reloc_root || !rc)
- 		return;
- 
--	rc = root->fs_info->reloc_ctl;
- 	if (!rc->merge_reloc_tree)
- 		return;
- 
-@@ -4703,10 +4701,10 @@ int btrfs_reloc_post_snapshot(struct btr
- 	struct btrfs_root *root = pending->root;
- 	struct btrfs_root *reloc_root;
- 	struct btrfs_root *new_root;
--	struct reloc_control *rc;
-+	struct reloc_control *rc = root->fs_info->reloc_ctl;
- 	int ret;
- 
--	if (!root->reloc_root)
-+	if (!root->reloc_root || !rc)
- 		return 0;
- 
- 	rc = root->fs_info->reloc_ctl;
+--- a/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi
++++ b/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi
+@@ -100,6 +100,7 @@
+ 		regulator-min-microvolt = <3300000>;
+ 		regulator-max-microvolt = <3300000>;
+ 		gpio = <&gpio1 26 GPIO_ACTIVE_HIGH>;
++		startup-delay-us = <70000>;
+ 		enable-active-high;
+ 		regulator-always-on;
+ 	};
 
 
