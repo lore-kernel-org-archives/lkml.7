@@ -2,131 +2,200 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 846D8C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85EA6C282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:24:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50B1F217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:19:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558646387;
-	bh=AXQTlUYZZ6JfDiM/2MFqfiN2fpoMce9w4y/UTvoDti8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=x+PbNDYEOc4IDABuSznDfJxraKh3GwftVDIIRG34LhVkSvmx1tA/J2CgaQyqXakab
-	 9Y8/A5GxbF/mRzhUrYDn3oUvhl72gGVKtHC3wNzE2LAnh4WClIKIi8RLyk0WcY+auk
-	 fe9BrG1tooqeLAKJUenl6Y9JuLrJIhrcq6bRCpus=
+	by mail.kernel.org (Postfix) with ESMTP id 4986A20862
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:24:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nB3Y+Vlw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731666AbfEWVTq (ORCPT
+        id S2388010AbfEWVYv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 17:19:46 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:33593 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729797AbfEWVTq (ORCPT
+        Thu, 23 May 2019 17:24:51 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:35590 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387521AbfEWVYu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 17:19:46 -0400
-Received: by mail-lf1-f65.google.com with SMTP id x132so5478194lfd.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 14:19:44 -0700 (PDT)
+        Thu, 23 May 2019 17:24:50 -0400
+Received: by mail-lf1-f67.google.com with SMTP id c17so5472636lfi.2
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 14:24:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zDS3Ns71UvqAxo/Ziy/UlngEZ1rvpeIhNyX6PGvAAp8=;
-        b=H4gjzqmptwunXRqYKn250eOT7ZJCydxukVmu4abj4LD8/gbMEVOPhuM7deCH1oNhln
-         IhAnoulFRb3ISTB2HVOGL4lwyjS9ysrUvrNhplgIj/dCVrMGGG7bNKPjDw5bsLNtt6oh
-         ZXbn+4T7bsuWw2xhN1jJiH7ToSUE6NWp3vTNg=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FzWr0jWUizq78fQjYjjq41koeiVNEvdn60rL1vMGWV8=;
+        b=nB3Y+Vlwq85hV6ZNvfs2rVnxQSendJp43bsBt+2JYHIuuRCGenxT5SgaFLY5E7CMt1
+         9cd6kziAiVcgNkwQ5opr7tBv1iplgg2PmD4IKiTklqrVV2JoB6H+kenz0UWY4fArez+m
+         Z/T06tzdWHYwwCGI0nCpPDJ2zfKIMNVmwC0p6F/3ik6fZlWnZzOkf3bLwhIou1nTWkH6
+         2Jl/5d0WyTqJidGqRbDu//1voBJ0UU5t7ySrO4Up5pjXQO6zpsZ5nUm9oZSE+Kjab/Ww
+         UkRZIZwKDZRZHB9GAh2aaKRvpwAhV0jQeY6jZmsrOLXvvOU8Hhjsvv3V6RAlQpSWVgh8
+         2ALQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zDS3Ns71UvqAxo/Ziy/UlngEZ1rvpeIhNyX6PGvAAp8=;
-        b=TtW1SiXWjNTVHC7CTWQfWPJHgErgaAqUeC5mAocHqYDW1TKtlEFTCFIoXoBAziBIe/
-         HLas8Lus/pVLlX4dkNttCVAQHe652uARobo1E6YgcjcG5SRSsXxDscZqd3RQpLftGc9K
-         7kD8tHdJtF9Q7Afev+kHvOlwGy8pq6i+rGe5SO0N+0oIKxatVCE+I5GAyu808GkU5OTW
-         lvVGmP8q7di245M6qxjzvBc/PqdkQ/vJBQi9Kh9roabTCToKJt7VhPhz/DLYyyLHHyvk
-         X2ojS9xaVeZGiv1PTP9ZzKPqhD/HHvH7EVtWKmz5kUVDDpEcZcH/w+FKmwztA6i9sIaq
-         7RGQ==
-X-Gm-Message-State: APjAAAWP7EdJIe+eMSRa+P9ldPvZu7yoTtqEv0SG3wZgOkcIpDConhJQ
-        BO15n9gNZb2jBxqFJwe6Cg4JSwgQt30=
-X-Google-Smtp-Source: APXvYqzoG/cE5bveDa5YVZJ4sD/+t6g/CAfEcoiewPap/VlXPAifEdHSTLaa3NPiDzmRWh32mg/OCw==
-X-Received: by 2002:a19:740e:: with SMTP id v14mr42946009lfe.144.1558646382999;
-        Thu, 23 May 2019 14:19:42 -0700 (PDT)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id k16sm135116lje.30.2019.05.23.14.19.41
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 14:19:41 -0700 (PDT)
-Received: by mail-lj1-f169.google.com with SMTP id h11so6839792ljb.2
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 14:19:41 -0700 (PDT)
-X-Received: by 2002:a2e:9f41:: with SMTP id v1mr12462152ljk.66.1558646380884;
- Thu, 23 May 2019 14:19:40 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FzWr0jWUizq78fQjYjjq41koeiVNEvdn60rL1vMGWV8=;
+        b=bY6FsBUhDnLJDrhH1s+cIkf2TUEDiM6z2gj3JgscbuZOOTq8j4/sz7NZFA186085Nx
+         cL9M4br9OVvmIG4exVKWz+jhg9QbH6i+IRJe6BuZaPqVmnH4HCFepYuHQUk1WRfQav2/
+         oARuKDmC4aQwGfY4KyR7zC1IUj9N/7RykuIjoWHTIVEZpFeTjd50Izu1xSzjyIaHfldi
+         CsP0RY3aEVGYutlV3SxDsVYNs1JdAfE0xMHSeEwmp22uUz49Nuk0Rd49y+ZTXfAGnL15
+         HjR0p35VFFKriXk0O//NDAmaegc5W2MgEkyGf5P2Gc0y6/j2Kp/YifUr7W2mE+9vcA/z
+         k4GQ==
+X-Gm-Message-State: APjAAAXpurpW+/gSA4IoWexcH3b5tEGjlohCTkZEpgcfOzq5vdEJ9uDa
+        Di0pQFxgM8NLOBsEems0N/Khhw==
+X-Google-Smtp-Source: APXvYqw0wQRztQNEXe5ECv9lUc6NSDiR+JDDfswtgJbKjbK3GH8kI/T2rb/i3Uq0p2tClCr/MsB2aA==
+X-Received: by 2002:ac2:5468:: with SMTP id e8mr18855107lfn.167.1558646688642;
+        Thu, 23 May 2019 14:24:48 -0700 (PDT)
+Received: from centauri (m83-185-80-163.cust.tele2.se. [83.185.80.163])
+        by smtp.gmail.com with ESMTPSA id i14sm136289ljj.57.2019.05.23.14.24.46
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 23 May 2019 14:24:47 -0700 (PDT)
+Date:   Thu, 23 May 2019 23:24:44 +0200
+From:   Niklas Cassel <niklas.cassel@linaro.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        marc.w.gonzalez@free.fr, sibis@codeaurora.org,
+        daniel.lezcano@linaro.org, Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 6/9] arm64: dts: qcom: msm8996: Add PSCI cpuidle low
+ power states
+Message-ID: <20190523212444.GA25133@centauri>
+References: <cover.1558430617.git.amit.kucheria@linaro.org>
+ <2ffbb3f32484c03360ff7d6fa4668581ef298c9e.1558430617.git.amit.kucheria@linaro.org>
 MIME-Version: 1.0
-References: <20190523100013.52a8d2a6@gandalf.local.home> <CAHk-=wg5HqJ2Kfgpub+tCWQ2_FiFwEW9H1Rm+an-BLGaGvDDXw@mail.gmail.com>
- <20190523112740.7167aba4@gandalf.local.home> <CAHk-=whFJqTOk0mSxJGeh38ZxDksgRaMrNV8hqTngiuokyJzew@mail.gmail.com>
- <20190523133648.591f9e78@gandalf.local.home>
-In-Reply-To: <20190523133648.591f9e78@gandalf.local.home>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 23 May 2019 14:19:25 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whATjcpjVmTtM-MJw=XWY9kxq2xc67wA4_UkmVgF1mf2Q@mail.gmail.com>
-Message-ID: <CAHk-=whATjcpjVmTtM-MJw=XWY9kxq2xc67wA4_UkmVgF1mf2Q@mail.gmail.com>
-Subject: Re: [RFC][PATCH] kernel.h: Add generic roundup_64() macro
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Leon Romanovsky <leon@kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau@lists.freedesktop.org,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2ffbb3f32484c03360ff7d6fa4668581ef298c9e.1558430617.git.amit.kucheria@linaro.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 10:36 AM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> >
-> > Of course, you probably want the usual "at least use 'int'" semantics,
-> > in which case the "type" should be "(x)+0":
-> >
-> >      #define round_up(x, y) size_fn((x)+0, round_up_size, x, y)
-> >
-> >  and the 8-bit and 16-bit cases will never be used.
->
-> I'm curious to what the advantage of that is?
+On Tue, May 21, 2019 at 03:05:16PM +0530, Amit Kucheria wrote:
+> Add device bindings for cpuidle states for cpu devices.
+> 
+> msm8996 features 4 cpus - 2 in each cluster. However, all cpus implement
+> the same microarchitecture and the two clusters only differ in the
+> maximum frequency attainable by the CPUs.
+> 
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/msm8996.dtsi | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> index c761269caf80..4f2fb7885f39 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> @@ -95,6 +95,7 @@
+>  			compatible = "qcom,kryo";
+>  			reg = <0x0 0x0>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&CPU_SLEEP_0>;
+>  			next-level-cache = <&L2_0>;
+>  			L2_0: l2-cache {
+>  			      compatible = "cache";
+> @@ -107,6 +108,7 @@
+>  			compatible = "qcom,kryo";
+>  			reg = <0x0 0x1>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&CPU_SLEEP_0>;
+>  			next-level-cache = <&L2_0>;
+>  		};
+>  
+> @@ -115,6 +117,7 @@
+>  			compatible = "qcom,kryo";
+>  			reg = <0x0 0x100>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&CPU_SLEEP_0>;
+>  			next-level-cache = <&L2_1>;
+>  			L2_1: l2-cache {
+>  			      compatible = "cache";
+> @@ -127,6 +130,7 @@
+>  			compatible = "qcom,kryo";
+>  			reg = <0x0 0x101>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&CPU_SLEEP_0>;
+>  			next-level-cache = <&L2_1>;
+>  		};
+>  
+> @@ -151,6 +155,19 @@
+>  				};
+>  			};
+>  		};
+> +
+> +		idle-states {
+> +			entry-method = "psci";
+> +
+> +			CPU_SLEEP_0: cpu-sleep-0 {
+> +				compatible = "arm,idle-state";
+> +				idle-state-name = "standalone-power-collapse";
+> +				arm,psci-suspend-param = <0x00000004>;
+> +				entry-latency-us = <40>;
+> +				exit-latency-us = <80>;
 
-Let's say that you have a structure with a 'unsigned char' member,
-because the value range is 0-255.
+Hello Amit,
 
-What happens if you do
+Looking at this line of code in msm-4.14:
+https://source.codeaurora.org/quic/la/kernel/msm-4.14/tree/drivers/cpuidle/lpm-levels.c?h=LA.UM.7.1.r1-14000-sm8150.0#n993
 
-   x = round_up(p->member, 4);
+And seeing the equivalent in msm-4.4:
+https://source.codeaurora.org/quic/la/kernel/msm-4.4/tree/drivers/cpuidle/lpm-levels.c?h=msm-4.4#n1080
 
-and the value is 255?
+It becomes obvious that
 
-Now, if you stay in 'unsigned char' the end result is 0. If you follow
-the usual C integer promotion rules ("all arithmetic promotes to at
-least 'int'"), you get 256.
+qcom,time-overhead == entry-latency-us + exit-latency-us
+and
+qcom,latency-us == exit-latency-us
 
-Most people probably expect 256, and that implies that even if you
-pass an 'unsigned char' to an arithmetic function like this, you
-expect any math to be done in 'int'. Doing the "(x)+0" forces that,
-because the "+0" changes the type of the expression from "unsigned
-char" to "int" due to C integer promotion.
+which means that
 
-Yes. The C integer type rules are subtle and sometimes surprising. One
-of the things I've wanted is to have some way to limit silent
-promotion (and silent truncation!), and cause warnings. 'sparse' does
-some of that with some special-case types (ie __bitwise), but it's
-pretty limited.
+entry-latency-us == qcom,time-overhead - qcom,latency-us
 
-              Linus
+
+Using this formula, with the numbers from downstream SDM845:
+https://source.codeaurora.org/quic/la/kernel/msm-4.9/tree/arch/arm64/boot/dts/qcom/sdm845-pm.dtsi?h=msm-4.9#n123
+
+qcom,latency-us = <621>;
+qcom,time-overhead = <885>;
+
+885 - 621 = 264
+
+we end up with the same values that Raju
+has in his submission for upstream SDM845:
+https://patchwork.kernel.org/patch/10953253/
+
+entry-latency-us = <264>;
+exit-latency-us = <621>;
+
+
+
+Which for msm8996:
+
+qcom,latency-us = <80>;
+qcom,time-overhead = <210>;
+
+gives:
+
+entry-latency-us = <130>
+exit-latency-us = <80>;
+
+> +				min-residency-us = <300>;
+> +			};
+> +		};
+>  	};
+>  
+>  	thermal-zones {
+> -- 
+> 2.17.1
+> 
