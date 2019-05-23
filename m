@@ -2,84 +2,85 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D29FC04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:04:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BBE5C04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FCBF2133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:04:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B0D52175B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:08:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558595281;
+	bh=T0gjpPWXfkyv+gbWFTr6yRPQFkhsU2y0t1/Ii1Cw/f4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uplUjvxfM6mwV/cQiTSd3lXjit0ju90a0Hn8fvqClfVM2ATMjeAQquhmIY81LOyOH
+	 hKBH/G7urQHL8Em1bX1VZoKQl01jKpi1bP8pvSY/z9xxGwzKS2wyw85208bUYH1slw
+	 3pBdLFSB1PJ/HI+fatRmo03pGabCqWgwLRdpyVWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbfEWHE1 (ORCPT
+        id S1727638AbfEWHIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 03:04:27 -0400
-Received: from david.siemens.de ([192.35.17.14]:53130 "EHLO david.siemens.de"
+        Thu, 23 May 2019 03:08:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726070AbfEWHE1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 03:04:27 -0400
-Received: from mail3.siemens.de (mail3.siemens.de [139.25.208.14])
-        by david.siemens.de (8.15.2/8.15.2) with ESMTPS id x4N74DYI003735
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 May 2019 09:04:13 +0200
-Received: from pluscontrol-debian-server.ppmd.SIEMENS.NET (pluscontrol-debian-server.ppmd.siemens.net [146.254.63.6])
-        by mail3.siemens.de (8.15.2/8.15.2) with ESMTP id x4N74A5C013555;
-        Thu, 23 May 2019 09:04:10 +0200
-From:   Andreas Oetken <andreas.oetken@siemens.com>
-Cc:     andreas@oetken.name, m-karicheri2@ti.com, a-kramer@ti.com,
-        Andreas Oetken <andreas.oetken@siemens.com>,
-        Arvid Brodin <arvid.brodin@alten.se>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH V3] hsr: fix don't prune the master node from the node_db
-Date:   Thu, 23 May 2019 09:02:37 +0200
-Message-Id: <20190523070238.17560-1-andreas.oetken@siemens.com>
-X-Mailer: git-send-email 2.20.1
+        id S1726070AbfEWHIA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 03:08:00 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 911E021019;
+        Thu, 23 May 2019 07:07:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558595279;
+        bh=T0gjpPWXfkyv+gbWFTr6yRPQFkhsU2y0t1/Ii1Cw/f4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZLQiyBogm1alOOQ2zDMy/tvmOT3eBPKq7dDMSc6yAw7aPG06ySNszIwdJIo2z602u
+         SwRl/RBspWjSSEihFzInU7T1oUq62MytCAT4VLnyneznUmwR7b3l2045p4SAOoWK/Y
+         BaAO+p3xvK64bLt4t1kaHIrI1I/H65yCzgwHr27I=
+Date:   Thu, 23 May 2019 09:07:55 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     laurentiu.tudor@nxp.com, stern@rowland.harvard.edu,
+        linux-usb@vger.kernel.org, marex@denx.de, leoyang.li@nxp.com,
+        linux-kernel@vger.kernel.org, robin.murphy@arm.com,
+        noring@nocrew.org, JuergenUrban@gmx.de
+Subject: Re: [PATCH v6 0/5] prerequisites for device reserved local mem rework
+Message-ID: <20190523070755.GA23832@kroah.com>
+References: <20190522142748.10078-1-laurentiu.tudor@nxp.com>
+ <20190523065602.GA11928@lst.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190523065602.GA11928@lst.de>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't prune master node in the hsr_prune_nodes function.
-Neither time_in[HSR_PT_SLAVE_A], nor time_in[HSR_PT_SLAVE_B],
-will ever be updated by hsr_register_frame_in for the master port.
-Thus the master node will be repeatedly pruned leading to
-repeated packet loss.
-This bug never appeared because the hsr_prune_nodes function
-was only called once. Since commit 5150b45fd355
-("net: hsr: Fix node prune function for forget time expiry") this issue
-is fixed unvealing the issue described above.
+On Thu, May 23, 2019 at 08:56:02AM +0200, Christoph Hellwig wrote:
+> As we seem to be getting ready to merge this series:  can the usb
+> maintainers please commit it to an immutable branch that I can pull
+> into the dma-mapping tree?  These changes are a preparation for
+> reworking the per-device DMA coherent allocator, and I'd prefer not
+> to wait for the next merge window with the next steps.
 
-Fixes: 5150b45fd355 ("net: hsr: Fix node prune function for forget time expiry")
-Signed-off-by: Andreas Oetken <andreas.oetken@siemens.com>
-Tested-by: Murali Karicheri <m-karicheri2@ti.com>
----
- net/hsr/hsr_framereg.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+I have no objection for you just taking this whole series as-is, no need
+to worry about merge conflicts with the USB tree, I doubt anything will
+be touching this area of code anytime soon.
 
-diff --git a/net/hsr/hsr_framereg.c b/net/hsr/hsr_framereg.c
-index 9fa9abd83018..2d7a19750436 100644
---- a/net/hsr/hsr_framereg.c
-+++ b/net/hsr/hsr_framereg.c
-@@ -365,6 +365,14 @@ void hsr_prune_nodes(struct timer_list *t)
- 
- 	rcu_read_lock();
- 	list_for_each_entry_rcu(node, &hsr->node_db, mac_list) {
-+		/* Don't prune own node. Neither time_in[HSR_PT_SLAVE_A]
-+		 * nor time_in[HSR_PT_SLAVE_B], will ever be updated for
-+		 * the master port. Thus the master node will be repeatedly
-+		 * pruned leading to packet loss.
-+		 */
-+		if (hsr_addr_is_self(hsr, node->macaddress_A))
-+			continue;
-+
- 		/* Shorthand */
- 		time_a = node->time_in[HSR_PT_SLAVE_A];
- 		time_b = node->time_in[HSR_PT_SLAVE_B];
--- 
-2.20.1
+So if you want to take it now, feel free to add:
 
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+to all of these.
+
+Or, if you really like/want a branch to pull from, I can do that as
+well, which ever is easiest for you to work with as you all are doing
+the hard work here, not me :)
+
+thanks,
+
+greg k-h
