@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 372C6C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E0DC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:14:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BEDB21855
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:14:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A0AC20863
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:14:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558638852;
-	bh=Re8T2yTHXK5XAfnVq2GhyXnFobK1U4GrBjodwoG3V1I=;
+	s=default; t=1558638856;
+	bh=cmtK/sdqxsP3V+WBMc4cyAYKdWHqDGrsfVMsTV08nF8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qVG6MKRLaEZKy5mLOAcvRnVHrA/lt02aqcfdgdxh2si5pFLvQOp89D8dgdQ5peuf5
-	 /lzwY5FKER7qK46Lwus9htLS/pGEIcjATMCqn+OUiylpAqV7n5SSnNX32rU8jWqteB
-	 3Ikg905AeLT3/GuebhZJvcu46SvG+zf+knzN4qE8=
+	b=K2o5JOd8WQVIEhbO7zO/1JH/35lQjMbPau1B4RQoOtXiYFE5i0OP6uNz8TwqbnGNG
+	 UHKFXCbN9l28s1bPRmu5ncrkl3djlWLR3PgortZnhV4nHhzk9yY508vVeSB4nhMKcr
+	 orcXvSZHPX5LWA0v2SttAVGI64jzX4mhUKyw39/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388687AbfEWTOK (ORCPT
+        id S2388714AbfEWTOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:14:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48082 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:14:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388678AbfEWTOH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:14:07 -0400
+        id S2388698AbfEWTON (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:14:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5275A217D9;
-        Thu, 23 May 2019 19:14:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A57072184E;
+        Thu, 23 May 2019 19:14:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638846;
-        bh=Re8T2yTHXK5XAfnVq2GhyXnFobK1U4GrBjodwoG3V1I=;
+        s=default; t=1558638852;
+        bh=cmtK/sdqxsP3V+WBMc4cyAYKdWHqDGrsfVMsTV08nF8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GsAqwifSIJAPc5rAw+7Skji10ACv3hllz6uenmSmtMqHFBp+rPS/f0wEZ2EaipxYS
-         cMBFQt22nxIfHywe0ETUZgPCv4+1er+KNV4ZpfvMkpAUa/z06LjvpVI8bkXHWy/WmF
-         KZP8gFo26uQoSjq9HM/Nkdit1f2khRtcYvVjXcqU=
+        b=l6G91ikziQzPGcxEnhyVE2Q6w8Sd7yF+DP0uHE3L3Xnn8ZuPxutHez8ewII231dTU
+         bf2HWd9bKpqWaxe3DzyzGL80k1rDqFit/IeT0Y0UsidIT3eJL3cCQljW7NTIzXBn6E
+         UxdnjGCbSUD7/Rg5EPf1T/q+x30o9IYRmefDWA5w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>
-Subject: [PATCH 4.14 75/77] bpf: add map_lookup_elem_sys_only for lookups from syscall side
-Date:   Thu, 23 May 2019 21:06:33 +0200
-Message-Id: <20190523181730.307329542@linuxfoundation.org>
+        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.14 77/77] btrfs: Honour FITRIM range constraints during free space trim
+Date:   Thu, 23 May 2019 21:06:35 +0200
+Message-Id: <20190523181730.581872705@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181719.982121681@linuxfoundation.org>
 References: <20190523181719.982121681@linuxfoundation.org>
@@ -60,54 +59,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Borkmann <daniel@iogearbox.net>
+From: Nikolay Borisov <nborisov@suse.com>
 
-commit c6110222c6f49ea68169f353565eb865488a8619 upstream.
+commit c2d1b3aae33605a61cbab445d8ae1c708ccd2698 upstream.
 
-Add a callback map_lookup_elem_sys_only() that map implementations
-could use over map_lookup_elem() from system call side in case the
-map implementation needs to handle the latter differently than from
-the BPF data path. If map_lookup_elem_sys_only() is set, this will
-be preferred pick for map lookups out of user space. This hook is
-used in a follow-up fix for LRU map, but once development window
-opens, we can convert other map types from map_lookup_elem() (here,
-the one called upon BPF_MAP_LOOKUP_ELEM cmd is meant) over to use
-the callback to simplify and clean up the latter.
+Up until now trimming the freespace was done irrespective of what the
+arguments of the FITRIM ioctl were. For example fstrim's -o/-l arguments
+will be entirely ignored. Fix it by correctly handling those paramter.
+This requires breaking if the found freespace extent is after the end of
+the passed range as well as completing trim after trimming
+fstrim_range::len bytes.
 
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Martin KaFai Lau <kafai@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Fixes: 499f377f49f0 ("btrfs: iterate over unused chunk space in FITRIM")
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Nikolay Borisov <nborisov@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 
 ---
- include/linux/bpf.h  |    1 +
- kernel/bpf/syscall.c |    5 ++++-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ fs/btrfs/extent-tree.c |   25 +++++++++++++++++++------
+ 1 file changed, 19 insertions(+), 6 deletions(-)
 
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -28,6 +28,7 @@ struct bpf_map_ops {
- 	void (*map_free)(struct bpf_map *map);
- 	int (*map_get_next_key)(struct bpf_map *map, void *key, void *next_key);
- 	void (*map_release_uref)(struct bpf_map *map);
-+	void *(*map_lookup_elem_sys_only)(struct bpf_map *map, void *key);
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -11058,9 +11058,9 @@ int btrfs_error_unpin_extent_range(struc
+  * transaction.
+  */
+ static int btrfs_trim_free_extents(struct btrfs_device *device,
+-				   u64 minlen, u64 *trimmed)
++				   struct fstrim_range *range, u64 *trimmed)
+ {
+-	u64 start = 0, len = 0;
++	u64 start = range->start, len = 0;
+ 	int ret;
  
- 	/* funcs callable from userspace and from eBPF programs */
- 	void *(*map_lookup_elem)(struct bpf_map *map, void *key);
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -493,7 +493,10 @@ static int map_lookup_elem(union bpf_att
- 		err = bpf_fd_htab_map_lookup_elem(map, key, value);
- 	} else {
- 		rcu_read_lock();
--		ptr = map->ops->map_lookup_elem(map, key);
-+		if (map->ops->map_lookup_elem_sys_only)
-+			ptr = map->ops->map_lookup_elem_sys_only(map, key);
-+		else
-+			ptr = map->ops->map_lookup_elem(map, key);
- 		if (ptr)
- 			memcpy(value, ptr, value_size);
- 		rcu_read_unlock();
+ 	*trimmed = 0;
+@@ -11096,8 +11096,8 @@ static int btrfs_trim_free_extents(struc
+ 			refcount_inc(&trans->use_count);
+ 		spin_unlock(&fs_info->trans_lock);
+ 
+-		ret = find_free_dev_extent_start(trans, device, minlen, start,
+-						 &start, &len);
++		ret = find_free_dev_extent_start(trans, device, range->minlen,
++						 start, &start, &len);
+ 		if (trans)
+ 			btrfs_put_transaction(trans);
+ 
+@@ -11109,6 +11109,16 @@ static int btrfs_trim_free_extents(struc
+ 			break;
+ 		}
+ 
++		/* If we are out of the passed range break */
++		if (start > range->start + range->len - 1) {
++			mutex_unlock(&fs_info->chunk_mutex);
++			ret = 0;
++			break;
++		}
++
++		start = max(range->start, start);
++		len = min(range->len, len);
++
+ 		ret = btrfs_issue_discard(device->bdev, start, len, &bytes);
+ 		up_read(&fs_info->commit_root_sem);
+ 		mutex_unlock(&fs_info->chunk_mutex);
+@@ -11119,6 +11129,10 @@ static int btrfs_trim_free_extents(struc
+ 		start += len;
+ 		*trimmed += bytes;
+ 
++		/* We've trimmed enough */
++		if (*trimmed >= range->len)
++			break;
++
+ 		if (fatal_signal_pending(current)) {
+ 			ret = -ERESTARTSYS;
+ 			break;
+@@ -11202,8 +11216,7 @@ int btrfs_trim_fs(struct btrfs_fs_info *
+ 	mutex_lock(&fs_info->fs_devices->device_list_mutex);
+ 	devices = &fs_info->fs_devices->devices;
+ 	list_for_each_entry(device, devices, dev_list) {
+-		ret = btrfs_trim_free_extents(device, range->minlen,
+-					      &group_trimmed);
++		ret = btrfs_trim_free_extents(device, range, &group_trimmed);
+ 		if (ret) {
+ 			dev_failed++;
+ 			dev_ret = ret;
 
 
