@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46B7FC46460
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 184DCC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 206FF217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:27:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3F89217D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:27:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639673;
-	bh=RiW2IQDV7rzyoBS0G8Gn9wdxSFA5At/oRHCRjO2mdbA=;
+	s=default; t=1558639676;
+	bh=jS/P740gJJTg5cpG7dqJ6n30Sc3YXWhZeWXnKtrOqsM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NPbVFO3Yi+70mz90t3leaXUuResTOgsiidJrRrxBUhVutyOXVDzUcVQ4DY1fRtiiW
-	 i0Ni/dcb9ph2c6tJCaHdo8KhAP4X80sjaEkkw4Ln0+tAPTloTSRblzUNefAOSQ4ibQ
-	 fkZiy7gjXHXAwVhWnDmgObXGoX0yvWO55GxpJxiI=
+	b=vkJP9Ym1PmYFB0A7hKVKhjab+UqHCgxh9HeETr4vcpnE7C/4KelGWXdMwSeYlgKF8
+	 nfNINhsiphxGgJmzmn/if0/iE2XfAp8jIH3nOxxmUsjddx264JYAUKMZvYfRoAc89N
+	 dFDSm+AWlK/NlTF9lmRS5jl5A4YIkNNqKYy8PFN8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391670AbfEWT1w (ORCPT
+        id S2391681AbfEWT1z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:27:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40138 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:27:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391655AbfEWT1t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:27:49 -0400
+        id S2391660AbfEWT1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:27:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D01A2206BA;
-        Thu, 23 May 2019 19:27:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D7272054F;
+        Thu, 23 May 2019 19:27:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639667;
-        bh=RiW2IQDV7rzyoBS0G8Gn9wdxSFA5At/oRHCRjO2mdbA=;
+        s=default; t=1558639670;
+        bh=jS/P740gJJTg5cpG7dqJ6n30Sc3YXWhZeWXnKtrOqsM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XMDzOePo39I14V2S5Q3+X4sOt+LQ31UVuJzM6Wbe01zaUWcWVLMsSspzxKStyBG9m
-         gmKbyQcV+NRv6yCATmuj7Xo10dHOzS7hN+y+cTS1zLxh6WIWnn6+bBeTe/LNUxr4Tl
-         LCokjapn9/bw+oiwrWdQCya6V1fV88WjGuxvEtPE=
+        b=vKnFdmqiz5YQFtbHziK9CgRk6nVU6Y0B82m68wWH4DToJ0v7xIPUABq+4yDP7FVqE
+         m36nWDpWxykWZeIkZpbZkgaI04vnGU0UKqcZ/duWACFvg6emesrs9BVfTjnEUd5cc4
+         85mgMM9mO/GLdQOVx4eTos2n6PAL7QvVHJb0OiGc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: [PATCH 5.1 042/122] intel_th: msu: Fix single mode with IOMMU
-Date:   Thu, 23 May 2019 21:06:04 +0200
-Message-Id: <20190523181710.315492098@linuxfoundation.org>
+        stable@vger.kernel.org, Steve Longerbeam <slongerbeam@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 5.1 051/122] media: imx: csi: Allow unknown nearest upstream entities
+Date:   Thu, 23 May 2019 21:06:13 +0200
+Message-Id: <20190523181711.473950999@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -59,104 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+From: Steve Longerbeam <slongerbeam@gmail.com>
 
-commit 4e0eaf239fb33ebc671303e2b736fa043462e2f4 upstream.
+commit 904371f90b2c0c749a5ab75478c129a4682ac3d8 upstream.
 
-Currently, the pages that are allocated for the single mode of MSC are not
-mapped into the device's dma space and the code is incorrectly using
-*_to_phys() in place of a dma address. This fails with IOMMU enabled and
-is otherwise bad practice.
+On i.MX6, the nearest upstream entity to the CSI can only be the
+CSI video muxes or the Synopsys DW MIPI CSI-2 receiver.
 
-Fix the single mode buffer allocation to map the pages into the device's
-DMA space.
+However the i.MX53 has no CSI video muxes or a MIPI CSI-2 receiver.
+So allow for the nearest upstream entity to the CSI to be something
+other than those.
 
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Fixes: ba82664c134e ("intel_th: Add Memory Storage Unit driver")
-Cc: stable@vger.kernel.org # v4.4+
+Fixes: bf3cfaa712e5c ("media: staging/imx: get CSI bus type from nearest
+upstream entity")
+
+Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwtracing/intel_th/msu.c |   35 ++++++++++++++++++++++++++++++++---
- 1 file changed, 32 insertions(+), 3 deletions(-)
+ drivers/staging/media/imx/imx-media-csi.c |   18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
---- a/drivers/hwtracing/intel_th/msu.c
-+++ b/drivers/hwtracing/intel_th/msu.c
-@@ -84,6 +84,7 @@ struct msc_iter {
-  * @reg_base:		register window base address
-  * @thdev:		intel_th_device pointer
-  * @win_list:		list of windows in multiblock mode
-+ * @single_sgt:		single mode buffer
-  * @nr_pages:		total number of pages allocated for this buffer
-  * @single_sz:		amount of data in single mode
-  * @single_wrap:	single mode wrap occurred
-@@ -104,6 +105,7 @@ struct msc {
- 	struct intel_th_device	*thdev;
- 
- 	struct list_head	win_list;
-+	struct sg_table		single_sgt;
- 	unsigned long		nr_pages;
- 	unsigned long		single_sz;
- 	unsigned int		single_wrap : 1;
-@@ -617,22 +619,45 @@ static void intel_th_msc_deactivate(stru
+--- a/drivers/staging/media/imx/imx-media-csi.c
++++ b/drivers/staging/media/imx/imx-media-csi.c
+@@ -154,9 +154,10 @@ static inline bool requires_passthrough(
+ /*
+  * Parses the fwnode endpoint from the source pad of the entity
+  * connected to this CSI. This will either be the entity directly
+- * upstream from the CSI-2 receiver, or directly upstream from the
+- * video mux. The endpoint is needed to determine the bus type and
+- * bus config coming into the CSI.
++ * upstream from the CSI-2 receiver, directly upstream from the
++ * video mux, or directly upstream from the CSI itself. The endpoint
++ * is needed to determine the bus type and bus config coming into
++ * the CSI.
   */
- static int msc_buffer_contig_alloc(struct msc *msc, unsigned long size)
- {
-+	unsigned long nr_pages = size >> PAGE_SHIFT;
- 	unsigned int order = get_order(size);
- 	struct page *page;
-+	int ret;
+ static int csi_get_upstream_endpoint(struct csi_priv *priv,
+ 				     struct v4l2_fwnode_endpoint *ep)
+@@ -172,7 +173,8 @@ static int csi_get_upstream_endpoint(str
+ 	if (!priv->src_sd)
+ 		return -EPIPE;
  
- 	if (!size)
- 		return 0;
+-	src = &priv->src_sd->entity;
++	sd = priv->src_sd;
++	src = &sd->entity;
  
-+	ret = sg_alloc_table(&msc->single_sgt, 1, GFP_KERNEL);
-+	if (ret)
-+		goto err_out;
-+
-+	ret = -ENOMEM;
- 	page = alloc_pages(GFP_KERNEL | __GFP_ZERO, order);
- 	if (!page)
--		return -ENOMEM;
-+		goto err_free_sgt;
+ 	if (src->function == MEDIA_ENT_F_VID_MUX) {
+ 		/*
+@@ -186,6 +188,14 @@ static int csi_get_upstream_endpoint(str
+ 			src = &sd->entity;
+ 	}
  
- 	split_page(page, order);
--	msc->nr_pages = size >> PAGE_SHIFT;
-+	sg_set_buf(msc->single_sgt.sgl, page_address(page), size);
++	/*
++	 * If the source is neither the video mux nor the CSI-2 receiver,
++	 * get the source pad directly upstream from CSI itself.
++	 */
++	if (src->function != MEDIA_ENT_F_VID_MUX &&
++	    sd->grp_id != IMX_MEDIA_GRP_ID_CSI2)
++		src = &priv->sd.entity;
 +
-+	ret = dma_map_sg(msc_dev(msc)->parent->parent, msc->single_sgt.sgl, 1,
-+			 DMA_FROM_DEVICE);
-+	if (ret < 0)
-+		goto err_free_pages;
-+
-+	msc->nr_pages = nr_pages;
- 	msc->base = page_address(page);
--	msc->base_addr = page_to_phys(page);
-+	msc->base_addr = sg_dma_address(msc->single_sgt.sgl);
- 
- 	return 0;
-+
-+err_free_pages:
-+	__free_pages(page, order);
-+
-+err_free_sgt:
-+	sg_free_table(&msc->single_sgt);
-+
-+err_out:
-+	return ret;
- }
- 
- /**
-@@ -643,6 +668,10 @@ static void msc_buffer_contig_free(struc
- {
- 	unsigned long off;
- 
-+	dma_unmap_sg(msc_dev(msc)->parent->parent, msc->single_sgt.sgl,
-+		     1, DMA_FROM_DEVICE);
-+	sg_free_table(&msc->single_sgt);
-+
- 	for (off = 0; off < msc->nr_pages << PAGE_SHIFT; off += PAGE_SIZE) {
- 		struct page *page = virt_to_page(msc->base + off);
- 
+ 	/* get source pad of entity directly upstream from src */
+ 	pad = imx_media_find_upstream_pad(priv->md, src, 0);
+ 	if (IS_ERR(pad))
 
 
