@@ -2,99 +2,121 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20515C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11178C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E787020881
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:46:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5AB720881
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:46:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558619193;
+	bh=hHE6c67P2rAS6OaTN285xrU4cTJEg+JYvlzhHriVflQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aT7kOQkX7qEb71StQoXK1I4zXPCGGNa4GNcdpCewZJvJwXQBRUFy4DuSfXMIcQEeU
+	 YvZ1gwEEvIsp6ZcTTvtDLSrQkZhmobmQjJLaNCkweea3V+lUyiJC5JzGNskSca4CVG
+	 cxBFBTgeYc8wfZvFnoSydEsIJZ7yoBifcFe4rXEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730759AbfEWNqa (ORCPT
+        id S1730800AbfEWNqd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 09:46:30 -0400
-Received: from www62.your-server.de ([213.133.104.62]:51730 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729902AbfEWNqa (ORCPT
+        Thu, 23 May 2019 09:46:33 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40576 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730564AbfEWNqb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 09:46:30 -0400
-Received: from [88.198.220.132] (helo=sslproxy03.your-server.de)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hTo3A-0003BO-4A; Thu, 23 May 2019 15:46:28 +0200
-Received: from [178.197.249.12] (helo=linux.home)
-        by sslproxy03.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hTo39-0008Tu-N1; Thu, 23 May 2019 15:46:27 +0200
-Subject: Re: [PATCH 4.19 144/187] selftests/bpf: skip verifier tests for
- unsupported program types
-To:     "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc:     "sashal@kernel.org" <sashal@kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "sdf@google.com" <sdf@google.com>
-References: <20190404084603.119654039@linuxfoundation.org>
- <20190404084609.946908305@linuxfoundation.org>
- <16ec5436310b0df657a4898e3d15ccc3b9aab8e2.camel@nokia.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <47a9ede3-bef8-7ae1-6353-b954b6e7f7af@iogearbox.net>
-Date:   Thu, 23 May 2019 15:46:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        Thu, 23 May 2019 09:46:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=mfme33xseZptaUR1J0V/caYBOllJ3rsr79Z37c1uExY=; b=p03EHWT2EucM1oy2mwwkLoCa4
+        cEClGv19UdrvGGd0zT2qpW5VR+hR7uqzOdMkk8Pq97xH1hF2IuNiIw8WCKa8qpFzoFcgidqqUxoFM
+        qkFRSOWgyqaN+BmVvehSRKNxsehKedaX1zgRl/igV7NNJdWO7vlbzoLgwPplFrbbMbU6w=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hTo39-0000Dd-D8; Thu, 23 May 2019 13:46:27 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id 0250D1126D24; Thu, 23 May 2019 14:46:25 +0100 (BST)
+Date:   Thu, 23 May 2019 14:46:25 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-rockchip@lists.infradead.org, drinkcat@chromium.org,
+        Guenter Roeck <groeck@chromium.org>, briannorris@chromium.org,
+        mka@chromium.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org
+Subject: Re: [PATCH v4 2/3] spi: Allow SPI devices to request the pumping
+ thread be realtime
+Message-ID: <20190523134625.GG17245@sirena.org.uk>
+References: <20190515164814.258898-1-dianders@chromium.org>
+ <20190515164814.258898-3-dianders@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <16ec5436310b0df657a4898e3d15ccc3b9aab8e2.camel@nokia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.100.3/25458/Thu May 23 09:58:32 2019)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="bO4vSxwwZtUjUWHo"
+Content-Disposition: inline
+In-Reply-To: <20190515164814.258898-3-dianders@chromium.org>
+X-Cookie: I brake for chezlogs!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/23/2019 12:27 PM, Rantala, Tommi T. (Nokia - FI/Espoo) wrote:
-> On Thu, 2019-04-04 at 10:48 +0200, Greg Kroah-Hartman wrote:
->> 4.19-stable review patch.  If anyone has any objections, please let
->> me know.
->>
->> ------------------
->>
->> [ Upstream commit 8184d44c9a577a2f1842ed6cc844bfd4a9981d8e ]
->>
->> Use recently introduced bpf_probe_prog_type() to skip tests in the
->> test_verifier() if bpf_verify_program() fails. The skipped test is
->> indicated in the output.
-> 
-> Hi, this patch added in 4.19.34 causes test_verifier build failure, as
-> bpf_probe_prog_type() is not available:
-> 
-> gcc -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf
-> -I../../../../include/generated -DHAVE_GENHDR
-> -I../../../include    test_verifier.c /root/linux-
-> 4.19.44/tools/testing/selftests/bpf/libbpf.a -lcap -lelf -lrt -lpthread
-> -o /root/linux-4.19.44/tools/testing/selftests/bpf/test_verifier
-> test_verifier.c: In function ‘do_test_single’:
-> test_verifier.c:12775:22: warning: implicit declaration of function
-> ‘bpf_probe_prog_type’; did you mean ‘bpf_program__set_type’? [-
-> Wimplicit-function-declaration]
->   if (fd_prog < 0 && !bpf_probe_prog_type(prog_type, 0)) {
->                       ^~~~~~~~~~~~~~~~~~~
->                       bpf_program__set_type
-> /usr/bin/ld: /tmp/ccEtyLhk.o: in function `do_test_single':
-> test_verifier.c:(.text+0xa19): undefined reference to
-> `bpf_probe_prog_type'
-> collect2: error: ld returned 1 exit status
-> make[1]: *** [../lib.mk:152: /root/linux-
-> 4.19.44/tools/testing/selftests/bpf/test_verifier] Error 1
 
-Looks like this kselftest one got auto-selected for stable? It's not
-strictly needed, so totally fine to drop.
+--bO4vSxwwZtUjUWHo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks,
-Daniel
+On Wed, May 15, 2019 at 09:48:12AM -0700, Douglas Anderson wrote:
+> Right now the only way to get the SPI pumping thread bumped up to
+> realtime priority is for the controller to request it.  However it may
+> be that the controller works fine with the normal priority but
+> communication to a particular SPI device on the bus needs realtime
+> priority.
+
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+
+  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-rt-pump
+
+for you to fetch changes up to 924b5867e7bd6a6a98014f0517b747465b108011:
+
+  spi: Allow SPI devices to request the pumping thread be realtime (2019-05-23 14:44:02 +0100)
+
+----------------------------------------------------------------
+spi: Allow setting pump to RT priority
+
+----------------------------------------------------------------
+Douglas Anderson (1):
+      spi: Allow SPI devices to request the pumping thread be realtime
+
+ drivers/spi/spi.c       | 36 ++++++++++++++++++++++++++++++------
+ include/linux/spi/spi.h |  2 ++
+ 2 files changed, 32 insertions(+), 6 deletions(-)
+
+--bO4vSxwwZtUjUWHo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzmpDEACgkQJNaLcl1U
+h9AT8wf9HCQwiI9ChQBim3VkHh1VA8vwPgC20zoPo4PUGPcvvaWX5I3lrUoeCp1Q
+vpMaUDp9J8OQ57wbmNFjqYYwLAK66XMUPQmqyH6q+1m1JSp5FP41aVGkJD32UOnk
+wqsDdznTOvdDrgnVtJWtqjSWiK18M4OQJhIJGwe0wBRIfk+bpQDa+s+R34wgHCt8
+xGJZcdJagggMsco0HvSgLuIRcIVuLbsCiu9Vxh1GR3ko3x7xLUVhkoKzxJ81qVu1
+99KmShuE/rXn2IKU0lfC6WjItvey3r1RWyKFsSd7xKI6Izz45lNFrUlgrSOyLW4R
+NqMXjQUeC/nEluG0IIC4X0mbopIIsw==
+=Xgy/
+-----END PGP SIGNATURE-----
+
+--bO4vSxwwZtUjUWHo--
