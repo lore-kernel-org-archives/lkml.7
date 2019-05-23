@@ -2,187 +2,270 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_SBL,URIBL_SBL_A autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66CAAC282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AEEC282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DFBC20862
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:44:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D717F20862
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:47:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fixposition.ch header.i=@fixposition.ch header.b="PgEVmLCY";
-	dkim=pass (2048-bit key) header.d=fixposition.ch header.i=@fixposition.ch header.b="FhwKNo/c"
+	dkim=pass (2048-bit key) header.d=tomeuvizoso-net.20150623.gappssmtp.com header.i=@tomeuvizoso-net.20150623.gappssmtp.com header.b="CYr4mNCV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730000AbfEWJoS (ORCPT
+        id S1730419AbfEWJrD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 05:44:18 -0400
-Received: from mail.fixposition.ch ([212.51.146.252]:57972 "EHLO
-        mail.fixposition.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726309AbfEWJoS (ORCPT
+        Thu, 23 May 2019 05:47:03 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:53484 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726363AbfEWJrC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 05:44:18 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.fixposition.ch (Postfix) with ESMTP id 630B11FD7B;
-        Thu, 23 May 2019 11:44:14 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fixposition.ch;
-        s=mail; t=1558604654;
-        bh=8Uyl4akugqZ5R9heNYDK3ic4w8QphwwSRvcQ9cwfzuE=;
-        h=In-Reply-To:From:Date:Cc:To:Subject:From;
-        b=PgEVmLCY4EgDUcupuum02X7faXhtZrNAxvEHwmYKz+GMqlI7PF/JYNuNFLjPTDpuy
-         Mj5PuUCWFTKmb5DDD9Tzi+v8G/bzvNg755n5utyFB4iqF5gjZZ1SXnG621dvEkRI4T
-         NxRagCRmr/l+He9vQLKXD/O6dfMZBiUWEEk3NQb4k86S3MXRSB73o9F5H1z1sVXwbr
-         d7ukRRvIoCGK8Wie4O6wWTNa6rv4U7qQd/kIDAjpCRbTNSUh9nu+kiHkUkXGsK5Dfm
-         58GnNoTCxxpU160riKsmPgDIZwv1LFHCg2wI7ywLQWNYuNW6WEMjfpzpW3S46ICAyS
-         tWw8ZOGkAkx6w==
-X-Virus-Scanned: Debian amavisd-new at fixposition.ch
-Received: from mail.fixposition.ch ([127.0.0.1])
-        by localhost (mail.fixposition.ch [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id tBqc_teX1UTY; Thu, 23 May 2019 11:44:11 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.fixposition.ch (Postfix) with ESMTP id B01851FF91;
-        Thu, 23 May 2019 11:44:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fixposition.ch;
-        s=mail; t=1558604651;
-        bh=8Uyl4akugqZ5R9heNYDK3ic4w8QphwwSRvcQ9cwfzuE=;
-        h=In-Reply-To:From:Date:Cc:To:Subject:From;
-        b=FhwKNo/ck+Dh8kYfq39loDKjSunTkc14w++FokJBcjq40O53XNsceHs6Qylc1yPoK
-         2RqkGsibxJJfdJXNt55/S2dg0iXQP+Xp4b6mqZAQv+nAljoA1snhlkgUfFeu4Kkfxz
-         isfpaVnaN7kcaIfscGvTcb6LFvRO2Oe4Nt1Y4Kea4r5os6Bg2HSNhdweZlcclHtkqq
-         YCK+lJLazTzr36YPgFTvGF1w176OUtB9m6cfi7VER0isz4vG4sDrqLCQX9z0eExlkz
-         TscchjjbFI9fq8VJf1udtHJzVz8MA5WWEiAQ3aqpct8MX9XlY3JWp/WzLSU9GQttTU
-         U1wCCDDZ/QF2Q==
-Content-Type: text/plain; charset="utf-8"
-In-Reply-To: <MN2PR12MB33738DAE3CCA829C2046CCE4C4000@MN2PR12MB3373.namprd12.prod.outlook.com>
-From:   "Andreea Lutac" <andreea.lutac@fixposition.ch>
-X-Forward: 82.130.71.115
-Date:   Thu, 23 May 2019 11:44:10 +0200
-Cc:     =?utf-8?q?stevemo=40skydio=2Ecom?= <stevemo@skydio.com>,
-        =?utf-8?q?jic23=40kernel=2Eorg?= <jic23@kernel.org>,
-        =?utf-8?q?knaack=2Eh=40gmx=2Ede?= <knaack.h@gmx.de>,
-        =?utf-8?q?lars=40metafoo=2Ede?= <lars@metafoo.de>,
-        =?utf-8?q?pmeerw=40pmeerw=2Enet?= <pmeerw@pmeerw.net>,
-        =?utf-8?q?linux-iio=40vger=2Ekernel=2Eorg?= 
-        <linux-iio@vger.kernel.org>,
-        =?utf-8?q?linux-kernel=40vger=2Ekernel=2Eorg?= 
-        <linux-kernel@vger.kernel.org>
-To:     "Jean-Baptiste Maneyrol" <JManeyrol@invensense.com>
+        Thu, 23 May 2019 05:47:02 -0400
+Received: by mail-it1-f194.google.com with SMTP id m141so8570513ita.3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 02:47:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tomeuvizoso-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=o9qGD0rptCcynbI2Mi951+wYe+LZmUVw5Jbzq7H7LuE=;
+        b=CYr4mNCVYoClhW3/8KzkrGw0dE/MQHcvxvP02Ix25c2AXtHjUi6HuS5n6lOmJLe3I+
+         MAwq6uwmjDrAW/w17OmU6Yn8bERVwkWmwN1qNuM098qBCB9hiGPEIhyB+IPgDHu1N0zq
+         xWYovIiVH+KrCA4ArtGgYjTG9YvGdVD3EcQ2Z2X4348OvmqTF0c7ZlWUtZd7tuwPHmUu
+         kfplabBQ/kUlvT0injsaYJCX6XlOSiyP5Zk7+qHQ6JgLT8p+pGwGTltGH3q4mXlAgUsx
+         OVJscuOEIGffRr+EB4W+jBtSL6cKQ2KjPxz2dhPXRjFZQO5XLKuoeGVm6r5LAL7JN5/b
+         y4lQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o9qGD0rptCcynbI2Mi951+wYe+LZmUVw5Jbzq7H7LuE=;
+        b=j64DxCs4yjH82QaZUFlUs42oOfyynAEBd+fV/9tYJCgdBnYVkl4MFP8XyMAatW40ad
+         xwF+qzm7dO0ziteQtaBXi7DC5TWfQvczIJxWMH3vzHK7Po+1eEJ5noBsLQIrGYK9ILls
+         oUCYj+7wFPGncLzvHBf37lkCnvyC5y2PK2/YjGE5OlTQXNqXRKJJPyZRaonQr+rgR45v
+         wDB8Pk7gm0iTlwt1/wZDCy/7yDl6qhBnxzyQro3mOloET0PrYJWb/VKpd39wvWEaQk9f
+         L6w0bI4Oxe0qE8UalhUaHqOURXDLoUp8nsMbMt774iSeGu5u9Np8/HX8D2VUNnq29hpu
+         T0/A==
+X-Gm-Message-State: APjAAAXD8L/cAKGf1ukmi+m+mocetr9f3Yy3qShFeIcwfMJgGocLI3Uq
+        FVK0DtJswDTeBf4QKV04xAyMTQ==
+X-Google-Smtp-Source: APXvYqw04EWOtc5PFMSYjltUREiEsqKv1Vo8bnTZ2SsqOP5C6NXP2cDsk+3tM0w5QwLnuvAU/dqBSg==
+X-Received: by 2002:a24:734c:: with SMTP id y73mr12377749itb.72.1558604821564;
+        Thu, 23 May 2019 02:47:01 -0700 (PDT)
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com. [209.85.166.41])
+        by smtp.gmail.com with ESMTPSA id j125sm2017635itb.27.2019.05.23.02.47.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 May 2019 02:47:00 -0700 (PDT)
+Received: by mail-io1-f41.google.com with SMTP id m7so4322977ioa.6;
+        Thu, 23 May 2019 02:47:00 -0700 (PDT)
+X-Received: by 2002:a6b:9257:: with SMTP id u84mr12698696iod.55.1558604820400;
+ Thu, 23 May 2019 02:47:00 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <42bd-5ce66b80-45-ca9e8b0@181725592>
-Subject: =?utf-8?q?Re=3A?= ICM20602 buffer issues with the =?utf-8?q?inv=5Fmpu6050?= 
- driver
-User-Agent: SOGoMail 4.0.7
-Content-Transfer-Encoding: quoted-printable
+References: <20190516044313.GA17751@localhost.localdomain>
+In-Reply-To: <20190516044313.GA17751@localhost.localdomain>
+From:   Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Date:   Thu, 23 May 2019 11:46:47 +0200
+X-Gmail-Original-Message-ID: <CAAObsKD0_+cJQW0YtF9AkWn8XYP9wSYHTi_UhRiba7tH5EWTdw@mail.gmail.com>
+Message-ID: <CAAObsKD0_+cJQW0YtF9AkWn8XYP9wSYHTi_UhRiba7tH5EWTdw@mail.gmail.com>
+Subject: Re: [GIT PULL] Thermal-SoC management changes for v5.2-rc1
+To:     Eduardo Valentin <edubezval@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Rui Zhang <rui.zhang@intel.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jean-Baptiste and Stepan,
+Hi Eduardo,
 
-Thanks so much for the replies and the advice. I've dug a bit deeper in=
-to this and added a few printk statements to the driver, as suggested b=
-y Stepan. It looks like the device is getting recognized correctly as I=
-CM20602 and the buffer is being filled with 14 bytes as expected.
+I saw that for 5.1 [0] you included a kernelci boot report for your
+tree, but not for 5.2. Have you found anything that should be improved
+in KernelCI for it to be more useful to maintainers like you?
 
-But I've identified some strange behaviour regarding the temperature ch=
-anneI. If I manually enable all 7 scan elements and read 14 bytes from =
-the device file, the readings appear correct and change accordingly whe=
-n I move the chip around. However, if I set in=5Ftemp=5Fen set to 0 (wi=
-th everything else still enabled) and read 12 bytes, the buffer doesn't=
- seem to acknowledge this change and shift the gyro values up, instead =
-getting only the first 12 bytes (accel=5Fx, accel=5Fy, accel=5Fz, temp,=
- gyro=5Fx, gyro=5Fy), without gyro=5Fz. So this is why it looks as if t=
-emp is replacing gyro=5Fx.
-I made a pastebin here with some of the (unconverted) values I got whil=
-e testing these cases: https://pastebin.com/BYVqDNch
+[0] https://lore.kernel.org/lkml/20190306161207.GA7365@localhost.localdomain/
 
-Attempting the same reads with my C++ program via libiio always results=
- in only the first 12 bytes being read, as for some strange reason libi=
-io fails to enable the temperature channel, so iio=5Fdevice=5Fget=5Fsam=
-ple=5Fsize() is always 12 and it's actually gyro=5Fz that I can't get t=
-o. 
+I found about this when trying to understand why the boot on the
+veyron-jaq board has been broken in 5.2-rc1.
 
-I'll try to look through the code that is supposed to enable a channel =
-and see why it's not succeeding via libiio. Do you have any clue as to =
-which bit of code does the adjustment of the buffer values according to=
- which channels are enabled? Is this done in the driver or deeper in th=
-e kernel?
+Thanks,
 
-Thanks once again for the help!
-Best regards,
-Andreea   
+Tomeu
 
-On Wednesday, May 22, 2019 16:33 CEST, Jean-Baptiste Maneyrol <JManeyro=
-l@invensense.com> wrote: 
- 
-> Hello,
-> 
-> I had a look inside the driver to verify the buffer implementation. I=
-t looks correct to me. I don't see where the problem can come from. I a=
-m sorry I don't have a setup currently to test in live.
-> 
-> For sure you can have a different result by reading the buffer throug=
-h the char device file compared to reading the raw sysfs entry. The buf=
-fer is taking the data from the FIFO and the raw sysfs from the sensor =
-data registers.
-> 
-> You can perhaps test value 1 by 1 in the buffer, and verify the corre=
-ctness of every attributes. If you can also send a complete buffer log =
-that would be helpful.
-> Every data is 2 bytes long and in the following order: accel=5Fx, acc=
-el=5Fy, accel=5Fz, temp, gyro=5Fx, gyro=5Fy, gyro=5Fz
-> 
-> Best regards,
-> JB Maneyrol
-> 
-> From: Andreea Lutac <andreea.lutac@fixposition.ch>
-> Sent: Tuesday, May 21, 2019 12:40
-> Cc: Jean-Baptiste Maneyrol; stevemo@skydio.com; jic23@kernel.org; kna=
-ack.h@gmx.de; lars@metafoo.de; pmeerw@pmeerw.net; linux-iio@vger.kernel=
-.org; linux-kernel@vger.kernel.org
-> Subject: ICM20602 buffer issues with the inv=5Fmpu6050 driver
-> =C2=A0
-> Hello,
-> 
-> I've been trying to get some data samples from the ICM20602 IMU using=
- the mpu6050 driver which recently added support for it, but I'm encoun=
-tering an issue with the ordering of the data in the FIFO.
-> According to the specs of the device, if the accel and gyro XYZ chann=
-els are enabled, then the hardware FIFO is filled with 14 bytes corresp=
-onding to the following channels: accel=5Fx, accel=5Fy, accel=5Fz, temp=
-, anglvel=5Fx, anglvel=5Fy, anglvel=5Fz. However, when reading out the =
-buffer, the value I get for anglvel=5Fx seems to actually be the temper=
-ature. This=C2=A0 occurs both when reading with iio=5Fchannel=5Fread (v=
-ia libiio) and also if I read directly from /dev/iio:device with only i=
-n=5Fanglvel=5Fx=5Fen set. But in=5Fanglvel=5Fx=5Fraw reports correct va=
-lues, which made me suspect that maybe somewhere in the driver this int=
-erleaved temp channel is not accounted for in the buffer structure.
-> 
-> I had a look at the driver code and inv=5Fmpu6050=5Fread=5Ffifo() in =
-particular, but I can't identify anything amiss. I've applied the recen=
-t patch that added the extra 2 temperature bytes ( ), but the problem p=
-ersists. So far I've tried changing the size of the data buffer, define=
-d in inv=5Fmpu=5Fiio.h:
-> 
-> /* 6 + 6 round up and plus 8 */
-> #define INV=5FMPU6050=5FOUTPUT=5FDATA=5FSIZE=C2=A0=C2=A0=C2=A0=C2=A0 =
-24
-> 
-> from 24 to 32, according to the intuition that 24 corresponds to read=
-ings without temperature (i.e. 6 bytes for accel, rounded up to 8 + 6 b=
-ytes for gyro, rounded up to 8 + 8 bytes for the timestamp =3D 24) and =
-thus another 8 bytes would be needed, but that doesn't seem to have sol=
-ved it.
-> 
-> I'm quite new to driver development though, so I think there might be=
- something I'm not getting. I would be really grateful if anyone could =
-shed some light over what's happening here or give some advice as to wh=
-at I could be doing wrong.
-> 
-> Best regards,
-> Andreea Lutac
+On Thu, 16 May 2019 at 06:43, Eduardo Valentin <edubezval@gmail.com> wrote:
 >
-
+> Hello Linus,
+>
+> Please consider the following thermal soc changes for v5.2-rc1.
+>
+> The following changes since commit 37624b58542fb9f2d9a70e6ea006ef8a5f66c30b:
+>
+>   Linux 5.1-rc7 (2019-04-28 17:04:13 -0700)
+>
+> are available in the git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-thermal linus
+>
+> for you to fetch changes up to 37bcec5d9f71bd13142a97d2196b293c9ac23823:
+>
+>   hwmon: (pwm-fan) Use devm_thermal_of_cooling_device_register (2019-05-14 07:00:47 -0700)
+>
+> Specifics:
+> - thermal core has a new devm_* API for registering cooling devices, thanks to Guenter R.
+>   I took the entire series, that is why you see changes on drivers/hwmon in this pull.
+> - rockchip thermal driver gains support to PX30 SoC, thanks to Elaine Z.
+> - the generic-adc thermal driver now considers the lookup table DT property as optional,
+>   thanks to Jean-Francois D.
+> - Refactoring of tsens thermal driver, thanks to Amit K.
+> - Cleanups on cpu cooling driver, thanks to Daniel L.
+> - broadcom thermal driver dropped support to ACPI, thanks to Srinath M.
+> - tegra thermal driver gains support to OC hw throttle and GPU throtle, thanks to Wei Ni.
+> - Fixes in several thermal drivers.
+>
+> BR,
+>
+> Eduardo Valentin
+>
+> ----------------------------------------------------------------
+> Amit Kucheria (21):
+>       drivers: thermal: tsens: Document the data structures
+>       drivers: thermal: tsens: Rename tsens_data
+>       drivers: thermal: tsens: Rename tsens_device
+>       drivers: thermal: tsens: Rename variable tmdev
+>       drivers: thermal: tsens: Use consistent names for variables
+>       drivers: thermal: tsens: Function prototypes should have argument names
+>       drivers: thermal: tsens: Rename tsens-8916 to prepare to merge with tsens-8974
+>       drivers: thermal: tsens: Rename constants to prepare to merge with tsens-8974
+>       drivers: thermal: tsens: Merge tsens-8974 into tsens-v0_1
+>       drivers: thermal: tsens: Introduce reg_fields to deal with register description
+>       drivers: thermal: tsens: Save reference to the device pointer and use it
+>       drivers: thermal: tsens: Don't print error message on -EPROBE_DEFER
+>       drivers: thermal: tsens: Add new operation to check if a sensor is enabled
+>       drivers: thermal: tsens: change data type for sensor IDs
+>       drivers: thermal: tsens: Introduce IP-specific max_sensor count
+>       drivers: thermal: tsens: simplify get_temp_tsens_v2 routine
+>       drivers: thermal: tsens: Move get_temp_tsens_v2 to allow sharing
+>       drivers: thermal: tsens: Common get_temp() learns to do ADC conversion
+>       dt: thermal: tsens: Add bindings for qcs404
+>       drivers: thermal: tsens: Add generic support for TSENS v1 IP
+>       drivers: thermal: tsens: Move calibration constants to header file
+>
+> Andrey Smirnov (1):
+>       thermal: qoriq: Remove unnecessary DT node is NULL check
+>
+> Daniel Lezcano (4):
+>       thermal/drivers/cpu_cooling: Remove pointless test in power2state()
+>       thermal/drivers/cpu_cooling: Fixup the header and copyright
+>       thermal/drivers/cpu_cooling: Add Software Package Data Exchange (SPDX)
+>       thermal/drivers/cpu_cooling: Remove pointless field
+>
+> Elaine Zhang (3):
+>       thermal: rockchip: fix up the tsadc pinctrl setting error
+>       dt-bindings: rockchip-thermal: Support the PX30 SoC compatible
+>       thermal: rockchip: Support the PX30 SoC in thermal driver
+>
+> Enrico Weigelt, metux IT consult (1):
+>       drivers: thermal: Kconfig: pedantic cleanups
+>
+> Guenter Roeck (6):
+>       thermal: Introduce devm_thermal_of_cooling_device_register
+>       hwmon: (aspeed-pwm-tacho) Use devm_thermal_of_cooling_device_register
+>       hwmon: (gpio-fan) Use devm_thermal_of_cooling_device_register
+>       hwmon: (mlxreg-fan) Use devm_thermal_of_cooling_device_register
+>       hwmon: (npcm750-pwm-fan) Use devm_thermal_of_cooling_device_register
+>       hwmon: (pwm-fan) Use devm_thermal_of_cooling_device_register
+>
+> Hoan Nguyen An (1):
+>       thermal: rcar_gen3_thermal: Fix init value of IRQCTL register
+>
+> Jean-Francois Dagenais (2):
+>       thermal: generic-adc: make lookup table optional
+>       dt-bindings: thermal: generic-adc: make lookup-table optional
+>
+> Jiada Wang (3):
+>       thermal: rcar_gen3_thermal: fix interrupt type
+>       thermal: rcar_gen3_thermal: disable interrupt in .remove
+>       thermal: rcar_gen3_thermal: Fix to show correct trip points number
+>
+> Matthias Kaehlcke (1):
+>       thermal: cpu_cooling: Actually trace CPU load in thermal_power_cpu_get_power
+>
+> Srinath Mannam (1):
+>       thermal: broadcom: Remove ACPI support
+>
+> Talel Shenhar (3):
+>       dt-bindings: thermal: al-thermal: Add binding documentation
+>       thermal: Introduce Amazon's Annapurna Labs Thermal Driver
+>       thermal: Fix build error of missing devm_ioremap_resource on UM
+>
+> Wei Ni (9):
+>       of: Add bindings of thermtrip for Tegra soctherm
+>       thermal: tegra: support hw and sw shutdown
+>       of: Add bindings of gpu hw throttle for Tegra soctherm
+>       thermal: tegra: add support for gpu hw-throttle
+>       thermal: tegra: add support for thermal IRQ
+>       thermal: tegra: add set_trips functionality
+>       thermal: tegra: add support for EDP IRQ
+>       of: Add bindings of OC hw throttle for Tegra soctherm
+>       thermal: tegra: enable OC hw throttle
+>
+> Wolfram Sang (1):
+>       thermal: stm32: simplify getting .driver_data
+>
+> Yangtao Li (1):
+>       of: thermal: Improve print information
+>
+> Yoshihiro Kaneko (1):
+>       thermal: rcar_thermal: update calculation formula for R-Car Gen3 SoCs
+>
+>  .../bindings/thermal/amazon,al-thermal.txt         |  33 +
+>  .../bindings/thermal/nvidia,tegra124-soctherm.txt  |  62 +-
+>  .../devicetree/bindings/thermal/qcom-tsens.txt     |  14 +
+>  .../bindings/thermal/rockchip-thermal.txt          |   1 +
+>  .../bindings/thermal/thermal-generic-adc.txt       |  10 +-
+>  MAINTAINERS                                        |   6 +
+>  drivers/hwmon/aspeed-pwm-tacho.c                   |   6 +-
+>  drivers/hwmon/gpio-fan.c                           |  25 +-
+>  drivers/hwmon/mlxreg-fan.c                         |  31 +-
+>  drivers/hwmon/npcm750-pwm-fan.c                    |   6 +-
+>  drivers/hwmon/pwm-fan.c                            |  73 +-
+>  drivers/thermal/Kconfig                            |  11 +
+>  drivers/thermal/Makefile                           |   1 +
+>  drivers/thermal/broadcom/sr-thermal.c              |   8 -
+>  drivers/thermal/cpu_cooling.c                      |  30 +-
+>  drivers/thermal/of-thermal.c                       |   3 +
+>  drivers/thermal/qcom/Makefile                      |   4 +-
+>  drivers/thermal/qcom/tsens-8916.c                  | 105 ---
+>  drivers/thermal/qcom/tsens-8960.c                  |  84 +-
+>  drivers/thermal/qcom/tsens-common.c                | 159 +++-
+>  .../thermal/qcom/{tsens-8974.c => tsens-v0_1.c}    | 166 +++-
+>  drivers/thermal/qcom/tsens-v1.c                    | 193 +++++
+>  drivers/thermal/qcom/tsens-v2.c                    | 111 +--
+>  drivers/thermal/qcom/tsens.c                       | 100 ++-
+>  drivers/thermal/qcom/tsens.h                       | 291 ++++++-
+>  drivers/thermal/qoriq_thermal.c                    |   5 -
+>  drivers/thermal/rcar_gen3_thermal.c                |  51 +-
+>  drivers/thermal/rcar_thermal.c                     |  11 +-
+>  drivers/thermal/rockchip_thermal.c                 |  74 +-
+>  drivers/thermal/st/Kconfig                         |  22 +-
+>  drivers/thermal/st/stm_thermal.c                   |   6 +-
+>  drivers/thermal/tegra/Kconfig                      |   4 +-
+>  drivers/thermal/tegra/soctherm.c                   | 961 +++++++++++++++++++--
+>  drivers/thermal/tegra/soctherm.h                   |  16 +
+>  drivers/thermal/tegra/tegra124-soctherm.c          |   7 +-
+>  drivers/thermal/tegra/tegra132-soctherm.c          |   7 +-
+>  drivers/thermal/tegra/tegra210-soctherm.c          |  15 +-
+>  drivers/thermal/thermal-generic-adc.c              |   9 +-
+>  drivers/thermal/thermal_core.c                     |  49 ++
+>  drivers/thermal/thermal_mmio.c                     | 129 +++
+>  include/dt-bindings/thermal/tegra124-soctherm.h    |   8 +-
+>  include/linux/thermal.h                            |  13 +
+>  42 files changed, 2330 insertions(+), 590 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/amazon,al-thermal.txt
+>  delete mode 100644 drivers/thermal/qcom/tsens-8916.c
+>  rename drivers/thermal/qcom/{tsens-8974.c => tsens-v0_1.c} (56%)
+>  create mode 100644 drivers/thermal/qcom/tsens-v1.c
+>  create mode 100644 drivers/thermal/thermal_mmio.c
