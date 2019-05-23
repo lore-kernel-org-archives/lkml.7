@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 452EFC46460
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E755EC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C71E2184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF564217D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:22:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639326;
-	bh=OM323lilaXTT5GZ/zcOGrhKKBjdRwxa1Q4gP6gKPlek=;
+	s=default; t=1558639329;
+	bh=gf+o3NeVqFACRQ7l+lxfdQbcSz6yhrDzSzQtgBf3Ekw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A+Ck4Olf67osxsa+csmaYb91Be0+6OV1NefXJ4FRMENpLqKYxZ+oY8E+W8RlEKnGE
-	 WuK6rbDL4NMtA3pc6e99SmFhXt1a4lYLS0Nj6f5iKFUUhDVuu8vC2OM/Qr0LoV0jeX
-	 ya4phKwQVjUKrQylqKmB5onu8lw2TCvN8ngPhdpk=
+	b=wugLDRitAFr7mavc8OSr8Ju5fxhp5wd2PNOqtfKF3yZ+LjOLXL4AWOqJaO8aAK+3P
+	 ddcz+BXrZZ0z6nTNJZdf8T4q/pduZzLypWdltLW350tlhR+t8+suN1xPrT66UHCSWO
+	 65YcP/MiROgInxAPwdhHye+JXxEpH2EdII2cBIk8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390397AbfEWTWF (ORCPT
+        id S2390405AbfEWTWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:22:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59684 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:22:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388660AbfEWTWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:22:01 -0400
+        id S2390361AbfEWTWD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:22:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A72F920863;
-        Thu, 23 May 2019 19:21:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56830205ED;
+        Thu, 23 May 2019 19:22:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639320;
-        bh=OM323lilaXTT5GZ/zcOGrhKKBjdRwxa1Q4gP6gKPlek=;
+        s=default; t=1558639322;
+        bh=gf+o3NeVqFACRQ7l+lxfdQbcSz6yhrDzSzQtgBf3Ekw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qLWgOI0+4WaAajLmzkQdpjvrUpIxrM3+JrI8saKJTA3rLIGWTLDIvu4OS9MWszAuY
-         +HyqUymRdrRnD2dRVDxVDQSXjNbwsREbziP5qk9l/ibTzu/2S7mWY78fzWlLozFb3e
-         U4sJvsh3aM0S+LnsebNQq18r1PYZxzGC0Cpi0UUQ=
+        b=MKHsGIKYwq4Guqva6wIZlolcRca6zXqTnNkoWS9U2HZFy31EP0gS++ap0uIncMUdt
+         fUbSvW3E/+180tCv0tC1wVwv7IatU7Vqu2CPqcmn6ft2q2VK7zt3fhkRq41rb7LD8K
+         pVmxrYWabAbfS/KJJCIT40Es3mP0iLISScuLe7rA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiao Ni <xni@redhat.com>,
-        NeilBrown <neilb@suse.com>, Song Liu <songliubraving@fb.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.0 034/139] md: batch flush requests.
-Date:   Thu, 23 May 2019 21:05:22 +0200
-Message-Id: <20190523181725.202744210@linuxfoundation.org>
+        stable@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH 5.0 054/139] clk: rockchip: fix wrong clock definitions for rk3328
+Date:   Thu, 23 May 2019 21:05:42 +0200
+Message-Id: <20190523181727.671865103@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -60,170 +60,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: NeilBrown <neilb@suse.com>
+From: Jonas Karlman <jonas@kwiboo.se>
 
-commit 2bc13b83e6298486371761de503faeffd15b7534 upstream.
+commit fb903392131a324a243c7731389277db1cd9f8df upstream.
 
-Currently if many flush requests are submitted to an md device is quick
-succession, they are serialized and can take a long to process them all.
-We don't really need to call flush all those times - a single flush call
-can satisfy all requests submitted before it started.
-So keep track of when the current flush started and when it finished,
-allow any pending flush that was requested before the flush started
-to complete without waiting any more.
+This patch fixes definition of several clock gate and select register
+that is wrong for rk3328 referring to the TRM and vendor kernel.
+Also use correct number of softrst registers.
 
-Test results from Xiao:
+Fix clock definition for:
+- clk_crypto
+- aclk_h265
+- pclk_h265
+- aclk_h264
+- hclk_h264
+- aclk_axisram
+- aclk_gmac
+- aclk_usb3otg
 
-Test is done on a raid10 device which is created by 4 SSDs. The tool is
-dbench.
-
-1. The latest linux stable kernel
-  Operation                Count    AvgLat    MaxLat
-  --------------------------------------------------
-  Deltree                    768    10.509    78.305
-  Flush                  2078376     0.013    10.094
-  Close                  21787697     0.019    18.821
-  LockX                    96580     0.007     3.184
-  Mkdir                      384     0.008     0.062
-  Rename                 1255883     0.191    23.534
-  ReadX                  46495589     0.020    14.230
-  WriteX                 14790591     7.123    60.706
-  Unlink                 5989118     0.440    54.551
-  UnlockX                  96580     0.005     2.736
-  FIND_FIRST             10393845     0.042    12.079
-  SET_FILE_INFORMATION   2415558     0.129    10.088
-  QUERY_FILE_INFORMATION 4711725     0.005     8.462
-  QUERY_PATH_INFORMATION 26883327     0.032    21.715
-  QUERY_FS_INFORMATION   4929409     0.010     8.238
-  NTCreateX              29660080     0.100    53.268
-
-Throughput 1034.88 MB/sec (sync open)  128 clients  128 procs
-max_latency=60.712 ms
-
-2. With patch1 "Revert "MD: fix lock contention for flush bios""
-  Operation                Count    AvgLat    MaxLat
-  --------------------------------------------------
-  Deltree                    256     8.326    36.761
-  Flush                   693291     3.974   180.269
-  Close                  7266404     0.009    36.929
-  LockX                    32160     0.006     0.840
-  Mkdir                      128     0.008     0.021
-  Rename                  418755     0.063    29.945
-  ReadX                  15498708     0.007     7.216
-  WriteX                 4932310    22.482   267.928
-  Unlink                 1997557     0.109    47.553
-  UnlockX                  32160     0.004     1.110
-  FIND_FIRST             3465791     0.036     7.320
-  SET_FILE_INFORMATION    805825     0.015     1.561
-  QUERY_FILE_INFORMATION 1570950     0.005     2.403
-  QUERY_PATH_INFORMATION 8965483     0.013    14.277
-  QUERY_FS_INFORMATION   1643626     0.009     3.314
-  NTCreateX              9892174     0.061    41.278
-
-Throughput 345.009 MB/sec (sync open)  128 clients  128 procs
-max_latency=267.939 m
-
-3. With patch1 and patch2
-  Operation                Count    AvgLat    MaxLat
-  --------------------------------------------------
-  Deltree                    768     9.570    54.588
-  Flush                  2061354     0.666    15.102
-  Close                  21604811     0.012    25.697
-  LockX                    95770     0.007     1.424
-  Mkdir                      384     0.008     0.053
-  Rename                 1245411     0.096    12.263
-  ReadX                  46103198     0.011    12.116
-  WriteX                 14667988     7.375    60.069
-  Unlink                 5938936     0.173    30.905
-  UnlockX                  95770     0.005     4.147
-  FIND_FIRST             10306407     0.041    11.715
-  SET_FILE_INFORMATION   2395987     0.048     7.640
-  QUERY_FILE_INFORMATION 4672371     0.005     9.291
-  QUERY_PATH_INFORMATION 26656735     0.018    19.719
-  QUERY_FS_INFORMATION   4887940     0.010     7.654
-  NTCreateX              29410811     0.059    28.551
-
-Throughput 1026.21 MB/sec (sync open)  128 clients  128 procs
-max_latency=60.075 ms
-
-Cc: <stable@vger.kernel.org> # v4.19+
-Tested-by: Xiao Ni <xni@redhat.com>
-Signed-off-by: NeilBrown <neilb@suse.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: fe3511ad8a1c ("clk: rockchip: add clock controller for rk3328")
+Cc: stable@vger.kernel.org
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+Tested-by: Peter Geis <pgwipeout@gmail.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/md.c |   27 +++++++++++++++++++++++----
- drivers/md/md.h |    3 +++
- 2 files changed, 26 insertions(+), 4 deletions(-)
+ drivers/clk/rockchip/clk-rk3328.c |   18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -427,6 +427,7 @@ static void submit_flushes(struct work_s
- 	struct mddev *mddev = container_of(ws, struct mddev, flush_work);
- 	struct md_rdev *rdev;
+--- a/drivers/clk/rockchip/clk-rk3328.c
++++ b/drivers/clk/rockchip/clk-rk3328.c
+@@ -458,7 +458,7 @@ static struct rockchip_clk_branch rk3328
+ 			RK3328_CLKSEL_CON(35), 15, 1, MFLAGS, 8, 7, DFLAGS,
+ 			RK3328_CLKGATE_CON(2), 12, GFLAGS),
+ 	COMPOSITE(SCLK_CRYPTO, "clk_crypto", mux_2plls_p, 0,
+-			RK3328_CLKSEL_CON(20), 7, 1, MFLAGS, 0, 7, DFLAGS,
++			RK3328_CLKSEL_CON(20), 7, 1, MFLAGS, 0, 5, DFLAGS,
+ 			RK3328_CLKGATE_CON(2), 4, GFLAGS),
+ 	COMPOSITE_NOMUX(SCLK_TSADC, "clk_tsadc", "clk_24m", 0,
+ 			RK3328_CLKSEL_CON(22), 0, 10, DFLAGS,
+@@ -550,15 +550,15 @@ static struct rockchip_clk_branch rk3328
+ 	GATE(0, "hclk_rkvenc_niu", "hclk_rkvenc", 0,
+ 			RK3328_CLKGATE_CON(25), 1, GFLAGS),
+ 	GATE(ACLK_H265, "aclk_h265", "aclk_rkvenc", 0,
+-			RK3328_CLKGATE_CON(25), 0, GFLAGS),
++			RK3328_CLKGATE_CON(25), 2, GFLAGS),
+ 	GATE(PCLK_H265, "pclk_h265", "hclk_rkvenc", 0,
+-			RK3328_CLKGATE_CON(25), 1, GFLAGS),
++			RK3328_CLKGATE_CON(25), 3, GFLAGS),
+ 	GATE(ACLK_H264, "aclk_h264", "aclk_rkvenc", 0,
+-			RK3328_CLKGATE_CON(25), 0, GFLAGS),
++			RK3328_CLKGATE_CON(25), 4, GFLAGS),
+ 	GATE(HCLK_H264, "hclk_h264", "hclk_rkvenc", 0,
+-			RK3328_CLKGATE_CON(25), 1, GFLAGS),
++			RK3328_CLKGATE_CON(25), 5, GFLAGS),
+ 	GATE(ACLK_AXISRAM, "aclk_axisram", "aclk_rkvenc", CLK_IGNORE_UNUSED,
+-			RK3328_CLKGATE_CON(25), 0, GFLAGS),
++			RK3328_CLKGATE_CON(25), 6, GFLAGS),
  
-+	mddev->start_flush = ktime_get_boottime();
- 	INIT_WORK(&mddev->flush_work, md_submit_flush_data);
- 	atomic_set(&mddev->flush_pending, 1);
- 	rcu_read_lock();
-@@ -467,6 +468,7 @@ static void md_submit_flush_data(struct
- 	 * could wait for this and below md_handle_request could wait for those
- 	 * bios because of suspend check
- 	 */
-+	mddev->last_flush = mddev->start_flush;
- 	mddev->flush_bio = NULL;
- 	wake_up(&mddev->sb_wait);
+ 	COMPOSITE(SCLK_VENC_CORE, "sclk_venc_core", mux_4plls_p, 0,
+ 			RK3328_CLKSEL_CON(51), 14, 2, MFLAGS, 8, 5, DFLAGS,
+@@ -663,7 +663,7 @@ static struct rockchip_clk_branch rk3328
  
-@@ -481,15 +483,32 @@ static void md_submit_flush_data(struct
+ 	/* PD_GMAC */
+ 	COMPOSITE(ACLK_GMAC, "aclk_gmac", mux_2plls_hdmiphy_p, 0,
+-			RK3328_CLKSEL_CON(35), 6, 2, MFLAGS, 0, 5, DFLAGS,
++			RK3328_CLKSEL_CON(25), 6, 2, MFLAGS, 0, 5, DFLAGS,
+ 			RK3328_CLKGATE_CON(3), 2, GFLAGS),
+ 	COMPOSITE_NOMUX(PCLK_GMAC, "pclk_gmac", "aclk_gmac", 0,
+ 			RK3328_CLKSEL_CON(25), 8, 3, DFLAGS,
+@@ -733,7 +733,7 @@ static struct rockchip_clk_branch rk3328
  
- void md_flush_request(struct mddev *mddev, struct bio *bio)
- {
-+	ktime_t start = ktime_get_boottime();
- 	spin_lock_irq(&mddev->lock);
- 	wait_event_lock_irq(mddev->sb_wait,
--			    !mddev->flush_bio,
-+			    !mddev->flush_bio ||
-+			    ktime_after(mddev->last_flush, start),
- 			    mddev->lock);
--	mddev->flush_bio = bio;
-+	if (!ktime_after(mddev->last_flush, start)) {
-+		WARN_ON(mddev->flush_bio);
-+		mddev->flush_bio = bio;
-+		bio = NULL;
-+	}
- 	spin_unlock_irq(&mddev->lock);
+ 	/* PD_PERI */
+ 	GATE(0, "aclk_peri_noc", "aclk_peri", CLK_IGNORE_UNUSED, RK3328_CLKGATE_CON(19), 11, GFLAGS),
+-	GATE(ACLK_USB3OTG, "aclk_usb3otg", "aclk_peri", 0, RK3328_CLKGATE_CON(19), 4, GFLAGS),
++	GATE(ACLK_USB3OTG, "aclk_usb3otg", "aclk_peri", 0, RK3328_CLKGATE_CON(19), 14, GFLAGS),
  
--	INIT_WORK(&mddev->flush_work, submit_flushes);
--	queue_work(md_wq, &mddev->flush_work);
-+	if (!bio) {
-+		INIT_WORK(&mddev->flush_work, submit_flushes);
-+		queue_work(md_wq, &mddev->flush_work);
-+	} else {
-+		/* flush was performed for some other bio while we waited. */
-+		if (bio->bi_iter.bi_size == 0)
-+			/* an empty barrier - all done */
-+			bio_endio(bio);
-+		else {
-+			bio->bi_opf &= ~REQ_PREFLUSH;
-+			mddev->pers->make_request(mddev, bio);
-+		}
-+	}
- }
- EXPORT_SYMBOL(md_flush_request);
+ 	GATE(HCLK_SDMMC, "hclk_sdmmc", "hclk_peri", 0, RK3328_CLKGATE_CON(19), 0, GFLAGS),
+ 	GATE(HCLK_SDIO, "hclk_sdio", "hclk_peri", 0, RK3328_CLKGATE_CON(19), 1, GFLAGS),
+@@ -913,7 +913,7 @@ static void __init rk3328_clk_init(struc
+ 				     &rk3328_cpuclk_data, rk3328_cpuclk_rates,
+ 				     ARRAY_SIZE(rk3328_cpuclk_rates));
  
---- a/drivers/md/md.h
-+++ b/drivers/md/md.h
-@@ -463,6 +463,9 @@ struct mddev {
- 	 */
- 	struct bio *flush_bio;
- 	atomic_t flush_pending;
-+	ktime_t start_flush, last_flush; /* last_flush is when the last completed
-+					  * flush was started.
-+					  */
- 	struct work_struct flush_work;
- 	struct work_struct event_work;	/* used by dm to report failure event */
- 	void (*sync_super)(struct mddev *mddev, struct md_rdev *rdev);
+-	rockchip_register_softrst(np, 11, reg_base + RK3328_SOFTRST_CON(0),
++	rockchip_register_softrst(np, 12, reg_base + RK3328_SOFTRST_CON(0),
+ 				  ROCKCHIP_SOFTRST_HIWORD_MASK);
+ 
+ 	rockchip_register_restart_notifier(ctx, RK3328_GLB_SRST_FST, NULL);
 
 
