@@ -2,239 +2,122 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E87C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 11:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD35C46460
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 11:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D59EA20851
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 11:46:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0FCA2168B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 11:47:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Lvt9jRIK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vIq7tLlX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730619AbfEWLqi (ORCPT
+        id S1730628AbfEWLro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 07:46:38 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43422 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730485AbfEWLqh (ORCPT
+        Thu, 23 May 2019 07:47:44 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41276 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729949AbfEWLro (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 07:46:37 -0400
-Received: by mail-pg1-f195.google.com with SMTP id f25so3008548pgv.10
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 04:46:37 -0700 (PDT)
+        Thu, 23 May 2019 07:47:44 -0400
+Received: by mail-wr1-f66.google.com with SMTP id u16so2039280wrn.8;
+        Thu, 23 May 2019 04:47:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=LEifsqwnL2BjXCVuqDW5HukFRG14FiPFkC5knaitSp8=;
-        b=Lvt9jRIK0RxPlPR9Ydlr2C/j77GrQptj8vSfAUw8rYMnhtJa2cDk84ixTSGctwKty2
-         7nz5mlHIUD9kRcsLQScD+TJU1Dcp1leEw+1SGih4l+elbSJL3p4bHk7YbrJqWO7YvZZW
-         HZOecpMOYn/eWKc2zdp17ipfC+L5hZeG8NJUlCkPE7oRmJSNv3ltNYXnNqhkzZO4Uejd
-         Hw1tQSAunCp0MojMPQ5QkDfziBEmOKiyaeeAWMkJx1z9iQ5iF1O73qfg6T8QPavedq++
-         LOuw5PPoXzLkI8T52+98iKNiLjVcuxGrGfevv4SZm6YF/sp50q0k+ForMnDkWkLQcYu/
-         xptA==
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9YqtCW0tbRef0Fm5cqvSOdlCFpzkVDTaJgcqIQyiBT8=;
+        b=vIq7tLlXXXDRV0gFGARjH6SvTg2BRhRk+p7+wzeII7TToU58ZIRP19lTK0gPptdRKm
+         6Qzk8l9R1faq5Z7bl1f+koGGaIjDcALA+jsrK5hJAvxR6Y+4p0igiPcj4pi9U56g1DnR
+         EK0zS6hPscmlDdrQHPgtuJQR2o2Pq7kBF5G/8npIHz1ejhYwEQlrhEjg3n4GqGXAYmh6
+         PUSfodzylh10zl+/38JW9GzShsYD6cxcw7009XvIoHMY4YYpDrXY085RMj20c7+YIafa
+         DbKOw7r6H/NTN32XAvF6fUC5LjsYdimAXsRBZoTzBe98fDKZuCyVCkMxp2VYPBkh+rmK
+         0V7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=LEifsqwnL2BjXCVuqDW5HukFRG14FiPFkC5knaitSp8=;
-        b=oAs/iA6BQln9vmML4O1YdRjXUp9we0QT88MwF9kr93gLds+vtQJPJ4KVbcrBtRfs3U
-         M0OwedB+pPl2TD+xT1EXhbZ6rsiXzxPY9rbOxoRzs25vH7qVEq4b4XMKZP1ISIVqiz5b
-         7zIaMOQKaZYy3z9uRtyfCgauwZKw8swlnbIbG7Z0tisfR+ovbJldKNM0gg9gbD3Huc7h
-         CfcQQ8bPlw6qwaW94FH7XHa7e5esQGQK0jAYJpX+HjBK5aRJDC6kd+9d0y3vM6m6rfjE
-         9TPJWsdCyaG0hL/ECeOnRd+BOH5LN02UI6kLiM1Xwcp16O7VyTeP5824ULVxGB/3QRws
-         BE2g==
-X-Gm-Message-State: APjAAAWCkul1XTEb9A0+KD+eT5g2wJCOzeBVLJFYQ+G+YJPNtfrJUctt
-        wCi4/whkcBOeLozEjIYg1VySYw==
-X-Google-Smtp-Source: APXvYqwMvfCi1UIzA9Dds+oEz5UVeF7cNdI5wIi6tZxo8UilpLvQEX9DwAhALre6fjnUlMXi6ouUiA==
-X-Received: by 2002:a63:2ac9:: with SMTP id q192mr26316526pgq.144.1558611997020;
-        Thu, 23 May 2019 04:46:37 -0700 (PDT)
-Received: from buildserver-90.open-silicon.com ([114.143.65.226])
-        by smtp.googlemail.com with ESMTPSA id l43sm565045pjb.7.2019.05.23.04.46.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 23 May 2019 04:46:36 -0700 (PDT)
-From:   Yash Shah <yash.shah@sifive.com>
-To:     davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        devicetree@vger.kernel.org
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        nicolas.ferre@microchip.com, palmer@sifive.com,
-        aou@eecs.berkeley.edu, ynezz@true.cz, paul.walmsley@sifive.com,
-        sachin.ghadi@sifive.com, Yash Shah <yash.shah@sifive.com>
-Subject: [PATCH 2/2] net: macb: Add support for SiFive FU540-C000
-Date:   Thu, 23 May 2019 17:15:52 +0530
-Message-Id: <1558611952-13295-3-git-send-email-yash.shah@sifive.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1558611952-13295-1-git-send-email-yash.shah@sifive.com>
-References: <1558611952-13295-1-git-send-email-yash.shah@sifive.com>
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=9YqtCW0tbRef0Fm5cqvSOdlCFpzkVDTaJgcqIQyiBT8=;
+        b=bQLSZnv6eKEZm52uLp3Qku3RxMvhM9Vq9KolX0IvGuMatyb1eisuOAZJD2/xG13a/1
+         O2Dxpv8+cfV35hyX/WsRAVTVfHTkJflNWGaXcHfNoTywbVk1xkQO9VY2UJykslVuE0cF
+         t/JAA2UgNdvwymRDjJVOqp9Rcgwu5ApZPpl93JPFfdUgvn+TnzEmZgdlOUMPq4tKyTl8
+         o9zPiaydIyhj5XoK362zCMmRihQ7PvO3uaplHaBzrFaDx6vQUEgh9tpyEgbe9diB6Xyf
+         mH9tV54bLsw1fkUzOA/rYXW/qkUrCB/CXvxsULD0kTPVGUXAvZ28p4HdoBnh3x6Uvzo/
+         OwgA==
+X-Gm-Message-State: APjAAAUaiCWOiCyjxwRVeZFUUnrctIfW429oTouQHroZboXkuDtC8jqs
+        5+uFj4xHETytNHVPdhHsGUo=
+X-Google-Smtp-Source: APXvYqyXDaVtFOjnuCjBHo3dqsM/hp9hs8h7Skl2dQIHLPNKdqJiMHf1WrYMBDLGZurDJsBXeQ7P+w==
+X-Received: by 2002:a5d:4b52:: with SMTP id w18mr329581wrs.262.1558612061895;
+        Thu, 23 May 2019 04:47:41 -0700 (PDT)
+Received: from macbookpro.malat.net (bru31-1-78-225-224-134.fbx.proxad.net. [78.225.224.134])
+        by smtp.gmail.com with ESMTPSA id x68sm9075665wmf.13.2019.05.23.04.47.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 May 2019 04:47:40 -0700 (PDT)
+Received: by macbookpro.malat.net (Postfix, from userid 1000)
+        id D6B341146D57; Thu, 23 May 2019 13:47:39 +0200 (CEST)
+From:   Mathieu Malaterre <malat@debian.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Mathieu Malaterre <malat@debian.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: [PATCH] powerpc/power: Expose pfn_is_nosave prototype
+Date:   Thu, 23 May 2019 13:47:36 +0200
+Message-Id: <20190523114736.30268-1-malat@debian.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The management IP block is tightly coupled with the Cadence MACB IP
-block on the FU540, and manages many of the boundary signals from the
-MACB IP. This patch only controls the tx_clk input signal to the MACB
-IP. Future patches may add support for monitoring or controlling other
-IP boundary signals.
+The declaration for pfn_is_nosave is only available in
+kernel/power/power.h. Since this function can be override in arch,
+expose it globally. Having a prototype will make sure to avoid warning
+(sometime treated as error with W=1) such as:
 
-Signed-off-by: Yash Shah <yash.shah@sifive.com>
+  arch/powerpc/kernel/suspend.c:18:5: error: no previous prototype for 'pfn_is_nosave' [-Werror=missing-prototypes]
+
+This moves the declaration into a globally visible header file and add
+missing include to avoid a warning in powerpc.
+
+Signed-off-by: Mathieu Malaterre <malat@debian.org>
 ---
- drivers/net/ethernet/cadence/macb_main.c | 118 +++++++++++++++++++++++++++++++
- 1 file changed, 118 insertions(+)
+ arch/powerpc/kernel/suspend.c | 1 +
+ include/linux/suspend.h       | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index c049410..a9e5227 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -10,6 +10,7 @@
+diff --git a/arch/powerpc/kernel/suspend.c b/arch/powerpc/kernel/suspend.c
+index a531154cc0f3..9e1b6b894245 100644
+--- a/arch/powerpc/kernel/suspend.c
++++ b/arch/powerpc/kernel/suspend.c
+@@ -8,6 +8,7 @@
+  */
  
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- #include <linux/clk.h>
-+#include <linux/clk-provider.h>
- #include <linux/crc32.h>
- #include <linux/module.h>
- #include <linux/moduleparam.h>
-@@ -40,6 +41,15 @@
- #include <linux/pm_runtime.h>
- #include "macb.h"
+ #include <linux/mm.h>
++#include <linux/suspend.h>
+ #include <asm/page.h>
+ #include <asm/sections.h>
  
-+/* This structure is only used for MACB on SiFive FU540 devices */
-+struct sifive_fu540_macb_mgmt {
-+	void __iomem *reg;
-+	unsigned long rate;
-+	struct clk_hw hw;
-+};
-+
-+static struct sifive_fu540_macb_mgmt *mgmt;
-+
- #define MACB_RX_BUFFER_SIZE	128
- #define RX_BUFFER_MULTIPLE	64  /* bytes */
- 
-@@ -3903,6 +3913,113 @@ static int at91ether_init(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static unsigned long fu540_macb_tx_recalc_rate(struct clk_hw *hw,
-+					       unsigned long parent_rate)
-+{
-+	return mgmt->rate;
-+}
-+
-+static long fu540_macb_tx_round_rate(struct clk_hw *hw, unsigned long rate,
-+				     unsigned long *parent_rate)
-+{
-+	if (WARN_ON(rate < 2500000))
-+		return 2500000;
-+	else if (rate == 2500000)
-+		return 2500000;
-+	else if (WARN_ON(rate < 13750000))
-+		return 2500000;
-+	else if (WARN_ON(rate < 25000000))
-+		return 25000000;
-+	else if (rate == 25000000)
-+		return 25000000;
-+	else if (WARN_ON(rate < 75000000))
-+		return 25000000;
-+	else if (WARN_ON(rate < 125000000))
-+		return 125000000;
-+	else if (rate == 125000000)
-+		return 125000000;
-+
-+	WARN_ON(rate > 125000000);
-+
-+	return 125000000;
-+}
-+
-+static int fu540_macb_tx_set_rate(struct clk_hw *hw, unsigned long rate,
-+				  unsigned long parent_rate)
-+{
-+	rate = fu540_macb_tx_round_rate(hw, rate, &parent_rate);
-+	iowrite32(rate != 125000000, mgmt->reg);
-+	mgmt->rate = rate;
-+
-+	return 0;
-+}
-+
-+static const struct clk_ops fu540_c000_ops = {
-+	.recalc_rate = fu540_macb_tx_recalc_rate,
-+	.round_rate = fu540_macb_tx_round_rate,
-+	.set_rate = fu540_macb_tx_set_rate,
-+};
-+
-+static int fu540_c000_clk_init(struct platform_device *pdev, struct clk **pclk,
-+			       struct clk **hclk, struct clk **tx_clk,
-+			       struct clk **rx_clk, struct clk **tsu_clk)
-+{
-+	struct clk_init_data init;
-+	int err = 0;
-+
-+	err = macb_clk_init(pdev, pclk, hclk, tx_clk, rx_clk, tsu_clk);
-+	if (err)
-+		return err;
-+
-+	mgmt = devm_kzalloc(&pdev->dev, sizeof(*mgmt), GFP_KERNEL);
-+	if (!mgmt)
-+		return -ENOMEM;
-+
-+	init.name = "sifive-gemgxl-mgmt";
-+	init.ops = &fu540_c000_ops;
-+	init.flags = 0;
-+	init.num_parents = 0;
-+
-+	mgmt->rate = 0;
-+	mgmt->hw.init = &init;
-+
-+	*tx_clk = clk_register(NULL, &mgmt->hw);
-+	if (IS_ERR(*tx_clk))
-+		return PTR_ERR(*tx_clk);
-+
-+	err = clk_prepare_enable(*tx_clk);
-+	if (err)
-+		dev_err(&pdev->dev, "failed to enable tx_clk (%u)\n", err);
-+	else
-+		dev_info(&pdev->dev, "Registered clk switch '%s'\n", init.name);
-+
-+	return 0;
-+}
-+
-+static int fu540_c000_init(struct platform_device *pdev)
-+{
-+	struct resource *res;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+	if (!res)
-+		return -ENODEV;
-+
-+	mgmt->reg = ioremap(res->start, resource_size(res));
-+	if (!mgmt->reg)
-+		return -ENOMEM;
-+
-+	return macb_init(pdev);
-+}
-+
-+static const struct macb_config fu540_c000_config = {
-+	.caps = MACB_CAPS_GIGABIT_MODE_AVAILABLE | MACB_CAPS_JUMBO |
-+		MACB_CAPS_GEM_HAS_PTP,
-+	.dma_burst_length = 16,
-+	.clk_init = fu540_c000_clk_init,
-+	.init = fu540_c000_init,
-+	.jumbo_max_len = 10240,
-+};
-+
- static const struct macb_config at91sam9260_config = {
- 	.caps = MACB_CAPS_USRIO_HAS_CLKEN | MACB_CAPS_USRIO_DEFAULT_IS_MII_GMII,
- 	.clk_init = macb_clk_init,
-@@ -3980,6 +4097,7 @@ static int at91ether_init(struct platform_device *pdev)
- 	{ .compatible = "cdns,at32ap7000-macb" },
- 	{ .compatible = "cdns,at91sam9260-macb", .data = &at91sam9260_config },
- 	{ .compatible = "cdns,macb" },
-+	{ .compatible = "cdns,fu540-macb", .data = &fu540_c000_config },
- 	{ .compatible = "cdns,np4-macb", .data = &np4_config },
- 	{ .compatible = "cdns,pc302-gem", .data = &pc302gem_config },
- 	{ .compatible = "cdns,gem", .data = &pc302gem_config },
+diff --git a/include/linux/suspend.h b/include/linux/suspend.h
+index 3f529ad9a9d2..2660bbdf5230 100644
+--- a/include/linux/suspend.h
++++ b/include/linux/suspend.h
+@@ -395,6 +395,7 @@ extern bool system_entering_hibernation(void);
+ extern bool hibernation_available(void);
+ asmlinkage int swsusp_save(void);
+ extern struct pbe *restore_pblist;
++int pfn_is_nosave(unsigned long pfn);
+ #else /* CONFIG_HIBERNATION */
+ static inline void register_nosave_region(unsigned long b, unsigned long e) {}
+ static inline void register_nosave_region_late(unsigned long b, unsigned long e) {}
 -- 
-1.9.1
+2.20.1
 
