@@ -2,120 +2,142 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6FAEC04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B66C04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:37:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87289204EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:35:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 996992075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:37:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="PvXYs1VD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726390AbfEWHf2 (ORCPT
+        id S1730270AbfEWHhc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 03:35:28 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:15999 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727232AbfEWHfX (ORCPT
+        Thu, 23 May 2019 03:37:32 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:46698 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726222AbfEWHh3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 03:35:23 -0400
-X-UUID: 864bf361aa5b4a52b11e6e1b6f7e7682-20190523
-X-UUID: 864bf361aa5b4a52b11e6e1b6f7e7682-20190523
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <long.cheng@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 802912487; Thu, 23 May 2019 15:35:14 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs03n1.mediatek.inc (172.21.101.181) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 23 May 2019 15:35:12 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 23 May 2019 15:35:11 +0800
-From:   Long Cheng <long.cheng@mediatek.com>
-To:     Vinod Koul <vkoul@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-serial@vger.kernel.org>,
-        <srv_heupstream@mediatek.com>,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        YT Shen <yt.shen@mediatek.com>,
-        Zhenbao Liu <zhenbao.liu@mediatek.com>,
-        Long Cheng <long.cheng@mediatek.com>
-Subject: [PATCH v13 0/2] add uart DMA function 
-Date:   Thu, 23 May 2019 15:35:07 +0800
-Message-ID: <1558596909-14084-1-git-send-email-long.cheng@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+        Thu, 23 May 2019 03:37:29 -0400
+Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 89AB7C0A62;
+        Thu, 23 May 2019 07:37:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1558597035; bh=vMtkeGJYR0zyPoI1aSHR7lqITOvxpI1w439NYnSYuo4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=PvXYs1VDJuY2z4jYpViAsdw6lojp/C8J5++6T4j6pThZLelIatZs24JPiZS3pCw49
+         WbRwxsMU/xHuOTLxYxkfYbq8cyoaNNPRI3C0j7k3kd/MCrZcTr8kikwKMjyjKOZ6fE
+         IQ6xF+0DNLcwzFkwa2GNxGAg7E39///gG8rA7Q5+6Ge0XGoI59kSMdZhEqZ3ZKmzXB
+         LLUiSpRktsO1/CoRSd09LSed84mHjcgIo8Ca6b81ZbPZbskherhWrhi88kB80TLxYd
+         sJJc8YTqOh/RNKf90FT8vPzwRkrY7FxHdM0OrJPkTenmJXtqYv32mIE+8Uq8eHvkPY
+         rCiDTbBGuuUgw==
+Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 012A4A00A3;
+        Thu, 23 May 2019 07:37:29 +0000 (UTC)
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by de02.synopsys.com (Postfix) with ESMTP id 2A06C3D93E;
+        Thu, 23 May 2019 09:37:28 +0200 (CEST)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: [PATCH net-next 04/18] net: stmmac: dwmac4/5: Add MAC loopback support
+Date:   Thu, 23 May 2019 09:36:54 +0200
+Message-Id: <aeea6b531e9a738163f61a99ecc650463576e376.1558596600.git.joabreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1558596599.git.joabreu@synopsys.com>
+References: <cover.1558596599.git.joabreu@synopsys.com>
+In-Reply-To: <cover.1558596599.git.joabreu@synopsys.com>
+References: <cover.1558596599.git.joabreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In Mediatek SOCs, the uart can support DMA function.
-Base on DMA engine formwork, we add the DMA code to support uart. And put the code under drivers/dma/mediatek.
+In preparation for the addition of stmmac selftests we implement the MAC
+loopback callback in dwmac4/5 cores.
 
-This series contains document bindings, Kconfig to control the function enable or not,
-device tree including interrupt and dma device node, the code of UART DMA
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Cc: Joao Pinto <jpinto@synopsys.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Corentin Labbe <clabbe.montjoie@gmail.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/dwmac4.h      |  1 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 15 +++++++++++++++
+ 2 files changed, 16 insertions(+)
 
-Changes compared to v12
--rename parameters
--remove direction
-Changes compared to v11
--modify TX/RX
--pause function by software
-Changes compared to v10
--modify DMA tx status function
--modify 8250_mtk for DMA rx
--add notes to binding Document.
-Changes compared to v9
--rename dt-bindings file
--remove direction from device_config
--simplified code
-Changes compared to v8
--revise missing items
-Changes compared to v7:
--modify apdma uart tx
-Changes compared to v6:
--Correct spelling
-Changes compared to v5:
--move 'requst irqs' to alloc channel
--remove tasklet.
-Changes compared to v4:
--modify Kconfig depends on.
-Changes compared to v3:
--fix CONFIG_PM, will cause build fail
-Changes compared to v2:
--remove unimportant parameters
--instead of cookie, use APIs of virtual channel.
--use of_dma_xlate_by_chan_id.
-Changes compared to v1:
--mian revised file, 8250_mtk_dma.c
---parameters renamed for standard
---remove atomic operation
-
-Long Cheng (2):
-  arm: dts: mt2712: add uart APDMA to device tree
-  serial: 8250-mtk: modify uart DMA rx
-
- arch/arm64/boot/dts/mediatek/mt2712e.dtsi |   51 +++++++++++++++++++++++++++++
- drivers/tty/serial/8250/8250_mtk.c        |   49 +++++++++++----------------
- 2 files changed, 71 insertions(+), 29 deletions(-)
-
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
+index eb013d54025a..3dddd7902b0f 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
+@@ -160,6 +160,7 @@ enum power_event {
+ #define GMAC_CONFIG_PS			BIT(15)
+ #define GMAC_CONFIG_FES			BIT(14)
+ #define GMAC_CONFIG_DM			BIT(13)
++#define GMAC_CONFIG_LM			BIT(12)
+ #define GMAC_CONFIG_DCRS		BIT(9)
+ #define GMAC_CONFIG_TE			BIT(1)
+ #define GMAC_CONFIG_RE			BIT(0)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+index 7e5d5db0d516..2f1a2a6f9b33 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+@@ -701,6 +701,18 @@ static void dwmac4_debug(void __iomem *ioaddr, struct stmmac_extra_stats *x,
+ 		x->mac_gmii_rx_proto_engine++;
+ }
+ 
++static void dwmac4_set_mac_loopback(void __iomem *ioaddr, bool enable)
++{
++	u32 value = readl(ioaddr + GMAC_CONFIG);
++
++	if (enable)
++		value |= GMAC_CONFIG_LM;
++	else
++		value &= ~GMAC_CONFIG_LM;
++
++	writel(value, ioaddr + GMAC_CONFIG);
++}
++
+ const struct stmmac_ops dwmac4_ops = {
+ 	.core_init = dwmac4_core_init,
+ 	.set_mac = stmmac_set_mac,
+@@ -730,6 +742,7 @@ const struct stmmac_ops dwmac4_ops = {
+ 	.pcs_get_adv_lp = dwmac4_get_adv_lp,
+ 	.debug = dwmac4_debug,
+ 	.set_filter = dwmac4_set_filter,
++	.set_mac_loopback = dwmac4_set_mac_loopback,
+ };
+ 
+ const struct stmmac_ops dwmac410_ops = {
+@@ -761,6 +774,7 @@ const struct stmmac_ops dwmac410_ops = {
+ 	.pcs_get_adv_lp = dwmac4_get_adv_lp,
+ 	.debug = dwmac4_debug,
+ 	.set_filter = dwmac4_set_filter,
++	.set_mac_loopback = dwmac4_set_mac_loopback,
+ };
+ 
+ const struct stmmac_ops dwmac510_ops = {
+@@ -797,6 +811,7 @@ const struct stmmac_ops dwmac510_ops = {
+ 	.safety_feat_dump = dwmac5_safety_feat_dump,
+ 	.rxp_config = dwmac5_rxp_config,
+ 	.flex_pps_config = dwmac5_flex_pps_config,
++	.set_mac_loopback = dwmac4_set_mac_loopback,
+ };
+ 
+ int dwmac4_setup(struct stmmac_priv *priv)
 -- 
-1.7.9.5
+2.7.4
 
