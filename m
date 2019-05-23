@@ -2,126 +2,77 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35433C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D858C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 092E32184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:37:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640239;
-	bh=VZ/qY7gzPf8BKoH4JDs2wBXDuVtj0bdbFzN0l2GOsww=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fSgXPg26/eA+LZ5CUpOaH4IMcCbXZegfZ5n9vmFZxr7VYkRUyxoRck7Z1SY/pLNUI
-	 tp0Y8pdi+kEPk/h66mtC2qtCvcWLRLaaxWhKGqv94ue9J1ulQlqaPzItHAjz2vOH0R
-	 /14Rwnd4vgnHXof38/IVErUh5Jw/Q7z3BZCqbDRE=
+	by mail.kernel.org (Postfix) with ESMTP id D0E1E2184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:37:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="pL5nUok9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391211AbfEWThR (ORCPT
+        id S2391542AbfEWThU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:37:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35696 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:37:20 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:60898 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390942AbfEWTYj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:24:39 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S2391147AbfEWThR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:37:17 -0400
+Received: from cz.tnic (unknown [165.204.77.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3885F2133D;
-        Thu, 23 May 2019 19:24:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639478;
-        bh=VZ/qY7gzPf8BKoH4JDs2wBXDuVtj0bdbFzN0l2GOsww=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ALagHLDuXcXD4IDgsc8KvWdkRDt7UJsqNYVbD74us2kJ0jA66IpXD4trqw/LDCaTD
-         I6Z3HhNtp9Ks8rb/eJCqyvg06rWnpDOFs2MYdoDwjQp/HmYbzx3N1XxTZ+ZBzwI0/r
-         eJL4+qD8yEpRZhXWERLjNwzJWOGO4U9ggn46X0QE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Chris Healy <cphealy@gmail.com>, linux-pm@vger.kernel.org,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 120/139] power: supply: sysfs: prevent endless uevent loop with CONFIG_POWER_SUPPLY_DEBUG
-Date:   Thu, 23 May 2019 21:06:48 +0200
-Message-Id: <20190523181735.241791265@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
-References: <20190523181720.120897565@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E585E1EC0249;
+        Thu, 23 May 2019 21:37:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1558640236;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=Srz9nZ3KqeuWjClvOk7zYv9LY9g9nrm5xPcxGRQlFLg=;
+        b=pL5nUok9ZIay72KrYyGu3TZDURNZJG33dgbozo1hyAIUyqg6Y3SWsQh7nNXVWl5bJ4vgpY
+        BP9wTC+Egqml/s8YdFAX6WJGzTlvOX8ou5mUBqZ7DAOuwDq15ds6hguSrlEeQZhMhoH05f
+        Ga1LyEvyIpKw4c0SSEb7xwSitV5/O+A=
+Date:   Thu, 23 May 2019 23:37:04 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+Cc:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCH] x86/MCE: Statically allocate mce_banks_array
+Message-ID: <20190523213704.GB3980@cz.tnic>
+References: <20190523150345.42906-1-Yazen.Ghannam@amd.com>
+ <20190523202754.GA3980@cz.tnic>
+ <SN6PR12MB2639AAC20E9F01D1DE810E17F8010@SN6PR12MB2639.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <SN6PR12MB2639AAC20E9F01D1DE810E17F8010@SN6PR12MB2639.namprd12.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 349ced9984ff540ce74ca8a0b2e9b03dc434b9dd ]
+On Thu, May 23, 2019 at 07:23:08PM +0000, Ghannam, Yazen wrote:
+> Sure, but which patch are you referring to?
+> 
+> This seems to fix a patch in the set in bp/rc0+3-ras.
 
-Fix a similar endless event loop as was done in commit
-8dcf32175b4e ("i2c: prevent endless uevent loop with
-CONFIG_I2C_DEBUG_CORE"):
+Sorry, I got confused. So bp/rc0+3-ras is not cast in stone - feel free
+to take it and merge this change into 5b0883f5c7be ("x86/MCE: Make
+mce_banks a per-CPU array") and then fix up any potential conflicts
+coming from the following patches. And then send the whole pile as a new
+revision.
 
-  The culprit is the dev_dbg printk in the i2c uevent handler. If
-  this is activated (for instance by CONFIG_I2C_DEBUG_CORE) it results
-  in an endless loop with systemd-journald.
+Thx.
 
-  This happens if user-space scans the system log and reads the uevent
-  file to get information about a newly created device, which seems
-  fair use to me. Unfortunately reading the "uevent" file uses the
-  same function that runs for creating the uevent for a new device,
-  generating the next syslog entry
-
-Both CONFIG_I2C_DEBUG_CORE and CONFIG_POWER_SUPPLY_DEBUG were reported
-in https://bugs.freedesktop.org/show_bug.cgi?id=76886 but only former
-seems to have been fixed. Drop debug prints as it was done in I2C
-subsystem to resolve the issue.
-
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: linux-pm@vger.kernel.org
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/power/supply/power_supply_sysfs.c | 6 ------
- 1 file changed, 6 deletions(-)
-
-diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-index dce24f5961609..5358a80d854f9 100644
---- a/drivers/power/supply/power_supply_sysfs.c
-+++ b/drivers/power/supply/power_supply_sysfs.c
-@@ -383,15 +383,11 @@ int power_supply_uevent(struct device *dev, struct kobj_uevent_env *env)
- 	char *prop_buf;
- 	char *attrname;
- 
--	dev_dbg(dev, "uevent\n");
--
- 	if (!psy || !psy->desc) {
- 		dev_dbg(dev, "No power supply yet\n");
- 		return ret;
- 	}
- 
--	dev_dbg(dev, "POWER_SUPPLY_NAME=%s\n", psy->desc->name);
--
- 	ret = add_uevent_var(env, "POWER_SUPPLY_NAME=%s", psy->desc->name);
- 	if (ret)
- 		return ret;
-@@ -427,8 +423,6 @@ int power_supply_uevent(struct device *dev, struct kobj_uevent_env *env)
- 			goto out;
- 		}
- 
--		dev_dbg(dev, "prop %s=%s\n", attrname, prop_buf);
--
- 		ret = add_uevent_var(env, "POWER_SUPPLY_%s=%s", attrname, prop_buf);
- 		kfree(attrname);
- 		if (ret)
 -- 
-2.20.1
+Regards/Gruss,
+    Boris.
 
-
-
+ECO tip #101: Trim your mails when you reply. Srsly.
