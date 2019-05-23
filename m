@@ -2,113 +2,199 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63794C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B54CFC282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31AE020879
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:09:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BD2120879
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:11:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nikanor-nu.20150623.gappssmtp.com header.i=@nikanor-nu.20150623.gappssmtp.com header.b="FQ0it7Ct"
+	dkim=pass (1024-bit key) header.d=aurorafoss.org header.i=@aurorafoss.org header.b="qKz9x26S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730485AbfEWMJn (ORCPT
+        id S1730558AbfEWMLh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 08:09:43 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:44362 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728309AbfEWMJm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 08:09:42 -0400
-Received: by mail-lf1-f67.google.com with SMTP id n134so4196823lfn.11
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 05:09:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=nikanor-nu.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=h6lj7XxfSxFYE4ZQJuSyQV2q9lHLkjeov5udj7sc3bk=;
-        b=FQ0it7Ctgumei+b9BjeJKiqMgsDTpyHgII+IhNI3w+vYYg27ZDMhMP/uIB26p/Q++R
-         IoXhK9dNk4Zk5iNUJPBqUJM4xxPTQjBkLnwx4od6a3pI8mbuMB2nwFogeJMxioXEm5to
-         4xH7qVtkEQ1MWEdlRRAYrcEyQxC0492R4fpu87VYZAaM2FHbQOH5eQrssfZuSnu2+L6k
-         sCf5fzP3YEuJhiwAJKml4VYoXhzermIUkUn6OeYiGEN0ZOZTvJtM3TFg/ymm5nUIHM9E
-         uBqcjLdMiKIzl1asXdmj6LiYS1EFDOguetlg6OFcGBCsJnvhChvmlAHubp7Toir/Vlas
-         Y8dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=h6lj7XxfSxFYE4ZQJuSyQV2q9lHLkjeov5udj7sc3bk=;
-        b=U3Qd7uf5/1xCqUWeNeVwfRyXai69pke7cLbqUAxeGMHnYAqE2VBUQJuA8PO6lklVyz
-         aRaxYCjpD/XymlZpnnozAGlEYmrrNL9F9M7EU9tPPVgCf4zr1VXOlqsvqJCe2rqkabsz
-         hlF7wfJdUrOmN9gCnrC4cPmX07ytMpxcrcsHR5zXCfnU+NWdxSuuoubzrh1h88m5cRTr
-         hlie+sTrXJXQfGe2dqiFNJl7o8zpZywGd6LU53XVprhdVuAlL1VrlGJSd9mbYqaNmrdM
-         ivQRs2R5oNca/zIBhKGLx9Pd0wN4mphXUsGY2VOUercJ0Z60WO0vqxVmVd7G4XXdyg00
-         BZzw==
-X-Gm-Message-State: APjAAAUg//AKgvUk2+SuGS9O45JuIcbXjVF2jlhfOGOcgfs0N49grw0r
-        t8i7Xgewto2+Cs34gtzsLzm+3g==
-X-Google-Smtp-Source: APXvYqzlzNEFp/xZRKmB8JdxW6mESUynRvJK0HU3P3lAVOPrac7uvZrZTDwDKYyxkHSAd7eR/nxNVg==
-X-Received: by 2002:ac2:4d0d:: with SMTP id r13mr21381889lfi.30.1558613380386;
-        Thu, 23 May 2019 05:09:40 -0700 (PDT)
-Received: from dev.nikanor.nu (78-72-133-4-no161.tbcn.telia.com. [78.72.133.4])
-        by smtp.gmail.com with ESMTPSA id g15sm1226340ljk.83.2019.05.23.05.09.39
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 May 2019 05:09:39 -0700 (PDT)
-Date:   Thu, 23 May 2019 14:09:37 +0200
-From:   Simon =?utf-8?Q?Sandstr=C3=B6m?= <simon@nikanor.nu>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        dan.carpenter@oracle.com
-Subject: Re: [PATCH 2/8] staging: kpc2000: use __func__ in debug messages
-Message-ID: <20190523120937.zq6gif6amslfruna@dev.nikanor.nu>
-References: <20190523113613.28342-1-simon@nikanor.nu>
- <20190523113613.28342-3-simon@nikanor.nu>
- <20190523115553.GA6953@kroah.com>
+        Thu, 23 May 2019 08:11:37 -0400
+Received: from out.migadu.com ([91.121.223.63]:55296 "EHLO out.migadu.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729762AbfEWMLg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 08:11:36 -0400
+X-Greylist: delayed 452 seconds by postgrey-1.27 at vger.kernel.org; Thu, 23 May 2019 08:11:35 EDT
+Received: (Migadu outbound); Thu, 23 May 2019 12:04:02 +0000
+Authentication-Results: out.migadu.com; auth=pass (plain)
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+        by out.migadu.com (Haraka/2.8.16) with ESMTPSA id 62D1782A-3A83-4104-AD52-8CDAF3E8EFDE.1
+        envelope-from <luis@aurorafoss.org> (authenticated bits=0)
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 verify=FAIL);
+        Thu, 23 May 2019 12:04:02 +0000
+Received: by mail-oi1-f171.google.com with SMTP id 203so4120846oid.13;
+        Thu, 23 May 2019 05:04:01 -0700 (PDT)
+X-Gm-Message-State: APjAAAXivUop7Xpf4Dy/YUDqxqUNxdPcZPLV2rYZJ8woSHEXkJi/lMsc
+        ZkJVOWxkWmusvQlOiT3ATNYA639lwfxuquEqQj4=
+X-Google-Smtp-Source: APXvYqx9TJdgzx+SRsv86x3Pg6PgQ6XTQ2PTSIBmK/tCq/Q7sGUckZpCFugE7A+nvTBUZyUbWV5sH9EmdN5jhxjrmrM=
+X-Received: by 2002:aca:240d:: with SMTP id n13mr2388042oic.145.1558613040588;
+ Thu, 23 May 2019 05:04:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190523115553.GA6953@kroah.com>
-User-Agent: NeoMutt/20180716
+References: <c2f3c22c-d491-17e7-ede7-54f9df11e064@redhat.com>
+ <20190402160433.15810-1-luis@aurorafoss.org> <55a52a4e-01d1-2f4c-25e3-0047537bef86@redhat.com>
+ <CAPyOxm8DyFjRxeL9QFHGW084cg5vhsKrwqGFy5rp8MEEZ3AHEQ@mail.gmail.com>
+ <c34e15ec4be9d783c7134491639eb176@_> <9d8458a1-fc47-0727-4dc8-1d1eb185886d@redhat.com>
+In-Reply-To: <9d8458a1-fc47-0727-4dc8-1d1eb185886d@redhat.com>
+From:   =?UTF-8?Q?Lu=C3=ADs_Ferreira?= <luis@aurorafoss.org>
+Date:   Thu, 23 May 2019 13:03:49 +0100
+X-Gmail-Original-Message-ID: <CAPyOxm9Q0Chq+TVjyK1eFWXCSJb0d-pttnEFVRB0Sw4QZnMM+Q@mail.gmail.com>
+Message-ID: <CAPyOxm9Q0Chq+TVjyK1eFWXCSJb0d-pttnEFVRB0Sw4QZnMM+Q@mail.gmail.com>
+Subject: Re: [PATCH] iio: accel: add missing sensor for some 2-in-1 based ultrabooks
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     jic23@kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1;a=rsa-sha256;bh=QG2XsEKhdyNggSpbcBvp05DnITNX9W6WV+MXt8mStR8=;c=relaxed/simple;d=aurorafoss.org;h=from:subject:date:to;s=default;b=qKz9x26S6oYtXxLvi1XFna2EuynaZGJmO3Gj31bruSlY7XSJQMQ4IT0qYo3bUOKezVIqKX38nPRyDqqd3NoOJHsAGiIoTNx55lrcRb24M0IOdiL/8sAZ+tne54lUZ8TQhriKq78paaoDOmWdt91/rF9IF4PJrZTyePHwBzEI6k8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 01:55:53PM +0200, Greg KH wrote:
-> On Thu, May 23, 2019 at 01:36:07PM +0200, Simon Sandström wrote:
-> > Fixes checkpatch.pl warning "Prefer using '"%s...", __func__' to using
-> > '<function name>', this function's name, in a string".
-> > 
-> > Signed-off-by: Simon Sandström <simon@nikanor.nu>
-> > ---
-> >  drivers/staging/kpc2000/kpc2000/cell_probe.c | 22 +++++++++++++-------
-> >  1 file changed, 14 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/drivers/staging/kpc2000/kpc2000/cell_probe.c b/drivers/staging/kpc2000/kpc2000/cell_probe.c
-> > index 95bfbe4aae4d..7b850f3e808b 100644
-> > --- a/drivers/staging/kpc2000/kpc2000/cell_probe.c
-> > +++ b/drivers/staging/kpc2000/kpc2000/cell_probe.c
-> > @@ -299,7 +299,8 @@ static int probe_core_uio(unsigned int core_num, struct kp2000_device *pcard,
-> >  
-> >  	kudev = kzalloc(sizeof(struct kpc_uio_device), GFP_KERNEL);
-> >  	if (!kudev) {
-> > -		dev_err(&pcard->pdev->dev, "probe_core_uio: failed to kzalloc kpc_uio_device\n");
-> > +		dev_err(&pcard->pdev->dev, "%s: failed to kzalloc kpc_uio_device\n",
-> > +			__func__);
-> 
-> kmalloc and friend error messages should just be deleted.  Didn't
-> checkpatch say something about that?
-> 
-> thanks,
-> 
-> greg k-h
+Hi Hams,
 
-Yes sorry, it did. Should I delete this chunk from this patch and add
-another patch to this series that just deletes the message, in v2?
+https://github.com/systemd/systemd/pull/12322
+https://github.com/hadess/iio-sensor-proxy/pull/262
 
-- Simon
+As all the pull requests to systemd and iio-sensor-proxy has already
+been merged, I just need your review on this:
+https://github.com/systemd/systemd/pull/12449
+
+Then, I guess this patch is ready to go. Please let me know if theres any i=
+ssue.
+
+Regards,
+Luis
+
+
+On Wed, 17 Apr 2019 at 16:08, Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi,
+>
+> On 15-04-19 17:40, luis@aurorafoss.org wrote:
+> > April 6, 2019 10:36 AM, "Hans de Goede" <hdegoede@redhat.com> wrote:
+> >
+> > Hi,
+> >
+> >> Yes that seems the best way forward with this.
+> >>
+> >> Note I think "base" is better then "keyboard" for the sensor which
+> >> is in the base/keyboard. But neither is perfect, so go which whatever
+> >> you prefer.
+> >
+> > Reference to:
+> > - https://github.com/hadess/iio-sensor-proxy/pull/262 > - https://githu=
+b.com/systemd/systemd/pull/12322
+>
+> Thank you for your work on this, I see that Bastien has
+> already reviewed the iio-sensor-proxy changes.
+>
+> I've just added one small remark to the systemd changes,
+> except for that small remark the systemd changes look good to me.
+>
+> Regards,
+>
+> Hams
+>
+>
+>
+>
+> >> On 06-04-19 01:01, Lu=C3=ADs Ferreira wrote:
+> >>
+> >>> Hi,
+> >>> Basically we need to come up with a convention to (optionally) indica=
+te
+> >>
+> >> the sensors location with a udev attribute set by:
+> >> /lib/udev/hwdb.d/60-sensor.hwdb
+> >>> So should we start adding `ACCEL_LOCATION=3Ddisplay` and
+> >>> `ACCEL_LOCATION=3Dkeyboard` attributes to that file and patch
+> >>> iio-sensor-proxy to ignore the keyboard ones as a first step ?
+> >>
+> >> Yes that seems the best way forward with this.
+> >>
+> >> Note I think "base" is better then "keyboard" for the sensor which
+> >> is in the base/keyboard. But neither is perfect, so go which whatever
+> >> you prefer.
+> >>
+> >> Thanks & Regards,
+> >>
+> >> Hans
+> >>
+> >>> On Wed, 3 Apr 2019 at 10:10, Hans de Goede <hdegoede@redhat.com> wrot=
+e:
+> >>
+> >> Hi,
+> >>
+> >> On 02-04-19 18:04, Lu=C3=ADs Ferreira wrote:
+> >>> Some ultrabooks, like Teclast F6 Pro, use KIOX010A sensor on display
+> >>> and KIOX020A sensor on keyboard base, to detect tablet mode or screen
+> >>> orientation.
+> >>
+> >> I deliberately left out the KIOX020A id for now, because currently
+> >> userspace cannot really deal with having 2 sensors.
+> >>
+> >> See:
+> >> https://github.com/systemd/systemd/issues/6557
+> >> https://github.com/hadess/iio-sensor-proxy/issues/166
+> >>
+> >> Basically we need to come up with a convention to (optionally) indicat=
+e
+> >> the sensors location with a udev attribute set by:
+> >> /lib/udev/hwdb.d/60-sensor.hwdb
+> >>
+> >> And then patch iio-sensor-proxy to consume that attribute and ignore
+> >> the one which has e.g. ACCEL_LOCATION=3Dkeyboard in its udev propertie=
+s
+> >>
+> >> Ignoring would be a first step, maybe later it can do something useful
+> >> with it, see e.g. : https://github.com/alesguzik/linux_detect_tablet_m=
+ode
+> >>
+> >> IMHO we really should minimally get code in place for iio-sensor-proxy
+> >> to ignore the keyboard accelerometer before merging this patch.
+> >>
+> >> I realize that having the code in place will not magically get it on
+> >> all users machines, but I believe this is the minimum which needs to
+> >> happen before we push this out and potentially breaks people screen
+> >> rotation.
+> >>
+> >> I've had working on this on my TODO list for a long long time now,
+> >> but -ENOTIME. If you have some time to work on this then that would
+> >> be great.
+> >>
+> >> Regards,
+> >>
+> >> Hans
+> >>> Signed-off-by: Lu=C3=ADs Ferreira <luis@aurorafoss.org>
+> >>> ---
+> >>> drivers/iio/accel/kxcjk-1013.c | 1 +
+> >>> 1 file changed, 1 insertion(+)
+> >>>
+> >>> diff --git a/drivers/iio/accel/kxcjk-1013.c b/drivers/iio/accel/kxcjk=
+-1013.c
+> >>> index 7096e577b23f..9a5e445facc1 100644
+> >>> --- a/drivers/iio/accel/kxcjk-1013.c
+> >>> +++ b/drivers/iio/accel/kxcjk-1013.c
+> >>> @@ -1492,6 +1492,7 @@ static const struct acpi_device_id kx_acpi_matc=
+h[] =3D {
+> >>> {"KIOX0009", KXTJ21009},
+> >>> {"KIOX000A", KXCJ91008},
+> >>> {"KIOX010A", KXCJ91008}, /* KXCJ91008 inside the display of a 2-in-1 =
+*/
+> >>> + {"KIOX020A", KXCJ91008},
+> >>> {"KXTJ1009", KXTJ21009},
+> >>> {"KXJ2109", KXTJ21009},
+> >>> {"SMO8500", KXCJ91008},
