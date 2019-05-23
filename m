@@ -2,236 +2,179 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A6FC282DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9643C282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E70A221871
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:35:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YmSS0LMu";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NzFOjevD"
+	by mail.kernel.org (Postfix) with ESMTP id 95757204EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:35:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729965AbfEWHfV (ORCPT
+        id S1730067AbfEWHfZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 03:35:21 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:58110 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726222AbfEWHfU (ORCPT
+        Thu, 23 May 2019 03:35:25 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:39391 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726081AbfEWHfW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 03:35:20 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id D186360DB6; Thu, 23 May 2019 07:35:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558596919;
-        bh=vaYCSPJNKOnJfhfTph1DKToRlp8mANwQb3rgvaGrh04=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=YmSS0LMu9w6hsfu3aVZgHUEaRW8oWTnMJAzblNdOS+NasujHP41YkFXeHcp3W1BNk
-         VOF5JIpSsmnteLqtd73ijOAykKpEg1liraJLoWNhpbKKos0+oTsJm8ZO9rbihp0a71
-         S06M4y3knEWtLXJbagbIW1cotSYtk/OCA0bvLQrM=
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CFFE460E5D;
-        Thu, 23 May 2019 07:35:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558596916;
-        bh=vaYCSPJNKOnJfhfTph1DKToRlp8mANwQb3rgvaGrh04=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=NzFOjevDj2yTKcBgxOOXOebaoVz64Tm7Nu1RhPaSdKqVOxzt09hwwQalYCp1h8KML
-         erpHyl0S2pX4h6mtSCkQExeRJuQZjiwZxUks1aj1LlOwE1zNhtRfoMEv8ndiwsWqsW
-         Cy+pSUv+wZnxZapyUMsH1O8wIxvZY9vi20Kg1JKY=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CFFE460E5D
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
-Received: by mail-ed1-f49.google.com with SMTP id w33so4438139edb.10;
-        Thu, 23 May 2019 00:35:15 -0700 (PDT)
-X-Gm-Message-State: APjAAAV4FtVYeykwNut4s9U8ijRMz6xiDFDvT0rZ72lQa6B7x+EGETqC
-        72NfVXyxjHOSnTzYhjOw3mWC6o17mitxXY0clJQ=
-X-Google-Smtp-Source: APXvYqxwK48xR/Y7oFZmW0R1iQATtHnSPbVuSjvhCBcsA/CK/DWYQxHabWtrJ11BQGSLmPAhAsILj7d0UtX1rXbzkKY=
-X-Received: by 2002:a50:9958:: with SMTP id l24mr95862736edb.92.1558596914222;
- Thu, 23 May 2019 00:35:14 -0700 (PDT)
+        Thu, 23 May 2019 03:35:22 -0400
+X-UUID: 6e2832516f8746e5ba414606f3f850cf-20190523
+X-UUID: 6e2832516f8746e5ba414606f3f850cf-20190523
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <long.cheng@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 523751359; Thu, 23 May 2019 15:35:16 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs03n2.mediatek.inc (172.21.101.182) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 23 May 2019 15:35:15 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 23 May 2019 15:35:14 +0800
+From:   Long Cheng <long.cheng@mediatek.com>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-serial@vger.kernel.org>,
+        <srv_heupstream@mediatek.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        YT Shen <yt.shen@mediatek.com>,
+        Zhenbao Liu <zhenbao.liu@mediatek.com>,
+        Long Cheng <long.cheng@mediatek.com>
+Subject: [PATCH 2/2] serial: 8250-mtk: modify uart DMA rx
+Date:   Thu, 23 May 2019 15:35:09 +0800
+Message-ID: <1558596909-14084-3-git-send-email-long.cheng@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <1558596909-14084-1-git-send-email-long.cheng@mediatek.com>
+References: <1558596909-14084-1-git-send-email-long.cheng@mediatek.com>
 MIME-Version: 1.0
-References: <20190516093020.18028-1-vivek.gautam@codeaurora.org>
-In-Reply-To: <20190516093020.18028-1-vivek.gautam@codeaurora.org>
-From:   Vivek Gautam <vivek.gautam@codeaurora.org>
-Date:   Thu, 23 May 2019 13:05:03 +0530
-X-Gmail-Original-Message-ID: <CAFp+6iGgXQ4wg7+rnchfd-4vQEiS5FLoRTVELN6qieC6DjE1HA@mail.gmail.com>
-Message-ID: <CAFp+6iGgXQ4wg7+rnchfd-4vQEiS5FLoRTVELN6qieC6DjE1HA@mail.gmail.com>
-Subject: Re: [PATCH v5 1/1] iommu/io-pgtable-arm: Add support to use system cache
-To:     Will Deacon <will.deacon@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <joro@8bytes.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>
-Cc:     pdaly@codeaurora.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        pratikp@codeaurora.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 2482CA85B661DC8764D4515A4275E8B6BC1A308EAB7BD6FB1D1E48C73F6E41C32000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin,
+Modify uart rx and complete for DMA
 
+Signed-off-by: Long Cheng <long.cheng@mediatek.com>
+---
+ drivers/tty/serial/8250/8250_mtk.c |   49 +++++++++++++++---------------------
+ 1 file changed, 20 insertions(+), 29 deletions(-)
 
+diff --git a/drivers/tty/serial/8250/8250_mtk.c b/drivers/tty/serial/8250/8250_mtk.c
+index 417c7c8..f470ded 100644
+--- a/drivers/tty/serial/8250/8250_mtk.c
++++ b/drivers/tty/serial/8250/8250_mtk.c
+@@ -47,7 +47,6 @@
+ #define MTK_UART_DMA_EN_RX	0x5
+ 
+ #define MTK_UART_ESCAPE_CHAR	0x77	/* Escape char added under sw fc */
+-#define MTK_UART_TX_SIZE	UART_XMIT_SIZE
+ #define MTK_UART_RX_SIZE	0x8000
+ #define MTK_UART_TX_TRIGGER	1
+ #define MTK_UART_RX_TRIGGER	MTK_UART_RX_SIZE
+@@ -89,28 +88,30 @@ static void mtk8250_dma_rx_complete(void *param)
+ 	struct mtk8250_data *data = up->port.private_data;
+ 	struct tty_port *tty_port = &up->port.state->port;
+ 	struct dma_tx_state state;
++	int copied, total, cnt;
+ 	unsigned char *ptr;
+-	int copied;
+ 
+-	dma_sync_single_for_cpu(dma->rxchan->device->dev, dma->rx_addr,
+-				dma->rx_size, DMA_FROM_DEVICE);
++	if (data->rx_status == DMA_RX_SHUTDOWN)
++		return;
+ 
+ 	dmaengine_tx_status(dma->rxchan, dma->rx_cookie, &state);
++	total = dma->rx_size - state.residue;
++	cnt = total;
+ 
+-	if (data->rx_status == DMA_RX_SHUTDOWN)
+-		return;
++	if ((data->rx_pos + cnt) > dma->rx_size)
++		cnt = dma->rx_size - data->rx_pos;
+ 
+-	if ((data->rx_pos + state.residue) <= dma->rx_size) {
+-		ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
+-		copied = tty_insert_flip_string(tty_port, ptr, state.residue);
+-	} else {
+-		ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
+-		copied = tty_insert_flip_string(tty_port, ptr,
+-						dma->rx_size - data->rx_pos);
++	ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
++	copied = tty_insert_flip_string(tty_port, ptr, cnt);
++	data->rx_pos += cnt;
++
++	if (total > cnt) {
+ 		ptr = (unsigned char *)(dma->rx_buf);
+-		copied += tty_insert_flip_string(tty_port, ptr,
+-				data->rx_pos + state.residue - dma->rx_size);
++		cnt = total - cnt;
++		copied += tty_insert_flip_string(tty_port, ptr, cnt);
++		data->rx_pos = cnt;
+ 	}
++
+ 	up->port.icount.rx += copied;
+ 
+ 	tty_flip_buffer_push(tty_port);
+@@ -121,9 +122,7 @@ static void mtk8250_dma_rx_complete(void *param)
+ static void mtk8250_rx_dma(struct uart_8250_port *up)
+ {
+ 	struct uart_8250_dma *dma = up->dma;
+-	struct mtk8250_data *data = up->port.private_data;
+ 	struct dma_async_tx_descriptor	*desc;
+-	struct dma_tx_state	 state;
+ 
+ 	desc = dmaengine_prep_slave_single(dma->rxchan, dma->rx_addr,
+ 					   dma->rx_size, DMA_DEV_TO_MEM,
+@@ -138,12 +137,6 @@ static void mtk8250_rx_dma(struct uart_8250_port *up)
+ 
+ 	dma->rx_cookie = dmaengine_submit(desc);
+ 
+-	dmaengine_tx_status(dma->rxchan, dma->rx_cookie, &state);
+-	data->rx_pos = state.residue;
+-
+-	dma_sync_single_for_device(dma->rxchan->device->dev, dma->rx_addr,
+-				   dma->rx_size, DMA_FROM_DEVICE);
+-
+ 	dma_async_issue_pending(dma->rxchan);
+ }
+ 
+@@ -156,13 +149,11 @@ static void mtk8250_dma_enable(struct uart_8250_port *up)
+ 	if (data->rx_status != DMA_RX_START)
+ 		return;
+ 
+-	dma->rxconf.direction		= DMA_DEV_TO_MEM;
+-	dma->rxconf.src_addr_width	= dma->rx_size / 1024;
+-	dma->rxconf.src_addr		= dma->rx_addr;
++	dma->rxconf.src_port_window_size	= dma->rx_size;
++	dma->rxconf.src_addr				= dma->rx_addr;
+ 
+-	dma->txconf.direction		= DMA_MEM_TO_DEV;
+-	dma->txconf.dst_addr_width	= MTK_UART_TX_SIZE / 1024;
+-	dma->txconf.dst_addr		= dma->tx_addr;
++	dma->txconf.dst_port_window_size	= UART_XMIT_SIZE;
++	dma->txconf.dst_addr				= dma->tx_addr;
+ 
+ 	serial_out(up, UART_FCR, UART_FCR_ENABLE_FIFO | UART_FCR_CLEAR_RCVR |
+ 		UART_FCR_CLEAR_XMIT);
+-- 
+1.7.9.5
 
-On Thu, May 16, 2019 at 3:00 PM Vivek Gautam
-<vivek.gautam@codeaurora.org> wrote:
->
-> Few Qualcomm platforms such as, sdm845 have an additional outer
-> cache called as System cache, aka. Last level cache (LLC) that
-> allows non-coherent devices to upgrade to using caching.
-> This cache sits right before the DDR, and is tightly coupled
-> with the memory controller. The clients using this cache request
-> their slices from this system cache, make it active, and can then
-> start using it.
->
-> There is a fundamental assumption that non-coherent devices can't
-> access caches. This change adds an exception where they *can* use
-> some level of cache despite still being non-coherent overall.
-> The coherent devices that use cacheable memory, and CPU make use of
-> this system cache by default.
->
-> Looking at memory types, we have following -
-> a) Normal uncached :- MAIR 0x44, inner non-cacheable,
->                       outer non-cacheable;
-> b) Normal cached :-   MAIR 0xff, inner read write-back non-transient,
->                       outer read write-back non-transient;
->                       attribute setting for coherenet I/O devices.
-> and, for non-coherent i/o devices that can allocate in system cache
-> another type gets added -
-> c) Normal sys-cached :- MAIR 0xf4, inner non-cacheable,
->                         outer read write-back non-transient
->
-> Coherent I/O devices use system cache by marking the memory as
-> normal cached.
-> Non-coherent I/O devices should mark the memory as normal
-> sys-cached in page tables to use system cache.
->
-> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-> ---
-
-Let me know if there's more to improve on this patch.
-
-Best regards
-Vivek
-
->
-> V3 version of this patch and related series can be found at [1].
-> V4 of this patch is available at [2].
->
-> The example usage of how a smmu master can make use of this protection
-> flag and set the correct memory attributes to start using system cache,
-> can be found at [3]; and here at [3] IOMMU_UPSTREAM_HINT is same as
-> IOMMU_QCOM_SYS_CACHE.
->
-> Changes since v4:
->  - Changed ARM_LPAE_MAIR_ATTR_QCOM_SYS_CACHE to
->    ARM_LPAE_MAIR_ATTR_INC_OWBRWA.
->  - Changed ARM_LPAE_MAIR_ATTR_IDX_QCOM_SYS_CACHE to
->    ARM_LPAE_MAIR_ATTR_IDX_INC_OCACHE.
->  - Added comments to iommu protection flag - IOMMU_QCOM_SYS_CACHE.
->
-> Changes since v3:
->  - Dropping support to cache i/o page tables to system cache. Getting support
->    for data buffers is the first step.
->    Removed io-pgtable quirk and related change to add domain attribute.
->
-> Glmark2 numbers on SDM845 based cheza board:
->
-> S.No.|  with LLC support   |    without LLC support
->      |  for data buffers   |
-> ---------------------------------------------------
-> 1    |  4480; 72.3fps      |    4042; 65.2fps
-> 2    |  4500; 72.6fps      |    4039; 65.1fps
-> 3    |  4523; 72.9fps      |    4106; 66.2fps
-> 4    |  4489; 72.4fps      |    4104; 66.2fps
-> 5    |  4518; 72.9fps      |    4072; 65.7fps
->
-> [1] https://patchwork.kernel.org/cover/10772629/
-> [2] https://lore.kernel.org/patchwork/patch/1072936/
-> [3] https://patchwork.kernel.org/patch/10302791/
->
->  drivers/iommu/io-pgtable-arm.c | 9 ++++++++-
->  include/linux/iommu.h          | 6 ++++++
->  2 files changed, 14 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
-> index 4e21efbc4459..2454ac11aa97 100644
-> --- a/drivers/iommu/io-pgtable-arm.c
-> +++ b/drivers/iommu/io-pgtable-arm.c
-> @@ -167,10 +167,12 @@
->  #define ARM_LPAE_MAIR_ATTR_MASK                0xff
->  #define ARM_LPAE_MAIR_ATTR_DEVICE      0x04
->  #define ARM_LPAE_MAIR_ATTR_NC          0x44
-> +#define ARM_LPAE_MAIR_ATTR_INC_OWBRWA  0xf4
->  #define ARM_LPAE_MAIR_ATTR_WBRWA       0xff
->  #define ARM_LPAE_MAIR_ATTR_IDX_NC      0
->  #define ARM_LPAE_MAIR_ATTR_IDX_CACHE   1
->  #define ARM_LPAE_MAIR_ATTR_IDX_DEV     2
-> +#define ARM_LPAE_MAIR_ATTR_IDX_INC_OCACHE      3
->
->  #define ARM_MALI_LPAE_TTBR_ADRMODE_TABLE (3u << 0)
->  #define ARM_MALI_LPAE_TTBR_READ_INNER  BIT(2)
-> @@ -470,6 +472,9 @@ static arm_lpae_iopte arm_lpae_prot_to_pte(struct arm_lpae_io_pgtable *data,
->                 else if (prot & IOMMU_CACHE)
->                         pte |= (ARM_LPAE_MAIR_ATTR_IDX_CACHE
->                                 << ARM_LPAE_PTE_ATTRINDX_SHIFT);
-> +               else if (prot & IOMMU_QCOM_SYS_CACHE)
-> +                       pte |= (ARM_LPAE_MAIR_ATTR_IDX_INC_OCACHE
-> +                               << ARM_LPAE_PTE_ATTRINDX_SHIFT);
->         }
->
->         if (prot & IOMMU_NOEXEC)
-> @@ -857,7 +862,9 @@ arm_64_lpae_alloc_pgtable_s1(struct io_pgtable_cfg *cfg, void *cookie)
->               (ARM_LPAE_MAIR_ATTR_WBRWA
->                << ARM_LPAE_MAIR_ATTR_SHIFT(ARM_LPAE_MAIR_ATTR_IDX_CACHE)) |
->               (ARM_LPAE_MAIR_ATTR_DEVICE
-> -              << ARM_LPAE_MAIR_ATTR_SHIFT(ARM_LPAE_MAIR_ATTR_IDX_DEV));
-> +              << ARM_LPAE_MAIR_ATTR_SHIFT(ARM_LPAE_MAIR_ATTR_IDX_DEV)) |
-> +             (ARM_LPAE_MAIR_ATTR_INC_OWBRWA
-> +              << ARM_LPAE_MAIR_ATTR_SHIFT(ARM_LPAE_MAIR_ATTR_IDX_INC_OCACHE));
->
->         cfg->arm_lpae_s1_cfg.mair[0] = reg;
->         cfg->arm_lpae_s1_cfg.mair[1] = 0;
-> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-> index a815cf6f6f47..8ee3fbaf5855 100644
-> --- a/include/linux/iommu.h
-> +++ b/include/linux/iommu.h
-> @@ -41,6 +41,12 @@
->   * if the IOMMU page table format is equivalent.
->   */
->  #define IOMMU_PRIV     (1 << 5)
-> +/*
-> + * Non-coherent masters on few Qualcomm SoCs can use this page protection flag
-> + * to set correct cacheability attributes to use an outer level of cache -
-> + * last level cache, aka system cache.
-> + */
-> +#define IOMMU_QCOM_SYS_CACHE   (1 << 6)
->
->  struct iommu_ops;
->  struct iommu_group;
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
->
-> _______________________________________________
-> iommu mailing list
-> iommu@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
-
-
-
---
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
