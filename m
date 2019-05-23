@@ -2,60 +2,61 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE14C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA47C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC90B20856
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:10:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB4A621773
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:11:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ldNHsFev"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M8xdb6wZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730905AbfEWPK6 (ORCPT
+        id S1731012AbfEWPLD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 11:10:58 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46002 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730756AbfEWPK6 (ORCPT
+        Thu, 23 May 2019 11:11:03 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39507 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730756AbfEWPLA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 11:10:58 -0400
-Received: by mail-wr1-f65.google.com with SMTP id b18so6665197wrq.12;
-        Thu, 23 May 2019 08:10:56 -0700 (PDT)
+        Thu, 23 May 2019 11:11:00 -0400
+Received: by mail-wr1-f67.google.com with SMTP id w8so6699123wrl.6;
+        Thu, 23 May 2019 08:10:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lG50LjNdtMd0GMcXEgVx+Uoijbx7K9hNxSLBW/EgKhU=;
-        b=ldNHsFevoUJI+m4FbTi2UMH8wljD73iVyxptd+ijSL15+l+rvV27f4AhOfD6Zithsz
-         WHb2N7G1npz9JSFRbdGPfYOgGBC0e9w0H9CXu1nBFbBWtdq43KJ+vRiBbMmpxNw9KI4S
-         Aep6RVyaD/KsRv+ZWnTUzNufFG+S8xl+kI8jsyzurpZGX262YD6X/LM6Hwe1FT0zDZXU
-         SKQeh+duhFV4XN7daCUxIws7h8BRcEK3oGdbGeAJblBk/DV5iFfMf+TJAnpzMNzmokQP
-         rbhFXAqrhe3S1YPlLEklIZ7ksp7mHOESuCYvGE5DJiGKehx2Ifyo5fOyiYFAXuRrF106
-         aAQw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=gc5Q9HCaQ5rPgkj8KRzJTbdaxTJ0kW48gLvYL3xRMJ0=;
+        b=M8xdb6wZwYfZCgHc3Bw+Bw5y9J72T/s0dD3w/SIV1z+UVpKhQ0+QPXNjZDQJEcznfB
+         ljIoX+5rCbr7ead2MGjgQHmGV+hAK+zKCuhTsOQQts4NWc6oIwQwWXQFze/rtiUCgNAZ
+         BprM+1fpa9g+yedn7B7rv+3fSwcP5zdKtRV0r/wYe+umPZ7hhlMFqjB6z0mWLFHbm/og
+         knKO72rDJlbe1v3dzfBs9+8hREUV7kGtlSJNzGOZp/D57uLOb1UtIRqy6FY6uyE17InL
+         2QivjhrymxxIIjHPK2w9Jc8QO1DunpEAxBHx5VRXo++XG+IaD8UuDtfbBbVSeUN8ZsXu
+         oVug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lG50LjNdtMd0GMcXEgVx+Uoijbx7K9hNxSLBW/EgKhU=;
-        b=Bqzhz6fMEoOC+nSzSGddgW9jAwV9MJOP3N+JxS/FC/+6LLktL2BVZ2HF49qjfyRSrB
-         a/DG/+K6cPnQgpApU1YOaLs4a290Fhncw41Up1ETy30GozXE/A6T2QAqqi1N0aQ2C8wT
-         /QtLazp4C0wSk5oHg1N+sLj10T/MTIO7nkv/Ncr/c4qJfxIIzIYn8/bytBiTjtH0WYtJ
-         2Kp3QaQwz7AhUuNGJuYsQ7sf53Al2nDRv+y44tbv8195LJhw5UCj/tBcr/Jvdi3eSQl+
-         nBiU/pJfoHlQ/VxRm0byEWjywx6Et3gZd4aDPlt0rsJDEsdXNSfmp42OUrtxYNLCroNY
-         Zsjg==
-X-Gm-Message-State: APjAAAU25wD6sX2esBLb7x0dKCgHuLqb0MFswPBLAAf/Os3ggjqrYH9T
-        RFj7aC5OfBtSQAPEFOeNE2Sx2xTTlUZngQ==
-X-Google-Smtp-Source: APXvYqwCg24QiXYaWltw5JOWO6jVdtF8z8XW5AMyTqUcKape8p/MJ1d+TsrXsWEg5OIeBmZrAPWruA==
-X-Received: by 2002:adf:cf0e:: with SMTP id o14mr3337336wrj.230.1558624256003;
-        Thu, 23 May 2019 08:10:56 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=gc5Q9HCaQ5rPgkj8KRzJTbdaxTJ0kW48gLvYL3xRMJ0=;
+        b=I7zIcADtlgYo14PzcZ9JyhgxuN0Z/ljUUZeVDwhUNXnCbQjG9LnPFL9aeOQav30q1I
+         sy392+95Ii5ARs7G8W3b2ri2hhrYvkgF9rlePMAbqRaqJVmQwgsHIOicSiWOhk129CRx
+         mq5XbAuPlml+0m+TCt9YXs+OUue+BxlZtSjweaBxTDXrgvd7Rv7Pg9jG9v1y1VjZ+tWL
+         q/8jU+oyldjJ/UwVfR8PJLHWCQToghkmjZKc/4FwtfKFxEqcMTlWfOfr+k4p/Y/0KGHD
+         9I+81WbT+HgMslh/idRttb0osWt+WF4uMXVcFoYByLX5n4PxUh5T3Wr2LMVihfDJvH5f
+         NyYg==
+X-Gm-Message-State: APjAAAUCjEaQFNrkooGSsIHlL7/H+JfyMqV1OgG/Pwj7Ekq9cNTy+oVG
+        zkCS3Mj060G895xHF/dxERE=
+X-Google-Smtp-Source: APXvYqyhry9skXqUZHuz4MBLzVwV4UhZXVj9Afk7FyiwMdTrNP46yL9NLed8GYbSR7agDLkb5+Xypw==
+X-Received: by 2002:adf:a4d8:: with SMTP id h24mr3142017wrb.171.1558624258158;
+        Thu, 23 May 2019 08:10:58 -0700 (PDT)
 Received: from localhost.localdomain (18.189-60-37.rdns.acropolistelecom.net. [37.60.189.18])
-        by smtp.gmail.com with ESMTPSA id q15sm11436324wrr.19.2019.05.23.08.10.54
+        by smtp.gmail.com with ESMTPSA id q15sm11436324wrr.19.2019.05.23.08.10.57
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 08:10:55 -0700 (PDT)
+        Thu, 23 May 2019 08:10:57 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
         Guenter Roeck <linux@roeck-us.net>,
@@ -66,10 +67,12 @@ To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
 Cc:     linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v5 0/4] Allwinner H6 watchdog support
-Date:   Thu, 23 May 2019 17:10:46 +0200
-Message-Id: <20190523151050.27302-1-peron.clem@gmail.com>
+Subject: [PATCH v5 2/4] arm64: dts: allwinner: h6: add watchdog node
+Date:   Thu, 23 May 2019 17:10:48 +0200
+Message-Id: <20190523151050.27302-3-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190523151050.27302-1-peron.clem@gmail.com>
+References: <20190523151050.27302-1-peron.clem@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -78,53 +81,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Allwinner H6 has a watchog node which seems broken
+on some boards.
 
-Allwinner H6 SoC has two watchdogs.
+Test has been performed on several boards.
 
-As we are not sure that both A64 and H6 are stricly identical, I have
-introduced the H6 bindings.
+Chen-Yu Tsai boards:
+Pine H64 - H6448BA 7782 => OK
+OrangePi Lite 2 - H8068BA 61C2 => KO
 
-After investigation it seems that on some boards the first watchdog doesn't
-make it properly reboot. Please see details in the commit log.
+Martin Ayotte boards:
+Pine H64 - H8069BA 6892 => OK
+OrangePi 3 - HA047BA 69W2 => KO
+OrangePi One Plus - H7310BA 6842 => KO
+OrangePi Lite2 - H6448BA 6662 => KO
 
-I think it's proper to add it with a comment anyway.
+Clément Péron board:
+Beelink GS1 - H7309BA 6842 => KO
 
-The r_watchdog is still available and usable on all the H6 boards.
+As it seems not fixable for now, declare the node
+but leave it disable with a comment.
 
-Thanks,
-Clément
+Signed-off-by: Clément Péron <peron.clem@gmail.com>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Changes since v4:
- - Delete specific bindings for r-wdt
-
-Changes since v3:
- - Remove A64 compatible
- - Introduce specific bindings for r-wdt
-
-Changes since v2:
- - Reintroduce H6 bindings
- - Add watchdog Maintainters / ML
- - Add Martin Ayotte test results
-
-Changes since v1:
- - Use A64 compatible instead of H6
- - Remove dt-bindings patch
- - Change watchdog status to disabled
- - Add r_watchdog node patch
- - Add enable sunxi watchdog patch
-
-Clément Péron (4):
-  dt-bindings: watchdog: add Allwinner H6 watchdog
-  arm64: dts: allwinner: h6: add watchdog node
-  arm64: dts: allwinner: h6: add r_watchog node
-  arm64: defconfig: enable sunxi watchdog
-
- .../devicetree/bindings/watchdog/sunxi-wdt.txt   |  1 +
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi     | 16 ++++++++++++++++
- arch/arm64/configs/defconfig                     |  1 +
- 3 files changed, 18 insertions(+)
-
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 16c5c3d0fd81..13e70aebddbe 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -208,6 +208,15 @@
+ 			reg = <0x03006000 0x400>;
+ 		};
+ 
++		watchdog: watchdog@30090a0 {
++			compatible = "allwinner,sun50i-h6-wdt",
++				     "allwinner,sun6i-a31-wdt";
++			reg = <0x030090a0 0x20>;
++			interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
++			/* Broken on some H6 boards */
++			status = "disabled";
++		};
++
+ 		pio: pinctrl@300b000 {
+ 			compatible = "allwinner,sun50i-h6-pinctrl";
+ 			reg = <0x0300b000 0x400>;
 -- 
 2.20.1
 
