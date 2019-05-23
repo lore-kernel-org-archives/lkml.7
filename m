@@ -2,185 +2,159 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2EC4C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 20:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 154DBC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 20:55:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 724772075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 20:54:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E54012075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 20:55:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388110AbfEWUyj (ORCPT
+        id S2388186AbfEWUzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 16:54:39 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:55111 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387529AbfEWUyj (ORCPT
+        Thu, 23 May 2019 16:55:03 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:35473 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387529AbfEWUzC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 16:54:39 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hTujT-0007qS-V1; Thu, 23 May 2019 14:54:35 -0600
-Received: from ip72-206-97-68.om.om.cox.net ([72.206.97.68] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hTujS-0007N5-Qn; Thu, 23 May 2019 14:54:35 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     linux-usb@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Oliver Neukum <oneukum@suse.com>,
-        <linux-kernel@vger.kernel.org>
-References: <Pine.LNX.4.44L0.1905231352200.1553-100000@iolanthe.rowland.org>
-Date:   Thu, 23 May 2019 15:54:26 -0500
-In-Reply-To: <Pine.LNX.4.44L0.1905231352200.1553-100000@iolanthe.rowland.org>
-        (Alan Stern's message of "Thu, 23 May 2019 14:12:57 -0400 (EDT)")
-Message-ID: <87ef4oevst.fsf@xmission.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
+        Thu, 23 May 2019 16:55:02 -0400
+X-Originating-IP: 90.89.68.76
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 2EBF5FF803;
+        Thu, 23 May 2019 20:54:51 +0000 (UTC)
+Date:   Thu, 23 May 2019 22:54:50 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
+Cc:     Jagan Teki <jagan@amarulasolutions.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Subject: Re: [PATCH] arm64: dts: allwinner: a64-oceanic-5205-5inmfd: Enable
+ CAN
+Message-ID: <20190523205450.bwccpvehpiugogbs@flea>
+References: <20190418141658.10868-1-jagan@amarulasolutions.com>
+ <20190418145641.q23tupopz2czjzc5@flea>
+ <CAOf5uwn8CtRs8cx0KC-bxNoRP4TiDrHi8F83QfjsZhueLDYFJg@mail.gmail.com>
+ <20190521081001.zjq3gnlvyuyexz6m@flea>
+ <CAOf5uwnhXjur=2NezCydaCxP5d33S+AwdD9WTDtp2EUJr4UTgg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1hTujS-0007N5-Qn;;;mid=<87ef4oevst.fsf@xmission.com>;;;hst=in01.mta.xmission.com;;;ip=72.206.97.68;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX188c5LUosfNPGRQ9/fs837sI2EaULcpvsw=
-X-SA-Exim-Connect-IP: 72.206.97.68
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH] signal/usb: Replace kill_pid_info_as_cred with kill_pid_usb_asyncio
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOf5uwnhXjur=2NezCydaCxP5d33S+AwdD9WTDtp2EUJr4UTgg@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alan Stern <stern@rowland.harvard.edu> writes:
+Hi Michael,
 
-> On Wed, 22 May 2019, Eric W. Biederman wrote:
+On Tue, May 21, 2019 at 01:08:09PM +0200, Michael Nazzareno Trimarchi wrote:
+> On Tue, May 21, 2019 at 10:10 AM Maxime Ripard
+> <maxime.ripard@bootlin.com> wrote:
+> >
+> > On Tue, May 21, 2019 at 08:47:02AM +0200, Michael Nazzareno Trimarchi wrote:
+> > > > > +     };
+> > > > > +
+> > > > >  };
+> > > > >
+> > > > >  &ehci0 {
+> > > > > @@ -77,6 +95,31 @@
+> > > > >       status = "okay";
+> > > > >  };
+> > > > >
+> > > > > +&pio {
+> > > > > +     can_pins: can-pins {
+> > > > > +             pins = "PD6",                   /* RX_BUF1_CAN0 */
+> > > > > +                    "PD7";                   /* RX_BUF0_CAN0 */
+> > > > > +             function = "gpio_in";
+> > > > > +     };
+> > > > > +};
+> > > >
+> > > > That isn't needed. What are they used for, you're not tying them to
+> > > > anything?
+> > >
+> > > Mux of their function is correct. They are connected in the schematics
+> > > but not used right now.
+> >
+> > Then describe the whole thing or don't?
+> >
 >
->> Perhaps this will work as a diagram.  I don't know if there is a better
->> way to say it in my patch description.  In struct siginfo there are 3
->> fields in fixed positions:
->> 
->>    int si_signo;
->>    int si_errno;
->>    int si_code;
->> 
->> After that there is a union.  The si_signo and si_code fields are
->> examined to see which union member is valid (see siginfo_layout).
->> In every other case a si_code of SI_ASYNCIO corresponds to
->> the the _rt union member which has the fields:
->> 
->>    int si_pid;
->>    int si_uid;
->>    sigval_t si_sigval;
+> Ok
 >
-> Yuu mean it's actually a union of structures containing these fields,
-> not a union of these fields, right?
-
-Correct.
-
->> However when usb started using SI_ASYNCIO the _sigfault union member
->> that (except for special exceptions) only has the field:
->> 
->>    void __user *si_addr;
->> 
->> Or in short the relevant piece of the union looks like:
->> 
->>          0   1  2   3    4   5   6  7
->>        +---+---+---+---+---+---+---+---+
->>        |    si_pid     |   si_uid      |
->>        +---+---+---+---+---+---+---+---+
->>        |             si_addr           | (64bit)
->>        +---+---+---+---+---+---+---+---+
->>        |     si_addr   | (32bit)
->>        +---+---+---+---+
->> 
->> Which means if siginfo is copied field by field on 32bit everything
->> works because si_pid and si_addr are in the same location.
+> > And that's kind of missing my point. If that pin group isn't related
+> > to any device, the pin muxing will not be changed. So that group, in
+> > itself, has strictly no effect.
+> >
+> > Moreover, you don't need a pin group in the first place to mux pins in
+> > GPIOs, the GPIO API will make sure that is the case when you request
+> > it.
 >
-> When you say "copied field by field", you mean that the si_pid, 
-> si_uid, and si_sigval values are copied individually?
+> This is correct on sunxi. Is this valid for sunxi or in general in
+> all the SoC?
 
-At least historically.  I have cleaned things up so no on native
-we can do a byte by byte copy.  But for the compat case we still
-copy field by field so that we have a chance of translating the fields.
+IIRC, it happens on all the SoCs that have a shared GPIO/pinctrl
+driver.
 
->> Similarly if siginfo is copied field by field on 64bit everything
->> works because there is no padding between si_pid and si_uid. So
->> copying both of those fields results in the entire si_addr being
->> copied.
->> 
->> It is the compat case that gets tricky.  Half of the bits are
->> zero.  If those zero bits show up in bytes 4-7 and the data
->> shows up in bytes 0-3 (aka little endian) everything works.
->> If those zero bits show in in bytes 0-3 (aka big endian) userspace sees
->> a NULL pointer instead of the value it passed.
+> Anyway make sense to have pins configured and place in the right
+> state, just suppose if the booting stage is wrong or anything that
+> make those pins in the wrong configuration
+
+It would be a bug in the pinctrl / GPIO code that would need to be
+fixed.
+
+> >
+> > > I can garantee that kernel wlll always configurred in the right way
+> > > and if I want I can export in userspace
+> > > for debug purpose
 >
-> The problem is that the compat translation layer copies si_pid and 
-> si_uid from the 64-bit kernel structure to the 32-bit user structure.  
-> And since the system is big-endian, the 64-bit si_addr value 
-> has zeros in bytes 0-3.  But those zeros are what userspace ends up 
-> seeing in its 32-bit version of si_addr.
+> Correct if you start to use it but if you want them right configured
+> the right place is in the default state e/o initstate if this can be
+> a problem of the hardware
+
+What problem do you have exactly?
+
+> Default state: the state the pinctrl handle shall be put
+>  *      into as default, usually this means the pins are up and ready to
+>  *      be used by the device driver. This state is commonly used by
+>  *      hogs to configure muxing and pins at boot, and also as a state
+>  *      to go into when returning from sleep and idle in
+>  *      .pm_runtime_resume() or ordinary .resume() for example.
 >
-> So the solution is to store the address in the si_sigval part instead.  
-> Wouldn't it have been easier to have a compat routine somewhere just 
-> do something like:
+> Now the pins are connected to the canbus as should be and they are
+> configured and usually put in the right state.
+
+As soon as you call gpio_get, the pins will be configured properly.
+
+And, pinctrl shouldn't allow that configuration (gpio_get + a pinctrl
+node for GPIOs) in our case. We do on most SoCs (all but the H6) for
+historical reasons, but this creates other bugs that we can't really
+fix right now. Still, we're slowly removing all of those pinctrl
+nodes, so it's not really to add new ones.
+
+> +               compatible = "microchip,mcp2515";
+> +               reg = <0>;
+> +               spi-max-frequency = <10000000>;
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&can_pins>;
 >
-> 	sinfo->si_pid = (u32) sinfo->si_addr;  /* Compensate for USB */
+> >
+> > Yes, because the API does it, not your change
 >
-> That would work regardless of the endianness, wouldn't it?
+> Do you prefer to drop the pinmux? or update the commit message
 
-That logic will work yes.  That is essentially what I implemented in
-proc_submiturb_compat:
-	userurb_sigval.sival_int = ptr_to_compat(arg);
+Drop the pinctrl group
 
-The practical problem is that we only know the compat status
-of userspace when (a) the usb ioctl is called and when (b) the signal is
-delivered to userspace.  We can't fix this a (b) because there is
-too little information available due to the fact that glibc also
-uses SI_ASYNCIO but with si_uid, si_pid, and si_siginfo. So we can't
-just replace si_pid with sinfo->si_addr because si_pid and si_uid are
-valid.
+Maxime
 
-So we have to do something at (a) which is complicated by the fact
-that we don't have siginfo yet.  So I choose to store a sigval_t
-instead to just get the relevant bits.
-
->> Fixing this while maintaining some modicum of sanity is the tricky bit.
->> The interface is made to kill_pid_usb_asyncio is made a sigval_t so the
->> standard signal compat tricks can be used.  sigval_t is a union of:
->> 
->>         int sival_int;
->>         void __user *sival_ptr;
->> 
->>          0   1  2   3    4   5   6  7
->>        +---+---+---+---+---+---+---+---+
->>        |            sival_ptr          | (64bit)
->>        +---+---+---+---+---+---+---+---+ 
->>        |    sival_ptr  | (32bit)
->>        +---+---+---+---+
->>        |    sival_int  |
->>        +---+---+---+---+
->> 
->> The signal code solves the compat issues for sigval_t by storing the
->> 32bit pointers in sival_int.  So they meaningful bits are guaranteed to
->> be in the low 32bits, just like the 32bit sival_ptr.
->> 
->> After a bunch of build BUG_ONs to verify my reasonable assumptions
->> of but the siginfo layout are actually true, the code that generates
->> the siginfo just copies a sigval_t to si_pid.  And assumes the code
->> in the usb stack placed the pointer in the proper part of the sigval_t
->> when it read the information from userspace.
->> 
->> I don't know if that helps make it easy to understand but I figured I
->> would give it a shot.
->
-> I think I understand now.  Thanks.
-
-Welcome.  I am trying to make this stuff comprehensible.
-
-Eric
-
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
