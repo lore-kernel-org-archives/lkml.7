@@ -2,101 +2,107 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B326FC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 242E0C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7953C20851
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:38:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4D0720851
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:39:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558607927;
-	bh=LV98oDw+6+f93CUH+xz95l4IeBYWaR8cSgx1i8jCCQ0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Qy10Smc8NKEUuWFsYRPM1O2utsOrH+0+JBtMRf8tuqRLVBFrxouaXM9PlK+Nuswdt
-	 2qBESFEiAvc9rmwMFitsKNd4yUpMlFdturKKx1W/Qthw8W0K5kK4g/r+8BpV8UqxHq
-	 jDbjwqcF9L51NMYjfYJff0HlyJ1/LV1WnINzKrp0=
+	s=default; t=1558607976;
+	bh=Az14sqZ7ebvAdl/fRQNK73i/hjMcUGsCAWpfJwgYwJc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aAVPZcO5/CGUDAchAeTNK3mD3o9pJKednZ9NjdA9VcuHztVZODJcXkHxUynDscOFL
+	 K2DpLufdaR1jP40mPJi0ti+epwOtrQD2jnOX3kF9taKiPbdUue+IEhV9azFQ/tnrGE
+	 SFodip6uKNX5rIToLVqlOXW2pku0LxgYVHjbSD/U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730437AbfEWKiq (ORCPT
+        id S1730453AbfEWKjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 06:38:46 -0400
-Received: from casper.infradead.org ([85.118.1.10]:43136 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727434AbfEWKiq (ORCPT
+        Thu, 23 May 2019 06:39:35 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:40373 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727434AbfEWKje (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 06:38:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=HW7kkCxLjbPF73Er62cEjl0sh5kfeFThig0TQRbVBDY=; b=XkQ6ahiZnLge7o52UrZ33qvHP8
-        EKq+CIuywgun5hSSyfs4MKaDcFUR+wnLQi4M8Nl01d3IwELqlacpAgm7VqpHc4afeyx9kQPhlVZCC
-        66QrPMLM0FPcuMt1cVP5Tg638kUW3AwbV7tkya84+7SMLRFZ+78r8v9uk4JrXHpH3RHWMgsnBgzRC
-        mn8gYNmHX2ZIfelUgODrYgd6LWbNtBijQo6myXv1Q9t8EbHn55o72nCkYCO6NQRk4qbbZFY3xQCLh
-        OvVWC0rbDk46hCRT/6W0ddgeFwOsLd7HOAJBx8g+AWQuTayyxk0u26lQ2TaWvUX+pESIuc/3TFVT7
-        1nln2t5g==;
-Received: from [179.182.168.126] (helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hTl7M-0001gk-AL; Thu, 23 May 2019 10:38:36 +0000
-Date:   Thu, 23 May 2019 07:38:30 -0300
-From:   Mauro Carvalho Chehab <mchehab@kernel.org>
-To:     Oleksandr Natalenko <oleksandr@redhat.com>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Markus Heiser <markus.heiser@darmarit.de>
-Subject: Re: [PATCH 0/8] docs: Fixes for recent versions of Sphinx
-Message-ID: <20190523073830.388b4868@coco.lan>
-In-Reply-To: <20190523101534.cenmf7rexa7gerot@butterfly.localdomain>
-References: <20190522205034.25724-1-corbet@lwn.net>
-        <20190523093944.mylk5l3ginkpelfi@butterfly.localdomain>
-        <877eah7a2k.fsf@intel.com>
-        <20190523101534.cenmf7rexa7gerot@butterfly.localdomain>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 23 May 2019 06:39:34 -0400
+Received: by mail-lj1-f194.google.com with SMTP id q62so4979003ljq.7
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 03:39:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Qv74DqO1FvoC14nBwYDubCDsUUhrYvH0YUJh7Uw9LZk=;
+        b=jipXITIyZ3dRPmi5fkk/uGBpgLtjW4D/YReeJ3UzlD3C+bvtiR9ThRJVzCdTZSM9qj
+         /2UfvpMktM3VYTssuiTiwA5CaYi602TEYRjbpmqweH27PnDWLZB6Qg6388J7jHzDl7ul
+         lk477G/riNvpo5mSSSi2gVC23iuS30o6na5cilXfgPgWZ7y19PEZ+s66OZ4FKLHaOaRf
+         Qox0fBmAZmFR6ULvQKyT+atS1JXUaHepmBexmGHk0NuYa+vuxI+Qebp7gPMsNeiWnwmf
+         3hSirL0Uzz/XtVx5ZaOXFYGgVr+UT4I0S9O+wb1JBxcVKwa0L23lI4PuZtlo5RbyzyrM
+         dgUw==
+X-Gm-Message-State: APjAAAVUk+8iqEBA03nCcZHAn0y8h4GNCXNAGbW/h+uAxEreu6ipB1LR
+        dSDMNfGAUB3CEh5whRHrIPk=
+X-Google-Smtp-Source: APXvYqxUQE8mW0nZC2ys8mqpiYmn+pu/RF+Y5SX0hWGA9j+1zSh9t6rPfCJ7ZYjgjlbJioR0xVsdKA==
+X-Received: by 2002:a2e:96da:: with SMTP id d26mr39081123ljj.9.1558607973094;
+        Thu, 23 May 2019 03:39:33 -0700 (PDT)
+Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
+        by smtp.gmail.com with ESMTPSA id u2sm5595415ljd.97.2019.05.23.03.39.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 May 2019 03:39:32 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.91)
+        (envelope-from <johan@kernel.org>)
+        id 1hTl8B-0002np-JF; Thu, 23 May 2019 12:39:28 +0200
+Date:   Thu, 23 May 2019 12:39:27 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Johan Hovold <johan@kernel.org>, Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Samuel Iglesias Gonsalvez <siglesias@igalia.com>,
+        Jens Taprogge <jens.taprogge@taprogge.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] tty: drop unused iflag macro
+Message-ID: <20190523103927.GE568@localhost>
+References: <20190426055925.13430-1-johan@kernel.org>
+ <20190523092127.GD568@localhost>
+ <20190523093109.GA24097@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190523093109.GA24097@kroah.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, 23 May 2019 12:15:34 +0200
-Oleksandr Natalenko <oleksandr@redhat.com> escreveu:
-
-> On Thu, May 23, 2019 at 01:13:23PM +0300, Jani Nikula wrote:
-> > On Thu, 23 May 2019, Oleksandr Natalenko <oleksandr@redhat.com> wrote:  
-> > > Thanks for the efforts. I've run this on top of Linus' tree, and the
-> > > only sphinx-related deprecation warning I've spotted is this one:
-> > >
-> > > /home/onatalen/work/src/linux/Documentation/sphinx/cdomain.py:51: RemovedInSphinx30Warning: app.override_domain() is deprecated. Use app.add_domain() with override option instead.
-> > >   app.override_domain(CDomain)
-> > >
-> > > Otherwise, it builds.  
+On Thu, May 23, 2019 at 11:31:09AM +0200, Greg Kroah-Hartman wrote:
+> On Thu, May 23, 2019 at 11:21:27AM +0200, Johan Hovold wrote:
+> > On Fri, Apr 26, 2019 at 07:59:22AM +0200, Johan Hovold wrote:
+> > > I noticed that the RELEVANT_IFLAG() macro was unused in USB serial and
+> > > turns out there were a few more instances that could be dropped.
+> > > 
+> > > I have some pending changes that may conflict with the corresponding
+> > > change to USB serial so I'll take that one separately through my tree,
+> > > but perhaps the rest could go through Greg's tty tree.
 > > 
-> > Please share your Sphinx version (sphinx-build --version).  
+> > > Johan Hovold (3):
+> > >   tty: simserial: drop unused iflag macro
+> > >   tty: ipoctal: drop unused iflag macro
+> > >   tty: cpm_uart: drop unused iflag macro
+> > > 
+> > >  arch/ia64/hp/sim/simserial.c                | 2 --
+> > >  drivers/ipack/devices/ipoctal.h             | 1 -
+> > >  drivers/tty/serial/cpm_uart/cpm_uart_core.c | 2 --
+> > >  3 files changed, 5 deletions(-)
+> > 
+> > Greg, do you still have these clean-ups in your queue? Want me to resend
+> > with Tony's ack?
 > 
-> [~]$ sphinx-build --version
-> sphinx-build 2.0.1
-> 
+> They are still in my to-review queue.  Let me dig out from some more
+> stable patches before I tackle the tty/serial stuff later today or
+> tomorrow.
 
-Same here with vanilla 2.0.0 (installed via pip3):
+No rush. Just saw you applying some tty patches the other day so figured
+I'd ask. Thanks.
 
-Running Sphinx v2.0.0
-/devel/v4l/docs/Documentation/sphinx/cdomain.py:51: RemovedInSphinx30Warning: app.override_domain() is deprecated. Use app.add_domain() with override option instead.
-  app.override_domain(CDomain)
-
-It seems that this message is there since 1.8:
-
-	https://www.sphinx-doc.org/en/1.8/_modules/sphinx/application.html
-
-The fix seems to be trivial: just replace it to:
-
-	app.add_domain(domain, override=True)
-
-Thanks,
-Mauro
+Johan
