@@ -2,144 +2,117 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 785D4C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 22:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C561C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 22:52:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 423C72133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 22:50:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C79542168B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 22:52:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PL1hqSFG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HAsZi7nZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388544AbfEWWuV (ORCPT
+        id S2388139AbfEWWwM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 18:50:21 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:9797 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387546AbfEWWuV (ORCPT
+        Thu, 23 May 2019 18:52:12 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:47084 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387546AbfEWWwL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 18:50:21 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ce723ac0005>; Thu, 23 May 2019 15:50:20 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 23 May 2019 15:50:19 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 23 May 2019 15:50:19 -0700
-Received: from [10.110.48.28] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 May
- 2019 22:50:14 +0000
-Subject: Re: [PATCH 1/1] infiniband/mm: convert put_page() to put_user_page*()
-To:     Ira Weiny <ira.weiny@intel.com>
-CC:     Jason Gunthorpe <jgg@mellanox.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        "Mike Marciniszyn" <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Christian Benvenuti <benve@cisco.com>,
-        "Jan Kara" <jack@suse.cz>
-References: <20190523072537.31940-1-jhubbard@nvidia.com>
- <20190523072537.31940-2-jhubbard@nvidia.com>
- <20190523172852.GA27175@iweiny-DESK2.sc.intel.com>
- <20190523173222.GH12145@mellanox.com>
- <fa6d7d7c-13a3-0586-6384-768ebb7f0561@nvidia.com>
- <20190523190423.GA19578@iweiny-DESK2.sc.intel.com>
- <0bd9859f-8eb0-9148-6209-08ae42665626@nvidia.com>
- <20190523223701.GA15048@iweiny-DESK2.sc.intel.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <050f56d0-1dda-036e-e508-3a7255ac7b59@nvidia.com>
-Date:   Thu, 23 May 2019 15:50:14 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 23 May 2019 18:52:11 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y11so4036367pfm.13
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 15:52:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6sNQBO0ShsOiyXm56ZAi0h5L7rJJmlpKkNelQHUJj+w=;
+        b=HAsZi7nZ8gveH237kWeKnke3dDxr+y2gwyQ7UKnpPqhx9d5PwmMZdVn7AXJnbNNKxS
+         ePDFO1IpN8iZHALaZ59urWJKkwTEjRYeKIbeaa5XlK6YazplFpVh3yQoNM2SreXoytPY
+         btxUuPLWLnazqWiEtgybRKS/JgvW7Ksg6tagpdJUc2j9vKOTSJ7wYNlwfPPVjGSV974J
+         8KoWA9zxDazLNvw1zkaTwiMaMQcUGxh/ANi8nkvxE5Fa1teN6vQn88J0xnGyo/nrpr4m
+         imIzmRVIX8eS7v6OXmI02YsKDallHF64R30gSIuSWrHTWujRe7yWJmNXLOOIOAJsBNSa
+         npYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6sNQBO0ShsOiyXm56ZAi0h5L7rJJmlpKkNelQHUJj+w=;
+        b=Okf+sbBBZKUqxVOBEb9wEErApIrUoRy0rFtk4fBv7F+BCwgLt1zyAoqGvQgTp9du+/
+         RgQKs8P/VzqG3j51vUqB1GE0AMYYzIT7TIgiCap6xm8tR+KOLQS3Nc0CVLBKpyZZjbur
+         C9DIL3NvtZ+QSdCeFJJOHyGJ4IrA3Ot0eSex/aU5j9VoQX3KKeSyj+7H7p7+yFtjccnp
+         H+ozJGeYkadVpKUvifg1zfDyErZIHEGI2hZOAM8J4wjHsUUEwHIrkzZ0wwo/6URFn/KD
+         iA7fb9HyDL8k8v9ejygKqH6Hl2SuEBVDeymf8GKsu5n3UbCIeaD7GNM5SrHruXr3CD71
+         QnuA==
+X-Gm-Message-State: APjAAAU3IhtK+ZHCdBeLVXXSZVgf3OdwKAtH5hH9eN4IrWRA2IecSOfX
+        PvoWEv7EphtSWYyNq6egnZgpG+hNhpBT7g==
+X-Google-Smtp-Source: APXvYqyuBQiscdYr7VRVcYBJKBnh5BshxJM8AvZKv6cszmjJhESCIjuXtoiy1ZJAGyWPkAkAtziQ5w==
+X-Received: by 2002:a62:2506:: with SMTP id l6mr107019907pfl.250.1558651929550;
+        Thu, 23 May 2019 15:52:09 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id x17sm341603pgh.47.2019.05.23.15.52.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 May 2019 15:52:09 -0700 (PDT)
+Date:   Thu, 23 May 2019 15:50:52 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     "broonie@kernel.org" <broonie@kernel.org>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>
+Cc:     "timur@kernel.org" <timur@kernel.org>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ASoC: fsl_esai: fix the channel swap issue after xrun
+Message-ID: <20190523225052.GA29562@Asurada-Nvidia.nvidia.com>
+References: <VE1PR04MB6479FF8E1B55E9BE67E7B0ECE3010@VE1PR04MB6479.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20190523223701.GA15048@iweiny-DESK2.sc.intel.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US-large
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1558651820; bh=pnD2mPom1537ot4zdnaJYiSqU3krtz3ITZMHoUjrO54=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=PL1hqSFGAyha/HZ79WcNqF63aQObWkwaPlneBIGP0b7M7mgvTnxDuamjPTAyGfKF1
-         yHMeLk26WEhfP2v931D1xU4W3M3kiwYQmBfLraEzR5YZXcfsobgtoJPyyLH4+6FTSu
-         jnQhcgabwqiWxG7558a5TO0DHh6plvrU70wZ6snBovpECiJdOYn4l86CCwmo3NDu3O
-         3UXNZap6nUALoyxA2W+ylo2ndYIsR8f9oF+z0OhfOamlbdOLOBUEnQFBZGiQWt1HUc
-         6E7eSVdsS34aUe5ZN9gIcZVR9Y/B0Sxsb590oa3FJ9NZuUjjM8XRY+0vmapyQQB2fM
-         PPK57wDeZu70A==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VE1PR04MB6479FF8E1B55E9BE67E7B0ECE3010@VE1PR04MB6479.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/23/19 3:37 PM, Ira Weiny wrote:
-[...] 
-> I've dug in further and I see now that release_pages() implements (almost the
-> same thing, see below) as put_page().
+On Thu, May 23, 2019 at 11:04:03AM +0000, S.j. Wang wrote:
+> > On Thu, May 23, 2019 at 09:53:42AM +0000, S.j. Wang wrote:
+> > > > > +     /*
+> > > > > +      * Add fifo reset here, because the regcache_sync will
+> > > > > +      * write one more data to ETDR.
+> > > > > +      * Which will cause channel shift.
+> > > >
+> > > > Sounds like a bug to me...should fix it first by marking the data
+> > > > registers as volatile.
+> > > >
+> > > The ETDR is a writable register, it is not volatile. Even we change it
+> > > to Volatile, I don't think we can't avoid this issue. for the
+> > > regcache_sync Just to write this register, it is correct behavior.
+> > 
+> > Is that so? Quoting the comments of regcache_sync():
+> > "* regcache_sync - Sync the register cache with the hardware.
+> >  *
+> >  * @map: map to configure.
+> >  *
+> >  * Any registers that should not be synced should be marked as
+> >  * volatile."
+> > 
+> > If regcache_sync() does sync volatile registers too as you said, I don't mind
+> > having this FIFO reset WAR for now, though I think this mismatch between
+> > the comments and the actual behavior then should get people's attention.
+> > 
+> > Thank you
 > 
-> However, I think we need to be careful here because put_page_testzero() calls
-> 
-> 	page_ref_dec_and_test(page);
-> 
-> ... and after your changes it will need to call ...
-> 
-> 	page_ref_sub_return(page, GUP_PIN_COUNTING_BIAS);
-> 
-> ... on a GUP page:
-> 
-> So how do you propose calling release_pages() from within put_user_pages()?  Or
-> were you thinking this would be temporary?
+> ETDR is not volatile,  if we mark it is volatile, is it correct?
 
-I was thinking of it as a temporary measure, only up until, but not including the
-point where put_user_pages() becomes active. That is, the point when put_user_pages
-starts decrementing GUP_PIN_COUNTING_BIAS, instead of just forwarding to put_page().
+Well, you have a point -- it might not be ideally true, but it sounds
+like a correct fix to me according to this comments.
 
-(For other readers, that's this patch:
+We can wait for Mark's comments or just send a patch to the mail list 
+for review.
 
-    "mm/gup: debug tracking of get_user_pages() references"
-
-...in https://github.com/johnhubbard/linux/tree/gup_dma_core )
-
-> 
-> That said, there are 2 differences I see between release_pages() and put_page()
-> 
-> 1) release_pages() will only work for a MEMORY_DEVICE_PUBLIC page and not all
->    devmem pages...
->    I think this is a bug, patch to follow shortly.
-> 
-> 2) release_pages() calls __ClearPageActive() while put_page() does not
-> 
-> I have no idea if the second difference is a bug or not.  But it smells of
-> one...
-> 
-> It would be nice to know if the open coding of put_page is really a performance
-> benefit or not.  It seems like an attempt to optimize the taking of the page
-> data lock.
-> 
-> Does anyone have any information about the performance advantage here?
-> 
-> Given the changes above it seems like it would be a benefit to merge the 2 call
-> paths more closely to make sure we do the right thing.
-> 
-
-Yes, it does. Maybe best to not do the temporary measure, then, while this stuff
-gets improved. I'll look at your other patch...
-
-
-thanks,
--- 
-John Hubbard
-NVIDIA
+Thanks you
