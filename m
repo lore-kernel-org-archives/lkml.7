@@ -2,143 +2,141 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D8EC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D50BC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5B4C2133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:17:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639070;
-	bh=BLX5G35cxlrNnJA6vomteX9aMzUjS8JM9fQH8dsdSzs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MheD/UgQ2XdXbdVtL9G7T5gOp+VLk/INpsmz4N5oPBTbR7ntiU1xlFwL/V6xMGbl/
-	 4Bu/PZlVrx7wBxK6gKUAmLceWKkRTUqLk5amMrWSBIZNv2Vbbz19wgOq6xuqICCCXU
-	 8PG7gkxyoisWrjzfUP9Vvj4jMK0QQITKtZcKW0hY=
+	by mail.kernel.org (Postfix) with ESMTP id 360E7217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:17:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="O0RCPEGv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389484AbfEWTRu (ORCPT
+        id S2389489AbfEWTRz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:17:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53050 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388790AbfEWTRs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:17:48 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E235420863;
-        Thu, 23 May 2019 19:17:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639067;
-        bh=BLX5G35cxlrNnJA6vomteX9aMzUjS8JM9fQH8dsdSzs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WcjJWZKTreiI2DPINFhFefBmZGAzUr9VTtgA47OXLwn1kF4BN1y3YCXpyL47gptVh
-         F4SUbZRRU1weNHArLhPa4ClJQAIRIfl6DYFvTu2x+AvN3U0ugdyhMXXcQdWW7lO902
-         16yJoPlpAw4hlpKg285yz3tD41uSS2lTM2GyZq/k=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kirill Smelkov <kirr@nexedi.com>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 4.19 082/114] fuse: Add FOPEN_STREAM to use stream_open()
-Date:   Thu, 23 May 2019 21:06:21 +0200
-Message-Id: <20190523181739.135794147@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
-References: <20190523181731.372074275@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 23 May 2019 15:17:55 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:37836 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389454AbfEWTRg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:17:36 -0400
+Received: by mail-qt1-f193.google.com with SMTP id o7so8117338qtp.4
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 12:17:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Pm+Vx0dhObnzybiaJozRDpH0LoNYUiVOhc6EGMjBZwU=;
+        b=O0RCPEGvWXVRXRZ7y88skUaFHv3isN4h6Tr6VLsss0em/c8A1IncniPr014w2Ci4io
+         9rBOKNHmm68kYI6ygpwlm+QtR16oXFPy2bhxS9CwKHFqrIfMtEWctvqEZ4eVLH4Cn7TJ
+         HOeZtmCGjBcvBSU18syidFL3Um1gGyCpWXeJsZC2Nvpz7PwdjRmaH9U2HY3sw2gtM83U
+         WGdsqtqNuVbxSdeTfdP4MztNl8z1hsbkujcQdJiIBLEMbySogRMR8przLBmtfBbirVh8
+         fc9baIPJgppq8UkcxW/nJPwGb+5dwFFa4fUBYQGfezP1UVVzSkaq/4vRP8kXOph9tKhv
+         tF2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Pm+Vx0dhObnzybiaJozRDpH0LoNYUiVOhc6EGMjBZwU=;
+        b=f0xMvVWbbw3D0Numv2fp5vVEQhJBphO8cf8/2qwwGU82un4BgaRgwnmK3N1qzf45vn
+         cgYg0VKq+f8mPBvsNzRHaaum91hRMCUnG8bnzhMMIDhzaRwMNAmoC8iOKk1zEveZrvKh
+         7rtrtpxXak1hW1vymLZRdkB8Fb4xa1IzO5f4b072Im0+3mh1CCHENgF6pABcT23kX61I
+         8Rl3bPLUFWPwy6WWxWjAldN9TgEGU9KyfWH9KKGdbL/iiAnWl+4At2gQ9vkzw2uIAgmJ
+         tZVU958Il3UAYXBdeXZil8wdS9KQqBAWu4G4FYrFlNgV/Nmi/TXYoo7xmuC+a84rJCHd
+         4HgQ==
+X-Gm-Message-State: APjAAAWltBe9r7QvoUn9SWPq/MNd1p88DMQDj/7fzPYMfybaNszV3trN
+        PjLSZzHh3BK4PAIUcqCmjGFrag==
+X-Google-Smtp-Source: APXvYqyby6SPIf9lPMNL5yZPBW7JhGUYjZjNDXWEHEzHk702uXmsFYcPFIXfDXhIH78qusR4hcmSJg==
+X-Received: by 2002:a0c:9acb:: with SMTP id k11mr59015856qvf.85.1558639055850;
+        Thu, 23 May 2019 12:17:35 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-49-251.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.49.251])
+        by smtp.gmail.com with ESMTPSA id q24sm139016qtq.58.2019.05.23.12.17.35
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 May 2019 12:17:35 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hTtDa-0000kS-RM; Thu, 23 May 2019 16:17:34 -0300
+Date:   Thu, 23 May 2019 16:17:34 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        "john.hubbard@gmail.com" <john.hubbard@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Christian Benvenuti <benve@cisco.com>, Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH 1/1] infiniband/mm: convert put_page() to put_user_page*()
+Message-ID: <20190523191734.GH12159@ziepe.ca>
+References: <20190523072537.31940-1-jhubbard@nvidia.com>
+ <20190523072537.31940-2-jhubbard@nvidia.com>
+ <20190523172852.GA27175@iweiny-DESK2.sc.intel.com>
+ <20190523173222.GH12145@mellanox.com>
+ <fa6d7d7c-13a3-0586-6384-768ebb7f0561@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fa6d7d7c-13a3-0586-6384-768ebb7f0561@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kirill Smelkov <kirr@nexedi.com>
+On Thu, May 23, 2019 at 10:46:38AM -0700, John Hubbard wrote:
+> On 5/23/19 10:32 AM, Jason Gunthorpe wrote:
+> > On Thu, May 23, 2019 at 10:28:52AM -0700, Ira Weiny wrote:
+> > > > @@ -686,8 +686,8 @@ int ib_umem_odp_map_dma_pages(struct ib_umem_odp *umem_odp, u64 user_virt,
+> > > >   			 * ib_umem_odp_map_dma_single_page().
+> > > >   			 */
+> > > >   			if (npages - (j + 1) > 0)
+> > > > -				release_pages(&local_page_list[j+1],
+> > > > -					      npages - (j + 1));
+> > > > +				put_user_pages(&local_page_list[j+1],
+> > > > +					       npages - (j + 1));
+> > > 
+> > > I don't know if we discussed this before but it looks like the use of
+> > > release_pages() was not entirely correct (or at least not necessary) here.  So
+> > > I think this is ok.
+> > 
+> > Oh? John switched it from a put_pages loop to release_pages() here:
+> > 
+> > commit 75a3e6a3c129cddcc683538d8702c6ef998ec589
+> > Author: John Hubbard <jhubbard@nvidia.com>
+> > Date:   Mon Mar 4 11:46:45 2019 -0800
+> > 
+> >      RDMA/umem: minor bug fix in error handling path
+> >      1. Bug fix: fix an off by one error in the code that cleans up if it fails
+> >         to dma-map a page, after having done a get_user_pages_remote() on a
+> >         range of pages.
+> >      2. Refinement: for that same cleanup code, release_pages() is better than
+> >         put_page() in a loop.
+> > 
+> > And now we are going to back something called put_pages() that
+> > implements the same for loop the above removed?
+> > 
+> > Seems like we are going in circles?? John?
+> > 
+> 
+> put_user_pages() is meant to be a drop-in replacement for release_pages(),
+> so I made the above change as an interim step in moving the callsite from
+> a loop, to a single call.
+> 
+> And at some point, it may be possible to find a way to optimize put_user_pages()
+> in a similar way to the batching that release_pages() does, that was part
+> of the plan for this.
+> 
+> But I do see what you mean: in the interim, maybe put_user_pages() should
+> just be calling release_pages(), how does that change sound?
 
-commit bbd84f33652f852ce5992d65db4d020aba21f882 upstream.
+It would have made it more consistent.. But it seems this isn't a
+functional problem in this patch
 
-Starting from commit 9c225f2655e3 ("vfs: atomic f_pos accesses as per
-POSIX") files opened even via nonseekable_open gate read and write via lock
-and do not allow them to be run simultaneously. This can create read vs
-write deadlock if a filesystem is trying to implement a socket-like file
-which is intended to be simultaneously used for both read and write from
-filesystem client.  See commit 10dce8af3422 ("fs: stream_open - opener for
-stream-like files so that read and write can run simultaneously without
-deadlock") for details and e.g. commit 581d21a2d02a ("xenbus: fix deadlock
-on writes to /proc/xen/xenbus") for a similar deadlock example on
-/proc/xen/xenbus.
-
-To avoid such deadlock it was tempting to adjust fuse_finish_open to use
-stream_open instead of nonseekable_open on just FOPEN_NONSEEKABLE flags,
-but grepping through Debian codesearch shows users of FOPEN_NONSEEKABLE,
-and in particular GVFS which actually uses offset in its read and write
-handlers
-
-	https://codesearch.debian.net/search?q=-%3Enonseekable+%3D
-	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1080
-	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1247-1346
-	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1399-1481
-
-so if we would do such a change it will break a real user.
-
-Add another flag (FOPEN_STREAM) for filesystem servers to indicate that the
-opened handler is having stream-like semantics; does not use file position
-and thus the kernel is free to issue simultaneous read and write request on
-opened file handle.
-
-This patch together with stream_open() should be added to stable kernels
-starting from v3.14+. This will allow to patch OSSPD and other FUSE
-filesystems that provide stream-like files to return FOPEN_STREAM |
-FOPEN_NONSEEKABLE in open handler and this way avoid the deadlock on all
-kernel versions. This should work because fuse_finish_open ignores unknown
-open flags returned from a filesystem and so passing FOPEN_STREAM to a
-kernel that is not aware of this flag cannot hurt. In turn the kernel that
-is not aware of FOPEN_STREAM will be < v3.14 where just FOPEN_NONSEEKABLE
-is sufficient to implement streams without read vs write deadlock.
-
-Cc: stable@vger.kernel.org # v3.14+
-Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- fs/fuse/file.c            |    4 +++-
- include/uapi/linux/fuse.h |    2 ++
- 2 files changed, 5 insertions(+), 1 deletion(-)
-
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -179,7 +179,9 @@ void fuse_finish_open(struct inode *inod
- 		file->f_op = &fuse_direct_io_file_operations;
- 	if (!(ff->open_flags & FOPEN_KEEP_CACHE))
- 		invalidate_inode_pages2(inode->i_mapping);
--	if (ff->open_flags & FOPEN_NONSEEKABLE)
-+	if (ff->open_flags & FOPEN_STREAM)
-+		stream_open(inode, file);
-+	else if (ff->open_flags & FOPEN_NONSEEKABLE)
- 		nonseekable_open(inode, file);
- 	if (fc->atomic_o_trunc && (file->f_flags & O_TRUNC)) {
- 		struct fuse_inode *fi = get_fuse_inode(inode);
---- a/include/uapi/linux/fuse.h
-+++ b/include/uapi/linux/fuse.h
-@@ -219,10 +219,12 @@ struct fuse_file_lock {
-  * FOPEN_DIRECT_IO: bypass page cache for this open file
-  * FOPEN_KEEP_CACHE: don't invalidate the data cache on open
-  * FOPEN_NONSEEKABLE: the file is not seekable
-+ * FOPEN_STREAM: the file is stream-like (no file position at all)
-  */
- #define FOPEN_DIRECT_IO		(1 << 0)
- #define FOPEN_KEEP_CACHE	(1 << 1)
- #define FOPEN_NONSEEKABLE	(1 << 2)
-+#define FOPEN_STREAM		(1 << 4)
- 
- /**
-  * INIT request/reply flags
-
-
+Jason
