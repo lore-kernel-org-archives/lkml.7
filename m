@@ -2,311 +2,120 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 380DBC04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F277C04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDCF8217D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:07:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3A6F20665
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:08:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="mGGvxHny"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730075AbfEWIHF (ORCPT
+        id S1729519AbfEWIIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 04:07:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:65485 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729986AbfEWIG7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 04:06:59 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CCB73C057F2F
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 08:06:58 +0000 (UTC)
-Received: from zhyan-laptop.redhat.com (ovpn-12-163.pek2.redhat.com [10.72.12.163])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 26B3A5D9C6;
-        Thu, 23 May 2019 08:06:56 +0000 (UTC)
-From:   "Yan, Zheng" <zyan@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     idryomov@redhat.com, jlayton@redhat.com
-Subject: [PATCH 4/8] ceph: close race between d_name_cmp() and update_dentry_lease()
-Date:   Thu, 23 May 2019 16:06:42 +0800
-Message-Id: <20190523080646.19632-4-zyan@redhat.com>
-In-Reply-To: <20190523080646.19632-1-zyan@redhat.com>
-References: <20190523080646.19632-1-zyan@redhat.com>
+        Thu, 23 May 2019 04:08:54 -0400
+Received: from mail-eopbgr40054.outbound.protection.outlook.com ([40.107.4.54]:27552
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726070AbfEWIIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 04:08:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=s7TW7SrGZyFu1JjCdwNDBFdcM4EAzwrJk58onsTZD0g=;
+ b=mGGvxHnyjYxFd3dxTFWM7DJADIkjyO8kXDeyA/TQ5oFH2VQcJFfZ0NKdUQQv7oQIhhQbb/tILqB/wrn22Mm6OHk98zqISllbBaHgqWk6Q1iNGygBEKj3dWE/lmpctuGI9cl5T51/6tOFy1k+1C/eVVVLB3NoM8hyADIrGA+Ovc0=
+Received: from VI1PR04MB4445.eurprd04.prod.outlook.com (20.177.55.161) by
+ VI1PR04MB5150.eurprd04.prod.outlook.com (20.177.50.203) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.15; Thu, 23 May 2019 08:08:50 +0000
+Received: from VI1PR04MB4445.eurprd04.prod.outlook.com
+ ([fe80::39fd:f3c3:46fc:f872]) by VI1PR04MB4445.eurprd04.prod.outlook.com
+ ([fe80::39fd:f3c3:46fc:f872%7]) with mapi id 15.20.1922.018; Thu, 23 May 2019
+ 08:08:50 +0000
+From:   Iuliana Prodan <iuliana.prodan@nxp.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+CC:     Horia Geanta <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH v2 1/2] crypto: caam - fix pkcs1pad(rsa-caam, sha256)
+ failure because of invalid input
+Thread-Topic: [PATCH v2 1/2] crypto: caam - fix pkcs1pad(rsa-caam, sha256)
+ failure because of invalid input
+Thread-Index: AQHVCxD1/1xcZwH7eE+osRH9ZRl26A==
+Date:   Thu, 23 May 2019 08:08:50 +0000
+Message-ID: <VI1PR04MB44452D9C82BB8835DDF759298C010@VI1PR04MB4445.eurprd04.prod.outlook.com>
+References: <1557919546-360-1-git-send-email-iuliana.prodan@nxp.com>
+ <20190523061202.ic2vgimgzvvm6dzc@gondor.apana.org.au>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=iuliana.prodan@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cf0ff7c2-6cf7-49e6-1d45-08d6df55e3b4
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5150;
+x-ms-traffictypediagnostic: VI1PR04MB5150:
+x-microsoft-antispam-prvs: <VI1PR04MB515086496B62B865F41A2D5E8C010@VI1PR04MB5150.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3173;
+x-forefront-prvs: 00462943DE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(376002)(136003)(366004)(346002)(396003)(199004)(189003)(66066001)(52536014)(99286004)(8676002)(25786009)(55016002)(316002)(4744005)(478600001)(76116006)(229853002)(73956011)(7696005)(64756008)(66446008)(66476007)(66946007)(66556008)(33656002)(26005)(74316002)(76176011)(186003)(5660300002)(68736007)(6116002)(6916009)(3846002)(6506007)(102836004)(53546011)(7736002)(4326008)(6436002)(486006)(44832011)(2906002)(305945005)(71190400001)(6246003)(14454004)(71200400001)(53936002)(9686003)(81166006)(81156014)(476003)(86362001)(8936002)(54906003)(446003)(256004)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5150;H:VI1PR04MB4445.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: AZFoy4EQkloD8QRcbg92lvtDMtkHRhRg/iOCa9DeOqOmfVchKcIf4rnDuF4Vrew2lYGSNdrQKZoT7eDiOMojHFp/OGLPYzCz5PV0F7K9BFwdvtwtI4YTK4vPofAn6yBY1BWEapHZ2qLLbl+JG6pmf1/ucV8J3GDeZ7pwzIhitiO7tVgmAvSC2AHLYd5bbM9CB4upxo3dTKIBEP0Ct4x906YWxKBIdNSzWhTO52ZexeQfu97EFKqb5cRthHrsSfCzVpRc4zDIHAg7ZFyS3Aixlzmpoaxd9/z/AxLjFpcawmao4kkM2xf0Ae2TUfCGBk+/94/UjGUPAVEcI3lg1KXvgxBH+9axN6LvoydUmxpDyJ37TYBKFqc9HBpYMznCGjrHPIcPZWZbb1pWWjlvluCGjBj5kj1VGgmxnH8Bk3A0Csg=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Thu, 23 May 2019 08:06:58 +0000 (UTC)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cf0ff7c2-6cf7-49e6-1d45-08d6df55e3b4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2019 08:08:50.3430
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: iuliana.prodan@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5150
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-d_name_cmp() and update_dentry_lease() lock and unlock dentry->d_lock
-respectively. Dentry may get renamed between them. The fix is moving
-the dentry name compare into update_dentry_lease().
-
-This patch introduce two version of update_dentry_lease(). One version
-is for the case that parent inode is locked. It does not need to check
-parent/target inode and dentry name. Another version is for the case
-that parent inode is not locked. It checks arent/target inode and dentry
-name after locking dentry->d_lock.
-
-Signed-off-by: "Yan, Zheng" <zyan@redhat.com>
----
- fs/ceph/inode.c | 164 ++++++++++++++++++++++++++----------------------
- 1 file changed, 88 insertions(+), 76 deletions(-)
-
-diff --git a/fs/ceph/inode.c b/fs/ceph/inode.c
-index 8cfece240ffe..e47a25495be5 100644
---- a/fs/ceph/inode.c
-+++ b/fs/ceph/inode.c
-@@ -1031,59 +1031,38 @@ static int fill_inode(struct inode *inode, struct page *locked_page,
- }
- 
- /*
-- * caller should hold session s_mutex.
-+ * caller should hold session s_mutex and dentry->d_lock.
-  */
--static void update_dentry_lease(struct dentry *dentry,
--				struct ceph_mds_reply_lease *lease,
--				struct ceph_mds_session *session,
--				unsigned long from_time,
--				struct ceph_vino *tgt_vino,
--				struct ceph_vino *dir_vino)
-+static void __update_dentry_lease(struct inode *dir, struct dentry *dentry,
-+				  struct ceph_mds_reply_lease *lease,
-+				  struct ceph_mds_session *session,
-+				  unsigned long from_time,
-+				  struct ceph_mds_session **old_lease_session)
- {
- 	struct ceph_dentry_info *di = ceph_dentry(dentry);
- 	long unsigned duration = le32_to_cpu(lease->duration_ms);
- 	long unsigned ttl = from_time + (duration * HZ) / 1000;
- 	long unsigned half_ttl = from_time + (duration * HZ / 2) / 1000;
--	struct inode *dir;
--	struct ceph_mds_session *old_lease_session = NULL;
--
--	/*
--	 * Make sure dentry's inode matches tgt_vino. NULL tgt_vino means that
--	 * we expect a negative dentry.
--	 */
--	if (!tgt_vino && d_really_is_positive(dentry))
--		return;
--
--	if (tgt_vino && (d_really_is_negative(dentry) ||
--			!ceph_ino_compare(d_inode(dentry), tgt_vino)))
--		return;
- 
--	spin_lock(&dentry->d_lock);
- 	dout("update_dentry_lease %p duration %lu ms ttl %lu\n",
- 	     dentry, duration, ttl);
- 
--	dir = d_inode(dentry->d_parent);
--
--	/* make sure parent matches dir_vino */
--	if (!ceph_ino_compare(dir, dir_vino))
--		goto out_unlock;
--
- 	/* only track leases on regular dentries */
- 	if (ceph_snap(dir) != CEPH_NOSNAP)
--		goto out_unlock;
-+		return;
- 
- 	di->lease_shared_gen = atomic_read(&ceph_inode(dir)->i_shared_gen);
- 	if (duration == 0) {
- 		__ceph_dentry_dir_lease_touch(di);
--		goto out_unlock;
-+		return;
- 	}
- 
- 	if (di->lease_gen == session->s_cap_gen &&
- 	    time_before(ttl, di->time))
--		goto out_unlock;  /* we already have a newer lease. */
-+		return;  /* we already have a newer lease. */
- 
- 	if (di->lease_session && di->lease_session != session) {
--		old_lease_session = di->lease_session;
-+		*old_lease_session = di->lease_session;
- 		di->lease_session = NULL;
- 	}
- 
-@@ -1096,6 +1075,62 @@ static void update_dentry_lease(struct dentry *dentry,
- 	di->time = ttl;
- 
- 	__ceph_dentry_lease_touch(di);
-+}
-+
-+static inline void update_dentry_lease(struct inode *dir, struct dentry *dentry,
-+					struct ceph_mds_reply_lease *lease,
-+					struct ceph_mds_session *session,
-+					unsigned long from_time)
-+{
-+	struct ceph_mds_session *old_lease_session = NULL;
-+	spin_lock(&dentry->d_lock);
-+	__update_dentry_lease(dir, dentry, lease, session, from_time,
-+			      &old_lease_session);
-+	spin_unlock(&dentry->d_lock);
-+	if (old_lease_session)
-+		ceph_put_mds_session(old_lease_session);
-+}
-+
-+/*
-+ * update dentry lease without having parent inode locked
-+ */
-+static void update_dentry_lease_careful(struct dentry *dentry,
-+					struct ceph_mds_reply_lease *lease,
-+					struct ceph_mds_session *session,
-+					unsigned long from_time,
-+					char *dname, u32 dname_len,
-+					struct ceph_vino *pdvino,
-+					struct ceph_vino *ptvino)
-+
-+{
-+	struct inode *dir;
-+	struct ceph_mds_session *old_lease_session = NULL;
-+
-+	spin_lock(&dentry->d_lock);
-+	/* make sure dentry's name matches target */
-+	if (dentry->d_name.len != dname_len ||
-+	    memcmp(dentry->d_name.name, dname, dname_len))
-+		goto out_unlock;
-+
-+	dir = d_inode(dentry->d_parent);
-+	/* make sure parent matches dvino */
-+	if (!ceph_ino_compare(dir, pdvino))
-+		goto out_unlock;
-+
-+	/* make sure dentry's inode matches target. NULL ptvino means that
-+	 * we expect a negative dentry */
-+	if (ptvino) {
-+		if (d_really_is_negative(dentry))
-+			goto out_unlock;
-+		if (!ceph_ino_compare(d_inode(dentry), ptvino))
-+			goto out_unlock;
-+	} else {
-+		if (d_really_is_positive(dentry))
-+			goto out_unlock;
-+	}
-+
-+	__update_dentry_lease(dir, dentry, lease, session,
-+			      from_time, &old_lease_session);
- out_unlock:
- 	spin_unlock(&dentry->d_lock);
- 	if (old_lease_session)
-@@ -1160,19 +1195,6 @@ static int splice_dentry(struct dentry **pdn, struct inode *in)
- 	return 0;
- }
- 
--static int d_name_cmp(struct dentry *dentry, const char *name, size_t len)
--{
--	int ret;
--
--	/* take d_lock to ensure dentry->d_name stability */
--	spin_lock(&dentry->d_lock);
--	ret = dentry->d_name.len - len;
--	if (!ret)
--		ret = memcmp(dentry->d_name.name, name, len);
--	spin_unlock(&dentry->d_lock);
--	return ret;
--}
--
- /*
-  * Incorporate results into the local cache.  This is either just
-  * one inode, or a directory, dentry, and possibly linked-to inode (e.g.,
-@@ -1375,10 +1397,9 @@ int ceph_fill_trace(struct super_block *sb, struct ceph_mds_request *req)
- 			} else if (have_lease) {
- 				if (d_unhashed(dn))
- 					d_add(dn, NULL);
--				update_dentry_lease(dn, rinfo->dlease,
--						    session,
--						    req->r_request_started,
--						    NULL, &dvino);
-+				update_dentry_lease(dir, dn,
-+						    rinfo->dlease, session,
-+						    req->r_request_started);
- 			}
- 			goto done;
- 		}
-@@ -1400,11 +1421,9 @@ int ceph_fill_trace(struct super_block *sb, struct ceph_mds_request *req)
- 		}
- 
- 		if (have_lease) {
--			tvino.ino = le64_to_cpu(rinfo->targeti.in->ino);
--			tvino.snap = le64_to_cpu(rinfo->targeti.in->snapid);
--			update_dentry_lease(dn, rinfo->dlease, session,
--					    req->r_request_started,
--					    &tvino, &dvino);
-+			update_dentry_lease(dir, dn,
-+					    rinfo->dlease, session,
-+					    req->r_request_started);
- 		}
- 		dout(" final dn %p\n", dn);
- 	} else if ((req->r_op == CEPH_MDS_OP_LOOKUPSNAP ||
-@@ -1422,27 +1441,20 @@ int ceph_fill_trace(struct super_block *sb, struct ceph_mds_request *req)
- 		err = splice_dentry(&req->r_dentry, in);
- 		if (err < 0)
- 			goto done;
--	} else if (rinfo->head->is_dentry &&
--		   !d_name_cmp(req->r_dentry, rinfo->dname, rinfo->dname_len)) {
-+	} else if (rinfo->head->is_dentry && req->r_dentry) {
-+		/* parent inode is not locked, be carefull */
- 		struct ceph_vino *ptvino = NULL;
--
--		if ((le32_to_cpu(rinfo->diri.in->cap.caps) & CEPH_CAP_FILE_SHARED) ||
--		    le32_to_cpu(rinfo->dlease->duration_ms)) {
--			dvino.ino = le64_to_cpu(rinfo->diri.in->ino);
--			dvino.snap = le64_to_cpu(rinfo->diri.in->snapid);
--
--			if (rinfo->head->is_target) {
--				tvino.ino = le64_to_cpu(rinfo->targeti.in->ino);
--				tvino.snap = le64_to_cpu(rinfo->targeti.in->snapid);
--				ptvino = &tvino;
--			}
--
--			update_dentry_lease(req->r_dentry, rinfo->dlease,
--				session, req->r_request_started, ptvino,
--				&dvino);
--		} else {
--			dout("%s: no dentry lease or dir cap\n", __func__);
-+		dvino.ino = le64_to_cpu(rinfo->diri.in->ino);
-+		dvino.snap = le64_to_cpu(rinfo->diri.in->snapid);
-+		if (rinfo->head->is_target) {
-+			tvino.ino = le64_to_cpu(rinfo->targeti.in->ino);
-+			tvino.snap = le64_to_cpu(rinfo->targeti.in->snapid);
-+			ptvino = &tvino;
- 		}
-+		update_dentry_lease_careful(req->r_dentry, rinfo->dlease,
-+					    session, req->r_request_started,
-+					    rinfo->dname, rinfo->dname_len,
-+					    &dvino, ptvino);
- 	}
- done:
- 	dout("fill_trace done err=%d\n", err);
-@@ -1604,7 +1616,7 @@ int ceph_readdir_prepopulate(struct ceph_mds_request *req,
- 	/* FIXME: release caps/leases if error occurs */
- 	for (i = 0; i < rinfo->dir_nr; i++) {
- 		struct ceph_mds_reply_dir_entry *rde = rinfo->dir_entries + i;
--		struct ceph_vino tvino, dvino;
-+		struct ceph_vino tvino;
- 
- 		dname.name = rde->name;
- 		dname.len = rde->name_len;
-@@ -1705,9 +1717,9 @@ int ceph_readdir_prepopulate(struct ceph_mds_request *req,
- 
- 		ceph_dentry(dn)->offset = rde->offset;
- 
--		dvino = ceph_vino(d_inode(parent));
--		update_dentry_lease(dn, rde->lease, req->r_session,
--				    req->r_request_started, &tvino, &dvino);
-+		update_dentry_lease(d_inode(parent), dn,
-+				    rde->lease, req->r_session,
-+				    req->r_request_started);
- 
- 		if (err == 0 && skipped == 0 && cache_ctl.index >= 0) {
- 			ret = fill_readdir_cache(d_inode(parent), dn,
--- 
-2.17.2
-
+On 5/23/2019 9:12 AM, Herbert Xu wrote:=0A=
+> On Wed, May 15, 2019 at 02:25:45PM +0300, Iuliana Prodan wrote:=0A=
+>>=0A=
+>> @@ -1058,6 +1105,14 @@ static int __init caam_pkc_init(void)=0A=
+>>   		goto out_put_dev;=0A=
+>>   	}=0A=
+>>   =0A=
+>> +	/* allocate zero buffer, used for padding input */=0A=
+>> +	zero_buffer =3D kzalloc(CAAM_RSA_MAX_INPUT_SIZE - 1, GFP_DMA |=0A=
+>> +			      GFP_KERNEL);=0A=
+>> +	if (!zero_buffer) {=0A=
+>> +		err =3D -ENOMEM;=0A=
+>> +		goto out_put_dev;=0A=
+>> +	}=0A=
+>> +=0A=
+>>   	err =3D crypto_register_akcipher(&caam_rsa);=0A=
+>>   	if (err)=0A=
+>>   		dev_warn(ctrldev, "%s alg registration failed\n",=0A=
+> =0A=
+> This patch does not apply on top of the caam patch-series from Horia.=0A=
+> You're also going to leak zero_buffer if crypto_register_akcipher=0A=
+> fails.=0A=
+> =0A=
+> Cheers,=0A=
+> =0A=
+=0A=
+I'll fix the conflicts and also the leak of zero_buffer if =0A=
+crypto_register_akcipher fails and send a new version.=0A=
+=0A=
+Regards,=0A=
+Iulia=0A=
