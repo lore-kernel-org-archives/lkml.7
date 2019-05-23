@@ -2,54 +2,54 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D907EC282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D176C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AECF12184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 521DF217D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:29:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639740;
-	bh=kiG2Z147l4GuJ/myFhrqydpFyu3ZbV9OGO+gjWFZCQk=;
+	s=default; t=1558639744;
+	bh=sn+dZ/PchoWhDRxZdzF7nRF8NliCSnp7Ebv9+XJ/kfU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F2nsfdAGegdVTKA/Hj8cxs9NeXpC/7cbyoeoscQlwdxsMZgjDgkO5q/MJkhM0z1fP
-	 KGtPkvFfUlcNN3rsoDbfrTCWEXLg8FIlxQFb/DVEJtQOtnIehyD7Cpaod4RhBDu/ZG
-	 BY3lPAyQW6QWYJ/mTIPtowkPbFAcLTetdmQgdLNc=
+	b=gT0gaCvM0ecWYrOWz2Xn2Ng0R/dR2lfoa+Ps0P2z4TGG2hfFGIq/wUifL8D8i0DDt
+	 ZSFB9ZNvafwqSWRXl6tWLVh/+ByextgIA25Nx3f768LvQFua0lxs95CJiA+3PtasZm
+	 NLUaoCogdkoORPnUaSD6H7PVjy7p1Qj38CP5JQHQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391856AbfEWT3A (ORCPT
+        id S2391863AbfEWT3D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:29:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41850 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:29:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391843AbfEWT25 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:28:57 -0400
+        id S2391843AbfEWT3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:29:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AEA22187F;
-        Thu, 23 May 2019 19:28:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C85D217D7;
+        Thu, 23 May 2019 19:28:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639737;
-        bh=kiG2Z147l4GuJ/myFhrqydpFyu3ZbV9OGO+gjWFZCQk=;
+        s=default; t=1558639739;
+        bh=sn+dZ/PchoWhDRxZdzF7nRF8NliCSnp7Ebv9+XJ/kfU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dpRBc0K5yTfMcU1okIl94P8d1YDEslHrwzgmYOQ8+ee/Jmt2EZDz251iE9Jm36pPk
-         gwisLW1PPaua2T4I17vUZMR5JVBC7+ly6HCAi90dZVvU/F+6lECvSWosQZb8w4Evcy
-         qEsiLWfnB/3jsKeXjAx03d6tkvOFsuOfW2JGLwDU=
+        b=MiMrSAmgda2xPsAhU0hUXzoCuh4qnVjU+EhHif6JR9PQIi5PiokWjWBlcW6etFFvR
+         3vIs4C0WEx/fEbys+ditmmEOtv8gKs5dZzAcME+ltw58r/GtGNEtDw3jUHnrucanyk
+         g31pSzFSnYaFMAgvfy/q9K0xBsSzaEqg/wHVDvIY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Orit Wasserman <orit.was@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Elazar Leibovich <elazar@lightbitslabs.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.1 076/122] tracing: Fix partial reading of trace events id file
-Date:   Thu, 23 May 2019 21:06:38 +0200
-Message-Id: <20190523181714.842315450@linuxfoundation.org>
+        stable@vger.kernel.org, Owen Chen <owen.chen@mediatek.com>,
+        Weiyi Lu <weiyi.lu@mediatek.com>,
+        James Liao <jamesjj.liao@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: [PATCH 5.1 061/122] clk: mediatek: Disable tuner_en before change PLL rate
+Date:   Thu, 23 May 2019 21:06:23 +0200
+Message-Id: <20190523181712.840483563@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -62,77 +62,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Elazar Leibovich <elazar@lightbitslabs.com>
+From: Owen Chen <owen.chen@mediatek.com>
 
-commit cbe08bcbbe787315c425dde284dcb715cfbf3f39 upstream.
+commit be17ca6ac76a5cfd07cc3a0397dd05d6929fcbbb upstream.
 
-When reading only part of the id file, the ppos isn't tracked correctly.
-This is taken care by simple_read_from_buffer.
+PLLs with tuner_en bit, such as APLL1, need to disable
+tuner_en before apply new frequency settings, or the new frequency
+settings (pcw) will not be applied.
+The tuner_en bit will be disabled during changing PLL rate
+and be restored after new settings applied.
 
-Reading a single byte, and then the next byte would result EOF.
-
-While this seems like not a big deal, this breaks abstractions that
-reads information from files unbuffered. See for example
-https://github.com/golang/go/issues/29399
-
-This code was mentioned as problematic in
-commit cd458ba9d5a5
-("tracing: Do not (ab)use trace_seq in event_id_read()")
-
-An example C code that show this bug is:
-
-  #include <stdio.h>
-  #include <stdint.h>
-
-  #include <sys/types.h>
-  #include <sys/stat.h>
-  #include <fcntl.h>
-  #include <unistd.h>
-
-  int main(int argc, char **argv) {
-    if (argc < 2)
-      return 1;
-    int fd = open(argv[1], O_RDONLY);
-    char c;
-    read(fd, &c, 1);
-    printf("First  %c\n", c);
-    read(fd, &c, 1);
-    printf("Second %c\n", c);
-  }
-
-Then run with, e.g.
-
-  sudo ./a.out /sys/kernel/debug/tracing/events/tcp/tcp_set_state/id
-
-You'll notice you're getting the first character twice, instead of the
-first two characters in the id file.
-
-Link: http://lkml.kernel.org/r/20181231115837.4932-1-elazar@lightbitslabs.com
-
-Cc: Orit Wasserman <orit.was@gmail.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: stable@vger.kernel.org
-Fixes: 23725aeeab10b ("ftrace: provide an id file for each event")
-Signed-off-by: Elazar Leibovich <elazar@lightbitslabs.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: e2f744a82d725 (clk: mediatek: Add MT2712 clock support)
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Owen Chen <owen.chen@mediatek.com>
+Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
+Reviewed-by: James Liao <jamesjj.liao@mediatek.com>
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace_events.c |    3 ---
- 1 file changed, 3 deletions(-)
+ drivers/clk/mediatek/clk-pll.c |   48 +++++++++++++++++++++++++++++------------
+ 1 file changed, 34 insertions(+), 14 deletions(-)
 
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -1318,9 +1318,6 @@ event_id_read(struct file *filp, char __
- 	char buf[32];
- 	int len;
+--- a/drivers/clk/mediatek/clk-pll.c
++++ b/drivers/clk/mediatek/clk-pll.c
+@@ -88,6 +88,32 @@ static unsigned long __mtk_pll_recalc_ra
+ 	return ((unsigned long)vco + postdiv - 1) / postdiv;
+ }
  
--	if (*ppos)
--		return 0;
--
- 	if (unlikely(!id))
- 		return -ENODEV;
++static void __mtk_pll_tuner_enable(struct mtk_clk_pll *pll)
++{
++	u32 r;
++
++	if (pll->tuner_en_addr) {
++		r = readl(pll->tuner_en_addr) | BIT(pll->data->tuner_en_bit);
++		writel(r, pll->tuner_en_addr);
++	} else if (pll->tuner_addr) {
++		r = readl(pll->tuner_addr) | AUDPLL_TUNER_EN;
++		writel(r, pll->tuner_addr);
++	}
++}
++
++static void __mtk_pll_tuner_disable(struct mtk_clk_pll *pll)
++{
++	u32 r;
++
++	if (pll->tuner_en_addr) {
++		r = readl(pll->tuner_en_addr) & ~BIT(pll->data->tuner_en_bit);
++		writel(r, pll->tuner_en_addr);
++	} else if (pll->tuner_addr) {
++		r = readl(pll->tuner_addr) & ~AUDPLL_TUNER_EN;
++		writel(r, pll->tuner_addr);
++	}
++}
++
+ static void mtk_pll_set_rate_regs(struct mtk_clk_pll *pll, u32 pcw,
+ 		int postdiv)
+ {
+@@ -96,6 +122,9 @@ static void mtk_pll_set_rate_regs(struct
  
+ 	pll_en = readl(pll->base_addr + REG_CON0) & CON0_BASE_EN;
+ 
++	/* disable tuner */
++	__mtk_pll_tuner_disable(pll);
++
+ 	/* set postdiv */
+ 	val = readl(pll->pd_addr);
+ 	val &= ~(POSTDIV_MASK << pll->data->pd_shift);
+@@ -122,6 +151,9 @@ static void mtk_pll_set_rate_regs(struct
+ 	if (pll->tuner_addr)
+ 		writel(con1 + 1, pll->tuner_addr);
+ 
++	/* restore tuner_en */
++	__mtk_pll_tuner_enable(pll);
++
+ 	if (pll_en)
+ 		udelay(20);
+ }
+@@ -228,13 +260,7 @@ static int mtk_pll_prepare(struct clk_hw
+ 	r |= pll->data->en_mask;
+ 	writel(r, pll->base_addr + REG_CON0);
+ 
+-	if (pll->tuner_en_addr) {
+-		r = readl(pll->tuner_en_addr) | BIT(pll->data->tuner_en_bit);
+-		writel(r, pll->tuner_en_addr);
+-	} else if (pll->tuner_addr) {
+-		r = readl(pll->tuner_addr) | AUDPLL_TUNER_EN;
+-		writel(r, pll->tuner_addr);
+-	}
++	__mtk_pll_tuner_enable(pll);
+ 
+ 	udelay(20);
+ 
+@@ -258,13 +284,7 @@ static void mtk_pll_unprepare(struct clk
+ 		writel(r, pll->base_addr + REG_CON0);
+ 	}
+ 
+-	if (pll->tuner_en_addr) {
+-		r = readl(pll->tuner_en_addr) & ~BIT(pll->data->tuner_en_bit);
+-		writel(r, pll->tuner_en_addr);
+-	} else if (pll->tuner_addr) {
+-		r = readl(pll->tuner_addr) & ~AUDPLL_TUNER_EN;
+-		writel(r, pll->tuner_addr);
+-	}
++	__mtk_pll_tuner_disable(pll);
+ 
+ 	r = readl(pll->base_addr + REG_CON0);
+ 	r &= ~CON0_BASE_EN;
 
 
