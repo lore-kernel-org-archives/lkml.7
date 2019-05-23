@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02960C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D81C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CABDA21851
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:31:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3124C206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:31:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639885;
-	bh=pMobA3DszLasSCXS9Xz1Yb6nbXZihZY5geDFb+L77uQ=;
+	s=default; t=1558639889;
+	bh=Jfx6KeEU+O9GHSS13gWnKqZraw3gOIgsyaXRRt0RtWM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S/4mXbYYJViifuFm0O5SQCvBpQ4xTCWG9ONFMOb7/Dik9w6aNu8xE31RAax4lTAlV
-	 Zjj+fNZpHqVxR4JmGyiK8Sqar0HZLVR0wMZ/YSCJmJBTt34QeEHgxcukZW4tOt+s4P
-	 dlSyrRIg7/WqAapAUIPtfdVyH3Kp4iCw60gk2zRQ=
+	b=qKwxxig0nxh8sGXPOQ2aRjT96YmQ33h+Db0vY+Tx0RHh5GsCvl095o+fm7jVm+X8o
+	 /ofxoSzV/Mnn8AUVHf4yWvKGgMPGxtA5/2I9a7QosQC0mUGYiReMvccJ9vKY0fx4XA
+	 I/IeP7jMSC2/lC+3iMNdCH+V/bm/GLtsU1/+RIO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392008AbfEWTbZ (ORCPT
+        id S2403850AbfEWTb2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:31:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45122 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:31:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403826AbfEWTbV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:31:21 -0400
+        id S2392017AbfEWTb0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:31:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BAB22184E;
-        Thu, 23 May 2019 19:31:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9C5E2054F;
+        Thu, 23 May 2019 19:31:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639879;
-        bh=pMobA3DszLasSCXS9Xz1Yb6nbXZihZY5geDFb+L77uQ=;
+        s=default; t=1558639885;
+        bh=Jfx6KeEU+O9GHSS13gWnKqZraw3gOIgsyaXRRt0RtWM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aQtMwYJ+gbs4S3IUTZRv8VmQoCuZNvG1jtdulDmZFzZ0icushprInYExWTVXOWe55
-         GUXzusi28SeoCsKIcFJYJSljS0vjIiZ6QRiFcTtNikjqPEd8HA0k65aB1xLWHEdSQY
-         jtLhUL2fIKMTatNHJ6uKvh0mm9B2qNRbBJpJqH8E=
+        b=S1GhhxowjzyHBUGmDvU1/l70m+Pa/MSaIFQI+KwBEIDG4a0Uy4O01qj36AdZgItHW
+         UWq1Y5NY7Ws5k08kseqJukBzwvZ8SsjN8v1pdb7hDJKLvFhmZuIY9BulOg/qamysIj
+         Gt7Hze7njXTAqtr9eYPDq3xadqkzmdWcNlY28ao8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>
-Subject: [PATCH 5.1 118/122] bpf, lru: avoid messing with eviction heuristics upon syscall lookup
-Date:   Thu, 23 May 2019 21:07:20 +0200
-Message-Id: <20190523181721.217449539@linuxfoundation.org>
+        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.1 120/122] btrfs: reloc: Fix NULL pointer dereference due to expanded reloc_root lifespan
+Date:   Thu, 23 May 2019 21:07:22 +0200
+Message-Id: <20190523181721.457475819@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -60,106 +59,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Borkmann <daniel@iogearbox.net>
+From: Qu Wenruo <wqu@suse.com>
 
-commit 50b045a8c0ccf44f76640ac3eea8d80ca53979a3 upstream.
+commit 10995c0491204c861948c9850939a7f4e90760a4 upstream.
 
-One of the biggest issues we face right now with picking LRU map over
-regular hash table is that a map walk out of user space, for example,
-to just dump the existing entries or to remove certain ones, will
-completely mess up LRU eviction heuristics and wrong entries such
-as just created ones will get evicted instead. The reason for this
-is that we mark an entry as "in use" via bpf_lru_node_set_ref() from
-system call lookup side as well. Thus upon walk, all entries are
-being marked, so information of actual least recently used ones
-are "lost".
+Commit d2311e698578 ("btrfs: relocation: Delay reloc tree deletion after
+merge_reloc_roots()") expands the life span of root->reloc_root.
 
-In case of Cilium where it can be used (besides others) as a BPF
-based connection tracker, this current behavior causes disruption
-upon control plane changes that need to walk the map from user space
-to evict certain entries. Discussion result from bpfconf [0] was that
-we should simply just remove marking from system call side as no
-good use case could be found where it's actually needed there.
-Therefore this patch removes marking for regular LRU and per-CPU
-flavor. If there ever should be a need in future, the behavior could
-be selected via map creation flag, but due to mentioned reason we
-avoid this here.
+This breaks certain checs of fs_info->reloc_ctl.  Before that commit, if
+we have a root with valid reloc_root, then it's ensured to have
+fs_info->reloc_ctl.
 
-  [0] http://vger.kernel.org/bpfconf.html
+But now since reloc_root doesn't always mean a valid fs_info->reloc_ctl,
+such check is unreliable and can cause the following NULL pointer
+dereference:
 
-Fixes: 29ba732acbee ("bpf: Add BPF_MAP_TYPE_LRU_HASH")
-Fixes: 8f8449384ec3 ("bpf: Add BPF_MAP_TYPE_LRU_PERCPU_HASH")
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Martin KaFai Lau <kafai@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+  BUG: unable to handle kernel NULL pointer dereference at 00000000000005c1
+  IP: btrfs_reloc_pre_snapshot+0x20/0x50 [btrfs]
+  PGD 0 P4D 0
+  Oops: 0000 [#1] SMP PTI
+  CPU: 0 PID: 10379 Comm: snapperd Not tainted
+  Call Trace:
+   create_pending_snapshot+0xd7/0xfc0 [btrfs]
+   create_pending_snapshots+0x8e/0xb0 [btrfs]
+   btrfs_commit_transaction+0x2ac/0x8f0 [btrfs]
+   btrfs_mksubvol+0x561/0x570 [btrfs]
+   btrfs_ioctl_snap_create_transid+0x189/0x190 [btrfs]
+   btrfs_ioctl_snap_create_v2+0x102/0x150 [btrfs]
+   btrfs_ioctl+0x5c9/0x1e60 [btrfs]
+   do_vfs_ioctl+0x90/0x5f0
+   SyS_ioctl+0x74/0x80
+   do_syscall_64+0x7b/0x150
+   entry_SYSCALL_64_after_hwframe+0x3d/0xa2
+  RIP: 0033:0x7fd7cdab8467
+
+Fix it by explicitly checking fs_info->reloc_ctl other than using the
+implied root->reloc_root.
+
+Fixes: d2311e698578 ("btrfs: relocation: Delay reloc tree deletion after merge_reloc_roots")
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/bpf/hashtab.c |   23 ++++++++++++++++++-----
- 1 file changed, 18 insertions(+), 5 deletions(-)
+ fs/btrfs/relocation.c |   12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
---- a/kernel/bpf/hashtab.c
-+++ b/kernel/bpf/hashtab.c
-@@ -527,18 +527,30 @@ static u32 htab_map_gen_lookup(struct bp
- 	return insn - insn_buf;
- }
- 
--static void *htab_lru_map_lookup_elem(struct bpf_map *map, void *key)
-+static __always_inline void *__htab_lru_map_lookup_elem(struct bpf_map *map,
-+							void *key, const bool mark)
+--- a/fs/btrfs/relocation.c
++++ b/fs/btrfs/relocation.c
+@@ -4667,14 +4667,12 @@ int btrfs_reloc_cow_block(struct btrfs_t
+ void btrfs_reloc_pre_snapshot(struct btrfs_pending_snapshot *pending,
+ 			      u64 *bytes_to_reserve)
  {
- 	struct htab_elem *l = __htab_map_lookup_elem(map, key);
+-	struct btrfs_root *root;
+-	struct reloc_control *rc;
++	struct btrfs_root *root = pending->root;
++	struct reloc_control *rc = root->fs_info->reloc_ctl;
  
- 	if (l) {
--		bpf_lru_node_set_ref(&l->lru_node);
-+		if (mark)
-+			bpf_lru_node_set_ref(&l->lru_node);
- 		return l->key + round_up(map->key_size, 8);
- 	}
+-	root = pending->root;
+-	if (!root->reloc_root)
++	if (!root->reloc_root || !rc)
+ 		return;
  
- 	return NULL;
- }
+-	rc = root->fs_info->reloc_ctl;
+ 	if (!rc->merge_reloc_tree)
+ 		return;
  
-+static void *htab_lru_map_lookup_elem(struct bpf_map *map, void *key)
-+{
-+	return __htab_lru_map_lookup_elem(map, key, true);
-+}
-+
-+static void *htab_lru_map_lookup_elem_sys(struct bpf_map *map, void *key)
-+{
-+	return __htab_lru_map_lookup_elem(map, key, false);
-+}
-+
- static u32 htab_lru_map_gen_lookup(struct bpf_map *map,
- 				   struct bpf_insn *insn_buf)
- {
-@@ -1250,6 +1262,7 @@ const struct bpf_map_ops htab_lru_map_op
- 	.map_free = htab_map_free,
- 	.map_get_next_key = htab_map_get_next_key,
- 	.map_lookup_elem = htab_lru_map_lookup_elem,
-+	.map_lookup_elem_sys_only = htab_lru_map_lookup_elem_sys,
- 	.map_update_elem = htab_lru_map_update_elem,
- 	.map_delete_elem = htab_lru_map_delete_elem,
- 	.map_gen_lookup = htab_lru_map_gen_lookup,
-@@ -1281,7 +1294,6 @@ static void *htab_lru_percpu_map_lookup_
+@@ -4703,10 +4701,10 @@ int btrfs_reloc_post_snapshot(struct btr
+ 	struct btrfs_root *root = pending->root;
+ 	struct btrfs_root *reloc_root;
+ 	struct btrfs_root *new_root;
+-	struct reloc_control *rc;
++	struct reloc_control *rc = root->fs_info->reloc_ctl;
+ 	int ret;
  
- int bpf_percpu_hash_copy(struct bpf_map *map, void *key, void *value)
- {
--	struct bpf_htab *htab = container_of(map, struct bpf_htab, map);
- 	struct htab_elem *l;
- 	void __percpu *pptr;
- 	int ret = -ENOENT;
-@@ -1297,8 +1309,9 @@ int bpf_percpu_hash_copy(struct bpf_map
- 	l = __htab_map_lookup_elem(map, key);
- 	if (!l)
- 		goto out;
--	if (htab_is_lru(htab))
--		bpf_lru_node_set_ref(&l->lru_node);
-+	/* We do not mark LRU map element here in order to not mess up
-+	 * eviction heuristics when user space does a map walk.
-+	 */
- 	pptr = htab_elem_get_ptr(l, map->key_size);
- 	for_each_possible_cpu(cpu) {
- 		bpf_long_memcpy(value + off,
+-	if (!root->reloc_root)
++	if (!root->reloc_root || !rc)
+ 		return 0;
+ 
+ 	rc = root->fs_info->reloc_ctl;
 
 
