@@ -2,97 +2,109 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE9F3C04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33095C282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AE9320862
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:03:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nikanor-nu.20150623.gappssmtp.com header.i=@nikanor-nu.20150623.gappssmtp.com header.b="Heyrg98N"
+	by mail.kernel.org (Postfix) with ESMTP id F1D3E20862
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:05:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729155AbfEWIDF (ORCPT
+        id S1729588AbfEWIFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 04:03:05 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:34522 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725814AbfEWIDE (ORCPT
+        Thu, 23 May 2019 04:05:10 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52576 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbfEWIFK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 04:03:04 -0400
-Received: by mail-lj1-f193.google.com with SMTP id j24so4572219ljg.1
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 01:03:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=nikanor-nu.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=GPOuorQ32uJ+YRQwwZE95bT2omKKOwwwtpWjGVHMWoc=;
-        b=Heyrg98N4Wo26gnY/JVGTBNNmNoWbhwP0yo4dKt8H+O8ILQDm1qKexfQsxO7gNi1GT
-         S7SHMEETOSgo5Joz3ay/FP4fFXkduXjtlpBbDX5lk3eWOKhg5xaH6fhamfXysIWm+kUh
-         Hmwp5bh9RrKnQDbQwhrnGQsIGG9WNAPMdomWdMGEEvTMNO+zbduR3Mpx83FcWC3ZLTDp
-         cmlMeY9LFjqiDOV9m6NVxZcIhiwBFgFdg1+fmVBbhfSR4tCRcVzxRGoOuOKGllD9rYZ/
-         YQhOeOnC19jtgPxSN4yqu/3vMsT6tdGJFQrXx69LNdX8TJtbYyEediVig3ukUfUgYKgB
-         w/hg==
+        Thu, 23 May 2019 04:05:10 -0400
+Received: by mail-wm1-f67.google.com with SMTP id y3so4756925wmm.2
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 01:05:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GPOuorQ32uJ+YRQwwZE95bT2omKKOwwwtpWjGVHMWoc=;
-        b=FUhZRsXzSEj7EvQI/LWGz9UrnQalnUYCW9bYZSjoCx2hwRNWRtAAmfL08j/P/FbaGL
-         obcoftnVFSpxqfzoHroZ/qy1hbpIxbEmZny1I2rak9Bibb+xAXJ6uYl71aQPMHEnspba
-         aCcFO3cHxhqIloo2wCnHEL97ByrJp50MPvlAEQa04rlcZ6lqtUo77uga8OFtGahb1wEF
-         2Ts8oJwvx+JrskVlzLtyM/rj/JExkaVYFCpMReWjAzxmXOe9r2QBWlFTXBI96mmoIezi
-         Dtf8SNKRD1YRvJ/Y+nr+x1ksvtvrfz357kNh88WYbOo5dG5IfDV25R2HbfQCwhGV4+3y
-         Un9g==
-X-Gm-Message-State: APjAAAV1nhWbgKK5y0SeziS5WFFZzk/XKM13D9TQDwfimLOjcien+bi2
-        3AagdNEsPUtjMmiQV4uwUuc/Ww==
-X-Google-Smtp-Source: APXvYqyoOD/ptktk0ASGAWXNuvhw2DiZr5qttk4R7BCV+c0nQHZ/sm8WqfO9PEdrq6z1NP1e4oRcpg==
-X-Received: by 2002:a2e:5bca:: with SMTP id m71mr45364215lje.116.1558598582716;
-        Thu, 23 May 2019 01:03:02 -0700 (PDT)
-Received: from dev.nikanor.nu (78-72-133-4-no161.tbcn.telia.com. [78.72.133.4])
-        by smtp.gmail.com with ESMTPSA id p5sm5891662lfc.80.2019.05.23.01.03.01
+        bh=LkPnFtYpyLkj70RFjcw8TCN+fI+dWnCKWpxfIn/z7iU=;
+        b=jBMXbjzLUm/ywo5MXxUL6bjgTvJIaxGOHsY8ma/M9i07AJTQ2Jkll6t5FktnsRIm8O
+         eUEyn173etmXR/RFgdaybt4KtAYWnRyrt/UlH/dd7Vpkj5S9h6kCYz6lTq/7QnKAsJUZ
+         Nh8qi/iHHCFCuA6Y798VHEKYI3mP05lfgHzEnYhw5x8iE4OBcUqHM0r9uHu/fwDOUPya
+         hbkS3QhP+8fOGcpBRIJ2bi9M4IPpfcuK8rAzSH9xaCddVM2n6aQqAHsJAEjUROvDJ1V8
+         eCOP0+sNqrGp893cnd1Ck4DAHKFS7zlaPhzLCjBplxAjR7pYgFAPfHbE4n9qcM9qU0dV
+         wqzw==
+X-Gm-Message-State: APjAAAUqNqdEcGsq5K3F0x672K3+zmI5sNYQFsFxIxUvCuslwGuBYiG9
+        anwlOOCPg7E038wO+bwY4Kbn
+X-Google-Smtp-Source: APXvYqxITmMxSX8uME9UdPACUAgC7iQj9jnQEo6XGQeTkpXlqJwcuGF4Z5vNg0khkQCg+bTy4sed0w==
+X-Received: by 2002:a1c:ba87:: with SMTP id k129mr10775600wmf.132.1558598707627;
+        Thu, 23 May 2019 01:05:07 -0700 (PDT)
+Received: from localhost (cpc111743-lutn13-2-0-cust844.9-3.cable.virginm.net. [82.17.115.77])
+        by smtp.gmail.com with ESMTPSA id k63sm9304944wmf.35.2019.05.23.01.05.06
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 May 2019 01:03:02 -0700 (PDT)
-Date:   Thu, 23 May 2019 10:03:00 +0200
-From:   Simon =?utf-8?Q?Sandstr=C3=B6m?= <simon@nikanor.nu>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     jeremy@azazel.net, dan.carpenter@oracle.com,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/6] staging: kpc2000: fix indent in cell_probe.c
-Message-ID: <20190523080300.kri23fma2sqabvh4@dev.nikanor.nu>
-References: <20190522205849.17444-1-simon@nikanor.nu>
- <20190522205849.17444-2-simon@nikanor.nu>
- <20190523072625.GA16429@kroah.com>
- <20190523072759.GA16656@kroah.com>
+        Thu, 23 May 2019 01:05:06 -0700 (PDT)
+Date:   Thu, 23 May 2019 09:05:06 +0100
+From:   Aaron Tomlin <atomlin@redhat.com>
+To:     Matteo Croce <mcroce@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH v5] proc/sysctl: add shared variables for range check
+Message-ID: <20190523080506.imvtj5ve2iwatdbn@atomlin.usersys.com>
+References: <20190430180111.10688-1-mcroce@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190523072759.GA16656@kroah.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190430180111.10688-1-mcroce@redhat.com>
+X-PGP-Key: http://pgp.mit.edu/pks/lookup?search=atomlin%40redhat.com
+X-PGP-Fingerprint: 7906 84EB FA8A 9638 8D1E  6E9B E2DE 9658 19CC 77D6
+User-Agent: NeoMutt/20180716-1637-ee8449
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 09:27:59AM +0200, Greg KH wrote:
-> On Thu, May 23, 2019 at 09:26:25AM +0200, Greg KH wrote:
-> > 
-> > This chunk does not match what you said this commit did :(
-> > 
-> > Please fix up and resend.
+On Tue 2019-04-30 20:01 +0200, Matteo Croce wrote:
+> In the sysctl code the proc_dointvec_minmax() function is often used to
+> validate the user supplied value between an allowed range. This function
+> uses the extra1 and extra2 members from struct ctl_table as minimum and
+> maximum allowed value.
 > 
-> Actually, wait, rebase and resend after I apply your other patches.
-> I'll hand-edit this patch to remove this chunk as your other fixes are
-> good...
+> On sysctl handler declaration, in every source file there are some readonly
+> variables containing just an integer which address is assigned to the
+> extra1 and extra2 members, so the sysctl range is enforced.
 > 
-> thanks,
+> The special values 0, 1 and INT_MAX are very often used as range boundary,
+> leading duplication of variables like zero=0, one=1, int_max=INT_MAX in
+> different source files:
 > 
-> greg k-h
+>     $ git grep -E '\.extra[12].*&(zero|one|int_max)\b' |wc -l
+>     248
+> 
+> Add a const int array containing the most commonly used values,
+> some macros to refer more easily to the correct array member,
+> and use them instead of creating a local one for every object file.
+> 
+> This is the bloat-o-meter output comparing the old and new binary
+> compiled with the default Fedora config:
+> 
+>     # scripts/bloat-o-meter -d vmlinux.o.old vmlinux.o
+>     add/remove: 2/2 grow/shrink: 0/2 up/down: 24/-188 (-164)
+>     Data                                         old     new   delta
+>     sysctl_vals                                    -      12     +12
+>     __kstrtab_sysctl_vals                          -      12     +12
+>     max                                           14      10      -4
+>     int_max                                       16       -     -16
+>     one                                           68       -     -68
+>     zero                                         128      28    -100
+>     Total: Before=20583249, After=20583085, chg -0.00%
+> 
+> Signed-off-by: Matteo Croce <mcroce@redhat.com>
+> ---
 
-Wops. OK, will do.
+Nice idea.
 
-Thanks
+Reviewed-by: Aaron Tomlin <atomlin@redhat.com>
 
-- Simon
+-- 
+Aaron Tomlin
