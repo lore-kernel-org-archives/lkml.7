@@ -2,125 +2,121 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 540BBC282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F126BC282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B2AD20B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:13:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A373B20B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:18:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="QnLisD6/"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="b34BiZjo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729819AbfEWCNO (ORCPT
+        id S1729654AbfEWCSQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 22:13:14 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:44379 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727691AbfEWCNL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 22:13:11 -0400
-Received: by mail-qk1-f193.google.com with SMTP id w25so2842820qkj.11
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 19:13:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=b3/EfmHSRs62elR8A/odK6e3/0Brcb6KqCx2aA27cX0=;
-        b=QnLisD6/JMGBjRoEeUEBnzIhET9cvQhrzLkPKkXxNCJuPiuygToVdTcDsAwx42cZ1b
-         UlAvySDZcxZSyTgfucQA3QsEb+vUS9fysnn19IhqPclikUfqfkQbzpjx1C7xeWQ/EFm4
-         clYt9HU1w6PBTd5Tuk8E+PY0ybn0CgpK3YGFcAI2L9GEobEqfakjbhs3PVghusX4HIZP
-         gSNNkIVt4CqnzDSiZWwl2sgaMjpmZUvdh2ByMQtDucxE2HRrledC+a9W0cyhRIOAJ8UA
-         EGMeRm8vYCQpbB5aKbglgNRP7qSkS+6hhZCn4KzcVXWcX1GQyD2iiRmOseNAzvUG6t4s
-         05Nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=b3/EfmHSRs62elR8A/odK6e3/0Brcb6KqCx2aA27cX0=;
-        b=eMzwGKDB3TeO+bgxEs0jzk/W8kQtEswyLKNTrLGqSOICNe6pfDvzIj7kFhTAnif0RV
-         BCnbm5BL4o5Wq49TuPkGkAJI2zrl6QsPWykdFrxuRz+F1ERCWSixwJGwAc0S5CMj0bTQ
-         Sl5G3aNgfiPLJvLtFeZTh2QiPPyLXwZg28U/xiQGm3kq7pbTJ2shVyjDdc3c6ecz2UZ5
-         /+ZgwQXbgloTGR3SNrobJnLK617RWAF1Qqct4oSKRhi5rxSiCDGqfmyU0PWJaqm+sXiw
-         MbXG2x4V+/tDoGmTv8IlAOoLxWE0Rcw9+IXMQDPCX2JV55/QuPpL+uqQ+JDPlQMNZfdo
-         +6jw==
-X-Gm-Message-State: APjAAAUSRyt+MhWNTojboALtuOxkzxNseDsdCtg/QXcTWSfIfwBpf+Jz
-        4Sz4YEvssde79yu52QHtSy0qAQ==
-X-Google-Smtp-Source: APXvYqwBibUBUKv3IpDQKP/S8DuZjyNQXNlKDOPKwGuuQFaNi+Xo8eCt6bpY/XnH14YiP71Dm3MSig==
-X-Received: by 2002:a37:660d:: with SMTP id a13mr35324863qkc.347.1558577590882;
-        Wed, 22 May 2019 19:13:10 -0700 (PDT)
-Received: from ovpn-121-0.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id j29sm11895298qki.39.2019.05.22.19.13.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 22 May 2019 19:13:10 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     mingo@redhat.com, peterz@infradead.org
-Cc:     linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH] sched: fix "runnable_avg_yN_inv" not used warnings
-Date:   Wed, 22 May 2019 22:12:45 -0400
-Message-Id: <20190523021245.2882-1-cai@lca.pw>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
+        Wed, 22 May 2019 22:18:16 -0400
+Received: from mail-eopbgr130078.outbound.protection.outlook.com ([40.107.13.78]:1038
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727305AbfEWCSQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 22:18:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yqaTJtux+lWdFM11IqGkLWvFA0WYDpmJrHnerLDRBDM=;
+ b=b34BiZjoVGaBlPYGbxFxemSo51casMzvJCTilprkEdeJFES5LvENPZSFBD30/GNDStplaHqce2BJ5JVdHyhEd1oRFvMV7+gPAUohfD33nAUrLvDfNog26FE8AUesWoopv0Uzj/rj5zy9lnDCl515zMtFpyFcW6Aq1ESGGncXXcg=
+Received: from VI1PR04MB4543.eurprd04.prod.outlook.com (20.177.55.90) by
+ VI1PR04MB5807.eurprd04.prod.outlook.com (20.178.204.29) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.16; Thu, 23 May 2019 02:18:10 +0000
+Received: from VI1PR04MB4543.eurprd04.prod.outlook.com
+ ([fe80::5062:df97:a70b:93f8]) by VI1PR04MB4543.eurprd04.prod.outlook.com
+ ([fe80::5062:df97:a70b:93f8%7]) with mapi id 15.20.1900.020; Thu, 23 May 2019
+ 02:18:10 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     Lucas Stach <l.stach@pengutronix.de>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "plyatov@gmail.com" <plyatov@gmail.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>
+CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: RE:Re: [PATCH v4 00/14] add ecspi ERR009165 for i.mx6/7 soc family
+Thread-Topic: Re: [PATCH v4 00/14] add ecspi ERR009165 for i.mx6/7 soc family
+Thread-Index: AdURDIuPRlx991CcRFGr8aoDaMhF+Q==
+Date:   Thu, 23 May 2019 02:18:10 +0000
+Message-ID: <VI1PR04MB45434A8AB7BC8B3DADBFCD5D89010@VI1PR04MB4543.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yibin.gong@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c3b08190-7cb3-4b82-2466-08d6df24e6f9
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5807;
+x-ms-traffictypediagnostic: VI1PR04MB5807:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <VI1PR04MB58070808651E8B5314FC837C89010@VI1PR04MB5807.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 00462943DE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(396003)(136003)(366004)(376002)(346002)(189003)(199004)(13464003)(8936002)(99286004)(476003)(14454004)(110136005)(81166006)(33656002)(45080400002)(54906003)(478600001)(6116002)(966005)(71200400001)(71190400001)(3846002)(486006)(68736007)(64756008)(66556008)(66446008)(73956011)(66946007)(76116006)(66476007)(316002)(9686003)(55016002)(6306002)(6436002)(53936002)(2501003)(7696005)(6506007)(4326008)(7416002)(74316002)(102836004)(81156014)(26005)(2906002)(25786009)(14444005)(186003)(86362001)(256004)(5660300002)(52536014)(8676002)(305945005)(2201001)(66066001)(7736002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5807;H:VI1PR04MB4543.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: DO1Ogv0ky5Ioo2TomolfMJFyqfZHQ1D0MfgzNqmn9ZBQY9nntGB81m98nrEWqnYKDdACTsxgjfyvWbJMe6/uOs3jqIzVWVqVBuGv/xnpqsE6+60tbb1bZbOU8nyWWghypg9Dw5wpx8iQb8rgsB51Z7lZywDiP9rTzdx/7r92DhGwUkMtAX9G0r43vJihRbAs4JX7F1LkFtWevBZQR8v75qvw40nm7KYnW5CGRwPySECgtzj2MzgccB+5ZGBOvmbNjCguYnpUlP/xlLyTa3DZYQpDUw8CLtN9HxRGFJuCwtI8+2TYwAZeHWrTzyrpWLIVGffdJ7ju6XJybz/3dKKSFbU1DKxIW+7znx1YFOBOuQwJOwywHIoUZpvW7/hOh7qePIsIMqHuVpbGer5sizgR3e/KpjY1bJtll8B3bjMCy00=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c3b08190-7cb3-4b82-2466-08d6df24e6f9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2019 02:18:10.5088
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5807
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-runnable_avg_yN_inv[] is only used in kernel/sched/pelt.c but was
-included in several other places and causes compilation warnings,
-
-In file included from kernel/sched/pelt.h:2,
-                 from kernel/sched/rt.c:8:
-kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined
-but not used [-Wunused-const-variable=]
-In file included from kernel/sched/pelt.h:2,
-                 from kernel/sched/fair.c:705:
-kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined
-but not used [-Wunused-const-variable=]
-In file included from kernel/sched/pelt.h:2,
-                 from kernel/sched/deadline.c:19:
-kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined
-but not used [-Wunused-const-variable=]
-
-Fixed it by appending the __maybe_unused attribute for it, so all
-generated variables and macros can still be kept in the same file.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- Documentation/scheduler/sched-pelt.c | 2 +-
- kernel/sched/sched-pelt.h            | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/scheduler/sched-pelt.c b/Documentation/scheduler/sched-pelt.c
-index e4219139386a..6c10b8764533 100644
---- a/Documentation/scheduler/sched-pelt.c
-+++ b/Documentation/scheduler/sched-pelt.c
-@@ -20,7 +20,7 @@ void calc_runnable_avg_yN_inv(void)
- 	int i;
- 	unsigned int x;
- 
--	printf("static const u32 runnable_avg_yN_inv[] = {");
-+	printf("static const u32 runnable_avg_yN_inv[] __maybe_unused = {");
- 	for (i = 0; i < HALFLIFE; i++) {
- 		x = ((1UL<<32)-1)*pow(y, i);
- 
-diff --git a/kernel/sched/sched-pelt.h b/kernel/sched/sched-pelt.h
-index a26473674fb7..c529706bed11 100644
---- a/kernel/sched/sched-pelt.h
-+++ b/kernel/sched/sched-pelt.h
-@@ -1,7 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- /* Generated by Documentation/scheduler/sched-pelt; do not modify. */
- 
--static const u32 runnable_avg_yN_inv[] = {
-+static const u32 runnable_avg_yN_inv[] __maybe_unused = {
- 	0xffffffff, 0xfa83b2da, 0xf5257d14, 0xefe4b99a, 0xeac0c6e6, 0xe5b906e6,
- 	0xe0ccdeeb, 0xdbfbb796, 0xd744fcc9, 0xd2a81d91, 0xce248c14, 0xc9b9bd85,
- 	0xc5672a10, 0xc12c4cc9, 0xbd08a39e, 0xb8fbaf46, 0xb504f333, 0xb123f581,
--- 
-2.20.1 (Apple Git-117)
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMdWNhcyBTdGFjaCA8bC5zdGFj
+aEBwZW5ndXRyb25peC5kZT4NCj4gU2VudDogMjAxOeW5tDXmnIgyMuaXpSAxODoxMA0KPiBIaSBS
+b2JpbiwNCj4gDQo+IEFtIE1pdHR3b2NoLCBkZW4gMjIuMDUuMjAxOSwgMDk6NTkgKzAwMDAgc2No
+cmllYiBSb2JpbiBHb25nOg0KPiA+ICAgVGhlcmUgaXMgZWNzcGkgRVJSMDA5MTY1IG9uIGkubXg2
+Lzcgc29jIGZhbWlseSwgd2hpY2ggY2F1c2UgRklGTw0KPiA+IHRyYW5zZmVyIHRvIGJlIHNlbmQg
+dHdpY2UgaW4gRE1BIG1vZGUuIFBsZWFzZSBnZXQgbW9yZSBpbmZvcm1hdGlvbiBmcm9tOg0KPiA+
+IGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRw
+cyUzQSUyRiUyRnd3dy4NCj4gDQo+IEkgaGF2ZW4ndCB0ZXN0ZWQgdGhpcyBzbyBhc2tpbmcgdGhl
+IG9idmlvdXMgcXVlc3Rpb246IHdoYXQgaGFwcGVucyB3aGVuIHRoaXMNCj4gc2VyaWVzIGlzIGFw
+cGxpZWQgd2l0aG91dCB0aGUgUkFNIHNjcmlwdCBiZWluZyBwcmVzZW50IG9uIHRoZSBzeXN0ZW0/
+IFdpbGwgaXQNCj4gcmVuZGVyIFNQSSB1bnVzYWJsZT8gSSBndWVzcyBzbyBzaW5jZSBpdCBjaGFu
+Z2VzIHRoZSBmbG93IGJldHdlZW4gdGhlIFNQSSBjb3JlDQo+IGFuZCBETUEgY29udHJvbGxlci4g
+Q2FuIHdlIHNvbWVob3cgZGV0ZWN0IHRoYXQgU0RNQSBpc24ndCB1c2luZyB0aGUgY29ycmVjdA0K
+PiBSQU0gc2NyaXB0IGFuZCBmYWxsIGJhY2sgdG8gUElPIG1vZGUgaW4gdGhlIFNQSSBkcml2ZXIg
+aW4gdGhhdCBjYXNlPw0KPiANCj4gQ3VycmVudGx5IHVzaW5nIHRoZSBSQU0gc2NyaXB0IGlzIG5v
+dCBhbiBvcHRpb24gaW4gYSBsb3Qgb2YgdXNlLWNhc2VzLCBhcyBpdCBzdGlsbA0KPiBicmVha3Mg
+c2VyaWFsIERNQSBzdXBwb3J0LiBUaGUgZml4IGZvciB0aGUgc2VyaWFsIGlzc3VlIHJlYWxseSBu
+ZWVkcyB0byBiZQ0KPiByZW1vdmUgdGhlIGJyb2tlbiBzZXJpYWwgc2NyaXB0IGZyb20gdGhlIFJB
+TSBmaXJtd2FyZSwgbm90IGNoYW5nZSB0aGUgc2VyaWFsDQo+IGRyaXZlciB0byBkZWFsIHdpdGgg
+dGhlIGJyb2tlbiBiZWhhdmlvciBpbnRyb2R1Y2VkIGJ5IHRoZSBSQU0gc2NyaXB0Lg0KT2theSwg
+SSdsbCB0cnkgdG8gbWVyZ2UgYW5vdGhlciBwYXRjaCB3aGljaCBmaXggVUFSVCBkcml2ZXIgZnVu
+Y3Rpb24gYnJva2VuIGlzc3VlIHdpdGggcmFtIHNjcmlwdCBzbyB0aGF0IG5vIGFueSBicm9rZW4g
+Zm9yIHRoaXMgcGF0Y2ggc2V0Lg0KPiANCj4gUmVnYXJkcywNCj4gTHVjYXMNCg==
