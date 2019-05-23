@@ -7,54 +7,56 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 661E6C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00879C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 300082133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7B0D20B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:49:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558619353;
-	bh=bM4rH6rT3exQF2n6miD0Oah2pGUJN1zpmPDBnLbr8Lc=;
+	s=default; t=1558619354;
+	bh=4Il95hFurCSiWD5MR3jt3LmIpYjN0Fsngb0CqqofnzM=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=yoFeiCdM8ArnMi/rcbyxv+hRuAiZtoGpe+3f2728KtpQljOuxN+xyubqQOqA+gF9f
-	 tOhHs3PI5eAOiKSxwhU3bjCOUfDLUi1g/DZ+9NMNOg1SxRX8+6l2apAAhxP3UtTkVD
-	 j2/QYqGIWB749TXUE3ubeKKwClXnDAN6W02z9oRQ=
+	b=EgN745lwbQ61OIHotP3wP5uAMfelRnd8kt3DQMsFSrBa4SeOAIjVij7oPMX1qrAmy
+	 cOc/JhjVgIy1p52UWD2cFIaSriGUpDLN/663tD2gEUMogY0iyN+bB3saiQOo/5fZIq
+	 sPNxAv5En6lhvMBxacuMGH5nLTlVJ3ckuew4lXaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730937AbfEWNtM (ORCPT
+        id S1730955AbfEWNtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 09:49:12 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45154 "EHLO
+        Thu, 23 May 2019 09:49:13 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44998 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730706AbfEWNtL (ORCPT
+        with ESMTP id S1730710AbfEWNtH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 09:49:11 -0400
+        Thu, 23 May 2019 09:49:07 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=XNfOmz3mv1HI9Hoz2nuwSlZ+6AVMa+i0bbmtNTX06rY=; b=vYclXzO/lJeo
-        5I3MA1p+mhNuW9aJRR1b0h4FIWti7rFeFjRJZVNr0v8sVisTaD2+tKTmUPrLGpvOv7Mmd9hzLneV+
-        /ls7ALHv2GolE9ROmBJQcZR5dPmhsqRPbS87GCgKmL3oOAfmPmLjG76vVoCjv3+eZqcwgAIzi2V1W
-        Egfiw=;
+        List-Archive; bh=MCSWTU3HxFj7ynCJyIZdDmGSO9hu5ixRfcDvdzVnf34=; b=a+E0ZHt/fXbn
+        lCvmlFivZVYX1dmo3XRpgxSX2WXbiFCdvG1KoIZ1RXyWGryFmf4yej1O4OMtCQP/5hwHRRmUI+HNg
+        celWngwwaX5CEBr7keOncz/tt2l8oVKM/IB6HEqFlspaQBw1uHVMZ4AHsnfhCY10QxR+J4AiwowoX
+        8/01o=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hTo5k-0000FQ-CM; Thu, 23 May 2019 13:49:08 +0000
+        id 1hTo5d-0000Eb-F9; Thu, 23 May 2019 13:49:01 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id C162C1126D28; Thu, 23 May 2019 14:49:07 +0100 (BST)
+        id C757C1126D24; Thu, 23 May 2019 14:48:59 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: dt-bindings: Convert spi-gpio binding to json-schema" to the spi tree
-In-Reply-To: <20190521212325.16639-2-robh@kernel.org>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Axel Lin <axel.lin@ingics.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        clang-built-linux@googlegroups.com,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: Applied "regulator: max77650: Move max77651_SBB1_desc's declaration down" to the regulator tree
+In-Reply-To: <20190523012629.7707-1-natechancellor@gmail.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190523134907.C162C1126D28@debutante.sirena.org.uk>
-Date:   Thu, 23 May 2019 14:49:07 +0100 (BST)
+Message-Id: <20190523134859.C757C1126D24@debutante.sirena.org.uk>
+Date:   Thu, 23 May 2019 14:48:59 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -62,11 +64,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: dt-bindings: Convert spi-gpio binding to json-schema
+   regulator: max77650: Move max77651_SBB1_desc's declaration down
 
-has been applied to the spi tree at
+has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.3
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.3
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -87,152 +89,60 @@ to this mail.
 Thanks,
 Mark
 
-From 97266c4d05345f9b500d10c3caa1070249e895e7 Mon Sep 17 00:00:00 2001
-From: Rob Herring <robh@kernel.org>
-Date: Tue, 21 May 2019 16:23:25 -0500
-Subject: [PATCH] spi: dt-bindings: Convert spi-gpio binding to json-schema
+From 59dec1f0fac8107f3bffaa0051afce795e24c3e4 Mon Sep 17 00:00:00 2001
+From: Nathan Chancellor <natechancellor@gmail.com>
+Date: Wed, 22 May 2019 18:26:29 -0700
+Subject: [PATCH] regulator: max77650: Move max77651_SBB1_desc's declaration
+ down
 
-Convert the spi-gpio binding to DT schema format.
+Clang warns:
 
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-spi@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
+drivers/regulator/max77650-regulator.c:32:39: warning: tentative
+definition of variable with internal linkage has incomplete non-array
+type 'struct max77650_regulator_desc'
+[-Wtentative-definition-incomplete-type]
+static struct max77650_regulator_desc max77651_SBB1_desc;
+                                      ^
+drivers/regulator/max77650-regulator.c:32:15: note: forward declaration
+of 'struct max77650_regulator_desc'
+static struct max77650_regulator_desc max77651_SBB1_desc;
+              ^
+1 warning generated.
+
+Move max77651_SBB1_desc's declaration below max77650_regulator_desc's
+definition so this warning does not happen.
+
+Fixes: 3df4235ac41c ("regulator: max77650: Convert MAX77651 SBB1 to pickable linear range")
+Link: https://github.com/ClangBuiltLinux/linux/issues/491
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- .../devicetree/bindings/spi/spi-gpio.txt      | 43 -----------
- .../devicetree/bindings/spi/spi-gpio.yaml     | 72 +++++++++++++++++++
- 2 files changed, 72 insertions(+), 43 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/spi/spi-gpio.txt
- create mode 100644 Documentation/devicetree/bindings/spi/spi-gpio.yaml
+ drivers/regulator/max77650-regulator.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-gpio.txt b/Documentation/devicetree/bindings/spi/spi-gpio.txt
-deleted file mode 100644
-index 52db562f17a4..000000000000
---- a/Documentation/devicetree/bindings/spi/spi-gpio.txt
-+++ /dev/null
-@@ -1,43 +0,0 @@
--SPI-GPIO devicetree bindings
+diff --git a/drivers/regulator/max77650-regulator.c b/drivers/regulator/max77650-regulator.c
+index ecf8cf7aad20..e3b28fc68cdb 100644
+--- a/drivers/regulator/max77650-regulator.c
++++ b/drivers/regulator/max77650-regulator.c
+@@ -29,8 +29,6 @@
+ 
+ #define MAX77650_REGULATOR_CURR_LIM_MASK	GENMASK(7, 6)
+ 
+-static struct max77650_regulator_desc max77651_SBB1_desc;
 -
--This represents a group of 3-n GPIO lines used for bit-banged SPI on dedicated
--GPIO lines.
--
--Required properties:
--
-- - compatible: should be set to "spi-gpio"
-- - #address-cells: should be set to <0x1>
-- - ranges
-- - sck-gpios: GPIO spec for the SCK line to use
-- - miso-gpios: GPIO spec for the MISO line to use
-- - mosi-gpios: GPIO spec for the MOSI line to use
-- - cs-gpios: GPIOs to use for chipselect lines.
--             Not needed if num-chipselects = <0>.
-- - num-chipselects: Number of chipselect lines. Should be <0> if a single device
--                    with no chip select is connected.
--
--Deprecated bindings:
--
--These legacy GPIO line bindings can alternatively be used to define the
--GPIO lines used, they should not be used in new device trees.
--
-- - gpio-sck: GPIO spec for the SCK line to use
-- - gpio-miso: GPIO spec for the MISO line to use
-- - gpio-mosi: GPIO spec for the MOSI line to use
--
--Example:
--
--	spi {
--		compatible = "spi-gpio";
--		#address-cells = <0x1>;
--		ranges;
--
--		sck-gpios = <&gpio 95 0>;
--		miso-gpios = <&gpio 98 0>;
--		mosi-gpios = <&gpio 97 0>;
--		cs-gpios = <&gpio 125 0>;
--		num-chipselects = <1>;
--
--		/* clients */
--	};
--
-diff --git a/Documentation/devicetree/bindings/spi/spi-gpio.yaml b/Documentation/devicetree/bindings/spi/spi-gpio.yaml
-new file mode 100644
-index 000000000000..55c4f1705f07
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/spi-gpio.yaml
-@@ -0,0 +1,72 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spi/spi-gpio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+ enum {
+ 	MAX77650_REGULATOR_ID_LDO = 0,
+ 	MAX77650_REGULATOR_ID_SBB0,
+@@ -45,6 +43,8 @@ struct max77650_regulator_desc {
+ 	unsigned int regB;
+ };
+ 
++static struct max77650_regulator_desc max77651_SBB1_desc;
 +
-+title: SPI-GPIO devicetree bindings
-+
-+maintainers:
-+  - Rob Herring <robh@kernel.org>
-+
-+description:
-+  This represents a group of 3-n GPIO lines used for bit-banged SPI on
-+  dedicated GPIO lines.
-+
-+allOf:
-+  - $ref: "/schemas/spi/spi-controller.yaml#"
-+
-+properties:
-+  compatible:
-+    const: spi-gpio
-+
-+  sck-gpios:
-+    description: GPIO spec for the SCK line to use
-+    maxItems: 1
-+
-+  miso-gpios:
-+    description: GPIO spec for the MISO line to use
-+    maxItems: 1
-+
-+  mosi-gpios:
-+    description: GPIO spec for the MOSI line to use
-+    maxItems: 1
-+
-+  cs-gpios:
-+    description: GPIOs to use for chipselect lines.
-+      Not needed if num-chipselects = <0>.
-+    minItems: 1
-+    maxItems: 1024
-+
-+  num-chipselects:
-+    description: Number of chipselect lines. Should be <0> if a single device
-+      with no chip select is connected.
-+    $ref: "/schemas/types.yaml#/definitions/uint32"
-+
-+  # Deprecated properties
-+  gpio-sck: false
-+  gpio-miso: false
-+  gpio-mosi: false
-+
-+required:
-+  - compatible
-+  - num-chipselects
-+  - sck-gpios
-+
-+examples:
-+  - |
-+    spi {
-+      compatible = "spi-gpio";
-+      #address-cells = <0x1>;
-+      #size-cells = <0x0>;
-+
-+      sck-gpios = <&gpio 95 0>;
-+      miso-gpios = <&gpio 98 0>;
-+      mosi-gpios = <&gpio 97 0>;
-+      cs-gpios = <&gpio 125 0>;
-+      num-chipselects = <1>;
-+
-+      /* clients */
-+    };
-+
-+...
+ static const unsigned int max77651_sbb1_volt_range_sel[] = {
+ 	0x0, 0x1, 0x2, 0x3
+ };
 -- 
 2.20.1
 
