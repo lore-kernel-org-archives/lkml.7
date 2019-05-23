@@ -2,108 +2,143 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D17C2C04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 05:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2194C04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 05:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB06320879
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 05:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3F9A20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 05:15:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726800AbfEWFCW (ORCPT
+        id S1726553AbfEWFPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 01:02:22 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:40854 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725786AbfEWFCW (ORCPT
+        Thu, 23 May 2019 01:15:18 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51606 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725792AbfEWFPS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 01:02:22 -0400
-Received: from [61.149.194.113] (helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <aaron.ma@canonical.com>)
-        id 1hTfrt-0008Jp-Hn; Thu, 23 May 2019 05:02:17 +0000
-Subject: Re: [PATCH 2/2] Input: synaptics - remove X240 from the topbuttonpad
- list
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Christopher Heiny <Cheiny@synaptics.com>,
-        Andrew Duggan <aduggan@synaptics.com>,
-        Hans de Goede <hdegoede@redhat.com>
-References: <20190519072711.2592-1-aaron.ma@canonical.com>
- <20190519072711.2592-2-aaron.ma@canonical.com>
- <20190521050850.GC183429@dtor-ws>
- <CAO-hwJLXB8Qec9Yhz0y6WgvEpE6KHk_53g4VtPGj9mfvMzk4dg@mail.gmail.com>
-From:   Aaron Ma <aaron.ma@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=aaron.ma@canonical.com; prefer-encrypt=mutual; keydata=
- mQENBFffeLkBCACi4eE4dPsgWN6B9UDOVcAvb5QgU/hRG6yS0I1lGKQv4KA+bke0c5g8clbO
- 9gIlIl2bityfA9NzBsDik4Iei3AxMbFyxv9keMwcOFQBIOZF0P3f05qjxftF8P+yp9QTV4hp
- BkFzsXzWRgXN3r8hU8wqZybepF4B1C83sm2kQ5A5N0AUGbZli9i2G+/VscG9sWfLy8T7f4YW
- MjmlijCjoV6k29vsmTWQPZ7EApNpvR5BnZQPmQWzkkr0lNXlsKcyLgefQtlwg6drK4fe4wz0
- ouBIHJEiXE1LWK1hUzkCUASra4WRwKk1Mv/NLLE/aJRqEvF2ukt3uVuM77RWfl7/H/v5ABEB
- AAG0IUFhcm9uIE1hIDxhYXJvbi5tYUBjYW5vbmljYWwuY29tPokBNwQTAQgAIQUCV994uQIb
- AwULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRDNxCzQfVU6ntJ9B/9aVy0+RkLqF9QpLmw+
- LAf1m3Fd+4ZarPTerqDqkLla3ekYhbrEtlI1mYuB5f+gtrIjmcW27gacHdslKB9YwaL8B4ZB
- GJKhcrntLg4YPzYUnXZkHHTv1hMw7fBYw82cBT+EbG0Djh6Po6Ihqyr3auHhfFcp1PZH4Mtq
- 6hN5KaDZzF/go+tRF5e4bn61Nhdue7mrhFSlfkzLG2ehHWmRV+S91ksH81YDFnazK0sRINBx
- V1S8ts3WJ2f1AbgmnDlbK3c/AfI5YxnIHn/x2ZdXj1P/wn7DgZHmpMy5DMuk0gN34NLUPLA/
- cHeKoBAF8emugljiKecKBpMTLe8FrVOxbkrauQENBFffeLkBCACweKP3Wx+gK81+rOUpuQ00
- sCyKzdtMuXXJ7oL4GzYHbLfJq+F+UHpQbytVGTn3R5+Y61v41g2zTYZooaC+Hs1+ixf+buG2
- +2LZjPSELWPNzH9lsKNlCcEvu1XhyyHkBDbnFFHWlUlql3nSXMo//dOTG/XGKaEaZUxjCLUC
- 8ehLc16DJDvdXsPwWhHrCH/4k92F6qQ14QigBMsl75jDTDJMEYgRYEBT1D/bwxdIeoN1BfIG
- mYgf059RrWax4SMiJtVDSUuDOpdwoEcZ0FWesRfbFrM+k/XKiIbjMZSvLunA4FIsOdWYOob4
- Hh0rsm1G+fBLYtT+bE26OWpQ/lSn4TdhABEBAAGJAR8EGAEIAAkFAlffeLkCGwwACgkQzcQs
- 0H1VOp6p5Af/ap5EVuP1AhFdPD3pXLNrUUt72W3cuAOjXyss43qFC2YRjGfktrizsDjQU46g
- VKoD6EW9XUPgvYM+k8BJEoXDLhHWnCnMKlbHP3OImxzLRhF4kdlnLicz1zKRcessQatRpJgG
- NIiD+eFyh0CZcWBO1BB5rWikjO/idicHao2stFdaBmIeXvhT9Xp6XNFEmzOmfHps+kKpWshY
- 9LDAU0ERBNsW4bekOCa/QxfqcbZYRjrVQvya0EhrPhq0bBpzkIL/7QSBMcdv6IajTlHnLARF
- nAIofCEKeEl7+ksiRapL5Nykcbt4dldE3sQWxIybC94SZ4inENKw6I8RNpigWm0R5w==
-Message-ID: <cdcc48a7-bd52-5ea4-6712-7f77604fe549@canonical.com>
-Date:   Thu, 23 May 2019 13:02:09 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 23 May 2019 01:15:18 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4N59SUi028323
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 01:15:16 -0400
+Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2snmye0htv-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 01:15:16 -0400
+Received: from localhost
+        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
+        Thu, 23 May 2019 06:15:15 +0100
+Received: from b01cxnp22033.gho.pok.ibm.com (9.57.198.23)
+        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 23 May 2019 06:15:12 +0100
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4N5FBwT38535290
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 May 2019 05:15:11 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 91CD3AC065;
+        Thu, 23 May 2019 05:15:11 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A6841AC05E;
+        Thu, 23 May 2019 05:15:08 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.80.216.227])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Thu, 23 May 2019 05:15:08 +0000 (GMT)
+References: <20190521044912.1375-1-bauerman@linux.ibm.com> <20190521044912.1375-12-bauerman@linux.ibm.com> <20190521051507.GD29120@lst.de>
+User-agent: mu4e 1.0; emacs 26.2
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Anshuman Khandual <anshuman.linux@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mike Anderson <andmike@linux.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Anshuman Khandual <khandual@linux.vnet.ibm.com>
+Subject: Re: [PATCH 11/12] powerpc/pseries/svm: Force SWIOTLB for secure guests
+In-reply-to: <20190521051507.GD29120@lst.de>
+Date:   Thu, 23 May 2019 02:15:04 -0300
 MIME-Version: 1.0
-In-Reply-To: <CAO-hwJLXB8Qec9Yhz0y6WgvEpE6KHk_53g4VtPGj9mfvMzk4dg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+x-cbid: 19052305-0072-0000-0000-00000432235B
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011146; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01207291; UDB=6.00634029; IPR=6.00988272;
+ MB=3.00027013; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-23 05:15:14
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052305-0073-0000-0000-00004C53FAC6
+Message-Id: <87y32xzr8n.fsf@morokweng.localdomain>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-23_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=947 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905230036
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+Hello Christoph,
 
-On 5/21/19 2:49 PM, Benjamin Tissoires wrote:
-> A quick google image search showed that the X240 had 2 versions: one
-> with the top software buttons, one without.
-> 
-> And this definitively rings a bell. I am sure we asked Lenovo and
-> Synaptics to change the PnPID when they would do such a change, but
-> they "forgot" during the *40 series refresh.
-> We have code in place to fix the reported ranges of the coordinates,
-> and we had to check against the board id (see min_max_pnpid_table[] in
-> synaptics.c).
-> Unfortunately, X240 (LEN0035) is not part of this table, so I don't
-> know which refresh of the board ID has implemented the non top
-> software buttons.
+Thanks for reviewing the patch!
 
-After double confirm from Lenovo, looks like they mixed up with
-touchpads on X240/X240s.
+Christoph Hellwig <hch@lst.de> writes:
 
-For now only one user reported this LEN0035 doesn't work on SMBus mode.
-module parameter can be a workaround.
-Maybe some touchpads with software top buttons are working well on
-SMBus. Let's keep eyes on this issue for now.
+>> diff --git a/arch/powerpc/include/asm/mem_encrypt.h b/arch/powerpc/include/asm/mem_encrypt.h
+>> new file mode 100644
+>> index 000000000000..45d5e4d0e6e0
+>> --- /dev/null
+>> +++ b/arch/powerpc/include/asm/mem_encrypt.h
+>> @@ -0,0 +1,19 @@
+>> +/* SPDX-License-Identifier: GPL-2.0+ */
+>> +/*
+>> + * SVM helper functions
+>> + *
+>> + * Copyright 2019 IBM Corporation
+>> + */
+>> +
+>> +#ifndef _ASM_POWERPC_MEM_ENCRYPT_H
+>> +#define _ASM_POWERPC_MEM_ENCRYPT_H
+>> +
+>> +#define sme_me_mask	0ULL
+>> +
+>> +static inline bool sme_active(void) { return false; }
+>> +static inline bool sev_active(void) { return false; }
+>> +
+>> +int set_memory_encrypted(unsigned long addr, int numpages);
+>> +int set_memory_decrypted(unsigned long addr, int numpages);
+>> +
+>> +#endif /* _ASM_POWERPC_MEM_ENCRYPT_H */
+>
+> S/390 seems to be adding a stub header just like this.  Can you please
+> clean up the Kconfig and generic headers bits for memory encryption so
+> that we don't need all this boilerplate code?
 
-Regards,
-Aaron
+Yes, that's a good idea. Will do.
 
-> 
-> Cheers,
-> Benjamin
+>>  config PPC_SVM
+>>  	bool "Secure virtual machine (SVM) support for POWER"
+>>  	depends on PPC_PSERIES
+>> +	select SWIOTLB
+>> +	select ARCH_HAS_MEM_ENCRYPT
+>>  	default n
+>
+> n is the default default, no need to explictly specify it.
+
+Indeed. Changed for the next version.
+
+-- 
+Thiago Jung Bauermann
+IBM Linux Technology Center
+
