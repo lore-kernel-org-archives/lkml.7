@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C79C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5FC9C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2A8B20868
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:25:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9D8C217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:25:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639519;
-	bh=opDWCBP5qXH4pJO+XUAFzz8F7pnR+9TexN+XwhMkewU=;
+	s=default; t=1558639521;
+	bh=LtAw2JPeh35qAaYGeZsx8jGPw5if8EhsDrE/tt2wK5k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PEnd13O8mm0fevePSv8J+cKCXTilY9J4B3waF11jgcoe6fz+UOWPewOVn6EJnnFf9
-	 CkHwV6M2E82mxvquKF7HiU0ckdqucs5GEUNL88AqRLAtVE8PpVz7Cch1lxPzRTMMog
-	 EixZZmUgnkPjrfOm6QO56/FefAJYZuLMJDUJ+UfA=
+	b=eiFRWyC2qwhl5KlPdBiStEvvwcqm0HEpL23YvT7JVFA8jFmzLu+BqovqChsESfeYP
+	 f5un922MpyYI4fS/WahI/Cas/GgX6YA2zf/0osoT377uNDrSodasilzPgvXpy276yN
+	 HrdZhlKxv9Q8wvt+xDk+9WEZleyZ8oLHf7eEHoFg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391061AbfEWTZS (ORCPT
+        id S2391076AbfEWTZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:25:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36664 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:25:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389390AbfEWTZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:25:14 -0400
+        id S2391055AbfEWTZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:25:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6643C2054F;
-        Thu, 23 May 2019 19:25:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 944902184E;
+        Thu, 23 May 2019 19:25:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639513;
-        bh=opDWCBP5qXH4pJO+XUAFzz8F7pnR+9TexN+XwhMkewU=;
+        s=default; t=1558639511;
+        bh=LtAw2JPeh35qAaYGeZsx8jGPw5if8EhsDrE/tt2wK5k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j63Y02u4acmpmTvdG6pNzflfWPzCswFU8H3A+q+bief5icI+74llPQb2zUCmgXjBP
-         Yp1TTGvb6IKBkUT7sp37kgMUQ5lYi73/qStdMjq2r2dmcKmFvbmgziUyA//2ABCjhN
-         zFqNCnn5NuH6i5vVNRnLkbMuIoAX/uB1Ik2pBFAs=
+        b=2OHFkfg46zr+lRvvKVqoFeBj1X1VpynvEc0NVd9DiiP1P8DtiBkYyM8G5fhworlUU
+         PUNh08FCajfnprafcj8FQmxQlhVRl3ZZgCzxu0vhAMwLxJhSLvJMdbwb0bvTfdWyaX
+         Z7J1L3onzOJ+WZmGXW9mU+wofCSTmfQALaZuXc34=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
+        stable@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 116/139] x86: kvm: hyper-v: deal with buggy TLB flush requests from WS2012
-Date:   Thu, 23 May 2019 21:06:44 +0200
-Message-Id: <20190523181734.875673419@linuxfoundation.org>
+Subject: [PATCH 5.0 115/139] PCI: Fix issue with "pci=disable_acs_redir" parameter being ignored
+Date:   Thu, 23 May 2019 21:06:43 +0200
+Message-Id: <20190523181734.807123874@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -60,58 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit da66761c2d93a46270d69001abb5692717495a68 ]
+[ Upstream commit d5bc73f34cc97c4b4b9202cc93182c2515076edf ]
 
-It was reported that with some special Multi Processor Group configuration,
-e.g:
- bcdedit.exe /set groupsize 1
- bcdedit.exe /set maxgroup on
- bcdedit.exe /set groupaware on
-for a 16-vCPU guest WS2012 shows BSOD on boot when PV TLB flush mechanism
-is in use.
+In most cases, kmalloc() will not be available early in boot when
+pci_setup() is called.  Thus, the kstrdup() call that was added to fix the
+__initdata bug with the disable_acs_redir parameter usually returns NULL,
+so the parameter is discarded and has no effect.
 
-Tracing kvm_hv_flush_tlb immediately reveals the issue:
+To fix this, store the string that's in initdata until an initcall function
+can allocate the memory appropriately.  This way we don't need any
+additional static memory.
 
- kvm_hv_flush_tlb: processor_mask 0x0 address_space 0x0 flags 0x2
-
-The only flag set in this request is HV_FLUSH_ALL_VIRTUAL_ADDRESS_SPACES,
-however, processor_mask is 0x0 and no HV_FLUSH_ALL_PROCESSORS is specified.
-We don't flush anything and apparently it's not what Windows expects.
-
-TLFS doesn't say anything about such requests and newer Windows versions
-seem to be unaffected. This all feels like a WS2012 bug, which is, however,
-easy to workaround in KVM: let's flush everything when we see an empty
-flush request, over-flushing doesn't hurt.
-
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fixes: d2fd6e81912a ("PCI: Fix __initdata issue with "pci=disable_acs_redir" parameter")
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/hyperv.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/pci/pci.c | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-index 371c669696d70..610c0f1fbdd71 100644
---- a/arch/x86/kvm/hyperv.c
-+++ b/arch/x86/kvm/hyperv.c
-@@ -1371,7 +1371,16 @@ static u64 kvm_hv_flush_tlb(struct kvm_vcpu *current_vcpu, u64 ingpa,
- 
- 		valid_bank_mask = BIT_ULL(0);
- 		sparse_banks[0] = flush.processor_mask;
--		all_cpus = flush.flags & HV_FLUSH_ALL_PROCESSORS;
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index e91005d0f20c7..3f77bab698ced 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -6266,8 +6266,7 @@ static int __init pci_setup(char *str)
+ 			} else if (!strncmp(str, "pcie_scan_all", 13)) {
+ 				pci_add_flags(PCI_SCAN_ALL_PCIE_DEVS);
+ 			} else if (!strncmp(str, "disable_acs_redir=", 18)) {
+-				disable_acs_redir_param =
+-					kstrdup(str + 18, GFP_KERNEL);
++				disable_acs_redir_param = str + 18;
+ 			} else {
+ 				printk(KERN_ERR "PCI: Unknown option `%s'\n",
+ 						str);
+@@ -6278,3 +6277,19 @@ static int __init pci_setup(char *str)
+ 	return 0;
+ }
+ early_param("pci", pci_setup);
 +
-+		/*
-+		 * Work around possible WS2012 bug: it sends hypercalls
-+		 * with processor_mask = 0x0 and HV_FLUSH_ALL_PROCESSORS clear,
-+		 * while also expecting us to flush something and crashing if
-+		 * we don't. Let's treat processor_mask == 0 same as
-+		 * HV_FLUSH_ALL_PROCESSORS.
-+		 */
-+		all_cpus = (flush.flags & HV_FLUSH_ALL_PROCESSORS) ||
-+			flush.processor_mask == 0;
- 	} else {
- 		if (unlikely(kvm_read_guest(kvm, ingpa, &flush_ex,
- 					    sizeof(flush_ex))))
++/*
++ * 'disable_acs_redir_param' is initialized in pci_setup(), above, to point
++ * to data in the __initdata section which will be freed after the init
++ * sequence is complete. We can't allocate memory in pci_setup() because some
++ * architectures do not have any memory allocation service available during
++ * an early_param() call. So we allocate memory and copy the variable here
++ * before the init section is freed.
++ */
++static int __init pci_realloc_setup_params(void)
++{
++	disable_acs_redir_param = kstrdup(disable_acs_redir_param, GFP_KERNEL);
++
++	return 0;
++}
++pure_initcall(pci_realloc_setup_params);
 -- 
 2.20.1
 
