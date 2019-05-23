@@ -2,149 +2,84 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A0CC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:52:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B63C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D98CC2175B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:52:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D8282175B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:55:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558626953;
+	bh=V4ZP2/dLscXLDqbQgJUnoACFi9scmweeDdhvMUiUVh4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=0u/aq9RlDMvwCisU+C6WyGZVxOciK4MgZPsQnHBYIXEbQXnKMYOJeZoSNDJAbIdgL
+	 EK/ocm4swNjvwwB+rwhMybZLtBgnhDdWTKOPDqITJWeBnwvQW1ShGWM3131KKUWr1A
+	 c5tlopTBNlLLMyqrLH1lu5hWKnKjmCkOcAfdw/rM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730972AbfEWPwL (ORCPT
+        id S1731048AbfEWPzx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 11:52:11 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34076 "EHLO mx1.redhat.com"
+        Thu, 23 May 2019 11:55:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730760AbfEWPwL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 11:52:11 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1730752AbfEWPzw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 11:55:52 -0400
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AA4FF75725;
-        Thu, 23 May 2019 15:52:10 +0000 (UTC)
-Received: from redhat.com (unknown [10.20.6.178])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C378117CDD;
-        Thu, 23 May 2019 15:52:09 +0000 (UTC)
-Date:   Thu, 23 May 2019 11:52:08 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Artemy Kovalyov <artemyko@mellanox.com>,
-        Moni Shoua <monis@mellanox.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>
-Subject: Re: [PATCH v4 0/1] Use HMM for ODP v4
-Message-ID: <20190523155207.GC5104@redhat.com>
-References: <20190411181314.19465-1-jglisse@redhat.com>
- <20190506195657.GA30261@ziepe.ca>
- <20190521205321.GC3331@redhat.com>
- <20190522005225.GA30819@ziepe.ca>
- <20190522174852.GA23038@redhat.com>
- <20190522235737.GD15389@ziepe.ca>
- <20190523150432.GA5104@redhat.com>
- <20190523154149.GB12159@ziepe.ca>
+        by mail.kernel.org (Postfix) with ESMTPSA id 984E82175B;
+        Thu, 23 May 2019 15:55:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558626951;
+        bh=V4ZP2/dLscXLDqbQgJUnoACFi9scmweeDdhvMUiUVh4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=R1S7fOzWe8tdEyXVX7h19w9DQxhcSM92aUWdB/iADTIYN0XEIgRAggtOg4hqkL9M5
+         Dm3q0yUpkHcv/Uu16ehRFFLNnzELyOQawj+f0RVr8Jp7FIH7lc4INPCAQlua1KZAyA
+         /pE+WzEwXsUudS1sX0d6S+EbYVwYZCg3nBx8umPw=
+Received: by mail-qt1-f173.google.com with SMTP id a17so7337101qth.3;
+        Thu, 23 May 2019 08:55:51 -0700 (PDT)
+X-Gm-Message-State: APjAAAXcHt6z9MXinuWmGRdxfDnZgv/2WbvvcTJhORm601JdGppYuHwl
+        s79NM8lkVENi2WWnLkT18FqpPwRge63gh7I3qQ==
+X-Google-Smtp-Source: APXvYqxzVHY9bCwMYV6NnW1uDWYDuENIPBg7zeYyQdXiHoh8OpVci9+JMjFdbOqPVhnY0iofHv0h/fEWtKyl/RUYnFI=
+X-Received: by 2002:a0c:8aad:: with SMTP id 42mr78521685qvv.200.1558626950891;
+ Thu, 23 May 2019 08:55:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190523154149.GB12159@ziepe.ca>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 23 May 2019 15:52:10 +0000 (UTC)
+References: <20190522131550.9034-1-manivannan.sadhasivam@linaro.org> <20190522131550.9034-2-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20190522131550.9034-2-manivannan.sadhasivam@linaro.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 23 May 2019 10:55:39 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKeiY=k8n+d_7ug_DG=qZdj_cAPSCeSU-37Ds3ogKQZmg@mail.gmail.com>
+Message-ID: <CAL_JsqKeiY=k8n+d_7ug_DG=qZdj_cAPSCeSU-37Ds3ogKQZmg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: arm: Document 96Boards Meerkat96
+ devicetree binding
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Peter Robinson <pbrobinson@gmail.com>, yossi@novtech.com,
+        nazik@novtech.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 12:41:49PM -0300, Jason Gunthorpe wrote:
-> On Thu, May 23, 2019 at 11:04:32AM -0400, Jerome Glisse wrote:
-> > On Wed, May 22, 2019 at 08:57:37PM -0300, Jason Gunthorpe wrote:
-> > > On Wed, May 22, 2019 at 01:48:52PM -0400, Jerome Glisse wrote:
-> > > 
-> > > > > > So attached is a rebase on top of 5.2-rc1, i have tested with pingpong
-> > > > > > (prefetch and not and different sizes). Seems to work ok.
-> > > > > 
-> > > > > Urk, it already doesn't apply to the rdma tree :(
-> > > > > 
-> > > > > The conflicts are a little more extensive than I'd prefer to handle..
-> > > > > Can I ask you to rebase it on top of this branch please:
-> > > > > 
-> > > > > https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git/log/?h=wip/jgg-for-next
-> > > > > 
-> > > > > Specifically it conflicts with this patch:
-> > > > > 
-> > > > > https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git/commit/?h=wip/jgg-for-next&id=d2183c6f1958e6b6dfdde279f4cee04280710e34
-> > > 
-> > > There is at least one more serious blocker here:
-> > > 
-> > > config ARCH_HAS_HMM_MIRROR
-> > >         bool
-> > >         default y
-> > >         depends on (X86_64 || PPC64)
-> > >         depends on MMU && 64BIT
-> > > 
-> > > I can't loose ARM64 support for ODP by merging this, that is too
-> > > serious of a regression.
-> > > 
-> > > Can you fix it?
-> > 
-> > 5.2 already has patch to fix the Kconfig (ARCH_HAS_HMM_MIRROR and
-> > ARCH_HAS_HMM_DEVICE replacing ARCH_HAS_HMM) I need to update nouveau
-> 
-> Newer than 5.2-rc1? Is this why ARCH_HAS_HMM_MIRROR is not used anywhere?
+On Wed, May 22, 2019 at 8:16 AM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+>
+> Document 96Boards Meerkat96 devicetree binding based on i.MX7D SoC.
+>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 
-Yes this is multi-step update, first add the new Kconfig release n,
-update driver in release n+1, update core Kconfig in release n+2
-
-So we are in release n (5.2), in 5.3 i will update nouveau and amdgpu
-so that in 5.4 in ca remove the old ARCH_HAS_HMM
-
-> > in 5.3 so that i can drop the old ARCH_HAS_HMM and then convert
-> > core mm in 5.4 to use ARCH_HAS_HMM_MIRROR and ARCH_HAS_HMM_DEVICE
-> > instead of ARCH_HAS_HMM
-> 
-> My problem is that ODP needs HMM_MIRROR which needs HMM & ARCH_HAS_HMM
-> - and then even if fixed we still have the ARCH_HAS_HMM_MIRROR
-> restricted to ARM64..
-> 
-> Can we broaden HMM_MIRROR to all arches? I would very much prefer
-> that.
-
-Ignore ARCH_HAS_HMM it will be remove in 5.4, all that will matter
-for ODP is ARCH_HAS_HMM_MIRROR which should be enabled for ARM64 as
-ARM64 has everything needed for that. I just did not add ARM64 to
-ARCH_HAS_HMM_MIRROR because i did not had hardware to test it on.
-
-So in 5.3 i will update nouveau and amdgpu to use ARCH_HAS_HMM_DEVICE
-and ARCH_HAS_HMM_MIRROR. In 5.4 i will update mm/Kconig to remove
-ARCH_HAS_HMM
-
-> 
-> > So it seems it will have to wait 5.4 for ODP. I will re-spin the
-> > patch for ODP once i am done reviewing Ralph changes and yours
-> > for 5.3.
-> 
-> I think we are still OK for 5.3.
-
-I can not update mm/Kconfig in 5.3 so any Kconfig update will be
-5.4
-
-> 
-> If mm takes the fixup patches so hmm mirror is as reliable as ODP's
-> existing stuff, and patch from you to enable ARM64, then we can
-> continue to merge into 5.3
-> 
-> So, let us try to get acks on those other threads..
-
-I will be merging your patchset and Ralph and repost, they are only
-minor change mostly that you can not update the driver API in just
-one release. First add the new API in release n, then replace old
-API usage in release n+1, then remove old API in n+2.
-
-Cheers,
-Jérôme
+Reviewed-by: Rob Herring <robh@kernel.org>
