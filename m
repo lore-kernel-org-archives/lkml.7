@@ -2,175 +2,118 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0117AC282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 01:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCBCC282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 01:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B0EC20B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 01:28:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 815FB20B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 01:28:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="O5GbkgID"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729675AbfEWB2G (ORCPT
+        id S1729687AbfEWB2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 21:28:06 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:45885 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727305AbfEWB2F (ORCPT
+        Wed, 22 May 2019 21:28:51 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:19521 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727305AbfEWB2u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 21:28:05 -0400
-Received: by mail-io1-f71.google.com with SMTP id z2so3351787iog.12
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 18:28:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Fl1AYilgXbXs+F9PHNE28XGBtd52ShtQBXn8a0buXtM=;
-        b=rhi+13qCvYnqBWNSYvwuAKC9jxnKBAWDZkwl7BtFbK+IWAZJdTOxD1xA+Um6Qg0aIw
-         9Wi2soP7RRwS6Tg+9jjhCBF397e7Y+Z93gHp9OoWzAbcBAYtJrkk8e/4XlxZYf4Gt46Q
-         rd/bW7kWyX1hQLeSH+xnXuEl1/DDamXJWfh6eyY6fqNhQqxOIUU0UYmIA5vvLZZ7rFit
-         ztOBqMnRMFyRjdXOItGUDG+5A7hiEEoC//7mQBg+kjC2KGJBBI89BE67nwyPqmcCtyDA
-         NecAdoNQdJkhXAE257eT5GDWWaZf6eSwzon7TDUmbG31qUV+E5WqQSVob0zL1PWbhGDJ
-         gaEQ==
-X-Gm-Message-State: APjAAAVBRVEJo7d7dreKL6D1SfX8Xmgwp5v2JaRyfl3Mh4YLfXO0yEya
-        2/FpX+zgrMwpF6Nmv5D05vVf5kAdM5kvDpy1zhgHlmVrg7wr
-X-Google-Smtp-Source: APXvYqzX0h3gT6teKiHansNya0jnKEok1GtoBkOvu5aNPuUWBhoqjBYyEEdOXS+1Y+vmss07bHjSRq/fWzWtDf2XHMQ8srObdKET
+        Wed, 22 May 2019 21:28:50 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ce5f74d0000>; Wed, 22 May 2019 18:28:45 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 22 May 2019 18:28:49 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 22 May 2019 18:28:49 -0700
+Received: from HQMAIL106.nvidia.com (172.18.146.12) by HQMAIL108.nvidia.com
+ (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 May
+ 2019 01:28:49 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL106.nvidia.com
+ (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Thu, 23 May 2019 01:28:49 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.170.210]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ce5f74f0006>; Wed, 22 May 2019 18:28:48 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <ldewangan@nvidia.com>, <broonie@kernel.org>,
+        <natechancellor@gmail.com>
+CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: [PATCH V1 00/12] LP0 entry and exit support for Tegra210
+Date:   Wed, 22 May 2019 18:28:29 -0700
+Message-ID: <1558574922-16531-1-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-X-Received: by 2002:a05:660c:2c5:: with SMTP id j5mr10636325itd.41.1558574884698;
- Wed, 22 May 2019 18:28:04 -0700 (PDT)
-Date:   Wed, 22 May 2019 18:28:04 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005bc340058983fe8e@google.com>
-Subject: memory leak in new_inode_pseudo
-From:   syzbot <syzbot+111cb28d9f583693aefa@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1558574925; bh=XkrgQWPSdSys4sY6++u5MjM3R5kQ9ZrMn6kdxayE2Cw=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=O5GbkgIDNZUXU4Msp9o4s6piJJSGEQwm0kjrS3Haye3FNkSU/Ao0cDViMLj88uRyd
+         0Fj4Q+mOdXTGA2hxEC4h9g7MWMySzse1VQNPT5RS5kpR2q6taB+1wHyk9GcudqqMpO
+         9TchfANyfb+jmeY7wwB5gSkF5q1Q5R/qaF7CzoVj0VJgrQZloQZBQ6duae69psSCrl
+         N0xVsqrqykOrvlM9Zv7J/I4x5OPhxDiE9KbZouanoCSZ45UT6eXSPIc430GlzQhFWs
+         cNbFucPnfofGfByBlWcmEOzKQcWsRV8B+ogt0XtPyqKAomM0Bj8Bxtb74p/0xX1UWn
+         alGb5sUIyQYEQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+This patch series includes Tegra210 deepsleep or LP0 support with
+deep sleep exit through RTC alarm wake and power button wake events.
 
-syzbot found the following crash on:
+This series also includes save and restore of PLLs, clocks, OSC contexts
+for basic LP0 exit.
 
-HEAD commit:    f49aa1de Merge tag 'for-5.2-rc1-tag' of git://git.kernel.o..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12dccd9ca00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=61dd9e15a761691d
-dashboard link: https://syzkaller.appspot.com/bug?extid=111cb28d9f583693aefa
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1587839ca00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16fdb38ca00000
+This patch series is doesn't support for 100% suspend/resume to fully
+functional state and we are working on some more drivers suspend and
+resume implementations.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+111cb28d9f583693aefa@syzkaller.appspotmail.com
+Sowjanya Komatineni (12):
+  irqchip: tegra: do not disable COP IRQ during suspend
+  pinctrl: tegra: add suspend and resume support
+  clk: tegra: save and restore PLLs state for system
+  clk: tegra: add support for peripheral clock suspend and resume
+  clk: tegra: add support for OSC clock resume
+  clk: tegra: add suspend resume support for DFLL clock
+  clk: tegra: support for Tegra210 clocks suspend-resume
+  soc/tegra: pmc: allow support for more tegra wake models
+  soc/tegra: pmc: add pmc wake support for tegra210
+  gpio: tegra: implement wake event support for Tegra210 and prior GPIO
+  soc/tegra: pmc: configure tegra deep sleep control settings
+  arm64: tegra: enable wake from deep sleep on RTC alarm.
 
-e list of known hosts.
-executing program
-BUG: memory leak
-unreferenced object 0xffff888121bdfd00 (size 632):
-   comm "syz-executor073", pid 7035, jiffies 4294943279 (age 8.130s)
-   hex dump (first 32 bytes):
-     01 00 00 00 02 00 00 00 00 00 00 00 00 00 00 00  ................
-     80 1e b6 1f 81 88 ff ff 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<0000000088b15f0d>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:55 [inline]
-     [<0000000088b15f0d>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<0000000088b15f0d>] slab_alloc mm/slab.c:3326 [inline]
-     [<0000000088b15f0d>] kmem_cache_alloc+0x134/0x270 mm/slab.c:3488
-     [<000000001a541de3>] sock_alloc_inode+0x1d/0xe0 net/socket.c:252
-     [<00000000226aca0e>] alloc_inode+0x2c/0xe0 fs/inode.c:226
-     [<0000000054963a4b>] new_inode_pseudo+0x18/0x70 fs/inode.c:915
-     [<00000000a577ddf0>] sock_alloc+0x1c/0x90 net/socket.c:575
-     [<000000000e50448f>] __sock_create+0x8f/0x250 net/socket.c:1394
-     [<00000000248d5219>] sock_create_kern+0x3b/0x50 net/socket.c:1499
-     [<0000000081cd440d>] io_uring_get_fd fs/io_uring.c:2997 [inline]
-     [<0000000081cd440d>] io_uring_create fs/io_uring.c:3080 [inline]
-     [<0000000081cd440d>] io_uring_setup+0x4ea/0x990 fs/io_uring.c:3128
-     [<00000000b95ec5c9>] __do_sys_io_uring_setup fs/io_uring.c:3141 [inline]
-     [<00000000b95ec5c9>] __se_sys_io_uring_setup fs/io_uring.c:3138 [inline]
-     [<00000000b95ec5c9>] __x64_sys_io_uring_setup+0x1a/0x20  
-fs/io_uring.c:3138
-     [<0000000072749d9e>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<0000000053106e40>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+ arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi |   7 +
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi       |   5 +-
+ drivers/clk/tegra/clk-dfll.c                   |  82 ++++++
+ drivers/clk/tegra/clk-dfll.h                   |   2 +
+ drivers/clk/tegra/clk-divider.c                |  19 ++
+ drivers/clk/tegra/clk-pll-out.c                |  25 ++
+ drivers/clk/tegra/clk-pll.c                    | 220 ++++++++++++--
+ drivers/clk/tegra/clk-tegra-fixed.c            |  15 +
+ drivers/clk/tegra/clk-tegra210.c               | 382 +++++++++++++++++++++++++
+ drivers/clk/tegra/clk.c                        |  74 ++++-
+ drivers/clk/tegra/clk.h                        |  18 ++
+ drivers/gpio/gpio-tegra.c                      | 109 ++++++-
+ drivers/irqchip/irq-tegra.c                    |  10 +-
+ drivers/pinctrl/tegra/pinctrl-tegra.c          |  68 ++++-
+ drivers/pinctrl/tegra/pinctrl-tegra.h          |   3 +
+ drivers/pinctrl/tegra/pinctrl-tegra114.c       |   1 +
+ drivers/pinctrl/tegra/pinctrl-tegra124.c       |   1 +
+ drivers/pinctrl/tegra/pinctrl-tegra20.c        |   1 +
+ drivers/pinctrl/tegra/pinctrl-tegra210.c       |   1 +
+ drivers/pinctrl/tegra/pinctrl-tegra30.c        |   1 +
+ drivers/soc/tegra/pmc.c                        | 159 +++++++++-
+ 21 files changed, 1167 insertions(+), 36 deletions(-)
 
-BUG: memory leak
-unreferenced object 0xffff88811fb61e80 (size 64):
-   comm "syz-executor073", pid 7035, jiffies 4294943279 (age 8.130s)
-   hex dump (first 32 bytes):
-     00 00 00 00 81 88 ff ff 88 1e b6 1f 81 88 ff ff  ................
-     88 1e b6 1f 81 88 ff ff 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<000000008c8eddf3>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:55 [inline]
-     [<000000008c8eddf3>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<000000008c8eddf3>] slab_alloc mm/slab.c:3326 [inline]
-     [<000000008c8eddf3>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<000000005afcf70e>] kmalloc include/linux/slab.h:547 [inline]
-     [<000000005afcf70e>] sock_alloc_inode+0x44/0xe0 net/socket.c:255
-     [<00000000226aca0e>] alloc_inode+0x2c/0xe0 fs/inode.c:226
-     [<0000000054963a4b>] new_inode_pseudo+0x18/0x70 fs/inode.c:915
-     [<00000000a577ddf0>] sock_alloc+0x1c/0x90 net/socket.c:575
-     [<000000000e50448f>] __sock_create+0x8f/0x250 net/socket.c:1394
-     [<00000000248d5219>] sock_create_kern+0x3b/0x50 net/socket.c:1499
-     [<0000000081cd440d>] io_uring_get_fd fs/io_uring.c:2997 [inline]
-     [<0000000081cd440d>] io_uring_create fs/io_uring.c:3080 [inline]
-     [<0000000081cd440d>] io_uring_setup+0x4ea/0x990 fs/io_uring.c:3128
-     [<00000000b95ec5c9>] __do_sys_io_uring_setup fs/io_uring.c:3141 [inline]
-     [<00000000b95ec5c9>] __se_sys_io_uring_setup fs/io_uring.c:3138 [inline]
-     [<00000000b95ec5c9>] __x64_sys_io_uring_setup+0x1a/0x20  
-fs/io_uring.c:3138
-     [<0000000072749d9e>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<0000000053106e40>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+-- 
+2.7.4
 
-BUG: memory leak
-unreferenced object 0xffff88811dd21c08 (size 56):
-   comm "syz-executor073", pid 7035, jiffies 4294943279 (age 8.130s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     30 fd bd 21 81 88 ff ff 20 1c d2 1d 81 88 ff ff  0..!.... .......
-   backtrace:
-     [<0000000088b15f0d>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:55 [inline]
-     [<0000000088b15f0d>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<0000000088b15f0d>] slab_alloc mm/slab.c:3326 [inline]
-     [<0000000088b15f0d>] kmem_cache_alloc+0x134/0x270 mm/slab.c:3488
-     [<00000000dec41212>] kmem_cache_zalloc include/linux/slab.h:732 [inline]
-     [<00000000dec41212>] lsm_inode_alloc security/security.c:523 [inline]
-     [<00000000dec41212>] security_inode_alloc+0x33/0xb0  
-security/security.c:876
-     [<0000000093ac97c3>] inode_init_always+0x108/0x200 fs/inode.c:168
-     [<000000006cedb4e8>] alloc_inode+0x49/0xe0 fs/inode.c:233
-     [<0000000054963a4b>] new_inode_pseudo+0x18/0x70 fs/inode.c:915
-     [<00000000a577ddf0>] sock_alloc+0x1c/0x90 net/socket.c:575
-     [<000000000e50448f>] __sock_create+0x8f/0x250 net/socket.c:1394
-     [<00000000248d5219>] sock_create_kern+0x3b/0x50 net/socket.c:1499
-     [<0000000081cd440d>] io_uring_get_fd fs/io_uring.c:2997 [inline]
-     [<0000000081cd440d>] io_uring_create fs/io_uring.c:3080 [inline]
-     [<0000000081cd440d>] io_uring_setup+0x4ea/0x990 fs/io_uring.c:3128
-     [<00000000b95ec5c9>] __do_sys_io_uring_setup fs/io_uring.c:3141 [inline]
-     [<00000000b95ec5c9>] __se_sys_io_uring_setup fs/io_uring.c:3138 [inline]
-     [<00000000b95ec5c9>] __x64_sys_io_uring_setup+0x1a/0x20  
-fs/io_uring.c:3138
-     [<0000000072749d9e>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<0000000053106e40>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
