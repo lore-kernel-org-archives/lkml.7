@@ -2,111 +2,116 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8936C282DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E3AC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99B4520879
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:11:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 595B92177E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:21:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="BuIOmpZc"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="upyPMan9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388552AbfEWXLX (ORCPT
+        id S2388294AbfEWXVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 19:11:23 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:50932 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387693AbfEWXLV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 19:11:21 -0400
-Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        Thu, 23 May 2019 19:21:47 -0400
+Received: from ozlabs.org ([203.11.71.1]:59519 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387693AbfEWXVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 19:21:47 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id EACE0C00C6;
-        Thu, 23 May 2019 23:11:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1558653066; bh=u9/BLbFMWX5K9TbPybc6ta2H5xZwxROFbq94KT4LOLc=;
-        h=From:To:CC:Subject:Date:References:From;
-        b=BuIOmpZclptRaTY+qH3bTZGf+L2kUJpAqCRGawoN/NlPcdz3diGQt6/8V5gZPB5Ls
-         K7r/pEzNotmniOV1P0deQJekDtU8y0+RR9heI+1K3ws/VZH6fpSODBVxiPFR1r5jpe
-         2f3GhzlzJ3scHvNAYZu1vBrM+71DhNYLbaUYkIT+NrR/dqtiNB5CjyB2BY1IiQigMP
-         u/zbqf0QjLUxV0AX7L9aNEk371D2batmf7mayfODrRdEFX+Qd+659L+b8a3oA2zrKH
-         GiMo7x07wwEDkJ65XDd9Ay4Q+yxNIvbrqETp5cAsjdG/iEtFyrsHMJwKmjr0w1TbXJ
-         28l+KryqupmeQ==
-Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 56B75A0097;
-        Thu, 23 May 2019 23:11:09 +0000 (UTC)
-Received: from us01wembx1.internal.synopsys.com ([169.254.1.22]) by
- US01WXQAHTC1.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Thu,
- 23 May 2019 16:10:30 -0700
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-To:     Mark Rutland <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "will.deacon@arm.com" <will.deacon@arm.com>
-CC:     "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "arnd@arndb.de" <arnd@arndb.de>, "bp@alien8.de" <bp@alien8.de>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "fenghua.yu@intel.com" <fenghua.yu@intel.com>,
-        "heiko.carstens@de.ibm.com" <heiko.carstens@de.ibm.com>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "ink@jurassic.park.msu.ru" <ink@jurassic.park.msu.ru>,
-        "jhogan@kernel.org" <jhogan@kernel.org>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "mattst88@gmail.com" <mattst88@gmail.com>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "palmer@sifive.com" <palmer@sifive.com>,
-        "paul.burton@mips.com" <paul.burton@mips.com>,
-        "paulus@samba.org" <paulus@samba.org>,
-        "ralf@linux-mips.org" <ralf@linux-mips.org>,
-        "rth@twiddle.net" <rth@twiddle.net>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "tony.luck@intel.com" <tony.luck@intel.com>
-Subject: Re: [PATCH 05/18] locking/atomic: arc: use s64 for atomic64
-Thread-Topic: [PATCH 05/18] locking/atomic: arc: use s64 for atomic64
-Thread-Index: AQHVEKGs9KZlALHlM0GHW5LrArar6w==
-Date:   Thu, 23 May 2019 23:10:30 +0000
-Message-ID: <C2D7FE5348E1B147BCA15975FBA2307501A251D626@us01wembx1.internal.synopsys.com>
-References: <20190522132250.26499-1-mark.rutland@arm.com>
- <20190522132250.26499-6-mark.rutland@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.13.184.19]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45959g5bGGz9s5c;
+        Fri, 24 May 2019 09:21:43 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1558653704;
+        bh=T6ekc/MGtCIVUVYB//skznkZYh0QGIVZEjJOl0d4DBQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=upyPMan9Rq6/b6aVskcBgN9HXiX8O7EY4+K8Y5JxrOM7MBdqgWSVh2DxV4WSanUBc
+         VvaKVaLgAWEgrKs7Z19HKxhiL9UbyO3tYpvqXg89ppsdiFoGf9oFNw4tq0kGOte7us
+         RzQb5ulxxsQA81mzWFwT5+KftNAlpkPn6S8Ajs5rXLlOqrdJ9DYlKr32F5xj9fwQtW
+         4m1KNaUD5QG2Onyu6lXjsIB78Tc25i4o5ToLZR0VmgZGc/4+STGgi19mAEs2mGnqLR
+         kp0nVp+icDzkuSP9kXQ6pAqUu35NtQt+V6tra9d4OYKjckAA4Rfq3DyI8mKXHF24Pk
+         rMGsUdeVehH8w==
+Date:   Fri, 24 May 2019 09:21:25 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: linux-next: manual merge of the v4l-dvb tree with Linus' tree
+Message-ID: <20190524092125.4ebc4d28@canb.auug.org.au>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_//vSvU6n/=OcUnbshppgiivd"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/22/19 6:24 AM, Mark Rutland wrote:=0A=
-> As a step towards making the atomic64 API use consistent types treewide,=
-=0A=
-> let's have the arc atomic64 implementation use s64 as the underlying=0A=
-> type for atomic64_t, rather than u64, matching the generated headers.=0A=
->=0A=
-> Otherwise, there should be no functional change as a result of this=0A=
-> patch.=0A=
->=0A=
-> Signed-off-by: Mark Rutland <mark.rutland@arm.com>=0A=
-> Cc: Peter Zijlstra <peterz@infradead.org>=0A=
-> Cc: Vineet Gupta <vgupta@synopsys.com>=0A=
-> Cc: Will Deacon <will.deacon@arm.com>=0A=
-=0A=
-Thx for the cleanup Mark.=0A=
-=0A=
-Acked-By: Vineet Gupta <vgupta@synopsys.com>   # for ARC bits=0A=
-=0A=
--Vineet=0A=
+--Sig_//vSvU6n/=OcUnbshppgiivd
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+Today's linux-next merge of the v4l-dvb tree got a conflict in:
+
+  drivers/media/platform/coda/Makefile
+
+between commit:
+
+  ec8f24b7faaf ("treewide: Add SPDX license identifier - Makefile/Kconfig")
+
+from Linus' tree and commit:
+
+  94b7ddb91c16 ("media: coda: remove -I$(src) header search path")
+
+from the v4l-dvb tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/media/platform/coda/Makefile
+index f13adacd924e,3eed82137257..000000000000
+--- a/drivers/media/platform/coda/Makefile
++++ b/drivers/media/platform/coda/Makefile
+@@@ -1,6 -1,3 +1,5 @@@
+ +# SPDX-License-Identifier: GPL-2.0-only
+- ccflags-y +=3D -I$(src)
+ +
+  coda-objs :=3D coda-common.o coda-bit.o coda-gdi.o coda-h264.o coda-jpeg.o
+ =20
+  obj-$(CONFIG_VIDEO_CODA) +=3D coda.o
+
+--Sig_//vSvU6n/=OcUnbshppgiivd
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlznKvUACgkQAVBC80lX
+0GzAzgf+Jeyk59jpqszwjhCVdTLAfx9dp9f8GwJ1yy5pC5WItANJtp6pA6ej90Tu
+8aNwVnYCmaVbwSpImDdSJz6QfhaYzdjKf+aD3u527eL6Ip1elO+cCgKyCbhr8MaI
+qio+/KjJgJv01HmfPsBpcxE3dX+/4JfITkT9DmLm2WbHOsONQZi65UPRLP8lfsGR
+VQ4pP++9+7kcbaHeRM7GD26+qDhAlxlr+5uBni56DCEIKUTYexKjwDava7KkEKxE
+U34sDRWPpLCP7H7ms3yL8cfIQrmfVmLBHyCjUoh3w1FlJMk5lxyrRv1ApDQ+7pZZ
+jsl5jN3fHQQ6I7swYZKQJzxx7H6Z6g==
+=8ai2
+-----END PGP SIGNATURE-----
+
+--Sig_//vSvU6n/=OcUnbshppgiivd--
