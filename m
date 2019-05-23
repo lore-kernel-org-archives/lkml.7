@@ -2,225 +2,96 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 441D3C46470
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:51:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B39EC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 083292168B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:51:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="KhEJLfvD"
+	by mail.kernel.org (Postfix) with ESMTP id 3248D21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:51:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730695AbfEWMvL (ORCPT
+        id S1729863AbfEWMvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 08:51:11 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:36170 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbfEWMvK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 08:51:10 -0400
-Received: by mail-qt1-f195.google.com with SMTP id a17so6534889qth.3
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 05:51:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tvZhWwgKm7E1dVHVTqcNBhVthbWGembrtq41stBFKS0=;
-        b=KhEJLfvDFJtXp5h58h6mCY3ICtla7khqIvU1EU1MAfSiLps4iCFvB4jQWyvVpzEO2f
-         kDHOLNfNJoJtYcZle+JQMgusO8VJ4KFzvy86jhgRK/qZRW4abGq39AAYRl3FQdJ/UNzA
-         M5QcLE1bbJdc4iPVGj02XZnhDOeJjceFQjyVZqN97/5qQW2ELQIhhZZiXlzNXo0ZOrO4
-         x2MKiSVXwBpUPybGs2dNudUGwWX2aeNINzzNp7jw0wLrz/AOoQizziboH86y+0yimv5W
-         ELF4p5fSqussufTN5NREXreecjhsB8wYg9XFaxN2Ob/rDYV4t0Fj2ZzQns3sXunBUsf2
-         S64A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tvZhWwgKm7E1dVHVTqcNBhVthbWGembrtq41stBFKS0=;
-        b=pwZ3+z4PFsRsarZi9e6jMuJKd+h1vWJoZN228rykWPh3jkukJkxt3v5GmNTNoEWLUR
-         8yGaCxecFTGVwpZ4IxOXfZXpoSpX3T5oDyZ+L7F7GyH1vLYetzHuXPwdGz28zZyj8Rqc
-         /qV7IEf7pFZmHRyO/Zp/UJuui3NOHMMgZvoTxbSK9ammfGFq29VQ4VVFjPkif54/XfqC
-         zxg4qJnYKnbqCJXFzfoZMzqQXgj6vSYF6CaYD5cEF+F6glKZSIWaT3YoTEJk8TVs83c8
-         z5y+fDh2sMqG8hEkCUWhLxl8uPkOfVBH+LHQvTXBwqHPKnf6keZ9+L0jd6qhwo1qNd9p
-         2Wxg==
-X-Gm-Message-State: APjAAAUR4SYqyISlswnP4xWvetGvs82FYYM4xq45dqynHVmLkkrJa/ZU
-        DNZeQhw7j51OiRcMnGil0PiBzg==
-X-Google-Smtp-Source: APXvYqx40PgnmEYuxdED9Zel+dm+Tl053xrjfv/+pM76UtiJq0BENAJa3oNhzD0YQ38NlO5XIGfDAA==
-X-Received: by 2002:a0c:af06:: with SMTP id i6mr32709230qvc.46.1558615869528;
-        Thu, 23 May 2019 05:51:09 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-49-251.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.49.251])
-        by smtp.gmail.com with ESMTPSA id c30sm17320924qta.25.2019.05.23.05.51.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 May 2019 05:51:09 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hTnBc-0002lt-KI; Thu, 23 May 2019 09:51:08 -0300
-Date:   Thu, 23 May 2019 09:51:08 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     rcampbell@nvidia.com
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        John Hubbard <jhubbard@nvidia.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 3/5] mm/hmm: Use mm_get_hmm() in hmm_range_register()
-Message-ID: <20190523125108.GA14013@ziepe.ca>
-References: <20190506232942.12623-1-rcampbell@nvidia.com>
- <20190506232942.12623-4-rcampbell@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190506232942.12623-4-rcampbell@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Thu, 23 May 2019 08:51:16 -0400
+Received: from mga11.intel.com ([192.55.52.93]:27649 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726310AbfEWMvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 08:51:15 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 May 2019 05:51:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,503,1549958400"; 
+   d="scan'208";a="174743420"
+Received: from marshy.an.intel.com ([10.122.105.159])
+  by fmsmga002.fm.intel.com with ESMTP; 23 May 2019 05:51:14 -0700
+From:   richard.gong@linux.intel.com
+To:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, dinguyen@kernel.org, atull@kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        sen.li@intel.com, richard.gong@linux.intel.com,
+        Richard Gong <richard.gong@intel.com>
+Subject: [PATCHv3 0/4] add Intel Stratix10 remote system update driver
+Date:   Thu, 23 May 2019 08:03:26 -0500
+Message-Id: <1558616610-499-1-git-send-email-richard.gong@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 04:29:40PM -0700, rcampbell@nvidia.com wrote:
-> From: Ralph Campbell <rcampbell@nvidia.com>
-> 
-> In hmm_range_register(), the call to hmm_get_or_create() implies that
-> hmm_range_register() could be called before hmm_mirror_register() when
-> in fact, that would violate the HMM API.
-> 
-> Use mm_get_hmm() instead of hmm_get_or_create() to get the HMM structure.
-> 
-> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Balbir Singh <bsingharora@gmail.com>
-> Cc: Dan Carpenter <dan.carpenter@oracle.com>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Souptick Joarder <jrdr.linux@gmail.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
->  mm/hmm.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/hmm.c b/mm/hmm.c
-> index f6c4c8633db9..2aa75dbed04a 100644
-> +++ b/mm/hmm.c
-> @@ -936,7 +936,7 @@ int hmm_range_register(struct hmm_range *range,
->  	range->start = start;
->  	range->end = end;
->  
-> -	range->hmm = hmm_get_or_create(mm);
-> +	range->hmm = mm_get_hmm(mm);
->  	if (!range->hmm)
->  		return -EFAULT;
+From: Richard Gong <richard.gong@intel.com>
 
-I looked for documentation saying that hmm_range_register should only
-be done inside a hmm_mirror_register and didn't see it. Did I miss it?
-Can you add a comment? 
+Since version 2 submission is too late for kernel 5.2, I submit version 3
+of Intel Stratix10 Remote System Update (RSU) drive for kernel 5.3.
 
-It is really good to fix this because it means we can rely on mmap sem
-to manage mm->hmm!
+There is only one additional change in version 3 patch sets, which updates
+kernel version to 5.3 in sysfs interface document.
 
-If this is true then I also think we should change the signature of
-the function to make this dependency relationship clear, and remove
-some possible confusing edge cases.
+Intel Stratix10 remote system update driver patches have been reviewed by
+Alan Tull and other colleagues at Intel.
 
-What do you think about something like this? (unfinished)
+The Intel Stratix10 Remote System Update driver exposes interfaces
+access through the Intel Stratix10 Service Layer to user space via sysfs
+interface. The RSU interfaces report and control some of the optional RSU
+features on Intel Stratix 10 SoC.
 
-commit 29098bd59cf481ad1915db40aefc8435dabb8b28
-Author: Jason Gunthorpe <jgg@mellanox.com>
-Date:   Thu May 23 09:41:19 2019 -0300
+The RSU feature provides a way for customers to update the boot
+configuration of a Intel Stratix 10 SoC device with significantly reduced
+risk of corrupting the bitstream storage and bricking the system.
 
-    mm/hmm: Use hmm_mirror not mm as an argument for hmm_register_range
-    
-    Ralf observes that hmm_register_range() can only be called by a driver
-    while a mirror is registered. Make this clear in the API by passing
-    in the mirror structure as a parameter.
-    
-    This also simplifies understanding the lifetime model for struct hmm,
-    as the hmm pointer must be valid as part of a registered mirror
-    so all we need in hmm_register_range() is a simple kref_get.
-    
-    Suggested-by: Ralph Campbell <rcampbell@nvidia.com>
-    Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+v3: changed kernel version from 5.2 to 5.3 in RSU sysfs interface document
+v2: removed compatible = "intel,stratix10-rsu"
+    added intel stratix10 RSU device
+    changed to support RSU in handling watchdog timeout
+    s/attr_group/ATTRIBUTE_GROUPS, use devm_device_add_groups() and
+    devm_device_remove_groups()
+    added check the return value from rsu_send_msg()
+    removed RSU binding text file
+    other corrections/changes 
 
-diff --git a/include/linux/hmm.h b/include/linux/hmm.h
-index 8b91c90d3b88cb..87d29e085a69f7 100644
---- a/include/linux/hmm.h
-+++ b/include/linux/hmm.h
-@@ -503,7 +503,7 @@ static inline bool hmm_mirror_mm_is_alive(struct hmm_mirror *mirror)
-  * Please see Documentation/vm/hmm.rst for how to use the range API.
-  */
- int hmm_range_register(struct hmm_range *range,
--		       struct mm_struct *mm,
-+		       struct hmm_mirror *mirror,
- 		       unsigned long start,
- 		       unsigned long end,
- 		       unsigned page_shift);
-@@ -539,7 +539,8 @@ static inline bool hmm_vma_range_done(struct hmm_range *range)
- }
- 
- /* This is a temporary helper to avoid merge conflict between trees. */
--static inline int hmm_vma_fault(struct hmm_range *range, bool block)
-+static inline int hmm_vma_fault(struct hmm_mirror *mirror,
-+				struct hmm_range *range, bool block)
- {
- 	long ret;
- 
-@@ -552,7 +553,7 @@ static inline int hmm_vma_fault(struct hmm_range *range, bool block)
- 	range->default_flags = 0;
- 	range->pfn_flags_mask = -1UL;
- 
--	ret = hmm_range_register(range, range->vma->vm_mm,
-+	ret = hmm_range_register(range, mirror,
- 				 range->start, range->end,
- 				 PAGE_SHIFT);
- 	if (ret)
-diff --git a/mm/hmm.c b/mm/hmm.c
-index 824e7e160d8167..fa1b04fcfc2549 100644
---- a/mm/hmm.c
-+++ b/mm/hmm.c
-@@ -927,7 +927,7 @@ static void hmm_pfns_clear(struct hmm_range *range,
-  * Track updates to the CPU page table see include/linux/hmm.h
-  */
- int hmm_range_register(struct hmm_range *range,
--		       struct mm_struct *mm,
-+		       struct hmm_mirror *mirror,
- 		       unsigned long start,
- 		       unsigned long end,
- 		       unsigned page_shift)
-@@ -935,7 +935,6 @@ int hmm_range_register(struct hmm_range *range,
- 	unsigned long mask = ((1UL << page_shift) - 1UL);
- 
- 	range->valid = false;
--	range->hmm = NULL;
- 
- 	if ((start & mask) || (end & mask))
- 		return -EINVAL;
-@@ -946,15 +945,12 @@ int hmm_range_register(struct hmm_range *range,
- 	range->start = start;
- 	range->end = end;
- 
--	range->hmm = hmm_get_or_create(mm);
--	if (!range->hmm)
--		return -EFAULT;
--
- 	/* Check if hmm_mm_destroy() was call. */
--	if (range->hmm->mm == NULL || range->hmm->dead) {
--		hmm_put(range->hmm);
-+	if (mirror->hmm->mm == NULL || mirror->hmm->dead)
- 		return -EFAULT;
--	}
-+
-+	range->hmm = mirror->hmm;
-+	kref_get(&range->hmm->kref);
- 
- 	/* Initialize range to track CPU page table update */
- 	mutex_lock(&range->hmm->lock);
+Richard Gong (4):
+  firmware: stratix10-svc: extend svc to support RSU notify and WD
+    features
+  firmware: add Intel Stratix10 remote system update driver
+  firmware: rsu: document sysfs interface
+  MAINTAINERS: add maintainer for Intel Stratix10 FW drivers
+
+ .../testing/sysfs-devices-platform-stratix10-rsu   | 100 +++++
+ MAINTAINERS                                        |  11 +
+ drivers/firmware/Kconfig                           |  18 +
+ drivers/firmware/Makefile                          |   1 +
+ drivers/firmware/stratix10-rsu.c                   | 409 +++++++++++++++++++++
+ drivers/firmware/stratix10-svc.c                   |  74 +++-
+ include/linux/firmware/intel/stratix10-smc.h       |  48 ++-
+ .../linux/firmware/intel/stratix10-svc-client.h    |  12 +-
+ 8 files changed, 663 insertions(+), 10 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-devices-platform-stratix10-rsu
+ create mode 100644 drivers/firmware/stratix10-rsu.c
+
+-- 
+2.7.4
 
