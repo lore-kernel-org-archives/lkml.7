@@ -2,100 +2,66 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF2AFC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C81CC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD19F20879
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:29:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A05920879
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:30:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731280AbfEWQ3s (ORCPT
+        id S1731333AbfEWQad (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 12:29:48 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:27750 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730957AbfEWQ3r (ORCPT
+        Thu, 23 May 2019 12:30:33 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:48552 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730790AbfEWQac (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 12:29:47 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-124-k_tmI2M6OK6o6fWSJ4SZFw-1; Thu, 23 May 2019 17:29:45 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 23 May 2019 17:29:44 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 23 May 2019 17:29:44 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Konstantin Khlebnikov' <khlebnikov@yandex-team.ru>,
-        Christian Brauner <christian@brauner.io>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "fweimer@redhat.com" <fweimer@redhat.com>
-CC:     "jannh@google.com" <jannh@google.com>,
-        "oleg@redhat.com" <oleg@redhat.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "dhowells@redhat.com" <dhowells@redhat.com>,
-        "tkjos@android.com" <tkjos@android.com>,
-        "ldv@altlinux.org" <ldv@altlinux.org>,
-        "miklos@szeredi.hu" <miklos@szeredi.hu>,
-        "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        "linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        "linux-xtensa@linux-xtensa.org" <linux-xtensa@linux-xtensa.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: RE: [PATCH v1 1/2] open: add close_range()
-Thread-Topic: [PATCH v1 1/2] open: add close_range()
-Thread-Index: AQHVEYO6ZYKDwRYmH0ewnJkZ6B6UzqZ45dMA
-Date:   Thu, 23 May 2019 16:29:44 +0000
-Message-ID: <5e57c26cb7044b69acd3846ac474b5d5@AcuMS.aculab.com>
-References: <20190522155259.11174-1-christian@brauner.io>
- <67e4458a-9cc4-d1aa-608c-73ebe9e2f7a3@yandex-team.ru>
-In-Reply-To: <67e4458a-9cc4-d1aa-608c-73ebe9e2f7a3@yandex-team.ru>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
-MIME-Version: 1.0
-X-MC-Unique: k_tmI2M6OK6o6fWSJ4SZFw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+        Thu, 23 May 2019 12:30:32 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d8])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3E2541509BAEC;
+        Thu, 23 May 2019 09:30:32 -0700 (PDT)
+Date:   Thu, 23 May 2019 09:30:31 -0700 (PDT)
+Message-Id: <20190523.093031.456990380849413310.davem@davemloft.net>
+To:     andreas.oetken@siemens.com
+Cc:     andreas@oetken.name, m-karicheri2@ti.com, a-kramer@ti.com,
+        arvid.brodin@alten.se, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V4] hsr: fix don't prune the master node from the
+ node_db
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190523115714.19412-1-andreas.oetken@siemens.com>
+References: <20190523115714.19412-1-andreas.oetken@siemens.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 23 May 2019 09:30:32 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogIEtvbnN0YW50aW4gS2hsZWJuaWtvdg0KPiBTZW50OiAyMyBNYXkgMjAxOSAxNzoyMg0K
-Li4uLg0KPiAgPiBJbiBhZGRpdGlvbiwgdGhlIHN5c2NhbGwgd2lsbCBhbHNvIHdvcmsgZm9yIHRh
-c2tzIHRoYXQgZG8gbm90IGhhdmUgcHJvY2ZzDQo+ICA+IG1vdW50ZWQgYW5kIG9uIGtlcm5lbHMg
-dGhhdCBkbyBub3QgaGF2ZSBwcm9jZnMgc3VwcG9ydCBjb21waWxlZCBpbi4gSW4gc3VjaA0KPiAg
-PiBzaXR1YXRpb25zIHRoZSBvbmx5IHdheSB0byBtYWtlIHN1cmUgdGhhdCBhbGwgZmlsZSBkZXNj
-cmlwdG9ycyBhcmUgY2xvc2VkDQo+ICA+IGlzIHRvIGNhbGwgY2xvc2UoKSBvbiBlYWNoIGZpbGUg
-ZGVzY3JpcHRvciB1cCB0byBVSU5UX01BWCBvciBSTElNSVRfTk9GSUxFLA0KPiAgPiBPUEVOX01B
-WCB0cmlja2VyeSAoY2YuIGNvbW1lbnQgWzhdIG9uIFJ1c3QpLg0KDQpDb2RlIHVzaW5nIFJMSU1J
-VF9OT0ZJTEUgaXMgYnJva2VuLg0KSXQgaXMgZWFzeSB0byByZWR1Y2UgdGhlIGhhcmQgbGltaXQg
-YmVsb3cgdGhhdCBvZiBhbiBvcGVuIGZkLg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRy
-ZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1L
-MSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
+From: Andreas Oetken <andreas.oetken@siemens.com>
+Date: Thu, 23 May 2019 13:57:14 +0200
 
+> Don't prune the master node in the hsr_prune_nodes function.
+> Neither time_in[HSR_PT_SLAVE_A] nor time_in[HSR_PT_SLAVE_B]
+> will ever be updated by hsr_register_frame_in for the master port.
+> Thus, the master node will be repeatedly pruned leading to
+> repeated packet loss.
+> This bug never appeared because the hsr_prune_nodes function
+> was only called once. Since commit 5150b45fd355
+> ("net: hsr: Fix node prune function for forget time expiry") this issue
+> is fixed unveiling the issue described above.
+> 
+> Fixes: 5150b45fd355 ("net: hsr: Fix node prune function for forget time expiry")
+> Signed-off-by: Andreas Oetken <andreas.oetken@siemens.com>
+> Tested-by: Murali Karicheri <m-karicheri2@ti.com>
+
+Applied.
