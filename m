@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5115C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98560C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0C012133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:15:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71651217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:15:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558638949;
-	bh=FtYbvIv3gOl5LAcrN+tt1XTYQKijAsSZSVhpgmTQNSA=;
+	s=default; t=1558638952;
+	bh=HiFtAIKrl+Yj/b7btEiQx9X+/cf8POcNBsL9C668gKc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZucYue/PjyJEZAtN5Vkj2jOtf1TjQEmoBBFYtHVnlU2643p4xyNvk36LsTJvkX4JL
-	 a9yDZBac+foca3NCIuvej7t0g6kv1+vDinv5W9brrcFHUqobSRs8xKHoFHdvSkyuS5
-	 E1GIT5xhoX0V59apOY4s5ASYhNlMliIXtSYl+uGM=
+	b=k50+yWovQ0AtfDzLmqmhwmnyuFWtgozBr/frMI4TtizdFW30AdFrMAejQZ93uQZHv
+	 TVxr499z7MlzDlta3DNbXkvOfOHZ547B6wiH/49MvVnUjR2puosehPwdhVZ36xveBN
+	 kNYyUQV9I4gS9KiXhfrjpPgA+o+fmB9Zq2yY1zg4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389076AbfEWTPt (ORCPT
+        id S2388623AbfEWTPv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:15:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50194 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:15:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389062AbfEWTPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:15:44 -0400
+        id S2389066AbfEWTPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:15:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27E192133D;
-        Thu, 23 May 2019 19:15:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D590C2133D;
+        Thu, 23 May 2019 19:15:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638943;
-        bh=FtYbvIv3gOl5LAcrN+tt1XTYQKijAsSZSVhpgmTQNSA=;
+        s=default; t=1558638946;
+        bh=HiFtAIKrl+Yj/b7btEiQx9X+/cf8POcNBsL9C668gKc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T9pUMOkyYC+vJ//qu2RzTBUmdFdDgt+kuauIxOPrHQ2KRVjZnHXt/gxxovfKn66Mo
-         MZdVPRIncJEuuK3rBnG36+/4qT2cHycD/FZVQv5C54eEono9NpNz6LkdsvTabjTiaH
-         U2y1mKvsb1a2e+eWh3JukG3hdSdprjR2ii4yYDrA=
+        b=cAnmXq3rNl4GYGEnZ89oWrttUELBRqd1Nt00SVPEKLswghcE3lgtUMPEP22RzW8ko
+         dx/qv4xcvn67z+1u1Rk/8cr5ANrizYCxKKsLzE34c1RZ/sIh9e+s1Pl9Mia1zdfLCZ
+         HgyIMX6UXbkpVLWe8XwyK7w5dhrZBNCl+98IyXz8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
-        Christian Lamparter <chunkeey@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.19 030/114] p54: drop device reference count if fails to enable device
-Date:   Thu, 23 May 2019 21:05:29 +0200
-Message-Id: <20190523181734.559102373@linuxfoundation.org>
+        stable@vger.kernel.org, Zhong Kaihua <zhongkaihua@huawei.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Zhangfei Gao <zhangfei.gao@linaro.org>,
+        Dong Zhang <zhangdong46@hisilicon.com>,
+        Leo Yan <leo.yan@linaro.org>, Stephen Boyd <sboyd@kernel.org>
+Subject: [PATCH 4.19 039/114] clk: hi3660: Mark clk_gate_ufs_subsys as critical
+Date:   Thu, 23 May 2019 21:05:38 +0200
+Message-Id: <20190523181735.310111138@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
 References: <20190523181731.372074275@linuxfoundation.org>
@@ -60,42 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pan Bian <bianpan2016@163.com>
+From: Leo Yan <leo.yan@linaro.org>
 
-commit 8149069db81853570a665f5e5648c0e526dc0e43 upstream.
+commit 9f77a60669d13ed4ddfa6cd7374c9d88da378ffa upstream.
 
-The function p54p_probe takes an extra reference count of the PCI
-device. However, the extra reference count is not dropped when it fails
-to enable the PCI device. This patch fixes the bug.
+clk_gate_ufs_subsys is a system bus clock, turning off it will
+introduce lockup issue during system suspend flow.  Let's mark
+clk_gate_ufs_subsys as critical clock, thus keeps it on during
+system suspend and resume.
 
+Fixes: d374e6fd5088 ("clk: hisilicon: Add clock driver for hi3660 SoC")
 Cc: stable@vger.kernel.org
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Acked-by: Christian Lamparter <chunkeey@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Cc: Zhong Kaihua <zhongkaihua@huawei.com>
+Cc: John Stultz <john.stultz@linaro.org>
+Cc: Zhangfei Gao <zhangfei.gao@linaro.org>
+Suggested-by: Dong Zhang <zhangdong46@hisilicon.com>
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/intersil/p54/p54pci.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/clk/hisilicon/clk-hi3660.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/net/wireless/intersil/p54/p54pci.c
-+++ b/drivers/net/wireless/intersil/p54/p54pci.c
-@@ -554,7 +554,7 @@ static int p54p_probe(struct pci_dev *pd
- 	err = pci_enable_device(pdev);
- 	if (err) {
- 		dev_err(&pdev->dev, "Cannot enable new PCI device\n");
--		return err;
-+		goto err_put;
- 	}
- 
- 	mem_addr = pci_resource_start(pdev, 0);
-@@ -639,6 +639,7 @@ static int p54p_probe(struct pci_dev *pd
- 	pci_release_regions(pdev);
-  err_disable_dev:
- 	pci_disable_device(pdev);
-+err_put:
- 	pci_dev_put(pdev);
- 	return err;
- }
+--- a/drivers/clk/hisilicon/clk-hi3660.c
++++ b/drivers/clk/hisilicon/clk-hi3660.c
+@@ -163,8 +163,12 @@ static const struct hisi_gate_clock hi36
+ 	  "clk_isp_snclk_mux", CLK_SET_RATE_PARENT, 0x50, 17, 0, },
+ 	{ HI3660_CLK_GATE_ISP_SNCLK2, "clk_gate_isp_snclk2",
+ 	  "clk_isp_snclk_mux", CLK_SET_RATE_PARENT, 0x50, 18, 0, },
++	/*
++	 * clk_gate_ufs_subsys is a system bus clock, mark it as critical
++	 * clock and keep it on for system suspend and resume.
++	 */
+ 	{ HI3660_CLK_GATE_UFS_SUBSYS, "clk_gate_ufs_subsys", "clk_div_sysbus",
+-	  CLK_SET_RATE_PARENT, 0x50, 21, 0, },
++	  CLK_SET_RATE_PARENT | CLK_IS_CRITICAL, 0x50, 21, 0, },
+ 	{ HI3660_PCLK_GATE_DSI0, "pclk_gate_dsi0", "clk_div_cfgbus",
+ 	  CLK_SET_RATE_PARENT, 0x50, 28, 0, },
+ 	{ HI3660_PCLK_GATE_DSI1, "pclk_gate_dsi1", "clk_div_cfgbus",
 
 
