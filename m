@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 145D5C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 106BBC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF5CD20868
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8FE020868
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639443;
-	bh=OFIsjXtbHYZbOt8iZhE+4vMAQY/LFmC8UGgt9t/KYqo=;
+	s=default; t=1558639446;
+	bh=Fn75vAqq208ZamoG1r5eXuJPt0CbASeV6eFZIIJezJ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=whEpnyRZxy7OOE9VD52UTZT5g1asRo05GMW/2DzLEYoHL/QChPsbsiIjN2hK3IhcE
-	 ASu0uZdlt0eIf5lLBHi0axtuR713UjMDInzKqw8mst52LndI9cLc4Z0xG1JvxOoDwy
-	 p9r3Ca/tgPuXfeS+NUgIfeqdHxmPFDLTEWClA0GI=
+	b=JNnhuT4zMLxDyjloUarWCObrk9azVcQ5jP1SGBI06opgvXJWB7fQIa0tKHI9WY2ih
+	 Vcdj/6LkYMRwHvACh5aSIGLeNoCuBSSj92BgC2I2XWLGV5zh7y2HuLbARHsd7tU1gM
+	 V8GAwW/j4w4h6kbcONxHf6ebF2hWSaY8iLRaNwRg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390188AbfEWTYC (ORCPT
+        id S2390826AbfEWTYG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:24:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34698 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:24:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390797AbfEWTX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:23:59 -0400
+        id S2390797AbfEWTYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:24:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15AB52054F;
-        Thu, 23 May 2019 19:23:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 899302054F;
+        Thu, 23 May 2019 19:24:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639438;
-        bh=OFIsjXtbHYZbOt8iZhE+4vMAQY/LFmC8UGgt9t/KYqo=;
+        s=default; t=1558639444;
+        bh=Fn75vAqq208ZamoG1r5eXuJPt0CbASeV6eFZIIJezJ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1fnrE7W2adqlwh2Wzx33dgH1CXBm7mZDkXc8e29yHdMaUFjSk1AQVnHeRYoqMLVS3
-         XDKxUr6LtRX6Hq+Ut1RIQmILDOGAliOiwzAHSyEWAQsbwLLyu5X+Z3KnumdbKpscJI
-         s4bSL33DN45+/KFFGF1YVPFPbwu4R1m8dMIm2Wk8=
+        b=amagaIFX+g5f1VpJPvox6yNX9xxquCQCiODNpDjuvIU478tqp9NJRk5rJp7P+NuMQ
+         F+n10ObqdXa+pX6uAr1ZxWOhYZ5H5h+Po012hi6A0T7GmfdlXClW2VkVTA2THJEDHS
+         QS2LIIAUklzZgfyMQpd804gyX3jpPYWQLSdIu1K4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sabrina Dubroca <sd@queasysnail.net>,
+        stable@vger.kernel.org,
         Steffen Klassert <steffen.klassert@secunet.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 105/139] esp4: add length check for UDP encapsulation
-Date:   Thu, 23 May 2019 21:06:33 +0200
-Message-Id: <20190523181733.974550825@linuxfoundation.org>
+Subject: [PATCH 5.0 107/139] xfrm4: Fix uninitialized memory read in _decode_session4
+Date:   Thu, 23 May 2019 21:06:35 +0200
+Message-Id: <20190523181734.150769677@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -60,88 +60,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8dfb4eba4100e7cdd161a8baef2d8d61b7a7e62e ]
+[ Upstream commit 8742dc86d0c7a9628117a989c11f04a9b6b898f3 ]
 
-esp_output_udp_encap can produce a length that doesn't fit in the 16
-bits of a UDP header's length field. In that case, we'll send a
-fragmented packet whose length is larger than IP_MAX_MTU (resulting in
-"Oversized IP packet" warnings on receive) and with a bogus UDP
-length.
+We currently don't reload pointers pointing into skb header
+after doing pskb_may_pull() in _decode_session4(). So in case
+pskb_may_pull() changed the pointers, we read from random
+memory. Fix this by putting all the needed infos on the
+stack, so that we don't need to access the header pointers
+after doing pskb_may_pull().
 
-To prevent this, add a length check to esp_output_udp_encap and return
- -EMSGSIZE on failure.
-
-This seems to be older than git history.
-
-Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
 Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/esp4.c | 20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
+ net/ipv4/xfrm4_policy.c | 24 +++++++++++++-----------
+ 1 file changed, 13 insertions(+), 11 deletions(-)
 
-diff --git a/net/ipv4/esp4.c b/net/ipv4/esp4.c
-index 10e809b296ec8..fb065a8937ea2 100644
---- a/net/ipv4/esp4.c
-+++ b/net/ipv4/esp4.c
-@@ -226,7 +226,7 @@ static void esp_output_fill_trailer(u8 *tail, int tfclen, int plen, __u8 proto)
- 	tail[plen - 1] = proto;
- }
- 
--static void esp_output_udp_encap(struct xfrm_state *x, struct sk_buff *skb, struct esp_info *esp)
-+static int esp_output_udp_encap(struct xfrm_state *x, struct sk_buff *skb, struct esp_info *esp)
+diff --git a/net/ipv4/xfrm4_policy.c b/net/ipv4/xfrm4_policy.c
+index d73a6d6652f60..2b144b92ae46a 100644
+--- a/net/ipv4/xfrm4_policy.c
++++ b/net/ipv4/xfrm4_policy.c
+@@ -111,7 +111,8 @@ static void
+ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
  {
- 	int encap_type;
- 	struct udphdr *uh;
-@@ -234,6 +234,7 @@ static void esp_output_udp_encap(struct xfrm_state *x, struct sk_buff *skb, stru
- 	__be16 sport, dport;
- 	struct xfrm_encap_tmpl *encap = x->encap;
- 	struct ip_esp_hdr *esph = esp->esph;
-+	unsigned int len;
+ 	const struct iphdr *iph = ip_hdr(skb);
+-	u8 *xprth = skb_network_header(skb) + iph->ihl * 4;
++	int ihl = iph->ihl;
++	u8 *xprth = skb_network_header(skb) + ihl * 4;
+ 	struct flowi4 *fl4 = &fl->u.ip4;
+ 	int oif = 0;
  
- 	spin_lock_bh(&x->lock);
- 	sport = encap->encap_sport;
-@@ -241,11 +242,14 @@ static void esp_output_udp_encap(struct xfrm_state *x, struct sk_buff *skb, stru
- 	encap_type = encap->encap_type;
- 	spin_unlock_bh(&x->lock);
+@@ -122,6 +123,11 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
+ 	fl4->flowi4_mark = skb->mark;
+ 	fl4->flowi4_oif = reverse ? skb->skb_iif : oif;
  
-+	len = skb->len + esp->tailen - skb_transport_offset(skb);
-+	if (len + sizeof(struct iphdr) >= IP_MAX_MTU)
-+		return -EMSGSIZE;
++	fl4->flowi4_proto = iph->protocol;
++	fl4->daddr = reverse ? iph->saddr : iph->daddr;
++	fl4->saddr = reverse ? iph->daddr : iph->saddr;
++	fl4->flowi4_tos = iph->tos;
 +
- 	uh = (struct udphdr *)esph;
- 	uh->source = sport;
- 	uh->dest = dport;
--	uh->len = htons(skb->len + esp->tailen
--		  - skb_transport_offset(skb));
-+	uh->len = htons(len);
- 	uh->check = 0;
+ 	if (!ip_is_fragment(iph)) {
+ 		switch (iph->protocol) {
+ 		case IPPROTO_UDP:
+@@ -133,7 +139,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
+ 			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
+ 				__be16 *ports;
  
- 	switch (encap_type) {
-@@ -262,6 +266,8 @@ static void esp_output_udp_encap(struct xfrm_state *x, struct sk_buff *skb, stru
+-				xprth = skb_network_header(skb) + iph->ihl * 4;
++				xprth = skb_network_header(skb) + ihl * 4;
+ 				ports = (__be16 *)xprth;
  
- 	*skb_mac_header(skb) = IPPROTO_UDP;
- 	esp->esph = esph;
-+
-+	return 0;
+ 				fl4->fl4_sport = ports[!!reverse];
+@@ -146,7 +152,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
+ 			    pskb_may_pull(skb, xprth + 2 - skb->data)) {
+ 				u8 *icmp;
+ 
+-				xprth = skb_network_header(skb) + iph->ihl * 4;
++				xprth = skb_network_header(skb) + ihl * 4;
+ 				icmp = xprth;
+ 
+ 				fl4->fl4_icmp_type = icmp[0];
+@@ -159,7 +165,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
+ 			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
+ 				__be32 *ehdr;
+ 
+-				xprth = skb_network_header(skb) + iph->ihl * 4;
++				xprth = skb_network_header(skb) + ihl * 4;
+ 				ehdr = (__be32 *)xprth;
+ 
+ 				fl4->fl4_ipsec_spi = ehdr[0];
+@@ -171,7 +177,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
+ 			    pskb_may_pull(skb, xprth + 8 - skb->data)) {
+ 				__be32 *ah_hdr;
+ 
+-				xprth = skb_network_header(skb) + iph->ihl * 4;
++				xprth = skb_network_header(skb) + ihl * 4;
+ 				ah_hdr = (__be32 *)xprth;
+ 
+ 				fl4->fl4_ipsec_spi = ah_hdr[1];
+@@ -183,7 +189,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
+ 			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
+ 				__be16 *ipcomp_hdr;
+ 
+-				xprth = skb_network_header(skb) + iph->ihl * 4;
++				xprth = skb_network_header(skb) + ihl * 4;
+ 				ipcomp_hdr = (__be16 *)xprth;
+ 
+ 				fl4->fl4_ipsec_spi = htonl(ntohs(ipcomp_hdr[1]));
+@@ -196,7 +202,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
+ 				__be16 *greflags;
+ 				__be32 *gre_hdr;
+ 
+-				xprth = skb_network_header(skb) + iph->ihl * 4;
++				xprth = skb_network_header(skb) + ihl * 4;
+ 				greflags = (__be16 *)xprth;
+ 				gre_hdr = (__be32 *)xprth;
+ 
+@@ -213,10 +219,6 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
+ 			break;
+ 		}
+ 	}
+-	fl4->flowi4_proto = iph->protocol;
+-	fl4->daddr = reverse ? iph->saddr : iph->daddr;
+-	fl4->saddr = reverse ? iph->daddr : iph->saddr;
+-	fl4->flowi4_tos = iph->tos;
  }
  
- int esp_output_head(struct xfrm_state *x, struct sk_buff *skb, struct esp_info *esp)
-@@ -275,8 +281,12 @@ int esp_output_head(struct xfrm_state *x, struct sk_buff *skb, struct esp_info *
- 	int tailen = esp->tailen;
- 
- 	/* this is non-NULL only with UDP Encapsulation */
--	if (x->encap)
--		esp_output_udp_encap(x, skb, esp);
-+	if (x->encap) {
-+		int err = esp_output_udp_encap(x, skb, esp);
-+
-+		if (err < 0)
-+			return err;
-+	}
- 
- 	if (!skb_cloned(skb)) {
- 		if (tailen <= skb_tailroom(skb)) {
+ static void xfrm4_update_pmtu(struct dst_entry *dst, struct sock *sk,
 -- 
 2.20.1
 
