@@ -2,131 +2,102 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F124C282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 01:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07237C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 01:03:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7FCE2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 01:02:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qnENwEOU"
+	by mail.kernel.org (Postfix) with ESMTP id A868D2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 01:03:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558573425;
+	bh=0c93wE/T01S1HHzZxo+8x1JHeBq/Z/FxViGUSsHuNEw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GqJDr8nU0iNYzyXoMTU2oo5/BU1+2puEer79i+znbQTRckY2jN3j6nIiRj3KIjswr
+	 WGIyOm8nrCW50tamCfVqFrk6RadPonn59YJRZh1z8uod+s2x9Va/02nv673Eq0xJbt
+	 Zacq0Z1xZ/CXqhn49m6YxkwAEAyNxmfPmRD5+oK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729642AbfEWBCl (ORCPT
+        id S1729711AbfEWBDp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 21:02:41 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:44528 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727691AbfEWBCl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 21:02:41 -0400
-Received: by mail-ed1-f67.google.com with SMTP id b8so6505448edm.11;
-        Wed, 22 May 2019 18:02:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tA5b54p1qAqxHmO8t68gnIq4GqiDwcEvhH8K1Xe2zjw=;
-        b=qnENwEOUwQ0oxBfzZgZVDizpmBDyGrl+bjfNeGAv897O0JjjKvO/YUq6LvV0ePVtJ5
-         0Wi0J1qCjbKbV4DAQhSHlLD8iEnyUGUjq3YjunPjjRgx+NwCHRqAmXLs8ISqZscv0Z9c
-         kTwTfr+GPcok3Sd8A2U9A64NgglZjfRJeQroLzU9O1xP3AS4uvBPHbvtrID+zyL0YBHM
-         EESszfmgC/t4uBWRQrRPCk9jv6WrEHtIJ6cfDasfXxSAEKYDB8K69kmkl7rq6IOhrkXD
-         bG1xT3oL8xWv/e96b+LAI0YPGlS5ne04pg1/+jeF63vF2bs0lE8NUqq6XfyoKufrK7cV
-         HBYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tA5b54p1qAqxHmO8t68gnIq4GqiDwcEvhH8K1Xe2zjw=;
-        b=St1heKk9WBK+XNKA97k3vGoohR9MUOTrx/CzFmcf21rdaPVgnE03y8ZD/P/rUvaBWC
-         CAvodtI8OICZzYf7Obhuq//joyD7Ed73nfOxmMIJQ949BfWaT/fQRUYcFmPuzXgcXCKx
-         JYcKMTRWcz35lmIh4jim4VKX8coOu9UCsmGfOy/GbRBRMADcOtjXc+1jBGhOCs/l9Ywk
-         7AtVm9yBMNohe3PPnEGtpUcP1cXNHqLJoNR7C3b0xdcZZdqNuBRzeSA+Zmh+f3/nK62t
-         k40dYwx8Nv3IzOrq/dhqregDL3zL43gLYxmqWc24fi6oAeonepd1dwwvE9+rGVILZ1go
-         wT6w==
-X-Gm-Message-State: APjAAAXpfkTIPejwNcvOZAYEkzTg54z/dfnnYWf1fnVfSx2K3WybiZIs
-        UmvST/Y1MDM+DRxE0B9RJHI=
-X-Google-Smtp-Source: APXvYqxMd8Rw+eFYKZ3xhYt6YenC9cRk5cOMYV4dwwHFyHns3qasNH6+Ciu3ihv7UDQS2ZFH3fJMog==
-X-Received: by 2002:a50:90ea:: with SMTP id d39mr93636417eda.15.1558573359135;
-        Wed, 22 May 2019 18:02:39 -0700 (PDT)
-Received: from archlinux-epyc ([2a01:4f9:2b:2b15::2])
-        by smtp.gmail.com with ESMTPSA id p27sm4098813ejf.65.2019.05.22.18.02.37
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 22 May 2019 18:02:37 -0700 (PDT)
-Date:   Wed, 22 May 2019 18:02:35 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
-        ldewangan@nvidia.com, broonie@kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org
-Subject: Re: [PATCH V5 4/4] spi: tegra114: add support for TX and RX trimmers
-Message-ID: <20190523010235.GA105588@archlinux-epyc>
-References: <1557810235-16401-1-git-send-email-skomatineni@nvidia.com>
- <1557810235-16401-5-git-send-email-skomatineni@nvidia.com>
+        Wed, 22 May 2019 21:03:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40542 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729535AbfEWBDo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 21:03:44 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07EAB2089E;
+        Thu, 23 May 2019 01:03:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558573424;
+        bh=0c93wE/T01S1HHzZxo+8x1JHeBq/Z/FxViGUSsHuNEw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=H5QNOK3Hj+hGJR7NJooBOJM7pC622hJjNbI5Z74TNb6jZ770OzTtrJEGQI9llBWGP
+         +D6mZ+AVButruoo+8vcMfrKj3TNJQv1FdHUIvbxKyWAJPV51f2RZB+0NHwVmtEjyFn
+         XD27vCaRuP0B38k5NcdLJfb4l/8ijUSN0M6zbBh4=
+Date:   Thu, 23 May 2019 09:02:44 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
+        "ccaione@baylibre.com" <ccaione@baylibre.com>,
+        "angus@akkea.ca" <angus@akkea.ca>,
+        "agx@sigxcpu.org" <agx@sigxcpu.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH 3/3] arm64: dts: imx8mq: add clock for SNVS RTC node
+Message-ID: <20190523010243.GD16359@dragon>
+References: <1557882259-3353-1-git-send-email-Anson.Huang@nxp.com>
+ <1557882259-3353-3-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1557810235-16401-5-git-send-email-skomatineni@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <1557882259-3353-3-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sowjanya,
-
-On Mon, May 13, 2019 at 10:03:55PM -0700, Sowjanya Komatineni wrote:
-> Tegra SPI master controller has programmable trimmers to adjust the
-> data with respect to the clock.
+On Wed, May 15, 2019 at 01:09:36AM +0000, Anson Huang wrote:
+> i.MX8MQ has clock gate for SNVS module, add clock info to SNVS
+> RTC node for clock management.
 > 
-> These trimmers are programmed in TX_CLK_TAP_DELAY and RX_CLK_TAP_DELAY
-> fields of COMMAND2 register.
-> 
-> SPI TX trimmer is to adjust the outgoing data with respect to the
-> outgoing clock and SPI RX trimmer is to adjust the loopback clock with
-> respect to the incoming data from the slave device.
-> 
-> These trimmers vary based on trace lengths of the platform design for
-> each of the slaves on the SPI bus and optimal value programmed is from
-> the platform validation across PVT.
-> 
-> This patch adds support for configuring TX and RX clock delay trimmers
-> through the device tree properties.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/spi/spi-tegra114.c | 67 ++++++++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 65 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
-> index e59ff7c1cee6..253a7f182fc9 100644
-> --- a/drivers/spi/spi-tegra114.c
-> +++ b/drivers/spi/spi-tegra114.c
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-<snip>
+This one still has problem with encoding and thus cannot be applied.
+Here is what I get, and there is '=20' in the patch content.
 
-> +static void tegra_spi_cleanup(struct spi_device *spi)
-> +{
-> +	struct tegra_spi_client_data *cdata = spi->controller_data;
-> +
-> +	spi->controller_data = NULL;
-> +	if (spi->dev.of_node)
-> +		kfree(cdata);
-> +}
-> +
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dt=
+s/freescale/imx8mq.dtsi
+index e5f3133..b706de8 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -438,6 +438,8 @@
+                                        offset =3D <0x34>;
+                                        interrupts =3D <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
+                                                <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
++                                       clocks =3D <&clk IMX8MQ_CLK_SNVS_ROOT>;
++                                       clock-names =3D "snvs-rtc";
+                                };
+                        };
+=20
+--=20
+2.7.4
 
-This function is not called anywhere and it is marked as static so it
-triggers an unused function warning. Was that intentional?
-
-drivers/spi/spi-tegra114.c:938:13: warning: unused function 'tegra_spi_cleanup' [-Wunused-function]
-static void tegra_spi_cleanup(struct spi_device *spi)
-            ^
-1 warning generated.
-
-Cheers,
-Nathan
