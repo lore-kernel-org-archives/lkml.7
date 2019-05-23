@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3191BC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63136C46460
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:35:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09DB02175B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:35:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 423F0217D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:35:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730664AbfEWKfp (ORCPT
+        id S1730691AbfEWKfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 06:35:45 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:43094 "EHLO
+        Thu, 23 May 2019 06:35:48 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:43128 "EHLO
         foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730631AbfEWKfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 06:35:40 -0400
+        id S1730669AbfEWKfp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 06:35:45 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AAF9515AB;
-        Thu, 23 May 2019 03:35:39 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 61E02A78;
+        Thu, 23 May 2019 03:35:44 -0700 (PDT)
 Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 958D83F718;
-        Thu, 23 May 2019 03:35:37 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 48CBD3F718;
+        Thu, 23 May 2019 03:35:42 -0700 (PDT)
 From:   Sudeep Holla <sudeep.holla@arm.com>
 To:     kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
 Cc:     Sudeep Holla <sudeep.holla@arm.com>, kvm@vger.kernel.org,
@@ -37,9 +37,9 @@ Cc:     Sudeep Holla <sudeep.holla@arm.com>, kvm@vger.kernel.org,
         Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will.deacon@arm.com>,
         Julien Thierry <julien.thierry@arm.com>
-Subject: [PATCH v2 08/15] arm64: KVM/debug: drop pmscr_el1 and use sys_regs[PMSCR_EL1] in kvm_cpu_context
-Date:   Thu, 23 May 2019 11:34:55 +0100
-Message-Id: <20190523103502.25925-9-sudeep.holla@arm.com>
+Subject: [PATCH v2 10/15] arm64: KVM: enable conditional save/restore full SPE profiling buffer controls
+Date:   Thu, 23 May 2019 11:34:57 +0100
+Message-Id: <20190523103502.25925-11-sudeep.holla@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190523103502.25925-1-sudeep.holla@arm.com>
 References: <20190523103502.25925-1-sudeep.holla@arm.com>
@@ -48,96 +48,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kvm_cpu_context now has support to stash the complete SPE buffer control
-context. We no longer need the pmscr_el1 kvm_vcpu_arch and it can be
-dropped.
+Now that we can save/restore the full SPE controls, we can enable it
+if SPE is setup and ready to use in KVM. It's supported in KVM only if
+all the CPUs in the system supports SPE.
+
+However to support heterogenous systems, we need to move the check if
+host supports SPE and do a partial save/restore.
 
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- arch/arm64/include/asm/kvm_host.h |  2 --
- arch/arm64/kvm/hyp/debug-sr.c     | 26 +++++++++++++++-----------
- 2 files changed, 15 insertions(+), 13 deletions(-)
+ arch/arm64/kvm/hyp/debug-sr.c | 33 ++++++++++++++++-----------------
+ include/kvm/arm_spe.h         |  3 +++
+ 2 files changed, 19 insertions(+), 17 deletions(-)
 
-diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-index 559aa6931291..6921fdfd477b 100644
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -310,8 +310,6 @@ struct kvm_vcpu_arch {
- 	struct {
- 		/* {Break,watch}point registers */
- 		struct kvm_guest_debug_arch regs;
--		/* Statistical profiling extension */
--		u64 pmscr_el1;
- 	} host_debug_state;
- 
- 	/* VGIC state */
 diff --git a/arch/arm64/kvm/hyp/debug-sr.c b/arch/arm64/kvm/hyp/debug-sr.c
-index 618884df1dc4..a2714a5eb3e9 100644
+index a4e6eaf5934f..cd0a7571abc1 100644
 --- a/arch/arm64/kvm/hyp/debug-sr.c
 +++ b/arch/arm64/kvm/hyp/debug-sr.c
-@@ -66,19 +66,19 @@
- 	default:	write_debug(ptr[0], reg, 0);			\
+@@ -67,18 +67,13 @@
  	}
  
--static void __hyp_text __debug_save_spe_nvhe(u64 *pmscr_el1)
-+static void __hyp_text __debug_save_spe_nvhe(struct kvm_cpu_context *ctxt)
+ static void __hyp_text
+-__debug_save_spe_nvhe(struct kvm_cpu_context *ctxt, bool full_ctxt)
++__debug_save_spe_context(struct kvm_cpu_context *ctxt, bool full_ctxt)
  {
  	u64 reg;
  
  	/* Clear pmscr in case of early return */
--	*pmscr_el1 = 0;
-+	ctxt->sys_regs[PMSCR_EL1] = 0;
+ 	ctxt->sys_regs[PMSCR_EL1] = 0;
  
- 	/* SPE present on this CPU? */
- 	if (!cpuid_feature_extract_unsigned_field(read_sysreg(id_aa64dfr0_el1),
- 						  ID_AA64DFR0_PMSVER_SHIFT))
- 		return;
- 
--	/* Yes; is it owned by EL3? */
-+	/* Yes; is it owned by higher EL? */
+-	/* SPE present on this CPU? */
+-	if (!cpuid_feature_extract_unsigned_field(read_sysreg(id_aa64dfr0_el1),
+-						  ID_AA64DFR0_PMSVER_SHIFT))
+-		return;
+-
+ 	/* Yes; is it owned by higher EL? */
  	reg = read_sysreg_s(SYS_PMBIDR_EL1);
  	if (reg & BIT(SYS_PMBIDR_EL1_P_SHIFT))
- 		return;
-@@ -89,7 +89,7 @@ static void __hyp_text __debug_save_spe_nvhe(u64 *pmscr_el1)
- 		return;
- 
- 	/* Yes; save the control register and disable data generation */
--	*pmscr_el1 = read_sysreg_el1_s(SYS_PMSCR);
-+	ctxt->sys_regs[PMSCR_EL1] = read_sysreg_el1_s(SYS_PMSCR);
- 	write_sysreg_el1_s(0, SYS_PMSCR);
- 	isb();
- 
-@@ -98,16 +98,16 @@ static void __hyp_text __debug_save_spe_nvhe(u64 *pmscr_el1)
- 	dsb(nsh);
+@@ -114,7 +109,7 @@ __debug_save_spe_nvhe(struct kvm_cpu_context *ctxt, bool full_ctxt)
  }
  
--static void __hyp_text __debug_restore_spe_nvhe(u64 pmscr_el1)
-+static void __hyp_text __debug_restore_spe_nvhe(struct kvm_cpu_context *ctxt)
+ static void __hyp_text
+-__debug_restore_spe_nvhe(struct kvm_cpu_context *ctxt, bool full_ctxt)
++__debug_restore_spe_context(struct kvm_cpu_context *ctxt, bool full_ctxt)
  {
--	if (!pmscr_el1)
-+	if (!ctxt->sys_regs[PMSCR_EL1])
+ 	if (!ctxt->sys_regs[PMSCR_EL1])
  		return;
- 
- 	/* The host page table is installed, but not yet synchronised */
- 	isb();
- 
- 	/* Re-enable data generation */
--	write_sysreg_el1_s(pmscr_el1, SYS_PMSCR);
-+	write_sysreg_el1_s(ctxt->sys_regs[PMSCR_EL1], SYS_PMSCR);
- }
- 
- static void __hyp_text __debug_save_state(struct kvm_vcpu *vcpu,
-@@ -175,14 +175,15 @@ void __hyp_text __debug_restore_host_context(struct kvm_vcpu *vcpu)
+@@ -182,11 +177,14 @@ void __hyp_text __debug_restore_guest_context(struct kvm_vcpu *vcpu)
  	struct kvm_guest_debug_arch *host_dbg;
  	struct kvm_guest_debug_arch *guest_dbg;
  
 +	host_ctxt = kern_hyp_va(vcpu->arch.host_cpu_context);
 +	guest_ctxt = &vcpu->arch.ctxt;
 +
- 	if (!has_vhe())
--		__debug_restore_spe_nvhe(vcpu->arch.host_debug_state.pmscr_el1);
-+		__debug_restore_spe_nvhe(host_ctxt);
- 
++	__debug_restore_spe_context(guest_ctxt, kvm_arm_spe_v1_ready(vcpu));
++
  	if (!(vcpu->arch.flags & KVM_ARM64_DEBUG_DIRTY))
  		return;
  
@@ -146,19 +111,65 @@ index 618884df1dc4..a2714a5eb3e9 100644
  	host_dbg = &vcpu->arch.host_debug_state.regs;
  	guest_dbg = kern_hyp_va(vcpu->arch.debug_ptr);
  
-@@ -198,8 +199,11 @@ void __hyp_text __debug_save_host_context(struct kvm_vcpu *vcpu)
- 	 * Non-VHE: Disable and flush SPE data generation
- 	 * VHE: The vcpu can run, but it can't hide.
- 	 */
-+	struct kvm_cpu_context *host_ctxt;
-+
-+	host_ctxt = kern_hyp_va(vcpu->arch.host_cpu_context);
- 	if (!has_vhe())
--		__debug_save_spe_nvhe(&vcpu->arch.host_debug_state.pmscr_el1);
-+		__debug_save_spe_nvhe(host_ctxt);
+@@ -204,8 +202,7 @@ void __hyp_text __debug_restore_host_context(struct kvm_vcpu *vcpu)
+ 	host_ctxt = kern_hyp_va(vcpu->arch.host_cpu_context);
+ 	guest_ctxt = &vcpu->arch.ctxt;
+ 
+-	if (!has_vhe())
+-		__debug_restore_spe_nvhe(host_ctxt, false);
++	__debug_restore_spe_context(host_ctxt, kvm_arm_spe_v1_ready(vcpu));
+ 
+ 	if (!(vcpu->arch.flags & KVM_ARM64_DEBUG_DIRTY))
+ 		return;
+@@ -221,19 +218,21 @@ void __hyp_text __debug_restore_host_context(struct kvm_vcpu *vcpu)
+ 
+ void __hyp_text __debug_save_host_context(struct kvm_vcpu *vcpu)
+ {
+-	/*
+-	 * Non-VHE: Disable and flush SPE data generation
+-	 * VHE: The vcpu can run, but it can't hide.
+-	 */
+ 	struct kvm_cpu_context *host_ctxt;
+ 
+ 	host_ctxt = kern_hyp_va(vcpu->arch.host_cpu_context);
+-	if (!has_vhe())
+-		__debug_save_spe_nvhe(host_ctxt, false);
++	if (cpuid_feature_extract_unsigned_field(read_sysreg(id_aa64dfr0_el1),
++						 ID_AA64DFR0_PMSVER_SHIFT))
++		__debug_save_spe_context(host_ctxt, kvm_arm_spe_v1_ready(vcpu));
  }
  
  void __hyp_text __debug_save_guest_context(struct kvm_vcpu *vcpu)
+ {
++	bool kvm_spe_ready = kvm_arm_spe_v1_ready(vcpu);
++
++	/* SPE present on this vCPU? */
++	if (kvm_spe_ready)
++		__debug_save_spe_context(&vcpu->arch.ctxt, kvm_spe_ready);
+ }
+ 
+ u32 __hyp_text __kvm_get_mdcr_el2(void)
+diff --git a/include/kvm/arm_spe.h b/include/kvm/arm_spe.h
+index 2440ff02f747..fdcb0df1e0fd 100644
+--- a/include/kvm/arm_spe.h
++++ b/include/kvm/arm_spe.h
+@@ -18,6 +18,8 @@ struct kvm_spe {
+ 
+ #ifdef CONFIG_KVM_ARM_SPE
+ 
++#define kvm_arm_spe_v1_ready(v)		((v)->arch.spe.ready)
++
+ static inline bool kvm_arm_support_spe_v1(void)
+ {
+ 	u64 dfr0 = read_sanitised_ftr_reg(SYS_ID_AA64DFR0_EL1);
+@@ -27,6 +29,7 @@ static inline bool kvm_arm_support_spe_v1(void)
+ }
+ #else
+ 
++#define kvm_arm_spe_v1_ready(v)		(false)
+ #define kvm_arm_support_spe_v1()	(false)
+ #endif /* CONFIG_KVM_ARM_SPE */
+ 
 -- 
 2.17.1
 
