@@ -2,89 +2,123 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFADC04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7EAEC04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:26:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4049A2168B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:26:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558596390;
-	bh=VjrQ83KC6HOFllWga6d52Rt+uC2gHnfL41blzY4duAc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=f2tK+lTkBHlTA7kcCZu5GqAAEa13Fsx1J5tJ5xjsvcIxyDqQQ8tS8+M+TjS1pDfel
-	 KD1Lb4UjLV1gSfTd/rboR0ldU26FVqeMtgBADOyXUezRk8V7e8lJ3Ix7IBpYh0C1lj
-	 B3BV1XmbsZ/wBdlka/fI0gdJi+ViSrHTY4qxhV9k=
+	by mail.kernel.org (Postfix) with ESMTP id A8B81217D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:26:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="miPz6BwB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728668AbfEWH03 (ORCPT
+        id S1729734AbfEWH0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 03:26:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35484 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726081AbfEWH03 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 03:26:29 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75941204EC;
-        Thu, 23 May 2019 07:26:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558596388;
-        bh=VjrQ83KC6HOFllWga6d52Rt+uC2gHnfL41blzY4duAc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pksjG0RC+ByW2fHhsIGsxmG/+IMfie8BzKZmr+nWkmX6x1hUQKUo4IZywBgHRZqmy
-         JTDMeIKdA2Wz5tR/Fsb4RkweAS75s7rmdSct5wOyCL/dB9G86rRg33vmdHvo+em6a7
-         HHx7qU118/0Fdy9J+TUb2Srhlt2xcFPkLr8azjN0=
-Date:   Thu, 23 May 2019 09:26:25 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Simon =?iso-8859-1?Q?Sandstr=F6m?= <simon@nikanor.nu>
-Cc:     jeremy@azazel.net, dan.carpenter@oracle.com,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/6] staging: kpc2000: fix indent in cell_probe.c
-Message-ID: <20190523072625.GA16429@kroah.com>
-References: <20190522205849.17444-1-simon@nikanor.nu>
- <20190522205849.17444-2-simon@nikanor.nu>
+        Thu, 23 May 2019 03:26:52 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42668 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726081AbfEWH0w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 03:26:52 -0400
+Received: by mail-pg1-f193.google.com with SMTP id e17so2511748pgo.9;
+        Thu, 23 May 2019 00:26:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jlgXheI8cakQJ3hxWBVQn//xqmqtv7/wivwFD999U00=;
+        b=miPz6BwBvCH/RwStiWjuSr1wakdqBdEhGehwuMJC4tO21Cw8ngK6NXuRGZ2I5CWEg4
+         WleCVkkpJ9zCcpvwW7NirYcjPdM7WxWnwjsOjpDkOJuHLgXB9Azi6BCQOJC2rxzxObo/
+         rFwHQgUe5y6j6V7golq2+nWhc58gg72Q6WQ95IBEfq1NeWEHmmu8tpmagq+WJDplyTI/
+         1B4Edp3PxMoN13A0VtjmgUU3SWYeokLlAd+8cbYTJNS6ihRDMNpjXBONnvqkU71mdRnj
+         wDtlRBdO/GTSgGNbezXpJMcWScq97PkWVgYwu3zbMf7D+AzZDTwIrfIA16vKv9F/yKRr
+         xZ+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jlgXheI8cakQJ3hxWBVQn//xqmqtv7/wivwFD999U00=;
+        b=RDQ4tXbQGr1+0VKS5juY8021AoUUN0iJC2Irh/zeA64D+NevbCvS2s7Z3grcN2O18j
+         jG3SB/8UyHGwWw14WTBCTgc6/3Glfg4hlFgl35aY2RXoDZpsm3HKqXVvjbqZoOlpfSO6
+         uZupzGhYP0gk/mngMq3qabJXDqHGdmJ1DUbS6KlZQEQYyc0c87xe1LWk3r3q18l4e6bC
+         jxLOns78o2nZyDzaSYSrtwLJ0jrI9PIFcs+wzF4nxS4c+RjhVaqYA2HLg08f7Hi6WllF
+         gNob9TP2iyUJu98RHx1KcDWaFWPCuNpVMWUZf/9lRvN6BXQ2i+yFl7XotFl5Yz5rAJL+
+         TGhg==
+X-Gm-Message-State: APjAAAV0vJ77kC1JKsg75qbI3Y6Yu73Dd0O/A8mZawG5SD8Netlqw94E
+        cq4WHa/94v8BrdIfRnI1uzw=
+X-Google-Smtp-Source: APXvYqwf8LWIvH1gPuRB+qfMGWb6tJdZL0eVa2OLEmxDxHtdyyOSvGVrXYSWrhxK4E/sp3TNPYSyjA==
+X-Received: by 2002:a62:5487:: with SMTP id i129mr100345262pfb.68.1558596410687;
+        Thu, 23 May 2019 00:26:50 -0700 (PDT)
+Received: from sandstorm.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id i7sm25052054pfo.19.2019.05.23.00.26.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 May 2019 00:26:49 -0700 (PDT)
+From:   john.hubbard@gmail.com
+X-Google-Original-From: jhubbard@nvidia.com
+To:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
+        LKML <linux-kernel@vger.kernel.org>, linux-rdma@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Christian Benvenuti <benve@cisco.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ira Weiny <ira.weiny@intel.com>
+Subject: [PATCH 0/1] infiniband/mm: convert put_page() to put_user_page*()
+Date:   Thu, 23 May 2019 00:25:36 -0700
+Message-Id: <20190523072537.31940-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+X-NVConfidentiality: public
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190522205849.17444-2-simon@nikanor.nu>
-User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 10:58:44PM +0200, Simon Sandström wrote:
-> Use tabs instead of spaces for indentation.
-> 
-> Signed-off-by: Simon Sandström <simon@nikanor.nu>
-> ---
->  drivers/staging/kpc2000/kpc2000/cell_probe.c | 574 +++++++++----------
->  1 file changed, 287 insertions(+), 287 deletions(-)
-> 
-> diff --git a/drivers/staging/kpc2000/kpc2000/cell_probe.c b/drivers/staging/kpc2000/kpc2000/cell_probe.c
-> index 0181b0a8ff82..6e034d115b47 100644
-> --- a/drivers/staging/kpc2000/kpc2000/cell_probe.c
-> +++ b/drivers/staging/kpc2000/kpc2000/cell_probe.c
-> @@ -25,7 +25,7 @@
->   *                                                              D                   C2S DMA Present
->   *                                                               DDD                C2S DMA Channel Number    [up to 8 channels]
->   *                                                                  II              IRQ Count [0 to 3 IRQs per core]
-> -                                                                      1111111000
-> + *                                                                    1111111000
->   *                                                                    IIIIIII       IRQ Base Number [up to 128 IRQs per card]
->   *                                                                           ___    Spare
->   *
+From: John Hubbard <jhubbard@nvidia.com>
 
-This chunk does not match what you said this commit did :(
+Hi Jason and all,
 
-Please fix up and resend.
+IIUC, now that we have the put_user_pages() merged in to linux.git, we can
+start sending up the callsite conversions via different subsystem
+maintainer trees. Here's one for linux-rdma.
+
+I've left the various Reviewed-by: and Tested-by: tags on here, even
+though it's been through a few rebases.
+
+If anyone has hardware, it would be good to get a real test of this.
 
 thanks,
+--
+John Hubbard
+NVIDIA
 
-greg k-h
+Cc: Doug Ledford <dledford@redhat.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Cc: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Cc: Christian Benvenuti <benve@cisco.com>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Jason Gunthorpe <jgg@mellanox.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
+
+John Hubbard (1):
+  infiniband/mm: convert put_page() to put_user_page*()
+
+ drivers/infiniband/core/umem.c              |  7 ++++---
+ drivers/infiniband/core/umem_odp.c          | 10 +++++-----
+ drivers/infiniband/hw/hfi1/user_pages.c     | 11 ++++-------
+ drivers/infiniband/hw/mthca/mthca_memfree.c |  6 +++---
+ drivers/infiniband/hw/qib/qib_user_pages.c  | 11 ++++-------
+ drivers/infiniband/hw/qib/qib_user_sdma.c   |  6 +++---
+ drivers/infiniband/hw/usnic/usnic_uiom.c    |  7 ++++---
+ 7 files changed, 27 insertions(+), 31 deletions(-)
+
+-- 
+2.21.0
+
