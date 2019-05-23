@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 184DCC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C75C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3F89217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:27:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2CBC206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:28:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639676;
-	bh=jS/P740gJJTg5cpG7dqJ6n30Sc3YXWhZeWXnKtrOqsM=;
+	s=default; t=1558639681;
+	bh=n/tMZ4cNVoAA1oHzG4CdFylVAUsgOpQAWjMKe/YoFaM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vkJP9Ym1PmYFB0A7hKVKhjab+UqHCgxh9HeETr4vcpnE7C/4KelGWXdMwSeYlgKF8
-	 nfNINhsiphxGgJmzmn/if0/iE2XfAp8jIH3nOxxmUsjddx264JYAUKMZvYfRoAc89N
-	 dFDSm+AWlK/NlTF9lmRS5jl5A4YIkNNqKYy8PFN8=
+	b=yGbg66tgnx8UpRHJ5c9gPuwXJ8AQlthf95+zvPn4ZG4YiEqo57aLQnG2+Lmh/lKZh
+	 z9DgkHP+M1gD9JIOCFMHS5KGBqdPviU5vXcSgQGzupox0CHwR5wvybg1SMId5JGhyI
+	 gN4FCx6QNbv7WPK7Ffda4jhNLPtVY4sePrKqww2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391681AbfEWT1z (ORCPT
+        id S2391699AbfEWT2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:27:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40194 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:28:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391660AbfEWT1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:27:50 -0400
+        id S2391002AbfEWT15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:27:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D7272054F;
-        Thu, 23 May 2019 19:27:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E505C2054F;
+        Thu, 23 May 2019 19:27:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639670;
-        bh=jS/P740gJJTg5cpG7dqJ6n30Sc3YXWhZeWXnKtrOqsM=;
+        s=default; t=1558639675;
+        bh=n/tMZ4cNVoAA1oHzG4CdFylVAUsgOpQAWjMKe/YoFaM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vKnFdmqiz5YQFtbHziK9CgRk6nVU6Y0B82m68wWH4DToJ0v7xIPUABq+4yDP7FVqE
-         m36nWDpWxykWZeIkZpbZkgaI04vnGU0UKqcZ/duWACFvg6emesrs9BVfTjnEUd5cc4
-         85mgMM9mO/GLdQOVx4eTos2n6PAL7QvVHJb0OiGc=
+        b=qoT74m1AhJXl2+vCATt68E7fDGbEvsdW5LLjsJ2tDBjKtbSNBz71H25N8Z3HajKSe
+         lzw2KIwBdMfX9uD9Cc2jJlc5dDL2qxVMHmvKGk23pVye76fuEeviWk/TZwEK8V9Kxb
+         E8C6lEv7kClSpUi4snExZR99vgvC2JDswFLAnzJU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Steve Longerbeam <slongerbeam@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 5.1 051/122] media: imx: csi: Allow unknown nearest upstream entities
-Date:   Thu, 23 May 2019 21:06:13 +0200
-Message-Id: <20190523181711.473950999@linuxfoundation.org>
+Subject: [PATCH 5.1 053/122] media: imx: Rename functions that add IPU-internal subdevs
+Date:   Thu, 23 May 2019 21:06:15 +0200
+Message-Id: <20190523181711.730366129@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -62,68 +63,158 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Steve Longerbeam <slongerbeam@gmail.com>
 
-commit 904371f90b2c0c749a5ab75478c129a4682ac3d8 upstream.
+commit 085b26da62211cb77622008082adff56aefa771d upstream.
 
-On i.MX6, the nearest upstream entity to the CSI can only be the
-CSI video muxes or the Synopsys DW MIPI CSI-2 receiver.
-
-However the i.MX53 has no CSI video muxes or a MIPI CSI-2 receiver.
-So allow for the nearest upstream entity to the CSI to be something
-other than those.
-
-Fixes: bf3cfaa712e5c ("media: staging/imx: get CSI bus type from nearest
-upstream entity")
+For the functions that add and remove the internal IPU subdevice
+descriptors, rename them to make clear they are the subdevs internal
+to the IPU. Also rename the platform data structure for the internal
+IPU subdevices. No functional changes.
 
 Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
+Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
 Cc: stable@vger.kernel.org
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/media/imx/imx-media-csi.c |   18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ drivers/staging/media/imx/imx-ic-common.c         |    2 +-
+ drivers/staging/media/imx/imx-media-dev.c         |    8 ++++----
+ drivers/staging/media/imx/imx-media-internal-sd.c |   12 ++++++------
+ drivers/staging/media/imx/imx-media-vdic.c        |    2 +-
+ drivers/staging/media/imx/imx-media.h             |    6 +++---
+ 5 files changed, 15 insertions(+), 15 deletions(-)
 
---- a/drivers/staging/media/imx/imx-media-csi.c
-+++ b/drivers/staging/media/imx/imx-media-csi.c
-@@ -154,9 +154,10 @@ static inline bool requires_passthrough(
- /*
-  * Parses the fwnode endpoint from the source pad of the entity
-  * connected to this CSI. This will either be the entity directly
-- * upstream from the CSI-2 receiver, or directly upstream from the
-- * video mux. The endpoint is needed to determine the bus type and
-- * bus config coming into the CSI.
-+ * upstream from the CSI-2 receiver, directly upstream from the
-+ * video mux, or directly upstream from the CSI itself. The endpoint
-+ * is needed to determine the bus type and bus config coming into
-+ * the CSI.
-  */
- static int csi_get_upstream_endpoint(struct csi_priv *priv,
- 				     struct v4l2_fwnode_endpoint *ep)
-@@ -172,7 +173,8 @@ static int csi_get_upstream_endpoint(str
- 	if (!priv->src_sd)
- 		return -EPIPE;
+--- a/drivers/staging/media/imx/imx-ic-common.c
++++ b/drivers/staging/media/imx/imx-ic-common.c
+@@ -26,7 +26,7 @@ static struct imx_ic_ops *ic_ops[IC_NUM_
  
--	src = &priv->src_sd->entity;
-+	sd = priv->src_sd;
-+	src = &sd->entity;
+ static int imx_ic_probe(struct platform_device *pdev)
+ {
+-	struct imx_media_internal_sd_platformdata *pdata;
++	struct imx_media_ipu_internal_sd_pdata *pdata;
+ 	struct imx_ic_priv *priv;
+ 	int ret;
  
- 	if (src->function == MEDIA_ENT_F_VID_MUX) {
- 		/*
-@@ -186,6 +188,14 @@ static int csi_get_upstream_endpoint(str
- 			src = &sd->entity;
+--- a/drivers/staging/media/imx/imx-media-dev.c
++++ b/drivers/staging/media/imx/imx-media-dev.c
+@@ -477,10 +477,10 @@ static int imx_media_probe(struct platfo
+ 		goto cleanup;
  	}
  
-+	/*
-+	 * If the source is neither the video mux nor the CSI-2 receiver,
-+	 * get the source pad directly upstream from CSI itself.
-+	 */
-+	if (src->function != MEDIA_ENT_F_VID_MUX &&
-+	    sd->grp_id != IMX_MEDIA_GRP_ID_CSI2)
-+		src = &priv->sd.entity;
-+
- 	/* get source pad of entity directly upstream from src */
- 	pad = imx_media_find_upstream_pad(priv->md, src, 0);
- 	if (IS_ERR(pad))
+-	ret = imx_media_add_internal_subdevs(imxmd);
++	ret = imx_media_add_ipu_internal_subdevs(imxmd);
+ 	if (ret) {
+ 		v4l2_err(&imxmd->v4l2_dev,
+-			 "add_internal_subdevs failed with %d\n", ret);
++			 "add_ipu_internal_subdevs failed with %d\n", ret);
+ 		goto cleanup;
+ 	}
+ 
+@@ -491,7 +491,7 @@ static int imx_media_probe(struct platfo
+ 	return 0;
+ 
+ del_int:
+-	imx_media_remove_internal_subdevs(imxmd);
++	imx_media_remove_ipu_internal_subdevs(imxmd);
+ cleanup:
+ 	v4l2_async_notifier_cleanup(&imxmd->notifier);
+ 	v4l2_device_unregister(&imxmd->v4l2_dev);
+@@ -508,7 +508,7 @@ static int imx_media_remove(struct platf
+ 	v4l2_info(&imxmd->v4l2_dev, "Removing imx-media\n");
+ 
+ 	v4l2_async_notifier_unregister(&imxmd->notifier);
+-	imx_media_remove_internal_subdevs(imxmd);
++	imx_media_remove_ipu_internal_subdevs(imxmd);
+ 	v4l2_async_notifier_cleanup(&imxmd->notifier);
+ 	media_device_unregister(&imxmd->md);
+ 	v4l2_device_unregister(&imxmd->v4l2_dev);
+--- a/drivers/staging/media/imx/imx-media-internal-sd.c
++++ b/drivers/staging/media/imx/imx-media-internal-sd.c
+@@ -1,7 +1,7 @@
+ /*
+  * Media driver for Freescale i.MX5/6 SOC
+  *
+- * Adds the internal subdevices and the media links between them.
++ * Adds the IPU internal subdevices and the media links between them.
+  *
+  * Copyright (c) 2016 Mentor Graphics Inc.
+  *
+@@ -192,7 +192,7 @@ static struct v4l2_subdev *find_sink(str
+ 
+ 	/*
+ 	 * retrieve IPU id from subdev name, note: can't get this from
+-	 * struct imx_media_internal_sd_platformdata because if src is
++	 * struct imx_media_ipu_internal_sd_pdata because if src is
+ 	 * a CSI, it has different struct ipu_client_platformdata which
+ 	 * does not contain IPU id.
+ 	 */
+@@ -270,7 +270,7 @@ static int add_internal_subdev(struct im
+ 			       const struct internal_subdev *isd,
+ 			       int ipu_id)
+ {
+-	struct imx_media_internal_sd_platformdata pdata;
++	struct imx_media_ipu_internal_sd_pdata pdata;
+ 	struct platform_device_info pdevinfo = {};
+ 	struct platform_device *pdev;
+ 
+@@ -328,7 +328,7 @@ static int add_ipu_internal_subdevs(stru
+ 	return 0;
+ }
+ 
+-int imx_media_add_internal_subdevs(struct imx_media_dev *imxmd)
++int imx_media_add_ipu_internal_subdevs(struct imx_media_dev *imxmd)
+ {
+ 	int ret;
+ 
+@@ -343,11 +343,11 @@ int imx_media_add_internal_subdevs(struc
+ 	return 0;
+ 
+ remove:
+-	imx_media_remove_internal_subdevs(imxmd);
++	imx_media_remove_ipu_internal_subdevs(imxmd);
+ 	return ret;
+ }
+ 
+-void imx_media_remove_internal_subdevs(struct imx_media_dev *imxmd)
++void imx_media_remove_ipu_internal_subdevs(struct imx_media_dev *imxmd)
+ {
+ 	struct imx_media_async_subdev *imxasd;
+ 	struct v4l2_async_subdev *asd;
+--- a/drivers/staging/media/imx/imx-media-vdic.c
++++ b/drivers/staging/media/imx/imx-media-vdic.c
+@@ -934,7 +934,7 @@ static const struct v4l2_subdev_internal
+ 
+ static int imx_vdic_probe(struct platform_device *pdev)
+ {
+-	struct imx_media_internal_sd_platformdata *pdata;
++	struct imx_media_ipu_internal_sd_pdata *pdata;
+ 	struct vdic_priv *priv;
+ 	int ret;
+ 
+--- a/drivers/staging/media/imx/imx-media.h
++++ b/drivers/staging/media/imx/imx-media.h
+@@ -115,7 +115,7 @@ struct imx_media_pad_vdev {
+ 	struct list_head list;
+ };
+ 
+-struct imx_media_internal_sd_platformdata {
++struct imx_media_ipu_internal_sd_pdata {
+ 	char sd_name[V4L2_SUBDEV_NAME_SIZE];
+ 	u32 grp_id;
+ 	int ipu_id;
+@@ -252,10 +252,10 @@ struct imx_media_fim *imx_media_fim_init
+ void imx_media_fim_free(struct imx_media_fim *fim);
+ 
+ /* imx-media-internal-sd.c */
+-int imx_media_add_internal_subdevs(struct imx_media_dev *imxmd);
++int imx_media_add_ipu_internal_subdevs(struct imx_media_dev *imxmd);
+ int imx_media_create_ipu_internal_links(struct imx_media_dev *imxmd,
+ 					struct v4l2_subdev *sd);
+-void imx_media_remove_internal_subdevs(struct imx_media_dev *imxmd);
++void imx_media_remove_ipu_internal_subdevs(struct imx_media_dev *imxmd);
+ 
+ /* imx-media-of.c */
+ int imx_media_add_of_subdevs(struct imx_media_dev *dev,
 
 
