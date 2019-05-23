@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08290C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9AEC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2738217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:14:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24A1820863
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:14:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558638866;
-	bh=01lHJtyrNYUH5+bN6f4WufV/9CfiWbCoRN2sq+yGHVs=;
+	s=default; t=1558638869;
+	bh=+o030PVkMDEq80ncXbZbWqQNFOFZ0EE82fJqik5Q8/Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BWExMm1l7kSjUIidowN652oaSAqkOOwSB/fwDUvw7eaY+zr9z5klOzsGmr4D1vCpR
-	 3W0XwrT1+6u4lUnJ4WAQ8YOjSBiXgjpH7fZFyv5C21nzpO4sSq36sXgOIaBQID7HCq
-	 OnOIappOaflSgQSmhqcgIkwv6R9LiqLZSIQffPsA=
+	b=kp9sUHqlbIXZ+QgKANpClKwC5VYSodGqRp0yg5hI5JekpchFW8+i6MvE0Rk6YCFhG
+	 mRoUQMZladfyLFe6BNaWaXGZsDzOKEhoulPExsUsE4HF3G/Cpj+8Ti503eBKfhh4HY
+	 fS9mQ63yoi4vpeHEMozrD2UCKiWOcQUWz8N7Xgp0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388754AbfEWTOZ (ORCPT
+        id S2388767AbfEWTO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:14:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48334 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:14:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388739AbfEWTOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:14:20 -0400
+        id S2387948AbfEWTO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:14:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A509421871;
-        Thu, 23 May 2019 19:14:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C70E20863;
+        Thu, 23 May 2019 19:14:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638860;
-        bh=01lHJtyrNYUH5+bN6f4WufV/9CfiWbCoRN2sq+yGHVs=;
+        s=default; t=1558638865;
+        bh=+o030PVkMDEq80ncXbZbWqQNFOFZ0EE82fJqik5Q8/Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F2TQ97IqHX+6nA1TOPNJ8NB5AIn1pkyuWW/Ka4qCKO05QLPBLcBd97qFVjbZRSu2H
-         PTV2ymf3+Kn6WtvgrP8mGOLINdcVTcM5wOTjgEM/CJQqiLfVAlb2/sCRZ40bimpSMr
-         XSv6FSD7l2mK8mZesRnb8i+5vgmf++e3Z4adQ9qE=
+        b=JApW1tj4c1o06FYHMAG7DRpRSBMrqW0yWL2YTxSQjgsOmrbaLKgNUgTKzuQqd9oXU
+         H6YeKApQicBGgy0xbDJrJq49JqIKa4oTspM1t3Y5YvatW1t6wnUaRQHCwa744a7vjU
+         J5T+ECE/9B1lFOdGWFJbboQTIYDH96s1poMX0MoM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
         syzbot <syzkaller@googlegroups.com>,
-        Wei Wang <weiwan@google.com>, David Ahern <dsahern@gmail.com>,
-        Martin Lau <kafai@fb.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 002/114] ipv6: prevent possible fib6 leaks
-Date:   Thu, 23 May 2019 21:05:01 +0200
-Message-Id: <20190523181731.671123685@linuxfoundation.org>
+Subject: [PATCH 4.19 004/114] net: avoid weird emergency message
+Date:   Thu, 23 May 2019 21:05:03 +0200
+Message-Id: <20190523181731.877653557@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
 References: <20190523181731.372074275@linuxfoundation.org>
@@ -64,104 +62,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 61fb0d01680771f72cc9d39783fb2c122aaad51e ]
+[ Upstream commit d7c04b05c9ca14c55309eb139430283a45c4c25f ]
 
-At ipv6 route dismantle, fib6_drop_pcpu_from() is responsible
-for finding all percpu routes and set their ->from pointer
-to NULL, so that fib6_ref can reach its expected value (1).
+When host is under high stress, it is very possible thread
+running netdev_wait_allrefs() returns from msleep(250)
+10 seconds late.
 
-The problem right now is that other cpus can still catch the
-route being deleted, since there is no rcu grace period
-between the route deletion and call to fib6_drop_pcpu_from()
+This leads to these messages in the syslog :
 
-This can leak the fib6 and associated resources, since no
-notifier will take care of removing the last reference(s).
+[...] unregister_netdevice: waiting for syz_tun to become free. Usage count = 0
 
-I decided to add another boolean (fib6_destroying) instead
-of reusing/renaming exception_bucket_flushed to ease stable backports,
-and properly document the memory barriers used to implement this fix.
+If the device refcount is zero, the wait is over.
 
-This patch has been co-developped with Wei Wang.
-
-Fixes: 93531c674315 ("net/ipv6: separate handling of FIB entries from dst based routes")
 Signed-off-by: Eric Dumazet <edumazet@google.com>
 Reported-by: syzbot <syzkaller@googlegroups.com>
-Cc: Wei Wang <weiwan@google.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Martin Lau <kafai@fb.com>
-Acked-by: Wei Wang <weiwan@google.com>
-Acked-by: Martin KaFai Lau <kafai@fb.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/ip6_fib.h |    3 ++-
- net/ipv6/ip6_fib.c    |   12 +++++++++---
- net/ipv6/route.c      |    7 +++++++
- 3 files changed, 18 insertions(+), 4 deletions(-)
+ net/core/dev.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/net/ip6_fib.h
-+++ b/include/net/ip6_fib.h
-@@ -171,7 +171,8 @@ struct fib6_info {
- 					dst_nocount:1,
- 					dst_nopolicy:1,
- 					dst_host:1,
--					unused:3;
-+					fib6_destroying:1,
-+					unused:2;
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -8716,7 +8716,7 @@ static void netdev_wait_allrefs(struct n
  
- 	struct fib6_nh			fib6_nh;
- 	struct rcu_head			rcu;
---- a/net/ipv6/ip6_fib.c
-+++ b/net/ipv6/ip6_fib.c
-@@ -877,6 +877,12 @@ static void fib6_drop_pcpu_from(struct f
- {
- 	int cpu;
+ 		refcnt = netdev_refcnt_read(dev);
  
-+	/* Make sure rt6_make_pcpu_route() wont add other percpu routes
-+	 * while we are cleaning them here.
-+	 */
-+	f6i->fib6_destroying = 1;
-+	mb(); /* paired with the cmpxchg() in rt6_make_pcpu_route() */
-+
- 	/* release the reference to this fib entry from
- 	 * all of its cached pcpu routes
- 	 */
-@@ -900,6 +906,9 @@ static void fib6_purge_rt(struct fib6_in
- {
- 	struct fib6_table *table = rt->fib6_table;
- 
-+	if (rt->rt6i_pcpu)
-+		fib6_drop_pcpu_from(rt, table);
-+
- 	if (atomic_read(&rt->fib6_ref) != 1) {
- 		/* This route is used as dummy address holder in some split
- 		 * nodes. It is not leaked, but it still holds other resources,
-@@ -921,9 +930,6 @@ static void fib6_purge_rt(struct fib6_in
- 			fn = rcu_dereference_protected(fn->parent,
- 				    lockdep_is_held(&table->tb6_lock));
- 		}
--
--		if (rt->rt6i_pcpu)
--			fib6_drop_pcpu_from(rt, table);
- 	}
- }
- 
---- a/net/ipv6/route.c
-+++ b/net/ipv6/route.c
-@@ -1268,6 +1268,13 @@ static struct rt6_info *rt6_make_pcpu_ro
- 	prev = cmpxchg(p, NULL, pcpu_rt);
- 	BUG_ON(prev);
- 
-+	if (rt->fib6_destroying) {
-+		struct fib6_info *from;
-+
-+		from = xchg((__force struct fib6_info **)&pcpu_rt->from, NULL);
-+		fib6_info_release(from);
-+	}
-+
- 	return pcpu_rt;
- }
- 
+-		if (time_after(jiffies, warning_time + 10 * HZ)) {
++		if (refcnt && time_after(jiffies, warning_time + 10 * HZ)) {
+ 			pr_emerg("unregister_netdevice: waiting for %s to become free. Usage count = %d\n",
+ 				 dev->name, refcnt);
+ 			warning_time = jiffies;
 
 
