@@ -4,55 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8187C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD86C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:21:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94F2E2186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:21:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1824217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:21:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639261;
-	bh=q0qp2aKN8Z0wy7iKGAyn+I/WpUO1dMJ9tlUpP9MIXJY=;
+	s=default; t=1558639265;
+	bh=ZibPXFaGJH9Q/OXzJX75Njp7npJK1gDSTZBYygSwI2c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IkyVEVb+YJpgneheRjf8nCRGQn7Qp0X58qko9aUEmfjvmxSeP4+2rjDNtQxn2GE/2
-	 EUr854X02u/8le/pQ6/Iac6RAxUYAsyX8+AQcVzN3nV3Y5QzBmfH4JGGxDBvt61rHN
-	 NyvTMufZ3nwr97aifsOgqHRFCZpbktXscVgb3S+I=
+	b=giReoleTkXfC/ki5I7jLuzTIWvIvYAjp7uORlxa0PE0gyZ7aZrZ0po0h6mAKivG6S
+	 05qWLyolt41VMMoTjq9afzQGY1+uyWtBvqNpHU06VlVhVqrPI4CRzZZ/KW65Sxfs+/
+	 L6DsvONe/dFKu/BDYd+aIlydp/N6uilVQ0x97n3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390161AbfEWTVA (ORCPT
+        id S2389485AbfEWTVD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:21:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58028 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:21:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388894AbfEWTU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:20:58 -0400
+        id S2388894AbfEWTVB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:21:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A324F205ED;
-        Thu, 23 May 2019 19:20:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AC272133D;
+        Thu, 23 May 2019 19:21:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639258;
-        bh=q0qp2aKN8Z0wy7iKGAyn+I/WpUO1dMJ9tlUpP9MIXJY=;
+        s=default; t=1558639260;
+        bh=ZibPXFaGJH9Q/OXzJX75Njp7npJK1gDSTZBYygSwI2c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nZO435cv7ROUR13MKLrkkNaqnHRNm6v90Pp3zq8fA6MBWMWN16PEI0mc9rH+YxlqR
-         y7Wu6C7MmeksfxOUGDMgCTDHc2pAIFsr/l8MstSQxUzIHivj1p0U2srR2tp612kC3a
-         Ve56/zHNKGKZSPHtuhTGrA7I9mxPhRLesXbq4Q3I=
+        b=Qo/O6R98kDgDsWZ3CoJQBS46cHWjIiKjwBr194neBj6xF7I3KTN8iQkOkKvO7JMog
+         Di7ZzBuFZprzlmfw3d28QEErVtZhFXG8ctZRyk/9XLs68nzHoNNqtJs07OqsCd8OTc
+         3GsJTQjyPPxRNiipDNcBLghe47Qv5KbFcKFh5ct8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dongli Zhang <dongli.zhang@oracle.com>,
-        James Smart <james.smart@broadcom.com>,
-        Bart Van Assche <bart.vanassche@wdc.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, linux-scsi@vger.kernel.org,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>
-Subject: [PATCH 5.0 020/139] blk-mq: free hw queues resource in hctxs release handler
-Date:   Thu, 23 May 2019 21:05:08 +0200
-Message-Id: <20190523181723.307122649@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Steve Twiss <stwiss.opensource@diasemi.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.0 021/139] regulator: core: fix error path for regulator_set_voltage_unlocked
+Date:   Thu, 23 May 2019 21:05:09 +0200
+Message-Id: <20190523181723.484279665@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -65,130 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Steve Twiss <stwiss.opensource@diasemi.com>
 
-commit c7e2d94b3d1634988a95ac4d77a72dc7487ece06 upstream.
+commit 70b464918e5331e488058870fcc6821d54c4e541 upstream.
 
-Once blk_cleanup_queue() returns, tags shouldn't be used any more,
-because blk_mq_free_tag_set() may be called. Commit 45a9c9d909b2
-("blk-mq: Fix a use-after-free") fixes this issue exactly.
+During several error paths in the function
+regulator_set_voltage_unlocked() the value of 'ret' can take on negative
+error values. However, in calls that go through the 'goto out' statement,
+this return value is lost and return 0 is used instead, indicating a
+'pass'.
 
-However, that commit introduces another issue. Before 45a9c9d909b2,
-we are allowed to run queue during cleaning up queue if the queue's
-kobj refcount is held. After that commit, queue can't be run during
-queue cleaning up, otherwise oops can be triggered easily because
-some fields of hctx are freed by blk_mq_free_queue() in blk_cleanup_queue().
+There are several cases where this function should legitimately return a
+fail instead of a pass: one such case includes constraints check during
+voltage selection in the call to regulator_check_voltage(), which can
+have -EINVAL for the case when an unsupported voltage is incorrectly
+requested. In that case, -22 is expected as the return value, not 0.
 
-We have invented ways for addressing this kind of issue before, such as:
-
-	8dc765d438f1 ("SCSI: fix queue cleanup race before queue initialization is done")
-	c2856ae2f315 ("blk-mq: quiesce queue before freeing queue")
-
-But still can't cover all cases, recently James reports another such
-kind of issue:
-
-	https://marc.info/?l=linux-scsi&m=155389088124782&w=2
-
-This issue can be quite hard to address by previous way, given
-scsi_run_queue() may run requeues for other LUNs.
-
-Fixes the above issue by freeing hctx's resources in its release handler, and this
-way is safe becasue tags isn't needed for freeing such hctx resource.
-
-This approach follows typical design pattern wrt. kobject's release handler.
-
-Cc: Dongli Zhang <dongli.zhang@oracle.com>
-Cc: James Smart <james.smart@broadcom.com>
-Cc: Bart Van Assche <bart.vanassche@wdc.com>
-Cc: linux-scsi@vger.kernel.org,
-Cc: Martin K . Petersen <martin.petersen@oracle.com>,
-Cc: Christoph Hellwig <hch@lst.de>,
-Cc: James E . J . Bottomley <jejb@linux.vnet.ibm.com>,
-Reported-by: James Smart <james.smart@broadcom.com>
-Fixes: 45a9c9d909b2 ("blk-mq: Fix a use-after-free")
-Cc: stable@vger.kernel.org
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Tested-by: James Smart <james.smart@broadcom.com>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 9243a195be7a ("regulator: core: Change voltage setting path")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/blk-core.c     |    2 +-
- block/blk-mq-sysfs.c |    6 ++++++
- block/blk-mq.c       |    8 ++------
- block/blk-mq.h       |    2 +-
- 4 files changed, 10 insertions(+), 8 deletions(-)
+ drivers/regulator/core.c |   11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -375,7 +375,7 @@ void blk_cleanup_queue(struct request_qu
- 	blk_exit_queue(q);
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -3360,15 +3360,12 @@ static int regulator_set_voltage_unlocke
  
- 	if (queue_is_mq(q))
--		blk_mq_free_queue(q);
-+		blk_mq_exit_queue(q);
+ 	/* for not coupled regulators this will just set the voltage */
+ 	ret = regulator_balance_voltage(rdev, state);
+-	if (ret < 0)
+-		goto out2;
++	if (ret < 0) {
++		voltage->min_uV = old_min_uV;
++		voltage->max_uV = old_max_uV;
++	}
  
- 	percpu_ref_exit(&q->q_usage_counter);
- 
---- a/block/blk-mq-sysfs.c
-+++ b/block/blk-mq-sysfs.c
-@@ -10,6 +10,7 @@
- #include <linux/smp.h>
- 
- #include <linux/blk-mq.h>
-+#include "blk.h"
- #include "blk-mq.h"
- #include "blk-mq-tag.h"
- 
-@@ -33,6 +34,11 @@ static void blk_mq_hw_sysfs_release(stru
- {
- 	struct blk_mq_hw_ctx *hctx = container_of(kobj, struct blk_mq_hw_ctx,
- 						  kobj);
-+
-+	if (hctx->flags & BLK_MQ_F_BLOCKING)
-+		cleanup_srcu_struct(hctx->srcu);
-+	blk_free_flush_queue(hctx->fq);
-+	sbitmap_free(&hctx->ctx_map);
- 	free_cpumask_var(hctx->cpumask);
- 	kfree(hctx->ctxs);
- 	kfree(hctx);
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -2270,12 +2270,7 @@ static void blk_mq_exit_hctx(struct requ
- 	if (set->ops->exit_hctx)
- 		set->ops->exit_hctx(hctx, hctx_idx);
- 
--	if (hctx->flags & BLK_MQ_F_BLOCKING)
--		cleanup_srcu_struct(hctx->srcu);
+ out:
+-	return 0;
+-out2:
+-	voltage->min_uV = old_min_uV;
+-	voltage->max_uV = old_max_uV;
 -
- 	blk_mq_remove_cpuhp(hctx);
--	blk_free_flush_queue(hctx->fq);
--	sbitmap_free(&hctx->ctx_map);
+ 	return ret;
  }
  
- static void blk_mq_exit_hw_queues(struct request_queue *q,
-@@ -2904,7 +2899,8 @@ err_exit:
- }
- EXPORT_SYMBOL(blk_mq_init_allocated_queue);
- 
--void blk_mq_free_queue(struct request_queue *q)
-+/* tags can _not_ be used after returning from blk_mq_exit_queue */
-+void blk_mq_exit_queue(struct request_queue *q)
- {
- 	struct blk_mq_tag_set	*set = q->tag_set;
- 
---- a/block/blk-mq.h
-+++ b/block/blk-mq.h
-@@ -36,7 +36,7 @@ struct blk_mq_ctx {
- 	struct kobject		kobj;
- } ____cacheline_aligned_in_smp;
- 
--void blk_mq_free_queue(struct request_queue *q);
-+void blk_mq_exit_queue(struct request_queue *q);
- int blk_mq_update_nr_requests(struct request_queue *q, unsigned int nr);
- void blk_mq_wake_waiters(struct request_queue *q);
- bool blk_mq_dispatch_rq_list(struct request_queue *, struct list_head *, bool);
 
 
