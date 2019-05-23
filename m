@@ -2,175 +2,214 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F77FC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BB9C282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5605A20851
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:48:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640921;
-	bh=S0kx7/0GsgQt2laQrUmU1prT3BZS5TGp4juaY3yVjdo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ak31vOmqSctb9Vm9TNav2BIQPSbOMqwtbTrFALBGdWXM8lkyr5dcC74aJzViLSVY/
-	 Fcrl5r54A4m7Q7o8bYdKYNyOvCimtgqshoU7rOKCpXKMUtJ/PlsRpZgEsEzHX3sTc9
-	 SJMWoA3CLvf4/JvIAjTCvqZVQeaPlDu+7Wsj/cOw=
+	by mail.kernel.org (Postfix) with ESMTP id 4BDA420851
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:48:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="cH5YpDqL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731712AbfEWTsj (ORCPT
+        id S1731789AbfEWTsr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:48:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45136 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388248AbfEWTLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:11:43 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5CCF217D7;
-        Thu, 23 May 2019 19:11:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638702;
-        bh=S0kx7/0GsgQt2laQrUmU1prT3BZS5TGp4juaY3yVjdo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QGOiI/C+9lNGkbUACXeH/7IRHKx/E+2ejF2YIhgd5dTqAGi6PHCv9OcYjr7XAgzAX
-         ia+qxNZzfPnwfKj70Gn2gfGMtkVr09FSp91lDN871YoH6AcuiUSo2AIDk+6xXdvg0m
-         H3NTbGyb8oM3obGujL3lGn7EolGFVq+SjPXfjlp4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.14 33/77] x86_64: Allow breakpoints to emulate call instructions
-Date:   Thu, 23 May 2019 21:05:51 +0200
-Message-Id: <20190523181724.795243206@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190523181719.982121681@linuxfoundation.org>
-References: <20190523181719.982121681@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 23 May 2019 15:48:47 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:47922 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731730AbfEWTsl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:48:41 -0400
+Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4NJhBAD002717
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 12:48:40 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=facebook; bh=dM9+BVyTbQ+UpQVar9OuJ9mOa6aG8ajNryPCO9+TC84=;
+ b=cH5YpDqLi+CHixLBKT4SUEC1kS0buGjmaHN3UnNbhX7V5irhEmIlTHU2ITVG7r4ZZSpg
+ rTkUi1Q5TngrhHekFu3CNKDQT8mvcrmvLIpvvgnrJZs42PGzpPh9X0IO8f2bQYFApaR/
+ hIgNplupE5tuAxxFwTPwxGK2khnmOsJp52M= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2snx7s8wf2-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 12:48:40 -0700
+Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::f) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 23 May 2019 12:48:37 -0700
+Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
+        id 57E5E125B048B; Thu, 23 May 2019 12:45:33 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
+To:     Alexei Starovoitov <ast@kernel.org>, <bpf@vger.kernel.org>
+CC:     Daniel Borkmann <daniel@iogearbox.net>, <netdev@vger.kernel.org>,
+        Tejun Heo <tj@kernel.org>, <kernel-team@fb.com>,
+        <cgroups@vger.kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+        Yonghong Song <yhs@fb.com>, <linux-kernel@vger.kernel.org>,
+        Roman Gushchin <guro@fb.com>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH v3 bpf-next 4/4] selftests/bpf: add auto-detach test
+Date:   Thu, 23 May 2019 12:45:32 -0700
+Message-ID: <20190523194532.2376233-5-guro@fb.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190523194532.2376233-1-guro@fb.com>
+References: <20190523194532.2376233-1-guro@fb.com>
+X-FB-Internal: Safe
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-23_16:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=489 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905230128
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+Add a kselftest to cover bpf auto-detachment functionality.
+The test creates a cgroup, associates some resources with it,
+attaches a couple of bpf programs and deletes the cgroup.
 
-commit 4b33dadf37666c0860b88f9e52a16d07bf6d0b03 upstream.
+Then it checks that bpf programs are going away in 5 seconds.
 
-In order to allow breakpoints to emulate call instructions, they need to push
-the return address onto the stack. The x86_64 int3 handler adds a small gap
-to allow the stack to grow some. Use this gap to add the return address to
-be able to emulate a call instruction at the breakpoint location.
+Expected output:
+  $ ./test_cgroup_attach
+  #override:PASS
+  #multi:PASS
+  #autodetach:PASS
+  test_cgroup_attach:PASS
 
-These helper functions are added:
+On a kernel without auto-detaching:
+  $ ./test_cgroup_attach
+  #override:PASS
+  #multi:PASS
+  #autodetach:FAIL
+  test_cgroup_attach:FAIL
 
-  int3_emulate_jmp(): changes the location of the regs->ip to return there.
-
- (The next two are only for x86_64)
-  int3_emulate_push(): to push the address onto the gap in the stack
-  int3_emulate_call(): push the return address and change regs->ip
-
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Nicolai Stange <nstange@suse.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: the arch/x86 maintainers <x86@kernel.org>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Jiri Kosina <jikos@kernel.org>
-Cc: Miroslav Benes <mbenes@suse.cz>
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Joe Lawrence <joe.lawrence@redhat.com>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Mimi Zohar <zohar@linux.ibm.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Nayna Jain <nayna@linux.ibm.com>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Joerg Roedel <jroedel@suse.de>
-Cc: "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
-Cc: stable@vger.kernel.org
-Fixes: b700e7f03df5 ("livepatch: kernel: add support for live patching")
-Tested-by: Nicolai Stange <nstange@suse.de>
-Reviewed-by: Nicolai Stange <nstange@suse.de>
-Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-[ Modified to only work for x86_64 and added comment to int3_emulate_push() ]
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Roman Gushchin <guro@fb.com>
 ---
- arch/x86/include/asm/text-patching.h |   28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ .../selftests/bpf/test_cgroup_attach.c        | 98 ++++++++++++++++++-
+ 1 file changed, 97 insertions(+), 1 deletion(-)
 
---- a/arch/x86/include/asm/text-patching.h
-+++ b/arch/x86/include/asm/text-patching.h
-@@ -38,4 +38,32 @@ extern void *text_poke(void *addr, const
- extern int poke_int3_handler(struct pt_regs *regs);
- extern void *text_poke_bp(void *addr, const void *opcode, size_t len, void *handler);
+diff --git a/tools/testing/selftests/bpf/test_cgroup_attach.c b/tools/testing/selftests/bpf/test_cgroup_attach.c
+index 2d6d57f50e10..7671909ee1cb 100644
+--- a/tools/testing/selftests/bpf/test_cgroup_attach.c
++++ b/tools/testing/selftests/bpf/test_cgroup_attach.c
+@@ -456,9 +456,105 @@ static int test_multiprog(void)
+ 	return rc;
+ }
  
-+static inline void int3_emulate_jmp(struct pt_regs *regs, unsigned long ip)
++static int test_autodetach(void)
 +{
-+	regs->ip = ip;
-+}
++	__u32 prog_cnt = 4, attach_flags;
++	int allow_prog[2] = {0};
++	__u32 prog_ids[2] = {0};
++	int cg = 0, i, rc = -1;
++	void *ptr = NULL;
++	int attempts;
 +
-+#define INT3_INSN_SIZE 1
-+#define CALL_INSN_SIZE 5
++	for (i = 0; i < ARRAY_SIZE(allow_prog); i++) {
++		allow_prog[i] = prog_load_cnt(1, 1 << i);
++		if (!allow_prog[i])
++			goto err;
++	}
 +
-+#ifdef CONFIG_X86_64
-+static inline void int3_emulate_push(struct pt_regs *regs, unsigned long val)
-+{
-+	/*
-+	 * The int3 handler in entry_64.S adds a gap between the
-+	 * stack where the break point happened, and the saving of
-+	 * pt_regs. We can extend the original stack because of
-+	 * this gap. See the idtentry macro's create_gap option.
++	if (setup_cgroup_environment())
++		goto err;
++
++	/* create a cgroup, attach two programs and remember their ids */
++	cg = create_and_get_cgroup("/cg_autodetach");
++	if (cg < 0)
++		goto err;
++
++	if (join_cgroup("/cg_autodetach"))
++		goto err;
++
++	for (i = 0; i < ARRAY_SIZE(allow_prog); i++) {
++		if (bpf_prog_attach(allow_prog[i], cg, BPF_CGROUP_INET_EGRESS,
++				    BPF_F_ALLOW_MULTI)) {
++			log_err("Attaching prog[%d] to cg:egress", i);
++			goto err;
++		}
++	}
++
++	/* make sure that programs are attached and run some traffic */
++	assert(bpf_prog_query(cg, BPF_CGROUP_INET_EGRESS, 0, &attach_flags,
++			      prog_ids, &prog_cnt) == 0);
++	assert(system(PING_CMD) == 0);
++
++	/* allocate some memory (4Mb) to pin the original cgroup */
++	ptr = malloc(4 * (1 << 20));
++	if (!ptr)
++		goto err;
++
++	/* close programs and cgroup fd */
++	for (i = 0; i < ARRAY_SIZE(allow_prog); i++) {
++		close(allow_prog[i]);
++		allow_prog[i] = 0;
++	}
++
++	close(cg);
++	cg = 0;
++
++	/* leave the cgroup and remove it. don't detach programs */
++	cleanup_cgroup_environment();
++
++	/* wait for the asynchronous auto-detachment.
++	 * wait for no more than 5 sec and give up.
 +	 */
-+	regs->sp -= sizeof(unsigned long);
-+	*(unsigned long *)regs->sp = val;
++	for (i = 0; i < ARRAY_SIZE(prog_ids); i++) {
++		for (attempts = 5; attempts >= 0; attempts--) {
++			int fd = bpf_prog_get_fd_by_id(prog_ids[i]);
++
++			if (fd < 0)
++				break;
++
++			/* don't leave the fd open */
++			close(fd);
++
++			if (!attempts)
++				goto err;
++
++			sleep(1);
++		}
++	}
++
++	rc = 0;
++err:
++	for (i = 0; i < ARRAY_SIZE(allow_prog); i++)
++		if (allow_prog[i] > 0)
++			close(allow_prog[i]);
++	if (cg)
++		close(cg);
++	free(ptr);
++	cleanup_cgroup_environment();
++	if (!rc)
++		printf("#autodetach:PASS\n");
++	else
++		printf("#autodetach:FAIL\n");
++	return rc;
 +}
 +
-+static inline void int3_emulate_call(struct pt_regs *regs, unsigned long func)
-+{
-+	int3_emulate_push(regs, regs->ip - INT3_INSN_SIZE + CALL_INSN_SIZE);
-+	int3_emulate_jmp(regs, func);
-+}
-+#endif
-+
- #endif /* _ASM_X86_TEXT_PATCHING_H */
-
+ int main(void)
+ {
+-	int (*tests[])(void) = {test_foo_bar, test_multiprog};
++	int (*tests[])(void) = {
++		test_foo_bar,
++		test_multiprog,
++		test_autodetach,
++	};
+ 	int errors = 0;
+ 	int i;
+ 
+-- 
+2.20.1
 
