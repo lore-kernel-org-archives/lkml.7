@@ -2,54 +2,51 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B68A0C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E932C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D40021850
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7540E21872
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:17:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639036;
-	bh=kiG2Z147l4GuJ/myFhrqydpFyu3ZbV9OGO+gjWFZCQk=;
+	s=default; t=1558639039;
+	bh=/ooMEr3sMXswUrQXLTg5AgIOva1OMjNOZyVecNJhe0U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=acO22GCYMjYC5pkbu5gHZZ18VzTt6NAVsx8QeaRykNZTGZbvegEbtB0eJtFJfu5wp
-	 LPmSqU1uOKHrGseS5IYC9XbSRWRmL303aUxksG8P0ySNviCVDBCkW2sGngTQNeCaZk
-	 HohmqoLFlvg2MFmXsAgGY5YRTSdkYtpnN+JCvE1w=
+	b=vN9u/mPXrtLXEcdLvCB1ecEHeGQ8DrG4Z0sJWsJCoS2F7ZCYn1JQSFjHENJgn+8Z2
+	 GpqL/sU2b0UN2rmPWnN3jnoGNVjDQ79VWUKX9tO+AZ3/3rJHkKhpm+qTwgrKQBA0Zi
+	 h76pzVjtRDj9iLMQZSAeuuJgjpOzg1dHrY7bZyAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389376AbfEWTRP (ORCPT
+        id S2388954AbfEWTRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:17:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52268 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:17:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389356AbfEWTRM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:17:12 -0400
+        id S2389375AbfEWTRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:17:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D232C2184E;
-        Thu, 23 May 2019 19:17:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EF7C21850;
+        Thu, 23 May 2019 19:17:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639032;
-        bh=kiG2Z147l4GuJ/myFhrqydpFyu3ZbV9OGO+gjWFZCQk=;
+        s=default; t=1558639035;
+        bh=/ooMEr3sMXswUrQXLTg5AgIOva1OMjNOZyVecNJhe0U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OoJwn0an7qwDmbl6Hl3cnnnIjbwXR/55alXN/7R8TlAyTPaz5I1mMwyQ6lRX/vE6R
-         jTEHj4Q7wwp00dbASka7vbe9hi+e1PLtXRS5UOd91aifgthDeeIjZV1o6kjFDrS7vo
-         fdmE9TKI3M9ezM0PO8MqwI2+B/qpRhQc7Vtzw9dE=
+        b=OVlkoLw9yZCdz9k8aIR493ujs+Hv9BMKp+voEcNxHwu+BWKy53maUugHLTuMeFQao
+         MFKYNKrEBCFHOIPF2OqKCl4m1B5/xTXwNQ+sktIPXpdNjZfSwGaJqzB4jj7xzcGMIG
+         42/esXhUUDmg+QN7Rs09/EHu9A/m5YHB1tbnMod4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Orit Wasserman <orit.was@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Elazar Leibovich <elazar@lightbitslabs.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.19 054/114] tracing: Fix partial reading of trace events id file
-Date:   Thu, 23 May 2019 21:05:53 +0200
-Message-Id: <20190523181736.547255660@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH 4.19 055/114] memory: tegra: Fix integer overflow on tick value calculation
+Date:   Thu, 23 May 2019 21:05:54 +0200
+Message-Id: <20190523181736.617188244@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
 References: <20190523181731.372074275@linuxfoundation.org>
@@ -62,77 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Elazar Leibovich <elazar@lightbitslabs.com>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-commit cbe08bcbbe787315c425dde284dcb715cfbf3f39 upstream.
+commit b906c056b6023c390f18347169071193fda57dde upstream.
 
-When reading only part of the id file, the ppos isn't tracked correctly.
-This is taken care by simple_read_from_buffer.
+Multiplying the Memory Controller clock rate by the tick count results
+in an integer overflow and in result the truncated tick value is being
+programmed into hardware, such that the GR3D memory client performance is
+reduced by two times.
 
-Reading a single byte, and then the next byte would result EOF.
-
-While this seems like not a big deal, this breaks abstractions that
-reads information from files unbuffered. See for example
-https://github.com/golang/go/issues/29399
-
-This code was mentioned as problematic in
-commit cd458ba9d5a5
-("tracing: Do not (ab)use trace_seq in event_id_read()")
-
-An example C code that show this bug is:
-
-  #include <stdio.h>
-  #include <stdint.h>
-
-  #include <sys/types.h>
-  #include <sys/stat.h>
-  #include <fcntl.h>
-  #include <unistd.h>
-
-  int main(int argc, char **argv) {
-    if (argc < 2)
-      return 1;
-    int fd = open(argv[1], O_RDONLY);
-    char c;
-    read(fd, &c, 1);
-    printf("First  %c\n", c);
-    read(fd, &c, 1);
-    printf("Second %c\n", c);
-  }
-
-Then run with, e.g.
-
-  sudo ./a.out /sys/kernel/debug/tracing/events/tcp/tcp_set_state/id
-
-You'll notice you're getting the first character twice, instead of the
-first two characters in the id file.
-
-Link: http://lkml.kernel.org/r/20181231115837.4932-1-elazar@lightbitslabs.com
-
-Cc: Orit Wasserman <orit.was@gmail.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: stable@vger.kernel.org
-Fixes: 23725aeeab10b ("ftrace: provide an id file for each event")
-Signed-off-by: Elazar Leibovich <elazar@lightbitslabs.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace_events.c |    3 ---
- 1 file changed, 3 deletions(-)
+ drivers/memory/tegra/mc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -1318,9 +1318,6 @@ event_id_read(struct file *filp, char __
- 	char buf[32];
- 	int len;
+--- a/drivers/memory/tegra/mc.c
++++ b/drivers/memory/tegra/mc.c
+@@ -280,7 +280,7 @@ static int tegra_mc_setup_latency_allowa
+ 	u32 value;
  
--	if (*ppos)
--		return 0;
--
- 	if (unlikely(!id))
- 		return -ENODEV;
+ 	/* compute the number of MC clock cycles per tick */
+-	tick = mc->tick * clk_get_rate(mc->clk);
++	tick = (unsigned long long)mc->tick * clk_get_rate(mc->clk);
+ 	do_div(tick, NSEC_PER_SEC);
  
+ 	value = readl(mc->regs + MC_EMEM_ARB_CFG);
 
 
