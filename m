@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39629C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D303CC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1074720879
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3B1C20879
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:36:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640199;
-	bh=m5qC+82P5K9BXdU+ypEv7VBPEXPh/Ox/e4oI2RBIThA=;
+	s=default; t=1558640201;
+	bh=dmdkHKAlomDeyTm+9zna1RJf7joT+IgtoQOEjI8u2SU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d3xkbhOrkwd3f2kRoxnjZgVulek5vHGMgdDMdS1c/gLH24XBymJ6uBYP8XizmEEop
-	 rIqUmxu6oKGVYPYimrCWmU9Tj08FwgdZX7gPRfPsqbxuqX9/qdRibMVh3bjFmPOIbF
-	 pWkjw7XZR/iqJ2d5+XbNcpP8rlhhPBmIiIgzywM8=
+	b=V/Bm7CoD9Gp3Uj1kx9jH7fn3gdRagjlvu/I6ZV8rGRrNiQ6Xsi7t1sB01ZtztM4Rx
+	 CUPB4SmXt8/gHNpBdEwnBn0LPmN+fEpIIDaDJpPsPo69H5pStcx7FnwMUaEYIvyiQG
+	 EWIu0Q7b5Wt0VaEqK917FyXFMZn9hk1AJ3iwH++c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390785AbfEWTZY (ORCPT
+        id S2391250AbfEWTgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:25:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36510 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:36:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391054AbfEWTZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:25:09 -0400
+        id S2389999AbfEWTZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:25:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0015A2133D;
-        Thu, 23 May 2019 19:25:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CD8120868;
+        Thu, 23 May 2019 19:25:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639508;
-        bh=m5qC+82P5K9BXdU+ypEv7VBPEXPh/Ox/e4oI2RBIThA=;
+        s=default; t=1558639524;
+        bh=dmdkHKAlomDeyTm+9zna1RJf7joT+IgtoQOEjI8u2SU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rQPdxyZTcah5iepMtWnaXgeG+xiLSSwq9sGcVrgID0p0Uub/RLTnmWOu11imPvqOF
-         mzJUy4u3Y5Dzx7oDsZBZbswlw+plkNlhXUMYXiMsZJubryATFWT7s5LI6GKU7qgvtS
-         tCmpyXuboH3UZaAqoyzI3R0Aql6IWTjGVmz7BkPs=
+        b=d92dbSmkV8tcxNwH/SlaCK1w4O7ICWpooNPy6RAsMLL74WHlQT5SdAdgdW/VMzRI6
+         PlQqzguQnzXPKWaN0vp6prc21CymX6lLYS49SM4Ri+kR9cP/ZVa5Q6cO0FE5jk9wWi
+         VIphtSkUXuo+WTkgJX93MGA3Ju6Fiwe4CvHUKo2Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 114/139] apparmorfs: fix use-after-free on symlink traversal
-Date:   Thu, 23 May 2019 21:06:42 +0200
-Message-Id: <20190523181734.727126644@linuxfoundation.org>
+Subject: [PATCH 5.0 129/139] ufs: fix braino in ufs_get_inode_gid() for solaris UFS flavour
+Date:   Thu, 23 May 2019 21:06:57 +0200
+Message-Id: <20190523181736.001450846@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -59,49 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f51dcd0f621caac5380ce90fbbeafc32ce4517ae ]
+[ Upstream commit 4e9036042fedaffcd868d7f7aa948756c48c637d ]
 
-symlink body shouldn't be freed without an RCU delay.  Switch apparmorfs
-to ->destroy_inode() and use of call_rcu(); free both the inode and symlink
-body in the callback.
+To choose whether to pick the GID from the old (16bit) or new (32bit)
+field, we should check if the old gid field is set to 0xffff.  Mainline
+checks the old *UID* field instead - cut'n'paste from the corresponding
+code in ufs_get_inode_uid().
 
+Fixes: 252e211e90ce
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/apparmor/apparmorfs.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ fs/ufs/util.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/security/apparmor/apparmorfs.c b/security/apparmor/apparmorfs.c
-index 3f80a684c232a..665853dd517ca 100644
---- a/security/apparmor/apparmorfs.c
-+++ b/security/apparmor/apparmorfs.c
-@@ -123,17 +123,22 @@ static int aafs_show_path(struct seq_file *seq, struct dentry *dentry)
- 	return 0;
- }
- 
--static void aafs_evict_inode(struct inode *inode)
-+static void aafs_i_callback(struct rcu_head *head)
- {
--	truncate_inode_pages_final(&inode->i_data);
--	clear_inode(inode);
-+	struct inode *inode = container_of(head, struct inode, i_rcu);
- 	if (S_ISLNK(inode->i_mode))
- 		kfree(inode->i_link);
-+	free_inode_nonrcu(inode);
-+}
-+
-+static void aafs_destroy_inode(struct inode *inode)
-+{
-+	call_rcu(&inode->i_rcu, aafs_i_callback);
- }
- 
- static const struct super_operations aafs_super_ops = {
- 	.statfs = simple_statfs,
--	.evict_inode = aafs_evict_inode,
-+	.destroy_inode = aafs_destroy_inode,
- 	.show_path = aafs_show_path,
- };
- 
+diff --git a/fs/ufs/util.h b/fs/ufs/util.h
+index 1fd3011ea6236..7fd4802222b8c 100644
+--- a/fs/ufs/util.h
++++ b/fs/ufs/util.h
+@@ -229,7 +229,7 @@ ufs_get_inode_gid(struct super_block *sb, struct ufs_inode *inode)
+ 	case UFS_UID_44BSD:
+ 		return fs32_to_cpu(sb, inode->ui_u3.ui_44.ui_gid);
+ 	case UFS_UID_EFT:
+-		if (inode->ui_u1.oldids.ui_suid == 0xFFFF)
++		if (inode->ui_u1.oldids.ui_sgid == 0xFFFF)
+ 			return fs32_to_cpu(sb, inode->ui_u3.ui_sun.ui_gid);
+ 		/* Fall through */
+ 	default:
 -- 
 2.20.1
 
