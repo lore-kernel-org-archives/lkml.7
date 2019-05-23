@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E0BC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02FE2C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3B1A20881
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:38:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF0D520881
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:39:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640336;
-	bh=HouLTLqIqjRCwjXfcBrJZTlxNRJEi9ykC66tBSDO8QI=;
+	s=default; t=1558640345;
+	bh=bRt5aQ02+ZCB3U16y6YlI6tuHQ0IH4I6lTxjjEgaPq4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PAeK89+c0ORlXLLXHHR7zxW/AsvQAtYm77Z+uE64iA2wPl1MB4vIdOz4LMe/Wwgk1
-	 C7sd77B5xGkIK0SnAqzER77NetDqJllNaVZsYwSucT6U0E7RMEdnMOdQOG4YNxG1oq
-	 L0i3mE5p8PYiU8Ei8ssUGqFez6y9kcSBQ5b8TCBs=
+	b=rbnrp85kRpUeNpm4KDpuYmigrX6RJXmLyp37bbPYM6iY1OZq9nC4wRyeHO1Qb8LE6
+	 u54m+fC6OOUVDRzK6vFK9XbufMq5xkKl1N1ZYKDU/HnPQRIZ1xr69kfsT92JfqS8YS
+	 t/1Tv0cTnEGhffDmt4nlSQyrCkqYB4w48GkONA28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390562AbfEWTWv (ORCPT
+        id S2390498AbfEWTWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:22:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32832 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:22:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389471AbfEWTWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:22:49 -0400
+        id S2389861AbfEWTWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:22:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D9762133D;
-        Thu, 23 May 2019 19:22:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 126632133D;
+        Thu, 23 May 2019 19:22:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639368;
-        bh=HouLTLqIqjRCwjXfcBrJZTlxNRJEi9ykC66tBSDO8QI=;
+        s=default; t=1558639349;
+        bh=bRt5aQ02+ZCB3U16y6YlI6tuHQ0IH4I6lTxjjEgaPq4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0wlVdDEYsNU26t8PqitKukA/JXR/Ep+GWCFURk7eSZQenMv4Z3RZdDpStWT/E/l8o
-         ZhPqjkoKX4DmTwhK+PFaQvytNKC41RFJ8nRVDb6ZJcFnuspYNszw9Xu/TiHg/N37uu
-         c37LnWcxw3HdelBCZvkr7mHq1/NoAoACKQ8AjgAE=
+        b=yc/biC5yJRfP//qvy813BNWHKIJgtWQBQuocbMnGKC75+sw0U3XCUD+e22Uv5seIa
+         MOGCL2NaF4WM6tPfvGy5SdVSOEnjSiS2cJ7VTatFGFJefrSj7aZ0VcNcGGLYGp15JO
+         OIaVc5PdG8AJLXRi+Ran6jTCMO0GjOtYGgYigkQA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 5.0 062/139] iommu/tegra-smmu: Fix invalid ASID bits on Tegra30/114
-Date:   Thu, 23 May 2019 21:05:50 +0200
-Message-Id: <20190523181728.813043955@linuxfoundation.org>
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Bernie Thompson <bernie@plugable.com>,
+        Ladislav Michl <ladis@linux-mips.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH 5.0 055/139] udlfb: delete the unused parameter for dlfb_handle_damage
+Date:   Thu, 23 May 2019 21:05:43 +0200
+Message-Id: <20190523181727.806500916@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -60,81 +61,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-commit 43a0541e312f7136e081e6bf58f6c8a2e9672688 upstream.
+commit bd86b6c5c60711dbd4fa21bdb497a188ecb6cf63 upstream.
 
-Both Tegra30 and Tegra114 have 4 ASID's and the corresponding bitfield of
-the TLB_FLUSH register differs from later Tegra generations that have 128
-ASID's.
+Remove the unused parameter "data" and unused variable "ret".
 
-In a result the PTE's are now flushed correctly from TLB and this fixes
-problems with graphics (randomly failing tests) on Tegra30.
-
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Cc: Bernie Thompson <bernie@plugable.com>
+Cc: Ladislav Michl <ladis@linux-mips.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iommu/tegra-smmu.c |   25 ++++++++++++++++++-------
- 1 file changed, 18 insertions(+), 7 deletions(-)
+ drivers/video/fbdev/udlfb.c |   21 +++++++++------------
+ 1 file changed, 9 insertions(+), 12 deletions(-)
 
---- a/drivers/iommu/tegra-smmu.c
-+++ b/drivers/iommu/tegra-smmu.c
-@@ -102,7 +102,6 @@ static inline u32 smmu_readl(struct tegr
- #define  SMMU_TLB_FLUSH_VA_MATCH_ALL     (0 << 0)
- #define  SMMU_TLB_FLUSH_VA_MATCH_SECTION (2 << 0)
- #define  SMMU_TLB_FLUSH_VA_MATCH_GROUP   (3 << 0)
--#define  SMMU_TLB_FLUSH_ASID(x)          (((x) & 0x7f) << 24)
- #define  SMMU_TLB_FLUSH_VA_SECTION(addr) ((((addr) & 0xffc00000) >> 12) | \
- 					  SMMU_TLB_FLUSH_VA_MATCH_SECTION)
- #define  SMMU_TLB_FLUSH_VA_GROUP(addr)   ((((addr) & 0xffffc000) >> 12) | \
-@@ -205,8 +204,12 @@ static inline void smmu_flush_tlb_asid(s
- {
- 	u32 value;
- 
--	value = SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_ASID(asid) |
--		SMMU_TLB_FLUSH_VA_MATCH_ALL;
-+	if (smmu->soc->num_asids == 4)
-+		value = (asid & 0x3) << 29;
-+	else
-+		value = (asid & 0x7f) << 24;
-+
-+	value |= SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_VA_MATCH_ALL;
- 	smmu_writel(smmu, value, SMMU_TLB_FLUSH);
+--- a/drivers/video/fbdev/udlfb.c
++++ b/drivers/video/fbdev/udlfb.c
+@@ -594,10 +594,9 @@ static int dlfb_render_hline(struct dlfb
+ 	return 0;
  }
  
-@@ -216,8 +219,12 @@ static inline void smmu_flush_tlb_sectio
+-static int dlfb_handle_damage(struct dlfb_data *dlfb, int x, int y,
+-	       int width, int height, char *data)
++static int dlfb_handle_damage(struct dlfb_data *dlfb, int x, int y, int width, int height)
  {
- 	u32 value;
+-	int i, ret;
++	int i;
+ 	char *cmd;
+ 	cycles_t start_cycles, end_cycles;
+ 	int bytes_sent = 0;
+@@ -641,7 +640,7 @@ static int dlfb_handle_damage(struct dlf
+ 			*cmd++ = 0xAF;
+ 		/* Send partial buffer remaining before exiting */
+ 		len = cmd - (char *) urb->transfer_buffer;
+-		ret = dlfb_submit_urb(dlfb, urb, len);
++		dlfb_submit_urb(dlfb, urb, len);
+ 		bytes_sent += len;
+ 	} else
+ 		dlfb_urb_completion(urb);
+@@ -679,7 +678,7 @@ static ssize_t dlfb_ops_write(struct fb_
+ 				(u32)info->var.yres);
  
--	value = SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_ASID(asid) |
--		SMMU_TLB_FLUSH_VA_SECTION(iova);
-+	if (smmu->soc->num_asids == 4)
-+		value = (asid & 0x3) << 29;
-+	else
-+		value = (asid & 0x7f) << 24;
-+
-+	value |= SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_VA_SECTION(iova);
- 	smmu_writel(smmu, value, SMMU_TLB_FLUSH);
+ 		dlfb_handle_damage(dlfb, 0, start, info->var.xres,
+-			lines, info->screen_base);
++			lines);
+ 	}
+ 
+ 	return result;
+@@ -695,7 +694,7 @@ static void dlfb_ops_copyarea(struct fb_
+ 	sys_copyarea(info, area);
+ 
+ 	dlfb_handle_damage(dlfb, area->dx, area->dy,
+-			area->width, area->height, info->screen_base);
++			area->width, area->height);
  }
  
-@@ -227,8 +234,12 @@ static inline void smmu_flush_tlb_group(
- {
- 	u32 value;
+ static void dlfb_ops_imageblit(struct fb_info *info,
+@@ -706,7 +705,7 @@ static void dlfb_ops_imageblit(struct fb
+ 	sys_imageblit(info, image);
  
--	value = SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_ASID(asid) |
--		SMMU_TLB_FLUSH_VA_GROUP(iova);
-+	if (smmu->soc->num_asids == 4)
-+		value = (asid & 0x3) << 29;
-+	else
-+		value = (asid & 0x7f) << 24;
-+
-+	value |= SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_VA_GROUP(iova);
- 	smmu_writel(smmu, value, SMMU_TLB_FLUSH);
+ 	dlfb_handle_damage(dlfb, image->dx, image->dy,
+-			image->width, image->height, info->screen_base);
++			image->width, image->height);
  }
  
+ static void dlfb_ops_fillrect(struct fb_info *info,
+@@ -717,7 +716,7 @@ static void dlfb_ops_fillrect(struct fb_
+ 	sys_fillrect(info, rect);
+ 
+ 	dlfb_handle_damage(dlfb, rect->dx, rect->dy, rect->width,
+-			      rect->height, info->screen_base);
++			      rect->height);
+ }
+ 
+ /*
+@@ -859,8 +858,7 @@ static int dlfb_ops_ioctl(struct fb_info
+ 		if (area.y > info->var.yres)
+ 			area.y = info->var.yres;
+ 
+-		dlfb_handle_damage(dlfb, area.x, area.y, area.w, area.h,
+-			   info->screen_base);
++		dlfb_handle_damage(dlfb, area.x, area.y, area.w, area.h);
+ 	}
+ 
+ 	return 0;
+@@ -1065,8 +1063,7 @@ static int dlfb_ops_set_par(struct fb_in
+ 			pix_framebuffer[i] = 0x37e6;
+ 	}
+ 
+-	dlfb_handle_damage(dlfb, 0, 0, info->var.xres, info->var.yres,
+-			   info->screen_base);
++	dlfb_handle_damage(dlfb, 0, 0, info->var.xres, info->var.yres);
+ 
+ 	return 0;
+ }
 
 
