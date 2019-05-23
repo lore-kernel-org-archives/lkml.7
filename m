@@ -4,189 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF31C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C8A8C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD9452175B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA5D02133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:51:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="VHUCEEc6";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="hp7xUepN"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="CwBpnrcY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388643AbfEWXtg (ORCPT
+        id S2388679AbfEWXvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 19:49:36 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:46168 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388232AbfEWXtg (ORCPT
+        Thu, 23 May 2019 19:51:03 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:41721 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388232AbfEWXvC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 19:49:36 -0400
-Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4NNebEZ013857;
-        Thu, 23 May 2019 16:49:13 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=anCZnXPpuXMoJ38NqQSh+Qtwb41WA2uoelsm1QZ8uEE=;
- b=VHUCEEc6N5HIwlXBknPvEPi3Jsm2MBaeZgi9nfO+FBSYI0OQxt85T0fIfO+FMHoO1VSf
- YLq84Mjy0/FerjN4zsd8XljFSO2t4DXU+1+M09CInEc7n5Li4FNvIsfZ3BjlbaH/VW2e
- PeX8QRDu1raN2uvduHq9HHRIfJMb/K5Q+nk= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2sp15ngwxj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 23 May 2019 16:49:13 -0700
-Received: from prn-hub03.TheFacebook.com (2620:10d:c081:35::127) by
- prn-hub05.TheFacebook.com (2620:10d:c081:35::129) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Thu, 23 May 2019 16:49:12 -0700
-Received: from NAM02-BL2-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Thu, 23 May 2019 16:49:12 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=anCZnXPpuXMoJ38NqQSh+Qtwb41WA2uoelsm1QZ8uEE=;
- b=hp7xUepN5hpeij2BdcGbiIqJDT5nqzyJesPxioEAs+JS0ok2j0/Z/s2/LIVmNimxELhvG5RVaukfUhLrbg1edRpyzVQHCz5JY4Gl+3YNwH5qkejR2gOwFPAjP9o5Pzdxuz/LJ2BImc+HDZIPN1IKqmWA3NyB8RSRrW3oD58JI3c=
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
- BYAPR15MB3142.namprd15.prod.outlook.com (20.178.239.215) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.18; Thu, 23 May 2019 23:49:10 +0000
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::d4f6:b485:69ee:fd9a]) by BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::d4f6:b485:69ee:fd9a%7]) with mapi id 15.20.1922.018; Thu, 23 May 2019
- 23:49:10 +0000
-From:   Roman Gushchin <guro@fb.com>
-To:     Yonghong Song <yhs@fb.com>
-CC:     Alexei Starovoitov <ast@kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Tejun Heo <tj@kernel.org>, Kernel Team <Kernel-team@fb.com>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        Stanislav Fomichev <sdf@fomichev.me>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 bpf-next 4/4] selftests/bpf: add auto-detach test
-Thread-Topic: [PATCH v3 bpf-next 4/4] selftests/bpf: add auto-detach test
-Thread-Index: AQHVEaCPg78JwYs3bk+j5PuTlvgUDqZ5VeUAgAALEoA=
-Date:   Thu, 23 May 2019 23:49:10 +0000
-Message-ID: <20190523234904.GA18995@tower.DHCP.thefacebook.com>
-References: <20190523194532.2376233-1-guro@fb.com>
- <20190523194532.2376233-5-guro@fb.com>
- <4ff840cb-7e24-62d5-4ea7-fbca34218800@fb.com>
-In-Reply-To: <4ff840cb-7e24-62d5-4ea7-fbca34218800@fb.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR07CA0079.namprd07.prod.outlook.com
- (2603:10b6:a03:12b::20) To BYAPR15MB2631.namprd15.prod.outlook.com
- (2603:10b6:a03:152::24)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::2:3036]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4f33cfa2-1f54-4439-b419-08d6dfd94045
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR15MB3142;
-x-ms-traffictypediagnostic: BYAPR15MB3142:
-x-microsoft-antispam-prvs: <BYAPR15MB31422B0E27D121BE7EFC017DBE010@BYAPR15MB3142.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 00462943DE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(39860400002)(346002)(396003)(376002)(189003)(199004)(486006)(81156014)(81166006)(33656002)(8936002)(6862004)(4326008)(25786009)(14454004)(316002)(186003)(99286004)(53936002)(68736007)(54906003)(66446008)(6246003)(256004)(2906002)(64756008)(5024004)(14444005)(66476007)(66556008)(8676002)(66946007)(6116002)(73956011)(76176011)(6512007)(46003)(9686003)(386003)(6506007)(53546011)(71200400001)(71190400001)(1076003)(5660300002)(446003)(6486002)(476003)(102836004)(52116002)(478600001)(86362001)(11346002)(6436002)(229853002)(6636002)(7736002)(305945005);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3142;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: JhUW2OPRCQhUXOmRB2XndGhV6WAaJfRuEhcasuAFnRT4Ee/UCj3k4/dlQTXtmnr/zq6kG8MrGbaDgm9OeTyBDAbqpCCrOLn0HuiBr7YlOL7cU6EGIsGLoCZlaQa2PGlMuSDAVc80TV4kmX9ndI9kCZ63zw9k5/8gfqBUNYepoHUOhG4WucUGI8D7txWG2GE+IIQZ2U0BMg2lEnskn76Z065E1ug265SCT2QySDx56OUFQCMjcWB3Yx2dpQKcXFg0yVuykY5XzV/Fp+yvmFFAqvQ2YoJTxL/95xOZC1uhMiRVn5YZm7AMtclX85BYzcdHBoNOIQ7+kT6WIvYZmb3TZHcEzoK+/OGV8ertnaq4G2TP2XaOi4UQ2QA/fTPUucOJkdNooa3NVGFY5miEVIyc4HxFNwXC2/Xn8sQBUQhjuPI=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <0AC895CF89FF2D42A731CD648CA32C9B@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 23 May 2019 19:51:02 -0400
+Received: by mail-lf1-f66.google.com with SMTP id d8so5662759lfb.8
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 16:51:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=fhBZncJ2MpAJBlQB8zRObQZP1s/1ENOk1yYHyMaqLDc=;
+        b=CwBpnrcYLEefMJFuxPFCRN4iTwN5WamdydpeCsRT71D0rSxVvB/+yh7YpZYxb0y/st
+         5uIc3/aNLUiHEsPWzhZUOxFhlgrSOswawfDUiHAURx0ICrBTwtC4fGeRzeK+bQ9fxzO2
+         AUqaFa327tG+7cjZlXV0TpFwev6e76lpur/kCU2/RB8eCN98srXtjhNhv3+3AfiHhVYt
+         VOUOoJ5Pj7J83Mghc5cBnVxIjhyDuj/U6gaRNjvAzyqixszSffdBW835Yysw9I2gNvPW
+         YuzNr3ULFt2eu7hOGS1lkEYi8akIZfNoRkPNDZvD25cMEQQZ5axf+KYvtbiHXAS7lkDn
+         qbMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=fhBZncJ2MpAJBlQB8zRObQZP1s/1ENOk1yYHyMaqLDc=;
+        b=lutgcQo9i2PCExsx4KXacj2lUy2JCK7lDKvSr7dUTBslG9XS4o5d24MBJJJulDUSvL
+         XCsjAnjNDwpzOioj0XA5R004FX1kQxyFDrqPFIf+RC/+NnM3nasptd/lU1Bcby6BIP15
+         VzkfV1F6akN7BG370bMIlvxY85j8GV/38HfOW8x7Iuw306XnDC0+7XnbvdVAH914rJ54
+         UT8MkQ03QKqQKueau8Eu+H/mzzE8rOWk8z0+OKWNedU1IHHgSvee5twE4SdWxdLeK4RW
+         wZV2KuUef3ifQYyS44SLgPxPq4T10LWglbQrMVoBgAr8Q18dfx+c7uYSCPlAtefsS/ts
+         J8Ww==
+X-Gm-Message-State: APjAAAX8EP7afjQ8KFrvcDwcKiC9wVPADqJQKsFxJK5Ma4G/5Q6avb1F
+        4y/PiOzxuMe8HVy1QieDmt1itM988ulHk4vEM/dJEA==
+X-Google-Smtp-Source: APXvYqxOUSWUQ3jLt0ClnRsVTHOlGj4gBaUGVeolp0BKGbX6O77PYECRjhSrrEERuRToBxdhUEoYFivoa6PmBkssuh0=
+X-Received: by 2002:ac2:4286:: with SMTP id m6mr7494929lfh.150.1558655461095;
+ Thu, 23 May 2019 16:51:01 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4f33cfa2-1f54-4439-b419-08d6dfd94045
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2019 23:49:10.1509
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: guro@fb.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3142
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-23_18:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905230153
-X-FB-Internal: deliver
+References: <1558648647-14324-1-git-send-email-alan.mikhak@sifive.com>
+In-Reply-To: <1558648647-14324-1-git-send-email-alan.mikhak@sifive.com>
+From:   Alan Mikhak <alan.mikhak@sifive.com>
+Date:   Thu, 23 May 2019 16:50:50 -0700
+Message-ID: <CABEDWGy8PhHqqRPpZjVrd3VtwxmtxV+Gs-8442e9EvKjFQLELw@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI: endpoint: Clear BAR before freeing its space
+To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kishon@ti.com, lorenzo.pieralisi@arm.com,
+        linux-riscv@lists.infradead.org,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        gustavo.pimentel@synopsys.com, wen.yang99@zte.com.cn, kjlu@umn.edu
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 04:09:30PM -0700, Yonghong Song wrote:
->=20
->=20
-> On 5/23/19 12:45 PM, Roman Gushchin wrote:
-> > Add a kselftest to cover bpf auto-detachment functionality.
-> > The test creates a cgroup, associates some resources with it,
-> > attaches a couple of bpf programs and deletes the cgroup.
-> >=20
-> > Then it checks that bpf programs are going away in 5 seconds.
-> >=20
-> > Expected output:
-> >    $ ./test_cgroup_attach
-> >    #override:PASS
-> >    #multi:PASS
-> >    #autodetach:PASS
-> >    test_cgroup_attach:PASS
-> >=20
-> > On a kernel without auto-detaching:
-> >    $ ./test_cgroup_attach
-> >    #override:PASS
-> >    #multi:PASS
-> >    #autodetach:FAIL
-> >    test_cgroup_attach:FAIL
-> >=20
-> > Signed-off-by: Roman Gushchin <guro@fb.com>
->=20
-> Looks good to me. It will be good if you can add test_cgroup_attach
-> to .gitignore to avoid it shows up in `git status`. With that,
++Bjorn Helgaas, +Gustavo Pimentel, +Wen Yang, +Kangjie Lu
+
+
+On Thu, May 23, 2019 at 2:57 PM Alan Mikhak <alan.mikhak@sifive.com> wrote:
 >
-
-Here it is!
-
-Thanks!
-
----
-
-From 150fb4db7ab37f0e8b6482386e8830f3d11b64e1 Mon Sep 17 00:00:00 2001
-From: Roman Gushchin <guro@fb.com>
-Date: Thu, 23 May 2019 16:46:58 -0700
-Subject: [PATCH bpf-next] selftests/bpf: add test_cgroup_attach to .gitigno=
-re
-
-Add test_cgroup_attach binary to .gitignore.
-
-Signed-off-by: Roman Gushchin <guro@fb.com>
----
- tools/testing/selftests/bpf/.gitignore | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/tools/testing/selftests/bpf/.gitignore b/tools/testing/selftes=
-ts/bpf/.gitignore
-index dd5d69529382..86a546e5e4db 100644
---- a/tools/testing/selftests/bpf/.gitignore
-+++ b/tools/testing/selftests/bpf/.gitignore
-@@ -22,6 +22,7 @@ test_lirc_mode2_user
- get_cgroup_id_user
- test_skb_cgroup_id_user
- test_socket_cookie
-+test_cgroup_attach
- test_cgroup_storage
- test_select_reuseport
- test_flow_dissector
---=20
-2.20.1
-
+> Associated pci_epf_bar structure is needed in pci_epc_clear_bar() but
+> would be cleared in pci_epf_free_space(), if called first, and BAR
+> would not get cleared.
+>
+> Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+> ---
+>  drivers/pci/endpoint/functions/pci-epf-test.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> index 27806987e93b..f81a219dde5b 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> @@ -381,8 +381,8 @@ static void pci_epf_test_unbind(struct pci_epf *epf)
+>                 epf_bar = &epf->bar[bar];
+>
+>                 if (epf_test->reg[bar]) {
+> -                       pci_epf_free_space(epf, epf_test->reg[bar], bar);
+>                         pci_epc_clear_bar(epc, epf->func_no, epf_bar);
+> +                       pci_epf_free_space(epf, epf_test->reg[bar], bar);
+>                 }
+>         }
+>  }
+> --
+> 2.7.4
+>
