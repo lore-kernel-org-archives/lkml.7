@@ -7,57 +7,56 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7003CC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A54C282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34A5820675
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:26:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7036B20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:27:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="p7I4z70C"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="pS7uVPzC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730236AbfEWJ0Z (ORCPT
+        id S1730268AbfEWJ1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 05:26:25 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:38179 "EHLO
+        Thu, 23 May 2019 05:27:06 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:45249 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbfEWJ0Y (ORCPT
+        with ESMTP id S1726429AbfEWJ1G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 05:26:24 -0400
+        Thu, 23 May 2019 05:27:06 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4N9QD6C4041756
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4N9QuRG4041804
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 23 May 2019 02:26:14 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4N9QD6C4041756
+        Thu, 23 May 2019 02:26:56 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4N9QuRG4041804
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1558603574;
-        bh=SeRSkk7rBDoF9RcYi/fBKrnRRUiI9j1SpLKdo4Y/naE=;
+        s=2019051801; t=1558603616;
+        bh=PzWiXWbuZBSOSkVnmtdtZG78MA42jnTVqc1lbPq3Ihg=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=p7I4z70CsmCMGkM6cyYe7hrDbmW96Q2wEWOiQgPhicuHsKSicrxAAP4kwZGHm1WzT
-         Fp6VT3Iwq7UlxxelyQSMpqJROsv/EUo3qw6ECQD+nYaYVFH907bcWj8nd21WNavFMU
-         ylCR/Z1Vsjg5sr3ynI4V8ecU2cAbXxj1uGRVzAS4bOOQ/EiviFDSp2QZzC1ia9bHSu
-         WrAvUwZyosGdlGJhhe6UP5L7vFrWp3082AYKZi5nPi9+o3kSRqyhU9Dh6dAkU6vocQ
-         hFVwFW3BPi9Q+Um/BZSL7fpRevJT4ZSa8IxyofPXTot2q0yvdHNyXYQANCzeQcXtX0
-         +zrqNxTZf1juA==
+        b=pS7uVPzCi1kxl2D2vUpzGbJq3p9hrXiAkIWTPsGdyZSPExwd72uNFbo5hGYhXRHOg
+         o64+3ZXCUtqXhCnkicTq6n6cubVMZ8Vjt7O0cKuB3oXmCo/ChOywzuZcVH0oDBVGoI
+         wXM0uVH0GNEO9fVYMqPgTk8zv1Pr2BUWdtOyjPHefBFnyWo5YS1TupwZZt/1tW0X8t
+         XFxGhoFs16PwRXCnKOOYT99BqR5S7iq6feFSpHRmPb/rywjmm+c4G7FC8lIFF8m4xP
+         0Ob4HK4aOtWyt8YRK5DLpxRCPQhVDHl9dqewiLet0MAN8/6meeFgc3WTRkAMgFdBkk
+         VtnA6xrJgUdYA==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4N9QDjV4041753;
-        Thu, 23 May 2019 02:26:13 -0700
-Date:   Thu, 23 May 2019 02:26:13 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4N9Qta54041801;
+        Thu, 23 May 2019 02:26:55 -0700
+Date:   Thu, 23 May 2019 02:26:55 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Zhang Rui <tipbot@zytor.com>
-Message-ID: <tip-aadf7b38337108627b014fb285147aacdfafe42e@git.kernel.org>
-Cc:     tglx@linutronix.de, len.brown@intel.com,
-        linux-kernel@vger.kernel.org, hpa@zytor.com, rui.zhang@intel.com,
-        mingo@kernel.org, peterz@infradead.org, rafael.j.wysocki@intel.com
-Reply-To: mingo@kernel.org, rui.zhang@intel.com,
-          rafael.j.wysocki@intel.com, peterz@infradead.org,
-          len.brown@intel.com, tglx@linutronix.de, hpa@zytor.com,
-          linux-kernel@vger.kernel.org
-In-Reply-To: <ae3d1903407fd6e3684234b674f4f0e62c2ab54c.1557769318.git.len.brown@intel.com>
-References: <ae3d1903407fd6e3684234b674f4f0e62c2ab54c.1557769318.git.len.brown@intel.com>
+Message-ID: <tip-32fb480e0a2cf1f71e4174d6477198c94dbc746c@git.kernel.org>
+Cc:     peterz@infradead.org, rafael.j.wysocki@intel.com, hpa@zytor.com,
+        rui.zhang@intel.com, tglx@linutronix.de, mingo@kernel.org,
+        linux-kernel@vger.kernel.org, len.brown@intel.com
+Reply-To: rafael.j.wysocki@intel.com, hpa@zytor.com, peterz@infradead.org,
+          len.brown@intel.com, mingo@kernel.org,
+          linux-kernel@vger.kernel.org, rui.zhang@intel.com,
+          tglx@linutronix.de
+In-Reply-To: <9fcb4719aeb7efccf3bc75ed8dd559e46121649f.1557769318.git.len.brown@intel.com>
+References: <9fcb4719aeb7efccf3bc75ed8dd559e46121649f.1557769318.git.len.brown@intel.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/topology] powercap/intel_rapl: Simplify
- rapl_find_package()
-Git-Commit-ID: aadf7b38337108627b014fb285147aacdfafe42e
+Subject: [tip:x86/topology] powercap/intel_rapl: Support multi-die/package
+Git-Commit-ID: 32fb480e0a2cf1f71e4174d6477198c94dbc746c
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -71,19 +70,22 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  aadf7b38337108627b014fb285147aacdfafe42e
-Gitweb:     https://git.kernel.org/tip/aadf7b38337108627b014fb285147aacdfafe42e
+Commit-ID:  32fb480e0a2cf1f71e4174d6477198c94dbc746c
+Gitweb:     https://git.kernel.org/tip/32fb480e0a2cf1f71e4174d6477198c94dbc746c
 Author:     Zhang Rui <rui.zhang@intel.com>
-AuthorDate: Mon, 13 May 2019 13:58:50 -0400
+AuthorDate: Mon, 13 May 2019 13:58:51 -0400
 Committer:  Thomas Gleixner <tglx@linutronix.de>
 CommitDate: Thu, 23 May 2019 10:08:32 +0200
 
-powercap/intel_rapl: Simplify rapl_find_package()
+powercap/intel_rapl: Support multi-die/package
 
-Simplify how the code to discover a package is called.  Rename
-find_package_by_id() to rapl_find_package_domain()
+RAPL "package" domains are actually implemented in hardware per-die.
+Thus, the new multi-die/package systems have mulitple domains
+within each physical package.
 
-Syntax only, no functional or semantic change.
+Update the intel_rapl driver to be "die aware" -- exporting multiple
+domains within a single package, when present.  No change on single
+die/package systems.
 
 Signed-off-by: Zhang Rui <rui.zhang@intel.com>
 Signed-off-by: Len Brown <len.brown@intel.com>
@@ -92,81 +94,31 @@ Reviewed-by: Ingo Molnar <mingo@kernel.org>
 Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Cc: linux-pm@vger.kernel.org
-Link: https://lkml.kernel.org/r/ae3d1903407fd6e3684234b674f4f0e62c2ab54c.1557769318.git.len.brown@intel.com
+Link: https://lkml.kernel.org/r/9fcb4719aeb7efccf3bc75ed8dd559e46121649f.1557769318.git.len.brown@intel.com
 
 ---
- drivers/powercap/intel_rapl.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/powercap/intel_rapl.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/powercap/intel_rapl.c b/drivers/powercap/intel_rapl.c
-index 4347f15165f8..3c3c0c23180b 100644
+index 3c3c0c23180b..9202dbcef96d 100644
 --- a/drivers/powercap/intel_rapl.c
 +++ b/drivers/powercap/intel_rapl.c
-@@ -264,8 +264,9 @@ static struct powercap_control_type *control_type; /* PowerCap Controller */
- static struct rapl_domain *platform_rapl_domain; /* Platform (PSys) domain */
- 
+@@ -266,7 +266,7 @@ static struct rapl_domain *platform_rapl_domain; /* Platform (PSys) domain */
  /* caller to ensure CPU hotplug lock is held */
--static struct rapl_package *find_package_by_id(int id)
-+static struct rapl_package *rapl_find_package_domain(int cpu)
+ static struct rapl_package *rapl_find_package_domain(int cpu)
  {
-+	int id = topology_physical_package_id(cpu);
+-	int id = topology_physical_package_id(cpu);
++	int id = topology_logical_die_id(cpu);
  	struct rapl_package *rp;
  
  	list_for_each_entry(rp, &rapl_packages, plist) {
-@@ -1300,7 +1301,7 @@ static int __init rapl_register_psys(void)
- 	rd->rpl[0].name = pl1_name;
- 	rd->rpl[1].prim_id = PL2_ENABLE;
- 	rd->rpl[1].name = pl2_name;
--	rd->rp = find_package_by_id(0);
-+	rd->rp = rapl_find_package_domain(0);
- 
- 	power_zone = powercap_register_zone(&rd->power_zone, control_type,
- 					    "psys", NULL,
-@@ -1456,8 +1457,9 @@ static void rapl_remove_package(struct rapl_package *rp)
- }
- 
+@@ -1459,7 +1459,7 @@ static void rapl_remove_package(struct rapl_package *rp)
  /* called from CPU hotplug notifier, hotplug lock held */
--static struct rapl_package *rapl_add_package(int cpu, int pkgid)
-+static struct rapl_package *rapl_add_package(int cpu)
+ static struct rapl_package *rapl_add_package(int cpu)
  {
-+	int id = topology_physical_package_id(cpu);
+-	int id = topology_physical_package_id(cpu);
++	int id = topology_logical_die_id(cpu);
  	struct rapl_package *rp;
  	int ret;
- 
-@@ -1466,7 +1468,7 @@ static struct rapl_package *rapl_add_package(int cpu, int pkgid)
- 		return ERR_PTR(-ENOMEM);
- 
- 	/* add the new package to the list */
--	rp->id = pkgid;
-+	rp->id = id;
- 	rp->lead_cpu = cpu;
- 
- 	/* check if the package contains valid domains */
-@@ -1497,12 +1499,11 @@ err_free_package:
-  */
- static int rapl_cpu_online(unsigned int cpu)
- {
--	int pkgid = topology_physical_package_id(cpu);
- 	struct rapl_package *rp;
- 
--	rp = find_package_by_id(pkgid);
-+	rp = rapl_find_package_domain(cpu);
- 	if (!rp) {
--		rp = rapl_add_package(cpu, pkgid);
-+		rp = rapl_add_package(cpu);
- 		if (IS_ERR(rp))
- 			return PTR_ERR(rp);
- 	}
-@@ -1512,11 +1513,10 @@ static int rapl_cpu_online(unsigned int cpu)
- 
- static int rapl_cpu_down_prep(unsigned int cpu)
- {
--	int pkgid = topology_physical_package_id(cpu);
- 	struct rapl_package *rp;
- 	int lead_cpu;
- 
--	rp = find_package_by_id(pkgid);
-+	rp = rapl_find_package_domain(cpu);
- 	if (!rp)
- 		return 0;
  
