@@ -6,49 +6,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACEAFC282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 00:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B98C282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 00:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B4C220B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 00:41:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18E7D20B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 00:41:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729803AbfEWAk7 (ORCPT
+        id S1729848AbfEWAlD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 20:40:59 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:49589 "EHLO
+        Wed, 22 May 2019 20:41:03 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:49595 "EHLO
         out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727691AbfEWAk6 (ORCPT
+        with ESMTP id S1727691AbfEWAlB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 20:40:58 -0400
+        Wed, 22 May 2019 20:41:01 -0400
 Received: from in01.mta.xmission.com ([166.70.13.51])
         by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.87)
         (envelope-from <ebiederm@xmission.com>)
-        id 1hTbmy-0002CQ-4F; Wed, 22 May 2019 18:40:56 -0600
+        id 1hTbn1-0002CZ-KQ; Wed, 22 May 2019 18:40:59 -0600
 Received: from ip72-206-97-68.om.om.cox.net ([72.206.97.68] helo=x220.int.ebiederm.org)
         by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_CBC_SHA256:128)
         (Exim 4.87)
         (envelope-from <ebiederm@xmission.com>)
-        id 1hTbmo-0005Z3-1s; Wed, 22 May 2019 18:40:55 -0600
+        id 1hTbmz-0005Z3-RJ; Wed, 22 May 2019 18:40:59 -0600
 From:   "Eric W. Biederman" <ebiederm@xmission.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
         Linux Containers <containers@lists.linux-foundation.org>,
         Oleg Nesterov <oleg@redhat.com>, linux-arch@vger.kernel.org,
-        Daniel Lezcano <daniel.lezcano@free.fr>,
-        Serge Hallyn <serge@hallyn.com>
-Date:   Wed, 22 May 2019 19:38:56 -0500
-Message-Id: <20190523003916.20726-7-ebiederm@xmission.com>
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        Jeff Layton <jlayton@primarydata.com>,
+        Steve French <smfrench@gmail.com>
+Date:   Wed, 22 May 2019 19:38:57 -0500
+Message-Id: <20190523003916.20726-8-ebiederm@xmission.com>
 X-Mailer: git-send-email 2.21.0.dirty
 In-Reply-To: <20190523003916.20726-1-ebiederm@xmission.com>
 References: <20190523003916.20726-1-ebiederm@xmission.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-XM-SPF: eid=1hTbmo-0005Z3-1s;;;mid=<20190523003916.20726-7-ebiederm@xmission.com>;;;hst=in01.mta.xmission.com;;;ip=72.206.97.68;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/nknWlLkrATb/83/XnvnuaDkWjd4HmdyI=
+X-XM-SPF: eid=1hTbmz-0005Z3-RJ;;;mid=<20190523003916.20726-8-ebiederm@xmission.com>;;;hst=in01.mta.xmission.com;;;ip=72.206.97.68;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1//zQ7CJekG5SW/vQ+Tj7WmvEFfZeaRGZI=
 X-SA-Exim-Connect-IP: 72.206.97.68
 X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [REVIEW][PATCH 06/26] signal/pid_namespace: Fix reboot_pid_ns to use send_sig not force_sig
+Subject: [REVIEW][PATCH 07/26] signal/cifs: Fix cifs_put_tcp_session to call send_sig instead of force_sig
 X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
 X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,28 +74,29 @@ and pointless.
 Because it won't impact the sending of the signal and and because
 using force_sig is wrong, replace force_sig with send_sig.
 
-Cc: Daniel Lezcano <daniel.lezcano@free.fr>
-Cc: Serge Hallyn <serge@hallyn.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Fixes: cf3f89214ef6 ("pidns: add reboot_pid_ns() to handle the reboot syscall")
+Cc: Namjae Jeon <namjae.jeon@samsung.com>
+Cc: Jeff Layton <jlayton@primarydata.com>
+Cc: Steve French <smfrench@gmail.com>
+Fixes: a5c3e1c725af ("Revert "cifs: No need to send SIGKILL to demux_thread during umount"")
+Fixes: e7ddee9037e7 ("cifs: disable sharing session and tcon and add new TCP sharing code")
 Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 ---
- kernel/pid_namespace.c | 2 +-
+ fs/cifs/connect.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
-index aa6e72fb7c08..098233ebe589 100644
---- a/kernel/pid_namespace.c
-+++ b/kernel/pid_namespace.c
-@@ -325,7 +325,7 @@ int reboot_pid_ns(struct pid_namespace *pid_ns, int cmd)
- 	}
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index 8c4121da624e..ed22bffb3fcc 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -2629,7 +2629,7 @@ cifs_put_tcp_session(struct TCP_Server_Info *server, int from_reconnect)
  
- 	read_lock(&tasklist_lock);
--	force_sig(SIGKILL, pid_ns->child_reaper);
-+	send_sig(SIGKILL, pid_ns->child_reaper, 1);
- 	read_unlock(&tasklist_lock);
+ 	task = xchg(&server->tsk, NULL);
+ 	if (task)
+-		force_sig(SIGKILL, task);
++		send_sig(SIGKILL, task, 1);
+ }
  
- 	do_exit(0);
+ static struct TCP_Server_Info *
 -- 
 2.21.0
 
