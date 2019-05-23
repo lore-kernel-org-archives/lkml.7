@@ -2,74 +2,119 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C17C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F05C46460
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A0C320657
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:02:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7E4E2177E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:06:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X1/pu0J+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731711AbfEWVCZ (ORCPT
+        id S1731648AbfEWVG6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 17:02:25 -0400
-Received: from smtprelay0230.hostedemail.com ([216.40.44.230]:56005 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729797AbfEWVCY (ORCPT
+        Thu, 23 May 2019 17:06:58 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:52666 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731537AbfEWVG6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 17:02:24 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id A6868182CED28;
-        Thu, 23 May 2019 21:02:23 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: brick10_31daacd83bf3d
-X-Filterd-Recvd-Size: 1862
-Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf13.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 23 May 2019 21:02:22 +0000 (UTC)
-Message-ID: <a3c036b12979ab7269917247a683eeb63df71d58.camel@perches.com>
-Subject: Re: [PATCH 1/2] MAINTAINERS: Add entry for fieldbus subsystem
-From:   Joe Perches <joe@perches.com>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        devel@driverdev.osuosl.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Thu, 23 May 2019 14:02:16 -0700
-In-Reply-To: <CAGngYiUnRSSPLDhXeAg5E0pM_-ZbNV9qpOarSemDdpwLPRZeqA@mail.gmail.com>
-References: <20190523195313.31008-1-TheSven73@gmail.com>
-         <1b741b25b973e049948b3e490c13aad48716d5b0.camel@perches.com>
-         <CAGngYiUnRSSPLDhXeAg5E0pM_-ZbNV9qpOarSemDdpwLPRZeqA@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 23 May 2019 17:06:58 -0400
+Received: by mail-it1-f193.google.com with SMTP id t184so12283158itf.2;
+        Thu, 23 May 2019 14:06:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qdKz+TOs1wCAyZUw0giltCYWrjHfuqYDcD0Y730vB18=;
+        b=X1/pu0J+wGbtPR2O2S+IZYCGPHacIpZIWlZOFWyrcdChosOCsJjjuHh8Pmjbpcd/iR
+         v93QHkkPBOa+2R+cA7xBGf3GJGK02mE+fvVDdEqB4GgsTipeTPJ6UQCrvJq1kJdFsskk
+         Hf68qhuoJF1y72HyQhy9UTR3pwbJ0O9GFSXpJUdO0NLDRyZ927qoRsk/ndLeG80c6yon
+         KvRUWEcuvxzy08YY3EsZPEefJ9KlXLSN7/HrXAx4ZcfMc7utGhKD2QaS4QFHFQqcxvSq
+         u6HahTlnlzCTKgxbW3PKFhDSjhK486kZuopYnyXvidTzXDyRLyYdnh+FR0DcMA72iFhD
+         4IYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qdKz+TOs1wCAyZUw0giltCYWrjHfuqYDcD0Y730vB18=;
+        b=q2kjOeNLaruz5fmvyfCne3jSuaf8mYtxhxjfy9NBJ93DP26a1Vvo8X7opb6xajTwim
+         FCI62uCmeKsDyt2cZg8pfzRwLnnacCw+jPyu/IYG9U8wuJGTvPXItHAgkrybYyuyqUT4
+         vnTAjdiFhc6WaTYKpA3FaFmgJSuKfUjZAMhPxPaTEGgAFQ4orpiqMmoysuq6or1cBy7/
+         bsaLC4BIt6WGkrpLML+ZMm/9vEH2RGINbZE8+oY9mFSf5BHYc7u+/OZx9nS2647nyZst
+         Hn1iRkgaH5VqN9A+OgTWhjvDIkGvi2ZVVESXwdbckqefRbDZo0gGZgptXBDtNiCVh4bL
+         AWIw==
+X-Gm-Message-State: APjAAAXwSo24peNtu5zbjbvwO5v/O/2uhWZkuxb5OX1x8NvFDwHzS+Kr
+        Ux0X58s5HblrdCFv+f9JTDezwAjui48HM5sGZ1Y=
+X-Google-Smtp-Source: APXvYqw39Es/1/4zjenOfZ0CdT39/+9yH2SVWfYxIvNq4CN3m21LbaDD6pNQgMJJnPBaS4n8+lARacqZ1hZGTol3H8M=
+X-Received: by 2002:a24:e084:: with SMTP id c126mr14417307ith.124.1558645617016;
+ Thu, 23 May 2019 14:06:57 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190522032144.10995-1-deepa.kernel@gmail.com>
+ <20190522150505.GA4915@redhat.com> <CABeXuvrPM5xvzqUydbREapvwgy6deYreHp0aaMoSHyLB6+HGRg@mail.gmail.com>
+ <20190522161407.GB4915@redhat.com> <CABeXuvpjrW5Gt95JC-_rYkOA=6RCD5OtkEQdwZVVqGCE3GkQOQ@mail.gmail.com>
+ <4f7b6dbeab1d424baaebd7a5df116349@AcuMS.aculab.com> <20190523145944.GB23070@redhat.com>
+ <345cfba5edde470f9a68d913f44fa342@AcuMS.aculab.com> <20190523163604.GE23070@redhat.com>
+ <f0eced5677c144debfc5a69d0d327bc1@AcuMS.aculab.com> <CABeXuvo-wey+NHWb4gi=FSRrjJOKkVcLPQ-J+dchJeHEbhGQ6g@mail.gmail.com>
+ <CABeXuvo5Y0aHgo-xMzmW7V02g+ysGqAkdoCAkW7L6LkukdvAcg@mail.gmail.com>
+In-Reply-To: <CABeXuvo5Y0aHgo-xMzmW7V02g+ysGqAkdoCAkW7L6LkukdvAcg@mail.gmail.com>
+From:   Deepa Dinamani <deepa.kernel@gmail.com>
+Date:   Thu, 23 May 2019 14:06:45 -0700
+Message-ID: <CABeXuvrKAz3epJjc9J21K-dET1Om9C=3gaDOUiQ96C39x4MAVg@mail.gmail.com>
+Subject: Re: [PATCH v2] signal: Adjust error codes according to restore_user_sigmask()
+To:     David Laight <David.Laight@aculab.com>
+Cc:     Oleg Nesterov <oleg@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "dbueso@suse.de" <dbueso@suse.de>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        Davidlohr Bueso <dave@stgolabs.net>, Eric Wong <e@80x24.org>,
+        Jason Baron <jbaron@akamai.com>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        linux-aio <linux-aio@kvack.org>,
+        Omar Kilani <omar.kilani@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-05-23 at 16:23 -0400, Sven Van Asbroeck wrote:
-> On Thu, May 23, 2019 at 4:00 PM Joe Perches <joe@perches.com> wrote:
-> > trivia: anybuss looks like a misspelling.
-> > It might be better as anybus-s.
-> This came up as well during the review process. When we insert a separator,
-> the include files start looking like anybus-s-controller.h, and the structs
-> become like struct anybus_s_ops. It then no longer looks like a misspelling,
-> but becomes harder to read?
-> 
-> An alternative solution is to get rid of the 's' suffix altogether. Anybus-S
-> is the only flavour we support right now. Although that may obviously
-> change in the future.
+> Just adding a little more clarification, there is an additional change
+> between [a] and [b].
+> As per [a] we would just restore the signal instead of changing the
+> saved_sigmask and the signal could get delivered right then. [b]
+> changes this to happen at syscall exit:
 
-anybuss just looked odd to me.
+Rewording above, as there seems to be a few misrepresentations:
 
-Whatever you choose is up to you and
-no doubt you'll choose well.
+Just adding a little more clarification, there is an additional change
+between [a] and [b].
+As per [a] we would just restore the signal mask instead of changing
+the saved_sigmask and the even the blocked signals could get delivered
+right then. [b] changes the restoration to happen at syscall exit:
 
-cheers, Joe
+> void restore_user_sigmask(const void __user *usigmask, sigset_t *sigsaved)
+> {
+>
+>            <snip>
+>
+>           /*
+>            * When signals are pending, do not restore them here.
+>            * Restoring sigmask here can lead to delivering signals
+> that the above
+>            * syscalls are intended to block because of the sigmask passed in.
+>            */
+>            if (signal_pending(current)) {
+>            current->saved_sigmask = *sigsaved;
+>            set_restore_sigmask();
+>            return;
+> }
 
-
+ -Deepa
