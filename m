@@ -2,106 +2,101 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D85C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 026DFC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:08:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38CF72184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D29FC20856
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:08:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731084AbfEWPEn (ORCPT
+        id S1730903AbfEWPI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 11:04:43 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:61108 "EHLO mx1.redhat.com"
+        Thu, 23 May 2019 11:08:28 -0400
+Received: from foss.arm.com ([217.140.101.70]:48564 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730783AbfEWPEm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 11:04:42 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1F9233082E24;
-        Thu, 23 May 2019 15:04:37 +0000 (UTC)
-Received: from redhat.com (unknown [10.20.6.178])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0EB501001E81;
-        Thu, 23 May 2019 15:04:33 +0000 (UTC)
-Date:   Thu, 23 May 2019 11:04:32 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Artemy Kovalyov <artemyko@mellanox.com>,
-        Moni Shoua <monis@mellanox.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>
-Subject: Re: [PATCH v4 0/1] Use HMM for ODP v4
-Message-ID: <20190523150432.GA5104@redhat.com>
-References: <20190411181314.19465-1-jglisse@redhat.com>
- <20190506195657.GA30261@ziepe.ca>
- <20190521205321.GC3331@redhat.com>
- <20190522005225.GA30819@ziepe.ca>
- <20190522174852.GA23038@redhat.com>
- <20190522235737.GD15389@ziepe.ca>
+        id S1730672AbfEWPI1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 11:08:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C7E5C80D;
+        Thu, 23 May 2019 08:08:26 -0700 (PDT)
+Received: from mbp (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B63863F690;
+        Thu, 23 May 2019 08:08:20 -0700 (PDT)
+Date:   Thu, 23 May 2019 16:08:14 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     enh <enh@google.com>, Evgenii Stepanov <eugenis@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
+Message-ID: <20190523150813.x4btg5zxa4gl5o4q@mbp>
+References: <cover.1557160186.git.andreyknvl@google.com>
+ <20190517144931.GA56186@arrakis.emea.arm.com>
+ <CAFKCwrj6JEtp4BzhqO178LFJepmepoMx=G+YdC8sqZ3bcBp3EQ@mail.gmail.com>
+ <20190521182932.sm4vxweuwo5ermyd@mbp>
+ <201905211633.6C0BF0C2@keescook>
+ <20190522101110.m2stmpaj7seezveq@mbp>
+ <CAJgzZoosKBwqXRyA6fb8QQSZXFqfHqe9qO9je5TogHhzuoGXJQ@mail.gmail.com>
+ <201905221157.A9BAB1F296@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190522235737.GD15389@ziepe.ca>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 23 May 2019 15:04:42 +0000 (UTC)
+In-Reply-To: <201905221157.A9BAB1F296@keescook>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 08:57:37PM -0300, Jason Gunthorpe wrote:
-> On Wed, May 22, 2019 at 01:48:52PM -0400, Jerome Glisse wrote:
-> 
-> > > > So attached is a rebase on top of 5.2-rc1, i have tested with pingpong
-> > > > (prefetch and not and different sizes). Seems to work ok.
-> > > 
-> > > Urk, it already doesn't apply to the rdma tree :(
-> > > 
-> > > The conflicts are a little more extensive than I'd prefer to handle..
-> > > Can I ask you to rebase it on top of this branch please:
-> > > 
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git/log/?h=wip/jgg-for-next
-> > > 
-> > > Specifically it conflicts with this patch:
-> > > 
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git/commit/?h=wip/jgg-for-next&id=d2183c6f1958e6b6dfdde279f4cee04280710e34
-> 
-> There is at least one more serious blocker here:
-> 
-> config ARCH_HAS_HMM_MIRROR
->         bool
->         default y
->         depends on (X86_64 || PPC64)
->         depends on MMU && 64BIT
-> 
-> I can't loose ARM64 support for ODP by merging this, that is too
-> serious of a regression.
-> 
-> Can you fix it?
+On Wed, May 22, 2019 at 12:21:27PM -0700, Kees Cook wrote:
+> If a process wants to not tag, that's also up to the allocator where
+> it can decide not to ask the kernel, and just not tag. Nothing breaks in
+> userspace if a process is NOT tagging and untagged_addr() exists or is
+> missing. This, I think, is the core way this doesn't trip over the
+> golden rule: an old system image will run fine (because it's not
+> tagging). A *new* system may encounter bugs with tagging because it's a
+> new feature: this is The Way Of Things. But we don't break old userspace
+> because old userspace isn't using tags.
 
-5.2 already has patch to fix the Kconfig (ARCH_HAS_HMM_MIRROR and
-ARCH_HAS_HMM_DEVICE replacing ARCH_HAS_HMM) I need to update nouveau
-in 5.3 so that i can drop the old ARCH_HAS_HMM and then convert
-core mm in 5.4 to use ARCH_HAS_HMM_MIRROR and ARCH_HAS_HMM_DEVICE
-instead of ARCH_HAS_HMM
+With this series and hwasan binaries, at some point in the future they
+will be considered "old userspace" and they do use pointer tags which
+expect to be ignored by both the hardware and the kernel. MTE breaks
+this assumption.
 
-Adding ARM64 to ARCH_HAS_HMM_MIRROR should not be an issue i would
-need access to an ARM64 to test as i did not wanted to enable it
-without testing.
-
-So it seems it will have to wait 5.4 for ODP. I will re-spin the
-patch for ODP once i am done reviewing Ralph changes and yours
-for 5.3.
-
-Cheers,
-Jérôme
+-- 
+Catalin
