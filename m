@@ -4,58 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06408C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31102C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:40:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEC9E2133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F32F52075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:40:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640445;
-	bh=mbmgRkQiwuLf6DbY/gT5XIYsFmE75IZy8W8zEZ8AzcQ=;
+	s=default; t=1558640454;
+	bh=laHD1jWBJrY0MXhlTLyPeumxAmw0dFaifheRZAZDSW8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0DabreirKpYubwkeRzaA6DiHwi6Ww1nBKWgnKXPwWwESJGV1H5drG9/XhFxZf6URk
-	 N42Ke2F7f7WYKdynOSc0/niDWLZauxycWeAas9rbMPNDHLV3mELEkfefzWKQ9XgGBf
-	 4bCNs/WHo5Ft9z0Smv4mGQWrQh2bAk0YS1D7Fdvs=
+	b=UgkR4lXNA/iNE+F+vYZKqEKz2JZRxvWAXqBND97Bq1ZTkQkHzzOrmVEadwsAP9ZIZ
+	 757FrAqKcOSSCNC4vRtC/NU8M6OHzBgDoGnhenpn43U63VdrTG/tiRQ2ZcmGhw9eRB
+	 gRkCmGhjNsNIP841L5Rig/6aBgYljYI70x3CjdTg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390597AbfEWTkp (ORCPT
+        id S2390622AbfEWTkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:40:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57934 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:40:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390146AbfEWTU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:20:56 -0400
+        id S2389368AbfEWTUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:20:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20645217D9;
-        Thu, 23 May 2019 19:20:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41792217D9;
+        Thu, 23 May 2019 19:20:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639255;
-        bh=mbmgRkQiwuLf6DbY/gT5XIYsFmE75IZy8W8zEZ8AzcQ=;
+        s=default; t=1558639247;
+        bh=laHD1jWBJrY0MXhlTLyPeumxAmw0dFaifheRZAZDSW8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N8/QuhbfUjEN3xFo+w0+EqEx4WdSOaTvugtvpQT6QX8PIKvuh/jMUmT1GqZS7YuH9
-         iWl0ckoQ7lPj/ZovPP2GjJCpDyrUkQbeZ38KZb4W+boZZOsTklVg7AxegxOEPjzgFe
-         Sj1JEyMESuadIm0I0zAV11KQp207xTX5PamOWC4o=
+        b=juCHr7b3jo12TvwAXk19CIP/y9VXTTHrg8shRFiXgOEQLYDaTR+xRXQvAo92O04WW
+         Ol1MLhDbpC5cgvqtYoJW+fo2s0xSeh7aiJqs7je7a07Sqk7qugikR4Rnvjz2/WIfjT
+         v7kxUvWHKNgzm+Wzo2+EXlpPRMi6sxhKFyeG/lXo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>, linux-mm@kvack.org,
-        Ingo Molnar <mingo@kernel.org>,
-        Justin Forbes <jmforbes@linuxtx.org>
-Subject: [PATCH 5.0 019/139] mm/gup: Remove the write parameter from gup_fast_permitted()
-Date:   Thu, 23 May 2019 21:05:07 +0200
-Message-Id: <20190523181723.124661314@linuxfoundation.org>
+        stable@vger.kernel.org, Dmytro Linkin <dmitrolin@mellanox.com>,
+        Roi Dayan <roid@mellanox.com>,
+        Vlad Buslov <vladbu@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.0 016/139] net/mlx5e: Additional check for flow destination comparison
+Date:   Thu, 23 May 2019 21:05:04 +0200
+Message-Id: <20190523181722.662968930@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -68,72 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+From: Dmytro Linkin <dmitrolin@mellanox.com>
 
-commit ad8cfb9c42ef83ecf4079bc7d77e6557648e952b upstream.
+[ Upstream commit c979c445a88e1c9dd7d8f90838c10456ae4ecd09 ]
 
-The 'write' parameter is unused in gup_fast_permitted() so remove it.
+Flow destination comparison has an inaccuracy: code see no
+difference between same vf ports, which belong to different pfs.
 
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-mm@kvack.org
-Link: http://lkml.kernel.org/r/20190210223424.13934-1-ira.weiny@intel.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Justin Forbes <jmforbes@linuxtx.org>
+Example: If start ping from VF0 (PF1) to VF1 (PF1) and mirror
+all traffic to VF0 (PF2), icmp reply to VF0 (PF1) and mirrored
+flow to VF0 (PF2) would be determined as same destination. It lead
+to creating flow handler with rule nodes, which not added to node
+tree. When later driver try to delete this flow rules we got
+kernel crash.
+
+Add comparison of vhca_id field to avoid this.
+
+Fixes: 1228e912c934 ("net/mlx5: Consider encapsulation properties when comparing destinations")
+Signed-off-by: Dmytro Linkin <dmitrolin@mellanox.com>
+Reviewed-by: Roi Dayan <roid@mellanox.com>
+Reviewed-by: Vlad Buslov <vladbu@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/x86/include/asm/pgtable_64.h |    3 +--
- mm/gup.c                          |    6 +++---
- 2 files changed, 4 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/fs_core.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/arch/x86/include/asm/pgtable_64.h
-+++ b/arch/x86/include/asm/pgtable_64.h
-@@ -259,8 +259,7 @@ extern void init_extra_mapping_uc(unsign
- extern void init_extra_mapping_wb(unsigned long phys, unsigned long size);
- 
- #define gup_fast_permitted gup_fast_permitted
--static inline bool gup_fast_permitted(unsigned long start, int nr_pages,
--		int write)
-+static inline bool gup_fast_permitted(unsigned long start, int nr_pages)
- {
- 	unsigned long len, end;
- 
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -1811,7 +1811,7 @@ static void gup_pgd_range(unsigned long
-  * Check if it's allowed to use __get_user_pages_fast() for the range, or
-  * we need to fall back to the slow version:
-  */
--bool gup_fast_permitted(unsigned long start, int nr_pages, int write)
-+bool gup_fast_permitted(unsigned long start, int nr_pages)
- {
- 	unsigned long len, end;
- 
-@@ -1853,7 +1853,7 @@ int __get_user_pages_fast(unsigned long
- 	 * block IPIs that come from THPs splitting.
- 	 */
- 
--	if (gup_fast_permitted(start, nr_pages, write)) {
-+	if (gup_fast_permitted(start, nr_pages)) {
- 		local_irq_save(flags);
- 		gup_pgd_range(start, end, write, pages, &nr);
- 		local_irq_restore(flags);
-@@ -1895,7 +1895,7 @@ int get_user_pages_fast(unsigned long st
- 	if (unlikely(!access_ok((void __user *)start, len)))
- 		return -EFAULT;
- 
--	if (gup_fast_permitted(start, nr_pages, write)) {
-+	if (gup_fast_permitted(start, nr_pages)) {
- 		local_irq_disable();
- 		gup_pgd_range(addr, end, write, pages, &nr);
- 		local_irq_enable();
+--- a/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
+@@ -1375,6 +1375,8 @@ static bool mlx5_flow_dests_cmp(struct m
+ 		if ((d1->type == MLX5_FLOW_DESTINATION_TYPE_VPORT &&
+ 		     d1->vport.num == d2->vport.num &&
+ 		     d1->vport.flags == d2->vport.flags &&
++		     ((d1->vport.flags & MLX5_FLOW_DEST_VPORT_VHCA_ID) ?
++		      (d1->vport.vhca_id == d2->vport.vhca_id) : true) &&
+ 		     ((d1->vport.flags & MLX5_FLOW_DEST_VPORT_REFORMAT_ID) ?
+ 		      (d1->vport.reformat_id == d2->vport.reformat_id) : true)) ||
+ 		    (d1->type == MLX5_FLOW_DESTINATION_TYPE_FLOW_TABLE &&
 
 
