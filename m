@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31102C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF99BC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F32F52075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:40:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC6F72075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:41:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640454;
-	bh=laHD1jWBJrY0MXhlTLyPeumxAmw0dFaifheRZAZDSW8=;
+	s=default; t=1558640461;
+	bh=q0NoChondQNBMPI/IILqxPHisepa81MuFB32CinsJs4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UgkR4lXNA/iNE+F+vYZKqEKz2JZRxvWAXqBND97Bq1ZTkQkHzzOrmVEadwsAP9ZIZ
-	 757FrAqKcOSSCNC4vRtC/NU8M6OHzBgDoGnhenpn43U63VdrTG/tiRQ2ZcmGhw9eRB
-	 gRkCmGhjNsNIP841L5Rig/6aBgYljYI70x3CjdTg=
+	b=dcKBUjaxBna55piG1Yxq0xOLvmGw/c9CjZWYA8EXlk90fgrGQS2SVAqrWh98csgwU
+	 Us1MZ+EHJOlbsBgY6rhvLNRYrfE1p3McbnrTYtdGZPV8pALTbRNlh3sJ6enDOYrWKE
+	 SJgD1qMTY8zxQUVEV6DBq4JDunPoK1ldi644Lau4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390622AbfEWTkx (ORCPT
+        id S2390080AbfEWTlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:40:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57742 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:41:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389368AbfEWTUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:20:48 -0400
+        id S2389021AbfEWTUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:20:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41792217D9;
-        Thu, 23 May 2019 19:20:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DED820863;
+        Thu, 23 May 2019 19:20:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639247;
-        bh=laHD1jWBJrY0MXhlTLyPeumxAmw0dFaifheRZAZDSW8=;
+        s=default; t=1558639237;
+        bh=q0NoChondQNBMPI/IILqxPHisepa81MuFB32CinsJs4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=juCHr7b3jo12TvwAXk19CIP/y9VXTTHrg8shRFiXgOEQLYDaTR+xRXQvAo92O04WW
-         Ol1MLhDbpC5cgvqtYoJW+fo2s0xSeh7aiJqs7je7a07Sqk7qugikR4Rnvjz2/WIfjT
-         v7kxUvWHKNgzm+Wzo2+EXlpPRMi6sxhKFyeG/lXo=
+        b=SR6wh2AD8Bc2iEUX9wk7wN4hP29Tngh4msMou+qVDKJeYWfpR3WWDWj4MAePzeoL6
+         hhhkFV7YBQYtiZsE+fO9TeUNf1Cv0zQgYdpm1Tv7cTV2Hs/eIE+kGzD4syu5CRxs4w
+         POKolaxa062DhpPgTSCk9A0Rv7m2CNm7b6uc8/xw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmytro Linkin <dmitrolin@mellanox.com>,
-        Roi Dayan <roid@mellanox.com>,
-        Vlad Buslov <vladbu@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.0 016/139] net/mlx5e: Additional check for flow destination comparison
-Date:   Thu, 23 May 2019 21:05:04 +0200
-Message-Id: <20190523181722.662968930@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mulu He <muluhe@codeaurora.org>
+Subject: [PATCH 5.0 030/139] stm class: Fix channel bitmap on 32-bit systems
+Date:   Thu, 23 May 2019 21:05:18 +0200
+Message-Id: <20190523181724.637400086@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -61,42 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmytro Linkin <dmitrolin@mellanox.com>
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
-[ Upstream commit c979c445a88e1c9dd7d8f90838c10456ae4ecd09 ]
+commit 51e0f227812ed81a368de54157ebe14396b4be03 upstream.
 
-Flow destination comparison has an inaccuracy: code see no
-difference between same vf ports, which belong to different pfs.
+Commit 7bd1d4093c2f ("stm class: Introduce an abstraction for System Trace
+Module devices") naively calculates the channel bitmap size in 64-bit
+chunks regardless of the size of underlying unsigned long, making the
+bitmap half as big on a 32-bit system. This leads to an out of bounds
+access with the upper half of the bitmap.
 
-Example: If start ping from VF0 (PF1) to VF1 (PF1) and mirror
-all traffic to VF0 (PF2), icmp reply to VF0 (PF1) and mirrored
-flow to VF0 (PF2) would be determined as same destination. It lead
-to creating flow handler with rule nodes, which not added to node
-tree. When later driver try to delete this flow rules we got
-kernel crash.
+Fix this by using BITS_TO_LONGS. While at it, convert to using
+struct_size() for the total size calculation of the master struct.
 
-Add comparison of vhca_id field to avoid this.
-
-Fixes: 1228e912c934 ("net/mlx5: Consider encapsulation properties when comparing destinations")
-Signed-off-by: Dmytro Linkin <dmitrolin@mellanox.com>
-Reviewed-by: Roi Dayan <roid@mellanox.com>
-Reviewed-by: Vlad Buslov <vladbu@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Fixes: 7bd1d4093c2f ("stm class: Introduce an abstraction for System Trace Module devices")
+Reported-by: Mulu He <muluhe@codeaurora.org>
+Cc: stable@vger.kernel.org # v4.4+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/mellanox/mlx5/core/fs_core.c |    2 ++
- 1 file changed, 2 insertions(+)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
-@@ -1375,6 +1375,8 @@ static bool mlx5_flow_dests_cmp(struct m
- 		if ((d1->type == MLX5_FLOW_DESTINATION_TYPE_VPORT &&
- 		     d1->vport.num == d2->vport.num &&
- 		     d1->vport.flags == d2->vport.flags &&
-+		     ((d1->vport.flags & MLX5_FLOW_DEST_VPORT_VHCA_ID) ?
-+		      (d1->vport.vhca_id == d2->vport.vhca_id) : true) &&
- 		     ((d1->vport.flags & MLX5_FLOW_DEST_VPORT_REFORMAT_ID) ?
- 		      (d1->vport.reformat_id == d2->vport.reformat_id) : true)) ||
- 		    (d1->type == MLX5_FLOW_DESTINATION_TYPE_FLOW_TABLE &&
+---
+ drivers/hwtracing/stm/core.c |    7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+--- a/drivers/hwtracing/stm/core.c
++++ b/drivers/hwtracing/stm/core.c
+@@ -166,11 +166,10 @@ stm_master(struct stm_device *stm, unsig
+ static int stp_master_alloc(struct stm_device *stm, unsigned int idx)
+ {
+ 	struct stp_master *master;
+-	size_t size;
+ 
+-	size = ALIGN(stm->data->sw_nchannels, 8) / 8;
+-	size += sizeof(struct stp_master);
+-	master = kzalloc(size, GFP_ATOMIC);
++	master = kzalloc(struct_size(master, chan_map,
++				     BITS_TO_LONGS(stm->data->sw_nchannels)),
++			 GFP_ATOMIC);
+ 	if (!master)
+ 		return -ENOMEM;
+ 
 
 
