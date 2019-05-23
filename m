@@ -2,157 +2,94 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D27C04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1596C04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62D342186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:32:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="b6vY6YID"
+	by mail.kernel.org (Postfix) with ESMTP id 8F1842186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:32:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbfEWHcH (ORCPT
+        id S1729897AbfEWHcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 03:32:07 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:39046 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726222AbfEWHcH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 03:32:07 -0400
-Received: from pendragon.ideasonboard.com (85-76-106-214-nat.elisa-mobile.fi [85.76.106.214])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9139B337;
-        Thu, 23 May 2019 09:32:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1558596722;
-        bh=/W2SCMLQvihCKvM7mxR3BE+Y239YuZ1nvKLwS2lS22s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=b6vY6YIDsBJ6mfZ1r7Cjz+6RS7YWDC4UqQv/GhyPYWnwLaqWsHk4FioMivLW63tzk
-         cr3JIVwoKX+zuCtO47ebgD+Lo5+6DQctzjSOf0UjhryORcxtcJ/jenCG8PBz3Y3v+N
-         RFtQvviCFCcE6TLV0l9RHjyP2CIv6RzPEGaxsvFk=
-Date:   Thu, 23 May 2019 10:31:41 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Torsten Duwe <duwe@lst.de>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Sean Paul <seanpaul@chromium.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Harald Geyer <harald@ccbib.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/6] dt-bindings: Add ANX6345 DP/eDP transmitter binding
-Message-ID: <20190523073141.GB4745@pendragon.ideasonboard.com>
-References: <20190523065013.2719D68B05@newverein.lst.de>
- <20190523065400.BD9EB68B05@newverein.lst.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190523065400.BD9EB68B05@newverein.lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 23 May 2019 03:32:15 -0400
+Received: from mga03.intel.com ([134.134.136.65]:36471 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726081AbfEWHcP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 03:32:15 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 May 2019 00:32:14 -0700
+X-ExtLoop1: 1
+Received: from wvoon-ilbpg2.png.intel.com ([10.88.227.88])
+  by fmsmga005.fm.intel.com with ESMTP; 23 May 2019 00:32:08 -0700
+From:   Voon Weifeng <weifeng.voon@intel.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jose Abreu <joabreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        biao huang <biao.huang@mediatek.com>,
+        Ong Boon Leong <boon.leong.ong@intel.com>,
+        Kweh Hock Leong <hock.leong.kweh@intel.com>,
+        Voon Weifeng <weifeng.voon@intel.com>
+Subject: [PATCH net-next v2 0/5] net: stmmac: enable EHL SGMII
+Date:   Thu, 23 May 2019 23:32:42 +0800
+Message-Id: <1558625567-21653-1-git-send-email-weifeng.voon@intel.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Torsten,
+012345678901234567890123456789012345678901234567890123456789012345678901234
+This patch-set is to enable Ethernet controller
+(DW Ethernet QoS and DW Ethernet PCS) with SGMII interface in Elkhart Lake.
+The DW Ethernet PCS is the Physical Coding Sublayer that is between Ethernet
+MAC and PHY and uses MDIO Clause-45 as Communication.
 
-Thank you for the patch.
+Kweh Hock Leong (1):
+  net: stmmac: enable clause 45 mdio support
 
-On Thu, May 23, 2019 at 08:54:00AM +0200, Torsten Duwe wrote:
-> From: Icenowy Zheng <icenowy@aosc.io>
-> 
-> The anx6345 is an ultra-low power DisplayPort/eDP transmitter designed
-> for portable devices.
-> 
-> Add a binding document for it.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Torsten Duwe <duwe@suse.de>
+Ong Boon Leong (3):
+  net: stmmac: introducing support for DWC xPCS logics
+  net: stmmac: add xpcs function hooks into main driver and ethtool
+  net: stmmac: add xPCS functions for device with DWMACv5.1
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Voon Weifeng (1):
+  net: stmmac: add EHL SGMII 1Gbps PCI info and PCI ID
 
-> ---
->  .../bindings/display/bridge/anx6345.txt       | 56 +++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/anx6345.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/anx6345.txt b/Documentation/devicetree/bindings/display/bridge/anx6345.txt
-> new file mode 100644
-> index 000000000000..e79a11348d11
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/anx6345.txt
-> @@ -0,0 +1,56 @@
-> +Analogix ANX6345 eDP Transmitter
-> +--------------------------------
-> +
-> +The ANX6345 is an ultra-low power Full-HD eDP transmitter designed for
-> +portable devices.
-> +
-> +Required properties:
-> +
-> + - compatible		: "analogix,anx6345"
-> + - reg			: I2C address of the device
-> + - reset-gpios		: Which GPIO to use for reset
-> + - dvdd12-supply	: Regulator for 1.2V digital core power.
-> + - dvdd25-supply	: Regulator for 2.5V digital core power.
-> +
-> +Optional properties:
-> +
-> + - Video ports for RGB input and eDP output using the DT bindings
-> +   defined in [1]
-> +
-> +[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
-> +
-> +Example:
-> +
-> +anx6345: anx6345@38 {
-> +	compatible = "analogix,anx6345";
-> +	reg = <0x38>;
-> +	reset-gpios = <&pio 3 24 GPIO_ACTIVE_LOW>; /* PD24 */
-> +	dvdd25-supply = <&reg_dldo2>;
-> +	dvdd12-supply = <&reg_fldo1>;
-> +
-> +	ports {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		anx6345_in: port@0 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0>;
-> +			anx6345_in_tcon0: endpoint@0 {
-> +				reg = <0>;
-> +				remote-endpoint = <&tcon0_out_anx6345>;
-> +			};
-> +		};
-> +
-> +		anx6345_out: port@1 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <1>;
-> +
-> +			anx6345_out_panel: endpoint@0 {
-> +				reg = <0>;
-> +				remote-endpoint = <&panel_in_edp>;
-> +			};
-> +		};
-> +	};
-> +};
+ drivers/net/ethernet/stmicro/stmmac/Makefile       |   2 +-
+ drivers/net/ethernet/stmicro/stmmac/common.h       |   1 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c  |  33 ++++
+ drivers/net/ethernet/stmicro/stmmac/dwxpcs.c       | 198 +++++++++++++++++++++
+ drivers/net/ethernet/stmicro/stmmac/dwxpcs.h       |  51 ++++++
+ drivers/net/ethernet/stmicro/stmmac/hwif.c         |  41 ++++-
+ drivers/net/ethernet/stmicro/stmmac/hwif.h         |  21 +++
+ drivers/net/ethernet/stmicro/stmmac/stmmac.h       |   2 +
+ .../net/ethernet/stmicro/stmmac/stmmac_ethtool.c   |  50 ++++--
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  | 152 ++++++++++++----
+ drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c  |  40 ++++-
+ drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c   | 111 ++++++++++++
+ include/linux/phy.h                                |   2 +
+ include/linux/stmmac.h                             |   3 +
+ 14 files changed, 649 insertions(+), 58 deletions(-)
+ create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwxpcs.c
+ create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwxpcs.h
 
 -- 
-Regards,
+Changelog v2:
+*Added support for the C37 AN for 1000BASE-X and SGMII (MAC side SGMII only)
+*removed and submitted the fix patch to net
+ "net: stmmac: dma channel control register need to be init first"
+*Squash the following 2 patches and move it to the end of the patch set:
+ "net: stmmac: add EHL SGMII 1Gbps platform data and PCI ID"
+ "net: stmmac: add xPCS platform data for EHL"
+1.9.1
 
-Laurent Pinchart
