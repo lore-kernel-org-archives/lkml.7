@@ -3,100 +3,115 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C272C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73290C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 252BF21019
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E3212133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:18:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730192AbfEWJSS (ORCPT
+        id S1730248AbfEWJS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 05:18:18 -0400
-Received: from foss.arm.com ([217.140.101.70]:41126 "EHLO foss.arm.com"
+        Thu, 23 May 2019 05:18:28 -0400
+Received: from aws.guarana.org ([13.237.110.252]:46702 "EHLO aws.guarana.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726429AbfEWJSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 05:18:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 13545341;
-        Thu, 23 May 2019 02:18:18 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F20363F718;
-        Thu, 23 May 2019 02:18:15 -0700 (PDT)
-Date:   Thu, 23 May 2019 10:18:11 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     Ard Biesheuvel <ard.biesheuvel@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com,
-        james.morse@arm.com, guillaume.gardet@arm.com,
-        mark.rutland@arm.com, mingo@kernel.org, jeyu@kernel.org,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        arnd@arndb.de, x86@kernel.org
-Subject: Re: [PATCH] module/ksymtab: use 64-bit relative reference for target
- symbol
-Message-ID: <20190523091811.GA26646@fuggles.cambridge.arm.com>
-References: <20190522150239.19314-1-ard.biesheuvel@arm.com>
- <293c9d0f-dc14-1413-e4b4-4299f0acfb9e@arm.com>
- <f2141ee5-d07a-6dd9-47c6-97e8fbdccf34@arm.com>
+        id S1726230AbfEWJS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 05:18:27 -0400
+Received: by aws.guarana.org (Postfix, from userid 1006)
+        id 08384A182E; Thu, 23 May 2019 09:18:23 +0000 (UTC)
+Date:   Thu, 23 May 2019 09:18:22 +0000
+From:   Kevin Easton <kevin@guarana.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Pavel Machek <pavel@denx.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Jiri Kosina <jkosina@suse.cz>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Josh Snyder <joshs@netflix.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Dave Chinner <david@fromorbit.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Cyril Hrubis <chrubis@suse.cz>, Tejun Heo <tj@kernel.org>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Daniel Gruss <daniel@gruss.cc>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dominique Martinet <asmadeus@codewreck.org>
+Subject: Re: [PATCH 4.19 053/105] mm/mincore.c: make mincore() more
+ conservative
+Message-ID: <20190523091822.GA18121@ip-172-31-14-16>
+References: <20190520115247.060821231@linuxfoundation.org>
+ <20190520115250.721190520@linuxfoundation.org>
+ <20190522085741.GB8174@amd>
+ <20190522092111.GD32329@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f2141ee5-d07a-6dd9-47c6-97e8fbdccf34@arm.com>
-User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
+In-Reply-To: <20190522092111.GD32329@dhcp22.suse.cz>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 09:41:40AM +0100, Ard Biesheuvel wrote:
-> 
-> 
-> On 5/22/19 5:28 PM, Ard Biesheuvel wrote:
+On Wed, May 22, 2019 at 11:21:11AM +0200, Michal Hocko wrote:
+> On Wed 22-05-19 10:57:41, Pavel Machek wrote:
+> > Hi!
 > > 
+> > > commit 134fca9063ad4851de767d1768180e5dede9a881 upstream.
+> > > 
+> > > The semantics of what mincore() considers to be resident is not
+> > > completely clear, but Linux has always (since 2.3.52, which is when
+> > > mincore() was initially done) treated it as "page is available in page
+> > > cache".
+> > > 
+> > > That's potentially a problem, as that [in]directly exposes
+> > > meta-information about pagecache / memory mapping state even about
+> > > memory not strictly belonging to the process executing the syscall,
+> > > opening possibilities for sidechannel attacks.
+> > > 
+> > > Change the semantics of mincore() so that it only reveals pagecache
+> > > information for non-anonymous mappings that belog to files that the
+> > > calling process could (if it tried to) successfully open for writing;
+> > > otherwise we'd be including shared non-exclusive mappings, which
+> > > 
+> > >  - is the sidechannel
+> > > 
+> > >  - is not the usecase for mincore(), as that's primarily used for data,
+> > >    not (shared) text
 > > 
-> > On 5/22/19 4:02 PM, Ard Biesheuvel wrote:
-> > > The following commit
-> > > 
-> > >    7290d5809571 ("module: use relative references for __ksymtab entries")
-> > > 
-> > > updated the ksymtab handling of some KASLR capable architectures
-> > > so that ksymtab entries are emitted as pairs of 32-bit relative
-> > > references. This reduces the size of the entries, but more
-> > > importantly, it gets rid of statically assigned absolute
-> > > addresses, which require fixing up at boot time if the kernel
-> > > is self relocating (which takes a 24 byte RELA entry for each
-> > > member of the ksymtab struct).
-> > > 
-> > > Since ksymtab entries are always part of the same module as the
-> > > symbol they export (or of the core kernel), it was assumed at the
-> > > time that a 32-bit relative reference is always sufficient to
-> > > capture the offset between a ksymtab entry and its target symbol.
-> > > 
-> > > Unfortunately, this is not always true: in the case of per-CPU
-> > > variables, a per-CPU variable's base address (which usually differs
-> > > from the actual address of any of its per-CPU copies) could be at
-> > > an arbitrary offset from the ksymtab entry, and so it may be out
-> > > of range for a 32-bit relative reference.
-> > > 
+> > ...
+> > 
+> > > @@ -189,8 +205,13 @@ static long do_mincore(unsigned long add
+> > >  	vma = find_vma(current->mm, addr);
+> > >  	if (!vma || addr < vma->vm_start)
+> > >  		return -ENOMEM;
+> > > -	mincore_walk.mm = vma->vm_mm;
+> > >  	end = min(vma->vm_end, addr + (pages << PAGE_SHIFT));
+> > > +	if (!can_do_mincore(vma)) {
+> > > +		unsigned long pages = DIV_ROUND_UP(end - addr, PAGE_SIZE);
+> > > +		memset(vec, 1, pages);
+> > > +		return pages;
+> > > +	}
+> > > +	mincore_walk.mm = vma->vm_mm;
+> > >  	err = walk_page_range(addr, end, &mincore_walk);
+> > 
+> > We normally return errors when we deny permissions; but this one just
+> > returns success and wrong data.
+> > 
+> > Could we return -EPERM there? If not, should it at least get a
+> > comment?
 > 
-> (Apologies for the 3-act monologue)
+> This was a deliberate decision AFAIR. We cannot return failure because
+> this could lead to an unexpected userspace failure. We are pretendeing
+> that those pages are present because that is the safest option -
+> e.g. consider an application which tries to refault until the page is
+> present...
 
-Exposition, development and recapitulation ;)
+Yes, in particular several userspace applications I found used mincore()
+to find out whether a particular range is mapped at all or not, treating
+any error as "unmapped" and any non-error return as "mapped".
 
-> This turns out to be incorrect. The symbol address of per-CPU variables
-> exported by modules is always in the vicinity of __per_cpu_start, and so it
-> is simply a matter of making sure that the core kernel is in range for
-> module ksymtab entries containing 32-bit relative references.
-> 
-> When running the arm64 with kaslr enabled, we currently randomize the module
-> space based on the range of ADRP/ADD instruction pairs, which have a -/+ 4
-> GB range rather than the -/+ 2 GB range of 32-bit place relative data
-> relocations. So we can fix this by simply reducing the randomization window
-> to 2 GB.
-
-Makes sense. Do you see the need for an option to disable PREL relocs
-altogether in case somebody wants the additional randomization range?
-
-Will
+    - Kevin
