@@ -2,102 +2,143 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0337FC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3855AC282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB2EF20862
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 096542177E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:49:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="KXEg/r5c"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="PHFjvm23"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731081AbfEWPrb (ORCPT
+        id S1731120AbfEWPs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 11:47:31 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34349 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730760AbfEWPrb (ORCPT
+        Thu, 23 May 2019 11:48:59 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:54769 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731038AbfEWPs6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 11:47:31 -0400
-Received: by mail-pg1-f194.google.com with SMTP id h2so289907pgg.1
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 08:47:31 -0700 (PDT)
+        Thu, 23 May 2019 11:48:58 -0400
+Received: by mail-it1-f193.google.com with SMTP id h20so10507448itk.4
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 08:48:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=jv+ZMbc1I98Kfuw0Mvc1m1vrwyGUlcd3bpE/jqp7bS0=;
-        b=KXEg/r5cqRllmZVEG6qwVqCZ9yxdY79ciDsmC/wq73qmEkq0HJzU0pbMFvT8pyOOMC
-         M1UTsQ+2P8noymytOkYDBQQKI0XdRCSx2LeIifJkiOu6m8N21sILr6+Ps4pbjTJvL1VL
-         HssSLUOOnz4YrbEenbqPmEsu6qZ4d/ZUReNHcY7wNTI9OVGWBPOirHS74rSSwsXE5W0m
-         9pM6F9+0iwNHMZEVpKMAAYuVcbsh3JiTHLDVoZ4iwRW5ZlJaIkDyf1TwujS67RlCWQ7E
-         k2qqzXQHZGoTX2qUbg+yNFo/egvQnf4HxtcKgOUbVPMO7u2BWjGzPzkhcTGTF7Yta08K
-         OFiA==
+        d=brauner.io; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qdhvyBV5eCUYlrhtprSXvsuKWr+yBvkV1a8SbE6AS60=;
+        b=PHFjvm23caZGYr4uiNYmJAibVBzXG/G68GWrR3KEL+4ubMa1yG52PY5KbD5HgQ94DS
+         UYyKxymb5fEjGeKdBKbPovN4lf1X37+9FR6/IKpeONALi6Pb6Ba6dCiyKGGLwyh/Thfo
+         TBBGEFZCAqITH+9ysPxJvr8e5RDKlYMuQAQ4Vb/7fDfahu0Q9wvBEskpiiSkZAzXwDg0
+         HO3ghqNF44h7BZNoCoOH48Br+sXnnPudMYWxblMnUowckCT/7+BYIAVlMi8aQoMmK9+g
+         efMaCVYPokznZ4LdQiFStyRq1hGeIabBZ6GksyGUTQGFowjocl7wKgtLYpmWvu2C2iki
+         T5Vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=jv+ZMbc1I98Kfuw0Mvc1m1vrwyGUlcd3bpE/jqp7bS0=;
-        b=aUysFh79PEulAWNHxkbnl+hRgArpn8x7gMZb1cd5dueo3MQLQEQInMpxZxMqAGy6/z
-         8rhKVm4KfUbSKMU38LGIUt75iOGqUw6Nf4/v4Ou11zuRURhDfmKTjSn0an0pKvOMOc+P
-         qZ0qI2q3H7aHq98JZsc+As0PGAtsdsSFffNRlSSNzw9okqmevOIKgczvSlYQOtStsOkO
-         zfDPW11wLbdMPeshlnumefKUFfTAXXYI4oTvcg7sfPBieIAIzSgT2IRt2oxJYnXeE56r
-         vz15cOUp7e0TIE97Ps7MJ8TVuHpTkHldDC9ESuhEoNd5AM7yDl+GwOTyMEsezN3oRHbJ
-         bIyA==
-X-Gm-Message-State: APjAAAX32oObvCG1Hw2H0OleRWt0OKR+hm864DWGURrTNxJNT2Qky8wF
-        R9BHWnREFI94gd2jlV6MFGX1EQ==
-X-Google-Smtp-Source: APXvYqzydErEWSZnvbFfkefvdicgMunWwZk7nzF43XkELRH/ke8RkJbMW+oZH025cjCAYMNFEwVIbw==
-X-Received: by 2002:a17:90a:e0f:: with SMTP id v15mr2093710pje.140.1558626450657;
-        Thu, 23 May 2019 08:47:30 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:ed4f:2717:3604:bb3f])
-        by smtp.googlemail.com with ESMTPSA id u6sm40276897pfa.1.2019.05.23.08.47.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 May 2019 08:47:30 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH] mmc: meson-gx: fix irq ack
-In-Reply-To: <20190523145950.7030-1-jbrunet@baylibre.com>
-References: <20190523145950.7030-1-jbrunet@baylibre.com>
-Date:   Thu, 23 May 2019 08:47:29 -0700
-Message-ID: <7ho93t41gu.fsf@baylibre.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qdhvyBV5eCUYlrhtprSXvsuKWr+yBvkV1a8SbE6AS60=;
+        b=s7Ir7JYYynKo7RKT8VbVYrkxka7WSwbltaqsPSjwSYeLKj7I5ajdEz7MkpGK+f7Wa+
+         cZWToDS7b1cc9bDBu78fNzx1kV/GraZTJU8TOxY8m2FGVJWzPPuR4sKWjTiAe2wS4SmH
+         /Qg22lrD6yRgXXRL5QMPxePdSnOAibA61UcvzpdgCkilyaiWqVovk1JBlUuv4TV/VsRN
+         Y6XCgJaFG88af/SEzWYfYgyKe0iWL+FvxFfAOWu8jvegMG7KcpJLGKuDUv+yqLjhgmFw
+         IrGmvYmQTAVFy6atc7dtvQyRdMQqOUKesWYEWrJK13trbRZhxCpfVk5Cc3iUAmPd6xSG
+         Guqw==
+X-Gm-Message-State: APjAAAVRhNthzBP8cgd8HU7Y4Rt0NI4/XYnOvzsYdrJzParqsXgPbcZs
+        7If2eE8A+KR57BkNNoeH7lWb/A==
+X-Google-Smtp-Source: APXvYqys6QK/iakUDj+Sh+Ogl2zyh29ySOoi4FUzRp4yc77NrnF9Vcc9AkfEItA9paeABX2UyF+z5Q==
+X-Received: by 2002:a24:6212:: with SMTP id d18mr13266189itc.2.1558626537435;
+        Thu, 23 May 2019 08:48:57 -0700 (PDT)
+Received: from localhost.localdomain ([172.56.12.187])
+        by smtp.gmail.com with ESMTPSA id v1sm9124939iob.56.2019.05.23.08.48.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 May 2019 08:48:56 -0700 (PDT)
+From:   Christian Brauner <christian@brauner.io>
+To:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        torvalds@linux-foundation.org, fweimer@redhat.com
+Cc:     jannh@google.com, oleg@redhat.com, tglx@linutronix.de,
+        arnd@arndb.de, shuah@kernel.org, dhowells@redhat.com,
+        tkjos@android.com, ldv@altlinux.org, miklos@szeredi.hu,
+        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, linux-arch@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, x86@kernel.org,
+        Christian Brauner <christian@brauner.io>
+Subject: [PATCH v2 0/2] close_range()
+Date:   Thu, 23 May 2019 17:47:45 +0200
+Message-Id: <20190523154747.15162-1-christian@brauner.io>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jerome Brunet <jbrunet@baylibre.com> writes:
+Hey,
 
-> While cleaning the ISR of the meson-gx and acking only raised irqs,
-> the ack of the irq was moved at the very last stage of the function.
->
-> This was stable during the initial tests but it triggered issues with
-> hs200, under specific loads (like booting android). Acking the irqs
-> after calling the mmc_request_done() causes the problem.
->
-> Moving the ack back to the original place solves the issue. Since the
-> irq is edge triggered, it does not hurt to ack irq even earlier, so
-> let's do it early in the ISR.
->
-> Fixes: 9c5fdb07a28d ("mmc: meson-gx: ack only raised irq")
-> Tested-by: Neil Armstrong <narmstrong@baylibre.com>
-> Tested-by: Kevin Hilman <khilman@baylibre.com>
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+This is v2 of this patchset.
 
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+In accordance with some comments There's a cond_resched() added to the
+close loop similar to what is done for close_files().
+A common helper pick_file() for __close_fd() and __close_range() has
+been split out. This allows to only make a cond_resched() call when
+filp_close() has been called similar to what is done in close_files().
+Maybe that's not worth it. Jann mentioned that cond_resched() looks
+rather cheap.
+So it maybe that we could simply do:
 
-And to be clear, this fix should go into v5.2-rc.
+while (fd <= max_fd) {
+       __close(files, fd++);
+       cond_resched();
+}
 
-My Tested-by is already above, but just for the benefit of the
-archives... tested this on mainline, and also on a v4.19 backport with
-Android and it fixes issues see there.
+I also added a missing test for close_range(fd, fd, 0).
 
-Kevin
+Thanks!
+Christian
+
+Christian Brauner (2):
+  open: add close_range()
+  tests: add close_range() tests
+
+ arch/alpha/kernel/syscalls/syscall.tbl        |   1 +
+ arch/arm/tools/syscall.tbl                    |   1 +
+ arch/arm64/include/asm/unistd32.h             |   2 +
+ arch/ia64/kernel/syscalls/syscall.tbl         |   1 +
+ arch/m68k/kernel/syscalls/syscall.tbl         |   1 +
+ arch/microblaze/kernel/syscalls/syscall.tbl   |   1 +
+ arch/mips/kernel/syscalls/syscall_n32.tbl     |   1 +
+ arch/mips/kernel/syscalls/syscall_n64.tbl     |   1 +
+ arch/mips/kernel/syscalls/syscall_o32.tbl     |   1 +
+ arch/parisc/kernel/syscalls/syscall.tbl       |   1 +
+ arch/powerpc/kernel/syscalls/syscall.tbl      |   1 +
+ arch/s390/kernel/syscalls/syscall.tbl         |   1 +
+ arch/sh/kernel/syscalls/syscall.tbl           |   1 +
+ arch/sparc/kernel/syscalls/syscall.tbl        |   1 +
+ arch/x86/entry/syscalls/syscall_32.tbl        |   1 +
+ arch/x86/entry/syscalls/syscall_64.tbl        |   1 +
+ arch/xtensa/kernel/syscalls/syscall.tbl       |   1 +
+ fs/file.c                                     |  62 +++++++-
+ fs/open.c                                     |  20 +++
+ include/linux/fdtable.h                       |   2 +
+ include/linux/syscalls.h                      |   2 +
+ include/uapi/asm-generic/unistd.h             |   4 +-
+ tools/testing/selftests/Makefile              |   1 +
+ tools/testing/selftests/core/.gitignore       |   1 +
+ tools/testing/selftests/core/Makefile         |   6 +
+ .../testing/selftests/core/close_range_test.c | 142 ++++++++++++++++++
+ 26 files changed, 249 insertions(+), 9 deletions(-)
+ create mode 100644 tools/testing/selftests/core/.gitignore
+ create mode 100644 tools/testing/selftests/core/Makefile
+ create mode 100644 tools/testing/selftests/core/close_range_test.c
+
+-- 
+2.21.0
+
