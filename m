@@ -2,168 +2,102 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF62C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96386C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 22:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E58E21773
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:59:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 604C621773
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 22:00:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QWbKFbkn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o/rLrxnW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388364AbfEWV7C (ORCPT
+        id S2388465AbfEWWAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 17:59:02 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:33173 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387616AbfEWV7B (ORCPT
+        Thu, 23 May 2019 18:00:07 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:33565 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387616AbfEWWAH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 17:59:01 -0400
-Received: by mail-qt1-f193.google.com with SMTP id z5so2321231qtb.0;
-        Thu, 23 May 2019 14:59:01 -0700 (PDT)
+        Thu, 23 May 2019 18:00:07 -0400
+Received: by mail-ed1-f68.google.com with SMTP id n17so11339033edb.0;
+        Thu, 23 May 2019 15:00:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lTgN7h3hdKr1+n0VjmGc/qWeMMTNBbp9DYutgOmMsBE=;
-        b=QWbKFbknKqScP8lkJNlpzZhJFZIFQqaNViglb5lX/qE5mAIVvrSs1mEANeC2R2rz4W
-         vr2CQALElWfwHN3hYOMXmx3SyeYeHL1CwqyJQXQ6KHiLEKVwgpCcTNUDnoY4kCe8slfe
-         29pDR7UlZXXz1zRY3hWKJ+8pE/ZKtMUNCNmBOZxc3X1TzU/ZMrBCX5LhCOUceJwrwbjY
-         sTWp/DdpTvLlkimimWAkKobngh+PBCAeK0yI26t/venNA1qTnL/XlmtG4AYB/YtjmuKk
-         zQXUp/gj8XzS9blh+3/3q1WefBLkyFlZo/uJPyCyUu1znC+wanluCi/b1pU20wbHTKQM
-         6NSg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NrjoaoALFNTTvuCx/kpH3VCJxv7gD5HUSZpBKLlLy3Y=;
+        b=o/rLrxnWlaxo+KO6LQia/PuLTPMOLvFfKv5nueVIVHcQ4LtoL1M+ExBzV2mOXHCkgq
+         9FXZmmJt5eqRpe8yMoW92kiXkhsaAQFkuOa+LvBBokqehAAZvNkuqzQeg8PdBjSHJb9T
+         2TsMZgmwUDfJG9sTDn+2BogPTov9xd6i4AivrxB6DTqXh9TVSKiyUB6Z6QLmoYX+deUy
+         Y7+U6CTkAyQlsh3Uztoum88uCwzTeuNbgXhGI7lbyXZPmftAI7eGkYV/uD1vBhYokyZF
+         wwmcWZLsgKcLs50zTx8C9ONYD5j8QHAp0gorKmXlLcMXGn9nPGtz2gpAgAf1ykj0uVZD
+         1mXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lTgN7h3hdKr1+n0VjmGc/qWeMMTNBbp9DYutgOmMsBE=;
-        b=uDC7PjEmqOHOK9Ueb02TE86HJzGFWbN2oh6o2pFAMDT+vaifmWJXrDLeF6+7pu5pm3
-         +zlGO2SibfRW4tREijfCCM8xqfD+Z7dxPtM8nhMsU4xs8InVV+anouz2wAZhVxx8ldD/
-         wlGn+5jHIPt2KKd3/WmJwv7owbXsqFOOFBcLj1P+BjTjFgz39VaWPiMHHRt+Vl3wm1y7
-         z+PD6Tdt5QA/w6n6PqlskTdCNpgfwKYzx31DcubPYR2xVuIZhyS58JGNQp+eNVOCFu61
-         ZihbRuIUwIZ7KxpQxd7UFyrG8MdHpJUbVUqrtifG4oTnJBb05+w8yIEEIlD47vGRdFdo
-         /QNA==
-X-Gm-Message-State: APjAAAWV/dgo3mOl3iJWbAdWHhy84qhd4b2sSusvHSPpUXOhTOOBZqWf
-        Z+BfPt9KPMUSsmW3WFi7yLKStlJMsnQ=
-X-Google-Smtp-Source: APXvYqwhxl26lCFqQbvw0xH5Wts3d1RmkKlYkbFIX4IScnu1FnkZLxIMiLvv14t5bKn8SQu61Ssiqg==
-X-Received: by 2002:a0c:b621:: with SMTP id f33mr49951528qve.199.1558648740234;
-        Thu, 23 May 2019 14:59:00 -0700 (PDT)
-Received: from localhost ([2601:184:4780:7861:5010:5849:d76d:b714])
-        by smtp.gmail.com with ESMTPSA id b11sm300127qtt.6.2019.05.23.14.58.59
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 May 2019 14:58:59 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Rob Clark <robdclark@chromium.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] PM / devfreq: try_then_request_governor should not return NULL
-Date:   Thu, 23 May 2019 14:58:45 -0700
-Message-Id: <20190523215853.16622-1-robdclark@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NrjoaoALFNTTvuCx/kpH3VCJxv7gD5HUSZpBKLlLy3Y=;
+        b=DeKZ8uixSASIStNO3HKUq9LL+JZ4sX/5Dgf8qA/FbrcgPNB/dkMjWgFCMYiJW0WTfZ
+         /gKzDCSHeVWtGJ6/cwYdjjOx/rGVXW6aXHL2M7rSHpPlyd8z2IS+nMtBR5OcV7i5pDdK
+         8Rv0KiyOmCSFdfd0MTg3DbJiWWwjAfwCT4ckrrFKr36epn0I5/i+7ju+Wg1b7zGdjoTg
+         e8uC6bcIHTgRb7DDsHYCYOPsgDXK2+cbS+QUg1MEKGXo1rdak47+dLc7vmDUmQdofrGH
+         Uy+I+RnZ57pYpUjRIhOYO+w9bG005EsPmnHK4zB3c8WYXML4/TVg5y9if/1hzqlFLjty
+         GXOA==
+X-Gm-Message-State: APjAAAVtVrPjddPita0+f5vEULhMyu91Iyq/IphCLbYzj4P1PvveadsP
+        vSKnM+3i6Py17EtpM7oFBnqmX4nw4dfJJdR2YzA=
+X-Google-Smtp-Source: APXvYqwtbiWFmfaqzvHt8wpfu08qW1lq5iWXYv/Rp0ykLQqMYS4xrMICt9HE7VUeyZAeAAEyThDzOA6bsjL/fa3PYhM=
+X-Received: by 2002:a17:906:11d3:: with SMTP id o19mr60567117eja.278.1558648805454;
+ Thu, 23 May 2019 15:00:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190523210651.80902-1-fklassen@appneta.com> <20190523210651.80902-2-fklassen@appneta.com>
+In-Reply-To: <20190523210651.80902-2-fklassen@appneta.com>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Thu, 23 May 2019 17:59:29 -0400
+Message-ID: <CAF=yD-+4g-HjmCnDWaVfdsyruePXqYeUDJgnffz9ro+rgNGv1g@mail.gmail.com>
+Subject: Re: [PATCH net 1/4] net/udp_gso: Allow TX timestamp with UDP GSO
+To:     Fred Klassen <fklassen@appneta.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        Willem de Bruijn <willemb@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+On Thu, May 23, 2019 at 5:09 PM Fred Klassen <fklassen@appneta.com> wrote:
+>
+> Fixes an issue where TX Timestamps are not arriving on the error queue
+> when UDP_SEGMENT CMSG type is combined with CMSG type SO_TIMESTAMPING.
+> This can be illustrated with an updated updgso_bench_tx program which
+> includes the '-T' option to test for this condition.
+>
+>     ./udpgso_bench_tx -4ucTPv -S 1472 -l2 -D 172.16.120.18
+>     poll timeout
+>     udp tx:      0 MB/s        1 calls/s      1 msg/s
+>
+> The "poll timeout" message above indicates that TX timestamp never
+> arrived.
+>
+> It also appears that other TX CMSG types cause similar issues, for
+> example trying to set SOL_IP/IP_TOS.
+>
+>     ./udpgso_bench_tx -4ucPv -S 1472 -q 182 -l2 -D 172.16.120.18
+>     poll timeout
+>     udp tx:      0 MB/s        1 calls/s      1 msg/s
 
-The two spots it is called expect either an IS_ERR() or a valid pointer,
-but not NULL.
+what exactly is the issue with IP_TOS?
 
-Fixes this crash that I came across:
-
-   Unable to handle kernel NULL pointer dereference at virtual address 0000000000000030
-   Mem abort info:
-     ESR = 0x96000005
-     Exception class = DABT (current EL), IL = 32 bits
-     SET = 0, FnV = 0
-     EA = 0, S1PTW = 0
-   Data abort info:
-     ISV = 0, ISS = 0x00000005
-     CM = 0, WnR = 0
-   [0000000000000030] user address but active_mm is swapper
-   Internal error: Oops: 96000005 [#1] PREEMPT SMP
-   Modules linked in:
-   Process kworker/2:1 (pid: 212, stack limit = 0x(____ptrval____))
-   CPU: 2 PID: 212 Comm: kworker/2:1 Not tainted 5.1.0-43338-g460e6984675c-dirty #54
-   Hardware name: Google Cheza (rev3+) (DT)
-   Workqueue: events deferred_probe_work_func
-   pstate: 00c00009 (nzcv daif +PAN +UAO)
-   pc : devfreq_add_device+0x2e4/0x410
-   lr : devfreq_add_device+0x2d4/0x410
-   sp : ffffff8013d93740
-   x29: ffffff8013d93790 x28: ffffffc0f54f8670
-   x27: 0000000000000001 x26: 0000000000000007
-   x25: ffffff80124abfd8 x24: 0000000000000000
-   x23: ffffffc0fabc4048 x22: ffffffc0fabc4388
-   x21: ffffffc0fabc4010 x20: ffffffc0fa243010
-   x19: ffffffc0fabc4000 x18: 0000000091c3d373
-   x17: 0000000000000400 x16: 000000000000001a
-   x15: 000000019e06d400 x14: 0000000000000001
-   x13: 0000000000000000 x12: 00000000000006b6
-   x11: 0000000000000000 x10: 0000000000000000
-   x9 : ffffffc0fa18ba00 x8 : 0000000000000000
-   x7 : 0000000000000000 x6 : ffffff80127a3d9a
-   x5 : ffffff8013d93550 x4 : 0000000000000000
-   x3 : 0000000000000000 x2 : 0000000000000000
-   x1 : 00000000000000fe x0 : 0000000000000000
-   Call trace:
-    devfreq_add_device+0x2e4/0x410
-    devm_devfreq_add_device+0x64/0xac
-    msm_gpu_init+0x320/0x5c0
-    adreno_gpu_init+0x21c/0x274
-    a6xx_gpu_init+0x68/0xf4
-    adreno_bind+0x158/0x284
-    component_bind_all+0x110/0x204
-    msm_drm_bind+0x118/0x5b8
-    try_to_bring_up_master+0x15c/0x19c
-    component_master_add_with_match+0xb4/0xec
-    msm_pdev_probe+0x1f0/0x27c
-    platform_drv_probe+0x90/0xb0
-    really_probe+0x120/0x298
-    driver_probe_device+0x64/0xfc
-    __device_attach_driver+0x8c/0xa4
-    bus_for_each_drv+0x88/0xd0
-    __device_attach+0xac/0x134
-    device_initial_probe+0x20/0x2c
-    bus_probe_device+0x34/0x90
-    deferred_probe_work_func+0x74/0xac
-    process_one_work+0x210/0x428
-    worker_thread+0x278/0x3e4
-    kthread+0x120/0x130
-    ret_from_fork+0x10/0x18
-   Code: aa0003f8 b13ffc1f 54000762 f901c278 (f9401b08)
-   ---[ end trace a6ecc18ce5894375 ]---
-   Kernel panic - not syncing: Fatal exception
-
-Signed-off-by: Rob Clark <robdclark@chromium.org>
----
- drivers/devfreq/devfreq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-index 0ae3de76833b..d29f66f0e52a 100644
---- a/drivers/devfreq/devfreq.c
-+++ b/drivers/devfreq/devfreq.c
-@@ -254,7 +254,7 @@ static struct devfreq_governor *try_then_request_governor(const char *name)
- 		/* Restore previous state before return */
- 		mutex_lock(&devfreq_list_lock);
- 		if (err)
--			return NULL;
-+			return ERR_PTR(err);
- 
- 		governor = find_devfreq_governor(name);
- 	}
--- 
-2.20.1
-
+If I understand correctly, the issue here is that the new 'P' option
+that polls on the error queue times out. This is unrelated to
+specifying TOS bits? Without zerocopy or timestamps, no message is
+expected on the error queue.
