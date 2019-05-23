@@ -2,51 +2,52 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C964C282DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CD6C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57C2E20851
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C22720851
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:47:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640819;
-	bh=Yt3FjdJeDqmwJIX+H6jtdQ7dkyINtBL76TztmOZ5O+s=;
+	s=default; t=1558640833;
+	bh=iinsLTxbI9GgEq3kXfceGAF5pzt0Yc7F8j71KqN8rV0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rM8+QOmMhSY4npF4y2/QJvQNshkr+RhoL1BhJh+RzxDXIasCuAbiumKdeXhOakgE+
-	 Shq2OnCjq7XzPh81nIKNY/EMFYc6RllfF1+hk9TwW4y5fnLy9pEDU38sGWg2ndt1wK
-	 bwnOJXmFsWu49zU1/hnNM2B9roZ+2OW8ssYaUEWo=
+	b=UxhkPTAAewft/IfafO5dAI0Jsa0VEt8VTTqspLQRMEHqvR+XPPpnY+C0K7uzUjFNE
+	 LPIeC6PL5SmznNLQLwNyItRxO4ADlO/4UioRzzfh61WAbzz869gHW2rg+o4E6CYYKn
+	 WAs3Zk/tfuVcPMlmWu07W/wFAViRdnkWt7Z3ORO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388725AbfEWTq6 (ORCPT
+        id S2388143AbfEWTrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:46:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47938 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:47:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387867AbfEWTN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:13:59 -0400
+        id S2388082AbfEWTN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:13:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 278C6217D9;
-        Thu, 23 May 2019 19:13:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DAF32186A;
+        Thu, 23 May 2019 19:13:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638838;
-        bh=Yt3FjdJeDqmwJIX+H6jtdQ7dkyINtBL76TztmOZ5O+s=;
+        s=default; t=1558638806;
+        bh=iinsLTxbI9GgEq3kXfceGAF5pzt0Yc7F8j71KqN8rV0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fz+3yuiPf3VBr+g51dusjIKpNWv0FPLeXpaaX1/kE2jUkrJnmSpallH3Qne3jAheg
-         OIiFc5HOk8ldI1JfoY/uXrimLEiL4fYx8lfyE3ZzAsCp89V/ce07eBKBsXFlkpAh5r
-         DtnQZmWmjbSWRVGj6roR7YaZLKlhJrxbUXjCw1/k=
+        b=JPHLvEHjKJVFH/x3TVO4WhhLjOtAn0hjqbW8f6SrlFMWA/8a9RzET5rHIA0a8cLsn
+         bIVPzW5Io7+t7/O4ODPYwTfozu1Y/HxoZ/qvaxzGekzU7FtmIUKyLA0uoqKTsmr8VM
+         7N1MFuzGcRn/vM9xMvMe37AFCfE5p6YRi7FKEuas=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 63/77] apparmorfs: fix use-after-free on symlink traversal
-Date:   Thu, 23 May 2019 21:06:21 +0200
-Message-Id: <20190523181728.674674667@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+        Nigel Croxon <ncroxon@redhat.com>, Xiao Ni <xni@redhat.com>,
+        Song Liu <songliubraving@fb.com>
+Subject: [PATCH 4.14 72/77] Revert "Dont jump to compute_result state from check_result state"
+Date:   Thu, 23 May 2019 21:06:30 +0200
+Message-Id: <20190523181729.932487393@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181719.982121681@linuxfoundation.org>
 References: <20190523181719.982121681@linuxfoundation.org>
@@ -59,51 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f51dcd0f621caac5380ce90fbbeafc32ce4517ae ]
+From: Song Liu <songliubraving@fb.com>
 
-symlink body shouldn't be freed without an RCU delay.  Switch apparmorfs
-to ->destroy_inode() and use of call_rcu(); free both the inode and symlink
-body in the callback.
+commit a25d8c327bb41742dbd59f8c545f59f3b9c39983 upstream.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This reverts commit 4f4fd7c5798bbdd5a03a60f6269cf1177fbd11ef.
+
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Nigel Croxon <ncroxon@redhat.com>
+Cc: Xiao Ni <xni@redhat.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- security/apparmor/apparmorfs.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/md/raid5.c |   19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
-diff --git a/security/apparmor/apparmorfs.c b/security/apparmor/apparmorfs.c
-index 0e03377bb83ea..dd746bd69a9b2 100644
---- a/security/apparmor/apparmorfs.c
-+++ b/security/apparmor/apparmorfs.c
-@@ -126,17 +126,22 @@ static int aafs_show_path(struct seq_file *seq, struct dentry *dentry)
- 	return 0;
- }
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -4218,15 +4218,26 @@ static void handle_parity_checks6(struct
+ 	case check_state_check_result:
+ 		sh->check_state = check_state_idle;
  
--static void aafs_evict_inode(struct inode *inode)
-+static void aafs_i_callback(struct rcu_head *head)
- {
--	truncate_inode_pages_final(&inode->i_data);
--	clear_inode(inode);
-+	struct inode *inode = container_of(head, struct inode, i_rcu);
- 	if (S_ISLNK(inode->i_mode))
- 		kfree(inode->i_link);
-+	free_inode_nonrcu(inode);
-+}
-+
-+static void aafs_destroy_inode(struct inode *inode)
-+{
-+	call_rcu(&inode->i_rcu, aafs_i_callback);
- }
- 
- static const struct super_operations aafs_super_ops = {
- 	.statfs = simple_statfs,
--	.evict_inode = aafs_evict_inode,
-+	.destroy_inode = aafs_destroy_inode,
- 	.show_path = aafs_show_path,
- };
- 
--- 
-2.20.1
-
+-		if (s->failed > 1)
+-			break;
+ 		/* handle a successful check operation, if parity is correct
+ 		 * we are done.  Otherwise update the mismatch count and repair
+ 		 * parity if !MD_RECOVERY_CHECK
+ 		 */
+ 		if (sh->ops.zero_sum_result == 0) {
+-			/* Any parity checked was correct */
+-			set_bit(STRIPE_INSYNC, &sh->state);
++			/* both parities are correct */
++			if (!s->failed)
++				set_bit(STRIPE_INSYNC, &sh->state);
++			else {
++				/* in contrast to the raid5 case we can validate
++				 * parity, but still have a failure to write
++				 * back
++				 */
++				sh->check_state = check_state_compute_result;
++				/* Returning at this point means that we may go
++				 * off and bring p and/or q uptodate again so
++				 * we make sure to check zero_sum_result again
++				 * to verify if p or q need writeback
++				 */
++			}
+ 		} else {
+ 			atomic64_add(STRIPE_SECTORS, &conf->mddev->resync_mismatches);
+ 			if (test_bit(MD_RECOVERY_CHECK, &conf->mddev->recovery)) {
 
 
