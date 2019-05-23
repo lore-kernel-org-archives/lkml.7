@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35255C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB984C282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D1F6217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AE6C217D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:09:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558638549;
-	bh=4Iku/FjekZcjWFXaDe6eZYD6gS+UBEqFJtU66m3sppg=;
+	s=default; t=1558638551;
+	bh=HAcD3m/JIFM/cfdQ3vbpGqvXZmV1Dd5atFkadOTgNs4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kWt2aNCqGNcseqLe0c2W7ahyLiGu3RUnbTm8FhA7lTefonWm4pVsukI748EMk4Lmu
-	 JHj1lNduwJK/fzi5ADx7wJamhB3OLkAt94HaDSJ7DgOVbIhukHo8m9Xo+VQUFm2q2I
-	 yp8VanBNVXITmZP94Qlq4KDaKjSw1exKP1lhflIc=
+	b=ZzEI8/4NdZ7CrzggEPNzVU5OZsDH9i58DOqnykyEfYKCx1hNqBChoOdVZaxTx9wrT
+	 kfjpddIeYlLfqcIzx9U5JeRF+wPR2wzw1w2zabjxqjPu6rVsBqBEY255vk5B9g6OEt
+	 cN+y/TFrbFzG+NtbG8/FDz7HVOhMW3kc7UqBtpzs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732060AbfEWTJI (ORCPT
+        id S1732074AbfEWTJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:09:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42112 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:09:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732039AbfEWTJH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:09:07 -0400
+        id S1732039AbfEWTJJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:09:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B52621841;
-        Thu, 23 May 2019 19:09:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCC6B217D7;
+        Thu, 23 May 2019 19:09:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638546;
-        bh=4Iku/FjekZcjWFXaDe6eZYD6gS+UBEqFJtU66m3sppg=;
+        s=default; t=1558638549;
+        bh=HAcD3m/JIFM/cfdQ3vbpGqvXZmV1Dd5atFkadOTgNs4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SzVi5vP8DJE5ZUf3DjDae4+KgFXJwnYzghbykCRzxbOhEsULzXl/XvHp4auPGpTQ7
-         PVH0Fdgh7SnOLbhVC+xRqf454CKsBXOGn9QXOW7uDXzjVIWaDD0l9kpYnQb6zevZyX
-         +OXB9rE0ERXWY5PG/bSCC6h4BppyF7kDfcMK4Jrg=
+        b=FlJrUpy5co1MaJjFW7D75VKuDJvGZk+tjjCztwA0sYUE8w0+OG1kuDXxniC9QSMIo
+         MevIKjOiV4CI/WTOWk609RNxGZbyKAyF/pSHN+xwPNhA8u1xAhTmdXB9xfuVhq3IeA
+         9VSGe1/1e3LqIb+ZHM9BuT0FdE07oavwseXoC3Y8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tingwei Zhang <tingwei@codeaurora.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: [PATCH 4.9 11/53] stm class: Fix channel free in stm output free path
-Date:   Thu, 23 May 2019 21:05:35 +0200
-Message-Id: <20190523181712.685624475@linuxfoundation.org>
+        stable@vger.kernel.org, Xiao Ni <xni@redhat.com>,
+        NeilBrown <neilb@suse.com>, Yufen Yu <yuyufen@huawei.com>,
+        Song Liu <songliubraving@fb.com>
+Subject: [PATCH 4.9 12/53] md: add mddev->pers to avoid potential NULL pointer dereference
+Date:   Thu, 23 May 2019 21:05:36 +0200
+Message-Id: <20190523181712.857372461@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181710.981455400@linuxfoundation.org>
 References: <20190523181710.981455400@linuxfoundation.org>
@@ -60,40 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tingwei Zhang <tingwei@codeaurora.org>
+From: Yufen Yu <yuyufen@huawei.com>
 
-commit ee496da4c3915de3232b5f5cd20e21ae3e46fe8d upstream.
+commit ee37e62191a59d253fc916b9fc763deb777211e2 upstream.
 
-Number of free masters is not set correctly in stm
-free path. Fix this by properly adding the number
-of output channels before setting them to 0 in
-stm_output_disclaim().
+When doing re-add, we need to ensure rdev->mddev->pers is not NULL,
+which can avoid potential NULL pointer derefence in fallowing
+add_bound_rdev().
 
-Currently it is equivalent to doing nothing since
-master->nr_free is incremented by 0.
-
-Fixes: 7bd1d4093c2f ("stm class: Introduce an abstraction for System Trace Module devices")
-Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc: stable@vger.kernel.org # v4.4
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Fixes: a6da4ef85cef ("md: re-add a failed disk")
+Cc: Xiao Ni <xni@redhat.com>
+Cc: NeilBrown <neilb@suse.com>
+Cc: <stable@vger.kernel.org> # 4.4+
+Reviewed-by: NeilBrown <neilb@suse.com>
+Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwtracing/stm/core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/md.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/hwtracing/stm/core.c
-+++ b/drivers/hwtracing/stm/core.c
-@@ -226,8 +226,8 @@ stm_output_disclaim(struct stm_device *s
- 	bitmap_release_region(&master->chan_map[0], output->channel,
- 			      ilog2(output->nr_chans));
- 
--	output->nr_chans = 0;
- 	master->nr_free += output->nr_chans;
-+	output->nr_chans = 0;
- }
- 
- /*
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -2694,8 +2694,10 @@ state_store(struct md_rdev *rdev, const
+ 			err = 0;
+ 		}
+ 	} else if (cmd_match(buf, "re-add")) {
+-		if (test_bit(Faulty, &rdev->flags) && (rdev->raid_disk == -1) &&
+-			rdev->saved_raid_disk >= 0) {
++		if (!rdev->mddev->pers)
++			err = -EINVAL;
++		else if (test_bit(Faulty, &rdev->flags) && (rdev->raid_disk == -1) &&
++				rdev->saved_raid_disk >= 0) {
+ 			/* clear_bit is performed _after_ all the devices
+ 			 * have their local Faulty bit cleared. If any writes
+ 			 * happen in the meantime in the local node, they
 
 
