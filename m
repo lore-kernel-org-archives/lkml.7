@@ -2,143 +2,123 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65233C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1111C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30CBC20879
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:16:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77B1321773
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:17:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729898AbfEWJQ4 (ORCPT
+        id S1730184AbfEWJRy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 05:16:56 -0400
-Received: from twhmllg4.macronix.com ([122.147.135.202]:52423 "EHLO
-        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726363AbfEWJQ4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 05:16:56 -0400
-Received: from twhfmnt1.mxic.com.tw (twhfm1p2.macronix.com [172.17.20.92])
-        by TWHMLLG4.macronix.com with ESMTP id x4N9G2se058184;
-        Thu, 23 May 2019 17:16:02 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
-        by Forcepoint Email with ESMTP id 9068031A9482045BD690;
-        Thu, 23 May 2019 17:16:02 +0800 (CST)
-In-Reply-To: <0e2994d6-6efc-9f36-f681-609199f20b9f@cogentembedded.com>
-References: <1558423174-10748-1-git-send-email-masonccyang@mxic.com.tw> <1558423174-10748-4-git-send-email-masonccyang@mxic.com.tw> <0e2994d6-6efc-9f36-f681-609199f20b9f@cogentembedded.com>
-To:     "Sergei Shtylyov" <sergei.shtylyov@cogentembedded.com>
-Cc:     bbrezillon@kernel.org, broonie@kernel.org,
-        devicetree@vger.kernel.org,
-        "Geert Uytterhoeven" <geert+renesas@glider.be>,
-        "Simon Horman" <horms@verge.net.au>, juliensu@mxic.com.tw,
-        lee.jones@linaro.org, linux-kernel@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-spi@vger.kernel.org,
-        marek.vasut@gmail.com, mark.rutland@arm.com,
-        miquel.raynal@bootlin.com, robh+dt@kernel.org
-Subject: Re: [PATCH v13 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3 RPC-IF
- controller bindings
-MIME-Version: 1.0
-X-KeepSent: B9416C97:8812436C-48258403:00329D12;
- type=4; name=$KeepSent
-X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
-Message-ID: <OFB9416C97.8812436C-ON48258403.00329D12-48258403.0032E82E@mxic.com.tw>
-From:   masonccyang@mxic.com.tw
-Date:   Thu, 23 May 2019 17:16:03 +0800
-X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
- 2019/05/23 PM 05:16:02,
-        Serialize complete at 2019/05/23 PM 05:16:02
-Content-Type: text/plain; charset="US-ASCII"
-X-MAIL: TWHMLLG4.macronix.com x4N9G2se058184
+        Thu, 23 May 2019 05:17:54 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:41100 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726230AbfEWJRy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 05:17:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CE3FC341;
+        Thu, 23 May 2019 02:17:53 -0700 (PDT)
+Received: from e111045-lin.cambridge.arm.com (unknown [10.1.39.23])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3827F3F718;
+        Thu, 23 May 2019 02:17:52 -0700 (PDT)
+From:   Ard Biesheuvel <ard.biesheuvel@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     marc.zyngier@arm.com, james.morse@arm.com, will.deacon@arm.com,
+        guillaume.gardet@arm.com, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org,
+        Ard Biesheuvel <ard.biesheuvel@arm.com>
+Subject: [PATCH] arm64/kernel: kaslr: reduce module randomization range to 2 GB
+Date:   Thu, 23 May 2019 10:17:37 +0100
+Message-Id: <20190523091737.18797-1-ard.biesheuvel@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following commit
 
-Hi Sergei,
+  7290d5809571 ("module: use relative references for __ksymtab entries")
 
-> On 05/21/2019 10:19 AM, Mason Yang wrote:
-> 
-> > Document the bindings used by the Renesas R-Car Gen3 RPC-IF 
-controller.
-> > 
-> > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> > ---
-> >  .../devicetree/bindings/mfd/renesas-rpc-if.txt     | 65 
-++++++++++++++++++++++
-> >  1 file changed, 65 insertions(+)
-> >  create mode 100644 
-Documentation/devicetree/bindings/mfd/renesas-rpc-if.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mfd/renesas-rpc-if.txt 
-b/
-> Documentation/devicetree/bindings/mfd/renesas-rpc-if.txt
-> > new file mode 100644
-> > index 0000000..20ec85b
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mfd/renesas-rpc-if.txt
-> > @@ -0,0 +1,65 @@
-> > +Renesas R-Car Gen3 RPC-IF controller Device Tree Bindings
-> > +---------------------------------------------------------
-> > +
-> > +RPC-IF supports both SPI NOR and HyperFlash (CFI-compliant flash)
-> > +
-> > +Required properties:
-> > +- compatible: should be an SoC-specific compatible value, followed by
-> > +      "renesas,rcar-gen3-rpc" as a fallback.
-> > +      supported SoC-specific values are:
-> > +      "renesas,r8a77995-rpc"   (R-Car D3)
-> > +- reg: should contain three register areas:
-> > +   first for RPC-IF registers,
-> > +   second for the direct mapping read mode and
-> > +   third for the write buffer area.
-> > +- reg-names: should contain "regs", "dirmap" and "wbuf"
-> > +- clocks: should contain 1 entries for the module's clock
-> > +- clock-names: should contain "rpc"
-> > +- power-domains: should contain system-controller(sysc) for 
-power-domain-cell
-> > +- resets: should contain clock pulse generator(cpg) for reset-cell,
-> > +     power-domain-cell and clock-cell
-> 
->    That's just some nonsense, sorry...
->    I suggest that you stop reposting your patches as I'm going to post
-> my version of this patchset RSN (based on your patches, of course) and 
-I'm
-> going to take care of fixing this file as well.
+updated the ksymtab handling of some KASLR capable architectures
+so that ksymtab entries are emitted as pairs of 32-bit relative
+references. This reduces the size of the entries, but more
+importantly, it gets rid of statically assigned absolute
+addresses, which require fixing up at boot time if the kernel
+is self relocating (which takes a 24 byte RELA entry for each
+member of the ksymtab struct).
 
-okay, just let me know your patch then.
+Since ksymtab entries are always part of the same module as the
+symbol they export, it was assumed at the time that a 32-bit
+relative reference is always sufficient to capture the offset
+between a ksymtab entry and its target symbol.
 
-thanks & best regards,
-Mason
+Unfortunately, this is not always true: in the case of per-CPU
+variables, a per-CPU variable's base address (which usually differs
+from the actual address of any of its per-CPU copies) is allocated
+in the vicinity of the ..data.percpu section in the core kernel
+(i.e., in the per-CPU reserved region which follows the section
+containing the core kernel's statically allocated per-CPU variables).
 
-CONFIDENTIALITY NOTE:
+Since we randomize the module space over a 4 GB window covering
+the core kernel (based on the -/+ 4 GB range of an ADRP/ADD pair),
+we may end up putting the core kernel out of the -/+ 2 GB range of
+32-bit relative references of module ksymtab entries that refer to
+per-CPU variables.
 
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
+So reduce the module randomization range a bit further. We lose
+1 bit of randomization this way, but this is something we can
+tolerate.
 
-Macronix International Co., Ltd.
+Cc: <stable@vger.kernel.org> # v4.19+
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@arm.com>
+---
 
-=====================================================================
+This supersedes
 
+module/ksymtab: use 64-bit relative reference for target symbol
+x86/tools: deal with 64-bit relative relocations for per-CPU symbols
 
+and is complemented by
 
-============================================================================
+arm64/module: deal with ambiguity in PRELxx relocation ranges
 
-CONFIDENTIALITY NOTE:
+ arch/arm64/kernel/kaslr.c  | 4 ++--
+ arch/arm64/kernel/module.c | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
+diff --git a/arch/arm64/kernel/kaslr.c b/arch/arm64/kernel/kaslr.c
+index b09b6f75f759..5d5f3ed3e66a 100644
+--- a/arch/arm64/kernel/kaslr.c
++++ b/arch/arm64/kernel/kaslr.c
+@@ -152,8 +152,8 @@ u64 __init kaslr_early_init(u64 dt_phys)
+ 		 * resolved via PLTs. (Branches between modules will be
+ 		 * resolved normally.)
+ 		 */
+-		module_range = SZ_4G - (u64)(_end - _stext);
+-		module_alloc_base = max((u64)_end + offset - SZ_4G,
++		module_range = SZ_2G - (u64)(_end - _stext);
++		module_alloc_base = max((u64)_end + offset - SZ_2G,
+ 					(u64)MODULES_VADDR);
+ 	} else {
+ 		/*
+diff --git a/arch/arm64/kernel/module.c b/arch/arm64/kernel/module.c
+index 2e4e3915b4d0..b2f99ff76ed1 100644
+--- a/arch/arm64/kernel/module.c
++++ b/arch/arm64/kernel/module.c
+@@ -56,7 +56,7 @@ void *module_alloc(unsigned long size)
+ 		 * can simply omit this fallback in that case.
+ 		 */
+ 		p = __vmalloc_node_range(size, MODULE_ALIGN, module_alloc_base,
+-				module_alloc_base + SZ_4G, GFP_KERNEL,
++				module_alloc_base + SZ_2G, GFP_KERNEL,
+ 				PAGE_KERNEL_EXEC, 0, NUMA_NO_NODE,
+ 				__builtin_return_address(0));
+ 
+-- 
+2.17.1
 
