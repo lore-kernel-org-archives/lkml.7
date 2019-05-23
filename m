@@ -2,125 +2,227 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7CDEC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 18:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B60C46460
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 18:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F7962133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 18:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 921022175B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 18:19:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RdkfpTzn"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ntmhKIV4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731432AbfEWSRM (ORCPT
+        id S1731463AbfEWST4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 14:17:12 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34074 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731116AbfEWSRL (ORCPT
+        Thu, 23 May 2019 14:19:56 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:15364 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731107AbfEWST4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 14:17:11 -0400
-Received: by mail-lj1-f196.google.com with SMTP id j24so6386021ljg.1
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 11:17:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xVLMianANhzmplrg1DNs0WltvutEsn5MSIrShEnvZRs=;
-        b=RdkfpTzn1ySwEf5C0dPq9Xu8VAtMSRYp5nqkCifYfl2954qRZjU8S941ZehD0289HL
-         58K0W3gbNY0XtItxxEIvZLiwWVn1sLiqtYNd7lQM0vYdx6DkZlVN7jkBwDBf/mXLVycl
-         ArBHla/sB4OasDKtIJSLgeX0vxbwwMOtAT4NXn+dcCnsCXH6ZDh0lQRKLsddOWX+WeVk
-         +5p0XrrH4ef9bu5LSLyoV6dsW0sRFgsd0HdVh+N1PsV0gaD/UUJIYTRVzPE62b3YlZLH
-         e22o8RjJ4D2nPi9Bo8PLaxoUrhy5o31ZHYaGHn+h1ZnjbieCNUdpwUU/m1IEEOHjQx6K
-         N/GQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xVLMianANhzmplrg1DNs0WltvutEsn5MSIrShEnvZRs=;
-        b=gu1EPQ4r0CqzD4md6/c7t+8wfwSl47immuUAhHWcnwFIKo26UU10uF7xPucZiKQOlT
-         9gHHM3FKd6IZbyWRKMyuJTqGSI9slsANeA+hxgjc4URI7NiHZSo3d5osS2ol1L9uOZeE
-         kmDvLlz73oH7RxWjfDsYyl8BDD/Sqh3iRjN2MLW2e4CG4+4sDfbiSceNtHZjFq9bZ3F/
-         +REtembdvy3uZVYton84fhy/C7es7xnkBo5jiNKKwJApBfkTE3sP2e4FOZi7RBye+9Jo
-         Qv+Uxbekr/JOtleXjlP1ue3TM7NfOOjHYdD47aFtuSbCTeeExKGvZWCrAV+whGBh+GS4
-         Y2Kg==
-X-Gm-Message-State: APjAAAUFav7fCTl2v9UNMM7q3TgD4xUGYnEF9PyqQheAF1lzOAQfpTAF
-        BjCnkqVzBfKCysheylnp8mMV748aqkY=
-X-Google-Smtp-Source: APXvYqxOibtzonsAh4V+NOrhPL4OVGZW3bjzOhPFSsQU0m7+fukLbOnsoQ8owCi9RrqtCTA7+i7P+A==
-X-Received: by 2002:a2e:9581:: with SMTP id w1mr35368191ljh.88.1558635429076;
-        Thu, 23 May 2019 11:17:09 -0700 (PDT)
-Received: from linux.local (c-d2cd225c.014-348-6c756e10.bbcust.telenor.se. [92.34.205.210])
-        by smtp.gmail.com with ESMTPSA id z9sm52209lfa.25.2019.05.23.11.17.07
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 May 2019 11:17:07 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-kernel@vger.kernel.org,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH] clocksource/drivers/ixp4xx: Implement delay timer
-Date:   Thu, 23 May 2019 20:16:02 +0200
-Message-Id: <20190523181602.3284-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.20.1
+        Thu, 23 May 2019 14:19:56 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ce6e4450000>; Thu, 23 May 2019 11:19:49 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 23 May 2019 11:19:54 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 23 May 2019 11:19:54 -0700
+Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 May
+ 2019 18:19:53 +0000
+Subject: Re: [PATCH 3/5] mm/hmm: Use mm_get_hmm() in hmm_range_register()
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20190506232942.12623-1-rcampbell@nvidia.com>
+ <20190506232942.12623-4-rcampbell@nvidia.com>
+ <20190523125108.GA14013@ziepe.ca>
+From:   Ralph Campbell <rcampbell@nvidia.com>
+Message-ID: <9e5c0f91-276e-e324-933b-f7440913d3da@nvidia.com>
+Date:   Thu, 23 May 2019 11:19:53 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190523125108.GA14013@ziepe.ca>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1558635589; bh=zmY6cpkfJP47eynWvdbItnSBSrag80L5m1Knjb7dWiY=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=ntmhKIV47+gCBSsE0RCd09zDogaT6Wk+N01BTylH0OAisEQ9xcZ6nRxVT8xqci/vY
+         8DyKxy8T8NnevgtucFLAyCXQ5bjX+qaIryz/Qy95foCTEG9TRSatnzDCbUqJTRb8nd
+         REGPqFgdkGhAtLhmEykVwevzc/dFY838B4mDCqEOgHuZY6YTRObXTewv71MzCLxCeK
+         Fuk7lm3LBpX8fWKoJXBL/VwbWHy1CWlEb9aTV9p8CqyLN08Q2xeYK7PwMUPSO4f7Ev
+         DM22iMaYXSZUZpTFKb6f5Fw4Fw49lyhRFKVypaiyDrLoTmw+BTx4NDnGSgwzLFkJcd
+         Mmebpe1KcayMA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds delay timer functionality to the IXP4xx
-timer driver.
 
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/clocksource/timer-ixp4xx.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+On 5/23/19 5:51 AM, Jason Gunthorpe wrote:
+> On Mon, May 06, 2019 at 04:29:40PM -0700, rcampbell@nvidia.com wrote:
+>> From: Ralph Campbell <rcampbell@nvidia.com>
+>>
+>> In hmm_range_register(), the call to hmm_get_or_create() implies that
+>> hmm_range_register() could be called before hmm_mirror_register() when
+>> in fact, that would violate the HMM API.
+>>
+>> Use mm_get_hmm() instead of hmm_get_or_create() to get the HMM structure.
+>>
+>> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+>> Cc: John Hubbard <jhubbard@nvidia.com>
+>> Cc: Ira Weiny <ira.weiny@intel.com>
+>> Cc: Dan Williams <dan.j.williams@intel.com>
+>> Cc: Arnd Bergmann <arnd@arndb.de>
+>> Cc: Balbir Singh <bsingharora@gmail.com>
+>> Cc: Dan Carpenter <dan.carpenter@oracle.com>
+>> Cc: Matthew Wilcox <willy@infradead.org>
+>> Cc: Souptick Joarder <jrdr.linux@gmail.com>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>>   mm/hmm.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/mm/hmm.c b/mm/hmm.c
+>> index f6c4c8633db9..2aa75dbed04a 100644
+>> +++ b/mm/hmm.c
+>> @@ -936,7 +936,7 @@ int hmm_range_register(struct hmm_range *range,
+>>   	range->start = start;
+>>   	range->end = end;
+>>   
+>> -	range->hmm = hmm_get_or_create(mm);
+>> +	range->hmm = mm_get_hmm(mm);
+>>   	if (!range->hmm)
+>>   		return -EFAULT;
+> 
+> I looked for documentation saying that hmm_range_register should only
+> be done inside a hmm_mirror_register and didn't see it. Did I miss it?
 
-diff --git a/drivers/clocksource/timer-ixp4xx.c b/drivers/clocksource/timer-ixp4xx.c
-index 5c2190b654cd..9396745e1c17 100644
---- a/drivers/clocksource/timer-ixp4xx.c
-+++ b/drivers/clocksource/timer-ixp4xx.c
-@@ -75,14 +75,19 @@ to_ixp4xx_timer(struct clock_event_device *evt)
- 	return container_of(evt, struct ixp4xx_timer, clkevt);
- }
- 
--static u64 notrace ixp4xx_read_sched_clock(void)
-+static unsigned long ixp4xx_read_timer(void)
- {
- 	return __raw_readl(local_ixp4xx_timer->base + IXP4XX_OSTS_OFFSET);
- }
- 
-+static u64 notrace ixp4xx_read_sched_clock(void)
-+{
-+	return ixp4xx_read_timer();
-+}
-+
- static u64 ixp4xx_clocksource_read(struct clocksource *c)
- {
--	return __raw_readl(local_ixp4xx_timer->base + IXP4XX_OSTS_OFFSET);
-+	return ixp4xx_read_timer();
- }
- 
- static irqreturn_t ixp4xx_timer_interrupt(int irq, void *dev_id)
-@@ -224,6 +229,13 @@ static __init int ixp4xx_timer_register(void __iomem *base,
- 
- 	sched_clock_register(ixp4xx_read_sched_clock, 32, timer_freq);
- 
-+#ifdef CONFIG_ARM
-+	/* Also use this timer for delays */
-+	tmr->delay_timer.read_current_timer = ixp4xx_read_timer;
-+	tmr->delay_timer.freq = timer_freq;
-+	register_current_timer_delay(&tmr->delay_timer);
-+#endif
-+
- 	return 0;
- }
- 
--- 
-2.20.1
+Yes, hmm_mirror_register() has to be called before hmm_range_register().
+Look at Documentation/vm/hmm.rst for "Address space mirroring 
+implementation and API".
 
+> Can you add a comment?
+
+Sure, although I think your idea to pass hmm_mirror to 
+hmm_range_register() makes sense and makes it clear.
+
+> It is really good to fix this because it means we can rely on mmap sem
+> to manage mm->hmm!
+> 
+> If this is true then I also think we should change the signature of
+> the function to make this dependency relationship clear, and remove
+> some possible confusing edge cases.
+> 
+> What do you think about something like this? (unfinished)
+> 
+> commit 29098bd59cf481ad1915db40aefc8435dabb8b28
+> Author: Jason Gunthorpe <jgg@mellanox.com>
+> Date:   Thu May 23 09:41:19 2019 -0300
+> 
+>      mm/hmm: Use hmm_mirror not mm as an argument for hmm_register_range
+>      
+>      Ralf observes that hmm_register_range() can only be called by a driver
+>      while a mirror is registered. Make this clear in the API by passing
+>      in the mirror structure as a parameter.
+>      
+>      This also simplifies understanding the lifetime model for struct hmm,
+>      as the hmm pointer must be valid as part of a registered mirror
+>      so all we need in hmm_register_range() is a simple kref_get.
+>      
+>      Suggested-by: Ralph Campbell <rcampbell@nvidia.com>
+>      Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+> 
+> diff --git a/include/linux/hmm.h b/include/linux/hmm.h
+> index 8b91c90d3b88cb..87d29e085a69f7 100644
+> --- a/include/linux/hmm.h
+> +++ b/include/linux/hmm.h
+> @@ -503,7 +503,7 @@ static inline bool hmm_mirror_mm_is_alive(struct hmm_mirror *mirror)
+>    * Please see Documentation/vm/hmm.rst for how to use the range API.
+>    */
+>   int hmm_range_register(struct hmm_range *range,
+> -		       struct mm_struct *mm,
+> +		       struct hmm_mirror *mirror,
+>   		       unsigned long start,
+>   		       unsigned long end,
+>   		       unsigned page_shift);
+> @@ -539,7 +539,8 @@ static inline bool hmm_vma_range_done(struct hmm_range *range)
+>   }
+>   
+>   /* This is a temporary helper to avoid merge conflict between trees. */
+> -static inline int hmm_vma_fault(struct hmm_range *range, bool block)
+> +static inline int hmm_vma_fault(struct hmm_mirror *mirror,
+> +				struct hmm_range *range, bool block)
+>   {
+>   	long ret;
+>   
+> @@ -552,7 +553,7 @@ static inline int hmm_vma_fault(struct hmm_range *range, bool block)
+>   	range->default_flags = 0;
+>   	range->pfn_flags_mask = -1UL;
+>   
+> -	ret = hmm_range_register(range, range->vma->vm_mm,
+> +	ret = hmm_range_register(range, mirror,
+>   				 range->start, range->end,
+>   				 PAGE_SHIFT);
+>   	if (ret)
+> diff --git a/mm/hmm.c b/mm/hmm.c
+> index 824e7e160d8167..fa1b04fcfc2549 100644
+> --- a/mm/hmm.c
+> +++ b/mm/hmm.c
+> @@ -927,7 +927,7 @@ static void hmm_pfns_clear(struct hmm_range *range,
+>    * Track updates to the CPU page table see include/linux/hmm.h
+>    */
+>   int hmm_range_register(struct hmm_range *range,
+> -		       struct mm_struct *mm,
+> +		       struct hmm_mirror *mirror,
+>   		       unsigned long start,
+>   		       unsigned long end,
+>   		       unsigned page_shift)
+> @@ -935,7 +935,6 @@ int hmm_range_register(struct hmm_range *range,
+>   	unsigned long mask = ((1UL << page_shift) - 1UL);
+>   
+>   	range->valid = false;
+> -	range->hmm = NULL;
+>   
+>   	if ((start & mask) || (end & mask))
+>   		return -EINVAL;
+> @@ -946,15 +945,12 @@ int hmm_range_register(struct hmm_range *range,
+>   	range->start = start;
+>   	range->end = end;
+>   
+> -	range->hmm = hmm_get_or_create(mm);
+> -	if (!range->hmm)
+> -		return -EFAULT;
+> -
+>   	/* Check if hmm_mm_destroy() was call. */
+> -	if (range->hmm->mm == NULL || range->hmm->dead) {
+> -		hmm_put(range->hmm);
+> +	if (mirror->hmm->mm == NULL || mirror->hmm->dead)
+>   		return -EFAULT;
+> -	}
+> +
+> +	range->hmm = mirror->hmm;
+> +	kref_get(&range->hmm->kref);
+>   
+>   	/* Initialize range to track CPU page table update */
+>   	mutex_lock(&range->hmm->lock);
+> 
