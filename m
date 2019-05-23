@@ -2,95 +2,154 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1367C04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A4CFC04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A72B2168B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:43:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558601002;
-	bh=OXEG3ImZ2eXX8KNRXnS3l2zhG1HunyO5thpIuSZ0PVk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FTYLJ9DKle2HJJ+Ut5lK8W3X/IkTrCU25LXtKCdaFtwkWVM9KiA1fItR8P3tnE7DF
-	 uZN8ENMnlM5i51W+6a4i0VkVvROstpMoAvzmhEbKjttA44nKmS8RewiRJI88/tzMdc
-	 HYEvd6g6hU6vISlCY67yMYwGAVIqkiDoo5CWRR50=
+	by mail.kernel.org (Postfix) with ESMTP id 3571220881
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:45:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730079AbfEWInV (ORCPT
+        id S1729632AbfEWIpB convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 04:43:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59754 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 04:45:01 -0400
+Received: from mga01.intel.com ([192.55.52.88]:25638 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725814AbfEWInV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 04:43:21 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDE3C21019;
-        Thu, 23 May 2019 08:43:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558601000;
-        bh=OXEG3ImZ2eXX8KNRXnS3l2zhG1HunyO5thpIuSZ0PVk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=B1b4DkIRb2OITYTbKqQDiZ8X1EyvG/ESTFwupm16zNCuuYoJwUdkbty0QyKnzWlCV
-         v5Opug1jMOEp36PKSvZ80McmgfMrrRmxcnDdx+qBaDw+aZk/SMreDBudFveP8pyjgL
-         //Yxrct3SxxCcBg+6IcgjVaa7mp5q1Wq/LltawIo=
-Date:   Thu, 23 May 2019 10:43:18 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Nishka Dasgupta <nishka.dasgupta@yahoo.com>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: fieldbus: anybuss: Remove variable
-Message-ID: <20190523084318.GB831@kroah.com>
-References: <20190523070531.13510-1-nishka.dasgupta@yahoo.com>
- <20190523072246.GD24998@kroah.com>
- <4a3d571f-5987-6735-be56-7976457d0797@yahoo.com>
+        id S1725814AbfEWIpB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 04:45:01 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 May 2019 01:45:00 -0700
+X-ExtLoop1: 1
+Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
+  by fmsmga001.fm.intel.com with ESMTP; 23 May 2019 01:45:00 -0700
+Received: from FMSMSX109.amr.corp.intel.com (10.18.116.9) by
+ fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Thu, 23 May 2019 01:45:00 -0700
+Received: from shsmsx103.ccr.corp.intel.com (10.239.4.69) by
+ fmsmsx109.amr.corp.intel.com (10.18.116.9) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Thu, 23 May 2019 01:44:59 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.33]) by
+ SHSMSX103.ccr.corp.intel.com ([169.254.4.70]) with mapi id 14.03.0415.000;
+ Thu, 23 May 2019 16:44:58 +0800
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>
+CC:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "jean-philippe.brucker@arm.com" <jean-philippe.brucker@arm.com>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
+Subject: RE: [RFC v3 0/3] vfio_pci: wrap pci device as a mediated device
+Thread-Topic: [RFC v3 0/3] vfio_pci: wrap pci device as a mediated device
+Thread-Index: AQHU+pmUgYQWOZcgyUar+GqJiI6/NqZ4kV4g
+Date:   Thu, 23 May 2019 08:44:57 +0000
+Message-ID: <A2975661238FB949B60364EF0F2C257439EB884E@SHSMSX104.ccr.corp.intel.com>
+References: <1556021680-2911-1-git-send-email-yi.l.liu@intel.com>
+In-Reply-To: <1556021680-2911-1-git-send-email-yi.l.liu@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiN2M0ZDE2YWUtNWFmNS00OTc5LWI2OTEtZjM0MGU2ZGZkYWMwIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiUU9yeGtsbDQ2aDFqQm82akQxQkJDOVVPY2Y1cE9Vck9JZlJYRDhnYzQrM0t6aWMwemNyWHNKWjBGbmFJSHczbyJ9
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4a3d571f-5987-6735-be56-7976457d0797@yahoo.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 01:52:29PM +0530, Nishka Dasgupta wrote:
+Hi Alex,
+
+Sorry to disturb you. Do you want to review on this version or review a rebased version? :-) If rebase version is better, I can try to do it asap.
+
+Thanks,
+Yi Liu
+
+> -----Original Message-----
+> From: Liu, Yi L
+> Sent: Tuesday, April 23, 2019 8:15 PM
+> To: alex.williamson@redhat.com; kwankhede@nvidia.com
+> Cc: Tian, Kevin <kevin.tian@intel.com>; baolu.lu@linux.intel.com; Liu, Yi L
+> <yi.l.liu@intel.com>; Sun, Yi Y <yi.y.sun@intel.com>; joro@8bytes.org; jean-
+> philippe.brucker@arm.com; peterx@redhat.com; linux-kernel@vger.kernel.org;
+> kvm@vger.kernel.org; yamada.masahiro@socionext.com; iommu@lists.linux-
+> foundation.org
+> Subject: [RFC v3 0/3] vfio_pci: wrap pci device as a mediated device
+> 
+> This patchset aims to add a vfio-pci-like meta driver as a demo user of the vfio
+> changes introduced in "vfio/mdev: IOMMU aware mediated device" patchset from
+> Baolu Lu.
+> 
+> Previous RFC v1 has given two proposals and the discussion could be found in
+> following link. Per the comments, this patchset adds a separate driver named vfio-
+> mdev-pci. It is a sample driver, but loactes in drivers/vfio/pci due to code sharing
+> consideration.
+> The corresponding Kconfig definition is in samples/Kconfig.
+> 
+> https://lkml.org/lkml/2019/3/4/529
+> 
+> Besides the test purpose, per Alex's comments, it could also be a good base driver
+> for experimenting with device specific mdev migration.
+> 
+> Specific interface tested in this proposal:
+> 
+> *) int mdev_set_iommu_device(struct device *dev,
+> 				struct device *iommu_device)
+>    introduced in the patch as below:
+>    "[PATCH v5 6/8] vfio/mdev: Add iommu related member in mdev_device"
 > 
 > 
-> On 23/05/19 12:52 PM, Greg KH wrote:
-> > On Thu, May 23, 2019 at 12:35:26PM +0530, Nishka Dasgupta wrote:
-> > > Variable client, assigned to priv->client, is used only once in a
-> > > function argument; hence, it can be removed and the function argument
-> > > replaced with priv->client directly.
-> > > Issue found with Coccinelle.
-> > > 
-> > > Signed-off-by: Nishka Dasgupta <nishka.dasgupta@yahoo.com>
-> > > ---
-> > >   drivers/staging/fieldbus/anybuss/hms-profinet.c | 4 +---
-> > >   1 file changed, 1 insertion(+), 3 deletions(-)
-> > > 
-> > > diff --git a/drivers/staging/fieldbus/anybuss/hms-profinet.c b/drivers/staging/fieldbus/anybuss/hms-profinet.c
-> > > index 5446843e35f4..a7f85912fa92 100644
-> > > --- a/drivers/staging/fieldbus/anybuss/hms-profinet.c
-> > > +++ b/drivers/staging/fieldbus/anybuss/hms-profinet.c
-> > > @@ -124,9 +124,7 @@ static int __profi_enable(struct profi_priv *priv)
-> > >   static int __profi_disable(struct profi_priv *priv)
-> > >   {
-> > > -	struct anybuss_client *client = priv->client;
-> > > -
-> > > -	anybuss_set_power(client, false);
-> > > +	anybuss_set_power(priv->client, false);
-> > 
-> > Same comments are relevant here as the last patch you sent.
+> Links:
+> *) Link of "vfio/mdev: IOMMU aware mediated device"
+> 	https://lwn.net/Articles/780522/
 > 
-> So just to clarify this patch isn't necessary and I should cc Sven?
+> Please feel free give your comments.
+> 
+> Thanks,
+> Yi Liu
+> 
+> Change log:
+>   v2->v3:
+>   - use vfio-mdev-pci instead of vfio-pci-mdev
+>   - place the new driver under drivers/vfio/pci while define
+>     Kconfig in samples/Kconfig to clarify it is a sample driver
+> 
+>   v1->v2:
+>   - instead of adding kernel option to existing vfio-pci
+>     module in v1, v2 follows Alex's suggestion to add a
+>     separate vfio-pci-mdev module.
+>   - new patchset subject: "vfio/pci: wrap pci device as a mediated device"
+> 
+> Liu, Yi L (3):
+>   vfio_pci: split vfio_pci.c into two source files
+>   vfio/pci: protect cap/ecap_perm bits alloc/free with atomic op
+>   smaples: add vfio-mdev-pci driver
+> 
+>  drivers/vfio/pci/Makefile           |    7 +-
+>  drivers/vfio/pci/common.c           | 1511 +++++++++++++++++++++++++++++++++++
+>  drivers/vfio/pci/vfio_mdev_pci.c    |  386 +++++++++
+>  drivers/vfio/pci/vfio_pci.c         | 1476 +---------------------------------
+>  drivers/vfio/pci/vfio_pci_config.c  |    9 +
+>  drivers/vfio/pci/vfio_pci_private.h |   27 +
+>  samples/Kconfig                     |   11 +
+>  7 files changed, 1962 insertions(+), 1465 deletions(-)  create mode 100644
+> drivers/vfio/pci/common.c  create mode 100644 drivers/vfio/pci/vfio_mdev_pci.c
+> 
+> --
+> 2.7.4
 
-For future patches to any drivers/staging/fieldbus/ changes, yes.
-
-thanks,
-
-greg k-h
