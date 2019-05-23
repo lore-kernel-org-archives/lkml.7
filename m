@@ -2,205 +2,124 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-19.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 230CBC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F20BFC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC8C02070D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:44:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0A642070D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:46:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Utg/ObYC"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E49P5qe4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731509AbfEWQop (ORCPT
+        id S1731184AbfEWQqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 12:44:45 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:43046 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731083AbfEWQoo (ORCPT
+        Thu, 23 May 2019 12:46:54 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:34205 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731042AbfEWQqx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 12:44:44 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4NGdNaA130756;
-        Thu, 23 May 2019 16:44:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=wFYuHv7CedBy3XdWoyhYc9mb6Paut9BcOFnjkADVXQU=;
- b=Utg/ObYContxtSeTc8itGdN6S3xIdmG4c0zsB2NyjPtSn2ywrj4hLpWXs3Y+n+b7XjAs
- aZVNNrt5oPmUgeqcdQzKvV+ZYgBhqUjBAmXkW70v3fkNYkiZpzvx68Esfz6jzgSrXO0J
- b1doAXWNN2tSqTefpol8p3Y6jSCFokMyBWfWZfISbRThg54KDULhtjMaQmfHQrCWCnfU
- IGFuAAwBuJMe5Y/xOqbMEBRlZT+2740yrgfdhoXmWjqsPP3Gpnvr3hD8aUOLAW1pcl6U
- EMdSrTa6uZ0MJJSgqQgK5ehGP2yc80OgSZeZ8bqt9sKLpBoIOa2dTM1yDLH9LtVFc0ki wA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2smsk5kq7p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 May 2019 16:44:03 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4NGgjoc016653;
-        Thu, 23 May 2019 16:44:02 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by aserp3020.oracle.com with ESMTP id 2smsh2c2mw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 23 May 2019 16:44:02 +0000
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x4NGhmCw019364;
-        Thu, 23 May 2019 16:44:02 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2smsh2c2mr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 May 2019 16:44:01 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4NGhxd9014214;
-        Thu, 23 May 2019 16:44:00 GMT
-Received: from wengwanwork.cn.oracle.com (/10.211.52.31)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 23 May 2019 16:43:59 +0000
-Subject: Re: [Ocfs2-devel] [PATCH V3 2/2] ocfs2: add locking filter debugfs
- file
-To:     Gang He <ghe@suse.com>
-Cc:     mark@fasheh.com, jlbec@evilplan.org, jiangqi903@gmail.com,
-        linux-kernel@vger.kernel.org, ocfs2-devel@oss.oracle.com
-References: <20190523104047.14794-1-ghe@suse.com>
- <20190523104047.14794-2-ghe@suse.com>
-From:   Wengang <wen.gang.wang@oracle.com>
-Message-ID: <da93442d-3333-5bd6-ce0a-edb66a58109d@oracle.com>
-Date:   Thu, 23 May 2019 09:43:58 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.2
+        Thu, 23 May 2019 12:46:53 -0400
+Received: by mail-ed1-f68.google.com with SMTP id p27so10175358eda.1
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 09:46:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9BT48q8YZdsRfqqlq1WI5BEP04XlG5qRgRWBn7AKc74=;
+        b=E49P5qe4m5z50mIcZEFehNywPQzUR2sTrsCDp7+OSPu94TJ5WPj6g4JT9ATXEEeN3i
+         sVisvRi5Iane1ywRX7NtNSo3bNtGHc1/a+az/W4fDtuLbc87twSTs3T0FLCMzkd4h2Md
+         gYqXEQpvkqs6D68Zg+Ty8k4Krc7l8H9ylcfFcgvPPCyCJIb/bxO7pV+eW4TIDQ1pP65F
+         VBI41rxflmLGOaf9XKr3FvdLQzoT4CwXzRDXWwwCpwTv7K7RqP4KRnsI4SoPh/1+3M4A
+         tb8wyvbpzyy2DMmmFuNtV7vOUBxU+FQSy2xfqaMS0VyejqGZ5NXkT2vhnC3uz5q07kaj
+         eonw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9BT48q8YZdsRfqqlq1WI5BEP04XlG5qRgRWBn7AKc74=;
+        b=ZImnOHXij2rcvDLqFPeebjftlS8zvL9ND9UNB1qqVgQfu4BcrOC8liqfEfTHhcUF07
+         5Nj2ankcy2DYYo3rvKY5uV61nLoxXJaxFH41B6U5NtJo9UsEZl14M2IWNqrxWx9PP01R
+         YpQmkmX9S8Wwz54pOkl9pM5u/cm9XUmeD2g+Zs0w/z7AWp+O25OIOI0mWuOux5OAuhS3
+         VcnkVRr5UrBq1b8qvvjJTEk86j9D2suZsek3HDpbtrjU9FRZFnGFzrsfULbpI6DFSwIC
+         1UYvBRbGppcVxo2nhvKFiN8VZo5tpG2m+rKhr8WFtwPjiQsg2K89kmXrCGvD5Il6WuBN
+         h3lg==
+X-Gm-Message-State: APjAAAW0SO7fiwSUym4RXvVFDdKG7+4xfOB/Sz/9A4jfXwsY5enPkksm
+        DcPA4h10jSQrdDxS6IW4HNmLmvYqFrBYEAQz4yDU6g==
+X-Google-Smtp-Source: APXvYqxjRFBRjmxhMpY4EXrqj+b8yMDt6Q4S9LXD/g+esQ+xRVqrmJdaiutfxvQN1Y7ApAH+JmdaizeahP1PUhJevGI=
+X-Received: by 2002:a17:906:1f93:: with SMTP id t19mr28144676ejr.48.1558630010971;
+ Thu, 23 May 2019 09:46:50 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190523104047.14794-2-ghe@suse.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9265 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905230113
+References: <CAAzmS69VFrTPzZ8DY_NPPTZYtBssocRnQOFAyo3VbSTO4CesbA@mail.gmail.com>
+ <20190523161532.122421-1-natechancellor@gmail.com>
+In-Reply-To: <20190523161532.122421-1-natechancellor@gmail.com>
+From:   Stephen Hines <srhines@google.com>
+Date:   Thu, 23 May 2019 09:46:38 -0700
+Message-ID: <CAAzmS6_ENnGayTm6fbbbk8dojXrKUEB1P2_ZtP914_GCOaVOoQ@mail.gmail.com>
+Subject: Re: [PATCH] misc: sgi-xp: Properly initialize buf in xpc_get_rsvd_page_pa
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Cliff Whickman <cpw@sgi.com>, Robin Holt <robinmholt@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gang,
+Looks good to me. :) Since I don't contribute to the Linux kernel
+directly, I appreciate you picking this up.
 
-Could you paste an example of outputs before patch VS that after patch?
-I think that would directly show what the patch does.
+Thanks,
+Steve
 
-thanks,
-wengang
-
-On 05/23/2019 03:40 AM, Gang He wrote:
-> Add locking filter debugfs file, which is used to filter lock
-> resources dump from locking_state debugfs file.
-> We use d_filter_secs field to filter lock resources dump,
-> the default d_filter_secs(0) value filters nothing,
-> otherwise, only dump the last N seconds active lock resources.
-> This enhancement can avoid dumping lots of old records.
-> The d_filter_secs value can be changed via locking_filter file.
+On Thu, May 23, 2019 at 9:20 AM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
 >
-> Compared with v2, ocfs2_dlm_init_debug() returns directly with
-> error when creating locking filter debugfs file is failed, since
-> ocfs2_dlm_shutdown_debug() will handle this failure perfectly.
-> Compared with v1, the main change is to add CONFIG_OCFS2_FS_STATS
-> macro definition judgment.
+> Clang warns:
 >
-> Signed-off-by: Gang He <ghe@suse.com>
-> Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+> drivers/misc/sgi-xp/xpc_partition.c:73:14: warning: variable 'buf' is
+> uninitialized when used within its own initialization [-Wuninitialized]
+>         void *buf = buf;
+>               ~~~   ^~~
+> 1 warning generated.
+>
+> Initialize it to NULL, which is more deterministic.
+>
+> Fixes: 279290294662 ("[IA64-SGI] cleanup the way XPC locates the reserved page")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/466
+> Suggested-by: Stephen Hines <srhines@google.com>
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 > ---
->   fs/ocfs2/dlmglue.c | 36 ++++++++++++++++++++++++++++++++++++
->   fs/ocfs2/ocfs2.h   |  2 ++
->   2 files changed, 38 insertions(+)
 >
-> diff --git a/fs/ocfs2/dlmglue.c b/fs/ocfs2/dlmglue.c
-> index dccf4136f8c1..fbe4562cf4fe 100644
-> --- a/fs/ocfs2/dlmglue.c
-> +++ b/fs/ocfs2/dlmglue.c
-> @@ -3006,6 +3006,8 @@ struct ocfs2_dlm_debug *ocfs2_new_dlm_debug(void)
->   	kref_init(&dlm_debug->d_refcnt);
->   	INIT_LIST_HEAD(&dlm_debug->d_lockres_tracking);
->   	dlm_debug->d_locking_state = NULL;
-> +	dlm_debug->d_locking_filter = NULL;
-> +	dlm_debug->d_filter_secs = 0;
->   out:
->   	return dlm_debug;
->   }
-> @@ -3104,11 +3106,33 @@ static int ocfs2_dlm_seq_show(struct seq_file *m, void *v)
->   {
->   	int i;
->   	char *lvb;
-> +	u32 now, last = 0;
->   	struct ocfs2_lock_res *lockres = v;
-> +	struct ocfs2_dlm_debug *dlm_debug =
-> +			((struct ocfs2_dlm_seq_priv *)m->private)->p_dlm_debug;
->   
->   	if (!lockres)
->   		return -EINVAL;
->   
-> +	if (dlm_debug->d_filter_secs) {
-> +		now = ktime_to_timespec(ktime_get()).tv_sec;
-> +#ifdef CONFIG_OCFS2_FS_STATS
-> +		if (lockres->l_lock_prmode.ls_last >
-> +		    lockres->l_lock_exmode.ls_last)
-> +			last = lockres->l_lock_prmode.ls_last;
-> +		else
-> +			last = lockres->l_lock_exmode.ls_last;
-> +#endif
-> +		/*
-> +		 * Use d_filter_secs field to filter lock resources dump,
-> +		 * the default d_filter_secs(0) value filters nothing,
-> +		 * otherwise, only dump the last N seconds active lock
-> +		 * resources.
-> +		 */
-> +		if ((now - last) > dlm_debug->d_filter_secs)
-> +			return 0;
-> +	}
-> +
->   	seq_printf(m, "0x%x\t", OCFS2_DLM_DEBUG_STR_VERSION);
->   
->   	if (lockres->l_type == OCFS2_LOCK_TYPE_DENTRY)
-> @@ -3258,6 +3282,17 @@ static int ocfs2_dlm_init_debug(struct ocfs2_super *osb)
->   		goto out;
->   	}
->   
-> +	dlm_debug->d_locking_filter = debugfs_create_u32("locking_filter",
-> +						0600,
-> +						osb->osb_debug_root,
-> +						&dlm_debug->d_filter_secs);
-> +	if (!dlm_debug->d_locking_filter) {
-> +		ret = -EINVAL;
-> +		mlog(ML_ERROR,
-> +		     "Unable to create locking filter debugfs file.\n");
-> +		goto out;
-> +	}
-> +
->   	ocfs2_get_dlm_debug(dlm_debug);
->   out:
->   	return ret;
-> @@ -3269,6 +3304,7 @@ static void ocfs2_dlm_shutdown_debug(struct ocfs2_super *osb)
->   
->   	if (dlm_debug) {
->   		debugfs_remove(dlm_debug->d_locking_state);
-> +		debugfs_remove(dlm_debug->d_locking_filter);
->   		ocfs2_put_dlm_debug(dlm_debug);
->   	}
->   }
-> diff --git a/fs/ocfs2/ocfs2.h b/fs/ocfs2/ocfs2.h
-> index 8efa022684f4..f4da51099889 100644
-> --- a/fs/ocfs2/ocfs2.h
-> +++ b/fs/ocfs2/ocfs2.h
-> @@ -237,6 +237,8 @@ struct ocfs2_orphan_scan {
->   struct ocfs2_dlm_debug {
->   	struct kref d_refcnt;
->   	struct dentry *d_locking_state;
-> +	struct dentry *d_locking_filter;
-> +	u32 d_filter_secs;
->   	struct list_head d_lockres_tracking;
->   };
->   
-
+> Thanks Steve for the suggestion, don't know why that never crossed my
+> mind...
+>
+> I tried to follow buf all the way down in get_partition_rsvd_page to see
+> if there would be any dereferences and I didn't see any but I could
+> have easily missed something.
+>
+>  drivers/misc/sgi-xp/xpc_partition.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/misc/sgi-xp/xpc_partition.c b/drivers/misc/sgi-xp/xpc_partition.c
+> index 3eba1c420cc0..782ce95d3f17 100644
+> --- a/drivers/misc/sgi-xp/xpc_partition.c
+> +++ b/drivers/misc/sgi-xp/xpc_partition.c
+> @@ -70,7 +70,7 @@ xpc_get_rsvd_page_pa(int nasid)
+>         unsigned long rp_pa = nasid;    /* seed with nasid */
+>         size_t len = 0;
+>         size_t buf_len = 0;
+> -       void *buf = buf;
+> +       void *buf = NULL;
+>         void *buf_base = NULL;
+>         enum xp_retval (*get_partition_rsvd_page_pa)
+>                 (void *, u64 *, unsigned long *, size_t *) =
+> --
+> 2.22.0.rc1
+>
