@@ -2,94 +2,125 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54551C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D61C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:04:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16FAE20879
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:04:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558616655;
-	bh=5TYoJa8qGNDFzR8pNwZLSjd7Y/DoFCH7IpM2KwwYzwM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=m4nuEshM/tuxQ5QOviZi2rXg4SGbe7BYrb4SCgxg1Kn2KZK8X4fyW0pxy/ELJRllg
-	 ZJl1y7OIK/cFeZ9YxMMfiP/3Xla1pY9fqNBiFs0BOn7WGsSC0oChbmmWlwmF96QzYT
-	 v7Ut1m4ewPazCY/sclwxEvFelt0Hbd/vptv61sGs=
+	by mail.kernel.org (Postfix) with ESMTP id A203C21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:04:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WbLEKpyn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730731AbfEWNEO (ORCPT
+        id S1730755AbfEWNEd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 09:04:14 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54462 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729430AbfEWNEN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 09:04:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=5TYoJa8qGNDFzR8pNwZLSjd7Y/DoFCH7IpM2KwwYzwM=; b=MoGaf52XL4YvGHNKDnMTptjqz
-        xwGZdC5AnoqqvBz52wghmHsQnyK/LmnMgq/ZH1jmyJA6XDWfsf9soVKVT3eIEx25qI83ROs3SI3Pj
-        hUeJn8iX3zW2Py0VdEhTXvguF4s+q2wPj7udyo+ZLMGqcDemaBb4mkVbjx+Xx7EmNY6Gk=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hTnOF-00009p-2x; Thu, 23 May 2019 13:04:11 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 829A11126D24; Thu, 23 May 2019 14:04:07 +0100 (BST)
-Date:   Thu, 23 May 2019 14:04:07 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, lgirdwood@gmail.com,
-        lee.jones@linaro.org, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH v4 4/6] regulator: lm363x: Add support for LM36274
-Message-ID: <20190523130407.GB17245@sirena.org.uk>
-References: <20190522192733.13422-1-dmurphy@ti.com>
- <20190522192733.13422-5-dmurphy@ti.com>
+        Thu, 23 May 2019 09:04:33 -0400
+Received: from ozlabs.org ([203.11.71.1]:41029 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730028AbfEWNEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 09:04:32 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 458qTR0Bgvz9s1c;
+        Thu, 23 May 2019 23:04:27 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1558616668;
+        bh=d5ZuvkUP8TBeK3z+2ilZtV6jDe/CcGS8heAqRVjKyAc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=WbLEKpyn+6AuwbkHqX6gXhyjuGcn4cZX2J5oIjCcNCN7Ey0ipmIEcoo4rBkdlhcZE
+         ZVEdz+zKdre7TOdoSLKv+XZnhmLOK5Eb4TQ1SjHWjrIRNvBpwqDoiYW8hpPi60iOEB
+         dGWM/0rjlpIIoKowDqXK28a3DJz7e1/eb0MKib1BYTvTreP00ZyBMplpCKj8NplYo/
+         lo8wMCY5uLrHbOS2jYqQtsMYwQSJAqFYVtEXI76fqQrRtezTQsg3u6UvQHB6pyp/9T
+         BDNVV9W1cZFpoS9BQT7HfDGnzjCprZgy54Usd4C98xbisTQZ7M5InZ6QNzk55uAErD
+         IzE6GlfdXfbOQ==
+Date:   Thu, 23 May 2019 23:04:09 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jyri Sarha <jsarha@ti.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Sean Paul <seanpaul@chromium.org>
+Subject: Re: linux-next: manual merge of the drm-misc tree with Linus' tree
+Message-ID: <20190523230409.31da92b9@canb.auug.org.au>
+In-Reply-To: <20190523115355.joyeqlmbjkufueyn@flea>
+References: <20190521105151.51ffa942@canb.auug.org.au>
+        <20190523115355.joyeqlmbjkufueyn@flea>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="xgyAXRrhYN0wYx8y"
-Content-Disposition: inline
-In-Reply-To: <20190522192733.13422-5-dmurphy@ti.com>
-X-Cookie: I brake for chezlogs!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/_M21XHDo4D4.=IXfMFpYmIR"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/_M21XHDo4D4.=IXfMFpYmIR
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
---xgyAXRrhYN0wYx8y
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hi Maxime,
 
-On Wed, May 22, 2019 at 02:27:31PM -0500, Dan Murphy wrote:
-> Adding regulator support for the LM36274 backlight driver.
-> This device can leverage this existing code as the functionality
-> and registers are common enough between the LM36274 and the LM363x
-> series of devices.
+On Thu, 23 May 2019 13:53:55 +0200 Maxime Ripard <maxime.ripard@bootlin.com=
+> wrote:
+>
+> On Tue, May 21, 2019 at 10:51:51AM +1000, Stephen Rothwell wrote:
+> >
+> > Today's linux-next merge of the drm-misc tree got a conflict in:
+> >
+> >   Documentation/devicetree/bindings/vendor-prefixes.txt
+> >
+> > between commit:
+> >
+> >   8122de54602e ("dt-bindings: Convert vendor prefixes to json-schema")
+> >
+> > from Linus' tree and commits:
+> >
+> >   b4a2c0055a4f ("dt-bindings: Add vendor prefix for VXT Ltd")
+> >   b1b0d36bdb15 ("dt-bindings: drm/panel: simple: Add binding for TFC S9=
+700RTWV43TR-01B")
+> >   fbd8b69ab616 ("dt-bindings: Add vendor prefix for Evervision Electron=
+ics")
+> >
+> > from the drm-misc tree.
+>=20
+> I just took your patch and pushed a temp branch there:
+> https://git.kernel.org/pub/scm/linux/kernel/git/mripard/linux.git/commit/=
+?h=3Ddrm-misc-next&id=3D3832f2cad5307ebcedeead13fbd8d3cf06ba5e90
+>=20
+> Rob, Stephen, are you ok with the change? If so, I'll push it.
 
-Acked-by: Mark Brown <broonie@kernel.org>
+All that needs to be done is for my patch (slightly corrected) needs to
+be applied to the drm-misc tree.  That tree already has the back merge
+of Linus' tree and the txt file has been removed (my patch should have
+been applied as part of the merge resolution but doing it later is fine).
 
---xgyAXRrhYN0wYx8y
-Content-Type: application/pgp-signature; name="signature.asc"
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/_M21XHDo4D4.=IXfMFpYmIR
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzmmkYACgkQJNaLcl1U
-h9DJZQf/TjFmZ+I430hKts/otevTynVR0fRisQdOLf0dUH4n8JiiTpcFOVI2DSco
-HFKZ9hEb+NQZLf84yh4YNLLb+DY0hlq9gkxYSmlOruPUiBLnbNRdF/hBFTc8N8Uj
-GGsW63lGjGDufRX+Ld4fk4Cvn0YaYfm0SQOs6a9y8MvYYtq9Qelz7+hy3I0PgNgW
-MOyqx7qRxRWkR/OvgdEFBZOP8DjxOlNUHSTMmliOGurAln7hGi4cy9QmmTapR0tS
-eAAWhxgvgrL8EkniUWeFcUtpcsbpYzzvZFUk2ypYvdVsxvW8DBQNttWVs5kkF3TN
-6XN9hDJDISOlFhSm/LBfhXcJoYfunA==
-=rrTw
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzmmkkACgkQAVBC80lX
+0GwClQf+KtJ3Zpo/s3kaUrdzpTkte/89nvyxmaiI63SFv545RTxjA9IyszIyDugJ
+amyGja9rdP0UOiFkAy+Y3mcI1Nyp36x4Pcp3qvsdHWcJd+6QZ8H2J7IP6ItA1F4M
+EXpv5KBcR1BSPxmY+aJQp4vLuE8AfafHAGtMf4uPFMr7XRIfhSm6w4K4UF9Y/Xp1
+b3xC3Tp2BjZg1pc2ZNEj3c4H2pElewVaRex7F4Pozihu8sVlnLMrNEQvlEumgSBr
+i+ZH0L7Dc9ggHXqPU/4R+6NcbDxMzccWtOZqy3oBoir7g98D2O+1vlfv0Hcz8MP7
+XBhTHOlQZwlM55ReOqZ2ja3WiNdafw==
+=7Nua
 -----END PGP SIGNATURE-----
 
---xgyAXRrhYN0wYx8y--
+--Sig_/_M21XHDo4D4.=IXfMFpYmIR--
