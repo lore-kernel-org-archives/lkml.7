@@ -2,146 +2,179 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 067BAC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66999C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAF4221019
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 354F721019
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:34:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="yFmVfNdh"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="bIEO04C0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730543AbfEWJeY (ORCPT
+        id S1729817AbfEWJev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 05:34:24 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:54223 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729698AbfEWJeW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 05:34:22 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4N9WfJP4042791
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 23 May 2019 02:32:41 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4N9WfJP4042791
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1558603962;
-        bh=6lC41jvdgeVTxcqYxxQ2U2sulpTHDaCnCykV3UQCT+4=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=yFmVfNdh6ewCTJ9Ppo+XZnhb8KOD0cnl8k5yYnB3LfZQPhhFhr3kefGWC7z06KfIw
-         T0apKE2ksIuMJQfmZ8AP79grCQidabn68xwehYN86fkjus5bGNa1aa6xZ5O1HnCy0j
-         f5Bbo+Blg2JAByFzvJ4fBy17GKaLHUs8ElXn4TtpRFZL+inWYsqZjhjcgH+jBNXwYE
-         QTGs0dw/epMpmCXBvHRhajnWSV2caiJC5ZB93PSbeYUsj8PJtS1ClDSFon0kRDRW7S
-         CZYhqsRTYvqeKI01awcLx/V4AxSJtK0rVAZcAKcWhuD5Yp97R8sOelGyqNJCLwe2jb
-         fFKd6dW3Hg4Bw==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4N9WfL44042788;
-        Thu, 23 May 2019 02:32:41 -0700
-Date:   Thu, 23 May 2019 02:32:41 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Kan Liang <tipbot@zytor.com>
-Message-ID: <tip-cb63ba0f670df1f0ddf21c6cc4bbe74db398742c@git.kernel.org>
-Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org, hpa@zytor.com,
-        kan.liang@linux.intel.com, peterz@infradead.org,
-        tglx@linutronix.de, len.brown@intel.com
-Reply-To: kan.liang@linux.intel.com, hpa@zytor.com,
-          linux-kernel@vger.kernel.org, mingo@kernel.org,
-          len.brown@intel.com, tglx@linutronix.de, peterz@infradead.org
-In-Reply-To: <acb5e483287280eeb2b6daabe04a600b85e72a78.1557769318.git.len.brown@intel.com>
-References: <acb5e483287280eeb2b6daabe04a600b85e72a78.1557769318.git.len.brown@intel.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/topology] perf/x86/intel/cstate: Support multi-die/package
-Git-Commit-ID: cb63ba0f670df1f0ddf21c6cc4bbe74db398742c
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 23 May 2019 05:34:51 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:50567 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726309AbfEWJeu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 05:34:50 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 458kqV1y1Qz9s9T;
+        Thu, 23 May 2019 19:34:46 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1558604087;
+        bh=w6loxVXiUPCui8tllc+juimOSwqBjbTphljski1VjmM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=bIEO04C0QrgzXApoXOW/gC+6BD/B2SzTlGzHnAnVBmXNHLrK6bUXriS0HkRpzLRCJ
+         h51yRP5j5xzH1qb2jtDllIMxCfOYM1PtfRhz+AaDQ3fhrZ/CsTtyrPkY2NvoSAtbfo
+         sYulquD1yJEvJ7AHN8XeX/jeLGQwfVQT6E0sT9K+SidRsrvszw/afyUZr6gFXdp5y3
+         goUmbh6xLa11urwI7BO7kyQyZwD+bkpSQLsKRdga6mGgT+zfPMueBjNLp4xnVEgiFB
+         cDImQYmkEIYR/ZmhgGcMUGwpfXFS1gildaKUoYf73eyYuX9csS7Pq8uwvWAr2906CP
+         RMFqwntzCuZaQ==
+Date:   Thu, 23 May 2019 19:34:02 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jyri Sarha <jsarha@ti.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Sean Paul <seanpaul@chromium.org>
+Subject: Re: linux-next: manual merge of the drm-misc tree with Linus' tree
+Message-ID: <20190523193402.60dc0812@canb.auug.org.au>
+In-Reply-To: <20190523081022.cbirvf2vucbyc34r@flea>
+References: <20190521105151.51ffa942@canb.auug.org.au>
+        <20190523081022.cbirvf2vucbyc34r@flea>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/M4TugNSXYXC94YDxNnBwkzN"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  cb63ba0f670df1f0ddf21c6cc4bbe74db398742c
-Gitweb:     https://git.kernel.org/tip/cb63ba0f670df1f0ddf21c6cc4bbe74db398742c
-Author:     Kan Liang <kan.liang@linux.intel.com>
-AuthorDate: Mon, 13 May 2019 13:58:59 -0400
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Thu, 23 May 2019 10:08:35 +0200
+--Sig_/M4TugNSXYXC94YDxNnBwkzN
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-perf/x86/intel/cstate: Support multi-die/package
+Hi Maxime,
 
-Some cstate counters become die-scoped on Xeon Cascade Lake-AP. Perf cstate
-driver needs to support die-scope cstate counters.
+On Thu, 23 May 2019 10:10:22 +0200 Maxime Ripard <maxime.ripard@bootlin.com=
+> wrote:
+>
+> Hi Stephen,
+>=20
+> On Tue, May 21, 2019 at 10:51:51AM +1000, Stephen Rothwell wrote:
+> > Hi all,
+> >
+> > Today's linux-next merge of the drm-misc tree got a conflict in:
+> >
+> >   Documentation/devicetree/bindings/vendor-prefixes.txt
+> >
+> > between commit:
+> >
+> >   8122de54602e ("dt-bindings: Convert vendor prefixes to json-schema")
+> >
+> > from Linus' tree and commits:
+> >
+> >   b4a2c0055a4f ("dt-bindings: Add vendor prefix for VXT Ltd")
+> >   b1b0d36bdb15 ("dt-bindings: drm/panel: simple: Add binding for TFC S9=
+700RTWV43TR-01B")
+> >   fbd8b69ab616 ("dt-bindings: Add vendor prefix for Evervision Electron=
+ics")
+> >
+> > from the drm-misc tree.
+> >
+> > I fixed it up (I deleted the file and added the patch below) and can
+> > carry the fix as necessary. This is now fixed as far as linux-next is
+> > concerned, but any non trivial conflicts should be mentioned to your
+> > upstream maintainer when your tree is submitted for merging.  You may
+> > also want to consider cooperating with the maintainer of the conflicting
+> > tree to minimise any particularly complex conflicts.
+> >
+> > --
+> > Cheers,
+> > Stephen Rothwell
+> >
+> > From: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Date: Tue, 21 May 2019 10:48:36 +1000
+> > Subject: [PATCH] dt-bindings: fix up for vendor prefixes file conversion
+> >
+> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > ---
+> >  Documentation/devicetree/bindings/vendor-prefixes.yaml | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/D=
+ocumentation/devicetree/bindings/vendor-prefixes.yaml
+> > index 83ca4816a78b..749e3c3843d0 100644
+> > --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> > +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> > @@ -287,6 +287,8 @@ patternProperties:
+> >      description: Everest Semiconductor Co. Ltd.
+> >    "^everspin,.*":
+> >      description: Everspin Technologies, Inc.
+> > +  "^evervision,.*":
+> > +    description: Evervision Electronics Co. Ltd.
+> >    "^exar,.*":
+> >      description: Exar Corporation
+> >    "^excito,.*":
+> > @@ -851,6 +853,8 @@ patternProperties:
+> >      description: Shenzhen Techstar Electronics Co., Ltd.
+> >    "^terasic,.*":
+> >      description: Terasic Inc.
+> > +  "^tfc,.*":
+> > +    description: Three Five Corp
+> >    "^thine,.*":
+> >      description: THine Electronics, Inc.
+> >    "^ti,.*":
+> > @@ -925,6 +929,8 @@ patternProperties:
+> >      description: Voipac Technologies s.r.o.
+> >    "^vot,.*":
+> >      description: Vision Optical Technology Co., Ltd.
+> > +  "^vxt,.*"
+> > +    description: VXT Ltd =20
+>=20
+> I'm not sure whether or not you can change it, but this breaks the
+> users of that file.
+>=20
+> What you want is:
+>=20
+> - "^vxt,.*"
+> + "^vxt,.*:"
 
-Use topology_die_cpumask() to replace topology_core_cpumask().  For
-previous platforms which doesn't have multi-die, topology_die_cpumask() is
-identical as topology_core_cpumask().  There is no functional change for
-previous platforms.
+I have fixed my version (but I put the ':' after the '"' like the
+others).
 
-Name the die-scope PMU "cstate_die".
+Thanks for letting me know.
+--=20
+Cheers,
+Stephen Rothwell
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Len Brown <len.brown@intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/acb5e483287280eeb2b6daabe04a600b85e72a78.1557769318.git.len.brown@intel.com
+--Sig_/M4TugNSXYXC94YDxNnBwkzN
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
----
- arch/x86/events/intel/cstate.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+-----BEGIN PGP SIGNATURE-----
 
-diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
-index 6072f92cb8ea..267d7f8e12ab 100644
---- a/arch/x86/events/intel/cstate.c
-+++ b/arch/x86/events/intel/cstate.c
-@@ -302,7 +302,7 @@ static int cstate_pmu_event_init(struct perf_event *event)
- 			return -EINVAL;
- 		event->hw.event_base = pkg_msr[cfg].msr;
- 		cpu = cpumask_any_and(&cstate_pkg_cpu_mask,
--				      topology_core_cpumask(event->cpu));
-+				      topology_die_cpumask(event->cpu));
- 	} else {
- 		return -ENOENT;
- 	}
-@@ -385,7 +385,7 @@ static int cstate_cpu_exit(unsigned int cpu)
- 	if (has_cstate_pkg &&
- 	    cpumask_test_and_clear_cpu(cpu, &cstate_pkg_cpu_mask)) {
- 
--		target = cpumask_any_but(topology_core_cpumask(cpu), cpu);
-+		target = cpumask_any_but(topology_die_cpumask(cpu), cpu);
- 		/* Migrate events if there is a valid target */
- 		if (target < nr_cpu_ids) {
- 			cpumask_set_cpu(target, &cstate_pkg_cpu_mask);
-@@ -414,7 +414,7 @@ static int cstate_cpu_init(unsigned int cpu)
- 	 * in the package cpu mask as the designated reader.
- 	 */
- 	target = cpumask_any_and(&cstate_pkg_cpu_mask,
--				 topology_core_cpumask(cpu));
-+				 topology_die_cpumask(cpu));
- 	if (has_cstate_pkg && target >= nr_cpu_ids)
- 		cpumask_set_cpu(cpu, &cstate_pkg_cpu_mask);
- 
-@@ -663,7 +663,13 @@ static int __init cstate_init(void)
- 	}
- 
- 	if (has_cstate_pkg) {
--		err = perf_pmu_register(&cstate_pkg_pmu, cstate_pkg_pmu.name, -1);
-+		if (topology_max_die_per_package() > 1) {
-+			err = perf_pmu_register(&cstate_pkg_pmu,
-+						"cstate_die", -1);
-+		} else {
-+			err = perf_pmu_register(&cstate_pkg_pmu,
-+						cstate_pkg_pmu.name, -1);
-+		}
- 		if (err) {
- 			has_cstate_pkg = false;
- 			pr_info("Failed to register cstate pkg pmu\n");
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzmaQoACgkQAVBC80lX
+0GxmJQf/SjSWc6s/V4yp7MSJOXV7fj4rbcZvA9A6yD2j8kZMDC2DF2xv1yZ/9fKL
+RDOBP4djWQOeFqd7HGliFFrlL899cNsOHHuhfaAa2cBSnHu1RfQAchRMtMsIv2yW
+YtZ3P3TYohfBbOYS2kjKIkE+ITQEA7C8ZNhZCh6XoJ6iLmz7z83IyqACDHdTbxqW
+nU0YcUtSnVf1b2WE3W/WVG+Z0ZKdGqmZ6lXXvtYX7A69YTFrjmU/3AYaQjLEq48y
+AjSxJGWWkkysxsz+zSz0221MsakKDIYBcbuBA9Wh31XAqeedRVoTxN+kxQg4IIJ0
+kzVUroPXneQc88gr0PFJ9YqltgTxUA==
+=HfDy
+-----END PGP SIGNATURE-----
+
+--Sig_/M4TugNSXYXC94YDxNnBwkzN--
