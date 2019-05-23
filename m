@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE95CC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47700C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:31:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B510E2054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EECC2054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:31:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639909;
-	bh=bazesv1zlSbhV7hBl7cRwPHNDrdniWGCiApnCNuxURc=;
+	s=default; t=1558639914;
+	bh=EhYtP/rpvE8jWFvUYVqzJ7BQ2mvQOotty2PPRp7l7Lw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q3M0JUoLNxXKdbAdiJ9lJyiFhq1hi07Y3oJmOZT77IqM6WeafVMWJHuiBNmn+M41N
-	 2jxKr7hnZEUMffaYpfh42e6yKlPTverhvH74rj2J6yazwfQob7TqBHmUpFQliF2aTR
-	 xtCNtErlqpINlGuL31i9k78iPHf8W3NF0uSTQaiI=
+	b=KGK3v9z7NfL5KTbjf0bt9G3WosI2R0PDFactgkNdvX8Q+6NKnRqG2Hj93YDQ/M8QY
+	 NqEDnZ5e1rS2UWhHvTriWO51WKoOHMBwF4KHMdNfW+nBf2g7xQeTKLm+fvXrJWbSaD
+	 n1IHPPC6LvuEYA1UOMIAZeoemTltM7hmI3BzQzEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403840AbfEWTbt (ORCPT
+        id S2403823AbfEWTbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:31:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45182 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:31:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403841AbfEWTbW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:31:22 -0400
+        id S2403757AbfEWTbP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:31:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2B642186A;
-        Thu, 23 May 2019 19:31:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01AD8217D9;
+        Thu, 23 May 2019 19:31:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639882;
-        bh=bazesv1zlSbhV7hBl7cRwPHNDrdniWGCiApnCNuxURc=;
+        s=default; t=1558639874;
+        bh=EhYtP/rpvE8jWFvUYVqzJ7BQ2mvQOotty2PPRp7l7Lw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fAepko/joRL5VIrpsCpIZqZ37DhZdU/80iezQtMendrw9IrxfVDYkUt/pJiRdBfHB
-         JJDYPpNz3uYcuo0XNNUszrbVMD+ax0scZIMugW07uTiLd/dSbeIYJP7cv3Bpddf2EI
-         JUxdi+NuPIZ+iwNceiFU3nAIlkDXp/W60ThZLJjg=
+        b=E4aQBnao+9liy8uvVpCI3u7Giyw7oHlvtqGnFVZJuSYqoIEbIvq8c2fxJEnrThow9
+         oW0/9BmPkHtmLaktH8r3dIWGidnLwFVnaldvQ7g1xnqWw/EdhgPPspsHtlGVWaDLdc
+         gVz+VfpmwUv2bLOjaCb12ZKOv5OEyguVDcOiQdOc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Joseph Myers <joseph@codesourcery.com>,
-        libc-alpha@sourceware.org, linux-api@vger.kernel.org,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Lukasz Majewski <lukma@denx.de>,
-        Stepan Golosunov <stepan@golosunov.pp.ru>
-Subject: [PATCH 5.1 119/122] y2038: Make CONFIG_64BIT_TIME unconditional
-Date:   Thu, 23 May 2019 21:07:21 +0200
-Message-Id: <20190523181721.342941070@linuxfoundation.org>
+        stable@vger.kernel.org, Chenbo Feng <fengc@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: [PATCH 5.1 116/122] bpf: relax inode permission check for retrieving bpf program
+Date:   Thu, 23 May 2019 21:07:18 +0200
+Message-Id: <20190523181720.917555214@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -64,57 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Chenbo Feng <fengc@google.com>
 
-commit f3d964673b2f1c5d5c68c77273efcf7103eed03b upstream.
+commit e547ff3f803e779a3898f1f48447b29f43c54085 upstream.
 
-As Stepan Golosunov points out, there is a small mistake in the
-get_timespec64() function in the kernel. It was originally added under the
-assumption that CONFIG_64BIT_TIME would get enabled on all 32-bit and
-64-bit architectures, but when the conversion was done, it was only turned
-on for 32-bit ones.
+For iptable module to load a bpf program from a pinned location, it
+only retrieve a loaded program and cannot change the program content so
+requiring a write permission for it might not be necessary.
+Also when adding or removing an unrelated iptable rule, it might need to
+flush and reload the xt_bpf related rules as well and triggers the inode
+permission check. It might be better to remove the write premission
+check for the inode so we won't need to grant write access to all the
+processes that flush and restore iptables rules.
 
-The effect is that the get_timespec64() function never clears the upper
-half of the tv_nsec field for 32-bit tasks in compat mode. Clearing this is
-required for POSIX compliant behavior of functions that pass a 'timespec'
-structure with a 64-bit tv_sec and a 32-bit tv_nsec, plus uninitialized
-padding.
-
-The easiest fix for linux-5.1 is to just make the Kconfig symbol
-unconditional, as it was originally intended. As a follow-up, the #ifdef
-CONFIG_64BIT_TIME can be removed completely..
-
-Note: for native 32-bit mode, no change is needed, this works as
-designed and user space should never need to clear the upper 32
-bits of the tv_nsec field, in or out of the kernel.
-
-Fixes: 00bf25d693e7 ("y2038: use time32 syscall names on 32-bit")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Joseph Myers <joseph@codesourcery.com>
-Cc: libc-alpha@sourceware.org
-Cc: linux-api@vger.kernel.org
-Cc: Deepa Dinamani <deepa.kernel@gmail.com>
-Cc: Lukasz Majewski <lukma@denx.de>
-Cc: Stepan Golosunov <stepan@golosunov.pp.ru>
-Link: https://lore.kernel.org/lkml/20190422090710.bmxdhhankurhafxq@sghpc.golosunov.pp.ru/
-Link: https://lkml.kernel.org/r/20190429131951.471701-1-arnd@arndb.de
+Signed-off-by: Chenbo Feng <fengc@google.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/Kconfig |    2 +-
+ kernel/bpf/inode.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -764,7 +764,7 @@ config COMPAT_OLD_SIGACTION
- 	bool
+--- a/kernel/bpf/inode.c
++++ b/kernel/bpf/inode.c
+@@ -518,7 +518,7 @@ out:
+ static struct bpf_prog *__get_prog_inode(struct inode *inode, enum bpf_prog_type type)
+ {
+ 	struct bpf_prog *prog;
+-	int ret = inode_permission(inode, MAY_READ | MAY_WRITE);
++	int ret = inode_permission(inode, MAY_READ);
+ 	if (ret)
+ 		return ERR_PTR(ret);
  
- config 64BIT_TIME
--	def_bool ARCH_HAS_64BIT_TIME
-+	def_bool y
- 	help
- 	  This should be selected by all architectures that need to support
- 	  new system calls with a 64-bit time_t. This is relevant on all 32-bit
 
 
