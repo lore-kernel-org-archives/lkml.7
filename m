@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE6C9C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90211C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EE6C21872
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:28:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D0A421841
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:28:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639711;
-	bh=5UCojV3+1l9pwyt7QHyOjN9adHUxg59F+wBeuWKbW/s=;
+	s=default; t=1558639715;
+	bh=UMvC08lni5aLyINag6W8qHVq+hf79X6rzLlABvFa1xc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cq1jQZwy3fA7548vP6IoDogvG8cDaSdm8I9bsxVKpSEwXHXtbgoLlBJepTq8NLuFv
-	 0rPqC6QMNMSPtajNp8v62sOLPEXuVIL2HKN2siZALpj4/RDtCWR87hwPf7Zl//6sXM
-	 mcU+tpcLr4HBlr6jmE22y7Ke05BS9rZRQgY2RIMA=
+	b=suBbLZ1k677buAhusqv/WaOuISKhhty92LTpTytFROuZKE21g4aZcMKok0LxNGxz4
+	 1JfXAD+27BBCgOCjEUZqcSwmoR7fuIDMm4HaH8GAGYVMs9y2oc0YPBYp1jAOzTOz7Q
+	 ptPIQvgC+WRw/QeD6foBi84XrdZ1tPzdbdwG+Zxo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391512AbfEWT2a (ORCPT
+        id S2391794AbfEWT2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:28:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41032 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:28:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403755AbfEWT2Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:28:25 -0400
+        id S2403755AbfEWT2b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:28:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 948E92184E;
-        Thu, 23 May 2019 19:28:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD10121841;
+        Thu, 23 May 2019 19:28:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639705;
-        bh=5UCojV3+1l9pwyt7QHyOjN9adHUxg59F+wBeuWKbW/s=;
+        s=default; t=1558639710;
+        bh=UMvC08lni5aLyINag6W8qHVq+hf79X6rzLlABvFa1xc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CUyFIApXntihnnoE5dkDscZEcnqxu0WGl1nR1KmBcfA7jVARXC99I1TD0Mf2iTYIV
-         OCjQSzXwFddFp1qX99LIXHl1q1Quxa0VbkRVRPbtYvLgyalOV84p5UIZIeQ0CX0WGT
-         QGz2RPK/gAteepBYSueeSYN05ZbE9E1iE1dcRRDI=
+        b=JSEJ65Lx6sjLmlEhZTKmYxzciKcC/2es1fQK5YrMX85KGn2IMxJjYDIGzK8j9gm6D
+         kYukHYlJF/O2VldNmJHWaIbCGw+mY9deWEARZB3s6W/9cHMoS9UnLv5Tz8p6OFY1w0
+         fMRxiZ9LShg1/LoWSx6WGd8RTitubGxTNsFG2ARY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 5.1 048/122] phy: ti-pipe3: fix missing bit-wise or operator when assigning val
-Date:   Thu, 23 May 2019 21:06:10 +0200
-Message-Id: <20190523181711.050745052@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 5.1 050/122] media: seco-cec: fix building with RC_CORE=m
+Date:   Thu, 23 May 2019 21:06:12 +0200
+Message-Id: <20190523181711.322318490@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -59,33 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit e6577cb5103b7ca7c0204c0c86ef4af8aa6288f6 upstream.
+commit 63604a143fe168094fbbccba56f6e3241683e399 upstream.
 
-There seems to be a missing bit-wise or operator when setting val,
-fix this by adding it in.
+I previously added an RC_CORE dependency here, but missed the corner
+case of CONFIG_VIDEO_SECO_CEC=y with CONFIG_RC_CORE=m, which still
+causes a link error:
 
-Fixes: 2796ceb0c18a ("phy: ti-pipe3: Update pcie phy settings")
-Cc: stable@vger.kernel.org # v4.19+
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+drivers/media/platform/seco-cec/seco-cec.o: In function `secocec_probe':
+seco-cec.c:(.text+0x1b8): undefined reference to `devm_rc_allocate_device'
+seco-cec.c:(.text+0x2e8): undefined reference to `devm_rc_register_device'
+drivers/media/platform/seco-cec/seco-cec.o: In function `secocec_irq_handler':
+seco-cec.c:(.text+0xa2c): undefined reference to `rc_keydown'
+
+Refine the dependency to disallow building the RC subdriver in this case.
+This is the same logic we apply in other drivers like it.
+
+Fixes: f27dd0ad6885 ("media: seco-cec: fix RC_CORE dependency")
+
+Cc: <stable@vger.kernel.org> # 5.1
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/phy/ti/phy-ti-pipe3.c |    2 +-
+ drivers/media/platform/Kconfig |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/phy/ti/phy-ti-pipe3.c
-+++ b/drivers/phy/ti/phy-ti-pipe3.c
-@@ -303,7 +303,7 @@ static void ti_pipe3_calibrate(struct ti
- 
- 	val = ti_pipe3_readl(phy->phy_rx, PCIEPHYRX_ANA_PROGRAMMABILITY);
- 	val &= ~(INTERFACE_MASK | LOSD_MASK | MEM_PLLDIV);
--	val = (0x1 << INTERFACE_SHIFT | 0xA << LOSD_SHIFT);
-+	val |= (0x1 << INTERFACE_SHIFT | 0xA << LOSD_SHIFT);
- 	ti_pipe3_writel(phy->phy_rx, PCIEPHYRX_ANA_PROGRAMMABILITY, val);
- 
- 	val = ti_pipe3_readl(phy->phy_rx, PCIEPHYRX_DIGITAL_MODES);
+--- a/drivers/media/platform/Kconfig
++++ b/drivers/media/platform/Kconfig
+@@ -649,7 +649,7 @@ config VIDEO_SECO_CEC
+ config VIDEO_SECO_RC
+ 	bool "SECO Boards IR RC5 support"
+ 	depends on VIDEO_SECO_CEC
+-	depends on RC_CORE
++	depends on RC_CORE=y || RC_CORE = VIDEO_SECO_CEC
+ 	help
+ 	  If you say yes here you will get support for the
+ 	  SECO Boards Consumer-IR in seco-cec driver.
 
 
