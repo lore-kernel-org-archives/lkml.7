@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03CCFC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:29:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF71C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9E7A217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:29:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 117C121851
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:29:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639748;
-	bh=gf+o3NeVqFACRQ7l+lxfdQbcSz6yhrDzSzQtgBf3Ekw=;
+	s=default; t=1558639752;
+	bh=eGjSZCeMlhs3mCdvp+rkNdXCGOMD6kWJsci1m1TlAcw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YOBvHYkzWa9l6vFxD8nzJuKAVyBr4Pph1tP0Fjml92cjDOBuL/wNunaBMaVoizrPd
-	 p2TkBEk9mtV2fv3XvSQhj15H/sny7xtnUnXb3gAoh8t6h6Z9ydNeKHx029eky3TD8P
-	 WHw1hZWnxgn4QnPEx3uJl0vQ2N3r+mjZsWWGTsUI=
+	b=Qt2LAMqMxDXJZDiBBIOuPEnA1vKra4pw96xMNfvXK/mBXs0Un8nH/ctte7iCgKlsF
+	 79klNrfTV7NzTi30/85QJMKZEB0SlJw5h9Tmlb3UQQq7nHM52VybcorwNNvhQ4TXgp
+	 lmVxIGMFsn4Xm6L9cG0hNPNVMXSJHY9X3d0fJ3LM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391882AbfEWT3H (ORCPT
+        id S2391895AbfEWT3L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:29:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41982 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:29:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391858AbfEWT3E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:29:04 -0400
+        id S2391416AbfEWT3I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:29:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CF66217D7;
-        Thu, 23 May 2019 19:29:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F4B3217D7;
+        Thu, 23 May 2019 19:29:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639742;
-        bh=gf+o3NeVqFACRQ7l+lxfdQbcSz6yhrDzSzQtgBf3Ekw=;
+        s=default; t=1558639748;
+        bh=eGjSZCeMlhs3mCdvp+rkNdXCGOMD6kWJsci1m1TlAcw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gv4jaPJmYwf0FcB1CSRUVXJzjUG1rmXpgzCeSfTzK+CYnTkt19w2FyiIU9/UkfSfp
-         YZ7oCFIMBd8dUJQSbOMiRj1w2esK0DEQzkRSD8qVHqhZsrMsK5gm9LkF+CNLSObtrD
-         ZFtdTAumobyy3gYit7fD900v6T0f4Nc9IDvAxn1g=
+        b=z9/ojJAzgr+icF4P/kgbUQrtYGistxrAkr5InlcJPWHgrX6bis4GnvxfH7M3QSRjX
+         V9JlsQLJ/FSJEhD4ZJSX1gIw9C0u3zMigGstnm7GLY8Iy8AB84rXBRIf/YCGHTX/8n
+         SJ8z3cQbgcRC+5y9aEwC4N4Jfb5HXIo/Fe9uLFbk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH 5.1 062/122] clk: rockchip: fix wrong clock definitions for rk3328
-Date:   Thu, 23 May 2019 21:06:24 +0200
-Message-Id: <20190523181712.946827931@linuxfoundation.org>
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Bernie Thompson <bernie@plugable.com>,
+        Ladislav Michl <ladis@linux-mips.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH 5.1 064/122] udlfb: fix sleeping inside spinlock
+Date:   Thu, 23 May 2019 21:06:26 +0200
+Message-Id: <20190523181713.201724775@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -60,93 +61,147 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonas Karlman <jonas@kwiboo.se>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-commit fb903392131a324a243c7731389277db1cd9f8df upstream.
+commit 6b11f9d8433b471fdd3ebed232b43a4b723be6ff upstream.
 
-This patch fixes definition of several clock gate and select register
-that is wrong for rk3328 referring to the TRM and vendor kernel.
-Also use correct number of softrst registers.
+If a framebuffer device is used as a console, the rendering calls
+(copyarea, fillrect, imageblit) may be done with the console spinlock
+held. On udlfb, these function call dlfb_handle_damage that takes a
+blocking semaphore before acquiring an URB.
 
-Fix clock definition for:
-- clk_crypto
-- aclk_h265
-- pclk_h265
-- aclk_h264
-- hclk_h264
-- aclk_axisram
-- aclk_gmac
-- aclk_usb3otg
+In order to fix the bug, this patch changes the calls copyarea, fillrect
+and imageblit to offload USB work to a workqueue.
 
-Fixes: fe3511ad8a1c ("clk: rockchip: add clock controller for rk3328")
-Cc: stable@vger.kernel.org
-Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-Tested-by: Peter Geis <pgwipeout@gmail.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+A side effect of this patch is 3x improvement in console scrolling speed
+because the device doesn't have to be updated after each copyarea call.
+
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Cc: Bernie Thompson <bernie@plugable.com>
+Cc: Ladislav Michl <ladis@linux-mips.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/clk/rockchip/clk-rk3328.c |   18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/video/fbdev/udlfb.c |   56 +++++++++++++++++++++++++++++++++++++++++---
+ include/video/udlfb.h       |    6 ++++
+ 2 files changed, 59 insertions(+), 3 deletions(-)
 
---- a/drivers/clk/rockchip/clk-rk3328.c
-+++ b/drivers/clk/rockchip/clk-rk3328.c
-@@ -458,7 +458,7 @@ static struct rockchip_clk_branch rk3328
- 			RK3328_CLKSEL_CON(35), 15, 1, MFLAGS, 8, 7, DFLAGS,
- 			RK3328_CLKGATE_CON(2), 12, GFLAGS),
- 	COMPOSITE(SCLK_CRYPTO, "clk_crypto", mux_2plls_p, 0,
--			RK3328_CLKSEL_CON(20), 7, 1, MFLAGS, 0, 7, DFLAGS,
-+			RK3328_CLKSEL_CON(20), 7, 1, MFLAGS, 0, 5, DFLAGS,
- 			RK3328_CLKGATE_CON(2), 4, GFLAGS),
- 	COMPOSITE_NOMUX(SCLK_TSADC, "clk_tsadc", "clk_24m", 0,
- 			RK3328_CLKSEL_CON(22), 0, 10, DFLAGS,
-@@ -550,15 +550,15 @@ static struct rockchip_clk_branch rk3328
- 	GATE(0, "hclk_rkvenc_niu", "hclk_rkvenc", 0,
- 			RK3328_CLKGATE_CON(25), 1, GFLAGS),
- 	GATE(ACLK_H265, "aclk_h265", "aclk_rkvenc", 0,
--			RK3328_CLKGATE_CON(25), 0, GFLAGS),
-+			RK3328_CLKGATE_CON(25), 2, GFLAGS),
- 	GATE(PCLK_H265, "pclk_h265", "hclk_rkvenc", 0,
--			RK3328_CLKGATE_CON(25), 1, GFLAGS),
-+			RK3328_CLKGATE_CON(25), 3, GFLAGS),
- 	GATE(ACLK_H264, "aclk_h264", "aclk_rkvenc", 0,
--			RK3328_CLKGATE_CON(25), 0, GFLAGS),
-+			RK3328_CLKGATE_CON(25), 4, GFLAGS),
- 	GATE(HCLK_H264, "hclk_h264", "hclk_rkvenc", 0,
--			RK3328_CLKGATE_CON(25), 1, GFLAGS),
-+			RK3328_CLKGATE_CON(25), 5, GFLAGS),
- 	GATE(ACLK_AXISRAM, "aclk_axisram", "aclk_rkvenc", CLK_IGNORE_UNUSED,
--			RK3328_CLKGATE_CON(25), 0, GFLAGS),
-+			RK3328_CLKGATE_CON(25), 6, GFLAGS),
+--- a/drivers/video/fbdev/udlfb.c
++++ b/drivers/video/fbdev/udlfb.c
+@@ -657,6 +657,50 @@ error:
+ 	return 0;
+ }
  
- 	COMPOSITE(SCLK_VENC_CORE, "sclk_venc_core", mux_4plls_p, 0,
- 			RK3328_CLKSEL_CON(51), 14, 2, MFLAGS, 8, 5, DFLAGS,
-@@ -663,7 +663,7 @@ static struct rockchip_clk_branch rk3328
++static void dlfb_init_damage(struct dlfb_data *dlfb)
++{
++	dlfb->damage_x = INT_MAX;
++	dlfb->damage_x2 = 0;
++	dlfb->damage_y = INT_MAX;
++	dlfb->damage_y2 = 0;
++}
++
++static void dlfb_damage_work(struct work_struct *w)
++{
++	struct dlfb_data *dlfb = container_of(w, struct dlfb_data, damage_work);
++	int x, x2, y, y2;
++
++	spin_lock_irq(&dlfb->damage_lock);
++	x = dlfb->damage_x;
++	x2 = dlfb->damage_x2;
++	y = dlfb->damage_y;
++	y2 = dlfb->damage_y2;
++	dlfb_init_damage(dlfb);
++	spin_unlock_irq(&dlfb->damage_lock);
++
++	if (x < x2 && y < y2)
++		dlfb_handle_damage(dlfb, x, y, x2 - x, y2 - y);
++}
++
++static void dlfb_offload_damage(struct dlfb_data *dlfb, int x, int y, int width, int height)
++{
++	unsigned long flags;
++	int x2 = x + width;
++	int y2 = y + height;
++
++	if (x >= x2 || y >= y2)
++		return;
++
++	spin_lock_irqsave(&dlfb->damage_lock, flags);
++	dlfb->damage_x = min(x, dlfb->damage_x);
++	dlfb->damage_x2 = max(x2, dlfb->damage_x2);
++	dlfb->damage_y = min(y, dlfb->damage_y);
++	dlfb->damage_y2 = max(y2, dlfb->damage_y2);
++	spin_unlock_irqrestore(&dlfb->damage_lock, flags);
++
++	schedule_work(&dlfb->damage_work);
++}
++
+ /*
+  * Path triggered by usermode clients who write to filesystem
+  * e.g. cat filename > /dev/fb1
+@@ -693,7 +737,7 @@ static void dlfb_ops_copyarea(struct fb_
  
- 	/* PD_GMAC */
- 	COMPOSITE(ACLK_GMAC, "aclk_gmac", mux_2plls_hdmiphy_p, 0,
--			RK3328_CLKSEL_CON(35), 6, 2, MFLAGS, 0, 5, DFLAGS,
-+			RK3328_CLKSEL_CON(25), 6, 2, MFLAGS, 0, 5, DFLAGS,
- 			RK3328_CLKGATE_CON(3), 2, GFLAGS),
- 	COMPOSITE_NOMUX(PCLK_GMAC, "pclk_gmac", "aclk_gmac", 0,
- 			RK3328_CLKSEL_CON(25), 8, 3, DFLAGS,
-@@ -733,7 +733,7 @@ static struct rockchip_clk_branch rk3328
+ 	sys_copyarea(info, area);
  
- 	/* PD_PERI */
- 	GATE(0, "aclk_peri_noc", "aclk_peri", CLK_IGNORE_UNUSED, RK3328_CLKGATE_CON(19), 11, GFLAGS),
--	GATE(ACLK_USB3OTG, "aclk_usb3otg", "aclk_peri", 0, RK3328_CLKGATE_CON(19), 4, GFLAGS),
-+	GATE(ACLK_USB3OTG, "aclk_usb3otg", "aclk_peri", 0, RK3328_CLKGATE_CON(19), 14, GFLAGS),
+-	dlfb_handle_damage(dlfb, area->dx, area->dy,
++	dlfb_offload_damage(dlfb, area->dx, area->dy,
+ 			area->width, area->height);
+ }
  
- 	GATE(HCLK_SDMMC, "hclk_sdmmc", "hclk_peri", 0, RK3328_CLKGATE_CON(19), 0, GFLAGS),
- 	GATE(HCLK_SDIO, "hclk_sdio", "hclk_peri", 0, RK3328_CLKGATE_CON(19), 1, GFLAGS),
-@@ -913,7 +913,7 @@ static void __init rk3328_clk_init(struc
- 				     &rk3328_cpuclk_data, rk3328_cpuclk_rates,
- 				     ARRAY_SIZE(rk3328_cpuclk_rates));
+@@ -704,7 +748,7 @@ static void dlfb_ops_imageblit(struct fb
  
--	rockchip_register_softrst(np, 11, reg_base + RK3328_SOFTRST_CON(0),
-+	rockchip_register_softrst(np, 12, reg_base + RK3328_SOFTRST_CON(0),
- 				  ROCKCHIP_SOFTRST_HIWORD_MASK);
+ 	sys_imageblit(info, image);
  
- 	rockchip_register_restart_notifier(ctx, RK3328_GLB_SRST_FST, NULL);
+-	dlfb_handle_damage(dlfb, image->dx, image->dy,
++	dlfb_offload_damage(dlfb, image->dx, image->dy,
+ 			image->width, image->height);
+ }
+ 
+@@ -715,7 +759,7 @@ static void dlfb_ops_fillrect(struct fb_
+ 
+ 	sys_fillrect(info, rect);
+ 
+-	dlfb_handle_damage(dlfb, rect->dx, rect->dy, rect->width,
++	dlfb_offload_damage(dlfb, rect->dx, rect->dy, rect->width,
+ 			      rect->height);
+ }
+ 
+@@ -940,6 +984,8 @@ static void dlfb_ops_destroy(struct fb_i
+ {
+ 	struct dlfb_data *dlfb = info->par;
+ 
++	cancel_work_sync(&dlfb->damage_work);
++
+ 	if (info->cmap.len != 0)
+ 		fb_dealloc_cmap(&info->cmap);
+ 	if (info->monspecs.modedb)
+@@ -1636,6 +1682,10 @@ static int dlfb_usb_probe(struct usb_int
+ 	dlfb->ops = dlfb_ops;
+ 	info->fbops = &dlfb->ops;
+ 
++	dlfb_init_damage(dlfb);
++	spin_lock_init(&dlfb->damage_lock);
++	INIT_WORK(&dlfb->damage_work, dlfb_damage_work);
++
+ 	INIT_LIST_HEAD(&info->modelist);
+ 
+ 	if (!dlfb_alloc_urb_list(dlfb, WRITES_IN_FLIGHT, MAX_TRANSFER)) {
+--- a/include/video/udlfb.h
++++ b/include/video/udlfb.h
+@@ -48,6 +48,12 @@ struct dlfb_data {
+ 	int base8;
+ 	u32 pseudo_palette[256];
+ 	int blank_mode; /*one of FB_BLANK_ */
++	int damage_x;
++	int damage_y;
++	int damage_x2;
++	int damage_y2;
++	spinlock_t damage_lock;
++	struct work_struct damage_work;
+ 	struct fb_ops ops;
+ 	/* blit-only rendering path metrics, exposed through sysfs */
+ 	atomic_t bytes_rendered; /* raw pixel-bytes driver asked to render */
 
 
