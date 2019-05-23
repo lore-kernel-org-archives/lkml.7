@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D013DC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2981EC282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA97820881
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:35:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE3D220881
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:35:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640128;
-	bh=Jm4gOeMZDy0CWa0ohmtarmH9iyQ6p78f9xr7urk7Y3k=;
+	s=default; t=1558640132;
+	bh=GqsLDKO2hxLnFO/SE3HhpEzRNoCZlRTxRd/5JxBCzTs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=scjWwtKicbKsC4WDDq2Dg14kbLjZPLsZNkWd7h6d4YgyifWi3X8gbVbBaZfNhI899
-	 iFsAloGKeJJwZ7pzDjKr8l0dKLVDRANmo6msHLG99kafv5M7ivahPrsMOh9FjrzxCw
-	 L9OGbVThaf/ytKnos4aB4ZhnmCtGtm2KlPiZXMzM=
+	b=NyLwE3z03MEiQ7St+Vs8sUvMOcvOzDUZi09Ydv8JsZpoTCgXqThUz43AW8aO4iBYy
+	 C5lk+5MnbK1M+8i6IS/0CKdnqY/HDRszXAmWCkVYvZKf5Rnj6yI6wDTvTHaeBksdzC
+	 l7McNH611rNW8LEXyTHpGotLRYa0S1FjidOkmASE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391872AbfEWTf1 (ORCPT
+        id S2391404AbfEWT0m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:35:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38680 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:26:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390681AbfEWT0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:26:46 -0400
+        id S2390754AbfEWT0h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:26:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36410206BA;
-        Thu, 23 May 2019 19:26:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1B0820868;
+        Thu, 23 May 2019 19:26:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639605;
-        bh=Jm4gOeMZDy0CWa0ohmtarmH9iyQ6p78f9xr7urk7Y3k=;
+        s=default; t=1558639597;
+        bh=GqsLDKO2hxLnFO/SE3HhpEzRNoCZlRTxRd/5JxBCzTs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jeH8OGKJZ0FvkYBChRfK13LPIlpD3YMAnqLAlYXGE2tBXB6OgBZi4T7IxD95cw/5+
-         YhigK3QNUfu9rk71QqoONiwJidZxoPNgQ0W0UmdZCdWDTvS0MTdYXpVIXt7XNuZ1HU
-         WvwPn3o7fZFJMfH29JQIOw+Oz4x3+nLKcygw23aU=
+        b=0GvdTThpxrtF1vZ6Y+bCyLoaCEOOg8Q+o2xyueu085Y7Hj6rwRFL+zNrI76YSB5qk
+         xCB2yUq54SpWdSGQWELiJOsSNW2cVRXWAlKYiAXOjJXR/1ZtN5c01tegaUo8LKE0Sb
+         EWwTLZ3Hkf4As3PCtKVUiayjrPymEHcb++yuOikU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sabrina Dubroca <sd@queasysnail.net>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dan Winship <danw@redhat.com>
-Subject: [PATCH 5.1 010/122] rtnetlink: always put IFLA_LINK for links with a link-netnsid
-Date:   Thu, 23 May 2019 21:05:32 +0200
-Message-Id: <20190523181706.363871384@linuxfoundation.org>
+        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.1 007/122] net: usb: qmi_wwan: add Telit 0x1260 and 0x1261 compositions
+Date:   Thu, 23 May 2019 21:05:29 +0200
+Message-Id: <20190523181706.017527166@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -61,95 +60,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sabrina Dubroca <sd@queasysnail.net>
+From: Daniele Palmas <dnlplm@gmail.com>
 
-[ Upstream commit feadc4b6cf42a53a8a93c918a569a0b7e62bd350 ]
+[ Upstream commit b4e467c82f8c12af78b6f6fa5730cb7dea7af1b4 ]
 
-Currently, nla_put_iflink() doesn't put the IFLA_LINK attribute when
-iflink == ifindex.
+Added support for Telit LE910Cx 0x1260 and 0x1261 compositions.
 
-In some cases, a device can be created in a different netns with the
-same ifindex as its parent. That device will not dump its IFLA_LINK
-attribute, which can confuse some userspace software that expects it.
-For example, if the last ifindex created in init_net and foo are both
-8, these commands will trigger the issue:
-
-    ip link add parent type dummy                   # ifindex 9
-    ip link add link parent netns foo type macvlan  # ifindex 9 in ns foo
-
-So, in case a device puts the IFLA_LINK_NETNSID attribute in a dump,
-always put the IFLA_LINK attribute as well.
-
-Thanks to Dan Winship for analyzing the original OpenShift bug down to
-the missing netlink attribute.
-
-v2: change Fixes tag, it's been here forever, as Nicolas Dichtel said
-    add Nicolas' ack
-v3: change Fixes tag
-    fix subject typo, spotted by Edward Cree
-
-Analyzed-by: Dan Winship <danw@redhat.com>
-Fixes: d8a5ec672768 ("[NET]: netlink support for moving devices between network namespaces.")
-Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
-Acked-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
+Acked-by: Bjørn Mork <bjorn@mork.no>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/rtnetlink.c |   16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ drivers/net/usb/qmi_wwan.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/net/core/rtnetlink.c
-+++ b/net/core/rtnetlink.c
-@@ -1496,14 +1496,15 @@ static int put_master_ifindex(struct sk_
- 	return ret;
- }
- 
--static int nla_put_iflink(struct sk_buff *skb, const struct net_device *dev)
-+static int nla_put_iflink(struct sk_buff *skb, const struct net_device *dev,
-+			  bool force)
- {
- 	int ifindex = dev_get_iflink(dev);
- 
--	if (dev->ifindex == ifindex)
--		return 0;
-+	if (force || dev->ifindex != ifindex)
-+		return nla_put_u32(skb, IFLA_LINK, ifindex);
- 
--	return nla_put_u32(skb, IFLA_LINK, ifindex);
-+	return 0;
- }
- 
- static noinline_for_stack int nla_put_ifalias(struct sk_buff *skb,
-@@ -1520,6 +1521,8 @@ static int rtnl_fill_link_netnsid(struct
- 				  const struct net_device *dev,
- 				  struct net *src_net)
- {
-+	bool put_iflink = false;
-+
- 	if (dev->rtnl_link_ops && dev->rtnl_link_ops->get_link_net) {
- 		struct net *link_net = dev->rtnl_link_ops->get_link_net(dev);
- 
-@@ -1528,10 +1531,12 @@ static int rtnl_fill_link_netnsid(struct
- 
- 			if (nla_put_s32(skb, IFLA_LINK_NETNSID, id))
- 				return -EMSGSIZE;
-+
-+			put_iflink = true;
- 		}
- 	}
- 
--	return 0;
-+	return nla_put_iflink(skb, dev, put_iflink);
- }
- 
- static int rtnl_fill_link_af(struct sk_buff *skb,
-@@ -1617,7 +1622,6 @@ static int rtnl_fill_ifinfo(struct sk_bu
- #ifdef CONFIG_RPS
- 	    nla_put_u32(skb, IFLA_NUM_RX_QUEUES, dev->num_rx_queues) ||
- #endif
--	    nla_put_iflink(skb, dev) ||
- 	    put_master_ifindex(skb, dev) ||
- 	    nla_put_u8(skb, IFLA_CARRIER, netif_carrier_ok(dev)) ||
- 	    (dev->qdisc &&
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -1250,6 +1250,8 @@ static const struct usb_device_id produc
+ 	{QMI_FIXED_INTF(0x1bc7, 0x1101, 3)},	/* Telit ME910 dual modem */
+ 	{QMI_FIXED_INTF(0x1bc7, 0x1200, 5)},	/* Telit LE920 */
+ 	{QMI_QUIRK_SET_DTR(0x1bc7, 0x1201, 2)},	/* Telit LE920, LE920A4 */
++	{QMI_QUIRK_SET_DTR(0x1bc7, 0x1260, 2)},	/* Telit LE910Cx */
++	{QMI_QUIRK_SET_DTR(0x1bc7, 0x1261, 2)},	/* Telit LE910Cx */
+ 	{QMI_QUIRK_SET_DTR(0x1bc7, 0x1900, 1)},	/* Telit LN940 series */
+ 	{QMI_FIXED_INTF(0x1c9e, 0x9801, 3)},	/* Telewell TW-3G HSPA+ */
+ 	{QMI_FIXED_INTF(0x1c9e, 0x9803, 4)},	/* Telewell TW-3G HSPA+ */
 
 
