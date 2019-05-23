@@ -2,114 +2,213 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB926C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F55EC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68DD92186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:53:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A8482186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:55:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="atEA2SB8"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="F01S9opK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731387AbfEWRx4 (ORCPT
+        id S1731440AbfEWRzt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 13:53:56 -0400
-Received: from mail-eopbgr70085.outbound.protection.outlook.com ([40.107.7.85]:28352
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730899AbfEWRx4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 13:53:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/xjf5SFKB5ODXOe4Q8/8+7+jabJoQJfJuPLFXDrRa4c=;
- b=atEA2SB8JMK9gKyZuKFl4Wf7S24+ks6ItyeAk6nuUL8NTtXXT0Ip+ZOF529pGEOHOUghZR4pbOf3bMguqyfSgd18iky6Dz8r3nSbAnh3s8ukyZIq5cUz+l/9bAkp9KtF9iFdE7N6Ei1Gy5k2e8cdyX0Az0biqfA9UaHtEJXB3jc=
-Received: from AM0PR0402MB3476.eurprd04.prod.outlook.com (52.133.50.141) by
- AM0PR0402MB3889.eurprd04.prod.outlook.com (52.133.38.157) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.17; Thu, 23 May 2019 17:53:51 +0000
-Received: from AM0PR0402MB3476.eurprd04.prod.outlook.com
- ([fe80::1cc6:b168:7419:aa48]) by AM0PR0402MB3476.eurprd04.prod.outlook.com
- ([fe80::1cc6:b168:7419:aa48%6]) with mapi id 15.20.1900.020; Thu, 23 May 2019
- 17:53:51 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-CC:     Robin Murphy <robin.murphy@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH] swiotlb: sync buffer when mapping FROM_DEVICE
-Thread-Topic: [PATCH] swiotlb: sync buffer when mapping FROM_DEVICE
-Thread-Index: AQHVEG7XwyI2zYKLCECD0q7/YpNC2Q==
-Date:   Thu, 23 May 2019 17:53:51 +0000
-Message-ID: <AM0PR0402MB3476A633E03202C26D15CB5698010@AM0PR0402MB3476.eurprd04.prod.outlook.com>
-References: <20190522072018.10660-1-horia.geanta@nxp.com>
- <20190522123243.GA26390@lst.de>
- <6cbe5470-16a6-17e9-337d-6ba18b16b6e8@arm.com>
- <20190522130921.GA26874@lst.de>
- <fdfd7318-7999-1fe6-01b6-ae1fb7ba8c30@arm.com>
- <20190522133400.GA27229@lst.de>
- <CGME20190522135556epcas2p34e0c14f2565abfdccc7035463f60a71b@epcas2p3.samsung.com>
- <ed26de5e-aee4-4e19-095c-cc551012d475@arm.com>
- <0c79721a-11cb-c945-5626-3d43cc299fe6@samsung.com>
- <20190523164332.GA22245@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [94.69.234.123]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 356fd88b-93bd-4e45-1136-08d6dfa79dce
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0PR0402MB3889;
-x-ms-traffictypediagnostic: AM0PR0402MB3889:
-x-microsoft-antispam-prvs: <AM0PR0402MB3889F5FB4AC0350355A655AE98010@AM0PR0402MB3889.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 00462943DE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(346002)(136003)(376002)(39860400002)(189003)(199004)(53936002)(4326008)(53546011)(8936002)(6506007)(316002)(7736002)(305945005)(110136005)(3846002)(74316002)(6246003)(6116002)(5660300002)(66946007)(4744005)(33656002)(76116006)(64756008)(66476007)(66446008)(66556008)(186003)(73956011)(8676002)(476003)(52536014)(66066001)(81166006)(14444005)(81156014)(26005)(9686003)(256004)(102836004)(6436002)(55016002)(99286004)(486006)(229853002)(86362001)(14454004)(446003)(7696005)(44832011)(2906002)(54906003)(25786009)(71200400001)(68736007)(71190400001)(478600001)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR0402MB3889;H:AM0PR0402MB3476.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: wCx6scCvRm17hTEpxIFGhx9za4I/XyE2oi0K623SOfPjgthZYXIQppRIqqTwgq26MNuYAiJ1JJcNxC/y81FIwF1I7ZUrBXPlzXqBw2wp0i1/Ic98GPluZSIt1jcu//4NbBjFNIs++RDT1oJRooeUuJk/pDxTPGVOxtO4M/t2aK6FD1GNH0SP81LELMhx+4JqcMybP0+IIfsfwVF53+IdlIl2tEq8WEjjVtDkGc5qJcldAMzudttOOKxSzE55oc75n1Zs/L3GahSerGCtPvNUN3NUb5/921j4tvSjJ2JVPQj/tw1jq4PkU3GHeoYDrEAcILqpyssDdTDflC7yRWlgVV6yDRGz/4zxWOFyiMx/8YxAW3HG43vyeLoQLmKut+jAHiYzmqcENb+Q0NS6cw+pEpxMA2dMu0aTyFgckHIO9PU=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 23 May 2019 13:55:49 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:44206 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730928AbfEWRzt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 13:55:49 -0400
+Received: by mail-qt1-f193.google.com with SMTP id f24so7759883qtk.11
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 10:55:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=CgT8oRWFS1J54ASxbVHmBz5Tyd/B834Vmb8dQsBzisk=;
+        b=F01S9opKEjPWv1Ji/EPg5pd8NgABY3rLeWMBPEdUABGVrhUNUf5eWyX9uP4mooc9z7
+         08jsjlnmLzzEGZa2iFIooRKYnwUGmWomH4RW9fOz5RgdIghbJHbngpnj3zQAptdfz5Xn
+         ozn0pvEdcMupMWs0/GT5euLr6qmTjpe5C4rkgyWcIcJQhOmO6JX9pNBvqsTNW3L5DrVo
+         hprfbGpQqesljgeHKGYrVsjgILLrqDcWnb2qGhkNr5O8vilHZmJVaDaUfrbY+RHRDcIS
+         +kdh3CoXyBFc8Ao/3ZL0a4rOoMaQyCwbYk30JpKF1t65UfZNPAu1RebA5i0dYH0QvfuY
+         +Omg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CgT8oRWFS1J54ASxbVHmBz5Tyd/B834Vmb8dQsBzisk=;
+        b=VebAyfavOvHtJFt5RfOpFYzU23w0sHgvZgNJaUc1AdPKft6E144b8IQKMb6UdJrxkD
+         mS/LHZq6/91UVE61xoMs+5YlA0HK2KL7sn7TZCRF49B+cnvueVfyjCG2mnZnmtgaZ6ga
+         eB7g8F+CRP1AsrKlifNmhYvRXhpqu+gINJtFc0f1ui/UvHkahzNpQdLXCUw4xTYigTnP
+         gZJd+MPIPShgI5/Pmv3qz90leDHEy7kJ+UxeWIWwtVxh/JHW3qvalD+DBKMbs1HA/GDy
+         H+gbQdfG+u6nVkYQ37yOVXDBFIvcX7bBDLsDO1+mHtG9Dfs9pcNdP3fvQi4q5cKSK9j4
+         UqCQ==
+X-Gm-Message-State: APjAAAVmnlE9NilSeOx/V+M81laITJ9u6bEVQQdLvb0m7sIy0/BC0G8a
+        2GcbqRx7Rkz1tk8UM36UY+1pIw==
+X-Google-Smtp-Source: APXvYqx3zTS7lcJS9edhgyAQdVswoEICefM3VTQ/rsN0qW9V3gpHj7jUQQJoTPHGPMbQYnaMuP+Zkg==
+X-Received: by 2002:aed:22e2:: with SMTP id q31mr80397038qtc.238.1558634148140;
+        Thu, 23 May 2019 10:55:48 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-49-251.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.49.251])
+        by smtp.gmail.com with ESMTPSA id o64sm21105qke.61.2019.05.23.10.55.47
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 May 2019 10:55:47 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hTrwQ-0008Ar-MY; Thu, 23 May 2019 14:55:46 -0300
+Date:   Thu, 23 May 2019 14:55:46 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Jerome Glisse <jglisse@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Artemy Kovalyov <artemyko@mellanox.com>,
+        Moni Shoua <monis@mellanox.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>
+Subject: Re: [PATCH v4 0/1] Use HMM for ODP v4
+Message-ID: <20190523175546.GE12159@ziepe.ca>
+References: <20190506195657.GA30261@ziepe.ca>
+ <20190521205321.GC3331@redhat.com>
+ <20190522005225.GA30819@ziepe.ca>
+ <20190522174852.GA23038@redhat.com>
+ <20190522235737.GD15389@ziepe.ca>
+ <20190523150432.GA5104@redhat.com>
+ <20190523154149.GB12159@ziepe.ca>
+ <20190523155207.GC5104@redhat.com>
+ <20190523163429.GC12159@ziepe.ca>
+ <20190523173302.GD5104@redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 356fd88b-93bd-4e45-1136-08d6dfa79dce
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2019 17:53:51.7974
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0402MB3889
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190523173302.GD5104@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/23/2019 7:43 PM, Christoph Hellwig wrote:=0A=
-> On Thu, May 23, 2019 at 07:35:07AM +0200, Marek Szyprowski wrote:=0A=
->> Don't we have DMA_BIDIRECTIONAL for such case?=0A=
-> =0A=
-> Not sure if it was intended for that case, but it definitively should=0A=
-> do the right thing for swiotlb, and it should also do the right thing=0A=
-> in terms of cache maintainance.=0A=
-> =0A=
->> Maybe we should update =0A=
->> documentation a bit to point that DMA_FROM_DEVICE expects the whole =0A=
->> buffer to be filled by the device?=0A=
-> =0A=
-> Probably. Horia, can you try to use DMA_BIDIRECTIONAL?=0A=
-> =0A=
-This works, but at the cost of performance - all the cache lines being writ=
-ten=0A=
-back to memory, just to be overwritten by the device.=0A=
-=0A=
-Thanks,=0A=
-Horia=0A=
+On Thu, May 23, 2019 at 01:33:03PM -0400, Jerome Glisse wrote:
+> On Thu, May 23, 2019 at 01:34:29PM -0300, Jason Gunthorpe wrote:
+> > On Thu, May 23, 2019 at 11:52:08AM -0400, Jerome Glisse wrote:
+> > > On Thu, May 23, 2019 at 12:41:49PM -0300, Jason Gunthorpe wrote:
+> > > > On Thu, May 23, 2019 at 11:04:32AM -0400, Jerome Glisse wrote:
+> > > > > On Wed, May 22, 2019 at 08:57:37PM -0300, Jason Gunthorpe wrote:
+> > > > > > On Wed, May 22, 2019 at 01:48:52PM -0400, Jerome Glisse wrote:
+> > > > > > 
+> > > > > > > > > So attached is a rebase on top of 5.2-rc1, i have tested with pingpong
+> > > > > > > > > (prefetch and not and different sizes). Seems to work ok.
+> > > > > > > > 
+> > > > > > > > Urk, it already doesn't apply to the rdma tree :(
+> > > > > > > > 
+> > > > > > > > The conflicts are a little more extensive than I'd prefer to handle..
+> > > > > > > > Can I ask you to rebase it on top of this branch please:
+> > > > > > > > 
+> > > > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git/log/?h=wip/jgg-for-next
+> > > > > > > > 
+> > > > > > > > Specifically it conflicts with this patch:
+> > > > > > > > 
+> > > > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git/commit/?h=wip/jgg-for-next&id=d2183c6f1958e6b6dfdde279f4cee04280710e34
+> > > > > > 
+> > > > > > There is at least one more serious blocker here:
+> > > > > > 
+> > > > > > config ARCH_HAS_HMM_MIRROR
+> > > > > >         bool
+> > > > > >         default y
+> > > > > >         depends on (X86_64 || PPC64)
+> > > > > >         depends on MMU && 64BIT
+> > > > > > 
+> > > > > > I can't loose ARM64 support for ODP by merging this, that is too
+> > > > > > serious of a regression.
+> > > > > > 
+> > > > > > Can you fix it?
+> > > > > 
+> > > > > 5.2 already has patch to fix the Kconfig (ARCH_HAS_HMM_MIRROR and
+> > > > > ARCH_HAS_HMM_DEVICE replacing ARCH_HAS_HMM) I need to update nouveau
+> > > > 
+> > > > Newer than 5.2-rc1? Is this why ARCH_HAS_HMM_MIRROR is not used anywhere?
+> > > 
+> > > Yes this is multi-step update, first add the new Kconfig release n,
+> > > update driver in release n+1, update core Kconfig in release n+2
+> > > 
+> > > So we are in release n (5.2), in 5.3 i will update nouveau and amdgpu
+> > > so that in 5.4 in ca remove the old ARCH_HAS_HMM
+> > 
+> > Why don't you just send the patch for both parts to mm or to DRM?
+> > 
+> > This is very normal - as long as the resulting conflicts would be
+> > small during there is no reason not to do this. Can you share the
+> > combined patch?
+> 
+> This was tested in the past an resulted in failure. So for now i am
+> taking the simplest and easiest path with the least burden for every
+> maintainer. It only complexify my life.
+
+I don't know what you tried to do in the past, but it happens all the
+time, every merge cycle with success. Not everything can be done, but
+changing the signature of one function with one call site should
+really not be a problem.
+
+> Note that mm is not a git tree and thus i can not play any git trick
+> to help in this endeavor.
+
+I am aware..
+
+> > > > If mm takes the fixup patches so hmm mirror is as reliable as ODP's
+> > > > existing stuff, and patch from you to enable ARM64, then we can
+> > > > continue to merge into 5.3
+> > > > 
+> > > > So, let us try to get acks on those other threads..
+> > > 
+> > > I will be merging your patchset and Ralph and repost, they are only
+> > > minor change mostly that you can not update the driver API in just
+> > > one release.
+> > 
+> > Of course you can, we do it all the time. It requires some
+> > co-ordination, but as long as the merge conflicts are not big it is
+> > fine.
+> > 
+> > Merge the driver API change and the call site updates to -mm and
+> > refain from merging horrendously conflicting patches through DRM.
+> > 
+> > In the case of the changes in my HMM RFC it is something like 2
+> > lines in DRM that need touching, no problem at all.
+> > 
+> > If you want help I can volunteer make a hmm PR for Linus just for this
+> > during the merge window - but Andrew would need to agree and ack the
+> > patches.
+> 
+> This was tested in the past and i do not want to go over this issue
+> again (or re-iterate the long emails discussion associated with that).
+> It failed and it put the burden on every maintainers. So it is easier
+> to do the multi-step thing.
+> 
+> You can take a peak at Ralph patchset and yours into one with minor
+> changes here:
+> 
+> https://cgit.freedesktop.org/~glisse/linux/log/?h=hmm-5.3
+
+Okay..
+
+This patch needs to use down_read(&mm->mmap_sem) not READ_ONCE:
+
+ mm/hmm: do not try to create hmm struct from within hmm_range_register()
+ Driver should never call hmm_range_register() without a valid and active
+ registered hmm_mirror and thus without a valid and active hmm struct. So
+ if that happens just return -EFAULT.
+
+Otherwise it is inconsisent with the locking scheme and has a use
+after free race. 
+
+I was not sure if the lock could be obtained safely here so I
+preferred to use the no-lock alternative of passing in mirror. I still
+think you should just change the single call site and sent to -mm.
+
+Thank you for all the other fixes, they look great.
+
+Regards,
+Jason
