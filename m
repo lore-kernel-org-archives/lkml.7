@@ -2,207 +2,99 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E54C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99AEFC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E568D21019
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67A722133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:37:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iOfxNUcS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730878AbfEWOdt (ORCPT
+        id S1730886AbfEWOhK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 10:33:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50684 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730710AbfEWOdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 10:33:49 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BD6DE307DA31;
-        Thu, 23 May 2019 14:33:48 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 7691E620DF;
-        Thu, 23 May 2019 14:33:44 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Thu, 23 May 2019 16:33:46 +0200 (CEST)
-Date:   Thu, 23 May 2019 16:33:41 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Deepa Dinamani <deepa.kernel@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>, dbueso@suse.de, axboe@kernel.dk,
-        Davidlohr Bueso <dave@stgolabs.net>, Eric Wong <e@80x24.org>,
-        Jason Baron <jbaron@akamai.com>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        linux-aio <linux-aio@kvack.org>,
-        Omar Kilani <omar.kilani@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org
-Subject: Re: [PATCH v2] signal: Adjust error codes according to
- restore_user_sigmask()
-Message-ID: <20190523143340.GA23070@redhat.com>
-References: <20190522032144.10995-1-deepa.kernel@gmail.com>
- <20190522150505.GA4915@redhat.com>
- <CABeXuvrPM5xvzqUydbREapvwgy6deYreHp0aaMoSHyLB6+HGRg@mail.gmail.com>
- <20190522161407.GB4915@redhat.com>
- <CABeXuvpjrW5Gt95JC-_rYkOA=6RCD5OtkEQdwZVVqGCE3GkQOQ@mail.gmail.com>
+        Thu, 23 May 2019 10:37:10 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36510 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730710AbfEWOhK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 10:37:10 -0400
+Received: by mail-pf1-f195.google.com with SMTP id v80so3366945pfa.3;
+        Thu, 23 May 2019 07:37:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=vXrYP6IVrcterAfOWxM/mFWw20K/yhkVE+r5OVSyxMg=;
+        b=iOfxNUcSiGEyOpWuZ+9PmG/Kq9Br/tesgw1a6Y70Xm1PPKKPs/0ha61+OmdTTrETAi
+         60UTX7PqF6BSSMhwyvAJjA5EzcNbnUd8rcoCt1oJlVKCJm4i3WXkWWJavRoMOp8h4K/8
+         we83GMgk9i71cTl3cH4dqBTX9p73nVp8vbwg7G+AzhUcnRjs2kFbDoE0zghIq0Ee/7pB
+         QNV0K3BZ/eSYvjEWqFpspGUm4s+Zk99w2x8U5Boy2qL13dtV0vGlE127dxgUkelJ4MZT
+         /Lw68WhPOe0J5CHaocUQ0W61XWFM3dk4OoemAB1Rs+Uvrcx3irg7R40IYBYH0j5f5OT6
+         9uOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vXrYP6IVrcterAfOWxM/mFWw20K/yhkVE+r5OVSyxMg=;
+        b=IN37ClfFttdkLz/IKzOk19ROQ3LiBYIAWOvgIja8uSgLmKZ7ZPPVmJuXl0W33KWqdl
+         mg64r+wTiSnb3dsNr6AykMbck/fGRnoqBW3SKNGGDORMzy7q/QAq9vCNYfd/a88X8IGP
+         yqF84m2QRej4OVlrNXA7ZPWKVicEagY1a4KYfhSK5fucJUWRP7WS14/CNPRpMEawHLsa
+         WBfLHs6tlPQ/5Ms3ynJo/8HduN/gBSerjbRAwmxmYwvmL0Z5GeQwBc7OXjLYr0d9myvk
+         4lHFN5weKlaj38gyZ58XN5hps03Mqd4qVl2re/2siGhQFoOzKPClPFWhXbq4erwQMam0
+         fukg==
+X-Gm-Message-State: APjAAAVHBQOAIUsynp9N6YUisjPHqu5CIsoFqVXFgiR97mWg6xGsgSas
+        Uo/Bb0H2M9BqXjQoThNPoB/E6pGP
+X-Google-Smtp-Source: APXvYqx+0UgZ3U8YG32buG7b66gR+glOP2cTRyJdh6HObzcpau5irLYVirnqpGWGgXGeoP85HDyGow==
+X-Received: by 2002:a63:441c:: with SMTP id r28mr18615091pga.255.1558622228957;
+        Thu, 23 May 2019 07:37:08 -0700 (PDT)
+Received: from [10.230.1.150] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id l7sm31306539pfl.9.2019.05.23.07.37.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 May 2019 07:37:08 -0700 (PDT)
+Subject: Re: [PATCH net-next v2] net: phy: lxt: Add suspend/resume support to
+ LXT971 and LXT973.
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+References: <eb206b659fcae041be38d583ff139ca73e9e03c3.1558601485.git.christophe.leroy@c-s.fr>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Message-ID: <000627c4-985f-6d77-ad20-8884be755ac2@gmail.com>
+Date:   Thu, 23 May 2019 07:37:06 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABeXuvpjrW5Gt95JC-_rYkOA=6RCD5OtkEQdwZVVqGCE3GkQOQ@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Thu, 23 May 2019 14:33:49 +0000 (UTC)
+In-Reply-To: <eb206b659fcae041be38d583ff139ca73e9e03c3.1558601485.git.christophe.leroy@c-s.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/22, Deepa Dinamani wrote:
->
-> > > > --- a/include/linux/sched/signal.h
-> > > > +++ b/include/linux/sched/signal.h
-> > > > @@ -416,7 +416,6 @@ void task_join_group_stop(struct task_struct *task);
-> > > > static inline void set_restore_sigmask(void)
-> > > > {
-> > > >    set_thread_flag(TIF_RESTORE_SIGMASK);
-> > > > -    WARN_ON(!test_thread_flag(TIF_SIGPENDING));
-> > >
-> > > So you always want do_signal() to be called?
-> >
-> > Why do you think so? No. This is just to avoid the warning, because with the
-> > patch I sent set_restore_sigmask() is called "in advance".
-> >
-> > > You will have to check each architecture's implementation of
-> > > do_signal() to check if that has any side effects.
-> >
-> > I don't think so.
->
-> Why not?
-
-Why yes?
-
-it seems that we have some communication problems. OK, please look at the code
-I proposed, I only added a couple of TODO comments
-
-	static inline void set_restore_sigmask(void)
-	{
-		// WARN_ON(!TIF_SIGPENDING) was removed by this patch
-		current->restore_sigmask = true;
-	}
-
-	int set_user_sigmask(const sigset_t __user *umask, size_t sigsetsize)
-	{
-		sigset_t *kmask;
-
-		if (!umask)
-			return 0;
-
-		if (sigsetsize != sizeof(sigset_t))
-			return -EINVAL;
-		if (copy_from_user(kmask, umask, sizeof(sigset_t)))
-			return -EFAULT;
-
-		set_restore_sigmask();
-		current->saved_sigmask = current->blocked;
-		set_current_blocked(kmask);
-
-		return 0;
-	}
-
-	SYSCALL_DEFINE6(epoll_pwait, int, epfd, struct epoll_event __user *, events,
-			int, maxevents, int, timeout, const sigset_t __user *, sigmask,
-			size_t, sigsetsize)
-	{
-		int error;
-
-		/*
-		 * If the caller wants a certain signal mask to be set during the wait,
-		 * we apply it here.
-		 */
-		error = set_user_sigmask(sigmask, sigsetsize);
-		if (error)
-			return error;
-
-		error = do_epoll_wait(epfd, events, maxevents, timeout);
-
-		// TODO. Add another helper to restore WARN_ON(!TIF_SIGPENDING)
-		// in case restore_saved_sigmask() is NOT called.
-
-		if (error != -EINTR)
-			restore_saved_sigmask();
-
-		return error;
-	}
-
-Note that it looks much simpler. Now, could you please explain
-
-	- why do you think this code is not correct ?
-
-	- why do you think we need to audit do_signal() ???
 
 
+On 5/23/2019 1:55 AM, Christophe Leroy wrote:
+> All LXT PHYs implement the standard "power down" bit 11 of
+> BMCR, so this patch adds support using the generic
+> genphy_{suspend,resume} functions added by
+> commit 0f0ca340e57b ("phy: power management support").
+> 
+> LXT970 is left aside because all registers get cleared upon
+> "power down" exit.
+> 
+> Reviewed-by: Heiner Kallweit <hkallweit1@gmail.com>
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
-> > > Although this is not what the patch is solving.
-> >
-> > Sure. But you know, after I tried to read the changelog, I am not sure
-> > I understand what exactly you are trying to fix. Could you please explain
-> > this part
-> >
-> >         The behavior
-> >         before 854a6ed56839a was that the signals were dropped after the error
-> >         code was decided. This resulted in lost signals but the userspace did not
-> >         notice it
-> >
-> > ? I fail to understand it, sorry. It looks as if the code was already buggy before
-> > that commit and it could miss a signal or something like this, but I do not see how.
->
-> Did you read the explanation pointed to in the commit text? :
->
-> https://lore.kernel.org/linux-fsdevel/20190427093319.sgicqik2oqkez3wk@dcvr/
-
-this link points to the lengthy and confusing discussion... after a quick glance
-I didn't find an answer to my question, so let me repeat it again: why do you think
-the kernel was buggy even before 854a6ed56839a40f6b5d02a2962f48841482eec4 ("signal:
-Add restore_user_sigmask()") ?
-
-Just in case...
-https://lore.kernel.org/linux-fsdevel/CABeXuvq7gCV2qPOo+Q8jvNyRaTvhkRLRbnL_oJ-AuK7Sp=P3QQ@mail.gmail.com/
-doesn't look right to me... let me quite some parts of your email:
-
-
-	-       /*
-	-        * If we changed the signal mask, we need to restore the original one.
-	-        * In case we've got a signal while waiting, we do not restore the
-	-        * signal mask yet, and we allow do_signal() to deliver the signal on
-	-        * the way back to userspace, before the signal mask is restored.
-	-        */
-	-       if (sigmask) {
-	-               if (error == -EINTR) {
-	-                       memcpy(&current->saved_sigmask, &sigsaved,
-	-                              sizeof(sigsaved));
-	-                       set_restore_sigmask();
-	-               } else
-
-	**** Execution reaches this else statement and the sigmask is restored
-	directly, ignoring the newly generated signal.
-
-I see nothing wrong. This is what we want.
-
-	The signal is never
-	handled.
-
-Well, "never" is not right. It won't be handled now, because it is blocked, but
-for example think of another pselect/whatever call with the same sigmask.
-
-> It would be better to understand the isssue before we start discussing the fix.
-
-Agreed. And that is why I am asking for your explanations, quite possibly I missed
-something, but so far I fail to understand you.
-
-Oleg.
-
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
