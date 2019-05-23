@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56670C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64436C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F03121841
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:08:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F4AB2133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:08:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558638532;
-	bh=efh1BNoFi31+cLx+5zdLiuS2kTb44Z1B/wWMtGTGnj0=;
+	s=default; t=1558638534;
+	bh=nOEQA3ZPNlwCk7DcRJEBG8Ie9IeSQaL4Fh5HMp7g8ic=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LrUdpCJ0LcceG4HXkYcASXBCxhx59SPeyWPyHGQRHXxb1EUTX84AoK2wsRtbxt5yx
-	 O2j+H5TV81gi/dBD8c24MHMjOJ/jLyQUdixjZB9s+3G40YsxT1BTJ8N37tjGgYS0dK
-	 Kx3uW2VQz6u1ikEALAlylaKqZH6B8SYM77ZMIjBY=
+	b=mCAmxGAeKBuYg0+MjtxzsUhOOp9ptMKHq7CAuWmwF4ZpDlHV0bsEzGHH3G77ClXBT
+	 OvPwiu/Q35jxZ9WuAzKRdBgSK7qk0y2gUYWSlve/T8bnLmh8dxH5A4/UzbwNQAk60o
+	 ELbhY6psmOqjpdo18hhgfUcB1z9Y68tI7jnXHhhc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731923AbfEWTIv (ORCPT
+        id S1731941AbfEWTIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:08:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41724 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:08:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731901AbfEWTIs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:08:48 -0400
+        id S1731921AbfEWTIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:08:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0197217D9;
-        Thu, 23 May 2019 19:08:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52214217D9;
+        Thu, 23 May 2019 19:08:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638528;
-        bh=efh1BNoFi31+cLx+5zdLiuS2kTb44Z1B/wWMtGTGnj0=;
+        s=default; t=1558638530;
+        bh=nOEQA3ZPNlwCk7DcRJEBG8Ie9IeSQaL4Fh5HMp7g8ic=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JtSNtHnsrP5P9/I6qGh8U6q6kwKmrqEVRc3zq9dvMv8HcA1BqPxKt+BoZnEFh2oeC
-         23MxGggOLrxymLhtCMEXqJD+Ar3NvT9HBFOO19amuoOEncYDuPmNg8Ra5sg093mL1j
-         4N6w31plBEFTPxb9HDUlcsu9B1K3eSMXxkd6rdVU=
+        b=U1NU4ty74D6rJ/FNcI+zJZTT4zkwZ3zOUz2BU1FFBSHPZoK7mOValRnTp86/cDGEH
+         aBuND3hBAmXfTza5IwDZw96dW0T9RzOqEH8lvp9yNrJSGVGSVCrlCoiRs2dQBrIGp6
+         0TyzRrpsMMdE4Zi3TpIqSvRMkOa6rHMJuj133UTE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 4.9 22/53] iommu/tegra-smmu: Fix invalid ASID bits on Tegra30/114
-Date:   Thu, 23 May 2019 21:05:46 +0200
-Message-Id: <20190523181714.380667133@linuxfoundation.org>
+        stable@vger.kernel.org, Stefano Garzarella <sgarzare@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 05/53] vsock/virtio: free packets during the socket release
+Date:   Thu, 23 May 2019 21:05:29 +0200
+Message-Id: <20190523181711.732195361@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181710.981455400@linuxfoundation.org>
 References: <20190523181710.981455400@linuxfoundation.org>
@@ -60,81 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Stefano Garzarella <sgarzare@redhat.com>
 
-commit 43a0541e312f7136e081e6bf58f6c8a2e9672688 upstream.
+[ Upstream commit ac03046ece2b158ebd204dfc4896fd9f39f0e6c8 ]
 
-Both Tegra30 and Tegra114 have 4 ASID's and the corresponding bitfield of
-the TLB_FLUSH register differs from later Tegra generations that have 128
-ASID's.
+When the socket is released, we should free all packets
+queued in the per-socket list in order to avoid a memory
+leak.
 
-In a result the PTE's are now flushed correctly from TLB and this fixes
-problems with graphics (randomly failing tests) on Tegra30.
-
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/iommu/tegra-smmu.c |   25 ++++++++++++++++++-------
- 1 file changed, 18 insertions(+), 7 deletions(-)
+ net/vmw_vsock/virtio_transport_common.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/iommu/tegra-smmu.c
-+++ b/drivers/iommu/tegra-smmu.c
-@@ -91,7 +91,6 @@ static inline u32 smmu_readl(struct tegr
- #define  SMMU_TLB_FLUSH_VA_MATCH_ALL     (0 << 0)
- #define  SMMU_TLB_FLUSH_VA_MATCH_SECTION (2 << 0)
- #define  SMMU_TLB_FLUSH_VA_MATCH_GROUP   (3 << 0)
--#define  SMMU_TLB_FLUSH_ASID(x)          (((x) & 0x7f) << 24)
- #define  SMMU_TLB_FLUSH_VA_SECTION(addr) ((((addr) & 0xffc00000) >> 12) | \
- 					  SMMU_TLB_FLUSH_VA_MATCH_SECTION)
- #define  SMMU_TLB_FLUSH_VA_GROUP(addr)   ((((addr) & 0xffffc000) >> 12) | \
-@@ -194,8 +193,12 @@ static inline void smmu_flush_tlb_asid(s
+--- a/net/vmw_vsock/virtio_transport_common.c
++++ b/net/vmw_vsock/virtio_transport_common.c
+@@ -725,12 +725,19 @@ static bool virtio_transport_close(struc
+ 
+ void virtio_transport_release(struct vsock_sock *vsk)
  {
- 	u32 value;
++	struct virtio_vsock_sock *vvs = vsk->trans;
++	struct virtio_vsock_pkt *pkt, *tmp;
+ 	struct sock *sk = &vsk->sk;
+ 	bool remove_sock = true;
  
--	value = SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_ASID(asid) |
--		SMMU_TLB_FLUSH_VA_MATCH_ALL;
-+	if (smmu->soc->num_asids == 4)
-+		value = (asid & 0x3) << 29;
-+	else
-+		value = (asid & 0x7f) << 24;
+ 	lock_sock(sk);
+ 	if (sk->sk_type == SOCK_STREAM)
+ 		remove_sock = virtio_transport_close(vsk);
 +
-+	value |= SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_VA_MATCH_ALL;
- 	smmu_writel(smmu, value, SMMU_TLB_FLUSH);
- }
++	list_for_each_entry_safe(pkt, tmp, &vvs->rx_queue, list) {
++		list_del(&pkt->list);
++		virtio_transport_free_pkt(pkt);
++	}
+ 	release_sock(sk);
  
-@@ -205,8 +208,12 @@ static inline void smmu_flush_tlb_sectio
- {
- 	u32 value;
- 
--	value = SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_ASID(asid) |
--		SMMU_TLB_FLUSH_VA_SECTION(iova);
-+	if (smmu->soc->num_asids == 4)
-+		value = (asid & 0x3) << 29;
-+	else
-+		value = (asid & 0x7f) << 24;
-+
-+	value |= SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_VA_SECTION(iova);
- 	smmu_writel(smmu, value, SMMU_TLB_FLUSH);
- }
- 
-@@ -216,8 +223,12 @@ static inline void smmu_flush_tlb_group(
- {
- 	u32 value;
- 
--	value = SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_ASID(asid) |
--		SMMU_TLB_FLUSH_VA_GROUP(iova);
-+	if (smmu->soc->num_asids == 4)
-+		value = (asid & 0x3) << 29;
-+	else
-+		value = (asid & 0x7f) << 24;
-+
-+	value |= SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_VA_GROUP(iova);
- 	smmu_writel(smmu, value, SMMU_TLB_FLUSH);
- }
- 
+ 	if (remove_sock)
 
 
