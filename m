@@ -2,64 +2,197 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08854C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BDFBC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:28:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1EC92175B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:23:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DAF320851
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:28:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="eH5v3tpg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730845AbfEWOX2 (ORCPT
+        id S1730885AbfEWO2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 10:23:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37212 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730709AbfEWOX2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 10:23:28 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 414C32081C;
-        Thu, 23 May 2019 14:23:27 +0000 (UTC)
-Date:   Thu, 23 May 2019 10:23:25 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH] x86: Remove unused TASK_TI_flags from asm-offsets.c
-Message-ID: <20190523102325.22eacdf7@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 23 May 2019 10:28:39 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:33683 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730790AbfEWO2i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 10:28:38 -0400
+Received: by mail-io1-f68.google.com with SMTP id z4so5042104iol.0
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 07:28:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RpoaZHiLYMmGlhX0k0xc+98b7kVM8O0Nb+ulnrgtNJY=;
+        b=eH5v3tpg2jWcAPb1BtxrbVrTwVUfKiSWlvBDKjPnMCLKVULShlUKgTwitBPVj8R67S
+         bl1SbiSsoHmzObZJaBxdW4O3YF9bi/hDQVh4LM4xPKTAcWNU8KdkloCUphchsoElrid6
+         6AE/lgpbQOcODzePbiuHNI5h5RQVYZ3DdiPNZ1P21NCTx0RWpesYRMzTQk9Tx9wVH82F
+         3QjTfmq966opB3u1fxAMKVkxd+GjbHM+SN0LX9x6Dx0Gop9JfYNLNSq6TGOipNEymeNB
+         dRNv03qtNpwfVHrkY4WBtB5KiozY7XbCo0INoRR2QE2B56FK+0X4wpaY3eTtXiJMWQV6
+         F5KQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RpoaZHiLYMmGlhX0k0xc+98b7kVM8O0Nb+ulnrgtNJY=;
+        b=gGqj7ESyQefXsXMIift5nDEoPnqsaCt8dUE1CFX6OFV8c8o2n3f60sE44HQqMk1lDf
+         hfNooZWwtKarosggMiAzgiq6JkgsXxB8a9SogoSIzy7lFvwCo47lTzngF/Qawl15yz9V
+         lZMSUFu2Nhk//V5o6vybIWXiUeGI0LDu7bZOSihdMI0mMhdPc7qnQKUqWoPwj3M5/isN
+         kfR9Mg1MLA1Njj69w4Xu7tnGPuqrqTyifR1G9ZVCPmd7i6CnMbu9ef5FBxSLQX5U5AHk
+         rraQIgUw7JXD7PM+mvQWLilOzj+dejd1OizLUr1nY2tVjMJFFUkaYrLVj37YhfdhbyxJ
+         C+Cw==
+X-Gm-Message-State: APjAAAV6YWmmBzKSfswzcWYDQawmwStDQKzQvkq1E+/bU6QIesoxOqIY
+        4QnQceYP7G2sUuG+7uiMh/sXKQ==
+X-Google-Smtp-Source: APXvYqx8LKzOGpiWsL6dTrqW1tpjf/a6M4DwvCuMOWOiEPh8pOdaLx/XEPvYVwOl6hL0YBJIUNsKYw==
+X-Received: by 2002:a6b:ca47:: with SMTP id a68mr20174292iog.227.1558621717396;
+        Thu, 23 May 2019 07:28:37 -0700 (PDT)
+Received: from brauner.io ([172.56.12.187])
+        by smtp.gmail.com with ESMTPSA id w186sm4196873ita.3.2019.05.23.07.28.30
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 23 May 2019 07:28:36 -0700 (PDT)
+Date:   Thu, 23 May 2019 16:28:28 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        torvalds@linux-foundation.org, fweimer@redhat.com,
+        jannh@google.com, tglx@linutronix.de, arnd@arndb.de,
+        shuah@kernel.org, dhowells@redhat.com, tkjos@android.com,
+        ldv@altlinux.org, miklos@szeredi.hu, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [PATCH v1 1/2] open: add close_range()
+Message-ID: <20190523142826.omb7vgygudifmveq@brauner.io>
+References: <20190522155259.11174-1-christian@brauner.io>
+ <20190522165737.GC4915@redhat.com>
+ <20190523115118.pmscbd6kaqy37dym@brauner.io>
+ <20190523141447.34s3kc3fuwmoeq7n@brauner.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190523141447.34s3kc3fuwmoeq7n@brauner.io>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 23, 2019 at 04:14:47PM +0200, Christian Brauner wrote:
+> On Thu, May 23, 2019 at 01:51:18PM +0200, Christian Brauner wrote:
+> > On Wed, May 22, 2019 at 06:57:37PM +0200, Oleg Nesterov wrote:
+> > > On 05/22, Christian Brauner wrote:
+> > > >
+> > > > +static struct file *pick_file(struct files_struct *files, unsigned fd)
+> > > >  {
+> > > > -	struct file *file;
+> > > > +	struct file *file = NULL;
+> > > >  	struct fdtable *fdt;
+> > > >  
+> > > >  	spin_lock(&files->file_lock);
+> > > > @@ -632,15 +629,65 @@ int __close_fd(struct files_struct *files, unsigned fd)
+> > > >  		goto out_unlock;
+> > > >  	rcu_assign_pointer(fdt->fd[fd], NULL);
+> > > >  	__put_unused_fd(files, fd);
+> > > > -	spin_unlock(&files->file_lock);
+> > > > -	return filp_close(file, files);
+> > > >  
+> > > >  out_unlock:
+> > > >  	spin_unlock(&files->file_lock);
+> > > > -	return -EBADF;
+> > > > +	return file;
+> > > 
+> > > ...
+> > > 
+> > > > +int __close_range(struct files_struct *files, unsigned fd, unsigned max_fd)
+> > > > +{
+> > > > +	unsigned int cur_max;
+> > > > +
+> > > > +	if (fd > max_fd)
+> > > > +		return -EINVAL;
+> > > > +
+> > > > +	rcu_read_lock();
+> > > > +	cur_max = files_fdtable(files)->max_fds;
+> > > > +	rcu_read_unlock();
+> > > > +
+> > > > +	/* cap to last valid index into fdtable */
+> > > > +	if (max_fd >= cur_max)
+> > > > +		max_fd = cur_max - 1;
+> > > > +
+> > > > +	while (fd <= max_fd) {
+> > > > +		struct file *file;
+> > > > +
+> > > > +		file = pick_file(files, fd++);
+> > > 
+> > > Well, how about something like
+> > > 
+> > > 	static unsigned int find_next_opened_fd(struct fdtable *fdt, unsigned start)
+> > > 	{
+> > > 		unsigned int maxfd = fdt->max_fds;
+> > > 		unsigned int maxbit = maxfd / BITS_PER_LONG;
+> > > 		unsigned int bitbit = start / BITS_PER_LONG;
+> > > 
+> > > 		bitbit = find_next_bit(fdt->full_fds_bits, maxbit, bitbit) * BITS_PER_LONG;
+> > > 		if (bitbit > maxfd)
+> > > 			return maxfd;
+> > > 		if (bitbit > start)
+> > > 			start = bitbit;
+> > > 		return find_next_bit(fdt->open_fds, maxfd, start);
+> > > 	}
+> > 
+> > > 
+> > > 	unsigned close_next_fd(struct files_struct *files, unsigned start, unsigned maxfd)
+> > > 	{
+> > > 		unsigned fd;
+> > > 		struct file *file;
+> > > 		struct fdtable *fdt;
+> > > 	
+> > > 		spin_lock(&files->file_lock);
+> > > 		fdt = files_fdtable(files);
+> > > 		fd = find_next_opened_fd(fdt, start);
+> > > 		if (fd >= fdt->max_fds || fd > maxfd) {
+> > > 			fd = -1;
+> > > 			goto out;
+> > > 		}
+> > > 
+> > > 		file = fdt->fd[fd];
+> > > 		rcu_assign_pointer(fdt->fd[fd], NULL);
+> > > 		__put_unused_fd(files, fd);
+> > > 	out:
+> > > 		spin_unlock(&files->file_lock);
+> > > 
+> > > 		if (fd == -1u)
+> > > 			return fd;
+> > > 
+> > > 		filp_close(file, files);
+> > > 		return fd + 1;
+> > > 	}
+> > 
+> > Thanks, Oleg!
+> > 
+> > I kept it dumb and was about to reply that your solution introduces more
+> > code when it seemed we wanted to keep this very simple for now.
+> > But then I saw that find_next_opened_fd() already exists as
+> > find_next_fd(). So it's actually not bad compared to what I sent in v1.
+> > So - with some small tweaks (need to test it and all now) - how do we
+> > feel about?:
+> 
+> That's obviously not correct atm but I'll send out a tweaked version in
+> a bit.
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+So given that we would really need another find_next_open_fd() I think
+sticking to the simple cond_resched() version I sent before is better
+for now until we see real-world performance issues.
+I was however missing a test for close_range(fd, fd, 0) anyway so I'll
+need to send a v2 with this test added.
 
-Since commit 21d375b6b34ff5 ("x86/entry/64: Remove the SYSCALL64 fast
-path"), there is no user of TASK_TI_flags in assembly. There's no need
-to keep it around in asm-offsets.c
-
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
-diff --git a/arch/x86/kernel/asm-offsets.c b/arch/x86/kernel/asm-offsets.c
-index 168543d077d7..da64452584b0 100644
---- a/arch/x86/kernel/asm-offsets.c
-+++ b/arch/x86/kernel/asm-offsets.c
-@@ -38,7 +38,6 @@ static void __used common(void)
- #endif
- 
- 	BLANK();
--	OFFSET(TASK_TI_flags, task_struct, thread_info.flags);
- 	OFFSET(TASK_addr_limit, task_struct, thread.addr_limit);
- 
- 	BLANK();
+Christian
