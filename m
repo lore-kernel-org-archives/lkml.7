@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B92EC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66537C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A03A2184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:14:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DC9E2133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:14:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558638845;
-	bh=2ptE7vIvQyhsyXR24RemViMRC03B+p8ztYdpEcbI6Q8=;
+	s=default; t=1558638848;
+	bh=3OfAKRejem44lhiav6rHoDnBgWyuGlQs1vMZTZo1psQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UPYbjp8u+k/Ln0WadoqcgPo4n/zS2OMVNgimIrhjiz6hFoWqlp0U8DB2qHkccO/EK
-	 Kgilh8WQiH+1ZhEbAuKFHrpKhsLMfZB1jkfZzRCERKOpTEcwcsiC2IyeAGBQrc5Nwf
-	 vMol9pQJ7vKgv2Ur51tMxGgB7EdJXn/eyorKEaOQ=
+	b=w1g1uUnMTBC/1RQloqNqv0Y3PHTB/zh/k4rVoNxI+aymbMW2RfnbVrmxVp8EpVjaU
+	 K+BoXUPBE7h+hkHsMD0jrz0AnFLc4eTXDJ8IKedkOA7ttxEVjbA0pa6yxkdcsii2+J
+	 OuZ/anD2SYVXaqca/vd1Nw1E4+BFdiecdoZHPCbI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388666AbfEWTOE (ORCPT
+        id S2387736AbfEWTOG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:14:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47974 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:14:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388393AbfEWTOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:14:02 -0400
+        id S2388430AbfEWTOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:14:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8DF620863;
-        Thu, 23 May 2019 19:14:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 940C52133D;
+        Thu, 23 May 2019 19:14:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638841;
-        bh=2ptE7vIvQyhsyXR24RemViMRC03B+p8ztYdpEcbI6Q8=;
+        s=default; t=1558638844;
+        bh=3OfAKRejem44lhiav6rHoDnBgWyuGlQs1vMZTZo1psQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xxbaxBP+RDej9ari1YbSODmxwpT/hYTrXHcmTIDqsImi2SlNVzGld8SdxbW8OAa3X
-         liVN7nGpCVgLf+/B1iJ6SK7pGDcAZplLJwdpSAO9u92hKT+sXX42Lx66g5TG7Ftxn+
-         x4+k1Q4/OVLExL3i8WDK84XHfYkZMIsKrMrI0AVc=
+        b=MseedxOdaRWg7ssyzWzpF0jRz+O+bw6NwE/HVMlofYoZOYUEkvPIESRPdVZyu8/47
+         gU5PhOuCQGmZoQo6ok5jxnHr+BhBk9iYXgMrvXnqIeS+l4h1jMQWWqw2HUNQl0cB/d
+         oopw8y2Emn2CZ2pDXiDVm7XqVgapNmYAzOfVBwuQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Damien Le Moal <damien.lemoal@wdc.com>,
-        Shaun Tancheff <shaun@tancheff.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 4.14 54/77] dm zoned: Fix zone report handling
-Date:   Thu, 23 May 2019 21:06:12 +0200
-Message-Id: <20190523181727.481354761@linuxfoundation.org>
+        stable@vger.kernel.org, Xiang Chen <chenxiang66@hisilicon.com>,
+        John Garry <john.garry@huawei.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: [PATCH 4.14 74/77] driver core: Postpone DMA tear-down until after devres release for probe failure
+Date:   Thu, 23 May 2019 21:06:32 +0200
+Message-Id: <20190523181730.183006273@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181719.982121681@linuxfoundation.org>
 References: <20190523181719.982121681@linuxfoundation.org>
@@ -60,57 +60,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Damien Le Moal <damien.lemoal@wdc.com>
+From: John Garry <john.garry@huawei.com>
 
-commit 7aedf75ff740a98f3683439449cd91c8662d03b2 upstream.
+commit 0b777eee88d712256ba8232a9429edb17c4f9ceb upstream.
 
-The function blkdev_report_zones() returns success even if no zone
-information is reported (empty report). Empty zone reports can only
-happen if the report start sector passed exceeds the device capacity.
-The conditions for this to happen are either a bug in the caller code,
-or, a change in the device that forced the low level driver to change
-the device capacity to a value that is lower than the report start
-sector. This situation includes a failed disk revalidation resulting in
-the disk capacity being changed to 0.
+In commit 376991db4b64 ("driver core: Postpone DMA tear-down until after
+devres release"), we changed the ordering of tearing down the device DMA
+ops and releasing all the device's resources; this was because the DMA ops
+should be maintained until we release the device's managed DMA memories.
 
-If this change happens while dm-zoned is in its initialization phase
-executing dmz_init_zones(), this function may enter an infinite loop
-and hang the system. To avoid this, add a check to disallow empty zone
-reports and bail out early. Also fix the function dmz_update_zone() to
-make sure that the report for the requested zone was correctly obtained.
+However, we have seen another crash on an arm64 system when a
+device driver probe fails:
 
-Fixes: 3b1a94c88b79 ("dm zoned: drive-managed zoned block device target")
-Cc: stable@vger.kernel.org
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
-Reviewed-by: Shaun Tancheff <shaun@tancheff.com>
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+  hisi_sas_v3_hw 0000:74:02.0: Adding to iommu group 2
+  scsi host1: hisi_sas_v3_hw
+  BUG: Bad page state in process swapper/0  pfn:313f5
+  page:ffff7e0000c4fd40 count:1 mapcount:0
+  mapping:0000000000000000 index:0x0
+  flags: 0xfffe00000001000(reserved)
+  raw: 0fffe00000001000 ffff7e0000c4fd48 ffff7e0000c4fd48
+0000000000000000
+  raw: 0000000000000000 0000000000000000 00000001ffffffff
+0000000000000000
+  page dumped because: PAGE_FLAGS_CHECK_AT_FREE flag(s) set
+  bad because of flags: 0x1000(reserved)
+  Modules linked in:
+  CPU: 49 PID: 1 Comm: swapper/0 Not tainted
+5.1.0-rc1-43081-g22d97fd-dirty #1433
+  Hardware name: Huawei D06/D06, BIOS Hisilicon D06 UEFI
+RC0 - V1.12.01 01/29/2019
+  Call trace:
+  dump_backtrace+0x0/0x118
+  show_stack+0x14/0x1c
+  dump_stack+0xa4/0xc8
+  bad_page+0xe4/0x13c
+  free_pages_check_bad+0x4c/0xc0
+  __free_pages_ok+0x30c/0x340
+  __free_pages+0x30/0x44
+  __dma_direct_free_pages+0x30/0x38
+  dma_direct_free+0x24/0x38
+  dma_free_attrs+0x9c/0xd8
+  dmam_release+0x20/0x28
+  release_nodes+0x17c/0x220
+  devres_release_all+0x34/0x54
+  really_probe+0xc4/0x2c8
+  driver_probe_device+0x58/0xfc
+  device_driver_attach+0x68/0x70
+  __driver_attach+0x94/0xdc
+  bus_for_each_dev+0x5c/0xb4
+  driver_attach+0x20/0x28
+  bus_add_driver+0x14c/0x200
+  driver_register+0x6c/0x124
+  __pci_register_driver+0x48/0x50
+  sas_v3_pci_driver_init+0x20/0x28
+  do_one_initcall+0x40/0x25c
+  kernel_init_freeable+0x2b8/0x3c0
+  kernel_init+0x10/0x100
+  ret_from_fork+0x10/0x18
+  Disabling lock debugging due to kernel taint
+  BUG: Bad page state in process swapper/0  pfn:313f6
+  page:ffff7e0000c4fd80 count:1 mapcount:0
+mapping:0000000000000000 index:0x0
+[   89.322983] flags: 0xfffe00000001000(reserved)
+  raw: 0fffe00000001000 ffff7e0000c4fd88 ffff7e0000c4fd88
+0000000000000000
+  raw: 0000000000000000 0000000000000000 00000001ffffffff
+0000000000000000
+
+The crash occurs for the same reason.
+
+In this case, on the really_probe() failure path, we are still clearing
+the DMA ops prior to releasing the device's managed memories.
+
+This patch fixes this issue by reordering the DMA ops teardown and the
+call to devres_release_all() on the failure path.
+
+Reported-by: Xiang Chen <chenxiang66@hisilicon.com>
+Tested-by: Xiang Chen <chenxiang66@hisilicon.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+[jpg: backport to 4.19.x and earlier]
+Signed-off-by: John Garry <john.garry@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-zoned-metadata.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/base/dd.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/drivers/md/dm-zoned-metadata.c
-+++ b/drivers/md/dm-zoned-metadata.c
-@@ -1169,6 +1169,9 @@ static int dmz_init_zones(struct dmz_met
- 			goto out;
- 		}
+--- a/drivers/base/dd.c
++++ b/drivers/base/dd.c
+@@ -387,7 +387,7 @@ re_probe:
  
-+		if (!nr_blkz)
-+			break;
-+
- 		/* Process report */
- 		for (i = 0; i < nr_blkz; i++) {
- 			ret = dmz_init_zone(zmd, zone, &blkz[i]);
-@@ -1204,6 +1207,8 @@ static int dmz_update_zone(struct dmz_me
- 	/* Get zone information from disk */
- 	ret = blkdev_report_zones(zmd->dev->bdev, dmz_start_sect(zmd, zone),
- 				  &blkz, &nr_blkz, GFP_NOIO);
-+	if (!nr_blkz)
-+		ret = -EIO;
- 	if (ret) {
- 		dmz_dev_err(zmd->dev, "Get zone %u report failed",
- 			    dmz_id(zmd, zone));
+ 	ret = dma_configure(dev);
+ 	if (ret)
+-		goto dma_failed;
++		goto probe_failed;
+ 
+ 	if (driver_sysfs_add(dev)) {
+ 		printk(KERN_ERR "%s: driver_sysfs_add(%s) failed\n",
+@@ -442,14 +442,13 @@ re_probe:
+ 	goto done;
+ 
+ probe_failed:
+-	dma_deconfigure(dev);
+-dma_failed:
+ 	if (dev->bus)
+ 		blocking_notifier_call_chain(&dev->bus->p->bus_notifier,
+ 					     BUS_NOTIFY_DRIVER_NOT_BOUND, dev);
+ pinctrl_bind_failed:
+ 	device_links_no_driver(dev);
+ 	devres_release_all(dev);
++	dma_deconfigure(dev);
+ 	driver_sysfs_remove(dev);
+ 	dev->driver = NULL;
+ 	dev_set_drvdata(dev, NULL);
 
 
