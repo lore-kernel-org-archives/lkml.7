@@ -7,46 +7,63 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62652C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:42:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95BF1C282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F8AC20881
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:42:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DD6620881
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:42:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640552;
-	bh=lXNckAZnpcx/r52Bhu7DZWMItin9YE9HIlmcNz015hY=;
+	s=default; t=1558640560;
+	bh=yKm9kSSfkFNJs3iEFdy76ZqrBYFPvJeqEdGoCYDAJsw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sztAwlQSfoFydm2lUk0njQxUNxKiTSCJN6/MKaV0hSSRyQpXOJgA1D5AXYfuRWZRW
-	 fz/34+MeOqTDJKH8tfn4vNB3ax0eeOLUImGQHHa9VQFZCHW0I3G7SsRSfKWi4v/8CI
-	 uvefqM7rskjLQFV3v+tkNRb6rZvEHxWwuuNxRY7M=
+	b=2gQ5r6eSwWPEPbZlpVSZQq7q8utFWGX+N/bqr+/ghLB9Lf1/VO0ltR9q4013zz/ed
+	 4OSpBN0NZw1quu5MlYPcWLDZzte+xNWh9jnJ933pypsfBS+0vvXQGh7ncVeiP9an2L
+	 hgR8cmRerYux43pmL/L292iSiemseTVOd+VSLefc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390324AbfEWTma (ORCPT
+        id S2389692AbfEWTSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:42:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54782 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:18:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389379AbfEWTTA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:19:00 -0400
+        id S2389687AbfEWTSs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:18:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84D7F20863;
-        Thu, 23 May 2019 19:18:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2F43205ED;
+        Thu, 23 May 2019 19:18:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639140;
-        bh=lXNckAZnpcx/r52Bhu7DZWMItin9YE9HIlmcNz015hY=;
+        s=default; t=1558639126;
+        bh=yKm9kSSfkFNJs3iEFdy76ZqrBYFPvJeqEdGoCYDAJsw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=byIJa+sKc7iY/E6dfS/cmuEsqGMmVd5ACTWE7OmQjOdRoEQNx0aSNd4Jo4SdhvOSD
-         leL7NZx85kPeKqP7ytP8APCiEDHXw1f9WNKdcCYXQVy9qJ3+/PIUFkPEQ2nOUGG3Un
-         C2gezRZiTqlCNAJFiXFezQ/k3vARp8RtAjbrRReM=
+        b=WVGTAvJzU+mqNfrYHd9sXNPuo03z6vXmqSRbZu7lb0FbmVxTy6nD6B8T2P9zhqUtv
+         FqKQjhNVlpKMOezWumM7BWFWWOm4ScEBJwcdGudZ7mss3v/RP4NycnVGkNrPPI4Ioh
+         WPXvkL0CXlV/etr9uiTxGGaa5nvwyaJ8coRwgsBo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        stable@vger.kernel.org, Li RongQing <lirongqing@baidu.com>,
+        Gary R Hook <gary.hook@amd.com>,
+        Borislav Petkov <bp@suse.de>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Coly Li <colyli@suse.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 092/114] securityfs: fix use-after-free on symlink traversal
-Date:   Thu, 23 May 2019 21:06:31 +0200
-Message-Id: <20190523181739.782821877@linuxfoundation.org>
+Subject: [PATCH 4.19 104/114] x86/mm/mem_encrypt: Disable all instrumentation for early SME setup
+Date:   Thu, 23 May 2019 21:06:43 +0200
+Message-Id: <20190523181740.427513217@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
 References: <20190523181731.372074275@linuxfoundation.org>
@@ -59,49 +76,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 46c874419652bbefdfed17420fd6e88d8a31d9ec ]
+[ Upstream commit b51ce3744f115850166f3d6c292b9c8cb849ad4f ]
 
-symlink body shouldn't be freed without an RCU delay.  Switch securityfs
-to ->destroy_inode() and use of call_rcu(); free both the inode and symlink
-body in the callback.
+Enablement of AMD's Secure Memory Encryption feature is determined very
+early after start_kernel() is entered. Part of this procedure involves
+scanning the command line for the parameter 'mem_encrypt'.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+To determine intended state, the function sme_enable() uses library
+functions cmdline_find_option() and strncmp(). Their use occurs early
+enough such that it cannot be assumed that any instrumentation subsystem
+is initialized.
+
+For example, making calls to a KASAN-instrumented function before KASAN
+is set up will result in the use of uninitialized memory and a boot
+failure.
+
+When AMD's SME support is enabled, conditionally disable instrumentation
+of these dependent functions in lib/string.c and arch/x86/lib/cmdline.c.
+
+ [ bp: Get rid of intermediary nostackp var and cleanup whitespace. ]
+
+Fixes: aca20d546214 ("x86/mm: Add support to make use of Secure Memory Encryption")
+Reported-by: Li RongQing <lirongqing@baidu.com>
+Signed-off-by: Gary R Hook <gary.hook@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Boris Brezillon <bbrezillon@kernel.org>
+Cc: Coly Li <colyli@suse.de>
+Cc: "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Kent Overstreet <kent.overstreet@gmail.com>
+Cc: "luto@kernel.org" <luto@kernel.org>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: "mingo@redhat.com" <mingo@redhat.com>
+Cc: "peterz@infradead.org" <peterz@infradead.org>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/155657657552.7116.18363762932464011367.stgit@sosrh3.amd.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/inode.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ arch/x86/lib/Makefile | 12 ++++++++++++
+ lib/Makefile          | 11 +++++++++++
+ 2 files changed, 23 insertions(+)
 
-diff --git a/security/inode.c b/security/inode.c
-index 8dd9ca8848e43..829f15672e01f 100644
---- a/security/inode.c
-+++ b/security/inode.c
-@@ -26,17 +26,22 @@
- static struct vfsmount *mount;
- static int mount_count;
+diff --git a/arch/x86/lib/Makefile b/arch/x86/lib/Makefile
+index 25a972c61b0ae..3c19d60316a88 100644
+--- a/arch/x86/lib/Makefile
++++ b/arch/x86/lib/Makefile
+@@ -6,6 +6,18 @@
+ # Produces uninteresting flaky coverage.
+ KCOV_INSTRUMENT_delay.o	:= n
  
--static void securityfs_evict_inode(struct inode *inode)
-+static void securityfs_i_callback(struct rcu_head *head)
- {
--	truncate_inode_pages_final(&inode->i_data);
--	clear_inode(inode);
-+	struct inode *inode = container_of(head, struct inode, i_rcu);
- 	if (S_ISLNK(inode->i_mode))
- 		kfree(inode->i_link);
-+	free_inode_nonrcu(inode);
-+}
++# Early boot use of cmdline; don't instrument it
++ifdef CONFIG_AMD_MEM_ENCRYPT
++KCOV_INSTRUMENT_cmdline.o := n
++KASAN_SANITIZE_cmdline.o  := n
 +
-+static void securityfs_destroy_inode(struct inode *inode)
-+{
-+	call_rcu(&inode->i_rcu, securityfs_i_callback);
- }
++ifdef CONFIG_FUNCTION_TRACER
++CFLAGS_REMOVE_cmdline.o = -pg
++endif
++
++CFLAGS_cmdline.o := $(call cc-option, -fno-stack-protector)
++endif
++
+ inat_tables_script = $(srctree)/arch/x86/tools/gen-insn-attr-x86.awk
+ inat_tables_maps = $(srctree)/arch/x86/lib/x86-opcode-map.txt
+ quiet_cmd_inat_tables = GEN     $@
+diff --git a/lib/Makefile b/lib/Makefile
+index 4238764468109..0ab808318202c 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -17,6 +17,17 @@ KCOV_INSTRUMENT_list_debug.o := n
+ KCOV_INSTRUMENT_debugobjects.o := n
+ KCOV_INSTRUMENT_dynamic_debug.o := n
  
- static const struct super_operations securityfs_super_operations = {
- 	.statfs		= simple_statfs,
--	.evict_inode	= securityfs_evict_inode,
-+	.destroy_inode	= securityfs_destroy_inode,
- };
- 
- static int fill_super(struct super_block *sb, void *data, int silent)
++# Early boot use of cmdline, don't instrument it
++ifdef CONFIG_AMD_MEM_ENCRYPT
++KASAN_SANITIZE_string.o := n
++
++ifdef CONFIG_FUNCTION_TRACER
++CFLAGS_REMOVE_string.o = -pg
++endif
++
++CFLAGS_string.o := $(call cc-option, -fno-stack-protector)
++endif
++
+ lib-y := ctype.o string.o vsprintf.o cmdline.o \
+ 	 rbtree.o radix-tree.o timerqueue.o\
+ 	 idr.o int_sqrt.o extable.o \
 -- 
 2.20.1
 
