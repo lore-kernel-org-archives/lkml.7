@@ -2,116 +2,102 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB133C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 167DAC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8851C2175B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:11:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6CB721773
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:11:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731151AbfEWQL3 (ORCPT
+        id S1731174AbfEWQLw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 12:11:29 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:40765 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730782AbfEWQL3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 12:11:29 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hTqJT-0007EP-Fv; Thu, 23 May 2019 10:11:27 -0600
-Received: from ip72-206-97-68.om.om.cox.net ([72.206.97.68] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hTqJS-0001D2-BB; Thu, 23 May 2019 10:11:27 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Will Deacon <will.deacon@arm.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, linux-arch@vger.kernel.org,
-        Dave Martin <Dave.Martin@arm.com>,
-        James Morse <james.morse@arm.com>
-References: <20190523003916.20726-1-ebiederm@xmission.com>
-        <20190523003916.20726-4-ebiederm@xmission.com>
-        <20190523101702.GG26646@fuggles.cambridge.arm.com>
-Date:   Thu, 23 May 2019 11:11:19 -0500
-In-Reply-To: <20190523101702.GG26646@fuggles.cambridge.arm.com> (Will Deacon's
-        message of "Thu, 23 May 2019 11:17:02 +0100")
-Message-ID: <875zq1gnh4.fsf_-_@xmission.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
+        Thu, 23 May 2019 12:11:52 -0400
+Received: from relay.sw.ru ([185.231.240.75]:51748 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730782AbfEWQLv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 12:11:51 -0400
+Received: from [172.16.25.169]
+        by relay.sw.ru with esmtp (Exim 4.91)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1hTqJe-00034X-DO; Thu, 23 May 2019 19:11:38 +0300
+Subject: Re: [PATCH v2 0/7] mm: process_vm_mmap() -- syscall for duplication a
+ process mapping
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     akpm@linux-foundation.org, dan.j.williams@intel.com,
+        mhocko@suse.com, keith.busch@intel.com,
+        kirill.shutemov@linux.intel.com, alexander.h.duyck@linux.intel.com,
+        ira.weiny@intel.com, andreyknvl@google.com, arunks@codeaurora.org,
+        vbabka@suse.cz, cl@linux.com, riel@surriel.com,
+        keescook@chromium.org, hannes@cmpxchg.org, npiggin@gmail.com,
+        mathieu.desnoyers@efficios.com, shakeelb@google.com, guro@fb.com,
+        aarcange@redhat.com, hughd@google.com, jglisse@redhat.com,
+        mgorman@techsingularity.net, daniel.m.jordan@oracle.com,
+        jannh@google.com, kilobyte@angband.pl, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <155836064844.2441.10911127801797083064.stgit@localhost.localdomain>
+ <20190522152254.5cyxhjizuwuojlix@box>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <4b0a2b23-abc7-fa0d-5e30-74741331e7e5@virtuozzo.com>
+Date:   Thu, 23 May 2019 19:11:37 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1hTqJS-0001D2-BB;;;mid=<875zq1gnh4.fsf_-_@xmission.com>;;;hst=in02.mta.xmission.com;;;ip=72.206.97.68;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18uM7KSAne4UR9ryYOSFz6/61hVMF9pJiQ=
-X-SA-Exim-Connect-IP: 72.206.97.68
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [REVIEW][PATCHv2 03/26] signal/arm64: Use force_sig not force_sig_fault for SIGKILL
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+In-Reply-To: <20190522152254.5cyxhjizuwuojlix@box>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 22.05.2019 18:22, Kirill A. Shutemov wrote:
+> On Mon, May 20, 2019 at 05:00:01PM +0300, Kirill Tkhai wrote:
+>> This patchset adds a new syscall, which makes possible
+>> to clone a VMA from a process to current process.
+>> The syscall supplements the functionality provided
+>> by process_vm_writev() and process_vm_readv() syscalls,
+>> and it may be useful in many situation.
+> 
+> Kirill, could you explain how the change affects rmap and how it is safe.
+> 
+> My concern is that the patchset allows to map the same page multiple times
+> within one process or even map page allocated by child to the parrent.
+> 
+> It was not allowed before.
+>
+> In the best case it makes reasoning about rmap substantially more difficult.
 
-I don't think this is userspace visible but SIGKILL does not have
-any si_codes that use the fault member of the siginfo union.  Correct
-this the simple way and call force_sig instead of force_sig_fault when
-the signal is SIGKILL.
+I don't think here is big impact from process relationships, because of
+as it existed before, the main rule of VMA chaining is that VMA is younger
+or older each other. For example, reusing of anon_vma in anon_vma_clone()
+may be done either children or siblings. Also, it is possible reparenting
+after some of processes dies; or splitting two branches of processes having
+the same grand parent into two chains after the grand parent dies, so it looks
+there should be many combinations already available.
 
-The two know places where synchronous SIGKILL are generated are
-do_bad_area and fpsimd_save.  The call paths to force_sig_fault are:
-do_bad_area
-  arm64_force_sig_fault
-    force_sig_fault
-force_signal_inject
-  arm64_notify_die
-    arm64_force_sig_fault
-       force_sig_fault
+Mapping of the same page multiple times is a different thing, and it was never
+allowed for rmap.
 
-Which means correcting this in arm64_force_sig_fault is enough
-to ensure the arm64 code is not misusing the generic code, which
-could lead to maintenance problems later.
+Could you please say more specifically what looks suspicious for you and I'll
+try to answer then? Otherwise, it's possible to write explanations as big as
+a dissertation and to miss all answers to that is interested for you :)
 
-Cc: stable@vger.kernel.org
-Cc: Dave Martin <Dave.Martin@arm.com>
-Cc: James Morse <james.morse@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Fixes: af40ff687bc9 ("arm64: signal: Ensure si_code is valid for all fault signals")
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
----
+> 
+> But I'm worry it will introduce hard-to-debug bugs, like described in
+> https://lwn.net/Articles/383162/.
 
-I have also made the corresponding changes to:
-09/26 signal: Remove task parameter from force_sig
-21/26 signal: Remove the task parameter from force_sig_fault
-But I will leave off reposting those as for now as the changes
-are obvious.
+I read the article, but there are a lot of messages in thread, I'm not sure,
+that found the actual fix there. But it looks like one of the fixes may be
+be usage of anon_vma->root in __page_set_anon_rmap().
 
-arch/arm64/kernel/traps.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+> Note, that is some cases we care about rmap walk order (see for instance
+> mremap() case). I'm not convinced that the feature will not break
+> something in the area.
 
-diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
-index ade32046f3fe..e45d5b440fb1 100644
---- a/arch/arm64/kernel/traps.c
-+++ b/arch/arm64/kernel/traps.c
-@@ -256,7 +256,10 @@ void arm64_force_sig_fault(int signo, int code, void __user *addr,
- 			   const char *str)
- {
- 	arm64_show_signal(signo, str);
--	force_sig_fault(signo, code, addr, current);
-+	if (signo == SIGKILL)
-+		force_sig(SIGKILL, current);
-+	else
-+		force_sig_fault(signo, code, addr, current);
- }
- 
- void arm64_force_sig_mceerr(int code, void __user *addr, short lsb,
--- 
-2.21.0.dirty
+Yeah, thanks for pointing, I'll check this.
 
+Kirill
