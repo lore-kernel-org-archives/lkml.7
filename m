@@ -2,257 +2,137 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A67E7C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B7DC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6706320851
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:58:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E6BD20851
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:04:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ageej1MS"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="U1MGQ6b0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731189AbfEWP6z (ORCPT
+        id S1730964AbfEWQEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 11:58:55 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:45447 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731163AbfEWP6y (ORCPT
+        Thu, 23 May 2019 12:04:06 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:27264 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730790AbfEWQEF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 11:58:54 -0400
-Received: by mail-lf1-f65.google.com with SMTP id n22so4773703lfe.12
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 08:58:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=814odXxcuVfRati0gurkRFNz500nIRSYGE0iZM3L0Ng=;
-        b=Ageej1MS07LK+EGbOwJeeZnHugvJ2fp8glfAPww4ixElzxf7Mr9k2u3Mrabn3FHQUH
-         6SO7ORaAoUQeMS/Ib6Jl+nwx3QQAX0PLJpWHFwC/5HtQRVID9SLQlvX7gW7ilcysorAR
-         A+cR1aXqoTu1wpK+PtW6Ijizg+zeJiF6Oc3y9NKLtVw2t4RFENGr5XhLiidgTWI2kqjs
-         PIPdiyY4xg9HDeqVu1M6xogSrHQPgl5Y7RjoiNsU6Lem3maqXBls43ZlALdMseQC0soh
-         qT86xHUKoGeN1JHZryZcT3CdO7vl+5N9A0Ym+LwtzsGFDst88ctcyGNcvFIDB7+5tCKe
-         oRZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=814odXxcuVfRati0gurkRFNz500nIRSYGE0iZM3L0Ng=;
-        b=Bopi7Po6B1SMEXB5mPgcCxsGUKVSbKZlwHAdGVyKCLuS1jcpjW9kp7dwWybw0v6358
-         Ya2Nq9iqvF+UJcTkasA6YW+hZ6rILdjNWNYMu59c7HTnpzUfh/ahe0e3fDx+vlro0OeS
-         Ydfo2ylaSnjkklNBy8+Dya5fKNCzqTbluU7AwhkWQgabLZ9atgivMJS6LfF7HU2ESbS/
-         bMxOv2TkSp9KyfI6NUpnWCb4J79kg38+TXCLv4v8gvNIVrahw/lnNYLUYu/1GNd9yn9s
-         2F6r+1qwxM+ovf1WaC2QPiNamyRPgEvq4BCi8+ii50Ow9DlWjs2H6TwnJNp2NeWSt2nk
-         2XyQ==
-X-Gm-Message-State: APjAAAXQQe0Qsik/yoaXHFNXlIydh41AJKYmo00wEgjh5Vb3bAHngYZi
-        /Wsu/AM9bAY2MuJ57GC9wlLPKw==
-X-Google-Smtp-Source: APXvYqymlMgaC20dZjIqJXcTZKOZ7c3DdFnP/su1Uisd7tkxD46l7+ihMKv9WheB40KSvyOITAnCzQ==
-X-Received: by 2002:ac2:4286:: with SMTP id m6mr6324069lfh.150.1558627131672;
-        Thu, 23 May 2019 08:58:51 -0700 (PDT)
-Received: from [10.44.66.8] ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id r27sm385711lfp.73.2019.05.23.08.58.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 08:58:51 -0700 (PDT)
-Subject: Re: [PATCH v2 4/4] dt-bindings: interconnect: qcs404: Introduce
- qcom,qos DT property
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>, robh+dt@kernel.org
-Cc:     vkoul@kernel.org, evgreen@chromium.org, daidavid1@codeaurora.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-References: <20190415104357.5305-1-georgi.djakov@linaro.org>
- <20190415104357.5305-5-georgi.djakov@linaro.org>
- <20190418225150.GN27005@builder>
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
- 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
- KEmKjLDvB0pePJkdTw==
-Message-ID: <a507a79e-e4da-4129-f52b-8db9927dc2a4@linaro.org>
-Date:   Thu, 23 May 2019 18:58:47 +0300
+        Thu, 23 May 2019 12:04:05 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4NG0sFA026679;
+        Thu, 23 May 2019 18:03:56 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=CshXfxU4/xd79yLbQPMejneBfTfn/les3xcKItJgDCk=;
+ b=U1MGQ6b0L0k9tiX8Bw01OqR6XxNf1xAn77QuCY7Zg2Ijp42sHMPAuPkgUT7XhNbcYT5+
+ W5fpCfQ+/aEzKmU2Ypm7/UuNzvkzPF956NxWkO8E5EPHkceCb83jKGpRrMkR67vDVNne
+ tJt5hg4fJUbhF4AFC41fSQRDTO874gqQLTdwp6qGRHxrTEM1RA7LSrD60yDBd7gI8XpM
+ o3hBuz3oFWRjKBmfCSpcINdNZCKAVopZR/f99iN3b+10yNdPn1uUxeEJ49TtvoFXR8Z1
+ XJIWk0BjKvxee+oHhmRsbETFimsagGvZ7OL64mybYprwV5F0Yl/GYWbSLL0CduVT9og8 0Q== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2snrve2898-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 23 May 2019 18:03:56 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1A62938;
+        Thu, 23 May 2019 16:03:55 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DF1DE4E9A;
+        Thu, 23 May 2019 16:03:54 +0000 (GMT)
+Received: from SAFEX1HUBCAS21.st.com (10.75.90.44) by Safex1hubcas24.st.com
+ (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 23 May
+ 2019 18:03:54 +0200
+Received: from localhost (10.48.0.131) by Webmail-ga.st.com (10.75.90.48) with
+ Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 23 May 2019 18:03:54 +0200
+From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
+To:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        xiang xiao <xiaoxiang781216@gmail.com>,
+        <linux-kernel@vger.kernel.org>
+CC:     <arnaud.pouliquen@st.com>,
+        Fabien DESSENNE <fabien.dessenne@st.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>
+Subject: [PATCH v4 0/2] TTY: add rpmsg tty driver
+Date:   Thu, 23 May 2019 18:03:19 +0200
+Message-ID: <1558627401-1090-1-git-send-email-arnaud.pouliquen@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <20190418225150.GN27005@builder>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.48.0.131]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-23_13:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn and Rob,
+This patch set introduces a TTY console on top of the RPMsg framework which
+enables the following use cases:
+- Provide a console to communicate easily with the remote processor
+  application.
+- Provide an interface to get the remote processor log traces without
+  ring buffer limitation.
+- Ease the migration from MPU + MCU processors to multi core processors
+  (MPU and MCU integrated in one processor)
 
-On 4/19/19 01:51, Bjorn Andersson wrote:
-> On Mon 15 Apr 03:43 PDT 2019, Georgi Djakov wrote:
-> 
->> There are separate hardware blocks per each interconnect that allow QoS
->> configuration to be applied to each port (node). There are different kinds of
->> priorities that could be set on these ports. Each port supports also various
->> QoS modes such as "fixed", "limiter", "bypass" and "regulator". Depending on
->> the mode, there are a few additional knobs that could be configured.
->>
->> Introduce the qcom,qos property, so that we describe this relation in DT and
->> allow the interconnect provider drivers can make use of it.
->>
-> 
-> As the example shows we will end up with two nodes describing the same
-> hardware with pretty much identical set of properties.
+An alternative of this proposed solution would consist in using the virtio
+console:
+The drawback with that solution is that it requires a specific virtio buffer
+(in addition to the one already used for RPMsg) which does not fit with remote
+processors with little memory. The proposed solution allows to multiplex the
+console with the other rpmsg services, optimizing the memory.
 
-I am still split and hesitant about what would be the best way to represent this
-in DT and it would be nice to reach some conclusion.
+The first patch adds an API to the rpmsg framework ('get buffer size') and the
+second one is the rpmsg tty driver itself.
 
-So the idea is that the QoS driver could be a standalone driver that does some
-static QoS configuration. The clocks i have listed in the example below are not
-the same, sorry. We should list there some of the interface clocks that need to
-be enabled before configuring the port priorities instead. For example USB or
-UFS axi clock and not the NoC clocks.
+History:
+-V3 to V4: 
+	- update documentation in rst format
+	- use tty_insert_flip_string_fixed_flag helper
+	- suppress some poinrter check (overprotection)
+	- move low_latency set from probe to activate ops. 
+	- various corrections and improvements relative to Jiri's comments 
 
-This makes the DT properties of the two nodes different. Оn one side we collect
-bandwidth requests and send them to the remote processor (RPM) and each NoC is
-represented in DT as child of RPM (like the rpm controlled regulators and
-clocks). On the other side we also have the mmio registers for configuring port
-priorities that may fit in DT under soc {} with their mmio registers and a list
-of iface clocks.
+-V2 to V3:
+	- suppress error return on rpmsg callback as not tested in rpmsg framework
+	- change some flow messages level to debug
+	- add missing out of memory checks
 
-> I really do think it's better to represent and implement the NoC
-> controllers on the mmio/platform bus and have a small "proxy" as a child
-> of the RPM.
->
-> By doing this you avoid the duplication of the clock properties and you
-> don't need the qcom,qos reference to pair up each "bus performance
-> driver" to the "bus qos driver".
+-V1 to V2:
+	- modify message structure to allow to data transmission but also
+	flow control
+	- add documentation file to describe message structure for remote
+	  implementation
+	- add dtr/rts management
+	- disable termios modes that generates non optimized behavior on RPMsg
+	  transfers
+	- replace rpmsg_send by rpmsg_trysend to not block the write
+	- suppress useless spinlock on read
+	- miscellaneous fixes to improve robustness
 
-The clock properties would contain different set of clocks - NoC clocks for the
-DT nodes in rpm {} and the iface clocks for the QoS DT nodes in soc {}.
+Arnaud Pouliquen (2):
+  rpmsg: core: add possibility to get message payload length
+  tty: add rpmsg driver
 
-> And you still maintain the idea that the entity you request bandwidth
-> votes with are the NoC controller (which also will be the QoS
-> controller).
+ Documentation/serial/tty_rpmsg.rst |  43 ++++
+ drivers/rpmsg/rpmsg_core.c         |  20 ++
+ drivers/rpmsg/rpmsg_internal.h     |   2 +
+ drivers/rpmsg/virtio_rpmsg_bus.c   |  11 +
+ drivers/tty/Kconfig                |   9 +
+ drivers/tty/Makefile               |   1 +
+ drivers/tty/rpmsg_tty.c            | 455 +++++++++++++++++++++++++++++++++++++
+ include/linux/rpmsg.h              |  10 +
+ 8 files changed, 551 insertions(+)
+ create mode 100644 Documentation/serial/tty_rpmsg.rst
+ create mode 100644 drivers/tty/rpmsg_tty.c
 
-I assume that the entities are the NoC controllers that we talk to through the RPM.
+-- 
+2.7.4
 
-Thanks,
-Georgi
-
-> 
-> Regards,
-> Bjorn
-> 
->> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
->> ---
->>
->> v2:
->> - New patch.
->>
->>  .../bindings/interconnect/qcom,qcs404.txt     | 31 +++++++++++++++++++
->>  1 file changed, 31 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt b/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
->> index 9befcd14a5b5..b971e0ee2963 100644
->> --- a/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
->> +++ b/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
->> @@ -11,9 +11,37 @@ Required properties :
->>  Optional properties :
->>  clocks : list of phandles and specifiers to all interconnect bus clocks
->>  clock-names : clock names should include both "bus_clk" and "bus_a_clk"
->> +qcom,qos : phandle to the QoS device-tree node
->>  
->>  Example:
->>  
->> +soc {
->> +	...
->> +	bimc_qos: interconnect@400000 {
->> +		compatible = "qcom,qcs404-bimc-qos";
->> +		reg = <0x400000 0x80000>;
->> +		clock-names = "bus_clk", "bus_a_clk";
->> +		clocks = <&rpmcc RPM_SMD_BIMC_CLK>,
->> +			<&rpmcc RPM_SMD_BIMC_A_CLK>;
->> +	};
->> +
->> +	pcnoc_qos: interconnect@500000 {
->> +		compatible = "qcom,qcs404-pcnoc-qos";
->> +		reg = <0x500000 0x15080>;
->> +		clock-names = "bus_clk", "bus_a_clk";
->> +		clocks = <&rpmcc RPM_SMD_PNOC_CLK>,
->> +			<&rpmcc RPM_SMD_PNOC_A_CLK>;
->> +	};
->> +
->> +	snoc_qos: interconnect@580000 {
->> +		compatible = "qcom,qcs404-snoc-qos";
->> +		reg = <0x580000 0x14000>;
->> +		clock-names = "bus_clk", "bus_a_clk";
->> +		clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
->> +			<&rpmcc RPM_SMD_SNOC_A_CLK>;
->> +	};
->> +};
->> +
->>  rpm-glink {
->>  	...
->>  	rpm_requests: glink-channel {
->> @@ -24,6 +52,7 @@ rpm-glink {
->>  			clock-names = "bus_clk", "bus_a_clk";
->>  			clocks = <&rpmcc RPM_SMD_BIMC_CLK>,
->>  				<&rpmcc RPM_SMD_BIMC_A_CLK>;
->> +			qcom,qos = <&bimc_qos>;
->>  		};
->>  
->>  		pnoc: interconnect@1 {
->> @@ -32,6 +61,7 @@ rpm-glink {
->>  			clock-names = "bus_clk", "bus_a_clk";
->>  			clocks = <&rpmcc RPM_SMD_PNOC_CLK>,
->>  				<&rpmcc RPM_SMD_PNOC_A_CLK>;
->> +			qcom,qos = <&pcnoc_qos>;
->>  		};
->>  
->>  		snoc: interconnect@2 {
->> @@ -40,6 +70,7 @@ rpm-glink {
->>  			clock-names = "bus_clk", "bus_a_clk";
->>  			clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
->>  				<&rpmcc RPM_SMD_SNOC_A_CLK>;
->> +			qcom,qos = <&snoc_qos>;
->>  		};
->>  	};
->>  };
