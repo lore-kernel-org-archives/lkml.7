@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B98EFC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C79C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87DE221850
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:25:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2A8B20868
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:25:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639513;
-	bh=KvXjtvUyIqiq47OFUXTPY2eRziVggsyoJzbZ9WaMZj4=;
+	s=default; t=1558639519;
+	bh=opDWCBP5qXH4pJO+XUAFzz8F7pnR+9TexN+XwhMkewU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fIayUNF0rSsrcc/wrcfteCIvtaEVe9/COL3xAp+gxZKEa2P+bPk91pQjvYX+dbkIN
-	 ZdNdMDjP7l8+v24rbz0Ll6ciFxpetTklRefbQnM1GHNXXOMP0SGBhG7gIMgaX4W0OQ
-	 eYpGO8Uc584bd2PYtPQLb+o71cAjmQCNNGOjpS6o=
+	b=PEnd13O8mm0fevePSv8J+cKCXTilY9J4B3waF11jgcoe6fz+UOWPewOVn6EJnnFf9
+	 CkHwV6M2E82mxvquKF7HiU0ckdqucs5GEUNL88AqRLAtVE8PpVz7Cch1lxPzRTMMog
+	 EixZZmUgnkPjrfOm6QO56/FefAJYZuLMJDUJ+UfA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390713AbfEWTZM (ORCPT
+        id S2391061AbfEWTZS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:25:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36458 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:25:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391049AbfEWTZG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:25:06 -0400
+        id S2389390AbfEWTZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:25:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4ABFF2054F;
-        Thu, 23 May 2019 19:25:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6643C2054F;
+        Thu, 23 May 2019 19:25:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639505;
-        bh=KvXjtvUyIqiq47OFUXTPY2eRziVggsyoJzbZ9WaMZj4=;
+        s=default; t=1558639513;
+        bh=opDWCBP5qXH4pJO+XUAFzz8F7pnR+9TexN+XwhMkewU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hwQhmTyrzuh5ssJW91+43k31vzup2FlVYID2AANxsWXFwX5J3mzd6DlemFKdURDUc
-         u93H3nf0vaOjQmwLnCfDltz6RwpvS7ijQ5p3RAHyBBxPRw5cF0SVVtfDgRV5N05Fri
-         MSukywUWjx7V94SCOBlivBIOSBRR2X/d6rktyHP0=
+        b=j63Y02u4acmpmTvdG6pNzflfWPzCswFU8H3A+q+bief5icI+74llPQb2zUCmgXjBP
+         Yp1TTGvb6IKBkUT7sp37kgMUQ5lYi73/qStdMjq2r2dmcKmFvbmgziUyA//2ABCjhN
+         zFqNCnn5NuH6i5vVNRnLkbMuIoAX/uB1Ik2pBFAs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 113/139] securityfs: fix use-after-free on symlink traversal
-Date:   Thu, 23 May 2019 21:06:41 +0200
-Message-Id: <20190523181734.655054133@linuxfoundation.org>
+Subject: [PATCH 5.0 116/139] x86: kvm: hyper-v: deal with buggy TLB flush requests from WS2012
+Date:   Thu, 23 May 2019 21:06:44 +0200
+Message-Id: <20190523181734.875673419@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -59,49 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 46c874419652bbefdfed17420fd6e88d8a31d9ec ]
+[ Upstream commit da66761c2d93a46270d69001abb5692717495a68 ]
 
-symlink body shouldn't be freed without an RCU delay.  Switch securityfs
-to ->destroy_inode() and use of call_rcu(); free both the inode and symlink
-body in the callback.
+It was reported that with some special Multi Processor Group configuration,
+e.g:
+ bcdedit.exe /set groupsize 1
+ bcdedit.exe /set maxgroup on
+ bcdedit.exe /set groupaware on
+for a 16-vCPU guest WS2012 shows BSOD on boot when PV TLB flush mechanism
+is in use.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Tracing kvm_hv_flush_tlb immediately reveals the issue:
+
+ kvm_hv_flush_tlb: processor_mask 0x0 address_space 0x0 flags 0x2
+
+The only flag set in this request is HV_FLUSH_ALL_VIRTUAL_ADDRESS_SPACES,
+however, processor_mask is 0x0 and no HV_FLUSH_ALL_PROCESSORS is specified.
+We don't flush anything and apparently it's not what Windows expects.
+
+TLFS doesn't say anything about such requests and newer Windows versions
+seem to be unaffected. This all feels like a WS2012 bug, which is, however,
+easy to workaround in KVM: let's flush everything when we see an empty
+flush request, over-flushing doesn't hurt.
+
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/inode.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ arch/x86/kvm/hyperv.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/security/inode.c b/security/inode.c
-index b7772a9b315ee..421dd72b58767 100644
---- a/security/inode.c
-+++ b/security/inode.c
-@@ -27,17 +27,22 @@
- static struct vfsmount *mount;
- static int mount_count;
+diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+index 371c669696d70..610c0f1fbdd71 100644
+--- a/arch/x86/kvm/hyperv.c
++++ b/arch/x86/kvm/hyperv.c
+@@ -1371,7 +1371,16 @@ static u64 kvm_hv_flush_tlb(struct kvm_vcpu *current_vcpu, u64 ingpa,
  
--static void securityfs_evict_inode(struct inode *inode)
-+static void securityfs_i_callback(struct rcu_head *head)
- {
--	truncate_inode_pages_final(&inode->i_data);
--	clear_inode(inode);
-+	struct inode *inode = container_of(head, struct inode, i_rcu);
- 	if (S_ISLNK(inode->i_mode))
- 		kfree(inode->i_link);
-+	free_inode_nonrcu(inode);
-+}
+ 		valid_bank_mask = BIT_ULL(0);
+ 		sparse_banks[0] = flush.processor_mask;
+-		all_cpus = flush.flags & HV_FLUSH_ALL_PROCESSORS;
 +
-+static void securityfs_destroy_inode(struct inode *inode)
-+{
-+	call_rcu(&inode->i_rcu, securityfs_i_callback);
- }
- 
- static const struct super_operations securityfs_super_operations = {
- 	.statfs		= simple_statfs,
--	.evict_inode	= securityfs_evict_inode,
-+	.destroy_inode	= securityfs_destroy_inode,
- };
- 
- static int fill_super(struct super_block *sb, void *data, int silent)
++		/*
++		 * Work around possible WS2012 bug: it sends hypercalls
++		 * with processor_mask = 0x0 and HV_FLUSH_ALL_PROCESSORS clear,
++		 * while also expecting us to flush something and crashing if
++		 * we don't. Let's treat processor_mask == 0 same as
++		 * HV_FLUSH_ALL_PROCESSORS.
++		 */
++		all_cpus = (flush.flags & HV_FLUSH_ALL_PROCESSORS) ||
++			flush.processor_mask == 0;
+ 	} else {
+ 		if (unlikely(kvm_read_guest(kvm, ingpa, &flush_ex,
+ 					    sizeof(flush_ex))))
 -- 
 2.20.1
 
