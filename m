@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A6BC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA18C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8F9221855
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC54921851
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639455;
-	bh=tXoZMYc7cpMKx8LYA+rpYZH2ULjsUpEYydwxB8RBcrA=;
+	s=default; t=1558639457;
+	bh=2ptE7vIvQyhsyXR24RemViMRC03B+p8ztYdpEcbI6Q8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lTgrvjnnu7p5JcG843gKX3EqeoV2uzQc8XImU3OSl/ppbAh0H/qA1piWEa+Qb89sf
-	 oDh/3q/NxRnhXqAZDm3n4RvITlMOVXXFnCW5RBy4p5CtlRAA29zqkd2c/yXhmbvqNs
-	 I3Y1P4kb+AFV59t85eyFVt8KL/izHKFJmJ1ZzfQ0=
+	b=2G3eQ6deVlZjLD/ici4xwzZb+DpEelwNCUViWUWgu6c4s6myw8XRhsidFdBEz85ML
+	 MEooJw6OmssFUPPkcsKr8Khk8x+A8WQYfBAHNf4EFHTFhCX+NVhej+SX1pe2EFykuS
+	 RnsFRr4UmOSq/8PUHgilfAQIvCejdpm5QtEDVfOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390851AbfEWTYO (ORCPT
+        id S2390862AbfEWTYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:24:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35010 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:24:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389827AbfEWTYK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:24:10 -0400
+        id S2389827AbfEWTYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:24:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5AE7217D9;
-        Thu, 23 May 2019 19:24:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32E8120868;
+        Thu, 23 May 2019 19:24:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639449;
-        bh=tXoZMYc7cpMKx8LYA+rpYZH2ULjsUpEYydwxB8RBcrA=;
+        s=default; t=1558639454;
+        bh=2ptE7vIvQyhsyXR24RemViMRC03B+p8ztYdpEcbI6Q8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2sfwj4COZ+4X5jt8efCc0ih6oHDwirhePlSv0aC5xhPJdJPTQlfIZ58ENPozoY4Qu
-         aGduGcnZJtgJPTtw3fVkDPX7VlZXsB0pw3JLrjjx9gDxaEl7qm3vG+06A/0NeaLTAa
-         6pCZGA95y5+jeqIAh5CIe05sxVIZIaLxpOcrG2/Q=
+        b=KZW7JzyUpX8YWzjLbzRxYjre6U1u54rIALoI1odX33yXD+O/8432qArjXX610Ty/0
+         1UyzWZKkEWiwqn8PmH6quY3SyY9Cr/ihpd4aTsuaF2JIjbyAupuU6zCkVbhK3DR7JU
+         kWlpdtk9xVTYhBZpFw2cLGMzjT4MUqJ9G1VrYdwU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Stefan=20M=C3=A4tje?= <stefan.maetje@esd.eu>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 5.0 092/139] PCI: Work around Pericom PCIe-to-PCI bridge Retrain Link erratum
-Date:   Thu, 23 May 2019 21:06:20 +0200
-Message-Id: <20190523181732.546172615@linuxfoundation.org>
+        stable@vger.kernel.org, Damien Le Moal <damien.lemoal@wdc.com>,
+        Shaun Tancheff <shaun@tancheff.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 5.0 094/139] dm zoned: Fix zone report handling
+Date:   Thu, 23 May 2019 21:06:22 +0200
+Message-Id: <20190523181732.836411863@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -61,98 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Mätje <stefan.maetje@esd.eu>
+From: Damien Le Moal <damien.lemoal@wdc.com>
 
-commit 4ec73791a64bab25cabf16a6067ee478692e506d upstream.
+commit 7aedf75ff740a98f3683439449cd91c8662d03b2 upstream.
 
-Due to an erratum in some Pericom PCIe-to-PCI bridges in reverse mode
-(conventional PCI on primary side, PCIe on downstream side), the Retrain
-Link bit needs to be cleared manually to allow the link training to
-complete successfully.
+The function blkdev_report_zones() returns success even if no zone
+information is reported (empty report). Empty zone reports can only
+happen if the report start sector passed exceeds the device capacity.
+The conditions for this to happen are either a bug in the caller code,
+or, a change in the device that forced the low level driver to change
+the device capacity to a value that is lower than the report start
+sector. This situation includes a failed disk revalidation resulting in
+the disk capacity being changed to 0.
 
-If it is not cleared manually, the link training is continuously restarted
-and no devices below the PCI-to-PCIe bridge can be accessed.  That means
-drivers for devices below the bridge will be loaded but won't work and may
-even crash because the driver is only reading 0xffff.
+If this change happens while dm-zoned is in its initialization phase
+executing dmz_init_zones(), this function may enter an infinite loop
+and hang the system. To avoid this, add a check to disallow empty zone
+reports and bail out early. Also fix the function dmz_update_zone() to
+make sure that the report for the requested zone was correctly obtained.
 
-See the Pericom Errata Sheet PI7C9X111SLB_errata_rev1.2_102711.pdf for
-details.  Devices known as affected so far are: PI7C9X110, PI7C9X111SL,
-PI7C9X130.
-
-Add a new flag, clear_retrain_link, in struct pci_dev.  Quirks for affected
-devices set this bit.
-
-Note that pcie_retrain_link() lives in aspm.c because that's currently the
-only place we use it, but this erratum is not specific to ASPM, and we may
-retrain links for other reasons in the future.
-
-Signed-off-by: Stefan Mätje <stefan.maetje@esd.eu>
-[bhelgaas: apply regardless of CONFIG_PCIEASPM]
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC: stable@vger.kernel.org
+Fixes: 3b1a94c88b79 ("dm zoned: drive-managed zoned block device target")
+Cc: stable@vger.kernel.org
+Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+Reviewed-by: Shaun Tancheff <shaun@tancheff.com>
+Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/pcie/aspm.c |    9 +++++++++
- drivers/pci/quirks.c    |   17 +++++++++++++++++
- include/linux/pci.h     |    2 ++
- 3 files changed, 28 insertions(+)
+ drivers/md/dm-zoned-metadata.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -205,6 +205,15 @@ static bool pcie_retrain_link(struct pci
- 	pcie_capability_read_word(parent, PCI_EXP_LNKCTL, &reg16);
- 	reg16 |= PCI_EXP_LNKCTL_RL;
- 	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
-+	if (parent->clear_retrain_link) {
-+		/*
-+		 * Due to an erratum in some devices the Retrain Link bit
-+		 * needs to be cleared again manually to allow the link
-+		 * training to succeed.
-+		 */
-+		reg16 &= ~PCI_EXP_LNKCTL_RL;
-+		pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
-+	}
+--- a/drivers/md/dm-zoned-metadata.c
++++ b/drivers/md/dm-zoned-metadata.c
+@@ -1169,6 +1169,9 @@ static int dmz_init_zones(struct dmz_met
+ 			goto out;
+ 		}
  
- 	/* Wait for link training end. Break out after waiting for timeout */
- 	start_jiffies = jiffies;
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -2245,6 +2245,23 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_IN
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x10f4, quirk_disable_aspm_l0s);
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x1508, quirk_disable_aspm_l0s);
- 
-+/*
-+ * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
-+ * Link bit cleared after starting the link retrain process to allow this
-+ * process to finish.
-+ *
-+ * Affected devices: PI7C9X110, PI7C9X111SL, PI7C9X130.  See also the
-+ * Pericom Errata Sheet PI7C9X111SLB_errata_rev1.2_102711.pdf.
-+ */
-+static void quirk_enable_clear_retrain_link(struct pci_dev *dev)
-+{
-+	dev->clear_retrain_link = 1;
-+	pci_info(dev, "Enable PCIe Retrain Link quirk\n");
-+}
-+DECLARE_PCI_FIXUP_HEADER(0x12d8, 0xe110, quirk_enable_clear_retrain_link);
-+DECLARE_PCI_FIXUP_HEADER(0x12d8, 0xe111, quirk_enable_clear_retrain_link);
-+DECLARE_PCI_FIXUP_HEADER(0x12d8, 0xe130, quirk_enable_clear_retrain_link);
++		if (!nr_blkz)
++			break;
 +
- static void fixup_rev1_53c810(struct pci_dev *dev)
- {
- 	u32 class = dev->class;
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -348,6 +348,8 @@ struct pci_dev {
- 	unsigned int	hotplug_user_indicators:1; /* SlotCtl indicators
- 						      controlled exclusively by
- 						      user sysfs */
-+	unsigned int	clear_retrain_link:1;	/* Need to clear Retrain Link
-+						   bit manually */
- 	unsigned int	d3_delay;	/* D3->D0 transition time in ms */
- 	unsigned int	d3cold_delay;	/* D3cold->D0 transition time in ms */
- 
+ 		/* Process report */
+ 		for (i = 0; i < nr_blkz; i++) {
+ 			ret = dmz_init_zone(zmd, zone, &blkz[i]);
+@@ -1204,6 +1207,8 @@ static int dmz_update_zone(struct dmz_me
+ 	/* Get zone information from disk */
+ 	ret = blkdev_report_zones(zmd->dev->bdev, dmz_start_sect(zmd, zone),
+ 				  &blkz, &nr_blkz, GFP_NOIO);
++	if (!nr_blkz)
++		ret = -EIO;
+ 	if (ret) {
+ 		dmz_dev_err(zmd->dev, "Get zone %u report failed",
+ 			    dmz_id(zmd, zone));
 
 
