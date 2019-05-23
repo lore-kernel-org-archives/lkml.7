@@ -2,227 +2,166 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B87C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 11:58:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F1C3C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:00:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90CD621019
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 11:58:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="MgIeKsPr"
+	by mail.kernel.org (Postfix) with ESMTP id 2B5C220881
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:00:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730489AbfEWL6u (ORCPT
+        id S1730477AbfEWMAu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 07:58:50 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:41154 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729698AbfEWL6u (ORCPT
+        Thu, 23 May 2019 08:00:50 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46804 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729698AbfEWMAt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 07:58:50 -0400
-Received: by mail-ed1-f68.google.com with SMTP id m4so8837985edd.8
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 04:58:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fHMFUKbG6Z1JionWeMJvzS6MHCcIonbFZhZi/HSky6k=;
-        b=MgIeKsPrSECQ+KZfe2WcSnzsqjOiLOx/b768LRpunmCRQTDTCaPYK9Lx3g2G+mqVBt
-         IKurDIXo/P35C0pA5/93qHk1TjBS7uQecOKn6hGUdlluza8+GRyWqVuUwBYNDMQCPxCY
-         Xy1WNvYpoUoS4WoorsGVmWFgobgy981ynbksnDNUNMt4PyF8X+sUX5jhGu35K2VaBTwO
-         emvs6kMgf1g1QUc421sf3lMOQlRjO//YPUXkM217ub5pULxJLDv905PxkMWwHU/D0Egg
-         tGU0DCZaXCLeLg14W5A2ieIiMr9zlR2rn7GzE4Bh1nJD9c4LYZHypPmSDueV1xhviSjT
-         MUHQ==
+        Thu, 23 May 2019 08:00:49 -0400
+Received: by mail-wr1-f65.google.com with SMTP id r7so5942839wrr.13
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 05:00:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fHMFUKbG6Z1JionWeMJvzS6MHCcIonbFZhZi/HSky6k=;
-        b=YHiAsg3844TcG7FxzPMKLQFi1UVvuQVrGDpnLs7bZWsgM1kzfho9i7xzLPzwETCfep
-         VpMI00tDeBmz0VNrFbx5h8tq8/QFYJThXyh3G3FWrN9I2/ou/kqvY5SoLwvFZGdccAGL
-         il6U89iGNYGGPvNOln8HMSn4tVn9AP5IwimyubV7XBr5oG0dE9SIBXBS+aDjCQ97bKR8
-         Kw1qRayBptaFv48/QvWMlOaUPldrCz/sX5gnlyN2lMhWzuvlBkhvJ5ryDzPfclijVmjE
-         dws2u7CDsA08rZqZRDmjSz+OJ7SKQFIT39MuUtaJNYS3CSuC7s702vrYBDSU/e0fYw7T
-         UVVQ==
-X-Gm-Message-State: APjAAAX8Z9TS3jmqpd0apRuuuYKAG1jhWhRpe0yF/X66z+McqLQ9im+N
-        yYcAhhUYnIKi4Sdx0QNyWRlc2w==
-X-Google-Smtp-Source: APXvYqyFfVt792qDhJmQnvDO74r6Nptq+9Jdiq/Pb+oBz9tuAP8o95P03p3ppFHFMpNQpi2X4q5MKg==
-X-Received: by 2002:a50:a3b5:: with SMTP id s50mr96935208edb.149.1558612727834;
-        Thu, 23 May 2019 04:58:47 -0700 (PDT)
-Received: from brauner.io (178-197-142-46.pool.kielnet.net. [46.142.197.178])
-        by smtp.gmail.com with ESMTPSA id l23sm4369446eje.6.2019.05.23.04.58.47
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 23 May 2019 04:58:47 -0700 (PDT)
-Date:   Thu, 23 May 2019 13:58:46 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Jan Kara <jack@suse.cz>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Matthew Bobrowski <mbobrowski@mbobrowski.org>
-Subject: Re: [PATCH] fanotify: remove redundant capable(CAP_SYS_ADMIN)s
-Message-ID: <20190523115845.w7neydaka5xivwyi@brauner.io>
-References: <20190522163150.16849-1-christian@brauner.io>
- <CAOQ4uxjV=7=FXuyccBK9Pu1B7o-w-pbc1FQXJxY4q6z8E93KOg@mail.gmail.com>
- <EB97EF04-D44F-4320-ACDC-C536EED03BA4@brauner.io>
- <CAOQ4uxhodqVw0DVfcvXYH5vBf4LKcv7t388ZwXeZPBTcEMzGSw@mail.gmail.com>
- <20190523095506.nyei5nogvv63lm4a@brauner.io>
- <CAOQ4uxiBeAzsE+b=tE7+9=25-qS7ohuTdEswYOt8DrCp6eAMuw@mail.gmail.com>
- <20190523104239.u63u2uth4yyuuufs@brauner.io>
- <CAOQ4uxji4jRvJnLvXe0yR4Ls7VxM_tjAypX1TqBe5FYr_7GnXw@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to;
+        bh=kK5j/gHOq84BsPW6f6bpX4ZZR9uGYZS8v5NTjclW2MI=;
+        b=uNiRsWhgXRafBIlxL8nfzEasHOyoFkcmMIr2KimeCVSPPgR61tEwrgZA60d7asHi9j
+         wIaWRLb/tMs4drIfYH9ehNdq7BBOg0rJ54glLK0JqdrY11MQC6YR2LVW7UE139dMHs/Z
+         g2iYaudUFclHbEDHMUwg4Tz+0dWVZtVDixGkivvG61for8gnqIVQfncty0AEldYmVDtO
+         NrYLsellLM5klAeIYRSEGZ5S5ri4Ls2dQSNT8KjcuSVDqV0A1eRVufeScYkYB0s+KZqi
+         6dgewh1WiuEHQ9V0kLB6VI30x+ZSKlELODWsv5rLc30yBShRrJ1e1E+3qXz4z7/YzntI
+         98XQ==
+X-Gm-Message-State: APjAAAVgEnXYPcBBGjJaB28CEctvZlwQUvXbws632T1A9rM6VJxcZXvM
+        4x5ilQTG65yeSNFIaeLMHUjmCA==
+X-Google-Smtp-Source: APXvYqzwLNqb2vVtGLlLihX2MEb17pbb/o5OQOxM+abjogysd5XSy+Jvy2mUO+jFwq610+25kTZ2TA==
+X-Received: by 2002:adf:ea89:: with SMTP id s9mr1952317wrm.322.1558612847790;
+        Thu, 23 May 2019 05:00:47 -0700 (PDT)
+Received: from [192.168.1.38] (228.red-83-52-173.dynamicip.rima-tde.net. [83.52.173.228])
+        by smtp.gmail.com with ESMTPSA id w185sm10728213wma.39.2019.05.23.05.00.46
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 May 2019 05:00:47 -0700 (PDT)
+Subject: Re: [Qemu-devel] Running linux on qemu omap
+To:     Thomas Huth <thuth@redhat.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc:     Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org,
+        qemu-devel@nongnu.org, linux-kernel@vger.kernel.org,
+        Peter Maydell <peter.maydell@linaro.org>
+References: <20190520190533.GA28160@Red>
+ <20190521232323.GD3621@darkstar.musicnaut.iki.fi>
+ <20190522093341.GA32154@Red>
+ <20190522181904.GE3621@darkstar.musicnaut.iki.fi>
+ <8977e2bb-8d9e-f4fd-4c44-b4f67e0e7314@redhat.com>
+From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <philmd@redhat.com>
+Openpgp: id=89C1E78F601EE86C867495CBA2A3FD6EDEADC0DE;
+ url=http://pgp.mit.edu/pks/lookup?op=get&search=0xA2A3FD6EDEADC0DE
+Message-ID: <c2972889-fe60-7614-fb6e-e57ddf780a54@redhat.com>
+Date:   Thu, 23 May 2019 14:00:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAOQ4uxji4jRvJnLvXe0yR4Ls7VxM_tjAypX1TqBe5FYr_7GnXw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <8977e2bb-8d9e-f4fd-4c44-b4f67e0e7314@redhat.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="N3gK20x9xpooVg0mf1GhPnBDZSkp1nIkO"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 02:40:39PM +0300, Amir Goldstein wrote:
-> On Thu, May 23, 2019 at 1:42 PM Christian Brauner <christian@brauner.io> wrote:
-> >
-> > On Thu, May 23, 2019 at 01:25:08PM +0300, Amir Goldstein wrote:
-> > > On Thu, May 23, 2019 at 12:55 PM Christian Brauner <christian@brauner.io> wrote:
-> > > >
-> > > > On Wed, May 22, 2019 at 11:00:22PM +0300, Amir Goldstein wrote:
-> > > > > On Wed, May 22, 2019 at 9:57 PM Christian Brauner <christian@brauner.io> wrote:
-> > > > > >
-> > > > > > On May 22, 2019 8:29:37 PM GMT+02:00, Amir Goldstein <amir73il@gmail.com> wrote:
-> > > > > > >On Wed, May 22, 2019 at 7:32 PM Christian Brauner
-> > > > > > ><christian@brauner.io> wrote:
-> > > > > > >>
-> > > > > > >> This removes two redundant capable(CAP_SYS_ADMIN) checks from
-> > > > > > >> fanotify_init().
-> > > > > > >> fanotify_init() guards the whole syscall with capable(CAP_SYS_ADMIN)
-> > > > > > >at the
-> > > > > > >> beginning. So the other two capable(CAP_SYS_ADMIN) checks are not
-> > > > > > >needed.
-> > > > > > >
-> > > > > > >It's intentional:
-> > > > > > >
-> > > > > > >commit e7099d8a5a34d2876908a9fab4952dabdcfc5909
-> > > > > > >Author: Eric Paris <eparis@redhat.com>
-> > > > > > >Date:   Thu Oct 28 17:21:57 2010 -0400
-> > > > > > >
-> > > > > > >    fanotify: limit the number of marks in a single fanotify group
-> > > > > > >
-> > > > > > >There is currently no limit on the number of marks a given fanotify
-> > > > > > >group
-> > > > > > >can have.  Since fanotify is gated on CAP_SYS_ADMIN this was not seen
-> > > > > > >as
-> > > > > > >a serious DoS threat.  This patch implements a default of 8192, the
-> > > > > > >same as
-> > > > > > >inotify to work towards removing the CAP_SYS_ADMIN gating and
-> > > > > > >eliminating
-> > > > > > >    the default DoS'able status.
-> > > > > > >
-> > > > > > >    Signed-off-by: Eric Paris <eparis@redhat.com>
-> > > > > > >
-> > > > > > >There idea is to eventually remove the gated CAP_SYS_ADMIN.
-> > > > > > >There is no reason that fanotify could not be used by unprivileged
-> > > > > > >users
-> > > > > > >to setup inotify style watch on an inode or directories children, see:
-> > > > > > >https://patchwork.kernel.org/patch/10668299/
-> > > > > > >
-> > > > > > >>
-> > > > > > >> Fixes: 5dd03f55fd2 ("fanotify: allow userspace to override max queue
-> > > > > > >depth")
-> > > > > > >> Fixes: ac7e22dcfaf ("fanotify: allow userspace to override max
-> > > > > > >marks")
-> > > > > > >
-> > > > > > >Fixes is used to tag bug fixes for stable.
-> > > > > > >There is no bug.
-> > > > > > >
-> > > > > > >Thanks,
-> > > > > > >Amir.
-> > > > > >
-> > > > > > Interesting. When do you think the gate can be removed?
-> > > > >
-> > > > > Nobody is working on this AFAIK.
-> > > > > What I posted was a simple POC, but I have no use case for this.
-> > > > > In the patchwork link above, Jan has listed the prerequisites for
-> > > > > removing the gate.
-> > > > >
-> > > > > One of the prerequisites is FAN_REPORT_FID, which is now merged.
-> > > > > When events gets reported with fid instead of fd, unprivileged user
-> > > > > (hopefully) cannot use fid for privilege escalation.
-> > > > >
-> > > > > > I was looking into switching from inotify to fanotify but since it's not usable from
-> > > > > > non-initial userns it's a no-no
-> > > > > > since we support nested workloads.
-> > > > >
-> > > > > One of Jan's questions was what is the benefit of using inotify-compatible
-> > > > > fanotify vs. using inotify.
-> > > > > So what was the reason you were looking into switching from inotify to fanotify?
-> > > > > Is it because of mount/filesystem watch? Because making those available for
-> > > >
-> > > > Yeah. Well, I would need to look but you could probably do it safely for
-> > > > filesystems mountable in user namespaces (which are few).
-> > > > Can you do a bind-mount and then place a watch on the bind-mount or is
-> > > > this superblock based?
-> > > >
-> > >
-> > > Either.
-> > > FAN_MARK_MOUNT was there from day 1 of fanotify.
-> > > FAN_MARK_FILESYSTEM was merged to Linux Linux 4.20.
-> > >
-> > > But directory modification events that are supported since v5.1 are
-> > > not available
-> > > with FAN_MARK_MOUNT, see:
-> >
-> > Because you're worried about unprivileged users spying on events? Or
-> > something else?
-> 
-> Something else. The current fsnotify_move/create/delete() VFS hooks
-> have no path/mount information, so it is not possible to filter them by
-> mount only by inode/sb.
-> Fixing that would not be trivial, but first a strong use case would need
-> to be presented.
-> 
-> > Because if you can do a bind-mount there's nothing preventing an
-> > unprivileged user to do a hand-rolled recursive inotify that would
-> > amount to the same thing anyway.
-> 
-> There is. unprivileged user cannot traverse into directories it is not
-> allowed to read/search.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--N3gK20x9xpooVg0mf1GhPnBDZSkp1nIkO
+Content-Type: multipart/mixed; boundary="PdV5Opk5aiZJQzRy0CJ7xPo7FQaFRUuX4";
+ protected-headers="v1"
+From: =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <philmd@redhat.com>
+To: Thomas Huth <thuth@redhat.com>, Aaro Koskinen <aaro.koskinen@iki.fi>,
+ Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc: Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org,
+ qemu-devel@nongnu.org, linux-kernel@vger.kernel.org,
+ Peter Maydell <peter.maydell@linaro.org>
+Message-ID: <c2972889-fe60-7614-fb6e-e57ddf780a54@redhat.com>
+Subject: Re: [Qemu-devel] Running linux on qemu omap
+References: <20190520190533.GA28160@Red>
+ <20190521232323.GD3621@darkstar.musicnaut.iki.fi>
+ <20190522093341.GA32154@Red>
+ <20190522181904.GE3621@darkstar.musicnaut.iki.fi>
+ <8977e2bb-8d9e-f4fd-4c44-b4f67e0e7314@redhat.com>
+In-Reply-To: <8977e2bb-8d9e-f4fd-4c44-b4f67e0e7314@redhat.com>
 
-Right, I should've mentioned: when you're userns root and you have
-access to all files. The part that is interesting to me is getting rid
-of capable(CAP_SYS_ADMIN).
+--PdV5Opk5aiZJQzRy0CJ7xPo7FQaFRUuX4
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> > (And btw, v5.1 really is a major step forward and I would really like to
-> >  use this api tbh.)
-> >
-> 
-> You haven't answered my question. What is the reason you are interested
-> in the new API? What does it provide that the old API does not?
-> I know the 2 APIs differ. I just want to know which difference interests *you*,
-> because without a strong use case, it will be hard for me to make progress
-> upstream.
-> 
-> Is what you want really a "bind-mount" watch or a "subtree watch"?
-> The distinction is important. I am thinking about solutions for the latter,
-> although there is no immediate solution in the horizon - only ideas.
+On 5/23/19 1:27 PM, Thomas Huth wrote:
+> On 22/05/2019 20.19, Aaro Koskinen wrote:
+>> Hi,
+>>
+>> On Wed, May 22, 2019 at 11:33:41AM +0200, Corentin Labbe wrote:
+>>> qemu-system-arm -M help |grep OMAP
+>>> cheetah              Palm Tungsten|E aka. Cheetah PDA (OMAP310)
+>>> n800                 Nokia N800 tablet aka. RX-34 (OMAP2420)
+>>> n810                 Nokia N810 tablet aka. RX-44 (OMAP2420)
+>>> sx1                  Siemens SX1 (OMAP310) V2
+>>> sx1-v1               Siemens SX1 (OMAP310) V1
+>>>
+>>>>> The maximum I can get with omap1_defconfig is
+>>>>> qemu-system-arm -kernel zImage -nographic -machine cheetah -append =
+'root=3D/dev/ram0 console=3DttyO0'
+>>>>> Uncompressing Linux... done, booting the kernel.
+>>>>> then nothing more.
+>>
+>> With N800/N810 omap2plus_defconfig should be used instead. However,
+>> I don't think that works either (but haven't tried recently). Also wit=
+h
+>> N800/N810 you need to append the DTB file to the kernel image.
+>=20
+> FWIW, Philippe recently posted a mail how to run older kernels on n810:=
 
-Both cases would be interesting. But subtree watch is what would
-probably help a lot already. So let me explain.
-For LXD - not sure if you know what that is - we allow user to "hotplug"
-mounts or certain whitelisted devices into a user namespace container.
-One of the nifty features is that we let users specify a "required"
-property. When "required" is "false" the user can give us a path, e.g.
-/bla/bla/bla/target and then we place a watch on the closest existing
-ancestor of my-device. When the target shows up we hotplug it for the
-user. Now, as you imagine maintaining that cache until "target" shows up
-is a royal pain.
+>=20
+> https://www.mail-archive.com/qemu-devel@nongnu.org/msg610653.html
 
-I think that we can get rid of at least some of the complexity if
-subtree watch and bind-mount watches would work.
+What I use as reference for testing ARM boards [*] is the work of
+Guenter Roeck:
+https://github.com/groeck/linux-build-test/blob/master/rootfs/arm/run-qem=
+u-arm.sh
 
-Thanks!
-Christian
+However I can see than none of the board listed by Corentin are tested
+=2E.. That reminder me I never succeed at using the Cheetah PDA. So the
+OMAP310 is probably bitroting in QEMU...
+
+[*] and slowly add to upstream patches he sent that fell through the
+cracks of qemu-devel.
+
+Regards,
+
+Phil.
+
+
+--PdV5Opk5aiZJQzRy0CJ7xPo7FQaFRUuX4--
+
+--N3gK20x9xpooVg0mf1GhPnBDZSkp1nIkO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEicHnj2Ae6GyGdJXLoqP9bt6twN4FAlzmi20ACgkQoqP9bt6t
+wN5i6xAAuRhP+m1TluijQk+H4g7hsK/vz9VkbGudZ6gk2C/UtPJg2KvLWw1lMCuL
+sy2snYHuKXs90yRbe1D4Ivf0HHzekXCPi94YxEckWh4UQO5J3SqCB5CSlq4HoMcj
+frBtor0Zfn3pKxHSIvIse+kcAem/JR5NJAqWALlpZz2vz+SOQ9IrhFfDgCr8ez0z
+oaFQ1JC93fGzGfXdTa/LkvANHt2f0JSknpqu7yJpN2ZmNVizpDkGo1bbHsPJqotv
+P+EUSvihxvNjkQz0hXALVoXG1WKQeGHCi6+ZnoeQnV029DVQdj5tJIL3wGAANXNY
+o584oXdqeJ3bRvqUi945CyGhrvTqPDL85t6AEuRln31we2LcnB/Rq+iA7M+UX7ZM
+9xF63BmSEDZxHpBBi4EYc4DpVmDJXhZjYSiVCQbXVoMCFt6RbFHCKxIyFlmjod+S
+i/lRnzNbTEj1+5LuYHiN09ILJqjQqp7oVhDcBevKLwT1N8TTNpuwQwx31nL54tBa
+Y8InAsmpjgduXTu9vpDvK68F5TpoY0I0RROdj+Z5wrFJ9sTIfo7E58p+w9XivXww
++v6oCr6Dod3t5UwvxyAZTQuOce6Sqk1i4oBMNCZ8OIP8tVM9Pi90pwfOgtb62EEj
+czDvTUF8Bt5W6/3Px5fW8FDR0HhejhunK4B0s40hH1ZqT/TXyog=
+=LlYn
+-----END PGP SIGNATURE-----
+
+--N3gK20x9xpooVg0mf1GhPnBDZSkp1nIkO--
