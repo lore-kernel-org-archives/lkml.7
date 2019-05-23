@@ -2,75 +2,55 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A76BC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25421C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AFB421019
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:27:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00D0220879
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:28:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731355AbfEWQ1u (ORCPT
+        id S1731363AbfEWQ21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 12:27:50 -0400
-Received: from mslow2.mail.gandi.net ([217.70.178.242]:35648 "EHLO
-        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730987AbfEWQ1u (ORCPT
+        Thu, 23 May 2019 12:28:27 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:48508 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730957AbfEWQ21 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 12:27:50 -0400
-Received: from relay12.mail.gandi.net (unknown [217.70.178.232])
-        by mslow2.mail.gandi.net (Postfix) with ESMTP id 0E9623A2EF0;
-        Thu, 23 May 2019 15:48:39 +0000 (UTC)
-Received: from localhost (lfbn-1-3034-80.w90-66.abo.wanadoo.fr [90.66.53.80])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 3ED5E20000A;
-        Thu, 23 May 2019 15:48:30 +0000 (UTC)
-Date:   Thu, 23 May 2019 17:48:29 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Richard Leitner <richard.leitner@skidata.com>
-Cc:     a.zummo@towertech.it, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/4] rtc: s35390a: uie_unsupported and minor fixes
-Message-ID: <20190523154829.GW3274@piout.net>
-References: <20190523115451.20007-1-richard.leitner@skidata.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190523115451.20007-1-richard.leitner@skidata.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Thu, 23 May 2019 12:28:27 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d8])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id DC6D61509BADB;
+        Thu, 23 May 2019 09:28:25 -0700 (PDT)
+Date:   Thu, 23 May 2019 09:28:25 -0700 (PDT)
+Message-Id: <20190523.092825.2184612182055559835.davem@davemloft.net>
+To:     yash.shah@sifive.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        nicolas.ferre@microchip.com, palmer@sifive.com,
+        aou@eecs.berkeley.edu, ynezz@true.cz, paul.walmsley@sifive.com,
+        sachin.ghadi@sifive.com
+Subject: Re: [PATCH 0/2] net: macb: Add support for SiFive FU540-C000
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1558611952-13295-1-git-send-email-yash.shah@sifive.com>
+References: <1558611952-13295-1-git-send-email-yash.shah@sifive.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 23 May 2019 09:28:26 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/05/2019 13:54:47+0200, Richard Leitner wrote:
-> As the s35390a does only support per-minute based alarms we have to
-> set the uie_unsupported flag. Otherwise it delays for 10sec and 
-> fails afterwards with modern hwclock versions.
-> 
-> Furthermore some other minor changes are made.
-> 
-> All patches were tested on an i.MX6 platform.
-> 
-> CHANGES v2:
->  - use BIT in "clarify INT2 pin output modes"
->  - add "change FLAG defines to use BIT macro"
-> 
-> Richard Leitner (4):
->   rtc: s35390a: clarify INT2 pin output modes
->   rtc: s35390a: set uie_unsupported
->   rtc: s35390a: introduce struct device in probe
->   rtc: s35390a: change FLAG defines to use BIT macro
-> 
->  drivers/rtc/rtc-s35390a.c | 55 +++++++++++++++++++++------------------
->  1 file changed, 29 insertions(+), 26 deletions(-)
-> 
 
-Applied, thanks.
+Please be consistent in your subsystem prefixes used in your Subject lines.
+You use "net: macb:" then "net/macb:"  Really, plain "macb: " is sufficient.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Thank you.
