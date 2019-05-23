@@ -2,495 +2,144 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A7DC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 20:42:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C3EC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 20:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A80682075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 20:42:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABFFE2075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 20:48:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388150AbfEWUmK (ORCPT
+        id S2387846AbfEWUsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 16:42:10 -0400
-Received: from mga14.intel.com ([192.55.52.115]:9055 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387394AbfEWUmH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 16:42:07 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 May 2019 13:42:06 -0700
-X-ExtLoop1: 1
-Received: from otc-lr-04.jf.intel.com ([10.54.39.157])
-  by FMSMGA003.fm.intel.com with ESMTP; 23 May 2019 13:42:05 -0700
-From:   kan.liang@linux.intel.com
-To:     acme@kernel.org, jolsa@kernel.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org
-Cc:     peterz@infradead.org, ak@linux.intel.com,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH 2/3] perf stat: Support per-die aggregation
-Date:   Thu, 23 May 2019 13:41:20 -0700
-Message-Id: <1558644081-17738-2-git-send-email-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1558644081-17738-1-git-send-email-kan.liang@linux.intel.com>
-References: <1558644081-17738-1-git-send-email-kan.liang@linux.intel.com>
+        Thu, 23 May 2019 16:48:32 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:40019 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387394AbfEWUsb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 16:48:31 -0400
+X-Originating-IP: 90.89.68.76
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id BA38CC0009;
+        Thu, 23 May 2019 20:48:24 +0000 (UTC)
+Date:   Thu, 23 May 2019 22:38:36 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        bshah@mykolab.com, Vasily Khoruzhick <anarsoul@gmail.com>,
+        powerpan@qq.com, michael@amarulasolutions.com,
+        linux-amarula@amarulasolutions.com, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v10 03/11] drm/sun4i: dsi: Fix video start delay
+ computation
+Message-ID: <20190523203836.xy7nmte3ubyxwg27@flea>
+References: <20190520090318.27570-1-jagan@amarulasolutions.com>
+ <20190520090318.27570-4-jagan@amarulasolutions.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190520090318.27570-4-jagan@amarulasolutions.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On Mon, May 20, 2019 at 02:33:10PM +0530, Jagan Teki wrote:
+> The current code is computing vertical video start delay as
+>
+> delay = mode->vtotal - (mode->vsync_end - mode->vdisplay) + start;
+>
+> On which the second parameter
+>
+> mode->vsync_end - mode->vdisplay = front porch + sync timings
+>
+> according to "DRM kernel-internal display mode structure" in
+> include/drm/drm_modes.h
+>
+> With adding additional sync timings, the desired video start delay
+> value as 510 for "bananapi,s070wv20-ct16" panel timings which indeed
+> trigger panel flip_done timed out as:
+>
+>  WARNING: CPU: 0 PID: 31 at drivers/gpu/drm/drm_atomic_helper.c:1429 drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0
+>  [CRTC:46:crtc-0] vblank wait timed out
+>  Modules linked in:
+>  CPU: 0 PID: 31 Comm: kworker/0:1 Not tainted 5.1.0-next-20190514-00029-g09e5b0ed0a58 #18
+>  Hardware name: Allwinner sun8i Family
+>  Workqueue: events deferred_probe_work_func
+>  [<c010ed54>] (unwind_backtrace) from [<c010b76c>] (show_stack+0x10/0x14)
+>  [<c010b76c>] (show_stack) from [<c0688c70>] (dump_stack+0x84/0x98)
+>  [<c0688c70>] (dump_stack) from [<c011d9e4>] (__warn+0xfc/0x114)
+>  [<c011d9e4>] (__warn) from [<c011da40>] (warn_slowpath_fmt+0x44/0x68)
+>  [<c011da40>] (warn_slowpath_fmt) from [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0)
+>  [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1) from [<c040e694>] (drm_atomic_helper_commit_tail_rpm+0x5c/0x6c)
+>  [<c040e694>] (drm_atomic_helper_commit_tail_rpm) from [<c040e4dc>] (commit_tail+0x40/0x6c)
+>  [<c040e4dc>] (commit_tail) from [<c040e5cc>] (drm_atomic_helper_commit+0xbc/0x128)
+>  [<c040e5cc>] (drm_atomic_helper_commit) from [<c0411b64>] (restore_fbdev_mode_atomic+0x1cc/0x1dc)
+>  [<c0411b64>] (restore_fbdev_mode_atomic) from [<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked+0x54/0xa0)
+>  [<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked) from [<c0415774>] (drm_fb_helper_set_par+0x30/0x54)
+>  [<c0415774>] (drm_fb_helper_set_par) from [<c03ad450>] (fbcon_init+0x560/0x5ac)
+>  [<c03ad450>] (fbcon_init) from [<c03eb8a0>] (visual_init+0xbc/0x104)
+>  [<c03eb8a0>] (visual_init) from [<c03ed1b8>] (do_bind_con_driver+0x1b0/0x390)
+>  [<c03ed1b8>] (do_bind_con_driver) from [<c03ed780>] (do_take_over_console+0x13c/0x1c4)
+>  [<c03ed780>] (do_take_over_console) from [<c03ad800>] (do_fbcon_takeover+0x74/0xcc)
+>  [<c03ad800>] (do_fbcon_takeover) from [<c013c9c8>] (notifier_call_chain+0x44/0x84)
+>  [<c013c9c8>] (notifier_call_chain) from [<c013cd20>] (__blocking_notifier_call_chain+0x48/0x60)
+>  [<c013cd20>] (__blocking_notifier_call_chain) from [<c013cd50>] (blocking_notifier_call_chain+0x18/0x20)
+>  [<c013cd50>] (blocking_notifier_call_chain) from [<c03a6e44>] (register_framebuffer+0x1e0/0x2f8)
+>  [<c03a6e44>] (register_framebuffer) from [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock+0x2fc/0x50c)
+>  [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock) from [<c04158c8>] (drm_fbdev_client_hotplug+0xe8/0x1b8)
+>  [<c04158c8>] (drm_fbdev_client_hotplug) from [<c0415a20>] (drm_fbdev_generic_setup+0x88/0x118)
+>  [<c0415a20>] (drm_fbdev_generic_setup) from [<c043f060>] (sun4i_drv_bind+0x128/0x160)
+>  [<c043f060>] (sun4i_drv_bind) from [<c044b598>] (try_to_bring_up_master+0x164/0x1a0)
+>  [<c044b598>] (try_to_bring_up_master) from [<c044b668>] (__component_add+0x94/0x140)
+>  [<c044b668>] (__component_add) from [<c0445e1c>] (sun6i_dsi_probe+0x144/0x234)
+>  [<c0445e1c>] (sun6i_dsi_probe) from [<c0452ef4>] (platform_drv_probe+0x48/0x9c)
+>  [<c0452ef4>] (platform_drv_probe) from [<c04512cc>] (really_probe+0x1dc/0x2c8)
+>  [<c04512cc>] (really_probe) from [<c0451518>] (driver_probe_device+0x60/0x160)
+>  [<c0451518>] (driver_probe_device) from [<c044f7a4>] (bus_for_each_drv+0x74/0xb8)
+>  [<c044f7a4>] (bus_for_each_drv) from [<c045107c>] (__device_attach+0xd0/0x13c)
+>  [<c045107c>] (__device_attach) from [<c0450474>] (bus_probe_device+0x84/0x8c)
+>  [<c0450474>] (bus_probe_device) from [<c0450900>] (deferred_probe_work_func+0x64/0x90)
+>  [<c0450900>] (deferred_probe_work_func) from [<c0135970>] (process_one_work+0x204/0x420)
+>  [<c0135970>] (process_one_work) from [<c013690c>] (worker_thread+0x274/0x5a0)
+>  [<c013690c>] (worker_thread) from [<c013b3d8>] (kthread+0x11c/0x14c)
+>  [<c013b3d8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
+>  Exception stack(0xde539fb0 to 0xde539ff8)
+>  9fa0:                                     00000000 00000000 00000000 00000000
+>  9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+>  9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+>  ---[ end trace 495200a78b24980e ]---
+>  random: fast init done
+>  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CRTC:46:crtc-0] flip_done timed out
+>  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CONNECTOR:48:DSI-1] flip_done timed out
+>  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [PLANE:30:plane-0] flip_done timed out
+>
+> But the expected video start delay value is 513 which states that
+> the second parameter on the computation is "front porch" value
+> (no sync timings included).
+>
+> This is clearly confirmed from the legacy [1] and new [2] bsp codes
+> that the second parameter on the video start delay is "front porch"
+>
+> Here is the detailed evidence for calculating front porch as per
+> bsp code.
+>
+> vfp = panel->lcd_vt - panel->lcd_y - panel->lcd_vbp
+> => (panel->lcd_vt) - panel->lcd_y - panel->lcd_vbp
+> => (tt->ver_front_porch + lcdp->panel_info.lcd_vbp
+>     + lcdp->panel_info.lcd_y) -  panel->lcd_y - panel->lcd_vbp
+> => tt->ver_front_porch
 
-It is useful to aggregate counts per die. E.g. Uncore becomes die-scope
-on Xeon Cascade Lake-AP.
+The comment on patch 1 still applies on this patch
 
-Introduce a new option "--per-die" to support per-die aggregation.
+Maxime
 
-The global id for each core has been changed to socket + die id + core
-id. The global id for each die is socket + die id.
-
-Add die information for per-core aggregation. The output of per-core
-aggregation will be changed from "S0-C0" to "S0-D0-C0". Any scripts
-which rely on the output format of per-core aggregation probably be
-broken.
-
-For perf stat record/report, there is no die information when processing
-the old perf.data. The per-die result will be the same as per-socket.
-
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
- tools/perf/Documentation/perf-stat.txt | 10 +++++
- tools/perf/builtin-stat.c              | 73 +++++++++++++++++++++++++++++++---
- tools/perf/util/cpumap.c               | 48 +++++++++++++++++++---
- tools/perf/util/cpumap.h               |  9 ++++-
- tools/perf/util/stat-display.c         | 27 +++++++++++--
- tools/perf/util/stat-shadow.c          |  1 +
- tools/perf/util/stat.c                 |  1 +
- tools/perf/util/stat.h                 |  1 +
- 8 files changed, 155 insertions(+), 15 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index 1e312c2..930c51c0 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -200,6 +200,13 @@ use --per-socket in addition to -a. (system-wide).  The output includes the
- socket number and the number of online processors on that socket. This is
- useful to gauge the amount of aggregation.
- 
-+--per-die::
-+Aggregate counts per processor die for system-wide mode measurements.  This
-+is a useful mode to detect imbalance between dies.  To enable this mode,
-+use --per-die in addition to -a. (system-wide).  The output includes the
-+die number and the number of online processors on that die. This is
-+useful to gauge the amount of aggregation.
-+
- --per-core::
- Aggregate counts per physical processor for system-wide mode measurements.  This
- is a useful mode to detect imbalance between physical cores.  To enable this mode,
-@@ -239,6 +246,9 @@ Input file name.
- --per-socket::
- Aggregate counts per processor socket for system-wide mode measurements.
- 
-+--per-die::
-+Aggregate counts per processor die for system-wide mode measurements.
-+
- --per-core::
- Aggregate counts per physical processor for system-wide mode measurements.
- 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 24b8e69..305f6f3 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -777,6 +777,8 @@ static struct option stat_options[] = {
- 		    "stop workload and print counts after a timeout period in ms (>= 10ms)"),
- 	OPT_SET_UINT(0, "per-socket", &stat_config.aggr_mode,
- 		     "aggregate counts per processor socket", AGGR_SOCKET),
-+	OPT_SET_UINT(0, "per-die", &stat_config.aggr_mode,
-+		     "aggregate counts per processor die", AGGR_DIE),
- 	OPT_SET_UINT(0, "per-core", &stat_config.aggr_mode,
- 		     "aggregate counts per physical processor core", AGGR_CORE),
- 	OPT_SET_UINT(0, "per-thread", &stat_config.aggr_mode,
-@@ -801,6 +803,12 @@ static int perf_stat__get_socket(struct perf_stat_config *config __maybe_unused,
- 	return cpu_map__get_socket(map, cpu, NULL);
- }
- 
-+static int perf_stat__get_die(struct perf_stat_config *config __maybe_unused,
-+			      struct cpu_map *map, int cpu)
-+{
-+	return cpu_map__get_die(map, cpu, NULL);
-+}
-+
- static int perf_stat__get_core(struct perf_stat_config *config __maybe_unused,
- 			       struct cpu_map *map, int cpu)
- {
-@@ -841,6 +849,12 @@ static int perf_stat__get_socket_cached(struct perf_stat_config *config,
- 	return perf_stat__get_aggr(config, perf_stat__get_socket, map, idx);
- }
- 
-+static int perf_stat__get_die_cached(struct perf_stat_config *config,
-+					struct cpu_map *map, int idx)
-+{
-+	return perf_stat__get_aggr(config, perf_stat__get_die, map, idx);
-+}
-+
- static int perf_stat__get_core_cached(struct perf_stat_config *config,
- 				      struct cpu_map *map, int idx)
- {
-@@ -871,6 +885,13 @@ static int perf_stat_init_aggr_mode(void)
- 		}
- 		stat_config.aggr_get_id = perf_stat__get_socket_cached;
- 		break;
-+	case AGGR_DIE:
-+		if (cpu_map__build_die_map(evsel_list->cpus, &stat_config.aggr_map)) {
-+			perror("cannot build die map");
-+			return -1;
-+		}
-+		stat_config.aggr_get_id = perf_stat__get_die_cached;
-+		break;
- 	case AGGR_CORE:
- 		if (cpu_map__build_core_map(evsel_list->cpus, &stat_config.aggr_map)) {
- 			perror("cannot build core map");
-@@ -936,21 +957,41 @@ static int perf_env__get_socket(struct cpu_map *map, int idx, void *data)
- 	return cpu == -1 ? -1 : env->cpu[cpu].socket_id;
- }
- 
-+static int perf_env__get_die(struct cpu_map *map, int idx, void *data)
-+{
-+	struct perf_env *env = data;
-+	int die = -1, cpu = perf_env__get_cpu(env, map, idx);
-+
-+	if (cpu != -1) {
-+		/*
-+		 * Encode socket in upper 8 bits
-+		 * die_id is relative to socket,
-+		 * we need a global id. So we combine
-+		 * socket + die id
-+		 */
-+		die = (env->cpu[cpu].socket_id << 8) |
-+		      (env->cpu[cpu].die_id & 0xff);
-+	}
-+
-+	return die;
-+}
-+
- static int perf_env__get_core(struct cpu_map *map, int idx, void *data)
- {
- 	struct perf_env *env = data;
- 	int core = -1, cpu = perf_env__get_cpu(env, map, idx);
- 
- 	if (cpu != -1) {
--		int socket_id = env->cpu[cpu].socket_id;
--
- 		/*
--		 * Encode socket in upper 16 bits
--		 * core_id is relative to socket, and
-+		 * Encode socket in upper 24 bits
-+		 * encode die id in upper 16 bits
-+		 * core_id is relative to socket and die,
- 		 * we need a global id. So we combine
--		 * socket + core id.
-+		 * socket + die id + core id
- 		 */
--		core = (socket_id << 16) | (env->cpu[cpu].core_id & 0xffff);
-+		core = (env->cpu[cpu].socket_id << 24) |
-+		       (env->cpu[cpu].die_id << 16) |
-+		       (env->cpu[cpu].core_id & 0xffff);
- 	}
- 
- 	return core;
-@@ -962,6 +1003,12 @@ static int perf_env__build_socket_map(struct perf_env *env, struct cpu_map *cpus
- 	return cpu_map__build_map(cpus, sockp, perf_env__get_socket, env);
- }
- 
-+static int perf_env__build_die_map(struct perf_env *env, struct cpu_map *cpus,
-+				   struct cpu_map **diep)
-+{
-+	return cpu_map__build_map(cpus, diep, perf_env__get_die, env);
-+}
-+
- static int perf_env__build_core_map(struct perf_env *env, struct cpu_map *cpus,
- 				    struct cpu_map **corep)
- {
-@@ -973,6 +1020,11 @@ static int perf_stat__get_socket_file(struct perf_stat_config *config __maybe_un
- {
- 	return perf_env__get_socket(map, idx, &perf_stat.session->header.env);
- }
-+static int perf_stat__get_die_file(struct perf_stat_config *config __maybe_unused,
-+				   struct cpu_map *map, int idx)
-+{
-+	return perf_env__get_die(map, idx, &perf_stat.session->header.env);
-+}
- 
- static int perf_stat__get_core_file(struct perf_stat_config *config __maybe_unused,
- 				    struct cpu_map *map, int idx)
-@@ -992,6 +1044,13 @@ static int perf_stat_init_aggr_mode_file(struct perf_stat *st)
- 		}
- 		stat_config.aggr_get_id = perf_stat__get_socket_file;
- 		break;
-+	case AGGR_DIE:
-+		if (perf_env__build_die_map(env, evsel_list->cpus, &stat_config.aggr_map)) {
-+			perror("cannot build die map");
-+			return -1;
-+		}
-+		stat_config.aggr_get_id = perf_stat__get_die_file;
-+		break;
- 	case AGGR_CORE:
- 		if (perf_env__build_core_map(env, evsel_list->cpus, &stat_config.aggr_map)) {
- 			perror("cannot build core map");
-@@ -1542,6 +1601,8 @@ static int __cmd_report(int argc, const char **argv)
- 	OPT_STRING('i', "input", &input_name, "file", "input file name"),
- 	OPT_SET_UINT(0, "per-socket", &perf_stat.aggr_mode,
- 		     "aggregate counts per processor socket", AGGR_SOCKET),
-+	OPT_SET_UINT(0, "per-die", &perf_stat.aggr_mode,
-+		     "aggregate counts per processor die", AGGR_DIE),
- 	OPT_SET_UINT(0, "per-core", &perf_stat.aggr_mode,
- 		     "aggregate counts per physical processor core", AGGR_CORE),
- 	OPT_SET_UINT('A', "no-aggr", &perf_stat.aggr_mode,
-diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-index 7db1365..3346ad2 100644
---- a/tools/perf/util/cpumap.c
-+++ b/tools/perf/util/cpumap.c
-@@ -380,6 +380,33 @@ int cpu_map__get_die_id(int cpu)
- 	return ret ?: value;
- }
- 
-+int cpu_map__get_die(struct cpu_map *map, int idx, void *data)
-+{
-+	int cpu, die, s;
-+
-+	if (idx > map->nr)
-+		return -1;
-+
-+	cpu = map->map[idx];
-+
-+	die = cpu_map__get_die_id(cpu);
-+	/* There is no die_id on legacy system. */
-+	if (die == -1)
-+		die = 0;
-+
-+	s = cpu_map__get_socket(map, idx, data);
-+	if (s == -1)
-+		return -1;
-+
-+	/*
-+	 * encode socket in upper 8 bits
-+	 * die_id is relative to socket, and
-+	 * we need a global id. So we combine
-+	 * socket + die id
-+	 */
-+	return (s << 8) | (die & 0xff);
-+}
-+
- int cpu_map__get_core_id(int cpu)
- {
- 	int value, ret = cpu__get_topology_int(cpu, "core_id", &value);
-@@ -388,7 +415,7 @@ int cpu_map__get_core_id(int cpu)
- 
- int cpu_map__get_core(struct cpu_map *map, int idx, void *data)
- {
--	int cpu, s;
-+	int cpu, s, die;
- 
- 	if (idx > map->nr)
- 		return -1;
-@@ -397,17 +424,23 @@ int cpu_map__get_core(struct cpu_map *map, int idx, void *data)
- 
- 	cpu = cpu_map__get_core_id(cpu);
- 
-+	die = cpu_map__get_die(map, idx, data);
-+	/* There is no die_id on legacy system. */
-+	if (die == -1)
-+		die = 0;
-+
- 	s = cpu_map__get_socket(map, idx, data);
- 	if (s == -1)
- 		return -1;
- 
- 	/*
--	 * encode socket in upper 16 bits
--	 * core_id is relative to socket, and
-+	 * encode socket in upper 24 bits
-+	 * encode die id in upper 16 bits
-+	 * core_id is relative to socket and die,
- 	 * we need a global id. So we combine
--	 * socket+ core id
-+	 * socket + die id + core id
- 	 */
--	return (s << 16) | (cpu & 0xffff);
-+	return (s << 24) | (die << 16) | (cpu & 0xffff);
- }
- 
- int cpu_map__build_socket_map(struct cpu_map *cpus, struct cpu_map **sockp)
-@@ -415,6 +448,11 @@ int cpu_map__build_socket_map(struct cpu_map *cpus, struct cpu_map **sockp)
- 	return cpu_map__build_map(cpus, sockp, cpu_map__get_socket, NULL);
- }
- 
-+int cpu_map__build_die_map(struct cpu_map *cpus, struct cpu_map **diep)
-+{
-+	return cpu_map__build_map(cpus, diep, cpu_map__get_die, NULL);
-+}
-+
- int cpu_map__build_core_map(struct cpu_map *cpus, struct cpu_map **corep)
- {
- 	return cpu_map__build_map(cpus, corep, cpu_map__get_core, NULL);
-diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
-index 6762ff9..1265f0e 100644
---- a/tools/perf/util/cpumap.h
-+++ b/tools/perf/util/cpumap.h
-@@ -26,9 +26,11 @@ size_t cpu_map__fprintf(struct cpu_map *map, FILE *fp);
- int cpu_map__get_socket_id(int cpu);
- int cpu_map__get_socket(struct cpu_map *map, int idx, void *data);
- int cpu_map__get_die_id(int cpu);
-+int cpu_map__get_die(struct cpu_map *map, int idx, void *data);
- int cpu_map__get_core_id(int cpu);
- int cpu_map__get_core(struct cpu_map *map, int idx, void *data);
- int cpu_map__build_socket_map(struct cpu_map *cpus, struct cpu_map **sockp);
-+int cpu_map__build_die_map(struct cpu_map *cpus, struct cpu_map **diep);
- int cpu_map__build_core_map(struct cpu_map *cpus, struct cpu_map **corep);
- const struct cpu_map *cpu_map__online(void); /* thread unsafe */
- 
-@@ -44,7 +46,12 @@ static inline int cpu_map__socket(struct cpu_map *sock, int s)
- 
- static inline int cpu_map__id_to_socket(int id)
- {
--	return id >> 16;
-+	return id >> 24;
-+}
-+
-+static inline int cpu_map__id_to_die(int id)
-+{
-+	return (id >> 16) & 0xff;
- }
- 
- static inline int cpu_map__id_to_cpu(int id)
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index 4c53bae..cae1b43 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -69,8 +69,9 @@ static void aggr_printout(struct perf_stat_config *config,
- {
- 	switch (config->aggr_mode) {
- 	case AGGR_CORE:
--		fprintf(config->output, "S%d-C%*d%s%*d%s",
-+		fprintf(config->output, "S%d-D%d-C%*d%s%*d%s",
- 			cpu_map__id_to_socket(id),
-+			cpu_map__id_to_die(id),
- 			config->csv_output ? 0 : -8,
- 			cpu_map__id_to_cpu(id),
- 			config->csv_sep,
-@@ -78,6 +79,16 @@ static void aggr_printout(struct perf_stat_config *config,
- 			nr,
- 			config->csv_sep);
- 		break;
-+	case AGGR_DIE:
-+		fprintf(config->output, "S%d-D%*d%s%*d%s",
-+			cpu_map__id_to_socket(id << 16),
-+			config->csv_output ? 0 : -8,
-+			cpu_map__id_to_die(id << 16),
-+			config->csv_sep,
-+			config->csv_output ? 0 : 4,
-+			nr,
-+			config->csv_sep);
-+		break;
- 	case AGGR_SOCKET:
- 		fprintf(config->output, "S%*d%s%*d%s",
- 			config->csv_output ? 0 : -5,
-@@ -89,8 +100,9 @@ static void aggr_printout(struct perf_stat_config *config,
- 			break;
- 	case AGGR_NONE:
- 		if (evsel->percore) {
--			fprintf(config->output, "S%d-C%*d%s",
-+			fprintf(config->output, "S%d-D%d-C%*d%s",
- 				cpu_map__id_to_socket(id),
-+				cpu_map__id_to_die(id),
- 				config->csv_output ? 0 : -5,
- 				cpu_map__id_to_cpu(id), config->csv_sep);
- 		} else {
-@@ -407,6 +419,7 @@ static void printout(struct perf_stat_config *config, int id, int nr,
- 			[AGGR_THREAD] = 1,
- 			[AGGR_NONE] = 1,
- 			[AGGR_SOCKET] = 2,
-+			[AGGR_DIE] = 2,
- 			[AGGR_CORE] = 2,
- 		};
- 
-@@ -879,7 +892,8 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
- }
- 
- static int aggr_header_lens[] = {
--	[AGGR_CORE] = 18,
-+	[AGGR_CORE] = 24,
-+	[AGGR_DIE] = 18,
- 	[AGGR_SOCKET] = 12,
- 	[AGGR_NONE] = 6,
- 	[AGGR_THREAD] = 24,
-@@ -888,6 +902,7 @@ static int aggr_header_lens[] = {
- 
- static const char *aggr_header_csv[] = {
- 	[AGGR_CORE] 	= 	"core,cpus,",
-+	[AGGR_DIE] 	= 	"die,cpus",
- 	[AGGR_SOCKET] 	= 	"socket,cpus",
- 	[AGGR_NONE] 	= 	"cpu,",
- 	[AGGR_THREAD] 	= 	"comm-pid,",
-@@ -954,6 +969,11 @@ static void print_interval(struct perf_stat_config *config,
- 			if (!metric_only)
- 				fprintf(output, "             counts %*s events\n", unit_width, "unit");
- 			break;
-+		case AGGR_DIE:
-+			fprintf(output, "#           time die cpus");
-+			if (!metric_only)
-+				fprintf(output, "             counts %*s events\n", unit_width, "unit");
-+			break;
- 		case AGGR_CORE:
- 			fprintf(output, "#           time core         cpus");
- 			if (!metric_only)
-@@ -1165,6 +1185,7 @@ perf_evlist__print_counters(struct perf_evlist *evlist,
- 
- 	switch (config->aggr_mode) {
- 	case AGGR_CORE:
-+	case AGGR_DIE:
- 	case AGGR_SOCKET:
- 		print_aggr(config, evlist, prefix);
- 		break;
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 83d8094..027b09a 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -12,6 +12,7 @@
- /*
-  * AGGR_GLOBAL: Use CPU 0
-  * AGGR_SOCKET: Use first CPU of socket
-+ * AGGR_DIE: Use first CPU of die
-  * AGGR_CORE: Use first CPU of core
-  * AGGR_NONE: Use matching CPU
-  * AGGR_THREAD: Not supported?
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index c3115d9..d91fe75 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -272,6 +272,7 @@ process_counter_values(struct perf_stat_config *config, struct perf_evsel *evsel
- 	switch (config->aggr_mode) {
- 	case AGGR_THREAD:
- 	case AGGR_CORE:
-+	case AGGR_DIE:
- 	case AGGR_SOCKET:
- 	case AGGR_NONE:
- 		if (!evsel->snapshot)
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index 2f9c915..7032dd1 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -44,6 +44,7 @@ enum aggr_mode {
- 	AGGR_NONE,
- 	AGGR_GLOBAL,
- 	AGGR_SOCKET,
-+	AGGR_DIE,
- 	AGGR_CORE,
- 	AGGR_THREAD,
- 	AGGR_UNSET,
--- 
-2.7.4
-
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
