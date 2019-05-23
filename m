@@ -2,71 +2,106 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD756C282DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 18:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67799C282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 18:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0D3F2133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 18:25:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558635919;
-	bh=4swXZDyheX0+mVhMrRucUExxVjZCYez9cbpbOfSgUMA=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=bbRGSPY5KZkhlEQE3F1eBXYumEbj7rs72WYkJV0ZzTCNgMKJ+ZN2FZRvJDeaoKAdE
-	 s8rc4+PZrCyotmewuT2M0xeN7s9ZHWWLq/qRKstvqHCASbadrpiXZnwuA5sR/tDspJ
-	 9OTu6ajb29q4Ws8NQUUBbrCMLpuLvNHRkze3sAEw=
+	by mail.kernel.org (Postfix) with ESMTP id 3EF0920815
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 18:28:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ILlcH0LX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731486AbfEWSZT (ORCPT
+        id S1731436AbfEWS2a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 14:25:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33770 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 14:28:30 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:50202 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731237AbfEWSZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 14:25:18 -0400
-Subject: Re: [GIT PULL] xfs: fixes for 5.2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558635917;
-        bh=4swXZDyheX0+mVhMrRucUExxVjZCYez9cbpbOfSgUMA=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=TDkAY1qbMjR7TumFE0radCRAWxn8OnVCid5M71m2yOQndOkkrcZ4aq4Ijy/azVNiG
-         hmShr6Nbt2CSgfHlPI3ZLrSJ72HWXeJ5vXZklm+xNO1ycxKe0oAX6VhVFInaCJYNSJ
-         1kzyvGhL3WX/ldtyGLR4gqHP6efoOaVdLGaW+K7E=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190523153346.GG5141@magnolia>
-References: <20190523153346.GG5141@magnolia>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190523153346.GG5141@magnolia>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
- tags/xfs-5.2-fixes-1
-X-PR-Tracked-Commit-Id: 5cd213b0fec640a46adc5e6e4dfc7763aa54b3b2
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 4dde821e4296e156d133b98ddc4c45861935a4fb
-Message-Id: <155863591788.31149.9259350999930839889.pr-tracker-bot@kernel.org>
-Date:   Thu, 23 May 2019 18:25:17 +0000
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     torvalds@linux-foundation.org,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        sandeen@sandeen.net, hch@lst.de
+        id S1731107AbfEWS2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 14:28:30 -0400
+Received: from cz.tnic (unknown [165.204.77.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8C4C01EC0722;
+        Thu, 23 May 2019 20:28:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1558636108;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=1dFzXcVh5H3mgKQCZ4xmGQdhf/xiGlb61Su3Uj/Yo6c=;
+        b=ILlcH0LXJL/gRjkeOXDR8ELTkSF9fB8PBnYh+hCFeEKx8RnEe6vztTq6GATli7szEoyzSU
+        UEWIWSxA56XlrlkoI6wO6HwRW5jQq+ssIhqVjKWyk+VFdnq6DHBFhemhmoHbTkuqplFFbn
+        sPxFbPUeoS2hjZIA5yehDO7Qqe+Xucw=
+Date:   Thu, 23 May 2019 22:28:17 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+Cc:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCH] x86/MCE: Statically allocate mce_banks_array
+Message-ID: <20190523202754.GA3980@cz.tnic>
+References: <20190523150345.42906-1-Yazen.Ghannam@amd.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190523150345.42906-1-Yazen.Ghannam@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 23 May 2019 08:33:46 -0700:
+On Thu, May 23, 2019 at 03:03:55PM +0000, Ghannam, Yazen wrote:
+> From: Yazen Ghannam <yazen.ghannam@amd.com>
+> 
+> The MCE control data is stored in an array of struct mce_banks. This
+> array has historically been shared by all CPUs and it was allocated
+> dynamically during the first CPU's init sequence.
+> 
+> However, starting with
+> 
+> 	5b0883f5c7be ("x86/MCE: Make mce_banks a per-CPU array")
+> 
+> the array was changed to become a per-CPU array. Each CPU would
+> dynamically allocate the array during its own init sequence.
+> 
+> This seems benign expect when "Lock Debugging" config options are
+> enabled in which case the following message appears.
+> 
+> 	BUG: sleeping function called from invalid context at mm/slab.h:418
+> 
+> The message appears during the secondary CPUs' init sequences. This seems
+> to be because these CPUs are in system_state=SYSTEM_SCHEDULING compared
+> to the primary CPU which is in system_state=SYSTEM_BOOTING.
+> 
+> Allocate the mce_banks_array statically so that this issue can be
+> avoided.
+> 
+> Also, remove the now unnecessary return values from
+> __mcheck_cpu_mce_banks_init() and __mcheck_cpu_cap_init().
+> 
+> Fixes: 5b0883f5c7be ("x86/MCE: Make mce_banks a per-CPU array")
+> Reported-by: kernel test robot <rong.a.chen@intel.com>
+> Suggested-by: Borislav Petkov <bp@suse.de>
+> Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+> ---
+>  arch/x86/kernel/cpu/mce/core.c | 39 ++++++++++++----------------------
+>  1 file changed, 14 insertions(+), 25 deletions(-)
 
-> git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.2-fixes-1
+Can you rediff this patch against tip/master please?
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/4dde821e4296e156d133b98ddc4c45861935a4fb
+It fixes a patch which is already in -rc1 so it needs to go first, into
+urgent, before your patchset.
 
-Thank you!
+Thx.
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Regards/Gruss,
+    Boris.
+
+ECO tip #101: Trim your mails when you reply. Srsly.
