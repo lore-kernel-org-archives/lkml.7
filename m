@@ -2,51 +2,51 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE4CC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6110C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 621E5217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C0882186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639465;
-	bh=FnalDg18hBi6kHR+z/J9Vm5QcBsPty/hXYq3rg0fMHQ=;
+	s=default; t=1558639467;
+	bh=DJK/MLF8I8/9SV0MixHGtroPi+wrkXjpjj37u+nsvLo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BeW7+zin2Q26L5ChqfuvlxEwWnTSzqs6ksghua7yZ2BpYaqs0T82VFnZ/usPNqHCp
-	 QBAIUk/J4y49zMnGRZMWX1wdt5w5joZc3e6/jtaq7+YMIq0jPLmj/Ec+Xuy78+Urba
-	 4ssJfCmcQ+Blu5b3NuyybC4VdvDBiipBsWeM9eCc=
+	b=r2q/+/hMDCIqHW2Edxg6RBfja+K3Gbm5ad+5334WjAtUfBx9hror3GkaQUBdvqWCb
+	 DrKUOVFcMpcKLY69uKGDCTdIfTQb/9Rqh1LLWWRDQCvPF4kfGb7BnfyS478QRgL6AC
+	 0AWYsbbiWpIYeYyz/n789PeXR5ooD5xcI0xwTSZ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390888AbfEWTYY (ORCPT
+        id S2390902AbfEWTY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:24:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35334 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:24:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389589AbfEWTYX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:24:23 -0400
+        id S2390868AbfEWTYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:24:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43C192054F;
-        Thu, 23 May 2019 19:24:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A49921851;
+        Thu, 23 May 2019 19:24:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639462;
-        bh=FnalDg18hBi6kHR+z/J9Vm5QcBsPty/hXYq3rg0fMHQ=;
+        s=default; t=1558639460;
+        bh=DJK/MLF8I8/9SV0MixHGtroPi+wrkXjpjj37u+nsvLo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l2LjDRpYfnt8mX9i9YMX1ScIYXAVSrh0zcufmH4IiJXIyXI7/IVK8U7vJh8U2emLd
-         E4ZsLX7rfzwADBXEDqOcOuXZApkB1dtPYpeyvtogjTk5Ildo0ykKMzhPAWHtgNwaPb
-         PK70m07FezTnYz+ptGBTvjpn7+86jWzHiAlb3Q60=
+        b=WDcuIiz8sMFUWTRpaNdHSQf5TF2PCY3H0qlcNKEz/7CKIecIhirBuqfw52AWiKtqY
+         RTcYTFfAA/qoOFpQSsuVfhKteKsClsuQf0JrxndP4SEPe3xnHLZC7o/y2Cn2LiSeNj
+         JBXtAWSpYlIelSVdKiobk5EHaklQqCzIH4HMqSMo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        stable@vger.kernel.org, Milan Broz <gmazyland@gmail.com>,
         Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.0 097/139] dm integrity: correctly calculate the size of metadata area
-Date:   Thu, 23 May 2019 21:06:25 +0200
-Message-Id: <20190523181733.202230618@linuxfoundation.org>
+Subject: [PATCH 5.0 096/139] dm crypt: move detailed message into debug level
+Date:   Thu, 23 May 2019 21:06:24 +0200
+Message-Id: <20190523181733.086735055@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -59,48 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Milan Broz <gmazyland@gmail.com>
 
-commit 30bba430ddf737978e40561198693ba91386dac1 upstream.
+commit 7a1cd7238fde6ab367384a4a2998cba48330c398 upstream.
 
-When we use separate devices for data and metadata, dm-integrity would
-incorrectly calculate the size of the metadata device as if it had
-512-byte block size - and it would refuse activation with larger block
-size and smaller metadata device.
+The information about tag size should not be printed without debug info
+set. Also print device major:minor in the error message to identify the
+device instance.
 
-Fix this so that it takes actual block size into account, which fixes
-the following reported issue:
-https://gitlab.com/cryptsetup/cryptsetup/issues/450
+Also use rate limiting and debug level for info about used crypto API
+implementaton.  This is important because during online reencryption
+the existing message saturates syslog (because we are moving hotzone
+across the whole device).
 
-Fixes: 356d9d52e122 ("dm integrity: allow separate metadata device")
-Cc: stable@vger.kernel.org # v4.19+
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Milan Broz <gmazyland@gmail.com>
 Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-integrity.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/md/dm-crypt.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/drivers/md/dm-integrity.c
-+++ b/drivers/md/dm-integrity.c
-@@ -2568,7 +2568,7 @@ static int calculate_device_limits(struc
- 		if (last_sector < ic->start || last_sector >= ic->meta_device_sectors)
+--- a/drivers/md/dm-crypt.c
++++ b/drivers/md/dm-crypt.c
+@@ -949,6 +949,7 @@ static int crypt_integrity_ctr(struct cr
+ {
+ #ifdef CONFIG_BLK_DEV_INTEGRITY
+ 	struct blk_integrity *bi = blk_get_integrity(cc->dev->bdev->bd_disk);
++	struct mapped_device *md = dm_table_get_md(ti->table);
+ 
+ 	/* From now we require underlying device with our integrity profile */
+ 	if (!bi || strcasecmp(bi->profile->name, "DM-DIF-EXT-TAG")) {
+@@ -968,7 +969,7 @@ static int crypt_integrity_ctr(struct cr
+ 
+ 	if (crypt_integrity_aead(cc)) {
+ 		cc->integrity_tag_size = cc->on_disk_tag_size - cc->integrity_iv_size;
+-		DMINFO("Integrity AEAD, tag size %u, IV size %u.",
++		DMDEBUG("%s: Integrity AEAD, tag size %u, IV size %u.", dm_device_name(md),
+ 		       cc->integrity_tag_size, cc->integrity_iv_size);
+ 
+ 		if (crypto_aead_setauthsize(any_tfm_aead(cc), cc->integrity_tag_size)) {
+@@ -976,7 +977,7 @@ static int crypt_integrity_ctr(struct cr
  			return -EINVAL;
- 	} else {
--		__u64 meta_size = ic->provided_data_sectors * ic->tag_size;
-+		__u64 meta_size = (ic->provided_data_sectors >> ic->sb->log2_sectors_per_block) * ic->tag_size;
- 		meta_size = (meta_size + ((1U << (ic->log2_buffer_sectors + SECTOR_SHIFT)) - 1))
- 				>> (ic->log2_buffer_sectors + SECTOR_SHIFT);
- 		meta_size <<= ic->log2_buffer_sectors;
-@@ -3439,7 +3439,7 @@ try_smaller_buffer:
- 	DEBUG_print("	journal_sections %u\n", (unsigned)le32_to_cpu(ic->sb->journal_sections));
- 	DEBUG_print("	journal_entries %u\n", ic->journal_entries);
- 	DEBUG_print("	log2_interleave_sectors %d\n", ic->sb->log2_interleave_sectors);
--	DEBUG_print("	device_sectors 0x%llx\n", (unsigned long long)ic->device_sectors);
-+	DEBUG_print("	data_device_sectors 0x%llx\n", (unsigned long long)ic->data_device_sectors);
- 	DEBUG_print("	initial_sectors 0x%x\n", ic->initial_sectors);
- 	DEBUG_print("	metadata_run 0x%x\n", ic->metadata_run);
- 	DEBUG_print("	log2_metadata_run %d\n", ic->log2_metadata_run);
+ 		}
+ 	} else if (cc->integrity_iv_size)
+-		DMINFO("Additional per-sector space %u bytes for IV.",
++		DMDEBUG("%s: Additional per-sector space %u bytes for IV.", dm_device_name(md),
+ 		       cc->integrity_iv_size);
+ 
+ 	if ((cc->integrity_tag_size + cc->integrity_iv_size) != bi->tag_size) {
+@@ -1890,7 +1891,7 @@ static int crypt_alloc_tfms_skcipher(str
+ 	 * algorithm implementation is used.  Help people debug performance
+ 	 * problems by logging the ->cra_driver_name.
+ 	 */
+-	DMINFO("%s using implementation \"%s\"", ciphermode,
++	DMDEBUG_LIMIT("%s using implementation \"%s\"", ciphermode,
+ 	       crypto_skcipher_alg(any_tfm(cc))->base.cra_driver_name);
+ 	return 0;
+ }
+@@ -1910,7 +1911,7 @@ static int crypt_alloc_tfms_aead(struct
+ 		return err;
+ 	}
+ 
+-	DMINFO("%s using implementation \"%s\"", ciphermode,
++	DMDEBUG_LIMIT("%s using implementation \"%s\"", ciphermode,
+ 	       crypto_aead_alg(any_tfm_aead(cc))->base.cra_driver_name);
+ 	return 0;
+ }
 
 
