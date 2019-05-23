@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D44C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C85C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A560F205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D89B217D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:18:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639090;
-	bh=7vPKA9ZlXsXxn+QL8U0amaJz9QPnomdJ8hm9ynBSpzc=;
+	s=default; t=1558639094;
+	bh=m00MS62AnepkM7lQYAoP56lp6ODo9R8Wy3Zth4c/3Zg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ybpOpP8h2ExRZ7F89DP+9O0fzLuZ4T7+hz1vAy/TTBh7ZQ/Ry1IeJH5UBkObrU/hP
-	 Dq8Yy1bcAAbIlinHYOJpN5+v4nPLRT1DLIZlYT93ea4UbxlnGrEaE8fSiXNu+ezjqF
-	 S871iJB3nF18uIQySq9NVzKDS9uOMZywv0xtUh8s=
+	b=bFzaSm6UuI0hUBSylEEkIRgRfUL1zeiev4D6h8Trv6+fa6TSMps72EZhiUtgflZU4
+	 y0IAJP22n5EqMGqUeKiZOaFWezOzIFwxGFhEuJPkf/tdY6uehtKylNEMmn7jgE7NmD
+	 DESPBVlzzsuGEY5daEXfgDLSD2qV0qFj5UPBjGu0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389538AbfEWTSJ (ORCPT
+        id S2389548AbfEWTSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:18:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53406 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:18:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389514AbfEWTSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:18:04 -0400
+        id S2389523AbfEWTSJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:18:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2234F20863;
-        Thu, 23 May 2019 19:18:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81C3B20863;
+        Thu, 23 May 2019 19:18:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639083;
-        bh=7vPKA9ZlXsXxn+QL8U0amaJz9QPnomdJ8hm9ynBSpzc=;
+        s=default; t=1558639089;
+        bh=m00MS62AnepkM7lQYAoP56lp6ODo9R8Wy3Zth4c/3Zg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T7idqLbXNeRf+yBvyOzmT9XyVgOhg0zTnW/I5Q4jCISFyeUiCK3trZroChkHgBtss
-         hdIm0eIn5qsByrA6nmy0M9PjkMQyqYAAqiARKouC3/o3afz6BzP8xMihWNiIF3P1cM
-         gxyNGUNyqMXlj22H+85+mXFxUcMA6fKjfDBO+sIU=
+        b=hc0OTAYTxE70FSNnNv2HAiEQTBQRTWgbMNyXyZCiDKDT0AFE8d62TSI0rl+0NKIJ7
+         iaSZMkAr/E2aIEW+/RckJYf2/z5o3mo4NEZ2w42y96g2inJ5XfRParjl8hoqRhq5PS
+         IViV12o7bbQAw6xYaIqcbhmWQYShttKVxFgcIXtQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        James Prestwood <james.prestwood@linux.intel.com>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
         Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 4.19 071/114] PCI: Mark Atheros AR9462 to avoid bus reset
-Date:   Thu, 23 May 2019 21:06:10 +0200
-Message-Id: <20190523181738.184583032@linuxfoundation.org>
+Subject: [PATCH 4.19 073/114] PCI/AER: Change pci_aer_init() stub to return void
+Date:   Thu, 23 May 2019 21:06:12 +0200
+Message-Id: <20190523181738.356645222@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
 References: <20190523181731.372074275@linuxfoundation.org>
@@ -60,34 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Prestwood <james.prestwood@linux.intel.com>
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 
-commit 6afb7e26978da5e86e57e540fdce65c8b04f398a upstream.
+commit 31f996efbd5a7825f4d30150469e9d110aea00e8 upstream.
 
-When using PCI passthrough with this device, the host machine locks up
-completely when starting the VM, requiring a hard reboot.  Add a quirk to
-avoid bus resets on this device.
+Commit 60ed982a4e78 ("PCI/AER: Move internal declarations to
+drivers/pci/pci.h") changed pci_aer_init() to return "void", but didn't
+change the stub for when CONFIG_PCIEAER isn't enabled.  Change the stub to
+match.
 
-Fixes: c3e59ee4e766 ("PCI: Mark Atheros AR93xx to avoid bus reset")
-Link: https://lore.kernel.org/linux-pci/20190107213248.3034-1-james.prestwood@linux.intel.com
-Signed-off-by: James Prestwood <james.prestwood@linux.intel.com>
+Fixes: 60ed982a4e78 ("PCI/AER: Move internal declarations to drivers/pci/pci.h")
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-CC: stable@vger.kernel.org	# v3.14+
+CC: stable@vger.kernel.org	# v4.19+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/quirks.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/pci.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -3383,6 +3383,7 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_A
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0032, quirk_no_bus_reset);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x003c, quirk_no_bus_reset);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0033, quirk_no_bus_reset);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0034, quirk_no_bus_reset);
- 
- /*
-  * Root port on some Cavium CN8xxx chips do not successfully complete a bus
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -530,7 +530,7 @@ void pci_aer_clear_fatal_status(struct p
+ void pci_aer_clear_device_status(struct pci_dev *dev);
+ #else
+ static inline void pci_no_aer(void) { }
+-static inline int pci_aer_init(struct pci_dev *d) { return -ENODEV; }
++static inline void pci_aer_init(struct pci_dev *d) { }
+ static inline void pci_aer_exit(struct pci_dev *d) { }
+ static inline void pci_aer_clear_fatal_status(struct pci_dev *dev) { }
+ static inline void pci_aer_clear_device_status(struct pci_dev *dev) { }
 
 
