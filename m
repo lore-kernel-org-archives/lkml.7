@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C50FC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34CB7C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24BC420673
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:32:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01F8420675
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:32:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639945;
-	bh=UzqSZtW2KajiKLccwmz24NY1Imd9fAY7yZ/3SJfDf2M=;
+	s=default; t=1558639952;
+	bh=GS0tX16/BUOw5pgwhsBCxb0NVNf2p/tJmSBmNjtGIHo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ySeviGMEgy6M5OJGtliUGZr27k6CkeE6h5bD0XUFDafpRvshCmIolV0ZLynIV7EX6
-	 wkWkoMiE5VT/l6qkCFL/3Jwj/ma1dJRN1fybMj5uenRAoUmf4YN56LynTnCAai++Z0
-	 wBY01RR+JDcjKtPzMayH45IGqBZgp9VUGgtEFDJA=
+	b=uzAWlTNqiA2/S/60KcAeRaOFf6ABSwK2/X5G3VHJy6H611S6JMkjB2YAt4usIFSAm
+	 nN6pFLbyyOU03VvvKtCsLS57WDsSz0+aYIzNdiZpAxe1Dlbw0SpYPI0pd9vfLeIqIN
+	 Kgu/FXC/oQymA7/+5kMU81PCiSF/6UDo8NW2VWLo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392183AbfEWTcY (ORCPT
+        id S2391947AbfEWTan (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:32:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44530 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:30:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391703AbfEWTax (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:30:53 -0400
+        id S2403787AbfEWTak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:30:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0D932133D;
-        Thu, 23 May 2019 19:30:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19BD821855;
+        Thu, 23 May 2019 19:30:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639853;
-        bh=UzqSZtW2KajiKLccwmz24NY1Imd9fAY7yZ/3SJfDf2M=;
+        s=default; t=1558639839;
+        bh=GS0tX16/BUOw5pgwhsBCxb0NVNf2p/tJmSBmNjtGIHo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rNevLWMLQgoyC6ZM27gIj+ct6+rsCw801cdCbzIAYDoX8T4QetbAOhYHmevAYQH8V
-         FlL0Ame6E/9lPzOf+yisFnjsGp8uUc8dpQiSP48ySdi8QKt+yYNrvIzKI/Oxx/Bkx6
-         36fSyT+HpZm5bzZq9VVXD7kx1JFSoFkGbz8hJYMA=
+        b=nP9QjqrVImWFczYj1Nr5iV5e9hbLSJzdKoRq8cxtnV+c/uhULrSsC1dM2UvLfoV1I
+         dJISPueTFllDb3sJwLQdhEGhZM0B7NfW5Ppr4hPn6wKXjfvN0Z1QpsQiW2fTfnaHip
+         6RsnaxZP6dQ2vmVyhJuYsfV4lp6himkskkHWo2uY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Stefan=20M=C3=A4tje?= <stefan.maetje@esd.eu>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 5.1 100/122] PCI: Factor out pcie_retrain_link() function
-Date:   Thu, 23 May 2019 21:07:02 +0200
-Message-Id: <20190523181718.501169582@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Lass <bevan@bi-co.net>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 5.1 111/122] dm: make sure to obey max_io_len_target_boundary
+Date:   Thu, 23 May 2019 21:07:13 +0200
+Message-Id: <20190523181720.134658446@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -61,85 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Mätje <stefan.maetje@esd.eu>
+From: Michael Lass <bevan@bi-co.net>
 
-commit 86fa6a344209d9414ea962b1f1ac6ade9dd7563a upstream.
+commit 51b86f9a8d1c4bb4e3862ee4b4c5f46072f7520d upstream.
 
-Factor out pcie_retrain_link() to use for Pericom Retrain Link quirk.  No
-functional change intended.
+Commit 61697a6abd24 ("dm: eliminate 'split_discard_bios' flag from DM
+target interface") incorrectly removed code from
+__send_changing_extent_only() that is required to impose a per-target IO
+boundary on IO that exceeds max_io_len_target_boundary().  Otherwise
+"special" IO (e.g. DISCARD, WRITE SAME, WRITE ZEROES) can write beyond
+where allowed.
 
-Signed-off-by: Stefan Mätje <stefan.maetje@esd.eu>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC: stable@vger.kernel.org
+Fix this by restoring the max_io_len_target_boundary() limit in
+__send_changing_extent_only()
+
+Fixes: 61697a6abd24 ("dm: eliminate 'split_discard_bios' flag from DM target interface")
+Cc: stable@vger.kernel.org # 5.1+
+Signed-off-by: Michael Lass <bevan@bi-co.net>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/pcie/aspm.c |   40 ++++++++++++++++++++++++----------------
- 1 file changed, 24 insertions(+), 16 deletions(-)
+ drivers/md/dm.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -196,6 +196,29 @@ static void pcie_clkpm_cap_init(struct p
- 	link->clkpm_capable = (blacklist) ? 0 : capable;
- }
- 
-+static bool pcie_retrain_link(struct pcie_link_state *link)
-+{
-+	struct pci_dev *parent = link->pdev;
-+	unsigned long start_jiffies;
-+	u16 reg16;
-+
-+	pcie_capability_read_word(parent, PCI_EXP_LNKCTL, &reg16);
-+	reg16 |= PCI_EXP_LNKCTL_RL;
-+	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
-+
-+	/* Wait for link training end. Break out after waiting for timeout */
-+	start_jiffies = jiffies;
-+	for (;;) {
-+		pcie_capability_read_word(parent, PCI_EXP_LNKSTA, &reg16);
-+		if (!(reg16 & PCI_EXP_LNKSTA_LT))
-+			break;
-+		if (time_after(jiffies, start_jiffies + LINK_RETRAIN_TIMEOUT))
-+			break;
-+		msleep(1);
-+	}
-+	return !(reg16 & PCI_EXP_LNKSTA_LT);
-+}
-+
- /*
-  * pcie_aspm_configure_common_clock: check if the 2 ends of a link
-  *   could use common clock. If they are, configure them to use the
-@@ -205,7 +228,6 @@ static void pcie_aspm_configure_common_c
+--- a/drivers/md/dm.c
++++ b/drivers/md/dm.c
+@@ -1467,7 +1467,7 @@ static unsigned get_num_write_zeroes_bio
+ static int __send_changing_extent_only(struct clone_info *ci, struct dm_target *ti,
+ 				       unsigned num_bios)
  {
- 	int same_clock = 1;
- 	u16 reg16, parent_reg, child_reg[8];
--	unsigned long start_jiffies;
- 	struct pci_dev *child, *parent = link->pdev;
- 	struct pci_bus *linkbus = parent->subordinate;
+-	unsigned len = ci->sector_count;
++	unsigned len;
+ 
  	/*
-@@ -263,21 +285,7 @@ static void pcie_aspm_configure_common_c
- 		reg16 &= ~PCI_EXP_LNKCTL_CCC;
- 	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
+ 	 * Even though the device advertised support for this type of
+@@ -1478,6 +1478,8 @@ static int __send_changing_extent_only(s
+ 	if (!num_bios)
+ 		return -EOPNOTSUPP;
  
--	/* Retrain link */
--	reg16 |= PCI_EXP_LNKCTL_RL;
--	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
--
--	/* Wait for link training end. Break out after waiting for timeout */
--	start_jiffies = jiffies;
--	for (;;) {
--		pcie_capability_read_word(parent, PCI_EXP_LNKSTA, &reg16);
--		if (!(reg16 & PCI_EXP_LNKSTA_LT))
--			break;
--		if (time_after(jiffies, start_jiffies + LINK_RETRAIN_TIMEOUT))
--			break;
--		msleep(1);
--	}
--	if (!(reg16 & PCI_EXP_LNKSTA_LT))
-+	if (pcie_retrain_link(link))
- 		return;
++	len = min((sector_t)ci->sector_count, max_io_len_target_boundary(ci->sector, ti));
++
+ 	__send_duplicate_bios(ci, ti, num_bios, &len);
  
- 	/* Training failed. Restore common clock configurations */
+ 	ci->sector += len;
 
 
