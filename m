@@ -2,189 +2,160 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BC2C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44996C282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70F5B2175B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:03:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6FF72175B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:06:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oB87+ku4"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="i8PEXjCT";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="M3OmUr98"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388563AbfEWXDQ (ORCPT
+        id S2388357AbfEWXGV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 19:03:16 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:37956 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387725AbfEWXDQ (ORCPT
+        Thu, 23 May 2019 19:06:21 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:56278 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387725AbfEWXGU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 19:03:16 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4NN1FVt059399;
-        Thu, 23 May 2019 23:02:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2018-07-02; bh=61U1g4Qwd+YXNHX5FwhqRFWvGU28Frzm1PU4OuNdzOA=;
- b=oB87+ku4KgSUdUPd4v61zpy+5bs2hMSwlRIWhIviu7YuuLj+QkXfdMN6RgecNnsgbcUK
- b+kwRhKyDblJf0RMk0lkhMjju64jy+4U8Y7y41C3FCD1D5GhJjKHeVCG5eyAePMxkSfD
- lJm3/IfLdf7bA4KN15jOIGrx7pcjEpBUezcUY/Iatighda2YU0Um4LK1DPuoo4B4gYd0
- 9MoJ08yDruASgKnOMQHIAEd7qPdRyqQku0e0AoCxIHyA5cM7p3f9bGFCaCj+aqM+rEZu
- 9ja6s5+oYCoiTLzfSYADK2bBYcyqniZ9A/7KI8NlvEmvwLghG470oUp/maD3MCAPo5Aw rQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2130.oracle.com with ESMTP id 2smsk5ngmk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 May 2019 23:02:47 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4NN18uj056885;
-        Thu, 23 May 2019 23:02:46 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2smshfhc0r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 May 2019 23:02:46 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4NN2foL000641;
-        Thu, 23 May 2019 23:02:41 GMT
-Received: from anon-dhcp-171.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 23 May 2019 23:02:41 +0000
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH net-next] xprtrdma: Use struct_size() in kzalloc()
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <70ca0dea-6f1f-922c-7c5d-e79c6cf6ecb5@embeddedor.com>
-Date:   Thu, 23 May 2019 19:02:39 -0400
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Bruce Fields <bfields@fieldses.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <CDDB9617-08B2-43B6-AB03-3BAA7CC27839@oracle.com>
-References: <20190131004622.GA30261@embeddedor>
- <07CB966E-A946-4956-8480-C0FC13E13E4E@oracle.com>
- <ad9eccc7-afd2-3419-b886-6210eeabd5b5@embeddedor.com>
- <70ca0dea-6f1f-922c-7c5d-e79c6cf6ecb5@embeddedor.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9266 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905230148
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9266 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905230148
+        Thu, 23 May 2019 19:06:20 -0400
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x4NN3Nxi006423;
+        Thu, 23 May 2019 16:06:06 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=phIreuEgZGB7hQWiDfT5EjSzPgXajjPLmKUroPJW/3o=;
+ b=i8PEXjCTErOrFLbO0ALMQ0L7wXcHg3OD4nWtbBXeBZdK3pZNyQcZ2V0EA7lamYXMu3v9
+ 3Pjgob4yxCL5qIJBb3yYinLylsDLWXYKN7avV2eXZAwkBCYC9M5OsBY3OIu00D/z0ccu
+ xxIWpGg+4YYhJsxU/QwGEJ+xOzk6r7VVSzQ= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0089730.ppops.net with ESMTP id 2sp3gm89eg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 23 May 2019 16:06:06 -0700
+Received: from ash-exopmbx201.TheFacebook.com (2620:10d:c0a8:83::8) by
+ ash-exhub104.TheFacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 23 May 2019 16:06:05 -0700
+Received: from ash-exhub203.TheFacebook.com (2620:10d:c0a8:83::5) by
+ ash-exopmbx201.TheFacebook.com (2620:10d:c0a8:83::8) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 23 May 2019 16:06:05 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 23 May 2019 16:06:05 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=phIreuEgZGB7hQWiDfT5EjSzPgXajjPLmKUroPJW/3o=;
+ b=M3OmUr98ek40/t9N6LlZebmgfWE530LBmu3qBg7KiP+NIuatCTImUALCF80GgyRMR+EZFr08P871ouMbStX+VVNFBUizMIn5xfUyw/vbDZIYj8U+xrfum+DPq/+LTY8ESux4TCt+FxWjuvvdh4NKPKhjDs/A6VqejIa5RWp8MYU=
+Received: from BYAPR15MB3384.namprd15.prod.outlook.com (20.179.59.17) by
+ BYAPR15MB2247.namprd15.prod.outlook.com (52.135.197.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.18; Thu, 23 May 2019 23:06:03 +0000
+Received: from BYAPR15MB3384.namprd15.prod.outlook.com
+ ([fe80::956e:28a4:f18d:b698]) by BYAPR15MB3384.namprd15.prod.outlook.com
+ ([fe80::956e:28a4:f18d:b698%3]) with mapi id 15.20.1900.020; Thu, 23 May 2019
+ 23:06:03 +0000
+From:   Yonghong Song <yhs@fb.com>
+To:     Roman Gushchin <guro@fb.com>
+CC:     Alexei Starovoitov <ast@kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Tejun Heo <tj@kernel.org>, Kernel Team <Kernel-team@fb.com>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        Stanislav Fomichev <sdf@fomichev.me>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 bpf-next 4/4] selftests/bpf: add auto-detach test
+Thread-Topic: [PATCH v2 bpf-next 4/4] selftests/bpf: add auto-detach test
+Thread-Index: AQHVEPUtUUkH/nhO2UeBDfLyvw3JgKZ4NA4AgADMVQCAAFXeAA==
+Date:   Thu, 23 May 2019 23:06:02 +0000
+Message-ID: <5a44b791-899b-5638-4c75-235a31a0cb4d@fb.com>
+References: <20190522232051.2938491-1-guro@fb.com>
+ <20190522232051.2938491-5-guro@fb.com>
+ <f7953267-8559-2f58-f39a-b2b0c3bf2e38@fb.com>
+ <20190523175833.GA7107@tower.DHCP.thefacebook.com>
+In-Reply-To: <20190523175833.GA7107@tower.DHCP.thefacebook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR02CA0067.namprd02.prod.outlook.com
+ (2603:10b6:a03:54::44) To BYAPR15MB3384.namprd15.prod.outlook.com
+ (2603:10b6:a03:10e::17)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::d011]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c502961f-2783-4dcc-e7d3-08d6dfd33a31
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR15MB2247;
+x-ms-traffictypediagnostic: BYAPR15MB2247:
+x-microsoft-antispam-prvs: <BYAPR15MB2247192229D6313D1E8FBAE3D3010@BYAPR15MB2247.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 00462943DE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(376002)(39860400002)(366004)(346002)(136003)(189003)(199004)(478600001)(6636002)(25786009)(6862004)(4326008)(102836004)(31686004)(14454004)(229853002)(6116002)(37006003)(2906002)(5660300002)(316002)(68736007)(6506007)(6512007)(66946007)(73956011)(53546011)(31696002)(86362001)(6486002)(66476007)(386003)(66446008)(66556008)(64756008)(54906003)(36756003)(6436002)(486006)(256004)(46003)(5024004)(99286004)(14444005)(446003)(71190400001)(71200400001)(186003)(53936002)(76176011)(305945005)(7736002)(52116002)(2616005)(81156014)(476003)(11346002)(8676002)(81166006)(8936002)(6246003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2247;H:BYAPR15MB3384.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: jBckefJ74sVsi0NXxXtCKUIXUnIoE9k6R8wKjsEnEM+SOaVAllSoUlqNdBPfyEUn5l5g2tS1Q/HUjfH3c2y6K+/mJzaHRpSPuBh4qlxgIVPl5pssiAoB5wvj8TnKZLn9qJB2SRgrV/5i1lBAJcL3ZLCWOLxX/7CkL04oAABX35Rmk44D3ivA784T0yWd9ofdqRK1hZ4wqe1n86UZCNHzE/lpOt7qzvewiDElkkZBQ0xCN7Jw7DBcEBpQkjlzE72/uMs/2HMr1Md1TO5CQoLjfV4TaO6yPBYKKyuVu5h2RYdKxUrvzXHFBCk3kFakIxBeobH+OMD8KR2U9txZtXrHLoYrw5ZYjDTeSHlOKofJAgZoM8ktwz5v0HGTqDhq+nV8PXyoS2YfX/woMDDfhiHjFUtVFtJiBJMPff3iLfvq0a0=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <15E0BB2E1DBFAF4DB4358347764A8F5A@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: c502961f-2783-4dcc-e7d3-08d6dfd33a31
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2019 23:06:03.0574
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2247
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-23_17:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905230149
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gustavo-
-
-Anna is supposed to take patches for xprtrdma/ .
-
-
-> On May 23, 2019, at 6:36 PM, Gustavo A. R. Silva =
-<gustavo@embeddedor.com> wrote:
->=20
-> Hi Dave,
->=20
-> I wonder if you can take this patch.
->=20
-> Thanks
-> --
-> Gustavo
->=20
-> On 3/28/19 3:41 PM, Gustavo A. R. Silva wrote:
->> Hi all,
->>=20
->> Friendly ping:
->>=20
->> Who can take this?
->>=20
->> Thanks
->> --
->> Gustavo
->>=20
->> On 1/31/19 8:11 AM, Chuck Lever wrote:
->>>=20
->>>=20
->>>> On Jan 30, 2019, at 7:46 PM, Gustavo A. R. Silva =
-<gustavo@embeddedor.com> wrote:
->>>>=20
->>>> One of the more common cases of allocation size calculations is =
-finding
->>>> the size of a structure that has a zero-sized array at the end, =
-along
->>>> with memory for some number of elements for that array. For =
-example:
->>>>=20
->>>> struct foo {
->>>>   int stuff;
->>>>   struct boo entry[];
->>>> };
->>>>=20
->>>> instance =3D kzalloc(sizeof(struct foo) + count * sizeof(struct =
-boo), GFP_KERNEL);
->>>>=20
->>>> Instead of leaving these open-coded and prone to type mistakes, we =
-can
->>>> now use the new struct_size() helper:
->>>>=20
->>>> instance =3D kzalloc(struct_size(instance, entry, count), =
-GFP_KERNEL);
->>>>=20
->>>> This code was detected with the help of Coccinelle.
->>>>=20
->>>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
->>>=20
->>> Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
->>>=20
->>>=20
->>>> ---
->>>> net/sunrpc/xprtrdma/verbs.c | 3 +--
->>>> 1 file changed, 1 insertion(+), 2 deletions(-)
->>>>=20
->>>> diff --git a/net/sunrpc/xprtrdma/verbs.c =
-b/net/sunrpc/xprtrdma/verbs.c
->>>> index 4994e75945b8..9e8cf7456840 100644
->>>> --- a/net/sunrpc/xprtrdma/verbs.c
->>>> +++ b/net/sunrpc/xprtrdma/verbs.c
->>>> @@ -811,8 +811,7 @@ static struct rpcrdma_sendctx =
-*rpcrdma_sendctx_create(struct rpcrdma_ia *ia)
->>>> {
->>>> 	struct rpcrdma_sendctx *sc;
->>>>=20
->>>> -	sc =3D kzalloc(sizeof(*sc) +
->>>> -		     ia->ri_max_send_sges * sizeof(struct ib_sge),
->>>> +	sc =3D kzalloc(struct_size(sc, sc_sges, ia->ri_max_send_sges),
->>>> 		     GFP_KERNEL);
->>>> 	if (!sc)
->>>> 		return NULL;
->>>> --=20
->>>> 2.20.1
->>>>=20
->>>=20
->>> --
->>> Chuck Lever
->>>=20
->>>=20
->>>=20
-
---
-Chuck Lever
-
-
-
+DQoNCk9uIDUvMjMvMTkgMTA6NTggQU0sIFJvbWFuIEd1c2hjaGluIHdyb3RlOg0KPiBPbiBXZWQs
+IE1heSAyMiwgMjAxOSBhdCAxMDo0NzoyNFBNIC0wNzAwLCBZb25naG9uZyBTb25nIHdyb3RlOg0K
+Pj4NCj4+DQo+PiBPbiA1LzIyLzE5IDQ6MjAgUE0sIFJvbWFuIEd1c2hjaGluIHdyb3RlOg0KPj4+
+IEFkZCBhIGtzZWxmdGVzdCB0byBjb3ZlciBicGYgYXV0by1kZXRhY2htZW50IGZ1bmN0aW9uYWxp
+dHkuDQo+Pj4gVGhlIHRlc3QgY3JlYXRlcyBhIGNncm91cCwgYXNzb2NpYXRlcyBzb21lIHJlc291
+cmNlcyB3aXRoIGl0LA0KPj4+IGF0dGFjaGVzIGEgY291cGxlIG9mIGJwZiBwcm9ncmFtcyBhbmQg
+ZGVsZXRlcyB0aGUgY2dyb3VwLg0KPj4+DQo+Pj4gVGhlbiBpdCBjaGVja3MgdGhhdCBicGYgcHJv
+Z3JhbXMgYXJlIGdvaW5nIGF3YXkgaW4gNSBzZWNvbmRzLg0KPj4+DQo+Pj4gRXhwZWN0ZWQgb3V0
+cHV0Og0KPj4+ICAgICAkIC4vdGVzdF9jZ3JvdXBfYXR0YWNoDQo+Pj4gICAgICNvdmVycmlkZTpQ
+QVNTDQo+Pj4gICAgICNtdWx0aTpQQVNTDQo+Pj4gICAgICNhdXRvZGV0YWNoOlBBU1MNCj4+PiAg
+ICAgdGVzdF9jZ3JvdXBfYXR0YWNoOlBBU1MNCj4+Pg0KPj4+IE9uIGEga2VybmVsIHdpdGhvdXQg
+YXV0by1kZXRhY2hpbmc6DQo+Pj4gICAgICQgLi90ZXN0X2Nncm91cF9hdHRhY2gNCj4+PiAgICAg
+I292ZXJyaWRlOlBBU1MNCj4+PiAgICAgI211bHRpOlBBU1MNCj4+PiAgICAgI2F1dG9kZXRhY2g6
+RkFJTA0KPj4+ICAgICB0ZXN0X2Nncm91cF9hdHRhY2g6RkFJTA0KPj4NCj4+IEkgcmFuIHRoaXMg
+cHJvYmxlbSB3aXRob3V0IGJvdGggb2xkIGFuZCBuZXcga2VybmVscyBhbmQNCj4+IGJvdGggZ2V0
+IGFsbCBQQVNTZXMuIE15IHRlc3RpbmcgZW52aXJvbm1lbnQgaXMgYSBWTS4NCj4+IENvdWxkIHlv
+dSBzcGVjaWZ5IGhvdyB0byB0cmlnZ2VyIHRoZSBhYm92ZSBmYWlsdXJlPw0KPiANCj4gTW9zdCBs
+aWtlbHkgeW91J3JlIHJ1bm5pbmcgY2dyb3VwIHYxLCBzbyB0aGUgbWVtb3J5IGNvbnRyb2xsZXIN
+Cj4gaXMgbm90IGVuYWJsZWQgb24gdW5pZmllZCBoaWVyYXJjaHkuIFlvdSBuZWVkIHRvIHBhc3MN
+Cj4gImNncm91cF9ub192MT1hbGwgc3lzdGVtZC51bmlmaWVkX2Nncm91cF9oaWVyYXJjaHk9MSIN
+Cj4gYXMgYm9vdCB0aW1lIG9wdGlvbnMgdG8gcnVuIGZ1bGx5IG9uIGNncm91cCB2Mi4NCg0KSSB0
+ZXN0ZWQgb24gYSBjZ3JvdXAgdjIgbWFjaGluZSBhbmQgaXQgaW5kZWVkIGZhaWxlZCB3aXRob3V0
+DQp0aGUgY29yZSBwYXRjaC4gVGhhbmtzIQ0KDQo+IA0KPiBCdXQgZ2VuZXJhbGx5IHNwZWFraW5n
+LCB0aGUgbGlmZWN5Y2xlIG9mIGEgZHlpbmcgY2dyb3VwIGlzDQo+IGNvbXBsZXRlbHkgaW1wbGVt
+ZW50YXRpb24tZGVmaW5lZC4gTm8gZ3VhcmFudGVlcyBhcmUgcHJvdmlkZWQuDQo+IFNvIGZhbHNl
+IHBvc2l0aXZlcyBhcmUgZmluZSBoZXJlLCBhbmQgc2hvdWxkbid0IGJlIGNvbnNpZGVyZWQgYXMN
+Cj4gc29tZXRoaW5nIGJhZC4NCj4gDQo+IEF0IHRoZSBlbmQgYWxsIHdlIHdhbnQgaXQgdG8gZGV0
+YWNoIHByb2dyYW1zIGluIGEgcmVhc29uYWJsZSB0aW1lDQo+IGFmdGVyIHJtZGlyLg0KPiANCj4g
+QnR3LCB0aGFuayB5b3UgZm9yIHRoZSBjYXJlZnVsIHJldmlldyBvZiB0aGUgcGF0Y2hzZXQuIEkn
+bGwNCj4gYWRkcmVzcyB5b3VyIGNvbW1lbnRzLCBhZGQgYWNrcyBhbmQgd2lsbCBzZW5kIG91dCB2
+My4NCj4gDQo+IFRoYW5rcyENCj4gDQo=
