@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2DABC282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:20:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA82C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A8BE218A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:20:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84881205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:20:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639223;
-	bh=7rPitIyyJ88Ajz/ZM+BgOKkmfkRETC+ZL64Szngkiwk=;
+	s=default; t=1558639230;
+	bh=9GmwRl0DwCCUQJu6ri224z0+vAKb2vpX+bVgVpvHWOg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S8ubU6MKoDPrm3p0vRiV0SV1cSqEW7yJot4+BnpIEpMP3sN/ZWBgo7T6tAq/mz/yz
-	 Pzzd1aYEDZ8Dzg6bH7BwzymI+5bZMW+1jtZ5IBBx6UazcWvd0xCbGi9GBwReKhZ07T
-	 x4nl0n1Rfq061HHKqGhV+aktmOQb2Qxfl1Uc+Xqs=
+	b=J2msFFFidedNZDzjA4/cg8NpFt1IImfi1lOeaonY15VkVGmw0ipuDHdp9IGKQGYoo
+	 M0Xxi1Qe3KvC44a7qEUwpOm2GKDhL9XTVmgZYCe9hUk2oM6QoIcAGB992S+sMqYi/G
+	 rdhp5egcuGdLTu5y2z2VMHFrX6GkFQZAsi8TioNE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390030AbfEWTUX (ORCPT
+        id S2390055AbfEWTU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:20:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56994 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:20:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390000AbfEWTUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:20:18 -0400
+        id S2389645AbfEWTU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:20:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D006721851;
-        Thu, 23 May 2019 19:20:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BD7B21851;
+        Thu, 23 May 2019 19:20:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639218;
-        bh=7rPitIyyJ88Ajz/ZM+BgOKkmfkRETC+ZL64Szngkiwk=;
+        s=default; t=1558639226;
+        bh=9GmwRl0DwCCUQJu6ri224z0+vAKb2vpX+bVgVpvHWOg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c1HFzZ7uZgmnF12NBrM4r0bwUW0lEIcGUTfhDdhrD+V2HaVp+QRtVrV6ioZQcEKtw
-         KtdNEC2+64tGBHnsgIZpPFi91RD6BiNLXJ/lx7OmfhjOcZlOJ6NLymeT2tmf3a+AAU
-         q2c7pOD0qymE/XVMf9pouRzG2J1NgLKycOHRAwtM=
+        b=IOL9q+MN4UvuBIXiTG0juoDWsG8r59tEMaxZg3MeE/4h/1lyFpqZdLMWiu1bRUTVR
+         QGinAJMGzp9OJuXqrQf5nSBmy9GzBPVpb1ilnMsDE2wSKgjpnx5cFr2KqhIPVwXKSQ
+         RiV/NoZEFDlyxTeGu0Qam9unpImpxxsx3e9fY5sc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmytro Linkin <dmitrolin@mellanox.com>,
-        Gavi Teitz <gavi@mellanox.com>, Roi Dayan <roid@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.0 015/139] net/mlx5e: Add missing ethtool driver info for representors
-Date:   Thu, 23 May 2019 21:05:03 +0200
-Message-Id: <20190523181722.461799422@linuxfoundation.org>
+        stable@vger.kernel.org, Helge Deller <deller@gmx.de>
+Subject: [PATCH 5.0 026/139] parisc: Allow live-patching of __meminit functions
+Date:   Thu, 23 May 2019 21:05:14 +0200
+Message-Id: <20190523181724.129167883@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -60,62 +58,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmytro Linkin <dmitrolin@mellanox.com>
+From: Helge Deller <deller@gmx.de>
 
-[ Upstream commit cf83c8fdcd4756644595521f48748ec22f7efede ]
+commit d19a12906e5e558c0f6b6cfece7b7caf1012ef95 upstream.
 
-For all representors added firmware version info to show in
-ethtool driver info.
-For uplink representor, because only it is tied to the pci device
-sysfs, added pci bus info.
+When making the text sections writeable with set_kernel_text_rw(1),
+include all text sections including those in the __init section.
+Otherwise functions marked with __meminit will stay read-only.
 
-Fixes: ff9b85de5d5d ("net/mlx5e: Add some ethtool port control entries to the uplink rep netdev")
-Signed-off-by: Dmytro Linkin <dmitrolin@mellanox.com>
-Reviewed-by: Gavi Teitz <gavi@mellanox.com>
-Reviewed-by: Roi Dayan <roid@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Helge Deller <deller@gmx.de>
+Cc: <stable@vger.kernel.org>	# 4.20+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/mellanox/mlx5/core/en_rep.c |   19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
-@@ -64,9 +64,26 @@ static void mlx5e_rep_indr_unregister_bl
- static void mlx5e_rep_get_drvinfo(struct net_device *dev,
- 				  struct ethtool_drvinfo *drvinfo)
+---
+ arch/parisc/mm/init.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/arch/parisc/mm/init.c
++++ b/arch/parisc/mm/init.c
+@@ -512,7 +512,7 @@ static void __init map_pages(unsigned lo
+ 
+ void __init set_kernel_text_rw(int enable_read_write)
  {
-+	struct mlx5e_priv *priv = netdev_priv(dev);
-+	struct mlx5_core_dev *mdev = priv->mdev;
-+
- 	strlcpy(drvinfo->driver, mlx5e_rep_driver_name,
- 		sizeof(drvinfo->driver));
- 	strlcpy(drvinfo->version, UTS_RELEASE, sizeof(drvinfo->version));
-+	snprintf(drvinfo->fw_version, sizeof(drvinfo->fw_version),
-+		 "%d.%d.%04d (%.16s)",
-+		 fw_rev_maj(mdev), fw_rev_min(mdev),
-+		 fw_rev_sub(mdev), mdev->board_id);
-+}
-+
-+static void mlx5e_uplink_rep_get_drvinfo(struct net_device *dev,
-+					 struct ethtool_drvinfo *drvinfo)
-+{
-+	struct mlx5e_priv *priv = netdev_priv(dev);
-+
-+	mlx5e_rep_get_drvinfo(dev, drvinfo);
-+	strlcpy(drvinfo->bus_info, pci_name(priv->mdev->pdev),
-+		sizeof(drvinfo->bus_info));
- }
+-	unsigned long start = (unsigned long) _text;
++	unsigned long start = (unsigned long) __init_begin;
+ 	unsigned long end   = (unsigned long) &data_start;
  
- static const struct counter_desc sw_rep_stats_desc[] = {
-@@ -374,7 +391,7 @@ static const struct ethtool_ops mlx5e_vf
- };
- 
- static const struct ethtool_ops mlx5e_uplink_rep_ethtool_ops = {
--	.get_drvinfo	   = mlx5e_rep_get_drvinfo,
-+	.get_drvinfo	   = mlx5e_uplink_rep_get_drvinfo,
- 	.get_link	   = ethtool_op_get_link,
- 	.get_strings       = mlx5e_rep_get_strings,
- 	.get_sset_count    = mlx5e_rep_get_sset_count,
+ 	map_pages(start, __pa(start), end-start,
 
 
