@@ -2,203 +2,204 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DD4C282DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 04:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6420DC04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 04:18:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA48E217F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 04:00:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18BEC20881
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 04:18:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gfr53ssr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KUCtlCKQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726273AbfEWEA6 (ORCPT
+        id S1726443AbfEWES6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 00:00:58 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:53543 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725320AbfEWEA6 (ORCPT
+        Thu, 23 May 2019 00:18:58 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33278 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725792AbfEWES6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 00:00:58 -0400
-Received: by mail-it1-f193.google.com with SMTP id m141so7383412ita.3
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 21:00:57 -0700 (PDT)
+        Thu, 23 May 2019 00:18:58 -0400
+Received: by mail-pg1-f194.google.com with SMTP id h17so2425680pgv.0;
+        Wed, 22 May 2019 21:18:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Fg4kLqlGmQOQHyxdEvFZw9hI0MF57JuinNfYOlZxse8=;
-        b=gfr53ssrCpePDd3o/wOwS15A94lu541xXTe7gLxo4+6lrHONgoP+naUChfz3ms0GaJ
-         /J1AODe36vt0rV9YVaPkLeSlW1O3E5lzz1oqVaBZrAibST1H6LtBoxX/d0zNnY681a8B
-         sUsZi7JXLRxkvd7Hy1mrRT+09QXS6LTwPG0Rm2wTCro5DsIiRLYyYBvVdefcI9TCMGUv
-         RA+//daunEjTIUMei4thpisJVFtHEnu1Nd69wb04U/iTB6uHW3W1/6PzgwGOQcYYNEdF
-         L6/eNgB1zOJjC13wwtSIEYM2vcVRuM4S1PfIQXQ0rocVfpkP7al2mpDcuWTwoP3+hqYC
-         MVkg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HbqtOQevQsp/ok74pQVOtTO4LnYP1GQdx8YeHeJwjdA=;
+        b=KUCtlCKQiEsmI4qGb5+5ls2Urv7EPflFrlNcayB80Hbzpnm6l2sig4DOkKVjy2L3/Y
+         DCuGlFQkA1XdKFHo2pCJG/dXO7KAKTGHKRxVsBfCP91+DA8Q/qgRB51tMJBFbZBU5s9U
+         LzOu3T2leyByV7HSD7nvZj42azIGalpu/X5vyigVydotYCMrLt+Gr9JqnRqWhopHeMK7
+         apETmcWQ003JlQhS7NyO99/odcD8T44nUYxxa6v4q935IrFKgMdb2Wd+MMzmwocjQRM3
+         /H8t6M3pszMEAyn7Y0gmU23w16DOMrRB1UTyLgVqe76seahwAUDIRvSytbfYJw25Ar1t
+         8K/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Fg4kLqlGmQOQHyxdEvFZw9hI0MF57JuinNfYOlZxse8=;
-        b=LqwlxGRp6zqCxtO+o5ys49esmurckZ6sF1jjJE1jFZaP3NIMlH4dx4nlI2P04xsQnt
-         AV7lLi1g0rLG3jNpHNHsu1RglAmIIP6HEtxKqQV5otBq2k1jbAa5L+EyIdfkw2vtOQkE
-         xHKv4vwbnnxUGRD7//UAAgcWLdjZneXnzX+qPQ8pEVKZEsle3V2UztS199xgiYw8y/b+
-         zNb/rxtFnFL4kXH5s1BhhcS7oYMpGYhtrLl+cF3v6eGEIaEMPqEg0Pe5fpA8XfZn2G1w
-         2Y/x8QuD+TxDTnhRpAUnLn4RhrLtbCtypKGdeNakHXjdvWDxkOr61VCzexDJsm8h5bC7
-         p6+w==
-X-Gm-Message-State: APjAAAXiAbZrv+7UxzeTUXQ0iPtWr1/+59umRzpAHkUZogkGMZoxetcO
-        Bwn/QbdjwdDUx7SiLPBL432OSPwE0bbKug4NmA==
-X-Google-Smtp-Source: APXvYqzf8Aj+YNXtaUpB++OtPPM8aUwvi8nQbv9VFNqU6+qkAwF3cOnghIf2wCuZKJk5A2bx4wRDx3xHHzxKl98iYPs=
-X-Received: by 2002:a24:5095:: with SMTP id m143mr11383477itb.68.1558584057383;
- Wed, 22 May 2019 21:00:57 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HbqtOQevQsp/ok74pQVOtTO4LnYP1GQdx8YeHeJwjdA=;
+        b=JN9PyhAW6JP4LMFPJO/wBsiOyMZ8K//Vv9fb4JlBiuu1Ynu5f+KHAZ4k3ERK0/DUi4
+         a0tmWzl7TNV975gOlFi+0v8dM+wnK9D3+FIrGB9EPgngSo9oFB1zLuF3y6RAbQXJOEup
+         Dh464HAyQ9pbPg1rdUwvOovUDND5h9aemLEo5YjHC3yUAVyGBB5AWlhWxp7cx/64PC/0
+         g/y6S0f/graEcyX8d2BnUwCojte2uSR9zoi90WRRxX2MU/L5VRoLWlgdRc0Z++rYyfcc
+         x/eFWIoX7neNqGstFhKRGZkVibYeUUte64j1G9ONvYrTDWSk4dhQj0EFIhu08Pnv0TJm
+         AcMQ==
+X-Gm-Message-State: APjAAAVTBTOB6iIY8RlxBsW6AI3NvQMs9iMk+Buir4k4bleBVGLlvynA
+        ajOuQOBLSVqAR3CvKJqBQ87/vHee
+X-Google-Smtp-Source: APXvYqzM2AE7xEJVcugB0F0nxfevORP435QvjJsvCkkKHUxCnEXIJdTnxTMM9RMQIN+QtEuNrlAuPg==
+X-Received: by 2002:aa7:8b57:: with SMTP id i23mr19083581pfd.54.1558585136738;
+        Wed, 22 May 2019 21:18:56 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.123])
+        by smtp.googlemail.com with ESMTPSA id m12sm22991427pgi.56.2019.05.22.21.18.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 22 May 2019 21:18:56 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: [PATCH 1/2] KVM: LAPIC: Optimize timer latency consider world switch time
+Date:   Thu, 23 May 2019 12:18:50 +0800
+Message-Id: <1558585131-1321-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <20190512054829.11899-1-cai@lca.pw> <20190513124112.GH24036@dhcp22.suse.cz>
- <1557755039.6132.23.camel@lca.pw> <20190513140448.GJ24036@dhcp22.suse.cz>
- <1557760846.6132.25.camel@lca.pw> <20190513153143.GK24036@dhcp22.suse.cz>
- <CAFgQCTt9XA9_Y6q8wVHkE9_i+b0ZXCAj__zYU0DU9XUkM3F4Ew@mail.gmail.com>
- <20190522111655.GA4374@dhcp22.suse.cz> <CAFgQCTuKVif9gPTsbNdAqLGQyQpQ+gC2D1BQT99d0yDYHj4_mA@mail.gmail.com>
-In-Reply-To: <CAFgQCTuKVif9gPTsbNdAqLGQyQpQ+gC2D1BQT99d0yDYHj4_mA@mail.gmail.com>
-From:   Pingfan Liu <kernelfans@gmail.com>
-Date:   Thu, 23 May 2019 12:00:46 +0800
-Message-ID: <CAFgQCTvKZU1B0e4Bg3hQedMJ4Oq2uiOshnsBQCjKinmrGdKcYg@mail.gmail.com>
-Subject: Re: [PATCH -next v2] mm/hotplug: fix a null-ptr-deref during NUMA boot
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
-        Barret Rhoden <brho@google.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Ingo Molnar <mingo@elte.hu>,
-        Oscar Salvador <osalvador@suse.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 11:58 AM Pingfan Liu <kernelfans@gmail.com> wrote:
->
-> On Wed, May 22, 2019 at 7:16 PM Michal Hocko <mhocko@kernel.org> wrote:
-> >
-> > On Wed 22-05-19 15:12:16, Pingfan Liu wrote:
-> > > On Mon, May 13, 2019 at 11:31 PM Michal Hocko <mhocko@kernel.org> wrote:
-> > > >
-> > > > On Mon 13-05-19 11:20:46, Qian Cai wrote:
-> > > > > On Mon, 2019-05-13 at 16:04 +0200, Michal Hocko wrote:
-> > > > > > On Mon 13-05-19 09:43:59, Qian Cai wrote:
-> > > > > > > On Mon, 2019-05-13 at 14:41 +0200, Michal Hocko wrote:
-> > > > > > > > On Sun 12-05-19 01:48:29, Qian Cai wrote:
-> > > > > > > > > The linux-next commit ("x86, numa: always initialize all possible
-> > > > > > > > > nodes") introduced a crash below during boot for systems with a
-> > > > > > > > > memory-less node. This is due to CPUs that get onlined during SMP boot,
-> > > > > > > > > but that onlining triggers a page fault in bus_add_device() during
-> > > > > > > > > device registration:
-> > > > > > > > >
-> > > > > > > > >       error = sysfs_create_link(&bus->p->devices_kset->kobj,
-> > > > > > > > >
-> > > > > > > > > bus->p is NULL. That "p" is the subsys_private struct, and it should
-> > > > > > > > > have been set in,
-> > > > > > > > >
-> > > > > > > > >       postcore_initcall(register_node_type);
-> > > > > > > > >
-> > > > > > > > > but that happens in do_basic_setup() after smp_init().
-> > > > > > > > >
-> > > > > > > > > The old code had set this node online via alloc_node_data(), so when it
-> > > > > > > > > came time to do_cpu_up() -> try_online_node(), the node was already up
-> > > > > > > > > and nothing happened.
-> > > > > > > > >
-> > > > > > > > > Now, it attempts to online the node, which registers the node with
-> > > > > > > > > sysfs, but that can't happen before the 'node' subsystem is registered.
-> > > > > > > > >
-> > > > > > > > > Since kernel_init() is running by a kernel thread that is in
-> > > > > > > > > SYSTEM_SCHEDULING state, fixed this by skipping registering with sysfs
-> > > > > > > > > during the early boot in __try_online_node().
-> > > > > > > >
-> > > > > > > > Relying on SYSTEM_SCHEDULING looks really hackish. Why cannot we simply
-> > > > > > > > drop try_online_node from do_cpu_up? Your v2 remark below suggests that
-> > > > > > > > we need to call node_set_online because something later on depends on
-> > > > > > > > that. Btw. why do we even allocate a pgdat from this path? This looks
-> > > > > > > > really messy.
-> > > > > > >
-> > > > > > > See the commit cf23422b9d76 ("cpu/mem hotplug: enable CPUs online before
-> > > > > > > local
-> > > > > > > memory online")
-> > > > > > >
-> > > > > > > It looks like try_online_node() in do_cpu_up() is needed for memory hotplug
-> > > > > > > which is to put its node online if offlined and then hotadd_new_pgdat()
-> > > > > > > calls
-> > > > > > > build_all_zonelists() to initialize the zone list.
-> > > > > >
-> > > > > > Well, do we still have to followthe logic that the above (unreviewed)
-> > > > > > commit has established? The hotplug code in general made a lot of ad-hoc
-> > > > > > design decisions which had to be revisited over time. If we are not
-> > > > > > allocating pgdats for newly added memory then we should really make sure
-> > > > > > to do so at a proper time and hook. I am not sure about CPU vs. memory
-> > > > > > init ordering but even then I would really prefer if we could make the
-> > > > > > init less obscure and _documented_.
-> > > > >
-> > > > > I don't know, but I think it is a good idea to keep the existing logic rather
-> > > > > than do a big surgery
-> > > >
-> > > > Adding more hacks just doesn't make the situation any better.
-> > > >
-> > > > > unless someone is able to confirm it is not breaking NUMA
-> > > > > node physical hotplug.
-> > > >
-> > > > I have a machine to test whole node offline. I am just busy to prepare a
-> > > > patch myself. I can have it tested though.
-> > > >
-> > > I think the definition of "node online" is worth of rethinking. Before
-> > > patch "x86, numa: always initialize all possible nodes", online means
-> > > either cpu or memory present. After this patch, only node owing memory
-> > > as present.
-> > >
-> > > In the commit log, I think the change's motivation should be "Not to
-> > > mention that it doesn't really make much sense to consider an empty
-> > > node as online because we just consider this node whenever we want to
-> > > iterate nodes to use and empty node is obviously not the best
-> > > candidate."
-> > >
-> > > But in fact, we already have for_each_node_state(nid, N_MEMORY) to
-> > > cover this purpose.
-> >
-> > I do not really think we want to spread N_MEMORY outside of the core MM.
-> > It is quite confusing IMHO.
-> > .
-> But it has already like this. Just git grep N_MEMORY.
->
-> > > Furthermore, changing the definition of online may
-> > > break something in the scheduler, e.g. in task_numa_migrate(), where
-> > > it calls for_each_online_node.
-> >
-> > Could you be more specific please? Why should numa balancing consider
-> > nodes without any memory?
-> >
-> As my understanding, the destination cpu can be on a memory less node.
-> BTW, there are several functions in the scheduler facing the same
-> scenario, task_numa_migrate() is an example.
->
-> > > By keeping the node owning cpu as online, Michal's patch can avoid
-> > > such corner case and keep things easy. Furthermore, if needed, the
-> > > other patch can use for_each_node_state(nid, N_MEMORY) to replace
-> > > for_each_online_node is some space.
-> >
-> > Ideally no code outside of the core MM should care about what kind of
-> > memory does the node really own. The external code should only care
-> > whether the node is online and thus usable or offline and of no
-> > interest.
-> Yes, but maybe it will pay great effort on it.
->
-And as a first step, we can find a way to fix the bug reported by me
-and the one reported by Barret
+From: Wanpeng Li <wanpengli@tencent.com>
 
-> Regards,
-> Pingfan
-> > --
-> > Michal Hocko
-> > SUSE Labs
+Advance lapic timer tries to hidden the hypervisor overhead between the
+host emulated timer fires and the guest awares the timer is fired. However,
+even though after more sustaining optimizations, kvm-unit-tests/tscdeadline_latency 
+still awares ~1000 cycles latency since we lost the time between the end of 
+wait_lapic_expire and the guest awares the timer is fired. There are 
+codes between the end of wait_lapic_expire and the world switch, futhermore, 
+the world switch itself also has overhead. Actually the guest_tsc is equal 
+to the target deadline time in wait_lapic_expire is too late, guest will
+aware the latency between the end of wait_lapic_expire() and after vmentry 
+to the guest. This patch takes this time into consideration. 
+
+The vmentry_lapic_timer_advance_ns module parameter should be well tuned by 
+host admin, it can reduce average cyclictest latency from 3us to 2us on 
+Skylake server. (guest w/ nohz=off, idle=poll, host w/ preemption_timer=N, 
+the cyclictest latency is not too sensitive when preemption_timer=Y for this 
+optimization in my testing), kvm-unit-tests/tscdeadline_latency can reach 0.
+
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+---
+ arch/x86/kvm/lapic.c   | 17 +++++++++++++++--
+ arch/x86/kvm/lapic.h   |  1 +
+ arch/x86/kvm/vmx/vmx.c |  2 +-
+ arch/x86/kvm/x86.c     |  3 +++
+ arch/x86/kvm/x86.h     |  2 ++
+ 5 files changed, 22 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index fcf42a3..6f85221 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -1531,6 +1531,19 @@ static inline void adjust_lapic_timer_advance(struct kvm_vcpu *vcpu,
+ 	apic->lapic_timer.timer_advance_ns = timer_advance_ns;
+ }
+ 
++u64 get_vmentry_advance_delta(struct kvm_vcpu *vcpu)
++{
++	u64 vmentry_lapic_timer_advance_cycles = 0;
++
++	if (vmentry_lapic_timer_advance_ns) {
++		vmentry_lapic_timer_advance_cycles = vmentry_lapic_timer_advance_ns *
++			vcpu->arch.virtual_tsc_khz;
++		do_div(vmentry_lapic_timer_advance_cycles, 1000000);
++	}
++	return vmentry_lapic_timer_advance_cycles;
++}
++EXPORT_SYMBOL_GPL(get_vmentry_advance_delta);
++
+ void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
+ {
+ 	struct kvm_lapic *apic = vcpu->arch.apic;
+@@ -1544,7 +1557,7 @@ void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
+ 
+ 	tsc_deadline = apic->lapic_timer.expired_tscdeadline;
+ 	apic->lapic_timer.expired_tscdeadline = 0;
+-	guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc());
++	guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc()) + get_vmentry_advance_delta(vcpu);
+ 	apic->lapic_timer.advance_expire_delta = guest_tsc - tsc_deadline;
+ 
+ 	if (guest_tsc < tsc_deadline)
+@@ -1572,7 +1585,7 @@ static void start_sw_tscdeadline(struct kvm_lapic *apic)
+ 	local_irq_save(flags);
+ 
+ 	now = ktime_get();
+-	guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc());
++	guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc()) + get_vmentry_advance_delta(vcpu);
+ 
+ 	ns = (tscdeadline - guest_tsc) * 1000000ULL;
+ 	do_div(ns, this_tsc_khz);
+diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
+index f974a3d..df2fe17 100644
+--- a/arch/x86/kvm/lapic.h
++++ b/arch/x86/kvm/lapic.h
+@@ -221,6 +221,7 @@ static inline int kvm_lapic_latched_init(struct kvm_vcpu *vcpu)
+ bool kvm_apic_pending_eoi(struct kvm_vcpu *vcpu, int vector);
+ 
+ void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu);
++u64 get_vmentry_advance_delta(struct kvm_vcpu *vcpu);
+ 
+ bool kvm_intr_is_single_vcpu_fast(struct kvm *kvm, struct kvm_lapic_irq *irq,
+ 			struct kvm_vcpu **dest_vcpu);
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index da24f18..0199ac3 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7047,7 +7047,7 @@ static int vmx_set_hv_timer(struct kvm_vcpu *vcpu, u64 guest_deadline_tsc,
+ 
+ 	vmx = to_vmx(vcpu);
+ 	tscl = rdtsc();
+-	guest_tscl = kvm_read_l1_tsc(vcpu, tscl);
++	guest_tscl = kvm_read_l1_tsc(vcpu, tscl) + get_vmentry_advance_delta(vcpu);
+ 	delta_tsc = max(guest_deadline_tsc, guest_tscl) - guest_tscl;
+ 	lapic_timer_advance_cycles = nsec_to_cycles(vcpu,
+ 						    ktimer->timer_advance_ns);
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index a4eb711..a02e2c3 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -145,6 +145,9 @@ module_param(tsc_tolerance_ppm, uint, S_IRUGO | S_IWUSR);
+ static int __read_mostly lapic_timer_advance_ns = -1;
+ module_param(lapic_timer_advance_ns, int, S_IRUGO | S_IWUSR);
+ 
++u32 __read_mostly vmentry_lapic_timer_advance_ns = 0;
++module_param(vmentry_lapic_timer_advance_ns, uint, S_IRUGO | S_IWUSR);
++
+ static bool __read_mostly vector_hashing = true;
+ module_param(vector_hashing, bool, S_IRUGO);
+ 
+diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+index 275b3b6..b0a3b84 100644
+--- a/arch/x86/kvm/x86.h
++++ b/arch/x86/kvm/x86.h
+@@ -294,6 +294,8 @@ extern u64 kvm_supported_xcr0(void);
+ 
+ extern unsigned int min_timer_period_us;
+ 
++extern unsigned int vmentry_lapic_timer_advance_ns;
++
+ extern bool enable_vmware_backdoor;
+ 
+ extern struct static_key kvm_no_apic_vcpu;
+-- 
+2.7.4
+
