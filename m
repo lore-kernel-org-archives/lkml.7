@@ -2,138 +2,94 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCFCBC46460
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 398F2C282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBD6A21773
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:32:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 047C22175B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:33:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558625628;
+	bh=eU0bc1TZXJmCh4tCLvIgnWjjGcWTvmqs3/XKWuOj0Rw=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=C+dKm86zu2EKLMomiIaDZzvEjcvogIaKYaUTIG427U/87l8oDTtZs4Jdeul5eXmyu
+	 DeO5CSvsYDOQFla4AlOh+mzMCn/XKiOccFSDtF/prcOXocUhL9McWMoVdqp8dDI6eU
+	 0afInMEfNYziZilYQBIM7a2thTW9xuQtIGrRok8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731101AbfEWPcA (ORCPT
+        id S1731041AbfEWPdr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 11:32:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46924 "EHLO mx1.redhat.com"
+        Thu, 23 May 2019 11:33:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730859AbfEWPb6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 11:31:58 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1730752AbfEWPdr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 11:33:47 -0400
+Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A6B89C05B038;
-        Thu, 23 May 2019 15:31:39 +0000 (UTC)
-Received: from redhat.com (unknown [10.20.6.178])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 461DB79599;
-        Thu, 23 May 2019 15:31:35 +0000 (UTC)
-Date:   Thu, 23 May 2019 11:31:33 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     john.hubbard@gmail.com
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        LKML <linux-kernel@vger.kernel.org>, linux-rdma@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Christian Benvenuti <benve@cisco.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ira Weiny <ira.weiny@intel.com>
-Subject: Re: [PATCH 1/1] infiniband/mm: convert put_page() to put_user_page*()
-Message-ID: <20190523153133.GB5104@redhat.com>
-References: <20190523072537.31940-1-jhubbard@nvidia.com>
- <20190523072537.31940-2-jhubbard@nvidia.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F43820868;
+        Thu, 23 May 2019 15:33:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558625626;
+        bh=eU0bc1TZXJmCh4tCLvIgnWjjGcWTvmqs3/XKWuOj0Rw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=shr/vyPXYAf7BJng+NopCN58Hohj7ENBVhPVi2GBA2VGs+VphSTRmh0ameJkUHYn3
+         oJH+bP8nYk7XtJbaWOjcSq8DYYmtzmCwuauXSXJcexTVGy5uhTC9ov76acb7V29ssW
+         tLD/unmzEQvRKgj3Xcz09wXLokUckxgeuIChjGGI=
+Date:   Thu, 23 May 2019 08:33:46 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     torvalds@linux-foundation.org
+Cc:     "Darrick J. Wong" <djwong@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        sandeen@sandeen.net, hch@lst.de
+Subject: [GIT PULL] xfs: fixes for 5.2
+Message-ID: <20190523153346.GG5141@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190523072537.31940-2-jhubbard@nvidia.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 23 May 2019 15:31:58 +0000 (UTC)
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 12:25:37AM -0700, john.hubbard@gmail.com wrote:
-> From: John Hubbard <jhubbard@nvidia.com>
-> 
-> For infiniband code that retains pages via get_user_pages*(),
-> release those pages via the new put_user_page(), or
-> put_user_pages*(), instead of put_page()
-> 
-> This is a tiny part of the second step of fixing the problem described
-> in [1]. The steps are:
-> 
-> 1) Provide put_user_page*() routines, intended to be used
->    for releasing pages that were pinned via get_user_pages*().
-> 
-> 2) Convert all of the call sites for get_user_pages*(), to
->    invoke put_user_page*(), instead of put_page(). This involves dozens of
->    call sites, and will take some time.
-> 
-> 3) After (2) is complete, use get_user_pages*() and put_user_page*() to
->    implement tracking of these pages. This tracking will be separate from
->    the existing struct page refcounting.
-> 
-> 4) Use the tracking and identification of these pages, to implement
->    special handling (especially in writeback paths) when the pages are
->    backed by a filesystem. Again, [1] provides details as to why that is
->    desirable.
-> 
-> [1] https://lwn.net/Articles/753027/ : "The Trouble with get_user_pages()"
-> 
-> Cc: Doug Ledford <dledford@redhat.com>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Mike Marciniszyn <mike.marciniszyn@intel.com>
-> Cc: Dennis Dalessandro <dennis.dalessandro@intel.com>
-> Cc: Christian Benvenuti <benve@cisco.com>
-> 
-> Reviewed-by: Jan Kara <jack@suse.cz>
-> Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-> Acked-by: Jason Gunthorpe <jgg@mellanox.com>
-> Tested-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+Hi Linus,
 
-Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
+Here's a bug fix for a minor accounting problem reported by a user.
+It's survived a few days of fstests and merges cleanly with upstream as
+of a few minutes ago.  Let me know if there are problems.
 
-Between i have a wishlist see below
+(Urgh, I just noticed that the tag message lists the wrong version.  If
+that's going to be a problem I can retag and resend...)
 
+--D
 
-> ---
->  drivers/infiniband/core/umem.c              |  7 ++++---
->  drivers/infiniband/core/umem_odp.c          | 10 +++++-----
->  drivers/infiniband/hw/hfi1/user_pages.c     | 11 ++++-------
->  drivers/infiniband/hw/mthca/mthca_memfree.c |  6 +++---
->  drivers/infiniband/hw/qib/qib_user_pages.c  | 11 ++++-------
->  drivers/infiniband/hw/qib/qib_user_sdma.c   |  6 +++---
->  drivers/infiniband/hw/usnic/usnic_uiom.c    |  7 ++++---
->  7 files changed, 27 insertions(+), 31 deletions(-)
-> 
-> diff --git a/drivers/infiniband/core/umem.c b/drivers/infiniband/core/umem.c
-> index e7ea819fcb11..673f0d240b3e 100644
-> --- a/drivers/infiniband/core/umem.c
-> +++ b/drivers/infiniband/core/umem.c
-> @@ -54,9 +54,10 @@ static void __ib_umem_release(struct ib_device *dev, struct ib_umem *umem, int d
->  
->  	for_each_sg_page(umem->sg_head.sgl, &sg_iter, umem->sg_nents, 0) {
->  		page = sg_page_iter_page(&sg_iter);
-> -		if (!PageDirty(page) && umem->writable && dirty)
-> -			set_page_dirty_lock(page);
-> -		put_page(page);
-> +		if (umem->writable && dirty)
-> +			put_user_pages_dirty_lock(&page, 1);
-> +		else
-> +			put_user_page(page);
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
 
-Can we get a put_user_page_dirty(struct page 8*pages, bool dirty, npages) ?
+  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
 
-It is a common pattern that we might have to conditionaly dirty the pages
-and i feel it would look cleaner if we could move the branch within the
-put_user_page*() function.
+are available in the Git repository at:
 
-Cheers,
-Jérôme
+  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.2-fixes-1
+
+for you to fetch changes up to 5cd213b0fec640a46adc5e6e4dfc7763aa54b3b2:
+
+  xfs: don't reserve per-AG space for an internal log (2019-05-20 11:25:39 -0700)
+
+----------------------------------------------------------------
+Fixes for 5.1:
+- Fix an accounting mistake where we included the log space when
+  calculating the reserve space for metadata expansion.
+
+----------------------------------------------------------------
+Darrick J. Wong (1):
+      xfs: don't reserve per-AG space for an internal log
+
+ fs/xfs/libxfs/xfs_ialloc_btree.c   | 9 +++++++++
+ fs/xfs/libxfs/xfs_refcount_btree.c | 9 +++++++++
+ fs/xfs/libxfs/xfs_rmap_btree.c     | 9 +++++++++
+ 3 files changed, 27 insertions(+)
