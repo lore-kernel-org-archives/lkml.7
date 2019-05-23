@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9055C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:08:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C15C6C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:08:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFD6D21841
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:08:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C0D2217D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:08:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558638515;
-	bh=it0I7Gz7nzbyQOCIAFGPR1F82AQBs2kZZi/28FjGoPo=;
+	s=default; t=1558638518;
+	bh=OcTC82Idr7QM0Ae7wMMO+hDiIGr3q5BcUhehwOdHS4A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sep9kE0U658ZC5MLvtsJBwVtJwrFEgtiIx8s8cbJs42OOdUeeSqqXcds9WSIDNNur
-	 r9papWgaJldPQlbuJU5xoqtBeygGgbbDoa0B3FRdtRhDj6N0+kN+L9/uEazEfj61F4
-	 uUvrj878ZSk4rROZ8KBTI+VHC+Mj2+nKH0dqbAi0=
+	b=w735DyVr/cY1SvP2jPXJpg/3+FOcPjtFwzK+PCGWxN8gpq+cprLl5eRYGpV8vFc6T
+	 87ZLSaLobkWc29GM7lGvQ94ZToL4Sg/TGCIxHtX50bvIHkgR1QDqA9X8qC8fa2iQsB
+	 ti56bwRer1cgFgaXU3QjJTGOXJtjKAPS63Fe/2mQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731797AbfEWTIe (ORCPT
+        id S1731812AbfEWTIh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:08:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41304 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:08:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731464AbfEWTIc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:08:32 -0400
+        id S1731464AbfEWTIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:08:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDAC02133D;
-        Thu, 23 May 2019 19:08:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68AE2217D7;
+        Thu, 23 May 2019 19:08:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638512;
-        bh=it0I7Gz7nzbyQOCIAFGPR1F82AQBs2kZZi/28FjGoPo=;
+        s=default; t=1558638514;
+        bh=OcTC82Idr7QM0Ae7wMMO+hDiIGr3q5BcUhehwOdHS4A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tliJiYIIN+4B/nGkV+CN8X3sx7nHbNEQxe21OuJmRFyDaiNtzdx4fvMt9yWz8lS51
-         MS0tmXtCiv+r781iGzUVel1SZ5d+rDUrSMJHje6jl5PLdclY4nlWm3GD8aN3hXLaGO
-         8VVJFXNHAucSUY7yFlYIlDd4JPRJLnh0npBKGLjs=
+        b=ohiccOY/dCgKNmOzNFqbNc5Rs7ifcod6G9X11jBd3xkiV8vtWdci2xOc1jFBYvxwv
+         rNAU6M8XOpg0aR3j4KT7X2xKuu9IRtWXeBQGIa4vXLCmKzAhHYsMpHS7WtDsWmW8ZD
+         wU2CjRR6WlKcT+9rXip/INv2Sw50rHFEYRvDWRC8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Probst <kernel@probst.it>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 4.9 16/53] cifs: fix strcat buffer overflow and reduce raciness in smb21_set_oplock_level()
-Date:   Thu, 23 May 2019 21:05:40 +0200
-Message-Id: <20190523181713.476317191@linuxfoundation.org>
+        stable@vger.kernel.org, Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 4.9 17/53] media: ov6650: Fix sensor possibly not detected on probe
+Date:   Thu, 23 May 2019 21:05:41 +0200
+Message-Id: <20190523181713.595067200@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181710.981455400@linuxfoundation.org>
 References: <20190523181710.981455400@linuxfoundation.org>
@@ -60,62 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Probst <kernel@probst.it>
+From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
 
-commit 6a54b2e002c9d00b398d35724c79f9fe0d9b38fb upstream.
+commit 933c1320847f5ed6b61a7d10f0a948aa98ccd7b0 upstream.
 
-Change strcat to strncpy in the "None" case to fix a buffer overflow
-when cinode->oplock is reset to 0 by another thread accessing the same
-cinode. It is never valid to append "None" to any other message.
+After removal of clock_start() from before soc_camera_init_i2c() in
+soc_camera_probe() by commit 9aea470b399d ("[media] soc-camera: switch
+I2C subdevice drivers to use v4l2-clk") introduced in v3.11, the ov6650
+driver could no longer probe the sensor successfully because its clock
+was no longer turned on in advance.  The issue was initially worked
+around by adding that missing clock_start() equivalent to OMAP1 camera
+interface driver - the only user of this sensor - but a propoer fix
+should be rather implemented in the sensor driver code itself.
 
-Consolidate multiple writes to cinode->oplock to reduce raciness.
+Fix the issue by inserting a delay between the clock is turned on and
+the sensor I2C registers are read for the first time.
 
-Signed-off-by: Christoph Probst <kernel@probst.it>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-CC: Stable <stable@vger.kernel.org>
+Tested on Amstrad Delta with now out of tree but still locally
+maintained omap1_camera host driver.
+
+Fixes: 9aea470b399d ("[media] soc-camera: switch I2C subdevice drivers to use v4l2-clk")
+
+Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/smb2ops.c |   14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ drivers/media/i2c/soc_camera/ov6650.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -1413,26 +1413,28 @@ smb21_set_oplock_level(struct cifsInodeI
- 		       unsigned int epoch, bool *purge_cache)
- {
- 	char message[5] = {0};
-+	unsigned int new_oplock = 0;
+--- a/drivers/media/i2c/soc_camera/ov6650.c
++++ b/drivers/media/i2c/soc_camera/ov6650.c
+@@ -844,6 +844,8 @@ static int ov6650_video_probe(struct i2c
+ 	if (ret < 0)
+ 		return ret;
  
- 	oplock &= 0xFF;
- 	if (oplock == SMB2_OPLOCK_LEVEL_NOCHANGE)
- 		return;
- 
--	cinode->oplock = 0;
- 	if (oplock & SMB2_LEASE_READ_CACHING_HE) {
--		cinode->oplock |= CIFS_CACHE_READ_FLG;
-+		new_oplock |= CIFS_CACHE_READ_FLG;
- 		strcat(message, "R");
- 	}
- 	if (oplock & SMB2_LEASE_HANDLE_CACHING_HE) {
--		cinode->oplock |= CIFS_CACHE_HANDLE_FLG;
-+		new_oplock |= CIFS_CACHE_HANDLE_FLG;
- 		strcat(message, "H");
- 	}
- 	if (oplock & SMB2_LEASE_WRITE_CACHING_HE) {
--		cinode->oplock |= CIFS_CACHE_WRITE_FLG;
-+		new_oplock |= CIFS_CACHE_WRITE_FLG;
- 		strcat(message, "W");
- 	}
--	if (!cinode->oplock)
--		strcat(message, "None");
-+	if (!new_oplock)
-+		strncpy(message, "None", sizeof(message));
++	msleep(20);
 +
-+	cinode->oplock = new_oplock;
- 	cifs_dbg(FYI, "%s Lease granted on inode %p\n", message,
- 		 &cinode->vfs_inode);
- }
+ 	/*
+ 	 * check and show product ID and manufacturer ID
+ 	 */
 
 
