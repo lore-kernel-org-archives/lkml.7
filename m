@@ -2,59 +2,52 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69DA5C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8FA1C282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41F1D217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96520206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639478;
-	bh=+t0u5GOucS63bRMTYhnfoDgwbCZ7hpJlC0pSSCGnqdA=;
+	s=default; t=1558639483;
+	bh=ynpK6vOq3ylr4Y2UYS7s2xllcFjZWtS8zw4ic0tmoJQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lJ/IPbJkqs51CBAscZPR1MACPf4lcFs1m/nJ+ETiBDGlWSY7lOa6i6aGToYQiGUln
-	 BtiNRm/glbOIok1YPaP/ttJlGGZaGGDKW7Raa91Qfc+HvOLz6pFg9AnZrUUMiEi5nj
-	 BneaQf8VENMK/84ogRveS9F1o3t2IBBOvQo4bF/E=
+	b=da6MB3pgpSpfaTaxZH20eLq1IBqtkgwIokgigNdXVQnoASscu6Fm0ewxe3z8bqLjJ
+	 JIEPnu8pG+0LotZJzx8Vzbw6PLiZ0WNs9d4sT3041kmye+GISwu6pGb5JWNRwxm+fn
+	 7N8q/nsTUUiXgo6wNzSMQd2WrFIL9SIXCSnbKLYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390938AbfEWTYh (ORCPT
+        id S2390962AbfEWTYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:24:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35514 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:24:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390917AbfEWTYb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:24:31 -0400
+        id S2390933AbfEWTYg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:24:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36BA32133D;
-        Thu, 23 May 2019 19:24:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A10820868;
+        Thu, 23 May 2019 19:24:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639470;
-        bh=+t0u5GOucS63bRMTYhnfoDgwbCZ7hpJlC0pSSCGnqdA=;
+        s=default; t=1558639476;
+        bh=ynpK6vOq3ylr4Y2UYS7s2xllcFjZWtS8zw4ic0tmoJQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iM/kQ491E0MIxQlxfwyS/9cVxz5SvE1om43J7iGsWW4Pnu2ccRpOMjfX5cpscY+/E
-         RVv05L+uHNbLonqYmL3Upd/W4uXwqc2ZyE/ySzmMFnYdNlyiNz+dpHQXfe7fytlvh1
-         UC4/K9whUEJNWdq8biJUHxA+kMIKfl7WUsWVrG0s=
+        b=nXX5IxoivxFHM0i6oxqruGYHuu/xKLqS7acujf8ZtWPcKiQqraEANEJOOBJpWx8Ri
+         EHQIx7w4C8eoDLP9cV2xLj0rlMOcgydkcmmHt5QkyvcCfu0jkBC8DG3cDSW+MQ3W/Q
+         TzGkNj0TkXhazjgAQg4NoziXoNzHn/fH+uDcuwT4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kazufumi Ikeda <kaz-ikeda@xc.jp.nec.com>,
-        Gaku Inami <gaku.inami.xw@bp.renesas.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH 5.0 090/139] PCI: rcar: Add the initialization of PCIe link in resume_noirq()
-Date:   Thu, 23 May 2019 21:06:18 +0200
-Message-Id: <20190523181732.338258401@linuxfoundation.org>
+        stable@vger.kernel.org, Andrew Jones <drjones@redhat.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 119/139] KVM: arm/arm64: Ensure vcpu target is unset on reset failure
+Date:   Thu, 23 May 2019 21:06:47 +0200
+Message-Id: <20190523181735.150659444@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -67,91 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kazufumi Ikeda <kaz-ikeda@xc.jp.nec.com>
+[ Upstream commit 811328fc3222f7b55846de0cd0404339e2e1e6d7 ]
 
-commit be20bbcb0a8cb5597cc62b3e28d275919f3431df upstream.
+A failed KVM_ARM_VCPU_INIT should not set the vcpu target,
+as the vcpu target is used by kvm_vcpu_initialized() to
+determine if other vcpu ioctls may proceed. We need to set
+the target before calling kvm_reset_vcpu(), but if that call
+fails, we should then unset it and clear the feature bitmap
+while we're at it.
 
-Reestablish the PCIe link very early in the resume process in case it
-went down to prevent PCI accesses from hanging the bus. Such accesses
-can happen early in the PCI resume process, as early as the
-SUSPEND_RESUME_NOIRQ step, thus the link must be reestablished in the
-driver resume_noirq() callback.
-
-Fixes: e015f88c368d ("PCI: rcar: Add support for R-Car H3 to pcie-rcar")
-Signed-off-by: Kazufumi Ikeda <kaz-ikeda@xc.jp.nec.com>
-Signed-off-by: Gaku Inami <gaku.inami.xw@bp.renesas.com>
-Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-[lorenzo.pieralisi@arm.com: reformatted commit log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: stable@vger.kernel.org
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Phil Edworthy <phil.edworthy@renesas.com>
-Cc: Simon Horman <horms+renesas@verge.net.au>
-Cc: Wolfram Sang <wsa@the-dreams.de>
-Cc: linux-renesas-soc@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Andrew Jones <drjones@redhat.com>
+[maz: Simplified patch, completed commit message]
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pcie-rcar.c |   21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ virt/kvm/arm/arm.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
---- a/drivers/pci/controller/pcie-rcar.c
-+++ b/drivers/pci/controller/pcie-rcar.c
-@@ -46,6 +46,7 @@
+diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
+index 9c486fad3f9f8..6202b4f718cea 100644
+--- a/virt/kvm/arm/arm.c
++++ b/virt/kvm/arm/arm.c
+@@ -949,7 +949,7 @@ int kvm_vm_ioctl_irq_line(struct kvm *kvm, struct kvm_irq_level *irq_level,
+ static int kvm_vcpu_set_target(struct kvm_vcpu *vcpu,
+ 			       const struct kvm_vcpu_init *init)
+ {
+-	unsigned int i;
++	unsigned int i, ret;
+ 	int phys_target = kvm_target_cpu();
  
- /* Transfer control */
- #define PCIETCTLR		0x02000
-+#define  DL_DOWN		BIT(3)
- #define  CFINIT			1
- #define PCIETSTR		0x02004
- #define  DATA_LINK_ACTIVE	1
-@@ -94,6 +95,7 @@
- #define MACCTLR			0x011058
- #define  SPEED_CHANGE		BIT(24)
- #define  SCRAMBLE_DISABLE	BIT(27)
-+#define PMSR			0x01105c
- #define MACS2R			0x011078
- #define MACCGSPSETR		0x011084
- #define  SPCNGRSN		BIT(31)
-@@ -1130,6 +1132,7 @@ static int rcar_pcie_probe(struct platfo
- 	pcie = pci_host_bridge_priv(bridge);
+ 	if (init->target != phys_target)
+@@ -984,9 +984,14 @@ static int kvm_vcpu_set_target(struct kvm_vcpu *vcpu,
+ 	vcpu->arch.target = phys_target;
  
- 	pcie->dev = dev;
-+	platform_set_drvdata(pdev, pcie);
+ 	/* Now we know what it is, we can reset it. */
+-	return kvm_reset_vcpu(vcpu);
+-}
++	ret = kvm_reset_vcpu(vcpu);
++	if (ret) {
++		vcpu->arch.target = -1;
++		bitmap_zero(vcpu->arch.features, KVM_VCPU_MAX_FEATURES);
++	}
  
- 	err = pci_parse_request_of_pci_ranges(dev, &pcie->resources, NULL);
- 	if (err)
-@@ -1221,10 +1224,28 @@ err_free_bridge:
- 	return err;
- }
- 
-+static int rcar_pcie_resume_noirq(struct device *dev)
-+{
-+	struct rcar_pcie *pcie = dev_get_drvdata(dev);
-+
-+	if (rcar_pci_read_reg(pcie, PMSR) &&
-+	    !(rcar_pci_read_reg(pcie, PCIETCTLR) & DL_DOWN))
-+		return 0;
-+
-+	/* Re-establish the PCIe link */
-+	rcar_pci_write_reg(pcie, CFINIT, PCIETCTLR);
-+	return rcar_pcie_wait_for_dl(pcie);
++	return ret;
 +}
-+
-+static const struct dev_pm_ops rcar_pcie_pm_ops = {
-+	.resume_noirq = rcar_pcie_resume_noirq,
-+};
-+
- static struct platform_driver rcar_pcie_driver = {
- 	.driver = {
- 		.name = "rcar-pcie",
- 		.of_match_table = rcar_pcie_of_match,
-+		.pm = &rcar_pcie_pm_ops,
- 		.suppress_bind_attrs = true,
- 	},
- 	.probe = rcar_pcie_probe,
+ 
+ static int kvm_arch_vcpu_ioctl_vcpu_init(struct kvm_vcpu *vcpu,
+ 					 struct kvm_vcpu_init *init)
+-- 
+2.20.1
+
 
 
