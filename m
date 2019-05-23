@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD0EC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F61C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98DD02133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:13:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3CA820863
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:13:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558638823;
-	bh=lD4/6hQEBd8Jge6vEJoPNGZPleezE7ZlAsciEFCdsUE=;
+	s=default; t=1558638828;
+	bh=bGCIwPJkbLn5Adn3ggc+NWKE25oDMPDavsVzc8He8Us=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wkqj9I7PbJIOHJFOMCCI90djUpF2pt+7oSDtyhpnG9TTGRa4UQYQ7GSuZqoTp1rBU
-	 cNDY2gMoDPh51PxpODi+yo0JCzUccumZNabJK/Okgx7oqcjRFSoC7FDk4e9dyIZr+R
-	 PsJhSpfPSt2dcmTTrr9vi0j4gyiRT/iZYrCzpZso=
+	b=QkjzFGpWi+/Mcbwc3KlFgPmW0g2ODP79JYdsahwRrmZTVLzU8eyYFMjPsSHgL8EIS
+	 K4jRNtRuwRNVwSjm18NlkXYWTQQbDeHpFkATI3+nYQk0vx3/wbSAk3Z8ZvO1wIygRx
+	 o+e+wY7vPXFSoiYWT0TaELY2LbLa4AcKU5g9TEeE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388227AbfEWTNm (ORCPT
+        id S2388634AbfEWTNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:13:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47584 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:13:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388135AbfEWTNf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:13:35 -0400
+        id S2388192AbfEWTNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:13:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 687C720863;
-        Thu, 23 May 2019 19:13:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF90C20863;
+        Thu, 23 May 2019 19:13:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638814;
-        bh=lD4/6hQEBd8Jge6vEJoPNGZPleezE7ZlAsciEFCdsUE=;
+        s=default; t=1558638820;
+        bh=bGCIwPJkbLn5Adn3ggc+NWKE25oDMPDavsVzc8He8Us=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WIq1p1G8eRndRdkSJ3HXKQ8Di80PmWyPHL0XybY3ZM/JvnAd+yQ6f6iddGzyCc1YO
-         Q6yKDYNtVXgAA/Dab7BgMSjdz6gGFA2t9CUTaDt3PrMqyjOEO5pv5L3cT57aYXYbDV
-         8TB6L0GqFrXCWvWo2az+NJlOeQ82aIfBOOdtTk8s=
+        b=Z3pv2pP7RpL/gNjIQgKeh5GkO19+hy8xy3hrsqNP79gcr2Trwmxgd4Sy3UZxbvDxx
+         e8UUTdAkR8Xgg4lG2KeDcipofJSY+apvdOsR/u+rcayaLiBS9PYAyGvhSeTGkLBB8d
+         I2IFwaPuCnA8mxWrPYDgsg8tFflgNIPED5YCE8mU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeremy Sowden <jeremy@azazel.net>,
+        stable@vger.kernel.org,
         Steffen Klassert <steffen.klassert@secunet.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 58/77] vti4: ipip tunnel deregistration fixes.
-Date:   Thu, 23 May 2019 21:06:16 +0200
-Message-Id: <20190523181727.976880575@linuxfoundation.org>
+Subject: [PATCH 4.14 60/77] xfrm4: Fix uninitialized memory read in _decode_session4
+Date:   Thu, 23 May 2019 21:06:18 +0200
+Message-Id: <20190523181728.247459342@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181719.982121681@linuxfoundation.org>
 References: <20190523181719.982121681@linuxfoundation.org>
@@ -60,46 +60,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5483844c3fc18474de29f5d6733003526e0a9f78 ]
+[ Upstream commit 8742dc86d0c7a9628117a989c11f04a9b6b898f3 ]
 
-If tunnel registration failed during module initialization, the module
-would fail to deregister the IPPROTO_COMP protocol and would attempt to
-deregister the tunnel.
+We currently don't reload pointers pointing into skb header
+after doing pskb_may_pull() in _decode_session4(). So in case
+pskb_may_pull() changed the pointers, we read from random
+memory. Fix this by putting all the needed infos on the
+stack, so that we don't need to access the header pointers
+after doing pskb_may_pull().
 
-The tunnel was not deregistered during module-exit.
-
-Fixes: dd9ee3444014e ("vti4: Fix a ipip packet processing bug in 'IPCOMP' virtual tunnel")
-Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
 Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/ip_vti.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ net/ipv4/xfrm4_policy.c | 24 +++++++++++++-----------
+ 1 file changed, 13 insertions(+), 11 deletions(-)
 
-diff --git a/net/ipv4/ip_vti.c b/net/ipv4/ip_vti.c
-index 306603a7f3514..c07065b7e3b0e 100644
---- a/net/ipv4/ip_vti.c
-+++ b/net/ipv4/ip_vti.c
-@@ -663,9 +663,9 @@ static int __init vti_init(void)
- 	return err;
- 
- rtnl_link_failed:
--	xfrm4_protocol_deregister(&vti_ipcomp4_protocol, IPPROTO_COMP);
--xfrm_tunnel_failed:
- 	xfrm4_tunnel_deregister(&ipip_handler, AF_INET);
-+xfrm_tunnel_failed:
-+	xfrm4_protocol_deregister(&vti_ipcomp4_protocol, IPPROTO_COMP);
- xfrm_proto_comp_failed:
- 	xfrm4_protocol_deregister(&vti_ah4_protocol, IPPROTO_AH);
- xfrm_proto_ah_failed:
-@@ -680,6 +680,7 @@ pernet_dev_failed:
- static void __exit vti_fini(void)
+diff --git a/net/ipv4/xfrm4_policy.c b/net/ipv4/xfrm4_policy.c
+index 4b586e7d56370..5952dca98e6b7 100644
+--- a/net/ipv4/xfrm4_policy.c
++++ b/net/ipv4/xfrm4_policy.c
+@@ -111,7 +111,8 @@ static void
+ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
  {
- 	rtnl_link_unregister(&vti_link_ops);
-+	xfrm4_tunnel_deregister(&ipip_handler, AF_INET);
- 	xfrm4_protocol_deregister(&vti_ipcomp4_protocol, IPPROTO_COMP);
- 	xfrm4_protocol_deregister(&vti_ah4_protocol, IPPROTO_AH);
- 	xfrm4_protocol_deregister(&vti_esp4_protocol, IPPROTO_ESP);
+ 	const struct iphdr *iph = ip_hdr(skb);
+-	u8 *xprth = skb_network_header(skb) + iph->ihl * 4;
++	int ihl = iph->ihl;
++	u8 *xprth = skb_network_header(skb) + ihl * 4;
+ 	struct flowi4 *fl4 = &fl->u.ip4;
+ 	int oif = 0;
+ 
+@@ -122,6 +123,11 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
+ 	fl4->flowi4_mark = skb->mark;
+ 	fl4->flowi4_oif = reverse ? skb->skb_iif : oif;
+ 
++	fl4->flowi4_proto = iph->protocol;
++	fl4->daddr = reverse ? iph->saddr : iph->daddr;
++	fl4->saddr = reverse ? iph->daddr : iph->saddr;
++	fl4->flowi4_tos = iph->tos;
++
+ 	if (!ip_is_fragment(iph)) {
+ 		switch (iph->protocol) {
+ 		case IPPROTO_UDP:
+@@ -133,7 +139,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
+ 			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
+ 				__be16 *ports;
+ 
+-				xprth = skb_network_header(skb) + iph->ihl * 4;
++				xprth = skb_network_header(skb) + ihl * 4;
+ 				ports = (__be16 *)xprth;
+ 
+ 				fl4->fl4_sport = ports[!!reverse];
+@@ -146,7 +152,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
+ 			    pskb_may_pull(skb, xprth + 2 - skb->data)) {
+ 				u8 *icmp;
+ 
+-				xprth = skb_network_header(skb) + iph->ihl * 4;
++				xprth = skb_network_header(skb) + ihl * 4;
+ 				icmp = xprth;
+ 
+ 				fl4->fl4_icmp_type = icmp[0];
+@@ -159,7 +165,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
+ 			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
+ 				__be32 *ehdr;
+ 
+-				xprth = skb_network_header(skb) + iph->ihl * 4;
++				xprth = skb_network_header(skb) + ihl * 4;
+ 				ehdr = (__be32 *)xprth;
+ 
+ 				fl4->fl4_ipsec_spi = ehdr[0];
+@@ -171,7 +177,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
+ 			    pskb_may_pull(skb, xprth + 8 - skb->data)) {
+ 				__be32 *ah_hdr;
+ 
+-				xprth = skb_network_header(skb) + iph->ihl * 4;
++				xprth = skb_network_header(skb) + ihl * 4;
+ 				ah_hdr = (__be32 *)xprth;
+ 
+ 				fl4->fl4_ipsec_spi = ah_hdr[1];
+@@ -183,7 +189,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
+ 			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
+ 				__be16 *ipcomp_hdr;
+ 
+-				xprth = skb_network_header(skb) + iph->ihl * 4;
++				xprth = skb_network_header(skb) + ihl * 4;
+ 				ipcomp_hdr = (__be16 *)xprth;
+ 
+ 				fl4->fl4_ipsec_spi = htonl(ntohs(ipcomp_hdr[1]));
+@@ -196,7 +202,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
+ 				__be16 *greflags;
+ 				__be32 *gre_hdr;
+ 
+-				xprth = skb_network_header(skb) + iph->ihl * 4;
++				xprth = skb_network_header(skb) + ihl * 4;
+ 				greflags = (__be16 *)xprth;
+ 				gre_hdr = (__be32 *)xprth;
+ 
+@@ -213,10 +219,6 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
+ 			break;
+ 		}
+ 	}
+-	fl4->flowi4_proto = iph->protocol;
+-	fl4->daddr = reverse ? iph->saddr : iph->daddr;
+-	fl4->saddr = reverse ? iph->daddr : iph->saddr;
+-	fl4->flowi4_tos = iph->tos;
+ }
+ 
+ static void xfrm4_update_pmtu(struct dst_entry *dst, struct sock *sk,
 -- 
 2.20.1
 
