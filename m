@@ -2,51 +2,52 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DEA0C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EBA4C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55C80217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:10:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 601BB217D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:10:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558638615;
-	bh=d2lz/LRhtp1gvkecaybs2OEfgoE9qS63fMgr3EWksjo=;
+	s=default; t=1558638623;
+	bh=pmBBXIbYx9wCoD61HcVaYTtByq2Ucu7mp3cgX6Lf/mA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x7pCu4JEpByCsDj3oXIdgczXxJs9nwKS8CDlJXF/gskIqSF4g60l+hbU7yZXfZ6+x
-	 DrnFabGgdZ+sx8Jbw2tAzW+a79MFWkUMJmEXgROpKA6m6btVTbJpd21S2ZsXeK0gGY
-	 kzWvoNz9uU/dkmwaoNEaRs3XB0MIOO+xymrfCeEM=
+	b=c1gBcfSIt2Bvgu33ciwgSNIR4UexU5HF5oBjz58bNu0XME1N8OhEXUnpg81Gvx09q
+	 kIJFkeHT9qeueRrEOOpINLQYWJvqnOqZSGfcwHZYQmXQ9/nm7pTXrSnMUpTBvfJke0
+	 riQS/HTtwRnWbVbYm0CZQ0de1gGkWghMkk6XwROo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387751AbfEWTKO (ORCPT
+        id S2387792AbfEWTKW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:10:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43504 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:10:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387722AbfEWTKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:10:11 -0400
+        id S2387758AbfEWTKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:10:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5655C2133D;
-        Thu, 23 May 2019 19:10:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7EA2217D9;
+        Thu, 23 May 2019 19:10:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638610;
-        bh=d2lz/LRhtp1gvkecaybs2OEfgoE9qS63fMgr3EWksjo=;
+        s=default; t=1558638616;
+        bh=pmBBXIbYx9wCoD61HcVaYTtByq2Ucu7mp3cgX6Lf/mA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gWtjzCP/sa6mikPpmfGGGT00I/TJjPjgoFCxlNmHExS3iX+sC88lZg+9C6BuB1iZn
-         pAKdRk4UnH/nzAKDJ+aMnQznclUPyvbDqRse+awE/rwB0OP+1CRxx4wbNwwPpq+qiL
-         E7QbTkLkBsIBIjUUUK0rfHxHBXTaX3eukH2AIw6A=
+        b=eR45xY4cjtk2Xpq0/3pMyWlivdlT5fBhwMyoB18360gB+Jk09wJsUOgAsoaL+FUHh
+         OE9lTb/rx+I39KUaDK0C7+npOxxfaWFrwod9R30JnHFhqlMnyLretoC6j+uJOLkAUL
+         /gGyFV7CfBirqhe7MBm7YjtuFvNNHKZu66WcvRM8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.9 53/53] btrfs: Honour FITRIM range constraints during free space trim
-Date:   Thu, 23 May 2019 21:06:17 +0200
-Message-Id: <20190523181719.388423466@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 45/53] xfrm4: Fix uninitialized memory read in _decode_session4
+Date:   Thu, 23 May 2019 21:06:09 +0200
+Message-Id: <20190523181718.097234570@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181710.981455400@linuxfoundation.org>
 References: <20190523181710.981455400@linuxfoundation.org>
@@ -59,91 +60,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolay Borisov <nborisov@suse.com>
+[ Upstream commit 8742dc86d0c7a9628117a989c11f04a9b6b898f3 ]
 
-commit c2d1b3aae33605a61cbab445d8ae1c708ccd2698 upstream.
+We currently don't reload pointers pointing into skb header
+after doing pskb_may_pull() in _decode_session4(). So in case
+pskb_may_pull() changed the pointers, we read from random
+memory. Fix this by putting all the needed infos on the
+stack, so that we don't need to access the header pointers
+after doing pskb_may_pull().
 
-Up until now trimming the freespace was done irrespective of what the
-arguments of the FITRIM ioctl were. For example fstrim's -o/-l arguments
-will be entirely ignored. Fix it by correctly handling those paramter.
-This requires breaking if the found freespace extent is after the end of
-the passed range as well as completing trim after trimming
-fstrim_range::len bytes.
-
-Fixes: 499f377f49f0 ("btrfs: iterate over unused chunk space in FITRIM")
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/extent-tree.c |   25 +++++++++++++++++++------
- 1 file changed, 19 insertions(+), 6 deletions(-)
+ net/ipv4/xfrm4_policy.c | 24 +++++++++++++-----------
+ 1 file changed, 13 insertions(+), 11 deletions(-)
 
---- a/fs/btrfs/extent-tree.c
-+++ b/fs/btrfs/extent-tree.c
-@@ -11150,9 +11150,9 @@ int btrfs_error_unpin_extent_range(struc
-  * transaction.
-  */
- static int btrfs_trim_free_extents(struct btrfs_device *device,
--				   u64 minlen, u64 *trimmed)
-+				   struct fstrim_range *range, u64 *trimmed)
+diff --git a/net/ipv4/xfrm4_policy.c b/net/ipv4/xfrm4_policy.c
+index 622e158a6fc40..1805413cd2251 100644
+--- a/net/ipv4/xfrm4_policy.c
++++ b/net/ipv4/xfrm4_policy.c
+@@ -108,7 +108,8 @@ static void
+ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
  {
--	u64 start = 0, len = 0;
-+	u64 start = range->start, len = 0;
- 	int ret;
+ 	const struct iphdr *iph = ip_hdr(skb);
+-	u8 *xprth = skb_network_header(skb) + iph->ihl * 4;
++	int ihl = iph->ihl;
++	u8 *xprth = skb_network_header(skb) + ihl * 4;
+ 	struct flowi4 *fl4 = &fl->u.ip4;
+ 	int oif = 0;
  
- 	*trimmed = 0;
-@@ -11188,8 +11188,8 @@ static int btrfs_trim_free_extents(struc
- 			atomic_inc(&trans->use_count);
- 		spin_unlock(&fs_info->trans_lock);
+@@ -119,6 +120,11 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
+ 	fl4->flowi4_mark = skb->mark;
+ 	fl4->flowi4_oif = reverse ? skb->skb_iif : oif;
  
--		ret = find_free_dev_extent_start(trans, device, minlen, start,
--						 &start, &len);
-+		ret = find_free_dev_extent_start(trans, device, range->minlen,
-+						 start, &start, &len);
- 		if (trans)
- 			btrfs_put_transaction(trans);
++	fl4->flowi4_proto = iph->protocol;
++	fl4->daddr = reverse ? iph->saddr : iph->daddr;
++	fl4->saddr = reverse ? iph->daddr : iph->saddr;
++	fl4->flowi4_tos = iph->tos;
++
+ 	if (!ip_is_fragment(iph)) {
+ 		switch (iph->protocol) {
+ 		case IPPROTO_UDP:
+@@ -130,7 +136,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
+ 			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
+ 				__be16 *ports;
  
-@@ -11201,6 +11201,16 @@ static int btrfs_trim_free_extents(struc
+-				xprth = skb_network_header(skb) + iph->ihl * 4;
++				xprth = skb_network_header(skb) + ihl * 4;
+ 				ports = (__be16 *)xprth;
+ 
+ 				fl4->fl4_sport = ports[!!reverse];
+@@ -143,7 +149,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
+ 			    pskb_may_pull(skb, xprth + 2 - skb->data)) {
+ 				u8 *icmp;
+ 
+-				xprth = skb_network_header(skb) + iph->ihl * 4;
++				xprth = skb_network_header(skb) + ihl * 4;
+ 				icmp = xprth;
+ 
+ 				fl4->fl4_icmp_type = icmp[0];
+@@ -156,7 +162,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
+ 			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
+ 				__be32 *ehdr;
+ 
+-				xprth = skb_network_header(skb) + iph->ihl * 4;
++				xprth = skb_network_header(skb) + ihl * 4;
+ 				ehdr = (__be32 *)xprth;
+ 
+ 				fl4->fl4_ipsec_spi = ehdr[0];
+@@ -168,7 +174,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
+ 			    pskb_may_pull(skb, xprth + 8 - skb->data)) {
+ 				__be32 *ah_hdr;
+ 
+-				xprth = skb_network_header(skb) + iph->ihl * 4;
++				xprth = skb_network_header(skb) + ihl * 4;
+ 				ah_hdr = (__be32 *)xprth;
+ 
+ 				fl4->fl4_ipsec_spi = ah_hdr[1];
+@@ -180,7 +186,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
+ 			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
+ 				__be16 *ipcomp_hdr;
+ 
+-				xprth = skb_network_header(skb) + iph->ihl * 4;
++				xprth = skb_network_header(skb) + ihl * 4;
+ 				ipcomp_hdr = (__be16 *)xprth;
+ 
+ 				fl4->fl4_ipsec_spi = htonl(ntohs(ipcomp_hdr[1]));
+@@ -193,7 +199,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
+ 				__be16 *greflags;
+ 				__be32 *gre_hdr;
+ 
+-				xprth = skb_network_header(skb) + iph->ihl * 4;
++				xprth = skb_network_header(skb) + ihl * 4;
+ 				greflags = (__be16 *)xprth;
+ 				gre_hdr = (__be32 *)xprth;
+ 
+@@ -210,10 +216,6 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
  			break;
  		}
+ 	}
+-	fl4->flowi4_proto = iph->protocol;
+-	fl4->daddr = reverse ? iph->saddr : iph->daddr;
+-	fl4->saddr = reverse ? iph->daddr : iph->saddr;
+-	fl4->flowi4_tos = iph->tos;
+ }
  
-+		/* If we are out of the passed range break */
-+		if (start > range->start + range->len - 1) {
-+			mutex_unlock(&fs_info->chunk_mutex);
-+			ret = 0;
-+			break;
-+		}
-+
-+		start = max(range->start, start);
-+		len = min(range->len, len);
-+
- 		ret = btrfs_issue_discard(device->bdev, start, len, &bytes);
- 		up_read(&fs_info->commit_root_sem);
- 		mutex_unlock(&fs_info->chunk_mutex);
-@@ -11211,6 +11221,10 @@ static int btrfs_trim_free_extents(struc
- 		start += len;
- 		*trimmed += bytes;
- 
-+		/* We've trimmed enough */
-+		if (*trimmed >= range->len)
-+			break;
-+
- 		if (fatal_signal_pending(current)) {
- 			ret = -ERESTARTSYS;
- 			break;
-@@ -11295,8 +11309,7 @@ int btrfs_trim_fs(struct btrfs_root *roo
- 	mutex_lock(&fs_info->fs_devices->device_list_mutex);
- 	devices = &fs_info->fs_devices->devices;
- 	list_for_each_entry(device, devices, dev_list) {
--		ret = btrfs_trim_free_extents(device, range->minlen,
--					      &group_trimmed);
-+		ret = btrfs_trim_free_extents(device, range, &group_trimmed);
- 		if (ret) {
- 			dev_failed++;
- 			dev_ret = ret;
+ static inline int xfrm4_garbage_collect(struct dst_ops *ops)
+-- 
+2.20.1
+
 
 
