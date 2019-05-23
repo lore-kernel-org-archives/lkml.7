@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EBA4C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62335C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 601BB217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:10:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30A14217F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:10:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558638623;
-	bh=pmBBXIbYx9wCoD61HcVaYTtByq2Ucu7mp3cgX6Lf/mA=;
+	s=default; t=1558638628;
+	bh=zMokBmG2SiKr56AHDr4LskiULYRSW7ptbdGvkBWruxw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c1gBcfSIt2Bvgu33ciwgSNIR4UexU5HF5oBjz58bNu0XME1N8OhEXUnpg81Gvx09q
-	 kIJFkeHT9qeueRrEOOpINLQYWJvqnOqZSGfcwHZYQmXQ9/nm7pTXrSnMUpTBvfJke0
-	 riQS/HTtwRnWbVbYm0CZQ0de1gGkWghMkk6XwROo=
+	b=MiJti3tlzRxqg/4vwhIOMGV7pw+lb9mx1nAfUJqmxmY6f8pbxQTgLLvKJ6pajwGgp
+	 THPLUeJ1T6EFRpmajBuQqtOilvLO7dvyIHKAuck+YT4VJxio0DMM0eV9rnrKzhL7sk
+	 xsEYGeGcHcPXOjb8XbE2/65KkxZAVAwYxm5Dm/go=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387792AbfEWTKW (ORCPT
+        id S2387823AbfEWTK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:10:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43600 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:10:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387758AbfEWTKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:10:17 -0400
+        id S2387789AbfEWTKW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:10:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7EA2217D9;
-        Thu, 23 May 2019 19:10:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3061C217D7;
+        Thu, 23 May 2019 19:10:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638616;
-        bh=pmBBXIbYx9wCoD61HcVaYTtByq2Ucu7mp3cgX6Lf/mA=;
+        s=default; t=1558638621;
+        bh=zMokBmG2SiKr56AHDr4LskiULYRSW7ptbdGvkBWruxw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eR45xY4cjtk2Xpq0/3pMyWlivdlT5fBhwMyoB18360gB+Jk09wJsUOgAsoaL+FUHh
-         OE9lTb/rx+I39KUaDK0C7+npOxxfaWFrwod9R30JnHFhqlMnyLretoC6j+uJOLkAUL
-         /gGyFV7CfBirqhe7MBm7YjtuFvNNHKZu66WcvRM8=
+        b=AvVOGvixZJkd7ZD/RCWRrjixe/1phTotUiVk2Xp3jttW/vJI6iCnoherNfXOdhdhB
+         H/r5jAKRcRjgFUAfb48cARgdvKZROkBxXeT5E0JZwdPXM7U4Y81RcMZsbNyedo8fk6
+         bx9uOKs5Nw3hiUaH5Fle9MvKo8W3T1Vfo1yKs/GM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Steffen Klassert <steffen.klassert@secunet.com>,
+        stable@vger.kernel.org, Andrew Jones <drjones@redhat.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 45/53] xfrm4: Fix uninitialized memory read in _decode_session4
-Date:   Thu, 23 May 2019 21:06:09 +0200
-Message-Id: <20190523181718.097234570@linuxfoundation.org>
+Subject: [PATCH 4.9 47/53] KVM: arm/arm64: Ensure vcpu target is unset on reset failure
+Date:   Thu, 23 May 2019 21:06:11 +0200
+Message-Id: <20190523181718.436163153@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181710.981455400@linuxfoundation.org>
 References: <20190523181710.981455400@linuxfoundation.org>
@@ -60,113 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8742dc86d0c7a9628117a989c11f04a9b6b898f3 ]
+[ Upstream commit 811328fc3222f7b55846de0cd0404339e2e1e6d7 ]
 
-We currently don't reload pointers pointing into skb header
-after doing pskb_may_pull() in _decode_session4(). So in case
-pskb_may_pull() changed the pointers, we read from random
-memory. Fix this by putting all the needed infos on the
-stack, so that we don't need to access the header pointers
-after doing pskb_may_pull().
+A failed KVM_ARM_VCPU_INIT should not set the vcpu target,
+as the vcpu target is used by kvm_vcpu_initialized() to
+determine if other vcpu ioctls may proceed. We need to set
+the target before calling kvm_reset_vcpu(), but if that call
+fails, we should then unset it and clear the feature bitmap
+while we're at it.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Signed-off-by: Andrew Jones <drjones@redhat.com>
+[maz: Simplified patch, completed commit message]
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/xfrm4_policy.c | 24 +++++++++++++-----------
- 1 file changed, 13 insertions(+), 11 deletions(-)
+ arch/arm/kvm/arm.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/net/ipv4/xfrm4_policy.c b/net/ipv4/xfrm4_policy.c
-index 622e158a6fc40..1805413cd2251 100644
---- a/net/ipv4/xfrm4_policy.c
-+++ b/net/ipv4/xfrm4_policy.c
-@@ -108,7 +108,8 @@ static void
- _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
+diff --git a/arch/arm/kvm/arm.c b/arch/arm/kvm/arm.c
+index a670c70f4def9..dfc00a5bdc10d 100644
+--- a/arch/arm/kvm/arm.c
++++ b/arch/arm/kvm/arm.c
+@@ -801,7 +801,7 @@ int kvm_vm_ioctl_irq_line(struct kvm *kvm, struct kvm_irq_level *irq_level,
+ static int kvm_vcpu_set_target(struct kvm_vcpu *vcpu,
+ 			       const struct kvm_vcpu_init *init)
  {
- 	const struct iphdr *iph = ip_hdr(skb);
--	u8 *xprth = skb_network_header(skb) + iph->ihl * 4;
-+	int ihl = iph->ihl;
-+	u8 *xprth = skb_network_header(skb) + ihl * 4;
- 	struct flowi4 *fl4 = &fl->u.ip4;
- 	int oif = 0;
+-	unsigned int i;
++	unsigned int i, ret;
+ 	int phys_target = kvm_target_cpu();
  
-@@ -119,6 +120,11 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
- 	fl4->flowi4_mark = skb->mark;
- 	fl4->flowi4_oif = reverse ? skb->skb_iif : oif;
+ 	if (init->target != phys_target)
+@@ -836,9 +836,14 @@ static int kvm_vcpu_set_target(struct kvm_vcpu *vcpu,
+ 	vcpu->arch.target = phys_target;
  
-+	fl4->flowi4_proto = iph->protocol;
-+	fl4->daddr = reverse ? iph->saddr : iph->daddr;
-+	fl4->saddr = reverse ? iph->daddr : iph->saddr;
-+	fl4->flowi4_tos = iph->tos;
-+
- 	if (!ip_is_fragment(iph)) {
- 		switch (iph->protocol) {
- 		case IPPROTO_UDP:
-@@ -130,7 +136,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
- 			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
- 				__be16 *ports;
+ 	/* Now we know what it is, we can reset it. */
+-	return kvm_reset_vcpu(vcpu);
+-}
++	ret = kvm_reset_vcpu(vcpu);
++	if (ret) {
++		vcpu->arch.target = -1;
++		bitmap_zero(vcpu->arch.features, KVM_VCPU_MAX_FEATURES);
++	}
  
--				xprth = skb_network_header(skb) + iph->ihl * 4;
-+				xprth = skb_network_header(skb) + ihl * 4;
- 				ports = (__be16 *)xprth;
++	return ret;
++}
  
- 				fl4->fl4_sport = ports[!!reverse];
-@@ -143,7 +149,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
- 			    pskb_may_pull(skb, xprth + 2 - skb->data)) {
- 				u8 *icmp;
- 
--				xprth = skb_network_header(skb) + iph->ihl * 4;
-+				xprth = skb_network_header(skb) + ihl * 4;
- 				icmp = xprth;
- 
- 				fl4->fl4_icmp_type = icmp[0];
-@@ -156,7 +162,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
- 			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
- 				__be32 *ehdr;
- 
--				xprth = skb_network_header(skb) + iph->ihl * 4;
-+				xprth = skb_network_header(skb) + ihl * 4;
- 				ehdr = (__be32 *)xprth;
- 
- 				fl4->fl4_ipsec_spi = ehdr[0];
-@@ -168,7 +174,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
- 			    pskb_may_pull(skb, xprth + 8 - skb->data)) {
- 				__be32 *ah_hdr;
- 
--				xprth = skb_network_header(skb) + iph->ihl * 4;
-+				xprth = skb_network_header(skb) + ihl * 4;
- 				ah_hdr = (__be32 *)xprth;
- 
- 				fl4->fl4_ipsec_spi = ah_hdr[1];
-@@ -180,7 +186,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
- 			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
- 				__be16 *ipcomp_hdr;
- 
--				xprth = skb_network_header(skb) + iph->ihl * 4;
-+				xprth = skb_network_header(skb) + ihl * 4;
- 				ipcomp_hdr = (__be16 *)xprth;
- 
- 				fl4->fl4_ipsec_spi = htonl(ntohs(ipcomp_hdr[1]));
-@@ -193,7 +199,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
- 				__be16 *greflags;
- 				__be32 *gre_hdr;
- 
--				xprth = skb_network_header(skb) + iph->ihl * 4;
-+				xprth = skb_network_header(skb) + ihl * 4;
- 				greflags = (__be16 *)xprth;
- 				gre_hdr = (__be32 *)xprth;
- 
-@@ -210,10 +216,6 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
- 			break;
- 		}
- 	}
--	fl4->flowi4_proto = iph->protocol;
--	fl4->daddr = reverse ? iph->saddr : iph->daddr;
--	fl4->saddr = reverse ? iph->daddr : iph->saddr;
--	fl4->flowi4_tos = iph->tos;
- }
- 
- static inline int xfrm4_garbage_collect(struct dst_ops *ops)
+ static int kvm_arch_vcpu_ioctl_vcpu_init(struct kvm_vcpu *vcpu,
+ 					 struct kvm_vcpu_init *init)
 -- 
 2.20.1
 
