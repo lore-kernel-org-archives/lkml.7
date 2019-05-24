@@ -2,287 +2,325 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 038F2C282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 01:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D68B0C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 01:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5CB7217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 01:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74CDB2177E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 01:52:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="bU6AHG9c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731747AbfEXBwd (ORCPT
+        id S1731781AbfEXBws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 21:52:33 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:34839 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729041AbfEXBwd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 21:52:33 -0400
-Received: from mail-oi1-f198.google.com ([209.85.167.198])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <dann.frazier@canonical.com>)
-        id 1hTzNk-0007DP-Vy
-        for linux-kernel@vger.kernel.org; Fri, 24 May 2019 01:52:29 +0000
-Received: by mail-oi1-f198.google.com with SMTP id a196so3088297oii.21
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 18:52:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fcmxKph3pCyexBJoShQkjYQnPHoxtN7FjobnykSc7YU=;
-        b=GIoONpDEVSlHYCsfJlVio1T7xEmDXy4xJuEnnanoFRc0c8ZqvzS3FoVZnvjqRFpOyQ
-         fkZBH8zzK/3adgC5gmYXsIf/JehAIczJnC/D+QxpbJH3WEGWxG/zu8UB+WbywrxCl5Qq
-         Geim70uXA01gwPRUMM8dJ3vdHtM1OnRanj7TGs5XUCGcFcw0EiHuhcRnJQ/00hHsEXSx
-         CPkruFaHKVXHwGeqCjpkTsGlFgbuGUVnfo5au/uK2IsFPd1aXXNbFVCQtMzhG7E/MhTm
-         sy59cdg6KJnCMROgHzQfHa+dW2VXzkut09Ax6MkYXBQV1/OVpOsssKf4BSENmb67gs9Y
-         QbPQ==
-X-Gm-Message-State: APjAAAXt7xsLZT/cxPAh3VU4XI1dYVRG0laUEMKotzBer1FCNAlXpExn
-        ftktquiS89323U6bu8uH560hUD619UvGYILgc9J/aWQsLt6MucxbP3HwQNTZOPxWYzL1rXMUbEK
-        srvIUsSPqAV2E3NExIyC004nZZybvqzHRjCqmFzQqtIZU+OlP2yVL7E0kaA==
-X-Received: by 2002:aca:4457:: with SMTP id r84mr4757178oia.42.1558662745685;
-        Thu, 23 May 2019 18:52:25 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwcLCDnLkLOViDE8qq4ESbj78foR+joXpI4y59sgFXOXOpy5hw/O2ShIZleoto5LLcrDCmROFuyBhYfkqe1GEc=
-X-Received: by 2002:aca:4457:: with SMTP id r84mr4757159oia.42.1558662745338;
- Thu, 23 May 2019 18:52:25 -0700 (PDT)
+        Thu, 23 May 2019 21:52:48 -0400
+Received: from mail-eopbgr40071.outbound.protection.outlook.com ([40.107.4.71]:58369
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731748AbfEXBwr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 21:52:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PYXI+LroAMpJfuX6UUegUkMs+OCOqpi2gLUFXkBr0OM=;
+ b=bU6AHG9cUpGcgqY0BVAwrtiDLc/GGlqo7x3Fpkq3o2f4p7uuL1FKbnCNTTHobFMpgYUBKddlWDeUfqlzjeXtCLJTVeMFXJ8MJ8DHv1EtJXp/L92mK5ZhnFj21ZrTu4yDufn+WCOMXIZsiV2vrtOUq0ROr/eruwOOFjivRBV0r2Y=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3868.eurprd04.prod.outlook.com (52.134.71.147) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.20; Fri, 24 May 2019 01:52:36 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::5835:e874:bd94:fec]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::5835:e874:bd94:fec%5]) with mapi id 15.20.1922.017; Fri, 24 May 2019
+ 01:52:36 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "agross@kernel.org" <agross@kernel.org>,
+        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
+        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "dinguyen@kernel.org" <dinguyen@kernel.org>,
+        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: [PATCH V7 1/2] soc: imx: Add SCU SoC info driver support
+Thread-Topic: [PATCH V7 1/2] soc: imx: Add SCU SoC info driver support
+Thread-Index: AQHVEdNcPmMYdshBQkmKzUqGv/ssOQ==
+Date:   Fri, 24 May 2019 01:52:36 +0000
+Message-ID: <1558662440-8820-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK2PR0401CA0014.apcprd04.prod.outlook.com
+ (2603:1096:202:2::24) To DB3PR0402MB3916.eurprd04.prod.outlook.com
+ (2603:10a6:8:10::18)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: bcbdbe5a-a500-4545-8349-08d6dfea7e74
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3868;
+x-ms-traffictypediagnostic: DB3PR0402MB3868:
+x-microsoft-antispam-prvs: <DB3PR0402MB386823658EB53392B395192BF5020@DB3PR0402MB3868.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2657;
+x-forefront-prvs: 0047BC5ADE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(366004)(39860400002)(376002)(396003)(199004)(189003)(71200400001)(14444005)(256004)(102836004)(71190400001)(110136005)(99286004)(6506007)(52116002)(386003)(25786009)(4326008)(53936002)(316002)(476003)(2616005)(486006)(66066001)(186003)(36756003)(26005)(2501003)(81156014)(81166006)(73956011)(7416002)(8936002)(8676002)(50226002)(305945005)(64756008)(6486002)(86362001)(66446008)(66476007)(66946007)(14454004)(66556008)(7736002)(2906002)(6116002)(6512007)(478600001)(5660300002)(68736007)(3846002)(2201001)(6436002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3868;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: MeajiVC++7ncE95NWzB/KMGjjyBF2GTeSIDGi8Htpsa1jC80J/cgjOpoS3uDlZMFJ4LXthnz47/Tmgwmf+QrUGPIiQ0STD4FiRo3q6hvIBpCa73llLgU6HTXXVBDDWdTRr+XWrD8osSzI2jzGbCQ/a2JuDpfOGPjNJgthVGADEX+RUs0FQqTzqFPWUfC5MQh6pjnX6AASMHyZZIvVy8Mp1cn124Vh3x0TwX0umy6Qs5FGd3hFlsVORPBdN7Pmo6vh29Ch0hqaXmk11///qSUGxb6wNA0j45Sg+qfygmZr5LRm9BfXbtTYvu9P7EJOovo23xW46tXpSD8pIDugEOaQMS55LMGN/+ANl0IUtWeCx9us8qVb9cbio1xuDRLESByLmq/8iSZOqtZkT2v4C4lDTrggX7AyX4FkVBkzC40KpA=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <57023B003E7F5F48BD029E440098C566@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190506223334.1834-1-nicoleotsuka@gmail.com> <20190506223334.1834-2-nicoleotsuka@gmail.com>
-In-Reply-To: <20190506223334.1834-2-nicoleotsuka@gmail.com>
-From:   dann frazier <dann.frazier@canonical.com>
-Date:   Thu, 23 May 2019 19:52:14 -0600
-Message-ID: <CALdTtnurdNe4+oJjSJfWw1ONf8-xvJ8KhonQkJNj+4LDZT7jAQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dma-contiguous: Abstract dma_{alloc, free}_contiguous()
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>, chris@zankel.net,
-        linux-xtensa@linux-xtensa.org, keescook@chromium.org,
-        sfr@canb.auug.org.au, tony@atomide.com,
-        Catalin Marinas <catalin.marinas@arm.com>, joro@8bytes.org,
-        Will Deacon <will.deacon@arm.com>, linux@armlinux.org.uk,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        jcmvbkbc@gmail.com, wsa+renesas@sang-engineering.com,
-        akpm@linux-foundation.org, treding@nvidia.com, dwmw2@infradead.org,
-        iamjoonsoo.kim@lge.com,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bcbdbe5a-a500-4545-8349-08d6dfea7e74
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 May 2019 01:52:36.1777
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3868
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 6, 2019 at 4:35 PM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
->
-> Both dma_alloc_from_contiguous() and dma_release_from_contiguous()
-> are very simply implemented, but requiring callers to pass certain
-> parameters like count and align, and taking a boolean parameter to
-> check __GFP_NOWARN in the allocation flags. So every function call
-> duplicates similar work:
->   /* A piece of example */
->   unsigned long order = get_order(size);
->   size_t count = size >> PAGE_SHIFT;
->   page = dma_alloc_from_contiguous(dev, count, order, gfp & __GFP_NOWARN);
->   [...]
->   dma_release_from_contiguous(dev, page, size >> PAGE_SHIFT);
->
-> Additionally, as CMA can be used only in the context which permits
-> sleeping, most of callers do a gfpflags_allow_blocking() check and
-> a corresponding fallback allocation of normal pages upon any false
-> result:
->   /* A piece of example */
->   if (gfpflags_allow_blocking(flag))
->       page = dma_alloc_from_contiguous();
->   if (!page)
->       page = alloc_pages();
->   [...]
->   if (!dma_release_from_contiguous(dev, page, count))
->       __free_pages(page, get_order(size));
->
-> So this patch simplifies those function calls by abstracting these
-> operations into the two new functions: dma_{alloc,free}_contiguous.
->
-> As some callers of dma_{alloc,release}_from_contiguous() might be
-> complicated, this patch just implements these two new functions to
-> kernel/dma/direct.c only as an initial step.
->
-> Suggested-by: Christoph Hellwig <hch@lst.de>
-> Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
-> ---
-> Changelog
-> v1->v2:
->  * Added new functions beside the old ones so we can replace callers
->    one by one later.
->  * Applied new functions to dma/direct.c only, because it's the best
->    example caller to apply and should be safe with the new functions.
->
->  include/linux/dma-contiguous.h | 10 +++++++
->  kernel/dma/contiguous.c        | 48 ++++++++++++++++++++++++++++++++++
->  kernel/dma/direct.c            | 24 +++--------------
->  3 files changed, 62 insertions(+), 20 deletions(-)
->
-> diff --git a/include/linux/dma-contiguous.h b/include/linux/dma-contiguous.h
-> index f247e8aa5e3d..dacbdcb91a89 100644
-> --- a/include/linux/dma-contiguous.h
-> +++ b/include/linux/dma-contiguous.h
-> @@ -115,6 +115,8 @@ struct page *dma_alloc_from_contiguous(struct device *dev, size_t count,
->                                        unsigned int order, bool no_warn);
->  bool dma_release_from_contiguous(struct device *dev, struct page *pages,
->                                  int count);
-> +struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp);
-> +void dma_free_contiguous(struct device *dev, struct page *page, size_t size);
->
->  #else
->
-> @@ -157,6 +159,14 @@ bool dma_release_from_contiguous(struct device *dev, struct page *pages,
->         return false;
->  }
->
-> +struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
-> +{
-> +       return NULL;
-> +}
-> +
-> +static inline
-> +void dma_free_contiguous(struct device *dev, struct page *page, size_t size) { }
-> +
->  #endif
->
->  #endif
-> diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
-> index b2a87905846d..21f39a6cb04f 100644
-> --- a/kernel/dma/contiguous.c
-> +++ b/kernel/dma/contiguous.c
-> @@ -214,6 +214,54 @@ bool dma_release_from_contiguous(struct device *dev, struct page *pages,
->         return cma_release(dev_get_cma_area(dev), pages, count);
->  }
+Add i.MX SCU SoC info driver to support i.MX8QXP SoC, introduce
+driver dependency into Kconfig as CONFIG_IMX_SCU must be
+selected to support i.MX SCU SoC driver, also need to use
+platform driver model to make sure IMX_SCU driver is probed
+before i.MX SCU SoC driver.
 
-This breaks the build for me if CONFIG_DMA_CMA=n:
+With this patch, SoC info can be read from sysfs:
 
-  LD [M]  fs/9p/9p.o
-ld: fs/9p/vfs_inode.o: in function `dma_alloc_contiguous':
-vfs_inode.c:(.text+0xa60): multiple definition of
-`dma_alloc_contiguous'; fs/9p/vfs_super.o:vfs_super.c:(.text+0x500):
-first defined here
+i.mx8qxp-mek# cat /sys/devices/soc0/family
+Freescale i.MX
 
-Do the following insertions need to be under an #ifdef CONFIG_DMA_CMA ?
+i.mx8qxp-mek# cat /sys/devices/soc0/soc_id
+0x2
 
-  -dann
+i.mx8qxp-mek# cat /sys/devices/soc0/machine
+Freescale i.MX8QXP MEK
 
-> +/**
-> + * dma_alloc_contiguous() - allocate contiguous pages
-> + * @dev:   Pointer to device for which the allocation is performed.
-> + * @size:  Requested allocation size.
-> + * @gfp:   Allocation flags.
-> + *
-> + * This function allocates contiguous memory buffer for specified device. It
-> + * first tries to use device specific contiguous memory area if available or
-> + * the default global one, then tries a fallback allocation of normal pages.
-> + */
-> +struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
-> +{
-> +       int node = dev ? dev_to_node(dev) : NUMA_NO_NODE;
-> +       size_t count = PAGE_ALIGN(size) >> PAGE_SHIFT;
-> +       size_t align = get_order(PAGE_ALIGN(size));
-> +       struct cma *cma = dev_get_cma_area(dev);
-> +       struct page *page = NULL;
-> +
-> +       /* CMA can be used only in the context which permits sleeping */
-> +       if (cma && gfpflags_allow_blocking(gfp)) {
-> +               align = min_t(size_t, align, CONFIG_CMA_ALIGNMENT);
-> +               page = cma_alloc(cma, count, align, gfp & __GFP_NOWARN);
-> +       }
-> +
-> +       /* Fallback allocation of normal pages */
-> +       if (!page)
-> +               page = alloc_pages_node(node, gfp, align);
-> +
-> +       return page;
-> +}
-> +
-> +/**
-> + * dma_free_contiguous() - release allocated pages
-> + * @dev:   Pointer to device for which the pages were allocated.
-> + * @page:  Pointer to the allocated pages.
-> + * @size:  Size of allocated pages.
-> + *
-> + * This function releases memory allocated by dma_alloc_contiguous(). As the
-> + * cma_release returns false when provided pages do not belong to contiguous
-> + * area and true otherwise, this function then does a fallback __free_pages()
-> + * upon a false-return.
-> + */
-> +void dma_free_contiguous(struct device *dev, struct page *page, size_t size)
-> +{
-> +       if (!cma_release(dev_get_cma_area(dev), page, size >> PAGE_SHIFT))
-> +               __free_pages(page, get_order(size));
-> +}
-> +
->  /*
->   * Support for reserved memory regions defined in device tree
->   */
-> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-> index 2c2772e9702a..0816c1e8b05a 100644
-> --- a/kernel/dma/direct.c
-> +++ b/kernel/dma/direct.c
-> @@ -96,8 +96,6 @@ static bool dma_coherent_ok(struct device *dev, phys_addr_t phys, size_t size)
->  struct page *__dma_direct_alloc_pages(struct device *dev, size_t size,
->                 dma_addr_t *dma_handle, gfp_t gfp, unsigned long attrs)
->  {
-> -       unsigned int count = PAGE_ALIGN(size) >> PAGE_SHIFT;
-> -       int page_order = get_order(size);
->         struct page *page = NULL;
->         u64 phys_mask;
->
-> @@ -109,20 +107,9 @@ struct page *__dma_direct_alloc_pages(struct device *dev, size_t size,
->         gfp |= __dma_direct_optimal_gfp_mask(dev, dev->coherent_dma_mask,
->                         &phys_mask);
->  again:
-> -       /* CMA can be used only in the context which permits sleeping */
-> -       if (gfpflags_allow_blocking(gfp)) {
-> -               page = dma_alloc_from_contiguous(dev, count, page_order,
-> -                                                gfp & __GFP_NOWARN);
-> -               if (page && !dma_coherent_ok(dev, page_to_phys(page), size)) {
-> -                       dma_release_from_contiguous(dev, page, count);
-> -                       page = NULL;
-> -               }
-> -       }
-> -       if (!page)
-> -               page = alloc_pages_node(dev_to_node(dev), gfp, page_order);
-> -
-> +       page = dma_alloc_contiguous(dev, size, gfp);
->         if (page && !dma_coherent_ok(dev, page_to_phys(page), size)) {
-> -               __free_pages(page, page_order);
-> +               dma_free_contiguous(dev, page, size);
->                 page = NULL;
->
->                 if (IS_ENABLED(CONFIG_ZONE_DMA32) &&
-> @@ -154,7 +141,7 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
->         if (PageHighMem(page)) {
->                 /*
->                  * Depending on the cma= arguments and per-arch setup
-> -                * dma_alloc_from_contiguous could return highmem pages.
-> +                * dma_alloc_contiguous could return highmem pages.
->                  * Without remapping there is no way to return them here,
->                  * so log an error and fail.
->                  */
-> @@ -176,10 +163,7 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
->
->  void __dma_direct_free_pages(struct device *dev, size_t size, struct page *page)
->  {
-> -       unsigned int count = PAGE_ALIGN(size) >> PAGE_SHIFT;
-> -
-> -       if (!dma_release_from_contiguous(dev, page, count))
-> -               __free_pages(page, get_order(size));
-> +       dma_free_contiguous(dev, page, size);
->  }
->
->  void dma_direct_free_pages(struct device *dev, size_t size, void *cpu_addr,
-> --
-> 2.17.1
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+i.mx8qxp-mek# cat /sys/devices/soc0/revision
+1.1
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+---
+Changes since V6:
+	- remove the "unknown" soc_id and revision support, as they are NOT useful=
+ and could introduce
+	  kernel opps in the failure path, as the "unknown" can NOT be freed;
+	- minor improvement for platform device name, IPC structure definition.
+---
+ drivers/soc/imx/Kconfig       |   9 +++
+ drivers/soc/imx/Makefile      |   1 +
+ drivers/soc/imx/soc-imx-scu.c | 144 ++++++++++++++++++++++++++++++++++++++=
+++++
+ 3 files changed, 154 insertions(+)
+ create mode 100644 drivers/soc/imx/soc-imx-scu.c
+
+diff --git a/drivers/soc/imx/Kconfig b/drivers/soc/imx/Kconfig
+index ade1b46..8aaebf1 100644
+--- a/drivers/soc/imx/Kconfig
++++ b/drivers/soc/imx/Kconfig
+@@ -8,4 +8,13 @@ config IMX_GPCV2_PM_DOMAINS
+ 	select PM_GENERIC_DOMAINS
+ 	default y if SOC_IMX7D
+=20
++config IMX_SCU_SOC
++	bool "i.MX System Controller Unit SoC info support"
++	depends on IMX_SCU
++	select SOC_BUS
++	help
++	  If you say yes here you get support for the NXP i.MX System
++	  Controller Unit SoC info module, it will provide the SoC info
++	  like SoC family, ID and revision etc.
++
+ endmenu
+diff --git a/drivers/soc/imx/Makefile b/drivers/soc/imx/Makefile
+index caa8653..cf9ca42 100644
+--- a/drivers/soc/imx/Makefile
++++ b/drivers/soc/imx/Makefile
+@@ -2,3 +2,4 @@
+ obj-$(CONFIG_HAVE_IMX_GPC) +=3D gpc.o
+ obj-$(CONFIG_IMX_GPCV2_PM_DOMAINS) +=3D gpcv2.o
+ obj-$(CONFIG_ARCH_MXC) +=3D soc-imx8.o
++obj-$(CONFIG_IMX_SCU_SOC) +=3D soc-imx-scu.o
+diff --git a/drivers/soc/imx/soc-imx-scu.c b/drivers/soc/imx/soc-imx-scu.c
+new file mode 100644
+index 0000000..676f612
+--- /dev/null
++++ b/drivers/soc/imx/soc-imx-scu.c
+@@ -0,0 +1,144 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright 2019 NXP.
++ */
++
++#include <dt-bindings/firmware/imx/rsrc.h>
++#include <linux/firmware/imx/sci.h>
++#include <linux/slab.h>
++#include <linux/sys_soc.h>
++#include <linux/platform_device.h>
++#include <linux/of.h>
++
++#define IMX_SCU_SOC_DRIVER_NAME		"imx-scu-soc"
++
++static struct imx_sc_ipc *soc_ipc_handle;
++
++struct imx_sc_msg_misc_get_soc_id {
++	struct imx_sc_rpc_msg hdr;
++	union {
++		struct {
++			u32 control;
++			u16 resource;
++		} __packed req;
++		struct {
++			u32 id;
++		} resp;
++	} data;
++} __packed;
++
++static int imx_scu_soc_id(void)
++{
++	struct imx_sc_msg_misc_get_soc_id msg;
++	struct imx_sc_rpc_msg *hdr =3D &msg.hdr;
++	int ret;
++
++	hdr->ver =3D IMX_SC_RPC_VERSION;
++	hdr->svc =3D IMX_SC_RPC_SVC_MISC;
++	hdr->func =3D IMX_SC_MISC_FUNC_GET_CONTROL;
++	hdr->size =3D 3;
++
++	msg.data.req.control =3D IMX_SC_C_ID;
++	msg.data.req.resource =3D IMX_SC_R_SYSTEM;
++
++	ret =3D imx_scu_call_rpc(soc_ipc_handle, &msg, true);
++	if (ret) {
++		pr_err("%s: get soc info failed, ret %d\n", __func__, ret);
++		return ret;
++	}
++
++	return msg.data.resp.id;
++}
++
++static int imx_scu_soc_probe(struct platform_device *pdev)
++{
++	struct soc_device_attribute *soc_dev_attr;
++	struct soc_device *soc_dev;
++	int id, ret;
++	u32 val;
++
++	ret =3D imx_scu_get_handle(&soc_ipc_handle);
++	if (ret)
++		return ret;
++
++	soc_dev_attr =3D devm_kzalloc(&pdev->dev, sizeof(*soc_dev_attr),
++				    GFP_KERNEL);
++	if (!soc_dev_attr)
++		return -ENOMEM;
++
++	soc_dev_attr->family =3D "Freescale i.MX";
++
++	ret =3D of_property_read_string(of_root,
++				      "model",
++				      &soc_dev_attr->machine);
++	if (ret)
++		return ret;
++
++	id =3D imx_scu_soc_id();
++	if (id < 0)
++		return -EINVAL;
++
++	/* format soc_id value passed from SCU firmware */
++	val =3D id & 0x1f;
++	soc_dev_attr->soc_id =3D kasprintf(GFP_KERNEL, "0x%x", val);
++	if (!soc_dev_attr->soc_id)
++		return -ENOMEM;
++
++	/* format revision value passed from SCU firmware */
++	val =3D (id >> 5) & 0xf;
++	val =3D (((val >> 2) + 1) << 4) | (val & 0x3);
++	soc_dev_attr->revision =3D kasprintf(GFP_KERNEL,
++					   "%d.%d",
++					   (val >> 4) & 0xf,
++					   val & 0xf);
++	if (!soc_dev_attr->revision) {
++		ret =3D -ENOMEM;
++		goto free_soc_id;
++	}
++
++	soc_dev =3D soc_device_register(soc_dev_attr);
++	if (IS_ERR(soc_dev)) {
++		ret =3D PTR_ERR(soc_dev);
++		goto free_revision;
++	}
++
++	return 0;
++
++free_revision:
++	kfree(soc_dev_attr->revision);
++free_soc_id:
++	kfree(soc_dev_attr->soc_id);
++	return ret;
++}
++
++static struct platform_driver imx_scu_soc_driver =3D {
++	.driver =3D {
++		.name =3D IMX_SCU_SOC_DRIVER_NAME,
++	},
++	.probe =3D imx_scu_soc_probe,
++};
++
++static int __init imx_scu_soc_init(void)
++{
++	struct platform_device *pdev;
++	struct device_node *np;
++	int ret;
++
++	np =3D of_find_compatible_node(NULL, NULL, "fsl,imx-scu");
++	if (!np)
++		return -ENODEV;
++
++	of_node_put(np);
++
++	ret =3D platform_driver_register(&imx_scu_soc_driver);
++	if (ret)
++		return ret;
++
++	pdev =3D platform_device_register_simple(IMX_SCU_SOC_DRIVER_NAME,
++					       -1, NULL, 0);
++	if (IS_ERR(pdev))
++		platform_driver_unregister(&imx_scu_soc_driver);
++
++	return PTR_ERR_OR_ZERO(pdev);
++}
++device_initcall(imx_scu_soc_init);
+--=20
+2.7.4
+
