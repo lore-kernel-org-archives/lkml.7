@@ -2,100 +2,94 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F37C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:03:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCAC3C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C834421851
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:03:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9260B2133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:08:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391834AbfEXUDm (ORCPT
+        id S2391781AbfEXUIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 16:03:42 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:57465 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391612AbfEXUDl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 16:03:41 -0400
-Received: from mail-ot1-f71.google.com ([209.85.210.71])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <dann.frazier@canonical.com>)
-        id 1hUGPi-0007wv-F1
-        for linux-kernel@vger.kernel.org; Fri, 24 May 2019 20:03:38 +0000
-Received: by mail-ot1-f71.google.com with SMTP id 73so4999384oty.2
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 13:03:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MdZgSrzvQrNvArhhMwV6uq98L6kGwXydzTCUTc3ed/4=;
-        b=nyzkxWlpmuQTSM7FL8BbV7PvXVB4xXH0cSeWffJLbTSbrj03V2WDPh/ZdXcfNG3yoU
-         L5L3u0ZVoTo5fNICoeiL4xhZ37bRhduTSFxjcIguZHKDIsrpOwBWAkH7Y+Qv8HL/WQIJ
-         CHdznPhvV09D9nadnKXRj32wT69+Jdat8PR3XnLTq72BBEIwifNChCvYE8pw0ZTp9CL1
-         VeMCAgB+ZtMfOkDKIzcdMSjEooTtGLCQ2FEXopxVBicVlCC/I20dyWOkzSX8ENynQ87o
-         Q/hIfZdtEsxJRFume/r5VOAIAhbe2CQB4Iy8aNbNF8F0TN0/Z01pg9Qvl9Tr1paVa+tf
-         IhiA==
-X-Gm-Message-State: APjAAAVXvzfQlU1yYLQnFZS1RxCxaUn3Ii9vsEsPn3CgdClOwEj88jSJ
-        4oPkAEfpvq14fovKp9dRbq6OhhU9MJZ/SyCuOnwnUMlhziM0zBE9di7fLNtcAqFDcpbgaQ4hvE7
-        Qk+y4KggDeVYroRKISGYaIzQbp085xwifvJe3rdsDQfsg0tDsGyA4VYTvhg==
-X-Received: by 2002:a05:6830:164d:: with SMTP id h13mr31758686otr.99.1558728217210;
-        Fri, 24 May 2019 13:03:37 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxoya9uYRsSIEv51UV91v8Z+LxDz8k4gGrzqqMySgCjbel8axNiXlhuqaT0Un+V+0ZUNeHLZgzLuTVB5rKzbzc=
-X-Received: by 2002:a05:6830:164d:: with SMTP id h13mr31758663otr.99.1558728216929;
- Fri, 24 May 2019 13:03:36 -0700 (PDT)
+        Fri, 24 May 2019 16:08:45 -0400
+Received: from mga17.intel.com ([192.55.52.151]:6671 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391612AbfEXUIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 16:08:45 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 May 2019 13:08:45 -0700
+X-ExtLoop1: 1
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by fmsmga006.fm.intel.com with ESMTP; 24 May 2019 13:08:44 -0700
+Received: from fmsmsx112.amr.corp.intel.com (10.18.116.6) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Fri, 24 May 2019 13:08:44 -0700
+Received: from crsmsx104.amr.corp.intel.com (172.18.63.32) by
+ FMSMSX112.amr.corp.intel.com (10.18.116.6) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Fri, 24 May 2019 13:08:44 -0700
+Received: from crsmsx101.amr.corp.intel.com ([169.254.1.116]) by
+ CRSMSX104.amr.corp.intel.com ([169.254.6.192]) with mapi id 14.03.0415.000;
+ Fri, 24 May 2019 14:08:42 -0600
+From:   "Weiny, Ira" <ira.weiny@intel.com>
+To:     Shakeel Butt <shakeelb@google.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH RFC] mm/swap: make release_pages() and put_pages() match
+Thread-Topic: [PATCH RFC] mm/swap: make release_pages() and put_pages() match
+Thread-Index: AQHVEmeV6lwaEiR3+E6UJvvneFDW0qZ7EgQA//+iDIA=
+Date:   Fri, 24 May 2019 20:08:42 +0000
+Message-ID: <2807E5FD2F6FDA4886F6618EAC48510E79D3ACC3@CRSMSX101.amr.corp.intel.com>
+References: <20190524193415.9733-1-ira.weiny@intel.com>
+ <CALvZod6skK6NxeRXjKS64+1jpF9NwbLp7DhpWueB0F6Tj4MNUw@mail.gmail.com>
+In-Reply-To: <CALvZod6skK6NxeRXjKS64+1jpF9NwbLp7DhpWueB0F6Tj4MNUw@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMDJlYzY3Y2ItYjdlMC00NDc0LThlN2EtNDZmODQxOTFlNTUyIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiWGhaUUYxZ29XQW9TaXRNU2VBVHFcL0tkRWJrdDN3OFlUcFJyNFNKRmJmYWVubmZvVkdDTzFDRWU3VmtFcDc3b3kifQ==
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [172.18.205.10]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190524040633.16854-1-nicoleotsuka@gmail.com>
-In-Reply-To: <20190524040633.16854-1-nicoleotsuka@gmail.com>
-From:   dann frazier <dann.frazier@canonical.com>
-Date:   Fri, 24 May 2019 14:03:25 -0600
-Message-ID: <CALdTtnu=WdYbqyq57EkB-=rsyz72SW-J8oyD7f6Xm-da2OgRgQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] Optimize dma_*_from_contiguous calls
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>, vdumpa@nvidia.com,
-        linux@armlinux.org.uk, Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>, chris@zankel.net,
-        jcmvbkbc@gmail.com, joro@8bytes.org, dwmw2@infradead.org,
-        tony@atomide.com, akpm@linux-foundation.org, sfr@canb.auug.org.au,
-        treding@nvidia.com, keescook@chromium.org, iamjoonsoo.kim@lge.com,
-        wsa+renesas@sang-engineering.com,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        iommu@lists.linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 10:08 PM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
->
-> [ Per discussion at v1, we decide to add two new functions and start
->   replacing callers one by one. For this series, it only touches the
->   dma-direct part. And instead of merging two PATCHes, I still keep
->   them separate so that we may easily revert PATCH-2 if anything bad
->   happens as last time -- PATCH-1 is supposed to be a safe cleanup. ]
->
-> This series of patches try to optimize dma_*_from_contiguous calls:
-> PATCH-1 abstracts two new functions and applies to dma-direct.c file.
-> PATCH-2 saves single pages and reduce fragmentations from CMA area.
->
-> Please check their commit messages for detail changelog.
->
-> Nicolin Chen (2):
->   dma-contiguous: Abstract dma_{alloc,free}_contiguous()
->   dma-contiguous: Use fallback alloc_pages for single pages
->
->  include/linux/dma-contiguous.h | 11 +++++++
->  kernel/dma/contiguous.c        | 57 ++++++++++++++++++++++++++++++++++
->  kernel/dma/direct.c            | 24 +++-----------
->  3 files changed, 72 insertions(+), 20 deletions(-)
-
-Thanks Nicolin. Tested on a HiSilicon D06 system.
-
-Tested-by: dann frazier <dann.frazier@canonical.com>
+PiANCj4gT24gRnJpLCBNYXkgMjQsIDIwMTkgYXQgMTI6MzMgUE0gPGlyYS53ZWlueUBpbnRlbC5j
+b20+IHdyb3RlOg0KPiA+DQo+ID4gRnJvbTogSXJhIFdlaW55IDxpcmEud2VpbnlAaW50ZWwuY29t
+Pg0KPiA+DQo+ID4gUkZDIEkgaGF2ZSBubyBpZGVhIGlmIHRoaXMgaXMgY29ycmVjdCBvciBub3Qu
+ICBCdXQgbG9va2luZyBhdA0KPiA+IHJlbGVhc2VfcGFnZXMoKSBJIHNlZSBhIGNhbGwgdG8gYm90
+aCBfX0NsZWFyUGFnZUFjdGl2ZSgpIGFuZA0KPiA+IF9fQ2xlYXJQYWdlV2FpdGVycygpIHdoaWxl
+IGluIF9fcGFnZV9jYWNoZV9yZWxlYXNlKCkgSSBkbyBub3QuDQo+ID4NCj4gPiBJcyB0aGlzIGEg
+YnVnIHdoaWNoIG5lZWRzIHRvIGJlIGZpeGVkPyAgRGlkIEkgbWlzcyBjbGVhcmluZyBhY3RpdmUN
+Cj4gPiBzb21ld2hlcmUgZWxzZSBpbiB0aGUgY2FsbCBjaGFpbiBvZiBwdXRfcGFnZT8NCj4gPg0K
+PiA+IFRoaXMgd2FzIGZvdW5kIHZpYSBjb2RlIGluc3BlY3Rpb24gd2hpbGUgZGV0ZXJtaW5pbmcg
+aWYNCj4gPiByZWxlYXNlX3BhZ2VzKCkgYW5kIHRoZSBuZXcgcHV0X3VzZXJfcGFnZXMoKSBjb3Vs
+ZCBiZSBpbnRlcmNoYW5nZWFibGUuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBJcmEgV2Vpbnkg
+PGlyYS53ZWlueUBpbnRlbC5jb20+DQo+ID4gLS0tDQo+ID4gIG1tL3N3YXAuYyB8IDEgKw0KPiA+
+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9t
+bS9zd2FwLmMgYi9tbS9zd2FwLmMNCj4gPiBpbmRleCAzYTc1NzIyZTY4YTkuLjlkMDQzMmJhZGRi
+MCAxMDA2NDQNCj4gPiAtLS0gYS9tbS9zd2FwLmMNCj4gPiArKysgYi9tbS9zd2FwLmMNCj4gPiBA
+QCAtNjksNiArNjksNyBAQCBzdGF0aWMgdm9pZCBfX3BhZ2VfY2FjaGVfcmVsZWFzZShzdHJ1Y3Qg
+cGFnZSAqcGFnZSkNCj4gPiAgICAgICAgICAgICAgICAgZGVsX3BhZ2VfZnJvbV9scnVfbGlzdChw
+YWdlLCBscnV2ZWMsDQo+ID4gcGFnZV9vZmZfbHJ1KHBhZ2UpKTsNCj4gDQo+IHNlZSBwYWdlX29m
+Zl9scnUocGFnZSkgYWJvdmUgd2hpY2ggY2xlYXIgYWN0aXZlIGJpdC4NCg0KVGhhbmtzLCAgU29y
+cnkgZm9yIHRoZSBub2lzZSwNCklyYQ0KDQoNCj4gDQo+ID4gICAgICAgICAgICAgICAgIHNwaW5f
+dW5sb2NrX2lycXJlc3RvcmUoJnBnZGF0LT5scnVfbG9jaywgZmxhZ3MpOw0KPiA+ICAgICAgICAg
+fQ0KPiA+ICsgICAgICAgX19DbGVhclBhZ2VBY3RpdmUocGFnZSk7DQo+ID4gICAgICAgICBfX0Ns
+ZWFyUGFnZVdhaXRlcnMocGFnZSk7DQo+ID4gICAgICAgICBtZW1fY2dyb3VwX3VuY2hhcmdlKHBh
+Z2UpOw0KPiA+ICB9DQo+ID4gLS0NCj4gPiAyLjIwLjENCj4gPg0K
