@@ -2,72 +2,98 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FEEEC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 608FDC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 712B721773
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:19:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3198E21773
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:19:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="fLbTFdXK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732012AbfEXSTH (ORCPT
+        id S2391279AbfEXSTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 14:19:07 -0400
-Received: from foss.arm.com ([217.140.101.70]:48396 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727346AbfEXSTH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 14:19:07 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E9A97A78;
-        Fri, 24 May 2019 11:19:06 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D81AF3F703;
-        Fri, 24 May 2019 11:19:05 -0700 (PDT)
-Date:   Fri, 24 May 2019 19:19:03 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [GIT PULL] arm64: Second round of fixes for -rc2
-Message-ID: <20190524181903.GB9697@fuggles.cambridge.arm.com>
-References: <20190524174357.GC9120@fuggles.cambridge.arm.com>
- <CAHk-=wijeJ5OjswsUkm0Fns=0kd7kgRo98uPsJE3HQfwP5mBRA@mail.gmail.com>
+        Fri, 24 May 2019 14:19:49 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39833 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728712AbfEXSTs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 14:19:48 -0400
+Received: by mail-wm1-f68.google.com with SMTP id z23so6047815wma.4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 11:19:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+8J7+u+08zw/YayuZerzF4YvJ/C2JcgVQ3UZvTM8GdY=;
+        b=fLbTFdXK/qHCokY3RRGYYjK9b5BKrl51TIo5xcbU/V1w71Dwmb7nnguqE/LlutxG0X
+         jFWSeN4YebgtkduKqxhKCmUhJN71XPTkHNuphOwT+PhHlXGKEqoPjqr4vDenJW+pRhSr
+         SwbGlSXdsq4MLZIC4tkbWx2U4Q56kzhih8EzIwaxMyzEubYKrtXsuvryQ5CqrEzKHEKW
+         NYkdXaA+BQ/6nSc9CrC1OlIMNM5+CkferqlCSyzGNDD0MKPmGAqThxGX6gjZZy15Z7up
+         Riq/QbxT1I2YIcTXhIKxqNKGD9wFJ+hN1Fq3s9VHiTRIJ95MEy/gHTjuhJzAFJyI2S6s
+         oooA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+8J7+u+08zw/YayuZerzF4YvJ/C2JcgVQ3UZvTM8GdY=;
+        b=CoBm6/4usiScaAvRbnveDK6coQdnCkf50vl+Ng3wvNRKo92fs1wJ2TbVfz0XcfPbs2
+         XUCvTVoRe8B/n8FtWdyfsQ0P6rvJoshYYRo37zXNamQ7yC1rLww0lFtIQNdxjVninRRv
+         fHvv6qNy602FFZ/MR+W4oY2Ss5ngFuB+zWCUcvtTQ7mQkXVAioasLSUkMNDXgavmPwwy
+         /L6hlC44Dio+mj6SQAJBtDCoeNFU8cb64NFr03+Ei4/ywfPvXyddw3dmzgFeXdky/yb6
+         2TN1S8QoErFAtu1QxWf0ZcIFdCYGcFVfyttshOfJ0Ot9v8gFLQv+cVmKDNr3MtnORbHP
+         K6XA==
+X-Gm-Message-State: APjAAAVXSdazi0MD45ppRDjWn+++9Nkjs5daiBJMvjmOvujwIX8gpON4
+        KPUR1WnF2lHlSKiDdmZexLI=
+X-Google-Smtp-Source: APXvYqxqHSt7C6QxdYYFU1OJ2baCwFXbx4oAQnj+bTCBMrHIlPHQxmVND5il/ViRVFU8xUfrGuis/Q==
+X-Received: by 2002:a7b:c40e:: with SMTP id k14mr895213wmi.114.1558721986483;
+        Fri, 24 May 2019 11:19:46 -0700 (PDT)
+Received: from blackbox.darklights.net (p200300F133EE7100D0AA8776F4474B72.dip0.t-ipconnect.de. [2003:f1:33ee:7100:d0aa:8776:f447:4b72])
+        by smtp.googlemail.com with ESMTPSA id i15sm3181831wre.30.2019.05.24.11.19.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 May 2019 11:19:45 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     linux-amlogic@lists.infradead.org, khilman@baylibre.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        hexdump0815@googlemail.com,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 0/1] ARM: meson8b-mxq: better support for the TRONFY MXQ
+Date:   Fri, 24 May 2019 20:19:35 +0200
+Message-Id: <20190524181936.29470-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wijeJ5OjswsUkm0Fns=0kd7kgRo98uPsJE3HQfwP5mBRA@mail.gmail.com>
-User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 11:14:02AM -0700, Linus Torvalds wrote:
-> Only tangentially relevant to this pull request:
-> 
-> On Fri, May 24, 2019 at 10:44 AM Will Deacon <will.deacon@arm.com> wrote:
-> >
-> > - Add workaround for Cortex-A76 CPU erratum #1463225
-> > - Handle Cortex-A76/Neoverse-N1 erratum #1418040 w/ existing workaround
-> 
-> could you perhaps talk to somebody inside ARM about making the errata
-> documentation publicly available?
-> 
-> I'm not sure why it seems to want an account at arm.com, and as a
-> result some pretty fundamental development tools ("let me google
-> that") don't work.
+A while ago a user asked on #linux-amlogic about the state of the
+TRONFY MXQ in mainline. I did some research (mainly downloading an
+Android firmware image for that device and looking at the .dtb) and
+updated the mainline .dts accordingly.
 
-We recently removed a whole bunch of click-through/registration things
-for our documentation, so I'm surprised that it's still the case for
-the errata document (but it does appear to be).
+I kept this patch in my tree but didn't hear back from anyone with one
+of these boards (who could actually test my patch). That was until
+today where I got the following message on IRC:
+  any plans to submit your latest own version of the meson8b mxq dtb
+  to mainline? it works really well for me and the one in mainline is
+  too simple to be usedful ...
 
-I'll see if this can be fixed. After all, we end up descibing the thing
-in the Kconfig text anyway...
+Thus I believe that this patch is finally ready for being included
+upstream!
 
-Cheers,
 
-Will
+Martin Blumenstingl (1):
+  ARM: dts: meson8b: mxq: improve support for the TRONFY MXQ S805
+
+ arch/arm/boot/dts/meson8b-mxq.dts | 139 ++++++++++++++++++++++++++++++
+ 1 file changed, 139 insertions(+)
+
+-- 
+2.21.0
+
