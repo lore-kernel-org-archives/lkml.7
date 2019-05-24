@@ -2,62 +2,42 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8425C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4952C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2A13217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:35:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558704951;
-	bh=aeJ54Tls8pUGac4NiymyuHRLfeqj/WJ1D8MuDz9g1gQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=KSezlMdou4wguKaAHF7dIyyElFoWmr8mtO8mdB5JFhaYPPfNkKmfIO2ktsBpnKSNM
-	 xoUV78p1t0A1rYOplDzaFSEV6weLo5ljlvvO3Njzd1OiR2xOQaxDBurnKmNkPHnyHL
-	 jNvWSzMpUE5TpaXvxIDRUSfRU1J9nVCt25lcdQ0s=
+	by mail.kernel.org (Postfix) with ESMTP id BFFB22184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:36:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403856AbfEXNfv (ORCPT
+        id S2403869AbfEXNgD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 09:35:51 -0400
-Received: from casper.infradead.org ([85.118.1.10]:56308 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403804AbfEXNfu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 09:35:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=a84L9ZynbQTHP9MHDmUi2uab2LrEajX0zeKKzUoHR2Q=; b=QbNFbzbaVGx6nDE4Lt/gz/ontH
-        mryLBk30+Ei/1aJ+mmhUQ1nwSoK+Py0cZktjf95fKVLP0ih2qCetBqumwAPZ3v9hvga8J/u12VOsz
-        wFi+JwWMK3ZMvFf/WHD8qCexM6jX0O6LKU8b+ka+TM8Xd9igf8AIzEuu91xScDMK9qQ7WQYz07wlG
-        TdPelpbWfdjxSj1WSXwumK1MacDG7AWnyZvKhmxIl/YWXUj5unKVWShDq38fDFgU5zM9KPc3Cn74W
-        NLqjEzHu1Q2rAsc2qy6QCf6WI11FyYoYaoQNTJviuZrQP0QGneB+DzhTgL3jLGdU2wL5dzxCj1D4J
-        9HSKYaAQ==;
-Received: from 177.97.63.247.dynamic.adsl.gvt.net.br ([177.97.63.247] helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hUAML-00007l-4G; Fri, 24 May 2019 13:35:45 +0000
-Date:   Fri, 24 May 2019 10:35:40 -0300
-From:   Mauro Carvalho Chehab <mchehab@kernel.org>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     andreyknvl@google.com,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        <linux-media@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        <syzkaller-bugs@googlegroups.com>, <wen.yang99@zte.com.cn>
-Subject: Re: [PATCH] media: usb: siano: Fix general protection fault in
- smsusb
-Message-ID: <20190524103540.250a69e7@coco.lan>
-In-Reply-To: <Pine.LNX.4.44L0.1905071237310.1632-100000@iolanthe.rowland.org>
-References: <0000000000004a08f805883ead54@google.com>
-        <Pine.LNX.4.44L0.1905071237310.1632-100000@iolanthe.rowland.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 24 May 2019 09:36:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42996 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403788AbfEXNgC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 09:36:02 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 874F1217F9;
+        Fri, 24 May 2019 13:36:01 +0000 (UTC)
+Date:   Fri, 24 May 2019 09:36:00 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Julien Thierry <julien.thierry@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] clocksource/arm_arch_timer: Don't trace count reader
+ functions
+Message-ID: <20190524093600.11ca3cb2@gandalf.local.home>
+In-Reply-To: <1558689025-50679-1-git-send-email-julien.thierry@arm.com>
+References: <1558689025-50679-1-git-send-email-julien.thierry@arm.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
@@ -66,169 +46,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, 7 May 2019 12:39:47 -0400 (EDT)
-Alan Stern <stern@rowland.harvard.edu> escreveu:
+On Fri, 24 May 2019 10:10:25 +0100
+Julien Thierry <julien.thierry@arm.com> wrote:
 
-> The syzkaller USB fuzzer found a general-protection-fault bug in the
-> smsusb part of the Siano DVB driver.  The fault occurs during probe
-> because the driver assumes without checking that the device has both
-> IN and OUT endpoints and the IN endpoint is ep1.
+> With v5.2-rc1, The ftrace functions_graph tracer locks up whenever it is
+> enabled on arm64.
 > 
-> By slightly rearranging the driver's initialization code, we can make
-> the appropriate checks early on and thus avoid the problem.  If the
-> expected endpoints aren't present, the new code safely returns -ENODEV
-> from the probe routine.
+> Since commit 0ea415390cd3 ("clocksource/arm_arch_timer: Use
+> arch_timer_read_counter to access stable counters") a function pointer
+> is consistently used to read the counter instead of potentially
+> referencing an inlinable function.
 > 
-> Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-> Reported-and-tested-by: syzbot+53f029db71c19a47325a@syzkaller.appspotmail.com
-> CC: <stable@vger.kernel.org>
+> The graph tacers relies on accessing the timer counters to compute the
+> time spent in functions which causes the lockup when attempting to trace
+> these code paths.
 > 
+> Annontate the arm arch timer counter accessors as notrace.
+> 
+> Fixes: 0ea415390cd3 ("clocksource/arm_arch_timer: Use
+>        arch_timer_read_counter to access stable counters")
+> Signed-off-by: Julien Thierry <julien.thierry@arm.com>
+> Cc: Marc Zyngier <marc.zyngier@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
 > ---
+>  drivers/clocksource/arm_arch_timer.c | 8 ++++----
+
+Is there any reason to function trace any of the functions in this
+file? If not, then I would suggest removing all the "notrace"
+annotations from this file, and add in the Makefile for this directory:
+
+CFLAGS_REMOVE_arm_arch_timer.o = $(CC_FLAGS_FTRACE)
+
+Hmm, I need to go through all the Makefiles in the kernel and remove
+the "-pg" and replace it with "$(CC_FLAGS_FTRACE)" as that's the safer
+way of doing it now.
+
+-- Steve
+
+
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> 
-> [as1897]
-> 
-> 
->  drivers/media/usb/siano/smsusb.c |   33 ++++++++++++++++++++-------------
->  1 file changed, 20 insertions(+), 13 deletions(-)
-> 
-> Index: usb-devel/drivers/media/usb/siano/smsusb.c
-> ===================================================================
-> --- usb-devel.orig/drivers/media/usb/siano/smsusb.c
-> +++ usb-devel/drivers/media/usb/siano/smsusb.c
-> @@ -400,6 +400,7 @@ static int smsusb_init_device(struct usb
->  	struct smsusb_device_t *dev;
->  	void *mdev;
->  	int i, rc;
-> +	int in_maxp;
+> diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
+> index b2a951a..5c69c9a 100644
+> --- a/drivers/clocksource/arm_arch_timer.c
+> +++ b/drivers/clocksource/arm_arch_timer.c
+> @@ -149,22 +149,22 @@ u32 arch_timer_reg_read(int access, enum arch_timer_reg reg,
+>  	return val;
+>  }
 >  
->  	/* create device object */
->  	dev = kzalloc(sizeof(struct smsusb_device_t), GFP_KERNEL);
-> @@ -411,6 +412,24 @@ static int smsusb_init_device(struct usb
->  	dev->udev = interface_to_usbdev(intf);
->  	dev->state = SMSUSB_DISCONNECTED;
+> -static u64 arch_counter_get_cntpct_stable(void)
+> +static notrace u64 arch_counter_get_cntpct_stable(void)
+>  {
+>  	return __arch_counter_get_cntpct_stable();
+>  }
 >  
-> +	for (i = 0; i < intf->cur_altsetting->desc.bNumEndpoints; i++) {
-> +		struct usb_endpoint_descriptor *desc =
-> +				&intf->cur_altsetting->endpoint[i].desc;
-> +
-> +		if (desc->bEndpointAddress & USB_DIR_IN) {
-> +			dev->in_ep = desc->bEndpointAddress;
-> +			in_maxp = usb_endpoint_maxp(desc);
-> +		} else {
-> +			dev->out_ep = desc->bEndpointAddress;
-> +		}
-> +	}
-> +
-> +	pr_debug("in_ep = %02x, out_ep = %02x\n", dev->in_ep, dev->out_ep);
-> +	if (!dev->in_ep || !dev->out_ep) {	/* Missing endpoints? */
-> +		smsusb_term_device(intf);
-> +		return -ENODEV;
-> +	}
-> +
->  	params.device_type = sms_get_board(board_id)->type;
+> -static u64 arch_counter_get_cntpct(void)
+> +static notrace u64 arch_counter_get_cntpct(void)
+>  {
+>  	return __arch_counter_get_cntpct();
+>  }
 >  
->  	switch (params.device_type) {
-> @@ -425,24 +444,12 @@ static int smsusb_init_device(struct usb
->  		/* fall-thru */
->  	default:
->  		dev->buffer_size = USB2_BUFFER_SIZE;
-> -		dev->response_alignment =
-> -		    le16_to_cpu(dev->udev->ep_in[1]->desc.wMaxPacketSize) -
-> -		    sizeof(struct sms_msg_hdr);
-> +		dev->response_alignment = in_maxp - sizeof(struct sms_msg_hdr);
+> -static u64 arch_counter_get_cntvct_stable(void)
+> +static notrace u64 arch_counter_get_cntvct_stable(void)
+>  {
+>  	return __arch_counter_get_cntvct_stable();
+>  }
 >  
->  		params.flags |= SMS_DEVICE_FAMILY2;
->  		break;
->  	}
->  
-> -	for (i = 0; i < intf->cur_altsetting->desc.bNumEndpoints; i++) {
-> -		if (intf->cur_altsetting->endpoint[i].desc. bEndpointAddress & USB_DIR_IN)
-> -			dev->in_ep = intf->cur_altsetting->endpoint[i].desc.bEndpointAddress;
-> -		else
-> -			dev->out_ep = intf->cur_altsetting->endpoint[i].desc.bEndpointAddress;
-> -	}
-> -
-> -	pr_debug("in_ep = %02x, out_ep = %02x\n",
-> -		dev->in_ep, dev->out_ep);
-> -
->  	params.device = &dev->udev->dev;
->  	params.usb_device = dev->udev;
->  	params.buffer_size = dev->buffer_size;
-> 
-
-Patch looks correct, and I'm applying it. It exposes another potential
-problem though: what happens if sizeof(desc.wMaxPacketSize) < sizeof(struct sms_msg_hdr)?
-
-I'm enclosing a followup patch that should solve this situation
-(and clean up a sparse warning).
-
-Thanks,
-Mauro
-
-[PATCH] media: smsusb: better handle optional alignment
-
-Most Siano devices require an alignment for the response.
-
-Changeset f3be52b0056a ("media: usb: siano: Fix general protection fault in smsusb")
-changed the logic with gets such aligment, but it now produces a
-sparce warning:
-
-drivers/media/usb/siano/smsusb.c: In function 'smsusb_init_device':
-drivers/media/usb/siano/smsusb.c:447:37: warning: 'in_maxp' may be used uninitialized in this function [-Wmaybe-uninitialized]
-  447 |   dev->response_alignment = in_maxp - sizeof(struct sms_msg_hdr);
-      |                             ~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The sparse message itself is bogus, but a broken (or fake) USB
-eeprom could produce a negative value for response_alignment.
-
-So, change the code in order to check if the result is not
-negative.
-
-Fixes: f3be52b0056a ("media: usb: siano: Fix general protection fault in smsusb")
-CC: <stable@vger.kernel.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-
-diff --git a/drivers/media/usb/siano/smsusb.c b/drivers/media/usb/siano/smsusb.c
-index 27ad14a3f831..e39f3f40dfdd 100644
---- a/drivers/media/usb/siano/smsusb.c
-+++ b/drivers/media/usb/siano/smsusb.c
-@@ -400,7 +400,7 @@ static int smsusb_init_device(struct usb_interface *intf, int board_id)
- 	struct smsusb_device_t *dev;
- 	void *mdev;
- 	int i, rc;
--	int in_maxp;
-+	int align = 0;
- 
- 	/* create device object */
- 	dev = kzalloc(sizeof(struct smsusb_device_t), GFP_KERNEL);
-@@ -418,14 +418,14 @@ static int smsusb_init_device(struct usb_interface *intf, int board_id)
- 
- 		if (desc->bEndpointAddress & USB_DIR_IN) {
- 			dev->in_ep = desc->bEndpointAddress;
--			in_maxp = usb_endpoint_maxp(desc);
-+			align = usb_endpoint_maxp(desc) - sizeof(struct sms_msg_hdr);
- 		} else {
- 			dev->out_ep = desc->bEndpointAddress;
- 		}
- 	}
- 
- 	pr_debug("in_ep = %02x, out_ep = %02x\n", dev->in_ep, dev->out_ep);
--	if (!dev->in_ep || !dev->out_ep) {	/* Missing endpoints? */
-+	if (!dev->in_ep || !dev->out_ep || align < 0) {  /* Missing endpoints? */
- 		smsusb_term_device(intf);
- 		return -ENODEV;
- 	}
-@@ -444,7 +444,7 @@ static int smsusb_init_device(struct usb_interface *intf, int board_id)
- 		/* fall-thru */
- 	default:
- 		dev->buffer_size = USB2_BUFFER_SIZE;
--		dev->response_alignment = in_maxp - sizeof(struct sms_msg_hdr);
-+		dev->response_alignment = align;
- 
- 		params.flags |= SMS_DEVICE_FAMILY2;
- 		break;
-
-
-
+> -static u64 arch_counter_get_cntvct(void)
+> +static notrace u64 arch_counter_get_cntvct(void)
+>  {
+>  	return __arch_counter_get_cntvct();
+>  }
 
