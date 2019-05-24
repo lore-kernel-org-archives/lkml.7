@@ -2,142 +2,140 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42819C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3702BC282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0478521841
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:52:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558677142;
-	bh=isQJuIhcuCBrs0hEM9Rq67SyZfcwBKSPB6Sk8DBiWws=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PqnJDd2RbYFx7L5Y/jJaTAPn9VxcbuO+6Uux2QGAeV0DmSC4Zoyh6wBYAPewcC2Qg
-	 Cnz+i7v8l83i/HPsXz1RFK7GOy3BvLa47KuXvlfXwN50SLHUShuZcyxwNkbTqW7DDr
-	 AxaY6uAKmZCAQdYx7CXLN/dRDLNnA2eciLphUYuY=
+	by mail.kernel.org (Postfix) with ESMTP id E743620665
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:52:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ZR073Czp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388618AbfEXFwV (ORCPT
+        id S2388698AbfEXFw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 01:52:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37754 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388260AbfEXFwU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 01:52:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 013ED20657;
-        Fri, 24 May 2019 05:52:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558677139;
-        bh=isQJuIhcuCBrs0hEM9Rq67SyZfcwBKSPB6Sk8DBiWws=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fP7FW/cO8V34XYmZg9rWhYsL+PlOydNwPAReC9ZvfvYHaN/b35fM+DhbXsDD67mLp
-         bi3k1OgRmDaUQFf0FVg8SK9pE8qEzstPunr67zKr1kYB8kOlV2hBMjdlV6RYrQgZVT
-         n3laM/k1NfzSjlro/5hQ+q4XG8fMNd+89CIJuUu4=
-Date:   Fri, 24 May 2019 07:52:17 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@android.com
-Subject: Re: [PATCH v1 0/5] Solve postboot supplier cleanup and optimize
- probe ordering
-Message-ID: <20190524055217.GC31664@kroah.com>
-References: <20190524010117.225219-1-saravanak@google.com>
+        Fri, 24 May 2019 01:52:27 -0400
+Received: from mail-eopbgr00058.outbound.protection.outlook.com ([40.107.0.58]:58892
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388260AbfEXFwZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 01:52:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eKwEL0hsIp12CnwV2oHYus+JsvYqct60cA6cWG8I7AY=;
+ b=ZR073CzpG6/dmkwaQ1/vCkOOLBPW/0S+1H84bIjQ65jR5+4MRw7DHI9d1/uEsSlgBcnfYE/XcxLVlSqUIYJloas+sFBYaR6oeiEvAPWJmjMc4aRmZuqq19jmZ9YrIk+Bn0iQKqFWAvlVhDNncCJozAGjdb+AA6/CDvVP0DzTFj0=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3721.eurprd04.prod.outlook.com (52.134.67.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.16; Fri, 24 May 2019 05:52:21 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::5835:e874:bd94:fec]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::5835:e874:bd94:fec%5]) with mapi id 15.20.1922.017; Fri, 24 May 2019
+ 05:52:21 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
+        "ccaione@baylibre.com" <ccaione@baylibre.com>,
+        "angus@akkea.ca" <angus@akkea.ca>,
+        "agx@sigxcpu.org" <agx@sigxcpu.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH 3/3] arm64: dts: imx8mq: add clock for SNVS RTC node
+Thread-Topic: [PATCH 3/3] arm64: dts: imx8mq: add clock for SNVS RTC node
+Thread-Index: AQHVCrrcUP74CkLHLE+NNE1EMv+PBqZ38P8AgAHi6yA=
+Date:   Fri, 24 May 2019 05:52:21 +0000
+Message-ID: <DB3PR0402MB391655657A8BE5E812F01C8FF5020@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1557882259-3353-1-git-send-email-Anson.Huang@nxp.com>
+ <1557882259-3353-3-git-send-email-Anson.Huang@nxp.com>
+ <20190523010243.GD16359@dragon>
+In-Reply-To: <20190523010243.GD16359@dragon>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: baa9a513-5da4-45ac-0c7f-08d6e00bfced
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3721;
+x-ms-traffictypediagnostic: DB3PR0402MB3721:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <DB3PR0402MB3721E06CBBF74329AE5F7860F5020@DB3PR0402MB3721.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:483;
+x-forefront-prvs: 0047BC5ADE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(396003)(346002)(39860400002)(366004)(136003)(13464003)(199004)(189003)(6436002)(76116006)(8676002)(6306002)(44832011)(73956011)(55016002)(68736007)(486006)(7736002)(9686003)(305945005)(7416002)(476003)(33656002)(74316002)(25786009)(81166006)(81156014)(2906002)(8936002)(14454004)(66476007)(446003)(66446008)(64756008)(66556008)(256004)(52536014)(54906003)(71190400001)(71200400001)(66066001)(66946007)(316002)(26005)(4326008)(53546011)(478600001)(6506007)(86362001)(102836004)(966005)(3846002)(6916009)(99286004)(229853002)(11346002)(7696005)(53936002)(6116002)(5660300002)(6246003)(186003)(76176011)(32563001)(299355004);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3721;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 1Hl5vOWHTPitA7aKByeNvRap739atBwDilrfWyJzQluuznZoYCmY96DgI+fep+9ZVkW5OWAIS7yyiBBWqV72t3qBBAFGQsud/oYNDJVUxm6VyMBW/MHUbx2FauREX9N5DJ/QTOVTA+Gkurwx9NTRNI6rvQQERWHtMmnuIXFfLBBz/qPF+1sr4CbRWVsnlFTgKDwXYSUVTw6ocbaxxzFTlTYrN7nd+4DzC6xOYZG0RgA5bCKfKm9zS/rt9Jvm/2ceRcZ9NY5LIzQsSnUXYKX9IpcP2GRsotFv5tBsd9J/BiJSItmK6YHqYC0SKCyp7jDhVzmSd+k8NppAf0GQeEbkI/MkWCdbBJsBSgIOHryjyquy927FjK97gzM2R7Dhs6seNefyTUtJYRQqQmO7X4C2B1kNZwiGfdhjrzb4kB2Gqdc=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190524010117.225219-1-saravanak@google.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: baa9a513-5da4-45ac-0c7f-08d6e00bfced
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 May 2019 05:52:21.0900
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: anson.huang@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3721
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 06:01:11PM -0700, Saravana Kannan wrote:
-> Add a generic "depends-on" property that allows specifying mandatory
-> functional dependencies between devices. Add device-links after the
-> devices are created (but before they are probed) by looking at this
-> "depends-on" property.
-> 
-> This property is used instead of existing DT properties that specify
-> phandles of other devices (Eg: clocks, pinctrl, regulators, etc). This
-> is because not all resources referred to by existing DT properties are
-> mandatory functional dependencies. Some devices/drivers might be able
-> to operate with reduced functionality when some of the resources
-> aren't available. For example, a device could operate in polling mode
-> if no IRQ is available, a device could skip doing power management if
-> clock or voltage control isn't available and they are left on, etc.
-> 
-> So, adding mandatory functional dependency links between devices by
-> looking at referred phandles in DT properties won't work as it would
-> prevent probing devices that could be probed. By having an explicit
-> depends-on property, we can handle these cases correctly.
-> 
-> Having functional dependencies explicitly called out in DT and
-> automatically added before the devices are probed, provides the
-> following benefits:
-> 
-> - Optimizes device probe order and avoids the useless work of
->   attempting probes of devices that will not probe successfully
->   (because their suppliers aren't present or haven't probed yet).
-> 
->   For example, in a commonly available mobile SoC, registering just
->   one consumer device's driver at an initcall level earlier than the
->   supplier device's driver causes 11 failed probe attempts before the
->   consumer device probes successfully. This was with a kernel with all
->   the drivers statically compiled in. This problem gets a lot worse if
->   all the drivers are loaded as modules without direct symbol
->   dependencies.
-> 
-> - Supplier devices like clock providers, regulators providers, etc
->   need to keep the resources they provide active and at a particular
->   state(s) during boot up even if their current set of consumers don't
->   request the resource to be active. This is because the rest of the
->   consumers might not have probed yet and turning off the resource
->   before all the consumers have probed could lead to a hang or
->   undesired user experience.
-> 
->   Some frameworks (Eg: regulator) handle this today by turning off
->   "unused" resources at late_initcall_sync and hoping all the devices
->   have probed by then. This is not a valid assumption for systems with
->   loadable modules. Other frameworks (Eg: clock) just don't handle
->   this due to the lack of a clear signal for when they can turn off
->   resources. This leads to downstream hacks to handle cases like this
->   that can easily be solved in the upstream kernel.
-> 
->   By linking devices before they are probed, we give suppliers a clear
->   count of the number of dependent consumers. Once all of the
->   consumers are active, the suppliers can turn off the unused
->   resources without making assumptions about the number of consumers.
-> 
-> By default we just add device-links to track "driver presence" (probe
-> succeeded) of the supplier device. If any other functionality provided
-> by device-links are needed, it is left to the consumer/supplier
-> devices to change the link when they probe.
-
-Somewhere in this wall of text you need to say:
-	MAKES DEVICES BOOT FASTER!
-right?  :)
-
-So in short, this solves the issue of deferred probing with systems with
-loads of modules for platform devices and device tree, in that now you
-have a chance to probe devices in the correct order saving loads of busy
-loops.
-
-A good thing, I like this, very nice work, all of these are:
-	Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-but odds are I'll take this through my tree, so I'll add my s-o-b then.
-But only after the DT people agree on the new entry.
-
-thanks,
-
-greg k-h
+SGksIFNoYXduDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2hhd24g
+R3VvIFttYWlsdG86c2hhd25ndW9Aa2VybmVsLm9yZ10NCj4gU2VudDogVGh1cnNkYXksIE1heSAy
+MywgMjAxOSA5OjAzIEFNDQo+IFRvOiBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4N
+Cj4gQ2M6IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IHMuaGF1ZXJA
+cGVuZ3V0cm9uaXguZGU7DQo+IGtlcm5lbEBwZW5ndXRyb25peC5kZTsgZmVzdGV2YW1AZ21haWwu
+Y29tOyBtdHVycXVldHRlQGJheWxpYnJlLmNvbTsNCj4gc2JveWRAa2VybmVsLm9yZzsgbC5zdGFj
+aEBwZW5ndXRyb25peC5kZTsgQWJlbCBWZXNhDQo+IDxhYmVsLnZlc2FAbnhwLmNvbT47IGFuZHJl
+dy5zbWlybm92QGdtYWlsLmNvbTsgY2NhaW9uZUBiYXlsaWJyZS5jb207DQo+IGFuZ3VzQGFra2Vh
+LmNhOyBhZ3hAc2lneGNwdS5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1h
+cm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJu
+ZWwub3JnOyBsaW51eC0NCj4gY2xrQHZnZXIua2VybmVsLm9yZzsgZGwtbGludXgtaW14IDxsaW51
+eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCAzLzNdIGFybTY0OiBkdHM6IGlt
+eDhtcTogYWRkIGNsb2NrIGZvciBTTlZTIFJUQyBub2RlDQo+IA0KPiBPbiBXZWQsIE1heSAxNSwg
+MjAxOSBhdCAwMTowOTozNkFNICswMDAwLCBBbnNvbiBIdWFuZyB3cm90ZToNCj4gPiBpLk1YOE1R
+IGhhcyBjbG9jayBnYXRlIGZvciBTTlZTIG1vZHVsZSwgYWRkIGNsb2NrIGluZm8gdG8gU05WUyBS
+VEMNCj4gPiBub2RlIGZvciBjbG9jayBtYW5hZ2VtZW50Lg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1i
+eTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+IA0KPiBUaGlzIG9uZSBzdGls
+bCBoYXMgcHJvYmxlbSB3aXRoIGVuY29kaW5nIGFuZCB0aHVzIGNhbm5vdCBiZSBhcHBsaWVkLg0K
+PiBIZXJlIGlzIHdoYXQgSSBnZXQsIGFuZCB0aGVyZSBpcyAnPTIwJyBpbiB0aGUgcGF0Y2ggY29u
+dGVudC4NCg0KV2Ugc3dpdGNoIHRvIGFub3RoZXIgc2VydmVyIHdoaWNoIGhhcyBubyBzdWNoIGlz
+c3VlLCBJIHJlc2VudCB0aGUgcGF0Y2gsDQpQbGVhc2UgcGljayB1cCB0aGlzIG9uZSwgc29ycnkg
+Zm9yIHRoZSBpbmNvbnZlbmllbmNlLg0KDQpodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3Bh
+dGNoLzEwOTU5MDk3Lw0KDQp0aGFua3MsDQpBbnNvbi4NCg0KPiANCj4gZGlmZiAtLWdpdCBhL2Fy
+Y2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtcS5kdHNpDQo+IGIvYXJjaC9hcm02NC9i
+b290L2R0PSBzL2ZyZWVzY2FsZS9pbXg4bXEuZHRzaSBpbmRleCBlNWYzMTMzLi5iNzA2ZGU4DQo+
+IDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4bXEuZHRz
+aQ0KPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4bXEuZHRzaQ0KPiBA
+QCAtNDM4LDYgKzQzOCw4IEBADQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICBvZmZzZXQgPTNEIDwweDM0PjsNCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIGludGVycnVwdHMgPTNEIDxHSUNfU1BJIDE5IElSUV9UWVBFX0xFVkVMX0hJR0g+
+LA0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8R0lD
+X1NQSSAyMCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIGNsb2NrcyA9M0QgPCZjbGsgSU1YOE1RX0NMS19TTlZTX1JPT1Q+Ow0K
+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xvY2stbmFtZXMgPTNE
+ICJzbnZzLXJ0YyI7DQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4gICAg
+ICAgICAgICAgICAgICAgICAgICAgfTsNCj4gPTIwDQo+IC0tPTIwDQo+IDIuNy40DQoNCg==
