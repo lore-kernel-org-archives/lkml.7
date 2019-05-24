@@ -2,298 +2,121 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B42C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ECECC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A77C520673
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:55:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C55F20851
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:56:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="EwweVXR/"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="BxxRly/a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391302AbfEXLz5 (ORCPT
+        id S2391340AbfEXL4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 07:55:57 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:53395 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391080AbfEXLz4 (ORCPT
+        Fri, 24 May 2019 07:56:20 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46981 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391289AbfEXL4U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 07:55:56 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190524115554euoutp01e5271d4db9734978a5321953c56101d4~hnHDj1-ky3240832408euoutp01w
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 11:55:54 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190524115554euoutp01e5271d4db9734978a5321953c56101d4~hnHDj1-ky3240832408euoutp01w
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1558698954;
-        bh=ABqkO9dr5QlBiYgkJtRqhKZ1Tq/7+M7c1WoLkY6X0TA=;
-        h=From:Subject:To:Date:References:From;
-        b=EwweVXR/iraj7fHUZ/Aq+2ldY0PRx9OTDsPbNrEKFvv/2Kb4bMVsnY5ejFxNyHlxl
-         50h+sulwUeXrSZdQABX8kS4iD5Fp0UfAvnXj3CyArYRlX0jrMc6PpeUFioFABkjSB3
-         YB3eWVct/dpMj+BKHhZ+v97hzBIgyc1mbTKBEeEU=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190524115554eucas1p12a4c4b881103feb9d0a9f51facecaeaa~hnHDPn_jL1979619796eucas1p1b;
-        Fri, 24 May 2019 11:55:54 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 02.F6.04377.ACBD7EC5; Fri, 24
-        May 2019 12:55:54 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190524115553eucas1p2f900901e65f06ec33e478d433f96e34f~hnHCSHdSq0669206692eucas1p2D;
-        Fri, 24 May 2019 11:55:53 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190524115553eusmtrp23fa8bd166566a05d1dfba220843011ae~hnHCEHcGg2266222662eusmtrp2U;
-        Fri, 24 May 2019 11:55:53 +0000 (GMT)
-X-AuditID: cbfec7f4-12dff70000001119-a8-5ce7dbca658b
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id C2.D5.04146.9CBD7EC5; Fri, 24
-        May 2019 12:55:53 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190524115552eusmtip1478386dc08562181a9dfba06b617e1b4~hnHB3sWDl2814828148eusmtip1C;
-        Fri, 24 May 2019 11:55:52 +0000 (GMT)
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH v2 2/2] video: fbdev: pvr2fb: add COMPILE_TEST support
-To:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Message-ID: <a8ba0a36-b9b3-4039-5f49-ddc1d900a9d1@samsung.com>
-Date:   Fri, 24 May 2019 13:55:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+        Fri, 24 May 2019 07:56:20 -0400
+Received: by mail-wr1-f67.google.com with SMTP id r7so9702477wrr.13
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 04:56:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fIH1V2TkOLOizahELZLm8HyLwy2aaFtFRBz9J0PeBqw=;
+        b=BxxRly/ajvZLSzLtmSK61bITxGipmBwL2OJdeWQO3mNyXxtVS8CEil/Hq9l4iMDC/B
+         VEFZDVNkjxzqX0zbqaeHVXVNhpOn9cAJzdlqNPCzBx+7o6QywsG/hAWe603Bqw6bhPEs
+         LDmeY9vGcEAOtfqf3dCRVdOkTV+JzURsWeF6c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fIH1V2TkOLOizahELZLm8HyLwy2aaFtFRBz9J0PeBqw=;
+        b=Apo+cTe17mtEokulMXob54Jr52rXAwkAS2ICmQ6S+YJqEunNXI+3Noisb+rt2bhVZ/
+         bsduH2d5KDFKeZpCvTuGzxm1oB/ZWgHA9qHuFijsbCztpslvfdS37q0BqLA0JtRJ3Gry
+         XGoEd4YqveK1/QzbUrAbwtUufHnZD8LQXWCxY8m0wlFGVSE5oKK9vYilKIllLtFDNPZX
+         oQ8+y/rqtLeqTbs+gDr3HhPcAN6fmcnc0HQcUKiskhEOk5WH5DZt38Wlmr0oByNmU575
+         oKBB3FIoGZGFL+KLGmAaHPUeiieHLg7o3lUma4yDGJGga6LoU8Hd7bRVHDrr9TWtYTKK
+         +Prw==
+X-Gm-Message-State: APjAAAUsqcKvhF2lx0gYcOkgWbuz/6xekw3Oh+t5bLYvYuOCABy8v41B
+        XpnOK+Ch12O/TfuAz/pRo5CBMA==
+X-Google-Smtp-Source: APXvYqxaUJk406M1CG/mbR9qjOGcTakZkRCyBja4St7JWs72rRudUYM+FwM44E6UaY6tFnqje5PA6A==
+X-Received: by 2002:adf:e90b:: with SMTP id f11mr7526503wrm.291.1558698978195;
+        Fri, 24 May 2019 04:56:18 -0700 (PDT)
+Received: from andrea (86.100.broadband17.iol.cz. [109.80.100.86])
+        by smtp.gmail.com with ESMTPSA id 91sm2540053wrs.43.2019.05.24.04.56.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 May 2019 04:56:17 -0700 (PDT)
+Date:   Fri, 24 May 2019 13:56:12 +0200
+From:   Andrea Parri <andrea.parri@amarulasolutions.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jorgen Hansen <jhansen@vmware.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Subject: Re: [PATCH 1/2] vmw_vmci: Clean up uses of atomic*_set()
+Message-ID: <20190524115612.GA21365@andrea>
+References: <1558694136-19226-1-git-send-email-andrea.parri@amarulasolutions.com>
+ <1558694136-19226-2-git-send-email-andrea.parri@amarulasolutions.com>
+ <20190524103934.GO2606@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupgleLIzCtJLcpLzFFi42LZduznOd1Tt5/HGPz7xW5x5et7NosTfR9Y
-        LS7vmsPmwOxxv/s4k8fnTXIBTFFcNimpOZllqUX6dglcGfN2mRW81K34t3oScwNjm2oXIyeH
-        hICJRO+JvcxdjFwcQgIrGCX2/ellhXC+MEoc/PkdKvOZUWLFzpfMMC2rvqxjgUgsZ5R43boY
-        quUto8SZzlXsIFVsAlYSE9tXMYLYwgJuEqfm7AGLiwgkSKyYPgMszitgJzH3yzGwOIuAqsSx
-        459ZQGxRgQiJ+8c2sELUCEqcnPkELM4sIC5x68l8JghbXmL72zlg50kI3GaT+DhzCiPEeS4S
-        e39PYIWwhSVeHd/CDmHLSPzfCdIM0rCOUeJvxwuo7u2MEssn/2ODqLKWOHz8IlA3B9AKTYn1
-        u/Qhwo4S0468YQYJSwjwSdx4KwhxBJ/EpG3TocK8Eh1tQhDVahIblm1gg1nbtXMlNOQ8JLqe
-        3waLCwnESux+95V1AqPCLCRvzkLy5iwkb85CuGcBI8sqRvHU0uLc9NRio7zUcr3ixNzi0rx0
-        veT83E2MwPRx+t/xLzsYd/1JOsQowMGoxMObcPl5jBBrYllxZe4hRgkOZiUR3tj9z2KEeFMS
-        K6tSi/Lji0pzUosPMUpzsCiJ81YzPIgWEkhPLEnNTk0tSC2CyTJxcEo1MGq+FZvqPfd5nHPP
-        eqa28wwr9xQ3e2dy3SvL+5ygdDuM7+WGqf8si/5Ie3W/etrZtftbfOHC6jylbW6LyypuR0g1
-        fzbP0Fzvy98esOXIo86vFmePfU8RjGma+ONR4Sf+PRbrt7ssOmvT9vdI5O3yU3JlNe1FwQ8Y
-        Vvp1xjXm/vpl+/voWbHMRUosxRmJhlrMRcWJAGpuuiobAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrCLMWRmVeSWpSXmKPExsVy+t/xu7onbz+PMXh+j9Xiytf3bBYn+j6w
-        WlzeNYfNgdnjfvdxJo/Pm+QCmKL0bIryS0tSFTLyi0tslaINLYz0DC0t9IxMLPUMjc1jrYxM
-        lfTtbFJSczLLUov07RL0MubtMit4qVvxb/Uk5gbGNtUuRk4OCQETiVVf1rF0MXJxCAksZZTY
-        dqWDqYuRAyghI3F8fRlEjbDEn2tdbBA1rxkl3n25xASSYBOwkpjYvooRxBYWcJM4NWcPO4gt
-        IpAg8fT1fDYQm1fATmLul2NgcRYBVYljxz+zgNiiAhESZ96vYIGoEZQ4OfMJmM0soC7xZ94l
-        ZghbXOLWk/lMELa8xPa3c5gnMPLPQtIyC0nLLCQts5C0LGBkWcUoklpanJueW2yoV5yYW1ya
-        l66XnJ+7iREY4tuO/dy8g/HSxuBDjAIcjEo8vAmXn8cIsSaWFVfmHmKU4GBWEuGN3f8sRog3
-        JbGyKrUoP76oNCe1+BCjKdBDE5mlRJPzgfGXVxJvaGpobmFpaG5sbmxmoSTO2yFwMEZIID2x
-        JDU7NbUgtQimj4mDU6qBUaGvX37t2dcaD+cyZsktsGU49uWl7r49Gy1nNUyvP7KzoUu64b2l
-        0uuk3Zrn0l/yGQdbfkpacuDMjm2HFESVO4qCl9XsTOeIFrL6sl9ttchEZvfZtowPVqd9l9Nh
-        ObhiUatPzLfHsi9PRLvVTndgF5oePCuiSnP16i9XZH1/K/1RFNm2lMXysBJLcUaioRZzUXEi
-        AMIc+qOHAgAA
-X-CMS-MailID: 20190524115553eucas1p2f900901e65f06ec33e478d433f96e34f
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190524115553eucas1p2f900901e65f06ec33e478d433f96e34f
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190524115553eucas1p2f900901e65f06ec33e478d433f96e34f
-References: <CGME20190524115553eucas1p2f900901e65f06ec33e478d433f96e34f@eucas1p2.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190524103934.GO2606@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add COMPILE_TEST support to pvr2fb driver for better compile
-testing coverage.
+On Fri, May 24, 2019 at 12:39:34PM +0200, Peter Zijlstra wrote:
+> On Fri, May 24, 2019 at 12:35:35PM +0200, Andrea Parri wrote:
+> > The primitive vmci_q_set_pointer() relies on atomic*_set() being of
+> > type 'void', but this is a non-portable implementation detail.
+> > 
+> > Reported-by: Mark Rutland <mark.rutland@arm.com>
+> > Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: Jorgen Hansen <jhansen@vmware.com>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Will Deacon <will.deacon@arm.com>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
+> > ---
+> >  include/linux/vmw_vmci_defs.h | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/include/linux/vmw_vmci_defs.h b/include/linux/vmw_vmci_defs.h
+> > index 0c06178e4985b..eb593868e2e9e 100644
+> > --- a/include/linux/vmw_vmci_defs.h
+> > +++ b/include/linux/vmw_vmci_defs.h
+> > @@ -759,9 +759,9 @@ static inline void vmci_q_set_pointer(atomic64_t *var,
+> >  				      u64 new_val)
+> >  {
+> >  #if defined(CONFIG_X86_32)
+> > -	return atomic_set((atomic_t *)var, (u32)new_val);
+> > +	atomic_set((atomic_t *)var, (u32)new_val);
+> >  #else
+> > -	return atomic64_set(var, new_val);
+> > +	atomic64_set(var, new_val);
+> >  #endif
+> >  }
+> 
+> All that should just die a horrible death. That code is crap.
+> 
+> See:
+> 
+>   lkml.kernel.org/r/20190524103731.GN2606@hirez.programming.kicks-ass.net
 
-While at it:
+I see, that was indeed 'racy' with my patch!  ;-)  Thank you!
 
-- mark pvr2fb_interrupt() and pvr2fb_common_init() with
-  __maybe_unused tag (to silence build warnings when
-  !SH_DREAMCAST)
-
-- convert mmio_base in struct pvr2fb_par to 'void __iomem *'
-  from 'unsigned long' (needed to silence build warnings on
-  ARM).
-
-- split pvr2_get_param() on pvr2_get_param_name() and
-  pvr2_get_param_val() (needed to silence build warnings on
-  x86).
-
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
----
-v2: fix build warnings on x86 reported by kbuild test robot
-
-patch #1/2 is unchanged so I'm not sending it again
-
- drivers/video/fbdev/Kconfig  |    3 +-
- drivers/video/fbdev/pvr2fb.c |   61 +++++++++++++++++++++++--------------------
- 2 files changed, 36 insertions(+), 28 deletions(-)
-
-Index: b/drivers/video/fbdev/Kconfig
-===================================================================
---- a/drivers/video/fbdev/Kconfig
-+++ b/drivers/video/fbdev/Kconfig
-@@ -807,7 +807,8 @@ config FB_XVR1000
- 
- config FB_PVR2
- 	tristate "NEC PowerVR 2 display support"
--	depends on FB && SH_DREAMCAST
-+	depends on FB && HAS_IOMEM
-+	depends on SH_DREAMCAST || COMPILE_TEST
- 	select FB_CFB_FILLRECT
- 	select FB_CFB_COPYAREA
- 	select FB_CFB_IMAGEBLIT
-Index: b/drivers/video/fbdev/pvr2fb.c
-===================================================================
---- a/drivers/video/fbdev/pvr2fb.c
-+++ b/drivers/video/fbdev/pvr2fb.c
-@@ -139,7 +139,7 @@ static struct pvr2fb_par {
- 	unsigned char is_doublescan;	/* Are scanlines output twice? (doublescan) */
- 	unsigned char is_lowres;	/* Is horizontal pixel-doubling enabled? */
- 
--	unsigned long mmio_base;	/* MMIO base */
-+	void __iomem *mmio_base;	/* MMIO base */
- 	u32 palette[16];
- } *currentpar;
- 
-@@ -325,9 +325,9 @@ static int pvr2fb_setcolreg(unsigned int
-  * anything if the cable type has been overidden (via "cable:XX").
-  */
- 
--#define PCTRA 0xff80002c
--#define PDTRA 0xff800030
--#define VOUTC 0xa0702c00
-+#define PCTRA ((void __iomem *)0xff80002c)
-+#define PDTRA ((void __iomem *)0xff800030)
-+#define VOUTC ((void __iomem *)0xa0702c00)
- 
- static int pvr2_init_cable(void)
- {
-@@ -619,7 +619,7 @@ static void pvr2_do_blank(void)
- 	is_blanked = do_blank > 0 ? do_blank : 0;
- }
- 
--static irqreturn_t pvr2fb_interrupt(int irq, void *dev_id)
-+static irqreturn_t __maybe_unused pvr2fb_interrupt(int irq, void *dev_id)
- {
- 	struct fb_info *info = dev_id;
- 
-@@ -722,23 +722,30 @@ static struct fb_ops pvr2fb_ops = {
- 	.fb_imageblit	= cfb_imageblit,
- };
- 
--static int pvr2_get_param(const struct pvr2_params *p, const char *s, int val,
--			  int size)
-+static int pvr2_get_param_val(const struct pvr2_params *p, const char *s,
-+			      int size)
- {
- 	int i;
- 
--	for (i = 0 ; i < size ; i++ ) {
--		if (s != NULL) {
--			if (!strncasecmp(p[i].name, s, strlen(s)))
--				return p[i].val;
--		} else {
--			if (p[i].val == val)
--				return (int)p[i].name;
--		}
-+	for (i = 0 ; i < size; i++ ) {
-+		if (!strncasecmp(p[i].name, s, strlen(s)))
-+			return p[i].val;
- 	}
- 	return -1;
- }
- 
-+static char *pvr2_get_param_name(const struct pvr2_params *p, int val,
-+			  int size)
-+{
-+	int i;
-+
-+	for (i = 0 ; i < size; i++ ) {
-+		if (p[i].val == val)
-+			return p[i].name;
-+	}
-+	return NULL;
-+}
-+
- /**
-  * pvr2fb_common_init
-  *
-@@ -757,7 +764,7 @@ static int pvr2_get_param(const struct p
-  * in for flexibility anyways. Who knows, maybe someone has tv-out on a
-  * PCI-based version of these things ;-)
-  */
--static int pvr2fb_common_init(void)
-+static int __maybe_unused pvr2fb_common_init(void)
- {
- 	struct pvr2fb_par *par = currentpar;
- 	unsigned long modememused, rev;
-@@ -770,8 +777,8 @@ static int pvr2fb_common_init(void)
- 		goto out_err;
- 	}
- 
--	par->mmio_base = (unsigned long)ioremap_nocache(pvr2_fix.mmio_start,
--							pvr2_fix.mmio_len);
-+	par->mmio_base = ioremap_nocache(pvr2_fix.mmio_start,
-+					 pvr2_fix.mmio_len);
- 	if (!par->mmio_base) {
- 		printk(KERN_ERR "pvr2fb: Failed to remap mmio space\n");
- 		goto out_err;
-@@ -819,8 +826,8 @@ static int pvr2fb_common_init(void)
- 		fb_info->var.xres, fb_info->var.yres,
- 		fb_info->var.bits_per_pixel,
- 		get_line_length(fb_info->var.xres, fb_info->var.bits_per_pixel),
--		(char *)pvr2_get_param(cables, NULL, cable_type, 3),
--		(char *)pvr2_get_param(outputs, NULL, video_output, 3));
-+		pvr2_get_param_name(cables, cable_type, 3),
-+		pvr2_get_param_name(outputs, video_output, 3));
- 
- #ifdef CONFIG_SH_STORE_QUEUES
- 	fb_notice(fb_info, "registering with SQ API\n");
-@@ -838,7 +845,7 @@ out_err:
- 	if (fb_info->screen_base)
- 		iounmap(fb_info->screen_base);
- 	if (par->mmio_base)
--		iounmap((void *)par->mmio_base);
-+		iounmap(par->mmio_base);
- 
- 	return -ENXIO;
- }
-@@ -905,8 +912,8 @@ static void __exit pvr2fb_dc_exit(void)
- 		fb_info->screen_base = NULL;
- 	}
- 	if (currentpar->mmio_base) {
--		iounmap((void *)currentpar->mmio_base);
--		currentpar->mmio_base = 0;
-+		iounmap(currentpar->mmio_base);
-+		currentpar->mmio_base = NULL;
- 	}
- 
- 	free_irq(HW_EVENT_VSYNC, fb_info);
-@@ -955,8 +962,8 @@ static void pvr2fb_pci_remove(struct pci
- 		fb_info->screen_base = NULL;
- 	}
- 	if (currentpar->mmio_base) {
--		iounmap((void *)currentpar->mmio_base);
--		currentpar->mmio_base = 0;
-+		iounmap(currentpar->mmio_base);
-+		currentpar->mmio_base = NULL;
- 	}
- 
- 	pci_release_regions(pdev);
-@@ -1027,9 +1034,9 @@ static int __init pvr2fb_setup(char *opt
- 	}
- 
- 	if (*cable_arg)
--		cable_type = pvr2_get_param(cables, cable_arg, 0, 3);
-+		cable_type = pvr2_get_param_val(cables, cable_arg, 3);
- 	if (*output_arg)
--		video_output = pvr2_get_param(outputs, output_arg, 0, 3);
-+		video_output = pvr2_get_param_val(outputs, output_arg, 3);
- 
- 	return 0;
- }
+  Andrea
