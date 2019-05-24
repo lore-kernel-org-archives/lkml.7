@@ -2,106 +2,97 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4899C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3065C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:47:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BBE12175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:45:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95FFD20815
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:47:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390123AbfEXJpA (ORCPT
+        id S2390222AbfEXJrx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 05:45:00 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:7320 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2389582AbfEXJpA (ORCPT
+        Fri, 24 May 2019 05:47:53 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:49866 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389841AbfEXJrx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 05:45:00 -0400
-X-UUID: daf92e84950644cfa0396206d837043a-20190524
-X-UUID: daf92e84950644cfa0396206d837043a-20190524
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <biao.huang@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1523258147; Fri, 24 May 2019 17:44:48 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by mtkmbs01n2.mediatek.inc
- (172.21.101.79) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 24 May
- 2019 17:44:46 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 24 May 2019 17:44:44 +0800
-Message-ID: <1558691084.24897.51.camel@mhfsdcap03>
-Subject: RE: [v2, PATCH] net: stmmac: add support for hash table size
- 128/256 in dwmac4
-From:   biao huang <biao.huang@mediatek.com>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-CC:     "davem@davemloft.net" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "yt.shen@mediatek.com" <yt.shen@mediatek.com>,
-        "jianguo.zhang@mediatek.comi" <jianguo.zhang@mediatek.comi>,
-        "boon.leong.ong@intel.com" <boon.leong.ong@intel.com>
-Date:   Fri, 24 May 2019 17:44:44 +0800
-In-Reply-To: <78EB27739596EE489E55E81C33FEC33A0B92D26F@DE02WEMBXB.internal.synopsys.com>
-References: <1557802843-31718-1-git-send-email-biao.huang@mediatek.com>
-         <78EB27739596EE489E55E81C33FEC33A0B92D26F@DE02WEMBXB.internal.synopsys.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Fri, 24 May 2019 05:47:53 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 82CB3634C7B;
+        Fri, 24 May 2019 12:47:22 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.89)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1hU6nK-00018F-C3; Fri, 24 May 2019 12:47:22 +0300
+Date:   Fri, 24 May 2019 12:47:22 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     "Andrew F. Davis" <afd@ti.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] [media] videobuf-dma-contig: Use size of buffer in mmap
+ not vma size
+Message-ID: <20190524094722.sjzk6hwfgjigxix6@valkosipuli.retiisi.org.uk>
+References: <20190329173427.18238-1-afd@ti.com>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 238D8347CAB595BF80BC7F148B95AD8BE5BE1F4F748A6570F199B0DC4BF2A9D82000:8
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190329173427.18238-1-afd@ti.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Seems I should modify this patch base on
-"https://patchwork.ozlabs.org/project/netdev/list/?series=109699"
+On Fri, Mar 29, 2019 at 12:34:27PM -0500, Andrew F. Davis wrote:
+> The size of the vma can be larger than the size of the backing buffer.
+> Use the buffer size over vma size to prevent exposing extra memory
+> to userspace.
+> 
+> Signed-off-by: Andrew F. Davis <afd@ti.com>
 
-On Fri, 2019-05-24 at 09:24 +0000, Jose Abreu wrote:
-> From: biao huang <biao.huang@mediatek.com>
-> Date: Fri, May 24, 2019 at 09:31:44
-> 
-> > On Fri, 2019-05-24 at 08:24 +0000, Jose Abreu wrote:
-> > > From: biao huang <biao.huang@mediatek.com>
-> > > Date: Fri, May 24, 2019 at 07:33:37
-> > > 
-> > > > any comments about this patch?
-> > > 
-> > > Can you please test your series on top of this one [1] and let me know 
-> > > the output of :
-> > > # ethtool -t eth0
-> > "ethtol -T eth0"? This patch only affect hash table filter, seems no
-> > relation to timestamp.
-> > > 
-execute "ethtool -t eth0", then we got "Cannot test: Operation not
-supported", is there any config should be enabled?
-> > > Just to make sure that this patch does not introduce any regressions. The 
-> > > remaining ones of the series look fine by me!
-> > > 
-> > > [1] 
-> > which one? Did I miss anything here?
-> 
-> Sorry, my mail client tried to wrap the long link and ended up in a 
-> loooong email.
-> 
-> [1] https://patchwork.ozlabs.org/project/netdev/list/?series=109699
-> 
-Got it.
-> Thanks,
-> Jose Miguel Abreu
+Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
+> ---
+>  drivers/media/v4l2-core/videobuf-dma-contig.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/media/v4l2-core/videobuf-dma-contig.c b/drivers/media/v4l2-core/videobuf-dma-contig.c
+> index e1bf50df4c70..65e2655d22b7 100644
+> --- a/drivers/media/v4l2-core/videobuf-dma-contig.c
+> +++ b/drivers/media/v4l2-core/videobuf-dma-contig.c
+> @@ -280,7 +280,6 @@ static int __videobuf_mmap_mapper(struct videobuf_queue *q,
+>  	struct videobuf_dma_contig_memory *mem;
+>  	struct videobuf_mapping *map;
+>  	int retval;
+> -	unsigned long size;
+>  
+>  	dev_dbg(q->dev, "%s\n", __func__);
+>  
+> @@ -303,7 +302,6 @@ static int __videobuf_mmap_mapper(struct videobuf_queue *q,
+>  		goto error;
+>  
+>  	/* Try to remap memory */
+> -	size = vma->vm_end - vma->vm_start;
+>  	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
+>  
+>  	/* the "vm_pgoff" is just used in v4l2 to find the
+> @@ -314,7 +312,7 @@ static int __videobuf_mmap_mapper(struct videobuf_queue *q,
+>  	 */
+>  	vma->vm_pgoff = 0;
+>  
+> -	retval = vm_iomap_memory(vma, mem->dma_handle, size);
+> +	retval = vm_iomap_memory(vma, mem->dma_handle, mem->size);
+>  	if (retval) {
+>  		dev_err(q->dev, "mmap: remap failed with error %d. ",
+>  			retval);
+> -- 
+> 2.21.0
+> 
 
+-- 
+Sakari Ailus
