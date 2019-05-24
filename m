@@ -2,138 +2,129 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A3EC282E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 080F6C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9712320879
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:07:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DD8020879
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:10:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="OG3jSL1i"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="k2WAcfx2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389066AbfEXHHw (ORCPT
+        id S2389027AbfEXHKf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 03:07:52 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:2122 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388869AbfEXHHw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 03:07:52 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4O71fNu007790;
-        Fri, 24 May 2019 09:07:32 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=KgYz8lOxNFe9GYsbnWGU1e/GbH4dagg7a0sGq3pqCSE=;
- b=OG3jSL1iKU0eVTv0A0JLy4hhXLT9kgBxURJsh6RYps7WQY0OPv2F3yHCjBd5uYpg+A4q
- MEq92hoDZWhCciu1gJ6JFguKPZw8xS/UZUR2sZCMwtsgzo1X0CW2dLb/sAcrXcP6PvZq
- y3C3Tfkn+L4gg+mqbi9KTMUOErn/K+o6uV/+blIiBPn32JmSbDL/145K00pgVqEUynLa
- YDJckO8lEiJ5ABs+seAGcDkHfGgV+rFYMybhZJL0bepOURua/3TvwHiWNFXlU7gc4tRk
- VIELxlOeYGo7reJLqHtRUgdyt6t1olwqaQI2IBdHQ545P1tkx/vbLvhmahllcoY/egAr aQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2snrve64ab-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 24 May 2019 09:07:32 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C60F34D;
-        Fri, 24 May 2019 07:07:29 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8D72315B0;
-        Fri, 24 May 2019 07:07:29 +0000 (GMT)
-Received: from [10.48.0.204] (10.75.127.49) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 24 May
- 2019 09:07:28 +0200
-Subject: Re: [v4, PATCH 2/3] net: stmmac: fix csr_clk can't be zero issue
-To:     Biao Huang <biao.huang@mediatek.com>,
-        Jose Abreu <joabreu@synopsys.com>
-CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <netdev@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <yt.shen@mediatek.com>,
-        <jianguo.zhang@mediatek.comi>, <boon.leong.ong@intel.com>
-References: <1558679169-26752-1-git-send-email-biao.huang@mediatek.com>
- <1558679169-26752-3-git-send-email-biao.huang@mediatek.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <120eba91-6d7f-1365-6b1c-e8365e54136c@st.com>
-Date:   Fri, 24 May 2019 09:07:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <1558679169-26752-3-git-send-email-biao.huang@mediatek.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+        Fri, 24 May 2019 03:10:35 -0400
+Received: from mail-eopbgr820075.outbound.protection.outlook.com ([40.107.82.75]:9911
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388460AbfEXHKe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 03:10:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector1-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ww0LyfRxGFq8R5I05daDtQhsIkDCr1jVHS1jTB8NDVg=;
+ b=k2WAcfx2hzIWOfrslF5oEh+yVX8XkKuVaWq4T6gQKRKMdbfpXT/Rp02LknvvSWvybEqoad+Ov56TKyOkCPG9EwQWz5Diw9rZMGaiyS83PtJdl63iI/MtXhJzziLcCUJQL810u5ALN50gEVFVFRSXplhDAWz/Au2Qgqly8uFsEHI=
+Received: from BY1PR0301MB0901.namprd03.prod.outlook.com (10.160.195.140) by
+ BY1PR0301MB1319.namprd03.prod.outlook.com (10.161.206.27) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.16; Fri, 24 May 2019 07:10:28 +0000
+Received: from BY1PR0301MB0901.namprd03.prod.outlook.com
+ ([fe80::f582:135:91b7:eb89]) by BY1PR0301MB0901.namprd03.prod.outlook.com
+ ([fe80::f582:135:91b7:eb89%4]) with mapi id 15.20.1922.017; Fri, 24 May 2019
+ 07:10:28 +0000
+From:   "Hennerich, Michael" <Michael.Hennerich@analog.com>
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+CC:     kbuild test robot <lkp@intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: RE: [PATCH] gpio: fix gpio-adp5588 build errors
+Thread-Topic: [PATCH] gpio: fix gpio-adp5588 build errors
+Thread-Index: AQHVEbMIs/GUdK8HvES52ZhkR4tgfKZ53FCA
+Date:   Fri, 24 May 2019 07:10:28 +0000
+Message-ID: <BY1PR0301MB090122CBC8CED2B6830425378E020@BY1PR0301MB0901.namprd03.prod.outlook.com>
+References: <8054bec0-ea24-8590-738b-bae58c0be3b4@infradead.org>
+In-Reply-To: <8054bec0-ea24-8590-738b-bae58c0be3b4@infradead.org>
+Accept-Language: de-DE, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG6NODE3.st.com (10.75.127.18) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-24_01:,,
- signatures=0
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Michael.Hennerich@analog.com; 
+x-originating-ip: [137.71.226.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 284cbd15-3702-4909-52c4-08d6e016e6dc
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:BY1PR0301MB1319;
+x-ms-traffictypediagnostic: BY1PR0301MB1319:
+x-microsoft-antispam-prvs: <BY1PR0301MB1319DC372529CF925CCA5F588E020@BY1PR0301MB1319.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0047BC5ADE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(346002)(396003)(376002)(39860400002)(136003)(199004)(13464003)(189003)(52536014)(305945005)(6246003)(25786009)(5660300002)(11346002)(446003)(53936002)(26005)(4326008)(316002)(8936002)(76116006)(14454004)(256004)(486006)(476003)(71190400001)(86362001)(7736002)(66446008)(66476007)(66946007)(64756008)(73956011)(66556008)(71200400001)(102836004)(66066001)(6506007)(53546011)(99286004)(33656002)(72206003)(2906002)(478600001)(2501003)(110136005)(76176011)(7696005)(54906003)(68736007)(6436002)(9686003)(55016002)(186003)(8676002)(81166006)(81156014)(74316002)(229853002)(6116002)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:BY1PR0301MB1319;H:BY1PR0301MB0901.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: analog.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 2N67lV7P4oE7PINIHd1W+YTKgUqh+GCqzD1AyRp8sVnMkMnkagaLSBdQ70Hm3/CWt0738ONetqwYLDB8wOaPUc7O2SI4EzVfE9Ez3DLo6KtTCXDAvgnFCfCda6TncZeqStzHvPkSTejAbefQQdUzdzRKMzoQeVlUsK9A5WwqUYvfVL17L0NKfDuXfbB8/DxvRV3mxE3JGIpoaPEs9vw6vzvUWA3ey4jdGZ2UfXvAaIMQrog68Id0+2bxt9YFzERgLcCBcUdrjz5w4cf25t9mJpventHp5VYy02ToNQzFBO0jnHiwSETv0d1ULCm99HW15u6xjLxAbW3Of6FBVJh7JZLkbwFOKK/UCoFbMaQI7bLLQEmttislwc8Fd2qSW+O977YbvX45yarMpdQnsh+AqF9h+h4voP5UAJwbEe+zmv4=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 284cbd15-3702-4909-52c4-08d6e016e6dc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 May 2019 07:10:28.4173
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY1PR0301MB1319
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Biao
-
-On 5/24/19 8:26 AM, Biao Huang wrote:
-> The specific clk_csr value can be zero, and
-> stmmac_clk is necessary for MDC clock which can be set dynamically.
-> So, change the condition from plat->clk_csr to plat->stmmac_clk to
-> fix clk_csr can't be zero issue.
-> 
-> Fixes: cd7201f477b9 ("stmmac: MDC clock dynamically based on the csr clock input")
-> Signed-off-by: Biao Huang <biao.huang@mediatek.com>
-> ---
->   drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |    6 +++---
->   .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |    5 ++++-
->   2 files changed, 7 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> index 06487a6..b2feb6c 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> @@ -4380,10 +4380,10 @@ int stmmac_dvr_probe(struct device *device,
->   	 * set the MDC clock dynamically according to the csr actual
->   	 * clock input.
->   	 */
-> -	if (!priv->plat->clk_csr)
-> -		stmmac_clk_csr_set(priv);
-> -	else
-> +	if (priv->plat->clk_csr >= 0)
->   		priv->clk_csr = priv->plat->clk_csr;
-> +	else
-> +		stmmac_clk_csr_set(priv);
->   
->   	stmmac_check_pcs_mode(priv);
->   
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-> index 3031f2b..f45bfbe 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-> @@ -408,7 +408,10 @@ struct plat_stmmacenet_data *
->   	/* Default to phy auto-detection */
->   	plat->phy_addr = -1;
->   
-> -	/* Get clk_csr from device tree */
-> +	/* Default to get clk_csr from stmmac_clk_crs_set(),
-> +	 * or get clk_csr from device tree.
-> +	 */
-> +	plat->clk_csr = -1;
->   	of_property_read_u32(np, "clk_csr", &plat->clk_csr);
->   
->   	/* "snps,phy-addr" is not a standard property. Mark it as deprecated
-> 
-
-Acked-by: Alexandre TORGUE <alexandre.torgue@st.com>
-
-thanks
-Alex
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSYW5keSBEdW5sYXAgW21haWx0
+bzpyZHVubGFwQGluZnJhZGVhZC5vcmddDQo+IFNlbnQ6IEZyZWl0YWcsIDI0LiBNYWkgMjAxOSAw
+MDowMQ0KPiBUbzogTEtNTCA8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZz47IGxpbnV4LWdw
+aW9Admdlci5rZXJuZWwub3JnDQo+IENjOiBrYnVpbGQgdGVzdCByb2JvdCA8bGtwQGludGVsLmNv
+bT47IEhlbm5lcmljaCwgTWljaGFlbCA8TWljaGFlbC5IZW5uZXJpY2hAYW5hbG9nLmNvbT47IExp
+bnVzIFdhbGxlaWoNCj4gPGxpbnVzLndhbGxlaWpAbGluYXJvLm9yZz47IEJhcnRvc3ogR29sYXN6
+ZXdza2kgPGJnb2xhc3pld3NraUBiYXlsaWJyZS5jb20+DQo+IFN1YmplY3Q6IFtQQVRDSF0gZ3Bp
+bzogZml4IGdwaW8tYWRwNTU4OCBidWlsZCBlcnJvcnMNCj4gDQo+IEZyb206IFJhbmR5IER1bmxh
+cCA8cmR1bmxhcEBpbmZyYWRlYWQub3JnPg0KPiANCj4gVGhlIGdwaW8tYWRwNTU4OCBkcml2ZXIg
+dXNlcyBpbnRlcmZhY2VzIHRoYXQgYXJlIHByb3ZpZGVkIGJ5DQo+IEdQSU9MSUJfSVJRQ0hJUCwg
+c28gc2VsZWN0IHRoYXQgc3ltYm9sIGluIGl0cyBLY29uZmlnIGVudHJ5Lg0KPiANCj4gRml4ZXMg
+dGhlc2UgYnVpbGQgZXJyb3JzOg0KPiANCj4gLi4vZHJpdmVycy9ncGlvL2dwaW8tYWRwNTU4OC5j
+OiBJbiBmdW5jdGlvbiDigJhhZHA1NTg4X2lycV9oYW5kbGVy4oCZOg0KPiAuLi9kcml2ZXJzL2dw
+aW8vZ3Bpby1hZHA1NTg4LmM6MjY2OjI2OiBlcnJvcjog4oCYc3RydWN0IGdwaW9fY2hpcOKAmSBo
+YXMgbm8gbWVtYmVyIG5hbWVkIOKAmGlyceKAmQ0KPiAgICAgICAgICAgICBkZXYtPmdwaW9fY2hp
+cC5pcnEuZG9tYWluLCBncGlvKSk7DQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgXg0KPiAu
+Li9kcml2ZXJzL2dwaW8vZ3Bpby1hZHA1NTg4LmM6IEluIGZ1bmN0aW9uIOKAmGFkcDU1ODhfaXJx
+X3NldHVw4oCZOg0KPiAuLi9kcml2ZXJzL2dwaW8vZ3Bpby1hZHA1NTg4LmM6Mjk4OjI6IGVycm9y
+OiBpbXBsaWNpdCBkZWNsYXJhdGlvbiBvZiBmdW5jdGlvbiDigJhncGlvY2hpcF9pcnFjaGlwX2Fk
+ZF9uZXN0ZWTigJkgWy1XZXJyb3I9aW1wbGljaXQtDQo+IGZ1bmN0aW9uLWRlY2xhcmF0aW9uXQ0K
+PiAgIHJldCA9IGdwaW9jaGlwX2lycWNoaXBfYWRkX25lc3RlZCgmZGV2LT5ncGlvX2NoaXAsDQo+
+ICAgXg0KPiAuLi9kcml2ZXJzL2dwaW8vZ3Bpby1hZHA1NTg4LmM6MzA3OjI6IGVycm9yOiBpbXBs
+aWNpdCBkZWNsYXJhdGlvbiBvZiBmdW5jdGlvbiDigJhncGlvY2hpcF9zZXRfbmVzdGVkX2lycWNo
+aXDigJkgWy1XZXJyb3I9aW1wbGljaXQtDQo+IGZ1bmN0aW9uLWRlY2xhcmF0aW9uXQ0KPiAgIGdw
+aW9jaGlwX3NldF9uZXN0ZWRfaXJxY2hpcCgmZGV2LT5ncGlvX2NoaXAsDQo+ICAgXg0KPiANCj4g
+Rml4ZXM6IDQ1OTc3M2FlOGRiYiAoImdwaW86IGFkcDU1ODgtZ3Bpbzogc3VwcG9ydCBpbnRlcnJ1
+cHQgY29udHJvbGxlciIpDQo+IA0KPiBSZXBvcnRlZC1ieToga2J1aWxkIHRlc3Qgcm9ib3QgPGxr
+cEBpbnRlbC5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IFJhbmR5IER1bmxhcCA8cmR1bmxhcEBpbmZy
+YWRlYWQub3JnPg0KDQpBY2tlZC1ieTogTWljaGFlbCBIZW5uZXJpY2ggPG1pY2hhZWwuaGVubmVy
+aWNoQGFuYWxvZy5jb20+DQoNCj4gQ2M6IE1pY2hhZWwgSGVubmVyaWNoIDxtaWNoYWVsLmhlbm5l
+cmljaEBhbmFsb2cuY29tPg0KPiBDYzogTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5h
+cm8ub3JnPg0KPiBDYzogQmFydG9zeiBHb2xhc3pld3NraSA8YmdvbGFzemV3c2tpQGJheWxpYnJl
+LmNvbT4NCj4gQ2M6IGxpbnV4LWdwaW9Admdlci5rZXJuZWwub3JnDQo+IC0tLQ0KPiAgZHJpdmVy
+cy9ncGlvL0tjb25maWcgfCAgICAxICsNCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigr
+KQ0KPiANCj4gLS0tIGxueC01Mi1yYzEub3JpZy9kcml2ZXJzL2dwaW8vS2NvbmZpZw0KPiArKysg
+bG54LTUyLXJjMS9kcml2ZXJzL2dwaW8vS2NvbmZpZw0KPiBAQCAtODIyLDYgKzgyMiw3IEBAIGNv
+bmZpZyBHUElPX0FEUDU1ODgNCj4gIGNvbmZpZyBHUElPX0FEUDU1ODhfSVJRDQo+ICAgICAgICAg
+Ym9vbCAiSW50ZXJydXB0IGNvbnRyb2xsZXIgc3VwcG9ydCBmb3IgQURQNTU4OCINCj4gICAgICAg
+ICBkZXBlbmRzIG9uIEdQSU9fQURQNTU4OD15DQo+ICsgICAgICAgc2VsZWN0IEdQSU9MSUJfSVJR
+Q0hJUA0KPiAgICAgICAgIGhlbHANCj4gICAgICAgICAgIFNheSB5ZXMgaGVyZSB0byBlbmFibGUg
+dGhlIGFkcDU1ODggdG8gYmUgdXNlZCBhcyBhbiBpbnRlcnJ1cHQNCj4gICAgICAgICAgIGNvbnRy
+b2xsZXIuIEl0IHJlcXVpcmVzIHRoZSBkcml2ZXIgdG8gYmUgYnVpbHQgaW4gdGhlIGtlcm5lbC4N
+Cj4gDQoNCg==
