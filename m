@@ -2,71 +2,147 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E825C282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE2B2C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27F0121848
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:59:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558713576;
-	bh=4+rchS067k+etnZl+afwYNLkDhPgxJ39VqZ3BVzy4O0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PDXZs3IbeCJssU/Hwkb20hyTHpLqZyKwQowx9Q1//0fH9iTV4HisgMoV4xAB2NSlb
-	 70N6HPGu+DLp1za+rUuJLLVzNtEzdtxeOg8DVfNEe3+pkE8ofWMNMe45CSlOyx0uqe
-	 sddUw0a58+EZncxcOAl//IqT6403mJvhsUp8cfio=
+	by mail.kernel.org (Postfix) with ESMTP id A377A21848
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:59:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=kinvolk.io header.i=@kinvolk.io header.b="Co9GxXET"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390404AbfEXP7f (ORCPT
+        id S2390546AbfEXP7p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 11:59:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51676 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389079AbfEXP7e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 11:59:34 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B80D8217D7;
-        Fri, 24 May 2019 15:59:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558713574;
-        bh=4+rchS067k+etnZl+afwYNLkDhPgxJ39VqZ3BVzy4O0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mSfPGbwLqyhe/N9Idd75C4ptW6jS6o+WpY64OZ6Y6bHR3u5+LT5n+jBUcTn6GeG8X
-         6iEJBw7BahotV0mjYyYdrSq3Z4hg7eGRM2uh8LfrvpM/N1JRgipYhFCc8Z12/jHYlC
-         0l4KrrrjgM8cwFT1dxdxsfuxMGatCvCekuPsaBDE=
-Date:   Fri, 24 May 2019 17:59:32 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Vijay Khemka <vijaykhemka@fb.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        sdasari@fb.com
-Subject: Re: [PATCH v2] misc: aspeed-lpc-ctrl: Correct return values
-Message-ID: <20190524155932.GB7516@kroah.com>
-References: <20190503181336.579877-1-vijaykhemka@fb.com>
+        Fri, 24 May 2019 11:59:45 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44240 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390411AbfEXP7p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 11:59:45 -0400
+Received: by mail-wr1-f67.google.com with SMTP id w13so2181052wru.11
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 08:59:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kinvolk.io; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HTU8ZvQGukDYiT1iBEhaciWthxQj5tSMJzxivJb2X1g=;
+        b=Co9GxXET5rTh0Gix9SpGtQXpoW7PfAsPOzE4RvtRidzZoKoaH/7aXuFpxXZqijZTW5
+         VQpH43xlsRCoJpE3daQdOwG8owbA8EqUhSn/7bi+lnRdr5qbWDzXUo3qFT20Us01qhCy
+         +OpZp4cOR2+U9YWVmhvXfDVQhLk8sgHXZ/OW8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HTU8ZvQGukDYiT1iBEhaciWthxQj5tSMJzxivJb2X1g=;
+        b=q6rEGiNgl5wU0rw5Pl+IQS7oURi81OWxIuotCOq1wnJ5j2eaM/52eA55cQRp2PrA2S
+         L6e0F9zordp011h5ehA+s9dVTYUCa2izpJ9K55qp1uaNAXizNQ26Y94ZTlonzkoHrvCV
+         5A8Y2YzjouXJFkjdbezbFadAAAzD0tgAj+T5IUYP5qPtnPSz21Ye1l9dgvhFD3Ruihoo
+         o96a2M707fTFfe4wRsN6HpTkkcFpBvso4kU4E51U6aoZbjCwAkt1MW5mOGOY9g1KnlZ9
+         +WSpLEvNurGni0TlkqfV6Gi9B36kqeSGLckvz4SlbKwBCo7nQQYfbEqHrhFf87ty+Oa8
+         zTBg==
+X-Gm-Message-State: APjAAAVFGyIGRahI1VGVONuu5eSxGVqe4bfKk25sfhG1U81+UpDM39Yi
+        z+REHNrbWyL2GBGJYF/whWw+DQ==
+X-Google-Smtp-Source: APXvYqyA0nKVvtW4KzkZUeSSbuyLcKqJJfWlj5TiUYJ11BV86ItffK7JLzlBB5qMe/JE64Q0wWetkA==
+X-Received: by 2002:adf:e408:: with SMTP id g8mr31393993wrm.143.1558713583663;
+        Fri, 24 May 2019 08:59:43 -0700 (PDT)
+Received: from locke-xps13.localdomain (69.pool85-58-237.dynamic.orange.es. [85.58.237.69])
+        by smtp.gmail.com with ESMTPSA id i185sm4535054wmg.32.2019.05.24.08.59.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 May 2019 08:59:42 -0700 (PDT)
+From:   =?UTF-8?q?Iago=20L=C3=B3pez=20Galeiras?= <iago@kinvolk.io>
+To:     john.fastabend@gmail.com, ast@kernel.org, daniel@iogearbox.net
+Cc:     alban@kinvolk.io, krzesimir@kinvolk.io, bpf@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Iago=20L=C3=B3pez=20Galeiras?= <iago@kinvolk.io>
+Subject: [PATCH bpf-next v4 0/4] sock ops: add netns ino and dev in bpf context
+Date:   Fri, 24 May 2019 17:59:27 +0200
+Message-Id: <20190524155931.7946-1-iago@kinvolk.io>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190503181336.579877-1-vijaykhemka@fb.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 03, 2019 at 11:13:36AM -0700, Vijay Khemka wrote:
-> Corrected some of return values with appropriate meanings and reported
-> relevant messages as debug information.
-> 
-> Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
-> ---
->  drivers/misc/aspeed-lpc-ctrl.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
+I'm taking over Alban's work on this.
 
-File is no longer here :(
+This series allows sockops programs to access the network namespace
+inode and device via (struct bpf_sock_ops)->netns_ino and ->netns_dev.
+This can be useful to apply different policies on different network
+namespaces.
+
+In the unlikely case where network namespaces are not compiled in
+(CONFIG_NET_NS=n), the verifier will generate code to return netns_dev
+as usual and will return 0 for netns_ino.
+
+The generated BPF bytecode for netns_ino is loading the correct
+inode number at the time of execution.
+
+However, the generated BPF bytecode for netns_dev is loading an
+immediate value determined at BPF-load-time by looking at the
+initial network namespace. In practice, this works because all netns
+currently use the same virtual device. If this was to change, this
+code would need to be updated too.
+
+It also adds sockmap and verifier selftests to cover the new fields.
+
+Partial reads work thanks to commit e2f7fc0ac69 ("bpf: fix undefined
+behavior in narrow load handling").
+
+v1 patchset can be found at:
+https://lkml.org/lkml/2019/4/12/238
+
+Changes since v1:
+- add netns_dev (review from Alexei)
+- tools/include/uapi/linux/bpf.h: update with netns_dev
+- tools/testing/selftests/bpf/test_sockmap_kern.h: print debugs with
+- This is a new selftest (review from Song)
+
+v2 patchest can be found at:
+https://lkml.org/lkml/2019/4/18/685
+
+Changes since v2:
+- replace __u64 by u64 in kernel code (review from Y Song)
+- remove unneeded #else branch: program would be rejected in
+  is_valid_access (review from Y Song)
+- allow partial reads (<u64) (review from Y Song)
+- standalone patch for the sync (requested by Y Song)
+- update commitmsg to refer to netns_ino
+- test partial reads on netns_dev (review from Y Song)
+- split in two tests
+
+v3 patchset can be found at:
+https://lkml.org/lkml/2019/4/26/740
+
+Changes since v3:
+- return netns_dev unconditionally and set netns_ino to 0 if
+  CONFIG_NET_NS is not enabled (review from Jakub Kicinski)
+- use bpf_ctx_record_field_size and bpf_ctx_narrow_access_ok instead of
+  manually deal with partial reads (review from Y Song)
+- update commit message to reflect new code and remove note about
+  partial reads since it was discussed in the review
+- use bpf_ctx_range() and offsetofend()
+
+Alban Crequy (4):
+  bpf: sock ops: add netns ino and dev in bpf context
+  bpf: sync bpf.h to tools/ for bpf_sock_ops->netns*
+  selftests: bpf: read netns_ino from struct bpf_sock_ops
+  selftests: bpf: verifier: read netns_dev and netns_ino from struct
+    bpf_sock_ops
+
+ include/uapi/linux/bpf.h                      |  2 +
+ net/core/filter.c                             | 70 +++++++++++++++++++
+ tools/include/uapi/linux/bpf.h                |  2 +
+ tools/testing/selftests/bpf/test_sockmap.c    | 38 +++++++++-
+ .../testing/selftests/bpf/test_sockmap_kern.h | 22 ++++++
+ .../testing/selftests/bpf/verifier/var_off.c  | 53 ++++++++++++++
+ 6 files changed, 184 insertions(+), 3 deletions(-)
+
+-- 
+2.21.0
+
