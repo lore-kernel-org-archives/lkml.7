@@ -2,169 +2,239 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B75C282E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E20C7C282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15A19217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:29:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB182217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:30:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403827AbfEXN3c (ORCPT
+        id S2403837AbfEXNao (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 09:29:32 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39764 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403799AbfEXN3c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 09:29:32 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7482930ADC75;
-        Fri, 24 May 2019 13:29:21 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 2A8382E024;
-        Fri, 24 May 2019 13:29:12 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Fri, 24 May 2019 15:29:21 +0200 (CEST)
-Date:   Fri, 24 May 2019 15:29:12 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     'Deepa Dinamani' <deepa.kernel@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "dbueso@suse.de" <dbueso@suse.de>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        Davidlohr Bueso <dave@stgolabs.net>, Eric Wong <e@80x24.org>,
-        Jason Baron <jbaron@akamai.com>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        linux-aio <linux-aio@kvack.org>,
-        Omar Kilani <omar.kilani@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH v2] signal: Adjust error codes according to
- restore_user_sigmask()
-Message-ID: <20190524132911.GA2655@redhat.com>
-References: <20190522032144.10995-1-deepa.kernel@gmail.com>
- <20190522150505.GA4915@redhat.com>
- <CABeXuvrPM5xvzqUydbREapvwgy6deYreHp0aaMoSHyLB6+HGRg@mail.gmail.com>
- <20190522161407.GB4915@redhat.com>
- <CABeXuvpjrW5Gt95JC-_rYkOA=6RCD5OtkEQdwZVVqGCE3GkQOQ@mail.gmail.com>
- <4f7b6dbeab1d424baaebd7a5df116349@AcuMS.aculab.com>
- <20190523145944.GB23070@redhat.com>
- <345cfba5edde470f9a68d913f44fa342@AcuMS.aculab.com>
- <20190523163604.GE23070@redhat.com>
- <f0eced5677c144debfc5a69d0d327bc1@AcuMS.aculab.com>
+        Fri, 24 May 2019 09:30:44 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38502 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2391359AbfEXNan (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 09:30:43 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4ODUZSl139757
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 09:30:42 -0400
+Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2spe8ja8w2-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 09:30:38 -0400
+Received: from localhost
+        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Fri, 24 May 2019 14:29:15 +0100
+Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
+        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 24 May 2019 14:29:11 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4ODTAaQ24707516
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 May 2019 13:29:10 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B02AFB2064;
+        Fri, 24 May 2019 13:29:10 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8222EB2065;
+        Fri, 24 May 2019 13:29:10 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 24 May 2019 13:29:10 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id BF94316C3609; Fri, 24 May 2019 06:29:11 -0700 (PDT)
+Date:   Fri, 24 May 2019 06:29:11 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Andrea Parri <andrea.parri@amarulasolutions.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH] rcu: Prevent evaluation of rcu_assign_pointer()
+Reply-To: paulmck@linux.ibm.com
+References: <1558694197-19295-1-git-send-email-andrea.parri@amarulasolutions.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f0eced5677c144debfc5a69d0d327bc1@AcuMS.aculab.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Fri, 24 May 2019 13:29:31 +0000 (UTC)
+In-Reply-To: <1558694197-19295-1-git-send-email-andrea.parri@amarulasolutions.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19052413-0052-0000-0000-000003C67251
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011154; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01207923; UDB=6.00634413; IPR=6.00988913;
+ MB=3.00027032; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-24 13:29:15
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052413-0053-0000-0000-000061074ABD
+Message-Id: <20190524132911.GV28207@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-24_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905240091
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It seems that we all are just trying to confuse each other. I got lost.
+On Fri, May 24, 2019 at 12:36:37PM +0200, Andrea Parri wrote:
+> Quoting Paul [1]:
+> 
+>  "Given that a quick (and perhaps error-prone) search of the uses
+>   of rcu_assign_pointer() in v5.1 didn't find a single use of the
+>   return value, let's please instead change the documentation and
+>   implementation to eliminate the return value."
+> 
+> [1] https://lkml.kernel.org/r/20190523135013.GL28207@linux.ibm.com
 
-On 05/23, David Laight wrote:
->
-> From: Oleg Nesterov
-> > Sent: 23 May 2019 17:36
-> > On 05/23, David Laight wrote:
-> > >
-> > > From: Oleg Nesterov
-> > > > On 05/23, David Laight wrote:
-> ...
-> > > > Not sure I understand... OK, suppose that you do
-> > > >
-> > > > 	block-all-signals;
-> > > > 	ret = pselect(..., sigmask(SIG_URG));
-> > > >
-> > > > if it returns success/timeout then the handler for SIG_URG should not be called?
-> > >
-> > > Ugg...
-> > > Posix probably allows the signal handler be called at the point the event
-> > > happens rather than being deferred until the system call completes.
-> > > Queueing up the signal handler to be run at a later time (syscall exit)
-> > > certainly makes sense.
-> > > Definitely safest to call the signal handler even if success/timeout
-> > > is returned.
-> >
-> > Why?
-> >
-> > > pselect() exists to stop the entry race, not the exit one.
-> >
-> > pselect() has to block SIG_URG again before it returns to user-mode, right?
->
-> Yep.
-> So the signal handler can't be called for a signal that happens after
-> pselect() returns.
+Thank you!  A few comments below.
 
-Yes. And "after pselect() returns" actually means "after pselect() restores
-the old sigmask while it returns to user mode".
+							Thanx, Paul
 
-> > Suppose pselect() finds a ready fd, and this races with SIG_URG.
->
-> You mean if SIG_URG is raised after a ready fd is found (or even timeout)?
-> So the return value isn't EINTR.
+> Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
+> Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
+> Cc: Josh Triplett <josh@joshtriplett.org>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: Lai Jiangshan <jiangshanlai@gmail.com>
+> Cc: Joel Fernandes <joel@joelfernandes.org>
+> Cc: rcu@vger.kernel.org
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Sasha Levin <sashal@kernel.org>
+> ---
+> Matthew, Sasha:
+> 
+> The patch is based on -rcu/dev; I took the liberty of applying the
+> same change to your #defines in:
+> 
+>  tools/testing/radix-tree/linux/rcupdate.h
+>  tools/include/linux/rcu.h
+> 
+> but I admit that I'm not familiar with their uses: please shout if
+> you have any objections with it.
+> ---
+>  Documentation/RCU/whatisRCU.txt           |  8 ++++----
+>  include/linux/rcupdate.h                  |  5 ++---
+>  tools/include/linux/rcu.h                 | 11 +++++++++--
+>  tools/testing/radix-tree/linux/rcupdate.h |  5 ++++-
+>  4 files changed, 19 insertions(+), 10 deletions(-)
+> 
+> diff --git a/Documentation/RCU/whatisRCU.txt b/Documentation/RCU/whatisRCU.txt
+> index 981651a8b65d2..f99a87b9a88fa 100644
+> --- a/Documentation/RCU/whatisRCU.txt
+> +++ b/Documentation/RCU/whatisRCU.txt
+> @@ -212,7 +212,7 @@ synchronize_rcu()
+>  
+>  rcu_assign_pointer()
+>  
+> -	typeof(p) rcu_assign_pointer(p, typeof(p) v);
+> +	rcu_assign_pointer(p, typeof(p) v);
 
-Yes.
+Please add the "void", similar to synchronize_rcu() above.
 
-> (If an fd is readable on entry, the SIG_URG could have happened much earlier.)
+>  	Yes, rcu_assign_pointer() -is- implemented as a macro, though it
+>  	would be cool to be able to declare a function in this manner.
+> @@ -220,9 +220,9 @@ rcu_assign_pointer()
+>  
+>  	The updater uses this function to assign a new value to an
+>  	RCU-protected pointer, in order to safely communicate the change
+> -	in value from the updater to the reader.  This function returns
+> -	the new value, and also executes any memory-barrier instructions
+> -	required for a given CPU architecture.
+> +	in value from the updater to the reader.  This macro does not
+> +	evaluate to an rvalue, but it does execute any memory-barrier
+> +	instructions required for a given CPU architecture.
+>  
+>  	Perhaps just as important, it serves to document (1) which
+>  	pointers are protected by RCU and (2) the point at which a
+> diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+> index 915460ec08722..a5f61a08e65fc 100644
+> --- a/include/linux/rcupdate.h
+> +++ b/include/linux/rcupdate.h
+> @@ -367,7 +367,7 @@ static inline void rcu_preempt_sleep_check(void) { }
+>   * other macros that it invokes.
+>   */
+>  #define rcu_assign_pointer(p, v)					      \
+> -({									      \
+> +do {									      \
+>  	uintptr_t _r_a_p__v = (uintptr_t)(v);				      \
+>  	rcu_check_sparse(p, __rcu);				      \
+>  									      \
+> @@ -375,8 +375,7 @@ static inline void rcu_preempt_sleep_check(void) { }
+>  		WRITE_ONCE((p), (typeof(p))(_r_a_p__v));		      \
+>  	else								      \
+>  		smp_store_release(&p, RCU_INITIALIZER((typeof(p))_r_a_p__v)); \
+> -	_r_a_p__v;							      \
+> -})
+> +} while (0)
+>  
+>  /**
+>   * rcu_swap_protected() - swap an RCU and a regular pointer
+> diff --git a/tools/include/linux/rcu.h b/tools/include/linux/rcu.h
+> index 7d02527e5bcea..01a435ee48cd6 100644
+> --- a/tools/include/linux/rcu.h
+> +++ b/tools/include/linux/rcu.h
+> @@ -19,7 +19,14 @@ static inline bool rcu_is_watching(void)
+>  	return false;
+>  }
+>  
+> -#define rcu_assign_pointer(p, v) ((p) = (v))
+> -#define RCU_INIT_POINTER(p, v) p=(v)
+> +#define rcu_assign_pointer(p, v)				\
+> +do {								\
+> +	(p) = (v);						\
+> +} while (0)
+> +
+> +#define RCU_INIT_POINTER(p, v)					\
+> +do {								\
+> +	(p) = (v);						\
+> +} while (0)
 
-Why not? See the pseudo code above. It was blocked before pselect() was called.
-So SIG_URG can be already pending when pselect() is called but since an fd is
-already ready on entry pselect() restores the old sigmask (and thus blocks SIG_URG
-again) and returns success. The handler is not called.
+These two each fit nicely on one line:
 
-However, if there is no a ready fd, pselect won't block. It will notice SIG_URG,
-deliver this signal, and return -EINTR.
+	#define rcu_assign_pointer(p, v) do { (p) = (v); } while (0)
+	#define RCU_INIT_POINTER(p, v)   do { (p) = (v); } while (0)
 
+>  
+>  #endif
+> diff --git a/tools/testing/radix-tree/linux/rcupdate.h b/tools/testing/radix-tree/linux/rcupdate.h
+> index fd280b070fdb1..48212f3a758e6 100644
+> --- a/tools/testing/radix-tree/linux/rcupdate.h
+> +++ b/tools/testing/radix-tree/linux/rcupdate.h
+> @@ -7,6 +7,9 @@
+>  #define rcu_dereference_raw(p) rcu_dereference(p)
+>  #define rcu_dereference_protected(p, cond) rcu_dereference(p)
+>  #define rcu_dereference_check(p, cond) rcu_dereference(p)
+> -#define RCU_INIT_POINTER(p, v)	(p) = (v)
+> +#define RCU_INIT_POINTER(p, v)					\
+> +do {								\
+> +	(p) = (v);						\
+> +} while (0)
 
-> > Why do you think the handler should run?
->
-> Think of the application code loop.
-> Consider what happens if the signal is SIG_INT - to request the program
-> stop.
+As does this one.
 
-SIG_INT or SIG_URG ? Again, please look at the pseudo code above. SIG_INT is
-blocked and never unblocked.
-
-> After every pselect() call the application looks to see if the handler
-> has been called.
-> If one of the fds is always readable pselect() will never return EINTR
-> but you want the SIG_INT handler run so that the loop gets terminated.
-> If you only call the signal handler when EINTR is returned the process
-> will never stop.
-> So you need to call the handler even when pselect() succeeds/time out.
-
-Then do not block SIG_INT ?
-
-	block-all-signals-except-SIG_INT;
-	ret = pselect(..., sigmask{SIG_URG, SIG_INT});
-
-
-> > What if SIG_URG comes right after pselect() blocks SIG_URG again? I mean,
-> > how this differs the case when it comes before, but a ready fd was already
-> > found?
->
-> I suspect you need to defer the re-instatement of the original mask
-> to the code that calls the signal handlers (which probably should
-> be called with the programs signal mask).
-
-This is what the kernel does when the signal is delivered, the original mask
-is restored after the signal handler runs.
-
-> So that particular window doesn't exist.
-
-Which window???
-
-Oleg.
+>  #endif
+> -- 
+> 2.7.4
+> 
 
