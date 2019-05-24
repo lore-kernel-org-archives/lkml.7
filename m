@@ -2,115 +2,203 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCABC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:20:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A12A0C282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B395E2133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:20:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dSdA4XKJ"
+	by mail.kernel.org (Postfix) with ESMTP id 7896B2133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:21:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558729267;
+	bh=n2UsS32Sxfj3hv8WCSXkGRum2KUrExqdzbmH8L8X0FA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LJDhlnrRu7arAubLxJsJN5XnfGrkdK2vBQ61vvkEfj5ahV7Z7ssQ0RnTH7hRdHvpE
+	 GSNEMVttTasa1S6hrkR475t30lni/i0S21Zfmu+4BaPgBUssDchQRQ5sFm6uzPcvh0
+	 M4haFDk5E5Kv48GMZDEtVMnZ+kccbsak35mQo5Sw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404178AbfEXUUX (ORCPT
+        id S2404201AbfEXUVG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 16:20:23 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42941 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403845AbfEXUUW (ORCPT
+        Fri, 24 May 2019 16:21:06 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:40465 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403845AbfEXUVF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 16:20:22 -0400
-Received: by mail-pl1-f193.google.com with SMTP id go2so4574848plb.9
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 13:20:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=jn/dM10djkegtPlL7Sb55El8ON07t/o4IMLGKNU09Wk=;
-        b=dSdA4XKJphgdBP4R18tB+k2uO6rQX3ddrHhVVGYMhPrPsJila5ldAhulVOP1Zo8FFx
-         ++lVxrQ8PY2p0LC1s8MK1Je8H+i4ORQW8U6YDs/+YeMa2RSzvTRH/9Vz79ecwvB7uL5e
-         rOxHPuZCvzt0q7Y72IIDn518QXLevd7AkTlL4=
+        Fri, 24 May 2019 16:21:05 -0400
+Received: by mail-oi1-f193.google.com with SMTP id r136so7954673oie.7;
+        Fri, 24 May 2019 13:21:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=jn/dM10djkegtPlL7Sb55El8ON07t/o4IMLGKNU09Wk=;
-        b=ohb3Nt08EIIYtOON/dQYFh6M3jQwYtq/Khj/SDQ+IO/kCI4qBTAOt1X8BG9V63nqZB
-         tuYeLzR1E6Kyrmwefz2oRKI3PkZdnje5i6RDPVCw0luODu+1aJSvw8gqpqMPkm6sMscU
-         NqddC4o29+uhCFsmegVfAJYMgknqcyUtmupaRCqVr8oA4asHsN65kb5qb6hPgpbIqCgm
-         Dk+gBXUNB9xBYZwVSwf1gpdQFsoETkxNTLN4YDRFQM+O+tX4GbRQjO5GOadXs4Lm4eKC
-         GJ1Fc7yyj+3x80a0zVSJbVAxBXbkrJpTxkiRbxygwuMT5haksM/NGVu9L3jvuMIRfB31
-         FPQw==
-X-Gm-Message-State: APjAAAXJhpfSnf1FpIHJG8WZ7Uzb2eFV2X2sjkVhMf4F0nXfJSs8lek9
-        PSutpheDK+pf+QCHw3kLdQtj7w==
-X-Google-Smtp-Source: APXvYqwG6Voqp5ZNVFg2FoYgXTfsgicPu/GqE9QTLsxIXS/jYwIVRk8sK/mKSYh+fnVbkMgwe+fpaw==
-X-Received: by 2002:a17:902:a81:: with SMTP id 1mr62618907plp.287.1558729222121;
-        Fri, 24 May 2019 13:20:22 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z9sm3530373pgs.28.2019.05.24.13.20.20
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1Pcvpx47Lgpkklh1dUYuXUVnYLV0UOVqnAMU1ZWlfNU=;
+        b=cSZbacRLT3THI/o2Eb0csGK2Iq6Chyy1j2hI6Y5EvKZFlhH/yICikCMVcwx+3yAmci
+         kBI7cNLZp1+vDsWXz3KkwXkUy5XLO/NDZgNE4+E2AfdreShNqymnGRvMGP+TPlfE1kFU
+         Brlfy/Gr0eYAzPzH8MSN18pJBmEuH1ILaDg3BhWI9G9ywz5S+q93cVC7oCI00oRnorvf
+         0O9Zw1brafdYIipJtS6AGBPrbJRa5uzT35lHkS2zDi20k/izrCTZaM0quisrxrzDKbuI
+         eiUdJqL8EScDza1pfwcDsLIQa39eBxcDY+I4qxActCp/WmmGGDKBlNwcH+9kSkruWLlO
+         wq6g==
+X-Gm-Message-State: APjAAAWoDE/y7UwrXdMYbrf9RrHchZhqFaUnAgNC+91PNutzyQxWe2lm
+        vF+M4OSAcj9yL9P5ygStsA==
+X-Google-Smtp-Source: APXvYqwiWbsmY0AvPIsFqEy9d5xnA4ACojgqv5dnCssQgQucS6H+KMlf712EdwupMRYpX8zpqeZlIw==
+X-Received: by 2002:aca:fd45:: with SMTP id b66mr7646303oii.157.1558729264891;
+        Fri, 24 May 2019 13:21:04 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 19sm1241172otf.72.2019.05.24.13.21.03
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 24 May 2019 13:20:20 -0700 (PDT)
-Date:   Fri, 24 May 2019 13:20:19 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH] net: tulip: de4x5: Drop redundant MODULE_DEVICE_TABLE()
-Message-ID: <201905241318.229430E@keescook>
+        Fri, 24 May 2019 13:21:04 -0700 (PDT)
+Date:   Fri, 24 May 2019 15:21:03 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mathieu Malaterre <malat@debian.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-clk@vger.kernel.org, od@zcrc.me
+Subject: Re: [PATCH v12 03/13] dt-bindings: Add doc for the Ingenic TCU
+ drivers
+Message-ID: <20190524202103.GA15650@bogus>
+References: <20190521145141.9813-1-paul@crapouillou.net>
+ <20190521145141.9813-4-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20190521145141.9813-4-paul@crapouillou.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Building with Clang reports the redundant use of MODULE_DEVICE_TABLE():
+On Tue, May 21, 2019 at 04:51:31PM +0200, Paul Cercueil wrote:
+> Add documentation about how to properly use the Ingenic TCU
+> (Timer/Counter Unit) drivers from devicetree.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+> 
+> Notes:
+>     v4: New patch in this series. Corresponds to V2 patches 3-4-5 with
+>      added content.
+>     
+>     v5: - Edited PWM/watchdog DT bindings documentation to point to the new
+>        document.
+>      - Moved main document to
+>        Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+>      - Updated documentation to reflect the new devicetree bindings.
+>     
+>     v6: - Removed PWM/watchdog documentation files as asked by upstream
+>      - Removed doc about properties that should be implicit
+>      - Removed doc about ingenic,timer-channel /
+>        ingenic,clocksource-channel as they are gone
+>      - Fix WDT clock name in the binding doc
+>      - Fix lengths of register areas in watchdog/pwm nodes
+>     
+>     v7: No change
+>     
+>     v8: - Fix address of the PWM node
+>      - Added doc about system timer and clocksource children nodes
+>     
+>     v9: - Remove doc about system timer and clocksource children
+>        nodes...
+>     - Add doc about ingenic,pwm-channels-mask property
+>     
+>     v10: No change
+>     
+>     v11: Fix info about default value of ingenic,pwm-channels-mask
+>     
+>     v12: Drop sub-nodes for now; they will be introduced in a follow-up
+>     	 patchset.
 
-drivers/net/ethernet/dec/tulip/de4x5.c:2110:1: error: redefinition of '__mod_eisa__de4x5_eisa_ids_device_table'
-MODULE_DEVICE_TABLE(eisa, de4x5_eisa_ids);
-^
-./include/linux/module.h:229:21: note: expanded from macro 'MODULE_DEVICE_TABLE'
-extern typeof(name) __mod_##type##__##name##_device_table               \
-                    ^
-<scratch space>:90:1: note: expanded from here
-__mod_eisa__de4x5_eisa_ids_device_table
-^
-drivers/net/ethernet/dec/tulip/de4x5.c:2100:1: note: previous definition is here
-MODULE_DEVICE_TABLE(eisa, de4x5_eisa_ids);
-^
-./include/linux/module.h:229:21: note: expanded from macro 'MODULE_DEVICE_TABLE'
-extern typeof(name) __mod_##type##__##name##_device_table               \
-                    ^
-<scratch space>:85:1: note: expanded from here
-__mod_eisa__de4x5_eisa_ids_device_table
-^
+Why? I believe I acked them.
 
-This drops the one further from the table definition to match the common
-use of MODULE_DEVICE_TABLE().
+> 
+>  .../devicetree/bindings/timer/ingenic,tcu.txt | 59 +++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/timer/ingenic,tcu.txt b/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+> new file mode 100644
+> index 000000000000..d101cd72c9b0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+> @@ -0,0 +1,59 @@
+> +Ingenic JZ47xx SoCs Timer/Counter Unit devicetree bindings
+> +==========================================================
+> +
+> +For a description of the TCU hardware and drivers, have a look at
+> +Documentation/mips/ingenic-tcu.txt.
+> +
+> +Required properties:
+> +
+> +- compatible: Must be one of:
+> +  * "ingenic,jz4740-tcu"
+> +  * "ingenic,jz4725b-tcu"
+> +  * "ingenic,jz4770-tcu"
+> +- reg: Should be the offset/length value corresponding to the TCU registers
+> +- clocks: List of phandle & clock specifiers for clocks external to the TCU.
+> +  The "pclk", "rtc" and "ext" clocks should be provided. The "tcu" clock
+> +  should be provided if the SoC has it.
+> +- clock-names: List of name strings for the external clocks.
+> +- #clock-cells: Should be <1>;
+> +  Clock consumers specify this argument to identify a clock. The valid values
+> +  may be found in <dt-bindings/clock/ingenic,tcu.h>.
+> +- interrupt-controller : Identifies the node as an interrupt controller
+> +- #interrupt-cells : Specifies the number of cells needed to encode an
+> +  interrupt source. The value should be 1.
+> +- interrupt-parent : phandle of the interrupt controller.
 
-Fixes: 07563c711fbc ("EISA bus MODALIAS attributes support")
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/net/ethernet/dec/tulip/de4x5.c | 1 -
- 1 file changed, 1 deletion(-)
+Drop this 'interrupt-parent' is implied and could be in a parent node.
 
-diff --git a/drivers/net/ethernet/dec/tulip/de4x5.c b/drivers/net/ethernet/dec/tulip/de4x5.c
-index 66535d1653f6..f16853c3c851 100644
---- a/drivers/net/ethernet/dec/tulip/de4x5.c
-+++ b/drivers/net/ethernet/dec/tulip/de4x5.c
-@@ -2107,7 +2107,6 @@ static struct eisa_driver de4x5_eisa_driver = {
- 		.remove  = de4x5_eisa_remove,
-         }
- };
--MODULE_DEVICE_TABLE(eisa, de4x5_eisa_ids);
- #endif
- 
- #ifdef CONFIG_PCI
--- 
-2.17.1
-
-
--- 
-Kees Cook
+> +- interrupts : Specifies the interrupt the controller is connected to.
+> +
+> +Optional properties:
+> +
+> +- ingenic,pwm-channels-mask: Bitmask of TCU channels reserved for PWM use.
+> +  Default value is 0xfc.
+> +
+> +
+> +Example
+> +==========================================================
+> +
+> +#include <dt-bindings/clock/jz4770-cgu.h>
+> +
+> +/ {
+> +	tcu: timer@10002000 {
+> +		compatible = "ingenic,jz4770-tcu";
+> +		reg = <0x10002000 0x1000>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0x0 0x10002000 0x1000>;
+> +
+> +		#clock-cells = <1>;
+> +
+> +		clocks = <&cgu JZ4770_CLK_RTC
+> +			  &cgu JZ4770_CLK_EXT
+> +			  &cgu JZ4770_CLK_PCLK>;
+> +		clock-names = "rtc", "ext", "pclk";
+> +
+> +		interrupt-controller;
+> +		#interrupt-cells = <1>;
+> +
+> +		interrupt-parent = <&intc>;
+> +		interrupts = <27 26 25>;
+> +	};
+> +};
+> -- 
+> 2.21.0.593.g511ec345e18
+> 
