@@ -2,105 +2,662 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C26CC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60DA5C282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71AE4217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:48:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24C0E217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:49:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M4QUoyns"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TE/rFngG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390194AbfEXPs6 (ORCPT
+        id S2390259AbfEXPtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 11:48:58 -0400
-Received: from mail-pl1-f178.google.com ([209.85.214.178]:39134 "EHLO
-        mail-pl1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389079AbfEXPs6 (ORCPT
+        Fri, 24 May 2019 11:49:25 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:45825 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389079AbfEXPtY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 11:48:58 -0400
-Received: by mail-pl1-f178.google.com with SMTP id g9so4325442plm.6
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 08:48:57 -0700 (PDT)
+        Fri, 24 May 2019 11:49:24 -0400
+Received: by mail-lf1-f65.google.com with SMTP id n22so7490481lfe.12
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 08:49:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=m6gKYz7wkMPGTWMNM0luL5MmLCYmBXD7EJslrvo/nuI=;
-        b=M4QUoyns4jSgst9lr4PwNHSUiJULHUtmzpXOWndjKxy4R6IxbXauo5MLpecOAGHzVd
-         7txaUQB3BUrcseBlcRGnzxH6ugyzMaXst4C4Xf/PfNBsOQJUsgDQrawrNBRwa+j+pzai
-         dc4HndGGbrZHemNVGV8OQfhSl+KDkQ2iKoDV5zOceF3NFyMJM6zYHFV4aTGB0bFXZ3MB
-         kttg0HiaviV/rHqN/nX4fIjA3SxT730gE4iDAoHjprM+Ib+UJL66opcCEwtwIwLXd4dW
-         ICuaRA9wXlfR87lMl0KpAaevH/emFdCSUuqbDqXhvfdMdj59LhoIpW+3yuk/OsqdoHUO
-         lPXw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6DVuf6G0pnmFLgrCnuOoTLUpwesl0ogSQoeGJ38/Nqk=;
+        b=TE/rFngG/4Ul87RlD4i5uFnRo73KjG6OJ7BhFGLnUuOYXDsARSDIIUl7c8mx9OtoZo
+         MwDGJqTVPis1Wk6ZTsESiIicxCB6jR25XVw6LDlIGfuWYE+E+l6WaZTE2ab+caMvW97Q
+         5JwE5LURU1qgwkfTclYNJOU9tdTsPBiVMKhiMCz4n/b8I0JPzJBbz7C6fSVqplzc6Px3
+         fduOdWbAKqyui1C88A4KcJcGfyKUNhyR3vKMyZ+2hCxzl1bHKEGrbQ3qHHQNZJRVelwA
+         3f9FD5mWAyBh60Yaiwe2eqIEGtz28fEDGD2yUKGLW4Yv7xPXQTY2McHhsypW+8lTATsM
+         gZUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=m6gKYz7wkMPGTWMNM0luL5MmLCYmBXD7EJslrvo/nuI=;
-        b=pI8hbRY4Wn5GJblWJPA7yJ1rec6eA1TD/lWzc53voClwv7TYP5l9dsOuWXNRupUwN9
-         FgsKT3yWNPU3dJb+3g3ZnRr35IDa60JcSLvhWuzYuI7Kq2bpa4kipPB6AK/hlx3qcQmj
-         2fKyWB0R6RAoC9bDNQtXkZuFp6tZyS9pdV4LIoUx/F93CfAarf9tO+sMakdbOzU0V17A
-         lFvBShjb6N5wzU0P5umqJqy8ap/t5qSuQhMzbqp+ZggzfHHXP47lSUVsdkg72cfrGM2c
-         tof7V8D4Cv6IbmU+MqoyifgfWfmDyyg/OP26RMlivd6w84yxxsaaaHsiUZREPVi37EU0
-         E5Rg==
-X-Gm-Message-State: APjAAAVFCdHg6HQZel6Ypoj735aXzU9PY1x1xdzd4Eihzqh+0J1XtiZc
-        2Jl/ti1U99x1zKK3dh+qk6CuOWpE2xt/GOVBggwLvPEjbho=
-X-Google-Smtp-Source: APXvYqzt+tANlU8Rah8eIjD2c2ndYNOEsbqihsbGfnF3jgLGWI/bEJDx77myq9kw+EFJoQEvuqsFy2MjrsQQ7oENbaY=
-X-Received: by 2002:a17:902:7486:: with SMTP id h6mr11158387pll.262.1558712936535;
- Fri, 24 May 2019 08:48:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAMmhGqKc27W03roONYXhmwB0dtz5Z8nGoS2MLSsKJ3Zotv5-JA@mail.gmail.com>
- <20190329125258.2c6fe0cb@gandalf.local.home> <CAMmhGqKPw1sxB_Qc+Z-MXZue+wtAQsQDDgUvjs4JQTVY8bR65g@mail.gmail.com>
- <20190401222056.3da6e7a7@oasis.local.home> <CAMmhGqL0tvxW_ucJUFKYqRrMRTTfUfRGpm1BnXiEvqFntSXSjQ@mail.gmail.com>
- <CAMmhGq+8XKBB9GA3J0pwZ6X6Qb1syxKVqNU6i6digtyjMrGyWw@mail.gmail.com>
- <20190524110048.142efd44@gandalf.local.home> <CAMmhGq+1gZvzR9RwJ6m1MzO1jnTy8yFx8jaRiWpGtZ=E6n9vig@mail.gmail.com>
- <20190524112457.58b24d89@gandalf.local.home>
-In-Reply-To: <20190524112457.58b24d89@gandalf.local.home>
-From:   Jason Behmer <jbehmer@google.com>
-Date:   Fri, 24 May 2019 08:48:44 -0700
-Message-ID: <CAMmhGqK7LxvR2t=v3NY5Um+EPurtbSfkpPtCAhDagFs_Sz0Kuw@mail.gmail.com>
-Subject: Re: Nested events with zero deltas, can use absolute timestamps instead?
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     tom.zanussi@linux.intel.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6DVuf6G0pnmFLgrCnuOoTLUpwesl0ogSQoeGJ38/Nqk=;
+        b=hTopJwExhqOxF7wmsS/HlCU8MG7VvU0Em3crm5pJTCBTXT0+UdLP9/rESLhuZCiMnU
+         7HY7RVH7q0cQIw2b/SR+m0GyhVCe5JYSkAwool4CAOZf1a93HgoPQIgOCstKJGBJxDC3
+         u+24brMaD7cQfFU/JTUmvBPmHwV8Vk6DlB5W+1REatfIag3YAxaus4k+mIyo2r9ORLw2
+         8D8ApiZ7aw1uacApiOSTw2HPS0iT99uXwOG/EFY9T44VnSu/UP5KisKXHxVan/06RCRK
+         RFbU8MzWsYjIlYFFEmjurkffT57I5uWAokL9gey/ZIBqyHwUtfoWIpqAG67Q7WoikalD
+         KTLQ==
+X-Gm-Message-State: APjAAAXmnKJvDMYgCfAwRhhW6A6mKnCkux+LUriVpPmUq0yb4fT1MBua
+        KodOt4a+oiDjURM0nbmvWNOxxaqu4f0=
+X-Google-Smtp-Source: APXvYqw70E6dpuUL3aXhUnwXYv7o80enHKDmM+y8v298qQ3HchQvRQqSUSxGHdfdhWLjKGXczoWtWg==
+X-Received: by 2002:ac2:43b7:: with SMTP id t23mr2203332lfl.26.1558712960849;
+        Fri, 24 May 2019 08:49:20 -0700 (PDT)
+Received: from seldlx21914.corpusers.net ([37.139.156.40])
+        by smtp.gmail.com with ESMTPSA id h14sm579945ljj.11.2019.05.24.08.49.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 May 2019 08:49:20 -0700 (PDT)
+Date:   Fri, 24 May 2019 17:49:18 +0200
+From:   Vitaly Wool <vitalywool@gmail.com>
+To:     Linux-MM <linux-mm@kvack.org>, linux-kernel@vger.kernel.org
+Cc:     Dan Streetman <ddstreet@ieee.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oleksiy.Avramchenko@sony.com,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Uladzislau Rezki <urezki@gmail.com>
+Subject: [PATCH] z3fold: add inter-page compaction
+Message-Id: <20190524174918.71074b358001bdbf1c23cd77@gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.30; x86_64-unknown-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 8:25 AM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Fri, 24 May 2019 08:11:12 -0700
-> Jason Behmer <jbehmer@google.com> wrote:
->
-> > > > What do you think of that?
-> > >
-> > > I don't think that's confusing if its well documented. Have the user
-> > > flag called "force_absolute_timestamps", that way it's not something
-> > > that the user will think that we wont have absolute timestamps if it is
-> > > zero. Have the documentation say:
-> > >
-> > >  Various utilities within the tracing system require that the ring
-> > >  buffer uses absolute timestamps. But you may force the ring buffer to
-> > >  always use it, which will give you unique timings with nested tracing
-> > >  at the cost of more usage in the ring buffer.
-> > >
-> > > -- Steve
-> >
-> > Ah, I was thinking of doing this within the existing timestamp_mode
-> > config file.  Having a separate file does make it much less confusing.
->
-> Not a separate file, but a new tracing option.
->
-> -- Steve
+For each page scheduled for compaction (e. g. by z3fold_free()),
+try to apply inter-page compaction before running the traditional/
+existing intra-page compaction. That means, if the page has only one
+buddy, we treat that buddy as a new object that we aim to place into
+an existing z3fold page. If such a page is found, that object is
+transferred and the old page is freed completely. The transferred
+object is named "foreign" and treated slightly differently thereafter.
 
-Sorry, I'm not sure I follow.  By new tracing option do you mean a new
-option in the timestamp_mode file?  I guess in that case would that
-still be the only writable option?  You could write 1/0 to the file
-which would turn on/off force_absolute_timestamps, and reading the
-file would show which of absolute, delta, and force_absolute was set?
-Or did you mean something else by tracing option?
+Namely, we increase "foreign handle" counter for the new page. Pages
+with non-zero "foreign handle" count become unmovable. This patch
+implements "foreign handle" detection when a handle is freed to
+decrement the foreign handle counter accordingly, so a page may as
+well become movable again as the time goes by.
+
+As a result, we almost always have exactly 3 objects per page and
+significantly better average compression ratio.
+
+Signed-off-by: Vitaly Wool <vitaly.vul@sony.com>
+---
+ mm/z3fold.c | 328 +++++++++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 285 insertions(+), 43 deletions(-)
+
+diff --git a/mm/z3fold.c b/mm/z3fold.c
+index 985732c8b025..d82bccc8bc90 100644
+--- a/mm/z3fold.c
++++ b/mm/z3fold.c
+@@ -41,6 +41,7 @@
+ #include <linux/workqueue.h>
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
++#include <linux/seqlock.h>
+ #include <linux/zpool.h>
+ 
+ /*
+@@ -89,6 +90,7 @@ struct z3fold_buddy_slots {
+ 	 */
+ 	unsigned long slot[BUDDY_MASK + 1];
+ 	unsigned long pool; /* back link + flags */
++	seqlock_t seqlock;
+ };
+ #define HANDLE_FLAG_MASK	(0x03)
+ 
+@@ -121,6 +123,7 @@ struct z3fold_header {
+ 	unsigned short start_middle;
+ 	unsigned short first_num:2;
+ 	unsigned short mapped_count:2;
++	unsigned short foreign_handles:2;
+ };
+ 
+ /**
+@@ -175,6 +178,18 @@ enum z3fold_page_flags {
+ 	PAGE_CLAIMED, /* by either reclaim or free */
+ };
+ 
++/*
++ * handle flags, go under HANDLE_FLAG_MASK
++ */
++enum z3fold_handle_flags {
++	HANDLES_ORPHANED = 0,
++};
++
++static inline struct z3fold_header *handle_to_z3fold_header(unsigned long);
++static inline struct z3fold_pool *zhdr_to_pool(struct z3fold_header *);
++static struct z3fold_header *__z3fold_alloc(struct z3fold_pool *, size_t, bool);
++static void add_to_unbuddied(struct z3fold_pool *, struct z3fold_header *);
++
+ /*****************
+  * Helpers
+ *****************/
+@@ -199,6 +214,7 @@ static inline struct z3fold_buddy_slots *alloc_slots(struct z3fold_pool *pool,
+ 	if (slots) {
+ 		memset(slots->slot, 0, sizeof(slots->slot));
+ 		slots->pool = (unsigned long)pool;
++		seqlock_init(&slots->seqlock);
+ 	}
+ 
+ 	return slots;
+@@ -217,24 +233,39 @@ static inline struct z3fold_buddy_slots *handle_to_slots(unsigned long handle)
+ static inline void free_handle(unsigned long handle)
+ {
+ 	struct z3fold_buddy_slots *slots;
++	struct z3fold_header *zhdr;
+ 	int i;
+ 	bool is_free;
++	unsigned int seq;
+ 
+ 	if (handle & (1 << PAGE_HEADLESS))
+ 		return;
+ 
+-	WARN_ON(*(unsigned long *)handle == 0);
+-	*(unsigned long *)handle = 0;
++	if (WARN_ON(*(unsigned long *)handle == 0))
++		return;
++
++	zhdr = handle_to_z3fold_header(handle);
+ 	slots = handle_to_slots(handle);
+-	is_free = true;
+-	for (i = 0; i <= BUDDY_MASK; i++) {
+-		if (slots->slot[i]) {
+-			is_free = false;
+-			break;
++	write_seqlock(&slots->seqlock);
++	*(unsigned long *)handle = 0;
++	write_sequnlock(&slots->seqlock);
++	if (zhdr->slots == slots)
++		return; /* simple case, nothing else to do */
++
++	/* we are freeing a foreign handle if we are here */
++	zhdr->foreign_handles--;
++	do {
++		is_free = true;
++		seq = read_seqbegin(&slots->seqlock);
++		for (i = 0; i <= BUDDY_MASK; i++) {
++			if (slots->slot[i]) {
++				is_free = false;
++				break;
++			}
+ 		}
+-	}
++	} while (read_seqretry(&slots->seqlock, seq));
+ 
+-	if (is_free) {
++	if (is_free && test_and_clear_bit(HANDLES_ORPHANED, &slots->pool)) {
+ 		struct z3fold_pool *pool = slots_to_pool(slots);
+ 
+ 		kmem_cache_free(pool->c_handle, slots);
+@@ -320,6 +351,7 @@ static struct z3fold_header *init_z3fold_page(struct page *page,
+ 	zhdr->start_middle = 0;
+ 	zhdr->cpu = -1;
+ 	zhdr->slots = slots;
++	zhdr->foreign_handles = 0;
+ 	INIT_LIST_HEAD(&zhdr->buddy);
+ 	INIT_WORK(&zhdr->work, compact_page_work);
+ 	return zhdr;
+@@ -385,25 +417,87 @@ static unsigned long encode_handle(struct z3fold_header *zhdr, enum buddy bud)
+ 		h |= (zhdr->last_chunks << BUDDY_SHIFT);
+ 
+ 	slots = zhdr->slots;
++	write_seqlock(&slots->seqlock);
+ 	slots->slot[idx] = h;
++	write_sequnlock(&slots->seqlock);
+ 	return (unsigned long)&slots->slot[idx];
+ }
+ 
++static inline struct z3fold_header *__get_z3fold_header(unsigned long handle,
++							bool lock)
++{
++	struct z3fold_buddy_slots *slots;
++	struct z3fold_header *zhdr;
++	unsigned int seq;
++	bool is_valid;
++
++	if (!(handle & (1 << PAGE_HEADLESS))) {
++		slots = handle_to_slots(handle);
++		do {
++			unsigned long addr;
++
++			seq = read_seqbegin(&slots->seqlock);
++			addr = *(unsigned long *)handle;
++			zhdr = (struct z3fold_header *)(addr & PAGE_MASK);
++			preempt_disable();
++			is_valid = !read_seqretry(&slots->seqlock, seq);
++			if (!is_valid) {
++				preempt_enable();
++				continue;
++			}
++			/*
++			 * if we are here, zhdr is a pointer to a valid z3fold
++			 * header. Lock it! And then re-check if someone has
++			 * changed which z3fold page this handle points to
++			 */
++			if (lock)
++				z3fold_page_lock(zhdr);
++			preempt_enable();
++			/*
++			 * we use is_valid as a "cached" value: if it's false,
++			 * no other checks needed, have to go one more round
++			 */
++		} while (!is_valid || (read_seqretry(&slots->seqlock, seq) &&
++			(lock ? ({ z3fold_page_unlock(zhdr); 1; }) : 1)));
++	} else {
++		zhdr = (struct z3fold_header *)(handle & PAGE_MASK);
++	}
++
++	return zhdr;
++}
++
++
+ /* Returns the z3fold page where a given handle is stored */
+ static inline struct z3fold_header *handle_to_z3fold_header(unsigned long h)
+ {
+-	unsigned long addr = h;
++	return __get_z3fold_header(h, false);
++}
++
++/* return locked z3fold page if it's not headless */
++static inline struct z3fold_header *get_z3fold_header(unsigned long h)
++{
++	return __get_z3fold_header(h, true);
++}
+ 
+-	if (!(addr & (1 << PAGE_HEADLESS)))
+-		addr = *(unsigned long *)h;
++static inline void put_z3fold_header(struct z3fold_header *zhdr)
++{
++	struct page *page = virt_to_page(zhdr);
+ 
+-	return (struct z3fold_header *)(addr & PAGE_MASK);
++	if (!test_bit(PAGE_HEADLESS, &page->private))
++		z3fold_page_unlock(zhdr);
+ }
+ 
+ /* only for LAST bud, returns zero otherwise */
+ static unsigned short handle_to_chunks(unsigned long handle)
+ {
+-	unsigned long addr = *(unsigned long *)handle;
++	unsigned long addr;
++	struct z3fold_buddy_slots *slots = handle_to_slots(handle);
++	unsigned int seq;
++
++	do {
++		seq = read_seqbegin(&slots->seqlock);
++		addr = *(unsigned long *)handle;
++	} while (read_seqretry(&slots->seqlock, seq));
+ 
+ 	return (addr & ~PAGE_MASK) >> BUDDY_SHIFT;
+ }
+@@ -417,9 +511,15 @@ static enum buddy handle_to_buddy(unsigned long handle)
+ {
+ 	struct z3fold_header *zhdr;
+ 	unsigned long addr;
++	struct z3fold_buddy_slots *slots;
++	unsigned int seq;
+ 
+ 	WARN_ON(handle & (1 << PAGE_HEADLESS));
+-	addr = *(unsigned long *)handle;
++	slots = handle_to_slots(handle);
++	do {
++		seq = read_seqbegin(&slots->seqlock);
++		addr = *(unsigned long *)handle;
++	} while (read_seqretry(&slots->seqlock, seq));
+ 	zhdr = (struct z3fold_header *)(addr & PAGE_MASK);
+ 	return (addr - zhdr->first_num) & BUDDY_MASK;
+ }
+@@ -433,6 +533,9 @@ static void __release_z3fold_page(struct z3fold_header *zhdr, bool locked)
+ {
+ 	struct page *page = virt_to_page(zhdr);
+ 	struct z3fold_pool *pool = zhdr_to_pool(zhdr);
++	unsigned int seq;
++	bool is_free;
++	int i;
+ 
+ 	WARN_ON(!list_empty(&zhdr->buddy));
+ 	set_bit(PAGE_STALE, &page->private);
+@@ -441,8 +544,27 @@ static void __release_z3fold_page(struct z3fold_header *zhdr, bool locked)
+ 	if (!list_empty(&page->lru))
+ 		list_del_init(&page->lru);
+ 	spin_unlock(&pool->lock);
++
++	/* If there are no foreign handles, free the handles array */
++	do {
++		is_free = true;
++		seq = read_seqbegin(&zhdr->slots->seqlock);
++		for (i = 0; i <= BUDDY_MASK; i++) {
++			if (zhdr->slots->slot[i]) {
++				is_free = false;
++				break;
++			}
++		}
++	} while (read_seqretry(&zhdr->slots->seqlock, seq));
++
++	if (is_free)
++		kmem_cache_free(pool->c_handle, zhdr->slots);
++	else
++		set_bit(HANDLES_ORPHANED, &zhdr->slots->pool);
++
+ 	if (locked)
+ 		z3fold_page_unlock(zhdr);
++
+ 	spin_lock(&pool->stale_lock);
+ 	list_add(&zhdr->buddy, &pool->stale);
+ 	queue_work(pool->release_wq, &pool->work);
+@@ -470,6 +592,7 @@ static void release_z3fold_page_locked_list(struct kref *ref)
+ 	struct z3fold_header *zhdr = container_of(ref, struct z3fold_header,
+ 					       refcount);
+ 	struct z3fold_pool *pool = zhdr_to_pool(zhdr);
++
+ 	spin_lock(&pool->lock);
+ 	list_del_init(&zhdr->buddy);
+ 	spin_unlock(&pool->lock);
+@@ -550,6 +673,119 @@ static inline void *mchunk_memmove(struct z3fold_header *zhdr,
+ 		       zhdr->middle_chunks << CHUNK_SHIFT);
+ }
+ 
++static inline bool buddy_single(struct z3fold_header *zhdr)
++{
++	return !((zhdr->first_chunks && zhdr->middle_chunks) ||
++			(zhdr->first_chunks && zhdr->last_chunks) ||
++			(zhdr->middle_chunks && zhdr->last_chunks));
++}
++
++static struct z3fold_header *compact_single_buddy(struct z3fold_header *zhdr)
++{
++	struct z3fold_pool *pool = zhdr_to_pool(zhdr);
++	void *p = zhdr;
++	unsigned long old_handle = 0;
++	enum buddy bud;
++	size_t sz = 0;
++	struct z3fold_header *new_zhdr = NULL;
++	int first_idx = __idx(zhdr, FIRST);
++	int middle_idx = __idx(zhdr, MIDDLE);
++	int last_idx = __idx(zhdr, LAST);
++
++	/*
++	 * No need to protect slots here -- all the slots are "local" and
++	 * the page lock is already taken
++	 */
++	if (zhdr->first_chunks && zhdr->slots->slot[first_idx]) {
++		bud = FIRST;
++		p += ZHDR_SIZE_ALIGNED;
++		sz = zhdr->first_chunks << CHUNK_SHIFT;
++		old_handle = (unsigned long)&zhdr->slots->slot[first_idx];
++	} else if (zhdr->middle_chunks && zhdr->slots->slot[middle_idx]) {
++		bud = MIDDLE;
++		p += zhdr->start_middle << CHUNK_SHIFT;
++		sz = zhdr->middle_chunks << CHUNK_SHIFT;
++		old_handle = (unsigned long)&zhdr->slots->slot[middle_idx];
++	} else if (zhdr->last_chunks && zhdr->slots->slot[last_idx]) {
++		bud = LAST;
++		p += PAGE_SIZE - (zhdr->last_chunks << CHUNK_SHIFT);
++		sz = zhdr->last_chunks << CHUNK_SHIFT;
++		old_handle = (unsigned long)&zhdr->slots->slot[last_idx];
++	}
++
++	if (sz > 0) {
++		struct page *newpage;
++		enum buddy new_bud = HEADLESS;
++		short chunks = size_to_chunks(sz);
++		void *q;
++
++		new_zhdr = __z3fold_alloc(pool, sz, false);
++		if (!new_zhdr)
++			return NULL;
++
++		newpage = virt_to_page(new_zhdr);
++		if (WARN_ON(new_zhdr == zhdr))
++			goto out_fail;
++
++		if (new_zhdr->first_chunks == 0) {
++			if (new_zhdr->middle_chunks != 0 &&
++					chunks >= new_zhdr->start_middle) {
++				new_bud = LAST;
++			} else {
++				new_bud = FIRST;
++			}
++		} else if (new_zhdr->last_chunks == 0) {
++			new_bud = LAST;
++		} else if (new_zhdr->middle_chunks == 0) {
++			new_bud = MIDDLE;
++		}
++		q = new_zhdr;
++		switch (new_bud) {
++		case FIRST:
++			new_zhdr->first_chunks = chunks;
++			q += ZHDR_SIZE_ALIGNED;
++			break;
++		case MIDDLE:
++			new_zhdr->middle_chunks = chunks;
++			new_zhdr->start_middle =
++				new_zhdr->first_chunks + ZHDR_CHUNKS;
++			q += new_zhdr->start_middle << CHUNK_SHIFT;
++			break;
++		case LAST:
++			new_zhdr->last_chunks = chunks;
++			q += PAGE_SIZE - (new_zhdr->last_chunks << CHUNK_SHIFT);
++			break;
++		default:
++			goto out_fail;
++		}
++		new_zhdr->foreign_handles++;
++		memcpy(q, p, sz);
++		write_seqlock(&zhdr->slots->seqlock);
++		*(unsigned long *)old_handle = (unsigned long)new_zhdr +
++			__idx(new_zhdr, new_bud);
++		if (new_bud == LAST)
++			*(unsigned long *)old_handle |=
++					(new_zhdr->last_chunks << BUDDY_SHIFT);
++		write_sequnlock(&zhdr->slots->seqlock);
++		add_to_unbuddied(pool, new_zhdr);
++		z3fold_page_unlock(new_zhdr);
++	}
++
++	return new_zhdr;
++
++out_fail:
++	if (new_zhdr) {
++		if (kref_put(&new_zhdr->refcount, release_z3fold_page_locked))
++			atomic64_dec(&pool->pages_nr);
++		else {
++			add_to_unbuddied(pool, new_zhdr);
++			z3fold_page_unlock(new_zhdr);
++		}
++	}
++	return NULL;
++
++}
++
+ #define BIG_CHUNK_GAP	3
+ /* Has to be called with lock held */
+ static int z3fold_compact_page(struct z3fold_header *zhdr)
+@@ -559,9 +795,6 @@ static int z3fold_compact_page(struct z3fold_header *zhdr)
+ 	if (test_bit(MIDDLE_CHUNK_MAPPED, &page->private))
+ 		return 0; /* can't move middle chunk, it's used */
+ 
+-	if (unlikely(PageIsolated(page)))
+-		return 0;
+-
+ 	if (zhdr->middle_chunks == 0)
+ 		return 0; /* nothing to compact */
+ 
+@@ -628,6 +861,15 @@ static void do_compact_page(struct z3fold_header *zhdr, bool locked)
+ 		return;
+ 	}
+ 
++	if (!zhdr->foreign_handles && buddy_single(zhdr) &&
++			compact_single_buddy(zhdr)) {
++		if (kref_put(&zhdr->refcount, release_z3fold_page_locked))
++			atomic64_dec(&pool->pages_nr);
++		else
++			z3fold_page_unlock(zhdr);
++		return;
++	}
++
+ 	z3fold_compact_page(zhdr);
+ 	add_to_unbuddied(pool, zhdr);
+ 	z3fold_page_unlock(zhdr);
+@@ -968,11 +1210,11 @@ static void z3fold_free(struct z3fold_pool *pool, unsigned long handle)
+ {
+ 	struct z3fold_header *zhdr;
+ 	struct page *page;
+-	enum buddy bud;
++	enum buddy bud = LAST; /* initialize to !HEADLESS */
+ 
+-	zhdr = handle_to_z3fold_header(handle);
+-	page = virt_to_page(zhdr);
++	zhdr = get_z3fold_header(handle);
+ 
++	page = virt_to_page(zhdr);
+ 	if (test_bit(PAGE_HEADLESS, &page->private)) {
+ 		/* if a headless page is under reclaim, just leave.
+ 		 * NB: we use test_and_set_bit for a reason: if the bit
+@@ -983,6 +1225,7 @@ static void z3fold_free(struct z3fold_pool *pool, unsigned long handle)
+ 			spin_lock(&pool->lock);
+ 			list_del(&page->lru);
+ 			spin_unlock(&pool->lock);
++			put_z3fold_header(zhdr);
+ 			free_z3fold_page(page, true);
+ 			atomic64_dec(&pool->pages_nr);
+ 		}
+@@ -990,7 +1233,6 @@ static void z3fold_free(struct z3fold_pool *pool, unsigned long handle)
+ 	}
+ 
+ 	/* Non-headless case */
+-	z3fold_page_lock(zhdr);
+ 	bud = handle_to_buddy(handle);
+ 
+ 	switch (bud) {
+@@ -1006,7 +1248,7 @@ static void z3fold_free(struct z3fold_pool *pool, unsigned long handle)
+ 	default:
+ 		pr_err("%s: unknown bud %d\n", __func__, bud);
+ 		WARN_ON(1);
+-		z3fold_page_unlock(zhdr);
++		put_z3fold_header(zhdr);
+ 		return;
+ 	}
+ 
+@@ -1021,7 +1263,7 @@ static void z3fold_free(struct z3fold_pool *pool, unsigned long handle)
+ 	}
+ 	if (unlikely(PageIsolated(page)) ||
+ 	    test_and_set_bit(NEEDS_COMPACTING, &page->private)) {
+-		z3fold_page_unlock(zhdr);
++		put_z3fold_header(zhdr);
+ 		return;
+ 	}
+ 	if (zhdr->cpu < 0 || !cpu_online(zhdr->cpu)) {
+@@ -1035,7 +1277,7 @@ static void z3fold_free(struct z3fold_pool *pool, unsigned long handle)
+ 	}
+ 	kref_get(&zhdr->refcount);
+ 	queue_work_on(zhdr->cpu, pool->compact_wq, &zhdr->work);
+-	z3fold_page_unlock(zhdr);
++	put_z3fold_header(zhdr);
+ }
+ 
+ /**
+@@ -1217,14 +1459,13 @@ static void *z3fold_map(struct z3fold_pool *pool, unsigned long handle)
+ 	void *addr;
+ 	enum buddy buddy;
+ 
+-	zhdr = handle_to_z3fold_header(handle);
++	zhdr = get_z3fold_header(handle);
+ 	addr = zhdr;
+ 	page = virt_to_page(zhdr);
+ 
+ 	if (test_bit(PAGE_HEADLESS, &page->private))
+ 		goto out;
+ 
+-	z3fold_page_lock(zhdr);
+ 	buddy = handle_to_buddy(handle);
+ 	switch (buddy) {
+ 	case FIRST:
+@@ -1246,8 +1487,8 @@ static void *z3fold_map(struct z3fold_pool *pool, unsigned long handle)
+ 
+ 	if (addr)
+ 		zhdr->mapped_count++;
+-	z3fold_page_unlock(zhdr);
+ out:
++	put_z3fold_header(zhdr);
+ 	return addr;
+ }
+ 
+@@ -1262,18 +1503,17 @@ static void z3fold_unmap(struct z3fold_pool *pool, unsigned long handle)
+ 	struct page *page;
+ 	enum buddy buddy;
+ 
+-	zhdr = handle_to_z3fold_header(handle);
++	zhdr = get_z3fold_header(handle);
+ 	page = virt_to_page(zhdr);
+ 
+ 	if (test_bit(PAGE_HEADLESS, &page->private))
+ 		return;
+ 
+-	z3fold_page_lock(zhdr);
+ 	buddy = handle_to_buddy(handle);
+ 	if (buddy == MIDDLE)
+ 		clear_bit(MIDDLE_CHUNK_MAPPED, &page->private);
+ 	zhdr->mapped_count--;
+-	z3fold_page_unlock(zhdr);
++	put_z3fold_header(zhdr);
+ }
+ 
+ /**
+@@ -1304,19 +1544,21 @@ static bool z3fold_page_isolate(struct page *page, isolate_mode_t mode)
+ 	    test_bit(PAGE_STALE, &page->private))
+ 		goto out;
+ 
++	if (zhdr->mapped_count != 0 || zhdr->foreign_handles != 0)
++		goto out;
++
+ 	pool = zhdr_to_pool(zhdr);
++	spin_lock(&pool->lock);
++	if (!list_empty(&zhdr->buddy))
++		list_del_init(&zhdr->buddy);
++	if (!list_empty(&page->lru))
++		list_del_init(&page->lru);
++	spin_unlock(&pool->lock);
++
++	kref_get(&zhdr->refcount);
++	z3fold_page_unlock(zhdr);
++	return true;
+ 
+-	if (zhdr->mapped_count == 0) {
+-		kref_get(&zhdr->refcount);
+-		if (!list_empty(&zhdr->buddy))
+-			list_del_init(&zhdr->buddy);
+-		spin_lock(&pool->lock);
+-		if (!list_empty(&page->lru))
+-			list_del(&page->lru);
+-		spin_unlock(&pool->lock);
+-		z3fold_page_unlock(zhdr);
+-		return true;
+-	}
+ out:
+ 	z3fold_page_unlock(zhdr);
+ 	return false;
+@@ -1342,7 +1584,7 @@ static int z3fold_page_migrate(struct address_space *mapping, struct page *newpa
+ 		unlock_page(page);
+ 		return -EAGAIN;
+ 	}
+-	if (zhdr->mapped_count != 0) {
++	if (zhdr->mapped_count != 0 || zhdr->foreign_handles != 0) {
+ 		z3fold_page_unlock(zhdr);
+ 		unlock_page(page);
+ 		return -EBUSY;
+-- 
+2.17.1
