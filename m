@@ -2,180 +2,180 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0858AC282E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B88EFC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA6642175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:27:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9131520851
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:28:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="eGczKoO2"
+	dkim=pass (2048-bit key) header.d=posk.io header.i=@posk.io header.b="DGIG2OEH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390554AbfEXQ1Q (ORCPT
+        id S2390832AbfEXQ2o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 12:27:16 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:43944 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390337AbfEXQ1P (ORCPT
+        Fri, 24 May 2019 12:28:44 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:34393 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390380AbfEXQ2n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 12:27:15 -0400
-Received: by mail-ed1-f68.google.com with SMTP id w33so11791428edb.10
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 09:27:13 -0700 (PDT)
+        Fri, 24 May 2019 12:28:43 -0400
+Received: by mail-ed1-f65.google.com with SMTP id p27so15216111eda.1
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 09:28:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5uGnJY6+WIJldncn5/DuJlJfSiMsN3sDHc0cFO6evKw=;
-        b=eGczKoO2oK1LxqRDUeq+D7nDJHBIb4XMUraNpLr4yOcOAsFgoTd33a5I2wq/sPLj5m
-         cv4CL9Pysa7bfIL+Jn+vSSY2Z0bldZYmz/9YA39+pTt/iA6nk2Z39gXEHUQfsENbPGDq
-         9COrk8k8zvaBOZH4FfeULv1UGUcPpYkvd+miQ=
+        d=posk.io; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yDvF8ijGMjXKswBaAKmkx4e+4Hw2+kdouMbMASjbcVw=;
+        b=DGIG2OEHCcGy9pFLL1EUTPA4Q4CAVvRVSxI5Oc+ftogN0WouSQiw4CkW6FvYzATM9u
+         ClIQ91EObEDk5+xk+Db1HLIcdXFFuMPIOsZi/ynjLiGlVMhl/kbGGjgRky/TkxKY4Me2
+         xzYJrKIvRKLbKNaP3qqpHmAoTJ/JQ3d4sPq89OYTaG8owOhepVzXN66yjaaer9Izy2SS
+         qTjH3H89y+/LJtOFvkdN9jSUNZgTpFEtjOu6eNz0lxbTe9KFPvtRTt8b/UUnKJ5oytwz
+         kThh1ZhyaTdMQlFifrR5G9Ks9tDDGJ0bwgMNbCiWtD+vY9hAX4TzdC6W3zgBBEwwWNqT
+         ljEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=5uGnJY6+WIJldncn5/DuJlJfSiMsN3sDHc0cFO6evKw=;
-        b=VqP9aL/WEG3CkIqLCRqPWWauuGfsQbTvnxAQBRQats0u68Z2LqHRdHpewipA9C8sAj
-         hN0Ll3ivsjMF7PGHeLxi/esCgMsBeRofEEcdzKf1rrq7jdkh9IYcdglqmtYR3ng2p8Wv
-         GN4wVIOzlrft/zLhRfSwmf9hx1EIrN828ZLcuLxd/xVkZECoZ8yjzKXphIDWETrh/xF4
-         ZnlKv85OfYnANQJV6wVEtp4ryFYHlJ4uP8ZYOlrUqQEcB61XkKI5eOxRDEv0EKX+j9oQ
-         k0/JNrsOscFb6HEhLxfC1he3PNAakQBChoH2ehYPBgvWdbJLNQ2aN41+YX1TI2PrbKIs
-         wcig==
-X-Gm-Message-State: APjAAAX3IH4pYJLvrYiR7zhAGmHCW+OY1I6xW4BunZ0rvCSxY4syL5Ob
-        CYvWjxwWQjcOvdNZslzR1nRg+/FdZ8I=
-X-Google-Smtp-Source: APXvYqz+Z4CiuIPAkdi1mB6lLRW1WTeonKTLCscAeQw4ulK7kt9ebJAos6eSJA0Dpqv9o1VxaTHnkw==
-X-Received: by 2002:a17:906:6a02:: with SMTP id o2mr57101777ejr.164.1558715233065;
-        Fri, 24 May 2019 09:27:13 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id m16sm418816ejj.57.2019.05.24.09.27.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 24 May 2019 09:27:12 -0700 (PDT)
-Date:   Fri, 24 May 2019 18:27:09 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Christoph Hellwig <hch@infradead.org>, akpm@linux-foundation.org,
-        Dave Airlie <airlied@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jerome Glisse <jglisse@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Artemy Kovalyov <artemyko@mellanox.com>,
-        Moni Shoua <monis@mellanox.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        linux-mm@kvack.org, dri-devel <dri-devel@lists.freedesktop.org>
-Subject: Re: RFC: Run a dedicated hmm.git for 5.3
-Message-ID: <20190524162709.GD21222@phenom.ffwll.local>
-Mail-Followup-To: Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>, akpm@linux-foundation.org,
-        Dave Airlie <airlied@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jerome Glisse <jglisse@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Artemy Kovalyov <artemyko@mellanox.com>,
-        Moni Shoua <monis@mellanox.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        linux-mm@kvack.org, dri-devel <dri-devel@lists.freedesktop.org>
-References: <20190523150432.GA5104@redhat.com>
- <20190523154149.GB12159@ziepe.ca>
- <20190523155207.GC5104@redhat.com>
- <20190523163429.GC12159@ziepe.ca>
- <20190523173302.GD5104@redhat.com>
- <20190523175546.GE12159@ziepe.ca>
- <20190523182458.GA3571@redhat.com>
- <20190523191038.GG12159@ziepe.ca>
- <20190524064051.GA28855@infradead.org>
- <20190524124455.GB16845@ziepe.ca>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yDvF8ijGMjXKswBaAKmkx4e+4Hw2+kdouMbMASjbcVw=;
+        b=tuPuIvXueAIOS9HryR8A9O4cd0pNCKsxmXgeo4oS2w52Lux2cvH1YP752rSl8tatNL
+         yf+KCh1KhFnDPQimFSCeeutt76DxUTH+NF2REXAIEuOQwLn0BVyLlPaQpAyJUC1CwENT
+         rchNqtBmKlNDy3TsxHTaC1DrIqCuFnis/GuzivMir/w0qcpGdWX4JawFo9KI/cMh12+9
+         wnA5gpYtLkQXsD8xpTMVEslxzVF7MsIQqUFm9nCSK9TbaYg+C7BhZEITcAxVvYCnqQ/d
+         /+ODQPPAKbj8DbMg7foHyMFgVaqCvwPvIlA7oMdP9EK2pK93h2+Tuk6oBuI+vE6OXicx
+         4y0Q==
+X-Gm-Message-State: APjAAAWQLnZJ99VJzgd0WGNMYB+7Z+NKnrwjh/zgr2N3f4Zj4V24fbXb
+        q1MkrZQNC1Cet6ObEQKibFCE9o6pLqxCzYcWsNco5w==
+X-Google-Smtp-Source: APXvYqxGzwVO1ZkMJIM3Mnc1FEnNtAkwAMMiTeH+RINJrdbRUCyXo6u4j5F2/YpAI/m4f9JnvvvTDSL73V4y4hQty84=
+X-Received: by 2002:aa7:c44e:: with SMTP id n14mr32345338edr.203.1558715321234;
+ Fri, 24 May 2019 09:28:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190524124455.GB16845@ziepe.ca>
-X-Operating-System: Linux phenom 4.14.0-3-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1558121424-2914-1-git-send-email-chiluk+linux@indeed.com>
+ <1558637087-20283-1-git-send-email-chiluk+linux@indeed.com>
+ <1558637087-20283-2-git-send-email-chiluk+linux@indeed.com>
+ <CAFTs51W0KdK4nw6wydn2HjNYvFRC8DYMmVeKX9FAe+4YUGEAZg@mail.gmail.com>
+ <20190524143204.GB4684@lorien.usersys.redhat.com> <CAC=E7cXxsyMLw1PR+8QchTH8FYL7WX6_8LBVdqueR1yjW+VVkQ@mail.gmail.com>
+In-Reply-To: <CAC=E7cXxsyMLw1PR+8QchTH8FYL7WX6_8LBVdqueR1yjW+VVkQ@mail.gmail.com>
+From:   Peter Oskolkov <posk@posk.io>
+Date:   Fri, 24 May 2019 09:28:30 -0700
+Message-ID: <CAFTs51Vm258CkDXi_Jj_cGOMotTvhdYR_VW8aUwAUvgistZOFQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] sched/fair: Fix low cpu usage with high throttling
+ by removing expiration of cpu-local slices
+To:     Dave Chiluk <chiluk+linux@indeed.com>
+Cc:     Phil Auld <pauld@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, cgroups@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Brendan Gregg <bgregg@netflix.com>,
+        Kyle Anderson <kwa@yelp.com>,
+        Gabriel Munos <gmunoz@netflix.com>,
+        John Hammond <jhammond@indeed.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        Ben Segall <bsegall@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 09:44:55AM -0300, Jason Gunthorpe wrote:
-> On Thu, May 23, 2019 at 11:40:51PM -0700, Christoph Hellwig wrote:
-> > On Thu, May 23, 2019 at 04:10:38PM -0300, Jason Gunthorpe wrote:
-> > > 
-> > > On Thu, May 23, 2019 at 02:24:58PM -0400, Jerome Glisse wrote:
-> > > > I can not take mmap_sem in range_register, the READ_ONCE is fine and
-> > > > they are no race as we do take a reference on the hmm struct thus
-> > > 
-> > > Of course there are use after free races with a READ_ONCE scheme, I
-> > > shouldn't have to explain this.
-> > > 
-> > > If you cannot take the read mmap sem (why not?), then please use my
-> > > version and push the update to the driver through -mm..
-> > 
-> > I think it would really help if we queue up these changes in a git tree
-> > that can be pulled into the driver trees.  Given that you've been
-> > doing so much work to actually make it usable I'd nominate rdma for the
-> > "lead" tree.
-> 
-> Sure, I'm willing to do that. RDMA has experience successfully running
-> shared git trees with netdev. It can work very well, but requires
-> discipline and understanding of the limitations.
-> 
-> I really want to see the complete HMM solution from Jerome (ie the
-> kconfig fixes, arm64, api fixes, etc) in one cohesive view, not
-> forced to be sprinkled across multiple kernel releases to work around
-> a submission process/coordination problem.
-> 
-> Now that -mm merged the basic hmm API skeleton I think running like
-> this would get us quickly to the place we all want: comprehensive in tree
-> users of hmm.
-> 
-> Andrew, would this be acceptable to you?
-> 
-> Dave, would you be willing to merge a clean HMM tree into DRM if it is
-> required for DRM driver work in 5.3?
-> 
-> I'm fine to merge a tree like this for RDMA, we already do this
-> pattern with netdev.
-> 
-> Background: The issue that is motivating this is we want to make
-> changes to some of the API's for hmm, which mean changes in existing
-> DRM, changes in to-be-accepted RDMA code, and to-be-accepted DRM
-> driver code. Coordintating the mm/hmm.c, RDMA and DRM changes is best
-> done with the proven shared git tree pattern. As CH explains I would
-> run a clean/minimal hmm tree that can be merged into driver trees as
-> required, and I will commit to sending a PR to Linus for this tree
-> very early in the merge window so that driver PR's are 'clean'.
-> 
-> The tree will only contain uncontroversial hmm related commits, bug
-> fixes, etc.
-> 
-> Obviouisly I will also commit to providing review for patches flowing
-> through this tree.
+On Fri, May 24, 2019 at 8:15 AM Dave Chiluk <chiluk+linux@indeed.com> wrote:
+>
+> On Fri, May 24, 2019 at 9:32 AM Phil Auld <pauld@redhat.com> wrote:
+> > On Thu, May 23, 2019 at 02:01:58PM -0700 Peter Oskolkov wrote:
+>
+> > > If the machine runs at/close to capacity, won't the overallocation
+> > > of the quota to bursty tasks necessarily negatively impact every other
+> > > task? Should the "unused" quota be available only on idle CPUs?
+> > > (Or maybe this is the behavior achieved here, and only the comment and
+> > > the commit message should be fixed...)
+> > >
+> >
+> > It's bounded by the amount left unused from the previous period. So
+> > theoretically a process could use almost twice its quota. But then it
+> > would have nothing left over in the next period. To repeat it would have
+> > to not use any that next period. Over a longer number of periods it's the
+> > same amount of CPU usage.
+> >
+> > I think that is more fair than throttling a process that has never used
+> > its full quota.
+> >
+> > And it removes complexity.
+> >
+> > Cheers,
+> > Phil
+>
+> Actually it's not even that bad.  The overallocation of quota to a
+> bursty task in a period is limited to at most one slice per cpu, and
+> that slice must not have been used in the previous periods.  The slice
+> size is set with /proc/sys/kernel/sched_cfs_bandwidth_slice_us and
+> defaults to 5ms.  If a bursty task goes from underutilizing quota to
+> using it's entire quota, it will not be able to burst in the
+> subsequent periods.  Therefore in an absolute worst case contrived
+> scenario, a bursty task can add at most 5ms to the latency of other
+> threads on the same CPU.  I think this worst case 5ms tradeoff is
+> entirely worth it.
+>
+> This does mean that a theoretically a poorly written massively
+> threaded application on an 80 core box, that spreads itself onto 80
+> cpu run queues, can overutilize it's quota in a period by at most 5ms
+> * 80 CPUs in a sincle period (slice * number of runqueues the
+> application is running on).  But that means that each of those threads
+>  would have had to not be use their quota in a previous period, and it
+> also means that the application would have to be carefully written to
+> exacerbate this behavior.
+>
+> Additionally if cpu bound threads underutilize a slice of their quota
+> in a period due to the cfs choosing a bursty task to run, they should
+> theoretically be able to make it up in the following periods when the
+> bursty task is unable to "burst".
 
-Sure topic branch sounds fine, we do that all the time with various
-subsystems all over. We have ready made scripts for topic branches and
-applying pulls from all over, so we can even soak test everything in our
-integration tree. In case there's conflicts or just to make sure
-everything works, before we bake the topic branch into permanent history
-(the main drm.git repo just can't be rebased, too much going on and too
-many people involvd).
+OK, so it is indeed possible that CPU bound threads will underutilize a slice
+of their quota in a period as a result of this patch. This should probably
+be clearly stated in the code comments and in the commit message.
 
-If Jerome is ok with wrestling with our scripting we could even pull these
-updates in while the hmm.git tree is evolving.
+In addition, I believe that although many workloads will indeed be
+indifferent to getting their fair share "later", some latency-sensitive
+workloads will definitely be negatively affected by this temporary
+CPU quota stealing by bursty antagonists. So there should probably be
+a way to limit this behavior; for example, by making it tunable
+per cgroup.
 
-Cheers, Daniel
-(drm co-maintainer fwiw)
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+>
+> Please be careful here quota and slice are being treated differently.
+> Quota does not roll-over between periods, only slices of quota that
+> has already been allocated to per cpu run queues. If you allocate
+> 100ms of quota per period to an application, but it only spreads onto
+> 3 cpu run queues that means it can in the worst case use 3 x slice
+> size = 15ms in periods following underutilization.
+>
+> So why does this matter.  Well applications that use thread pools
+> *(*cough* java *cough*) with lots of tiny little worker threads, tend
+> to spread themselves out onto a lot of run queues.  These worker
+> threads grab quota slices in order to run, then rarely use all of
+> their slice (1 or 2ms out of the 5ms).  This results in those worker
+> threads starving the main application of quota, and then expiring the
+> remainder of that quota slice on the per-cpu.  Going back to my
+> earlier 100ms quota / 80 cpu example.  That means only
+> 100ms/cfs_bandwidth_slice_us(5ms) = 20 slices are available in a
+> period.  So only 20 out of these 80 cpus ever get a slice allocated to
+> them.  By allowing these per-cpu run queues to use their remaining
+> slice in following periods these worker threads do not need to be
+> allocated additional slice, and thereby the main threads are actually
+> able to use the allocated cpu quota.
+>
+> This can be experienced by running fibtest available at
+> https://github.com/indeedeng/fibtest/.
+> $ runfibtest 1
+> runs a single fast thread taskset to cpu 0
+> $ runfibtest 8
+> Runs a single fast thread taskset to cpu 0, and 7 slow threads taskset
+> to cpus 1-7.  This run is expected to show less iterations, but the
+> worse problem is that the cpu usage is far less than the 500ms that it
+> should have received.
+>
+> Thanks for the engagement on this,
+> Dave Chiluk
