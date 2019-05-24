@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8872C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FBC6C282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B2B42175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:54:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FDF0217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:54:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="cvyCEwSj"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Nh3n8kL/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390277AbfEXIyr (ORCPT
+        id S2390291AbfEXIyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 04:54:47 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:34401 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390179AbfEXIyo (ORCPT
+        Fri, 24 May 2019 04:54:52 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:44500 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390248AbfEXIyq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 04:54:44 -0400
-Received: by mail-ed1-f68.google.com with SMTP id p27so13377867eda.1
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 01:54:43 -0700 (PDT)
+        Fri, 24 May 2019 04:54:46 -0400
+Received: by mail-ed1-f65.google.com with SMTP id b8so13304637edm.11
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 01:54:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ffwll.ch; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=3VFKuM3MW7HhJw8g+F0ZAMGgocYe76vTXpU+uF+1TQo=;
-        b=cvyCEwSj1QIHhiUcfE6glzcCA2U8gdeQg0UJH+eLHNVqhr9yA74lr76XhDC68i/K4s
-         ySqXKthJaclCts4kf7qGy4NZyjN9KsaoOAoblQUPftMCEF/SeQQBYvkHtmqPvnJ5Mrm+
-         4wMOGUPvzJhyy1ifC2pEL2npDGzuVq8hf/6JQ=
+        bh=NmvrGIUWQkTElry91PwheZTmzBnjKP7PR8ohbwjeRGw=;
+        b=Nh3n8kL/lOQMsn5ZR8TvohBEqbIzE7Lgj3nCIy9tF9DcXQiDN/rMDZEKzdjjQlKv2v
+         DBcU1thQcKCne7ZjTeekcxfx+fSPE39PVenj5kjlxDaGWTjihc9VVQH/EXPWiuIuPEI+
+         oThhEVt/uxjw2gJKXFL2oGTpb8aHJS//3bOh4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=3VFKuM3MW7HhJw8g+F0ZAMGgocYe76vTXpU+uF+1TQo=;
-        b=nhFCWMM3Ev89fmil6EFcmhCv9QF84ewowXfBgvDjk2gubUp35YRAPSSElEXJiQ/0nH
-         jfOLfoyQ7JC9BqgQ8KSTPDhCO+S9eCnXy0OwgGnHM/LpGsOCgAyvbBwgb0z2KK/HdJAv
-         uVTBIXumLbzFdVF+6MPRu48xios0r84Xxl+iFg2hNVrtACKAFSemtvpdn+Hq/irSdymz
-         Y/ihycBRH9r/uC7WIKWAmHtu84+KCIaqDVMSU/sAeHKiiEUodydQFz7Zm/+gm40ZOTD6
-         Eq3O+/BVf0MEvecXEq4iT+XxUEbGxdg6equoDW6phgzZ9zaoAx2HhNtcIc7yhYQAtUSl
-         A72w==
-X-Gm-Message-State: APjAAAXx1ML3DTLcX4rKt1ya5lSQIl0+9SZGq4qP9zBpni15cmTq8iF5
-        /6sxMecTYf8N7YRmsa+RreWCOYIr4Jc=
-X-Google-Smtp-Source: APXvYqxEVgu2quVopIofi1fANkMhstACI2EGNdT+MIZH3gHRE5pFQbfKt9ctKt7SsMjsTvmXSEszUQ==
-X-Received: by 2002:a17:906:2ac5:: with SMTP id m5mr81917352eje.71.1558688082399;
-        Fri, 24 May 2019 01:54:42 -0700 (PDT)
+        bh=NmvrGIUWQkTElry91PwheZTmzBnjKP7PR8ohbwjeRGw=;
+        b=BoXeUwAmzPxQ0sm5rd8Gjc0o5hNzULdPHlU1FKhNk7bG03Zo/2mgb4gRrmUO+fnQqe
+         Hhq8JTCh6QIrGezYwCkD93vWPMfN0Fa13VurBBZPTZteC2Gpx8mlxz8IVvGSr0Ymy9Qh
+         A9I/F/b0zQ9fZmbVPu+DQVq10PrN1T276HO52U5UWIhwyTZmPqxK7HQ0FIPxqCmmrO66
+         WIv/Qmygd9Fvyo+OEucXE7XnWIOvpox5Vjl/wd8FmFxIJC12wzveEDNXisfAua5IY/Le
+         m3f9dSLvV6qj/VdRLCBDHbz+8wns/IOUchpxfiyG9olJdnaTlO700khZkaNx9PSfdwQO
+         wr6w==
+X-Gm-Message-State: APjAAAXqmXVDIZf6Mkiv14h/PMvTfroE0JOTAC9gA/nUR4H2OmXHujiu
+        ratcIg+oP8TdfMTPqBwCLKB3boG/jcw=
+X-Google-Smtp-Source: APXvYqwajf0oCHKmp7dOkjnUHWvBU13ALDXZf5gmM/1TI3Cp7xnjVwoelMbSOCmGIhHgMN29lqIMcQ==
+X-Received: by 2002:a17:907:20cd:: with SMTP id qq13mr55869127ejb.170.1558688084971;
+        Fri, 24 May 2019 01:54:44 -0700 (PDT)
 Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id 96sm567082edq.68.2019.05.24.01.54.41
+        by smtp.gmail.com with ESMTPSA id 96sm567082edq.68.2019.05.24.01.54.43
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 01:54:41 -0700 (PDT)
+        Fri, 24 May 2019 01:54:44 -0700 (PDT)
 From:   Daniel Vetter <daniel.vetter@ffwll.ch>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
         DRI Development <dri-devel@lists.freedesktop.org>,
         Daniel Vetter <daniel.vetter@ffwll.ch>,
         Daniel Vetter <daniel.vetter@intel.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Yisheng Xie <ysxie@foxmail.com>
-Subject: [PATCH 31/33] fbcon: Document what I learned about fbcon locking
-Date:   Fri, 24 May 2019 10:53:52 +0200
-Message-Id: <20190524085354.27411-32-daniel.vetter@ffwll.ch>
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>
+Subject: [PATCH 33/33] backlight: simplify lcd notifier
+Date:   Fri, 24 May 2019 10:53:54 +0200
+Message-Id: <20190524085354.27411-34-daniel.vetter@ffwll.ch>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190524085354.27411-1-daniel.vetter@ffwll.ch>
 References: <20190524085354.27411-1-daniel.vetter@ffwll.ch>
@@ -75,47 +75,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's not pretty.
+With all the work I've done on replacing fb notifier calls with direct
+calls into fbcon the backlight/lcd notifier is the only user left.
+
+It will only receive events now that it cares about, hence we can
+remove this check.
 
 Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Yisheng Xie <ysxie@foxmail.com>
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>
 ---
- drivers/video/fbdev/core/fbcon.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ drivers/video/backlight/lcd.c | 11 -----------
+ 1 file changed, 11 deletions(-)
 
-diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
-index 6a4bbb8407c0..8444d5151c2d 100644
---- a/drivers/video/fbdev/core/fbcon.c
-+++ b/drivers/video/fbdev/core/fbcon.c
-@@ -88,6 +88,25 @@
- #  define DPRINTK(fmt, args...)
- #endif
+diff --git a/drivers/video/backlight/lcd.c b/drivers/video/backlight/lcd.c
+index a758039475d0..8ea5e5937ae2 100644
+--- a/drivers/video/backlight/lcd.c
++++ b/drivers/video/backlight/lcd.c
+@@ -29,17 +29,6 @@ static int fb_notifier_callback(struct notifier_block *self,
+ 	struct lcd_device *ld;
+ 	struct fb_event *evdata = data;
  
-+/*
-+ * FIXME: Locking
-+ *
-+ * - fbcon state itself is protected by the console_lock, and the code does a
-+ *   pretty good job at making sure that lock is held everywhere it's needed.
-+ *
-+ * - access to the registered_fb array is entirely unprotected. This should use
-+ *   proper object lifetime handling, i.e. get/put_fb_info. This also means
-+ *   switching from indices to proper pointers for fb_info everywhere.
-+ *
-+ * - fbcon doesn't bother with fb_lock/unlock at all. This is buggy, since it
-+ *   means concurrent access to the same fbdev from both fbcon and userspace
-+ *   will blow up. To fix this all fbcon calls from fbmem.c need to be moved out
-+ *   of fb_lock/unlock protected sections, since otherwise we'll recurse and
-+ *   deadlock eventually. Aside: Due to these deadlock issues the fbdev code in
-+ *   fbmem.c cannot use locking asserts, and there's lots of callers which get
-+ *   the rules wrong, e.g. fbsysfs.c entirely missed fb_lock/unlock calls too.
-+ */
-+
- enum {
- 	FBCON_LOGO_CANSHOW	= -1,	/* the logo can be shown */
- 	FBCON_LOGO_DRAW		= -2,	/* draw the logo to a console */
+-	/* If we aren't interested in this event, skip it immediately ... */
+-	switch (event) {
+-	case FB_EVENT_BLANK:
+-	case FB_EVENT_MODE_CHANGE:
+-	case FB_EARLY_EVENT_BLANK:
+-	case FB_R_EARLY_EVENT_BLANK:
+-		break;
+-	default:
+-		return 0;
+-	}
+-
+ 	ld = container_of(self, struct lcd_device, fb_notif);
+ 	if (!ld->ops)
+ 		return 0;
 -- 
 2.20.1
 
