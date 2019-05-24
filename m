@@ -7,70 +7,64 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE43C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C258EC282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D794217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:54:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82A352184B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:55:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="HUdmHgmj"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="G8gQaHLZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390244AbfEXIyp (ORCPT
+        id S2390317AbfEXIzA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 04:54:45 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:34393 "EHLO
+        Fri, 24 May 2019 04:55:00 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:34402 "EHLO
         mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390206AbfEXIym (ORCPT
+        with ESMTP id S2390240AbfEXIyp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 04:54:42 -0400
-Received: by mail-ed1-f66.google.com with SMTP id p27so13377711eda.1
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 01:54:40 -0700 (PDT)
+        Fri, 24 May 2019 04:54:45 -0400
+Received: by mail-ed1-f66.google.com with SMTP id p27so13377941eda.1
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 01:54:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ffwll.ch; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=yvJfpAYuex1ZzOWAPU6Riy4B+TLlFKSikZdtVIlcEvw=;
-        b=HUdmHgmj6xKTF/IjmxdZCCQ8CBeV1rzmE0mINDeSFn9Qneug/fJWEvLp96IRv6kfvC
-         945nj1FkujWD3gaC8/RWS8thQOvrVBUhwZvbngFiPZohDzX0b7uHbmyyJhdhJ29mwuwx
-         FLVEnq5iGLC4vngpjPDvEq9wcH4Tf/lzfBzOs=
+        bh=mUAcB3sU0dD3E/MUylEVVwC2GTKxo8rk41HcMoWy7Z0=;
+        b=G8gQaHLZUx+WzPRhTW9uW/COq5N31wy0ORbu7OIDAR64WlKCvpFjKEJSkBXQceNUqU
+         Pf2ZP8mFN3py9TSDiJCyhwRzpd2XkYyNoHJZxCR/dIW1IXyui6OCcrPWPzlGghN5ZXxa
+         ENIvnIJhRgK6TnD1XZkchnjTIKtsaX7Tf2OIM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=yvJfpAYuex1ZzOWAPU6Riy4B+TLlFKSikZdtVIlcEvw=;
-        b=mtAMHzGpVf3bHA8AjwP0jQtIbPpfGRW2Vv2AwGPx+C0xyYj4Bo3MiPj1dXX4SAFGXP
-         KcFg77fACrEp4bUzTwfAlOTPHskRlHY4f7fYgga7+2POOPRNMRcuTdk8o2f/auYQV/ia
-         u7DtvKJQq5ANSM2G90vz2Y/mNthOsyqsj+i1T8C9yK0yqwM89dFsrxvub1a7IjzHPo8g
-         LuByACkQWGheHc4GbwJjjkemgTDaviSDOIvnUaQBvijuUmvsYcrmyZLsukvzMCbiTvx6
-         IGR64RD7oYTtetECeugqyFi3lA+aDoGueIcWUaqmLUbiqMw4J6g9gcQaxNx+IMbJX9T5
-         xxMw==
-X-Gm-Message-State: APjAAAXs5KWi4M/eqigvGtIVesmPiROl5cA10yh+4Wwkz21RI7WsRX6r
-        oqNHDeErcx4f0x7EdkTZrauz+ejX/lM=
-X-Google-Smtp-Source: APXvYqyxJ3OtlgIvW239dvLOeioh8c4KEAqEFm7ic6IPrLWep6WRTnj3exef/quNNUVmDRuYnFB2hA==
-X-Received: by 2002:a17:906:25c5:: with SMTP id n5mr49943586ejb.110.1558688079930;
-        Fri, 24 May 2019 01:54:39 -0700 (PDT)
+        bh=mUAcB3sU0dD3E/MUylEVVwC2GTKxo8rk41HcMoWy7Z0=;
+        b=L3N+reFxL5odm52YCXZyZBxMUrgwMTtLjZPcLSbd5iHTvsGrBhQP6DIR/iWbYD2y4e
+         hPYLmoiIC0yMzM53RW+96n9zbpNTvkkseDTEEL5CbxX3NIsgHYU8yl0b0S77WBmIFOA7
+         W5mFDbBO6Mb4ZGCAxY1FVf7WpBlnwX7CrEFCAqKjrwD3KBAot3z6lsXMKAsHyu27cbQF
+         Od1JuUMe8HwbkchbT6JoOozf0S+PWKHi9VtXLhSm+s6CRNYWh0kN6Eg8G6E4XCbltdlO
+         Lwu/YdTIERGP4tE/FzzTeArxh8etGU0XWS899/xAZDUVRinBFGL48jg6UuNMI0QJV10b
+         WX2Q==
+X-Gm-Message-State: APjAAAWsHTLNR2cWQVeKJuC8pXtIbuqhOFMYDYp+HYKEayhiul/8nuyL
+        yW1riSLDulvjrU4ysumVQR5GpRx0sYo=
+X-Google-Smtp-Source: APXvYqz2qHhN5A2pWKpVJsBUdeEY8H62cdHPVnuNt4a6bkkHftmLnMSppn0lpuPcH/owQLYONbNwfA==
+X-Received: by 2002:a17:906:d557:: with SMTP id gk23mr78999185ejb.285.1558688083594;
+        Fri, 24 May 2019 01:54:43 -0700 (PDT)
 Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id 96sm567082edq.68.2019.05.24.01.54.38
+        by smtp.gmail.com with ESMTPSA id 96sm567082edq.68.2019.05.24.01.54.42
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 01:54:39 -0700 (PDT)
+        Fri, 24 May 2019 01:54:42 -0700 (PDT)
 From:   Daniel Vetter <daniel.vetter@ffwll.ch>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
         DRI Development <dri-devel@lists.freedesktop.org>,
         Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Lukas Wunner <lukas@wunner.de>,
         Daniel Vetter <daniel.vetter@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Yisheng Xie <ysxie@foxmail.com>, linux-fbdev@vger.kernel.org
-Subject: [PATCH 29/33] vgaswitcheroo: call fbcon_remap_all directly
-Date:   Fri, 24 May 2019 10:53:50 +0200
-Message-Id: <20190524085354.27411-30-daniel.vetter@ffwll.ch>
+        Jens Frederich <jfrederich@gmail.com>,
+        Daniel Drake <dsd@laptop.org>,
+        Jon Nettleton <jon.nettleton@gmail.com>
+Subject: [PATCH 32/33] staging/olpc_dcon: Add drm conversion to TODO
+Date:   Fri, 24 May 2019 10:53:53 +0200
+Message-Id: <20190524085354.27411-33-daniel.vetter@ffwll.ch>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190524085354.27411-1-daniel.vetter@ffwll.ch>
 References: <20190524085354.27411-1-daniel.vetter@ffwll.ch>
@@ -81,139 +75,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While at it, clean up the interface a bit and push the console locking
-into fbcon.c.
+this driver is pretty horrible from a design pov, and needs a complete
+overhaul. Concrete thing that annoys me is that it looks at
+registered_fb, which is an internal thing to fbmem.c and fbcon.c. And
+ofc it gets the lifetime rules all wrong (it should at least use
+get/put_fb_info).
 
-v2: Remove now outdated comment (Lukas).
+Looking at the history, there's been an attempt at dropping this from
+staging in 2016, but that had to be reverted. Since then not real
+effort except the usual stream of trivial patches, and fbdev has been
+formally closed for any new hw support. Time to try again and drop
+this?
 
-v3: Forgot to add static inline to the dummy function.
-
-Acked-by: Lukas Wunner <lukas@wunner.de>
 Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-Cc: Lukas Wunner <lukas@wunner.de>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Sean Paul <sean@poorly.run>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Yisheng Xie <ysxie@foxmail.com>
-Cc: linux-fbdev@vger.kernel.org
+Cc: Jens Frederich <jfrederich@gmail.com>
+Cc: Daniel Drake <dsd@laptop.org>
+Cc: Jon Nettleton <jon.nettleton@gmail.com>
 ---
- drivers/gpu/vga/vga_switcheroo.c | 11 +++--------
- drivers/video/fbdev/core/fbcon.c | 14 +++++---------
- include/linux/fb.h               |  2 --
- include/linux/fbcon.h            |  2 ++
- 4 files changed, 10 insertions(+), 19 deletions(-)
+ drivers/staging/olpc_dcon/TODO | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/gpu/vga/vga_switcheroo.c b/drivers/gpu/vga/vga_switcheroo.c
-index a132c37d7334..65d7541c413a 100644
---- a/drivers/gpu/vga/vga_switcheroo.c
-+++ b/drivers/gpu/vga/vga_switcheroo.c
-@@ -35,6 +35,7 @@
- #include <linux/debugfs.h>
- #include <linux/fb.h>
- #include <linux/fs.h>
-+#include <linux/fbcon.h>
- #include <linux/module.h>
- #include <linux/pci.h>
- #include <linux/pm_domain.h>
-@@ -736,14 +737,8 @@ static int vga_switchto_stage2(struct vga_switcheroo_client *new_client)
- 	if (!active->driver_power_control)
- 		set_audio_state(active->id, VGA_SWITCHEROO_OFF);
- 
--	if (new_client->fb_info) {
--		struct fb_event event;
--
--		console_lock();
--		event.info = new_client->fb_info;
--		fb_notifier_call_chain(FB_EVENT_REMAP_ALL_CONSOLE, &event);
--		console_unlock();
--	}
-+	if (new_client->fb_info)
-+		fbcon_remap_all(new_client->fb_info);
- 
- 	mutex_lock(&vgasr_priv.mux_hw_lock);
- 	ret = vgasr_priv.handler->switchto(new_client->id);
-diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
-index a07c261da53a..e08e984e2511 100644
---- a/drivers/video/fbdev/core/fbcon.c
-+++ b/drivers/video/fbdev/core/fbcon.c
-@@ -3149,17 +3149,16 @@ void fbcon_fb_unregistered(struct fb_info *info)
- 		do_unregister_con_driver(&fb_con);
- }
- 
--/* called with console_lock held */
--static void fbcon_remap_all(int idx)
-+void fbcon_remap_all(struct fb_info *info)
- {
--	int i;
--
--	WARN_CONSOLE_UNLOCKED();
-+	int i, idx = info->node;
- 
-+	console_lock();
- 	if (deferred_takeover) {
- 		for (i = first_fb_vc; i <= last_fb_vc; i++)
- 			con2fb_map_boot[i] = idx;
- 		fbcon_map_override();
-+		console_unlock();
- 		return;
- 	}
- 
-@@ -3172,6 +3171,7 @@ static void fbcon_remap_all(int idx)
- 		       first_fb_vc + 1, last_fb_vc + 1);
- 		info_idx = idx;
- 	}
-+	console_unlock();
- }
- 
- #ifdef CONFIG_FRAMEBUFFER_CONSOLE_DETECT_PRIMARY
-@@ -3337,10 +3337,6 @@ static int fbcon_event_notify(struct notifier_block *self,
- 		con2fb = event->data;
- 		con2fb->framebuffer = con2fb_map[con2fb->console - 1];
- 		break;
--	case FB_EVENT_REMAP_ALL_CONSOLE:
--		idx = info->node;
--		fbcon_remap_all(idx);
--		break;
- 	}
- 	return ret;
- }
-diff --git a/include/linux/fb.h b/include/linux/fb.h
-index f9c212f9b661..25e4b885f5b3 100644
---- a/include/linux/fb.h
-+++ b/include/linux/fb.h
-@@ -139,8 +139,6 @@ struct fb_cursor_user {
- #define FB_EVENT_SET_CONSOLE_MAP        0x08
- /*      A display blank is requested       */
- #define FB_EVENT_BLANK                  0x09
--/*      CONSOLE-SPECIFIC: remap all consoles to new fb - for vga_switcheroo */
--#define FB_EVENT_REMAP_ALL_CONSOLE      0x0F
- /*      A hardware display blank early change occurred */
- #define FB_EARLY_EVENT_BLANK		0x10
- /*      A hardware display blank revert early change occurred */
-diff --git a/include/linux/fbcon.h b/include/linux/fbcon.h
-index de31eeb22c97..69f900d289b2 100644
---- a/include/linux/fbcon.h
-+++ b/include/linux/fbcon.h
-@@ -16,6 +16,7 @@ void fbcon_get_requirement(struct fb_info *info,
- 			   struct fb_blit_caps *caps);
- void fbcon_fb_blanked(struct fb_info *info, int blank);
- void fbcon_update_vcs(struct fb_info *info, bool all);
-+void fbcon_remap_all(struct fb_info *info);
- #else
- static inline void fb_console_init(void) {}
- static inline void fb_console_exit(void) {}
-@@ -31,6 +32,7 @@ static inline void fbcon_get_requirement(struct fb_info *info,
- 					 struct fb_blit_caps *caps) {}
- static inline void fbcon_fb_blanked(struct fb_info *info, int blank) {}
- static inline void fbcon_update_vcs(struct fb_info *info, bool all) {}
-+static inline void fbcon_remap_all(struct fb_info *info) {}
- #endif
- 
- #endif /* _LINUX_FBCON_H */
+diff --git a/drivers/staging/olpc_dcon/TODO b/drivers/staging/olpc_dcon/TODO
+index 665a0b061719..fe09efbc7f77 100644
+--- a/drivers/staging/olpc_dcon/TODO
++++ b/drivers/staging/olpc_dcon/TODO
+@@ -1,4 +1,11 @@
+ TODO:
++	- complete rewrite:
++	  1. The underlying fbdev drivers need to be converted into drm kernel
++	     modesetting drivers.
++	  2. The dcon low-power display mode can then be integrated using the
++	     drm damage tracking and self-refresh helpers.
++	  This bolted-on self-refresh support that digs around in fbdev
++	  internals, but isn't properly integrated, is not the correct solution.
+ 	- see if vx855 gpio API can be made similar enough to cs5535 so we can
+ 	  share more code
+ 	- convert all uses of the old GPIO API from <linux/gpio.h> to the
 -- 
 2.20.1
 
