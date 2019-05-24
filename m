@@ -2,79 +2,154 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F46C282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B096C282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1ECC20879
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DB3120879
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:27:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="omEJrnMw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404261AbfEXV0j (ORCPT
+        id S2404275AbfEXV1q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 17:26:39 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:58802 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404163AbfEXV0i (ORCPT
+        Fri, 24 May 2019 17:27:46 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53174 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404163AbfEXV1p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 17:26:38 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hUHhr-0007g4-Jm; Fri, 24 May 2019 21:26:27 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Chris Wilson <chris@chris-wilson.co.uk>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] drm/i915/gtt: set err to -ENOMEM on memory allocation failure
-Date:   Fri, 24 May 2019 22:26:27 +0100
-Message-Id: <20190524212627.24256-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 24 May 2019 17:27:45 -0400
+Received: by mail-wm1-f66.google.com with SMTP id y3so10709951wmm.2;
+        Fri, 24 May 2019 14:27:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=y9ux/6s5mqKpo3SGmaASVq5a3/znJngTKz9dxsY6Ors=;
+        b=omEJrnMwXjBomP4BtaaCk/eahP4koX6r9N/1FRZFbAIeIEejhvE2xj11PA1ZGUmirI
+         P1LAT+/s4Rfq71eZQ/EX0iXP+V8Hfrs6mDbooVcuextI7ReAKBae9Lyw6fmipHr3iZ8F
+         Yn+jYqg8fnQuHMF/YhMnjgUZShVc/DqDuWGyAUcK0XNIzO/aSTv4Pc+QlK2PDBllUX1+
+         Sk1tbDsdU87eYGD6n6E9jIQJdoR8X3BZsx1owMCdIv5cj8CCZbMEJoL47ABToHMmYDV9
+         W6fLBNA/j+oOorGBbQtIBrMiI+yCs90gT/VlKkPj+2gz0PuF/aQf/R7AGGTM4eEJGEFQ
+         8Y3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=y9ux/6s5mqKpo3SGmaASVq5a3/znJngTKz9dxsY6Ors=;
+        b=ib+5oKIPNfbxUApWGsnXQo+LuFf9JgQlv+E6JLlvFdPHD3nvtUoAofiuKZl+P77inY
+         heCdJALOK/kWv7IqxPgKGTDtZKAaxyoL9gZ5hxO7o1t+kTiozLUR32a2RtUnZMgwzHt1
+         pPM1iCZXhYiXgh5FXXSlJPsk6mXTiOEJxzTcp2lqrPuCh0MRPK7erMMXric/JTL39GRK
+         BpMsvs7bBsI3ey6LlMusR0Upf0zWswLLoSn2/J6ZfJRPnDSX5DdFcskQpDOmcovrTNkV
+         mUrnFscTtMa5phl3RkrQGAm/hcmfqhrUbh0WZZUSNSbb+wpcPp71oEq2f6xdKIYM0ACU
+         9snw==
+X-Gm-Message-State: APjAAAX7fckNvEw3TzLwIb5eQ1OOKYmUHjKlIPLTdWdJAZPoRYaSPCRr
+        +i4M1xmPRGAi94kQmP4UNq5PEzs=
+X-Google-Smtp-Source: APXvYqyK2ayCbgVB5WtHhnVxNe6zHQgykGJ0C9c2YZvQtzxbgh+2+uSTMs+0rCT1FVbeCl9VyZ9/UA==
+X-Received: by 2002:a05:600c:2289:: with SMTP id 9mr18657802wmf.106.1558733263578;
+        Fri, 24 May 2019 14:27:43 -0700 (PDT)
+Received: from avx2 ([46.53.253.112])
+        by smtp.gmail.com with ESMTPSA id b2sm3371534wrt.20.2019.05.24.14.27.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 May 2019 14:27:42 -0700 (PDT)
+Date:   Sat, 25 May 2019 00:27:40 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Christian Brauner <christian@brauner.io>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH v2 0/2] close_range()
+Message-ID: <20190524212740.GA7165@avx2>
+References: <20190523182152.GA6875@avx2>
+ <CAHk-=wj5YZQ=ox+T1kc4RWp3KP+4VvXzvr8vOBbqcht6cOXufw@mail.gmail.com>
+ <20190524183903.GB2658@avx2>
+ <CAHk-=wjaCygWXyGP-D2=ER0x8UbwdvyifH2Jfnf1KHUwR3sedw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjaCygWXyGP-D2=ER0x8UbwdvyifH2Jfnf1KHUwR3sedw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Fri, May 24, 2019 at 11:55:44AM -0700, Linus Torvalds wrote:
+> On Fri, May 24, 2019 at 11:39 AM Alexey Dobriyan <adobriyan@gmail.com> wrote:
+> >
+> > > Would there ever be any other reason to traverse unknown open files
+> > > than to close them?
+> >
+> > This is what lsof(1) does:
+> 
+> I repeat: Would there ever be any other reason to traverse unknown
+> open files than to close them?
+> 
+> lsof is not AT ALL a relevant argument.
+> 
+> lsof fundamentally wants /proc, because lsof looks at *other*
+> processes. That has absolutely zero to do with fdmap. lsof does *not*
+> want fdmap at all. It wants "list other processes files". Which is
+> very much what /proc is all about.
+> 
+> So your argument that "fdmap is more generic" is bogus.
+> 
+> fdmap is entirely pointless unless you can show a real and relevant
+> (to performance) use of it.
+> 
+> When you would *possibly* have a "let me get a list of all the file
+> descriptors I have open, because I didn't track them myself"
+> situation?  That makes no sense. Particularly from a performance
+> standpoint.
+> 
+> In contrast, "close_range()" makes sense as an operation.
 
-Currently when the allocation of ppgtt->work fails the error return
-path via err_free returns an uninitialized value in err. Fix this
-by setting err to the appropriate error return of -ENOMEM.
+What about orthogonality of interfaces?
 
-Addresses-Coverity: ("Uninitialized scalar variable")
-Fixes: d3622099c76f ("drm/i915/gtt: Always acquire struct_mutex for gen6_ppgtt_cleanup")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/gpu/drm/i915/i915_gem_gtt.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+	fdmap()
+	bulk_close()
 
-diff --git a/drivers/gpu/drm/i915/i915_gem_gtt.c b/drivers/gpu/drm/i915/i915_gem_gtt.c
-index 8d8a4b0ad4d9..8a9b506387d4 100644
---- a/drivers/gpu/drm/i915/i915_gem_gtt.c
-+++ b/drivers/gpu/drm/i915/i915_gem_gtt.c
-@@ -2035,8 +2035,10 @@ static struct i915_hw_ppgtt *gen6_ppgtt_create(struct drm_i915_private *i915)
- 	ppgtt->base.vm.pte_encode = ggtt->vm.pte_encode;
- 
- 	ppgtt->work = kmalloc(sizeof(*ppgtt->work), GFP_KERNEL);
--	if (!ppgtt->work)
-+	if (!ppgtt->work) {
-+		err = -ENOMEM;
- 		goto err_free;
-+	}
- 
- 	err = gen6_ppgtt_init_scratch(ppgtt);
- 	if (err)
--- 
-2.20.1
+Now fdmap() can be reused for lsof/criu and it is only 2 system calls
+for close-everything usecase which is OK because readdir is 4(!) minimum:
 
+	open
+	getdents
+	getdents() = 0
+	close
+
+Writing all of this I understood how fdmap can be made more faster which
+neither getdents() nor even read() have the luxury of: it can return
+a flag if more data is available so that application would do next fdmap()
+only if truly necessary.
+
+> I can
+> explain exactly when it would be used, and I can easily see a
+> situation where "I've opened a ton of files, now I want to release
+> them" is a valid model of operation. And it's a valid optimization to
+> do a bulk operation like that.
+> 
+> IOW, close_range() makes sense as an operation even if you could just
+> say "ok, I know exactly what files I have open". But it also makes
+> sense as an operation for the case of "I don't even care what files I
+> have open, I just want to close them".
+> 
+> In contrast, the "I have opened a ton of files, and I don't even know
+> what the hell I did, so can you list them for me" makes no sense.
+> 
+> Because outside of "close them", there's no bulk operation that makes
+> sense on random file handles that you don't know what they are. Unless
+> you iterate over them and do the stat thing or whatever to figure it
+> out - which is lsof, but as mentioned, it's about *other* peoples
+> files.
+
+What you're doing is making exactly one usecase take exactly one system
+call and leaving everything else deal with /proc. Stracing lsof shows
+very clearly how stupid and how wasteful it is. Especially now that
+we're post-meltdown era caring about system call costs (yeah suure).
+
+I'm suggesting make close-universe usecase take only 2 system calls.
+which is still better than anything /proc can offer.
