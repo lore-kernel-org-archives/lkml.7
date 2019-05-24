@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E6EBC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:35:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABFE1C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02F0D20815
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:35:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84C1E217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:35:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AUHxs0Ag"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R8r+dL8r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390220AbfEXPfh (ORCPT
+        id S2390359AbfEXPfu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 11:35:37 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:38441 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389914AbfEXPfd (ORCPT
+        Fri, 24 May 2019 11:35:50 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:36123 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390164AbfEXPff (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 11:35:33 -0400
-Received: by mail-lj1-f193.google.com with SMTP id 14so9050903ljj.5;
-        Fri, 24 May 2019 08:35:31 -0700 (PDT)
+        Fri, 24 May 2019 11:35:35 -0400
+Received: by mail-lj1-f195.google.com with SMTP id z1so3567386ljb.3;
+        Fri, 24 May 2019 08:35:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=yr9SuSgJcQmXUlZFQ7lwiMnKS2BHo2uA+j1WQjZheiI=;
-        b=AUHxs0Ag5lvuWYV6wXlSUWoM94eFyrXLuLnlZvzZZET0r2x34qIUfH86KUeXmz8KxP
-         6ojeTF+EtC9J9CabTRxki6pl6l3z9wT+RluRahLMmeiTOryq2xjj8lSOXR1AjWaJzIqT
-         HDvMEcuMTUnRf+zWghMkEPYeAxAXd+TO0jHewbjKHEPLW1s7w5kszc6Jz8VycMbysNYK
-         UE/WWBNKnrO6kjMi1edXBWq8C+9SkVwuu2TVoHUb60jSvXU5oa0YCOY/5SFaCz6kv6Lp
-         ukE1LaGlqq1y293RQbKJOgIrjjOCHbty8AB9yx3/CmgMH3zs8HMTa5katKqTtcIulgN4
-         nzFg==
+        bh=618TV7pnajoPuI0PqJ6tVBxH02eKydMCb/CmuPQTTi8=;
+        b=R8r+dL8r1uz0xwtFfXDEYu04D2f3z1VB8OQWnFdXa8QD3rVCiljKLx7ayuq1ICOSPg
+         TSuVQ6ItehIHbkqzYTCcKmgm30kcE6qJMiKqo53D1v7AFbFfGMlW3wW4DshIPSW6Y4el
+         ItLeGlgiH8oRrnNm9LISBDx6/VlbeZSPl8iWOy6H3bO5a6/d6D2fE9OMLkNn6XtufwSw
+         3v/LmS4iFhBI8kUUs23py7apaLQu+eQASBGq06gkFyyXnCERSdSuAm+vHY9gwfNVt0b/
+         x7y89HUc1UlfXcGorGrV281aX5k30W/oRKaXcgy2md2kJ9XN6zFdog+lQaCW8X2wXhNf
+         fEiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=yr9SuSgJcQmXUlZFQ7lwiMnKS2BHo2uA+j1WQjZheiI=;
-        b=Achf2/9h/88a1Wy61XjiO1sjTOfUAf3pOxjY/Z/nczQCEDdHCG0NUdYJvsrf934h8t
-         gRzL0dsKkDb07txbCBhhTD4TcTckhmNc/+2PpOQcinXj4kKsgtnHzqtCEOFuay6d4wzD
-         d6DOXu2XxZkIdX/y/dd8+fmfcTuq7H+u+pYFV+ts2FsXSHdE30itTpJ4igg3Az4JpZcx
-         I8ezepUJKQh900nnEAcmc9dYQ/fV2+p86pao3sPdO4S7KG2AMZKAOm7XcQx6YH4EThMm
-         rSYzYTHxA0bGCpWON/tWCHuzd9QPQcxghwwK2FlpTyXTNgdSm7c3w5UwbVAFrRfCqQsk
-         Sjzg==
-X-Gm-Message-State: APjAAAXKiqAYL/C8teii728JAPSL3tATQGa4hJ1RhKJeZyumVWsS1Ir5
-        6Mb02x0e35bGzmMMvk5J8Kc=
-X-Google-Smtp-Source: APXvYqwX4WNp4CHGhfigOtxAt+kAz4V4VxI0eGau/GCv2afdpCjT/W9Y2CCVCN9RhxrJQN7tQfByWg==
-X-Received: by 2002:a2e:87c9:: with SMTP id v9mr25451712ljj.100.1558712131285;
-        Fri, 24 May 2019 08:35:31 -0700 (PDT)
+        bh=618TV7pnajoPuI0PqJ6tVBxH02eKydMCb/CmuPQTTi8=;
+        b=DqiISh0xYK/T2SaguL51RBuH9Mhxstpdammf6T6tGrhTIRhjtB59vPfnJrsHWzlOgn
+         S4Xssqyg3iR6H7ZLybiz5lk9mrKmgsT5XobWVhn98RcdJ+0YxfEqZ55fS53/lylOzozS
+         Hv/Cquf2gB/iE9YeC3DtlqaHvyy6cnqDdI3U0Au7BENwLvtIRyqaVdypnS/icSYehXsD
+         YgUbIWMVDaKrHHG+NLDo9dUsho7pbSwYa67/ERzzyJPargH2oiWHeGRxx0iG1BxfXJSb
+         OGBbs6iiPQjVd3X71v8pVXQIQT82dqmLP6DXCWzgDrWlPAeQRbtp5g0zSp/kJju91bq8
+         Oozg==
+X-Gm-Message-State: APjAAAWXlfQIO411xwS3IqtbjvoII2qvrm6ydLqfaul7boxNrQHmmMzm
+        j773/K5ars5PDOgou8GYHoI=
+X-Google-Smtp-Source: APXvYqydJE4Azb7Jl0po0NVqBkXSHCKV0s5gl49jeSg/2C4U0fQLq270oliOBKMRuCTSYxnPORMj2w==
+X-Received: by 2002:a2e:818b:: with SMTP id e11mr52951042ljg.82.1558712134287;
+        Fri, 24 May 2019 08:35:34 -0700 (PDT)
 Received: from localhost.localdomain ([94.29.35.141])
-        by smtp.gmail.com with ESMTPSA id y14sm572316ljh.60.2019.05.24.08.35.30
+        by smtp.gmail.com with ESMTPSA id y14sm572316ljh.60.2019.05.24.08.35.33
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 08:35:30 -0700 (PDT)
+        Fri, 24 May 2019 08:35:33 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -66,9 +66,9 @@ To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
         Peter De Schrijver <pdeschrijver@nvidia.com>
 Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
         Nicolas Chauvet <kwizart@gmail.com>
-Subject: [PATCH v3 5/8] clocksource/drivers/tegra: Release all IRQ's on request_irq() error
-Date:   Fri, 24 May 2019 18:32:50 +0300
-Message-Id: <20190524153253.28564-6-digetx@gmail.com>
+Subject: [PATCH v3 8/8] clocksource/drivers/tegra: Support COMPILE_TEST universally
+Date:   Fri, 24 May 2019 18:32:53 +0300
+Message-Id: <20190524153253.28564-9-digetx@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190524153253.28564-1-digetx@gmail.com>
 References: <20190524153253.28564-1-digetx@gmail.com>
@@ -79,37 +79,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Release all requested IRQ's on the request error to properly clean up
-allocated resources.
+Remove build dependency on ARM for compile-testing to allow non-arch
+specific build-bots (like Intel's test robot) to compile the driver and
+report about problems.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/clocksource/timer-tegra20.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/clocksource/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clocksource/timer-tegra20.c b/drivers/clocksource/timer-tegra20.c
-index 55e9b3e1fbeb..18b81d814b3b 100644
---- a/drivers/clocksource/timer-tegra20.c
-+++ b/drivers/clocksource/timer-tegra20.c
-@@ -293,7 +293,7 @@ static int __init tegra_init_timer(struct device_node *np, bool tegra20)
- 			pr_err("%s: can't map IRQ for CPU%d\n",
- 			       __func__, cpu);
- 			ret = -EINVAL;
--			goto out;
-+			goto out_irq;
- 		}
+diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+index 3300739edce4..8c21e557181b 100644
+--- a/drivers/clocksource/Kconfig
++++ b/drivers/clocksource/Kconfig
+@@ -137,10 +137,10 @@ config SUN5I_HSTIMER
+ 	  Enables support the Sun5i timer.
  
- 		irq_set_status_flags(cpu_to->clkevt.irq, IRQ_NOAUTOEN);
-@@ -303,7 +303,8 @@ static int __init tegra_init_timer(struct device_node *np, bool tegra20)
- 		if (ret) {
- 			pr_err("%s: cannot setup irq %d for CPU%d\n",
- 				__func__, cpu_to->clkevt.irq, cpu);
--			ret = -EINVAL;
-+			irq_dispose_mapping(cpu_to->clkevt.irq);
-+			cpu_to->clkevt.irq = 0;
- 			goto out_irq;
- 		}
- 	}
+ config TEGRA_TIMER
+-	bool "Tegra timer driver" if COMPILE_TEST
++	bool "Tegra timer driver"
+ 	select CLKSRC_MMIO
+ 	select TIMER_OF
+-	depends on ARM || ARM64
++	depends on ARCH_TEGRA || COMPILE_TEST
+ 	help
+ 	  Enables support for the Tegra driver.
+ 
 -- 
 2.21.0
 
