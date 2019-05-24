@@ -2,95 +2,136 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF934C282E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B67DAC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C88EE2186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:07:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9017F20863
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:14:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731936AbfEXRHG (ORCPT
+        id S1731784AbfEXROm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 13:07:06 -0400
-Received: from mga05.intel.com ([192.55.52.43]:37043 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731468AbfEXRHF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 13:07:05 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 May 2019 10:07:05 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by orsmga005.jf.intel.com with ESMTP; 24 May 2019 10:07:04 -0700
-Date:   Fri, 24 May 2019 10:07:04 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     "Xing, Cedric" <cedric.xing@intel.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-Message-ID: <20190524170704.GA3401@linux.intel.com>
-References: <20190522153836.GA24833@linux.intel.com>
- <CALCETrUS8xyF1JJmQs18BGTDhPRXf+s81BkMZCZwmY73r7M+zg@mail.gmail.com>
- <20190523023517.GA31950@linux.intel.com>
- <20190523102628.GC10955@linux.intel.com>
- <20190523141752.GA12078@linux.intel.com>
- <CALCETrUzx3LPAKCLFf75P-XshAkRcr+JLET3LA_kHDs9MA11FA@mail.gmail.com>
- <20190523234044.GC12078@linux.intel.com>
- <CALCETrV4DVEfW6EJ6DnQGGYDJAiA5M1QcuYJTiroumOM+D6Jjg@mail.gmail.com>
- <960B34DE67B9E140824F1DCDEC400C0F654E8956@ORSMSX116.amr.corp.intel.com>
- <CALCETrX0WqouSWgdM+LNxMzypa0ZHZXTmJ+nNkuPuL8UOF_f2w@mail.gmail.com>
+        Fri, 24 May 2019 13:14:42 -0400
+Received: from gateway21.websitewelcome.com ([192.185.45.212]:36236 "EHLO
+        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725777AbfEXROm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 13:14:42 -0400
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id 0799E400C9F2B
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 12:14:41 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id UDmChalYp2qH7UDmChpTPl; Fri, 24 May 2019 12:14:41 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.47.159] (port=51574 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hUDlt-002A7a-UC; Fri, 24 May 2019 12:14:39 -0500
+Date:   Fri, 24 May 2019 12:14:21 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Zhi Wang <zhi.a.wang@intel.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     intel-gvt-dev@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] drm/i915/kvmgt: Use struct_size() helper
+Message-ID: <20190524171421.GA20808@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALCETrX0WqouSWgdM+LNxMzypa0ZHZXTmJ+nNkuPuL8UOF_f2w@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.47.159
+X-Source-L: No
+X-Exim-ID: 1hUDlt-002A7a-UC
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.47.159]:51574
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 11
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 09:43:27AM -0700, Andy Lutomirski wrote:
-> On Fri, May 24, 2019 at 12:24 AM Xing, Cedric <cedric.xing@intel.com> wrote:
-> > /**
-> >  * Summary:
-> >  * - The enclave file resembles a shared object that contains RO/RX/RW segments
-> >  * - FILE__* are assigned to /dev/sgx/enclave, to determine acceptable permissions to mmap()/mprotect(), valid combinations are
-> >  *   + FILE__READ - Allow SGX1 enclaves only
-> >  *   + FILE__READ|FILE__WRITE - Allow SGX2 enclaves to expand data segments (e.g. heaps, stacks, etc.)
-> 
-> I think this is a non-starter :(  FILE__WRITE also means that you can
-> write to the file, and the admin / policy author will almost never
-> want to allow that.
+Make use of the struct_size() helper instead of an open-coded version
+in order to avoid any potential type mistakes, in particular in the
+context in which this code is being used.
 
-Why would FILE__WRITE on /dev/sgx/enclave be a problem?  An actual
-write to /dev/sgx/enclave would yield -EINVAL, no?
+So, replace the following form:
+
+sizeof(*sparse) + (nr_areas * sizeof(*sparse->areas)
+
+with:
+
+struct_size(sparse, areas, sparse->nr_areas)
+
+and so on...
+
+Also, notice that variable size is unnecessary, hence it is removed.
+
+This code was detected with the help of Coccinelle.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/gpu/drm/i915/gvt/kvmgt.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c b/drivers/gpu/drm/i915/gvt/kvmgt.c
+index 144301b778df..9674738b89df 100644
+--- a/drivers/gpu/drm/i915/gvt/kvmgt.c
++++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
+@@ -1306,7 +1306,6 @@ static long intel_vgpu_ioctl(struct mdev_device *mdev, unsigned int cmd,
+ 		unsigned int i;
+ 		int ret;
+ 		struct vfio_region_info_cap_sparse_mmap *sparse = NULL;
+-		size_t size;
+ 		int nr_areas = 1;
+ 		int cap_type_id;
+ 
+@@ -1349,9 +1348,8 @@ static long intel_vgpu_ioctl(struct mdev_device *mdev, unsigned int cmd,
+ 					VFIO_REGION_INFO_FLAG_WRITE;
+ 			info.size = gvt_aperture_sz(vgpu->gvt);
+ 
+-			size = sizeof(*sparse) +
+-					(nr_areas * sizeof(*sparse->areas));
+-			sparse = kzalloc(size, GFP_KERNEL);
++			sparse = kzalloc(struct_size(sparse, areas, nr_areas),
++					 GFP_KERNEL);
+ 			if (!sparse)
+ 				return -ENOMEM;
+ 
+@@ -1416,9 +1414,9 @@ static long intel_vgpu_ioctl(struct mdev_device *mdev, unsigned int cmd,
+ 			switch (cap_type_id) {
+ 			case VFIO_REGION_INFO_CAP_SPARSE_MMAP:
+ 				ret = vfio_info_add_capability(&caps,
+-					&sparse->header, sizeof(*sparse) +
+-					(sparse->nr_areas *
+-						sizeof(*sparse->areas)));
++					&sparse->header,
++					struct_size(sparse, areas,
++						    sparse->nr_areas));
+ 				if (ret) {
+ 					kfree(sparse);
+ 					return ret;
+-- 
+2.21.0
+
