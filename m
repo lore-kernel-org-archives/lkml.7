@@ -2,292 +2,240 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB9EAC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECEBDC282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48F4F20868
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:43:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="N5cq2X5s"
+	by mail.kernel.org (Postfix) with ESMTP id B6C5C2184B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:45:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388932AbfEXGnW (ORCPT
+        id S2388921AbfEXGpZ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 02:43:22 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38496 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388800AbfEXGnW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 02:43:22 -0400
-Received: by mail-pf1-f196.google.com with SMTP id b76so4713203pfb.5
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 23:43:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vLgUtLgd34YoqqCTxqxpLbSxwvGV3M2LzlOeHp/1Cec=;
-        b=N5cq2X5sCawY7Z9049rLPwU2gWCT9rIbtsT0Gz4DPk13eQy0LpN2Tna59vDAwMCKzz
-         yntDPC/U/AQk4gBrEMzkYjB7r5K+SY6B47c8qwbFaxDoj1bmL8XacFpGy0WTlr8q7xNO
-         SuryBhMNYUt/Ak5gHuag3fv9upiLR/uTCvmuKpm4e1XxqFEnAXoJst7wRjvlw1rHW/JW
-         3WuI/9UfWTZq9oC3gtgoTqofkQjoiCbCPcagQyPFlsjvgHy7ND/g9q5OZB8HZ6MXXBZC
-         XG1XChwOHdsCuhnpSUrbwPVGVmLJKrxvYh8WofIgx35W/kgfETXtzT1hWmmhxl3oHJ/e
-         9hlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=vLgUtLgd34YoqqCTxqxpLbSxwvGV3M2LzlOeHp/1Cec=;
-        b=VuUwUgqKeUz8RZZ685X7hdP/W+umfVRfxnHAnIuejOe51vVkKhvhniLG6MrCbAeeu/
-         5eT39idgjgJ/RwhuNwsA/Q1vQe/FVnKaWs5NhXLQtseQZ7HuE8RqjOLox+ixWpxO0RGH
-         qWwilBBxCf0g+KqSr1jJegKPc7p0uhyU935JtH5Fo7U1FSI9CPeZgLgILB9c8v9ayCCl
-         6KnQM3BuRHPcropnirPalF9XmBAVyahu819p4sUgccCcrXudm+pziC9gv406igqUOkl1
-         WY0rML4OHGzohaODvKt/Y/Bfez6TmyCoz9Ea/durI9mW9QL4qxuKScDAfaTmp8uildU3
-         VVUw==
-X-Gm-Message-State: APjAAAWkP7Vnhw+KZ9QHgKKvMx8L7s3OM2glsXcsjAfhy3rUb9WdDWBI
-        6YKdL+F7LLqpKejKO6DxZrXsSSRO7Uw=
-X-Google-Smtp-Source: APXvYqxqG0xxpSvgFOlx2V/WqlpEOtxoiKjPS2ntAlHEUsHs+ZwOtWxQSUfVvqJLa+cBrl/pKYMGJg==
-X-Received: by 2002:a63:5c1b:: with SMTP id q27mr104461120pgb.127.1558680200104;
-        Thu, 23 May 2019 23:43:20 -0700 (PDT)
-Received: from [10.61.2.175] ([122.99.82.10])
-        by smtp.gmail.com with ESMTPSA id n27sm2608734pfb.129.2019.05.23.23.43.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 23:43:19 -0700 (PDT)
-Subject: Re: [PATCH] mm: add account_locked_vm utility function
-To:     Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc:     akpm@linux-foundation.org, Alan Tull <atull@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christoph Lameter <cl@linux.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        Fri, 24 May 2019 02:45:25 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:34568 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388365AbfEXGpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 02:45:24 -0400
+Received: from [46.183.103.17] (helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1hU3x7-0002US-Pg; Fri, 24 May 2019 08:45:18 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     "elaine.zhang" <zhangqing@rock-chips.com>
+Cc:     Enric Balletbo Serra <eballetbo@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Moritz Fischer <mdf@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Steve Sistare <steven.sistare@oracle.com>,
-        Wu Hao <hao.wu@intel.com>, linux-mm@kvack.org,
-        kvm@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190503201629.20512-1-daniel.m.jordan@oracle.com>
- <4b42057f-b998-f87c-4e0f-a91abcb366f9@ozlabs.ru>
- <20190520153020.mzvjsjwefwxz6cau@ca-dmjordan1.us.oracle.com>
-From:   Alexey Kardashevskiy <aik@ozlabs.ru>
-Openpgp: preference=signencrypt
-Autocrypt: addr=aik@ozlabs.ru; keydata=
- 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
-Message-ID: <de375582-2c35-8e8a-4737-c816052a8e58@ozlabs.ru>
-Date:   Fri, 24 May 2019 16:43:10 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        huangtao@rock-chips.com, Linux PM list <linux-pm@vger.kernel.org>,
+        xxx@rock-chips.com, xf@rock-chips.com,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Doug Anderson <dianders@chromium.org>, vicencb@gmail.com
+Subject: Re: [PATCH v3 1/3] thermal: rockchip: fix up the tsadc pinctrl setting error
+Date:   Fri, 24 May 2019 08:45:12 +0200
+Message-ID: <23620031.GKuRlaLy8o@phil>
+In-Reply-To: <a6780f8f-4144-f817-b4b8-c40f6aa5e806@rock-chips.com>
+References: <1556618986-18923-1-git-send-email-zhangqing@rock-chips.com> <2174314.1vfUlvne1O@phil> <a6780f8f-4144-f817-b4b8-c40f6aa5e806@rock-chips.com>
 MIME-Version: 1.0
-In-Reply-To: <20190520153020.mzvjsjwefwxz6cau@ca-dmjordan1.us.oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Elaine,
 
-
-On 21/05/2019 01:30, Daniel Jordan wrote:
-> On Mon, May 20, 2019 at 04:19:34PM +1000, Alexey Kardashevskiy wrote:
->> On 04/05/2019 06:16, Daniel Jordan wrote:
->>> locked_vm accounting is done roughly the same way in five places, so
->>> unify them in a helper.  Standardize the debug prints, which vary
->>> slightly.
->>
->> And I rather liked that prints were different and tell precisely which
->> one of three each printk is.
+Am Donnerstag, 23. Mai 2019, 03:34:37 CEST schrieb elaine.zhang:
+> hi, Heiko & Enric:
 > 
-> I'm not following.  One of three...callsites?  But there were five callsites.
+> 在 2019/5/22 下午8:27, Heiko Stuebner 写道:
+> > Hi Enric,
+> >
+> > Am Montag, 20. Mai 2019, 15:38:32 CEST schrieb Enric Balletbo Serra:
+> >> Hi all,
+> >>
+> >> As pointed by [1] and [2] this commit, that now is upstream, breaks
+> >> veyron (rk3288) and kevin (rk3399) boards. The problem is especially
+> >> critical for veyron boards because they don't boot anymore.
+> >>
+> >> I didn't look deep at the problem but I have some concerns about this
+> >> patch, see below.
+> >>
+> >> [1] https://www.spinics.net/lists/linux-rockchip/msg24657.html
+> >> [2] https://www.spinics.net/lists/linux-rockchip/msg24735.html
+> >>
+> >> Missatge de Daniel Lezcano <daniel.lezcano@linaro.org> del dia dt., 30
+> >> d’abr. 2019 a les 15:39:
+> >>> On 30/04/2019 12:09, Elaine Zhang wrote:
+> >>>> Explicitly use the pinctrl to set/unset the right mode
+> >>>> instead of relying on the pinctrl init mode.
+> >>>> And it requires setting the tshut polarity before select pinctrl.
+> >>>>
+> >>>> When the temperature sensor mode is set to 0, it will automatically
+> >>>> reset the board via the Clock-Reset-Unit (CRU) if the over temperature
+> >>>> threshold is reached. However, when the pinctrl initializes, it does a
+> >>>> transition to "otp_out" which may lead the SoC restart all the time.
+> >>>>
+> >>>> "otp_out" IO may be connected to the RESET circuit on the hardware.
+> >>>> If the IO is in the wrong state, it will trigger RESET.
+> >>>> (similar to the effect of pressing the RESET button)
+> >>>> which will cause the soc to restart all the time.
+> >>>>
+> >>>> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+> >>> Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> >>>
+> >>>
+> >>>
+> >>>> ---
+> >>>>   drivers/thermal/rockchip_thermal.c | 36 +++++++++++++++++++++++++++++++++---
+> >>>>   1 file changed, 33 insertions(+), 3 deletions(-)
+> >>>>
+> >>>> diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_thermal.c
+> >>>> index 9c7643d62ed7..6dc7fc516abf 100644
+> >>>> --- a/drivers/thermal/rockchip_thermal.c
+> >>>> +++ b/drivers/thermal/rockchip_thermal.c
+> >>>> @@ -172,6 +172,9 @@ struct rockchip_thermal_data {
+> >>>>        int tshut_temp;
+> >>>>        enum tshut_mode tshut_mode;
+> >>>>        enum tshut_polarity tshut_polarity;
+> >>>> +     struct pinctrl *pinctrl;
+> >>>> +     struct pinctrl_state *gpio_state;
+> >>>> +     struct pinctrl_state *otp_state;
+> >>>>   };
+> >>>>
+> >>>>   /**
+> >>>> @@ -1242,6 +1245,8 @@ static int rockchip_thermal_probe(struct platform_device *pdev)
+> >>>>                return error;
+> >>>>        }
+> >>>>
+> >>>> +     thermal->chip->control(thermal->regs, false);
+> >>>> +
+> >> That's the line that causes the hang. Commenting this makes the veyron
+> >> boot again. Probably this needs to go after chip->initialize?
+> > It needs to go after the clk_enable calls.
+> > At this point the tsadc may still be unclocked.
+> 
+> The clk is enable by default.
 
+Not necessarily. A driver needing a clock should not rely on it being
+magically on :-) . Especially rk3288 devices were affected by this ...
+see the number of people "complaining".
 
-Well, 3 of them are mine, I was referring to them :)
+As you need to have the pclk enabled to access the tsadc registers
+I'd suggest changing the control to something like
 
+clk_prepare_enable(pclk)
+->control(..., false)
+clk_prepare_enable(tsadc)
 
-> Anyway, I added a _RET_IP_ to the debug print so you can differentiate.
+So just swapping the clk-enable order (right now pclk only gets enabled
+later as second clock)
 
+> The reason for this modification:
+> 
+> The otp Pin polarity setting for tsadc must be set when tsadc is turned off.
+> 
+> The order:
+> 
+> Close the tsadc->Set the otp pin polarity ->Set the pinctrl->initialize 
+> the tsadc->Open the tsadc
 
-I did not know that existed, cool!
+I'm still trying to understand why you need the additional pin-states
+though. I.e. you introduce an additional gpio and otpout state, but
+instead could just select the "init" state when needed?
+(when the tsadc gets disabled)
+
+Staying backwards compatible with existing devicetrees is really important
+and changing the pinctrl requirements makes tsadc probe fail on these.
+
+Heiko
 
 
 > 
->> I commented below but in general this seems working.
->>
->> Tested-by: Alexey Kardashevskiy <aik@ozlabs.ru>
 > 
-> Thanks!  And for the review as well.
+> As for the problem you mentioned, I guess: The default polarity of otp 
+> does not match the default state, that is, the otp is triggered by 
+> default, and then the reset circuit of the hardware takes effect and is 
+> restarted all the time.
+> Modification:
+> 1. For this hardware, otp pin default state is modified.
+> 2. The mode of using CRU is rockchip,hw-tshut-mode = <0> in DTS;
+> /* tshut mode 0:CRU 1:GPIO */
 > 
->>> diff --git a/drivers/vfio/vfio_iommu_spapr_tce.c b/drivers/vfio/vfio_iommu_spapr_tce.c
->>> index 6b64e45a5269..d39a1b830d82 100644
->>> --- a/drivers/vfio/vfio_iommu_spapr_tce.c
->>> +++ b/drivers/vfio/vfio_iommu_spapr_tce.c
->>> @@ -34,49 +35,13 @@
->>>  static void tce_iommu_detach_group(void *iommu_data,
->>>  		struct iommu_group *iommu_group);
->>>  
->>> -static long try_increment_locked_vm(struct mm_struct *mm, long npages)
->>> +static int tce_account_locked_vm(struct mm_struct *mm, unsigned long npages,
->>> +				 bool inc)
->>>  {
->>> -	long ret = 0, locked, lock_limit;
->>> -
->>>  	if (WARN_ON_ONCE(!mm))
->>>  		return -EPERM;
->>
->>
->> If this WARN_ON is the only reason for having tce_account_locked_vm()
->> instead of calling account_locked_vm() directly, you can then ditch the
->> check as I have never ever seen this triggered.
+> Recommended use method 2. You can try it.
 > 
-> Great, will do.
+> >
+> >>>>        error = clk_prepare_enable(thermal->clk);
+> >>>>        if (error) {
+> >>>>                dev_err(&pdev->dev, "failed to enable converter clock: %d\n",
+> >>>> @@ -1267,6 +1272,30 @@ static int rockchip_thermal_probe(struct platform_device *pdev)
+> >>>>        thermal->chip->initialize(thermal->grf, thermal->regs,
+> >>>>                                  thermal->tshut_polarity);
+> >>>>
+> >>>> +     if (thermal->tshut_mode == TSHUT_MODE_GPIO) {
+> >>>> +             thermal->pinctrl = devm_pinctrl_get(&pdev->dev);
+> >>>> +             if (IS_ERR(thermal->pinctrl)) {
+> >>>> +                     dev_err(&pdev->dev, "failed to find thermal pinctrl\n");
+> >>>> +                     return PTR_ERR(thermal->pinctrl);
+> >>>> +             }
+> >>>> +
+> >>>> +             thermal->gpio_state = pinctrl_lookup_state(thermal->pinctrl,
+> >>>> +                                                        "gpio");
+> >> Shouldn't this mode be documented properly in the binding first?
+> > More importantly, it should be _backwards-compatible_, aka work with
+> > old devicetrees without that property and not break thermal handling for
+> > them entirely.
+> If need  _backwards-compatible_,  It's can't return 
+> PTR_ERR(thermal->pinctrl) when get
 > 
->>> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
->>> index d0f731c9920a..15ac76171ccd 100644
->>> --- a/drivers/vfio/vfio_iommu_type1.c
->>> +++ b/drivers/vfio/vfio_iommu_type1.c
->>> @@ -273,25 +273,14 @@ static int vfio_lock_acct(struct vfio_dma *dma, long npage, bool async)
->>>  		return -ESRCH; /* process exited */
->>>  
->>>  	ret = down_write_killable(&mm->mmap_sem);
->>> -	if (!ret) {
->>> -		if (npage > 0) {
->>> -			if (!dma->lock_cap) {
->>> -				unsigned long limit;
->>> -
->>> -				limit = task_rlimit(dma->task,
->>> -						RLIMIT_MEMLOCK) >> PAGE_SHIFT;
->>> -
->>> -				if (mm->locked_vm + npage > limit)
->>> -					ret = -ENOMEM;
->>> -			}
->>> -		}
->>> +	if (ret)
->>> +		goto out;
->>
->>
->> A single "goto" to jump just 3 lines below seems unnecessary.
+> devm_pinctrl_get failed.
 > 
-> No strong preference here, I'll take out the goto.
+> >
+> >> The binding [3] talks about init, default and sleep states but *not*
+> >> gpio and otpout. The patch series looks incomplete to me or not using
+> >> the proper names.
+> >>
+> >> [3] https://elixir.bootlin.com/linux/v5.2-rc1/source/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+> >>
+> >>>> +             if (IS_ERR_OR_NULL(thermal->gpio_state)) {
+> >>>> +                     dev_err(&pdev->dev, "failed to find thermal gpio state\n");
+> >>>> +                     return -EINVAL;
+> >>>> +             }
+> >>>> +
+> >>>> +             thermal->otp_state = pinctrl_lookup_state(thermal->pinctrl,
+> >>>> +                                                       "otpout");
+> >>>> +             if (IS_ERR_OR_NULL(thermal->otp_state)) {
+> >>>> +                     dev_err(&pdev->dev, "failed to find thermal otpout state\n");
+> >>>> +                     return -EINVAL;
+> >>>> +             }
+> >>>> +
+> >> Same here otpout is not a documented.
+> >>
+> >> As this change is now in mainline and is causing veyron to hang I'd
+> >> suggest reverting this change for now. Even fixing the root cause
+> >> (maybe the one I pointed above) after this patch we will have the
+> >> thermal driver to fail because "gpio" and "otpout" states are not
+> >> defined nor documented (a change on this will need some reviews and
+> >> acks and time I guess).
+> > I definitly agree here. Handling + checking the binding change
+> > as well as needed fallback code is definitly not material for -rc-kernels
+> > so we should just revert for now and let Elaine fix the issues for 5.3.
+> >
+> > Anyone volunteering for sending a revert-patch to Eduardo? :-)
 > 
->>> +int __account_locked_vm(struct mm_struct *mm, unsigned long pages, bool inc,
->>> +			struct task_struct *task, bool bypass_rlim)
->>> +{
->>> +	unsigned long locked_vm, limit;
->>> +	int ret = 0;
->>> +
->>> +	locked_vm = mm->locked_vm;
->>> +	if (inc) {
->>> +		if (!bypass_rlim) {
->>> +			limit = task_rlimit(task, RLIMIT_MEMLOCK) >> PAGE_SHIFT;
->>> +			if (locked_vm + pages > limit) {
->>> +				ret = -ENOMEM;
->>> +				goto out;
->>> +			}
->>> +		}
->>
->> Nit:
->>
->> if (!ret)
->>
->> and then you don't need "goto out".
+> I agree to revert the patch,and I will correct it and push it later.
 > 
-> Ok, sure.
-> 
->>> +		mm->locked_vm = locked_vm + pages;
->>> +	} else {
->>> +		WARN_ON_ONCE(pages > locked_vm);
->>> +		mm->locked_vm = locked_vm - pages;
->>
->>
->> Can go negative here. Not a huge deal but inaccurate imo.
-> 
-> I hear you, but setting a negative value to zero, as we had done previously,
-> doesn't make much sense to me.
+> Do I need to commit the revert the patch now?@Heiko
 
 
-Ok then. I have not seen these WARN_ON for a very long time anyway.
 
 
--- 
-Alexey
