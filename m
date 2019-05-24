@@ -2,127 +2,139 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F15C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C06FC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7263C217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:41:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E07C20673
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:42:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ya0zg7pQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390682AbfEXKlx (ORCPT
+        id S2390690AbfEXKmm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 06:41:53 -0400
-Received: from foss.arm.com ([217.140.101.70]:39800 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390639AbfEXKlx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 06:41:53 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C2CCC374;
-        Fri, 24 May 2019 03:41:52 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 23A643F703;
-        Fri, 24 May 2019 03:41:51 -0700 (PDT)
-Date:   Fri, 24 May 2019 11:41:48 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Tengfei Fan <tengfeif@codeaurora.org>
-Cc:     catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com,
-        anshuman.khandual@arm.com, andreyknvl@google.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tengfei@codeaurora.org
-Subject: Re: [PATCH] arm64: break while loop if task had been rescheduled
-Message-ID: <20190524104148.GB12796@lakrids.cambridge.arm.com>
-References: <1558430404-4840-1-git-send-email-tengfeif@codeaurora.org>
+        Fri, 24 May 2019 06:42:42 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46572 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390497AbfEXKmm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 06:42:42 -0400
+Received: by mail-wr1-f68.google.com with SMTP id r7so9471158wrr.13
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 03:42:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=sMgd9oZAKI1GrJ2O2mtgZuuxKr/03GN+V6GqnIamqiM=;
+        b=Ya0zg7pQjg6VWbg1h/AAx+p19IUhVehVy7LguVr1othTF/poBx67vu9yEsTVyoYt7Y
+         fsSheJV7cQFowfQ4dZrdxSJMq+6VSoDY3zNDeO1IQI4bbmd6T9mk3NRyOQN91cU8EXbm
+         3o5xT0BlVYxu2rnyfFYKgxJXa1BBajc7cjZYaPiSB4x7nLmOVlyDbBnwCXgV4RLP1zgi
+         GTe3D8kIMJE6TSf+sHcO8s8ZCO7NVyDoYwfgP+pAZJb4kfXtuThMmEA5w3How0R0pCRT
+         4x0vKT7oh1ROoHsIbZ8+SbMaPmxG0PMdG/ZubnAj3OxeRMe/DMZSZLvln4MtCOz+2N+T
+         5vMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=sMgd9oZAKI1GrJ2O2mtgZuuxKr/03GN+V6GqnIamqiM=;
+        b=F8SYd8s/grn/BRT8RH+7YwHUOgMRQqGfUmz0z9VNay9LTodDQyXufuLtNxIVVezqSA
+         K60rZtGA3XjO3uffy5hcQEKlgDjugdh/oD82is68LEqMCUr1Y/Us26VWtaWKWQ2QcT2E
+         9JZ/Gwk6N7hgq1h38ZqorGFaVDeIANkR3uU6qkqUfML2hQXmJ8PK4cHpXGphIWgCSwzP
+         1wTUxVy7LXJOKK/jN03OVEFobYfAt+uLQD00TCf6VKkxY+UZZh4zeN4DG1kIqf8nk3hK
+         PUTekoNQAenoj0QoE27/6PUPp1xkxnWDGu49+S9LjVinU7dtDDqN4t0BhXF2b3CRawbo
+         MXQg==
+X-Gm-Message-State: APjAAAUpP0KBTjXXYfTC6LFMl4fdfijBIkoloWUca09PZ6c8NwgmXQMh
+        4qyUd4Xi4Lc+sicVGm7JwQbhRg==
+X-Google-Smtp-Source: APXvYqyINA4RJcI3np98LtdVeR4axYizn55wIalMAZg4q6a2dh6IvmkWcd31cIgC6JlsO+XYc4CKvA==
+X-Received: by 2002:a5d:54cc:: with SMTP id x12mr16916464wrv.303.1558694560785;
+        Fri, 24 May 2019 03:42:40 -0700 (PDT)
+Received: from [192.168.0.41] (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
+        by smtp.googlemail.com with ESMTPSA id 88sm5731506wrc.33.2019.05.24.03.42.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 May 2019 03:42:40 -0700 (PDT)
+Subject: Re: [PATCH] clocksource/arm_arch_timer: Don't trace count reader
+ functions
+To:     Marc Zyngier <marc.zyngier@arm.com>,
+        Julien Thierry <julien.thierry@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>
+References: <1558689025-50679-1-git-send-email-julien.thierry@arm.com>
+ <9adf92c2-b7a5-00a3-ff09-58484d9bb9db@arm.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <a1af63f8-1b3e-a959-d309-7360679739a2@linaro.org>
+Date:   Fri, 24 May 2019 12:42:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1558430404-4840-1-git-send-email-tengfeif@codeaurora.org>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <9adf92c2-b7a5-00a3-ff09-58484d9bb9db@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 05:20:04PM +0800, Tengfei Fan wrote:
-> While printing a task's backtrace and this task isn't
-> current task, it is possible that task's fp and fp+8
-> have the same value, so cannot break the while loop.
-> This can break while loop if this task had been
-> rescheduled during print this task's backtrace.
-
-There are a few cases where backtracing can get stuck in an infinite
-loop. I'd attempted to address that more generally in my
-arm64/robust-stacktrace branch [1].
-
-Looking at tsk->state here is inherently racy, and doesn't solve the
-general case, so I'd prefer to avoid that.
-
-Do my patches help you here? If so, I'm happy to rebase those to
-v5.2-rc1 and repost.
-
-Thanks,
-Mark.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git/log/?h=arm64/robust-stacktrace
-
+On 24/05/2019 11:53, Marc Zyngier wrote:
+> On 24/05/2019 10:10, Julien Thierry wrote:
+>> With v5.2-rc1, The ftrace functions_graph tracer locks up whenever it is
+>> enabled on arm64.
+>>
+>> Since commit 0ea415390cd3 ("clocksource/arm_arch_timer: Use
+>> arch_timer_read_counter to access stable counters") a function pointer
+>> is consistently used to read the counter instead of potentially
+>> referencing an inlinable function.
+>>
+>> The graph tacers relies on accessing the timer counters to compute the
 > 
-> Signed-off-by: Tengfei Fan <tengfeif@codeaurora.org>
-> ---
->  arch/arm64/kernel/traps.c | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
+> nit: tracers
 > 
-> diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
-> index 2975598..9df6e02 100644
-> --- a/arch/arm64/kernel/traps.c
-> +++ b/arch/arm64/kernel/traps.c
-> @@ -103,6 +103,9 @@ void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
->  {
->  	struct stackframe frame;
->  	int skip = 0;
-> +	long cur_state = 0;
-> +	unsigned long cur_sp = 0;
-> +	unsigned long cur_fp = 0;
->  
->  	pr_debug("%s(regs = %p tsk = %p)\n", __func__, regs, tsk);
->  
-> @@ -127,6 +130,9 @@ void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
->  		 */
->  		frame.fp = thread_saved_fp(tsk);
->  		frame.pc = thread_saved_pc(tsk);
-> +		cur_state = tsk->state;
-> +		cur_sp = thread_saved_sp(tsk);
-> +		cur_fp = frame.fp;
->  	}
->  #ifdef CONFIG_FUNCTION_GRAPH_TRACER
->  	frame.graph = 0;
-> @@ -134,6 +140,23 @@ void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
->  
->  	printk("Call trace:\n");
->  	do {
-> +		if (tsk != current && (cur_state != tsk->state
-> +			/*
-> +			 * We would not be printing backtrace for the task
-> +			 * that has changed state from uninterruptible to
-> +			 * running before hitting the do-while loop but after
-> +			 * saving the current state. If task is in running
-> +			 * state before saving the state, then we may print
-> +			 * wrong call trace or end up in infinite while loop
-> +			 * if *(fp) and *(fp+8) are same. While the situation
-> +			 * will stop print when that task schedule out.
-> +			 */
-> +			|| cur_sp != thread_saved_sp(tsk)
-> +			|| cur_fp != thread_saved_fp(tsk))) {
-> +			printk("The task:%s had been rescheduled!\n",
-> +				tsk->comm);
-> +			break;
-> +		}
->  		/* skip until specified stack frame */
->  		if (!skip) {
->  			dump_backtrace_entry(frame.pc);
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+>> time spent in functions which causes the lockup when attempting to trace
+>> these code paths.
+>>
+>> Annontate the arm arch timer counter accessors as notrace.
 > 
+> nit: Annotate
+> 
+>>
+>> Fixes: 0ea415390cd3 ("clocksource/arm_arch_timer: Use
+>>        arch_timer_read_counter to access stable counters")
+>> Signed-off-by: Julien Thierry <julien.thierry@arm.com>
+>> Cc: Marc Zyngier <marc.zyngier@arm.com>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>> Cc: Steven Rostedt <rostedt@goodmis.org>
+>> ---
+
+[ ... ]
+
+> Well spotted, thanks Julien.
+> 
+> Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+> 
+> Daniel, can you please pick this up for the next batch of clocksource fixes?
+
+Sure.
+
+I will take care of fixing the comments, no need to resend.
+
+Thanks
+
+  -- Daniel
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
