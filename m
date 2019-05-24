@@ -2,88 +2,125 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF69C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4859FC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA42320868
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:40:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gCA2Zddj"
+	by mail.kernel.org (Postfix) with ESMTP id 029EA21872
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:41:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558680094;
+	bh=GnUlb2w838xd5hQqZ9px7ehCOKF1E/1g0D40kxag20E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SAXHPOO2GbWaHC0IOq2T/cOMB2wiA8s3UVFTrpdCHH0Bv5L47Gl+nsoWMBQYNdkg6
+	 uG8Q+7Ks2sPqoWjX7XAxZimKsco1i7rZ5oqvLKeY2zfF7lybANubWjaKoj4U9UL4I3
+	 /KiCM9D6h5RWaRo3gkwZkDVfR7oeakn1m6ADewKQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388895AbfEXGk4 (ORCPT
+        id S2388935AbfEXGld (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 02:40:56 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49750 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388335AbfEXGk4 (ORCPT
+        Fri, 24 May 2019 02:41:33 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55242 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388735AbfEXGlc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 02:40:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=MboJlUX6ud6Y8h1xvMwj2zi3GdAiWghHA9DcE9E0NzM=; b=gCA2ZddjLB5JYDteejHRuh95u
-        wJtaMuKOt5ACv/IoDR4+kaisQNbxEfqFZy7k1OXAn1DibvkRaXx+6ppZxoi/sgG+aZCL/GCx+GaXT
-        xYn1+r+DqaVdoo9xeLPjTM1sWHV6skEExwJRIQwTSreXcRSJ0noVHx3MlPRSUPg81/AxHUivOym9w
-        3uSlGykT8z6X9n9lodjYzb4NpCAUUqgt5J70gjw2mlp42t5mvX0r7bpW08CB9ZOYsPp42p76e2ZHC
-        cObH1wCHfyOxmPP/jgAmUasX014LH9QR7Dq1g24+bAB9ecrOGc5a5i7RdtUcfpguWkQRROfWnpeMw
-        BqaRnYRLQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hU3sp-0000NM-Do; Fri, 24 May 2019 06:40:51 +0000
-Date:   Thu, 23 May 2019 23:40:51 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Jerome Glisse <jglisse@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Artemy Kovalyov <artemyko@mellanox.com>,
-        Moni Shoua <monis@mellanox.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        linux-mm@kvack.org, akpm@linux-foundation.org
-Subject: Re: [PATCH v4 0/1] Use HMM for ODP v4
-Message-ID: <20190524064051.GA28855@infradead.org>
-References: <20190522174852.GA23038@redhat.com>
- <20190522235737.GD15389@ziepe.ca>
- <20190523150432.GA5104@redhat.com>
- <20190523154149.GB12159@ziepe.ca>
- <20190523155207.GC5104@redhat.com>
- <20190523163429.GC12159@ziepe.ca>
- <20190523173302.GD5104@redhat.com>
- <20190523175546.GE12159@ziepe.ca>
- <20190523182458.GA3571@redhat.com>
- <20190523191038.GG12159@ziepe.ca>
+        Fri, 24 May 2019 02:41:32 -0400
+Received: by mail-wm1-f65.google.com with SMTP id i3so8078828wml.4
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 23:41:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=qf3X+hbIZgwfzHXy1m/OMvmqj8NQkz8T8T5hmzXyNRY=;
+        b=EsJHEOgIz5F0c9k2zqMsvxfglHKI6q1Bj8XT+LxmDagDurt0dvkYBBM79a6YD5Oxau
+         yvtMaRLym743m8GZH3NN7LhijXncuLKXdmI9LM+XmKtzr09I1TaYKFwgjzBhDJOq1JPW
+         0NwbM96tQLgazOU+oDXfcN+MhFV89HTtQrM8tDkhjXlsfRiqT61AB1BF5GvpUJ6ldrtC
+         Ue6erU7E8dy5g86jzPlwMSbvE2u7jhBpmci9FURUdL/WlmrIOJxtIVhLbeXMPYYAlBo4
+         1xbAH3aGaLKUlQntRalvB51g2CkYeCFD/A4WHVgG2bDw1UpzmQvkwXd6NBm0Vfy9qb18
+         593A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qf3X+hbIZgwfzHXy1m/OMvmqj8NQkz8T8T5hmzXyNRY=;
+        b=U7QMyRWoEBrkA1hRItn56cVx6QIW9+i6vJrrFu0WziYPnTb2IM2MvAv2q1sNw4vSvd
+         L2gxfh1Gn1L1niWv11aTMERAdkZQKushyEr5u3ThkRnIZX65FP78y9tlZ4aUeg/0b3DS
+         iyHSz9QVMpwCV9O3y1tO7IWAQH+XHet3JXGlN9xpWwNX0qScbxbxKAzvuXU/SakP45n+
+         2RWWEnj32NL7ANZE7Jnh2eFC0HXI50N75BiAzuSgK/fYgSDFZTzoIWZaHEKwdwvxSE7j
+         Q7UurR5Oww/fM9zTQ7YV30Xv9Jo4HnWdxwdzbgyxdduZo11BH9+KYK+wcA8fwtKc3eLs
+         wZyA==
+X-Gm-Message-State: APjAAAUx4ohKcaR0hOPwIJ8zh8hqWrM8XypUmJU9qXpwOD7SvGZm03J/
+        qjtb278VdTJv9WY3nWjRiDc=
+X-Google-Smtp-Source: APXvYqx86cSR0trsn9pND3YgX292yJypc2fu0c693IlXzOqRFGjGI8G7/1xAvKrP6wZd7aDEmsU82w==
+X-Received: by 2002:a1c:a002:: with SMTP id j2mr14456456wme.131.1558680090055;
+        Thu, 23 May 2019 23:41:30 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id s62sm3159826wmf.24.2019.05.23.23.41.28
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 May 2019 23:41:29 -0700 (PDT)
+Date:   Fri, 24 May 2019 08:41:27 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>, tglx@linutronix.de
+Subject: Re: [PATCH] locking/lockdep: Don't complain about wrong name for no
+ validate class
+Message-ID: <20190524064127.GA71071@gmail.com>
+References: <20190517212234.32611-1-bigeasy@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190523191038.GG12159@ziepe.ca>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190517212234.32611-1-bigeasy@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 04:10:38PM -0300, Jason Gunthorpe wrote:
-> 
-> On Thu, May 23, 2019 at 02:24:58PM -0400, Jerome Glisse wrote:
-> > I can not take mmap_sem in range_register, the READ_ONCE is fine and
-> > they are no race as we do take a reference on the hmm struct thus
-> 
-> Of course there are use after free races with a READ_ONCE scheme, I
-> shouldn't have to explain this.
-> 
-> If you cannot take the read mmap sem (why not?), then please use my
-> version and push the update to the driver through -mm..
 
-I think it would really help if we queue up these changes in a git tree
-that can be pulled into the driver trees.  Given that you've been
-doing so much work to actually make it usable I'd nominate rdma for the
-"lead" tree.
+* Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
+
+> It is possible to ignore the validation for a certain log be using
+> 	lockdep_set_novalidate_class()
+
+s/log/lock
+s/be/by
+
+?
+
+> on it. Each invocation will assign a new name to the class it created
+> for created __lockdep_no_validate__. That means that once
+> lockdep_set_novalidate_class() has been used on two locks then
+> class->name won't match lock->name for the first lock triggering the
+> warning.
+> 
+> Ignoring changed non-matching ->name pointer for the
+> __lockdep_no_validate__ class.
+> 
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> ---
+>  kernel/locking/lockdep.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+> index d06190fa50822..38be69d344f7f 100644
+> --- a/kernel/locking/lockdep.c
+> +++ b/kernel/locking/lockdep.c
+> @@ -731,7 +731,8 @@ look_up_lock_class(const struct lockdep_map *lock, unsigned int subclass)
+>  			 * Huh! same key, different name? Did someone trample
+>  			 * on some memory? We're most confused.
+>  			 */
+> -			WARN_ON_ONCE(class->name != lock->name);
+> +			WARN_ON_ONCE(class->name != lock->name &&
+> +				     lock->key != &__lockdep_no_validate__);
+
+Looks good otherwise - applied.
+
+Thanks,
+
+	Ingo
