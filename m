@@ -2,114 +2,173 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E646C46470
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1659DC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1396A2184B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:43:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF033217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:43:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RryeXkT1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WhHqJhf1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389666AbfEXInG (ORCPT
+        id S2389670AbfEXIna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 04:43:06 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:32932 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389478AbfEXInF (ORCPT
+        Fri, 24 May 2019 04:43:30 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35151 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389281AbfEXIn3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 04:43:05 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4O8gp4B024403;
-        Fri, 24 May 2019 03:42:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1558687371;
-        bh=fin7XhZZt8YCoI8vomIMRZu6HitZPEiD+fW8ZGt0YLk=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=RryeXkT1iXd8RNGAW3xhN0h2WU2blOPNNoJy1Kp+PfxFAN5vMjk6M4hUTHDMA4L48
-         zVl8dDvCPgyj3Ah89N2m6KAJx9kVOTkB/sZnqP5mOjeB8z3ah7UWEG+7/Vg3SDjB0l
-         P0M5EhH5IzkqNvagmza8Yu+KCmoN2mWKgNqiZYm0=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4O8gpvA038357
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 24 May 2019 03:42:51 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 24
- May 2019 03:42:50 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 24 May 2019 03:42:50 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4O8glfl071191;
-        Fri, 24 May 2019 03:42:48 -0500
-Subject: Re: [PATCH v2] PCI: endpoint: Set endpoint controller pointer to null
-To:     Alan Mikhak <alan.mikhak@sifive.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <lorenzo.pieralisi@arm.com>,
-        <linux-riscv@lists.infradead.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-References: <1558647944-13816-1-git-send-email-alan.mikhak@sifive.com>
- <CABEDWGyb3zTaiRqt7-mvrS6Dvhu0Fkhjp4nvaJ-vaJrD3n=0_Q@mail.gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <0e4cfe24-adf6-8966-9f58-69f7aba7a6fa@ti.com>
-Date:   Fri, 24 May 2019 14:11:33 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 24 May 2019 04:43:29 -0400
+Received: by mail-lj1-f196.google.com with SMTP id h11so7957534ljb.2
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 01:43:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=2UGCpA22jrVv8p9U3LtnJYy4mTfB0OkTT5zNxTX9Y9E=;
+        b=WhHqJhf1qkUGoFrvbntgMG9Vtkw0hDHAVDQd3JUXLi0k8UB+6RkvzcmMi8Mf+tlyt9
+         Fzx3Rm70otucFLSGs8EdzagNeJQaaXvSRCbNXtP5FUOUuUiTo/RmPmkKgsQdzMGn/uez
+         85sC67xAnXMroSY8YutK3NNUBorZS+9HShW7CgjxKJEirp63fNKdf/3eqs9d0OqpG0HR
+         sHuCeMpEv8E5xLJ6hd3esDb0GemTWlSkV0CA6Sf9hbttrDeZQJVOhQns68JvbiXyBDG3
+         J7LK9V5wPmGbRiozveCHAMDqjvNNosKRlXMEzblKSAHl3IqcV9eAJLlV5BZxqVaRuvuG
+         miCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=2UGCpA22jrVv8p9U3LtnJYy4mTfB0OkTT5zNxTX9Y9E=;
+        b=Vf8ksG8p1f+quepm6PMPa57X+Wvcb+7ltpF3pUHlXKMr3Gfbk/BaG0CnpobFlGJPQo
+         x4uYpboj5ovldcKfuTfw3q2CjIaFsx8ZU66/mamw7X26wHD+gicxKiJptSo8v4Q1UMmT
+         V2gB6sWWPm/SYTrFfa46oVHORQpDhNPhxTalUDkcfAbCpb1GP2m1R7IU3P7L/hXAgkSV
+         RaL4G3e6q1DPVzXfPheKn6xnNljZcgEKdizzZfeiydqxQzosRZYsMf6VHrbk4cg32Qut
+         gooHMcWJxWv2g5Moqxn7Zn7dq6mKsRrFWGfCuaL4/zBX6LakPJg86bclsrygR6c8Qxzn
+         PxOQ==
+X-Gm-Message-State: APjAAAVICYvpQzGFke8oJHyPec6rtHEmKl0c/Vj4iEHMz/8imDF9Bp//
+        zRYKuRxWQ8WoHyWr6B8Epw4FRvMIBmRCCdRkQnoX4w==
+X-Google-Smtp-Source: APXvYqwjnmSEo46KGBhe5MUpoaw6uYQBmbXj0jbIUPWSD6KRHce5EuNKpxV2WFvs1OI0U9nJGdmCELgxnrJAycaNp2A=
+X-Received: by 2002:a2e:b0fc:: with SMTP id h28mr33659890ljl.55.1558687407909;
+ Fri, 24 May 2019 01:43:27 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CABEDWGyb3zTaiRqt7-mvrS6Dvhu0Fkhjp4nvaJ-vaJrD3n=0_Q@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20190523181710.981455400@linuxfoundation.org>
+In-Reply-To: <20190523181710.981455400@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 24 May 2019 14:13:15 +0530
+Message-ID: <CA+G9fYuYgDB=ta07ZeQrRgEDwddQCmWpTr9N47CPEnWC5GuS_Q@mail.gmail.com>
+Subject: Re: [PATCH 4.9 00/53] 4.9.179-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 24 May 2019 at 00:38, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.9.179 release.
+> There are 53 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat 25 May 2019 06:15:18 PM UTC.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.9.179-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.9.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-On 24/05/19 5:27 AM, Alan Mikhak wrote:
-> +Bjorn Helgaas
-> 
-> On Thu, May 23, 2019 at 2:46 PM Alan Mikhak <alan.mikhak@sifive.com> wrote:
->>
->> Set endpoint controller pointer to null in pci_epc_remove_epf()
->> to avoid -EBUSY on subsequent call to pci_epc_add_epf().
->>
->> Requires checking for null endpoint function pointer.
->>
->> Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+Summary
+------------------------------------------------------------------------
 
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  drivers/pci/endpoint/pci-epc-core.c | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
->> index e4712a0f249c..2091508c1620 100644
->> --- a/drivers/pci/endpoint/pci-epc-core.c
->> +++ b/drivers/pci/endpoint/pci-epc-core.c
->> @@ -519,11 +519,12 @@ void pci_epc_remove_epf(struct pci_epc *epc, struct pci_epf *epf)
->>  {
->>         unsigned long flags;
->>
->> -       if (!epc || IS_ERR(epc))
->> +       if (!epc || IS_ERR(epc) || !epf)
->>                 return;
->>
->>         spin_lock_irqsave(&epc->lock, flags);
->>         list_del(&epf->list);
->> +       epf->epc = NULL;
->>         spin_unlock_irqrestore(&epc->lock, flags);
->>  }
->>  EXPORT_SYMBOL_GPL(pci_epc_remove_epf);
->> --
->> 2.7.4
->>
+kernel: 4.9.179-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.9.y
+git commit: f6bc31d8c3be3e5ab957341b3f99f8b45fcc646e
+git describe: v4.9.178-54-gf6bc31d8c3be
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
+ld/v4.9.178-54-gf6bc31d8c3be
+
+No regressions (compared to build v4.9.178)
+
+No fixes (compared to build v4.9.178)
+
+Ran 21733 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* ltp-open-posix-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+* ssuite
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
