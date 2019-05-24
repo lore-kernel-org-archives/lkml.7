@@ -2,129 +2,140 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 080F6C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA41C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DD8020879
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:10:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="k2WAcfx2"
+	by mail.kernel.org (Postfix) with ESMTP id A9D1E20879
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:11:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558681890;
+	bh=xpNn3uDwi5in7WsQGi/e8aUm1uTtyA2uJgZVykMf5Sc=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=XqrabfZxPXCBL77AjY9b7OmCdH0mGap5rZNIDu3S3zE14U56QGnghHZsAF2wjv2bB
+	 L7hkztE04A8wwEYNbc8Gm533G9V2n3KClLPQY0SYKNXNhTg/Nh233xerQTK6Ql00mx
+	 ncphddPVLYdgxgJFJ6ghIkTxlz0IlJQFHcTUGzE4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389027AbfEXHKf (ORCPT
+        id S2389069AbfEXHL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 03:10:35 -0400
-Received: from mail-eopbgr820075.outbound.protection.outlook.com ([40.107.82.75]:9911
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388460AbfEXHKe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 03:10:34 -0400
+        Fri, 24 May 2019 03:11:27 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42020 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389017AbfEXHL1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 03:11:27 -0400
+Received: by mail-pg1-f194.google.com with SMTP id 33so1572422pgv.9
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 00:11:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector1-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ww0LyfRxGFq8R5I05daDtQhsIkDCr1jVHS1jTB8NDVg=;
- b=k2WAcfx2hzIWOfrslF5oEh+yVX8XkKuVaWq4T6gQKRKMdbfpXT/Rp02LknvvSWvybEqoad+Ov56TKyOkCPG9EwQWz5Diw9rZMGaiyS83PtJdl63iI/MtXhJzziLcCUJQL810u5ALN50gEVFVFRSXplhDAWz/Au2Qgqly8uFsEHI=
-Received: from BY1PR0301MB0901.namprd03.prod.outlook.com (10.160.195.140) by
- BY1PR0301MB1319.namprd03.prod.outlook.com (10.161.206.27) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.16; Fri, 24 May 2019 07:10:28 +0000
-Received: from BY1PR0301MB0901.namprd03.prod.outlook.com
- ([fe80::f582:135:91b7:eb89]) by BY1PR0301MB0901.namprd03.prod.outlook.com
- ([fe80::f582:135:91b7:eb89%4]) with mapi id 15.20.1922.017; Fri, 24 May 2019
- 07:10:28 +0000
-From:   "Hennerich, Michael" <Michael.Hennerich@analog.com>
-To:     Randy Dunlap <rdunlap@infradead.org>,
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MPddsqOMs2VFumlMiCjin9Z1IsRX+oIN+Nj3UNKXTpY=;
+        b=Gp4WWZMYEuzlwJFvJxISKLJquTk97gcRLbwoEQU1LvnFsvoU2PSKpd/msdC88GNqBZ
+         Znhtvou2ePOH+4oP4WcGLHIu/HWkk3UPx/PXT4FvoY3k8sUF05/Uu3LEkQbJUovLwNX8
+         sLtbG+q2+rNlyBZ+ve0DUiuQaxTZqncX1tfKRGmjnXosqvi6psoa4eMFOneVl4V2dIC1
+         AkZgEeoZgFd+uKvFE6Ncy/xt0/egWkxHseYk7DASMtq504NetI0Qzxx24dNoUiz4tR9k
+         BmkCGzglOBFwAgHDJ71VmgxWcs8lJy2eUTKhx8xBzk6yccYJDrJMi7lKvKxUQU7PtJjo
+         RrnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=MPddsqOMs2VFumlMiCjin9Z1IsRX+oIN+Nj3UNKXTpY=;
+        b=ZBpaOdVix1F5jzxOKnEd5HSXFnjTYO0d+XLgH2ItcbASkeQkXGnQg9Af36HF4yK566
+         yo4TDlrJ2l6TeY+WWP/ictiBS5SPrbLG5NBjtwi1+W7mzCkfQuosnUj5dSqELQhVNcXi
+         MmBZIIJInYFmQcq7/5mu06uowmnrkWPzIJeS98QkcOFuf8EicInh3Gv6BHcvzesi311U
+         d9yao9MUgg9O542WZQU+0OdB7w59bx+dhtcq4VgjXuiHbLexl+FjQR1xGT2alDJ6+c5Y
+         JxrSlaOxFUj3xLmFYnMp6WuQKFxJKALYTCstJiOBAuFHEryq9jc2oI15WZHQI/oyp4GF
+         Nqcg==
+X-Gm-Message-State: APjAAAWa5DQWjIGPhFx+VwKN47qQ5rvVKnbLTdIbvdlA6Cs55c3x87Bu
+        Y7PTAYEIUGy0aE9EsqtopNV8QVOG
+X-Google-Smtp-Source: APXvYqxT7GhpKmzpTZu1aHFmsEQEzMslywhpxvZoC6f5svrrMHno2g/tsm4jOn5ESJHrsIhXxFw21w==
+X-Received: by 2002:a17:90a:5d15:: with SMTP id s21mr6954384pji.125.1558681885882;
+        Fri, 24 May 2019 00:11:25 -0700 (PDT)
+Received: from bbox-2.seo.corp.google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
+        by smtp.gmail.com with ESMTPSA id e5sm1179689pgh.35.2019.05.24.00.11.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 May 2019 00:11:24 -0700 (PDT)
+From:   Minchan Kim <minchan@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Michal Hocko <mhocko@suse.com>, linux-mm <linux-mm@kvack.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-CC:     kbuild test robot <lkp@intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: RE: [PATCH] gpio: fix gpio-adp5588 build errors
-Thread-Topic: [PATCH] gpio: fix gpio-adp5588 build errors
-Thread-Index: AQHVEbMIs/GUdK8HvES52ZhkR4tgfKZ53FCA
-Date:   Fri, 24 May 2019 07:10:28 +0000
-Message-ID: <BY1PR0301MB090122CBC8CED2B6830425378E020@BY1PR0301MB0901.namprd03.prod.outlook.com>
-References: <8054bec0-ea24-8590-738b-bae58c0be3b4@infradead.org>
-In-Reply-To: <8054bec0-ea24-8590-738b-bae58c0be3b4@infradead.org>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Michael.Hennerich@analog.com; 
-x-originating-ip: [137.71.226.54]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 284cbd15-3702-4909-52c4-08d6e016e6dc
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:BY1PR0301MB1319;
-x-ms-traffictypediagnostic: BY1PR0301MB1319:
-x-microsoft-antispam-prvs: <BY1PR0301MB1319DC372529CF925CCA5F588E020@BY1PR0301MB1319.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0047BC5ADE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(346002)(396003)(376002)(39860400002)(136003)(199004)(13464003)(189003)(52536014)(305945005)(6246003)(25786009)(5660300002)(11346002)(446003)(53936002)(26005)(4326008)(316002)(8936002)(76116006)(14454004)(256004)(486006)(476003)(71190400001)(86362001)(7736002)(66446008)(66476007)(66946007)(64756008)(73956011)(66556008)(71200400001)(102836004)(66066001)(6506007)(53546011)(99286004)(33656002)(72206003)(2906002)(478600001)(2501003)(110136005)(76176011)(7696005)(54906003)(68736007)(6436002)(9686003)(55016002)(186003)(8676002)(81166006)(81156014)(74316002)(229853002)(6116002)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:BY1PR0301MB1319;H:BY1PR0301MB0901.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: analog.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 2N67lV7P4oE7PINIHd1W+YTKgUqh+GCqzD1AyRp8sVnMkMnkagaLSBdQ70Hm3/CWt0738ONetqwYLDB8wOaPUc7O2SI4EzVfE9Ez3DLo6KtTCXDAvgnFCfCda6TncZeqStzHvPkSTejAbefQQdUzdzRKMzoQeVlUsK9A5WwqUYvfVL17L0NKfDuXfbB8/DxvRV3mxE3JGIpoaPEs9vw6vzvUWA3ey4jdGZ2UfXvAaIMQrog68Id0+2bxt9YFzERgLcCBcUdrjz5w4cf25t9mJpventHp5VYy02ToNQzFBO0jnHiwSETv0d1ULCm99HW15u6xjLxAbW3Of6FBVJh7JZLkbwFOKK/UCoFbMaQI7bLLQEmttislwc8Fd2qSW+O977YbvX45yarMpdQnsh+AqF9h+h4voP5UAJwbEe+zmv4=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Minchan Kim <minchan@kernel.org>, stable@kernel.org,
+        Wu Fangsuo <fangsuowu@asrmicro.com>
+Subject: [PATCH] mm: fix trying to reclaim unevicable LRU page
+Date:   Fri, 24 May 2019 16:11:14 +0900
+Message-Id: <20190524071114.74202-1-minchan@kernel.org>
+X-Mailer: git-send-email 2.22.0.rc1.257.g3120a18244-goog
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 284cbd15-3702-4909-52c4-08d6e016e6dc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 May 2019 07:10:28.4173
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY1PR0301MB1319
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSYW5keSBEdW5sYXAgW21haWx0
-bzpyZHVubGFwQGluZnJhZGVhZC5vcmddDQo+IFNlbnQ6IEZyZWl0YWcsIDI0LiBNYWkgMjAxOSAw
-MDowMQ0KPiBUbzogTEtNTCA8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZz47IGxpbnV4LWdw
-aW9Admdlci5rZXJuZWwub3JnDQo+IENjOiBrYnVpbGQgdGVzdCByb2JvdCA8bGtwQGludGVsLmNv
-bT47IEhlbm5lcmljaCwgTWljaGFlbCA8TWljaGFlbC5IZW5uZXJpY2hAYW5hbG9nLmNvbT47IExp
-bnVzIFdhbGxlaWoNCj4gPGxpbnVzLndhbGxlaWpAbGluYXJvLm9yZz47IEJhcnRvc3ogR29sYXN6
-ZXdza2kgPGJnb2xhc3pld3NraUBiYXlsaWJyZS5jb20+DQo+IFN1YmplY3Q6IFtQQVRDSF0gZ3Bp
-bzogZml4IGdwaW8tYWRwNTU4OCBidWlsZCBlcnJvcnMNCj4gDQo+IEZyb206IFJhbmR5IER1bmxh
-cCA8cmR1bmxhcEBpbmZyYWRlYWQub3JnPg0KPiANCj4gVGhlIGdwaW8tYWRwNTU4OCBkcml2ZXIg
-dXNlcyBpbnRlcmZhY2VzIHRoYXQgYXJlIHByb3ZpZGVkIGJ5DQo+IEdQSU9MSUJfSVJRQ0hJUCwg
-c28gc2VsZWN0IHRoYXQgc3ltYm9sIGluIGl0cyBLY29uZmlnIGVudHJ5Lg0KPiANCj4gRml4ZXMg
-dGhlc2UgYnVpbGQgZXJyb3JzOg0KPiANCj4gLi4vZHJpdmVycy9ncGlvL2dwaW8tYWRwNTU4OC5j
-OiBJbiBmdW5jdGlvbiDigJhhZHA1NTg4X2lycV9oYW5kbGVy4oCZOg0KPiAuLi9kcml2ZXJzL2dw
-aW8vZ3Bpby1hZHA1NTg4LmM6MjY2OjI2OiBlcnJvcjog4oCYc3RydWN0IGdwaW9fY2hpcOKAmSBo
-YXMgbm8gbWVtYmVyIG5hbWVkIOKAmGlyceKAmQ0KPiAgICAgICAgICAgICBkZXYtPmdwaW9fY2hp
-cC5pcnEuZG9tYWluLCBncGlvKSk7DQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgXg0KPiAu
-Li9kcml2ZXJzL2dwaW8vZ3Bpby1hZHA1NTg4LmM6IEluIGZ1bmN0aW9uIOKAmGFkcDU1ODhfaXJx
-X3NldHVw4oCZOg0KPiAuLi9kcml2ZXJzL2dwaW8vZ3Bpby1hZHA1NTg4LmM6Mjk4OjI6IGVycm9y
-OiBpbXBsaWNpdCBkZWNsYXJhdGlvbiBvZiBmdW5jdGlvbiDigJhncGlvY2hpcF9pcnFjaGlwX2Fk
-ZF9uZXN0ZWTigJkgWy1XZXJyb3I9aW1wbGljaXQtDQo+IGZ1bmN0aW9uLWRlY2xhcmF0aW9uXQ0K
-PiAgIHJldCA9IGdwaW9jaGlwX2lycWNoaXBfYWRkX25lc3RlZCgmZGV2LT5ncGlvX2NoaXAsDQo+
-ICAgXg0KPiAuLi9kcml2ZXJzL2dwaW8vZ3Bpby1hZHA1NTg4LmM6MzA3OjI6IGVycm9yOiBpbXBs
-aWNpdCBkZWNsYXJhdGlvbiBvZiBmdW5jdGlvbiDigJhncGlvY2hpcF9zZXRfbmVzdGVkX2lycWNo
-aXDigJkgWy1XZXJyb3I9aW1wbGljaXQtDQo+IGZ1bmN0aW9uLWRlY2xhcmF0aW9uXQ0KPiAgIGdw
-aW9jaGlwX3NldF9uZXN0ZWRfaXJxY2hpcCgmZGV2LT5ncGlvX2NoaXAsDQo+ICAgXg0KPiANCj4g
-Rml4ZXM6IDQ1OTc3M2FlOGRiYiAoImdwaW86IGFkcDU1ODgtZ3Bpbzogc3VwcG9ydCBpbnRlcnJ1
-cHQgY29udHJvbGxlciIpDQo+IA0KPiBSZXBvcnRlZC1ieToga2J1aWxkIHRlc3Qgcm9ib3QgPGxr
-cEBpbnRlbC5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IFJhbmR5IER1bmxhcCA8cmR1bmxhcEBpbmZy
-YWRlYWQub3JnPg0KDQpBY2tlZC1ieTogTWljaGFlbCBIZW5uZXJpY2ggPG1pY2hhZWwuaGVubmVy
-aWNoQGFuYWxvZy5jb20+DQoNCj4gQ2M6IE1pY2hhZWwgSGVubmVyaWNoIDxtaWNoYWVsLmhlbm5l
-cmljaEBhbmFsb2cuY29tPg0KPiBDYzogTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5h
-cm8ub3JnPg0KPiBDYzogQmFydG9zeiBHb2xhc3pld3NraSA8YmdvbGFzemV3c2tpQGJheWxpYnJl
-LmNvbT4NCj4gQ2M6IGxpbnV4LWdwaW9Admdlci5rZXJuZWwub3JnDQo+IC0tLQ0KPiAgZHJpdmVy
-cy9ncGlvL0tjb25maWcgfCAgICAxICsNCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigr
-KQ0KPiANCj4gLS0tIGxueC01Mi1yYzEub3JpZy9kcml2ZXJzL2dwaW8vS2NvbmZpZw0KPiArKysg
-bG54LTUyLXJjMS9kcml2ZXJzL2dwaW8vS2NvbmZpZw0KPiBAQCAtODIyLDYgKzgyMiw3IEBAIGNv
-bmZpZyBHUElPX0FEUDU1ODgNCj4gIGNvbmZpZyBHUElPX0FEUDU1ODhfSVJRDQo+ICAgICAgICAg
-Ym9vbCAiSW50ZXJydXB0IGNvbnRyb2xsZXIgc3VwcG9ydCBmb3IgQURQNTU4OCINCj4gICAgICAg
-ICBkZXBlbmRzIG9uIEdQSU9fQURQNTU4OD15DQo+ICsgICAgICAgc2VsZWN0IEdQSU9MSUJfSVJR
-Q0hJUA0KPiAgICAgICAgIGhlbHANCj4gICAgICAgICAgIFNheSB5ZXMgaGVyZSB0byBlbmFibGUg
-dGhlIGFkcDU1ODggdG8gYmUgdXNlZCBhcyBhbiBpbnRlcnJ1cHQNCj4gICAgICAgICAgIGNvbnRy
-b2xsZXIuIEl0IHJlcXVpcmVzIHRoZSBkcml2ZXIgdG8gYmUgYnVpbHQgaW4gdGhlIGtlcm5lbC4N
-Cj4gDQoNCg==
+There was below bugreport from Wu Fangsuo.
+
+7200 [  680.491097] c4 7125 (syz-executor) page:ffffffbf02f33b40 count:86 mapcount:84 mapping:ffffffc08fa7a810 index:0x24
+7201 [  680.531186] c4 7125 (syz-executor) flags: 0x19040c(referenced|uptodate|arch_1|mappedtodisk|unevictable|mlocked)
+7202 [  680.544987] c0 7125 (syz-executor) raw: 000000000019040c ffffffc08fa7a810 0000000000000024 0000005600000053
+7203 [  680.556162] c0 7125 (syz-executor) raw: ffffffc009b05b20 ffffffc009b05b20 0000000000000000 ffffffc09bf3ee80
+7204 [  680.566860] c0 7125 (syz-executor) page dumped because: VM_BUG_ON_PAGE(PageLRU(page) || PageUnevictable(page))
+7205 [  680.578038] c0 7125 (syz-executor) page->mem_cgroup:ffffffc09bf3ee80
+7206 [  680.585467] c0 7125 (syz-executor) ------------[ cut here ]------------
+7207 [  680.592466] c0 7125 (syz-executor) kernel BUG at /home/build/farmland/adroid9.0/kernel/linux/mm/vmscan.c:1350!
+7223 [  680.603663] c0 7125 (syz-executor) Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
+7224 [  680.611436] c0 7125 (syz-executor) Modules linked in:
+7225 [  680.616769] c0 7125 (syz-executor) CPU: 0 PID: 7125 Comm: syz-executor Tainted: G S              4.14.81 #3
+7226 [  680.626826] c0 7125 (syz-executor) Hardware name: ASR AQUILAC EVB (DT)
+7227 [  680.633623] c0 7125 (syz-executor) task: ffffffc00a54cd00 task.stack: ffffffc009b00000
+7228 [  680.641917] c0 7125 (syz-executor) PC is at shrink_page_list+0x1998/0x3240
+7229 [  680.649144] c0 7125 (syz-executor) LR is at shrink_page_list+0x1998/0x3240
+7230 [  680.656303] c0 7125 (syz-executor) pc : [<ffffff90083a2158>] lr : [<ffffff90083a2158>] pstate: 60400045
+7231 [  680.666086] c0 7125 (syz-executor) sp : ffffffc009b05940
+..
+7342 [  681.671308] c0 7125 (syz-executor) [<ffffff90083a2158>] shrink_page_list+0x1998/0x3240
+7343 [  681.679567] c0 7125 (syz-executor) [<ffffff90083a3dc0>] reclaim_clean_pages_from_list+0x3c0/0x4f0
+7344 [  681.688793] c0 7125 (syz-executor) [<ffffff900837ed64>] alloc_contig_range+0x3bc/0x650
+7347 [  681.717421] c0 7125 (syz-executor) [<ffffff90084925cc>] cma_alloc+0x214/0x668
+7348 [  681.724892] c0 7125 (syz-executor) [<ffffff90091e4d78>] ion_cma_allocate+0x98/0x1d8
+7349 [  681.732872] c0 7125 (syz-executor) [<ffffff90091e0b20>] ion_alloc+0x200/0x7e0
+7350 [  681.740302] c0 7125 (syz-executor) [<ffffff90091e154c>] ion_ioctl+0x18c/0x378
+7351 [  681.747738] c0 7125 (syz-executor) [<ffffff90084c6824>] do_vfs_ioctl+0x17c/0x1780
+7352 [  681.755514] c0 7125 (syz-executor) [<ffffff90084c7ed4>] SyS_ioctl+0xac/0xc0
+
+Wu found it's due to [1]. Before that, unevictable page goes to cull_mlocked
+routine so that it couldn't reach the VM_BUG_ON_PAGE line.
+
+To fix the issue, this patch filter out unevictable LRU pages
+from the reclaim_clean_pages_from_list in CMA.
+
+[1] ad6b67041a45, mm: remove SWAP_MLOCK in ttu
+
+Cc: <stable@kernel.org>	[4.12+]
+Reported-debugged-by: Wu Fangsuo <fangsuowu@asrmicro.com>
+Signed-off-by: Minchan Kim <minchan@kernel.org>
+---
+ mm/vmscan.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index d9c3e873eca6..7350afae5c3c 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -1505,7 +1505,7 @@ unsigned long reclaim_clean_pages_from_list(struct zone *zone,
+ 
+ 	list_for_each_entry_safe(page, next, page_list, lru) {
+ 		if (page_is_file_cache(page) && !PageDirty(page) &&
+-		    !__PageMovable(page)) {
++		    !__PageMovable(page) && !PageUnevictable(page)) {
+ 			ClearPageActive(page);
+ 			list_move(&page->lru, &clean_pages);
+ 		}
+-- 
+2.22.0.rc1.257.g3120a18244-goog
+
