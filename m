@@ -2,121 +2,139 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D35C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43190C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F82320675
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:15:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 178362133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:15:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kY+E5Qiu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390657AbfEXQPc (ORCPT
+        id S2390768AbfEXQPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 12:15:32 -0400
-Received: from mga11.intel.com ([192.55.52.93]:45431 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390532AbfEXQPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 12:15:32 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 May 2019 09:15:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,507,1549958400"; 
-   d="scan'208";a="177765957"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga002.fm.intel.com with ESMTP; 24 May 2019 09:15:23 -0700
-Date:   Fri, 24 May 2019 09:16:19 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     hch@lst.de, robin.murphy@arm.com, m.szyprowski@samsung.com,
-        vdumpa@nvidia.com, linux@armlinux.org.uk, catalin.marinas@arm.com,
-        will.deacon@arm.com, chris@zankel.net, jcmvbkbc@gmail.com,
-        joro@8bytes.org, dwmw2@infradead.org, tony@atomide.com,
-        akpm@linux-foundation.org, sfr@canb.auug.org.au,
-        treding@nvidia.com, keescook@chromium.org, iamjoonsoo.kim@lge.com,
-        wsa+renesas@sang-engineering.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, iommu@lists.linux-foundation.org,
-        dann.frazier@canonical.com
-Subject: Re: [PATCH v3 2/2] dma-contiguous: Use fallback alloc_pages for
- single pages
-Message-ID: <20190524161618.GB23100@iweiny-DESK2.sc.intel.com>
-References: <20190524040633.16854-1-nicoleotsuka@gmail.com>
- <20190524040633.16854-3-nicoleotsuka@gmail.com>
+        Fri, 24 May 2019 12:15:46 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:44490 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389588AbfEXQPp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 12:15:45 -0400
+Received: by mail-ed1-f68.google.com with SMTP id b8so15081100edm.11
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 09:15:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=xiom/qbhc8hzsnkXpNYZUpJBz12Ihudb7omPLvvxhj8=;
+        b=kY+E5QiuzaCj1lGRZrWvzWlIc8/dOw5vf72u3ftpBv18Imso/xFk6x0/AyJdz0DyTA
+         AWPbrxLmcaWnMK4Jzd0D4eI9reaHq7Y3lIptb3kt/PPctGb9lAR5khYhRboR9IoFz48b
+         +FSeY0oBxlWeZryLjXQHxFgG2pMzS3v4439x/ADxoOTnZcgQ5W0spbP3oZUYPxWSWeI/
+         lRX6t9zHJGZo1+l05wPc3hQm4T1Qs8O5jj9p4YAliOFsTFRIL7bwCK1myIoxAsMBZ0M9
+         HIm/MSiTktQRB/aXE3J79srWkSOjrAlgK++yvYbAY8w2brUrvku3c7JKpd0ZGMAVgK4M
+         9tcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=xiom/qbhc8hzsnkXpNYZUpJBz12Ihudb7omPLvvxhj8=;
+        b=pSO/72EIOQ5YNBV2KDmMshrjZWj2AkTNlmPXyPVt+oedao7PjW5uUFZ5gb43EB6MuL
+         Vh9kBoIIiavXxngCuBhyjljc2Iqx/4yO8tJroysEKcZw23W6Z71tjHtsywxWFlNhF5vn
+         PhjBYpse2NxpqC8Fsfs6wOBSy8wASarkbt+AK8vmW2qnkzztO96yE8typLyliChAfuRq
+         xmQfQ75rf1DGx6uWY02MW/xZKtekAh9lIOFAVQ6HO+MbfiacVLP0gncRc2fYAXFQ9Utz
+         YgIpEE5t9vstJz7tqARJTKUCPp4ooTiOWgxHimSi3leAO9RtaOjHjodivOFgaXPX8eGv
+         Qa/A==
+X-Gm-Message-State: APjAAAXhpWXF39gtLtK+jQfmmne86b5GVNFlAi2walL6st++vbNzKX2B
+        lyl+R4LwfD6j85uZhhIUsJI=
+X-Google-Smtp-Source: APXvYqwPMvsrTK7DMaHJWzPyB8e3YbMWUoWhnCCT9QLPYu2yG4stqlm1HrSUqH6pfYaXbPKCrw5iJw==
+X-Received: by 2002:a17:906:cd08:: with SMTP id oz8mr37589909ejb.67.1558714543948;
+        Fri, 24 May 2019 09:15:43 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:4f9:2b:2b15::2])
+        by smtp.gmail.com with ESMTPSA id u5sm428197ejm.85.2019.05.24.09.15.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 May 2019 09:15:42 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Cliff Whickman <cpw@sgi.com>, Robin Holt <robinmholt@gmail.com>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Stephen Hines <srhines@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: [PATCH] misc: sgi-xp: Properly initialize buf in xpc_get_rsvd_page_pa
+Date:   Fri, 24 May 2019 09:15:17 -0700
+Message-Id: <20190524161517.125941-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.22.0.rc1
+In-Reply-To: <20190524160015.GA7590@kroah.com>
+References: <20190524160015.GA7590@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190524040633.16854-3-nicoleotsuka@gmail.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 09:06:33PM -0700, Nicolin Chen wrote:
-> The addresses within a single page are always contiguous, so it's
-> not so necessary to always allocate one single page from CMA area.
-> Since the CMA area has a limited predefined size of space, it may
-> run out of space in heavy use cases, where there might be quite a
-> lot CMA pages being allocated for single pages.
-> 
-> However, there is also a concern that a device might care where a
-> page comes from -- it might expect the page from CMA area and act
-> differently if the page doesn't.
+Clang warns:
 
-How does a device know, after this call, if a CMA area was used?  From the
-patches I figured a device should not care.
+drivers/misc/sgi-xp/xpc_partition.c:73:14: warning: variable 'buf' is
+uninitialized when used within its own initialization [-Wuninitialized]
+        void *buf = buf;
+              ~~~   ^~~
+1 warning generated.
 
-> 
-> This patch tries to use the fallback alloc_pages path, instead of
-> one-page size allocations from the global CMA area in case that a
-> device does not have its own CMA area. This'd save resources from
-> the CMA global area for more CMA allocations, and also reduce CMA
-> fragmentations resulted from trivial allocations.
-> 
-> Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
-> ---
->  kernel/dma/contiguous.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
-> index 21f39a6cb04f..6914b92d5c88 100644
-> --- a/kernel/dma/contiguous.c
-> +++ b/kernel/dma/contiguous.c
-> @@ -223,14 +223,23 @@ bool dma_release_from_contiguous(struct device *dev, struct page *pages,
->   * This function allocates contiguous memory buffer for specified device. It
->   * first tries to use device specific contiguous memory area if available or
->   * the default global one, then tries a fallback allocation of normal pages.
-> + *
-> + * Note that it byapss one-page size of allocations from the global area as
-> + * the addresses within one page are always contiguous, so there is no need
-> + * to waste CMA pages for that kind; it also helps reduce fragmentations.
->   */
->  struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
->  {
->  	int node = dev ? dev_to_node(dev) : NUMA_NO_NODE;
->  	size_t count = PAGE_ALIGN(size) >> PAGE_SHIFT;
->  	size_t align = get_order(PAGE_ALIGN(size));
-> -	struct cma *cma = dev_get_cma_area(dev);
->  	struct page *page = NULL;
-> +	struct cma *cma = NULL;
-> +
-> +	if (dev && dev->cma_area)
-> +		cma = dev->cma_area;
-> +	else if (count > 1)
-> +		cma = dma_contiguous_default_area;
+Arnd's explanation during review:
 
-Doesn't dev_get_dma_area() already do this?
+  /*
+   * Returns the physical address of the partition's reserved page through
+   * an iterative number of calls.
+   *
+   * On first call, 'cookie' and 'len' should be set to 0, and 'addr'
+   * set to the nasid of the partition whose reserved page's address is
+   * being sought.
+   * On subsequent calls, pass the values, that were passed back on the
+   * previous call.
+   *
+   * While the return status equals SALRET_MORE_PASSES, keep calling
+   * this function after first copying 'len' bytes starting at 'addr'
+   * into 'buf'. Once the return status equals SALRET_OK, 'addr' will
+   * be the physical address of the partition's reserved page. If the
+   * return status equals neither of these, an error as occurred.
+   */
+  static inline s64
+  sn_partition_reserved_page_pa(u64 buf, u64 *cookie, u64 *addr, u64 *len)
 
-Ira
+  so *len is set to zero on the first call and tells the bios how many
+  bytes are accessible at 'buf', and it does get updated by the BIOS to
+  tell us how many bytes it needs, and then we allocate that and try again.
 
->  
->  	/* CMA can be used only in the context which permits sleeping */
->  	if (cma && gfpflags_allow_blocking(gfp)) {
-> -- 
-> 2.17.1
-> 
+Fixes: 279290294662 ("[IA64-SGI] cleanup the way XPC locates the reserved page")
+Link: https://github.com/ClangBuiltLinux/linux/issues/466
+Suggested-by: Stephen Hines <srhines@google.com>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/misc/sgi-xp/xpc_partition.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/misc/sgi-xp/xpc_partition.c b/drivers/misc/sgi-xp/xpc_partition.c
+index 3eba1c420cc0..782ce95d3f17 100644
+--- a/drivers/misc/sgi-xp/xpc_partition.c
++++ b/drivers/misc/sgi-xp/xpc_partition.c
+@@ -70,7 +70,7 @@ xpc_get_rsvd_page_pa(int nasid)
+ 	unsigned long rp_pa = nasid;	/* seed with nasid */
+ 	size_t len = 0;
+ 	size_t buf_len = 0;
+-	void *buf = buf;
++	void *buf = NULL;
+ 	void *buf_base = NULL;
+ 	enum xp_retval (*get_partition_rsvd_page_pa)
+ 		(void *, u64 *, unsigned long *, size_t *) =
+-- 
+2.22.0.rc1
+
