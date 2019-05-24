@@ -2,176 +2,88 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E55C282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E40DCC282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B11CC206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:35:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=indeed.com header.i=@indeed.com header.b="XkGCSwkf"
+	by mail.kernel.org (Postfix) with ESMTP id A9DD4217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:38:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558733936;
+	bh=ySpdzIHE/XcoHxbm6ZRtDfMXMFvgQNWn2svqBWl+NIk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=metjrV3BXaAWvl5ywyjVLnAy+5hCKrd8nsP0G73HPo6uC7iaPAjv5gWYpjZBmDBIn
+	 E0uVncqqPdIu7+8bEE4h17wEiFVgsGgFo35uaTGGiICdfIjMz5nxKObKu9MsxCye9+
+	 0c24vnsD2g9zaTyrkDyp38XZcWvOjzz/CSBS7GGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404284AbfEXVfa (ORCPT
+        id S2404269AbfEXViz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 17:35:30 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:40227 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404200AbfEXVfa (ORCPT
+        Fri, 24 May 2019 17:38:55 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:39116 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404182AbfEXViy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 17:35:30 -0400
-Received: by mail-io1-f66.google.com with SMTP id n5so2720201ioc.7
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 14:35:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=indeed.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=noDnUncx7v00BxHdUohQoEvRvQhcGRS8pbc3im08Y6w=;
-        b=XkGCSwkf+gvLn+XdjFi6oK3HPEzI0RUs4ZqtQ0lOHGrQKFa0hwHkkjkQDO+7jwA6gC
-         WYWPee8sG9gbw27iFQteMwZ78ZN7XW9kKpMa23LGy1HbSfZblj4tEItFv0nC1wtzn8XL
-         0pfiZab5hvshimfRZ1ThgNinG45tn30mJAPM8=
+        Fri, 24 May 2019 17:38:54 -0400
+Received: by mail-oi1-f195.google.com with SMTP id v2so8075835oie.6;
+        Fri, 24 May 2019 14:38:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=noDnUncx7v00BxHdUohQoEvRvQhcGRS8pbc3im08Y6w=;
-        b=uG5oWMBb0U+H0c/ey3FNSey6OPLjDzD7Dmcr+pvOpSWOr33F3aFQftj0lPngeOvj0H
-         Ki8QR5Gc8TPSGvlfhzV3B7s/0rHjIFuu18TMDYk5YWIjvCDF/Sqc6iIoFQNHqyXQtwo0
-         J346u0nX4/0utWyPNSltWTSQvOxpqurAhv192NPGm+SNWA5YDC8hxBe1lxLMaBAQvC3N
-         4QuWLUPbRYsZqI/nWCZjoeGvxSHpBPAYHqD1epSVrTUs3B5YdrVDqFoKFOx/dZEQ2Zh5
-         hWOJF5mJoQrpBhozLK0fqv2w/uTkXEPY6iSUEsZJB6Yl7llJpI3nAt+occDkXxP952uY
-         WGNA==
-X-Gm-Message-State: APjAAAXYHSTu5Oh3XVzq2Hl/rcxVHnmrGmyhCOVSEhoYfvsJRviTPqGq
-        JWz9R76ibAHP7T7zAGvCS9WAzOYJB81/gfWF2TLaiw==
-X-Google-Smtp-Source: APXvYqwXlEws9qaOfIVvBaoZGOZu72Hu818IkDE74Ow2/24+Q2FfYTdCzpHB2Gq57suTYF9vMHF8CBjqBuFn6VHf7ws=
-X-Received: by 2002:a05:6602:4f:: with SMTP id z15mr20771387ioz.108.1558733728840;
- Fri, 24 May 2019 14:35:28 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0d0FCy/4Vi/5vNwAuSVgIf6EEX3+JB7bBJ032s55LX4=;
+        b=aMmX3vk7HqlO5Hr/+nNJVndkAFE1sMgyvnqkJAW3+nC0nHtPMOqmCyMuIBB0FJaEoU
+         leurgUN7EPZg1BDgpU9YeJcwk7eVIxGquV5v+bcVgKnTYbNpVvMHNvmwFD4l1yJUdEBd
+         4LYHjeloI4Kw8vLSe/dKHYnUM4Z0ZSJEtAAdyzBLNshlv5m1smg8yKBW6uBPmnhrRwyz
+         MwMbrTdl2qP/IyZhOASRKlKEQuradg2jnfw4vIZ7PlovRVWP6zTxq0vcP/YE96ejmO7P
+         Hr+5Zqc4Fq919zcoDVpzh0iNHTEpeUPh6mWontawCP8TBhgC3oaLmaE8Xifs0koeibtk
+         EsBA==
+X-Gm-Message-State: APjAAAV3Dw5qj8r54NHNdhubvcX37hdC6Wu5qjY9JIEgX3zmsybSBbr5
+        47jFAqsRGRcB1SE1xqOkeQ==
+X-Google-Smtp-Source: APXvYqxzbc8H6qprFZplYCrEeBeDAa86opIsAm/OZuzqeg10y4fclGeeLH2a231jJoHFJfk2x1BjSA==
+X-Received: by 2002:aca:b8c3:: with SMTP id i186mr7732146oif.163.1558733934051;
+        Fri, 24 May 2019 14:38:54 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id g3sm1325221oif.25.2019.05.24.14.38.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 24 May 2019 14:38:53 -0700 (PDT)
+Date:   Fri, 24 May 2019 16:38:52 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Hsin-Yi Wang <hsinyi@chromium.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: Remove Linuxisms from
+ common-properties binding
+Message-ID: <20190524213852.GA10241@bogus>
+References: <20190514204053.124122-1-swboyd@chromium.org>
+ <20190514204053.124122-2-swboyd@chromium.org>
 MIME-Version: 1.0
-References: <1558121424-2914-1-git-send-email-chiluk+linux@indeed.com>
- <1558637087-20283-1-git-send-email-chiluk+linux@indeed.com>
- <1558637087-20283-2-git-send-email-chiluk+linux@indeed.com>
- <CAFTs51W0KdK4nw6wydn2HjNYvFRC8DYMmVeKX9FAe+4YUGEAZg@mail.gmail.com>
- <20190524143204.GB4684@lorien.usersys.redhat.com> <CAC=E7cXxsyMLw1PR+8QchTH8FYL7WX6_8LBVdqueR1yjW+VVkQ@mail.gmail.com>
- <CAFTs51Vm258CkDXi_Jj_cGOMotTvhdYR_VW8aUwAUvgistZOFQ@mail.gmail.com>
-In-Reply-To: <CAFTs51Vm258CkDXi_Jj_cGOMotTvhdYR_VW8aUwAUvgistZOFQ@mail.gmail.com>
-From:   Dave Chiluk <chiluk+linux@indeed.com>
-Date:   Fri, 24 May 2019 16:35:02 -0500
-Message-ID: <CAC=E7cXVrGRKMNkJPhd4fJi7wgdYk=YcXPV7B8GVNL5M69BarQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] sched/fair: Fix low cpu usage with high throttling
- by removing expiration of cpu-local slices
-To:     Peter Oskolkov <posk@posk.io>
-Cc:     Phil Auld <pauld@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, cgroups@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Brendan Gregg <bgregg@netflix.com>,
-        Kyle Anderson <kwa@yelp.com>,
-        Gabriel Munos <gmunoz@netflix.com>,
-        John Hammond <jhammond@indeed.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        Ben Segall <bsegall@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190514204053.124122-2-swboyd@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 11:28 AM Peter Oskolkov <posk@posk.io> wrote:
->
-> On Fri, May 24, 2019 at 8:15 AM Dave Chiluk <chiluk+linux@indeed.com> wrote:
-> >
-> > On Fri, May 24, 2019 at 9:32 AM Phil Auld <pauld@redhat.com> wrote:
-> > > On Thu, May 23, 2019 at 02:01:58PM -0700 Peter Oskolkov wrote:
-> >
-> > > > If the machine runs at/close to capacity, won't the overallocation
-> > > > of the quota to bursty tasks necessarily negatively impact every other
-> > > > task? Should the "unused" quota be available only on idle CPUs?
-> > > > (Or maybe this is the behavior achieved here, and only the comment and
-> > > > the commit message should be fixed...)
-> > > >
-> > >
-> > > It's bounded by the amount left unused from the previous period. So
-> > > theoretically a process could use almost twice its quota. But then it
-> > > would have nothing left over in the next period. To repeat it would have
-> > > to not use any that next period. Over a longer number of periods it's the
-> > > same amount of CPU usage.
-> > >
-> > > I think that is more fair than throttling a process that has never used
-> > > its full quota.
-> > >
-> > > And it removes complexity.
-> > >
-> > > Cheers,
-> > > Phil
-> >
-> > Actually it's not even that bad.  The overallocation of quota to a
-> > bursty task in a period is limited to at most one slice per cpu, and
-> > that slice must not have been used in the previous periods.  The slice
-> > size is set with /proc/sys/kernel/sched_cfs_bandwidth_slice_us and
-> > defaults to 5ms.  If a bursty task goes from underutilizing quota to
-> > using it's entire quota, it will not be able to burst in the
-> > subsequent periods.  Therefore in an absolute worst case contrived
-> > scenario, a bursty task can add at most 5ms to the latency of other
-> > threads on the same CPU.  I think this worst case 5ms tradeoff is
-> > entirely worth it.
-> >
-> > This does mean that a theoretically a poorly written massively
-> > threaded application on an 80 core box, that spreads itself onto 80
-> > cpu run queues, can overutilize it's quota in a period by at most 5ms
-> > * 80 CPUs in a sincle period (slice * number of runqueues the
-> > application is running on).  But that means that each of those threads
-> >  would have had to not be use their quota in a previous period, and it
-> > also means that the application would have to be carefully written to
-> > exacerbate this behavior.
-> >
-> > Additionally if cpu bound threads underutilize a slice of their quota
-> > in a period due to the cfs choosing a bursty task to run, they should
-> > theoretically be able to make it up in the following periods when the
-> > bursty task is unable to "burst".
->
-> OK, so it is indeed possible that CPU bound threads will underutilize a slice
-> of their quota in a period as a result of this patch. This should probably
-> be clearly stated in the code comments and in the commit message.
->
-> In addition, I believe that although many workloads will indeed be
-> indifferent to getting their fair share "later", some latency-sensitive
-> workloads will definitely be negatively affected by this temporary
-> CPU quota stealing by bursty antagonists. So there should probably be
-> a way to limit this behavior; for example, by making it tunable
-> per cgroup.
->
-This patch restores the behavior that existed from at least
-v3.16..v4.18, and the current Redhat 7 kernels.  So you are kind of
-championing a moot point as no one has noticed this "bursting"
-behavior in over 5 years.  By removing this slice expiration
-altogether we restore the behavior and also solve the root issue of
-'commit 512ac999d275 ("sched/fair: Fix bandwidth timer clock drift
-condition")'.
+On Tue, 14 May 2019 13:40:51 -0700, Stephen Boyd wrote:
+> We shouldn't reference Linux kernel functions or Linux itself in proper
+> bindings. It's OK to reference functions in the kernel when explaining
+> examples, but otherwise we shouldn't reference functions to describe
+> what the binding means.
+> 
+> Cc: Hsin-Yi Wang <hsinyi@chromium.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+>  .../devicetree/bindings/common-properties.txt   | 17 ++++++++---------
+>  1 file changed, 8 insertions(+), 9 deletions(-)
+> 
 
-Since 512ac999d275, many people are now noticing the slice expiration
-and very displeased with the behavior change.
-see: https://github.com/kubernetes/kubernetes/issues/67577
+Applied, thanks.
 
-I would love to hear if you know of a single complaint during that 5
-year time window, where someone noticed this bursting and reported
-that it negatively affected their application.
-
-As for the documentation, I thought about documenting the possible
-adverse side-effect, but I didn't feel it was worthwhile since no one
-had noticed that corner case in the 5 years.  I also could not figure
-out a concise way of describing the slight corner case issue without
-overly complicating the documentation.  I felt that adding that corner
-case would have detracted rather than added to the documentation's
-usefulness.  As far as commenting in code, considering most of this
-commit removes lines, there's not a really great place for it.  That's
-why I did my best to describe the behavior in the documentation.
-Smart people can draw conclusions from there as you have done.  Please
-keep in mind that this "bursting" is again limited to a single slice
-on each per-cpu run-queue.
-
-Thank you,
-Dave
+Rob
