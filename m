@@ -2,230 +2,667 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75572C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D66F3C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1545E20815
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:49:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ZN2MXsnB"
+	by mail.kernel.org (Postfix) with ESMTP id 7E3EF20815
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:51:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390310AbfEXJtB (ORCPT
+        id S2390066AbfEXJvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 05:49:01 -0400
-Received: from mail-eopbgr130083.outbound.protection.outlook.com ([40.107.13.83]:27109
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389716AbfEXJtA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 05:49:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5SEvq+qTMgBHAB3T5geIizUWL5wJk17f9MsMhtsETUI=;
- b=ZN2MXsnB5fvJFS+yrpImi284qbeAVeS/SBAmSFYw05QP3ZspbQZD+dIxfFg2IV9CNXWNot0seuZgR/WyX6pX23xzvi+4iIEZgwO6GRmAKDHWwaLNnL7fSd3+wI5cbheCmZe+QNC6gACstpNJyjfmqDgpbSpwwG0ZldeH5t7JDPM=
-Received: from AM6PR04MB4357.eurprd04.prod.outlook.com (52.135.167.33) by
- AM6PR04MB4615.eurprd04.prod.outlook.com (20.176.243.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.17; Fri, 24 May 2019 09:48:53 +0000
-Received: from AM6PR04MB4357.eurprd04.prod.outlook.com
- ([fe80::d877:33b5:bfa6:30ce]) by AM6PR04MB4357.eurprd04.prod.outlook.com
- ([fe80::d877:33b5:bfa6:30ce%6]) with mapi id 15.20.1922.016; Fri, 24 May 2019
- 09:48:53 +0000
-From:   Chuanhua Han <chuanhua.han@nxp.com>
-To:     Leo Li <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Rob Herring <robh@kernel.org>
-CC:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ying Zhang <ying.zhang22455@nxp.com>
-Subject: RE: [EXT] Re: [PATCH] arm64: dts: ls1028a: fix watchdog device node
-Thread-Topic: [EXT] Re: [PATCH] arm64: dts: ls1028a: fix watchdog device node
-Thread-Index: AQHVBjWLU5tDmMzveEaz3RlKVqbc5aZupocAgAA6wsCAAQpVgIAFsPwAgAB6roCAAKa7cIAACsWAgANWFYA=
-Date:   Fri, 24 May 2019 09:48:52 +0000
-Message-ID: <AM6PR04MB4357072E079BDD8D1866595797020@AM6PR04MB4357.eurprd04.prod.outlook.com>
-References: <20190509070657.18281-1-chuanhua.han@nxp.com>
- <20190517023728.GA15856@dragon>
- <AM6PR04MB4357C78FCEBA1B00AA42ED2E970B0@AM6PR04MB4357.eurprd04.prod.outlook.com>
- <AM6PR04MB586341334E62A663EE5E8BD18F0B0@AM6PR04MB5863.eurprd04.prod.outlook.com>
- <AM6PR04MB435758E1498B6A2BE0C0ACE397070@AM6PR04MB4357.eurprd04.prod.outlook.com>
- <AM6PR04MB58631458E6D851E4D83A77ED8F070@AM6PR04MB5863.eurprd04.prod.outlook.com>
- <AM6PR04MB435708872A4DBA92561C772597000@AM6PR04MB4357.eurprd04.prod.outlook.com>
- <AM6PR04MB5863FA1CE6D1E40F11B2E5008F000@AM6PR04MB5863.eurprd04.prod.outlook.com>
-In-Reply-To: <AM6PR04MB5863FA1CE6D1E40F11B2E5008F000@AM6PR04MB5863.eurprd04.prod.outlook.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=chuanhua.han@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: effba48d-ddd4-4c74-4988-08d6e02d0822
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM6PR04MB4615;
-x-ms-traffictypediagnostic: AM6PR04MB4615:
-x-microsoft-antispam-prvs: <AM6PR04MB4615C423D43BFE1A8143947397020@AM6PR04MB4615.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0047BC5ADE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(346002)(366004)(136003)(376002)(396003)(13464003)(199004)(189003)(8676002)(486006)(86362001)(8936002)(81156014)(81166006)(316002)(55016002)(6246003)(6506007)(6436002)(9686003)(110136005)(54906003)(6116002)(52536014)(71200400001)(71190400001)(3846002)(2906002)(5660300002)(14444005)(256004)(66066001)(66556008)(66476007)(66946007)(64756008)(76116006)(7736002)(186003)(73956011)(476003)(446003)(26005)(11346002)(7696005)(305945005)(68736007)(76176011)(66446008)(44832011)(229853002)(99286004)(25786009)(102836004)(53546011)(4326008)(33656002)(14454004)(478600001)(53936002)(74316002)(21314003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB4615;H:AM6PR04MB4357.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: WWkJXneRZkZAhG3FD222bYoTcR8tBhmtabohIiICNksyWI13EIaSuXe+4pzwB6X9AuJ/dLFO3mkzGLTFfCGb057LM1TGkhNJOaWSFg1RxBC+iRC2mEOLNhkkc1B6lH6tvpksH9pSTxMa9AxEcpfLiJvtGI9OkyNVONyC01GLBXfbywoQIv3pAMzFKceNnKMZ62skBIkW+70WOBIN0lmvvkOy3ACyRbWO14a8GcZVlgNRGxQGWaDq5rH+BTvTpWF/z2m/qpqUQyFUZdB6qA7MbA2zhWN31PvDaoVQ/KARKrsH/pkcg1Xh1MHMTlmVs/y5UNp9urTK+5Hr6WKcrlKoCEAxjLzRkpfqnPIwJRJP44ZBdmKcy6cEY7+5/PaxUkh+H+1RoPSvRvwct2v+L5GgmZLXJcvpDW92Td6jfT+JRdA=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Fri, 24 May 2019 05:51:06 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:43908 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389716AbfEXJvG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 05:51:06 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 49E5428A28D
+Subject: Re: [PATCH v5] platform/chrome: wilco_ec: Add telemetry char device
+ interface
+To:     Nick Crews <ncrews@chromium.org>, bleung@chromium.org
+Cc:     linux-kernel@vger.kernel.org, dlaurie@chromium.org,
+        djkurtz@chromium.org, dtor@google.com, sjg@chromium.org,
+        bartfab@chromium.org, lamzin@google.com, jchwong@google.com
+References: <20190521192045.261801-1-ncrews@chromium.org>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <2b8eccfa-0117-37c3-44cb-b1220b9678f9@collabora.com>
+Date:   Fri, 24 May 2019 11:51:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: effba48d-ddd4-4c74-4988-08d6e02d0822
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 May 2019 09:48:53.2059
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: chuanhua.han@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4615
+In-Reply-To: <20190521192045.261801-1-ncrews@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFJvYiBIZXJyaW5nDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTog
-TGVvIExpDQo+IFNlbnQ6IDIwMTnE6jXUwjIyyNUgMTQ6NTANCj4gVG86IENodWFuaHVhIEhhbiA8
-Y2h1YW5odWEuaGFuQG54cC5jb20+OyBTaGF3biBHdW8NCj4gPHNoYXduZ3VvQGtlcm5lbC5vcmc+
-OyBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPg0KPiBDYzogbWFyay5ydXRsYW5kQGFybS5j
-b207IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gZGV2aWNldHJlZUB2
-Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFlpbmcgWmhhbmcN
-Cj4gPHlpbmcuemhhbmcyMjQ1NUBueHAuY29tPg0KPiBTdWJqZWN0OiBSRTogW0VYVF0gUmU6IFtQ
-QVRDSF0gYXJtNjQ6IGR0czogbHMxMDI4YTogZml4IHdhdGNoZG9nIGRldmljZSBub2RlDQo+IA0K
-PiANCj4gDQo+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiBGcm9tOiBDaHVhbmh1
-YSBIYW4NCj4gPiBTZW50OiBXZWRuZXNkYXksIE1heSAyMiwgMjAxOSAxOjI2IEFNDQo+ID4gVG86
-IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwu
-b3JnPg0KPiA+IENjOiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgbGludXgtYXJtLWtlcm5lbEBsaXN0
-cy5pbmZyYWRlYWQub3JnOw0KPiA+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1r
-ZXJuZWxAdmdlci5rZXJuZWwub3JnOyBZaW5nIFpoYW5nDQo+ID4gPHlpbmcuemhhbmcyMjQ1NUBu
-eHAuY29tPg0KPiA+IFN1YmplY3Q6IFJFOiBbRVhUXSBSZTogW1BBVENIXSBhcm02NDogZHRzOiBs
-czEwMjhhOiBmaXggd2F0Y2hkb2cNCj4gPiBkZXZpY2Ugbm9kZQ0KPiA+DQo+ID4NCj4gPg0KPiA+
-ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IExlbyBMaQ0KPiA+ID4g
-U2VudDogMjAxOcTqNdTCMjLI1SA0OjE1DQo+ID4gPiBUbzogQ2h1YW5odWEgSGFuIDxjaHVhbmh1
-YS5oYW5AbnhwLmNvbT47IFNoYXduIEd1bw0KPiA+ID4gPHNoYXduZ3VvQGtlcm5lbC5vcmc+DQo+
-ID4gPiBDYzogbWFyay5ydXRsYW5kQGFybS5jb207IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
-cmFkZWFkLm9yZzsNCj4gPiA+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJu
-ZWxAdmdlci5rZXJuZWwub3JnOyBZaW5nIFpoYW5nDQo+ID4gPiA8eWluZy56aGFuZzIyNDU1QG54
-cC5jb20+DQo+ID4gPiBTdWJqZWN0OiBSRTogW0VYVF0gUmU6IFtQQVRDSF0gYXJtNjQ6IGR0czog
-bHMxMDI4YTogZml4IHdhdGNoZG9nDQo+ID4gPiBkZXZpY2Ugbm9kZQ0KPiA+ID4NCj4gPiA+DQo+
-ID4gPg0KPiA+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gPiBGcm9tOiBD
-aHVhbmh1YSBIYW4NCj4gPiA+ID4gU2VudDogVHVlc2RheSwgTWF5IDIxLCAyMDE5IDg6MDAgQU0N
-Cj4gPiA+ID4gVG86IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgU2hhd24gR3VvIDxzaGF3
-bmd1b0BrZXJuZWwub3JnPg0KPiA+ID4gPiBDYzogbWFyay5ydXRsYW5kQGFybS5jb207IGxpbnV4
-LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gPiA+ID4gZGV2aWNldHJlZUB2Z2Vy
-Lmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFlpbmcNCj4gPiA+ID4g
-WmhhbmcgPHlpbmcuemhhbmcyMjQ1NUBueHAuY29tPg0KPiA+ID4gPiBTdWJqZWN0OiBSRTogW0VY
-VF0gUmU6IFtQQVRDSF0gYXJtNjQ6IGR0czogbHMxMDI4YTogZml4IHdhdGNoZG9nDQo+ID4gPiA+
-IGRldmljZSBub2RlDQo+ID4gPiA+DQo+ID4gPiA+DQo+ID4gPiA+DQo+ID4gPiA+ID4gLS0tLS1P
-cmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+ID4gPiBGcm9tOiBMZW8gTGkNCj4gPiA+ID4gPiBT
-ZW50OiAyMDE5xOo11MIxOMjVIDY6MDENCj4gPiA+ID4gPiBUbzogQ2h1YW5odWEgSGFuIDxjaHVh
-bmh1YS5oYW5AbnhwLmNvbT47IFNoYXduIEd1bw0KPiA+ID4gPiA+IDxzaGF3bmd1b0BrZXJuZWwu
-b3JnPg0KPiA+ID4gPiA+IENjOiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgbGludXgtYXJtLWtlcm5l
-bEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiA+ID4gPiA+IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
-b3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBZaW5nDQo+ID4gPiA+ID4gWmhhbmcg
-PHlpbmcuemhhbmcyMjQ1NUBueHAuY29tPg0KPiA+ID4gPiA+IFN1YmplY3Q6IFJFOiBbRVhUXSBS
-ZTogW1BBVENIXSBhcm02NDogZHRzOiBsczEwMjhhOiBmaXggd2F0Y2hkb2cNCj4gPiA+ID4gPiBk
-ZXZpY2Ugbm9kZQ0KPiA+ID4gPiA+DQo+ID4gPiA+ID4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+ID4g
-LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+ID4gPiA+IEZyb206IENodWFuaHVhIEhh
-bg0KPiA+ID4gPiA+ID4gU2VudDogRnJpZGF5LCBNYXkgMTcsIDIwMTkgMToxMSBBTQ0KPiA+ID4g
-PiA+ID4gVG86IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz4NCj4gPiA+ID4gPiA+IENj
-OiBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47IG1hcmsucnV0bGFuZEBhcm0uY29tOw0KPiA+
-ID4gPiA+ID4gbGludXgtYXJtLSBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gPiA+ID4g
-PiA+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC0ga2VybmVsQHZnZXIua2VybmVs
-Lm9yZzsNCj4gPiA+ID4gPiA+IFlpbmcgWmhhbmcgPHlpbmcuemhhbmcyMjQ1NUBueHAuY29tPg0K
-PiA+ID4gPiA+ID4gU3ViamVjdDogUkU6IFtFWFRdIFJlOiBbUEFUQ0hdIGFybTY0OiBkdHM6IGxz
-MTAyOGE6IGZpeA0KPiA+ID4gPiA+ID4gd2F0Y2hkb2cgZGV2aWNlIG5vZGUNCj4gPiA+ID4gPiA+
-DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gLS0tLS1PcmlnaW5hbCBN
-ZXNzYWdlLS0tLS0NCj4gPiA+ID4gPiA+ID4gRnJvbTogU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJu
-ZWwub3JnPg0KPiA+ID4gPiA+ID4gPiBTZW50OiAyMDE5xOo11MIxN8jVIDEwOjM4DQo+ID4gPiA+
-ID4gPiA+IFRvOiBDaHVhbmh1YSBIYW4gPGNodWFuaHVhLmhhbkBueHAuY29tPg0KPiA+ID4gPiA+
-ID4gPiBDYzogTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBtYXJrLnJ1dGxhbmRAYXJtLmNv
-bTsNCj4gPiA+ID4gPiA+ID4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0K
-PiA+ID4gPiA+ID4gPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZn
-ZXIua2VybmVsLm9yZzsNCj4gPiA+ID4gPiA+ID4gWWluZyBaaGFuZyA8eWluZy56aGFuZzIyNDU1
-QG54cC5jb20+DQo+ID4gPiA+ID4gPiA+IFN1YmplY3Q6IFtFWFRdIFJlOiBbUEFUQ0hdIGFybTY0
-OiBkdHM6IGxzMTAyOGE6IGZpeCB3YXRjaGRvZw0KPiA+ID4gPiA+ID4gPiBkZXZpY2Ugbm9kZQ0K
-PiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiBDYXV0aW9uOiBFWFQgRW1haWwNCj4gPiA+ID4g
-PiA+ID4NCj4gPiA+ID4gPiA+ID4gT24gVGh1LCBNYXkgMDksIDIwMTkgYXQgMDM6MDY6NTdQTSAr
-MDgwMCwgQ2h1YW5odWEgSGFuIHdyb3RlOg0KPiA+ID4gPiA+ID4gPiA+IGxzMTAyOGEgcGxhdGZv
-cm0gdXNlcyBzcDgwNSB3YXRjaGRvZywgYW5kIHVzZSAxLzE2DQo+ID4gPiA+ID4gPiA+ID4gcGxh
-dGZvcm0gY2xvY2sgYXMgdGltZXIgY2xvY2ssIHRoaXMgcGF0Y2ggZml4IGRldmljZSB0cmVlIG5v
-ZGUuDQo+ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBaaGFu
-ZyBZaW5nLTIyNDU1IDx5aW5nLnpoYW5nMjI0NTVAbnhwLmNvbT4NCj4gPiA+ID4gPiA+ID4gPiBT
-aWduZWQtb2ZmLWJ5OiBDaHVhbmh1YSBIYW4gPGNodWFuaHVhLmhhbkBueHAuY29tPg0KPiA+ID4g
-PiA+ID4gPiA+IC0tLQ0KPiA+ID4gPiA+ID4gPiA+ICAuLi4vYXJtNjQvYm9vdC9kdHMvZnJlZXNj
-YWxlL2ZzbC1sczEwMjhhLmR0c2kgfCAxOQ0KPiA+ID4gPiA+ID4gPiA+ICsrKysrKysrKysrKy0t
-LS0tLS0NCj4gPiA+ID4gPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDEyIGluc2VydGlvbnMoKyks
-IDcgZGVsZXRpb25zKC0pDQo+ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gPiBkaWZmIC0t
-Z2l0DQo+ID4gPiA+ID4gPiA+ID4gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wt
-bHMxMDI4YS5kdHNpDQo+ID4gPiA+ID4gPiA+ID4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVz
-Y2FsZS9mc2wtbHMxMDI4YS5kdHNpDQo+ID4gPiA+ID4gPiA+ID4gaW5kZXggYjA0NTgxMjQ5ZjBi
-Li4xNTEwYjE4NTgyNDYgMTAwNjQ0DQo+ID4gPiA+ID4gPiA+ID4gLS0tIGEvYXJjaC9hcm02NC9i
-b290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0KPiA+ID4gPiA+ID4gPiA+ICsrKyBi
-L2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kNCj4gPiA+ID4g
-PiA+ID4gPiBAQCAtMjg1LDEzICsyODUsMTggQEANCj4gPiA+ID4gPiA+ID4gPiAgICAgICAgICAg
-ICAgICAgICAgICAgI2ludGVycnVwdC1jZWxscyA9IDwyPjsNCj4gPiA+ID4gPiA+ID4gPiAgICAg
-ICAgICAgICAgIH07DQo+ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gPiAtICAgICAgICAg
-ICAgIHdkb2cwOiB3YXRjaGRvZ0AyM2MwMDAwIHsNCj4gPiA+ID4gPiA+ID4gPiAtICAgICAgICAg
-ICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJmc2wsbHMxMDI4YS13ZHQiLA0KPiA+ID4gImZzbCxp
-bXgyMS13ZHQiOw0KPiA+ID4gPiA+ID4gPiA+IC0gICAgICAgICAgICAgICAgICAgICByZWcgPSA8
-MHgwIDB4MjNjMDAwMCAweDAgMHgxMDAwMD47DQo+ID4gPiA+ID4gPiA+ID4gLSAgICAgICAgICAg
-ICAgICAgICAgIGludGVycnVwdHMgPSA8R0lDX1NQSSA1OQ0KPiA+ID4gPiA+IElSUV9UWVBFX0xF
-VkVMX0hJR0g+Ow0KPiA+ID4gPiA+ID4gPiA+IC0gICAgICAgICAgICAgICAgICAgICBjbG9ja3Mg
-PSA8JmNsb2NrZ2VuIDQgMT47DQo+ID4gPiA+ID4gPiA+ID4gLSAgICAgICAgICAgICAgICAgICAg
-IGJpZy1lbmRpYW47DQo+ID4gPiA+ID4gPiA+ID4gLSAgICAgICAgICAgICAgICAgICAgIHN0YXR1
-cyA9ICJkaXNhYmxlZCI7DQo+ID4gPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICBjbHVzdGVyMV9j
-b3JlMF93YXRjaGRvZzogd2R0QGMwMDAwMDAgew0KPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4g
-PiBLZWVwICd3YXRjaGRvZycgYXMgdGhlIG5vZGUgbmFtZSwNCj4gPiA+ID4gPiA+IFRoYW5rcyBm
-b3IgeW91ciByZXBsYXkNCj4gPiA+ID4gPiA+IERvIHlvdSBtZWFuIHJlcGxhY2UgdGhlIKGud2R0
-oa8gd2l0aCChrndhdGNoZG9noa8/DQo+ID4gPiA+ID4gPiBhbmQga2VlcCBub2RlcyBzb3J0IGlu
-IHVuaXQtYWRkcmVzcy4NCj4gPiA+ID4gPiA+IFdoYXQgZG9lcyB0aGlzIG1lYW4/DQo+ID4gPiA+
-ID4NCj4gPiA+ID4gPiBUaGF0IG1lYW5zIG9yZGVyIHRoZSBub2RlcyBieSB0aGUgYWRkcmVzc2Vz
-IChlLmcuIGMwMDAwMDAsDQo+ID4gPiA+ID4gYzAxMDAwMCkNCj4gPiA+ID4gVGhlIGN1cnJlbnQg
-b3JkZXIgaXMgY29ycmVjdKOoVGhlIGZpcnN0IGlzIGMwMDAwMDAsIHRoZW4gYzAwMDAwMKOpLg0K
-PiA+ID4NCj4gPiA+IEJ1dCB0aGV5IGFyZSBhZGRlZCBhZnRlciBncGlvQDIzMjAwMDAgYW5kIGJl
-Zm9yZSBzYXRhQDMyMDAwMDAuDQo+ID4gSSBjaGFuZ2VkIGFuZCBtYWRlIHRoZSBzZWNvbmQgdmVy
-c2lvbiBvZiB0aGUgcGF0Y2gsIGJ1dCBJIGZvdW5kIHRoZQ0KPiA+IGZvbGxvd2luZyBlcnJvciB3
-aGVuIEkgZXhlY3V0ZWQgLi9zY3JpcHRzL2NoZWNrcGF0Y2gucGwgeHh4LnBhdGNoIHRvDQo+ID4g
-Y2hlY2sgdGhlIHBhdGNoOg0KPiA+DQo+ID4gV0FSTklORzogRFQgY29tcGF0aWJsZSBzdHJpbmcg
-dmVuZG9yICJhcm0iIGFwcGVhcnMgdW4tZG9jdW1lbnRlZCAtLQ0KPiA+IGNoZWNrIC4vRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQNCj4gPiAjNDM6
-IEZJTEU6IGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2k6MzUx
-Og0KPiA+ICsgY29tcGF0aWJsZSA9ICJhcm0sc3A4MDUiLCAiYXJtLHByaW1lY2VsbCI7DQo+ID4N
-Cj4gPiBIb3dldmVyLCB0aGVyZSBpcyBubyB2ZW5kb3ItcHJlZml4ZXMudHh0IGZpbGUgaW4gdGhl
-DQo+ID4gLi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvIGRpcmVjdG9yeSwgb25s
-eSB2ZW5kb3ItDQo+ID4gcHJlZml4ZXMueWFtbC4NCj4gPiBNb3Jlb3ZlciwgdGhlcmUgYXJlIKGu
-YXJtoa8gdmVuZG9ycyBpbiB2ZW5kb3ItcHJlZml4ZXMueWFtbC4NCj4gDQo+IEFkZGVkIFJvYiBI
-ZXJyaW5nIHRvIHRoZSB0aHJlYWQuDQo+IA0KPiA+IFJlcXVlc3QgaGVscKOsdGhhbmtzDQpIb3cg
-Y2FuIEkgc29sdmUgdGhpcyBwYXRjaCBjaGVjayBlcnJvcj8gQXNrIGZvciBoZWxwLCB0aGFuayB5
-b3UhDQo+ID4gPg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+IFNoYXdu
-DQo+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgIGNv
-bXBhdGlibGUgPSAiYXJtLHNwODA1IiwNCj4gImFybSxwcmltZWNlbGwiOw0KPiA+ID4gPiA+ID4g
-PiA+ICsgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MHgwIDB4YzAwMDAwMCAweDAgMHgxMDAw
-PjsNCj4gPiA+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgY2xvY2tzID0gPCZjbG9j
-a2dlbiA0IDE1PiwNCj4gPiA+ID4gPiA+ID4gPiArIDwmY2xvY2tnZW4NCj4gPiA+ID4gPiA+ID4g
-PiArIDQNCj4gPiA+IDE1PjsNCj4gPiA+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAg
-Y2xvY2stbmFtZXMgPSAiYXBiX3BjbGsiLCAid2RvZ19jbGsiOw0KPiA+ID4gPiA+ID4gPiA+ICsg
-ICAgICAgICAgICAgfTsNCj4gPiA+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiA+ID4gKyAgICAg
-ICAgICAgICBjbHVzdGVyMV9jb3JlMV93YXRjaGRvZzogd2R0QGMwMTAwMDAgew0KPiA+ID4gPiA+
-ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gImFybSxzcDgwNSIsDQo+
-ICJhcm0scHJpbWVjZWxsIjsNCj4gPiA+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAg
-cmVnID0gPDB4MCAweGMwMTAwMDAgMHgwIDB4MTAwMD47DQo+ID4gPiA+ID4gPiA+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgIGNsb2NrcyA9IDwmY2xvY2tnZW4gNCAxNT4sDQo+ID4gPiA+ID4gPiA+
-ID4gKyA8JmNsb2NrZ2VuDQo+ID4gPiA+ID4gPiA+ID4gKyA0DQo+ID4gPiAxNT47DQo+ID4gPiA+
-ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgIGNsb2NrLW5hbWVzID0gImFwYl9wY2xrIiwN
-Cj4gPiA+ID4gPiA+ID4gPiArICJ3ZG9nX2NsayI7DQo+ID4gPiA+ID4gPiA+ID4gICAgICAgICAg
-ICAgICB9Ow0KPiA+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ID4gICAgICAgICAgICAgICBz
-YXRhOiBzYXRhQDMyMDAwMDAgew0KPiA+ID4gPiA+ID4gPiA+IC0tDQo+ID4gPiA+ID4gPiA+ID4g
-Mi4xNy4xDQo+ID4gPiA+ID4gPiA+ID4NCg==
+Hi Nick,
+
+I'm mostly fine with it but ...
+
+On 21/5/19 21:20, Nick Crews wrote:
+> The Wilco Embedded Controller is able to send telemetry data
+> which is useful for enterprise applications. A daemon running on
+> the OS sends a command to the EC via a write() to a char device,
+> and can read the response with a read(). The write() request is
+> verified by the driver to ensure that it is performing only one
+> of the whitelisted commands, and that no extraneous data is
+> being transmitted to the EC. The response is passed directly
+> back to the reader with no modification.
+> 
+> The character device will appear as /dev/wilco_telemN, where N
+> is some small non-negative integer, starting with 0. Only one
+
+Still remains my question in the previous version.
+
+We will really have more than one /dev/wilco_telemN devices handled by this
+driver? Why not use a Miscellaneous Character Device Driver that will simplify
+the code?
+
+Thanks,
+ Enric
+
+
+> process may have the file descriptor open at a time. The calling
+> userspace program needs to keep the device file descriptor open
+> between the calls to write() and read() in order to preserve the
+> response. Up to 32 bytes will be available for reading.
+> 
+> For testing purposes, try requesting the EC's firmware build
+> date, by sending the WILCO_EC_TELEM_GET_VERSION command with
+> argument index=3. i.e. write [0x38, 0x00, 0x03]
+> to the device node. An ASCII string of the build date is
+> returned.
+> 
+> Signed-off-by: Nick Crews <ncrews@chromium.org>
+> ---
+> v5 changes:
+> - Free device data in callback so that it isn't freed while
+>   the character device is open.
+> - Remove under-used dev_num variable in probe()
+> - Change pr_warn to pr_err in module_init()
+> - Allow for telemetry requests smaller than 32 bytes,
+>   and improve the validation on the requests.
+> - Return -EMSGSIZE instead of -EINVAL in for too-long requests.
+> - Zero out response buffer before making a request, so the
+>   response is more clearly padded.
+> v3 changes:
+> - Change WILCO_EC_CMD_* commands to WILCO_EC_TELEM_* in
+>   order to differentiate from the 0xF0 commannds.
+> - Use kernel-doc style for wilco_ec_telem_request.
+> - Change "GPL v2" to "GPL" in MODULE_LICENSE.
+> - Fix formatting in check_args_length().
+> v2 changes:
+> - Add verification of userspace requests, so that only
+>   whitelisted commands and args can get sent to the EC
+> - Use EC firmware build date request as example/test
+> - Pass the wilco_ec_device to the child driver better,
+>   instead of the child driver needing to access the parent
+>   devices' data.
+> 
+>  drivers/platform/chrome/wilco_ec/Kconfig     |   7 +
+>  drivers/platform/chrome/wilco_ec/Makefile    |   2 +
+>  drivers/platform/chrome/wilco_ec/core.c      |  13 +
+>  drivers/platform/chrome/wilco_ec/debugfs.c   |   2 +-
+>  drivers/platform/chrome/wilco_ec/telemetry.c | 450 +++++++++++++++++++
+>  include/linux/platform_data/wilco-ec.h       |   2 +
+>  6 files changed, 475 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/platform/chrome/wilco_ec/telemetry.c
+> 
+> diff --git a/drivers/platform/chrome/wilco_ec/Kconfig b/drivers/platform/chrome/wilco_ec/Kconfig
+> index e09e4cebe9b4..2fc03aa624cf 100644
+> --- a/drivers/platform/chrome/wilco_ec/Kconfig
+> +++ b/drivers/platform/chrome/wilco_ec/Kconfig
+> @@ -18,3 +18,10 @@ config WILCO_EC_DEBUGFS
+>  	  manipulation and allow for testing arbitrary commands.  This
+>  	  interface is intended for debug only and will not be present
+>  	  on production devices.
+> +
+> +config WILCO_EC_TELEMETRY
+> +	tristate "Enable querying telemetry data from EC"
+> +	depends on WILCO_EC
+> +	help
+> +	  If you say Y here, you get support to query EC telemetry data from
+> +	  /dev/wilco_telem0 using write() and then read().
+> diff --git a/drivers/platform/chrome/wilco_ec/Makefile b/drivers/platform/chrome/wilco_ec/Makefile
+> index 72df9b5e1983..72a99f854241 100644
+> --- a/drivers/platform/chrome/wilco_ec/Makefile
+> +++ b/drivers/platform/chrome/wilco_ec/Makefile
+> @@ -4,3 +4,5 @@ wilco_ec-objs				:= core.o mailbox.o properties.o sysfs.o
+>  obj-$(CONFIG_WILCO_EC)			+= wilco_ec.o
+>  wilco_ec_debugfs-objs			:= debugfs.o
+>  obj-$(CONFIG_WILCO_EC_DEBUGFS)		+= wilco_ec_debugfs.o
+> +wilco_ec_telem-objs			:= telemetry.o
+> +obj-$(CONFIG_WILCO_EC_TELEMETRY)	+= wilco_ec_telem.o
+> diff --git a/drivers/platform/chrome/wilco_ec/core.c b/drivers/platform/chrome/wilco_ec/core.c
+> index 45cf3a5ed062..3724bf4b77c6 100644
+> --- a/drivers/platform/chrome/wilco_ec/core.c
+> +++ b/drivers/platform/chrome/wilco_ec/core.c
+> @@ -93,8 +93,20 @@ static int wilco_ec_probe(struct platform_device *pdev)
+>  		goto unregister_rtc;
+>  	}
+>  
+> +	/* Register child device that will be found by the telemetry driver. */
+> +	ec->telem_pdev = platform_device_register_data(dev, "wilco_telem",
+> +						       PLATFORM_DEVID_AUTO,
+> +						       ec, sizeof(*ec));
+> +	if (IS_ERR(ec->telem_pdev)) {
+> +		dev_err(dev, "Failed to create telemetry platform device\n");
+> +		ret = PTR_ERR(ec->telem_pdev);
+> +		goto remove_sysfs;
+> +	}
+> +
+>  	return 0;
+>  
+> +remove_sysfs:
+> +	wilco_ec_remove_sysfs(ec);
+>  unregister_rtc:
+>  	platform_device_unregister(ec->rtc_pdev);
+>  unregister_debugfs:
+> @@ -109,6 +121,7 @@ static int wilco_ec_remove(struct platform_device *pdev)
+>  	struct wilco_ec_device *ec = platform_get_drvdata(pdev);
+>  
+>  	wilco_ec_remove_sysfs(ec);
+> +	platform_device_unregister(ec->telem_pdev);
+>  	platform_device_unregister(ec->rtc_pdev);
+>  	if (ec->debugfs_pdev)
+>  		platform_device_unregister(ec->debugfs_pdev);
+> diff --git a/drivers/platform/chrome/wilco_ec/debugfs.c b/drivers/platform/chrome/wilco_ec/debugfs.c
+> index 281ec595e8e0..8d65a1e2f1a3 100644
+> --- a/drivers/platform/chrome/wilco_ec/debugfs.c
+> +++ b/drivers/platform/chrome/wilco_ec/debugfs.c
+> @@ -16,7 +16,7 @@
+>  
+>  #define DRV_NAME "wilco-ec-debugfs"
+>  
+> -/* The 256 raw bytes will take up more space when represented as a hex string */
+> +/* The raw bytes will take up more space when represented as a hex string */
+>  #define FORMATTED_BUFFER_SIZE (EC_MAILBOX_DATA_SIZE * 4)
+>  
+>  struct wilco_ec_debugfs {
+> diff --git a/drivers/platform/chrome/wilco_ec/telemetry.c b/drivers/platform/chrome/wilco_ec/telemetry.c
+> new file mode 100644
+> index 000000000000..94cdc166c840
+> --- /dev/null
+> +++ b/drivers/platform/chrome/wilco_ec/telemetry.c
+> @@ -0,0 +1,450 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Telemetry communication for Wilco EC
+> + *
+> + * Copyright 2019 Google LLC
+> + *
+> + * The Wilco Embedded Controller is able to send telemetry data
+> + * which is useful for enterprise applications. A daemon running on
+> + * the OS sends a command to the EC via a write() to a char device,
+> + * and can read the response with a read(). The write() request is
+> + * verified by the driver to ensure that it is performing only one
+> + * of the whitelisted commands, and that no extraneous data is
+> + * being transmitted to the EC. The response is passed directly
+> + * back to the reader with no modification.
+> + *
+> + * The character device will appear as /dev/wilco_telemN, where N
+> + * is some small non-negative integer, starting with 0. Only one
+> + * process may have the file descriptor open at a time. The calling
+> + * userspace program needs to keep the device file descriptor open
+> + * between the calls to write() and read() in order to preserve the
+> + * response. Up to 32 bytes will be available for reading.
+> + *
+> + * For testing purposes, try requesting the EC's firmware build
+> + * date, by sending the WILCO_EC_TELEM_GET_VERSION command with
+> + * argument index=3. i.e. write [0x38, 0x00, 0x03]
+> + * to the device node. An ASCII string of the build date is
+> + * returned.
+> + */
+> +
+> +#include <linux/cdev.h>
+> +#include <linux/device.h>
+> +#include <linux/fs.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_data/wilco-ec.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +#include <linux/types.h>
+> +#include <linux/uaccess.h>
+> +
+> +#define TELEM_DEV_NAME		"wilco_telem"
+> +#define TELEM_CLASS_NAME	TELEM_DEV_NAME
+> +#define DRV_NAME		TELEM_DEV_NAME
+> +#define TELEM_DEV_NAME_FMT	(TELEM_DEV_NAME "%d")
+> +static struct class telem_class = {
+> +	.owner	= THIS_MODULE,
+> +	.name	= TELEM_CLASS_NAME,
+> +};
+> +
+> +/* Keep track of all the device numbers used. */
+> +#define TELEM_MAX_DEV 128
+> +static int telem_major;
+> +static DEFINE_IDA(telem_ida);
+> +
+> +/* EC telemetry command codes */
+> +#define WILCO_EC_TELEM_GET_LOG			0x99
+> +#define WILCO_EC_TELEM_GET_VERSION		0x38
+> +#define WILCO_EC_TELEM_GET_FAN_INFO		0x2E
+> +#define WILCO_EC_TELEM_GET_DIAG_INFO		0xFA
+> +#define WILCO_EC_TELEM_GET_TEMP_INFO		0x95
+> +#define WILCO_EC_TELEM_GET_TEMP_READ		0x2C
+> +#define WILCO_EC_TELEM_GET_BATT_EXT_INFO	0x07
+> +
+> +#define TELEM_ARGS_SIZE_MAX	30
+> +
+> +/**
+> + * struct wilco_ec_telem_request - Telemetry command and arguments sent to EC.
+> + * @command: One of WILCO_EC_TELEM_GET_* command codes.
+> + * @reserved: Must be 0.
+> + * @args: The first N bytes are one of telem_args_get_* structs, the rest is 0.
+> + */
+> +struct wilco_ec_telem_request {
+> +	u8 command;
+> +	u8 reserved;
+> +	u8 args[TELEM_ARGS_SIZE_MAX];
+> +} __packed;
+> +
+> +/*
+> + * The following telem_args_get_* structs are embedded within the |args| field
+> + * of wilco_ec_telem_request.
+> + */
+> +
+> +struct telem_args_get_log {
+> +	u8 log_type;
+> +	u8 log_index;
+> +} __packed;
+> +
+> +/*
+> + * Get a piece of info about the EC firmware version:
+> + * 0 = label
+> + * 1 = svn_rev
+> + * 2 = model_no
+> + * 3 = build_date
+> + * 4 = frio_version
+> + */
+> +struct telem_args_get_version {
+> +	u8 index;
+> +} __packed;
+> +
+> +struct telem_args_get_fan_info {
+> +	u8 command;
+> +	u8 fan_number;
+> +	u8 arg;
+> +} __packed;
+> +
+> +struct telem_args_get_diag_info {
+> +	u8 type;
+> +	u8 sub_type;
+> +} __packed;
+> +
+> +struct telem_args_get_temp_info {
+> +	u8 command;
+> +	u8 index;
+> +	u8 field;
+> +	u8 zone;
+> +} __packed;
+> +
+> +struct telem_args_get_temp_read {
+> +	u8 sensor_index;
+> +} __packed;
+> +
+> +struct telem_args_get_batt_ext_info {
+> +	u8 var_args[5];
+> +} __packed;
+> +
+> +/**
+> + * check_telem_request() - Ensure that a request from userspace is valid.
+> + * @rq: Request buffer copied from userspace.
+> + * @size: Number of bytes copied from userspace.
+> + *
+> + * Return: 0 if valid, -EINVAL if bad command or reserved byte is non-zero,
+> + *         -EMSGSIZE if the request is too long.
+> + *
+> + * We do not want to allow userspace to send arbitrary telemetry commands to
+> + * the EC. Therefore we check to ensure that
+> + * 1. The request follows the format of struct wilco_ec_telem_request.
+> + * 2. The supplied command code is one of the whitelisted commands.
+> + * 3. The request only contains the necessary data for the header and arguments.
+> + */
+> +static int check_telem_request(struct wilco_ec_telem_request *rq,
+> +			       size_t size)
+> +{
+> +	size_t max_size = offsetof(struct wilco_ec_telem_request, args);
+> +
+> +	if (rq->reserved)
+> +		return -EINVAL;
+> +
+> +	switch (rq->command) {
+> +	case WILCO_EC_TELEM_GET_LOG:
+> +		max_size += sizeof(struct telem_args_get_log);
+> +		break;
+> +	case WILCO_EC_TELEM_GET_VERSION:
+> +		max_size += sizeof(struct telem_args_get_version);
+> +		break;
+> +	case WILCO_EC_TELEM_GET_FAN_INFO:
+> +		max_size += sizeof(struct telem_args_get_fan_info);
+> +		break;
+> +	case WILCO_EC_TELEM_GET_DIAG_INFO:
+> +		max_size += sizeof(struct telem_args_get_diag_info);
+> +		break;
+> +	case WILCO_EC_TELEM_GET_TEMP_INFO:
+> +		max_size += sizeof(struct telem_args_get_temp_info);
+> +		break;
+> +	case WILCO_EC_TELEM_GET_TEMP_READ:
+> +		max_size += sizeof(struct telem_args_get_temp_read);
+> +		break;
+> +	case WILCO_EC_TELEM_GET_BATT_EXT_INFO:
+> +		max_size += sizeof(struct telem_args_get_batt_ext_info);
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	return (size <= max_size) ? 0 : -EMSGSIZE;
+> +}
+> +
+> +/**
+> + * struct telem_device_data - Data for a Wilco EC device that queries telemetry.
+> + * @cdev: Char dev that userspace reads and polls from.
+> + * @dev: Device associated with the %cdev.
+> + * @ec: Wilco EC that we will be communicating with using the mailbox interface.
+> + * @available: Boolean of if the device can be opened.
+> + */
+> +struct telem_device_data {
+> +	struct device dev;
+> +	struct cdev cdev;
+> +	struct wilco_ec_device *ec;
+> +	atomic_t available;
+> +};
+> +
+> +#define TELEM_RESPONSE_SIZE	EC_MAILBOX_DATA_SIZE
+> +
+> +/**
+> + * struct telem_session_data - Data that exists between open() and release().
+> + * @dev_data: Pointer to get back to the device data and EC.
+> + * @request: Command and arguments sent to EC.
+> + * @response: Response buffer of data from EC.
+> + * @has_msg: Is there data available to read from a previous write?
+> + */
+> +struct telem_session_data {
+> +	struct telem_device_data *dev_data;
+> +	struct wilco_ec_telem_request request;
+> +	u8 response[TELEM_RESPONSE_SIZE];
+> +	bool has_msg;
+> +};
+> +
+> +/**
+> + * telem_open() - Callback for when the device node is opened.
+> + * @inode: inode for this char device node.
+> + * @filp: file for this char device node.
+> + *
+> + * We need to ensure that after writing a command to the device,
+> + * the same userspace process reads the corresponding result.
+> + * Therefore, we increment a refcount on opening the device, so that
+> + * only one process can communicate with the EC at a time.
+> + *
+> + * Return: 0 on success, or negative error code on failure.
+> + */
+> +static int telem_open(struct inode *inode, struct file *filp)
+> +{
+> +	struct telem_device_data *dev_data;
+> +	struct telem_session_data *sess_data;
+> +
+> +	/* Ensure device isn't already open */
+> +	dev_data = container_of(inode->i_cdev, struct telem_device_data, cdev);
+> +	if (atomic_cmpxchg(&dev_data->available, 1, 0) == 0)
+> +		return -EBUSY;
+> +
+> +	get_device(&dev_data->dev);
+> +
+> +	sess_data = kzalloc(sizeof(*sess_data), GFP_KERNEL);
+> +	if (!sess_data) {
+> +		atomic_set(&dev_data->available, 1);
+> +		return -ENOMEM;
+> +	}
+> +	sess_data->dev_data = dev_data;
+> +	sess_data->has_msg = false;
+> +
+> +	nonseekable_open(inode, filp);
+> +	filp->private_data = sess_data;
+> +
+> +	return 0;
+> +}
+> +
+> +static ssize_t telem_write(struct file *filp, const char __user *buf,
+> +			   size_t count, loff_t *pos)
+> +{
+> +	struct telem_session_data *sess_data = filp->private_data;
+> +	struct wilco_ec_message msg = {};
+> +	int ret;
+> +
+> +	if (count > sizeof(sess_data->request))
+> +		return -EMSGSIZE;
+> +	if (copy_from_user(&sess_data->request, buf, count))
+> +		return -EFAULT;
+> +	ret = check_telem_request(&sess_data->request, count);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	memset(sess_data->response, 0, sizeof(sess_data->response));
+> +	msg.type = WILCO_EC_MSG_TELEMETRY;
+> +	msg.request_data = &sess_data->request;
+> +	msg.request_size = sizeof(sess_data->request);
+> +	msg.response_data = sess_data->response;
+> +	msg.response_size = sizeof(sess_data->response);
+> +
+> +	ret = wilco_ec_mailbox(sess_data->dev_data->ec, &msg);
+> +	if (ret < 0)
+> +		return ret;
+> +	if (ret != sizeof(sess_data->response))
+> +		return -EMSGSIZE;
+> +
+> +	sess_data->has_msg = true;
+> +
+> +	return count;
+> +}
+> +
+> +static ssize_t telem_read(struct file *filp, char __user *buf, size_t count,
+> +			  loff_t *pos)
+> +{
+> +	struct telem_session_data *sess_data = filp->private_data;
+> +
+> +	if (!sess_data->has_msg)
+> +		return -ENODATA;
+> +	if (count > sizeof(sess_data->response))
+> +		return -EINVAL;
+> +
+> +	if (copy_to_user(buf, sess_data->response, count))
+> +		return -EFAULT;
+> +
+> +	sess_data->has_msg = false;
+> +
+> +	return count;
+> +}
+> +
+> +static int telem_release(struct inode *inode, struct file *filp)
+> +{
+> +	struct telem_session_data *sess_data = filp->private_data;
+> +
+> +	atomic_set(&sess_data->dev_data->available, 1);
+> +	put_device(&sess_data->dev_data->dev);
+> +	kfree(sess_data);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct file_operations telem_fops = {
+> +	.open = telem_open,
+> +	.write = telem_write,
+> +	.read = telem_read,
+> +	.release = telem_release,
+> +	.llseek = no_llseek,
+> +	.owner = THIS_MODULE,
+> +};
+> +
+> +/**
+> + * telem_device_free() - Callback to free the telem_device_data structure.
+> + * @d: The device embedded in our device data, which we have been ref counting.
+> + *
+> + * Once all open file descriptors are closed and the device has been removed,
+> + * the refcount of the device will fall to 0 and this will be called.
+> + */
+> +static void telem_device_free(struct device *d)
+> +{
+> +	struct telem_device_data *dev_data;
+> +
+> +	dev_data = container_of(d, struct telem_device_data, dev);
+> +	kfree(dev_data);
+> +}
+> +
+> +/**
+> + * telem_device_probe() - Callback when creating a new device.
+> + * @pdev: platform device that we will be receiving telems from.
+> + *
+> + * This finds a free minor number for the device, allocates and initializes
+> + * some device data, and creates a new device and char dev node.
+> + *
+> + * Return: 0 on success, negative error code on failure.
+> + */
+> +static int telem_device_probe(struct platform_device *pdev)
+> +{
+> +	struct telem_device_data *dev_data;
+> +	int error, minor;
+> +
+> +	/* Get the next available device number */
+> +	minor = ida_alloc_max(&telem_ida, TELEM_MAX_DEV-1, GFP_KERNEL);
+> +	if (minor < 0) {
+> +		error = minor;
+> +		dev_err(&pdev->dev, "Failed to find minor number: %d", error);
+> +		return error;
+> +	}
+> +
+> +	dev_data = kzalloc(sizeof(*dev_data), GFP_KERNEL);
+> +	if (!dev_data) {
+> +		ida_simple_remove(&telem_ida, minor);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	/* Initialize the device data */
+> +	dev_data->ec = dev_get_platdata(&pdev->dev);
+> +	atomic_set(&dev_data->available, 1);
+> +	platform_set_drvdata(pdev, dev_data);
+> +
+> +	/* Initialize the device */
+> +	dev_data->dev.devt = MKDEV(telem_major, minor);
+> +	dev_data->dev.class = &telem_class;
+> +	dev_data->dev.release = telem_device_free;
+> +	dev_set_name(&dev_data->dev, TELEM_DEV_NAME_FMT, minor);
+> +	device_initialize(&dev_data->dev);
+> +
+> +	/* Initialize the character device and add it to userspace */;
+> +	cdev_init(&dev_data->cdev, &telem_fops);
+> +	error = cdev_device_add(&dev_data->cdev, &dev_data->dev);
+> +	if (error) {
+> +		put_device(&dev_data->dev);
+> +		ida_simple_remove(&telem_ida, minor);
+> +		return error;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int telem_device_remove(struct platform_device *pdev)
+> +{
+> +	struct telem_device_data *dev_data = platform_get_drvdata(pdev);
+> +
+> +	cdev_device_del(&dev_data->cdev, &dev_data->dev);
+> +	put_device(&dev_data->dev);
+> +	ida_simple_remove(&telem_ida, MINOR(dev_data->dev.devt));
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver telem_driver = {
+> +	.probe = telem_device_probe,
+> +	.remove = telem_device_remove,
+> +	.driver = {
+> +		.name = DRV_NAME,
+> +	},
+> +};
+> +
+> +static int __init telem_module_init(void)
+> +{
+> +	dev_t dev_num = 0;
+> +	int ret;
+> +
+> +	ret = class_register(&telem_class);
+> +	if (ret) {
+> +		pr_err(DRV_NAME ": Failed registering class: %d", ret);
+> +		return ret;
+> +	}
+> +
+> +	/* Request the kernel for device numbers, starting with minor=0 */
+> +	ret = alloc_chrdev_region(&dev_num, 0, TELEM_MAX_DEV, TELEM_DEV_NAME);
+> +	if (ret) {
+> +		pr_err(DRV_NAME ": Failed allocating dev numbers: %d", ret);
+> +		goto destroy_class;
+> +	}
+> +	telem_major = MAJOR(dev_num);
+> +
+> +	ret = platform_driver_register(&telem_driver);
+> +	if (ret < 0) {
+> +		pr_err(DRV_NAME ": Failed registering driver: %d\n", ret);
+> +		goto unregister_region;
+> +	}
+> +
+> +	return 0;
+> +
+> +unregister_region:
+> +	unregister_chrdev_region(MKDEV(telem_major, 0), TELEM_MAX_DEV);
+> +destroy_class:
+> +	class_unregister(&telem_class);
+> +	ida_destroy(&telem_ida);
+> +	return ret;
+> +}
+> +
+> +static void __exit telem_module_exit(void)
+> +{
+> +	platform_driver_unregister(&telem_driver);
+> +	unregister_chrdev_region(MKDEV(telem_major, 0), TELEM_MAX_DEV);
+> +	class_unregister(&telem_class);
+> +	ida_destroy(&telem_ida);
+> +}
+> +
+> +module_init(telem_module_init);
+> +module_exit(telem_module_exit);
+> +
+> +MODULE_AUTHOR("Nick Crews <ncrews@chromium.org>");
+> +MODULE_DESCRIPTION("Wilco EC telemetry driver");
+> +MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("platform:" DRV_NAME);
+> diff --git a/include/linux/platform_data/wilco-ec.h b/include/linux/platform_data/wilco-ec.h
+> index e3ce9ce49b11..ad03b586a095 100644
+> --- a/include/linux/platform_data/wilco-ec.h
+> +++ b/include/linux/platform_data/wilco-ec.h
+> @@ -29,6 +29,7 @@
+>   * @data_size: Size of the data buffer used for EC communication.
+>   * @debugfs_pdev: The child platform_device used by the debugfs sub-driver.
+>   * @rtc_pdev: The child platform_device used by the RTC sub-driver.
+> + * @telem_pdev: The child platform_device used by the telemetry sub-driver.
+>   */
+>  struct wilco_ec_device {
+>  	struct device *dev;
+> @@ -40,6 +41,7 @@ struct wilco_ec_device {
+>  	size_t data_size;
+>  	struct platform_device *debugfs_pdev;
+>  	struct platform_device *rtc_pdev;
+> +	struct platform_device *telem_pdev;
+>  };
+>  
+>  /**
+> 
