@@ -2,149 +2,140 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FADBC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B34C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FEC520851
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FD0420851
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:31:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390646AbfEXQax (ORCPT
+        id S2390852AbfEXQbQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 12:30:53 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42190 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390021AbfEXQax (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 12:30:53 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 93715AF68;
-        Fri, 24 May 2019 16:30:50 +0000 (UTC)
-Subject: Re: [RFC][PATCH] kernel.h: Add generic roundup_64() macro
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Roger Willcocks <roger@filmlight.ltd.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Leon Romanovsky <leon@kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau@lists.freedesktop.org,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20190523100013.52a8d2a6@gandalf.local.home>
- <CAHk-=wg5HqJ2Kfgpub+tCWQ2_FiFwEW9H1Rm+an-BLGaGvDDXw@mail.gmail.com>
- <20190523112740.7167aba4@gandalf.local.home>
- <e4e875f0-2aa5-89f4-f462-78bedb9c5cde@filmlight.ltd.uk>
- <20190524112656.5ef67c6c@gandalf.local.home>
-From:   Nikolay Borisov <nborisov@suse.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <bd4a85fc-dc56-aae0-4986-003ad4a11ef4@suse.com>
-Date:   Fri, 24 May 2019 19:30:45 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 24 May 2019 12:31:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41744 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390392AbfEXQbP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 12:31:15 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DF3C581122;
+        Fri, 24 May 2019 16:31:09 +0000 (UTC)
+Received: from treble (ovpn-121-106.rdu2.redhat.com [10.10.121.106])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9365210027BC;
+        Fri, 24 May 2019 16:31:06 +0000 (UTC)
+Date:   Fri, 24 May 2019 11:31:04 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Ard Biesheuvel <ard.biesheuvel@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, guillaume.gardet@arm.com,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Jessica Yu <jeyu@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] module/ksymtab: use 64-bit relative reference for target
+ symbol
+Message-ID: <20190524163104.o6xh54x4ngbihneb@treble>
+References: <20190522150239.19314-1-ard.biesheuvel@arm.com>
+ <293c9d0f-dc14-1413-e4b4-4299f0acfb9e@arm.com>
+ <f2141ee5-d07a-6dd9-47c6-97e8fbdccf34@arm.com>
+ <20190523091811.GA26646@fuggles.cambridge.arm.com>
+ <907a9681-cd1d-3326-e3dd-5f6965497720@arm.com>
+ <20190524152045.w3syntzp4bb5jb7u@treble>
+ <CAKv+Gu9DLf9y2uqTo407gLK3AX3pq+HGFxytsoR9C2zfGdUc-A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190524112656.5ef67c6c@gandalf.local.home>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu9DLf9y2uqTo407gLK3AX3pq+HGFxytsoR9C2zfGdUc-A@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 24 May 2019 16:31:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 24, 2019 at 05:55:37PM +0200, Ard Biesheuvel wrote:
+> On Fri, 24 May 2019 at 17:21, Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> >
+> > On Thu, May 23, 2019 at 10:29:39AM +0100, Ard Biesheuvel wrote:
+> > >
+> > >
+> > > On 5/23/19 10:18 AM, Will Deacon wrote:
+> > > > On Thu, May 23, 2019 at 09:41:40AM +0100, Ard Biesheuvel wrote:
+> > > > >
+> > > > >
+> > > > > On 5/22/19 5:28 PM, Ard Biesheuvel wrote:
+> > > > > >
+> > > > > >
+> > > > > > On 5/22/19 4:02 PM, Ard Biesheuvel wrote:
+> > > > > > > The following commit
+> > > > > > >
+> > > > > > >     7290d5809571 ("module: use relative references for __ksymtab entries")
+> > > > > > >
+> > > > > > > updated the ksymtab handling of some KASLR capable architectures
+> > > > > > > so that ksymtab entries are emitted as pairs of 32-bit relative
+> > > > > > > references. This reduces the size of the entries, but more
+> > > > > > > importantly, it gets rid of statically assigned absolute
+> > > > > > > addresses, which require fixing up at boot time if the kernel
+> > > > > > > is self relocating (which takes a 24 byte RELA entry for each
+> > > > > > > member of the ksymtab struct).
+> > > > > > >
+> > > > > > > Since ksymtab entries are always part of the same module as the
+> > > > > > > symbol they export (or of the core kernel), it was assumed at the
+> > > > > > > time that a 32-bit relative reference is always sufficient to
+> > > > > > > capture the offset between a ksymtab entry and its target symbol.
+> > > > > > >
+> > > > > > > Unfortunately, this is not always true: in the case of per-CPU
+> > > > > > > variables, a per-CPU variable's base address (which usually differs
+> > > > > > > from the actual address of any of its per-CPU copies) could be at
+> > > > > > > an arbitrary offset from the ksymtab entry, and so it may be out
+> > > > > > > of range for a 32-bit relative reference.
+> > > > > > >
+> > > > >
+> > > > > (Apologies for the 3-act monologue)
+> > > >
+> > > > Exposition, development and recapitulation ;)
+> > > >
+> > > > > This turns out to be incorrect. The symbol address of per-CPU variables
+> > > > > exported by modules is always in the vicinity of __per_cpu_start, and so it
+> > > > > is simply a matter of making sure that the core kernel is in range for
+> > > > > module ksymtab entries containing 32-bit relative references.
+> > > > >
+> > > > > When running the arm64 with kaslr enabled, we currently randomize the module
+> > > > > space based on the range of ADRP/ADD instruction pairs, which have a -/+ 4
+> > > > > GB range rather than the -/+ 2 GB range of 32-bit place relative data
+> > > > > relocations. So we can fix this by simply reducing the randomization window
+> > > > > to 2 GB.
+> > > >
+> > > > Makes sense. Do you see the need for an option to disable PREL relocs
+> > > > altogether in case somebody wants the additional randomization range?
+> > > >
+> > >
+> > > No, not really. To be honest, I don't think
+> > > CONFIG_RANDOMIZE_MODULE_REGION_FULL is that useful to begin with, and the
+> > > only reason we enabled it by default at the time was to ensure that the PLT
+> > > code got some coverage after we introduced it.
+> >
+> > In code, percpu variables are accessed with absolute relocations, right?
+> 
+> No, they are accessed just like ordinary symbols, so PC32 references
+> on x86 or ADRP/ADD references on arm64 are both quite common.
 
+Ah, right, now I see some PC32 percpu references.
 
-On 24.05.19 г. 18:26 ч., Steven Rostedt wrote:
-> On Fri, 24 May 2019 16:11:14 +0100
-> Roger Willcocks <roger@filmlight.ltd.uk> wrote:
-> 
->> On 23/05/2019 16:27, Steven Rostedt wrote:
->>>
->>> I haven't yet tested this, but what about something like the following:
->>>
->>> ...perhaps forget about the constant check, and just force
->>> the power of two check:
->>>
->>> 							\
->>> 	if (!(__y & (__y >> 1))) {			\
->>> 		__x = round_up(x, y);			\
->>> 	} else {					\  
->>
->> You probably want
->>
->>             if (!(__y & (__y - 1))
->>
->> --
-> 
-> Yes I do. I corrected it in my next email.
-> 
->  http://lkml.kernel.org/r/20190523133648.591f9e78@gandalf.local.home
+So if PC32 references are sufficient for code, why aren't they
+sufficient for ksymtab entries?  Isn't the ksymtab data address closer
+to the percpu data than the code?  Do you have an example of an out of
+range ksymtab reference?
 
-Or perhaps just using is_power_of_2 from include/linux/log2.h ?
-> 
->> #define roundup(x, y) (					\
->> {							\
->> 	typeof(y) __y = y;				\
->> 	typeof(x) __x;					\
->> 							\
->> 	if (__y & (__y - 1))				\
->> 		__x = round_up(x, __y);			\
->> 	else						\
->> 		__x = (((x) + (__y - 1)) / __y) * __y;	\
->> 	__x;						\
->> })
-> 
-> 
-> -- Steve
-> 
+-- 
+Josh
