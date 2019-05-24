@@ -2,132 +2,107 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=AC_FROM_MANY_DOTS,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA50C282E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A96FFC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F02521773
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 864D221773
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:08:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731992AbfEXSH0 (ORCPT
+        id S1729485AbfEXSIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 14:07:26 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:55576 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726909AbfEXSH0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 14:07:26 -0400
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1hUEbA-0004vM-1b; Fri, 24 May 2019 18:07:20 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     bhelgaas@google.com, rafael.j.wysocki@intel.com
-Cc:     stern@rowland.harvard.edu, lukas@wunner.de,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH v3] PCI / PM: Don't runtime suspend when device only supports wakeup from D0
-Date:   Sat, 25 May 2019 02:07:16 +0800
-Message-Id: <20190524180716.13124-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 24 May 2019 14:08:12 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:48186 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727661AbfEXSIM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 14:08:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 49589A78;
+        Fri, 24 May 2019 11:08:11 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E5C8A3F703;
+        Fri, 24 May 2019 11:08:09 -0700 (PDT)
+Date:   Fri, 24 May 2019 19:08:05 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     linux-mm@kvack.org, akpm@linux-foundation.org,
+        catalin.marinas@arm.com, anshuman.khandual@arm.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 4/4] arm64: mm: Implement pte_devmap support
+Message-ID: <20190524180805.GA9697@fuggles.cambridge.arm.com>
+References: <cover.1558547956.git.robin.murphy@arm.com>
+ <817d92886fc3b33bcbf6e105ee83a74babb3a5aa.1558547956.git.robin.murphy@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <817d92886fc3b33bcbf6e105ee83a74babb3a5aa.1558547956.git.robin.murphy@arm.com>
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's an xHCI device that doesn't wake when a USB device gets plugged
-to its USB port. The driver's own runtime suspend callback was called,
-PME signaling was enabled, but it stays at PCI D0:
-  Status: D0 NoSoftRst+ PME-Enable+ DSel=0 DScale=0 PME-
+On Thu, May 23, 2019 at 04:03:16PM +0100, Robin Murphy wrote:
+> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+> index 2c41b04708fe..a6378625d47c 100644
+> --- a/arch/arm64/include/asm/pgtable.h
+> +++ b/arch/arm64/include/asm/pgtable.h
+> @@ -90,6 +90,7 @@ extern unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)];
+>  #define pte_write(pte)		(!!(pte_val(pte) & PTE_WRITE))
+>  #define pte_user_exec(pte)	(!(pte_val(pte) & PTE_UXN))
+>  #define pte_cont(pte)		(!!(pte_val(pte) & PTE_CONT))
+> +#define pte_devmap(pte)		(!!(pte_val(pte) & PTE_DEVMAP))
+>  
+>  #define pte_cont_addr_end(addr, end)						\
+>  ({	unsigned long __boundary = ((addr) + CONT_PTE_SIZE) & CONT_PTE_MASK;	\
+> @@ -217,6 +218,11 @@ static inline pmd_t pmd_mkcont(pmd_t pmd)
+>  	return __pmd(pmd_val(pmd) | PMD_SECT_CONT);
+>  }
+>  
+> +static inline pte_t pte_mkdevmap(pte_t pte)
+> +{
+> +	return set_pte_bit(pte, __pgprot(PTE_DEVMAP));
+> +}
+> +
+>  static inline void set_pte(pte_t *ptep, pte_t pte)
+>  {
+>  	WRITE_ONCE(*ptep, pte);
+> @@ -381,6 +387,9 @@ static inline int pmd_protnone(pmd_t pmd)
+>  
+>  #define pmd_mkhuge(pmd)		(__pmd(pmd_val(pmd) & ~PMD_TABLE_BIT))
+>  
+> +#define pmd_devmap(pmd)		pte_devmap(pmd_pte(pmd))
+> +#define pmd_mkdevmap(pmd)	pte_pmd(pte_mkdevmap(pmd_pte(pmd)))
+> +
+>  #define __pmd_to_phys(pmd)	__pte_to_phys(pmd_pte(pmd))
+>  #define __phys_to_pmd_val(phys)	__phys_to_pte_val(phys)
+>  #define pmd_pfn(pmd)		((__pmd_to_phys(pmd) & PMD_MASK) >> PAGE_SHIFT)
+> @@ -537,6 +546,11 @@ static inline phys_addr_t pud_page_paddr(pud_t pud)
+>  	return __pud_to_phys(pud);
+>  }
+>  
+> +static inline int pud_devmap(pud_t pud)
+> +{
+> +	return 0;
+> +}
+> +
+>  /* Find an entry in the second-level page table. */
+>  #define pmd_index(addr)		(((addr) >> PMD_SHIFT) & (PTRS_PER_PMD - 1))
+>  
+> @@ -624,6 +638,11 @@ static inline phys_addr_t pgd_page_paddr(pgd_t pgd)
+>  
+>  #define pgd_ERROR(pgd)		__pgd_error(__FILE__, __LINE__, pgd_val(pgd))
+>  
+> +static inline int pgd_devmap(pgd_t pgd)
+> +{
+> +	return 0;
+> +}
 
-A PCI device can be runtime suspended while still stays at D0 when it
-supports D0 PME and its _S0W reports D0. Theoretically this should work,
-but as [1] specifies, D0 doesn't have wakeup capability.
+I think you need to guard this and pXd_devmap() with
+CONFIG_TRANSPARENT_HUGEPAGE, otherwise you'll conflict with the dummy
+definitions in mm.h and the build will fail.
 
-To avoid this problematic situation, we should avoid runtime suspend if
-D0 is the only state that can wake up the device. If the deivce doesn't
-require wakeup capability, carry out driver's runtime suspend as usual,
-which may have logic to save its power internally.
-
-[1] https://docs.microsoft.com/en-us/windows-hardware/drivers/kernel/device-working-state-d0
-
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203673
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
-v3:
- - Add Bugzilla link
-v2:
- - Changes wording
- - Keep old behaviour for devices can't wakeup.
-
- drivers/pci/pci-driver.c | 6 ++++++
- drivers/pci/pci.c        | 2 +-
- include/linux/pci.h      | 3 +++
- 3 files changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index cae630fe6387..e3fac1d2a265 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -1239,6 +1239,7 @@ static int pci_pm_runtime_suspend(struct device *dev)
- 	struct pci_dev *pci_dev = to_pci_dev(dev);
- 	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
- 	pci_power_t prev = pci_dev->current_state;
-+	bool wakeup = device_can_wakeup(dev);
- 	int error;
- 
- 	/*
-@@ -1251,6 +1252,11 @@ static int pci_pm_runtime_suspend(struct device *dev)
- 		return 0;
- 	}
- 
-+	if (wakeup && pci_target_state(pci_dev, wakeup) == PCI_D0) {
-+		dev_dbg(dev, "D0 doesn't have wakeup capability\n");
-+		return -EBUSY;
-+	}
-+
- 	pci_dev->state_saved = false;
- 	if (pm && pm->runtime_suspend) {
- 		error = pm->runtime_suspend(dev);
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 8abc843b1615..ceee6efbbcfe 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -2294,7 +2294,7 @@ EXPORT_SYMBOL(pci_wake_from_d3);
-  * If the platform can't manage @dev, return the deepest state from which it
-  * can generate wake events, based on any available PME info.
-  */
--static pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup)
-+pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup)
- {
- 	pci_power_t target_state = PCI_D3hot;
- 
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 4a5a84d7bdd4..91e8dc4d04aa 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1188,6 +1188,7 @@ bool pci_pme_capable(struct pci_dev *dev, pci_power_t state);
- void pci_pme_active(struct pci_dev *dev, bool enable);
- int pci_enable_wake(struct pci_dev *dev, pci_power_t state, bool enable);
- int pci_wake_from_d3(struct pci_dev *dev, bool enable);
-+pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup);
- int pci_prepare_to_sleep(struct pci_dev *dev);
- int pci_back_from_sleep(struct pci_dev *dev);
- bool pci_dev_run_wake(struct pci_dev *dev);
-@@ -1672,6 +1673,8 @@ static inline int pci_set_power_state(struct pci_dev *dev, pci_power_t state)
- { return 0; }
- static inline int pci_wake_from_d3(struct pci_dev *dev, bool enable)
- { return 0; }
-+pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup)
-+{ return PCI_D0; }
- static inline pci_power_t pci_choose_state(struct pci_dev *dev,
- 					   pm_message_t state)
- { return PCI_D0; }
--- 
-2.17.1
-
+Will
