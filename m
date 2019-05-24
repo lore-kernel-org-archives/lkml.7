@@ -2,336 +2,123 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AA3C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 00:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A6EC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 00:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA6142177E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 00:39:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9C63217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 00:41:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="XuoSaaGN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731685AbfEXAj2 (ORCPT
+        id S2388655AbfEXAkm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 20:39:28 -0400
-Received: from mga07.intel.com ([134.134.136.100]:13265 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731488AbfEXAj2 (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 20:39:28 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 May 2019 17:39:27 -0700
-X-ExtLoop1: 1
-Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.239.196.112]) ([10.239.196.112])
-  by orsmga008.jf.intel.com with ESMTP; 23 May 2019 17:39:25 -0700
-Subject: Re: [PATCH v1 8/9] perf diff: Print the basic block cycles diff
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <1558358876-32211-1-git-send-email-yao.jin@linux.intel.com>
- <1558358876-32211-9-git-send-email-yao.jin@linux.intel.com>
- <20190522140428.GD4757@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <b3b39a99-e4a6-b0f7-e828-2309de77b2fa@linux.intel.com>
-Date:   Fri, 24 May 2019 08:39:24 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190522140428.GD4757@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Thu, 23 May 2019 20:40:42 -0400
+Received: from mail-eopbgr80041.outbound.protection.outlook.com ([40.107.8.41]:16571
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731488AbfEXAkm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 20:40:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CxgKO0W/BktaJK0MWO7PHVKXRW1MuT6dYVnler6z2Bg=;
+ b=XuoSaaGND4IKufrscGDMYCVNLtruFSTCTLMbM21EvHE2cOKxpkDlTS8rZ2Z8ksgcrBMJHqM98Lr9hp3MXI/JR7mUpfqFsOr/vrULc9yz+RVU1/f3mACFTXMfaaRtgK52eR59a+OcsF3cQJtEgYZebIqnTBfJmv59kdhXHGc8x/g=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3850.eurprd04.prod.outlook.com (52.134.65.151) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.19; Fri, 24 May 2019 00:40:38 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::5835:e874:bd94:fec]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::5835:e874:bd94:fec%5]) with mapi id 15.20.1922.017; Fri, 24 May 2019
+ 00:40:38 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "agross@kernel.org" <agross@kernel.org>,
+        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
+        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "dinguyen@kernel.org" <dinguyen@kernel.org>,
+        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: [PATCH RESEND] arm64: defconfig: Enable CONFIG_QORIQ_THERMAL
+Thread-Topic: [PATCH RESEND] arm64: defconfig: Enable CONFIG_QORIQ_THERMAL
+Thread-Index: AQHVEclO/85kyS08dEKAaYgO0QP/vQ==
+Date:   Fri, 24 May 2019 00:40:37 +0000
+Message-ID: <1558658123-8797-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK2PR02CA0213.apcprd02.prod.outlook.com
+ (2603:1096:201:20::25) To DB3PR0402MB3916.eurprd04.prod.outlook.com
+ (2603:10a6:8:10::18)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 725ee209-bad8-49c6-d831-08d6dfe0705d
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3850;
+x-ms-traffictypediagnostic: DB3PR0402MB3850:
+x-microsoft-antispam-prvs: <DB3PR0402MB3850E4496B10B07A07CF84FAF5020@DB3PR0402MB3850.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:843;
+x-forefront-prvs: 0047BC5ADE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(39860400002)(346002)(136003)(396003)(376002)(199004)(189003)(2201001)(8936002)(478600001)(6486002)(81166006)(81156014)(86362001)(6116002)(8676002)(3846002)(6436002)(2906002)(68736007)(7416002)(316002)(476003)(50226002)(2616005)(486006)(6512007)(66066001)(26005)(53936002)(110136005)(25786009)(99286004)(186003)(4326008)(71200400001)(71190400001)(102836004)(4744005)(5660300002)(386003)(6506007)(73956011)(66476007)(66556008)(66446008)(64756008)(66946007)(256004)(52116002)(7736002)(305945005)(36756003)(2501003)(14454004)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3850;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: T8xLOrR0DmBkb6sVJ6DLoIUI4wglTn7AgddpovLrqq3rPDGs+VXQbZkb2GHKNnr2nEfxK4+eogLwYq1sx4QmDOeHq9GgOAokcd5bt2MyHqZOclvbYEEwxAWKphfpXG+xoWYBcFVnfGlZYrRV5JaF6M3osAHBQqlvCV8ORF6iZM1g8jgOyQtAAmuTPHIlScR5dCBcLdA3wfCn66cZ0Xe2DVJ5KddSZrHXJUvkkKRV47uPl7kboS36SS9XexzIssef3+XPruL1qKDIvfK/WcDxlf8ru7dg+bdTIIsvOIU8RXBBG3o8IomYW3lZ8jyuOqEbxp8Ga3aPuI+QhdGZY1bXB3KuFh3DImMjR8s/JZi4ffQwOprdreU+QHrIIC3yE5OEPDPXi0ztGK+Zo+ZVaw+xftekthvQhvLbzN/gjMNmzdQ=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <A536D3C75A2CC448A45555FC24F891F0@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 725ee209-bad8-49c6-d831-08d6dfe0705d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 May 2019 00:40:38.0604
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: anson.huang@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3850
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+i.MX8MQ needs CONFIG_QORIQ_THERMAL for thermal support.
 
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-On 5/22/2019 10:04 PM, Jiri Olsa wrote:
-> On Mon, May 20, 2019 at 09:27:55PM +0800, Jin Yao wrote:
->> Currently we only support sorting by diff cycles.
->>
->> For example,
->>
->> perf record -b ./div
->> perf record -b ./div
->> perf diff --basic-block
->>
->>   # Cycles diff  Basic block (start:end)
->>   # ...........  .......................
->>   #
->>            -20   native_write_msr (7fff9a069900:7fff9a06990b)
->>             -3   __indirect_thunk_start (7fff9ac02ca0:7fff9ac02ca0)
->>              1   __indirect_thunk_start (7fff9ac02cac:7fff9ac02cb0)
->>              0   rand@plt (490:490)
->>              0   rand (3af60:3af64)
->>              0   rand (3af69:3af6d)
->>              0   main (4e8:4ea)
->>              0   main (4ef:500)
->>              0   main (4ef:535)
->>              0   compute_flag (640:644)
->>              0   compute_flag (649:659)
->>              0   __random_r (3ac40:3ac76)
->>              0   __random_r (3ac40:3ac88)
->>              0   __random_r (3ac90:3ac9c)
->>              0   __random (3aac0:3aad2)
->>              0   __random (3aae0:3aae7)
->>              0   __random (3ab03:3ab0f)
->>              0   __random (3ab14:3ab1b)
->>              0   __random (3ab28:3ab2e)
->>              0   __random (3ab4a:3ab53)
-> 
-> really nice, could you keep the standard diff format
-> and display the 'Baseline' and Shared Object columns?
-> 
-> jirka
-> 
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index f0bad30..c91642d 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -420,6 +420,7 @@ CONFIG_SENSORS_INA2XX=3Dm
+ CONFIG_THERMAL_GOV_POWER_ALLOCATOR=3Dy
+ CONFIG_CPU_THERMAL=3Dy
+ CONFIG_THERMAL_EMULATION=3Dy
++CONFIG_QORIQ_THERMAL=3Dm
+ CONFIG_ROCKCHIP_THERMAL=3Dm
+ CONFIG_RCAR_THERMAL=3Dy
+ CONFIG_RCAR_GEN3_THERMAL=3Dy
+--=20
+2.7.4
 
-Thanks Jiri!
-
-Let me check how to do that.
-
-Thanks
-Jin Yao
-
->>
->> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
->> ---
->>   tools/perf/builtin-diff.c | 168 ++++++++++++++++++++++++++++++++++++++++++++++
->>   tools/perf/util/hist.c    |   2 +-
->>   tools/perf/util/sort.h    |   1 +
->>   3 files changed, 170 insertions(+), 1 deletion(-)
->>
->> diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
->> index 47e34a3..dbf242d 100644
->> --- a/tools/perf/builtin-diff.c
->> +++ b/tools/perf/builtin-diff.c
->> @@ -27,6 +27,12 @@
->>   #include <stdlib.h>
->>   #include <math.h>
->>   
->> +struct block_hpp_fmt {
->> +	struct perf_hpp_fmt	fmt;
->> +	struct data__file	*file;
->> +	int			width;
->> +};
->> +
->>   struct block_hists {
->>   	struct hists		sym_hists;
->>   	struct perf_hpp_list	sym_list;
->> @@ -34,6 +40,8 @@ struct block_hists {
->>   	struct hists		hists;
->>   	struct perf_hpp_list	list;
->>   	struct perf_hpp_fmt	fmt;
->> +	struct block_hpp_fmt	block_fmt;
->> +	struct perf_hpp_fmt	desc_fmt;
->>   };
->>   
->>   struct perf_diff {
->> @@ -1157,6 +1165,162 @@ static void compute_block_hists_diff(struct block_hists *block_hists,
->>   	}
->>   }
->>   
->> +static int64_t block_cycles_diff_cmp(struct perf_hpp_fmt *fmt,
->> +				     struct hist_entry *left,
->> +				     struct hist_entry *right)
->> +{
->> +	struct block_hpp_fmt *block_fmt = container_of(fmt,
->> +						       struct block_hpp_fmt,
->> +						       fmt);
->> +	struct data__file *d = block_fmt->file;
->> +	bool pairs_left  = hist_entry__has_pairs(left);
->> +	bool pairs_right = hist_entry__has_pairs(right);
->> +	struct hist_entry *p_right, *p_left;
->> +	s64 l, r;
->> +
->> +	if (!pairs_left && !pairs_right)
->> +		return 0;
->> +
->> +	if (!pairs_left || !pairs_right)
->> +		return pairs_left ? -1 : 1;
->> +
->> +	p_left  = get_pair_data(left, d);
->> +	p_right  = get_pair_data(right, d);
->> +
->> +	if (!p_left && !p_right)
->> +		return 0;
->> +
->> +	if (!p_left || !p_right)
->> +		return p_left ?  -1 : 1;
->> +
->> +	l = abs(p_left->diff.cycles_diff);
->> +	r = abs(p_right->diff.cycles_diff);
->> +
->> +	return r - l;
->> +}
->> +
->> +static int64_t block_diff_sort(struct perf_hpp_fmt *fmt,
->> +			       struct hist_entry *left, struct hist_entry *right)
->> +{
->> +	return block_cycles_diff_cmp(fmt, right, left);
->> +}
->> +
->> +static int block_diff_header(struct perf_hpp_fmt *fmt __maybe_unused,
->> +			     struct perf_hpp *hpp,
->> +			     struct hists *hists __maybe_unused,
->> +			     int line __maybe_unused,
->> +			     int *span __maybe_unused)
->> +{
->> +	return scnprintf(hpp->buf, hpp->size, "Cycles diff");
->> +}
->> +
->> +static int block_diff_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
->> +			    struct hist_entry *he)
->> +{
->> +	struct block_hpp_fmt *block_fmt = container_of(fmt,
->> +						       struct block_hpp_fmt,
->> +						       fmt);
->> +	struct data__file *d = block_fmt->file;
->> +	struct hist_entry *pair = get_pair_data(he, d);
->> +
->> +	if (pair && pair->diff.computed) {
->> +		return scnprintf(hpp->buf, hpp->size, "%*ld", block_fmt->width,
->> +				 pair->diff.cycles_diff);
->> +	}
->> +
->> +	return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width, " ");
->> +}
->> +
->> +static int block_diff_width(struct perf_hpp_fmt *fmt,
->> +			    struct perf_hpp *hpp __maybe_unused,
->> +			    struct hists *hists __maybe_unused)
->> +{
->> +	struct block_hpp_fmt *block_fmt =
->> +		container_of(fmt, struct block_hpp_fmt, fmt);
->> +
->> +	return block_fmt->width;
->> +}
->> +
->> +static int block_sym_width(struct perf_hpp_fmt *fmt __maybe_unused,
->> +			    struct perf_hpp *hpp __maybe_unused,
->> +			    struct hists *hists __maybe_unused)
->> +{
->> +	return 23;
->> +}
->> +
->> +static int block_sym_entry(struct perf_hpp_fmt *fmt __maybe_unused,
->> +			   struct perf_hpp *hpp, struct hist_entry *he)
->> +{
->> +	struct block_info *bi = he->block_info;
->> +
->> +	return scnprintf(hpp->buf, hpp->size, "%s (%lx:%lx)",
->> +			 bi->sym->name, bi->sym->start + bi->start,
->> +			 bi->sym->start + bi->end);
->> +}
->> +
->> +static int block_sym_header(struct perf_hpp_fmt *fmt __maybe_unused,
->> +			    struct perf_hpp *hpp,
->> +			    struct hists *hists __maybe_unused,
->> +			    int line __maybe_unused,
->> +			    int *span __maybe_unused)
->> +{
->> +	return scnprintf(hpp->buf, hpp->size, "Basic block (start:end)");
->> +}
->> +
->> +static int filter_cb(struct hist_entry *he, void *arg __maybe_unused)
->> +{
->> +	he->not_collen = true;
->> +
->> +	return 0;
->> +}
->> +
->> +static void hists_block_printf_sorted(struct hists *hists)
->> +{
->> +	hists__fprintf(hists, true, 0, 0, 0, stdout, true);
->> +}
->> +
->> +static void init_block_hists_fmt(void)
->> +{
->> +	struct block_hists *hists_base = &data__files[0].block_hists;
->> +	struct data__file *d;
->> +	int i;
->> +	struct perf_hpp_fmt *fmt;
->> +
->> +	perf_hpp__reset_output_field(&hists_base->list);
->> +
->> +	hists_base->list.nr_header_lines = 1;
->> +
->> +	data__for_each_file_new(i, d) {
->> +		struct block_hpp_fmt *block_fmt = &d->block_hists.block_fmt;
->> +
->> +		fmt = &block_fmt->fmt;
->> +		block_fmt->file = d;
->> +		block_fmt->width = 11;
->> +
->> +		INIT_LIST_HEAD(&fmt->list);
->> +		INIT_LIST_HEAD(&fmt->sort_list);
->> +
->> +		fmt->sort = block_diff_sort;
->> +		fmt->header = block_diff_header;
->> +		fmt->entry = block_diff_entry;
->> +		fmt->width = block_diff_width;
->> +
->> +		perf_hpp_list__column_register(&hists_base->list, fmt);
->> +		perf_hpp_list__register_sort_field(&hists_base->list, fmt);
->> +	}
->> +
->> +	/* fmt for description */
->> +	fmt = &hists_base->desc_fmt;
->> +
->> +	fmt->width = block_sym_width;
->> +	fmt->entry = block_sym_entry;
->> +	fmt->header = block_sym_header;
->> +	fmt->sort = hist_entry__cmp_nop;
->> +
->> +	perf_hpp_list__column_register(&hists_base->list, fmt);
->> +	perf_hpp_list__register_sort_field(&hists_base->list, fmt);
->> +}
->> +
->>   static void basic_block_process(void)
->>   {
->>   	struct hists *hists_base = &data__files[0].block_hists.hists;
->> @@ -1182,6 +1346,10 @@ static void basic_block_process(void)
->>   		compute_block_hists_diff(&data__files[0].block_hists, d);
->>   	}
->>   
->> +	init_block_hists_fmt();
->> +	hists__output_resort_cb(hists_base, NULL, filter_cb);
->> +	hists_block_printf_sorted(hists_base);
->> +
->>   	data__for_each_file(i, d) {
->>   		hists__delete_entries(&d->block_hists.sym_hists);
->>   		hists__delete_entries(&d->block_hists.hists);
->> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
->> index 3810460..ae95191 100644
->> --- a/tools/perf/util/hist.c
->> +++ b/tools/perf/util/hist.c
->> @@ -1846,7 +1846,7 @@ static void output_resort(struct hists *hists, struct ui_progress *prog,
->>   		__hists__insert_output_entry(&hists->entries, n, min_callchain_hits, use_callchain);
->>   		hists__inc_stats(hists, n);
->>   
->> -		if (!n->filtered)
->> +		if ((!n->filtered) && (!n->not_collen))
->>   			hists__calc_col_len(hists, n);
->>   
->>   		if (prog)
->> diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
->> index de9e61a..1e921fe 100644
->> --- a/tools/perf/util/sort.h
->> +++ b/tools/perf/util/sort.h
->> @@ -121,6 +121,7 @@ struct hist_entry {
->>   
->>   	char			level;
->>   	u8			filtered;
->> +	bool			not_collen;
->>   
->>   	u16			callchain_size;
->>   	union {
->> -- 
->> 2.7.4
->>
