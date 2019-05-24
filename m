@@ -2,64 +2,88 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 224D0C282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF69C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:40:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E157620868
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:37:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA42320868
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:40:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gCA2Zddj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388933AbfEXGhu (ORCPT
+        id S2388895AbfEXGk4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 02:37:50 -0400
-Received: from mga17.intel.com ([192.55.52.151]:3887 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388859AbfEXGhs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 02:37:48 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 May 2019 23:37:47 -0700
-X-ExtLoop1: 1
-Received: from allen-box.sh.intel.com ([10.239.159.136])
-  by orsmga002.jf.intel.com with ESMTP; 23 May 2019 23:37:45 -0700
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH 1/1] iommu: Add missing new line for dma type
-Date:   Fri, 24 May 2019 14:30:56 +0800
-Message-Id: <20190524063056.12258-1-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 24 May 2019 02:40:56 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49750 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388335AbfEXGk4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 02:40:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=MboJlUX6ud6Y8h1xvMwj2zi3GdAiWghHA9DcE9E0NzM=; b=gCA2ZddjLB5JYDteejHRuh95u
+        wJtaMuKOt5ACv/IoDR4+kaisQNbxEfqFZy7k1OXAn1DibvkRaXx+6ppZxoi/sgG+aZCL/GCx+GaXT
+        xYn1+r+DqaVdoo9xeLPjTM1sWHV6skEExwJRIQwTSreXcRSJ0noVHx3MlPRSUPg81/AxHUivOym9w
+        3uSlGykT8z6X9n9lodjYzb4NpCAUUqgt5J70gjw2mlp42t5mvX0r7bpW08CB9ZOYsPp42p76e2ZHC
+        cObH1wCHfyOxmPP/jgAmUasX014LH9QR7Dq1g24+bAB9ecrOGc5a5i7RdtUcfpguWkQRROfWnpeMw
+        BqaRnYRLQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hU3sp-0000NM-Do; Fri, 24 May 2019 06:40:51 +0000
+Date:   Thu, 23 May 2019 23:40:51 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Jerome Glisse <jglisse@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Leon Romanovsky <leonro@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Artemy Kovalyov <artemyko@mellanox.com>,
+        Moni Shoua <monis@mellanox.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        linux-mm@kvack.org, akpm@linux-foundation.org
+Subject: Re: [PATCH v4 0/1] Use HMM for ODP v4
+Message-ID: <20190524064051.GA28855@infradead.org>
+References: <20190522174852.GA23038@redhat.com>
+ <20190522235737.GD15389@ziepe.ca>
+ <20190523150432.GA5104@redhat.com>
+ <20190523154149.GB12159@ziepe.ca>
+ <20190523155207.GC5104@redhat.com>
+ <20190523163429.GC12159@ziepe.ca>
+ <20190523173302.GD5104@redhat.com>
+ <20190523175546.GE12159@ziepe.ca>
+ <20190523182458.GA3571@redhat.com>
+ <20190523191038.GG12159@ziepe.ca>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190523191038.GG12159@ziepe.ca>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-So that all types are printed in the same format.
+On Thu, May 23, 2019 at 04:10:38PM -0300, Jason Gunthorpe wrote:
+> 
+> On Thu, May 23, 2019 at 02:24:58PM -0400, Jerome Glisse wrote:
+> > I can not take mmap_sem in range_register, the READ_ONCE is fine and
+> > they are no race as we do take a reference on the hmm struct thus
+> 
+> Of course there are use after free races with a READ_ONCE scheme, I
+> shouldn't have to explain this.
+> 
+> If you cannot take the read mmap sem (why not?), then please use my
+> version and push the update to the driver through -mm..
 
-Fixes: c52c72d3dee81 ("iommu: Add sysfs attribyte for domain type")
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
----
- drivers/iommu/iommu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 3fa025f849e9..f371574e9c68 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -341,7 +341,7 @@ static ssize_t iommu_group_show_type(struct iommu_group *group,
- 			type = "unmanaged\n";
- 			break;
- 		case IOMMU_DOMAIN_DMA:
--			type = "DMA";
-+			type = "DMA\n";
- 			break;
- 		}
- 	}
--- 
-2.17.1
-
+I think it would really help if we queue up these changes in a git tree
+that can be pulled into the driver trees.  Given that you've been
+doing so much work to actually make it usable I'd nominate rdma for the
+"lead" tree.
