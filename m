@@ -2,169 +2,111 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75109C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 03:12:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB80C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 03:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BB8C21874
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 03:12:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48D4221773
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 03:13:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RkRTYY+3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388822AbfEXDL7 (ORCPT
+        id S2387654AbfEXDNR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 23:11:59 -0400
-Received: from mx2.mailbox.org ([80.241.60.215]:19540 "EHLO mx2.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387559AbfEXDL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 23:11:59 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx2.mailbox.org (Postfix) with ESMTPS id 1335AA015B;
-        Fri, 24 May 2019 05:11:54 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter04.heinlein-hosting.de (spamfilter04.heinlein-hosting.de [80.241.56.122]) (amavisd-new, port 10030)
-        with ESMTP id SZgroZg2fFsB; Fri, 24 May 2019 05:11:27 +0200 (CEST)
-Date:   Fri, 24 May 2019 13:11:09 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Christian Brauner <christian@brauner.io>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH RFC v8 01/10] namei: obey trailing magic-link DAC
- permissions
-Message-ID: <20190524031109.v24r6typyug2rlto@yavin>
-References: <20190520133305.11925-1-cyphar@cyphar.com>
- <20190520133305.11925-2-cyphar@cyphar.com>
- <CALCETrVCwe49q5mu=f6jTYNSgosQSjjY5chukMPo6eZtQGqo5g@mail.gmail.com>
- <20190523020009.mi25uziu2b3whf4l@yavin>
+        Thu, 23 May 2019 23:13:17 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:37238 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387726AbfEXDNR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 23:13:17 -0400
+Received: by mail-pl1-f196.google.com with SMTP id p15so3563720pll.4
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 20:13:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=SADUbUTzsKuL6+0zlFN554wz3Ug1cJN9qaVymCYLya8=;
+        b=RkRTYY+3hCLgYqP2p+u+vpPJcIgR7UCLzQVOZl9uOyK1n3lrfRyg3ucE3OwGPk9P+P
+         tLqwZbaVRXdBtc+0DB1TZU+dOnf2fVy3XzzMaozUAPfUS7T4BerAEIx3U0BwTrIpAbgu
+         qLtLDLrTExsuU55T39GAzXMZXAKwO71fUxxMl2m1lMOO5++FwxOK3wbIu6GyfxRh5N0l
+         dfPD8qf2iIcp9eetBCLwPJvPBr60mdgGEuu5OLeNGSZP8Dqd39y6BJssucc2z9/MN2T4
+         LoO2I9Qff2ZTZj2Eh7XtljAR7+yoO5T15x39zK54CNISqcbKOuHqo4Hd+/u/uYDWfrhO
+         n/NA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=SADUbUTzsKuL6+0zlFN554wz3Ug1cJN9qaVymCYLya8=;
+        b=N/v92FoJXJhlsNj7eyHfyZApeb61RvPFxlDxZ4CYVrvH7K37V4mnZ+HEI2OO3U48n5
+         fpeS7c0ySu2s5MkzIXtL37Uc7Gk9yoSovjXvbqfli/rb9jdD3ZYAiTTvux55jdWjHI0y
+         AYMatMjwB/oBIUdfpv25zQTRT+sHqiEu94yCRAj3DiPW2q0jWA6ULgtChhcrNjTK1ezM
+         8xe0wFmpH0/7UY9HpFqtlAGRtpY/GneC20uK7vREckhwaHWM5dPXpDQVXodL6vcWDUB2
+         tjJHYdQ9SACjwi1s+rXZIQWE2hC1jaCtTtv3UV8pq/RY4L9dLrCQ1M4jw9JDW+9NmYv0
+         XHkA==
+X-Gm-Message-State: APjAAAU66AGdZbMRmtWbxO8OqywqD/U1mhv6szD9fsgQvL9jatNmhspt
+        djuC7p3M6BHB9BPyifhGCDi5Jwo73a4=
+X-Google-Smtp-Source: APXvYqwx+3Ni5mzChJHEGu89s31328M3giHbmL30qpfZhaPz2GvtZ7v0kNlaEDRChzrpyQdQ6bnsNw==
+X-Received: by 2002:a17:902:b615:: with SMTP id b21mr40159692pls.12.1558667596052;
+        Thu, 23 May 2019 20:13:16 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([66.42.35.75])
+        by smtp.gmail.com with ESMTPSA id e10sm909308pfm.137.2019.05.23.20.13.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 May 2019 20:13:15 -0700 (PDT)
+Date:   Fri, 24 May 2019 11:12:48 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     agk@redhat.com, snitzer@redhat.com, dm-devel@redhat.com
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] dm-region-hash: Fix a missing-check bug in __rh_alloc()
+Message-ID: <20190524031248.GA6295@zhanggen-UX430UQ>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="r6xfnzimry42j3mt"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190523020009.mi25uziu2b3whf4l@yavin>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In function __rh_alloc(), the pointer nreg is allocated a memory space
+via kmalloc(). And it is used in the following codes. However, when 
+there is a memory allocation error, kmalloc() fails. Thus null pointer
+dereference may happen. And it will cause the kernel to crash. Therefore,
+we should check the return value and handle the error.
+Further, in __rh_find(), we should also check the return value and
+handle the error.
 
---r6xfnzimry42j3mt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
 
-On 2019-05-23, Aleksa Sarai <cyphar@cyphar.com> wrote:
-> On 2019-05-22, Andy Lutomirski <luto@kernel.org> wrote:
-> > What are actual examples of uses for this exception?  Breaking
-> > selftests is not, in and of itself, a huge problem.
->=20
-> Not as far as I know. All of the re-opening users I know of do re-opens
-> of O_PATH or are re-opening with the same (or fewer) privileges. I also
-> ran this for a few days on my laptop without this exception, and didn't
-> have any visible issues.
-
-I have modified the patch to WARN_ON(may_open_magiclink() =3D=3D -EACCES).
-
-So far (in the past day on my openSUSE machines) I have only seen two
-programs which have hit this case: kbd[1]'s "loadkeys" and "kbd_mode"
-binaries. In addition to there not being any user-visible errors -- they
-actually handle permission errors gracefully!
-
-  static int
-  open_a_console(const char *fnam)
-  {
-  	int fd;
-
-  	/*
-  	 * For ioctl purposes we only need some fd and permissions
-  	 * do not matter. But setfont:activatemap() does a write.
-  	 */
-  	fd =3D open(fnam, O_RDWR);
-  	if (fd < 0)
-  		fd =3D open(fnam, O_WRONLY);
-  	if (fd < 0)
-  		fd =3D open(fnam, O_RDONLY);
-  	if (fd < 0)
-  		return -1;
-  	return fd;
-  }
-
-The above gets called with "/proc/self/fd/0" as an argument (as well as
-other console candidates like "/dev/console"). And setfont:activatemap()
-actually does handle read-only fds:
-
-  static void
-  send_escseq(int fd, const char *seq, int n)
-  {
-  	if (write(fd, seq, n) !=3D n) /* maybe fd is read-only */
-  		printf("%s", seq);
-  }
-
-  void activatemap(int fd)
-  {
-  	send_escseq(fd, "\033(K", 3);
-  }
-
-So, thus far, not only have I not seen anything go wrong -- the only
-program which actually hits this case handles the error gracefully.
-Obviously we got lucky here, but the lack of any users of this
-mis-feature leads me to have some hope that we can block it without
-anyone noticing.
-
-But I emphatically do not want to break userspace here (except for
-attackers, obviously).
-
-[1]: http://git.altlinux.org/people/legion/packages/kbd.git
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---r6xfnzimry42j3mt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEb6Gz4/mhjNy+aiz1Snvnv3Dem58FAlznYMwACgkQSnvnv3De
-m5/UlRAAovI52jrpVsYCg4NsE4FyF6D0yGqaH+nTC1yXRTFIQOX0gWiYDa0U/BAQ
-cJNYiSNBV8HHy4s0N5h1MFu6FDKmWhNS5a8A58HUMXlJQ/6/RpT2NnleB6MBfi02
-E91mqGiVxU4wEthnb44GhUhTmbSoo4JwrdI7AfhvOiKTEziXcf7HcF2VUMMySdD+
-WTC48upAO2G2oYUowAWydF4//I6y7LL4mFPO0RhWCxUqFQmapC3ujka1xvkE46zQ
-4R8ZIlKhnBk3SuE5B77urbIAr4gnQt7U6dZVvQACl/bpBBR8UPkj19okJ4yfjr77
-x2q5Wq8MJB4sYTcjeAml1GNV3f+3v39OwDxiP9HF/j0oergsbKO/Lx0+B3S63TEk
-Hz3KhZRfC8/YpeTTGy60l/3Wqb+kONRvl8J1H47C/JS26MVQUs9nym/Iq6PX+cRf
-V2usCjxwVE1vrZAbpxUMAuifgTmkjf3n2NAURpFTKMX/druhDFxol6ZsuB4/0Ti4
-EseHO5B2wVxkydDzR/9cmj6y29HUge+Y3fAeKa3zvtShYwhKqHg4DYx8CsoFVBfK
-ACLPMT6ymdJ/uz/xBy6wzT88vmDJZ4XC/vlAeAUTXZdd//s2CUu3fSaJs1FfKHr/
-marW2Z16cmWWkyzZiWZlekLhKRxG3BmpD7bI5Wcxw2YKwPYl8IQ=
-=eLDb
------END PGP SIGNATURE-----
-
---r6xfnzimry42j3mt--
+---
+diff --git a/drivers/md/dm-region-hash.c b/drivers/md/dm-region-hash.c
+index 1f76045..2fa1641 100644
+--- a/drivers/md/dm-region-hash.c
++++ b/drivers/md/dm-region-hash.c
+@@ -290,8 +290,11 @@ static struct dm_region *__rh_alloc(struct dm_region_hash *rh, region_t region)
+ 	struct dm_region *reg, *nreg;
+ 
+ 	nreg = mempool_alloc(&rh->region_pool, GFP_ATOMIC);
+-	if (unlikely(!nreg))
++	if (unlikely(!nreg)) {
+ 		nreg = kmalloc(sizeof(*nreg), GFP_NOIO | __GFP_NOFAIL);
++		if (!nreg)
++			return NULL;
++	}
+ 
+ 	nreg->state = rh->log->type->in_sync(rh->log, region, 1) ?
+ 		      DM_RH_CLEAN : DM_RH_NOSYNC;
+@@ -329,6 +332,8 @@ static struct dm_region *__rh_find(struct dm_region_hash *rh, region_t region)
+ 	if (!reg) {
+ 		read_unlock(&rh->hash_lock);
+ 		reg = __rh_alloc(rh, region);
++		if (!reg)
++			return NULL;
+ 		read_lock(&rh->hash_lock);
+ 	}
+ 
+---
