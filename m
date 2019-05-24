@@ -2,110 +2,98 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FB6C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D405C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:00:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 878DE20863
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:59:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="F+JKEfzZ"
+	by mail.kernel.org (Postfix) with ESMTP id DD5FF217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:00:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391125AbfEXQ7U (ORCPT
+        id S2391146AbfEXRAX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 12:59:20 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:41977 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390210AbfEXQ7U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 12:59:20 -0400
-Received: by mail-ot1-f66.google.com with SMTP id l25so9300096otp.8
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 09:59:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gEsvEvFjlwXN7UDcC7wBfcVN0ngYDlTviwk40lFh0VE=;
-        b=F+JKEfzZoisl55BG48UjSnmshBQgO9/0HkQVAr6Vyzhbpu8ZE5OYQdCLS2r7gg5Fet
-         xsFTm/CY0rb9DvK2SU4u8wLrvEc5OpWNJcfbSDisSY2sMAlLWvWz1GZjZ2H3Uqu7oCCF
-         IQMwHXKRFilGrj1cyLDjSwk6YUEP2rgdWgWYA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gEsvEvFjlwXN7UDcC7wBfcVN0ngYDlTviwk40lFh0VE=;
-        b=ggm7nqyZxWDVDlP6xqdt1Gg42n4/6mwF2/lZoDoCDZ3zjZUhoZBgYJN4HCf7fQCFM0
-         lT11MXAYHmC12GRgEqmOYg5+Oj5vYAh7chW881/Ako8OZFRK0DPmezEQDP5cTHRK93m4
-         vczS8Smgrnt0raBCDloM9imXucPvITK618678kYp3SkvAo/z0EmcO38Ij46CX+kXD3yW
-         C6MXtQNvr2bZkdZR1G0J9voxCcgbVmDmDw4PTB3OsDF0TxlTSIXFFcQLM6BK+qCx+aLE
-         mPaCaqqh64HZXKHfYHq0brfrH+2/ezmJAWcGv0XvUc8ZluLniI1v7Aj3ryuZjilAXxia
-         kkEA==
-X-Gm-Message-State: APjAAAXwjr4Cvy+fBOpdle43HIT1nLh5ZEhkc4NuRSBTrAduXBaQH4g/
-        ZsO2zS91TxUGEuSzZmp+6NcEJ+k/3pC9tsocIwdaIw==
-X-Google-Smtp-Source: APXvYqyPbMvtr56mDew3jzxBkjA+50maDgvK6bd7zBN/VZAbXpM4qVtqYD8AqQh52rPXg2kktDPJwMkBLyw2j0YmSis=
-X-Received: by 2002:a05:6830:16d2:: with SMTP id l18mr29769854otr.303.1558717159283;
- Fri, 24 May 2019 09:59:19 -0700 (PDT)
+        Fri, 24 May 2019 13:00:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38618 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390210AbfEXRAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 13:00:22 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 649873179179;
+        Fri, 24 May 2019 17:00:17 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-85.bos.redhat.com [10.18.17.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 36CFF6092D;
+        Fri, 24 May 2019 17:00:15 +0000 (UTC)
+Subject: Re: [PATCH] locking/lock_events: Use this_cpu_add() when necessary
+To:     Will Deacon <will.deacon@arm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+References: <20190522153953.30341-1-longman@redhat.com>
+ <CAHk-=wjit1=wf-JxUebS4_9WUCKbnfGPt0QF13-LijmumMEB-Q@mail.gmail.com>
+ <20190523145839.GB31896@fuggles.cambridge.arm.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <e6f9465a-2d26-23c4-96b6-4c5945993e6d@redhat.com>
+Date:   Fri, 24 May 2019 13:00:14 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190523154149.GB12159@ziepe.ca> <20190523155207.GC5104@redhat.com>
- <20190523163429.GC12159@ziepe.ca> <20190523173302.GD5104@redhat.com>
- <20190523175546.GE12159@ziepe.ca> <20190523182458.GA3571@redhat.com>
- <20190523191038.GG12159@ziepe.ca> <20190524064051.GA28855@infradead.org>
- <20190524124455.GB16845@ziepe.ca> <20190524162709.GD21222@phenom.ffwll.local> <20190524165301.GD16845@ziepe.ca>
-In-Reply-To: <20190524165301.GD16845@ziepe.ca>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Fri, 24 May 2019 18:59:07 +0200
-Message-ID: <CAKMK7uHODeVX4DHdM-w2xkqCmN71MaQH1ZiRZcPN38Hhy0A-sQ@mail.gmail.com>
-Subject: Re: RFC: Run a dedicated hmm.git for 5.3
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Airlie <airlied@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-rdma@vger.kernel.org, Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Artemy Kovalyov <artemyko@mellanox.com>,
-        Moni Shoua <monis@mellanox.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Linux MM <linux-mm@kvack.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190523145839.GB31896@fuggles.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Fri, 24 May 2019 17:00:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 6:53 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+On 5/23/19 10:58 AM, Will Deacon wrote:
+> On Wed, May 22, 2019 at 12:54:13PM -0700, Linus Torvalds wrote:
+>> On Wed, May 22, 2019 at 8:40 AM Waiman Long <longman@redhat.com> wrote:
+>>> +#if defined(CONFIG_PREEMPT) && \
+>>> +   (defined(CONFIG_DEBUG_PREEMPT) || !defined(CONFIG_X86))
+>>> +#define lockevent_percpu_inc(x)                this_cpu_inc(x)
+>>> +#define lockevent_percpu_add(x, v)     this_cpu_add(x, v)
+>> Why that CONFIG_X86 special case?
+>>
+>> On x86, the regular non-underscore versionm is perfectly fine, and the
+>> underscore is no faster or simpler.
+>>
+>> So just make it be
+>>
+>>    #if defined(CONFIG_PREEMPT)
+>>      .. non-underscore versions..
+>>    #else
+>>      .. underscore versions ..
+>>    #endif
+>>
+>> and realize that x86 simply doesn't _care_. On x86, it will be one
+>> single instruction regardless.
+>>
+>> Non-x86 may prefer the underscore versions for the non-preempt case.
+> To be honest, given this depends on LOCK_EVENT_COUNTS, I'd be inclined to
+> keep things simple and drop the underscore versions entirely. Saves having
+> to worry about things like "could I take an interrupt during the add?".
 >
-> On Fri, May 24, 2019 at 06:27:09PM +0200, Daniel Vetter wrote:
-> > Sure topic branch sounds fine, we do that all the time with various
-> > subsystems all over. We have ready made scripts for topic branches and
-> > applying pulls from all over, so we can even soak test everything in our
-> > integration tree. In case there's conflicts or just to make sure
-> > everything works, before we bake the topic branch into permanent history
-> > (the main drm.git repo just can't be rebased, too much going on and too
-> > many people involvd).
->
-> We don't rebase rdma.git either for the same reasons and nor does
-> netdev
->
-> So the usual flow for a shared topic branch is also no-rebase -
-> testing/etc needs to be done before things get applied to it.
+I have sent out the v2 patch that simplifies the condition. Now the
+underscore versions will be used for !preempt kernel and non-underscore
+version used in preempt kernel. The non-underscore versions may generate
+a lot more unnecessary code when CONFIG_PREEMPT_COUNT is defined.
 
-Rebasing before it gets baked into any tree is still ok. And for
-something like this we do need a test branch first, which might need a
-fixup patch squashed in. On the drm side we have a drm-local
-integration tree for this stuff (like linux-next, but without all the
-other stuff that's not relevant for graphics). But yeah that's just
-details, easy to figure out.
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+Cheers,
+Longman
+
