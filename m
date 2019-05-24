@@ -2,123 +2,168 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC023C282E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 22:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D86C282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 23:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CDFB2184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 22:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E343217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 23:06:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558739218;
+	bh=5GNjMd/TCLLjHnXRdSlD1qdYRS2d2nUOK/2fk7s1iuI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=U5HaoZGKOLvdPGPmS6v0NjfNKcKFPO7s8cvnjj1ferwLbRSTkOkv9KDIraZMh+3BP
+	 8ANgwE13USEOU1jC18+kfF1dcjFk8r624wcGlE+VU6YAs9FdACnKP5LPK/S1dv4qkc
+	 Ts5y5TZ8HmIqn0frxC1AtgOtas5cLighKD8l0fuk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732129AbfEXWzJ (ORCPT
+        id S1732147AbfEXXG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 18:55:09 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:55125 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727091AbfEXWzJ (ORCPT
+        Fri, 24 May 2019 19:06:56 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:34178 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727091AbfEXXG4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 18:55:09 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 7914E802FB; Sat, 25 May 2019 00:54:56 +0200 (CEST)
-Date:   Sat, 25 May 2019 00:55:05 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        linux-leds@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.1 033/375] leds: avoid races with workqueue
-Message-ID: <20190524225505.GA16076@amd>
-References: <20190522192115.22666-1-sashal@kernel.org>
- <20190522192115.22666-33-sashal@kernel.org>
+        Fri, 24 May 2019 19:06:56 -0400
+Received: by mail-lf1-f68.google.com with SMTP id v18so8255154lfi.1
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 16:06:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pQINizPFkNPnto59K0HZACSWR9ngvO3M7aOeMX8dPW8=;
+        b=GmxgEiG+jMRxi4LmBi9k7J2C8n7RpiC2NBCZ3DLX08K85gcoyywZ4tl+P32/mMwcqG
+         O4Y184LyNs6/HdVttJYg26SnTEZenmTPwRlWi8OYmFedIXmlG1SXqhBugOdxMaqrphSg
+         0/iJn6C0x9KeeqMxCK7RF+v4pYfhlNizqxwtc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pQINizPFkNPnto59K0HZACSWR9ngvO3M7aOeMX8dPW8=;
+        b=Jqi65uJO0FB/qdV7+/ozDId50ZTx4is7efMWOBIH7obbvE0g8AN63AI0qAjrruus8G
+         r8LxoG527UxILwHmEGjn80XqcIfaFN0G+6EQPVfSDSIRL2EWySX/Q22Yygf1RbWRvbbg
+         trMq1pLj5fOgATIo59hLZRtWmKIUrP+ll7yHAlIXtlltaLglEjbv5l+/izxWwd87kD0/
+         SnkQ8v+S/n10nP6OHiRYZGLwpLCm8DuoepPxhSjEsGzrvqG+uKmn8bwjVoddt/xwBswl
+         7TEQ4NUggRVDUbOuqS+ltJaVCEjaJqiC/ZyqRaK66mDGTpE/ByfLIU9IJP9Oj6hRaPr3
+         1uYQ==
+X-Gm-Message-State: APjAAAWDDMekD7VG34VHtazTBofzUnVv5Gdg1Zf0TrZPjURzJWmmcJiF
+        Ujd/LNAip3Z2DC4wHhhA5lQlmIjBGrY=
+X-Google-Smtp-Source: APXvYqyW73enIXo49JfJYtAg+JqTf+xLVl8Qd28o5852jedYfXkJ6hZJowFQdFki1/uL4gV9BEmncg==
+X-Received: by 2002:a19:27cc:: with SMTP id n195mr26505715lfn.172.1558739213015;
+        Fri, 24 May 2019 16:06:53 -0700 (PDT)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id g15sm740722ljk.83.2019.05.24.16.06.52
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 May 2019 16:06:52 -0700 (PDT)
+Received: by mail-lj1-f169.google.com with SMTP id r76so4544533lja.12
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 16:06:52 -0700 (PDT)
+X-Received: by 2002:a2e:97d8:: with SMTP id m24mr44440219ljj.52.1558738775052;
+ Fri, 24 May 2019 15:59:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="zYM0uCDKw75PZbzx"
-Content-Disposition: inline
-In-Reply-To: <20190522192115.22666-33-sashal@kernel.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20190507164317.13562-1-cyphar@cyphar.com> <20190507164317.13562-6-cyphar@cyphar.com>
+In-Reply-To: <20190507164317.13562-6-cyphar@cyphar.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 24 May 2019 15:59:19 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whbFMg4+HuWOBuHpvDNiAyowX2HUowv3+pt8vPWk5W-YQ@mail.gmail.com>
+Message-ID: <CAHk-=whbFMg4+HuWOBuHpvDNiAyowX2HUowv3+pt8vPWk5W-YQ@mail.gmail.com>
+Subject: Re: [PATCH v7 5/5] namei: resolveat(2) syscall
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Christian Brauner <christian@brauner.io>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 7, 2019 at 9:44 AM Aleksa Sarai <cyphar@cyphar.com> wrote:
+>
+> The most obvious syscall to add support for the new LOOKUP_* scoping
+> flags would be openat(2) (along with the required execveat(2) change
+> included in this series). However, there are a few reasons to not do
+> this:
 
---zYM0uCDKw75PZbzx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+So honestly, this last patch is what turns me off the whole thing.
 
-Hi!
+It goes from a nice new feature ("you can use O_NOSYMLINKS to disallow
+symlink traversal") to a special-case joke that isn't worth it any
+more. You get a useless path descrptor back from s special hacky
+system call, you don't actually get the useful data that you probably
+*want* the open to get you.
 
-Could we hold this patch for now?
+Sure, you could eventually then use a *second* system call (openat
+with O_EMPTYPATH) to actually get something you can *use*, but at this
+point you've just wasted everybodys time and effort with a pointless
+second system call.
 
-> From: Pavel Machek <pavel@ucw.cz>
->=20
-> [ Upstream commit 0db37915d912e8dc6588f25da76d3ed36718d92f ]
->=20
-> There are races between "main" thread and workqueue. They manifest
-> themselves on Thinkpad X60:
->=20
-> This should result in LED blinking, but it turns it off instead:
->=20
->     root@amd:/data/pavel# cd /sys/class/leds/tpacpi\:\:power
->     root@amd:/sys/class/leds/tpacpi::power# echo timer > trigger
->     root@amd:/sys/class/leds/tpacpi::power# echo timer > trigger
->=20
-> It should be possible to transition from blinking to solid on by echo
-> 0 > brightness; echo 1 > brightness... but that does not work, either,
-> if done too quickly.
->=20
-> Synchronization of the workqueue fixes both.
->=20
-> Fixes: 1afcadfcd184 ("leds: core: Use set_brightness_work for the blockin=
-g op")
-> Signed-off-by: Pavel Machek <pavel@ucw.cz>
-> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/leds/led-class.c | 1 +
->  drivers/leds/led-core.c  | 5 +++++
->  2 files changed, 6 insertions(+)
+So I really don't see the point of this whole thing. Why even bother.
+Nobody sane will ever use that odd two-systemcall model, and even if
+they did, it would be slower and inconvenient.
 
-> index e3da7c03da1b5..e9ae7f87ab900 100644
-> --- a/drivers/leds/led-core.c
-> +++ b/drivers/leds/led-core.c
-> @@ -164,6 +164,11 @@ static void led_blink_setup(struct led_classdev *led=
-_cdev,
->  		     unsigned long *delay_on,
->  		     unsigned long *delay_off)
->  {
-> +	/*
-> +	 * If "set brightness to 0" is pending in workqueue, we don't
-> +	 * want that to be reordered after blink_set()
-> +	 */
-> +	flush_work(&led_cdev->set_brightness_work);
->  	if (!test_bit(LED_BLINK_ONESHOT, &led_cdev->work_flags) &&
->  	    led_cdev->blink_set &&
->  	    !led_cdev->blink_set(led_cdev, delay_on, delay_off))
+The whole and only point of this seems to be the two lines that say
 
-This part is likely buggy. It seems triggers are using this from
-atomic context... ledtrig-disk for example.
+       if (flags & ~VALID_RESOLVE_FLAGS)
+              return -EINVAL;
 
+but that adds absolutely zero value to anything.  The argument is that
+"we can't add it to existing flags, because old kernels won't honor
+it", but that's a completely BS argument, since the user has to have a
+fallback anyway for the old kernel case - so we literally could much
+more conveniently just expose it as a prctl() or something to _ask_
+the kernel what flags it honors.
 
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+So to me, this whole argument means that "Oh, we'll make it really
+inconvenient to actually use this".
 
---zYM0uCDKw75PZbzx
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+If we want to introduce a new system call that allows cool new
+features, it should have *more* powerful semantics than the existing
+ones, not be clearly weaker and less useful.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+So how about making the new system call be something that is a
+*superset* of "openat()" so that people can use that, and then if it
+fails, just fall back to openat(). But if it succeeds, it just
+succeeds, and you don't need to then do other system calls to actually
+make it useful.
 
-iEYEARECAAYFAlzodkkACgkQMOfwapXb+vI2uwCcDhcBUedPuemmTJH8HBfplj3n
-Am0An36r7SaUBERnD+oeUjpUQZCYLV3s
-=RkIY
------END PGP SIGNATURE-----
+Make the new system call something people *want* to use because it's
+useful, not a crippled useless thing that has some special case use
+for some limited thing and just wastes system call space.
 
---zYM0uCDKw75PZbzx--
+Example *useful* system call attributes:
+
+ - make it like openat(), but have another argument with the "limit flags"
+
+ - maybe return more status of the resulting file. People very
+commonly do "open->fstat" just to get the size for mmap or to check
+some other detail of the file before use.
+
+In other words, make the new system call *useful*. Not some castrated
+"not useful on its own" thing.
+
+So I still support the whole "let's make it easy to limit path lookup
+in sane ways", but this model of then limiting using the result sanely
+just makes me a sad panda.
+
+                     Linus
