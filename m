@@ -2,149 +2,163 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC80C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0106EC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA79720863
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:05:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="f+X+SrLA"
+	by mail.kernel.org (Postfix) with ESMTP id BB4E821841
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:06:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388762AbfEXGFV (ORCPT
+        id S2388814AbfEXGGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 02:05:21 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:51717 "EHLO pegase1.c-s.fr"
+        Fri, 24 May 2019 02:06:31 -0400
+Received: from foss.arm.com ([217.140.101.70]:34388 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387622AbfEXGFU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 02:05:20 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 459G7L03RnzB09ZF;
-        Fri, 24 May 2019 08:05:18 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=f+X+SrLA; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id f7uJQh1rUrn5; Fri, 24 May 2019 08:05:17 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 459G7K5kJ7zB09ZD;
-        Fri, 24 May 2019 08:05:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1558677917; bh=UDbhPInoRZ11n1EDsJaZvijySZH5TsRju++Hii5RRqM=;
-        h=From:In-Reply-To:Subject:To:Cc:Date:From;
-        b=f+X+SrLAXqAHWTrmqUnU5zVxYu/ra50Al5ZVsS9seK7KvlKsJO+wp5tFyEmudRrZk
-         iy9pLRkwj0UCsdP/6KP8otMy3W9rg5t05Zq+0R8Ik3K1cLcuPlnhS8ZqZA0K6+aWIQ
-         /uHV3uRNpAHChYqVLkHVU91LFxvu79tqw9yqVYXI=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id AAA318B790;
-        Fri, 24 May 2019 08:05:18 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id EurX6mTew14t; Fri, 24 May 2019 08:05:18 +0200 (CEST)
-Received: from po16846vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 915708B76F;
-        Fri, 24 May 2019 08:05:18 +0200 (CEST)
-Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 53A6966293; Fri, 24 May 2019 06:05:18 +0000 (UTC)
-Message-Id: <8164abbe117d8353bb88132d7cfa8bc26a60ca66.1558677767.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-In-Reply-To: <20190522211724.GC456@darkstar.musicnaut.iki.fi>
-Subject: [RFC PATCH v2] powerpc: fix kexec failure on book3s/32
-To:     Aaro Koskinen <aaro.koskinen@iki.fi>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Fri, 24 May 2019 06:05:18 +0000 (UTC)
+        id S2387622AbfEXGGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 02:06:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8DCD5374;
+        Thu, 23 May 2019 23:06:30 -0700 (PDT)
+Received: from [10.162.42.134] (p8cg001049571a15.blr.arm.com [10.162.42.134])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AB13C3F5AF;
+        Thu, 23 May 2019 23:06:24 -0700 (PDT)
+Subject: Re: [PATCH V3 2/4] arm64/mm: Hold memory hotplug lock while walking
+ for kernel page table dump
+To:     Mark Rutland <mark.rutland@arm.com>,
+        Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        akpm@linux-foundation.org, catalin.marinas@arm.com,
+        will.deacon@arm.com, mgorman@techsingularity.net,
+        james.morse@arm.com, robin.murphy@arm.com, cpandya@codeaurora.org,
+        arunks@codeaurora.org, dan.j.williams@intel.com, osalvador@suse.de,
+        david@redhat.com, cai@lca.pw, logang@deltatee.com,
+        ira.weiny@intel.com
+References: <1557824407-19092-1-git-send-email-anshuman.khandual@arm.com>
+ <1557824407-19092-3-git-send-email-anshuman.khandual@arm.com>
+ <20190515165847.GH16651@dhcp22.suse.cz>
+ <20190516102354.GB40960@lakrids.cambridge.arm.com>
+ <20190516110529.GQ16651@dhcp22.suse.cz>
+ <20190522164212.GD23592@lakrids.cambridge.arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <c3be0539-2ffe-07b6-f106-12ccb93bbe2f@arm.com>
+Date:   Fri, 24 May 2019 11:36:35 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20190522164212.GD23592@lakrids.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes: 63b2bc619565 ("powerpc/mm/32s: Use BATs for STRICT_KERNEL_RWX")
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/kernel/machine_kexec_32.c | 8 ++++++++
- arch/powerpc/mm/book3s32/mmu.c         | 7 +++++--
- arch/powerpc/mm/mmu_decl.h             | 2 ++
- 3 files changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/kernel/machine_kexec_32.c b/arch/powerpc/kernel/machine_kexec_32.c
-index affe5dcce7f4..83e61a8f8468 100644
---- a/arch/powerpc/kernel/machine_kexec_32.c
-+++ b/arch/powerpc/kernel/machine_kexec_32.c
-@@ -15,6 +15,7 @@
- #include <asm/cacheflush.h>
- #include <asm/hw_irq.h>
- #include <asm/io.h>
-+#include <mm/mmu_decl.h>
- 
- typedef void (*relocate_new_kernel_t)(
- 				unsigned long indirection_page,
-@@ -35,6 +36,8 @@ void default_machine_kexec(struct kimage *image)
- 	unsigned long page_list;
- 	unsigned long reboot_code_buffer, reboot_code_buffer_phys;
- 	relocate_new_kernel_t rnk;
-+	unsigned long bat_size = 128 << 10;
-+	unsigned long bat_mask = ~(bat_size - 1);
- 
- 	/* Interrupts aren't acceptable while we reboot */
- 	local_irq_disable();
-@@ -54,6 +57,11 @@ void default_machine_kexec(struct kimage *image)
- 	memcpy((void *)reboot_code_buffer, relocate_new_kernel,
- 						relocate_new_kernel_size);
- 
-+	printk(KERN_INFO "Reboot code buffer at %lx\n", reboot_code_buffer);
-+	mtsrin(mfsrin(reboot_code_buffer) & ~SR_NX, reboot_code_buffer);
-+	setibat(7, reboot_code_buffer & bat_mask, reboot_code_buffer_phys & bat_mask,
-+		bat_size, PAGE_KERNEL_TEXT);
-+
- 	flush_icache_range(reboot_code_buffer,
- 				reboot_code_buffer + KEXEC_CONTROL_PAGE_SIZE);
- 	printk(KERN_INFO "Bye!\n");
-diff --git a/arch/powerpc/mm/book3s32/mmu.c b/arch/powerpc/mm/book3s32/mmu.c
-index fc073cb2c517..7124700edb0f 100644
---- a/arch/powerpc/mm/book3s32/mmu.c
-+++ b/arch/powerpc/mm/book3s32/mmu.c
-@@ -124,8 +124,8 @@ static unsigned int block_size(unsigned long base, unsigned long top)
-  * of 2 between 128k and 256M.
-  * Only for 603+ ...
-  */
--static void setibat(int index, unsigned long virt, phys_addr_t phys,
--		    unsigned int size, pgprot_t prot)
-+void setibat(int index, unsigned long virt, phys_addr_t phys,
-+	     unsigned int size, pgprot_t prot)
- {
- 	unsigned int bl = (size >> 17) - 1;
- 	int wimgxpp;
-@@ -197,6 +197,9 @@ void mmu_mark_initmem_nx(void)
- 	if (cpu_has_feature(CPU_FTR_601))
- 		return;
- 
-+	if (IS_ENABLED(CONFIG_KEXEC))
-+		nb--;
-+
- 	for (i = 0; i < nb - 1 && base < top && top - base > (128 << 10);) {
- 		size = block_size(base, top);
- 		setibat(i++, PAGE_OFFSET + base, base, size, PAGE_KERNEL_TEXT);
-diff --git a/arch/powerpc/mm/mmu_decl.h b/arch/powerpc/mm/mmu_decl.h
-index 7bac0aa2026a..478584d50cf2 100644
---- a/arch/powerpc/mm/mmu_decl.h
-+++ b/arch/powerpc/mm/mmu_decl.h
-@@ -103,6 +103,8 @@ void print_system_hash_info(void);
- extern void mapin_ram(void);
- extern void setbat(int index, unsigned long virt, phys_addr_t phys,
- 		   unsigned int size, pgprot_t prot);
-+void setibat(int index, unsigned long virt, phys_addr_t phys,
-+	     unsigned int size, pgprot_t prot);
- 
- extern int __map_without_bats;
- extern unsigned int rtas_data, rtas_size;
--- 
-2.13.3
 
+On 05/22/2019 10:12 PM, Mark Rutland wrote:
+> On Thu, May 16, 2019 at 01:05:29PM +0200, Michal Hocko wrote:
+>> On Thu 16-05-19 11:23:54, Mark Rutland wrote:
+>>> Hi Michal,
+>>>
+>>> On Wed, May 15, 2019 at 06:58:47PM +0200, Michal Hocko wrote:
+>>>> On Tue 14-05-19 14:30:05, Anshuman Khandual wrote:
+>>>>> The arm64 pagetable dump code can race with concurrent modification of the
+>>>>> kernel page tables. When a leaf entries are modified concurrently, the dump
+>>>>> code may log stale or inconsistent information for a VA range, but this is
+>>>>> otherwise not harmful.
+>>>>>
+>>>>> When intermediate levels of table are freed, the dump code will continue to
+>>>>> use memory which has been freed and potentially reallocated for another
+>>>>> purpose. In such cases, the dump code may dereference bogus addressses,
+>>>>> leading to a number of potential problems.
+>>>>>
+>>>>> Intermediate levels of table may by freed during memory hot-remove, or when
+>>>>> installing a huge mapping in the vmalloc region. To avoid racing with these
+>>>>> cases, take the memory hotplug lock when walking the kernel page table.
+>>>>
+>>>> Why is this a problem only on arm64 
+>>>
+>>> It looks like it's not -- I think we're just the first to realise this.
+>>>
+>>> AFAICT x86's debugfs ptdump has the same issue if run conccurently with
+>>> memory hot remove. If 32-bit arm supported hot-remove, its ptdump code
+>>> would have the same issue.
+>>>
+>>>> and why do we even care for debugfs? Does anybody rely on this thing
+>>>> to be reliable? Do we even need it? Who is using the file?
+>>>
+>>> The debugfs part is used intermittently by a few people working on the
+>>> arm64 kernel page tables. We use that both to sanity-check that kernel
+>>> page tables are created/updated correctly after changes to the arm64 mmu
+>>> code, and also to debug issues if/when we encounter issues that appear
+>>> to be the result of kernel page table corruption.
+>>
+>> OK, I see. Thanks for the clarification.
+>>
+>>> So while it's rare to need it, it's really useful to have when we do
+>>> need it, and I'd rather not remove it. I'd also rather that it didn't
+>>> have latent issues where we can accidentally crash the kernel when using
+>>> it, which is what this patch is addressing.
+>>
+>> While I agree, do we rather want to document that you shouldn't be using
+>> the debugging tool while the hotplug is ongoing because you might get a
+>> garbage or crash the kernel in the worst case? In other words is the
+>> absolute correctness worth the additional maint. burden wrt. to future
+>> hotplug changes?
+> 
+> I don't think that it's reasonable for this code to bring down the
+> kernel unless the kernel page tables are already corrupt. I agree we
+> should minimize the impact on other code, and I'm happy to penalize
+> ptdump so long as it's functional and safe.
+> 
+> I would like it to be possible to use the ptdump code to debug
+> hot-remove, so I'd rather not make the two mutually exclusive. I'd also
+> like it to be possible to use this in-the-field, and for that asking an
+> admin to potentially crash their system isn't likely to fly.
+> 
+>>>> I am asking because I would really love to make mem hotplug locking less
+>>>> scattered outside of the core MM than more. Most users simply shouldn't
+>>>> care. Pfn walkers should rely on pfn_to_online_page.
+> 
+> Jut to check, is your plan to limit access to the hotplug lock, or to
+> redesign the locking scheme?
+> 
+>>> I'm not sure if that would help us here; IIUC pfn_to_online_page() alone
+>>> doesn't ensure that the page remains online. Is there a way to achieve
+>>> that other than get_online_mems()?
+>>
+>> You have to pin the page to make sure the hotplug is not going to
+>> offline it.
+> 
+> I'm not exactly sure how pinning works -- is there a particular set of
+> functions I should look at for that?
+> 
+> I guess that if/when we allocate the vmemmap from hotpluggable memory
+> that will require the pinning code to take the hotplug lock internally
+> to ensure that the struct page is accessible while we attempt to pin it?
+
+I am bit confused here.
+
+Which pages are we trying to pin ?
+
+1) init_mm page table pages (vmemmap + linear) for the range to be hot-removed
+2) struct pages for the PFN range to be hot-removed
+
+We need hot-remove process to be blocked enough not to free the intermediate
+level page table pages which will ensure kernel does not crash during ptdump.
+
+AFAICT
+
+1) Holding reference on (1) prevent freeing of pgtable pages during hot-remove
+2) Holding reference on (2) prevent range PFN from being hot removed which in
+   turn can prevent forward progress for hot-remove process and hence possibly
+   prevent freeing of intermediate level pgtable pages.
+
+But both the above solutions are bit complex and will consume more cycles as
+compared to just take a memory_hotplug_lock. In case of (1) it is bit tricker
+as ptdump code has to first walk init_mm to get to all the pgtable pages for
+taking a reference/lock on them. Just wondering if it is worth the trouble.
