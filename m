@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B20DC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:26:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D0AC282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 177B821841
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:26:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE6C921841
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:26:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388922AbfEXG00 (ORCPT
+        id S2388607AbfEXG0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 02:26:26 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:27206 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388141AbfEXG0Y (ORCPT
+        Fri, 24 May 2019 02:26:23 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:17003 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387936AbfEXG0X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 02:26:24 -0400
-X-UUID: a1fa9814b30f43b1ac4507bc9001ea2c-20190524
-X-UUID: a1fa9814b30f43b1ac4507bc9001ea2c-20190524
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        Fri, 24 May 2019 02:26:23 -0400
+X-UUID: 08e1021ea9fc46bb84750d23cfff3b90-20190524
+X-UUID: 08e1021ea9fc46bb84750d23cfff3b90-20190524
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
         (envelope-from <biao.huang@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1351067012; Fri, 24 May 2019 14:26:17 +0800
+        with ESMTP id 1460366481; Fri, 24 May 2019 14:26:15 +0800
 Received: from mtkcas07.mediatek.inc (172.21.101.84) by
  mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 24 May 2019 14:26:16 +0800
+ 15.0.1395.4; Fri, 24 May 2019 14:26:14 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 24 May 2019 14:26:15 +0800
+ Transport; Fri, 24 May 2019 14:26:14 +0800
 From:   Biao Huang <biao.huang@mediatek.com>
 To:     Jose Abreu <joabreu@synopsys.com>
 CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
@@ -46,9 +46,9 @@ CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
         <linux-mediatek@lists.infradead.org>, <yt.shen@mediatek.com>,
         <biao.huang@mediatek.com>, <jianguo.zhang@mediatek.comi>,
         <boon.leong.ong@intel.com>
-Subject: [v4, PATCH 3/3] net: stmmac: dwmac-mediatek: modify csr_clk value to fix mdio read/write fail
-Date:   Fri, 24 May 2019 14:26:09 +0800
-Message-ID: <1558679169-26752-4-git-send-email-biao.huang@mediatek.com>
+Subject: [v4, PATCH 1/3] net: stmmac: update rx tail pointer register to fix rx dma hang issue.
+Date:   Fri, 24 May 2019 14:26:07 +0800
+Message-ID: <1558679169-26752-2-git-send-email-biao.huang@mediatek.com>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <1558679169-26752-1-git-send-email-biao.huang@mediatek.com>
 References: <1558679169-26752-1-git-send-email-biao.huang@mediatek.com>
@@ -60,29 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1. the frequency of csr clock is 66.5MHz, so the csr_clk value should
-be 0 other than 5.
-2. the csr_clk can be got from device tree, so remove initialization here.
+Currently we will not update the receive descriptor tail pointer in
+stmmac_rx_refill. Rx dma will think no available descriptors and stop
+once received packets exceed DMA_RX_SIZE, so that the rx only test will fail.
 
-Fixes: 9992f37e346b ("stmmac: dwmac-mediatek: add support for mt2712")
+Update the receive tail pointer in stmmac_rx_refill to add more descriptors
+to the rx channel, so packets can be received continually
+
+Fixes: 54139cf3bb33 ("net: stmmac: adding multiple buffers for rx")
 Signed-off-by: Biao Huang <biao.huang@mediatek.com>
 ---
- .../net/ethernet/stmicro/stmmac/dwmac-mediatek.c   |    2 --
- 1 file changed, 2 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
-index bf25629..126b66b 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
-@@ -346,8 +346,6 @@ static int mediatek_dwmac_probe(struct platform_device *pdev)
- 		return PTR_ERR(plat_dat);
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 5678b86..06487a6 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -3338,6 +3338,7 @@ static inline void stmmac_rx_refill(struct stmmac_priv *priv, u32 queue)
+ 		entry = STMMAC_GET_ENTRY(entry, DMA_RX_SIZE);
+ 	}
+ 	rx_q->dirty_rx = entry;
++	stmmac_set_rx_tail_ptr(priv, priv->ioaddr, rx_q->rx_tail_addr, queue);
+ }
  
- 	plat_dat->interface = priv_plat->phy_mode;
--	/* clk_csr_i = 250-300MHz & MDC = clk_csr_i/124 */
--	plat_dat->clk_csr = 5;
- 	plat_dat->has_gmac4 = 1;
- 	plat_dat->has_gmac = 0;
- 	plat_dat->pmt = 0;
+ /**
 -- 
 1.7.9.5
 
