@@ -2,186 +2,140 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE44C282E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C6DC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 525C62175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4475A21773
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:34:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=appneta.com header.i=@appneta.com header.b="RTj7+3ho"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390978AbfEXQdd (ORCPT
+        id S2391018AbfEXQe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 12:33:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52266 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390021AbfEXQdc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 12:33:32 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B100D309704F;
-        Fri, 24 May 2019 16:33:16 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
-        by smtp.corp.redhat.com (Postfix) with SMTP id A78C8608CD;
-        Fri, 24 May 2019 16:33:11 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Fri, 24 May 2019 18:33:16 +0200 (CEST)
-Date:   Fri, 24 May 2019 18:33:10 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Deepa Dinamani <deepa.kernel@gmail.com>
-Cc:     David Laight <David.Laight@aculab.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "dbueso@suse.de" <dbueso@suse.de>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        Davidlohr Bueso <dave@stgolabs.net>, Eric Wong <e@80x24.org>,
-        Jason Baron <jbaron@akamai.com>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        linux-aio <linux-aio@kvack.org>,
-        Omar Kilani <omar.kilani@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH v2] signal: Adjust error codes according to
- restore_user_sigmask()
-Message-ID: <20190524163310.GG2655@redhat.com>
-References: <20190522161407.GB4915@redhat.com>
- <CABeXuvpjrW5Gt95JC-_rYkOA=6RCD5OtkEQdwZVVqGCE3GkQOQ@mail.gmail.com>
- <4f7b6dbeab1d424baaebd7a5df116349@AcuMS.aculab.com>
- <20190523145944.GB23070@redhat.com>
- <345cfba5edde470f9a68d913f44fa342@AcuMS.aculab.com>
- <20190523163604.GE23070@redhat.com>
- <f0eced5677c144debfc5a69d0d327bc1@AcuMS.aculab.com>
- <CABeXuvo-wey+NHWb4gi=FSRrjJOKkVcLPQ-J+dchJeHEbhGQ6g@mail.gmail.com>
- <20190524141054.GB2655@redhat.com>
- <CABeXuvqSzy+v=3Y5NnMmfob7bvuNkafmdDqoex8BVENN3atqZA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABeXuvqSzy+v=3Y5NnMmfob7bvuNkafmdDqoex8BVENN3atqZA@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 24 May 2019 16:33:32 +0000 (UTC)
+        Fri, 24 May 2019 12:34:57 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40491 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390392AbfEXQe5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 12:34:57 -0400
+Received: by mail-pg1-f194.google.com with SMTP id d30so5336554pgm.7
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 09:34:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=appneta.com; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=jMjLROklthN+O3Df8yt9TlHidscQVhl/xhe8VKBhLw0=;
+        b=RTj7+3ho4OVZTP8Zx35lNiConf8t4mXw1wlWc21/pod0vTNlY8j/MoTM0eGPSLppM8
+         sRyavB6yAVpbZgB5HE7IGIRsBTgCs3ES4GnUhWYZCLSSRaWgr4T1k1akNZEbyenwNpap
+         KmziuotEvNKVL9Agwn8XZS8+K+40oh3/C2Teo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=jMjLROklthN+O3Df8yt9TlHidscQVhl/xhe8VKBhLw0=;
+        b=KxyhalEVDR17ecjAFxr9CoXWIAcL9RcQ2e3YKlyUxRB7woocmnkOh50U7ZrHVWQxta
+         +7fO/CN9L7lKi+Sg2AxJjY3j3FQXBDMFlEYcYXmOuw5k56wTVCGR3mCvfyeu6sqysZ/F
+         kBbBNlvS2NAJdlRrnNOlCMTK4hk1+TVZUwC8Vmy1ZgYK+Pz89DpPMD9kU+sep8AOKodT
+         KfgKzE2x176n1rQtX3Uc0EEbZdFJXUMpXsSVTqgeso0xdKyo4rsFdIUhF7TGE7yPOJnL
+         lwyLNazNrPD4s89o3X/mAK2V+iaZalhiC0pelRsqD/vFnTG56qglE6iWVezmZ+nB4XAr
+         0mMA==
+X-Gm-Message-State: APjAAAU2LEf6MSov0NQhxNMtcwxmhp/r3wLoQrKVMvdqq+QpfydZRUBN
+        IA8JCbBxH8qx4S5CCCkAvwxqSw==
+X-Google-Smtp-Source: APXvYqyx2N/q7mx3gGOoUYMl3j9OfFC00BbVqsItAFzefwBvP16+2eS7FZ9WPkOnQwkTuBN0z2WxYQ==
+X-Received: by 2002:a17:90a:d16:: with SMTP id t22mr10712067pja.130.1558715695943;
+        Fri, 24 May 2019 09:34:55 -0700 (PDT)
+Received: from jltm109.jaalam.net (vancouver-a.appneta.com. [209.139.228.33])
+        by smtp.gmail.com with ESMTPSA id l65sm4818808pfb.7.2019.05.24.09.34.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 May 2019 09:34:55 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCH net 1/4] net/udp_gso: Allow TX timestamp with UDP GSO
+From:   Fred Klassen <fklassen@appneta.com>
+In-Reply-To: <CAF=yD-LtAKpND601LQrC1+=iF6spSUXVdUapcsbJdv5FYa=5Jg@mail.gmail.com>
+Date:   Fri, 24 May 2019 09:34:54 -0700
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        Willem de Bruijn <willemb@google.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <AFC1ECC8-BFAC-4718-B0C9-97CC4BD1F397@appneta.com>
+References: <20190523210651.80902-1-fklassen@appneta.com>
+ <20190523210651.80902-2-fklassen@appneta.com>
+ <CAF=yD-Jf95De=z_nx9WFkGDa6+nRUqM_1PqGkjwaFPzOe+PfXg@mail.gmail.com>
+ <AE8E0772-7256-4B9C-A990-96930E834AEE@appneta.com>
+ <CAF=yD-LtAKpND601LQrC1+=iF6spSUXVdUapcsbJdv5FYa=5Jg@mail.gmail.com>
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/24, Deepa Dinamani wrote:
->
-> On Fri, May 24, 2019 at 7:11 AM Oleg Nesterov <oleg@redhat.com> wrote:
-> >
-> > On 05/23, Deepa Dinamani wrote:
-> > >
-> > > Ok, since there has been quite a bit of argument here, I will
-> > > backtrack a little bit and maybe it will help us understand what's
-> > > happening here.
-> > > There are many scenarios being discussed on this thread:
-> > > a. State of code before 854a6ed56839a
-> >
-> > I think everything was correct,
->
-> There were 2 things that were wrong:
->
-> 1. If an unblocked signal was received, after the ep_poll(), then the
-> return status did not indicate that.
+> Interesting. TCP timestamping takes the opposite choice and does
+> timestamp the last byte in the sendmsg request.
+>=20
 
-Yes,
+I have a difficult time with the philosophy of TX timestamping the last
+segment. The actual timestamp occurs just before the last segment
+is sent. This is neither the start  nor the end of a GSO packet, which
+to me seems somewhat arbitrary. It is even more arbitrary when using
+software TX tiimestamping. These are timestamps represent the
+time that the packet is queued onto the NIC=E2=80=99s buffer, not actual
+time leaving the wire. Queuing to a ring buffer is usually much faster
+than wire rates. Therefore, say the timestamp of the last 1500 byte=20
+segment of a 64K GSO packet may in reality be representing a time
+about half way through the burst.
 
-> This is expected behavior
-> according to man page. If this is indeed what is expected then the man
-> page should note that signal will be delivered in this case and return
-> code will still be 0.
->
-> "EINTR
-> The call was interrupted by a signal handler before either any of the
-> requested events occurred or the timeout expired; see signal(7)."
+Since the timestamp of a TX packet occurs just before any data is sent,
+I have found it most valuable to timestamp just before the first byte of=20=
 
-and what do you think the man page could say?
+the packet or burst. Conversely, I find it most valuable to get an RX
+timestamp  after the last byte arrives.
 
-This is obviously possible for any syscall, and we can't avoid this. A signal
-can come right after syscall insn completes. The signal handler will be called
-but this won't change $rax, user-space can see return code == 0 or anything else.
+> It sounds like it depends on the workload. Perhaps this then needs to
+> be configurable with an SOF_.. flag.
+>=20
 
-And this doesn't differ from the case when the signal comes before syscall returns.
+It would be interesting if a practical case can be made for timestamping
+the last segment. In my mind, I don=E2=80=99t see how that would be =
+valuable.
 
-> 2. The restoring of the sigmask is done right in the syscall part and
-> not while exiting the syscall and if you get a blocked signal here,
-> you will deliver this to userspace.
+> Another option would be to return a timestamp for every segment. But
+> they would all return the same tskey. And it causes different behavior
+> with and without hardware offload.
 
-So I assume that this time you are talking about epoll_pwait() and not epoll_wait()...
+When it comes to RX packets, getting per-packet (or per segment)
+timestamps is invaluable. They represent actual wire times. However
+my previous research into TX timestamping has led me to conclude
+that there is no practical value when timestamping every packet of=20
+a back-to-back burst.
 
-And I simply can't understand you. But yes, if the original mask doesn't include
-the pending signal it will be delivered while the syscall can return success/timout
-or -EFAULT or anything.
+When using software TX timestamping, The inter-packet timestamps
+are typically much faster than line rate. Whereas you may be sending
+on a GigE link, you may measure 20Gbps. At higher rates, I have found
+that the overhead of per-packet software timestamping can produce
+gaps in packets.
 
-This is correct, see above.
+When using hardware timestamping, I think you will find that nearly all
+adapters only allow one timestamp at a time. Therefore only one
+packet in a burst would get timestamped. There are exceptions, for
+example I am playing with a 100G Mellanox adapter that has
+per-packet TX timestamping. However, I suspect that when I am
+done testing, all I will see is timestamps that are representing wire
+rate (e.g. 123nsec per 1500 byte packet).
 
-> > > b. State after 854a6ed56839a
-> >
-> > obviously buggy,
->
-> Ok, then can you point out what specifically was wrong with
-> 854a6ed56839a?
+Beyond testing the accuracy of a NIC=E2=80=99s timestamping =
+capabilities, I
+see very little value in doing per-segment timestamping.
 
-Cough. If nothing else the lost -EINTR?
-
-> And, not how it could be more simple?
-
-Well, I already sent the patch and after that I even showed you the code with the
-patch applied. See https://lore.kernel.org/lkml/20190523143340.GA23070@redhat.com/
-
-> > What you are saying looks very confusing to me, I will assume that you
-> > meant something like
-> >
-> >         - a signal SIG_XXX was blocked before sys_epoll_pwait() was called
-> >
-> >         - sys_epoll_pwait(sigmask) unblocks SIG_XXX according to sigmask
-> >
-> >         - sys_epoll_pwait() calls do_epoll_wait() which returns success
-> >
-> >         - SIG_XXX comes after that and it is "never noticed"
-> >
-> > Yes. Everything is correct. And see my reply to David, SIG_XXX can even
-> > come _before_ sys_epoll_pwait() was called.
->
-> No, I'm talking about a signal that was not blocked.
-
-OK, see above.
-
-> > > So the question is does the userspace have to know about this signal
-> > > or not.
-> >
-> > If userspace needs to know about SIG_XXX it should not block it, that is all.
->
-> What should be the return value if a signal is detected after a fd completed?
-
-Did you mean "if a signal is detected after a ready fd was already found" ?
-
-In this case the return value should report success. But I have already lost,
-this all looks irrelevant wrt to fix we need.
-
-> > > What [b] does is to move the signal check closer to the restoration of
-> > > the signal.
-> >
-> > FOR NO REASON, afaics (to simplify, lets forget the problem with the wrong
-> > return value you are trying to fix).
->
-> As I already pointed out, the restoring of the sigmask is done during
-> the syscall and not while exiting the syscall and if you get a blocked
-> signal here, you will deliver this to userspace.
->
-> > And even if there were ANY reason to do this, note that (with or without this
-> > fix) the signal_pending() check inside restore_user_sigmask() can NOT help,
-> > simply because SIG_XXX can come right after this check.
->
-> This I pointed out already that we should probably make this sequence atomic.
-
-See above.
-
-Oleg.
 
