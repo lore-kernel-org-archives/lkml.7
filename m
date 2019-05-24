@@ -2,560 +2,127 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBA8BC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED66C282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93C4220879
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:50:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8C8420879
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:51:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ryas6VNY"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="e4/CpAO0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391665AbfEXRuQ (ORCPT
+        id S2391680AbfEXRvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 13:50:16 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:49186 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390929AbfEXRuP (ORCPT
+        Fri, 24 May 2019 13:51:05 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40041 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbfEXRvE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 13:50:15 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4OHnoWs089077;
-        Fri, 24 May 2019 12:49:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1558720190;
-        bh=2cTisi/y0uKwKNufdSECX78KXEoYdqF9x4ODZtNjdnM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Ryas6VNYKiESU86SdE2JUfo9djDdKEEQkqf4k9+1Hj0Uwt/vIFH0IgWMqdODOUHku
-         LLnBdwXl9ZbhVrld5UbEP07YEDbyIoKr2capZHcELInbnVK39zj8vbupEAMmiEolQI
-         jarq7RNJzY9yfqTw5yEvQCPiPLbMjcK6CpFBMWcU=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4OHno6X037326
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 24 May 2019 12:49:50 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 24
- May 2019 12:49:50 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 24 May 2019 12:49:50 -0500
-Received: from [10.250.96.121] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4OHnk3U118139;
-        Fri, 24 May 2019 12:49:46 -0500
-Subject: Re: [PATCH net-next 3/3] net: ethernet: ti: cpsw: add XDP support
-To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>, <hawk@kernel.org>,
-        <davem@davemloft.net>
-CC:     <ast@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>, <xdp-newbies@vger.kernel.org>,
-        <ilias.apalodimas@linaro.org>, <netdev@vger.kernel.org>,
-        <daniel@iogearbox.net>, <jakub.kicinski@netronome.com>,
-        <john.fastabend@gmail.com>
-References: <20190523182035.9283-1-ivan.khoronzhuk@linaro.org>
- <20190523182035.9283-4-ivan.khoronzhuk@linaro.org>
-From:   grygorii <grygorii.strashko@ti.com>
-Message-ID: <6a88616b-9a49-77c3-577e-40670f62f953@ti.com>
-Date:   Fri, 24 May 2019 20:49:38 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190523182035.9283-4-ivan.khoronzhuk@linaro.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 24 May 2019 13:51:04 -0400
+Received: by mail-pl1-f195.google.com with SMTP id g69so4453838plb.7
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 10:51:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=ocLpeABc0HQG8VakKMn2nzLynuB7SdZa/fkKOnImdKM=;
+        b=e4/CpAO0cLXVFJXkjwP4Q7OvrYfhoyHJdNe2WEcZMZJnJDciggEGccrFo8JVoGXtb5
+         b+zlU3vEDkzcWrUZTvrPARbOM8V3XuERPwDfVYLz3nWYcwpRJtEcMv9ONyyYFXSyTIpg
+         m4VAyWJawqnztcr3Ph4Y4uyNnv7qZkXYF2a+jg4eC/vvGD8tWIArlWDDO/1L4cy2Qbyi
+         CK/+ImPgjQegUn/M/oIkFxI6j4XduMpxad9NQmsJwVRPlODAOfilPBrHk4icV0RFXCA4
+         uhas3dPiAbiPZXa+hw/CwbyhY7fx+X6PmhYKDuTJwMyZU50MFV80XP55bCuIjzGlG9EK
+         tMNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=ocLpeABc0HQG8VakKMn2nzLynuB7SdZa/fkKOnImdKM=;
+        b=Yu1GFWu8LO0xQaZjzs+qIqvli+A5HP3/u2SKojGdmL39Hg9mXYvEqqKG70azNAacaB
+         OKd9aG+d79z6yPO8622NwGXDR0Tve+6vTYJPCL9NDAWNfs2FWvly8xm0qavZQtZL/ZaM
+         oNFN/hpazKVwO6/iwUSQTtP/xijK88xhTQEAGkd1CAiB91H60bf4kxjky+NthPrKJ86m
+         275gycKtKPNeTSBV7JIbgt5fEddIzW0U2qpQ9eD4ve2sYUv4fbLGiAO4loRUN0I3vllZ
+         SMwQFRoaghijr+MCIsLRRPOcN9358ZgQ1nMDwFY5ytY6X1TcCsf6F8LsX5LXMyRfPMpM
+         Q1dA==
+X-Gm-Message-State: APjAAAVBauLuGo8F+2Rms0/GRphFhHlF2Oj6GI+DHa+C8vZ4ZxvBnxEx
+        O0VLV19Mt9pZfkemijcvJdHfRA==
+X-Google-Smtp-Source: APXvYqzzY81ZrfYrcbzt983IOgBBG5J0RNb114wVXJ/FR0byAfcIPsoMJBqiR3z1BlD8XAqhWlGIrg==
+X-Received: by 2002:a17:902:10c:: with SMTP id 12mr107916591plb.61.1558720264308;
+        Fri, 24 May 2019 10:51:04 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:25e7:e273:cc72:2b04? ([2601:646:c200:1ef2:25e7:e273:cc72:2b04])
+        by smtp.gmail.com with ESMTPSA id 12sm8835425pfs.106.2019.05.24.10.51.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 May 2019 10:51:03 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16E227)
+In-Reply-To: <20190524170704.GA3401@linux.intel.com>
+Date:   Fri, 24 May 2019 10:51:02 -0700
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <D1F8869E-7431-4D73-8571-8F4F187B8632@amacapital.net>
+References: <20190522153836.GA24833@linux.intel.com> <CALCETrUS8xyF1JJmQs18BGTDhPRXf+s81BkMZCZwmY73r7M+zg@mail.gmail.com> <20190523023517.GA31950@linux.intel.com> <20190523102628.GC10955@linux.intel.com> <20190523141752.GA12078@linux.intel.com> <CALCETrUzx3LPAKCLFf75P-XshAkRcr+JLET3LA_kHDs9MA11FA@mail.gmail.com> <20190523234044.GC12078@linux.intel.com> <CALCETrV4DVEfW6EJ6DnQGGYDJAiA5M1QcuYJTiroumOM+D6Jjg@mail.gmail.com> <960B34DE67B9E140824F1DCDEC400C0F654E8956@ORSMSX116.amr.corp.intel.com> <CALCETrX0WqouSWgdM+LNxMzypa0ZHZXTmJ+nNkuPuL8UOF_f2w@mail.gmail.com> <20190524170704.GA3401@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ivan,
 
-On 23/05/2019 21:20, Ivan Khoronzhuk wrote:
-> Add XDP support based on rx page_pool allocator, one frame per page.
-> Page pool allocator is used with assumption that only one rx_handler
-> is running simultaneously. DMA map/unmap is reused from page pool
-> despite there is no need to map whole page.
-> 
-> Due to specific of cpsw, the same TX/RX handler can be used by 2
-> network devices, so special fields in buffer are added to identify
-> an interface the frame is destined to. Thus XDP works for both
-> interfaces, that allows to test xdp redirect between two interfaces
-> easily.
-> 
-> XDP prog is common for all channels till appropriate changes are added
-> in XDP infrastructure.
-> 
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-> ---
->   drivers/net/ethernet/ti/Kconfig        |   1 +
->   drivers/net/ethernet/ti/cpsw.c         | 555 ++++++++++++++++++++++---
->   drivers/net/ethernet/ti/cpsw_ethtool.c |  53 +++
->   drivers/net/ethernet/ti/cpsw_priv.h    |   7 +
->   4 files changed, 554 insertions(+), 62 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
-> index bd05a977ee7e..3cb8c5214835 100644
-> --- a/drivers/net/ethernet/ti/Kconfig
-> +++ b/drivers/net/ethernet/ti/Kconfig
-> @@ -50,6 +50,7 @@ config TI_CPSW
->   	depends on ARCH_DAVINCI || ARCH_OMAP2PLUS || COMPILE_TEST
->   	select TI_DAVINCI_MDIO
->   	select MFD_SYSCON
-> +	select PAGE_POOL
->   	select REGMAP
->   	---help---
->   	  This driver supports TI's CPSW Ethernet Switch.
-> diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
-> index 87a600aeee4a..274e6b64ea9e 100644
-> --- a/drivers/net/ethernet/ti/cpsw.c
-> +++ b/drivers/net/ethernet/ti/cpsw.c
-> @@ -31,6 +31,10 @@
->   #include <linux/if_vlan.h>
->   #include <linux/kmemleak.h>
->   #include <linux/sys_soc.h>
-> +#include <net/page_pool.h>
-> +#include <linux/bpf.h>
-> +#include <linux/bpf_trace.h>
-> +#include <linux/filter.h>
->   
->   #include <linux/pinctrl/consumer.h>
->   #include <net/pkt_cls.h>
-> @@ -60,6 +64,10 @@ static int descs_pool_size = CPSW_CPDMA_DESCS_POOL_SIZE_DEFAULT;
->   module_param(descs_pool_size, int, 0444);
->   MODULE_PARM_DESC(descs_pool_size, "Number of CPDMA CPPI descriptors in pool");
->   
-> +/* The buf includes headroom compatible with both skb and xdpf */
-> +#define CPSW_HEADROOM_NA (max(XDP_PACKET_HEADROOM, NET_SKB_PAD) + NET_IP_ALIGN)
-> +#define CPSW_HEADROOM  ALIGN(CPSW_HEADROOM_NA, sizeof(long))
-> +
->   #define for_each_slave(priv, func, arg...)				\
->   	do {								\
->   		struct cpsw_slave *slave;				\
-> @@ -74,6 +82,8 @@ MODULE_PARM_DESC(descs_pool_size, "Number of CPDMA CPPI descriptors in pool");
->   				(func)(slave++, ##arg);			\
->   	} while (0)
->   
-> +#define CPSW_XMETA_OFFSET	ALIGN(sizeof(struct xdp_frame), sizeof(long))
-> +
->   static int cpsw_ndo_vlan_rx_add_vid(struct net_device *ndev,
->   				    __be16 proto, u16 vid);
->   
-> @@ -337,24 +347,58 @@ void cpsw_intr_disable(struct cpsw_common *cpsw)
->   	return;
->   }
+> On May 24, 2019, at 10:07 AM, Sean Christopherson <sean.j.christopherson@i=
+ntel.com> wrote:
+>=20
+>> On Fri, May 24, 2019 at 09:43:27AM -0700, Andy Lutomirski wrote:
+>>> On Fri, May 24, 2019 at 12:24 AM Xing, Cedric <cedric.xing@intel.com> wr=
+ote:
+>>> /**
+>>> * Summary:
+>>> * - The enclave file resembles a shared object that contains RO/RX/RW se=
+gments
+>>> * - FILE__* are assigned to /dev/sgx/enclave, to determine acceptable pe=
+rmissions to mmap()/mprotect(), valid combinations are
+>>> *   + FILE__READ - Allow SGX1 enclaves only
+>>> *   + FILE__READ|FILE__WRITE - Allow SGX2 enclaves to expand data segmen=
+ts (e.g. heaps, stacks, etc.)
+>>=20
+>> I think this is a non-starter :(  FILE__WRITE also means that you can
+>> write to the file, and the admin / policy author will almost never
+>> want to allow that.
+>=20
+> Why would FILE__WRITE on /dev/sgx/enclave be a problem?  An actual
+> write to /dev/sgx/enclave would yield -EINVAL, no?
 
-[..]
-
->   
-> +static int cpsw_xdp_tx_frame_mapped(struct cpsw_priv *priv,
-> +				    struct xdp_frame *xdpf, struct page *page)
-> +{
-> +	struct cpsw_common *cpsw = priv->cpsw;
-> +	struct cpsw_meta_xdp *xmeta;
-> +	struct netdev_queue *txq;
-> +	struct cpdma_chan *txch;
-> +	dma_addr_t dma;
-> +	int ret;
-> +
-> +	xmeta = (void *)xdpf + CPSW_XMETA_OFFSET;
-> +	xmeta->ch = 0;
-> +
-> +	txch = cpsw->txv[0].ch;
-> +	dma = (xdpf->data - (void *)xdpf) + page->dma_addr;
-> +	ret = cpdma_chan_submit_mapped(txch, cpsw_xdpf_to_handle(xdpf), dma,
-> +				       xdpf->len,
-> +				       priv->emac_port + cpsw->data.dual_emac);
-> +	if (ret) {
-> +		xdp_return_frame_rx_napi(xdpf);
-> +		goto stop;
-> +	}
-> +
-> +	/* no tx desc - stop sending us tx frames */
-> +	if (unlikely(!cpdma_check_free_tx_desc(txch)))
-> +		goto stop;
-> +
-> +	return ret;
-> +stop:
-> +	txq = netdev_get_tx_queue(priv->ndev, 0);
-> +	netif_tx_stop_queue(txq);
-> +
-> +	/* Barrier, so that stop_queue visible to other cpus */
-> +	smp_mb__after_atomic();
-> +
-> +	if (cpdma_check_free_tx_desc(txch))
-> +		netif_tx_wake_queue(txq);
-> +
-> +	return ret;
-> +}
-> +
-> +static int cpsw_xdp_tx_frame(struct cpsw_priv *priv, struct xdp_frame *xdpf)
-> +{
-> +	struct cpsw_common *cpsw = priv->cpsw;
-> +	struct cpsw_meta_xdp *xmeta;
-> +	struct netdev_queue *txq;
-> +	struct cpdma_chan *txch;
-> +	int ret;
-> +
-> +	xmeta = (void *)xdpf + CPSW_XMETA_OFFSET;
-> +	if (sizeof(*xmeta) > xdpf->headroom)
-> +		return -EINVAL;
-> +
-> +	xmeta->ndev = priv->ndev;
-> +	xmeta->ch = 0;
-> +
-> +	txch = cpsw->txv[0].ch;
-> +	ret = cpdma_chan_submit(txch, cpsw_xdpf_to_handle(xdpf), xdpf->data,
-> +				xdpf->len,
-> +				priv->emac_port + cpsw->data.dual_emac);
-> +	if (ret) {
-> +		xdp_return_frame_rx_napi(xdpf);
-> +		goto stop;
-> +	}
-> +
-> +	/* no tx desc - stop sending us tx frames */
-> +	if (unlikely(!cpdma_check_free_tx_desc(txch)))
-> +		goto stop;
-> +
-> +	return ret;
-> +stop:
-> +	txq = netdev_get_tx_queue(priv->ndev, 0);
-> +	netif_tx_stop_queue(txq);
-> +
-> +	/* Barrier, so that stop_queue visible to other cpus */
-> +	smp_mb__after_atomic();
-> +
-> +	if (cpdma_check_free_tx_desc(txch))
-> +		netif_tx_wake_queue(txq);
-> +
-> +	return ret;
-> +}
-
-Above 2 functions are mostly identical - could you do smth. with it?
-
-> +
-> +static int cpsw_run_xdp(struct cpsw_priv *priv, struct cpsw_vector *rxv,
-> +			struct xdp_buff *xdp, struct page *page)
-> +{
-> +	struct net_device *ndev = priv->ndev;
-> +	struct xdp_frame *xdpf;
-> +	struct bpf_prog *prog;
-> +	int ret = 1;
-> +	u32 act;
-> +
-> +	rcu_read_lock();
-> +
-> +	prog = READ_ONCE(priv->xdp_prog);
-> +	if (!prog) {
-> +		ret = 0;
-> +		goto out;
-> +	}
-> +
-> +	act = bpf_prog_run_xdp(prog, xdp);
-> +	switch (act) {
-> +	case XDP_PASS:
-> +		ret = 0;
-> +		break;
-> +	case XDP_TX:
-> +		xdpf = convert_to_xdp_frame(xdp);
-> +		if (unlikely(!xdpf))
-> +			xdp_return_buff(xdp);
-> +		else
-> +			cpsw_xdp_tx_frame_mapped(priv, xdpf, page);
-> +		break;
-> +	case XDP_REDIRECT:
-> +		if (xdp_do_redirect(ndev, xdp, prog))
-> +			xdp_return_buff(xdp);
-> +		else
-> +			ret = 2;
-
-could we avoid using consts as return values?
-may be some informative defines/enum?
-
-> +		break;
-> +	default:
-> +		bpf_warn_invalid_xdp_action(act);
-> +		/* fall through */
-> +	case XDP_ABORTED:
-> +		trace_xdp_exception(ndev, prog, act);
-> +		/* fall through -- handle aborts by dropping packet */
-> +	case XDP_DROP:
-> +		xdp_return_buff(xdp);
-> +		break;
-> +	}
-> +out:
-> +	rcu_read_unlock();
-> +	return ret;
-> +}
-> +
-> +static unsigned int cpsw_rxbuf_total_len(unsigned int len)
-> +{
-> +	len += CPSW_HEADROOM;
-> +	len += SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
-> +	return SKB_DATA_ALIGN(len);
-> +}
-> +
-> +struct page_pool *cpsw_create_rx_pool(struct cpsw_common *cpsw)
-> +{
-> +	struct page_pool_params pp_params = { 0 };
-> +	struct page_pool *pool;
-> +
-> +	pp_params.order = 0;
-> +	pp_params.flags = PP_FLAG_DMA_MAP;
-> +
-> +	/* set it to number of RX descriptors, but can be more */
-> +	pp_params.pool_size = cpdma_get_num_rx_descs(cpsw->dma);
-> +	pp_params.nid = NUMA_NO_NODE;
-> +	pp_params.dma_dir = DMA_BIDIRECTIONAL;
-> +	pp_params.dev = cpsw->dev;
-> +
-> +	pool = page_pool_create(&pp_params);
-> +	if (IS_ERR(pool))
-> +		dev_err(cpsw->dev, "cannot create rx page pool\n");
-> +
-> +	return pool;
-> +}
-> +
-> +static struct page *cpsw_alloc_page(struct cpsw_common *cpsw)
-> +{
-> +	struct page_pool *pool = cpsw->rx_page_pool;
-> +	struct page *page, *prev_page = NULL;
-> +	int try = pool->p.pool_size << 2;
-> +	int start_free = 0, ret;
-> +
-> +	do {
-> +		page = page_pool_dev_alloc_pages(pool);
-> +		if (!page)
-> +			return NULL;
-> +
-> +		/* if netstack has page_pool recycling remove the rest */
-> +		if (page_ref_count(page) == 1)
-> +			break;
-> +
-> +		/* start free pages in use, shouldn't happen */
-> +		if (prev_page == page || start_free) {
-> +			/* dma unmap/puts page if rfcnt != 1 */
-> +			page_pool_recycle_direct(pool, page);
-> +			start_free = 1;
-> +			continue;
-> +		}
-> +
-> +		/* if refcnt > 1, page has been holding by netstack, it's pity,
-> +		 * so put it to the ring to be consumed later when fast cash is
-> +		 * empty. If ring is full then free page by recycling as above.
-> +		 */
-> +		ret = ptr_ring_produce(&pool->ring, page);
-> +		if (ret) {
-> +			page_pool_recycle_direct(pool, page);
-> +			continue;
-> +		}
-> +
-> +		if (!prev_page)
-> +			prev_page = page;
-> +	} while (try--);
-> +
-> +	return page;
-> +}
-> +
->   static int cpsw_rx_handler(void *token, int len, int status)
->   {
-> -	struct cpdma_chan	*ch;
-> -	struct sk_buff		*skb = token;
-> -	struct sk_buff		*new_skb;
-> -	struct net_device	*ndev = skb->dev;
-> -	int			ret = 0, port;
-> -	struct cpsw_common	*cpsw = ndev_to_cpsw(ndev);
-> +	struct page		*new_page, *page = token;
-> +	void			*pa = page_address(page);
-> +	struct cpsw_meta_xdp	*xmeta = pa + CPSW_XMETA_OFFSET;
-> +	struct cpsw_common	*cpsw = ndev_to_cpsw(xmeta->ndev);
-> +	int			pkt_size = cpsw->rx_packet_max;
-> +	int			ret = 0, port, ch = xmeta->ch;
-> +	struct page_pool	*pool = cpsw->rx_page_pool;
-> +	int			headroom = CPSW_HEADROOM;
-> +	struct net_device	*ndev = xmeta->ndev;
-> +	int			flush = 0;
->   	struct cpsw_priv	*priv;
-> +	struct sk_buff		*skb;
-> +	struct xdp_buff		xdp;
-> +	dma_addr_t		dma;
->   
->   	if (cpsw->data.dual_emac) {
->   		port = CPDMA_RX_SOURCE_PORT(status);
-> -		if (port) {
-> +		if (port)
->   			ndev = cpsw->slaves[--port].ndev;
-> -			skb->dev = ndev;
-> -		}
->   	}
->   
->   	if (unlikely(status < 0) || unlikely(!netif_running(ndev))) {
-> @@ -429,47 +680,101 @@ static int cpsw_rx_handler(void *token, int len, int status)
->   			 * in reducing of the number of rx descriptor in
->   			 * DMA engine, requeue skb back to cpdma.
->   			 */
-> -			new_skb = skb;
-> +			new_page = page;
->   			goto requeue;
->   		}
->   
->   		/* the interface is going down, skbs are purged */
-> -		dev_kfree_skb_any(skb);
-> +		page_pool_recycle_direct(pool, page);
->   		return 0;
->   	}
->   
-> -	new_skb = netdev_alloc_skb_ip_align(ndev, cpsw->rx_packet_max);
-> -	if (new_skb) {
-> -		skb_copy_queue_mapping(new_skb, skb);
-> -		skb_put(skb, len);
-> -		if (status & CPDMA_RX_VLAN_ENCAP)
-> -			cpsw_rx_vlan_encap(skb);
-> -		priv = netdev_priv(ndev);
-> -		if (priv->rx_ts_enabled)
-> -			cpts_rx_timestamp(cpsw->cpts, skb);
-> -		skb->protocol = eth_type_trans(skb, ndev);
-> -		netif_receive_skb(skb);
-> -		ndev->stats.rx_bytes += len;
-> -		ndev->stats.rx_packets++;
-> -		kmemleak_not_leak(new_skb);
-> -	} else {
-> +	new_page = cpsw_alloc_page(cpsw);
-> +	if (unlikely(!new_page)) {
-> +		new_page = page;
->   		ndev->stats.rx_dropped++;
-> -		new_skb = skb;
-> +		goto requeue;
->   	}
->   
-> +	priv = netdev_priv(ndev);
-> +	if (priv->xdp_prog) {
-> +		if (status & CPDMA_RX_VLAN_ENCAP) {
-> +			xdp.data = (void *)pa + CPSW_HEADROOM +
-> +				   CPSW_RX_VLAN_ENCAP_HDR_SIZE;
-> +			xdp.data_end = xdp.data + len -
-> +				       CPSW_RX_VLAN_ENCAP_HDR_SIZE;
-> +		} else {
-> +			xdp.data = (void *)pa + CPSW_HEADROOM;
-> +			xdp.data_end = xdp.data + len;
-> +		}
-> +
-> +		xdp_set_data_meta_invalid(&xdp);
-> +
-> +		xdp.data_hard_start = pa;
-> +		xdp.rxq = &priv->xdp_rxq[ch];
-> +
-> +		ret = cpsw_run_xdp(priv, &cpsw->rxv[ch], &xdp, page);
-> +		if (ret) {
-> +			if (ret == 2)
-> +				flush = 1;
-
-const?
-
-> +
-> +			goto requeue;
-> +		}
-> +
-> +		/* XDP prog might have changed packet data and boundaries */
-> +		len = xdp.data_end - xdp.data;
-> +		headroom = xdp.data - xdp.data_hard_start;
-> +	}
-> +
-> +	/* Build skb and pass it to netstack if XDP off or XDP prog
-> +	 * returned XDP_PASS
-> +	 */
-> +	skb = build_skb(pa, cpsw_rxbuf_total_len(pkt_size));
-> +	if (!skb) {
-> +		ndev->stats.rx_dropped++;
-> +		page_pool_recycle_direct(pool, page);
-> +		goto requeue;
-> +	}
-> +
-> +	skb_reserve(skb, headroom);
-> +	skb_put(skb, len);
-> +	skb->dev = ndev;
-> +	if (status & CPDMA_RX_VLAN_ENCAP)
-> +		cpsw_rx_vlan_encap(skb);
-> +	if (priv->rx_ts_enabled)
-> +		cpts_rx_timestamp(cpsw->cpts, skb);
-> +	skb->protocol = eth_type_trans(skb, ndev);
-> +
-> +	/* recycle page before increasing refcounter, it allows to hold page in
-> +	 * page pool cache improving allocation time, see cpsw_alloc_page().
-> +	 */
-> +	page_pool_recycle_direct(pool, page);
-> +
-> +	/* remove once ordinary netstack has page_pool recycling */
-> +	page_ref_inc(page);
-> +
-> +	netif_receive_skb(skb);
-> +
-> +	ndev->stats.rx_bytes += len;
-> +	ndev->stats.rx_packets++;
-> +
->   requeue:
->   	if (netif_dormant(ndev)) {
-> -		dev_kfree_skb_any(new_skb);
-> -		return 0;
-> +		page_pool_recycle_direct(pool, new_page);
-> +		return flush;
->   	}
->   
-> -	ch = cpsw->rxv[skb_get_queue_mapping(new_skb)].ch;
-> -	ret = cpdma_chan_submit(ch, new_skb, new_skb->data,
-> -				skb_tailroom(new_skb), 0);
-> +	xmeta = page_address(new_page) + CPSW_XMETA_OFFSET;
-> +	xmeta->ndev = ndev;
-> +	xmeta->ch = ch;
-> +
-> +	dma = new_page->dma_addr + CPSW_HEADROOM;
-> +	ret = cpdma_chan_submit_mapped(cpsw->rxv[ch].ch, new_page, dma,
-> +				       pkt_size, 0);
->   	if (WARN_ON(ret < 0))
-> -		dev_kfree_skb_any(new_skb);
-> +		page_pool_recycle_direct(pool, new_page);
->   
-> -	return 0;
-> +	return flush;
->   }
->   
->   void cpsw_split_res(struct cpsw_common *cpsw)
-> @@ -644,7 +949,7 @@ static int cpsw_tx_poll(struct napi_struct *napi_tx, int budget)
->   static int cpsw_rx_mq_poll(struct napi_struct *napi_rx, int budget)
->   {
->   	u32			ch_map;
-> -	int			num_rx, cur_budget, ch;
-> +	int			num_rx, cur_budget, ch, flush;
->   	struct cpsw_common	*cpsw = napi_to_cpsw(napi_rx);
->   	struct cpsw_vector	*rxv;
->   
-> @@ -660,8 +965,12 @@ static int cpsw_rx_mq_poll(struct napi_struct *napi_rx, int budget)
->   		else
->   			cur_budget = rxv->budget;
->   
-> -		cpdma_chan_process(rxv->ch, &cur_budget);
-> +		flush = cpdma_chan_process(rxv->ch, &cur_budget);
->   		num_rx += cur_budget;
-> +
-> +		if (flush)
-> +			xdp_do_flush_map();
-
-const?
-
-> +
->   		if (num_rx >= budget)
->   			break;
->   	}
-> @@ -677,10 +986,15 @@ static int cpsw_rx_mq_poll(struct napi_struct *napi_rx, int budget)
->   static int cpsw_rx_poll(struct napi_struct *napi_rx, int budget)
-
-Thank you
-
--- 
-Best regards,
-grygorii
+Bah, read it wrong =E2=80=94 FILE__WRITE on the enclave file on disk is no g=
+ood.=
