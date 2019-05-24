@@ -2,116 +2,125 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05121C282E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9879CC282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFF5421848
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DE132175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:04:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xvnk4WTm"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="SVznC4KC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732085AbfEXVD1 (ORCPT
+        id S2404205AbfEXVEF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 17:03:27 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41891 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727115AbfEXVD1 (ORCPT
+        Fri, 24 May 2019 17:04:05 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:45276 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727115AbfEXVEF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 17:03:27 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q17so1155358pfq.8;
-        Fri, 24 May 2019 14:03:26 -0700 (PDT)
+        Fri, 24 May 2019 17:04:05 -0400
+Received: by mail-oi1-f196.google.com with SMTP id w144so8013020oie.12
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 14:04:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=veCSDwIU7Xf8XfmuNtrrDmEH89bB2GKhK9A6gPb0QBQ=;
-        b=Xvnk4WTmydtuFb0RyGDZKhWc3ExxFqVv7ezG/mmUmkVCCtF/hUKBOl8UVVEHqoTZjr
-         TW5Af5FcpTcmy5+sW/IQm8EyyF1mD9A2B3bA4Nuv/k8XRCA9M+7pu9wTJOLeLsFOV2RR
-         N4Yu077B5V8hQVtKNnDA3B5NFq+KTAl6JfPBEdVsn/1EurfX6X511EiATEcQzceWWk1g
-         n0JDHHrlNWnPzKnPj/sjphXkrRosoIMqqvg0bfJQW0WTxwwJrcONCdQzmkOWQNqUJkW6
-         sTiMfuXkgYHbbxX59nBcLJRCoY4Kfor6nrwx8VJNTSkEwX/NNOV3OCkca3Q6PYR/hpgL
-         RNzg==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=TZLUTKJ3F2aogiV4hxpY25KLHdygnyYYVAPTh5EB7PA=;
+        b=SVznC4KCLx7YSAx2b6fQ+ZtJiZ6ujYdV9mSMxY84cZ56j+I/vr7lCZ/TTMGPqIrmG2
+         n+MXhfhPC5SPlCZeuF2ieZOIOLtAiTxsv8dTJ3LY+T++Gx1kU0nnyQjXCoaVyIRN2139
+         bNjLSLTnsM4vNLAE53uhz0BWJ5+IUfLiAbY/s+oxqkfDD+60ZakSOC4NcjsVb/AdikkC
+         Ep3lJuX0jO9ltkpAJ7esLFb6M7WD0hEd9tkFPAhX3J2Jbb5HOcty+jYUuRdcBSREf+Rw
+         JqYkgRMAVIy/x+dJaSnpwbW1LDzz1JAl9eng+iVqHCNf+jFOWorG+cxdGn6taPp9T4ya
+         Clvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=veCSDwIU7Xf8XfmuNtrrDmEH89bB2GKhK9A6gPb0QBQ=;
-        b=TYE4sSNKC1bYpvCCwaqsE8rqNuowMSi5w1Ec5lfIkmOwL9BCdoga7f1iVMs/M2eaKm
-         g61Jt0xDGxQVuPCCxnNZ92oQGQaJ+wjLt4ZzbiL6VLP9jAs937aVkOsvLKeW8e7SYrqV
-         6hHH9Afbh0V5iQqMsbCoUvSVcte5l5s58xpN3wRBdozpdj2dkiFOJxLoLiMtRRhryfa0
-         dBEGBo9rVTSYnxkimmdqfQLdUA28HOV1Wp7FwDDUcrU3YhuEfTZY0sZp5JcdZQq1nhQn
-         51uDpcGRDpNAaEDTCMHVHHW40kDtf4Y+GXk/YRFC6tc57kHJ/dB9m0deYpkpJRTA6i4m
-         oByw==
-X-Gm-Message-State: APjAAAVYqdcQ/U3NgWarmxfbBEuO3l7nPpR+2n255UZp9DLIw0NSIO6F
-        T6iw9b6MoQJpQ7NBqAvXdzs=
-X-Google-Smtp-Source: APXvYqw42MFYkbCooFVMUAGBY57ttz0aR8EW2m0ewulYbSLfJYwi9uLvW1I2bXMi/7GygcEDbx3qWA==
-X-Received: by 2002:a17:90a:8e86:: with SMTP id f6mr11922584pjo.66.1558731806109;
-        Fri, 24 May 2019 14:03:26 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:180::93e9])
-        by smtp.gmail.com with ESMTPSA id x23sm3369575pfn.160.2019.05.24.14.03.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 14:03:25 -0700 (PDT)
-Date:   Fri, 24 May 2019 14:03:23 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>, bpf@vger.kernel.org,
-        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
-        Tejun Heo <tj@kernel.org>, kernel-team@fb.com,
-        cgroups@vger.kernel.org, Stanislav Fomichev <sdf@fomichev.me>,
-        Yonghong Song <yhs@fb.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 bpf-next 0/4] cgroup bpf auto-detachment
-Message-ID: <20190524210321.tzpt7ilaasaagtou@ast-mbp.dhcp.thefacebook.com>
-References: <20190523194532.2376233-1-guro@fb.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=TZLUTKJ3F2aogiV4hxpY25KLHdygnyYYVAPTh5EB7PA=;
+        b=QOQJMeffSueabnyqF9OS9QIVi73TMTSw3t9xPQ49lW3TS3I/vVkJ9tjroi4O8iSHPy
+         YoLlqtnmCxvQ8fkDzMenY+USRdoi/MlYzYgNw8LzAFdIu8hUm2IneYlpm5WqQOEWhDn4
+         TsjbxIdWyJafyqjqsDDhoA0e+upK94FnRZylIjkX8uD5NSu7ZY6OpzxTiI/3gDmBalDo
+         42vpyoP6GRubAIaunhUUGBCC+XiybUP3Fx82CooCUd2GWHzLS2XmfdqoHU/EqN5fbziT
+         jBMUC+zPvJRrj8dq8efud/yOiGCrlRkSlzcqz+59O6j4qfBTVORXcs4PY31mOd6H302Q
+         NgIQ==
+X-Gm-Message-State: APjAAAUCJThDe9vrzpfr9ME7Q1CsvHy6pTqycIrNeifWoQbVPdueOLxa
+        kS3qcrUc8bL7RyxTRlvXK91/NeOKCOud3CrDfIDHSg==
+X-Google-Smtp-Source: APXvYqxZIFyFGsR/pXREy00mCK+6RQ0bxehaezcZvJguGqHs6hXw7JjGal55rGe16XzZYEOCHBpbDovT+9fdeN+vXHk=
+X-Received: by 2002:aca:b641:: with SMTP id g62mr7861089oif.149.1558731844633;
+ Fri, 24 May 2019 14:04:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190523194532.2376233-1-guro@fb.com>
-User-Agent: NeoMutt/20180223
+References: <20190523223746.4982-1-ira.weiny@intel.com> <CAPcyv4gYxyoX5U+Fg0LhwqDkMRb-NRvPShOh+nXp-r_HTwhbyA@mail.gmail.com>
+In-Reply-To: <CAPcyv4gYxyoX5U+Fg0LhwqDkMRb-NRvPShOh+nXp-r_HTwhbyA@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 24 May 2019 14:03:52 -0700
+Message-ID: <CAPcyv4i7+AVR9_U+g8npO_ixJFz=5kEUJ9RaiD2aKBmBOo-PJA@mail.gmail.com>
+Subject: Re: [PATCH] mm/swap: Fix release_pages() when releasing devmap pages
+To:     "Weiny, Ira" <ira.weiny@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 12:45:28PM -0700, Roman Gushchin wrote:
-> This patchset implements a cgroup bpf auto-detachment functionality:
-> bpf programs are detached as soon as possible after removal of the
-> cgroup, without waiting for the release of all associated resources.
+On Thu, May 23, 2019 at 8:58 PM Dan Williams <dan.j.williams@intel.com> wro=
+te:
+>
+> On Thu, May 23, 2019 at 3:37 PM <ira.weiny@intel.com> wrote:
+> >
+> > From: Ira Weiny <ira.weiny@intel.com>
+> >
+> > Device pages can be more than type MEMORY_DEVICE_PUBLIC.
+> >
+> > Handle all device pages within release_pages()
+> >
+> > This was found via code inspection while determining if release_pages()
+> > and the new put_user_pages() could be interchangeable.
+> >
+> > Cc: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+> > Cc: Dan Williams <dan.j.williams@intel.com>
+> > Cc: Michal Hocko <mhocko@suse.com>
+> > Cc: John Hubbard <jhubbard@nvidia.com>
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > ---
+> >  mm/swap.c | 7 +++----
+> >  1 file changed, 3 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/mm/swap.c b/mm/swap.c
+> > index 3a75722e68a9..d1e8122568d0 100644
+> > --- a/mm/swap.c
+> > +++ b/mm/swap.c
+> > @@ -739,15 +739,14 @@ void release_pages(struct page **pages, int nr)
+> >                 if (is_huge_zero_page(page))
+> >                         continue;
+> >
+> > -               /* Device public page can not be huge page */
+> > -               if (is_device_public_page(page)) {
+> > +               if (is_zone_device_page(page)) {
+> >                         if (locked_pgdat) {
+> >                                 spin_unlock_irqrestore(&locked_pgdat->l=
+ru_lock,
+> >                                                        flags);
+> >                                 locked_pgdat =3D NULL;
+> >                         }
+> > -                       put_devmap_managed_page(page);
+> > -                       continue;
+> > +                       if (put_devmap_managed_page(page))
+>
+> This "shouldn't" fail, and if it does the code that follows might get
+> confused by a ZONE_DEVICE page. If anything I would make this a
+> WARN_ON_ONCE(!put_devmap_managed_page(page)), but always continue
+> unconditionally.
 
-The idea looks great, but doesn't quite work:
-
-$ ./test_cgroup_attach
-#override:PASS
-[   66.475219] BUG: sleeping function called from invalid context at ../include/linux/percpu-rwsem.h:34
-[   66.476095] in_atomic(): 1, irqs_disabled(): 0, pid: 21, name: ksoftirqd/2
-[   66.476706] CPU: 2 PID: 21 Comm: ksoftirqd/2 Not tainted 5.2.0-rc1-00211-g1861420d0162 #1564
-[   66.477595] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.0-2.el7 04/01/2014
-[   66.478360] Call Trace:
-[   66.478591]  dump_stack+0x5b/0x8b
-[   66.478892]  ___might_sleep+0x22f/0x290
-[   66.479230]  cpus_read_lock+0x18/0x50
-[   66.479550]  static_key_slow_dec+0x41/0x70
-[   66.479914]  cgroup_bpf_release+0x1a6/0x400
-[   66.480285]  percpu_ref_switch_to_atomic_rcu+0x203/0x330
-[   66.480754]  rcu_core+0x475/0xcc0
-[   66.481047]  ? switch_mm_irqs_off+0x684/0xa40
-[   66.481422]  ? rcu_note_context_switch+0x260/0x260
-[   66.481842]  __do_softirq+0x1cf/0x5ff
-[   66.482174]  ? takeover_tasklets+0x5f0/0x5f0
-[   66.482542]  ? smpboot_thread_fn+0xab/0x780
-[   66.482911]  run_ksoftirqd+0x1a/0x40
-[   66.483225]  smpboot_thread_fn+0x3ad/0x780
-[   66.483583]  ? sort_range+0x20/0x20
-[   66.483894]  ? __kthread_parkme+0xb0/0x190
-[   66.484253]  ? sort_range+0x20/0x20
-[   66.484562]  ? sort_range+0x20/0x20
-[   66.484878]  kthread+0x2e2/0x3e0
-[   66.485166]  ? kthread_create_worker_on_cpu+0xb0/0xb0
-[   66.485620]  ret_from_fork+0x1f/0x30
-
-Same test runs fine before the patches.
-
+As discussed offline, I'm wrong here. It needs to fall through to
+put_page_testzero() for the device-dax case, but perhaps a comment for
+the next time I forget that subtlety.
