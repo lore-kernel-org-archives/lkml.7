@@ -2,232 +2,89 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14607C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE8F8C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD37E2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A949821850
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:41:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tFjCJYE4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391224AbfEXLkz (ORCPT
+        id S2391241AbfEXLlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 07:40:55 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:53618 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390743AbfEXLky (ORCPT
+        Fri, 24 May 2019 07:41:24 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:34644 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391005AbfEXLlX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 07:40:54 -0400
-Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
-  Joergen.Andreasen@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Joergen.Andreasen@microchip.com";
-  x-sender="Joergen.Andreasen@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa4.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Joergen.Andreasen@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa4.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Joergen.Andreasen@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.60,506,1549954800"; 
-   d="scan'208";a="34319525"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 24 May 2019 04:40:53 -0700
-Received: from localhost (10.10.76.4) by chn-sv-exch02.mchp-main.com
- (10.10.76.38) with Microsoft SMTP Server id 14.3.352.0; Fri, 24 May 2019
- 04:40:53 -0700
-Date:   Fri, 24 May 2019 13:40:52 +0200
-From:   Joergen Andreasen <joergen.andreasen@microchip.com>
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-CC:     <netdev@vger.kernel.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next v2 1/1] net: mscc: ocelot: Implement port
- policers via tc command
-Message-ID: <20190524114050.rznhisqcgdm5c2e6@soft-dev16>
-References: <20190502094029.22526-1-joergen.andreasen@microchip.com>
- <20190523104939.2721-1-joergen.andreasen@microchip.com>
- <20190523104939.2721-2-joergen.andreasen@microchip.com>
- <20190523115630.7710cc49@cakuba.netronome.com>
+        Fri, 24 May 2019 07:41:23 -0400
+Received: by mail-lf1-f66.google.com with SMTP id v18so6913260lfi.1
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 04:41:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eJLDwVfH5VJnZx8ZM8GCRIzVJV8WcHMD+lvgI85Fwb8=;
+        b=tFjCJYE4s1Z94dMb5aFsdWecVIC3UQ9ZA0iji4fhIgPiEbpjNkp6PM+YSIl/F0zg/8
+         v067wNSAoldwvwxNc12hzdZ1o+Ue6PunKG5AFaw6SVX+axaqR+H6XYobKIQ2AOZfRVDT
+         2MSu12IVDZlJVYeaEXVBJ6u0fHu/T+hQ38wwb9HMSr/yWO0eah4xbg1CG4Yx04vpm/Gl
+         5waRRmDXldlktA4Axy7Gh6TMSlIUN0TR5TR6qQnFCE/iDu+Yu3IwGLAbBiOQYDTZkcO5
+         7PFePDllYZl7eMyl9c9S364wV1ARtv7+Ho5BblphuAKfQYr1mTkL2OPyj3M5EdvOFQ9r
+         bP4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eJLDwVfH5VJnZx8ZM8GCRIzVJV8WcHMD+lvgI85Fwb8=;
+        b=tqXV88Aecg5gu2h6sdQOHYWLSY68TUqwdseiLmWWcg5NdPqRR0PEw/xyuwf6rkAJGP
+         QZ7uNVE9fhbuOTPs1yogUlH8N53OQKdJQLnrf4gB+CvBkT0hamDGl40amwiSrg/COhfP
+         coJEwXhkjYAB3w5zN6J391IOp/XpciiaNOFOL75FcH/3vM1DMGqWgLJV2PBxobcimPuf
+         +Rs2W8kG7+FYTQBuwhJ1KCQsMjcg7GvDUMmZ4lmwmyfuk5o+yzVyc4bAnW8PcQvPFaQx
+         JkNDkKWEiEFGIpXG2nAAnWLoMYP5eYpiSomoJwXYYqKzWvr0rs+k5yo4V4uy0vgOFwQ+
+         N/oA==
+X-Gm-Message-State: APjAAAWr4ZdDSRE3Fnz/MGLCQ2kdxS1Xwd+hYYMWDpOm2/r6kj9ERbe+
+        X/Ip6sBYsJY66JWc8pLx04qeqq6Znq4eo0EebA+QAA==
+X-Google-Smtp-Source: APXvYqwlCU/Ve7G0DQMfQWyCLtGMK3SgbEDDMWwyMwxIxCdMA7wUKKKX4Ntzrp8svUCapzuA04ATKczG2IaW15wIr9U=
+X-Received: by 2002:ac2:5935:: with SMTP id v21mr9226943lfi.117.1558698082036;
+ Fri, 24 May 2019 04:41:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <20190523115630.7710cc49@cakuba.netronome.com>
-User-Agent: NeoMutt/20171215
+References: <1557503126-3025-1-git-send-email-alexandre.torgue@st.com>
+In-Reply-To: <1557503126-3025-1-git-send-email-alexandre.torgue@st.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 24 May 2019 13:41:09 +0200
+Message-ID: <CACRpkdazPrbzL-oo6rhfgDcLftjCE1hrgPQCMvtE2TOUUnorVg@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: pinctrl: Convert stm32 pinctrl bindings
+ to json-schema
+To:     Alexandre Torgue <alexandre.torgue@st.com>
+Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jakub,
+On Fri, May 10, 2019 at 5:45 PM Alexandre Torgue
+<alexandre.torgue@st.com> wrote:
 
-The 05/23/2019 11:56, Jakub Kicinski wrote:
-> External E-Mail
-> 
-> 
-> On Thu, 23 May 2019 12:49:39 +0200, Joergen Andreasen wrote:
-> > Hardware offload of matchall classifier and police action are now
-> > supported via the tc command.
-> > Supported police parameters are: rate and burst.
-> > 
-> > Example:
-> > 
-> > Add:
-> > tc qdisc add dev eth3 handle ffff: ingress
-> > tc filter add dev eth3 parent ffff: prio 1 handle 2	\
-> > 	matchall skip_sw				\
-> > 	action police rate 100Mbit burst 10000
-> > 
-> > Show:
-> > tc -s -d qdisc show dev eth3
-> > tc -s -d filter show dev eth3 ingress
-> > 
-> > Delete:
-> > tc filter del dev eth3 parent ffff: prio 1
-> > tc qdisc del dev eth3 handle ffff: ingress
-> > 
-> > Signed-off-by: Joergen Andreasen <joergen.andreasen@microchip.com>
-> 
-> > diff --git a/drivers/net/ethernet/mscc/ocelot.c b/drivers/net/ethernet/mscc/ocelot.c
-> > index d715ef4fc92f..3ec7864d9dc8 100644
-> > --- a/drivers/net/ethernet/mscc/ocelot.c
-> > +++ b/drivers/net/ethernet/mscc/ocelot.c
-> > @@ -943,6 +943,7 @@ static const struct net_device_ops ocelot_port_netdev_ops = {
-> >  	.ndo_vlan_rx_kill_vid		= ocelot_vlan_rx_kill_vid,
-> >  	.ndo_set_features		= ocelot_set_features,
-> >  	.ndo_get_port_parent_id		= ocelot_get_port_parent_id,
-> > +	.ndo_setup_tc			= ocelot_setup_tc,
-> >  };
-> >  
-> >  static void ocelot_get_strings(struct net_device *netdev, u32 sset, u8 *data)
-> > @@ -1663,8 +1664,9 @@ int ocelot_probe_port(struct ocelot *ocelot, u8 port,
-> >  	dev->netdev_ops = &ocelot_port_netdev_ops;
-> >  	dev->ethtool_ops = &ocelot_ethtool_ops;
-> >  
-> > -	dev->hw_features |= NETIF_F_HW_VLAN_CTAG_FILTER | NETIF_F_RXFCS;
-> > -	dev->features |= NETIF_F_HW_VLAN_CTAG_FILTER;
-> > +	dev->hw_features |= NETIF_F_HW_VLAN_CTAG_FILTER | NETIF_F_RXFCS |
-> > +		NETIF_F_HW_TC;
-> > +	dev->features |= NETIF_F_HW_VLAN_CTAG_FILTER | NETIF_F_HW_TC;
-> >  
-> >  	memcpy(dev->dev_addr, ocelot->base_mac, ETH_ALEN);
-> >  	dev->dev_addr[ETH_ALEN - 1] += port;
-> 
-> You need to add a check in set_features to make sure nobody clears the
-> NETIF_F_TC flag while something is offloaded, otherwise you will miss
-> the REMOVE callback (it will bounce from the
-> tc_cls_can_offload_and_chain0() check).
+> Convert the STM32 pinctrl binding to DT schema format using json-schema.
+>
+> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
 
-I will add this check in v3
+What a feat. Well done!
+Patch applied with Rob's Review tag.
 
-> 
-> > diff --git a/drivers/net/ethernet/mscc/ocelot_tc.c b/drivers/net/ethernet/mscc/ocelot_tc.c
-> > new file mode 100644
-> > index 000000000000..2412e0dbc267
-> > --- /dev/null
-> > +++ b/drivers/net/ethernet/mscc/ocelot_tc.c
-> > @@ -0,0 +1,164 @@
-> > +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> > +/* Microsemi Ocelot Switch TC driver
-> > + *
-> > + * Copyright (c) 2019 Microsemi Corporation
-> > + */
-> > +
-> > +#include "ocelot_tc.h"
-> > +#include "ocelot_police.h"
-> > +#include <net/pkt_cls.h>
-> > +
-> > +static int ocelot_setup_tc_cls_matchall(struct ocelot_port *port,
-> > +					struct tc_cls_matchall_offload *f,
-> > +					bool ingress)
-> > +{
-> > +	struct netlink_ext_ack *extack = f->common.extack;
-> > +	struct ocelot_policer pol = { 0 };
-> > +	struct flow_action_entry *action;
-> > +	int err;
-> > +
-> > +	netdev_dbg(port->dev, "%s: port %u command %d cookie %lu\n",
-> > +		   __func__, port->chip_port, f->command, f->cookie);
-> > +
-> > +	if (!ingress) {
-> > +		NL_SET_ERR_MSG_MOD(extack, "Only ingress is supported");
-> > +		return -EOPNOTSUPP;
-> > +	}
-> > +
-> > +	switch (f->command) {
-> > +	case TC_CLSMATCHALL_REPLACE:
-> > +		if (!flow_offload_has_one_action(&f->rule->action)) {
-> > +			NL_SET_ERR_MSG_MOD(extack,
-> > +					   "Only one action is supported");
-> > +			return -EOPNOTSUPP;
-> > +		}
-> > +
-> > +		action = &f->rule->action.entries[0];
-> > +
-> > +		if (action->id != FLOW_ACTION_POLICE) {
-> > +			NL_SET_ERR_MSG_MOD(extack, "Unsupported action");
-> > +			return -EOPNOTSUPP;
-> > +		}
-> 
-> Please also reject the offload if block is shared, as HW policer state
-> cannot be shared between ports, the way it is in SW.  You have to save
-> whether the block is shared or not at bind time, see:
-> 
-> d6787147e15d ("net/sched: remove block pointer from common offload structure")
-
-I will fix this in v3.
-
-> 
-> > +		if (port->tc.police_id && port->tc.police_id != f->cookie) {
-> > +			NL_SET_ERR_MSG_MOD(extack,
-> > +					   "Only one policer per port is supported\n");
-> > +			return -EEXIST;
-> > +		}
-> > +
-> > +		pol.rate = (u32)div_u64(action->police.rate_bytes_ps, 1000) * 8;
-> > +		pol.burst = (u32)div_u64(action->police.rate_bytes_ps *
-> > +					 PSCHED_NS2TICKS(action->police.burst),
-> > +					 PSCHED_TICKS_PER_SEC);
-> > +
-> > +		err = ocelot_port_policer_add(port, &pol);
-> > +		if (err) {
-> > +			NL_SET_ERR_MSG_MOD(extack, "Could not add policer\n");
-> > +			return err;
-> > +		}
-> > +
-> > +		port->tc.police_id = f->cookie;
-> > +		return 0;
-> > +	case TC_CLSMATCHALL_DESTROY:
-> > +		if (port->tc.police_id != f->cookie)
-> > +			return -ENOENT;
-> > +
-> > +		err = ocelot_port_policer_del(port);
-> > +		if (err) {
-> > +			NL_SET_ERR_MSG_MOD(extack,
-> > +					   "Could not delete policer\n");
-> > +			return err;
-> > +		}
-> > +		port->tc.police_id = 0;
-> > +		return 0;
-> > +	case TC_CLSMATCHALL_STATS: /* fall through */
-> > +	default:
-> > +		return -EOPNOTSUPP;
-> > +	}
-> > +}
-> 
-
--- 
-Joergen Andreasen, Microchip
+Yours,
+Linus Walleij
