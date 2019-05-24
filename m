@@ -2,163 +2,104 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0106EC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2253EC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB4E821841
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:06:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D72A72175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:07:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nORqcTXC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388814AbfEXGGb (ORCPT
+        id S2388851AbfEXGHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 02:06:31 -0400
-Received: from foss.arm.com ([217.140.101.70]:34388 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387622AbfEXGGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 02:06:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8DCD5374;
-        Thu, 23 May 2019 23:06:30 -0700 (PDT)
-Received: from [10.162.42.134] (p8cg001049571a15.blr.arm.com [10.162.42.134])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AB13C3F5AF;
-        Thu, 23 May 2019 23:06:24 -0700 (PDT)
-Subject: Re: [PATCH V3 2/4] arm64/mm: Hold memory hotplug lock while walking
- for kernel page table dump
-To:     Mark Rutland <mark.rutland@arm.com>,
-        Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        akpm@linux-foundation.org, catalin.marinas@arm.com,
-        will.deacon@arm.com, mgorman@techsingularity.net,
-        james.morse@arm.com, robin.murphy@arm.com, cpandya@codeaurora.org,
-        arunks@codeaurora.org, dan.j.williams@intel.com, osalvador@suse.de,
-        david@redhat.com, cai@lca.pw, logang@deltatee.com,
-        ira.weiny@intel.com
-References: <1557824407-19092-1-git-send-email-anshuman.khandual@arm.com>
- <1557824407-19092-3-git-send-email-anshuman.khandual@arm.com>
- <20190515165847.GH16651@dhcp22.suse.cz>
- <20190516102354.GB40960@lakrids.cambridge.arm.com>
- <20190516110529.GQ16651@dhcp22.suse.cz>
- <20190522164212.GD23592@lakrids.cambridge.arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <c3be0539-2ffe-07b6-f106-12ccb93bbe2f@arm.com>
-Date:   Fri, 24 May 2019 11:36:35 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Fri, 24 May 2019 02:07:25 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:40066 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387622AbfEXGHZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 02:07:25 -0400
+Received: by mail-lf1-f66.google.com with SMTP id h13so6160991lfc.7
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 23:07:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=d6DjOHpSOGiAQtqaZSVvnSZsCuiDPmUFs7J2NpGe6Nc=;
+        b=nORqcTXCVV9nc9SK2YQWhJtsGOqSZD23NIUbnDdDxpL15XGhtVHKX0MfppXOLJFBwy
+         0P9t6kFlbch9f1PPUI4mIvX4hzRrC9Dzyv2b5wI6YlnmSDo7a85L2k8G0y53pUO7qSSP
+         tDnpGi4l+ev/I4v9YrPZJl0QFph7+OXMB3vpNBL3yk5sqQq0XXMerZ9VOfmBlTRfQlSF
+         m9TLcHtU7IlfR4AEnuVAPxAQRy8z3P2g+DEOpRbEYUSI/n560HdYHlZGnjVhariXnLkm
+         Q94mMO8WE4VXjnf4x40hg+tSoxGlTX0XCVnP7/Q/gthDC0x3mKFiLxIkemuMlfWtETFK
+         N5Rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=d6DjOHpSOGiAQtqaZSVvnSZsCuiDPmUFs7J2NpGe6Nc=;
+        b=St0NfSuV0XPi3dNGPlHD0Z1Ex/F/RV+BfT72LPG6qfI9w+jt4GL4EZncAoPSdUmO1e
+         eSgIkbEfY23absukVERaqYo4P2hhuPlUT+ZfvO9sFSaziEMTh8WAtj8JVWkPR1S7l3Gm
+         chg61e5Cx4i2rWAMrrY6/8sgLf45cccKvTp5LVfELtGPJOmDDFl42RxyvOJ9+qvNzDUk
+         oCgUyfk5GIq3H4rURgeny7Yh/jaIjIHbm9mm/UpJ3lSUmbIN8EiV5bjrPPa8yWr27pIR
+         SNNqSsMrD05605lmVIXPb1XQx/4i3UPHtrpcmsfoWSJ96rko031VFWJe9HwhE5AZVxah
+         GIhw==
+X-Gm-Message-State: APjAAAUbL9WvT0rYlyVT4vpqcV6+hMM0MoJxRLy5WlPXlDyFopV/+aY4
+        TYkoXH3MXc2As+WzoY5scURPvLuHUvovPJ+/BFQ=
+X-Google-Smtp-Source: APXvYqzjKfLz2wX1S735wBgBbGn4bC1gYHoT+lCNShIJ/Ws8P6ej5al2rZKZOnlROIru0SbdWql4JpatiYfsATTOfd0=
+X-Received: by 2002:a05:6512:508:: with SMTP id o8mr7037970lfb.119.1558678043701;
+ Thu, 23 May 2019 23:07:23 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190522164212.GD23592@lakrids.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1558366258-3808-1-git-send-email-jrdr.linux@gmail.com>
+ <20190521085547.58e1650c@erd987> <CAFqt6zZA32QA-6VtaKcrEtq=qkoGLHpirSvXb5wt7-wd_-74hQ@mail.gmail.com>
+ <CANiq72nd5i4ADU1GbEt1Dkhp-5YkC9ip-h4a0G64oN+b95wAXA@mail.gmail.com> <CANiq72=zCD7AAE-OBzDYm5GXenoF48SdzwO1LunWSfexqBuH7A@mail.gmail.com>
+In-Reply-To: <CANiq72=zCD7AAE-OBzDYm5GXenoF48SdzwO1LunWSfexqBuH7A@mail.gmail.com>
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+Date:   Fri, 24 May 2019 11:37:12 +0530
+Message-ID: <CAFqt6zaUhPJYozmq-m_BjJTh5EUmsQoE4yZ+Ovv6F-ymns+JGA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] auxdisplay/ht16k33.c: Convert to use vm_map_pages_zero()
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Robin van der Gracht <robin@protonic.nl>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 24, 2019 at 9:52 AM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
+>
+> On Thu, May 23, 2019 at 2:58 PM Miguel Ojeda
+> <miguel.ojeda.sandonis@gmail.com> wrote:
+> >
 
 
-On 05/22/2019 10:12 PM, Mark Rutland wrote:
-> On Thu, May 16, 2019 at 01:05:29PM +0200, Michal Hocko wrote:
->> On Thu 16-05-19 11:23:54, Mark Rutland wrote:
->>> Hi Michal,
->>>
->>> On Wed, May 15, 2019 at 06:58:47PM +0200, Michal Hocko wrote:
->>>> On Tue 14-05-19 14:30:05, Anshuman Khandual wrote:
->>>>> The arm64 pagetable dump code can race with concurrent modification of the
->>>>> kernel page tables. When a leaf entries are modified concurrently, the dump
->>>>> code may log stale or inconsistent information for a VA range, but this is
->>>>> otherwise not harmful.
->>>>>
->>>>> When intermediate levels of table are freed, the dump code will continue to
->>>>> use memory which has been freed and potentially reallocated for another
->>>>> purpose. In such cases, the dump code may dereference bogus addressses,
->>>>> leading to a number of potential problems.
->>>>>
->>>>> Intermediate levels of table may by freed during memory hot-remove, or when
->>>>> installing a huge mapping in the vmalloc region. To avoid racing with these
->>>>> cases, take the memory hotplug lock when walking the kernel page table.
->>>>
->>>> Why is this a problem only on arm64 
->>>
->>> It looks like it's not -- I think we're just the first to realise this.
->>>
->>> AFAICT x86's debugfs ptdump has the same issue if run conccurently with
->>> memory hot remove. If 32-bit arm supported hot-remove, its ptdump code
->>> would have the same issue.
->>>
->>>> and why do we even care for debugfs? Does anybody rely on this thing
->>>> to be reliable? Do we even need it? Who is using the file?
->>>
->>> The debugfs part is used intermittently by a few people working on the
->>> arm64 kernel page tables. We use that both to sanity-check that kernel
->>> page tables are created/updated correctly after changes to the arm64 mmu
->>> code, and also to debug issues if/when we encounter issues that appear
->>> to be the result of kernel page table corruption.
->>
->> OK, I see. Thanks for the clarification.
->>
->>> So while it's rare to need it, it's really useful to have when we do
->>> need it, and I'd rather not remove it. I'd also rather that it didn't
->>> have latent issues where we can accidentally crash the kernel when using
->>> it, which is what this patch is addressing.
->>
->> While I agree, do we rather want to document that you shouldn't be using
->> the debugging tool while the hotplug is ongoing because you might get a
->> garbage or crash the kernel in the worst case? In other words is the
->> absolute correctness worth the additional maint. burden wrt. to future
->> hotplug changes?
-> 
-> I don't think that it's reasonable for this code to bring down the
-> kernel unless the kernel page tables are already corrupt. I agree we
-> should minimize the impact on other code, and I'm happy to penalize
-> ptdump so long as it's functional and safe.
-> 
-> I would like it to be possible to use the ptdump code to debug
-> hot-remove, so I'd rather not make the two mutually exclusive. I'd also
-> like it to be possible to use this in-the-field, and for that asking an
-> admin to potentially crash their system isn't likely to fly.
-> 
->>>> I am asking because I would really love to make mem hotplug locking less
->>>> scattered outside of the core MM than more. Most users simply shouldn't
->>>> care. Pfn walkers should rely on pfn_to_online_page.
-> 
-> Jut to check, is your plan to limit access to the hotplug lock, or to
-> redesign the locking scheme?
-> 
->>> I'm not sure if that would help us here; IIUC pfn_to_online_page() alone
->>> doesn't ensure that the page remains online. Is there a way to achieve
->>> that other than get_online_mems()?
->>
->> You have to pin the page to make sure the hotplug is not going to
->> offline it.
-> 
-> I'm not exactly sure how pinning works -- is there a particular set of
-> functions I should look at for that?
-> 
-> I guess that if/when we allocate the vmemmap from hotpluggable memory
-> that will require the pinning code to take the hotplug lock internally
-> to ensure that the struct page is accessible while we attempt to pin it?
 
-I am bit confused here.
+> > Taking a quick look now, by the way, why does vm_map_pages_zero() (and
+> > __vm_map_pages() etc.) get a pointer to an array instead of a pointer
+> > to the first element?
 
-Which pages are we trying to pin ?
+For this particular driver, one page is getting mapped into vma. But
+there are other
+places where a entire page array ( with more than one pages) mapped into
+vma. That's the reason to pass pointer to an array and do rest of the operations
+inside __vm_map_pages().
 
-1) init_mm page table pages (vmemmap + linear) for the range to be hot-removed
-2) struct pages for the PFN range to be hot-removed
+https://lkml.org/lkml/2019/3/18/1265
 
-We need hot-remove process to be blocked enough not to free the intermediate
-level page table pages which will ensure kernel does not crash during ptdump.
+>
+> Also, in __vm_map_pages(), semantically w.r.t. to the comment,
+> shouldn't the first check test for equality too? (i.e. for vm_pgoff ==
+> num)? (even if such case fails in the second test anyway).
 
-AFAICT
+Sorry, didn't get it. Do you mean there should be a separate check for
+*vm_pgoff == num* ?
 
-1) Holding reference on (1) prevent freeing of pgtable pages during hot-remove
-2) Holding reference on (2) prevent range PFN from being hot removed which in
-   turn can prevent forward progress for hot-remove process and hence possibly
-   prevent freeing of intermediate level pgtable pages.
 
-But both the above solutions are bit complex and will consume more cycles as
-compared to just take a memory_hotplug_lock. In case of (1) it is bit tricker
-as ptdump code has to first walk init_mm to get to all the pgtable pages for
-taking a reference/lock on them. Just wondering if it is worth the trouble.
+> Cheers,
+> Miguel
