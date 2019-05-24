@@ -2,87 +2,139 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0617AC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C9FC282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2ADD20673
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:53:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CBCE21855
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:54:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jzEE+tTJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Dy0aSOZb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391377AbfEXLx4 (ORCPT
+        id S2391401AbfEXLyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 07:53:56 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:36530 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390961AbfEXLxz (ORCPT
+        Fri, 24 May 2019 07:54:05 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:49178 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391378AbfEXLyF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 07:53:55 -0400
-Received: by mail-lf1-f65.google.com with SMTP id y10so6936512lfl.3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 04:53:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ArzXIkFbICKV9szOeGfzmIhB8Bq88PwXMETYybb74ok=;
-        b=jzEE+tTJPbcrtJ4L4eQdnvHMcevMqqx5FcY5sYaJi/hIwBRhZf/eda7UvoUBQsKPrF
-         3m4yW6UvhCwqrLuTnJoHBQGDRuV5vuBC3s0BZDXXgyU8F63o9UUhp4aTVAhdsNPaC4f7
-         U/Z2i3KAEq9rF7xHmkGh9bWREmGY2xB+DYAEEucYsFhkF18+R2fckx2ZSQgFVQJL8rLd
-         2lPdfoYC0Z2KMEYKi9xauWIqUDH5QN/xPrx/qgz8w4juGGoqw22wrxY2EnESQ3qhRkUz
-         dvCTi8jOREMhc3LMNJU0DkAGs87Al91/0vpDJ65HmSkGn7dBP1FWLTlYTEIE5hK+7K4T
-         jrjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ArzXIkFbICKV9szOeGfzmIhB8Bq88PwXMETYybb74ok=;
-        b=PaO5kcOixJoJTCROgbLKLZCOPCfogcQERGOPVjPUqapqdrl8r1grLA74dIgK5AwTC7
-         ha2UyZCj+iXxuhgb55/WcwantWay8Nnd9TyAMtwNz6PloO/O3ID5t+nBWor5caqRLu/w
-         lUjW6EZ4bkItro229elMBumk1k67nCpxATsP01WpkSH7vbzQhnAKqdXzKjgpcOuupI6s
-         z7gyjeRXAV9DYbTWAqF44GD5SWg8gPLKxbp2niWMYtO1AFl8U3pf0q+kNaYtHg2CYvpn
-         k3cMa77D9fpsbPUMdnA549TkDDHMULTEP3PawbP3hFpAf+yBu7ffStozDgDuBxw+gxRo
-         pt+g==
-X-Gm-Message-State: APjAAAWo/B93N+bNapShIU23W4q2etGnklMEDzOmLZDnlNAgcu1j36aY
-        JoIHX9MCLiMyd7WxAzhmVIITqPTNsjBv5Q6QjOwefA==
-X-Google-Smtp-Source: APXvYqzE7BYn50MEZEoe+sHHjHC8sPLW6Y7wfn3iSsAAhDLZMksxZFIgx0M3J1CenXT2tXKspxlHD8pFNqWzLwTn398=
-X-Received: by 2002:ac2:4919:: with SMTP id n25mr5435050lfi.114.1558698834149;
- Fri, 24 May 2019 04:53:54 -0700 (PDT)
+        Fri, 24 May 2019 07:54:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=vVkD+yS+6mY3ND8nY872UeMHSULOVyjDtscm+0lgvtc=; b=Dy0aSOZbCrVtrIo8dC0PzlUHX
+        uFjvE/MFtcTUu5HIH7+jBtdgszhIPRaXs1lCTo3Bk8K784xoTIXK0SpZuzRHKaTidrLbfA9kASK2h
+        YOYRaERfDnMZVsM1gw582GINE4uLOMLbwVub24179V+GnxUelKob/P3Pq4B2pr6szy7k0O56XVa5r
+        2QecVZ8IzRq4rzgnJd/ywlC51c3JBP53P3kp/2EgJVQmOjCqOjA/p8FL1Mr4g4nLPNMnYz/J6Cm2p
+        gJ323St9pi8uoLuX6aipNMh8SKXqD4ptdPWllpqyo2L18brt0NaDiH/HU2IakAidNo36uECiVaKEC
+        xPtBx64og==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hU8kU-0008N3-D0; Fri, 24 May 2019 11:52:34 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id AC0A620670583; Fri, 24 May 2019 13:52:31 +0200 (CEST)
+Date:   Fri, 24 May 2019 13:52:31 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu, arnd@arndb.de,
+        bp@alien8.de, catalin.marinas@arm.com, davem@davemloft.net,
+        fenghua.yu@intel.com, heiko.carstens@de.ibm.com,
+        herbert@gondor.apana.org.au, ink@jurassic.park.msu.ru,
+        jhogan@kernel.org, linux@armlinux.org.uk, mattst88@gmail.com,
+        mingo@kernel.org, mpe@ellerman.id.au, palmer@sifive.com,
+        paul.burton@mips.com, paulus@samba.org, ralf@linux-mips.org,
+        rth@twiddle.net, stable@vger.kernel.org, tglx@linutronix.de,
+        tony.luck@intel.com, vgupta@synopsys.com,
+        gregkh@linuxfoundation.org, jhansen@vmware.com, vdasa@vmware.com,
+        aditr@vmware.com, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH 00/18] locking/atomic: atomic64 type cleanup
+Message-ID: <20190524115231.GN2623@hirez.programming.kicks-ass.net>
+References: <20190522132250.26499-1-mark.rutland@arm.com>
+ <20190523083013.GA4616@andrea>
+ <20190523101926.GA3370@lakrids.cambridge.arm.com>
+ <20190524103731.GN2606@hirez.programming.kicks-ass.net>
+ <20190524111807.GS2650@hirez.programming.kicks-ass.net>
+ <20190524114220.GA4260@fuggles.cambridge.arm.com>
 MIME-Version: 1.0
-References: <20190520083101.10229-1-manivannan.sadhasivam@linaro.org> <20190520083101.10229-5-manivannan.sadhasivam@linaro.org>
-In-Reply-To: <20190520083101.10229-5-manivannan.sadhasivam@linaro.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 24 May 2019 13:53:42 +0200
-Message-ID: <CACRpkda3zvFfEzfVkUT3_zvoL-fTNxF+59T0f8dZtBGV9kQVAg@mail.gmail.com>
-Subject: Re: [PATCH 4/5] dt-bindings: pinctrl: Document pinconf bindings for
- BM1880 SoC
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        haitao.suo@bitmain.com, darren.tsao@bitmain.com,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        alec.lin@bitmain.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190524114220.GA4260@fuggles.cambridge.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 10:31 AM Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
+On Fri, May 24, 2019 at 12:42:20PM +0100, Will Deacon wrote:
 
-> Document pinconf bindings for Bitmain BM1880 SoC.
->
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > diff --git a/Documentation/atomic_t.txt b/Documentation/atomic_t.txt
+> > index dca3fb0554db..125c95ddbbc0 100644
+> > --- a/Documentation/atomic_t.txt
+> > +++ b/Documentation/atomic_t.txt
+> > @@ -83,6 +83,9 @@ The non-RMW ops are (typically) regular LOADs and STOREs and are canonically
+> >  implemented using READ_ONCE(), WRITE_ONCE(), smp_load_acquire() and
+> >  smp_store_release() respectively.
+> >  
+> 
+> Not sure you need a new paragraph here.
+> 
+> > +Therefore, if you find yourself only using the Non-RMW operations of atomic_t,
+> > +you do not in fact need atomic_t at all and are doing it wrong.
+> > +
+> 
+> That makes sense to me, although I now find that the sentence below is a bit
+> confusing because it sounds like it's a caveat relating to only using
+> Non-RMW ops.
+> 
+> >  The one detail to this is that atomic_set{}() should be observable to the RMW
+> >  ops. That is:
+> 
+> How about changing this to be:
+> 
+>   "A subtle detail of atomic_set{}() is that it should be observable..."
 
-Uses standard bindings so completely uncontroversial.
-Patch applied.
+Done, find below.
 
-Yours,
-Linus Walleij
+---
+Subject: Documentation/atomic_t.txt: Clarify pure non-rmw usage
+
+Clarify that pure non-RMW usage of atomic_t is pointless, there is
+nothing 'magical' about atomic_set() / atomic_read().
+
+This is something that seems to confuse people, because I happen upon it
+semi-regularly.
+
+Acked-by: Will Deacon <will.deacon@arm.com>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ Documentation/atomic_t.txt | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/atomic_t.txt b/Documentation/atomic_t.txt
+index dca3fb0554db..89eae7f6b360 100644
+--- a/Documentation/atomic_t.txt
++++ b/Documentation/atomic_t.txt
+@@ -81,9 +81,11 @@ SEMANTICS
+ 
+ The non-RMW ops are (typically) regular LOADs and STOREs and are canonically
+ implemented using READ_ONCE(), WRITE_ONCE(), smp_load_acquire() and
+-smp_store_release() respectively.
++smp_store_release() respectively. Therefore, if you find yourself only using
++the Non-RMW operations of atomic_t, you do not in fact need atomic_t at all
++and are doing it wrong.
+ 
+-The one detail to this is that atomic_set{}() should be observable to the RMW
++A subtle detail of atomic_set{}() is that it should be observable to the RMW
+ ops. That is:
+ 
+   C atomic-set
