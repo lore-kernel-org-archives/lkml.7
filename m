@@ -2,91 +2,75 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0839C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDC9C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:42:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A54942133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:41:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="2jZOEwPt"
+	by mail.kernel.org (Postfix) with ESMTP id EAEAD2184B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:42:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731895AbfEXFlV (ORCPT
+        id S1731922AbfEXFm1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 01:41:21 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:61724 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbfEXFlV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 01:41:21 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id x4O5eDEB025409;
-        Fri, 24 May 2019 14:40:13 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x4O5eDEB025409
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1558676415;
-        bh=iN9az4yLq8H8s7g0mKC1/aWat7k8YMfbSGrf+YN/OP8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=2jZOEwPt/oMl8dLaQxV1S+FMPlz/CpP9UQrNnUt8ovtrQgf0dAAhr3X5W5D6lVNeW
-         Yu+JH/F/59av5IGQ0yP3Kk0BupUuthgNiwjhlyyXKJ73U2G4uF9FbtDt+rlorZ11BJ
-         fbdRw0L5nht8Yk2uSDtIjDXZ+Tuq0Vy3J/i5+emzxRsavL4th0VEp3eakmKBsODkoQ
-         R7273/Kda8aOtU4xZfO0zHnaN/WCZsPf1qwp8+SypnyLdarmQqhrfW/O0gcN4mjZ2u
-         smH7NhM9o7DQLdWPl2NahHOrnOfjU5gEdmx/rWpPntDPgQv30z3eZJalTBpPocjXZ3
-         L0aNnVoX0q8zQ==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Cc:     Vineet Gupta <vgupta@synopsys.com>,
-        linux-snps-arc@lists.infradead.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH] clocksource: arc_timer: use BIT() instead of _BITUL()
-Date:   Fri, 24 May 2019 14:40:10 +0900
-Message-Id: <20190524054010.19323-1-yamada.masahiro@socionext.com>
+        Fri, 24 May 2019 01:42:27 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:46126 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725890AbfEXFm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 01:42:26 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B03631A03A6;
+        Fri, 24 May 2019 07:42:24 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D38AF1A03A2;
+        Fri, 24 May 2019 07:42:17 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8FA0A402D6;
+        Fri, 24 May 2019 13:42:09 +0800 (SGT)
+From:   Anson.Huang@nxp.com
+To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        l.stach@pengutronix.de, abel.vesa@nxp.com,
+        andrew.smirnov@gmail.com, ccaione@baylibre.com, angus@akkea.ca,
+        agx@sigxcpu.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH RESEND] arm64: dts: imx8mq: add clock for SNVS RTC node
+Date:   Fri, 24 May 2019 13:44:06 +0800
+Message-Id: <20190524054406.3220-1-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is in-kernel C code, so there is no reason to use _BITUL().
-Replace it with equivalent BIT().
+From: Anson Huang <Anson.Huang@nxp.com>
 
-I added #include <linux/bits.h> explicitly although it has been included
-by other headers eventually.
+i.MX8MQ has clock gate for SNVS module, add clock info to SNVS
+RTC node for clock management.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
- drivers/clocksource/arc_timer.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/clocksource/arc_timer.c b/drivers/clocksource/arc_timer.c
-index b28970ca4a7a..b1f21bf3b83c 100644
---- a/drivers/clocksource/arc_timer.c
-+++ b/drivers/clocksource/arc_timer.c
-@@ -16,6 +16,7 @@
-  */
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index df3e96b..3473195 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -433,6 +433,8 @@
+ 					offset = <0x34>;
+ 					interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
+ 						<GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
++					clocks = <&clk IMX8MQ_CLK_SNVS_ROOT>;
++					clock-names = "snvs-rtc";
+ 				};
+ 			};
  
- #include <linux/interrupt.h>
-+#include <linux/bits.h>
- #include <linux/clk.h>
- #include <linux/clk-provider.h>
- #include <linux/clocksource.h>
-@@ -142,7 +143,7 @@ static u64 arc_read_rtc(struct clocksource *cs)
- 		l = read_aux_reg(AUX_RTC_LOW);
- 		h = read_aux_reg(AUX_RTC_HIGH);
- 		status = read_aux_reg(AUX_RTC_CTRL);
--	} while (!(status & _BITUL(31)));
-+	} while (!(status & BIT(31)));
- 
- 	return (((u64)h) << 32) | l;
- }
 -- 
-2.17.1
+2.7.4
 
