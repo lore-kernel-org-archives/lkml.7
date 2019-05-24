@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D06C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1AA5C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B319B21855
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:16:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89D5821773
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:16:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SYmw9u/B"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vGhRLZdm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391003AbfEXLQs (ORCPT
+        id S2391029AbfEXLQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 24 May 2019 07:16:48 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35428 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390932AbfEXLQp (ORCPT
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39001 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390973AbfEXLQq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 07:16:45 -0400
-Received: by mail-wm1-f68.google.com with SMTP id w9so2699490wmi.0
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 04:16:43 -0700 (PDT)
+        Fri, 24 May 2019 07:16:46 -0400
+Received: by mail-wm1-f67.google.com with SMTP id z23so4742223wma.4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 04:16:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=D2Cp7f/Qid/by7EIC98tg3BbhOaVwQta3p5eP2Mz3hQ=;
-        b=SYmw9u/BJ1amgAo2T7+9N3JVa9edXzEA5XwgQqoQMkbnEG66y2My7j+uYTQliLkZ5G
-         wA9s/2O5X1B23OTaAssAZqkSQG7H0FIYEIl98O0kAwj5fnLaqvu/WznalSN1VNHQHsa3
-         C2Ee/KA7/+/H1EyER8+3hFE2PHg0y77TF18FtIzduRBGHj0pAVpYwg3GCtGUmwEAyOdO
-         kq+deYjKk+I+pLJefY9stJWTiwb51IIHZXQUqnwYT/unx3FHYircXFxYC/3b+akzVGQC
-         I9K8RQxuAlz134Wu1krvsJ0ASORwtwDVQbjb7tDGIdPN5IxBeeHTnFhhM1qPXafxgn+F
-         dBQw==
+        bh=lvZ+JFSB5ojt72GfMWAJ6EobprUjj+jvH2Pe8i8Nlqo=;
+        b=vGhRLZdmVNVGGcKBnIItowDcWfMq3Xaw389Y/cuQNZS4iDmNrDbBCBaX7j23/axhjX
+         3oooQ0egkgP8w5lyPAe/HAxKtMBDhYdSX6EsSAPyYt0P4Ww1aoQiSNAaVNud2QXu3api
+         GFKQY8wfQlR7UqVc6obKc9SULzAyDlvH5R2p0WlFfPzuHL3nuHYEUAMGSY5GRG+XFDlk
+         OcjsVTGANwjDrbjGYzwli5ZADNkJVqhkkRyxw6DWF+ygOhLiqJQI2GfBGj7Lf4fQS/E/
+         BXywzq0fUEuSt7fY19YaBAYj2KfVe34HZqK2TegGijJTDUytHGn2IupYEnTTU6nfhZDE
+         dkxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=D2Cp7f/Qid/by7EIC98tg3BbhOaVwQta3p5eP2Mz3hQ=;
-        b=LXSA1+ZEXOspJIqI1/7LDUKBPbt+dG6p97bJT5QiiR44Y5KYFCxcxf9nZEbmRGLm8D
-         DGJCKutVsvBUAl9OLHlN190K+fQyUd8wyFgnXcNujnXqYMyx2FRaU5skD2dfjcCi9SpG
-         hFjD0ivw5OkoC2DPUZGyq2xBBJ4VsPfd4140jpXxE9/9qtjswXFfJjTl516wGlOTDa9p
-         FvOsOY9gl47yaE5GpSrQklBQbrPIUzuV95Cua5yiyLUY1v3uilGNCWUdTxptV8XAkdgr
-         CA6EjtbUjYc1PhOa6O9gvQOR8Jd6gFUDe6rOMh4iRifFgahpWtUHY/GG2AIENut8Dm2g
-         oi0w==
-X-Gm-Message-State: APjAAAUFfLxl9VH3C60spfVsoy77tgyvwBd8YjQ8GtYz8PMAVrvdzbst
-        oiQEhLfRmLb+KovpNOjqNddioLepgFw=
-X-Google-Smtp-Source: APXvYqxsVF67CvGyBFlBpEB6QLF5KlM2/7fBtHAgHn+ziqbVb+VjF03bsjbsYjxxhD9U1c3D5iapPA==
-X-Received: by 2002:a1c:a815:: with SMTP id r21mr14796594wme.66.1558696603124;
-        Fri, 24 May 2019 04:16:43 -0700 (PDT)
+        bh=lvZ+JFSB5ojt72GfMWAJ6EobprUjj+jvH2Pe8i8Nlqo=;
+        b=kXdt9D+c+tjMwJQ/+VRP8TfkTJDXvJM+qXO0Zgb1v6j8YUgtExdneT52Ys5kGG0rSR
+         PKDtDuIqwXhYKDInBVr/Ne4MKg0JHocXt7u1f7whkKBc9B2+sxRny5pQwf+axJBtexby
+         dDoFHQiXfHepvEsiN98DxKzLOvOe2XWKORY7q1fKB4W8dUn5gYgwIfbgoYHxlkYzh6Qf
+         uOqzH5YCV2wCA5GJDXp6LJHzRHaZT5AQ/WxcmNCK1kk5hdOtZTXGTghu0Ysbli+2GBYU
+         OQM68tXrTB3XLBkiQnQK8lcVFmD8Y/H89I8WkDSdqmT2I6QL33j4hknoT6ZAOWJgaj1F
+         9IwQ==
+X-Gm-Message-State: APjAAAVmbjBfq4gzg/EN3E/TEQ44c8FU+1YiSxLJZGSGT2KKBDDxwG4D
+        kE7oP0ZLRcbqvuxSNNWBpajjFw==
+X-Google-Smtp-Source: APXvYqy+UF7YScMw4fsKaK+MYTGXLzQwG03YeCQeqCMYHJj95yNud2jE39yceVrXzeJZh7NAXHV4mQ==
+X-Received: by 2002:a1c:9a14:: with SMTP id c20mr15322201wme.104.1558696604433;
+        Fri, 24 May 2019 04:16:44 -0700 (PDT)
 Received: from clegane.local (73.82.95.92.rev.sfr.net. [92.95.82.73])
-        by smtp.gmail.com with ESMTPSA id h12sm2575392wre.14.2019.05.24.04.16.42
+        by smtp.gmail.com with ESMTPSA id h12sm2575392wre.14.2019.05.24.04.16.43
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 04:16:42 -0700 (PDT)
+        Fri, 24 May 2019 04:16:43 -0700 (PDT)
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 To:     tglx@linutronix.de
 Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@linux.intel.com
-Subject: [PATCH V2 5/9] genirq/timings: Encapsulate timings push
-Date:   Fri, 24 May 2019 13:16:11 +0200
-Message-Id: <20190524111615.4891-6-daniel.lezcano@linaro.org>
+Subject: [PATCH V2 6/9] genirq/timings: Encapsulate storing function
+Date:   Fri, 24 May 2019 13:16:12 +0200
+Message-Id: <20190524111615.4891-7-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190524111615.4891-1-daniel.lezcano@linaro.org>
 References: <20190524111615.4891-1-daniel.lezcano@linaro.org>
@@ -69,57 +69,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For the next patches providing the selftest, we do want to
-artificially insert timings value in the circular buffer in order to
-check the correctness of the code. Encapsulate the common code between
-the future test code and the current with an always-inline tag.
+For the next patches providing the selftest, we want to insert
+interval values directly in the buffer in order to check the
+correctness of the code. Encapsulate the code doing that in a always
+inline function in order to reuse it in the test code.
 
-No functional change.
+No functional changes.
 
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- kernel/irq/internals.h | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ kernel/irq/timings.c | 53 ++++++++++++++++++++++++++++----------------
+ 1 file changed, 34 insertions(+), 19 deletions(-)
 
-diff --git a/kernel/irq/internals.h b/kernel/irq/internals.h
-index 70c3053bc1f6..21f9927ff5ad 100644
---- a/kernel/irq/internals.h
-+++ b/kernel/irq/internals.h
-@@ -354,6 +354,16 @@ static inline int irq_timing_decode(u64 value, u64 *timestamp)
- 	return value & U16_MAX;
+diff --git a/kernel/irq/timings.c b/kernel/irq/timings.c
+index 8928601b4b42..02689e6168c4 100644
+--- a/kernel/irq/timings.c
++++ b/kernel/irq/timings.c
+@@ -431,11 +431,43 @@ static u64 __irq_timings_next_event(struct irqt_stat *irqs, int irq, u64 now)
+ 	return irqs->last_ts + irqs->ema_time[index];
  }
  
-+static __always_inline void irq_timings_push(u64 ts, int irq)
++static __always_inline int irq_timings_interval_index(u64 interval)
 +{
-+	struct irq_timings *timings = this_cpu_ptr(&irq_timings);
++	/*
++	 * The PREDICTION_FACTOR increase the interval size for the
++	 * array of exponential average.
++	 */
++	u64 interval_us = (interval >> 10) / PREDICTION_FACTOR;
 +
-+	timings->values[timings->count & IRQ_TIMINGS_MASK] =
-+		irq_timing_encode(ts, irq);
-+
-+	timings->count++;
++	return likely(interval_us) ? ilog2(interval_us) : 0;
 +}
 +
- /*
-  * The function record_irq_time is only called in one place in the
-  * interrupts handler. We want this function always inline so the code
-@@ -367,15 +377,8 @@ static __always_inline void record_irq_time(struct irq_desc *desc)
- 	if (!static_branch_likely(&irq_timing_enabled))
- 		return;
++static __always_inline void __irq_timings_store(int irq, struct irqt_stat *irqs,
++						u64 interval)
++{
++	int index;
++
++	/*
++	 * Get the index in the ema table for this interrupt.
++	 */
++	index = irq_timings_interval_index(interval);
++
++	/*
++	 * Store the index as an element of the pattern in another
++	 * circular array.
++	 */
++	irqs->circ_timings[irqs->count & IRQ_TIMINGS_MASK] = index;
++
++	irqs->ema_time[index] = irq_timings_ema_new(interval,
++						    irqs->ema_time[index]);
++
++	irqs->count++;
++}
++
+ static inline void irq_timings_store(int irq, struct irqt_stat *irqs, u64 ts)
+ {
+ 	u64 old_ts = irqs->last_ts;
+ 	u64 interval;
+-	int index;
  
--	if (desc->istate & IRQS_TIMINGS) {
--		struct irq_timings *timings = this_cpu_ptr(&irq_timings);
+ 	/*
+ 	 * The timestamps are absolute time values, we need to compute
+@@ -466,24 +498,7 @@ static inline void irq_timings_store(int irq, struct irqt_stat *irqs, u64 ts)
+ 		return;
+ 	}
+ 
+-	/*
+-	 * Get the index in the ema table for this interrupt. The
+-	 * PREDICTION_FACTOR increase the interval size for the array
+-	 * of exponential average.
+-	 */
+-	index = likely(interval) ?
+-		ilog2((interval >> 10) / PREDICTION_FACTOR) : 0;
 -
--		timings->values[timings->count & IRQ_TIMINGS_MASK] =
--			irq_timing_encode(local_clock(),
--					  irq_desc_get_irq(desc));
+-	/*
+-	 * Store the index as an element of the pattern in another
+-	 * circular array.
+-	 */
+-	irqs->circ_timings[irqs->count & IRQ_TIMINGS_MASK] = index;
 -
--		timings->count++;
--	}
-+	if (desc->istate & IRQS_TIMINGS)
-+		irq_timings_push(local_clock(), irq_desc_get_irq(desc));
+-	irqs->ema_time[index] = irq_timings_ema_new(interval,
+-						    irqs->ema_time[index]);
+-
+-	irqs->count++;
++	__irq_timings_store(irq, irqs, interval);
  }
- #else
- static inline void irq_remove_timings(struct irq_desc *desc) {}
+ 
+ /**
 -- 
 2.17.1
 
