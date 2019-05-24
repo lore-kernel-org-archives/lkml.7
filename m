@@ -2,76 +2,96 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD2BEC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05909C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A451520815
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:19:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558711158;
-	bh=kmYgj5gKowihH9Hz+CQdYeZjDyUaNPJOm5n23hQQWrc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ra15Rzlz3r/gFvlgw3ZTga1KnE/EqKaDnZQQY+mDx1m2uP7kEeYDSi1T394Uk503w
-	 thJKkRaYfAalqpMLp1QVUNo4vY+LSCXDZ7jqrmG+HlEocbiBr7fYXTcEPNxgDDc8Ga
-	 FBAUz6ThMw7iwUnMaiP4baDiwzwiBvb2zm1YXPME=
+	by mail.kernel.org (Postfix) with ESMTP id D28402075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:20:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=filmlight.ltd.uk header.i=@filmlight.ltd.uk header.b="wpXaBT07"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389621AbfEXPTR (ORCPT
+        id S2389795AbfEXPUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 11:19:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40006 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389079AbfEXPTP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 11:19:15 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAF4A2075E;
-        Fri, 24 May 2019 15:19:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558711155;
-        bh=kmYgj5gKowihH9Hz+CQdYeZjDyUaNPJOm5n23hQQWrc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eEYe5FdW353C/LCqKEFnf4py+eROkFAaU3tXUILEyVSuYvIwXIP9467DGRXdjoPFn
-         pitiSmt0cQ/PDMxfXR8viCx+3N83oXI1UjFLfOgxRPtNMDApzrlcKbE2mZ30b8jtt3
-         qxpe443AFhusMA/dy/1IR4IAkicU23McJ6qCd0w8=
-Date:   Fri, 24 May 2019 17:19:12 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jinpu Wang <jinpu.wang@cloud.ionos.com>
-Cc:     Tony Luck <tony.luck@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        linux-kernel@vger.kernel.org,
-        Elmar Gerdes <elmar.gerdes@cloud.ionos.com>
-Subject: Re: Is 2nd Generation Intel(R) Xeon(R) Processors (Formerly Cascade
- Lake) affected by MDS
-Message-ID: <20190524151912.GA29389@kroah.com>
-References: <CAMGffEkQmdrrH3+UChZx_Af6WcFFQFw6fz3Ti4CRUau-wq7jow@mail.gmail.com>
- <20190524141732.GA4412@kroah.com>
- <7B9F565D-EE66-432B-9D29-E494BFD24683@gmail.com>
- <CAMGffEmmtJhQE04xt84QHrDxUFa0OqbKfZZT_mhXN6P6D99-WA@mail.gmail.com>
+        Fri, 24 May 2019 11:20:12 -0400
+Received: from c.mx.filmlight.ltd.uk ([54.76.112.217]:35009 "EHLO
+        c.mx.filmlight.ltd.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389428AbfEXPUL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 11:20:11 -0400
+X-Greylist: delayed 535 seconds by postgrey-1.27 at vger.kernel.org; Fri, 24 May 2019 11:20:10 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by omni.filmlight.ltd.uk (Postfix) with ESMTP id E84FD40000D9;
+        Fri, 24 May 2019 16:11:14 +0100 (BST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 omni.filmlight.ltd.uk E84FD40000D9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=filmlight.ltd.uk;
+        s=default; t=1558710674;
+        bh=0Ug3SmMBjFHqgISSjAkOrPxbVWMmS3DdLx7SQNNyROg=;
+        h=Cc:Subject:To:References:From:Date:In-Reply-To:From;
+        b=wpXaBT074VJO3lUY2B3AqfKB/W8kA/0eApqSZ41aOSGqNLFXeF+yci3TFm4WhVp4H
+         kV37VGx9Na/NLT5TmdU7mOXvKRov8tvnBDw7t4Am86QVyAKBCTZ3DDWsVdZoEArlfE
+         1m3WIQhTP2Qa/l+lxluF+WXJkuQNf4b1SOeoeu50=
+Received: from montana.filmlight.ltd.uk (envoy [62.7.83.226])
+        (Authenticated sender: roger)
+        by omni.filmlight.ltd.uk (Postfix) with ESMTPSA id AB169887FAA;
+        Fri, 24 May 2019 16:11:14 +0100 (BST)
+Cc:     roger@filmlight.ltd.uk, LKML <linux-kernel@vger.kernel.org>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau@lists.freedesktop.org,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [RFC][PATCH] kernel.h: Add generic roundup_64() macro
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <20190523100013.52a8d2a6@gandalf.local.home>
+ <CAHk-=wg5HqJ2Kfgpub+tCWQ2_FiFwEW9H1Rm+an-BLGaGvDDXw@mail.gmail.com>
+ <20190523112740.7167aba4@gandalf.local.home>
+From:   Roger Willcocks <roger@filmlight.ltd.uk>
+Message-ID: <e4e875f0-2aa5-89f4-f462-78bedb9c5cde@filmlight.ltd.uk>
+Date:   Fri, 24 May 2019 16:11:14 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMGffEmmtJhQE04xt84QHrDxUFa0OqbKfZZT_mhXN6P6D99-WA@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190523112740.7167aba4@gandalf.local.home>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 05:14:38PM +0200, Jinpu Wang wrote:
-> I would expect the production Cascade Lake supports md-clear feature,
-> so VM migration works from old generation.
-> Could some one give me an answer?
 
-No idea, try it and see!
+On 23/05/2019 16:27, Steven Rostedt wrote:
+>
+> I haven't yet tested this, but what about something like the following:
+>
+> ...perhaps forget about the constant check, and just force
+> the power of two check:
+>
+> 							\
+> 	if (!(__y & (__y >> 1))) {			\
+> 		__x =3D round_up(x, y);			\
+> 	} else {					\
 
-good luck!
+You probably want
 
-greg k-h
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!(__y &=
+ (__y - 1))
+
+--
+
+Roger
+
+
