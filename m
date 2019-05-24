@@ -2,179 +2,237 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48254C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 01:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5918DC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 01:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE053217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 01:17:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0498C2184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 01:18:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558660693;
+	bh=7lZcMPoWnmeu0Lf6tScsQ7kQKOEs9HqN2DCaPjTfUzo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=v9w+q2UHQcjKm2BT2R1LrSpWRTISrck4+HusAiZdV3RJc66CACVwI935RWokW29gi
+	 VXZOuWJZnKfgmH6UAyuIwr02do7nuE9uM4EIcqcaniTEDJmOmWMVmpBd0TWzy8xldc
+	 4+bYNu0Xqunesern043swJEqfzIq3XG7GTkKOIBo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389168AbfEXBR6 (ORCPT
+        id S2389187AbfEXBSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 21:17:58 -0400
-Received: from mga07.intel.com ([134.134.136.100]:15050 "EHLO mga07.intel.com"
+        Thu, 23 May 2019 21:18:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387626AbfEXBQi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 21:16:38 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 May 2019 18:16:36 -0700
-X-ExtLoop1: 1
-Received: from unknown (HELO luv-build.sc.intel.com) ([172.25.110.25])
-  by fmsmga008.fm.intel.com with ESMTP; 23 May 2019 18:16:36 -0700
-From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>
-Cc:     Ashok Raj <ashok.raj@intel.com>, Joerg Roedel <joro@8bytes.org>,
-        Andi Kleen <andi.kleen@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>,
-        Stephane Eranian <eranian@google.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Ricardo Neri <ricardo.neri@intel.com>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Tony Luck <tony.luck@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Don Zickus <dzickus@redhat.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Babu Moger <Babu.Moger@amd.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
+        id S2387626AbfEXBSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 21:18:10 -0400
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6416C218B6
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 01:18:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558660688;
+        bh=7lZcMPoWnmeu0Lf6tScsQ7kQKOEs9HqN2DCaPjTfUzo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=L17Jfa/Us2ZXApwta7cAoOC9c3NGw2tm1QB1VurrQU0TaWCdhiMet8mHL20XvrAqV
+         TH20q/gdWLNJKa3bM34yERSCAPx4cIp6M17ITISjzJRIM+um7KyEETShxLr84/uD5V
+         7pxeT3K+W7thx1oE8oyiPHYiMXItdqJ/8+384sO0=
+Received: by mail-wm1-f47.google.com with SMTP id v19so48549wmh.0
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 18:18:08 -0700 (PDT)
+X-Gm-Message-State: APjAAAU21k38l55trV5P6ErQAjMVHEQQ/4JijvU/Z+pEkEPKeN08mqW6
+        j0W713DVCr2rbQEKleNlTiG94Y645IgqsCtXc2hxDA==
+X-Google-Smtp-Source: APXvYqzXf5nwlCxNugY+uLWyzOZ9Xhqu+wCaxbeB64RQCTiklz7s0koNHkWVqoGAsX1sGLapxPd2pMZLHx17rxuWBSA=
+X-Received: by 2002:a1c:e906:: with SMTP id q6mr14707368wmc.47.1558660686807;
+ Thu, 23 May 2019 18:18:06 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190521155140.GE22089@linux.intel.com> <20190522132022.GC31176@linux.intel.com>
+ <20190522132227.GD31176@linux.intel.com> <0e183cce-c4b4-0e10-dbb6-bd81bea58b66@tycho.nsa.gov>
+ <20190522153836.GA24833@linux.intel.com> <CALCETrUS8xyF1JJmQs18BGTDhPRXf+s81BkMZCZwmY73r7M+zg@mail.gmail.com>
+ <20190523023517.GA31950@linux.intel.com> <20190523102628.GC10955@linux.intel.com>
+ <20190523141752.GA12078@linux.intel.com> <CALCETrUzx3LPAKCLFf75P-XshAkRcr+JLET3LA_kHDs9MA11FA@mail.gmail.com>
+ <20190523234044.GC12078@linux.intel.com>
+In-Reply-To: <20190523234044.GC12078@linux.intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 23 May 2019 18:17:54 -0700
+X-Gmail-Original-Message-ID: <CALCETrV4DVEfW6EJ6DnQGGYDJAiA5M1QcuYJTiroumOM+D6Jjg@mail.gmail.com>
+Message-ID: <CALCETrV4DVEfW6EJ6DnQGGYDJAiA5M1QcuYJTiroumOM+D6Jjg@mail.gmail.com>
+Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Byungchul Park <byungchul.park@lge.com>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        "Luis R. Rodriguez" <mcgrof@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        David Rientjes <rientjes@google.com>,
-        sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: [RFC PATCH v4 10/21] watchdog/hardlockup: Add function to enable NMI watchdog on all allowed CPUs at once
-Date:   Thu, 23 May 2019 18:16:12 -0700
-Message-Id: <1558660583-28561-11-git-send-email-ricardo.neri-calderon@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1558660583-28561-1-git-send-email-ricardo.neri-calderon@linux.intel.com>
-References: <1558660583-28561-1-git-send-email-ricardo.neri-calderon@linux.intel.com>
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When there are more than one implementation of the NMI watchdog, there may
-be situations in which switching from one to another is needed (e.g., if
-the time-stamp counter becomes unstable, the HPET-based NMI watchdog can
-no longer be used.
+On Thu, May 23, 2019 at 4:40 PM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> On Thu, May 23, 2019 at 08:38:17AM -0700, Andy Lutomirski wrote:
+> > On Thu, May 23, 2019 at 7:17 AM Sean Christopherson
+> > <sean.j.christopherson@intel.com> wrote:
+> > >
+> > > On Thu, May 23, 2019 at 01:26:28PM +0300, Jarkko Sakkinen wrote:
+> > > > On Wed, May 22, 2019 at 07:35:17PM -0700, Sean Christopherson wrote:
+> > > > > But actually, there's no need to disallow mmap() after ECREATE since the
+> > > > > LSM checks also apply to mmap(), e.g. FILE__EXECUTE would be needed to
+> > > > > mmap() any enclave pages PROT_EXEC.  I guess my past self thought mmap()
+> > > > > bypassed LSM checks?  The real problem is that mmap()'ng an existing
+> > > > > enclave would require FILE__WRITE and FILE__EXECUTE, which puts us back
+> > > > > at square one.
+> > > >
+> > > > I'm lost with the constraints we want to set.
+> > >
+> > > As is today, SELinux policies would require enclave loaders to have
+> > > FILE__WRITE and FILE__EXECUTE permissions on /dev/sgx/enclave.  Presumably
+> > > other LSMs have similar requirements.  Requiring all processes to have
+> > > FILE__{WRITE,EXECUTE} permissions means the permissions don't add much
+> > > value, e.g. they can't be used to distinguish between an enclave that is
+> > > being loaded from an unmodified file and an enclave that is being
+> > > generated on the fly, e.g. Graphene.
+> > >
+> > > Looking back at Andy's mail, he was talking about requiring FILE__EXECUTE
+> > > to run an enclave, so perhaps it's only FILE__WRITE that we're trying to
+> > > special case.
+> > >
+> >
+> > I thought about this some more, and I have a new proposal that helps
+> > address the ELRANGE alignment issue and the permission issue at the
+> > cost of some extra verbosity.  Maybe you all can poke holes in it :)
+> > The basic idea is to make everything more explicit from a user's
+> > perspective.  Here's how it works:
+> >
+> > Opening /dev/sgx/enclave gives an enclave_fd that, by design, doesn't
+> > give EXECUTE or WRITE.  mmap() on the enclave_fd only works if you
+> > pass PROT_NONE and gives the correct alignment.  The resulting VMA
+> > cannot be mprotected or mremapped.  It can't be mmapped at all until
+>
+> I assume you're thinking of clearing all VM_MAY* flags in sgx_mmap()?
+>
+> > after ECREATE because the alignment isn't known before that.
+>
+> I don't follow.  The alignment is known because userspace knows the size
+> of its enclave.  The initial unknown is the address, but that becomes
+> known once the initial mmap() completes.
 
-The perf-based implementation of the hardlockup detector makes use of
-various per-CPU variables which are accessed via this_cpu operations.
-Hence, each CPU needs to enable its own NMI watchdog if using the perf
-implementation.
+[...]
 
-Add functionality to switch from one NMI watchdog to another and do it
-from each allowed CPU.
+I think I made the mistake of getting too carried away with
+implementation details rather than just getting to the point.  And I
+misremembered the ECREATE flow -- oops.  Let me try again.  First,
+here are some problems with some earlier proposals (mine, yours
+Cedric's):
 
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ashok Raj <ashok.raj@intel.com>
-Cc: Andi Kleen <andi.kleen@intel.com>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc: Don Zickus <dzickus@redhat.com>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Frederic Weisbecker <frederic@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Babu Moger <Babu.Moger@amd.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Philippe Ombredanne <pombredanne@nexb.com>
-Cc: Colin Ian King <colin.king@canonical.com>
-Cc: Byungchul Park <byungchul.park@lge.com>
-Cc: "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
-Cc: "Luis R. Rodriguez" <mcgrof@kernel.org>
-Cc: Waiman Long <longman@redhat.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-Cc: "Ravi V. Shankar" <ravi.v.shankar@intel.com>
-Cc: x86@kernel.org
-Cc: sparclinux@vger.kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
----
- include/linux/nmi.h |  2 ++
- kernel/watchdog.c   | 15 +++++++++++++++
- 2 files changed, 17 insertions(+)
+ - Having the EADD operation always work but have different effects
+depending on the source memory permissions is, at the very least,
+confusing.
 
-diff --git a/include/linux/nmi.h b/include/linux/nmi.h
-index e5f1a86e20b7..6d828334348b 100644
---- a/include/linux/nmi.h
-+++ b/include/linux/nmi.h
-@@ -83,9 +83,11 @@ static inline void reset_hung_task_detector(void) { }
- 
- #if defined(CONFIG_HARDLOCKUP_DETECTOR)
- extern void hardlockup_detector_disable(void);
-+extern void hardlockup_start_all(void);
- extern unsigned int hardlockup_panic;
- #else
- static inline void hardlockup_detector_disable(void) {}
-+static inline void hardlockup_start_all(void) {}
- #endif
- 
- #if defined(CONFIG_HAVE_NMI_WATCHDOG) || defined(CONFIG_HARDLOCKUP_DETECTOR)
-diff --git a/kernel/watchdog.c b/kernel/watchdog.c
-index 7f9e7b9306fe..be589001200a 100644
---- a/kernel/watchdog.c
-+++ b/kernel/watchdog.c
-@@ -566,6 +566,21 @@ int lockup_detector_offline_cpu(unsigned int cpu)
- 	return 0;
- }
- 
-+static int hardlockup_start_fn(void *data)
-+{
-+	watchdog_nmi_enable(smp_processor_id());
-+	return 0;
-+}
-+
-+void hardlockup_start_all(void)
-+{
-+	int cpu;
-+
-+	cpumask_copy(&watchdog_allowed_mask, &watchdog_cpumask);
-+	for_each_cpu(cpu, &watchdog_allowed_mask)
-+		smp_call_on_cpu(cpu, hardlockup_start_fn, NULL, false);
-+}
-+
- static void lockup_detector_reconfigure(void)
- {
- 	cpus_read_lock();
--- 
-2.17.1
+ - If we want to encourage user programs to be well-behaved, we want
+to make it easy to map the RX parts of an enclave RX, the RW parts RW,
+the RO parts R, etc.  But this interacts poorly with the sgx_mmap()
+alignment magic, as you've pointed out.
 
+ - We don't want to couple LSMs with SGX too tightly.
+
+So here's how a nice interface might work:
+
+int enclave_fd = open("/dev/sgx/enclave", O_RDWR);
+
+/* enclave_fd points to a totally blank enclave. Before ECREATE, we
+need to decide on an address. */
+
+void *addr = mmap(NULL, size, PROT_NONE, MAP_SHARED, enclave_fd, 0);
+
+/* we have an address! */
+
+ioctl(enclave_fd, ECREATE, ...);
+
+/* now add some data to the enclave.  We want the RWX addition to fail
+immediately unless we have the relevant LSM pemission.   Similarly, we
+want the RX addition to fail immediately unless the source VMA is
+appropriate. */
+
+ioctl(enclave_fd, EADD, rx_source_1, MAXPERM=RX, ...);  [the ...
+includes SECINFO, which the kernel doesn't really care about]
+ioctl(enclave_fd, EADD, ro_source_1, MAXPERM=RX ...);
+ioctl(enclave_fd, EADD, rw_source_1, MAXPERM=RW ...);
+ioctl(enclave_fd, EADD, rwx_source_1, MAXPERM=RWX ...);
+
+ioctl(enclave_fd, EINIT, ...);  /* presumably pass sigstruct_fd here, too. */
+
+/* at this point, all is well except that the enclave is mapped
+PROT_NONE. There are a couple ways I can imagine to fix this. */
+
+We could use mmap:
+
+mmap(baseaddr+offset, len, PROT_READ, MAP_SHARED | MAP_FIXED,
+enclave_fd, 0);  /* only succeeds if MAXPERM & R == R */
+
+But this has some annoying implications with regard to
+sgx_get_unmapped_area().  We could use an ioctl:
+
+ioctl(enclave_fd, SGX_IOC_MPROTECT, offset, len, PROT_READ);
+
+which has the potentially nice property that we can completely bypass
+the LSM hooks, because the LSM has *already* vetted everything when
+the EADD calls were allowed.  Or we could maybe even just use
+mprotect() itself:
+
+mprotect(baseaddr + offset, len, PROT_READ);
+
+Or, for the really evil option, we could use a bit of magic in .fault
+and do nothing here.  Instead we'd make the initial mapping
+PROT_READ|PROT_WRITE|PROT_EXEC and have .fault actually instantiate
+the PTEs with the intersection of the VMA permissions and MAXPERM.  I
+don't think I like this alternative, since it feels more magical than
+needed and it will be harder to debug.  I like the fact that
+/proc/self/maps shows the actual permissions in all the other
+variants.
+
+
+All of the rest of the crud in my earlier email was just
+implementation details.  The point I was trying to make was that I
+think it's possible to implement this without making too much of a
+mess internally.  I think I favor the mprotect() approach since it
+makes the behavior fairly obvious.
+
+I don't think any of this needs to change for SGX2.  We'd have an
+ioctl() that does EAUG and specifies MAXPERM.  Trying to mprotect() a
+page that hasn't been added yet with any permission other than
+PROT_NONE would fail.  I suppose we might end up needing a way to let
+the EAUG operation *change* MAXPERM, and this operation would have to
+do some more LSM checks and walk all the existing mappings to make
+sure they're consistent with the new MAXPERM.
+
+As an aside, I wonder if Linus et all would be okay with a new
+MAP_FULLY_ALIGNED mmap() flag that allocated memory aligned to the
+requested size.  Then we could get rid of yet another bit of magic.
+
+--Andy
