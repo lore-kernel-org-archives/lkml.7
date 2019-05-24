@@ -2,115 +2,100 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DC7C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A534C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2927C217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC37520856
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:56:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390653AbfEXKxp (ORCPT
+        id S2390730AbfEXK4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 06:53:45 -0400
-Received: from foss.arm.com ([217.140.101.70]:40106 "EHLO foss.arm.com"
+        Fri, 24 May 2019 06:56:11 -0400
+Received: from foss.arm.com ([217.140.101.70]:40190 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390459AbfEXKxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 06:53:45 -0400
+        id S2390485AbfEXK4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 06:56:10 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 427CE374;
-        Fri, 24 May 2019 03:53:44 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BC7B83F703;
-        Fri, 24 May 2019 03:53:42 -0700 (PDT)
-Date:   Fri, 24 May 2019 11:53:40 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Andrea Parri <andrea.parri@amarulasolutions.com>
-Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jorgen Hansen <jhansen@vmware.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will.deacon@arm.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: Re: [PATCH 2/2] compiler: Prevent evaluation of WRITE_ONCE()
-Message-ID: <20190524105339.GC12796@lakrids.cambridge.arm.com>
-References: <1558694136-19226-1-git-send-email-andrea.parri@amarulasolutions.com>
- <1558694136-19226-3-git-send-email-andrea.parri@amarulasolutions.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0EC91374;
+        Fri, 24 May 2019 03:56:10 -0700 (PDT)
+Received: from [10.162.42.134] (p8cg001049571a15.blr.arm.com [10.162.42.134])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B23593F703;
+        Fri, 24 May 2019 03:56:06 -0700 (PDT)
+Subject: Re: mm/compaction: BUG: NULL pointer dereference
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>, linux-mm@kvack.org
+Cc:     mgorman@techsingularity.net, akpm@linux-foundation.org,
+        mhocko@suse.com, cai@lca.pw, linux-kernel@vger.kernel.org,
+        marc.zyngier@arm.com, kvmarm@lists.cs.columbia.edu,
+        kvm@vger.kernel.org
+References: <1558689619-16891-1-git-send-email-suzuki.poulose@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <cfddd75a-b302-5557-05b8-2b328bba27c8@arm.com>
+Date:   Fri, 24 May 2019 16:26:16 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1558694136-19226-3-git-send-email-andrea.parri@amarulasolutions.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <1558689619-16891-1-git-send-email-suzuki.poulose@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-This would be better titled as:
 
-  compiler: don't return a value from WRITE_ONCE()
-
-... since we do want the WRITE_ONCE() itself to be evaluated.
-
-On Fri, May 24, 2019 at 12:35:36PM +0200, Andrea Parri wrote:
-> Now that there's no single use of the value of WRITE_ONCE(), change
-> the implementation to eliminate it.
-
-I hope that's the case, but it's possible that some macros might be
-relying on this, so it's probably worth waiting to see if the kbuild
-test robot screams.
-
-Otherwise, I agree that WRITE_ONCE() returning a value is surprising,
-and unnecessary. IIRC you said that trying to suport that in other
-implementations was painful, so aligning on a non-returning version
-sounds reasonable to me.
-
+On 05/24/2019 02:50 PM, Suzuki K Poulose wrote:
+> Hi,
 > 
-> Suggested-by: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Jorgen Hansen <jhansen@vmware.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
-> ---
->  include/linux/compiler.h | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
+> We are hitting NULL pointer dereferences while running stress tests with KVM.
+> See splat [0]. The test is to spawn 100 VMs all doing standard debian
+> installation (Thanks to Marc's automated scripts, available here [1] ).
+> The problem has been reproduced with a better rate of success from 5.1-rc6
+> onwards.
 > 
-> diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-> index 8aaf7cd026b06..4024c809a6c63 100644
-> --- a/include/linux/compiler.h
-> +++ b/include/linux/compiler.h
-> @@ -277,12 +277,11 @@ unsigned long read_word_at_a_time(const void *addr)
->  }
->  
->  #define WRITE_ONCE(x, val) \
-> -({							\
-> +do {							\
->  	union { typeof(x) __val; char __c[1]; } __u =	\
->  		{ .__val = (__force typeof(x)) (val) }; \
->  	__write_once_size(&(x), __u.__c, sizeof(x));	\
-> -	__u.__val;					\
-> -})
-> +} while (0)
-
-With the title fixed, and assuming that the kbuild test robot doesn't
-find uses we've missed:
-
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-Thanks,
-Mark.
-
-
->  
->  #endif /* __KERNEL__ */
->  
-> -- 
-> 2.7.4
+> The issue is only reproducible with swapping enabled and the entire
+> memory is used up, when swapping heavily. Also this issue is only reproducible
+> on only one server with 128GB, which has the following memory layout:
 > 
+> [32GB@4GB, hole , 96GB@544GB]
+> 
+> Here is my non-expert analysis of the issue so far.
+> 
+> Under extreme memory pressure, the kswapd could trigger reset_isolation_suitable()
+> to figure out the cached values for migrate/free pfn for a zone, by scanning through
+> the entire zone. On our server it does so in the range of [ 0x10_0000, 0xa00_0000 ],
+> with the following area of holes : [ 0x20_0000, 0x880_0000 ].
+> In the failing case, we end up setting the cached migrate pfn as : 0x508_0000, which
+> is right in the center of the zone pfn range. i.e ( 0x10_0000 + 0xa00_0000 ) / 2,
+> with reset_migrate = 0x88_4e00, reset_free = 0x10_0000.
+> 
+> Now these cached values are used by the fast_isolate_freepages() to find a pfn. However,
+> since we cant find anything during the search we fall back to using the page belonging
+> to the min_pfn (which is the migrate_pfn), without proper checks to see if that is valid
+> PFN or not. This is then passed on to fast_isolate_around() which tries to do :
+> set_pageblock_skip(page) on the page which blows up due to an NULL mem_section pointer.
+> 
+> The following patch seems to fix the issue for me, but I am not quite convinced that
+> it is the right fix. Thoughts ?
+> 
+> 
+> diff --git a/mm/compaction.c b/mm/compaction.c
+> index 9febc8c..9e1b9ac 100644
+> --- a/mm/compaction.c
+> +++ b/mm/compaction.c
+> @@ -1399,7 +1399,7 @@ fast_isolate_freepages(struct compact_control *cc)
+>  				page = pfn_to_page(highest);
+>  				cc->free_pfn = highest;
+>  			} else {
+> -				if (cc->direct_compaction) {
+> +				if (cc->direct_compaction && pfn_valid(min_pfn)) {
+>  					page = pfn_to_page(min_pfn);
+
+pfn_to_online_page() here would be better as it does not add pfn_valid() cost on
+architectures which does not subscribe to CONFIG_HOLES_IN_ZONE. But regardless if
+the compaction is trying to scan pfns in zone holes, then it should be avoided.
