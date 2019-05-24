@@ -2,153 +2,89 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 473E2C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 00:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF9DC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 00:12:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6DB520863
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 00:11:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EuZua2Uz"
+	by mail.kernel.org (Postfix) with ESMTP id 0454B20673
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 00:12:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388683AbfEXALo (ORCPT
+        id S1731609AbfEXAMo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 20:11:44 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35353 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387613AbfEXALn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 20:11:43 -0400
-Received: by mail-pf1-f193.google.com with SMTP id d126so1964280pfd.2
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 17:11:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:from:cc:to:user-agent:date;
-        bh=55+scLPzywd2t6Q9yx3Qo50LoEln+k1CYwGY53WWjzw=;
-        b=EuZua2Uzj4PFIiNubpucYeny5iInwuYR+P39ZD/rE/lEL2FPFCY4KF7C9r/zE3fIsH
-         NAna6L2IHwMgPHCUgEk1jHwDhX2jy6B+xtoSR35UuQNkV+BJ9+PDF1/9k4oUEPJDSiRo
-         0KVAjc7QFF/nw0767rfpVHo+EbMTIiMCjvsmE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:from:cc:to
-         :user-agent:date;
-        bh=55+scLPzywd2t6Q9yx3Qo50LoEln+k1CYwGY53WWjzw=;
-        b=dKfUpIB7gJNxiyRY2NWR64jWfIT/ft5dr6OkR0S5jZ3i5bIxfaGFpNwI2sMfj5hMtQ
-         sk1xf/yHOcSfQcGxAE+FiOR6kK7nhwjErQB9oY4crwhLuiASvuNlylg0vyFmOOPV9oft
-         HUrWyJMv1N0JrY+7xBbF0eK6u2rEg0psZSjx+8AIu1maQvwPtAouaNNddxn5FS04DOLe
-         UvcDOIJIRcG++5hHeghHIWOjf0+hWM6mp5jZX6ihiefijc8Ne//bgOgS5k814U16JZdm
-         8JwIuT5XNrr6VF0hPNqT9lsljpGUg3VoLO2XE2k1MDtLWmBBswTCZVHXZL0O9sbWTU3Y
-         gunQ==
-X-Gm-Message-State: APjAAAVDy2bQ4P7UmFkR2Hv413v0f4xMC9TuPzJMcon5NFQSqnvMA6O9
-        ib7nB3RpMp6bCzOKuOxSEHBx/7fGWRaiXA==
-X-Google-Smtp-Source: APXvYqwIfZhlX2GDAEViod1U1tdxrWTVRDC+bH4vbpfSIRi2ENnxCO9LMZ917gDBnasxtFKUES9r4w==
-X-Received: by 2002:aa7:881a:: with SMTP id c26mr102396225pfo.254.1558656702464;
-        Thu, 23 May 2019 17:11:42 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id x18sm597981pfj.17.2019.05.23.17.11.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 May 2019 17:11:41 -0700 (PDT)
-Message-ID: <5ce736bd.1c69fb81.f2410.2b19@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Thu, 23 May 2019 20:12:44 -0400
+Received: from mx.allycomm.com ([138.68.30.55]:47689 "EHLO mx.allycomm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727042AbfEXAMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 20:12:43 -0400
+Received: from jkletsky-mbp15.guidewire.com (inet.guidewire.com [199.91.42.30])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx.allycomm.com (Postfix) with ESMTPSA id E376D3D38F;
+        Thu, 23 May 2019 17:12:41 -0700 (PDT)
+Subject: Re: [PATCH v4 3/3] mtd: spinand: Add support for GigaDevice
+ GD5F1GQ4UFxxG
+To:     Schrempf Frieder <frieder.schrempf@kontron.de>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190522220555.11626-1-lede@allycomm.com>
+ <20190522220555.11626-4-lede@allycomm.com>
+ <e438022f-3444-9aae-adac-2dd3dd0071b7@kontron.de>
+From:   Jeff Kletsky <lede@allycomm.com>
+Message-ID: <e0682730-b69d-d774-d98f-53858e390d8b@allycomm.com>
+Date:   Thu, 23 May 2019 17:12:41 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <AM0PR04MB6434A12D2DCB42ECAA7EB1FAEE010@AM0PR04MB6434.eurprd04.prod.outlook.com>
-References: <20190523195313.24701-1-farosas@linux.ibm.com> <5ce722ac.1c69fb81.b62d2.16d0@mx.google.com> <AM0PR04MB6434A12D2DCB42ECAA7EB1FAEE010@AM0PR04MB6434.eurprd04.prod.outlook.com>
-Subject: Re: [PATCH] scripts/gdb: Fix invocation when CONFIG_COMMON_CLK is not set
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Kieran Bingham <kbingham@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jackie Liu <liuyun01@kylinos.cn>
-To:     Fabiano Rosas <farosas@linux.ibm.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>
-User-Agent: alot/0.8.1
-Date:   Thu, 23 May 2019 17:11:40 -0700
+In-Reply-To: <e438022f-3444-9aae-adac-2dd3dd0071b7@kontron.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Leonard Crestez (2019-05-23 16:09:18)
-> On 5/24/2019 1:46 AM, Stephen Boyd wrote:
-> > Quoting Fabiano Rosas (2019-05-23 12:53:11)
-> >> diff --git a/scripts/gdb/linux/constants.py.in b/scripts/gdb/linux/con=
-stants.py.in
-> >> index 1d73083da6cb..2efbec6b6b8d 100644
-> >> --- a/scripts/gdb/linux/constants.py.in
-> >> +++ b/scripts/gdb/linux/constants.py.in
-> >> @@ -40,7 +40,8 @@
-> >>   import gdb
-> >>  =20
-> >>   /* linux/clk-provider.h */
-> >> -LX_GDBPARSED(CLK_GET_RATE_NOCACHE)
-> >> +if IS_BUILTIN(CONFIG_COMMON_CLK):
-> >> +    LX_GDBPARSED(CLK_GET_RATE_NOCACHE)
-> >>  =20
-> >=20
-> > Why is this LX_GDBPARSED() instead of LX_VALUE()? From what I can tell
-> > it doesn't need to be runtime evaluated, just assigned to something that
-> > is macro expanded by CPP.
->=20
-> Because CLK_GET_RATE_NOCACHE expands to BIT() which expands to a=20
-> constant with an UL suffix which python doesn't understand.
->=20
-> Alternatively we could redefine the BIT macros inside constants.py.in=20
-> but using gdb features seemed better. We could even try to strip integer =
+(reduced direct addressees, though still on lists)
 
-> literal suffixes with sed.
->=20
-> Mentioned before: https://lkml.org/lkml/2019/5/3/341
->=20
+On 5/22/19 11:42 PM, Schrempf Frieder wrote:
 
-Ah ok. A comment in the code would have helped me, but o well.
+> On 23.05.19 00:05, Jeff Kletsky wrote:
+>> From: Jeff Kletsky <git-commits@allycomm.com>
+>>
+>> The GigaDevice GD5F1GQ4UFxxG SPI NAND is in current production devices
+>> and, while it has the same logical layout as the E-series devices,
+>> it differs in the SPI interfacing in significant ways.
+>>
+>> This support is contingent on previous commits to:
+>>
+>>     * Add support for two-byte device IDs
+>>     * Define macros for page-read ops with three-byte addresses
+>>
+>> http://www.gigadevice.com/datasheet/gd5f1gq4xfxxg/
+>>
+>> Signed-off-by: Jeff Kletsky <git-commits@allycomm.com>
+> Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+>
+>> Reported-by: kbuild test robot <lkp@intel.com>
+> I dont't think that this Reported-by tag should be used here. The bot
+> reported build errors caused by your patch and you fixed it in a new
+> version. As far as I understand this tag, it references someone who
+> reported a flaw/bug that led to this change in the first place.
+> The version history of the changes won't be visible in the git history
+> later, but the tag will be and would be rather confusing.
 
-I'd still like to apply this change to clk tree so that we can avoid
-needing to do the IS_BUILTIN check entirely.
+Thank you for your patience and explanations. I've been being conservative
+as I'm not a "seasoned, Linux professional" and am still getting my
+git send-email config / command line for Linux properly straightened out.
 
-----8<----
-From: Stephen Boyd <sboyd@kernel.org>
-Date: Thu, 23 May 2019 17:05:59 -0700
-Subject: [PATCH] clk: Remove ifdef for COMMON_CLK in clk-provider.h
+Should I send another patch set with the `kbuild...` tag removed,
+or would it be removed in the process of an appropriate member
+of the Linux MTD team adding their tag for approval, if and when
+that happens?
 
-This ifdef has been there since the beginning of this file, but it
-doesn't really seem to serve any purpose besides obfuscating the struct
-definitions and #defines here from compilation units that include it.
-Let's always expose these function prototypes and struct definitions so
-that code can inspect clk providers without needing to have
-CONFIG_COMMON_CLK enabled.
+Jeff
 
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
----
- include/linux/clk-provider.h | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-index bb6118f79784..3bced2ec9f26 100644
---- a/include/linux/clk-provider.h
-+++ b/include/linux/clk-provider.h
-@@ -9,8 +9,6 @@
- #include <linux/of.h>
- #include <linux/of_clk.h>
-=20
--#ifdef CONFIG_COMMON_CLK
--
- /*
-  * flags used across common struct clk.  these flags should only affect the
-  * top-level framework.  custom flags for dealing with hardware specifics
-@@ -1019,5 +1017,4 @@ static inline int of_clk_detect_critical(struct devic=
-e_node *np, int index,
-=20
- void clk_gate_restore_context(struct clk_hw *hw);
-=20
--#endif /* CONFIG_COMMON_CLK */
- #endif /* CLK_PROVIDER_H */
---=20
-Sent by a computer through tubes
