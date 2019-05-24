@@ -2,80 +2,153 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7087C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:54:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2CCC282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3B6E21850
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:54:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36524206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:54:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o3G4QU3i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403951AbfEXNyE (ORCPT
+        id S2403968AbfEXNyG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 09:54:04 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:36642 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S2403873AbfEXNyD (ORCPT
+        Fri, 24 May 2019 09:54:06 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38592 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403917AbfEXNyF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 09:54:03 -0400
-Received: (qmail 1597 invoked by uid 2102); 24 May 2019 09:54:02 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 24 May 2019 09:54:02 -0400
-Date:   Fri, 24 May 2019 09:54:02 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg KH <greg@kroah.com>
-cc:     andreyknvl@google.com,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        <linux-media@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        <syzkaller-bugs@googlegroups.com>, <wen.yang99@zte.com.cn>
-Subject: Re: [PATCH] media: usb: siano: Fix general protection fault in smsusb
-In-Reply-To: <20190524103540.250a69e7@coco.lan>
-Message-ID: <Pine.LNX.4.44L0.1905240951470.1435-100000@iolanthe.rowland.org>
+        Fri, 24 May 2019 09:54:05 -0400
+Received: by mail-pl1-f193.google.com with SMTP id f97so4223384plb.5;
+        Fri, 24 May 2019 06:54:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KAeJ4wUrvHpOLw7ye4R6Tb6Y50k1ZsjRygN64gReTaY=;
+        b=o3G4QU3iUKDI4Yn+sOyq2Wunya0S3SZMeAbdgf0jLfUS2IieDIk08IaeNje3CTh0Si
+         35Z2B1TTjBz2CUk8lM2ToK3ruzwuVNnGOzgProJV37jpfsvCHsZ+bS1M4V/qqyDeMTU6
+         diRb2qSpY/kIQhHXv02o5O0x77tf5Myj7NQQn2r7BcAyD48Vo6En/JzB806VJROR7OP3
+         +BKGjW1vAMfwcjNnoIjCmmA9uAxA7TT0aCL7MQ35HfVmtYVoa3mfUIAwe8AiJ8S3cjek
+         5XrE3luolet+3RPjAX6/MzgYAs4HFzEgLVyABl7JlpVI966fH4NA6JP+XCcBwGUwwv1V
+         4bVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KAeJ4wUrvHpOLw7ye4R6Tb6Y50k1ZsjRygN64gReTaY=;
+        b=TsDg5VTQqYiHNzYtGBTD4N4qXy7+cN/PfuNu538W4nuydU3vdIMeJYwibnVMuiXuD9
+         kJysfg4OtKyVUuA8XaKaJTLo3SZ13hYi187wBakte44XwdUpJp2Hur8R66z6I2y7Y+z6
+         Wvvlc2RjGbVNelD2crtjq/wukdsp9mSzU+fOXLqGfG4q1608MiAhiChbWxZVRXY3b+Aj
+         BO/0UOPYzSF1hu95zzWS7xSVhKf570TbzEueyhDwW+81EmLF3BE6AQTkZy7fcezH9X4k
+         Po9ekVoSpBs82xeA6Fvzu7Q5CJGBgegWmvH//Jc7mThhzYHxjNLV4ufT9w7i+hTeyxqa
+         +GOA==
+X-Gm-Message-State: APjAAAXgiPjsnZ6a+JwrWd1SotyBIbqQq48dP1nFsC7eBequpEbShiPF
+        nP4aGwEVlBEFL86/8ZyMJQL13bdjWcs=
+X-Google-Smtp-Source: APXvYqxt0sBXbvNKCDDuFXzkLiwx1WjCENXPktOMxi3noMT4ujCq0YhAiiM5MtGU1DAS+zEj2ORk2Q==
+X-Received: by 2002:a17:902:7617:: with SMTP id k23mr63034749pll.175.1558706044369;
+        Fri, 24 May 2019 06:54:04 -0700 (PDT)
+Received: from localhost.localdomain ([2601:644:8201:32e0:7256:81ff:febd:926d])
+        by smtp.gmail.com with ESMTPSA id g8sm3556133pfk.83.2019.05.24.06.54.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 May 2019 06:54:03 -0700 (PDT)
+Date:   Fri, 24 May 2019 06:54:00 -0700
+From:   Eduardo Valentin <edubezval@gmail.com>
+To:     Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Rui Zhang <rui.zhang@intel.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] Thermal-SoC management changes for v5.2-rc1
+Message-ID: <20190524135358.GA2750@localhost.localdomain>
+References: <20190516044313.GA17751@localhost.localdomain>
+ <CAAObsKD0_+cJQW0YtF9AkWn8XYP9wSYHTi_UhRiba7tH5EWTdw@mail.gmail.com>
+ <20190524024047.GE1936@localhost.localdomain>
+ <CAAObsKB_CsPk5uFCCsQs+UD3EYzAwEAWZCiH1_L4t2rXmymjTQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAObsKB_CsPk5uFCCsQs+UD3EYzAwEAWZCiH1_L4t2rXmymjTQ@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 May 2019, Mauro Carvalho Chehab wrote:
+Hello,
 
-> Em Tue, 7 May 2019 12:39:47 -0400 (EDT)
-> Alan Stern <stern@rowland.harvard.edu> escreveu:
+On Fri, May 24, 2019 at 10:23:09AM +0200, Tomeu Vizoso wrote:
+> On Fri, 24 May 2019 at 04:40, Eduardo Valentin <edubezval@gmail.com> wrote:
+> >
+> > On Thu, May 23, 2019 at 11:46:47AM +0200, Tomeu Vizoso wrote:
+> > > Hi Eduardo,
+> > >
+> > > I saw that for 5.1 [0] you included a kernelci boot report for your
+> > > tree, but not for 5.2. Have you found anything that should be improved
+> > > in KernelCI for it to be more useful to maintainers like you?
+> >
+> > Honestly, I take a couple of automated testing as input before sending
+> > my pulls to Linux: (a) my local test, (b) kernel-ci, and (c) 0-day.
+> >
+> > There was really no reason specifically for me to not add the report
+> > from kernelci, except..
+> > >
+> > > [0] https://lore.kernel.org/lkml/20190306161207.GA7365@localhost.localdomain/
+> > >
+> > > I found about this when trying to understand why the boot on the
+> > > veyron-jaq board has been broken in 5.2-rc1.
+> > >
+> >
+> > I remember a report saying this failed, but from what I could tell from
+> > the boot log, the board booted and hit terminal. But apparently, after
+> > all reports from developers, the veyron-jaq boards were in a hang state.
+> >
+> > That was hard for me to tell from your logs, as they looked like
+> > a regular boot that hits terminal.
+> >
+> > Maybe I should have looked for a specific output of a command you guys
+> > run, saying "successful boot" somewhere?
 > 
-> > The syzkaller USB fuzzer found a general-protection-fault bug in the
-> > smsusb part of the Siano DVB driver.  The fault occurs during probe
-> > because the driver assumes without checking that the device has both
-> > IN and OUT endpoints and the IN endpoint is ep1.
-> > 
-> > By slightly rearranging the driver's initialization code, we can make
-> > the appropriate checks early on and thus avoid the problem.  If the
-> > expected endpoints aren't present, the new code safely returns -ENODEV
-> > from the probe routine.
-> > 
-> > Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-> > Reported-and-tested-by: syzbot+53f029db71c19a47325a@syzkaller.appspotmail.com
-> > CC: <stable@vger.kernel.org>
+> I think what is easiest and clearest is to consider the bisection
+> reports as a very strong indication that something is quite wrong in
+> the branch.
 
-> Patch looks correct, and I'm applying it. It exposes another potential
-> problem though: what happens if sizeof(desc.wMaxPacketSize) < sizeof(struct sms_msg_hdr)?
+OK. I hear you.
+
 > 
-> I'm enclosing a followup patch that should solve this situation
-> (and clean up a sparse warning).
+> Because if a board stopped booting and the bisection found a
+> suspicious patch, and reverting it gets the board booting again, then
+> chances are very high that the patch in question broke that boot.
 > 
-> Thanks,
-> Mauro
 
-Your points are well taken.
 
-However, Greg KH has already taken the original patch and a fix for the 
-sparse warning into his tree.  I guess the two of you should figure out 
-how best to straighten this out.
+Yeah, for sure If I had understood the report properly I could have
+nacked the patch.
 
-Alan Stern
+> Do you think the wording could be improved to make it clearer? Or
+> maybe some other changes to make all this more useful to maintainers
+> like you?
+> 
+
+Well, from my perspective, I need to judge if the failure on your report
+is really related to my changes. Many times, specially on build errors,
+we get failures that are unrelated. Build errors are more straight
+forward do judge. Similarly, we need to find out if a boot issue is
+caused by a change on the branch or something existing. On boot issues
+from kernelci reports, I think the false negatives I have been seeing
+is lab/boards failing to boot. Those can also be easy to spot as the
+in most cases the kernel wont even load. 
+
+For this particular case, as I described before, the kernel would
+load and hit the shell command line, but in fact it was in hang state
+IIRC. That is probably why it has not straight forward to understand
+from the log. Maybe a successful boot message somewhere would have
+helped to spot the problem (or the opposite of it, something
+saying, I was expecting to execute a command and board was
+unresponsive).
 
