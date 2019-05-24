@@ -2,139 +2,139 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43190C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E74AC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 178362133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67A892070D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:19:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kY+E5Qiu"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="UylskouG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390768AbfEXQPq (ORCPT
+        id S2390411AbfEXQT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 12:15:46 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:44490 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389588AbfEXQPp (ORCPT
+        Fri, 24 May 2019 12:19:27 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:35453 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389588AbfEXQT1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 12:15:45 -0400
-Received: by mail-ed1-f68.google.com with SMTP id b8so15081100edm.11
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 09:15:44 -0700 (PDT)
+        Fri, 24 May 2019 12:19:27 -0400
+Received: by mail-ed1-f67.google.com with SMTP id p26so15157092edr.2
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 09:19:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=xiom/qbhc8hzsnkXpNYZUpJBz12Ihudb7omPLvvxhj8=;
-        b=kY+E5QiuzaCj1lGRZrWvzWlIc8/dOw5vf72u3ftpBv18Imso/xFk6x0/AyJdz0DyTA
-         AWPbrxLmcaWnMK4Jzd0D4eI9reaHq7Y3lIptb3kt/PPctGb9lAR5khYhRboR9IoFz48b
-         +FSeY0oBxlWeZryLjXQHxFgG2pMzS3v4439x/ADxoOTnZcgQ5W0spbP3oZUYPxWSWeI/
-         lRX6t9zHJGZo1+l05wPc3hQm4T1Qs8O5jj9p4YAliOFsTFRIL7bwCK1myIoxAsMBZ0M9
-         HIm/MSiTktQRB/aXE3J79srWkSOjrAlgK++yvYbAY8w2brUrvku3c7JKpd0ZGMAVgK4M
-         9tcQ==
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CPXRqRXi1dkgpDWgkFmv18S2UXCoASA126/ZLDqpep8=;
+        b=UylskouGfFzdz9k+rD+nBUfnMYwu3B0Nrzz9IwSBv0raqC8VeO7Lkj9KRYotH32kPR
+         nHWepxV6u3vgwH2ef+aZf2ztNNBaHS3ozEOEmxUDfkARJoFeLSU91+wVtTaehbyEkGlW
+         WkJRGJNPShq1SMDUDasYCQlV9bDsrgqX/R4nk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=xiom/qbhc8hzsnkXpNYZUpJBz12Ihudb7omPLvvxhj8=;
-        b=pSO/72EIOQ5YNBV2KDmMshrjZWj2AkTNlmPXyPVt+oedao7PjW5uUFZ5gb43EB6MuL
-         Vh9kBoIIiavXxngCuBhyjljc2Iqx/4yO8tJroysEKcZw23W6Z71tjHtsywxWFlNhF5vn
-         PhjBYpse2NxpqC8Fsfs6wOBSy8wASarkbt+AK8vmW2qnkzztO96yE8typLyliChAfuRq
-         xmQfQ75rf1DGx6uWY02MW/xZKtekAh9lIOFAVQ6HO+MbfiacVLP0gncRc2fYAXFQ9Utz
-         YgIpEE5t9vstJz7tqARJTKUCPp4ooTiOWgxHimSi3leAO9RtaOjHjodivOFgaXPX8eGv
-         Qa/A==
-X-Gm-Message-State: APjAAAXhpWXF39gtLtK+jQfmmne86b5GVNFlAi2walL6st++vbNzKX2B
-        lyl+R4LwfD6j85uZhhIUsJI=
-X-Google-Smtp-Source: APXvYqwPMvsrTK7DMaHJWzPyB8e3YbMWUoWhnCCT9QLPYu2yG4stqlm1HrSUqH6pfYaXbPKCrw5iJw==
-X-Received: by 2002:a17:906:cd08:: with SMTP id oz8mr37589909ejb.67.1558714543948;
-        Fri, 24 May 2019 09:15:43 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:4f9:2b:2b15::2])
-        by smtp.gmail.com with ESMTPSA id u5sm428197ejm.85.2019.05.24.09.15.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 09:15:42 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Cliff Whickman <cpw@sgi.com>, Robin Holt <robinmholt@gmail.com>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Stephen Hines <srhines@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: [PATCH] misc: sgi-xp: Properly initialize buf in xpc_get_rsvd_page_pa
-Date:   Fri, 24 May 2019 09:15:17 -0700
-Message-Id: <20190524161517.125941-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.22.0.rc1
-In-Reply-To: <20190524160015.GA7590@kroah.com>
-References: <20190524160015.GA7590@kroah.com>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=CPXRqRXi1dkgpDWgkFmv18S2UXCoASA126/ZLDqpep8=;
+        b=ByVV4EFMYTsTIP87ih91eXzuaKWfeJ4COfu6B4Y9D/wKrNSO7Illu3Eq8kZ+zIq5Kh
+         EKkWtZSbeschFZqcafUM1Jxc+mQ0BSYMag2fuRGSdpfTAjoolr09dxYytcyQ3z2/SPvs
+         A6Ayp4NDX9W7dJReYt7kGbzsfe2Ptx/X7PNaQsv62onc2ouxNA7SVqw/E35QBDSTo9Jt
+         lyJsFNMRWJwvvXpkN2z+PIixQeI4Xp/Ie9Zkhq6D0Ut/FGF/9Gg0j1nujIgHNRSUlWUf
+         u4HlnU3Fz8BpjlAu8EIt1jA89fFQpQfFMkq1uSXE0imOMQoy45fO3FaQTzrYAyoi8JXU
+         h/kw==
+X-Gm-Message-State: APjAAAXrLYmRj+64ffh6y46BhyCgBrCA/iAfk+8cj/e3ZdDurTmv76wM
+        JcUowPcTwMPZHOJly76yPWAuuG93Qks=
+X-Google-Smtp-Source: APXvYqxgOqPPzrf9EfWwfmeL3Crqrk0YFhsfqKE5TlV0QEK2AcOGsS18h9BWypj8BrokO9/WGm1gEQ==
+X-Received: by 2002:a17:906:ecee:: with SMTP id qt14mr79168553ejb.96.1558714765767;
+        Fri, 24 May 2019 09:19:25 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id g18sm848038edh.13.2019.05.24.09.19.24
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 24 May 2019 09:19:24 -0700 (PDT)
+Date:   Fri, 24 May 2019 18:19:22 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, Dave Airlie <airlied@linux.ie>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Subject: Re: linux-next: build failure after merge of the drm-fixes tree
+Message-ID: <20190524161922.GB21222@phenom.ffwll.local>
+Mail-Followup-To: Stephen Rothwell <sfr@canb.auug.org.au>,
+        Dave Airlie <airlied@linux.ie>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+References: <20190524082926.6e1a7d8f@canb.auug.org.au>
+ <CAKMK7uGSfOev71DKF+ygRjU0rMWcrW3rL7-=Xhbwdm9STUWntQ@mail.gmail.com>
+ <20190524201548.2e8594a2@canb.auug.org.au>
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190524201548.2e8594a2@canb.auug.org.au>
+X-Operating-System: Linux phenom 4.14.0-3-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang warns:
+On Fri, May 24, 2019 at 08:15:48PM +1000, Stephen Rothwell wrote:
+> Hi Daniel,
+> 
+> On Fri, 24 May 2019 10:09:28 +0200 Daniel Vetter <daniel@ffwll.ch> wrote:
+> >
+> > On Fri, May 24, 2019 at 12:29 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> > >
+> > > After merging the drm-fixes tree, today's linux-next build (x86_64
+> > > allmodconfig) failed like this:
+> > >
+> > > drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm.c: In function 'load_dmcu_fw':
+> > > drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm.c:667:7: error: implicit declaration of function 'ASICREV_IS_PICASSO'; did you mean 'ASICREV_IS_VEGA12_P'? [-Werror=implicit-function-declaration]
+> > >    if (ASICREV_IS_PICASSO(adev->external_rev_id))
+> > >        ^~~~~~~~~~~~~~~~~~
+> > >        ASICREV_IS_VEGA12_P
+> > >
+> > > Caused by commit
+> > >
+> > >   55143dc23ca4 ("drm/amd/display: Don't load DMCU for Raven 1")
+> > >
+> > > I have reverted that commit for today.  
+> > 
+> > Seems to compile fine here, and Dave just sent out the pull so I guess
+> > works for him too. What's your .config?
+> 
+> See above "x86_64 allmodconfig"
+> 
+> Looking at it closely now, I can't see how that error comes about.
+> 
+> Ah, in the drm-fixes tree, the definition of  is protected by
+> 
+>   #if defined(CONFIG_DRM_AMD_DC_DCN1_01)
+> 
+> which gets removed in the amdgpu tree (merged later).  So I can only
+> presume that CONFIG_DRM_AMD_DC_DCN1_01 was not set for the build I did.
+> 
+> config DRM_AMD_DC
+>         bool "AMD DC - Enable new display engine"
+>         default y
+>         select DRM_AMD_DC_DCN1_0 if X86 && !(KCOV_INSTRUMENT_ALL && KCOV_ENABLE_
+> COMPARISONS)KCOV_INSTRUMENT_ALL && KCOV_ENABLE_COMPARISONS
+>         select DRM_AMD_DC_DCN1_01 if X86 && !(KCOV_INSTRUMENT_ALL && KCOV_ENABLE_COMPARISONS)
+> 
+> So maybe KCOV_INSTRUMENT_ALL && KCOV_ENABLE_COMPARISONS are set for
+> allmodconfig.  I no longer have the actual .config file any more, sorry.
 
-drivers/misc/sgi-xp/xpc_partition.c:73:14: warning: variable 'buf' is
-uninitialized when used within its own initialization [-Wuninitialized]
-        void *buf = buf;
-              ~~~   ^~~
-1 warning generated.
-
-Arnd's explanation during review:
-
-  /*
-   * Returns the physical address of the partition's reserved page through
-   * an iterative number of calls.
-   *
-   * On first call, 'cookie' and 'len' should be set to 0, and 'addr'
-   * set to the nasid of the partition whose reserved page's address is
-   * being sought.
-   * On subsequent calls, pass the values, that were passed back on the
-   * previous call.
-   *
-   * While the return status equals SALRET_MORE_PASSES, keep calling
-   * this function after first copying 'len' bytes starting at 'addr'
-   * into 'buf'. Once the return status equals SALRET_OK, 'addr' will
-   * be the physical address of the partition's reserved page. If the
-   * return status equals neither of these, an error as occurred.
-   */
-  static inline s64
-  sn_partition_reserved_page_pa(u64 buf, u64 *cookie, u64 *addr, u64 *len)
-
-  so *len is set to zero on the first call and tells the bios how many
-  bytes are accessible at 'buf', and it does get updated by the BIOS to
-  tell us how many bytes it needs, and then we allocate that and try again.
-
-Fixes: 279290294662 ("[IA64-SGI] cleanup the way XPC locates the reserved page")
-Link: https://github.com/ClangBuiltLinux/linux/issues/466
-Suggested-by: Stephen Hines <srhines@google.com>
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- drivers/misc/sgi-xp/xpc_partition.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/misc/sgi-xp/xpc_partition.c b/drivers/misc/sgi-xp/xpc_partition.c
-index 3eba1c420cc0..782ce95d3f17 100644
---- a/drivers/misc/sgi-xp/xpc_partition.c
-+++ b/drivers/misc/sgi-xp/xpc_partition.c
-@@ -70,7 +70,7 @@ xpc_get_rsvd_page_pa(int nasid)
- 	unsigned long rp_pa = nasid;	/* seed with nasid */
- 	size_t len = 0;
- 	size_t buf_len = 0;
--	void *buf = buf;
-+	void *buf = NULL;
- 	void *buf_base = NULL;
- 	enum xp_retval (*get_partition_rsvd_page_pa)
- 		(void *, u64 *, unsigned long *, size_t *) =
+Ah yes. Dave figured it out too and added a revert on top and redid the
+pull to Linus. Thanks for spotting&reporting this.
+-Daniel
 -- 
-2.22.0.rc1
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
