@@ -2,168 +2,510 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D86C282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 23:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7995C282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 23:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E343217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 23:06:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558739218;
-	bh=5GNjMd/TCLLjHnXRdSlD1qdYRS2d2nUOK/2fk7s1iuI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=U5HaoZGKOLvdPGPmS6v0NjfNKcKFPO7s8cvnjj1ferwLbRSTkOkv9KDIraZMh+3BP
-	 8ANgwE13USEOU1jC18+kfF1dcjFk8r624wcGlE+VU6YAs9FdACnKP5LPK/S1dv4qkc
-	 Ts5y5TZ8HmIqn0frxC1AtgOtas5cLighKD8l0fuk=
+	by mail.kernel.org (Postfix) with ESMTP id 4EB3621848
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 23:09:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fmvQ/o/k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732147AbfEXXG4 (ORCPT
+        id S1732194AbfEXXJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 19:06:56 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34178 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727091AbfEXXG4 (ORCPT
+        Fri, 24 May 2019 19:09:10 -0400
+Received: from mail-pl1-f173.google.com ([209.85.214.173]:44229 "EHLO
+        mail-pl1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727091AbfEXXJJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 19:06:56 -0400
-Received: by mail-lf1-f68.google.com with SMTP id v18so8255154lfi.1
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 16:06:54 -0700 (PDT)
+        Fri, 24 May 2019 19:09:09 -0400
+Received: by mail-pl1-f173.google.com with SMTP id c5so4715657pll.11
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 16:09:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pQINizPFkNPnto59K0HZACSWR9ngvO3M7aOeMX8dPW8=;
-        b=GmxgEiG+jMRxi4LmBi9k7J2C8n7RpiC2NBCZ3DLX08K85gcoyywZ4tl+P32/mMwcqG
-         O4Y184LyNs6/HdVttJYg26SnTEZenmTPwRlWi8OYmFedIXmlG1SXqhBugOdxMaqrphSg
-         0/iJn6C0x9KeeqMxCK7RF+v4pYfhlNizqxwtc=
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
+        bh=t4FvAvg9bJ//lnX63nmn/Q4iAH/LdGoA3M8COrAtO5o=;
+        b=fmvQ/o/ka1/HM4lgDFF+deJAz5cVsdNABJK7N4AsyOygt56GwrtoFkH/OROO/AW9mN
+         IWjNTT0d4/NCgMEG1ArK8BDShVPYTfMKAJhebhhTLhW/0AxhsJ+8njQaY3UyQzexg4Z2
+         1VbKpt+5I8VsmqiEryFLa9m3ymMLTYLLv7mEIBMRyfcwWnNlNHcBUHUW8feLLhjZcQuT
+         PG5dTnPUr2ORe+GvTnwjMuoxADmWFQJJXRRwd6zQorACoE8JEexdMyK4ITqONXsuQaY+
+         fYNt5S7cRiGYpEkJFAMEmZWSIswX3v1ocaRmDORESLBDQ4UjmOzNBoEJN7t91m0WltRn
+         ou5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pQINizPFkNPnto59K0HZACSWR9ngvO3M7aOeMX8dPW8=;
-        b=Jqi65uJO0FB/qdV7+/ozDId50ZTx4is7efMWOBIH7obbvE0g8AN63AI0qAjrruus8G
-         r8LxoG527UxILwHmEGjn80XqcIfaFN0G+6EQPVfSDSIRL2EWySX/Q22Yygf1RbWRvbbg
-         trMq1pLj5fOgATIo59hLZRtWmKIUrP+ll7yHAlIXtlltaLglEjbv5l+/izxWwd87kD0/
-         SnkQ8v+S/n10nP6OHiRYZGLwpLCm8DuoepPxhSjEsGzrvqG+uKmn8bwjVoddt/xwBswl
-         7TEQ4NUggRVDUbOuqS+ltJaVCEjaJqiC/ZyqRaK66mDGTpE/ByfLIU9IJP9Oj6hRaPr3
-         1uYQ==
-X-Gm-Message-State: APjAAAWDDMekD7VG34VHtazTBofzUnVv5Gdg1Zf0TrZPjURzJWmmcJiF
-        Ujd/LNAip3Z2DC4wHhhA5lQlmIjBGrY=
-X-Google-Smtp-Source: APXvYqyW73enIXo49JfJYtAg+JqTf+xLVl8Qd28o5852jedYfXkJ6hZJowFQdFki1/uL4gV9BEmncg==
-X-Received: by 2002:a19:27cc:: with SMTP id n195mr26505715lfn.172.1558739213015;
-        Fri, 24 May 2019 16:06:53 -0700 (PDT)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id g15sm740722ljk.83.2019.05.24.16.06.52
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 16:06:52 -0700 (PDT)
-Received: by mail-lj1-f169.google.com with SMTP id r76so4544533lja.12
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 16:06:52 -0700 (PDT)
-X-Received: by 2002:a2e:97d8:: with SMTP id m24mr44440219ljj.52.1558738775052;
- Fri, 24 May 2019 15:59:35 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
+         :mime-version;
+        bh=t4FvAvg9bJ//lnX63nmn/Q4iAH/LdGoA3M8COrAtO5o=;
+        b=phu3XX3x+v13usQmhab7sbqzXQqCufqyX88yWYlkm12t2FtcEiZ62APxqPJqY/SauF
+         U3URgObfdPHjX0GtsxlzHCT05S4qynwd67f6tQ9jXIRfOPL15H5dwhCO5yiN8iMmkkFM
+         yVZWCiYXmikNv+1urafRgY9O7rSDZxUxx2iC8C54wDTndW6qwzs7NwyGlvRiG8OCiDzX
+         5vfpZwij/7tUvbM6Al7fZQWFQygH/8cAFK3vJuP2S+rjyBmrrzu1KAyQzlvaXE+lc1T9
+         0Qhx/7qoqVI3czLa9BakvmLwgfiJmBGFBRmhx0PrKmZIDDUPlJgXfOOhoNDF8NjCecFV
+         cYbg==
+X-Gm-Message-State: APjAAAVR1NgsO/CMlQOJS88lFZpd439tIdI3Ka/RpGrVZ4tC8lNnY/hp
+        sh3F5tUXK3CMaPwIe+29D4kFNQ==
+X-Google-Smtp-Source: APXvYqzWqIPQZiKlhgD+NmP7/0vGPdtNWh+yFFjas9ogAPNidBgmXHXVUpNQ6P+3h1gNA7YrsXsDAQ==
+X-Received: by 2002:a17:902:5e1:: with SMTP id f88mr61903480plf.226.1558738940335;
+        Fri, 24 May 2019 16:02:20 -0700 (PDT)
+Received: from [100.112.76.36] ([104.133.8.100])
+        by smtp.gmail.com with ESMTPSA id f17sm3169655pgv.16.2019.05.24.16.02.18
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 24 May 2019 16:02:19 -0700 (PDT)
+Date:   Fri, 24 May 2019 16:02:02 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Pavel Machek <pavel@ucw.cz>
+cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Revert "leds: avoid races with workqueue"?
+Message-ID: <alpine.LSU.2.11.1905241540080.1674@eggly.anvils>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-References: <20190507164317.13562-1-cyphar@cyphar.com> <20190507164317.13562-6-cyphar@cyphar.com>
-In-Reply-To: <20190507164317.13562-6-cyphar@cyphar.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 24 May 2019 15:59:19 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whbFMg4+HuWOBuHpvDNiAyowX2HUowv3+pt8vPWk5W-YQ@mail.gmail.com>
-Message-ID: <CAHk-=whbFMg4+HuWOBuHpvDNiAyowX2HUowv3+pt8vPWk5W-YQ@mail.gmail.com>
-Subject: Re: [PATCH v7 5/5] namei: resolveat(2) syscall
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 7, 2019 at 9:44 AM Aleksa Sarai <cyphar@cyphar.com> wrote:
->
-> The most obvious syscall to add support for the new LOOKUP_* scoping
-> flags would be openat(2) (along with the required execveat(2) change
-> included in this series). However, there are a few reasons to not do
-> this:
+Hi Pavel,
 
-So honestly, this last patch is what turns me off the whole thing.
+I'm having to revert 0db37915d912 ("leds: avoid races with workqueue")
+from my 5.2-rc testing tree, because lockdep and other debug options
+don't like it: net/mac80211/led.c arranges for led_blink_setup() to be
+called at softirq time, and flush_work() is not good for calling then.
 
-It goes from a nice new feature ("you can use O_NOSYMLINKS to disallow
-symlink traversal") to a special-case joke that isn't worth it any
-more. You get a useless path descrptor back from s special hacky
-system call, you don't actually get the useful data that you probably
-*want* the open to get you.
+Hugh
 
-Sure, you could eventually then use a *second* system call (openat
-with O_EMPTYPATH) to actually get something you can *use*, but at this
-point you've just wasted everybodys time and effort with a pointless
-second system call.
+================================
+WARNING: inconsistent lock state
+5.2.0-rc1 #1 Tainted: G        W        
+--------------------------------
+inconsistent {SOFTIRQ-ON-W} -> {IN-SOFTIRQ-W} usage.
+swapper/1/0 [HC0[0]:SC1[1]:HE1:SE0] takes:
+000000006e30541b ((work_completion)(&led_cdev->set_brightness_work)){+.?.}, at: __flush_work+0x3b/0x38a
+{SOFTIRQ-ON-W} state was registered at:
+  lock_acquire+0x146/0x1a1
+  __flush_work+0x5b/0x38a
+  flush_work+0xb/0xd
+  led_blink_setup+0x1e/0xd3
+  led_blink_set+0x3f/0x44
+  tpt_trig_timer+0xdb/0x106
+  ieee80211_mod_tpt_led_trig+0xed/0x112
+  __ieee80211_recalc_idle+0xd9/0x11f
+  ieee80211_idle_off+0xe/0x10
+  ieee80211_add_chanctx+0x6c/0x2df
+  ieee80211_new_chanctx+0x7d/0xe8
+  ieee80211_vif_use_channel+0x163/0x1fe
+  ieee80211_prep_connection+0x9db/0xbac
+  ieee80211_mgd_auth+0x274/0x328
+  ieee80211_auth+0x13/0x15
+  cfg80211_mlme_auth+0x1e1/0x341
+  nl80211_authenticate+0x25c/0x29e
+  genl_family_rcv_msg+0x2b7/0x31a
+  genl_rcv_msg+0x4a/0x6c
+  netlink_rcv_skb+0x55/0xaa
+  genl_rcv+0x23/0x32
+  netlink_unicast+0xfc/0x1bb
+  netlink_sendmsg+0x2c6/0x335
+  sock_sendmsg+0x12/0x1d
+  ___sys_sendmsg+0x1c5/0x23d
+  __sys_sendmsg+0x4b/0x75
+  __x64_sys_sendmsg+0x1a/0x1c
+  do_syscall_64+0x51/0x182
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+irq event stamp: 44098
+hardirqs last  enabled at (44098): [<ffffffff818a2375>] _raw_spin_unlock_irqrestore+0x3a/0x5b
+hardirqs last disabled at (44097): [<ffffffff818a21fd>] _raw_spin_lock_irqsave+0x13/0x4c
+softirqs last  enabled at (44088): [<ffffffff810fbb8e>] _local_bh_enable+0x1e/0x20
+softirqs last disabled at (44089): [<ffffffff810fbecf>] irq_exit+0x69/0xb9
 
-So I really don't see the point of this whole thing. Why even bother.
-Nobody sane will ever use that odd two-systemcall model, and even if
-they did, it would be slower and inconvenient.
+other info that might help us debug this:
+ Possible unsafe locking scenario:
 
-The whole and only point of this seems to be the two lines that say
+       CPU0
+       ----
+  lock((work_completion)(&led_cdev->set_brightness_work));
+  <Interrupt>
+    lock((work_completion)(&led_cdev->set_brightness_work));
 
-       if (flags & ~VALID_RESOLVE_FLAGS)
-              return -EINVAL;
+ *** DEADLOCK ***
 
-but that adds absolutely zero value to anything.  The argument is that
-"we can't add it to existing flags, because old kernels won't honor
-it", but that's a completely BS argument, since the user has to have a
-fallback anyway for the old kernel case - so we literally could much
-more conveniently just expose it as a prctl() or something to _ask_
-the kernel what flags it honors.
+2 locks held by swapper/1/0:
+ #0: 0000000002d634a0 ((&tpt_trig->timer)){+.-.}, at: call_timer_fn+0x0/0x2ce
+ #1: 000000007ed2567d (&trig->leddev_list_lock){.+.?}, at: tpt_trig_timer+0xbe/0x106
 
-So to me, this whole argument means that "Oh, we'll make it really
-inconvenient to actually use this".
-
-If we want to introduce a new system call that allows cool new
-features, it should have *more* powerful semantics than the existing
-ones, not be clearly weaker and less useful.
-
-So how about making the new system call be something that is a
-*superset* of "openat()" so that people can use that, and then if it
-fails, just fall back to openat(). But if it succeeds, it just
-succeeds, and you don't need to then do other system calls to actually
-make it useful.
-
-Make the new system call something people *want* to use because it's
-useful, not a crippled useless thing that has some special case use
-for some limited thing and just wastes system call space.
-
-Example *useful* system call attributes:
-
- - make it like openat(), but have another argument with the "limit flags"
-
- - maybe return more status of the resulting file. People very
-commonly do "open->fstat" just to get the size for mmap or to check
-some other detail of the file before use.
-
-In other words, make the new system call *useful*. Not some castrated
-"not useful on its own" thing.
-
-So I still support the whole "let's make it easy to limit path lookup
-in sane ways", but this model of then limiting using the result sanely
-just makes me a sad panda.
-
-                     Linus
+stack backtrace:
+CPU: 1 PID: 0 Comm: swapper/1 Tainted: G        W         5.2.0-rc1 #1
+Hardware name: LENOVO 4174EH1/4174EH1, BIOS 8CET51WW (1.31 ) 11/29/2011
+Call Trace:
+ <IRQ>
+ dump_stack+0x67/0x93
+ print_usage_bug+0x292/0x2a5
+ ? print_irq_inversion_bug+0x1cb/0x1cb
+ mark_lock+0x307/0x51e
+ __lock_acquire+0x2c0/0x762
+ lock_acquire+0x146/0x1a1
+ ? __flush_work+0x3b/0x38a
+ ? __ieee80211_create_tpt_led_trigger+0xcb/0xcb
+ __flush_work+0x5b/0x38a
+ ? __flush_work+0x3b/0x38a
+ ? mark_held_locks+0x47/0x63
+ ? _raw_spin_unlock_irqrestore+0x3a/0x5b
+ ? _raw_spin_unlock_irqrestore+0x3a/0x5b
+ ? lockdep_hardirqs_on+0x196/0x1a5
+ ? try_to_del_timer_sync+0x44/0x4f
+ ? trace_hardirqs_on+0xc7/0xf7
+ ? __ieee80211_create_tpt_led_trigger+0xcb/0xcb
+ ? _raw_spin_unlock_irqrestore+0x46/0x5b
+ ? __ieee80211_create_tpt_led_trigger+0xcb/0xcb
+ flush_work+0xb/0xd
+ led_blink_setup+0x1e/0xd3
+ led_blink_set+0x3f/0x44
+ tpt_trig_timer+0xdb/0x106
+ ? add_timer_on+0xce/0xce
+ call_timer_fn+0x11e/0x2ce
+ ? __ieee80211_create_tpt_led_trigger+0xcb/0xcb
+ expire_timers+0x141/0x197
+ run_timer_softirq+0x65/0x10e
+ __do_softirq+0x1bf/0x430
+ irq_exit+0x69/0xb9
+ smp_apic_timer_interrupt+0x1ee/0x269
+ apic_timer_interrupt+0xf/0x20
+ </IRQ>
+RIP: 0010:cpuidle_enter_state+0x1f4/0x34d
+Code: ff e8 36 0c ac ff 45 84 ff 74 16 9c 58 f6 c4 02 74 08 0f 0b fa e8 e5 da b4 ff 31 ff e8 23 c9 b1 ff e8 f0 d8 b4 ff fb 45 85 ed <0f> 88 e2 00 00 00 49 63 f5 b9 e8 03 00 00 48 6b c6 60 49 8d 7c 04
+RSP: 0018:ffff888234d8be58 EFLAGS: 00000206 ORIG_RAX: ffffffffffffff13
+RAX: ffff888234d84300 RBX: ffffe8ffffc864c0 RCX: 000000000000001f
+RDX: 0000000000000000 RSI: 0000000000000006 RDI: ffff888234d84300
+RBP: ffff888234d8be98 R08: 0000000000000002 R09: fffffffa2dd3f8df
+R10: 0000000000000ed5 R11: 0000000000000086 R12: ffffffff8229e320
+R13: 0000000000000005 R14: ffffffff8229e518 R15: 0000000000000000
+ ? cpuidle_enter_state+0x1f0/0x34d
+ cpuidle_enter+0x28/0x36
+ call_cpuidle+0x3b/0x3d
+ do_idle+0x189/0x1eb
+ cpu_startup_entry+0x1a/0x1e
+ start_secondary+0xfe/0x11b
+ secondary_startup_64+0xa4/0xb0
+BUG: sleeping function called from invalid context at kernel/workqueue.c:2974
+in_atomic(): 1, irqs_disabled(): 0, pid: 0, name: swapper/1
+INFO: lockdep is turned off.
+Preemption disabled at:
+[<ffffffff8108e14f>] start_secondary+0x48/0x11b
+CPU: 1 PID: 0 Comm: swapper/1 Tainted: G        W         5.2.0-rc1 #1
+Hardware name: LENOVO 4174EH1/4174EH1, BIOS 8CET51WW (1.31 ) 11/29/2011
+Call Trace:
+ <IRQ>
+ dump_stack+0x67/0x93
+ ? start_secondary+0x48/0x11b
+ ___might_sleep+0x229/0x240
+ ? __ieee80211_create_tpt_led_trigger+0xcb/0xcb
+ __might_sleep+0x63/0x77
+ ? __flush_work+0x3b/0x38a
+ __flush_work+0x84/0x38a
+ ? mark_held_locks+0x47/0x63
+ ? _raw_spin_unlock_irqrestore+0x3a/0x5b
+ ? _raw_spin_unlock_irqrestore+0x3a/0x5b
+ ? lockdep_hardirqs_on+0x196/0x1a5
+ ? try_to_del_timer_sync+0x44/0x4f
+ ? trace_hardirqs_on+0xc7/0xf7
+ ? __ieee80211_create_tpt_led_trigger+0xcb/0xcb
+ ? _raw_spin_unlock_irqrestore+0x46/0x5b
+ ? __ieee80211_create_tpt_led_trigger+0xcb/0xcb
+ flush_work+0xb/0xd
+ led_blink_setup+0x1e/0xd3
+ led_blink_set+0x3f/0x44
+ tpt_trig_timer+0xdb/0x106
+ ? add_timer_on+0xce/0xce
+ call_timer_fn+0x11e/0x2ce
+ ? __ieee80211_create_tpt_led_trigger+0xcb/0xcb
+ expire_timers+0x141/0x197
+ run_timer_softirq+0x65/0x10e
+ __do_softirq+0x1bf/0x430
+ irq_exit+0x69/0xb9
+ smp_apic_timer_interrupt+0x1ee/0x269
+ apic_timer_interrupt+0xf/0x20
+ </IRQ>
+RIP: 0010:cpuidle_enter_state+0x1f4/0x34d
+Code: ff e8 36 0c ac ff 45 84 ff 74 16 9c 58 f6 c4 02 74 08 0f 0b fa e8 e5 da b4 ff 31 ff e8 23 c9 b1 ff e8 f0 d8 b4 ff fb 45 85 ed <0f> 88 e2 00 00 00 49 63 f5 b9 e8 03 00 00 48 6b c6 60 49 8d 7c 04
+RSP: 0018:ffff888234d8be58 EFLAGS: 00000206 ORIG_RAX: ffffffffffffff13
+RAX: ffff888234d84300 RBX: ffffe8ffffc864c0 RCX: 000000000000001f
+RDX: 0000000000000000 RSI: 0000000000000006 RDI: ffff888234d84300
+RBP: ffff888234d8be98 R08: 0000000000000002 R09: fffffffa2dd3f8df
+R10: 0000000000000ed5 R11: 0000000000000086 R12: ffffffff8229e320
+R13: 0000000000000005 R14: ffffffff8229e518 R15: 0000000000000000
+ ? cpuidle_enter_state+0x1f0/0x34d
+ cpuidle_enter+0x28/0x36
+ call_cpuidle+0x3b/0x3d
+ do_idle+0x189/0x1eb
+ cpu_startup_entry+0x1a/0x1e
+ start_secondary+0xfe/0x11b
+ secondary_startup_64+0xa4/0xb0
+ing mDNS multicast group on interface wlp3s0.IPv6 with address fe80::2677:3ff:fe6f:637c.
+ing mDNS multicast group on interface wlp3s0.IPv6 with address 2600:1700:3ec0:f40:2677:3ff:fe6f:637c.
+stering new address record for 2600:1700:3ec0:f40:2677:3ff:fe6f:637c on wlp3s0.*.
+drawing address record for fe80::2677:3ff:fe6f:637c on wlp3s0.
+BUG: sleeping function called from invalid context at kernel/workqueue.c:2974
+in_atomic(): 1, irqs_disabled(): 0, pid: 0, name: swapper/1
+INFO: lockdep is turned off.
+Preemption disabled at:
+[<ffffffff8108e14f>] start_secondary+0x48/0x11b
+CPU: 1 PID: 0 Comm: swapper/1 Tainted: G        W         5.2.0-rc1 #1
+Hardware name: LENOVO 4174EH1/4174EH1, BIOS 8CET51WW (1.31 ) 11/29/2011
+Call Trace:
+ <IRQ>
+ dump_stack+0x67/0x93
+ ? start_secondary+0x48/0x11b
+ ___might_sleep+0x229/0x240
+ ? __ieee80211_create_tpt_led_trigger+0xcb/0xcb
+ __might_sleep+0x63/0x77
+ ? __flush_work+0x3b/0x38a
+ __flush_work+0x84/0x38a
+ ? trace_hardirqs_on+0xc7/0xf7
+ ? __ieee80211_create_tpt_led_trigger+0xcb/0xcb
+ ? _raw_spin_unlock_irqrestore+0x46/0x5b
+ ? __ieee80211_create_tpt_led_trigger+0xcb/0xcb
+ flush_work+0xb/0xd
+ led_blink_setup+0x1e/0xd3
+ led_blink_set+0x3f/0x44
+ tpt_trig_timer+0xdb/0x106
+ ? add_timer_on+0xce/0xce
+ call_timer_fn+0x11e/0x2ce
+ ? __ieee80211_create_tpt_led_trigger+0xcb/0xcb
+ expire_timers+0x141/0x197
+ run_timer_softirq+0x65/0x10e
+ ? ktime_get+0x8e/0xe4
+ ? trace_hardirqs_on+0xc7/0xf7
+ __do_softirq+0x1bf/0x430
+ irq_exit+0x69/0xb9
+ smp_apic_timer_interrupt+0x1ee/0x269
+ apic_timer_interrupt+0xf/0x20
+ </IRQ>
+RIP: 0010:cpuidle_enter_state+0x1f4/0x34d
+Code: ff e8 36 0c ac ff 45 84 ff 74 16 9c 58 f6 c4 02 74 08 0f 0b fa e8 e5 da b4 ff 31 ff e8 23 c9 b1 ff e8 f0 d8 b4 ff fb 45 85 ed <0f> 88 e2 00 00 00 49 63 f5 b9 e8 03 00 00 48 6b c6 60 49 8d 7c 04
+RSP: 0018:ffff888234d8be58 EFLAGS: 00000206 ORIG_RAX: ffffffffffffff13
+RAX: 0000000000000000 RBX: ffffe8ffffc864c0 RCX: 000000000000001f
+RDX: 0000000000000000 RSI: 0000001c6cff9837 RDI: ffffffff81664055
+RBP: ffff888234d8be98 R08: 0000000000000002 R09: fffffffa2dd3f8df
+R10: 000000000000e848 R11: 0000000000016727 R12: ffffffff8229e320
+R13: 0000000000000005 R14: ffffffff8229e518 R15: 0000000000000000
+ ? cpuidle_enter_state+0x1f0/0x34d
+ ? cpuidle_enter_state+0x1f0/0x34d
+ cpuidle_enter+0x28/0x36
+ call_cpuidle+0x3b/0x3d
+ do_idle+0x189/0x1eb
+ cpu_startup_entry+0x1a/0x1e
+ start_secondary+0xfe/0x11b
+ secondary_startup_64+0xa4/0xb0
+BUG: sleeping function called from invalid context at kernel/workqueue.c:2974
+in_atomic(): 1, irqs_disabled(): 0, pid: 0, name: swapper/1
+INFO: lockdep is turned off.
+Preemption disabled at:
+[<ffffffff8108e14f>] start_secondary+0x48/0x11b
+CPU: 1 PID: 0 Comm: swapper/1 Tainted: G        W         5.2.0-rc1 #1
+Hardware name: LENOVO 4174EH1/4174EH1, BIOS 8CET51WW (1.31 ) 11/29/2011
+Call Trace:
+ <IRQ>
+ dump_stack+0x67/0x93
+ ? start_secondary+0x48/0x11b
+ ___might_sleep+0x229/0x240
+ ? __ieee80211_create_tpt_led_trigger+0xcb/0xcb
+ __might_sleep+0x63/0x77
+ ? __flush_work+0x3b/0x38a
+ __flush_work+0x84/0x38a
+ ? trace_hardirqs_on+0xc7/0xf7
+ ? __ieee80211_create_tpt_led_trigger+0xcb/0xcb
+ ? _raw_spin_unlock_irqrestore+0x46/0x5b
+ ? __ieee80211_create_tpt_led_trigger+0xcb/0xcb
+ flush_work+0xb/0xd
+ led_blink_setup+0x1e/0xd3
+ led_blink_set+0x3f/0x44
+ tpt_trig_timer+0xdb/0x106
+ ? add_timer_on+0xce/0xce
+ call_timer_fn+0x11e/0x2ce
+ ? __ieee80211_create_tpt_led_trigger+0xcb/0xcb
+ expire_timers+0x141/0x197
+ run_timer_softirq+0x65/0x10e
+ ? ktime_get+0x8e/0xe4
+ ? trace_hardirqs_on+0xc7/0xf7
+ __do_softirq+0x1bf/0x430
+ irq_exit+0x69/0xb9
+ smp_apic_timer_interrupt+0x1ee/0x269
+ apic_timer_interrupt+0xf/0x20
+ </IRQ>
+RIP: 0010:cpuidle_enter_state+0x1f4/0x34d
+Code: ff e8 36 0c ac ff 45 84 ff 74 16 9c 58 f6 c4 02 74 08 0f 0b fa e8 e5 da b4 ff 31 ff e8 23 c9 b1 ff e8 f0 d8 b4 ff fb 45 85 ed <0f> 88 e2 00 00 00 49 63 f5 b9 e8 03 00 00 48 6b c6 60 49 8d 7c 04
+RSP: 0018:ffff888234d8be58 EFLAGS: 00000206 ORIG_RAX: ffffffffffffff13
+RAX: 0000000000000000 RBX: ffffe8ffffc864c0 RCX: 000000000000001f
+RDX: 0000000000000000 RSI: 0000001d051767b2 RDI: ffffffff81664055
+RBP: ffff888234d8be98 R08: 0000000000000002 R09: fffffffa2dd3f8df
+R10: 0000000000031f74 R11: 0000000000034923 R12: ffffffff8229e320
+R13: 0000000000000005 R14: ffffffff8229e518 R15: 0000000000000000
+ ? cpuidle_enter_state+0x1f0/0x34d
+ ? cpuidle_enter_state+0x1f0/0x34d
+ cpuidle_enter+0x28/0x36
+ call_cpuidle+0x3b/0x3d
+ do_idle+0x189/0x1eb
+ cpu_startup_entry+0x1a/0x1e
+ start_secondary+0xfe/0x11b
+ secondary_startup_64+0xa4/0xb0
+BUG: sleeping function called from invalid context at kernel/workqueue.c:2974
+in_atomic(): 1, irqs_disabled(): 0, pid: 0, name: swapper/1
+INFO: lockdep is turned off.
+Preemption disabled at:
+[<ffffffff8108e14f>] start_secondary+0x48/0x11b
+CPU: 1 PID: 0 Comm: swapper/1 Tainted: G        W         5.2.0-rc1 #1
+Hardware name: LENOVO 4174EH1/4174EH1, BIOS 8CET51WW (1.31 ) 11/29/2011
+Call Trace:
+ <IRQ>
+ dump_stack+0x67/0x93
+ ? start_secondary+0x48/0x11b
+ ___might_sleep+0x229/0x240
+ ? __ieee80211_create_tpt_led_trigger+0xcb/0xcb
+ __might_sleep+0x63/0x77
+ ? __flush_work+0x3b/0x38a
+ __flush_work+0x84/0x38a
+ ? trace_hardirqs_on+0xc7/0xf7
+ ? __ieee80211_create_tpt_led_trigger+0xcb/0xcb
+ ? _raw_spin_unlock_irqrestore+0x46/0x5b
+ ? __ieee80211_create_tpt_led_trigger+0xcb/0xcb
+ flush_work+0xb/0xd
+ led_blink_setup+0x1e/0xd3
+ led_blink_set+0x3f/0x44
+ tpt_trig_timer+0xdb/0x106
+ ? add_timer_on+0xce/0xce
+ call_timer_fn+0x11e/0x2ce
+ ? __ieee80211_create_tpt_led_trigger+0xcb/0xcb
+ expire_timers+0x141/0x197
+ run_timer_softirq+0x65/0x10e
+ ? ktime_get+0x8e/0xe4
+ ? trace_hardirqs_on+0xc7/0xf7
+ __do_softirq+0x1bf/0x430
+ irq_exit+0x69/0xb9
+ smp_apic_timer_interrupt+0x1ee/0x269
+ apic_timer_interrupt+0xf/0x20
+ </IRQ>
+RIP: 0010:cpuidle_enter_state+0x1f4/0x34d
+Code: ff e8 36 0c ac ff 45 84 ff 74 16 9c 58 f6 c4 02 74 08 0f 0b fa e8 e5 da b4 ff 31 ff e8 23 c9 b1 ff e8 f0 d8 b4 ff fb 45 85 ed <0f> 88 e2 00 00 00 49 63 f5 b9 e8 03 00 00 48 6b c6 60 49 8d 7c 04
+RSP: 0018:ffff888234d8be58 EFLAGS: 00000206 ORIG_RAX: ffffffffffffff13
+RAX: 0000000000000000 RBX: ffffe8ffffc864c0 RCX: 000000000000001f
+RDX: 0000000000000000 RSI: 0000001e2bc5a50d RDI: ffffffff81664055
+RBP: ffff888234d8be98 R08: 0000000000000002 R09: fffffffa2dd3f8df
+R10: 0000000000007d25 R11: 00000000000300c8 R12: ffffffff8229e320
+R13: 0000000000000005 R14: ffffffff8229e518 R15: 0000000000000000
+ ? cpuidle_enter_state+0x1f0/0x34d
+ ? cpuidle_enter_state+0x1f0/0x34d
+ cpuidle_enter+0x28/0x36
+ call_cpuidle+0x3b/0x3d
+ do_idle+0x189/0x1eb
+ cpu_startup_entry+0x1a/0x1e
+ start_secondary+0xfe/0x11b
+ secondary_startup_64+0xa4/0xb0
+BUG: sleeping function called from invalid context at kernel/workqueue.c:2974
+in_atomic(): 1, irqs_disabled(): 0, pid: 0, name: swapper/1
+INFO: lockdep is turned off.
+Preemption disabled at:
+[<ffffffff8108e14f>] start_secondary+0x48/0x11b
+CPU: 1 PID: 0 Comm: swapper/1 Tainted: G        W         5.2.0-rc1 #1
+Hardware name: LENOVO 4174EH1/4174EH1, BIOS 8CET51WW (1.31 ) 11/29/2011
+Call Trace:
+ <IRQ>
+ dump_stack+0x67/0x93
+ ? start_secondary+0x48/0x11b
+ ___might_sleep+0x229/0x240
+ ? __ieee80211_create_tpt_led_trigger+0xcb/0xcb
+ __might_sleep+0x63/0x77
+ ? __flush_work+0x3b/0x38a
+ __flush_work+0x84/0x38a
+ ? trace_hardirqs_on+0xc7/0xf7
+ ? __ieee80211_create_tpt_led_trigger+0xcb/0xcb
+ ? _raw_spin_unlock_irqrestore+0x46/0x5b
+ ? __ieee80211_create_tpt_led_trigger+0xcb/0xcb
+ flush_work+0xb/0xd
+ led_blink_setup+0x1e/0xd3
+ led_blink_set+0x3f/0x44
+ tpt_trig_timer+0xdb/0x106
+ ? add_timer_on+0xce/0xce
+ call_timer_fn+0x11e/0x2ce
+ ? __ieee80211_create_tpt_led_trigger+0xcb/0xcb
+ expire_timers+0x141/0x197
+ run_timer_softirq+0x65/0x10e
+ ? ktime_get+0x8e/0xe4
+ ? trace_hardirqs_on+0xc7/0xf7
+ __do_softirq+0x1bf/0x430
+ irq_exit+0x69/0xb9
+ smp_apic_timer_interrupt+0x1ee/0x269
+ apic_timer_interrupt+0xf/0x20
+ </IRQ>
+RIP: 0010:cpuidle_enter_state+0x1f4/0x34d
+Code: ff e8 36 0c ac ff 45 84 ff 74 16 9c 58 f6 c4 02 74 08 0f 0b fa e8 e5 da b4 ff 31 ff e8 23 c9 b1 ff e8 f0 d8 b4 ff fb 45 85 ed <0f> 88 e2 00 00 00 49 63 f5 b9 e8 03 00 00 48 6b c6 60 49 8d 7c 04
+RSP: 0018:ffff888234d8be58 EFLAGS: 00000206 ORIG_RAX: ffffffffffffff13
+RAX: 0000000000000000 RBX: ffffe8ffffc864c0 RCX: 000000000000001f
+RDX: 0000000000000000 RSI: 0000001f57348651 RDI: ffffffff81664055
+RBP: ffff888234d8be98 R08: 0000000000000002 R09: fffffffa2dd3f8df
+R10: 0000000000006ac4 R11: 0000000000007e37 R12: ffffffff8229e320
+R13: 0000000000000005 R14: ffffffff8229e518 R15: 0000000000000000
+ ? cpuidle_enter_state+0x1f0/0x34d
+ ? cpuidle_enter_state+0x1f0/0x34d
+ cpuidle_enter+0x28/0x36
+ call_cpuidle+0x3b/0x3d
+ do_idle+0x189/0x1eb
+ cpu_startup_entry+0x1a/0x1e
+ start_secondary+0xfe/0x11b
+ secondary_startup_64+0xa4/0xb0
+BUG: sleeping function called from invalid context at kernel/workqueue.c:2974
+in_atomic(): 1, irqs_disabled(): 0, pid: 0, name: swapper/1
+INFO: lockdep is turned off.
+Preemption disabled at:
+[<ffffffff8108e14f>] start_secondary+0x48/0x11b
+CPU: 1 PID: 0 Comm: swapper/1 Tainted: G        W         5.2.0-rc1 #1
+Hardware name: LENOVO 4174EH1/4174EH1, BIOS 8CET51WW (1.31 ) 11/29/2011
+Call Trace:
+ <IRQ>
+ dump_stack+0x67/0x93
+ ? start_secondary+0x48/0x11b
+ ___might_sleep+0x229/0x240
+ ? __ieee80211_create_tpt_led_trigger+0xcb/0xcb
+ __might_sleep+0x63/0x77
+ ? __flush_work+0x3b/0x38a
+ __flush_work+0x84/0x38a
+ ? trace_hardirqs_on+0xc7/0xf7
+ ? __ieee80211_create_tpt_led_trigger+0xcb/0xcb
+ ? _raw_spin_unlock_irqrestore+0x46/0x5b
+ ? __ieee80211_create_tpt_led_trigger+0xcb/0xcb
+ flush_work+0xb/0xd
+ led_blink_setup+0x1e/0xd3
+ led_blink_set+0x3f/0x44
+ tpt_trig_timer+0xdb/0x106
+ ? add_timer_on+0xce/0xce
+ call_timer_fn+0x11e/0x2ce
+ ? __ieee80211_create_tpt_led_trigger+0xcb/0xcb
+ expire_timers+0x141/0x197
+ run_timer_softirq+0x65/0x10e
+ ? ktime_get+0x8e/0xe4
+ ? trace_hardirqs_on+0xc7/0xf7
+ __do_softirq+0x1bf/0x430
+ irq_exit+0x69/0xb9
+ smp_apic_timer_interrupt+0x1ee/0x269
+ apic_timer_interrupt+0xf/0x20
+ </IRQ>
+RIP: 0010:cpuidle_enter_state+0x1f4/0x34d
+Code: ff e8 36 0c ac ff 45 84 ff 74 16 9c 58 f6 c4 02 74 08 0f 0b fa e8 e5 da b4 ff 31 ff e8 23 c9 b1 ff e8 f0 d8 b4 ff fb 45 85 ed <0f> 88 e2 00 00 00 49 63 f5 b9 e8 03 00 00 48 6b c6 60 49 8d 7c 04
+RSP: 0018:ffff888234d8be58 EFLAGS: 00000206 ORIG_RAX: ffffffffffffff13
+RAX: 0000000000000000 RBX: ffffe8ffffc864c0 RCX: 000000000000001f
+RDX: 0000000000000000 RSI: 000000207de2bdf6 RDI: ffffffff81664055
+RBP: ffff888234d8be98 R08: 0000000000000002 R09: fffffffa2dd3f8df
+R10: 000000000000afc8 R11: 00000000000185c2 R12: ffffffff8229e320
+R13: 0000000000000005 R14: ffffffff8229e518 R15: 0000000000000000
+ ? cpuidle_enter_state+0x1f0/0x34d
+ ? cpuidle_enter_state+0x1f0/0x34d
+ cpuidle_enter+0x28/0x36
+ call_cpuidle+0x3b/0x3d
+ do_idle+0x189/0x1eb
+ cpu_startup_entry+0x1a/0x1e
+ start_secondary+0xfe/0x11b
+ secondary_startup_64+0xa4/0xb0
