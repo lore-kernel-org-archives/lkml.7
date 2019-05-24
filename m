@@ -2,86 +2,126 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF07CC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A16B9C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2A142081C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:12:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FD272081C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:12:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391387AbfEXMMY (ORCPT
+        id S2391448AbfEXMMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 08:12:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48654 "EHLO mail.kernel.org"
+        Fri, 24 May 2019 08:12:33 -0400
+Received: from mga06.intel.com ([134.134.136.31]:48482 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391253AbfEXMMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 08:12:23 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD98421773;
-        Fri, 24 May 2019 12:12:21 +0000 (UTC)
-Date:   Fri, 24 May 2019 08:12:19 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "Frank Ch. Eigler" <fche@redhat.com>
-Subject: Re: [RFC][PATCH 03/14 v2] function_graph: Allow multiple users to
- attach to function graph
-Message-ID: <20190524081219.25de03f6@gandalf.local.home>
-In-Reply-To: <20190524112608.GJ2589@hirez.programming.kicks-ass.net>
-References: <20190520142001.270067280@goodmis.org>
-        <20190520142156.992391836@goodmis.org>
-        <20190524112608.GJ2589@hirez.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S2391253AbfEXMMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 08:12:33 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 May 2019 05:12:32 -0700
+X-ExtLoop1: 1
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by orsmga006.jf.intel.com with SMTP; 24 May 2019 05:12:27 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Fri, 24 May 2019 15:12:26 +0300
+Date:   Fri, 24 May 2019 15:12:26 +0300
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Brian Starkey <Brian.Starkey@arm.com>
+Cc:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        nd <nd@arm.com>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>,
+        "thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "sean@poorly.run" <sean@poorly.run>
+Subject: Re: [PATCH] drm/komeda: Added AFBC support for komeda driver
+Message-ID: <20190524121226.GD5942@intel.com>
+References: <20190404110552.15778-1-james.qian.wang@arm.com>
+ <20190516135748.GC1372@arm.com>
+ <20190521084552.GA20625@james-ThinkStation-P300>
+ <20190524111009.beddu67vvx66wvmk@DESKTOP-E1NTVVP.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190524111009.beddu67vvx66wvmk@DESKTOP-E1NTVVP.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 May 2019 13:26:08 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
-
-> But but but but.. why not add all the required bits to the shadow stack
-> in the first place and do away with the array entirely?
-
-What required bits would that be? The pointer to the fgraph_ops,
-because we need that to pass to the calling function.
-
+On Fri, May 24, 2019 at 11:10:09AM +0000, Brian Starkey wrote:
+> Hi,
 > 
-> So on ret, just keep POP'ing until either the stack is empty or the
-> entry is for another function.
+> On Tue, May 21, 2019 at 09:45:58AM +0100, james qian wang (Arm Technology China) wrote:
+> > On Thu, May 16, 2019 at 09:57:49PM +0800, Ayan Halder wrote:
+> > > On Thu, Apr 04, 2019 at 12:06:14PM +0100, james qian wang (Arm Technology China) wrote:
+> > > >  
+> > > > +static int
+> > > > +komeda_fb_afbc_size_check(struct komeda_fb *kfb, struct drm_file *file,
+> > > > +			  const struct drm_mode_fb_cmd2 *mode_cmd)
+> > > > +{
+> > > > +	struct drm_framebuffer *fb = &kfb->base;
+> > > > +	const struct drm_format_info *info = fb->format;
+> > > > +	struct drm_gem_object *obj;
+> > > > +	u32 alignment_w = 0, alignment_h = 0, alignment_header;
+> > > > +	u32 n_blocks = 0, min_size = 0;
+> > > > +
+> > > > +	obj = drm_gem_object_lookup(file, mode_cmd->handles[0]);
+> > > > +	if (!obj) {
+> > > > +		DRM_DEBUG_KMS("Failed to lookup GEM object\n");
+> > > > +		return -ENOENT;
+> > > > +	}
+> > > > +
+> > > > +	switch (fb->modifier & AFBC_FORMAT_MOD_BLOCK_SIZE_MASK) {
+> > > > +	case AFBC_FORMAT_MOD_BLOCK_SIZE_32x8:
+> > > > +		alignment_w = 32;
+> > > > +		alignment_h = 8;
+> > > > +		break;
+> > > > +	case AFBC_FORMAT_MOD_BLOCK_SIZE_16x16:
+> > > > +		alignment_w = 16;
+> > > > +		alignment_h = 16;
+> > > > +		break;
+> > > > +	default:
+> > > Can we have something like a warn here ?
+> > 
+> > will add a WARN here.
+> > 
+> 
+> I think it's better not to. fb->modifier comes from
+> userspace, so a malicious app could spam us with WARNs, effectively
+> dos-ing the system. -EINVAL should be sufficient.
 
-When we hit a fgraph_ops, how do we know if it was freed or not? We
-can't just blindly reference it.
+Should probably check that the entire modifier+format is
+actually valid. Otherwise you risk passing on a bogus
+modifier deeper into the driver which may trigger
+interesting bugs.
 
-The idea of the array, is that we can maintain state in a single
-location of when the fgraph_ops is freed. If we return from a function,
-we have an index and a counter, and if the counter doesn't match with
-what's in the array, then we know that the fgraph_ops is no longer
-around and we just drop it.
+Also theoretically (however unlikely) some broken userspace
+might start to depend on the ability to create framebuffers
+with crap modifiers, which could later break if you change
+the way you handle the modifiers. Then you're stuck between
+the rock and hard place because you can't break existing
+userspace but you still want to change the way modifiers
+are handled in the kernel.
 
-The reason for the array, is to keep track of if the fgraph_ops has
-been freed or not. Otherwise, when we unregister the fgraph_ops, we
-would need to search all shadow stacks, looking for it to unreference
-it.
+Best not give userspace too much rope IMO. Two ways to go about
+that:
+1) drm_any_plane_has_format() (assumes your .format_mod_supported()
+   does its job properly)
+2) roll your own 
 
-Believe me, I rather not have that array, but I couldn't come up with a
-better solution to handle freeing of fgraph_ops.
-
--- Steve
+-- 
+Ville Syrjälä
+Intel
