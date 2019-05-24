@@ -2,90 +2,100 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E670C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26890C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62A3620868
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:24:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="SsCvf8px"
+	by mail.kernel.org (Postfix) with ESMTP id E18E92184B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:24:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389098AbfEXHYi (ORCPT
+        id S2389121AbfEXHYn convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 03:24:38 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:35638 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388982AbfEXHYi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 03:24:38 -0400
-Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 34DD1C012B;
-        Fri, 24 May 2019 07:24:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1558682663; bh=ep8YghOnVJandEp4n5gYS1G1JYgCzpooQvEBO3Vcyg0=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=SsCvf8pxuGvHXs1VR6DWH6pTycRIpwI2RqDuKVvtSsMw8jAfTgfZ8fZ0Guz5IBu32
-         n5M38/cW+cIIGylsObwiJ/yoA/leMU8gHYT2Hb9EQu5v6Jt9Gy9geby3GIUyPqHWOM
-         SzHOyH+VxzjujRLF65TzIH9u0NYYVJGvGpsdPPW4HXJ1vDMijC6oq0SAHDqEa36ccV
-         RqicsLey/WoPc3Kvycc0KRqn6B8/Wl43Ps8YNR4oQaLqsvGXepL7FG1+NigRR1iJgr
-         bm3g+/K+5zJoYJWsk1gfkiIwaDRf7yU59dThfXSm4zU2gVuPkAfo5wCAnyqQdZy47a
-         C3+QWhcsV8IOg==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 91544A00FF;
-        Fri, 24 May 2019 07:24:29 +0000 (UTC)
-Received: from DE02WEHTCB.internal.synopsys.com (10.225.19.94) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 24 May 2019 00:24:29 -0700
-Received: from DE02WEMBXB.internal.synopsys.com ([fe80::95ce:118a:8321:a099])
- by DE02WEHTCB.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Fri,
- 24 May 2019 09:24:27 +0200
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     David Miller <davem@davemloft.net>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>,
-        "peppe.cavallaro@st.com" <peppe.cavallaro@st.com>,
-        "alexandre.torgue@st.com" <alexandre.torgue@st.com>,
-        "clabbe.montjoie@gmail.com" <clabbe.montjoie@gmail.com>,
-        "andrew@lunn.ch" <andrew@lunn.ch>
-Subject: RE: [PATCH net-next 00/18] net: stmmac: Improvements and Selftests
-Thread-Topic: [PATCH net-next 00/18] net: stmmac: Improvements and Selftests
-Thread-Index: AQHVETphrQGM1vIbeE+0UH3fT3CjTKZ4v88AgAACcwCAAR5pwA==
-Date:   Fri, 24 May 2019 07:24:26 +0000
-Message-ID: <78EB27739596EE489E55E81C33FEC33A0B92CB20@DE02WEMBXB.internal.synopsys.com>
-References: <cover.1558596599.git.joabreu@synopsys.com>
-        <20190523.090928.974790678055823460.davem@davemloft.net>
- <20190523.091814.750814773629903183.davem@davemloft.net>
-In-Reply-To: <20190523.091814.750814773629903183.davem@davemloft.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.107.19.176]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
+        Fri, 24 May 2019 03:24:43 -0400
+Received: from prv1-mh.provo.novell.com ([137.65.248.33]:46880 "EHLO
+        prv1-mh.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388982AbfEXHYm (ORCPT
+        <rfc822;groupwise-linux-kernel@vger.kernel.org:5:1>);
+        Fri, 24 May 2019 03:24:42 -0400
+Received: from INET-PRV1-MTA by prv1-mh.provo.novell.com
+        with Novell_GroupWise; Fri, 24 May 2019 01:24:40 -0600
+Message-Id: <5CE79C360200007800231E1D@prv1-mh.provo.novell.com>
+X-Mailer: Novell GroupWise Internet Agent 18.1.1 
+Date:   Fri, 24 May 2019 01:24:38 -0600
+From:   "Jan Beulich" <JBeulich@suse.com>
+To:     "Fredrik Noring" <noring@nocrew.org>
+Cc:     <adobriyan@gmail.com>, <akpm@linux-foundation.org>,
+        "Jessica Yu" <jeyu@redhat.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC] sscanf: Fix integer overflow with sscanf field
+ width
+References: <20190523172758.GA54373@sx9>
+In-Reply-To: <20190523172758.GA54373@sx9>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8BIT
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Miller <davem@davemloft.net>
-Date: Thu, May 23, 2019 at 17:18:14
+>>> On 23.05.19 at 19:27, <noring@nocrew.org> wrote:
+> This fixes 53809751ac23 ("sscanf: don't ignore field widths for numeric
+> conversions"). sscanf overflows integers with simple strings such as dates.
+> As an example, consider
+> 
+> 	r = sscanf("20190523123456", "%4d%2d%2d%2d%2d%2d",
+> 		&year, &month, &day,
+> 		&hour, &minute, &second);
+> 
+> 	pr_info("%d %04d-%02d-%2d %02d:%02d:%02d\n",
+> 		r,
+> 		year, month, day,
+> 		hour, minute, second);
+> 
+> On a 32-bit machine this prints
+> 
+> 	6 0000-05-23 12:34:56
+> 
+> where the year is zero, and not 2019 as expected. The reason is that sscanf
+> attempts to read 20190523123456 as a whole integer and then divide it with
+> 10^10 to obtain 2019, which obviously fails. Of course, 64-bit machines fail
+> similarly on longer numerical strings.
 
-> I'm reverting, this doesn't even build.
+Right, and that's also what that commit's description says remains as
+non-conforming behavior.
 
-Damn, sorry! I failed to notice that dev_set_rx_mode() is not exported :/
+> I'm offering a simple patch to correct this below. The idea is to have a
+> variant of _parse_integer() called _parse_integer_end(), with the ability
+> to stop consuming digits. The functions
+> 
+> 	simple_{strtol,strtoll,strtoul,strtoull}()
+> 
+> now have the corresponding
+> 
+> 	sscanf_{strtol,strtoll,strtoul,strtoull}()
+> 
+> taking a field width into account. There are some code duplication issues
+> etc. so one might consider making more extensive changes than these.
 
-I will fix and resend!
+I'm not the maintainer here, but to me it looks mostly okay.
 
-Thanks,
-Jose Miguel Abreu
+> +static long sscanf_strtol(const char *cp, int field_width,
+> +	char **endp, unsigned int base)
+> +{
+> +	if (*cp == '-')
+> +		return -sscanf_strtoul(cp + 1, field_width - 1, endp, base);
+
+I'm afraid you may neither convert a field width of zero to -1 here,
+nor convert a field width of 1 to zero (unlimited).
+
+I'd also like to note that the 'u' and 'x' format characters also accept
+a sign as per the standard, but that's an orthogonal issue which you
+may or may not want to address at the same time.
+
+Jan
+
+
