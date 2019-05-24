@@ -2,173 +2,122 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1659DC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBB2C282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF033217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:43:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC68B217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:46:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WhHqJhf1"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Bfhp6Htr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389670AbfEXIna (ORCPT
+        id S2389595AbfEXIqR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 04:43:30 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35151 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389281AbfEXIn3 (ORCPT
+        Fri, 24 May 2019 04:46:17 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:47892 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389349AbfEXIqQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 04:43:29 -0400
-Received: by mail-lj1-f196.google.com with SMTP id h11so7957534ljb.2
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 01:43:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=2UGCpA22jrVv8p9U3LtnJYy4mTfB0OkTT5zNxTX9Y9E=;
-        b=WhHqJhf1qkUGoFrvbntgMG9Vtkw0hDHAVDQd3JUXLi0k8UB+6RkvzcmMi8Mf+tlyt9
-         Fzx3Rm70otucFLSGs8EdzagNeJQaaXvSRCbNXtP5FUOUuUiTo/RmPmkKgsQdzMGn/uez
-         85sC67xAnXMroSY8YutK3NNUBorZS+9HShW7CgjxKJEirp63fNKdf/3eqs9d0OqpG0HR
-         sHuCeMpEv8E5xLJ6hd3esDb0GemTWlSkV0CA6Sf9hbttrDeZQJVOhQns68JvbiXyBDG3
-         J7LK9V5wPmGbRiozveCHAMDqjvNNosKRlXMEzblKSAHl3IqcV9eAJLlV5BZxqVaRuvuG
-         miCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=2UGCpA22jrVv8p9U3LtnJYy4mTfB0OkTT5zNxTX9Y9E=;
-        b=Vf8ksG8p1f+quepm6PMPa57X+Wvcb+7ltpF3pUHlXKMr3Gfbk/BaG0CnpobFlGJPQo
-         x4uYpboj5ovldcKfuTfw3q2CjIaFsx8ZU66/mamw7X26wHD+gicxKiJptSo8v4Q1UMmT
-         V2gB6sWWPm/SYTrFfa46oVHORQpDhNPhxTalUDkcfAbCpb1GP2m1R7IU3P7L/hXAgkSV
-         RaL4G3e6q1DPVzXfPheKn6xnNljZcgEKdizzZfeiydqxQzosRZYsMf6VHrbk4cg32Qut
-         gooHMcWJxWv2g5Moqxn7Zn7dq6mKsRrFWGfCuaL4/zBX6LakPJg86bclsrygR6c8Qxzn
-         PxOQ==
-X-Gm-Message-State: APjAAAVICYvpQzGFke8oJHyPec6rtHEmKl0c/Vj4iEHMz/8imDF9Bp//
-        zRYKuRxWQ8WoHyWr6B8Epw4FRvMIBmRCCdRkQnoX4w==
-X-Google-Smtp-Source: APXvYqwjnmSEo46KGBhe5MUpoaw6uYQBmbXj0jbIUPWSD6KRHce5EuNKpxV2WFvs1OI0U9nJGdmCELgxnrJAycaNp2A=
-X-Received: by 2002:a2e:b0fc:: with SMTP id h28mr33659890ljl.55.1558687407909;
- Fri, 24 May 2019 01:43:27 -0700 (PDT)
+        Fri, 24 May 2019 04:46:16 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4O8k6S3092885;
+        Fri, 24 May 2019 03:46:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1558687566;
+        bh=DXFEDPWPKDOFxRB075nEECWtEkWPXsJvcN4FB3Z5q1Y=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=Bfhp6HtrbU4jNqmpwALOr7PuPYMbsCKxQAY9SrbT2FRyn33xyzinHbS+fW9MZ9YYx
+         woEVabr2VXFv/C4NiUl2k5nSdN1vJQHlaR/2WZbchu/o3/4R98whqTp16nuMVOj57N
+         rLPDj86zqVw1fiKqm8tqzOgD8n/QDDsr/Gophvi8=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4O8k6Gj087569
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 24 May 2019 03:46:06 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 24
+ May 2019 03:46:05 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 24 May 2019 03:46:05 -0500
+Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4O8k1C2076108;
+        Fri, 24 May 2019 03:46:02 -0500
+Subject: Re: [PATCH v2] PCI: endpoint: Allocate enough space for fixed size
+ BAR
+To:     Alan Mikhak <alan.mikhak@sifive.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <lorenzo.pieralisi@arm.com>,
+        <linux-riscv@lists.infradead.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <gustavo.pimentel@synopsys.com>, <wen.yang99@zte.com.cn>,
+        <kjlu@umn.edu>
+References: <1558648079-13893-1-git-send-email-alan.mikhak@sifive.com>
+ <CABEDWGxMXg7RAgrUL-7W6vgC0BpCj9ys+i7myjxdBgn3vn_P6Q@mail.gmail.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <a08ce87a-d515-b1c3-a903-6777e18c87ae@ti.com>
+Date:   Fri, 24 May 2019 14:14:47 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190523181710.981455400@linuxfoundation.org>
-In-Reply-To: <20190523181710.981455400@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 24 May 2019 14:13:15 +0530
-Message-ID: <CA+G9fYuYgDB=ta07ZeQrRgEDwddQCmWpTr9N47CPEnWC5GuS_Q@mail.gmail.com>
-Subject: Re: [PATCH 4.9 00/53] 4.9.179-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CABEDWGxMXg7RAgrUL-7W6vgC0BpCj9ys+i7myjxdBgn3vn_P6Q@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 May 2019 at 00:38, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.9.179 release.
-> There are 53 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat 25 May 2019 06:15:18 PM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.9.179-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.9.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
 
-Summary
-------------------------------------------------------------------------
+On 24/05/19 5:26 AM, Alan Mikhak wrote:
+> +Bjorn Helgaas, +Gustavo Pimentel, +Wen Yang, +Kangjie Lu
+> 
+> On Thu, May 23, 2019 at 2:48 PM Alan Mikhak <alan.mikhak@sifive.com> wrote:
+>>
+>> PCI endpoint test function code should honor the .bar_fixed_size parameter
+>> from underlying endpoint controller drivers or results may be unexpected.
+>>
+>> In pci_epf_test_alloc_space(), check if BAR being used for test register
+>> space is a fixed size BAR. If so, allocate the required fixed size.
+>>
+>> Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
 
-kernel: 4.9.179-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.9.y
-git commit: f6bc31d8c3be3e5ab957341b3f99f8b45fcc646e
-git describe: v4.9.178-54-gf6bc31d8c3be
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
-ld/v4.9.178-54-gf6bc31d8c3be
-
-No regressions (compared to build v4.9.178)
-
-No fixes (compared to build v4.9.178)
-
-Ran 21733 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* ssuite
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  drivers/pci/endpoint/functions/pci-epf-test.c | 8 +++++++-
+>>  1 file changed, 7 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+>> index 27806987e93b..7d41e6684b87 100644
+>> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+>> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+>> @@ -434,10 +434,16 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
+>>         int bar;
+>>         enum pci_barno test_reg_bar = epf_test->test_reg_bar;
+>>         const struct pci_epc_features *epc_features;
+>> +       size_t test_reg_size;
+>>
+>>         epc_features = epf_test->epc_features;
+>>
+>> -       base = pci_epf_alloc_space(epf, sizeof(struct pci_epf_test_reg),
+>> +       if (epc_features->bar_fixed_size[test_reg_bar])
+>> +               test_reg_size = bar_size[test_reg_bar];
+>> +       else
+>> +               test_reg_size = sizeof(struct pci_epf_test_reg);
+>> +
+>> +       base = pci_epf_alloc_space(epf, test_reg_size,
+>>                                    test_reg_bar, epc_features->align);
+>>         if (!base) {
+>>                 dev_err(dev, "Failed to allocated register space\n");
+>> --
+>> 2.7.4
+>>
