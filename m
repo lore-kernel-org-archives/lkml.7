@@ -2,59 +2,64 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73697C282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 22:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2707DC282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 22:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E344206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 22:11:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1507206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 22:11:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b4bnpjUG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q5NF2enZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732157AbfEXWLY (ORCPT
+        id S1732184AbfEXWL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 18:11:24 -0400
-Received: from mail-qk1-f202.google.com ([209.85.222.202]:45515 "EHLO
-        mail-qk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729348AbfEXWLX (ORCPT
+        Fri, 24 May 2019 18:11:27 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:41670 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729348AbfEXWL0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 18:11:23 -0400
-Received: by mail-qk1-f202.google.com with SMTP id u129so7113174qkd.12
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 15:11:23 -0700 (PDT)
+        Fri, 24 May 2019 18:11:26 -0400
+Received: by mail-pf1-f202.google.com with SMTP id b127so6515898pfb.8
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 15:11:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=4Q5cUaijVMs9uX4GEP2w+puXwcUw+16nbge+LaGw4CU=;
-        b=b4bnpjUGJZco5KrCCij6qGeyYOpnQ6EUhQ8NUoKI+cX1kacu9DH7wN5foTPfmmlolq
-         CKffvVApVb0p0lBfo7jJERWkASHjbxlnBYXsc1PtR0vJegw0eSmIip/MICN4iNIFrpWd
-         zksqZqnN/SPT+scsY4GpsLRJA25meeFAPTNp6TEId4VVdiIjGvXnHAmb5Dt5dHJ+YK/e
-         ytYy1tez9wddLVeYUnzdaTJ2pVzHydQyQO3q87n4Aesfivbqq+vjiMvGeD6vz3fkFBhl
-         QF32zZPK04znjUeYyNN7AB86lKrEzo44CZ30BirMujV2Vfqa33OXCZdDhYKx7Tjd+gV5
-         rGGQ==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=KIojoAmBE/BSnpEvXcodRJ0tgdeRBs6mJX1gQekfIhA=;
+        b=Q5NF2enZHYLf+khWG7iyaIncDe+9M501ZKT4rE2UiUAeFpYGD7WgEK66eMZvTUH7Fm
+         NFjo29hBJwD8aQ17sgD2jVdSTVQviNfFyuaYdeHxoTd9CLowxCNXxIz2cy+nwUQiEm3n
+         uPGp3zdu44K5gxoq6OI2Ne54lRPHL/OQbkVi7SzpOfZpjg/G2s5DvIObUyPgQguVwN5w
+         4kirThYDoas6ku5+JgEDrJ9eG1xjIM48ovyNjRUSP+ql++kE6VXnH9k3lBvyvInJin6s
+         3t0d1YsZXzeFpMdHWgOQfeW8d9YqFB/slsOyowBXtIK0kbY1f55NODRjri7AT9XVl9Lc
+         DA7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=4Q5cUaijVMs9uX4GEP2w+puXwcUw+16nbge+LaGw4CU=;
-        b=lob0OBequX/kJ3LgoEMswe13Cj+Poey/a2sC1dc/EOK4mkBVD/sTk5BjCZax/KwJeK
-         YjyHNujLmGbWshVxpYC+aXxg1TVXVD5WyHnOAIdT32pnJ15kQrXLEVBZHQIHlMzIZlXq
-         PZthUO3dGP+TWwAtIKiyiOnZtWzJD7unagndDpDEXg1d56rIHhDhJVUyQyvULFKI27ON
-         fIAxgKMnEkXgKVQ4IPyxlWKC6pUtcoPEWX6o/UrQxYt/HJ99/XhoRdW56F30gZEJJEAW
-         sn7WMWERO0hYj8KYTpfG4nLx7ehF1KRCMbRNB5Z+wReh3xpla/7eNR76pnan4ms3oX9o
-         6hCA==
-X-Gm-Message-State: APjAAAU4p4wPhIvHi6uhaa4YLWjS88rh640yopf111XL4erk1VPwm/aR
-        VQ7W78Gca9jDsMNw5kxrTQU6VRWXu+Qx1vPL79E=
-X-Google-Smtp-Source: APXvYqyN2T1Tt4iVrldEc4T5BeRw3mZqz6P4z4rMJZeudYUwwKSPXn+uwAEdpeb0INu6bRw6MjERiuCswmzCYQSlZxo=
-X-Received: by 2002:ac8:3747:: with SMTP id p7mr35413335qtb.125.1558735882957;
- Fri, 24 May 2019 15:11:22 -0700 (PDT)
-Date:   Fri, 24 May 2019 15:11:15 -0700
-Message-Id: <20190524221118.177548-1-samitolvanen@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=KIojoAmBE/BSnpEvXcodRJ0tgdeRBs6mJX1gQekfIhA=;
+        b=WhesJwlgerBdU5Jg8oOZ2ilqmNIpkzHtD7An7xxO84HpTzZ3GDQgdepIXwxu//S16J
+         sIxwStm81C9Vxy9VJO9U7TJCBvWD82vyEWtokqbD6QcwFp2ktzY4g/o3yAXM7H8sxUTj
+         68jdsaH6k9b5g+XWpzw9qleWJB9T+E3vcboyr4Sjzh5RBh6TmGG2HwnCyQgp4G/Uu2SS
+         Ti5ClszYVJcjfuegwj7JB1dgC/1EGaoAlK5m7dN6KqfT9skYzdH9UL0z82mFOR5mv2tq
+         TxO06hPpfjZEmm1LFyyf5fIGr7HrorHLQY2dgUvrnBtmnaBiAPAGlJOGs+5b6AvTHf5H
+         Kjkw==
+X-Gm-Message-State: APjAAAUmahxiiozNKgiNbIOj5/r9meJAUPpv5T9/YH2S6bGpd6z9REaN
+        SBsh5XClgNOs9ZevDbZN8sE+T6LtWaX0A+kp1lo=
+X-Google-Smtp-Source: APXvYqyzCxYDZAxNhJ5uLrFZIu9zCTdanj30bKrE/Us1YXpWQ3S67zBs3LYPNicVI1QucfjHTqn4fWw8yWBsrcZD/ZE=
+X-Received: by 2002:a63:a1f:: with SMTP id 31mr91586268pgk.233.1558735885221;
+ Fri, 24 May 2019 15:11:25 -0700 (PDT)
+Date:   Fri, 24 May 2019 15:11:16 -0700
+In-Reply-To: <20190524221118.177548-1-samitolvanen@google.com>
+Message-Id: <20190524221118.177548-2-samitolvanen@google.com>
 Mime-Version: 1.0
+References: <20190524221118.177548-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.22.0.rc1.257.g3120a18244-goog
-Subject: [PATCH v3 0/3] fix function type mismatches in syscall wrappers
+Subject: [PATCH v3 1/3] arm64: fix syscall_fn_t type
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will.deacon@arm.com>,
@@ -69,29 +74,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These patches fix type mismatches in arm64 syscall wrapper
-definitions, which trip indirect call checks with Control-Flow
-Integrity.
+Syscall wrappers in <asm/syscall_wrapper.h> use const struct pt_regs *
+as the argument type. Use const in syscall_fn_t as well to fix indirect
+call type mismatches with Control-Flow Integrity checking.
 
-Changes in v3:
-- instead of SYSCALL_DEFINE0, just define __arm64_sys_ni_syscall
-  with the correct type to avoid unnecessary error injection
+Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+---
+ arch/arm64/include/asm/syscall.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Changes in v2:
-- more informative commit message for the syscall_fn_t change
-- added a patch for fixing sys_ni_syscall
-
-Sami Tolvanen (3):
-  arm64: fix syscall_fn_t type
-  arm64: use the correct function type in SYSCALL_DEFINE0
-  arm64: use the correct function type for __arm64_sys_ni_syscall
-
- arch/arm64/include/asm/syscall.h         |  2 +-
- arch/arm64/include/asm/syscall_wrapper.h | 18 +++++++++---------
- arch/arm64/kernel/sys.c                  | 14 +++++++++-----
- arch/arm64/kernel/sys32.c                |  7 ++-----
- 4 files changed, 21 insertions(+), 20 deletions(-)
-
+diff --git a/arch/arm64/include/asm/syscall.h b/arch/arm64/include/asm/syscall.h
+index a65167f5cded8..e8bcb9ecede9b 100644
+--- a/arch/arm64/include/asm/syscall.h
++++ b/arch/arm64/include/asm/syscall.h
+@@ -20,7 +20,7 @@
+ #include <linux/compat.h>
+ #include <linux/err.h>
+ 
+-typedef long (*syscall_fn_t)(struct pt_regs *regs);
++typedef long (*syscall_fn_t)(const struct pt_regs *regs);
+ 
+ extern const syscall_fn_t sys_call_table[];
+ 
 -- 
 2.22.0.rc1.257.g3120a18244-goog
 
