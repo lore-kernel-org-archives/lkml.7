@@ -2,71 +2,47 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB80C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB62C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:11:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62E2121773
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95176217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:11:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="VKr3W69i"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="QVGyy0kS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390878AbfEXLLG (ORCPT
+        id S2390916AbfEXLLK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 07:11:06 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:34432 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390760AbfEXLLG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 07:11:06 -0400
-Received: by mail-io1-f68.google.com with SMTP id g84so7461413ioa.1
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 04:11:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Us0ScZrMvHOFeUHt3wu7YFBQO7zkY9OXaUx/Vlx7/nA=;
-        b=VKr3W69inH/db6ZNTFU5L+jQiMeiPx4sZUy4oWhYzklUuA+px4Vh/Ujply9/A+dOm7
-         pHYu8NSj4OTnTNiCVUohYjRxNhZIfVbOdCFMnwG8w6OtrokpSMLWf5STFZQRAD4mqhev
-         mVUiWnX0clsCj7MJOy6DsRabFmwtCwR+SMv+jRNxlm8P44tO9sdUfVtdqUQFt85d0rd8
-         lHcQagw9FaWEWu4nOfYd9f3v6IpMD9oCD99xSU6gNbgoH2f5LpV8VnlKYMnVuz3V8yhZ
-         NRAnSeaN5VAOnRDlQa8Yw0XfsmGr1lL+xVzBH2/O/KC0JHvCn9b2AMyMMlOU+vbYd1rk
-         +dRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Us0ScZrMvHOFeUHt3wu7YFBQO7zkY9OXaUx/Vlx7/nA=;
-        b=e+fMx61jFTibMsBaXQQC+LrQ1BE8NSaD8S+z8qbbXkvYPK5Sfl7uP7zdcWn2Vr0zz7
-         cRGurrbkjH+3iLec31RA79g8pIUlO81dJiARiYAmd0mDeqFyfwQtem3B4ys+JiJLw6Bh
-         qglNQeYLa0WlpC4n6XOKAPjWm0xi2gWW5AOMDHt/T1HtnGr6ael+tMZw0C4IvPq+rMv3
-         x5x/lYGk1HRy6Kn17rUWG3w+XclKdlW5om2uLLU8qIUiQ3jXGvIOj452XPlpPKncIwj7
-         ZUTJqVmNuE9Dg+jW2ZCb/VNYx9BuWZt0uECtdNRQ2COLyMWcaJIbeIGv+avcWgzAvAGy
-         3MsA==
-X-Gm-Message-State: APjAAAUxn6SgqWGVxanB1FIsOrwaVq1yQkrSoLE+glxZBagpvh/RdL7x
-        3qmoSN22oAOh4azZZ7srZLyZnw==
-X-Google-Smtp-Source: APXvYqw+LvbLoOTPBAjUSxC9hepXsEOVVyF8GfEyQ7tnid64OhYAkwk4YnaAvf6et2Qahm65DUMrRA==
-X-Received: by 2002:a5d:8a0b:: with SMTP id w11mr203175iod.261.1558696265468;
-        Fri, 24 May 2019 04:11:05 -0700 (PDT)
-Received: from localhost.localdomain ([172.56.12.37])
-        by smtp.gmail.com with ESMTPSA id y194sm1024771itb.34.2019.05.24.04.11.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 04:11:04 -0700 (PDT)
-From:   Christian Brauner <christian@brauner.io>
-To:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, torvalds@linux-foundation.org,
-        fweimer@redhat.com
-Cc:     jannh@google.com, oleg@redhat.com, tglx@linutronix.de,
-        arnd@arndb.de, shuah@kernel.org, dhowells@redhat.com,
-        tkjos@android.com, ldv@altlinux.org, miklos@szeredi.hu,
-        Christian Brauner <christian@brauner.io>
-Subject: [PATCH v3 0/3] close_range()
-Date:   Fri, 24 May 2019 13:10:44 +0200
-Message-Id: <20190524111047.6892-1-christian@brauner.io>
-X-Mailer: git-send-email 2.21.0
+        Fri, 24 May 2019 07:11:10 -0400
+Received: from onstation.org ([52.200.56.107]:53838 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390760AbfEXLLJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 07:11:09 -0400
+Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id CF2B53E88C;
+        Fri, 24 May 2019 11:11:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1558696268;
+        bh=b3xoIo6bZa98+lW1QIsMbZizb+JmTWWn33+Kc5ksiJo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=QVGyy0kSeWGNcheHJjAJEw93eVpXHSDN7EfhbQ3t6WSHe8wz1PFkW/W8BBgxUDFPR
+         ACR17+MnBRZFyTpSI5imbsA9FwwkC3aL6TGS57ONUVRWsDsLswMENFW7lR27s1F2Yu
+         puO0OE48XEzT648f92DGoBpb7JQg7DgS5saFy0AM=
+From:   Brian Masney <masneyb@onstation.org>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
+Cc:     faiz_abbas@ti.com, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: [PATCH] mmc: sdhci: queue work after sdhci_defer_done()
+Date:   Fri, 24 May 2019 07:10:53 -0400
+Message-Id: <20190524111053.12228-1-masneyb@onstation.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,78 +50,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey,
+WiFi stopped working on the LG Nexus 5 phone and the issue was bisected
+to the commit c07a48c26519 ("mmc: sdhci: Remove finish_tasklet") that
+moved from using a tasklet to a work queue. That patch also changed
+sdhci_irq() to return IRQ_WAKE_THREAD instead of finishing the work when
+sdhci_defer_done() is true. Change it to queue work to the complete work
+queue if sdhci_defer_done() is true so that the functionality is
+equilivent to what was there when the finish_tasklet was present. This
+corrects the WiFi breakage on the Nexus 5 phone.
 
-This is v3 of this patchset.
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+Fixes: c07a48c26519 ("mmc: sdhci: Remove finish_tasklet")
+---
+See 'sdhci@f98a4900' in qcom-msm8974-lge-nexus5-hammerhead.dts for
+details about how the WiFi is wired into sdhci on this platform.
 
-This fixes a braino spotted by Oleg (/me tips proverbial hat) and splits
-the implementation of close_range() into adding the actual syscall and
-the wiring-up of the syscall itself as requested by Arnd. It also adds a
-missing bump of __NR_compat_syscalls for arm64 that Arnd spotted.
+bisect log:
 
-For controversy around whether or not this is the greatest idea and api
-ever I refer the avid reader to the comment section of LWN.
+ git bisect start
+ # bad: [4dde821e4296e156d133b98ddc4c45861935a4fb] Merge tag 'xfs-5.2-fixes-1' of git://git.kernel.org/pub/scm/fs/xfs/xfs-linux
+ git bisect bad 4dde821e4296e156d133b98ddc4c45861935a4fb
+ # good: [e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd] Linux 5.1
+ git bisect good e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd
+ # bad: [8c79f4cd441b27df6cadd11b70a50e06b3b3a2bf] Merge tag 'docs-5.2' of git://git.lwn.net/linux
+ git bisect bad 8c79f4cd441b27df6cadd11b70a50e06b3b3a2bf
+ # bad: [67a242223958d628f0ba33283668e3ddd192d057] Merge tag 'for-5.2/block-20190507' of git://git.kernel.dk/linux-block
+ git bisect bad 67a242223958d628f0ba33283668e3ddd192d057
+ # good: [8ff468c29e9a9c3afe9152c10c7b141343270bf3] Merge branch 'x86-fpu-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+ git bisect good 8ff468c29e9a9c3afe9152c10c7b141343270bf3
+ # good: [e2a5be107f52cefb9010ccae6f569c3ddaa954cc] staging: kpc2000: kpc_spi: Fix build error for {read,write}q
+ git bisect good e2a5be107f52cefb9010ccae6f569c3ddaa954cc
+ # bad: [cf482a49af564a3044de3178ea28f10ad5921b38] Merge tag 'driver-core-5.2-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core
+ git bisect bad cf482a49af564a3044de3178ea28f10ad5921b38
+ # good: [9f2e3a53f7ec9ef55e9d01bc29a6285d291c151e] Merge tag 'for-5.2-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
+ git bisect good 9f2e3a53f7ec9ef55e9d01bc29a6285d291c151e
+ # good: [b4b52b881cf08e13d110eac811d4becc0775abbf] Merge tag 'Wimplicit-fallthrough-5.2-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux
+ git bisect good b4b52b881cf08e13d110eac811d4becc0775abbf
+ # bad: [d5f758f2df8015b8dcf47b6403cc192e4cef734d] mmc: meson-gx: disable HS400
+ git bisect bad d5f758f2df8015b8dcf47b6403cc192e4cef734d
+ # good: [b3fb9d64b497b890f7b779a9f0b40b5cc269ea18] mmc: mmci: define get_dctrl_cfg for legacy variant
+ git bisect good b3fb9d64b497b890f7b779a9f0b40b5cc269ea18
+ # good: [ade024f130f742725da9219624b01666f04bc4a6] memstick: jmb38x_ms: remove set but not used variable 'data'
+ git bisect good ade024f130f742725da9219624b01666f04bc4a6
+ # bad: [42c38d4a1bc41e78dedbf73b0fb35e44007789bb] mmc: core: Fix warning and undefined behavior in mmc voltage handling
+ git bisect bad 42c38d4a1bc41e78dedbf73b0fb35e44007789bb
+ # good: [19d2f695f4e82794df7465b029c02b104d1b9903] mmc: sdhci: Call mmc_request_done() from IRQ handler if possible
+ git bisect good 19d2f695f4e82794df7465b029c02b104d1b9903
+ # bad: [71c733c4e1aeb83e8221e89caeec893d51f88b7b] mmc: tegra: add sdhci tegra suspend and resume
+ git bisect bad 71c733c4e1aeb83e8221e89caeec893d51f88b7b
+ # bad: [c07a48c2651965e84d35cf193dfc0e5f7892d612] mmc: sdhci: Remove finish_tasklet
+ git bisect bad c07a48c2651965e84d35cf193dfc0e5f7892d612
+ # first bad commit: [c07a48c2651965e84d35cf193dfc0e5f7892d612] mmc: sdhci: Remove finish_tasklet
 
-/* v2 */
-In accordance with some comments by Linus and Al there's a
-cond_resched() added to the close loop similar to what is done for
-close_files().
+ drivers/mmc/host/sdhci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-A common helper pick_file() for __close_fd() and __close_range() has
-been split out. This allows to only make a cond_resched() call when
-filp_close() has been called similar to what is done in close_files().
-Maybe that's not worth it. Jann mentioned that cond_resched() looks
-rather cheap.
-
-So it maybe that we could simply do:
-
-while (fd <= max_fd) {
-       __close_fd(files, fd++);
-       cond_resched();
-}
-
-I also added a missing test for close_range(fd, fd, 0).
-
-Thanks!
-Christian
-
-Christian Brauner (3):
-  open: add close_range()
-  arch: wire-up close_range()
-  tests: add close_range() tests
-
- arch/alpha/kernel/syscalls/syscall.tbl        |   1 +
- arch/arm/tools/syscall.tbl                    |   1 +
- arch/arm64/include/asm/unistd.h               |   2 +-
- arch/arm64/include/asm/unistd32.h             |   2 +
- arch/ia64/kernel/syscalls/syscall.tbl         |   1 +
- arch/m68k/kernel/syscalls/syscall.tbl         |   1 +
- arch/microblaze/kernel/syscalls/syscall.tbl   |   1 +
- arch/mips/kernel/syscalls/syscall_n32.tbl     |   1 +
- arch/mips/kernel/syscalls/syscall_n64.tbl     |   1 +
- arch/mips/kernel/syscalls/syscall_o32.tbl     |   1 +
- arch/parisc/kernel/syscalls/syscall.tbl       |   1 +
- arch/powerpc/kernel/syscalls/syscall.tbl      |   1 +
- arch/s390/kernel/syscalls/syscall.tbl         |   1 +
- arch/sh/kernel/syscalls/syscall.tbl           |   1 +
- arch/sparc/kernel/syscalls/syscall.tbl        |   1 +
- arch/x86/entry/syscalls/syscall_32.tbl        |   1 +
- arch/x86/entry/syscalls/syscall_64.tbl        |   1 +
- arch/xtensa/kernel/syscalls/syscall.tbl       |   1 +
- fs/file.c                                     |  62 +++++++-
- fs/open.c                                     |  20 +++
- include/linux/fdtable.h                       |   2 +
- include/linux/syscalls.h                      |   2 +
- include/uapi/asm-generic/unistd.h             |   4 +-
- tools/testing/selftests/Makefile              |   1 +
- tools/testing/selftests/core/.gitignore       |   1 +
- tools/testing/selftests/core/Makefile         |   6 +
- .../testing/selftests/core/close_range_test.c | 142 ++++++++++++++++++
- 27 files changed, 250 insertions(+), 10 deletions(-)
- create mode 100644 tools/testing/selftests/core/.gitignore
- create mode 100644 tools/testing/selftests/core/Makefile
- create mode 100644 tools/testing/selftests/core/close_range_test.c
-
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index 97158344b862..3563c3bc57c9 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -3115,7 +3115,7 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
+ 			continue;
+ 
+ 		if (sdhci_defer_done(host, mrq)) {
+-			result = IRQ_WAKE_THREAD;
++			queue_work(host->complete_wq, &host->complete_work);
+ 		} else {
+ 			mrqs_done[i] = mrq;
+ 			host->mrqs_done[i] = NULL;
 -- 
-2.21.0
+2.20.1
 
