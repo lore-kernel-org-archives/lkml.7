@@ -2,174 +2,207 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A34CDC282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 263B8C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BC21217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:48:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="esWJX+cr"
+	by mail.kernel.org (Postfix) with ESMTP id E88B2217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:50:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389668AbfEXIss (ORCPT
+        id S2389689AbfEXIuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 04:48:48 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:42220 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389488AbfEXIss (ORCPT
+        Fri, 24 May 2019 04:50:18 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:39937 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2389448AbfEXIuR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 04:48:48 -0400
-Received: by mail-lj1-f196.google.com with SMTP id 188so7925209ljf.9
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 01:48:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=GhIlaR2R/WDcCpztQRUoJRfl8xHyTqpHnxSrqDeAz1A=;
-        b=esWJX+crexokT24aSBq5Qlk0UnAO4fbSyr2+zVaV61DjyX54uyW31dzHTs9zhRemz0
-         MPZM5vt3law+QdnOKFtJDUDEtivlLS9uENDJNeWW7riuob+6NJGhammsgZI4BWppGwoa
-         mchEo0oPeLbxsIUMue1nwTmKpSwLD9lkeT3kvyDq9uTQKBma6+ahMdLu6kpkZ+ghH+FS
-         BDqnGyfxmKXu+BR98QbRRsgU9PaYSXv1w/yV1Ql1BoKlp2ytfaH5/tqB4jc/42MMEAGv
-         eCcVZK7cmqrHqd+535XWH7ms5RYWUE6COeOGxVZTHbHeLkBPV7IWPNbOUfDURqI2uWhx
-         HTpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=GhIlaR2R/WDcCpztQRUoJRfl8xHyTqpHnxSrqDeAz1A=;
-        b=aSSlhOR/L22/6trYs4E6S0mCO++qvfeJBwIimpF4utP0YD3Ug8O7BM5isXZoONw8Wi
-         DLVo+Mlj3YL+7nbU4IWa78PcOS3sx9COw7c+3HLWJ5AFR/l77j8mnWxWWRCvVf5O8jro
-         Zi7GlOg8ssKZLGqDMg77Vzld1tCKHiX/I3XNG+MQgg4NRHDd4390Bcc7uAzeETspPqFf
-         1JDoDKWJYqP3TZy0AcnlUekzhRcFUawhtt9FFDpw31NgK2BuOnZXyjYVjtO2TSFpOc/3
-         L6PdpCIoWTwk9f0KXSjw7g3tNft+QDaNQUVSaGDujl7Is4P9tq40sozhEYsbWVYsNNP2
-         48cQ==
-X-Gm-Message-State: APjAAAVptGlU+z5nlNBWX9Xgp+eoa/7LDc+Lv/aF1OW1i9L8BWTLSGPX
-        xN/+BzcL/FCaNugIVcAnZj/pS6/bODrLQAh2t0B3fw==
-X-Google-Smtp-Source: APXvYqwEYr9zI6BkhnUM++IfeCcC+xbSOsMTtYqvpe6zA/njTkpkrPLs5HySfbG+rBCaT0DAWzeOiXT/AKbWPtdZdlc=
-X-Received: by 2002:a2e:864e:: with SMTP id i14mr20074286ljj.141.1558687726068;
- Fri, 24 May 2019 01:48:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190523181731.372074275@linuxfoundation.org>
-In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 24 May 2019 14:18:34 +0530
-Message-ID: <CA+G9fYsXDbU-ZLD1mji8c8rNErVu+YOUvbw2rpXvMPXdRC5NPg@mail.gmail.com>
-Subject: Re: [PATCH 4.19 000/114] 4.19.46-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
+        Fri, 24 May 2019 04:50:17 -0400
+X-UUID: 5d923b77664b4aecafb3e2f4c3f4a389-20190524
+X-UUID: 5d923b77664b4aecafb3e2f4c3f4a389-20190524
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <biao.huang@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1254751235; Fri, 24 May 2019 16:50:08 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N1.mediatek.inc
+ (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 24 May
+ 2019 16:50:07 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 24 May 2019 16:50:06 +0800
+Message-ID: <1558687806.24897.48.camel@mhfsdcap03>
+Subject: Re: [PATCH net-next v2 1/5] net: stmmac: enable clause 45 mdio
+ support
+From:   biao huang <biao.huang@mediatek.com>
+To:     Voon Weifeng <weifeng.voon@intel.com>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "Giuseppe Cavallaro" <peppe.cavallaro@st.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "Florian Fainelli" <f.fainelli@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Ong Boon Leong <boon.leong.ong@intel.com>,
+        "Kweh Hock Leong" <hock.leong.kweh@intel.com>
+Date:   Fri, 24 May 2019 16:50:06 +0800
+In-Reply-To: <1558625567-21653-2-git-send-email-weifeng.voon@intel.com>
+References: <1558625567-21653-1-git-send-email-weifeng.voon@intel.com>
+         <1558625567-21653-2-git-send-email-weifeng.voon@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 May 2019 at 00:44, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.19.46 release.
-> There are 114 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat 25 May 2019 06:15:02 PM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.19.46-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.19.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+Hi Weifeng,
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+clause45 mdio access with this patch test pass on our platform, thanks!
 
-Summary
-------------------------------------------------------------------------
+On Thu, 2019-05-23 at 23:32 +0800, Voon Weifeng wrote:
+> From: Kweh Hock Leong <hock.leong.kweh@intel.com>
+> 
+> DWMAC4 is capable to support clause 45 mdio communication.
+> This patch enable the feature on stmmac_mdio_write() and
+> stmmac_mdio_read() by following phy_write_mmd() and
+> phy_read_mmd() mdiobus read write implementation format.
+> 
+> Reviewed-by: Li, Yifan <yifan2.li@intel.com>
+> Signed-off-by: Kweh Hock Leong <hock.leong.kweh@intel.com>
+> Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
+> Signed-off-by: Weifeng Voon <weifeng.voon@intel.com>
+> ---
+>  drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c | 40 ++++++++++++++++++-----
+>  include/linux/phy.h                               |  2 ++
+>  2 files changed, 34 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
+> index bdd351597b55..761caaeb3da1 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
+> @@ -34,11 +34,27 @@
+>  
+>  #define MII_BUSY 0x00000001
+>  #define MII_WRITE 0x00000002
+> +#define MII_DATA_MASK GENMASK(15, 0)
+>  
+>  /* GMAC4 defines */
+>  #define MII_GMAC4_GOC_SHIFT		2
+> +#define MII_GMAC4_REG_ADDR_SHIFT	16
+>  #define MII_GMAC4_WRITE			(1 << MII_GMAC4_GOC_SHIFT)
+>  #define MII_GMAC4_READ			(3 << MII_GMAC4_GOC_SHIFT)
+> +#define MII_GMAC4_C45E			BIT(1)
+> +
+> +static void stmmac_mdio_c45_setup(struct stmmac_priv *priv, int phyreg,
+> +				  u32 *val, u32 *data)
+> +{
+> +	unsigned int reg_mask = priv->hw->mii.reg_mask;
+> +	unsigned int reg_shift = priv->hw->mii.reg_shift;
+> +
+> +	*val |= MII_GMAC4_C45E;
+> +	*val &= ~reg_mask;
+> +	*val |= ((phyreg >> MII_DEVADDR_C45_SHIFT) << reg_shift) & reg_mask;
+> +
+> +	*data |= (phyreg & MII_REGADDR_C45_MASK) << MII_GMAC4_REG_ADDR_SHIFT;
+> +}
+>  
+>  /* XGMAC defines */
+>  #define MII_XGMAC_SADDR			BIT(18)
+> @@ -165,22 +181,26 @@ static int stmmac_mdio_read(struct mii_bus *bus, int phyaddr, int phyreg)
+>  	struct stmmac_priv *priv = netdev_priv(ndev);
+>  	unsigned int mii_address = priv->hw->mii.addr;
+>  	unsigned int mii_data = priv->hw->mii.data;
+> -	u32 v;
+> -	int data;
+>  	u32 value = MII_BUSY;
+> +	int data = 0;
+> +	u32 v;
+>  
+>  	value |= (phyaddr << priv->hw->mii.addr_shift)
+>  		& priv->hw->mii.addr_mask;
+>  	value |= (phyreg << priv->hw->mii.reg_shift) & priv->hw->mii.reg_mask;
+>  	value |= (priv->clk_csr << priv->hw->mii.clk_csr_shift)
+>  		& priv->hw->mii.clk_csr_mask;
+> -	if (priv->plat->has_gmac4)
+> +	if (priv->plat->has_gmac4) {
+>  		value |= MII_GMAC4_READ;
+> +		if (phyreg & MII_ADDR_C45)
+> +			stmmac_mdio_c45_setup(priv, phyreg, &value, &data);
+> +	}
+>  
+>  	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
+>  			       100, 10000))
+>  		return -EBUSY;
+>  
+> +	writel(data, priv->ioaddr + mii_data);
+>  	writel(value, priv->ioaddr + mii_address);
+>  
+>  	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
+> @@ -188,7 +208,7 @@ static int stmmac_mdio_read(struct mii_bus *bus, int phyaddr, int phyreg)
+>  		return -EBUSY;
+>  
+>  	/* Read the data from the MII data register */
+> -	data = (int)readl(priv->ioaddr + mii_data);
+> +	data = (int)readl(priv->ioaddr + mii_data) & MII_DATA_MASK;
+>  
+>  	return data;
+>  }
+> @@ -208,8 +228,9 @@ static int stmmac_mdio_write(struct mii_bus *bus, int phyaddr, int phyreg,
+>  	struct stmmac_priv *priv = netdev_priv(ndev);
+>  	unsigned int mii_address = priv->hw->mii.addr;
+>  	unsigned int mii_data = priv->hw->mii.data;
+> -	u32 v;
+>  	u32 value = MII_BUSY;
+> +	int data = phydata;
+> +	u32 v;
+>  
+>  	value |= (phyaddr << priv->hw->mii.addr_shift)
+>  		& priv->hw->mii.addr_mask;
+> @@ -217,10 +238,13 @@ static int stmmac_mdio_write(struct mii_bus *bus, int phyaddr, int phyreg,
+>  
+>  	value |= (priv->clk_csr << priv->hw->mii.clk_csr_shift)
+>  		& priv->hw->mii.clk_csr_mask;
+> -	if (priv->plat->has_gmac4)
+> +	if (priv->plat->has_gmac4) {
+>  		value |= MII_GMAC4_WRITE;
+> -	else
+> +		if (phyreg & MII_ADDR_C45)
+> +			stmmac_mdio_c45_setup(priv, phyreg, &value, &data);
+> +	} else {
+>  		value |= MII_WRITE;
+> +	}
+>  
+>  	/* Wait until any existing MII operation is complete */
+>  	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
+> @@ -228,7 +252,7 @@ static int stmmac_mdio_write(struct mii_bus *bus, int phyaddr, int phyreg,
+>  		return -EBUSY;
+>  
+>  	/* Set the MII address register to write */
+> -	writel(phydata, priv->ioaddr + mii_data);
+> +	writel(data, priv->ioaddr + mii_data);
+>  	writel(value, priv->ioaddr + mii_address);
+>  
+>  	/* Wait until any existing MII operation is complete */
+> diff --git a/include/linux/phy.h b/include/linux/phy.h
+> index 073fb151b5a9..d3daac8ec686 100644
+> --- a/include/linux/phy.h
+> +++ b/include/linux/phy.h
+> @@ -198,6 +198,8 @@ static inline const char *phy_modes(phy_interface_t interface)
+>  /* Or MII_ADDR_C45 into regnum for read/write on mii_bus to enable the 21 bit
+>     IEEE 802.3ae clause 45 addressing mode used by 10GIGE phy chips. */
+>  #define MII_ADDR_C45 (1<<30)
+> +#define MII_DEVADDR_C45_SHIFT	16
+> +#define MII_REGADDR_C45_MASK	GENMASK(15, 0)
+>  
+>  struct device;
+>  struct phylink;
 
-kernel: 4.19.46-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.19.y
-git commit: 071ff9cc98498f489abc097471549b19933ba3e2
-git describe: v4.19.45-115-g071ff9cc9849
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
-ild/v4.19.45-115-g071ff9cc9849
 
 
-No regressions (compared to build v4.19.45)
-
-No fixes (compared to build v4.19.45)
-
-Ran 23173 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libgpiod
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
