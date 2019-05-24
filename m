@@ -2,103 +2,126 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD28C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 01:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EAA2C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 01:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F079D217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 01:20:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IfO+Pnmb"
+	by mail.kernel.org (Postfix) with ESMTP id 33FB22168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 01:27:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388805AbfEXBUp (ORCPT
+        id S2388639AbfEXB1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 21:20:45 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40000 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731632AbfEXBUp (ORCPT
+        Thu, 23 May 2019 21:27:06 -0400
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:33895 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726769AbfEXB1F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 21:20:45 -0400
-Received: by mail-pg1-f193.google.com with SMTP id d30so4058024pgm.7;
-        Thu, 23 May 2019 18:20:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :content-transfer-encoding:user-agent;
-        bh=wjBM6bom7PUFxoIMEGkCV+PHcAdXcG+G3bGPxdfSjkg=;
-        b=IfO+Pnmbq7poyYM/5EZwXwxuUoy9EkjBgkm2L+v4CKqmyvHC16J9tndQj/+7k73olM
-         71L+fopZwPkhgmDFeTY1WXVRb44ber6DlalEslpEY4aaj87EWOK1mWLC7ebgBIDsAK8X
-         l24f04WVzfhbQAEOFn0n5PfcYgIDT+7XF+zFZWsTKs2G1P0CQJVeYPvkd3ZGT7/MO4Aj
-         leh8Ma9BNyKFuqsNTiEznSWBB+1V3ITzBmelZI3sSTJnjU9FIVmFSZIF6TpSMcXGzTE5
-         ZOYl+IvlSWBfLTqC73d2hXagBoGC7F8kO7tiqgH18zrU0MMX1B9moN0slBgmNKFtrQ6m
-         tkfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding:user-agent;
-        bh=wjBM6bom7PUFxoIMEGkCV+PHcAdXcG+G3bGPxdfSjkg=;
-        b=prYW8YvcBt6eoHGlnMjzvUaWL+nptA6CY5faCAJKvSkd5WW/sbBJStqSSbZJiryieZ
-         hy/ptG4m+zu71GHcgD/1H4FC0yalNh3LN6IN6h0/x4JuTsNYfCQNXt9ictbsJ23J6W7b
-         xqbi4/pR0nQHhw0+igMtRnsH2KHzV4RBFB7frJihgJCU70hG8IE0376HUEwt0tLqh7wf
-         Tb/sVtiMHOf0DHJ7+79UgmbntvS+/hzy0VkQ7KZuNsKSMKuP61idTEnw+WL1+hjn/BXq
-         AzYOq4D81FISWHkP6a2bo9kRvbfOzaHzdi3YmKWQ2wdvkSJ3elAVAMPGuh8ZPP9X+JOs
-         T9Yg==
-X-Gm-Message-State: APjAAAVoffLJOxW2O76eB1aePgPWrGQ0fFGoluwcF4VaDMkd3SPGgIDs
-        qwW6JsxrxnGPeMca4pPeo/Q=
-X-Google-Smtp-Source: APXvYqz4Pqo2ZbVrYpORsgp6dI+Sj724gAx02se7zNPOJ44V33PDcDM5JvUhK9T1W3rYGdjZmiDYsA==
-X-Received: by 2002:aa7:860a:: with SMTP id p10mr92210505pfn.214.1558660844238;
-        Thu, 23 May 2019 18:20:44 -0700 (PDT)
-Received: from ip-172-31-44-144.us-west-2.compute.internal (ec2-54-186-128-88.us-west-2.compute.amazonaws.com. [54.186.128.88])
-        by smtp.gmail.com with ESMTPSA id i7sm677374pfo.19.2019.05.23.18.20.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 May 2019 18:20:43 -0700 (PDT)
-Date:   Fri, 24 May 2019 01:20:41 +0000
-From:   Alakesh Haloi <alakesh.haloi@gmail.com>
-To:     Shuah Khan <shuah@kernel.org>
-Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] selftests: kselftest: fix function return type
-Message-ID: <20190524012041.GA75353@ip-172-31-44-144.us-west-2.compute.internal>
+        Thu, 23 May 2019 21:27:05 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TSWQwwc_1558661219;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TSWQwwc_1558661219)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 24 May 2019 09:27:00 +0800
+Subject: Re: [v4 PATCH 2/2] mm: vmscan: correct some vmscan counters for THP
+ swapout
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     ying.huang@intel.com, hannes@cmpxchg.org, mhocko@suse.com,
+        mgorman@techsingularity.net, kirill.shutemov@linux.intel.com,
+        josef@toxicpanda.com, hughd@google.com, shakeelb@google.com,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <20190523155126.2312-1-hdanton@sina.com>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <b9c24d05-776a-4c4d-162a-e756e2c20d0f@linux.alibaba.com>
+Date:   Fri, 24 May 2019 09:26:57 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190523155126.2312-1-hdanton@sina.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ksft_test_num function returns sum of unsigned ints and hence should
-return unsigned int. This fixes the following compiler warning
 
-In file included from sync_test.c:37:0:
-../kselftest.h: In function ‘ksft_print_cnts’:
-../kselftest.h:73:16: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
-  if (ksft_plan != ksft_test_num())
-                ^~
-Signed-off-by: Alakesh Haloi <alakesh.haloi@gmail.com>
----
- tools/testing/selftests/kselftest.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/kselftest.h b/tools/testing/selftests/kselftest.h
-index ec15c4f6af55..5a98c80e079e 100644
---- a/tools/testing/selftests/kselftest.h
-+++ b/tools/testing/selftests/kselftest.h
-@@ -35,7 +35,7 @@ struct ksft_count {
- static struct ksft_count ksft_cnt;
- static unsigned int ksft_plan;
- 
--static inline int ksft_test_num(void)
-+static inline unsigned int ksft_test_num(void)
- {
- 	return ksft_cnt.ksft_pass + ksft_cnt.ksft_fail +
- 		ksft_cnt.ksft_xfail + ksft_cnt.ksft_xpass +
--- 
-2.17.1
+On 5/23/19 11:51 PM, Hillf Danton wrote:
+> On Thu, 23 May 2019 10:27:38 +0800 Yang Shi wrote:
+>> @ -1642,14 +1650,14 @@ static unsigned long isolate_lru_pages(unsigned long nr_to_scan,
+>>   	unsigned long nr_zone_taken[MAX_NR_ZONES] = { 0 };
+>>   	unsigned long nr_skipped[MAX_NR_ZONES] = { 0, };
+>>   	unsigned long skipped = 0;
+>> -	unsigned long scan, total_scan, nr_pages;
+>> +	unsigned long scan, total_scan;
+>> +	unsigned long nr_pages;
+> Change for no earn:)
+
+Aha, yes.
+
+>
+>>   	LIST_HEAD(pages_skipped);
+>>   	isolate_mode_t mode = (sc->may_unmap ? 0 : ISOLATE_UNMAPPED);
+>>   
+>> +	total_scan = 0;
+>>   	scan = 0;
+>> -	for (total_scan = 0;
+>> -	     scan < nr_to_scan && nr_taken < nr_to_scan && !list_empty(src);
+>> -	     total_scan++) {
+>> +	while (scan < nr_to_scan && !list_empty(src)) {
+>>   		struct page *page;
+> AFAICS scan currently prevents us from looping for ever, while nr_taken bails
+> us out once we get what's expected, so I doubt it makes much sense to cut
+> nr_taken off.
+
+It is because "scan < nr_to_scan && nr_taken >= nr_to_scan" is 
+impossible now with the units fixed.
+
+>>   
+>>   		page = lru_to_page(src);
+>> @@ -1657,9 +1665,12 @@ static unsigned long isolate_lru_pages(unsigned long nr_to_scan,
+>>   
+>>   		VM_BUG_ON_PAGE(!PageLRU(page), page);
+>>   
+>> +		nr_pages = 1 << compound_order(page);
+>> +		total_scan += nr_pages;
+>> +
+>>   		if (page_zonenum(page) > sc->reclaim_idx) {
+>>   			list_move(&page->lru, &pages_skipped);
+>> -			nr_skipped[page_zonenum(page)]++;
+>> +			nr_skipped[page_zonenum(page)] += nr_pages;
+>>   			continue;
+>>   		}
+>>   
+>> @@ -1669,10 +1680,9 @@ static unsigned long isolate_lru_pages(unsigned long nr_to_scan,
+>>   		 * ineligible pages.  This causes the VM to not reclaim any
+>>   		 * pages, triggering a premature OOM.
+>>   		 */
+>> -		scan++;
+>> +		scan += nr_pages;
+> The comment looks to defy the change if we fail to add a huge page to
+> the dst list; otherwise nr_taken knows how to do the right thing. What
+> I prefer is to let scan to do one thing a time.
+
+I don't get your point. Do you mean the comment "Do not count skipped 
+pages because that makes the function return with no isolated pages if 
+the LRU mostly contains ineligible pages."? I'm supposed the comment is 
+used to explain why not count skipped page.
+
+>
+>>   		switch (__isolate_lru_page(page, mode)) {
+>>   		case 0:
+>> -			nr_pages = hpage_nr_pages(page);
+>>   			nr_taken += nr_pages;
+>>   			nr_zone_taken[page_zonenum(page)] += nr_pages;
+>>   			list_move(&page->lru, dst);
+>> -- 
+>> 1.8.3.1
+>>
+> Best Regards
+> Hillf
 
