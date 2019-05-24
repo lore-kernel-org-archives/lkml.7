@@ -2,118 +2,160 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66002C282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B94C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D36221850
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:55:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UipkAn8u"
+	by mail.kernel.org (Postfix) with ESMTP id 625F8206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:56:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404014AbfEXNzC (ORCPT
+        id S2403969AbfEXN4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 09:55:02 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40417 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403976AbfEXNzC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 09:55:02 -0400
-Received: by mail-pf1-f195.google.com with SMTP id u17so5383433pfn.7;
-        Fri, 24 May 2019 06:55:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=74cGYuYE4LvrkLIEFnFNyny7NYqRKsZMnpjvNI31MgI=;
-        b=UipkAn8uV7zvYKNe8UA7lnIfZMEMxdpw0XyGFfhCgJd67Bhn1WazcJ4fTPuCSKlCnv
-         TY1JdY1Y4Wm99qK0+XgTQfByzGK8lFjXlqV/xcE/HPWQvIHfrrkfF9lNnQe3q73pW35F
-         8FLITnR5oJQbQOv7Wkjb00tn8Ts2jPOhuDZhMaZ7hFWAMvl2vHf2xBAlbyHWbsnOR74h
-         caVc9UZxNuu3x6JJcqqB3SjrGzTwuPlNmzZEokOh+RXw1BnOBfhFjmqxWW0iVaB27zNU
-         OJ6+dwr0RBCYI9Q0d0ZKOjlcUo1uaplXKXUoeq+tDW8j5YUuGP+VJRQHcVu3s7eVEWmF
-         D6AA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=74cGYuYE4LvrkLIEFnFNyny7NYqRKsZMnpjvNI31MgI=;
-        b=OksJDkWsDr8Dgc+UUfoNUCF01dO96/oLF0S7ICuWlmc4uJpo7kxaNmCVhRSbqZwtXL
-         BduscMSAqmq7Hle/v6QlM4J9GwgONs0UNVtAfQxTV1XK9TZE4Wcck8fazig2p9jDUwWe
-         QKPdXpEOL6GQaB2I0jVMFlxsKy5YBB9+PsJjVWRJOzqPVsvwAQt7ySECPz560asAXQZl
-         gyX3Z6faTTeMYcs9kZADlp1u1I0G+7a008GEOA03CV4983GIf9RHAbENPEp3GxzXlNX0
-         ktlEZdvxMFbo+NITNMoWq8dy+2VlM+wd2jQO6osDMvtrJvLHw/BTeZXp7SuUCsKljAq4
-         pc0A==
-X-Gm-Message-State: APjAAAWTwUktDZPLQPIsQsaTGJZwk+mkUsGI287pJst8tNlfU6grV/pp
-        /MGqUlCbMhtlCthRi32KTt8=
-X-Google-Smtp-Source: APXvYqyI4/9Own5qAnrvmUJI2kt8z4xs3DQFmq8LiAk+f/vitLhrSqGFqGrT33edFUqBUwdG7Pzovg==
-X-Received: by 2002:a17:90a:ba96:: with SMTP id t22mr9617439pjr.143.1558706101263;
-        Fri, 24 May 2019 06:55:01 -0700 (PDT)
-Received: from localhost.localdomain ([2601:644:8201:32e0:7256:81ff:febd:926d])
-        by smtp.gmail.com with ESMTPSA id u5sm2193541pgp.19.2019.05.24.06.55.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 06:55:00 -0700 (PDT)
-Date:   Fri, 24 May 2019 06:54:58 -0700
-From:   Eduardo Valentin <edubezval@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Rui Zhang <rui.zhang@intel.com>
-Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] Thermal-SoC management fixes for v5.2-rc2
-Message-ID: <20190524135457.GB2750@localhost.localdomain>
+        Fri, 24 May 2019 09:56:33 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34720 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403843AbfEXN4d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 09:56:33 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 56B193087BD2;
+        Fri, 24 May 2019 13:56:29 +0000 (UTC)
+Received: from hp-dl360pgen8-07.khw2.lab.eng.bos.redhat.com (hp-dl360pgen8-07.khw2.lab.eng.bos.redhat.com [10.16.210.135])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4DE482CFD6;
+        Fri, 24 May 2019 13:56:25 +0000 (UTC)
+From:   Jarod Wilson <jarod@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Jarod Wilson <jarod@redhat.com>,
+        Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Subject: [PATCH net] bonding: make debugging output more succinct
+Date:   Fri, 24 May 2019 09:56:23 -0400
+Message-Id: <20190524135623.17326-1-jarod@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Fri, 24 May 2019 13:56:32 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Linus,
+Seeing bonding debug log data along the lines of "event: 5" is a bit spartan,
+and often requires a lookup table if you don't remember what every event is.
+Make use of netdev_cmd_to_name for an improved debugging experience, so for
+the prior example, you'll see: "bond_netdev_event received NETDEV_REGISTER"
+instead (both are prefixed with the device for which the event pertains).
 
-Please consider the following thermal soc fixes for v5.2-rc2.
+There are also quite a few places that the netdev_dbg output could stand to
+mention exactly which slave the message pertains to (gets messy if you have
+multiple slaves all spewing at once to know which one they pertain to).
 
-The following changes since commit 4dde821e4296e156d133b98ddc4c45861935a4fb:
+CC: Jay Vosburgh <j.vosburgh@gmail.com>
+CC: Veaceslav Falico <vfalico@gmail.com>
+CC: Andy Gospodarek <andy@greyhouse.net>
+CC: "David S. Miller" <davem@davemloft.net>
+CC: netdev@vger.kernel.org
+Signed-off-by: Jarod Wilson <jarod@redhat.com>
+---
+ drivers/net/bonding/bond_main.c | 27 ++++++++++++++++++---------
+ 1 file changed, 18 insertions(+), 9 deletions(-)
 
-  Merge tag 'xfs-5.2-fixes-1' of git://git.kernel.org/pub/scm/fs/xfs/xfs-linux (2019-05-23 11:18:18 -0700)
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index 407f4095a37a..4acc352b316b 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -1515,7 +1515,8 @@ int bond_enslave(struct net_device *bond_dev, struct net_device *slave_dev,
+ 	new_slave->original_mtu = slave_dev->mtu;
+ 	res = dev_set_mtu(slave_dev, bond->dev->mtu);
+ 	if (res) {
+-		netdev_dbg(bond_dev, "Error %d calling dev_set_mtu\n", res);
++		netdev_dbg(bond_dev, "Error %d calling dev_set_mtu for slave %s\n",
++			   res, slave_dev->name);
+ 		goto err_free;
+ 	}
+ 
+@@ -1536,7 +1537,8 @@ int bond_enslave(struct net_device *bond_dev, struct net_device *slave_dev,
+ 		res = dev_set_mac_address(slave_dev, (struct sockaddr *)&ss,
+ 					  extack);
+ 		if (res) {
+-			netdev_dbg(bond_dev, "Error %d calling set_mac_address\n", res);
++			netdev_dbg(bond_dev, "Error %d calling set_mac_address for slave %s\n",
++				   res, slave_dev->name);
+ 			goto err_restore_mtu;
+ 		}
+ 	}
+@@ -1636,7 +1638,8 @@ int bond_enslave(struct net_device *bond_dev, struct net_device *slave_dev,
+ 
+ 	if (new_slave->link != BOND_LINK_DOWN)
+ 		new_slave->last_link_up = jiffies;
+-	netdev_dbg(bond_dev, "Initial state of slave_dev is BOND_LINK_%s\n",
++	netdev_dbg(bond_dev, "%s: Initial state of slave_dev %s is BOND_LINK_%s\n",
++		   __func__, slave_dev->name,
+ 		   new_slave->link == BOND_LINK_DOWN ? "DOWN" :
+ 		   (new_slave->link == BOND_LINK_UP ? "UP" : "BACK"));
+ 
+@@ -1679,7 +1682,8 @@ int bond_enslave(struct net_device *bond_dev, struct net_device *slave_dev,
+ 		bond_set_slave_inactive_flags(new_slave, BOND_SLAVE_NOTIFY_NOW);
+ 		break;
+ 	default:
+-		netdev_dbg(bond_dev, "This slave is always active in trunk mode\n");
++		netdev_dbg(bond_dev, "This slave (%s) is always active in trunk mode\n",
++			   slave_dev->name);
+ 
+ 		/* always active in trunk mode */
+ 		bond_set_active_slave(new_slave);
+@@ -1698,7 +1702,8 @@ int bond_enslave(struct net_device *bond_dev, struct net_device *slave_dev,
+ #ifdef CONFIG_NET_POLL_CONTROLLER
+ 	if (bond->dev->npinfo) {
+ 		if (slave_enable_netpoll(new_slave)) {
+-			netdev_info(bond_dev, "master_dev is using netpoll, but new slave device does not support netpoll\n");
++			netdev_info(bond_dev, "master_dev is using netpoll, but new slave device %s does not support netpoll\n",
++				    slave_dev->name);
+ 			res = -EBUSY;
+ 			goto err_detach;
+ 		}
+@@ -1711,19 +1716,22 @@ int bond_enslave(struct net_device *bond_dev, struct net_device *slave_dev,
+ 	res = netdev_rx_handler_register(slave_dev, bond_handle_frame,
+ 					 new_slave);
+ 	if (res) {
+-		netdev_dbg(bond_dev, "Error %d calling netdev_rx_handler_register\n", res);
++		netdev_dbg(bond_dev, "Error %d calling netdev_rx_handler_register for slave %s\n",
++			   res, slave_dev->name);
+ 		goto err_detach;
+ 	}
+ 
+ 	res = bond_master_upper_dev_link(bond, new_slave, extack);
+ 	if (res) {
+-		netdev_dbg(bond_dev, "Error %d calling bond_master_upper_dev_link\n", res);
++		netdev_dbg(bond_dev, "Error %d calling bond_master_upper_dev_link for slave %s\n",
++			   res, slave_dev->name);
+ 		goto err_unregister;
+ 	}
+ 
+ 	res = bond_sysfs_slave_add(new_slave);
+ 	if (res) {
+-		netdev_dbg(bond_dev, "Error %d calling bond_sysfs_slave_add\n", res);
++		netdev_dbg(bond_dev, "Error %d calling bond_sysfs_slave_add for slave %s\n",
++			   res, slave_dev->name);
+ 		goto err_upper_unlink;
+ 	}
+ 
+@@ -3212,7 +3220,8 @@ static int bond_netdev_event(struct notifier_block *this,
+ {
+ 	struct net_device *event_dev = netdev_notifier_info_to_dev(ptr);
+ 
+-	netdev_dbg(event_dev, "event: %lx\n", event);
++	netdev_dbg(event_dev, "%s received %s\n",
++		   __func__, netdev_cmd_to_name(event));
+ 
+ 	if (!(event_dev->priv_flags & IFF_BONDING))
+ 		return NOTIFY_DONE;
+-- 
+2.20.1
 
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-thermal fixes
-
-for you to fetch changes up to 6a310f8f97bb8bc2e2bb9db6f49a1b8678c8d144:
-
-  thermal: rcar_gen3_thermal: Update temperature conversion method (2019-05-23 21:58:25 -0700)
-
-Specifics:
-- revert pinctrl settings on rockchip which causes boot failure on rk3288.
-Proper follow up patch being discussed. Meanwhile reverting gets those booting again.
-- Minor fixes on rcar and tegra
-
-BR,
-
-Eduardo
-
-
-----------------------------------------------------------------
-Heiko Stuebner (1):
-      Revert "thermal: rockchip: fix up the tsadc pinctrl setting error"
-
-Yoshihiro Kaneko (3):
-      thermal: rcar_gen3_thermal: Update value of Tj_1
-      thermal: rcar_gen3_thermal: Update calculation formula of IRQTEMP
-      thermal: rcar_gen3_thermal: Update temperature conversion method
-
-YueHaibing (1):
-      thermal: tegra: Make tegra210_tsensor_thermtrips static
-
- drivers/thermal/rcar_gen3_thermal.c       | 92 ++++++++++++++++++++-----------
- drivers/thermal/rockchip_thermal.c        | 36 +-----------
- drivers/thermal/tegra/tegra210-soctherm.c |  2 +-
- 3 files changed, 64 insertions(+), 66 deletions(-)
