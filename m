@@ -2,114 +2,129 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA97C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B319EC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DF0920879
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:17:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J+X9xSnl"
+	by mail.kernel.org (Postfix) with ESMTP id 77CF92168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:19:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390024AbfEXJRP (ORCPT
+        id S2389830AbfEXJTP convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 05:17:15 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:33301 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389515AbfEXJRP (ORCPT
+        Fri, 24 May 2019 05:19:15 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:41474 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389569AbfEXJTP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 05:17:15 -0400
-Received: by mail-lf1-f66.google.com with SMTP id x132so6605125lfd.0
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 02:17:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=MQNAZ2qpcerEvwA34HiaREcIaqtFT4giJ0gziFwgnU4=;
-        b=J+X9xSnl4BIQvSLLO+SvCj3CZv19Aw7rcBirRTZtbNQGrSoMiAZ+QeWRmpfTLvK5SI
-         nF+TkOmYoyoh5yZCyPXqKdtISy8OLwnbnfXPpIEszISmeTAsoHsGqxxsCHlLyQk2FUxE
-         ncWjZgFlgNwVK8JqW6QZzRqdAzfSysYBShcPS2EUpT7Z7WcPZvjaNJ92KsJUQa6dL/es
-         aEMhKW1JdXsBn2Zqf7oASyAc9NIhwFZlFRHysgZCK2XqHx9mKXjlqFn805pTbseKSSOd
-         62za/mG/T+kxlbn0jgxGV1j5a34Z5puz1doKDlmMn7/6PtPpTNP/ozR/+bS60hlVLnbu
-         GhUQ==
+        Fri, 24 May 2019 05:19:15 -0400
+Received: by mail-qk1-f196.google.com with SMTP id m18so6398796qki.8
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 02:19:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=MQNAZ2qpcerEvwA34HiaREcIaqtFT4giJ0gziFwgnU4=;
-        b=DmW10dfPzxbdNsfeDGSs+UEOJWSanTCd3ajg46ibFf7wKx0UqGvP8CKF4RKB0R/vqi
-         OWTMSvxoACnLU6XUFrOE+gjfkJOw3RDUu6xpa69hk3vNsT/Ta9i58quwWAlRG4KdecLl
-         hn8oYCL/TTW8EL0yoFmbs7GqATenb3pwMRQV1m0PXglUKn52UUHTPRvdtbfqpoYwNKvP
-         Vs/jyVjevNy4JGd4bGQ5vAnoYzfL1ZF98yc0wrlraRTyedHSDsKhcsqMemadmMffjs9z
-         4Xa6ZCntSR6mLxjbEiYIqFLMuFECrNenSZBR4QirwsosnZczT5wqXd067it6AyeAA34o
-         MKKg==
-X-Gm-Message-State: APjAAAUOnwOHea3q/sr8sdbCnYz2i6ErnhiAVTLhWxQ4j5QPoRM8yf54
-        fD9+4gT1ADKMMNVSqVWW87gDxxLeWqFzjMAwO//s1Q==
-X-Google-Smtp-Source: APXvYqwhFZnoWeef1nj+ibv3/z3Wdour3IMfS4Mk2lrPJTMx/qF2SwhC16rn6xiFF+4gJffu8ObxgV8//sWIKgFDgkQ=
-X-Received: by 2002:ac2:4919:: with SMTP id n25mr4948262lfi.114.1558689433090;
- Fri, 24 May 2019 02:17:13 -0700 (PDT)
+        bh=7+56V34UO6f1yOAZuwtgojwUdZjIaQZjLcC9WjhkGCQ=;
+        b=IyHf/WRrKHqFTo+D64eyTWFIIpzDdRFUwSrakRL6BUQM5v5fBDQ7if9SKKcwuQDOvJ
+         u1d6m2xv3ivLP0UuAvsYrOPru/La3G+hRZbvIZZ054x2XvUCqfplZyy7JU0aPVwgvrc5
+         fiV3d8JaUN8KHalJQ/QuyFLcPUXIrmcTMXAgfd3CTZ44CpnQPSh8vHV13gNEw3TWk8Fq
+         1gV16FNPr8UuknTyLRGmpuSOy1hc2pJ3/DbJgN5L/vOluVAEVr0+36SAFowCzKptSmr4
+         CtRawi3eLHlVHK6lRI8OIUP+qKzKJhaXIdSCLP9P8RIokMoz4ZdKkKm2VC53GjZPfYcW
+         jiZg==
+X-Gm-Message-State: APjAAAX17XO5mJgDVzQ+a6olUULd6HF4R69ml/HnLCqXqYl+KfRcH+6u
+        bKwLkOi9YoetCtRyF/tnl4odlvizA6mMnTeWDVVUEA==
+X-Google-Smtp-Source: APXvYqyqRQ8qrEWXLm6DLEhWSrO4D17JdjftR/wwDYbEaVtlNU2URLnO29TsiKgTY4ax7bO0iBI4+FiH/tbgRbNM1WQ=
+X-Received: by 2002:a37:ea16:: with SMTP id t22mr53587620qkj.337.1558689554600;
+ Fri, 24 May 2019 02:19:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <8054bec0-ea24-8590-738b-bae58c0be3b4@infradead.org>
-In-Reply-To: <8054bec0-ea24-8590-738b-bae58c0be3b4@infradead.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 24 May 2019 11:17:00 +0200
-Message-ID: <CACRpkdahhJbvZw+2eQr3hFxYED94f42maOnmVKVhB6mSEKUkVw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: fix gpio-adp5588 build errors
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        kbuild test robot <lkp@intel.com>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20190521132712.2818-1-benjamin.tissoires@redhat.com>
+ <20190521132712.2818-10-benjamin.tissoires@redhat.com> <003d01d511de$9da229c0$d8e67d40$@emc.com.tw>
+ <CAO-hwJLnjxVxdodqAkKdQpqjAPGV1QYnugM+9t_86xRD92WJ-Q@mail.gmail.com> <011a01d5120f$146265e0$3d2731a0$@emc.com.tw>
+In-Reply-To: <011a01d5120f$146265e0$3d2731a0$@emc.com.tw>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Fri, 24 May 2019 11:19:03 +0200
+Message-ID: <CAO-hwJJMwX0w8wTwC66axCQrn8GemH4AFhRv3=30YZ0er2HkwQ@mail.gmail.com>
+Subject: Re: [PATCH v2 09/10] Input: elan_i2c - correct the width/size base value
+To:     =?UTF-8?B?5buW5bSH5qau?= <kt.liao@emc.com.tw>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Aaron Ma <aaron.ma@canonical.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 12:00 AM Randy Dunlap <rdunlap@infradead.org> wrote=
-:
+On Fri, May 24, 2019 at 11:00 AM 廖崇榮 <kt.liao@emc.com.tw> wrote:
+>
+> Hi
+>
+> -----Original Message-----
+> From: Benjamin Tissoires [mailto:benjamin.tissoires@redhat.com]
+> Sent: Friday, May 24, 2019 3:06 PM
+> To: 廖崇榮
+> Cc: Dmitry Torokhov; Rob Herring; Aaron Ma; Hans de Goede; open list:HID CORE LAYER; lkml; devicetree@vger.kernel.org
+> Subject: Re: [PATCH v2 09/10] Input: elan_i2c - correct the width/size base value
+>
+> On Fri, May 24, 2019 at 5:13 AM 廖崇榮 <kt.liao@emc.com.tw> wrote:
+> >
+> > Hi Benjamin,
+> >
+> > Thanks so much for all you do for Elan touchpad.
+> >
+> > For the width_*, I have a question for it.
+> > Our antenna sensors fully occupied the whole touchpad PCB.
+> >
+> > The Gap between 2 sensors are 7.5 mil (0.19mm).
+> > That's why we did not minus one trace.
+>
+> So, with the P52 I have:
+> [  +0.000009] max:    (3045,1731) drivers/input/mouse/elan_i2c_core.c:428
+> [  +0.000003] traces: (24,14) drivers/input/mouse/elan_i2c_core.c:429
+> [  +0.000002] size:   (98,55) drivers/input/mouse/elan_i2c_core.c:430
+> [  +0.000001] res:    (31,31) drivers/input/mouse/elan_i2c_core.c:431
+>
+> calculated size (max/res): 98 x 56 mm
+> true size, as measured: 101 x 60 mm
+>
+> I list layout information of P52 touchpad as below.
+> Physical size : 99 x 58 mm
+> Active Area size : ~ 97 * 56 mm, (boarding is 1.008mm for each side)
+>
+> Sensor layout:
+> X Pitch : 4.0286 mm
+> Y Pitch : 4.0147 mm
+>
+> Which gives (without the minus 1):
+> width_x = max_x / x_traces = 3045 / 24 = 126.875 -> 3.9885 mm width_y = max_y / y_traces = 1731 / 14 = 123.643 -> 4.0927 mm
+>
+> -> this gives a total size of the touchpad of: 96 x 57 mm (width_x *
+> 24, width_y * 14)
+>
+> With the minus 1:
+> width_x = max_x / x_traces = 3045 / 23 = 132.391 -> 4.2707 mm width_y = max_y / y_traces = 1731 / 14 = 133.154 -> 4.2953 mm
+>
+> -> this gives a total size of the touchpad of: 102 x 60 mm (width_x *
+> 24, width_y * 14)
+> and considering traces-1: 98 x 56 mm
+>
+> Removing 1 to the number of traces gave a squarer values in rows and columns, and this is what is done in the PS/2 driver.
+> Also, going back to the size of the touchpad gives a better value when removing 1 on the *traces.
+> So maybe when forwarding the properties we should remove one there in the PS/2 driver?
+>
+> Removing 1 trace may be better for some of previous touchpad. (depending on sensor pattern)
+> mk_* indicate the number of trace which is touched, and it's not a precise value.
+> I think the usability won't change too much whether removing one trace.
+> PS/2 have supported plenty of touchpad. It's better to remain the same.
+>
 
-> From: Randy Dunlap <rdunlap@infradead.org>
->
-> The gpio-adp5588 driver uses interfaces that are provided by
-> GPIOLIB_IRQCHIP, so select that symbol in its Kconfig entry.
->
-> Fixes these build errors:
->
-> ../drivers/gpio/gpio-adp5588.c: In function =E2=80=98adp5588_irq_handler=
-=E2=80=99:
-> ../drivers/gpio/gpio-adp5588.c:266:26: error: =E2=80=98struct gpio_chip=
-=E2=80=99 has no member named =E2=80=98irq=E2=80=99
->             dev->gpio_chip.irq.domain, gpio));
->                           ^
-> ../drivers/gpio/gpio-adp5588.c: In function =E2=80=98adp5588_irq_setup=E2=
-=80=99:
-> ../drivers/gpio/gpio-adp5588.c:298:2: error: implicit declaration of func=
-tion =E2=80=98gpiochip_irqchip_add_nested=E2=80=99 [-Werror=3Dimplicit-func=
-tion-declaration]
->   ret =3D gpiochip_irqchip_add_nested(&dev->gpio_chip,
->   ^
-> ../drivers/gpio/gpio-adp5588.c:307:2: error: implicit declaration of func=
-tion =E2=80=98gpiochip_set_nested_irqchip=E2=80=99 [-Werror=3Dimplicit-func=
-tion-declaration]
->   gpiochip_set_nested_irqchip(&dev->gpio_chip,
->   ^
->
-> Fixes: 459773ae8dbb ("gpio: adp5588-gpio: support interrupt controller")
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Michael Hennerich <michael.hennerich@analog.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Cc: linux-gpio@vger.kernel.org
+OK, so I guess I should just drop this patch from the series then.
 
-Patch applied for fixes.
-
-Yours,
-Linus Walleij
+Cheers,
+Benjamin
