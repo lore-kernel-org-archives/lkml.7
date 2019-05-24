@@ -2,114 +2,144 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58821C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E75DC282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A30020665
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:58:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558702736;
-	bh=Mmyzd07CZWTa5QeyoV5ylxDCl4XGjnmTYqEiaDncFWg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=j/Ld/9Ap5WP8mAEZZhOaLOMrs15VYV71/wlrSwiqmRwIMw9C8NPV3tNT42N6399r0
-	 bHMiF/aM9xiECEjpqPsZDVn22B0UMS3XLkhpQCjdib3JaLpv9TuO8gaPguWjLRjCb8
-	 zd2o3e1fD44oiuR0cNZo/eCZJ8Ne4ISk+abIMemA=
+	by mail.kernel.org (Postfix) with ESMTP id 4AD5C20665
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:02:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="smAVCUCy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391540AbfEXM6z (ORCPT
+        id S2391394AbfEXNCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 08:58:55 -0400
-Received: from casper.infradead.org ([85.118.1.10]:52652 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391124AbfEXM6y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 08:58:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Uu9Fmh5pwSkk63A/ozGUPFdWVQX5yOpI9xs85fZyEQA=; b=jxRC9/nxBNjuwCaVymHPBJAC1G
-        h0h2yiTY+lQ92E0Kji4sDWnj6Rrg6S0W7LqqjU+6oSVVgsrt3Fgi7a/HYNVesz7M7TgpT2/GoAbOO
-        O3Tw454tu7FVIGbRiYKSbHBkRsfo3b3cy4ZWZoKwb+of0bzwyVFsgLEDyU5A5hdohM98R0F3KeebD
-        QDDkL93Pl8xFPvSWf5PyR2dU44oT4MKfKTbBXYfmw0a8xknNWwfD+Eh4La5y9kIRG/H2bJVagGplz
-        7q3YdgpX+6t1L1y/rNMtPYqjpXeE5rUTj87UBcMv6rZoNMFXM3RYnXkVcdgcOWFxmgz0kjoCG0V6w
-        sx849M4Q==;
-Received: from 177.97.63.247.dynamic.adsl.gvt.net.br ([177.97.63.247] helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hU9mc-0006sj-E0; Fri, 24 May 2019 12:58:51 +0000
-Date:   Fri, 24 May 2019 09:58:45 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc:     <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        <linux-media@vger.kernel.org>
-Subject: Re: [PATCH next 15/25] media: platform: Use dev_get_drvdata()
-Message-ID: <20190524095845.26ef82fd@coco.lan>
-In-Reply-To: <20190423075020.173734-16-wangkefeng.wang@huawei.com>
-References: <20190423075020.173734-1-wangkefeng.wang@huawei.com>
-        <20190423075020.173734-16-wangkefeng.wang@huawei.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 24 May 2019 09:02:10 -0400
+Received: from onstation.org ([52.200.56.107]:54248 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391045AbfEXNCK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 09:02:10 -0400
+Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id B68C73E88C;
+        Fri, 24 May 2019 13:02:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1558702928;
+        bh=z0jLt5GmPMP9SlehCoH5XOtq6l1p49diMIagJEvp4Qk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=smAVCUCykCHg++Dm5V8KlqfT5bsIWumj7ZrBGCUTy1m2iBlT5OcjhX8UojJtSkArp
+         oO1iKMD08rTaMxV65tpG71BGKZI74eEZXsPUcu8XJmKDy+Un1OI9m7V5vCceJ9SDAz
+         +SeCUTfxNxkazFQxBs6dIPwU4/AU/YhAZhx6naOQ=
+Date:   Fri, 24 May 2019 09:02:08 -0400
+From:   Brian Masney <masneyb@onstation.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     ulf.hansson@linaro.org, faiz_abbas@ti.com,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] mmc: sdhci: queue work after sdhci_defer_done()
+Message-ID: <20190524130208.GA16322@basecamp>
+References: <20190524111053.12228-1-masneyb@onstation.org>
+ <70782901-a9ac-5647-1abe-89c86a44a01b@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <70782901-a9ac-5647-1abe-89c86a44a01b@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, 23 Apr 2019 15:50:10 +0800
-Kefeng Wang <wangkefeng.wang@huawei.com> escreveu:
-
-> Using dev_get_drvdata directly.
-
-Patch looks ok to me. Assuming that this will be applied via some
-other tree:
-
-Acked-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-
+On Fri, May 24, 2019 at 03:17:13PM +0300, Adrian Hunter wrote:
+> On 24/05/19 2:10 PM, Brian Masney wrote:
+> > WiFi stopped working on the LG Nexus 5 phone and the issue was bisected
+> > to the commit c07a48c26519 ("mmc: sdhci: Remove finish_tasklet") that
+> > moved from using a tasklet to a work queue. That patch also changed
+> > sdhci_irq() to return IRQ_WAKE_THREAD instead of finishing the work when
+> > sdhci_defer_done() is true. Change it to queue work to the complete work
+> > queue if sdhci_defer_done() is true so that the functionality is
+> > equilivent to what was there when the finish_tasklet was present. This
+> > corrects the WiFi breakage on the Nexus 5 phone.
+> > 
+> > Signed-off-by: Brian Masney <masneyb@onstation.org>
+> > Fixes: c07a48c26519 ("mmc: sdhci: Remove finish_tasklet")
+> > ---
+> > See 'sdhci@f98a4900' in qcom-msm8974-lge-nexus5-hammerhead.dts for
+> > details about how the WiFi is wired into sdhci on this platform.
+> > 
+> > bisect log:
+> > 
+> >  git bisect start
+> >  # bad: [4dde821e4296e156d133b98ddc4c45861935a4fb] Merge tag 'xfs-5.2-fixes-1' of git://git.kernel.org/pub/scm/fs/xfs/xfs-linux
+> >  git bisect bad 4dde821e4296e156d133b98ddc4c45861935a4fb
+> >  # good: [e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd] Linux 5.1
+> >  git bisect good e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd
+> >  # bad: [8c79f4cd441b27df6cadd11b70a50e06b3b3a2bf] Merge tag 'docs-5.2' of git://git.lwn.net/linux
+> >  git bisect bad 8c79f4cd441b27df6cadd11b70a50e06b3b3a2bf
+> >  # bad: [67a242223958d628f0ba33283668e3ddd192d057] Merge tag 'for-5.2/block-20190507' of git://git.kernel.dk/linux-block
+> >  git bisect bad 67a242223958d628f0ba33283668e3ddd192d057
+> >  # good: [8ff468c29e9a9c3afe9152c10c7b141343270bf3] Merge branch 'x86-fpu-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+> >  git bisect good 8ff468c29e9a9c3afe9152c10c7b141343270bf3
+> >  # good: [e2a5be107f52cefb9010ccae6f569c3ddaa954cc] staging: kpc2000: kpc_spi: Fix build error for {read,write}q
+> >  git bisect good e2a5be107f52cefb9010ccae6f569c3ddaa954cc
+> >  # bad: [cf482a49af564a3044de3178ea28f10ad5921b38] Merge tag 'driver-core-5.2-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core
+> >  git bisect bad cf482a49af564a3044de3178ea28f10ad5921b38
+> >  # good: [9f2e3a53f7ec9ef55e9d01bc29a6285d291c151e] Merge tag 'for-5.2-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
+> >  git bisect good 9f2e3a53f7ec9ef55e9d01bc29a6285d291c151e
+> >  # good: [b4b52b881cf08e13d110eac811d4becc0775abbf] Merge tag 'Wimplicit-fallthrough-5.2-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux
+> >  git bisect good b4b52b881cf08e13d110eac811d4becc0775abbf
+> >  # bad: [d5f758f2df8015b8dcf47b6403cc192e4cef734d] mmc: meson-gx: disable HS400
+> >  git bisect bad d5f758f2df8015b8dcf47b6403cc192e4cef734d
+> >  # good: [b3fb9d64b497b890f7b779a9f0b40b5cc269ea18] mmc: mmci: define get_dctrl_cfg for legacy variant
+> >  git bisect good b3fb9d64b497b890f7b779a9f0b40b5cc269ea18
+> >  # good: [ade024f130f742725da9219624b01666f04bc4a6] memstick: jmb38x_ms: remove set but not used variable 'data'
+> >  git bisect good ade024f130f742725da9219624b01666f04bc4a6
+> >  # bad: [42c38d4a1bc41e78dedbf73b0fb35e44007789bb] mmc: core: Fix warning and undefined behavior in mmc voltage handling
+> >  git bisect bad 42c38d4a1bc41e78dedbf73b0fb35e44007789bb
+> >  # good: [19d2f695f4e82794df7465b029c02b104d1b9903] mmc: sdhci: Call mmc_request_done() from IRQ handler if possible
+> >  git bisect good 19d2f695f4e82794df7465b029c02b104d1b9903
+> >  # bad: [71c733c4e1aeb83e8221e89caeec893d51f88b7b] mmc: tegra: add sdhci tegra suspend and resume
+> >  git bisect bad 71c733c4e1aeb83e8221e89caeec893d51f88b7b
+> >  # bad: [c07a48c2651965e84d35cf193dfc0e5f7892d612] mmc: sdhci: Remove finish_tasklet
+> >  git bisect bad c07a48c2651965e84d35cf193dfc0e5f7892d612
+> >  # first bad commit: [c07a48c2651965e84d35cf193dfc0e5f7892d612] mmc: sdhci: Remove finish_tasklet
+> > 
+> >  drivers/mmc/host/sdhci.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> > index 97158344b862..3563c3bc57c9 100644
+> > --- a/drivers/mmc/host/sdhci.c
+> > +++ b/drivers/mmc/host/sdhci.c
+> > @@ -3115,7 +3115,7 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
+> >  			continue;
+> >  
+> >  		if (sdhci_defer_done(host, mrq)) {
+> > -			result = IRQ_WAKE_THREAD;
+> > +			queue_work(host->complete_wq, &host->complete_work);
 > 
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: Benson Leung <bleung@chromium.org>
-> Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Cc: linux-media@vger.kernel.org
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-> ---
->  drivers/media/platform/cros-ec-cec/cros-ec-cec.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
+> The IRQ thread has a lot less latency than the work queue, which is why it
+> is done that way.
 > 
-> diff --git a/drivers/media/platform/cros-ec-cec/cros-ec-cec.c b/drivers/media/platform/cros-ec-cec/cros-ec-cec.c
-> index 7bc4d8a9af28..2e218c7a3a1f 100644
-> --- a/drivers/media/platform/cros-ec-cec/cros-ec-cec.c
-> +++ b/drivers/media/platform/cros-ec-cec/cros-ec-cec.c
-> @@ -174,8 +174,7 @@ static const struct cec_adap_ops cros_ec_cec_ops = {
->  #ifdef CONFIG_PM_SLEEP
->  static int cros_ec_cec_suspend(struct device *dev)
->  {
-> -	struct platform_device *pdev = to_platform_device(dev);
-> -	struct cros_ec_cec *cros_ec_cec = dev_get_drvdata(&pdev->dev);
-> +	struct cros_ec_cec *cros_ec_cec = dev_get_drvdata(dev);
->  
->  	if (device_may_wakeup(dev))
->  		enable_irq_wake(cros_ec_cec->cros_ec->irq);
-> @@ -185,8 +184,7 @@ static int cros_ec_cec_suspend(struct device *dev)
->  
->  static int cros_ec_cec_resume(struct device *dev)
->  {
-> -	struct platform_device *pdev = to_platform_device(dev);
-> -	struct cros_ec_cec *cros_ec_cec = dev_get_drvdata(&pdev->dev);
-> +	struct cros_ec_cec *cros_ec_cec = dev_get_drvdata(dev);
->  
->  	if (device_may_wakeup(dev))
->  		disable_irq_wake(cros_ec_cec->cros_ec->irq);
+> I am not sure why you say this change is equivalent to what was there
+> before, nor why it fixes your problem.
+> 
+> Can you explain some more?
 
+What I meant by the equivalent change was that tasklet_schedule() used
+to be called in this situation rather than returning IRQ_WAKE_THREAD.
 
+I'm honestly not sure exactly what's going on yet. Without the patch I
+sent out, wlan0 is not detected on the phone. Perhaps there is a subtle
+race condition somewhere that is exposed with the reduction in latency
+since I assume tasklet_schedule() is more expensive than doing the
+processing in the bottom half?
 
-Thanks,
-Mauro
+I'll do some more digging and see if I can find more information. I sent
+this out to get a discussion started.
+
+Brian
