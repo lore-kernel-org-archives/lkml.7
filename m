@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41578C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 01:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55943C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 01:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EF11217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 01:16:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04824217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 01:16:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388839AbfEXBQo (ORCPT
+        id S2388812AbfEXBQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 21:16:44 -0400
-Received: from mga02.intel.com ([134.134.136.20]:42224 "EHLO mga02.intel.com"
+        Thu, 23 May 2019 21:16:42 -0400
+Received: from mga05.intel.com ([192.55.52.43]:14788 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731683AbfEXBQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2388730AbfEXBQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 May 2019 21:16:39 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 May 2019 18:16:35 -0700
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 May 2019 18:16:38 -0700
 X-ExtLoop1: 1
 Received: from unknown (HELO luv-build.sc.intel.com) ([172.25.110.25])
-  by fmsmga008.fm.intel.com with ESMTP; 23 May 2019 18:16:34 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 23 May 2019 18:16:38 -0700
 From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>
@@ -39,15 +39,20 @@ Cc:     Ashok Raj <ashok.raj@intel.com>, Joerg Roedel <joro@8bytes.org>,
         linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
         Ricardo Neri <ricardo.neri@intel.com>,
         Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Tony Luck <tony.luck@intel.com>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Wincy Van <fanwenyi0529@gmail.com>,
         Kate Stewart <kstewart@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [RFC PATCH v4 03/21] x86/hpet: Calculate ticks-per-second in a separate function
-Date:   Thu, 23 May 2019 18:16:05 -0700
-Message-Id: <1558660583-28561-4-git-send-email-ricardo.neri-calderon@linux.intel.com>
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Baoquan He <bhe@redhat.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [RFC PATCH v4 18/21] x86/apic: Add a parameter for the APIC delivery mode
+Date:   Thu, 23 May 2019 18:16:20 -0700
+Message-Id: <1558660583-28561-19-git-send-email-ricardo.neri-calderon@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1558660583-28561-1-git-send-email-ricardo.neri-calderon@linux.intel.com>
 References: <1558660583-28561-1-git-send-email-ricardo.neri-calderon@linux.intel.com>
@@ -56,100 +61,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is easier to compute the expiration times of an HPET timer by using
-its frequency (i.e., the number of times it ticks in a second) than its
-period, as given in the capabilities register.
+Until now, the delivery mode of APIC interrupts is set to the default
+mode set in the APIC driver. However, there are no restrictions in hardware
+to configure each interrupt with a different delivery mode. Specifying the
+delivery mode per interrupt is useful when one is interested in changing
+the delivery mode of a particular interrupt. For instance, this can be used
+to deliver an interrupt as non-maskable.
 
-In addition to the HPET char driver, the HPET-based hardlockup detector
-will also need to know the timer's frequency. Thus, create a common
-function that both can use.
+Add a new member, delivery_mode, to struct irq_cfg. This new member, can
+be used to update the configuration of the delivery mode in each interrupt
+domain. Likewise, add equivalent macros to populate MSI messages.
 
-Cc: "H. Peter Anvin" <hpa@zytor.com>
+Currently, all interrupt domains set the delivery mode of interrupts using
+the APIC setting. Interrupt domains use an irq_cfg data structure to
+configure their own data structures and hardware resources. Thus, in order
+to keep the current behavior, set the delivery mode of the irq
+configuration that as the APIC setting. In this manner, irq domains can
+obtain the delivery mode from the irq configuration data instead of the
+APIC setting, if needed.
+
 Cc: Ashok Raj <ashok.raj@intel.com>
 Cc: Andi Kleen <andi.kleen@intel.com>
 Cc: Tony Luck <tony.luck@intel.com>
-Cc: Clemens Ladisch <clemens@ladisch.de>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Philippe Ombredanne <pombredanne@nexb.com>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Jacob Pan <jacob.jun.pan@intel.com>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Wincy Van <fanwenyi0529@gmail.com>
 Cc: Kate Stewart <kstewart@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: Philippe Ombredanne <pombredanne@nexb.com>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: Lu Baolu <baolu.lu@linux.intel.com>
 Cc: Stephane Eranian <eranian@google.com>
 Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
 Cc: "Ravi V. Shankar" <ravi.v.shankar@intel.com>
 Cc: x86@kernel.org
+Cc: iommu@lists.linux-foundation.org
 Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 ---
- drivers/char/hpet.c  | 31 ++++++++++++++++++++++++-------
- include/linux/hpet.h |  1 +
- 2 files changed, 25 insertions(+), 7 deletions(-)
+ arch/x86/include/asm/hw_irq.h |  5 +++--
+ arch/x86/include/asm/msidef.h |  3 +++
+ arch/x86/kernel/apic/vector.c | 10 ++++++++++
+ 3 files changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
-index 3a1e6b3ccd10..747255f552a9 100644
---- a/drivers/char/hpet.c
-+++ b/drivers/char/hpet.c
-@@ -836,6 +836,29 @@ static unsigned long hpet_calibrate(struct hpets *hpetp)
- 	return ret;
- }
+diff --git a/arch/x86/include/asm/hw_irq.h b/arch/x86/include/asm/hw_irq.h
+index 32e666e1231e..c024e5976b78 100644
+--- a/arch/x86/include/asm/hw_irq.h
++++ b/arch/x86/include/asm/hw_irq.h
+@@ -117,8 +117,9 @@ struct irq_alloc_info {
+ };
  
-+u64 hpet_get_ticks_per_sec(u64 hpet_caps)
-+{
-+	u64 ticks_per_sec, period;
+ struct irq_cfg {
+-	unsigned int		dest_apicid;
+-	unsigned int		vector;
++	unsigned int				dest_apicid;
++	unsigned int				vector;
++	enum ioapic_irq_destination_types	delivery_mode;
+ };
+ 
+ extern struct irq_cfg *irq_cfg(unsigned int irq);
+diff --git a/arch/x86/include/asm/msidef.h b/arch/x86/include/asm/msidef.h
+index 38ccfdc2d96e..6d666c90f057 100644
+--- a/arch/x86/include/asm/msidef.h
++++ b/arch/x86/include/asm/msidef.h
+@@ -16,6 +16,9 @@
+ 					 MSI_DATA_VECTOR_MASK)
+ 
+ #define MSI_DATA_DELIVERY_MODE_SHIFT	8
++#define MSI_DATA_DELIVERY_MODE_MASK	0x00000700
++#define MSI_DATA_DELIVERY_MODE(dm)	(((dm) << MSI_DATA_DELIVERY_MODE_SHIFT) & \
++					 MSI_DATA_DELIVERY_MODE_MASK)
+ #define  MSI_DATA_DELIVERY_FIXED	(0 << MSI_DATA_DELIVERY_MODE_SHIFT)
+ #define  MSI_DATA_DELIVERY_LOWPRI	(1 << MSI_DATA_DELIVERY_MODE_SHIFT)
+ #define  MSI_DATA_DELIVERY_NMI		(4 << MSI_DATA_DELIVERY_MODE_SHIFT)
+diff --git a/arch/x86/kernel/apic/vector.c b/arch/x86/kernel/apic/vector.c
+index 3173e07d3791..99436fe7e932 100644
+--- a/arch/x86/kernel/apic/vector.c
++++ b/arch/x86/kernel/apic/vector.c
+@@ -548,6 +548,16 @@ static int x86_vector_alloc_irqs(struct irq_domain *domain, unsigned int virq,
+ 		irqd->chip_data = apicd;
+ 		irqd->hwirq = virq + i;
+ 		irqd_set_single_target(irqd);
 +
-+	period = (hpet_caps & HPET_COUNTER_CLK_PERIOD_MASK) >>
-+		 HPET_COUNTER_CLK_PERIOD_SHIFT; /* fs, 10^-15 */
++		/*
++		 * Initialize the delivery mode of this irq to match the
++		 * default delivery mode of the APIC. This is useful for
++		 * children irq domains which want to take the delivery
++		 * mode from the individual irq configuration rather
++		 * than from the APIC.
++		 */
++		 apicd->hw_irq_cfg.delivery_mode = apic->irq_delivery_mode;
 +
-+	/*
-+	 * The frequency is the reciprocal of the period. The period is given
-+	 * in femtoseconds per second. Thus, prepare a dividend to obtain the
-+	 * frequency in ticks per second.
-+	 */
-+
-+	/* 10^15 femtoseconds per second */
-+	ticks_per_sec = 1000000000000000ULL;
-+	ticks_per_sec += period >> 1; /* round */
-+
-+	/* The quotient is put in the dividend. We drop the remainder. */
-+	do_div(ticks_per_sec, period);
-+
-+	return ticks_per_sec;
-+}
-+
- int hpet_alloc(struct hpet_data *hdp)
- {
- 	u64 cap, mcfg;
-@@ -844,7 +867,6 @@ int hpet_alloc(struct hpet_data *hdp)
- 	struct hpets *hpetp;
- 	struct hpet __iomem *hpet;
- 	static struct hpets *last;
--	unsigned long period;
- 	unsigned long long temp;
- 	u32 remainder;
- 
-@@ -894,12 +916,7 @@ int hpet_alloc(struct hpet_data *hdp)
- 
- 	last = hpetp;
- 
--	period = (cap & HPET_COUNTER_CLK_PERIOD_MASK) >>
--		HPET_COUNTER_CLK_PERIOD_SHIFT; /* fs, 10^-15 */
--	temp = 1000000000000000uLL; /* 10^15 femtoseconds per second */
--	temp += period >> 1; /* round */
--	do_div(temp, period);
--	hpetp->hp_tick_freq = temp; /* ticks per second */
-+	hpetp->hp_tick_freq = hpet_get_ticks_per_sec(cap);
- 
- 	printk(KERN_INFO "hpet%d: at MMIO 0x%lx, IRQ%s",
- 		hpetp->hp_which, hdp->hd_phys_address,
-diff --git a/include/linux/hpet.h b/include/linux/hpet.h
-index 8604564b985d..e7b36bcf4699 100644
---- a/include/linux/hpet.h
-+++ b/include/linux/hpet.h
-@@ -107,5 +107,6 @@ static inline void hpet_reserve_timer(struct hpet_data *hd, int timer)
- }
- 
- int hpet_alloc(struct hpet_data *);
-+u64 hpet_get_ticks_per_sec(u64 hpet_caps);
- 
- #endif				/* !__HPET__ */
+ 		/*
+ 		 * Legacy vectors are already assigned when the IOAPIC
+ 		 * takes them over. They stay on the same vector. This is
 -- 
 2.17.1
 
