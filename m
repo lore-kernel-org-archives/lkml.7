@@ -2,129 +2,114 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=AC_FROM_MANY_DOTS,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C53C2C282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31987C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9677E20665
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:14:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E99CE20665
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:15:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="yLbcUFVU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389355AbfEXIO4 (ORCPT
+        id S2389453AbfEXIPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 04:14:56 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:43479 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389234AbfEXIO4 (ORCPT
+        Fri, 24 May 2019 04:15:32 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:36861 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389160AbfEXIPb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 04:14:56 -0400
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1hU5Lj-0005XE-T3; Fri, 24 May 2019 08:14:48 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     bhelgaas@google.com, rafael.j.wysocki@intel.com
-Cc:     stern@rowland.harvard.edu, lukas@wunner.de,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH v2] PCI / PM: Don't runtime suspend when device only supports wakeup from D0
-Date:   Fri, 24 May 2019 16:14:44 +0800
-Message-Id: <20190524081444.9115-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 24 May 2019 04:15:31 -0400
+Received: by mail-lf1-f65.google.com with SMTP id y10so6443749lfl.3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 01:15:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pY20TLIKVkI1/Bl2d5BcPoMjZP1eL0jlGVq4XWFCLqw=;
+        b=yLbcUFVUKHOR54BpTzOG46y3ETP7QeyZEj3PxIvxlmWXhu+p3XLcJfFXKnkco7NJEd
+         OKeoWywqIAob+YJUoOUQtJkbOuABUegFkduX0AfOuvdmxruzZjtEjeby+ZBqbQIoKov8
+         RZZ7uIDhZJ1ql/XGJljY32KPbbpSJG+j1Yxpc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pY20TLIKVkI1/Bl2d5BcPoMjZP1eL0jlGVq4XWFCLqw=;
+        b=Ate2Eo3vVtf7OIxFjOjR3qr6xBcO6NU4Fn/kdg0AKMIb9lZMskNDbOTUyD+D0vMFTQ
+         ZYEV7k40BptUgac5LL0B/xLHjo+3d+gmut2bnaWldSJ7SD7QNxf+CGIqbz3P7Ufny5SI
+         vXc/Ws9xurr2ZaUv80QSVWVWpQ5A/FvzqhphgHmRPR41WBxgOk01fzqL0jC4ZBlUD9MS
+         LpYhrr/jqv4jv7uCI0DJAIXILVblvXuFVe8HaFOkayFPXuK2Jibn7NOOCsKSQsUAvJbU
+         59m43Z01SS4r9kOxilhdB2DcDk1nFmUZ8jeQyUIAXjPC2b9GJdjOcy91dA4tmkeKgZRl
+         lxqw==
+X-Gm-Message-State: APjAAAXJzkKZ/Abzl/MzHEjvfgDkMg0YlGDpAXgd/nLBqrRflKZsyXTT
+        ximfgVSNe1wwY3wPYNlaorKZeKjrprIx8zWjYHRujw==
+X-Google-Smtp-Source: APXvYqzVMi4pg2qRCfQfJd5BsbX8em3+Hdl2SMJgN+BItmMDwe24Jng0frtTTmpTZt9GG9xJXeqVFKyK1swQ88DNA7Q=
+X-Received: by 2002:a05:6512:507:: with SMTP id o7mr29687719lfb.137.1558685729981;
+ Fri, 24 May 2019 01:15:29 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190522114314.515b410d@canb.auug.org.au>
+In-Reply-To: <20190522114314.515b410d@canb.auug.org.au>
+From:   Joel Fernandes <joel@joelfernandes.org>
+Date:   Fri, 24 May 2019 11:15:17 +0300
+Message-ID: <CAEXW_YR99jkobkTUJLKjX-swR_AVYrjFzQcaD8j1JuZZ=dK9Qw@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the akpm-current tree with the pidfd tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christian Brauner <christian@brauner.io>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's an xHCI device that doesn't wake when a USB device gets plugged
-to its USB port. The driver's own runtime suspend callback was called,
-PME signaling was enabled, but it stays at PCI D0:
-  Status: D0 NoSoftRst+ PME-Enable+ DSel=0 DScale=0 PME-
+On Wed, May 22, 2019 at 4:43 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> Today's linux-next merge of the akpm-current tree got a conflict in:
+>
+>   kernel/pid.c
+>
+> between commit:
+>
+>   99e9da7f2796 ("pid: add pidfd_open()")
 
-A PCI device can be runtime suspended while still stays at D0 when it
-supports D0 PME and its _S0W reports D0. Theoretically this should work,
-but as [1] specifies, D0 doesn't have wakeup capability.
+Fix LGTM. Thank you.
 
-To avoid this problematic situation, we should avoid runtime suspend if
-D0 is the only state that can wake up the device. If the deivce doesn't
-require wakeup capability, carry out driver's runtime suspend as usual,
-which may have logic to save its power internally.
 
-[1] https://docs.microsoft.com/en-us/windows-hardware/drivers/kernel/device-working-state-d0
-
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
-v2:
- - Changes wording
- - Keep old behaviour for devices can't wakeup.
-
- drivers/pci/pci-driver.c | 6 ++++++
- drivers/pci/pci.c        | 2 +-
- include/linux/pci.h      | 3 +++
- 3 files changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index cae630fe6387..e3fac1d2a265 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -1239,6 +1239,7 @@ static int pci_pm_runtime_suspend(struct device *dev)
- 	struct pci_dev *pci_dev = to_pci_dev(dev);
- 	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
- 	pci_power_t prev = pci_dev->current_state;
-+	bool wakeup = device_can_wakeup(dev);
- 	int error;
- 
- 	/*
-@@ -1251,6 +1252,11 @@ static int pci_pm_runtime_suspend(struct device *dev)
- 		return 0;
- 	}
- 
-+	if (wakeup && pci_target_state(pci_dev, wakeup) == PCI_D0) {
-+		dev_dbg(dev, "D0 doesn't have wakeup capability\n");
-+		return -EBUSY;
-+	}
-+
- 	pci_dev->state_saved = false;
- 	if (pm && pm->runtime_suspend) {
- 		error = pm->runtime_suspend(dev);
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 8abc843b1615..ceee6efbbcfe 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -2294,7 +2294,7 @@ EXPORT_SYMBOL(pci_wake_from_d3);
-  * If the platform can't manage @dev, return the deepest state from which it
-  * can generate wake events, based on any available PME info.
-  */
--static pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup)
-+pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup)
- {
- 	pci_power_t target_state = PCI_D3hot;
- 
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 4a5a84d7bdd4..91e8dc4d04aa 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1188,6 +1188,7 @@ bool pci_pme_capable(struct pci_dev *dev, pci_power_t state);
- void pci_pme_active(struct pci_dev *dev, bool enable);
- int pci_enable_wake(struct pci_dev *dev, pci_power_t state, bool enable);
- int pci_wake_from_d3(struct pci_dev *dev, bool enable);
-+pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup);
- int pci_prepare_to_sleep(struct pci_dev *dev);
- int pci_back_from_sleep(struct pci_dev *dev);
- bool pci_dev_run_wake(struct pci_dev *dev);
-@@ -1672,6 +1673,8 @@ static inline int pci_set_power_state(struct pci_dev *dev, pci_power_t state)
- { return 0; }
- static inline int pci_wake_from_d3(struct pci_dev *dev, bool enable)
- { return 0; }
-+pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup)
-+{ return PCI_D0; }
- static inline pci_power_t pci_choose_state(struct pci_dev *dev,
- 					   pm_message_t state)
- { return PCI_D0; }
--- 
-2.17.1
-
+>
+> from the pidfd tree and commit:
+>
+>   51c59c914840 ("kernel/pid.c: convert struct pid:count to refcount_t")
+>
+> from the akpm-current tree.
+>
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+>
+> --
+> Cheers,
+> Stephen Rothwell
+>
+> diff --cc kernel/pid.c
+> index 39181ccca846,b59681973dd6..000000000000
+> --- a/kernel/pid.c
+> +++ b/kernel/pid.c
+> @@@ -37,8 -36,7 +37,8 @@@
+>   #include <linux/init_task.h>
+>   #include <linux/syscalls.h>
+>   #include <linux/proc_ns.h>
+> - #include <linux/proc_fs.h>
+> + #include <linux/refcount.h>
+>  +#include <linux/sched/signal.h>
+>   #include <linux/sched/task.h>
+>   #include <linux/idr.h>
+>
