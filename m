@@ -2,113 +2,135 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D936AC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE5FC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 985F121841
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:01:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QVFQZJlc"
+	by mail.kernel.org (Postfix) with ESMTP id 4F6AE2175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:01:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558681290;
+	bh=ZmvlpHvxGyk/NSgi+zudMi7xz8PLs2ggVcwCb+7Twgo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Px/WDvAI7g+3JTWfoD4lE4cSE7t3kDTyJmU+X1Hsoiw1uklBpYHx+QuGXdNexZERK
+	 DKnsqvoYepgrB5LNYTOJJ+fzFbScqtjTNn2WZ2VuFgWXgxwcYRiEKRRaXgsCMiOT+s
+	 uWV/bEEezw/FZknhmILUBwNhVjhdE7obFIs3SMxo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388972AbfEXHBZ (ORCPT
+        id S2389003AbfEXHB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 03:01:25 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45755 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388689AbfEXHBY (ORCPT
+        Fri, 24 May 2019 03:01:29 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36139 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388689AbfEXHB3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 03:01:24 -0400
-Received: by mail-pf1-f196.google.com with SMTP id s11so4734873pfm.12
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 00:01:24 -0700 (PDT)
+        Fri, 24 May 2019 03:01:29 -0400
+Received: by mail-wm1-f65.google.com with SMTP id v22so776712wml.1
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 00:01:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=kcpiZ7R8bxxOGoxY0wG0uRBYgVeNOevv4W9NWBBQjIo=;
-        b=QVFQZJlc66vuLIMsxfASsBcB+kl/AU4ofR9x4QtN1+/JaLthAVLuyMyHbZ0oAxVPJ0
-         W4GYAZm473D/QCRsp3DVCwXtfvkxgKNAyyVznrSKGofQRDElNAjpxkMNAM2eSUUX1ZeD
-         YOtb2gMLWDKi+G5rRWMR8FXL+MOB1vMDGHBwZ4l6SuSIYZ42MoYaRK63DzhDuX1VDUEr
-         7gkMnYupkGqhh7nZj2AOubOdJPew//UcUt8X0Bnidl8QXMsMB4yVsx4pAytf2QDXCCZ0
-         r3XDBr8VB3wmj3orqjvIT+o7Mw89F0276xAob2eX9Gv+3Ld0BDRNEVwNyaovCP4uYgpW
-         HQfQ==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cD+QKfx54qleGjQuzLkKBuFuX5HsGQPpWu1Zk02xUxg=;
+        b=MPdxeBjPI/0Tbxev05h5rrf9JzQqpBmPERQJCBn3JVsNT1macRKaj5TQq9jWsY8gna
+         tRM/zOzk9NAnoxQ2eiktaoIk10yjclhR0q/+hoRdmuG++X6sS9i3G7Bat2Nhq+n0PgLh
+         7Ndn4xvNcgZ/RV7T8uA2zFahbVS6qaTVLJA/FymVXCz1MQF5zGJAsAX9284WAlur8q/k
+         XlLZgIM9u27cHwa+xd85i0ry22HXKRGxXlrLozF+tcsLRmVE5UpmJzTxUjdyj5sulhdG
+         6z5tDxTo6UL7AeFj4ETYUN2YNUMhId3I6i1dd+sUFewDr4vZFeHXobXqxyD9QwQPaYJa
+         WBiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kcpiZ7R8bxxOGoxY0wG0uRBYgVeNOevv4W9NWBBQjIo=;
-        b=p0pLw7eP6vcZOUoxWU8DfrxSNrMcXB+P4Vs2fkvP/ymDuIeMVTELmWThp9athx25sZ
-         BRjHUHuY/+5SZeSsruamecUc/qCw+/IO9+ZNu6TS8IaszaHg14/igGHOBFJwKC+3Hp/Q
-         2cssXZsXZg1XxkZxKSZKn4EsAOWP8PsiSf8mp+w41XyXSNrtrinZUOy7Xz2+6iYzTg4T
-         N9txltLieia5ca2VIilbJ+OL9Y96226fFppmeEnq0o5PqULvf8J2DejXV/5CJioetgvx
-         SiziF6TjPP4zIKGWp/yvNwVow+RhclNhR/qIFA0SfMtv/dLq2B2u8PyG7ANNUGYLAfRn
-         Dp/g==
-X-Gm-Message-State: APjAAAWUPun55v4Tm4J+LHjfFA4xo+TrDcqV447O7BqiDueaV4FIfz+j
-        y+UM2JZS05vpGI+gTf5thjbKz72k
-X-Google-Smtp-Source: APXvYqxqZhsVhUG8FRXyeEFRdwfLU4LOE99S2muppyTS+kjC/CdlUHG4PzaDHug1XfLZKtAOmL0NhQ==
-X-Received: by 2002:a17:90a:204a:: with SMTP id n68mr6923151pjc.21.1558681283503;
-        Fri, 24 May 2019 00:01:23 -0700 (PDT)
-Received: from [10.0.2.15] ([110.225.17.212])
-        by smtp.gmail.com with ESMTPSA id 135sm2181690pfb.97.2019.05.24.00.01.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 00:01:23 -0700 (PDT)
-Subject: Re: [PATCH] staging: ks7010: Remove initialisation
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-References: <20190524055602.3694-1-nishkadg.linux@gmail.com>
- <20190524065238.GA3600@kroah.com>
-From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
-Message-ID: <aae76db5-8768-d277-e527-9e166a02f46e@gmail.com>
-Date:   Fri, 24 May 2019 12:31:19 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cD+QKfx54qleGjQuzLkKBuFuX5HsGQPpWu1Zk02xUxg=;
+        b=TeW+O5mfVl4hdF5ZQeyWsZDx0pRjI3nZqGA0ugnzpVtaEAcgL26SXINSnbWbJSukFG
+         WkF4j5YdI2SH/3IQmvJmlQxFm6XMpyBPWgLCpmFhhy58jlK97q48EfL1C/zbDr+kgLTz
+         +2dNgZmpbeYHHdFdjookwzXcmR+Ry98iunreTS4D+m1neNOCTcVLhtFE+Y3ntLLDigPY
+         RTMtBa3fXsHiOdw7DoE+W7fvb4jDbP0/7AYRwpot543SIrGyjepBzd2f/acXPAnivmRi
+         6cqcLoqa4vjXNS1El5q4ruoyKAw0X05x7eVPN4yf9HEJOMnmSdC6TBF217TULaWrJo0b
+         xHeg==
+X-Gm-Message-State: APjAAAUuJfA/0gU8oVcMe5qMu+Tj5HZ7yB3xt3cc8toRzwn/EzYHuQbf
+        8aDFABiSxrqVc824EiXL/QU=
+X-Google-Smtp-Source: APXvYqzpcuwD1m5xZjDyFb76oiplEO6VonPQ3y47FqXPP06zV3tx/kjIWzSw39SYNqIQ3KJ9UlvI7A==
+X-Received: by 2002:a7b:c842:: with SMTP id c2mr1792682wml.28.1558681286913;
+        Fri, 24 May 2019 00:01:26 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id x68sm2215915wmf.13.2019.05.24.00.01.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 24 May 2019 00:01:26 -0700 (PDT)
+Date:   Fri, 24 May 2019 09:01:24 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     yabinc@google.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH 1/4] perf/ring_buffer: Fix exposing a temporarily
+ decreased data_head.
+Message-ID: <20190524070124.GA11882@gmail.com>
+References: <20190517115230.437269790@infradead.org>
+ <20190517115418.224478157@infradead.org>
+ <20190517130509.GA90824@gmail.com>
+ <20190517142648.GC2589@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20190524065238.GA3600@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190517142648.GC2589@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/05/19 12:22 PM, Greg KH wrote:
-> On Fri, May 24, 2019 at 11:26:02AM +0530, Nishka Dasgupta wrote:
->> As the initial value of the return variable result is never used, it can
->> be removed.
->> Issue found with Coccinelle.
->>
->> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
->> ---
->>   drivers/staging/ks7010/ks7010_sdio.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
+
+* Peter Zijlstra <peterz@infradead.org> wrote:
+
+> On Fri, May 17, 2019 at 03:05:09PM +0200, Ingo Molnar wrote:
+> > 
+> > * Peter Zijlstra <peterz@infradead.org> wrote:
+> > 
+> > > In perf_output_put_handle(), an IRQ/NMI can happen in below location and
+> > > write records to the same ring buffer:
+> > > 	...
+> > > 	local_dec_and_test(&rb->nest)
+> > > 	...                          <-- an IRQ/NMI can happen here
+> > > 	rb->user_page->data_head = head;
+> > > 	...
+> > > 
+> > > In this case, a value A is written to data_head in the IRQ, then a value
+> > > B is written to data_head after the IRQ. And A > B. As a result,
+> > > data_head is temporarily decreased from A to B. And a reader may see
+> > > data_head < data_tail if it read the buffer frequently enough, which
+> > > creates unexpected behaviors.
+> > > 
+> > > This can be fixed by moving dec(&rb->nest) to after updating data_head,
+> > > which prevents the IRQ/NMI above from updating data_head.
+> > > 
+> > > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> > > Cc: Ingo Molnar <mingo@redhat.com>
+> > > Cc: Jiri Olsa <jolsa@redhat.com>
+> > > Cc: Namhyung Kim <namhyung@kernel.org>
+> > > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> > > Fixes: ef60777c9abd ("perf: Optimize the perf_output() path by removing IRQ-disables")
+> > > Signed-off-by: Yabin Cui <yabinc@google.com>
+> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > > Link: https://lkml.kernel.org/r/20190516184010.167903-1-yabinc@google.com
+> > 
+> > So these are missing a bunch of:
+> > 
+> >   From: Yabin Cui <yabinc@google.com>
+> > 
+> > lines, right?
+> > 
 > 
-> Didn't you already send this?
+> The first. certainly, the rest, while inspired by his patch, is more
+> complete than what he did.
 
-I sent two patches about removing initialisation in ks7010 today, but I 
-couldn't make it a patch series because the different files had 
-different maintainers. I don't think I've sent this patch before, but 
-it's possible I made a mistake because my local tree has not been the 
-best organised lately. I apologise for the confusion.
+Oh, indeed - I adjusted the first patch only.
 
-> And please run a spell-checker on your subject line when you resend
-> this :)
+Thanks,
 
-Is this about "initialise" (and now also "organised", "apologise", etc)? 
-As far as I'm aware whether the word ends in "-ise"/"-ize" depends on 
-local varieties of English, so I went with the variety I'm more used to. 
-Should I stick with American/Canadian spelling variants (including "-or" 
-over "-our" etc) from now on?
-
-Nishka
-> 
-> thanks,
-> 
-> greg k-h
-> 
-
+	Ingo
