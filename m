@@ -2,79 +2,84 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DCCC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A477AC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:38:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7723521851
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 778E7217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:38:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389067AbfEXHi3 (ORCPT
+        id S2389104AbfEXHia (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 03:38:29 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:49652 "EHLO inva020.nxp.com"
+        Fri, 24 May 2019 03:38:30 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53288 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388911AbfEXHi3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 03:38:29 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A10551A03C2;
-        Fri, 24 May 2019 09:38:27 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id DF5E61A03B4;
-        Fri, 24 May 2019 09:38:23 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E6199402E0;
-        Fri, 24 May 2019 15:38:18 +0800 (SGT)
-From:   Peng Ma <peng.ma@nxp.com>
-To:     shawnguo@kernel.org, leoyang.li@nxp.com
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Peng Ma <peng.ma@nxp.com>
-Subject: [PATCH] arm64: dts: ls1028a: Enable sata.
-Date:   Fri, 24 May 2019 15:30:22 +0800
-Message-Id: <20190524073022.32174-1-peng.ma@nxp.com>
-X-Mailer: git-send-email 2.14.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S2388911AbfEXHia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 03:38:30 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1657130BB559;
+        Fri, 24 May 2019 07:38:30 +0000 (UTC)
+Received: from MiWiFi-R3L-srv.redhat.com (ovpn-12-43.pek2.redhat.com [10.72.12.43])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9C6C55B683;
+        Fri, 24 May 2019 07:38:15 +0000 (UTC)
+From:   Baoquan He <bhe@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, mingo@kernel.org, bp@alien8.de, hpa@zytor.com,
+        kirill.shutemov@linux.intel.com, x86@kernel.org, dyoung@redhat.com,
+        Baoquan He <bhe@redhat.com>
+Subject: [PATCH v5 0/3] Add restrictions for kexec/kdump jumping between 5-level and 4-level kernel
+Date:   Fri, 24 May 2019 15:38:07 +0800
+Message-Id: <20190524073810.24298-1-bhe@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Fri, 24 May 2019 07:38:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change the sata node to enable sata.
 
-Signed-off-by: Peng Ma <peng.ma@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts |    4 ++++
- arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts |    4 ++++
- 2 files changed, 8 insertions(+), 0 deletions(-)
+The v4 cover letter tells the background about this adding, paste the
+link here for reference:
+http://lkml.kernel.org/r/20190509013644.1246-1-bhe@redhat.com
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-index b359068..4ed1828 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-@@ -153,3 +153,7 @@
- &sai1 {
- 	status = "okay";
- };
-+
-+&sata {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-index f9c272f..4a203f7 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-@@ -151,3 +151,7 @@
- &sai4 {
- 	status = "okay";
- };
-+
-+&sata {
-+	status = "okay";
-+};
+Changelog:
+v4->v5:
+  Tune code and log per Dave's comments, no functional change.
+  - In patch 2, change the printed erorr message; 
+  - In patch 3, add macro SZ_64T and use it in code, and remove the
+    obsolete code comment.
+v3->v4:
+  No functional change.
+  - Rewrite log of patch 1/3 tell who the newly added bits are gonna be
+    used.
+  - Rewrite log of patch 2/3 per tglx's words.
+  - Add Kirill's Acked-by.
+
+v2->v3:
+  Change the constant to match the notation for the rest of defines as
+  Kirill suggested;
+v1->v2:
+  Correct the subject of patch 1 according to tglx's comment;
+  Add more information to cover-letter to address reviewers' concerns;
+
+Baoquan He (3):
+  x86/boot: Add xloadflags bits for 5-level kernel checking
+  x86/kexec/64: Error out if try to jump to old 4-level kernel from
+    5-level kernel
+  x86/kdump/64: Change the upper limit of crashkernel reservation
+
+ arch/x86/boot/header.S                | 12 +++++++++++-
+ arch/x86/include/uapi/asm/bootparam.h |  2 ++
+ arch/x86/kernel/kexec-bzimage64.c     |  5 +++++
+ arch/x86/kernel/setup.c               | 15 ++++++++++++---
+ include/linux/sizes.h                 |  1 +
+ 5 files changed, 31 insertions(+), 4 deletions(-)
+
 -- 
-1.7.1
+2.17.2
 
