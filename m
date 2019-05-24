@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E9CAC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 507D0C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:36:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 263A121773
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:36:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23B9F21773
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:36:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="jHBVOno5"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="EVlS01Zr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390548AbfEXKgP (ORCPT
+        id S2390570AbfEXKgU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 06:36:15 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54826 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389448AbfEXKgP (ORCPT
+        Fri, 24 May 2019 06:36:20 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54838 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389448AbfEXKgT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 06:36:15 -0400
-Received: by mail-wm1-f65.google.com with SMTP id i3so8822353wml.4
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 03:36:13 -0700 (PDT)
+        Fri, 24 May 2019 06:36:19 -0400
+Received: by mail-wm1-f66.google.com with SMTP id i3so8822645wml.4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 03:36:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Jv+/uIukQfW/OxHNR7bAyqpTVp/OLgnxi44gYUFQRII=;
-        b=jHBVOno5BwcUjYCRe7UBEvjFH9aCoBem8UeQ5No34z4H12/N1RpbLZ4NMlFLqgkLpr
-         WSXAmoVrdKhO8EDk5TWIf0j9VxTfpRvbJx/PYTYbQ9z1VxboNHY7mAduSHrqtQv70pGQ
-         yPYyisaApP7w0nx0i523LCSXi4ZFr2nrN1LC8=
+        bh=2QncBY+O8HWHusWpmG3TvATwMEVVOER+jDNcjQdf6X8=;
+        b=EVlS01ZrOUW4y5TgcO5PW42Ys40ozEuuGxT/VlB+ZHdDPVKs4LX29n9Jkr/8Z6PNse
+         UOegy/cIjxDtwK5VzIY7E10zeWFGG8tTsr5lP2bUds+aMR5zF6msMBfDOuzwMsAVKFkQ
+         gU27fdfkz+KNgVoLDEVbPC0ybAaS2opAbZtLg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Jv+/uIukQfW/OxHNR7bAyqpTVp/OLgnxi44gYUFQRII=;
-        b=A8wJWgEEgSeKOJH7ucRVohKqPfocUVk3U0q70kdtGmMHLLyHIun/PsFBkfhAIpMVMy
-         hcRoO4q3g4OCcdbGp5EXb4Xfm1hvzxLALca4iEKuJtSPPFhlk95kXJOURnMy0rFOsHGD
-         HkNyVPLlh/aCVuSSKNLEmOoWq0o/X8K6yDcpdWCnZCq19kMJ206Z6gzFU1ab5IwrAwNs
-         xjNCvtN5WsamXRYg7bqQ4igOXj+Aa5uaN6OCGr/W7pfzZ8oDVBswdDChX5xhzx9ur4tp
-         COlBv9qoc2VSZ8Xgu8JaXqST435408YxUsA/ptcxJLnQSc93f2X00WmSoQ5fKYf/PBZ9
-         LMCw==
-X-Gm-Message-State: APjAAAVF/6XK5shFb5hFfDxdqkf9Ot9sEfC0+DSw0LmM6LOs40YupcKe
-        pyg95IoKMoM31uzPHsQ6KuZTNpTe7BS+bg==
-X-Google-Smtp-Source: APXvYqzOF8c6dcpLuEx32dQGio5YxaEepv+5uijVeRGIeWU/m0vjVdwVeInCDrSgBOLzBdtFeYnX3g==
-X-Received: by 2002:a1c:1d4:: with SMTP id 203mr16760046wmb.76.1558694172544;
-        Fri, 24 May 2019 03:36:12 -0700 (PDT)
+        bh=2QncBY+O8HWHusWpmG3TvATwMEVVOER+jDNcjQdf6X8=;
+        b=NWTkUBCAqfnj5kNwlchrZsE4Wl4cU9tW4LbT8XcDldMFALweDnnrYAUkTA1GfSojFf
+         GzQvcc1JyNOtUUlhu1wlDg29USc+kmZG7DOIXOIrA5ELKq9dswjZ2kAaRcUbql/CrXzw
+         qbCKRyL02ky7gfS0iFWGQICQrSJpL4W1/ATO3q+l4OOsRETfFxn6JmtqdJ1qiUyv0rlA
+         4fthaNZaX8ll3pYhibm5vxf30xehLBxu881dmYfmJRN/2w9SxCjdFzvrIp9KF/WwWXnu
+         YKHhJrWFLcqsHNPmBrX/P8N0+egqdRYZCzfuUWCDtlD/DjlOuzp1E8kRVhyxsnBcJHHo
+         9kLA==
+X-Gm-Message-State: APjAAAXFgtSOqrl2sV9NHJnjzMK/VLAeX0g0hPJzlMmDaVbwmgtxgtlW
+        hv+xUYy5woqqOGMYZLamz0msUEJuvpxIog==
+X-Google-Smtp-Source: APXvYqws0A2pqR2pfzJ8O/T2RqNMUG9rXolT5X554i6CeJ//OGuyEyIYbdY/Bl3oqqrJuBL1+d3ltQ==
+X-Received: by 2002:a1c:f909:: with SMTP id x9mr16477369wmh.12.1558694177408;
+        Fri, 24 May 2019 03:36:17 -0700 (PDT)
 Received: from localhost.localdomain (86.100.broadband17.iol.cz. [109.80.100.86])
-        by smtp.gmail.com with ESMTPSA id n4sm2111272wrp.61.2019.05.24.03.36.11
+        by smtp.gmail.com with ESMTPSA id n4sm2111272wrp.61.2019.05.24.03.36.16
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 24 May 2019 03:36:12 -0700 (PDT)
+        Fri, 24 May 2019 03:36:16 -0700 (PDT)
 From:   Andrea Parri <andrea.parri@amarulasolutions.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
@@ -62,9 +62,9 @@ Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
         Will Deacon <will.deacon@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
         "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH 1/2] vmw_vmci: Clean up uses of atomic*_set()
-Date:   Fri, 24 May 2019 12:35:35 +0200
-Message-Id: <1558694136-19226-2-git-send-email-andrea.parri@amarulasolutions.com>
+Subject: [PATCH 2/2] compiler: Prevent evaluation of WRITE_ONCE()
+Date:   Fri, 24 May 2019 12:35:36 +0200
+Message-Id: <1558694136-19226-3-git-send-email-andrea.parri@amarulasolutions.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1558694136-19226-1-git-send-email-andrea.parri@amarulasolutions.com>
 References: <1558694136-19226-1-git-send-email-andrea.parri@amarulasolutions.com>
@@ -73,10 +73,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The primitive vmci_q_set_pointer() relies on atomic*_set() being of
-type 'void', but this is a non-portable implementation detail.
+Now that there's no single use of the value of WRITE_ONCE(), change
+the implementation to eliminate it.
 
-Reported-by: Mark Rutland <mark.rutland@arm.com>
+Suggested-by: Mark Rutland <mark.rutland@arm.com>
 Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
 Cc: Arnd Bergmann <arnd@arndb.de>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
@@ -86,24 +86,27 @@ Cc: Will Deacon <will.deacon@arm.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
 ---
- include/linux/vmw_vmci_defs.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/compiler.h | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/vmw_vmci_defs.h b/include/linux/vmw_vmci_defs.h
-index 0c06178e4985b..eb593868e2e9e 100644
---- a/include/linux/vmw_vmci_defs.h
-+++ b/include/linux/vmw_vmci_defs.h
-@@ -759,9 +759,9 @@ static inline void vmci_q_set_pointer(atomic64_t *var,
- 				      u64 new_val)
- {
- #if defined(CONFIG_X86_32)
--	return atomic_set((atomic_t *)var, (u32)new_val);
-+	atomic_set((atomic_t *)var, (u32)new_val);
- #else
--	return atomic64_set(var, new_val);
-+	atomic64_set(var, new_val);
- #endif
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index 8aaf7cd026b06..4024c809a6c63 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -277,12 +277,11 @@ unsigned long read_word_at_a_time(const void *addr)
  }
+ 
+ #define WRITE_ONCE(x, val) \
+-({							\
++do {							\
+ 	union { typeof(x) __val; char __c[1]; } __u =	\
+ 		{ .__val = (__force typeof(x)) (val) }; \
+ 	__write_once_size(&(x), __u.__c, sizeof(x));	\
+-	__u.__val;					\
+-})
++} while (0)
+ 
+ #endif /* __KERNEL__ */
  
 -- 
 2.7.4
