@@ -6,190 +6,187 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 326F5C282E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B155C282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BC1A21848
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D0E92175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:34:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732192AbfEXSdx (ORCPT
+        id S1732070AbfEXSee convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 14:33:53 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:43780 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728739AbfEXSdw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 14:33:52 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4OIWDgj129187
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 14:33:51 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2spmnpb8n9-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 14:33:51 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Fri, 24 May 2019 19:33:49 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 24 May 2019 19:33:44 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4OIXhWZ59834370
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 May 2019 18:33:43 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 96691A405B;
-        Fri, 24 May 2019 18:33:43 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 27AD9A405C;
-        Fri, 24 May 2019 18:33:42 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.16.173])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 24 May 2019 18:33:42 +0000 (GMT)
-To:     Thomas Huth <thuth@redhat.com>,
-        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Andrew Jones <drjones@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-s390@vger.kernel.org
-References: <20190523164309.13345-1-thuth@redhat.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- syiRa+UVlsKmx1hsEg==
-Date:   Fri, 24 May 2019 20:33:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190523164309.13345-1-thuth@redhat.com>
-Content-Type: text/plain; charset=utf-8
+        Fri, 24 May 2019 14:34:34 -0400
+Received: from mga04.intel.com ([192.55.52.120]:27663 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727465AbfEXSed (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 14:34:33 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 May 2019 11:34:33 -0700
+X-ExtLoop1: 1
+Received: from orsmsx104.amr.corp.intel.com ([10.22.225.131])
+  by orsmga005.jf.intel.com with ESMTP; 24 May 2019 11:34:33 -0700
+Received: from orsmsx121.amr.corp.intel.com (10.22.225.226) by
+ ORSMSX104.amr.corp.intel.com (10.22.225.131) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Fri, 24 May 2019 11:34:33 -0700
+Received: from orsmsx116.amr.corp.intel.com ([169.254.7.165]) by
+ ORSMSX121.amr.corp.intel.com ([169.254.10.64]) with mapi id 14.03.0415.000;
+ Fri, 24 May 2019 11:34:32 -0700
+From:   "Xing, Cedric" <cedric.xing@intel.com>
+To:     "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "Stephen Smalley" <sds@tycho.nsa.gov>
+CC:     Andy Lutomirski <luto@kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Subject: RE: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+Thread-Topic: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+Thread-Index: AQHVC0vUmIXibKT8TUm/EUnHn2XAfqZu5q2AgAAGWoCABXOKgIABz2SAgAAI9ACAAWgPAIAAAJWAgAAJhACAAByGAIAAdoKAgABA+ICAAIOmAIAAQKcAgAAWeICAAIbLAIAAGyYA///WAeCAARtHgIAAIeCAgAADbAD//5AmcA==
+Date:   Fri, 24 May 2019 18:34:32 +0000
+Message-ID: <960B34DE67B9E140824F1DCDEC400C0F654E8E1D@ORSMSX116.amr.corp.intel.com>
+References: <CALCETrUS8xyF1JJmQs18BGTDhPRXf+s81BkMZCZwmY73r7M+zg@mail.gmail.com>
+ <20190523023517.GA31950@linux.intel.com>
+ <20190523102628.GC10955@linux.intel.com>
+ <20190523141752.GA12078@linux.intel.com>
+ <CALCETrUzx3LPAKCLFf75P-XshAkRcr+JLET3LA_kHDs9MA11FA@mail.gmail.com>
+ <20190523234044.GC12078@linux.intel.com>
+ <CALCETrV4DVEfW6EJ6DnQGGYDJAiA5M1QcuYJTiroumOM+D6Jjg@mail.gmail.com>
+ <960B34DE67B9E140824F1DCDEC400C0F654E8956@ORSMSX116.amr.corp.intel.com>
+ <dda0912b-cb15-3c07-d368-345159e995f7@tycho.nsa.gov>
+ <20190524174243.GA365@linux.intel.com> <20190524175458.GB365@linux.intel.com>
+In-Reply-To: <20190524175458.GB365@linux.intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19052418-0008-0000-0000-000002EA1161
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052418-0009-0000-0000-00002256D505
-Message-Id: <41d6b365-7e8f-f028-cc5b-c3896d73db83@de.ibm.com>
-Subject: Re:  [PATCH v1 0/9] KVM selftests for s390x
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-24_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=946 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905240120
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYjM1YjY3NGMtZmM1Mi00ZWM3LTg2MWEtZjQ4MjdjMTI2MTg4IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoieEgxQ1NRZkl6MlIyMEN5YzZBT01zQTA2dngxUDA1ajFGcm81R2VLeExWSHZEYnVLRjM3bFErRUtNN0FsbDlMSCJ9
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.138]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I have now queued every patch in the kselftest branch on kvms390 at kernel.org.
-I will push out for next as soon as I have some ack/nacks on the
-"KVM: s390: fix memory slot handling for KVM_SET_USER_MEMORY_REGION"
-patch.
+> From: linux-sgx-owner@vger.kernel.org [mailto:linux-sgx-
+> owner@vger.kernel.org] On Behalf Of Sean Christopherson
+> Sent: Friday, May 24, 2019 10:55 AM
+> 
+> On Fri, May 24, 2019 at 10:42:43AM -0700, Sean Christopherson wrote:
+> > Hmm, I've been thinking more about pulling permissions from the source
+> > page.  Conceptually I'm not sure we need to meet the same requirements
+> as
+> > non-enclave DSOs while the enclave is being built, i.e. do we really
+> need
+> > to force userspace to fully map the enclave in normal memory?
+> >
+> > Consider the Graphene scenario where it's building an enclave on the
+> fly.
+> > Pulling permissions from the source VMAs means Graphene has to map the
+> > code pages of the enclave with X.  This means Graphene will need
+> EXEDMOD
+> > (or EXECMEM if Graphene isn't careful).  In a non-SGX scenario this
+> makes
+> > perfect sense since there is no way to verify the end result of RW->RX.
+> >
+> > But for SGX, assuming enclaves are whitelisted by their sigstruct
+> (checked
+> > at EINIT) and because page permissions affect sigstruct.MRENCLAVE, it
+> *is*
+> > possible to verify the resulting RX contents.  E.g. for the purposes
+> of
+> > LSMs, can't we use the .sigstruct file as a proxy for the enclave and
+> > require FILE__EXECUTE on the .sigstruct inode to map/run the enclave?
+> >
+> > Stephen, is my logic sound?
+> >
+> >
+> > If so...
+> >
+> >   - Require FILE__READ+FILE__EXECUTE on .sigstruct to mmap() the
+> enclave.
+> >
+> >   - Prevent userspace from mapping the enclave with permissions beyond
+> the
+> >     original permissions of the enclave.  This can be done by
+> populating
+> >     VM_MAY{READ,WRITE,EXEC} from the SECINFO (same basic concept as
+> Andy's
+> >     proposals).  E.g. pre-EINIT, mmap() and mprotect() can only
+> succeed
+> >     with PROT_NONE.
+> >
+> >   - Require FILE__{READ,WRITE,EXECUTE} on /dev/sgx/enclave for
+> simplicity,
+> >     or provide an alternate SGX_IOC_MPROTECT if we want to sidestep
+> the
+> >     FILE__WRITE requirement.
+> 
+> One more thought.  EADD (and the equivalent SGX2 flow) could do
+> security_mmap_file() with a NULL file on the SECINFO permissions, which
+> would trigger PROCESS_EXECMEM if an enclave attempts to map a page RWX.
 
-On 23.05.19 18:43, Thomas Huth wrote:
-> This patch series enables the KVM selftests for s390x. As a first
-> test, the sync_regs from x86 has been adapted to s390x, and after
-> a fix for KVM_CAP_MAX_VCPU_ID on s390x, the kvm_create_max_vcpus
-> is now enabled here, too.
-> 
-> Please note that the ucall() interface is not used yet - since
-> s390x neither has PIO nor MMIO, this needs some more work first
-> before it becomes usable (we likely should use a DIAG hypercall
-> here, which is what the sync_reg test is currently using, too...
-> I started working on that topic, but did not finish that work
-> yet, so I decided to not include it yet).
-> 
-> RFC -> v1:
->  - Rebase, needed to add the first patch for vcpu_nested_state_get/set
->  - Added patch to introduce VM_MODE_DEFAULT macro
->  - Improved/cleaned up the code in processor.c
->  - Added patch to fix KVM_CAP_MAX_VCPU_ID on s390x
->  - Added patch to enable the kvm_create_max_vcpus on s390x and aarch64
-> 
-> Andrew Jones (1):
->   kvm: selftests: aarch64: fix default vm mode
-> 
-> Thomas Huth (8):
->   KVM: selftests: Wrap vcpu_nested_state_get/set functions with x86
->     guard
->   KVM: selftests: Guard struct kvm_vcpu_events with
->     __KVM_HAVE_VCPU_EVENTS
->   KVM: selftests: Introduce a VM_MODE_DEFAULT macro for the default bits
->   KVM: selftests: Align memory region addresses to 1M on s390x
->   KVM: selftests: Add processor code for s390x
->   KVM: selftests: Add the sync_regs test for s390x
->   KVM: s390: Do not report unusabled IDs via KVM_CAP_MAX_VCPU_ID
->   KVM: selftests: Move kvm_create_max_vcpus test to generic code
-> 
->  MAINTAINERS                                   |   2 +
->  arch/mips/kvm/mips.c                          |   3 +
->  arch/powerpc/kvm/powerpc.c                    |   3 +
->  arch/s390/kvm/kvm-s390.c                      |   1 +
->  arch/x86/kvm/x86.c                            |   3 +
->  tools/testing/selftests/kvm/Makefile          |   7 +-
->  .../testing/selftests/kvm/include/kvm_util.h  |  10 +
->  .../selftests/kvm/include/s390x/processor.h   |  22 ++
->  .../kvm/{x86_64 => }/kvm_create_max_vcpus.c   |   3 +-
->  .../selftests/kvm/lib/aarch64/processor.c     |   2 +-
->  tools/testing/selftests/kvm/lib/kvm_util.c    |  25 +-
->  .../selftests/kvm/lib/s390x/processor.c       | 286 ++++++++++++++++++
->  .../selftests/kvm/lib/x86_64/processor.c      |   2 +-
->  .../selftests/kvm/s390x/sync_regs_test.c      | 151 +++++++++
->  virt/kvm/arm/arm.c                            |   3 +
->  virt/kvm/kvm_main.c                           |   2 -
->  16 files changed, 514 insertions(+), 11 deletions(-)
->  create mode 100644 tools/testing/selftests/kvm/include/s390x/processor.h
->  rename tools/testing/selftests/kvm/{x86_64 => }/kvm_create_max_vcpus.c (93%)
->  create mode 100644 tools/testing/selftests/kvm/lib/s390x/processor.c
->  create mode 100644 tools/testing/selftests/kvm/s390x/sync_regs_test.c
-> 
+If "initial permissions" for enclaves are less restrictive than shared objects, then it'd become a backdoor for circumventing LSM when enclave whitelisting is *not* in place. For example, an adversary may load a page, which would otherwise never be executable, as an executable page in EPC.
 
+In the case a RWX page is needed, the calling process has to have a RWX page serving as the source for EADD so PROCESS__EXECMEM will have been checked. For SGX2, changing an EPC page to RWX is subject to FILE__EXECMEM on /dev/sgx/enclave, which I see as a security benefit because it only affects the enclave but not the whole process hosting it.
+
+> 
+> > No changes are required to LSMs, SGX1 has a single LSM touchpoint in
+> its
+> > mmap(), and I *think* the only required userspace change is to mmap()
+> > PROT_NONE when allocating the enclave's virtual address range.
+
+I'm not sure I understand the motivation behind this proposal to decouple initial EPC permissions from source pages.
+
+I don't think it a big deal to fully mmap() enclave files, which have to be parsed by user mode anyway to determine various things including but not limited to the size of heap(s), size and number of TCSs/stacks/TLS areas, and the overall enclave size. So with PHDRs parsed, it's trivial to mmap() each segment with permissions from its PHDR.
+
+> >
+> > As for Graphene, it doesn't need extra permissions to run its enclaves,
+> > it just needs a way to install .sigstruct, which is a generic
+> permissions
+> > problem and not SGX specific.
+> >
+> >
+> > For SGX2 maybe:
+> >
+> >   - No additional requirements to map an EAUG'd page as RW page.  Not
+> >     aligned with standard MAP_SHARED behavior, but we really don't
+> want
+> >     to require FILE__WRITE, and thus allow writes to .sigstruct.
+> >
+> >   - Require FILE__EXECMOD on the .sigstruct to map previously writable
+> >     page as executable (which indirectly includes all EAUG'd pages).
+> >     Wiring this up will be a little funky, but we again we don't want
+> >     to require FILE__WRITE on .sigstruct.
+> >
+
+I'm lost. Why is EAUG tied to permissions on .sigstruct? 
+
+-Cedric
