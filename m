@@ -2,111 +2,102 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 165BAC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 19:45:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C21A9C282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 19:48:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE8B82133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 19:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97B82206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 19:48:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AoUNQsLq"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="G2CUD+lT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732161AbfEXTpY (ORCPT
+        id S2403761AbfEXTss (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 15:45:24 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:44561 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729017AbfEXTpY (ORCPT
+        Fri, 24 May 2019 15:48:48 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:37248 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729017AbfEXTss (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 15:45:24 -0400
-Received: by mail-vs1-f67.google.com with SMTP id w124so6608092vsb.11
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 12:45:23 -0700 (PDT)
+        Fri, 24 May 2019 15:48:48 -0400
+Received: by mail-pl1-f195.google.com with SMTP id p15so4560116pll.4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 12:48:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VSCpos+5H3kGeuz4/hTR2VLM2nKqyPZxFJn7Vr/MpQI=;
-        b=AoUNQsLq6Nebbod6Sm11L9aen5qNZdwC5XZ8qwlFqKhwX63DBoRmtvwwZVLPL9IvXn
-         5lyeHW37ecHGFEgb+/FWreU2wis4OHyURUg0liq01uuXh01ntrGFbGa8T832e0Gorrfl
-         zjHaCbq3y+tFFDzDRtq+ryKPiFf+t0CuhKHk+WDqA3TYwtgX0DzPmg/wFpHQ91JDXRg7
-         RvYiciBuTmBup9a/gn/3V2noY6o4ktctRPMWEZk5ne3vCTfoOvsaqLISpFR0WzpX8CRG
-         l89OQYl6kXjjMh4jUSfbelHZcXy0Ju+EQfKaBfodUajnX+OfdRa5qiStAnCd40W9vLzg
-         TRPw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=Kk/YxPQI8pjQg2ClWfvPmzY4EAH0NW1JSdFr4PlUXcM=;
+        b=G2CUD+lTa53s9XEHdAu6Uz1rrPmqDKQpcYpqWKb/xMf8WKCTpK8myE/lnyy4PfAr2N
+         8femmjlLFP+9ZFA/5GZ0MD5H6avuMvPZoaU9r3IxE0TslHKV2vhuA+vZdTMbBW1RX9Kn
+         imV6EDEmvzFX/hrtSokafkqBj1ZoClk4vZmYcFlbZz1s786qS9Npj6R3v4iuIbZM8fQk
+         fQqWd4gR5XdWt0R/MZbMEhDrW30G7cE6/6e0yuLeDdajN8wIOGUAvcztTVzSIL+v/n6k
+         koFdUzGyjBFPkGPQLkN4CyNPI4jCxURji5Iiry1JNnQ6le0ACb4GB1ftZWez0n9kCm9h
+         cN0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VSCpos+5H3kGeuz4/hTR2VLM2nKqyPZxFJn7Vr/MpQI=;
-        b=MMYsS4SVtkPKc5x7tfn3BiE0vP5VT03EoiQ5qP+L00mvy4TwqgM4yU57C7dZTKHA1f
-         wxdVls1XOexB3xMekUMPLGz5AImkX9952bJRpEYH0lVQIJ3zdrDQpBX93ZjiZzXtlZuj
-         8RQ9LaXZcCupBd3hXTU1DdGMUjenf8cfg+JIqEtzjI/TWpOqeffh4faQQm8gqTJhMF39
-         NGlszwDALDOQBC4j8o3MtF+E+8B6GHsMZoW5VU65MYKvk8E+yG73IERh+ltkZZai4sUO
-         BxRcxB5L7r3KCnMjSC1M9PJPAgp8UF5yZwMRymx6qet4ZfPIAm4hdN7mIxTXYtQUInLV
-         WhMA==
-X-Gm-Message-State: APjAAAVIllYHOMs6gmckk+MkSifRLZbkMxKLEsvoqLlNKCINvA05XfZx
-        qaPxOO4uB9nK7u7Vn4X4F+iT/fa9mK31ordbxo2k5F54
-X-Google-Smtp-Source: APXvYqw9NjKQ5dEKwrWmN1RqAqrSeJpm3eY48E5BV/gLBVxn5HAGMnXelM1zCu6GF5K/fQjnAXXYhbHcFRxRWd+Z110=
-X-Received: by 2002:a67:6c07:: with SMTP id h7mr49204648vsc.228.1558727123333;
- Fri, 24 May 2019 12:45:23 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=Kk/YxPQI8pjQg2ClWfvPmzY4EAH0NW1JSdFr4PlUXcM=;
+        b=o6GQ29jRnyaaKefanIAjXAZrm9y87lJb6l6U9JAHV4pNrw8RXTA885gHWJ4MKnsjZp
+         SoHFPsG5UGQY4YcdpCUK4Hmq9baMWY2LJ4K70FslJ8p8ZOJL+DsiV7YDB6OvpXSNXWZ3
+         KxT+wOvR1qGTpD7aGHxUJ7sYHXj0/Y1I+ttkNjl4ZgZtSXQNVU+PGA5vyN5zLdz4LgqA
+         HNcxECnBLEQ4lOTNIhPwRdEmYWc8wmyPyar8qYCN1YnoAjkRM6q+oO8+JDKmehxQvqou
+         zaWPDEaivbhqAzA7Ad/Vc8U763jIZKU8VJfhsc6A45VaVnALnSu10RBS9l4GBKR2bs2Y
+         VuJw==
+X-Gm-Message-State: APjAAAVCIBZuhJyISnSp8zQOTdv4FxKC/Xbr1h8OOzoiHM8BndaxsDvY
+        aOC71ojQQou+9ligJAmO5qU3G2xPLQwKew==
+X-Google-Smtp-Source: APXvYqw5/u338biK4FyupPkQJCokUaMWyzX5A6yHD9gzUPih/c1K3aPdHPLszkcKKfzpGfpbIW1kDg==
+X-Received: by 2002:a17:902:8214:: with SMTP id x20mr85789356pln.308.1558727327582;
+        Fri, 24 May 2019 12:48:47 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:ed4f:2717:3604:bb3f])
+        by smtp.googlemail.com with ESMTPSA id x5sm3383819pjp.21.2019.05.24.12.48.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 24 May 2019 12:48:45 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     "kernelci.org bot" <bot@kernelci.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.1 000/122] 5.1.5-stable review
+In-Reply-To: <5ce727ee.1c69fb81.fbeca.2a40@mx.google.com>
+References: <20190523181705.091418060@linuxfoundation.org> <5ce727ee.1c69fb81.fbeca.2a40@mx.google.com>
+Date:   Fri, 24 May 2019 12:48:44 -0700
+Message-ID: <7h7eaf1vmr.fsf@baylibre.com>
 MIME-Version: 1.0
-References: <20190512194136.GA12189@ogabbay-VM> <20190524183633.GA7304@kroah.com>
-In-Reply-To: <20190524183633.GA7304@kroah.com>
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-Date:   Fri, 24 May 2019 22:44:58 +0300
-Message-ID: <CAFCwf11-8f9jvTQd41K5=72AL49eB2NysZexBfhhDOmfGkttwA@mail.gmail.com>
-Subject: Re: [git pull] habanalabs fixes for 5.2-rc1/2
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 9:36 PM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Sun, May 12, 2019 at 10:41:36PM +0300, Oded Gabbay wrote:
-> > Hi Greg,
-> >
-> > This is the pull request containing fixes for 5.2-rc1/2.
-> >
-> > It contains 2 fixes (1 of them for stable) and 1 change to a new IOCTL
-> > that was introduced to kernel 5.2 in the previous pull requests.
-> >
-> > See the tag comment for more details.
-> >
-> > Thanks,
-> > Oded
-> >
-> > The following changes since commit 8ea5b2abd07e2280a332bd9c1a7f4dd15b9b6c13:
-> >
-> >   Merge branch 'fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs (2019-05-09 19:35:41 -0700)
-> >
-> > are available in the Git repository at:
-> >
-> >   git://people.freedesktop.org/~gabbayo/linux tags/misc-habanalabs-fixes-2019-05-12
->
-> Is this pull request still needed, or was it also part of the other one?
-not needed, I've sent you a new one that includes this and I wrote it
-in the pull request.
+"kernelci.org bot" <bot@kernelci.org> writes:
 
+> stable-rc/linux-5.1.y boot: 138 boots: 1 failed, 121 passed with 14 offline, 2 untried/unknown (v5.1.4-123-gad8ad5ad6200)
 >
-> How about fixing all of this by just sending patches?  :)
-Starting of next week, all my team members are starting to send
-patches individually upstream, and I really think the right way to go
-is for me to apply them to my -next and -fixes branches and then I
-will send it to you at the appropriate time and to the correct
-branches.
-I'm sorry for the confusion that was here (I sent the fixes pull too
-early), but I assure you it won't happen again.
-Oded
+> Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux-5.1.y/kernel/v5.1.4-123-gad8ad5ad6200/
+> Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-5.1.y/kernel/v5.1.4-123-gad8ad5ad6200/
+>
+> Tree: stable-rc
+> Branch: linux-5.1.y
+> Git Describe: v5.1.4-123-gad8ad5ad6200
+> Git Commit: ad8ad5ad6200a933bc774415620bb31dd8b2da66
+> Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+> Tested: 76 unique boards, 24 SoC families, 14 builds out of 209
+>
+> Boot Failure Detected:
+>
+> arm:
+>     multi_v7_defconfig:
+>         gcc-8:
+>             bcm4708-smartrg-sr400ac: 1 failed lab
 
->
-> thanks,
->
-> greg k-h
+FYI, this one has a fix submitted to mainline (and tagged for stable)
+this week.
+
+Kevin
