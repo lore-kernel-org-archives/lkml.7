@@ -2,82 +2,86 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CDFC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 19:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 164C1C282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 19:07:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0415321848
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 19:05:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6A2B21850
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 19:07:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558724853;
+	bh=A6/JoHyyjMUdq8M1/t7NxVezHpxIBIL9Ea3XwORrlSA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=q2qkOrrI/zfVKik0ZziiqQgGLzligB4BogCH8YoCcHYnWa9GV9OHI61FTuayecWNs
+	 ysIgRY8QcZPFB3kGAwWtCxWMfj00sUkV+/5H5RhA6pepKDng4GAzqOc4SK2do2iGYy
+	 5V91b6qK7d8jqTQuMnDGaYIbCK6U37htX6ows5DM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732081AbfEXTFY (ORCPT
+        id S2391688AbfEXTHc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 15:05:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43510 "EHLO mx1.redhat.com"
+        Fri, 24 May 2019 15:07:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727115AbfEXTFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 15:05:23 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S2391503AbfEXTHb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 15:07:31 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id ABBE559441;
-        Fri, 24 May 2019 19:05:22 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-85.bos.redhat.com [10.18.17.85])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 430261001DD5;
-        Fri, 24 May 2019 19:05:19 +0000 (UTC)
-Subject: Re: [PATCH v3] locking/lock_events: Use this_cpu_add() when necessary
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-References: <20190524185343.4137-1-longman@redhat.com>
- <CAHk-=wgmB8BVrOZEqDysvC21MNmWcWXh1-DYzctsZYmZomkkog@mail.gmail.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <0f8883ee-6e31-a1dd-a749-6d2ba07e758d@redhat.com>
-Date:   Fri, 24 May 2019 15:05:18 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        by mail.kernel.org (Postfix) with ESMTPSA id C5FCA2175B;
+        Fri, 24 May 2019 19:07:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558724851;
+        bh=A6/JoHyyjMUdq8M1/t7NxVezHpxIBIL9Ea3XwORrlSA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=D07n5+Tg29CwtpLBXWs6JSIhD6SBvEKWTL3TAF649xb/bUdjWgvV6iCyyCQlPxvAA
+         0dionBBsq9da4jbn7WaMcxeZVTHXz4e1ILaDawgEV+nOuZ2oq+caL83AwfrJw5eXdI
+         MIlwkfGe0WBVuKDmnvZL4105T9KvRABZZjuX4mik=
+Date:   Fri, 24 May 2019 21:07:28 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     shuah <shuah@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.1 000/122] 5.1.5-stable review
+Message-ID: <20190524190728.GA18691@kroah.com>
+References: <20190523181705.091418060@linuxfoundation.org>
+ <689feba6-bce3-1d16-b5b6-27ce8b8a9e2d@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wgmB8BVrOZEqDysvC21MNmWcWXh1-DYzctsZYmZomkkog@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Fri, 24 May 2019 19:05:23 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <689feba6-bce3-1d16-b5b6-27ce8b8a9e2d@kernel.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/24/19 3:00 PM, Linus Torvalds wrote:
-> On Fri, May 24, 2019 at 11:54 AM Waiman Long <longman@redhat.com> wrote:
->>  v2: Simplify the condition to just preempt or !preempt.
->>  v3: Document the imprecise nature of the percpu count.
-> My point was that if they are imprecise., then you shouldn't use CONFIG_PREEMPT.
->
-> Because CONFIG_PREEMPT doesn't matter, and the count is imprecise with
-> it or without it.
->
-> So if they are imprecise, then what matters isn't whether the
-> operation is atomic or not, and the real issue is avout whether it
-> causes that "BUG: using __this_cpu_add() in preemptible" message.
->
-> IOW, you should use the config option that matters and is relevant,
-> namely CONFIG_DEBUG_PREEMPT.
+On Fri, May 24, 2019 at 12:55:59PM -0600, shuah wrote:
+> On 5/23/19 1:05 PM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.1.5 release.
+> > There are 122 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Sat 25 May 2019 06:14:44 PM UTC.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.5-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> > 
+> Compiled and booted on my test system. No dmesg regressions.
 
-Yes, that makes sense. I will update the patch again.
+Wonderful, thanks for testing these and letting me know.
 
-Thanks,
-Longman
-
+greg k-h
