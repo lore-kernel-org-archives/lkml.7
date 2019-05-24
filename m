@@ -2,233 +2,88 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E58CAC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C8B5C282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B682620868
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:07:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B31B20868
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:07:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="y7nfCg4b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403793AbfEXNHb (ORCPT
+        id S2403811AbfEXNHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 09:07:31 -0400
-Received: from mga04.intel.com ([192.55.52.120]:7522 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391357AbfEXNHa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 09:07:30 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 May 2019 06:07:30 -0700
-X-ExtLoop1: 1
-Received: from mgastonx-mobl.amr.corp.intel.com (HELO [10.251.128.35]) ([10.251.128.35])
-  by orsmga003.jf.intel.com with ESMTP; 24 May 2019 06:07:28 -0700
-Subject: Re: [PATCH v2] ASoC: drop COMPILE_TEST for sound/soc/intel/boards/
- that use X86_INTEL_LPSS
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        moderated for non-subscribers <alsa-devel@alsa-project.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>
-References: <03640e4f-1f8e-9090-c03b-364918e633d3@infradead.org>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <c05d5438-d369-e69d-e314-a0b104a3c71e@linux.intel.com>
-Date:   Fri, 24 May 2019 08:07:28 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 24 May 2019 09:07:46 -0400
+Received: from mail-vk1-f195.google.com ([209.85.221.195]:36046 "EHLO
+        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391357AbfEXNHq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 09:07:46 -0400
+Received: by mail-vk1-f195.google.com with SMTP id l199so2107357vke.3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 06:07:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jdBUUMv99kj0cqC35xVQ0vJ+lTbAYnC4lk5/+dSwqX8=;
+        b=y7nfCg4b4hWh5cXtClN2G9IlPfZtmsJ3lCmnJcQFhJJFfR7Duny76GHmGWVmLX7JkN
+         4BQJt1/DlmVVHNx6yxD8f1v1vebpwhOW/ZIYNZ2RvPKxui5ELigztwF3+awy6EBQw7wE
+         m3Y2E5XpbLeF2AxgqwDhp4aX77GeAAP51wkhJr9AxhH+GkIXWwNH8VLVQGaBoN8GvqUp
+         A8Sh1fZjhD6lSYCc2m9pwMqc/p7T2nlHT50o9OXZ1RUVaIxCKjYUX676pmynjMX0a5ue
+         bReHsYh0ssps55JEZQvYZbYbEun8Ea/68G3H264PjF491twDM4RQQrC4Rib1pUZoFXKT
+         CZ7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jdBUUMv99kj0cqC35xVQ0vJ+lTbAYnC4lk5/+dSwqX8=;
+        b=nIaRGOd+/H669H/0OVgpoomnVl96nd7uwkayNd3VBJtzC2m/tI3HdfpYQhr3wWTsZ/
+         Ci3lCrQiIvhrzIl+CKsEnDFevXj2/I2evyHw+cua1NfSmIWsDghjrkhoVAPaP3C+gSCI
+         RaNub6cA5j3FDy1qyJhdRrmuIWIcXr9fJpFfGEWMp7zCby8NmDeilUbwIsq6vDNruONJ
+         ri4oDSiak4FjA9jKT21acwhThFPg48ZvnT+nBM6M1H7nEV1wN7HhNCaMc1Rpom/b0iPh
+         9vFiM58fosjwAYjPTjQz3AHGqTLAEJPBecGpGsQYiBO+v6d02S4rl2DwXv6t3j4/UiF0
+         cQIQ==
+X-Gm-Message-State: APjAAAVujdCGjSmZGU9f93RDgS9Uax+Kvv0eEYffgFjKGiXkp35iZpND
+        sIGmM5110+phC/MofmgUk1eSg60xqsdK1w==
+X-Google-Smtp-Source: APXvYqwvZqoB7HcLldyB5hnboWptllAQCHpm5/Temh8iNOZUGFHOn/N74uzD1wlGnZSad8s+yXbosA==
+X-Received: by 2002:a1f:8d0b:: with SMTP id p11mr4674585vkd.31.1558703264670;
+        Fri, 24 May 2019 06:07:44 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::e914])
+        by smtp.gmail.com with ESMTPSA id v14sm815351vkd.4.2019.05.24.06.07.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 May 2019 06:07:43 -0700 (PDT)
+Date:   Fri, 24 May 2019 09:07:42 -0400
+From:   Josef Bacik <josef@toxicpanda.com>
+To:     Yao Liu <yotta.liu@ucloud.cn>
+Cc:     Josef Bacik <josef@toxicpanda.com>, Jens Axboe <axboe@kernel.dk>,
+        linux-block@vger.kernel.org, nbd@other.debian.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] nbd: fix connection timed out error after
+ reconnecting to server
+Message-ID: <20190524130740.zfypc2j3q5e3gryr@MacBook-Pro-91.local.dhcp.thefacebook.com>
+References: <1558691036-16281-1-git-send-email-yotta.liu@ucloud.cn>
 MIME-Version: 1.0
-In-Reply-To: <03640e4f-1f8e-9090-c03b-364918e633d3@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1558691036-16281-1-git-send-email-yotta.liu@ucloud.cn>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 24, 2019 at 05:43:54PM +0800, Yao Liu wrote:
+> Some I/O requests that have been sent succussfully but have not yet been
+> replied won't be resubmitted after reconnecting because of server restart,
+> so we add a list to track them.
+> 
+> Signed-off-by: Yao Liu <yotta.liu@ucloud.cn>
 
+Nack, this is what the timeout stuff is supposed to handle.  The commands will
+timeout and we'll resubmit them if we have alive sockets.  Thanks,
 
-On 5/23/19 10:45 PM, Randy Dunlap wrote:
-> From: Randy Dunlap <rdunlap@infradead.org>
-> 
-> This is a partial revert of 164a263bf8d0, which causes build errors
-> on non-X86 platforms (specifically seen on IA64) when COMPILE_TEST
-> is set/enabled.
-> 
-> Fixes these build errors (on ia64):
-> i../sound/soc/intel/boards/bxt_da7219_max98357a.c:19:10: fatal error: asm/cpu_device_id.h: No such file or directory
->   #include <asm/cpu_device_id.h>
-> ../sound/soc/intel/boards/bytcr_rt5640.c:31:10: fatal error: asm/cpu_device_id.h: No such file or directory
->   #include <asm/cpu_device_id.h>
-> ../sound/soc/intel/boards/bytcr_rt5651.c:33:10: fatal error: asm/cpu_device_id.h: No such file or directory
->   #include <asm/cpu_device_id.h>
-> ../sound/soc/intel/boards/cht_bsw_rt5645.c:29:10: fatal error: asm/cpu_device_id.h: No such file or directory
->   #include <asm/cpu_device_id.h>
-> ../sound/soc/intel/boards/bytcht_es8316.c:33:10: fatal error: asm/cpu_device_id.h: No such file or directory
->   #include <asm/cpu_device_id.h>
-> ../sound/soc/intel/boards/bytcht_da7213.c:26:10: fatal error: asm/platform_sst_audio.h: No such file or directory
->   #include <asm/platform_sst_audio.h>
-
-Randy, your v2 removes COMPILE_TEST for all boards even the ones that 
-compiled fine?
-
-Also maybe the 'right' way to fix this is to have a helper that compiles 
-out on non X86 platforms (or use an existing one?). IIRC the dependency 
-on asm/cpu_device_id is just to find out if the device is baytrail or 
-cherrytrail.
-
-> 
-> Fixes: 164a263bf8d0 ("ASoC: Intel: Make boards more available for compile test")
-> 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> Cc: Liam Girdwood <liam.r.girdwood@linux.intel.com>
-> Cc: Jie Yang <yang.jie@linux.intel.com>
-> Cc: alsa-devel@alsa-project.org
-> ---
->   sound/soc/intel/boards/Kconfig |   30 +++++++++++++++---------------
->   1 file changed, 15 insertions(+), 15 deletions(-)
-> 
-> --- lnx-52-rc1.orig/sound/soc/intel/boards/Kconfig
-> +++ lnx-52-rc1/sound/soc/intel/boards/Kconfig
-> @@ -18,7 +18,7 @@ config SND_SOC_INTEL_HASWELL_MACH
->   	tristate "Haswell Lynxpoint"
->   	depends on I2C
->   	depends on I2C_DESIGNWARE_PLATFORM || COMPILE_TEST
-> -	depends on X86_INTEL_LPSS || COMPILE_TEST
-> +	depends on X86_INTEL_LPSS
->   	select SND_SOC_RT5640
->   	help
->   	  This adds support for the Lynxpoint Audio DSP on Intel(R) Haswell
-> @@ -35,7 +35,7 @@ config SND_SOC_INTEL_BDW_RT5677_MACH
->   	depends on I2C
->   	depends on I2C_DESIGNWARE_PLATFORM || COMPILE_TEST
->   	depends on GPIOLIB || COMPILE_TEST
-> -	depends on X86_INTEL_LPSS || COMPILE_TEST
-> +	depends on X86_INTEL_LPSS
->   	select SND_SOC_RT5677
->   	help
->   	  This adds support for Intel Broadwell platform based boards with
-> @@ -47,7 +47,7 @@ config SND_SOC_INTEL_BROADWELL_MACH
->   	tristate "Broadwell Wildcatpoint"
->   	depends on I2C
->   	depends on I2C_DESIGNWARE_PLATFORM || COMPILE_TEST
-> -	depends on X86_INTEL_LPSS || COMPILE_TEST
-> +	depends on X86_INTEL_LPSS
->   	select SND_SOC_RT286
->   	help
->   	  This adds support for the Wilcatpoint Audio DSP on Intel(R) Broadwell
-> @@ -61,7 +61,7 @@ if SND_SOC_INTEL_BAYTRAIL
->   config SND_SOC_INTEL_BYT_MAX98090_MACH
->   	tristate "Baytrail with MAX98090 codec"
->   	depends on I2C
-> -	depends on X86_INTEL_LPSS || COMPILE_TEST
-> +	depends on X86_INTEL_LPSS
->   	select SND_SOC_MAX98090
->   	help
->   	  This adds audio driver for Intel Baytrail platform based boards
-> @@ -72,7 +72,7 @@ config SND_SOC_INTEL_BYT_MAX98090_MACH
->   config SND_SOC_INTEL_BYT_RT5640_MACH
->   	tristate "Baytrail with RT5640 codec"
->   	depends on I2C
-> -	depends on X86_INTEL_LPSS || COMPILE_TEST
-> +	depends on X86_INTEL_LPSS
->   	select SND_SOC_RT5640
->   	help
->   	  This adds audio driver for Intel Baytrail platform based boards
-> @@ -86,7 +86,7 @@ if SND_SST_ATOM_HIFI2_PLATFORM || SND_SO
->   config SND_SOC_INTEL_BYTCR_RT5640_MACH
->   	tristate "Baytrail and Baytrail-CR with RT5640 codec"
->   	depends on I2C && ACPI
-> -	depends on X86_INTEL_LPSS || COMPILE_TEST
-> +	depends on X86_INTEL_LPSS
->   	select SND_SOC_ACPI
->   	select SND_SOC_RT5640
->   	help
-> @@ -98,7 +98,7 @@ config SND_SOC_INTEL_BYTCR_RT5640_MACH
->   config SND_SOC_INTEL_BYTCR_RT5651_MACH
->   	tristate "Baytrail and Baytrail-CR with RT5651 codec"
->   	depends on I2C && ACPI
-> -	depends on X86_INTEL_LPSS || COMPILE_TEST
-> +	depends on X86_INTEL_LPSS
->   	select SND_SOC_ACPI
->   	select SND_SOC_RT5651
->   	help
-> @@ -110,7 +110,7 @@ config SND_SOC_INTEL_BYTCR_RT5651_MACH
->   config SND_SOC_INTEL_CHT_BSW_RT5672_MACH
->   	tristate "Cherrytrail & Braswell with RT5672 codec"
->   	depends on I2C && ACPI
-> -	depends on X86_INTEL_LPSS || COMPILE_TEST
-> +	depends on X86_INTEL_LPSS
->   	select SND_SOC_ACPI
->   	select SND_SOC_RT5670
->           help
-> @@ -122,7 +122,7 @@ config SND_SOC_INTEL_CHT_BSW_RT5672_MACH
->   config SND_SOC_INTEL_CHT_BSW_RT5645_MACH
->   	tristate "Cherrytrail & Braswell with RT5645/5650 codec"
->   	depends on I2C && ACPI
-> -	depends on X86_INTEL_LPSS || COMPILE_TEST
-> +	depends on X86_INTEL_LPSS
->   	select SND_SOC_ACPI
->   	select SND_SOC_RT5645
->   	help
-> @@ -134,7 +134,7 @@ config SND_SOC_INTEL_CHT_BSW_RT5645_MACH
->   config SND_SOC_INTEL_CHT_BSW_MAX98090_TI_MACH
->   	tristate "Cherrytrail & Braswell with MAX98090 & TI codec"
->   	depends on I2C && ACPI
-> -	depends on X86_INTEL_LPSS || COMPILE_TEST
-> +	depends on X86_INTEL_LPSS
->   	select SND_SOC_MAX98090
->   	select SND_SOC_TS3A227E
->   	help
-> @@ -146,7 +146,7 @@ config SND_SOC_INTEL_CHT_BSW_MAX98090_TI
->   config SND_SOC_INTEL_CHT_BSW_NAU8824_MACH
->   	tristate "Cherrytrail & Braswell with NAU88L24 codec"
->   	depends on I2C && ACPI
-> -	depends on X86_INTEL_LPSS || COMPILE_TEST
-> +	depends on X86_INTEL_LPSS
->   	select SND_SOC_ACPI
->   	select SND_SOC_NAU8824
->   	help
-> @@ -158,7 +158,7 @@ config SND_SOC_INTEL_CHT_BSW_NAU8824_MAC
->   config SND_SOC_INTEL_BYT_CHT_DA7213_MACH
->   	tristate "Baytrail & Cherrytrail with DA7212/7213 codec"
->   	depends on I2C && ACPI
-> -	depends on X86_INTEL_LPSS || COMPILE_TEST
-> +	depends on X86_INTEL_LPSS
->   	select SND_SOC_ACPI
->   	select SND_SOC_DA7213
->   	help
-> @@ -170,7 +170,7 @@ config SND_SOC_INTEL_BYT_CHT_DA7213_MACH
->   config SND_SOC_INTEL_BYT_CHT_ES8316_MACH
->   	tristate "Baytrail & Cherrytrail with ES8316 codec"
->   	depends on I2C && ACPI
-> -	depends on X86_INTEL_LPSS || COMPILE_TEST
-> +	depends on X86_INTEL_LPSS
->   	select SND_SOC_ACPI
->   	select SND_SOC_ES8316
->   	help
-> @@ -186,7 +186,7 @@ if SND_SST_ATOM_HIFI2_PLATFORM
->   config SND_SOC_INTEL_BYT_CHT_NOCODEC_MACH
->   	tristate "Baytrail & Cherrytrail platform with no codec (MinnowBoard MAX, Up)"
->   	depends on I2C && ACPI
-> -	depends on X86_INTEL_LPSS || COMPILE_TEST
-> +	depends on X86_INTEL_LPSS
->   	help
->   	  This adds support for ASoC machine driver for the MinnowBoard Max or
->   	  Up boards and provides access to I2S signals on the Low-Speed
-> @@ -248,7 +248,7 @@ if SND_SOC_INTEL_APL
->   config SND_SOC_INTEL_BXT_DA7219_MAX98357A_MACH
->   	tristate "Broxton with DA7219 and MAX98357A in I2S Mode"
->   	depends on I2C && ACPI
-> -	depends on MFD_INTEL_LPSS || COMPILE_TEST
-> +	depends on MFD_INTEL_LPSS
->   	select SND_SOC_DA7219
->   	select SND_SOC_MAX98357A
->   	select SND_SOC_DMIC
-> 
+Josef
