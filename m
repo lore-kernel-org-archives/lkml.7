@@ -2,74 +2,140 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EF8C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D47C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C67F2175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:28:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE2B12175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:28:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="vAvXIxPj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388398AbfEXF2G (ORCPT
+        id S2388561AbfEXF2g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 01:28:06 -0400
-Received: from mail-it1-f199.google.com ([209.85.166.199]:33168 "EHLO
-        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727134AbfEXF2F (ORCPT
+        Fri, 24 May 2019 01:28:36 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40414 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388445AbfEXF2f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 01:28:05 -0400
-Received: by mail-it1-f199.google.com with SMTP id 15so5287551ita.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 22:28:05 -0700 (PDT)
+        Fri, 24 May 2019 01:28:35 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 15so7822248wmg.5
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 22:28:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=RFTpgKRph5hKN4zTxKUj6Kr/SwTVEIL9u2TwViKkFZk=;
+        b=vAvXIxPjSSPQJ/jwSn2ql0sbGOYI+N9VsW1Ov6qe4KCrNHZL+o9rxlzGT+/kO/9vv8
+         fxT5wSHIue1K8T9gju+d306IKXguLY6K/oHFG2hOZ4YTyvM5KLKetDw38ifnvIXPeY00
+         E7vh6XelLoC7w0/PepM6VagNMQWUmgm6hZtrvaFxeleMIueJycikrA3Inp30/sbsTdil
+         MgAUPo4EQIQfhZFmR47yw9QFlE0TTwOuNZ6UUTWXuMddKUa3Nc+/Zr0K8K2r0n2oGPfR
+         vAwpnZmiuDkKt2XNPTpezDxjn/B/ZRQM3GEJQ5APBE6NxvLrjPyjg7ZAY5PIqZHGikWI
+         SYgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to
-         :content-transfer-encoding;
-        bh=q9cCO7nqhlgXyUNz1cM4/Qf9S/SQ2WkjNSQAnXjcv4s=;
-        b=BvlU8Br1CscFYDcJ2hSz94dkjJpeheega2760oLSHXP+sqQDl2qeAHPmqwfZRGzwMd
-         CEOzzzfffgvxZ+j5QPXs0E1RfHD1DL1qnTmgfRNg0aS5xwHmsv+ruhG0Lg7e5nfNkAlq
-         u3tZZQtnvxY3/dSq4eT8lhlOZwPqJcs9pJ7taJnBY+YZV8jVNk4rUbQ/eLuQcEIYvw1Y
-         1cy6lExtWOsbJWTBNDiT8SVVm5Q1N3mfRmzVUcXktvPs5rYDbKFzZZB4UtFK1YoFqNee
-         qvuvET7q5vel9TthQdVZn+3nfE3AjEtpo0eUfw2bSwYAXEgBQHqkr1vndK613iPNpQKy
-         4B6g==
-X-Gm-Message-State: APjAAAX3GiyNzK4FfqQ/D37UKY4gpAEfIZk+bjUgYStl20JV7pcSM5Jk
-        pjbxtuv7KN2+dErOuVJO4nNzP2mKdOqKt9VARn74Z9n7J9sl
-X-Google-Smtp-Source: APXvYqwDDOZn9e8caYZRqq7PZLeP8M7Or+hKD8jRpeN8/ApSvkZcSA2QFvEj87ml6/PDfg0cFh0P0TXKwMQFezxY0xt/kXgpZiGt
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=RFTpgKRph5hKN4zTxKUj6Kr/SwTVEIL9u2TwViKkFZk=;
+        b=pNpSKOHoyXw8piv5DB1nPltrBaIY4/8hEuRRFFiNWF+MmXOU/i6qi2YTJLy4P16PfT
+         pyLagbPdutuN7LRnxmkVp+3rxNtOC+/BVOSDeHC6Rga4frDHBZo1dSlHpDO6BHvB3SlJ
+         CTAsPsOLB9M0rQhcOaL3g+V900hGR99eHoHectR3D92sSfM9uviNASfvgEQYzxJ2mY4S
+         PSMF6IOHFe2eph7XJYT3ay2TtZ7cF39r9bl+Z0SB1OCr/bAeArpqituCmYx8U9rRrQLD
+         YXoPngtwxILWV8LoZH5TnZS6d3FpqlsfHD3T9ZUh6ATvuJL8OJUbJMTHIcm+lmTDL9DW
+         iyQA==
+X-Gm-Message-State: APjAAAWxmplfX6E04jPGulcpidxtyhXlSLfCenMVzauER0U9aoGnvXGj
+        JaP92zfO8AGTs+mN35KavAXHew==
+X-Google-Smtp-Source: APXvYqzwao2EN7hiFW+Tv6d4/ftSGcUlI1GVkPFKcrwoS6nS6JeY/tv8y/IfU//6RKQQsqjoAAQqmg==
+X-Received: by 2002:a1c:80c3:: with SMTP id b186mr14376002wmd.43.1558675713578;
+        Thu, 23 May 2019 22:28:33 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id a5sm1058730wrt.10.2019.05.23.22.28.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 May 2019 22:28:33 -0700 (PDT)
+Message-ID: <5ce78101.1c69fb81.69b72.5337@mx.google.com>
+Date:   Thu, 23 May 2019 22:28:33 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-Received: by 2002:a24:ac0a:: with SMTP id s10mr18291167ite.60.1558675685007;
- Thu, 23 May 2019 22:28:05 -0700 (PDT)
-Date:   Thu, 23 May 2019 22:28:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008666df05899b7663@google.com>
-Subject: bpf build error
-From:   syzbot <syzbot+cbe357153903f8d9409a@syzkaller.appspotmail.com>
-To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Report-Type: boot
+X-Kernelci-Tree: stable-rc
+X-Kernelci-Branch: linux-4.9.y
+X-Kernelci-Kernel: v4.9.178-54-gf6bc31d8c3be
+In-Reply-To: <20190523181710.981455400@linuxfoundation.org>
+References: <20190523181710.981455400@linuxfoundation.org>
+Subject: Re: [PATCH 4.9 00/53] 4.9.179-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8sDQoNCnN5emJvdCBmb3VuZCB0aGUgZm9sbG93aW5nIGNyYXNoIG9uOg0KDQpIRUFEIGNv
-bW1pdDogICAgZTZmNmNkMGQgYnBmOiBzb2NrbWFwLCBmaXggdXNlIGFmdGVyIGZyZWUgZnJvbSBz
-bGVlcCBpbiBwcy4uDQpnaXQgdHJlZTogICAgICAgYnBmDQpjb25zb2xlIG91dHB1dDogaHR0cHM6
-Ly9zeXprYWxsZXIuYXBwc3BvdC5jb20veC9sb2cudHh0P3g9MTZmMTE2ZTRhMDAwMDANCmtlcm5l
-bCBjb25maWc6ICBodHRwczovL3N5emthbGxlci5hcHBzcG90LmNvbS94Ly5jb25maWc/eD1mYzA0
-NTEzMTQ3Mjk0N2Q3DQpkYXNoYm9hcmQgbGluazogaHR0cHM6Ly9zeXprYWxsZXIuYXBwc3BvdC5j
-b20vYnVnP2V4dGlkPWNiZTM1NzE1MzkwM2Y4ZDk0MDlhDQpjb21waWxlcjogICAgICAgZ2NjIChH
-Q0MpIDkuMC4wIDIwMTgxMjMxIChleHBlcmltZW50YWwpDQoNClVuZm9ydHVuYXRlbHksIEkgZG9u
-J3QgaGF2ZSBhbnkgcmVwcm9kdWNlciBmb3IgdGhpcyBjcmFzaCB5ZXQuDQoNCklNUE9SVEFOVDog
-aWYgeW91IGZpeCB0aGUgYnVnLCBwbGVhc2UgYWRkIHRoZSBmb2xsb3dpbmcgdGFnIHRvIHRoZSBj
-b21taXQ6DQpSZXBvcnRlZC1ieTogc3l6Ym90K2NiZTM1NzE1MzkwM2Y4ZDk0MDlhQHN5emthbGxl
-ci5hcHBzcG90bWFpbC5jb20NCg0KbmV0L2NvcmUvc2tidWZmLmM6MjM0MDo2OiBlcnJvcjog4oCY
-c3RydWN0IG1zZ2hkcuKAmSBoYXMgbm8gbWVtYmVyIG5hbWVkIOKAmGZsYWdz4oCZDQoNCi0tLQ0K
-VGhpcyBidWcgaXMgZ2VuZXJhdGVkIGJ5IGEgYm90LiBJdCBtYXkgY29udGFpbiBlcnJvcnMuDQpT
-ZWUgaHR0cHM6Ly9nb28uZ2wvdHBzbUVKIGZvciBtb3JlIGluZm9ybWF0aW9uIGFib3V0IHN5emJv
-dC4NCnN5emJvdCBlbmdpbmVlcnMgY2FuIGJlIHJlYWNoZWQgYXQgc3l6a2FsbGVyQGdvb2dsZWdy
-b3Vwcy5jb20uDQoNCnN5emJvdCB3aWxsIGtlZXAgdHJhY2sgb2YgdGhpcyBidWcgcmVwb3J0LiBT
-ZWU6DQpodHRwczovL2dvby5nbC90cHNtRUojc3RhdHVzIGZvciBob3cgdG8gY29tbXVuaWNhdGUg
-d2l0aCBzeXpib3QuDQo=
+stable-rc/linux-4.9.y boot: 107 boots: 0 failed, 94 passed with 13 offline =
+(v4.9.178-54-gf6bc31d8c3be)
+
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-4.9.y/kernel/v4.9.178-54-gf6bc31d8c3be/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.9.y=
+/kernel/v4.9.178-54-gf6bc31d8c3be/
+
+Tree: stable-rc
+Branch: linux-4.9.y
+Git Describe: v4.9.178-54-gf6bc31d8c3be
+Git Commit: f6bc31d8c3be3e5ab957341b3f99f8b45fcc646e
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 52 unique boards, 22 SoC families, 15 builds out of 197
+
+Offline Platforms:
+
+arm:
+
+    bcm2835_defconfig:
+        gcc-8
+            bcm2835-rpi-b: 1 offline lab
+
+    tegra_defconfig:
+        gcc-8
+            tegra124-jetson-tk1: 1 offline lab
+
+    sama5_defconfig:
+        gcc-8
+            at91-sama5d4_xplained: 1 offline lab
+
+    socfpga_defconfig:
+        gcc-8
+            socfpga_cyclone5_de0_sockit: 1 offline lab
+
+    sunxi_defconfig:
+        gcc-8
+            sun5i-r8-chip: 1 offline lab
+
+    multi_v7_defconfig:
+        gcc-8
+            alpine-db: 1 offline lab
+            at91-sama5d4_xplained: 1 offline lab
+            socfpga_cyclone5_de0_sockit: 1 offline lab
+            stih410-b2120: 1 offline lab
+            sun5i-r8-chip: 1 offline lab
+            tegra124-jetson-tk1: 1 offline lab
+
+arm64:
+
+    defconfig:
+        gcc-8
+            apq8016-sbc: 1 offline lab
+            juno-r2: 1 offline lab
+
+---
+For more info write to <info@kernelci.org>
