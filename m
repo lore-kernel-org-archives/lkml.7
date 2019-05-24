@@ -2,174 +2,162 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5710AC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19999C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B84A2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:14:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7F322075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:15:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="BDPx+/WU"
+	dkim=pass (1024-bit key) header.d=indeed.com header.i=@indeed.com header.b="SyJyK7bq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389642AbfEXPOw (ORCPT
+        id S2389808AbfEXPPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 11:14:52 -0400
-Received: from mail-wr1-f42.google.com ([209.85.221.42]:36702 "EHLO
-        mail-wr1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389079AbfEXPOw (ORCPT
+        Fri, 24 May 2019 11:15:04 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:53786 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389680AbfEXPPD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 11:14:52 -0400
-Received: by mail-wr1-f42.google.com with SMTP id s17so10431046wru.3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 08:14:50 -0700 (PDT)
+        Fri, 24 May 2019 11:15:03 -0400
+Received: by mail-it1-f195.google.com with SMTP id m141so16324946ita.3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 08:15:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
+        d=indeed.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=uugXwYBw6qrNzPiz5k482oyz6t67aADXcqRGiVXbx48=;
-        b=BDPx+/WUWs1crEIdTHcicYAWTugLioOAvrlk0qubVFZzRa1cIQGR/brzPpm6Lf+ysu
-         EX3OHDbPtOKWtsLxyAmuaX8gO0PhRZpqZndl+V1Hjc9ZmQB3pAUVAdAKy9ReEVd3VONQ
-         8YcueSxdVQewSG4JowqGp+31NayZxIac+jtgkzdBUQ0vz8uy31AvSNc4wMoHn00kZeoc
-         g2kPEbxokxnca1PD6Dgdkljxqhrzl2miPz3coawNKtZLcd8V7HnI+QXqUe1eFxjabXkr
-         NaD3S+wUd9nwxVAqIUdiRS14Fp+kDwKz3hAqdNh+4LeiL0nuOYSreD7bKt3he3WEbD3Q
-         i6Rg==
+        bh=QKLfYJyC3pKaeS6F7jFzdQyiyzLOg1HgkzY2ER2lf8E=;
+        b=SyJyK7bqOaMgHMjzDpJD7dAwjgOIEi1xlEARg3dMKeAMKWck3EhGPDjqP3Nh4hmz1D
+         N6RkEfG1q17Dn79D9gw30IPA1hQljik6lSpT9pcuHQWSC0uWEpj2+lu366snnFzTXXZE
+         uM4krkIXH4V6O5L0XG32GACEDXsUx3lL9SeA4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=uugXwYBw6qrNzPiz5k482oyz6t67aADXcqRGiVXbx48=;
-        b=IZXon4Jgmj2rhNinhZy4jTVMUcIb+0T8XNR68HwNz+Kx1lJk7OlDgLolvqQmExzjIY
-         IRMZ0QAd1eRYL8Gycv65tCtvIXSAGCMxTfu/DUER+tx1dXU0o5aV6lrJ7U4v7bqb08Jk
-         GrGRaKyg0sA+f9R0wvDJBLfFLda8vRse0Pt9t8k+9REkHqeJCP0ORxNKOrE5+goNeoyr
-         iQQpGMsOL5dJspMXQy44dcSEnhjaM49H6+l0pbz3bzwZ5aDj+GgNn+0TI7UVQUMrKwLN
-         LkLjl6FFUYDlcI5LtYwUY0TO+wYy4YhQw1Z3qxq5v05cuHABb+jsQ22feMzq/pzGNLgT
-         DG6w==
-X-Gm-Message-State: APjAAAV6Tn434T775UKkAMJ2P+NLVH+KYF+NXq4+RCgnYm831/RjO/ry
-        yaqJU69fBYq1GCIlGAxOiSxQlnPv+PKxBgvpmxWeo7tQcxY=
-X-Google-Smtp-Source: APXvYqybpS5/RBY/KMp9Et5ZD4baUpiLOXoyQntSe/3tsjycFioeZMaEZK2TdzoZyJn1mNf0Jb3HEKhBte8O/e9LsLw=
-X-Received: by 2002:adf:f250:: with SMTP id b16mr32332393wrp.24.1558710889763;
- Fri, 24 May 2019 08:14:49 -0700 (PDT)
+        bh=QKLfYJyC3pKaeS6F7jFzdQyiyzLOg1HgkzY2ER2lf8E=;
+        b=BOBxCTxK3wRNCtC65qbq1taz+rB7UD8Xiwdhbu1GEUmdKCWE7ICj4OYsC5Aer9qIL3
+         djDwY5159oAhfSEhPU60ZD8244xXxnO1dTKZkk5IfU4OZqqPMxSnAlzN+VnV5k0wyZAq
+         RfMW9ZPDH5Y83k5LXFu5YRYU3RS95uN0uIcb4SmhDlWoxk8qKTFpujn4J2OSIGBAbsQ0
+         KBGbWxb5lu1XiikCwdaHm1uarzKRNp4QSumHJOm9FAtzUcAVPwXLtJN9IL1RsFMtGccM
+         6Muvcsg3pfLHpgOdpzcsKjuV953yYSWPZ4BXstAhWVcwN2BZ/YWWnYXSA0GUJ5rSdd9r
+         uSwQ==
+X-Gm-Message-State: APjAAAVtwJe+7+5NOLZWYt2oViZNSea88M+7FSz0ooqw/aIXMDh/FSb8
+        O/TRfvZb4u8cjksfVlWR5fwGqN658qjm/N8jCd+I7g==
+X-Google-Smtp-Source: APXvYqzVu0rNwyOTEwJowRayjAIM0pYRTvrNQJtlqcqx3df2u61eOKLFw3ymoMRJXNsAirDbg8l2CBRRUasnwvQknxk=
+X-Received: by 2002:a24:680c:: with SMTP id v12mr17714903itb.67.1558710902196;
+ Fri, 24 May 2019 08:15:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAMGffEkQmdrrH3+UChZx_Af6WcFFQFw6fz3Ti4CRUau-wq7jow@mail.gmail.com>
- <20190524141732.GA4412@kroah.com> <7B9F565D-EE66-432B-9D29-E494BFD24683@gmail.com>
-In-Reply-To: <7B9F565D-EE66-432B-9D29-E494BFD24683@gmail.com>
-From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
-Date:   Fri, 24 May 2019 17:14:38 +0200
-Message-ID: <CAMGffEmmtJhQE04xt84QHrDxUFa0OqbKfZZT_mhXN6P6D99-WA@mail.gmail.com>
-Subject: Re: Is 2nd Generation Intel(R) Xeon(R) Processors (Formerly Cascade
- Lake) affected by MDS
-To:     Tony Luck <tony.luck@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        linux-kernel@vger.kernel.org,
-        Elmar Gerdes <elmar.gerdes@cloud.ionos.com>
+References: <1558121424-2914-1-git-send-email-chiluk+linux@indeed.com>
+ <1558637087-20283-1-git-send-email-chiluk+linux@indeed.com>
+ <1558637087-20283-2-git-send-email-chiluk+linux@indeed.com>
+ <CAFTs51W0KdK4nw6wydn2HjNYvFRC8DYMmVeKX9FAe+4YUGEAZg@mail.gmail.com> <20190524143204.GB4684@lorien.usersys.redhat.com>
+In-Reply-To: <20190524143204.GB4684@lorien.usersys.redhat.com>
+From:   Dave Chiluk <chiluk+linux@indeed.com>
+Date:   Fri, 24 May 2019 10:14:36 -0500
+Message-ID: <CAC=E7cXxsyMLw1PR+8QchTH8FYL7WX6_8LBVdqueR1yjW+VVkQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] sched/fair: Fix low cpu usage with high throttling
+ by removing expiration of cpu-local slices
+To:     Phil Auld <pauld@redhat.com>
+Cc:     Peter Oskolkov <posk@posk.io>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, cgroups@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Brendan Gregg <bgregg@netflix.com>,
+        Kyle Anderson <kwa@yelp.com>,
+        Gabriel Munos <gmunoz@netflix.com>,
+        John Hammond <jhammond@indeed.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        Ben Segall <bsegall@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 4:45 PM Tony Luck <tony.luck@gmail.com> wrote:
+On Fri, May 24, 2019 at 9:32 AM Phil Auld <pauld@redhat.com> wrote:
+> On Thu, May 23, 2019 at 02:01:58PM -0700 Peter Oskolkov wrote:
+
+> > If the machine runs at/close to capacity, won't the overallocation
+> > of the quota to bursty tasks necessarily negatively impact every other
+> > task? Should the "unused" quota be available only on idle CPUs?
+> > (Or maybe this is the behavior achieved here, and only the comment and
+> > the commit message should be fixed...)
+> >
 >
-> Stepping 5 is preproduction of cascade lake. MDS mitigation is in production parts (stepping >= 6)
+> It's bounded by the amount left unused from the previous period. So
+> theoretically a process could use almost twice its quota. But then it
+> would have nothing left over in the next period. To repeat it would have
+> to not use any that next period. Over a longer number of periods it's the
+> same amount of CPU usage.
 >
-> Sent from my iPhone
+> I think that is more fair than throttling a process that has never used
+> its full quota.
 >
-> > On May 24, 2019, at 07:17, Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-> >
-> >> On Fri, May 24, 2019 at 03:19:34PM +0200, Jinpu Wang wrote:
-> >> Resend with plain text, and remove confidential unnecessary signature.
-> >> sorry for spam.
-> >>
-> >> Hi Thomas, hi Greg, hi Tony, hi Arjan, hi other expert on the list
-> >>
-> >> I noticed on our Cascade lake with 4.14.120,  the kernel is reporting
-> >> vulnerable:
-> >> jwang@ps401a-912:~$ head /sys/devices/system/cpu/vulnerabilities/mds
-> >> Vulnerable: Clear CPU buffers attempted, no microcode; SMT vulnerable
-> >>
-> >> But according to INTEL,  they have built the mitigation in hardware
-> >> for Cascade Lake:
-> >> https://www.intel.com/content/www/us/en/architecture-and-technology/engineering-new-protections-into-hardware.html
-> >>
-> >> We are using latest microcode from debian:
-> >> https://metadata.ftp-master.debian.org/changelogs//non-free/i/intel-microcode/intel-microcode_3.20190514.1~deb9u1_changelog
-> >> lscpu:
-> >> jwang@ps401a-912:~$ lscpu
-> >> Architecture:          x86_64
-> >> CPU op-mode(s):        32-bit, 64-bit
-> >> Byte Order:            Little Endian
-> >> CPU(s):                96
-> >> On-line CPU(s) list:   0-95
-> >> Thread(s) per core:    2
-> >> Core(s) per socket:    24
-> >> Socket(s):             2
-> >> NUMA node(s):          2
-> >> Vendor ID:             GenuineIntel
-> >> CPU family:            6
-> >> Model:                 85
-> >> Model name:            Intel(R) Xeon(R) Platinum 8268 CPU @ 2.90GHz
-> >> Stepping:              5
-> >> CPU MHz:               3228.226
-> >> CPU max MHz:           3900.0000
-> >> CPU min MHz:           1000.0000
-> >> BogoMIPS:              5800.00
-> >> Virtualization:        VT-x
-> >> L1d cache:             32K
-> >> L1i cache:             32K
-> >> L2 cache:              1024K
-> >> L3 cache:              33792K
-> >> NUMA node0 CPU(s):     0-23,48-71
-> >> NUMA node1 CPU(s):     24-47,72-95
-> >> Flags:                 fpu vme de pse tsc msr pae mce cx8 apic sep
-> >> mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht
-> >> tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs
-> >> bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq
-> >> dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm
-> >> pcid dca sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes
-> >> xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb cat_l3
-> >> cdp_l3 invpcid_single intel_ppin ssbd mba ibrs ibpb stibp tpr_shadow
-> >> vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2
-> >> erms invpcid rtm cqm mpx rdt_a avx512f avx512dq rdseed adx smap
-> >> clflushopt clwb intel_pt avx512cd avx512bw avx512vl xsaveopt xsavec
-> >> xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local
-> >> dtherm ida arat pln pts pku ospke flush_l1d arch_capabilities
-> >>
-> >> Clearly we want to buy Cascade Lake if the hardware mitigations are in
-> >> place, but the information on the internet is quite limited and
-> >> misleading.
-> >>
-> >> Could anyone of you could clarify it for us?
-> >> Does it mean 4.14.120 is missing patches for detecting Cascade Lake
-> >> mitigation, Or maybe only small set of cascade lake has mitigation?
-> >> Or the community/intel are not sure about it yet?
-> >
-> > Did you try 4.19 or 5.1?  Try those and see if anything changes.
-> >
-> > If not, odds are you need a microcode update from Intel, please contact
-> > them, nothing we can do about that.
-> >
-> > If 4.14 works different from 4.19 or 5.1, please let us know.
-> >
-> > thanks,
-> >
-> > greg k-h
+> And it removes complexity.
+>
+> Cheers,
+> Phil
 
-Thanks, Greg, thanks Tony,
+Actually it's not even that bad.  The overallocation of quota to a
+bursty task in a period is limited to at most one slice per cpu, and
+that slice must not have been used in the previous periods.  The slice
+size is set with /proc/sys/kernel/sched_cfs_bandwidth_slice_us and
+defaults to 5ms.  If a bursty task goes from underutilizing quota to
+using it's entire quota, it will not be able to burst in the
+subsequent periods.  Therefore in an absolute worst case contrived
+scenario, a bursty task can add at most 5ms to the latency of other
+threads on the same CPU.  I think this worst case 5ms tradeoff is
+entirely worth it.
 
-I tried also 4.19.46 kernel, it show the same.
+This does mean that a theoretically a poorly written massively
+threaded application on an 80 core box, that spreads itself onto 80
+cpu run queues, can overutilize it's quota in a period by at most 5ms
+* 80 CPUs in a sincle period (slice * number of runqueues the
+application is running on).  But that means that each of those threads
+ would have had to not be use their quota in a previous period, and it
+also means that the application would have to be carefully written to
+exacerbate this behavior.
 
-As Tony mentioned, it's due to the stepping difference, our test
-machine is a preproduction one.
-I would expect the production Cascade Lake supports md-clear feature,
-so VM migration works from old generation.
-Could some one give me an answer?
+Additionally if cpu bound threads underutilize a slice of their quota
+in a period due to the cfs choosing a bursty task to run, they should
+theoretically be able to make it up in the following periods when the
+bursty task is unable to "burst".
 
-Thanks a lot.
--- 
-Jack Wang
-Linux Kernel Developer @ 1 & 1 Cloud IONOS GmbH
+Please be careful here quota and slice are being treated differently.
+Quota does not roll-over between periods, only slices of quota that
+has already been allocated to per cpu run queues. If you allocate
+100ms of quota per period to an application, but it only spreads onto
+3 cpu run queues that means it can in the worst case use 3 x slice
+size = 15ms in periods following underutilization.
+
+So why does this matter.  Well applications that use thread pools
+*(*cough* java *cough*) with lots of tiny little worker threads, tend
+to spread themselves out onto a lot of run queues.  These worker
+threads grab quota slices in order to run, then rarely use all of
+their slice (1 or 2ms out of the 5ms).  This results in those worker
+threads starving the main application of quota, and then expiring the
+remainder of that quota slice on the per-cpu.  Going back to my
+earlier 100ms quota / 80 cpu example.  That means only
+100ms/cfs_bandwidth_slice_us(5ms) = 20 slices are available in a
+period.  So only 20 out of these 80 cpus ever get a slice allocated to
+them.  By allowing these per-cpu run queues to use their remaining
+slice in following periods these worker threads do not need to be
+allocated additional slice, and thereby the main threads are actually
+able to use the allocated cpu quota.
+
+This can be experienced by running fibtest available at
+https://github.com/indeedeng/fibtest/.
+$ runfibtest 1
+runs a single fast thread taskset to cpu 0
+$ runfibtest 8
+Runs a single fast thread taskset to cpu 0, and 7 slow threads taskset
+to cpus 1-7.  This run is expected to show less iterations, but the
+worse problem is that the cpu usage is far less than the 500ms that it
+should have received.
+
+Thanks for the engagement on this,
+Dave Chiluk
