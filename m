@@ -2,105 +2,130 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DCCC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C9ADC282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B6612133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:33:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QDjjTITk"
+	by mail.kernel.org (Postfix) with ESMTP id 064232133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:33:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558708437;
+	bh=gZetN5B3ywzeQ7Qs5a+pWguj+B6DKPIfnehnVziFYMc=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=ntoFjn/qjSAO/+6ketYm3JITvPetZMKukVLt+t+SEcVQn1g/eEYQGb+sGs5mZoeCp
+	 8gLWywlcyAhazW13y6fVlHGLV85R9uP++loUfpjyQXgUf1QxKnIJXO7gna4L7DAIRR
+	 Y4ICyCuLbD5GuvhJ3Xp2WDplxPZp3/s/T+jk6qhw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404005AbfEXOdc (ORCPT
+        id S2404113AbfEXOd4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 10:33:32 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:33957 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391500AbfEXOdb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 10:33:31 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w7so4258568plz.1;
-        Fri, 24 May 2019 07:33:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bkANiCU/QOHZhbNxPjGAJHjS7JejXUR7CHNVdlS4/ms=;
-        b=QDjjTITkxQodeNlBDOvaMduMLdxc/XVqi1m23ey82bMaG6/I38qQn8QskKhffhvdI2
-         zDl3+ofdsRdHQ85Ypnascg2McRI4/rjka2NHxgxWTvsVkwkA30RW/Qr5E0JVspgd91h8
-         FcpaXsjy6/bsZf31X2j3zaXNQocT4e49DA4mYeOHt+CXU5uJgSqtQZwHdagEexnaJm0s
-         5+y4+s9RIaDyn0/LoSUOdrqjgj3NKzEwJH0vLL7+rvoaKTD/7Tdx8cr+SVEX+bLpx2T/
-         fJbi/LMjO2tVdoH7+ze4jinDC6atA6OFNjxLSudP+Y2pLxpQGagR0ZC9Zs9chjrAH+OU
-         Vscg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bkANiCU/QOHZhbNxPjGAJHjS7JejXUR7CHNVdlS4/ms=;
-        b=X5SqNvOsCG1aa9ggjvmpeuSO71+dSdehiFsIuGSUn/177DlpA8DQWXEdhvtnDQVNb5
-         2JPupS2JTtMoXddHt7ZL+MiXOaSh5r7gtYULrpsCsnanUsu8VXvBt+a5vIwLrr0bqhkm
-         c8snTG0iwfI77Mcn1SVKYu5XSL14dvwoe7f4zWZ1m7IIrNwv7ci+CUMeOh92dhoxkAgZ
-         Pe9awnFCDhLH4PPcjj+2j5B1PYby03BOoIxo90mNJ9zJqca7cIC3p894GESf6UTNlhmF
-         NluoDW9ReadNp15lb5U5iyFTPlj5KBjnZ1Jwr31dEmGmCg59i08/3B83y81aEKs1Pav+
-         eL2Q==
-X-Gm-Message-State: APjAAAVNr/g16N8K402BtksOlnna9V37LrPM3SKxXY12KKcJY06ER0mR
-        cAo4xQsWO13HVh1as1iAtVI=
-X-Google-Smtp-Source: APXvYqwye2akahN+OdAFoz3/avW9PE6yMBVVQi/FuXlUVOKHcANsVWoerj1ea1bSWcNDJSABYTiHrA==
-X-Received: by 2002:a17:902:6a4:: with SMTP id 33mr64032456plh.338.1558708411303;
-        Fri, 24 May 2019 07:33:31 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([66.42.35.75])
-        by smtp.gmail.com with ESMTPSA id s134sm3476408pfc.110.2019.05.24.07.33.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 07:33:30 -0700 (PDT)
-Date:   Fri, 24 May 2019 22:33:09 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     lgirdwood@gmail.com, perex@perex.cz, alsa-devel@alsa-project.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tegra_wm9712: Fix a memory leaking bug in
- tegra_wm9712_driver_probe()
-Message-ID: <20190524143309.GA8631@zhanggen-UX430UQ>
-References: <20190524005014.GA2289@zhanggen-UX430UQ>
- <b2d43dfe-17e5-a975-435b-49f2aa2ad550@nvidia.com>
+        Fri, 24 May 2019 10:33:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56588 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404039AbfEXOdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 10:33:55 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5586D2133D;
+        Fri, 24 May 2019 14:33:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558708435;
+        bh=gZetN5B3ywzeQ7Qs5a+pWguj+B6DKPIfnehnVziFYMc=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=aw1FIC57J9GZmg1xCAVTytzdxhIu5ydjXn8d/GgzsVQKCB2WOrjZEHBDQMFdqZq2a
+         Uo3CLauNxVU7oS1m+fp7jgh0kkdLLFyjlmLHlvzs9UtUY4B2qv4x3NDGelhxMANfUS
+         9lGjM78D5IjY63bna6w4N5yiXFW6PNOgaFJdO4I8=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b2d43dfe-17e5-a975-435b-49f2aa2ad550@nvidia.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190524072745.27398-1-amergnat@baylibre.com>
+References: <20190524072745.27398-1-amergnat@baylibre.com>
+Subject: Re: [PATCH] clk: fix clock global name usage.
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        baylibre-upstreaming@groups.io,
+        Alexandre Mergnat <amergnat@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>
+To:     Alexandre Mergnat <amergnat@baylibre.com>, mturquette@baylibre.com
+User-Agent: alot/0.8.1
+Date:   Fri, 24 May 2019 07:33:54 -0700
+Message-Id: <20190524143355.5586D2133D@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 09:33:13AM +0100, Jon Hunter wrote:
-> 
-> On 24/05/2019 01:50, Gen Zhang wrote:
-> > In tegra_wm9712_driver_probe(), 'machine->codec' is allocated by
-> > platform_device_alloc(). When it is NULL, function returns ENOMEM.
-> > However, 'machine' is allocated by devm_kzalloc() before this site.
-> > Thus we should free 'machine' before function ends to prevent memory
-> > leaking.
-> 
-> Memory allocated by devm_xxx() is automatically freed on failure so this
-> is not correct.
-Thanks for your comments, Jon. But after I examined the code, I am still
-confused about the usage of devm_kmalloc(). You can kindly refer to 
-hisi_sas_debugfs_init() in drivers/scsi/hisi_sas/hisi_sas_main.c. And
-devm_kfree() is used to free a memory allocated by devm_kmalloc(). And
-I found other situations similar to this in other files.
+Quoting Alexandre Mergnat (2019-05-24 00:27:45)
+> A recent patch allows the clock framework to specify the parent
+> relationship with either the clk_hw pointer, the global name or through
+> Device Tree name.
 
-So, I hope you can give me some guidance on this. Thanks!
-> 
-> > Further, we should free 'machine->util_data', 'machine->codec' and
-> > 'machine' before this function normally ends to prevent memory leaking.
-> 
-> This is also incorrect. Why would we free all resources after
-> successfully initialising the driver?
-I re-checked this part, and it is totally incorrect. It should be deleted.
+You could point to the commit instead of saying "a recent patch". Would
+provide more clarity.
 
-Thanks
-Gen
+>=20
+> But the global name isn't handled by the clk framework because the DT name
+> is considered valid even if it's NULL, so of_clk_get_hw() returns an
+> unexpected clock (the first clock specified in DT).
+
+Yes, the DT name can be NULL and then we would use the index.
+
+>=20
+> This can be fixed by calling of_clk_get_hw() only when DT name is not NUL=
+L.
+>=20
+> Fixes: fc0c209c147f ("clk: Allow parents to be specified without string n=
+ames")
+> Cc: Jerome Brunet <jbrunet@baylibre.com>
+> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+> ---
+>  drivers/clk/clk.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> index bdb077ba59b9..9624a75e5a8d 100644
+> --- a/drivers/clk/clk.c
+> +++ b/drivers/clk/clk.c
+> @@ -368,7 +368,7 @@ static struct clk_core *clk_core_get(struct clk_core =
+*core, u8 p_index)
+>         const char *dev_id =3D dev ? dev_name(dev) : NULL;
+>         struct device_node *np =3D core->of_node;
+> =20
+> -       if (np && index >=3D 0)
+> +       if (name && np && index >=3D 0)
+
+Do you set the index to 0 in this clk's parent_data? We purposefully set
+the index to -1 in clk_core_populate_parent_map() so that the fw_name
+can be NULL but the index can be something >=3D 0 and then we'll use that
+to lookup the clk from DT. We need to support that combination.
+
+	fw_name   |   index |  DT lookup?
+	----------+---------+------------
+	NULL      |    >=3D 0 |     Y
+	NULL      |    -1   |     N
+	non-NULL  |    -1   |     ?
+	non-NULL  |    >=3D 0 |     Y
+
+Maybe we should support the ? case, because right now it will fail to do
+the DT lookup when the index is -1.
+
+So this patch instead?
+
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index b34e84bb8167..a554cb9316a5 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -368,7 +368,7 @@ static struct clk_core *clk_core_get(struct clk_core *c=
+ore, u8 p_index)
+ 	const char *dev_id =3D dev ? dev_name(dev) : NULL;
+ 	struct device_node *np =3D core->of_node;
+=20
+-	if (np && index >=3D 0)
++	if (np && (index >=3D 0 || name))
+ 		hw =3D of_clk_get_hw(np, index, name);
+=20
+ 	/*
