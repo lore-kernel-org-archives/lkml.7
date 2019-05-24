@@ -2,108 +2,106 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE0EEC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 471EDC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 899AD2184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:49:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CCC521850
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:50:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="hEqELOMj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403912AbfEXNt4 (ORCPT
+        id S2403924AbfEXNuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 09:49:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41998 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403809AbfEXNt4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 09:49:56 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6B8E230BB546;
-        Fri, 24 May 2019 13:49:50 +0000 (UTC)
-Received: from hp-dl360pgen8-07.khw2.lab.eng.bos.redhat.com (hp-dl360pgen8-07.khw2.lab.eng.bos.redhat.com [10.16.210.135])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 32B3A7D67C;
-        Fri, 24 May 2019 13:49:44 +0000 (UTC)
-From:   Jarod Wilson <jarod@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Jarod Wilson <jarod@redhat.com>,
-        Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Heesoon Kim <Heesoon.Kim@stratus.com>
-Subject: [PATCH net] bonding/802.3ad: fix slave link initialization transition states
-Date:   Fri, 24 May 2019 09:49:28 -0400
-Message-Id: <20190524134928.16834-1-jarod@redhat.com>
+        Fri, 24 May 2019 09:50:21 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:43793 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403876AbfEXNuV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 09:50:21 -0400
+Received: by mail-pl1-f195.google.com with SMTP id gn7so4194200plb.10
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 06:50:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=mfjGRiMHKLKe40QcPzGgiXQKqFosuxoiydIUgFnM900=;
+        b=hEqELOMjryeiq/Lz0j9sXaizVrFc6bSfFOPrXONo19/tKBN7s3fxW+KghW5RryeTIF
+         H4mhqxlbjBImKESJHTVUZWQ8tcdwfqfHaaOBK/Z6lxTMKaTRztgUhKJ0F1A5k6RtXUfW
+         gjk/ADbWI3Z6HeOupBvKaf0MxJhbqVirqA6CQiQGxn+pXTFPsYCljQoEW3t0VGO1oCGX
+         QIJ9h149YB3yPIZgVgQqLEvH4JNMPFy+hEPqh46tGhlBb/uCVbMqFXh9Dy4JQmoZnBTa
+         dJI29pKUP74aWLR015xqFhcHMR1lyKfox9scN8JcJ2PAqM928cFBcvQDxTd2pibUH7Gn
+         Rcxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=mfjGRiMHKLKe40QcPzGgiXQKqFosuxoiydIUgFnM900=;
+        b=LL25RZHtpxoF1Pysc372ReG/Um7C97BRU6gQSAE4FAyT1UmUViI7X/xfphkrsuJr7e
+         me7JvluCH3ZIQgz3A0jV9SVbpaHcb3cQLx89xlxF4J/0bVPjgYArBse0/gFar+QaKHs7
+         hPqmcptvp0tJrX70S0cFTWW8IJ7IrAtzHaOCsJrWwrUDcf61UOPtRK9BYmRF/641e35w
+         v+H6QjJnnIMouZ1DLkWuLBT5WG53RY/QtR8p9+7iVu3N3wqxjM1g3+vYC1QDLBHfE39F
+         sV6S2pudi3Q0ezHZrV5PParREACHY5FUAQkYhuudus2vXmvSs2NE3GnwphpyBwfkwJ2i
+         C5Cg==
+X-Gm-Message-State: APjAAAU7/vYfUlM8LO5RNcSEjKW3fcmoGZ+W9HvD4k+K3pVX8oHqhaOS
+        Ew3k4VJunl9yTsQfoEvnTi0QkA==
+X-Google-Smtp-Source: APXvYqx50QVTouTpwq7kMvsDqLVK19AQ+I3Ki7CVWSIIkSQ5uiFK6uhw/4n9Kco9j2EHKt32XLCrWQ==
+X-Received: by 2002:a17:902:3183:: with SMTP id x3mr3353568plb.321.1558705820424;
+        Fri, 24 May 2019 06:50:20 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:ed4f:2717:3604:bb3f])
+        by smtp.googlemail.com with ESMTPSA id a9sm2551220pgw.72.2019.05.24.06.50.19
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 24 May 2019 06:50:19 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     "kernelci.org bot" <bot@kernelci.org>, tomeu.vizoso@collabora.com,
+        guillaume.tucker@collabora.com, mgalka@collabora.com,
+        Neil Armstrong <narmstrong@baylibre.com>, broonie@kernel.org,
+        matthew.hart@linaro.org, enric.balletbo@collabora.com,
+        Jerome Brunet <jbrunet@baylibre.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-amlogic@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: mainline/master boot bisection: v5.2-rc1-172-g4dde821e4296 on meson-g12a-x96-max
+In-Reply-To: <5ce78689.1c69fb81.58097.eacf@mx.google.com>
+References: <5ce78689.1c69fb81.58097.eacf@mx.google.com>
+Date:   Fri, 24 May 2019 06:50:18 -0700
+Message-ID: <7hmujc0xnp.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Fri, 24 May 2019 13:49:55 +0000 (UTC)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Once in a while, with just the right timing, 802.3ad slaves will fail to
-properly initialize, winding up in a weird state, with a partner system
-mac address of 00:00:00:00:00:00. This started happening after a fix to
-properly track link_failure_count tracking, where an 802.3ad slave that
-reported itself as link up in the miimon code, but wasn't able to get a
-valid speed/duplex, started getting set to BOND_LINK_FAIL instead of
-BOND_LINK_DOWN. That was the proper thing to do for the general "my link
-went down" case, but has created a link initialization race that can put
-the interface in this odd state.
+"kernelci.org bot" <bot@kernelci.org> writes:
 
-The simple fix is to instead set the slave link to BOND_LINK_DOWN again,
-if the link has never been up (last_link_up == 0), so the link state
-doesn't bounce from BOND_LINK_DOWN to BOND_LINK_FAIL -- it hasn't failed
-in this case, it simply hasn't been up yet, and this prevents the
-unnecessary state change from DOWN to FAIL and getting stuck in an init
-failure w/o a partner mac.
+> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+> * This automated bisection report was sent to you on the basis  *
+> * that you may be involved with the breaking commit it has      *
+> * found.  No manual investigation has been done to verify it,   *
+> * and the root cause of the problem may be somewhere else.      *
+> * Hope this helps!                                              *
+> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+>
+> mainline/master boot bisection: v5.2-rc1-172-g4dde821e4296 on meson-g12a-x96-max
+>
+> Summary:
+>   Start:      4dde821e4296 Merge tag 'xfs-5.2-fixes-1' of git://git.kernel.org/pub/scm/fs/xfs/xfs-linux
+>   Details:    https://kernelci.org/boot/id/5ce72c6259b514ed817a3640
+>   Plain log:  https://storage.kernelci.org//mainline/master/v5.2-rc1-172-g4dde821e4296/arm64/defconfig+CONFIG_RANDOMIZE_BASE=y/gcc-8/lab-baylibre/boot-meson-g12a-x96-max.txt
+>   HTML log:   https://storage.kernelci.org//mainline/master/v5.2-rc1-172-g4dde821e4296/arm64/defconfig+CONFIG_RANDOMIZE_BASE=y/gcc-8/lab-baylibre/boot-meson-g12a-x96-max.html
+>   Result:     11a7bea17c9e arm64: dts: meson: g12a: add pinctrl support controllers
 
-Fixes: ea53abfab960 ("bonding/802.3ad: fix link_failure_count tracking")
-CC: Jay Vosburgh <j.vosburgh@gmail.com>
-CC: Veaceslav Falico <vfalico@gmail.com>
-CC: Andy Gospodarek <andy@greyhouse.net>
-CC: "David S. Miller" <davem@davemloft.net>
-CC: netdev@vger.kernel.org
-Tested-by: Heesoon Kim <Heesoon.Kim@stratus.com>
-Signed-off-by: Jarod Wilson <jarod@redhat.com>
----
- drivers/net/bonding/bond_main.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+False alarm.
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index 062fa7e3af4c..407f4095a37a 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -3122,13 +3122,18 @@ static int bond_slave_netdev_event(unsigned long event,
- 	case NETDEV_CHANGE:
- 		/* For 802.3ad mode only:
- 		 * Getting invalid Speed/Duplex values here will put slave
--		 * in weird state. So mark it as link-fail for the time
--		 * being and let link-monitoring (miimon) set it right when
--		 * correct speeds/duplex are available.
-+		 * in weird state. Mark it as link-fail if the link was
-+		 * previously up or link-down if it hasn't yet come up, and
-+		 * let link-monitoring (miimon) set it right when correct
-+		 * speeds/duplex are available.
- 		 */
- 		if (bond_update_speed_duplex(slave) &&
--		    BOND_MODE(bond) == BOND_MODE_8023AD)
--			slave->link = BOND_LINK_FAIL;
-+		    BOND_MODE(bond) == BOND_MODE_8023AD) {
-+			if (slave->last_link_up)
-+				slave->link = BOND_LINK_FAIL;
-+			else
-+				slave->link = BOND_LINK_DOWN;
-+		}
- 
- 		if (BOND_MODE(bond) == BOND_MODE_8023AD)
- 			bond_3ad_adapter_speed_duplex_changed(slave);
--- 
-2.20.1
+This one is failing in one lab but passing in another:
+https://kernelci.org/boot/all/job/mainline/branch/master/kernel/v5.2-rc1-172-g4dde821e4296/
 
+I'll look into what's the difference between labs.
+
+Kevin
