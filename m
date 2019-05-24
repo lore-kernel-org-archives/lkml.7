@@ -2,120 +2,150 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D3C8C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47BF0C282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36BB220879
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:10:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lightnvm-io.20150623.gappssmtp.com header.i=@lightnvm-io.20150623.gappssmtp.com header.b="SkKlsrUN"
+	by mail.kernel.org (Postfix) with ESMTP id 2B42120879
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:11:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404021AbfEXOKj (ORCPT
+        id S2404061AbfEXOLB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 10:10:39 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:39657 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403895AbfEXOKh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 10:10:37 -0400
-Received: by mail-ed1-f67.google.com with SMTP id e24so14602804edq.6
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 07:10:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lightnvm-io.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zd6uEkSfOKcIDHK5M0+W3LMhr+2Unkt5+6YPVhWe7SM=;
-        b=SkKlsrUNFydZnTSDgAJCNmm25cQr0RFvH/gxkbDSO4X/IuMpZkG9GaK86csttJl1Ug
-         RN740qB7AYInm4lZ6a6qXnZT9GL6QUh6Sghogqt31HmU+ZDpVfXCUNy/UCIwANvHyCx5
-         WXg9OIqM1RIuzhYi2nqZC5apA8rY1IlvMsKEsGzOhh3bt17flX9SCwZGTL6Hd1k7kj9c
-         U+OLGXw6VmNcyxuaSOCWtEWDqjP++kn6pp29i1CGCkECWKmUR92WJNE4GOds8gU0mKR8
-         bPflpYnwiBXgjNek4/Dy4Arjvs1j2z6N2Yg3wTD4eHebZb58N8Fc6mAFI/wIC96VMOOi
-         uD7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zd6uEkSfOKcIDHK5M0+W3LMhr+2Unkt5+6YPVhWe7SM=;
-        b=edlRluvTKNIw1lnV8gOA87ziEu5xPbRwWiWvs4P8mUIhg83M2oZ5pvRGd+BrPSN43u
-         eZ+DjpJlfSykyiuj470pV5PV3tklT00ZrffCG+G3aWsd/hVpxVr7NyibygwIxjw2u8h0
-         zako1sNeHPuL7+52wQYgpjd77GsHMSzbxdWvyBJoTj7EqvkjCLnZSI6Dcv7AlzBPecSI
-         zSjOE56Tl4vNOWFbtV/dkWtwD5md+M3Uqfd13oK7Ive4LavguZupsApJqZESBnnAm6Kj
-         gTuSxr2lqL02UXkALcVmTenjcZBUhJA/2aDzwuoNOHHPc2Av17G9LCawh8MqfK9Wiu7J
-         kwxQ==
-X-Gm-Message-State: APjAAAVJdw7GVZPYuUnzAwZlky/9K69x9YH9HgpRd8ZnkN+vRix36GF2
-        YOQkMNZiehYjQN6lddMTRSUKgzBeGJJ0iw==
-X-Google-Smtp-Source: APXvYqydLmlPS6p7i7sq9DyqK7+pJX98Hsv8Ko41hQY0aJ5979RnYkXxMBcrmkJIy6kfjPg+6WmxWw==
-X-Received: by 2002:a17:906:5f82:: with SMTP id a2mr47247409eju.297.1558707035452;
-        Fri, 24 May 2019 07:10:35 -0700 (PDT)
-Received: from [192.168.0.36] (2-111-91-225-cable.dk.customer.tdc.net. [2.111.91.225])
-        by smtp.googlemail.com with ESMTPSA id dv13sm381962ejb.32.2019.05.24.07.10.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 07:10:34 -0700 (PDT)
-Subject: Re: [PATCH] lightnvm: pblk: Fix freeing merged pages
-To:     Heiner Litz <hlitz@ucsc.edu>
-Cc:     javier@javigon.com, Hans Holmberg <Hans.Holmberg@wdc.com>,
-        igor.j.konopko@intel.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190515003952.12541-1-hlitz@ucsc.edu>
-From:   =?UTF-8?Q?Matias_Bj=c3=b8rling?= <mb@lightnvm.io>
-Message-ID: <c50f1ce5-1d8b-a0e2-6954-cd920e3d1140@lightnvm.io>
-Date:   Fri, 24 May 2019 16:10:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Fri, 24 May 2019 10:11:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43162 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403895AbfEXOLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 10:11:01 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 96E3281126;
+        Fri, 24 May 2019 14:11:00 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 8E55B1835C;
+        Fri, 24 May 2019 14:10:55 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Fri, 24 May 2019 16:11:00 +0200 (CEST)
+Date:   Fri, 24 May 2019 16:10:54 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Deepa Dinamani <deepa.kernel@gmail.com>
+Cc:     David Laight <David.Laight@aculab.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "dbueso@suse.de" <dbueso@suse.de>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        Davidlohr Bueso <dave@stgolabs.net>, Eric Wong <e@80x24.org>,
+        Jason Baron <jbaron@akamai.com>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        linux-aio <linux-aio@kvack.org>,
+        Omar Kilani <omar.kilani@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH v2] signal: Adjust error codes according to
+ restore_user_sigmask()
+Message-ID: <20190524141054.GB2655@redhat.com>
+References: <20190522150505.GA4915@redhat.com>
+ <CABeXuvrPM5xvzqUydbREapvwgy6deYreHp0aaMoSHyLB6+HGRg@mail.gmail.com>
+ <20190522161407.GB4915@redhat.com>
+ <CABeXuvpjrW5Gt95JC-_rYkOA=6RCD5OtkEQdwZVVqGCE3GkQOQ@mail.gmail.com>
+ <4f7b6dbeab1d424baaebd7a5df116349@AcuMS.aculab.com>
+ <20190523145944.GB23070@redhat.com>
+ <345cfba5edde470f9a68d913f44fa342@AcuMS.aculab.com>
+ <20190523163604.GE23070@redhat.com>
+ <f0eced5677c144debfc5a69d0d327bc1@AcuMS.aculab.com>
+ <CABeXuvo-wey+NHWb4gi=FSRrjJOKkVcLPQ-J+dchJeHEbhGQ6g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190515003952.12541-1-hlitz@ucsc.edu>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABeXuvo-wey+NHWb4gi=FSRrjJOKkVcLPQ-J+dchJeHEbhGQ6g@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 24 May 2019 14:11:00 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/15/19 2:39 AM, Heiner Litz wrote:
-> bio_add_pc_page() may merge pages when a bio is padded due to a flush.
-> Fix iteration over the bio to free the correct pages in case of a merge.
-> 
-> Signed-off-by: Heiner Litz <hlitz@ucsc.edu>
-> ---
->   drivers/lightnvm/pblk-core.c | 18 ++++++++++--------
->   1 file changed, 10 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/lightnvm/pblk-core.c b/drivers/lightnvm/pblk-core.c
-> index 773537804319..88d61b27a9ab 100644
-> --- a/drivers/lightnvm/pblk-core.c
-> +++ b/drivers/lightnvm/pblk-core.c
-> @@ -323,14 +323,16 @@ void pblk_free_rqd(struct pblk *pblk, struct nvm_rq *rqd, int type)
->   void pblk_bio_free_pages(struct pblk *pblk, struct bio *bio, int off,
->   			 int nr_pages)
->   {
-> -	struct bio_vec bv;
-> -	int i;
-> -
-> -	WARN_ON(off + nr_pages != bio->bi_vcnt);
-> -
-> -	for (i = off; i < nr_pages + off; i++) {
-> -		bv = bio->bi_io_vec[i];
-> -		mempool_free(bv.bv_page, &pblk->page_bio_pool);
-> +	struct bio_vec *bv;
-> +	struct page *page;
-> +	int i,e, nbv = 0;
-> +
-> +	for (i = 0; i < bio->bi_vcnt; i++) {
-> +		bv = &bio->bi_io_vec[i];
-> +		page = bv->bv_page;
-> +		for (e = 0; e < bv->bv_len; e += PBLK_EXPOSED_PAGE_SIZE, nbv++)
-> +			if (nbv >= off)
-> +				mempool_free(page++, &pblk->page_bio_pool);
->   	}
->   }
->   
-> 
+On 05/23, Deepa Dinamani wrote:
+>
+> Ok, since there has been quite a bit of argument here, I will
+> backtrack a little bit and maybe it will help us understand what's
+> happening here.
+> There are many scenarios being discussed on this thread:
+> a. State of code before 854a6ed56839a
 
-Thanks Heiner. Picked up for 5.3.
+I think everything was correct,
+
+> b. State after 854a6ed56839a
+
+obviously buggy,
+
+> c. Proposed fix as per the patchset in question.
+
+Nack, sorry. I'll try to finish my patch on Monday. It will restore the state
+before 854a6ed56839a and (imo) cleanup/simplify this code.
+
+At leat this is what I think right now. May be I will have to change my mind
+after this discussion. But in any case I can't believe I will ever agree with
+your fix ;)
+
+> These are particularly meant for a scenario(d) such as below:
+>
+> 1. block the signals you don't care about.
+> 2. syscall()
+> 3. unblock the signals blocked in 1.
+>
+> The problem here is that if there is a signal that is not blocked by 1
+> and such a signal is delivered between 1 and 2(since they are not
+> atomic), the syscall in 2 might block forever as it never found out
+> about the signal.
+
+and that is why we have pselect/etc to make this sequence "atomic".
+
+> As per [a] and let's consider the case of epoll_pwait only first for simplicity.
+>
+> As I said before, ep_poll() is what checks for signal_pending() and is
+> responsible for setting errno to -EINTR when there is a signal.
+
+To clarify, if do_epoll_wait() return -EINTR then signal_pending() is true,
+right?
+
+> So if a signal is received after ep_poll() and ep_poll() returns
+> success, it is never noticed by the syscall during execution.
+
+What you are saying looks very confusing to me, I will assume that you
+meant something like
+
+	- a signal SIG_XXX was blocked before sys_epoll_pwait() was called
+
+	- sys_epoll_pwait(sigmask) unblocks SIG_XXX according to sigmask
+
+	- sys_epoll_pwait() calls do_epoll_wait() which returns success
+
+	- SIG_XXX comes after that and it is "never noticed"
+
+Yes. Everything is correct. And see my reply to David, SIG_XXX can even
+come _before_ sys_epoll_pwait() was called.
+
+> So the question is does the userspace have to know about this signal
+> or not.
+
+If userspace needs to know about SIG_XXX it should not block it, that is all.
+
+> What [b] does is to move the signal check closer to the restoration of
+> the signal.
+
+FOR NO REASON, afaics (to simplify, lets forget the problem with the wrong
+return value you are trying to fix).
+
+And even if there were ANY reason to do this, note that (with or without this
+fix) the signal_pending() check inside restore_user_sigmask() can NOT help,
+simply because SIG_XXX can come right after this check.
+
+Oleg.
+
