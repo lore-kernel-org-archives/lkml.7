@@ -2,159 +2,142 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A0FC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 03:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 598C5C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 03:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21C9D21773
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 03:08:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 137C8217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 03:10:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="Uek8QpIS"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KwcgVa2a";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WuQbAxZ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388645AbfEXDIh (ORCPT
+        id S2388784AbfEXDKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 23:08:37 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:32962 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387559AbfEXDIf (ORCPT
+        Thu, 23 May 2019 23:10:06 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:59272 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387559AbfEXDKF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 23:08:35 -0400
-Received: by mail-wm1-f65.google.com with SMTP id v19so168797wmh.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 20:08:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=FrWVceI3LtR5FXxB8VcRvYsptOYTyMCHoGS31s3o9rQ=;
-        b=Uek8QpISTDvAmO2k7+vMVSMUzvpm5mjQvrPO36Wwy6wxPZ6LweTdmpAKzUkXhr6KQk
-         +WwaUejc3kWfFjGfJknTwbUX1gSMvvHHrmVafhoRv9GlA/2ERpbLlboxYOcwMUNTn+tA
-         /fQluHtzwxB8Lr0xsf4J+p8UomkBIrLAPlF4KQPRSOTJj0wi6+u+CqpePHjTEBVN+yX5
-         OSGCJLvgK9rdwbeluEs737ScCstUwnOus5+Tu06uVOZYbo5Pqsr5OJcf/f741J+oJnpF
-         1xsNdV+J4cNvby+8uRQUDFOTdQxAfdz4kobsHzB3lphJfVODF4fsDDv//0Am0Hs/XSZl
-         n7qA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=FrWVceI3LtR5FXxB8VcRvYsptOYTyMCHoGS31s3o9rQ=;
-        b=UVh0ty/ypqDGlM63e7dGXzfgH8fmtdQFn/N+5qEP2kK7nIDVAOzB2yZGQ2F6O8nnUZ
-         CgX0RaXBIjA4GNFCvHFJNpql0k2oBAGh45c4JSlFw7I1uD6uH/eBdTv5ios+mcXqyAD8
-         2ZX1WsVe3QZyrOfTMHsxLTbwGarQXQreafxFhk8fjo6dcytA5cXIHnDbVfSLVNz3hGDh
-         IaW/SZU7aPrkJfAnqApYXRDmTqc5Zp6LcQdp1VzshiPE44MxOW7ZYRTwQBngssn1PIHe
-         ZQakg+/zIOYV9+if7mEBBIzDFBo+/oroiEn1riqpym8RcugKLPp66GVsayfq+yP1mLaK
-         LsMw==
-X-Gm-Message-State: APjAAAV7D2uK6INZGXXARpc2K4kZFB77oFuoT4Vx1yRCs39tVU/wIQap
-        cmqz0u0X56SsHosYr0aQx16LXUJHS/5ENw==
-X-Google-Smtp-Source: APXvYqwlnCCV/zlDEy4EC5XnWE5afnhbVOSr22yWh6gUWydCLhKkB/mh0Mfc06dm7kNpUe6/5yTDrA==
-X-Received: by 2002:a1c:be0b:: with SMTP id o11mr14605446wmf.63.1558667313538;
-        Thu, 23 May 2019 20:08:33 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id t7sm890736wrq.76.2019.05.23.20.08.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 20:08:33 -0700 (PDT)
-Message-ID: <5ce76031.1c69fb81.9ce3a.4a71@mx.google.com>
-Date:   Thu, 23 May 2019 20:08:33 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Thu, 23 May 2019 23:10:05 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 57A496087A; Fri, 24 May 2019 03:10:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1558667404;
+        bh=O7cQI3hKqwLum3dHopYKUX9rFdvXxU3XnAEloPidYkw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KwcgVa2aLbELxlhUSZKkPZEkpNP+qGfug1/VE4DtHmC5AIZQAiqt+W1R3LkCvb/sN
+         PEmBPBONx4nN3iS2WKb7lSVrRwcpr6GcVPH502i3r3hBToAuz/yxH37xdcqs82ZVjq
+         aC72j52i4R9fd7DSpGsLnjCGa09hneTV44ishI8g=
+Received: from codeaurora.org (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: stummala@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D418660878;
+        Fri, 24 May 2019 03:10:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1558667403;
+        bh=O7cQI3hKqwLum3dHopYKUX9rFdvXxU3XnAEloPidYkw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WuQbAxZ9GbJEdO1ImtXt4dxUx6Brtsq+dRj53DdHfIAxhNCxoNf45ng0buMrWweno
+         txVw4F0fyn0jiRnVKgrWmB2p2KK3W8b64PvP87ms7v1JsBYnwBBZBPeolxtR7BCVl4
+         sOctgbc2rTrMZ+16uESeWBzZcyT2EL6t8Va1Z8JM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D418660878
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
+Date:   Fri, 24 May 2019 08:39:58 +0530
+From:   Sahitya Tummala <stummala@codeaurora.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     sunqiuyang <sunqiuyang@huawei.com>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [PATCH v6 1/1] f2fs: ioctl for removing a range from F2FS
+Message-ID: <20190524030958.GB10043@codeaurora.org>
+References: <20190524015555.12622-1-sunqiuyang@huawei.com>
+ <e7cfed52-0212-834f-aed8-0c5abc07f779@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: boot
-X-Kernelci-Tree: stable-rc
-X-Kernelci-Branch: linux-4.14.y
-X-Kernelci-Kernel: v4.14.121-78-g64cb9b0bb7de
-In-Reply-To: <20190523181719.982121681@linuxfoundation.org>
-References: <20190523181719.982121681@linuxfoundation.org>
-Subject: Re: [PATCH 4.14 00/77] 4.14.122-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e7cfed52-0212-834f-aed8-0c5abc07f779@huawei.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.14.y boot: 125 boots: 2 failed, 108 passed with 15 offlin=
-e (v4.14.121-78-g64cb9b0bb7de)
+On Fri, May 24, 2019 at 10:32:07AM +0800, Chao Yu wrote:
+> +Cc Sahitya,
+> 
+> On 2019/5/24 9:55, sunqiuyang wrote:
+> > From: Qiuyang Sun <sunqiuyang@huawei.com>
+> > 
+> > This ioctl shrinks a given length (aligned to sections) from end of the
+> > main area. Any cursegs and valid blocks will be moved out before
+> > invalidating the range.
+> > 
+> > This feature can be used for adjusting partition sizes online.
+> > --
+> > Changlog v1 ==> v2:
+> > 
+> > Sahitya Tummala:
+> >  - Add this ioctl for f2fs_compat_ioctl() as well.
+> >  - Fix debugfs status to reflect the online resize changes.
+> >  - Fix potential race between online resize path and allocate new data
+> >    block path or gc path.
+> > 
+> > Others:
+> >  - Rename some identifiers.
+> >  - Add some error handling branches.
+> >  - Clear sbi->next_victim_seg[BG_GC/FG_GC] in shrinking range.
+> > --
+> > Changelog v2 ==> v3:
+> > Implement this interface as ext4's, and change the parameter from shrunk
+> > bytes to new block count of F2FS.
+> > --
+> > Changelog v3 ==> v4:
+> >  - During resizing, force to empty sit_journal and forbid adding new
+> >    entries to it, in order to avoid invalid segno in journal after resize.
+> >  - Reduce sbi->user_block_count before resize starts.
+> >  - Commit the updated superblock first, and then update in-memory metadata
+> >    only when the former succeeds.
+> >  - Target block count must align to sections.
+> > --
+> > Changelog v4 ==> v5:
+> > Write checkpoint before and after committing the new superblock, w/o
+> > CP_FSCK_FLAG respectively, so that the FS can be fixed by fsck even if
+> > resize fails after the new superblock is committed.
+> > --
+> > Changelog v5 ==> v6:
+> >  - In free_segment_range(), reduce granularity of gc_mutex.
+> >  - Add protection on curseg migration.
+> > 
+> > Signed-off-by: Qiuyang Sun <sunqiuyang@huawei.com>
+> > Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> > Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+> 
+> Looks good to me now,
+> 
+> Reviewed-by: Chao Yu <yuchao0@huawei.com>
+> 
+> To Sahitya, is it okay to you merging all your fixes and adding Signed-off in
+> original patch? We can still separate them from this patch if you object this,
+> let us know.
+> 
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.14.y/kernel/v4.14.121-78-g64cb9b0bb7de/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.14.=
-y/kernel/v4.14.121-78-g64cb9b0bb7de/
+Hi Chao,
 
-Tree: stable-rc
-Branch: linux-4.14.y
-Git Describe: v4.14.121-78-g64cb9b0bb7de
-Git Commit: 64cb9b0bb7de34fd893ee96ecf613039130de9a6
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 66 unique boards, 24 SoC families, 14 builds out of 201
+I am okay with merging.
 
-Boot Regressions Detected:
+Thanks,
+Sahitya.
 
-arm:
+> Thanks,
 
-    omap2plus_defconfig:
-        gcc-8:
-          omap3-beagle-xm:
-              lab-baylibre: new failure (last pass: v4.14.121)
-
-Boot Failures Detected:
-
-arm:
-    omap2plus_defconfig:
-        gcc-8:
-            omap3-beagle-xm: 1 failed lab
-
-arm64:
-    defconfig:
-        gcc-8:
-            rk3399-firefly: 1 failed lab
-
-Offline Platforms:
-
-arm:
-
-    sama5_defconfig:
-        gcc-8
-            at91-sama5d4_xplained: 1 offline lab
-
-    multi_v7_defconfig:
-        gcc-8
-            alpine-db: 1 offline lab
-            at91-sama5d4_xplained: 1 offline lab
-            socfpga_cyclone5_de0_sockit: 1 offline lab
-            stih410-b2120: 1 offline lab
-            sun5i-r8-chip: 1 offline lab
-            tegra124-jetson-tk1: 1 offline lab
-            tegra20-iris-512: 1 offline lab
-
-    tegra_defconfig:
-        gcc-8
-            tegra124-jetson-tk1: 1 offline lab
-            tegra20-iris-512: 1 offline lab
-
-    sunxi_defconfig:
-        gcc-8
-            sun5i-r8-chip: 1 offline lab
-
-    bcm2835_defconfig:
-        gcc-8
-            bcm2835-rpi-b: 1 offline lab
-
-arm64:
-
-    defconfig:
-        gcc-8
-            apq8016-sbc: 1 offline lab
-            juno-r2: 1 offline lab
-            mt7622-rfb1: 1 offline lab
-
----
-For more info write to <info@kernelci.org>
+-- 
+--
+Sent by a consultant of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
