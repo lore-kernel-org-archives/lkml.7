@@ -2,103 +2,102 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47BBAC282E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB11FC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29541206A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:39:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FCFE206A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:39:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JahhLfLy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390567AbfEXKj3 (ORCPT
+        id S2390676AbfEXKjq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 06:39:29 -0400
-Received: from outbound-smtp09.blacknight.com ([46.22.139.14]:42369 "EHLO
-        outbound-smtp09.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390410AbfEXKj3 (ORCPT
+        Fri, 24 May 2019 06:39:46 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:48176 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390106AbfEXKjq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 06:39:29 -0400
-Received: from mail.blacknight.com (pemlinmail04.blacknight.ie [81.17.254.17])
-        by outbound-smtp09.blacknight.com (Postfix) with ESMTPS id 4EEF91C22F4
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 11:39:26 +0100 (IST)
-Received: (qmail 32417 invoked from network); 24 May 2019 10:39:26 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[37.228.225.79])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 24 May 2019 10:39:26 -0000
-Date:   Fri, 24 May 2019 11:39:24 +0100
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-mm@kvack.org, akpm@linux-foundation.org, mhocko@suse.com,
-        cai@lca.pw, linux-kernel@vger.kernel.org, marc.zyngier@arm.com,
-        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org
-Subject: Re: mm/compaction: BUG: NULL pointer dereference
-Message-ID: <20190524103924.GN18914@techsingularity.net>
-References: <1558689619-16891-1-git-send-email-suzuki.poulose@arm.com>
+        Fri, 24 May 2019 06:39:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=BriCFiVsvXiSB70hYfidU8VqORTyQEhK40fA2bRZURg=; b=JahhLfLypSqyFz1nlMEJrreDo
+        3zwU9SAKwXFypEKOnmLTpx577riUPdcFXcLfxiXSji7/3qJkglkHQJ9S/ajcXtjPpEN34Y9am+jEy
+        wGqCfu5wOl/CHLFzZmYtYQddiVqSw1FVLwpYpRdu9kZamS1j4c8qdy6T1yGj9MKPhlwk8JSN3MHP2
+        aI43izaMyVjyjrPILaDT6yePtOw84wXW/A0V0bhfTwG8UusvU40KLO7Yr0vqmQZwyTW6fpIjaEhgo
+        V8zPR/LibQJOzv3xCOXfI7kpYcWhw41YcHDnXngkLInrFAq3s/B1ArSyxx8+M4jRgDXaqa1g5u5qQ
+        mF/kjCrpQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hU7bt-0007ui-JC; Fri, 24 May 2019 10:39:37 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 87D2F2029B0A3; Fri, 24 May 2019 12:39:34 +0200 (CEST)
+Date:   Fri, 24 May 2019 12:39:34 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Andrea Parri <andrea.parri@amarulasolutions.com>
+Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jorgen Hansen <jhansen@vmware.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Subject: Re: [PATCH 1/2] vmw_vmci: Clean up uses of atomic*_set()
+Message-ID: <20190524103934.GO2606@hirez.programming.kicks-ass.net>
+References: <1558694136-19226-1-git-send-email-andrea.parri@amarulasolutions.com>
+ <1558694136-19226-2-git-send-email-andrea.parri@amarulasolutions.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1558689619-16891-1-git-send-email-suzuki.poulose@arm.com>
+In-Reply-To: <1558694136-19226-2-git-send-email-andrea.parri@amarulasolutions.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 10:20:19AM +0100, Suzuki K Poulose wrote:
-> Hi,
+On Fri, May 24, 2019 at 12:35:35PM +0200, Andrea Parri wrote:
+> The primitive vmci_q_set_pointer() relies on atomic*_set() being of
+> type 'void', but this is a non-portable implementation detail.
 > 
-> We are hitting NULL pointer dereferences while running stress tests with KVM.
-> See splat [0]. The test is to spawn 100 VMs all doing standard debian
-> installation (Thanks to Marc's automated scripts, available here [1] ).
-> The problem has been reproduced with a better rate of success from 5.1-rc6
-> onwards.
+> Reported-by: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Jorgen Hansen <jhansen@vmware.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
+> ---
+>  include/linux/vmw_vmci_defs.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> The issue is only reproducible with swapping enabled and the entire
-> memory is used up, when swapping heavily. Also this issue is only reproducible
-> on only one server with 128GB, which has the following memory layout:
-> 
-> [32GB@4GB, hole , 96GB@544GB]
-> 
-> Here is my non-expert analysis of the issue so far.
-> 
-> Under extreme memory pressure, the kswapd could trigger reset_isolation_suitable()
-> to figure out the cached values for migrate/free pfn for a zone, by scanning through
-> the entire zone. On our server it does so in the range of [ 0x10_0000, 0xa00_0000 ],
-> with the following area of holes : [ 0x20_0000, 0x880_0000 ].
-> In the failing case, we end up setting the cached migrate pfn as : 0x508_0000, which
-> is right in the center of the zone pfn range. i.e ( 0x10_0000 + 0xa00_0000 ) / 2,
-> with reset_migrate = 0x88_4e00, reset_free = 0x10_0000.
-> 
-> Now these cached values are used by the fast_isolate_freepages() to find a pfn. However,
-> since we cant find anything during the search we fall back to using the page belonging
-> to the min_pfn (which is the migrate_pfn), without proper checks to see if that is valid
-> PFN or not. This is then passed on to fast_isolate_around() which tries to do :
-> set_pageblock_skip(page) on the page which blows up due to an NULL mem_section pointer.
-> 
-> The following patch seems to fix the issue for me, but I am not quite convinced that
-> it is the right fix. Thoughts ?
-> 
+> diff --git a/include/linux/vmw_vmci_defs.h b/include/linux/vmw_vmci_defs.h
+> index 0c06178e4985b..eb593868e2e9e 100644
+> --- a/include/linux/vmw_vmci_defs.h
+> +++ b/include/linux/vmw_vmci_defs.h
+> @@ -759,9 +759,9 @@ static inline void vmci_q_set_pointer(atomic64_t *var,
+>  				      u64 new_val)
+>  {
+>  #if defined(CONFIG_X86_32)
+> -	return atomic_set((atomic_t *)var, (u32)new_val);
+> +	atomic_set((atomic_t *)var, (u32)new_val);
+>  #else
+> -	return atomic64_set(var, new_val);
+> +	atomic64_set(var, new_val);
+>  #endif
+>  }
 
-I think the patch is valid and the alternatives would be unnecessarily
-complicated. During a normal scan for free pages to isolate, there
-is a check for pageblock_pfn_to_page() which uses a pfn_valid check
-for non-contiguous zones in __pageblock_pfn_to_page. Now, while the
-non-contiguous check could be made in the area you highlight, it would be a
-relatively small optimisation that would be unmeasurable overall. However,
-it is definitely the case that if the PFN you highlight is invalid that
-badness happens. If you want to express this as a signed-off patch with
-an adjusted changelog then I'd be happy to add
+All that should just die a horrible death. That code is crap.
 
-Reviewed-by: Mel Gorman <mgorman@techsingularity.net>
+See:
 
-If you are not comfortable with rewriting the changelog and formatting
-it as a patch then I can do it on your behalf and preserve your
-Signed-off-by. Just let me know.
-
-Thanks for researching this, I think it also applies to other people but
-had not found the time to track it down.
-
--- 
-Mel Gorman
-SUSE Labs
+  lkml.kernel.org/r/20190524103731.GN2606@hirez.programming.kicks-ass.net
