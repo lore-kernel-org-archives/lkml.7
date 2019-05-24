@@ -2,154 +2,185 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B096C282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6310C282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DB3120879
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:27:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="omEJrnMw"
+	by mail.kernel.org (Postfix) with ESMTP id 90EC921848
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:27:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558733272;
+	bh=lYZ/zudY+xu5Tnp4RjFaSiBIAvLoW/eSULQY+XTsmB0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=d3IV9FRWLjViJVdlqtGF5EmlKn+wh9ilrxuP2UbKopqw/zZ+s0TUX7VuC8ZVmtFKJ
+	 +6C6lMEMRU0Ej2Ocw8QGeFH79RLqaDhbKkVH5rcQA3OWe+MgGqMDOVdp2A7O33cYWY
+	 0mRtp05I+y4zCj7FEBQQvan2r7O1eYkFqvuP63Xc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404275AbfEXV1q (ORCPT
+        id S2404289AbfEXV1v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 17:27:46 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53174 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404163AbfEXV1p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 17:27:45 -0400
-Received: by mail-wm1-f66.google.com with SMTP id y3so10709951wmm.2;
-        Fri, 24 May 2019 14:27:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=y9ux/6s5mqKpo3SGmaASVq5a3/znJngTKz9dxsY6Ors=;
-        b=omEJrnMwXjBomP4BtaaCk/eahP4koX6r9N/1FRZFbAIeIEejhvE2xj11PA1ZGUmirI
-         P1LAT+/s4Rfq71eZQ/EX0iXP+V8Hfrs6mDbooVcuextI7ReAKBae9Lyw6fmipHr3iZ8F
-         Yn+jYqg8fnQuHMF/YhMnjgUZShVc/DqDuWGyAUcK0XNIzO/aSTv4Pc+QlK2PDBllUX1+
-         Sk1tbDsdU87eYGD6n6E9jIQJdoR8X3BZsx1owMCdIv5cj8CCZbMEJoL47ABToHMmYDV9
-         W6fLBNA/j+oOorGBbQtIBrMiI+yCs90gT/VlKkPj+2gz0PuF/aQf/R7AGGTM4eEJGEFQ
-         8Y3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=y9ux/6s5mqKpo3SGmaASVq5a3/znJngTKz9dxsY6Ors=;
-        b=ib+5oKIPNfbxUApWGsnXQo+LuFf9JgQlv+E6JLlvFdPHD3nvtUoAofiuKZl+P77inY
-         heCdJALOK/kWv7IqxPgKGTDtZKAaxyoL9gZ5hxO7o1t+kTiozLUR32a2RtUnZMgwzHt1
-         pPM1iCZXhYiXgh5FXXSlJPsk6mXTiOEJxzTcp2lqrPuCh0MRPK7erMMXric/JTL39GRK
-         BpMsvs7bBsI3ey6LlMusR0Upf0zWswLLoSn2/J6ZfJRPnDSX5DdFcskQpDOmcovrTNkV
-         mUrnFscTtMa5phl3RkrQGAm/hcmfqhrUbh0WZZUSNSbb+wpcPp71oEq2f6xdKIYM0ACU
-         9snw==
-X-Gm-Message-State: APjAAAX7fckNvEw3TzLwIb5eQ1OOKYmUHjKlIPLTdWdJAZPoRYaSPCRr
-        +i4M1xmPRGAi94kQmP4UNq5PEzs=
-X-Google-Smtp-Source: APXvYqyK2ayCbgVB5WtHhnVxNe6zHQgykGJ0C9c2YZvQtzxbgh+2+uSTMs+0rCT1FVbeCl9VyZ9/UA==
-X-Received: by 2002:a05:600c:2289:: with SMTP id 9mr18657802wmf.106.1558733263578;
-        Fri, 24 May 2019 14:27:43 -0700 (PDT)
-Received: from avx2 ([46.53.253.112])
-        by smtp.gmail.com with ESMTPSA id b2sm3371534wrt.20.2019.05.24.14.27.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 14:27:42 -0700 (PDT)
-Date:   Sat, 25 May 2019 00:27:40 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Christian Brauner <christian@brauner.io>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/2] close_range()
-Message-ID: <20190524212740.GA7165@avx2>
-References: <20190523182152.GA6875@avx2>
- <CAHk-=wj5YZQ=ox+T1kc4RWp3KP+4VvXzvr8vOBbqcht6cOXufw@mail.gmail.com>
- <20190524183903.GB2658@avx2>
- <CAHk-=wjaCygWXyGP-D2=ER0x8UbwdvyifH2Jfnf1KHUwR3sedw@mail.gmail.com>
+        Fri, 24 May 2019 17:27:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60590 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404279AbfEXV1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 17:27:50 -0400
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92180218A5
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 21:27:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558733268;
+        bh=lYZ/zudY+xu5Tnp4RjFaSiBIAvLoW/eSULQY+XTsmB0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=0JGJB4h+D9j0ddlAUz9g50NndJ0gLLwGmUqN1hvMw6D4tflMRdf5hZOowZbD/sSk4
+         KCsScGmqrRQq0ou0NJ72nJq/c7tzqtrm5Bzvy2ECWR6w/Hnp4SZzlyxpREO3ol6HKy
+         VCzEaV6pXU1pu1iXoBn2chS039FLon9BSBUVinwU=
+Received: by mail-wr1-f42.google.com with SMTP id w13so2928377wru.11
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 14:27:48 -0700 (PDT)
+X-Gm-Message-State: APjAAAX70R0dc7rbtTuW1Z5PcBWSg5utBsh6QTC/T6d0MatDV0xT2jti
+        vKNSASxcBesoIOuL6Qj4CYi5J/iRnhox3hY94mdzNQ==
+X-Google-Smtp-Source: APXvYqz/lEYmDwBnuqtbsvCzNOvsvr/2JBTnsk8u6fRJLIYpjhQwWS2cdjPRGlgRYD7PpvsZVsI0HCybdWBGTpi625c=
+X-Received: by 2002:a5d:5506:: with SMTP id b6mr63690967wrv.221.1558733266996;
+ Fri, 24 May 2019 14:27:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wjaCygWXyGP-D2=ER0x8UbwdvyifH2Jfnf1KHUwR3sedw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190523141752.GA12078@linux.intel.com> <CALCETrUzx3LPAKCLFf75P-XshAkRcr+JLET3LA_kHDs9MA11FA@mail.gmail.com>
+ <20190523234044.GC12078@linux.intel.com> <CALCETrV4DVEfW6EJ6DnQGGYDJAiA5M1QcuYJTiroumOM+D6Jjg@mail.gmail.com>
+ <960B34DE67B9E140824F1DCDEC400C0F654E8956@ORSMSX116.amr.corp.intel.com>
+ <dda0912b-cb15-3c07-d368-345159e995f7@tycho.nsa.gov> <20190524174243.GA365@linux.intel.com>
+ <20190524175458.GB365@linux.intel.com> <960B34DE67B9E140824F1DCDEC400C0F654E8E1D@ORSMSX116.amr.corp.intel.com>
+ <CALCETrUw5sEr-MHPMU4CzEzkrejDs-JOThHB9Buhoxo5-rdpRw@mail.gmail.com> <20190524200333.GF365@linux.intel.com>
+In-Reply-To: <20190524200333.GF365@linux.intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 24 May 2019 14:27:34 -0700
+X-Gmail-Original-Message-ID: <CALCETrUyAAhnQ+RUeN1L41TKj-vcD2CNt-FJ9siO=Zo6gvH1Aw@mail.gmail.com>
+Message-ID: <CALCETrUyAAhnQ+RUeN1L41TKj-vcD2CNt-FJ9siO=Zo6gvH1Aw@mail.gmail.com>
+Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 11:55:44AM -0700, Linus Torvalds wrote:
-> On Fri, May 24, 2019 at 11:39 AM Alexey Dobriyan <adobriyan@gmail.com> wrote:
+On Fri, May 24, 2019 at 1:03 PM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> On Fri, May 24, 2019 at 12:37:44PM -0700, Andy Lutomirski wrote:
+> > On Fri, May 24, 2019 at 11:34 AM Xing, Cedric <cedric.xing@intel.com> wrote:
+> > >
+> > > If "initial permissions" for enclaves are less restrictive than shared
+> > > objects, then it'd become a backdoor for circumventing LSM when enclave
+> > > whitelisting is *not* in place. For example, an adversary may load a page,
+> > > which would otherwise never be executable, as an executable page in EPC.
+> > >
+> > > In the case a RWX page is needed, the calling process has to have a RWX
+> > > page serving as the source for EADD so PROCESS__EXECMEM will have been
+> > > checked. For SGX2, changing an EPC page to RWX is subject to FILE__EXECMEM
+> > > on /dev/sgx/enclave, which I see as a security benefit because it only
+> > > affects the enclave but not the whole process hosting it.
 > >
-> > > Would there ever be any other reason to traverse unknown open files
-> > > than to close them?
+> > So the permission would be like FILE__EXECMOD on the source enclave
+> > page, because it would be mapped MAP_ANONYMOUS, PROT_WRITE?
+> > MAP_SHARED, PROT_WRITE isn't going to work because that means you can
+> > modify the file.
+>
+> Was this in response to Cedric's comment, or to my comment?
+
+Yours.  I think that requiring source pages to be actually mapped W is
+not such a great idea.
+
+>
+> > I'm starting to think that looking at the source VMA permission bits
+> > or source PTE permission bits is putting a bit too much policy into
+> > the driver as opposed to the LSM.  How about delegating the whole
+> > thing to an LSM hook?  The EADD operation would invoke a new hook,
+> > something like:
 > >
-> > This is what lsof(1) does:
-> 
-> I repeat: Would there ever be any other reason to traverse unknown
-> open files than to close them?
-> 
-> lsof is not AT ALL a relevant argument.
-> 
-> lsof fundamentally wants /proc, because lsof looks at *other*
-> processes. That has absolutely zero to do with fdmap. lsof does *not*
-> want fdmap at all. It wants "list other processes files". Which is
-> very much what /proc is all about.
-> 
-> So your argument that "fdmap is more generic" is bogus.
-> 
-> fdmap is entirely pointless unless you can show a real and relevant
-> (to performance) use of it.
-> 
-> When you would *possibly* have a "let me get a list of all the file
-> descriptors I have open, because I didn't track them myself"
-> situation?  That makes no sense. Particularly from a performance
-> standpoint.
-> 
-> In contrast, "close_range()" makes sense as an operation.
+> > int security_enclave_load_bytes(void *source_addr, struct
+> > vm_area_struct *source_vma, loff_t source_offset, unsigned int
+> > maxperm);
+> >
+> > Then you don't have to muck with mapping anything PROT_EXEC.  Instead
+> > you load from a mapping of a file and the LSM applies whatever policy
+> > it feels appropriate.  If the first pass gets something wrong, the
+> > application or library authors can take it up with the SELinux folks
+> > without breaking the whole ABI :)
+> >
+> > (I'm proposing passing in the source_vma because this hook would be
+> > called with mmap_sem held for read to avoid a TOCTOU race.)
+> >
+> > If we go this route, the only substantial change to the existing
+> > driver that's needed for an initial upstream merge is the maxperm
+> > mechanism and whatever hopefully minimal API changes are needed to
+> > allow users to conveniently set up the mappings.  And we don't need to
+> > worry about how to hack around mprotect() calling into the LSM,
+> > because the LSM will actually be aware of SGX and can just do the
+> > right thing.
+>
+> This doesn't address restricting which processes can run which enclaves,
+> it only allows restricting the build flow.  Or are you suggesting this
+> be done in addition to whitelisting sigstructs?
 
-What about orthogonality of interfaces?
+In addition.
 
-	fdmap()
-	bulk_close()
+But I named the function badly and gave it a bad signature, which
+confused you.  Let's try again:
 
-Now fdmap() can be reused for lsof/criu and it is only 2 system calls
-for close-everything usecase which is OK because readdir is 4(!) minimum:
+int security_enclave_load_from_memory(const struct vm_area_struct
+*source, unsigned int maxperm);
 
-	open
-	getdents
-	getdents() = 0
-	close
+Maybe some really fancy future LSM would also want loff_t
+source_offset, but it's probably not terribly useful.  This same
+callback would be used for EAUG.
 
-Writing all of this I understood how fdmap can be made more faster which
-neither getdents() nor even read() have the luxury of: it can return
-a flag if more data is available so that application would do next fdmap()
-only if truly necessary.
+Following up on your discussion with Cedric about sigstruct, the other
+callback would be something like:
 
-> I can
-> explain exactly when it would be used, and I can easily see a
-> situation where "I've opened a ton of files, now I want to release
-> them" is a valid model of operation. And it's a valid optimization to
-> do a bulk operation like that.
-> 
-> IOW, close_range() makes sense as an operation even if you could just
-> say "ok, I know exactly what files I have open". But it also makes
-> sense as an operation for the case of "I don't even care what files I
-> have open, I just want to close them".
-> 
-> In contrast, the "I have opened a ton of files, and I don't even know
-> what the hell I did, so can you list them for me" makes no sense.
-> 
-> Because outside of "close them", there's no bulk operation that makes
-> sense on random file handles that you don't know what they are. Unless
-> you iterate over them and do the stat thing or whatever to figure it
-> out - which is lsof, but as mentioned, it's about *other* peoples
-> files.
+int security_enclave_init(struct file *sigstruct_file);
 
-What you're doing is making exactly one usecase take exactly one system
-call and leaving everything else deal with /proc. Stracing lsof shows
-very clearly how stupid and how wasteful it is. Especially now that
-we're post-meltdown era caring about system call costs (yeah suure).
+The main issue I see is that we also want to control the enclave's
+ability to have RWX pages or to change a W page to X.  We might also
+want:
 
-I'm suggesting make close-universe usecase take only 2 system calls.
-which is still better than anything /proc can offer.
+int security_enclave_load_zeros(unsigned int maxperm);
+
+An enclave that's going to modify its own code will need memory with
+maxperm = RWX or WX.
+
+But this is a bit awkward if the LSM's decision depends on the
+sigstruct.  We could get fancy and require that the sigstruct be
+supplied before any EADD operations so that the maxperm decisions can
+depend on the sigstruct.
+
+Am I making more sense now?
