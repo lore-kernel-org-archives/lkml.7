@@ -2,168 +2,126 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A4CC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B32C282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE5B32175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:37:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=who-t.net header.i=@who-t.net header.b="baXxfCBU";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rIcjGurc"
+	by mail.kernel.org (Postfix) with ESMTP id B82C22133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:38:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731890AbfEXFhA (ORCPT
+        id S2387874AbfEXFiP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 01:37:00 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:54887 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726601AbfEXFg7 (ORCPT
+        Fri, 24 May 2019 01:38:15 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:44341 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387434AbfEXFiP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 01:36:59 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 6417E21EA0;
-        Fri, 24 May 2019 01:36:56 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Fri, 24 May 2019 01:36:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=who-t.net; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=l
-        Kg4XQeq5jOC7ztvZYWg3fg6/ebfKedqKp+BMmCvMz4=; b=baXxfCBU5iplvdNS+
-        6T/zo3PdxcVAcp2ZVjR/RM03J2d0Hhx5U/foQmfV4tbI2tNQEKN4fpExpZk9DkNS
-        VNoM8u6TBCFEEoN8ene9HgcHj5eM6Y4EG1y0nEAtIy4H5hS3FTUaBQpuES9PX49X
-        Kv1qG3OA05tEiWLz8v5A6fLbpxnrZQMQj/0/RiStGyB9Yo/I3GfqjtExBnZ2L6OZ
-        cjt4zcptQ6A/aV5W+CqhIp5KYY0YoXANMic+Tq2YEsG40wm7Zk1zakos+T7Z2vuR
-        EgNNM/MguQl23WKyla46am3aKfioxEdWVZBgeKhTIts7XDStWKmzbU2cUNxIQSGl
-        da3cg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=lKg4XQeq5jOC7ztvZYWg3fg6/ebfKedqKp+BMmCvM
-        z4=; b=rIcjGurc51yGDA0o6P+2ZgymkWxnwCHXtZ2hJugPAl5Yml0KhEQs7QdRe
-        qCrj4dW8ijKHPhjH/+gvGqWMZ5AdHTgxqMqXErGOaC17evTYeOtep74eEGuA0B1l
-        T2ZvGW/yIXu9FICDVoy3B0Xh68PKrqsr+YwrB2EkDZhFUTG7uxpcwE8qjmKuGL7D
-        tAgbmZLo4TQxTJ9n6NlQ+JAfg6EakiLrzEFC7+NcnqZtU5j/PbsLDwmfNaOwJI73
-        IN+ByfD41D28RHvjfdT51RTvIc8X+Ec4XhLWFrKDstnQBqjBeLx4yaYYE9sevQ8H
-        DY0tUJlXdsDZxqyN/tX0eLZ4bgCqw==
-X-ME-Sender: <xms:94LnXKpNTtE4DClk3cE7nkVN0I6OEY8haE37KKWu4risAbqZIzfbTg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrudduhedgleelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtugfgjggfsehtkeertddtreejnecuhfhrohhmpefrvght
-    vghrucfjuhhtthgvrhgvrhcuoehpvghtvghrrdhhuhhtthgvrhgvrhesfihhohdqthdrnh
-    gvtheqnecuffhomhgrihhnpehfrhgvvgguvghskhhtohhprdhorhhgnecukfhppeduudej
-    rddvtddrieelrddugedvnecurfgrrhgrmhepmhgrihhlfhhrohhmpehpvghtvghrrdhhuh
-    htthgvrhgvrhesfihhohdqthdrnhgvthenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:94LnXLDzR2BTPIBbGl7IsypQq-fedVl47QPAEJgAc_xgMlH31RJFDg>
-    <xmx:94LnXIfjZeNUf0RQYuLQyeh2SN8dcOoA0bIQBSe9fUOMfD1WRKdSow>
-    <xmx:94LnXNDVAbuhLCoaWJ-1pvkuP2t5dLuI5K7wJpy_GUVkCD32L-ajVg>
-    <xmx:-ILnXHLVBKbZKiRFOaNK-tO5LRDcqWykS-q8Ic1YqJV4w7nYl1aphw>
-Received: from jelly (117-20-69-142.751445.bne.nbn.aussiebb.net [117.20.69.142])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 4438680060;
-        Fri, 24 May 2019 01:36:52 -0400 (EDT)
-Date:   Fri, 24 May 2019 15:36:48 +1000
-From:   Peter Hutterer <peter.hutterer@who-t.net>
-To:     Hui Wang <hui.wang@canonical.com>
-Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>,
-        Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>,
-        dmitry.torokhov@gmail.com, XiaoXiao Liu <sliuuxiaonxiao@gmail.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Xiaojian Cao <xiaojian.cao@cn.alps.com>,
-        "zhangfp1@lenovo.com" <zhangfp1@lenovo.com>
-Subject: Re: =?utf-8?B?562U5aSNOiDnrZTlpI06IOetlA==?=
- =?utf-8?B?5aSNOiBbUEFUQ0hdIGlucHV0?= =?utf-8?Q?=3A?= alps-fix the issue the
- special alps trackpoint do not work.
-Message-ID: <20190524053648.GA16379@jelly>
-References: <20190520110149.27107-1-sliuuxiaonxiao@gmail.com>
- <OSBPR01MB485510A2A32CD9D2CE5EF7A1DA070@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <345b62e1-407e-7a03-9b03-486bbf5a0a8e@canonical.com>
- <20190521094622.syeub6tcqhbyc7sg@pali>
- <OSBPR01MB4855D744473149D037612506DA000@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <20190522063546.kb74mxeprkauicul@pali>
- <OSBPR01MB48550B43F78BBFBDC20D414DDA000@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <20190522074030.64sy7xt3wnomtxjb@pali>
- <20190523060154.GA10526@jelly>
- <38ec4a40-d51a-aeb1-a5e8-dbaed1142298@canonical.com>
+        Fri, 24 May 2019 01:38:15 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R241e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TSXa0AK_1558676276;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TSXa0AK_1558676276)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 24 May 2019 13:37:56 +0800
+Subject: Re: [v4 PATCH 1/2] mm: vmscan: remove double slab pressure by inc'ing
+ sc->nr_scanned
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     ying.huang@intel.com, hannes@cmpxchg.org, mhocko@suse.com,
+        mgorman@techsingularity.net, kirill.shutemov@linux.intel.com,
+        josef@toxicpanda.com, hughd@google.com, shakeelb@google.com,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <20190524041545.10820-1-hdanton@sina.com>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <6a3a7a59-fe63-68b9-cec1-400395a2a199@linux.alibaba.com>
+Date:   Fri, 24 May 2019 13:37:56 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <38ec4a40-d51a-aeb1-a5e8-dbaed1142298@canonical.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190524041545.10820-1-hdanton@sina.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 01:25:52PM +0800, Hui Wang wrote:
-> 
-> On 2019/5/23 下午2:01, Peter Hutterer wrote:
-> > On Wed, May 22, 2019 at 09:40:30AM +0200, Pali Rohár wrote:
-> > > On Wednesday 22 May 2019 07:30:43 Xiaoxiao Liu wrote:
-> > > > Hi Pali,
-> > > > 
-> > > > Ok, and cannot you set ALPS_DUALPOINT flag based on that
-> > > > alps_check_is_trackpoint() result and then update
-> > > > alps_process_packet_ss4_v3() code to supports also
-> > > > V8 trackpoint packets?
-> > > > --> Yes, we can do like so, when we use the v8 method to process the trackpoint , the mouse speed is not ideal.
-> > > >        Then we choose the standard mouse driver.
-> > > Mouse speed is something which is configurable. Have you configured it
-> > > somehow? Also there is libinput project should handle these settings
-> > > more properly.
-> > > 
-> > > Adding Peter Hutterer, maintainer of libinput to loop. I think he could
-> > > help with this problem.
-> > libinput has a quirk for a magic multiplier on trackpoints. it was the only
-> > solution I found that came close to "working" given that every device seems
-> > to provide some other random magic data. Doc for it is here:
-> > https://wayland.freedesktop.org/libinput/doc/latest/trackpoint-configuration.html
-> 
-> Hello Peter Hutterer,
-> 
-> To adjust the trackpoint speed from userspace:
-> 
-> If the libinput version is lower than 1.9.0, we could set
-> POINTINGSTICK_CONST_ACCEL=0.25
-> 
-> If the libinput version is higher than 1.12.0, we could set
-> AttrTrackpointMultiplier=0.25
-> 
-> But if we use libinput-1.10.0,  how could we adjust the speed?
 
-The LIBINPUT_ATTR_TRACKPOINT_RANGE property, which didn't end up working
-well (hence why it got replaced again). See the docs here though:
-https://wayland.freedesktop.org/libinput/doc/1.10.0/trackpoints.html
 
-Cheers,
-   Peter
+On 5/24/19 12:15 PM, Hillf Danton wrote:
+> On Thu, 23 May 2019 10:27:37 +0800 Yang Shi wrote:
+>> The commit 9092c71bb724 ("mm: use sc->priority for slab shrink targets")
+>> has broken up the relationship between sc->nr_scanned and slab pressure.
+>> The sc->nr_scanned can't double slab pressure anymore.  So, it sounds no
+>> sense to still keep sc->nr_scanned inc'ed.  Actually, it would prevent
+>> from adding pressure on slab shrink since excessive sc->nr_scanned would
+>> prevent from scan->priority raise.
+>>
+> The deleted code below wants to get more slab pages shrinked, and it can do
+> that without raising scan priority first even after commit 9092c71bb724. Or
+> we may face the risk that priority goes up too much faster than thought, per
+> the following snippet.
 
-> > 
-> > There are also different speeds depending on which xorg driver you'd use (or
-> > libinput/Wayland), so a "mouse speed is not ideal" is almost a guarantee,
-> > given a large enough variety of setups :) That's why we have the speed
-> > toggle, but I'm happy to hear any suggestions on how to make the trackpoint
-> > more useful (in libinput anyway).
-> > 
-> > > I do not think it is a good idea to force back to generic PS/2 mouse
-> > > driver for touchpads and trackpoints. Native drivers for touchpads and
-> > > trackpoints supports multitouch, absolute reporting and lot of other
-> > > things... Also calculation of mouse speed from absolute positions on
-> > > touchpads can be more easily fixed as from emulated relative movements.
-> > Yeah, agree. Using PS/2 mouse drivers means you lose *all* the extra
-> > features touchpads have like palm detection, tapping, scrolling, gestures,
-> > etc.
-> > 
-> > Cheers,
-> >     Peter
-> > 
-> > > Dmitry, what is your opinion about this problem? What should psmouse.ko
-> > > do in this situation? Disallow usage of absolute mode and force bare
-> > > PS/2 relative mode?
-> > 
+The priority is raised if kswapd_shrink_node() returns false for kswapd 
+(The direct reclaim would just raise the priority if sc->nr_reclaimed >= 
+sc->nr_to_reclaim). The kswapd_shrink_node() returns "return 
+sc->nr_scanned >= sc->nr_to_reclaim". So, the old "double pressure" 
+doesn't work as it was designed anymore since it would prevent from make 
+"sc->nr_scanned < sc->nr_to_reclaim".
+
+And, the patch 2/2 would not make the priority go up too much since one 
+THP would be accounted as 512 base page.
+
+>
+> 		/*
+> 		 * If we're getting trouble reclaiming, start doing
+> 		 * writepage even in laptop mode.
+> 		 */
+> 		if (sc->priority < DEF_PRIORITY - 2)
+>
+>> The bonnie test doesn't show this would change the behavior of
+>> slab shrinkers.
+>>
+>> 				w/		w/o
+>> 			  /sec    %CP      /sec      %CP
+>> Sequential delete: 	3960.6    94.6    3997.6     96.2
+>> Random delete: 		2518      63.8    2561.6     64.6
+>>
+>> The slight increase of "/sec" without the patch would be caused by the
+>> slight increase of CPU usage.
+>>
+>> Cc: Josef Bacik <josef@toxicpanda.com>
+>> Cc: Michal Hocko <mhocko@kernel.org>
+>> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+>> ---
+>> v4: Added Johannes's ack
+>>
+>>   mm/vmscan.c | 5 -----
+>>   1 file changed, 5 deletions(-)
+>>
+>> diff --git a/mm/vmscan.c b/mm/vmscan.c
+>> index 7acd0af..b65bc50 100644
+>> --- a/mm/vmscan.c
+>> +++ b/mm/vmscan.c
+>> @@ -1137,11 +1137,6 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+>>   		if (!sc->may_unmap && page_mapped(page))
+>>   			goto keep_locked;
+>>   
+>> -		/* Double the slab pressure for mapped and swapcache pages */
+>> -		if ((page_mapped(page) || PageSwapCache(page)) &&
+>> -		    !(PageAnon(page) && !PageSwapBacked(page)))
+>> -			sc->nr_scanned++;
+>> -
+>>   		may_enter_fs = (sc->gfp_mask & __GFP_FS) ||
+>>   			(PageSwapCache(page) && (sc->gfp_mask & __GFP_IO));
+>>   
+>> -- 
+>> 1.8.3.1
+>>
+> Best Regards
+> Hillf
+
