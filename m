@@ -2,81 +2,116 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 087C5C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C886C282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB5C820673
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:50:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F074C20673
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:51:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404152AbfEXOux (ORCPT
+        id S2404179AbfEXOvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 10:50:53 -0400
-Received: from smtp.asem.it ([151.1.184.197]:60586 "EHLO smtp.asem.it"
+        Fri, 24 May 2019 10:51:17 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35976 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403860AbfEXOux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 10:50:53 -0400
-X-Greylist: delayed 301 seconds by postgrey-1.27 at vger.kernel.org; Fri, 24 May 2019 10:50:52 EDT
-Received: from webmail.asem.it
-        by asem.it (smtp.asem.it)
-        (SecurityGateway 5.5.0)
-        with ESMTP id SG003896145.MSG 
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 16:45:48 +0200S
-Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1261.35; Fri, 24
- May 2019 16:45:47 +0200
-Received: from flavio-x.asem.intra (172.16.17.208) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server id 15.1.1261.35 via Frontend
- Transport; Fri, 24 May 2019 16:45:47 +0200
-From:   Flavio Suligoi <f.suligoi@asem.it>
-To:     Marek Vasut <marek.vasut@gmail.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Richard Weinberger <richard@nod.at>
-CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        Flavio Suligoi <f.suligoi@asem.it>
-Subject: [PATCH] mtd: spi-nor: change "error reading JEDEC id" from dbg to err
-Date:   Fri, 24 May 2019 16:45:45 +0200
-Message-ID: <1558709145-12088-1-git-send-email-f.suligoi@asem.it>
-X-Mailer: git-send-email 2.7.4
+        id S2404154AbfEXOvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 10:51:17 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 604EB30B1B84;
+        Fri, 24 May 2019 14:51:11 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 41FB02CFD6;
+        Fri, 24 May 2019 14:51:07 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Fri, 24 May 2019 16:51:11 +0200 (CEST)
+Date:   Fri, 24 May 2019 16:51:06 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Deepa Dinamani <deepa.kernel@gmail.com>
+Cc:     David Laight <David.Laight@aculab.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "dbueso@suse.de" <dbueso@suse.de>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        Davidlohr Bueso <dave@stgolabs.net>, Eric Wong <e@80x24.org>,
+        Jason Baron <jbaron@akamai.com>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        linux-aio <linux-aio@kvack.org>,
+        Omar Kilani <omar.kilani@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH v2] signal: Adjust error codes according to
+ restore_user_sigmask()
+Message-ID: <20190524145105.GD2655@redhat.com>
+References: <20190522161407.GB4915@redhat.com>
+ <CABeXuvpjrW5Gt95JC-_rYkOA=6RCD5OtkEQdwZVVqGCE3GkQOQ@mail.gmail.com>
+ <4f7b6dbeab1d424baaebd7a5df116349@AcuMS.aculab.com>
+ <20190523145944.GB23070@redhat.com>
+ <345cfba5edde470f9a68d913f44fa342@AcuMS.aculab.com>
+ <20190523163604.GE23070@redhat.com>
+ <f0eced5677c144debfc5a69d0d327bc1@AcuMS.aculab.com>
+ <CABeXuvo-wey+NHWb4gi=FSRrjJOKkVcLPQ-J+dchJeHEbhGQ6g@mail.gmail.com>
+ <20190524141947.GC2655@redhat.com>
+ <CABeXuvqx9fZGiGSAQEE=7wechoGE0E8YW7icBWoTtXPkWPROUw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
-X-SGSPF-Result: none (smtp.asem.it)
-X-SGOP-RefID: str=0001.0A090209.5CE8039C.0029,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABeXuvqx9fZGiGSAQEE=7wechoGE0E8YW7icBWoTtXPkWPROUw@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Fri, 24 May 2019 14:51:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case of SPI error during the reading of the nor Id,
-the probe fails without any error message related to
-the JEDEC Id reading procedure.
+On 05/24, Deepa Dinamani wrote:
+>
+> I think you are misunderstanding what I said.
 
-Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
----
- drivers/mtd/spi-nor/spi-nor.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+probably. Everything was very confusing to me from the very beginning.
+And yes, I can hardly understand your emails, sorry. This one too :/
 
-diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index 73172d7..8719d45 100644
---- a/drivers/mtd/spi-nor/spi-nor.c
-+++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -2062,7 +2062,7 @@ static const struct flash_info *spi_nor_read_id(struct spi_nor *nor)
- 
- 	tmp = nor->read_reg(nor, SPINOR_OP_RDID, id, SPI_NOR_MAX_ID_LEN);
- 	if (tmp < 0) {
--		dev_dbg(nor->dev, "error %d reading JEDEC ID\n", tmp);
-+		dev_err(nor->dev, "error %d reading JEDEC ID\n", tmp);
- 		return ERR_PTR(tmp);
- 	}
- 
--- 
-2.7.4
+> You are taking things
+> out of context. I was saying here what I did was inspired by why the
+> syscall was designed to begin with.
+
+which syscall?
+
+> The syscall below refers to
+> epoll_wait and not epoll_pwait.
+
+So you tried to explain why epoll_pwait() was designed? Or what?
+
+Either way, everything I said below still looks right to me. This probably
+means that I still can't understand you.
+
+But this is irrelevant. My main point is that the kernel was correct before
+854a6ed568 ("signal: Add restore_user_sigmask()"), the (incomplete) patch I sent
+tries to a) restore the correct behaviour and b) simplify/cleanup the code.
+
+> On Fri, May 24, 2019 at 7:19 AM Oleg Nesterov <oleg@redhat.com> wrote:
+> >
+> > On 05/23, Deepa Dinamani wrote:
+> > >
+> > > 1. block the signals you don't care about.
+> > > 2. syscall()
+> > > 3. unblock the signals blocked in 1.
+> >
+> > and even this part of your email is very confusing. because in this case
+> > we can never miss a signal. I'd say
+> >
+> >         1. block the signals you don't care about
+> >         2. unblock the signals which should interrupt the syscall below
+> >         3. syscall()
+> >         4. block the signals unblocked in 2.
+> >
+> > Oleg.
+> >
 
