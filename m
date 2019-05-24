@@ -2,118 +2,100 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10334C282E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F9BC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC372217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:06:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FF29217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:08:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nBmvoo6/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d+squ87/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389780AbfEXJGc (ORCPT
+        id S2389802AbfEXJIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 05:06:32 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:32886 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389515AbfEXJGb (ORCPT
+        Fri, 24 May 2019 05:08:21 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:42498 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389475AbfEXJIU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 05:06:31 -0400
-Received: by mail-lj1-f196.google.com with SMTP id w1so8028824ljw.0;
-        Fri, 24 May 2019 02:06:30 -0700 (PDT)
+        Fri, 24 May 2019 05:08:20 -0400
+Received: by mail-oi1-f195.google.com with SMTP id w9so6492794oic.9
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 02:08:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=pMU63N90N2a6pXKwvYAZ7NGX7dlAMOWlTR4hVN71d+g=;
-        b=nBmvoo6/aJfUJvIX7emFQp1qUTY/CPD2o5Sf9M/ecdwDcNGFOMTCIcf7dbb9BK8e3N
-         7JK3jiAIK6ETrgigaKn4XgxN4VpcNZRLdtawy7ftvEUUfsNb4dNu8Hy84sAE+68H6yg3
-         E72Okv2SpISabzjT/Z/MGaGQODbsTg+acHGfhMQePDApbBvcaKt++QCrqfX1+kHlPiJS
-         x21xalFnqurGpbb1jlzpYwx9+UjOscmghnFxafukjxFutTcdZR2ZYgSw69lTu0aUWOz7
-         78WfA+bRROnwJTXkUNGqCX3KSjkDnuLrIMXvaYzz3s9giWCawojVESQYXKaGS954qB9c
-         uoxw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fB4Mx1+ciujWx737rFsuAYwMzrj1DN17Thp/F78Hnjc=;
+        b=d+squ87/oI0uVVahDHP6UGzMXCXMhgPZZcDo3lVXzeXUKSHBkQhc7gqWzihqo9vOQy
+         CdgX6zR6DifJEB+vf61aGhD4gh3pjN/pnahyKTvjQWfAdRzfOTpjHqbQQG/bkMktFaVp
+         oWdn/FYmS4jPv8RbWG9Betj4zgRTJFRn2F9hb8Wbn0tjO5TauhiOmLa/pn7sCcvh8+Tq
+         TctxiuJGuhmN+OnrJMgEv+EMTx6LdVEBzpYwedKNLMLLhNtznxp7PAlxH/NTLuN4Hwep
+         sBLq4Ew6yYq1c0EyYNmvCukIEtsgg+E/rtyVPuSFE2csK8qrl20iJk7W3VyNwXv7P5ca
+         hzAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pMU63N90N2a6pXKwvYAZ7NGX7dlAMOWlTR4hVN71d+g=;
-        b=n/JekZstzhlZLLXWlb+doQccd/Oljzi7YLsz9rdLGkmotpuTvWAh6qr1M9/IFWnxtG
-         Cat0bPmTvbAAfH0NPFcz4TFmL67uZ1BorZhFLUQZkTJwN+7rsKf68gMfRdd0FbmmIqlO
-         fMLhnrCSAu1tVXZcaD2u+hLNs1HZWLQu1MW9xjdx74t3kKV2f8Z4jzXYJWMxijg7i+zg
-         7tAaArYd7RnvGu/VZhjlURtROiG4yMiBZP1Xk7jIyrNBYK9edAWl4rogrpb3OjHLbHMm
-         4DbIrNiktahg2WQ5XSFty+HNGcAqd+j3mbhBlfaklh0eG/xQT6bpYbLBa/hDg7v3tNuQ
-         3iAA==
-X-Gm-Message-State: APjAAAXmklDf5oGAmcl0Kz6QTzq8ZBFqnaXPoYlJN6dWEdkwEE6Xx5uP
-        Q4ZQaiPZTWmtB51lmT89H6PBvRg4fcg=
-X-Google-Smtp-Source: APXvYqy+y8pjWQek9mnm9deUaxlaSK4qdqmtS4i37KxBnt4vxKxFyj8DuOWLnjawJUkYN8ZDmJ5/2w==
-X-Received: by 2002:a2e:6a01:: with SMTP id f1mr51154780ljc.21.1558688789118;
-        Fri, 24 May 2019 02:06:29 -0700 (PDT)
-Received: from [172.31.190.215] ([86.57.146.226])
-        by smtp.gmail.com with ESMTPSA id n8sm480034lfe.15.2019.05.24.02.06.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 02:06:28 -0700 (PDT)
-Subject: Re: [PATCH 0/7] Adjust hybrid polling sleep time
-To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1556609582.git.asml.silence@gmail.com>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Message-ID: <28d729ed-1112-501a-a5d4-6d53d6432113@gmail.com>
-Date:   Fri, 24 May 2019 12:06:14 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fB4Mx1+ciujWx737rFsuAYwMzrj1DN17Thp/F78Hnjc=;
+        b=udYZIKVv5rHMCxSFeuOP7sJR1H1WiziMnqzu+PbX7Sh98ZB9/yUW5r2BmDWeNx9FG7
+         fMCz7N1FQ/UnfulUSwPD289yQn75zgwdjSBvdulLIraNLzPndhQzWtI2uMKzRP4lOmSb
+         hL309NG0JDDmvIujR4jszasEvrMcs1S9qeONl3IWamQ30KSEHv/R+TxhLg6wPoWoTkh/
+         kff/fccRdEvByExG/o3aFk7jhEUPCVJhmsFsMlhj7m7wPxUWbpH3BanuCyAskuhp/kjr
+         Q/a6lUavhwzaaWtjh/uRkbTYw8NwWrju56rIS0SbcvUog3MjL4uHzX+b/xHZHQwaFsxy
+         0Ikw==
+X-Gm-Message-State: APjAAAWygGWLtHTmfs/fnNkX12SY4TymF6B75kkZOrHXZ0XxKO9Wdkcs
+        ULWo+lgH9Tff6rUAD9Qjt9Fwf5297IzP6aUZrf42PA==
+X-Google-Smtp-Source: APXvYqxHbexWzTRLmkrsg+gXqQ60yiLxWfsxk2OkwvXCv6kRjRelFNf+AkPIWYQAJhahxwNOdWMgxZbeYGVl2JUIWH8=
+X-Received: by 2002:aca:5785:: with SMTP id l127mr5290268oib.48.1558688899862;
+ Fri, 24 May 2019 02:08:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <cover.1556609582.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190520190533.GA28160@Red> <20190521232323.GD3621@darkstar.musicnaut.iki.fi>
+ <20190522093341.GA32154@Red> <20190522181904.GE3621@darkstar.musicnaut.iki.fi>
+ <8977e2bb-8d9e-f4fd-4c44-b4f67e0e7314@redhat.com> <c2972889-fe60-7614-fb6e-e57ddf780a54@redhat.com>
+ <20190523183623.GB5234@darkstar.musicnaut.iki.fi>
+In-Reply-To: <20190523183623.GB5234@darkstar.musicnaut.iki.fi>
+From:   Peter Maydell <peter.maydell@linaro.org>
+Date:   Fri, 24 May 2019 10:08:09 +0100
+Message-ID: <CAFEAcA8C0WN5FwaW2kfWiRm1T8wML_fWXDKqRXP-Lv_P7ysy8A@mail.gmail.com>
+Subject: Re: [Qemu-devel] Running linux on qemu omap
+To:     Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc:     =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <philmd@redhat.com>,
+        Thomas Huth <thuth@redhat.com>,
+        Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>,
+        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Any suggestions?
+On Thu, 23 May 2019 at 19:36, Aaro Koskinen <aaro.koskinen@iki.fi> wrote:
+> Cheetah works with serial console. I tried with console on display,
+> and it seems to boot up, and the frame buffer window gets correctly
+> sized but for some reason it just stays blank.
 
-You might also want to consider (and hopefully apply) the first 3
-separately as they are bug fixes. (e.g. hybrid polling turned out to be
-disabled).
-Would it be better for me to split the patchset?
+As a general question, when you're doing these tests are you
+using a kernel image that is known to work on real hardware?
+One problem we have with some of these older QEMU platforms
+is that it turns out that QEMU is only tested with the kernel,
+and the kernel support for the platform is only tested with
+QEMU, and so you get equal and opposite bugs in QEMU and the
+kernel that cancel each other out and don't get noticed...
 
+(On the QEMU side these platforms are all basically orphaned:
+if somebody submits patches to fix bugs we'll review them,
+but they're unlikely to get a great deal of attention otherwise.
+They're also quite near the top of the "maybe we'll just
+deprecate and then delete these" list, since we have not
+historically had any working guest images to test against.
+If there's a real userbase that wants them to continue to
+exist that's a different matter, of course.)
 
-On 4/30/2019 10:34 AM, Pavel Begunkov (Silence) wrote:
-> From: Pavel Begunkov <asml.silence@gmail.com>
-> 
-> Sleep time for adaptive hybrid polling is coarse and can be improved to
-> decrease CPU load. Use variation of the 3-sigma rule and runtime
-> tuning.
-> 
-> This approach gives up to 2x CPU load reduction keeping the same latency
-> distribution and throughput.
-> 
-> Pavel Begunkov (7):
->   blk-iolatency: Fix zero mean in previous stats
->   blk-stats: Introduce explicit stat staging buffers
->   blk-mq: Fix disabled hybrid polling
->   blk-stats: Add left mean deviation to blk_stats
->   blk-mq: Precalculate hybrid polling time
->   blk-mq: Track num of overslept by hybrid poll rqs
->   blk-mq: Adjust hybrid poll sleep time
-> 
->  block/blk-core.c          |   7 +-
->  block/blk-iolatency.c     |  60 ++++++++++----
->  block/blk-mq-debugfs.c    |  14 ++--
->  block/blk-mq.c            | 163 ++++++++++++++++++++++++++++----------
->  block/blk-stat.c          |  67 +++++++++++++---
->  block/blk-stat.h          |  15 +++-
->  include/linux/blk_types.h |   9 +++
->  include/linux/blkdev.h    |  17 +++-
->  8 files changed, 271 insertions(+), 81 deletions(-)
-> 
-
--- 
-Yours sincerely,
-Pavel Begunkov
+thanks
+- PMM
