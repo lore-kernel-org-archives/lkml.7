@@ -2,128 +2,107 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A6EC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD0CC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:04:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CC2120863
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51D3020863
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:04:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="haAJq5jY"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MnQgEBJB";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WtaCR2+w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388450AbfEXGDn (ORCPT
+        id S2388674AbfEXGEC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 02:03:43 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37237 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387622AbfEXGDn (ORCPT
+        Fri, 24 May 2019 02:04:02 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:50270 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388070AbfEXGEC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 02:03:43 -0400
-Received: by mail-pf1-f194.google.com with SMTP id a23so4656141pff.4
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 23:03:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Dgk22vNOFVTdl15VCCSR/tsBKmUZl95JwAuWXbL3XM4=;
-        b=haAJq5jYQY/oHcN77oKF7B9I+jJBdfhZl03i0p38il8WSfQC1Dxf8A8jaPEgrNn9Mc
-         CxUkRBfjZCaishIQst8qhzUqXO2S5Hq1QqmUsNs0qxEob+yPExPrC5wOX89FmT9LFkeS
-         X48xvBEdt/z2Q8qKG46Pty2n3LOJtaTGE4E0zFDim2Jepeh6lMYO4LVNSOVRRDfNPCvQ
-         fLU4rxM50AI+lWYdpHKwPTk3J/xe0zTCi9U6kL8QXoViA3oNyc0gVePHptCZTRjflu8Q
-         GgwmbwQS02CBk3SsPZVuF9hH2+kePIgtWUpbQmJEYia/e0LWA4tZI2Abdci0WgE/Imrq
-         fHLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Dgk22vNOFVTdl15VCCSR/tsBKmUZl95JwAuWXbL3XM4=;
-        b=sc/sV/p7gX+rCMQny9zt94LPDTb5N4iTECuac6zoeW9rDsXacyts/qMIeKWuL4WleZ
-         aZxNLjlleHT2ZBPLdGUsYvFnCRJa3xYxvsQ95dHpHYYRAGI+Iq8ysDlWSXx2IRjK6FQB
-         Gld94NOrRKsEuxX5ybJDvpXuyxi2nngCuJGfv5otfxA+YhYJpEoBsaL3N7fy6CY1LCRP
-         SD7FMYRtuhR2ryx8nPVdwk1lgVgLiomXfn3vPRZrxfksb84NTULYVZuByN4WKwgbBTbt
-         yY8SfIgFVdYeMxvRzDERbZHmkxfjTKTGsrGnlf+p0OXCJzAtF/tun9r8LVvHj1QDwBh9
-         wOPw==
-X-Gm-Message-State: APjAAAXOA1uY3p3O5n5mU3q1rx47qHpZdJP9fClyqQTI1SscNM662CGf
-        ejBmY9lIs02DnWs+YIVZqPU=
-X-Google-Smtp-Source: APXvYqyIb39LWo6daB+rzJC6BkUxi08RKGYIbWTC445D2ECXSZn9XWhpoKUxddYv2qQWH9DTy0Bkjg==
-X-Received: by 2002:a17:90a:c696:: with SMTP id n22mr6541804pjt.24.1558677822477;
-        Thu, 23 May 2019 23:03:42 -0700 (PDT)
-Received: from localhost.localdomain ([110.225.17.212])
-        by smtp.gmail.com with ESMTPSA id t25sm2264100pfq.91.2019.05.23.23.03.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 23:03:41 -0700 (PDT)
-From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
-To:     gregkh@linuxfoundation.org, thesven73@gmail.com, hofrat@osadl.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Subject: [PATCH] staging: fieldbus: anybuss: Remove variables
-Date:   Fri, 24 May 2019 11:33:28 +0530
-Message-Id: <20190524060328.3827-1-nishkadg.linux@gmail.com>
-X-Mailer: git-send-email 2.19.1
+        Fri, 24 May 2019 02:04:02 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 60D4860C8B; Fri, 24 May 2019 06:04:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1558677840;
+        bh=+LXeINwGo6CiisA+JrfBkpcV33DtSDYcwasClLqFltM=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=MnQgEBJBFX7Jr6ZKTlpvPMRJlQPlORXWJeNHd18+CdO6x9V93JYSt8nqTFP73lTVe
+         Kc87IbU8eSlsJ0klkz6GlvCLKXc6yFpvAFoopfpj6hJVstNPzdnt9epwSyXMx7viOQ
+         idTFVhIbOwNG/+qmb2jqYeYdR78lpVY7V7ALMvB0=
+Received: from [10.131.117.43] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CA5026063A;
+        Fri, 24 May 2019 06:03:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1558677838;
+        bh=+LXeINwGo6CiisA+JrfBkpcV33DtSDYcwasClLqFltM=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=WtaCR2+wyWWFjJzU9+IBN0PVFNR69TJTy4vvAyk+MUIWQoA6bLptg7h6mGWmvgSYC
+         ceLZ777Tzuy2Vfg1oiS6jsaRdeMMBSozslhkgH9uA3OjPW/L2iqMfhWCfqhoBEh3TL
+         vBuirdXrib/G+OD5P4nw7QuflaX7JS6fFb70beys=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CA5026063A
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [RFC v2 00/11] DVFS in the OPP core
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-scsi@vger.kernel.org, swboyd@chromium.org,
+        ulf.hansson@linaro.org, dianders@chromium.org, rafael@kernel.org,
+        vincent.guittot@linaro.org
+References: <20190320094918.20234-1-rnayak@codeaurora.org>
+ <20190521062248.ogjetb2rwtqekflx@vireshk-i7>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <85dbc630-f526-c06f-8a8b-9bbc3b794693@codeaurora.org>
+Date:   Fri, 24 May 2019 11:33:52 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190521062248.ogjetb2rwtqekflx@vireshk-i7>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The local variable cd, used in multiple functions, is immediately passed
-to another function call, whose result is returned. As that is the only
-use of cd, it can be replaced with its variable.
-Issue found with Coccinelle.
 
-Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
----
- drivers/staging/fieldbus/anybuss/host.c | 18 ++++++------------
- 1 file changed, 6 insertions(+), 12 deletions(-)
+On 5/21/2019 11:52 AM, Viresh Kumar wrote:
+> On 20-03-19, 15:19, Rajendra Nayak wrote:
+>> This is a v2 of the RFC posted earlier by Stephen Boyd [1]
+>>
+>> As part of v2 I still follow the same approach of dev_pm_opp_set_rate()
+>> API using clk framework to round the frequency passed and making it
+>> accept 0 as a valid frequency indicating the frequency isn't required
+>> anymore. It just has a few more drivers converted to use this approach
+>> like dsi/dpu and ufs.
+>> ufs demonstrates the case of having to handle multiple power domains, one
+>> of which is scalable.
+>>
+>> The patches are based on 5.1-rc1 and depend on some ufs fixes I posted
+>> earlier [2] and a DT patch to include the rpmpd header [3]
+>>
+>> [1] https://lkml.org/lkml/2019/1/28/2086
+>> [2] https://lkml.org/lkml/2019/3/8/70
+>> [3] https://lkml.org/lkml/2019/3/20/120
+> 
+> Hi Rajendra,
+> 
+> I am inclined to apply/push this series for 5.3-rc1, will it be
+> possible for you to spend some time on this at priority ?
 
-diff --git a/drivers/staging/fieldbus/anybuss/host.c b/drivers/staging/fieldbus/anybuss/host.c
-index f69dc4930457..9679cd0b737b 100644
---- a/drivers/staging/fieldbus/anybuss/host.c
-+++ b/drivers/staging/fieldbus/anybuss/host.c
-@@ -1046,10 +1046,8 @@ EXPORT_SYMBOL_GPL(anybuss_start_init);
- 
- int anybuss_finish_init(struct anybuss_client *client)
- {
--	struct anybuss_host *cd = client->host;
--
--	return _anybus_mbox_cmd(cd, CMD_END_INIT, false, NULL, 0,
--					NULL, 0, NULL, 0);
-+	return _anybus_mbox_cmd(client->host, CMD_END_INIT, false, NULL, 0,
-+				NULL, 0, NULL, 0);
- }
- EXPORT_SYMBOL_GPL(anybuss_finish_init);
- 
-@@ -1146,20 +1144,16 @@ EXPORT_SYMBOL_GPL(anybuss_send_msg);
- int anybuss_send_ext(struct anybuss_client *client, u16 cmd_num,
- 		     const void *buf, size_t count)
- {
--	struct anybuss_host *cd = client->host;
--
--	return _anybus_mbox_cmd(cd, cmd_num, true, NULL, 0, NULL, 0,
--					buf, count);
-+	return _anybus_mbox_cmd(client->host, cmd_num, true, NULL, 0, NULL, 0,
-+				buf, count);
- }
- EXPORT_SYMBOL_GPL(anybuss_send_ext);
- 
- int anybuss_recv_msg(struct anybuss_client *client, u16 cmd_num,
- 		     void *buf, size_t count)
- {
--	struct anybuss_host *cd = client->host;
--
--	return _anybus_mbox_cmd(cd, cmd_num, true, NULL, 0, buf, count,
--					NULL, 0);
-+	return _anybus_mbox_cmd(client->host, cmd_num, true, NULL, 0, buf,
-+				count, NULL, 0);
- }
- EXPORT_SYMBOL_GPL(anybuss_recv_msg);
- 
+Hey Viresh, I was on vacation, just got back. I will refresh this series
+and address your previous feedback, I haven't received much feedback for the
+driver changes :/ but we can atleast review and get the OPP layer changes
+finalized. thanks.
+
 -- 
-2.19.1
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
