@@ -2,209 +2,175 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA80C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8BDEC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25B192133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:57:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBC142133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:59:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404144AbfEXO5Q (ORCPT
+        id S2404145AbfEXO7v convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 10:57:16 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37312 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2403917AbfEXO5Q (ORCPT
+        Fri, 24 May 2019 10:59:51 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:21958 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2404054AbfEXO7u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 10:57:16 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4OEkvGN135185
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 10:57:14 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2spfj7a9jr-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 10:57:14 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Fri, 24 May 2019 15:57:12 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 24 May 2019 15:57:08 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4OEv76r22478954
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 May 2019 14:57:07 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B26D842041;
-        Fri, 24 May 2019 14:57:07 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 44B1C42047;
-        Fri, 24 May 2019 14:57:06 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.111.39])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 24 May 2019 14:57:06 +0000 (GMT)
-Subject: Re: [PATCH v6 1/3] Add a new ima hook ima_kexec_cmdline to measure
- cmdline args
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Prakhar Srivastava <prsriva02@gmail.com>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     mjg59@google.com, roberto.sassu@huawei.com, vgoyal@redhat.com
-Date:   Fri, 24 May 2019 10:56:55 -0400
-In-Reply-To: <20190521000645.16227-2-prsriva02@gmail.com>
-References: <20190521000645.16227-1-prsriva02@gmail.com>
-         <20190521000645.16227-2-prsriva02@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19052414-0016-0000-0000-0000027F1275
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052414-0017-0000-0000-000032DC0F9A
-Message-Id: <1558709815.3977.56.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-24_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905240099
+        Fri, 24 May 2019 10:59:50 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id uk-mta-4-IqGpfYYFOqCYiNehhRN8dg-1;
+ Fri, 24 May 2019 15:59:43 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 24 May 2019 15:59:42 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 24 May 2019 15:59:42 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Oleg Nesterov' <oleg@redhat.com>
+CC:     'Deepa Dinamani' <deepa.kernel@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "dbueso@suse.de" <dbueso@suse.de>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        Davidlohr Bueso <dave@stgolabs.net>, Eric Wong <e@80x24.org>,
+        Jason Baron <jbaron@akamai.com>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        linux-aio <linux-aio@kvack.org>,
+        Omar Kilani <omar.kilani@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH v2] signal: Adjust error codes according to
+ restore_user_sigmask()
+Thread-Topic: [PATCH v2] signal: Adjust error codes according to
+ restore_user_sigmask()
+Thread-Index: AQHVELwtsgR+BAQFXk2JV68Wk/7LjKZ4aINAgABVkoCAAB2x0P///TgAgAARdkCAAUypAIAAGykA
+Date:   Fri, 24 May 2019 14:59:42 +0000
+Message-ID: <766510cbbec640b18fd99f3946b37475@AcuMS.aculab.com>
+References: <20190522032144.10995-1-deepa.kernel@gmail.com>
+ <20190522150505.GA4915@redhat.com>
+ <CABeXuvrPM5xvzqUydbREapvwgy6deYreHp0aaMoSHyLB6+HGRg@mail.gmail.com>
+ <20190522161407.GB4915@redhat.com>
+ <CABeXuvpjrW5Gt95JC-_rYkOA=6RCD5OtkEQdwZVVqGCE3GkQOQ@mail.gmail.com>
+ <4f7b6dbeab1d424baaebd7a5df116349@AcuMS.aculab.com>
+ <20190523145944.GB23070@redhat.com>
+ <345cfba5edde470f9a68d913f44fa342@AcuMS.aculab.com>
+ <20190523163604.GE23070@redhat.com>
+ <f0eced5677c144debfc5a69d0d327bc1@AcuMS.aculab.com>
+ <20190524132911.GA2655@redhat.com>
+In-Reply-To: <20190524132911.GA2655@redhat.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-MC-Unique: IqGpfYYFOqCYiNehhRN8dg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prakhar,
+From: Oleg Nesterov
+> Sent: 24 May 2019 14:29
+> It seems that we all are just trying to confuse each other. I got lost.
 
-On Mon, 2019-05-20 at 17:06 -0700, Prakhar Srivastava wrote:
-> Currently during kexec_file_load(soft reboot) the cmdline args
-> passed are not measured and the PCR values are not reset.
+I'm always lost :-)
 
-This patch addresses not measuring the kexec boot cmdline.  I don't
-see a reason for mentioning anything about the PCR values not being
-reset.  Keep it simple.
-
-> This results in the new kernel to assume a secure boot was
-> followed. The boot args used to launch the new kernel need to be
-> measured and carried over to the next kernel to be used for
-> attestation. IMA supports only measuring files, no functionality
-> exists to measure a buffer(kexec cmdline).
+> On 05/23, David Laight wrote:
+> >
+> > From: Oleg Nesterov
+> > > Sent: 23 May 2019 17:36
+> > > On 05/23, David Laight wrote:
+> > > >
+> > > > From: Oleg Nesterov
+> > > > > On 05/23, David Laight wrote:
+> > ...
+> > > > > Not sure I understand... OK, suppose that you do
+> > > > >
+> > > > > 	block-all-signals;
+> > > > > 	ret = pselect(..., sigmask(SIG_URG));
+> > > > >
+> > > > > if it returns success/timeout then the handler for SIG_URG should not be called?
+> > > >
+> > > > Ugg...
+> > > > Posix probably allows the signal handler be called at the point the event
+> > > > happens rather than being deferred until the system call completes.
+> > > > Queueing up the signal handler to be run at a later time (syscall exit)
+> > > > certainly makes sense.
+> > > > Definitely safest to call the signal handler even if success/timeout
+> > > > is returned.
+> > >
+> > > Why?
+> > >
+> > > > pselect() exists to stop the entry race, not the exit one.
+> > >
+> > > pselect() has to block SIG_URG again before it returns to user-mode, right?
+> >
+> > Yep.
+> > So the signal handler can't be called for a signal that happens after
+> > pselect() returns.
 > 
-> This change adds a new functionality to measure buffers
-> process_buffer_measurement which uses the hash of the buffer
-> instead of file hash to add an entry in the ima log.
-> A new ima hook ima_kexec_cmdline is also defined which calls
-> into process_buffer_measurement to add the kexec_cmdline args
-> to the log.
+> Yes. And "after pselect() returns" actually means "after pselect() restores
+> the old sigmask while it returns to user mode".
 > 
-> A new policy KEXEC_CMDLINE is also defined to control measuring the
-> kexec_cmdline buffer.
-> This patch only adds IMA_MEASURE as a supported functionality.
+> > > Suppose pselect() finds a ready fd, and this races with SIG_URG.
+> >
+> > You mean if SIG_URG is raised after a ready fd is found (or even timeout)?
+> > So the return value isn't EINTR.
 > 
-> - A new ima hook ima_kexec_cmdline is defined to be called by the
-> kexec code.
-> - A new function process_buffer_measurement is defined to measure
-> the buffer hash into the ima log.
-> - A new func policy KEXEC_CMDLINE is defined to control the measurement.
-
-Missing is how to verify the digest of the measurement list kexec boot
-cmdline entry based on /proc/cmdline.  Everything before the "root="
-in the /proc entry needs to be removed before calculating the hash.
- Please include a sample shell command.
-
-Matthew's patch "IMA: Allow profiles to define the desired IMA
-template" will require changes to this patch.  Please rebase this
-patch set on top of it, once Matthew addresses the comments and re-
-posts.
-
-(Reminder: the patch description should be 70 - 75 characters.)
-
+> Yes.
 > 
-> Signed-off-by: Prakhar Srivastava <prsriva02@gmail.com>
-> ---
+> > (If an fd is readable on entry, the SIG_URG could have happened much earlier.)
+> 
+> Why not? See the pseudo code above. It was blocked before pselect() was called.
+> So SIG_URG can be already pending when pselect() is called but since an fd is
+> already ready on entry pselect() restores the old sigmask (and thus blocks SIG_URG
+> again) and returns success. The handler is not called.
+> 
+> However, if there is no a ready fd, pselect won't block. It will notice SIG_URG,
+> deliver this signal, and return -EINTR.
 
-< snip >
+To my mind changing the signal mask should be enough to get a masked
+signal handler called - even if the mask is reset before the syscall exits.
+There shouldn't be any need for an interruptible wait to be interrupted.
 
-> --- a/security/integrity/ima/ima_main.c
-> +++ b/security/integrity/ima/ima_main.c
-> @@ -576,6 +576,83 @@ int ima_load_data(enum kernel_load_data_id id)
->  	return 0;
->  }
->  
-> +/*
-> + * process_buffer_measurement - Measure the buffer to ima log.
-> + * @buf: pointer to the buffer that needs to be added to the log.
-> + * @size: size of buffer(in bytes).
-> + * @eventname: event name to be used for the buffer entry.
-> + * @cred: a pointer to a credentials structure for user validation.
-> + * @secid: the secid of the task to be validated.
-> + *
-> + * Based on policy, the buffer is measured into the ima log.
-> + */
-> +static void process_buffer_measurement(const void *buf, int size,
-> +				const char *eventname, const struct cred *cred,
-> +				u32 secid)
-> +{
-> +	int ret = 0;
-> +	struct ima_template_entry *entry = NULL;
-> +	struct integrity_iint_cache tmp_iint, *iint = &tmp_iint;
-> +	struct ima_event_data event_data = {iint, NULL, NULL,
-> +						NULL, 0, NULL};
+I suspect that if you send a signal to a process that is looping
+in userspace (on a different) the signal handler is called on the next
+exit to userspace regardless as to whether the kernel blocks.
 
-Thiago's clean up patch initializes only specific variables, as
-needed.  Please initialize event_data like:
+epoll and pselect shouldn't be any different.
+Having the signal unmasked at any time should be enough to get it called.
 
-struct ima_event_data event_data = {.iint = iint};
+...
+> > > What if SIG_URG comes right after pselect() blocks SIG_URG again? I mean,
+> > > how this differs the case when it comes before, but a ready fd was already
+> > > found?
+> >
+> > I suspect you need to defer the re-instatement of the original mask
+> > to the code that calls the signal handlers (which probably should
+> > be called with the programs signal mask).
+> 
+> This is what the kernel does when the signal is delivered, the original mask
+> is restored after the signal handler runs.
 
+I'd have thought that the original signal mask (all blocked in the examples)
+should be restored before the signal handler is called.
+After all the signal handler is allowed to modify the processes signal mask.
+I've had horrid thoughts about SIG_SUSPEND :-)
 
-> +	struct {
-> +		struct ima_digest_data hdr;
-> +		char digest[IMA_MAX_DIGEST_SIZE];
-> +	} hash;
-> +	int violation = 0;
-> +	int pcr = CONFIG_IMA_MEASURE_PCR_IDX;
-> +	int action = 0;
-> +
-> +	action = ima_get_action(NULL, cred, secid, 0, KEXEC_CMDLINE, &pcr);
-> +	if (!(action & IMA_MEASURE))
-> +		goto out;
-> +
-> +	memset(iint, 0, sizeof(*iint));
-> +	memset(&hash, 0, sizeof(hash));
-> +
-> +	event_data.filename = eventname;
-> +
-> +	iint->ima_hash = &hash.hdr;
-> +	iint->ima_hash->algo = ima_hash_algo;
-> +	iint->ima_hash->length = hash_digest_size[ima_hash_algo];
-> +
-> +	ret = ima_calc_buffer_hash(buf, size, iint->ima_hash);
-> +	if (ret < 0)
-> +		goto out;
-> +
-> +	ret = ima_alloc_init_template(&event_data, &entry);
-> +	if (ret < 0)
-> +		goto out;
-> +
-> +	if (action & IMA_MEASURE)
-> +		ret = ima_store_template(entry, violation, NULL, buf, pcr);
-> +
-> +	if (ret < 0) {
-> +		ima_free_template_entry(entry);
-> +	}
+	David
 
-Remove brackets.
-
-Mimi
-
-> +
-> +out:
-> +	return;
-> +}
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
