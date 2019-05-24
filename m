@@ -2,84 +2,76 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D93C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD2BEC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EA5720815
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A451520815
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:19:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558711158;
+	bh=kmYgj5gKowihH9Hz+CQdYeZjDyUaNPJOm5n23hQQWrc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ra15Rzlz3r/gFvlgw3ZTga1KnE/EqKaDnZQQY+mDx1m2uP7kEeYDSi1T394Uk503w
+	 thJKkRaYfAalqpMLp1QVUNo4vY+LSCXDZ7jqrmG+HlEocbiBr7fYXTcEPNxgDDc8Ga
+	 FBAUz6ThMw7iwUnMaiP4baDiwzwiBvb2zm1YXPME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389524AbfEXPTN (ORCPT
+        id S2389621AbfEXPTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 11:19:13 -0400
-Received: from smtprelay0117.hostedemail.com ([216.40.44.117]:33270 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389079AbfEXPTN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 11:19:13 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 6A263837F252;
-        Fri, 24 May 2019 15:19:11 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: eye33_15cd51fc83639
-X-Filterd-Recvd-Size: 2470
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf01.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 24 May 2019 15:19:09 +0000 (UTC)
-Message-ID: <f6286af05b1eda38b103ef1337cd7086d3ea4372.camel@perches.com>
-Subject: Re: [PATCH net] bonding: make debugging output more succinct
-From:   Joe Perches <joe@perches.com>
-To:     Jarod Wilson <jarod@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Date:   Fri, 24 May 2019 08:19:07 -0700
-In-Reply-To: <20190524135623.17326-1-jarod@redhat.com>
-References: <20190524135623.17326-1-jarod@redhat.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 24 May 2019 11:19:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40006 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389079AbfEXPTP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 11:19:15 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAF4A2075E;
+        Fri, 24 May 2019 15:19:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558711155;
+        bh=kmYgj5gKowihH9Hz+CQdYeZjDyUaNPJOm5n23hQQWrc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eEYe5FdW353C/LCqKEFnf4py+eROkFAaU3tXUILEyVSuYvIwXIP9467DGRXdjoPFn
+         pitiSmt0cQ/PDMxfXR8viCx+3N83oXI1UjFLfOgxRPtNMDApzrlcKbE2mZ30b8jtt3
+         qxpe443AFhusMA/dy/1IR4IAkicU23McJ6qCd0w8=
+Date:   Fri, 24 May 2019 17:19:12 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jinpu Wang <jinpu.wang@cloud.ionos.com>
+Cc:     Tony Luck <tony.luck@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        linux-kernel@vger.kernel.org,
+        Elmar Gerdes <elmar.gerdes@cloud.ionos.com>
+Subject: Re: Is 2nd Generation Intel(R) Xeon(R) Processors (Formerly Cascade
+ Lake) affected by MDS
+Message-ID: <20190524151912.GA29389@kroah.com>
+References: <CAMGffEkQmdrrH3+UChZx_Af6WcFFQFw6fz3Ti4CRUau-wq7jow@mail.gmail.com>
+ <20190524141732.GA4412@kroah.com>
+ <7B9F565D-EE66-432B-9D29-E494BFD24683@gmail.com>
+ <CAMGffEmmtJhQE04xt84QHrDxUFa0OqbKfZZT_mhXN6P6D99-WA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMGffEmmtJhQE04xt84QHrDxUFa0OqbKfZZT_mhXN6P6D99-WA@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-05-24 at 09:56 -0400, Jarod Wilson wrote:
-> Seeing bonding debug log data along the lines of "event: 5" is a bit spartan,
-> and often requires a lookup table if you don't remember what every event is.
-> Make use of netdev_cmd_to_name for an improved debugging experience, so for
-> the prior example, you'll see: "bond_netdev_event received NETDEV_REGISTER"
-> instead (both are prefixed with the device for which the event pertains).
-> 
-> There are also quite a few places that the netdev_dbg output could stand to
-> mention exactly which slave the message pertains to (gets messy if you have
-> multiple slaves all spewing at once to know which one they pertain to).
-[]
-> diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-[]
-> @@ -1515,7 +1515,8 @@ int bond_enslave(struct net_device *bond_dev, struct net_device *slave_dev,
->  	new_slave->original_mtu = slave_dev->mtu;
->  	res = dev_set_mtu(slave_dev, bond->dev->mtu);
->  	if (res) {
-> -		netdev_dbg(bond_dev, "Error %d calling dev_set_mtu\n", res);
-> +		netdev_dbg(bond_dev, "Error %d calling dev_set_mtu for slave %s\n",
-> +			   res, slave_dev->name);
+On Fri, May 24, 2019 at 05:14:38PM +0200, Jinpu Wang wrote:
+> I would expect the production Cascade Lake supports md-clear feature,
+> so VM migration works from old generation.
+> Could some one give me an answer?
 
-Perhaps better to add and use helper mechanisms like:
+No idea, try it and see!
 
-#define slave_dbg(bond_dev, slave_dev, fmt, ...)				\
-	netdev_dbg(bond_dev, "(slave %s) " fmt, (slave_dev)->name, ##__VA_ARGS__)
+good luck!
 
-So this might be
-		slave_dbg(bond_dev, slave_dev, "Error %d calling dev_set_mtu\n",
-			  res);
-etc...
-
-So there would be a unified style to grep in the logs.
-
+greg k-h
