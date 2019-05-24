@@ -2,110 +2,99 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74AFBC282E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ABEDC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 573A02075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:42:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1752E2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:43:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391168AbfEXLmd (ORCPT
+        id S2391255AbfEXLnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 07:42:33 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:41174 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390983AbfEXLmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 07:42:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 383FB374;
-        Fri, 24 May 2019 04:42:32 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 38DE93F703;
-        Fri, 24 May 2019 04:42:27 -0700 (PDT)
-Date:   Fri, 24 May 2019 12:42:20 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu, arnd@arndb.de,
-        bp@alien8.de, catalin.marinas@arm.com, davem@davemloft.net,
-        fenghua.yu@intel.com, heiko.carstens@de.ibm.com,
-        herbert@gondor.apana.org.au, ink@jurassic.park.msu.ru,
-        jhogan@kernel.org, linux@armlinux.org.uk, mattst88@gmail.com,
-        mingo@kernel.org, mpe@ellerman.id.au, palmer@sifive.com,
-        paul.burton@mips.com, paulus@samba.org, ralf@linux-mips.org,
-        rth@twiddle.net, stable@vger.kernel.org, tglx@linutronix.de,
-        tony.luck@intel.com, vgupta@synopsys.com,
-        gregkh@linuxfoundation.org, jhansen@vmware.com, vdasa@vmware.com,
-        aditr@vmware.com, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH 00/18] locking/atomic: atomic64 type cleanup
-Message-ID: <20190524114220.GA4260@fuggles.cambridge.arm.com>
-References: <20190522132250.26499-1-mark.rutland@arm.com>
- <20190523083013.GA4616@andrea>
- <20190523101926.GA3370@lakrids.cambridge.arm.com>
- <20190524103731.GN2606@hirez.programming.kicks-ass.net>
- <20190524111807.GS2650@hirez.programming.kicks-ass.net>
+        Fri, 24 May 2019 07:43:15 -0400
+Received: from mail-wm1-f52.google.com ([209.85.128.52]:35719 "EHLO
+        mail-wm1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390920AbfEXLnO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 07:43:14 -0400
+Received: by mail-wm1-f52.google.com with SMTP id w9so2777254wmi.0
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 04:43:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aQ5Notts0BAv9aikRNQKLy1psUiEzig1oST72IhaGow=;
+        b=SNSGOPprwVKCrwRJJSj2pDWUOnlUGflmmHVZOsX99cADIvadSjy7kDVt9teLeWbpkV
+         7/56/m4EH4BUg+mUqlrMz9wRyaUX1s/KeGxDXwV8eVzPGfDG21DpX9ObvGRJVZDVkdje
+         pJAObpl8PnTrXaBQ36ucFgEYw0Rn0a+uFmd+qL/LcTchka7rLnlNN2Cxq9lqVQE+deoj
+         pi0kXW7oinJWwaewJrh0NZe/qslcyHs6FscLelhIZI1tyfSrVNMPKoj/7eQ5ykB6znS7
+         LOHWg0D9Xp39ULkGCw6O+FwZIuF4ubDVtHvruypeqt4P3oMWlNaZwV0NDlkAoGOSIRrj
+         hn3A==
+X-Gm-Message-State: APjAAAXoLtfLt2sIEFEby76FJ/huDBEBxxekD0EpyhHkYDhZDUglQkJg
+        QL14lo+0orEzsOqoVUy981P7QmzT/r4=
+X-Google-Smtp-Source: APXvYqyM7KgS6R5ZRv/7BgvhV2xOQx8JJLv0FBpz1HKYks8F4VO4kLpVKwOXUcKrjx5ZlTesSmCa+w==
+X-Received: by 2002:a7b:c444:: with SMTP id l4mr16519573wmi.15.1558698192747;
+        Fri, 24 May 2019 04:43:12 -0700 (PDT)
+Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id a128sm2210109wmc.13.2019.05.24.04.43.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 24 May 2019 04:43:11 -0700 (PDT)
+Date:   Fri, 24 May 2019 13:43:10 +0200
+From:   Oleksandr Natalenko <oleksandr@redhat.com>
+To:     Justin Piszcz <jpiszcz@lucidpixels.com>
+Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: 5.1 kernel: khugepaged stuck at 100%
+Message-ID: <20190524114310.6h3tlslncepa6323@butterfly.localdomain>
+References: <002901d5064d$42355ea0$c6a01be0$@lucidpixels.com>
+ <20190509111343.rvmy5noqlf4os3zk@box>
+ <CAO9zADww2v2ckHsNDwRgiyMr9b3JH1xOOSiRJ0Uh2XZT5c=MEQ@mail.gmail.com>
+ <CAO9zADyq44Sn0kYZBC55C0ykpHaASzp+27K3BofbkEniK6af-w@mail.gmail.com>
+ <CAO9zADw_PnZMyVJKek-GT96esPXdh007hnzenveawOAM3CvK9g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190524111807.GS2650@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
+In-Reply-To: <CAO9zADw_PnZMyVJKek-GT96esPXdh007hnzenveawOAM3CvK9g@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 01:18:07PM +0200, Peter Zijlstra wrote:
-> On Fri, May 24, 2019 at 12:37:31PM +0200, Peter Zijlstra wrote:
-> > On Thu, May 23, 2019 at 11:19:26AM +0100, Mark Rutland wrote:
-> > 
-> > > [mark@lakrids:~/src/linux]% git grep '\(return\|=\)\s\+atomic\(64\)\?_set'
-> > > include/linux/vmw_vmci_defs.h:  return atomic_set((atomic_t *)var, (u32)new_val);
-> > > include/linux/vmw_vmci_defs.h:  return atomic64_set(var, new_val);
-> > > 
-> > 
-> > Oh boy, what a load of crap you just did find.
-> > 
-> > How about something like the below? I've not read how that buffer is
-> > used, but the below preserves all broken without using atomic*_t.
+On Thu, May 16, 2019 at 10:27:50AM -0400, Justin Piszcz wrote:
+> On Thu, May 16, 2019 at 10:17 AM Justin Piszcz <jpiszcz@lucidpixels.com> wrote:
+> >
+> > On Thu, May 16, 2019 at 10:14 AM Justin Piszcz <jpiszcz@lucidpixels.com> wrote:
+> > >
+> > > On Tue, May 14, 2019 at 9:16 AM Kirill A. Shutemov <kirill@shutemov.name> wrote:
+> > >
+> > > > Could you check what khugepaged doing?
+> > > >
+> > > > cat /proc/$(pidof khugepaged)/stack
+> > >
+> > > It is doing it again, 10:12am - 2019-05-16
+> > >
+> > >   PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+> > >    77 root      39  19       0      0      0 R 100.0   0.0  92:06.94 khugepaged
+> > >
+> > > Kernel: 5.1.2
+> > >
+> > > $ sudo cat /proc/$(pidof khugepaged)/stack
+> > > [<0>] 0xffffffffffffffff
+> > >
 > 
-> Clarified by something along these lines?
+> As a workaround/in the meantime--I will add the following to lilo/grub:
+> transparent_hugepage=never
 > 
-> ---
->  Documentation/atomic_t.txt | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/atomic_t.txt b/Documentation/atomic_t.txt
-> index dca3fb0554db..125c95ddbbc0 100644
-> --- a/Documentation/atomic_t.txt
-> +++ b/Documentation/atomic_t.txt
-> @@ -83,6 +83,9 @@ The non-RMW ops are (typically) regular LOADs and STOREs and are canonically
->  implemented using READ_ONCE(), WRITE_ONCE(), smp_load_acquire() and
->  smp_store_release() respectively.
->  
+> Justin
 
-Not sure you need a new paragraph here.
+Cc'ing myself since i observe such a behaviour sometimes right after KVM
+VM is launched. No luck with reproducing it on demand so far, though.
 
-> +Therefore, if you find yourself only using the Non-RMW operations of atomic_t,
-> +you do not in fact need atomic_t at all and are doing it wrong.
-> +
-
-That makes sense to me, although I now find that the sentence below is a bit
-confusing because it sounds like it's a caveat relating to only using
-Non-RMW ops.
-
->  The one detail to this is that atomic_set{}() should be observable to the RMW
->  ops. That is:
-
-How about changing this to be:
-
-  "A subtle detail of atomic_set{}() is that it should be observable..."
-
-With that:
-
-Acked-by: Will Deacon <will.deacon@arm.com>
-
-Will
+-- 
+  Best regards,
+    Oleksandr Natalenko (post-factum)
+    Senior Software Maintenance Engineer
