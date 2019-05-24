@@ -2,331 +2,165 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA855C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92DD7C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE47E2184B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:46:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F0122184B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:47:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403866AbfEXNq1 (ORCPT
+        id S2403885AbfEXNrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 09:46:27 -0400
-Received: from mga12.intel.com ([192.55.52.136]:29934 "EHLO mga12.intel.com"
+        Fri, 24 May 2019 09:47:01 -0400
+Received: from mga18.intel.com ([134.134.136.126]:38809 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403817AbfEXNq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 09:46:26 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S2391124AbfEXNrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 09:47:01 -0400
+X-Amp-Result: UNSCANNABLE
 X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 May 2019 06:46:26 -0700
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 May 2019 06:47:00 -0700
 X-ExtLoop1: 1
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga001.jf.intel.com with ESMTP; 24 May 2019 06:46:25 -0700
-Date:   Fri, 24 May 2019 06:49:24 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        joro@8bytes.org, alex.williamson@redhat.com,
-        yi.l.liu@linux.intel.com, iommu@lists.linux-foundation.org,
-        ashok.raj@intel.com, linux-kernel@vger.kernel.org,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH 2/4] iommu: Introduce device fault data
-Message-ID: <20190524064924.0cc92ae3@jacob-builder>
-In-Reply-To: <791fe9b1-5d85-fd2d-7cfb-c2fb3428deb6@arm.com>
-References: <20190523180613.55049-1-jean-philippe.brucker@arm.com>
-        <20190523180613.55049-3-jean-philippe.brucker@arm.com>
-        <791fe9b1-5d85-fd2d-7cfb-c2fb3428deb6@arm.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by fmsmga007.fm.intel.com with ESMTP; 24 May 2019 06:46:58 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1hUAXB-0003ZZ-T3; Fri, 24 May 2019 16:46:57 +0300
+Date:   Fri, 24 May 2019 16:46:57 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Stefan Roese <sr@denx.de>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Yegor Yefremov <yegorslists@googlemail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Giulio Benetti <giulio.benetti@micronovasrl.com>
+Subject: Re: [PATCH 1/2 v2] serial: mctrl_gpio: Check if GPIO property
+ exisits before requesting it
+Message-ID: <20190524134657.GV9224@smile.fi.intel.com>
+References: <20190524094825.16151-1-sr@denx.de>
+ <20190524102002.GT2781@lahna.fi.intel.com>
+ <CAHp75VcMVrYv1MXmmqE9fDXShS=Y8pPdWZ4f1neo=ne88TLZDg@mail.gmail.com>
+ <287cdcc8-9a8f-4583-8be9-bd1f95936733@denx.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <287cdcc8-9a8f-4583-8be9-bd1f95936733@denx.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 May 2019 19:43:46 +0100
-Robin Murphy <robin.murphy@arm.com> wrote:
-
-> On 23/05/2019 19:06, Jean-Philippe Brucker wrote:
-> > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+On Fri, May 24, 2019 at 01:29:34PM +0200, Stefan Roese wrote:
+> On 24.05.19 13:11, Andy Shevchenko wrote:
+> > On Fri, May 24, 2019 at 1:21 PM Mika Westerberg
+> > <mika.westerberg@linux.intel.com> wrote:
+> > > 
+> > > On Fri, May 24, 2019 at 11:48:24AM +0200, Stefan Roese wrote:
+> > > > This patch adds a check for the GPIOs property existence, before the
+> > > > GPIO is requested. This fixes an issue seen when the 8250 mctrl_gpio
+> > > > support is added (2nd patch in this patch series) on x86 platforms using
+> > > > ACPI.
+> > > > 
+> > > > Here Mika's comments from 2016-08-09:
+> > > > 
+> > > > "
+> > > > I noticed that with v4.8-rc1 serial console of some of our Broxton
+> > > > systems does not work properly anymore. I'm able to see output but input
+> > > > does not work.
+> > > > 
+> > > > I bisected it down to commit 4ef03d328769eddbfeca1f1c958fdb181a69c341
+> > > > ("tty/serial/8250: use mctrl_gpio helpers").
+> > > > 
+> > > > The reason why it fails is that in ACPI we do not have names for GPIOs
+> > > > (except when _DSD is used) so we use the "idx" to index into _CRS GPIO
+> > > > resources. Now mctrl_gpio_init_noauto() goes through a list of GPIOs
+> > > > calling devm_gpiod_get_index_optional() passing "idx" of 0 for each. The
+> > > > UART device in Broxton has following (simplified) ACPI description:
+> > > > 
+> > > >      Device (URT4)
+> > > >      {
+> > > >          ...
+> > > >          Name (_CRS, ResourceTemplate () {
+> > > >              GpioIo (Exclusive, PullDefault, 0x0000, 0x0000, IoRestrictionOutputOnly,
+> > > >                      "\\_SB.GPO0", 0x00, ResourceConsumer)
+> > > >              {
+> > > >                  0x003A
+> > > >              }
+> > > >              GpioIo (Exclusive, PullDefault, 0x0000, 0x0000, IoRestrictionOutputOnly,
+> > > >                      "\\_SB.GPO0", 0x00, ResourceConsumer)
+> > > >              {
+> > > >                  0x003D
+> > > >              }
+> > > >          })
+> > > > 
+> > > > In this case it finds the first GPIO (0x003A which happens to be RX pin
+> > > > for that UART), turns it into GPIO which then breaks input for the UART
+> > > > device. This also breaks systems with bluetooth connected to UART (those
+> > > > typically have some GPIOs in their _CRS).
+> > > > 
+> > > > Any ideas how to fix this?
+> > > > 
+> > > > We cannot just drop the _CRS index lookup fallback because that would
+> > > > break many existing machines out there so maybe we can limit this to
+> > > > only DT enabled machines. Or alternatively probe if the property first
+> > > > exists before trying to acquire the GPIOs (using
+> > > > device_property_present()).
+> > > > "
+> > > > 
+> > > > This patch implements the fix suggested by Mika in his statement above.
+> > > > 
 > > 
-> > Device faults detected by IOMMU can be reported outside the IOMMU
-> > subsystem for further processing. This patch introduces
-> > a generic device fault data structure.
-> > 
-> > The fault can be either an unrecoverable fault or a page request,
-> > also referred to as a recoverable fault.
-> > 
-> > We only care about non internal faults that are likely to be
-> > reported to an external subsystem.
-> > 
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-> > Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
-> > Signed-off-by: Ashok Raj <ashok.raj@intel.com>
-> > Signed-off-by: Eric Auger <eric.auger@redhat.com>
-> > ---
-> >   include/linux/iommu.h      |  43 ++++++++++++++
-> >   include/uapi/linux/iommu.h | 118
-> > +++++++++++++++++++++++++++++++++++++ 2 files changed, 161
-> > insertions(+) create mode 100644 include/uapi/linux/iommu.h
-> > 
-> > diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-> > index a815cf6f6f47..d442f5f3fa93 100644
-> > --- a/include/linux/iommu.h
-> > +++ b/include/linux/iommu.h
-> > @@ -25,6 +25,7 @@
-> >   #include <linux/errno.h>
-> >   #include <linux/err.h>
-> >   #include <linux/of.h>
-> > +#include <uapi/linux/iommu.h>
-> >   
-> >   #define IOMMU_READ	(1 << 0)
-> >   #define IOMMU_WRITE	(1 << 1)
-> > @@ -49,6 +50,7 @@ struct device;
-> >   struct iommu_domain;
-> >   struct notifier_block;
-> >   struct iommu_sva;
-> > +struct iommu_fault_event;
-> >   
-> >   /* iommu fault flags */
-> >   #define IOMMU_FAULT_READ	0x0
-> > @@ -58,6 +60,7 @@ typedef int (*iommu_fault_handler_t)(struct
-> > iommu_domain *, struct device *, unsigned long, int, void *);
-> >   typedef int (*iommu_mm_exit_handler_t)(struct device *dev, struct
-> > iommu_sva *, void *);
-> > +typedef int (*iommu_dev_fault_handler_t)(struct iommu_fault_event
-> > *, void *); 
-> >   struct iommu_domain_geometry {
-> >   	dma_addr_t aperture_start; /* First address that can be
-> > mapped    */ @@ -301,6 +304,45 @@ struct iommu_device {
-> >   	struct device *dev;
-> >   };
-> >   
-> > +/**
-> > + * struct iommu_fault_event - Generic fault event
-> > + *
-> > + * Can represent recoverable faults such as a page requests or
-> > + * unrecoverable faults such as DMA or IRQ remapping faults.
-> > + *
-> > + * @fault: fault descriptor
-> > + * @iommu_private: used by the IOMMU driver for storing
-> > fault-specific
-> > + *                 data. Users should not modify this field before
-> > + *                 sending the fault response.  
+> > We have a board where ASL provides _DSD for CTS and RxD pins.
+> > I'm afraid this won't work on it.
 > 
-> Sorry if I'm a bit late to the party, but given that description, if 
-> users aren't allowed to touch this then why expose it to them at all? 
-> I.e. why not have iommu_report_device_fault() pass just the fault
-> itself to the fault handler:
-> 
-> 	ret = fparam->handler(&evt->fault, fparam->data);
-> 
-> and let the IOMMU core/drivers decapsulate it again later if need be. 
-> AFAICS drivers could also just embed the entire generic event in
-> their own private structure anyway, just as we do for domains.
-> 
-I can't remember all the discussion history but I think iommu_private
-is used similarly to the page request private data (device private). We
-need to inject the data to the guest and the guest will send the
-unmodified data back along with response. The private data can be used
-to tag internal device/iommu context.
+> With "won't work" you mean, that the GPIO can't be used for modem
+> control in this case in the current implementation (with this
+> patchset)? Or do you mean, that the breakage (input does not work
+> on Broxton systems) will not be solved by this patch?
 
-I think we can do the way you said by keeping them within iommu core
-and recover it based on the response but that would require tracking
-each fault report, right?
+It will solve RxD case, due to mctrl doesn't count RxD as a "control" line.
 
-If we pass on the private data, we only need to check if the response
-belong to the device but not exact match of a specific fault since the
-damage is contained in the assigned device. In case of injection
-fault into the guest, the response will come asynchronously after the
-handler completes.
+Though we have CTS pin defined for the same purpose, which means the hardware
+flow control won't work on a subset of Broxton boards.
 
-> Robin.
-> 
-> > + */
-> > +struct iommu_fault_event {
-> > +	struct iommu_fault fault;
-> > +	u64 iommu_private;
-> > +};
-> > +
-> > +/**
-> > + * struct iommu_fault_param - per-device IOMMU fault data
-> > + * @handler: Callback function to handle IOMMU faults at device
-> > level
-> > + * @data: handler private data
-> > + */
-> > +struct iommu_fault_param {
-> > +	iommu_dev_fault_handler_t handler;
-> > +	void *data;
-> > +};
-> > +
-> > +/**
-> > + * struct iommu_param - collection of per-device IOMMU data
-> > + *
-> > + * @fault_param: IOMMU detected device fault reporting data
-> > + *
-> > + * TODO: migrate other per device data pointers under
-> > iommu_dev_data, e.g.
-> > + *	struct iommu_group	*iommu_group;
-> > + *	struct iommu_fwspec	*iommu_fwspec;
-> > + */
-> > +struct iommu_param {
-> > +	struct iommu_fault_param *fault_param;
-> > +};
-> > +
-> >   int  iommu_device_register(struct iommu_device *iommu);
-> >   void iommu_device_unregister(struct iommu_device *iommu);
-> >   int  iommu_device_sysfs_add(struct iommu_device *iommu,
-> > @@ -504,6 +546,7 @@ struct iommu_ops {};
-> >   struct iommu_group {};
-> >   struct iommu_fwspec {};
-> >   struct iommu_device {};
-> > +struct iommu_fault_param {};
-> >   
-> >   static inline bool iommu_present(struct bus_type *bus)
-> >   {
-> > diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
-> > new file mode 100644
-> > index 000000000000..796402174d6c
-> > --- /dev/null
-> > +++ b/include/uapi/linux/iommu.h
-> > @@ -0,0 +1,118 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> > +/*
-> > + * IOMMU user API definitions
-> > + */
-> > +
-> > +#ifndef _UAPI_IOMMU_H
-> > +#define _UAPI_IOMMU_H
-> > +
-> > +#include <linux/types.h>
-> > +
-> > +#define IOMMU_FAULT_PERM_READ	(1 << 0) /* read */
-> > +#define IOMMU_FAULT_PERM_WRITE	(1 << 1) /* write */
-> > +#define IOMMU_FAULT_PERM_EXEC	(1 << 2) /* exec */
-> > +#define IOMMU_FAULT_PERM_PRIV	(1 << 3) /* privileged */
-> > +
-> > +/* Generic fault types, can be expanded IRQ remapping fault */
-> > +enum iommu_fault_type {
-> > +	IOMMU_FAULT_DMA_UNRECOV = 1,	/* unrecoverable fault
-> > */
-> > +	IOMMU_FAULT_PAGE_REQ,		/* page request fault
-> > */ +};
-> > +
-> > +enum iommu_fault_reason {
-> > +	IOMMU_FAULT_REASON_UNKNOWN = 0,
-> > +
-> > +	/* Could not access the PASID table (fetch caused external
-> > abort) */
-> > +	IOMMU_FAULT_REASON_PASID_FETCH,
-> > +
-> > +	/* PASID entry is invalid or has configuration errors */
-> > +	IOMMU_FAULT_REASON_BAD_PASID_ENTRY,
-> > +
-> > +	/*
-> > +	 * PASID is out of range (e.g. exceeds the maximum PASID
-> > +	 * supported by the IOMMU) or disabled.
-> > +	 */
-> > +	IOMMU_FAULT_REASON_PASID_INVALID,
-> > +
-> > +	/*
-> > +	 * An external abort occurred fetching (or updating) a
-> > translation
-> > +	 * table descriptor
-> > +	 */
-> > +	IOMMU_FAULT_REASON_WALK_EABT,
-> > +
-> > +	/*
-> > +	 * Could not access the page table entry (Bad address),
-> > +	 * actual translation fault
-> > +	 */
-> > +	IOMMU_FAULT_REASON_PTE_FETCH,
-> > +
-> > +	/* Protection flag check failed */
-> > +	IOMMU_FAULT_REASON_PERMISSION,
-> > +
-> > +	/* access flag check failed */
-> > +	IOMMU_FAULT_REASON_ACCESS,
-> > +
-> > +	/* Output address of a translation stage caused Address
-> > Size fault */
-> > +	IOMMU_FAULT_REASON_OOR_ADDRESS,
-> > +};
-> > +
-> > +/**
-> > + * struct iommu_fault_unrecoverable - Unrecoverable fault data
-> > + * @reason: reason of the fault, from &enum iommu_fault_reason
-> > + * @flags: parameters of this fault (IOMMU_FAULT_UNRECOV_* values)
-> > + * @pasid: Process Address Space ID
-> > + * @perm: requested permission access using by the incoming
-> > transaction
-> > + *        (IOMMU_FAULT_PERM_* values)
-> > + * @addr: offending page address
-> > + * @fetch_addr: address that caused a fetch abort, if any
-> > + */
-> > +struct iommu_fault_unrecoverable {
-> > +	__u32	reason;
-> > +#define IOMMU_FAULT_UNRECOV_PASID_VALID		(1 << 0)
-> > +#define IOMMU_FAULT_UNRECOV_ADDR_VALID		(1 << 1)
-> > +#define IOMMU_FAULT_UNRECOV_FETCH_ADDR_VALID	(1 << 2)
-> > +	__u32	flags;
-> > +	__u32	pasid;
-> > +	__u32	perm;
-> > +	__u64	addr;
-> > +	__u64	fetch_addr;
-> > +};
-> > +
-> > +/**
-> > + * struct iommu_fault_page_request - Page Request data
-> > + * @flags: encodes whether the corresponding fields are valid and
-> > whether this
-> > + *         is the last page in group (IOMMU_FAULT_PAGE_REQUEST_*
-> > values)
-> > + * @pasid: Process Address Space ID
-> > + * @grpid: Page Request Group Index
-> > + * @perm: requested page permissions (IOMMU_FAULT_PERM_* values)
-> > + * @addr: page address
-> > + * @private_data: device-specific private information
-> > + */
-> > +struct iommu_fault_page_request {
-> > +#define IOMMU_FAULT_PAGE_REQUEST_PASID_VALID	(1 << 0)
-> > +#define IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE	(1 << 1)
-> > +#define IOMMU_FAULT_PAGE_REQUEST_PRIV_DATA	(1 << 2)
-> > +	__u32	flags;
-> > +	__u32	pasid;
-> > +	__u32	grpid;
-> > +	__u32	perm;
-> > +	__u64	addr;
-> > +	__u64	private_data[2];
-> > +};
-> > +
-> > +/**
-> > + * struct iommu_fault - Generic fault data
-> > + * @type: fault type from &enum iommu_fault_type
-> > + * @padding: reserved for future use (should be zero)
-> > + * @event: fault event, when @type is %IOMMU_FAULT_DMA_UNRECOV
-> > + * @prm: Page Request message, when @type is %IOMMU_FAULT_PAGE_REQ
-> > + */
-> > +struct iommu_fault {
-> > +	__u32	type;
-> > +	__u32	padding;
-> > +	union {
-> > +		struct iommu_fault_unrecoverable event;
-> > +		struct iommu_fault_page_request prm;
-> > +	};
-> > +};
-> > +#endif /* _UAPI_IOMMU_H */
-> >   
-> _______________________________________________
-> iommu mailing list
-> iommu@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
+> If its the former, then I think that solving this issue is something
+> for a new patch, to support modem-control on such platforms as well
+> (if needed).
 
-[Jacob Pan]
+> Please note that this patch is not trying to get modem-control working
+> on such ACPI based systems.
+
+I understand that. At the same time it should not break existing systems.
+
+> Its targeted for device-tree enabled
+> platforms, using the 8250 serial driver, here specifically a MIPS
+> MT7688 based board. And just wants to fix the latter issue mentioned
+> above so that the 8250 modem-control support can be accepted in
+> mainline.
+
+As I said already we have to distinguish *the purpose* of these GPIOs.
+(like CTS).
+
+Can we apply this if and only if the device has no ACPI companion device?
+
+In this case DT will work as you expect and ACPI won't be broken.
+
+> > Basically we need to understand the use of the GPIOs in UART. In our
+> > case it's an out-of-band wake up source for UART.
+> > Simply requiring GPIOs to be present is not enough.
+> > 
+> > Perhaps property like 'modem-control-gpio-in-use' (this seems a bad
+> > name, given for sake of example).
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
