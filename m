@@ -2,170 +2,133 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A349DC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE82FC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F9E5217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB6642168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:03:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403765AbfEXNCp (ORCPT
+        id S2403786AbfEXNDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 09:02:45 -0400
-Received: from foss.arm.com ([217.140.101.70]:42494 "EHLO foss.arm.com"
+        Fri, 24 May 2019 09:03:12 -0400
+Received: from mga02.intel.com ([134.134.136.20]:17708 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391045AbfEXNCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 09:02:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2A794A78;
-        Fri, 24 May 2019 06:02:44 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9D5D53F703;
-        Fri, 24 May 2019 06:02:41 -0700 (PDT)
-Date:   Fri, 24 May 2019 14:02:17 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Andrew Jones <drjones@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        Sudakshina Das <sudi.das@arm.com>,
-        Paul Elliott <paul.elliott@arm.com>
-Subject: Re: [PATCH 4/8] arm64: Basic Branch Target Identification support
-Message-ID: <20190524130217.GA15566@lakrids.cambridge.arm.com>
-References: <1558693533-13465-1-git-send-email-Dave.Martin@arm.com>
- <1558693533-13465-5-git-send-email-Dave.Martin@arm.com>
+        id S2391555AbfEXNDL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 09:03:11 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 May 2019 06:03:10 -0700
+X-ExtLoop1: 1
+Received: from mgastonx-mobl.amr.corp.intel.com (HELO [10.251.128.35]) ([10.251.128.35])
+  by orsmga003.jf.intel.com with ESMTP; 24 May 2019 06:03:09 -0700
+Subject: Re: [alsa-devel] [PATCH] ASoc: fix
+ sound/soc/intel/skylake/slk-ssp-clk.c build error on IA64
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        moderated for non-subscribers <alsa-devel@alsa-project.org>
+Cc:     Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        kbuild test robot <lkp@intel.com>
+References: <9019c87f-cf1a-b59f-d87e-8169b247cf88@infradead.org>
+ <6b89e370-90e3-6962-c71a-80919b7c6154@linux.intel.com>
+ <4cedd724-7c2e-10c2-a328-61f7af3ab9ed@infradead.org>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <7d685525-b0fe-429b-f0ea-f363069cf667@linux.intel.com>
+Date:   Fri, 24 May 2019 08:03:09 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1558693533-13465-5-git-send-email-Dave.Martin@arm.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <4cedd724-7c2e-10c2-a328-61f7af3ab9ed@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dave,
 
-This generally looks good, but I have a few comments below.
 
-On Fri, May 24, 2019 at 11:25:29AM +0100, Dave Martin wrote:
-> +#define arch_calc_vm_prot_bits(prot, pkey) arm64_calc_vm_prot_bits(prot)
-> +static inline unsigned long arm64_calc_vm_prot_bits(unsigned long prot)
-> +{
-> +	if (system_supports_bti() && (prot & PROT_BTI_GUARDED))
-> +		return VM_ARM64_GP;
-> +
-> +	return 0;
-> +}
-> +
-> +#define arch_vm_get_page_prot(vm_flags) arm64_vm_get_page_prot(vm_flags)
-> +static inline pgprot_t arm64_vm_get_page_prot(unsigned long vm_flags)
-> +{
-> +	return (vm_flags & VM_ARM64_GP) ? __pgprot(PTE_GP) : __pgprot(0);
-> +}
+On 5/23/19 9:59 PM, Randy Dunlap wrote:
+> On 5/23/19 4:28 AM, Pierre-Louis Bossart wrote:
+>>
+>>
+>> On 5/22/19 10:58 PM, Randy Dunlap wrote:
+>>> From: Randy Dunlap <rdunlap@infradead.org>
+>>>
+>>> skl-ssp-clk.c does not build on IA64 because the driver
+>>> uses the common clock interface, so make the driver depend
+>>> on COMMON_CLK.
+>>>
+>>> Fixes this build error:
+>>> ../sound/soc/intel/skylake/skl-ssp-clk.c:26:16: error: field 'hw' has incomplete type
+>>>     struct clk_hw hw;
+>>>                   ^~
+>>>
+>>> Reported-by: kbuild test robot <lkp@intel.com>
+>>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+>>> Cc: Mark Brown <broonie@kernel.org>
+>>> Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+>>> Cc: Liam Girdwood <liam.r.girdwood@linux.intel.com>
+>>> Cc: Jie Yang <yang.jie@linux.intel.com>
+>>> Cc: alsa-devel@alsa-project.org
+>>> ---
+>>>    sound/soc/intel/Kconfig        |    3 ++-
+>>>    sound/soc/intel/boards/Kconfig |    2 +-
+>>>    2 files changed, 3 insertions(+), 2 deletions(-)
+>>>
+>>> --- lnx-52-rc1.orig/sound/soc/intel/Kconfig
+>>> +++ lnx-52-rc1/sound/soc/intel/Kconfig
+>>> @@ -104,7 +104,7 @@ config SND_SST_ATOM_HIFI2_PLATFORM_ACPI
+>>>    config SND_SOC_INTEL_SKYLAKE
+>>>        tristate "All Skylake/SST Platforms"
+>>>        depends on PCI && ACPI
+>>> -    select SND_SOC_INTEL_SKL
+>>> +    select SND_SOC_INTEL_SKL if COMMON_CLK
+>>
+>> Is this really necessary? The COMMON_CLK is only needed for the SND_SOC_INTEL_SKYLAKE_SSP_CLK option, isn't it?
+> 
+> It prevents this Kconfig warning:
+> 
+> WARNING: unmet direct dependencies detected for SND_SOC_INTEL_SKL
+>    Depends on [n]: SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_SOC_INTEL_SST_TOPLEVEL [=y] && PCI [=y] && ACPI [=y] && COMMON_CLK [=n]
+>    Selected by [y]:
+>    - SND_SOC_INTEL_SKYLAKE [=y] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_SOC_INTEL_SST_TOPLEVEL [=y] && PCI [=y] && ACPI [=y]
 
-While the architectural name for the PTE bit is GP, it might make more
-sense to call the vm flag VM_ARM64_BTI, since people are more likely to
-recognise BTI than GP as a mnemonic.
+Humm, ok. Can you share the config? I'd like to look into this. There 
+may be a need for this COMMON_CLK, but applying it here would not be 
+fully correct: you can unselect SND_SOC_INTEL_SKYLAKE and only select 
+SND_SOC_INTEL_SKL and still have the same problem.
 
-Not a big deal either way, though.
+> 
+>>>        select SND_SOC_INTEL_APL
+>>>        select SND_SOC_INTEL_KBL
+>>>        select SND_SOC_INTEL_GLK
+>>> @@ -120,6 +120,7 @@ config SND_SOC_INTEL_SKYLAKE
+>>>    config SND_SOC_INTEL_SKL
+>>>        tristate "Skylake Platforms"
+>>>        depends on PCI && ACPI
+>>> +    depends on COMMON_CLK
+>>>        select SND_SOC_INTEL_SKYLAKE_FAMILY
+>>>        help
+>>>          If you have a Intel Skylake platform with the DSP enabled
+>>> --- lnx-52-rc1.orig/sound/soc/intel/boards/Kconfig
+>>> +++ lnx-52-rc1/sound/soc/intel/boards/Kconfig
+>>> @@ -286,7 +286,7 @@ config SND_SOC_INTEL_KBL_RT5663_MAX98927
+>>>        select SND_SOC_MAX98927
+>>>        select SND_SOC_DMIC
+>>>        select SND_SOC_HDAC_HDMI
+>>> -    select SND_SOC_INTEL_SKYLAKE_SSP_CLK
+>>> +    select SND_SOC_INTEL_SKYLAKE_SSP_CLK if COMMON_CLK
+>>
+>> and here I would make it a depend. I guess your solution solves the compilation but doesn't fully represent the fact that this machine driver is not functional without COMMON_CLK+SKYLAKE_SSP_CLK.
+> 
+> Not functional on ia64 anyway.  :)
 
-[...]
-
-> diff --git a/arch/arm64/include/asm/ptrace.h b/arch/arm64/include/asm/ptrace.h
-> index b2de329..b868ef11 100644
-> --- a/arch/arm64/include/asm/ptrace.h
-> +++ b/arch/arm64/include/asm/ptrace.h
-> @@ -41,6 +41,7 @@
->  
->  /* Additional SPSR bits not exposed in the UABI */
->  #define PSR_IL_BIT		(1 << 20)
-> +#define PSR_BTYPE_CALL		(2 << 10)
-
-I thought BTYPE was a 2-bit field, so isn't there at leat one other
-value to have a mnemonic for?
-
-Is it an enumeration or a bitmask?
-
->  #endif /* _UAPI__ASM_HWCAP_H */
-> diff --git a/arch/arm64/include/uapi/asm/mman.h b/arch/arm64/include/uapi/asm/mman.h
-> new file mode 100644
-> index 0000000..4776b43
-> --- /dev/null
-> +++ b/arch/arm64/include/uapi/asm/mman.h
-> @@ -0,0 +1,9 @@
-> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> +#ifndef _UAPI__ASM_MMAN_H
-> +#define _UAPI__ASM_MMAN_H
-> +
-> +#include <asm-generic/mman.h>
-> +
-> +#define PROT_BTI_GUARDED	0x10		/* BTI guarded page */
-
-From prior discussions, I thought this would be PROT_BTI, without the
-_GUARDED suffix. Do we really need that?
-
-AFAICT, all other PROT_* definitions only have a single underscore, and
-the existing arch-specific flags are PROT_ADI on sparc, and PROT_SAO on
-powerpc.
-
-[...]
-
-> diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
-> index b82e0a9..3717b06 100644
-> --- a/arch/arm64/kernel/ptrace.c
-> +++ b/arch/arm64/kernel/ptrace.c
-> @@ -1860,7 +1860,7 @@ void syscall_trace_exit(struct pt_regs *regs)
->   */
->  #define SPSR_EL1_AARCH64_RES0_BITS \
->  	(GENMASK_ULL(63, 32) | GENMASK_ULL(27, 25) | GENMASK_ULL(23, 22) | \
-> -	 GENMASK_ULL(20, 13) | GENMASK_ULL(11, 10) | GENMASK_ULL(5, 5))
-> +	 GENMASK_ULL(20, 13) | GENMASK_ULL(5, 5))
->  #define SPSR_EL1_AARCH32_RES0_BITS \
->  	(GENMASK_ULL(63, 32) | GENMASK_ULL(22, 22) | GENMASK_ULL(20, 20))
-
-Phew; I was worried this would be missed!
-
-[...]
-
-> @@ -741,6 +741,11 @@ static void setup_return(struct pt_regs *regs, struct k_sigaction *ka,
->  	regs->regs[29] = (unsigned long)&user->next_frame->fp;
->  	regs->pc = (unsigned long)ka->sa.sa_handler;
->  
-> +	if (system_supports_bti()) {
-> +		regs->pstate &= ~(regs->pstate & PSR_BTYPE_MASK);
-
-Nit: that can be:
-
-		regs->pstate &= ~PSR_BTYPE_MASK;
-
-> diff --git a/arch/arm64/kernel/syscall.c b/arch/arm64/kernel/syscall.c
-> index 5610ac0..85b456b 100644
-> --- a/arch/arm64/kernel/syscall.c
-> +++ b/arch/arm64/kernel/syscall.c
-> @@ -66,6 +66,7 @@ static void el0_svc_common(struct pt_regs *regs, int scno, int sc_nr,
->  	unsigned long flags = current_thread_info()->flags;
->  
->  	regs->orig_x0 = regs->regs[0];
-> +	regs->pstate &= ~(regs->pstate & PSR_BTYPE_MASK);
-
-Likewise:
-
-	regs->pstate &= ~PSR_BTYPE_MASK;
-
-... though I don't understand why that would matter to syscalls, nor how
-those bits could ever be set given we had to execute an SVC to get here.
-
-What am I missing?
-
-Thanks,
-Mark.
+Yeah, I am fine with this.
