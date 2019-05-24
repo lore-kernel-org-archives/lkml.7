@@ -2,90 +2,67 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E09C282E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:09:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDA4C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9FDA20868
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:09:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="EYXxJ25S"
+	by mail.kernel.org (Postfix) with ESMTP id 3EE6021773
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:09:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403859AbfEXNJC (ORCPT
+        id S2403872AbfEXNJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 09:09:02 -0400
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:40596 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391193AbfEXNJB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 09:09:01 -0400
-Received: by mail-vk1-f193.google.com with SMTP id v140so2107326vkd.7
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 06:09:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1NFK9aapiSHvsfIUj35JfqUMZ2Y7KkhyrVEtoE1rNlo=;
-        b=EYXxJ25SpuP4HuvEOLSk+zi+mVPSGhOX25UDQE/sUtZJKdvkLF44+bWtW1eWv9AX6+
-         /pKQzpJ/ypcCzYcgtZcr7B44gBnyZFJDbYJnpzKHyFra6gwrZ8KSSrmUHBtB1+9TxFPS
-         EGwMSJHMVfrBBvWbQzV/sH7BnQXaZqevzNOBAeBOsno0bv22fGAlf5FWntZzalS1VaAI
-         ZoPzw2wsj0lnH7LEjts6kFv2LbuozDQLeclYFZIdYVaSHmtbgBQ98HAHq1x05qhuahsE
-         Plt7dW56m9PAhslYjZ4hGEtZcUo7cpLNyehcLl1VvBT103zfKklMSuPHhSONGeWcDAt3
-         yw5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1NFK9aapiSHvsfIUj35JfqUMZ2Y7KkhyrVEtoE1rNlo=;
-        b=W3Drw/0J+Zw8NyTBowIbFXBMab0cJWvSAPeJBNFoob/qgwOM/72DbL92L6gTJ/kpVf
-         Ud9L3pwC3ojOSoFxtKLg4rysLKisbFPNLiH8w8rxc6g4T+5vqFv80/2BJYfQitvbgYIH
-         qrznYGVrYsYnVDlnMDa1c97OVq2/d3jX+12ZoL1PjJ1kEyCG4zd+AKzzM6iojD1RrKXj
-         kF/z0M71pJymd6P+Rd2WAFReWyZvFsBo37S1xxPK/oMdVh4U4H9M5eZ0ss3MbpnsOk53
-         hxFXngUO0xjSGV8CCRL6aTg4JDcM22pSq+p+fBETUBcm0rzBaMFbcKUCpfKJGMXVBxYH
-         XlPg==
-X-Gm-Message-State: APjAAAUpgLd7r2k2d4qkY/SjcfkA/jbHARncvMfJ0IXt8WZvsMEh7MXG
-        80qvL9grY8F+QbNuCrE+aKSl8w==
-X-Google-Smtp-Source: APXvYqwSNSRIsSEWFVwlmbvUZtMXOmCI7hQZGA8lIGGGG7uY/2hEEqrVZAFNsLcsasTdlDybTnGHdg==
-X-Received: by 2002:a1f:9d07:: with SMTP id g7mr4795657vke.40.1558703340487;
-        Fri, 24 May 2019 06:09:00 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::e914])
-        by smtp.gmail.com with ESMTPSA id 143sm1127525vkj.44.2019.05.24.06.08.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 06:08:59 -0700 (PDT)
-Date:   Fri, 24 May 2019 09:08:58 -0400
-From:   Josef Bacik <josef@toxicpanda.com>
-To:     Yao Liu <yotta.liu@ucloud.cn>
-Cc:     Josef Bacik <josef@toxicpanda.com>, Jens Axboe <axboe@kernel.dk>,
-        linux-block@vger.kernel.org, nbd@other.debian.org,
+        Fri, 24 May 2019 09:09:20 -0400
+Received: from mga11.intel.com ([192.55.52.93]:33530 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391436AbfEXNJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 09:09:20 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 May 2019 06:09:19 -0700
+X-ExtLoop1: 1
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 24 May 2019 06:09:18 -0700
+Received: from [10.254.95.140] (kliang2-mobl.ccr.corp.intel.com [10.254.95.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 995805801AB;
+        Fri, 24 May 2019 06:09:17 -0700 (PDT)
+Subject: Re: [PATCH 1/2] perf/x86: Disable non generic regs for software/probe
+ events
+To:     Vince Weaver <vincent.weaver@maine.edu>
+Cc:     ak@linux.intel.com, peterz@infradead.org,
+        alexander.shishkin@linux.intel.com, acme@redhat.com,
+        jolsa@redhat.com, eranian@google.com, mingo@kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] nbd: notify userland even if nbd has already
- disconnected
-Message-ID: <20190524130856.zod5agp7hk74pcnr@MacBook-Pro-91.local.dhcp.thefacebook.com>
-References: <1558691036-16281-1-git-send-email-yotta.liu@ucloud.cn>
- <1558691036-16281-2-git-send-email-yotta.liu@ucloud.cn>
+References: <1558636616-4891-1-git-send-email-kan.liang@linux.intel.com>
+ <alpine.DEB.2.21.1905240902420.8774@macbook-air>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <efd27dab-9cee-e22f-fd67-9fed4bac7de7@linux.intel.com>
+Date:   Fri, 24 May 2019 09:09:16 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1558691036-16281-2-git-send-email-yotta.liu@ucloud.cn>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <alpine.DEB.2.21.1905240902420.8774@macbook-air>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 05:43:55PM +0800, Yao Liu wrote:
-> Some nbd client implementations have a userland's daemon, so we should
-> inform client daemon to clean up and exit.
+
+
+
+On 5/24/2019 9:03 AM, Vince Weaver wrote:
 > 
-> Signed-off-by: Yao Liu <yotta.liu@ucloud.cn>
+> I've run the fuzzer overnight with both patches applied and have not seen
+> any issues.
+> 
 
-Except the nbd_disconnected() check is for the case that the client told us
-specifically to disconnect, so we don't want to send the notification to
-re-connect because we've already been told we want to tear everything down.
-Nack to this as well.  Thanks,
-
-Josef
+Thanks a lot for the test.
+Kan
