@@ -2,107 +2,149 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD0CC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC80C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51D3020863
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:04:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA79720863
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:05:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MnQgEBJB";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WtaCR2+w"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="f+X+SrLA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388674AbfEXGEC (ORCPT
+        id S2388762AbfEXGFV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 02:04:02 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:50270 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388070AbfEXGEC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 02:04:02 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 60D4860C8B; Fri, 24 May 2019 06:04:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558677840;
-        bh=+LXeINwGo6CiisA+JrfBkpcV33DtSDYcwasClLqFltM=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=MnQgEBJBFX7Jr6ZKTlpvPMRJlQPlORXWJeNHd18+CdO6x9V93JYSt8nqTFP73lTVe
-         Kc87IbU8eSlsJ0klkz6GlvCLKXc6yFpvAFoopfpj6hJVstNPzdnt9epwSyXMx7viOQ
-         idTFVhIbOwNG/+qmb2jqYeYdR78lpVY7V7ALMvB0=
-Received: from [10.131.117.43] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CA5026063A;
-        Fri, 24 May 2019 06:03:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558677838;
-        bh=+LXeINwGo6CiisA+JrfBkpcV33DtSDYcwasClLqFltM=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=WtaCR2+wyWWFjJzU9+IBN0PVFNR69TJTy4vvAyk+MUIWQoA6bLptg7h6mGWmvgSYC
-         ceLZ777Tzuy2Vfg1oiS6jsaRdeMMBSozslhkgH9uA3OjPW/L2iqMfhWCfqhoBEh3TL
-         vBuirdXrib/G+OD5P4nw7QuflaX7JS6fFb70beys=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CA5026063A
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [RFC v2 00/11] DVFS in the OPP core
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-spi@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-scsi@vger.kernel.org, swboyd@chromium.org,
-        ulf.hansson@linaro.org, dianders@chromium.org, rafael@kernel.org,
-        vincent.guittot@linaro.org
-References: <20190320094918.20234-1-rnayak@codeaurora.org>
- <20190521062248.ogjetb2rwtqekflx@vireshk-i7>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <85dbc630-f526-c06f-8a8b-9bbc3b794693@codeaurora.org>
-Date:   Fri, 24 May 2019 11:33:52 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190521062248.ogjetb2rwtqekflx@vireshk-i7>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 24 May 2019 02:05:21 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:51717 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387622AbfEXGFU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 02:05:20 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 459G7L03RnzB09ZF;
+        Fri, 24 May 2019 08:05:18 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=f+X+SrLA; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id f7uJQh1rUrn5; Fri, 24 May 2019 08:05:17 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 459G7K5kJ7zB09ZD;
+        Fri, 24 May 2019 08:05:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1558677917; bh=UDbhPInoRZ11n1EDsJaZvijySZH5TsRju++Hii5RRqM=;
+        h=From:In-Reply-To:Subject:To:Cc:Date:From;
+        b=f+X+SrLAXqAHWTrmqUnU5zVxYu/ra50Al5ZVsS9seK7KvlKsJO+wp5tFyEmudRrZk
+         iy9pLRkwj0UCsdP/6KP8otMy3W9rg5t05Zq+0R8Ik3K1cLcuPlnhS8ZqZA0K6+aWIQ
+         /uHV3uRNpAHChYqVLkHVU91LFxvu79tqw9yqVYXI=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id AAA318B790;
+        Fri, 24 May 2019 08:05:18 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id EurX6mTew14t; Fri, 24 May 2019 08:05:18 +0200 (CEST)
+Received: from po16846vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 915708B76F;
+        Fri, 24 May 2019 08:05:18 +0200 (CEST)
+Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 53A6966293; Fri, 24 May 2019 06:05:18 +0000 (UTC)
+Message-Id: <8164abbe117d8353bb88132d7cfa8bc26a60ca66.1558677767.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+In-Reply-To: <20190522211724.GC456@darkstar.musicnaut.iki.fi>
+Subject: [RFC PATCH v2] powerpc: fix kexec failure on book3s/32
+To:     Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Fri, 24 May 2019 06:05:18 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fixes: 63b2bc619565 ("powerpc/mm/32s: Use BATs for STRICT_KERNEL_RWX")
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/kernel/machine_kexec_32.c | 8 ++++++++
+ arch/powerpc/mm/book3s32/mmu.c         | 7 +++++--
+ arch/powerpc/mm/mmu_decl.h             | 2 ++
+ 3 files changed, 15 insertions(+), 2 deletions(-)
 
-On 5/21/2019 11:52 AM, Viresh Kumar wrote:
-> On 20-03-19, 15:19, Rajendra Nayak wrote:
->> This is a v2 of the RFC posted earlier by Stephen Boyd [1]
->>
->> As part of v2 I still follow the same approach of dev_pm_opp_set_rate()
->> API using clk framework to round the frequency passed and making it
->> accept 0 as a valid frequency indicating the frequency isn't required
->> anymore. It just has a few more drivers converted to use this approach
->> like dsi/dpu and ufs.
->> ufs demonstrates the case of having to handle multiple power domains, one
->> of which is scalable.
->>
->> The patches are based on 5.1-rc1 and depend on some ufs fixes I posted
->> earlier [2] and a DT patch to include the rpmpd header [3]
->>
->> [1] https://lkml.org/lkml/2019/1/28/2086
->> [2] https://lkml.org/lkml/2019/3/8/70
->> [3] https://lkml.org/lkml/2019/3/20/120
-> 
-> Hi Rajendra,
-> 
-> I am inclined to apply/push this series for 5.3-rc1, will it be
-> possible for you to spend some time on this at priority ?
-
-Hey Viresh, I was on vacation, just got back. I will refresh this series
-and address your previous feedback, I haven't received much feedback for the
-driver changes :/ but we can atleast review and get the OPP layer changes
-finalized. thanks.
-
+diff --git a/arch/powerpc/kernel/machine_kexec_32.c b/arch/powerpc/kernel/machine_kexec_32.c
+index affe5dcce7f4..83e61a8f8468 100644
+--- a/arch/powerpc/kernel/machine_kexec_32.c
++++ b/arch/powerpc/kernel/machine_kexec_32.c
+@@ -15,6 +15,7 @@
+ #include <asm/cacheflush.h>
+ #include <asm/hw_irq.h>
+ #include <asm/io.h>
++#include <mm/mmu_decl.h>
+ 
+ typedef void (*relocate_new_kernel_t)(
+ 				unsigned long indirection_page,
+@@ -35,6 +36,8 @@ void default_machine_kexec(struct kimage *image)
+ 	unsigned long page_list;
+ 	unsigned long reboot_code_buffer, reboot_code_buffer_phys;
+ 	relocate_new_kernel_t rnk;
++	unsigned long bat_size = 128 << 10;
++	unsigned long bat_mask = ~(bat_size - 1);
+ 
+ 	/* Interrupts aren't acceptable while we reboot */
+ 	local_irq_disable();
+@@ -54,6 +57,11 @@ void default_machine_kexec(struct kimage *image)
+ 	memcpy((void *)reboot_code_buffer, relocate_new_kernel,
+ 						relocate_new_kernel_size);
+ 
++	printk(KERN_INFO "Reboot code buffer at %lx\n", reboot_code_buffer);
++	mtsrin(mfsrin(reboot_code_buffer) & ~SR_NX, reboot_code_buffer);
++	setibat(7, reboot_code_buffer & bat_mask, reboot_code_buffer_phys & bat_mask,
++		bat_size, PAGE_KERNEL_TEXT);
++
+ 	flush_icache_range(reboot_code_buffer,
+ 				reboot_code_buffer + KEXEC_CONTROL_PAGE_SIZE);
+ 	printk(KERN_INFO "Bye!\n");
+diff --git a/arch/powerpc/mm/book3s32/mmu.c b/arch/powerpc/mm/book3s32/mmu.c
+index fc073cb2c517..7124700edb0f 100644
+--- a/arch/powerpc/mm/book3s32/mmu.c
++++ b/arch/powerpc/mm/book3s32/mmu.c
+@@ -124,8 +124,8 @@ static unsigned int block_size(unsigned long base, unsigned long top)
+  * of 2 between 128k and 256M.
+  * Only for 603+ ...
+  */
+-static void setibat(int index, unsigned long virt, phys_addr_t phys,
+-		    unsigned int size, pgprot_t prot)
++void setibat(int index, unsigned long virt, phys_addr_t phys,
++	     unsigned int size, pgprot_t prot)
+ {
+ 	unsigned int bl = (size >> 17) - 1;
+ 	int wimgxpp;
+@@ -197,6 +197,9 @@ void mmu_mark_initmem_nx(void)
+ 	if (cpu_has_feature(CPU_FTR_601))
+ 		return;
+ 
++	if (IS_ENABLED(CONFIG_KEXEC))
++		nb--;
++
+ 	for (i = 0; i < nb - 1 && base < top && top - base > (128 << 10);) {
+ 		size = block_size(base, top);
+ 		setibat(i++, PAGE_OFFSET + base, base, size, PAGE_KERNEL_TEXT);
+diff --git a/arch/powerpc/mm/mmu_decl.h b/arch/powerpc/mm/mmu_decl.h
+index 7bac0aa2026a..478584d50cf2 100644
+--- a/arch/powerpc/mm/mmu_decl.h
++++ b/arch/powerpc/mm/mmu_decl.h
+@@ -103,6 +103,8 @@ void print_system_hash_info(void);
+ extern void mapin_ram(void);
+ extern void setbat(int index, unsigned long virt, phys_addr_t phys,
+ 		   unsigned int size, pgprot_t prot);
++void setibat(int index, unsigned long virt, phys_addr_t phys,
++	     unsigned int size, pgprot_t prot);
+ 
+ extern int __map_without_bats;
+ extern unsigned int rtas_data, rtas_size;
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.13.3
+
