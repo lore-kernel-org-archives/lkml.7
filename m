@@ -2,118 +2,73 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 344CCC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C2BC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 020AE21848
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:20:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="YUKjt5T1"
+	by mail.kernel.org (Postfix) with ESMTP id 4C48820851
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:22:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390626AbfEXQUJ (ORCPT
+        id S2391032AbfEXQWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 12:20:09 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:41122 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389588AbfEXQUI (ORCPT
+        Fri, 24 May 2019 12:22:02 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:56227 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389079AbfEXQWC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 12:20:08 -0400
-Received: by mail-ed1-f68.google.com with SMTP id m4so15105375edd.8
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 09:20:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qa/iTdMK2I5u7OLH5mUmubpi3Ui2X4Y/60DebnqcWKA=;
-        b=YUKjt5T1Uxbnehko3JGL2u2xg4tM7137f8tigXS15tKoOaor5fhH2rdF2bZu2pmZ29
-         CXlen5OW7V7h5ZAJUlNaFmfhRqbz3V6eiRg1mrMLmxwMXEq8FAC96F/w2Y1k4xI8mTF8
-         hN4YPvaOwSEvViy+ZqNaKCMe9VigQy4rKnUWI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=qa/iTdMK2I5u7OLH5mUmubpi3Ui2X4Y/60DebnqcWKA=;
-        b=ASLSYy6b0XtvKiYN9oQoirsYqm+pT9wRhH4yyCsmjxa4JCbv+NDWbvNZOtSIql/XL/
-         NWgqAzvH2MtpghSnYUoPpWm33J8Z4EUJTnUXGOapSi5l9tFaqMMtZkYwRMMVt25unY/+
-         3HTK2wKuv+4Y98LdRYmo9/xTt7uUCz5JXLMWb1dfEDayeyTp14CI33fbjmnh6nal2vU8
-         sVWmHDsrCEqCd2JNaKTtmTUXqvE42Y5zL++b1QQXUWYopDwaPb4Lm+fZjbyJnrgDhsID
-         hfd2+BhKjlvAZHW37q24KV4iWLroLuZaHrKG2WAKPK4f/bXV+XbNNDXOtDy3VwGIdI7A
-         +VIA==
-X-Gm-Message-State: APjAAAVZ9GTBH0p3VVDEVytJeM01FWDmoBPK2qDikSjsPAhO0YIf+s9i
-        6swMQozVBkIAZ7qKeEXMf6totg==
-X-Google-Smtp-Source: APXvYqyyUQQMpWFfqqnY1+kkknYiFDuvhN02hQKZ5YtOLDuOntF6aWyDvGMULBXc37JgAEFjADK+/Q==
-X-Received: by 2002:a17:906:4581:: with SMTP id t1mr64624488ejq.187.1558714806496;
-        Fri, 24 May 2019 09:20:06 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id f32sm850181edf.36.2019.05.24.09.20.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 24 May 2019 09:20:05 -0700 (PDT)
-Date:   Fri, 24 May 2019 18:20:03 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, Dave Airlie <airlied@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
-        <virtualization@lists.linux-foundation.org>,
-        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
-        <spice-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/qxl: drop WARN_ONCE()
-Message-ID: <20190524162003.GC21222@phenom.ffwll.local>
-Mail-Followup-To: Gerd Hoffmann <kraxel@redhat.com>,
-        dri-devel@lists.freedesktop.org, Dave Airlie <airlied@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" <virtualization@lists.linux-foundation.org>,
-        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" <spice-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190524104251.22761-1-kraxel@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190524104251.22761-1-kraxel@redhat.com>
-X-Operating-System: Linux phenom 4.14.0-3-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 24 May 2019 12:22:02 -0400
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1hUCxE-0007MK-Gl; Fri, 24 May 2019 18:22:00 +0200
+Message-ID: <1558714920.2987.2.camel@pengutronix.de>
+Subject: Re: [PATCH] dt-bindings: reset: imx7: Fix the spelling of 'indices'
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     andrew.smirnov@gmail.com, linux-kernel@vger.kernel.org
+Date:   Fri, 24 May 2019 18:22:00 +0200
+In-Reply-To: <20190524110625.17407-1-festevam@gmail.com>
+References: <20190524110625.17407-1-festevam@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 12:42:50PM +0200, Gerd Hoffmann wrote:
-> There is no good reason to flood the kernel log with a WARN
-> stacktrace just because someone tried to mmap a prime buffer.
+Hi Fabio,
 
-Yeah no userspace triggerable dmesg noise above debug level.
+On Fri, 2019-05-24 at 08:06 -0300, Fabio Estevam wrote:
+> The correct spelling is 'indices', so fix it accordingly.
 > 
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+> Signed-off-by: Fabio Estevam <festevam@gmail.com>
 > ---
->  drivers/gpu/drm/qxl/qxl_prime.c | 1 -
->  1 file changed, 1 deletion(-)
+>  Documentation/devicetree/bindings/reset/fsl,imx7-src.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/gpu/drm/qxl/qxl_prime.c b/drivers/gpu/drm/qxl/qxl_prime.c
-> index 114653b471c6..7d3816fca5a8 100644
-> --- a/drivers/gpu/drm/qxl/qxl_prime.c
-> +++ b/drivers/gpu/drm/qxl/qxl_prime.c
-> @@ -77,6 +77,5 @@ void qxl_gem_prime_vunmap(struct drm_gem_object *obj, void *vaddr)
->  int qxl_gem_prime_mmap(struct drm_gem_object *obj,
->  		       struct vm_area_struct *area)
->  {
-> -	WARN_ONCE(1, "not implemented");
->  	return -ENOSYS;
->  }
-> -- 
-> 2.18.1
-> 
+> diff --git a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
+> index 2ecf33815d18..13e095182db4 100644
+> --- a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
+> +++ b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
+> @@ -45,6 +45,6 @@ Example:
+>          };
+>  
+>  
+> -For list of all valid reset indicies see
+> +For list of all valid reset indices see
+>  <dt-bindings/reset/imx7-reset.h> for i.MX7 and
+>  <dt-bindings/reset/imx8mq-reset.h> for i.MX8MQ
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Thank you, applied to reset/next.
+
+regards
+Philipp
