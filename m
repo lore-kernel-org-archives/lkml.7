@@ -3,76 +3,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C1F6C282E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFBC9C282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:46:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CF2921874
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:46:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D7CF21871
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:46:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404162AbfEXUp7 (ORCPT
+        id S2391799AbfEXUqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 16:45:59 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38471 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389927AbfEXUp6 (ORCPT
+        Fri, 24 May 2019 16:46:16 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:43032 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390330AbfEXUqP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 16:45:58 -0400
-Received: by mail-wm1-f68.google.com with SMTP id t5so10411138wmh.3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 13:45:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mx7/UI9Jm1N8o+CZmUOfiHnK1kOQ3K16dEGlWbDQvu4=;
-        b=rG0MGquD3LtiovQGgrbGgPaZLOMsfEOFJ50WVqVCYdcli8sL2n5vVIbBt8zzLK/tB5
-         l1kw5nyjeMr2R1woVrdtB/UQ+g/sRS4UCHHrJmEuO2N2xZ7OifqEXxMbHeIATDU+6iT/
-         HZeLlU/tVDEK9zKt8egT78b10EsaCl1AOrGzxXRlmUaJItERMsh9dzJjScekgtH0lPqJ
-         0ksPWUe54uWLVSRNpqT6No+hZ/oLDgUVgKocbl1qkKNjqFcG2K+IZf6MpF67z1ZTrFmA
-         zA80S8hDELbjX/MSGneIyi1adSRYCgWJvXEkq56M1XB7WSyFqEikD1fhxCmbqxUZUy9U
-         eCuA==
-X-Gm-Message-State: APjAAAUBkByg0ZqrZsHEj4r8FJZNqluhMFuYPB51yV1f2EUP+A3fXEEc
-        zgZyfxwGFyChPwB/cF3dKeGAwBpdkTI=
-X-Google-Smtp-Source: APXvYqxJ83uZdMSEPSw6n2yqxH4DHAUSilro/nLhvRdru9Hu/zOSo5muHXY3j4Boz/pBy1d6U3DQdg==
-X-Received: by 2002:a1c:ef05:: with SMTP id n5mr1213237wmh.149.1558730756405;
-        Fri, 24 May 2019 13:45:56 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:4d53:18d:3ffd:370? ([2001:b07:6468:f312:4d53:18d:3ffd:370])
-        by smtp.gmail.com with ESMTPSA id p11sm2914061wrs.5.2019.05.24.13.45.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 13:45:55 -0700 (PDT)
-Subject: Re: [PATCH] kvm: fix compilation on s390
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <1558725957-22998-1-git-send-email-pbonzini@redhat.com>
- <20190524202438.GE30439@unicorn.suse.cz>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <328789af-23b2-d5d6-2353-2e36e39c7452@redhat.com>
-Date:   Fri, 24 May 2019 22:45:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190524202438.GE30439@unicorn.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Fri, 24 May 2019 16:46:15 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d8])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id EE70814E300C7;
+        Fri, 24 May 2019 13:46:14 -0700 (PDT)
+Date:   Fri, 24 May 2019 13:46:14 -0700 (PDT)
+Message-Id: <20190524.134614.1742380864925013895.davem@davemloft.net>
+To:     Jose.Abreu@synopsys.com
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Joao.Pinto@synopsys.com, peppe.cavallaro@st.com,
+        alexandre.torgue@st.com, clabbe.montjoie@gmail.com, andrew@lunn.ch
+Subject: Re: [PATCH net-next v2 00/18] net: stmmac: Improvements and
+ Selftests
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <cover.1558685827.git.joabreu@synopsys.com>
+References: <cover.1558685827.git.joabreu@synopsys.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 24 May 2019 13:46:15 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/05/19 22:24, Michal Kubecek wrote:
-> On Fri, May 24, 2019 at 09:25:57PM +0200, Paolo Bonzini wrote:
->> s390 does not have memremap, even though in this particular case it
->> would be useful.
+From: Jose Abreu <Jose.Abreu@synopsys.com>
+Date: Fri, 24 May 2019 10:20:08 +0200
+
+> [ Thanks to the introducion of selftests this series ended up being a misc
+> of improvements and the selftests additions per-se. ]
 > 
-> This is not completely true: memremap() is built when HAS_IOMEM is
-> defined which on s390 depends on CONFIG_PCI. So for "normal" configs
-> HAS_IOMEM would be enabled and memremap() would be available. We only
-> encountered the build error with a special minimal config for zfcpdump.
+> This introduces selftests support in stmmac driver. We add 9 basic sanity
+> checks and MAC loopback support for all cores within the driver. This way
+> more tests can easily be added in the future and can be run in virtually
+> any MAC/GMAC/QoS/XGMAC platform.
+> 
+> Having this we can find regressions and missing features in the driver
+> while at the same time we can check if the IP is correctly working.
+> 
+> We have been using this for some time now and I do have more tests to
+> submit in the feature. My experience is that although writing the tests
+> adds more development time, the gain results are obvious.
+> 
+> I let this feature optional within the driver under a Kconfig option.
 
-I see; I'll change it to "does not always have".
-
-Paolo
+Series applied.
