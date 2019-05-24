@@ -2,175 +2,105 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC4FC282E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F029AC282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7CAD2175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:52:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B81212175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:53:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J5FYUdsg"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FFhzeP6k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389767AbfEXIwS (ORCPT
+        id S2389703AbfEXIxm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 04:52:18 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:39566 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389674AbfEXIwR (ORCPT
+        Fri, 24 May 2019 04:53:42 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:46692 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389276AbfEXIxl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 04:52:17 -0400
-Received: by mail-lj1-f195.google.com with SMTP id a10so7959875ljf.6
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 01:52:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=O2vg4JJ6DQN4pfILUKPpTfkfWPxJjLQm+2vH3kc0sHQ=;
-        b=J5FYUdsgzQPrZOCxmVPMsVuv9uaTdhwWmtv9DG/REc4UMztVrF2Kh9QDMLHoN1GFWS
-         KdPFSf+owyVJDGLfjg4+BXjd4iRI4p0mpoH3Bnv8jhI0JcKSVluTBIyyIHbKK4Dfejap
-         ICt22xHfszQXei9MfvLACCNxoWN5k1N4TxBqjx718Nk7Wg1ZRHKEOyvHmDsTQENDF9bO
-         2GAD4WqxdAO4ZKR8vtaxXEKxmFWAX5rYVymVwnpQas870lETFxMtB9YIyCctppMdwcuJ
-         EUJuSfFDDnZbLzmP0q+nfn9GYnQY2ZsP5yUfZ2lGAJhLsFv2wAB72IWMZQGUikRWMEpc
-         BqjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=O2vg4JJ6DQN4pfILUKPpTfkfWPxJjLQm+2vH3kc0sHQ=;
-        b=H6WC9O9dBKbSWh/pTo3kz4E3vpCdwG4cr2KAeSk+T0iv+4gzkxFgr/PWdb22CbNsDA
-         Z1OajJjgfUdbCtkOhtiNyZEDIZKbpzZ0hxa+e7Sta05yJu8iUzT94Ee7qKVLO1jDed0F
-         7SmSJ6eHyRn2mRLkpC9xWx9PmJjB4LTTuO/u4FIzazrWesff8trhHkK5N25pc2iCkXMS
-         ex5JKDcnWdvjx8vZhGm11rvPrbK+iDlJSFgLEXI5ItCn+aPogJJ0Dc5zkmcohlF8gRea
-         7Ay8zt3XOsHwDIZW1Ugf9HxM4dof2gpC++gcuJ1fMMc69tJm4dMURYKsguMQrf5DBYMx
-         RI1w==
-X-Gm-Message-State: APjAAAUJvnJvQrMcmWpix+AEdIehmJ9r3prP+QTfOyyY8OTu0ACNQLTv
-        T423mj/k3nT/B8s9qTE9hn7CaqY8drPEB/FnNTT8fw==
-X-Google-Smtp-Source: APXvYqxAcY7C0Ox2MGq2f1WYUz/6CSPH493tnSQHpWl6GBGrfEjMPXwvo5jc0Ca/zhQDBXTN5UUqne8o2kDScTByc4A=
-X-Received: by 2002:a2e:7411:: with SMTP id p17mr4442391ljc.24.1558687935675;
- Fri, 24 May 2019 01:52:15 -0700 (PDT)
+        Fri, 24 May 2019 04:53:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=LXmpMTr3XlRy99COjSyRQeXMTTr9YPleMD/v1+k5tko=; b=FFhzeP6klPAGGecTbC7KSAl/S
+        pN8lJ8PEZYEAdEN95JChOFyF98gYqQ4fIS7MUM1MK8ru4th8yMfJ6k5krhX/YvSCygYL2LHZzq4iE
+        4T+/ZuToRYQinZY6kIgbroXkTNZwgi6PGFlUgRuHrZN07UKGvjOMjgdDg4C/bea4ANH1wDhHPKdfh
+        vST04O7Y+1y6+uA68szMemv9ngVx6m3V96y7YKc3aARR5Z7Yxu0zA9V0M3zNRSgmmsIyGFpRW8bZ7
+        LvYqjUddgy3A9wmNdBKyHijpMcWBp1qSF8UO3WA69QsPdPvt/RSF7ICTXiBx2xuuHIIZmNyZhpkof
+        yy6DeQzBA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hU5x4-00079T-5N; Fri, 24 May 2019 08:53:22 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D12CD201D3687; Fri, 24 May 2019 10:53:19 +0200 (CEST)
+Date:   Fri, 24 May 2019 10:53:19 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Kairui Song <kasong@redhat.com>, Alexei Starovoitov <ast@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
+Subject: Re: Getting empty callchain from perf_callchain_kernel()
+Message-ID: <20190524085319.GE2589@hirez.programming.kicks-ass.net>
+References: <20190517091044.GM2606@hirez.programming.kicks-ass.net>
+ <CACPcB9cpNp5CBqoRs+XMCwufzAFa8Pj-gbmj9fb+g5wVdue=ig@mail.gmail.com>
+ <20190522140233.GC16275@worktop.programming.kicks-ass.net>
+ <ab047883-69f6-1175-153f-5ad9462c6389@fb.com>
+ <20190522174517.pbdopvookggen3d7@treble>
+ <20190522234635.a47bettklcf5gt7c@treble>
+ <CACPcB9dRJ89YAMDQdKoDMU=vFfpb5AaY0mWC_Xzw1ZMTFBf6ng@mail.gmail.com>
+ <20190523133253.tad6ywzzexks6hrp@treble>
+ <CACPcB9fQKg7xhzhCZaF4UGi=EQs1HLTFgg-C_xJQaUfho3yMyA@mail.gmail.com>
+ <20190523152413.m2pbnamihu3s2c5s@treble>
 MIME-Version: 1.0
-References: <20190523181720.120897565@linuxfoundation.org>
-In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 24 May 2019 14:22:03 +0530
-Message-ID: <CA+G9fYvJGgo_SQj00Y7ounpwvjv4xCk+0x7Gtux7_-baKi+t7g@mail.gmail.com>
-Subject: Re: [PATCH 5.0 000/139] 5.0.19-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190523152413.m2pbnamihu3s2c5s@treble>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 May 2019 at 00:50, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.0.19 release.
-> There are 139 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat 25 May 2019 06:14:53 PM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.0.19-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.0.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+On Thu, May 23, 2019 at 10:24:13AM -0500, Josh Poimboeuf wrote:
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+> Here's the latest version which should fix it in all cases (based on
+> tip/master):
+> 
+>   https://git.kernel.org/pub/scm/linux/kernel/git/jpoimboe/linux.git/commit/?h=bpf-orc-fix
 
-Summary
-------------------------------------------------------------------------
+That patch suffers an inconsitency, the comment states:
 
-kernel: 5.0.19-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.0.y
-git commit: c7802929531b3fd886283d78a4f91f1e522cbdf2
-git describe: v5.0.18-140-gc7802929531b
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.0-oe/bui=
-ld/v5.0.18-140-gc7802929531b
+  'if they have "jump_table" in the name'
 
+while the actual code implements:
 
-No regressions (compared to build v5.0.18)
+  'if the name starts with "jump_table"'
 
-No fixes (compared to build v5.0.18)
+Other than that, I suppose that works just fine ;-)
 
-Ran 23203 total tests in the following environments and test suites.
+> There's no need to put special cases in the FP unwinder when we can
+> instead just fix the frame pointer usage in the JIT code.
+> 
+> For ORC, I'm thinking we may be able to just require that all generated
+> code (BPF and others) always use frame pointers.  Then when ORC doesn't
+> recognize a code address, it could try using the frame pointer as a
+> fallback.
 
-Environments
---------------
-- dragonboard-410c
-- i386
-- juno-r2
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
+Yes, this seems like a sensible approach. We'd also have to audit the
+ftrace and kprobe trampolines, IIRC they only do framepointer setup for
+CONFIG_FRAME_POINTER currently, which should be easy to fix (after the
+patches I have to fix the FP generation in the first place:
 
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libgpiod
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-fs-tests
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+  https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git/log/?h=x86/wip
+)
