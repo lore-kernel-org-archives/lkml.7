@@ -2,135 +2,127 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE5FC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD2CC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F6AE2175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:01:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558681290;
-	bh=ZmvlpHvxGyk/NSgi+zudMi7xz8PLs2ggVcwCb+7Twgo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Px/WDvAI7g+3JTWfoD4lE4cSE7t3kDTyJmU+X1Hsoiw1uklBpYHx+QuGXdNexZERK
-	 DKnsqvoYepgrB5LNYTOJJ+fzFbScqtjTNn2WZ2VuFgWXgxwcYRiEKRRaXgsCMiOT+s
-	 uWV/bEEezw/FZknhmILUBwNhVjhdE7obFIs3SMxo=
+	by mail.kernel.org (Postfix) with ESMTP id 5BAC021841
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:03:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="VrpPEWTy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389003AbfEXHB3 (ORCPT
+        id S2388955AbfEXHD0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 03:01:29 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36139 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388689AbfEXHB3 (ORCPT
+        Fri, 24 May 2019 03:03:26 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:46386 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388260AbfEXHD0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 03:01:29 -0400
-Received: by mail-wm1-f65.google.com with SMTP id v22so776712wml.1
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 00:01:27 -0700 (PDT)
+        Fri, 24 May 2019 03:03:26 -0400
+Received: by mail-oi1-f193.google.com with SMTP id 203so6259164oid.13
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 00:03:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cD+QKfx54qleGjQuzLkKBuFuX5HsGQPpWu1Zk02xUxg=;
-        b=MPdxeBjPI/0Tbxev05h5rrf9JzQqpBmPERQJCBn3JVsNT1macRKaj5TQq9jWsY8gna
-         tRM/zOzk9NAnoxQ2eiktaoIk10yjclhR0q/+hoRdmuG++X6sS9i3G7Bat2Nhq+n0PgLh
-         7Ndn4xvNcgZ/RV7T8uA2zFahbVS6qaTVLJA/FymVXCz1MQF5zGJAsAX9284WAlur8q/k
-         XlLZgIM9u27cHwa+xd85i0ry22HXKRGxXlrLozF+tcsLRmVE5UpmJzTxUjdyj5sulhdG
-         6z5tDxTo6UL7AeFj4ETYUN2YNUMhId3I6i1dd+sUFewDr4vZFeHXobXqxyD9QwQPaYJa
-         WBiw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ggAqQCZOVRZtFKzDVVtPukGfGP3OkJTZeJtZud1HmIk=;
+        b=VrpPEWTyV7w/xBs02DOpEB2wHeHLcT5gaBjDP3+JsnrYHNsdP/gHQs/91puwpoSwjk
+         lI+Q6BKnQWGbZSAcUtt+qBmgzxJjPIehh1lqAs6zBvLLVtSJU1dc35uKKxtIBPJtRdrJ
+         +MPG8/Oig2M2xOLcbZ64OB9F6H9f++/ZIRGdX42UUQsXKaSVQZ8/+UdKxOEbPLku9DGm
+         I0LkfKw8RXhb40SCoxN2zrMDPkMYzDuAZBdjPtYIAUZd/45cIRRlB2GRyl+oXe8kO0vq
+         EhA+pIJE+8ehAjGmHvnAsFwTB2JCRZCsdF50f5UCREyiZEYmM9S0D5/A1eNVUXS+FJwR
+         PUGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cD+QKfx54qleGjQuzLkKBuFuX5HsGQPpWu1Zk02xUxg=;
-        b=TeW+O5mfVl4hdF5ZQeyWsZDx0pRjI3nZqGA0ugnzpVtaEAcgL26SXINSnbWbJSukFG
-         WkF4j5YdI2SH/3IQmvJmlQxFm6XMpyBPWgLCpmFhhy58jlK97q48EfL1C/zbDr+kgLTz
-         +2dNgZmpbeYHHdFdjookwzXcmR+Ry98iunreTS4D+m1neNOCTcVLhtFE+Y3ntLLDigPY
-         RTMtBa3fXsHiOdw7DoE+W7fvb4jDbP0/7AYRwpot543SIrGyjepBzd2f/acXPAnivmRi
-         6cqcLoqa4vjXNS1El5q4ruoyKAw0X05x7eVPN4yf9HEJOMnmSdC6TBF217TULaWrJo0b
-         xHeg==
-X-Gm-Message-State: APjAAAUuJfA/0gU8oVcMe5qMu+Tj5HZ7yB3xt3cc8toRzwn/EzYHuQbf
-        8aDFABiSxrqVc824EiXL/QU=
-X-Google-Smtp-Source: APXvYqzpcuwD1m5xZjDyFb76oiplEO6VonPQ3y47FqXPP06zV3tx/kjIWzSw39SYNqIQ3KJ9UlvI7A==
-X-Received: by 2002:a7b:c842:: with SMTP id c2mr1792682wml.28.1558681286913;
-        Fri, 24 May 2019 00:01:26 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id x68sm2215915wmf.13.2019.05.24.00.01.25
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 24 May 2019 00:01:26 -0700 (PDT)
-Date:   Fri, 24 May 2019 09:01:24 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     yabinc@google.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH 1/4] perf/ring_buffer: Fix exposing a temporarily
- decreased data_head.
-Message-ID: <20190524070124.GA11882@gmail.com>
-References: <20190517115230.437269790@infradead.org>
- <20190517115418.224478157@infradead.org>
- <20190517130509.GA90824@gmail.com>
- <20190517142648.GC2589@hirez.programming.kicks-ass.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ggAqQCZOVRZtFKzDVVtPukGfGP3OkJTZeJtZud1HmIk=;
+        b=UjHugAtp0ccA6b47F8HlHMHYiBabArflrHMC1OZimXyfWcp+AgwDENA2seIRAKtfXX
+         2pZPl8jQwMLuW4eCRzyo9yZCsnxY4tZGVK0Pem5hd4zTIDfnHXxO3jo5/J8MZDlX1VNC
+         pQ2CzDyrCxXIZDVSjOLcCfwvS4CTJNJN6F+K/4jGCwIpRvk8BjSB0w05DJPAV4u4Zf+6
+         4kl+9XpcmuR0k8VWcx5evlEYFCesMuu7Xza4xrCdp4L695/plkvmcc/4LfQPkWe5Y8bF
+         AzZ/XSdOv5Qt0FKAF3GraUrLlUcVB5mL7MQ70r80vqqNi0UZGw/i2RlmsafwHOUZIjtB
+         s8jw==
+X-Gm-Message-State: APjAAAUpuKqbVrmfThZfhwf76jRg8DX3rdGFYhZBxKs34yxVJZNWRHlj
+        JTiS/sPIM6vtCKurA6uLBEI0Io+oPpjH/ZIZWT7RsA==
+X-Google-Smtp-Source: APXvYqxAbBUuROv5rdCa31jOH1GdpIUh2srX0z4DRxWpYcHFRalRwK2qR7nmEndZPgcFAvpYqZyxeAGzKrIjF2xYEU8=
+X-Received: by 2002:aca:4e42:: with SMTP id c63mr5486438oib.170.1558681405264;
+ Fri, 24 May 2019 00:03:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190517142648.GC2589@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <8054bec0-ea24-8590-738b-bae58c0be3b4@infradead.org>
+In-Reply-To: <8054bec0-ea24-8590-738b-bae58c0be3b4@infradead.org>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Fri, 24 May 2019 09:03:14 +0200
+Message-ID: <CAMpxmJUVoaAq0-0ELpzmZjke7yjZN+n75WO9i=cWK-WbXw8gZw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: fix gpio-adp5588 build errors
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        kbuild test robot <lkp@intel.com>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+pt., 24 maj 2019 o 00:00 Randy Dunlap <rdunlap@infradead.org> napisa=C5=82(=
+a):
+>
+> From: Randy Dunlap <rdunlap@infradead.org>
+>
+> The gpio-adp5588 driver uses interfaces that are provided by
+> GPIOLIB_IRQCHIP, so select that symbol in its Kconfig entry.
+>
+> Fixes these build errors:
+>
+> ../drivers/gpio/gpio-adp5588.c: In function =E2=80=98adp5588_irq_handler=
+=E2=80=99:
+> ../drivers/gpio/gpio-adp5588.c:266:26: error: =E2=80=98struct gpio_chip=
+=E2=80=99 has no member named =E2=80=98irq=E2=80=99
+>             dev->gpio_chip.irq.domain, gpio));
+>                           ^
+> ../drivers/gpio/gpio-adp5588.c: In function =E2=80=98adp5588_irq_setup=E2=
+=80=99:
+> ../drivers/gpio/gpio-adp5588.c:298:2: error: implicit declaration of func=
+tion =E2=80=98gpiochip_irqchip_add_nested=E2=80=99 [-Werror=3Dimplicit-func=
+tion-declaration]
+>   ret =3D gpiochip_irqchip_add_nested(&dev->gpio_chip,
+>   ^
+> ../drivers/gpio/gpio-adp5588.c:307:2: error: implicit declaration of func=
+tion =E2=80=98gpiochip_set_nested_irqchip=E2=80=99 [-Werror=3Dimplicit-func=
+tion-declaration]
+>   gpiochip_set_nested_irqchip(&dev->gpio_chip,
+>   ^
+>
+> Fixes: 459773ae8dbb ("gpio: adp5588-gpio: support interrupt controller")
+>
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Michael Hennerich <michael.hennerich@analog.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Cc: linux-gpio@vger.kernel.org
+> ---
+>  drivers/gpio/Kconfig |    1 +
+>  1 file changed, 1 insertion(+)
+>
+> --- lnx-52-rc1.orig/drivers/gpio/Kconfig
+> +++ lnx-52-rc1/drivers/gpio/Kconfig
+> @@ -822,6 +822,7 @@ config GPIO_ADP5588
+>  config GPIO_ADP5588_IRQ
+>         bool "Interrupt controller support for ADP5588"
+>         depends on GPIO_ADP5588=3Dy
+> +       select GPIOLIB_IRQCHIP
+>         help
+>           Say yes here to enable the adp5588 to be used as an interrupt
+>           controller. It requires the driver to be built in the kernel.
+>
+>
 
-* Peter Zijlstra <peterz@infradead.org> wrote:
-
-> On Fri, May 17, 2019 at 03:05:09PM +0200, Ingo Molnar wrote:
-> > 
-> > * Peter Zijlstra <peterz@infradead.org> wrote:
-> > 
-> > > In perf_output_put_handle(), an IRQ/NMI can happen in below location and
-> > > write records to the same ring buffer:
-> > > 	...
-> > > 	local_dec_and_test(&rb->nest)
-> > > 	...                          <-- an IRQ/NMI can happen here
-> > > 	rb->user_page->data_head = head;
-> > > 	...
-> > > 
-> > > In this case, a value A is written to data_head in the IRQ, then a value
-> > > B is written to data_head after the IRQ. And A > B. As a result,
-> > > data_head is temporarily decreased from A to B. And a reader may see
-> > > data_head < data_tail if it read the buffer frequently enough, which
-> > > creates unexpected behaviors.
-> > > 
-> > > This can be fixed by moving dec(&rb->nest) to after updating data_head,
-> > > which prevents the IRQ/NMI above from updating data_head.
-> > > 
-> > > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> > > Cc: Ingo Molnar <mingo@redhat.com>
-> > > Cc: Jiri Olsa <jolsa@redhat.com>
-> > > Cc: Namhyung Kim <namhyung@kernel.org>
-> > > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> > > Fixes: ef60777c9abd ("perf: Optimize the perf_output() path by removing IRQ-disables")
-> > > Signed-off-by: Yabin Cui <yabinc@google.com>
-> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > > Link: https://lkml.kernel.org/r/20190516184010.167903-1-yabinc@google.com
-> > 
-> > So these are missing a bunch of:
-> > 
-> >   From: Yabin Cui <yabinc@google.com>
-> > 
-> > lines, right?
-> > 
-> 
-> The first. certainly, the rest, while inspired by his patch, is more
-> complete than what he did.
-
-Oh, indeed - I adjusted the first patch only.
-
-Thanks,
-
-	Ingo
+Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
