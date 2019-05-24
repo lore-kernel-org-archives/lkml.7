@@ -2,88 +2,91 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C8B5C282E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEAE5C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B31B20868
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:07:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="y7nfCg4b"
+	by mail.kernel.org (Postfix) with ESMTP id AE19520868
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:07:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403811AbfEXNHq (ORCPT
+        id S2403831AbfEXNHr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 09:07:46 -0400
-Received: from mail-vk1-f195.google.com ([209.85.221.195]:36046 "EHLO
-        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391357AbfEXNHq (ORCPT
+        Fri, 24 May 2019 09:07:47 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:51989 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391609AbfEXNHq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 24 May 2019 09:07:46 -0400
-Received: by mail-vk1-f195.google.com with SMTP id l199so2107357vke.3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 06:07:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jdBUUMv99kj0cqC35xVQ0vJ+lTbAYnC4lk5/+dSwqX8=;
-        b=y7nfCg4b4hWh5cXtClN2G9IlPfZtmsJ3lCmnJcQFhJJFfR7Duny76GHmGWVmLX7JkN
-         4BQJt1/DlmVVHNx6yxD8f1v1vebpwhOW/ZIYNZ2RvPKxui5ELigztwF3+awy6EBQw7wE
-         m3Y2E5XpbLeF2AxgqwDhp4aX77GeAAP51wkhJr9AxhH+GkIXWwNH8VLVQGaBoN8GvqUp
-         A8Sh1fZjhD6lSYCc2m9pwMqc/p7T2nlHT50o9OXZ1RUVaIxCKjYUX676pmynjMX0a5ue
-         bReHsYh0ssps55JEZQvYZbYbEun8Ea/68G3H264PjF491twDM4RQQrC4Rib1pUZoFXKT
-         CZ7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jdBUUMv99kj0cqC35xVQ0vJ+lTbAYnC4lk5/+dSwqX8=;
-        b=nIaRGOd+/H669H/0OVgpoomnVl96nd7uwkayNd3VBJtzC2m/tI3HdfpYQhr3wWTsZ/
-         Ci3lCrQiIvhrzIl+CKsEnDFevXj2/I2evyHw+cua1NfSmIWsDghjrkhoVAPaP3C+gSCI
-         RaNub6cA5j3FDy1qyJhdRrmuIWIcXr9fJpFfGEWMp7zCby8NmDeilUbwIsq6vDNruONJ
-         ri4oDSiak4FjA9jKT21acwhThFPg48ZvnT+nBM6M1H7nEV1wN7HhNCaMc1Rpom/b0iPh
-         9vFiM58fosjwAYjPTjQz3AHGqTLAEJPBecGpGsQYiBO+v6d02S4rl2DwXv6t3j4/UiF0
-         cQIQ==
-X-Gm-Message-State: APjAAAVujdCGjSmZGU9f93RDgS9Uax+Kvv0eEYffgFjKGiXkp35iZpND
-        sIGmM5110+phC/MofmgUk1eSg60xqsdK1w==
-X-Google-Smtp-Source: APXvYqwvZqoB7HcLldyB5hnboWptllAQCHpm5/Temh8iNOZUGFHOn/N74uzD1wlGnZSad8s+yXbosA==
-X-Received: by 2002:a1f:8d0b:: with SMTP id p11mr4674585vkd.31.1558703264670;
-        Fri, 24 May 2019 06:07:44 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::e914])
-        by smtp.gmail.com with ESMTPSA id v14sm815351vkd.4.2019.05.24.06.07.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 06:07:43 -0700 (PDT)
-Date:   Fri, 24 May 2019 09:07:42 -0400
-From:   Josef Bacik <josef@toxicpanda.com>
-To:     Yao Liu <yotta.liu@ucloud.cn>
-Cc:     Josef Bacik <josef@toxicpanda.com>, Jens Axboe <axboe@kernel.dk>,
-        linux-block@vger.kernel.org, nbd@other.debian.org,
+Received: from localhost (aaubervilliers-681-1-27-134.w90-88.abo.wanadoo.fr [90.88.147.134])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 4294A240004;
+        Fri, 24 May 2019 13:07:43 +0000 (UTC)
+Date:   Fri, 24 May 2019 15:07:42 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-watchdog@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] nbd: fix connection timed out error after
- reconnecting to server
-Message-ID: <20190524130740.zfypc2j3q5e3gryr@MacBook-Pro-91.local.dhcp.thefacebook.com>
-References: <1558691036-16281-1-git-send-email-yotta.liu@ucloud.cn>
+Subject: Re: [PATCH v5 0/4] Allwinner H6 watchdog support
+Message-ID: <20190524130742.blyckr74erre3ekk@flea>
+References: <20190523151050.27302-1-peron.clem@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="kp5yz4xxxfd2wshh"
 Content-Disposition: inline
-In-Reply-To: <1558691036-16281-1-git-send-email-yotta.liu@ucloud.cn>
+In-Reply-To: <20190523151050.27302-1-peron.clem@gmail.com>
 User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 05:43:54PM +0800, Yao Liu wrote:
-> Some I/O requests that have been sent succussfully but have not yet been
-> replied won't be resubmitted after reconnecting because of server restart,
-> so we add a list to track them.
-> 
-> Signed-off-by: Yao Liu <yotta.liu@ucloud.cn>
 
-Nack, this is what the timeout stuff is supposed to handle.  The commands will
-timeout and we'll resubmit them if we have alive sockets.  Thanks,
+--kp5yz4xxxfd2wshh
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Josef
+On Thu, May 23, 2019 at 05:10:46PM +0200, Cl=E9ment P=E9ron wrote:
+> Hi,
+>
+> Allwinner H6 SoC has two watchdogs.
+>
+> As we are not sure that both A64 and H6 are stricly identical, I have
+> introduced the H6 bindings.
+>
+> After investigation it seems that on some boards the first watchdog doesn=
+'t
+> make it properly reboot. Please see details in the commit log.
+>
+> I think it's proper to add it with a comment anyway.
+>
+> The r_watchdog is still available and usable on all the H6 boards.
+
+Applied all 4, thanks!
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--kp5yz4xxxfd2wshh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOfsngAKCRDj7w1vZxhR
+xZhmAP9dNnhILxNK6etNTB+zKw2FWxx3f+hVuDnWL6dnrZudwwD8DkKLz0P5oKZC
+vjDzU3AcRPlmS3ZNQi7CpQqMK2tE8wg=
+=FvXk
+-----END PGP SIGNATURE-----
+
+--kp5yz4xxxfd2wshh--
