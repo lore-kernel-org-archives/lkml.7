@@ -2,109 +2,114 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA89C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D271DC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:35:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2B5B217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:33:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29CB121773
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:35:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a5ovVBZw"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Hru5M1+b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390526AbfEXKdq (ORCPT
+        id S2390531AbfEXKf4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 06:33:46 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34591 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389942AbfEXKdq (ORCPT
+        Fri, 24 May 2019 06:35:56 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33281 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389448AbfEXKf4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 06:33:46 -0400
-Received: by mail-wr1-f68.google.com with SMTP id f8so9492016wrt.1;
-        Fri, 24 May 2019 03:33:44 -0700 (PDT)
+        Fri, 24 May 2019 06:35:56 -0400
+Received: by mail-wr1-f65.google.com with SMTP id d9so9492152wrx.0
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 03:35:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xy3TJvnccS7kGUcSZLX9sdDSzruBA3cqxWDF1khBA+4=;
-        b=a5ovVBZw+lCIGJjdJVOqP7nQ8+/GJah+4KRJNDsic1i593Xr2molZadc/TTL321dhs
-         6h+tDBCJh+WhiklO4rE7x07qlQCGLadG/4db6XsJZ7moFJvtkuRQfYWyfjS2T9GngewH
-         bMnu2E9D2iCPv0O9425dOC58fFLEK1jnINmW17ztiyXog0siLAICmazaUr/J4MiDKQOd
-         z+7yzpWYUgIY+NfxG8GjpXRohOqAQUayvuosE7qiIzeziUuxFWlUaBSTUWZCsFXFqMkb
-         eLqN7GY91W5+taYvQfV+j+e34K43aY0vn8KSGGULj/ouBjNlp/RcGHHtbYFnrV6g4gmA
-         +uaQ==
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=njauMCJ2o1/GsnZ2mPeYOiP+YI83chYuXOrhyQtPV2M=;
+        b=Hru5M1+bFuLqBXipwVL2/tEtOL/OtEx3FfYSgOWmgjXRA6dLOeH7ftsHBfQvooSUhW
+         wOktU1Vsg7mrFiljLdYvYKym6cUf2gXXkBYQQghCH0Qek2YnYyzk65DxP/TLjWfClk2z
+         d8QYG7bXQwnPbdm+nWcEhHjzEhyGYCbHF+UKQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=xy3TJvnccS7kGUcSZLX9sdDSzruBA3cqxWDF1khBA+4=;
-        b=XNKs8gEz1CNReDq4fOZUu0fPS44gKtmO5eYkHQWSmQx2uhU6jqUhLCWLYOxI21oUfZ
-         IDMb6lJquRbDnX/q+9nqPSU9i44mALiCgfvLc1UmKJ7fYE54kYq2mhPlWxS/efMkz8zL
-         +HzspWOxlhyTMt8KAXQ5wbDzmyPisLEN1tAC87FBkZNWwmTxLz6EfUisPWiKbguSKK/C
-         LaZ9gpQ4cJ4Qsa5bK/9uGL2d/qbv83YyPLKNBHHbnw19f9O6q2s/dCswRrW1yKtJuzcp
-         rABfyc56ogGFI3DtmPasyoDvG3qiTUghGhLcz7pBCx0Ea5nednw9qt0QlDEzVkzKGWxa
-         /DBQ==
-X-Gm-Message-State: APjAAAUkKg54p3EMTue7hTZvEvSnJR/1+dDUC6QLUAwz/XPwTUeMkTWP
-        IZ9hWAFZZMVdv+qFNk17ysdoI22M
-X-Google-Smtp-Source: APXvYqxaatb4farmltlaj0cwWSTh0PzBX2v0mslJ3vCUXBT5o/rX4TmsParooCTTZ8kwa95GD1gYcw==
-X-Received: by 2002:adf:ec0f:: with SMTP id x15mr63377772wrn.120.1558694023967;
-        Fri, 24 May 2019 03:33:43 -0700 (PDT)
-Received: from macbookpro.malat.net ([2a01:e34:ee1e:860:6f23:82e6:aa2d:bbd1])
-        by smtp.gmail.com with ESMTPSA id f16sm1976736wrx.58.2019.05.24.03.33.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 24 May 2019 03:33:43 -0700 (PDT)
-Received: by macbookpro.malat.net (Postfix, from userid 1000)
-        id 8D3EB11415E7; Fri, 24 May 2019 12:33:41 +0200 (CEST)
-From:   Mathieu Malaterre <malat@debian.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     trivial@kernel.org, kernel-janitors@vger.kernel.org,
-        Mathieu Malaterre <malat@debian.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH] clocksource: Move inline keyword to the beginning of function declarations
-Date:   Fri, 24 May 2019 12:33:39 +0200
-Message-Id: <20190524103339.28787-1-malat@debian.org>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=njauMCJ2o1/GsnZ2mPeYOiP+YI83chYuXOrhyQtPV2M=;
+        b=Rj/BHauAMMWRNPl3XLKZ/Crsff5urySQBKxB4rDvCTA+mEL2p2ql1oruWl1a/EMNUv
+         3RFm+Fr4s7Cqg4JlLxhA4R+V/PisnI6z6qV2KYxAsZzUg3iLLRAJiovz93OFIDHdQXfB
+         KRzq/WfADnzi7r+I15ACk0xEIJcEe3KaUWXMrF7E6cc77bynoDwFVATZGXKVhccAzYZc
+         WA7YOi3ISn6n5Q8aWqmJr1ja2LpRONCcE2tblQexunmnvJi/w3MOtr8JbdlIY17MxhsW
+         ZI8P4vfXdwDTkgDW0gvoSj+EFvvVLQD9wXx8h5zo3ouovmuDuD1u5pB/H9pvav/oNcEI
+         OOnA==
+X-Gm-Message-State: APjAAAX8UoT2FeZtmnktFF/yFpKlIjIH8Y4wyutcu/PpWEsF8S7LO3gh
+        c35ufi7CRpP7znpE5uyVMY6nUAn0/k2ojw==
+X-Google-Smtp-Source: APXvYqymSOvRTe+J1h7dpzi/nvT3l56pi2Q0/g+JC6fOANr4pHoOUwoVnNfxrnU18CWAomssiDGh2g==
+X-Received: by 2002:adf:f292:: with SMTP id k18mr37384267wro.321.1558694154076;
+        Fri, 24 May 2019 03:35:54 -0700 (PDT)
+Received: from localhost.localdomain (86.100.broadband17.iol.cz. [109.80.100.86])
+        by smtp.gmail.com with ESMTPSA id n4sm2111272wrp.61.2019.05.24.03.35.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 24 May 2019 03:35:53 -0700 (PDT)
+From:   Andrea Parri <andrea.parri@amarulasolutions.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jorgen Hansen <jhansen@vmware.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Subject: [PATCH 0/2] Prevent evaluation of WRITE_ONCE()
+Date:   Fri, 24 May 2019 12:35:34 +0200
+Message-Id: <1558694136-19226-1-git-send-email-andrea.parri@amarulasolutions.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The inline keyword was not at the beginning of the function declarations.
-Fix the following warnings triggered when using W=1:
+Hi all,
 
-  kernel/time/clocksource.c:108:1: warning: 'inline' is not at beginning of declaration [-Wold-style-declaration]
-  kernel/time/clocksource.c:113:1: warning: 'inline' is not at beginning of declaration [-Wold-style-declaration]
+This all started when we realized that
 
-Signed-off-by: Mathieu Malaterre <malat@debian.org>
----
- kernel/time/clocksource.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+  atomic64_t v;
+  ...
+  typeof(v.counter) my_val = atomic64_set(&v, VAL);
 
-diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
-index 3bcc19ceb073..fff5f64981c6 100644
---- a/kernel/time/clocksource.c
-+++ b/kernel/time/clocksource.c
-@@ -105,12 +105,12 @@ static DEFINE_SPINLOCK(watchdog_lock);
- static int watchdog_running;
- static atomic_t watchdog_reset_pending;
- 
--static void inline clocksource_watchdog_lock(unsigned long *flags)
-+static inline void clocksource_watchdog_lock(unsigned long *flags)
- {
- 	spin_lock_irqsave(&watchdog_lock, *flags);
- }
- 
--static void inline clocksource_watchdog_unlock(unsigned long *flags)
-+static inline void clocksource_watchdog_unlock(unsigned long *flags)
- {
- 	spin_unlock_irqrestore(&watchdog_lock, *flags);
- }
+is a valid assignment on some architectures, but not on others [1]:
+in particular, the assignment is valid on all architectures #define
+-ing their atomic64_set() macro to WRITE_ONCE() (which is currently
+evaluated).
+
+Mark suggested to clean up all non-portable users of atomic*_set(),
+and to prevent WRITE_ONCE() from being evaluated [2]; this resulted
+in this first attempt/patchset based on Mark's atomics/type-cleanup
+branch [3].
+
+Cheers Andrea
+
+[1] https://lkml.kernel.org/r/20190523083013.GA4616@andrea
+[2] https://lkml.kernel.org/r/20190523141851.GA7523@lakrids.cambridge.arm.com
+[3] git://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git atomics/type-cleanup
+
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jorgen Hansen <jhansen@vmware.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
+
+Andrea Parri (2):
+  vmw_vmci: Clean up uses of atomic*_set()
+  compiler: Prevent evaluation of WRITE_ONCE()
+
+ include/linux/compiler.h      | 5 ++---
+ include/linux/vmw_vmci_defs.h | 4 ++--
+ 2 files changed, 4 insertions(+), 5 deletions(-)
+
 -- 
-2.20.1
+2.7.4
 
