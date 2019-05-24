@@ -2,140 +2,164 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B34C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77645C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FD0420851
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:31:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34E442175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:31:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GlQveNqr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390852AbfEXQbQ (ORCPT
+        id S2390940AbfEXQbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 12:31:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41744 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390392AbfEXQbP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 12:31:15 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DF3C581122;
-        Fri, 24 May 2019 16:31:09 +0000 (UTC)
-Received: from treble (ovpn-121-106.rdu2.redhat.com [10.10.121.106])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9365210027BC;
-        Fri, 24 May 2019 16:31:06 +0000 (UTC)
-Date:   Fri, 24 May 2019 11:31:04 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Ard Biesheuvel <ard.biesheuvel@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, guillaume.gardet@arm.com,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Jessica Yu <jeyu@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] module/ksymtab: use 64-bit relative reference for target
- symbol
-Message-ID: <20190524163104.o6xh54x4ngbihneb@treble>
-References: <20190522150239.19314-1-ard.biesheuvel@arm.com>
- <293c9d0f-dc14-1413-e4b4-4299f0acfb9e@arm.com>
- <f2141ee5-d07a-6dd9-47c6-97e8fbdccf34@arm.com>
- <20190523091811.GA26646@fuggles.cambridge.arm.com>
- <907a9681-cd1d-3326-e3dd-5f6965497720@arm.com>
- <20190524152045.w3syntzp4bb5jb7u@treble>
- <CAKv+Gu9DLf9y2uqTo407gLK3AX3pq+HGFxytsoR9C2zfGdUc-A@mail.gmail.com>
+        Fri, 24 May 2019 12:31:22 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36879 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390392AbfEXQbV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 12:31:21 -0400
+Received: by mail-pl1-f194.google.com with SMTP id p15so4381827pll.4;
+        Fri, 24 May 2019 09:31:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+SbEPxSc3I9t4ZXFty6TOIoP4vL3V/mhx3yZoaGSreo=;
+        b=GlQveNqrq65wwhA4ieUT9aYptmfo7DDk7kZsOPsenXJoyymP8EW2oqHg4Ml8/3MChv
+         Rk26pdLUgacRyUSwRU5Vli1itjAwjxUP8dpy/hF0LYe91eSyh93RklAZOtrePW07t4Wj
+         AO4EQ4Wi0bF+Z5609+Ivos/VCDTS8RF6fs0wSDNQZfexOWJ7Gds++zNzKA9xQxVub2/G
+         AgTV+WWZPwYVLlOVKev8Z0NuqgxC2ke/Z9LOlT2sMcWjHMmZJthTibU6z3JrVp5qaYJv
+         2uxmKXCSnWi3iJei8Qsp3Vx6Do6adEetf1+MvMbEPDmzmubBQDiC3Rkjb2Y4U/QvR6F2
+         4URA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+SbEPxSc3I9t4ZXFty6TOIoP4vL3V/mhx3yZoaGSreo=;
+        b=EToL5/H2jXOnzxF49v2o3V6qO8f19401xobMgyj834JKtIq0h3G1G08CfazGcPqAJs
+         9eCKzSP/dfE1r20pyj35kDmlqhFtiDhhRIojlyhRO9ixT0c6jmqphCxJYv+Wkf8GS/8M
+         Bb7mq31SdOkFM3ZI+aDW85vHuAT3y9lYgHUb3fHJ8mRmOIblQztmATIqIUQ8bkSgiL5i
+         58Gk/tQK/+Sjk7gpgsSX7/IO5EGs37WHjHrs/h4K7lYtf17M8Ztu3UDBX5EDk6K0agLE
+         M0QK8mdHDaacxbLtNrEA1v9Ko1SCxOcSr5amBzU0uj6aEIx6PZ8qdzBwG7sseCEV5i/p
+         RZmQ==
+X-Gm-Message-State: APjAAAUxSCIUsjoOdbdhV59ajbf7dA906IMZQo6yJnRZOgqPC1jPHW/m
+        ycCz9vgawVl9CpJM7adGXBpgE7AgPHwecVaXIKzCdkkipcA=
+X-Google-Smtp-Source: APXvYqyfIsWqcIjwlEhAaUOL1D7Git4IbxuJL/FO7WdnNTDUNfF9A6xrslrJUF9+OPD2qFwXrrjhqkm7DEAzbJU3nnM=
+X-Received: by 2002:a17:902:e00a:: with SMTP id ca10mr109769533plb.18.1558715481196;
+ Fri, 24 May 2019 09:31:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAKv+Gu9DLf9y2uqTo407gLK3AX3pq+HGFxytsoR9C2zfGdUc-A@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 24 May 2019 16:31:15 +0000 (UTC)
+References: <20190520224124.153005-1-mathewk@chromium.org> <CAK+PMK47_OE-BgOYD_TD0kwxD4RG+nS9Wstg4ydUy7yV9nVmHQ@mail.gmail.com>
+ <a7a23cbea93d46b48f7c9bd4e4cd4314@AUSX13MPC105.AMER.DELL.COM>
+In-Reply-To: <a7a23cbea93d46b48f7c9bd4e4cd4314@AUSX13MPC105.AMER.DELL.COM>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 24 May 2019 19:31:10 +0300
+Message-ID: <CAHp75VdQs-e0F-MHk3bX3Csp6cGCf5mYJLdVVTBc3i3S8ExgmA@mail.gmail.com>
+Subject: Re: [PATCH v2] platform/x86: intel-vbtn: Report switch events when
+ event wakes device
+To:     Mario Limonciello <Mario.Limonciello@dell.com>
+Cc:     jettrink@chromium.org, mathewk@chromium.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        AceLan Kao <acelan.kao@canonical.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 05:55:37PM +0200, Ard Biesheuvel wrote:
-> On Fri, 24 May 2019 at 17:21, Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+On Tue, May 21, 2019 at 4:43 PM <Mario.Limonciello@dell.com> wrote:
+>
+> > -----Original Message-----
+> > From: Jett Rink <jettrink@chromium.org>
+> > Sent: Tuesday, May 21, 2019 8:37 AM
+> > To: Mathew King
+> > Cc: linux-kernel; AceLan Kao; Andy Shevchenko; Darren Hart; platform-driver-
+> > x86@vger.kernel.org; Limonciello, Mario
+> > Subject: Re: [PATCH v2] platform/x86: intel-vbtn: Report switch events when event
+> > wakes device
 > >
-> > On Thu, May 23, 2019 at 10:29:39AM +0100, Ard Biesheuvel wrote:
-> > >
-> > >
-> > > On 5/23/19 10:18 AM, Will Deacon wrote:
-> > > > On Thu, May 23, 2019 at 09:41:40AM +0100, Ard Biesheuvel wrote:
-> > > > >
-> > > > >
-> > > > > On 5/22/19 5:28 PM, Ard Biesheuvel wrote:
-> > > > > >
-> > > > > >
-> > > > > > On 5/22/19 4:02 PM, Ard Biesheuvel wrote:
-> > > > > > > The following commit
-> > > > > > >
-> > > > > > >     7290d5809571 ("module: use relative references for __ksymtab entries")
-> > > > > > >
-> > > > > > > updated the ksymtab handling of some KASLR capable architectures
-> > > > > > > so that ksymtab entries are emitted as pairs of 32-bit relative
-> > > > > > > references. This reduces the size of the entries, but more
-> > > > > > > importantly, it gets rid of statically assigned absolute
-> > > > > > > addresses, which require fixing up at boot time if the kernel
-> > > > > > > is self relocating (which takes a 24 byte RELA entry for each
-> > > > > > > member of the ksymtab struct).
-> > > > > > >
-> > > > > > > Since ksymtab entries are always part of the same module as the
-> > > > > > > symbol they export (or of the core kernel), it was assumed at the
-> > > > > > > time that a 32-bit relative reference is always sufficient to
-> > > > > > > capture the offset between a ksymtab entry and its target symbol.
-> > > > > > >
-> > > > > > > Unfortunately, this is not always true: in the case of per-CPU
-> > > > > > > variables, a per-CPU variable's base address (which usually differs
-> > > > > > > from the actual address of any of its per-CPU copies) could be at
-> > > > > > > an arbitrary offset from the ksymtab entry, and so it may be out
-> > > > > > > of range for a 32-bit relative reference.
-> > > > > > >
-> > > > >
-> > > > > (Apologies for the 3-act monologue)
-> > > >
-> > > > Exposition, development and recapitulation ;)
-> > > >
-> > > > > This turns out to be incorrect. The symbol address of per-CPU variables
-> > > > > exported by modules is always in the vicinity of __per_cpu_start, and so it
-> > > > > is simply a matter of making sure that the core kernel is in range for
-> > > > > module ksymtab entries containing 32-bit relative references.
-> > > > >
-> > > > > When running the arm64 with kaslr enabled, we currently randomize the module
-> > > > > space based on the range of ADRP/ADD instruction pairs, which have a -/+ 4
-> > > > > GB range rather than the -/+ 2 GB range of 32-bit place relative data
-> > > > > relocations. So we can fix this by simply reducing the randomization window
-> > > > > to 2 GB.
-> > > >
-> > > > Makes sense. Do you see the need for an option to disable PREL relocs
-> > > > altogether in case somebody wants the additional randomization range?
-> > > >
-> > >
-> > > No, not really. To be honest, I don't think
-> > > CONFIG_RANDOMIZE_MODULE_REGION_FULL is that useful to begin with, and the
-> > > only reason we enabled it by default at the time was to ensure that the PLT
-> > > code got some coverage after we introduced it.
 > >
-> > In code, percpu variables are accessed with absolute relocations, right?
-> 
-> No, they are accessed just like ordinary symbols, so PC32 references
-> on x86 or ADRP/ADD references on arm64 are both quite common.
 
-Ah, right, now I see some PC32 percpu references.
+Pushed to my review and testing queue, thanks!
 
-So if PC32 references are sufficient for code, why aren't they
-sufficient for ksymtab entries?  Isn't the ksymtab data address closer
-to the percpu data than the code?  Do you have an example of an out of
-range ksymtab reference?
+> > [EXTERNAL EMAIL]
+> >
+> > On Mon, May 20, 2019 at 4:41 PM Mathew King <mathewk@chromium.org>
+> > wrote:
+> > >
+> > > When a switch event, such as tablet mode/laptop mode or docked/undocked,
+> > > wakes a device make sure that the value of the swich is reported.
+> > > Without when a device is put in tablet mode from laptop mode when it is
+> > > suspended or vice versa the device will wake up but mode will be
+> > > incorrect.
+> > >
+> > > Tested by suspending a device in laptop mode and putting it in tablet
+> > > mode, the device resumes and is in tablet mode. When suspending the
+> > > device in tablet mode and putting it in laptop mode the device resumes
+> > > and is in laptop mode.
+> > >
+> > > Signed-off-by: Mathew King <mathewk@chromium.org>
+> > >
+> > > ---
+> > > Changes in v2:
+> > >   - Added comment explaining why switch events are reported
+> > >   - Format so that checkpatch is happy
+> > > ---
+> > >  drivers/platform/x86/intel-vbtn.c | 16 ++++++++++++++--
+> > >  1 file changed, 14 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+> > > index 06cd7e818ed5..a0d0cecff55f 100644
+> > > --- a/drivers/platform/x86/intel-vbtn.c
+> > > +++ b/drivers/platform/x86/intel-vbtn.c
+> > > @@ -76,12 +76,24 @@ static void notify_handler(acpi_handle handle, u32
+> > event, void *context)
+> > >         struct platform_device *device = context;
+> > >         struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
+> > >         unsigned int val = !(event & 1); /* Even=press, Odd=release */
+> > > -       const struct key_entry *ke_rel;
+> > > +       const struct key_entry *ke, *ke_rel;
+> > >         bool autorelease;
+> > >
+> > >         if (priv->wakeup_mode) {
+> > > -               if (sparse_keymap_entry_from_scancode(priv->input_dev, event)) {
+> > > +               ke = sparse_keymap_entry_from_scancode(priv->input_dev, event);
+> > > +               if (ke) {
+> > >                         pm_wakeup_hard_event(&device->dev);
+> > > +
+> > > +                       /*
+> > > +                        * Switch events like tablet mode will wake the device
+> > > +                        * and report the new switch position to the input
+> > > +                        * subsystem.
+> > > +                        */
+> > Thanks for adding the comment; This looks good to me.
+> >
+> > > +                       if (ke->type == KE_SW)
+> > > +                               sparse_keymap_report_event(priv->input_dev,
+> > > +                                                          event,
+> > > +                                                          val,
+> > > +                                                          0);
+> > >                         return;
+> > >                 }
+> > >                 goto out_unknown;
+> > > --
+> > > 2.21.0.1020.gf2820cf01a-goog
+> > >
+> >
+> > Reviewed-by: Jett Rink <jettrink@chromium.org>
+>
+> Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
+
+
 
 -- 
-Josh
+With Best Regards,
+Andy Shevchenko
