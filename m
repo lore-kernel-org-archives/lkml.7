@@ -2,95 +2,194 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 037FAC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 326F5C282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D083B21848
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:33:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="nzVtAW6q";
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="nF7p9akw"
+	by mail.kernel.org (Postfix) with ESMTP id 0BC1A21848
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:33:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732107AbfEXSdM (ORCPT
+        id S1732192AbfEXSdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 14:33:12 -0400
-Received: from node.akkea.ca ([192.155.83.177]:52648 "EHLO node.akkea.ca"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732054AbfEXSdI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 14:33:08 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by node.akkea.ca (Postfix) with ESMTP id 88BCE4E2050;
-        Fri, 24 May 2019 18:33:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1558722787; bh=LmQmUojdQSRgprO3m2DjN3DljwNQT9zOpEdeZGWgzBw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=nzVtAW6q5kxieimwEOFI9OX768YjDfMtsbfESF9mIf5p9c6UvL9qX788MupSFEVHx
-         BCWHL8BjHulNrQTYbps3jzXTNqqLL37nRyXL05LItaKdy7VsBXcY5yqNfgUCm6p52p
-         0pd1+/aNxBYCHYnJ3lEWYI+tBtCZbmV0H2JhF7xY=
-X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
-Received: from node.akkea.ca ([127.0.0.1])
-        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id hgEYkabp4wt5; Fri, 24 May 2019 18:33:06 +0000 (UTC)
-Received: from localhost.localdomain (unknown [24.244.23.228])
-        by node.akkea.ca (Postfix) with ESMTPSA id CEE034E204B;
-        Fri, 24 May 2019 18:33:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1558722786; bh=LmQmUojdQSRgprO3m2DjN3DljwNQT9zOpEdeZGWgzBw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=nF7p9akwmfKryeBlra/1SbTeWO7OO1fYEglIgqbQDnVccpRnHQ3nnxU7h0yo6XZ2D
-         Ak81BB1OmadnQw76BTjTh2MND/0QhZuvGVdppTjTaHaFRI8uDClmRVSu3GPL3VFwJI
-         zZo+sfIjsYkopt6ijoGKpJ/kebmPuVjhmynBPYCY=
-From:   Angus Ainslie <angus@akkea.ca>
-To:     angus.ainslie@puri.sm
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: [PATCH v14 2/3] dt-bindings: Add an entry for Purism SPC
-Date:   Fri, 24 May 2019 12:32:56 -0600
-Message-Id: <20190524183257.16066-3-angus@akkea.ca>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190524183257.16066-1-angus@akkea.ca>
-References: <20190524183257.16066-1-angus@akkea.ca>
+        Fri, 24 May 2019 14:33:53 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:43780 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728739AbfEXSdw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 14:33:52 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4OIWDgj129187
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 14:33:51 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2spmnpb8n9-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 14:33:51 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Fri, 24 May 2019 19:33:49 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 24 May 2019 19:33:44 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4OIXhWZ59834370
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 May 2019 18:33:43 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 96691A405B;
+        Fri, 24 May 2019 18:33:43 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 27AD9A405C;
+        Fri, 24 May 2019 18:33:42 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.16.173])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 24 May 2019 18:33:42 +0000 (GMT)
+To:     Thomas Huth <thuth@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Andrew Jones <drjones@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-s390@vger.kernel.org
+References: <20190523164309.13345-1-thuth@redhat.com>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ syiRa+UVlsKmx1hsEg==
+Date:   Fri, 24 May 2019 20:33:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190523164309.13345-1-thuth@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19052418-0008-0000-0000-000002EA1161
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052418-0009-0000-0000-00002256D505
+Message-Id: <41d6b365-7e8f-f028-cc5b-c3896d73db83@de.ibm.com>
+Subject: Re:  [PATCH v1 0/9] KVM selftests for s390x
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-24_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=946 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905240120
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Angus Ainslie (Purism)" <angus@akkea.ca>
+I have now queued every patch in the kselftest branch on kvms390 at kernel.org.
+I will push out for next as soon as I have some ack/nacks on the
+"KVM: s390: fix memory slot handling for KVM_SET_USER_MEMORY_REGION"
+patch.
 
-Add an entry for Purism, SPC
-
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 749e3c3843d0..07d5211a8192 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -687,6 +687,8 @@ patternProperties:
-     description: PROBOX2 (by W2COMP Co., Ltd.)
-   "^pulsedlight,.*":
-     description: PulsedLight, Inc
-+  "^purism,.*":
-+    description: Purism, SPC
-   "^qca,.*":
-     description: Qualcomm Atheros, Inc.
-   "^qcom,.*":
--- 
-2.17.1
+On 23.05.19 18:43, Thomas Huth wrote:
+> This patch series enables the KVM selftests for s390x. As a first
+> test, the sync_regs from x86 has been adapted to s390x, and after
+> a fix for KVM_CAP_MAX_VCPU_ID on s390x, the kvm_create_max_vcpus
+> is now enabled here, too.
+> 
+> Please note that the ucall() interface is not used yet - since
+> s390x neither has PIO nor MMIO, this needs some more work first
+> before it becomes usable (we likely should use a DIAG hypercall
+> here, which is what the sync_reg test is currently using, too...
+> I started working on that topic, but did not finish that work
+> yet, so I decided to not include it yet).
+> 
+> RFC -> v1:
+>  - Rebase, needed to add the first patch for vcpu_nested_state_get/set
+>  - Added patch to introduce VM_MODE_DEFAULT macro
+>  - Improved/cleaned up the code in processor.c
+>  - Added patch to fix KVM_CAP_MAX_VCPU_ID on s390x
+>  - Added patch to enable the kvm_create_max_vcpus on s390x and aarch64
+> 
+> Andrew Jones (1):
+>   kvm: selftests: aarch64: fix default vm mode
+> 
+> Thomas Huth (8):
+>   KVM: selftests: Wrap vcpu_nested_state_get/set functions with x86
+>     guard
+>   KVM: selftests: Guard struct kvm_vcpu_events with
+>     __KVM_HAVE_VCPU_EVENTS
+>   KVM: selftests: Introduce a VM_MODE_DEFAULT macro for the default bits
+>   KVM: selftests: Align memory region addresses to 1M on s390x
+>   KVM: selftests: Add processor code for s390x
+>   KVM: selftests: Add the sync_regs test for s390x
+>   KVM: s390: Do not report unusabled IDs via KVM_CAP_MAX_VCPU_ID
+>   KVM: selftests: Move kvm_create_max_vcpus test to generic code
+> 
+>  MAINTAINERS                                   |   2 +
+>  arch/mips/kvm/mips.c                          |   3 +
+>  arch/powerpc/kvm/powerpc.c                    |   3 +
+>  arch/s390/kvm/kvm-s390.c                      |   1 +
+>  arch/x86/kvm/x86.c                            |   3 +
+>  tools/testing/selftests/kvm/Makefile          |   7 +-
+>  .../testing/selftests/kvm/include/kvm_util.h  |  10 +
+>  .../selftests/kvm/include/s390x/processor.h   |  22 ++
+>  .../kvm/{x86_64 => }/kvm_create_max_vcpus.c   |   3 +-
+>  .../selftests/kvm/lib/aarch64/processor.c     |   2 +-
+>  tools/testing/selftests/kvm/lib/kvm_util.c    |  25 +-
+>  .../selftests/kvm/lib/s390x/processor.c       | 286 ++++++++++++++++++
+>  .../selftests/kvm/lib/x86_64/processor.c      |   2 +-
+>  .../selftests/kvm/s390x/sync_regs_test.c      | 151 +++++++++
+>  virt/kvm/arm/arm.c                            |   3 +
+>  virt/kvm/kvm_main.c                           |   2 -
+>  16 files changed, 514 insertions(+), 11 deletions(-)
+>  create mode 100644 tools/testing/selftests/kvm/include/s390x/processor.h
+>  rename tools/testing/selftests/kvm/{x86_64 => }/kvm_create_max_vcpus.c (93%)
+>  create mode 100644 tools/testing/selftests/kvm/lib/s390x/processor.c
+>  create mode 100644 tools/testing/selftests/kvm/s390x/sync_regs_test.c
+> 
 
