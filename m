@@ -2,116 +2,80 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D68F9C46460
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB6EBC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:00:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B44DA20815
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:00:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9874A20815
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:00:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403999AbfEXOAs (ORCPT
+        id S2404030AbfEXOAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 10:00:48 -0400
-Received: from relay.sw.ru ([185.231.240.75]:34690 "EHLO relay.sw.ru"
+        Fri, 24 May 2019 10:00:51 -0400
+Received: from mga12.intel.com ([192.55.52.136]:30871 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403875AbfEXOAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 10:00:47 -0400
-Received: from [172.16.25.169]
-        by relay.sw.ru with esmtp (Exim 4.91)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1hUAkL-0006lR-1n; Fri, 24 May 2019 17:00:33 +0300
-Subject: Re: [PATCH v2 0/7] mm: process_vm_mmap() -- syscall for duplication a
- process mapping
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     akpm@linux-foundation.org, dan.j.williams@intel.com,
-        mhocko@suse.com, keith.busch@intel.com,
-        kirill.shutemov@linux.intel.com, alexander.h.duyck@linux.intel.com,
-        ira.weiny@intel.com, andreyknvl@google.com, arunks@codeaurora.org,
-        vbabka@suse.cz, cl@linux.com, riel@surriel.com,
-        keescook@chromium.org, hannes@cmpxchg.org, npiggin@gmail.com,
-        mathieu.desnoyers@efficios.com, shakeelb@google.com, guro@fb.com,
-        aarcange@redhat.com, hughd@google.com, jglisse@redhat.com,
-        mgorman@techsingularity.net, daniel.m.jordan@oracle.com,
-        jannh@google.com, kilobyte@angband.pl, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <155836064844.2441.10911127801797083064.stgit@localhost.localdomain>
- <20190522152254.5cyxhjizuwuojlix@box>
- <358bb95e-0dca-6a82-db39-83c0cf09a06c@virtuozzo.com>
- <20190524115239.ugxv766doolc6nsc@box>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <c3cd3719-0a5e-befe-89f2-328526bb714d@virtuozzo.com>
-Date:   Fri, 24 May 2019 17:00:32 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S2403876AbfEXOAu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 10:00:50 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 May 2019 07:00:50 -0700
+X-ExtLoop1: 1
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by fmsmga001.fm.intel.com with ESMTP; 24 May 2019 07:00:47 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hUAkX-0003gA-M2; Fri, 24 May 2019 17:00:45 +0300
+Date:   Fri, 24 May 2019 17:00:45 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        Changbin Du <changbin.du@intel.com>
+Subject: Re: [PATCH V2 7/9] genirq/timings: Add selftest for circular array
+Message-ID: <20190524140045.GY9224@smile.fi.intel.com>
+References: <20190524111615.4891-1-daniel.lezcano@linaro.org>
+ <20190524111615.4891-8-daniel.lezcano@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20190524115239.ugxv766doolc6nsc@box>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190524111615.4891-8-daniel.lezcano@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24.05.2019 14:52, Kirill A. Shutemov wrote:
-> On Fri, May 24, 2019 at 01:45:50PM +0300, Kirill Tkhai wrote:
->> On 22.05.2019 18:22, Kirill A. Shutemov wrote:
->>> On Mon, May 20, 2019 at 05:00:01PM +0300, Kirill Tkhai wrote:
->>>> This patchset adds a new syscall, which makes possible
->>>> to clone a VMA from a process to current process.
->>>> The syscall supplements the functionality provided
->>>> by process_vm_writev() and process_vm_readv() syscalls,
->>>> and it may be useful in many situation.
->>>
->>> Kirill, could you explain how the change affects rmap and how it is safe.
->>>
->>> My concern is that the patchset allows to map the same page multiple times
->>> within one process or even map page allocated by child to the parrent.
->>>
->>> It was not allowed before.
->>>
->>> In the best case it makes reasoning about rmap substantially more difficult.
->>>
->>> But I'm worry it will introduce hard-to-debug bugs, like described in
->>> https://lwn.net/Articles/383162/.
->>
->> Andy suggested to unmap PTEs from source page table, and this make the single
->> page never be mapped in the same process twice. This is OK for my use case,
->> and here we will just do a small step "allow to inherit VMA by a child process",
->> which we didn't have before this. If someone still needs to continue the work
->> to allow the same page be mapped twice in a single process in the future, this
->> person will have a supported basis we do in this small step. I believe, someone
->> like debugger may want to have this to make a fast snapshot of a process private
->> memory (when the task is stopped for a small time to get its memory). But for
->> me remapping is enough at the moment.
->>
->> What do you think about this?
+On Fri, May 24, 2019 at 01:16:13PM +0200, Daniel Lezcano wrote:
+> Due to the complexity of the code and the difficulty to debug it,
+> let's add some selftests to the framework in order to spot issues or
+> regression at boot time when the runtime testing is enabled for this
+> subsystem.
 > 
-> I don't think that unmapping alone will do. Consider the following
-> scenario:
-> 
-> 1. Task A creates and populates the mapping.
-> 2. Task A forks. We have now Task B mapping the same pages, but
-> write-protected.
-> 3. Task B calls process_vm_mmap() and passes the mapping to the parent.
-> 
-> After this Task A will have the same anon pages mapped twice.
+> This tests the circular buffer at the limits and validates:
+>  - the encoding / decoding of the values
+>  - the macro to browse the irq timings circular buffer
+>  - the function to push data in the circular buffer
 
-Ah, sure.
+Can it use kselftest infrastructure?
 
-> One possible way out would be to force CoW on all pages in the mapping,
-> before passing the mapping to the new process.
 
-This will pop all swapped pages up, which is the thing the patchset aims
-to prevent.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Hm, what about allow remapping only VMA, which anon_vma::rb_root contain
-only chain and which vma->anon_vma_chain contains single entry? This is
-a vma, which were faulted, but its mm never were duplicated (or which
-forks already died).
 
-Thanks,
-Kirill
