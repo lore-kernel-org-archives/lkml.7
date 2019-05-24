@@ -2,130 +2,275 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61412C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0269DC46470
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 218C3217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:21:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1F562184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:23:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gk7n6wp3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388393AbfEXCVF (ORCPT
+        id S2387805AbfEXCXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 22:21:05 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:32963 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388221AbfEXCVE (ORCPT
+        Thu, 23 May 2019 22:23:38 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:34292 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727037AbfEXCXh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 22:21:04 -0400
-Received: by mail-io1-f67.google.com with SMTP id z4so6594242iol.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 19:21:04 -0700 (PDT)
+        Thu, 23 May 2019 22:23:37 -0400
+Received: by mail-pl1-f195.google.com with SMTP id w7so3511497plz.1;
+        Thu, 23 May 2019 19:23:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=e1DbnTPIJ1iejRn7jLSDK3DKtKxc2O4mzdLRsl8BYBo=;
+        b=Gk7n6wp3Y4UsB9vY3npw4yhb+kfnlc75G4i1dcH9U4uIvu4ZLHyPXmLaSUfMNBk3QH
+         y5GL8if6wC5qAkh3cupGFrjaK2uSWXSmWLp6YkvRXInTH4BkCUEK66bouJ7RAkecmsh8
+         A3tJUCrGjUbSMOvtJ3TO7WeT2KyZxxoeuE/9kK9qDaJk4ccZnhqapQG6NFodrQNlFyYD
+         AFj+q5wZbe3Xc8OLeOn2KYi6H8JnBESMEKQEodzXC1MLRb+xttucfUvZf+rEpFwssdNu
+         jsBB7/xyzQHOT2i5+UbC6k6+KbPEcvC1SseoxCExrjtFS4UM9uuN+yMCyEOog52Cf8gh
+         gDsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TU9aYcgfNn+o19/ZAhWzQtbz6o/09lUEz74yQbsbrOs=;
-        b=IYmFlcrCbLJvf+DMaU0f07icE+57EErMva7k0BG1s06+uLm5pg5EzoyKFoqhRbzPw/
-         PtfRMIxkIzTAWwbbO3qKnPbSzeeCOQV+wdisuoA6PWCk8bCvZcu0afoe1tz8XJU6GPMW
-         zPmRb0iYbJjwq+3MfeoLd+jsDZEo9kmXyG4QZ9XzXJyGOTJPoBR4rVyt1XYhURjQh6eK
-         9XzBhuFumtDdyv22Auuk+5OehhamWrkd/VnQoZRXMPKHA3cGpY/9tkF5BovrPwuOOdrQ
-         fkSPvxymrrErfg35AllMx/QSVUnpX6NbZuiwocN3NJchrUcKbDZrca16tAXReG9gDS2p
-         r6Bg==
-X-Gm-Message-State: APjAAAUnkjP7v1Hgxh5yQmpTjHyVebEVLauBxC2XpJeF5dDaMYdunEf0
-        qTq4359oflruaARtbYI/U+uJo7012cHrQO88PsvgrA==
-X-Google-Smtp-Source: APXvYqxbzwmKP5zCOrF9d/b6xGv/Y8vObXzFIyCgXMb5NFMNIrNQb6s8fIjcHFafIn6tV0z6EJRKgM+nov7KtbhNUjM=
-X-Received: by 2002:a05:6602:211a:: with SMTP id x26mr5453533iox.202.1558664464183;
- Thu, 23 May 2019 19:21:04 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=e1DbnTPIJ1iejRn7jLSDK3DKtKxc2O4mzdLRsl8BYBo=;
+        b=MXF+HI1nS/OrR+7UUlBfD78m6wLY1t1WJ16d0j6eKBL2SLDO7osvUf0UprsgtjtEUn
+         xcM9hpJwdnwD02WAb3S880uJLY4QTr5ZdvKr1P2TI/bkyN2236GuEWP1/wL6a/xvUmvM
+         To+sukSE0erNhP4sYoamEOJ3+uvfOIRDvT7Coc2W5dG5wx5CSfSjfokDMZE79dmSe1RZ
+         7arjk10o7JoWHn4ep1wkya4spr5fuHd3sFbraCrKDbkI2KKoomehWWs1P2CcAncjd8aa
+         CjpK+F0ctPekQNixR1UUIHzq/bomE0tfqJIR2ZuUVZDX4KSktE4qyRpE+jvBvbCnqNEX
+         +3qw==
+X-Gm-Message-State: APjAAAVKQknQY0JmupmA+XwlQ4MCjqAozW5ymRKNWluGgPnyo+mjY6/u
+        plMMHdjdR30T7WWE0pLJhME=
+X-Google-Smtp-Source: APXvYqzFOHPG8VXCtgNKg6xY9VwfLQ02d2QBKiL28RccT9f8vHkEsAGNSfDCyuD7aKNbidRRdkiPnA==
+X-Received: by 2002:a17:902:4383:: with SMTP id j3mr103569105pld.320.1558664615922;
+        Thu, 23 May 2019 19:23:35 -0700 (PDT)
+Received: from localhost.localdomain ([2601:644:8201:32e0:7256:81ff:febd:926d])
+        by smtp.gmail.com with ESMTPSA id a8sm818118pfk.14.2019.05.23.19.23.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 May 2019 19:23:35 -0700 (PDT)
+Date:   Thu, 23 May 2019 19:23:33 -0700
+From:   Eduardo Valentin <edubezval@gmail.com>
+To:     "elaine.zhang" <zhangqing@rock-chips.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        Enric Balletbo Serra <eballetbo@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        huangtao@rock-chips.com, Linux PM list <linux-pm@vger.kernel.org>,
+        xxx@rock-chips.com, xf@rock-chips.com,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Doug Anderson <dianders@chromium.org>, vicencb@gmail.com
+Subject: Re: [PATCH v3 1/3] thermal: rockchip: fix up the tsadc pinctrl
+ setting error
+Message-ID: <20190524022331.GB1936@localhost.localdomain>
+References: <1556618986-18923-1-git-send-email-zhangqing@rock-chips.com>
+ <785392a0-282a-1e51-a4d6-a6d5ca478949@linaro.org>
+ <CAFqH_53nbiwzQKctNa7MBzgCcsRFn1p8g31Xgvo3E9k6eA8AKw@mail.gmail.com>
+ <2174314.1vfUlvne1O@phil>
+ <a6780f8f-4144-f817-b4b8-c40f6aa5e806@rock-chips.com>
 MIME-Version: 1.0
-References: <CACPcB9cpNp5CBqoRs+XMCwufzAFa8Pj-gbmj9fb+g5wVdue=ig@mail.gmail.com>
- <20190522140233.GC16275@worktop.programming.kicks-ass.net>
- <ab047883-69f6-1175-153f-5ad9462c6389@fb.com> <20190522174517.pbdopvookggen3d7@treble>
- <20190522234635.a47bettklcf5gt7c@treble> <CACPcB9dRJ89YAMDQdKoDMU=vFfpb5AaY0mWC_Xzw1ZMTFBf6ng@mail.gmail.com>
- <20190523133253.tad6ywzzexks6hrp@treble> <CACPcB9fQKg7xhzhCZaF4UGi=EQs1HLTFgg-C_xJQaUfho3yMyA@mail.gmail.com>
- <20190523152413.m2pbnamihu3s2c5s@treble> <CACPcB9e0mL6jdNWfH-2K-rkvmQiz=G6mtLiZ+AEmp3-V0x+Z8A@mail.gmail.com>
- <20190523172714.6fkzknfsuv2t44se@treble>
-In-Reply-To: <20190523172714.6fkzknfsuv2t44se@treble>
-From:   Kairui Song <kasong@redhat.com>
-Date:   Fri, 24 May 2019 10:20:52 +0800
-Message-ID: <CACPcB9dHzht9v9G9_z6oe5AAwgxCTuswRLxTB29vhWphqBO5Ng@mail.gmail.com>
-Subject: Re: Getting empty callchain from perf_callchain_kernel()
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Alexei Starovoitov <ast@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a6780f8f-4144-f817-b4b8-c40f6aa5e806@rock-chips.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 1:27 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
->
-> On Fri, May 24, 2019 at 12:41:59AM +0800, Kairui Song wrote:
-> >  On Thu, May 23, 2019 at 11:24 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> > >
-> > > On Thu, May 23, 2019 at 10:50:24PM +0800, Kairui Song wrote:
-> > > > > > Hi Josh, this still won't fix the problem.
-> > > > > >
-> > > > > > Problem is not (or not only) with ___bpf_prog_run, what actually went
-> > > > > > wrong is with the JITed bpf code.
-> > > > >
-> > > > > There seem to be a bunch of issues.  My patch at least fixes the failing
-> > > > > selftest reported by Alexei for ORC.
-> > > > >
-> > > > > How can I recreate your issue?
-> > > >
-> > > > Hmm, I used bcc's example to attach bpf to trace point, and with that
-> > > > fix stack trace is still invalid.
-> > > >
-> > > > CMD I used with bcc:
-> > > > python3 ./tools/stackcount.py t:sched:sched_fork
-> > >
-> > > I've had problems in the past getting bcc to build, so I was hoping it
-> > > was reproducible with a standalone selftest.
-> > >
-> > > > And I just had another try applying your patch, self test is also failing.
-> > >
-> > > Is it the same selftest reported by Alexei?
-> > >
-> > >   test_stacktrace_map:FAIL:compare_map_keys stackid_hmap vs. stackmap err -1 errno 2
-> > >
-> > > > I'm applying on my local master branch, a few days older than
-> > > > upstream, I can update and try again, am I missing anything?
-> > >
-> > > The above patch had some issues, so with some configs you might see an
-> > > objtool warning for ___bpf_prog_run(), in which case the patch doesn't
-> > > fix the test_stacktrace_map selftest.
-> > >
-> > > Here's the latest version which should fix it in all cases (based on
-> > > tip/master):
-> > >
-> > >   https://git.kernel.org/pub/scm/linux/kernel/git/jpoimboe/linux.git/commit/?h=bpf-orc-fix
+On Thu, May 23, 2019 at 09:34:37AM +0800, elaine.zhang wrote:
+> hi, Heiko & Enric:
+> 
+> 在 2019/5/22 下午8:27, Heiko Stuebner 写道:
+> >Hi Enric,
 > >
-> > Hmm, I still get the failure:
-> > test_stacktrace_map:FAIL:compare_map_keys stackid_hmap vs. stackmap
-> > err -1 errno 2
+> >Am Montag, 20. Mai 2019, 15:38:32 CEST schrieb Enric Balletbo Serra:
+> >>Hi all,
+> >>
+> >>As pointed by [1] and [2] this commit, that now is upstream, breaks
+> >>veyron (rk3288) and kevin (rk3399) boards. The problem is especially
+> >>critical for veyron boards because they don't boot anymore.
+> >>
+> >>I didn't look deep at the problem but I have some concerns about this
+> >>patch, see below.
+> >>
+> >>[1] https://www.spinics.net/lists/linux-rockchip/msg24657.html
+> >>[2] https://www.spinics.net/lists/linux-rockchip/msg24735.html
+> >>
+> >>Missatge de Daniel Lezcano <daniel.lezcano@linaro.org> del dia dt., 30
+> >>d’abr. 2019 a les 15:39:
+> >>>On 30/04/2019 12:09, Elaine Zhang wrote:
+> >>>>Explicitly use the pinctrl to set/unset the right mode
+> >>>>instead of relying on the pinctrl init mode.
+> >>>>And it requires setting the tshut polarity before select pinctrl.
+> >>>>
+> >>>>When the temperature sensor mode is set to 0, it will automatically
+> >>>>reset the board via the Clock-Reset-Unit (CRU) if the over temperature
+> >>>>threshold is reached. However, when the pinctrl initializes, it does a
+> >>>>transition to "otp_out" which may lead the SoC restart all the time.
+> >>>>
+> >>>>"otp_out" IO may be connected to the RESET circuit on the hardware.
+> >>>>If the IO is in the wrong state, it will trigger RESET.
+> >>>>(similar to the effect of pressing the RESET button)
+> >>>>which will cause the soc to restart all the time.
+> >>>>
+> >>>>Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+> >>>Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> >>>
+> >>>
+> >>>
+> >>>>---
+> >>>>  drivers/thermal/rockchip_thermal.c | 36 +++++++++++++++++++++++++++++++++---
+> >>>>  1 file changed, 33 insertions(+), 3 deletions(-)
+> >>>>
+> >>>>diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_thermal.c
+> >>>>index 9c7643d62ed7..6dc7fc516abf 100644
+> >>>>--- a/drivers/thermal/rockchip_thermal.c
+> >>>>+++ b/drivers/thermal/rockchip_thermal.c
+> >>>>@@ -172,6 +172,9 @@ struct rockchip_thermal_data {
+> >>>>       int tshut_temp;
+> >>>>       enum tshut_mode tshut_mode;
+> >>>>       enum tshut_polarity tshut_polarity;
+> >>>>+     struct pinctrl *pinctrl;
+> >>>>+     struct pinctrl_state *gpio_state;
+> >>>>+     struct pinctrl_state *otp_state;
+> >>>>  };
+> >>>>
+> >>>>  /**
+> >>>>@@ -1242,6 +1245,8 @@ static int rockchip_thermal_probe(struct platform_device *pdev)
+> >>>>               return error;
+> >>>>       }
+> >>>>
+> >>>>+     thermal->chip->control(thermal->regs, false);
+> >>>>+
+> >>That's the line that causes the hang. Commenting this makes the veyron
+> >>boot again. Probably this needs to go after chip->initialize?
+> >It needs to go after the clk_enable calls.
+> >At this point the tsadc may still be unclocked.
+> 
+> The clk is enable by default.
+> 
+> 
+> The reason for this modification:
+> 
+> The otp Pin polarity setting for tsadc must be set when tsadc is turned off.
+> 
+> The order:
+> 
+> Close the tsadc->Set the otp pin polarity ->Set the pinctrl->initialize the
+> tsadc->Open the tsadc
+> 
+> 
+> As for the problem you mentioned, I guess: The default polarity of otp does
+> not match the default state, that is, the otp is triggered by default, and
+> then the reset circuit of the hardware takes effect and is restarted all the
+> time.
+> Modification:
+> 1. For this hardware, otp pin default state is modified.
+> 2. The mode of using CRU is rockchip,hw-tshut-mode = <0> in DTS;
+> /* tshut mode 0:CRU 1:GPIO */
+> 
+> Recommended use method 2. You can try it.
+> 
 > >
-> > And I didn't see how this will fix the issue. As long as ORC need to
-> > unwind through the JITed code it will fail. And that will happen
-> > before reaching ___bpf_prog_run.
->
-> Ok, I was able to recreate by doing
->
->   echo 1 > /proc/sys/net/core/bpf_jit_enable
->
-> first.  I'm guessing you have CONFIG_BPF_JIT_ALWAYS_ON.
->
+> >>>>       error = clk_prepare_enable(thermal->clk);
+> >>>>       if (error) {
+> >>>>               dev_err(&pdev->dev, "failed to enable converter clock: %d\n",
+> >>>>@@ -1267,6 +1272,30 @@ static int rockchip_thermal_probe(struct platform_device *pdev)
+> >>>>       thermal->chip->initialize(thermal->grf, thermal->regs,
+> >>>>                                 thermal->tshut_polarity);
+> >>>>
+> >>>>+     if (thermal->tshut_mode == TSHUT_MODE_GPIO) {
+> >>>>+             thermal->pinctrl = devm_pinctrl_get(&pdev->dev);
+> >>>>+             if (IS_ERR(thermal->pinctrl)) {
+> >>>>+                     dev_err(&pdev->dev, "failed to find thermal pinctrl\n");
+> >>>>+                     return PTR_ERR(thermal->pinctrl);
+> >>>>+             }
+> >>>>+
+> >>>>+             thermal->gpio_state = pinctrl_lookup_state(thermal->pinctrl,
+> >>>>+                                                        "gpio");
+> >>Shouldn't this mode be documented properly in the binding first?
+> >More importantly, it should be _backwards-compatible_, aka work with
+> >old devicetrees without that property and not break thermal handling for
+> >them entirely.
+> If need  _backwards-compatible_,  It's can't return
+> PTR_ERR(thermal->pinctrl) when get
+> 
+> devm_pinctrl_get failed.
+> 
+> >
+> >>The binding [3] talks about init, default and sleep states but *not*
+> >>gpio and otpout. The patch series looks incomplete to me or not using
+> >>the proper names.
+> >>
+> >>[3] https://elixir.bootlin.com/linux/v5.2-rc1/source/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+> >>
+> >>>>+             if (IS_ERR_OR_NULL(thermal->gpio_state)) {
+> >>>>+                     dev_err(&pdev->dev, "failed to find thermal gpio state\n");
+> >>>>+                     return -EINVAL;
+> >>>>+             }
+> >>>>+
+> >>>>+             thermal->otp_state = pinctrl_lookup_state(thermal->pinctrl,
+> >>>>+                                                       "otpout");
+> >>>>+             if (IS_ERR_OR_NULL(thermal->otp_state)) {
+> >>>>+                     dev_err(&pdev->dev, "failed to find thermal otpout state\n");
+> >>>>+                     return -EINVAL;
+> >>>>+             }
+> >>>>+
+> >>Same here otpout is not a documented.
+> >>
+> >>As this change is now in mainline and is causing veyron to hang I'd
+> >>suggest reverting this change for now. Even fixing the root cause
+> >>(maybe the one I pointed above) after this patch we will have the
+> >>thermal driver to fail because "gpio" and "otpout" states are not
+> >>defined nor documented (a change on this will need some reviews and
+> >>acks and time I guess).
+> >I definitly agree here. Handling + checking the binding change
+> >as well as needed fallback code is definitly not material for -rc-kernels
+> >so we should just revert for now and let Elaine fix the issues for 5.3.
+> >
+> >Anyone volunteering for sending a revert-patch to Eduardo? :-)
+> 
+> I agree to revert the patch,and I will correct it and push it later.
 
-Yes, with JIT off it will be fixed. I can confirm that.
 
---
-Best Regards,
-Kairui Song
+Great! Collecting the revert that was already sent I will send out to
+coming rc so we clear the breakage.
+
+> 
+> Do I need to commit the revert the patch now?@Heiko
+> 
+
+
+Yeah, you should see it in the next rc after I send this to Linus.
+
+Meanwhile, it would be good if you good send another version of your
+patch that does not break the other boards.
+
+> >
+> >Heiko
+> >
+> >
+> >
+> >
+> >
+> >
+> >
+> 
+> 
