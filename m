@@ -2,153 +2,138 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF28C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A3EC282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9272206A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9712320879
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:07:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="OG3jSL1i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389053AbfEXHFu convert rfc822-to-8bit (ORCPT
+        id S2389066AbfEXHHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 03:05:50 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:42722 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388891AbfEXHFt (ORCPT
+        Fri, 24 May 2019 03:07:52 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:2122 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388869AbfEXHHw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 03:05:49 -0400
-Received: by mail-qk1-f196.google.com with SMTP id b9so3172816qkg.9
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 00:05:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=awBE3R6MaFliHdZCh3cBgGkjYreG0txG8Lteb87Xiyg=;
-        b=GRT6+IDMx4tpzVN2U5TGnRZ55GdUKdYhV3dPM5UYh6FTc6Ml5haK5RRcXAwc7q3lAW
-         TNPcOZqxKzvRIpozz8i/pFdwWpVDQGWAMm6yvFrhzQDQTjgLhl5wtUjhR0xt5nYj7U08
-         JfqQ0ecjoEHfoOmOUwjenvHU9+6UrsQyfbCiDFWb9gSG08a66OxBKA9W57O2bI/PVN/j
-         tsPYlHHIcJokNxgbgmXUVmI+fGbh8kK/Rzegow58PCuNDpQpQro7lW48ttgPS1F1qw7H
-         mkBYotFgA8gaIN4vENFzQLLVeppIONrgp0GWsMYKboCVvNdWJdxQakI9hkCPqPNjdDhL
-         bakA==
-X-Gm-Message-State: APjAAAWcdJsYqaQFIMT0uxouiV2eNjnlgDaEo5PYRJV6VH1wTQIpJwbB
-        vLvAKMQ06LYotdA7b9R8W5GSdEIhIZf9Ocb/0Nv0tQ==
-X-Google-Smtp-Source: APXvYqzEqHGLSARrvwBrdDvw232GTj/gPZc+E9LYUyp/feCZjZOmnGjw6Y+kT9XzG0LrToqWr9SAYN8MvMLXYZNpFlw=
-X-Received: by 2002:ac8:875:: with SMTP id x50mr83396994qth.345.1558681548800;
- Fri, 24 May 2019 00:05:48 -0700 (PDT)
+        Fri, 24 May 2019 03:07:52 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4O71fNu007790;
+        Fri, 24 May 2019 09:07:32 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=KgYz8lOxNFe9GYsbnWGU1e/GbH4dagg7a0sGq3pqCSE=;
+ b=OG3jSL1iKU0eVTv0A0JLy4hhXLT9kgBxURJsh6RYps7WQY0OPv2F3yHCjBd5uYpg+A4q
+ MEq92hoDZWhCciu1gJ6JFguKPZw8xS/UZUR2sZCMwtsgzo1X0CW2dLb/sAcrXcP6PvZq
+ y3C3Tfkn+L4gg+mqbi9KTMUOErn/K+o6uV/+blIiBPn32JmSbDL/145K00pgVqEUynLa
+ YDJckO8lEiJ5ABs+seAGcDkHfGgV+rFYMybhZJL0bepOURua/3TvwHiWNFXlU7gc4tRk
+ VIELxlOeYGo7reJLqHtRUgdyt6t1olwqaQI2IBdHQ545P1tkx/vbLvhmahllcoY/egAr aQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2snrve64ab-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 24 May 2019 09:07:32 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C60F34D;
+        Fri, 24 May 2019 07:07:29 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8D72315B0;
+        Fri, 24 May 2019 07:07:29 +0000 (GMT)
+Received: from [10.48.0.204] (10.75.127.49) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 24 May
+ 2019 09:07:28 +0200
+Subject: Re: [v4, PATCH 2/3] net: stmmac: fix csr_clk can't be zero issue
+To:     Biao Huang <biao.huang@mediatek.com>,
+        Jose Abreu <joabreu@synopsys.com>
+CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <netdev@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <yt.shen@mediatek.com>,
+        <jianguo.zhang@mediatek.comi>, <boon.leong.ong@intel.com>
+References: <1558679169-26752-1-git-send-email-biao.huang@mediatek.com>
+ <1558679169-26752-3-git-send-email-biao.huang@mediatek.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <120eba91-6d7f-1365-6b1c-e8365e54136c@st.com>
+Date:   Fri, 24 May 2019 09:07:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190521132712.2818-1-benjamin.tissoires@redhat.com>
- <20190521132712.2818-10-benjamin.tissoires@redhat.com> <003d01d511de$9da229c0$d8e67d40$@emc.com.tw>
-In-Reply-To: <003d01d511de$9da229c0$d8e67d40$@emc.com.tw>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Fri, 24 May 2019 09:05:37 +0200
-Message-ID: <CAO-hwJLnjxVxdodqAkKdQpqjAPGV1QYnugM+9t_86xRD92WJ-Q@mail.gmail.com>
-Subject: Re: [PATCH v2 09/10] Input: elan_i2c - correct the width/size base value
-To:     =?UTF-8?B?5buW5bSH5qau?= <kt.liao@emc.com.tw>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Aaron Ma <aaron.ma@canonical.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <1558679169-26752-3-git-send-email-biao.huang@mediatek.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG6NODE3.st.com (10.75.127.18) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-24_01:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 5:13 AM 廖崇榮 <kt.liao@emc.com.tw> wrote:
->
-> Hi Benjamin,
->
-> Thanks so much for all you do for Elan touchpad.
->
-> For the width_*, I have a question for it.
-> Our antenna sensors fully occupied the whole touchpad PCB.
->
-> The Gap between 2 sensors are 7.5 mil (0.19mm).
-> That's why we did not minus one trace.
+Hi Biao
 
-So, with the P52 I have:
-[  +0.000009] max:    (3045,1731) drivers/input/mouse/elan_i2c_core.c:428
-[  +0.000003] traces: (24,14) drivers/input/mouse/elan_i2c_core.c:429
-[  +0.000002] size:   (98,55) drivers/input/mouse/elan_i2c_core.c:430
-[  +0.000001] res:    (31,31) drivers/input/mouse/elan_i2c_core.c:431
-
-calculated size (max/res): 98 x 56 mm
-true size, as measured: 101 x 60 mm
-
-Which gives (without the minus 1):
-width_x = max_x / x_traces = 3045 / 24 = 126.875 -> 3.9885 mm
-width_y = max_y / y_traces = 1731 / 14 = 123.643 -> 4.0927 mm
-
--> this gives a total size of the touchpad of: 96 x 57 mm (width_x *
-24, width_y * 14)
-
-With the minus 1:
-width_x = max_x / x_traces = 3045 / 23 = 132.391 -> 4.2707 mm
-width_y = max_y / y_traces = 1731 / 14 = 133.154 -> 4.2953 mm
-
--> this gives a total size of the touchpad of: 102 x 60 mm (width_x *
-24, width_y * 14)
-and considering traces-1: 98 x 56 mm
-
-Removing 1 to the number of traces gave a squarer values in rows and
-columns, and this is what is done in the PS/2 driver.
-Also, going back to the size of the touchpad gives a better value when
-removing 1 on the *traces.
-So maybe when forwarding the properties we should remove one there in
-the PS/2 driver?
-
-Cheers,
-Benjamin
-
->
->
-> Thanks
-> KT
-> -----Original Message-----
-> From: Benjamin Tissoires [mailto:benjamin.tissoires@redhat.com]
-> Sent: Tuesday, May 21, 2019 9:27 PM
-> To: Dmitry Torokhov; KT Liao; Rob Herring; Aaron Ma; Hans de Goede
-> Cc: linux-input@vger.kernel.org; linux-kernel@vger.kernel.org;
-> devicetree@vger.kernel.org; Benjamin Tissoires
-> Subject: [PATCH v2 09/10] Input: elan_i2c - correct the width/size base
-> value
->
-> *_traces are the number of antennas. width_* is thus the space between 2
-> antennas. Which means, we should subtract 1 to the number of antennas to
-> divide the touchpad by the number of holes between each antenna.
->
-> Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
->
-> --
->
-> new in v2
+On 5/24/19 8:26 AM, Biao Huang wrote:
+> The specific clk_csr value can be zero, and
+> stmmac_clk is necessary for MDC clock which can be set dynamically.
+> So, change the condition from plat->clk_csr to plat->stmmac_clk to
+> fix clk_csr can't be zero issue.
+> 
+> Fixes: cd7201f477b9 ("stmmac: MDC clock dynamically based on the csr clock input")
+> Signed-off-by: Biao Huang <biao.huang@mediatek.com>
 > ---
->  drivers/input/mouse/elan_i2c_core.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/input/mouse/elan_i2c_core.c
-> b/drivers/input/mouse/elan_i2c_core.c
-> index 6f4feedb7765..3375eaa9a72e 100644
-> --- a/drivers/input/mouse/elan_i2c_core.c
-> +++ b/drivers/input/mouse/elan_i2c_core.c
-> @@ -398,8 +398,8 @@ static int elan_query_device_parameters(struct
-> elan_tp_data *data)
->                 if (error)
->                         return error;
->         }
-> -       data->width_x = data->max_x / x_traces;
-> -       data->width_y = data->max_y / y_traces;
-> +       data->width_x = data->max_x / (x_traces - 1);
-> +       data->width_y = data->max_y / (y_traces - 1);
->
->         if (device_property_read_u32(&client->dev,
->                                      "touchscreen-x-mm", &x_mm) ||
-> --
-> 2.21.0
->
+>   drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |    6 +++---
+>   .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |    5 ++++-
+>   2 files changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> index 06487a6..b2feb6c 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> @@ -4380,10 +4380,10 @@ int stmmac_dvr_probe(struct device *device,
+>   	 * set the MDC clock dynamically according to the csr actual
+>   	 * clock input.
+>   	 */
+> -	if (!priv->plat->clk_csr)
+> -		stmmac_clk_csr_set(priv);
+> -	else
+> +	if (priv->plat->clk_csr >= 0)
+>   		priv->clk_csr = priv->plat->clk_csr;
+> +	else
+> +		stmmac_clk_csr_set(priv);
+>   
+>   	stmmac_check_pcs_mode(priv);
+>   
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+> index 3031f2b..f45bfbe 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+> @@ -408,7 +408,10 @@ struct plat_stmmacenet_data *
+>   	/* Default to phy auto-detection */
+>   	plat->phy_addr = -1;
+>   
+> -	/* Get clk_csr from device tree */
+> +	/* Default to get clk_csr from stmmac_clk_crs_set(),
+> +	 * or get clk_csr from device tree.
+> +	 */
+> +	plat->clk_csr = -1;
+>   	of_property_read_u32(np, "clk_csr", &plat->clk_csr);
+>   
+>   	/* "snps,phy-addr" is not a standard property. Mark it as deprecated
+> 
+
+Acked-by: Alexandre TORGUE <alexandre.torgue@st.com>
+
+thanks
+Alex
