@@ -3,112 +3,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6418C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E08C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8601A217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A4A02184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:44:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389179AbfEXHmv (ORCPT
+        id S2389196AbfEXHoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 03:42:51 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:27286 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388960AbfEXHmv (ORCPT
+        Fri, 24 May 2019 03:44:13 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:47089 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388911AbfEXHoL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 03:42:51 -0400
-X-UUID: d50e7404e6a24342ab317cff1f4924c2-20190524
-X-UUID: d50e7404e6a24342ab317cff1f4924c2-20190524
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
-        (envelope-from <neal.liu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1760047958; Fri, 24 May 2019 15:42:37 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 24 May 2019 15:42:34 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 24 May 2019 15:42:34 +0800
-Message-ID: <1558683754.5671.4.camel@mtkswgap22>
-Subject: Re: [PATCH 3/3] hwrng: add mt67xx-rng driver
-From:   Neal Liu <neal.liu@mediatek.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-CC:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        Stephan Mueller <smueller@chronox.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "mpm@selenic.com" <mpm@selenic.com>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        Crystal Guo =?UTF-8?Q?=28=E9=83=AD=E6=99=B6=29?= 
-        <Crystal.Guo@mediatek.com>, Neal Liu <neal.liu@mediatek.com>
-Date:   Fri, 24 May 2019 15:42:34 +0800
-In-Reply-To: <20190510063915.kwqy3e5urs6j7ity@gondor.apana.org.au>
-References: <1557287937-2410-1-git-send-email-neal.liu@mediatek.com>
-         <1557287937-2410-4-git-send-email-neal.liu@mediatek.com>
-         <12193108.aNnqf5ydOJ@tauon.chronox.de>
-         <1557311737.11818.11.camel@mtkswgap22>
-         <20190509052649.xfkgb3qd7rhcgktj@gondor.apana.org.au>
-         <1557413686.23445.6.camel@mtkswgap22>
-         <20190510063915.kwqy3e5urs6j7ity@gondor.apana.org.au>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Fri, 24 May 2019 03:44:11 -0400
+Received: by mail-qk1-f196.google.com with SMTP id a132so6005115qkb.13;
+        Fri, 24 May 2019 00:44:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=k2hM4uRH+xcF6VZw3zZp57FHF0UiIEpfXR9WFJl84UE=;
+        b=PYXq1Idzv0Di7KLMknzWpNB+eY+yAOjbVLGoI5HUbfbPvDLGbeqCylQHAYwjvuSa0e
+         IkMKSeoe3IR3aNnjCBw+MHwc5WWQdgsseuj/aC59yOVLI4d0Twksyz4v5wc494lIhagG
+         tI6f8JhIFaoCJFSmJxKQFc1dQ+AEZABwqBiQEMUXnGdfiMTZB2Gs3uPZ3vGAsGa/AdF7
+         LCIl7WMuGS5y0Bo6e8XQO/aJiEDa/nlQqrbspcGRQGNzl23DvPUNFRrB+4NRjwo/OfAB
+         atqkh0iKBC0EFrVTNrQ50gbR+7yV90h01bA/rQNSKkLlx5BjivcZnCzdDU1XcWXk/L1l
+         WKfA==
+X-Gm-Message-State: APjAAAXwfXByxZKYfWiMo9NPVH0LPLmzUDK7pZnqtwgzF0APfN1TY0OJ
+        4eLsFdXsvJQkA4Q8mb4D3BVwKXzWUO3mq3l/+tQ=
+X-Google-Smtp-Source: APXvYqy/WqyRL4BlbMWLM5GdeDgLkBJI6XwCNcVvXGonN+2oV2dtTQWrObje5U17OKbtEn0pWH9nlYsDR25/fOWgBDY=
+X-Received: by 2002:ac8:2433:: with SMTP id c48mr70119188qtc.18.1558683849757;
+ Fri, 24 May 2019 00:44:09 -0700 (PDT)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 89ED3B40815DB6F837B8DBB2E0E3948F37DDFAA36A07D69CF4F4116AD8AC13F82000:8
-X-MTK:  N
+References: <20190522155259.11174-1-christian@brauner.io> <67e4458a-9cc4-d1aa-608c-73ebe9e2f7a3@yandex-team.ru>
+ <20190523163345.q5ynd2ytk7nxcvqf@brauner.io>
+In-Reply-To: <20190523163345.q5ynd2ytk7nxcvqf@brauner.io>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 24 May 2019 09:43:53 +0200
+Message-ID: <CAK8P3a26uvqmExJZsezhB+cp2ADM0Ai9jVUKWOFM6kg848bCKg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] open: add close_range()
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Shuah Khan <shuah@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Todd Kjos <tkjos@android.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        alpha <linux-alpha@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-ia64@vger.kernel.org,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        linux-mips@vger.kernel.org,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Herbert,
-	Could you kindly help to review our patches?
-	Thanks
+On Thu, May 23, 2019 at 6:33 PM Christian Brauner <christian@brauner.io> wrote:
+> On Thu, May 23, 2019 at 07:22:17PM +0300, Konstantin Khlebnikov wrote:
+> > On 22.05.2019 18:52, Christian Brauner wrote:> This adds the close_range() syscall. It allows to efficiently close a range
+> > >   22 files changed, 100 insertions(+), 9 deletions(-)
+> > >
+> >
+> > It would be better to split arch/ wiring into separate patch for better readability.
+>
+> Ok. You mean only do x86 - seems to be the standard - and then move the
+> others into a separate patch? Doesn't seem worth to have a patch
+> per-arch, I'd think.
 
-From	Neal Liu <>
-Subject	[PATCH 0/3] MT67XX random number generator support
-Date	Wed, 8 May 2019 11:58:54 +0800
-share
-These patch series introduce a generic rng driver for Trustzone
-based kernel driver which would like to communicate with ATF
-SIP services.
+I think I would prefer the first patch to just add the call without wiring it up
+anywhere, and a second patch do add it on all architectures including x86.
 
-Patch #1 initials SMC fid table for Mediatek SIP interfaces and
-adds HWRNG related SMC call.
-
-Patch #2..3 adds mt67xx-rng kernel driver for Trustzone based SoCs.
-For Mediatek SoCs on ARMv8 with TrustZone enabled, peripherals like
-entropy sources is not accessible from normal world (linux) and
-rather accessible from secure world (ATF/TEE) only. This driver aims
-to provide a generic interface to ATF rng service.
-
-Neal Liu (3):
-  soc: mediatek: add SMC fid table for SIP interface
-  dt-bindings: rng: update bindings for MT67xx SoCs
-  hwrng: add mt67xx-rng driver
-
- Documentation/devicetree/bindings/rng/mtk-rng.txt |   13 ++-
- drivers/char/hw_random/Kconfig                    |   16 ++++
- drivers/char/hw_random/Makefile                   |    1 +
- drivers/char/hw_random/mt67xx-rng.c               |  104
-+++++++++++++++++++++
- include/linux/soc/mediatek/mtk_sip_svc.h          |   55 +++++++++++
- 5 files changed, 186 insertions(+), 3 deletions(-)
- create mode 100644 drivers/char/hw_random/mt67xx-rng.c
- create mode 100644 include/linux/soc/mediatek/mtk_sip_svc.h
-
--- 
-1.7.9.5
-
-Best Regards,
--Neal Liu
-
-
+     Arnd
