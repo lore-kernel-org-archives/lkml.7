@@ -2,140 +2,132 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D33EDC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C6EC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:53:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9185621841
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:53:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558677201;
-	bh=kn1S16Ld07hbuety+OJkH2qGFXGPsK+lf/8fod4Sik0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JQQVn6RTKIy1PL/q+cy14sw9KbFygeBtGSayJkiUlTbciedIESrK/54siHBJ3A9ps
-	 gbr6NrjL44QV0MZI4pmPZnL3L+s17VzADVh6tZl5CVcLcCFv+c6FZwjTsG40rc1T8A
-	 PngLfyIA6ZU/599weBzq5GdsquHyeTJSVy9WXvSk=
+	by mail.kernel.org (Postfix) with ESMTP id 8694C2081C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:53:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="L3QA65NQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388854AbfEXFxV (ORCPT
+        id S2388865AbfEXFxi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 01:53:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38082 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388814AbfEXFxU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 01:53:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9C172081C;
-        Fri, 24 May 2019 05:53:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558677198;
-        bh=kn1S16Ld07hbuety+OJkH2qGFXGPsK+lf/8fod4Sik0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Y/QnzEHjhiKiG5k3cC6a3yuajtiOeTnlBpmd/LE4Na0IZgBAXBzTJst6mstjAtmHF
-         LpxGDF+znyZero3Vm+hho2oazJM9gbAvo/O2PIvdvUqSt07QUUs/ZA+c7pQTIp2u2k
-         hdL+I/gNNQ2R/Cm3xSp3qXDkG/D/HBMzm4Xq7KUw=
-Date:   Fri, 24 May 2019 07:53:16 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        torvalds@linux-foundation.org,
-        Andrew Morton <akpm@linux-foundation.org>, linux@roeck-us.net,
-        shuah@kernel.org, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Subject: Re: [PATCH 4.14 00/77] 4.14.122-stable review
-Message-ID: <20190524055316.GD31664@kroah.com>
-References: <20190523181719.982121681@linuxfoundation.org>
- <CABMQnVK9pg8ZsZWYtc48TzVDnvYU7XSPj6FPOBGipayKfnmHSA@mail.gmail.com>
+        Fri, 24 May 2019 01:53:38 -0400
+Received: from mail-eopbgr80088.outbound.protection.outlook.com ([40.107.8.88]:27310
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388258AbfEXFxi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 01:53:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=R3jNrJbSE+OLLbjY/ZhGMPVrdaaXS8U8WtMRqD0FeTw=;
+ b=L3QA65NQL00ZRideaw6x8NbkSNUuobOwvN7BX7JcXPG2MLaVdPMYUzQfgpgf2uqB0Zh0Y2/SN7fOPiJ/5Eji5eog/nkifTXXHd3u0FhpKjVb23xS2rErQWm6yoMUwqVEgyl9sfCWpGvSFtw1769wdAWdHjG+RwLOVcEtN1zPMzg=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3882.eurprd04.prod.outlook.com (52.134.72.33) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.18; Fri, 24 May 2019 05:53:33 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::5835:e874:bd94:fec]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::5835:e874:bd94:fec%5]) with mapi id 15.20.1922.017; Fri, 24 May 2019
+ 05:53:33 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>
+CC:     "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH 1/2] soc: imx: soc-imx8: Avoid unnecessary of_node_put()
+ in error handling
+Thread-Topic: [PATCH 1/2] soc: imx: soc-imx8: Avoid unnecessary of_node_put()
+ in error handling
+Thread-Index: AQHVD7YvdNtmZ2uz6UeyYdwfC+FzEKZ4qg6AgAEgPbA=
+Date:   Fri, 24 May 2019 05:53:33 +0000
+Message-ID: <DB3PR0402MB3916A92814AC8B5E66DA2C3CF5020@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1558430013-18346-1-git-send-email-Anson.Huang@nxp.com>
+ <20190523124044.GT9261@dragon>
+In-Reply-To: <20190523124044.GT9261@dragon>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5214ef71-8460-48f9-321c-08d6e00c2812
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3882;
+x-ms-traffictypediagnostic: DB3PR0402MB3882:
+x-ms-exchange-purlcount: 2
+x-microsoft-antispam-prvs: <DB3PR0402MB388207AF674DF4ACAE9D22D6F5020@DB3PR0402MB3882.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0047BC5ADE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(39860400002)(136003)(346002)(376002)(13464003)(189003)(199004)(6306002)(4326008)(102836004)(6506007)(316002)(6246003)(9686003)(7736002)(53546011)(8936002)(6916009)(229853002)(478600001)(76116006)(33656002)(55016002)(64756008)(25786009)(66066001)(66946007)(73956011)(8676002)(66556008)(66446008)(66476007)(81166006)(476003)(446003)(81156014)(6436002)(11346002)(14454004)(5660300002)(74316002)(2906002)(44832011)(54906003)(68736007)(486006)(86362001)(3846002)(76176011)(7696005)(256004)(26005)(52536014)(6116002)(186003)(966005)(99286004)(71190400001)(71200400001)(53936002)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3882;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 6w3ZCUflHoT3YNMuO7+Y4xHTWhSb/MWLl81gBV0awS/AknieNqI7zYToksg1a5SW01Ont+rhrwLU0BQ8dOKPTg9/JolA3XqfGGkKyjVf4JKwf0gW9t12JWfwCrHZtzEO//5Nme+z4PkoPDOxM08zyFx07t0YIbqOxJLe0hV5LLvIzkMRaC1kUh54O2ne/m1d8xH3jFMn6sCmzamaUidwEBgPcuxXxZ4RNhp3Up52iq553wmOknJUE9Cz8AFf0ZGrTLVLEXKiGwg0I/te2Inip0Ncn11jVB1dtXULH4MRnms4NxOCQVYYIJJiP9OGRv2SD50I/yFwZ+D0ELXUEQwaz8LrrU1ahtNLElmejJq8IBmAVNSrIeK+xs06PUid/tm0BeLEXPZHOPbo1++mvqdXB8GNn238Phz/6BUxPnCI8UI=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABMQnVK9pg8ZsZWYtc48TzVDnvYU7XSPj6FPOBGipayKfnmHSA@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5214ef71-8460-48f9-321c-08d6e00c2812
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 May 2019 05:53:33.4075
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: anson.huang@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3882
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 09:28:05AM +0900, Nobuhiro Iwamatsu wrote:
-> Hi.
-> 
-> 2019年5月24日(金) 4:11 Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
-> >
-> > This is the start of the stable review cycle for the 4.14.122 release.
-> > There are 77 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Sat 25 May 2019 06:15:09 PM UTC.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.122-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
-> >
-> > -------------
-> > Pseudo-Shortlog of commits:
-> >
-> > Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >     Linux 4.14.122-rc1
-> >
-> 
-> <snip>
-> 
-> >
-> > Yifeng Li <tomli@tomli.me>
-> >     fbdev: sm712fb: fix crashes and garbled display during DPMS modesetting
-> >
-> 
-> There is a problem in this commit, which is fixed in the following commit:
->     9dc20113988b9a75ea6b3abd68dc45e2d73ccdab
-> 
-> commit 9dc20113988b9a75ea6b3abd68dc45e2d73ccdab
-> Author: Yifeng Li <tomli@tomli.me>
-> Date:   Tue Apr 2 17:14:10 2019 +0200
-> 
->     fbdev: sm712fb: fix memory frequency by avoiding a switch/case fallthrough
-> 
->     A fallthrough in switch/case was introduced in f627caf55b8e ("fbdev:
->     sm712fb: fix crashes and garbled display during DPMS modesetting"),
->     due to my copy-paste error, which would cause the memory clock frequency
->     for SM720 to be programmed to SM712.
-> 
->     Since it only reprograms the clock to a different frequency, it's only
->     a benign issue without visible side-effect, so it also evaded Sudip
->     Mukherjee's code review and regression tests. scripts/checkpatch.pl
->     also failed to discover the issue, possibly due to nested switch
->     statements.
-> 
->     This issue was found by Stephen Rothwell by building linux-next with
->     -Wimplicit-fallthrough.
-> 
->     Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
->     Fixes: f627caf55b8e ("fbdev: sm712fb: fix crashes and garbled
-> display during DPMS modesetting")
->     Signed-off-by: Yifeng Li <tomli@tomli.me>
->     Cc: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
->     Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
->     Cc: Kees Cook <keescook@chromium.org>
->     Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> 
-> And this is also necessary for other stable-rc tree.
-> Please apply this commit to 4.9.y, 4.14.y, 4.19.y, 5.0.y and 5.1.y.
-
-Now queued up everywhere, thanks!
-
-greg k-h
+SGksIFNoYXduDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2hhd24g
+R3VvIFttYWlsdG86c2hhd25ndW9Aa2VybmVsLm9yZ10NCj4gU2VudDogVGh1cnNkYXksIE1heSAy
+MywgMjAxOSA4OjQxIFBNDQo+IFRvOiBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4N
+Cj4gQ2M6IHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU7IGtlcm5lbEBwZW5ndXRyb25peC5kZTsgZmVz
+dGV2YW1AZ21haWwuY29tOw0KPiBMZW9uYXJkIENyZXN0ZXogPGxlb25hcmQuY3Jlc3RlekBueHAu
+Y29tPjsgQWJlbCBWZXNhDQo+IDxhYmVsLnZlc2FAbnhwLmNvbT47IHZpcmVzaC5rdW1hckBsaW5h
+cm8ub3JnOyBsaW51eC1hcm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC1r
+ZXJuZWxAdmdlci5rZXJuZWwub3JnOyBkbC1saW51eC1pbXgNCj4gPGxpbnV4LWlteEBueHAuY29t
+Pg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDEvMl0gc29jOiBpbXg6IHNvYy1pbXg4OiBBdm9pZCB1
+bm5lY2Vzc2FyeQ0KPiBvZl9ub2RlX3B1dCgpIGluIGVycm9yIGhhbmRsaW5nDQo+IA0KPiBPbiBU
+dWUsIE1heSAyMSwgMjAxOSBhdCAwOToxODo0M0FNICswMDAwLCBBbnNvbiBIdWFuZyB3cm90ZToN
+Cj4gPiBvZl9ub2RlX3B1dCgpIGlzIGNhbGxlZCBhZnRlciBvZl9tYXRjaF9ub2RlKCkgc3VjY2Vz
+c2Z1bGx5IGNhbGxlZCwNCj4gPiB0aGVuIGluIHRoZSBmb2xsb3dpbmcgZXJyb3IgaGFuZGxpbmcs
+IG9mX25vZGVfcHV0KCkgaXMgY2FsbGVkIGFnYWluDQo+ID4gd2hpY2ggaXMgdW5uZWNlc3Nhcnks
+IHRoaXMgcGF0Y2ggYWRqdXN0cyB0aGUgbG9jYXRpb24gb2Ygb2Zfbm9kZV9wdXQoKQ0KPiA+IHRv
+IGF2b2lkIHN1Y2ggc2NlbmFyaW8uDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFu
+ZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gDQo+IEFnYWluLCB0aGVyZSBhcmUgJz0yMCcgaW4g
+dGhlIHBhdGNoIGNvbnRlbnQgYW5kIEkgY2Fubm90IGFwcGx5IGl0Lg0KDQpJIHJlc2VudCB0aGUg
+cGF0Y2ggc2V0LCBwbGVhc2UgcGljayB0aGVtIHVwLCB0aGFua3MuDQoNCmh0dHBzOi8vcGF0Y2h3
+b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTA5NTkxMDEvDQpodHRwczovL3BhdGNod29yay5rZXJuZWwu
+b3JnL3BhdGNoLzEwOTU5MDk5Lw0KDQpBbnNvbi4NCg0KPiANCj4gU2hhd24NCj4gDQo+ID4gLS0t
+DQo+ID4gIGRyaXZlcnMvc29jL2lteC9zb2MtaW14OC5jIHwgNCArKy0tDQo+ID4gIDEgZmlsZSBj
+aGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9zb2MvaW14L3NvYy1pbXg4LmMgYi9kcml2ZXJzL3NvYy9pbXgvc29jLWlt
+eDguYw0KPiA+IGluZGV4IGIxYmQ4ZTIuLjk0NGFkZDIgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVy
+cy9zb2MvaW14L3NvYy1pbXg4LmMNCj4gPiArKysgYi9kcml2ZXJzL3NvYy9pbXgvc29jLWlteDgu
+Yw0KPiA+IEBAIC04Niw4ICs4Niw2IEBAIHN0YXRpYyBpbnQgX19pbml0IGlteDhfc29jX2luaXQo
+dm9pZCkNCj4gPiAgCWlmICghaWQpDQo+ID4gIAkJZ290byBmcmVlX3NvYzsNCj4gPg0KPiA+IC0J
+b2Zfbm9kZV9wdXQocm9vdCk7DQo+ID4gLQ0KPiA+ICAJZGF0YSA9IGlkLT5kYXRhOw0KPiA+ICAJ
+aWYgKGRhdGEpIHsNCj4gPiAgCQlzb2NfZGV2X2F0dHItPnNvY19pZCA9IGRhdGEtPm5hbWU7DQo+
+ID4gQEAgLTEwNiw2ICsxMDQsOCBAQCBzdGF0aWMgaW50IF9faW5pdCBpbXg4X3NvY19pbml0KHZv
+aWQpDQo+ID4gIAlpZiAoSVNfRU5BQkxFRChDT05GSUdfQVJNX0lNWF9DUFVGUkVRX0RUKSkNCj4g
+PiAgCQlwbGF0Zm9ybV9kZXZpY2VfcmVnaXN0ZXJfc2ltcGxlKCJpbXgtY3B1ZnJlcS1kdCIsIC0x
+LCBOVUxMLA0KPiAwKTsNCj4gPg0KPiA+ICsJb2Zfbm9kZV9wdXQocm9vdCk7DQo+ID4gKw0KPiA+
+ICAJcmV0dXJuIDA7DQo+ID4NCj4gPiAgZnJlZV9yZXY6DQo+ID4gLS0NCj4gPiAyLjcuNA0KPiA+
+DQo=
