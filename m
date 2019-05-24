@@ -2,82 +2,95 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C64BC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 03:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF1FC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 03:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB5882184B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 03:18:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558667907;
-	bh=XwHg2mXb8WzJvbztibhVXfbFYRpVR6mtdv8vVyp0Duk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=rDdGZio0Q7N+7AcLxTeoHGQ59bNBDEBohj9zjvvgPSIY/HIKdXtc9zcLS/d+fcbwk
-	 ljDSy8ftVPMpYFj54R5RC7AJ0vtYI2kd4pB3dTcYKASWAqIaBnrhf6+vvC2f2i5rNX
-	 zdd9rPYY8mBmVsKgVxXE1Im7xe61/KKW0vo3EoDY=
+	by mail.kernel.org (Postfix) with ESMTP id E8E5421773
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 03:20:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U0zV4CMf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731843AbfEXDS0 (ORCPT
+        id S1731844AbfEXDUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 23:18:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41532 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729972AbfEXDSZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 23:18:25 -0400
-Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FAB621773;
-        Fri, 24 May 2019 03:18:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558667905;
-        bh=XwHg2mXb8WzJvbztibhVXfbFYRpVR6mtdv8vVyp0Duk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=gOH1cU9zPFjRxln9OKY2r62pmt7/PemAORYbGNQaegIo+iNyQgDReb7QKaxHNrJMV
-         wSO5kvL30yjVKbx/3MMAoDgQQRq/1VMw0+WCa8a6BuYmGleZmEV4g/sve7Ch1/cBre
-         NLuOxJNpsd1jJge2pGr1UmmlztkDedgK2+m3hZgI=
-Date:   Thu, 23 May 2019 20:18:22 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Aubrey Li <aubrey.li@linux.intel.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, peterz@infradead.org,
-        hpa@zytor.com, ak@linux.intel.com, tim.c.chen@linux.intel.com,
-        dave.hansen@intel.com, arjan@linux.intel.com, adobriyan@gmail.com,
-        aubrey.li@intel.com, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH v18 1/3] proc: add /proc/<pid>/arch_status
-Message-Id: <20190523201822.cc554d68ec567164bec781e1@linux-foundation.org>
-In-Reply-To: <20190425143219.102258-1-aubrey.li@linux.intel.com>
-References: <20190425143219.102258-1-aubrey.li@linux.intel.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 23 May 2019 23:20:22 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41917 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729972AbfEXDUW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 23:20:22 -0400
+Received: by mail-pg1-f193.google.com with SMTP id z3so4214391pgp.8;
+        Thu, 23 May 2019 20:20:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=/46rsZ0TTMrZw/Frg4uFqjjAL1q6S8X5odognbNJDoY=;
+        b=U0zV4CMfeMlVJWaUSgQ8PLNxvkC7aaW5aY89tbgl4GaWQU9Hytv9KaCr4wB7cP/3+/
+         eyAmLSx0MVQv7+FYZGKEGkuPZf5ajCwkatcsePz56UoZvUHrRM8tJQb5uIyI4JMs5rcy
+         zci/srp1GX2M7ji6XHLLZsnDq2xYpEkh9K+2h6NHRzYlpuUB8W55RzrpezKijTRg1w21
+         q76WbfjwE3llc4+aE8ZYtT4uI9t0yJz3dJLl1TUxsq24iJC3nf0d9mv4AYGoB8tAZn8v
+         l8Den+dLrfUoExfU8Z49Hzn2Jw7ZFwgdykpVDRkwSjL1i0NrjKsRHDV9CVNZSz5ViTQw
+         CZCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=/46rsZ0TTMrZw/Frg4uFqjjAL1q6S8X5odognbNJDoY=;
+        b=kP+KagRvX8r008BxAjA6xJxIJs123Rzb8U+bLvGuMV+TgUIcs3DtpRxOh2fz3tVWZI
+         MQeLDL9rfRvYbeS6Oi/bR2lePCsXDNhbWCx4U4/Nrtzw7CM19tYI4DATIoFJRibZOab0
+         x7EUbNIsbS/FsjA9esDZAIDwo/o0ewxt0BTwEN25XtIE8gmdTjsw4u/fPReR8ALFoGJr
+         W1G75N8ucs3to44bsRvzhNBoJZZvccTB9NDDzoeWRO2tqlI8hNIy0KP6pHqerScZD2P+
+         N4HM5wz+ZbwquiwjOUi0+LQIbgPrpIRZTNK/IsvIC7RK9u06O3IM4DWSuL+cexJoA8ir
+         7CKg==
+X-Gm-Message-State: APjAAAVt88D6oNEDP2X/9dsgb8+I7iCId1IToZw/jK8DeOlQCEztyIHu
+        f6NwIxGJeGIb8eG88389fjW7wABwLSA=
+X-Google-Smtp-Source: APXvYqxbWSM+hI4uIW27uLHuDqC0XCB3kIbdcREdqzqdWBfwnTb7NoUXPaJHLvecNEQncC+9q1QBmQ==
+X-Received: by 2002:aa7:8219:: with SMTP id k25mr16878817pfi.38.1558668021303;
+        Thu, 23 May 2019 20:20:21 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([66.42.35.75])
+        by smtp.gmail.com with ESMTPSA id g17sm902746pfb.56.2019.05.23.20.20.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 May 2019 20:20:20 -0700 (PDT)
+Date:   Fri, 24 May 2019 11:19:46 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ipv6_sockglue: Fix a missing-check bug in ip6_ra_control()
+Message-ID: <20190524031946.GA6463@zhanggen-UX430UQ>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Apr 2019 22:32:17 +0800 Aubrey Li <aubrey.li@linux.intel.com> wrote:
+In function ip6_ra_control(), the pointer new_ra is allocated a memory 
+space via kmalloc(). And it is used in the following codes. However, 
+when there is a memory allocation error, kmalloc() fails. Thus null 
+pointer dereference may happen. And it will cause the kernel to crash. 
+Therefore, we should check the return value and handle the error.
 
-> The architecture specific information of the running processes
-> could be useful to the userland. Add /proc/<pid>/arch_status
-> interface support to examine process architecture specific
-> information externally.
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
 
-I'll give this an
-
-Acked-by: Andrew Morton <akpm@linux-foundation.org>
-
-from a procfs POV and shall let the x86 maintainers worry about it.
-
-I must say I'm a bit surprised that we don't already provide some form
-of per-process CPU-specific info anywhere in procfs.  Something to
-piggy-back this onto.  But I can't find such a thing.
-
-I assume we've already discussed why this is a new procfs file rather
-than merely a new line in /proc/<pid>/status.  If so, please add the
-reasoning to the changelog.  If not, please discuss now ;)
-
-
+---
+diff --git a/net/ipv6/ipv6_sockglue.c b/net/ipv6/ipv6_sockglue.c
+index 40f21fe..0a3d035 100644
+--- a/net/ipv6/ipv6_sockglue.c
++++ b/net/ipv6/ipv6_sockglue.c
+@@ -68,6 +68,8 @@ int ip6_ra_control(struct sock *sk, int sel)
+ 		return -ENOPROTOOPT;
+ 
+ 	new_ra = (sel >= 0) ? kmalloc(sizeof(*new_ra), GFP_KERNEL) : NULL;
++	if (sel >= 0 && !new_ra)
++		return -ENOMEM;
+ 
+ 	write_lock_bh(&ip6_ra_lock);
+ 	for (rap = &ip6_ra_chain; (ra = *rap) != NULL; rap = &ra->next) {
