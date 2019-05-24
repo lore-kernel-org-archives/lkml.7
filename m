@@ -2,155 +2,153 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E987C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 00:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 473E2C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 00:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 234C92175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 00:07:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6DB520863
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 00:11:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="rPjpMQQR"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EuZua2Uz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388808AbfEXAHq (ORCPT
+        id S2388683AbfEXALo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 20:07:46 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:37268 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388695AbfEXAHa (ORCPT
+        Thu, 23 May 2019 20:11:44 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35353 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387613AbfEXALn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 20:07:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1558656450; x=1590192450;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=1SdLFPXetAg3nrR1IO1V0QDUQiFziWocOM5xU46X9ZA=;
-  b=rPjpMQQRVORrbh3Vpl23/a7TrpbKlWygVD2c0BxzF4Qr4sJtVkfjny63
-   nAqYJ/sdD6vJnj8RBxXsI0Q7KK0T3GrRGz2RisIY5Ntgrg8z9jG8x0aWi
-   Rbeck+F8Q4r26YAp90zgSRRSi25yRlUqAUmMFsQR0DLu3ocJMnlJwyw4A
-   L6kuSA1BCfJDCOksVb49Uc52s7kqN+ajjlP8STGbtQ9GF6ztdJC+MbS5J
-   4dpGxE3r6pCYeO/ZfAjzdliv3WIJKQAcmZf+w0OMtjH5KhXJJntxSxvOs
-   3MbZOwxH5bTj7mYDeooehWBBLUMlPDQe8DHptENl5UupksXAKJYlXQEmd
-   A==;
-X-IronPort-AV: E=Sophos;i="5.60,505,1549900800"; 
-   d="scan'208";a="108976467"
-Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 24 May 2019 08:07:29 +0800
-IronPort-SDR: CwSFiBJC1pzGKT2S0VQjGTixSsPh9VZfZHW7/xiqbp4PJy0LI03N55eqCfh4HYKD09zFvJ1hnx
- HlZaVUfGamU9iUsNAlLgn5kL9PqiFQ2RfgeKWfJh92Sk6Y91jmuiZKpzdZ4E9ST0mfH7OKGU0d
- r8EMfDN2LshObVIKwIHgBAz//8CKM3WcYqx0XKqS/Vy8Vm8g8MJber0+8t01pUeLD0HjCfLimD
- +IYb3cQzfhyJK6zDiNwQqrxNDM0yKOsTj4G7iEAWgJh4xodmuV6hlzL48AKprNEh2czYv5071C
- F/DEzipTnYiSCkVvpponpnFR
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP; 23 May 2019 16:45:10 -0700
-IronPort-SDR: vXZ4XSK9LUBf5ZWszJwtTb4rMMV3fmbYhZ9isZM07tLp+6dAKXjytTd62sv0dWJ8c/dczi8vdf
- mzOOjmZgY3QlclHixf+HXkdq/yoR0AAbYKM2dyB0enq32mtvDtDj/iv39I9tTxD0TwXPKbzLnY
- nejq/gMxiXVGbT+s3f6f5QVmYuhcmRDsmCJaaflh2xH9uibLsniWOkerekb7gLCcDpL0yO7uEH
- lE4RMqeetQG8MqlLY9aZUB6cyQ18OzEzucsr75+tYmSsQi2IYQFYVLxJLHzZ5M667YzZbAS4Ae
- p/Q=
-Received: from jedi-01.sdcorp.global.sandisk.com (HELO jedi-01.int.fusionio.com) ([10.11.143.218])
-  by uls-op-cesaip02.wdc.com with ESMTP; 23 May 2019 17:07:28 -0700
-From:   Atish Patra <atish.patra@wdc.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Andreas Schwab <schwab@suse.de>,
-        Anup Patel <anup@brainfault.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        devicetree@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        linux-riscv@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Otto Sabart <ottosabart@seberm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [RFT PATCH v5 5/5] RISC-V: Parse cpu topology during boot.
-Date:   Thu, 23 May 2019 17:06:52 -0700
-Message-Id: <20190524000653.13005-6-atish.patra@wdc.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190524000653.13005-1-atish.patra@wdc.com>
-References: <20190524000653.13005-1-atish.patra@wdc.com>
+        Thu, 23 May 2019 20:11:43 -0400
+Received: by mail-pf1-f193.google.com with SMTP id d126so1964280pfd.2
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 17:11:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:from:cc:to:user-agent:date;
+        bh=55+scLPzywd2t6Q9yx3Qo50LoEln+k1CYwGY53WWjzw=;
+        b=EuZua2Uzj4PFIiNubpucYeny5iInwuYR+P39ZD/rE/lEL2FPFCY4KF7C9r/zE3fIsH
+         NAna6L2IHwMgPHCUgEk1jHwDhX2jy6B+xtoSR35UuQNkV+BJ9+PDF1/9k4oUEPJDSiRo
+         0KVAjc7QFF/nw0767rfpVHo+EbMTIiMCjvsmE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:from:cc:to
+         :user-agent:date;
+        bh=55+scLPzywd2t6Q9yx3Qo50LoEln+k1CYwGY53WWjzw=;
+        b=dKfUpIB7gJNxiyRY2NWR64jWfIT/ft5dr6OkR0S5jZ3i5bIxfaGFpNwI2sMfj5hMtQ
+         sk1xf/yHOcSfQcGxAE+FiOR6kK7nhwjErQB9oY4crwhLuiASvuNlylg0vyFmOOPV9oft
+         HUrWyJMv1N0JrY+7xBbF0eK6u2rEg0psZSjx+8AIu1maQvwPtAouaNNddxn5FS04DOLe
+         UvcDOIJIRcG++5hHeghHIWOjf0+hWM6mp5jZX6ihiefijc8Ne//bgOgS5k814U16JZdm
+         8JwIuT5XNrr6VF0hPNqT9lsljpGUg3VoLO2XE2k1MDtLWmBBswTCZVHXZL0O9sbWTU3Y
+         gunQ==
+X-Gm-Message-State: APjAAAVDy2bQ4P7UmFkR2Hv413v0f4xMC9TuPzJMcon5NFQSqnvMA6O9
+        ib7nB3RpMp6bCzOKuOxSEHBx/7fGWRaiXA==
+X-Google-Smtp-Source: APXvYqwIfZhlX2GDAEViod1U1tdxrWTVRDC+bH4vbpfSIRi2ENnxCO9LMZ917gDBnasxtFKUES9r4w==
+X-Received: by 2002:aa7:881a:: with SMTP id c26mr102396225pfo.254.1558656702464;
+        Thu, 23 May 2019 17:11:42 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id x18sm597981pfj.17.2019.05.23.17.11.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 May 2019 17:11:41 -0700 (PDT)
+Message-ID: <5ce736bd.1c69fb81.f2410.2b19@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <AM0PR04MB6434A12D2DCB42ECAA7EB1FAEE010@AM0PR04MB6434.eurprd04.prod.outlook.com>
+References: <20190523195313.24701-1-farosas@linux.ibm.com> <5ce722ac.1c69fb81.b62d2.16d0@mx.google.com> <AM0PR04MB6434A12D2DCB42ECAA7EB1FAEE010@AM0PR04MB6434.eurprd04.prod.outlook.com>
+Subject: Re: [PATCH] scripts/gdb: Fix invocation when CONFIG_COMMON_CLK is not set
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Kieran Bingham <kbingham@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jackie Liu <liuyun01@kylinos.cn>
+To:     Fabiano Rosas <farosas@linux.ibm.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>
+User-Agent: alot/0.8.1
+Date:   Thu, 23 May 2019 17:11:40 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, there are no topology defined for RISC-V.
-Parse the cpu-map node from device tree and setup the
-cpu topology.
+Quoting Leonard Crestez (2019-05-23 16:09:18)
+> On 5/24/2019 1:46 AM, Stephen Boyd wrote:
+> > Quoting Fabiano Rosas (2019-05-23 12:53:11)
+> >> diff --git a/scripts/gdb/linux/constants.py.in b/scripts/gdb/linux/con=
+stants.py.in
+> >> index 1d73083da6cb..2efbec6b6b8d 100644
+> >> --- a/scripts/gdb/linux/constants.py.in
+> >> +++ b/scripts/gdb/linux/constants.py.in
+> >> @@ -40,7 +40,8 @@
+> >>   import gdb
+> >>  =20
+> >>   /* linux/clk-provider.h */
+> >> -LX_GDBPARSED(CLK_GET_RATE_NOCACHE)
+> >> +if IS_BUILTIN(CONFIG_COMMON_CLK):
+> >> +    LX_GDBPARSED(CLK_GET_RATE_NOCACHE)
+> >>  =20
+> >=20
+> > Why is this LX_GDBPARSED() instead of LX_VALUE()? From what I can tell
+> > it doesn't need to be runtime evaluated, just assigned to something that
+> > is macro expanded by CPP.
+>=20
+> Because CLK_GET_RATE_NOCACHE expands to BIT() which expands to a=20
+> constant with an UL suffix which python doesn't understand.
+>=20
+> Alternatively we could redefine the BIT macros inside constants.py.in=20
+> but using gdb features seemed better. We could even try to strip integer =
 
-CPU topology after applying the patch.
-$cat /sys/devices/system/cpu/cpu2/topology/core_siblings_list
-0-3
-$cat /sys/devices/system/cpu/cpu3/topology/core_siblings_list
-0-3
-$cat /sys/devices/system/cpu/cpu3/topology/physical_package_id
-0
-$cat /sys/devices/system/cpu/cpu3/topology/core_id
-3
+> literal suffixes with sed.
+>=20
+> Mentioned before: https://lkml.org/lkml/2019/5/3/341
+>=20
 
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
+Ah ok. A comment in the code would have helped me, but o well.
+
+I'd still like to apply this change to clk tree so that we can avoid
+needing to do the IS_BUILTIN check entirely.
+
+----8<----
+From: Stephen Boyd <sboyd@kernel.org>
+Date: Thu, 23 May 2019 17:05:59 -0700
+Subject: [PATCH] clk: Remove ifdef for COMMON_CLK in clk-provider.h
+
+This ifdef has been there since the beginning of this file, but it
+doesn't really seem to serve any purpose besides obfuscating the struct
+definitions and #defines here from compilation units that include it.
+Let's always expose these function prototypes and struct definitions so
+that code can inspect clk providers without needing to have
+CONFIG_COMMON_CLK enabled.
+
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 ---
- arch/riscv/Kconfig          | 1 +
- arch/riscv/kernel/smpboot.c | 3 +++
- 2 files changed, 4 insertions(+)
+ include/linux/clk-provider.h | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index ee32c66e1af3..be319d902275 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -46,6 +46,7 @@ config RISCV
- 	select PCI_MSI if PCI
- 	select RISCV_TIMER
- 	select GENERIC_IRQ_MULTI_HANDLER
-+	select GENERIC_ARCH_TOPOLOGY if SMP
- 	select ARCH_HAS_PTE_SPECIAL
- 	select ARCH_HAS_MMIOWB
- 	select HAVE_EBPF_JIT if 64BIT
-diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
-index 7a0b62252524..54f89d5b19ba 100644
---- a/arch/riscv/kernel/smpboot.c
-+++ b/arch/riscv/kernel/smpboot.c
-@@ -16,6 +16,7 @@
-  * GNU General Public License for more details.
-  */
- 
-+#include <linux/arch_topology.h>
- #include <linux/module.h>
- #include <linux/init.h>
- #include <linux/kernel.h>
-@@ -43,6 +44,7 @@ static DECLARE_COMPLETION(cpu_running);
- 
- void __init smp_prepare_boot_cpu(void)
- {
-+	init_cpu_topology();
- }
- 
- void __init smp_prepare_cpus(unsigned int max_cpus)
-@@ -146,6 +148,7 @@ asmlinkage void __init smp_callin(void)
- 
- 	trap_init();
- 	notify_cpu_starting(smp_processor_id());
-+	update_siblings_masks(smp_processor_id());
- 	set_cpu_online(smp_processor_id(), 1);
- 	/*
- 	 * Remote TLB flushes are ignored while the CPU is offline, so emit
--- 
-2.21.0
-
+diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+index bb6118f79784..3bced2ec9f26 100644
+--- a/include/linux/clk-provider.h
++++ b/include/linux/clk-provider.h
+@@ -9,8 +9,6 @@
+ #include <linux/of.h>
+ #include <linux/of_clk.h>
+=20
+-#ifdef CONFIG_COMMON_CLK
+-
+ /*
+  * flags used across common struct clk.  these flags should only affect the
+  * top-level framework.  custom flags for dealing with hardware specifics
+@@ -1019,5 +1017,4 @@ static inline int of_clk_detect_critical(struct devic=
+e_node *np, int index,
+=20
+ void clk_gate_restore_context(struct clk_hw *hw);
+=20
+-#endif /* CONFIG_COMMON_CLK */
+ #endif /* CLK_PROVIDER_H */
+--=20
+Sent by a computer through tubes
