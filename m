@@ -2,209 +2,174 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A6CC282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 960A8C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:44:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70582217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:41:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 695B8217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:44:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uOlmCXjv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qxKDRoU1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729678AbfEXSlP (ORCPT
+        id S1731913AbfEXSo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 14:41:15 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40098 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727344AbfEXSlP (ORCPT
+        Fri, 24 May 2019 14:44:29 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36270 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728594AbfEXSo3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 14:41:15 -0400
-Received: by mail-pg1-f195.google.com with SMTP id d30so5496962pgm.7
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 11:41:14 -0700 (PDT)
+        Fri, 24 May 2019 14:44:29 -0400
+Received: by mail-pg1-f194.google.com with SMTP id a3so5510470pgb.3;
+        Fri, 24 May 2019 11:44:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=enedDcHOKwZ9FHmS+00cJM3D7/hClZHS2EbEfHPQk5U=;
-        b=uOlmCXjvTURxVtROiVg3BpdHBOk/9A+22CVFBzoHGcNrqGbb8LSQDQ1avRYlXD5/+2
-         JXoj3D7XK+gJvQ66NLOUsjaBfav6U7le5Txksh+l3cFHfob68iJA4qABK9OXSuVzdBwe
-         WzkdoXzHqEcxhyPsrIwLV6J/hZNe+h8t+yBD4vQktVWZrJ0YqtaT9pwkvwZ27fU5P3Lw
-         taMBMmY/BjFocIq8neVOlLpQXx3W5uT7JQ7RZbC9FbOSPD+Zt+fhXdCTC3UyKdg/lbHB
-         WoqZbUD8C4oUmXADB5UcBe1VlR+w02uJqplIhIcHbN6GgbSPgdV9GcnsSlwzLDudt7Io
-         jxvA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DEKp3R9bzWITm6m4VOnqiAhUVI7e2LB8OiUJABzyZx8=;
+        b=qxKDRoU1G/mwIWP7uUuNzzAmD7D6dvoYgB9hhTNPyWsq9qxRGRTqyNXnjGTkleh1Tp
+         VQOZVd78RCsDy8Z97aLIcvGcbiBNaNCo20PZrlvbM1rvJ4I71Ol8JJhK2RIGzbcfAMNc
+         4aFBhpo2Dv2EL0mqtr7BgBYoBT1N4MCcUWvxUUds55z3J1EDk12Sax4tmU2nA+oOEtLk
+         3vnUnThFId83WEpuUWgqydw0So8PHlZr32Eo7ggJ6ai6usGJYhhMMJD3xP1kR0nTM67W
+         9/89lkAuDy+BMq9xfh01KiNUFn0UgLC6PI9D6b0AlLwTO8WYDO8J4QVVN7PJ9uP4FIJE
+         DhHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=enedDcHOKwZ9FHmS+00cJM3D7/hClZHS2EbEfHPQk5U=;
-        b=RBhF3bn72B56jTmHq4LOFNBMylp2xgfR/X05abYY30H0uV6tkiMpO59PUWR37tmbT2
-         jrQqK6nEC1lxqs5k4Bd4ZeO/HN2+Tgt6WLYmdrQ+IbvQw0XfHH5vBgpf4h1eG6aFFWhC
-         mhgITfsfUcvUMw/s96twGPwaEjvJEcd8q+vcfiAO+/teYWPhSITKhZAJZfyUYgMqWuIi
-         JZSORrS7Y1BOYgKAYDvrFb3G2XpfOj/FTWSA4qJj33aCNUndV333RHrbM2YfL9ORrWZn
-         Ki2ljPsW7v524P7rT+OzNJTyBCYKcsS9L4VrUZTR6BjPXt0nelJ6L6va7JQVcV9xT8W5
-         oo2A==
-X-Gm-Message-State: APjAAAVJal7+k78IN6e5/ldaB+dQZj5gWwZEU02YqP6yj9pgaiYTgoEt
-        12kFbln9kQz+5VtOwQDc+2o=
-X-Google-Smtp-Source: APXvYqwCBwkebRvyL3c/9tanH7F7zOjVgiNGySmCeH5IN0s9c9ZLo1WTjyzra5OWxmcRK0Ccpe1avw==
-X-Received: by 2002:a17:90a:1a84:: with SMTP id p4mr11470288pjp.15.1558723274170;
-        Fri, 24 May 2019 11:41:14 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.92.73])
-        by smtp.gmail.com with ESMTPSA id t33sm3036573pjb.1.2019.05.24.11.41.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 11:41:13 -0700 (PDT)
-Date:   Sat, 25 May 2019 00:11:05 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        Nishka Dasgupta <nishka.dasgupta@yahoo.com>,
-        Kimberly Brown <kimbrownkd@gmail.com>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        Murray McAllister <murray.mcallister@insomniasec.com>,
-        Puranjay Mohan <puranjay12@gmail.com>,
-        Hardik Singh Rathore <hardiksingh.k@gmail.com>,
-        Omer Efrat <omer.efrat@tandemg.com>,
-        Quytelda Kahja <quytelda@tamalin.org>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jeeeun Evans <jeeeunevans@gmail.com>,
-        Michael Straube <straube.linux@gmail.com>,
-        Emanuel Bennici <benniciemanuel78@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [Patch v5] staging: rtl8723bs: core: rtw_ap: fix Unneeded variable:
- "ret". Return "0"
-Message-ID: <20190524184105.GA3975@hari-Inspiron-1545>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DEKp3R9bzWITm6m4VOnqiAhUVI7e2LB8OiUJABzyZx8=;
+        b=YwSmGPjSAigBINQS5VwLv1vyD5J9EnKi2Gbek6HPxowH3jXLctcGcm04g37RG165dd
+         7HpFtt4Pd1SYRasUYm9lNVNVcb+pGKxPo+d4rlQ7w6H6b8OxuZ3N3VTGk4qK4Mj0KT+i
+         aCZ35n45kA/gkKuxAVUrzT8G916G+GIuUdgGRQ/KN8ip8NbRJBC5t5mKkwKveiUIVPpD
+         rleRsBKzxBL0OMZk5ViL8n7u06PVXjCICJ1D9qo11rhKJGPMKwqfXI77OMDh5eefAXM5
+         iqqj3g00oYmM6n5Mm6DQri9URNeFSX0fMZNvjmfAs7IHwrVdOTip2DcQnKEtDe0ufcv7
+         GtFQ==
+X-Gm-Message-State: APjAAAWfRKvD6PGbUXb+Du3nk3i20WYiBMSLQ171/wIRhgS3PvG6mhOz
+        WKgopgGhvIG5PDw4Vr0gmPGVfv+Ewc3i5ERSxg7xRgB7EM0=
+X-Google-Smtp-Source: APXvYqz7sGEKbs0+Ma3aDEulBrlqCsNX+W3IUJLVBSwDvswP70eniWkTfxtGATVQV4azjI2DmKfSU2jLiy8X/7+Hslk=
+X-Received: by 2002:a17:90a:778b:: with SMTP id v11mr11447669pjk.132.1558723467843;
+ Fri, 24 May 2019 11:44:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190522105113.11153-1-heikki.krogerus@linux.intel.com>
+In-Reply-To: <20190522105113.11153-1-heikki.krogerus@linux.intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 24 May 2019 21:44:17 +0300
+Message-ID: <CAHp75VcvpoUhOnB1fLBY9G_L6R8SJBCjn+tYFdTo37GuHFKcyQ@mail.gmail.com>
+Subject: Re: [PATCH v4 00/16] Software fwnode references
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Function "rtw_sta_flush" always returns 0 value.
-So change return type of rtw_sta_flush from int to void.
+On Wed, May 22, 2019 at 1:51 PM Heikki Krogerus
+<heikki.krogerus@linux.intel.com> wrote:
+>
+> Hi,
+>
+> I'm not splitting this series in two after all. After thinking about
+> this for some time, I decided to add support for static software
+> nodes. I did not want to support them because I don't want to make it
+> easy to maintain board files, but in end they make the use of the
+> software nodes so much more easier compared to if we always had to
+> dynamically allocate them that it's a no-brainer. The references can
+> now be also described statically. Actually, those can now only be
+> described statically.
+>
+> Hans! I applied (hopefully) all of the fixes you proposed in v3. I
+> hope you have time to test these.
+>
+> Here's the cover letter from v3:
+>
+> This is the third version of my proposal to add reference handling to
+> the software node code. In this version I renamed ACPI_NAME_SIZE to
+> ACPI_NAMESEG_SIZE in 6/13, and slit patch 9/13 in two separate patches
+> (9/13 and 10/13) as suggested by Andy. Patch 9/13 will now only move
+> the registration of max17047 out of probe, and 10/13 will introduce
+> the software nodes.
+>
+> v2 cover letter:
+>
+> This is the second version of this series. In this version I'm
+> introducing a new helper device_find_child_by_name() as proposed
+> by Andy. Andy requested also another helper that could be used for
+> chaining the fwnodes, but I decided not to add that now. I would like
+> to still think about how we should handle exceptions like if there
+> already is a secondary node assigned for a node.
+>
+> v1 cover letter:
+>
+> This series adds support for software fwnode reference handling. In
+> practice it means making fwnode_property_get_reference_args() function
+> usable in the drivers also with software nodes. I send the series
+> originally as RFC [1].
+>
+> As the first user for the software node references, I'm converting
+> intel_cht_int33fe.c to use them as part of the series.
+>
+> [1] https://lkml.org/lkml/2019/3/15/457
+>
 
-Same thing applies for rtw_hostapd_sta_flush
+For PDx86 bits,
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
------
-Changes v2 -
-       change return type of rtw_sta_flush
-Changes v3 -
-       fix indentaion issue
-Changes v4 -
-       prepare patch on linux-next
-Changes v5 -
-      cleanup subject and commit message
----
- drivers/staging/rtl8723bs/core/rtw_ap.c           | 7 ++-----
- drivers/staging/rtl8723bs/include/rtw_ap.h        | 2 +-
- drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c | 4 ++--
- drivers/staging/rtl8723bs/os_dep/ioctl_linux.c    | 7 +++----
- 4 files changed, 8 insertions(+), 12 deletions(-)
+Assuming it will go thru some other tree.
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_ap.c b/drivers/staging/rtl8723bs/core/rtw_ap.c
-index 912ac2f..7bebb41 100644
---- a/drivers/staging/rtl8723bs/core/rtw_ap.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_ap.c
-@@ -2189,10 +2189,9 @@ u8 ap_free_sta(
- 	return beacon_updated;
- }
- 
--int rtw_sta_flush(struct adapter *padapter)
-+void rtw_sta_flush(struct adapter *padapter)
- {
- 	struct list_head	*phead, *plist;
--	int ret = 0;
- 	struct sta_info *psta = NULL;
- 	struct sta_priv *pstapriv = &padapter->stapriv;
- 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
-@@ -2202,7 +2201,7 @@ int rtw_sta_flush(struct adapter *padapter)
- 	DBG_871X(FUNC_NDEV_FMT"\n", FUNC_NDEV_ARG(padapter->pnetdev));
- 
- 	if ((pmlmeinfo->state&0x03) != WIFI_FW_AP_STATE)
--		return ret;
-+		return;
- 
- 	spin_lock_bh(&pstapriv->asoc_list_lock);
- 	phead = &pstapriv->asoc_list;
-@@ -2226,8 +2225,6 @@ int rtw_sta_flush(struct adapter *padapter)
- 	issue_deauth(padapter, bc_addr, WLAN_REASON_DEAUTH_LEAVING);
- 
- 	associated_clients_update(padapter, true);
--
--	return ret;
- }
- 
- /* called > TSR LEVEL for USB or SDIO Interface*/
-diff --git a/drivers/staging/rtl8723bs/include/rtw_ap.h b/drivers/staging/rtl8723bs/include/rtw_ap.h
-index fd56c9db..d6f3a3a 100644
---- a/drivers/staging/rtl8723bs/include/rtw_ap.h
-+++ b/drivers/staging/rtl8723bs/include/rtw_ap.h
-@@ -31,7 +31,7 @@ u8 bss_cap_update_on_sta_leave(struct adapter *padapter, struct sta_info *psta);
- void sta_info_update(struct adapter *padapter, struct sta_info *psta);
- void ap_sta_info_defer_update(struct adapter *padapter, struct sta_info *psta);
- u8 ap_free_sta(struct adapter *padapter, struct sta_info *psta, bool active, u16 reason);
--int rtw_sta_flush(struct adapter *padapter);
-+void rtw_sta_flush(struct adapter *padapter);
- void start_ap_mode(struct adapter *padapter);
- void stop_ap_mode(struct adapter *padapter);
- 
-diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-index 996bd1a..9bc6856 100644
---- a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-+++ b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-@@ -2870,9 +2870,9 @@ static int cfg80211_rtw_del_station(struct wiphy *wiphy, struct net_device *ndev
- 
- 		flush_all_cam_entry(padapter);	/* clear CAM */
- 
--		ret = rtw_sta_flush(padapter);
-+		rtw_sta_flush(padapter);
- 
--		return ret;
-+		return 0;
- 	}
- 
- 
-diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-index bfbbcf0..236a462 100644
---- a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-+++ b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-@@ -3753,7 +3753,7 @@ static int rtw_set_beacon(struct net_device *dev, struct ieee_param *param, int
- 
- }
- 
--static int rtw_hostapd_sta_flush(struct net_device *dev)
-+static void rtw_hostapd_sta_flush(struct net_device *dev)
- {
- 	/* _irqL irqL; */
- 	/* struct list_head	*phead, *plist; */
-@@ -3765,8 +3765,7 @@ static int rtw_hostapd_sta_flush(struct net_device *dev)
- 
- 	flush_all_cam_entry(padapter);	/* clear CAM */
- 
--	return rtw_sta_flush(padapter);
--
-+	rtw_sta_flush(padapter);
- }
- 
- static int rtw_add_sta(struct net_device *dev, struct ieee_param *param)
-@@ -4253,7 +4252,7 @@ static int rtw_hostapd_ioctl(struct net_device *dev, struct iw_point *p)
- 	switch (param->cmd) {
- 	case RTL871X_HOSTAPD_FLUSH:
- 
--		ret = rtw_hostapd_sta_flush(dev);
-+		rtw_hostapd_sta_flush(dev);
- 
- 		break;
- 
+> thanks,
+>
+> Heikki Krogerus (16):
+>   software node: Allow node creation without properties
+>   software node: Simplify software_node_release() function
+>   software node: Add support for static node descriptors
+>   software node: Use kobject name when finding child nodes by name
+>   software node: Add software_node_get_reference_args()
+>   driver core: Add helper device_find_child_by_name()
+>   ACPI / property: Don't limit named child node matching to data nodes
+>   device property: Introduce fwnode_find_reference()
+>   device connection: Find connections also by checking the references
+>   usb: typec: Registering real device entries for the muxes
+>   platform/x86: intel_cht_int33fe: Register max17047 in its own function
+>   platform/x86: intel_cht_int33fe: Remove unused fusb302 device property
+>   platform/x86: intel_cht_int33fe: Provide software nodes for the
+>     devices
+>   platform/x86: intel_cht_int33fe: Provide fwnode for the USB connector
+>   platform/x86: intel_cht_int33fe: Supply fwnodes for the external
+>     dependencies
+>   platform/x86: intel_cht_int33fe: Replacing the old connections with
+>     references
+>
+>  drivers/acpi/property.c                  |  26 +-
+>  drivers/base/core.c                      |  28 ++
+>  drivers/base/devcon.c                    |  26 ++
+>  drivers/base/property.c                  |  24 ++
+>  drivers/base/swnode.c                    | 324 +++++++++++++++++------
+>  drivers/platform/x86/intel_cht_int33fe.c | 290 ++++++++++++++++----
+>  drivers/usb/roles/class.c                |   2 +-
+>  drivers/usb/typec/bus.h                  |  15 ++
+>  drivers/usb/typec/class.c                |  17 +-
+>  drivers/usb/typec/mux.c                  | 238 ++++++++++++-----
+>  drivers/usb/typec/mux/pi3usb30532.c      |  46 ++--
+>  include/linux/device.h                   |   2 +
+>  include/linux/property.h                 |  51 ++++
+>  include/linux/usb/typec_mux.h            |  62 ++---
+>  14 files changed, 902 insertions(+), 249 deletions(-)
+>
+> --
+> 2.20.1
+>
+
+
 -- 
-2.7.4
-
+With Best Regards,
+Andy Shevchenko
