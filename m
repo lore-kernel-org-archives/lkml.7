@@ -2,99 +2,143 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E08C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA21EC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A4A02184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:44:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 761E8217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:44:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="Q3BVUNOD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389196AbfEXHoN (ORCPT
+        id S2389208AbfEXHoS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 03:44:13 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:47089 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388911AbfEXHoL (ORCPT
+        Fri, 24 May 2019 03:44:18 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:16299 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388911AbfEXHoQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 03:44:11 -0400
-Received: by mail-qk1-f196.google.com with SMTP id a132so6005115qkb.13;
-        Fri, 24 May 2019 00:44:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=k2hM4uRH+xcF6VZw3zZp57FHF0UiIEpfXR9WFJl84UE=;
-        b=PYXq1Idzv0Di7KLMknzWpNB+eY+yAOjbVLGoI5HUbfbPvDLGbeqCylQHAYwjvuSa0e
-         IkMKSeoe3IR3aNnjCBw+MHwc5WWQdgsseuj/aC59yOVLI4d0Twksyz4v5wc494lIhagG
-         tI6f8JhIFaoCJFSmJxKQFc1dQ+AEZABwqBiQEMUXnGdfiMTZB2Gs3uPZ3vGAsGa/AdF7
-         LCIl7WMuGS5y0Bo6e8XQO/aJiEDa/nlQqrbspcGRQGNzl23DvPUNFRrB+4NRjwo/OfAB
-         atqkh0iKBC0EFrVTNrQ50gbR+7yV90h01bA/rQNSKkLlx5BjivcZnCzdDU1XcWXk/L1l
-         WKfA==
-X-Gm-Message-State: APjAAAXwfXByxZKYfWiMo9NPVH0LPLmzUDK7pZnqtwgzF0APfN1TY0OJ
-        4eLsFdXsvJQkA4Q8mb4D3BVwKXzWUO3mq3l/+tQ=
-X-Google-Smtp-Source: APXvYqy/WqyRL4BlbMWLM5GdeDgLkBJI6XwCNcVvXGonN+2oV2dtTQWrObje5U17OKbtEn0pWH9nlYsDR25/fOWgBDY=
-X-Received: by 2002:ac8:2433:: with SMTP id c48mr70119188qtc.18.1558683849757;
- Fri, 24 May 2019 00:44:09 -0700 (PDT)
+        Fri, 24 May 2019 03:44:16 -0400
+Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
+  Christian.Gromm@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Christian.Gromm@microchip.com";
+  x-sender="Christian.Gromm@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa4.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Christian.Gromm@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa4.microchip.iphmx.com; spf=Pass smtp.mailfrom=Christian.Gromm@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+X-IronPort-AV: E=Sophos;i="5.60,506,1549954800"; 
+   d="scan'208";a="34292066"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 24 May 2019 00:44:15 -0700
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.76.107) with Microsoft SMTP Server (TLS) id
+ 14.3.352.0; Fri, 24 May 2019 00:43:36 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector1-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gAm2YwAZ/EmePgHMsx/on3S5wg7TWPQxUKqD3gJrDwE=;
+ b=Q3BVUNODh0DnzX7/DUsZruTT/duaEpFXg+ysxob2XfL9Jil94ScxuLr8J8wBTEgiy9147lhcwZ5LqGKoZGpcIgk2BXbaY2cpu0h1KRUzxJWOjKfOMgKAIk29QGk9S3YGp16Lh5eHXcfrDK9uq464qAX/hvYF+KHRyRjal7R2oEU=
+Received: from DM6PR11MB3705.namprd11.prod.outlook.com (20.178.231.155) by
+ DM6PR11MB3499.namprd11.prod.outlook.com (20.177.220.92) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.18; Fri, 24 May 2019 07:43:34 +0000
+Received: from DM6PR11MB3705.namprd11.prod.outlook.com
+ ([fe80::489a:6dfb:8f5a:4e32]) by DM6PR11MB3705.namprd11.prod.outlook.com
+ ([fe80::489a:6dfb:8f5a:4e32%2]) with mapi id 15.20.1922.018; Fri, 24 May 2019
+ 07:43:34 +0000
+From:   <Christian.Gromm@microchip.com>
+To:     <linux-kernel@vger.kernel.org>, <gregkh@linuxfoundation.org>,
+        <nishkadg.linux@gmail.com>, <devel@driverdev.osuosl.org>
+Subject: Re: [PATCH] staging: most: usb: Remove variable frame_size
+Thread-Topic: [PATCH] staging: most: usb: Remove variable frame_size
+Thread-Index: AQHVEWru4bAmJ43IiUKRHTPXdpRoOqZ55vcA
+Date:   Fri, 24 May 2019 07:43:34 +0000
+Message-ID: <1558684034.16425.5.camel@microchip.com>
+References: <20190523132334.29611-1-nishkadg.linux@gmail.com>
+In-Reply-To: <20190523132334.29611-1-nishkadg.linux@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [62.154.213.229]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c9644965-a449-4c6c-a6f8-08d6e01b8698
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:DM6PR11MB3499;
+x-ms-traffictypediagnostic: DM6PR11MB3499:
+x-microsoft-antispam-prvs: <DM6PR11MB34992CCEBD96F73D9C6995C4F8020@DM6PR11MB3499.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:229;
+x-forefront-prvs: 0047BC5ADE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(39860400002)(366004)(376002)(136003)(346002)(189003)(199004)(2501003)(66556008)(76176011)(6246003)(110136005)(26005)(8936002)(2201001)(86362001)(71200400001)(71190400001)(186003)(99286004)(316002)(53936002)(486006)(103116003)(68736007)(25786009)(11346002)(5660300002)(476003)(66476007)(2616005)(446003)(229853002)(8676002)(6436002)(3846002)(66066001)(14454004)(6116002)(6512007)(64756008)(73956011)(66446008)(66946007)(91956017)(76116006)(81166006)(478600001)(102836004)(6486002)(14444005)(6506007)(36756003)(256004)(305945005)(81156014)(2906002)(72206003)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR11MB3499;H:DM6PR11MB3705.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: hvs1JZ4V4E2EvKzsjAq6a9DrncC+raw6BZJx3yPyztiCP+hckx3HACx1aTTnGU0paRBYAPrJxQNIRDKDvnF+/DoZs5zhdqamVQ10sBlMpbQJ5hdgrZeVd3qs+Gs0Jszu/PZ16YjgbLvyySMpU8f2tSWSbPcDdjvbdrbkIz+aDKsg+E8tT3JLL8gYhLmNBHICpkDKz+YfnD43X0dSda+GJHHF5udZiUjupunmPHE08wNjt+lc7wj9C3OVgcOnXCxRUW7yHr0OnGYyjQ9tH25Dhtfpw+r2VYYpSlKs8vIJxX/gMBp458A5fM50tb+V3LAVXsCuK5C8Ez09Op4GfF4uVvlXajUS6ZGucjXCJB4+2Rt5gz+bMx4SVnGkyiz1nn7owJGxRV2Q1Z7tMjzeMowDf7DXLN9sjKo97J1Yo+1Fq60=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <16B117BE1C833640A6995931C6077582@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190522155259.11174-1-christian@brauner.io> <67e4458a-9cc4-d1aa-608c-73ebe9e2f7a3@yandex-team.ru>
- <20190523163345.q5ynd2ytk7nxcvqf@brauner.io>
-In-Reply-To: <20190523163345.q5ynd2ytk7nxcvqf@brauner.io>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 24 May 2019 09:43:53 +0200
-Message-ID: <CAK8P3a26uvqmExJZsezhB+cp2ADM0Ai9jVUKWOFM6kg848bCKg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] open: add close_range()
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Shuah Khan <shuah@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Todd Kjos <tkjos@android.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        alpha <linux-alpha@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-ia64@vger.kernel.org,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        linux-mips@vger.kernel.org,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: c9644965-a449-4c6c-a6f8-08d6e01b8698
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 May 2019 07:43:34.6014
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: christian.gromm@microchip.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3499
+X-OriginatorOrg: microchip.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 6:33 PM Christian Brauner <christian@brauner.io> wrote:
-> On Thu, May 23, 2019 at 07:22:17PM +0300, Konstantin Khlebnikov wrote:
-> > On 22.05.2019 18:52, Christian Brauner wrote:> This adds the close_range() syscall. It allows to efficiently close a range
-> > >   22 files changed, 100 insertions(+), 9 deletions(-)
-> > >
-> >
-> > It would be better to split arch/ wiring into separate patch for better readability.
->
-> Ok. You mean only do x86 - seems to be the standard - and then move the
-> others into a separate patch? Doesn't seem worth to have a patch
-> per-arch, I'd think.
-
-I think I would prefer the first patch to just add the call without wiring it up
-anywhere, and a second patch do add it on all architectures including x86.
-
-     Arnd
+T24gRG8sIDIwMTktMDUtMjMgYXQgMTg6NTMgKzA1MzAsIE5pc2hrYSBEYXNndXB0YSB3cm90ZToN
+Cj4gRXh0ZXJuYWwgRS1NYWlsDQo+IA0KPiANCj4gUmVtb3ZlIHZhcmlhYmxlIGZyYW1lX3NpemUg
+YXMgaXRzIG11bHRpcGxlIHVzYWdlcyBhcmUgYWxsIGluZGVwZW5kZW50DQo+IG9mDQo+IGVhY2gg
+b3RoZXIgYW5kIHNvIGNhbiBiZSByZXR1cm5lZCBzZXBhcmF0ZWx5Lg0KPiBJc3N1ZSBmb3VuZCB3
+aXRoIENvY2NpbmVsbGUuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBOaXNoa2EgRGFzZ3VwdGEgPG5p
+c2hrYWRnLmxpbnV4QGdtYWlsLmNvbT4NCg0KQWNrZWQtYnk6IENocmlzdGlhbiBHcm9tbSA8Y2hy
+aXN0aWFuLmdyb21tQG1pY3JvY2hpcC5jb20+DQoNCj4gLS0tDQo+IMKgZHJpdmVycy9zdGFnaW5n
+L21vc3QvdXNiL3VzYi5jIHwgMTYgKysrKysrLS0tLS0tLS0tLQ0KPiDCoDEgZmlsZSBjaGFuZ2Vk
+LCA2IGluc2VydGlvbnMoKyksIDEwIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvc3RhZ2luZy9tb3N0L3VzYi91c2IuYw0KPiBiL2RyaXZlcnMvc3RhZ2luZy9tb3N0L3Vz
+Yi91c2IuYw0KPiBpbmRleCAzNjBjYjViN2ExMGIuLjc1MWU4MmNmNjZjNSAxMDA2NDQNCj4gLS0t
+IGEvZHJpdmVycy9zdGFnaW5nL21vc3QvdXNiL3VzYi5jDQo+ICsrKyBiL2RyaXZlcnMvc3RhZ2lu
+Zy9tb3N0L3VzYi91c2IuYw0KPiBAQCAtMTg2LDMyICsxODYsMjggQEAgc3RhdGljIGlubGluZSBp
+bnQgc3RhcnRfc3luY19lcChzdHJ1Y3QNCj4gdXNiX2RldmljZSAqdXNiX2RldiwgdTE2IGVwKQ0K
+PiDCoCAqLw0KPiDCoHN0YXRpYyB1bnNpZ25lZCBpbnQgZ2V0X3N0cmVhbV9mcmFtZV9zaXplKHN0
+cnVjdCBtb3N0X2NoYW5uZWxfY29uZmlnDQo+ICpjZmcpDQo+IMKgew0KPiAtCXVuc2lnbmVkIGlu
+dCBmcmFtZV9zaXplID0gMDsNCj4gwqAJdW5zaWduZWQgaW50IHN1Yl9zaXplID0gY2ZnLT5zdWJi
+dWZmZXJfc2l6ZTsNCj4gwqANCj4gwqAJaWYgKCFzdWJfc2l6ZSkgew0KPiDCoAkJcHJfd2Fybigi
+TWlzY29uZmlnOiBTdWJidWZmZXIgc2l6ZSB6ZXJvLlxuIik7DQo+IC0JCXJldHVybiBmcmFtZV9z
+aXplOw0KPiArCQlyZXR1cm4gMDsNCj4gwqAJfQ0KPiDCoAlzd2l0Y2ggKGNmZy0+ZGF0YV90eXBl
+KSB7DQo+IMKgCWNhc2UgTU9TVF9DSF9JU09DOg0KPiAtCQlmcmFtZV9zaXplID0gQVZfUEFDS0VU
+U19QRVJfWEFDVCAqIHN1Yl9zaXplOw0KPiAtCQlicmVhazsNCj4gKwkJcmV0dXJuIEFWX1BBQ0tF
+VFNfUEVSX1hBQ1QgKiBzdWJfc2l6ZTsNCj4gwqAJY2FzZSBNT1NUX0NIX1NZTkM6DQo+IMKgCQlp
+ZiAoY2ZnLT5wYWNrZXRzX3Blcl94YWN0ID09IDApIHsNCj4gwqAJCQlwcl93YXJuKCJNaXNjb25m
+aWc6IFBhY2tldHMgcGVyIFhBQ1QNCj4gemVyb1xuIik7DQo+IC0JCQlmcmFtZV9zaXplID0gMDsN
+Cj4gKwkJCXJldHVybiAwOw0KPiDCoAkJfSBlbHNlIGlmIChjZmctPnBhY2tldHNfcGVyX3hhY3Qg
+PT0gMHhGRikgew0KPiAtCQkJZnJhbWVfc2l6ZSA9IChVU0JfTVRVIC8gc3ViX3NpemUpICoNCj4g
+c3ViX3NpemU7DQo+ICsJCQlyZXR1cm4gKFVTQl9NVFUgLyBzdWJfc2l6ZSkgKiBzdWJfc2l6ZTsN
+Cj4gwqAJCX0gZWxzZSB7DQo+IC0JCQlmcmFtZV9zaXplID0gY2ZnLT5wYWNrZXRzX3Blcl94YWN0
+ICoNCj4gc3ViX3NpemU7DQo+ICsJCQlyZXR1cm4gY2ZnLT5wYWNrZXRzX3Blcl94YWN0ICogc3Vi
+X3NpemU7DQo+IMKgCQl9DQo+IC0JCWJyZWFrOw0KPiDCoAlkZWZhdWx0Og0KPiDCoAkJcHJfd2Fy
+bigiUXVlcnkgZnJhbWUgc2l6ZSBvZiBub24tc3RyZWFtaW5nDQo+IGNoYW5uZWxcbiIpOw0KPiAt
+CQlicmVhazsNCj4gKwkJcmV0dXJuIDA7DQo+IMKgCX0NCj4gLQlyZXR1cm4gZnJhbWVfc2l6ZTsN
+Cj4gwqB9DQo+IMKgDQo+IMKgLyoq
