@@ -2,97 +2,150 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB85BC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:39:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DEA5C282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95D8721883
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:39:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5702F21773
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:40:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391556AbfEXRjU (ORCPT
+        id S2391586AbfEXRkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 13:39:20 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:47706 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726381AbfEXRjU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 13:39:20 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ADB42A78;
-        Fri, 24 May 2019 10:39:19 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9901C3F703;
-        Fri, 24 May 2019 10:39:17 -0700 (PDT)
-Date:   Fri, 24 May 2019 18:39:15 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-Subject: Re: [PATCH v2] locking/lock_events: Use this_cpu_add() when necessary
-Message-ID: <20190524173915.GB9120@fuggles.cambridge.arm.com>
-References: <20190524165346.26373-1-longman@redhat.com>
- <20190524171939.GA9120@fuggles.cambridge.arm.com>
- <CAHk-=wiQ3kbk1G40ofSMu7qGhrX4PgngN64jGnttOcNCvKy6EA@mail.gmail.com>
- <8ceebb1c-e8f1-8bc5-e032-48f1a653a979@redhat.com>
+        Fri, 24 May 2019 13:40:18 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:45463 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726381AbfEXRkR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 13:40:17 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id C440720023;
+        Fri, 24 May 2019 19:40:12 +0200 (CEST)
+Date:   Fri, 24 May 2019 19:40:11 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Jani Nikula <jani.nikula@intel.com>
+Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>
+Subject: Re: [RFC 1/3] kbuild: add support for ensuring headers are
+ self-contained
+Message-ID: <20190524174011.GA23737@ravnborg.org>
+References: <20190516194818.29230-1-jani.nikula@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8ceebb1c-e8f1-8bc5-e032-48f1a653a979@redhat.com>
-User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
+In-Reply-To: <20190516194818.29230-1-jani.nikula@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=taGs_qngAAAA:8
+        a=c-n4J4-pAAAA:8 a=NZ-89VFvAAAA:8 a=QyXUC8HyAAAA:8 a=p_TaepwW8ewYzqXrKMIA:9
+        a=CjuIK1q_8ugA:10 a=DM_PlaNYpjARcMQr2apF:22 a=L0NDqeB7ZLmQzAogN4cw:22
+        a=pm31WBKQz9GEXVZSZ1ft:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 01:35:39PM -0400, Waiman Long wrote:
-> On 5/24/19 1:27 PM, Linus Torvalds wrote:
-> > On Fri, May 24, 2019 at 10:19 AM Will Deacon <will.deacon@arm.com> wrote:
-> >> Are you sure this works wrt IRQs? For example, if I take an interrupt when
-> >> trying to update the counter, and then the irq handler takes a qspinlock
-> >> which in turn tries to update the counter. Would I lose an update in that
-> >> scenario?
-> > Sounds about right.
-> >
-> > We might decide that the lock event counters are not necessarily
-> > precise, but just rough guide-line statistics ("close enough in
-> > practice")
-> >
-> > But that would imply that it shouldn't be dependent on CONFIG_PREEMPT
-> > at all, and we should always use the double-underscore version, except
-> > without the debug checking.
-> >
-> > Maybe the #ifdef should just be CONFIG_PREEMPT_DEBUG, with a comment
-> > saying "we're not exact, but debugging complains, so if you enable
-> > debugging it will be slower and precise". Because I don't think we
-> > have a "do this unsafely and without any debugging" option.
-> 
-> I am not too worry about losing count here and there once in a while
-> because of interrupts, but the possibility of having the count from one
-> CPU to be put into another CPU in a preempt kernel may distort the total
-> count significantly. This is what I want to avoid.
-> 
-> 
-> >
-> > And the whole "not precise" thing should be documented, of course.
-> 
-> Yes, I will update the patch to document that fact that the count may
-> not be precise. Anyway even if we have a 1-2% error, it is not a big
-> deal in term of presenting a global picture of what operations are being
-> done.
+Hi Jani
 
-I suppose one alternative would be to have a per-cpu local_t variable,
-and do the increments on that. However, that's probably worse than the
-current approach for x86.
+> Sometimes it's useful to be able to explicitly ensure certain headers
+> remain self-contained, i.e. that they are compilable as standalone
+> units, by including and/or forward declaring everything they depend on.
+> 
+> Add special target header-test-y where individual Makefiles can add
+> headers to be tested if CONFIG_HEADER_TEST is enabled. This will
+> generate a dummy C file per header that gets built as part of extra-y.
 
-Will
+Very useful, thanks.
+I have cooked up something ad-hoc a couple of times but having it as a
+standard feature in the build system is much better.
+The we can let some of our infrastructure pick up an issues
+automatically.
+
+> 
+> Cc: Chris Wilson <chris@chris-wilson.co.uk>
+> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Cc: Michal Marek <michal.lkml@markovi.net>
+> Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+> ---
+>  Documentation/kbuild/makefiles.txt |  7 +++++++
+>  init/Kconfig                       |  9 +++++++++
+>  scripts/Makefile.build             | 10 ++++++++++
+>  scripts/Makefile.lib               |  3 +++
+>  4 files changed, 29 insertions(+)
+> 
+> diff --git a/Documentation/kbuild/makefiles.txt b/Documentation/kbuild/makefiles.txt
+> index 03c065855eaf..73df58e5ea0c 100644
+> --- a/Documentation/kbuild/makefiles.txt
+> +++ b/Documentation/kbuild/makefiles.txt
+> @@ -1036,6 +1036,13 @@ When kbuild executes, the following steps are followed (roughly):
+>  	In this example, extra-y is used to list object files that
+>  	shall be built, but shall not be linked as part of built-in.a.
+>  
+> +    header-test-y
+> +
+> +	header-test-y specifies headers (*.h) in the current directory that
+> +	should be compile tested to ensure they are self-contained,
+> +	i.e. compilable as standalone units. If CONFIG_HEADER_TEST is enabled,
+> +	this autogenerates dummy sources to include the headers, and builds them
+> +	as part of extra-y.
+Do we want to restrict this to current directory only?
+Sometimes we could use this for headers in include/ but let it
+trigger for the relevant subsystem.
+So for example drivers/gpu/drm/Makefile will include the rules
+for all headers in include/drm/*
+
+The alternative would be Makefiles (of Kbuild files)
+scattered in the directories with headers and then some
+infrastructure to visit those.
+
+Follow patch extend the header-test feature to work with
+headers in include/
+
+Example:
+# Header files from this directory
+header-test-y += drm_crtc_helper_internal.h
+header-test-y += drm_crtc_internal.h
+..
+.
+# Header files from include/drm
+header-test-y += drm/amd_asic_type.h
+header-test-y += drm/ati_pcigart.h
+...
+
+
+In the patch $* is used to get the "stem" from the pattern.
+This is the filname of the header file without extension.
+
+
+	Sam
+
+
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index 4d4bf698467a..ca132ab3a551 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -295,11 +295,10 @@ $(obj)/%.lst: $(src)/%.c FORCE
+ # ---------------------------------------------------------------------------
+ 
+ quiet_cmd_header_test = HDRTEST $@
+-      cmd_header_test = echo "\#include \"$(<F)\"" > $@
++      cmd_header_test = echo "\#include <$(2).h>" > $@
+ 
+-# FIXME: would be nice to be able to limit this implicit rule to header-test-y
+-$(obj)/%.header_test.c: $(src)/%.h FORCE
+-	$(call if_changed,header_test)
++$(obj)/%.header_test.c:
++	$(call cmd,header_test,$*)
+ 
+ # Compile assembler sources (.S)
+ # ---------------------------------------------------------------------------
+
