@@ -2,88 +2,113 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC859C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8121FC282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1AC62070D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:52:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 563AE217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:53:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="V2c3cbyo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390887AbfEXQwk (ORCPT
+        id S2391049AbfEXQxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 12:52:40 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:56740 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2390210AbfEXQwj (ORCPT
+        Fri, 24 May 2019 12:53:04 -0400
+Received: from mail-vk1-f195.google.com ([209.85.221.195]:36773 "EHLO
+        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390346AbfEXQxE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 12:52:39 -0400
-Received: from callcc.thunk.org (guestnat-104-133-0-109.corp.google.com [104.133.0.109] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x4OGqDtZ028397
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 May 2019 12:52:16 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 421D9420481; Fri, 24 May 2019 12:52:13 -0400 (EDT)
-Date:   Fri, 24 May 2019 12:52:13 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     Sahitya Tummala <stummala@codeaurora.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Mel Gorman <mgorman@techsingularity.net>, linux-mm@kvack.org,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Eric Biggers <ebiggers@kernel.org>,
-        linux-fscrypt@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/vmscan.c: drop all inode/dentry cache from LRU
-Message-ID: <20190524165213.GB2765@mit.edu>
-Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
-        Sahitya Tummala <stummala@codeaurora.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>, Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Yafang Shao <laoar.shao@gmail.com>, Roman Gushchin <guro@fb.com>,
-        Mel Gorman <mgorman@techsingularity.net>, linux-mm@kvack.org,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Eric Biggers <ebiggers@kernel.org>, linux-fscrypt@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1558685161-860-1-git-send-email-stummala@codeaurora.org>
+        Fri, 24 May 2019 12:53:04 -0400
+Received: by mail-vk1-f195.google.com with SMTP id l199so2325814vke.3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 09:53:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=BWxqjKZCed63tdrqv52w7wsfWcnck29Bguoecq4JyuE=;
+        b=V2c3cbyoJqcZX30pcTkJEv7QnnWfFOVUG/SZKLtnQEgMJVwm89vkCiLejgP7M+iRpN
+         q/gLFJwalceC5ic9vkHhbkH+U/d7dt/5gsWtZqSmPEamXKr1uoECt4WeGoJqd2HwGhbx
+         9Occ1equYYbcXlCB88viJlGsBFmUVprPlSaUrUnpgJaFB5VgTgvCVd56gO+SEN+aAAgm
+         xm1VbLsF+wb2n+Ta5LcBu1FilJNm/nl1Mj5onw2ziQywv/g3tjrYI+IB0DZ9YrwYdgB0
+         VEIEcUTbHmI4X7mxwSOIeASg6iishBSuXQpcZN/RP20qWAgLsgkprlD05w//8ySkAW73
+         D/4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BWxqjKZCed63tdrqv52w7wsfWcnck29Bguoecq4JyuE=;
+        b=q/gDiCnJQsmzJD4NF6kZN4l1ZmYWPImWCRcFXF1CBI8Rg+AHiJ+6nwwEHzt1Z7QBvA
+         266AZQimbyilLJ0XZ444mIlgnpRfvyFEQuuUKKIx1PCF2C36QHRcPE/n+qmNVhi9wyT2
+         jLE9WUSI2ld5LOKtaK1YUvIXy/guIW8bis5R15c2l7a4dvqFM6bVUu2DryOhtASCqKFt
+         o9UFTVTzbvvlNnX/Sr+G5IgT8A6cSskBatQzNk59a+U+2AYGf/hbC7HxF05uUiscovnr
+         kw3p8/sS0BeCW7kkPehT7egmSqaBq4lxO/PXb1vfOF/uExrKrtxCLCFO1FDrZc9/Hd28
+         kIDw==
+X-Gm-Message-State: APjAAAXA8cxXiglKvfPNclVHqMSDeqc1lEDfU+T7MS7PUA0FmW9Igz/W
+        HnpTUZEBR4sTWVGukI8TNp3HSw==
+X-Google-Smtp-Source: APXvYqxGf4YX6m1bc63rX3ITovS0x9J+uBVKSme0zDKMj1gtik5rsITucqSrT8VXY0G62c80cqSI9A==
+X-Received: by 2002:a1f:fe81:: with SMTP id l123mr6286152vki.51.1558716782783;
+        Fri, 24 May 2019 09:53:02 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-49-251.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.49.251])
+        by smtp.gmail.com with ESMTPSA id b2sm1470363vkf.16.2019.05.24.09.53.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 24 May 2019 09:53:01 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hUDRF-0008FA-F4; Fri, 24 May 2019 13:53:01 -0300
+Date:   Fri, 24 May 2019 13:53:01 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Christoph Hellwig <hch@infradead.org>, akpm@linux-foundation.org,
+        Dave Airlie <airlied@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Artemy Kovalyov <artemyko@mellanox.com>,
+        Moni Shoua <monis@mellanox.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        linux-mm@kvack.org, dri-devel <dri-devel@lists.freedesktop.org>
+Subject: Re: RFC: Run a dedicated hmm.git for 5.3
+Message-ID: <20190524165301.GD16845@ziepe.ca>
+References: <20190523154149.GB12159@ziepe.ca>
+ <20190523155207.GC5104@redhat.com>
+ <20190523163429.GC12159@ziepe.ca>
+ <20190523173302.GD5104@redhat.com>
+ <20190523175546.GE12159@ziepe.ca>
+ <20190523182458.GA3571@redhat.com>
+ <20190523191038.GG12159@ziepe.ca>
+ <20190524064051.GA28855@infradead.org>
+ <20190524124455.GB16845@ziepe.ca>
+ <20190524162709.GD21222@phenom.ffwll.local>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1558685161-860-1-git-send-email-stummala@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190524162709.GD21222@phenom.ffwll.local>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 01:36:01PM +0530, Sahitya Tummala wrote:
-> This is important for the scenario where FBE (file based encryption)
-> is enabled. With FBE, the encryption context needed to en/decrypt a file
-> will be stored in inode and any inode that is left in the cache after
-> drop_caches is done will be a problem. For ex, in Android, drop_caches
-> will be used when switching work profiles.
-> 
-> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+On Fri, May 24, 2019 at 06:27:09PM +0200, Daniel Vetter wrote:
+> Sure topic branch sounds fine, we do that all the time with various
+> subsystems all over. We have ready made scripts for topic branches and
+> applying pulls from all over, so we can even soak test everything in our
+> integration tree. In case there's conflicts or just to make sure
+> everything works, before we bake the topic branch into permanent history
+> (the main drm.git repo just can't be rebased, too much going on and too
+> many people involvd).
 
-Instead of making a change to vmscan.c, it's probably better to
-migrate to the new fscrypt key-management framework, which solves this
-problem with an explicit FS_IOC_REMOVE_ENCRYPTION_KEY ioctl.  This
-allows the system to remove all inodes that were made available via a
-single key without having nuking all other inodes --- this would make
-it much faster after a user logs out of ChromeOS, for example:
+We don't rebase rdma.git either for the same reasons and nor does
+netdev
 
-See:
+So the usual flow for a shared topic branch is also no-rebase -
+testing/etc needs to be done before things get applied to it.
 
-	https://patchwork.kernel.org/patch/10952019/
-
-							- Ted
+Cheers,
+Jason
