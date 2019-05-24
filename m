@@ -2,116 +2,70 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A8BC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 255D5C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:45:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10C912168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:45:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X5eBh8Hw"
+	by mail.kernel.org (Postfix) with ESMTP id E64FF2184B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:45:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558698352;
+	bh=DtwbMLQuxLL8JPucnEoCkrw7f7w9/RQzp/gzFsIZI6s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IHndTRJTGLgNAmIoC0q9L59AY6GCKJlXZSgtEzYZuWBPkoq5rMPAaiTAR+5qeGFgz
+	 Tjttcf8PWHXWUgD45mOAu+pvh1OYdLHQHTS6RIUDAYhWPX+L+I56ViPSfj34pQBsGj
+	 uqdhPOfmeU5kYH6rRuJ8HAhR1pqfeUmeM9ejLMg4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391137AbfEXLp0 (ORCPT
+        id S2391225AbfEXLpv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 07:45:26 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:36824 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390743AbfEXLpZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 07:45:25 -0400
-Received: by mail-pl1-f194.google.com with SMTP id d21so4091451plr.3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 04:45:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=pThOH74d8lQhRMWxtImQn30Cs54Ck/famShCD5k4u9k=;
-        b=X5eBh8HwaH2kevrFZ4TlTPyn6cWvSzx5HtglUCrryy8Wl14EeYfGa5fds8VoZdWH2Q
-         Y5IboCDaK7hJmohhGNaA+8VHgKE08RmVIXejy5dDu6ybTieN93D3+YPvD1Q/cSDsmxTr
-         IjUlcOW1i4Ifo4OPnkiLTM2xonIRh0sx7ke8DZxYFFUW6FW9O/kRjSSxWF9nlqS/pHKa
-         KEsST7jVvik6X2s0l44VmZvevQUcM3Ws+Lix+L+pTz23y+ITtrxMjbiNQ4KM6+IVXj3M
-         SOAscoCG9w41UaSh1UZJcrSAUviHk07oDBzrLa0Kx29mlhRRBM6OM/UO8fblXJcOwL3t
-         P5Tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=pThOH74d8lQhRMWxtImQn30Cs54Ck/famShCD5k4u9k=;
-        b=W+CPefY/RI4qRqOXu7nlLUQazddPI7oJxDgPEX8DAmSAgiLbHtrYX2iLvdVbZMvY5S
-         AqviyAAHDyt2uc1563UrxUo6KUdz+jSyFY+M5UiC2ENPQXKxorRpy5PMqr77cvG6oG4E
-         Beqi2trTdVXKLXSW/37K0AAaYCd3CthRYXcW5xOEGxfo86Tjlv+LCyCfHxJVZ8kgBtU6
-         7IYlj0TMetnCpLNAEuT0mlOjeK8Rz873wWq+906cLfApUeUTLTPHRmDgJmifm3caSnpS
-         atKc3CmNIlR6kTu5qQGpFNuIfOZLm894MuKLz2TsWqAgGVv/F32BEKAZEYQ2bnWHKRYi
-         61hw==
-X-Gm-Message-State: APjAAAVgVTWdx2DF4iMbZOLFL/V/zK9FDl7lTU4tNFc4ft4bmcnGILBU
-        keFfWpd2iEtkc8e663iwcnY=
-X-Google-Smtp-Source: APXvYqze+RRkwrHQveGrS6259imBjCp9OcLJ94OtEeaVUC5RKh+JfSsqH5PZudihTnQO6ZBKLjuohA==
-X-Received: by 2002:a17:902:b084:: with SMTP id p4mr35671110plr.59.1558698325354;
-        Fri, 24 May 2019 04:45:25 -0700 (PDT)
-Received: from tom-pc.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id n27sm5688233pfb.129.2019.05.24.04.45.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 24 May 2019 04:45:24 -0700 (PDT)
-From:   Dianzhang Chen <dianzhangchen0@gmail.com>
-To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
-Cc:     hpa@zytor.com, x86@kernel.org, linux-kernel@vger.kernel.org,
-        Dianzhang Chen <dianzhangchen0@gmail.com>
-Subject: [PATCH] x86: fix possible spectre-v1 in do_get_thread_area()
-Date:   Fri, 24 May 2019 19:45:12 +0800
-Message-Id: <1558698312-5716-1-git-send-email-dianzhangchen0@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 24 May 2019 07:45:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40962 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390743AbfEXLpu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 07:45:50 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4169C2168B;
+        Fri, 24 May 2019 11:45:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558698350;
+        bh=DtwbMLQuxLL8JPucnEoCkrw7f7w9/RQzp/gzFsIZI6s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yKRLd1qN3FDzsK+9OH+CIoXIAeFWfGHgQhTyiTVlNjv4vsc6f6B20VPvbD1En3TlN
+         bwHSKqyeDNUFj23catdQieWwCwbge9w7qptMwQVNGaceQR6oQPtMi12YjPThp4litt
+         EhT06EbicenLUhUV1F1CvCn3QEbstAbQoZShehxI=
+Date:   Fri, 24 May 2019 13:45:47 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jinpu Wang <jinpu.wang@cloud.ionos.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, tony.luck@intel.com,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        linux-kernel@vger.kernel.org,
+        Elmar Gerdes <elmar.gerdes@cloud.ionos.com>
+Subject: Re: Is 2nd Generation Intel(R) Xeon(R) Processors (Formerly Cascade
+ Lake) affected by MDS
+Message-ID: <20190524114547.GA686@kroah.com>
+References: <CAMGffE=xsHWMNoGn75wzv9CLrQ81OizgLiwDEwqKw14i_eVj8Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMGffE=xsHWMNoGn75wzv9CLrQ81OizgLiwDEwqKw14i_eVj8Q@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The idx in do_get_thread_area() is controlled by userspace via syscall: ptrace(defined in kernel/ptrace.c), hence leading to a potential exploitation of the Spectre variant 1 vulnerability.
-The idx can be controlled from: ptrace -> arch_ptrace -> do_get_thread_area.
+On Fri, May 24, 2019 at 11:23:40AM +0200, Jinpu Wang wrote:
+> This e-mail may contain confidential and/or privileged information. If
+> you are not the intended recipient of this e-mail, you are hereby
+> notified that saving, distribution or use of the content of this
+> e-mail in any way is prohibited. If you have received this e-mail in
+> error, please notify the sender and delete the e-mail.
 
-Fix this by sanitizing idx before using it to index p->thread.tls_array.
-
-Signed-off-by: Dianzhang Chen <dianzhangchen0@gmail.com>
----
- arch/x86/kernel/tls.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/kernel/tls.c b/arch/x86/kernel/tls.c
-index a5b802a..e3dc05b 100644
---- a/arch/x86/kernel/tls.c
-+++ b/arch/x86/kernel/tls.c
-@@ -5,6 +5,7 @@
- #include <linux/user.h>
- #include <linux/regset.h>
- #include <linux/syscalls.h>
-+#include <linux/nospec.h>
- 
- #include <linux/uaccess.h>
- #include <asm/desc.h>
-@@ -220,15 +221,19 @@ int do_get_thread_area(struct task_struct *p, int idx,
- 		       struct user_desc __user *u_info)
- {
- 	struct user_desc info;
-+	int index = idx - GDT_ENTRY_TLS_MIN;
- 
- 	if (idx == -1 && get_user(idx, &u_info->entry_number))
- 		return -EFAULT;
- 
--	if (idx < GDT_ENTRY_TLS_MIN || idx > GDT_ENTRY_TLS_MAX)
-+	if (index < 0 || index > GDT_ENTRY_TLS_MAX - GDT_ENTRY_TLS_MIN)
- 		return -EINVAL;
- 
-+	index = array_index_nospec(index,
-+				GDT_ENTRY_TLS_MAX - GDT_ENTRY_TLS_MIN + 1);
-+
- 	fill_user_desc(&info, idx,
--		       &p->thread.tls_array[idx - GDT_ENTRY_TLS_MIN]);
-+		       &p->thread.tls_array[index]);
- 
- 	if (copy_to_user(u_info, &info, sizeof(info)))
- 		return -EFAULT;
--- 
-2.7.4
-
+I am not allowed to respond to such emails as they do not mix well with
+Linux kernel development requirements, sorry.
