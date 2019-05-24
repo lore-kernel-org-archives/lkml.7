@@ -7,101 +7,180 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63800C282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 482C8C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B8F22175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEAA9217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:55:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Xeo0NgYq"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="N2a0XA0p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390085AbfEXIy3 (ORCPT
+        id S2389576AbfEXIzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 04:54:29 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:39285 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390001AbfEXIyX (ORCPT
+        Fri, 24 May 2019 04:55:41 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:45574 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390081AbfEXIya (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 04:54:23 -0400
-Received: by mail-ed1-f68.google.com with SMTP id e24so13342641edq.6
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 01:54:22 -0700 (PDT)
+        Fri, 24 May 2019 04:54:30 -0400
+Received: by mail-ed1-f66.google.com with SMTP id g57so13292037edc.12
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 01:54:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ffwll.ch; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=brzEwqzIIXnydSs/RGKR5pFbo4J3hD4vcbto6AdqxGk=;
-        b=Xeo0NgYq2zY1qZPEankOx3NnBKnR25IXVXKxHkt4Y0761hcMWTCBOBv7E29ft9gKMK
-         UuKrb+d5LMYjosukYAmOB+0jLjO/Y+J6bSeJt3HuAbXJzhngH6TYBnlErxYlaaJpzn03
-         9plmnzfTUhDWJle88EbXJyyIodmCNhuCQStxs=
+        bh=P7tIrgwU7eV/tnp6z+MGMTB4sNqCdN7ed69YxIOeB/8=;
+        b=N2a0XA0p9Nzm5STKQj70ji0mhzkZ/xfxYB2PMpEu/BQLvb4CnU9DbBWMxTs8SwbL0b
+         Ct9CB35ETqZsHmnRsddzqoZV0c7Xtr1YtcIieAN9fX/X0JrtOD7aSyaXAZWqDhu+/GyA
+         9UtwtG2Q41IP1MqfY2yvDKhJ+880HBSlYdMeo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=brzEwqzIIXnydSs/RGKR5pFbo4J3hD4vcbto6AdqxGk=;
-        b=CjOTLla4yTHIG37c0lIGcOXQCkkF9cG2sTLWpfTeecAeKdRwe8LEhHxHuQePgCDEHs
-         5OzPVXo2xYHD3Q9TM7ufXf1O06w2bc6WLBW0gwLgXyI9iaPrdYbTUpBf+plJHEsmdqa0
-         c7JgtR0djUcphOaNQwD3DVfwOUUCcClQWK3vFuyrBgvUNN+IdFQtVpCR0ccjpTqihN/e
-         rLVXMV814eHyeieSZ3L71U3KLS6bPDdhZ0AM9ZzcG96QpPwLEyv6MjdkEt3J35ZeGSfs
-         CaA7Xcfy5HLO5Vo43ji3ND78mp+FjJZsBjyLVCRCtDSw+K6Baea3/XID90aYsik1bkdK
-         QJIw==
-X-Gm-Message-State: APjAAAXH1+fGmZuQrfc0qjIKLqtK/foKnCJSvU7KMjG9rL6kS1M40nuf
-        5g3QC/i3OveE368/kj1+jA9+4YJ83VM=
-X-Google-Smtp-Source: APXvYqyWxvUGXtbZ3ghrLc8v+hKyKnYCdQVb8oPo8l7h4OBwvxyDc3SSjNPuRkrd519zrYDMbCVOGA==
-X-Received: by 2002:a50:9858:: with SMTP id h24mr55620849edb.147.1558688061759;
-        Fri, 24 May 2019 01:54:21 -0700 (PDT)
+        bh=P7tIrgwU7eV/tnp6z+MGMTB4sNqCdN7ed69YxIOeB/8=;
+        b=qoLJI5TBV6BTKcV8UKQDA/vwubgXnhAwy/hkmhLbYNFg46q7Za0tmYUtEm20AJfcRa
+         mzXAZki9LuYa+DJcn3lJOAXTITgPOOx9wopfc6Y02gJMLNpnyw4oURAas1PPdkYBHwnD
+         STxoR+ZuyGLh3bHeXNiiQL3bA3ppnGeQ61AiQ2smAD2d35TPHHO+FeRFkwoIU/S0OXUS
+         OCNruksxUwhm6zpDpJlzrxPxuUjwALanqwEzIekfKSn4MLS9NKZrj+2/QW5w/nVs208X
+         lbL98iH6qYqPTI9bMcoAoRFTLHBACdseU/Px7+4vwoEWLgLA3cz8emgUmRk0up2jir0n
+         0JGw==
+X-Gm-Message-State: APjAAAWnVFtSj6e6y4Jcu0slxK41FXIRpaKqUpECopv9vwfc0z4ju5Ct
+        BZqCxNfYkcNfXCnl7AqQ46E0RogPjEo=
+X-Google-Smtp-Source: APXvYqxMDc+MB2GzcxdSQS+P6KkuwPYcQbSOHZxvH6/HgzRjYRaM+LEjDMKiT80Ym/ek6JxYO7XvZg==
+X-Received: by 2002:a17:906:f194:: with SMTP id gs20mr47317746ejb.177.1558688068453;
+        Fri, 24 May 2019 01:54:28 -0700 (PDT)
 Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id 96sm567082edq.68.2019.05.24.01.54.20
+        by smtp.gmail.com with ESMTPSA id 96sm567082edq.68.2019.05.24.01.54.26
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 01:54:21 -0700 (PDT)
+        Fri, 24 May 2019 01:54:27 -0700 (PDT)
 From:   Daniel Vetter <daniel.vetter@ffwll.ch>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
         DRI Development <dri-devel@lists.freedesktop.org>,
         Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= <syrjala@sci.fi>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 15/33] fbdev/atyfb: lock_fb_info can't fail
-Date:   Fri, 24 May 2019 10:53:36 +0200
-Message-Id: <20190524085354.27411-16-daniel.vetter@ffwll.ch>
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Markus Elfring <elfring@users.sourceforge.net>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>
+Subject: [PATCH 20/33] fbdev/sh_mob: Remove fb notifier callback
+Date:   Fri, 24 May 2019 10:53:41 +0200
+Message-Id: <20190524085354.27411-21-daniel.vetter@ffwll.ch>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190524085354.27411-1-daniel.vetter@ffwll.ch>
 References: <20190524085354.27411-1-daniel.vetter@ffwll.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's properly protected by reboot_lock.
+This seems to be entirely defunct:
 
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Mikulas Patocka <mpatocka@redhat.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: "Ville Syrjälä" <syrjala@sci.fi>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+- The FB_EVEN_SUSPEND/RESUME events are only sent out by
+  fb_set_suspend. Which is supposed to be called by drivers in their
+  suspend/resume hooks, and not itself call into drivers. Luckily
+  sh_mob doesn't call fb_set_suspend, so this seems to do nothing
+  useful.
+
+- The notify hook calls sh_mobile_fb_reconfig() which in turn can
+  call into the fb notifier. Or attempt too, since that would
+  deadlock.
+
+So looks like leftover hacks from when this was originally introduced
+in
+
+commit 6011bdeaa6089d49c02de69f05980da7bad314ab
+Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Date:   Wed Jul 21 10:13:21 2010 +0000
+
+    fbdev: sh-mobile: HDMI support for SH-Mobile SoCs
+
+So let's just remove it.
+
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Markus Elfring <elfring@users.sourceforge.net>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
 ---
- drivers/video/fbdev/aty/atyfb_base.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/video/fbdev/sh_mobile_lcdcfb.c | 38 --------------------------
+ 1 file changed, 38 deletions(-)
 
-diff --git a/drivers/video/fbdev/aty/atyfb_base.c b/drivers/video/fbdev/aty/atyfb_base.c
-index b6fe103df145..eebb62d82a23 100644
---- a/drivers/video/fbdev/aty/atyfb_base.c
-+++ b/drivers/video/fbdev/aty/atyfb_base.c
-@@ -3916,8 +3916,7 @@ static int atyfb_reboot_notify(struct notifier_block *nb,
- 	if (!reboot_info)
- 		goto out;
+diff --git a/drivers/video/fbdev/sh_mobile_lcdcfb.c b/drivers/video/fbdev/sh_mobile_lcdcfb.c
+index c5924f5e98c6..0d7a044852d7 100644
+--- a/drivers/video/fbdev/sh_mobile_lcdcfb.c
++++ b/drivers/video/fbdev/sh_mobile_lcdcfb.c
+@@ -213,7 +213,6 @@ struct sh_mobile_lcdc_priv {
+ 	struct sh_mobile_lcdc_chan ch[2];
+ 	struct sh_mobile_lcdc_overlay overlays[4];
  
--	if (!lock_fb_info(reboot_info))
--		goto out;
-+	lock_fb_info(reboot_info);
+-	struct notifier_block notifier;
+ 	int started;
+ 	int forced_fourcc; /* 2 channel LCDC must share fourcc setting */
+ };
+@@ -2258,37 +2257,6 @@ static const struct dev_pm_ops sh_mobile_lcdc_dev_pm_ops = {
+  * Framebuffer notifier
+  */
  
- 	par = reboot_info->par;
+-/* locking: called with info->lock held */
+-static int sh_mobile_lcdc_notify(struct notifier_block *nb,
+-				 unsigned long action, void *data)
+-{
+-	struct fb_event *event = data;
+-	struct fb_info *info = event->info;
+-	struct sh_mobile_lcdc_chan *ch = info->par;
+-
+-	if (&ch->lcdc->notifier != nb)
+-		return NOTIFY_DONE;
+-
+-	dev_dbg(info->dev, "%s(): action = %lu, data = %p\n",
+-		__func__, action, event->data);
+-
+-	switch(action) {
+-	case FB_EVENT_SUSPEND:
+-		sh_mobile_lcdc_display_off(ch);
+-		sh_mobile_lcdc_stop(ch->lcdc);
+-		break;
+-	case FB_EVENT_RESUME:
+-		mutex_lock(&ch->open_lock);
+-		sh_mobile_fb_reconfig(info);
+-		mutex_unlock(&ch->open_lock);
+-
+-		sh_mobile_lcdc_display_on(ch);
+-		sh_mobile_lcdc_start(ch->lcdc);
+-	}
+-
+-	return NOTIFY_OK;
+-}
+-
+ /* -----------------------------------------------------------------------------
+  * Probe/remove and driver init/exit
+  */
+@@ -2316,8 +2284,6 @@ static int sh_mobile_lcdc_remove(struct platform_device *pdev)
+ 	struct sh_mobile_lcdc_priv *priv = platform_get_drvdata(pdev);
+ 	unsigned int i;
  
+-	fb_unregister_client(&priv->notifier);
+-
+ 	for (i = 0; i < ARRAY_SIZE(priv->overlays); i++)
+ 		sh_mobile_lcdc_overlay_fb_unregister(&priv->overlays[i]);
+ 	for (i = 0; i < ARRAY_SIZE(priv->ch); i++)
+@@ -2707,10 +2673,6 @@ static int sh_mobile_lcdc_probe(struct platform_device *pdev)
+ 			goto err1;
+ 	}
+ 
+-	/* Failure ignored */
+-	priv->notifier.notifier_call = sh_mobile_lcdc_notify;
+-	fb_register_client(&priv->notifier);
+-
+ 	return 0;
+ err1:
+ 	sh_mobile_lcdc_remove(pdev);
 -- 
 2.20.1
 
