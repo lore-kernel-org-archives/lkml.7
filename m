@@ -2,130 +2,98 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9315FC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE3A3C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 647F420815
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A225B217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:43:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="1n9ifoFQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k//C0g7e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390315AbfEXPmt (ORCPT
+        id S2389854AbfEXPnS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 11:42:49 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:51138 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389206AbfEXPms (ORCPT
+        Fri, 24 May 2019 11:43:18 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33704 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389206AbfEXPnR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 11:42:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=6LF1uAQ2oica475Ehbh+NoOEhdE3ZAb3FjLSENrt/0M=; b=1n9ifoFQv+/PqlphLj4Vv6dDg+
-        xNMyEWYx+A3Ha1qhWKM+L70RJ+VUo3PyXic61tvYA7CDuTtHwHSYq0QATSQm8nzSxYJSF5dG88hfu
-        NyhAQrSDcEjH9g2Kdbrqo28eic5i8xh5iBRjdfeGsxWRZmR41wa17P3ot1TZNTj7WciXGJlJaks0m
-        2TzQD+aEPzjZ1OjsQzhWViqZn+3v5I1UkJE3AA+P/4GUXaw446wKIhcn1a/K3rhsAzw20QU7VjRN3
-        5x81GgJ2pFBRr2+f62aWiLHngaItcqct0GnBgLf1nIgaRjhoPJU8rsSqJqligy3TOG5jVECTZsEjb
-        HYGQBvxw==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hUCLF-00017C-Vi; Fri, 24 May 2019 15:42:46 +0000
-Subject: Re: linux-next: Tree for May 24 (leds-lm3697)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org
-References: <20190524140727.19d1e349@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <f8300d14-972d-1c03-3266-836b94c1ec9a@infradead.org>
-Date:   Fri, 24 May 2019 08:42:42 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 24 May 2019 11:43:17 -0400
+Received: by mail-pg1-f195.google.com with SMTP id h17so5284567pgv.0;
+        Fri, 24 May 2019 08:43:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=b667PaiUgQ8Q7PpALzJt/7gtzGVjETB3D6yMZYIALTM=;
+        b=k//C0g7exdcOJUzXWpFbNqGCMszp+12V7HlLpivolIypgaoPAXyanHxWMU4qG1gZcw
+         j1aKpX5rg9hmij2IMvONUlM7bHhfdSlddZ9/R01ZA/zH/TJ5ijO7uDi0K2YYu7Rp+sAO
+         vydLknKzVLK8+FqaHvqN7AmvInf2J6sfzVZNkLzeIAkAksKw1kc1y4VO6zlrDoBE2pVs
+         da+DIMZQSrtnYqqjXcd+MybTXwHcrqDWHYikIlBJFmraFEGxoqcBklt7RwffmlQUXlkC
+         Zd15JQuglsWt0Bmx0kQy2RRFlZH8ZwL+eEJQr1PoD989P1TC75l4ymQk7jyq81nc/YAS
+         jGhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=b667PaiUgQ8Q7PpALzJt/7gtzGVjETB3D6yMZYIALTM=;
+        b=mtqTagC6fE2MvlfdVBfUnwjPFbJNqW9coFtwoHa9ZQeKTG20WvfUSLEPsU0HHK+2gk
+         MpONsvGlLgFt0Osx8BP+PhXQHL9RG9huHlCW0q8I/IzHXqoAHSnjDBaqFweiBC+vf/pi
+         EbAVieQ8Z4qNOaQ2f/X1y20x/3wu6m4uMQBXcTXKF9jA9BA3lyzjYAfksz0XhnbbunSm
+         c7lxIeOadkjOdpCKI9mtqoP0zXHPJcb+2XCgPoWn7yCSH5VclUnZfj71rQemTXUhY9Xv
+         lQoKu3D9Fv6iAFsf58yXUijZdt7Gh0meTsFkz5gVzDVjUD0RoOuAwhhgopP8JNIXd2uM
+         dAVg==
+X-Gm-Message-State: APjAAAWoVeSDiVStdz091e+KRFF8ffkIVW4XynVft4cJUpErWCUj8aIC
+        ITdxYvdU880NRCj0axxeIPY=
+X-Google-Smtp-Source: APXvYqwhRl211cWfEVTBxkcGOE9w1J3jhmtE5k3PSWuOj9tEW3/mOIt0iLAt0La053XLjoZSI4kECg==
+X-Received: by 2002:a62:e0cb:: with SMTP id d72mr20598365pfm.242.1558712597167;
+        Fri, 24 May 2019 08:43:17 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([66.42.35.75])
+        by smtp.gmail.com with ESMTPSA id e73sm4397753pfh.59.2019.05.24.08.43.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 May 2019 08:43:16 -0700 (PDT)
+Date:   Fri, 24 May 2019 23:42:52 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     lgirdwood@gmail.com, perex@perex.cz, alsa-devel@alsa-project.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tegra_wm9712: Fix a memory leaking bug in
+ tegra_wm9712_driver_probe()
+Message-ID: <20190524154252.GA10186@zhanggen-UX430UQ>
+References: <20190524005014.GA2289@zhanggen-UX430UQ>
+ <b2d43dfe-17e5-a975-435b-49f2aa2ad550@nvidia.com>
+ <20190524143309.GA8631@zhanggen-UX430UQ>
+ <e52f4140-a119-a584-40a2-6359d6e1784a@nvidia.com>
+ <20190524150053.GA9235@zhanggen-UX430UQ>
+ <1740686f-a466-430c-9d01-ab83ea6998ac@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20190524140727.19d1e349@canb.auug.org.au>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1740686f-a466-430c-9d01-ab83ea6998ac@nvidia.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/23/19 9:07 PM, Stephen Rothwell wrote:
-> Hi all,
+On Fri, May 24, 2019 at 04:36:54PM +0100, Jon Hunter wrote:
+> There could well be cases where you need to explicitly call
+> devm_kfree(), but having a quick glance at the example above, I don't
+> see why you would call devm_kfree() here and yes looks like that code
+> could be simplified significantly. Notice that hisi_sas_debugfs_exit()
+> does not free any memory as it is not necessary to explicitly do so.
 > 
-> News: there will be no linux-next release on Monday.
+> Cheers
+> Jon
 > 
-> Changes since 20190523:
-> 
-> The input-current tree gained a build failure so I reverted a commit.
-> 
-> The drm-fixes tree gained a build failure so I reverted a commit.
-> 
-> The v4l-dvb tree gained a conflict against Linus' tree.
-> 
-> Non-merge commits (relative to Linus' tree): 1814
->  1870 files changed, 61172 insertions(+), 32723 deletions(-)
-> 
-> ----------------------------------------------------------------------------
-> 
-> I have created today's linux-next tree at
-> git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-> (patches at http://www.kernel.org/pub/linux/kernel/next/ ).  If you
-> are tracking the linux-next tree using git, you should not use "git pull"
-> to do so as that will try to merge the new linux-next release with the
-> old one.  You should use "git fetch" and checkout or reset to the new
-> master.
-> 
-> You can see which trees have been included by looking in the Next/Trees
-> file in the source.  There are also quilt-import.log and merge.log
-> files in the Next directory.  Between each merge, the tree was built
-> with a ppc64_defconfig for powerpc, an allmodconfig for x86_64, a
-> multi_v7_defconfig for arm and a native build of tools/perf. After
-> the final fixups (if any), I do an x86_64 modules_install followed by
-> builds for x86_64 allnoconfig, powerpc allnoconfig (32 and 64 bit),
-> ppc44x_defconfig, allyesconfig and pseries_le_defconfig and i386, sparc
-> and sparc64 defconfig. And finally, a simple boot test of the powerpc
-> pseries_le_defconfig kernel in qemu (with and without kvm enabled).
-> 
-> Below is a summary of the state of the merge.
-> 
-> I am currently merging 290 trees (counting Linus' and 70 trees of bug
-> fix patches pending for the current merge release).
-> 
-> Stats about the size of the tree over time can be seen at
-> http://neuling.org/linux-next-size.html .
-> 
-> Status of my local build tests will be at
-> http://kisskb.ellerman.id.au/linux-next .  If maintainers want to give
-> advice about cross compilers/configs that work, we are always open to add
-> more builds.
-> 
-> Thanks to Randy Dunlap for doing many randconfig builds.  And to Paul
-> Gortmaker for triage and bug fixes.
-> 
+> -- 
+> nvpublic
+Thanks for your suggestions, Jon! I think I need to e-mail to those
+maintainers about this issue.
 
-seen on i386:
-
-ld: drivers/leds/leds-lm3697.o: in function `lm3697_probe':
-leds-lm3697.c:(.text+0x451): undefined reference to `devm_of_led_classdev_register'
-
-CONFIG_LEDS_CLASS=m
-CONFIG_LEDS_TI_LMU_COMMON=y
-CONFIG_LEDS_LM3697=y
-
-
-It looks to me like this is needed:
-
-	depends on LEDS_CLASS && I2C && OF
-?
-
--- 
-~Randy
+Thanks
+Gen
