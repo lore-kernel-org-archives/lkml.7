@@ -2,261 +2,138 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 606D6C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:17:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2B6C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2010520673
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:17:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qXp2W7KY"
+	by mail.kernel.org (Postfix) with ESMTP id 305BB206A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:17:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558707457;
+	bh=Ly/qXNblcj6nTmgNO9vZijpkqkJFY1NjX2g/yRrwRXU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jJAdcdhpFFyMTaNl5DGlhDL04kcY3VWyscjUckkF7NLhEuXAEjsXav9nTBVZhtjp1
+	 lOZXpOlvpv2BjhIi/4wbOrTxQ5CUGFxV2qKGPDL+5sMNZ1bzl/kdM4WXg7/mNO63CW
+	 s649gWeTNEAhwoxvriziajuJ4ZosfRRUSPG2h6DA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404090AbfEXOR2 (ORCPT
+        id S2404116AbfEXORg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 10:17:28 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34453 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403895AbfEXOR1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 10:17:27 -0400
-Received: by mail-pg1-f196.google.com with SMTP id h2so2095367pgg.1
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 07:17:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nKudlJj/w8w8O8/nnYWhoDEELtp6+YxytSFdce5FuwQ=;
-        b=qXp2W7KYLzfPRkn4lW6HybWe5fJOUKlJBOjqbh8nw6RYEePPHQq0yCtWKcKH8IrW3N
-         eorqIQKqt7LSttdvJdN6wthW7Ras8GKMqg+R62NGP4FHW5QyIyJgycEfryTYJFr4Ora3
-         yCKVAmed09SRB0itVJhCOLp5D6nJWboN/VVYfYMBjMpjioiNJj/7MVSYi6GTDtVNOFsF
-         v391lEILHvxbJ4JofS+Pfazahdd+Oh1kbPDwfMWV3xb7cyzCqZf0Vwn4ajfoITTb/GMo
-         U6H27EL2DFPw/3QWqS155bup2lZ+jmLjj01o8KnBUnnnRcW1EqT4gnBAmwPfW/ORTqb2
-         HS8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nKudlJj/w8w8O8/nnYWhoDEELtp6+YxytSFdce5FuwQ=;
-        b=WQoISlMFuRrFMSeGW1NNE05vu/R//nR5g/3DwFhBavKTT0lBcl9PqynxrxW5KquFCl
-         DyWDDhqBu8VMg4CLnqS1dVPMqBMfv6EpAjx9xhraAxvjRpZKD0mt1lcAcw0qC51oJQKg
-         Lifyy+SY/yZO4+l58oQ9YnNMZSgOtkR9Zmt484taWpv10FvYoPRM1IyoK7kK5WzDBhbj
-         mytOvAszbeQsYNyxVQryr8aFcP9VKB0lislaUvKOP/aGDyIDoLCiq23XLpbLvmCiAH62
-         B0sfYzYUAWSEQBKWkDDlUwOHowyx/8+YrADsvNEr0yqh2d55GP1rsqGDN4IuFIf+c/DB
-         IJIg==
-X-Gm-Message-State: APjAAAW0EMvJ9PT3CwS8dNNh92TzsKRoU3zuNktDLaIzZdgFs7SWbzcQ
-        Y+G2gPTXJtnizt20u1f+4R4YBT+1lc8HzqNy//WHvC71Z+MnWQ==
-X-Google-Smtp-Source: APXvYqxzJlRFsoRsutKj/X8gJ2yqMvFk36dvVCpHR+Y9L1tN8QR0lbEFrAkXAxkKc73NJ53R6ip00845jmj5aZZHuGQ=
-X-Received: by 2002:a63:d70b:: with SMTP id d11mr103366510pgg.178.1558707446255;
- Fri, 24 May 2019 07:17:26 -0700 (PDT)
+        Fri, 24 May 2019 10:17:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52714 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403917AbfEXORf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 10:17:35 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 420D020673;
+        Fri, 24 May 2019 14:17:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558707454;
+        bh=Ly/qXNblcj6nTmgNO9vZijpkqkJFY1NjX2g/yRrwRXU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GIl4k66ws5pUeVrvkGpDk+3pIsbuq17/KAV6o4+bT8OzTqKiUq0m/9vscvMRI4O2H
+         mm9CvKcNChu2czCmqM4eV1rc640R2qZ/+DDl0I8m+nN0I5nqpVX6f0K91x2tn/onOX
+         SbtiqAcmUr64ICWNRlYZo/XrHXsA0HnR5iq4wdfw=
+Date:   Fri, 24 May 2019 16:17:32 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jinpu Wang <jinpu.wang@cloud.ionos.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, tony.luck@intel.com,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        linux-kernel@vger.kernel.org,
+        Elmar Gerdes <elmar.gerdes@cloud.ionos.com>
+Subject: Re: Is 2nd Generation Intel(R) Xeon(R) Processors (Formerly Cascade
+ Lake) affected by MDS
+Message-ID: <20190524141732.GA4412@kroah.com>
+References: <CAMGffEkQmdrrH3+UChZx_Af6WcFFQFw6fz3Ti4CRUau-wq7jow@mail.gmail.com>
 MIME-Version: 1.0
-References: <CAMmhGqKc27W03roONYXhmwB0dtz5Z8nGoS2MLSsKJ3Zotv5-JA@mail.gmail.com>
- <20190329125258.2c6fe0cb@gandalf.local.home> <CAMmhGqKPw1sxB_Qc+Z-MXZue+wtAQsQDDgUvjs4JQTVY8bR65g@mail.gmail.com>
- <20190401222056.3da6e7a7@oasis.local.home> <CAMmhGqL0tvxW_ucJUFKYqRrMRTTfUfRGpm1BnXiEvqFntSXSjQ@mail.gmail.com>
-In-Reply-To: <CAMmhGqL0tvxW_ucJUFKYqRrMRTTfUfRGpm1BnXiEvqFntSXSjQ@mail.gmail.com>
-From:   Jason Behmer <jbehmer@google.com>
-Date:   Fri, 24 May 2019 07:17:15 -0700
-Message-ID: <CAMmhGq+8XKBB9GA3J0pwZ6X6Qb1syxKVqNU6i6digtyjMrGyWw@mail.gmail.com>
-Subject: Re: Nested events with zero deltas, can use absolute timestamps instead?
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     tom.zanussi@linux.intel.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMGffEkQmdrrH3+UChZx_Af6WcFFQFw6fz3Ti4CRUau-wq7jow@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 1, 2019 at 9:42 PM Jason Behmer <jbehmer@google.com> wrote:
->
-> On Mon, Apr 1, 2019 at 7:21 PM Steven Rostedt <rostedt@goodmis.org> wrote:
-> >
-> > On Mon, 1 Apr 2019 15:54:20 -0700
-> > Jason Behmer <jbehmer@google.com> wrote:
-> >
-> > > The concurrency model is still a little bit unclear to me as I'm new
-> > > to this codebase.  So I'm having some trouble reasoning about what
-> > > operations are safe at one point on the ring buffer.    It seems like
-> > > we can't be preempted in general, just interrupts?  And the events for
-> > > the events emitted by interrupts will be fully processed before
-> > > getting back to the event pointed at by the commit pointer?  If this
-> > > is true I think the approach below (and prototyped in the attached
-> > > patch against head) might work and would love feedback.  If not, this
-> > > problem is way harder.
-> > >
-> > > We detect nested events by checking our event pointer against the
-> > > commit pointer.  This is safe because we reserve our event space
-> > > atomically in the buffer, leading to an ordering of events we can
-> > > depend on.  But to add a TIME_STAMP event we need to reserve more
-> > > space before we even have an event pointer, so we need to know
-> > > something about the ordering of events before we've actually
-> > > atomically reserved ours.  We could check if the write pointer is set
-> > > to the commit pointer, and if it isn't we know we're a nested event.
-> > > But, someone could update the write pointer and/or commit pointer
-> > > between the time we check it and the time we atomically reserve our
-> > > space in the buffer.  However, I think maybe this is ok.
-> > >
-> > > If we see that the write pointer is not equal to the commit pointer,
-> > > then we're in an interrupt, and the only thing that could update the
-> > > commit pointer is the original event emitting code that was
-> > > interrupted, which can't run again until we're finished.  And the only
-> > > thing that can update the write pointer is further interrupts of us,
-> > > which will advance the write pointer further away from commit, leaving
-> > > our decision to allocate a TIME_STAMP event as valid.
-> > >
-> > > If we see that the write pointer is equal to the commit pointer, then
-> > > anything that interrupts us before we move the write pointer will see
-> > > that same state and will need to, before returning to us, commit their
-> > > event and set commit to their new write pointer, which will make our
-> > > decision valid once again.
-> > >
-> > > There's a lot of assumptions in there that I'd love to be checked on
-> > > as I'm new to this code base.  For example I haven't read the read
-> > > path at all and have no idea if it interacts with this at all.
-> >
-> > I think you pretty much got the idea correct. The issue is what to put
-> > into the extra timestamp value. As the time we record the timestamp
-> > compared to the time we allocate the space for the timestamp is not
-> > atomic. And we can't have time go backwards :-(
-> >
-> >                 |                                  |
-> > commit  --->    +----------------------------------+
-> >                 | TS offset from previous event    |  (A)
-> >                 +----------------------------------+
-> >                 | outer event data                 |
-> > <interrupt>     +----------------------------------+
-> >                 | extended TS                      |  (B)
-> >                 +----------------------------------+
-> >                 | interrupt event data             |
-> >                 +----------------------------------+
-> >  head   --->    |                                  |
-> >
-> >
-> >         TS = rdstc();
-> >         A = reserve_ring_buffer
-> >         *A = TS
-> >
-> > interrupt:
-> >         TS = rdtsc();
-> >         B = reserve_ring_buffer
-> >         *B = TS
-> >
-> >
-> > What's important is what we store in A and B
-> >
-> >         TS = rdtsc();
-> >                 <interrupt> --->
-> >                                         TS = rdstc()
-> >                                         (this is first commit!)
-> >                                         A = reserver_ring_buffer
-> >                                         *A = TS
-> >                                         (finish commit)
-> >                 <----
-> >         A = reserver_ring_buffer
-> >         *A = TS
-> >
-> > You can see how the recording of the timestamp and writing it gets
-> > complex. Also it gets more complex when we use deltas and not direct writes.
-> >
-> > Now we may be able to handle this if we take the timestamp before doing
-> > anything, and if it's nested, take it again (which should guarantee
-> > that it's after the previous timestamp)
-> >
-> > Now of course the question is, how do we update the write stamp that we
-> > will use to compute new "deltas"? Or we just use absolute timestamps to
-> > the end of the page, and start over again, when we start a new page
-> > that isn't nested.
-> >
-> > But see where the complexity comes from?
-> >
-> > -- Steve
->
-> Ah, yes, I was too focused on the first problem of if we could even
-> reserve the space due to concurrency restrictions.
->
-> First, I had assumed there weren't restrictions on timestamps needing
-> to not go backwards between consecutive events in the buffers, as it
-> seems the current implementation of absolute timestamps should have
-> this issue.  It also seems incredibly difficult to solve.  Even with
-> your suggestion of taking the timestamp a second time if you're nested
-> - can't you end up with multiple layers of nesting?  So how do you
-> make sure that the third level nested event has a timestamp after the
-> second level nested event?  It seems like maybe there's some very
-> complicated way you can make this work given that it seems like your
-> stack depth here is limited here to One of each of normal, nmi,
-> softirq, and hardirq at a time (is that right?).
->
-> And second, I forgot entirely about updating the write stamp.  It
-> looks like my prototype patch as written will still just update the
-> write stamp to the outer event's timestamp, whereas really logically
-> we'd like to set it to the last thing in the buffer when we commit.
-> It looks like rb_set_commit_to_write already leapfrogs write_stamp to
-> the next page timestamp every time it commits a full page.  Ideally
-> we'd be able to also do this when we get to the tail page and update
-> commit to its write index.  Because, I think, nothing will be diffing
-> off of write_stamp until we set commit to be back to write.  But of
-> course within a page we have no clue what the timestamp of the event
-> previous to the write pointer is.
->
-> And with ordering problems, you can't even just try the brute force
-> approach of having all of the nested events update write_stamp on
-> commit if their ts is larger than the current write_stamp (although
-> even if you did want to do that it seems like you'd have to do some
-> more complicate atomic access to write stamp as you would no longer
-> have the nice property of it only being updated by one piece of code
-> at a time).
->
-> As for using absolute timestamps for the rest of the page, it seems
-> like in many use cases that would end up being functionally very
-> similar (with a far more complex implementation) to just turning on
-> absolute timestamps for everything.  This of course depends entirely
-> on the trace points you're gathering, but some common ones, like
-> sched_* seem to get called fairly often from an interrupt context even
-> on an idle system.
->
->
-> Also, I was actually going to send out a patch to try to make the
-> timestamp_mode file writable, as an easy short-term fix for getting
-> absolute time stamps.  However, it looks like the current hook to turn
-> it on is doing some ref counting on enabling/disabling some histogram
-> listeners.  Combining that with a user-writable config file seems a
-> little tricky in terms of semantics, which do we want to take
-> priority?  It seems like a user changing a config an accidentally
-> clobbering the histogram listeners isn't great, but neither is giving
-> back a user cryptic errors when they try to write the file and
-> histogram listeners are configured.  Any thoughts on what to do there
-> and how to implement it?
->
-> Thanks,
-> Jason
+On Fri, May 24, 2019 at 03:19:34PM +0200, Jinpu Wang wrote:
+> Resend with plain text, and remove confidential unnecessary signature.
+> sorry for spam.
+> 
+> Hi Thomas, hi Greg, hi Tony, hi Arjan, hi other expert on the list
+> 
+> I noticed on our Cascade lake with 4.14.120,  the kernel is reporting
+> vulnerable:
+> jwang@ps401a-912:~$ head /sys/devices/system/cpu/vulnerabilities/mds
+> Vulnerable: Clear CPU buffers attempted, no microcode; SMT vulnerable
+> 
+> But according to INTEL,  they have built the mitigation in hardware
+> for Cascade Lake:
+> https://www.intel.com/content/www/us/en/architecture-and-technology/engineering-new-protections-into-hardware.html
+> 
+> We are using latest microcode from debian:
+> https://metadata.ftp-master.debian.org/changelogs//non-free/i/intel-microcode/intel-microcode_3.20190514.1~deb9u1_changelog
+> lscpu:
+> jwang@ps401a-912:~$ lscpu
+> Architecture:          x86_64
+> CPU op-mode(s):        32-bit, 64-bit
+> Byte Order:            Little Endian
+> CPU(s):                96
+> On-line CPU(s) list:   0-95
+> Thread(s) per core:    2
+> Core(s) per socket:    24
+> Socket(s):             2
+> NUMA node(s):          2
+> Vendor ID:             GenuineIntel
+> CPU family:            6
+> Model:                 85
+> Model name:            Intel(R) Xeon(R) Platinum 8268 CPU @ 2.90GHz
+> Stepping:              5
+> CPU MHz:               3228.226
+> CPU max MHz:           3900.0000
+> CPU min MHz:           1000.0000
+> BogoMIPS:              5800.00
+> Virtualization:        VT-x
+> L1d cache:             32K
+> L1i cache:             32K
+> L2 cache:              1024K
+> L3 cache:              33792K
+> NUMA node0 CPU(s):     0-23,48-71
+> NUMA node1 CPU(s):     24-47,72-95
+> Flags:                 fpu vme de pse tsc msr pae mce cx8 apic sep
+> mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht
+> tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs
+> bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq
+> dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm
+> pcid dca sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes
+> xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb cat_l3
+> cdp_l3 invpcid_single intel_ppin ssbd mba ibrs ibpb stibp tpr_shadow
+> vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2
+> erms invpcid rtm cqm mpx rdt_a avx512f avx512dq rdseed adx smap
+> clflushopt clwb intel_pt avx512cd avx512bw avx512vl xsaveopt xsavec
+> xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local
+> dtherm ida arat pln pts pku ospke flush_l1d arch_capabilities
+> 
+> Clearly we want to buy Cascade Lake if the hardware mitigations are in
+> place, but the information on the internet is quite limited and
+> misleading.
+> 
+> Could anyone of you could clarify it for us?
+> Does it mean 4.14.120 is missing patches for detecting Cascade Lake
+> mitigation, Or maybe only small set of cascade lake has mitigation?
+> Or the community/intel are not sure about it yet?
 
-Hi Steven,
-Your other email reminded me of this thread.  The easy "fix" we
-decided to pursue was to simply turn on absolute timestamps for all
-events and use up the extra space, which in our particular application
-isn't a huge deal.  We haven't yet gotten around to trying to send a
-patch for plumbing user-configurable absolute timestamps, but as noted
-immediately above, the configuration for timestamp_mode is actually a
-bit tricky to implement with the existing histogram ref counting.  The
-way I was thinking about dealing with that was to have a separate bool
-to indicate the state the user has indicated they want, and then you
-have to work through all the possible combinations of behavior:
+Did you try 4.19 or 5.1?  Try those and see if anything changes.
 
-If user absolute timestamps is false, all behavior is exactly as today.
-If user absolute timestamps is true, histogram refs transitioning 0->1
-is a no-op, as is histogram refs transitioning 1->0.
-If histogram refs are 0 and user absolute timestamps transition
-false->true or true->false, they get what they want.
-If histogram refs are >0 and user absolute timestamps transition
-false->true, it's a no-op.
+If not, odds are you need a microcode update from Intel, please contact
+them, nothing we can do about that.
 
-And the confusing one:
-If histogram refs are >0 and user absolute timestamps transitions
-true->false we can't turn off absolute timestamps and screw up the
-histograms, so we return an error.  But user absolute timestamps is
-now false, which means when histogram refs transitions back to 0, it
-will turn off absolute timestamps.
+If 4.14 works different from 4.19 or 5.1, please let us know.
 
-What do you think of that?
+thanks,
+
+greg k-h
