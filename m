@@ -2,119 +2,127 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1174C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B61C282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:20:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77306217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9509D217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:20:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="EnzLLyj6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cOX4GWm3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731800AbfEXCUS (ORCPT
+        id S2388207AbfEXCUs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 22:20:18 -0400
-Received: from mail-eopbgr130081.outbound.protection.outlook.com ([40.107.13.81]:17421
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731722AbfEXCUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 22:20:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Fx8velWyfeej5f/270jyntWlGJK+7WjPzSWgGLuBUl8=;
- b=EnzLLyj6rW4X56hEQJRwCvD0FhiKBNVcDPCN55jcCNpnIvBG54JY9d/niY3cZ64TMUOFe4VVAeUfVS8VZaVbomrd9D+rkvSYqt03/7J370SmUsf7yJDT8B4S0aDBPCh8oSty1dzvcURx1k/GcGhBYJeoMD/fx6qcVsCstbrTOC8=
-Received: from VI1PR0401MB2237.eurprd04.prod.outlook.com (10.169.132.138) by
- VI1PR0401MB2413.eurprd04.prod.outlook.com (10.169.134.18) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.16; Fri, 24 May 2019 02:20:13 +0000
-Received: from VI1PR0401MB2237.eurprd04.prod.outlook.com
- ([fe80::b091:6395:e853:5986]) by VI1PR0401MB2237.eurprd04.prod.outlook.com
- ([fe80::b091:6395:e853:5986%3]) with mapi id 15.20.1922.016; Fri, 24 May 2019
- 02:20:13 +0000
-From:   "Y.b. Lu" <yangbo.lu@nxp.com>
-To:     Richard Cochran <richardcochran@gmail.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH net-next v2, 0/4] ENETC: support hardware timestamping
-Thread-Topic: [PATCH net-next v2, 0/4] ENETC: support hardware timestamping
-Thread-Index: AQHVEQ/lOru7YbqaqUKfl9qTVlpeDKZ4uksAgADRkBA=
-Date:   Fri, 24 May 2019 02:20:13 +0000
-Message-ID: <VI1PR0401MB2237EC43DA992198CE3BA768F8020@VI1PR0401MB2237.eurprd04.prod.outlook.com>
-References: <20190523023451.2933-1-yangbo.lu@nxp.com>
- <20190523134832.xzupnwvhhlljtoyh@localhost>
-In-Reply-To: <20190523134832.xzupnwvhhlljtoyh@localhost>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yangbo.lu@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 92d54a33-d243-4487-6d81-08d6dfee5aba
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR0401MB2413;
-x-ms-traffictypediagnostic: VI1PR0401MB2413:
-x-microsoft-antispam-prvs: <VI1PR0401MB241393EFC9C3F6A7B552F04CF8020@VI1PR0401MB2413.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0047BC5ADE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(376002)(136003)(346002)(396003)(366004)(13464003)(189003)(199004)(6436002)(478600001)(3846002)(6116002)(4744005)(55016002)(53546011)(6506007)(305945005)(7736002)(74316002)(2906002)(81166006)(99286004)(8676002)(81156014)(6916009)(53936002)(5660300002)(229853002)(7696005)(9686003)(76176011)(14454004)(68736007)(25786009)(486006)(8936002)(6246003)(256004)(1411001)(476003)(316002)(86362001)(26005)(66066001)(11346002)(54906003)(66446008)(64756008)(66946007)(102836004)(33656002)(186003)(66556008)(66476007)(71190400001)(446003)(52536014)(71200400001)(4326008)(73956011)(76116006);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0401MB2413;H:VI1PR0401MB2237.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 958tLymnFyr8DC2LrntJmkdvAF4etRA03gvUiKtL0zn0sHlTAEuT2zIVfYbfibTQ5MSbHh4ondzjAfbCZ9xCMUR0zALxqMeW842CgVAmJd8wjIKG0Uo+WtVWxPz05CmhaPq9T7lWpJUIJLDnWnJ6qcNRfvNdgqGBqfAyq7tKFGYa+LTP9htsq02bZm2uur6trUAKCO9vHZuPQTQIrb3Q1AxrYQyt18JQrdUyLFjSfpUfKRcYTJydyxqVxjrA5NekXJQUSxPIuiB0doydODd/6aHJahCfC83HHMZKTq8Jt/Ru6TbgD10QRhoirK5HYCnojKqxp1ovEwyZMstNBzD7iUQQln0Iu4Xt9u+trPXv4gMdj9felPZDLExLCbuLv5d3iOetA3hUL/GE7Ncii/Un/mLp9Bb5HtY+VoTUIq2SZyo=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 23 May 2019 22:20:48 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42203 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387654AbfEXCUr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 22:20:47 -0400
+Received: by mail-pl1-f196.google.com with SMTP id go2so3497344plb.9;
+        Thu, 23 May 2019 19:20:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8i6sdY7hQZvF0VE8bmdd+Eg6UX6pwW91eLCHd9wKizE=;
+        b=cOX4GWm3SirJ0mfbzCgcw3AZqCJyholEQXV89WdBtgj14h6xZwMLjcZuoFGQqzIlBc
+         d7tV/mEa2ulUXk9lU9t627pEmV9b/Xj0QFNnbi7vxGBTooW8bIuHGDXcevIn+sUypy9n
+         ApLEVHIocW/Vn9FhI5Jjw80Cmr3T3y+dH4turBtTPjLJ2OmZ3nno5mdLJy9F56XxMZb0
+         CgWolSYYG87kk8MnQdVuxeZQmDYfsmMEdBvpDgIHVrlSAItDAyhosEqq23ag8Ql9wIn9
+         aIHLZMXNHeoafO/9zUYUbXIOT1EkcamcX3Uyt7zMMrITCgTq3e3b+XGgLcjvsgKT6F1o
+         D/Iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8i6sdY7hQZvF0VE8bmdd+Eg6UX6pwW91eLCHd9wKizE=;
+        b=D/vEy50xUDKoJKxiIBxCRZQI1kSFoLCAm4cE3QpXaXk40itBZxPvTptLBQTpm1F1sY
+         wSCQvTE8NVBXpCqFB1dvlLYMXas8+K/XpUvEo/i/ESuYpdqda8NWVVu+XgYNW8vuppsj
+         Z1zjOU5ulr8+MI8ne+WMJHGwwPCTkUF16K0gQpOiMaUAWNaptyGvmMHw7xqA/Z98sU9l
+         WMxS/Krkx/OiMdpFc6ph8lg0klLo09lQ5T1jGfQSG4VPdP22LPHZXY95jKiQlN5T2oS7
+         NpSGU8OYGbpQt3OcS5hge8qYSjhUGLyZ1OTxVVIAm4MFMbEhQ9XklL4Gt92Ge+LpZX9X
+         5Vpg==
+X-Gm-Message-State: APjAAAVHAdYoqGBrixPGbqZYZEDHsLfkWP14gbibjuxRA2SXAeHkfKnA
+        ryiFFg2IK15XG4a/2lMaOSE=
+X-Google-Smtp-Source: APXvYqy8IsUKhin/UgEK4yCtU0skPkff11e+FW8nFuiATBxaJlXG+/rqhfIN5xqSVctGKNxteeaTdA==
+X-Received: by 2002:a17:902:a407:: with SMTP id p7mr12856160plq.41.1558664446375;
+        Thu, 23 May 2019 19:20:46 -0700 (PDT)
+Received: from localhost.localdomain ([2601:644:8201:32e0:7256:81ff:febd:926d])
+        by smtp.gmail.com with ESMTPSA id c23sm880199pfp.0.2019.05.23.19.20.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 May 2019 19:20:45 -0700 (PDT)
+Date:   Thu, 23 May 2019 19:20:43 -0700
+From:   Eduardo Valentin <edubezval@gmail.com>
+To:     Doug Anderson <dianders@chromium.org>,
+        Elaine Zhang <zhangqing@rock-chips.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>, Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        zhangqing <zhangqing@rock-chips.com>,
+        Enric Balletbo Serra <eballetbo@gmail.com>,
+        Brian Norris <briannorris@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH] Revert "thermal: rockchip: fix up the tsadc pinctrl
+ setting error"
+Message-ID: <20190524022042.GA1936@localhost.localdomain>
+References: <20190522141236.26987-1-heiko@sntech.de>
+ <CAD=FV=UxwqkHpsxXhEHrQDY6MtymeT3Gn_G4Q5xSh6pZVWTRHA@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 92d54a33-d243-4487-6d81-08d6dfee5aba
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 May 2019 02:20:13.5770
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yangbo.lu@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2413
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=UxwqkHpsxXhEHrQDY6MtymeT3Gn_G4Q5xSh6pZVWTRHA@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Richard Cochran <richardcochran@gmail.com>
-> Sent: Thursday, May 23, 2019 9:49 PM
-> To: Y.b. Lu <yangbo.lu@nxp.com>
-> Cc: netdev@vger.kernel.org; David Miller <davem@davemloft.net>; Claudiu
-> Manoil <claudiu.manoil@nxp.com>; Shawn Guo <shawnguo@kernel.org>; Rob
-> Herring <robh+dt@kernel.org>; Alexandru Marginean
-> <alexandru.marginean@nxp.com>; devicetree@vger.kernel.org;
-> linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH net-next v2, 0/4] ENETC: support hardware timestampin=
-g
->=20
-> On Thu, May 23, 2019 at 02:33:24AM +0000, Y.b. Lu wrote:
-> > This patch-set is to support hardware timestamping for ENETC and also
-> > to add ENETC 1588 timer device tree node for ls1028a.
->=20
-> Please, in the future, summarize the changes from the last series in the =
-cover
-> letter.  It helps the reviewers to focus.
+On Wed, May 22, 2019 at 08:34:34AM -0700, Doug Anderson wrote:
+> Hi,
+> 
+> On Wed, May 22, 2019 at 7:12 AM Heiko Stuebner <heiko@sntech.de> wrote:
+> >
+> > This reverts commit 28694e009e512451ead5519dd801f9869acb1f60.
+> >
+> > The commit causes multiple issues in that:
+> > - the added call to ->control does potentially run unclocked
+> >   causing a hang of the machine
+> > - the added pinctrl-states are undocumented in the binding
+> > - the added pinctrl-states are not backwards compatible, breaking
+> >   old devicetrees.
+> >
+> > Fixes: 28694e009e51 ("thermal: rockchip: fix up the tsadc pinctrl setting error")
+> > Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> > ---
+> >  drivers/thermal/rockchip_thermal.c | 36 +++---------------------------
+> >  1 file changed, 3 insertions(+), 33 deletions(-)
+> 
+> In case it helps with the urgency, there are lots of people who have
+> all independently needed to identify which commit stopped their boards
+> from booting mainline or broke temperature reading.  I'm aware of at
+> least these reports:
+> 
+> Reported-by: kernelci.org bot <bot@kernelci.org>
+> Reported-by: Enric Balletbo Serra <eballetbo@gmail.com>
+> Reported-by: Vicente Bergas <vicencb@gmail.com>
+> Reported-by: Jack Mitchell <ml@embed.me.uk>
+> Reported-by: Douglas Anderson <dianders@chromium.org>
+> 
+> I can confirm that my board boots again after this revert, thus:
+> 
+> Tested-by: Douglas Anderson <dianders@chromium.org>
 
-[Y.b. Lu] Sorry Richard. Will summarize all changes in cover letter in the =
-future, besides change notes on each patch.
-Thanks.
+I see. I can collect this revert if that is what unblocks you guys.
 
->=20
-> Thanks,
-> Richard
+Elaine, do you mind checking why these pinctrl changes are causing
+boot issues?
+
+
