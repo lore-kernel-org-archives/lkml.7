@@ -2,142 +2,101 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F14FC282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F07C2C282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E2B920863
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:51:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hRMqCoke"
+	by mail.kernel.org (Postfix) with ESMTP id BC25C20673
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:53:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558731218;
+	bh=dZ+6grp0h0L09G+mfO2crPoNXYemVc66ZD5uhyb+d6o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=o6DYvPhIpoVLhH8WzlpKEVlMym4aqzk+u2lDpNTT4Q4s8WehIg/e1RHXasToVrHpl
+	 4gFUu7/eI6rKOwQJyf7JqCEyZd2UPLkEyosg9wHQptdY33CtG1WSbkR8ellmXvINYx
+	 lraOdmzb3HWwPmvFVKXQ0KmIWfs3IiI0zNw0qWBo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404247AbfEXUvO (ORCPT
+        id S2404193AbfEXUxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 16:51:14 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52280 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389242AbfEXUvO (ORCPT
+        Fri, 24 May 2019 16:53:37 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40558 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727115AbfEXUxh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 16:51:14 -0400
-Received: by mail-wm1-f67.google.com with SMTP id y3so10641220wmm.2;
-        Fri, 24 May 2019 13:51:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=bPw4eeQMLnyhDknfeCO+DcdhVdRhY9BK2qfVRz0v1v8=;
-        b=hRMqCokeKZrylB/Y723YgYyZWRNs8gxaTrshNbPX1JO5GZ1vqhF4ViS6Y8Ak5UijQP
-         TkOw/sKCfL04u/Opfs9TatZzDZ0utImfpnShKv+9E8JuwaPau+Yokr2G+In3X1GEqAJd
-         XJXygN9Y+Xd5KtwDI9lL8hYqMI25WWloiJNpnTQRU2jl5xMcHBdNIUp0uLeWogcs3hrk
-         h99i5yyAVGkLT8tZ/mU0L04MdDRTpkcHh2V+w8nDYQEs4D0ZZIRu7vaXWCYx7anMT7w4
-         NPMByo0C8k8RQluwXGVLUS/OjiE1iFsppwe0bDSJTz6z8PfmxemZZkpPN9hOORSd8NfI
-         xfAA==
+        Fri, 24 May 2019 16:53:37 -0400
+Received: by mail-ot1-f65.google.com with SMTP id u11so9885906otq.7;
+        Fri, 24 May 2019 13:53:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=bPw4eeQMLnyhDknfeCO+DcdhVdRhY9BK2qfVRz0v1v8=;
-        b=bOIbCteQT+CLtz9ZDXKLI2kxxVJbh6XJj8DKyt1MqwXe6+Ic0q5dKRvRGNUundEoiM
-         EhqjIDQSjhCmQ94HhtB9abs/2cVFulY/AFcrPETzvKi6CZxFcX5PaZHdaGKyTksTI+dj
-         nQorPjdaj7zap+N7TQa4pYVJM4yYBZaM8bR3ENYB/C5k6GTidimm7TFNTv6FxVSCnRvO
-         XPUz1aXGs2wkfTm+caGQTtxWXCLIR312gMmxUX2/yriZYkHP9znodKlcRUMX7GmQypg2
-         9TO8IUIJyOwxDk35O4qeLkfWkQiOAnwMJ2s25jvHI+rhq7FdcQEBNuks5DFOzM+I+G6I
-         mf4A==
-X-Gm-Message-State: APjAAAWkZ9dqjup5yEAQSmvvZyn74VMdsA4TOFVRU/lyqFqGjTSlOuwO
-        a0RnbbLnsylVuq27KKPeWrVKg1uj
-X-Google-Smtp-Source: APXvYqy4UBXRnjUOd8AfyUvLQQNv70IpVyzxQJnY28PMTR9VXcbYtbNpRtNhtNdavRWACJLskd3yPw==
-X-Received: by 2002:a7b:cb8b:: with SMTP id m11mr1150403wmi.158.1558731072014;
-        Fri, 24 May 2019 13:51:12 -0700 (PDT)
-Received: from [192.168.1.17] (bkq212.neoplus.adsl.tpnet.pl. [83.28.184.212])
-        by smtp.gmail.com with ESMTPSA id m206sm4631499wmf.21.2019.05.24.13.51.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 13:51:11 -0700 (PDT)
-Subject: Re: [RESEND PATCH v4 6/6] leds: lm36274: Introduce the TI LM36274 LED
- driver
-To:     Dan Murphy <dmurphy@ti.com>, Pavel Machek <pavel@ucw.cz>
-Cc:     broonie@kernel.org, lgirdwood@gmail.com, lee.jones@linaro.org,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190522192733.13422-1-dmurphy@ti.com>
- <20190522192733.13422-7-dmurphy@ti.com> <20190523125012.GB20354@amd>
- <0c2bd6af-92c5-2458-dc41-1ea413545347@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <89a80aa8-66ee-d0ec-fa54-c55ca8de06af@gmail.com>
-Date:   Fri, 24 May 2019 22:51:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=06rJ2oOKojiLBVVks+8FBspxtuNBQL8fyHUzc3BCuBc=;
+        b=bL3pATx4po7/noOwGUGuGmNP4ctU40K9SnxfpNv2Iy8ucfjFxG+19xwFw49JeXWL46
+         tJBvJdr8cHcIU0MkeujORGnlaxJgfyo9pwSTa+njiz4U3T3iXg90NVmfcL0jjyUH7/aM
+         4hwRK7X7aH/4lpIx+qXNdtBgSLnXaxSDkbmnJMxfO0k/jQhHBkrADZ0QaAIEUFiCVWkh
+         0VyAUjn7KKuwA3XT15Li6DTacixokUoxblg0tBCMezYNHK8FGF34+8C6RT0m6S/Skb8c
+         tjrw3zb9ra3TKW/CbNYSjD2we9JsLRH/YWHL8Kb2Mjg8tsoWq7vJXWrEUe8EYxKPeyXS
+         pRIg==
+X-Gm-Message-State: APjAAAXsYAWznAjo49smzvBov5H2K4XKbFbWAhUTMIzMRG5eARWyS1A9
+        vrQIVjaZloKT2YZd8P2rJw==
+X-Google-Smtp-Source: APXvYqzGG5lUSWgq/o6kjQnGmXFXXA5GlptnL5Pce4GN5KDh99a83PbpqEWkdGObCFeN8Kbml7X3AQ==
+X-Received: by 2002:a9d:1b67:: with SMTP id l94mr64169216otl.239.1558731216665;
+        Fri, 24 May 2019 13:53:36 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id j18sm1457839oih.45.2019.05.24.13.53.35
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 24 May 2019 13:53:35 -0700 (PDT)
+Date:   Fri, 24 May 2019 15:53:30 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Puneet Saxena <puneets@nvidia.com>
+Cc:     robh+dt@kernel.org, pantelis.antoniou@konsulko.com,
+        frowand.list@gmail.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, treding@nvidia.com,
+        vdumpa@nvidia.com, snikam@nvidia.com, jonathanh@nvidia.com,
+        Puneet Saxena <puneets@nvidia.com>
+Subject: Re: [PATCH V2] of: reserved-memory: ignore disabled memory-region
+ nodes
+Message-ID: <20190524205330.GA23430@bogus>
+References: <1558522031-549-1-git-send-email-puneets@nvidia.com>
+ <1558522031-549-2-git-send-email-puneets@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <0c2bd6af-92c5-2458-dc41-1ea413545347@ti.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1558522031-549-2-git-send-email-puneets@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, 22 May 2019 16:17:11 +0530, Puneet Saxena wrote:
+> From: Krishna Reddy <vdumpa@nvidia.com>
+> 
+> Ignore disabled nodes in the memory-region 
+> nodes list and continue to initialize the rest 
+> of enabled nodes.
+> 
+> Check if the "reserved-memory" node is available
+> and if it's not available, return 0 to ignore the 
+> "reserved-memory" node and continue parsing with 
+> next node in memory-region nodes list.
+> 
+> Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
+> Signed-off-by: Puneet Saxena <puneets@nvidia.com>
+> ---
+> v2:
+> * Fixed typo in commit message.
+> * Used "of_device_is_available" to check "reserved-memory"
+>   nodes are disabled/enabled.
+> 
+>  drivers/of/of_reserved_mem.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
 
-On 5/23/19 9:09 PM, Dan Murphy wrote:
-> Pavel
-> 
-> Thanks for the review
-> 
-> On 5/23/19 7:50 AM, Pavel Machek wrote:
->> Hi!
->>
->>> +++ b/drivers/leds/leds-lm36274.c
->>
->>> +static int lm36274_parse_dt(struct lm36274 *lm36274_data)
->>> +{
->>> +	struct fwnode_handle *child = NULL;
->>> +	char label[LED_MAX_NAME_SIZE];
->>> +	struct device *dev = &lm36274_data->pdev->dev;
->>> +	const char *name;
->>> +	int child_cnt;
->>> +	int ret = -EINVAL;
->>> +
->>> +	/* There should only be 1 node */
->>> +	child_cnt = device_get_child_node_count(dev);
->>> +	if (child_cnt != 1)
->>> +		return ret;
->>
->> I'd do explicit "return -EINVAL" here.
->>
-> 
-> ACK
-> 
->>> +static int lm36274_probe(struct platform_device *pdev)
->>> +{
->>> +	struct ti_lmu *lmu = dev_get_drvdata(pdev->dev.parent);
->>> +	struct lm36274 *lm36274_data;
->>> +	int ret;
->>> +
->>> +	lm36274_data = devm_kzalloc(&pdev->dev, sizeof(*lm36274_data),
->>> +				    GFP_KERNEL);
->>> +	if (!lm36274_data) {
->>> +		ret = -ENOMEM;
->>> +		return ret;
->>> +	}
->>
->> And certainly do "return -ENOMEM" explicitly here.
->>
-> 
-> ACK
-> 
->> Acked-by: Pavel Machek <pavel@ucw.cz>
+Applied, thanks.
 
-I've done all amendments requested by Pavel and updated branch
-ib-leds-mfd-regulator on linux-leds.git, but in the same time
-dropped the merge from the for-next.
-
-We will proceed further once we clarify the issue of cross-merging
-recently raised again by Linus.
-
--- 
-Best regards,
-Jacek Anaszewski
+Rob
