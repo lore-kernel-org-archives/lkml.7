@@ -2,131 +2,93 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 925D2C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A0EEC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7222120856
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:20:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A05F20879
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:22:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R2nXicON"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389597AbfEXPU5 (ORCPT
+        id S2389555AbfEXPWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 11:20:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:15399 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389079AbfEXPU5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 11:20:57 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BD41F9FFC6;
-        Fri, 24 May 2019 15:20:51 +0000 (UTC)
-Received: from treble (ovpn-121-106.rdu2.redhat.com [10.10.121.106])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E7AB85F7C5;
-        Fri, 24 May 2019 15:20:46 +0000 (UTC)
-Date:   Fri, 24 May 2019 10:20:45 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Ard Biesheuvel <ard.biesheuvel@arm.com>
-Cc:     Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com,
-        james.morse@arm.com, guillaume.gardet@arm.com,
-        mark.rutland@arm.com, mingo@kernel.org, jeyu@kernel.org,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        arnd@arndb.de, x86@kernel.org
-Subject: Re: [PATCH] module/ksymtab: use 64-bit relative reference for target
- symbol
-Message-ID: <20190524152045.w3syntzp4bb5jb7u@treble>
-References: <20190522150239.19314-1-ard.biesheuvel@arm.com>
- <293c9d0f-dc14-1413-e4b4-4299f0acfb9e@arm.com>
- <f2141ee5-d07a-6dd9-47c6-97e8fbdccf34@arm.com>
- <20190523091811.GA26646@fuggles.cambridge.arm.com>
- <907a9681-cd1d-3326-e3dd-5f6965497720@arm.com>
+        Fri, 24 May 2019 11:22:24 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:37205 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389314AbfEXPWX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 11:22:23 -0400
+Received: by mail-lf1-f65.google.com with SMTP id m15so6839243lfh.4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 08:22:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QyF3o58FFX1H1q5j3kdiPxjWQwX8mwAfxQ1M8ShVyoI=;
+        b=R2nXicON9l8j67j7PadKSRB4aV4W8j0X8VrwwypSh5dc/jQT2y5uUN8rZSpBv12B+g
+         WI80lgH2mR8r7dRtZOOv2HePNQnSEUDtSG39KhmqNSiNiNkYA4OzyUBagAy3bsf7YDqU
+         WpU+CA4s+vDA1kVZj7mmPnOOihogo5bRT1jbpXir6J/KOpZ27oTLsUSdfYAaozpPatwA
+         1sRNLToQWgrSwoDi8cex+LE58QAxSyaW4ykyLPlSzUgydnGj2DgGMBXKvmwm1baKM5dv
+         u848+Lu1/GSCycSO+lRYhXvlzCIviyFwen68e8/QHujHkVUwZLTw5Y6Vk3wuTMC3KND0
+         JKZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QyF3o58FFX1H1q5j3kdiPxjWQwX8mwAfxQ1M8ShVyoI=;
+        b=GZbAebv9bvjOqAYe65JTRJfUzjCO3UsV/H2rlo4msMeiPk8T2Pf51Esx6blWSPCbt8
+         V12PGQXlGdLC75cfIbzo7MnyqiUwTcrAPqwb/ktX30osAQQo7gkUrrJ+/Lb26Tgpcg9O
+         MhNH/YJNZXrYMjuHQ+LrpwAS7jrwWzs74HU8CE4PvwAHw9M12ebuXhEtpOw3kwRFBaGb
+         3yHQ7fMYjeqxyZfi7UyrY6WYhjgBAQ/tMYaNZIX4828MnfuExiahUOwM0zKiBa9vsDDy
+         oqcJfP8sAMUXPw/wY/OaUxyhiqnwa4geC/R/QIs0agNeRtzB7RMCVXBKTkV6FOtYzDMx
+         pyMQ==
+X-Gm-Message-State: APjAAAXoXyzRa1W/leYLxIhNWTgpeA7NA+NaZbHDXxjwyOnZC4v+9yoB
+        7Z0BLnckzRK2SVQlv9SbkcP4L9VfkJcvzjBREfCGVw==
+X-Google-Smtp-Source: APXvYqwmvwWHGvypE/OcPxIOvNOsboOsJx8yQtKE+WMD3B1aEcSgE8sirRO4jcp62+tgDg3VjDVnaACWJ1dbGLlT+EY=
+X-Received: by 2002:a19:f60f:: with SMTP id x15mr351461lfe.61.1558711341073;
+ Fri, 24 May 2019 08:22:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <907a9681-cd1d-3326-e3dd-5f6965497720@arm.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Fri, 24 May 2019 15:20:56 +0000 (UTC)
+References: <1557474183-19719-1-git-send-email-alexandre.torgue@st.com>
+ <CACRpkdZ4P=PSCu86p48nBPeVk-h5T0Ytc1CYV3XZGd4fLuJLGw@mail.gmail.com> <ae00fd9c-d25e-c401-4d21-d526a63538f2@st.com>
+In-Reply-To: <ae00fd9c-d25e-c401-4d21-d526a63538f2@st.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 24 May 2019 17:22:09 +0200
+Message-ID: <CACRpkdbJKAGyeBU1tX77-wSYzGXDBqRYR1gQyzOZ_XT4RGFbsw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: stm32: add lock mechanism for irqmux selection
+To:     Alexandre Torgue <alexandre.torgue@st.com>
+Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Lina Iyer <ilina@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 10:29:39AM +0100, Ard Biesheuvel wrote:
-> 
-> 
-> On 5/23/19 10:18 AM, Will Deacon wrote:
-> > On Thu, May 23, 2019 at 09:41:40AM +0100, Ard Biesheuvel wrote:
-> > > 
-> > > 
-> > > On 5/22/19 5:28 PM, Ard Biesheuvel wrote:
-> > > > 
-> > > > 
-> > > > On 5/22/19 4:02 PM, Ard Biesheuvel wrote:
-> > > > > The following commit
-> > > > > 
-> > > > >     7290d5809571 ("module: use relative references for __ksymtab entries")
-> > > > > 
-> > > > > updated the ksymtab handling of some KASLR capable architectures
-> > > > > so that ksymtab entries are emitted as pairs of 32-bit relative
-> > > > > references. This reduces the size of the entries, but more
-> > > > > importantly, it gets rid of statically assigned absolute
-> > > > > addresses, which require fixing up at boot time if the kernel
-> > > > > is self relocating (which takes a 24 byte RELA entry for each
-> > > > > member of the ksymtab struct).
-> > > > > 
-> > > > > Since ksymtab entries are always part of the same module as the
-> > > > > symbol they export (or of the core kernel), it was assumed at the
-> > > > > time that a 32-bit relative reference is always sufficient to
-> > > > > capture the offset between a ksymtab entry and its target symbol.
-> > > > > 
-> > > > > Unfortunately, this is not always true: in the case of per-CPU
-> > > > > variables, a per-CPU variable's base address (which usually differs
-> > > > > from the actual address of any of its per-CPU copies) could be at
-> > > > > an arbitrary offset from the ksymtab entry, and so it may be out
-> > > > > of range for a 32-bit relative reference.
-> > > > > 
-> > > 
-> > > (Apologies for the 3-act monologue)
-> > 
-> > Exposition, development and recapitulation ;)
-> > 
-> > > This turns out to be incorrect. The symbol address of per-CPU variables
-> > > exported by modules is always in the vicinity of __per_cpu_start, and so it
-> > > is simply a matter of making sure that the core kernel is in range for
-> > > module ksymtab entries containing 32-bit relative references.
-> > > 
-> > > When running the arm64 with kaslr enabled, we currently randomize the module
-> > > space based on the range of ADRP/ADD instruction pairs, which have a -/+ 4
-> > > GB range rather than the -/+ 2 GB range of 32-bit place relative data
-> > > relocations. So we can fix this by simply reducing the randomization window
-> > > to 2 GB.
-> > 
-> > Makes sense. Do you see the need for an option to disable PREL relocs
-> > altogether in case somebody wants the additional randomization range?
-> > 
-> 
-> No, not really. To be honest, I don't think
-> CONFIG_RANDOMIZE_MODULE_REGION_FULL is that useful to begin with, and the
-> only reason we enabled it by default at the time was to ensure that the PLT
-> code got some coverage after we introduced it.
+On Fri, May 24, 2019 at 2:27 PM Alexandre Torgue
+<alexandre.torgue@st.com> wrote:
+> On 5/24/19 1:26 PM, Linus Walleij wrote:
 
-In code, percpu variables are accessed with absolute relocations, right?
-Before I read your 3rd act, I was wondering if it would make sense to do
-the same with the ksymtab relocations.
+> > Patch applied, can't say I fully understand it but you know what
+> > you're doing!
+>
+> Thanks :). Do you need a better explanation ?
 
-Like if we somehow [ insert much hand waving ] ensured that everybody
-uses EXPORT_PER_CPU_SYMBOL() for percpu symbols instead of just
-EXPORT_SYMBOL() then we could use a different macro to create the
-ksymtab relocations for percpu variables, such that they use absolute
-relocations.
+What I need to understand for hierarchical interrupt controllers
+on GPIO is what I can pull into the gpio library. I am working
+to extract some code from drivers/gpio/gpio-ixp4xx.c
+to make generic simple hierarchical domain support available,
+and Lina is working on generalizing some stuff.
 
-Just an idea.  Maybe the point is moot now.
+But these complex domain operations in the STM32 seem
+to be some special beast.
 
--- 
-Josh
+Yours,
+Linus Walleij
