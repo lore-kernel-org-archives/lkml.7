@@ -2,107 +2,99 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB81C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2420BC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 034AD20675
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:11:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lk+FkbhR"
+	by mail.kernel.org (Postfix) with ESMTP id EB4302133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:11:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390717AbfEXQLO (ORCPT
+        id S2390726AbfEXQLW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 12:11:14 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34469 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389588AbfEXQLN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 12:11:13 -0400
-Received: by mail-wr1-f68.google.com with SMTP id f8so10606130wrt.1
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 09:11:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=160Paj/lPd85OhWaT9/sgowVap7gjQwewiJrcI6C66g=;
-        b=lk+FkbhRsiiJcxv7AuvF/7Y4Tc52DnfanHK1otTXas1dYfl3+p/ptCtdtjBOSlhVZz
-         YX69WRAUtegfu8+r0Nhuy3nejp2BHm1Jf4vQb6ojgJlnKC6q4SPhmyufkIZvDzUJvlih
-         Ho7LzU72dYGBKdqgw+940s8TtQ+uL0masHxsv4DIg7EHkxAbEupRwDZwBq98pARrDzzT
-         Z6OXWh66ZgaqIzn/jdLMCFIy16pHvzHRrqEN8xQRHdJfQF/CQknRMusHZROekge6bn0F
-         hA2dFo4ZGrFKESto0+FB/Qz8yCFEL/aRRMRbilU8A1TPwSZBr55SFZUd1d0aKFtXRjoC
-         Ea8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=160Paj/lPd85OhWaT9/sgowVap7gjQwewiJrcI6C66g=;
-        b=oztsKpDhgUJw6eeSAaI1klyHuI6LL0x7u6qMGsnYpRqKmMSj14heBfb4BViYsqJX87
-         /WHRCM1IKe4JLrpSwuO2wy69hLGQlNNmza6UKNFgxi7uj939a7rwvuxcXiynyE+D7I5n
-         KNwi8hzHDG76mkkRAaNCkC7a9fVci6c+D6mYHYaJPOyAzsJ1wHTJeoM27REgbCFahPPF
-         zfcaOeNIzUFvyAeTAVyKeIcEJ6bN2RXGuX54GMFSnGh4iXFdid+lKtX7hfDDnpDPwXHZ
-         sIxYew/UoyFKtlYTb2SXWmc3zgFOztGoAEsNcKNgPdHfD1Ac3QvwMcoPQhF9+pA+0hJz
-         VNTQ==
-X-Gm-Message-State: APjAAAVaMGdGhvloeskmRBnBW2o9TrXrkNqy+Nj74zUg/MEVCghX2TNQ
-        pPsqMOiEC18dZ/XwHa8qgTy+dVwq0GU=
-X-Google-Smtp-Source: APXvYqzs2u6rAJfXZbk10Kqnnamqi5R+5n2+xBl9RWq3t38cho2YlS8DqJ7n1xgJ3s7oMk0OoMKbSw==
-X-Received: by 2002:a05:6000:41:: with SMTP id k1mr33234918wrx.332.1558714271901;
-        Fri, 24 May 2019 09:11:11 -0700 (PDT)
-Received: from [192.168.0.41] (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
-        by smtp.googlemail.com with ESMTPSA id z202sm5249302wmc.18.2019.05.24.09.11.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 09:11:11 -0700 (PDT)
-Subject: Re: [PATCH V2 4/9] genirq/timings: Use the min kernel macro
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org
-References: <20190524111615.4891-1-daniel.lezcano@linaro.org>
- <20190524111615.4891-5-daniel.lezcano@linaro.org>
- <20190524135742.GX9224@smile.fi.intel.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <7e0d0246-2559-b749-f741-521d7cab69f5@linaro.org>
-Date:   Fri, 24 May 2019 18:11:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 24 May 2019 12:11:22 -0400
+Received: from mga11.intel.com ([192.55.52.93]:45178 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389588AbfEXQLV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 12:11:21 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 May 2019 09:11:21 -0700
+X-ExtLoop1: 1
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by orsmga005.jf.intel.com with ESMTP; 24 May 2019 09:11:19 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hUCmt-0005WZ-2E; Fri, 24 May 2019 19:11:19 +0300
+Date:   Fri, 24 May 2019 19:11:19 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>
+Subject: [GIT PULL] platform-drivers-x86 for 5.2-2
+Message-ID: <20190524161119.GA21220@smile.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190524135742.GX9224@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/05/2019 15:57, Andy Shevchenko wrote:
-> On Fri, May 24, 2019 at 01:16:10PM +0200, Daniel Lezcano wrote:
->> The' min' is available as a kernel macro. Use it instead of writing
->> the same code.
-> 
-> While it's technically correct...
-> 
->>  	/*
->>  	 * 'count' will depends if the circular buffer wrapped or not
->>  	 */
->> -	count = irqs->count < IRQ_TIMINGS_SIZE ?
->> -		irqs->count : IRQ_TIMINGS_SIZE;
->> +	count = min_t(int, irqs->count,  IRQ_TIMINGS_SIZE);
->>  
->>  	start = irqs->count < IRQ_TIMINGS_SIZE ?
->>  		0 : (irqs->count & IRQ_TIMINGS_MASK);
-> 
-> ...looking to the context I would leave as is to have a pattern.
+Hi Linus,
 
-Yes, you are right. I'll drop this patch.
+Fixes for v5.2-rc2. This batch is sent now due to dependencies which are landed
+in v5.2-rc1.
 
+Thanks,
+
+With Best Regards,
+Andy Shevchenko
+
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+
+  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+
+are available in the Git repository at:
+
+  git://git.infradead.org/linux-platform-drivers-x86.git tags/platform-drivers-x86-v5.2-2
+
+for you to fetch changes up to d6423bd03031c020121da26c41a26bd5cc6d0da3:
+
+  platform/x86: pmc_atom: Add several Beckhoff Automation boards to critclk_systems DMI table (2019-05-20 17:26:40 +0300)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v5.2-2
+
+Some of Intel Cherrytrail based platforms depend on PMC clock to be always on.
+Here couple of quirks to the driver to support affected hardware.
+
+The following is an automated git shortlog grouped by driver:
+
+pmc_atom:
+ -  Add several Beckhoff Automation boards to critclk_systems DMI table
+ -  Add Lex 3I380D industrial PC to critclk_systems DMI table
+
+----------------------------------------------------------------
+Hans de Goede (1):
+      platform/x86: pmc_atom: Add Lex 3I380D industrial PC to critclk_systems DMI table
+
+Steffen Dirkwinkel (1):
+      platform/x86: pmc_atom: Add several Beckhoff Automation boards to critclk_systems DMI table
+
+ drivers/platform/x86/pmc_atom.c | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+With Best Regards,
+Andy Shevchenko
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
 
