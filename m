@@ -2,177 +2,152 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC6EC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A70C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16EA2217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:46:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 028A4217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:50:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="liOkQIXL"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Kbigf6+x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391421AbfEXSqO (ORCPT
+        id S2391644AbfEXSuz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 14:46:14 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:38021 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727465AbfEXSqN (ORCPT
+        Fri, 24 May 2019 14:50:55 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44353 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728920AbfEXSuy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 14:46:13 -0400
-Received: by mail-qk1-f195.google.com with SMTP id p26so6436990qkj.5
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 11:46:12 -0700 (PDT)
+        Fri, 24 May 2019 14:50:54 -0400
+Received: by mail-lj1-f196.google.com with SMTP id e13so9514384ljl.11
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 11:50:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=IoB71L3djsCZ7bHbX+R8KL8dGOgZjjWcP/e3MrnOUac=;
-        b=liOkQIXL+nQ7v498p/4REooeG3rRjamBvyOSfvJWj9qRhCPy8LVsptkVgC4BAegbBG
-         mpYJjrMyV6eC+uHVLWus84tfvXPzBBl37PV30A5UN4op2w6fAAO57g5OXWO8x1qTqIGW
-         FI0KVN7nnXy7jtQuRo4yrfxEY44d/JDePJdB6F/WkCNjbzPtLMAaP5vV86/LS93z7fBC
-         SmOrXJoHTCfKdppoW4ARHSVsVpD11ZTpgkNqS6zrlIOQ4vuecRCYc7o/rYSHJ0xLu6bm
-         q2HkVgCLLSf8cMX71tWF4TBiyhcxcsyOzT5ATT/ElK6Cyq3BTPdxb4eY0Qk5ijMOiQj7
-         UfIA==
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QOpX777PdKYx2FzNZIOtxcAjmxm00VhvM8DiVIi+gic=;
+        b=Kbigf6+x+ocH2AyNwOQs10+zTlWsKMDO9/R3dOcVtJEsfBiTdREjTIWj0JV6CHVW+P
+         0bdYxs0w5RFKDgoUO42v7CMvChE8nv/xYh1q2Pwve6NgLoq5FqSTUgD1HUm1NblF3zzo
+         BjoFzOiEbYKqPd3c1BR5RbEaQi/NryGeokfcK84JXj1XAGhH9MoyYskyhgnH8RaQ5CLj
+         WR79xxBWypA2Q46vSqio9b+1968KuT6l05TTPXDmyXuLIWiHRatJxbPHbSsn6J0rCafx
+         di0JDLlRn6HJQZ0l2MVpuMDllwCLWJhHUj1Dq8BE8n0Ik7OugIwaEmocHbbgpECtINYi
+         FFiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IoB71L3djsCZ7bHbX+R8KL8dGOgZjjWcP/e3MrnOUac=;
-        b=MSWedzx/cC4K/CxuVdQKzu8z91ElGvtCjtQyHJTnKggbEXcIXMH/vHp/QrKxsF8n6K
-         VlLmASMkFjMDSUfiCfuodFqApkiWZvXP+hE6YtvBUzjBzxNf7UkgBZ7NCaZPVLR4IZxs
-         7S9FS9iNx4tui8OplD3VQZzLLs2vIXKpwRu9zearf4N9BJWtWFQN77edv8dEXtf9EQye
-         hy+L9yA7EoBuv90Z0NhvwVHo3V9YOJFN1kcHAmTmnjvLe9MefnkX/nhORYDINJ8lae4V
-         brvHN0LETpEacoLC+myz5zfaLwUhd0DVvRHBbugQaHdC3Ps512E5uj3NftU+BdoFyoAs
-         LNbg==
-X-Gm-Message-State: APjAAAXTExkuseiALiFXAeBmyI237jAOWNc1p4SPw4p2qG8K1wJVDzcU
-        tSBzO6gb0nbt34rQZDlKzDEDZm3T
-X-Google-Smtp-Source: APXvYqyQSbU8rR4+eC5QmKGq7a0bRumySciVNN4C7VIiFTYsBl5FFmNFcRUxnpS29FchhY2jN+vaYQ==
-X-Received: by 2002:a0c:d2b0:: with SMTP id q45mr76886415qvh.185.1558723572357;
-        Fri, 24 May 2019 11:46:12 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([190.15.121.82])
-        by smtp.gmail.com with ESMTPSA id i37sm1546901qtb.31.2019.05.24.11.46.10
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 24 May 2019 11:46:11 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 585AF41149; Fri, 24 May 2019 15:46:07 -0300 (-03)
-Date:   Fri, 24 May 2019 15:46:07 -0300
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Stanislav Fomichev <sdf@fomichev.me>,
-        Song Liu <songliubraving@fb.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH 05/12] perf tools: Read also the end of the kernel
-Message-ID: <20190524184607.GG17479@kernel.org>
-References: <20190508132010.14512-1-jolsa@kernel.org>
- <20190508132010.14512-6-jolsa@kernel.org>
- <20190524181506.GE17479@kernel.org>
- <20190524181717.GF17479@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QOpX777PdKYx2FzNZIOtxcAjmxm00VhvM8DiVIi+gic=;
+        b=SzVwGq7cDHCzF7oSj8heFjHs2DXr0ek3b4ytayCOBvstRv3Mq6cI0WBl/CppPGLlJU
+         p9/NqTHuCvvvuOfCPKw/nM8Sf2zo/ieFHNUYn1JWIwSOsKSycBMRKIzSXhNqx0ES2K4Y
+         umpjGCCeQOX0pQGkytSRJZR5Wdh8RFMcOS09KGKP5shOfvXGq9lzvMP6slGwNjRuNhSV
+         eRwX4wrNGz1ru+Yk3Cdy7FpGvYUrvi/ecMUOAihBQGzizLaVqFC2WRPPDsOlqbnrFpvv
+         OgKOfivzZrEKmS2Fi6gofggmfbwWwtIpOAAPWLL1wIZnsVGdUR1gPq8ZWAU9nffPPpF8
+         aUuw==
+X-Gm-Message-State: APjAAAWNR85slR1EqOLNfvNfgLY3owG+PozAsPA9CI0pnHiyi3CmhZil
+        Db+/3HiTBjz5leNLy2k42gSO9GYWyLOZufYsB91fow==
+X-Google-Smtp-Source: APXvYqz/OD3h7LRiuXDBvHSt/uffjWkPCJB8DeQ107a3CO6oNwjqh3hQPyFQHG0JlC8k7s8e1Xhc+GQxDqy1yZ0LoCQ=
+X-Received: by 2002:a2e:8587:: with SMTP id b7mr42887354lji.101.1558723852754;
+ Fri, 24 May 2019 11:50:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190524181717.GF17479@kernel.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <1558648540-14239-1-git-send-email-alan.mikhak@sifive.com>
+ <CABEDWGzHkt4p_byEihOAs9g97t450h9-Z0Qu2b2-O1pxCNPX+A@mail.gmail.com> <baa68439-f703-a453-34a2-24387bb9112d@ti.com>
+In-Reply-To: <baa68439-f703-a453-34a2-24387bb9112d@ti.com>
+From:   Alan Mikhak <alan.mikhak@sifive.com>
+Date:   Fri, 24 May 2019 11:50:41 -0700
+Message-ID: <CABEDWGyJpfX=DzBgXAGwu29rEwmY3s_P9QPC0eJOJ3KBysRWtA@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI: endpoint: Skip odd BAR when skipping 64bit BAR
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lorenzo.pieralisi@arm.com, linux-riscv@lists.infradead.org,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        gustavo.pimentel@synopsys.com, wen.yang99@zte.com.cn, kjlu@umn.edu
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, May 24, 2019 at 03:17:17PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Fri, May 24, 2019 at 03:15:06PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Wed, May 08, 2019 at 03:20:03PM +0200, Jiri Olsa escreveu:
-> > > We mark the end of kernel based on the first module,
-> > > but that could cover some bpf program maps. Reading
-> > > _etext symbol if it's present to get precise kernel
-> > > map end.
-> > 
-> > Investigating... Have you run 'perf test' before hitting the send
-> > button? :-)
-> 
-> <SNIP>
-> 
-> > [root@quaco c]# perf test -v 1
-> >  1: vmlinux symtab matches kallsyms                       :
-> <SNIP>
-> > --- start ---
-> > ERR : 0xffffffff8cc00e41: __indirect_thunk_end not on kallsyms
-> <SNIP>
-> > test child finished with -1
-> > ---- end ----
-> > vmlinux symtab matches kallsyms: FAILED!
-> > [root@quaco c]#
-> 
-> So...
-> 
-> [root@quaco c]# grep __indirect_thunk_end /proc/kallsyms
-> ffffffff8cc00e41 T __indirect_thunk_end
-> [root@quaco c]# grep -w _etext /proc/kallsyms
-> ffffffff8cc00e41 T _etext
-> [root@quaco c]#
-> 
-> [root@quaco c]# grep -w ffffffff8cc00e41 /proc/kallsyms
-> ffffffff8cc00e41 T _etext
-> ffffffff8cc00e41 T __indirect_thunk_end
-> [root@quaco c]#
-> 
-> Lemme try to fix this.
+Hi Kishon,
 
-So, I got this right before your patch:
+Yes. This change is still applicable even when the platform specifies
+that it only supports 64-bit BARs by setting the bar_fixed_64bit
+member of epc_features.
 
-commit 1d1c54c5bbf55256e691bedb47b0d14745043e80
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-Date:   Fri May 24 15:39:00 2019 -0300
+The issue being fixed is this: If the 'continue' statement is executed
+within the loop, the loop index 'bar' needs to advanced by two, not
+one, when the BAR is 64-bit. Otherwise the next loop iteration will be
+on an odd BAR which doesn't exist.
 
-    perf test vmlinux-kallsyms: Ignore aliases to _etext when searching on kallsyms
-    
-    No need to search for aliases for the symbol that marks the end of the
-    kernel text segment, the following patch will make such symbols not to
-    be found when searching in the kallsyms maps causing this test to fail.
-    
-    So as a prep patch to avoid breaking bisection, ignore such symbols.
-    
-    Cc: Adrian Hunter <adrian.hunter@intel.com>
-    Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-    Cc: Andi Kleen <ak@linux.intel.com>
-    Cc: Jiri Olsa <jolsa@kernel.org>
-    Cc: Namhyung Kim <namhyung@kernel.org>
-    Cc: Peter Zijlstra <peterz@infradead.org>
-    Cc: Song Liu <songliubraving@fb.com>
-    Cc: Stanislav Fomichev <sdf@google.com>
-    Cc: Thomas Richter <tmricht@linux.ibm.com>
-    Link: https://lkml.kernel.org/n/tip-qfwuih8cvmk9doh7k5k244eq@git.kernel.org
-    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+The PCI_BASE_ADDRESS_MEM_TYPE_64 flag in epf_bar->flag reflects the
+value set by the platform in the bar_fixed_64bit member of
+epc_features.
 
-diff --git a/tools/perf/tests/vmlinux-kallsyms.c b/tools/perf/tests/vmlinux-kallsyms.c
-index 7691980b7df1..f101576d1c72 100644
---- a/tools/perf/tests/vmlinux-kallsyms.c
-+++ b/tools/perf/tests/vmlinux-kallsyms.c
-@@ -161,9 +161,16 @@ int test__vmlinux_matches_kallsyms(struct test *test __maybe_unused, int subtest
- 
- 				continue;
- 			}
--		} else
-+		} else if (mem_start == kallsyms.vmlinux_map->end) {
-+			/*
-+			 * Ignore aliases to _etext, i.e. to the end of the kernel text area,
-+			 * such as __indirect_thunk_end.
-+			 */
-+			continue;
-+		} else {
- 			pr_debug("ERR : %#" PRIx64 ": %s not on kallsyms\n",
- 				 mem_start, sym->name);
-+		}
- 
- 		err = -1;
- 	}
+This patch moves the checking of  PCI_BASE_ADDRESS_MEM_TYPE_64 in
+epf_bar->flags to before the 'continue' statement to advance the 'bar'
+loop index accordingly. The comment you see about 'pci_epc_set_bar()'
+preceding the moved code is the original comment and was also moved
+along with the code.
+
+Regards,
+Alan Mikhak
+
+On Fri, May 24, 2019 at 1:51 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>
+> Hi,
+>
+> On 24/05/19 5:25 AM, Alan Mikhak wrote:
+> > +Bjorn Helgaas, +Gustavo Pimentel, +Wen Yang, +Kangjie Lu
+> >
+> > On Thu, May 23, 2019 at 2:55 PM Alan Mikhak <alan.mikhak@sifive.com> wrote:
+> >>
+> >> Always skip odd bar when skipping 64bit BARs in pci_epf_test_set_bar()
+> >> and pci_epf_test_alloc_space().
+> >>
+> >> Otherwise, pci_epf_test_set_bar() will call pci_epc_set_bar() on odd loop
+> >> index when skipping reserved 64bit BAR. Moreover, pci_epf_test_alloc_space()
+> >> will call pci_epf_alloc_space() on bind for odd loop index when BAR is 64bit
+> >> but leaks on subsequent unbind by not calling pci_epf_free_space().
+> >>
+> >> Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+> >> Reviewed-by: Paul Walmsley <paul.walmsley@sifive.com>
+> >> ---
+> >>  drivers/pci/endpoint/functions/pci-epf-test.c | 25 ++++++++++++-------------
+> >>  1 file changed, 12 insertions(+), 13 deletions(-)
+> >>
+> >> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> >> index 27806987e93b..96156a537922 100644
+> >> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> >> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> >> @@ -389,7 +389,7 @@ static void pci_epf_test_unbind(struct pci_epf *epf)
+> >>
+> >>  static int pci_epf_test_set_bar(struct pci_epf *epf)
+> >>  {
+> >> -       int bar;
+> >> +       int bar, add;
+> >>         int ret;
+> >>         struct pci_epf_bar *epf_bar;
+> >>         struct pci_epc *epc = epf->epc;
+> >> @@ -400,8 +400,14 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
+> >>
+> >>         epc_features = epf_test->epc_features;
+> >>
+> >> -       for (bar = BAR_0; bar <= BAR_5; bar++) {
+> >> +       for (bar = BAR_0; bar <= BAR_5; bar += add) {
+> >>                 epf_bar = &epf->bar[bar];
+> >> +               /*
+> >> +                * pci_epc_set_bar() sets PCI_BASE_ADDRESS_MEM_TYPE_64
+> >> +                * if the specific implementation required a 64-bit BAR,
+> >> +                * even if we only requested a 32-bit BAR.
+> >> +                */
+>
+> set_bar shouldn't set PCI_BASE_ADDRESS_MEM_TYPE_64. If a platform supports only
+> 64-bit BAR, that should be specified in epc_features bar_fixed_64bit member.
+>
+> Thanks
+> Kishon
