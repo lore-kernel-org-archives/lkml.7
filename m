@@ -2,143 +2,293 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F8DC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58796C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08E422177E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:59:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RW35XySV"
+	by mail.kernel.org (Postfix) with ESMTP id ED10F217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:59:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388138AbfEXC7d (ORCPT
+        id S2388459AbfEXC7r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 22:59:33 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:43966 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387485AbfEXC7c (ORCPT
+        Thu, 23 May 2019 22:59:47 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:35605 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387408AbfEXC7r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 22:59:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=3ReDohYM/VMtr1ygEVpafs5ADrPqoTmnqqTt7tUizZ4=; b=RW35XySVF4hvxpb9dr376bXusL
-        ySj1jxNLHAaTvwzjVtxXr0qSApXWjsWEJ1y3IkQnpe4Bfywf2OUiaOeges9y3rTbFn2b2Pnjdc9Q3
-        XEtQoGyF5638qdkRRJ+rDkap42NykEh7AAb6ucWC25g/SMr7SKseUJclLffDq30q/kn5HKkrt3QpS
-        9jCPfOKqopqcP9TaBKm00uJMD02uJCVUS4GV6wzo8hPvVyW1TLxxLYYcuBJAbxbHLlDd5DRzCX/OU
-        jnDF4AGT0mexUPyIqFhrm0q88oBoYE79ol6XZwN5osX8okOL8cw53pwT7kiKF0YVPC9u2JlCaQGWP
-        Yl66VaBg==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hU0QV-0002dg-L1; Fri, 24 May 2019 02:59:23 +0000
-Subject: Re: [alsa-devel] [PATCH] ASoc: fix
- sound/soc/intel/skylake/slk-ssp-clk.c build error on IA64
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        moderated for non-subscribers <alsa-devel@alsa-project.org>
-Cc:     Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        kbuild test robot <lkp@intel.com>
-References: <9019c87f-cf1a-b59f-d87e-8169b247cf88@infradead.org>
- <6b89e370-90e3-6962-c71a-80919b7c6154@linux.intel.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <4cedd724-7c2e-10c2-a328-61f7af3ab9ed@infradead.org>
-Date:   Thu, 23 May 2019 19:59:19 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 23 May 2019 22:59:47 -0400
+Received: from mail-oi1-f200.google.com ([209.85.167.200])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <dann.frazier@canonical.com>)
+        id 1hU0Qq-0003q2-6p
+        for linux-kernel@vger.kernel.org; Fri, 24 May 2019 02:59:44 +0000
+Received: by mail-oi1-f200.google.com with SMTP id a196so3139293oii.21
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 19:59:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OVTkfCXi8Qvdl5BtPJlX4LlWKBE6YTyiV+OTd3AKz3c=;
+        b=LYg96kS27druHY9HC9nUxjb7grQcv2MSASv7rropCkvxLVBV5L7iE5RfSo7k83tKPz
+         CBgMghgUPUeHysSh8UWWnRR/R+jLDeVeCXrrSFzQUu5W8sr5RC8nAO0euzbe/1Sx9Prj
+         J6UTpgwZiakFFSlN2XDFuT0ufj4VwVFa5xPt7KQP5aWeaeGZ1hQaAcD9XFoJu1GvvTvM
+         V5SwPGxPTMcHfYbBGG7uwlF25gp74OlmVT4i/3keWDzqa2PVSZtX4D0OBzoUYFK6qd0D
+         2aaJkD0zaPwIyECAantaOjkurJQ/vNY8qp8w+jz6OIe5TNTIuLQ9N1MVY9OmL+5keK5j
+         NhZA==
+X-Gm-Message-State: APjAAAW0uCEtR5Y/pn5v/vd2s06LoT82n+TP/4Tf/+b/NPJNSXC+u0R2
+        dzV/px2+mESWmSVC06yC4NRgJcC4brRFgkYz50Gby3ZuI8dO1BvRebahLllXNHyNQEBDlwWk5Au
+        y72B9hTxd0p7qrGtbcyrgAYBcfaqnfL8YNfhTjZI/ycSI3SioD7UihlHTDA==
+X-Received: by 2002:a9d:7c85:: with SMTP id q5mr23318121otn.31.1558666781897;
+        Thu, 23 May 2019 19:59:41 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxYCS/jIPuxtRQmoQl/5N5w/PRITbInIGx1pTjVVqdV4vaiAMsKDZGjjfDVIPuB372BRT8qS0RUcYiTUiZKg3Y=
+X-Received: by 2002:a9d:7c85:: with SMTP id q5mr23318098otn.31.1558666781507;
+ Thu, 23 May 2019 19:59:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <6b89e370-90e3-6962-c71a-80919b7c6154@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190506223334.1834-1-nicoleotsuka@gmail.com> <20190506223334.1834-2-nicoleotsuka@gmail.com>
+ <CALdTtnurdNe4+oJjSJfWw1ONf8-xvJ8KhonQkJNj+4LDZT7jAQ@mail.gmail.com>
+In-Reply-To: <CALdTtnurdNe4+oJjSJfWw1ONf8-xvJ8KhonQkJNj+4LDZT7jAQ@mail.gmail.com>
+From:   dann frazier <dann.frazier@canonical.com>
+Date:   Thu, 23 May 2019 20:59:30 -0600
+Message-ID: <CALdTtnuwRKkna_y5_5BdEYWNRbOQnLvtfz1PY-d4r78tj5hgVw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dma-contiguous: Abstract dma_{alloc, free}_contiguous()
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>, chris@zankel.net,
+        linux-xtensa@linux-xtensa.org, keescook@chromium.org,
+        sfr@canb.auug.org.au, tony@atomide.com,
+        Catalin Marinas <catalin.marinas@arm.com>, joro@8bytes.org,
+        Will Deacon <will.deacon@arm.com>, linux@armlinux.org.uk,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        jcmvbkbc@gmail.com, wsa+renesas@sang-engineering.com,
+        akpm@linux-foundation.org, treding@nvidia.com, dwmw2@infradead.org,
+        iamjoonsoo.kim@lge.com,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/23/19 4:28 AM, Pierre-Louis Bossart wrote:
-> 
-> 
-> On 5/22/19 10:58 PM, Randy Dunlap wrote:
->> From: Randy Dunlap <rdunlap@infradead.org>
->>
->> skl-ssp-clk.c does not build on IA64 because the driver
->> uses the common clock interface, so make the driver depend
->> on COMMON_CLK.
->>
->> Fixes this build error:
->> ../sound/soc/intel/skylake/skl-ssp-clk.c:26:16: error: field 'hw' has incomplete type
->>    struct clk_hw hw;
->>                  ^~
->>
->> Reported-by: kbuild test robot <lkp@intel.com>
->> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
->> Cc: Mark Brown <broonie@kernel.org>
->> Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
->> Cc: Liam Girdwood <liam.r.girdwood@linux.intel.com>
->> Cc: Jie Yang <yang.jie@linux.intel.com>
->> Cc: alsa-devel@alsa-project.org
->> ---
->>   sound/soc/intel/Kconfig        |    3 ++-
->>   sound/soc/intel/boards/Kconfig |    2 +-
->>   2 files changed, 3 insertions(+), 2 deletions(-)
->>
->> --- lnx-52-rc1.orig/sound/soc/intel/Kconfig
->> +++ lnx-52-rc1/sound/soc/intel/Kconfig
->> @@ -104,7 +104,7 @@ config SND_SST_ATOM_HIFI2_PLATFORM_ACPI
->>   config SND_SOC_INTEL_SKYLAKE
->>       tristate "All Skylake/SST Platforms"
->>       depends on PCI && ACPI
->> -    select SND_SOC_INTEL_SKL
->> +    select SND_SOC_INTEL_SKL if COMMON_CLK
-> 
-> Is this really necessary? The COMMON_CLK is only needed for the SND_SOC_INTEL_SKYLAKE_SSP_CLK option, isn't it?
+On Thu, May 23, 2019 at 7:52 PM dann frazier <dann.frazier@canonical.com> wrote:
+>
+> On Mon, May 6, 2019 at 4:35 PM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
+> >
+> > Both dma_alloc_from_contiguous() and dma_release_from_contiguous()
+> > are very simply implemented, but requiring callers to pass certain
+> > parameters like count and align, and taking a boolean parameter to
+> > check __GFP_NOWARN in the allocation flags. So every function call
+> > duplicates similar work:
+> >   /* A piece of example */
+> >   unsigned long order = get_order(size);
+> >   size_t count = size >> PAGE_SHIFT;
+> >   page = dma_alloc_from_contiguous(dev, count, order, gfp & __GFP_NOWARN);
+> >   [...]
+> >   dma_release_from_contiguous(dev, page, size >> PAGE_SHIFT);
+> >
+> > Additionally, as CMA can be used only in the context which permits
+> > sleeping, most of callers do a gfpflags_allow_blocking() check and
+> > a corresponding fallback allocation of normal pages upon any false
+> > result:
+> >   /* A piece of example */
+> >   if (gfpflags_allow_blocking(flag))
+> >       page = dma_alloc_from_contiguous();
+> >   if (!page)
+> >       page = alloc_pages();
+> >   [...]
+> >   if (!dma_release_from_contiguous(dev, page, count))
+> >       __free_pages(page, get_order(size));
+> >
+> > So this patch simplifies those function calls by abstracting these
+> > operations into the two new functions: dma_{alloc,free}_contiguous.
+> >
+> > As some callers of dma_{alloc,release}_from_contiguous() might be
+> > complicated, this patch just implements these two new functions to
+> > kernel/dma/direct.c only as an initial step.
+> >
+> > Suggested-by: Christoph Hellwig <hch@lst.de>
+> > Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+> > ---
+> > Changelog
+> > v1->v2:
+> >  * Added new functions beside the old ones so we can replace callers
+> >    one by one later.
+> >  * Applied new functions to dma/direct.c only, because it's the best
+> >    example caller to apply and should be safe with the new functions.
+> >
+> >  include/linux/dma-contiguous.h | 10 +++++++
+> >  kernel/dma/contiguous.c        | 48 ++++++++++++++++++++++++++++++++++
+> >  kernel/dma/direct.c            | 24 +++--------------
+> >  3 files changed, 62 insertions(+), 20 deletions(-)
+> >
+> > diff --git a/include/linux/dma-contiguous.h b/include/linux/dma-contiguous.h
+> > index f247e8aa5e3d..dacbdcb91a89 100644
+> > --- a/include/linux/dma-contiguous.h
+> > +++ b/include/linux/dma-contiguous.h
+> > @@ -115,6 +115,8 @@ struct page *dma_alloc_from_contiguous(struct device *dev, size_t count,
+> >                                        unsigned int order, bool no_warn);
+> >  bool dma_release_from_contiguous(struct device *dev, struct page *pages,
+> >                                  int count);
+> > +struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp);
+> > +void dma_free_contiguous(struct device *dev, struct page *page, size_t size);
+> >
+> >  #else
+> >
+> > @@ -157,6 +159,14 @@ bool dma_release_from_contiguous(struct device *dev, struct page *pages,
+> >         return false;
+> >  }
+> >
+> > +struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
+> > +{
+> > +       return NULL;
+> > +}
+> > +
+> > +static inline
+> > +void dma_free_contiguous(struct device *dev, struct page *page, size_t size) { }
+> > +
+> >  #endif
+> >
+> >  #endif
+> > diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
+> > index b2a87905846d..21f39a6cb04f 100644
+> > --- a/kernel/dma/contiguous.c
+> > +++ b/kernel/dma/contiguous.c
+> > @@ -214,6 +214,54 @@ bool dma_release_from_contiguous(struct device *dev, struct page *pages,
+> >         return cma_release(dev_get_cma_area(dev), pages, count);
+> >  }
+>
+> This breaks the build for me if CONFIG_DMA_CMA=n:
+>
+>   LD [M]  fs/9p/9p.o
+> ld: fs/9p/vfs_inode.o: in function `dma_alloc_contiguous':
+> vfs_inode.c:(.text+0xa60): multiple definition of
+> `dma_alloc_contiguous'; fs/9p/vfs_super.o:vfs_super.c:(.text+0x500):
+> first defined here
+>
+> Do the following insertions need to be under an #ifdef CONFIG_DMA_CMA ?
 
-It prevents this Kconfig warning:
+Ah, no - the problem is actually a missing "static inline" in the
+!CONFIG_DMA_CMA version of dma_alloc_contiguous().
 
-WARNING: unmet direct dependencies detected for SND_SOC_INTEL_SKL
-  Depends on [n]: SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_SOC_INTEL_SST_TOPLEVEL [=y] && PCI [=y] && ACPI [=y] && COMMON_CLK [=n]
-  Selected by [y]:
-  - SND_SOC_INTEL_SKYLAKE [=y] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_SOC_INTEL_SST_TOPLEVEL [=y] && PCI [=y] && ACPI [=y]
+  -dann
 
-
->>       select SND_SOC_INTEL_APL
->>       select SND_SOC_INTEL_KBL
->>       select SND_SOC_INTEL_GLK
->> @@ -120,6 +120,7 @@ config SND_SOC_INTEL_SKYLAKE
->>   config SND_SOC_INTEL_SKL
->>       tristate "Skylake Platforms"
->>       depends on PCI && ACPI
->> +    depends on COMMON_CLK
->>       select SND_SOC_INTEL_SKYLAKE_FAMILY
->>       help
->>         If you have a Intel Skylake platform with the DSP enabled
->> --- lnx-52-rc1.orig/sound/soc/intel/boards/Kconfig
->> +++ lnx-52-rc1/sound/soc/intel/boards/Kconfig
->> @@ -286,7 +286,7 @@ config SND_SOC_INTEL_KBL_RT5663_MAX98927
->>       select SND_SOC_MAX98927
->>       select SND_SOC_DMIC
->>       select SND_SOC_HDAC_HDMI
->> -    select SND_SOC_INTEL_SKYLAKE_SSP_CLK
->> +    select SND_SOC_INTEL_SKYLAKE_SSP_CLK if COMMON_CLK
-> 
-> and here I would make it a depend. I guess your solution solves the compilation but doesn't fully represent the fact that this machine driver is not functional without COMMON_CLK+SKYLAKE_SSP_CLK.
-
-Not functional on ia64 anyway.  :)
-
-> 
->>       help
->>         This adds support for ASoC Onboard Codec I2S machine driver. This will
->>         create an alsa sound card for RT5663 + MAX98927.
-
-
-Thanks.
--- 
-~Randy
+> > +/**
+> > + * dma_alloc_contiguous() - allocate contiguous pages
+> > + * @dev:   Pointer to device for which the allocation is performed.
+> > + * @size:  Requested allocation size.
+> > + * @gfp:   Allocation flags.
+> > + *
+> > + * This function allocates contiguous memory buffer for specified device. It
+> > + * first tries to use device specific contiguous memory area if available or
+> > + * the default global one, then tries a fallback allocation of normal pages.
+> > + */
+> > +struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
+> > +{
+> > +       int node = dev ? dev_to_node(dev) : NUMA_NO_NODE;
+> > +       size_t count = PAGE_ALIGN(size) >> PAGE_SHIFT;
+> > +       size_t align = get_order(PAGE_ALIGN(size));
+> > +       struct cma *cma = dev_get_cma_area(dev);
+> > +       struct page *page = NULL;
+> > +
+> > +       /* CMA can be used only in the context which permits sleeping */
+> > +       if (cma && gfpflags_allow_blocking(gfp)) {
+> > +               align = min_t(size_t, align, CONFIG_CMA_ALIGNMENT);
+> > +               page = cma_alloc(cma, count, align, gfp & __GFP_NOWARN);
+> > +       }
+> > +
+> > +       /* Fallback allocation of normal pages */
+> > +       if (!page)
+> > +               page = alloc_pages_node(node, gfp, align);
+> > +
+> > +       return page;
+> > +}
+> > +
+> > +/**
+> > + * dma_free_contiguous() - release allocated pages
+> > + * @dev:   Pointer to device for which the pages were allocated.
+> > + * @page:  Pointer to the allocated pages.
+> > + * @size:  Size of allocated pages.
+> > + *
+> > + * This function releases memory allocated by dma_alloc_contiguous(). As the
+> > + * cma_release returns false when provided pages do not belong to contiguous
+> > + * area and true otherwise, this function then does a fallback __free_pages()
+> > + * upon a false-return.
+> > + */
+> > +void dma_free_contiguous(struct device *dev, struct page *page, size_t size)
+> > +{
+> > +       if (!cma_release(dev_get_cma_area(dev), page, size >> PAGE_SHIFT))
+> > +               __free_pages(page, get_order(size));
+> > +}
+> > +
+> >  /*
+> >   * Support for reserved memory regions defined in device tree
+> >   */
+> > diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+> > index 2c2772e9702a..0816c1e8b05a 100644
+> > --- a/kernel/dma/direct.c
+> > +++ b/kernel/dma/direct.c
+> > @@ -96,8 +96,6 @@ static bool dma_coherent_ok(struct device *dev, phys_addr_t phys, size_t size)
+> >  struct page *__dma_direct_alloc_pages(struct device *dev, size_t size,
+> >                 dma_addr_t *dma_handle, gfp_t gfp, unsigned long attrs)
+> >  {
+> > -       unsigned int count = PAGE_ALIGN(size) >> PAGE_SHIFT;
+> > -       int page_order = get_order(size);
+> >         struct page *page = NULL;
+> >         u64 phys_mask;
+> >
+> > @@ -109,20 +107,9 @@ struct page *__dma_direct_alloc_pages(struct device *dev, size_t size,
+> >         gfp |= __dma_direct_optimal_gfp_mask(dev, dev->coherent_dma_mask,
+> >                         &phys_mask);
+> >  again:
+> > -       /* CMA can be used only in the context which permits sleeping */
+> > -       if (gfpflags_allow_blocking(gfp)) {
+> > -               page = dma_alloc_from_contiguous(dev, count, page_order,
+> > -                                                gfp & __GFP_NOWARN);
+> > -               if (page && !dma_coherent_ok(dev, page_to_phys(page), size)) {
+> > -                       dma_release_from_contiguous(dev, page, count);
+> > -                       page = NULL;
+> > -               }
+> > -       }
+> > -       if (!page)
+> > -               page = alloc_pages_node(dev_to_node(dev), gfp, page_order);
+> > -
+> > +       page = dma_alloc_contiguous(dev, size, gfp);
+> >         if (page && !dma_coherent_ok(dev, page_to_phys(page), size)) {
+> > -               __free_pages(page, page_order);
+> > +               dma_free_contiguous(dev, page, size);
+> >                 page = NULL;
+> >
+> >                 if (IS_ENABLED(CONFIG_ZONE_DMA32) &&
+> > @@ -154,7 +141,7 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
+> >         if (PageHighMem(page)) {
+> >                 /*
+> >                  * Depending on the cma= arguments and per-arch setup
+> > -                * dma_alloc_from_contiguous could return highmem pages.
+> > +                * dma_alloc_contiguous could return highmem pages.
+> >                  * Without remapping there is no way to return them here,
+> >                  * so log an error and fail.
+> >                  */
+> > @@ -176,10 +163,7 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
+> >
+> >  void __dma_direct_free_pages(struct device *dev, size_t size, struct page *page)
+> >  {
+> > -       unsigned int count = PAGE_ALIGN(size) >> PAGE_SHIFT;
+> > -
+> > -       if (!dma_release_from_contiguous(dev, page, count))
+> > -               __free_pages(page, get_order(size));
+> > +       dma_free_contiguous(dev, page, size);
+> >  }
+> >
+> >  void dma_direct_free_pages(struct device *dev, size_t size, void *cpu_addr,
+> > --
+> > 2.17.1
+> >
+> >
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
