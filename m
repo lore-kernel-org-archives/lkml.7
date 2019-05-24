@@ -2,112 +2,109 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 507D0C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:36:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E36AC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:36:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23B9F21773
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:36:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="EVlS01Zr"
+	by mail.kernel.org (Postfix) with ESMTP id F11DF21773
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:36:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390570AbfEXKgU (ORCPT
+        id S2390603AbfEXKgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 06:36:20 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54838 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389448AbfEXKgT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 06:36:19 -0400
-Received: by mail-wm1-f66.google.com with SMTP id i3so8822645wml.4
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 03:36:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=2QncBY+O8HWHusWpmG3TvATwMEVVOER+jDNcjQdf6X8=;
-        b=EVlS01ZrOUW4y5TgcO5PW42Ys40ozEuuGxT/VlB+ZHdDPVKs4LX29n9Jkr/8Z6PNse
-         UOegy/cIjxDtwK5VzIY7E10zeWFGG8tTsr5lP2bUds+aMR5zF6msMBfDOuzwMsAVKFkQ
-         gU27fdfkz+KNgVoLDEVbPC0ybAaS2opAbZtLg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=2QncBY+O8HWHusWpmG3TvATwMEVVOER+jDNcjQdf6X8=;
-        b=NWTkUBCAqfnj5kNwlchrZsE4Wl4cU9tW4LbT8XcDldMFALweDnnrYAUkTA1GfSojFf
-         GzQvcc1JyNOtUUlhu1wlDg29USc+kmZG7DOIXOIrA5ELKq9dswjZ2kAaRcUbql/CrXzw
-         qbCKRyL02ky7gfS0iFWGQICQrSJpL4W1/ATO3q+l4OOsRETfFxn6JmtqdJ1qiUyv0rlA
-         4fthaNZaX8ll3pYhibm5vxf30xehLBxu881dmYfmJRN/2w9SxCjdFzvrIp9KF/WwWXnu
-         YKHhJrWFLcqsHNPmBrX/P8N0+egqdRYZCzfuUWCDtlD/DjlOuzp1E8kRVhyxsnBcJHHo
-         9kLA==
-X-Gm-Message-State: APjAAAXFgtSOqrl2sV9NHJnjzMK/VLAeX0g0hPJzlMmDaVbwmgtxgtlW
-        hv+xUYy5woqqOGMYZLamz0msUEJuvpxIog==
-X-Google-Smtp-Source: APXvYqws0A2pqR2pfzJ8O/T2RqNMUG9rXolT5X554i6CeJ//OGuyEyIYbdY/Bl3oqqrJuBL1+d3ltQ==
-X-Received: by 2002:a1c:f909:: with SMTP id x9mr16477369wmh.12.1558694177408;
-        Fri, 24 May 2019 03:36:17 -0700 (PDT)
-Received: from localhost.localdomain (86.100.broadband17.iol.cz. [109.80.100.86])
-        by smtp.gmail.com with ESMTPSA id n4sm2111272wrp.61.2019.05.24.03.36.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 24 May 2019 03:36:16 -0700 (PDT)
-From:   Andrea Parri <andrea.parri@amarulasolutions.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jorgen Hansen <jhansen@vmware.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH 2/2] compiler: Prevent evaluation of WRITE_ONCE()
-Date:   Fri, 24 May 2019 12:35:36 +0200
-Message-Id: <1558694136-19226-3-git-send-email-andrea.parri@amarulasolutions.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1558694136-19226-1-git-send-email-andrea.parri@amarulasolutions.com>
-References: <1558694136-19226-1-git-send-email-andrea.parri@amarulasolutions.com>
+        Fri, 24 May 2019 06:36:24 -0400
+Received: from relay.sw.ru ([185.231.240.75]:56218 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389448AbfEXKgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 06:36:24 -0400
+Received: from [172.16.25.169]
+        by relay.sw.ru with esmtp (Exim 4.91)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1hU7YU-0005xE-Bo; Fri, 24 May 2019 13:36:06 +0300
+Subject: Re: [PATCH v2 0/7] mm: process_vm_mmap() -- syscall for duplication a
+ process mapping
+To:     Andy Lutomirski <luto@kernel.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Keith Busch <keith.busch@intel.com>,
+        alexander.h.duyck@linux.intel.com, Weiny Ira <ira.weiny@intel.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        arunks@codeaurora.org, Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Lameter <cl@linux.com>,
+        Rik van Riel <riel@surriel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Roman Gushchin <guro@fb.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        daniel.m.jordan@oracle.com, Jann Horn <jannh@google.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Linux API <linux-api@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
+References: <155836064844.2441.10911127801797083064.stgit@localhost.localdomain>
+ <CALCETrU221N6uPmdaj4bRDDsf+Oc5tEfPERuyV24wsYKHn+spA@mail.gmail.com>
+ <9638a51c-4295-924f-1852-1783c7f3e82d@virtuozzo.com>
+ <CALCETrUMDTGRtLFocw6vnN___7rkb6r82ULehs0=yQO5PZL8MA@mail.gmail.com>
+ <67d1321e-ffd6-24a3-407f-cd26c82e46b8@virtuozzo.com>
+ <CALCETrWzuH3=Uh91UeGwpCj28kjQ82Lj2OTuXm7_3d871PyZSA@mail.gmail.com>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <58ad677d-677f-5e16-ecf9-565fcc3b7145@virtuozzo.com>
+Date:   Fri, 24 May 2019 13:36:05 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <CALCETrWzuH3=Uh91UeGwpCj28kjQ82Lj2OTuXm7_3d871PyZSA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that there's no single use of the value of WRITE_ONCE(), change
-the implementation to eliminate it.
+On 23.05.2019 19:19, Andy Lutomirski wrote:
+> On Tue, May 21, 2019 at 10:44 AM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+>>
+>> On 21.05.2019 19:43, Andy Lutomirski wrote:
+>>> On Tue, May 21, 2019 at 8:52 AM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+>>>>
+>>>> On 21.05.2019 17:43, Andy Lutomirski wrote:
+> 
+>>> Do you mean that the code you sent rejects this case?  If so, please
+>>> document it.  In any case, I looked at the code, and it seems to be
+>>> trying to handle MAP_SHARED and MAP_ANONYMOUS.  I don't see where it
+>>> would reject copying a vDSO.
+>>
+>> I prohibit all the VMAs, which contain on of flags: VM_HUGETLB|VM_DONTEXPAND|VM_PFNMAP|VM_IO.
+>> I'll check carefully, whether it's enough for vDSO.
+> 
+> I think you could make the new syscall a lot more comprehensible bg
+> restricting it to just MAP_ANONYMOUS, by making it unmap the source,
+> or possibly both.  If the new syscall unmaps the source (in order so
+> that the source is gone before the newly mapped pages become
+> accessible), then you avoid issues in which you need to define
+> sensible semantics for what happens if both copies are accessed
+> simultaneously.
 
-Suggested-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jorgen Hansen <jhansen@vmware.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
----
- include/linux/compiler.h | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+In case of we unmap source, this does not introduce a new principal
+behavior with the same page mapped twice in a single process like
+Kirill pointed. This sounds as a good idea and this covers my
+application area.
 
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index 8aaf7cd026b06..4024c809a6c63 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -277,12 +277,11 @@ unsigned long read_word_at_a_time(const void *addr)
- }
- 
- #define WRITE_ONCE(x, val) \
--({							\
-+do {							\
- 	union { typeof(x) __val; char __c[1]; } __u =	\
- 		{ .__val = (__force typeof(x)) (val) }; \
- 	__write_once_size(&(x), __u.__c, sizeof(x));	\
--	__u.__val;					\
--})
-+} while (0)
- 
- #endif /* __KERNEL__ */
- 
--- 
-2.7.4
+The only new principal thing is a child process will be able to inherit
+a parent's VMA, which is not possible now. But it looks like we never
+depend on processes relationship in the mapping code, and process
+reparenting already gives many combinations, so the new change should
+not affect much on this.
 
+Kirill
