@@ -2,87 +2,79 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2BDC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 03:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF44C282DE
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 03:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 808ED2184B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 03:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3C412184B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 03:31:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558668667;
-	bh=CUoB1/lohw4IFNZnQRxH8vK9OnSsYAl12HWN/ZrYLFw=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Ds3m477kgqVkJ7Y/j+2R2Dre97KQ+hP3qUV5MTijr+hjmpZcgtyWOqlMDVKCrl49n
-	 h1YvlrnBnNoXqF6J4n22qay+9myNzaDYfw/keCSbLcLKuTvRt3YizfWcCQ4jDqoa0M
-	 77QebMHGZin/nXyNgSsYnkBnLu5srAsHNRYJQHhA=
+	s=default; t=1558668669;
+	bh=h341EBXdLK6cOhUdc2aJHH3YPAWToqT/9Mx16lDync0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zpHjzDT1NUP7t/DqvLyP6WQFa6n1Lu/rb6CMd1cji5EJwYLVAyLsuu+l+8D8JDXhG
+	 WNSFK9TTXSfb1TexgJSfn456E2EhwloQ5NlINgH5B3HhmJ/mY9FtMqeHvRjGUvQhnT
+	 /1OsGO662In2Qj82s4Tr9K9w0ORZhAFHstiefsDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388836AbfEXDbG (ORCPT
+        id S2388860AbfEXDbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 23:31:06 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:33160 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387559AbfEXDbF (ORCPT
+        Thu, 23 May 2019 23:31:09 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:38644 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388803AbfEXDbG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 23:31:05 -0400
-Received: by mail-io1-f66.google.com with SMTP id z4so6690838iol.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 20:31:05 -0700 (PDT)
+        Thu, 23 May 2019 23:31:06 -0400
+Received: by mail-it1-f196.google.com with SMTP id i63so11730497ita.3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 20:31:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4IMXeSPz07H/1FS+L5wog9k24C98hcuyfvlIBRrFToQ=;
-        b=JuooVbNFZqVGK0ePviE0+zQb5HLSPgmBhi22D2BkiE/7yFc3PTJNQPFhzTnHXwXDO/
-         JweFIXmAX8zk6C7iGGlZ8FZ3K7jJswX+d2yJ+56Yho3vHWhkyP2jP4CFjXXhQCbbZTk6
-         tn1Y3UpMIIKQI6eOHSBeOwAZuvY9AONqt+uic=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Mv9CMN0i6nNcIH3+gboQPHuQ3PFIry51DtN3+zdUF0M=;
+        b=IxNxaYrz95tN91XjVNI3UZ+WlfGO3SRzMiNHHQNCCLJouwGqKBfnwmZbq6bRWDhQrG
+         aUOM8bJ4BAs6XD6I8cStJ6rWQQ+syKvXrRPJeXM6MmzODaNCzxsNOQaFm6HNC8HCwaqn
+         xvXZ/p4QpAcYet2UxsjZ461n6UGmxiei8k9NM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4IMXeSPz07H/1FS+L5wog9k24C98hcuyfvlIBRrFToQ=;
-        b=IJbbo0iCnDbKZN7xdhwmENMpk2rkmaYalC5qF6+h1gaLdVFJ8aFEzTL1OVOFAncSbt
-         dR566k583wvdqggaMJjFVnKbBjR/s0XY6LUY3eCEP0zLthLaUujcvO9xzj+eDLmlEoBl
-         KybtnRkmukH7vdDt5XLN20G1hSRHQFBLIOiEEBFQ+hWWa0pnj90w8iNNUpiXJI2e79W9
-         ZdyrSYcC/eb/WhYrrxuyFZKHfGyAbDn9v/yz83YIR4oi+U+oJ1UDJGZDDb8Z4rwph/9M
-         qEpkCyUhcoT+25zoThcZ06YIXskBwtR1kqwPGiAbnjnTekMe6UTRh4IA+22HtW+xTZTK
-         g6xg==
-X-Gm-Message-State: APjAAAUpXThY1JNHnvft+5DT0NC71UNAKJ1CcQ3qDR+F9pnevwTUGwUq
-        dj8tP7xX7FssHiS+xeKDUCx0QLsk29o=
-X-Google-Smtp-Source: APXvYqw5FmID+PmO0aMdsdSEbVeSQErU4FoC610/wj0wuiUVHLFvpKEsMgkeFn5w6ac6DAfyipIrXQ==
-X-Received: by 2002:a6b:4408:: with SMTP id r8mr3147213ioa.103.1558668664632;
-        Thu, 23 May 2019 20:31:04 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Mv9CMN0i6nNcIH3+gboQPHuQ3PFIry51DtN3+zdUF0M=;
+        b=LkpDIBaW3DdE1eQAb1LwASaAHira9nvLgTLByH6uVwgaOJe4AOhrM6/0oiUn6lmQ8m
+         wROh0fpHEuXDxOW5Q3SwAvtw4x+dYTERVBZYHWRnmGmQ3lUk+cQsqXSiFlMHjcc9kgJp
+         OP0ANIZlfwVNI5NgriMCxHxwANhVUnLbJNisRSQdvJWe2TiBJ21K639mR9ZAAgoMbeEv
+         nqbFCaNEZMQaIXoTCCWRxkdR2zSrNtE+hXfI+HHSq+/Qyt243m+Vak46pNqfL8mgQqqp
+         xdpvz9dbE+SZxEgdcuv0K97v4KLGK2GlMCQtoQAvwPVhVlOERIvesZrw9ERerk6OnpnD
+         eWow==
+X-Gm-Message-State: APjAAAW7uUx7KV6mwlOAaQfqeB866Snxke5tm2R5h5EvVKva66L6sENS
+        8DDBT2ni2+Gbq43Oh2gsoliwdA==
+X-Google-Smtp-Source: APXvYqzu4HFk3XLY67ReDmSSeHuX4CFH8VygT+5D9E6iMHvE0v5XoUNZtGm8DWCnSZ9pIcW9imvfKg==
+X-Received: by 2002:a02:1006:: with SMTP id 6mr66453369jay.47.1558668665524;
+        Thu, 23 May 2019 20:31:05 -0700 (PDT)
 Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id h185sm794380itb.16.2019.05.23.20.31.03
+        by smtp.gmail.com with ESMTPSA id h185sm794380itb.16.2019.05.23.20.31.04
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 20:31:04 -0700 (PDT)
+        Thu, 23 May 2019 20:31:05 -0700 (PDT)
 From:   Shuah Khan <skhan@linuxfoundation.org>
 To:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
         helen.koike@collabora.com
 Cc:     Shuah Khan <skhan@linuxfoundation.org>,
         linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] Use Media Dev Allocator to fix vimc dev lifetime bugs
-Date:   Thu, 23 May 2019 21:31:00 -0600
-Message-Id: <cover.1558667245.git.skhan@linuxfoundation.org>
+Subject: [PATCH 1/2] media: add generic device allocate interface to media-dev-allocator
+Date:   Thu, 23 May 2019 21:31:01 -0600
+Message-Id: <f4b11067f523b5727b9a44cf415ce265deffdfe0.1558667245.git.skhan@linuxfoundation.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <cover.1558667245.git.skhan@linuxfoundation.org>
+References: <cover.1558667245.git.skhan@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-
-media_device is embedded in struct vimc_device and when vimc is removed
-vimc_device and the embedded media_device goes with it, while the active
-stream and vimc_capture continue to access it.
-
-Fix the media_device lifetime problem by changing vimc to create shared
-media_device using Media Device Allocator API and vimc_capture getting
-a reference to vimc module. With this change, vimc module can be removed
-only when the references are gone. vimc can be removed after vimc_capture
-is removed.
 
 Media Device Allocator API supports just USB devices. Enhance it
 adding a genetic device allocate interface to support other media
@@ -97,17 +89,157 @@ reference.
 The new interface has been tested with vimc component driver to fix
 panics when vimc module is removed while streaming is in progress.
 
-Shuah Khan (2):
-  media: add generic device allocate interface to media-dev-allocator
-  vimc: fix BUG: unable to handle kernel NULL pointer dereference
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+---
+ drivers/media/Makefile              |  4 +--
+ drivers/media/media-dev-allocator.c | 39 ++++++++++++++++++++++++
+ include/media/media-dev-allocator.h | 46 +++++++++++++++++++++++++----
+ 3 files changed, 80 insertions(+), 9 deletions(-)
 
- drivers/media/Makefile                     |  4 +-
- drivers/media/media-dev-allocator.c        | 39 ++++++++++++++
- drivers/media/platform/vimc/vimc-capture.c | 17 +++++-
- drivers/media/platform/vimc/vimc-core.c    | 60 ++++++++++++----------
- include/media/media-dev-allocator.h        | 46 ++++++++++++++---
- 5 files changed, 130 insertions(+), 36 deletions(-)
-
+diff --git a/drivers/media/Makefile b/drivers/media/Makefile
+index 4a330d0e5e40..3a4f7f74301d 100644
+--- a/drivers/media/Makefile
++++ b/drivers/media/Makefile
+@@ -7,9 +7,7 @@ media-objs	:= media-device.o media-devnode.o media-entity.o \
+ 		   media-request.o
+ 
+ ifeq ($(CONFIG_MEDIA_CONTROLLER),y)
+-	ifeq ($(CONFIG_USB),y)
+-		media-objs += media-dev-allocator.o
+-	endif
++	media-objs += media-dev-allocator.o
+ endif
+ 
+ #
+diff --git a/drivers/media/media-dev-allocator.c b/drivers/media/media-dev-allocator.c
+index ae17887dec59..4078e098cede 100644
+--- a/drivers/media/media-dev-allocator.c
++++ b/drivers/media/media-dev-allocator.c
+@@ -94,6 +94,7 @@ static struct media_device *__media_device_get(struct device *dev,
+ 	return &mdi->mdev;
+ }
+ 
++#if IS_ENABLED(CONFIG_USB)
+ struct media_device *media_device_usb_allocate(struct usb_device *udev,
+ 					       const char *module_name,
+ 					       struct module *owner)
+@@ -115,6 +116,44 @@ struct media_device *media_device_usb_allocate(struct usb_device *udev,
+ 	return mdev;
+ }
+ EXPORT_SYMBOL_GPL(media_device_usb_allocate);
++#endif
++
++struct media_device *media_device_allocate(struct device *dev,
++					   const char *model,
++					   const char *bus_info,
++					   const char *module_name,
++					   struct module *owner)
++{
++	struct media_device *mdev;
++
++	mutex_lock(&media_device_lock);
++	mdev = __media_device_get(dev, module_name, owner);
++	if (!mdev) {
++		mutex_unlock(&media_device_lock);
++		return ERR_PTR(-ENOMEM);
++	}
++
++	if (!mdev->dev) {
++		/* Initialize media device */
++		if (model)
++			strscpy(mdev->model, model, sizeof(mdev->model));
++		else
++			strscpy(mdev->model, "Unkonw model",
++				sizeof(mdev->model));
++		if (bus_info)
++			strscpy(mdev->bus_info, bus_info,
++				sizeof(mdev->bus_info));
++		else
++			strscpy(mdev->bus_info, "Unknown bus_info",
++				sizeof(mdev->bus_info));
++		mdev->dev = dev;
++		media_device_init(mdev);
++	}
++
++	mutex_unlock(&media_device_lock);
++	return mdev;
++}
++EXPORT_SYMBOL_GPL(media_device_allocate);
+ 
+ void media_device_delete(struct media_device *mdev, const char *module_name,
+ 			 struct module *owner)
+diff --git a/include/media/media-dev-allocator.h b/include/media/media-dev-allocator.h
+index b35ea6062596..479a3c52cf89 100644
+--- a/include/media/media-dev-allocator.h
++++ b/include/media/media-dev-allocator.h
+@@ -19,7 +19,8 @@
+ 
+ struct usb_device;
+ 
+-#if defined(CONFIG_MEDIA_CONTROLLER) && defined(CONFIG_USB)
++#if defined(CONFIG_MEDIA_CONTROLLER)
++#if defined(CONFIG_USB)
+ /**
+  * media_device_usb_allocate() - Allocate and return struct &media device
+  *
+@@ -38,6 +39,36 @@ struct usb_device;
+ struct media_device *media_device_usb_allocate(struct usb_device *udev,
+ 					       const char *module_name,
+ 					       struct module *owner);
++#else
++static inline struct media_device *media_device_usb_allocate(
++			struct usb_device *udev, const char *module_name,
++			struct module *owner)
++			{ return NULL; }
++#endif /* CONFIG_USB */
++/**
++ * media_device_allocate() - Allocate and return struct &media device
++ *
++ * @udev:		struct &device pointer
++ * @model:		should be filled with device model name
++ * @bus_info:		should be filled with device bus information:
++ *			Unique and stable device location identifier
++ *			as defined in struct media_device
++ * @module_name:	should be filled with %KBUILD_MODNAME
++ * @owner:		struct module pointer %THIS_MODULE for the driver.
++ *			%THIS_MODULE is null for a built-in driver.
++ *			It is safe even when %THIS_MODULE is null.
++ *
++ * This interface should be called to allocate a Media Device when multiple
++ * drivers/sub-drivers share device and the media device. This interface
++ * allocates &media_device structure and calls media_device_init() to
++ * initialize it.
++ *
++ */
++struct media_device *media_device_allocate(struct device *dev,
++					   const char *model,
++					   const char *bus_info,
++					   const char *module_name,
++					   struct module *owner);
+ /**
+  * media_device_delete() - Release media device. Calls kref_put().
+  *
+@@ -52,12 +83,15 @@ struct media_device *media_device_usb_allocate(struct usb_device *udev,
+ void media_device_delete(struct media_device *mdev, const char *module_name,
+ 			 struct module *owner);
+ #else
+-static inline struct media_device *media_device_usb_allocate(
+-			struct usb_device *udev, const char *module_name,
+-			struct module *owner)
+-			{ return NULL; }
++static inline struct media_device *media_device_allocate(
++					struct device *dev,
++					const char *model,
++					const char *bus_info,
++					const char *module_name,
++					struct module *owner)
++					{ return NULL; }
+ static inline void media_device_delete(
+ 			struct media_device *mdev, const char *module_name,
+ 			struct module *owner) { }
+-#endif /* CONFIG_MEDIA_CONTROLLER && CONFIG_USB */
++#endif /* CONFIG_MEDIA_CONTROLLER */
+ #endif /* _MEDIA_DEV_ALLOCATOR_H */
 -- 
 2.17.1
 
