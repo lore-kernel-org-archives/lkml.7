@@ -2,111 +2,194 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A7CC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94879C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:43:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78EA821841
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:43:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 686AA217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:43:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Umf6KdVJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390745AbfEXKm7 (ORCPT
+        id S2390770AbfEXKnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 06:42:59 -0400
-Received: from foss.arm.com ([217.140.101.70]:39864 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390374AbfEXKm6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 06:42:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D473B374;
-        Fri, 24 May 2019 03:42:57 -0700 (PDT)
-Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5690D3F703;
-        Fri, 24 May 2019 03:42:56 -0700 (PDT)
-Subject: Re: mm/compaction: BUG: NULL pointer dereference
-To:     mgorman@techsingularity.net
-Cc:     linux-mm@kvack.org, akpm@linux-foundation.org, mhocko@suse.com,
-        cai@lca.pw, linux-kernel@vger.kernel.org, marc.zyngier@arm.com,
-        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org
-References: <1558689619-16891-1-git-send-email-suzuki.poulose@arm.com>
- <20190524103924.GN18914@techsingularity.net>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <98b93f38-64a7-dcd1-c027-6d1195f3380f@arm.com>
-Date:   Fri, 24 May 2019 11:42:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 24 May 2019 06:43:09 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44585 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390743AbfEXKnH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 06:43:07 -0400
+Received: by mail-pf1-f195.google.com with SMTP id g9so5088242pfo.11
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 03:43:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nP3yWdSdOBguUQvL1Rluu0V+blq5lMGRtGXamF3bLkw=;
+        b=Umf6KdVJ9NBQr824CkR3whnBByI3We6uojHAy4ZHN7aGThpcSheG/NUEteAhmo4BZr
+         Tv3iTdzkL3hZ1221FRM9gKTC009LNKGhRQd/2Sb66A6bKtWHwQKYuaOlJstrgROIkLqy
+         D/raVHojoJ6xnSPJKnpRe1QKrLqYeYrXcqEw8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nP3yWdSdOBguUQvL1Rluu0V+blq5lMGRtGXamF3bLkw=;
+        b=Hy3a51i3gKPHlcT5HjNlPqFC7gMIgDX6O+mn8F9uljKhuWZuS04plvv12m+NhTJMlV
+         UL6f7aHJKi9JeI718rKgsZbdjH/P8GlDuw0dpWTe7OkMXf3O7U+ggAkx/IObmVxwh7jO
+         ecA1K9Ipdoixk2sbBsqDFV9ugnOmz8kfO/KHIzPJRcHcxzDuAo1umvRGbYlKWNyRWGG0
+         /uAld35QFGeF0aaIAt0tN7VMQjZ1ZhEo521J2/AqzW9QrHySaw2l2AP/wJjErHsPwByq
+         tIlBwwdqWGvJzejeTT37t6p6yKW8GHW3sEZGE8/V/lT7Jxol2b1KRnH2TF+rFLKweWky
+         lgpQ==
+X-Gm-Message-State: APjAAAVjG9maP4vFgoPV07r4yT8sJu3oE8mGIyB7Kw4Bu79RM3Kij3ng
+        SF29QVfPYRpu4MfruVs64etPOA==
+X-Google-Smtp-Source: APXvYqxrirpUHWJCS4XTsorLCGVLEXohr/Hu6n159kHS43nSAQBPXQ2rskeSgI2M8selLJJyC1lBrA==
+X-Received: by 2002:a63:225b:: with SMTP id t27mr18104506pgm.25.1558694587171;
+        Fri, 24 May 2019 03:43:07 -0700 (PDT)
+Received: from localhost.localdomain ([183.82.227.60])
+        by smtp.gmail.com with ESMTPSA id u1sm2176028pfh.85.2019.05.24.03.43.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 May 2019 03:43:06 -0700 (PDT)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Michael Trimarchi <michael@amarulasolutions.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@googlegroups.com, linux-amarula@amarulasolutions.com,
+        Jagan Teki <jagan@amarulasolutions.com>
+Subject: [DO NOT MERGE] [PATCH v2 2/6] ARM: dts: sun8i: bananapi-m2m: Enable Bananapi S070WV20-CT16 DSI panel
+Date:   Fri, 24 May 2019 16:12:52 +0530
+Message-Id: <20190524104252.20236-1-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
 MIME-Version: 1.0
-In-Reply-To: <20190524103924.GN18914@techsingularity.net>
-Content-Type: text/plain; charset=iso-8859-15; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mel,
+This patch add support for Bananapi S070WV20-CT16 DSI panel to
+BPI-M2M board.
 
-Thanks for your quick response.
+DSI panel connected via board DSI port with,
+- DCDC1 as VCC-DSI supply
+- PL5 gpio for lcd reset gpio pin
+- PB7 gpio for lcd enable gpio pin
+- PL4 gpio for backlight enable pin
 
-On 24/05/2019 11:39, Mel Gorman wrote:
-> On Fri, May 24, 2019 at 10:20:19AM +0100, Suzuki K Poulose wrote:
->> Hi,
->>
->> We are hitting NULL pointer dereferences while running stress tests with KVM.
->> See splat [0]. The test is to spawn 100 VMs all doing standard debian
->> installation (Thanks to Marc's automated scripts, available here [1] ).
->> The problem has been reproduced with a better rate of success from 5.1-rc6
->> onwards.
->>
->> The issue is only reproducible with swapping enabled and the entire
->> memory is used up, when swapping heavily. Also this issue is only reproducible
->> on only one server with 128GB, which has the following memory layout:
->>
->> [32GB@4GB, hole , 96GB@544GB]
->>
->> Here is my non-expert analysis of the issue so far.
->>
->> Under extreme memory pressure, the kswapd could trigger reset_isolation_suitable()
->> to figure out the cached values for migrate/free pfn for a zone, by scanning through
->> the entire zone. On our server it does so in the range of [ 0x10_0000, 0xa00_0000 ],
->> with the following area of holes : [ 0x20_0000, 0x880_0000 ].
->> In the failing case, we end up setting the cached migrate pfn as : 0x508_0000, which
->> is right in the center of the zone pfn range. i.e ( 0x10_0000 + 0xa00_0000 ) / 2,
->> with reset_migrate = 0x88_4e00, reset_free = 0x10_0000.
->>
->> Now these cached values are used by the fast_isolate_freepages() to find a pfn. However,
->> since we cant find anything during the search we fall back to using the page belonging
->> to the min_pfn (which is the migrate_pfn), without proper checks to see if that is valid
->> PFN or not. This is then passed on to fast_isolate_around() which tries to do :
->> set_pageblock_skip(page) on the page which blows up due to an NULL mem_section pointer.
->>
->> The following patch seems to fix the issue for me, but I am not quite convinced that
->> it is the right fix. Thoughts ?
->>
-> 
-> I think the patch is valid and the alternatives would be unnecessarily
-> complicated. During a normal scan for free pages to isolate, there
-> is a check for pageblock_pfn_to_page() which uses a pfn_valid check
-> for non-contiguous zones in __pageblock_pfn_to_page. Now, while the
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+ arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts | 59 ++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
 
-I had the initial version with the pageblock_pfn_to_page(), but as you said,
-it is a complicated way of perform the same check as pfn_valid().
+diff --git a/arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts b/arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts
+index e1c75f7fa3ca..762d4cfcff01 100644
+--- a/arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts
++++ b/arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts
+@@ -44,6 +44,7 @@
+ #include "sun8i-a33.dtsi"
+ 
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/pwm/pwm.h>
+ 
+ / {
+ 	model = "BananaPi M2 Magic";
+@@ -61,6 +62,14 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
++	backlight: backlight {
++		compatible = "pwm-backlight";
++		pwms = <&pwm 0 50000 PWM_POLARITY_INVERTED>;
++		brightness-levels = <1 2 4 8 16 32 64 128 255>;
++		default-brightness-level = <8>;
++		enable-gpios = <&r_pio 0 4 GPIO_ACTIVE_HIGH>; /* LCD-BL-EN: PL4 */
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 
+@@ -122,6 +131,46 @@
+ 	status = "okay";
+ };
+ 
++&de {
++	status = "okay";
++};
++
++&dphy {
++	status = "okay";
++};
++
++&dsi {
++	vcc-dsi-supply = <&reg_dcdc1>;		/* VCC-DSI */
++	status = "okay";
++
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		dsi_out: port@0 {
++			reg = <0>;
++
++			dsi_out_panel: endpoint {
++				remote-endpoint = <&panel_out_dsi>;
++			};
++		};
++	};
++
++	panel@0 {
++		compatible = "bananapi,s070wv20-ct16-icn6211";
++		reg = <0>;
++		enable-gpios = <&pio 1 7 GPIO_ACTIVE_HIGH>; /* LCD-PWR-EN: PB7 */
++		reset-gpios = <&r_pio 0 5 GPIO_ACTIVE_HIGH>; /* LCD-RST: PL5 */
++		backlight = <&backlight>;
++
++		port {
++			panel_out_dsi: endpoint {
++				remote-endpoint = <&dsi_out_panel>;
++			};
++		};
++	};
++};
++
+ &ehci0 {
+ 	status = "okay";
+ };
+@@ -157,6 +206,12 @@
+ 	status = "okay";
+ };
+ 
++&pwm {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pwm0_pin>;
++	status = "okay";
++};
++
+ &r_rsb {
+ 	status = "okay";
+ 
+@@ -269,6 +324,10 @@
+ 	status = "okay";
+ };
+ 
++&tcon0 {
++	status = "okay";
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pb_pins>;
+-- 
+2.18.0.321.gffc6fa0e3
 
-> non-contiguous check could be made in the area you highlight, it would be a
-> relatively small optimisation that would be unmeasurable overall. However,
-> it is definitely the case that if the PFN you highlight is invalid that
-> badness happens. If you want to express this as a signed-off patch with
-> an adjusted changelog then I'd be happy to add
-
-Sure, will send it right away.
-
-> 
-> Reviewed-by: Mel Gorman <mgorman@techsingularity.net>
-> 
-
-Thanks.
-
-Suzuki
