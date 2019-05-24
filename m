@@ -2,154 +2,207 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FROM_EXCESS_BASE64,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D719CC282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 22:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3BD9C282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 22:41:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A40672184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 22:39:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JNQS/PTG"
+	by mail.kernel.org (Postfix) with ESMTP id CAEE72175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 22:41:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404411AbfEXWjB (ORCPT
+        id S2404398AbfEXWlK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 18:39:01 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51642 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727091AbfEXWjA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 18:39:00 -0400
-Received: by mail-wm1-f68.google.com with SMTP id f10so3369664wmb.1
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 15:38:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fyZi6v0mcgKSC16RURy0qopnByCgnXY1K2U9goxfA1Q=;
-        b=JNQS/PTGqlUgYcpzMAYHuZqlDvD2sNfGPlDoRvlyNpPQfxbTZutYHgHCSjsSJCCw05
-         5YmVB59KP6XFcHrAKqxOqRTk6Hr9wRl/t3WLBPgNtb3FGdbcbWTLcHAG8wVVbZqX5ja4
-         9e08U9URC16u5tUAjjOWPTrjp9emoLdkHQ0gikVaBB/CDY/xofJWr5/JmNvBDV7cHUTw
-         XcxwQUgNMMwd8fo0Eas9iV1pSTWD3TghtD0rDuSCLTb3c3Fn4yeh1DBbBaVGUgyKG3tK
-         opPLbHpuRD8/V0Rlas0cihCTst7HIoJ/xDApIijjD/5PGhOoh/stcZc5gpOkc5HLQSYP
-         wI9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fyZi6v0mcgKSC16RURy0qopnByCgnXY1K2U9goxfA1Q=;
-        b=D86zpJQIpFFu6PFqho9J27k3/7Qnv16lCH1xPt+5tQCzz9m0gybPGAgGJ0sz34iA7h
-         ikTvxqs8YxQ3WrHZd0uyuZSkNe4/lXswRtc52/XAb32I4IlR9V03trARB7Bs7akDds8L
-         yyt1mREyRZyBT3B0qHaKCE11Y0UVp4HOHoe7OurkHyBoNRmGh4gJJTMjUKCLujywz+fR
-         V1J4ISc8m/QqT8Ll8+3gZJohrO4n1YHVGnKtkxjZaqkNdY0IiaIAS8VF2SrvoFJs53CP
-         NTZzds4wT0sj26rKDKI+yrj8wuzoz11aiEzeXmy8wJCkg/cz6cHWT155vJLHIZo+LnjZ
-         KYPQ==
-X-Gm-Message-State: APjAAAVlFXu4FDQ5+0dWfURl+1/rdIuE5WT1Q58pST0eiJHxKRRuNwpx
-        1qBeP8Ui04R6xrgJNeFx2wGU86PPnbX16HbtHZRIag==
-X-Google-Smtp-Source: APXvYqxW2n5H9vt7mX4JNr8xeJxdoAikSxRfwl4bvPXYtUPI7AS/sOyLcEt10h951ycbvpy5lE6/mmoD6w3q9rCJBPA=
-X-Received: by 2002:a1c:2e0a:: with SMTP id u10mr63993wmu.92.1558737537847;
- Fri, 24 May 2019 15:38:57 -0700 (PDT)
+        Fri, 24 May 2019 18:41:10 -0400
+Received: from mga07.intel.com ([134.134.136.100]:15291 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727091AbfEXWlJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 18:41:09 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 May 2019 15:41:08 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by orsmga002.jf.intel.com with ESMTP; 24 May 2019 15:41:07 -0700
+Date:   Fri, 24 May 2019 15:41:07 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     "Xing, Cedric" <cedric.xing@intel.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+Message-ID: <20190524224107.GJ365@linux.intel.com>
+References: <20190523234044.GC12078@linux.intel.com>
+ <CALCETrV4DVEfW6EJ6DnQGGYDJAiA5M1QcuYJTiroumOM+D6Jjg@mail.gmail.com>
+ <960B34DE67B9E140824F1DCDEC400C0F654E8956@ORSMSX116.amr.corp.intel.com>
+ <dda0912b-cb15-3c07-d368-345159e995f7@tycho.nsa.gov>
+ <20190524174243.GA365@linux.intel.com>
+ <20190524175458.GB365@linux.intel.com>
+ <960B34DE67B9E140824F1DCDEC400C0F654E8E1D@ORSMSX116.amr.corp.intel.com>
+ <CALCETrUw5sEr-MHPMU4CzEzkrejDs-JOThHB9Buhoxo5-rdpRw@mail.gmail.com>
+ <20190524200333.GF365@linux.intel.com>
+ <CALCETrUyAAhnQ+RUeN1L41TKj-vcD2CNt-FJ9siO=Zo6gvH1Aw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190524134928.16834-1-jarod@redhat.com> <30882.1558732616@famine>
-In-Reply-To: <30882.1558732616@famine>
-From:   =?UTF-8?B?TWFoZXNoIEJhbmRld2FyICjgpK7gpLngpYfgpLYg4KSs4KSC4KSh4KWH4KS14KS+4KSwKQ==?= 
-        <maheshb@google.com>
-Date:   Fri, 24 May 2019 15:38:46 -0700
-Message-ID: <CAF2d9jhGmsaOZsDWNFihsD4EuEVq9s0xwY22d+FuhBz=A2JpKA@mail.gmail.com>
-Subject: Re: [PATCH net] bonding/802.3ad: fix slave link initialization
- transition states
-To:     Jay Vosburgh <jay.vosburgh@canonical.com>
-Cc:     Jarod Wilson <jarod@redhat.com>, linux-kernel@vger.kernel.org,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-netdev <netdev@vger.kernel.org>,
-        Heesoon Kim <Heesoon.Kim@stratus.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrUyAAhnQ+RUeN1L41TKj-vcD2CNt-FJ9siO=Zo6gvH1Aw@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 2:17 PM Jay Vosburgh <jay.vosburgh@canonical.com> wrote:
->
-> Jarod Wilson <jarod@redhat.com> wrote:
->
-> >Once in a while, with just the right timing, 802.3ad slaves will fail to
-> >properly initialize, winding up in a weird state, with a partner system
-> >mac address of 00:00:00:00:00:00. This started happening after a fix to
-> >properly track link_failure_count tracking, where an 802.3ad slave that
-> >reported itself as link up in the miimon code, but wasn't able to get a
-> >valid speed/duplex, started getting set to BOND_LINK_FAIL instead of
-> >BOND_LINK_DOWN. That was the proper thing to do for the general "my link
-> >went down" case, but has created a link initialization race that can put
-> >the interface in this odd state.
->
-Are there any notification consequences because of this change?
+On Fri, May 24, 2019 at 02:27:34PM -0700, Andy Lutomirski wrote:
+> On Fri, May 24, 2019 at 1:03 PM Sean Christopherson
+> <sean.j.christopherson@intel.com> wrote:
+> >
+> > On Fri, May 24, 2019 at 12:37:44PM -0700, Andy Lutomirski wrote:
+> > > On Fri, May 24, 2019 at 11:34 AM Xing, Cedric <cedric.xing@intel.com> wrote:
+> > > >
+> > > > If "initial permissions" for enclaves are less restrictive than shared
+> > > > objects, then it'd become a backdoor for circumventing LSM when enclave
+> > > > whitelisting is *not* in place. For example, an adversary may load a page,
+> > > > which would otherwise never be executable, as an executable page in EPC.
+> > > >
+> > > > In the case a RWX page is needed, the calling process has to have a RWX
+> > > > page serving as the source for EADD so PROCESS__EXECMEM will have been
+> > > > checked. For SGX2, changing an EPC page to RWX is subject to FILE__EXECMEM
+> > > > on /dev/sgx/enclave, which I see as a security benefit because it only
+> > > > affects the enclave but not the whole process hosting it.
+> > >
+> > > So the permission would be like FILE__EXECMOD on the source enclave
+> > > page, because it would be mapped MAP_ANONYMOUS, PROT_WRITE?
+> > > MAP_SHARED, PROT_WRITE isn't going to work because that means you can
+> > > modify the file.
+> >
+> > Was this in response to Cedric's comment, or to my comment?
+> 
+> Yours.  I think that requiring source pages to be actually mapped W is
+> not such a great idea.
 
->        Reading back in the git history, the ultimate cause of this
-> "weird state" appears to be devices that assert NETDEV_UP prior to
-> actually being able to supply sane speed/duplex values, correct?
->
->         Presuming that this is the case, I don't see that there's much
-> else to be done here, and so:
->
-> Acked-by: Jay Vosburgh <jay.vosburgh@canonical.com>
->
-> >The simple fix is to instead set the slave link to BOND_LINK_DOWN again,
-> >if the link has never been up (last_link_up == 0), so the link state
-> >doesn't bounce from BOND_LINK_DOWN to BOND_LINK_FAIL -- it hasn't failed
-> >in this case, it simply hasn't been up yet, and this prevents the
-> >unnecessary state change from DOWN to FAIL and getting stuck in an init
-> >failure w/o a partner mac.
+I wasn't requiring source pages to be mapped W.  At least I didn't intend
+to require W.  What I was trying to say is that SGX could trigger an
+EXECMEM check if userspace attempted to EADD or EAUG an enclave page with
+RWX permissions, e.g.:
+
+  if ((SECINFO.PERMS & RWX) == RWX) {
+      ret = security_mmap_file(NULL, RWX, ???);
+      if (ret)
+          return ret;
+  }
+
+But that's a moot point if we add security_enclave_load() or whatever.
+
+> 
 > >
-> >Fixes: ea53abfab960 ("bonding/802.3ad: fix link_failure_count tracking")
-> >CC: Jay Vosburgh <j.vosburgh@gmail.com>
-> >CC: Veaceslav Falico <vfalico@gmail.com>
-> >CC: Andy Gospodarek <andy@greyhouse.net>
-> >CC: "David S. Miller" <davem@davemloft.net>
-> >CC: netdev@vger.kernel.org
-> >Tested-by: Heesoon Kim <Heesoon.Kim@stratus.com>
-> >Signed-off-by: Jarod Wilson <jarod@redhat.com>
->
->
->
-> >---
-> > drivers/net/bonding/bond_main.c | 15 ++++++++++-----
-> > 1 file changed, 10 insertions(+), 5 deletions(-)
+> > > I'm starting to think that looking at the source VMA permission bits
+> > > or source PTE permission bits is putting a bit too much policy into
+> > > the driver as opposed to the LSM.  How about delegating the whole
+> > > thing to an LSM hook?  The EADD operation would invoke a new hook,
+> > > something like:
+> > >
+> > > int security_enclave_load_bytes(void *source_addr, struct
+> > > vm_area_struct *source_vma, loff_t source_offset, unsigned int
+> > > maxperm);
+> > >
+> > > Then you don't have to muck with mapping anything PROT_EXEC.  Instead
+> > > you load from a mapping of a file and the LSM applies whatever policy
+> > > it feels appropriate.  If the first pass gets something wrong, the
+> > > application or library authors can take it up with the SELinux folks
+> > > without breaking the whole ABI :)
+> > >
+> > > (I'm proposing passing in the source_vma because this hook would be
+> > > called with mmap_sem held for read to avoid a TOCTOU race.)
+> > >
+> > > If we go this route, the only substantial change to the existing
+> > > driver that's needed for an initial upstream merge is the maxperm
+> > > mechanism and whatever hopefully minimal API changes are needed to
+> > > allow users to conveniently set up the mappings.  And we don't need to
+> > > worry about how to hack around mprotect() calling into the LSM,
+> > > because the LSM will actually be aware of SGX and can just do the
+> > > right thing.
 > >
-> >diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-> >index 062fa7e3af4c..407f4095a37a 100644
-> >--- a/drivers/net/bonding/bond_main.c
-> >+++ b/drivers/net/bonding/bond_main.c
-> >@@ -3122,13 +3122,18 @@ static int bond_slave_netdev_event(unsigned long event,
-> >       case NETDEV_CHANGE:
-> >               /* For 802.3ad mode only:
-> >                * Getting invalid Speed/Duplex values here will put slave
-> >-               * in weird state. So mark it as link-fail for the time
-> >-               * being and let link-monitoring (miimon) set it right when
-> >-               * correct speeds/duplex are available.
-> >+               * in weird state. Mark it as link-fail if the link was
-> >+               * previously up or link-down if it hasn't yet come up, and
-> >+               * let link-monitoring (miimon) set it right when correct
-> >+               * speeds/duplex are available.
-> >                */
-> >               if (bond_update_speed_duplex(slave) &&
-> >-                  BOND_MODE(bond) == BOND_MODE_8023AD)
-> >-                      slave->link = BOND_LINK_FAIL;
-> >+                  BOND_MODE(bond) == BOND_MODE_8023AD) {
-> >+                      if (slave->last_link_up)
-> >+                              slave->link = BOND_LINK_FAIL;
-> >+                      else
-> >+                              slave->link = BOND_LINK_DOWN;
-> >+              }
-> >
-> >               if (BOND_MODE(bond) == BOND_MODE_8023AD)
-> >                       bond_3ad_adapter_speed_duplex_changed(slave);
-> >--
-> >2.20.1
-> >
+> > This doesn't address restricting which processes can run which enclaves,
+> > it only allows restricting the build flow.  Or are you suggesting this
+> > be done in addition to whitelisting sigstructs?
+> 
+> In addition.
+> 
+> But I named the function badly and gave it a bad signature, which
+> confused you.  Let's try again:
+> 
+> int security_enclave_load_from_memory(const struct vm_area_struct
+> *source, unsigned int maxperm);
+
+I prefer security_enclave_load(), "from_memory" seems redundant at best.
+
+> Maybe some really fancy future LSM would also want loff_t
+> source_offset, but it's probably not terribly useful.  This same
+> callback would be used for EAUG.
+> 
+> Following up on your discussion with Cedric about sigstruct, the other
+> callback would be something like:
+> 
+> int security_enclave_init(struct file *sigstruct_file);
+> 
+> The main issue I see is that we also want to control the enclave's
+> ability to have RWX pages or to change a W page to X.  We might also
+> want:
+> 
+> int security_enclave_load_zeros(unsigned int maxperm);
+
+What's the use case for this?  @maxperm will always be at least RW in
+this case, otherwise the page is useless to the enclave, and if the
+enclave can write the page, the fact that it started as zeros is
+irrelevant.
+
+> An enclave that's going to modify its own code will need memory with
+> maxperm = RWX or WX.
+> 
+> But this is a bit awkward if the LSM's decision depends on the
+> sigstruct.  We could get fancy and require that the sigstruct be
+> supplied before any EADD operations so that the maxperm decisions can
+> depend on the sigstruct.
+> 
+> Am I making more sense now?
+
+Yep.  Requiring .sigstruct at ECREATE would be trivial.  If we wanted
+flexibility we could do:
+
+   int security_enclave_load(struct file *file, struct vm_area_struct *vma,
+                             unsigned long prot);
+
+And for ultimate flexibility we could pass both .sigstruct and the file
+pointer for /dev/sgx/enclave, but that seems a bit ridiculous.
+
+Passing both would allow tying EXECMOD to /dev/sgx/enclave as Cedric
+wanted (without having to play games and pass /dev/sgx/enclave to
+security_enclave_load()), but I don't think there's anything fundamentally
+broken with using .sigstruct for EXECMOD.  It requires more verbose
+labeling, but that's not a bad thing.
