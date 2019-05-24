@@ -2,239 +2,233 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E20C7C282E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8425C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB182217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:30:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2A13217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:35:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558704951;
+	bh=aeJ54Tls8pUGac4NiymyuHRLfeqj/WJ1D8MuDz9g1gQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=KSezlMdou4wguKaAHF7dIyyElFoWmr8mtO8mdB5JFhaYPPfNkKmfIO2ktsBpnKSNM
+	 xoUV78p1t0A1rYOplDzaFSEV6weLo5ljlvvO3Njzd1OiR2xOQaxDBurnKmNkPHnyHL
+	 jNvWSzMpUE5TpaXvxIDRUSfRU1J9nVCt25lcdQ0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403837AbfEXNao (ORCPT
+        id S2403856AbfEXNfv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 09:30:44 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38502 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2391359AbfEXNan (ORCPT
+        Fri, 24 May 2019 09:35:51 -0400
+Received: from casper.infradead.org ([85.118.1.10]:56308 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403804AbfEXNfu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 09:30:43 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4ODUZSl139757
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 09:30:42 -0400
-Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2spe8ja8w2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 09:30:38 -0400
-Received: from localhost
-        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Fri, 24 May 2019 14:29:15 +0100
-Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
-        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 24 May 2019 14:29:11 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4ODTAaQ24707516
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 May 2019 13:29:10 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B02AFB2064;
-        Fri, 24 May 2019 13:29:10 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8222EB2065;
-        Fri, 24 May 2019 13:29:10 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 24 May 2019 13:29:10 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id BF94316C3609; Fri, 24 May 2019 06:29:11 -0700 (PDT)
-Date:   Fri, 24 May 2019 06:29:11 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Andrea Parri <andrea.parri@amarulasolutions.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH] rcu: Prevent evaluation of rcu_assign_pointer()
-Reply-To: paulmck@linux.ibm.com
-References: <1558694197-19295-1-git-send-email-andrea.parri@amarulasolutions.com>
+        Fri, 24 May 2019 09:35:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=a84L9ZynbQTHP9MHDmUi2uab2LrEajX0zeKKzUoHR2Q=; b=QbNFbzbaVGx6nDE4Lt/gz/ontH
+        mryLBk30+Ei/1aJ+mmhUQ1nwSoK+Py0cZktjf95fKVLP0ih2qCetBqumwAPZ3v9hvga8J/u12VOsz
+        wFi+JwWMK3ZMvFf/WHD8qCexM6jX0O6LKU8b+ka+TM8Xd9igf8AIzEuu91xScDMK9qQ7WQYz07wlG
+        TdPelpbWfdjxSj1WSXwumK1MacDG7AWnyZvKhmxIl/YWXUj5unKVWShDq38fDFgU5zM9KPc3Cn74W
+        NLqjEzHu1Q2rAsc2qy6QCf6WI11FyYoYaoQNTJviuZrQP0QGneB+DzhTgL3jLGdU2wL5dzxCj1D4J
+        9HSKYaAQ==;
+Received: from 177.97.63.247.dynamic.adsl.gvt.net.br ([177.97.63.247] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hUAML-00007l-4G; Fri, 24 May 2019 13:35:45 +0000
+Date:   Fri, 24 May 2019 10:35:40 -0300
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     andreyknvl@google.com,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        <linux-media@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        <syzkaller-bugs@googlegroups.com>, <wen.yang99@zte.com.cn>
+Subject: Re: [PATCH] media: usb: siano: Fix general protection fault in
+ smsusb
+Message-ID: <20190524103540.250a69e7@coco.lan>
+In-Reply-To: <Pine.LNX.4.44L0.1905071237310.1632-100000@iolanthe.rowland.org>
+References: <0000000000004a08f805883ead54@google.com>
+        <Pine.LNX.4.44L0.1905071237310.1632-100000@iolanthe.rowland.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1558694197-19295-1-git-send-email-andrea.parri@amarulasolutions.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19052413-0052-0000-0000-000003C67251
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011154; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01207923; UDB=6.00634413; IPR=6.00988913;
- MB=3.00027032; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-24 13:29:15
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052413-0053-0000-0000-000061074ABD
-Message-Id: <20190524132911.GV28207@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-24_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905240091
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 12:36:37PM +0200, Andrea Parri wrote:
-> Quoting Paul [1]:
+Em Tue, 7 May 2019 12:39:47 -0400 (EDT)
+Alan Stern <stern@rowland.harvard.edu> escreveu:
+
+> The syzkaller USB fuzzer found a general-protection-fault bug in the
+> smsusb part of the Siano DVB driver.  The fault occurs during probe
+> because the driver assumes without checking that the device has both
+> IN and OUT endpoints and the IN endpoint is ep1.
 > 
->  "Given that a quick (and perhaps error-prone) search of the uses
->   of rcu_assign_pointer() in v5.1 didn't find a single use of the
->   return value, let's please instead change the documentation and
->   implementation to eliminate the return value."
+> By slightly rearranging the driver's initialization code, we can make
+> the appropriate checks early on and thus avoid the problem.  If the
+> expected endpoints aren't present, the new code safely returns -ENODEV
+> from the probe routine.
 > 
-> [1] https://lkml.kernel.org/r/20190523135013.GL28207@linux.ibm.com
-
-Thank you!  A few comments below.
-
-							Thanx, Paul
-
-> Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-> Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
-> Cc: Josh Triplett <josh@joshtriplett.org>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Cc: Lai Jiangshan <jiangshanlai@gmail.com>
-> Cc: Joel Fernandes <joel@joelfernandes.org>
-> Cc: rcu@vger.kernel.org
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Sasha Levin <sashal@kernel.org>
+> Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+> Reported-and-tested-by: syzbot+53f029db71c19a47325a@syzkaller.appspotmail.com
+> CC: <stable@vger.kernel.org>
+> 
 > ---
-> Matthew, Sasha:
 > 
-> The patch is based on -rcu/dev; I took the liberty of applying the
-> same change to your #defines in:
 > 
->  tools/testing/radix-tree/linux/rcupdate.h
->  tools/include/linux/rcu.h
+> [as1897]
 > 
-> but I admit that I'm not familiar with their uses: please shout if
-> you have any objections with it.
-> ---
->  Documentation/RCU/whatisRCU.txt           |  8 ++++----
->  include/linux/rcupdate.h                  |  5 ++---
->  tools/include/linux/rcu.h                 | 11 +++++++++--
->  tools/testing/radix-tree/linux/rcupdate.h |  5 ++++-
->  4 files changed, 19 insertions(+), 10 deletions(-)
 > 
-> diff --git a/Documentation/RCU/whatisRCU.txt b/Documentation/RCU/whatisRCU.txt
-> index 981651a8b65d2..f99a87b9a88fa 100644
-> --- a/Documentation/RCU/whatisRCU.txt
-> +++ b/Documentation/RCU/whatisRCU.txt
-> @@ -212,7 +212,7 @@ synchronize_rcu()
+>  drivers/media/usb/siano/smsusb.c |   33 ++++++++++++++++++++-------------
+>  1 file changed, 20 insertions(+), 13 deletions(-)
+> 
+> Index: usb-devel/drivers/media/usb/siano/smsusb.c
+> ===================================================================
+> --- usb-devel.orig/drivers/media/usb/siano/smsusb.c
+> +++ usb-devel/drivers/media/usb/siano/smsusb.c
+> @@ -400,6 +400,7 @@ static int smsusb_init_device(struct usb
+>  	struct smsusb_device_t *dev;
+>  	void *mdev;
+>  	int i, rc;
+> +	int in_maxp;
 >  
->  rcu_assign_pointer()
+>  	/* create device object */
+>  	dev = kzalloc(sizeof(struct smsusb_device_t), GFP_KERNEL);
+> @@ -411,6 +412,24 @@ static int smsusb_init_device(struct usb
+>  	dev->udev = interface_to_usbdev(intf);
+>  	dev->state = SMSUSB_DISCONNECTED;
 >  
-> -	typeof(p) rcu_assign_pointer(p, typeof(p) v);
-> +	rcu_assign_pointer(p, typeof(p) v);
-
-Please add the "void", similar to synchronize_rcu() above.
-
->  	Yes, rcu_assign_pointer() -is- implemented as a macro, though it
->  	would be cool to be able to declare a function in this manner.
-> @@ -220,9 +220,9 @@ rcu_assign_pointer()
->  
->  	The updater uses this function to assign a new value to an
->  	RCU-protected pointer, in order to safely communicate the change
-> -	in value from the updater to the reader.  This function returns
-> -	the new value, and also executes any memory-barrier instructions
-> -	required for a given CPU architecture.
-> +	in value from the updater to the reader.  This macro does not
-> +	evaluate to an rvalue, but it does execute any memory-barrier
-> +	instructions required for a given CPU architecture.
->  
->  	Perhaps just as important, it serves to document (1) which
->  	pointers are protected by RCU and (2) the point at which a
-> diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-> index 915460ec08722..a5f61a08e65fc 100644
-> --- a/include/linux/rcupdate.h
-> +++ b/include/linux/rcupdate.h
-> @@ -367,7 +367,7 @@ static inline void rcu_preempt_sleep_check(void) { }
->   * other macros that it invokes.
->   */
->  #define rcu_assign_pointer(p, v)					      \
-> -({									      \
-> +do {									      \
->  	uintptr_t _r_a_p__v = (uintptr_t)(v);				      \
->  	rcu_check_sparse(p, __rcu);				      \
->  									      \
-> @@ -375,8 +375,7 @@ static inline void rcu_preempt_sleep_check(void) { }
->  		WRITE_ONCE((p), (typeof(p))(_r_a_p__v));		      \
->  	else								      \
->  		smp_store_release(&p, RCU_INITIALIZER((typeof(p))_r_a_p__v)); \
-> -	_r_a_p__v;							      \
-> -})
-> +} while (0)
->  
->  /**
->   * rcu_swap_protected() - swap an RCU and a regular pointer
-> diff --git a/tools/include/linux/rcu.h b/tools/include/linux/rcu.h
-> index 7d02527e5bcea..01a435ee48cd6 100644
-> --- a/tools/include/linux/rcu.h
-> +++ b/tools/include/linux/rcu.h
-> @@ -19,7 +19,14 @@ static inline bool rcu_is_watching(void)
->  	return false;
->  }
->  
-> -#define rcu_assign_pointer(p, v) ((p) = (v))
-> -#define RCU_INIT_POINTER(p, v) p=(v)
-> +#define rcu_assign_pointer(p, v)				\
-> +do {								\
-> +	(p) = (v);						\
-> +} while (0)
+> +	for (i = 0; i < intf->cur_altsetting->desc.bNumEndpoints; i++) {
+> +		struct usb_endpoint_descriptor *desc =
+> +				&intf->cur_altsetting->endpoint[i].desc;
 > +
-> +#define RCU_INIT_POINTER(p, v)					\
-> +do {								\
-> +	(p) = (v);						\
-> +} while (0)
-
-These two each fit nicely on one line:
-
-	#define rcu_assign_pointer(p, v) do { (p) = (v); } while (0)
-	#define RCU_INIT_POINTER(p, v)   do { (p) = (v); } while (0)
-
+> +		if (desc->bEndpointAddress & USB_DIR_IN) {
+> +			dev->in_ep = desc->bEndpointAddress;
+> +			in_maxp = usb_endpoint_maxp(desc);
+> +		} else {
+> +			dev->out_ep = desc->bEndpointAddress;
+> +		}
+> +	}
+> +
+> +	pr_debug("in_ep = %02x, out_ep = %02x\n", dev->in_ep, dev->out_ep);
+> +	if (!dev->in_ep || !dev->out_ep) {	/* Missing endpoints? */
+> +		smsusb_term_device(intf);
+> +		return -ENODEV;
+> +	}
+> +
+>  	params.device_type = sms_get_board(board_id)->type;
 >  
->  #endif
-> diff --git a/tools/testing/radix-tree/linux/rcupdate.h b/tools/testing/radix-tree/linux/rcupdate.h
-> index fd280b070fdb1..48212f3a758e6 100644
-> --- a/tools/testing/radix-tree/linux/rcupdate.h
-> +++ b/tools/testing/radix-tree/linux/rcupdate.h
-> @@ -7,6 +7,9 @@
->  #define rcu_dereference_raw(p) rcu_dereference(p)
->  #define rcu_dereference_protected(p, cond) rcu_dereference(p)
->  #define rcu_dereference_check(p, cond) rcu_dereference(p)
-> -#define RCU_INIT_POINTER(p, v)	(p) = (v)
-> +#define RCU_INIT_POINTER(p, v)					\
-> +do {								\
-> +	(p) = (v);						\
-> +} while (0)
-
-As does this one.
-
->  #endif
-> -- 
-> 2.7.4
+>  	switch (params.device_type) {
+> @@ -425,24 +444,12 @@ static int smsusb_init_device(struct usb
+>  		/* fall-thru */
+>  	default:
+>  		dev->buffer_size = USB2_BUFFER_SIZE;
+> -		dev->response_alignment =
+> -		    le16_to_cpu(dev->udev->ep_in[1]->desc.wMaxPacketSize) -
+> -		    sizeof(struct sms_msg_hdr);
+> +		dev->response_alignment = in_maxp - sizeof(struct sms_msg_hdr);
+>  
+>  		params.flags |= SMS_DEVICE_FAMILY2;
+>  		break;
+>  	}
+>  
+> -	for (i = 0; i < intf->cur_altsetting->desc.bNumEndpoints; i++) {
+> -		if (intf->cur_altsetting->endpoint[i].desc. bEndpointAddress & USB_DIR_IN)
+> -			dev->in_ep = intf->cur_altsetting->endpoint[i].desc.bEndpointAddress;
+> -		else
+> -			dev->out_ep = intf->cur_altsetting->endpoint[i].desc.bEndpointAddress;
+> -	}
+> -
+> -	pr_debug("in_ep = %02x, out_ep = %02x\n",
+> -		dev->in_ep, dev->out_ep);
+> -
+>  	params.device = &dev->udev->dev;
+>  	params.usb_device = dev->udev;
+>  	params.buffer_size = dev->buffer_size;
 > 
+
+Patch looks correct, and I'm applying it. It exposes another potential
+problem though: what happens if sizeof(desc.wMaxPacketSize) < sizeof(struct sms_msg_hdr)?
+
+I'm enclosing a followup patch that should solve this situation
+(and clean up a sparse warning).
+
+Thanks,
+Mauro
+
+[PATCH] media: smsusb: better handle optional alignment
+
+Most Siano devices require an alignment for the response.
+
+Changeset f3be52b0056a ("media: usb: siano: Fix general protection fault in smsusb")
+changed the logic with gets such aligment, but it now produces a
+sparce warning:
+
+drivers/media/usb/siano/smsusb.c: In function 'smsusb_init_device':
+drivers/media/usb/siano/smsusb.c:447:37: warning: 'in_maxp' may be used uninitialized in this function [-Wmaybe-uninitialized]
+  447 |   dev->response_alignment = in_maxp - sizeof(struct sms_msg_hdr);
+      |                             ~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The sparse message itself is bogus, but a broken (or fake) USB
+eeprom could produce a negative value for response_alignment.
+
+So, change the code in order to check if the result is not
+negative.
+
+Fixes: f3be52b0056a ("media: usb: siano: Fix general protection fault in smsusb")
+CC: <stable@vger.kernel.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+
+diff --git a/drivers/media/usb/siano/smsusb.c b/drivers/media/usb/siano/smsusb.c
+index 27ad14a3f831..e39f3f40dfdd 100644
+--- a/drivers/media/usb/siano/smsusb.c
++++ b/drivers/media/usb/siano/smsusb.c
+@@ -400,7 +400,7 @@ static int smsusb_init_device(struct usb_interface *intf, int board_id)
+ 	struct smsusb_device_t *dev;
+ 	void *mdev;
+ 	int i, rc;
+-	int in_maxp;
++	int align = 0;
+ 
+ 	/* create device object */
+ 	dev = kzalloc(sizeof(struct smsusb_device_t), GFP_KERNEL);
+@@ -418,14 +418,14 @@ static int smsusb_init_device(struct usb_interface *intf, int board_id)
+ 
+ 		if (desc->bEndpointAddress & USB_DIR_IN) {
+ 			dev->in_ep = desc->bEndpointAddress;
+-			in_maxp = usb_endpoint_maxp(desc);
++			align = usb_endpoint_maxp(desc) - sizeof(struct sms_msg_hdr);
+ 		} else {
+ 			dev->out_ep = desc->bEndpointAddress;
+ 		}
+ 	}
+ 
+ 	pr_debug("in_ep = %02x, out_ep = %02x\n", dev->in_ep, dev->out_ep);
+-	if (!dev->in_ep || !dev->out_ep) {	/* Missing endpoints? */
++	if (!dev->in_ep || !dev->out_ep || align < 0) {  /* Missing endpoints? */
+ 		smsusb_term_device(intf);
+ 		return -ENODEV;
+ 	}
+@@ -444,7 +444,7 @@ static int smsusb_init_device(struct usb_interface *intf, int board_id)
+ 		/* fall-thru */
+ 	default:
+ 		dev->buffer_size = USB2_BUFFER_SIZE;
+-		dev->response_alignment = in_maxp - sizeof(struct sms_msg_hdr);
++		dev->response_alignment = align;
+ 
+ 		params.flags |= SMS_DEVICE_FAMILY2;
+ 		break;
+
+
+
 
