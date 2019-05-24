@@ -2,109 +2,144 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2BDBC282E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:47:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2336C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:48:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5B6620851
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:47:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B01A420851
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:48:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="Rn1w8rrq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390037AbfEXPrB (ORCPT
+        id S2389947AbfEXPsn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 11:47:01 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:32969 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389079AbfEXPrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 11:47:00 -0400
-Received: from LHREML711-CAH.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 27C5215AA8D2C4377753;
-        Fri, 24 May 2019 16:46:59 +0100 (IST)
-Received: from [10.204.65.201] (10.204.65.201) by smtpsuk.huawei.com
- (10.201.108.34) with Microsoft SMTP Server (TLS) id 14.3.408.0; Fri, 24 May
- 2019 16:46:57 +0100
-Subject: Re:
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        Prakhar Srivastava <prsriva02@gmail.com>,
-        <linux-integrity@vger.kernel.org>,
-        <linux-security-module@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <mjg59@google.com>, <vgoyal@redhat.com>
-References: <20190521000645.16227-1-prsriva02@gmail.com>
- <20190521000645.16227-3-prsriva02@gmail.com>
- <1558710722.3977.68.camel@linux.ibm.com>
- <a7acac28-156e-80d1-b759-cb0c59f73169@huawei.com>
-Message-ID: <cb0eb785-9050-738e-c1bf-8e769fe096fa@huawei.com>
-Date:   Fri, 24 May 2019 17:47:05 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Fri, 24 May 2019 11:48:43 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36069 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389079AbfEXPsn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 11:48:43 -0400
+Received: by mail-oi1-f195.google.com with SMTP id y124so7387785oiy.3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 08:48:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=VnZfOS1iwVY/y3S5ygO9n8yXSXom1QPOKMwgmm4Nkio=;
+        b=Rn1w8rrq8jnqx+HnE9zs1bnGB0aDFB9M0RNzuGCNQxPDSvCjbZOLE/1/8l6w3jwS6V
+         pmEZtLZqA1fmX11DldIiqC8w3eAWCNOn4/08jY4rmP1pCZJ9hrnoVvLAfyQP+nje0T10
+         bGM7I4GosQwiCSD7vKCWa1RcNjBZv8Qr+KhCN+J8gkVBXvT7DPy2LVo97iuxRsREsnFD
+         8ucA6KSgdfbUysB6hJuvkhTgO+XsMrjiV4fQ587UBx/kLhvb3YBgtTM4RL+0fTheleTt
+         ql5JfvYfCMPOHAd9oHF1+7a45IA/oyBjb855gQdQf5OQivqCLy1zIlTBnTMkC0G99uw3
+         Bm4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=VnZfOS1iwVY/y3S5ygO9n8yXSXom1QPOKMwgmm4Nkio=;
+        b=fr/9sb4Vx13ucSQc4I5HCxBcICNCCe3NVS4kYNHgjYSGxOUJiygekX1+kypq63hYtf
+         WIP/aX7OQugZpZ5CNo5oBMLMSf18v/K426KWFRZvDd/fQX6Wy0bxrrpV1XNo1vQ39g4o
+         /L2vs1EUbHLLMrayXzSUDVH0uPFV4ffiaSY/N9iP/tYfZrp1N9arPnPsUJ+tGbBhLvlz
+         lHXhSJNslMurDIdmB1j571bxnD8QCPnLrEgemhRMeJOxmlIAxpkwh9n9sgcMYCse6rhD
+         EyqMT6C5f7D2M4xSmQHYKYjABLCOXqjWndHOsfOGGskj82XQ7V9VvCjUg1JYGa10CFrt
+         UwZA==
+X-Gm-Message-State: APjAAAWeMQLVoaSdVDg+XxxX0jQPQfYNdxgmF6T2nNOVdlM+VjaZOHxh
+        /395z9PgB2JzIaw777cFGbSfnDGibePiobWjHEcs1g==
+X-Google-Smtp-Source: APXvYqyW4iOkpvEW07bkloS7q8ueiELOVVaDniEHBFWvpgPMKVs+sfmDFFX+MOSdAC6C6h4JfkN/ao+FJlBeTpW2WMg=
+X-Received: by 2002:aca:ab07:: with SMTP id u7mr6444454oie.73.1558712922804;
+ Fri, 24 May 2019 08:48:42 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <a7acac28-156e-80d1-b759-cb0c59f73169@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.204.65.201]
-X-CFilter-Loop: Reflected
+References: <20190523223746.4982-1-ira.weiny@intel.com> <CAPcyv4gYxyoX5U+Fg0LhwqDkMRb-NRvPShOh+nXp-r_HTwhbyA@mail.gmail.com>
+ <20190524153625.GA23100@iweiny-DESK2.sc.intel.com>
+In-Reply-To: <20190524153625.GA23100@iweiny-DESK2.sc.intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 24 May 2019 08:48:31 -0700
+Message-ID: <CAPcyv4gtYws-csDXSEzyL4UUQtD8iDgCC=m4vk1x8fFqF9fttg@mail.gmail.com>
+Subject: Re: [PATCH] mm/swap: Fix release_pages() when releasing devmap pages
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/24/2019 5:42 PM, Roberto Sassu wrote:
-> On 5/24/2019 5:12 PM, Mimi Zohar wrote:
->> On Mon, 2019-05-20 at 17:06 -0700, Prakhar Srivastava wrote:
->>> A buffer(cmdline args) measured into ima cannot be appraised
->>> without already being aware of the buffer contents.Since we
->>> don't know what cmdline args will be passed (or need to validate
->>> what was passed) it is not possible to appraise it.
->>>
->>> Since hashs are non reversible the raw buffer is needed to
->>> recompute the hash.
->>> To regenrate the hash of the buffer and appraise the same
->>> the contents of the buffer need to be available.
->>>
->>> A new template field buf is added to the existing ima template
->>> fields, which can be used to store/read the buffer itself.
->>> Two new fields are added to the ima_event_data to carry the
->>> buf and buf_len whenever necessary.
->>>
->>> Updated the process_buffer_measurement call to add the buf
->>> to the ima_event_data.
->>> process_buffer_measurement added in "Add a new ima hook
->>> ima_kexec_cmdline to measure cmdline args"
->>>
->>> - Add a new template field 'buf' to be used to store/read
->>> the buffer data.
->>> - Added two new fields to ima_event_data to hold the buf and
->>> buf_len [Suggested by Roberto]
->>> -Updated process_buffer_meaurement to add the buffer to
->>> ima_event_data
->>
->> This patch description can be written more concisely.
->>
->> Patch 1/3 in this series introduces measuring the kexec boot command
->> line.  This patch defines a new template field for storing the kexec
->> boot command line in the measurement list in order for a remote
->> attestation server to verify.
->>
->> As mentioned, the first patch description should include a shell
->> command for verifying the digest in the kexec boot command line
->> measurement list record against /proc/cmdline.  This patch description
->> should include a shell command showing how to verify the digest based
->> on the new field.  Should the new field in the ascii measurement list
->> be displayed as a string, not hex?
-> 
-> We should define a new type. If the type is DATA_FMT_STRING, spaces are
-> replaced with '_'.
+On Fri, May 24, 2019 at 8:35 AM Ira Weiny <ira.weiny@intel.com> wrote:
+>
+> On Thu, May 23, 2019 at 08:58:12PM -0700, Dan Williams wrote:
+> > On Thu, May 23, 2019 at 3:37 PM <ira.weiny@intel.com> wrote:
+> > >
+> > > From: Ira Weiny <ira.weiny@intel.com>
+> > >
+> > > Device pages can be more than type MEMORY_DEVICE_PUBLIC.
+> > >
+> > > Handle all device pages within release_pages()
+> > >
+> > > This was found via code inspection while determining if release_pages=
+()
+> > > and the new put_user_pages() could be interchangeable.
+> > >
+> > > Cc: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+> > > Cc: Dan Williams <dan.j.williams@intel.com>
+> > > Cc: Michal Hocko <mhocko@suse.com>
+> > > Cc: John Hubbard <jhubbard@nvidia.com>
+> > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > > ---
+> > >  mm/swap.c | 7 +++----
+> > >  1 file changed, 3 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/mm/swap.c b/mm/swap.c
+> > > index 3a75722e68a9..d1e8122568d0 100644
+> > > --- a/mm/swap.c
+> > > +++ b/mm/swap.c
+> > > @@ -739,15 +739,14 @@ void release_pages(struct page **pages, int nr)
+> > >                 if (is_huge_zero_page(page))
+> > >                         continue;
+> > >
+> > > -               /* Device public page can not be huge page */
+> > > -               if (is_device_public_page(page)) {
+> > > +               if (is_zone_device_page(page)) {
+> > >                         if (locked_pgdat) {
+> > >                                 spin_unlock_irqrestore(&locked_pgdat-=
+>lru_lock,
+> > >                                                        flags);
+> > >                                 locked_pgdat =3D NULL;
+> > >                         }
+> > > -                       put_devmap_managed_page(page);
+> > > -                       continue;
+> > > +                       if (put_devmap_managed_page(page))
+> >
+> > This "shouldn't" fail, and if it does the code that follows might get
+>
+> I agree it shouldn't based on the check.  However...
+>
+> > confused by a ZONE_DEVICE page. If anything I would make this a
+> > WARN_ON_ONCE(!put_devmap_managed_page(page)), but always continue
+> > unconditionally.
+>
+> I was trying to follow the pattern from put_page()  Where if fails it ind=
+icated
+> it was not a devmap page and so "regular" processing should continue.
 
-Or better. Leave it as hex, otherwise there would be a parsing problem
-if there are spaces in the data for a field.
+In this case that regular continuation already happened by not taking
+the if (is_zone_device_page(page)) branch
 
-Roberto
+>
+> Since I'm unsure I'll just ask what does this check do?
+>
+>         if (!static_branch_unlikely(&devmap_managed_key))
+>                 return false;
 
--- 
-HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
-Managing Director: Bo PENG, Jian LI, Yanli SHI
+That attempts to skip the overhead imposed by device-pages, i.e.
+->page_free() callback and other extras, if there are no device-page
+producers in the system. I.e. use the old simple put_page() path when
+there is no hmm or pmem.
