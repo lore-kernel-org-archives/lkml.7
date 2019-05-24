@@ -3,71 +3,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7563C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 678ABC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9899320868
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:25:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 326B920868
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:25:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389166AbfEXHZ0 (ORCPT
+        id S2389184AbfEXHZo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 03:25:26 -0400
-Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:33579 "EHLO
-        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388910AbfEXHZ0 (ORCPT
+        Fri, 24 May 2019 03:25:44 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:42211 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388910AbfEXHZo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 03:25:26 -0400
-Received: from [192.168.2.10] ([46.9.252.75])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id U4ZshHnhOsDWyU4ZwhQhDj; Fri, 24 May 2019 09:25:24 +0200
-Subject: Re: [PATCH v6 2/3] drm/bridge: dw-hdmi: pass connector info to the
- CEC adapter
-To:     Dariusz Marcinkiewicz <darekm@google.com>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190517154256.255696-1-darekm@google.com>
- <20190517154256.255696-2-darekm@google.com>
- <8f2ceecd-da9e-a923-da72-cdc660eecb3a@xs4all.nl>
- <CALFZZQHjc8WxuuGzcWUjDJ2TU9Pyp+f0XN0p8iPahPFAOtw6AA@mail.gmail.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <dc7a5a31-ca37-167f-5ebe-9b27e0830a87@xs4all.nl>
-Date:   Fri, 24 May 2019 09:25:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 24 May 2019 03:25:44 -0400
+Received: from [5.158.153.53] (helo=nanos.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hU4aE-00078e-7c; Fri, 24 May 2019 09:25:42 +0200
+Date:   Fri, 24 May 2019 09:25:36 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>
+cc:     linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 0/7] rslib: RS decoder is severely broken
+In-Reply-To: <20190509150929.GA309@mail-personal>
+Message-ID: <alpine.DEB.2.21.1905240924430.2166@nanos.tec.linutronix.de>
+References: <20190330182947.8823-1-ferdinand.blomqvist@gmail.com> <alpine.DEB.2.21.1904041322160.1685@nanos.tec.linutronix.de> <20190509150929.GA309@mail-personal>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <CALFZZQHjc8WxuuGzcWUjDJ2TU9Pyp+f0XN0p8iPahPFAOtw6AA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfOkeo0nb1UDHfM7/T2Pc2KEcf8pmdZTyE9osaYNAyx1GgUfuywIBwhNcFonPRJLVHp3bl1YzsC/HXuCoKIjQycLgDfJ32muL9mNRLV8menfJUxYckl2n
- TMTBAIVsPRp4TRq71EXKgItmT+biNoX9+5siaKdotHubDo2ypWteJbZwQC2PnxjpPHHCBJtuPyNmjKPiWOpGW1vL1XGUldeEihF4F9GcLN7+c7j0JSLnsqjk
- pwNVpwScyxcPn/CMp4IJFQ==
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/21/19 12:54 PM, Dariusz Marcinkiewicz wrote:
-> On Mon, May 20, 2019 at 1:30 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
->>
->> On 5/17/19 5:42 PM, Dariusz Marcinkiewicz wrote:
->>> This patch makes dw-hdmi pass DRM connector info to a respective
->>> CEC adapter. In order to be able to do that it delays creation of
->>> the dw-hdmi-cec platform device until DRM connector is initialized.
->>>
->>> Requires testing.
->>
->> Testing this patch with the Khadas VIM2 board gives this kernel warning:
->>
-> Thank you for testing!
+On Thu, 9 May 2019, Ferdinand Blomqvist wrote:
+> On 2019-04-04 13:24:05, Thomas Gleixner wrote:
+> > Ferdinand,
+> > 
+> > On Sat, 30 Mar 2019, Ferdinand Blomqvist wrote:
+> > 
+> > Thanks for providing that! I'm short of cycles to go through that right
+> > now, but will do in the foreseeable future. Feel free to remind me if I
+> > don't do so within two weeks.
 > 
-> This was probably because the platform device info was not fully
-> initialized. Hopefully it is better in v7.
+> A gentle reminder.
 
-This now works without a crash on my Khadas board!
+Working through it. Need to page in all the details :(
 
 Thanks,
 
-	Hans
+	tglx
