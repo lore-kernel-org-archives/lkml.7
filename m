@@ -2,116 +2,96 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C886C282E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D93C282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F074C20673
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:51:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39BC22075B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:52:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404179AbfEXOvR (ORCPT
+        id S2404173AbfEXOwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 10:51:17 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35976 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404154AbfEXOvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 10:51:17 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 604EB30B1B84;
-        Fri, 24 May 2019 14:51:11 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 41FB02CFD6;
-        Fri, 24 May 2019 14:51:07 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Fri, 24 May 2019 16:51:11 +0200 (CEST)
-Date:   Fri, 24 May 2019 16:51:06 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Deepa Dinamani <deepa.kernel@gmail.com>
-Cc:     David Laight <David.Laight@aculab.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "dbueso@suse.de" <dbueso@suse.de>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        Davidlohr Bueso <dave@stgolabs.net>, Eric Wong <e@80x24.org>,
-        Jason Baron <jbaron@akamai.com>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        linux-aio <linux-aio@kvack.org>,
-        Omar Kilani <omar.kilani@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH v2] signal: Adjust error codes according to
- restore_user_sigmask()
-Message-ID: <20190524145105.GD2655@redhat.com>
-References: <20190522161407.GB4915@redhat.com>
- <CABeXuvpjrW5Gt95JC-_rYkOA=6RCD5OtkEQdwZVVqGCE3GkQOQ@mail.gmail.com>
- <4f7b6dbeab1d424baaebd7a5df116349@AcuMS.aculab.com>
- <20190523145944.GB23070@redhat.com>
- <345cfba5edde470f9a68d913f44fa342@AcuMS.aculab.com>
- <20190523163604.GE23070@redhat.com>
- <f0eced5677c144debfc5a69d0d327bc1@AcuMS.aculab.com>
- <CABeXuvo-wey+NHWb4gi=FSRrjJOKkVcLPQ-J+dchJeHEbhGQ6g@mail.gmail.com>
- <20190524141947.GC2655@redhat.com>
- <CABeXuvqx9fZGiGSAQEE=7wechoGE0E8YW7icBWoTtXPkWPROUw@mail.gmail.com>
+        Fri, 24 May 2019 10:52:36 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52908 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2403860AbfEXOwg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 10:52:36 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E02AFAF7F;
+        Fri, 24 May 2019 14:52:34 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Mathias Nyman <mathias.nyman@intel.com>
+Cc:     oneukum@suse.com, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] xhci: clear port_remote_wakeup after resume failure
+Date:   Fri, 24 May 2019 16:52:30 +0200
+Message-Id: <20190524145231.6605-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABeXuvqx9fZGiGSAQEE=7wechoGE0E8YW7icBWoTtXPkWPROUw@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Fri, 24 May 2019 14:51:16 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/24, Deepa Dinamani wrote:
->
-> I think you are misunderstanding what I said.
+This was seen on a Dell Precision 5520 using it's WD15 dock. The dock's
+Ethernet device interfaces with the laptop through one of it's USB3
+ports. While idle, the Ethernet device and HCD are suspended by runtime
+PM, being the only device connected on the bus. Then, both are resumed on
+behalf of the Ethernet device, which has remote wake-up capabilities.
 
-probably. Everything was very confusing to me from the very beginning.
-And yes, I can hardly understand your emails, sorry. This one too :/
+The Ethernet device was observed to randomly disconnect from the USB
+port shortly after submitting it's remote wake-up request. Probably a
+weird timing issue yet to be investigated. This causes runtime PM to
+busyloop causing some tangible CPU load. The reason is the port gets
+stuck in the middle of a remote wake-up operation, waiting for the
+device to switch to U0. This never happens, leaving "port_remote_wakeup"
+enabled, and automatically triggering a failure on any further suspend
+operation.
 
-> You are taking things
-> out of context. I was saying here what I did was inspired by why the
-> syscall was designed to begin with.
+This patch clears "port_remote_wakeup" upon detecting a device with a
+wrong resuming port state (see Table 4-9 in 4.15.2.3). Making sure the
+above mentioned situation doesn't trigger a PM busyloop.
 
-which syscall?
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+---
+ drivers/usb/host/xhci-hub.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-> The syscall below refers to
-> epoll_wait and not epoll_pwait.
-
-So you tried to explain why epoll_pwait() was designed? Or what?
-
-Either way, everything I said below still looks right to me. This probably
-means that I still can't understand you.
-
-But this is irrelevant. My main point is that the kernel was correct before
-854a6ed568 ("signal: Add restore_user_sigmask()"), the (incomplete) patch I sent
-tries to a) restore the correct behaviour and b) simplify/cleanup the code.
-
-> On Fri, May 24, 2019 at 7:19 AM Oleg Nesterov <oleg@redhat.com> wrote:
-> >
-> > On 05/23, Deepa Dinamani wrote:
-> > >
-> > > 1. block the signals you don't care about.
-> > > 2. syscall()
-> > > 3. unblock the signals blocked in 1.
-> >
-> > and even this part of your email is very confusing. because in this case
-> > we can never miss a signal. I'd say
-> >
-> >         1. block the signals you don't care about
-> >         2. unblock the signals which should interrupt the syscall below
-> >         3. syscall()
-> >         4. block the signals unblocked in 2.
-> >
-> > Oleg.
-> >
+diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
+index 3abe70ff1b1e..53f5ee50ef8c 100644
+--- a/drivers/usb/host/xhci-hub.c
++++ b/drivers/usb/host/xhci-hub.c
+@@ -1047,8 +1047,8 @@ static u32 xhci_get_port_status(struct usb_hcd *hcd,
+ 		xhci_get_usb2_port_status(port, &status, raw_port_status,
+ 					  flags);
+ 	/*
+-	 * Clear stale usb2 resume signalling variables in case port changed
+-	 * state during resume signalling. For example on error
++	 * Clear stale resume signalling variables in case port changed
++	 * state during resume signalling. For example on error.
+ 	 */
+ 	if ((bus_state->resume_done[wIndex] ||
+ 	     test_bit(wIndex, &bus_state->resuming_ports)) &&
+@@ -1057,6 +1057,12 @@ static u32 xhci_get_port_status(struct usb_hcd *hcd,
+ 		bus_state->resume_done[wIndex] = 0;
+ 		clear_bit(wIndex, &bus_state->resuming_ports);
+ 		usb_hcd_end_port_resume(&hcd->self, wIndex);
++	} else if (bus_state->port_remote_wakeup & (1 << port->hcd_portnum) &&
++		   ((raw_port_status & PORT_PLS_MASK) != XDEV_RESUME ||
++		   !(raw_port_status & PORT_CONNECT) ||
++		   !(raw_port_status & PORT_PE) ||
++		   raw_port_status & PORT_OC)) {
++		bus_state->port_remote_wakeup &= ~(1 << port->hcd_portnum);
+ 	}
+ 
+ 	if (bus_state->port_c_suspend & (1 << wIndex))
+-- 
+2.21.0
 
