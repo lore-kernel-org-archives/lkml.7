@@ -2,97 +2,132 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=AC_FROM_MANY_DOTS,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A8EC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA50C282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 345992133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:05:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NeXqS1Hv"
+	by mail.kernel.org (Postfix) with ESMTP id 7F02521773
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:07:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732043AbfEXSFo (ORCPT
+        id S1731992AbfEXSH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 14:05:44 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:33007 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbfEXSFo (ORCPT
+        Fri, 24 May 2019 14:07:26 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:55576 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726909AbfEXSH0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 14:05:44 -0400
-Received: by mail-ua1-f67.google.com with SMTP id 49so3952132uas.0;
-        Fri, 24 May 2019 11:05:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:message-id:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-disposition:content-transfer-encoding;
-        bh=PcoTHdGaQs/oS0l0s0m+vBHryefQqzo0n8dHugWubO8=;
-        b=NeXqS1HvsZSSQRUkTzNHSX6lYJlU04peNsF9phz9BtuIIDoB2w/XG1s+IBZ7NT1GDg
-         L13UfZN1KSPpSTcnH2A1viXbsFRhEAqPmRyq06Dwq67zxoiwxhXW8ZXEnT8tpR5RDf7c
-         uSlOGwi6YYKb909ek9RNaAUXDItdj7n51ZHznUCf9y8tauP4ZERUNpNjP4x9Pl/3NLE3
-         vJR8v6WY6ORryPQmElOTEAxwKm17hjLyrPJF/5t9EJ1TElx3J12ywmOcCijM+N7KYWhj
-         KpLSZNYUhtmNKbgWJv61oXlKMsdz3uxYTpQoUxo9RWVs2xcOsM2pbCd55rVPcm44cP7K
-         F+Kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
-         :references:mime-version:content-disposition
-         :content-transfer-encoding;
-        bh=PcoTHdGaQs/oS0l0s0m+vBHryefQqzo0n8dHugWubO8=;
-        b=WR3QHzmK9SHo5sSVoAuo7u6TmOtNS9wwRjLySoHVpF37PXzRJb7/W+2qfSkW3AHX2S
-         hoihr7GfxQfI94hxfkVUoJihhVlEIGEdNGpo909B7e9JhW2R7SeFMYQVNIAeyRS98Mc8
-         A7Mws6QzHIFQ7KWIFpo2pydOsCIaDJuh8r7SgtSPalsIzZ5AiyWWaplXkRhPt9MfGV8u
-         5nZ5z8s2B4w4ylnFIBbrKumOI+5w22byMxlK2d5U6LVtWgtqn90UDhETuylMatqZujjf
-         KDrPGZDAzG6mbL1r3r2b0qibnRo7tOwLxI4YlP1vswZZioGsImwVhTxk0eUqAyq6Ag3J
-         6cmQ==
-X-Gm-Message-State: APjAAAVOUIKCL/Ov0EPHzIi2qi04BeHFBeGnpdZtHQy2d0pyvLDg9S9M
-        WH8NGINSg1lyE0IQl5wVuZk=
-X-Google-Smtp-Source: APXvYqwkWNCRx3CHExW+IJQePUfT7RZq3BIM6AwWWMLeEth5GJy6I/4peZPF7oluIdgapau0d4poKA==
-X-Received: by 2002:ab0:644d:: with SMTP id j13mr23523976uap.98.1558721143160;
-        Fri, 24 May 2019 11:05:43 -0700 (PDT)
-Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
-        by smtp.gmail.com with ESMTPSA id g41sm1889892uah.12.2019.05.24.11.05.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 24 May 2019 11:05:42 -0700 (PDT)
-Date:   Fri, 24 May 2019 14:05:41 -0400
-Message-ID: <20190524140541.GH17138@t480s.localdomain>
-From:   Vivien Didelot <vivien.didelot@gmail.com>
-To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 4/5] net: dsa: mv88e6xxx: implement watchdog_ops for
- mv88e6250
-In-Reply-To: <20190524085921.11108-5-rasmus.villemoes@prevas.dk>
-References: <20190501193126.19196-1-rasmus.villemoes@prevas.dk>
- <20190524085921.11108-1-rasmus.villemoes@prevas.dk>
- <20190524085921.11108-5-rasmus.villemoes@prevas.dk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+        Fri, 24 May 2019 14:07:26 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1hUEbA-0004vM-1b; Fri, 24 May 2019 18:07:20 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     bhelgaas@google.com, rafael.j.wysocki@intel.com
+Cc:     stern@rowland.harvard.edu, lukas@wunner.de,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH v3] PCI / PM: Don't runtime suspend when device only supports wakeup from D0
+Date:   Sat, 25 May 2019 02:07:16 +0800
+Message-Id: <20190524180716.13124-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 May 2019 09:00:29 +0000, Rasmus Villemoes <rasmus.villemoes@prevas.dk> wrote:
-> The MV88E6352_G2_WDOG_CTL_* bits almost, but not quite, describe the
-> watchdog control register on the mv88e6250. Among those actually
-> referenced in the code, only QC_ENABLE differs (bit 6 rather than bit
-> 5).
-> 
-> Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+There's an xHCI device that doesn't wake when a USB device gets plugged
+to its USB port. The driver's own runtime suspend callback was called,
+PME signaling was enabled, but it stays at PCI D0:
+  Status: D0 NoSoftRst+ PME-Enable+ DSel=0 DScale=0 PME-
 
-Clean patch,
+A PCI device can be runtime suspended while still stays at D0 when it
+supports D0 PME and its _S0W reports D0. Theoretically this should work,
+but as [1] specifies, D0 doesn't have wakeup capability.
 
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+To avoid this problematic situation, we should avoid runtime suspend if
+D0 is the only state that can wake up the device. If the deivce doesn't
+require wakeup capability, carry out driver's runtime suspend as usual,
+which may have logic to save its power internally.
 
-Thanks,
-Vivien
+[1] https://docs.microsoft.com/en-us/windows-hardware/drivers/kernel/device-working-state-d0
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203673
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+v3:
+ - Add Bugzilla link
+v2:
+ - Changes wording
+ - Keep old behaviour for devices can't wakeup.
+
+ drivers/pci/pci-driver.c | 6 ++++++
+ drivers/pci/pci.c        | 2 +-
+ include/linux/pci.h      | 3 +++
+ 3 files changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index cae630fe6387..e3fac1d2a265 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -1239,6 +1239,7 @@ static int pci_pm_runtime_suspend(struct device *dev)
+ 	struct pci_dev *pci_dev = to_pci_dev(dev);
+ 	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
+ 	pci_power_t prev = pci_dev->current_state;
++	bool wakeup = device_can_wakeup(dev);
+ 	int error;
+ 
+ 	/*
+@@ -1251,6 +1252,11 @@ static int pci_pm_runtime_suspend(struct device *dev)
+ 		return 0;
+ 	}
+ 
++	if (wakeup && pci_target_state(pci_dev, wakeup) == PCI_D0) {
++		dev_dbg(dev, "D0 doesn't have wakeup capability\n");
++		return -EBUSY;
++	}
++
+ 	pci_dev->state_saved = false;
+ 	if (pm && pm->runtime_suspend) {
+ 		error = pm->runtime_suspend(dev);
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 8abc843b1615..ceee6efbbcfe 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -2294,7 +2294,7 @@ EXPORT_SYMBOL(pci_wake_from_d3);
+  * If the platform can't manage @dev, return the deepest state from which it
+  * can generate wake events, based on any available PME info.
+  */
+-static pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup)
++pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup)
+ {
+ 	pci_power_t target_state = PCI_D3hot;
+ 
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 4a5a84d7bdd4..91e8dc4d04aa 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1188,6 +1188,7 @@ bool pci_pme_capable(struct pci_dev *dev, pci_power_t state);
+ void pci_pme_active(struct pci_dev *dev, bool enable);
+ int pci_enable_wake(struct pci_dev *dev, pci_power_t state, bool enable);
+ int pci_wake_from_d3(struct pci_dev *dev, bool enable);
++pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup);
+ int pci_prepare_to_sleep(struct pci_dev *dev);
+ int pci_back_from_sleep(struct pci_dev *dev);
+ bool pci_dev_run_wake(struct pci_dev *dev);
+@@ -1672,6 +1673,8 @@ static inline int pci_set_power_state(struct pci_dev *dev, pci_power_t state)
+ { return 0; }
+ static inline int pci_wake_from_d3(struct pci_dev *dev, bool enable)
+ { return 0; }
++pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup)
++{ return PCI_D0; }
+ static inline pci_power_t pci_choose_state(struct pci_dev *dev,
+ 					   pm_message_t state)
+ { return PCI_D0; }
+-- 
+2.17.1
+
