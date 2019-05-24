@@ -4,288 +4,111 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13631C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0441CC282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF29021841
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:51:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE2362133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:52:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sKNR8NY0"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="UPkeqXPC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389020AbfEXGvs (ORCPT
+        id S2389028AbfEXGwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 02:51:48 -0400
-Received: from mail-wr1-f43.google.com ([209.85.221.43]:45008 "EHLO
-        mail-wr1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388460AbfEXGvr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 02:51:47 -0400
-Received: by mail-wr1-f43.google.com with SMTP id w13so368003wru.11
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 23:51:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=lltLW4PSxvyQGN9XyeiraZ/m6eO8W0SUMmn8vLH/4Ls=;
-        b=sKNR8NY0tdHJd99RjxkPWy5xROELdQXkEYNdj/yXQrJN4FaQmVN45QCN+eIrSK75WP
-         ksEV48A0KtcwdJ9WAYF86rYLYCVOGp1ezKwrE4l0l1vCYYNVlHTSH++X/aQ3RFdsCeix
-         DHmQ8gtHyGsgVdOz549pXg1ADjYR26rUtPm1bnQJ2P7DUCn0HnaK8zR89jPQc34pKSRg
-         B8cqAYAHnLDICrsEbLoGb8hyaqXQdIfKuCnlGo5AfN/607orQpVcUMFUjDEPKj4mJKsL
-         i44CxLQJGkyq75HPyRtYgbniv5FkQXkM9PAvHFchZwf84BRgVR8P0Rlbi6P8v+/LPpxj
-         o/zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=lltLW4PSxvyQGN9XyeiraZ/m6eO8W0SUMmn8vLH/4Ls=;
-        b=enoq8A2fTTghg04MN3xnR5dsTLEXZfk32WsPIEoTaIb1XdZlKJiAgRxmEwqNEURUHC
-         AbrvWk6mmk1eOGoxvXDtumCHj3vOfi6SI7ALwMAw42pvesxV66/NI5z/bLsTDftwX0hb
-         fQ1I25u5YHcOMk7sj4sGw8YTT8ZP7aVFij4TQksk5fx2yBbuNMhW3oIP2XxBjjs5i0FZ
-         06VZKMlzvUUYVParxjKTDAkbiEBWvZWQtw/Fdc146wdA/cm9p6jDWRzQVESl89GwVT5N
-         1gVdSV3jsenpSbd29CsA0B6vm8Vy88z/19A62PSQUA8uA7HFZRlNDa4RIvo0LL2P++vB
-         2WQw==
-X-Gm-Message-State: APjAAAUYfyY0hW1sfco476nhcuzs8/RFJDnT4xN3BRXNW8q34SEwQ9OA
-        xZ+oTta2UOMYTgCVNVh2Nd3kGg==
-X-Google-Smtp-Source: APXvYqzeAuKP4BywTT/svgg/pjDVaIDsDagPL3WmK/2Rp2Vr6wlLceTq/3SQUFtprD0lx72bBfsIvA==
-X-Received: by 2002:a5d:680d:: with SMTP id w13mr22137863wru.316.1558680704991;
-        Thu, 23 May 2019 23:51:44 -0700 (PDT)
-Received: from [192.168.0.100] (84-33-66-28.dyn.eolo.it. [84.33.66.28])
-        by smtp.gmail.com with ESMTPSA id u2sm4345328wra.82.2019.05.23.23.51.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 23:51:43 -0700 (PDT)
-From:   Paolo Valente <paolo.valente@linaro.org>
-Message-Id: <E270AD92-943E-4529-8158-AB480D6D9DF8@linaro.org>
-Content-Type: multipart/signed;
-        boundary="Apple-Mail=_85482289-FC7E-4B1A-B758-AC353CB4BF94";
-        protocol="application/pgp-signature";
-        micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
- controller
-Date:   Fri, 24 May 2019 08:51:41 +0200
-In-Reply-To: <a04368ba-f1d5-8f2c-1279-a685a137d024@csail.mit.edu>
-Cc:     linux-fsdevel@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
-        jmoyer@redhat.com, Theodore Ts'o <tytso@mit.edu>,
-        amakhalov@vmware.com, anishs@vmware.com, srivatsab@vmware.com
-To:     "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-References: <8d72fcf7-bbb4-2965-1a06-e9fc177a8938@csail.mit.edu>
- <1812E450-14EF-4D5A-8F31-668499E13652@linaro.org>
- <46c6a4be-f567-3621-2e16-0e341762b828@csail.mit.edu>
- <07D11833-8285-49C2-943D-E4C1D23E8859@linaro.org>
- <A0DFE635-EFEC-4670-AD70-5D813E170BEE@linaro.org>
- <5B6570A2-541A-4CF8-98E0-979EA6E3717D@linaro.org>
- <2CB39B34-21EE-4A95-A073-8633CF2D187C@linaro.org>
- <FC24E25F-4578-454D-AE2B-8D8D352478D8@linaro.org>
- <0e3fdf31-70d9-26eb-7b42-2795d4b03722@csail.mit.edu>
- <F5E29C98-6CC4-43B8-994D-0B5354EECBF3@linaro.org>
- <686D6469-9DE7-4738-B92A-002144C3E63E@linaro.org>
- <01d55216-5718-767a-e1e6-aadc67b632f4@csail.mit.edu>
- <CA8A23E2-6F22-4444-9A20-E052A94CAA9B@linaro.org>
- <cc148388-3c82-d7c0-f9ff-8c31bb5dc77d@csail.mit.edu>
- <6FE0A98F-1E3D-4EF6-8B38-2C85741924A4@linaro.org>
- <2A58C239-EF3F-422B-8D87-E7A3B500C57C@linaro.org>
- <a04368ba-f1d5-8f2c-1279-a685a137d024@csail.mit.edu>
-X-Mailer: Apple Mail (2.3445.104.8)
+        Fri, 24 May 2019 02:52:25 -0400
+Received: from mail-eopbgr140070.outbound.protection.outlook.com ([40.107.14.70]:44516
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388359AbfEXGwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 02:52:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nlRvQZo53BSUi27LQlzuJ4QnlVhn6ZgzMtaFg7S9t3E=;
+ b=UPkeqXPCDFtNUGZPLsCHZEQVeAFYbIB2ssI/ZAucHRqgQSK3PHdygibydmXS3qIxwU7FgVZM85F+I0Ws+EnBk3VYi2ouY6XhAiOJgjconTuZd8CqRI9xoSd77T7gM6FqpPcGblxuOCujKDSqFCpcUtNkppUkUwzyVd8scMT/W6Y=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB3694.eurprd04.prod.outlook.com (52.134.15.24) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.15; Fri, 24 May 2019 06:52:20 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::ccaf:f4a1:704a:e745]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::ccaf:f4a1:704a:e745%4]) with mapi id 15.20.1922.018; Fri, 24 May 2019
+ 06:52:20 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+CC:     Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH v2 1/2] crypto: caam - fix pkcs1pad(rsa-caam, sha256)
+ failure because of invalid input
+Thread-Topic: [PATCH v2 1/2] crypto: caam - fix pkcs1pad(rsa-caam, sha256)
+ failure because of invalid input
+Thread-Index: AQHVES51mI1lYxB850GcRxowCCF+GA==
+Date:   Fri, 24 May 2019 06:52:20 +0000
+Message-ID: <VI1PR0402MB348566DBD83A4FE5B9B5E42598020@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <1557919546-360-1-git-send-email-iuliana.prodan@nxp.com>
+ <20190523061202.ic2vgimgzvvm6dzc@gondor.apana.org.au>
+ <AM0PR0402MB3476BE4FE08AC135742D262998010@AM0PR0402MB3476.eurprd04.prod.outlook.com>
+ <20190523123813.xosynrnsdpqfieqv@gondor.apana.org.au>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [94.69.234.123]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 02b5aec0-73ff-4bd4-b3a0-08d6e0145e1b
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3694;
+x-ms-traffictypediagnostic: VI1PR0402MB3694:
+x-microsoft-antispam-prvs: <VI1PR0402MB3694C4D65D4CB4C14AE07E0B98020@VI1PR0402MB3694.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:586;
+x-forefront-prvs: 0047BC5ADE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(396003)(136003)(346002)(376002)(366004)(199004)(189003)(186003)(26005)(54906003)(305945005)(316002)(478600001)(68736007)(6246003)(446003)(229853002)(14444005)(256004)(7696005)(33656002)(53546011)(102836004)(25786009)(6506007)(99286004)(76176011)(53936002)(74316002)(4326008)(66066001)(52536014)(6916009)(2906002)(14454004)(9686003)(66446008)(3846002)(73956011)(66476007)(66946007)(76116006)(64756008)(6116002)(7736002)(91956017)(66556008)(86362001)(81166006)(81156014)(476003)(8936002)(55016002)(6436002)(44832011)(8676002)(486006)(5660300002)(71190400001)(71200400001)(4744005)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3694;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: qsPN4EIZ9+qol1kzlAnlF9D232Yf1lRp7FciVavShxats2jykaApOSO65GU67aTC4Kp2xsYr2YyCPsmduv94naXWHb46+gwpzM3pUIZvaMfEnT/AJH3Pi/XH6EiPG1nT3O6EkACeYhdmji5Cx7lc4CQ57UrCLyYlLfnUqc4znAlBf9k1ACcihlvfBdBLIOtSpRB6NfAoKya979OeJJnEKppAwe/4zvOzv1NB3x/GOxyYxasUSsDJMUJFJhFYeZzjV5Ptm4v0EVV3fq1PFaJv8Bg8/nl0eziwS8ZRBLLxCqiiaQPkgccMD+XVclBW+RNVawDt0+E2L935/XBjeGp+zAT84fEkZCVXCuCkTnUQ9iW1xFhfpM1CKC1xun4UGs+GB+XL22auc+QtVPRTfv14xUmsjZMovp1eVOrx+owJfKE=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 02b5aec0-73ff-4bd4-b3a0-08d6e0145e1b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 May 2019 06:52:20.1076
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: horia.geanta@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3694
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---Apple-Mail=_85482289-FC7E-4B1A-B758-AC353CB4BF94
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=us-ascii
-
-
-
-> Il giorno 24 mag 2019, alle ore 01:43, Srivatsa S. Bhat =
-<srivatsa@csail.mit.edu> ha scritto:
->=20
-> On 5/23/19 10:22 AM, Paolo Valente wrote:
->>=20
->>> Il giorno 23 mag 2019, alle ore 11:19, Paolo Valente =
-<paolo.valente@linaro.org> ha scritto:
->>>=20
->>>> Il giorno 23 mag 2019, alle ore 04:30, Srivatsa S. Bhat =
-<srivatsa@csail.mit.edu> ha scritto:
->>>>=20
-> [...]
->>>> Also, I'm very happy to run additional tests or experiments to help
->>>> track down this issue. So, please don't hesitate to let me know if
->>>> you'd like me to try anything else or get you additional traces =
-etc. :)
->>>>=20
->>>=20
->>> Here's to you!  :) I've attached a new small improvement that may
->>> reduce fluctuations (path to apply on top of the others, of course).
->>> Unfortunately, I don't expect this change to boost the throughput
->>> though.
->>>=20
->>> In contrast, I've thought of a solution that might be rather
->>> effective: making BFQ aware (heuristically) of trivial
->>> synchronizations between processes in different groups.  This will
->>> require a little more work and time.
->>>=20
->>=20
->> Hi Srivatsa,
->> I'm back :)
->>=20
->> First, there was a mistake in the last patch I sent you, namely in
->> 0001-block-bfq-re-sample-req-service-times-when-possible.patch.
->> Please don't apply that patch at all.
->>=20
->> I've attached a new series of patches instead.  The first patch in =
-this
->> series is a fixed version of the faulty patch above (if I'm creating =
-too
->> much confusion, I'll send you again all patches to apply on top of
->> mainline).
->>=20
->=20
-> No problem, I got it :)
->=20
->> This series also implements the more effective idea I told you a few
->> hours ago.  In my system, the loss is now around only 10%, even with
->> low_latency on.
->>=20
->=20
-> When trying to run multiple dd tasks simultaneously, I get the kernel
-> panic shown below (mainline is fine, without these patches).
->=20
-
-Could you please provide me somehow with a list =
-*(bfq_serv_to_charge+0x21) ?
-
-Thanks,
-Paolo
-
-> [  568.232231] BUG: kernel NULL pointer dereference, address: =
-0000000000000024
-> [  568.232257] #PF: supervisor read access in kernel mode
-> [  568.232273] #PF: error_code(0x0000) - not-present page
-> [  568.232289] PGD 0 P4D 0
-> [  568.232299] Oops: 0000 [#1] SMP PTI
-> [  568.232312] CPU: 0 PID: 1029 Comm: dd Tainted: G            E     =
-5.1.0-io-dbg-4+ #6
-> [  568.232334] Hardware name: VMware, Inc. VMware Virtual =
-Platform/440BX Desktop Reference Platform, BIOS 6.00 04/05/2016
-> [  568.232388] RIP: 0010:bfq_serv_to_charge+0x21/0x50
-> [  568.232404] Code: ff e8 c3 5e bc ff 0f 1f 00 0f 1f 44 00 00 48 8b =
-86 20 01 00 00 55 48 89 e5 53 48 89 fb a8 40 75 09 83 be a0 01 00 00 01 =
-76 09 <8b> 43 24 c1 e8 09 5b 5d c3 48 8b 7e 08 e8 5d fd ff ff 84 c0 75 =
-ea
-> [  568.232473] RSP: 0018:ffffa73a42dab750 EFLAGS: 00010002
-> [  568.232489] RAX: 0000000000001052 RBX: 0000000000000000 RCX: =
-ffffa73a42dab7a0
-> [  568.232510] RDX: ffffa73a42dab657 RSI: ffff8b7b6ba2ab70 RDI: =
-0000000000000000
-> [  568.232530] RBP: ffffa73a42dab758 R08: 0000000000000000 R09: =
-0000000000000001
-> [  568.232551] R10: 0000000000000000 R11: ffffa73a42dab7a0 R12: =
-ffff8b7b6aed3800
-> [  568.232571] R13: 0000000000000000 R14: 0000000000000000 R15: =
-ffff8b7b6aed3800
-> [  568.232592] FS:  00007fb5b0724540(0000) GS:ffff8b7b6f800000(0000) =
-knlGS:0000000000000000
-> [  568.232615] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  568.232632] CR2: 0000000000000024 CR3: 00000004266be002 CR4: =
-00000000001606f0
-> [  568.232690] Call Trace:
-> [  568.232703]  bfq_select_queue+0x781/0x1000
-> [  568.232717]  bfq_dispatch_request+0x1d7/0xd60
-> [  568.232731]  ? bfq_bfqq_handle_idle_busy_switch.isra.36+0x2cd/0xb20
-> [  568.232751]  blk_mq_do_dispatch_sched+0xa8/0xe0
-> [  568.232765]  blk_mq_sched_dispatch_requests+0xe3/0x150
-> [  568.232783]  __blk_mq_run_hw_queue+0x56/0x100
-> [  568.232798]  __blk_mq_delay_run_hw_queue+0x107/0x160
-> [  568.232814]  blk_mq_run_hw_queue+0x75/0x190
-> [  568.232828]  blk_mq_sched_insert_requests+0x7a/0x100
-> [  568.232844]  blk_mq_flush_plug_list+0x1d7/0x280
-> [  568.232859]  blk_flush_plug_list+0xc2/0xe0
-> [  568.232872]  blk_finish_plug+0x2c/0x40
-> [  568.232886]  ext4_writepages+0x592/0xe60
-> [  568.233381]  ? ext4_mark_iloc_dirty+0x52b/0x860
-> [  568.233851]  do_writepages+0x3c/0xd0
-> [  568.234304]  ? ext4_mark_inode_dirty+0x1a0/0x1a0
-> [  568.234748]  ? do_writepages+0x3c/0xd0
-> [  568.235197]  ? __generic_write_end+0x4e/0x80
-> [  568.235644]  __filemap_fdatawrite_range+0xa5/0xe0
-> [  568.236089]  ? __filemap_fdatawrite_range+0xa5/0xe0
-> [  568.236533]  ? ext4_da_write_end+0x13c/0x280
-> [  568.236983]  file_write_and_wait_range+0x5a/0xb0
-> [  568.237407]  ext4_sync_file+0x11e/0x3e0
-> [  568.237819]  vfs_fsync_range+0x48/0x80
-> [  568.238217]  ext4_file_write_iter+0x234/0x3d0
-> [  568.238610]  ? _cond_resched+0x19/0x40
-> [  568.238982]  new_sync_write+0x112/0x190
-> [  568.239347]  __vfs_write+0x29/0x40
-> [  568.239705]  vfs_write+0xb1/0x1a0
-> [  568.240078]  ksys_write+0x89/0xc0
-> [  568.240428]  __x64_sys_write+0x1a/0x20
-> [  568.240771]  do_syscall_64+0x5b/0x140
-> [  568.241115]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> [  568.241456] RIP: 0033:0x7fb5b02325f4
-> [  568.241787] Code: 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b3 0f =
-1f 80 00 00 00 00 48 8d 05 09 11 2d 00 8b 00 85 c0 75 13 b8 01 00 00 00 =
-0f 05 <48> 3d 00 f0 ff ff 77 54 f3 c3 66 90 41 54 55 49 89 d4 53 48 89 =
-f5
-> [  568.242842] RSP: 002b:00007ffcb12e2968 EFLAGS: 00000246 ORIG_RAX: =
-0000000000000001
-> [  568.243220] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: =
-00007fb5b02325f4
-> [  568.243616] RDX: 0000000000000200 RSI: 000055698f2ad000 RDI: =
-0000000000000001
-> [  568.244026] RBP: 0000000000000200 R08: 0000000000000004 R09: =
-0000000000000003
-> [  568.244401] R10: 00007fb5b04feca0 R11: 0000000000000246 R12: =
-000055698f2ad000
-> [  568.244775] R13: 0000000000000000 R14: 0000000000000000 R15: =
-000055698f2ad000
-> [  568.245154] Modules linked in: xt_MASQUERADE(E) =
-nf_conntrack_netlink(E) nfnetlink(E) xfrm_user(E) xfrm_algo(E) =
-xt_addrtype(E) br_netfilter(E) bridge(E) stp(E) llc(E) overlay(E) =
-vmw_vsock_vmci_transport(E) vsock(E) ip6table_filter(E) ip6_tables(E) =
-xt_conntrack(E) iptable_mangle(E) iptable_nat(E) nf_nat(E) =
-iptable_filter
-> [  568.248651] CR2: 0000000000000024
-> [  568.249142] ---[ end trace 0ddd315e0a5bdfba ]---
->=20
->=20
-> Regards,
-> Srivatsa
-> VMware Photon OS
-
-
---Apple-Mail=_85482289-FC7E-4B1A-B758-AC353CB4BF94
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEpYoduex+OneZyvO8OAkCLQGo9oMFAlznlH0ACgkQOAkCLQGo
-9oP7Kg//QHKt9Jzd3acqyDErdMmFS2yVJJYS8+gQCTLa0fu44rQYs7wiCipLNKdI
-rrymUh3KYssp2iTE23wVHZ36OfkU0157yzztHAoguyq2CNMFfTYv+T7lx3803In3
-KS9QalPnIpm5K1ectGfCtcXb8QZt/ZAJ1mZDhhphQEIx9dOqmW1+tehihzgzW0K1
-vKIk9DaN4/WcE7yeQCtaD7gJI4TWKaKhwDfH+BmfjMg0OvU4xOjaJFSvjH/C+OWp
-Mw9DIDt+Ne638wKuPPsH1aEtZxR/G0Z+wHy+CuAyikt4KTDm4dGcHpGR99Rhb6IY
-LOeHKWUD0JyeJs5oQdUFL8fRNu2i7LhOVVJKuOdW99yvWNe/zzY9fgaPzt78itNS
-SiKvkQAqKYHtVkk8RW3+U3HbXR1v0vV62nhbBgrSF9qhVecvRgeYhzBVl6ZkAo5z
-UwiIRjQgzsbUDrnHjrzYxGb45sJxkC+WJRxTf95hJ3y842uy7ML6YBNHmfWDi5d+
-3xsV1qvIvSyMaj/NryCRbRqM1XseyiQGw+gSSqUAbhCgPEVhPAzn3sUYizz2DVAi
-VQAUAOvo4bq1UJqM8AMTYItdgG4PqMafRPGDQY9wQ0emWyc8Qsb99Lm9rvhOG0Ou
-IDRcISk/XZTXb/M0nuaMIJ6pP1IjsAGOXyWk6wADOD8Gn5WarRE=
-=5NSm
------END PGP SIGNATURE-----
-
---Apple-Mail=_85482289-FC7E-4B1A-B758-AC353CB4BF94--
+On 5/23/2019 3:38 PM, Herbert Xu wrote:=0A=
+> On Thu, May 23, 2019 at 10:02:41AM +0000, Horia Geanta wrote:=0A=
+>>=0A=
+>> When crypto_register_akcipher fails, it merely prints a warning and fall=
+s=0A=
+>> through (does not immediately return), thus there's no leak.=0A=
+> =0A=
+> How can this work? Wouldn't the exit path then unregister a bunch of=0A=
+> unregistered algorithms and crash?=0A=
+> =0A=
+You're actually right.=0A=
+zero_buffer is leaked in case crypto_register_akcipher fails.=0A=
+=0A=
+Besides this, there is an existing issue (independent of current patch) wit=
+h=0A=
+algorithm registration: algorithms (in fact, rsa) are unregistered even if=
+=0A=
+registration might have failed.=0A=
+This should be addressed separately.=0A=
+=0A=
+Thanks,=0A=
+Horia=0A=
