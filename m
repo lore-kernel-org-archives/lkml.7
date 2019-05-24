@@ -2,176 +2,115 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A93DC282E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E7BC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FA4321841
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:11:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="N16bIUJU"
+	by mail.kernel.org (Postfix) with ESMTP id 5114821841
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:23:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558675384;
+	bh=f82AkJp+40WX2NnbIN+0SDdISJuq17jnjJEWcou+ku8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lj6i+9D9SZ5DnWQV0oqfYg2FFkGyzO9ibCynOUFCAa8hPssdJGmFG/VjJZ7lgVTyV
+	 3mvfyj+Mf9PtPYIcgTCcxfWyCUiQgbxqfyOkMq9LDGk/0qNGnmFLzZQbSDd5hPrq83
+	 CvsaysEOUBVFTjN1OPYdAmyT0AwPsvhGwEgHCpUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731867AbfEXFLP (ORCPT
+        id S1731832AbfEXFXD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 01:11:15 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:49890 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726450AbfEXFLO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 01:11:14 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4O58OsX099722;
-        Fri, 24 May 2019 05:10:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=REAUKjfQKEdcVeSuvq5zJFnMuBvwiLH8VFdTYr5FO2A=;
- b=N16bIUJUMgkuTYiVWaUyPgm0pnAAc3GzVg4umAtD70IztClaxxPGoU97HPBidT9mjnxl
- 8cVLsdvzQHwy5qs1ERSiwsOwFicPCr0r5YL6zYPZNaiWflbuxaLMV6KqIXDyVCH6sXAK
- Io9e6gyFpat9tuq6/4jDXoC0migg4oRzUoruZX1TfsPHjKDCzaR8iqXezrvTybEAOsAP
- 0SWJreZs+Ig3JmI1Jv9DTHxZK26teL52X/JlrySXh23FkUWBwoFS94s3vVAFDCIcmeo8
- AzEs6+N9JK+nLnHBudVv0/XdNfcNj0bx25Pbn+/R6AnKxqBT/2HeDEbz0P2b+cnMR0J2 hQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2smsk5pjbq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 May 2019 05:10:18 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4O5A9v0051514;
-        Fri, 24 May 2019 05:10:17 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by aserp3020.oracle.com with ESMTP id 2smsh2njjg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 24 May 2019 05:10:17 +0000
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x4O5AG23052029;
-        Fri, 24 May 2019 05:10:16 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2smsh2njja-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 May 2019 05:10:16 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4O5AF8X001163;
-        Fri, 24 May 2019 05:10:15 GMT
-Received: from localhost (/10.159.211.99)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 24 May 2019 05:10:15 +0000
-Date:   Fri, 24 May 2019 01:10:11 -0400
-From:   Kris Van Hees <kris.van.hees@oracle.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Kris Van Hees <kris.van.hees@oracle.com>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        dtrace-devel@oss.oracle.com, linux-kernel@vger.kernel.org,
-        mhiramat@kernel.org, acme@kernel.org, ast@kernel.org,
-        daniel@iogearbox.net, peterz@infradead.org
-Subject: Re: [RFC PATCH 00/11] bpf, trace, dtrace: DTrace BPF program type
- implementation and sample use
-Message-ID: <20190524051011.GV2422@oracle.com>
-References: <20190521184137.GH2422@oracle.com>
- <20190521205533.evfszcjvdouby7vp@ast-mbp.dhcp.thefacebook.com>
- <20190521173618.2ebe8c1f@gandalf.local.home>
- <20190521214325.rr7emn5z3b7wqiiy@ast-mbp.dhcp.thefacebook.com>
- <20190521174757.74ec8937@gandalf.local.home>
- <20190522052327.GN2422@oracle.com>
- <20190522205329.uu26oq2saj56og5m@ast-mbp.dhcp.thefacebook.com>
- <20190523054610.GR2422@oracle.com>
- <20190523211330.hng74yi75ixmcznc@ast-mbp.dhcp.thefacebook.com>
- <20190523190243.54221053@gandalf.local.home>
+        Fri, 24 May 2019 01:23:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60982 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726601AbfEXFXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 01:23:03 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 205E12175B;
+        Fri, 24 May 2019 05:23:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558675381;
+        bh=f82AkJp+40WX2NnbIN+0SDdISJuq17jnjJEWcou+ku8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RNSdo2mEGNLVWgg8saywtySjugfajliIhGqv3WPyH33AcK/NKbmqAa+AwRjmqfn+n
+         TbJulVvkoz+hrBYbspr6pP0xhNQEffiOCCd1h2S7LfzIKd8Qjs7sxoBwGJ/FgKXldB
+         P1bZb984H136y+/GMCXbmx+36V99RUNmbtlunPuc=
+Date:   Fri, 24 May 2019 07:22:58 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Scott Branden <scott.branden@broadcom.com>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH 2/3] firmware: add offset to request_firmware_into_buf
+Message-ID: <20190524052258.GB28229@kroah.com>
+References: <20190523025113.4605-1-scott.branden@broadcom.com>
+ <20190523025113.4605-3-scott.branden@broadcom.com>
+ <20190523055233.GB22946@kroah.com>
+ <15c47e4d-e70d-26bb-9747-0ad0aa81597b@broadcom.com>
+ <20190523165424.GA21048@kroah.com>
+ <44282070-ddaf-3afb-9bdc-4751e3f197ac@broadcom.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190523190243.54221053@gandalf.local.home>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9266 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905240035
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <44282070-ddaf-3afb-9bdc-4751e3f197ac@broadcom.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 07:02:43PM -0400, Steven Rostedt wrote:
-> On Thu, 23 May 2019 14:13:31 -0700
-> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+On Thu, May 23, 2019 at 10:01:38PM -0700, Scott Branden wrote:
 > 
-> > > In DTrace, people write scripts based on UAPI-style interfaces and they don't
-> > > have to concern themselves with e.g. knowing how to get the value of the 3rd
-> > > argument that was passed by the firing probe.  All they need to know is that
-> > > the probe will have a 3rd argument, and that the 3rd argument to *any* probe
-> > > can be accessed as 'arg2' (or args[2] for typed arguments, if the provider is
-> > > capable of providing that).  Different probes have different ways of passing
-> > > arguments, and only the provider code for each probe type needs to know how
-> > > to retrieve the argument values.
+> On 2019-05-23 9:54 a.m., Greg Kroah-Hartman wrote:
+> > On Thu, May 23, 2019 at 09:36:02AM -0700, Scott Branden wrote:
+> > > Hi Greg,
 > > > 
-> > > Does this help bring clarity to the reasons why an abstract (generic) probe
-> > > concept is part of DTrace's design?  
-> > 
-> > It actually sounds worse than I thought.
-> > If dtrace script reads some kernel field it's considered to be uapi?! ouch.
-> > It means dtrace development philosophy is incompatible with the linux kernel.
-> > There is no way kernel is going to bend itself to make dtrace scripts
-> > runnable if that means that all dtrace accessible fields become uapi.
+> > > On 2019-05-22 10:52 p.m., Greg Kroah-Hartman wrote:
+> > > > On Wed, May 22, 2019 at 07:51:12PM -0700, Scott Branden wrote:
+> > > > > Add offset to request_firmware_into_buf to allow for portions
+> > > > > of firmware file to be read into a buffer.  Necessary where firmware
+> > > > > needs to be loaded in portions from file in memory constrained systems.
+> > > > > 
+> > > > > Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+> > > > > ---
+> > > > >    drivers/base/firmware_loader/firmware.h |  5 +++
+> > > > >    drivers/base/firmware_loader/main.c     | 49 +++++++++++++++++--------
+> > > > >    include/linux/firmware.h                |  8 +++-
+> > > > >    3 files changed, 45 insertions(+), 17 deletions(-)
+> > > > No new firmware test for this new option?  How do we know it even works?
+> > > I was unaware there are existing firmware tests.  Please let me know where
+> > > these tests exists and I can add a test for this new option.
+> > tools/testing/selftests/firmware/
 > 
-> Now from what I'm reading, it seams that the Dtrace layer may be
-> abstracting out fields from the kernel. This is actually something I
-> have been thinking about to solve the "tracepoint abi" issue. There's
-> usually basic ideas that happen. An interrupt goes off, there's a
-> handler, etc. We could abstract that out that we trace when an
-> interrupt goes off and the handler happens, and record the vector
-> number, and/or what device it was for. We have tracepoints in the
-> kernel that do this, but they do depend a bit on the implementation.
-> Now, if we could get a layer that abstracts this information away from
-> the implementation, then I think that's a *good* thing.
+> Unfortunately, there doesn't seem to be a test for the existing
+> request_firmware_into_buf api.
 
-This is indeed what DTrace uses.  When a probe triggers (be it kprobe, network
-event, tracepoint, etc), the core execution component is invoked with a probe
-id, and a set of data items.  In its current implementation (not BPF based),
-the probe triggers which causes a probe type specific handler to be called in
-the provider module for that probe type.  The handler determines the probe id
-(e.g. for a kprobe that might be based on the program counter value), and it
-also prepares the list of data items (which we call arguments to the probe).
-It then calls the execution component with the probe id and arguments.
+Are you sure?  The test is for userspace functionality, there isn't
+kernel unit tests here.  You need to verify that you didn't break
+existing functionality as well as verify that your new functionality
+works.
 
-All probe types are handled by a provider, and each provider has a handler
-that determines the probe id and arguments, and then calls the execution
-component.  So, at the level of the execution component all probes look the
-same.
-
-Scripts commonly operate on the abstract probe, but scriptr writers can opt
-to do more fancy things that do depend on probe implementation details.  In
-that case, there is of course no guarantee that the script will keep working
-as kernel releases change.
-
-> > In stark contrast to dtrace all of bpf tracing scripts (bcc scripts
-> > and bpftrace scripts) are written for specific kernel with intimate
-> > knowledge of kernel details. They do break all the time when kernel changes.
-> > kprobe and tracepoints are NOT uapi. All of them can change.
-> > tracepoints are a bit more stable than kprobes, but they are not uapi.
+> > > We have tested this with a new driver in development which requires the
+> > > firmware file to be read in portions into memory.  I can add my tested-by
+> > > and others to the commit message if desired.
+> > I can't take new apis without an in-kernel user, you all know this...
 > 
-> I wish that was totally true, but tracepoints *can* be an abi. I had
-> code reverted because powertop required one to be a specific format. To
-> this day, the wakeup event has a "success" field that writes in a
-> hardcoded "1", because there's tools that depend on it, and they only
-> work if there's a success field and the value is 1.
-> 
-> I do definitely agree with you that the Dtrace code shall *never* keep
-> the kernel from changing. That is, if Dtrace depends on something that
-> changes (let's say we record priority of a task, but someday priority
-> is replaced by something else), then Dtrace must cope with it. It must
-> not be a blocker like user space applications can be.
+> OK, It will have to wait then as I was hoping to get this in before my
+> leave.
 
-I fully agree that DTrace or any other tool should never prevent changes from
-happening at the kernel level.  Even in its current (non-BPF) implementation
-it has had to cope with changes.  The abstraction through the providers has
-been a real benefit for that because changes to probe mechanisms can be dealt
-with at the level of the providers, and everything else can remain the same
-because the abstraction "hides" the implementation details.
+Throwing new code over the wall and running away is a sure way to ensure
+that your code will be ignored :)
 
-	Kris
+thanks,
+
+greg k-h
