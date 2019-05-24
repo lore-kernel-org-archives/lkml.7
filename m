@@ -2,112 +2,153 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D02F0C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF28C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:05:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8950F206A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:04:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="n9nTLIsA"
+	by mail.kernel.org (Postfix) with ESMTP id D9272206A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:05:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389043AbfEXHEd (ORCPT
+        id S2389053AbfEXHFu convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 03:04:33 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:41156 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388872AbfEXHEd (ORCPT
+        Fri, 24 May 2019 03:05:50 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:42722 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388891AbfEXHFt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 03:04:33 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4O6xFKO001526;
-        Fri, 24 May 2019 07:04:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=fQH7QNMBskDMhw+9r7IsyO7ajPNTo8pdYGoJVhRHFJE=;
- b=n9nTLIsAkRwFqbdQ/X9aCYNUW3hRnA5/n5sYbVYpT6WLhYA6pl49rmnzUKOw+uehBKUv
- CvirWgW/mxh58IEhHMdhkjZIMu4MHG96TOtoEdks2RLq6d2GLQIaGgYyqILmu2OUOBJu
- Ii7JeUfONgLHwt1udOdZvOXiEeTH7R5CdsJfrDXhUGg+G21rbjP/h0qGZT9rG+bYiK5f
- olHhoUW6i6FX842if3Ka0JgBOe05UkQeWxVy85GgakpoTm1NeO0ywtJpzRDkuQttZhq5
- y4CYmMBeGeS12eEGroj2VoOH98HvNnRx9J9p79x/Uro6LNAUgyu3iTFs2QA6Lbitrmsl Iw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 2smsk5q1px-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 May 2019 07:04:18 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4O73lsX095996;
-        Fri, 24 May 2019 07:04:17 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2smsgvxq8p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 May 2019 07:04:17 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4O74FpU014669;
-        Fri, 24 May 2019 07:04:15 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 24 May 2019 07:04:14 +0000
-Date:   Fri, 24 May 2019 10:04:04 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Cc:     gregkh@linuxfoundation.org, colin.king@canonical.com,
-        herbert@gondor.apana.org.au, qader.aymen@gmail.com,
-        sergio.paracuellos@gmail.com, bhanusreemahesh@gmail.com,
-        mattmccoy110@gmail.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: ks7010: Remove initialisation
-Message-ID: <20190524070404.GV31203@kadam>
-References: <20190524055238.3581-1-nishkadg.linux@gmail.com>
+        Fri, 24 May 2019 03:05:49 -0400
+Received: by mail-qk1-f196.google.com with SMTP id b9so3172816qkg.9
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 00:05:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=awBE3R6MaFliHdZCh3cBgGkjYreG0txG8Lteb87Xiyg=;
+        b=GRT6+IDMx4tpzVN2U5TGnRZ55GdUKdYhV3dPM5UYh6FTc6Ml5haK5RRcXAwc7q3lAW
+         TNPcOZqxKzvRIpozz8i/pFdwWpVDQGWAMm6yvFrhzQDQTjgLhl5wtUjhR0xt5nYj7U08
+         JfqQ0ecjoEHfoOmOUwjenvHU9+6UrsQyfbCiDFWb9gSG08a66OxBKA9W57O2bI/PVN/j
+         tsPYlHHIcJokNxgbgmXUVmI+fGbh8kK/Rzegow58PCuNDpQpQro7lW48ttgPS1F1qw7H
+         mkBYotFgA8gaIN4vENFzQLLVeppIONrgp0GWsMYKboCVvNdWJdxQakI9hkCPqPNjdDhL
+         bakA==
+X-Gm-Message-State: APjAAAWcdJsYqaQFIMT0uxouiV2eNjnlgDaEo5PYRJV6VH1wTQIpJwbB
+        vLvAKMQ06LYotdA7b9R8W5GSdEIhIZf9Ocb/0Nv0tQ==
+X-Google-Smtp-Source: APXvYqzEqHGLSARrvwBrdDvw232GTj/gPZc+E9LYUyp/feCZjZOmnGjw6Y+kT9XzG0LrToqWr9SAYN8MvMLXYZNpFlw=
+X-Received: by 2002:ac8:875:: with SMTP id x50mr83396994qth.345.1558681548800;
+ Fri, 24 May 2019 00:05:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190524055238.3581-1-nishkadg.linux@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9266 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905240048
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9266 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905240048
+References: <20190521132712.2818-1-benjamin.tissoires@redhat.com>
+ <20190521132712.2818-10-benjamin.tissoires@redhat.com> <003d01d511de$9da229c0$d8e67d40$@emc.com.tw>
+In-Reply-To: <003d01d511de$9da229c0$d8e67d40$@emc.com.tw>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Fri, 24 May 2019 09:05:37 +0200
+Message-ID: <CAO-hwJLnjxVxdodqAkKdQpqjAPGV1QYnugM+9t_86xRD92WJ-Q@mail.gmail.com>
+Subject: Re: [PATCH v2 09/10] Input: elan_i2c - correct the width/size base value
+To:     =?UTF-8?B?5buW5bSH5qau?= <kt.liao@emc.com.tw>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Aaron Ma <aaron.ma@canonical.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 11:22:38AM +0530, Nishka Dasgupta wrote:
-> The initial value of return variable ret is never used, so it can be
-> removed.
-> Issue found with Coccinelle.
-> 
-> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+On Fri, May 24, 2019 at 5:13 AM 廖崇榮 <kt.liao@emc.com.tw> wrote:
+>
+> Hi Benjamin,
+>
+> Thanks so much for all you do for Elan touchpad.
+>
+> For the width_*, I have a question for it.
+> Our antenna sensors fully occupied the whole touchpad PCB.
+>
+> The Gap between 2 sensors are 7.5 mil (0.19mm).
+> That's why we did not minus one trace.
+
+So, with the P52 I have:
+[  +0.000009] max:    (3045,1731) drivers/input/mouse/elan_i2c_core.c:428
+[  +0.000003] traces: (24,14) drivers/input/mouse/elan_i2c_core.c:429
+[  +0.000002] size:   (98,55) drivers/input/mouse/elan_i2c_core.c:430
+[  +0.000001] res:    (31,31) drivers/input/mouse/elan_i2c_core.c:431
+
+calculated size (max/res): 98 x 56 mm
+true size, as measured: 101 x 60 mm
+
+Which gives (without the minus 1):
+width_x = max_x / x_traces = 3045 / 24 = 126.875 -> 3.9885 mm
+width_y = max_y / y_traces = 1731 / 14 = 123.643 -> 4.0927 mm
+
+-> this gives a total size of the touchpad of: 96 x 57 mm (width_x *
+24, width_y * 14)
+
+With the minus 1:
+width_x = max_x / x_traces = 3045 / 23 = 132.391 -> 4.2707 mm
+width_y = max_y / y_traces = 1731 / 14 = 133.154 -> 4.2953 mm
+
+-> this gives a total size of the touchpad of: 102 x 60 mm (width_x *
+24, width_y * 14)
+and considering traces-1: 98 x 56 mm
+
+Removing 1 to the number of traces gave a squarer values in rows and
+columns, and this is what is done in the PS/2 driver.
+Also, going back to the size of the touchpad gives a better value when
+removing 1 on the *traces.
+So maybe when forwarding the properties we should remove one there in
+the PS/2 driver?
+
+Cheers,
+Benjamin
+
+>
+>
+> Thanks
+> KT
+> -----Original Message-----
+> From: Benjamin Tissoires [mailto:benjamin.tissoires@redhat.com]
+> Sent: Tuesday, May 21, 2019 9:27 PM
+> To: Dmitry Torokhov; KT Liao; Rob Herring; Aaron Ma; Hans de Goede
+> Cc: linux-input@vger.kernel.org; linux-kernel@vger.kernel.org;
+> devicetree@vger.kernel.org; Benjamin Tissoires
+> Subject: [PATCH v2 09/10] Input: elan_i2c - correct the width/size base
+> value
+>
+> *_traces are the number of antennas. width_* is thus the space between 2
+> antennas. Which means, we should subtract 1 to the number of antennas to
+> divide the touchpad by the number of holes between each antenna.
+>
+> Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+>
+> --
+>
+> new in v2
 > ---
->  drivers/staging/ks7010/ks_hostif.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/ks7010/ks_hostif.c b/drivers/staging/ks7010/ks_hostif.c
-> index e089366ed02a..3775fd4b89ae 100644
-> --- a/drivers/staging/ks7010/ks_hostif.c
-> +++ b/drivers/staging/ks7010/ks_hostif.c
-> @@ -1067,7 +1067,7 @@ int hostif_data_request(struct ks_wlan_private *priv, struct sk_buff *skb)
->  	unsigned int length = 0;
->  	struct hostif_data_request *pp;
->  	unsigned char *p;
-> -	int result = 0;
-> +	int result;
-
-You should get rid of the result variable completely and just use "ret"
-instead.  No need for two variables.
-
-regards,
-dan carpenter
-
+>  drivers/input/mouse/elan_i2c_core.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/input/mouse/elan_i2c_core.c
+> b/drivers/input/mouse/elan_i2c_core.c
+> index 6f4feedb7765..3375eaa9a72e 100644
+> --- a/drivers/input/mouse/elan_i2c_core.c
+> +++ b/drivers/input/mouse/elan_i2c_core.c
+> @@ -398,8 +398,8 @@ static int elan_query_device_parameters(struct
+> elan_tp_data *data)
+>                 if (error)
+>                         return error;
+>         }
+> -       data->width_x = data->max_x / x_traces;
+> -       data->width_y = data->max_y / y_traces;
+> +       data->width_x = data->max_x / (x_traces - 1);
+> +       data->width_y = data->max_y / (y_traces - 1);
+>
+>         if (device_property_read_u32(&client->dev,
+>                                      "touchscreen-x-mm", &x_mm) ||
+> --
+> 2.21.0
+>
