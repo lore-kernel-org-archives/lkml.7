@@ -7,65 +7,63 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A852FC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F244DC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74A8B217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:59:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1B7B217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:59:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kinvolk.io header.i=@kinvolk.io header.b="IsM8T9AQ"
+	dkim=pass (1024-bit key) header.d=kinvolk.io header.i=@kinvolk.io header.b="GssyZSkW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390681AbfEXP7t (ORCPT
+        id S2390750AbfEXP7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 11:59:49 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37052 "EHLO
+        Fri, 24 May 2019 11:59:52 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44243 "EHLO
         mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390447AbfEXP7q (ORCPT
+        with ESMTP id S2390612AbfEXP7t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 11:59:46 -0400
-Received: by mail-wr1-f65.google.com with SMTP id e15so10562039wrs.4
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 08:59:45 -0700 (PDT)
+        Fri, 24 May 2019 11:59:49 -0400
+Received: by mail-wr1-f65.google.com with SMTP id w13so2181221wru.11
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 08:59:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kinvolk.io; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=4+MHJBrmm9KRjn/wDS7WWHu8Cy42aeEnK0sLNpM5l60=;
-        b=IsM8T9AQUvHcFdkvbVn/nCpV40RfegBRI1RF4/IFpEtGoHhiq9M+D55zdSpJsBZgOB
-         Mi5CGVEBQqSXcjrJFfHdV/9j/MMAI7bZQcyrHJ1J09gCYj/Q7kjh3DEiSoWTi+I2dTFD
-         CkNfB7T9/TbOZ4bSkK12GtDrR44F+Sr/eQ1uI=
+        bh=11EhXksDgdLmWhW501RogfILPsFHkHJiIn4iFOtsvjs=;
+        b=GssyZSkWdOU9agSjA8INcuqiayVB83C44Wis5i/7nVJk31dewgINfjIxvpnL0CTY4h
+         BBceJgP9LzMbRLvTXaWJrRfZM3wm/QHdiiUU0gdZmBw+aYUZm/Y0JLqPN2x8Z0fHi0/f
+         yvp2LOkcszG2VCyEt1EZLAkvfFKmoFk3rELoM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=4+MHJBrmm9KRjn/wDS7WWHu8Cy42aeEnK0sLNpM5l60=;
-        b=m4wAQmq9u1Sa5d5HUaINHpJSthFTCiNzd887brYO39kBrtU0MfiVNiDQvwalcET1II
-         S2AU1u0arr3xYPlAM1dHryV8TR89zJFP3CtDewro3wJx8NwNBdGnng178On/5omyV0U1
-         XijGHfXvH9C/ewawgLpIYtGDJYvuWb0AsDFwxKM1uxokaW4OBiscCWxsZiexlnG7z0Pm
-         2erEeFQ59m/IlyVgiUPkhTVC5kayLrWlBgejzpWuNkjYw1P4tBufYO0qAl/lk2akm2GF
-         FVndNJ9YcpAnBlyaJ0Gh/mevGVYjzbwRrSgQpi6jbepHPyru8ReUK0N8/MOb7lzG5U8e
-         p7vQ==
-X-Gm-Message-State: APjAAAVq9cmLSyJaCFDFnyiMQgN4+WPEW5vbpCUl5aV16sQx7XX5UM7U
-        5IHyWJ+LJJun0n45vD8TtPCkTA==
-X-Google-Smtp-Source: APXvYqxb/2l/hSFeLSn20/xoSixRvKuYeO00mVPJjt9MT+WN/gwOIS2e3Aq971HCHt8zllYb8JfSVw==
-X-Received: by 2002:adf:f041:: with SMTP id t1mr5510970wro.74.1558713584903;
-        Fri, 24 May 2019 08:59:44 -0700 (PDT)
+        bh=11EhXksDgdLmWhW501RogfILPsFHkHJiIn4iFOtsvjs=;
+        b=jlOzCejYclH3hgZXVKlYJT29Xpz8/lZhLgr2/Rfl28LlsaXh9Qh3VxJcR3VsQ2Iqn6
+         d4b4SaBW44/aUPOfdZqF/6popFWvm3H2IJZ70iIgmt5lpg08G5E95/OHJMJrQJBoPna+
+         SKKbWOqIXiLOd8bKwCJDvZDTHyldTIMiqAt1snaXyTf11ZnyvTPRW6WGJKIiekzTO1K4
+         ilpVdwZdN65NNgMBWghdCUV7FK0L7gwdXTwLDtjef9jqLQj+0cDoqt4uruQNW3H0I63s
+         CrertgNwWFWXHqup7MDhXqbW+N2gHELBfC2sboudtWjzEkIBekW8oCYLV3kjp2gg2vR4
+         uf5Q==
+X-Gm-Message-State: APjAAAU8aQwKDgCmC2ZL42QWtz8xFNP2KnfEQMfFPxIyRcS/X7cQxRIr
+        ahocSpVu6Vyv8GzC6j0uitp8g22/tSKjQ3Cf3LU=
+X-Google-Smtp-Source: APXvYqzy9kV54v99nmN14d8OI9a0E/+mvisOW6R3n0kP0aQPovAEgvO/MDVnPFoBuuMnInk+XwgUHw==
+X-Received: by 2002:adf:d4c2:: with SMTP id w2mr2076163wrk.167.1558713587363;
+        Fri, 24 May 2019 08:59:47 -0700 (PDT)
 Received: from locke-xps13.localdomain (69.pool85-58-237.dynamic.orange.es. [85.58.237.69])
-        by smtp.gmail.com with ESMTPSA id i185sm4535054wmg.32.2019.05.24.08.59.43
+        by smtp.gmail.com with ESMTPSA id i185sm4535054wmg.32.2019.05.24.08.59.46
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 08:59:44 -0700 (PDT)
+        Fri, 24 May 2019 08:59:46 -0700 (PDT)
 From:   =?UTF-8?q?Iago=20L=C3=B3pez=20Galeiras?= <iago@kinvolk.io>
 To:     john.fastabend@gmail.com, ast@kernel.org, daniel@iogearbox.net
 Cc:     alban@kinvolk.io, krzesimir@kinvolk.io, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Iago=20L=C3=B3pez=20Galeiras?= <iago@kinvolk.io>
-Subject: [PATCH bpf-next v4 1/4] bpf: sock ops: add netns ino and dev in bpf context
-Date:   Fri, 24 May 2019 17:59:28 +0200
-Message-Id: <20190524155931.7946-2-iago@kinvolk.io>
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH bpf-next v4 3/4] selftests: bpf: read netns_ino from struct bpf_sock_ops
+Date:   Fri, 24 May 2019 17:59:30 +0200
+Message-Id: <20190524155931.7946-4-iago@kinvolk.io>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190524155931.7946-1-iago@kinvolk.io>
 References: <20190524155931.7946-1-iago@kinvolk.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -74,173 +72,208 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alban Crequy <alban@kinvolk.io>
 
-sockops programs can now access the network namespace inode and device
-via (struct bpf_sock_ops)->netns_ino and ->netns_dev. This can be useful
-to apply different policies on different network namespaces.
+This shows how a sockops program could be restricted to a specific
+network namespace. The sockops program looks at the current netns via
+(struct bpf_sock_ops)->netns_ino and checks if the value matches the
+configuration in the new BPF map "sock_netns".
 
-In the unlikely case where network namespaces are not compiled in
-(CONFIG_NET_NS=n), the verifier will return netns_dev as usual and will
-return 0 for netns_ino.
+The test program ./test_sockmap accepts a new parameter "--netns"; the
+default value is the current netns found by stat() on /proc/self/ns/net,
+so the previous tests still pass:
 
-The generated BPF bytecode for netns_ino is loading the correct inode
-number at the time of execution.
+sudo ./test_sockmap
+...
+Summary: 412 PASSED 0 FAILED
+...
+Summary: 824 PASSED 0 FAILED
 
-However, the generated BPF bytecode for netns_dev is loading an
-immediate value determined at BPF-load-time by looking at the initial
-network namespace. In practice, this works because all netns currently
-use the same virtual device. If this was to change, this code would need
-to be updated too.
+I run my additional test in the following way:
 
-Co-authored-by: Iago López Galeiras <iago@kinvolk.io>
+NETNS=$(readlink /proc/self/ns/net | sed 's/^net:\[\(.*\)\]$/\1/')
+CGR=/sys/fs/cgroup/unified/user.slice/user-1000.slice/session-5.scope/
+sudo ./test_sockmap --cgroup $CGR --netns $NETNS &
+
+cat /sys/kernel/debug/tracing/trace_pipe
+
+echo foo | nc -l 127.0.0.1 8080 &
+echo bar | nc 127.0.0.1 8080
+
+=> the connection goes through the sockmap
+
+When testing with a wrong $NETNS, I get the trace_pipe log:
+> not binding connection on netns 4026531992
+
 Signed-off-by: Alban Crequy <alban@kinvolk.io>
-Signed-off-by: Iago López Galeiras <iago@kinvolk.io>
 
 ---
 
 Changes since v1:
-- add netns_dev (review from Alexei)
+- tools/include/uapi/linux/bpf.h: update with netns_dev
+- tools/testing/selftests/bpf/test_sockmap_kern.h: print debugs with
+  both netns_dev and netns_ino
 
 Changes since v2:
-- replace __u64 by u64 in kernel code (review from Y Song)
-- remove unneeded #else branch: program would be rejected in
-  is_valid_access (review from Y Song)
-- allow partial reads (<u64) (review from Y Song)
-
-Changes since v3:
-- return netns_dev unconditionally and set netns_ino to 0 if
-  CONFIG_NET_NS is not enabled (review from Jakub Kicinski)
-- use bpf_ctx_record_field_size and bpf_ctx_narrow_access_ok instead of
-  manually deal with partial reads (review from Y Song)
-- update commit message to reflect new code and remove note about
-  partial reads since it was discussed in the review
-- use bpf_ctx_range() and offsetofend()
+- update commitmsg to refer to netns_ino
 ---
- include/uapi/linux/bpf.h |  2 ++
- net/core/filter.c        | 70 ++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 72 insertions(+)
+ tools/testing/selftests/bpf/test_sockmap.c    | 38 +++++++++++++++++--
+ .../testing/selftests/bpf/test_sockmap_kern.h | 22 +++++++++++
+ 2 files changed, 57 insertions(+), 3 deletions(-)
 
-diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-index 63e0cf66f01a..e64066a09a5f 100644
---- a/include/uapi/linux/bpf.h
-+++ b/include/uapi/linux/bpf.h
-@@ -3261,6 +3261,8 @@ struct bpf_sock_ops {
- 	__u32 sk_txhash;
- 	__u64 bytes_received;
- 	__u64 bytes_acked;
-+	__u64 netns_dev;
-+	__u64 netns_ino;
+diff --git a/tools/testing/selftests/bpf/test_sockmap.c b/tools/testing/selftests/bpf/test_sockmap.c
+index 3845144e2c91..5a1b9c96fca1 100644
+--- a/tools/testing/selftests/bpf/test_sockmap.c
++++ b/tools/testing/selftests/bpf/test_sockmap.c
+@@ -2,6 +2,7 @@
+ // Copyright (c) 2017-2018 Covalent IO, Inc. http://covalent.io
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <stdint.h>
+ #include <sys/socket.h>
+ #include <sys/ioctl.h>
+ #include <sys/select.h>
+@@ -21,6 +22,7 @@
+ #include <sys/resource.h>
+ #include <sys/types.h>
+ #include <sys/sendfile.h>
++#include <sys/stat.h>
+ 
+ #include <linux/netlink.h>
+ #include <linux/socket.h>
+@@ -63,8 +65,8 @@ int s1, s2, c1, c2, p1, p2;
+ int test_cnt;
+ int passed;
+ int failed;
+-int map_fd[8];
+-struct bpf_map *maps[8];
++int map_fd[9];
++struct bpf_map *maps[9];
+ int prog_fd[11];
+ 
+ int txmsg_pass;
+@@ -84,6 +86,7 @@ int txmsg_ingress;
+ int txmsg_skb;
+ int ktls;
+ int peek_flag;
++uint64_t netns_opt;
+ 
+ static const struct option long_options[] = {
+ 	{"help",	no_argument,		NULL, 'h' },
+@@ -111,6 +114,7 @@ static const struct option long_options[] = {
+ 	{"txmsg_skb", no_argument,		&txmsg_skb, 1 },
+ 	{"ktls", no_argument,			&ktls, 1 },
+ 	{"peek", no_argument,			&peek_flag, 1 },
++	{"netns",	required_argument,	NULL, 'n'},
+ 	{0, 0, NULL, 0 }
  };
  
- /* Definitions for bpf_sock_ops_cb_flags */
-diff --git a/net/core/filter.c b/net/core/filter.c
-index 55bfc941d17a..2b1552a8dd74 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -76,6 +76,8 @@
- #include <net/lwtunnel.h>
- #include <net/ipv6_stubs.h>
- #include <net/bpf_sk_storage.h>
-+#include <linux/kdev_t.h>
-+#include <linux/proc_ns.h>
+@@ -1585,6 +1589,7 @@ char *map_names[] = {
+ 	"sock_bytes",
+ 	"sock_redir_flags",
+ 	"sock_skb_opts",
++	"sock_netns",
+ };
  
- /**
-  *	sk_filter_trim_cap - run a packet through a socket filter
-@@ -6822,6 +6824,18 @@ static bool sock_ops_is_valid_access(int off, int size,
+ int prog_attach_type[] = {
+@@ -1619,6 +1624,8 @@ static int populate_progs(char *bpf_file)
+ 	struct bpf_object *obj;
+ 	int i = 0;
+ 	long err;
++	struct stat netns_sb;
++	uint64_t netns_ino;
+ 
+ 	obj = bpf_object__open(bpf_file);
+ 	err = libbpf_get_error(obj);
+@@ -1655,6 +1662,28 @@ static int populate_progs(char *bpf_file)
  		}
- 	} else {
- 		switch (off) {
-+		case bpf_ctx_range(struct bpf_sock_ops, netns_dev):
-+			if (off >= offsetofend(struct bpf_sock_ops, netns_dev))
-+				return false;
-+
-+			bpf_ctx_record_field_size(info, sizeof(u64));
-+			if (!bpf_ctx_narrow_access_ok(off, size, sizeof(u64)))
-+				return false;
-+			break;
-+		case offsetof(struct bpf_sock_ops, netns_ino):
-+			if (size != sizeof(u64))
-+				return false;
-+			break;
- 		case bpf_ctx_range_till(struct bpf_sock_ops, bytes_received,
- 					bytes_acked):
- 			if (size != sizeof(__u64))
-@@ -7739,6 +7753,11 @@ static u32 sock_addr_convert_ctx_access(enum bpf_access_type type,
- 	return insn - insn_buf;
- }
- 
-+static struct ns_common *sockops_netns_cb(void *private_data)
-+{
-+	return &init_net.ns;
-+}
-+
- static u32 sock_ops_convert_ctx_access(enum bpf_access_type type,
- 				       const struct bpf_insn *si,
- 				       struct bpf_insn *insn_buf,
-@@ -7747,6 +7766,10 @@ static u32 sock_ops_convert_ctx_access(enum bpf_access_type type,
- {
- 	struct bpf_insn *insn = insn_buf;
- 	int off;
-+	struct inode *ns_inode;
-+	struct path ns_path;
-+	u64 netns_dev;
-+	void *res;
- 
- /* Helper macro for adding read access to tcp_sock or sock fields. */
- #define SOCK_OPS_GET_FIELD(BPF_FIELD, OBJ_FIELD, OBJ)			      \
-@@ -7993,6 +8016,53 @@ static u32 sock_ops_convert_ctx_access(enum bpf_access_type type,
- 		SOCK_OPS_GET_OR_SET_FIELD(sk_txhash, sk_txhash,
- 					  struct sock, type);
- 		break;
-+
-+	case bpf_ctx_range(struct bpf_sock_ops, netns_dev):
-+		/* We get the netns_dev at BPF-load-time and not at
-+		 * BPF-exec-time. We assume that netns_dev is a constant.
-+		 */
-+		res = ns_get_path_cb(&ns_path, sockops_netns_cb, NULL);
-+		if (IS_ERR(res)) {
-+			netns_dev = 0;
-+		} else {
-+			ns_inode = ns_path.dentry->d_inode;
-+			netns_dev = new_encode_dev(ns_inode->i_sb->s_dev);
-+		}
-+		*target_size = 8;
-+		*insn++ = BPF_MOV64_IMM(si->dst_reg, netns_dev);
-+		break;
-+
-+	case offsetof(struct bpf_sock_ops, netns_ino):
-+#ifdef CONFIG_NET_NS
-+		/* Loading: sk_ops->sk->__sk_common.skc_net.net->ns.inum
-+		 * Type: (struct bpf_sock_ops_kern *)
-+		 *       ->(struct sock *)
-+		 *       ->(struct sock_common)
-+		 *       .possible_net_t
-+		 *       .(struct net *)
-+		 *       ->(struct ns_common)
-+		 *       .(unsigned int)
-+		 */
-+		BUILD_BUG_ON(offsetof(struct sock, __sk_common) != 0);
-+		BUILD_BUG_ON(offsetof(possible_net_t, net) != 0);
-+		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(
-+						struct bpf_sock_ops_kern, sk),
-+				      si->dst_reg, si->src_reg,
-+				      offsetof(struct bpf_sock_ops_kern, sk));
-+		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(
-+						possible_net_t, net),
-+				      si->dst_reg, si->dst_reg,
-+				      offsetof(struct sock_common, skc_net));
-+		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(
-+						struct ns_common, inum),
-+				      si->dst_reg, si->dst_reg,
-+				      offsetof(struct net, ns) +
-+				      offsetof(struct ns_common, inum));
-+#else
-+		*insn++ = BPF_MOV64_IMM(si->dst_reg, 0);
-+#endif
-+		break;
-+
  	}
- 	return insn - insn_buf;
+ 
++	if (netns_opt == 0) {
++		err = stat("/proc/self/ns/net", &netns_sb);
++		if (err) {
++			fprintf(stderr,
++				"ERROR: cannot stat network namespace: %ld (%s)\n",
++				err, strerror(errno));
++			return -1;
++		}
++		netns_ino = netns_sb.st_ino;
++	} else {
++		netns_ino = netns_opt;
++	}
++	i = 1;
++	err = bpf_map_update_elem(map_fd[8], &netns_ino, &i, BPF_ANY);
++	if (err) {
++		fprintf(stderr,
++			"ERROR: bpf_map_update_elem (netns):  %ld (%s)\n",
++			err, strerror(errno));
++		return -1;
++	}
++
++
+ 	return 0;
  }
+ 
+@@ -1738,7 +1767,7 @@ int main(int argc, char **argv)
+ 	if (argc < 2)
+ 		return test_suite(-1);
+ 
+-	while ((opt = getopt_long(argc, argv, ":dhvc:r:i:l:t:p:q:",
++	while ((opt = getopt_long(argc, argv, ":dhvc:r:i:l:t:p:q:n:",
+ 				  long_options, &longindex)) != -1) {
+ 		switch (opt) {
+ 		case 's':
+@@ -1805,6 +1834,9 @@ int main(int argc, char **argv)
+ 				return -1;
+ 			}
+ 			break;
++		case 'n':
++			netns_opt = strtoull(optarg, NULL, 10);
++			break;
+ 		case 0:
+ 			break;
+ 		case 'h':
+diff --git a/tools/testing/selftests/bpf/test_sockmap_kern.h b/tools/testing/selftests/bpf/test_sockmap_kern.h
+index e7639f66a941..317406dad6cf 100644
+--- a/tools/testing/selftests/bpf/test_sockmap_kern.h
++++ b/tools/testing/selftests/bpf/test_sockmap_kern.h
+@@ -91,6 +91,13 @@ struct bpf_map_def SEC("maps") sock_skb_opts = {
+ 	.max_entries = 1
+ };
+ 
++struct bpf_map_def SEC("maps") sock_netns = {
++	.type = BPF_MAP_TYPE_HASH,
++	.key_size = sizeof(__u64),
++	.value_size = sizeof(int),
++	.max_entries = 16
++};
++
+ SEC("sk_skb1")
+ int bpf_prog1(struct __sk_buff *skb)
+ {
+@@ -132,9 +139,24 @@ int bpf_sockmap(struct bpf_sock_ops *skops)
+ {
+ 	__u32 lport, rport;
+ 	int op, err = 0, index, key, ret;
++	int i = 0;
++	__u64 netns_dev, netns_ino;
++	int *allowed;
+ 
+ 
+ 	op = (int) skops->op;
++	netns_dev = skops->netns_dev;
++	netns_ino = skops->netns_ino;
++	bpf_printk("bpf_sockmap: netns_dev = %lu netns_ino = %lu\n",
++		   netns_dev, netns_ino);
++
++	// Only allow sockmap connection on the configured network namespace
++	allowed = bpf_map_lookup_elem(&sock_netns, &netns_ino);
++	if (allowed == NULL || *allowed == 0) {
++		bpf_printk("not binding connection on netns_ino %lu\n",
++			   netns_ino);
++		return 0;
++	}
+ 
+ 	switch (op) {
+ 	case BPF_SOCK_OPS_PASSIVE_ESTABLISHED_CB:
 -- 
 2.21.0
 
