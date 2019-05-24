@@ -2,139 +2,100 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C968EC282E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F37C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:03:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB523217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:03:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C834421851
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:03:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391793AbfEXUDg (ORCPT
+        id S2391834AbfEXUDm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 16:03:36 -0400
-Received: from mga11.intel.com ([192.55.52.93]:59357 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391612AbfEXUDf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 16:03:35 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 May 2019 13:03:34 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by fmsmga001.fm.intel.com with ESMTP; 24 May 2019 13:03:33 -0700
-Date:   Fri, 24 May 2019 13:03:33 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     "Xing, Cedric" <cedric.xing@intel.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-Message-ID: <20190524200333.GF365@linux.intel.com>
-References: <20190523141752.GA12078@linux.intel.com>
- <CALCETrUzx3LPAKCLFf75P-XshAkRcr+JLET3LA_kHDs9MA11FA@mail.gmail.com>
- <20190523234044.GC12078@linux.intel.com>
- <CALCETrV4DVEfW6EJ6DnQGGYDJAiA5M1QcuYJTiroumOM+D6Jjg@mail.gmail.com>
- <960B34DE67B9E140824F1DCDEC400C0F654E8956@ORSMSX116.amr.corp.intel.com>
- <dda0912b-cb15-3c07-d368-345159e995f7@tycho.nsa.gov>
- <20190524174243.GA365@linux.intel.com>
- <20190524175458.GB365@linux.intel.com>
- <960B34DE67B9E140824F1DCDEC400C0F654E8E1D@ORSMSX116.amr.corp.intel.com>
- <CALCETrUw5sEr-MHPMU4CzEzkrejDs-JOThHB9Buhoxo5-rdpRw@mail.gmail.com>
+        Fri, 24 May 2019 16:03:42 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:57465 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391612AbfEXUDl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 16:03:41 -0400
+Received: from mail-ot1-f71.google.com ([209.85.210.71])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <dann.frazier@canonical.com>)
+        id 1hUGPi-0007wv-F1
+        for linux-kernel@vger.kernel.org; Fri, 24 May 2019 20:03:38 +0000
+Received: by mail-ot1-f71.google.com with SMTP id 73so4999384oty.2
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 13:03:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MdZgSrzvQrNvArhhMwV6uq98L6kGwXydzTCUTc3ed/4=;
+        b=nyzkxWlpmuQTSM7FL8BbV7PvXVB4xXH0cSeWffJLbTSbrj03V2WDPh/ZdXcfNG3yoU
+         L5L3u0ZVoTo5fNICoeiL4xhZ37bRhduTSFxjcIguZHKDIsrpOwBWAkH7Y+Qv8HL/WQIJ
+         CHdznPhvV09D9nadnKXRj32wT69+Jdat8PR3XnLTq72BBEIwifNChCvYE8pw0ZTp9CL1
+         VeMCAgB+ZtMfOkDKIzcdMSjEooTtGLCQ2FEXopxVBicVlCC/I20dyWOkzSX8ENynQ87o
+         Q/hIfZdtEsxJRFume/r5VOAIAhbe2CQB4Iy8aNbNF8F0TN0/Z01pg9Qvl9Tr1paVa+tf
+         IhiA==
+X-Gm-Message-State: APjAAAVXvzfQlU1yYLQnFZS1RxCxaUn3Ii9vsEsPn3CgdClOwEj88jSJ
+        4oPkAEfpvq14fovKp9dRbq6OhhU9MJZ/SyCuOnwnUMlhziM0zBE9di7fLNtcAqFDcpbgaQ4hvE7
+        Qk+y4KggDeVYroRKISGYaIzQbp085xwifvJe3rdsDQfsg0tDsGyA4VYTvhg==
+X-Received: by 2002:a05:6830:164d:: with SMTP id h13mr31758686otr.99.1558728217210;
+        Fri, 24 May 2019 13:03:37 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxoya9uYRsSIEv51UV91v8Z+LxDz8k4gGrzqqMySgCjbel8axNiXlhuqaT0Un+V+0ZUNeHLZgzLuTVB5rKzbzc=
+X-Received: by 2002:a05:6830:164d:: with SMTP id h13mr31758663otr.99.1558728216929;
+ Fri, 24 May 2019 13:03:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrUw5sEr-MHPMU4CzEzkrejDs-JOThHB9Buhoxo5-rdpRw@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190524040633.16854-1-nicoleotsuka@gmail.com>
+In-Reply-To: <20190524040633.16854-1-nicoleotsuka@gmail.com>
+From:   dann frazier <dann.frazier@canonical.com>
+Date:   Fri, 24 May 2019 14:03:25 -0600
+Message-ID: <CALdTtnu=WdYbqyq57EkB-=rsyz72SW-J8oyD7f6Xm-da2OgRgQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] Optimize dma_*_from_contiguous calls
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>, vdumpa@nvidia.com,
+        linux@armlinux.org.uk, Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>, chris@zankel.net,
+        jcmvbkbc@gmail.com, joro@8bytes.org, dwmw2@infradead.org,
+        tony@atomide.com, akpm@linux-foundation.org, sfr@canb.auug.org.au,
+        treding@nvidia.com, keescook@chromium.org, iamjoonsoo.kim@lge.com,
+        wsa+renesas@sang-engineering.com,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        iommu@lists.linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 12:37:44PM -0700, Andy Lutomirski wrote:
-> On Fri, May 24, 2019 at 11:34 AM Xing, Cedric <cedric.xing@intel.com> wrote:
-> >
-> > If "initial permissions" for enclaves are less restrictive than shared
-> > objects, then it'd become a backdoor for circumventing LSM when enclave
-> > whitelisting is *not* in place. For example, an adversary may load a page,
-> > which would otherwise never be executable, as an executable page in EPC.
-> >
-> > In the case a RWX page is needed, the calling process has to have a RWX
-> > page serving as the source for EADD so PROCESS__EXECMEM will have been
-> > checked. For SGX2, changing an EPC page to RWX is subject to FILE__EXECMEM
-> > on /dev/sgx/enclave, which I see as a security benefit because it only
-> > affects the enclave but not the whole process hosting it.
-> 
-> So the permission would be like FILE__EXECMOD on the source enclave
-> page, because it would be mapped MAP_ANONYMOUS, PROT_WRITE?
-> MAP_SHARED, PROT_WRITE isn't going to work because that means you can
-> modify the file.
+On Thu, May 23, 2019 at 10:08 PM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
+>
+> [ Per discussion at v1, we decide to add two new functions and start
+>   replacing callers one by one. For this series, it only touches the
+>   dma-direct part. And instead of merging two PATCHes, I still keep
+>   them separate so that we may easily revert PATCH-2 if anything bad
+>   happens as last time -- PATCH-1 is supposed to be a safe cleanup. ]
+>
+> This series of patches try to optimize dma_*_from_contiguous calls:
+> PATCH-1 abstracts two new functions and applies to dma-direct.c file.
+> PATCH-2 saves single pages and reduce fragmentations from CMA area.
+>
+> Please check their commit messages for detail changelog.
+>
+> Nicolin Chen (2):
+>   dma-contiguous: Abstract dma_{alloc,free}_contiguous()
+>   dma-contiguous: Use fallback alloc_pages for single pages
+>
+>  include/linux/dma-contiguous.h | 11 +++++++
+>  kernel/dma/contiguous.c        | 57 ++++++++++++++++++++++++++++++++++
+>  kernel/dma/direct.c            | 24 +++-----------
+>  3 files changed, 72 insertions(+), 20 deletions(-)
 
-Was this in response to Cedric's comment, or to my comment?
+Thanks Nicolin. Tested on a HiSilicon D06 system.
 
-> I'm starting to think that looking at the source VMA permission bits
-> or source PTE permission bits is putting a bit too much policy into
-> the driver as opposed to the LSM.  How about delegating the whole
-> thing to an LSM hook?  The EADD operation would invoke a new hook,
-> something like:
-> 
-> int security_enclave_load_bytes(void *source_addr, struct
-> vm_area_struct *source_vma, loff_t source_offset, unsigned int
-> maxperm);
-> 
-> Then you don't have to muck with mapping anything PROT_EXEC.  Instead
-> you load from a mapping of a file and the LSM applies whatever policy
-> it feels appropriate.  If the first pass gets something wrong, the
-> application or library authors can take it up with the SELinux folks
-> without breaking the whole ABI :)
-> 
-> (I'm proposing passing in the source_vma because this hook would be
-> called with mmap_sem held for read to avoid a TOCTOU race.)
-> 
-> If we go this route, the only substantial change to the existing
-> driver that's needed for an initial upstream merge is the maxperm
-> mechanism and whatever hopefully minimal API changes are needed to
-> allow users to conveniently set up the mappings.  And we don't need to
-> worry about how to hack around mprotect() calling into the LSM,
-> because the LSM will actually be aware of SGX and can just do the
-> right thing.
-
-This doesn't address restricting which processes can run which enclaves,
-it only allows restricting the build flow.  Or are you suggesting this
-be done in addition to whitelisting sigstructs?
-
-What's the value prop beyond whitelisting sigstructs?  Realistically, I
-doubt LSMs/users will want to take the performance hit of scanning the
-source bytes every time an enclave is loaded.
-
-We could add seomthing like security_enclave_mprotect() in lieu of abusing
-security_file_mprotect(), but passing the full source bytes seems a bit
-much.
+Tested-by: dann frazier <dann.frazier@canonical.com>
