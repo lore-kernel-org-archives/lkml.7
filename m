@@ -2,223 +2,142 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 461E4C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 03:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C7E4C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 03:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E124321773
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 03:16:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DADDC217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 03:16:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Yx6m/VB2";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ipYr7kWr"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="b8TIeHi8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731794AbfEXDQU (ORCPT
+        id S1731825AbfEXDQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 23:16:20 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:32880 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731522AbfEXDQT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 23:16:19 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id C2137607F4; Fri, 24 May 2019 03:16:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558667777;
-        bh=UfUOkq1yueIuFHRCYwReJukg9DnuYytlPgBSWsYteYI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Yx6m/VB2KcpMl2a85QuiJUCONQ5dv/ZK0PkE2IXk/NglQdiAslKZCIlbBB8CtAAAN
-         0Sz8KHOHQi658aI+qT+MYSM6Fm22LFnDTL7OS2th6i2ZQiXyx5MXPWIKAXFP3Rp97c
-         yiS/QA5W4P6lXfXeHRl/kMjgB3EIR4AFb+hg3vFY=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 7ED2C602F8;
-        Fri, 24 May 2019 03:16:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558667776;
-        bh=UfUOkq1yueIuFHRCYwReJukg9DnuYytlPgBSWsYteYI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ipYr7kWrhDYzMDqvpORoOVR37GGSUGG5J1iH61s8hM2Kbbc8Fb+oJQy6zdPy6/D7G
-         zc7T4QauzYvsCK9YTxkIqwqyJn9UED08wp2wBL4mNpb7pTuObCfc3WMYv9eryfZIq7
-         3+7vxYy9KpPgGRNca09vcC4TjXbzWbxlh8Y79k7Y=
+        Thu, 23 May 2019 23:16:52 -0400
+Received: from mail-eopbgr150048.outbound.protection.outlook.com ([40.107.15.48]:61314
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731490AbfEXDQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 23:16:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KqS2DZUMb5Adwcl0tbc/DbnkYyqnfoMJ/qs5Yvl25lk=;
+ b=b8TIeHi87oJcI6A4DSBZ95dilWIyymgW7MdmoFmdQwmcr6md9kBHCCc5rQVo1HIgWTZDoGSMejjN7X2Dug3hN63Qv0VMkekZm07L6byd65KH2XwCEKkIhPrYeJ2Cd/KhnrkDkvXW2MjCr86hneiImfee3JdJRc9UWE1w6K3+nag=
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
+ VE1PR08MB5135.eurprd08.prod.outlook.com (20.179.30.94) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.16; Fri, 24 May 2019 03:16:47 +0000
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::206b:5cf6:97e:1358]) by VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::206b:5cf6:97e:1358%7]) with mapi id 15.20.1922.017; Fri, 24 May 2019
+ 03:16:47 +0000
+From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+To:     Liviu Dudau <Liviu.Dudau@arm.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "sean@poorly.run" <sean@poorly.run>
+CC:     "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
+        "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>,
+        nd <nd@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Ben Davis <Ben.Davis@arm.com>,
+        "Oscar Zhang (Arm Technology China)" <Oscar.Zhang@arm.com>,
+        "Channing Chen (Arm Technology China)" <Channing.Chen@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+Subject: [PATCH] drm/komeda: Accept null writeback configurations for
+ writeback
+Thread-Topic: [PATCH] drm/komeda: Accept null writeback configurations for
+ writeback
+Thread-Index: AQHVEd8ee/t54Nf5EUSIM2PBpwEGHg==
+Date:   Fri, 24 May 2019 03:16:47 +0000
+Message-ID: <20190524031628.20533-1-james.qian.wang@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [113.29.88.7]
+x-clientproxiedby: HK0PR04CA0009.apcprd04.prod.outlook.com
+ (2603:1096:203:36::21) To VE1PR08MB5006.eurprd08.prod.outlook.com
+ (2603:10a6:803:113::31)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 778196cb-de6b-491e-22a9-08d6dff64105
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VE1PR08MB5135;
+x-ms-traffictypediagnostic: VE1PR08MB5135:
+x-ms-exchange-purlcount: 1
+nodisclaimer: True
+x-microsoft-antispam-prvs: <VE1PR08MB513588971A67A75FA5A2DB3EB3020@VE1PR08MB5135.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 0047BC5ADE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(39860400002)(366004)(136003)(376002)(346002)(189003)(199004)(36756003)(1076003)(26005)(68736007)(6306002)(66066001)(6436002)(6512007)(2906002)(2616005)(8936002)(476003)(186003)(5660300002)(386003)(316002)(53936002)(4326008)(6486002)(2201001)(6116002)(3846002)(110136005)(305945005)(14454004)(55236004)(86362001)(102836004)(6506007)(66476007)(54906003)(66946007)(73956011)(7736002)(66446008)(64756008)(66556008)(256004)(25786009)(71200400001)(486006)(71190400001)(966005)(99286004)(8676002)(103116003)(2501003)(50226002)(52116002)(478600001)(81166006)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB5135;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: xgIiYazmQNkPBWjt8H4ypghmGVz2dzTzxgaE0vlKgtuLI8kfdN1qKKy3LpabPJk1r+DHaAyD0/l8XWAkZBwEPnHIcX2IpEO/86SMc7lIEP0Fpknobv2RGOaOclc2B80qT2urBlg9LmS8zQe2w9/3rbVMnS4fTOejPc6y3MuB7utq3O/j3fnCl1irW/RU0obJ2lnSUJwC6luN2kkeq1FUHXgGW8ozTwYA6uRw5uTgsHNm9vU1EKUpp9aS5yOKHHgdfsa98UkMc0rI/im9JGV52wc0rgd/BWLvuCKukT/vf0/we4lAq9eTbPKDKxseJCRiv0nv+AlZjN13SRZ+fNm4SnB62ZiVJfoGnR2Lo0u+CMAuKpVCkWfV83b82ubLmk4L6vYhfH55H9pgiGx+43Z3Mdf2wA6kV1rv7gdzxnC4anI=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Fri, 24 May 2019 11:16:16 +0800
-From:   tengfeif@codeaurora.org
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     catalin.marinas@arm.com, will.deacon@arm.com, mark.rutland@arm.com,
-        marc.zyngier@arm.com, andreyknvl@google.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tengfei@codeaurora.org
-Subject: [PATCH] arm64: break while loop if task had been rescheduled
-Message-ID: <52076172bb8a55305846f6d4dc97bb52@codeaurora.org>
-X-Sender: tengfeif@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 778196cb-de6b-491e-22a9-08d6dff64105
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 May 2019 03:16:47.1804
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: james.qian.wang@arm.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB5135
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When task isn't current task, this task's state have
-chance to be changed during printing this task's
-backtrace, so it is possible that task's fp and fp+8
-have the same vaule, so cannot break the while loop.
-To fix this issue, we first save the task's state, sp
-and fp, then we will get the task's current state, sp
-and fp in each while again. we will stop to print
-backtrace if we found any of the values are different
-than what we saved.
-
-/********************************answer 
-question**********************************/
-This is very confusing. IIUC it suggests that while printing
-the backtrace for non-current tasks the do/while loop does not
-exit because fp and fp+8 might have the same value ? When would
-this happen ? Even in that case the commit message here does not
-properly match the change in this patch.
-
-In our issue, we got fp=pc=0xFFFFFF8025A13BA0, so cannot exit while
-loop in dump_basktrace().
-After analyze our issue's dump, we found one task(such as: task A)
-is exiting via invoke do_exit() during another task is showing task
-A's dumptask. In kernel code, do_exit() and exit_notify are defined
-as follows:
-void noreturn do_exit(long code)
-{
-      ......
-      exit_notify(tsk, group_dead);
-      ......
-}
-static void exit_notify(struct task_struct *tsk, int group_dead)
-{
-      ......
-}
-Because of exit_notify() is a static function, so it is inlined to
-do_exit() when compile kernel, so we can get partial assembly code
-of do_exit() as follows:
-……
-{
-         bool autoreap;
-         struct task_struct *p, *n;
-         LIST_HEAD(dead);
-
-         write_lock_irq(&tasklist_lock);
-      c10:       90000000        adrp    x0, 0 <tasklist_lock>
-      c14:       910003e8        mov     x8, sp
-      c18:       91000000        add     x0, x0, #0x0
-*/
-static void exit_notify(struct task_struct *tsk, int group_dead)
-{
-         bool autoreap;
-         struct task_struct *p, *n;
-         LIST_HEAD(dead);
-      c1c:       a90023e8        stp     x8, x8, [sp]
-
-         write_lock_irq(&tasklist_lock);
-      c20:       94000000        bl      0 <_raw_write_lock_irq>
-      c24:       f9435268        ldr     x8, [x19,#1696]
-……
- From the code "c14:" and "c1c:", we will find sp's addr value is stored
-in sp and sp+8, so sp's vaule equal (sp+8)'s value.
-In our issue, there is a chance of fp point sp, so there will be 
-fp=pc=fp's
-addr value,so code cannot break from while loop in dump_backtrace().
-
-/********************************answer 
-question**********************************/
-
-/********************************answer 
-question**********************************/
-This patch tries to stop printing the stack for non-current tasks
-if their state change while there is one dump_backtrace() trying
-to print back trace. Dont we have any lock preventing a task in
-this situation (while dumping it's backtrace) from running again
-or changing state.
-I haven't found any lock preventing a task in this situation, and I 
-think we shouldn't
-prevent task running if this task is scheduled.
-/********************************answer 
-question**********************************/
-
-Signed-off-by: Tengfei Fan <tengfeif@codeaurora.org>
----
-  arch/arm64/kernel/traps.c | 23 +++++++++++++++++++++++
-  1 file changed, 23 insertions(+)
-
-diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
-index 2975598..9df6e02 100644
---- a/arch/arm64/kernel/traps.c
-+++ b/arch/arm64/kernel/traps.c
-@@ -103,6 +103,9 @@ void dump_backtrace(struct pt_regs *regs, struct 
-task_struct *tsk)
-  {
-      struct stackframe frame;
-      int skip = 0;
-+    long cur_state = 0;
-+    unsigned long cur_sp = 0;
-+    unsigned long cur_fp = 0;
-
-      pr_debug("%s(regs = %p tsk = %p)\n", __func__, regs, tsk);
-
-@@ -127,6 +130,9 @@ void dump_backtrace(struct pt_regs *regs, struct 
-task_struct *tsk)
-           */
-          frame.fp = thread_saved_fp(tsk);
-          frame.pc = thread_saved_pc(tsk);
-+        cur_state = tsk->state;
-+        cur_sp = thread_saved_sp(tsk);
-+        cur_fp = frame.fp;
-
-/********************************answer 
-question**********************************/
-Should 'saved_state|sp|fp' instead as its applicable to non-current
-tasks only.
-'saved_state|sp|fp' only applies to non-current tasks.
-
-/********************************answer 
-question**********************************/
-
-      }
-  #ifdef CONFIG_FUNCTION_GRAPH_TRACER
-      frame.graph = 0;
-@@ -134,6 +140,23 @@ void dump_backtrace(struct pt_regs *regs, struct 
-task_struct *tsk)
-
-      printk("Call trace:\n");
-      do {
-+        if (tsk != current && (cur_state != tsk->state
-+            /*
-+             * We would not be printing backtrace for the task
-+             * that has changed state from "saved" state to ohter
-+             * state before hitting the do-while loop but after
-+             * saving the current state. If task's current state
-+             * not equal the "saved" state, then we may print
-+             * wrong call trace or end up in infinite while loop
-+             * if *(fp) and *(fp+8) are same. While the situation
-+             * should be stoped once we found the task's state
-+             * is changed, so we detect the task's current state,
-+             * sp and fp in each while.
-+             */
-+            || cur_sp != thread_saved_sp(tsk)
-+            || cur_fp != thread_saved_fp(tsk))) {
-
-/********************************answer 
-question**********************************/
-Why does any of these three mismatches detect the problematic transition
-not just the state ?
-1. we can use "cur_state != tsk->state" prevent printing backtrace if 
-the task's
-    state is changed after "saved" task's state.
-2. we can use "cur_sp != thread_saved_sp(tsk)" and "cur_fp != 
-thread_saved_fp(tsk)"
-    prevent printing backtrace if the task's state is changed before 
-"saved" task's
-    state. Because the value of "thread_saved_sp(tsk)" and 
-"thread_saved_fp(tsk)"
-    will not equal "saved" sp(cur_sp) and fp(cur_fp).
-/********************************answer 
-question**********************************/
+VXNlciBtYXkgc2VuZCBudWxsIHdyaXRlYmFjayBjb25maWd1cmF0aW9ucyBmb3Igd3JpdGViYWNr
+IGNvbm5lY3RvciBsaWtlOg0KLSBPbmx5IGJpbmQgdGhlIHdyaXRlYmFjayBjb25uZWN0b3IgdG8g
+Y3J0Yy4NCi0gc2V0IGEgZmJfaWQoMCkgdG8gd3JpdGViYWNrX2ZiX2lkX3Byb3BlcnR5DQpBbGwg
+YWJvdmUgY29uZmlndXJhdGlvbnMgYXJlIG1lYW5pbmdsZXNzIGZvciB3cml0ZWJhY2ssIGJ1dCBz
+aW5jZSB0aGV5IGFyZQ0Kc3RpbGwgdmFsaWQgY29uZmlndXJhdGlvbnMsIGFjY2VwdCB0aGVtLg0K
+DQpEZXBlbmRzIG9uOg0KLSBodHRwczovL3BhdGNod29yay5mcmVlZGVza3RvcC5vcmcvc2VyaWVz
+LzYwODU2Lw0KDQpTaWduZWQtb2ZmLWJ5OiBKYW1lcyBRaWFuIFdhbmcgKEFybSBUZWNobm9sb2d5
+IENoaW5hKSA8amFtZXMucWlhbi53YW5nQGFybS5jb20+DQotLS0NCiAuLi4vZ3B1L2RybS9hcm0v
+ZGlzcGxheS9rb21lZGEva29tZWRhX3diX2Nvbm5lY3Rvci5jICB8IDExICsrKysrKy0tLS0tDQog
+MSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkNCg0KZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX3diX2Nvbm5l
+Y3Rvci5jIGIvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfd2JfY29u
+bmVjdG9yLmMNCmluZGV4IDIwMjk1MjkxNTcyZi4uMGQ3MzQyNDRmNjYyIDEwMDY0NA0KLS0tIGEv
+ZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfd2JfY29ubmVjdG9yLmMN
+CisrKyBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX3diX2Nvbm5l
+Y3Rvci5jDQpAQCAtMTMsMTEgKzEzLDcgQEAga29tZWRhX3diX2luaXRfZGF0YV9mbG93KHN0cnVj
+dCBrb21lZGFfbGF5ZXIgKndiX2xheWVyLA0KIAkJCSBzdHJ1Y3Qga29tZWRhX2NydGNfc3RhdGUg
+KmtjcnRjX3N0LA0KIAkJCSBzdHJ1Y3Qga29tZWRhX2RhdGFfZmxvd19jZmcgKmRmbG93KQ0KIHsN
+Ci0Jc3RydWN0IGRybV9mcmFtZWJ1ZmZlciAqZmIgPSBjb25uX3N0LT53cml0ZWJhY2tfam9iID8N
+Ci0JCQkJICAgICBjb25uX3N0LT53cml0ZWJhY2tfam9iLT5mYiA6IE5VTEw7DQotDQotCWlmICgh
+ZmIpDQotCQlyZXR1cm4gLUVJTlZBTDsNCisJc3RydWN0IGRybV9mcmFtZWJ1ZmZlciAqZmIgPSBj
+b25uX3N0LT53cml0ZWJhY2tfam9iLT5mYjsNCiANCiAJbWVtc2V0KGRmbG93LCAwLCBzaXplb2Yo
+KmRmbG93KSk7DQogDQpAQCAtNDIsMTAgKzM4LDE1IEBAIGtvbWVkYV93Yl9lbmNvZGVyX2F0b21p
+Y19jaGVjayhzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIsDQogCQkJICAgICAgIHN0cnVjdCBk
+cm1fY29ubmVjdG9yX3N0YXRlICpjb25uX3N0KQ0KIHsNCiAJc3RydWN0IGtvbWVkYV9jcnRjX3N0
+YXRlICprY3J0Y19zdCA9IHRvX2tjcnRjX3N0KGNydGNfc3QpOw0KKwlzdHJ1Y3QgZHJtX3dyaXRl
+YmFja19qb2IgKndyaXRlYmFja19qb2IgPSBjb25uX3N0LT53cml0ZWJhY2tfam9iOw0KIAlzdHJ1
+Y3Qga29tZWRhX2xheWVyICp3Yl9sYXllcjsNCiAJc3RydWN0IGtvbWVkYV9kYXRhX2Zsb3dfY2Zn
+IGRmbG93Ow0KIAlpbnQgZXJyOw0KIA0KKwlpZiAoIXdyaXRlYmFja19qb2IgfHwgIXdyaXRlYmFj
+a19qb2ItPmZiKSB7DQorCQlyZXR1cm4gMDsNCisJfQ0KKw0KIAlpZiAoIWNydGNfc3QtPmFjdGl2
+ZSkgew0KIAkJRFJNX0RFQlVHX0FUT01JQygiQ2Fubm90IHdyaXRlIHRoZSBjb21wb3NpdGlvbiBy
+ZXN1bHQgb3V0IG9uIGEgaW5hY3RpdmUgQ1JUQy5cbiIpOw0KIAkJcmV0dXJuIC1FSU5WQUw7DQot
+LSANCjIuMTcuMQ0KDQo=
