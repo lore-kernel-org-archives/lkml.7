@@ -2,667 +2,160 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D66F3C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5CC8C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E3EF20815
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:51:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8145B217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:52:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jrjdlO2A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390066AbfEXJvG (ORCPT
+        id S2390184AbfEXJwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 05:51:06 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:43908 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389716AbfEXJvG (ORCPT
+        Fri, 24 May 2019 05:52:16 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39280 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389582AbfEXJwP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 05:51:06 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 49E5428A28D
-Subject: Re: [PATCH v5] platform/chrome: wilco_ec: Add telemetry char device
- interface
-To:     Nick Crews <ncrews@chromium.org>, bleung@chromium.org
-Cc:     linux-kernel@vger.kernel.org, dlaurie@chromium.org,
-        djkurtz@chromium.org, dtor@google.com, sjg@chromium.org,
-        bartfab@chromium.org, lamzin@google.com, jchwong@google.com
-References: <20190521192045.261801-1-ncrews@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <2b8eccfa-0117-37c3-44cb-b1220b9678f9@collabora.com>
-Date:   Fri, 24 May 2019 11:51:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 24 May 2019 05:52:15 -0400
+Received: by mail-wr1-f66.google.com with SMTP id e2so558050wrv.6;
+        Fri, 24 May 2019 02:52:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=SZlgdWghXcOx29IJ3YpRkLUJGC5gsx+9Sxo+2Gik714=;
+        b=jrjdlO2AntaltwpcLnkrsJX6gM9QxY/Jw39kNl8hmQUOhViJK+GnF6ntE9xZniEIcD
+         pzwc6ZiagUdIBg4kWq2fPr/EnQEs+e5XXKvtfrnT9sVeyfakLbpbFuwbUH9ZJs/lmZEb
+         IxGNn4eftCWeUw2WX3QhIMMPOTotMNac/27itGdTAT/O13URcopN3LyvMMjFKXD1eBQ6
+         PpmS1RP7JCpzmGsr5ELvor32yVG0ozlUFxipWCoXVU7i4NkP61Jr0vlYYmJ7WNSVcnUg
+         Mp1IXEuBnH/4iBP4uqhqRNpe5qj96PWzO48js1YylZM3ih47gb5GMlTX4OSO4DCziiK8
+         BRxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=SZlgdWghXcOx29IJ3YpRkLUJGC5gsx+9Sxo+2Gik714=;
+        b=rkL0io0NPRUtOMBYwaYRn9ZUnSkfCrLJRCSkaIIrgi3Vbb2YF3ZzswoQtJsoc1SIJ0
+         r5N4/3/hBhvuE+balTKR4YW+ejdK47MQVM6/RkshDa/1kteTJ6oIiQA5Ug3NAdtVBYLa
+         e7fjA7Bqog22ZBU1xtvGdL40xOra3myiw8azwL673l6WhnLGBsrlNiLKrqru+p+QBohM
+         m434LtbQVr1i80/8IflLqx3avudXD25ggFCkf3axsdynh6NKj+hiZPfwM1xMK1RGxqj1
+         5xHvTW8IBSHNdtb+91/McygEf66+DVhkLMjKHlV0VfeJqs/tQF7nrFrTSmYOPiqIz/yC
+         h+1w==
+X-Gm-Message-State: APjAAAWRhGIsBsDGLV2I6s6oXbLxBtWrXK3m/dnXxSoIeElh/b/KsOHM
+        kB+gdUeBd/eDeov/7mpv+2k=
+X-Google-Smtp-Source: APXvYqxPjtYlHBthTHveuzTO3uZdtAaeckc2jmNSuYLALzSHS1CHfyQHt6ggKigbBuqoxx5HqjOKtw==
+X-Received: by 2002:a5d:6108:: with SMTP id v8mr6961359wrt.150.1558691533362;
+        Fri, 24 May 2019 02:52:13 -0700 (PDT)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id y130sm1767931wmc.44.2019.05.24.02.52.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 24 May 2019 02:52:12 -0700 (PDT)
+Date:   Fri, 24 May 2019 11:52:11 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Peter Hutterer <peter.hutterer@who-t.net>
+Cc:     Hui Wang <hui.wang@canonical.com>,
+        Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>,
+        dmitry.torokhov@gmail.com, XiaoXiao Liu <sliuuxiaonxiao@gmail.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Xiaojian Cao <xiaojian.cao@cn.alps.com>,
+        "zhangfp1@lenovo.com" <zhangfp1@lenovo.com>
+Subject: Re: =?utf-8?B?562U5aSNOiDnrZTlpI06IOetlA==?=
+ =?utf-8?B?5aSNOiBbUEFUQ0hdIGlucHV0?= =?utf-8?Q?=3A?= alps-fix the issue the
+ special alps trackpoint do not work.
+Message-ID: <20190524095211.wfvqxt3ihu2ft7lw@pali>
+References: <OSBPR01MB4855D744473149D037612506DA000@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+ <20190522063546.kb74mxeprkauicul@pali>
+ <OSBPR01MB48550B43F78BBFBDC20D414DDA000@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+ <20190522074030.64sy7xt3wnomtxjb@pali>
+ <20190523060154.GA10526@jelly>
+ <38ec4a40-d51a-aeb1-a5e8-dbaed1142298@canonical.com>
+ <20190524053648.GA16379@jelly>
+ <d1fd207d-68e1-0b57-f0dc-c254bfc9352c@canonical.com>
+ <20190524072648.6zqgz7rpwpcv22pb@pali>
+ <20190524093238.GA1119@jelly>
 MIME-Version: 1.0
-In-Reply-To: <20190521192045.261801-1-ncrews@chromium.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190524093238.GA1119@jelly>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nick,
-
-I'm mostly fine with it but ...
-
-On 21/5/19 21:20, Nick Crews wrote:
-> The Wilco Embedded Controller is able to send telemetry data
-> which is useful for enterprise applications. A daemon running on
-> the OS sends a command to the EC via a write() to a char device,
-> and can read the response with a read(). The write() request is
-> verified by the driver to ensure that it is performing only one
-> of the whitelisted commands, and that no extraneous data is
-> being transmitted to the EC. The response is passed directly
-> back to the reader with no modification.
+On Friday 24 May 2019 19:32:38 Peter Hutterer wrote:
+> On Fri, May 24, 2019 at 09:26:48AM +0200, Pali Rohár wrote:
+> > On Friday 24 May 2019 13:50:53 Hui Wang wrote:
+> > > On 2019/5/24 下午1:36, Peter Hutterer wrote:
+> > > > On Fri, May 24, 2019 at 01:25:52PM +0800, Hui Wang wrote:
+> > > > > On 2019/5/23 下午2:01, Peter Hutterer wrote:
+> > > > > > On Wed, May 22, 2019 at 09:40:30AM +0200, Pali Rohár wrote:
+> > > > > > > On Wednesday 22 May 2019 07:30:43 Xiaoxiao Liu wrote:
+> > > > > > > > Hi Pali,
+> > > > > > > > 
+> > > > > > > > Ok, and cannot you set ALPS_DUALPOINT flag based on that
+> > > > > > > > alps_check_is_trackpoint() result and then update
+> > > > > > > > alps_process_packet_ss4_v3() code to supports also
+> > > > > > > > V8 trackpoint packets?
+> > > > > > > > --> Yes, we can do like so, when we use the v8 method to process the trackpoint , the mouse speed is not ideal.
+> > > > > > > >         Then we choose the standard mouse driver.
+> > > > > > > Mouse speed is something which is configurable. Have you configured it
+> > > > > > > somehow? Also there is libinput project should handle these settings
+> > > > > > > more properly.
+> > > > > > > 
+> > > > > > > Adding Peter Hutterer, maintainer of libinput to loop. I think he could
+> > > > > > > help with this problem.
+> > > > > > libinput has a quirk for a magic multiplier on trackpoints. it was the only
+> > > > > > solution I found that came close to "working" given that every device seems
+> > > > > > to provide some other random magic data. Doc for it is here:
+> > > > > > https://wayland.freedesktop.org/libinput/doc/latest/trackpoint-configuration.html
+> > > > > Hello Peter Hutterer,
+> > > > > 
+> > > > > To adjust the trackpoint speed from userspace:
+> > > > > 
+> > > > > If the libinput version is lower than 1.9.0, we could set
+> > > > > POINTINGSTICK_CONST_ACCEL=0.25
+> > > > > 
+> > > > > If the libinput version is higher than 1.12.0, we could set
+> > > > > AttrTrackpointMultiplier=0.25
+> > > > > 
+> > > > > But if we use libinput-1.10.0,  how could we adjust the speed?
+> > > > The LIBINPUT_ATTR_TRACKPOINT_RANGE property, which didn't end up working
+> > > > well (hence why it got replaced again). See the docs here though:
+> > > > https://wayland.freedesktop.org/libinput/doc/1.10.0/trackpoints.html
+> > > > 
+> > > > Cheers,
+> > > >     Peter
+> > > 
+> > > OK, got it, Thanks.
+> > 
+> > Is not here some database where for input device name / id is specified
+> > that property? So users do not have to invent what is correct value for
+> > their hardware?
 > 
-> The character device will appear as /dev/wilco_telemN, where N
-> is some small non-negative integer, starting with 0. Only one
+> yeah, libinput ships with a quirks database that sets those, but it relies
+> on users to submit the quirks.
+> https://gitlab.freedesktop.org/libinput/libinput/tree/master/quirks
 
-Still remains my question in the previous version.
+That is enough!
 
-We will really have more than one /dev/wilco_telemN devices handled by this
-driver? Why not use a Miscellaneous Character Device Driver that will simplify
-the code?
+> There's no "correct" value anyway, if you ask 3 users what the trackpoint
+> should do you'll get 5 answers :)
 
-Thanks,
- Enric
+I know :) but reason for such database is to provide some sane defaults.
+Which seems it is already there.
 
-
-> process may have the file descriptor open at a time. The calling
-> userspace program needs to keep the device file descriptor open
-> between the calls to write() and read() in order to preserve the
-> response. Up to 32 bytes will be available for reading.
-> 
-> For testing purposes, try requesting the EC's firmware build
-> date, by sending the WILCO_EC_TELEM_GET_VERSION command with
-> argument index=3. i.e. write [0x38, 0x00, 0x03]
-> to the device node. An ASCII string of the build date is
-> returned.
-> 
-> Signed-off-by: Nick Crews <ncrews@chromium.org>
-> ---
-> v5 changes:
-> - Free device data in callback so that it isn't freed while
->   the character device is open.
-> - Remove under-used dev_num variable in probe()
-> - Change pr_warn to pr_err in module_init()
-> - Allow for telemetry requests smaller than 32 bytes,
->   and improve the validation on the requests.
-> - Return -EMSGSIZE instead of -EINVAL in for too-long requests.
-> - Zero out response buffer before making a request, so the
->   response is more clearly padded.
-> v3 changes:
-> - Change WILCO_EC_CMD_* commands to WILCO_EC_TELEM_* in
->   order to differentiate from the 0xF0 commannds.
-> - Use kernel-doc style for wilco_ec_telem_request.
-> - Change "GPL v2" to "GPL" in MODULE_LICENSE.
-> - Fix formatting in check_args_length().
-> v2 changes:
-> - Add verification of userspace requests, so that only
->   whitelisted commands and args can get sent to the EC
-> - Use EC firmware build date request as example/test
-> - Pass the wilco_ec_device to the child driver better,
->   instead of the child driver needing to access the parent
->   devices' data.
-> 
->  drivers/platform/chrome/wilco_ec/Kconfig     |   7 +
->  drivers/platform/chrome/wilco_ec/Makefile    |   2 +
->  drivers/platform/chrome/wilco_ec/core.c      |  13 +
->  drivers/platform/chrome/wilco_ec/debugfs.c   |   2 +-
->  drivers/platform/chrome/wilco_ec/telemetry.c | 450 +++++++++++++++++++
->  include/linux/platform_data/wilco-ec.h       |   2 +
->  6 files changed, 475 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/platform/chrome/wilco_ec/telemetry.c
-> 
-> diff --git a/drivers/platform/chrome/wilco_ec/Kconfig b/drivers/platform/chrome/wilco_ec/Kconfig
-> index e09e4cebe9b4..2fc03aa624cf 100644
-> --- a/drivers/platform/chrome/wilco_ec/Kconfig
-> +++ b/drivers/platform/chrome/wilco_ec/Kconfig
-> @@ -18,3 +18,10 @@ config WILCO_EC_DEBUGFS
->  	  manipulation and allow for testing arbitrary commands.  This
->  	  interface is intended for debug only and will not be present
->  	  on production devices.
-> +
-> +config WILCO_EC_TELEMETRY
-> +	tristate "Enable querying telemetry data from EC"
-> +	depends on WILCO_EC
-> +	help
-> +	  If you say Y here, you get support to query EC telemetry data from
-> +	  /dev/wilco_telem0 using write() and then read().
-> diff --git a/drivers/platform/chrome/wilco_ec/Makefile b/drivers/platform/chrome/wilco_ec/Makefile
-> index 72df9b5e1983..72a99f854241 100644
-> --- a/drivers/platform/chrome/wilco_ec/Makefile
-> +++ b/drivers/platform/chrome/wilco_ec/Makefile
-> @@ -4,3 +4,5 @@ wilco_ec-objs				:= core.o mailbox.o properties.o sysfs.o
->  obj-$(CONFIG_WILCO_EC)			+= wilco_ec.o
->  wilco_ec_debugfs-objs			:= debugfs.o
->  obj-$(CONFIG_WILCO_EC_DEBUGFS)		+= wilco_ec_debugfs.o
-> +wilco_ec_telem-objs			:= telemetry.o
-> +obj-$(CONFIG_WILCO_EC_TELEMETRY)	+= wilco_ec_telem.o
-> diff --git a/drivers/platform/chrome/wilco_ec/core.c b/drivers/platform/chrome/wilco_ec/core.c
-> index 45cf3a5ed062..3724bf4b77c6 100644
-> --- a/drivers/platform/chrome/wilco_ec/core.c
-> +++ b/drivers/platform/chrome/wilco_ec/core.c
-> @@ -93,8 +93,20 @@ static int wilco_ec_probe(struct platform_device *pdev)
->  		goto unregister_rtc;
->  	}
->  
-> +	/* Register child device that will be found by the telemetry driver. */
-> +	ec->telem_pdev = platform_device_register_data(dev, "wilco_telem",
-> +						       PLATFORM_DEVID_AUTO,
-> +						       ec, sizeof(*ec));
-> +	if (IS_ERR(ec->telem_pdev)) {
-> +		dev_err(dev, "Failed to create telemetry platform device\n");
-> +		ret = PTR_ERR(ec->telem_pdev);
-> +		goto remove_sysfs;
-> +	}
-> +
->  	return 0;
->  
-> +remove_sysfs:
-> +	wilco_ec_remove_sysfs(ec);
->  unregister_rtc:
->  	platform_device_unregister(ec->rtc_pdev);
->  unregister_debugfs:
-> @@ -109,6 +121,7 @@ static int wilco_ec_remove(struct platform_device *pdev)
->  	struct wilco_ec_device *ec = platform_get_drvdata(pdev);
->  
->  	wilco_ec_remove_sysfs(ec);
-> +	platform_device_unregister(ec->telem_pdev);
->  	platform_device_unregister(ec->rtc_pdev);
->  	if (ec->debugfs_pdev)
->  		platform_device_unregister(ec->debugfs_pdev);
-> diff --git a/drivers/platform/chrome/wilco_ec/debugfs.c b/drivers/platform/chrome/wilco_ec/debugfs.c
-> index 281ec595e8e0..8d65a1e2f1a3 100644
-> --- a/drivers/platform/chrome/wilco_ec/debugfs.c
-> +++ b/drivers/platform/chrome/wilco_ec/debugfs.c
-> @@ -16,7 +16,7 @@
->  
->  #define DRV_NAME "wilco-ec-debugfs"
->  
-> -/* The 256 raw bytes will take up more space when represented as a hex string */
-> +/* The raw bytes will take up more space when represented as a hex string */
->  #define FORMATTED_BUFFER_SIZE (EC_MAILBOX_DATA_SIZE * 4)
->  
->  struct wilco_ec_debugfs {
-> diff --git a/drivers/platform/chrome/wilco_ec/telemetry.c b/drivers/platform/chrome/wilco_ec/telemetry.c
-> new file mode 100644
-> index 000000000000..94cdc166c840
-> --- /dev/null
-> +++ b/drivers/platform/chrome/wilco_ec/telemetry.c
-> @@ -0,0 +1,450 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Telemetry communication for Wilco EC
-> + *
-> + * Copyright 2019 Google LLC
-> + *
-> + * The Wilco Embedded Controller is able to send telemetry data
-> + * which is useful for enterprise applications. A daemon running on
-> + * the OS sends a command to the EC via a write() to a char device,
-> + * and can read the response with a read(). The write() request is
-> + * verified by the driver to ensure that it is performing only one
-> + * of the whitelisted commands, and that no extraneous data is
-> + * being transmitted to the EC. The response is passed directly
-> + * back to the reader with no modification.
-> + *
-> + * The character device will appear as /dev/wilco_telemN, where N
-> + * is some small non-negative integer, starting with 0. Only one
-> + * process may have the file descriptor open at a time. The calling
-> + * userspace program needs to keep the device file descriptor open
-> + * between the calls to write() and read() in order to preserve the
-> + * response. Up to 32 bytes will be available for reading.
-> + *
-> + * For testing purposes, try requesting the EC's firmware build
-> + * date, by sending the WILCO_EC_TELEM_GET_VERSION command with
-> + * argument index=3. i.e. write [0x38, 0x00, 0x03]
-> + * to the device node. An ASCII string of the build date is
-> + * returned.
-> + */
-> +
-> +#include <linux/cdev.h>
-> +#include <linux/device.h>
-> +#include <linux/fs.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_data/wilco-ec.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +#include <linux/types.h>
-> +#include <linux/uaccess.h>
-> +
-> +#define TELEM_DEV_NAME		"wilco_telem"
-> +#define TELEM_CLASS_NAME	TELEM_DEV_NAME
-> +#define DRV_NAME		TELEM_DEV_NAME
-> +#define TELEM_DEV_NAME_FMT	(TELEM_DEV_NAME "%d")
-> +static struct class telem_class = {
-> +	.owner	= THIS_MODULE,
-> +	.name	= TELEM_CLASS_NAME,
-> +};
-> +
-> +/* Keep track of all the device numbers used. */
-> +#define TELEM_MAX_DEV 128
-> +static int telem_major;
-> +static DEFINE_IDA(telem_ida);
-> +
-> +/* EC telemetry command codes */
-> +#define WILCO_EC_TELEM_GET_LOG			0x99
-> +#define WILCO_EC_TELEM_GET_VERSION		0x38
-> +#define WILCO_EC_TELEM_GET_FAN_INFO		0x2E
-> +#define WILCO_EC_TELEM_GET_DIAG_INFO		0xFA
-> +#define WILCO_EC_TELEM_GET_TEMP_INFO		0x95
-> +#define WILCO_EC_TELEM_GET_TEMP_READ		0x2C
-> +#define WILCO_EC_TELEM_GET_BATT_EXT_INFO	0x07
-> +
-> +#define TELEM_ARGS_SIZE_MAX	30
-> +
-> +/**
-> + * struct wilco_ec_telem_request - Telemetry command and arguments sent to EC.
-> + * @command: One of WILCO_EC_TELEM_GET_* command codes.
-> + * @reserved: Must be 0.
-> + * @args: The first N bytes are one of telem_args_get_* structs, the rest is 0.
-> + */
-> +struct wilco_ec_telem_request {
-> +	u8 command;
-> +	u8 reserved;
-> +	u8 args[TELEM_ARGS_SIZE_MAX];
-> +} __packed;
-> +
-> +/*
-> + * The following telem_args_get_* structs are embedded within the |args| field
-> + * of wilco_ec_telem_request.
-> + */
-> +
-> +struct telem_args_get_log {
-> +	u8 log_type;
-> +	u8 log_index;
-> +} __packed;
-> +
-> +/*
-> + * Get a piece of info about the EC firmware version:
-> + * 0 = label
-> + * 1 = svn_rev
-> + * 2 = model_no
-> + * 3 = build_date
-> + * 4 = frio_version
-> + */
-> +struct telem_args_get_version {
-> +	u8 index;
-> +} __packed;
-> +
-> +struct telem_args_get_fan_info {
-> +	u8 command;
-> +	u8 fan_number;
-> +	u8 arg;
-> +} __packed;
-> +
-> +struct telem_args_get_diag_info {
-> +	u8 type;
-> +	u8 sub_type;
-> +} __packed;
-> +
-> +struct telem_args_get_temp_info {
-> +	u8 command;
-> +	u8 index;
-> +	u8 field;
-> +	u8 zone;
-> +} __packed;
-> +
-> +struct telem_args_get_temp_read {
-> +	u8 sensor_index;
-> +} __packed;
-> +
-> +struct telem_args_get_batt_ext_info {
-> +	u8 var_args[5];
-> +} __packed;
-> +
-> +/**
-> + * check_telem_request() - Ensure that a request from userspace is valid.
-> + * @rq: Request buffer copied from userspace.
-> + * @size: Number of bytes copied from userspace.
-> + *
-> + * Return: 0 if valid, -EINVAL if bad command or reserved byte is non-zero,
-> + *         -EMSGSIZE if the request is too long.
-> + *
-> + * We do not want to allow userspace to send arbitrary telemetry commands to
-> + * the EC. Therefore we check to ensure that
-> + * 1. The request follows the format of struct wilco_ec_telem_request.
-> + * 2. The supplied command code is one of the whitelisted commands.
-> + * 3. The request only contains the necessary data for the header and arguments.
-> + */
-> +static int check_telem_request(struct wilco_ec_telem_request *rq,
-> +			       size_t size)
-> +{
-> +	size_t max_size = offsetof(struct wilco_ec_telem_request, args);
-> +
-> +	if (rq->reserved)
-> +		return -EINVAL;
-> +
-> +	switch (rq->command) {
-> +	case WILCO_EC_TELEM_GET_LOG:
-> +		max_size += sizeof(struct telem_args_get_log);
-> +		break;
-> +	case WILCO_EC_TELEM_GET_VERSION:
-> +		max_size += sizeof(struct telem_args_get_version);
-> +		break;
-> +	case WILCO_EC_TELEM_GET_FAN_INFO:
-> +		max_size += sizeof(struct telem_args_get_fan_info);
-> +		break;
-> +	case WILCO_EC_TELEM_GET_DIAG_INFO:
-> +		max_size += sizeof(struct telem_args_get_diag_info);
-> +		break;
-> +	case WILCO_EC_TELEM_GET_TEMP_INFO:
-> +		max_size += sizeof(struct telem_args_get_temp_info);
-> +		break;
-> +	case WILCO_EC_TELEM_GET_TEMP_READ:
-> +		max_size += sizeof(struct telem_args_get_temp_read);
-> +		break;
-> +	case WILCO_EC_TELEM_GET_BATT_EXT_INFO:
-> +		max_size += sizeof(struct telem_args_get_batt_ext_info);
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	return (size <= max_size) ? 0 : -EMSGSIZE;
-> +}
-> +
-> +/**
-> + * struct telem_device_data - Data for a Wilco EC device that queries telemetry.
-> + * @cdev: Char dev that userspace reads and polls from.
-> + * @dev: Device associated with the %cdev.
-> + * @ec: Wilco EC that we will be communicating with using the mailbox interface.
-> + * @available: Boolean of if the device can be opened.
-> + */
-> +struct telem_device_data {
-> +	struct device dev;
-> +	struct cdev cdev;
-> +	struct wilco_ec_device *ec;
-> +	atomic_t available;
-> +};
-> +
-> +#define TELEM_RESPONSE_SIZE	EC_MAILBOX_DATA_SIZE
-> +
-> +/**
-> + * struct telem_session_data - Data that exists between open() and release().
-> + * @dev_data: Pointer to get back to the device data and EC.
-> + * @request: Command and arguments sent to EC.
-> + * @response: Response buffer of data from EC.
-> + * @has_msg: Is there data available to read from a previous write?
-> + */
-> +struct telem_session_data {
-> +	struct telem_device_data *dev_data;
-> +	struct wilco_ec_telem_request request;
-> +	u8 response[TELEM_RESPONSE_SIZE];
-> +	bool has_msg;
-> +};
-> +
-> +/**
-> + * telem_open() - Callback for when the device node is opened.
-> + * @inode: inode for this char device node.
-> + * @filp: file for this char device node.
-> + *
-> + * We need to ensure that after writing a command to the device,
-> + * the same userspace process reads the corresponding result.
-> + * Therefore, we increment a refcount on opening the device, so that
-> + * only one process can communicate with the EC at a time.
-> + *
-> + * Return: 0 on success, or negative error code on failure.
-> + */
-> +static int telem_open(struct inode *inode, struct file *filp)
-> +{
-> +	struct telem_device_data *dev_data;
-> +	struct telem_session_data *sess_data;
-> +
-> +	/* Ensure device isn't already open */
-> +	dev_data = container_of(inode->i_cdev, struct telem_device_data, cdev);
-> +	if (atomic_cmpxchg(&dev_data->available, 1, 0) == 0)
-> +		return -EBUSY;
-> +
-> +	get_device(&dev_data->dev);
-> +
-> +	sess_data = kzalloc(sizeof(*sess_data), GFP_KERNEL);
-> +	if (!sess_data) {
-> +		atomic_set(&dev_data->available, 1);
-> +		return -ENOMEM;
-> +	}
-> +	sess_data->dev_data = dev_data;
-> +	sess_data->has_msg = false;
-> +
-> +	nonseekable_open(inode, filp);
-> +	filp->private_data = sess_data;
-> +
-> +	return 0;
-> +}
-> +
-> +static ssize_t telem_write(struct file *filp, const char __user *buf,
-> +			   size_t count, loff_t *pos)
-> +{
-> +	struct telem_session_data *sess_data = filp->private_data;
-> +	struct wilco_ec_message msg = {};
-> +	int ret;
-> +
-> +	if (count > sizeof(sess_data->request))
-> +		return -EMSGSIZE;
-> +	if (copy_from_user(&sess_data->request, buf, count))
-> +		return -EFAULT;
-> +	ret = check_telem_request(&sess_data->request, count);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	memset(sess_data->response, 0, sizeof(sess_data->response));
-> +	msg.type = WILCO_EC_MSG_TELEMETRY;
-> +	msg.request_data = &sess_data->request;
-> +	msg.request_size = sizeof(sess_data->request);
-> +	msg.response_data = sess_data->response;
-> +	msg.response_size = sizeof(sess_data->response);
-> +
-> +	ret = wilco_ec_mailbox(sess_data->dev_data->ec, &msg);
-> +	if (ret < 0)
-> +		return ret;
-> +	if (ret != sizeof(sess_data->response))
-> +		return -EMSGSIZE;
-> +
-> +	sess_data->has_msg = true;
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t telem_read(struct file *filp, char __user *buf, size_t count,
-> +			  loff_t *pos)
-> +{
-> +	struct telem_session_data *sess_data = filp->private_data;
-> +
-> +	if (!sess_data->has_msg)
-> +		return -ENODATA;
-> +	if (count > sizeof(sess_data->response))
-> +		return -EINVAL;
-> +
-> +	if (copy_to_user(buf, sess_data->response, count))
-> +		return -EFAULT;
-> +
-> +	sess_data->has_msg = false;
-> +
-> +	return count;
-> +}
-> +
-> +static int telem_release(struct inode *inode, struct file *filp)
-> +{
-> +	struct telem_session_data *sess_data = filp->private_data;
-> +
-> +	atomic_set(&sess_data->dev_data->available, 1);
-> +	put_device(&sess_data->dev_data->dev);
-> +	kfree(sess_data);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct file_operations telem_fops = {
-> +	.open = telem_open,
-> +	.write = telem_write,
-> +	.read = telem_read,
-> +	.release = telem_release,
-> +	.llseek = no_llseek,
-> +	.owner = THIS_MODULE,
-> +};
-> +
-> +/**
-> + * telem_device_free() - Callback to free the telem_device_data structure.
-> + * @d: The device embedded in our device data, which we have been ref counting.
-> + *
-> + * Once all open file descriptors are closed and the device has been removed,
-> + * the refcount of the device will fall to 0 and this will be called.
-> + */
-> +static void telem_device_free(struct device *d)
-> +{
-> +	struct telem_device_data *dev_data;
-> +
-> +	dev_data = container_of(d, struct telem_device_data, dev);
-> +	kfree(dev_data);
-> +}
-> +
-> +/**
-> + * telem_device_probe() - Callback when creating a new device.
-> + * @pdev: platform device that we will be receiving telems from.
-> + *
-> + * This finds a free minor number for the device, allocates and initializes
-> + * some device data, and creates a new device and char dev node.
-> + *
-> + * Return: 0 on success, negative error code on failure.
-> + */
-> +static int telem_device_probe(struct platform_device *pdev)
-> +{
-> +	struct telem_device_data *dev_data;
-> +	int error, minor;
-> +
-> +	/* Get the next available device number */
-> +	minor = ida_alloc_max(&telem_ida, TELEM_MAX_DEV-1, GFP_KERNEL);
-> +	if (minor < 0) {
-> +		error = minor;
-> +		dev_err(&pdev->dev, "Failed to find minor number: %d", error);
-> +		return error;
-> +	}
-> +
-> +	dev_data = kzalloc(sizeof(*dev_data), GFP_KERNEL);
-> +	if (!dev_data) {
-> +		ida_simple_remove(&telem_ida, minor);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	/* Initialize the device data */
-> +	dev_data->ec = dev_get_platdata(&pdev->dev);
-> +	atomic_set(&dev_data->available, 1);
-> +	platform_set_drvdata(pdev, dev_data);
-> +
-> +	/* Initialize the device */
-> +	dev_data->dev.devt = MKDEV(telem_major, minor);
-> +	dev_data->dev.class = &telem_class;
-> +	dev_data->dev.release = telem_device_free;
-> +	dev_set_name(&dev_data->dev, TELEM_DEV_NAME_FMT, minor);
-> +	device_initialize(&dev_data->dev);
-> +
-> +	/* Initialize the character device and add it to userspace */;
-> +	cdev_init(&dev_data->cdev, &telem_fops);
-> +	error = cdev_device_add(&dev_data->cdev, &dev_data->dev);
-> +	if (error) {
-> +		put_device(&dev_data->dev);
-> +		ida_simple_remove(&telem_ida, minor);
-> +		return error;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int telem_device_remove(struct platform_device *pdev)
-> +{
-> +	struct telem_device_data *dev_data = platform_get_drvdata(pdev);
-> +
-> +	cdev_device_del(&dev_data->cdev, &dev_data->dev);
-> +	put_device(&dev_data->dev);
-> +	ida_simple_remove(&telem_ida, MINOR(dev_data->dev.devt));
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver telem_driver = {
-> +	.probe = telem_device_probe,
-> +	.remove = telem_device_remove,
-> +	.driver = {
-> +		.name = DRV_NAME,
-> +	},
-> +};
-> +
-> +static int __init telem_module_init(void)
-> +{
-> +	dev_t dev_num = 0;
-> +	int ret;
-> +
-> +	ret = class_register(&telem_class);
-> +	if (ret) {
-> +		pr_err(DRV_NAME ": Failed registering class: %d", ret);
-> +		return ret;
-> +	}
-> +
-> +	/* Request the kernel for device numbers, starting with minor=0 */
-> +	ret = alloc_chrdev_region(&dev_num, 0, TELEM_MAX_DEV, TELEM_DEV_NAME);
-> +	if (ret) {
-> +		pr_err(DRV_NAME ": Failed allocating dev numbers: %d", ret);
-> +		goto destroy_class;
-> +	}
-> +	telem_major = MAJOR(dev_num);
-> +
-> +	ret = platform_driver_register(&telem_driver);
-> +	if (ret < 0) {
-> +		pr_err(DRV_NAME ": Failed registering driver: %d\n", ret);
-> +		goto unregister_region;
-> +	}
-> +
-> +	return 0;
-> +
-> +unregister_region:
-> +	unregister_chrdev_region(MKDEV(telem_major, 0), TELEM_MAX_DEV);
-> +destroy_class:
-> +	class_unregister(&telem_class);
-> +	ida_destroy(&telem_ida);
-> +	return ret;
-> +}
-> +
-> +static void __exit telem_module_exit(void)
-> +{
-> +	platform_driver_unregister(&telem_driver);
-> +	unregister_chrdev_region(MKDEV(telem_major, 0), TELEM_MAX_DEV);
-> +	class_unregister(&telem_class);
-> +	ida_destroy(&telem_ida);
-> +}
-> +
-> +module_init(telem_module_init);
-> +module_exit(telem_module_exit);
-> +
-> +MODULE_AUTHOR("Nick Crews <ncrews@chromium.org>");
-> +MODULE_DESCRIPTION("Wilco EC telemetry driver");
-> +MODULE_LICENSE("GPL");
-> +MODULE_ALIAS("platform:" DRV_NAME);
-> diff --git a/include/linux/platform_data/wilco-ec.h b/include/linux/platform_data/wilco-ec.h
-> index e3ce9ce49b11..ad03b586a095 100644
-> --- a/include/linux/platform_data/wilco-ec.h
-> +++ b/include/linux/platform_data/wilco-ec.h
-> @@ -29,6 +29,7 @@
->   * @data_size: Size of the data buffer used for EC communication.
->   * @debugfs_pdev: The child platform_device used by the debugfs sub-driver.
->   * @rtc_pdev: The child platform_device used by the RTC sub-driver.
-> + * @telem_pdev: The child platform_device used by the telemetry sub-driver.
->   */
->  struct wilco_ec_device {
->  	struct device *dev;
-> @@ -40,6 +41,7 @@ struct wilco_ec_device {
->  	size_t data_size;
->  	struct platform_device *debugfs_pdev;
->  	struct platform_device *rtc_pdev;
-> +	struct platform_device *telem_pdev;
->  };
->  
->  /**
-> 
+-- 
+Pali Rohár
+pali.rohar@gmail.com
