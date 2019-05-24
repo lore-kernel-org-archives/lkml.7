@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2CB0C282E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75044C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A20162184B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D8362175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:22:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="b/30Of5b"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Y2Y8p34F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389731AbfEXIVU (ORCPT
+        id S2389905AbfEXIWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 04:21:20 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:35532 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389463AbfEXIUi (ORCPT
+        Fri, 24 May 2019 04:22:04 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:38308 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2389456AbfEXIUi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 24 May 2019 04:20:38 -0400
 Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id B7FCDC012A;
-        Fri, 24 May 2019 08:20:45 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id BB77CC0134;
+        Fri, 24 May 2019 08:20:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1558686045; bh=Ov6NfcG97VTah4g4GGXOMfkMTg12mw14VW62NwwkFuQ=;
+        t=1558686023; bh=yiL/SwWSfq3piLGk33q1eN8HnE24GZKTj2gsPp16vxM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=b/30Of5bgtUzKS6ifumTOeKQvdAnOXH9v13creIbj4SKPuHAWNVpPxAfxCq++omAZ
-         ffylQ5i6lN2CXrq1M2HFThdjal+eFeo/xmaEq4SwiWX0STIEglj2LHT71u9ZJwea6+
-         kYk6d4s1mVLmv2ndfOnTmd7+nvviLh4WTLb0Ug3MNHIyTCcNoBnzUu50B3ABN8/Kwa
-         R+DsVbKFNwAPcjHq7/hXe8kDRQ/Y0pzTjhAISQiPOtimysKVylb7Z1WgViz7gsLXxm
-         Le12seWbWpaAF8Q8v0oksjpBDcXxNVxjfPzt3gLKhtthSydRgDRpiyIt9VUUs5QzKY
-         UbeStxJN3jcqw==
+        b=Y2Y8p34FaYKMDnVjqXiTFN3KXPFHPP2XFghD1ZKrNi6oYZ7yr8jw/0VCvZUuHhQje
+         5bHQBT5sOm8o3fAbWi3vtMrIyFPPeLcrTR5/CZLy6ZwAk1ox0dPGlWzrzkFRSGnrPz
+         kLzMIQ3tqHQHXqFX5RsjO7Rwq90TY32YRskhcoSfJJkYAIKDgneELYHtjv5xPzTiTA
+         s+ZztZP2U0PJam8Um6MlnihcFC0q/R9Mw3ZRAhn4D4eGVTsDAmE5IjF4mTVgy1JsrU
+         qN5f5jx7u+m4Pph7iN7nOJY7Gyh4Nq5RHHh3wDaB5lNW2M6Dezez4zEJEsR9Ji2vF4
+         +xbGet0WMewhA==
 Received: from de02.synopsys.com (germany.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id D7A76A0245;
+        by mailhost.synopsys.com (Postfix) with ESMTP id 76839A024F;
         Fri, 24 May 2019 08:20:37 +0000 (UTC)
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id 532473FB18;
-        Fri, 24 May 2019 10:20:36 +0200 (CEST)
+        by de02.synopsys.com (Postfix) with ESMTP id F1F133FB05;
+        Fri, 24 May 2019 10:20:35 +0200 (CEST)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
@@ -51,9 +51,9 @@ Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
         "David S . Miller" <davem@davemloft.net>,
         Giuseppe Cavallaro <peppe.cavallaro@st.com>,
         Alexandre Torgue <alexandre.torgue@st.com>
-Subject: [PATCH net-next v2 13/18] net: stmmac: dwmac1000: Clear unused address entries
-Date:   Fri, 24 May 2019 10:20:21 +0200
-Message-Id: <aa5f934e1958e8b7b9f137c7dbc8c33ac2fcf789.1558685828.git.joabreu@synopsys.com>
+Subject: [PATCH net-next v2 09/18] net: stmmac: dwmac4/5: Also pass control frames while in promisc mode
+Date:   Fri, 24 May 2019 10:20:17 +0200
+Message-Id: <3cb0f3ace4174fdd323ec01e57f8bfa6eb41f23b.1558685827.git.joabreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1558685827.git.joabreu@synopsys.com>
 References: <cover.1558685827.git.joabreu@synopsys.com>
@@ -64,10 +64,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case we don't use a given address entry we need to clear it because
-it could contain previous values that are no longer valid.
+In order for the selftests to run the Flow Control selftest we need to
+also pass pause frames to the stack.
 
-Found out while running stmmac selftests.
+Pass this type of frames while in promiscuous mode.
 
 Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 Cc: Joao Pinto <jpinto@synopsys.com>
@@ -75,26 +75,35 @@ Cc: David S. Miller <davem@davemloft.net>
 Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
 Cc: Alexandre Torgue <alexandre.torgue@st.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/dwmac4.h      | 1 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
-index bc91af6c01b6..ebe41dd09bab 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
-@@ -217,6 +217,12 @@ static void dwmac1000_set_filter(struct mac_device_info *hw,
- 					    GMAC_ADDR_LOW(reg));
- 			reg++;
- 		}
-+
-+		while (reg <= perfect_addr_number) {
-+			writel(0, ioaddr + GMAC_ADDR_HIGH(reg));
-+			writel(0, ioaddr + GMAC_ADDR_LOW(reg));
-+			reg++;
-+		}
- 	}
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
+index 3dddd7902b0f..c3cbca804bcd 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
+@@ -64,6 +64,7 @@
+ #define GMAC_PACKET_FILTER_PR		BIT(0)
+ #define GMAC_PACKET_FILTER_HMC		BIT(2)
+ #define GMAC_PACKET_FILTER_PM		BIT(4)
++#define GMAC_PACKET_FILTER_PCF		BIT(7)
  
- #ifdef FRAME_FILTER_DEBUG
+ #define GMAC_MAX_PERFECT_ADDRESSES	128
+ 
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+index 45c294f39ea6..31679480564a 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+@@ -406,7 +406,7 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
+ 	unsigned int value = 0;
+ 
+ 	if (dev->flags & IFF_PROMISC) {
+-		value = GMAC_PACKET_FILTER_PR;
++		value = GMAC_PACKET_FILTER_PR | GMAC_PACKET_FILTER_PCF;
+ 	} else if ((dev->flags & IFF_ALLMULTI) ||
+ 			(netdev_mc_count(dev) > HASH_TABLE_SIZE)) {
+ 		/* Pass all multi */
 -- 
 2.7.4
 
