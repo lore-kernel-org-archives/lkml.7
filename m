@@ -2,143 +2,100 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA21EC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 028C0C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:45:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 761E8217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:44:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="Q3BVUNOD"
+	by mail.kernel.org (Postfix) with ESMTP id BD8C22184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:45:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558683956;
+	bh=ObrvGpPLiHEvyPviS1L6MjtoBDnP+praLC5ukqMFU0M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=U6bBPwUc6v6ocmm2NKQ+Px5ZffZolFFuQx06G47ccRMDIq5a6L0Iuu9ev8vGrGc0u
+	 DIiecEvQxLZB/+pljeTa+zjMzmzoLu4eXhH3D8Sb9+42RwWvvDdDry5k7RsPzQKDTe
+	 fkd0RxRqXMyU0kJCwIopkgcarKXq8qXOBd4/23JI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389208AbfEXHoS (ORCPT
+        id S2389122AbfEXHpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 03:44:18 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:16299 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388911AbfEXHoQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 03:44:16 -0400
-Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
-  Christian.Gromm@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Christian.Gromm@microchip.com";
-  x-sender="Christian.Gromm@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa4.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Christian.Gromm@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa4.microchip.iphmx.com; spf=Pass smtp.mailfrom=Christian.Gromm@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.60,506,1549954800"; 
-   d="scan'208";a="34292066"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 24 May 2019 00:44:15 -0700
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.76.107) with Microsoft SMTP Server (TLS) id
- 14.3.352.0; Fri, 24 May 2019 00:43:36 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gAm2YwAZ/EmePgHMsx/on3S5wg7TWPQxUKqD3gJrDwE=;
- b=Q3BVUNODh0DnzX7/DUsZruTT/duaEpFXg+ysxob2XfL9Jil94ScxuLr8J8wBTEgiy9147lhcwZ5LqGKoZGpcIgk2BXbaY2cpu0h1KRUzxJWOjKfOMgKAIk29QGk9S3YGp16Lh5eHXcfrDK9uq464qAX/hvYF+KHRyRjal7R2oEU=
-Received: from DM6PR11MB3705.namprd11.prod.outlook.com (20.178.231.155) by
- DM6PR11MB3499.namprd11.prod.outlook.com (20.177.220.92) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.18; Fri, 24 May 2019 07:43:34 +0000
-Received: from DM6PR11MB3705.namprd11.prod.outlook.com
- ([fe80::489a:6dfb:8f5a:4e32]) by DM6PR11MB3705.namprd11.prod.outlook.com
- ([fe80::489a:6dfb:8f5a:4e32%2]) with mapi id 15.20.1922.018; Fri, 24 May 2019
- 07:43:34 +0000
-From:   <Christian.Gromm@microchip.com>
-To:     <linux-kernel@vger.kernel.org>, <gregkh@linuxfoundation.org>,
-        <nishkadg.linux@gmail.com>, <devel@driverdev.osuosl.org>
-Subject: Re: [PATCH] staging: most: usb: Remove variable frame_size
-Thread-Topic: [PATCH] staging: most: usb: Remove variable frame_size
-Thread-Index: AQHVEWru4bAmJ43IiUKRHTPXdpRoOqZ55vcA
-Date:   Fri, 24 May 2019 07:43:34 +0000
-Message-ID: <1558684034.16425.5.camel@microchip.com>
-References: <20190523132334.29611-1-nishkadg.linux@gmail.com>
-In-Reply-To: <20190523132334.29611-1-nishkadg.linux@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [62.154.213.229]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c9644965-a449-4c6c-a6f8-08d6e01b8698
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:DM6PR11MB3499;
-x-ms-traffictypediagnostic: DM6PR11MB3499:
-x-microsoft-antispam-prvs: <DM6PR11MB34992CCEBD96F73D9C6995C4F8020@DM6PR11MB3499.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:229;
-x-forefront-prvs: 0047BC5ADE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(39860400002)(366004)(376002)(136003)(346002)(189003)(199004)(2501003)(66556008)(76176011)(6246003)(110136005)(26005)(8936002)(2201001)(86362001)(71200400001)(71190400001)(186003)(99286004)(316002)(53936002)(486006)(103116003)(68736007)(25786009)(11346002)(5660300002)(476003)(66476007)(2616005)(446003)(229853002)(8676002)(6436002)(3846002)(66066001)(14454004)(6116002)(6512007)(64756008)(73956011)(66446008)(66946007)(91956017)(76116006)(81166006)(478600001)(102836004)(6486002)(14444005)(6506007)(36756003)(256004)(305945005)(81156014)(2906002)(72206003)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR11MB3499;H:DM6PR11MB3705.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: hvs1JZ4V4E2EvKzsjAq6a9DrncC+raw6BZJx3yPyztiCP+hckx3HACx1aTTnGU0paRBYAPrJxQNIRDKDvnF+/DoZs5zhdqamVQ10sBlMpbQJ5hdgrZeVd3qs+Gs0Jszu/PZ16YjgbLvyySMpU8f2tSWSbPcDdjvbdrbkIz+aDKsg+E8tT3JLL8gYhLmNBHICpkDKz+YfnD43X0dSda+GJHHF5udZiUjupunmPHE08wNjt+lc7wj9C3OVgcOnXCxRUW7yHr0OnGYyjQ9tH25Dhtfpw+r2VYYpSlKs8vIJxX/gMBp458A5fM50tb+V3LAVXsCuK5C8Ez09Op4GfF4uVvlXajUS6ZGucjXCJB4+2Rt5gz+bMx4SVnGkyiz1nn7owJGxRV2Q1Z7tMjzeMowDf7DXLN9sjKo97J1Yo+1Fq60=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <16B117BE1C833640A6995931C6077582@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 24 May 2019 03:45:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35078 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388911AbfEXHpz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 03:45:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2B0D217F9;
+        Fri, 24 May 2019 07:45:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558683954;
+        bh=ObrvGpPLiHEvyPviS1L6MjtoBDnP+praLC5ukqMFU0M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EUN9fDVX77IBJUkCIzY9sNbVP5n/uaDGltIbrw7RwF72ifujn+NUZ3fD5lGSp2vF3
+         ES8/uxnuMieLrmdE953JA4Aznd29rvq5GXNIemu2kQtvCEi6Rilck3U7Ab+62zbQ+W
+         6H23cbY3lGz9eJcBK+CbpAf6HrBR8eMoOGFxBtfs=
+Date:   Fri, 24 May 2019 09:45:52 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH] usb: mtu3: fix up undefined reference to
+ usb_debug_root
+Message-ID: <20190524074552.GA1080@kroah.com>
+References: <ee71197a681165aa72cb73c7f6cb402953351805.1558678075.git.chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: c9644965-a449-4c6c-a6f8-08d6e01b8698
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 May 2019 07:43:34.6014
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: christian.gromm@microchip.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3499
-X-OriginatorOrg: microchip.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ee71197a681165aa72cb73c7f6cb402953351805.1558678075.git.chunfeng.yun@mediatek.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRG8sIDIwMTktMDUtMjMgYXQgMTg6NTMgKzA1MzAsIE5pc2hrYSBEYXNndXB0YSB3cm90ZToN
-Cj4gRXh0ZXJuYWwgRS1NYWlsDQo+IA0KPiANCj4gUmVtb3ZlIHZhcmlhYmxlIGZyYW1lX3NpemUg
-YXMgaXRzIG11bHRpcGxlIHVzYWdlcyBhcmUgYWxsIGluZGVwZW5kZW50DQo+IG9mDQo+IGVhY2gg
-b3RoZXIgYW5kIHNvIGNhbiBiZSByZXR1cm5lZCBzZXBhcmF0ZWx5Lg0KPiBJc3N1ZSBmb3VuZCB3
-aXRoIENvY2NpbmVsbGUuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBOaXNoa2EgRGFzZ3VwdGEgPG5p
-c2hrYWRnLmxpbnV4QGdtYWlsLmNvbT4NCg0KQWNrZWQtYnk6IENocmlzdGlhbiBHcm9tbSA8Y2hy
-aXN0aWFuLmdyb21tQG1pY3JvY2hpcC5jb20+DQoNCj4gLS0tDQo+IMKgZHJpdmVycy9zdGFnaW5n
-L21vc3QvdXNiL3VzYi5jIHwgMTYgKysrKysrLS0tLS0tLS0tLQ0KPiDCoDEgZmlsZSBjaGFuZ2Vk
-LCA2IGluc2VydGlvbnMoKyksIDEwIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvc3RhZ2luZy9tb3N0L3VzYi91c2IuYw0KPiBiL2RyaXZlcnMvc3RhZ2luZy9tb3N0L3Vz
-Yi91c2IuYw0KPiBpbmRleCAzNjBjYjViN2ExMGIuLjc1MWU4MmNmNjZjNSAxMDA2NDQNCj4gLS0t
-IGEvZHJpdmVycy9zdGFnaW5nL21vc3QvdXNiL3VzYi5jDQo+ICsrKyBiL2RyaXZlcnMvc3RhZ2lu
-Zy9tb3N0L3VzYi91c2IuYw0KPiBAQCAtMTg2LDMyICsxODYsMjggQEAgc3RhdGljIGlubGluZSBp
-bnQgc3RhcnRfc3luY19lcChzdHJ1Y3QNCj4gdXNiX2RldmljZSAqdXNiX2RldiwgdTE2IGVwKQ0K
-PiDCoCAqLw0KPiDCoHN0YXRpYyB1bnNpZ25lZCBpbnQgZ2V0X3N0cmVhbV9mcmFtZV9zaXplKHN0
-cnVjdCBtb3N0X2NoYW5uZWxfY29uZmlnDQo+ICpjZmcpDQo+IMKgew0KPiAtCXVuc2lnbmVkIGlu
-dCBmcmFtZV9zaXplID0gMDsNCj4gwqAJdW5zaWduZWQgaW50IHN1Yl9zaXplID0gY2ZnLT5zdWJi
-dWZmZXJfc2l6ZTsNCj4gwqANCj4gwqAJaWYgKCFzdWJfc2l6ZSkgew0KPiDCoAkJcHJfd2Fybigi
-TWlzY29uZmlnOiBTdWJidWZmZXIgc2l6ZSB6ZXJvLlxuIik7DQo+IC0JCXJldHVybiBmcmFtZV9z
-aXplOw0KPiArCQlyZXR1cm4gMDsNCj4gwqAJfQ0KPiDCoAlzd2l0Y2ggKGNmZy0+ZGF0YV90eXBl
-KSB7DQo+IMKgCWNhc2UgTU9TVF9DSF9JU09DOg0KPiAtCQlmcmFtZV9zaXplID0gQVZfUEFDS0VU
-U19QRVJfWEFDVCAqIHN1Yl9zaXplOw0KPiAtCQlicmVhazsNCj4gKwkJcmV0dXJuIEFWX1BBQ0tF
-VFNfUEVSX1hBQ1QgKiBzdWJfc2l6ZTsNCj4gwqAJY2FzZSBNT1NUX0NIX1NZTkM6DQo+IMKgCQlp
-ZiAoY2ZnLT5wYWNrZXRzX3Blcl94YWN0ID09IDApIHsNCj4gwqAJCQlwcl93YXJuKCJNaXNjb25m
-aWc6IFBhY2tldHMgcGVyIFhBQ1QNCj4gemVyb1xuIik7DQo+IC0JCQlmcmFtZV9zaXplID0gMDsN
-Cj4gKwkJCXJldHVybiAwOw0KPiDCoAkJfSBlbHNlIGlmIChjZmctPnBhY2tldHNfcGVyX3hhY3Qg
-PT0gMHhGRikgew0KPiAtCQkJZnJhbWVfc2l6ZSA9IChVU0JfTVRVIC8gc3ViX3NpemUpICoNCj4g
-c3ViX3NpemU7DQo+ICsJCQlyZXR1cm4gKFVTQl9NVFUgLyBzdWJfc2l6ZSkgKiBzdWJfc2l6ZTsN
-Cj4gwqAJCX0gZWxzZSB7DQo+IC0JCQlmcmFtZV9zaXplID0gY2ZnLT5wYWNrZXRzX3Blcl94YWN0
-ICoNCj4gc3ViX3NpemU7DQo+ICsJCQlyZXR1cm4gY2ZnLT5wYWNrZXRzX3Blcl94YWN0ICogc3Vi
-X3NpemU7DQo+IMKgCQl9DQo+IC0JCWJyZWFrOw0KPiDCoAlkZWZhdWx0Og0KPiDCoAkJcHJfd2Fy
-bigiUXVlcnkgZnJhbWUgc2l6ZSBvZiBub24tc3RyZWFtaW5nDQo+IGNoYW5uZWxcbiIpOw0KPiAt
-CQlicmVhazsNCj4gKwkJcmV0dXJuIDA7DQo+IMKgCX0NCj4gLQlyZXR1cm4gZnJhbWVfc2l6ZTsN
-Cj4gwqB9DQo+IMKgDQo+IMKgLyoq
+On Fri, May 24, 2019 at 02:11:33PM +0800, Chunfeng Yun wrote:
+> When CONFIG_USB is not set, and CONFIG_USB_GADGET is set,
+> there is an issue:
+> 
+> ld:
+> drivers/usb/mtu3/mtu3_debugfs.o: in function 'ssusb_debugfs_create_root':
+> mtu3_debugfs.c:(.text+0xba3): undefined reference to 'usb_debug_root'
+> 
+> usb_debug_root is only built when CONFIG_USB is enabled, so here drop it
+> and use NULL instead.
+> 
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Acked-by: Randy Dunlap <rdunlap@infradead.org>
+> ---
+>  drivers/usb/mtu3/mtu3_debugfs.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+
+Why resend?
+
+> diff --git a/drivers/usb/mtu3/mtu3_debugfs.c b/drivers/usb/mtu3/mtu3_debugfs.c
+> index 62c57ddc554e..b7c86ccd50b4 100644
+> --- a/drivers/usb/mtu3/mtu3_debugfs.c
+> +++ b/drivers/usb/mtu3/mtu3_debugfs.c
+> @@ -528,8 +528,7 @@ void ssusb_dr_debugfs_init(struct ssusb_mtk *ssusb)
+>  
+>  void ssusb_debugfs_create_root(struct ssusb_mtk *ssusb)
+>  {
+> -	ssusb->dbgfs_root =
+> -		debugfs_create_dir(dev_name(ssusb->dev), usb_debug_root);
+> +	ssusb->dbgfs_root = debugfs_create_dir(dev_name(ssusb->dev), NULL);
+
+This moves the directory to a new location no matter what the
+configuration is. What's wrong with where it is today?  And shoudn't we
+create the usb root directory if only gadget is enabled?
+
+thanks,
+
+greg k-h
