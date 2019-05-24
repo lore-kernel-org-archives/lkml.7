@@ -2,101 +2,118 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D35DC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AEE5C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A4752133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:34:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE29220815
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:35:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jcU0PA0h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389617AbfEXPeN convert rfc822-to-8bit (ORCPT
+        id S2389809AbfEXPf2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 11:34:13 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33749 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389352AbfEXPeM (ORCPT
+        Fri, 24 May 2019 11:35:28 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40720 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389203AbfEXPf1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 11:34:12 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 66so9096850otq.0
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 08:34:12 -0700 (PDT)
+        Fri, 24 May 2019 11:35:27 -0400
+Received: by mail-lj1-f196.google.com with SMTP id q62so9040051ljq.7;
+        Fri, 24 May 2019 08:35:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=p7Liv7qd8+5BtHD0U0PqHlvEgsBKMReX1LuzLFCMHK8=;
+        b=jcU0PA0hUnXW9X1FBpgsbvZrt3YIH/dGhht9rrB9VJN9krvINOfGpAaPxzGqJCaSD+
+         +BF07DjsNNPv46E28PMY+wul6aCLtG7uteRyM0dINjhbsKWJvUF3B28uJLXQn7o2FwMa
+         OeEjA351SWervSm0262UEjgyf7H0WaE5EIoRwsjzG91uyzhcQ2W44lqm7/R1Q07C97CK
+         pP7DHrvXL9ZxrEsPyl9Vv5dmceB1fyAxIbkHM42Mzvj8HJeA91Q6kXF/jLE1Hka6YkT9
+         jK+x4eoxMWZ/mL2Cq/upnWGm2AQezaR7AezYaSWRUzIXsp8iSOhj5UfFt/Y39lkMYTXA
+         Aglg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=XmUFDj9D/eofBnJzPdCvp5T1ZMAct2TpjK59uIWjaGI=;
-        b=HgzQliJr5FyK0loJ/uGKOgIQ9j12KWC3S3reEufRyjtqLFmRlrJMRrlBhJWS9xR6+p
-         A7FgS8CqSz9iiPN7IR1z8thBZ5Xsa9soQ6wWINa9Zav3JXcsy2jw5eMRGTGlhuoKvjfZ
-         fdgPS0zSSFdV4kyElBHr0HmH05ouwHK4AF1KDJtPgFA5/zF0lRAZLIVF+O736NHjPxZ5
-         WQIbwDiX9M3fhTW1AM2C2L+q/QTUV31reh+eMSedPDWpG1PhoW1waX0HNGqTyRVR3P7N
-         RMhTa24attaS7xemNAz4jx2/nACLd6LROshJtdlrEDbrt2dvyN3s9DCs/9W+T1qq9bz6
-         EQUQ==
-X-Gm-Message-State: APjAAAVDUL0QymuLJEbUMizydaY9DG4NO8eksldVC7jVQA1chhxn4ooC
-        uG2sjUofMSCWQKRAMkX4Jplvb19TcjUGpUjLw6I/3g==
-X-Google-Smtp-Source: APXvYqxsrFVzXtT9Acfrz6QjWXchCDlZpb53Ha0Iwr8PLUs05rv6qoQCFOXdqtNTzA0Ek/izdns14Zvmvnm+oyKNNNs=
-X-Received: by 2002:a9d:30d6:: with SMTP id r22mr62722773otg.33.1558712052313;
- Fri, 24 May 2019 08:34:12 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=p7Liv7qd8+5BtHD0U0PqHlvEgsBKMReX1LuzLFCMHK8=;
+        b=dymcQBrP81edz/iSIaEIYt/sAqyKbAeeWHK1dkJi6Gla9bsIXs4jlR6919jmDrG94G
+         t4Kf+BPztMDpGWtTHzOtatKVXq+rQFhiuW6uIn5mtldvM+rPjBBOJfjBde/+rQBn6b7+
+         yl5/pGFy4dEIgkOBrOIW/RS3Sr8gsPMkJMnWhdkfc83cTkbbPYgioZmoGmTuwFejBi1x
+         lYCmUsND3ldWxrdffG9oAWpxj1gqTduzvKxh1nHs+24yntCUlqRhHWCXdNkeHmWElQPX
+         R8ozxKw7VTQ8fqjjiLjXmdXQoc75ocioCOPWuvNsNZVvRoQYXpdvkKtdgMlWiQxg29XC
+         qCNg==
+X-Gm-Message-State: APjAAAXrxwgy6sdvgVP7aCPI9ahGGud3vTeYonAPTU0oiNCVUzAWKcuN
+        nXQAeYPwEmkbT0eFRCNAdy0=
+X-Google-Smtp-Source: APXvYqwgb8gNmxN7E76vJBMODOQHHtEXafw3rWkHIKuclkkrxOj6H7Px5y+W9/juHUfdEYimsHU+hw==
+X-Received: by 2002:a2e:7808:: with SMTP id t8mr13805852ljc.78.1558712125783;
+        Fri, 24 May 2019 08:35:25 -0700 (PDT)
+Received: from localhost.localdomain ([94.29.35.141])
+        by smtp.gmail.com with ESMTPSA id y14sm572316ljh.60.2019.05.24.08.35.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 May 2019 08:35:24 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Joseph Lo <josephl@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nicolas Chauvet <kwizart@gmail.com>
+Subject: [PATCH v3 0/8] NVIDIA Tegra clocksource driver improvements
+Date:   Fri, 24 May 2019 18:32:45 +0300
+Message-Id: <20190524153253.28564-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190409204003.6428-1-jsavitz@redhat.com> <20190521143414.GJ5307@blackbody.suse.cz>
-In-Reply-To: <20190521143414.GJ5307@blackbody.suse.cz>
-From:   Joel Savitz <jsavitz@redhat.com>
-Date:   Fri, 24 May 2019 11:33:55 -0400
-Message-ID: <CAL1p7m6nfPkWoEEAjO+Gxq-ZiRY7+1jU_7dVcw2-hjC22xz-4A@mail.gmail.com>
-Subject: Re: [PATCH v2] cpuset: restore sanity to cpuset_cpus_allowed_fallback()
-To:     =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
-Cc:     linux-kernel@vger.kernel.org, Li Zefan <lizefan@huawei.com>,
-        Tejun Heo <tj@kernel.org>, Waiman Long <longman@redhat.com>,
-        Phil Auld <pauld@redhat.com>, cgroups@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 10:35 AM Michal Koutný <mkoutny@suse.com> wrote:
-> >       $ grep Cpus /proc/$$/status
-> >       Cpus_allowed:   ff
-> >       Cpus_allowed_list:      0-7
->
-> (a)
->
-> >       $ taskset -p 4 $$
-> >       pid 19202's current affinity mask: f
+Hello,
 
-> I'm confused where this value comes from, I must be missing something.
->
-> Joel, is the task in question put into a cpuset with 0xf CPUs only (at
-> point (a))? Or are the CPUs 4-7 offlined as well?
+This series primarily unifies the driver code across all Tegra SoC
+generations. In a result the clocksources are allocated per-CPU on
+older Tegra's and have a higher rating than the arch-timer, the newer
+Tegra210 is getting support for microsecond clocksource and the driver's
+code is getting much cleaner. Note that arch-timer usage is discouraged on
+all Tegra's due to the time jitter caused by the CPU frequency scaling.
 
-Good point.
+The series was extensively tested on Tegra20 and Tegra30.
 
-It is a bit ambiguous, but I performed no action on the task's cpuset
-nor did I offline any cpus at point (a).
+Changelog:
 
-After a bit of research, I am fairly certain that the observed
-discrepancy is due to differing mechanisms used to acquire the cpuset
-mask value.
+v3: Fixed compilation on ARM64. Turned out that it doesn't have the
+    delay-timer, thanks to Nicolas Chauvet for the report.
 
-The first mechanism, via `grep Cpus /proc/$$/status`, has it's value
-populated by the expression (task->cpus_allowed) in
-fs/proc/array.c:sched_getaffinity(), whereas the taskset utility
-(https://github.com/karelzak/util-linux/blob/master/schedutils/taskset.c)
-uses sched_getaffinity(2) to determine the "current affinity mask"
-value from the expression (task->cpus_allowed & cpu_active_mask) in
-kernel/sched/core.c:sched_getaffinty(),
+    Added new "Support COMPILE_TEST universally" patch for better
+    compile-test coverage.
 
-I do not know if there is an explicit reason for this discrepancy or
-whether the two mechanisms were simply built independently, perhaps
-for different purposes.
+v2: Rebased on recent linux-next. Now all of #ifdef's are removed from the
+    code due to the recent patch that generalized persistent clocksource.
 
-I think the /proc/$$/status value is intended to simply reflect the
-user-specified policy stating which cpus the task is allowed to run on
-without consideration for hardware state, whereas the taskset value is
-representative of the cpus that the task can actually be run on given
-the restriction policy specified by the user via the cpuset mechanism.
+    Couple other minor cosmetic changes.
 
-By the way, I posted a v2 of this patch that correctly handles cgroup
-v2 behavior.
+Dmitry Osipenko (8):
+  clocksource/drivers/tegra: Support per-CPU timers on all Tegra's
+  clocksource/drivers/tegra: Unify timer code
+  clocksource/drivers/tegra: Reset hardware state on init
+  clocksource/drivers/tegra: Replace readl/writel with relaxed versions
+  clocksource/drivers/tegra: Release all IRQ's on request_irq() error
+  clocksource/drivers/tegra: Minor code clean up
+  clocksource/drivers/tegra: Use SPDX identifier
+  clocksource/drivers/tegra: Support COMPILE_TEST universally
+
+ drivers/clocksource/Kconfig         |   4 +-
+ drivers/clocksource/timer-tegra20.c | 276 +++++++++++++---------------
+ 2 files changed, 127 insertions(+), 153 deletions(-)
+
+-- 
+2.21.0
+
