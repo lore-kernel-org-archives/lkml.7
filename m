@@ -2,108 +2,119 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A757C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1174C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C3CB217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:19:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77306217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:20:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S7KSm6iw"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="EnzLLyj6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387945AbfEXCTz (ORCPT
+        id S1731800AbfEXCUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 22:19:55 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41182 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731745AbfEXCTy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 22:19:54 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q17so4322654pfq.8
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 19:19:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1r65OmAtTuTYfs4yCjT89JrdvU2o2JvcprLZLVLaQKA=;
-        b=S7KSm6iwowOOw2c1qrqgNfr1w5f2iQexcfmaSBrKX2vuxyB+5PmCJX+37ASe73cNw4
-         Ubgd7Ac2B5ArJbeuNYLavu8q8mq0jEBg/GWFGJs16LjNmbk6KqftPrDm9nxXdZEUxI59
-         Fz0y7zv0ByWxf1CWiLfFz2C8Hqz83dPadArVy7Q9ExLgZsikqNbEu5m5W8vROIldlihv
-         oYrwsaILxnTbb+k7jo8J6awc2IVucAFoIEGJGA08XXSs74EZJlIL8I1LZ6leli6w4wD8
-         ubh4LVJsjdl40mOG4HlhXxp8rXtU+RzQIIKXeUngwf0Wpem+k/vQa3kWFibR134FtCi3
-         yD/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1r65OmAtTuTYfs4yCjT89JrdvU2o2JvcprLZLVLaQKA=;
-        b=En4qNAKIFMeUbg2RxcRznClWzlkBrhK4ZycPMGKGJRX/q+E6M2sgWdIQVN5yaB4jct
-         VsodRfb9HhcI0GsHFAsDml4gmvgxoXknZS64VOdWr3HNgHZr657NxPbBLAduB2NL6M2A
-         fEliyrp4AslMipmtNehRs9k9Sb7QKbB2noOHGA62cQTLKARkEH+NNoB8bfG1Zm4gTZ0s
-         Had4WqXyGeEocZNhwxGXzsP115pUenCza1DozdMw1WSWTyDevsMwP/g712CqjfLzj7tB
-         Uh6PeeNWp7uhIfZjopoFVY+vFPVuLPMh2yG967p21Gskhx/H5HdZdTy2/pEOd1RMLaDP
-         XTfw==
-X-Gm-Message-State: APjAAAXskjO7VPcNs3G3GOSFfHRR10OKl19BPXhVgh81CXwlqvO0/NFd
-        ynVperznw47/kG7HFLMvKU2oRWBFzuM=
-X-Google-Smtp-Source: APXvYqyyZdbdCpm+5BbvFdQDihC5nJHyUfP+iN02RlBLMKB2ysC8SIDandY0irZVbdVgIWw/ZqyHDg==
-X-Received: by 2002:a62:ac0a:: with SMTP id v10mr108775273pfe.57.1558664393807;
-        Thu, 23 May 2019 19:19:53 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([66.42.35.75])
-        by smtp.gmail.com with ESMTPSA id t7sm728742pfh.156.2019.05.23.19.19.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 19:19:53 -0700 (PDT)
-Date:   Fri, 24 May 2019 10:19:32 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     jslaby@suse.com
-Cc:     keescook@chromium.org, khorenko@virtuozzo.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] consolemap: Fix a memory leaking bug in
- con_insert_unipair()
-Message-ID: <20190524021932.GA4866@zhanggen-UX430UQ>
-References: <20190521092935.GA2297@zhanggen-UX430UQ>
- <201905211342.DE554F0D@keescook>
- <20190522015055.GC4093@zhanggen-UX430UQ>
- <201905221353.AD8E585E6D@keescook>
- <20190523003452.GB14060@zhanggen-UX430UQ>
- <201905230952.B47ADA17A@keescook>
+        Thu, 23 May 2019 22:20:18 -0400
+Received: from mail-eopbgr130081.outbound.protection.outlook.com ([40.107.13.81]:17421
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731722AbfEXCUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 22:20:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Fx8velWyfeej5f/270jyntWlGJK+7WjPzSWgGLuBUl8=;
+ b=EnzLLyj6rW4X56hEQJRwCvD0FhiKBNVcDPCN55jcCNpnIvBG54JY9d/niY3cZ64TMUOFe4VVAeUfVS8VZaVbomrd9D+rkvSYqt03/7J370SmUsf7yJDT8B4S0aDBPCh8oSty1dzvcURx1k/GcGhBYJeoMD/fx6qcVsCstbrTOC8=
+Received: from VI1PR0401MB2237.eurprd04.prod.outlook.com (10.169.132.138) by
+ VI1PR0401MB2413.eurprd04.prod.outlook.com (10.169.134.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.16; Fri, 24 May 2019 02:20:13 +0000
+Received: from VI1PR0401MB2237.eurprd04.prod.outlook.com
+ ([fe80::b091:6395:e853:5986]) by VI1PR0401MB2237.eurprd04.prod.outlook.com
+ ([fe80::b091:6395:e853:5986%3]) with mapi id 15.20.1922.016; Fri, 24 May 2019
+ 02:20:13 +0000
+From:   "Y.b. Lu" <yangbo.lu@nxp.com>
+To:     Richard Cochran <richardcochran@gmail.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH net-next v2, 0/4] ENETC: support hardware timestamping
+Thread-Topic: [PATCH net-next v2, 0/4] ENETC: support hardware timestamping
+Thread-Index: AQHVEQ/lOru7YbqaqUKfl9qTVlpeDKZ4uksAgADRkBA=
+Date:   Fri, 24 May 2019 02:20:13 +0000
+Message-ID: <VI1PR0401MB2237EC43DA992198CE3BA768F8020@VI1PR0401MB2237.eurprd04.prod.outlook.com>
+References: <20190523023451.2933-1-yangbo.lu@nxp.com>
+ <20190523134832.xzupnwvhhlljtoyh@localhost>
+In-Reply-To: <20190523134832.xzupnwvhhlljtoyh@localhost>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yangbo.lu@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 92d54a33-d243-4487-6d81-08d6dfee5aba
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR0401MB2413;
+x-ms-traffictypediagnostic: VI1PR0401MB2413:
+x-microsoft-antispam-prvs: <VI1PR0401MB241393EFC9C3F6A7B552F04CF8020@VI1PR0401MB2413.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0047BC5ADE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(376002)(136003)(346002)(396003)(366004)(13464003)(189003)(199004)(6436002)(478600001)(3846002)(6116002)(4744005)(55016002)(53546011)(6506007)(305945005)(7736002)(74316002)(2906002)(81166006)(99286004)(8676002)(81156014)(6916009)(53936002)(5660300002)(229853002)(7696005)(9686003)(76176011)(14454004)(68736007)(25786009)(486006)(8936002)(6246003)(256004)(1411001)(476003)(316002)(86362001)(26005)(66066001)(11346002)(54906003)(66446008)(64756008)(66946007)(102836004)(33656002)(186003)(66556008)(66476007)(71190400001)(446003)(52536014)(71200400001)(4326008)(73956011)(76116006);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0401MB2413;H:VI1PR0401MB2237.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 958tLymnFyr8DC2LrntJmkdvAF4etRA03gvUiKtL0zn0sHlTAEuT2zIVfYbfibTQ5MSbHh4ondzjAfbCZ9xCMUR0zALxqMeW842CgVAmJd8wjIKG0Uo+WtVWxPz05CmhaPq9T7lWpJUIJLDnWnJ6qcNRfvNdgqGBqfAyq7tKFGYa+LTP9htsq02bZm2uur6trUAKCO9vHZuPQTQIrb3Q1AxrYQyt18JQrdUyLFjSfpUfKRcYTJydyxqVxjrA5NekXJQUSxPIuiB0doydODd/6aHJahCfC83HHMZKTq8Jt/Ru6TbgD10QRhoirK5HYCnojKqxp1ovEwyZMstNBzD7iUQQln0Iu4Xt9u+trPXv4gMdj9felPZDLExLCbuLv5d3iOetA3hUL/GE7Ncii/Un/mLp9Bb5HtY+VoTUIq2SZyo=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201905230952.B47ADA17A@keescook>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 92d54a33-d243-4487-6d81-08d6dfee5aba
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 May 2019 02:20:13.5770
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yangbo.lu@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2413
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In function con_insert_unipair(), when allocation for p2 and p1[n]
-fails, ENOMEM is returned, but previously allocated p1 is not freed, 
-remains as leaking memory. Thus we should free p1 as well when this
-allocation fails.
+> -----Original Message-----
+> From: Richard Cochran <richardcochran@gmail.com>
+> Sent: Thursday, May 23, 2019 9:49 PM
+> To: Y.b. Lu <yangbo.lu@nxp.com>
+> Cc: netdev@vger.kernel.org; David Miller <davem@davemloft.net>; Claudiu
+> Manoil <claudiu.manoil@nxp.com>; Shawn Guo <shawnguo@kernel.org>; Rob
+> Herring <robh+dt@kernel.org>; Alexandru Marginean
+> <alexandru.marginean@nxp.com>; devicetree@vger.kernel.org;
+> linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH net-next v2, 0/4] ENETC: support hardware timestampin=
+g
+>=20
+> On Thu, May 23, 2019 at 02:33:24AM +0000, Y.b. Lu wrote:
+> > This patch-set is to support hardware timestamping for ENETC and also
+> > to add ENETC 1588 timer device tree node for ls1028a.
+>=20
+> Please, in the future, summarize the changes from the last series in the =
+cover
+> letter.  It helps the reviewers to focus.
 
-Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
----
-diff --git a/drivers/tty/vt/consolemap.c b/drivers/tty/vt/consolemap.c
-index b28aa0d..79fcc96 100644
---- a/drivers/tty/vt/consolemap.c
-+++ b/drivers/tty/vt/consolemap.c
-@@ -489,7 +489,11 @@ con_insert_unipair(struct uni_pagedir *p, u_short unicode, u_short fontpos)
- 	p2 = p1[n = (unicode >> 6) & 0x1f];
- 	if (!p2) {
- 		p2 = p1[n] = kmalloc_array(64, sizeof(u16), GFP_KERNEL);
--		if (!p2) return -ENOMEM;
-+		if (!p2) {
-+			kfree(p1);
-+			p->uni_pgdir[n] = NULL;
-+			return -ENOMEM;
-+		}
- 		memset(p2, 0xff, 64*sizeof(u16)); /* No glyphs for the characters (yet) */
- 	}
- 
----
+[Y.b. Lu] Sorry Richard. Will summarize all changes in cover letter in the =
+future, besides change notes on each patch.
+Thanks.
+
+>=20
+> Thanks,
+> Richard
