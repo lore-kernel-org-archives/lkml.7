@@ -2,114 +2,225 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67625C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA90DC282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2968A2133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:04:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7871621841
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:04:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="hfqkhQtJ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Up8QcnJH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389252AbfEXIEW (ORCPT
+        id S2389286AbfEXIEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 04:04:22 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:55033 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388959AbfEXIEW (ORCPT
+        Fri, 24 May 2019 04:04:46 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:33271 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388959AbfEXIEq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 04:04:22 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4O8475w117569
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 24 May 2019 01:04:07 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4O8475w117569
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1558685048;
-        bh=gpAvCLFY8WATT/YNdMDzVEaap+bR2sycGhzeaXjx/ZU=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=hfqkhQtJDpHVYJKtGZAte4ZF52jeIeZyKfofkPQvMzuWZY6EmrguKMkI9z6oz5y8+
-         KQIgdaO0z53KiK/0z4695xUkPT3M9Rhe9CRsvuN250nFH6s/6KeLZV8kZG7jpb9fBO
-         wW1Y1I2GUdjmGJ6aa800bVPld+HAXlqTPjnLeEpG7MC3FUZWxBtbJ7fbIB5memzQZz
-         Y/P1QX5FjhQlKfmiGZqJ0VnqEKllYpqUijaWhroAoYw98GKfmqiosmFqu1hc62MNXq
-         6OASQMQGZIaXC8SNtQZGuwKvH5xAFNcahC2Kf631qrXp/f6Ol+CGt3ON1fUMTP1I6Y
-         7tWj5ygZuFeBg==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4O847Xs117566;
-        Fri, 24 May 2019 01:04:07 -0700
-Date:   Fri, 24 May 2019 01:04:07 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Masahiro Yamada <tipbot@zytor.com>
-Message-ID: <tip-e62a4239c3dfd182a7e676cfe9efb1f4cec5ca25@git.kernel.org>
-Cc:     torvalds@linux-foundation.org, peterz@infradead.org, hpa@zytor.com,
-        mingo@kernel.org, bp@alien8.de, linux-kernel@vger.kernel.org,
-        yamada.masahiro@socionext.com, tglx@linutronix.de
-Reply-To: bp@alien8.de, linux-kernel@vger.kernel.org,
-          yamada.masahiro@socionext.com, tglx@linutronix.de,
-          mingo@kernel.org, peterz@infradead.org, hpa@zytor.com,
-          torvalds@linux-foundation.org
-In-Reply-To: <20190521072211.21014-1-yamada.masahiro@socionext.com>
-References: <20190521072211.21014-1-yamada.masahiro@socionext.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/cleanups] x86/io_delay: Break instead of fallthrough in
- switch statement
-Git-Commit-ID: e62a4239c3dfd182a7e676cfe9efb1f4cec5ca25
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Fri, 24 May 2019 04:04:46 -0400
+Received: by mail-qk1-f194.google.com with SMTP id p18so6141612qkk.0
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 01:04:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LBXfo3f3VBxQHXcdRSMKfsobC/cqHl7OlQRiXsV30VE=;
+        b=Up8QcnJHOhogEiKKRZBk7rIW48oCZIkD0YdLLu9spajcuW7/MYtWd3epuGdovq00P/
+         SUbc99vqX5gDHrPGwN7Dolt/v7jcwDTPibqK8zKHGAFtJqYgHfxoBXw0+0oNALI2mIfE
+         KUT7oul7kXsOiTjUSfdzkVzzqJ1UInOsTxARo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LBXfo3f3VBxQHXcdRSMKfsobC/cqHl7OlQRiXsV30VE=;
+        b=CNmpWDMRo1OAJOHf2MGlrkNgfVlCcDwtoCc6lEY5AfbWR2wmTKREXfNnstLDwfzPPw
+         f+huBk0bgEcSLFNIqBK5ts6HzX+goFCHIVJQoTVmymEiF9AqpsxvaY8ZRUPXcBBoTGAk
+         avs13kH3X64rjEG8PpUW6UmnnivxpPvvJdRRvBnvhWvGDSGwijjJd0JVkNbuL37D3wo9
+         swwgY9cCQFnpVFpZNL/147M0keTJLls2dj/jWt0oHguEVkhrPMGsMGlrQr+3so+MCgMr
+         QEqnS9GIGQg+fvOjlavQYzLOOz1Ev5RFka/kFrv/c/qN9f4S/A890z6OKgi9YlDzbt5H
+         BnCA==
+X-Gm-Message-State: APjAAAUNvTKIA60HtuB2/ogZHthODcEvyPrybbMeFEqo/kx6VlGfxYya
+        QziLOGSNa35Y7AIhBmIEIIw0RA2VdNboXmNE3jGO+A==
+X-Google-Smtp-Source: APXvYqyB85ubtcUVl583XzKJZMZmxA4tCmm7+GDK24kIDpdUoaqG/G/G21Le/PPOJRIOpUavh90Nb+rOMBaAuEwQaXA=
+X-Received: by 2002:aed:3512:: with SMTP id a18mr85921585qte.181.1558685084516;
+ Fri, 24 May 2019 01:04:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+References: <1557997725-12178-1-git-send-email-andrew-sh.cheng@mediatek.com> <1557997725-12178-9-git-send-email-andrew-sh.cheng@mediatek.com>
+In-Reply-To: <1557997725-12178-9-git-send-email-andrew-sh.cheng@mediatek.com>
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+Date:   Fri, 24 May 2019 16:04:18 +0800
+Message-ID: <CAJMQK-hF3RT7wPRunE8q4uaEVaS1wkvmQO5t28Poz9ztiJ5Rmg@mail.gmail.com>
+Subject: Re: [PATCH 8/8] devfreq: mediatek: cci devfreq register opp
+ notification for SVS support
+To:     "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        devicetree@vger.kernel.org, srv_heupstream@mediatek.com,
+        linux-pm@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
+        fan.chen@mediatek.com, linux-mediatek@lists.infradead.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  e62a4239c3dfd182a7e676cfe9efb1f4cec5ca25
-Gitweb:     https://git.kernel.org/tip/e62a4239c3dfd182a7e676cfe9efb1f4cec5ca25
-Author:     Masahiro Yamada <yamada.masahiro@socionext.com>
-AuthorDate: Tue, 21 May 2019 16:22:10 +0900
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Fri, 24 May 2019 08:46:06 +0200
-
-x86/io_delay: Break instead of fallthrough in switch statement
-
-The current code is fine since 'case CONFIG_IO_DELAY_TYPE_NONE'
-does nothing, but scripts/checkpatch.pl complains about this:
-
-  warning: Possible switch case/default not preceded by break or fallthrough comment
-
-I like break statement better than a fallthrough comment here.
-It avoids the warning and clarify the code.
-
-No behavior change is intended.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/20190521072211.21014-1-yamada.masahiro@socionext.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/kernel/io_delay.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/x86/kernel/io_delay.c b/arch/x86/kernel/io_delay.c
-index 805b7a341aca..3dc874d5d43b 100644
---- a/arch/x86/kernel/io_delay.c
-+++ b/arch/x86/kernel/io_delay.c
-@@ -39,6 +39,7 @@ void native_io_delay(void)
- 		 * are shorter until calibrated):
- 		 */
- 		udelay(2);
-+		break;
- 	case CONFIG_IO_DELAY_TYPE_NONE:
- 		break;
- 	}
+On Thu, May 16, 2019 at 9:08 AM Andrew-sh.Cheng
+<andrew-sh.cheng@mediatek.com> wrote:
+>
+> From: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
+>
+> SVS will change the voltage of opp item.
+> CCI devfreq need to react to change frequency.
+>
+> Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
+> ---
+>  drivers/devfreq/mt8183-cci-devfreq.c | 63 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 63 insertions(+)
+>
+> diff --git a/drivers/devfreq/mt8183-cci-devfreq.c b/drivers/devfreq/mt8183-cci-devfreq.c
+> index 818a167c442f..250c963789f3 100644
+> --- a/drivers/devfreq/mt8183-cci-devfreq.c
+> +++ b/drivers/devfreq/mt8183-cci-devfreq.c
+> @@ -19,7 +19,10 @@ struct cci_devfreq {
+>         struct regulator *proc_reg;
+>         unsigned long proc_reg_uV;
+>         struct clk *cci_clk;
+> +       unsigned long freq;
+>         struct notifier_block nb;
+> +       struct notifier_block opp_nb;
+> +       int cci_min_freq;
+>  };
+>
+>  static int cci_devfreq_regulator_notifier(struct notifier_block *nb,
+> @@ -65,17 +68,62 @@ static int cci_devfreq_regulator_notifier(struct notifier_block *nb,
+>         return 0;
+>  }
+>
+> +static int ccidevfreq_opp_notifier(struct notifier_block *nb,
+> +unsigned long event, void *data)
+> +{
+> +       int ret;
+> +       struct dev_pm_opp *opp = data;
+> +       struct cci_devfreq *cci_df = container_of(nb, struct cci_devfreq,
+> +                                                 opp_nb);
+> +       unsigned long   freq, volt, cur_volt;
+> +
+> +       if (event == OPP_EVENT_ADJUST_VOLTAGE) {
+> +               freq = dev_pm_opp_get_freq(opp);
+> +               /* current opp item is changed */
+> +               if (freq == cci_df->freq) {
+> +                       volt = dev_pm_opp_get_voltage(opp);
+> +                       cur_volt = regulator_get_voltage(cci_df->proc_reg);
+> +
+> +                       if (volt > cur_volt) {
+> +                               /* need reduce freq */
+> +                               mutex_lock(&cci_df->devfreq->lock);
+> +                               ret = update_devfreq(cci_df->devfreq);
+> +                               if (ret)
+> +                                       pr_err("Fail to reduce cci frequency by opp notification: %d\n",
+This line is too long
+> +                                              ret);
+> +                               mutex_unlock(&cci_df->devfreq->lock);
+> +                       }
+> +               }
+> +
+> +               if (freq == cci_df->cci_min_freq) {
+> +                       volt = dev_pm_opp_get_voltage(opp);
+> +                       regulator_set_voltage(cci_df->proc_reg, volt, INT_MAX);
+> +               }
+> +       } else if (event == OPP_EVENT_DISABLE) {
+Is this case handled? If not, is this branch needed?
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +
+>  static int mtk_cci_governor_get_target(struct devfreq *devfreq,
+>                                        unsigned long *freq)
+>  {
+>         struct cci_devfreq *cci_df;
+>         struct dev_pm_opp *opp;
+> +       int ret;
+>
+>         cci_df = dev_get_drvdata(devfreq->dev.parent);
+>
+>         /* find available frequency */
+>         opp = dev_pm_opp_find_freq_ceil_by_volt(devfreq->dev.parent,
+>                                                 cci_df->proc_reg_uV);
+> +       ret = PTR_ERR_OR_ZERO(opp);
+> +       if (ret) {
+> +               pr_err("%s[%d], cannot find opp with voltage=%d: %d\n",
+> +                      __func__, __LINE__, cci_df->proc_reg_uV, ret);
+> +               return ret;
+> +       }
+>         *freq = dev_pm_opp_get_freq(opp);
+>
+>         return 0;
+> @@ -87,9 +135,11 @@ static int mtk_cci_governor_event_handler(struct devfreq *devfreq,
+>         int ret;
+>         struct cci_devfreq *cci_df;
+>         struct notifier_block *nb;
+> +       struct notifier_block *opp_nb;
+>
+>         cci_df = dev_get_drvdata(devfreq->dev.parent);
+>         nb = &cci_df->nb;
+> +       opp_nb = &cci_df->opp_nb;
+>
+>         switch (event) {
+>         case DEVFREQ_GOV_START:
+> @@ -100,6 +150,8 @@ static int mtk_cci_governor_event_handler(struct devfreq *devfreq,
+>                 if (ret)
+>                         pr_err("%s: failed to add governor: %d\n", __func__,
+>                                ret);
+> +               opp_nb->notifier_call = ccidevfreq_opp_notifier;
+> +               dev_pm_opp_register_notifier(devfreq->dev.parent, opp_nb);
+>                 break;
+>
+>         case DEVFREQ_GOV_STOP:
+> @@ -141,6 +193,8 @@ static int mtk_cci_devfreq_target(struct device *dev, unsigned long *freq,
+>                 return ret;
+>         }
+>
+> +       cci_df->freq = *freq;
+> +
+>         return 0;
+>  }
+>
+> @@ -152,6 +206,8 @@ static int mtk_cci_devfreq_probe(struct platform_device *pdev)
+>  {
+>         struct device *cci_dev = &pdev->dev;
+>         struct cci_devfreq *cci_df;
+> +       unsigned long freq, volt;
+> +       struct dev_pm_opp *opp;
+>         int ret;
+>
+>         cci_df = devm_kzalloc(cci_dev, sizeof(*cci_df), GFP_KERNEL);
+> @@ -181,6 +237,13 @@ static int mtk_cci_devfreq_probe(struct platform_device *pdev)
+>                 return ret;
+>         }
+>
+> +       /* set voltage lower bound */
+> +       freq = 1;
+> +       opp = dev_pm_opp_find_freq_ceil(cci_dev, &freq);
+> +       cci_df->cci_min_freq = dev_pm_opp_get_freq(opp);
+> +       volt = dev_pm_opp_get_voltage(opp);
+> +       dev_pm_opp_put(opp);
+> +
+>         platform_set_drvdata(pdev, cci_df);
+>
+>         cci_df->devfreq = devm_devfreq_add_device(cci_dev,
