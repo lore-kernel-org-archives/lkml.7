@@ -2,77 +2,82 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B62DC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 19:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CDFC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 19:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D886021848
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 19:04:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558724687;
-	bh=1Otej3DqW8kLZe+otOAU42a39fB+op/iRkL/qfZt6fg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mXL7G/hwrY8J7/0H03gl+S8ei9VJmd+n2/EX46oMIQh72BNOv7hzYG6xZRYQQX1jg
-	 dtKpDxptqQj8Dz+wLVrdA2onWh446bmLv6atsvUBqBn4QrWeran34Er36ODCMM8/We
-	 zxoA8tVmALPX6H+2mmEwb/jcuWYhsygQco9cd9Ac=
+	by mail.kernel.org (Postfix) with ESMTP id 0415321848
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 19:05:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732011AbfEXTEr (ORCPT
+        id S1732081AbfEXTFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 15:04:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36190 "EHLO mail.kernel.org"
+        Fri, 24 May 2019 15:05:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43510 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727115AbfEXTEq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 15:04:46 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727115AbfEXTFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 15:05:23 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4291B21848;
-        Fri, 24 May 2019 19:04:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558724685;
-        bh=1Otej3DqW8kLZe+otOAU42a39fB+op/iRkL/qfZt6fg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NwJLeqRFtTod+iPoBP/acd7TE4ryKxbyswv6Fpy55OK9uiD+XFkAvnx6y2TJtSsR5
-         WsD5YNJLSWx7SKouF3NC7IDgLog9/Gn8ermSMQbQ1dhTfRgWvRgKRYxd3EYIGYnS+9
-         yVWCGDay8rhC1zBPnQn4GelPufHKIaDoB4xmCChA=
-Date:   Fri, 24 May 2019 21:04:43 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Muchun Song <smuchun@gmail.com>
-Cc:     rafael@kernel.org, benh@kernel.crashing.org, prsood@codeaurora.org,
-        mojha@codeaurora.org, gkohli@codeaurora.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        zhaowuyun@wingtech.com
-Subject: Re: [PATCH v4] driver core: Fix use-after-free and double free on
- glue directory
-Message-ID: <20190524190443.GB29565@kroah.com>
-References: <20190516142342.28019-1-smuchun@gmail.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id ABBE559441;
+        Fri, 24 May 2019 19:05:22 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-85.bos.redhat.com [10.18.17.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 430261001DD5;
+        Fri, 24 May 2019 19:05:19 +0000 (UTC)
+Subject: Re: [PATCH v3] locking/lock_events: Use this_cpu_add() when necessary
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+References: <20190524185343.4137-1-longman@redhat.com>
+ <CAHk-=wgmB8BVrOZEqDysvC21MNmWcWXh1-DYzctsZYmZomkkog@mail.gmail.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <0f8883ee-6e31-a1dd-a749-6d2ba07e758d@redhat.com>
+Date:   Fri, 24 May 2019 15:05:18 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190516142342.28019-1-smuchun@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <CAHk-=wgmB8BVrOZEqDysvC21MNmWcWXh1-DYzctsZYmZomkkog@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Fri, 24 May 2019 19:05:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 10:23:42PM +0800, Muchun Song wrote:
-> There is a race condition between removing glue directory and adding a new
-> device under the glue directory. It can be reproduced in following test:
+On 5/24/19 3:00 PM, Linus Torvalds wrote:
+> On Fri, May 24, 2019 at 11:54 AM Waiman Long <longman@redhat.com> wrote:
+>>  v2: Simplify the condition to just preempt or !preempt.
+>>  v3: Document the imprecise nature of the percpu count.
+> My point was that if they are imprecise., then you shouldn't use CONFIG_PREEMPT.
+>
+> Because CONFIG_PREEMPT doesn't matter, and the count is imprecise with
+> it or without it.
+>
+> So if they are imprecise, then what matters isn't whether the
+> operation is atomic or not, and the real issue is avout whether it
+> causes that "BUG: using __this_cpu_add() in preemptible" message.
+>
+> IOW, you should use the config option that matters and is relevant,
+> namely CONFIG_DEBUG_PREEMPT.
 
-<snip>
+Yes, that makes sense. I will update the patch again.
 
-Is this related to:
-	Subject: [PATCH v3] drivers: core: Remove glue dirs early only when refcount is 1
+Thanks,
+Longman
 
-?
-
-If so, why is the solution so different?
-
-thanks,
-
-greg k-h
