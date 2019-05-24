@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07DF6C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 01:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41578C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 01:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 056F9217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 01:16:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EF11217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 01:16:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388876AbfEXBQv (ORCPT
+        id S2388839AbfEXBQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 21:16:51 -0400
+        Thu, 23 May 2019 21:16:44 -0400
 Received: from mga02.intel.com ([134.134.136.20]:42224 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388801AbfEXBQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 21:16:42 -0400
+        id S1731683AbfEXBQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 21:16:39 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 May 2019 18:16:36 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 May 2019 18:16:35 -0700
 X-ExtLoop1: 1
 Received: from unknown (HELO luv-build.sc.intel.com) ([172.25.110.25])
-  by fmsmga008.fm.intel.com with ESMTP; 23 May 2019 18:16:36 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 23 May 2019 18:16:34 -0700
 From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>
@@ -38,10 +38,16 @@ Cc:     Ashok Raj <ashok.raj@intel.com>, Joerg Roedel <joro@8bytes.org>,
         Randy Dunlap <rdunlap@infradead.org>, x86@kernel.org,
         linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
         Ricardo Neri <ricardo.neri@intel.com>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Subject: [RFC PATCH v4 09/21] x86/nmi: Add a NMI_WATCHDOG NMI handler category
-Date:   Thu, 23 May 2019 18:16:11 -0700
-Message-Id: <1558660583-28561-10-git-send-email-ricardo.neri-calderon@linux.intel.com>
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Tony Luck <tony.luck@intel.com>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [RFC PATCH v4 03/21] x86/hpet: Calculate ticks-per-second in a separate function
+Date:   Thu, 23 May 2019 18:16:05 -0700
+Message-Id: <1558660583-28561-4-git-send-email-ricardo.neri-calderon@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1558660583-28561-1-git-send-email-ricardo.neri-calderon@linux.intel.com>
 References: <1558660583-28561-1-git-send-email-ricardo.neri-calderon@linux.intel.com>
@@ -50,69 +56,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a NMI_WATCHDOG as a new category of NMI handler. This new category
-is to be used with the HPET-based hardlockup detector. This detector
-does not have a direct way of checking if the HPET timer is the source of
-the NMI. Instead it indirectly estimate it using the time-stamp counter.
+It is easier to compute the expiration times of an HPET timer by using
+its frequency (i.e., the number of times it ticks in a second) than its
+period, as given in the capabilities register.
 
-Therefore, we may have false-positives in case another NMI occurs within
-the estimated time window. For this reason, we want the handler of the
-detector to be called after all the NMI_LOCAL handlers. A simple way
-of achieving this with a new NMI handler category.
+In addition to the HPET char driver, the HPET-based hardlockup detector
+will also need to know the timer's frequency. Thus, create a common
+function that both can use.
 
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ashok Raj <ashok.raj@intel.com>
+Cc: Andi Kleen <andi.kleen@intel.com>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Clemens Ladisch <clemens@ladisch.de>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Philippe Ombredanne <pombredanne@nexb.com>
+Cc: Kate Stewart <kstewart@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+Cc: "Ravi V. Shankar" <ravi.v.shankar@intel.com>
+Cc: x86@kernel.org
 Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 ---
- arch/x86/include/asm/nmi.h |  1 +
- arch/x86/kernel/nmi.c      | 10 ++++++++++
- 2 files changed, 11 insertions(+)
+ drivers/char/hpet.c  | 31 ++++++++++++++++++++++++-------
+ include/linux/hpet.h |  1 +
+ 2 files changed, 25 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/include/asm/nmi.h b/arch/x86/include/asm/nmi.h
-index 75ded1d13d98..75aa98313cde 100644
---- a/arch/x86/include/asm/nmi.h
-+++ b/arch/x86/include/asm/nmi.h
-@@ -29,6 +29,7 @@ enum {
- 	NMI_UNKNOWN,
- 	NMI_SERR,
- 	NMI_IO_CHECK,
-+	NMI_WATCHDOG,
- 	NMI_MAX
- };
+diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
+index 3a1e6b3ccd10..747255f552a9 100644
+--- a/drivers/char/hpet.c
++++ b/drivers/char/hpet.c
+@@ -836,6 +836,29 @@ static unsigned long hpet_calibrate(struct hpets *hpetp)
+ 	return ret;
+ }
  
-diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-index 4df7705022b9..43e96aedc6fe 100644
---- a/arch/x86/kernel/nmi.c
-+++ b/arch/x86/kernel/nmi.c
-@@ -64,6 +64,10 @@ static struct nmi_desc nmi_desc[NMI_MAX] =
- 		.lock = __RAW_SPIN_LOCK_UNLOCKED(&nmi_desc[3].lock),
- 		.head = LIST_HEAD_INIT(nmi_desc[3].head),
- 	},
-+	{
-+		.lock = __RAW_SPIN_LOCK_UNLOCKED(&nmi_desc[4].lock),
-+		.head = LIST_HEAD_INIT(nmi_desc[4].head),
-+	},
- 
- };
- 
-@@ -174,6 +178,8 @@ int __register_nmi_handler(unsigned int type, struct nmiaction *action)
- 	 */
- 	WARN_ON_ONCE(type == NMI_SERR && !list_empty(&desc->head));
- 	WARN_ON_ONCE(type == NMI_IO_CHECK && !list_empty(&desc->head));
-+	WARN_ON_ONCE(type == NMI_WATCHDOG && !list_empty(&desc->head));
++u64 hpet_get_ticks_per_sec(u64 hpet_caps)
++{
++	u64 ticks_per_sec, period;
 +
- 
- 	/*
- 	 * some handlers need to be executed first otherwise a fake
-@@ -384,6 +390,10 @@ static void default_do_nmi(struct pt_regs *regs)
- 	}
- 	raw_spin_unlock(&nmi_reason_lock);
- 
-+	handled = nmi_handle(NMI_WATCHDOG, regs);
-+	if (handled == NMI_HANDLED)
-+		return;
++	period = (hpet_caps & HPET_COUNTER_CLK_PERIOD_MASK) >>
++		 HPET_COUNTER_CLK_PERIOD_SHIFT; /* fs, 10^-15 */
 +
- 	/*
- 	 * Only one NMI can be latched at a time.  To handle
- 	 * this we may process multiple nmi handlers at once to
++	/*
++	 * The frequency is the reciprocal of the period. The period is given
++	 * in femtoseconds per second. Thus, prepare a dividend to obtain the
++	 * frequency in ticks per second.
++	 */
++
++	/* 10^15 femtoseconds per second */
++	ticks_per_sec = 1000000000000000ULL;
++	ticks_per_sec += period >> 1; /* round */
++
++	/* The quotient is put in the dividend. We drop the remainder. */
++	do_div(ticks_per_sec, period);
++
++	return ticks_per_sec;
++}
++
+ int hpet_alloc(struct hpet_data *hdp)
+ {
+ 	u64 cap, mcfg;
+@@ -844,7 +867,6 @@ int hpet_alloc(struct hpet_data *hdp)
+ 	struct hpets *hpetp;
+ 	struct hpet __iomem *hpet;
+ 	static struct hpets *last;
+-	unsigned long period;
+ 	unsigned long long temp;
+ 	u32 remainder;
+ 
+@@ -894,12 +916,7 @@ int hpet_alloc(struct hpet_data *hdp)
+ 
+ 	last = hpetp;
+ 
+-	period = (cap & HPET_COUNTER_CLK_PERIOD_MASK) >>
+-		HPET_COUNTER_CLK_PERIOD_SHIFT; /* fs, 10^-15 */
+-	temp = 1000000000000000uLL; /* 10^15 femtoseconds per second */
+-	temp += period >> 1; /* round */
+-	do_div(temp, period);
+-	hpetp->hp_tick_freq = temp; /* ticks per second */
++	hpetp->hp_tick_freq = hpet_get_ticks_per_sec(cap);
+ 
+ 	printk(KERN_INFO "hpet%d: at MMIO 0x%lx, IRQ%s",
+ 		hpetp->hp_which, hdp->hd_phys_address,
+diff --git a/include/linux/hpet.h b/include/linux/hpet.h
+index 8604564b985d..e7b36bcf4699 100644
+--- a/include/linux/hpet.h
++++ b/include/linux/hpet.h
+@@ -107,5 +107,6 @@ static inline void hpet_reserve_timer(struct hpet_data *hd, int timer)
+ }
+ 
+ int hpet_alloc(struct hpet_data *);
++u64 hpet_get_ticks_per_sec(u64 hpet_caps);
+ 
+ #endif				/* !__HPET__ */
 -- 
 2.17.1
 
