@@ -2,162 +2,178 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19999C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C050C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7F322075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:15:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 148462075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:16:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=indeed.com header.i=@indeed.com header.b="SyJyK7bq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gCMAYpHJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389808AbfEXPPE (ORCPT
+        id S2389658AbfEXPQk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 11:15:04 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:53786 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389680AbfEXPPD (ORCPT
+        Fri, 24 May 2019 11:16:40 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:52357 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389079AbfEXPQk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 11:15:03 -0400
-Received: by mail-it1-f195.google.com with SMTP id m141so16324946ita.3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 08:15:02 -0700 (PDT)
+        Fri, 24 May 2019 11:16:40 -0400
+Received: by mail-it1-f196.google.com with SMTP id t184so16345783itf.2;
+        Fri, 24 May 2019 08:16:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=indeed.com; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=QKLfYJyC3pKaeS6F7jFzdQyiyzLOg1HgkzY2ER2lf8E=;
-        b=SyJyK7bqOaMgHMjzDpJD7dAwjgOIEi1xlEARg3dMKeAMKWck3EhGPDjqP3Nh4hmz1D
-         N6RkEfG1q17Dn79D9gw30IPA1hQljik6lSpT9pcuHQWSC0uWEpj2+lu366snnFzTXXZE
-         uM4krkIXH4V6O5L0XG32GACEDXsUx3lL9SeA4=
+        bh=Ue5iAQh3o+RrZq+T4VgTKmLqWN6Wlxd8oVLaY6JmVVo=;
+        b=gCMAYpHJfYJUrKtc5oOniur8lpNW+N8uTuzjZHgP4or1AcKLVGkYZ2hbf2zteQLJ/m
+         jg76i3nOzn+IbZxbv9LoKRkSgtNnVhHve6C+dLnYj7BV8WPhGpddv1RufLS3jhn3r0tU
+         ZM3dUTSV9xcGr0h3RfQKPjNokDHrUTwCofbQJffzfQPs22BUW3cVaDM06QFHsExF4kny
+         X3VBDYAQEbBjGc7PJkT+cNO+4snLWNICiBwGBJTDJOGhoibDfZY5NkUf032uNqT0Yunx
+         OfAfdaueUXCZfV/9fljZSkcppYLcmXdv3Tk/TZQ3ij/EyjMDd6Kftsrv1rDCivBoazpE
+         FnGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=QKLfYJyC3pKaeS6F7jFzdQyiyzLOg1HgkzY2ER2lf8E=;
-        b=BOBxCTxK3wRNCtC65qbq1taz+rB7UD8Xiwdhbu1GEUmdKCWE7ICj4OYsC5Aer9qIL3
-         djDwY5159oAhfSEhPU60ZD8244xXxnO1dTKZkk5IfU4OZqqPMxSnAlzN+VnV5k0wyZAq
-         RfMW9ZPDH5Y83k5LXFu5YRYU3RS95uN0uIcb4SmhDlWoxk8qKTFpujn4J2OSIGBAbsQ0
-         KBGbWxb5lu1XiikCwdaHm1uarzKRNp4QSumHJOm9FAtzUcAVPwXLtJN9IL1RsFMtGccM
-         6Muvcsg3pfLHpgOdpzcsKjuV953yYSWPZ4BXstAhWVcwN2BZ/YWWnYXSA0GUJ5rSdd9r
-         uSwQ==
-X-Gm-Message-State: APjAAAVtwJe+7+5NOLZWYt2oViZNSea88M+7FSz0ooqw/aIXMDh/FSb8
-        O/TRfvZb4u8cjksfVlWR5fwGqN658qjm/N8jCd+I7g==
-X-Google-Smtp-Source: APXvYqzVu0rNwyOTEwJowRayjAIM0pYRTvrNQJtlqcqx3df2u61eOKLFw3ymoMRJXNsAirDbg8l2CBRRUasnwvQknxk=
-X-Received: by 2002:a24:680c:: with SMTP id v12mr17714903itb.67.1558710902196;
- Fri, 24 May 2019 08:15:02 -0700 (PDT)
+        bh=Ue5iAQh3o+RrZq+T4VgTKmLqWN6Wlxd8oVLaY6JmVVo=;
+        b=KrAUR/3sUqFhS2fCA07BIQfUfTQsa39xhUDOdWsDsyVfdlreBPKV8b9qvhPDDlZ8dW
+         z3z07GBorW1c0TV6bwmTkP17mXuPcLVz7XOALHTFuSQJrS45yRX0PcPdMuBS0voS4QPn
+         ShqBwVQlLros5JjeV+dsT1sQW9wsP1vtRJxn2NOCUPGfGDoO4GJpV7EKvrkGu2A7wJus
+         S5rK1Hgxhl/96VLE81BpkSDy//jfGAi60Jtf7Dch24dM0a5S6u4vL8Ic8c26ddvGTlWc
+         y1ZnreJMpZkyjrUgJRUYXNq9TSgU4i8iycBZQUhZX2qcbOAVwZ5lWozehfvMTkvLM18U
+         JIqw==
+X-Gm-Message-State: APjAAAXDf35vNMhjj7IOuX/1akj+pDcPZra0QqPl32X82aS8nGYnQ6VR
+        qKWy16ckcaX11PNEJXddrBaYgAMLvfeDyoIlp6E=
+X-Google-Smtp-Source: APXvYqxR6m7vbnGIM+BEYmZgfSpPLI1ndiLHiIaQVaa2rr9P87vKtLr6igqahreqyvbvw7yowifJCB5gCbe0P38NhbY=
+X-Received: by 2002:a24:e084:: with SMTP id c126mr17512124ith.124.1558710998913;
+ Fri, 24 May 2019 08:16:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <1558121424-2914-1-git-send-email-chiluk+linux@indeed.com>
- <1558637087-20283-1-git-send-email-chiluk+linux@indeed.com>
- <1558637087-20283-2-git-send-email-chiluk+linux@indeed.com>
- <CAFTs51W0KdK4nw6wydn2HjNYvFRC8DYMmVeKX9FAe+4YUGEAZg@mail.gmail.com> <20190524143204.GB4684@lorien.usersys.redhat.com>
-In-Reply-To: <20190524143204.GB4684@lorien.usersys.redhat.com>
-From:   Dave Chiluk <chiluk+linux@indeed.com>
-Date:   Fri, 24 May 2019 10:14:36 -0500
-Message-ID: <CAC=E7cXxsyMLw1PR+8QchTH8FYL7WX6_8LBVdqueR1yjW+VVkQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] sched/fair: Fix low cpu usage with high throttling
- by removing expiration of cpu-local slices
-To:     Phil Auld <pauld@redhat.com>
-Cc:     Peter Oskolkov <posk@posk.io>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, cgroups@vger.kernel.org,
+References: <20190522150505.GA4915@redhat.com> <CABeXuvrPM5xvzqUydbREapvwgy6deYreHp0aaMoSHyLB6+HGRg@mail.gmail.com>
+ <20190522161407.GB4915@redhat.com> <CABeXuvpjrW5Gt95JC-_rYkOA=6RCD5OtkEQdwZVVqGCE3GkQOQ@mail.gmail.com>
+ <4f7b6dbeab1d424baaebd7a5df116349@AcuMS.aculab.com> <20190523145944.GB23070@redhat.com>
+ <345cfba5edde470f9a68d913f44fa342@AcuMS.aculab.com> <20190523163604.GE23070@redhat.com>
+ <f0eced5677c144debfc5a69d0d327bc1@AcuMS.aculab.com> <CABeXuvo-wey+NHWb4gi=FSRrjJOKkVcLPQ-J+dchJeHEbhGQ6g@mail.gmail.com>
+ <20190524141054.GB2655@redhat.com>
+In-Reply-To: <20190524141054.GB2655@redhat.com>
+From:   Deepa Dinamani <deepa.kernel@gmail.com>
+Date:   Fri, 24 May 2019 08:16:23 -0700
+Message-ID: <CABeXuvqSzy+v=3Y5NnMmfob7bvuNkafmdDqoex8BVENN3atqZA@mail.gmail.com>
+Subject: Re: [PATCH v2] signal: Adjust error codes according to restore_user_sigmask()
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     David Laight <David.Laight@aculab.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Brendan Gregg <bgregg@netflix.com>,
-        Kyle Anderson <kwa@yelp.com>,
-        Gabriel Munos <gmunoz@netflix.com>,
-        John Hammond <jhammond@indeed.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        Ben Segall <bsegall@google.com>
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "dbueso@suse.de" <dbueso@suse.de>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        Davidlohr Bueso <dave@stgolabs.net>, Eric Wong <e@80x24.org>,
+        Jason Baron <jbaron@akamai.com>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        linux-aio <linux-aio@kvack.org>,
+        Omar Kilani <omar.kilani@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 9:32 AM Phil Auld <pauld@redhat.com> wrote:
-> On Thu, May 23, 2019 at 02:01:58PM -0700 Peter Oskolkov wrote:
-
-> > If the machine runs at/close to capacity, won't the overallocation
-> > of the quota to bursty tasks necessarily negatively impact every other
-> > task? Should the "unused" quota be available only on idle CPUs?
-> > (Or maybe this is the behavior achieved here, and only the comment and
-> > the commit message should be fixed...)
+On Fri, May 24, 2019 at 7:11 AM Oleg Nesterov <oleg@redhat.com> wrote:
+>
+> On 05/23, Deepa Dinamani wrote:
 > >
+> > Ok, since there has been quite a bit of argument here, I will
+> > backtrack a little bit and maybe it will help us understand what's
+> > happening here.
+> > There are many scenarios being discussed on this thread:
+> > a. State of code before 854a6ed56839a
 >
-> It's bounded by the amount left unused from the previous period. So
-> theoretically a process could use almost twice its quota. But then it
-> would have nothing left over in the next period. To repeat it would have
-> to not use any that next period. Over a longer number of periods it's the
-> same amount of CPU usage.
+> I think everything was correct,
+
+There were 2 things that were wrong:
+
+1. If an unblocked signal was received, after the ep_poll(), then the
+return status did not indicate that. This is expected behavior
+according to man page. If this is indeed what is expected then the man
+page should note that signal will be delivered in this case and return
+code will still be 0.
+
+"EINTR
+The call was interrupted by a signal handler before either any of the
+requested events occurred or the timeout expired; see signal(7)."
+
+2. The restoring of the sigmask is done right in the syscall part and
+not while exiting the syscall and if you get a blocked signal here,
+you will deliver this to userspace.
+
+> > b. State after 854a6ed56839a
 >
-> I think that is more fair than throttling a process that has never used
-> its full quota.
+> obviously buggy,
+
+Ok, then can you point out what specifically was wrong with
+854a6ed56839a? And, not how it could be more simple?
+
+> > c. Proposed fix as per the patchset in question.
 >
-> And it removes complexity.
+> > As per [a] and let's consider the case of epoll_pwait only first for simplicity.
+> >
+> > As I said before, ep_poll() is what checks for signal_pending() and is
+> > responsible for setting errno to -EINTR when there is a signal.
 >
-> Cheers,
-> Phil
+> To clarify, if do_epoll_wait() return -EINTR then signal_pending() is true,
+> right?
 
-Actually it's not even that bad.  The overallocation of quota to a
-bursty task in a period is limited to at most one slice per cpu, and
-that slice must not have been used in the previous periods.  The slice
-size is set with /proc/sys/kernel/sched_cfs_bandwidth_slice_us and
-defaults to 5ms.  If a bursty task goes from underutilizing quota to
-using it's entire quota, it will not be able to burst in the
-subsequent periods.  Therefore in an absolute worst case contrived
-scenario, a bursty task can add at most 5ms to the latency of other
-threads on the same CPU.  I think this worst case 5ms tradeoff is
-entirely worth it.
+Yes, the case I'm talking about is when do_epoll_wait() returns 0 and
+then you get a signal.
 
-This does mean that a theoretically a poorly written massively
-threaded application on an 80 core box, that spreads itself onto 80
-cpu run queues, can overutilize it's quota in a period by at most 5ms
-* 80 CPUs in a sincle period (slice * number of runqueues the
-application is running on).  But that means that each of those threads
- would have had to not be use their quota in a previous period, and it
-also means that the application would have to be carefully written to
-exacerbate this behavior.
+> > So if a signal is received after ep_poll() and ep_poll() returns
+> > success, it is never noticed by the syscall during execution.
+>
+> What you are saying looks very confusing to me, I will assume that you
+> meant something like
+>
+>         - a signal SIG_XXX was blocked before sys_epoll_pwait() was called
+>
+>         - sys_epoll_pwait(sigmask) unblocks SIG_XXX according to sigmask
+>
+>         - sys_epoll_pwait() calls do_epoll_wait() which returns success
+>
+>         - SIG_XXX comes after that and it is "never noticed"
+>
+> Yes. Everything is correct. And see my reply to David, SIG_XXX can even
+> come _before_ sys_epoll_pwait() was called.
 
-Additionally if cpu bound threads underutilize a slice of their quota
-in a period due to the cfs choosing a bursty task to run, they should
-theoretically be able to make it up in the following periods when the
-bursty task is unable to "burst".
+No, I'm talking about a signal that was not blocked.
 
-Please be careful here quota and slice are being treated differently.
-Quota does not roll-over between periods, only slices of quota that
-has already been allocated to per cpu run queues. If you allocate
-100ms of quota per period to an application, but it only spreads onto
-3 cpu run queues that means it can in the worst case use 3 x slice
-size = 15ms in periods following underutilization.
+> > So the question is does the userspace have to know about this signal
+> > or not.
+>
+> If userspace needs to know about SIG_XXX it should not block it, that is all.
 
-So why does this matter.  Well applications that use thread pools
-*(*cough* java *cough*) with lots of tiny little worker threads, tend
-to spread themselves out onto a lot of run queues.  These worker
-threads grab quota slices in order to run, then rarely use all of
-their slice (1 or 2ms out of the 5ms).  This results in those worker
-threads starving the main application of quota, and then expiring the
-remainder of that quota slice on the per-cpu.  Going back to my
-earlier 100ms quota / 80 cpu example.  That means only
-100ms/cfs_bandwidth_slice_us(5ms) = 20 slices are available in a
-period.  So only 20 out of these 80 cpus ever get a slice allocated to
-them.  By allowing these per-cpu run queues to use their remaining
-slice in following periods these worker threads do not need to be
-allocated additional slice, and thereby the main threads are actually
-able to use the allocated cpu quota.
+What should be the return value if a signal is detected after a fd completed?
 
-This can be experienced by running fibtest available at
-https://github.com/indeedeng/fibtest/.
-$ runfibtest 1
-runs a single fast thread taskset to cpu 0
-$ runfibtest 8
-Runs a single fast thread taskset to cpu 0, and 7 slow threads taskset
-to cpus 1-7.  This run is expected to show less iterations, but the
-worse problem is that the cpu usage is far less than the 500ms that it
-should have received.
+> > What [b] does is to move the signal check closer to the restoration of
+> > the signal.
+>
+> FOR NO REASON, afaics (to simplify, lets forget the problem with the wrong
+> return value you are trying to fix).
 
-Thanks for the engagement on this,
-Dave Chiluk
+As I already pointed out, the restoring of the sigmask is done during
+the syscall and not while exiting the syscall and if you get a blocked
+signal here, you will deliver this to userspace.
+
+> And even if there were ANY reason to do this, note that (with or without this
+> fix) the signal_pending() check inside restore_user_sigmask() can NOT help,
+> simply because SIG_XXX can come right after this check.
+
+This I pointed out already that we should probably make this sequence atomic.
+
+
+-Deepa
