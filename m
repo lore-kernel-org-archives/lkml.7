@@ -2,102 +2,106 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB8CC282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9598CC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB1E021841
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:06:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 542BC2133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:07:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="o0Dk7f3+";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kE4NYJ/h"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="xCHhnsof"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389429AbfEXIGj (ORCPT
+        id S2389432AbfEXIHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 04:06:39 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:45050 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389046AbfEXIGi (ORCPT
+        Fri, 24 May 2019 04:07:05 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:35683 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389046AbfEXIHE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 04:06:38 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id BC43F60E40; Fri, 24 May 2019 08:06:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558685196;
-        bh=HFahEd1e9otwuYSiHy1qPYvBNA3cY2td10pq593gtdw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=o0Dk7f3+hdz7aLAyaH+W2bwHvC2BB+Qo7wch7/PP9JDnDkcfeQL3QIBvBweFT/5Hw
-         XS8fzRC1wLadBfl4wxjqJ5IZEcUs6TlNd1ZqDXwBc6gawFGgTgvx6XRoSSGAyTR9fy
-         Sa6xsgNpqk6Jyk005JTE9Rkg7+Prbf5tR/gJmIIM=
-Received: from codeaurora.org (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: stummala@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3FC7C60716;
-        Fri, 24 May 2019 08:06:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558685195;
-        bh=HFahEd1e9otwuYSiHy1qPYvBNA3cY2td10pq593gtdw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=kE4NYJ/hbdpoJMFmQboUNCozSkfLhIstHc2jckprU6iCfY++FGxUi0PuBJuCb2yGb
-         72EfNaAjfosSNFJm6llDdqSxPceH2w1ay4QaS73iKcXMWqbjCRmejXDuPzVug4udpX
-         gB9LczQo46sRD5H9Llx+DAkvtItJUD1AnpKIzayM=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3FC7C60716
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
-From:   Sahitya Tummala <stummala@codeaurora.org>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Mel Gorman <mgorman@techsingularity.net>, linux-mm@kvack.org,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Eric Biggers <ebiggers@kernel.org>,
-        linux-fscrypt@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Sahitya Tummala <stummala@codeaurora.org>
-Subject: [PATCH] mm/vmscan.c: drop all inode/dentry cache from LRU
-Date:   Fri, 24 May 2019 13:36:01 +0530
-Message-Id: <1558685161-860-1-git-send-email-stummala@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Fri, 24 May 2019 04:07:04 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4O86qXS118241
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Fri, 24 May 2019 01:06:52 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4O86qXS118241
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019051801; t=1558685213;
+        bh=5QkrotJddjjWUgkG/UKFHdwYKxgHPZdllRWfDpBfu6M=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=xCHhnsofGo/uHqcS4Vc2ox3h7sV1w6RDxzdxPwTpwDehZGTQxkiUEaqsagH+UZlfc
+         oAtd1jX12bKM4uImdlYNLFtl7IrZhM5HVZI6wxc8t0kBz0kddXIcwmXDwLAaBjeg/c
+         JTeoyUbT3KMIaONxAJ9AsXzzF4bPt81S1WmYCRGp7R5E7wrl8/M4ftcU8uAbBhT0eU
+         2jWSNz/eGl0tLb+lJbbbLAa+u+RC4j5HAuAxeZNzgkwwl0SwBZ0VIGQF52lxcObtyT
+         twzyowXGLblLXWrkHERS6dGjFaB1gJdOP4JbUVEloGPxMDJTIZMCtrgGDYxIWYKsbi
+         WTRR/CM2RfA+g==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4O86qKF118238;
+        Fri, 24 May 2019 01:06:52 -0700
+Date:   Fri, 24 May 2019 01:06:52 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Ira Weiny <tipbot@zytor.com>
+Message-ID: <tip-9db9b76767f133d0e1ce19f01117c83221641899@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
+        mingo@kernel.org, tglx@linutronix.de,
+        torvalds@linux-foundation.org, ira.weiny@intel.com, corbet@lwn.net,
+        hpa@zytor.com
+Reply-To: torvalds@linux-foundation.org, ira.weiny@intel.com,
+          corbet@lwn.net, hpa@zytor.com, linux-kernel@vger.kernel.org,
+          peterz@infradead.org, mingo@kernel.org, tglx@linutronix.de
+In-Reply-To: <20190520205253.23762-1-ira.weiny@intel.com>
+References: <20190520205253.23762-1-ira.weiny@intel.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/asm] Documentation/x86: Fix path to entry_32.S
+Git-Commit-ID: 9db9b76767f133d0e1ce19f01117c83221641899
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is important for the scenario where FBE (file based encryption)
-is enabled. With FBE, the encryption context needed to en/decrypt a file
-will be stored in inode and any inode that is left in the cache after
-drop_caches is done will be a problem. For ex, in Android, drop_caches
-will be used when switching work profiles.
+Commit-ID:  9db9b76767f133d0e1ce19f01117c83221641899
+Gitweb:     https://git.kernel.org/tip/9db9b76767f133d0e1ce19f01117c83221641899
+Author:     Ira Weiny <ira.weiny@intel.com>
+AuthorDate: Mon, 20 May 2019 13:52:53 -0700
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Fri, 24 May 2019 08:52:54 +0200
 
-Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+Documentation/x86: Fix path to entry_32.S
+
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-doc@vger.kernel.org
+Link: http://lkml.kernel.org/r/20190520205253.23762-1-ira.weiny@intel.com
+[ Adjusted the patch to the RST conversion. ]
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- mm/vmscan.c | 2 +-
+ Documentation/x86/exception-tables.rst | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index d96c547..b48926f 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -730,7 +730,7 @@ void drop_slab_node(int nid)
- 		do {
- 			freed += shrink_slab(GFP_KERNEL, nid, memcg, 0);
- 		} while ((memcg = mem_cgroup_iter(NULL, memcg, NULL)) != NULL);
--	} while (freed > 10);
-+	} while (freed != 0);
- }
+diff --git a/Documentation/x86/exception-tables.rst b/Documentation/x86/exception-tables.rst
+index 24596c8210b5..ed6d4b0cf62c 100644
+--- a/Documentation/x86/exception-tables.rst
++++ b/Documentation/x86/exception-tables.rst
+@@ -35,7 +35,7 @@ page fault handler::
+   void do_page_fault(struct pt_regs *regs, unsigned long error_code)
  
- void drop_slab(void)
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
-
+ in arch/x86/mm/fault.c. The parameters on the stack are set up by
+-the low level assembly glue in arch/x86/kernel/entry_32.S. The parameter
++the low level assembly glue in arch/x86/entry/entry_32.S. The parameter
+ regs is a pointer to the saved registers on the stack, error_code
+ contains a reason code for the exception.
+ 
