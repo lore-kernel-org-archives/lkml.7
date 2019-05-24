@@ -2,144 +2,116 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16014C282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05121C282E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D74BA2081C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:01:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558731695;
-	bh=CFg7XvU9v0lnRjzs+tGDUprgJfAZafgtXU+wVAo1RXg=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=M8WBB/HdX1lGTsubKXzE6eZ5M6PlDSeifXPeXjIxO+za6HBbm7UsR7iugIJit4hJX
-	 jRvuFJguSlatYf55XPaCD7vBi/rB98kVX0nX/Jlg7crEQZDg3p0DRY3go1OE8otCE7
-	 MX6LUB+8Mbjsx7UUFEQjthftftYXDgILWkwT9Uqc=
+	by mail.kernel.org (Postfix) with ESMTP id CFF5421848
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:03:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xvnk4WTm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404215AbfEXVBf (ORCPT
+        id S1732085AbfEXVD1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 17:01:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46232 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391775AbfEXVBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 17:01:34 -0400
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1435D21848;
-        Fri, 24 May 2019 21:01:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558731693;
-        bh=CFg7XvU9v0lnRjzs+tGDUprgJfAZafgtXU+wVAo1RXg=;
-        h=From:Date:Subject:To:Cc:From;
-        b=01XDmDDflKM0ZAXnpGXenKFx11nBA7t1oh/qqaVBGt7diVR9MGNRs+TfvbQdKBFXy
-         ywQcSb7ytediejVewpRI42hmMLvVYifw3rGMMwOBcD7kBf/cVU/nUwHlaDXEMOnwXJ
-         4+TLEkFuqooCD9uaznNJ4V6k3SVh+E4cUUp7+hkc=
-Received: by mail-qk1-f175.google.com with SMTP id w25so9469258qkj.11;
-        Fri, 24 May 2019 14:01:33 -0700 (PDT)
-X-Gm-Message-State: APjAAAW6LsYzVT0U/K6hbDdl3q/PryBddqa4p7wexZEVBXKyxdqaWnpx
-        PZQhl0CcOnNMHp2i38vGnUQkikS+NAn3Lk8XRQ==
-X-Google-Smtp-Source: APXvYqwEUhcqw9pXlIHiVbMcQAt3k3SQXCATeSGD3gWhAOsmGcLw4ozfuPqUWMMZs4CpKB1KJFfQeQAcYrdD5TVb8ZY=
-X-Received: by 2002:a37:358:: with SMTP id 85mr78983951qkd.174.1558731692319;
- Fri, 24 May 2019 14:01:32 -0700 (PDT)
+        Fri, 24 May 2019 17:03:27 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41891 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727115AbfEXVD1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 17:03:27 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q17so1155358pfq.8;
+        Fri, 24 May 2019 14:03:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=veCSDwIU7Xf8XfmuNtrrDmEH89bB2GKhK9A6gPb0QBQ=;
+        b=Xvnk4WTmydtuFb0RyGDZKhWc3ExxFqVv7ezG/mmUmkVCCtF/hUKBOl8UVVEHqoTZjr
+         TW5Af5FcpTcmy5+sW/IQm8EyyF1mD9A2B3bA4Nuv/k8XRCA9M+7pu9wTJOLeLsFOV2RR
+         N4Yu077B5V8hQVtKNnDA3B5NFq+KTAl6JfPBEdVsn/1EurfX6X511EiATEcQzceWWk1g
+         n0JDHHrlNWnPzKnPj/sjphXkrRosoIMqqvg0bfJQW0WTxwwJrcONCdQzmkOWQNqUJkW6
+         sTiMfuXkgYHbbxX59nBcLJRCoY4Kfor6nrwx8VJNTSkEwX/NNOV3OCkca3Q6PYR/hpgL
+         RNzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=veCSDwIU7Xf8XfmuNtrrDmEH89bB2GKhK9A6gPb0QBQ=;
+        b=TYE4sSNKC1bYpvCCwaqsE8rqNuowMSi5w1Ec5lfIkmOwL9BCdoga7f1iVMs/M2eaKm
+         g61Jt0xDGxQVuPCCxnNZ92oQGQaJ+wjLt4ZzbiL6VLP9jAs937aVkOsvLKeW8e7SYrqV
+         6hHH9Afbh0V5iQqMsbCoUvSVcte5l5s58xpN3wRBdozpdj2dkiFOJxLoLiMtRRhryfa0
+         dBEGBo9rVTSYnxkimmdqfQLdUA28HOV1Wp7FwDDUcrU3YhuEfTZY0sZp5JcdZQq1nhQn
+         51uDpcGRDpNAaEDTCMHVHHW40kDtf4Y+GXk/YRFC6tc57kHJ/dB9m0deYpkpJRTA6i4m
+         oByw==
+X-Gm-Message-State: APjAAAVYqdcQ/U3NgWarmxfbBEuO3l7nPpR+2n255UZp9DLIw0NSIO6F
+        T6iw9b6MoQJpQ7NBqAvXdzs=
+X-Google-Smtp-Source: APXvYqw42MFYkbCooFVMUAGBY57ttz0aR8EW2m0ewulYbSLfJYwi9uLvW1I2bXMi/7GygcEDbx3qWA==
+X-Received: by 2002:a17:90a:8e86:: with SMTP id f6mr11922584pjo.66.1558731806109;
+        Fri, 24 May 2019 14:03:26 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:180::93e9])
+        by smtp.gmail.com with ESMTPSA id x23sm3369575pfn.160.2019.05.24.14.03.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 May 2019 14:03:25 -0700 (PDT)
+Date:   Fri, 24 May 2019 14:03:23 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>, bpf@vger.kernel.org,
+        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
+        Tejun Heo <tj@kernel.org>, kernel-team@fb.com,
+        cgroups@vger.kernel.org, Stanislav Fomichev <sdf@fomichev.me>,
+        Yonghong Song <yhs@fb.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 bpf-next 0/4] cgroup bpf auto-detachment
+Message-ID: <20190524210321.tzpt7ilaasaagtou@ast-mbp.dhcp.thefacebook.com>
+References: <20190523194532.2376233-1-guro@fb.com>
 MIME-Version: 1.0
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 24 May 2019 16:01:21 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKUbPziR3dHi15K-uZUH_D-GtodV_LVqw+EhEGLeZZZHA@mail.gmail.com>
-Message-ID: <CAL_JsqKUbPziR3dHi15K-uZUH_D-GtodV_LVqw+EhEGLeZZZHA@mail.gmail.com>
-Subject: [GIT PULL] Devicetree fixes for 5.2-rc
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190523194532.2376233-1-guro@fb.com>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Thu, May 23, 2019 at 12:45:28PM -0700, Roman Gushchin wrote:
+> This patchset implements a cgroup bpf auto-detachment functionality:
+> bpf programs are detached as soon as possible after removal of the
+> cgroup, without waiting for the release of all associated resources.
 
-Please pull.
+The idea looks great, but doesn't quite work:
 
-Rob
+$ ./test_cgroup_attach
+#override:PASS
+[   66.475219] BUG: sleeping function called from invalid context at ../include/linux/percpu-rwsem.h:34
+[   66.476095] in_atomic(): 1, irqs_disabled(): 0, pid: 21, name: ksoftirqd/2
+[   66.476706] CPU: 2 PID: 21 Comm: ksoftirqd/2 Not tainted 5.2.0-rc1-00211-g1861420d0162 #1564
+[   66.477595] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.0-2.el7 04/01/2014
+[   66.478360] Call Trace:
+[   66.478591]  dump_stack+0x5b/0x8b
+[   66.478892]  ___might_sleep+0x22f/0x290
+[   66.479230]  cpus_read_lock+0x18/0x50
+[   66.479550]  static_key_slow_dec+0x41/0x70
+[   66.479914]  cgroup_bpf_release+0x1a6/0x400
+[   66.480285]  percpu_ref_switch_to_atomic_rcu+0x203/0x330
+[   66.480754]  rcu_core+0x475/0xcc0
+[   66.481047]  ? switch_mm_irqs_off+0x684/0xa40
+[   66.481422]  ? rcu_note_context_switch+0x260/0x260
+[   66.481842]  __do_softirq+0x1cf/0x5ff
+[   66.482174]  ? takeover_tasklets+0x5f0/0x5f0
+[   66.482542]  ? smpboot_thread_fn+0xab/0x780
+[   66.482911]  run_ksoftirqd+0x1a/0x40
+[   66.483225]  smpboot_thread_fn+0x3ad/0x780
+[   66.483583]  ? sort_range+0x20/0x20
+[   66.483894]  ? __kthread_parkme+0xb0/0x190
+[   66.484253]  ? sort_range+0x20/0x20
+[   66.484562]  ? sort_range+0x20/0x20
+[   66.484878]  kthread+0x2e2/0x3e0
+[   66.485166]  ? kthread_create_worker_on_cpu+0xb0/0xb0
+[   66.485620]  ret_from_fork+0x1f/0x30
 
+Same test runs fine before the patches.
 
-The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
-
-  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-tags/devicetree-fixes-for-5.2
-
-for you to fetch changes up to 852d095d16a6298834839f441593f59d58a31978:
-
-  checkpatch.pl: Update DT vendor prefix check (2019-05-22 14:54:49 -0500)
-
-----------------------------------------------------------------
-Devicetree fixes for 5.2:
-
-- Update checkpatch.pl to use DT vendor-prefixes.yaml
-
-- Fix DT binding references to files converted to DT schema
-
-- Clean-up Arm CPU binding examples to match schema
-
-- Add Sifive block versioning scheme documentation
-
-- Pass binding directory base to validation tools for reference lookups
-
-----------------------------------------------------------------
-Kamal Dasu (1):
-      dt: bindings: mtd: replace references to nand.txt with
-nand-controller.yaml
-
-Mauro Carvalho Chehab (1):
-      dt: fix refs that were renamed to json with the same file name
-
-Paul Walmsley (1):
-      dt-bindings: sifive: describe sifive-blocks versioning
-
-Rob Herring (3):
-      dt-bindings: Pass binding directory to validation tools
-      dt-bindings: interrupt-controller: arm,gic: Fix schema errors in example
-      checkpatch.pl: Update DT vendor prefix check
-
-Robin Murphy (1):
-      dt-bindings: arm: Clean up CPU binding examples
-
- Documentation/devicetree/bindings/Makefile         |  2 +-
- Documentation/devicetree/bindings/arm/arm-boards   |  4 +--
- .../devicetree/bindings/arm/cpu-capacity.txt       | 12 +++----
- .../devicetree/bindings/arm/omap/crossbar.txt      |  2 +-
- .../bindings/clock/samsung,s5pv210-clock.txt       |  2 +-
- .../bindings/interrupt-controller/arm,gic.yaml     | 24 +++++++-------
- .../marvell,odmi-controller.txt                    |  2 +-
- .../devicetree/bindings/leds/irled/spi-ir-led.txt  |  2 +-
- .../devicetree/bindings/mtd/amlogic,meson-nand.txt |  2 +-
- .../devicetree/bindings/mtd/brcm,brcmnand.txt      |  6 ++--
- .../devicetree/bindings/mtd/denali-nand.txt        |  6 ++--
- .../devicetree/bindings/mtd/fsmc-nand.txt          |  6 ++--
- .../devicetree/bindings/mtd/gpmc-nand.txt          |  2 +-
- .../devicetree/bindings/mtd/hisi504-nand.txt       |  2 +-
- .../devicetree/bindings/mtd/marvell-nand.txt       | 14 ++++----
- Documentation/devicetree/bindings/mtd/mxc-nand.txt |  6 ++--
- .../bindings/mtd/nvidia-tegra20-nand.txt           |  6 ++--
- .../devicetree/bindings/mtd/oxnas-nand.txt         |  2 +-
- .../devicetree/bindings/mtd/qcom_nandc.txt         |  4 +--
- .../devicetree/bindings/mtd/samsung-s3c2410.txt    |  6 ++--
- .../devicetree/bindings/mtd/stm32-fmc2-nand.txt    |  6 ++--
- .../devicetree/bindings/mtd/tango-nand.txt         |  2 +-
- .../devicetree/bindings/mtd/vf610-nfc.txt          |  8 ++---
- .../sifive/sifive-blocks-ip-versioning.txt         | 38 ++++++++++++++++++++++
- MAINTAINERS                                        |  4 +--
- scripts/Makefile.lib                               |  2 +-
- scripts/checkpatch.pl                              |  4 +--
- 27 files changed, 108 insertions(+), 68 deletions(-)
- create mode 100644
-Documentation/devicetree/bindings/sifive/sifive-blocks-ip-versioning.txt
