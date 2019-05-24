@@ -2,125 +2,67 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6EAC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A7EFC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:54:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31FD0217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:52:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11A0D21848
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:54:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390283AbfEXPwA (ORCPT
+        id S2390011AbfEXPyb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 11:52:00 -0400
-Received: from outbound-smtp25.blacknight.com ([81.17.249.193]:32889 "EHLO
-        outbound-smtp25.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390020AbfEXPwA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 11:52:00 -0400
-Received: from mail.blacknight.com (pemlinmail05.blacknight.ie [81.17.254.26])
-        by outbound-smtp25.blacknight.com (Postfix) with ESMTPS id E2F01B8864
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 16:51:56 +0100 (IST)
-Received: (qmail 32091 invoked from network); 24 May 2019 15:51:56 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[37.228.225.79])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 24 May 2019 15:51:56 -0000
-Date:   Fri, 24 May 2019 16:51:55 +0100
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-mm@kvack.org, akpm@linux-foundation.org, mhocko@suse.com,
-        cai@lca.pw, linux-kernel@vger.kernel.org, marc.zyngier@arm.com,
-        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org
-Subject: Re: [PATCH] mm, compaction: Make sure we isolate a valid PFN
-Message-ID: <20190524155155.GQ18914@techsingularity.net>
-References: <20190524103924.GN18914@techsingularity.net>
- <1558711908-15688-1-git-send-email-suzuki.poulose@arm.com>
+        Fri, 24 May 2019 11:54:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50280 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389385AbfEXPya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 11:54:30 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF841217D7;
+        Fri, 24 May 2019 15:54:29 +0000 (UTC)
+Date:   Fri, 24 May 2019 11:54:28 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Jason Behmer <jbehmer@google.com>
+Cc:     tom.zanussi@linux.intel.com, linux-kernel@vger.kernel.org
+Subject: Re: Nested events with zero deltas, can use absolute timestamps
+ instead?
+Message-ID: <20190524115428.2bf41725@gandalf.local.home>
+In-Reply-To: <CAMmhGqK7LxvR2t=v3NY5Um+EPurtbSfkpPtCAhDagFs_Sz0Kuw@mail.gmail.com>
+References: <CAMmhGqKc27W03roONYXhmwB0dtz5Z8nGoS2MLSsKJ3Zotv5-JA@mail.gmail.com>
+        <20190329125258.2c6fe0cb@gandalf.local.home>
+        <CAMmhGqKPw1sxB_Qc+Z-MXZue+wtAQsQDDgUvjs4JQTVY8bR65g@mail.gmail.com>
+        <20190401222056.3da6e7a7@oasis.local.home>
+        <CAMmhGqL0tvxW_ucJUFKYqRrMRTTfUfRGpm1BnXiEvqFntSXSjQ@mail.gmail.com>
+        <CAMmhGq+8XKBB9GA3J0pwZ6X6Qb1syxKVqNU6i6digtyjMrGyWw@mail.gmail.com>
+        <20190524110048.142efd44@gandalf.local.home>
+        <CAMmhGq+1gZvzR9RwJ6m1MzO1jnTy8yFx8jaRiWpGtZ=E6n9vig@mail.gmail.com>
+        <20190524112457.58b24d89@gandalf.local.home>
+        <CAMmhGqK7LxvR2t=v3NY5Um+EPurtbSfkpPtCAhDagFs_Sz0Kuw@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <1558711908-15688-1-git-send-email-suzuki.poulose@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 04:31:48PM +0100, Suzuki K Poulose wrote:
-> When we have holes in a normal memory zone, we could endup having
-> cached_migrate_pfns which may not necessarily be valid, under heavy memory
-> pressure with swapping enabled ( via __reset_isolation_suitable(), triggered
-> by kswapd).
-> 
-> Later if we fail to find a page via fast_isolate_freepages(), we may
-> end up using the migrate_pfn we started the search with, as valid
-> page. This could lead to accessing NULL pointer derefernces like below,
-> due to an invalid mem_section pointer.
-> 
-> Unable to handle kernel NULL pointer dereference at virtual address 0000000000000008 [47/1825]
->  Mem abort info:
->    ESR = 0x96000004
->    Exception class = DABT (current EL), IL = 32 bits
->    SET = 0, FnV = 0
->    EA = 0, S1PTW = 0
->  Data abort info:
->    ISV = 0, ISS = 0x00000004
->    CM = 0, WnR = 0
->  user pgtable: 4k pages, 48-bit VAs, pgdp = 0000000082f94ae9
->  [0000000000000008] pgd=0000000000000000
->  Internal error: Oops: 96000004 [#1] SMP
->  ...
->  CPU: 10 PID: 6080 Comm: qemu-system-aar Not tainted 510-rc1+ #6
->  Hardware name: AmpereComputing(R) OSPREY EV-883832-X3-0001/OSPREY, BIOS 4819 09/25/2018
->  pstate: 60000005 (nZCv daif -PAN -UAO)
->  pc : set_pfnblock_flags_mask+0x58/0xe8
->  lr : compaction_alloc+0x300/0x950
->  [...]
->  Process qemu-system-aar (pid: 6080, stack limit = 0x0000000095070da5)
->  Call trace:
->   set_pfnblock_flags_mask+0x58/0xe8
->   compaction_alloc+0x300/0x950
->   migrate_pages+0x1a4/0xbb0
->   compact_zone+0x750/0xde8
->   compact_zone_order+0xd8/0x118
->   try_to_compact_pages+0xb4/0x290
->   __alloc_pages_direct_compact+0x84/0x1e0
->   __alloc_pages_nodemask+0x5e0/0xe18
->   alloc_pages_vma+0x1cc/0x210
->   do_huge_pmd_anonymous_page+0x108/0x7c8
->   __handle_mm_fault+0xdd4/0x1190
->   handle_mm_fault+0x114/0x1c0
->   __get_user_pages+0x198/0x3c0
->   get_user_pages_unlocked+0xb4/0x1d8
->   __gfn_to_pfn_memslot+0x12c/0x3b8
->   gfn_to_pfn_prot+0x4c/0x60
->   kvm_handle_guest_abort+0x4b0/0xcd8
->   handle_exit+0x140/0x1b8
->   kvm_arch_vcpu_ioctl_run+0x260/0x768
->   kvm_vcpu_ioctl+0x490/0x898
->   do_vfs_ioctl+0xc4/0x898
->   ksys_ioctl+0x8c/0xa0
->   __arm64_sys_ioctl+0x28/0x38
->   el0_svc_common+0x74/0x118
->   el0_svc_handler+0x38/0x78
->   el0_svc+0x8/0xc
->  Code: f8607840 f100001f 8b011401 9a801020 (f9400400)
->  ---[ end trace af6a35219325a9b6 ]---
-> 
-> The issue was reported on an arm64 server with 128GB with holes in the zone
-> (e.g, [32GB@4GB, 96GB@544GB]), with a swap device enabled, while running 100 KVM
-> guest instances.
-> 
-> This patch fixes the issue by ensuring that the page belongs to a valid PFN
-> when we fallback to using the lower limit of the scan range upon failure in
-> fast_isolate_freepages().
-> 
-> Fixes: 5a811889de10f1eb ("mm, compaction: use free lists to quickly locate a migration target")
-> Reported-by: Marc Zyngier <marc.zyngier@arm.com>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+On Fri, 24 May 2019 08:48:44 -0700
+Jason Behmer <jbehmer@google.com> wrote:
 
-Reviewed-by: Mel Gorman <mgorman@techsingularity.net>
+> Sorry, I'm not sure I follow.  By new tracing option do you mean a new
+> option in the timestamp_mode file?  I guess in that case would that
+> still be the only writable option?  You could write 1/0 to the file
+> which would turn on/off force_absolute_timestamps, and reading the
+> file would show which of absolute, delta, and force_absolute was set?
+> Or did you mean something else by tracing option?
 
--- 
-Mel Gorman
-SUSE Labs
+I mean the options in tracefs/options/*
+
+Do a search for OVERWRITE in kernel/trace/ and see what it does.
+
+-- Steve
