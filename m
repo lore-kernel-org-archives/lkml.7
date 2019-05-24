@@ -2,116 +2,118 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F66C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BA6C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01EE420879
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:54:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D17692133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:55:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558702448;
-	bh=2DPAS6U9MkK6H99Wj2Dj1ObTdbh7LvHGDMm/wdboGNk=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=JkjHKSAz9YEAaRT3FX8NVmlvMQWwfA1XFCn6TKDOcBI7dshAXTr0RhLjsnxIaZKEA
-	 3oBnjIbt2ZpUC8haJyw1yhUuCKudi+3LftMj/+qEQBhYhUl3bo/Ue+QP+BJW/mhP8y
-	 wb+IZSPXuCSkbDHNsP4MOJaiE8XkjyTSt/zrywjo=
+	s=default; t=1558702509;
+	bh=BQFHtZ5dEmvH4qkll2wnSHnFe4of3FdDHtHbvRIZnpo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=HbCQuqtTf7YfzuZplM9lzrkr+g19GL9i2N8ZU4KiD2xyTFOXh3l2OscT5nzfeh5wz
+	 yIMEAVGLL6lDGSoDS1V92bwQLd958bV4K1SiosG8NcYoOJCrY4kX5L2XUSC4WaiCjd
+	 u+EQvDG1maZyMJqoLPhXtJl0+lvlNvI/btK3/rcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391300AbfEXMyH (ORCPT
+        id S2403764AbfEXMzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 08:54:07 -0400
-Received: from mail-pl1-f180.google.com ([209.85.214.180]:39807 "EHLO
-        mail-pl1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390946AbfEXMyG (ORCPT
+        Fri, 24 May 2019 08:55:08 -0400
+Received: from casper.infradead.org ([85.118.1.10]:52268 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390946AbfEXMzH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 08:54:06 -0400
-Received: by mail-pl1-f180.google.com with SMTP id g9so4146058plm.6
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 05:54:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZGrwwhyQGwZ240SOWzANJeQRyK9PCdGpkGuUDnJ+N0A=;
-        b=EAsPCaueLWnwoNyr/vnXSVMuNsyo/PlhQG9ehOCDtc1DJWDcttLmToqf2Z0DbW1Zn4
-         mNWpiQYFW7pebvtP8MqHmPAV3YKULOq6TqevDYaOiJ1svJp50MucFOlhcVVx7jK/gy4n
-         0Hxcii/wREwv13+bukDparIi4vgleyxsfskjo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZGrwwhyQGwZ240SOWzANJeQRyK9PCdGpkGuUDnJ+N0A=;
-        b=LWUlMsBP9S5PPyZj9qNwuNaaTPks/FPCOD5oiiUOoo0q20Js33OUgYoswtpZqTctuG
-         B572JlCsU5w/a29Ojt9g/RrIauy8uKLIYqqP28ut4xs43a6Bl4IpKzwE6JeUr7E9MCWm
-         f5r9MeVOqqU5+Bhs1l9IJYGKwq2nL55asJpiSrj7rn2PbqdG6nqSG0F9wHV6RlLbT+Ma
-         VJpvmtq1IIa63DMlMtEsMh5fJlshOON1LfSpUqn2OcXJUXEDyOlAEK9nkhqmtnEzljMW
-         aAgnzyN8ffdToucF8cmTXPc1Y2P2/9fA6HAi9NTdt/pv8h3Gi7k8+E15bf9ai6+MsGGA
-         46Tg==
-X-Gm-Message-State: APjAAAWPLLTnXM0iEx01lKcU1uwk+UjXrvbae8MALzv2sjSvDKWxaolQ
-        xrQWch5fDYIOUHpz2SjDKskk3WItmDJzQQ==
-X-Google-Smtp-Source: APXvYqxeg+xCGTQIPiHKdyLxz560XprN1Lj94nGLAvX6va+hMM29aYWbnsGzSnMKk1lY0x6Sg9YStw==
-X-Received: by 2002:a17:902:46a:: with SMTP id 97mr77650464ple.66.1558702445881;
-        Fri, 24 May 2019 05:54:05 -0700 (PDT)
-Received: from chatter.i7.local (192-0-228-88.cpe.teksavvy.com. [192.0.228.88])
-        by smtp.gmail.com with ESMTPSA id c14sm2230019pgl.43.2019.05.24.05.54.04
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 24 May 2019 05:54:05 -0700 (PDT)
-Date:   Fri, 24 May 2019 08:54:02 -0400
-From:   Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-To:     Theodore Ts'o <tytso@mit.edu>, Joe Perches <joe@perches.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: PSA: Do not use "Reported-By" without reporter's approval
-Message-ID: <20190524125402.GA616@chatter.i7.local>
-References: <20190522193011.GB21412@chatter.i7.local>
- <7b7287463e830fa8d981dc440f8165622cbc628e.camel@perches.com>
- <20190522195804.GC21412@chatter.i7.local>
- <20190524045708.GH2532@mit.edu>
+        Fri, 24 May 2019 08:55:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=cyQ2oCePc4465xvjRRiSWu3xnwrETc8dIcA8pz3EwJ0=; b=E4iX4UX6mglLfAHRlj9/ZWx+Pu
+        yjmQqjwNzpxIGvni7RskChjxO4ZkWz+4AxWjRGdL/6NO5FLorU4dYd5TmXiM8JGzpnn2J0v82gsPf
+        oap2Y2VrPjk8iSXtkTbSk5vr3DIKak5KbRd3qKasC28pEf8aVn+a5aCiXaeImaL5VKHV5kxDl+8rL
+        DsC2gwUE9Qy87vP6utPhnfZeTZP+gCCKcj8BxEuy+9oKbpuSf6UK8Pj+l8+B5TcI/BthdUA897BIi
+        iaRO0las5/BQy59Sv+piPNCgL/9LhSMmy3jISAVESqnN2tFQ3Sbo91uVu5WwTB+7vmY0prvMP3Mvo
+        cLGtF+rw==;
+Received: from 177.97.63.247.dynamic.adsl.gvt.net.br ([177.97.63.247] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hU9io-0006hg-JZ; Fri, 24 May 2019 12:54:55 +0000
+Date:   Fri, 24 May 2019 09:54:48 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Hans Verkuil <hansverk@cisco.com>, od@zcrc.me,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] media: uapi: Add RGB bus formats for the
+ GiantPlus GPM940B0 panel
+Message-ID: <20190524095448.5eeddc06@coco.lan>
+In-Reply-To: <20190422093722.4344-2-paul@crapouillou.net>
+References: <20190422093722.4344-1-paul@crapouillou.net>
+        <20190422093722.4344-2-paul@crapouillou.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190524045708.GH2532@mit.edu>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 12:57:08AM -0400, Theodore Ts'o wrote:
->> I'm perfectly fine with Link:, however Reported-By: usually has the 
->> person's
->> name and email address (i.e. PII data per GDPR definition). If that pehrson
->> submitted the bug report via bugzilla.kernel.org or a similar resource,
->> their expectation is that they can delete their account should they choose
->> to to do so. However, if the patch containing Reported-By is committed to
->> git, their PII becomes permanently and immutably recorded for any reasonable
->> meaning of the word "forever."
->
->Many (most?) bugzilla.kernel.org components result in e-mail getting
->sent to vger.kernel.org mailing lists.  So even if they delete the
->bugzilla account, there e-mail will be immortalized in lore.kernel.org
->and their associated git repositories.
+Em Mon, 22 Apr 2019 11:37:21 +0200
+Paul Cercueil <paul@crapouillou.net> escreveu:
 
-I wouldn't say that most -- to my knowledge, it's only about 5-6 
-components of the 50+. It's hard to tell how much that is by volume, 
-though, because certainly not all components see much activity.
+> The GiantPlus GPM940B0 is a 24-bit TFT panel where the RGB components
+> are transferred sequentially on a 8-bit bus.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+> 
+> Notes:
+>     v2: New patch
+>     
+>     v3: No change
+> 
+>  include/uapi/linux/media-bus-format.h | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/uapi/linux/media-bus-format.h b/include/uapi/linux/media-bus-format.h
+> index d6a5a3bfe6c4..f31724d6cd40 100644
+> --- a/include/uapi/linux/media-bus-format.h
+> +++ b/include/uapi/linux/media-bus-format.h
+> @@ -34,7 +34,7 @@
+>  
+>  #define MEDIA_BUS_FMT_FIXED			0x0001
+>  
+> -/* RGB - next is	0x101b */
+> +/* RGB - next is	0x101d */
+>  #define MEDIA_BUS_FMT_RGB444_1X12		0x1016
+>  #define MEDIA_BUS_FMT_RGB444_2X8_PADHI_BE	0x1001
+>  #define MEDIA_BUS_FMT_RGB444_2X8_PADHI_LE	0x1002
+> @@ -54,6 +54,8 @@
+>  #define MEDIA_BUS_FMT_RGB888_1X24		0x100a
+>  #define MEDIA_BUS_FMT_RGB888_2X12_BE		0x100b
+>  #define MEDIA_BUS_FMT_RGB888_2X12_LE		0x100c
+> +#define MEDIA_BUS_FMT_RGB888_3X8_BE		0x101b
+> +#define MEDIA_BUS_FMT_RGB888_3X8_LE		0x101c
+>  #define MEDIA_BUS_FMT_RGB888_1X7X4_SPWG		0x1011
+>  #define MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA	0x1012
+>  #define MEDIA_BUS_FMT_ARGB8888_1X32		0x100d
 
-We *can* excise things on lore.kernel.org. It's a massive pain, since 
-message archive is a git repository itself, so will need to be rebased, 
-reindexed and remirrored -- but it *is* possible. On the other hand, 
-once a commit makes it into the kernel's git tree, it becomes impossible 
-to edit it without affecting the PGP integrity of all git tags following 
-it. Since PGP signatures can be considered a core aspect of the git tree 
-integrity, we can then argue that editing commit history of linux.git is 
-unreasonable per GDPR's own guidelines. We can't make the same claim 
-about lists on lore.kernel.org.
+You should also patch the documentation text at:
 
->So perhaps a better approach is to put a warning alerting bug
->reporters that submitting a bug means their e-mail will end up get
->broadcasting in public mailing list archives and public git
->repositories?
+	Documentation/media/uapi/v4l/subdev-formats.rst
 
-That's probably something we should do. I'll investigate it.
+In order to describe the new formats that will be included.
 
--K
+(also patch needs to be rebased, as it conflicts to some other
+new formats added there)
+
+Thanks,
+Mauro
