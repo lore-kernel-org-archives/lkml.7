@@ -2,118 +2,100 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2CCEC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D85C282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71E8721773
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:13:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fA/5THbk"
+	by mail.kernel.org (Postfix) with ESMTP id 734D821848
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:13:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391509AbfEXSND (ORCPT
+        id S1731968AbfEXSNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 14:13:03 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36575 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726869AbfEXSND (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 14:13:03 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v22so2849151wml.1
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 11:13:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=w4aq75m0l1tw9tA8/0+sCX4bioCRlGyWir4CZV+DPO0=;
-        b=fA/5THbk3ENmZGXlI5FHc7o2G8j2dmoZhHvYA76vVvdAS8oys36o2R1+nbbJPCiDU9
-         E0QZ9eaCwl1gWNBpuAbmXSQ9nD04yQyj6NP4Vd80tmyX73vr98LOoV1uBAShQOP/G20r
-         KD23YyL53Lkk+HkGMTWdQgF8dU5jJdQWdHxwCb/cNsyk0I9gYghbS8lcjk25iWVbYPyx
-         00ID/ldljPmVYVytroPOSF5HhtNeuYu5CkRmlpzpEPSwfSnIpynpkuRhXKEuJULlUoyU
-         vT5yHOXiUMHbhvaw21tU5VTtTRjPCQVPwiZ5r2tEqzcW8/KrQMNknJRl57K66dJT4e9H
-         DeNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=w4aq75m0l1tw9tA8/0+sCX4bioCRlGyWir4CZV+DPO0=;
-        b=csNICWEb27nTF0Po9zNVC44D7UB5TISVaLznUJp5Jyv+HFUVHgfqBJ8aWqVHWFmOo4
-         wnAY6eWFblV4oJ1tx6XngObtdbsY34AMzIHWMFOMp5U+zow3YtZrm4EhqK+nMJVCZKi5
-         NMBZGrAs4IHEL0SJf94aCm9xhurQeIHLCCxqzMsUyXtAYRAHaF86ym6vdOAZn9lWVXtx
-         zicEPn6X7buNnR8UmG3MeagwqNTyQbEBwT6TWR0caX34x2mG/6eUzHrOgLAVvff8Fgj0
-         KgZDKp9cp2CrksEGY9hy1NqyRWVgFqbzZaHR2zWMta0Ms9aYpXjjbq4pst8egIN/mvuE
-         dS+g==
-X-Gm-Message-State: APjAAAXqgVd3aLhnDcWZPLGgOGSYI1PELEW8BLU5a4XZLWFdVo/dMk0m
-        o2jdAiG+FvleX1nxknQZ9GwZ3/w=
-X-Google-Smtp-Source: APXvYqyOhmb3KTv9YwhRl1oa2dwlHjCpZIGtQmZEyeT4tKvxxCzF1FHDDDmSZJEcTYiw5VkWGHyilQ==
-X-Received: by 2002:a1c:c912:: with SMTP id f18mr16913695wmb.118.1558721581064;
-        Fri, 24 May 2019 11:13:01 -0700 (PDT)
-Received: from avx2 ([46.53.250.220])
-        by smtp.gmail.com with ESMTPSA id r4sm2025722wrv.34.2019.05.24.11.13.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 11:13:00 -0700 (PDT)
-Date:   Fri, 24 May 2019 21:12:56 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] proc: hide "segfault at ffffffffff600000" dmesg spam
-Message-ID: <20190524181256.GA2260@avx2>
+        Fri, 24 May 2019 14:13:47 -0400
+Received: from mga06.intel.com ([134.134.136.31]:5504 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727201AbfEXSNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 14:13:47 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 May 2019 11:13:46 -0700
+X-ExtLoop1: 1
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga007.fm.intel.com with ESMTP; 24 May 2019 11:13:45 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 74736146; Fri, 24 May 2019 21:13:44 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1] mfd: intel-lpss: Keep device tables sorted by ID
+Date:   Fri, 24 May 2019 21:13:44 +0300
+Message-Id: <20190524181344.70653-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Test tries to access vsyscall page and if it doesn't exist gets SIGSEGV
-which can spam into dmesg. However the segfault happens by design.
-Handle it and carry information via exit code to parent.
+Easier to find and maintain if the device tables sorted by ID.
+Do it here for intel-lpss MFD driver.
 
-Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
+ drivers/mfd/intel-lpss-pci.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
- tools/testing/selftests/proc/proc-pid-vm.c |   17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
+index 417569482481..40490a822c4c 100644
+--- a/drivers/mfd/intel-lpss-pci.c
++++ b/drivers/mfd/intel-lpss-pci.c
+@@ -186,10 +186,10 @@ static const struct pci_device_id intel_lpss_pci_ids[] = {
+ 	{ PCI_VDEVICE(INTEL, 0x31bc), (kernel_ulong_t)&bxt_uart_info },
+ 	{ PCI_VDEVICE(INTEL, 0x31be), (kernel_ulong_t)&bxt_uart_info },
+ 	{ PCI_VDEVICE(INTEL, 0x31c0), (kernel_ulong_t)&bxt_uart_info },
+-	{ PCI_VDEVICE(INTEL, 0x31ee), (kernel_ulong_t)&bxt_uart_info },
+ 	{ PCI_VDEVICE(INTEL, 0x31c2), (kernel_ulong_t)&bxt_info },
+ 	{ PCI_VDEVICE(INTEL, 0x31c4), (kernel_ulong_t)&bxt_info },
+ 	{ PCI_VDEVICE(INTEL, 0x31c6), (kernel_ulong_t)&bxt_info },
++	{ PCI_VDEVICE(INTEL, 0x31ee), (kernel_ulong_t)&bxt_uart_info },
+ 	/* ICL-LP */
+ 	{ PCI_VDEVICE(INTEL, 0x34a8), (kernel_ulong_t)&spt_uart_info },
+ 	{ PCI_VDEVICE(INTEL, 0x34a9), (kernel_ulong_t)&spt_uart_info },
+@@ -236,7 +236,6 @@ static const struct pci_device_id intel_lpss_pci_ids[] = {
+ 	{ PCI_VDEVICE(INTEL, 0x9da9), (kernel_ulong_t)&spt_uart_info },
+ 	{ PCI_VDEVICE(INTEL, 0x9daa), (kernel_ulong_t)&spt_info },
+ 	{ PCI_VDEVICE(INTEL, 0x9dab), (kernel_ulong_t)&spt_info },
+-	{ PCI_VDEVICE(INTEL, 0x9dfb), (kernel_ulong_t)&spt_info },
+ 	{ PCI_VDEVICE(INTEL, 0x9dc5), (kernel_ulong_t)&cnl_i2c_info },
+ 	{ PCI_VDEVICE(INTEL, 0x9dc6), (kernel_ulong_t)&cnl_i2c_info },
+ 	{ PCI_VDEVICE(INTEL, 0x9dc7), (kernel_ulong_t)&spt_uart_info },
+@@ -244,6 +243,7 @@ static const struct pci_device_id intel_lpss_pci_ids[] = {
+ 	{ PCI_VDEVICE(INTEL, 0x9de9), (kernel_ulong_t)&cnl_i2c_info },
+ 	{ PCI_VDEVICE(INTEL, 0x9dea), (kernel_ulong_t)&cnl_i2c_info },
+ 	{ PCI_VDEVICE(INTEL, 0x9deb), (kernel_ulong_t)&cnl_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x9dfb), (kernel_ulong_t)&spt_info },
+ 	/* SPT-H */
+ 	{ PCI_VDEVICE(INTEL, 0xa127), (kernel_ulong_t)&spt_uart_info },
+ 	{ PCI_VDEVICE(INTEL, 0xa128), (kernel_ulong_t)&spt_uart_info },
+@@ -268,12 +268,12 @@ static const struct pci_device_id intel_lpss_pci_ids[] = {
+ 	{ PCI_VDEVICE(INTEL, 0xa329), (kernel_ulong_t)&spt_uart_info },
+ 	{ PCI_VDEVICE(INTEL, 0xa32a), (kernel_ulong_t)&spt_info },
+ 	{ PCI_VDEVICE(INTEL, 0xa32b), (kernel_ulong_t)&spt_info },
+-	{ PCI_VDEVICE(INTEL, 0xa37b), (kernel_ulong_t)&spt_info },
+ 	{ PCI_VDEVICE(INTEL, 0xa347), (kernel_ulong_t)&spt_uart_info },
+ 	{ PCI_VDEVICE(INTEL, 0xa368), (kernel_ulong_t)&cnl_i2c_info },
+ 	{ PCI_VDEVICE(INTEL, 0xa369), (kernel_ulong_t)&cnl_i2c_info },
+ 	{ PCI_VDEVICE(INTEL, 0xa36a), (kernel_ulong_t)&cnl_i2c_info },
+ 	{ PCI_VDEVICE(INTEL, 0xa36b), (kernel_ulong_t)&cnl_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0xa37b), (kernel_ulong_t)&spt_info },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(pci, intel_lpss_pci_ids);
+-- 
+2.20.1
 
---- a/tools/testing/selftests/proc/proc-pid-vm.c
-+++ b/tools/testing/selftests/proc/proc-pid-vm.c
-@@ -215,6 +215,11 @@ static const char str_vsyscall[] =
- "ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0                  [vsyscall]\n";
- 
- #ifdef __x86_64__
-+static void sigaction_SIGSEGV(int _, siginfo_t *__, void *___)
-+{
-+	_exit(1);
-+}
-+
- /*
-  * vsyscall page can't be unmapped, probe it with memory load.
-  */
-@@ -231,11 +236,19 @@ static void vsyscall(void)
- 	if (pid == 0) {
- 		struct rlimit rlim = {0, 0};
- 		(void)setrlimit(RLIMIT_CORE, &rlim);
-+
-+		/* Hide "segfault at ffffffffff600000" messages. */
-+		struct sigaction act;
-+		memset(&act, 0, sizeof(struct sigaction));
-+		act.sa_flags = SA_SIGINFO;
-+		act.sa_sigaction = sigaction_SIGSEGV;
-+		(void)sigaction(SIGSEGV, &act, NULL);
-+
- 		*(volatile int *)0xffffffffff600000UL;
- 		exit(0);
- 	}
--	wait(&wstatus);
--	if (WIFEXITED(wstatus)) {
-+	waitpid(pid, &wstatus, 0);
-+	if (WIFEXITED(wstatus) && WEXITSTATUS(wstatus) == 0) {
- 		g_vsyscall = true;
- 	}
- }
