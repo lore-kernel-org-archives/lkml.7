@@ -2,74 +2,62 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30098C282E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAFBEC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0840F2133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:16:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A75D62133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:16:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391839AbfEXUQQ (ORCPT
+        id S2404063AbfEXUQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 16:16:16 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:33752 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391816AbfEXUQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 16:16:16 -0400
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1hUGbu-00032N-CE; Fri, 24 May 2019 14:16:15 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1hUGbu-00026Q-4D; Fri, 24 May 2019 14:16:14 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Fri, 24 May 2019 14:16:07 -0600
-Message-Id: <20190524201610.8039-1-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH 0/3] Cleanup resource_alignment parameter
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+        Fri, 24 May 2019 16:16:52 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:42590 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391739AbfEXUQw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 16:16:52 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d8])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6363514DE103B;
+        Fri, 24 May 2019 13:16:51 -0700 (PDT)
+Date:   Fri, 24 May 2019 13:16:50 -0700 (PDT)
+Message-Id: <20190524.131650.1001639096871571503.davem@davemloft.net>
+To:     yangbo.lu@nxp.com
+Cc:     netdev@vger.kernel.org, richardcochran@gmail.com,
+        claudiu.manoil@nxp.com, shawnguo@kernel.org, robh+dt@kernel.org,
+        alexandru.marginean@nxp.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2, 0/4] ENETC: support hardware timestamping
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190523023451.2933-1-yangbo.lu@nxp.com>
+References: <20190523023451.2933-1-yangbo.lu@nxp.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 24 May 2019 13:16:51 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a follow up to the cleanup I started last cycle on the
-resource_alignment parameter after finding an improved way to do handle
-the static buffer for the disable_acs_redir parameter. So this patchset
-allows us to drop a significant chunk of static data.
+From: "Y.b. Lu" <yangbo.lu@nxp.com>
+Date: Thu, 23 May 2019 02:33:24 +0000
 
-Per the discussion last cycle, this version keeps the spin locks
-(instead of the RCU implementation) and splits the change into a
-couple different patches.
+> This patch-set is to support hardware timestamping for ENETC
+> and also to add ENETC 1588 timer device tree node for ls1028a.
+> 
+> Because the ENETC RX BD ring dynamic allocation has not been
+> supported and it is too expensive to use extended RX BDs
+> if timestamping is not used, a Kconfig option is used to
+> enable extended RX BDs in order to support hardware
+> timestamping. This option will be removed once RX BD
+> ring dynamic allocation is implemented.
 
-Thanks,
-
-Logan
-
---
-
-Logan Gunthorpe (3):
-  PCI: Clean up resource_alignment parameter to not require static
-    buffer
-  PCI: Move pci_[get|set]_resource_alignment_param() into their callers
-  PCI: Force trailing new line to resource_alignment_param in sysfs
-
- drivers/pci/pci.c | 65 +++++++++++++++++++++++++----------------------
- 1 file changed, 35 insertions(+), 30 deletions(-)
-
---
-2.20.1
+Series applied.
