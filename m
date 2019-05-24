@@ -2,116 +2,236 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C7EAC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15388C282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03423217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:38:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC52C21851
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:39:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CTOtH5sH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391230AbfEXSit (ORCPT
+        id S2391485AbfEXSjG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 14:38:49 -0400
-Received: from foss.arm.com ([217.140.101.70]:48816 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727344AbfEXSit (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 14:38:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7A341A78;
-        Fri, 24 May 2019 11:38:48 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 44BC53F703;
-        Fri, 24 May 2019 11:38:47 -0700 (PDT)
-Subject: Re: [PATCH v3 4/4] arm64: mm: Implement pte_devmap support
-To:     Will Deacon <will.deacon@arm.com>
-Cc:     linux-mm@kvack.org, akpm@linux-foundation.org,
-        catalin.marinas@arm.com, anshuman.khandual@arm.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <cover.1558547956.git.robin.murphy@arm.com>
- <817d92886fc3b33bcbf6e105ee83a74babb3a5aa.1558547956.git.robin.murphy@arm.com>
- <20190524180805.GA9697@fuggles.cambridge.arm.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <9ef54c1b-b9a5-ed13-b9d6-65e7c4af0a75@arm.com>
-Date:   Fri, 24 May 2019 19:38:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 24 May 2019 14:39:06 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:45669 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727344AbfEXSjF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 14:39:05 -0400
+Received: by mail-ed1-f66.google.com with SMTP id g57so789431edc.12;
+        Fri, 24 May 2019 11:39:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+zWh+e2JBmSZjNxmHFCEsBAIMZEj3CfViqQesJhg4Ew=;
+        b=CTOtH5sH91k5oEblppyj2vdbuh9y9ChOJPokmxaW0k6iTVIM1Pij22UGRVBgXTMvDA
+         NmJvUumCc4rqDN0MZ1BJQ7kcaYPRkP3tkS0ESt1DltSl/8MBQfQcCfbi6o/zxI/nqeC9
+         CDF8JCiH9Z9qHEvy+aB+K27NleoD2JMlp6i8w6q8J42i2qONpTIQklfQkNbfg8vKb9vM
+         4YcA0ZHiz6oaQ5p+zjWeMzERFBV33QNTXEHogeFJIFGZMB39ckOYr0aGslZ6zgtDtaAD
+         H+uDeOsDDWE2igje7Yp/HaNmel0rqbwsllmtWEDE8AGdVGKZBwTcTU5FnMO6A/blQ55f
+         yP+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+zWh+e2JBmSZjNxmHFCEsBAIMZEj3CfViqQesJhg4Ew=;
+        b=BLtX8cgO4zrOza9qJOPpEY31DOY1XbQZELEiY7U0uYye2/uMRXLag1287QVLCzk0Bk
+         Q8adgtNm3GztsNSTXfmYNmVe7bJcCSOBw57jJae44jIMnDpve0315prVuKqEdag1O5cF
+         /OzAiLd+p2kviMeeXMTLnNeyBw4fW4RE2i6gDcDMk8NUxS0/RjiKm52iHDbtz01tzkDF
+         GeijTSegOy9v8JkbPWgLdgmQL11HiX77RSfNMSAnvM3d05AjvaRXrQkw3Gm+VtBhQnV0
+         RfbmwiSzFJqe0b5zKFq/x/fC2qhTiwtgLGUkWsonGkbQgqcphBWx7oc1vB74JyoPrRed
+         HVmg==
+X-Gm-Message-State: APjAAAXA/mibmy0JqpnqzUvgYAILalbt6zbV54i/zBuDqjQP2sJ6Xxy/
+        pKYSpDtuKWZTCjc9klVYQ/cf0hT5GoBWPRRS1jM=
+X-Google-Smtp-Source: APXvYqwKSk+tkXqI7m1a/B0AuT5MCsz5lL0eOqG1GRFEo7/oVeuc+C1m4SijaJVC+vBe/rRUNLzKhlRrwBuRlXTIGXs=
+X-Received: by 2002:a50:f9cc:: with SMTP id a12mr106818668edq.272.1558723142887;
+ Fri, 24 May 2019 11:39:02 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190524180805.GA9697@fuggles.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20180927224609.19515-1-robdclark@gmail.com> <20181029191000.GD16739@arm.com>
+ <CAF6AEGtgC0V6ii2=p2HGmqvHFKNJhaOLi8873SGPDsrg70xGRg@mail.gmail.com>
+ <20181113063225.GA3109@brain-police> <CAF6AEGuV2zh97iq+TgkRw0bK3VNSxJieD1N2KMW3N28h07M+0w@mail.gmail.com>
+ <20181126193147.GB534@arm.com>
+In-Reply-To: <20181126193147.GB534@arm.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Fri, 24 May 2019 11:38:49 -0700
+Message-ID: <CAF6AEGurwA-+h-dTH9nTBUknZOcw+7w-=_oRtNSrV9ZqjLDZvQ@mail.gmail.com>
+Subject: Re: [PATCH] iommu: arm-smmu: Set SCTLR.HUPCF bit
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <joro@8bytes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/05/2019 19:08, Will Deacon wrote:
-> On Thu, May 23, 2019 at 04:03:16PM +0100, Robin Murphy wrote:
->> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
->> index 2c41b04708fe..a6378625d47c 100644
->> --- a/arch/arm64/include/asm/pgtable.h
->> +++ b/arch/arm64/include/asm/pgtable.h
->> @@ -90,6 +90,7 @@ extern unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)];
->>   #define pte_write(pte)		(!!(pte_val(pte) & PTE_WRITE))
->>   #define pte_user_exec(pte)	(!(pte_val(pte) & PTE_UXN))
->>   #define pte_cont(pte)		(!!(pte_val(pte) & PTE_CONT))
->> +#define pte_devmap(pte)		(!!(pte_val(pte) & PTE_DEVMAP))
->>   
->>   #define pte_cont_addr_end(addr, end)						\
->>   ({	unsigned long __boundary = ((addr) + CONT_PTE_SIZE) & CONT_PTE_MASK;	\
->> @@ -217,6 +218,11 @@ static inline pmd_t pmd_mkcont(pmd_t pmd)
->>   	return __pmd(pmd_val(pmd) | PMD_SECT_CONT);
->>   }
->>   
->> +static inline pte_t pte_mkdevmap(pte_t pte)
->> +{
->> +	return set_pte_bit(pte, __pgprot(PTE_DEVMAP));
->> +}
->> +
->>   static inline void set_pte(pte_t *ptep, pte_t pte)
->>   {
->>   	WRITE_ONCE(*ptep, pte);
->> @@ -381,6 +387,9 @@ static inline int pmd_protnone(pmd_t pmd)
->>   
->>   #define pmd_mkhuge(pmd)		(__pmd(pmd_val(pmd) & ~PMD_TABLE_BIT))
->>   
->> +#define pmd_devmap(pmd)		pte_devmap(pmd_pte(pmd))
->> +#define pmd_mkdevmap(pmd)	pte_pmd(pte_mkdevmap(pmd_pte(pmd)))
->> +
->>   #define __pmd_to_phys(pmd)	__pte_to_phys(pmd_pte(pmd))
->>   #define __phys_to_pmd_val(phys)	__phys_to_pte_val(phys)
->>   #define pmd_pfn(pmd)		((__pmd_to_phys(pmd) & PMD_MASK) >> PAGE_SHIFT)
->> @@ -537,6 +546,11 @@ static inline phys_addr_t pud_page_paddr(pud_t pud)
->>   	return __pud_to_phys(pud);
->>   }
->>   
->> +static inline int pud_devmap(pud_t pud)
->> +{
->> +	return 0;
->> +}
->> +
->>   /* Find an entry in the second-level page table. */
->>   #define pmd_index(addr)		(((addr) >> PMD_SHIFT) & (PTRS_PER_PMD - 1))
->>   
->> @@ -624,6 +638,11 @@ static inline phys_addr_t pgd_page_paddr(pgd_t pgd)
->>   
->>   #define pgd_ERROR(pgd)		__pgd_error(__FILE__, __LINE__, pgd_val(pgd))
->>   
->> +static inline int pgd_devmap(pgd_t pgd)
->> +{
->> +	return 0;
->> +}
-> 
-> I think you need to guard this and pXd_devmap() with
-> CONFIG_TRANSPARENT_HUGEPAGE, otherwise you'll conflict with the dummy
-> definitions in mm.h and the build will fail.
+On Mon, Nov 26, 2018 at 11:31 AM Will Deacon <will.deacon@arm.com> wrote:
+>
+> Hi Rob,
+>
+> On Tue, Nov 13, 2018 at 08:12:35AM -0500, Rob Clark wrote:
+> > On Tue, Nov 13, 2018 at 1:32 AM Will Deacon <will.deacon@arm.com> wrote:
+> > > On Fri, Nov 09, 2018 at 01:01:55PM -0500, Rob Clark wrote:
+> > > > On Mon, Oct 29, 2018 at 3:09 PM Will Deacon <will.deacon@arm.com> wrote:
+> > > > > On Thu, Sep 27, 2018 at 06:46:07PM -0400, Rob Clark wrote:
+> > > > > > We seem to need to set either this or CFCFG (stall), otherwise gpu
+> > > > > > faults trigger problems with other in-flight transactions from the
+> > > > > > GPU causing CP errors, etc.
+> > > > > >
+> > > > > > In the ARM SMMU spec, the 'Hit under previous context fault' bit is
+> > > > > > described as:
+> > > > > >
+> > > > > >  '0' - Stall or terminate subsequent transactions in the presence
+> > > > > >        of an outstanding context fault
+> > > > > >  '1' - Process all subsequent transactions independently of any
+> > > > > >        outstanding context fault.
+> > > > > >
+> > > > > > Since we don't enable CFCFG (stall) the behavior of terminating
+> > > > > > other transactions makes sense.  And is probably not what we want
+> > > > > > (and definately not what we want for GPU).
+> > > > > >
+> > > > > > Signed-off-by: Rob Clark <robdclark@gmail.com>
+> > > > > > ---
+> > > > > > So I hit this issue a long time back on 820 (msm8996) and at the
+> > > > > > time I solved it with a patch that enabled CFCFG.  And it resurfaced
+> > > > > > more recently on sdm845.  But at the time CFCFG was rejected, iirc
+> > > > > > because of concern that it would cause problems on other non-qcom
+> > > > > > arm smmu implementations.  And I think I forgot to send this version
+> > > > > > of the solution.
+> > > > > >
+> > > > > > If enabling HUPCF is anticipated to cause problems on other ARM
+> > > > > > SMMU implementations, I think I can come up with a variant of this
+> > > > > > patch which conditionally enables it for snapdragon.
+> > > > > >
+> > > > > > Either way, I'd really like to get some variant of this fix merged
+> > > > > > (and probably it would be a good idea for stable kernel branches
+> > > > > > too), since current behaviour with the GPU means faults turn into
+> > > > > > a fantastic cascade of fail.
+> > > > >
+> > > > > Can you describe how this fantastic cascade of fail improves with this
+> > > > > patch, please? If you're getting context faults then something has already
+> > > > > gone horribly wrong, so I'm trying to work out how this improves things.
+> > > > >
+> > > >
+> > > > There are plenty of cases where getting iommu faults with a GPU is
+> > > > "normal", or at least not something the kernel or even GL driver can
+> > > > control.
+> > >
+> > > Such as? All the mainline driver does is print a diagnostic and clear the
+> > > fault, which doesn't seem generally useful.
+> >
+> > it is useful to debug the fault ;-)
+> >
+> > Although eventually we'll want to be able to do more than that, like
+> > have the fault trigger bringing in pages of a mmap'd file and that
+> > sort of thing.
+>
+> Right, and feels very strange to me if we have this bit set because it
+> means that your fault is no longer synchronous and therefore diverges
+> from the fault model that you get from the CPU, where you certainly
+> wouldn't expect stores appearing in the program after a faulting load to
+> be visible in memory. However, thinking harder about it, I suppose we're
+> already in a situation where the translations are handled out of order
+> in the absence of barriers, so maybe it's not the end of the world.
+>
+> Could you dump the FSR value that you see in the fault handler, please?
+> From my reading of the architecture spec, as long as clear all of the
+> fault bits in the irq handler, then your machine shouldn't die like it
+> does with HUPCFG=CFCFG=0..
 
-Ah, right you are - I got as far as catching similar issues with 
-CONFIG_PGTABLE_LEVELS, but apparently I failed to spot the !THP guards 
-in x86 and powerpc. Let me give this one a tweak and test a wider range 
-of configs...
 
-Robin.
+Getting back to this after realizing I lost SCTLR.HUPCF patch that I
+was carrying locally when rebasing.  Here is an example dump (w/ FSR)
+of what happens:
+
+
+
+[May24 14:33] arm-smmu 5040000.iommu: Unhandled context fault:
+fsr=0x402, iova=0x7ffe35c0, fsynr=0x1, cb=1
+[  +0.000034] adreno 5000000.gpu: CP illegal instruction error
+[  +0.000036] adreno 5000000.gpu: CP illegal instruction error
+[  +0.000017] adreno 5000000.gpu: CP illegal instruction error
+[  +0.000017] adreno 5000000.gpu: CP illegal instruction error
+[  +0.000015] adreno 5000000.gpu: CP illegal instruction error
+[  +0.000016] adreno 5000000.gpu: CP illegal instruction error
+[  +0.000076] adreno 5000000.gpu: CP illegal instruction error
+[  +0.000015] adreno 5000000.gpu: CP illegal instruction error
+[  +0.000016] adreno 5000000.gpu: CP illegal instruction error
+[  +0.000015] adreno 5000000.gpu: CP illegal instruction error
+[  +0.047100] adreno 5000000.gpu: [drm:a6xx_irq] *ERROR* gpu fault
+ring 0 fence 8 status 00800005 rb 0047/0047 ib1 0000000001CC7000/0000
+ib2 0000000001CC5000/0000
+[  +0.000106] msm ae00000.mdss: [drm:recover_worker] *ERROR* A630:
+hangcheck recover!
+[  +0.000380] msm ae00000.mdss: [drm:recover_worker] *ERROR* A630:
+offending task: d:flush_queue0 (./deqp-gles31 --deqp-visibility=hidden
+--deqp-caselist-file=regressions
+--deqp-log-filename=results/FD630/regressions.qpa
+--deqp-surface-type=fbo --deqp-surface-width=256
+--deqp-surface-height=256)
+[  +0.501297] adreno 5000000.gpu: [drm:a6xx_irq] *ERROR* gpu fault
+ring 0 fence 8 status 00800005 rb 0047/0047 ib1 0000000 ib2
+0000/001CC500000
+[  +0.051307] revision: 630 (6.3.0.2)
+[  +0.000006] rb 0: fence:    6/8
+[  +0.000003] rptr:     24
+[  +0.000002] rb wptr:  71
+
+
+The 'CP illegal instruction error's and following gpu fault are the
+result of the faulting read from the GPU causing other non-faulting
+reads to return zero.
+
+
+Note that enabling STALL (CFCFG) also avoids this problem.  I suppose
+maybe setting CFCFG for implementation==QCOM_SMMUV2 would be a better
+idea?
+
+BR,
+-R
+
+> > > > With this patch, you still get the iommu fault, but it doesn't cause
+> > > > the gpu to crash.  But without it, other memory accesses in flight
+> > > > while the fault occurs, like the GPU command-processor reading further
+> > > > ahead in the cmdstream to setup next draw, would return zero's,
+> > > > causing the GPU to crash or get into a bad state.
+> > >
+> > > I get that part, but I don't understand why we're seeing faults in the first
+> > > place and I worry that this patch is just the tip of the iceberg. It's also
+> > > not clear that processing subsequent transactions is always the right thing
+> > > to do in a world where we actually want to report (and handle) synchronous
+> > > faults from devices.
+> >
+> > Sure, it is a bug.. but it can be an application bug that is not
+> > something the userspace GL driver or kernel could do anything about.
+> > We shouldn't let this kill the GPU.  If the application didn't have
+> > this much control, we wouldn't need an IOMMU in the first place[1].
+> > With opencl compute, the userspace controlled shader has full blown
+> > pointers to GPU memory.
+> >
+> > And even in cases where it is a userspace GL driver bug, having some
+> > robustness to not completely kill the GPU makes debugging much easier.
+> > Something I do a lot when bringing up support for a new generation of
+> > GPU.
+> >
+> > I'm having a hard time understanding your objection to this.
+> > Returning zero's for non-faulting transactions is a *really bad idea*.
+>
+> Wait -- who said anything about returning zeroes? Where does that behaviour
+> appear in the architecture?
+>
+> Will
