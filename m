@@ -2,111 +2,93 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA60C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:02:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F4FC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69D42217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:02:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1284521850
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:05:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oRa09WzY"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="YYbVYxF6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731898AbfEXFC6 (ORCPT
+        id S1731816AbfEXFFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 01:02:58 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:38944 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726156AbfEXFC6 (ORCPT
+        Fri, 24 May 2019 01:05:47 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:42711 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726450AbfEXFFr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 01:02:58 -0400
-Received: by mail-ed1-f66.google.com with SMTP id e24so12487189edq.6;
-        Thu, 23 May 2019 22:02:56 -0700 (PDT)
+        Fri, 24 May 2019 01:05:47 -0400
+Received: by mail-vs1-f67.google.com with SMTP id z11so4962030vsq.9
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 22:05:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=sifive.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=cKIZDHhM23UDx19n3GdofpP2QbyBXWvdFRSPtj7m9HE=;
-        b=oRa09WzYVDPLaZ5iPjcgR/bdIyyuzBl/O6xLgj1mU3su+ZBKB6CTACAztrwNZRHF/z
-         zacN60isAAh630eywgOtMVB/pSfUCxtSzA/9F3IrWGJd9rwpVzB0TdEwG4H4Y1RR18LO
-         MFvS0kFs4D2zRrX60Y84cF6DxY6mtyc6+cYaCjdn8hL38av9jkWagvo3EkVcXVZppKyr
-         MydepX+75ROuH7POzzS+CziyKp9ObYCStkZqFSY1b7YTaqk1Ah8aYbPtWOSnsA28i/H8
-         F0Byu4s7Ntw1fzM2lO8xZZDnJ8pcw3fIoteLVoiKsrrJAqW3ZV6ds0r5EjeF4YNzz5Vi
-         llBw==
+         :cc;
+        bh=tKVly6OsjAP22H8YmM5rdYdS5YdPghJ8QErKTSHa7AM=;
+        b=YYbVYxF6Q9/uYNoqs8vrH9SJmroJSJaP37lSIzKdWSzQBcJ/xpe2IYe/QqzKtLyQQD
+         +mgzMgT2mWRdPK2QGhjlfc3yBnWAp5Ugakm4AXKL10W+s6VPjL7KSE/mPQqdO2jAuY9R
+         jf4ODaHOOT2EB/XZicSIGzsKK8LptVeP+GAkepgZi4qO4rN/gLOtSbDi0mtSiw5If5Vl
+         xWec84BewQq084f38kXoEm2IzhMH45y7lMNMpOu6fWzJsvZC8dynWdPX2BRPH1exFtTS
+         6ObR92e+wS3VYIC0gN9Rx7wm/IRdcq5Vc0Ji0MLRNS/TOHs/bRN/0WfvlzFiBfPd18Uj
+         7+7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=cKIZDHhM23UDx19n3GdofpP2QbyBXWvdFRSPtj7m9HE=;
-        b=Ishs46iAlERNRe+EfI9+eV/YlJ4fIfZvtjbvEXyJPINfGh8mbE7/Pxd/krg2xro4EY
-         021B2IMavKtROkFNZZwy/xVHvpHefXryt0N7A38s1KdDQiExsQv2v6tV4w3v8Vh3t98O
-         FzpyNMknFbPfG3+K/S/OotThhZQLKq+AbKRFdIhlTYqKKCbMphLh58K1oWB0zcyNDNqs
-         8xzLjqlj6SR5I8/Qunpt2AwJgddiKw3bIlDVvgy9xVPTs7bwskKPcdRbvHxXMalRHcRI
-         Jgark2GF1+4Jx3jEMCvANoUO0kqskHMRsv+H0aw9WcumBQIROI7kutpCK0pQlKbWf/6r
-         XqcQ==
-X-Gm-Message-State: APjAAAVJeizy3h442ngtT68kYmcPfKpWPd72FgAP34EtVvQn0fNbFrRY
-        u9Eb9/GaHxMnFQ+0Z2reiE+R+S5Txf1W/zilSjY=
-X-Google-Smtp-Source: APXvYqyA2P6rJ5Rpgaw8f2+M2ICv1VNxQnaI17Q7cCTaCC06j3aE+a5kT2N0nDt4xBozCWvy5ZXtss4pe/5LVrwSnxo=
-X-Received: by 2002:a50:f5d0:: with SMTP id x16mr100304375edm.287.1558674176088;
- Thu, 23 May 2019 22:02:56 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=tKVly6OsjAP22H8YmM5rdYdS5YdPghJ8QErKTSHa7AM=;
+        b=KUG9Qy5QAnO/FTdpDD8i2QmXFOsAKr3uvClnf5+jNPgwRQLIBEP9LMvC3q91XCNv/m
+         gHnYHm+38YJudseup33AJXzfz+CQibZqTz4g78myvVy0kyeOdS9zddjKyNvoRSQx8+RW
+         6/EW6vZYG5YRi6sHiYbypagyoDcuss6plHuTuGMsfiawcuRmGnFuJPnklhJhMajKfufw
+         5pOKcPTVvROsRHsrtEGLtjQ7O5lBwPK/spQDxQotacoBPrNaZBUAcYXW7biQK3ZF6Oqs
+         15HeqIll+xc/Dg3FgwhKCc4GBFbV1xTg9yrGpZuFaG8sU3YixpmBNuHbVdp0ryDgxo7h
+         MOyw==
+X-Gm-Message-State: APjAAAXSJNj052nVxc/7u857+ERxNqO0gMWXMFZGYfOpSQGMmGrBVE/I
+        qkismIkk6t0XE7K0+2B683zKY4arswsllWix/xiW/w==
+X-Google-Smtp-Source: APXvYqzGNNHs++eX29nKjNVR+rLrBktRKrwzetThjxGfSuRn9WRNWCLdhEHXEO68Z8lWnHq60qbFVQOvuEi4IDCpLJo=
+X-Received: by 2002:a67:ca9a:: with SMTP id a26mr21338403vsl.92.1558674346247;
+ Thu, 23 May 2019 22:05:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190523210651.80902-1-fklassen@appneta.com> <20190523210651.80902-5-fklassen@appneta.com>
- <CAF=yD-KBNLr5KY-YQ1KMmZGCpYNefSJKaJkZNOwd8nRiedpQtA@mail.gmail.com> <D68C643B-C6A4-4EC5-8E4F-368BDE03760B@appneta.com>
-In-Reply-To: <D68C643B-C6A4-4EC5-8E4F-368BDE03760B@appneta.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Fri, 24 May 2019 01:02:20 -0400
-Message-ID: <CAF=yD-JGxrAbv0Cxcn1O20mXY28J1PnpWsHRqcRPO97advm10A@mail.gmail.com>
-Subject: Re: [PATCH net 4/4] net/udpgso_bench_tx: audit error queue
-To:     Fred Klassen <fklassen@appneta.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        Willem de Bruijn <willemb@google.com>
+References: <1558515574-11155-1-git-send-email-sagar.kadam@sifive.com>
+ <1558515574-11155-4-git-send-email-sagar.kadam@sifive.com>
+ <20190522194529.GJ7281@lunn.ch> <CAARK3HmMVibudG2CFLBoMSAqnraXyirTL6CXYo1T_XJEuGJy7Q@mail.gmail.com>
+ <20190523123435.GA15531@lunn.ch> <CAARK3H=BPT3aGUGiQvov5aqFRNVTSeyqJ-bNGw6uEoU7c8iiJg@mail.gmail.com>
+ <20190523135350.GA4985@kunai>
+In-Reply-To: <20190523135350.GA4985@kunai>
+From:   Sagar Kadam <sagar.kadam@sifive.com>
+Date:   Fri, 24 May 2019 10:35:35 +0530
+Message-ID: <CAARK3Hk42cAPwiLiKMRJgau3WesCEtQkpvaG_KwMCfnV6ih3PA@mail.gmail.com>
+Subject: Re: [PATCH v7 3/3] i2c-ocores: sifive: add polling mode workaround
+ for FU540-C000 SoC.
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, peter@korsgaard.com,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 9:27 PM Fred Klassen <fklassen@appneta.com> wrote:
+On Thu, May 23, 2019 at 7:23 PM Wolfram Sang <wsa@the-dreams.de> wrote:
 >
-> Willem, this is only my 2nd patch, and my last one was a one liner.
-> I=E2=80=99ll try to work through this, but let me know if I am doing a ro=
-okie
-> mistake (learning curve and all).
-
-Not at all. The fix makes perfect sense.
-
-The test patches 2 and 4 are not fixes, so are better suited to to
-net-next. Perhaps the changes to the test can also be more concise,
-just the minimal changes needed to demonstrate the bug and fix.
-
-> >>                        tss =3D (struct my_scm_timestamping *)CMSG_DATA=
-(cmsg);
-> >> -                       fprintf(stderr, "tx timestamp =3D %lu.%09lu\n"=
-,
-> >> -                               tss->ts[i].tv_sec, tss->ts[i].tv_nsec)=
-;
-> >> +                       if (tss->ts[i].tv_sec =3D=3D 0)
-> >> +                               stat_tx_ts_errors++;
-> >> +                       if (cfg_verbose)
-> >> +                               fprintf(stderr, "tx timestamp =3D %lu.=
-%09lu\n",
-> >> +                                       tss->ts[i].tv_sec, tss->ts[i].=
-tv_nsec);
-> >
-> > changes unrelated to this feature?
 >
-> I=E2=80=99ll remove. Do you think that I should pull out any messages rel=
-ated
-> to =E2=80=9Ccfg_verbose=E2=80=9D?
+> > Ok, Great. Do we need to write to him about this patchset?
+>
+> Nope. Hint: You can dig in the mail archives studying older patches to
+> see how things work. I do this as well because things may work
+> differently per subsystem.
+>
 
-This change did not seem relevant to the main feature of the patch.
+Thanks Wolfram for confirming on this.
+I will do check in the mail archives for additional info.
+
+Regards,
+Sagar Kadam
