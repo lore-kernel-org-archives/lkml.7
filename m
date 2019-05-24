@@ -2,109 +2,111 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9070DC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2B7C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43C6721841
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:24:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="D6N1xI62"
+	by mail.kernel.org (Postfix) with ESMTP id 8EDDD217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:26:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390087AbfEXJYh (ORCPT
+        id S2390120AbfEXJ0O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 05:24:37 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:40634 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389710AbfEXJYh (ORCPT
+        Fri, 24 May 2019 05:26:14 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:23165 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2389758AbfEXJ0O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 05:24:37 -0400
-Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 667C4C0137;
-        Fri, 24 May 2019 09:24:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1558689862; bh=AVU6oZcHCROGnmkLrcWIelylachVoYTTTsYDpq5qRGE=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=D6N1xI62ExfnhyeopDP2KepGh9+jcTsoEdBgNxKAB8EyL2fnL9XREOHFmEEC3hEsi
-         +sV5eTIn2eDF0X+zGLIclMhVbRmsCn1mnXSf8b6YXmO+JCj257l1HAgFEsprkN4IBi
-         vaW9W8eRRXX+nnYrR92XoZ1bY6GQaFnMeybI/KjollFkG5VPauhnhwClD/xulaMaUJ
-         mW55DXwY3yipCq7jOQRVF9ySTeXKTPNqceFkFoWHyrAVq6/Kky44Bhc3rbPQ5X0znp
-         yZC8zLePl0nck3VrGBfDDtBFePDEP5Xy2yj/Mg+RJWCkK2qYWId9+WkoKX1J3JhSKy
-         mKwbWs8/Mpt7g==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 5716EA0070;
-        Fri, 24 May 2019 09:24:34 +0000 (UTC)
-Received: from DE02WEHTCB.internal.synopsys.com (10.225.19.94) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 24 May 2019 02:24:33 -0700
-Received: from DE02WEMBXB.internal.synopsys.com ([fe80::95ce:118a:8321:a099])
- by DE02WEHTCB.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Fri,
- 24 May 2019 11:24:31 +0200
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     biao huang <biao.huang@mediatek.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>
-CC:     "davem@davemloft.net" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
+        Fri, 24 May 2019 05:26:14 -0400
+X-UUID: 6380ca07a1a848caadf8a110be0a92e8-20190524
+X-UUID: 6380ca07a1a848caadf8a110be0a92e8-20190524
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1520838834; Fri, 24 May 2019 17:25:54 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N1.mediatek.inc
+ (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 24 May
+ 2019 17:25:52 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 24 May 2019 17:25:51 +0800
+Message-ID: <1558689951.10179.422.camel@mhfsdcap03>
+Subject: Re: [RESEND PATCH] usb: mtu3: fix up undefined reference to
+ usb_debug_root
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        <linux-usb@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mediatek@lists.infradead.org" 
         <linux-mediatek@lists.infradead.org>,
-        "yt.shen@mediatek.com" <yt.shen@mediatek.com>,
-        "jianguo.zhang@mediatek.comi" <jianguo.zhang@mediatek.comi>,
-        "boon.leong.ong@intel.com" <boon.leong.ong@intel.com>
-Subject: RE: [v2, PATCH] net: stmmac: add support for hash table size
- 128/256 in dwmac4
-Thread-Topic: [v2, PATCH] net: stmmac: add support for hash table size
- 128/256 in dwmac4
-Thread-Index: AQHVCgFP5uFdcKuEVU64Pxj/Ha7yEaZ5v7KAgABABhD//+D6AIAAL/0w
-Date:   Fri, 24 May 2019 09:24:31 +0000
-Message-ID: <78EB27739596EE489E55E81C33FEC33A0B92D26F@DE02WEMBXB.internal.synopsys.com>
-References: <1557802843-31718-1-git-send-email-biao.huang@mediatek.com>
-         <1557802843-31718-2-git-send-email-biao.huang@mediatek.com>
-         <1558679617.24897.43.camel@mhfsdcap03>
-         <78EB27739596EE489E55E81C33FEC33A0B92CDA0@DE02WEMBXB.internal.synopsys.com>
- <1558686704.24897.45.camel@mhfsdcap03>
-In-Reply-To: <1558686704.24897.45.camel@mhfsdcap03>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.107.19.176]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        <linux-kernel@vger.kernel.org>
+Date:   Fri, 24 May 2019 17:25:51 +0800
+In-Reply-To: <20190524074552.GA1080@kroah.com>
+References: <ee71197a681165aa72cb73c7f6cb402953351805.1558678075.git.chunfeng.yun@mediatek.com>
+         <20190524074552.GA1080@kroah.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogYmlhbyBodWFuZyA8Ymlhby5odWFuZ0BtZWRpYXRlay5jb20+DQpEYXRlOiBGcmksIE1h
-eSAyNCwgMjAxOSBhdCAwOTozMTo0NA0KDQo+IE9uIEZyaSwgMjAxOS0wNS0yNCBhdCAwODoyNCAr
-MDAwMCwgSm9zZSBBYnJldSB3cm90ZToNCj4gPiBGcm9tOiBiaWFvIGh1YW5nIDxiaWFvLmh1YW5n
-QG1lZGlhdGVrLmNvbT4NCj4gPiBEYXRlOiBGcmksIE1heSAyNCwgMjAxOSBhdCAwNzozMzozNw0K
-PiA+IA0KPiA+ID4gYW55IGNvbW1lbnRzIGFib3V0IHRoaXMgcGF0Y2g/DQo+ID4gDQo+ID4gQ2Fu
-IHlvdSBwbGVhc2UgdGVzdCB5b3VyIHNlcmllcyBvbiB0b3Agb2YgdGhpcyBvbmUgWzFdIGFuZCBs
-ZXQgbWUga25vdyANCj4gPiB0aGUgb3V0cHV0IG9mIDoNCj4gPiAjIGV0aHRvb2wgLXQgZXRoMA0K
-PiAiZXRodG9sIC1UIGV0aDAiPyBUaGlzIHBhdGNoIG9ubHkgYWZmZWN0IGhhc2ggdGFibGUgZmls
-dGVyLCBzZWVtcyBubw0KPiByZWxhdGlvbiB0byB0aW1lc3RhbXAuDQo+ID4gDQo+ID4gSnVzdCB0
-byBtYWtlIHN1cmUgdGhhdCB0aGlzIHBhdGNoIGRvZXMgbm90IGludHJvZHVjZSBhbnkgcmVncmVz
-c2lvbnMuIFRoZSANCj4gPiByZW1haW5pbmcgb25lcyBvZiB0aGUgc2VyaWVzIGxvb2sgZmluZSBi
-eSBtZSENCj4gPiANCj4gPiBbMV0gDQo+IHdoaWNoIG9uZT8gRGlkIEkgbWlzcyBhbnl0aGluZyBo
-ZXJlPw0KDQpTb3JyeSwgbXkgbWFpbCBjbGllbnQgdHJpZWQgdG8gd3JhcCB0aGUgbG9uZyBsaW5r
-IGFuZCBlbmRlZCB1cCBpbiBhIA0KbG9vb29uZyBlbWFpbC4NCg0KWzFdIGh0dHBzOi8vcGF0Y2h3
-b3JrLm96bGFicy5vcmcvcHJvamVjdC9uZXRkZXYvbGlzdC8/c2VyaWVzPTEwOTY5OQ0KDQpUaGFu
-a3MsDQpKb3NlIE1pZ3VlbCBBYnJldQ0K
+On Fri, 2019-05-24 at 09:45 +0200, Greg Kroah-Hartman wrote:
+> On Fri, May 24, 2019 at 02:11:33PM +0800, Chunfeng Yun wrote:
+> > When CONFIG_USB is not set, and CONFIG_USB_GADGET is set,
+> > there is an issue:
+> > 
+> > ld:
+> > drivers/usb/mtu3/mtu3_debugfs.o: in function 'ssusb_debugfs_create_root':
+> > mtu3_debugfs.c:(.text+0xba3): undefined reference to 'usb_debug_root'
+> > 
+> > usb_debug_root is only built when CONFIG_USB is enabled, so here drop it
+> > and use NULL instead.
+> > 
+> > Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > Acked-by: Randy Dunlap <rdunlap@infradead.org>
+> > ---
+> >  drivers/usb/mtu3/mtu3_debugfs.c | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> Why resend?
+Sorry, I should send it out as v2 due to acked-by is added.
+
+> 
+> > diff --git a/drivers/usb/mtu3/mtu3_debugfs.c b/drivers/usb/mtu3/mtu3_debugfs.c
+> > index 62c57ddc554e..b7c86ccd50b4 100644
+> > --- a/drivers/usb/mtu3/mtu3_debugfs.c
+> > +++ b/drivers/usb/mtu3/mtu3_debugfs.c
+> > @@ -528,8 +528,7 @@ void ssusb_dr_debugfs_init(struct ssusb_mtk *ssusb)
+> >  
+> >  void ssusb_debugfs_create_root(struct ssusb_mtk *ssusb)
+> >  {
+> > -	ssusb->dbgfs_root =
+> > -		debugfs_create_dir(dev_name(ssusb->dev), usb_debug_root);
+> > +	ssusb->dbgfs_root = debugfs_create_dir(dev_name(ssusb->dev), NULL);
+> 
+> This moves the directory to a new location no matter what the
+> configuration is. What's wrong with where it is today?  
+it seems usb_debug_root is only for host, but not for gadget only, it's
+defined and created in usb/core/usb.c
+
+> And shoudn't we
+> create the usb root directory if only gadget is enabled?
+Yes, need modify udc/core.c, it's better if support it, do you want me
+to send a patch for it?
+
+Thanks
+
+> 
+> thanks,
+> 
+> greg k-h
+
+
