@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 690E7C282DE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 01:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3CE3C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 01:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C36821872
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 01:17:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 575BB2175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 01:17:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388989AbfEXBRR (ORCPT
+        id S2389008AbfEXBRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 21:17:17 -0400
-Received: from mga07.intel.com ([134.134.136.100]:15055 "EHLO mga07.intel.com"
+        Thu, 23 May 2019 21:17:23 -0400
+Received: from mga05.intel.com ([192.55.52.43]:14793 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388765AbfEXBQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2388759AbfEXBQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 May 2019 21:16:41 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 May 2019 18:16:38 -0700
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 May 2019 18:16:39 -0700
 X-ExtLoop1: 1
 Received: from unknown (HELO luv-build.sc.intel.com) ([172.25.110.25])
   by fmsmga008.fm.intel.com with ESMTP; 23 May 2019 18:16:38 -0700
@@ -39,20 +39,20 @@ Cc:     Ashok Raj <ashok.raj@intel.com>, Joerg Roedel <joro@8bytes.org>,
         linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
         Ricardo Neri <ricardo.neri@intel.com>,
         Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Tony Luck <tony.luck@intel.com>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Wincy Van <fanwenyi0529@gmail.com>,
         Kate Stewart <kstewart@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Baoquan He <bhe@redhat.com>,
         Jan Kiszka <jan.kiszka@siemens.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Nayna Jain <nayna@linux.ibm.com>
-Subject: [RFC PATCH v4 16/21] x86/watchdog: Add a shim hardlockup detector
-Date:   Thu, 23 May 2019 18:16:18 -0700
-Message-Id: <1558660583-28561-17-git-send-email-ricardo.neri-calderon@linux.intel.com>
+        Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [RFC PATCH v4 20/21] iommu/vt-d: hpet: Reserve an interrupt remampping table entry for watchdog
+Date:   Thu, 23 May 2019 18:16:22 -0700
+Message-Id: <1558660583-28561-21-git-send-email-ricardo.neri-calderon@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1558660583-28561-1-git-send-email-ricardo.neri-calderon@linux.intel.com>
 References: <1558660583-28561-1-git-send-email-ricardo.neri-calderon@linux.intel.com>
@@ -61,157 +61,165 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The generic hardlockup detector is based on perf. It also provides a set
-of weak stubs that CPU architectures can override. Add a shim hardlockup
-detector for x86 that selects between perf and hpet implementations.
+When interrupt remapping is enabled, MSI interrupt messages must follow a
+special format that the IOMMU can understand. Hence, when the HPET hard
+lockup detector is used with interrupt remapping, it must also follow this
+special format.
 
-Specifically, this shim implementation is needed for the HPET-based
-hardlockup detector; it can also be used for future implementations.
+The IOMMU, given the information about a particular interrupt, already
+knows how to populate the MSI message with this special format and the
+corresponding entry in the interrupt remapping table. Given that this is a
+special interrupt case, we want to avoid the interrupt subsystem. Add two
+functions to create an entry for the HPET hard lockup detector. Perform
+this process in two steps as described below.
 
-Cc: "H. Peter Anvin" <hpa@zytor.com>
+When initializing the lockup detector, the function
+hld_hpet_intremap_alloc_irq() permanently allocates a new entry in the
+interrupt remapping table and populates it with the information the
+IOMMU driver needs. In order to populate the table, the IOMMU needs to
+know the HPET block ID as described in the ACPI table. Hence, add such
+ID to the data of the hardlockup detector.
+
+When the hardlockup detector is enabled, the function
+hld_hpet_intremapactivate_irq() activates the recently created entry
+in the interrupt remapping table via the modify_irte() functions. While
+doing this, it specifies which CPU the interrupt must target via its APIC
+ID. This function can be called every time the destination iD of the
+interrupt needs to be updated; there is no need to allocate or remove
+entries in the interrupt remapping table.
+
 Cc: Ashok Raj <ashok.raj@intel.com>
 Cc: Andi Kleen <andi.kleen@intel.com>
 Cc: Tony Luck <tony.luck@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Clemens Ladisch <clemens@ladisch.de>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Philippe Ombredanne <pombredanne@nexb.com>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Jacob Pan <jacob.jun.pan@intel.com>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Wincy Van <fanwenyi0529@gmail.com>
 Cc: Kate Stewart <kstewart@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc: Mimi Zohar <zohar@linux.ibm.com>
+Cc: Philippe Ombredanne <pombredanne@nexb.com>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Baoquan He <bhe@redhat.com>
 Cc: Jan Kiszka <jan.kiszka@siemens.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Nayna Jain <nayna@linux.ibm.com>
+Cc: Lu Baolu <baolu.lu@linux.intel.com>
 Cc: Stephane Eranian <eranian@google.com>
 Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
 Cc: "Ravi V. Shankar" <ravi.v.shankar@intel.com>
 Cc: x86@kernel.org
-Suggested-by: Nicholas Piggin <npiggin@gmail.com>
+Cc: iommu@lists.linux-foundation.org
 Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 ---
- arch/x86/Kconfig.debug         |  4 ++
- arch/x86/kernel/Makefile       |  1 +
- arch/x86/kernel/watchdog_hld.c | 78 ++++++++++++++++++++++++++++++++++
- 3 files changed, 83 insertions(+)
- create mode 100644 arch/x86/kernel/watchdog_hld.c
+ arch/x86/include/asm/hpet.h         | 11 +++++++
+ arch/x86/kernel/hpet.c              |  1 +
+ drivers/iommu/intel_irq_remapping.c | 49 +++++++++++++++++++++++++++++
+ 3 files changed, 61 insertions(+)
 
-diff --git a/arch/x86/Kconfig.debug b/arch/x86/Kconfig.debug
-index 445bbb188f10..52c77e2145c9 100644
---- a/arch/x86/Kconfig.debug
-+++ b/arch/x86/Kconfig.debug
-@@ -169,11 +169,15 @@ config IOMMU_LEAK
- config HAVE_MMIOTRACE_SUPPORT
- 	def_bool y
+diff --git a/arch/x86/include/asm/hpet.h b/arch/x86/include/asm/hpet.h
+index a82cbe17479d..811051fa7ade 100644
+--- a/arch/x86/include/asm/hpet.h
++++ b/arch/x86/include/asm/hpet.h
+@@ -119,6 +119,8 @@ struct hpet_hld_data {
+ 	u64		tsc_ticks_per_cpu;
+ 	u32		handling_cpu;
+ 	u32		enabled_cpus;
++	u8		blockid;
++	void		*intremap_data;
+ 	struct msi_msg	msi_msg;
+ 	unsigned long	cpu_monitored_mask[0];
+ };
+@@ -129,6 +131,15 @@ extern void hardlockup_detector_hpet_stop(void);
+ extern void hardlockup_detector_hpet_enable(unsigned int cpu);
+ extern void hardlockup_detector_hpet_disable(unsigned int cpu);
+ extern void hardlockup_detector_switch_to_perf(void);
++#ifdef CONFIG_IRQ_REMAP
++extern int hld_hpet_intremap_activate_irq(struct hpet_hld_data *hdata);
++extern int hld_hpet_intremap_alloc_irq(struct hpet_hld_data *hdata);
++#else
++static inline int hld_hpet_intremap_activate_irq(struct hpet_hld_data *hdata)
++{ return -ENODEV; }
++static inline int hld_hpet_intremap_alloc_irq(struct hpet_hld_data *hdata)
++{ return -ENODEV; }
++#endif /* CONFIG_IRQ_REMAP */
+ #else
+ static inline struct hpet_hld_data *hpet_hardlockup_detector_assign_timer(void)
+ { return NULL; }
+diff --git a/arch/x86/kernel/hpet.c b/arch/x86/kernel/hpet.c
+index dd3bb664a188..ddc9be81a075 100644
+--- a/arch/x86/kernel/hpet.c
++++ b/arch/x86/kernel/hpet.c
+@@ -202,6 +202,7 @@ struct hpet_hld_data *hpet_hardlockup_detector_assign_timer(void)
+ 	 */
+ 	temp = (u64)cfg << HPET_COUNTER_CLK_PERIOD_SHIFT;
+ 	hdata->ticks_per_second = hpet_get_ticks_per_sec(temp);
++	hdata->blockid = hpet_blockid;
  
-+config X86_HARDLOCKUP_DETECTOR
-+	bool
-+
- config X86_HARDLOCKUP_DETECTOR_HPET
- 	bool "Use HPET Timer for Hard Lockup Detection"
- 	select SOFTLOCKUP_DETECTOR
- 	select HARDLOCKUP_DETECTOR
- 	select HARDLOCKUP_DETECTOR_CORE
-+	select X86_HARDLOCKUP_DETECTOR
- 	depends on HPET_TIMER && HPET && X86_64
- 	help
- 	  Say y to enable a hardlockup detector that is driven by a High-
-diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-index 3ad55de67e8b..e60244b8a8ec 100644
---- a/arch/x86/kernel/Makefile
-+++ b/arch/x86/kernel/Makefile
-@@ -106,6 +106,7 @@ obj-$(CONFIG_VM86)		+= vm86_32.o
- obj-$(CONFIG_EARLY_PRINTK)	+= early_printk.o
- 
- obj-$(CONFIG_HPET_TIMER) 	+= hpet.o
-+obj-$(CONFIG_X86_HARDLOCKUP_DETECTOR) += watchdog_hld.o
- obj-$(CONFIG_X86_HARDLOCKUP_DETECTOR_HPET) += watchdog_hld_hpet.o
- obj-$(CONFIG_APB_TIMER)		+= apb_timer.o
- 
-diff --git a/arch/x86/kernel/watchdog_hld.c b/arch/x86/kernel/watchdog_hld.c
-new file mode 100644
-index 000000000000..c2512d4c79c5
---- /dev/null
-+++ b/arch/x86/kernel/watchdog_hld.c
-@@ -0,0 +1,78 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * A shim hardlockup detector. It overrides the weak stubs of the generic
-+ * implementation to select between the perf- or the hpet-based implementation.
-+ *
-+ * Copyright (C) Intel Corporation 2019
-+ */
-+
-+#include <linux/nmi.h>
+ 	return hdata;
+ }
+diff --git a/drivers/iommu/intel_irq_remapping.c b/drivers/iommu/intel_irq_remapping.c
+index 2e61eaca7d7e..256466dd30cb 100644
+--- a/drivers/iommu/intel_irq_remapping.c
++++ b/drivers/iommu/intel_irq_remapping.c
+@@ -20,6 +20,7 @@
+ #include <asm/irq_remapping.h>
+ #include <asm/pci-direct.h>
+ #include <asm/msidef.h>
 +#include <asm/hpet.h>
+ 
+ #include "irq_remapping.h"
+ 
+@@ -1516,3 +1517,51 @@ int dmar_ir_hotplug(struct dmar_drhd_unit *dmaru, bool insert)
+ 
+ 	return ret;
+ }
 +
-+enum x86_hardlockup_detector {
-+	X86_HARDLOCKUP_DETECTOR_PERF,
-+	X86_HARDLOCKUP_DETECTOR_HPET,
-+};
-+
-+static enum __read_mostly x86_hardlockup_detector detector_type;
-+
-+int watchdog_nmi_enable(unsigned int cpu)
++#ifdef CONFIG_X86_HARDLOCKUP_DETECTOR_HPET
++int hld_hpet_intremap_activate_irq(struct hpet_hld_data *hdata)
 +{
-+	if (detector_type == X86_HARDLOCKUP_DETECTOR_PERF) {
-+		hardlockup_detector_perf_enable();
-+		return 0;
-+	}
++	u32 destid = apic->calc_dest_apicid(hdata->handling_cpu);
++	struct intel_ir_data *data;
 +
-+	if (detector_type == X86_HARDLOCKUP_DETECTOR_HPET) {
-+		hardlockup_detector_hpet_enable(cpu);
-+		return 0;
-+	}
-+
-+	return -ENODEV;
++	data = (struct intel_ir_data *)hdata->intremap_data;
++	data->irte_entry.dest_id = IRTE_DEST(destid);
++	return modify_irte(&data->irq_2_iommu, &data->irte_entry);
 +}
 +
-+void watchdog_nmi_disable(unsigned int cpu)
++int hld_hpet_intremap_alloc_irq(struct hpet_hld_data *hdata)
 +{
-+	if (detector_type == X86_HARDLOCKUP_DETECTOR_PERF) {
-+		hardlockup_detector_perf_disable();
-+		return;
-+	}
++	struct intel_ir_data *data;
++	struct irq_alloc_info info;
++	struct intel_iommu *iommu;
++	struct irq_cfg irq_cfg;
++	int index;
 +
-+	if (detector_type == X86_HARDLOCKUP_DETECTOR_HPET) {
-+		hardlockup_detector_hpet_disable(cpu);
-+		return;
-+	}
++	iommu = map_hpet_to_ir(hdata->blockid);
++	if (!iommu)
++		return -ENODEV;
++
++	data = kzalloc(sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	down_read(&dmar_global_lock);
++	index =  alloc_irte(iommu, 0, &data->irq_2_iommu, 1);
++	up_read(&dmar_global_lock);
++	if (index < 0)
++		return index;
++
++	info.type = X86_IRQ_ALLOC_TYPE_HPET;
++	info.hpet_id = hdata->blockid;
++
++	/* Vector is not relevant if NMI is the delivery mode */
++	irq_cfg.vector = 0;
++	irq_cfg.delivery_mode = dest_NMI;
++	intel_irq_remapping_prepare_irte(data, &irq_cfg, &info, index, 0);
++
++	hdata->intremap_data = data;
++	memcpy(&hdata->msi_msg, &data->msi_entry, sizeof(hdata->msi_msg));
++
++	return 0;
 +}
-+
-+int __init watchdog_nmi_probe(void)
-+{
-+	int ret;
-+
-+	/*
-+	 * Try first with the HPET hardlockup detector. It will only
-+	 * succeed if selected at build time and the nmi_watchdog
-+	 * command-line parameter is configured. This ensure that the
-+	 * perf-based detector is used by default, if selected at
-+	 * build time.
-+	 */
-+	ret = hardlockup_detector_hpet_init();
-+	if (!ret) {
-+		detector_type = X86_HARDLOCKUP_DETECTOR_HPET;
-+		return ret;
-+	}
-+
-+	ret = hardlockup_detector_perf_init();
-+	if (!ret) {
-+		detector_type = X86_HARDLOCKUP_DETECTOR_PERF;
-+		return ret;
-+	}
-+
-+	return ret;
-+}
-+
-+void watchdog_nmi_stop(void)
-+{
-+	/* Only the HPET lockup detector defines a stop function. */
-+	if (detector_type == X86_HARDLOCKUP_DETECTOR_HPET)
-+		hardlockup_detector_hpet_stop();
-+}
++#endif /* CONFIG_HARDLOCKUP_DETECTOR_HPET */
 -- 
 2.17.1
 
