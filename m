@@ -6,136 +6,161 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58CB8C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AAA3C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:19:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ED2F21773
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:19:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34B092075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:19:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="XmzyFhnq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="umKy+t+d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391610AbfEXNTr (ORCPT
+        id S2391636AbfEXNT5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 09:19:47 -0400
-Received: from mail-wr1-f47.google.com ([209.85.221.47]:34972 "EHLO
-        mail-wr1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391124AbfEXNTq (ORCPT
+        Fri, 24 May 2019 09:19:57 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:47009 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391124AbfEXNT5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 09:19:46 -0400
-Received: by mail-wr1-f47.google.com with SMTP id m3so10020803wrv.2
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 06:19:45 -0700 (PDT)
+        Fri, 24 May 2019 09:19:57 -0400
+Received: by mail-qk1-f196.google.com with SMTP id a132so7443999qkb.13
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 06:19:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=jzQHkJ/pBgBZFWEflJGA8oAilvAER1cbh7aG0kbKgEg=;
-        b=XmzyFhnq54xA5wcGkqE0Kvl/lYMjYymazK+mvs1c0g90yx8Lg8+hKjcbUD0i055Xg2
-         hxMdOSOlLn7r4TLzQ92lSmTMiJyy+9KsbJ6D1v2pdC6Ih1AkeU8PiHvXwLzjbsLMW1hG
-         HOsmR9ks7c8FKeHQRKqg2OYj/2RVVh331YB0Gl2H7aJ0T85Btyo3YEq8/4ZPbPfsXs0W
-         uxsMjSkxdRF7Nm8GXW1X5tZCHW6fc/7lXIpKroYqmw8Jb/tRvmec1/1s6SEVhKv3XhyP
-         uAbnHnJojuMdq3mWZA2byZwGVuGvAxY5Wp2y5//PHuyRWnBNvItQ3feaMVdJTOQ9fJOO
-         TTzA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9XdN+SJO4nNfooj9kJ5ndy5j9Cl/+8FH0MeIweuOGzA=;
+        b=umKy+t+dNFNuRN3//yw8fJR6BmKynML3xuh30YRuWun2gOZ+W2hNgIWycKEjShbKbd
+         +FaBLWWcJmgMHcMDZbJpme0B+zf+ew2DoIP3CGphOfrE7Uuv9JuH+Azx0JvVqPoUY69M
+         8HdcUI0H3BJrfLosqseHHAHfiHj4KGX/ihlnRjVwBaCFLFsBmnSouSuJszVLhKJrYcwx
+         8tQyWrNqwS2t+IfxysJ8FFxfS+5AG4ufj3xnhx+Gy9VtowqTETLuytKmYD3+BKSs5gml
+         DcHLVCrIjW6guYl6IsMmAwxSbCC6nvhrn/xRdCsvVhDlb5k3q26iQg7IVg4+fGtcbDKS
+         r1eA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=jzQHkJ/pBgBZFWEflJGA8oAilvAER1cbh7aG0kbKgEg=;
-        b=XowwSK3gbPhyUiiZxznFh/Zh0xS6rX4evI99fO3ia1p8xWhnBA2Y9ZAQEkjIBZbORE
-         EFjS/kVYg5YNRcrlBleUpcNTeon0ZYQIdBqV5rhmSE2+OtWwcxdlH1s8iVbFRsmVMML4
-         fPxi5HSdiHNOfcIY6uU5+esGu7lDWO1HA3HNw7LSYhG9pYKSIOEUNA+/I6nKzNindrC+
-         EcjEpkqBsog1qQ9UgB1odOgamZMseAoYHEkYyQBpJj3Nl3KFR3aBaguNjLBcyen6By6L
-         KtwbMzpcC7UKoDShuM88KzhESBSjgPfOmMzDn+/Vp//S+tPBxH1JH+U00l41865V3bWk
-         gtwQ==
-X-Gm-Message-State: APjAAAWZqiZdIsQzQ+GtKYHmrKCmTo5GUamtouQucYWrdQBbvw/h7RxW
-        D7ujdGqpqjxquTgt+wxwZ7xLztRUlsINa29ewoiyPl5SCoN33Q==
-X-Google-Smtp-Source: APXvYqymYAYbhZJ6X39VTu/pMd+I2/jr8Buobp/bgOkPFW19s+WOOob3SGrFPknEjdEgr7o5X5AWhZP+4qEil/gGnsQ=
-X-Received: by 2002:a5d:440d:: with SMTP id z13mr2119880wrq.263.1558703985074;
- Fri, 24 May 2019 06:19:45 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9XdN+SJO4nNfooj9kJ5ndy5j9Cl/+8FH0MeIweuOGzA=;
+        b=cU23KoQ7t5S5u5mN/+X7GPqT4gZ9Ta9iH6vvExapZwtsX3OeLwPuMdlWy31DX1ncer
+         QQC7gNUgM03hukaeI3hE7rezsbnuCSRDHraq5SZMCH7OuYgOX9FweHJpFdzmy5ToLzKy
+         XoTH1Cheo/7vrxfo0IqQwE8Rsw6U9yx9XbQlJC2eRYKQO+quc1R0C+BOUE7WwM5L3Psm
+         lBIadMT8ewZGCE2r5Dwo8aNP1kiPQ2AOJU96dKh/ZaVsqzvpYA4HTwM8KflxeZhudRVX
+         azxwB+YDFOzrxabuU9G/5NjrGrxuJXG7Nw6NZ+ESy0io5Ua7wuONQrHOZRS1us42RF/L
+         BsnQ==
+X-Gm-Message-State: APjAAAXWoA92h0CxnAvubUNhe0D2qlMVOmD0eZUhOtKZleMYq5G2R20q
+        uDisdLQC0/KRTCMykggnl3anG2DuERDBdSWxAExmzg==
+X-Google-Smtp-Source: APXvYqx9KM7Yc5ojQbqNvCzGfvIIOam7qCdkDSAjgKM3Z0ld27IhHfeKfkMag3SA4N0Hdi+ZJCJ+jc69aHauc+MA8mw=
+X-Received: by 2002:a0c:8b54:: with SMTP id d20mr28830004qvc.1.1558703996214;
+ Fri, 24 May 2019 06:19:56 -0700 (PDT)
 MIME-Version: 1.0
-From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
-Date:   Fri, 24 May 2019 15:19:34 +0200
-Message-ID: <CAMGffEkQmdrrH3+UChZx_Af6WcFFQFw6fz3Ti4CRUau-wq7jow@mail.gmail.com>
-Subject: Is 2nd Generation Intel(R) Xeon(R) Processors (Formerly Cascade Lake)
- affected by MDS
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        tony.luck@intel.com, Arjan van de Ven <arjan@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Elmar Gerdes <elmar.gerdes@cloud.ionos.com>
+References: <1558521304-27469-1-git-send-email-suzuki.poulose@arm.com>
+ <20190523143227.GC31751@leoy-ThinkPad-X240s> <23a50436-4bcf-3439-c189-093e1a58438d@arm.com>
+In-Reply-To: <23a50436-4bcf-3439-c189-093e1a58438d@arm.com>
+From:   Mike Leach <mike.leach@linaro.org>
+Date:   Fri, 24 May 2019 14:19:43 +0100
+Message-ID: <CAJ9a7Vjh_RDgp6nKrgrmuKcAhs77iU_oKTuBhSBdkUUwiwZbSg@mail.gmail.com>
+Subject: Re: [PATCH v4 00/30] coresight: Support for ACPI bindings
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     Leo Yan <leo.yan@linaro.org>, coresight@lists.linaro.org,
+        linux-kernel@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Resend with plain text, and remove confidential unnecessary signature.
-sorry for spam.
+Hi Suzuki, Leo
 
-Hi Thomas, hi Greg, hi Tony, hi Arjan, hi other expert on the list
+On Thu, 23 May 2019 at 16:32, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+>
+> Hi Leo,
+>
+> On 23/05/2019 15:32, Leo Yan wrote:
+> > Hi Suzuki,
+> >
+> > On Wed, May 22, 2019 at 11:34:33AM +0100, Suzuki K Poulose wrote:
+> >
+> > [...]
+> >
+> >> Changes since v2:
+> >>   - Drop the patches exposing device links via sysfs, to be posted as separate
+> >>     series.
+> >
+> > Thanks for sharing the git tree linkage in another email.  Just want
+> > to confirm, since patch set v3 you have dropped the patch "coresight:
+> > Expose device connections via sysfs" [1], will you send out this patch
+> > after ACPI binding support patches has been merged?
+>
+> We are awaiting Mike's comment on the approach, as his CTI support also
+> needs something similar.
+>
 
-I noticed on our Cascade lake with 4.14.120,  the kernel is reporting
-vulnerable:
-jwang@ps401a-912:~$ head /sys/devices/system/cpu/vulnerabilities/mds
-Vulnerable: Clear CPU buffers attempted, no microcode; SMT vulnerable
+I fully agree that there is requirement to expose device connections
+as Suzuki's patches provided. As commented in the original patch, it
+removes the need for users to have knowledge of hardware specifics or
+access to device tree source.
 
-But according to INTEL,  they have built the mitigation in hardware
-for Cascade Lake:
-https://www.intel.com/content/www/us/en/architecture-and-technology/engineering-new-protections-into-hardware.html
+For the trace datapath a simple link is sufficient to express this
+information. The nature of the data and connection is known - it is
+the trace data running from source to sink. The linked components are
+guaranteed to be registered coresight devices
 
-We are using latest microcode from debian:
-https://metadata.ftp-master.debian.org/changelogs//non-free/i/intel-microcode/intel-microcode_3.20190514.1~deb9u1_changelog
-lscpu:
-jwang@ps401a-912:~$ lscpu
-Architecture:          x86_64
-CPU op-mode(s):        32-bit, 64-bit
-Byte Order:            Little Endian
-CPU(s):                96
-On-line CPU(s) list:   0-95
-Thread(s) per core:    2
-Core(s) per socket:    24
-Socket(s):             2
-NUMA node(s):          2
-Vendor ID:             GenuineIntel
-CPU family:            6
-Model:                 85
-Model name:            Intel(R) Xeon(R) Platinum 8268 CPU @ 2.90GHz
-Stepping:              5
-CPU MHz:               3228.226
-CPU max MHz:           3900.0000
-CPU min MHz:           1000.0000
-BogoMIPS:              5800.00
-Virtualization:        VT-x
-L1d cache:             32K
-L1i cache:             32K
-L2 cache:              1024K
-L3 cache:              33792K
-NUMA node0 CPU(s):     0-23,48-71
-NUMA node1 CPU(s):     24-47,72-95
-Flags:                 fpu vme de pse tsc msr pae mce cx8 apic sep
-mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht
-tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs
-bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq
-dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm
-pcid dca sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes
-xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb cat_l3
-cdp_l3 invpcid_single intel_ppin ssbd mba ibrs ibpb stibp tpr_shadow
-vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2
-erms invpcid rtm cqm mpx rdt_a avx512f avx512dq rdseed adx smap
-clflushopt clwb intel_pt avx512cd avx512bw avx512vl xsaveopt xsavec
-xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local
-dtherm ida arat pln pts pku ospke flush_l1d arch_capabilities
+However, the requirement for the CTI is different.
 
-Clearly we want to buy Cascade Lake if the hardware mitigations are in
-place, but the information on the internet is quite limited and
-misleading.
+CTI is not limited to connecting to other coresight devices. Any
+device can be wired into a CTI trigger signal. These devices may or
+may not have drivers  / entries in the device tree.
+For each connection a client needs to know the signals connected to
+the cti, the signal directions, the signal prupose if possible, and
+the device connected.
+For this reason we dynamically fill out a connections infomation
+sub-dir in sysfs containing _name, _trigin_sig, _trigout_sig,
+_trigin_type, _trigout_type - described in the patch [1].
 
-Could anyone of you could clarify it for us?
-Does it mean 4.14.120 is missing patches for detecting Cascade Lake
-mitigation, Or maybe only small set of cascade lake has mitigation?
-Or the community/intel are not sure about it yet?
+This information is sufficient and necessary to enable a user to
+program a CTI in most cases.
 
-Looking forward for your reply.
+As an example look at the Juno dtsi in [2].
+CTI 0 is connected to ETR, ETF, STM and TPIU - all coresight devices.
+CTI 1 is connected to REF_CLK, system profiler and watchdog - no
+coresight devices at all.
+CTI 2 is connected to ETF, and two ELA devices - so 1 coresight device
+and 2 not coresight devices.
 
-Thanks,
+So my view is that for the case where CTI is connected to another
+CoreSight device the sysfs link could be used in addition to the
+information described above.
 
--- 
-Jack Wang
-Linux Kernel Developer
+Regards.
+
+Mike
+
+[1] https://lists.linaro.org/pipermail/coresight/2019-May/002587.html
+[2] https://lists.linaro.org/pipermail/coresight/2019-May/002589.html
+
+> >
+> > When you send out the new patch for exposing device connection, please
+> > loop me so that I can base on it for perf testing related works.
+>
+> Sure, will do. As such, the perf testing should not be affected by that
+> series. It is just a helper to demonstrate the connections. But yes, it
+> will definitely help you to choose an ETF for a cluster, if you had multiple
+> ETFs on the system. Otherwise, you should be OK.
+>
+> Please be aware that the power management support is missing on ACPI platform.
+> So you must make sure, by other means, that the debug domain is powered up.
+>
+>
+> Cheers
+> Suzuki
+> _______________________________________________
+> CoreSight mailing list
+> CoreSight@lists.linaro.org
+> https://lists.linaro.org/mailman/listinfo/coresight
+
+
+
+--
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
