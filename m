@@ -2,126 +2,92 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3489EC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1456BC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:42:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D51E620645
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:41:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC54820644
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:42:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A3eoary3"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IrJmjsCm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390177AbfEXJlu (ORCPT
+        id S2390264AbfEXJm3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 05:41:50 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46236 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390058AbfEXJlu (ORCPT
+        Fri, 24 May 2019 05:42:29 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:18430 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389677AbfEXJm3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 05:41:50 -0400
-Received: by mail-wr1-f67.google.com with SMTP id r7so9263389wrr.13
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 02:41:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=y5N3blBOF57aEuNrqnxupdWMUAa8sEMVdsUI1rflzSQ=;
-        b=A3eoary35mP/ldGozEDAvNCMcz//E5Pp2NMOTYth62qhOZRHuBL/1IULlsfXC0iE9P
-         2U0gHdxYDJUaj4/6vWvRNMk5HbYNmIhmOG5NAYpgm3RxPw/J/9h8cmhnbF+Cey7mkEbG
-         ccMh7n93p3TomLg1SElpLdEG6psgy5ls35POE7RF/bxByT7tjwKwdXvhdPmpWY0gf3O7
-         OtZsfHFApGsWlB1Rnobgx9Pxe8YvME0Af3Da4OtTI/6CIJtdOY4QyTRafmL1vqAuDiFa
-         BzxusJ/C1QxGVMQzSZsPcl8j+TmsdyWxL3P+T5qGGixYakACt/r6OdNpNGJAvo2oZI61
-         SFlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=y5N3blBOF57aEuNrqnxupdWMUAa8sEMVdsUI1rflzSQ=;
-        b=CQl3n77U0SmdReydIaCZYtJCI92YC1Y3vBWwG+6AsiQJPZcz0cK5DnIw1yLOStUge8
-         c7Gvf2idzSnucH5MW4NyNv3m5XFKBduyfCjFKbuOhpZ11YYV9lH6xGcCY+Pn9pkDyPuV
-         komHNiX4U345IQoK8hBmhfrcnaKZwVZcEhztLm4akqBhjbOD3iDdyd688SNquEUL4Z5m
-         6XDbgph2j2Fm5jqo7SizQrDlFdbB43MzDQ8ufNwV0R1zh22qK8r31gB7A9IxxD1D/+Px
-         1OnZ4qReX4CAC0EZDyJ67Z80v3QZN1sUyC7gue5PMXzaGQnwTH0AMXIN0piQiUU82E4g
-         k1XQ==
-X-Gm-Message-State: APjAAAX3xFVjq0O/kS9kXVsH6t5OAiQD6Lm0ExPeWSn2dj3e6sPQIvsf
-        3VZs9VWoDCngbor9zGUpX5d1Ag==
-X-Google-Smtp-Source: APXvYqwPRO4pFpxSPn86THLU1S+1gsKxZpAqGiQDN/sY0wzkykgkTLwXk57Z0fyJ2AQwWnT5Lmk4kQ==
-X-Received: by 2002:adf:aa09:: with SMTP id p9mr9813762wrd.59.1558690909082;
-        Fri, 24 May 2019 02:41:49 -0700 (PDT)
-Received: from apalos (ppp-94-66-229-5.home.otenet.gr. [94.66.229.5])
-        by smtp.gmail.com with ESMTPSA id o23sm247011wro.13.2019.05.24.02.41.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 02:41:48 -0700 (PDT)
-Date:   Fri, 24 May 2019 12:41:45 +0300
-From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
-To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Cc:     grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net,
-        ast@kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        netdev@vger.kernel.org, daniel@iogearbox.net,
-        jakub.kicinski@netronome.com, john.fastabend@gmail.com
-Subject: Re: [PATCH net-next 0/3] net: ethernet: ti: cpsw: Add XDP support
-Message-ID: <20190524094145.GA24675@apalos>
-References: <20190523182035.9283-1-ivan.khoronzhuk@linaro.org>
+        Fri, 24 May 2019 05:42:29 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ce7bc850000>; Fri, 24 May 2019 02:42:29 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 24 May 2019 02:42:28 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 24 May 2019 02:42:28 -0700
+Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 24 May
+ 2019 09:42:26 +0000
+Subject: Re: [PATCH] spi: Fix a memory leaking bug in wl1271_probe()
+To:     Gen Zhang <blackgod016574@gmail.com>, <kvalo@codeaurora.org>,
+        <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190523143022.GA26485@zhanggen-UX430UQ>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <279050e0-39e4-173d-ffe8-c1837951f4d1@nvidia.com>
+Date:   Fri, 24 May 2019 10:42:25 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190523182035.9283-1-ivan.khoronzhuk@linaro.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190523143022.GA26485@zhanggen-UX430UQ>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1558690949; bh=f+gDnXlt84op+cO+SWUow2VW/jdTpsnQIMrQpyyMGgg=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=IrJmjsCmpX60wzUFmVgEp/9UJN9UZ8CYieGXNOttBYSl0DHZVc5tniuH7PieaTg0L
+         cJXXy8DPE0qVjF1PnDEITchM8yIkJEFsYMapIUL9UsWWd+dMOtabN/lijwIuBZ3Jij
+         Mu4J588ig4jERKcaDk7drT7tzEVEzG/U7TNC/zdCjRzUG8L90N+JypogQwWKx55x5Z
+         YCxh4Y/K04ckhNUH8R26DDGms6OsVpA1sGDPrUn8bOnFCW9ryGsS0pSgO0b2FBQrKw
+         aFumIbRFnHWe6UetgEZ9eC/5jqDNktD2ofYnSpMQWYZXu6qDRfXm4d4LRCN63HLRLc
+         oOuMI+pveu4oQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ivan,
 
-More XDP drivers, that's good!
-> This patchset add XDP support for TI cpsw driver and base it on
-> page_pool allocator. It was verified on af_xdp socket drop,
-> af_xdp l2f, ebpf XDP_DROP, XDP_REDIRECT, XDP_PASS, XDP_TX.
+On 23/05/2019 15:30, Gen Zhang wrote:
+> In wl1271_probe(), 'glue->core' is allocated by platform_device_alloc(),
+> when this allocation fails, ENOMEM is returned. However, 'pdev_data'
+> and 'glue' are allocated by devm_kzalloc() before 'glue->core'. When
+> platform_device_alloc() returns NULL, we should also free 'pdev_data'
+> and 'glue' before wl1271_probe() ends to prevent leaking memory.
 > 
-> It was verified with following configs enabled:
-> CONFIG_JIT=y
-> CONFIG_BPFILTER=y
-> CONFIG_BPF_SYSCALL=y
-> CONFIG_XDP_SOCKETS=y
-> CONFIG_BPF_EVENTS=y
-> CONFIG_HAVE_EBPF_JIT=y
-> CONFIG_BPF_JIT=y
-> CONFIG_CGROUP_BPF=y
+> Similarly, we shoulf free 'pdev_data' when 'glue' is NULL. And we should
+> free 'pdev_data' and 'glue' when 'glue->reg' is error and when 'ret' is
+> error.
 > 
-> Link on previous RFC:
-> https://lkml.org/lkml/2019/4/17/861
+> Further, we should free 'glue->core', 'pdev_data' and 'glue' when this 
+> function normally ends to prevent leaking memory.
 > 
-The recycling pattern has changed i'll have a closer look in the weekend and let
-you know
-> Also regular tests with iperf2 were done in order to verify impact on
-> regular netstack performance, compared with base commit:
-> https://pastebin.com/JSMT0iZ4
-Do you have any XDP related numbers?
-> 
-> Based on net-next/master
-> 
-> Ivan Khoronzhuk (3):
->   net: ethernet: ti: davinci_cpdma: add dma mapped submit
->   net: ethernet: ti: davinci_cpdma: return handler status
->   net: ethernet: ti: cpsw: add XDP support
-> 
->  drivers/net/ethernet/ti/Kconfig         |   1 +
->  drivers/net/ethernet/ti/cpsw.c          | 570 +++++++++++++++++++++---
->  drivers/net/ethernet/ti/cpsw_ethtool.c  |  55 ++-
->  drivers/net/ethernet/ti/cpsw_priv.h     |   9 +-
->  drivers/net/ethernet/ti/davinci_cpdma.c | 122 +++--
->  drivers/net/ethernet/ti/davinci_cpdma.h |   6 +-
->  drivers/net/ethernet/ti/davinci_emac.c  |  18 +-
->  7 files changed, 675 insertions(+), 106 deletions(-)
-> 
-> -- 
-> 2.17.1
-> 
-Thanks
-/Ilias
+> Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+I have seen several of these patches now, and this is not correct. I
+think you need to understand how devm_kzalloc() works.
+
+Jon
+
+-- 
+nvpublic
