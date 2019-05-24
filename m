@@ -2,93 +2,95 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32CF1C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D17BC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 001C5217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:26:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3D51217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:26:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qno0DZOa"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KgOptn20"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391059AbfEXL01 (ORCPT
+        id S2391086AbfEXL0c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 07:26:27 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:33157 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390816AbfEXL00 (ORCPT
+        Fri, 24 May 2019 07:26:32 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:48782 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390699AbfEXL0b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 07:26:26 -0400
-Received: by mail-qk1-f196.google.com with SMTP id p18so6953495qkk.0
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 04:26:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AQbzxXz1q7eupENIwZaibprKRQQ1QGdGQzKNp6w4Rig=;
-        b=qno0DZOafF73RT0ZDcC5fDnleaIYN1r7Spg2AtrRPoNELpOm+eVBquKf6qMKWbrZll
-         vML+ySumfkUfEYJsRHL24yaWH5pJ2yNZvk+QsCm9PHbbqB9FvVUNPlDWi7czSYwW62gh
-         LZl2c3bZ6CtXghWBQfFf+LQJRDn3nM+w6HyXoPhLlkwZ26YXO2dC2zAUmr3wKfwVhcjz
-         zJb7JHfyzcbGDJkHpUPYxU8vDenHtUxsi88gK56wAcnT1O7pEsALLubqM2Jv9hNu4Krf
-         /OvG8Q/kHdAMj8+NFilB1sUaRV8xwnSu+MqeNgwFaIq7JTUC/dBUgN7YcA3F3ADeOT4k
-         vaeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AQbzxXz1q7eupENIwZaibprKRQQ1QGdGQzKNp6w4Rig=;
-        b=CU9RwDTnLYJdn4piT8EG2/om0WAv1dVGCBv8LsoI4rUqdjTbfn1F9sT5V9kYC5zwlA
-         /dzwcQJg5SPbInDA+cALp9OyZ4exGYyxWNLvTJ1NIq5jHv+GlH0JYE2Lk6owezCFV31b
-         qPrOvtTCqjQqjg43NTFWg1pMMpMk6fCY5B8hyL4tVSZ9eF/UgEtXVqvVjexkfjL3jDTE
-         gZA/VSSPlKw3wpnpBC1rV7h6BEnxwazQBk7bKT5c28y+g+rYJz3IlF1babc2AyULO6oc
-         PFgtd6wJjXytAVMMdZzkscf/QiDQT1+evKGAmqCTymJ5IofnOfr3eEEscNgTw/OGbXta
-         ur3g==
-X-Gm-Message-State: APjAAAWWs1W8seGwOlcKcJyQbAN3Z94Sie721OPJg8VWM0U93hKFpklq
-        4W920P4l1gP9u0/23R927ugYmGwZea6cvfiQ8ppH2g==
-X-Google-Smtp-Source: APXvYqwjkUQ0RLpOGJmq7DNe4leRPE5WFR5Q2/qSAXC1a4jjesdy4O9Mkrsk1p39MJVgfwXgFcwsHDCr+h35uS+jHwU=
-X-Received: by 2002:a05:620a:1648:: with SMTP id c8mr73380286qko.186.1558697186148;
- Fri, 24 May 2019 04:26:26 -0700 (PDT)
+        Fri, 24 May 2019 07:26:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=urZSc9PtRmTIXnZlQzXLqeUysj9C2lLQGdh2OmGehcc=; b=KgOptn20NIjdi6wcMIC0AJ4vC
+        fMk+tfJYcfwJKyyPzZ35GT0UJfB81UZfuoq+HySz9B0DiqHOX/glmMtM9E5kLiIsHL7XX90SJm0EE
+        axk0OtfvO/SE2jEgtsGB80PZvzQ8c/RPa/lU/4wJRTe1DUdV6higzq4+mcmC4q4Pt20eDYX6Ydjs6
+        ASA6Ichx0tm/Hv9mupqM+TBAdmYTE97RYU9C1M9czhUeZZ21QTbjZ2kEUbEmrp40//nqsDQQWSpag
+        JzTeIMl/JotbqqmE9WpMDfp0E2xK+nLZR9gOfKGgzuTVaHuFchO/bk1ygiVLA0UPwXbsOPTxkDG6q
+        l9An+hpWg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hU8Kw-0008Ci-8V; Fri, 24 May 2019 11:26:10 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0B53F20277364; Fri, 24 May 2019 13:26:09 +0200 (CEST)
+Date:   Fri, 24 May 2019 13:26:08 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        "Frank Ch. Eigler" <fche@redhat.com>
+Subject: Re: [RFC][PATCH 03/14 v2] function_graph: Allow multiple users to
+ attach to function graph
+Message-ID: <20190524112608.GJ2589@hirez.programming.kicks-ass.net>
+References: <20190520142001.270067280@goodmis.org>
+ <20190520142156.992391836@goodmis.org>
 MIME-Version: 1.0
-References: <1557474183-19719-1-git-send-email-alexandre.torgue@st.com>
-In-Reply-To: <1557474183-19719-1-git-send-email-alexandre.torgue@st.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 24 May 2019 13:26:14 +0200
-Message-ID: <CACRpkdZ4P=PSCu86p48nBPeVk-h5T0Ytc1CYV3XZGd4fLuJLGw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: stm32: add lock mechanism for irqmux selection
-To:     Alexandre Torgue <alexandre.torgue@st.com>
-Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190520142156.992391836@goodmis.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 10, 2019 at 9:43 AM Alexandre Torgue
-<alexandre.torgue@st.com> wrote:
+On Mon, May 20, 2019 at 10:20:04AM -0400, Steven Rostedt wrote:
+> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+> 
+> Allow for multiple users to attach to function graph tracer at the same
+> time. Only 16 simultaneous users can attach to the tracer. This is because
+> there's an array that stores the pointers to the attached fgraph_ops. When a
+> a function being traced is entered, each of the ftrace_ops entryfunc is
+> called and if it returns non zero, its index into the array will be added to
+> the shadow stack.
+> 
+> On exit of the function being traced, the shadow stack will contain the
+> indexes of the ftrace_ops on the array that want their retfunc to be called.
+> 
+> Because a function may sleep for a long time (if a task sleeps itself), the
+> return of the function may be literally days later. If the ftrace_ops is
+> removed, its place on the array is replaced with a ftrace_ops that contains
+> the stub functions and that will be called when the function finally
+> returns.
 
-> GPIOs are split between several banks (A, B, ...) and each bank can have
-> up to 16 lines. Those GPIOs could be used as interrupt lines thanks to
-> exti lines. As there are only 16 exti lines, a mux is used to select which
-> gpio line is connected to which exti line. Mapping is done as follow:
->
-> -A0, B0, C0.. -->exti_line_0 (X0 selected by mux_0)
-> -A1, B1, C1.. -->exti_line_1 (X1 selected by mux_1)
-> ...
->
-> This patch adds a protection to avoid overriding on mux_n for exti_line_n.
->
-> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+But but but but.. why not add all the required bits to the shadow stack
+in the first place and do away with the array entirely?
 
-Patch applied, can't say I fully understand it but you know what
-you're doing!
+So on ret, just keep POP'ing until either the stack is empty or the
+entry is for another function.
 
-Yours,
-Linus Walleij
+
