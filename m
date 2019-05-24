@@ -2,152 +2,105 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02287C282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 22:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57DC9C282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 22:04:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5FEC217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 22:01:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A286217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 22:04:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=appneta.com header.i=@appneta.com header.b="CP3pG9if"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Upz4APO1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404444AbfEXWB1 (ORCPT
+        id S1732126AbfEXWE6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 18:01:27 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42712 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404303AbfEXWB0 (ORCPT
+        Fri, 24 May 2019 18:04:58 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:46104 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729552AbfEXWE6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 18:01:26 -0400
-Received: by mail-pf1-f194.google.com with SMTP id r22so3200689pfh.9
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 15:01:26 -0700 (PDT)
+        Fri, 24 May 2019 18:04:58 -0400
+Received: by mail-pl1-f196.google.com with SMTP id r18so4661222pls.13;
+        Fri, 24 May 2019 15:04:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=appneta.com; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Nt1Bto+RuKAe8F0XKPOQ+MhI4MGCp3IBcqE1bNWm624=;
-        b=CP3pG9ifqRjFBc0YzSgRZhosVC3X/Gn1RGmFGqOzuMcKIczmIs/OCyyjYxWltNsfFk
-         4mycd8lZIITJoEB+fcpjf8FT1kv+xkBDmO6lK+fhB4wuUjsW2BKF02fS2SVSabb57vwh
-         ANBUCNIjYnb5tPURfcu15IQNfhbH/7OJVk0es=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YnnyVNqUxh2k/cxJmn0sG9tavfiNdKrpTqEXdJVnlro=;
+        b=Upz4APO1cM07lMLyjajBRGcUaIxxWc2xSIZPv0yCdbKk3bgt8lhoMg/RBm5woTdxPr
+         nACGQHxt104QMt3YOOh2M23sdsn8KzWP43N33VaglrLr0tP4Uc0GjOGD2Enlhex9VIQJ
+         /yNsLnXqaY7H7SRuzusM6LohshAGdco0DOPG58aQuYHlVn+khi52A4xolC0Syz96GUlg
+         AONdEtSU9gMyoKyKxxlCZ+f2GCXI1k7BJOOgckQPYpu5r3jPA7qyv80idWO6GzETPGKv
+         Wo6lFlJbmAFy8PTdZ+uLnfhPiv7bcyUp6FDJfa9Qo2vVvj1pDoHAB6fMuQ+tsu1ZewBH
+         2bYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Nt1Bto+RuKAe8F0XKPOQ+MhI4MGCp3IBcqE1bNWm624=;
-        b=IES4m+iRROqFO44l+g530S8/TaeB8i4F8Nc3xVm4l6QwQj3iu54ehy/Cg023KBQxCP
-         2v/iRIdmhGk5L4vHULB3THSDagHQlQsa3a6BRjDy1WjXktnL3ItwgqVIksRPTU4ErjvE
-         /VEGfLZJ/F0DRh9wcOlCP//4VpLiWcrX+9JjR/SL8ZLQ9i08kHRVjaI95w4y3ng1b5S0
-         p6Vq3pAHIHBN3DwImg2CzcpqBpWsTibD/bNhpHXhHTKFrjHItbvWtpiON7JAMzV8LOJz
-         kG7FA81eRN1Y8WqmDmziHphY7pZzZAKcLrCyh54C7ARsKm3SZeDOEm9fRVhQcF/Wvmeq
-         Fqbg==
-X-Gm-Message-State: APjAAAU2FAwQwFyIiihAw3zu+4cy8/c30uFtO6cuhPER676KbowxDHbQ
-        +MtTGVebG3G4j3hRrwE6uYvGsA==
-X-Google-Smtp-Source: APXvYqx1AU7WlE+4JCn2Y/DvThwLZLnoOhh2EBVLKjNWpqmzprHergerEz/Wt2MlbcL6sAcU78Bqng==
-X-Received: by 2002:a17:90a:216d:: with SMTP id a100mr12026144pje.6.1558735285565;
-        Fri, 24 May 2019 15:01:25 -0700 (PDT)
-Received: from jltm109.jaalam.net (vancouver-a.appneta.com. [209.139.228.33])
-        by smtp.gmail.com with ESMTPSA id e123sm3645702pgc.29.2019.05.24.15.01.24
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YnnyVNqUxh2k/cxJmn0sG9tavfiNdKrpTqEXdJVnlro=;
+        b=pfxKN3zAPReirnVmToZpIV4v+7tV/Ak2+nxzafvlHKZjwTsdo2/Jr8u7eAipS+lyEM
+         +8t8jxxZ4GbpYv11Rgg0jBr5Ll+tb/Go5P5Xwe+Pf5GrFUJXjfByb15KSI6KzqWohd61
+         8iHAu2LQ84+EkL4/t1LbUMfiSeGwjB5krwygMIusvdnOihD6t/QM/GIFzn16qZ5Mn7fh
+         J//+zFU9WGQzxLGevA9gqDQe6w7l1iuWTdjUixuK/9en6b+WLtgFw1F0qSC5NIAyBap5
+         37ElRdUiS5pT/c2EWKHkbiXgWozbnT6UjW5webZcPNq8oS6LGG7J45r1jUWcew+dYdbE
+         dKTA==
+X-Gm-Message-State: APjAAAX3IrWp9sRilSWvxgD/N2s3Q1mY/wQvVMTHoi/JlWd97N4az+KA
+        odJdgYycAeh2oVAv4nwv+mXOZ5tz
+X-Google-Smtp-Source: APXvYqypmiDhXsU+qDxVxiydwYZ6k6hTxblUTrBF2RHXWA3cgKgAk9DsWjvYxZl+U+7+y7nr6JubvQ==
+X-Received: by 2002:a17:902:a70f:: with SMTP id w15mr39764422plq.222.1558735497195;
+        Fri, 24 May 2019 15:04:57 -0700 (PDT)
+Received: from ?IPv6:2601:282:800:fd80:59ee:6a57:8906:e2a1? ([2601:282:800:fd80:59ee:6a57:8906:e2a1])
+        by smtp.googlemail.com with ESMTPSA id o7sm4736191pfp.168.2019.05.24.15.04.55
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 15:01:24 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH net 1/4] net/udp_gso: Allow TX timestamp with UDP GSO
-From:   Fred Klassen <fklassen@appneta.com>
-In-Reply-To: <CAF=yD-Le-eTadOi7PL8WFEQCG=yLqb5gvKiks+s5Akeq8TenBQ@mail.gmail.com>
-Date:   Fri, 24 May 2019 15:01:24 -0700
-Cc:     "David S. Miller" <davem@davemloft.net>,
+        Fri, 24 May 2019 15:04:56 -0700 (PDT)
+Subject: Re: [PATCH][next] ipv4: remove redundant assignment to n
+To:     Colin King <colin.king@canonical.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
         Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        Willem de Bruijn <willemb@google.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <90E3853F-107D-45BA-93DC-D0BE8AC6FCBB@appneta.com>
-References: <20190523210651.80902-1-fklassen@appneta.com>
- <20190523210651.80902-2-fklassen@appneta.com>
- <CAF=yD-Jf95De=z_nx9WFkGDa6+nRUqM_1PqGkjwaFPzOe+PfXg@mail.gmail.com>
- <AE8E0772-7256-4B9C-A990-96930E834AEE@appneta.com>
- <CAF=yD-LtAKpND601LQrC1+=iF6spSUXVdUapcsbJdv5FYa=5Jg@mail.gmail.com>
- <AFC1ECC8-BFAC-4718-B0C9-97CC4BD1F397@appneta.com>
- <CAF=yD-Le-eTadOi7PL8WFEQCG=yLqb5gvKiks+s5Akeq8TenBQ@mail.gmail.com>
-To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-X-Mailer: Apple Mail (2.3445.104.8)
+        netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190524215658.25432-1-colin.king@canonical.com>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <fece118c-22ca-30c5-51b7-b6e9dc56ae59@gmail.com>
+Date:   Fri, 24 May 2019 16:04:54 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
+ Gecko/20100101 Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20190524215658.25432-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 5/24/19 3:56 PM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The pointer n is being assigned a value however this value is
+> never read in the code block and the end of the code block
+> continues to the next loop iteration. Clean up the code by
+> removing the redundant assignment.
+> 
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  net/ipv4/fib_trie.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
 
+This looks right to me -- n should have been dropped. It is used in
+fib_trie_free from which I created  __fib_info_notify_update but
+__fib_info_notify_update does do the put_child_root or node_free, it
+only walks the tree looking for relevant entries that need to send the
+NEWROUTE notifications.
 
-> On May 24, 2019, at 12:29 PM, Willem de Bruijn =
-<willemdebruijn.kernel@gmail.com> wrote:
->=20
-> It is the last moment that a timestamp can be generated for the last
-> byte, I don't see how that is "neither the start nor the end of a GSO
-> packet=E2=80=9D.
-
-My misunderstanding. I thought TCP did last segment timestamping, not
-last byte. In that case, your statements make sense.
-
->> It would be interesting if a practical case can be made for =
-timestamping
->> the last segment. In my mind, I don=E2=80=99t see how that would be =
-valuable.
->=20
-> It depends whether you are interested in measuring network latency or
-> host transmit path latency.
->=20
-> For the latter, knowing the time from the start of the sendmsg call to
-> the moment the last byte hits the wire is most relevant. Or in absence
-> of (well defined) hardware support, the last byte being queued to the
-> device is the next best thing.
->=20
-> It would make sense for this software implementation to follow
-> established hardware behavior. But as far as I know, the exact time a
-> hardware timestamp is taken is not consistent across devices, either.
->=20
-> For fine grained timestamped data, perhaps GSO is simply not a good
-> mechanism. That said, it still has to queue a timestamp if requested.
-
-I see your point. Makes sense to me.
-
->> When using hardware timestamping, I think you will find that nearly =
-all
->> adapters only allow one timestamp at a time. Therefore only one
->> packet in a burst would get timestamped.
->=20
-> Can you elaborate? When the host queues N packets all with hardware
-> timestamps requested, all N completions will have a timestamp? Or is
-> that not guaranteed?
->=20
-
-It is not guaranteed. The best example is in ixgbe_main.c and search for
-=E2=80=98SKBTX_HW_TSTAMP=E2=80=99.  If there is a PTP TX timestamp in =
-progress,
-=E2=80=98__IXGBE_PTP_TX_IN_PROGRESS=E2=80=99 is set and no other =
-timestamps
-are possible. The flag is cleared after transmit softirq, and only then
-can another TX timestamp be taken. =20
-
->> There are exceptions, for
->> example I am playing with a 100G Mellanox adapter that has
->> per-packet TX timestamping. However, I suspect that when I am
->> done testing, all I will see is timestamps that are representing wire
->> rate (e.g. 123nsec per 1500 byte packet).
->>=20
->> Beyond testing the accuracy of a NIC=E2=80=99s timestamping =
-capabilities, I
->> see very little value in doing per-segment timestamping.
->=20
-> Ack. Great detailed argument, thanks.
-
-Thanks. I=E2=80=99m a timestamping nerd and have learned lots with this=20=
-
-discussion.
+Fixes: 1bff1a0c9bbda ("ipv4: Add function to send route updates")
+Reviewed-by: David Ahern <dsahern@gmail.com>
 
