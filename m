@@ -6,84 +6,99 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B51DC282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47BBAC282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:39:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33D8D206A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:38:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29541206A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:39:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390725AbfEXKiv (ORCPT
+        id S2390567AbfEXKj3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 06:38:51 -0400
-Received: from mga02.intel.com ([134.134.136.20]:37305 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390248AbfEXKiv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 06:38:51 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 May 2019 03:38:50 -0700
-X-ExtLoop1: 1
-Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.189])
-  by orsmga005.jf.intel.com with ESMTP; 24 May 2019 03:38:46 -0700
-Date:   Fri, 24 May 2019 13:38:46 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     James Morris <jmorris@namei.org>
-Cc:     Matthew Garrett <matthewgarrett@google.com>,
-        linux-integrity@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca,
-        roberto.sassu@huawei.com, linux-efi@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tweek@google.com, bsz@semihalf.com
-Subject: Re: [PATCH V7 0/4] Add support for crypto agile logs
-Message-ID: <20190524103846.GA11695@linux.intel.com>
-References: <20190520205501.177637-1-matthewgarrett@google.com>
- <20190523121449.GA9997@linux.intel.com>
- <20190523122610.GA12327@linux.intel.com>
- <alpine.LRH.2.21.1905240252440.31508@namei.org>
+        Fri, 24 May 2019 06:39:29 -0400
+Received: from outbound-smtp09.blacknight.com ([46.22.139.14]:42369 "EHLO
+        outbound-smtp09.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390410AbfEXKj3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 06:39:29 -0400
+Received: from mail.blacknight.com (pemlinmail04.blacknight.ie [81.17.254.17])
+        by outbound-smtp09.blacknight.com (Postfix) with ESMTPS id 4EEF91C22F4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 11:39:26 +0100 (IST)
+Received: (qmail 32417 invoked from network); 24 May 2019 10:39:26 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[37.228.225.79])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 24 May 2019 10:39:26 -0000
+Date:   Fri, 24 May 2019 11:39:24 +0100
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     linux-mm@kvack.org, akpm@linux-foundation.org, mhocko@suse.com,
+        cai@lca.pw, linux-kernel@vger.kernel.org, marc.zyngier@arm.com,
+        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org
+Subject: Re: mm/compaction: BUG: NULL pointer dereference
+Message-ID: <20190524103924.GN18914@techsingularity.net>
+References: <1558689619-16891-1-git-send-email-suzuki.poulose@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <alpine.LRH.2.21.1905240252440.31508@namei.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <1558689619-16891-1-git-send-email-suzuki.poulose@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 02:54:20AM +1000, James Morris wrote:
-> On Thu, 23 May 2019, Jarkko Sakkinen wrote:
+On Fri, May 24, 2019 at 10:20:19AM +0100, Suzuki K Poulose wrote:
+> Hi,
 > 
-> > On Thu, May 23, 2019 at 03:14:49PM +0300, Jarkko Sakkinen wrote:
-> > > On Mon, May 20, 2019 at 01:54:57PM -0700, Matthew Garrett wrote:
-> > > > Identical to previous version except without the KSAN workaround - Ard
-> > > > has a better solution for that.
-> > > 
-> > > 
-> > > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > Tested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > 
-> > Only applied to my master at this point becaues the patches from
-> > my earlier PRs are not yet mirrored to security/next-general.
+> We are hitting NULL pointer dereferences while running stress tests with KVM.
+> See splat [0]. The test is to spawn 100 VMs all doing standard debian
+> installation (Thanks to Marc's automated scripts, available here [1] ).
+> The problem has been reproduced with a better rate of success from 5.1-rc6
+> onwards.
 > 
-> Which PRs are these?
+> The issue is only reproducible with swapping enabled and the entire
+> memory is used up, when swapping heavily. Also this issue is only reproducible
+> on only one server with 128GB, which has the following memory layout:
 > 
-> btw, Linus wants security subsystem maintainers to submit PRs directly to 
-> him from now on.
+> [32GB@4GB, hole , 96GB@544GB]
 > 
-> I'll only be carrying patches for the core LSM and new security mechanisms 
-> before they're merged and have a maintainer assigned.
+> Here is my non-expert analysis of the issue so far.
+> 
+> Under extreme memory pressure, the kswapd could trigger reset_isolation_suitable()
+> to figure out the cached values for migrate/free pfn for a zone, by scanning through
+> the entire zone. On our server it does so in the range of [ 0x10_0000, 0xa00_0000 ],
+> with the following area of holes : [ 0x20_0000, 0x880_0000 ].
+> In the failing case, we end up setting the cached migrate pfn as : 0x508_0000, which
+> is right in the center of the zone pfn range. i.e ( 0x10_0000 + 0xa00_0000 ) / 2,
+> with reset_migrate = 0x88_4e00, reset_free = 0x10_0000.
+> 
+> Now these cached values are used by the fast_isolate_freepages() to find a pfn. However,
+> since we cant find anything during the search we fall back to using the page belonging
+> to the min_pfn (which is the migrate_pfn), without proper checks to see if that is valid
+> PFN or not. This is then passed on to fast_isolate_around() which tries to do :
+> set_pageblock_skip(page) on the page which blows up due to an NULL mem_section pointer.
+> 
+> The following patch seems to fix the issue for me, but I am not quite convinced that
+> it is the right fix. Thoughts ?
+> 
 
-I'm referring to these:
+I think the patch is valid and the alternatives would be unnecessarily
+complicated. During a normal scan for free pages to isolate, there
+is a check for pageblock_pfn_to_page() which uses a pfn_valid check
+for non-contiguous zones in __pageblock_pfn_to_page. Now, while the
+non-contiguous check could be made in the area you highlight, it would be a
+relatively small optimisation that would be unmeasurable overall. However,
+it is definitely the case that if the PFN you highlight is invalid that
+badness happens. If you want to express this as a signed-off patch with
+an adjusted changelog then I'd be happy to add
 
-https://lore.kernel.org/linux-integrity/20190329115544.GA27351@linux.intel.com/
+Reviewed-by: Mel Gorman <mgorman@techsingularity.net>
 
-I got response from you that those were applied and there is another
-response in that thread that they are being sent to Linus. That is why I
-haven't done anything since. Most of them are critical fixes to v5.1
-changes.
+If you are not comfortable with rewriting the changelog and formatting
+it as a patch then I can do it on your behalf and preserve your
+Signed-off-by. Just let me know.
 
-Should I now take the action to send a PR to Linus and tag them to
-stable?
+Thanks for researching this, I think it also applies to other people but
+had not found the time to track it down.
 
-/Jarkko
+-- 
+Mel Gorman
+SUSE Labs
