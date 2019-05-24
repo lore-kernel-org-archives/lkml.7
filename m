@@ -5,54 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3A64C282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 23:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E9DC282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 23:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99033217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 23:50:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19A982186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 23:50:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="bKtwgdrk"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="ExaDqp0k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726461AbfEXXuI (ORCPT
+        id S1726494AbfEXXuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 19:50:08 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44287 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbfEXXuD (ORCPT
+        Fri, 24 May 2019 19:50:09 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33498 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726441AbfEXXuG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 19:50:03 -0400
-Received: by mail-pg1-f196.google.com with SMTP id n2so5839168pgp.11
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 16:50:03 -0700 (PDT)
+        Fri, 24 May 2019 19:50:06 -0400
+Received: by mail-pf1-f194.google.com with SMTP id z28so6205402pfk.0
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 16:50:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=joelfernandes.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=eaayBc92IMmJypjY+VABsd2ojMmm1ZzkUdujrOQbc5g=;
-        b=bKtwgdrkqRsODjat6ojYHyBKdVvveA/eZWmIfkN9EasXwK9Os8rI42a213oMZywyrJ
-         uQqACXEmiJkk4pse9iu30fuVl4njrGuVeGY+qNGodI9qLCrR7wmHRld8PBOzHPJpRXLn
-         hVJS0T152ByGYPSSVahtJqoeq8R8jylKj9qpc=
+        bh=4IUQP+uKyCN66rRAguQBd+uSI/nPEDtpoZNPuNABz7k=;
+        b=ExaDqp0kDit6EEuSOcT+FAdLJsr3wasxUTshDnisEPTxiqbsM/iwHBlK5jmEac4uTx
+         1WrmYkFMfBW8Hthn8w/kr+CT1si+DUZOuwzHNsk8UBPZv3PhzihaZaVz4saSEqQb9A8/
+         P62/INsuK+8WFv0NR63C1VMqjfsXLMIYivmZQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=eaayBc92IMmJypjY+VABsd2ojMmm1ZzkUdujrOQbc5g=;
-        b=OqP5bv6FhNTNekgj+ADmrHdqtTqZL5jz7SJomu/Qk7RQ2Lw0o733aOBIa1nP+0Xmpx
-         ZUG2NMvEo1nt0wzE7lCl9ZQkQGG0XvpMtsPM3We+wUH6xbyDY/cUMeszUW56IPjcH/r/
-         enF5/5ZnGCgMHjDj4W2PqbbSHYzmdZC9MouYdQk9ZaTI2cAl7FeNKAT48hD28TLD2AfG
-         q1HwWynFYnhnO8XDXJolR7d/SbHa4TeB+3lJ2SJjADMgiN+SlX45lRdWPuDQkUBQjVhM
-         YVBvNuhUX0KrLZYpv39TsZ3i+7ZyrViI0fgzNOhTHT2+hREo6UNxXbYjOdPbjdl6B1bi
-         woJQ==
-X-Gm-Message-State: APjAAAWHLGoL2r4GiSlollvuznYwEJ5B4/EUxbkLzXWfJaNTdayAiufV
-        cfZkqYxdBinGvxvTdualb4IPYbRtonpL4g==
-X-Google-Smtp-Source: APXvYqxnwdALM9KRFwXLedWKJxMEgotFtqy5TZBUssjnizX6ClUg18TxOqEWpFQcyOGvp5/8X0oLPg==
-X-Received: by 2002:a17:90a:b296:: with SMTP id c22mr13322972pjr.28.1558741802356;
-        Fri, 24 May 2019 16:50:02 -0700 (PDT)
+        bh=4IUQP+uKyCN66rRAguQBd+uSI/nPEDtpoZNPuNABz7k=;
+        b=OlDt5bkCHeO+kkFfbGc81BEqpvWAjLESdSVARxnxEpOjey6hSNOvUhxGNOHMmCNsDD
+         EAEamN4D5ApWGGSOSZ5EfkDH5P5DuFyK98+ycixPySNt5YNZakIVnReGD4vJvuLue0gH
+         pYtyEphvs8KOX/BtbdkJZ6y0P9xeRwkbNukNjgPaVRhC11GF6kvLs9ZNeAiSI4Dy7fek
+         rPmR1aSqQkGZ4Bxi0/uu2YqDOuyiyJDLbcWZJgEUe0uQMjX5V/e6OGJ9Qy8r6stM4ozv
+         zojxZxR6PETzaKu64+h39cm5KVTDE6G849M54Da3Zjyy3MdjPI5JfPPEsNmcKrdmPfA6
+         Do5w==
+X-Gm-Message-State: APjAAAURyOWIOd0r+caUpgvPC8JetjensvX5LBQLntFbHa0yLbAu1zZI
+        8ZTDrAA8sSaHJNPjm+Qa5WscWWZHaAxUHg==
+X-Google-Smtp-Source: APXvYqxNGBpXom3Ado94lkiXFHwXNMChLcccb7ZkYxRn6dsfk/n65WIEwwfbkGKCqFKqFYilSX8ODw==
+X-Received: by 2002:a17:90a:372a:: with SMTP id u39mr12987526pjb.19.1558741804955;
+        Fri, 24 May 2019 16:50:04 -0700 (PDT)
 Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id q4sm3297595pgb.39.2019.05.24.16.49.59
+        by smtp.gmail.com with ESMTPSA id q4sm3297595pgb.39.2019.05.24.16.50.02
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 24 May 2019 16:50:01 -0700 (PDT)
+        Fri, 24 May 2019 16:50:04 -0700 (PDT)
 From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
@@ -68,9 +68,9 @@ Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
         "Paul E. McKenney" <paulmck@linux.ibm.com>,
         Paul Mackerras <paulus@ozlabs.org>, rcu@vger.kernel.org,
         Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH RFC 4/5] rculist: Remove hlist_for_each_entry_rcu_notrace since no users
-Date:   Fri, 24 May 2019 19:49:32 -0400
-Message-Id: <20190524234933.5133-5-joel@joelfernandes.org>
+Subject: [PATCH RFC 5/5] rcu: Remove rcu_dereference_raw_notrace since no users
+Date:   Fri, 24 May 2019 19:49:33 -0400
+Message-Id: <20190524234933.5133-6-joel@joelfernandes.org>
 X-Mailer: git-send-email 2.22.0.rc1.257.g3120a18244-goog
 In-Reply-To: <20190524234933.5133-1-joel@joelfernandes.org>
 References: <20190524234933.5133-1-joel@joelfernandes.org>
@@ -82,57 +82,51 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 The series removes all users of the API and with this patch, the API
-itself.
+itself. Also fix documentation.
 
 Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 ---
- .clang-format           |  1 -
- include/linux/rculist.h | 20 --------------------
- 2 files changed, 21 deletions(-)
+ Documentation/RCU/Design/Requirements/Requirements.html | 6 +++---
+ include/linux/rcupdate.h                                | 9 ---------
+ 2 files changed, 3 insertions(+), 12 deletions(-)
 
-diff --git a/.clang-format b/.clang-format
-index 2ffd69afc1a8..aa935923f5cb 100644
---- a/.clang-format
-+++ b/.clang-format
-@@ -287,7 +287,6 @@ ForEachMacros:
-   - 'hlist_for_each_entry_from_rcu'
-   - 'hlist_for_each_entry_rcu'
-   - 'hlist_for_each_entry_rcu_bh'
--  - 'hlist_for_each_entry_rcu_notrace'
-   - 'hlist_for_each_entry_safe'
-   - '__hlist_for_each_rcu'
-   - 'hlist_for_each_safe'
-diff --git a/include/linux/rculist.h b/include/linux/rculist.h
-index e91ec9ddcd30..0d3d77cf4f07 100644
---- a/include/linux/rculist.h
-+++ b/include/linux/rculist.h
-@@ -628,26 +628,6 @@ static inline void hlist_add_behind_rcu(struct hlist_node *n,
- 		pos = hlist_entry_safe(rcu_dereference_raw(hlist_next_rcu(\
- 			&(pos)->member)), typeof(*(pos)), member))
+diff --git a/Documentation/RCU/Design/Requirements/Requirements.html b/Documentation/RCU/Design/Requirements/Requirements.html
+index 5a9238a2883c..9727278893e6 100644
+--- a/Documentation/RCU/Design/Requirements/Requirements.html
++++ b/Documentation/RCU/Design/Requirements/Requirements.html
+@@ -2512,9 +2512,9 @@ disabled across the entire RCU read-side critical section.
+ <p>
+ It is possible to use tracing on RCU code, but tracing itself
+ uses RCU.
+-For this reason, <tt>rcu_dereference_raw_notrace()</tt>
+-is provided for use by tracing, which avoids the destructive
+-recursion that could otherwise ensue.
++This is the other reason for using, <tt>rcu_dereference_raw()</tt>,
++for use by tracing, which avoids the destructive recursion that could
++otherwise ensue.
+ This API is also used by virtualization in some architectures,
+ where RCU readers execute in environments in which tracing
+ cannot be used.
+diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+index 922bb6848813..f917a27fc115 100644
+--- a/include/linux/rcupdate.h
++++ b/include/linux/rcupdate.h
+@@ -472,15 +472,6 @@ static inline void rcu_preempt_sleep_check(void) { }
+ 	__rcu_dereference_check((p), (c) || rcu_read_lock_sched_held(), \
+ 				__rcu)
  
--/**
-- * hlist_for_each_entry_rcu_notrace - iterate over rcu list of given type (for tracing)
-- * @pos:	the type * to use as a loop cursor.
-- * @head:	the head for your list.
-- * @member:	the name of the hlist_node within the struct.
+-/*
+- * The tracing infrastructure traces RCU (we want that), but unfortunately
+- * some of the RCU checks causes tracing to lock up the system.
 - *
-- * This list-traversal primitive may safely run concurrently with
-- * the _rcu list-mutation primitives such as hlist_add_head_rcu()
-- * as long as the traversal is guarded by rcu_read_lock().
-- *
-- * This is the same as hlist_for_each_entry_rcu() except that it does
-- * not do any RCU debugging or tracing.
+- * The no-tracing version of rcu_dereference_raw() must not call
+- * rcu_read_lock_held().
 - */
--#define hlist_for_each_entry_rcu_notrace(pos, head, member)			\
--	for (pos = hlist_entry_safe (rcu_dereference_raw_notrace(hlist_first_rcu(head)),\
--			typeof(*(pos)), member);			\
--		pos;							\
--		pos = hlist_entry_safe(rcu_dereference_raw_notrace(hlist_next_rcu(\
--			&(pos)->member)), typeof(*(pos)), member))
+-#define rcu_dereference_raw_notrace(p) __rcu_dereference_check((p), 1, __rcu)
 -
  /**
-  * hlist_for_each_entry_rcu_bh - iterate over rcu list of given type
-  * @pos:	the type * to use as a loop cursor.
+  * rcu_dereference_protected() - fetch RCU pointer when updates prevented
+  * @p: The pointer to read, prior to dereferencing
 -- 
 2.22.0.rc1.257.g3120a18244-goog
 
