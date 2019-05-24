@@ -2,79 +2,73 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB084C282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30920C282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA78C2184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:44:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558734247;
-	bh=TiUA1WFEq7Il0rd+tzTv7rHfLDePXM5hZjMGD293VfM=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=HVZa+H2NWv4q3OQ9sSwCe6TIwsBs7bazhfW11miEx1auTv0OtJ0RP7g8aJR/c3bZ0
-	 ZDNfby325UEnKSyJN6cG56FIavCt6uwC/2yTMZtMZgSMq1pjtigWrouI2Yf2pnytTx
-	 +espnwW9P2Q2tapJaDwsTYv4UmCZrS76poPzBNsA=
+	by mail.kernel.org (Postfix) with ESMTP id 09555217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:44:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404360AbfEXVoH (ORCPT
+        id S2404369AbfEXVo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 17:44:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37200 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404176AbfEXVoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 17:44:06 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BA61217D7;
-        Fri, 24 May 2019 21:44:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558734246;
-        bh=TiUA1WFEq7Il0rd+tzTv7rHfLDePXM5hZjMGD293VfM=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=cJ+pF9asSBVEbeEPeP4pGA0GV5iHC4bFiFHmwoUEDwMg7DFd9qo4/LIbkBQ4tMJEI
-         0P7Xi2JdoC42bXYGpT6WKBUWfmkp7AZszIPijW/GZ8fpUAlM95SC/uT8XAKkzXDsjB
-         MsQHY6yNf8WuMRRrrmjS3ZtdwpvPrvdw9ldaJSyY=
-Subject: Re: [PATCH v2 1/3] kselftest/cgroup: fix unexpected testing failure
- on test_memcontrol
-To:     Tejun Heo <tj@kernel.org>, Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     cgroups@vger.kernel.org, Roman Gushchin <guro@fb.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jay Kamat <jgkamat@fb.com>, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190520030140.203605-1-alex.shi@linux.alibaba.com>
- <20190520030140.203605-2-alex.shi@linux.alibaba.com>
- <20190524214035.GG374014@devbig004.ftw2.facebook.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <0c6b76b8-e20c-33f0-21da-64a5d5da30a9@kernel.org>
-Date:   Fri, 24 May 2019 15:44:04 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 24 May 2019 17:44:29 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:59006 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404176AbfEXVo3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 17:44:29 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hUHz9-0000fU-TG; Fri, 24 May 2019 21:44:20 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Simon Ho <simon.ho@conexant.com>, alsa-devel@alsa-project.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] ASoC: cx2072x: remove redundant assignment to pulse_len
+Date:   Fri, 24 May 2019 22:44:19 +0100
+Message-Id: <20190524214419.25075-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190524214035.GG374014@devbig004.ftw2.facebook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/24/19 3:40 PM, Tejun Heo wrote:
-> Hello,
-> 
-> All three patches look good to me.  Please feel free to add my
-> acked-by.  Shuah, should I route these through cgroup tree or would
-> the kselftest tree be a better fit?
-> 
-> Thanks.
-> 
+From: Colin Ian King <colin.king@canonical.com>
 
+Variable pulse_len is being initialized to 1 however this value is
+never read and pulse_len is being re-assigned later in a switch
+statement.  Clean up the code by removing the redundant initialization.
 
-Tejun, I can take them through kselftest tree.
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ sound/soc/codecs/cx2072x.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-thanks,
--- Shuah
+diff --git a/sound/soc/codecs/cx2072x.c b/sound/soc/codecs/cx2072x.c
+index 23d2b25fe04c..c11a585bbf70 100644
+--- a/sound/soc/codecs/cx2072x.c
++++ b/sound/soc/codecs/cx2072x.c
+@@ -679,7 +679,7 @@ static int cx2072x_config_i2spcm(struct cx2072x_priv *cx2072x)
+ 	int is_right_j = 0;
+ 	int is_frame_inv = 0;
+ 	int is_bclk_inv = 0;
+-	int pulse_len = 1;
++	int pulse_len;
+ 	int frame_len = cx2072x->frame_size;
+ 	int sample_size = cx2072x->sample_size;
+ 	int i2s_right_slot;
+-- 
+2.20.1
+
