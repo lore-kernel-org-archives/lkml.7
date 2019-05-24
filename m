@@ -2,128 +2,127 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C733C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F15C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFE28217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:41:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="U3C+2Pkv"
+	by mail.kernel.org (Postfix) with ESMTP id 7263C217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:41:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390631AbfEXKlu (ORCPT
+        id S2390682AbfEXKlx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 06:41:50 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:46584 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390410AbfEXKlt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 06:41:49 -0400
-Received: by mail-pg1-f196.google.com with SMTP id o11so234646pgm.13
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 03:41:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Y5swjDHGKG+ezs/+w53g29T0/qBVH9yKlg23nn55c5E=;
-        b=U3C+2Pkv2aIG9zWer39/ZGLeS4wd7ty00L8nRwq2xSL9FzpzYmJ8/WtIyJFRadmuQc
-         DTP0KxyKCLyYHEAPVI55+6VrkoniAOF48Vl9Wj50Veq/wZPJat9/g22LGvoecBk8SR7s
-         r9+EN1shbjhX2kn0bCjSZ2tUp8JHkSf1kS7r8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Y5swjDHGKG+ezs/+w53g29T0/qBVH9yKlg23nn55c5E=;
-        b=HHhBLt8MSjSTsBje1XbxX8871o5M4FBYz+21UJgHWEAht+xmzzKgVSOturr3i5hvBt
-         PIMR2Dyy7iOs6YHaQWx6yyG/Lr1qxL6ZgZbYn05vtwFqFJdkNoTwxKcLPE5bV83LL/MC
-         VmonmzZPpa0wO94SId9W9ktEJ6regtUnVgf7sUbyDV39gawYeLbFqd1pd3YBIgTsGlTx
-         Suog3mT6+O6I1qN5u0Tiyvjgj6oiYMnT/huGuarxRaTyjuxCWVYDLpB9Wp/z3dH5ZdgR
-         n7bXMjFiMFr6WEmz52r9YzfzS5Ora6ft7aWOu28c+ORM6w9sTvLRRuRY041UjWgkU06i
-         oW9w==
-X-Gm-Message-State: APjAAAV9yhQcOUEI9o6ESQrJW8CMAdGvzhm1H+8sKfXVNBRZwKMbQd9/
-        8AaGBTADWyahRoU/dUHhBoQYBw==
-X-Google-Smtp-Source: APXvYqyvPrCWj4wLzn1Yd+9CbYrQKIVeghMZMryVtTFYZMAHt18ZSgOULimYpUVkB3YXKeqkBNPeBw==
-X-Received: by 2002:a63:9d8d:: with SMTP id i135mr104296236pgd.245.1558694509078;
-        Fri, 24 May 2019 03:41:49 -0700 (PDT)
-Received: from localhost.localdomain ([183.82.227.60])
-        by smtp.gmail.com with ESMTPSA id m72sm6550113pjb.7.2019.05.24.03.41.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 03:41:48 -0700 (PDT)
-From:   Jagan Teki <jagan@amarulasolutions.com>
-To:     Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Michael Trimarchi <michael@amarulasolutions.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-sunxi@googlegroups.com, linux-amarula@amarulasolutions.com,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: [PATCH v2 1/6] drm/sun4i: dsi: Use drm panel_or_bridge call
-Date:   Fri, 24 May 2019 16:11:10 +0530
-Message-Id: <20190524104115.20161-2-jagan@amarulasolutions.com>
-X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
-In-Reply-To: <20190524104115.20161-1-jagan@amarulasolutions.com>
-References: <20190524104115.20161-1-jagan@amarulasolutions.com>
+        Fri, 24 May 2019 06:41:53 -0400
+Received: from foss.arm.com ([217.140.101.70]:39800 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390639AbfEXKlx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 06:41:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C2CCC374;
+        Fri, 24 May 2019 03:41:52 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 23A643F703;
+        Fri, 24 May 2019 03:41:51 -0700 (PDT)
+Date:   Fri, 24 May 2019 11:41:48 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Tengfei Fan <tengfeif@codeaurora.org>
+Cc:     catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com,
+        anshuman.khandual@arm.com, andreyknvl@google.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tengfei@codeaurora.org
+Subject: Re: [PATCH] arm64: break while loop if task had been rescheduled
+Message-ID: <20190524104148.GB12796@lakrids.cambridge.arm.com>
+References: <1558430404-4840-1-git-send-email-tengfeif@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1558430404-4840-1-git-send-email-tengfeif@codeaurora.org>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Right now the driver is finding the panel using of_drm_find_panel,
-replace the same with drm_of_find_panel_or_bridge which would help
-to find the panel or bridge on the same call if bridge support added
-in future.
+On Tue, May 21, 2019 at 05:20:04PM +0800, Tengfei Fan wrote:
+> While printing a task's backtrace and this task isn't
+> current task, it is possible that task's fp and fp+8
+> have the same value, so cannot break the while loop.
+> This can break while loop if this task had been
+> rescheduled during print this task's backtrace.
 
-Added NULL in bridge argument, same will replace with bridge parameter
-once bridge supported.
+There are a few cases where backtracing can get stuck in an infinite
+loop. I'd attempted to address that more generally in my
+arm64/robust-stacktrace branch [1].
 
-Cc: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+Looking at tsk->state here is inherently racy, and doesn't solve the
+general case, so I'd prefer to avoid that.
 
-diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-index 65771e9a343a..ae2fe31b05b1 100644
---- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-+++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-@@ -21,6 +21,7 @@
- #include <drm/drmP.h>
- #include <drm/drm_atomic_helper.h>
- #include <drm/drm_mipi_dsi.h>
-+#include <drm/drm_of.h>
- #include <drm/drm_panel.h>
- #include <drm/drm_probe_helper.h>
- 
-@@ -964,11 +965,13 @@ static int sun6i_dsi_attach(struct mipi_dsi_host *host,
- 			    struct mipi_dsi_device *device)
- {
- 	struct sun6i_dsi *dsi = host_to_sun6i_dsi(host);
-+	int ret;
- 
- 	dsi->device = device;
--	dsi->panel = of_drm_find_panel(device->dev.of_node);
--	if (IS_ERR(dsi->panel))
--		return PTR_ERR(dsi->panel);
-+	ret = drm_of_find_panel_or_bridge(host->dev->of_node, 0, 0,
-+					  &dsi->panel, NULL);
-+	if (ret)
-+		return ret;
- 
- 	dev_info(host->dev, "Attached device %s\n", device->name);
- 
--- 
-2.18.0.321.gffc6fa0e3
+Do my patches help you here? If so, I'm happy to rebase those to
+v5.2-rc1 and repost.
 
+Thanks,
+Mark.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git/log/?h=arm64/robust-stacktrace
+
+> 
+> Signed-off-by: Tengfei Fan <tengfeif@codeaurora.org>
+> ---
+>  arch/arm64/kernel/traps.c | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+> 
+> diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
+> index 2975598..9df6e02 100644
+> --- a/arch/arm64/kernel/traps.c
+> +++ b/arch/arm64/kernel/traps.c
+> @@ -103,6 +103,9 @@ void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
+>  {
+>  	struct stackframe frame;
+>  	int skip = 0;
+> +	long cur_state = 0;
+> +	unsigned long cur_sp = 0;
+> +	unsigned long cur_fp = 0;
+>  
+>  	pr_debug("%s(regs = %p tsk = %p)\n", __func__, regs, tsk);
+>  
+> @@ -127,6 +130,9 @@ void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
+>  		 */
+>  		frame.fp = thread_saved_fp(tsk);
+>  		frame.pc = thread_saved_pc(tsk);
+> +		cur_state = tsk->state;
+> +		cur_sp = thread_saved_sp(tsk);
+> +		cur_fp = frame.fp;
+>  	}
+>  #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+>  	frame.graph = 0;
+> @@ -134,6 +140,23 @@ void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
+>  
+>  	printk("Call trace:\n");
+>  	do {
+> +		if (tsk != current && (cur_state != tsk->state
+> +			/*
+> +			 * We would not be printing backtrace for the task
+> +			 * that has changed state from uninterruptible to
+> +			 * running before hitting the do-while loop but after
+> +			 * saving the current state. If task is in running
+> +			 * state before saving the state, then we may print
+> +			 * wrong call trace or end up in infinite while loop
+> +			 * if *(fp) and *(fp+8) are same. While the situation
+> +			 * will stop print when that task schedule out.
+> +			 */
+> +			|| cur_sp != thread_saved_sp(tsk)
+> +			|| cur_fp != thread_saved_fp(tsk))) {
+> +			printk("The task:%s had been rescheduled!\n",
+> +				tsk->comm);
+> +			break;
+> +		}
+>  		/* skip until specified stack frame */
+>  		if (!skip) {
+>  			dump_backtrace_entry(frame.pc);
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
