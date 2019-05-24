@@ -2,36 +2,37 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A88D1C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 986FDC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D72C20862
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:26:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67F4120862
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:26:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388852AbfEXG0X (ORCPT
+        id S2388902AbfEXG0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 02:26:23 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:14807 "EHLO
+        Fri, 24 May 2019 02:26:25 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:14809 "EHLO
         mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387622AbfEXG0X (ORCPT
+        with ESMTP id S2388051AbfEXG0Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 02:26:23 -0400
-X-UUID: aeba96ef057a42a5933beda6dd0a1da5-20190524
-X-UUID: aeba96ef057a42a5933beda6dd0a1da5-20190524
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        Fri, 24 May 2019 02:26:24 -0400
+X-UUID: 11b01a1f3a6a4d4cb21edba42fb58a89-20190524
+X-UUID: 11b01a1f3a6a4d4cb21edba42fb58a89-20190524
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
         (envelope-from <biao.huang@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1752624849; Fri, 24 May 2019 14:26:15 +0800
+        with ESMTP id 874709294; Fri, 24 May 2019 14:26:17 +0800
 Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 24 May 2019 14:26:13 +0800
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 24 May 2019 14:26:15 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 24 May 2019 14:26:13 +0800
+ Transport; Fri, 24 May 2019 14:26:14 +0800
 From:   Biao Huang <biao.huang@mediatek.com>
 To:     Jose Abreu <joabreu@synopsys.com>
 CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
@@ -45,51 +46,67 @@ CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
         <linux-mediatek@lists.infradead.org>, <yt.shen@mediatek.com>,
         <biao.huang@mediatek.com>, <jianguo.zhang@mediatek.comi>,
         <boon.leong.ong@intel.com>
-Subject: [v4, PATCH 0/3] fix some bugs in stmmac
-Date:   Fri, 24 May 2019 14:26:06 +0800
-Message-ID: <1558679169-26752-1-git-send-email-biao.huang@mediatek.com>
+Subject: [v4, PATCH 2/3] net: stmmac: fix csr_clk can't be zero issue
+Date:   Fri, 24 May 2019 14:26:08 +0800
+Message-ID: <1558679169-26752-3-git-send-email-biao.huang@mediatek.com>
 X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <1558679169-26752-1-git-send-email-biao.huang@mediatek.com>
+References: <1558679169-26752-1-git-send-email-biao.huang@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-TM-SNTS-SMTP: 86EFF50A2E3E7471BBF624373C15CF06603E1AF3736B7DA1286DF202D2EDBB822000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-changes in v4:                                                                  
-        since MTL_OPERATION_MODE write back issue has be fixed in the latest driver,
-remove original patch#3                                                         
-                                                                                
-changes in v3:                                                                  
-        add a Fixes:tag for each patch                                          
-                                                                                
-changes in v2:                                                                  
-        1. update rx_tail_addr as Jose's comment                                
-        2. changes clk_csr condition as Alex's proposition                      
-        3. remove init lines in dwmac-mediatek, get clk_csr from dts instead.   
-                                                                                
-v1:                                                                             
-This series fix some bugs in stmmac driver                                      
-3 patches are for common stmmac or dwmac4:                                      
-        1. update rx tail pointer to fix rx dma hang issue.                     
-        2. change condition for mdc clock to fix csr_clk can't be zero issue.   
-        3. write the modified value back to MTL_OPERATION_MODE.                 
-1 patch is for dwmac-mediatek:                                                  
-        modify csr_clk value to fix mdio read/write fail issue for dwmac-mediatek
-                                                                                
-Biao Huang (3):                                                                 
-  net: stmmac: update rx tail pointer register to fix rx dma hang               
-    issue.                                                                      
-  net: stmmac: fix csr_clk can't be zero issue                                  
-  net: stmmac: dwmac-mediatek: modify csr_clk value to fix mdio                 
-    read/write fail                                                             
-                                                                                
- .../net/ethernet/stmicro/stmmac/dwmac-mediatek.c   |    2 --                   
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |    7 ++++---              
- .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |    5 ++++-                
- 3 files changed, 8 insertions(+), 6 deletions(-)                               
-                                                                                
---                                                                              
+The specific clk_csr value can be zero, and
+stmmac_clk is necessary for MDC clock which can be set dynamically.
+So, change the condition from plat->clk_csr to plat->stmmac_clk to
+fix clk_csr can't be zero issue.
+
+Fixes: cd7201f477b9 ("stmmac: MDC clock dynamically based on the csr clock input")
+Signed-off-by: Biao Huang <biao.huang@mediatek.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |    6 +++---
+ .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |    5 ++++-
+ 2 files changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 06487a6..b2feb6c 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -4380,10 +4380,10 @@ int stmmac_dvr_probe(struct device *device,
+ 	 * set the MDC clock dynamically according to the csr actual
+ 	 * clock input.
+ 	 */
+-	if (!priv->plat->clk_csr)
+-		stmmac_clk_csr_set(priv);
+-	else
++	if (priv->plat->clk_csr >= 0)
+ 		priv->clk_csr = priv->plat->clk_csr;
++	else
++		stmmac_clk_csr_set(priv);
+ 
+ 	stmmac_check_pcs_mode(priv);
+ 
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+index 3031f2b..f45bfbe 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+@@ -408,7 +408,10 @@ struct plat_stmmacenet_data *
+ 	/* Default to phy auto-detection */
+ 	plat->phy_addr = -1;
+ 
+-	/* Get clk_csr from device tree */
++	/* Default to get clk_csr from stmmac_clk_crs_set(),
++	 * or get clk_csr from device tree.
++	 */
++	plat->clk_csr = -1;
+ 	of_property_read_u32(np, "clk_csr", &plat->clk_csr);
+ 
+ 	/* "snps,phy-addr" is not a standard property. Mark it as deprecated
+-- 
 1.7.9.5
 
