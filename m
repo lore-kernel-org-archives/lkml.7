@@ -2,387 +2,213 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E2FC282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 115BFC282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7656021773
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:43:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558716226;
-	bh=ggW23MrZkRt9rW5CmH9tG1BXOSlW9TRFJp98uIdvoKI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=AfAgvO3a9IGYMdGOKeVBCNsQrgm4572XXp30iqjpXZLBofVSBDt4fKbToxHcW9FgN
-	 wc9CfUsNHh3HSDcfLUZy/5us66x8cas4Qj+qWey3F8ASQrW5RXIvRhOeJpUyJuauPu
-	 yawlj/KMieeZmEr+3n67Lka7c42id2Oqf0pZRXgs=
+	by mail.kernel.org (Postfix) with ESMTP id D4E1721773
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:45:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="ngVpiceK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390915AbfEXQnq (ORCPT
+        id S2390948AbfEXQpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 12:43:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40626 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390605AbfEXQnn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 12:43:43 -0400
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C613921873
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 16:43:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558716222;
-        bh=ggW23MrZkRt9rW5CmH9tG1BXOSlW9TRFJp98uIdvoKI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=jBQ0Q2nxFeX8XMrkvwPiJGo7pwylggWf2/AyVI2PbYXi7qr65UaaQpTHCRAVkeNQd
-         SkIjpqT59HmsQJkrUovhNQAVEdd1GqLw7qi5lCcFYpOKaEWViUELx9+sl5g67pPwey
-         USG1epbHZl0BoGkrG+LWoa7w/PJlzomL6a1Q3Lq0=
-Received: by mail-wr1-f45.google.com with SMTP id f8so10699152wrt.1
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 09:43:41 -0700 (PDT)
-X-Gm-Message-State: APjAAAWWybpC7/fbPNS66Lz4jNApi/+PIhfUS7gh8W9CqYMvNwOCsRgR
-        lReTfiDXL02h3E1mTn7B08RlYcRlJ6L4VAK/m1ABCg==
-X-Google-Smtp-Source: APXvYqyggkvONNjNv0hDqKOGkisM3NKy4emIEsenROzIg+slkkM4mIbFl4MeDSbBPYXfV6Uy6VAslybbXyN+JYL5RVA=
-X-Received: by 2002:adf:e9ca:: with SMTP id l10mr5325072wrn.47.1558716220228;
- Fri, 24 May 2019 09:43:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190521155140.GE22089@linux.intel.com> <20190522132022.GC31176@linux.intel.com>
- <20190522132227.GD31176@linux.intel.com> <0e183cce-c4b4-0e10-dbb6-bd81bea58b66@tycho.nsa.gov>
- <20190522153836.GA24833@linux.intel.com> <CALCETrUS8xyF1JJmQs18BGTDhPRXf+s81BkMZCZwmY73r7M+zg@mail.gmail.com>
- <20190523023517.GA31950@linux.intel.com> <20190523102628.GC10955@linux.intel.com>
- <20190523141752.GA12078@linux.intel.com> <CALCETrUzx3LPAKCLFf75P-XshAkRcr+JLET3LA_kHDs9MA11FA@mail.gmail.com>
- <20190523234044.GC12078@linux.intel.com> <CALCETrV4DVEfW6EJ6DnQGGYDJAiA5M1QcuYJTiroumOM+D6Jjg@mail.gmail.com>
- <960B34DE67B9E140824F1DCDEC400C0F654E8956@ORSMSX116.amr.corp.intel.com>
-In-Reply-To: <960B34DE67B9E140824F1DCDEC400C0F654E8956@ORSMSX116.amr.corp.intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Fri, 24 May 2019 09:43:27 -0700
-X-Gmail-Original-Message-ID: <CALCETrX0WqouSWgdM+LNxMzypa0ZHZXTmJ+nNkuPuL8UOF_f2w@mail.gmail.com>
-Message-ID: <CALCETrX0WqouSWgdM+LNxMzypa0ZHZXTmJ+nNkuPuL8UOF_f2w@mail.gmail.com>
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-To:     "Xing, Cedric" <cedric.xing@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Fri, 24 May 2019 12:45:13 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:41382 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390346AbfEXQpM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 12:45:12 -0400
+Received: by mail-pl1-f194.google.com with SMTP id f12so4373489plt.8
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 09:45:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=y2z2dUkL6OhM76g8NRgsrjEEVDS8Qi9hxxcwTP5yXro=;
+        b=ngVpiceK0/3tVomB8NgMcKoVlDAL4VKoCylBb3sHtgzh3IdevD7uh9d93p7S+3mBtg
+         VWzXRMkGxSaNcTe8rWjbyeOLsuUn29vXbeB34U66Ctqp7nE8+br9lXCxFVs0YsczFnlx
+         g2DtyLmw9/jP1htQchRZMkJDcqWiC6ZnQDe8A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=y2z2dUkL6OhM76g8NRgsrjEEVDS8Qi9hxxcwTP5yXro=;
+        b=m8TTiPKQwpCrduU5/aqmH7oVrUA2dpCG66UHhNB27A/KVWQHwKRCz7i7tWg+7qug8M
+         UDqzEG6fIizwbWPVAX4bBVGoFvMGzN7IJ7PoNhPmTP8hf+WOwFbFFMGO7DPqOCFHVnOU
+         f2iITfmTV+lxAEpAyv+A3Q/UFVP3Mg2c6p5Ry42Z9MOF7c4GUfIcbuqY8/bsFGIgNElE
+         Lfab91j7P6PETzIs9fJCBM2evYOzBZONeBpYqi5njWtj9pE/fjZ2IbUrvUXNGjgMUj/k
+         eQu7YeFp2J/j33nDiejGktyxxLK4EqgmcrzyHaTN23c/JzXcxt38VmVqyl43MgWI4VHY
+         q3AQ==
+X-Gm-Message-State: APjAAAXLzELjZNwsrxjsy8z1m28KosoL8FvA35REth4LzcY9iABJeHOg
+        dj1+2GhxPmkyfhU/L8ROAHpXMg==
+X-Google-Smtp-Source: APXvYqy5csoUelKHq3QiRCp9VtPY9ZkTFbQOg5Wt/yEN3POdZnheqeeWKxFczwhSSIBvKLJRw89cNw==
+X-Received: by 2002:a17:902:f81:: with SMTP id 1mr58195262plz.242.1558716311638;
+        Fri, 24 May 2019 09:45:11 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id w1sm1326713pfg.51.2019.05.24.09.45.10
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 24 May 2019 09:45:10 -0700 (PDT)
+Date:   Fri, 24 May 2019 12:45:09 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Andrea Parri <andrea.parri@amarulasolutions.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
         Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>, rcu@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH] rcu: Prevent evaluation of rcu_assign_pointer()
+Message-ID: <20190524164509.GA197789@google.com>
+References: <1558694197-19295-1-git-send-email-andrea.parri@amarulasolutions.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1558694197-19295-1-git-send-email-andrea.parri@amarulasolutions.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 12:24 AM Xing, Cedric <cedric.xing@intel.com> wrote=
-:
->
-> Hi Andy,
->
-> > From: Andy Lutomirski [mailto:luto@kernel.org]
-> > Sent: Thursday, May 23, 2019 6:18 PM
-> >
-> > On Thu, May 23, 2019 at 4:40 PM Sean Christopherson <sean.j.christopher=
-son@intel.com>
-> > wrote:
-> > >
-> > > On Thu, May 23, 2019 at 08:38:17AM -0700, Andy Lutomirski wrote:
-> > > > On Thu, May 23, 2019 at 7:17 AM Sean Christopherson
-> > > > <sean.j.christopherson@intel.com> wrote:
-> > > > >
-> > > > > On Thu, May 23, 2019 at 01:26:28PM +0300, Jarkko Sakkinen wrote:
-> > > > > > On Wed, May 22, 2019 at 07:35:17PM -0700, Sean Christopherson w=
-rote:
-> > > > > > > But actually, there's no need to disallow mmap() after ECREAT=
-E
-> > > > > > > since the LSM checks also apply to mmap(), e.g. FILE__EXECUTE
-> > > > > > > would be needed to
-> > > > > > > mmap() any enclave pages PROT_EXEC.  I guess my past self
-> > > > > > > thought mmap() bypassed LSM checks?  The real problem is that
-> > > > > > > mmap()'ng an existing enclave would require FILE__WRITE and
-> > > > > > > FILE__EXECUTE, which puts us back at square one.
-> > > > > >
-> > > > > > I'm lost with the constraints we want to set.
-> > > > >
-> > > > > As is today, SELinux policies would require enclave loaders to
-> > > > > have FILE__WRITE and FILE__EXECUTE permissions on
-> > > > > /dev/sgx/enclave.  Presumably other LSMs have similar
-> > > > > requirements.  Requiring all processes to have
-> > > > > FILE__{WRITE,EXECUTE} permissions means the permissions don't add
-> > > > > much value, e.g. they can't be used to distinguish between an
-> > > > > enclave that is being loaded from an unmodified file and an encla=
-ve that is being
-> > generated on the fly, e.g. Graphene.
-> > > > >
-> > > > > Looking back at Andy's mail, he was talking about requiring
-> > > > > FILE__EXECUTE to run an enclave, so perhaps it's only FILE__WRITE
-> > > > > that we're trying to special case.
-> > > > >
-> > > >
-> > > > I thought about this some more, and I have a new proposal that help=
-s
-> > > > address the ELRANGE alignment issue and the permission issue at the
-> > > > cost of some extra verbosity.  Maybe you all can poke holes in it :=
-)
-> > > > The basic idea is to make everything more explicit from a user's
-> > > > perspective.  Here's how it works:
-> > > >
-> > > > Opening /dev/sgx/enclave gives an enclave_fd that, by design,
-> > > > doesn't give EXECUTE or WRITE.  mmap() on the enclave_fd only works
-> > > > if you pass PROT_NONE and gives the correct alignment.  The
-> > > > resulting VMA cannot be mprotected or mremapped.  It can't be
-> > > > mmapped at all until
-> > >
-> > > I assume you're thinking of clearing all VM_MAY* flags in sgx_mmap()?
-> > >
-> > > > after ECREATE because the alignment isn't known before that.
-> > >
-> > > I don't follow.  The alignment is known because userspace knows the
-> > > size of its enclave.  The initial unknown is the address, but that
-> > > becomes known once the initial mmap() completes.
-> >
-> > [...]
-> >
-> > I think I made the mistake of getting too carried away with implementat=
-ion details rather
-> > than just getting to the point.  And I misremembered the ECREATE flow -=
-- oops.  Let me try
-> > again.  First, here are some problems with some earlier proposals (mine=
-, yours
-> > Cedric's):
-> >
-> >  - Having the EADD operation always work but have different effects dep=
-ending on the
-> > source memory permissions is, at the very least, confusing.
->
-> Inheriting permissions from source pages IMHO is the easiest way to valid=
-ate the EPC permissions without any changes to LSM. And the argument about =
-its security is also easy to make.
->
-> I understand that it may take some effort to document it properly but oth=
-erwise don't see any practical issues with it.
+On Fri, May 24, 2019 at 12:36:37PM +0200, Andrea Parri wrote:
+> Quoting Paul [1]:
+> 
+>  "Given that a quick (and perhaps error-prone) search of the uses
+>   of rcu_assign_pointer() in v5.1 didn't find a single use of the
+>   return value, let's please instead change the documentation and
+>   implementation to eliminate the return value."
+> 
+> [1] https://lkml.kernel.org/r/20190523135013.GL28207@linux.ibm.com
+> 
+> Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
+> Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
+> Cc: Josh Triplett <josh@joshtriplett.org>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: Lai Jiangshan <jiangshanlai@gmail.com>
+> Cc: Joel Fernandes <joel@joelfernandes.org>
+> Cc: rcu@vger.kernel.org
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Sasha Levin <sashal@kernel.org>
+> ---
+> Matthew, Sasha:
+> 
+> The patch is based on -rcu/dev; I took the liberty of applying the
+> same change to your #defines in:
+> 
+>  tools/testing/radix-tree/linux/rcupdate.h
+>  tools/include/linux/rcu.h
+> 
+> but I admit that I'm not familiar with their uses: please shout if
+> you have any objections with it.
+> ---
+>  Documentation/RCU/whatisRCU.txt           |  8 ++++----
+>  include/linux/rcupdate.h                  |  5 ++---
+>  tools/include/linux/rcu.h                 | 11 +++++++++--
+>  tools/testing/radix-tree/linux/rcupdate.h |  5 ++++-
+>  4 files changed, 19 insertions(+), 10 deletions(-)
+> 
+> diff --git a/Documentation/RCU/whatisRCU.txt b/Documentation/RCU/whatisRCU.txt
+> index 981651a8b65d2..f99a87b9a88fa 100644
+> --- a/Documentation/RCU/whatisRCU.txt
+> +++ b/Documentation/RCU/whatisRCU.txt
+> @@ -212,7 +212,7 @@ synchronize_rcu()
+>  
+>  rcu_assign_pointer()
+>  
+> -	typeof(p) rcu_assign_pointer(p, typeof(p) v);
+> +	rcu_assign_pointer(p, typeof(p) v);
+>  
+>  	Yes, rcu_assign_pointer() -is- implemented as a macro, though it
+>  	would be cool to be able to declare a function in this manner.
+> @@ -220,9 +220,9 @@ rcu_assign_pointer()
+>  
+>  	The updater uses this function to assign a new value to an
+>  	RCU-protected pointer, in order to safely communicate the change
+> -	in value from the updater to the reader.  This function returns
+> -	the new value, and also executes any memory-barrier instructions
+> -	required for a given CPU architecture.
+> +	in value from the updater to the reader.  This macro does not
+> +	evaluate to an rvalue, but it does execute any memory-barrier
+> +	instructions required for a given CPU architecture.
+>  
+>  	Perhaps just as important, it serves to document (1) which
+>  	pointers are protected by RCU and (2) the point at which a
+> diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+> index 915460ec08722..a5f61a08e65fc 100644
+> --- a/include/linux/rcupdate.h
+> +++ b/include/linux/rcupdate.h
+> @@ -367,7 +367,7 @@ static inline void rcu_preempt_sleep_check(void) { }
+>   * other macros that it invokes.
+>   */
+>  #define rcu_assign_pointer(p, v)					      \
+> -({									      \
+> +do {									      \
+>  	uintptr_t _r_a_p__v = (uintptr_t)(v);				      \
+>  	rcu_check_sparse(p, __rcu);				      \
+>  									      \
+> @@ -375,8 +375,7 @@ static inline void rcu_preempt_sleep_check(void) { }
+>  		WRITE_ONCE((p), (typeof(p))(_r_a_p__v));		      \
+>  	else								      \
+>  		smp_store_release(&p, RCU_INITIALIZER((typeof(p))_r_a_p__v)); \
+> -	_r_a_p__v;							      \
+> -})
+> +} while (0)
+>  
+>  /**
+>   * rcu_swap_protected() - swap an RCU and a regular pointer
+> diff --git a/tools/include/linux/rcu.h b/tools/include/linux/rcu.h
+> index 7d02527e5bcea..01a435ee48cd6 100644
+> --- a/tools/include/linux/rcu.h
+> +++ b/tools/include/linux/rcu.h
+> @@ -19,7 +19,14 @@ static inline bool rcu_is_watching(void)
+>  	return false;
+>  }
+>  
+> -#define rcu_assign_pointer(p, v) ((p) = (v))
+> -#define RCU_INIT_POINTER(p, v) p=(v)
+> +#define rcu_assign_pointer(p, v)				\
+> +do {								\
+> +	(p) = (v);						\
+> +} while (0)
+> +
+> +#define RCU_INIT_POINTER(p, v)					\
+> +do {								\
+> +	(p) = (v);						\
+> +} while (0)
+>  
+>  #endif
+> diff --git a/tools/testing/radix-tree/linux/rcupdate.h b/tools/testing/radix-tree/linux/rcupdate.h
+> index fd280b070fdb1..48212f3a758e6 100644
+> --- a/tools/testing/radix-tree/linux/rcupdate.h
+> +++ b/tools/testing/radix-tree/linux/rcupdate.h
+> @@ -7,6 +7,9 @@
+>  #define rcu_dereference_raw(p) rcu_dereference(p)
+>  #define rcu_dereference_protected(p, cond) rcu_dereference(p)
+>  #define rcu_dereference_check(p, cond) rcu_dereference(p)
+> -#define RCU_INIT_POINTER(p, v)	(p) = (v)
+> +#define RCU_INIT_POINTER(p, v)					\
+> +do {								\
+> +	(p) = (v);						\
+> +} while (0)
+>  
+>  #endif
+> -- 
+> 2.7.4
+> 
 
-My objection is to the fact that it's implicit.  I have no problem
-with some operation succeeding if the source address is X and failing
-if it's !X, but I don't think it's fantastic to have it succeed in
-either case but do different things.
+Other than Paul's nits, LGTM. Thanks.
 
-For what it's worth, while this is a bit of a theoretical issue for X,
-but I think it's a real problem with W.  To avoid accidentally mapping
-an enclave page X and then later mapping the same page W (potentially
-in a different VMA), I think it will be a lot simpler if the driver
-can track which pages are allowed to ever be W.  We definitely *don't*
-want an interface in which the eventual writability of a page is
-inferred from the W permission on the source address, since we do
-*not* want to force anyone to map their enclave file PROT_WRITE or
-even to open it O_RDWR.
-
-With the explicit MAXPERM passed in, this issue goes away.  You can
-specify W if you want W.
-
->
-> >
-> >  - If we want to encourage user programs to be well-behaved, we want to=
- make it easy to
-> > map the RX parts of an enclave RX, the RW parts RW, the RO parts R, etc=
-.  But this
-> > interacts poorly with the sgx_mmap() alignment magic, as you've pointed=
- out.
-> >
-> >  - We don't want to couple LSMs with SGX too tightly.
-> >
-> > So here's how a nice interface might work:
-> >
-> > int enclave_fd =3D open("/dev/sgx/enclave", O_RDWR);
-> >
-> > /* enclave_fd points to a totally blank enclave. Before ECREATE, we nee=
-d to decide on an
-> > address. */
-> >
-> > void *addr =3D mmap(NULL, size, PROT_NONE, MAP_SHARED, enclave_fd, 0);
-> >
-> > /* we have an address! */
-> >
-> > ioctl(enclave_fd, ECREATE, ...);
-> >
-> > /* now add some data to the enclave.  We want the RWX addition to fail
-> > immediately unless we have the relevant LSM pemission.   Similarly, we
-> > want the RX addition to fail immediately unless the source VMA is appro=
-priate. */
-> >
-> > ioctl(enclave_fd, EADD, rx_source_1, MAXPERM=3DRX, ...);  [the ...
-> > includes SECINFO, which the kernel doesn't really care about] ioctl(enc=
-lave_fd, EADD,
-> > ro_source_1, MAXPERM=3DRX ...); ioctl(enclave_fd, EADD, rw_source_1, MA=
-XPERM=3DRW ...);
-> > ioctl(enclave_fd, EADD, rwx_source_1, MAXPERM=3DRWX ...);
->
-> If MAXPERM is taken from ioctl parameters, the real question here is how =
-to validate MAXPERM. Guess we shouldn't allow arbitrary MAXPERM to be speci=
-fied by user code, and the only logical source I can think of is from the s=
-ource pages (or from the enclave source file, but memory mapping is preferr=
-ed because it offers more flexibility).
-
-That's exactly what I intended here.  If you specify MAXPERM=3DRX, then
-the kernel can validate that the source address is executable.
-
->
-> >
-> > ioctl(enclave_fd, EINIT, ...);  /* presumably pass sigstruct_fd here, t=
-oo. */
-> >
-> > /* at this point, all is well except that the enclave is mapped PROT_NO=
-NE. There are a
-> > couple ways I can imagine to fix this. */
-> >
-> > We could use mmap:
-> >
-> > mmap(baseaddr+offset, len, PROT_READ, MAP_SHARED | MAP_FIXED, enclave_f=
-d, 0);  /* only
-> > succeeds if MAXPERM & R =3D=3D R */
-> >
-> > But this has some annoying implications with regard to sgx_get_unmapped=
-_area().  We could
-> > use an ioctl:
->
-> There's an easy fix. Just let sgx_get_unmapped_area() do the natural alig=
-nment only if MAP_FIXED is *not* set, otherwise, honor both address and len=
-.
->
-> But mmap() is subject to LSM check (probably against /dev/sgx/enclave?). =
-How to do mmap(RX) if FILE__EXECUTE is *not* granted for /dev/sgx/enclave, =
-even if MAXPERM=3DRX?
-
-I think we just let /dev/sgx/enclave be FILE__EXECUTE.  We don't
-*have* to make it so that FILE__WRITE and FILE__EXECUTE on
-/dev/sgx/enclave means you can create RWX enclave mappings.
-
->
-> >
-> > ioctl(enclave_fd, SGX_IOC_MPROTECT, offset, len, PROT_READ);
-> >
-> > which has the potentially nice property that we can completely bypass t=
-he LSM hooks,
-> > because the LSM has *already* vetted everything when the EADD calls wer=
-e allowed.  Or we
-> > could maybe even just use
-> > mprotect() itself:
-> >
-> > mprotect(baseaddr + offset, len, PROT_READ);
->
-> How to bypass LSM hooks in this mprotect()?
-
-Hmm.  I guess we either use FILE__WRITE and FILE__EXECUTE or we use ioctl()=
-.
-
->
-> >
-> > Or, for the really evil option, we could use a bit of magic in .fault a=
-nd do nothing here.
-> > Instead we'd make the initial mapping PROT_READ|PROT_WRITE|PROT_EXEC an=
-d have .fault
-> > actually instantiate the PTEs with the intersection of the VMA permissi=
-ons and MAXPERM.  I
-> > don't think I like this alternative, since it feels more magical than n=
-eeded and it will
-> > be harder to debug.  I like the fact that /proc/self/maps shows the act=
-ual permissions in
-> > all the other variants.
->
-> Agreed.
->
-> >
-> >
-> > All of the rest of the crud in my earlier email was just implementation=
- details.  The
-> > point I was trying to make was that I think it's possible to implement =
-this without making
-> > too much of a mess internally.  I think I favor the mprotect() approach=
- since it makes the
-> > behavior fairly obvious.
-> >
-> > I don't think any of this needs to change for SGX2.  We'd have an
-> > ioctl() that does EAUG and specifies MAXPERM.  Trying to mprotect() a p=
-age that hasn't
-> > been added yet with any permission other than PROT_NONE would fail.  I =
-suppose we might
-> > end up needing a way to let the EAUG operation *change* MAXPERM, and th=
-is operation would
-> > have to do some more LSM checks and walk all the existing mappings to m=
-ake sure they're
-> > consistent with the new MAXPERM.
->
-> EAUG ioctl could be a solution, but isn't optimal at least. What we've do=
-ne is #PF based. Specifically, an SGX2 enclave will have its heap mapped as=
- RW, but without any pages populated before EINIT. Then when the enclave ne=
-eds a new page in its heap, it issues EACCEPT, which will cause a #PF and t=
-he driver will respond by EAUG a new EPC page. And then the enclave will be=
- resumed and the faulted EACCEPT will be retried (and succeed).
->
-
-If the driver works like that, then whatever call sets up this lazily
-allocated heap could do the MAXPERM part.
-
-That being said, is the performance advantage from putting this logic
-in the kernel instead of in the untrusted part of the SDK really
-worthwhile?
-
-> >
-> > As an aside, I wonder if Linus et all would be okay with a new MAP_FULL=
-Y_ALIGNED mmap()
-> > flag that allocated memory aligned to the requested size.  Then we coul=
-d get rid of yet
-> > another bit of magic.
-> >
-> > --Andy
->
-> I've also got a chance to think more about it lately.
->
-> When we talk about EPC page permissions with SGX2 in mind, I think we sho=
-uld distinguish between initial permissions and runtime permissions. Initia=
-l permissions refer to the page permissions set at EADD. They are technical=
-ly set by "untrusted" code so should go by policies similar to those applic=
-able to regular shared objects. Runtime permissions refer to the permission=
-s granted by EMODPE, EAUG and EACCEPTCOPY. They are resulted from inherent =
-behavior of the enclave, which in theory is determined by the enclave's mea=
-surements (MRENCLAVE and/or MRSIGNER).
->
-> And we have 2 distinct files to work with - the enclave file and /dev/sgx=
-/enclave. And I consider the enclave file a logical source for initial perm=
-issions while /dev/sgx/enclave is a means to control runtime permissions. T=
-hen we can have a simpler approach like the pseudo code below.
->
-> /**
->  * Summary:
->  * - The enclave file resembles a shared object that contains RO/RX/RW se=
-gments
->  * - FILE__* are assigned to /dev/sgx/enclave, to determine acceptable pe=
-rmissions to mmap()/mprotect(), valid combinations are
->  *   + FILE__READ - Allow SGX1 enclaves only
->  *   + FILE__READ|FILE__WRITE - Allow SGX2 enclaves to expand data segmen=
-ts (e.g. heaps, stacks, etc.)
-
-I think this is a non-starter :(  FILE__WRITE also means that you can
-write to the file, and the admin / policy author will almost never
-want to allow that.
