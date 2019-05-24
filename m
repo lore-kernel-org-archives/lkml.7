@@ -2,95 +2,130 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FD5C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCCFBC282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:17:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8AEF20856
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:14:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFDD32081C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:17:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391534AbfEXMOZ (ORCPT
+        id S2391433AbfEXMRa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 08:14:25 -0400
-Received: from verein.lst.de ([213.95.11.211]:53563 "EHLO newverein.lst.de"
+        Fri, 24 May 2019 08:17:30 -0400
+Received: from mga09.intel.com ([134.134.136.24]:8125 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391311AbfEXMOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 08:14:25 -0400
-Received: by newverein.lst.de (Postfix, from userid 2005)
-        id E333268B02; Fri, 24 May 2019 14:13:59 +0200 (CEST)
-Date:   Fri, 24 May 2019 14:13:59 +0200
-From:   Torsten Duwe <duwe@lst.de>
-To:     Vasily Khoruzhick <anarsoul@gmail.com>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Sean Paul <seanpaul@chromium.org>,
-        Harald Geyer <harald@ccbib.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 6/6] arm64: dts: allwinner: a64: enable ANX6345 bridge
- on Teres-I
-Message-ID: <20190524121359.GE15685@lst.de>
-References: <20190523065013.2719D68B05@newverein.lst.de> <20190523065404.BB60F68B20@newverein.lst.de> <CA+E=qVdh-=C5zOYWYj95jLN51EaXFS6B+CQ101-f64q5QmgN3g@mail.gmail.com>
+        id S2390961AbfEXMR3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 08:17:29 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 May 2019 05:17:29 -0700
+X-ExtLoop1: 1
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.198]) ([10.237.72.198])
+  by fmsmga005.fm.intel.com with ESMTP; 24 May 2019 05:17:27 -0700
+Subject: Re: [PATCH] mmc: sdhci: queue work after sdhci_defer_done()
+To:     Brian Masney <masneyb@onstation.org>, ulf.hansson@linaro.org
+Cc:     faiz_abbas@ti.com, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <20190524111053.12228-1-masneyb@onstation.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <70782901-a9ac-5647-1abe-89c86a44a01b@intel.com>
+Date:   Fri, 24 May 2019 15:17:13 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+E=qVdh-=C5zOYWYj95jLN51EaXFS6B+CQ101-f64q5QmgN3g@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20190524111053.12228-1-masneyb@onstation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 07:48:03AM -0700, Vasily Khoruzhick wrote:
-> On Wed, May 22, 2019 at 11:54 PM Torsten Duwe <duwe@lst.de> wrote:
-> >
-> >
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-> > @@ -65,6 +65,21 @@
-> >                 };
-> >         };
-> >
-> > +       panel: panel {
-> > +               compatible ="innolux,n116bge", "simple-panel";
+On 24/05/19 2:10 PM, Brian Masney wrote:
+> WiFi stopped working on the LG Nexus 5 phone and the issue was bisected
+> to the commit c07a48c26519 ("mmc: sdhci: Remove finish_tasklet") that
+> moved from using a tasklet to a work queue. That patch also changed
+> sdhci_irq() to return IRQ_WAKE_THREAD instead of finishing the work when
+> sdhci_defer_done() is true. Change it to queue work to the complete work
+> queue if sdhci_defer_done() is true so that the functionality is
+> equilivent to what was there when the finish_tasklet was present. This
+> corrects the WiFi breakage on the Nexus 5 phone.
 > 
-> IIRC Rob wanted it to be edp-connector, not simple-panel. Also you
-> need to introduce edp-connector binding.
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> Fixes: c07a48c26519 ("mmc: sdhci: Remove finish_tasklet")
+> ---
+> See 'sdhci@f98a4900' in qcom-msm8974-lge-nexus5-hammerhead.dts for
+> details about how the WiFi is wired into sdhci on this platform.
+> 
+> bisect log:
+> 
+>  git bisect start
+>  # bad: [4dde821e4296e156d133b98ddc4c45861935a4fb] Merge tag 'xfs-5.2-fixes-1' of git://git.kernel.org/pub/scm/fs/xfs/xfs-linux
+>  git bisect bad 4dde821e4296e156d133b98ddc4c45861935a4fb
+>  # good: [e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd] Linux 5.1
+>  git bisect good e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd
+>  # bad: [8c79f4cd441b27df6cadd11b70a50e06b3b3a2bf] Merge tag 'docs-5.2' of git://git.lwn.net/linux
+>  git bisect bad 8c79f4cd441b27df6cadd11b70a50e06b3b3a2bf
+>  # bad: [67a242223958d628f0ba33283668e3ddd192d057] Merge tag 'for-5.2/block-20190507' of git://git.kernel.dk/linux-block
+>  git bisect bad 67a242223958d628f0ba33283668e3ddd192d057
+>  # good: [8ff468c29e9a9c3afe9152c10c7b141343270bf3] Merge branch 'x86-fpu-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+>  git bisect good 8ff468c29e9a9c3afe9152c10c7b141343270bf3
+>  # good: [e2a5be107f52cefb9010ccae6f569c3ddaa954cc] staging: kpc2000: kpc_spi: Fix build error for {read,write}q
+>  git bisect good e2a5be107f52cefb9010ccae6f569c3ddaa954cc
+>  # bad: [cf482a49af564a3044de3178ea28f10ad5921b38] Merge tag 'driver-core-5.2-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core
+>  git bisect bad cf482a49af564a3044de3178ea28f10ad5921b38
+>  # good: [9f2e3a53f7ec9ef55e9d01bc29a6285d291c151e] Merge tag 'for-5.2-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
+>  git bisect good 9f2e3a53f7ec9ef55e9d01bc29a6285d291c151e
+>  # good: [b4b52b881cf08e13d110eac811d4becc0775abbf] Merge tag 'Wimplicit-fallthrough-5.2-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux
+>  git bisect good b4b52b881cf08e13d110eac811d4becc0775abbf
+>  # bad: [d5f758f2df8015b8dcf47b6403cc192e4cef734d] mmc: meson-gx: disable HS400
+>  git bisect bad d5f758f2df8015b8dcf47b6403cc192e4cef734d
+>  # good: [b3fb9d64b497b890f7b779a9f0b40b5cc269ea18] mmc: mmci: define get_dctrl_cfg for legacy variant
+>  git bisect good b3fb9d64b497b890f7b779a9f0b40b5cc269ea18
+>  # good: [ade024f130f742725da9219624b01666f04bc4a6] memstick: jmb38x_ms: remove set but not used variable 'data'
+>  git bisect good ade024f130f742725da9219624b01666f04bc4a6
+>  # bad: [42c38d4a1bc41e78dedbf73b0fb35e44007789bb] mmc: core: Fix warning and undefined behavior in mmc voltage handling
+>  git bisect bad 42c38d4a1bc41e78dedbf73b0fb35e44007789bb
+>  # good: [19d2f695f4e82794df7465b029c02b104d1b9903] mmc: sdhci: Call mmc_request_done() from IRQ handler if possible
+>  git bisect good 19d2f695f4e82794df7465b029c02b104d1b9903
+>  # bad: [71c733c4e1aeb83e8221e89caeec893d51f88b7b] mmc: tegra: add sdhci tegra suspend and resume
+>  git bisect bad 71c733c4e1aeb83e8221e89caeec893d51f88b7b
+>  # bad: [c07a48c2651965e84d35cf193dfc0e5f7892d612] mmc: sdhci: Remove finish_tasklet
+>  git bisect bad c07a48c2651965e84d35cf193dfc0e5f7892d612
+>  # first bad commit: [c07a48c2651965e84d35cf193dfc0e5f7892d612] mmc: sdhci: Remove finish_tasklet
+> 
+>  drivers/mmc/host/sdhci.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index 97158344b862..3563c3bc57c9 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -3115,7 +3115,7 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
+>  			continue;
+>  
+>  		if (sdhci_defer_done(host, mrq)) {
+> -			result = IRQ_WAKE_THREAD;
+> +			queue_work(host->complete_wq, &host->complete_work);
 
-This line is identically found in
-arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi and
-arch/arm64/boot/dts/nvidia/tegra132-norrin.dts
+The IRQ thread has a lot less latency than the work queue, which is why it
+is done that way.
 
-> > +               status = "okay";
-> > +               power-supply = <&reg_dcdc1>;
-> > +               backlight = <&backlight>;
-> > +
-> > +               ports {
-> > +                       panel_in: port {
-> > +                               panel_in_edp: endpoint {
-> > +                                       remote-endpoint = <&anx6345_out>;
-> > +                               };
-> > +                       };
-> > +               };
+I am not sure why you say this change is equivalent to what was there
+before, nor why it fixes your problem.
 
-The whole node is the same as in rk3288-veyron-chromebook.dtsi; I only adapted
-the power-supply and remote-endpoint properties.
+Can you explain some more?
 
-Is there anything wrong with that?
-
-	Torsten
+>  		} else {
+>  			mrqs_done[i] = mrq;
+>  			host->mrqs_done[i] = NULL;
+> 
 
