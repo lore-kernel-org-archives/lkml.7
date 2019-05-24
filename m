@@ -2,280 +2,203 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2131C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B21A0C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7913320879
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:48:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 715BE2186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:49:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UvPczUel"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d1iG+MUQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391223AbfEXRsR (ORCPT
+        id S2391398AbfEXRtq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 13:48:17 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:38938 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726079AbfEXRsR (ORCPT
+        Fri, 24 May 2019 13:49:46 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42685 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390955AbfEXRtq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 13:48:17 -0400
-Received: by mail-it1-f195.google.com with SMTP id 9so15012782itf.4;
-        Fri, 24 May 2019 10:48:16 -0700 (PDT)
+        Fri, 24 May 2019 13:49:46 -0400
+Received: by mail-pg1-f196.google.com with SMTP id 33so2470867pgv.9;
+        Fri, 24 May 2019 10:49:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=z8Zfkq0Xkri+HQ7egNBjraELwTs9KKa4UccJfXqDOF0=;
-        b=UvPczUelcGv2D2UmwRKcGNhh4d9WAsWuweYLkVdKV80HXgKz3wLr/9KVMnLb9PcFNN
-         /aXqKmafLVBMwOfDs/ybxZUEMIygKlxnGv8DJbxHKw4YqGkf32/qM0/XFYt3n6kGCTEd
-         Vv0Gjp0ETqRqqb3axc1J0YN1HbCPd0GPbAxHP4nKCixVpnJ0MtRoDM6imEan4waXpD4P
-         CJ9WI665qd/Lgq3XQ1DKKGqhRQ4rXAOnLMRdgzibRahPBnYvmAnrVUrQpTbwSxDE2bdH
-         ubNomg4+r1dOp/xCFzf14b1HODYf1i5L1EQaU2MVfluXI5q7CCNquWb6iIV3WG9bAc75
-         0KfQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uwkcMthACx3x1edax8OMd3ml9XngEKgJIbialrO8Jc8=;
+        b=d1iG+MUQyb42unxWn8uupZHlXfjEMYb+TuSBbR9R/jnJl4GIs7Rzy8UEgC01y57SFe
+         o4HrL1cG//HbYK0QraGRytzw9uyyQG/FvGYN6Kgnh8OOt2OHCWQ247c5dG1d07CE2Ode
+         3HVYyjayzdgArphFK/c3kNO6nFe+rRuoI4airi842Mu59e43l92O6bKzT9Oywl4ZdZi0
+         vsuHEj2gME3V3DN78ptpaghWpUYEqltlWXk3JHNanxFNv91vTSLfVj0CTxOPEC2szdX8
+         tWJZaowFVWZSJN3m6Hr+XoKUA19w8ccOAGwuWX1LGbt/9mYvdhIiqxT/d/9ZkA8+UD1X
+         RBjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=z8Zfkq0Xkri+HQ7egNBjraELwTs9KKa4UccJfXqDOF0=;
-        b=CcLjDnwigIyWY7bj3E5krr5QMbzUVnLUQeyvf26Qld9QvJv8nKb7OrFfjQHirLd8cz
-         MRs5soHqQz+X/0E7k0W3HDc8w3jqTfjD2gkYxJNO5UKtXUf7oP8Q/utkg1NylAZVSIBJ
-         8KeM3RnWi58zxoQM8b11egqMekAlnWq/v1P5ZeYxeJfbtKikNr+1h67Bx6LvDkNvauci
-         avv44ydblrnSvqJ+uNuQmRLPA4ERfOw+LT2blIVn0H4wmU7R8vjMA72u0zYAAttlNBHR
-         gCUH6Z9ppn4eQmzbsa1P4e+KvdgHI8SOr78lJUG0lfBzW0Xxgy1SWhmNZmm1OLTVuwqv
-         RtOQ==
-X-Gm-Message-State: APjAAAVaH5CTgPke0yoiQ17OI6NRFJLR3qzYAJknT5cxXiUxrMcdxGVK
-        QuxdtBBHz0uvpUopV778NTUqM64EuYlEpgJFAXc=
-X-Google-Smtp-Source: APXvYqwlrSrxc0IgkyQcO9Wd+lqq7LeER5YMFgnTsbKALZV6W3lE8EaBKQX1/CFPVzefERUauMRgPlaLgxPFFmd670w=
-X-Received: by 2002:a24:e4b:: with SMTP id 72mr19889019ite.142.1558720096249;
- Fri, 24 May 2019 10:48:16 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uwkcMthACx3x1edax8OMd3ml9XngEKgJIbialrO8Jc8=;
+        b=ctqIhsqs2qv3/of5YzX5IzoBPU7fEEvMdTbchOYHVCtt0+CbQfLzVdxQel8GuWArWs
+         Z2Sg9grczcgrcFeySl5If9E/TCNcO0zsIhJwjqY61qfbqeFby9PVQ+txRZkUumtgDkL1
+         cnyuTEt1HUsQjKTNTaEdlRF3JNFbi1GOQvLIB4CxB2ySjwc57x73/X8vIsxjfq51vwZg
+         t9RGp7+zntuWZxL19lOnU/9Dv5nfW8bmuqc9a8lnGSAZoDumSjvxoI91ub9b7lLgl4zL
+         LuHRItOsJRayLpr5hEfisjIJvz4J5hjGHLOkQd4TVcf/nu1cnaqUsudSv9D5HpMSLn3j
+         4J3g==
+X-Gm-Message-State: APjAAAX2hofnrPFfC63oEQ6vqrm+btNqnuCsYRRYiX9asLcO/VucBGfz
+        EXKmTyMiXcUzfF5ftsnlytM=
+X-Google-Smtp-Source: APXvYqzSD1OkhTJ2WE+zxVNd/us16LO4MI0HRxyOzmgssT7XMdHI0ePx9xcBQ6X5mBocq+78pKauHg==
+X-Received: by 2002:aa7:9afc:: with SMTP id y28mr114322415pfp.101.1558720185499;
+        Fri, 24 May 2019 10:49:45 -0700 (PDT)
+Received: from [192.168.1.70] (c-24-6-192-50.hsd1.ca.comcast.net. [24.6.192.50])
+        by smtp.gmail.com with ESMTPSA id h123sm3359574pfe.80.2019.05.24.10.49.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 May 2019 10:49:45 -0700 (PDT)
+Subject: Re: [PATCH v1 0/5] Solve postboot supplier cleanup and optimize probe
+ ordering
+To:     Saravana Kannan <saravanak@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com
+References: <20190524010117.225219-1-saravanak@google.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <06b479e2-e8a0-b3e8-567c-7fa0f1c5bdf6@gmail.com>
+Date:   Fri, 24 May 2019 10:49:43 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190524155931.7946-1-iago@kinvolk.io> <20190524155931.7946-2-iago@kinvolk.io>
-In-Reply-To: <20190524155931.7946-2-iago@kinvolk.io>
-From:   Y Song <ys114321@gmail.com>
-Date:   Fri, 24 May 2019 10:47:39 -0700
-Message-ID: <CAH3MdRU72b2-XXKPToCV922W3fRsmSWb12rUCNqaJjC3=5ZTng@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v4 1/4] bpf: sock ops: add netns ino and dev in
- bpf context
-To:     =?UTF-8?Q?Iago_L=C3=B3pez_Galeiras?= <iago@kinvolk.io>
-Cc:     John Fastabend <john.fastabend@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alban Crequy <alban@kinvolk.io>, krzesimir@kinvolk.io,
-        bpf <bpf@vger.kernel.org>, netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190524010117.225219-1-saravanak@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 9:01 AM Iago L=C3=B3pez Galeiras <iago@kinvolk.io> =
-wrote:
->
-> From: Alban Crequy <alban@kinvolk.io>
->
-> sockops programs can now access the network namespace inode and device
-> via (struct bpf_sock_ops)->netns_ino and ->netns_dev. This can be useful
-> to apply different policies on different network namespaces.
->
-> In the unlikely case where network namespaces are not compiled in
-> (CONFIG_NET_NS=3Dn), the verifier will return netns_dev as usual and will
-> return 0 for netns_ino.
->
-> The generated BPF bytecode for netns_ino is loading the correct inode
-> number at the time of execution.
->
-> However, the generated BPF bytecode for netns_dev is loading an
-> immediate value determined at BPF-load-time by looking at the initial
-> network namespace. In practice, this works because all netns currently
-> use the same virtual device. If this was to change, this code would need
-> to be updated too.
->
-> Co-authored-by: Iago L=C3=B3pez Galeiras <iago@kinvolk.io>
-> Signed-off-by: Alban Crequy <alban@kinvolk.io>
-> Signed-off-by: Iago L=C3=B3pez Galeiras <iago@kinvolk.io>
->
-> ---
->
-> Changes since v1:
-> - add netns_dev (review from Alexei)
->
-> Changes since v2:
-> - replace __u64 by u64 in kernel code (review from Y Song)
-> - remove unneeded #else branch: program would be rejected in
->   is_valid_access (review from Y Song)
-> - allow partial reads (<u64) (review from Y Song)
->
-> Changes since v3:
-> - return netns_dev unconditionally and set netns_ino to 0 if
->   CONFIG_NET_NS is not enabled (review from Jakub Kicinski)
-> - use bpf_ctx_record_field_size and bpf_ctx_narrow_access_ok instead of
->   manually deal with partial reads (review from Y Song)
-> - update commit message to reflect new code and remove note about
->   partial reads since it was discussed in the review
-> - use bpf_ctx_range() and offsetofend()
-> ---
->  include/uapi/linux/bpf.h |  2 ++
->  net/core/filter.c        | 70 ++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 72 insertions(+)
->
-> diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-> index 63e0cf66f01a..e64066a09a5f 100644
-> --- a/include/uapi/linux/bpf.h
-> +++ b/include/uapi/linux/bpf.h
-> @@ -3261,6 +3261,8 @@ struct bpf_sock_ops {
->         __u32 sk_txhash;
->         __u64 bytes_received;
->         __u64 bytes_acked;
-> +       __u64 netns_dev;
-> +       __u64 netns_ino;
->  };
->
->  /* Definitions for bpf_sock_ops_cb_flags */
-> diff --git a/net/core/filter.c b/net/core/filter.c
-> index 55bfc941d17a..2b1552a8dd74 100644
-> --- a/net/core/filter.c
-> +++ b/net/core/filter.c
-> @@ -76,6 +76,8 @@
->  #include <net/lwtunnel.h>
->  #include <net/ipv6_stubs.h>
->  #include <net/bpf_sk_storage.h>
-> +#include <linux/kdev_t.h>
-> +#include <linux/proc_ns.h>
->
->  /**
->   *     sk_filter_trim_cap - run a packet through a socket filter
-> @@ -6822,6 +6824,18 @@ static bool sock_ops_is_valid_access(int off, int =
-size,
->                 }
->         } else {
->                 switch (off) {
-> +               case bpf_ctx_range(struct bpf_sock_ops, netns_dev):
-> +                       if (off >=3D offsetofend(struct bpf_sock_ops, net=
-ns_dev))
-> +                               return false;
+On 5/23/19 6:01 PM, Saravana Kannan wrote:
+> Add a generic "depends-on" property that allows specifying mandatory
+> functional dependencies between devices. Add device-links after the
+> devices are created (but before they are probed) by looking at this
+> "depends-on" property.
+> 
+> This property is used instead of existing DT properties that specify
+> phandles of other devices (Eg: clocks, pinctrl, regulators, etc). This
+> is because not all resources referred to by existing DT properties are
+> mandatory functional dependencies. Some devices/drivers might be able> to operate with reduced functionality when some of the resources
+> aren't available. For example, a device could operate in polling mode
+> if no IRQ is available, a device could skip doing power management if
+> clock or voltage control isn't available and they are left on, etc.
+> 
+> So, adding mandatory functional dependency links between devices by
+> looking at referred phandles in DT properties won't work as it would
+> prevent probing devices that could be probed. By having an explicit
+> depends-on property, we can handle these cases correctly.
 
-This is not needed.
-#define bpf_ctx_range(TYPE, MEMBER)
-         \
-        offsetof(TYPE, MEMBER) ... offsetofend(TYPE, MEMBER) - 1
-off should never be >=3D offsetofend(struct bpf_sock_ops, netns_dev).
+Trying to wrap my brain around the concept, this series seems to be
+adding the ability to declare that an apparent dependency (eg an IRQ
+specified by a phandle) is _not_ actually a dependency.
 
-> +
-> +                       bpf_ctx_record_field_size(info, sizeof(u64));
-> +                       if (!bpf_ctx_narrow_access_ok(off, size, sizeof(u=
-64)))
-> +                               return false;
-> +                       break;
-> +               case offsetof(struct bpf_sock_ops, netns_ino):
-> +                       if (size !=3D sizeof(u64))
-> +                               return false;
-> +                       break;
->                 case bpf_ctx_range_till(struct bpf_sock_ops, bytes_receiv=
-ed,
->                                         bytes_acked):
->                         if (size !=3D sizeof(__u64))
-> @@ -7739,6 +7753,11 @@ static u32 sock_addr_convert_ctx_access(enum bpf_a=
-ccess_type type,
->         return insn - insn_buf;
->  }
->
-> +static struct ns_common *sockops_netns_cb(void *private_data)
-> +{
-> +       return &init_net.ns;
-> +}
-> +
->  static u32 sock_ops_convert_ctx_access(enum bpf_access_type type,
->                                        const struct bpf_insn *si,
->                                        struct bpf_insn *insn_buf,
-> @@ -7747,6 +7766,10 @@ static u32 sock_ops_convert_ctx_access(enum bpf_ac=
-cess_type type,
->  {
->         struct bpf_insn *insn =3D insn_buf;
->         int off;
-> +       struct inode *ns_inode;
-> +       struct path ns_path;
-> +       u64 netns_dev;
-> +       void *res;
->
->  /* Helper macro for adding read access to tcp_sock or sock fields. */
->  #define SOCK_OPS_GET_FIELD(BPF_FIELD, OBJ_FIELD, OBJ)                   =
-     \
-> @@ -7993,6 +8016,53 @@ static u32 sock_ops_convert_ctx_access(enum bpf_ac=
-cess_type type,
->                 SOCK_OPS_GET_OR_SET_FIELD(sk_txhash, sk_txhash,
->                                           struct sock, type);
->                 break;
-> +
-> +       case bpf_ctx_range(struct bpf_sock_ops, netns_dev):
-> +               /* We get the netns_dev at BPF-load-time and not at
-> +                * BPF-exec-time. We assume that netns_dev is a constant.
-> +                */
-> +               res =3D ns_get_path_cb(&ns_path, sockops_netns_cb, NULL);
-> +               if (IS_ERR(res)) {
-> +                       netns_dev =3D 0;
+The phandle already implies the dependency.  Creating a separate
+depends-on property provides a method of ignoring the implied
+dependencies.
 
-What is the proper way to handle error here?
-If we indeed get an error and netns_dev =3D 0, do this mean bpf program
-should check netns_dev =3D=3D 0 and special case it? Or since this is reall=
-y
-a lower probability thing we can set to 0 and bpf program's logic does not
-need to specialize this one.
+This is not just hardware description.  It is instead a combination
+of hardware functionality and driver functionality.  An example
+provided in the second paragraph of the email I am replying to
+suggests a device could operate in polling mode if no IRQ is
+available.  Using this example, the devicetree does not know
+whether the driver requires the IRQ (currently an implied
+dependency since the IRQ phandle exists).  My understanding
+of this example is that the device node would _not_ have a
+depends-on property for the IRQ phandle so the IRQ would be
+optional.  But this is an attribute of the driver, not the
+hardware.  This is also configuration, declaring whether the
+system is willing to accept polling mode instead of interrupt
+mode.
 
-At least, maybe we need a little documentation for the field in uapi header
-to point out this potential caveat?
+Devicetree is not the proper place for driver description or
+for configuration.
 
-> +               } else {
-> +                       ns_inode =3D ns_path.dentry->d_inode;
-> +                       netns_dev =3D new_encode_dev(ns_inode->i_sb->s_de=
-v);
-> +               }
-> +               *target_size =3D 8;
-> +               *insn++ =3D BPF_MOV64_IMM(si->dst_reg, netns_dev);
-> +               break;
-> +
-> +       case offsetof(struct bpf_sock_ops, netns_ino):
-> +#ifdef CONFIG_NET_NS
-> +               /* Loading: sk_ops->sk->__sk_common.skc_net.net->ns.inum
-> +                * Type: (struct bpf_sock_ops_kern *)
-> +                *       ->(struct sock *)
-> +                *       ->(struct sock_common)
-> +                *       .possible_net_t
-> +                *       .(struct net *)
-> +                *       ->(struct ns_common)
-> +                *       .(unsigned int)
-> +                */
-> +               BUILD_BUG_ON(offsetof(struct sock, __sk_common) !=3D 0);
-> +               BUILD_BUG_ON(offsetof(possible_net_t, net) !=3D 0);
-> +               *insn++ =3D BPF_LDX_MEM(BPF_FIELD_SIZEOF(
-> +                                               struct bpf_sock_ops_kern,=
- sk),
-> +                                     si->dst_reg, si->src_reg,
-> +                                     offsetof(struct bpf_sock_ops_kern, =
-sk));
-> +               *insn++ =3D BPF_LDX_MEM(BPF_FIELD_SIZEOF(
-> +                                               possible_net_t, net),
-> +                                     si->dst_reg, si->dst_reg,
-> +                                     offsetof(struct sock_common, skc_ne=
-t));
-> +               *insn++ =3D BPF_LDX_MEM(BPF_FIELD_SIZEOF(
-> +                                               struct ns_common, inum),
-> +                                     si->dst_reg, si->dst_reg,
-> +                                     offsetof(struct net, ns) +
-> +                                     offsetof(struct ns_common, inum));
-> +#else
-> +               *insn++ =3D BPF_MOV64_IMM(si->dst_reg, 0);
-> +#endif
-> +               break;
-> +
->         }
->         return insn - insn_buf;
->  }
-> --
-> 2.21.0
->
+Another flaw with this method is that existing device trees
+will be broken after the kernel is modified, because existing
+device trees do not have the depends-on property.  This breaks
+the devicetree compatibility rules.
+
+
+> Having functional dependencies explicitly called out in DT and
+> automatically added before the devices are probed, provides the
+> following benefits:
+> 
+> - Optimizes device probe order and avoids the useless work of
+>   attempting probes of devices that will not probe successfully
+>   (because their suppliers aren't present or haven't probed yet).
+> 
+>   For example, in a commonly available mobile SoC, registering just
+>   one consumer device's driver at an initcall level earlier than the
+>   supplier device's driver causes 11 failed probe attempts before the
+>   consumer device probes successfully. This was with a kernel with all
+>   the drivers statically compiled in. This problem gets a lot worse if
+>   all the drivers are loaded as modules without direct symbol
+>   dependencies.
+> 
+> - Supplier devices like clock providers, regulators providers, etc
+>   need to keep the resources they provide active and at a particular
+>   state(s) during boot up even if their current set of consumers don't
+>   request the resource to be active. This is because the rest of the
+>   consumers might not have probed yet and turning off the resource
+>   before all the consumers have probed could lead to a hang or
+>   undesired user experience.
+> 
+>   Some frameworks (Eg: regulator) handle this today by turning off
+>   "unused" resources at late_initcall_sync and hoping all the devices
+>   have probed by then. This is not a valid assumption for systems with
+>   loadable modules. Other frameworks (Eg: clock) just don't handle
+>   this due to the lack of a clear signal for when they can turn off
+>   resources. This leads to downstream hacks to handle cases like this
+>   that can easily be solved in the upstream kernel.
+> 
+>   By linking devices before they are probed, we give suppliers a clear
+
+By linking devices to suppliers before they are probed, we give suppliers a clear
+
+>   count of the number of dependent consumers. Once all of the
+>   consumers are active, the suppliers can turn off the unused
+>   resources without making assumptions about the number of consumers.
+> 
+> By default we just add device-links to track "driver presence" (probe
+> succeeded) of the supplier device. If any other functionality provided
+> by device-links are needed, it is left to the consumer/supplier
+> devices to change the link when they probe.
+>  
+> 
+> Saravana Kannan (5):
+>   of/platform: Speed up of_find_device_by_node()
+>   driver core: Add device links support for pending links to suppliers
+>   dt-bindings: Add depends-on property
+>   of/platform: Add functional dependency link from "depends-on" property
+>   driver core: Add sync_state driver/bus callback
+> 
+>  .../devicetree/bindings/depends-on.txt        |  26 +++++
+>  drivers/base/core.c                           | 106 ++++++++++++++++++
+>  drivers/of/platform.c                         |  75 ++++++++++++-
+>  include/linux/device.h                        |  24 ++++
+>  include/linux/of.h                            |   3 +
+>  5 files changed, 233 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/depends-on.txt
+> 
+
+The above issues make this specific implementation not acceptable.
+
+I like the analysis of the problem areas, and I like the concepts of
+trying to solve not only probe ordering, but also the problem of
+when to turn off resources that will not be needed.  But at the
+moment, I don't have a suggestion of a way to implement a solution.
+
+-Frank
