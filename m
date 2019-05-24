@@ -2,128 +2,162 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-11.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60823C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:20:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D76AC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 187CB2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:20:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="Z8xkhd+1"
+	by mail.kernel.org (Postfix) with ESMTP id 3BE732168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:20:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389983AbfEXJU3 (ORCPT
+        id S2390025AbfEXJUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 05:20:29 -0400
-Received: from mail-eopbgr20046.outbound.protection.outlook.com ([40.107.2.46]:3153
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389782AbfEXJU3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 05:20:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ognNpkl807nBqsQdBLKcGDcw6EvJvcbEgoxEPGpp0E4=;
- b=Z8xkhd+1HP9xgLk8OdYewZgFw9Gg/H8eKwxcbSRjjdMqTZdzlBNLB/GDSUULflLRvUoTf+VRwoConBoMNYSDWdEXlq5xxct9uhhfhkmUcBSEoDruCzry5qrxEG88PqLNt6d2uGdZMUENlK48KrCirXD4j2uuPVP4sCZIVX3VsTg=
-Received: from DB7PR08MB3530.eurprd08.prod.outlook.com (20.177.120.80) by
- DB7PR08MB3100.eurprd08.prod.outlook.com (52.134.110.30) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.16; Fri, 24 May 2019 09:20:24 +0000
-Received: from DB7PR08MB3530.eurprd08.prod.outlook.com
- ([fe80::e41c:9e3c:80bf:25c6]) by DB7PR08MB3530.eurprd08.prod.outlook.com
- ([fe80::e41c:9e3c:80bf:25c6%5]) with mapi id 15.20.1922.019; Fri, 24 May 2019
- 09:20:24 +0000
-From:   "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
-To:     Liviu Dudau <Liviu.Dudau@arm.com>,
-        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "seanpaul@chromium.org" <seanpaul@chromium.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>
-CC:     "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        nd <nd@arm.com>
-Subject: [PATCH] drm/komeda: Creates plane alpha and blend mode properties
-Thread-Topic: [PATCH] drm/komeda: Creates plane alpha and blend mode
- properties
-Thread-Index: AQHVEhHr++MhbaMzfUqcV+mgo840iw==
-Date:   Fri, 24 May 2019 09:20:24 +0000
-Message-ID: <1558689598-2215-1-git-send-email-lowry.li@arm.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [113.29.88.7]
-x-clientproxiedby: HK2PR02CA0163.apcprd02.prod.outlook.com
- (2603:1096:201:1f::23) To DB7PR08MB3530.eurprd08.prod.outlook.com
- (2603:10a6:10:49::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Lowry.Li@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 1.9.1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3ff16a0a-7b7c-44eb-820f-08d6e0290d4c
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB7PR08MB3100;
-x-ms-traffictypediagnostic: DB7PR08MB3100:
-x-ms-exchange-purlcount: 5
-nodisclaimer: True
-x-microsoft-antispam-prvs: <DB7PR08MB31007D58B8DFA14D263B15CC9F020@DB7PR08MB3100.eurprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 0047BC5ADE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(39860400002)(346002)(136003)(396003)(199004)(189003)(66066001)(81166006)(6512007)(81156014)(7736002)(6116002)(8936002)(26005)(50226002)(8676002)(305945005)(2501003)(36756003)(5660300002)(66446008)(316002)(66556008)(966005)(64756008)(72206003)(66946007)(478600001)(68736007)(14454004)(66476007)(25786009)(73956011)(6436002)(6306002)(53936002)(4326008)(86362001)(6486002)(5024004)(256004)(6636002)(71190400001)(71200400001)(52116002)(2906002)(110136005)(2201001)(486006)(186003)(3846002)(54906003)(6506007)(55236004)(386003)(102836004)(476003)(99286004)(2616005);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR08MB3100;H:DB7PR08MB3530.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: kNPGmcq+2HYm28OGYT7rcKA8nTUOJdBJwjGwtIsFGJk/w6cGDz34YGvX+3DRCl2uISojvDuGnHFTCGW4Bwcjeu1eu6RWYhtvMesNog4sTgMdk2wVpc10vvCwT8JpPzHEokOyVjtNhFIIQzDKNveub27brP68zTQ1jib1Pb6ZNQW937h52O9m3xVZzQUSbzozfNqpfEEdgahV/dZzTLq+U3yDB1gdcbkl/zxKVdmigYeHsFZkstk2oP2c4uJYzvTifWNCbaA4JKrex4PVMXJtJo9ymm2lLSM45M3LFg5Tp8ZELeMI09IYK8CA7SUMbgiXSYfm1qodjr7IwjV7CD2paLvm+c4ycWT9TWMpxXP+cJKZ80PexMYG+N7U+c+G/rsGvBIpbk/OZUOnrh9B4/8Bqt2zEK0EKyQsWvbRPxq59yo=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3ff16a0a-7b7c-44eb-820f-08d6e0290d4c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 May 2019 09:20:24.6329
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Lowry.Li@arm.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3100
+        Fri, 24 May 2019 05:20:36 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:37628 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389710AbfEXJUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 05:20:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 10AE7A78;
+        Fri, 24 May 2019 02:20:35 -0700 (PDT)
+Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 407523F703;
+        Fri, 24 May 2019 02:20:33 -0700 (PDT)
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+To:     linux-mm@kvack.org
+Cc:     mgorman@techsingularity.net, akpm@linux-foundation.org,
+        mhocko@suse.com, cai@lca.pw, linux-kernel@vger.kernel.org,
+        marc.zyngier@arm.com, kvmarm@lists.cs.columbia.edu,
+        kvm@vger.kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: mm/compaction: BUG: NULL pointer dereference
+Date:   Fri, 24 May 2019 10:20:19 +0100
+Message-Id: <1558689619-16891-1-git-send-email-suzuki.poulose@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogIkxvd3J5IExpIChBcm0gVGVjaG5vbG9neSBDaGluYSkiIDxMb3dyeS5MaUBhcm0uY29t
-Pg0KDQpDcmVhdGVzIHBsYW5lIGFscGhhIGFuZCBibGVuZCBtb2RlIHByb3BlcnRpZXMgYXR0YWNo
-ZWQgdG8gcGxhbmUuDQoNClRoaXMgcGF0Y2ggZGVwZW5kcyBvbjoNCi0gaHR0cHM6Ly9wYXRjaHdv
-cmsuZnJlZWRlc2t0b3Aub3JnL3Nlcmllcy81OTkxNS8NCi0gaHR0cHM6Ly9wYXRjaHdvcmsuZnJl
-ZWRlc2t0b3Aub3JnL3Nlcmllcy81ODY2NS8NCi0gaHR0cHM6Ly9wYXRjaHdvcmsuZnJlZWRlc2t0
-b3Aub3JnL3Nlcmllcy81OTAwMC8NCi0gaHR0cHM6Ly9wYXRjaHdvcmsuZnJlZWRlc2t0b3Aub3Jn
-L3Nlcmllcy81OTAwMi8NCi0gaHR0cHM6Ly9wYXRjaHdvcmsuZnJlZWRlc2t0b3Aub3JnL3Nlcmll
-cy81OTQ3MS8NCg0KQ2hhbmdlcyBzaW5jZSB2MToNCi0gQWRkcyBwYXRjaCBkZW5wZW5kZW5jeSBp
-biB0aGUgY29tbWVudA0KDQpDaGFuZ2VzIHNpbmNlIHYyOg0KLSBSZW1vdmUgW1JGQ10gZnJvbSB0
-aGUgc3ViamVjdA0KDQpDaGFuZ2VzIHNpbmNlIHYzOg0KLSBSZWJhc2UgdGhlIGNvZGUNCg0KU2ln
-bmVkLW9mZi1ieTogTG93cnkgTGkgKEFybSBUZWNobm9sb2d5IENoaW5hKSA8bG93cnkubGlAYXJt
-LmNvbT4NCi0tLQ0KIGRyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX3Bs
-YW5lLmMgfCAxMSArKysrKysrKysrKw0KIDEgZmlsZSBjaGFuZ2VkLCAxMSBpbnNlcnRpb25zKCsp
-DQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVk
-YV9wbGFuZS5jIGIvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfcGxh
-bmUuYw0KaW5kZXggZTdjZDY5MC4uOWI4N2MyNSAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvZ3B1L2Ry
-bS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX3BsYW5lLmMNCisrKyBiL2RyaXZlcnMvZ3B1L2Ry
-bS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX3BsYW5lLmMNCkBAIC0zMDMsNiArMzAzLDE3IEBA
-IHN0YXRpYyBpbnQga29tZWRhX3BsYW5lX2FkZChzdHJ1Y3Qga29tZWRhX2ttc19kZXYgKmttcywN
-CiANCiAJZHJtX3BsYW5lX2hlbHBlcl9hZGQocGxhbmUsICZrb21lZGFfcGxhbmVfaGVscGVyX2Z1
-bmNzKTsNCiANCisJZXJyID0gZHJtX3BsYW5lX2NyZWF0ZV9hbHBoYV9wcm9wZXJ0eShwbGFuZSk7
-DQorCWlmIChlcnIpDQorCQlnb3RvIGNsZWFudXA7DQorDQorCWVyciA9IGRybV9wbGFuZV9jcmVh
-dGVfYmxlbmRfbW9kZV9wcm9wZXJ0eShwbGFuZSwNCisJCQlCSVQoRFJNX01PREVfQkxFTkRfUElY
-RUxfTk9ORSkgfA0KKwkJCUJJVChEUk1fTU9ERV9CTEVORF9QUkVNVUxUSSkgICB8DQorCQkJQklU
-KERSTV9NT0RFX0JMRU5EX0NPVkVSQUdFKSk7DQorCWlmIChlcnIpDQorCQlnb3RvIGNsZWFudXA7
-DQorDQogCWVyciA9IGtvbWVkYV9wbGFuZV9jcmVhdGVfbGF5ZXJfcHJvcGVydGllcyhrcGxhbmUs
-IGxheWVyKTsNCiAJaWYgKGVycikNCiAJCWdvdG8gY2xlYW51cDsNCi0tIA0KMS45LjENCg0K
+Hi,
+
+We are hitting NULL pointer dereferences while running stress tests with KVM.
+See splat [0]. The test is to spawn 100 VMs all doing standard debian
+installation (Thanks to Marc's automated scripts, available here [1] ).
+The problem has been reproduced with a better rate of success from 5.1-rc6
+onwards.
+
+The issue is only reproducible with swapping enabled and the entire
+memory is used up, when swapping heavily. Also this issue is only reproducible
+on only one server with 128GB, which has the following memory layout:
+
+[32GB@4GB, hole , 96GB@544GB]
+
+Here is my non-expert analysis of the issue so far.
+
+Under extreme memory pressure, the kswapd could trigger reset_isolation_suitable()
+to figure out the cached values for migrate/free pfn for a zone, by scanning through
+the entire zone. On our server it does so in the range of [ 0x10_0000, 0xa00_0000 ],
+with the following area of holes : [ 0x20_0000, 0x880_0000 ].
+In the failing case, we end up setting the cached migrate pfn as : 0x508_0000, which
+is right in the center of the zone pfn range. i.e ( 0x10_0000 + 0xa00_0000 ) / 2,
+with reset_migrate = 0x88_4e00, reset_free = 0x10_0000.
+
+Now these cached values are used by the fast_isolate_freepages() to find a pfn. However,
+since we cant find anything during the search we fall back to using the page belonging
+to the min_pfn (which is the migrate_pfn), without proper checks to see if that is valid
+PFN or not. This is then passed on to fast_isolate_around() which tries to do :
+set_pageblock_skip(page) on the page which blows up due to an NULL mem_section pointer.
+
+The following patch seems to fix the issue for me, but I am not quite convinced that
+it is the right fix. Thoughts ?
+
+
+diff --git a/mm/compaction.c b/mm/compaction.c
+index 9febc8c..9e1b9ac 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -1399,7 +1399,7 @@ fast_isolate_freepages(struct compact_control *cc)
+ 				page = pfn_to_page(highest);
+ 				cc->free_pfn = highest;
+ 			} else {
+-				if (cc->direct_compaction) {
++				if (cc->direct_compaction && pfn_valid(min_pfn)) {
+ 					page = pfn_to_page(min_pfn);
+ 					cc->free_pfn = min_pfn;
+ 				}
+
+
+Suzuki
+
+
+[ 0 ] Kernel splat
+ Unable to handle kernel NULL pointer dereference at virtual address 0000000000000008 [47/1825]
+ Mem abort info:
+   ESR = 0x96000004
+   Exception class = DABT (current EL), IL = 32 bits
+   SET = 0, FnV = 0
+   EA = 0, S1PTW = 0
+ Data abort info:
+   ISV = 0, ISS = 0x00000004
+   CM = 0, WnR = 0
+ user pgtable: 4k pages, 48-bit VAs, pgdp = 0000000082f94ae9
+ [0000000000000008] pgd=0000000000000000
+ Internal error: Oops: 96000004 [#1] SMP
+ ...
+ CPU: 10 PID: 6080 Comm: qemu-system-aar Not tainted 510-rc1+ #6
+ Hardware name: AmpereComputing(R) OSPREY EV-883832-X3-0001/OSPREY, BIOS 4819 09/25/2018
+ pstate: 60000005 (nZCv daif -PAN -UAO)
+ pc : set_pfnblock_flags_mask+0x58/0xe8
+ lr : compaction_alloc+0x300/0x950
+ sp : ffff00001fc03010
+ x29: ffff00001fc03010 x28: 0000000000000000 
+ x27: 0000000000000000 x26: ffff000010bf7000 
+ x25: 0000000006445000 x24: 0000000006444e00 
+ x23: ffff7e018f138000 x22: 0000000000000003 
+ x21: 0000000000000001 x20: 0000000006444e00 
+ x19: 0000000000000001 x18: 0000000000000000 
+ x17: 0000000000000000 x16: ffff809f7fe97268 
+ x15: 0000000191138000 x14: 0000000000000000 
+ x13: 0000000000000070 x12: 0000000000000000 
+ x11: ffff00001fc03108 x10: 0000000000000000 
+ x9 : 0000000009222400 x8 : 0000000000000187 
+ x7 : 00000000063c4e00 x6 : 0000000006444e00 
+ x5 : 0000000000080000 x4 : 0000000000000001 
+ x3 : 0000000000000003 x2 : ffff809f7fe92840 
+ x1 : 0000000000000220 x0 : 0000000000000000 
+ Process qemu-system-aar (pid: 6080, stack limit = 0x0000000095070da5)
+ Call trace:
+  set_pfnblock_flags_mask+0x58/0xe8
+  compaction_alloc+0x300/0x950
+  migrate_pages+0x1a4/0xbb0
+  compact_zone+0x750/0xde8
+  compact_zone_order+0xd8/0x118
+  try_to_compact_pages+0xb4/0x290
+  __alloc_pages_direct_compact+0x84/0x1e0
+  __alloc_pages_nodemask+0x5e0/0xe18
+  alloc_pages_vma+0x1cc/0x210
+  do_huge_pmd_anonymous_page+0x108/0x7c8
+  __handle_mm_fault+0xdd4/0x1190
+  handle_mm_fault+0x114/0x1c0
+  __get_user_pages+0x198/0x3c0
+  get_user_pages_unlocked+0xb4/0x1d8
+  __gfn_to_pfn_memslot+0x12c/0x3b8
+  gfn_to_pfn_prot+0x4c/0x60
+  kvm_handle_guest_abort+0x4b0/0xcd8
+  handle_exit+0x140/0x1b8
+  kvm_arch_vcpu_ioctl_run+0x260/0x768
+  kvm_vcpu_ioctl+0x490/0x898
+  do_vfs_ioctl+0xc4/0x898
+  ksys_ioctl+0x8c/0xa0
+  __arm64_sys_ioctl+0x28/0x38
+  el0_svc_common+0x74/0x118
+  el0_svc_handler+0x38/0x78
+  el0_svc+0x8/0xc
+ Code: f8607840 f100001f 8b011401 9a801020 (f9400400) 
+ ---[ end trace af6a35219325a9b6 ]---
+
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/maz/vminstall.git/
