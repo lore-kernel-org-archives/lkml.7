@@ -2,158 +2,233 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C49C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B744C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77E43217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:44:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46CE22184B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:44:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NCJDg9xp";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KbvxFmnv"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Y6/TPr4d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390824AbfEXKoG (ORCPT
+        id S2390847AbfEXKoS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 06:44:06 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:49232 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390578AbfEXKoG (ORCPT
+        Fri, 24 May 2019 06:44:18 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34405 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390829AbfEXKoR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 06:44:06 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id EF415611FC; Fri, 24 May 2019 10:44:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558694645;
-        bh=HF7FUic2Qgap5t9eKuxI7oyYoQWtLjSkiQ9P+5lmjgA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=NCJDg9xpM3m7Tr78OqD7WJBPCTV8Eaq/qGbuC7+HQaM/CIZOJP4tORbuXzvsqFjKW
-         E++8fOAhFf+BJxjR9J3Iu3ijtsVhQHgaJOj44V+MvrJwXTxarGdtaeoPURC3/ww+GF
-         MuBmCRdMXuF0XKAhzZLNaZ39DH9rxeufjzoh6RcQ=
-Received: from codeaurora.org (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: stummala@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3EAFB60C5F;
-        Fri, 24 May 2019 10:44:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558694644;
-        bh=HF7FUic2Qgap5t9eKuxI7oyYoQWtLjSkiQ9P+5lmjgA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=KbvxFmnvnO6HucGm9IgtDjyI71UXjCLu9Fa0t4OsNNZV3YlobN6ZhhNvIOGA6ZQxB
-         n2VgvVUOv0xlRf6L28u+vkxgHON1z1O5JR9HY/vs96NLaE+cT0e+HUP3bapWuQL02e
-         g3QZW3sy3nJ2pkA0dIwv2EVIyl1oZNz2z0KpdZgc=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3EAFB60C5F
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
-From:   Sahitya Tummala <stummala@codeaurora.org>
-To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        linux-f2fs-devel@lists.sourceforge.net
-Cc:     Sahitya Tummala <stummala@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] f2fs: add errors=panic mount option
-Date:   Fri, 24 May 2019 16:13:51 +0530
-Message-Id: <1558694631-12481-1-git-send-email-stummala@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Fri, 24 May 2019 06:44:17 -0400
+Received: by mail-pg1-f194.google.com with SMTP id h2so1806157pgg.1
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 03:44:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=I2TZuRmi80hep26TN0kzkhgc7I9J5j9G8LP4vdObAKA=;
+        b=Y6/TPr4dAmAWl0yxUzh38/rCmUtxW/omfCTV8dq+RbcPTsSd1HVRkatTyfzFAii57t
+         BfV8WUcypTvaCp1oLLG4kiNKbi+JR8xOtbHkYZcjheeMGA/rjVkHysCYMbacTc90AFcy
+         Acb53tu8z0vw5pIclEFWVobYO75ZD5L0bTcFc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=I2TZuRmi80hep26TN0kzkhgc7I9J5j9G8LP4vdObAKA=;
+        b=g0lI1g5SfXKGroyWZ2OE1Gs0iuEOnrOP1kWfsmXOj/XBfQT7EQgXbfQY+frbQMg1aj
+         ghZI3XEkvv1idQbPC83wx89MUxzqVLwVyYKNm3eUzrOMiohE/pQS/F/eHFJvGwKPxUma
+         lylcCluc+1OqsegGU0BU3bshxas44Wg9JOFRnl7ykIwzYKU4uXaiSdOz3hosdTo47WbJ
+         st/Ehs0afoPhImpm9i3BlCmC/meQeX5P6/vG8sRbTVvaOLxQCjxc+JHOtX//gKXenHO9
+         KY0gzdmRW/3z69plvuqOVzJ+sSz8nhfCLBbGv+Z1gqm9khWxEg63Z7SkwC2W0DTVTzrA
+         Ulyw==
+X-Gm-Message-State: APjAAAUeKcSx+SxePpPEt4EkJTG3OBRy16UP9cNqC5F+bE3ryCYTR9mo
+        F6zFYXk0vn56qGnZdyCzsR+QsA==
+X-Google-Smtp-Source: APXvYqxLSs8iO1m115oUyVnrdwFq0cnEzH565uo/USlTwFKMKyOMBAIiY/kx7gcZIlu2j9RZRIsZCw==
+X-Received: by 2002:a62:582:: with SMTP id 124mr112332112pff.209.1558694656864;
+        Fri, 24 May 2019 03:44:16 -0700 (PDT)
+Received: from localhost.localdomain ([183.82.227.60])
+        by smtp.gmail.com with ESMTPSA id h11sm2303416pfn.170.2019.05.24.03.44.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 May 2019 03:44:16 -0700 (PDT)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Michael Trimarchi <michael@amarulasolutions.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@googlegroups.com, linux-amarula@amarulasolutions.com,
+        Jagan Teki <jagan@amarulasolutions.com>
+Subject: [DO NOT MERGE] [PATCH v2 6/6] ARM: dts: sun8i: bananapi-m2m: Enable Bananapi S070WV20-CT16 DSI panel
+Date:   Fri, 24 May 2019 16:13:17 +0530
+Message-Id: <20190524104317.20287-4-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
+In-Reply-To: <20190524104317.20287-1-jagan@amarulasolutions.com>
+References: <20190524104317.20287-1-jagan@amarulasolutions.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add errors=panic mount option for debugging purpose. It can be
-set dynamically when the config option CONFIG_F2FS_CHECK_FS
-is not enabled.
+This patch add support for Bananapi S070WV20-CT16 DSI panel to
+BPI-M2M board.
 
-Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+Bananapi S070WV20-CT16 is a pure RGB output panel with ICN6211 DSI/RGB
+convertor bridge, so enable bridge along with associated panel.
+
+DSI panel connected via board DSI port with,
+- DCDC1 as VCC-DSI supply
+- PL5 gpio for bridge reset gpio pin
+- PB7 gpio for lcd enable gpio pin
+- PL4 gpio for backlight enable pin
+
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- fs/f2fs/f2fs.h  |  9 +++++++--
- fs/f2fs/super.c | 21 +++++++++++++++++++++
- 2 files changed, 28 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts | 86 ++++++++++++++++++++
+ 1 file changed, 86 insertions(+)
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 9b3d997..95adedb 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -32,8 +32,12 @@
- #define f2fs_bug_on(sbi, condition)					\
- 	do {								\
- 		if (unlikely(condition)) {				\
--			WARN_ON(1);					\
--			set_sbi_flag(sbi, SBI_NEED_FSCK);		\
-+			if (test_opt(sbi, ERRORS_PANIC)) {		\
-+				BUG_ON(condition);			\
-+			} else {					\
-+				WARN_ON(1);				\
-+				set_sbi_flag(sbi, SBI_NEED_FSCK);	\
-+			}						\
- 		}							\
- 	} while (0)
- #endif
-@@ -99,6 +103,7 @@ struct f2fs_fault_info {
- #define F2FS_MOUNT_INLINE_XATTR_SIZE	0x00800000
- #define F2FS_MOUNT_RESERVE_ROOT		0x01000000
- #define F2FS_MOUNT_DISABLE_CHECKPOINT	0x02000000
-+#define F2FS_MOUNT_ERRORS_PANIC		0x04000000
+diff --git a/arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts b/arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts
+index e1c75f7fa3ca..5f3f9523a03e 100644
+--- a/arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts
++++ b/arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts
+@@ -44,6 +44,7 @@
+ #include "sun8i-a33.dtsi"
  
- #define F2FS_OPTION(sbi)	((sbi)->mount_opt)
- #define clear_opt(sbi, option)	(F2FS_OPTION(sbi).opt &= ~F2FS_MOUNT_##option)
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 912e261..7d6d96a 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -137,6 +137,7 @@ enum {
- 	Opt_fsync,
- 	Opt_test_dummy_encryption,
- 	Opt_checkpoint,
-+	Opt_errors,
- 	Opt_err,
- };
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/pwm/pwm.h>
  
-@@ -196,6 +197,7 @@ enum {
- 	{Opt_fsync, "fsync_mode=%s"},
- 	{Opt_test_dummy_encryption, "test_dummy_encryption"},
- 	{Opt_checkpoint, "checkpoint=%s"},
-+	{Opt_errors, "errors=%s"},
- 	{Opt_err, NULL},
- };
+ / {
+ 	model = "BananaPi M2 Magic";
+@@ -61,6 +62,14 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
  
-@@ -788,6 +790,23 @@ static int parse_options(struct super_block *sb, char *options)
- 			}
- 			kvfree(name);
- 			break;
-+		case Opt_errors:
-+#ifndef CONFIG_F2FS_CHECK_FS
-+			name = match_strdup(&args[0]);
-+			if (!name)
-+				return -ENOMEM;
++	backlight: backlight {
++		compatible = "pwm-backlight";
++		pwms = <&pwm 0 50000 PWM_POLARITY_INVERTED>;
++		brightness-levels = <1 2 4 8 16 32 64 128 255>;
++		default-brightness-level = <8>;
++		enable-gpios = <&r_pio 0 4 GPIO_ACTIVE_HIGH>; /* LCD-BL-EN: PL4 */
++	};
 +
-+			if (strlen(name) == 5 && !strncmp(name, "panic", 5)) {
-+				set_opt(sbi, ERRORS_PANIC);
-+			} else {
-+				kvfree(name);
-+				return -EINVAL;
-+			}
-+			kvfree(name);
-+			f2fs_msg(sb, KERN_INFO,
-+				"debug mode errors=panic enabled\n");
-+#endif
-+			break;
- 		default:
- 			f2fs_msg(sb, KERN_ERR,
- 				"Unrecognized mount option \"%s\" or missing value",
-@@ -1417,6 +1436,8 @@ static int f2fs_show_options(struct seq_file *seq, struct dentry *root)
- 		seq_printf(seq, ",fsync_mode=%s", "strict");
- 	else if (F2FS_OPTION(sbi).fsync_mode == FSYNC_MODE_NOBARRIER)
- 		seq_printf(seq, ",fsync_mode=%s", "nobarrier");
-+	if (test_opt(sbi, ERRORS_PANIC))
-+		seq_printf(seq, ",errors=%s", "panic");
- 	return 0;
- }
+ 	leds {
+ 		compatible = "gpio-leds";
  
+@@ -81,6 +90,18 @@
+ 		};
+ 	};
+ 
++	panel {
++		compatible = "bananapi,s070wv20-ct16", "simple-panel";
++		enable-gpios = <&pio 1 7 GPIO_ACTIVE_HIGH>; /* LCD-PWR-EN: PB7 */
++		backlight = <&backlight>;
++
++		port {
++			panel_out_bridge: endpoint {
++				remote-endpoint = <&bridge_out_panel>;
++			};
++		};
++	};
++
+ 	reg_vcc5v0: vcc5v0 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vcc5v0";
+@@ -122,6 +143,61 @@
+ 	status = "okay";
+ };
+ 
++&de {
++	status = "okay";
++};
++
++&dphy {
++	status = "okay";
++};
++
++&dsi {
++	vcc-dsi-supply = <&reg_dcdc1>;		/* VCC-DSI */
++	status = "okay";
++
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		dsi_out: port@0 {
++			reg = <0>;
++
++			dsi_out_bridge: endpoint {
++				remote-endpoint = <&bridge_out_dsi>;
++			};
++		};
++	};
++
++	bridge@0 {
++		compatible = "chipone,icn6211";
++		reg = <0>;
++		reset-gpios = <&r_pio 0 5 GPIO_ACTIVE_HIGH>; /* LCD-RST: PL5 */
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			bridge_in: port@0 {
++				reg = <0>;
++
++				bridge_out_dsi: endpoint {
++					remote-endpoint = <&dsi_out_bridge>;
++				};
++			};
++
++			bridge_out: port@1 {
++				reg = <1>;
++
++				bridge_out_panel: endpoint {
++					remote-endpoint = <&panel_out_bridge>;
++				};
++			};
++		};
++	};
++};
++
+ &ehci0 {
+ 	status = "okay";
+ };
+@@ -157,6 +233,12 @@
+ 	status = "okay";
+ };
+ 
++&pwm {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pwm0_pin>;
++	status = "okay";
++};
++
+ &r_rsb {
+ 	status = "okay";
+ 
+@@ -269,6 +351,10 @@
+ 	status = "okay";
+ };
+ 
++&tcon0 {
++	status = "okay";
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pb_pins>;
 -- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+2.18.0.321.gffc6fa0e3
 
