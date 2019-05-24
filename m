@@ -2,162 +2,336 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40DBFC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 00:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AA3C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 00:39:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5CDF2133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 00:31:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L0LNNWnJ"
+	by mail.kernel.org (Postfix) with ESMTP id BA6142177E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 00:39:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731739AbfEXAbz (ORCPT
+        id S1731685AbfEXAj2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 20:31:55 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:32788 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731488AbfEXAbz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 20:31:55 -0400
-Received: by mail-pg1-f195.google.com with SMTP id h17so4016473pgv.0;
-        Thu, 23 May 2019 17:31:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lLQfizO5S1jeLuBK8ynQ0IvaQmS9BQxkxCqtOoGCSCY=;
-        b=L0LNNWnJnUIN2+yQZywgfLB5J3tMyi7KeNcTJAQAgtp9m1rQhqCdmqJqTNzKsF8qz/
-         r6bFDq4KAZ8kKYpIMs1sc8KBN/rlgvwSiuuNMJV1S/lRKcKYuAP7vmi3U5aZ0oUwL6HO
-         NWzNSQUVxyANl01QM5FyagHT9RmoTKfnf7N/+gW1utKK1TdlPkGeyhZHjPWspW32mNZg
-         aE4x1LGZ33qlID81d9l+PkYzMccniA9NVlXRawFrj3KZosHo3K6/s33GpHvNKS8Z87fe
-         oGtn+B1xlhRuNjdzWEi891wpKGoG3dUI6dXqoL+eLJfiHXian7EZQNy8mAXGrQZBZuKO
-         e9AQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lLQfizO5S1jeLuBK8ynQ0IvaQmS9BQxkxCqtOoGCSCY=;
-        b=VPwceux6/EHv3ijctOTFL0/yNeE1TL7q8V3umjP1l/pejsz+K7Ma4KkrN0V2Phoeg6
-         H3nQ/iUNT/E1Tjh2zsA28EUyeP+9BbHL0+5IFZTUwsJ9cqz0XG5qztnj+FzAlvDUVmz7
-         YKg4OmU09DQgkuhKEFmqa70idJxQn9EWIvXK3HP0DCQw9T+dGzOnQxe+hYX5EF9Htq16
-         JpcBioXjhR8fKNA9cid29KfHqamfCZbvp/btAXXTVGDFZLowVrVm2PTvKrWqu9L+fQQj
-         i9lQEiGTr01hJF1SIS0/wQ2/GSLfCXpCUe8ZifyFFmmnaifbxvGWAKznmixjeP8Gqtgo
-         JE9Q==
-X-Gm-Message-State: APjAAAW8Bq/NXROn+79/HBa8vLqTNT9m1fya7JSuamdkAtQbTsfYgx1s
-        8TetTf1XEJKDsur16IiQ/Eo=
-X-Google-Smtp-Source: APXvYqyP+i+hlBQ6YeZP0DdBtBgKcBfw/Lads6VZVc0D+fnqYzQQq6sIdzpR9PuwuU1dy2TICm5Pyw==
-X-Received: by 2002:a63:1a5e:: with SMTP id a30mr4551646pgm.433.1558657913224;
-        Thu, 23 May 2019 17:31:53 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::1:d5a9])
-        by smtp.gmail.com with ESMTPSA id o11sm422964pjp.31.2019.05.23.17.31.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 17:31:52 -0700 (PDT)
-Date:   Thu, 23 May 2019 17:31:50 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Kris Van Hees <kris.van.hees@oracle.com>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, dtrace-devel@oss.oracle.com,
-        linux-kernel@vger.kernel.org, mhiramat@kernel.org, acme@kernel.org,
-        ast@kernel.org, daniel@iogearbox.net, peterz@infradead.org
-Subject: Re: [RFC PATCH 00/11] bpf, trace, dtrace: DTrace BPF program type
- implementation and sample use
-Message-ID: <20190524003148.pk7qbxn7ysievhym@ast-mbp.dhcp.thefacebook.com>
-References: <20190521184137.GH2422@oracle.com>
- <20190521205533.evfszcjvdouby7vp@ast-mbp.dhcp.thefacebook.com>
- <20190521173618.2ebe8c1f@gandalf.local.home>
- <20190521214325.rr7emn5z3b7wqiiy@ast-mbp.dhcp.thefacebook.com>
- <20190521174757.74ec8937@gandalf.local.home>
- <20190522052327.GN2422@oracle.com>
- <20190522205329.uu26oq2saj56og5m@ast-mbp.dhcp.thefacebook.com>
- <20190523054610.GR2422@oracle.com>
- <20190523211330.hng74yi75ixmcznc@ast-mbp.dhcp.thefacebook.com>
- <20190523190243.54221053@gandalf.local.home>
+        Thu, 23 May 2019 20:39:28 -0400
+Received: from mga07.intel.com ([134.134.136.100]:13265 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731488AbfEXAj2 (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 20:39:28 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 May 2019 17:39:27 -0700
+X-ExtLoop1: 1
+Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.239.196.112]) ([10.239.196.112])
+  by orsmga008.jf.intel.com with ESMTP; 23 May 2019 17:39:25 -0700
+Subject: Re: [PATCH v1 8/9] perf diff: Print the basic block cycles diff
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <1558358876-32211-1-git-send-email-yao.jin@linux.intel.com>
+ <1558358876-32211-9-git-send-email-yao.jin@linux.intel.com>
+ <20190522140428.GD4757@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <b3b39a99-e4a6-b0f7-e828-2309de77b2fa@linux.intel.com>
+Date:   Fri, 24 May 2019 08:39:24 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190523190243.54221053@gandalf.local.home>
-User-Agent: NeoMutt/20180223
+In-Reply-To: <20190522140428.GD4757@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 07:02:43PM -0400, Steven Rostedt wrote:
-> On Thu, 23 May 2019 14:13:31 -0700
-> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+
+
+On 5/22/2019 10:04 PM, Jiri Olsa wrote:
+> On Mon, May 20, 2019 at 09:27:55PM +0800, Jin Yao wrote:
+>> Currently we only support sorting by diff cycles.
+>>
+>> For example,
+>>
+>> perf record -b ./div
+>> perf record -b ./div
+>> perf diff --basic-block
+>>
+>>   # Cycles diff  Basic block (start:end)
+>>   # ...........  .......................
+>>   #
+>>            -20   native_write_msr (7fff9a069900:7fff9a06990b)
+>>             -3   __indirect_thunk_start (7fff9ac02ca0:7fff9ac02ca0)
+>>              1   __indirect_thunk_start (7fff9ac02cac:7fff9ac02cb0)
+>>              0   rand@plt (490:490)
+>>              0   rand (3af60:3af64)
+>>              0   rand (3af69:3af6d)
+>>              0   main (4e8:4ea)
+>>              0   main (4ef:500)
+>>              0   main (4ef:535)
+>>              0   compute_flag (640:644)
+>>              0   compute_flag (649:659)
+>>              0   __random_r (3ac40:3ac76)
+>>              0   __random_r (3ac40:3ac88)
+>>              0   __random_r (3ac90:3ac9c)
+>>              0   __random (3aac0:3aad2)
+>>              0   __random (3aae0:3aae7)
+>>              0   __random (3ab03:3ab0f)
+>>              0   __random (3ab14:3ab1b)
+>>              0   __random (3ab28:3ab2e)
+>>              0   __random (3ab4a:3ab53)
 > 
-> > > In DTrace, people write scripts based on UAPI-style interfaces and they don't
-> > > have to concern themselves with e.g. knowing how to get the value of the 3rd
-> > > argument that was passed by the firing probe.  All they need to know is that
-> > > the probe will have a 3rd argument, and that the 3rd argument to *any* probe
-> > > can be accessed as 'arg2' (or args[2] for typed arguments, if the provider is
-> > > capable of providing that).  Different probes have different ways of passing
-> > > arguments, and only the provider code for each probe type needs to know how
-> > > to retrieve the argument values.
-> > > 
-> > > Does this help bring clarity to the reasons why an abstract (generic) probe
-> > > concept is part of DTrace's design?  
-> > 
-> > It actually sounds worse than I thought.
-> > If dtrace script reads some kernel field it's considered to be uapi?! ouch.
-> > It means dtrace development philosophy is incompatible with the linux kernel.
-> > There is no way kernel is going to bend itself to make dtrace scripts
-> > runnable if that means that all dtrace accessible fields become uapi.
+> really nice, could you keep the standard diff format
+> and display the 'Baseline' and Shared Object columns?
 > 
-> Now from what I'm reading, it seams that the Dtrace layer may be
-> abstracting out fields from the kernel. This is actually something I
-> have been thinking about to solve the "tracepoint abi" issue. There's
-> usually basic ideas that happen. An interrupt goes off, there's a
-> handler, etc. We could abstract that out that we trace when an
-> interrupt goes off and the handler happens, and record the vector
-> number, and/or what device it was for. We have tracepoints in the
-> kernel that do this, but they do depend a bit on the implementation.
-> Now, if we could get a layer that abstracts this information away from
-> the implementation, then I think that's a *good* thing.
-
-I don't like this deferred irq idea at all.
-Abstracting details from the users is _never_ a good idea.
-A ton of people use bcc scripts and bpftrace because they want those details.
-They need to know what kernel is doing to make better decisions.
-Delaying irq record is the opposite.
-
-> > 
-> > In stark contrast to dtrace all of bpf tracing scripts (bcc scripts
-> > and bpftrace scripts) are written for specific kernel with intimate
-> > knowledge of kernel details. They do break all the time when kernel changes.
-> > kprobe and tracepoints are NOT uapi. All of them can change.
-> > tracepoints are a bit more stable than kprobes, but they are not uapi.
+> jirka
 > 
-> I wish that was totally true, but tracepoints *can* be an abi. I had
-> code reverted because powertop required one to be a specific format. To
-> this day, the wakeup event has a "success" field that writes in a
-> hardcoded "1", because there's tools that depend on it, and they only
-> work if there's a success field and the value is 1.
 
-I really think that you should put powertop nightmares to rest.
-That was long ago. The kernel is different now.
-Linus made it clear several times that it is ok to change _all_ tracepoints.
-Period. Some maintainers somehow still don't believe that they can do it.
+Thanks Jiri!
 
-Some tracepoints are used more than others and more people will
-complain: "ohh I need to change my script" when that tracepoint changes.
-But the kernel development is not going to be hampered by a tracepoint.
-No matter how widespread its usage in scripts.
+Let me check how to do that.
 
-Sometimes that pain of change can be mitigated a bit. Like that
-'success' field example, but tracepoints still change.
-Meaningful value before vs hardcoded constant is still a breakage for
-some scripts.
+Thanks
+Jin Yao
 
-> I do definitely agree with you that the Dtrace code shall *never* keep
-> the kernel from changing. That is, if Dtrace depends on something that
-> changes (let's say we record priority of a task, but someday priority
-> is replaced by something else), then Dtrace must cope with it. It must
-> not be a blocker like user space applications can be.
-> 
-> 
-> -- Steve
+>>
+>> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+>> ---
+>>   tools/perf/builtin-diff.c | 168 ++++++++++++++++++++++++++++++++++++++++++++++
+>>   tools/perf/util/hist.c    |   2 +-
+>>   tools/perf/util/sort.h    |   1 +
+>>   3 files changed, 170 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+>> index 47e34a3..dbf242d 100644
+>> --- a/tools/perf/builtin-diff.c
+>> +++ b/tools/perf/builtin-diff.c
+>> @@ -27,6 +27,12 @@
+>>   #include <stdlib.h>
+>>   #include <math.h>
+>>   
+>> +struct block_hpp_fmt {
+>> +	struct perf_hpp_fmt	fmt;
+>> +	struct data__file	*file;
+>> +	int			width;
+>> +};
+>> +
+>>   struct block_hists {
+>>   	struct hists		sym_hists;
+>>   	struct perf_hpp_list	sym_list;
+>> @@ -34,6 +40,8 @@ struct block_hists {
+>>   	struct hists		hists;
+>>   	struct perf_hpp_list	list;
+>>   	struct perf_hpp_fmt	fmt;
+>> +	struct block_hpp_fmt	block_fmt;
+>> +	struct perf_hpp_fmt	desc_fmt;
+>>   };
+>>   
+>>   struct perf_diff {
+>> @@ -1157,6 +1165,162 @@ static void compute_block_hists_diff(struct block_hists *block_hists,
+>>   	}
+>>   }
+>>   
+>> +static int64_t block_cycles_diff_cmp(struct perf_hpp_fmt *fmt,
+>> +				     struct hist_entry *left,
+>> +				     struct hist_entry *right)
+>> +{
+>> +	struct block_hpp_fmt *block_fmt = container_of(fmt,
+>> +						       struct block_hpp_fmt,
+>> +						       fmt);
+>> +	struct data__file *d = block_fmt->file;
+>> +	bool pairs_left  = hist_entry__has_pairs(left);
+>> +	bool pairs_right = hist_entry__has_pairs(right);
+>> +	struct hist_entry *p_right, *p_left;
+>> +	s64 l, r;
+>> +
+>> +	if (!pairs_left && !pairs_right)
+>> +		return 0;
+>> +
+>> +	if (!pairs_left || !pairs_right)
+>> +		return pairs_left ? -1 : 1;
+>> +
+>> +	p_left  = get_pair_data(left, d);
+>> +	p_right  = get_pair_data(right, d);
+>> +
+>> +	if (!p_left && !p_right)
+>> +		return 0;
+>> +
+>> +	if (!p_left || !p_right)
+>> +		return p_left ?  -1 : 1;
+>> +
+>> +	l = abs(p_left->diff.cycles_diff);
+>> +	r = abs(p_right->diff.cycles_diff);
+>> +
+>> +	return r - l;
+>> +}
+>> +
+>> +static int64_t block_diff_sort(struct perf_hpp_fmt *fmt,
+>> +			       struct hist_entry *left, struct hist_entry *right)
+>> +{
+>> +	return block_cycles_diff_cmp(fmt, right, left);
+>> +}
+>> +
+>> +static int block_diff_header(struct perf_hpp_fmt *fmt __maybe_unused,
+>> +			     struct perf_hpp *hpp,
+>> +			     struct hists *hists __maybe_unused,
+>> +			     int line __maybe_unused,
+>> +			     int *span __maybe_unused)
+>> +{
+>> +	return scnprintf(hpp->buf, hpp->size, "Cycles diff");
+>> +}
+>> +
+>> +static int block_diff_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+>> +			    struct hist_entry *he)
+>> +{
+>> +	struct block_hpp_fmt *block_fmt = container_of(fmt,
+>> +						       struct block_hpp_fmt,
+>> +						       fmt);
+>> +	struct data__file *d = block_fmt->file;
+>> +	struct hist_entry *pair = get_pair_data(he, d);
+>> +
+>> +	if (pair && pair->diff.computed) {
+>> +		return scnprintf(hpp->buf, hpp->size, "%*ld", block_fmt->width,
+>> +				 pair->diff.cycles_diff);
+>> +	}
+>> +
+>> +	return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width, " ");
+>> +}
+>> +
+>> +static int block_diff_width(struct perf_hpp_fmt *fmt,
+>> +			    struct perf_hpp *hpp __maybe_unused,
+>> +			    struct hists *hists __maybe_unused)
+>> +{
+>> +	struct block_hpp_fmt *block_fmt =
+>> +		container_of(fmt, struct block_hpp_fmt, fmt);
+>> +
+>> +	return block_fmt->width;
+>> +}
+>> +
+>> +static int block_sym_width(struct perf_hpp_fmt *fmt __maybe_unused,
+>> +			    struct perf_hpp *hpp __maybe_unused,
+>> +			    struct hists *hists __maybe_unused)
+>> +{
+>> +	return 23;
+>> +}
+>> +
+>> +static int block_sym_entry(struct perf_hpp_fmt *fmt __maybe_unused,
+>> +			   struct perf_hpp *hpp, struct hist_entry *he)
+>> +{
+>> +	struct block_info *bi = he->block_info;
+>> +
+>> +	return scnprintf(hpp->buf, hpp->size, "%s (%lx:%lx)",
+>> +			 bi->sym->name, bi->sym->start + bi->start,
+>> +			 bi->sym->start + bi->end);
+>> +}
+>> +
+>> +static int block_sym_header(struct perf_hpp_fmt *fmt __maybe_unused,
+>> +			    struct perf_hpp *hpp,
+>> +			    struct hists *hists __maybe_unused,
+>> +			    int line __maybe_unused,
+>> +			    int *span __maybe_unused)
+>> +{
+>> +	return scnprintf(hpp->buf, hpp->size, "Basic block (start:end)");
+>> +}
+>> +
+>> +static int filter_cb(struct hist_entry *he, void *arg __maybe_unused)
+>> +{
+>> +	he->not_collen = true;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void hists_block_printf_sorted(struct hists *hists)
+>> +{
+>> +	hists__fprintf(hists, true, 0, 0, 0, stdout, true);
+>> +}
+>> +
+>> +static void init_block_hists_fmt(void)
+>> +{
+>> +	struct block_hists *hists_base = &data__files[0].block_hists;
+>> +	struct data__file *d;
+>> +	int i;
+>> +	struct perf_hpp_fmt *fmt;
+>> +
+>> +	perf_hpp__reset_output_field(&hists_base->list);
+>> +
+>> +	hists_base->list.nr_header_lines = 1;
+>> +
+>> +	data__for_each_file_new(i, d) {
+>> +		struct block_hpp_fmt *block_fmt = &d->block_hists.block_fmt;
+>> +
+>> +		fmt = &block_fmt->fmt;
+>> +		block_fmt->file = d;
+>> +		block_fmt->width = 11;
+>> +
+>> +		INIT_LIST_HEAD(&fmt->list);
+>> +		INIT_LIST_HEAD(&fmt->sort_list);
+>> +
+>> +		fmt->sort = block_diff_sort;
+>> +		fmt->header = block_diff_header;
+>> +		fmt->entry = block_diff_entry;
+>> +		fmt->width = block_diff_width;
+>> +
+>> +		perf_hpp_list__column_register(&hists_base->list, fmt);
+>> +		perf_hpp_list__register_sort_field(&hists_base->list, fmt);
+>> +	}
+>> +
+>> +	/* fmt for description */
+>> +	fmt = &hists_base->desc_fmt;
+>> +
+>> +	fmt->width = block_sym_width;
+>> +	fmt->entry = block_sym_entry;
+>> +	fmt->header = block_sym_header;
+>> +	fmt->sort = hist_entry__cmp_nop;
+>> +
+>> +	perf_hpp_list__column_register(&hists_base->list, fmt);
+>> +	perf_hpp_list__register_sort_field(&hists_base->list, fmt);
+>> +}
+>> +
+>>   static void basic_block_process(void)
+>>   {
+>>   	struct hists *hists_base = &data__files[0].block_hists.hists;
+>> @@ -1182,6 +1346,10 @@ static void basic_block_process(void)
+>>   		compute_block_hists_diff(&data__files[0].block_hists, d);
+>>   	}
+>>   
+>> +	init_block_hists_fmt();
+>> +	hists__output_resort_cb(hists_base, NULL, filter_cb);
+>> +	hists_block_printf_sorted(hists_base);
+>> +
+>>   	data__for_each_file(i, d) {
+>>   		hists__delete_entries(&d->block_hists.sym_hists);
+>>   		hists__delete_entries(&d->block_hists.hists);
+>> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+>> index 3810460..ae95191 100644
+>> --- a/tools/perf/util/hist.c
+>> +++ b/tools/perf/util/hist.c
+>> @@ -1846,7 +1846,7 @@ static void output_resort(struct hists *hists, struct ui_progress *prog,
+>>   		__hists__insert_output_entry(&hists->entries, n, min_callchain_hits, use_callchain);
+>>   		hists__inc_stats(hists, n);
+>>   
+>> -		if (!n->filtered)
+>> +		if ((!n->filtered) && (!n->not_collen))
+>>   			hists__calc_col_len(hists, n);
+>>   
+>>   		if (prog)
+>> diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
+>> index de9e61a..1e921fe 100644
+>> --- a/tools/perf/util/sort.h
+>> +++ b/tools/perf/util/sort.h
+>> @@ -121,6 +121,7 @@ struct hist_entry {
+>>   
+>>   	char			level;
+>>   	u8			filtered;
+>> +	bool			not_collen;
+>>   
+>>   	u16			callchain_size;
+>>   	union {
+>> -- 
+>> 2.7.4
+>>
