@@ -2,96 +2,126 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A28C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E9FC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84AF220851
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:59:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Vlce1W9j"
+	by mail.kernel.org (Postfix) with ESMTP id 7450221773
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:05:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391459AbfEXL7Z (ORCPT
+        id S2391328AbfEXMF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 07:59:25 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40431 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391289AbfEXL7Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 07:59:25 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 15so8923258wmg.5
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 04:59:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ylCdvZjvw5YApJTYZtzD5E81VMyO184/XWz6sUowkYc=;
-        b=Vlce1W9j2Ag36I5ChjwChL/0RfGbZ/S3espio/TnQWoNjhpycwPWfcZcuvtvVwMMRV
-         dbqnmhKfwbA1mcdwbAHNZsF0tXXHV2GtA1cnof3zXGusROvX3DI+Gm7q7JD1s6CFV9mR
-         y0OiPOYsWVzX4jkLhY91z9m7iM3CQ5bhQa8ZM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ylCdvZjvw5YApJTYZtzD5E81VMyO184/XWz6sUowkYc=;
-        b=YaTjuTumofgcbDkN8S7Nw3/jlHJnXge3mpqAaqiHOdMCJucalJcLBvYeMuvrCzwmtQ
-         NDXanG+Au+GPwD3Az23vRItMZWHHhhtL6XiuRaLn9thcCfckTrjRzQgbTVN45O1B5SRC
-         BewOfg67vmjNNA4rkRfQ9elPcSQCCKpNxgW6iyUGzpHGjdwVF3KszOQGfM6bHT7aSGc+
-         9roPYxpkV9aukbDVim/WF3itafVC67UhwPsdtZ8U1Rt69HZ25OsDe6YQJFWs2fXVGzLh
-         /6ui0ANkNtRbjFFk3hyVYMTFxdD3G7fjUzP03UnXqBhw/DJu2DTbxvWmIoPYde+/csFR
-         wQiA==
-X-Gm-Message-State: APjAAAWBeWp/RGgH4Ib9iYqF/TTPfnr0q8uLMI/x0kedkGeWTfSKCtNo
-        YM1vsV21BzNnntu3poTJONB9pA==
-X-Google-Smtp-Source: APXvYqyI74qzxxv7ozq3We0Rv+V5cuSv4Hn0KidnLAc1LZBKaKle9t0O0Kl1/gwa/lGAY+Duqz4JDQ==
-X-Received: by 2002:a1c:7303:: with SMTP id d3mr15466105wmb.119.1558699163047;
-        Fri, 24 May 2019 04:59:23 -0700 (PDT)
-Received: from andrea (86.100.broadband17.iol.cz. [109.80.100.86])
-        by smtp.gmail.com with ESMTPSA id j190sm2539268wmb.19.2019.05.24.04.59.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 04:59:22 -0700 (PDT)
-Date:   Fri, 24 May 2019 13:59:20 +0200
-From:   Andrea Parri <andrea.parri@amarulasolutions.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Jorgen Hansen <jhansen@vmware.com>,
-        Will Deacon <will.deacon@arm.com>,
+        Fri, 24 May 2019 08:05:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47342 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391216AbfEXMF5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 08:05:57 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3653120851;
+        Fri, 24 May 2019 12:05:55 +0000 (UTC)
+Date:   Fri, 24 May 2019 08:05:53 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Andy Lutomirski <luto@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: Re: [PATCH 1/2] vmw_vmci: Clean up uses of atomic*_set()
-Message-ID: <20190524115920.GB21365@andrea>
-References: <1558694136-19226-1-git-send-email-andrea.parri@amarulasolutions.com>
- <1558694136-19226-2-git-send-email-andrea.parri@amarulasolutions.com>
- <20190524103934.GO2606@hirez.programming.kicks-ass.net>
- <20190524114042.GA360@kroah.com>
+        Namhyung Kim <namhyung@kernel.org>,
+        "Frank Ch. Eigler" <fche@redhat.com>
+Subject: Re: [RFC][PATCH 01/14 v2] function_graph: Convert ret_stack to a
+ series of longs
+Message-ID: <20190524080553.354f1cae@gandalf.local.home>
+In-Reply-To: <20190524111144.GI2589@hirez.programming.kicks-ass.net>
+References: <20190520142001.270067280@goodmis.org>
+        <20190520142156.704372433@goodmis.org>
+        <20190524111144.GI2589@hirez.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190524114042.GA360@kroah.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > All that should just die a horrible death. That code is crap.
-> > 
-> > See:
-> > 
-> >   lkml.kernel.org/r/20190524103731.GN2606@hirez.programming.kicks-ass.net
+On Fri, 24 May 2019 13:11:44 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
+
+> On Mon, May 20, 2019 at 10:20:02AM -0400, Steven Rostedt wrote:
 > 
-> I agree, Peter's patch should be the thing that is applied, not this
-> one.
+> > +#define FGRAPH_RET_SIZE (sizeof(struct ftrace_ret_stack))
+> > +#define FGRAPH_RET_INDEX (ALIGN(FGRAPH_RET_SIZE, sizeof(long)) / sizeof(long))  
+> 
+> I think you want to write that like:
+> 
+> 	BUILD_BUG_ON(sizeof(ftrace_ret_stack) % sizeof(long));
 
-Thanks for the confirmation, Greg.  I'll drop mine.
+Sure.
 
-At this time, it's not clear to me where Peter's patch will be applied,
-and where/whether I should rebase 2/2 (if there is interested in that):
+> 
+> It'd be very weird for that sizeof not to be right.
 
-Please let me know.
+Agreed, but I was paranoid. The BUILD_BUG_ON() would also work.
 
-Thanks,
-  Andrea
+> 
+> > +#define SHADOW_STACK_SIZE (PAGE_SIZE)  
+> 
+> Do we really need that big a shadow stack?
+
+Well, this is a sticky point. I allow up to 16 users at a time
+(although I can't imagine more than 5, but you never know), and each
+user adds a long and up to 4 more words (which is probably unlikely
+anyway). And then we can have deep call stacks (we are getting deeper
+each release it seems).
+
+I figured, I start with a page size, and then in the future we can make
+it dynamic, or shrink it if it proves to be too much.
+
+> 
+> > +#define SHADOW_STACK_INDEX			\
+> > +	(ALIGN(SHADOW_STACK_SIZE, sizeof(long)) / sizeof(long))
+> > +/* Leave on a buffer at the end */
+> > +#define SHADOW_STACK_MAX_INDEX (SHADOW_STACK_INDEX - FGRAPH_RET_INDEX)
+> > +
+> > +#define RET_STACK(t, index) ((struct ftrace_ret_stack *)(&(t)->ret_stack[index]))
+> > +#define RET_STACK_INC(c) ({ c += FGRAPH_RET_INDEX; })
+> > +#define RET_STACK_DEC(c) ({ c -= FGRAPH_RET_INDEX; })  
+> 
+> I'm thinking something like:
+> 
+> #define RET_PUSH(s, val)				\
+> do {							\
+> 	(s) -= sizeof(val);				\
+> 	(typeof(val) *)(s) = val;			\
+> } while (0)
+> 
+> #define RET_POP(s, type)				\
+> ({							\
+> 	type *__ptr = (void *)(s);			\
+> 	(s) += sizeof(type);				\
+> 	*__ptr;						\
+> })
+> 
+> Would me clearer?
+
+Due to races with interrupts, and this not being an atomic operation, I
+had to play tricks with moving the stack pointer and adding data to it.
+So I wanted to keep the changing of the stack pointer and adding and
+retrieving of the stack data separate.
+
+Later patches remove the RET_STACK_INC/DEC() anyway.
+
+Thanks for taking the time to look at these patches!
+
+-- Steve
+
