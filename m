@@ -2,104 +2,82 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 979AAC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 357B2C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F6E820665
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:57:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iCZGiqc7"
+	by mail.kernel.org (Postfix) with ESMTP id 0EE5120879
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:57:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391469AbfEXM5f (ORCPT
+        id S2391516AbfEXM5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 08:57:35 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46620 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391124AbfEXM5f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 08:57:35 -0400
-Received: by mail-pg1-f193.google.com with SMTP id o11so416778pgm.13
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 05:57:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=CD4kioQVFgkBRKMteVuyQoGT6FFB+zqtbCWCvWtVQrA=;
-        b=iCZGiqc7A98iuHiHAe2YmyId2jJEvMj/+NWdDb7CZwhV/OLqooo0COa+F27AijWSpN
-         Amvi9XDjTzPRQQtGkdaH2+tV2HmEZA5etc0/LBzyc2JjqR/K8RlspkdeOP2zyEcaiByv
-         VFCxcL345JvYDa/4StowIM8D/V+Etho0NQetcrPHXboDHlppb8oIXhUI+tYFEnrfsOne
-         eQus7q/DxX0acsfLzjTKvIavjp57/0bggMLIDrJLGkdLeY8RnBsvD1WyG1+u5gWLxJxV
-         h1en81sp+S5U+iv1wfl08bLhXe+zvLmNCWzyeo5SY7tt9sogCIIlSRxtDrGHWk6kvLcD
-         M8NQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=CD4kioQVFgkBRKMteVuyQoGT6FFB+zqtbCWCvWtVQrA=;
-        b=RnW8jN5kqeTF30sZNKPsF64xxUmWusYaz6ySwDFNVPK5PxchL5ItjmHcs97qt/ml5F
-         /5Bm0fYL4FhOqDeU48hbWi4g1ueXjBfvm00omqmnqjmPBwtzbF3iloz6CrYSvCLe+mZm
-         /bPwPKyDsq3TNuVrvFESoP8khcdWWQCuNMLkdg8gyQn0VHRRDX1BJdTtDxZchOpZkFhV
-         pbQv/P59rsjXXk1UMwSj76m+4nqXuZDE4z6dqsxUpHnWg1av5Ns3Wt+5aU+IPgr35tCV
-         xZ3ywFap5ziXpo82WADH6cYNbP2H3LpUnDROG4qEdYNE7qKI56EJ2KhHMjkFp6rE0j0I
-         ZHDw==
-X-Gm-Message-State: APjAAAV3zAgpD5yjNDQ+68mwR5wtoQmCEqMcurSTa44R/zZJCCsdDwZV
-        4he+WfjaQje0kFkXip8NKcQqXTXH9w4HbQ==
-X-Google-Smtp-Source: APXvYqyRLpirLUto0XRsows3I8LALg4tGOIdNLiduUoq6G334B+V/enK/r4xWf8YVmq2uh9tRuTVtA==
-X-Received: by 2002:a17:90a:840a:: with SMTP id j10mr9302028pjn.29.1558702654560;
-        Fri, 24 May 2019 05:57:34 -0700 (PDT)
-Received: from tom-pc.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id p13sm4228796pfq.69.2019.05.24.05.57.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 24 May 2019 05:57:34 -0700 (PDT)
-From:   Dianzhang Chen <dianzhangchen0@gmail.com>
-To:     oleg@redhat.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
-Cc:     hpa@zytor.com, x86@kernel.org, linux-kernel@vger.kernel.org,
-        Dianzhang Chen <dianzhangchen0@gmail.com>
-Subject: [PATCH] x86: fix possible spectre-v1 in ptrace_get_debugreg()
-Date:   Fri, 24 May 2019 20:57:02 +0800
-Message-Id: <1558702622-15143-1-git-send-email-dianzhangchen0@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 24 May 2019 08:57:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55138 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391124AbfEXM5s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 08:57:48 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CCDD20665;
+        Fri, 24 May 2019 12:57:46 +0000 (UTC)
+Date:   Fri, 24 May 2019 08:57:44 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        "Frank Ch. Eigler" <fche@redhat.com>
+Subject: Re: [RFC][PATCH 03/14 v2] function_graph: Allow multiple users to
+ attach to function graph
+Message-ID: <20190524085744.71557f32@gandalf.local.home>
+In-Reply-To: <20190524122724.GO2623@hirez.programming.kicks-ass.net>
+References: <20190520142001.270067280@goodmis.org>
+        <20190520142156.992391836@goodmis.org>
+        <20190524112608.GJ2589@hirez.programming.kicks-ass.net>
+        <20190524081219.25de03f6@gandalf.local.home>
+        <20190524122724.GO2623@hirez.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The n in ptrace_get_debugreg() is indirectly controlled by userspace via syscall: ptrace(defined in kernel/ptrace.c), hence leading to a potential exploitation of the Spectre variant 1 vulnerability.
-The n can be controlled from: ptrace -> arch_ptrace -> ptrace_get_debugreg.
+On Fri, 24 May 2019 14:27:24 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-Fix this by sanitizing n before using it to index thread->ptrace_bps.
+> > Believe me, I rather not have that array, but I couldn't come up with a
+> > better solution to handle freeing of fgraph_ops.  
+> 
+> The trivial answer would be to refcount the thing, but can't we make
+> rcu_tasks do this?
 
-Signed-off-by: Dianzhang Chen <dianzhangchen0@gmail.com>
----
- arch/x86/kernel/ptrace.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+But wouldn't refcounts require atomic operations, something that would
+be excruciatingly slow for something that runs on all functions.
 
-diff --git a/arch/x86/kernel/ptrace.c b/arch/x86/kernel/ptrace.c
-index 4b8ee05..3f8f158 100644
---- a/arch/x86/kernel/ptrace.c
-+++ b/arch/x86/kernel/ptrace.c
-@@ -24,6 +24,7 @@
- #include <linux/rcupdate.h>
- #include <linux/export.h>
- #include <linux/context_tracking.h>
-+#include <linux/nospec.h>
- 
- #include <linux/uaccess.h>
- #include <asm/pgtable.h>
-@@ -644,7 +645,8 @@ static unsigned long ptrace_get_debugreg(struct task_struct *tsk, int n)
- 	unsigned long val = 0;
- 
- 	if (n < HBP_NUM) {
--		struct perf_event *bp = thread->ptrace_bps[n];
-+		struct perf_event *bp =
-+			thread->ptrace_bps[array_index_nospec(n, HBP_NUM)];
- 
- 		if (bp)
- 			val = bp->hw.info.address;
--- 
-2.7.4
+rcu_tasks doesn't cross voluntary sleeps, which this does.
+
+> 
+> And delay the unreg until all active users are gone -- who gives a crap
+> that can take a while.
+
+It could literally be forever (well, until the machine reboots). And
+something that could appear to be a memory leak, although a very slow
+one. But probably be hard to have more than the number of tasks on the
+system.
+
+-- Steve
 
