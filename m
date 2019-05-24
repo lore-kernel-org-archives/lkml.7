@@ -2,52 +2,60 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 357B2C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58821C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EE5120879
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:57:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A30020665
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:58:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558702736;
+	bh=Mmyzd07CZWTa5QeyoV5ylxDCl4XGjnmTYqEiaDncFWg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=j/Ld/9Ap5WP8mAEZZhOaLOMrs15VYV71/wlrSwiqmRwIMw9C8NPV3tNT42N6399r0
+	 bHMiF/aM9xiECEjpqPsZDVn22B0UMS3XLkhpQCjdib3JaLpv9TuO8gaPguWjLRjCb8
+	 zd2o3e1fD44oiuR0cNZo/eCZJ8Ne4ISk+abIMemA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391516AbfEXM5s (ORCPT
+        id S2391540AbfEXM6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 08:57:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55138 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391124AbfEXM5s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 08:57:48 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CCDD20665;
-        Fri, 24 May 2019 12:57:46 +0000 (UTC)
-Date:   Fri, 24 May 2019 08:57:44 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "Frank Ch. Eigler" <fche@redhat.com>
-Subject: Re: [RFC][PATCH 03/14 v2] function_graph: Allow multiple users to
- attach to function graph
-Message-ID: <20190524085744.71557f32@gandalf.local.home>
-In-Reply-To: <20190524122724.GO2623@hirez.programming.kicks-ass.net>
-References: <20190520142001.270067280@goodmis.org>
-        <20190520142156.992391836@goodmis.org>
-        <20190524112608.GJ2589@hirez.programming.kicks-ass.net>
-        <20190524081219.25de03f6@gandalf.local.home>
-        <20190524122724.GO2623@hirez.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 24 May 2019 08:58:55 -0400
+Received: from casper.infradead.org ([85.118.1.10]:52652 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391124AbfEXM6y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 08:58:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Uu9Fmh5pwSkk63A/ozGUPFdWVQX5yOpI9xs85fZyEQA=; b=jxRC9/nxBNjuwCaVymHPBJAC1G
+        h0h2yiTY+lQ92E0Kji4sDWnj6Rrg6S0W7LqqjU+6oSVVgsrt3Fgi7a/HYNVesz7M7TgpT2/GoAbOO
+        O3Tw454tu7FVIGbRiYKSbHBkRsfo3b3cy4ZWZoKwb+of0bzwyVFsgLEDyU5A5hdohM98R0F3KeebD
+        QDDkL93Pl8xFPvSWf5PyR2dU44oT4MKfKTbBXYfmw0a8xknNWwfD+Eh4La5y9kIRG/H2bJVagGplz
+        7q3YdgpX+6t1L1y/rNMtPYqjpXeE5rUTj87UBcMv6rZoNMFXM3RYnXkVcdgcOWFxmgz0kjoCG0V6w
+        sx849M4Q==;
+Received: from 177.97.63.247.dynamic.adsl.gvt.net.br ([177.97.63.247] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hU9mc-0006sj-E0; Fri, 24 May 2019 12:58:51 +0000
+Date:   Fri, 24 May 2019 09:58:45 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc:     <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        <linux-media@vger.kernel.org>
+Subject: Re: [PATCH next 15/25] media: platform: Use dev_get_drvdata()
+Message-ID: <20190524095845.26ef82fd@coco.lan>
+In-Reply-To: <20190423075020.173734-16-wangkefeng.wang@huawei.com>
+References: <20190423075020.173734-1-wangkefeng.wang@huawei.com>
+        <20190423075020.173734-16-wangkefeng.wang@huawei.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
@@ -56,28 +64,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 May 2019 14:27:24 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+Em Tue, 23 Apr 2019 15:50:10 +0800
+Kefeng Wang <wangkefeng.wang@huawei.com> escreveu:
 
-> > Believe me, I rather not have that array, but I couldn't come up with a
-> > better solution to handle freeing of fgraph_ops.  
-> 
-> The trivial answer would be to refcount the thing, but can't we make
-> rcu_tasks do this?
+> Using dev_get_drvdata directly.
 
-But wouldn't refcounts require atomic operations, something that would
-be excruciatingly slow for something that runs on all functions.
+Patch looks ok to me. Assuming that this will be applied via some
+other tree:
 
-rcu_tasks doesn't cross voluntary sleeps, which this does.
+Acked-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
 > 
-> And delay the unreg until all active users are gone -- who gives a crap
-> that can take a while.
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: Benson Leung <bleung@chromium.org>
+> Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Cc: linux-media@vger.kernel.org
+> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> ---
+>  drivers/media/platform/cros-ec-cec/cros-ec-cec.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/media/platform/cros-ec-cec/cros-ec-cec.c b/drivers/media/platform/cros-ec-cec/cros-ec-cec.c
+> index 7bc4d8a9af28..2e218c7a3a1f 100644
+> --- a/drivers/media/platform/cros-ec-cec/cros-ec-cec.c
+> +++ b/drivers/media/platform/cros-ec-cec/cros-ec-cec.c
+> @@ -174,8 +174,7 @@ static const struct cec_adap_ops cros_ec_cec_ops = {
+>  #ifdef CONFIG_PM_SLEEP
+>  static int cros_ec_cec_suspend(struct device *dev)
+>  {
+> -	struct platform_device *pdev = to_platform_device(dev);
+> -	struct cros_ec_cec *cros_ec_cec = dev_get_drvdata(&pdev->dev);
+> +	struct cros_ec_cec *cros_ec_cec = dev_get_drvdata(dev);
+>  
+>  	if (device_may_wakeup(dev))
+>  		enable_irq_wake(cros_ec_cec->cros_ec->irq);
+> @@ -185,8 +184,7 @@ static int cros_ec_cec_suspend(struct device *dev)
+>  
+>  static int cros_ec_cec_resume(struct device *dev)
+>  {
+> -	struct platform_device *pdev = to_platform_device(dev);
+> -	struct cros_ec_cec *cros_ec_cec = dev_get_drvdata(&pdev->dev);
+> +	struct cros_ec_cec *cros_ec_cec = dev_get_drvdata(dev);
+>  
+>  	if (device_may_wakeup(dev))
+>  		disable_irq_wake(cros_ec_cec->cros_ec->irq);
 
-It could literally be forever (well, until the machine reboots). And
-something that could appear to be a memory leak, although a very slow
-one. But probably be hard to have more than the number of tasks on the
-system.
 
--- Steve
 
+Thanks,
+Mauro
