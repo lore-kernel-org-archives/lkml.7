@@ -2,118 +2,182 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BA6C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E326FC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D17692133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:55:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558702509;
-	bh=BQFHtZ5dEmvH4qkll2wnSHnFe4of3FdDHtHbvRIZnpo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=HbCQuqtTf7YfzuZplM9lzrkr+g19GL9i2N8ZU4KiD2xyTFOXh3l2OscT5nzfeh5wz
-	 yIMEAVGLL6lDGSoDS1V92bwQLd958bV4K1SiosG8NcYoOJCrY4kX5L2XUSC4WaiCjd
-	 u+EQvDG1maZyMJqoLPhXtJl0+lvlNvI/btK3/rcE=
+	by mail.kernel.org (Postfix) with ESMTP id C17B62133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:55:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403764AbfEXMzI (ORCPT
+        id S2391386AbfEXMzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 24 May 2019 08:55:08 -0400
-Received: from casper.infradead.org ([85.118.1.10]:52268 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390946AbfEXMzH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+Received: from mx1.redhat.com ([209.132.183.28]:54978 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390974AbfEXMzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 24 May 2019 08:55:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=cyQ2oCePc4465xvjRRiSWu3xnwrETc8dIcA8pz3EwJ0=; b=E4iX4UX6mglLfAHRlj9/ZWx+Pu
-        yjmQqjwNzpxIGvni7RskChjxO4ZkWz+4AxWjRGdL/6NO5FLorU4dYd5TmXiM8JGzpnn2J0v82gsPf
-        oap2Y2VrPjk8iSXtkTbSk5vr3DIKak5KbRd3qKasC28pEf8aVn+a5aCiXaeImaL5VKHV5kxDl+8rL
-        DsC2gwUE9Qy87vP6utPhnfZeTZP+gCCKcj8BxEuy+9oKbpuSf6UK8Pj+l8+B5TcI/BthdUA897BIi
-        iaRO0las5/BQy59Sv+piPNCgL/9LhSMmy3jISAVESqnN2tFQ3Sbo91uVu5WwTB+7vmY0prvMP3Mvo
-        cLGtF+rw==;
-Received: from 177.97.63.247.dynamic.adsl.gvt.net.br ([177.97.63.247] helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hU9io-0006hg-JZ; Fri, 24 May 2019 12:54:55 +0000
-Date:   Fri, 24 May 2019 09:54:48 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Hans Verkuil <hansverk@cisco.com>, od@zcrc.me,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] media: uapi: Add RGB bus formats for the
- GiantPlus GPM940B0 panel
-Message-ID: <20190524095448.5eeddc06@coco.lan>
-In-Reply-To: <20190422093722.4344-2-paul@crapouillou.net>
-References: <20190422093722.4344-1-paul@crapouillou.net>
-        <20190422093722.4344-2-paul@crapouillou.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 461A681127;
+        Fri, 24 May 2019 12:55:07 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-78.pek2.redhat.com [10.72.12.78])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6334D6A96A;
+        Fri, 24 May 2019 12:55:00 +0000 (UTC)
+Date:   Fri, 24 May 2019 20:54:56 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Kairui Song <kasong@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        Bhupesh Sharma <bhsharma@redhat.com>
+Subject: Re: [PATCH v3] vmcore: Add a kernel parameter vmcore_device_dump
+Message-ID: <20190524125456.GA3342@dhcp-128-65.nay.redhat.com>
+References: <20190524062922.26399-1-kasong@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190524062922.26399-1-kasong@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 24 May 2019 12:55:07 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, 22 Apr 2019 11:37:21 +0200
-Paul Cercueil <paul@crapouillou.net> escreveu:
-
-> The GiantPlus GPM940B0 is a 24-bit TFT panel where the RGB components
-> are transferred sequentially on a 8-bit bus.
+On 05/24/19 at 02:29pm, Kairui Song wrote:
+> Since commit 2724273e8fd0 ("vmcore: add API to collect hardware dump in
+> second kernel"), drivers is allowed to add device related dump data to
+> vmcore as they want by using the device dump API. This have a potential
+> issue, the data is stored in memory, drivers may append too much data
+> and use too much memory. The vmcore is typically used in a kdump kernel
+> which runs in a pre-reserved small chunk of memory. So as a result it
+> will make kdump unusable at all due to OOM issues.
 > 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> So introduce new vmcore_device_dump= kernel parameter, and disable
+> device dump by default. User can enable it only if device dump data is
+> required for debugging, and have the chance to increase the kdump
+> reserved memory accordingly before device dump fails kdump.
+> 
+> Signed-off-by: Kairui Song <kasong@redhat.com>
+> 
 > ---
 > 
-> Notes:
->     v2: New patch
->     
->     v3: No change
+>  Update from V2:
+>   - Improve related docs
 > 
->  include/uapi/linux/media-bus-format.h | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  Update from V1:
+>   - Use bool parameter to turn it on/off instead of letting user give
+>     the size limit. Size of device dump is hard to determine.
 > 
-> diff --git a/include/uapi/linux/media-bus-format.h b/include/uapi/linux/media-bus-format.h
-> index d6a5a3bfe6c4..f31724d6cd40 100644
-> --- a/include/uapi/linux/media-bus-format.h
-> +++ b/include/uapi/linux/media-bus-format.h
-> @@ -34,7 +34,7 @@
+>  Documentation/admin-guide/kernel-parameters.txt | 14 ++++++++++++++
+>  fs/proc/Kconfig                                 |  6 ++++--
+>  fs/proc/vmcore.c                                | 13 +++++++++++++
+>  3 files changed, 31 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 138f6664b2e2..3706ad9e1d97 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -5078,6 +5078,20 @@
+>  			decrease the size and leave more room for directly
+>  			mapped kernel RAM.
 >  
->  #define MEDIA_BUS_FMT_FIXED			0x0001
+> +	vmcore_device_dump=	[KNL,KDUMP]
+> +			Format: {"off" | "on"}
+> +			Depends on CONFIG_PROC_VMCORE_DEVICE_DUMP.
+> +			This parameter allows enable or disable device dump
+> +			for vmcore on kernel start-up.
+> +			Device dump allows drivers to append dump data to
+> +			vmcore so you can collect driver specified debug info.
+> +			Note that the drivers could append the data without
+> +			any limit, and the data is stored in memory, this may
+> +			bring a significant memory stress. If you want to turn
+> +			on this option, make sure you have reserved enough memory
+> +			with crashkernel= parameter.
+> +			default: off
+> +
+>  	vmcp_cma=nn[MG]	[KNL,S390]
+>  			Sets the memory size reserved for contiguous memory
+>  			allocations for the vmcp device driver.
+> diff --git a/fs/proc/Kconfig b/fs/proc/Kconfig
+> index 817c02b13b1d..1a7a38976bb0 100644
+> --- a/fs/proc/Kconfig
+> +++ b/fs/proc/Kconfig
+> @@ -56,8 +56,10 @@ config PROC_VMCORE_DEVICE_DUMP
+>  	  recovery kernel's initramfs to collect its underlying device
+>  	  snapshot.
 >  
-> -/* RGB - next is	0x101b */
-> +/* RGB - next is	0x101d */
->  #define MEDIA_BUS_FMT_RGB444_1X12		0x1016
->  #define MEDIA_BUS_FMT_RGB444_2X8_PADHI_BE	0x1001
->  #define MEDIA_BUS_FMT_RGB444_2X8_PADHI_LE	0x1002
-> @@ -54,6 +54,8 @@
->  #define MEDIA_BUS_FMT_RGB888_1X24		0x100a
->  #define MEDIA_BUS_FMT_RGB888_2X12_BE		0x100b
->  #define MEDIA_BUS_FMT_RGB888_2X12_LE		0x100c
-> +#define MEDIA_BUS_FMT_RGB888_3X8_BE		0x101b
-> +#define MEDIA_BUS_FMT_RGB888_3X8_LE		0x101c
->  #define MEDIA_BUS_FMT_RGB888_1X7X4_SPWG		0x1011
->  #define MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA	0x1012
->  #define MEDIA_BUS_FMT_ARGB8888_1X32		0x100d
+> -	  If you say Y here, the collected device dumps will be added
+> -	  as ELF notes to /proc/vmcore.
+> +	  If you say Y here, a new kernel parameter 'vmcore_device_dump'
+> +	  will be available. You can then enable device dump by passing
 
-You should also patch the documentation text at:
+"a new kernel parameter 'vmcore_device_dump' will be available" is not
+necessary, "new" is a not a clear word.  I suggest to remove this
+sentence.
 
-	Documentation/media/uapi/v4l/subdev-formats.rst
+s/You can then/You can
 
-In order to describe the new formats that will be included.
+Otherwise:
 
-(also patch needs to be rebased, as it conflicts to some other
-new formats added there)
+Acked-by: Dave Young <dyoung@redhat.com>
 
-Thanks,
-Mauro
+
+> +	  'vmcore_device_dump=on' to kernel, the collected device dumps
+> +	  will be added as ELF notes to /proc/vmcore.
+>  
+>  config PROC_SYSCTL
+>  	bool "Sysctl support (/proc/sys)" if EXPERT
+> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+> index 3fe90443c1bb..d1b608b0efad 100644
+> --- a/fs/proc/vmcore.c
+> +++ b/fs/proc/vmcore.c
+> @@ -53,6 +53,8 @@ static struct proc_dir_entry *proc_vmcore;
+>  /* Device Dump list and mutex to synchronize access to list */
+>  static LIST_HEAD(vmcoredd_list);
+>  static DEFINE_MUTEX(vmcoredd_mutex);
+> +
+> +static bool vmcoredd_enabled;
+>  #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
+>  
+>  /* Device Dump Size */
+> @@ -1451,6 +1453,11 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
+>  	size_t data_size;
+>  	int ret;
+>  
+> +	if (!vmcoredd_enabled) {
+> +		pr_err_once("Device dump is disabled\n");
+> +		return -EINVAL;
+> +	}
+> +
+>  	if (!data || !strlen(data->dump_name) ||
+>  	    !data->vmcoredd_callback || !data->size)
+>  		return -EINVAL;
+> @@ -1502,6 +1509,12 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL(vmcore_add_device_dump);
+> +
+> +static int __init vmcoredd_parse_cmdline(char *arg)
+> +{
+> +	return kstrtobool(arg, &vmcoredd_enabled);
+> +}
+> +__setup("vmcore_device_dump=", vmcoredd_parse_cmdline);
+>  #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
+>  
+>  /* Free all dumps in vmcore device dump list */
+> -- 
+> 2.21.0
+> 
+
+Thanks
+Dave
