@@ -2,134 +2,210 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE2F4C282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B98DC282E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8249821871
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:40:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558730415;
-	bh=wFsbEiryw53H8UjsLlHQHC0xUqlnlsNlOf8RPFh1WKs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=s0OMrdAnxhcG/TwBlCFSQRU2NEn4LyuRij+55k7K3UvhJ+lhI4duf+4LfbPuqvILw
-	 CcNtIs+wC5pyQ/BE9BukOWO/Cys+AzeUEsuYQLJJw/Vu7QVVCohvcfqmjQp5yIJR7Z
-	 Yi4OnrjC2uFC2cf6VYTOex/3ufOhK9XuZbBpJZPk=
+	by mail.kernel.org (Postfix) with ESMTP id E1BDF217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:42:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404192AbfEXUkO (ORCPT
+        id S2404222AbfEXUmk convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 16:40:14 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:33251 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403762AbfEXUkO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 16:40:14 -0400
-Received: by mail-oi1-f193.google.com with SMTP id q186so8008948oia.0;
-        Fri, 24 May 2019 13:40:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dx7F2tb05aWTZPXIYGXtVkVDpMKUEB0sugnYrUDSEP4=;
-        b=P78IcKu7WJg4jCcKSloQgjWIj4cMcSEISgo0HQ352FUEyyeie6JW8wc1D8aQE3exHd
-         82UT7Gq2nBBUHk77N6pYfizYz8r+xMA0jczOsk6P8DsMKK3Bj6lsFEoxBww1WuibY7Bc
-         ly526uSWPvsA96/yG68FAVrKreHnPmSOIRzTMpn/ZUEivQazmGFYitnmj1hCud9IqcYh
-         434GxF0yGffJziaZwCNKGSeWLrD637/jvJHOCZrMYDjKx39YKMiDtwJh0gqOZLTBqfc3
-         pYma7ffSjSQeaTE3s/12ugiDWz0WHJ5fYVM8bwumuABpl+s1PF0DOSKtQ5hduDvRgy6M
-         aKgw==
-X-Gm-Message-State: APjAAAVDUpLh9YAQNmc7Zxs3TM8LAv9r0ref3mNxy9shRsXFC3It+ke6
-        dfUR0k8mPMafRMiEb7fulA==
-X-Google-Smtp-Source: APXvYqwl0+0Ie8Od8OqQ6UiwN8QOUNPXf4lB+czpxJ/RNSAqP54n83yRE/iuWBu2oUEGNFxf1Cnjsg==
-X-Received: by 2002:aca:f183:: with SMTP id p125mr7644441oih.13.1558730413479;
-        Fri, 24 May 2019 13:40:13 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id g102sm1186465otg.59.2019.05.24.13.40.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 24 May 2019 13:40:12 -0700 (PDT)
-Date:   Fri, 24 May 2019 15:40:12 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-Cc:     mark.rutland@arm.com, peter@korsgaard.com, andrew@lunn.ch,
-        palmer@sifive.com, paul.walmsley@sifive.com,
-        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 1/3] dt-bindings: i2c: extend existing opencore
- bindings.
-Message-ID: <20190524204012.GA2580@bogus>
-References: <1558515574-11155-1-git-send-email-sagar.kadam@sifive.com>
- <1558515574-11155-2-git-send-email-sagar.kadam@sifive.com>
+        Fri, 24 May 2019 16:42:40 -0400
+Received: from mga02.intel.com ([134.134.136.20]:46258 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404022AbfEXUmj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 16:42:39 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 May 2019 13:42:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,508,1549958400"; 
+   d="scan'208";a="177888961"
+Received: from orsmsx107.amr.corp.intel.com ([10.22.240.5])
+  by fmsmga002.fm.intel.com with ESMTP; 24 May 2019 13:42:34 -0700
+Received: from orsmsx112.amr.corp.intel.com (10.22.240.13) by
+ ORSMSX107.amr.corp.intel.com (10.22.240.5) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Fri, 24 May 2019 13:42:13 -0700
+Received: from orsmsx116.amr.corp.intel.com ([169.254.7.165]) by
+ ORSMSX112.amr.corp.intel.com ([169.254.3.79]) with mapi id 14.03.0415.000;
+ Fri, 24 May 2019 13:42:13 -0700
+From:   "Xing, Cedric" <cedric.xing@intel.com>
+To:     "Christopherson, Sean J" <sean.j.christopherson@intel.com>
+CC:     Stephen Smalley <sds@tycho.nsa.gov>,
+        Andy Lutomirski <luto@kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Subject: RE: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+Thread-Topic: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+Thread-Index: AQHVC0vUmIXibKT8TUm/EUnHn2XAfqZu5q2AgAAGWoCABXOKgIABz2SAgAAI9ACAAWgPAIAAAJWAgAAJhACAAByGAIAAdoKAgABA+ICAAIOmAIAAQKcAgAAWeICAAIbLAIAAGyYA///WAeCAARtHgIAAIeCAgAADbAD//5AmcIAAhdwA//+atsA=
+Date:   Fri, 24 May 2019 20:42:13 +0000
+Message-ID: <960B34DE67B9E140824F1DCDEC400C0F654E8FC2@ORSMSX116.amr.corp.intel.com>
+References: <20190523102628.GC10955@linux.intel.com>
+ <20190523141752.GA12078@linux.intel.com>
+ <CALCETrUzx3LPAKCLFf75P-XshAkRcr+JLET3LA_kHDs9MA11FA@mail.gmail.com>
+ <20190523234044.GC12078@linux.intel.com>
+ <CALCETrV4DVEfW6EJ6DnQGGYDJAiA5M1QcuYJTiroumOM+D6Jjg@mail.gmail.com>
+ <960B34DE67B9E140824F1DCDEC400C0F654E8956@ORSMSX116.amr.corp.intel.com>
+ <dda0912b-cb15-3c07-d368-345159e995f7@tycho.nsa.gov>
+ <20190524174243.GA365@linux.intel.com>
+ <20190524175458.GB365@linux.intel.com>
+ <960B34DE67B9E140824F1DCDEC400C0F654E8E1D@ORSMSX116.amr.corp.intel.com>
+ <20190524191344.GD365@linux.intel.com>
+In-Reply-To: <20190524191344.GD365@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNjY1ZTdhNmItYzYwYS00NmE4LWE5N2ItOTM1ZTU1OTE0ZmViIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiXC9nUGZOVWtLMnZKb3g0cHU5eU0xSllENDVWXC9pcXBWMHZcL1hnVTA0UCtEa3Z1bHN5UTFBM09rWGl3RUtsTnNNWCJ9
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.138]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1558515574-11155-2-git-send-email-sagar.kadam@sifive.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 02:29:32PM +0530, Sagar Shrikant Kadam wrote:
-> Reformatted compatibility strings to one valid combination on
-> each line.
-> Add FU540-C000 specific device tree bindings to already available
-> i2-ocores file. This device is available on
-> HiFive Unleashed Rev A00 board. Move interrupt under optional
-> property list as this can be optional.
+> From: linux-sgx-owner@vger.kernel.org [mailto:linux-sgx-
+> owner@vger.kernel.org] On Behalf Of Sean Christopherson
+> Sent: Friday, May 24, 2019 12:14 PM
 > 
-> The FU540-C000 SoC from sifive, has an Opencore's I2C block
-> reimplementation.
+> My point is that enclaves have different properties than shared objects.
 > 
-> The DT compatibility string for this IP is present in HDL and available at.
-> https://github.com/sifive/sifive-blocks/blob/master/src/main/scala/devices/i2c/I2C.scala#L73
+> Normal LSM behavior with regard to executing files is to label files
+> with e.g. FILE__EXECUTE.  Because an enclave must be built to the exact
+> specifications of .sigstruct, requring FILE__EXECUTE on the .sigstruct
+> is effectively the same as requiring FILE__EXECUTE on the enclave itself.
 > 
-> Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-> ---
->  Documentation/devicetree/bindings/i2c/i2c-ocores.txt | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
+> Addressing your scenario of loading an executable page in EPC, doing so
+> would require one of the following:
 > 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-> index 17bef9a..db96951 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-> @@ -1,9 +1,13 @@
->  Device tree configuration for i2c-ocores
->  
->  Required properties:
-> -- compatible      : "opencores,i2c-ocores" or "aeroflexgaisler,i2cmst"
-> +- compatible      : "opencores,i2c-ocores",
-> +                    "aeroflexgaisler,i2cmst",
-> +                    "sifive,fu540-c000-i2c","sifive,i2c0".
-
-space needed                                   ^
-
-And drop the end of line commas and period.
-
-
-> +                    For Opencore based I2C IP block reimplemented in
-> +                    FU540-C000 SoC.Please refer sifive-blocks-ip-versioning.txt
-
-And here too.
-
-And 'refer to'
-
-> +                    for additional details.
->  - reg             : bus address start and address range size of device
-> -- interrupts      : interrupt number
->  - clocks          : handle to the controller clock; see the note below.
->                      Mutually exclusive with opencores,ip-clock-frequency
->  - opencores,ip-clock-frequency: frequency of the controller clock in Hz;
-> @@ -12,6 +16,7 @@ Required properties:
->  - #size-cells     : should be <0>
->  
->  Optional properties:
-> +- interrupts      : interrupt number.
->  - clock-frequency : frequency of bus clock in Hz; see the note below.
->                      Defaults to 100 KHz when the property is not specified
->  - reg-shift       : device register offsets are shifted by this value
-> -- 
-> 1.9.1
+>   - Ability to install a .sigstruct with FILE__EXECUTE
 > 
+>   - PROCESS__EXECMEM
+> 
+>   - FILE__EXECMOD and SGX2 support
+
+Now I got your point. It sounds a great idea to me!
+
+But instead of using .sigstruct file, I'd still recommend using file mapping (i.e. SIGSTRUCT needs to reside in executable memory). But then there'll be a hole - a process having FILE__EXECMOD on any file could use that file as a SIGSTRUCT. Probably we'll need a new type in SELinux to label enclave/sigstruct files.
+
+> 
+> > In the case a RWX page is needed, the calling process has to have a
+> > RWX page serving as the source for EADD so PROCESS__EXECMEM will have
+> been checked.
+> > For SGX2, changing an EPC page to RWX is subject to FILE__EXECMEM on
+> > /dev/sgx/enclave, which I see as a security benefit because it only
+> > affects the enclave but not the whole process hosting it.
+> 
+> There is no FILE__EXECMEM check, only PROCESS__EXECMEM and FILE__EXECMOD.
+> I assume you're referring to the latter?
+
+Yes.
+
+> 
+> I don't see a fundamental difference between having RWX in an enclave
+> and RWX in normal memory, either way the process can execute arbitrary
+> code, i.e. PROCESS__EXECMEM is appropriate.  Yes, an enclave will #UD on
+> certain instructions, but that's easily sidestepped by having a
+> trampoline in the host (marked RX) and piping arbitrary code into the
+> enclave.  Or using EEXIT to do a bit of ROP.
+
+I'm with you.
+
+With your proposal only FILE__EXECMOD is needed on /dev/sgx/enclave to launch Graphene enclaves or the like.
+
+> 
+> > > > No changes are required to LSMs, SGX1 has a single LSM touchpoint
+> > > > in
+> > > its
+> > > > mmap(), and I *think* the only required userspace change is to
+> > > > mmap() PROT_NONE when allocating the enclave's virtual address
+> range.
+> >
+> > I'm not sure I understand the motivation behind this proposal to
+> > decouple initial EPC permissions from source pages.
+> 
+> Pulling permissions from source pages means userspace needs to fully map
+> the in normal memory, including marking pages executable.  That exposes
+> the loader to having executable pages in its address space that it has
+> no intention of executing (outside of the enclave).  And for Graphene,
+> it means having to actively avoid PROCESS__EXECMEM, e.g. by using a
+> dummy backing file to build the enclave instead of anon memory.
+
+Agreed.
+
+> 
+> > I don't think it a big deal to fully mmap() enclave files, which have
+> > to be parsed by user mode anyway to determine various things including
+> > but not limited to the size of heap(s), size and number of
+> > TCSs/stacks/TLS areas, and the overall enclave size. So with PHDRs
+> > parsed, it's trivial to mmap() each segment with permissions from its
+> PHDR.
+> >
+> > > > As for Graphene, it doesn't need extra permissions to run its
+> > > > enclaves, it just needs a way to install .sigstruct, which is a
+> > > > generic permissions problem and not SGX specific.
+> > > >
+> > > >
+> > > > For SGX2 maybe:
+> > > >
+> > > >   - No additional requirements to map an EAUG'd page as RW page.
+> Not
+> > > >     aligned with standard MAP_SHARED behavior, but we really don't
+> want
+> > > >     to require FILE__WRITE, and thus allow writes to .sigstruct.
+> > > >
+> > > >   - Require FILE__EXECMOD on the .sigstruct to map previously
+> writable
+> > > >     page as executable (which indirectly includes all EAUG'd
+> pages).
+> > > >     Wiring this up will be a little funky, but we again we don't
+> want
+> > > >     to require FILE__WRITE on .sigstruct.
+> > > >
+> >
+> > I'm lost. Why is EAUG tied to permissions on .sigstruct?
+> 
+> Because for the purposes of LSM checks, .sigstruct is the enclave's
+> backing file, and mapping a previously writable enclave page as
+> exectuable is roughly equivalent to mapping a CoW'd page as exectuable.
+
+I think I've got your idea. You are trying to use permissions on .sigstruct to determine whether EAUG will be available to that specific enclave. Am I right?
+
+I'd tie EAUG to the permissions of /dev/sgx/enclave instead. But why? There are couple of reasons. For one, a SIGSTRUCT identifies the behavior of the enclave, hence the SGX features needed by that enclave. So if an enclave requires EAUG, the .sigstruct has to allow EAUG or the enclave wouldn't work. That means the system admin wouldn't have a choice but to match up what's needed by the enclave. For two, whether to allow, say loading code dynamically into an enclave, depends on whether the host process can tolerate the inherent risk. And that decision is seldom made on individual enclaves but to the host process as a whole. And /dev/sgx/enclave serves that purpose.
+
+-Cedric
+
