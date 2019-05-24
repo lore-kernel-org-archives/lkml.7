@@ -2,133 +2,100 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 319C9C282E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EEECC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE2882175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:07:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07FA42175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:10:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tR+zmdMe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388915AbfEXGHn (ORCPT
+        id S2388485AbfEXGK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 02:07:43 -0400
-Received: from mga18.intel.com ([134.134.136.126]:13073 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388070AbfEXGHm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 02:07:42 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 May 2019 23:07:41 -0700
-X-ExtLoop1: 1
-Received: from lftan-mobl.gar.corp.intel.com (HELO ubuntu) ([10.226.248.59])
-  by orsmga004.jf.intel.com with SMTP; 23 May 2019 23:07:38 -0700
-Received: by ubuntu (sSMTP sendmail emulation); Fri, 24 May 2019 14:07:36 +0800
-From:   Ley Foon Tan <ley.foon.tan@intel.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        lftan.linux@gmail.com, Ley Foon Tan <ley.foon.tan@intel.com>
-Subject: [PATCH 2/2] PCI: altera: Remove cfgrdX and cfgwrX
-Date:   Fri, 24 May 2019 14:07:26 +0800
-Message-Id: <1558678046-4052-3-git-send-email-ley.foon.tan@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1558678046-4052-1-git-send-email-ley.foon.tan@intel.com>
-References: <1558678046-4052-1-git-send-email-ley.foon.tan@intel.com>
+        Fri, 24 May 2019 02:10:57 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:46419 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387936AbfEXGK5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 02:10:57 -0400
+Received: by mail-lf1-f66.google.com with SMTP id l26so6144313lfh.13
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 23:10:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WODHkcAF25NHibZn5m21sZFv0u7Ed0zLwASYN+dfRH4=;
+        b=tR+zmdMenZ8rl6qmmPgkcatcUU4Qm6kn/lwcJy46XmoBluFNlPq8pNmw6531qDSsS2
+         tr5RytD5TiH8d7LpjcamGxH7pGVUx+bB7u2YNpJAItH4UDqcsC+m6FyVIVVoe8OEWcuj
+         rfULFYmaJg+MvZDHgknevYGdVNnFwl3P3eZsMRaNA58btfrPJaa8r0Ee1eKe/WkhEIEV
+         ptWcS67e1+nW9iUNJ6RNjni5jwwmWUivMaKjPWjGb21SR1Da/K6FOUaaAVEKRWDh0Zzg
+         lPbx3TJ9hZx9+CHd1DXZVyZjSqketb4IsPTv1AdIyJr+OzMUWKdlSrwtPG3KMSWKbhRs
+         kfAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WODHkcAF25NHibZn5m21sZFv0u7Ed0zLwASYN+dfRH4=;
+        b=TF+2niFQd5rfAsFbIdEKLzA+hIaMy4xNe0v2L8M22IkpXKGIEhwnnvEPmCijP9kxTv
+         vxAGNJws20bkSNXujQqmgbU50gL8bXOdMm3yWx8lEO7boEZqQ3M4MwA2+5rq7FhBu6aF
+         MqLRR7hcXBxkNy8+YwPdCJIOjBsb9S6RpWOyivPLDE3Spr4OrRSmztT7/ZPUyb4Mf/oh
+         OjT+QxsQtQhje8ucA0JS2edHIKSYTNOueOSAHT3aWYL9YoJD8M6ug7ShtUFv+1u01g59
+         K3Y0UqDICLxCvD322elGJEa/8jWQichDARjaPCaxmmabWMxTjO5iMsws+IP/VX/sUgko
+         T2Rw==
+X-Gm-Message-State: APjAAAVo+8/h4vjlaWW0LLfXhm34yPm6EEX3sBcl0KjTF/qz6Bni2qb+
+        +OOQzxcQIHWjC2C7XzMctg0osiOybZZu6DbDuqU=
+X-Google-Smtp-Source: APXvYqzXGbJCmoJG4ZaU1NGpkE2v9aGHvIt6kkpBINLu6d/z4nqZAOnRfcsNn6sHkfMZGJeB3wCErYQ7W0D3rkG/lKI=
+X-Received: by 2002:a19:4cd5:: with SMTP id z204mr4626669lfa.113.1558678255734;
+ Thu, 23 May 2019 23:10:55 -0700 (PDT)
+MIME-Version: 1.0
+References: <1558366258-3808-1-git-send-email-jrdr.linux@gmail.com> <CANiq72nubJ6KHXROuDHV8Ap6MJQx6SDKUJCxYuN1_YDy=A_ELw@mail.gmail.com>
+In-Reply-To: <CANiq72nubJ6KHXROuDHV8Ap6MJQx6SDKUJCxYuN1_YDy=A_ELw@mail.gmail.com>
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+Date:   Fri, 24 May 2019 11:40:43 +0530
+Message-ID: <CAFqt6zaAT5buz4VGzNkqKAH+r=usEU+fyK5EhgUP42Jfdy-rOw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] auxdisplay/ht16k33.c: Convert to use vm_map_pages_zero()
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Robin van der Gracht <robin@protonic.nl>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No longer need cfgrdX and cfgwrX since we have separate defines for
-TLP_CFG*_DW0 and S10_TLP_CFG*_DW0, so remove them.
+On Thu, May 23, 2019 at 6:53 PM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
+>
+> On Mon, May 20, 2019 at 5:26 PM Souptick Joarder <jrdr.linux@gmail.com> wrote:
+> >
+> > While using mmap, the incorrect value of length and vm_pgoff are
+> > ignored and this driver go ahead with mapping fbdev.buffer
+> > to user vma.
+>
+> Typos: values*, goes* (same for the other patch)
 
-Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
----
- drivers/pci/controller/pcie-altera.c | 33 +++++++---------------------
- 1 file changed, 8 insertions(+), 25 deletions(-)
+Ok, will add it into v2.
 
-diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
-index 047bcc214f9b..d96980a4e327 100644
---- a/drivers/pci/controller/pcie-altera.c
-+++ b/drivers/pci/controller/pcie-altera.c
-@@ -58,20 +58,20 @@
- #define RP_DEVFN			0
- #define TLP_REQ_ID(bus, devfn)		(((bus) << 8) | (devfn))
- #define TLP_CFGRD_DW0(pcie, bus)					\
--	((((bus == pcie->root_bus_nr) ? pcie->pcie_data->cfgrd0		\
--				: pcie->pcie_data->cfgrd1) << 24) |	\
-+	((((bus == pcie->root_bus_nr) ? TLP_FMTTYPE_CFGRD0		\
-+				: TLP_FMTTYPE_CFGRD1) << 24) |	\
- 				TLP_PAYLOAD_SIZE)
- #define TLP_CFGWR_DW0(pcie, bus)					\
--	((((bus == pcie->root_bus_nr) ? pcie->pcie_data->cfgwr0		\
--				: pcie->pcie_data->cfgwr1) << 24) |	\
-+	((((bus == pcie->root_bus_nr) ? TLP_FMTTYPE_CFGWR0		\
-+				: TLP_FMTTYPE_CFGWR1) << 24) |	\
- 				TLP_PAYLOAD_SIZE)
- #define S10_TLP_CFGRD_DW0(pcie, bus)					\
--	(((((bus) > S10_RP_SECONDARY(pcie)) ? pcie->pcie_data->cfgrd0	\
--				: pcie->pcie_data->cfgrd1) << 24) |	\
-+	(((((bus) > S10_RP_SECONDARY(pcie)) ? TLP_FMTTYPE_CFGRD1	\
-+				: TLP_FMTTYPE_CFGRD0) << 24) |	\
- 				TLP_PAYLOAD_SIZE)
- #define S10_TLP_CFGWR_DW0(pcie, bus)					\
--	(((((bus) > S10_RP_SECONDARY(pcie)) ? pcie->pcie_data->cfgwr0	\
--				: pcie->pcie_data->cfgwr1) << 24) |	\
-+	(((((bus) > S10_RP_SECONDARY(pcie)) ? TLP_FMTTYPE_CFGWR1	\
-+				: TLP_FMTTYPE_CFGWR0) << 24) |	\
- 				TLP_PAYLOAD_SIZE)
- #define TLP_CFG_DW1(pcie, tag, be)	\
- 	(((TLP_REQ_ID(pcie->root_bus_nr,  RP_DEVFN)) << 16) | (tag << 8) | (be))
-@@ -87,11 +87,6 @@
- 
- #define DWORD_MASK			3
- 
--#define S10_TLP_FMTTYPE_CFGRD0		0x05
--#define S10_TLP_FMTTYPE_CFGRD1		0x04
--#define S10_TLP_FMTTYPE_CFGWR0		0x45
--#define S10_TLP_FMTTYPE_CFGWR1		0x44
--
- enum altera_pcie_version {
- 	ALTERA_PCIE_V1 = 0,
- 	ALTERA_PCIE_V2,
-@@ -124,10 +119,6 @@ struct altera_pcie_data {
- 	const struct altera_pcie_ops *ops;
- 	enum altera_pcie_version version;
- 	u32 cap_offset;		/* PCIe capability structure register offset */
--	u32 cfgrd0;
--	u32 cfgrd1;
--	u32 cfgwr0;
--	u32 cfgwr1;
- };
- 
- struct tlp_rp_regpair_t {
-@@ -784,20 +775,12 @@ static const struct altera_pcie_data altera_pcie_1_0_data = {
- 	.ops = &altera_pcie_ops_1_0,
- 	.cap_offset = 0x80,
- 	.version = ALTERA_PCIE_V1,
--	.cfgrd0 = TLP_FMTTYPE_CFGRD0,
--	.cfgrd1 = TLP_FMTTYPE_CFGRD1,
--	.cfgwr0 = TLP_FMTTYPE_CFGWR0,
--	.cfgwr1 = TLP_FMTTYPE_CFGWR1,
- };
- 
- static const struct altera_pcie_data altera_pcie_2_0_data = {
- 	.ops = &altera_pcie_ops_2_0,
- 	.version = ALTERA_PCIE_V2,
- 	.cap_offset = 0x70,
--	.cfgrd0 = S10_TLP_FMTTYPE_CFGRD0,
--	.cfgrd1 = S10_TLP_FMTTYPE_CFGRD1,
--	.cfgwr0 = S10_TLP_FMTTYPE_CFGWR0,
--	.cfgwr1 = S10_TLP_FMTTYPE_CFGWR1,
- };
- 
- static const struct of_device_id altera_pcie_of_match[] = {
--- 
-2.19.0
+>
+> > Convert vm_insert_pages() to use vm_map_pages_zero(). We could later
+> > "fix" these drivers to behave according to the normal vm_pgoff
+> > offsetting simply by removing the _zero suffix on the function name
+> > and if that causes regressions, it gives us an easy way to revert.
+>
+> Would it be possible to add a "Link:" to where these new functions are
+> discussed/used (maybe a lore.kernel.org link?)?
 
+This might be helpful.
+https://lkml.org/lkml/2018/12/24/204
+
+>
+> Thanks for the patch!
+>
+> Cheers,
+> Miguel
