@@ -2,98 +2,153 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84BC7C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A8A7C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D4D3217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:11:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558696276;
-	bh=bP+JIZdMCq3mFksR+O8CGhak1958qiz5uli+/aUERDM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Tc8H5oQhFR2L+BQFv5lE/9DTLjCJmaruSymbQNfAKxWalv3hMFg0lKqxlPLURo/IB
-	 Z5sb9bIQZZlnOOuHADFQdrJFO7DShcjK2gvYWnBaj+uKmob+upypetqd830k2bQj6d
-	 Q6N8gNuf+8cFg6/8XCTbO9I5JMv97UrVgqlxNc7Q=
+	by mail.kernel.org (Postfix) with ESMTP id 1EEEE21773
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:11:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HYoUYWIh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390968AbfEXLLP (ORCPT
+        id S2390979AbfEXLLS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 07:11:15 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52574 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390920AbfEXLLM (ORCPT
+        Fri, 24 May 2019 07:11:18 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46536 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390865AbfEXLLP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 07:11:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=6LU7sDJKxPMA6OFCSaUXHyqjt8vt2VZhmSa0y+SVYGI=; b=NEjqqlOstTB1P+pLf2ReDgqAP
-        Qlva+QxzNTcWA2+n6SO1OhUe8ldQHcVMCK8O4wZOt7E0xptV7GqbhFu/oTzUSAZD5iEBV0ypM5vVs
-        27z2md8tfsvRAgyjtiNMqctJ2EfYTARqGCRUnMrmLcyAo49tAqgZ0mvXP9+WU6DTyTyCo=;
-Received: from 188.29.164.87.threembb.co.uk ([188.29.164.87] helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hU86C-00036y-Ss; Fri, 24 May 2019 11:10:57 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 4E5BC440046; Fri, 24 May 2019 12:10:54 +0100 (BST)
-Date:   Fri, 24 May 2019 12:10:54 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Subject: Re: [PATCH] Revert "ASoC: simple-card: Fix configuration of DAI
- format"
-Message-ID: <20190524111054.GA2456@sirena.org.uk>
-References: <1558688044-22025-1-git-send-email-jonathanh@nvidia.com>
+        Fri, 24 May 2019 07:11:15 -0400
+Received: by mail-pg1-f194.google.com with SMTP id o11so274309pgm.13;
+        Fri, 24 May 2019 04:11:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+7J3y/fRv6XMK7gAKFuZ39eh40Af0wWeNJ4E0Zu6iH0=;
+        b=HYoUYWIh3uxH3NcvCusp33T+XJZGa3fl3oPvO7fB2blpt4QwpbEZ766Q6PdGDR/jo0
+         6aSBiNvJpU5mDgahFRvLB9LBIE2cUeHXTyFTHszceQw8jfChjmoT29ycbO6G4mLcjkFM
+         pHmIEiwTY7vIw5+kqnuhBDwVnP5a0U+mlm3P/Z74RJ6ALUTXP6fXK8OpIH9JE+0F4oEp
+         UMbXXoMwNDDjUD4OvuQVRdpp07ivomZNl79TGq401M3SdkdgZKlsxtTzM6YfVwppXTC0
+         aPua41Z1j5GWqWXGUY7VMsobwPUDzDvp/uzkRzVojgE11zv26SIUT8a71z36yQBTprjB
+         U8hA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+7J3y/fRv6XMK7gAKFuZ39eh40Af0wWeNJ4E0Zu6iH0=;
+        b=mHLV9fA11ZNU+paXL2N30QMK3/hfDBpooKjUHTBPhu02JGkkB7CjVD1nRWHwnYxnE7
+         8h7AgAe4NKECFlMHYG6krBPXSXLEYcieL5cPCU3h/FzCh3a65Ivpp/wIiCsaRpkJgFTk
+         6cE60Me17zMlVjCnmiO1WNL9LFa5LaPq6b52IlQpStD22AW0njU5OzCEVPpGDvwOSpdw
+         33HE01UcwSIgN3AUggo5yKKj5woRvitZKQmnqiZMkzmqVMxwhsV9aExkAnSqo925mkd/
+         JSglaXmVNILGextcuQtX0PhubGIw2cttWB3ERjQaqNB9YCfp06Ho5OlPKTk3VY3RVV6r
+         5NtQ==
+X-Gm-Message-State: APjAAAVVa+HM5hyMJmTqWoXnyKG4G2Fy9Py6JQsIcUxXaNo+dWy7PZKu
+        rz5kUJYSapQGvMaYCNrjpt3SfKcuiiVzMROISW1yfVttl5s=
+X-Google-Smtp-Source: APXvYqzYyUtbyEanugU1hCluTgnfxJNvdrqZABRyTDBTH6kPu9nHnVaBSweAUERuV3/ZxPF8YN2yIXwMP9HRBBhe+Vg=
+X-Received: by 2002:a63:4d0b:: with SMTP id a11mr16877570pgb.74.1558696275115;
+ Fri, 24 May 2019 04:11:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="6TrnltStXW4iwmi0"
-Content-Disposition: inline
-In-Reply-To: <1558688044-22025-1-git-send-email-jonathanh@nvidia.com>
-X-Cookie: The other line moves faster.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190524094825.16151-1-sr@denx.de> <20190524102002.GT2781@lahna.fi.intel.com>
+In-Reply-To: <20190524102002.GT2781@lahna.fi.intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 24 May 2019 14:11:04 +0300
+Message-ID: <CAHp75VcMVrYv1MXmmqE9fDXShS=Y8pPdWZ4f1neo=ne88TLZDg@mail.gmail.com>
+Subject: Re: [PATCH 1/2 v2] serial: mctrl_gpio: Check if GPIO property exisits
+ before requesting it
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Stefan Roese <sr@denx.de>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Yegor Yefremov <yegorslists@googlemail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Giulio Benetti <giulio.benetti@micronovasrl.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 24, 2019 at 1:21 PM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+>
+> On Fri, May 24, 2019 at 11:48:24AM +0200, Stefan Roese wrote:
+> > This patch adds a check for the GPIOs property existence, before the
+> > GPIO is requested. This fixes an issue seen when the 8250 mctrl_gpio
+> > support is added (2nd patch in this patch series) on x86 platforms using
+> > ACPI.
+> >
+> > Here Mika's comments from 2016-08-09:
+> >
+> > "
+> > I noticed that with v4.8-rc1 serial console of some of our Broxton
+> > systems does not work properly anymore. I'm able to see output but input
+> > does not work.
+> >
+> > I bisected it down to commit 4ef03d328769eddbfeca1f1c958fdb181a69c341
+> > ("tty/serial/8250: use mctrl_gpio helpers").
+> >
+> > The reason why it fails is that in ACPI we do not have names for GPIOs
+> > (except when _DSD is used) so we use the "idx" to index into _CRS GPIO
+> > resources. Now mctrl_gpio_init_noauto() goes through a list of GPIOs
+> > calling devm_gpiod_get_index_optional() passing "idx" of 0 for each. The
+> > UART device in Broxton has following (simplified) ACPI description:
+> >
+> >     Device (URT4)
+> >     {
+> >         ...
+> >         Name (_CRS, ResourceTemplate () {
+> >             GpioIo (Exclusive, PullDefault, 0x0000, 0x0000, IoRestrictionOutputOnly,
+> >                     "\\_SB.GPO0", 0x00, ResourceConsumer)
+> >             {
+> >                 0x003A
+> >             }
+> >             GpioIo (Exclusive, PullDefault, 0x0000, 0x0000, IoRestrictionOutputOnly,
+> >                     "\\_SB.GPO0", 0x00, ResourceConsumer)
+> >             {
+> >                 0x003D
+> >             }
+> >         })
+> >
+> > In this case it finds the first GPIO (0x003A which happens to be RX pin
+> > for that UART), turns it into GPIO which then breaks input for the UART
+> > device. This also breaks systems with bluetooth connected to UART (those
+> > typically have some GPIOs in their _CRS).
+> >
+> > Any ideas how to fix this?
+> >
+> > We cannot just drop the _CRS index lookup fallback because that would
+> > break many existing machines out there so maybe we can limit this to
+> > only DT enabled machines. Or alternatively probe if the property first
+> > exists before trying to acquire the GPIOs (using
+> > device_property_present()).
+> > "
+> >
+> > This patch implements the fix suggested by Mika in his statement above.
+> >
 
---6TrnltStXW4iwmi0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+We have a board where ASL provides _DSD for CTS and RxD pins.
+I'm afraid this won't work on it.
 
-On Fri, May 24, 2019 at 09:54:04AM +0100, Jon Hunter wrote:
-> Revert commit 069d037aea98 ("ASoC: simple-card: Fix configuration of
-> DAI format"). During further review, it turns out that the actual issue
-> was caused by an incorrectly formatted device-tree node describing the
-> soundcard.
+Basically we need to understand the use of the GPIOs in UART. In our
+case it's an out-of-band wake up source for UART.
+Simply requiring GPIOs to be present is not enough.
 
-Please use subject lines matching the style for the subsystem.  This
-makes it easier for people to identify relevant patches.
+Perhaps property like 'modem-control-gpio-in-use' (this seems a bad
+name, given for sake of example).
 
---6TrnltStXW4iwmi0
-Content-Type: application/pgp-signature; name="signature.asc"
+> > Signed-off-by: Stefan Roese <sr@denx.de>
+> > Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+>
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzn0TsACgkQJNaLcl1U
-h9D7hgf+KnlthPCAcNyZh9TNU0VlaxTKG3nZmDHU6QQg/BOOt48b+aWZBg7UIuHi
-ii8RJQsiBLnRhDUs8COFEcoyDMwlCaFcyn31Gtfno7H2IvZgWHgN9zff1hkibOZ+
-571fGi0LS3x+5htd4wNPQQdNSai7uSTVR4NYGl2jh9H3fLLRU16PatCRlT5xQoyO
-lEc+c6Ag/greLJbHgoT5bJf0GSOTaGcATCI2NWmTx86dyZ568Fs7gEDKGph7Md8h
-NGMHhk8Wew0avn6epDR2opQhXFP1pqD9KK/TUm0GgRX0x2gqauePZeq6W2ucgQD1
-CuA1xZr3ytSJsWyVaP1GGMEPph0iRw==
-=NXV0
------END PGP SIGNATURE-----
 
---6TrnltStXW4iwmi0--
+-- 
+With Best Regards,
+Andy Shevchenko
