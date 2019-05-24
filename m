@@ -2,207 +2,119 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3BD9C282E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 22:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB9DC282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 22:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAEE72175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 22:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 327402175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 22:41:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404398AbfEXWlK (ORCPT
+        id S2404436AbfEXWl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 18:41:10 -0400
-Received: from mga07.intel.com ([134.134.136.100]:15291 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727091AbfEXWlJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 18:41:09 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 May 2019 15:41:08 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by orsmga002.jf.intel.com with ESMTP; 24 May 2019 15:41:07 -0700
-Date:   Fri, 24 May 2019 15:41:07 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     "Xing, Cedric" <cedric.xing@intel.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-Message-ID: <20190524224107.GJ365@linux.intel.com>
-References: <20190523234044.GC12078@linux.intel.com>
- <CALCETrV4DVEfW6EJ6DnQGGYDJAiA5M1QcuYJTiroumOM+D6Jjg@mail.gmail.com>
- <960B34DE67B9E140824F1DCDEC400C0F654E8956@ORSMSX116.amr.corp.intel.com>
- <dda0912b-cb15-3c07-d368-345159e995f7@tycho.nsa.gov>
- <20190524174243.GA365@linux.intel.com>
- <20190524175458.GB365@linux.intel.com>
- <960B34DE67B9E140824F1DCDEC400C0F654E8E1D@ORSMSX116.amr.corp.intel.com>
- <CALCETrUw5sEr-MHPMU4CzEzkrejDs-JOThHB9Buhoxo5-rdpRw@mail.gmail.com>
- <20190524200333.GF365@linux.intel.com>
- <CALCETrUyAAhnQ+RUeN1L41TKj-vcD2CNt-FJ9siO=Zo6gvH1Aw@mail.gmail.com>
+        Fri, 24 May 2019 18:41:27 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:59797 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727113AbfEXWl0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 18:41:26 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hUIsO-0005Bm-I1; Fri, 24 May 2019 22:41:24 +0000
+To:     "David S. Miller" <davem@davemloft.net>,
+        Esben Haabendal <esben@geanix.com>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Colin Ian King <colin.king@canonical.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ mQINBE6TJCgBEACo6nMNvy06zNKj5tiwDsXXS+LhT+LwtEsy9EnraKYXAf2xwazcICSjX06e
+ fanlyhB0figzQO0n/tP7BcfMVNG7n1+DC71mSyRK1ZERcG1523ajvdZOxbBCTvTitYOy3bjs
+ +LXKqeVMhK3mRvdTjjmVpWnWqJ1LL+Hn12ysDVVfkbtuIm2NoaSEC8Ae8LSSyCMecd22d9Pn
+ LR4UeFgrWEkQsqROq6ZDJT9pBLGe1ZS0pVGhkRyBP9GP65oPev39SmfAx9R92SYJygCy0pPv
+ BMWKvEZS/7bpetPNx6l2xu9UvwoeEbpzUvH26PHO3DDAv0ynJugPCoxlGPVf3zcfGQxy3oty
+ dNTWkP6Wh3Q85m+AlifgKZudjZLrO6c+fAw/jFu1UMjNuyhgShtFU7NvEzL3RqzFf9O1qM2m
+ uj83IeFQ1FZ65QAiCdTa3npz1vHc7N4uEQBUxyXgXfCI+A5yDnjHwzU0Y3RYS52TA3nfa08y
+ LGPLTf5wyAREkFYou20vh5vRvPASoXx6auVf1MuxokDShVhxLpryBnlKCobs4voxN54BUO7m
+ zuERXN8kadsxGFzItAyfKYzEiJrpUB1yhm78AecDyiPlMjl99xXk0zs9lcKriaByVUv/NsyJ
+ FQj/kmdxox3XHi9K29kopFszm1tFiDwCFr/xumbZcMY17Yi2bQARAQABtCVDb2xpbiBLaW5n
+ IDxjb2xpbi5raW5nQGNhbm9uaWNhbC5jb20+iQI2BBMBCAAhBQJOkyQoAhsDBQsJCAcDBRUK
+ CQgLBRYCAwEAAh4BAheAAAoJEGjCh9/GqAImsBcP9i6C/qLewfi7iVcOwqF9avfGzOPf7CVr
+ n8CayQnlWQPchmGKk6W2qgnWI2YLIkADh53TS0VeSQ7Tetj8f1gV75eP0Sr/oT/9ovn38QZ2
+ vN8hpZp0GxOUrzkvvPjpH+zdmKSaUsHGp8idfPpZX7XeBO0yojAs669+3BrnBcU5wW45SjSV
+ nfmVj1ZZj3/yBunb+hgNH1QRcm8ZPICpjvSsGFClTdB4xu2AR28eMiL/TTg9k8Gt72mOvhf0
+ fS0/BUwcP8qp1TdgOFyiYpI8CGyzbfwwuGANPSupGaqtIRVf+/KaOdYUM3dx/wFozZb93Kws
+ gXR4z6tyvYCkEg3x0Xl9BoUUyn9Jp5e6FOph2t7TgUvv9dgQOsZ+V9jFJplMhN1HPhuSnkvP
+ 5/PrX8hNOIYuT/o1AC7K5KXQmr6hkkxasjx16PnCPLpbCF5pFwcXc907eQ4+b/42k+7E3fDA
+ Erm9blEPINtt2yG2UeqEkL+qoebjFJxY9d4r8PFbEUWMT+t3+dmhr/62NfZxrB0nTHxDVIia
+ u8xM+23iDRsymnI1w0R78yaa0Eea3+f79QsoRW27Kvu191cU7QdW1eZm05wO8QUvdFagVVdW
+ Zg2DE63Fiin1AkGpaeZG9Dw8HL3pJAJiDe0KOpuq9lndHoGHs3MSa3iyQqpQKzxM6sBXWGfk
+ EkK5Ag0ETpMkKAEQAMX6HP5zSoXRHnwPCIzwz8+inMW7mJ60GmXSNTOCVoqExkopbuUCvinN
+ 4Tg+AnhnBB3R1KTHreFGoz3rcV7fmJeut6CWnBnGBtsaW5Emmh6gZbO5SlcTpl7QDacgIUuT
+ v1pgewVHCcrKiX0zQDJkcK8FeLUcB2PXuJd6sJg39kgsPlI7R0OJCXnvT/VGnd3XPSXXoO4K
+ cr5fcjsZPxn0HdYCvooJGI/Qau+imPHCSPhnX3WY/9q5/WqlY9cQA8tUC+7mgzt2VMjFft1h
+ rp/CVybW6htm+a1d4MS4cndORsWBEetnC6HnQYwuC4bVCOEg9eXMTv88FCzOHnMbE+PxxHzW
+ 3Gzor/QYZGcis+EIiU6hNTwv4F6fFkXfW6611JwfDUQCAHoCxF3B13xr0BH5d2EcbNB6XyQb
+ IGngwDvnTyKHQv34wE+4KtKxxyPBX36Z+xOzOttmiwiFWkFp4c2tQymHAV70dsZTBB5Lq06v
+ 6nJs601Qd6InlpTc2mjd5mRZUZ48/Y7i+vyuNVDXFkwhYDXzFRotO9VJqtXv8iqMtvS4xPPo
+ 2DtJx6qOyDE7gnfmk84IbyDLzlOZ3k0p7jorXEaw0bbPN9dDpw2Sh9TJAUZVssK119DJZXv5
+ 2BSc6c+GtMqkV8nmWdakunN7Qt/JbTcKlbH3HjIyXBy8gXDaEto5ABEBAAGJAh8EGAEIAAkF
+ Ak6TJCgCGwwACgkQaMKH38aoAiZ4lg/+N2mkx5vsBmcsZVd3ys3sIsG18w6RcJZo5SGMxEBj
+ t1UgyIXWI9lzpKCKIxKx0bskmEyMy4tPEDSRfZno/T7p1mU7hsM4owi/ic0aGBKP025Iok9G
+ LKJcooP/A2c9dUV0FmygecRcbIAUaeJ27gotQkiJKbi0cl2gyTRlolKbC3R23K24LUhYfx4h
+ pWj8CHoXEJrOdHO8Y0XH7059xzv5oxnXl2SD1dqA66INnX+vpW4TD2i+eQNPgfkECzKzGj+r
+ KRfhdDZFBJj8/e131Y0t5cu+3Vok1FzBwgQqBnkA7dhBsQm3V0R8JTtMAqJGmyOcL+JCJAca
+ 3Yi81yLyhmYzcRASLvJmoPTsDp2kZOdGr05Dt8aGPRJL33Jm+igfd8EgcDYtG6+F8MCBOult
+ TTAu+QAijRPZv1KhEJXwUSke9HZvzo1tNTlY3h6plBsBufELu0mnqQvHZmfa5Ay99dF+dL1H
+ WNp62+mTeHsX6v9EACH4S+Cw9Q1qJElFEu9/1vFNBmGY2vDv14gU2xEiS2eIvKiYl/b5Y85Q
+ QLOHWV8up73KK5Qq/6bm4BqVd1rKGI9un8kezUQNGBKre2KKs6wquH8oynDP/baoYxEGMXBg
+ GF/qjOC6OY+U7kNUW3N/A7J3M2VdOTLu3hVTzJMZdlMmmsg74azvZDV75dUigqXcwjE=
+Subject: re: net: ll_temac: Cleanup multicast filter on change
+Message-ID: <6b57d3a1-98b6-c20d-355d-87c2f52b0f31@canonical.com>
+Date:   Fri, 24 May 2019 23:41:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrUyAAhnQ+RUeN1L41TKj-vcD2CNt-FJ9siO=Zo6gvH1Aw@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 02:27:34PM -0700, Andy Lutomirski wrote:
-> On Fri, May 24, 2019 at 1:03 PM Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
-> >
-> > On Fri, May 24, 2019 at 12:37:44PM -0700, Andy Lutomirski wrote:
-> > > On Fri, May 24, 2019 at 11:34 AM Xing, Cedric <cedric.xing@intel.com> wrote:
-> > > >
-> > > > If "initial permissions" for enclaves are less restrictive than shared
-> > > > objects, then it'd become a backdoor for circumventing LSM when enclave
-> > > > whitelisting is *not* in place. For example, an adversary may load a page,
-> > > > which would otherwise never be executable, as an executable page in EPC.
-> > > >
-> > > > In the case a RWX page is needed, the calling process has to have a RWX
-> > > > page serving as the source for EADD so PROCESS__EXECMEM will have been
-> > > > checked. For SGX2, changing an EPC page to RWX is subject to FILE__EXECMEM
-> > > > on /dev/sgx/enclave, which I see as a security benefit because it only
-> > > > affects the enclave but not the whole process hosting it.
-> > >
-> > > So the permission would be like FILE__EXECMOD on the source enclave
-> > > page, because it would be mapped MAP_ANONYMOUS, PROT_WRITE?
-> > > MAP_SHARED, PROT_WRITE isn't going to work because that means you can
-> > > modify the file.
-> >
-> > Was this in response to Cedric's comment, or to my comment?
-> 
-> Yours.  I think that requiring source pages to be actually mapped W is
-> not such a great idea.
+Hi,
 
-I wasn't requiring source pages to be mapped W.  At least I didn't intend
-to require W.  What I was trying to say is that SGX could trigger an
-EXECMEM check if userspace attempted to EADD or EAUG an enclave page with
-RWX permissions, e.g.:
+static analysis with Coverity has detected a potential issue with the
+following commit:
 
-  if ((SECINFO.PERMS & RWX) == RWX) {
-      ret = security_mmap_file(NULL, RWX, ???);
-      if (ret)
-          return ret;
-  }
+commit 1b3fa5cf859bce7094ac18d32f54af8a7148ad51
+Author: Esben Haabendal <esben@geanix.com>
+Date:   Thu May 23 14:02:21 2019 +0200
 
-But that's a moot point if we add security_enclave_load() or whatever.
+    net: ll_temac: Cleanup multicast filter on change
 
-> 
-> >
-> > > I'm starting to think that looking at the source VMA permission bits
-> > > or source PTE permission bits is putting a bit too much policy into
-> > > the driver as opposed to the LSM.  How about delegating the whole
-> > > thing to an LSM hook?  The EADD operation would invoke a new hook,
-> > > something like:
-> > >
-> > > int security_enclave_load_bytes(void *source_addr, struct
-> > > vm_area_struct *source_vma, loff_t source_offset, unsigned int
-> > > maxperm);
-> > >
-> > > Then you don't have to muck with mapping anything PROT_EXEC.  Instead
-> > > you load from a mapping of a file and the LSM applies whatever policy
-> > > it feels appropriate.  If the first pass gets something wrong, the
-> > > application or library authors can take it up with the SELinux folks
-> > > without breaking the whole ABI :)
-> > >
-> > > (I'm proposing passing in the source_vma because this hook would be
-> > > called with mmap_sem held for read to avoid a TOCTOU race.)
-> > >
-> > > If we go this route, the only substantial change to the existing
-> > > driver that's needed for an initial upstream merge is the maxperm
-> > > mechanism and whatever hopefully minimal API changes are needed to
-> > > allow users to conveniently set up the mappings.  And we don't need to
-> > > worry about how to hack around mprotect() calling into the LSM,
-> > > because the LSM will actually be aware of SGX and can just do the
-> > > right thing.
-> >
-> > This doesn't address restricting which processes can run which enclaves,
-> > it only allows restricting the build flow.  Or are you suggesting this
-> > be done in addition to whitelisting sigstructs?
-> 
-> In addition.
-> 
-> But I named the function badly and gave it a bad signature, which
-> confused you.  Let's try again:
-> 
-> int security_enclave_load_from_memory(const struct vm_area_struct
-> *source, unsigned int maxperm);
+In function temac_set_multicast_list
+(drivers/net/ethernet/xilinx/ll_temac_main.c), loop counter i is *only*
+initialized in the code block:
 
-I prefer security_enclave_load(), "from_memory" seems redundant at best.
+	if (!netdev_mc_empty(ndev)) {
+		...
+	}
 
-> Maybe some really fancy future LSM would also want loff_t
-> source_offset, but it's probably not terribly useful.  This same
-> callback would be used for EAUG.
-> 
-> Following up on your discussion with Cedric about sigstruct, the other
-> callback would be something like:
-> 
-> int security_enclave_init(struct file *sigstruct_file);
-> 
-> The main issue I see is that we also want to control the enclave's
-> ability to have RWX pages or to change a W page to X.  We might also
-> want:
-> 
-> int security_enclave_load_zeros(unsigned int maxperm);
+Following this if code block there is a while-loop that iterates using i
+as counter which will be problematic if i has not been correctly
+initialized:
 
-What's the use case for this?  @maxperm will always be at least RW in
-this case, otherwise the page is useless to the enclave, and if the
-enclave can write the page, the fact that it started as zeros is
-irrelevant.
+        while (i < MULTICAST_CAM_TABLE_NUM) {
+                temac_indirect_out32_locked(lp, XTE_MAW0_OFFSET, 0);
+                temac_indirect_out32_locked(lp, XTE_MAW1_OFFSET, i << 16);
+                i++;
+        }
 
-> An enclave that's going to modify its own code will need memory with
-> maxperm = RWX or WX.
-> 
-> But this is a bit awkward if the LSM's decision depends on the
-> sigstruct.  We could get fancy and require that the sigstruct be
-> supplied before any EADD operations so that the maxperm decisions can
-> depend on the sigstruct.
-> 
-> Am I making more sense now?
-
-Yep.  Requiring .sigstruct at ECREATE would be trivial.  If we wanted
-flexibility we could do:
-
-   int security_enclave_load(struct file *file, struct vm_area_struct *vma,
-                             unsigned long prot);
-
-And for ultimate flexibility we could pass both .sigstruct and the file
-pointer for /dev/sgx/enclave, but that seems a bit ridiculous.
-
-Passing both would allow tying EXECMOD to /dev/sgx/enclave as Cedric
-wanted (without having to play games and pass /dev/sgx/enclave to
-security_enclave_load()), but I don't think there's anything fundamentally
-broken with using .sigstruct for EXECMOD.  It requires more verbose
-labeling, but that's not a bad thing.
+Colin
