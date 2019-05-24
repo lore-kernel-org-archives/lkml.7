@@ -2,57 +2,57 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B63E4C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD54C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E1EE217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:43:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02F9F217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:44:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="MMbn8v2Z"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="OyifHJAO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390790AbfEXKnp (ORCPT
+        id S2390807AbfEXKn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 06:43:45 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45000 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390578AbfEXKno (ORCPT
+        Fri, 24 May 2019 06:43:59 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44661 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390578AbfEXKn6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 06:43:44 -0400
-Received: by mail-pg1-f193.google.com with SMTP id n2so4845385pgp.11
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 03:43:44 -0700 (PDT)
+        Fri, 24 May 2019 06:43:58 -0400
+Received: by mail-pf1-f195.google.com with SMTP id g9so5089411pfo.11
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 03:43:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=qNTSCPsOEC2W2+GNT7l2VKFB0+zY6ZYUs+njP7ZZryY=;
-        b=MMbn8v2Zd2qsn/V/zb6Mt7MtfVlWEps+yV995UvWXL1qqyAQ3BZmYedcZmufHrmzso
-         pmn/HjUvKsI28wdzVni96j2suAg2VF2NOyBYHDWkoag8/K6d/bRvl3k9S3+JbubG81qG
-         C/PJWR2X8Czf3xVJnt9ALXMpfquiiK0chagBE=
+        bh=Bq5JeR/itXRFWJkFBy/4tSREROqi+e79H6/1fNsKbVM=;
+        b=OyifHJAO2FY1I6WMV5KWMz4fEKUQ5ksubmjH/U8znuzy2iQ40wQwxbzcoCgrPSjNqP
+         UmHNJaiDFOdp0ycz0rXeRxoWHEsSi3zTE00HERGPtcpyteh8cFWNlBv7MWc/Esuibd95
+         bM4Jg6ykMobiJdLIlTq44XJJbby9O4wz+2fXI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=qNTSCPsOEC2W2+GNT7l2VKFB0+zY6ZYUs+njP7ZZryY=;
-        b=PpwXGL/pXxAn372y4wf6DKNSLKzdWGunsxRajfe/UnaqwPEQfsJhu3LG4QFNcpKuCK
-         MqOsiI3L5shL1t6pMMTe3iE4uX/AcrSvz0WEtK7z+03bLBWg6JGyMmhFxXqj+g5wVpjH
-         PIUfr9Yv1bNVsrw/dVO0rpJvsLAObU0Ygm9b15wAdXf38SkjLe/L0yemNFYsUUHq++/e
-         1kaPTb+N+EgtxYN2vCGwIQrTqidrQYzIjmyfQqBCiMGtVHtpUStYRVO9ZDg6bgAnuL+F
-         iJ7wA/eZGT25bq2ohs72579wnec3M1EeruqR6KKoE09Yk2k8EgOiGL9m6762RZIf19RY
-         A7EQ==
-X-Gm-Message-State: APjAAAWH/pNHtLzk0318OHANDM0LPFblwlIPfg96wbf2EEe0hb3aGaFt
-        Vo3yCRKSFd3/na4GX/NTJIlkZA==
-X-Google-Smtp-Source: APXvYqwKcohDIPUT5/aEC255pUPB2TXqU3TOva/kNXfG24c8fTCD7t9u2h8RQ7FYuSxfiGAGamTVqQ==
-X-Received: by 2002:a62:5653:: with SMTP id k80mr110389226pfb.144.1558694623629;
-        Fri, 24 May 2019 03:43:43 -0700 (PDT)
+        bh=Bq5JeR/itXRFWJkFBy/4tSREROqi+e79H6/1fNsKbVM=;
+        b=bniNfyVVT9dUBjo6+aXuB8lf4n4XkwpbpulnzHq10PKIZD67HXuu84eqRHD9+3VwxC
+         b/RurqrOG90HVcbTqaCSHRlGqOS4x2esKTpNpejdcgQgOzYHQRMnll/8+pJ8Mb6m3YLz
+         MrWJ04bpSe4klArRHlCOjdIEE4mpizDKQzgtvQlY3Z1BhCu9Dq38eS2OD6YfvJddOs6+
+         D80GAUPiwGmXmb+Up+a8LH6qAVC5VRydI2w8cripa66XY96agZipJ4xoxdbsvpBxy11/
+         x1JUKxi7gUX5Mj7feHa1VEuM6lchkRtzOpiRFYt1kU44HOL1TywY2tFW15DtDP9GIUTW
+         LwTg==
+X-Gm-Message-State: APjAAAWmIPl0oJ9Mm4+++tiqs0BdXqrEIsj2obgD7MX+XpWsh+ZAvPsC
+        3ze+tkV1u3cbbI91n9c1ulSj1Q==
+X-Google-Smtp-Source: APXvYqxfYiF5og1UQq3Y0TjhTFSgxW3pYtju93KNCwdtLt3rerjecQ5de3ix+C1QlDyDCblrS3f7eQ==
+X-Received: by 2002:a63:dc09:: with SMTP id s9mr63725852pgg.425.1558694637934;
+        Fri, 24 May 2019 03:43:57 -0700 (PDT)
 Received: from localhost.localdomain ([183.82.227.60])
-        by smtp.gmail.com with ESMTPSA id h11sm2303416pfn.170.2019.05.24.03.43.37
+        by smtp.gmail.com with ESMTPSA id h11sm2303416pfn.170.2019.05.24.03.43.52
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 03:43:43 -0700 (PDT)
+        Fri, 24 May 2019 03:43:57 -0700 (PDT)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     Andrzej Hajda <a.hajda@samsung.com>,
         Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
@@ -67,9 +67,9 @@ Cc:     Michael Trimarchi <michael@amarulasolutions.com>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-sunxi@googlegroups.com, linux-amarula@amarulasolutions.com,
         Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v2 4/6] dt-bindings: display: bridge: Add ICN6211 MIPI-DSI to RGB converter bridge
-Date:   Fri, 24 May 2019 16:13:15 +0530
-Message-Id: <20190524104317.20287-2-jagan@amarulasolutions.com>
+Subject: [PATCH v2 5/6] drm/bridge: Add Chipone ICN6211 MIPI-DSI/RGB converter bridge
+Date:   Fri, 24 May 2019 16:13:16 +0530
+Message-Id: <20190524104317.20287-3-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
 In-Reply-To: <20190524104317.20287-1-jagan@amarulasolutions.com>
 References: <20190524104317.20287-1-jagan@amarulasolutions.com>
@@ -84,98 +84,421 @@ ICN6211 is MIPI-DSI/RGB converter bridge from chipone.
 It has a flexible configuration of MIPI DSI signal input
 and produce RGB565, RGB666, RGB888 output format.
 
-Add dt-bingings for it.
+Add bridge driver for it.
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- .../display/bridge/chipone,icn6211.txt        | 78 +++++++++++++++++++
- 1 file changed, 78 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt
+Note:
+- drm_panel_bridge_add seems not working or incompatible 
+as per driver setup. any inputs on this would be great.
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt b/Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt
+ MAINTAINERS                              |   6 +
+ drivers/gpu/drm/bridge/Kconfig           |  10 +
+ drivers/gpu/drm/bridge/Makefile          |   1 +
+ drivers/gpu/drm/bridge/chipone-icn6211.c | 344 +++++++++++++++++++++++
+ 4 files changed, 361 insertions(+)
+ create mode 100644 drivers/gpu/drm/bridge/chipone-icn6211.c
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4cc30c360fda..97ffb265bedc 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4991,6 +4991,12 @@ T:	git git://anongit.freedesktop.org/drm/drm-misc
+ S:	Maintained
+ F:	drivers/gpu/drm/bochs/
+ 
++DRM DRIVER FOR CHIPONE ICN6211 MIPI-DSI to RGB CONVERTOR BRIDGE
++M:	Jagan Teki <jagan@amarulasolutions.com>
++S:	Maintained
++F:	drivers/gpu/drm/bridge/chipone-icn6211.c
++F:	Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt
++
+ DRM DRIVER FOR FARADAY TVE200 TV ENCODER
+ M:	Linus Walleij <linus.walleij@linaro.org>
+ T:	git git://anongit.freedesktop.org/drm/drm-misc
+diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+index 3dff9997f5e3..2e06be1aaca3 100644
+--- a/drivers/gpu/drm/bridge/Kconfig
++++ b/drivers/gpu/drm/bridge/Kconfig
+@@ -36,6 +36,16 @@ config DRM_CDNS_DSI
+ 	  Support Cadence DPI to DSI bridge. This is an internal
+ 	  bridge and is meant to be directly embedded in a SoC.
+ 
++config DRM_CHIPONE_ICN6211
++	tristate "Chipone ICN6211 MIPI-DSI/RGB converter bridge"
++	depends on DRM && DRM_PANEL
++	depends on OF
++	select DRM_MIPI_DSI
++	help
++	  ICN6211 is MIPI-DSI/RGB converter bridge from chipone.
++	  It has a flexible configuration of MIPI DSI signal input
++	  and produce RGB565, RGB666, RGB888 output format.
++
+ config DRM_DUMB_VGA_DAC
+ 	tristate "Dumb VGA DAC Bridge support"
+ 	depends on OF
+diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
+index 4934fcf5a6f8..541fdccad10b 100644
+--- a/drivers/gpu/drm/bridge/Makefile
++++ b/drivers/gpu/drm/bridge/Makefile
+@@ -1,6 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
+ obj-$(CONFIG_DRM_CDNS_DSI) += cdns-dsi.o
++obj-$(CONFIG_DRM_CHIPONE_ICN6211) += chipone-icn6211.o
+ obj-$(CONFIG_DRM_DUMB_VGA_DAC) += dumb-vga-dac.o
+ obj-$(CONFIG_DRM_LVDS_ENCODER) += lvds-encoder.o
+ obj-$(CONFIG_DRM_MEGACHIPS_STDPXXXX_GE_B850V3_FW) += megachips-stdpxxxx-ge-b850v3-fw.o
+diff --git a/drivers/gpu/drm/bridge/chipone-icn6211.c b/drivers/gpu/drm/bridge/chipone-icn6211.c
 new file mode 100644
-index 000000000000..53a9848ef8b6
+index 000000000000..76edda52dc57
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt
-@@ -0,0 +1,78 @@
-+Chipone ICN6211 MIPI-DSI to RGB Converter Bridge
++++ b/drivers/gpu/drm/bridge/chipone-icn6211.c
+@@ -0,0 +1,344 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Copyright (C) 2018 Amarula Solutions
++ * Author: Jagan Teki <jagan@amarulasolutions.com>
++ */
 +
-+ICN6211 is MIPI-DSI/RGB converter bridge from chipone.
-+It has a flexible configuration of MIPI DSI signal input
-+and produce RGB565, RGB666, RGB888 output format.
++#include <drm/drm_atomic_helper.h>
++#include <drm/drm_fb_helper.h>
++#include <drm/drm_of.h>
++#include <drm/drm_panel.h>
++#include <drm/drm_print.h>
++#include <drm/drm_probe_helper.h>
++#include <drm/drm_mipi_dsi.h>
 +
-+Required properties for RGB:
-+- compatible: must be "chipone,icn6211"
-+- reg: the virtual channel number of a DSI peripheral
-+- reset-gpios: a GPIO phandle for the reset pin
++#include <linux/delay.h>
++#include <linux/gpio/consumer.h>
++#include <linux/module.h>
++#include <linux/of_device.h>
++#include <linux/of_graph.h>
 +
-+The device node can contain following 'port' child nodes,
-+according to the OF graph bindings defined in [1]:
-+  0: DSI Input, not required, if the bridge is DSI controlled
-+  1: RGB Output, mandatory
++#include <video/mipi_display.h>
 +
-+[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
-+
-+Example:
-+
-+	panel {
-+		compatible = "bananapi,s070wv20-ct16", "simple-panel";
-+		enable-gpios = <&pio 1 7 GPIO_ACTIVE_HIGH>; /* LCD-PWR-EN: PB7 */
-+		backlight = <&backlight>;
-+
-+		port {
-+			panel_out_bridge: endpoint {
-+				remote-endpoint = <&bridge_out_panel>;
-+			};
-+		};
-+	};
-+
-+&dsi {
-+	vcc-dsi-supply = <&reg_dcdc1>;		/* VCC-DSI */
-+	status = "okay";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		dsi_out: port@0 {
-+			reg = <0>;
-+
-+			dsi_out_bridge: endpoint {
-+				remote-endpoint = <&bridge_out_dsi>;
-+			};
-+		};
-+	};
-+
-+	bridge@0 {
-+		compatible = "chipone,icn6211";
-+		reg = <0>;
-+		reset-gpios = <&r_pio 0 5 GPIO_ACTIVE_HIGH>; /* LCD-RST: PL5 */
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			bridge_in: port@0 {
-+				reg = <0>;
-+
-+				bridge_out_dsi: endpoint {
-+					remote-endpoint = <&dsi_out_bridge>;
-+				};
-+			};
-+
-+			bridge_out: port@1 {
-+				reg = <1>;
-+
-+				bridge_out_panel: endpoint {
-+					remote-endpoint = <&panel_out_bridge>;
-+				};
-+			};
-+		};
-+	};
++struct chipone_bridge_desc {
++	unsigned int lanes;
++	unsigned long mode_flags;
++	enum mipi_dsi_pixel_format format;
++	void (*chipone_bridge_init)(struct drm_bridge *bridge);
 +};
++
++struct chipone {
++	struct device *dev;
++	struct drm_bridge bridge;
++	struct drm_connector connector;
++	struct drm_panel *panel;
++	const struct drm_display_mode *mode;
++	const struct chipone_bridge_desc *desc;
++
++	struct gpio_desc *reset_gpio;
++};
++
++static inline struct chipone *bridge_to_chipone(struct drm_bridge *bridge)
++{
++	return container_of(bridge, struct chipone, bridge);
++}
++
++static inline
++struct chipone *connector_to_chipone(struct drm_connector *connector)
++{
++	return container_of(connector, struct chipone, connector);
++}
++
++static int chipone_get_modes(struct drm_connector *connector)
++{
++	struct chipone *icn = connector_to_chipone(connector);
++
++	return drm_panel_get_modes(icn->panel);
++}
++
++static const
++struct drm_connector_helper_funcs chipone_connector_helper_funcs = {
++	.get_modes = chipone_get_modes,
++};
++
++static const struct drm_connector_funcs chipone_connector_funcs = {
++	.fill_modes = drm_helper_probe_single_connector_modes,
++	.destroy = drm_connector_cleanup,
++	.reset = drm_atomic_helper_connector_reset,
++	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
++	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
++};
++
++static void chipone_disable(struct drm_bridge *bridge)
++{
++	struct chipone *icn = bridge_to_chipone(bridge);
++	int ret;
++
++	ret = drm_panel_disable(bridge_to_chipone(bridge)->panel);
++	if (ret < 0)
++		DRM_DEV_ERROR(icn->dev, "error disabling panel (%d)\n", ret);
++}
++
++static void chipone_post_disable(struct drm_bridge *bridge)
++{
++	struct chipone *icn = bridge_to_chipone(bridge);
++	int ret;
++
++	ret = drm_panel_unprepare(icn->panel);
++	if (ret < 0)
++		DRM_DEV_ERROR(icn->dev, "error unpreparing panel (%d)\n", ret);
++
++	msleep(50);
++
++	gpiod_set_value(icn->reset_gpio, 0);
++}
++
++static inline int chipone_dsi_write(struct chipone *icn,  const void *seq,
++				    size_t len)
++{
++	struct mipi_dsi_device *dsi = to_mipi_dsi_device(icn->dev);
++
++	return mipi_dsi_generic_write(dsi, seq, len);
++}
++
++#define CHIPONE_DSI(icn, seq...)				\
++	{							\
++		const u8 d[] = { seq };				\
++		chipone_dsi_write(icn, d, ARRAY_SIZE(d));	\
++	}
++
++static void icn6211_bridge_init(struct drm_bridge *bridge)
++{
++	struct chipone *icn = bridge_to_chipone(bridge);
++	const struct drm_display_mode *mode = icn->mode;
++
++	CHIPONE_DSI(icn, 0x7A, 0xC1);
++
++	/* lower 8 bits of hdisplay */
++	CHIPONE_DSI(icn, 0x20, mode->hdisplay & 0xff);
++
++	/* lower 8 bits of vdisplay */
++	CHIPONE_DSI(icn, 0x21, mode->vdisplay & 0xff);
++
++	/**
++	 * lsb nibble: 2nd nibble of hdisplay
++	 * msb nibble: 2nd nibble of vdisplay
++	 */
++	CHIPONE_DSI(icn, 0x22, (((mode->hdisplay >> 8) & 0xf) |
++		    (((mode->vdisplay >> 8) & 0xf) << 4)));
++
++	/* HFP */
++	CHIPONE_DSI(icn, 0x23, mode->hsync_start - mode->hdisplay);
++
++	/* HSYNC */
++	CHIPONE_DSI(icn, 0x24, mode->hsync_end - mode->hsync_start);
++
++	/* HBP */
++	CHIPONE_DSI(icn, 0x25, mode->htotal - mode->hsync_end);
++
++	CHIPONE_DSI(icn, 0x26, 0x00);
++
++	/* VFP */
++	CHIPONE_DSI(icn, 0x27, mode->vsync_start - mode->vdisplay);
++
++	/* VSYNC */
++	CHIPONE_DSI(icn, 0x28, mode->vsync_end - mode->vsync_start);
++
++	/* VBP */
++	CHIPONE_DSI(icn, 0x29, mode->vtotal - mode->vsync_end);
++
++	/* dsi specific sequence */
++	CHIPONE_DSI(icn, MIPI_DCS_SET_TEAR_OFF, 0x80);
++	CHIPONE_DSI(icn, MIPI_DCS_SET_ADDRESS_MODE, 0x28);
++	CHIPONE_DSI(icn, 0xB5, 0xA0);
++	CHIPONE_DSI(icn, 0x5C, 0xFF);
++	CHIPONE_DSI(icn, MIPI_DCS_SET_COLUMN_ADDRESS, 0x01);
++	CHIPONE_DSI(icn, MIPI_DCS_GET_POWER_SAVE, 0x92);
++	CHIPONE_DSI(icn, 0x6B, 0x71);
++	CHIPONE_DSI(icn, 0x69, 0x2B);
++	CHIPONE_DSI(icn, MIPI_DCS_ENTER_SLEEP_MODE, 0x40);
++	CHIPONE_DSI(icn, MIPI_DCS_EXIT_SLEEP_MODE, 0x98);
++
++	/* icn6211 specific sequence */
++	CHIPONE_DSI(icn, 0xB6, 0x20);
++	CHIPONE_DSI(icn, 0x51, 0x20);
++	CHIPONE_DSI(icn, 0x09, 0x10);
++}
++
++static void chipone_pre_enable(struct drm_bridge *bridge)
++{
++	struct chipone *icn = bridge_to_chipone(bridge);
++	int ret;
++
++	gpiod_set_value(icn->reset_gpio, 0);
++	msleep(20);
++
++	gpiod_set_value(icn->reset_gpio, 1);
++	msleep(50);
++
++	icn->desc->chipone_bridge_init(bridge);
++
++	ret = drm_panel_prepare(icn->panel);
++	if (ret < 0)
++		DRM_DEV_ERROR(icn->dev, "error preparing panel (%d)\n", ret);
++}
++
++static void chipone_enable(struct drm_bridge *bridge)
++{
++	struct chipone *icn = bridge_to_chipone(bridge);
++	int ret;
++
++	ret = drm_panel_enable(icn->panel);
++	if (ret < 0)
++		DRM_DEV_ERROR(icn->dev, "error enabling panel (%d)\n", ret);
++}
++
++static int chipone_attach(struct drm_bridge *bridge)
++{
++	struct chipone *icn = bridge_to_chipone(bridge);
++	struct drm_device *drm = bridge->dev;
++	int ret;
++
++	if (!bridge->encoder) {
++		DRM_ERROR("Parent encoder object not found");
++		return -ENODEV;
++	}
++
++	icn->connector.polled = DRM_CONNECTOR_POLL_HPD;
++	ret = drm_connector_init(drm, &icn->connector,
++				 &chipone_connector_funcs,
++				 DRM_MODE_CONNECTOR_DPI);
++	if (ret) {
++		DRM_DEV_ERROR(icn->dev,
++			      "Couldn't initialise the rgb connector\n");
++		goto err_out;
++	}
++
++	drm_connector_helper_add(&icn->connector,
++				 &chipone_connector_helper_funcs);
++	drm_connector_register(&icn->connector);
++	drm_connector_attach_encoder(&icn->connector, bridge->encoder);
++
++	ret = drm_panel_attach(icn->panel, &icn->connector);
++	if (ret) {
++		DRM_DEV_ERROR(icn->dev, "Couldn't attach our panel\n");
++		goto err_cleanup_connector;
++	}
++
++	return 0;
++
++err_cleanup_connector:
++	drm_encoder_cleanup(bridge->encoder);
++err_out:
++	return ret;
++}
++
++static void chipone_detach(struct drm_bridge *bridge)
++{
++	struct chipone *icn = bridge_to_chipone(bridge);
++
++	drm_connector_unregister(&icn->connector);
++	drm_panel_detach(icn->panel);
++	icn->panel = NULL;
++	drm_connector_put(&icn->connector);
++}
++
++static enum drm_mode_status chipone_mode_valid(struct drm_bridge *bridge,
++					const struct drm_display_mode *mode)
++{
++	struct chipone *icn = bridge_to_chipone(bridge);
++
++	/* mode timings are useful during bridge init */
++	icn->mode = mode;
++
++	return MODE_OK;
++}
++
++static const struct drm_bridge_funcs chipone_bridge_funcs = {
++	.disable = chipone_disable,
++	.post_disable = chipone_post_disable,
++	.enable = chipone_enable,
++	.pre_enable = chipone_pre_enable,
++	.attach = chipone_attach,
++	.detach = chipone_detach,
++	.mode_valid = chipone_mode_valid,
++};
++
++static const struct chipone_bridge_desc icn6211_desc = {
++	.lanes			= 4,
++	.mode_flags		= MIPI_DSI_MODE_VIDEO_SYNC_PULSE,
++	.format			= MIPI_DSI_FMT_RGB888,
++	.chipone_bridge_init	= icn6211_bridge_init,
++};
++
++static int chipone_probe(struct mipi_dsi_device *dsi)
++{
++	struct device *dev = &dsi->dev;
++	const struct chipone_bridge_desc *desc;
++	struct chipone *icn;
++	int ret;
++
++	icn = devm_kzalloc(dev, sizeof(struct chipone), GFP_KERNEL);
++	if (!icn)
++		return -ENOMEM;
++
++	desc = of_device_get_match_data(dev);
++
++	icn->dev = dev;
++	dsi->mode_flags = desc->mode_flags;
++	dsi->format = desc->format;
++	dsi->lanes = desc->lanes;
++
++	icn->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
++	if (IS_ERR(icn->reset_gpio)) {
++		DRM_DEV_ERROR(dev, "Couldn't get our reset GPIO\n");
++		return PTR_ERR(icn->reset_gpio);
++	}
++
++	ret = drm_of_find_panel_or_bridge(icn->dev->of_node, 1, 0,
++					  &icn->panel, NULL);
++	if (ret && ret != -EPROBE_DEFER) {
++		DRM_DEV_ERROR(dev, "Couldn't find the panel (ret = %d)\n", ret);
++		return ret;
++	}
++
++	icn->bridge.funcs = &chipone_bridge_funcs;
++	icn->bridge.of_node = dev->of_node;
++
++	drm_bridge_add(&icn->bridge);
++	mipi_dsi_set_drvdata(dsi, icn);
++	icn->desc = desc;
++
++	return mipi_dsi_attach(dsi);
++}
++
++static int chipone_remove(struct mipi_dsi_device *dsi)
++{
++	struct chipone *icn = mipi_dsi_get_drvdata(dsi);
++
++	mipi_dsi_detach(dsi);
++	drm_bridge_remove(&icn->bridge);
++
++	return 0;
++}
++
++static const struct of_device_id chipone_of_match[] = {
++	{ .compatible = "chipone,icn6211", .data = &icn6211_desc },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, chipone_of_match);
++
++static struct mipi_dsi_driver chipone_driver = {
++	.probe = chipone_probe,
++	.remove = chipone_remove,
++	.driver = {
++		.name = "chipone-icn6211",
++		.owner = THIS_MODULE,
++		.of_match_table = chipone_of_match,
++	},
++};
++module_mipi_dsi_driver(chipone_driver);
++
++MODULE_AUTHOR("Jagan Teki <jagan@amarulasolutions.com>");
++MODULE_DESCRIPTION("Chipone ICN6211 MIPI-DSI to RGB Convertor Bridge");
++MODULE_LICENSE("GPL v2");
 -- 
 2.18.0.321.gffc6fa0e3
 
