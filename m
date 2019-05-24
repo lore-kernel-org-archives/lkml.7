@@ -2,210 +2,115 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7041C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB7FC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D86920879
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:31:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C515C2184B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:33:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="Vxe1Ocgb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t/rJt4ZK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390510AbfEXKbu (ORCPT
+        id S2390490AbfEXKdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 06:31:50 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:50516 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390468AbfEXKbt (ORCPT
+        Fri, 24 May 2019 06:33:01 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36696 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389448AbfEXKdA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 06:31:49 -0400
-Received: by mail-it1-f193.google.com with SMTP id a186so5026347itg.0
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 03:31:48 -0700 (PDT)
+        Fri, 24 May 2019 06:33:00 -0400
+Received: by mail-wr1-f66.google.com with SMTP id s17so9493602wru.3;
+        Fri, 24 May 2019 03:32:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=t6QPS5lwd7cr471Dg03A0AXuNJ/CrzRoO1xYODuKhbA=;
-        b=Vxe1OcgbXiqgWJS2x6TaYm+Cn6jhah0Qj5bXPrvsCh/P7F74y/HXVPKJgfba1esHAh
-         pwR5mq5lwAljwztFYdwuQRV8yQdOUdArsoOfy733CwBcrJjtFBZmm+2psNdK9a0f6LRt
-         rLVXaIubfp97S/kaUSegG/zw06TKZWV2uGoYdfz/HBZMYvpqO26ETRVlzOvec4BsvfMF
-         b/tEWUN6EkieS8aeK40Tf6C3HdOU3ue/E/Pe+SN7+Bn/JSvbY38QUqiXMJBvf9Eosi4J
-         jqg/ZTc6HhZAgAgv8MD/8YVQKF6dun5zVxcWHFX4FzRjCjDe6ZiDbFDHVp+8BPV1oxjx
-         me4A==
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=43H7NEPhk13B4dzNlL0gCOKayUYB6rO3EyAsXttShWI=;
+        b=t/rJt4ZKXr5z/Poulu/FjatdRCaCYjOm2V1fOmg9Z5Z/0zIQQzMykgDzX6PRH1PTaz
+         SqdXRDCZFDF8Ey5F+62ueQuNH3eNoLnATAztmg1tqqvOVARpxNsGs9SAfKk+nG+S4awj
+         kzJ39Xm8iITs6MhUkwXK2ZFOQO5XRYDxEzDPkdzgvClHZd/1UfH+TlQGEoFNzC6aAX2Z
+         vngBWREvA0uFd+rfvAu+J1RmdO+zodE4MZLtTOb600cuN/K/rGlBuqZNTpi5jkL5PDAH
+         KuwhA2T/hwh2I7davoS9GYavP7omcLV7ohn64rE+M9NngcL8vIGNrx895fvf9HCJUlxq
+         ObzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=t6QPS5lwd7cr471Dg03A0AXuNJ/CrzRoO1xYODuKhbA=;
-        b=Vy+eubKinQdYTJJc4UWyOhbYA8RrQnfZdO8AUbcqhebR/SftLu+oNegT3atj1y6Bvp
-         jeZ6FI23XG5EgFP1PmlaW944qM2uiJOCjoiIkFjiKGBgRABE8md3ORzzfrWU+CRQsE67
-         b5xbCDIgIW5P5DIsdAaeq/+jORap+Llhn19tDWaniirPmpQ+iAQ0kaTyBtyeIfjxNi0W
-         0hMuLO7qmRrb6c46L80mESXmC+tMzd0kBXYdQUy2weXZ41cEULBLQt8nL+1ldMmtk94f
-         GRdbmOb3ZNPCVMnoaRTkzjpFjFOcl65t7RYotiZGQFC+WATqY0jsNhBY1oXTTObwy8tP
-         q8AA==
-X-Gm-Message-State: APjAAAWmj5FhY8MZnPMcFg7afegkvgmN2W3qb5jYVU+O5zN5MOcgpBXx
-        U8yU7VXOc2t1HEsBLBvotBFhSA==
-X-Google-Smtp-Source: APXvYqzsmLzfolt9XPm7istwtQ8OTvFuPcrdmMMZuaT+6LV9wiCluPiGeCgPdZY3zO0tzizi0DzZng==
-X-Received: by 2002:a24:28c1:: with SMTP id h184mr18752225ith.105.1558693908188;
-        Fri, 24 May 2019 03:31:48 -0700 (PDT)
-Received: from brauner.io ([172.56.12.37])
-        by smtp.gmail.com with ESMTPSA id p2sm1028528itb.29.2019.05.24.03.31.41
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 24 May 2019 03:31:47 -0700 (PDT)
-Date:   Fri, 24 May 2019 12:31:39 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        torvalds@linux-foundation.org, fweimer@redhat.com,
-        jannh@google.com, oleg@redhat.com, tglx@linutronix.de,
-        arnd@arndb.de, shuah@kernel.org, dhowells@redhat.com,
-        tkjos@android.com, ldv@altlinux.org, miklos@szeredi.hu,
-        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, linux-arch@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v1 1/2] open: add close_range()
-Message-ID: <20190524103137.otw7tbmagiqnf6u6@brauner.io>
-References: <20190522155259.11174-1-christian@brauner.io>
- <67e4458a-9cc4-d1aa-608c-73ebe9e2f7a3@yandex-team.ru>
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=43H7NEPhk13B4dzNlL0gCOKayUYB6rO3EyAsXttShWI=;
+        b=SwwlZAP8gI7XDpt+1wmpY/sslmDGjkLcj+3/pgLmxuLCYXcYOxKV2acj9CJ9CNsj9b
+         ebG6OKrik6Xl0v3XEGab8pxf+Y6RjF7TxGynjFZyPBghTK1WN1Bpp/9QZaR5hOM6u/zI
+         2lAP2xJdTrzklP64REMRGyxGrawgKM6qazTgcv1/JfNNjX51CBxVrM1k4q//oiLCwfOm
+         iRoR1xGegKQlG+S6/WzQV+Mgs7kj2pzGADLB6tzEnBAHoup9G/gSMFdcS8vN677UK3F6
+         8RatnEuuQrILzJdoVXDZZBnf6g1ZLociUjURyMdIYHujM9f5ht6OxjqEU5/yHqw+7YLa
+         2Z9w==
+X-Gm-Message-State: APjAAAWc+2wsoO/l+oUH4KdYoNxB+5ZBMtPSl+hjln7wH7L+tjHEhRgi
+        1i84HK3g6MyMbH32BY4g4Ss=
+X-Google-Smtp-Source: APXvYqy9hMbxDrGpmcWBZqGaOnxSh5id0OZbq5E53Xu7si60swphJIc8cBK1WhyxL072WvFo5bBWnQ==
+X-Received: by 2002:a5d:5342:: with SMTP id t2mr169047wrv.71.1558693978476;
+        Fri, 24 May 2019 03:32:58 -0700 (PDT)
+Received: from macbookpro.malat.net ([2a01:e34:ee1e:860:6f23:82e6:aa2d:bbd1])
+        by smtp.gmail.com with ESMTPSA id k184sm4818626wmk.0.2019.05.24.03.32.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 24 May 2019 03:32:56 -0700 (PDT)
+Received: by macbookpro.malat.net (Postfix, from userid 1000)
+        id 150C211415E7; Fri, 24 May 2019 12:32:55 +0200 (CEST)
+From:   Mathieu Malaterre <malat@debian.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     trivial@kernel.org, kernel-janitors@vger.kernel.org,
+        Mathieu Malaterre <malat@debian.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] x86/tsc: Move inline keyword to the beginning of function declarations
+Date:   Fri, 24 May 2019 12:32:51 +0200
+Message-Id: <20190524103252.28575-1-malat@debian.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <67e4458a-9cc4-d1aa-608c-73ebe9e2f7a3@yandex-team.ru>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 07:22:17PM +0300, Konstantin Khlebnikov wrote:
-> On 22.05.2019 18:52, Christian Brauner wrote:> This adds the close_range() syscall. It allows to efficiently close a range
-> > of file descriptors up to all file descriptors of a calling task.
-> >
-> > The syscall came up in a recent discussion around the new mount API and
-> > making new file descriptor types cloexec by default. During this
-> > discussion, Al suggested the close_range() syscall (cf. [1]). Note, a
-> > syscall in this manner has been requested by various people over time.
-> >
-> > First, it helps to close all file descriptors of an exec()ing task. This
-> > can be done safely via (quoting Al's example from [1] verbatim):
-> >
-> >          /* that exec is sensitive */
-> >          unshare(CLONE_FILES);
-> >          /* we don't want anything past stderr here */
-> >          close_range(3, ~0U);
-> >          execve(....);
-> >
-> > The code snippet above is one way of working around the problem that file
-> > descriptors are not cloexec by default. This is aggravated by the fact that
-> > we can't just switch them over without massively regressing userspace. For
-> > a whole class of programs having an in-kernel method of closing all file
-> > descriptors is very helpful (e.g. demons, service managers, programming
-> > language standard libraries, container managers etc.).
-> > (Please note, unshare(CLONE_FILES) should only be needed if the calling
-> >   task is multi-threaded and shares the file descriptor table with another
-> >   thread in which case two threads could race with one thread allocating
-> >   file descriptors and the other one closing them via close_range(). For the
-> >   general case close_range() before the execve() is sufficient.)
-> >
-> > Second, it allows userspace to avoid implementing closing all file
-> > descriptors by parsing through /proc/<pid>/fd/* and calling close() on each
-> > file descriptor. From looking at various large(ish) userspace code bases
-> > this or similar patterns are very common in:
-> > - service managers (cf. [4])
-> > - libcs (cf. [6])
-> > - container runtimes (cf. [5])
-> > - programming language runtimes/standard libraries
-> >    - Python (cf. [2])
-> >    - Rust (cf. [7], [8])
-> > As Dmitry pointed out there's even a long-standing glibc bug about missing
-> > kernel support for this task (cf. [3]).
-> > In addition, the syscall will also work for tasks that do not have procfs
-> > mounted and on kernels that do not have procfs support compiled in. In such
-> > situations the only way to make sure that all file descriptors are closed
-> > is to call close() on each file descriptor up to UINT_MAX or RLIMIT_NOFILE,
-> > OPEN_MAX trickery (cf. comment [8] on Rust).
-> >
-> > The performance is striking. For good measure, comparing the following
-> > simple close_all_fds() userspace implementation that is essentially just
-> > glibc's version in [6]:
-> >
-> > static int close_all_fds(void)
-> > {
-> >          int dir_fd;
-> >          DIR *dir;
-> >          struct dirent *direntp;
-> >
-> >          dir = opendir("/proc/self/fd");
-> >          if (!dir)
-> >                  return -1;
-> >          dir_fd = dirfd(dir);
-> >          while ((direntp = readdir(dir))) {
-> >                  int fd;
-> >                  if (strcmp(direntp->d_name, ".") == 0)
-> >                          continue;
-> >                  if (strcmp(direntp->d_name, "..") == 0)
-> >                          continue;
-> >                  fd = atoi(direntp->d_name);
-> >                  if (fd == dir_fd || fd == 0 || fd == 1 || fd == 2)
-> >                          continue;
-> >                  close(fd);
-> >          }
-> >          closedir(dir);
-> >          return 0;
-> > }
-> >
-> > to close_range() yields:
-> > 1. closing 4 open files:
-> >     - close_all_fds(): ~280 us
-> >     - close_range():    ~24 us
-> >
-> > 2. closing 1000 open files:
-> >     - close_all_fds(): ~5000 us
-> >     - close_range():   ~800 us
-> >
-> > close_range() is designed to allow for some flexibility. Specifically, it
-> > does not simply always close all open file descriptors of a task. Instead,
-> > callers can specify an upper bound.
-> > This is e.g. useful for scenarios where specific file descriptors are
-> > created with well-known numbers that are supposed to be excluded from
-> > getting closed.
-> > For extra paranoia close_range() comes with a flags argument. This can e.g.
-> > be used to implement extension. Once can imagine userspace wanting to stop
-> > at the first error instead of ignoring errors under certain circumstances.
-> 
-> > There might be other valid ideas in the future. In any case, a flag
-> > argument doesn't hurt and keeps us on the safe side.
-> 
-> Here is another strange but real-live scenario: crash handler for dumping core.
-> 
-> If applications has network connections it would be better to close them all,
-> otherwise clients will wait until end of dumping process or timeout.
-> Also closing normal files might be a good idea for releasing locks.
-> 
-> But simple closing might race with other threads - closed fd will be reused
-> while some code still thinks it refers to original file.
-> 
-> Our solution closes files without freeing fd: it opens /dev/null and
-> replaces all opened descriptors using dup2.
-> 
-> So, special flag for close_range() could close files without clearing bitmap.
-> Effect should be the same - fd wouldn't be reused.
-> 
-> Actually two flags for two phases: closing files and releasing fd.
+The inline keyword was not at the beginning of the function declarations.
+Fix the following warnings triggered when using W=1:
 
-Konstantin, I'm sorry, I totally missed that part of your mail
-yesterday.
-Without speaking to the feasibility of this it's at least a good
-illustration that people really do have the possible need for a flag
-argument.
+  arch/x86/kernel/tsc.c:62:1: warning: 'inline' is not at beginning of declaration [-Wold-style-declaration]
+  arch/x86/kernel/tsc.c:79:1: warning: 'inline' is not at beginning of declaration [-Wold-style-declaration]
 
-Thanks!
-Christian
+Cc: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Mathieu Malaterre <malat@debian.org>
+---
+ arch/x86/kernel/tsc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
+index 0b29e58f288e..75a41bddbc9d 100644
+--- a/arch/x86/kernel/tsc.c
++++ b/arch/x86/kernel/tsc.c
+@@ -59,7 +59,7 @@ struct cyc2ns {
+ 
+ static DEFINE_PER_CPU_ALIGNED(struct cyc2ns, cyc2ns);
+ 
+-void __always_inline cyc2ns_read_begin(struct cyc2ns_data *data)
++__always_inline void cyc2ns_read_begin(struct cyc2ns_data *data)
+ {
+ 	int seq, idx;
+ 
+@@ -76,7 +76,7 @@ void __always_inline cyc2ns_read_begin(struct cyc2ns_data *data)
+ 	} while (unlikely(seq != this_cpu_read(cyc2ns.seq.sequence)));
+ }
+ 
+-void __always_inline cyc2ns_read_end(void)
++__always_inline void cyc2ns_read_end(void)
+ {
+ 	preempt_enable_notrace();
+ }
+-- 
+2.20.1
+
