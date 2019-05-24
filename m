@@ -2,100 +2,93 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A2B5C282E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 19:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E924C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 19:26:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 195BA217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 19:24:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558725893;
-	bh=v5VkPZdMrsfOk5vdtZkpEzgkmscmF3h9SK1vV1by7M8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=g/6wohZEmqmvOG4A3eUkQ0RcgonYpjz/HO6fvn2ZEAGZAy4NngeUKzJFwxphF/olh
-	 dbnD4T0LHJbgfLECQ36uaOax4mNGBmyCTp/X1AnoBAztbcOYxw5GNS4YCg7DbXONo0
-	 +MOXp+kUBw7S2FzVyCpSE8eimhFV2dwdBrLt3Q30=
+	by mail.kernel.org (Postfix) with ESMTP id 0A7AB217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 19:26:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sL7oJAkj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732130AbfEXTYw (ORCPT
+        id S2391664AbfEXT0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 15:24:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46064 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732102AbfEXTYv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 15:24:51 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B91E6217F9;
-        Fri, 24 May 2019 19:24:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558725891;
-        bh=v5VkPZdMrsfOk5vdtZkpEzgkmscmF3h9SK1vV1by7M8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=z+iUHQgP0tFqAaWHFjwpUpqORkPASPti3JX0npCzmYQTWd6aHptNZ/AqaD81UMS1w
-         wzPagk4dqgcwQ3hL6UWAwpNLjjm2J8IXKmtkoBQ/YiYVKi9ltJQw3GN+d8toxDXNlO
-         66nzpQyW2iIXYFvE6VWfJ1kup7+De8HVxYEJVeWE=
-Date:   Fri, 24 May 2019 15:24:49 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@microsoft.com, linux-hyperv@vger.kernel.org,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] Hyper-V commits for 5.2
-Message-ID: <20190524192449.GC12898@sasha-vm>
-References: <20190506033111.A3EBA205F4@mail.kernel.org>
- <20190524182802.GA7887@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190524182802.GA7887@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 24 May 2019 15:26:02 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42248 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729597AbfEXT0C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 15:26:02 -0400
+Received: by mail-wr1-f66.google.com with SMTP id l2so11057763wrb.9;
+        Fri, 24 May 2019 12:26:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=b3Gt3nCXb0rhnImTl+/ddhNNml+7l/9DP/rB9AdAbXQ=;
+        b=sL7oJAkjFMOlhtC4l/nYSpc36PhbTiok7yW75uDyMZi7i/pA2E1Xs4P+ueugu3HEx2
+         fiiXAMK0P0/gF7mq9uy7NLd9UVFFlc7JvDAhw8b4TOaRD6hWJSo9SNND8MINlwZnY7Hr
+         IUeu5SzruvjUq5WOTptZxspf9mJHCLA6IYXEwB5u6hkIX6Sccn706fhuLQjivBJYuSPZ
+         +uIEElFTSZgw3GtvvCN8YGvB7LRRpjSyj9MqKGXByVl+phiFKCaZUXbvlk2UhlddmhPl
+         vbHC7Un+sH7Yoyskv3fc8+yyi68NrT2ds8kAp5DfyYlu8cvf4x+Qcu7YGgv4Pv8yL3Dx
+         Jw/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=b3Gt3nCXb0rhnImTl+/ddhNNml+7l/9DP/rB9AdAbXQ=;
+        b=SvChrcK8xlb5bGvpCQqc0i6aDBLHrCTDiN1zHc02g/iZCGi19DhuR7UsBr+pGV5LSh
+         OcISj3yPMkhqyIHEtibBQT1f4bk+97XVxC/FkCrecFUIXrF5IMJSIwRf7EShJRref5IC
+         hJNBQJTHaogoG6ot+vMIrs/AIHWINruA+NMK0iFAa5A9e5ZGEY3lXbi9uz0QEMI5Sm5A
+         nOQTaYVZ8+tg2/hX/JIyzksY5NkczFN0zvoboZJ/ub/4YxsXJS8J/MJY0zzj+PggAtty
+         jW1D0N++vlaPqcEHQ9hsSyfbQ+2TbQY9TXqM5vV65rUtoYwgfsesW6O2D3WLJoT0GOFh
+         hEOA==
+X-Gm-Message-State: APjAAAXDNcPNILRKatwirJ6hLGC6/YmaXZfrqklt4Uv6EY6R3oDidw6w
+        o0lddIiNiUEitiMHTNGThTQNN+To
+X-Google-Smtp-Source: APXvYqxLD46pCMgTMBYIaIfb05LIoR14pDM0/aay84vq3fwyYPsdtMRD1gZzhynBQQOPUB0Agwu0Hg==
+X-Received: by 2002:a5d:6402:: with SMTP id z2mr1100317wru.350.1558725960064;
+        Fri, 24 May 2019 12:26:00 -0700 (PDT)
+Received: from 640k.lan ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id s11sm682660wro.17.2019.05.24.12.25.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 May 2019 12:25:59 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     mkubecek@suse.cz
+Subject: [PATCH] kvm: fix compilation on s390
+Date:   Fri, 24 May 2019 21:25:57 +0200
+Message-Id: <1558725957-22998-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 08:28:02PM +0200, Greg KH wrote:
->On Sun, May 05, 2019 at 11:31:04PM -0400, Sasha Levin wrote:
->> -----BEGIN PGP SIGNED MESSAGE-----
->> Hash: SHA512
->>
->> The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
->>
->>   Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
->>
->> are available in the Git repository at:
->>
->>   git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-next-signed
->>
->> for you to fetch changes up to a3fb7bf369efa296c1fc68aead1b6fb3c735573b:
->>
->>   drivers: input: serio: Add a module desription to the hyperv_keyboard driver (2019-04-23 15:41:40 -0400)
->>
->> - ----------------------------------------------------------------
->> Adding module description to various hyper-v modules
->>
->> - ----------------------------------------------------------------
->> Joseph Salisbury (3):
->>       drivers: hid: Add a module description line to the hid_hyperv driver
->>       drivers: hv: Add a module description line to the hv_vmbus driver
->>       drivers: input: serio: Add a module desription to the hyperv_keyboard driver
->>
->>  drivers/hid/hid-hyperv.c              | 2 ++
->>  drivers/hv/vmbus_drv.c                | 1 +
->>  drivers/input/serio/hyperv-keyboard.c | 2 ++
->
->This should go through the different subsystems, for the different
->drivers, not just through me.
+s390 does not have memremap, even though in this particular case it
+would be useful.
 
-I was hoping to avoid that for these trivial commits...
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ virt/kvm/kvm_main.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-I'll resend them.
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 1fadfb9cf36e..134ec0283a8a 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -1761,8 +1761,10 @@ static int __kvm_map_gfn(struct kvm_memory_slot *slot, gfn_t gfn,
+ 	if (pfn_valid(pfn)) {
+ 		page = pfn_to_page(pfn);
+ 		hva = kmap(page);
++#ifdef CONFIG_HAS_IOMEM
+ 	} else {
+ 		hva = memremap(pfn_to_hpa(pfn), PAGE_SIZE, MEMREMAP_WB);
++#endif
+ 	}
+ 
+ 	if (!hva)
+-- 
+1.8.3.1
 
---
-Thanks,
-Sasha
