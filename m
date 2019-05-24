@@ -2,191 +2,104 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00874C282E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 582E5C282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D858C217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:41:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 355A020815
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:42:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390178AbfEXPlv (ORCPT
+        id S2390238AbfEXPmm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 11:41:51 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:45532 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389079AbfEXPlr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 11:41:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 72E5C15A2;
-        Fri, 24 May 2019 08:41:46 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DC68A3F575;
-        Fri, 24 May 2019 08:41:45 -0700 (PDT)
-Date:   Fri, 24 May 2019 16:41:44 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Subject: Re: [PATCH v15 05/17] arms64: untag user pointers passed to memory
- syscalls
-Message-ID: <20190524154143.GG8268@e119886-lin.cambridge.arm.com>
-References: <cover.1557160186.git.andreyknvl@google.com>
- <00eb4c63fefc054e2c8d626e8fedfca11d7c2600.1557160186.git.andreyknvl@google.com>
+        Fri, 24 May 2019 11:42:42 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:32968 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389206AbfEXPml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 11:42:41 -0400
+Received: from LHREML711-CAH.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 90E31FB144421F93551E;
+        Fri, 24 May 2019 16:42:40 +0100 (IST)
+Received: from [10.204.65.201] (10.204.65.201) by smtpsuk.huawei.com
+ (10.201.108.34) with Microsoft SMTP Server (TLS) id 14.3.408.0; Fri, 24 May
+ 2019 16:42:39 +0100
+Subject: Re:
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>,
+        <linux-integrity@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <mjg59@google.com>, <vgoyal@redhat.com>
+References: <20190521000645.16227-1-prsriva02@gmail.com>
+ <20190521000645.16227-3-prsriva02@gmail.com>
+ <1558710722.3977.68.camel@linux.ibm.com>
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+Message-ID: <a7acac28-156e-80d1-b759-cb0c59f73169@huawei.com>
+Date:   Fri, 24 May 2019 17:42:46 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00eb4c63fefc054e2c8d626e8fedfca11d7c2600.1557160186.git.andreyknvl@google.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <1558710722.3977.68.camel@linux.ibm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.204.65.201]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 06:30:51PM +0200, Andrey Konovalov wrote:
-> This patch is a part of a series that extends arm64 kernel ABI to allow to
-> pass tagged user pointers (with the top byte set to something else other
-> than 0x00) as syscall arguments.
+On 5/24/2019 5:12 PM, Mimi Zohar wrote:
+> On Mon, 2019-05-20 at 17:06 -0700, Prakhar Srivastava wrote:
+>> A buffer(cmdline args) measured into ima cannot be appraised
+>> without already being aware of the buffer contents.Since we
+>> don't know what cmdline args will be passed (or need to validate
+>> what was passed) it is not possible to appraise it.
+>>
+>> Since hashs are non reversible the raw buffer is needed to
+>> recompute the hash.
+>> To regenrate the hash of the buffer and appraise the same
+>> the contents of the buffer need to be available.
+>>
+>> A new template field buf is added to the existing ima template
+>> fields, which can be used to store/read the buffer itself.
+>> Two new fields are added to the ima_event_data to carry the
+>> buf and buf_len whenever necessary.
+>>
+>> Updated the process_buffer_measurement call to add the buf
+>> to the ima_event_data.
+>> process_buffer_measurement added in "Add a new ima hook
+>> ima_kexec_cmdline to measure cmdline args"
+>>
+>> - Add a new template field 'buf' to be used to store/read
+>> the buffer data.
+>> - Added two new fields to ima_event_data to hold the buf and
+>> buf_len [Suggested by Roberto]
+>> -Updated process_buffer_meaurement to add the buffer to
+>> ima_event_data
 > 
-> This patch allows tagged pointers to be passed to the following memory
-> syscalls: brk, get_mempolicy, madvise, mbind, mincore, mlock, mlock2,
-> mmap, mmap_pgoff, mprotect, mremap, msync, munlock, munmap,
-> remap_file_pages, shmat and shmdt.
+> This patch description can be written more concisely.
 > 
-> This is done by untagging pointers passed to these syscalls in the
-> prologues of their handlers.
+> Patch 1/3 in this series introduces measuring the kexec boot command
+> line.  This patch defines a new template field for storing the kexec
+> boot command line in the measurement list in order for a remote
+> attestation server to verify.
 > 
-> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> ---
+> As mentioned, the first patch description should include a shell
+> command for verifying the digest in the kexec boot command line
+> measurement list record against /proc/cmdline.  This patch description
+> should include a shell command showing how to verify the digest based
+> on the new field.  Should the new field in the ascii measurement list
+> be displayed as a string, not hex?
 
+We should define a new type. If the type is DATA_FMT_STRING, spaces are
+replaced with '_'.
 
-> +SYSCALL_DEFINE2(arm64_mlock, unsigned long, start, size_t, len)
-> +{
-> +	start = untagged_addr(start);
-> +	return ksys_mlock(start, len, VM_LOCKED);
-> +}
-> +
-> +SYSCALL_DEFINE2(arm64_mlock2, unsigned long, start, size_t, len)
-> +{
-> +	start = untagged_addr(start);
-> +	return ksys_mlock(start, len, VM_LOCKED);
-> +}
+Roberto
 
-I think this may be a copy/paste error...
-
-Shouldn't mlock2 have a third 'flags' argument to distinguish is from mlock?
-
-Thanks,
-
-Andrew Murray
-
-> +
-> +SYSCALL_DEFINE2(arm64_munlock, unsigned long, start, size_t, len)
-> +{
-> +	start = untagged_addr(start);
-> +	return ksys_munlock(start, len);
-> +}
-> +
-> +SYSCALL_DEFINE3(arm64_mprotect, unsigned long, start, size_t, len,
-> +		unsigned long, prot)
-> +{
-> +	start = untagged_addr(start);
-> +	return ksys_mprotect_pkey(start, len, prot, -1);
-> +}
-> +
-> +SYSCALL_DEFINE3(arm64_msync, unsigned long, start, size_t, len, int, flags)
-> +{
-> +	start = untagged_addr(start);
-> +	return ksys_msync(start, len, flags);
-> +}
-> +
-> +SYSCALL_DEFINE3(arm64_mincore, unsigned long, start, size_t, len,
-> +		unsigned char __user *, vec)
-> +{
-> +	start = untagged_addr(start);
-> +	return ksys_mincore(start, len, vec);
-> +}
-> +
-> +SYSCALL_DEFINE5(arm64_remap_file_pages, unsigned long, start,
-> +		unsigned long, size, unsigned long, prot,
-> +		unsigned long, pgoff, unsigned long, flags)
-> +{
-> +	start = untagged_addr(start);
-> +	return ksys_remap_file_pages(start, size, prot, pgoff, flags);
-> +}
-> +
-> +SYSCALL_DEFINE3(arm64_shmat, int, shmid, char __user *, shmaddr, int, shmflg)
-> +{
-> +	shmaddr = untagged_addr(shmaddr);
-> +	return ksys_shmat(shmid, shmaddr, shmflg);
-> +}
-> +
-> +SYSCALL_DEFINE1(arm64_shmdt, char __user *, shmaddr)
-> +{
-> +	shmaddr = untagged_addr(shmaddr);
-> +	return ksys_shmdt(shmaddr);
-> +}
-> +
->  /*
->   * Wrappers to pass the pt_regs argument.
->   */
->  #define sys_personality		sys_arm64_personality
-> +#define sys_mmap_pgoff		sys_arm64_mmap_pgoff
-> +#define sys_mremap		sys_arm64_mremap
-> +#define sys_munmap		sys_arm64_munmap
-> +#define sys_brk			sys_arm64_brk
-> +#define sys_get_mempolicy	sys_arm64_get_mempolicy
-> +#define sys_madvise		sys_arm64_madvise
-> +#define sys_mbind		sys_arm64_mbind
-> +#define sys_mlock		sys_arm64_mlock
-> +#define sys_mlock2		sys_arm64_mlock2
-> +#define sys_munlock		sys_arm64_munlock
-> +#define sys_mprotect		sys_arm64_mprotect
-> +#define sys_msync		sys_arm64_msync
-> +#define sys_mincore		sys_arm64_mincore
-> +#define sys_remap_file_pages	sys_arm64_remap_file_pages
-> +#define sys_shmat		sys_arm64_shmat
-> +#define sys_shmdt		sys_arm64_shmdt
->  
->  asmlinkage long sys_ni_syscall(const struct pt_regs *);
->  #define __arm64_sys_ni_syscall	sys_ni_syscall
-> -- 
-> 2.21.0.1020.gf2820cf01a-goog
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+-- 
+HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
+Managing Director: Bo PENG, Jian LI, Yanli SHI
