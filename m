@@ -2,142 +2,129 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58097C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:51:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 217DCC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E558217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:51:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558723897;
-	bh=+PiQxhORYMt326tyGMmMXRxjOS2IPxS8uRhZIcpuKbA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HSgudEZAjeeQW24w92z/RCBAlhmJvuvQQgdObKKMMm8o0HcU44m886K1bwBv5PtbE
-	 wLP7/3CAubHUphhaORPuYhuXMRdYKhKZOVR36eEhCPjVjIGob1B91VlhsZg6R0D1g0
-	 SE8OdK+ePf9GLEhJIB9xoU57BmhU3aDZ6s3Z2T0A=
+	by mail.kernel.org (Postfix) with ESMTP id EED9621848
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:54:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403910AbfEXSvf (ORCPT
+        id S1729925AbfEXSyG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 14:51:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57524 "EHLO mail.kernel.org"
+        Fri, 24 May 2019 14:54:06 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40592 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391687AbfEXSvf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 14:51:35 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727344AbfEXSyF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 14:54:05 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3441821848;
-        Fri, 24 May 2019 18:51:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558723894;
-        bh=+PiQxhORYMt326tyGMmMXRxjOS2IPxS8uRhZIcpuKbA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ybqjOnB26JLHuvWJ9GeSMnhWV3+Tb+iqO9nk0HbNeOJPW8bcGYr/IFStHGHhwlb34
-         kb8wNFQ/XkYQDzbq2yROu3vLBHMkY1JeRb+bD1NMCOS5JdAH7V7ijCJ/dsH9Lffw2W
-         J1Wac1tQbt471p6LglL03GVbvffVTavPWHpueTDw=
-Date:   Fri, 24 May 2019 20:51:32 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     amit@kernel.org, zhenwei pi <pizhenwei@bytedance.com>
-Cc:     amit@kernel.org, arnd@arndb.de,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] virtio_console: remove vq buf while unpluging port
-Message-ID: <20190524185132.GA10695@kroah.com>
-References: <1556416204-30311-1-git-send-email-pizhenwei@bytedance.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556416204-30311-1-git-send-email-pizhenwei@bytedance.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4D2183082DDD;
+        Fri, 24 May 2019 18:54:00 +0000 (UTC)
+Received: from llong.com (dhcp-17-85.bos.redhat.com [10.18.17.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F0D045C1B4;
+        Fri, 24 May 2019 18:53:55 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH v3] locking/lock_events: Use this_cpu_add() when necessary
+Date:   Fri, 24 May 2019 14:53:43 -0400
+Message-Id: <20190524185343.4137-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Fri, 24 May 2019 18:54:05 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 28, 2019 at 09:50:04AM +0800, zhenwei pi wrote:
-> A bug can be easily reproduced:
-> Host# cat guest-agent.xml
-> <channel type="unix">
->   <source mode="bind" path="/var/lib/libvirt/qemu/stretch.agent"/>
->   <target type="virtio" name="org.qemu.guest_agent.0" state="connected"/>
-> </channel>
-> Host# virsh attach-device instance guest-agent.xml
-> Host# virsh detach-device instance guest-agent.xml
-> Host# virsh attach-device instance guest-agent.xml
-> 
-> and guest report: virtio-ports vport0p1: Error allocating inbufs
-> 
-> The reason is that the port is unplugged and the vq buf still remained.
-> So, fix two cases in this patch:
-> 1, fix memory leak with attach-device/detach-device.
-> 2, fix logic bug with attach-device/detach-device/attach-device.
-> 
-> Signed-off-by: zhenwei pi <pizhenwei@bytedance.com>
-> ---
->  drivers/char/virtio_console.c | 21 +++++++++++++++------
->  1 file changed, 15 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/char/virtio_console.c b/drivers/char/virtio_console.c
-> index fbeb719..f6e37f4 100644
-> --- a/drivers/char/virtio_console.c
-> +++ b/drivers/char/virtio_console.c
-> @@ -251,6 +251,7 @@ struct port {
->  
->  /* This is the very early arch-specified put chars function. */
->  static int (*early_put_chars)(u32, const char *, int);
-> +static void remove_vq(struct virtqueue *vq);
->  
->  static struct port *find_port_by_vtermno(u32 vtermno)
->  {
-> @@ -1550,6 +1551,9 @@ static void unplug_port(struct port *port)
->  	}
->  
->  	remove_port_data(port);
-> +	spin_lock_irq(&port->inbuf_lock);
-> +	remove_vq(port->in_vq);
-> +	spin_unlock_irq(&port->inbuf_lock);
->  
->  	/*
->  	 * We should just assume the device itself has gone off --
-> @@ -1945,17 +1949,22 @@ static const struct file_operations portdev_fops = {
->  	.owner = THIS_MODULE,
->  };
->  
-> +static void remove_vq(struct virtqueue *vq)
-> +{
-> +	struct port_buffer *buf;
-> +
-> +	flush_bufs(vq, true);
-> +	while ((buf = virtqueue_detach_unused_buf(vq)))
-> +		free_buf(buf, true);
-> +}
-> +
->  static void remove_vqs(struct ports_device *portdev)
->  {
->  	struct virtqueue *vq;
->  
-> -	virtio_device_for_each_vq(portdev->vdev, vq) {
-> -		struct port_buffer *buf;
-> +	virtio_device_for_each_vq(portdev->vdev, vq)
-> +		remove_vq(vq);
->  
-> -		flush_bufs(vq, true);
-> -		while ((buf = virtqueue_detach_unused_buf(vq)))
-> -			free_buf(buf, true);
-> -	}
->  	portdev->vdev->config->del_vqs(portdev->vdev);
->  	kfree(portdev->in_vqs);
->  	kfree(portdev->out_vqs);
-> -- 
-> 2.7.4
+The kernel test robot has reported that the use of __this_cpu_add()
+causes bug messages like:
 
+  BUG: using __this_cpu_add() in preemptible [00000000] code: ...
 
-Amit, any ideas if this is valid or not and if this should be applied?
+This is only an issue on preempt kernel where preemption can happen in
+the middle of a percpu operation. We are still using __this_cpu_*() for
+!preempt kernel to avoid additional overhead in case CONFIG_PREEMPT_COUNT
+is set.
 
-thanks,
+ v2: Simplify the condition to just preempt or !preempt.
+ v3: Document the imprecise nature of the percpu count.
 
-greg k-h
+Fixes: a8654596f0371 ("locking/rwsem: Enable lock event counting")
+Signed-off-by: Waiman Long <longman@redhat.com>
+---
+ kernel/locking/lock_events.h | 32 ++++++++++++++++++++++++++++++--
+ 1 file changed, 30 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/locking/lock_events.h b/kernel/locking/lock_events.h
+index feb1acc54611..6bcb96b7e1d3 100644
+--- a/kernel/locking/lock_events.h
++++ b/kernel/locking/lock_events.h
+@@ -30,13 +30,41 @@ enum lock_events {
+  */
+ DECLARE_PER_CPU(unsigned long, lockevents[lockevent_num]);
+ 
++/*
++ * The purpose of the lock event counting subsystem is to provide a low
++ * overhead way to record the number of specific locking events by using
++ * percpu counters. It is the percpu sum that matters, not specifically
++ * how many of them happens in each cpu.
++ *
++ * It is possible that the same percpu counter may be modified in both
++ * the process and interrupt contexts. For architectures that perform
++ * percpu operation with multiple instructions, it is possible to lose
++ * count if a process context percpu update is interrupted in the middle
++ * and the same counter is updated in the interrupt context. Therefore,
++ * the generated percpu sum may not be precise. The error, if any, should
++ * be small and insignificant.
++ *
++ * In !preempt kernel, we can just use __this_cpu_*() as preemption
++ * won't happen in the middle of the percpu operation. In preempt kernel,
++ * preemption happens in the middle of the percpu operation may produce
++ * incorrect result that can be signficant if the task is moved to a
++ * different cpu.
++ */
++#ifdef CONFIG_PREEMPT
++#define lockevent_percpu_inc(x)		this_cpu_inc(x)
++#define lockevent_percpu_add(x, v)	this_cpu_add(x, v)
++#else
++#define lockevent_percpu_inc(x)		__this_cpu_inc(x)
++#define lockevent_percpu_add(x, v)	__this_cpu_add(x, v)
++#endif
++
+ /*
+  * Increment the PV qspinlock statistical counters
+  */
+ static inline void __lockevent_inc(enum lock_events event, bool cond)
+ {
+ 	if (cond)
+-		__this_cpu_inc(lockevents[event]);
++		lockevent_percpu_inc(lockevents[event]);
+ }
+ 
+ #define lockevent_inc(ev)	  __lockevent_inc(LOCKEVENT_ ##ev, true)
+@@ -44,7 +72,7 @@ static inline void __lockevent_inc(enum lock_events event, bool cond)
+ 
+ static inline void __lockevent_add(enum lock_events event, int inc)
+ {
+-	__this_cpu_add(lockevents[event], inc);
++	lockevent_percpu_add(lockevents[event], inc);
+ }
+ 
+ #define lockevent_add(ev, c)	__lockevent_add(LOCKEVENT_ ##ev, c)
+-- 
+2.18.1
+
