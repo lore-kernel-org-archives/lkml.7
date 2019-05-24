@@ -2,112 +2,94 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA04EC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A635BC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:57:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB41B2184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7768B2133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:57:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mDgsvVGI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732015AbfEXR5L (ORCPT
+        id S2391148AbfEXR5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 13:57:11 -0400
-Received: from foss.arm.com ([217.140.101.70]:48016 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726071AbfEXR5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 13:57:10 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C1C4A78;
-        Fri, 24 May 2019 10:57:09 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1E1993F703;
-        Fri, 24 May 2019 10:57:06 -0700 (PDT)
-Date:   Fri, 24 May 2019 18:56:58 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Peng Fan <peng.fan@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "andre.przywara@arm.com" <andre.przywara@arm.com>,
-        "van.freenix@gmail.com" <van.freenix@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 0/2] mailbox: arm: introduce smc triggered mailbox
-Message-ID: <20190524175658.GA5045@e107155-lin>
-References: <20190523060437.11059-1-peng.fan@nxp.com>
- <4ba2b243-5622-bb27-6fc3-cd9457430e54@gmail.com>
+        Fri, 24 May 2019 13:57:55 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:34593 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726071AbfEXR5y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 13:57:54 -0400
+Received: by mail-vs1-f68.google.com with SMTP id q64so6415301vsd.1;
+        Fri, 24 May 2019 10:57:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:message-id:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-disposition:content-transfer-encoding;
+        bh=xsHpHXSkRG30rT1Gebig5Ode0f+Go1ChQZY26jIIXn8=;
+        b=mDgsvVGICwKVo8Ff+lHccYlhJ3uc9K6ujYOICfC/U00blP02IIgpILC2MQbcNAoSQk
+         srM9l51RM7U2OfoyeTqqffBh6cmUjyEnE6hvyEtlcOTK3GCZlTieZikSdmJD5CP/YAja
+         afIrjked50mJppRtlNgkeY/oZgrWfJ7Z6+HZAwfMZy6pj3+XDUPePBO3gRKl2bDfvqB+
+         7HAnZem3z1qJQ25lzvXHK1vJqLTuC4RGbD/Y9QzBZA6KWpZ/bnQ1Gja4LbKuBhkuzuXy
+         CtNq/Sn9C+uzJcJUR7tezOJ/5XtMliRPRM+nQwwaUlgjuQLRR78T6RJ7oq1g/54eSRCT
+         RhKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
+         :references:mime-version:content-disposition
+         :content-transfer-encoding;
+        bh=xsHpHXSkRG30rT1Gebig5Ode0f+Go1ChQZY26jIIXn8=;
+        b=bpME/qxIjREfzAH0YyXe8hIl1VvsM9Uk6tMdSWqq3Acp2loUEYCgXH5vMRuR4ahSGZ
+         R6vfnLG0N5D9uIFDUy2M19TdVu7xbO21DZeLoZVL4Gs1rd3CxfwBpS1G3TxAK2RaozBK
+         zZmmbKi3ckS+NaO59eTD+usBRdlrYSotV73fD3p2DkaWCbVaFoHGJs3TiwFk3usQftq0
+         4QJ4Ldl28m7WV2rpPtn7O0BPYV+EvmJ579xe1xFBWWE7GqbDtYg80X1sH8X/ePeaItI+
+         G0JNaezDoWQRuccK8+07yH/fWPV/VNZdsGTZxp62U3CsKJvJ1Zqqa+tuAsWvOeA77yC8
+         f2Og==
+X-Gm-Message-State: APjAAAUklSsMZVSgQoYptpYUoQ3mBOT6k9mxgPmgzuH5/lunY8y4/UCH
+        Zq69DyGpbMEtZAi19cCbexs=
+X-Google-Smtp-Source: APXvYqyfzlUuV5m88iQ6s9M+IZkWp0j0bN7hq+4Ly5qwzkTH9gGYZXVt1lMVYqQqh3Ri3jBHK0x/kQ==
+X-Received: by 2002:a67:bc01:: with SMTP id t1mr16496492vsn.102.1558720674023;
+        Fri, 24 May 2019 10:57:54 -0700 (PDT)
+Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
+        by smtp.gmail.com with ESMTPSA id w131sm1448000vsw.7.2019.05.24.10.57.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 24 May 2019 10:57:53 -0700 (PDT)
+Date:   Fri, 24 May 2019 13:57:52 -0400
+Message-ID: <20190524135752.GD17138@t480s.localdomain>
+From:   Vivien Didelot <vivien.didelot@gmail.com>
+To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/5] net: dsa: prepare mv88e6xxx_g1_atu_op() for the
+ mv88e6250
+In-Reply-To: <20190524085921.11108-3-rasmus.villemoes@prevas.dk>
+References: <20190501193126.19196-1-rasmus.villemoes@prevas.dk>
+ <20190524085921.11108-1-rasmus.villemoes@prevas.dk>
+ <20190524085921.11108-3-rasmus.villemoes@prevas.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <4ba2b243-5622-bb27-6fc3-cd9457430e54@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 10:30:50AM -0700, Florian Fainelli wrote:
-> Hi,
->
-> On 5/22/19 10:50 PM, Peng Fan wrote:
-> > This is a modified version from Andre Przywara's patch series
-> > https://lore.kernel.org/patchwork/cover/812997/.
-> > [1] is a draft implementation of i.MX8MM SCMI ATF implementation that
-> > use smc as mailbox, power/clk is included, but only part of clk has been
-> > implemented to work with hardware, power domain only supports get name
-> > for now.
-> >
-> > The traditional Linux mailbox mechanism uses some kind of dedicated hardware
-> > IP to signal a condition to some other processing unit, typically a dedicated
-> > management processor.
-> > This mailbox feature is used for instance by the SCMI protocol to signal a
-> > request for some action to be taken by the management processor.
-> > However some SoCs does not have a dedicated management core to provide
-> > those services. In order to service TEE and to avoid linux shutdown
-> > power and clock that used by TEE, need let firmware to handle power
-> > and clock, the firmware here is ARM Trusted Firmware that could also
-> > run SCMI service.
-> >
-> > The existing SCMI implementation uses a rather flexible shared memory
-> > region to communicate commands and their parameters, it still requires a
-> > mailbox to actually trigger the action.
->
-> We have had something similar done internally with a couple of minor
-> differences:
->
-> - a SGI is used to send SCMI notifications/delayed replies to support
-> asynchronism (patches are in the works to actually add that to the Linux
-> SCMI framework). There is no good support for SGI in the kernel right
-> now so we hacked up something from the existing SMP code and adding the
-> ability to register our own IPI handlers (SHAME!). Using a PPI should
-> work and should allow for using request_irq() AFAICT.
->
+On Fri, 24 May 2019 09:00:26 +0000, Rasmus Villemoes <rasmus.villemoes@prevas.dk> wrote:
+> All the currently supported chips have .num_databases either 256 or
+> 4096, so this patch does not change behaviour for any of those. The
+> mv88e6250, however, has .num_databases == 64, and it does not put the
+> upper two bits in ATU control 13:12, but rather in ATU Operation
+> 9:8. So change the logic to prepare for supporting mv88e6250.
+> 
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
 
-We have been thinking this since we were asked if SMC can be transport.
-Generally out of 16 SGIs, 8 are reserved for secure side and non-secure
-has 8. Of these 8, IIUC 7 is already being used by kernel. So unless we
-manage to get the last one reserved exclusive to SCMI, it makes it
-difficult to add SGI support in SCMI.
-
-We have been telling partners/vendors about this limitation if they
-use SMC as transport and need to have dedicated h/w interrupt for the
-notifications.
-
-Another issue could be with virtualisation(using HVC) and EL handling
-so called SCMI SGI. We need to think about those too. I will try to get
-more info on this and come back on this.
-
---
-Regards,
-Sudeep
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
