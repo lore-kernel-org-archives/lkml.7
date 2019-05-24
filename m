@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2033C282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 22:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3810BC282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 22:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DA4F206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 22:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08B0D206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 22:11:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CUsAhV5X"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RNG0ZKg6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732204AbfEXWLa (ORCPT
+        id S2404288AbfEXWLf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 18:11:30 -0400
-Received: from mail-vs1-f74.google.com ([209.85.217.74]:33399 "EHLO
-        mail-vs1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729348AbfEXWL3 (ORCPT
+        Fri, 24 May 2019 18:11:35 -0400
+Received: from mail-yw1-f73.google.com ([209.85.161.73]:36432 "EHLO
+        mail-yw1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729348AbfEXWLb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 18:11:29 -0400
-Received: by mail-vs1-f74.google.com with SMTP id q25so2263813vsk.0
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 15:11:28 -0700 (PDT)
+        Fri, 24 May 2019 18:11:31 -0400
+Received: by mail-yw1-f73.google.com with SMTP id p123so5034461ywg.3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 15:11:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=v92h8itBUYfDlklDlHFCcJBl3/YhqLnEEC7wTIuTHIM=;
-        b=CUsAhV5X7IG2TWg3my4XjAd8N+cugOoAK2eNkVT5xhIUmLHS0BGK+qa4DRM4Z22cLx
-         tIKhnYDefXMooVOqGJ9AXeNU1h5v1ryC8qLaZnMLaza9RURY7h11L2mzTjYrLav40CKr
-         PoYW9InXbd01jGqMhxFZDs1kzy5+0ZInB9sshvcc6ohLa6l9WU7EO5bpDmDfw2+eQguf
-         XOSuj2JDaQrbY1F01G9b2NXP/AxJEF8DKwMlFxfeaLRFwiwgelynwdfg5FT9Dxd1GOri
-         M9J2A8C/rEIBYKbDjFaBoUiuUY8RBlwTEYHAGjXyKbUWW73gq8uHo2DgxuaVEySRD4il
-         dt2Q==
+        bh=q0pnEpuGpsfO4o4/PpGY6OcjeWOaJUu326iPNm0R3Pc=;
+        b=RNG0ZKg6/OghWFPwBoYwNzzYloxIFDIocpLzYRM7vLV5WjfKTdG0n8nzOmvNytNZF6
+         sfTW8MpEGAm41YabVTVREGIGWD6JHYrXq8KmQPoaszezFCDN1Dxmz5Qbva8y/LYgPCtO
+         ce3D+ayaKaJaDDrKEKplXgZQoRMLisOlwkdsPuJcLrOTxavfI22g+OKZ1MTHn4qK1gA+
+         cZqSbSqI5bkynak7VLvlSPeenO0NkiFk5E0iq3pq8ibZbXC5xv6IOnQepuR6bpn9v/S/
+         lV75WhtPEZjzQnpCk6/yGlc9a8T5mp/CvOQgr4k8ZchtltDF/h+lqFOKDiP2tL9xS90Y
+         n0JQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=v92h8itBUYfDlklDlHFCcJBl3/YhqLnEEC7wTIuTHIM=;
-        b=iLf0BGuMY9+ASFy6HFkjJzfk5zkDMSTS1z8ddVONiouspj3NCK4wVpicd9Nn9+ZSAL
-         6VUdf+3bcewVoaCThG60h8yIlkvpCUu2CQSeIIrZaX4SQ/T8zmbc4zMFgx2M2l1Wthxt
-         ifSxQ1iAyIKEmqE8cMTPRHtvKarKqlkjPGsne/Uv9J7+0r9Rsjag/VE4+yU0dx0UDTbe
-         CNRpremVbzV6GplTEAEbggp6SNHO6wp2ykTJkBG047UE3cJGjg7tc6xw8vL6j+17sFc1
-         gjTzfVWRavstuW2P31+QeYHlCUBgtc1lWAkmc8U5g/ydeCHwWFfZC/BQVqYxrTr5719Y
-         WywA==
-X-Gm-Message-State: APjAAAWxu+6vVDmVNNm3rubCMh59I+Df3Rx65vtRKnrIxuWF/8d7I4NM
-        1LI4d6YruZIFlT2Yn4w1a3iZyPIc4nwnws/64NU=
-X-Google-Smtp-Source: APXvYqyEasMSInV7lTRAqxTR3tlK+X6lvMZOcDgfdEHMr3xXlhBiE/O5JogcdnzzcRFyPYoTDe25RsVg0qI/jFZJc7U=
-X-Received: by 2002:a1f:3143:: with SMTP id x64mr8099236vkx.32.1558735887958;
- Fri, 24 May 2019 15:11:27 -0700 (PDT)
-Date:   Fri, 24 May 2019 15:11:17 -0700
+        bh=q0pnEpuGpsfO4o4/PpGY6OcjeWOaJUu326iPNm0R3Pc=;
+        b=p210sebkjZXYLeEoLgXGU5xc/w6R7bqZMJct3G9xeyyLjesMasY1j8xSp0SBy+KPwc
+         R/QZkTuV+Hi25z4qdYs+edE7Tt+Y4kTxDTd7DVt1op4SG5W3SiZFmUSynMFoId/n4bVg
+         8rmtuGIKhhi6updSdMsVoEdDXB/8EvQlsm5PRAomKvZB1oSoPnLRXPL+0HTC0cre+v+F
+         ALeXou+3HRcfbvElMONBkRJmPIlnm5pyfoWy5z5yLJ+sqqfDM/wT0rJDeUfyVv98EZUn
+         jKkUYXpv+npWvI3oKab1Ce8ZP7kvtnK2AnNA1gCvHDou6/emDS3SCVCrp4C/UFzanrGB
+         Fa9w==
+X-Gm-Message-State: APjAAAUWCoNV7AST2Onlf4nRpMfLJCHMMEwWD4z36aCs7u/AGM2ASrM+
+        9UTHCl0/TtxXew0+l3MU9bA72JvtVzmrLLRh1Y8=
+X-Google-Smtp-Source: APXvYqxDeASkLXDKWGHrVqaBSK/xzXsxmzMcmmg5HzG3TNLITJge2KYm2eHYLxy/MUCdgQ/j1WC7sUY9hOVabnK32vo=
+X-Received: by 2002:a81:a34a:: with SMTP id a71mr37463051ywh.318.1558735890589;
+ Fri, 24 May 2019 15:11:30 -0700 (PDT)
+Date:   Fri, 24 May 2019 15:11:18 -0700
 In-Reply-To: <20190524221118.177548-1-samitolvanen@google.com>
-Message-Id: <20190524221118.177548-3-samitolvanen@google.com>
+Message-Id: <20190524221118.177548-4-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20190524221118.177548-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.22.0.rc1.257.g3120a18244-goog
-Subject: [PATCH v3 2/3] arm64: use the correct function type in SYSCALL_DEFINE0
+Subject: [PATCH v3 3/3] arm64: use the correct function type for __arm64_sys_ni_syscall
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will.deacon@arm.com>,
@@ -73,51 +73,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Although a syscall defined using SYSCALL_DEFINE0 doesn't accept
-parameters, use the correct function type to avoid indirect call
-type mismatches with Control-Flow Integrity checking.
+Calling sys_ni_syscall through a syscall_fn_t pointer trips indirect
+call Control-Flow Integrity checking due to a function type
+mismatch. Use SYSCALL_DEFINE0 for __arm64_sys_ni_syscall instead and
+remove the now unnecessary casts.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- arch/arm64/include/asm/syscall_wrapper.h | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ arch/arm64/kernel/sys.c   | 14 +++++++++-----
+ arch/arm64/kernel/sys32.c |  7 ++-----
+ 2 files changed, 11 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm64/include/asm/syscall_wrapper.h b/arch/arm64/include/asm/syscall_wrapper.h
-index a4477e515b798..507d0ee6bc690 100644
---- a/arch/arm64/include/asm/syscall_wrapper.h
-+++ b/arch/arm64/include/asm/syscall_wrapper.h
-@@ -30,10 +30,10 @@
- 	}										\
- 	static inline long __do_compat_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__))
+diff --git a/arch/arm64/kernel/sys.c b/arch/arm64/kernel/sys.c
+index 6f91e81165147..d8b35cfe5e94e 100644
+--- a/arch/arm64/kernel/sys.c
++++ b/arch/arm64/kernel/sys.c
+@@ -47,22 +47,26 @@ SYSCALL_DEFINE1(arm64_personality, unsigned int, personality)
+ 	return ksys_personality(personality);
+ }
  
--#define COMPAT_SYSCALL_DEFINE0(sname)					\
--	asmlinkage long __arm64_compat_sys_##sname(void);		\
--	ALLOW_ERROR_INJECTION(__arm64_compat_sys_##sname, ERRNO);	\
--	asmlinkage long __arm64_compat_sys_##sname(void)
-+#define COMPAT_SYSCALL_DEFINE0(sname)							\
-+	asmlinkage long __arm64_compat_sys_##sname(const struct pt_regs *__unused);	\
-+	ALLOW_ERROR_INJECTION(__arm64_compat_sys_##sname, ERRNO);			\
-+	asmlinkage long __arm64_compat_sys_##sname(const struct pt_regs *__unused)
++asmlinkage long sys_ni_syscall(void);
++
++asmlinkage long __arm64_sys_ni_syscall(const struct pt_regs *__unused)
++{
++	return sys_ni_syscall();
++}
++
+ /*
+  * Wrappers to pass the pt_regs argument.
+  */
+ #define sys_personality		sys_arm64_personality
  
- #define COND_SYSCALL_COMPAT(name) \
- 	cond_syscall(__arm64_compat_sys_##name);
-@@ -62,11 +62,11 @@
- 	static inline long __do_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__))
+-asmlinkage long sys_ni_syscall(const struct pt_regs *);
+-#define __arm64_sys_ni_syscall	sys_ni_syscall
+-
+ #undef __SYSCALL
+ #define __SYSCALL(nr, sym)	asmlinkage long __arm64_##sym(const struct pt_regs *);
+ #include <asm/unistd.h>
  
- #ifndef SYSCALL_DEFINE0
--#define SYSCALL_DEFINE0(sname)					\
--	SYSCALL_METADATA(_##sname, 0);				\
--	asmlinkage long __arm64_sys_##sname(void);		\
--	ALLOW_ERROR_INJECTION(__arm64_sys_##sname, ERRNO);	\
--	asmlinkage long __arm64_sys_##sname(void)
-+#define SYSCALL_DEFINE0(sname)							\
-+	SYSCALL_METADATA(_##sname, 0);						\
-+	asmlinkage long __arm64_sys_##sname(const struct pt_regs *__unused);	\
-+	ALLOW_ERROR_INJECTION(__arm64_sys_##sname, ERRNO);			\
-+	asmlinkage long __arm64_sys_##sname(const struct pt_regs *__unused)
- #endif
+ #undef __SYSCALL
+-#define __SYSCALL(nr, sym)	[nr] = (syscall_fn_t)__arm64_##sym,
++#define __SYSCALL(nr, sym)	[nr] = __arm64_##sym,
  
- #ifndef COND_SYSCALL
+ const syscall_fn_t sys_call_table[__NR_syscalls] = {
+-	[0 ... __NR_syscalls - 1] = (syscall_fn_t)sys_ni_syscall,
++	[0 ... __NR_syscalls - 1] = __arm64_sys_ni_syscall,
+ #include <asm/unistd.h>
+ };
+diff --git a/arch/arm64/kernel/sys32.c b/arch/arm64/kernel/sys32.c
+index 0f8bcb7de7008..3c80a40c1c9d6 100644
+--- a/arch/arm64/kernel/sys32.c
++++ b/arch/arm64/kernel/sys32.c
+@@ -133,17 +133,14 @@ COMPAT_SYSCALL_DEFINE6(aarch32_fallocate, int, fd, int, mode,
+ 	return ksys_fallocate(fd, mode, arg_u64(offset), arg_u64(len));
+ }
+ 
+-asmlinkage long sys_ni_syscall(const struct pt_regs *);
+-#define __arm64_sys_ni_syscall	sys_ni_syscall
+-
+ #undef __SYSCALL
+ #define __SYSCALL(nr, sym)	asmlinkage long __arm64_##sym(const struct pt_regs *);
+ #include <asm/unistd32.h>
+ 
+ #undef __SYSCALL
+-#define __SYSCALL(nr, sym)	[nr] = (syscall_fn_t)__arm64_##sym,
++#define __SYSCALL(nr, sym)	[nr] = __arm64_##sym,
+ 
+ const syscall_fn_t compat_sys_call_table[__NR_compat_syscalls] = {
+-	[0 ... __NR_compat_syscalls - 1] = (syscall_fn_t)sys_ni_syscall,
++	[0 ... __NR_compat_syscalls - 1] = __arm64_sys_ni_syscall,
+ #include <asm/unistd32.h>
+ };
 -- 
 2.22.0.rc1.257.g3120a18244-goog
 
