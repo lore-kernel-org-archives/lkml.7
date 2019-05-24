@@ -6,116 +6,148 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B592C282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 22:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02287C282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 22:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 034B5217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 22:00:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5FEC217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 22:01:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="t0f08gxx"
+	dkim=pass (1024-bit key) header.d=appneta.com header.i=@appneta.com header.b="CP3pG9if"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404439AbfEXWAH (ORCPT
+        id S2404444AbfEXWB1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 18:00:07 -0400
-Received: from node.akkea.ca ([192.155.83.177]:57728 "EHLO node.akkea.ca"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404303AbfEXWAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 18:00:05 -0400
-Received: by node.akkea.ca (Postfix, from userid 33)
-        id 1542B4E204B; Fri, 24 May 2019 22:00:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1558735205; bh=Ql0cD5JfK/yoXltjS6jKt/CQqtSPm7QpPWra93u8UTM=;
-        h=To:Subject:Date:From:Cc:In-Reply-To:References;
-        b=t0f08gxxwNFLW0NebIk/BaI1njSOhzERZPR6qldRKUWUdgWZr/nykIdgrEZ5tXBx7
-         H/TK0bpZRHlrxlMR8DjeKiBl7istEYv722fQclR3fBGZkHuHuKDwsu8ZKne6+Oo3e3
-         +G3RuN67uhpEN5rb9mt05M8PUKLCAl5kairFbl/4=
-To:     Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v13 2/4] arm64: dts: fsl: librem5: Add a device tree for  the Librem5 devkit
-X-PHP-Originating-Script: 1000:rcube.php
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 24 May 2019 15:00:05 -0700
-From:   Angus Ainslie <angus@akkea.ca>
-Cc:     angus.ainslie@puri.sm, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20190523191926.GB3803@xo-6d-61-c0.localdomain>
-References: <20190520142330.3556-1-angus@akkea.ca>
- <20190520142330.3556-3-angus@akkea.ca>
- <20190523191926.GB3803@xo-6d-61-c0.localdomain>
-Message-ID: <1e6c0664949f38452b8f14b901bff513@www.akkea.ca>
-X-Sender: angus@akkea.ca
-User-Agent: Roundcube Webmail/1.1.3
+        Fri, 24 May 2019 18:01:27 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42712 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404303AbfEXWB0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 18:01:26 -0400
+Received: by mail-pf1-f194.google.com with SMTP id r22so3200689pfh.9
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 15:01:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=appneta.com; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=Nt1Bto+RuKAe8F0XKPOQ+MhI4MGCp3IBcqE1bNWm624=;
+        b=CP3pG9ifqRjFBc0YzSgRZhosVC3X/Gn1RGmFGqOzuMcKIczmIs/OCyyjYxWltNsfFk
+         4mycd8lZIITJoEB+fcpjf8FT1kv+xkBDmO6lK+fhB4wuUjsW2BKF02fS2SVSabb57vwh
+         ANBUCNIjYnb5tPURfcu15IQNfhbH/7OJVk0es=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=Nt1Bto+RuKAe8F0XKPOQ+MhI4MGCp3IBcqE1bNWm624=;
+        b=IES4m+iRROqFO44l+g530S8/TaeB8i4F8Nc3xVm4l6QwQj3iu54ehy/Cg023KBQxCP
+         2v/iRIdmhGk5L4vHULB3THSDagHQlQsa3a6BRjDy1WjXktnL3ItwgqVIksRPTU4ErjvE
+         /VEGfLZJ/F0DRh9wcOlCP//4VpLiWcrX+9JjR/SL8ZLQ9i08kHRVjaI95w4y3ng1b5S0
+         p6Vq3pAHIHBN3DwImg2CzcpqBpWsTibD/bNhpHXhHTKFrjHItbvWtpiON7JAMzV8LOJz
+         kG7FA81eRN1Y8WqmDmziHphY7pZzZAKcLrCyh54C7ARsKm3SZeDOEm9fRVhQcF/Wvmeq
+         Fqbg==
+X-Gm-Message-State: APjAAAU2FAwQwFyIiihAw3zu+4cy8/c30uFtO6cuhPER676KbowxDHbQ
+        +MtTGVebG3G4j3hRrwE6uYvGsA==
+X-Google-Smtp-Source: APXvYqx1AU7WlE+4JCn2Y/DvThwLZLnoOhh2EBVLKjNWpqmzprHergerEz/Wt2MlbcL6sAcU78Bqng==
+X-Received: by 2002:a17:90a:216d:: with SMTP id a100mr12026144pje.6.1558735285565;
+        Fri, 24 May 2019 15:01:25 -0700 (PDT)
+Received: from jltm109.jaalam.net (vancouver-a.appneta.com. [209.139.228.33])
+        by smtp.gmail.com with ESMTPSA id e123sm3645702pgc.29.2019.05.24.15.01.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 May 2019 15:01:24 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCH net 1/4] net/udp_gso: Allow TX timestamp with UDP GSO
+From:   Fred Klassen <fklassen@appneta.com>
+In-Reply-To: <CAF=yD-Le-eTadOi7PL8WFEQCG=yLqb5gvKiks+s5Akeq8TenBQ@mail.gmail.com>
+Date:   Fri, 24 May 2019 15:01:24 -0700
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        Willem de Bruijn <willemb@google.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <90E3853F-107D-45BA-93DC-D0BE8AC6FCBB@appneta.com>
+References: <20190523210651.80902-1-fklassen@appneta.com>
+ <20190523210651.80902-2-fklassen@appneta.com>
+ <CAF=yD-Jf95De=z_nx9WFkGDa6+nRUqM_1PqGkjwaFPzOe+PfXg@mail.gmail.com>
+ <AE8E0772-7256-4B9C-A990-96930E834AEE@appneta.com>
+ <CAF=yD-LtAKpND601LQrC1+=iF6spSUXVdUapcsbJdv5FYa=5Jg@mail.gmail.com>
+ <AFC1ECC8-BFAC-4718-B0C9-97CC4BD1F397@appneta.com>
+ <CAF=yD-Le-eTadOi7PL8WFEQCG=yLqb5gvKiks+s5Akeq8TenBQ@mail.gmail.com>
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel,
 
-On 2019-05-23 12:19, Pavel Machek wrote:
-> Hi!
-> 
->> - LEDs
->> - gyro
->> - magnetometer
-> 
->> +	leds {
->> +		compatible = "gpio-leds";
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&pinctrl_gpio_leds>;
->> +
->> +		led1 {
->> +			label = "LED 1";
-> 
-> So, what kind of LED do you have, and what color is it? label should
-> probably be something like
-> notify:green.
-> 
 
-As we don't have a specific use for these yet does it really matter if 
-there is a colour or a number associated with them ?
+> On May 24, 2019, at 12:29 PM, Willem de Bruijn =
+<willemdebruijn.kernel@gmail.com> wrote:
+>=20
+> It is the last moment that a timestamp can be generated for the last
+> byte, I don't see how that is "neither the start nor the end of a GSO
+> packet=E2=80=9D.
 
->> +	charger@6b { /* bq25896 */
->> +		compatible = "ti,bq25890";
->> +		reg = <0x6b>;
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&pinctrl_charger>;
->> +		interrupt-parent = <&gpio3>;
->> +		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
->> +		ti,battery-regulation-voltage = <4192000>; /* 4.192V */
->> +		ti,charge-current = <1600000>; /* 1.6 A */
-> 
-> No space before A, for consistency.
-> 
->> +		ti,termination-current = <66000>;  /* 66mA */
->> +		ti,precharge-current = <1300000>; /* 1.3A */
-> 
-> I thought precharge is usually something low, because you are not yet
-> sure of battery health...?
-> 
+My misunderstanding. I thought TCP did last segment timestamping, not
+last byte. In that case, your statements make sense.
 
-I think I put that in incorrectly. The intention was 130mA.
+>> It would be interesting if a practical case can be made for =
+timestamping
+>> the last segment. In my mind, I don=E2=80=99t see how that would be =
+valuable.
+>=20
+> It depends whether you are interested in measuring network latency or
+> host transmit path latency.
+>=20
+> For the latter, knowing the time from the start of the sendmsg call to
+> the moment the last byte hits the wire is most relevant. Or in absence
+> of (well defined) hardware support, the last byte being queued to the
+> device is the next best thing.
+>=20
+> It would make sense for this software implementation to follow
+> established hardware behavior. But as far as I know, the exact time a
+> hardware timestamp is taken is not consistent across devices, either.
+>=20
+> For fine grained timestamped data, perhaps GSO is simply not a good
+> mechanism. That said, it still has to queue a timestamp if requested.
 
->> +		ti,minimum-sys-voltage = <2750000>; /* 2.75V */
-> 
-> Are you sure? Normally systems shut down at 3.2V, 3V or so. Li-ion
-> batteries don't
-> really like to be discharged _this_ deep.
+I see your point. Makes sense to me.
 
-You are correct. I'll fix it for the next version.
+>> When using hardware timestamping, I think you will find that nearly =
+all
+>> adapters only allow one timestamp at a time. Therefore only one
+>> packet in a burst would get timestamped.
+>=20
+> Can you elaborate? When the host queues N packets all with hardware
+> timestamps requested, all N completions will have a timestamp? Or is
+> that not guaranteed?
+>=20
 
-Thanks
-Angus
+It is not guaranteed. The best example is in ixgbe_main.c and search for
+=E2=80=98SKBTX_HW_TSTAMP=E2=80=99.  If there is a PTP TX timestamp in =
+progress,
+=E2=80=98__IXGBE_PTP_TX_IN_PROGRESS=E2=80=99 is set and no other =
+timestamps
+are possible. The flag is cleared after transmit softirq, and only then
+can another TX timestamp be taken. =20
 
-> 
-> 										Pavel
+>> There are exceptions, for
+>> example I am playing with a 100G Mellanox adapter that has
+>> per-packet TX timestamping. However, I suspect that when I am
+>> done testing, all I will see is timestamps that are representing wire
+>> rate (e.g. 123nsec per 1500 byte packet).
+>>=20
+>> Beyond testing the accuracy of a NIC=E2=80=99s timestamping =
+capabilities, I
+>> see very little value in doing per-segment timestamping.
+>=20
+> Ack. Great detailed argument, thanks.
+
+Thanks. I=E2=80=99m a timestamping nerd and have learned lots with this=20=
+
+discussion.
 
