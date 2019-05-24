@@ -4,121 +4,170 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D65C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F6F8C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E862020675
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:33:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DD0D20675
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:34:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="axT/Z4Pe"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I2DlnDhP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389627AbfEXIdS (ORCPT
+        id S2389512AbfEXIe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 04:33:18 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:15383 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389297AbfEXIdR (ORCPT
+        Fri, 24 May 2019 04:34:26 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:45565 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389046AbfEXIeZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 04:33:17 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ce7ac4d0001>; Fri, 24 May 2019 01:33:17 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 24 May 2019 01:33:17 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 24 May 2019 01:33:17 -0700
-Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 24 May
- 2019 08:33:15 +0000
-Subject: Re: [PATCH] tegra_wm9712: Fix a memory leaking bug in
- tegra_wm9712_driver_probe()
-To:     Gen Zhang <blackgod016574@gmail.com>, <lgirdwood@gmail.com>,
-        <perex@perex.cz>
-CC:     <alsa-devel@alsa-project.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190524005014.GA2289@zhanggen-UX430UQ>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <b2d43dfe-17e5-a975-435b-49f2aa2ad550@nvidia.com>
-Date:   Fri, 24 May 2019 09:33:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 24 May 2019 04:34:25 -0400
+Received: by mail-qk1-f196.google.com with SMTP id j1so6205870qkk.12
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 01:34:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=oKqDPNhFrhfI648m2ZpZorjnGR/p8vjrAU5pnK+zOrc=;
+        b=I2DlnDhPUcB9WSOCiHzGa1dh1aSnEVCZqggaUOEx9lu7ClYlgQWd6xGoN6YLBPFd1B
+         y4VQ8i8uCB9rsJzrpZWQeb66qboUfGI6KX8JrBPy8kILPXMFqypAi02U7tX7kF7Vu9Hq
+         Rgml47oOcJaNGJ2WC/7p7ccoaY757I98JYMCeJMe0sE6+052hFn/5G9Z7e3pmwA+wIp4
+         fRXfuvzU/zFpDBHtVf0JPhkfXlgAQsd3jVYyMxpSCAoXbIUARfcI8LmTkJ+XII8WNDTa
+         K5NIpfMyyaLuO1nfuIEI+7Vn8r4v2NnRZaBtpmf7tCoJnUnVu47g7OXKU8BLxRMpUb9W
+         bP+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=oKqDPNhFrhfI648m2ZpZorjnGR/p8vjrAU5pnK+zOrc=;
+        b=XdQfRwxHdxWzfxaCdcOcXvbxlwOdvRU6EVkONsSQ0XTdN1qucU+nuonReEKnd8OnRW
+         ABjK9gpI9cU4NLstm6scRefkIopcVM6ej7Zj2kMy0+oXqYjY9dH8Iehbg003cghidoLb
+         04Rin1yYlCbyb8O8l6oFgg35DY4O31UWVRu1/+qiMqON1GUxUvQ/WsIsUt/fAvmVAAXk
+         IahWNKxOA6ZeIeNf/HNKTGt6vwU4oBaxQWlbkseY+5FWwJhvFIfy+8C6EcCkmfaWztYk
+         sP4g/MHnh+vbb2mmH67oogxmrSHqBmRExGWldigXIVYyehCR1qxasQcWWDbKFB2BDnAY
+         IdIw==
+X-Gm-Message-State: APjAAAUPRbJCzXsft4NoFTvBBRlU43JNoPY04N3GwXO+Hpk2YBXPU23j
+        qupbDKrBTVoiQttOMcYmmmKzO6NdMslwfdTLJ68X2w==
+X-Google-Smtp-Source: APXvYqyMS3Rs1LJXdWZyK+SojuIy5gzc84YCqZt/AjhqaC8guA5a6LqGCwTxVOOBLQN9MRZFyJwqWtLqDZrNHGIGZ/Q=
+X-Received: by 2002:ac8:5501:: with SMTP id j1mr4886948qtq.239.1558686864752;
+ Fri, 24 May 2019 01:34:24 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190524005014.GA2289@zhanggen-UX430UQ>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1558686797; bh=vkCEueUAPlP/apgkFiyHjF374bXH/u7KlllgHip5zNw=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=axT/Z4PeCAsNFCG1WqGLPh67ItaiJrqmcFul0qH19p84KXDA55OvlN4ub0AM0L0J1
-         teyY8/SXfwb1dxPxEpSaeXje2VopUqvGzYWk6+mU1CtAGG1BbTQiUKDfDOPhexo7mc
-         sJEqJMze0K4TiJKqMopCFG6TfZXtJJB3DI/bIMsQbEwfnEbyjSINU0WE9lzfTnv5mY
-         Qaagp1ceWr+Q/+ct/YMtiaxD8m+09fWb5geSwovhV7gscDHq2fl6l7Xefn60virDA1
-         A+SzHmxXgCnuhmFukoFr72M7KJCZUt7LN/30gwE3Wv/YePiHE6xi849yvhFBzI6nhq
-         c27aizYhUb+2w==
+References: <1557500579-19720-1-git-send-email-yannick.fertre@st.com> <aa466c60-9110-630e-3c75-99e632207334@st.com>
+In-Reply-To: <aa466c60-9110-630e-3c75-99e632207334@st.com>
+From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Date:   Fri, 24 May 2019 10:34:13 +0200
+Message-ID: <CA+M3ks6nqUdMGxkBYf17ptVMB0P3xJ+cY93xXhCX6FTcKJr+eA@mail.gmail.com>
+Subject: Re: [PATCH] drm/stm: dsi: check hardware version
+To:     Philippe CORNU <philippe.cornu@st.com>
+Cc:     Yannick FERTRE <yannick.fertre@st.com>,
+        Benjamin GAIGNARD <benjamin.gaignard@st.com>,
+        Vincent ABRIOU <vincent.abriou@st.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Le ven. 10 mai 2019 =C3=A0 18:31, Philippe CORNU <philippe.cornu@st.com> a =
+=C3=A9crit :
+>
+>
+> Dear Yannick,
+> Thank you for your patch,
+>
+> Acked-by: Philippe Cornu <philippe.cornu@st.com>
+>
+> Dear Benjamin,
+> If you are fine with this patch, please push it *after* the patch named
+> "drm/stm: dsi: add support of an optional regulator" (if I well
+> understood those two patches)
+>
+> Thank you
+> Philippe :-)
 
-On 24/05/2019 01:50, Gen Zhang wrote:
-> In tegra_wm9712_driver_probe(), 'machine->codec' is allocated by
-> platform_device_alloc(). When it is NULL, function returns ENOMEM.
-> However, 'machine' is allocated by devm_kzalloc() before this site.
-> Thus we should free 'machine' before function ends to prevent memory
-> leaking.
+Applied on drm-misc-next,
 
-Memory allocated by devm_xxx() is automatically freed on failure so this
-is not correct.
-
-> Further, we should free 'machine->util_data', 'machine->codec' and
-> 'machine' before this function normally ends to prevent memory leaking.
-
-This is also incorrect. Why would we free all resources after
-successfully initialising the driver?
-
-> Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-> ---
-> diff --git a/sound/soc/tegra/tegra_wm9712.c b/sound/soc/tegra/tegra_wm9712.c
-> index 864a334..295c41d 100644
-> --- a/sound/soc/tegra/tegra_wm9712.c
-> +++ b/sound/soc/tegra/tegra_wm9712.c
-> @@ -86,7 +86,8 @@ static int tegra_wm9712_driver_probe(struct platform_device *pdev)
->  	machine->codec = platform_device_alloc("wm9712-codec", -1);
->  	if (!machine->codec) {
->  		dev_err(&pdev->dev, "Can't allocate wm9712 platform device\n");
-> -		return -ENOMEM;
-> +		ret = -ENOMEM;
-> +		goto codec_free;
->  	}
->  
->  	ret = platform_device_add(machine->codec);
-> @@ -127,6 +128,10 @@ static int tegra_wm9712_driver_probe(struct platform_device *pdev)
->  		goto asoc_utils_fini;
->  	}
->  
-> +	tegra_asoc_utils_fini(&machine->util_data);
-> +	platform_device_del(machine->codec);
-> +	platform_device_put(machine->codec);
-> +	devm_kfree(&pdev->dev, machine);
->  	return 0;
-
-As stated above, this is incorrect.
-
-Did you actually test this? I think you would find this would break the
-driver.
-
-Jon
-
--- 
-nvpublic
+Benjamin
+>
+>
+> On 5/10/19 5:02 PM, Yannick Fertr=C3=A9 wrote:
+> > Check version of DSI hardware IP. Only versions 1.30 & 1.31
+> > are supported.
+> >
+> > Signed-off-by: Yannick Fertr=C3=A9 <yannick.fertre@st.com>
+> > ---
+> >   drivers/gpu/drm/stm/dw_mipi_dsi-stm.c | 24 +++++++++++++++++++++++-
+> >   1 file changed, 23 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c b/drivers/gpu/drm/st=
+m/dw_mipi_dsi-stm.c
+> > index 22bd095..29105e9 100644
+> > --- a/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
+> > +++ b/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
+> > @@ -227,7 +227,6 @@ dw_mipi_dsi_get_lane_mbps(void *priv_data, const st=
+ruct drm_display_mode *mode,
+> >       u32 val;
+> >
+> >       /* Update lane capabilities according to hw version */
+> > -     dsi->hw_version =3D dsi_read(dsi, DSI_VERSION) & VERSION;
+> >       dsi->lane_min_kbps =3D LANE_MIN_KBPS;
+> >       dsi->lane_max_kbps =3D LANE_MAX_KBPS;
+> >       if (dsi->hw_version =3D=3D HWVER_131) {
+> > @@ -306,6 +305,7 @@ static int dw_mipi_dsi_stm_probe(struct platform_de=
+vice *pdev)
+> >   {
+> >       struct device *dev =3D &pdev->dev;
+> >       struct dw_mipi_dsi_stm *dsi;
+> > +     struct clk *pclk;
+> >       struct resource *res;
+> >       int ret;
+> >
+> > @@ -347,6 +347,28 @@ static int dw_mipi_dsi_stm_probe(struct platform_d=
+evice *pdev)
+> >               goto err_clk_get;
+> >       }
+> >
+> > +     pclk =3D devm_clk_get(dev, "pclk");
+> > +     if (IS_ERR(pclk)) {
+> > +             ret =3D PTR_ERR(pclk);
+> > +             DRM_ERROR("Unable to get peripheral clock: %d\n", ret);
+> > +             goto err_dsi_probe;
+> > +     }
+> > +
+> > +     ret =3D clk_prepare_enable(pclk);
+> > +     if (ret) {
+> > +             DRM_ERROR("%s: Failed to enable peripheral clk\n", __func=
+__);
+> > +             goto err_dsi_probe;
+> > +     }
+> > +
+> > +     dsi->hw_version =3D dsi_read(dsi, DSI_VERSION) & VERSION;
+> > +     clk_disable_unprepare(pclk);
+> > +
+> > +     if (dsi->hw_version !=3D HWVER_130 && dsi->hw_version !=3D HWVER_=
+131) {
+> > +             ret =3D -ENODEV;
+> > +             DRM_ERROR("bad dsi hardware version\n");
+> > +             goto err_dsi_probe;
+> > +     }
+> > +
+> >       dw_mipi_dsi_stm_plat_data.base =3D dsi->base;
+> >       dw_mipi_dsi_stm_plat_data.priv_data =3D dsi;
+> >
+> >
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
