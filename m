@@ -2,95 +2,113 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B93C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6418C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10ACF217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:42:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558683757;
-	bh=W3xRpy3DBCHBRWi5JRR2yOwXam58kwiXx6SKvIkiyE4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=D4pkPUPHk6g3W1Ok2hWUyCahJ7jvqLU2m+2SZW+gfzew0VeqAggQ8z8GTfKtL5aSP
-	 ud4sFEuupUIc9+bNfGGTmXMo+qFvmHSL64QCFAwquvGW5dJ3ICAaRvzeSohJGMkahR
-	 THoaKkil04NJTK6B6mAw9GP819pIktV+ecuYQMeg=
+	by mail.kernel.org (Postfix) with ESMTP id 8601A217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:42:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389143AbfEXHmg (ORCPT
+        id S2389179AbfEXHmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 03:42:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34594 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388960AbfEXHmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 03:42:36 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DD20217F9;
-        Fri, 24 May 2019 07:42:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558683754;
-        bh=W3xRpy3DBCHBRWi5JRR2yOwXam58kwiXx6SKvIkiyE4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jQezOaYqzv0VthgRDI02GtbedXKYChnnDmOd9CQAkqLJCcKW4pjcrABFzLyHDDldC
-         x1DE4DeSmeobuChKHVudpRHr4Dhm3VXPINYQYi1qdOjIkoTf1ZXbOCgWT6fDuBub9z
-         0DBSQ5sE98ti/VxhSeHI385KzJjDDxb4o8gI39Hk=
-Date:   Fri, 24 May 2019 09:42:32 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: ks7010: Remove initialisation
-Message-ID: <20190524074231.GA29172@kroah.com>
-References: <20190524055602.3694-1-nishkadg.linux@gmail.com>
- <20190524065238.GA3600@kroah.com>
- <aae76db5-8768-d277-e527-9e166a02f46e@gmail.com>
+        Fri, 24 May 2019 03:42:51 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:27286 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388960AbfEXHmv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 03:42:51 -0400
+X-UUID: d50e7404e6a24342ab317cff1f4924c2-20190524
+X-UUID: d50e7404e6a24342ab317cff1f4924c2-20190524
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <neal.liu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1760047958; Fri, 24 May 2019 15:42:37 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 24 May 2019 15:42:34 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 24 May 2019 15:42:34 +0800
+Message-ID: <1558683754.5671.4.camel@mtkswgap22>
+Subject: Re: [PATCH 3/3] hwrng: add mt67xx-rng driver
+From:   Neal Liu <neal.liu@mediatek.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+CC:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        Stephan Mueller <smueller@chronox.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "mpm@selenic.com" <mpm@selenic.com>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        Crystal Guo =?UTF-8?Q?=28=E9=83=AD=E6=99=B6=29?= 
+        <Crystal.Guo@mediatek.com>, Neal Liu <neal.liu@mediatek.com>
+Date:   Fri, 24 May 2019 15:42:34 +0800
+In-Reply-To: <20190510063915.kwqy3e5urs6j7ity@gondor.apana.org.au>
+References: <1557287937-2410-1-git-send-email-neal.liu@mediatek.com>
+         <1557287937-2410-4-git-send-email-neal.liu@mediatek.com>
+         <12193108.aNnqf5ydOJ@tauon.chronox.de>
+         <1557311737.11818.11.camel@mtkswgap22>
+         <20190509052649.xfkgb3qd7rhcgktj@gondor.apana.org.au>
+         <1557413686.23445.6.camel@mtkswgap22>
+         <20190510063915.kwqy3e5urs6j7ity@gondor.apana.org.au>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aae76db5-8768-d277-e527-9e166a02f46e@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-TM-SNTS-SMTP: 89ED3B40815DB6F837B8DBB2E0E3948F37DDFAA36A07D69CF4F4116AD8AC13F82000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 12:31:19PM +0530, Nishka Dasgupta wrote:
-> On 24/05/19 12:22 PM, Greg KH wrote:
-> > On Fri, May 24, 2019 at 11:26:02AM +0530, Nishka Dasgupta wrote:
-> > > As the initial value of the return variable result is never used, it can
-> > > be removed.
-> > > Issue found with Coccinelle.
-> > > 
-> > > Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
-> > > ---
-> > >   drivers/staging/ks7010/ks7010_sdio.c | 2 +-
-> > >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > Didn't you already send this?
-> 
-> I sent two patches about removing initialisation in ks7010 today, but I
-> couldn't make it a patch series because the different files had different
-> maintainers. I don't think I've sent this patch before, but it's possible I
-> made a mistake because my local tree has not been the best organised lately.
-> I apologise for the confusion.
-> 
+Hi Herbert,
+	Could you kindly help to review our patches?
+	Thanks
 
-I saw two patches with the same subject line, if I messed up, please
-resend.
+From	Neal Liu <>
+Subject	[PATCH 0/3] MT67XX random number generator support
+Date	Wed, 8 May 2019 11:58:54 +0800
+share
+These patch series introduce a generic rng driver for Trustzone
+based kernel driver which would like to communicate with ATF
+SIP services.
 
-> > And please run a spell-checker on your subject line when you resend
-> > this :)
-> 
-> Is this about "initialise" (and now also "organised", "apologise", etc)? As
-> far as I'm aware whether the word ends in "-ise"/"-ize" depends on local
-> varieties of English, so I went with the variety I'm more used to. Should I
-> stick with American/Canadian spelling variants (including "-or" over "-our"
-> etc) from now on?
+Patch #1 initials SMC fid table for Mediatek SIP interfaces and
+adds HWRNG related SMC call.
 
-Ah, didn't realize that was a valid spelling, sorry.
+Patch #2..3 adds mt67xx-rng kernel driver for Trustzone based SoCs.
+For Mediatek SoCs on ARMv8 with TrustZone enabled, peripherals like
+entropy sources is not accessible from normal world (linux) and
+rather accessible from secure world (ATF/TEE) only. This driver aims
+to provide a generic interface to ATF rng service.
 
-greg k-h
+Neal Liu (3):
+  soc: mediatek: add SMC fid table for SIP interface
+  dt-bindings: rng: update bindings for MT67xx SoCs
+  hwrng: add mt67xx-rng driver
+
+ Documentation/devicetree/bindings/rng/mtk-rng.txt |   13 ++-
+ drivers/char/hw_random/Kconfig                    |   16 ++++
+ drivers/char/hw_random/Makefile                   |    1 +
+ drivers/char/hw_random/mt67xx-rng.c               |  104
++++++++++++++++++++++
+ include/linux/soc/mediatek/mtk_sip_svc.h          |   55 +++++++++++
+ 5 files changed, 186 insertions(+), 3 deletions(-)
+ create mode 100644 drivers/char/hw_random/mt67xx-rng.c
+ create mode 100644 include/linux/soc/mediatek/mtk_sip_svc.h
+
+-- 
+1.7.9.5
+
+Best Regards,
+-Neal Liu
+
+
