@@ -2,118 +2,112 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE2B6C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA04EC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C971C2133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:57:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB41B2184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:57:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731981AbfEXR5I (ORCPT
+        id S1732015AbfEXR5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 13:57:08 -0400
-Received: from mga07.intel.com ([134.134.136.100]:64010 "EHLO mga07.intel.com"
+        Fri, 24 May 2019 13:57:11 -0400
+Received: from foss.arm.com ([217.140.101.70]:48016 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726071AbfEXR5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 13:57:07 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 May 2019 10:57:07 -0700
-X-ExtLoop1: 1
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga002.jf.intel.com with ESMTP; 24 May 2019 10:57:07 -0700
-Date:   Fri, 24 May 2019 11:00:05 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        joro@8bytes.org, alex.williamson@redhat.com,
-        yi.l.liu@linux.intel.com, iommu@lists.linux-foundation.org,
-        ashok.raj@intel.com, linux-kernel@vger.kernel.org,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH 3/4] iommu: Introduce device fault report API
-Message-ID: <20190524110005.55c3eade@jacob-builder>
-In-Reply-To: <e56244fd-86fd-1fc9-17f7-d00179d586ac@arm.com>
-References: <20190523180613.55049-1-jean-philippe.brucker@arm.com>
-        <20190523180613.55049-4-jean-philippe.brucker@arm.com>
-        <e56244fd-86fd-1fc9-17f7-d00179d586ac@arm.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        id S1726071AbfEXR5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 13:57:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C1C4A78;
+        Fri, 24 May 2019 10:57:09 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1E1993F703;
+        Fri, 24 May 2019 10:57:06 -0700 (PDT)
+Date:   Fri, 24 May 2019 18:56:58 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Peng Fan <peng.fan@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "andre.przywara@arm.com" <andre.przywara@arm.com>,
+        "van.freenix@gmail.com" <van.freenix@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 0/2] mailbox: arm: introduce smc triggered mailbox
+Message-ID: <20190524175658.GA5045@e107155-lin>
+References: <20190523060437.11059-1-peng.fan@nxp.com>
+ <4ba2b243-5622-bb27-6fc3-cd9457430e54@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4ba2b243-5622-bb27-6fc3-cd9457430e54@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 May 2019 19:56:54 +0100
-Robin Murphy <robin.murphy@arm.com> wrote:
+On Thu, May 23, 2019 at 10:30:50AM -0700, Florian Fainelli wrote:
+> Hi,
+>
+> On 5/22/19 10:50 PM, Peng Fan wrote:
+> > This is a modified version from Andre Przywara's patch series
+> > https://lore.kernel.org/patchwork/cover/812997/.
+> > [1] is a draft implementation of i.MX8MM SCMI ATF implementation that
+> > use smc as mailbox, power/clk is included, but only part of clk has been
+> > implemented to work with hardware, power domain only supports get name
+> > for now.
+> >
+> > The traditional Linux mailbox mechanism uses some kind of dedicated hardware
+> > IP to signal a condition to some other processing unit, typically a dedicated
+> > management processor.
+> > This mailbox feature is used for instance by the SCMI protocol to signal a
+> > request for some action to be taken by the management processor.
+> > However some SoCs does not have a dedicated management core to provide
+> > those services. In order to service TEE and to avoid linux shutdown
+> > power and clock that used by TEE, need let firmware to handle power
+> > and clock, the firmware here is ARM Trusted Firmware that could also
+> > run SCMI service.
+> >
+> > The existing SCMI implementation uses a rather flexible shared memory
+> > region to communicate commands and their parameters, it still requires a
+> > mailbox to actually trigger the action.
+>
+> We have had something similar done internally with a couple of minor
+> differences:
+>
+> - a SGI is used to send SCMI notifications/delayed replies to support
+> asynchronism (patches are in the works to actually add that to the Linux
+> SCMI framework). There is no good support for SGI in the kernel right
+> now so we hacked up something from the existing SMP code and adding the
+> ability to register our own IPI handlers (SHAME!). Using a PPI should
+> work and should allow for using request_irq() AFAICT.
+>
 
-> On 23/05/2019 19:06, Jean-Philippe Brucker wrote:
-> > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > 
-> > Traditionally, device specific faults are detected and handled
-> > within their own device drivers. When IOMMU is enabled, faults such
-> > as DMA related transactions are detected by IOMMU. There is no
-> > generic reporting mechanism to report faults back to the in-kernel
-> > device driver or the guest OS in case of assigned devices.
-> > 
-> > This patch introduces a registration API for device specific fault
-> > handlers. This differs from the existing iommu_set_fault_handler/
-> > report_iommu_fault infrastructures in several ways:
-> > - it allows to report more sophisticated fault events (both
-> >    unrecoverable faults and page request faults) due to the nature
-> >    of the iommu_fault struct
-> > - it is device specific and not domain specific.
-> > 
-> > The current iommu_report_device_fault() implementation only handles
-> > the "shoot and forget" unrecoverable fault case. Handling of page
-> > request faults or stalled faults will come later.
-> > 
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Signed-off-by: Ashok Raj <ashok.raj@intel.com>
-> > Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-> > Signed-off-by: Eric Auger <eric.auger@redhat.com>
-> > ---
-> >   drivers/iommu/iommu.c | 127
-> > ++++++++++++++++++++++++++++++++++++++++++ include/linux/iommu.h |
-> > 29 ++++++++++ 2 files changed, 156 insertions(+)
-> > 
-> > diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-> > index 67ee6623f9b2..d546f7baa0d4 100644
-> > --- a/drivers/iommu/iommu.c
-> > +++ b/drivers/iommu/iommu.c
-> > @@ -644,6 +644,13 @@ int iommu_group_add_device(struct iommu_group
-> > *group, struct device *dev) goto err_free_name;
-> >   	}
-> >   
-> > +	dev->iommu_param = kzalloc(sizeof(*dev->iommu_param),
-> > GFP_KERNEL);
-> > +	if (!dev->iommu_param) {
-> > +		ret = -ENOMEM;
-> > +		goto err_free_name;
-> > +	}
-> > +	mutex_init(&dev->iommu_param->lock);
-> > +  
-> 
-> Note that this gets a bit tricky when we come to move to move the 
-> fwspec/ops/etc. into iommu_param, since that data can have a longer 
-> lifespan than the group association. I'd suggest moving this
-> management out to the iommu_{probe,release}_device() level from the
-> start, but maybe we're happy to come back and change things later as
-> necessary.
-> 
-Agreed, I can't think of any downside of moving it earlier.
-> Robin.
-> 
->  [...]  
-> _______________________________________________
-> iommu mailing list
-> iommu@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
+We have been thinking this since we were asked if SMC can be transport.
+Generally out of 16 SGIs, 8 are reserved for secure side and non-secure
+has 8. Of these 8, IIUC 7 is already being used by kernel. So unless we
+manage to get the last one reserved exclusive to SCMI, it makes it
+difficult to add SGI support in SCMI.
 
-[Jacob Pan]
+We have been telling partners/vendors about this limitation if they
+use SMC as transport and need to have dedicated h/w interrupt for the
+notifications.
+
+Another issue could be with virtualisation(using HVC) and EL handling
+so called SCMI SGI. We need to think about those too. I will try to get
+more info on this and come back on this.
+
+--
+Regards,
+Sudeep
