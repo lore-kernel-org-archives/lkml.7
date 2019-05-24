@@ -2,129 +2,95 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09248C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B93C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7F772184B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10ACF217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:42:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558683757;
+	bh=W3xRpy3DBCHBRWi5JRR2yOwXam58kwiXx6SKvIkiyE4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=D4pkPUPHk6g3W1Ok2hWUyCahJ7jvqLU2m+2SZW+gfzew0VeqAggQ8z8GTfKtL5aSP
+	 ud4sFEuupUIc9+bNfGGTmXMo+qFvmHSL64QCFAwquvGW5dJ3ICAaRvzeSohJGMkahR
+	 THoaKkil04NJTK6B6mAw9GP819pIktV+ecuYQMeg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389119AbfEXHlL (ORCPT
+        id S2389143AbfEXHmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 03:41:11 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:40121 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388960AbfEXHlK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 03:41:10 -0400
-Received: by mail-qk1-f193.google.com with SMTP id q197so6033838qke.7
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 00:41:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FRYxcsA8gB9FibohJrWOdhqpBp517njxkreby+OWZAA=;
-        b=a5i0hc5HW8w1Q7zIUP9Y7DPRDw4v8USDI6kD/nh9++tvffpz1+pgiRf+aAWJCuQAvc
-         OIBY6KFziDqoUfqsDk4O8SSfsHBCc31jzc/FwSqDjEjnEaV6VHe3X5K5lB/RstOu6hL9
-         6CBlzXrLrpyAJoqlrkVjZ+tF9DJfKL63h6Lo156jmtIPoH1W+ZAGO0a2+cW4cXIytmOc
-         h5wPK2oeuI+jYnGTp4IRuEob+oJ8PTmig6ExqmPWRNIwhP43sScFJPdsstJuTgX3J/Ts
-         MWPDI6l//x6qkrE65S1luOK+DeMthJi+YNLJML9Es5IOQ8yzvWdi+9LneyLUVHQP9RJe
-         kndg==
-X-Gm-Message-State: APjAAAW72Ci0vCiVaABYqUXR6hnFXMLStBV1GipmXcGSA1nvfm5IQhKT
-        koA87j/MdXUDHVrfdJe81IhW9nhznkluqXATU5E=
-X-Google-Smtp-Source: APXvYqwKjoorl+i2iSi0wJjXdbgxY2NnU3CoD/Rr8CXva8Z9KCBM7/GgIHAXtDLbf7tJIkQBQvIgx6lRi0X7Yz2ZISg=
-X-Received: by 2002:a37:3ce:: with SMTP id 197mr78391397qkd.14.1558683664367;
- Fri, 24 May 2019 00:41:04 -0700 (PDT)
+        Fri, 24 May 2019 03:42:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34594 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388960AbfEXHmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 03:42:36 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DD20217F9;
+        Fri, 24 May 2019 07:42:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558683754;
+        bh=W3xRpy3DBCHBRWi5JRR2yOwXam58kwiXx6SKvIkiyE4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jQezOaYqzv0VthgRDI02GtbedXKYChnnDmOd9CQAkqLJCcKW4pjcrABFzLyHDDldC
+         x1DE4DeSmeobuChKHVudpRHr4Dhm3VXPINYQYi1qdOjIkoTf1ZXbOCgWT6fDuBub9z
+         0DBSQ5sE98ti/VxhSeHI385KzJjDDxb4o8gI39Hk=
+Date:   Fri, 24 May 2019 09:42:32 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Nishka Dasgupta <nishkadg.linux@gmail.com>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: ks7010: Remove initialisation
+Message-ID: <20190524074231.GA29172@kroah.com>
+References: <20190524055602.3694-1-nishkadg.linux@gmail.com>
+ <20190524065238.GA3600@kroah.com>
+ <aae76db5-8768-d277-e527-9e166a02f46e@gmail.com>
 MIME-Version: 1.0
-References: <CAAzmS69VFrTPzZ8DY_NPPTZYtBssocRnQOFAyo3VbSTO4CesbA@mail.gmail.com>
- <20190523161532.122421-1-natechancellor@gmail.com> <CAKwvOdmjQvCh__ZH+gLLgcKy4u1n5cgJQPU1WRuitEp+UZra5w@mail.gmail.com>
-In-Reply-To: <CAKwvOdmjQvCh__ZH+gLLgcKy4u1n5cgJQPU1WRuitEp+UZra5w@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 24 May 2019 09:40:47 +0200
-Message-ID: <CAK8P3a3RE3Jwft6WTNavV7St3P+mVFwRyCQFVaO3==LB7j29rw@mail.gmail.com>
-Subject: Re: [PATCH] misc: sgi-xp: Properly initialize buf in xpc_get_rsvd_page_pa
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Cliff Whickman <cpw@sgi.com>,
-        Robin Holt <robinmholt@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Stephen Hines <srhines@google.com>,
-        Tony Luck <tony.luck@intel.com>, rja@sgi.com,
-        Fenghua Yu <fenghua.yu@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aae76db5-8768-d277-e527-9e166a02f46e@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 8:05 PM 'Nick Desaulniers' via Clang Built
-Linux <clang-built-linux@googlegroups.com> wrote:
->
-> On Thu, May 23, 2019 at 9:20 AM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> >
-> > Clang warns:
-> >
-> > drivers/misc/sgi-xp/xpc_partition.c:73:14: warning: variable 'buf' is
-> > uninitialized when used within its own initialization [-Wuninitialized]
-> >         void *buf = buf;
-> >               ~~~   ^~~
-> > 1 warning generated.
-> >
-> > Initialize it to NULL, which is more deterministic.
-> >
-> > Fixes: 279290294662 ("[IA64-SGI] cleanup the way XPC locates the reserved page")
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/466
-> > Suggested-by: Stephen Hines <srhines@google.com>
-> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
->
-> From https://github.com/ClangBuiltLinux/linux/issues/466#issuecomment-488781917
-> I tried to follow the rabbit hole, but eventually these void* get
-> converted to u64's and passed along to function that I have no idea
-> whether they handle the value `(u64)(void*)0` or not.  Either way,
-> they definitely don't handle uninitialized values/UB.
->
-> I was going to cc Robin who's already cc'ed, but looks like this code
-> was last touched 7-10 years ago. + Tony and Fenghua for ia64 since
-> sn_partition_reserved_page_pa is defined in
-> arch/ia64/include/asm/sn/sn_sal.h.
->
-> In absence of consensus, I'll prefer NULL to uninitialized.
-> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-> Thanks Nathan for following up on this.
+On Fri, May 24, 2019 at 12:31:19PM +0530, Nishka Dasgupta wrote:
+> On 24/05/19 12:22 PM, Greg KH wrote:
+> > On Fri, May 24, 2019 at 11:26:02AM +0530, Nishka Dasgupta wrote:
+> > > As the initial value of the return variable result is never used, it can
+> > > be removed.
+> > > Issue found with Coccinelle.
+> > > 
+> > > Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+> > > ---
+> > >   drivers/staging/ks7010/ks7010_sdio.c | 2 +-
+> > >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > Didn't you already send this?
+> 
+> I sent two patches about removing initialisation in ks7010 today, but I
+> couldn't make it a patch series because the different files had different
+> maintainers. I don't think I've sent this patch before, but it's possible I
+> made a mistake because my local tree has not been the best organised lately.
+> I apologise for the confusion.
+> 
 
-I also had to take a look, and I think I understand what's going on,
-and interestingly, the code is correct, both before and after your patch.
-It's described in this comment:
+I saw two patches with the same subject line, if I messed up, please
+resend.
 
-/*
- * Returns the physical address of the partition's reserved page through
- * an iterative number of calls.
- *
- * On first call, 'cookie' and 'len' should be set to 0, and 'addr'
- * set to the nasid of the partition whose reserved page's address is
- * being sought.
- * On subsequent calls, pass the values, that were passed back on the
- * previous call.
- *
- * While the return status equals SALRET_MORE_PASSES, keep calling
- * this function after first copying 'len' bytes starting at 'addr'
- * into 'buf'. Once the return status equals SALRET_OK, 'addr' will
- * be the physical address of the partition's reserved page. If the
- * return status equals neither of these, an error as occurred.
- */
-static inline s64
-sn_partition_reserved_page_pa(u64 buf, u64 *cookie, u64 *addr, u64 *len)
+> > And please run a spell-checker on your subject line when you resend
+> > this :)
+> 
+> Is this about "initialise" (and now also "organised", "apologise", etc)? As
+> far as I'm aware whether the word ends in "-ise"/"-ize" depends on local
+> varieties of English, so I went with the variety I'm more used to. Should I
+> stick with American/Canadian spelling variants (including "-or" over "-our"
+> etc) from now on?
 
-so *len is set to zero on the first call and tells the bios how many bytes
-are accessible at 'buf', and it does get updated by the BIOS to tell
-us how many bytes it needs, and then we allocate that and try again.
+Ah, didn't realize that was a valid spelling, sorry.
 
-With that explanation added,
-
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+greg k-h
