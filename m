@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B191BC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B318C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:35:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 770B421848
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:35:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 152702184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:35:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YQ7y26+f"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yWSgtcfv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404093AbfEXRff (ORCPT
+        id S2404128AbfEXRfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 13:35:35 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:39930 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404038AbfEXRfc (ORCPT
+        Fri, 24 May 2019 13:35:47 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37177 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403898AbfEXRf2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 13:35:32 -0400
-Received: by mail-pl1-f195.google.com with SMTP id g9so4428466plm.6
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 10:35:32 -0700 (PDT)
+        Fri, 24 May 2019 13:35:28 -0400
+Received: by mail-pg1-f194.google.com with SMTP id n27so5419709pgm.4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 10:35:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=kCvwFMGwRnGuZeRHJ6YgvFt4aJih6OXfy9LKk/iBWu0=;
-        b=YQ7y26+fKhvVQjSu+oATI8VWV5sKICSnn1gYagomwkRM5EM0xTvt8dx8FFsnXt6Cx2
-         vH8qWqmfDGIoJyZGTapGgbLNAqw1RfOQjPKsNiKLjMG73JIX+nXuiZvZ7vOQbyQHrRrl
-         Yhw82DHWeUyC76mE51BiQZQIbs0q0UMapGnOz26tR07jh/cXlOqbXwblPRN4agvY/z06
-         Gwg18gWvOMVt8Zl5tcflXwtXYwgRBgWwsUJKFQXMkKc945syyTd9RY8eumUxwTRAYcUv
-         bD5aW0olejWezjqDFzxIxsDb9h4CPR/WVb9PpfWGRSGZHrBFkyNt8gV0iNSGQfP4S114
-         AWBg==
+        bh=sLeIs2ht3Bexy615KPYvuA1gjE4ZvABeyxgkVxsxj04=;
+        b=yWSgtcfvNEzSucZd2HObaLO8RWQcceH4AX+g6zfH930jotOnk6YMB5pQ/SLW4ipjhJ
+         jZ5iI7gJfpoSYQtQUcZ79lBPaNPG+hbO2hs4QYVeDM7GG+D8UhlGkg4IwoFS/GymgbHf
+         lm3l8Rz829dZxNiy3CRzcoX8x69OUkaFafZq681COCJ81z2pXxwUW2/iWULdJsICdI5n
+         6AYDsGP+qVK/YeCmljvY0U3ZMXj4yA8XmpwqYCiu1NEMSNnk0ZobahU98vScCjkqCUf6
+         u3tZRBZnKTaTIrtQlGjp7AC2DoG2GAM3gFXJiKR5h511V0HeFOVIUvDbVKCJqIlmOLm2
+         gopw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=kCvwFMGwRnGuZeRHJ6YgvFt4aJih6OXfy9LKk/iBWu0=;
-        b=iW0CswO6gTy1Op8DvopKOq5uPGUzIKV9LGWpJW59PLjA1y9T4zFDNuFVPmQSEO5z7o
-         SGJ8gnTAcJKcLfvCQ+FlPVb2ahZL4UJ24R/rz8nGg1nkhMVaAgQ7dxITJ6hiYTSr/uvH
-         rjPPs4EUbH9ad17Lusua7ErZRsIjAMOLlmbnsC0XuHca+Rn+lehS/8ewUCs+Ydkr+D3y
-         nulUKddz+d7MsHz6j8lOzXIBLiL63ZzxooGA1XDkK/o2pN7QhM/IvUJgoYIl62Yv+q8X
-         3cTx3q+tq44SPljO0qf3WKd9UZ4OGWx7KCJmBFdHGdYY8bhCSdTPCkB1vqr4t0FGSnWA
-         CP9A==
-X-Gm-Message-State: APjAAAV+bb5Gy36ksZ29ZY8TMHEfEBkgK345Fr44YLAGff2Jflf5GTyX
-        AYUcvTdwgjYjntIS6/+jjdDKgg==
-X-Google-Smtp-Source: APXvYqyKPSUnuJg5c0insoJuvlBmJpdkLIKlpZQvESO04xz5Cp17cMymp0bMSMynDYh3YALA1WLQOg==
-X-Received: by 2002:a17:902:bf4a:: with SMTP id u10mr3881439pls.56.1558719331612;
-        Fri, 24 May 2019 10:35:31 -0700 (PDT)
+        bh=sLeIs2ht3Bexy615KPYvuA1gjE4ZvABeyxgkVxsxj04=;
+        b=feCacX2YeinEi1jOkcXr27InURrqIQ+Vgd6jDBQeah79s5A5yI61t3uVkQGKpYZP8Q
+         lLufzRtHo3AYqpcRXB4+dl4TeDhdvse1akYV/KNE/uOOZ6/pfI2oH5MDeH3+hPgx6ABT
+         VKm0Gsv75s0KMr9XR7Xz3XgeTlwCG5uJPfh3JNB4ja7RZP12YX5fDIOuOOeV4yzBUOO+
+         Wg3ns0TcWK2Mo2eOTAkwgid5xRM/fFsMAmqGWmto8HFXrYaEqetNj5qpXW5jZJ/0ota7
+         lYG3DkF12DyBzsFDCidYHqctXFSxftcJQRiiRq2EugRqoGqjiQBOTsIzOFfaz7zYBei+
+         q+kQ==
+X-Gm-Message-State: APjAAAXdEUpORYwYYCpbOux2bLzJgEX5mjrUUS4+kj4ywQZkfbkEMbRh
+        a1zc8Ns0fgmmpAlSvMb4bFAL8w==
+X-Google-Smtp-Source: APXvYqz6Z9QeG1cYwrhxHF6PF7OOomptz6Teuxu81LFJg0dPX+YqM5WwRF3ij2Zbc9TCmxntEiW4AQ==
+X-Received: by 2002:a63:2a06:: with SMTP id q6mr20337812pgq.290.1558719327903;
+        Fri, 24 May 2019 10:35:27 -0700 (PDT)
 Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id k13sm2809575pgr.90.2019.05.24.10.35.30
+        by smtp.gmail.com with ESMTPSA id k13sm2809575pgr.90.2019.05.24.10.35.26
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 10:35:31 -0700 (PDT)
+        Fri, 24 May 2019 10:35:27 -0700 (PDT)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     acme@kernel.org
 Cc:     peterz@infradead.org, mingo@redhat.com,
@@ -62,9 +62,9 @@ Cc:     peterz@infradead.org, mingo@redhat.com,
         namhyung@kernel.org, suzuki.poulose@arm.com, leo.yan@linaro.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         coresight@lists.linaro.org
-Subject: [PATCH v2 17/17] perf tools: Add support for CPU-wide trace scenarios
-Date:   Fri, 24 May 2019 11:35:08 -0600
-Message-Id: <20190524173508.29044-18-mathieu.poirier@linaro.org>
+Subject: [PATCH v2 14/17] perf tools: Add support for multiple traceID queues
+Date:   Fri, 24 May 2019 11:35:05 -0600
+Message-Id: <20190524173508.29044-15-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190524173508.29044-1-mathieu.poirier@linaro.org>
 References: <20190524173508.29044-1-mathieu.poirier@linaro.org>
@@ -73,362 +73,258 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for CPU-wide trace scenarios by correlating range packets
-with timestamp packets.  That way range packets received on different
-ETMQ/traceID channels can be processed and synthesized in chronological
-order.
+When operating in CPU-wide trace mode with a source/sink topology of N:1
+packets with multiple traceID will end up in the same cs_etm_queue.  In
+order to properly decode packets they need to be split in different
+queues, i.e one queue per traceID.
+
+As such add support for multiple traceID per cs_etm_queue by adding
+a new cs_etm_traceid_queue every time a new traceID is discovered
+in the trace stream.
 
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- tools/perf/util/cs-etm.c | 254 +++++++++++++++++++++++++++++++++++++--
- 1 file changed, 246 insertions(+), 8 deletions(-)
+ tools/perf/Makefile.config |   3 +
+ tools/perf/util/cs-etm.c   | 131 ++++++++++++++++++++++++++++++-------
+ 2 files changed, 110 insertions(+), 24 deletions(-)
 
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index e1bb5288ab1f..feb2d1b85087 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -412,6 +412,9 @@ ifdef CORESIGHT
+   $(call feature_check,libopencsd)
+   ifeq ($(feature-libopencsd), 1)
+     CFLAGS += -DHAVE_CSTRACE_SUPPORT $(LIBOPENCSD_CFLAGS)
++    ifeq ($(feature-reallocarray), 0)
++      CFLAGS += -DCOMPAT_NEED_REALLOCARRAY
++    endif
+     LDFLAGS += $(LIBOPENCSD_LDFLAGS)
+     EXTLIBS += $(OPENCSDLIBS)
+     $(call detected,CONFIG_LIBOPENCSD)
 diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 91496a3a2209..0c7776b51045 100644
+index 2483293266d8..afc2491f9f2a 100644
 --- a/tools/perf/util/cs-etm.c
 +++ b/tools/perf/util/cs-etm.c
-@@ -90,12 +90,26 @@ struct cs_etm_queue {
+@@ -29,6 +29,7 @@
+ #include "thread.h"
+ #include "thread_map.h"
+ #include "thread-stack.h"
++#include <tools/libc_compat.h>
+ #include "util.h"
+ 
+ #define MAX_TIMESTAMP (~0ULL)
+@@ -82,7 +83,9 @@ struct cs_etm_queue {
+ 	u64 offset;
+ 	const unsigned char *buf;
+ 	size_t buf_len, buf_used;
+-	struct cs_etm_traceid_queue *traceid_queues;
++	/* Conversion between traceID and index in traceid_queues array */
++	struct intlist *traceid_queues_list;
++	struct cs_etm_traceid_queue **traceid_queues;
  };
  
  static int cs_etm__update_queues(struct cs_etm_auxtrace *etm);
-+static int cs_etm__process_queues(struct cs_etm_auxtrace *etm);
- static int cs_etm__process_timeless_queues(struct cs_etm_auxtrace *etm,
- 					   pid_t tid);
-+static int cs_etm__get_data_block(struct cs_etm_queue *etmq);
-+static int cs_etm__decode_data_block(struct cs_etm_queue *etmq);
- 
- /* PTMs ETMIDR [11:8] set to b0011 */
- #define ETMIDR_PTM_VERSION 0x00000300
- 
-+/*
-+ * A struct auxtrace_heap_item only has a queue_nr and a timestamp to
-+ * work with.  One option is to modify to auxtrace_heap_XYZ() API or simply
-+ * encode the etm queue number as the upper 16 bit and the channel as
-+ * the lower 16 bit.
-+ */
-+#define TO_CS_QUEUE_NR(queue_nr, trace_id_chan)	\
-+		      (queue_nr << 16 | trace_chan_id)
-+#define TO_QUEUE_NR(cs_queue_nr) (cs_queue_nr >> 16)
-+#define TO_TRACE_CHAN_ID(cs_queue_nr) (cs_queue_nr & 0x0000ffff)
-+
- static u32 cs_etm__get_v7_protocol_version(u32 etmidr)
+@@ -208,31 +211,71 @@ static int cs_etm__init_traceid_queue(struct cs_etm_queue *etmq,
+ static struct cs_etm_traceid_queue
+ *cs_etm__etmq_get_traceid_queue(struct cs_etm_queue *etmq, u8 trace_chan_id)
  {
- 	etmidr &= ETMIDR_PTM_VERSION;
-@@ -147,6 +161,29 @@ void cs_etm__etmq_set_traceid_queue_timestamp(struct cs_etm_queue *etmq,
- 	etmq->pending_timestamp = trace_chan_id;
- }
- 
-+static u64 cs_etm__etmq_get_timestamp(struct cs_etm_queue *etmq,
-+				      u8 *trace_chan_id)
-+{
-+	struct cs_etm_packet_queue *packet_queue;
-+
-+	if (!etmq->pending_timestamp)
-+		return 0;
-+
-+	if (trace_chan_id)
-+		*trace_chan_id = etmq->pending_timestamp;
-+
-+	packet_queue = cs_etm__etmq_get_packet_queue(etmq,
-+						     etmq->pending_timestamp);
-+	if (!packet_queue)
-+		return 0;
-+
-+	/* Acknowledge pending status */
-+	etmq->pending_timestamp = 0;
-+
-+	/* See function cs_etm_decoder__do_{hard|soft}_timestamp() */
-+	return packet_queue->timestamp;
-+}
-+
- static void cs_etm__clear_packet_queue(struct cs_etm_packet_queue *queue)
- {
- 	int i;
-@@ -171,6 +208,20 @@ static void cs_etm__clear_packet_queue(struct cs_etm_packet_queue *queue)
- 	}
- }
- 
-+static void cs_etm__clear_all_packet_queues(struct cs_etm_queue *etmq)
-+{
+-	struct cs_etm_traceid_queue *tidq;
 +	int idx;
 +	struct int_node *inode;
++	struct intlist *traceid_queues_list;
++	struct cs_etm_traceid_queue *tidq, **traceid_queues;
+ 	struct cs_etm_auxtrace *etm = etmq->etm;
+ 
+-	if (!etm->timeless_decoding)
+-		return NULL;
++	if (etm->timeless_decoding)
++		trace_chan_id = CS_ETM_PER_THREAD_TRACEID;
+ 
+-	tidq = etmq->traceid_queues;
++	traceid_queues_list = etmq->traceid_queues_list;
+ 
+-	if (tidq)
+-		return tidq;
++	/*
++	 * Check if the traceid_queue exist for this traceID by looking
++	 * in the queue list.
++	 */
++	inode = intlist__find(traceid_queues_list, trace_chan_id);
++	if (inode) {
++		idx = (int)(intptr_t)inode->priv;
++		return etmq->traceid_queues[idx];
++	}
+ 
++	/* We couldn't find a traceid_queue for this traceID, allocate one */
+ 	tidq = malloc(sizeof(*tidq));
+ 	if (!tidq)
+ 		return NULL;
+ 
+ 	memset(tidq, 0, sizeof(*tidq));
+ 
++	/* Get a valid index for the new traceid_queue */
++	idx = intlist__nr_entries(traceid_queues_list);
++	/* Memory for the inode is free'ed in cs_etm_free_traceid_queues () */
++	inode = intlist__findnew(traceid_queues_list, trace_chan_id);
++	if (!inode)
++		goto out_free;
++
++	/* Associate this traceID with this index */
++	inode->priv = (void *)(intptr_t)idx;
++
+ 	if (cs_etm__init_traceid_queue(etmq, tidq, trace_chan_id))
+ 		goto out_free;
+ 
+-	etmq->traceid_queues = tidq;
++	/* Grow the traceid_queues array by one unit */
++	traceid_queues = etmq->traceid_queues;
++	traceid_queues = reallocarray(traceid_queues,
++				      idx + 1,
++				      sizeof(*traceid_queues));
++
++	/*
++	 * On failure reallocarray() returns NULL and the original block of
++	 * memory is left untouched.
++	 */
++	if (!traceid_queues)
++		goto out_free;
++
++	traceid_queues[idx] = tidq;
++	etmq->traceid_queues = traceid_queues;
+ 
+-	return etmq->traceid_queues;
++	return etmq->traceid_queues[idx];
+ 
+ out_free:
++	/*
++	 * Function intlist__remove() removes the inode from the list
++	 * and delete the memory associated to it.
++	 */
++	intlist__remove(traceid_queues_list, inode);
+ 	free(tidq);
+ 
+ 	return NULL;
+@@ -412,6 +455,44 @@ static int cs_etm__flush_events(struct perf_session *session,
+ 	return cs_etm__process_timeless_queues(etm, -1);
+ }
+ 
++static void cs_etm__free_traceid_queues(struct cs_etm_queue *etmq)
++{
++	int idx;
++	uintptr_t priv;
++	struct int_node *inode, *tmp;
 +	struct cs_etm_traceid_queue *tidq;
 +	struct intlist *traceid_queues_list = etmq->traceid_queues_list;
 +
-+	intlist__for_each_entry(inode, traceid_queues_list) {
-+		idx = (int)(intptr_t)inode->priv;
++	intlist__for_each_entry_safe(inode, tmp, traceid_queues_list) {
++		priv = (uintptr_t)inode->priv;
++		idx = priv;
++
++		/* Free this traceid_queue from the array */
 +		tidq = etmq->traceid_queues[idx];
-+		cs_etm__clear_packet_queue(&tidq->packet_queue);
++		thread__zput(tidq->thread);
++		zfree(&tidq->event_buf);
++		zfree(&tidq->last_branch);
++		zfree(&tidq->last_branch_rb);
++		zfree(&tidq->prev_packet);
++		zfree(&tidq->packet);
++		zfree(&tidq);
++
++		/*
++		 * Function intlist__remove() removes the inode from the list
++		 * and delete the memory associated to it.
++		 */
++		intlist__remove(traceid_queues_list, inode);
 +	}
++
++	/* Then the RB tree itself */
++	intlist__delete(traceid_queues_list);
++	etmq->traceid_queues_list = NULL;
++
++	/* finally free the traceid_queues array */
++	free(etmq->traceid_queues);
++	etmq->traceid_queues = NULL;
 +}
 +
- static int cs_etm__init_traceid_queue(struct cs_etm_queue *etmq,
- 				      struct cs_etm_traceid_queue *tidq,
- 				      u8 trace_chan_id)
-@@ -458,15 +509,15 @@ static int cs_etm__flush_events(struct perf_session *session,
- 	if (!tool->ordered_events)
- 		return -EINVAL;
+ static void cs_etm__free_queue(void *priv)
+ {
+ 	struct cs_etm_queue *etmq = priv;
+@@ -419,14 +500,8 @@ static void cs_etm__free_queue(void *priv)
+ 	if (!etmq)
+ 		return;
  
--	if (!etm->timeless_decoding)
--		return -EINVAL;
+-	thread__zput(etmq->traceid_queues->thread);
+ 	cs_etm_decoder__free(etmq->decoder);
+-	zfree(&etmq->traceid_queues->event_buf);
+-	zfree(&etmq->traceid_queues->last_branch);
+-	zfree(&etmq->traceid_queues->last_branch_rb);
+-	zfree(&etmq->traceid_queues->prev_packet);
+-	zfree(&etmq->traceid_queues->packet);
+-	zfree(&etmq->traceid_queues);
++	cs_etm__free_traceid_queues(etmq);
+ 	free(etmq);
+ }
+ 
+@@ -497,19 +572,21 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
+ 	u8  cpumode;
+ 	u64 offset;
+ 	int len;
+-	struct	 thread *thread;
+-	struct	 machine *machine;
+-	struct	 addr_location al;
 -
- 	ret = cs_etm__update_queues(etm);
- 
- 	if (ret < 0)
- 		return ret;
- 
--	return cs_etm__process_timeless_queues(etm, -1);
-+	if (etm->timeless_decoding)
-+		return cs_etm__process_timeless_queues(etm, -1);
-+
-+	return cs_etm__process_queues(etm);
- }
- 
- static void cs_etm__free_traceid_queues(struct cs_etm_queue *etmq)
-@@ -685,6 +736,9 @@ static int cs_etm__setup_queue(struct cs_etm_auxtrace *etm,
- 			       unsigned int queue_nr)
- {
- 	int ret = 0;
-+	unsigned int cs_queue_nr;
-+	u8 trace_chan_id;
-+	u64 timestamp;
- 	struct cs_etm_queue *etmq = queue->priv;
- 
- 	if (list_empty(&queue->head) || etmq)
-@@ -702,6 +756,67 @@ static int cs_etm__setup_queue(struct cs_etm_auxtrace *etm,
- 	etmq->queue_nr = queue_nr;
- 	etmq->offset = 0;
- 
-+	if (etm->timeless_decoding)
-+		goto out;
-+
-+	/*
-+	 * We are under a CPU-wide trace scenario.  As such we need to know
-+	 * when the code that generated the traces started to execute so that
-+	 * it can be correlated with execution on other CPUs.  So we get a
-+	 * handle on the beginning of traces and decode until we find a
-+	 * timestamp.  The timestamp is then added to the auxtrace min heap
-+	 * in order to know what nibble (of all the etmqs) to decode first.
-+	 */
-+	while (1) {
-+		/*
-+		 * Fetch an aux_buffer from this etmq.  Bail if no more
-+		 * blocks or an error has been encountered.
-+		 */
-+		ret = cs_etm__get_data_block(etmq);
-+		if (ret <= 0)
-+			goto out;
-+
-+		/*
-+		 * Run decoder on the trace block.  The decoder will stop when
-+		 * encountering a timestamp, a full packet queue or the end of
-+		 * trace for that block.
-+		 */
-+		ret = cs_etm__decode_data_block(etmq);
-+		if (ret)
-+			goto out;
-+
-+		/*
-+		 * Function cs_etm_decoder__do_{hard|soft}_timestamp() does all
-+		 * the timestamp calculation for us.
-+		 */
-+		timestamp = cs_etm__etmq_get_timestamp(etmq, &trace_chan_id);
-+
-+		/* We found a timestamp, no need to continue. */
-+		if (timestamp)
-+			break;
-+
-+		/*
-+		 * We didn't find a timestamp so empty all the traceid packet
-+		 * queues before looking for another timestamp packet, either
-+		 * in the current data block or a new one.  Packets that were
-+		 * just decoded are useless since no timestamp has been
-+		 * associated with them.  As such simply discard them.
-+		 */
-+		cs_etm__clear_all_packet_queues(etmq);
-+	}
-+
-+	/*
-+	 * We have a timestamp.  Add it to the min heap to reflect when
-+	 * instructions conveyed by the range packets of this traceID queue
-+	 * started to execute.  Once the same has been done for all the traceID
-+	 * queues of each etmq, redenring and decoding can start in
-+	 * chronological order.
-+	 *
-+	 * Note that packets decoded above are still in the traceID's packet
-+	 * queue and will be processed in cs_etm__process_queues().
-+	 */
-+	cs_queue_nr = TO_CS_QUEUE_NR(queue_nr, trace_id_chan);
-+	ret = auxtrace_heap__add(&etm->heap, cs_queue_nr, timestamp);
- out:
- 	return ret;
- }
-@@ -1846,6 +1961,28 @@ static int cs_etm__process_traceid_queue(struct cs_etm_queue *etmq,
- 	return ret;
- }
- 
-+static void cs_etm__clear_all_traceid_queues(struct cs_etm_queue *etmq)
-+{
-+	int idx;
-+	struct int_node *inode;
+-	(void)trace_chan_id;
++	struct thread *thread;
++	struct machine *machine;
++	struct addr_location al;
 +	struct cs_etm_traceid_queue *tidq;
-+	struct intlist *traceid_queues_list = etmq->traceid_queues_list;
+ 
+ 	if (!etmq)
+ 		return 0;
+ 
+ 	machine = etmq->etm->machine;
+ 	cpumode = cs_etm__cpu_mode(etmq, address);
++	tidq = cs_etm__etmq_get_traceid_queue(etmq, trace_chan_id);
++	if (!tidq)
++		return 0;
+ 
+-	thread = etmq->traceid_queues->thread;
++	thread = tidq->thread;
+ 	if (!thread) {
+ 		if (cpumode != PERF_RECORD_MISC_KERNEL)
+ 			return 0;
+@@ -545,6 +622,10 @@ static struct cs_etm_queue *cs_etm__alloc_queue(struct cs_etm_auxtrace *etm)
+ 	if (!etmq)
+ 		return NULL;
+ 
++	etmq->traceid_queues_list = intlist__new(NULL);
++	if (!etmq->traceid_queues_list)
++		goto out_free;
 +
-+	intlist__for_each_entry(inode, traceid_queues_list) {
-+		idx = (int)(intptr_t)inode->priv;
-+		tidq = etmq->traceid_queues[idx];
-+
-+		/* Ignore return value */
-+		cs_etm__process_traceid_queue(etmq, tidq);
-+
-+		/*
-+		 * Generate an instruction sample with the remaining
-+		 * branchstack entries.
-+		 */
-+		cs_etm__flush(etmq, tidq);
-+	}
-+}
-+
- static int cs_etm__run_decoder(struct cs_etm_queue *etmq)
+ 	/* Use metadata to fill in trace parameters for trace decoder */
+ 	t_params = zalloc(sizeof(*t_params) * etm->num_cpu);
+ 
+@@ -579,6 +660,7 @@ static struct cs_etm_queue *cs_etm__alloc_queue(struct cs_etm_auxtrace *etm)
+ out_free_decoder:
+ 	cs_etm_decoder__free(etmq->decoder);
+ out_free:
++	intlist__delete(etmq->traceid_queues_list);
+ 	free(etmq);
+ 
+ 	return NULL;
+@@ -1280,8 +1362,9 @@ static bool cs_etm__is_svc_instr(struct cs_etm_queue *etmq, u8 trace_chan_id,
+ 				 struct cs_etm_packet *packet,
+ 				 u64 end_addr)
  {
- 	int err = 0;
-@@ -1913,6 +2050,105 @@ static int cs_etm__process_timeless_queues(struct cs_etm_auxtrace *etm,
- 	return 0;
- }
+-	u16 instr16;
+-	u32 instr32;
++	/* Initialise to keep compiler happy */
++	u16 instr16 = 0;
++	u32 instr32 = 0;
+ 	u64 addr;
  
-+static int cs_etm__process_queues(struct cs_etm_auxtrace *etm)
-+{
-+	int ret = 0;
-+	unsigned int cs_queue_nr, queue_nr;
-+	u8 trace_chan_id;
-+	u64 timestamp;
-+	struct auxtrace_queue *queue;
-+	struct cs_etm_queue *etmq;
-+	struct cs_etm_traceid_queue *tidq;
-+
-+	while (1) {
-+		if (!etm->heap.heap_cnt)
-+			goto out;
-+
-+		/* Take the entry at the top of the min heap */
-+		cs_queue_nr = etm->heap.heap_array[0].queue_nr;
-+		queue_nr = TO_QUEUE_NR(cs_queue_nr);
-+		trace_chan_id = TO_TRACE_CHAN_ID(cs_queue_nr);
-+		queue = &etm->queues.queue_array[queue_nr];
-+		etmq = queue->priv;
-+
-+		/*
-+		 * Remove the top entry from the heap since we are about
-+		 * to process it.
-+		 */
-+		auxtrace_heap__pop(&etm->heap);
-+
-+		tidq  = cs_etm__etmq_get_traceid_queue(etmq, trace_chan_id);
-+		if (!tidq) {
-+			/*
-+			 * No traceID queue has been allocated for this traceID,
-+			 * which means something somewhere went very wrong.  No
-+			 * other choice than simply exit.
-+			 */
-+			ret = -EINVAL;
-+			goto out;
-+		}
-+
-+		/*
-+		 * Packets associated with this timestamp are already in
-+		 * the etmq's traceID queue, so process them.
-+		 */
-+		ret = cs_etm__process_traceid_queue(etmq, tidq);
-+		if (ret < 0)
-+			goto out;
-+
-+		/*
-+		 * Packets for this timestamp have been processed, time to
-+		 * move on to the next timestamp, fetching a new auxtrace_buffer
-+		 * if need be.
-+		 */
-+refetch:
-+		ret = cs_etm__get_data_block(etmq);
-+		if (ret < 0)
-+			goto out;
-+
-+		/*
-+		 * No more auxtrace_buffers to process in this etmq, simply
-+		 * move on to another entry in the auxtrace_heap.
-+		 */
-+		if (!ret)
-+			continue;
-+
-+		ret = cs_etm__decode_data_block(etmq);
-+		if (ret)
-+			goto out;
-+
-+		timestamp = cs_etm__etmq_get_timestamp(etmq, &trace_chan_id);
-+
-+		if (!timestamp) {
-+			/*
-+			 * Function cs_etm__decode_data_block() returns when
-+			 * there is no more traces to decode in the current
-+			 * auxtrace_buffer OR when a timestamp has been
-+			 * encountered on any of the traceID queues.  Since we
-+			 * did not get a timestamp, there is no more traces to
-+			 * process in this auxtrace_buffer.  As such empty and
-+			 * flush all traceID queues.
-+			 */
-+			cs_etm__clear_all_traceid_queues(etmq);
-+
-+			/* Fetch another auxtrace_buffer for this etmq */
-+			goto refetch;
-+		}
-+
-+		/*
-+		 * Add to the min heap the timestamp for packets that have
-+		 * just been decoded.  They will be processed and synthesized
-+		 * during the next call to cs_etm__process_traceid_queue() for
-+		 * this queue/traceID.
-+		 */
-+		cs_queue_nr = TO_CS_QUEUE_NR(queue_nr, trace_chan_id);
-+		ret = auxtrace_heap__add(&etm->heap, cs_queue_nr, timestamp);
-+	}
-+
-+out:
-+	return ret;
-+}
-+
- static int cs_etm__process_itrace_start(struct cs_etm_auxtrace *etm,
- 					union perf_event *event)
- {
-@@ -1991,9 +2227,6 @@ static int cs_etm__process_event(struct perf_session *session,
- 		return -EINVAL;
- 	}
- 
--	if (!etm->timeless_decoding)
--		return -EINVAL;
--
- 	if (sample->time && (sample->time != (u64) -1))
- 		timestamp = sample->time;
- 	else
-@@ -2005,7 +2238,8 @@ static int cs_etm__process_event(struct perf_session *session,
- 			return err;
- 	}
- 
--	if (event->header.type == PERF_RECORD_EXIT)
-+	if (etm->timeless_decoding &&
-+	    event->header.type == PERF_RECORD_EXIT)
- 		return cs_etm__process_timeless_queues(etm,
- 						       event->fork.tid);
- 
-@@ -2014,6 +2248,10 @@ static int cs_etm__process_event(struct perf_session *session,
- 	else if (event->header.type == PERF_RECORD_SWITCH_CPU_WIDE)
- 		return cs_etm__process_switch_cpu_wide(etm, event);
- 
-+	if (!etm->timeless_decoding &&
-+	    event->header.type == PERF_RECORD_AUX)
-+		return cs_etm__process_queues(etm);
-+
- 	return 0;
- }
- 
+ 	switch (packet->isa) {
 -- 
 2.17.1
 
