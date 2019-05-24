@@ -2,165 +2,191 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AAA3C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B06AC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34B092075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:19:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="umKy+t+d"
+	by mail.kernel.org (Postfix) with ESMTP id 1864720851
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:22:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391636AbfEXNT5 (ORCPT
+        id S2391616AbfEXNWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 09:19:57 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:47009 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391124AbfEXNT5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 09:19:57 -0400
-Received: by mail-qk1-f196.google.com with SMTP id a132so7443999qkb.13
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 06:19:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9XdN+SJO4nNfooj9kJ5ndy5j9Cl/+8FH0MeIweuOGzA=;
-        b=umKy+t+dNFNuRN3//yw8fJR6BmKynML3xuh30YRuWun2gOZ+W2hNgIWycKEjShbKbd
-         +FaBLWWcJmgMHcMDZbJpme0B+zf+ew2DoIP3CGphOfrE7Uuv9JuH+Azx0JvVqPoUY69M
-         8HdcUI0H3BJrfLosqseHHAHfiHj4KGX/ihlnRjVwBaCFLFsBmnSouSuJszVLhKJrYcwx
-         8tQyWrNqwS2t+IfxysJ8FFxfS+5AG4ufj3xnhx+Gy9VtowqTETLuytKmYD3+BKSs5gml
-         DcHLVCrIjW6guYl6IsMmAwxSbCC6nvhrn/xRdCsvVhDlb5k3q26iQg7IVg4+fGtcbDKS
-         r1eA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9XdN+SJO4nNfooj9kJ5ndy5j9Cl/+8FH0MeIweuOGzA=;
-        b=cU23KoQ7t5S5u5mN/+X7GPqT4gZ9Ta9iH6vvExapZwtsX3OeLwPuMdlWy31DX1ncer
-         QQC7gNUgM03hukaeI3hE7rezsbnuCSRDHraq5SZMCH7OuYgOX9FweHJpFdzmy5ToLzKy
-         XoTH1Cheo/7vrxfo0IqQwE8Rsw6U9yx9XbQlJC2eRYKQO+quc1R0C+BOUE7WwM5L3Psm
-         lBIadMT8ewZGCE2r5Dwo8aNP1kiPQ2AOJU96dKh/ZaVsqzvpYA4HTwM8KflxeZhudRVX
-         azxwB+YDFOzrxabuU9G/5NjrGrxuJXG7Nw6NZ+ESy0io5Ua7wuONQrHOZRS1us42RF/L
-         BsnQ==
-X-Gm-Message-State: APjAAAXWoA92h0CxnAvubUNhe0D2qlMVOmD0eZUhOtKZleMYq5G2R20q
-        uDisdLQC0/KRTCMykggnl3anG2DuERDBdSWxAExmzg==
-X-Google-Smtp-Source: APXvYqx9KM7Yc5ojQbqNvCzGfvIIOam7qCdkDSAjgKM3Z0ld27IhHfeKfkMag3SA4N0Hdi+ZJCJ+jc69aHauc+MA8mw=
-X-Received: by 2002:a0c:8b54:: with SMTP id d20mr28830004qvc.1.1558703996214;
- Fri, 24 May 2019 06:19:56 -0700 (PDT)
+        Fri, 24 May 2019 09:22:02 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51590 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391124AbfEXNWC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 09:22:02 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 45FD338ABF;
+        Fri, 24 May 2019 13:21:56 +0000 (UTC)
+Received: from krava (unknown [10.40.205.226])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 44A117D57C;
+        Fri, 24 May 2019 13:21:53 +0000 (UTC)
+Date:   Fri, 24 May 2019 15:21:52 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH] perf/x86/intel: Use is_visible callback for default group
+Message-ID: <20190524132152.GB26617@krava>
+References: <20190512155518.21468-1-jolsa@kernel.org>
+ <20190512155518.21468-10-jolsa@kernel.org>
+ <20190513093545.GM2623@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <1558521304-27469-1-git-send-email-suzuki.poulose@arm.com>
- <20190523143227.GC31751@leoy-ThinkPad-X240s> <23a50436-4bcf-3439-c189-093e1a58438d@arm.com>
-In-Reply-To: <23a50436-4bcf-3439-c189-093e1a58438d@arm.com>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Fri, 24 May 2019 14:19:43 +0100
-Message-ID: <CAJ9a7Vjh_RDgp6nKrgrmuKcAhs77iU_oKTuBhSBdkUUwiwZbSg@mail.gmail.com>
-Subject: Re: [PATCH v4 00/30] coresight: Support for ACPI bindings
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     Leo Yan <leo.yan@linaro.org>, coresight@lists.linaro.org,
-        linux-kernel@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190513093545.GM2623@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 24 May 2019 13:22:01 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suzuki, Leo
+On Mon, May 13, 2019 at 11:35:45AM +0200, Peter Zijlstra wrote:
+> On Sun, May 12, 2019 at 05:55:18PM +0200, Jiri Olsa wrote:
+> > Using the new pmu::update_attrs attribute group for default
+> > attributes - freeze_on_smi, allow_tsx_force_abort.
+> > 
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> 
+> > diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> > index 7db858c3bbec..e721be25abfb 100644
+> > --- a/arch/x86/events/intel/core.c
+> > +++ b/arch/x86/events/intel/core.c
+> > @@ -3888,8 +3888,6 @@ static __initconst const struct x86_pmu core_pmu = {
+> >  	.check_period		= intel_pmu_check_period,
+> >  };
+> >  
+> > -static struct attribute *intel_pmu_attrs[];
+> > -
+> >  static __initconst const struct x86_pmu intel_pmu = {
+> >  	.name			= "Intel",
+> >  	.handle_irq		= intel_pmu_handle_irq,
+> > @@ -3921,8 +3919,6 @@ static __initconst const struct x86_pmu intel_pmu = {
+> >  	.format_attrs		= intel_arch3_formats_attr,
+> >  	.events_sysfs_show	= intel_event_sysfs_show,
+> >  
+> > -	.attrs			= intel_pmu_attrs,
+> > -
+> >  	.cpu_prepare		= intel_pmu_cpu_prepare,
+> >  	.cpu_starting		= intel_pmu_cpu_starting,
+> >  	.cpu_dying		= intel_pmu_cpu_dying,
+> > @@ -4449,6 +4445,10 @@ static struct attribute_group group_format_extra_skl = {
+> >  	.is_visible = exra_is_visible,
+> >  };
+> >  
+> > +static struct attribute_group group_default = {
+> > +	.attrs = intel_pmu_attrs,
+> > +};
+> > +
+> >  static const struct attribute_group *attr_update[] = {
+> >  	&group_events_td,
+> >  	&group_events_mem,
+> > @@ -4457,6 +4457,7 @@ static const struct attribute_group *attr_update[] = {
+> >  	&group_caps_lbr,
+> >  	&group_format_extra,
+> >  	&group_format_extra_skl,
+> > +	&group_default,
+> >  	NULL,
+> >  };
+> 
+> 
+> Ah, I would have expected to see this somewhat dodgy hack go away too:
+> 
+> 	static struct attribute *intel_pmu_attrs[] = {
+> 		&dev_attr_freeze_on_smi.attr,
+> 		NULL, /* &dev_attr_allow_tsx_force_abort.attr.attr */
+> 		NULL,
+> 	};
+> 
+> 	intel_pmu_attrs[1] = &dev_attr_allow_tsx_force_abort.attr;
+> 
+> 
+> That just begs for a .visislbe too, right?
 
-On Thu, 23 May 2019 at 16:32, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
->
-> Hi Leo,
->
-> On 23/05/2019 15:32, Leo Yan wrote:
-> > Hi Suzuki,
-> >
-> > On Wed, May 22, 2019 at 11:34:33AM +0100, Suzuki K Poulose wrote:
-> >
-> > [...]
-> >
-> >> Changes since v2:
-> >>   - Drop the patches exposing device links via sysfs, to be posted as separate
-> >>     series.
-> >
-> > Thanks for sharing the git tree linkage in another email.  Just want
-> > to confirm, since patch set v3 you have dropped the patch "coresight:
-> > Expose device connections via sysfs" [1], will you send out this patch
-> > after ACPI binding support patches has been merged?
->
-> We are awaiting Mike's comment on the approach, as his CTI support also
-> needs something similar.
->
+hi,
+I added the is_visible callback (below), but I dont have
+the skylake to test this, so I only verified this wouldn't
+break freeze_on_smi on my server..
 
-I fully agree that there is requirement to expose device connections
-as Suzuki's patches provided. As commented in the original patch, it
-removes the need for users to have knowledge of hardware specifics or
-access to device tree source.
+any chance you could test this?
 
-For the trace datapath a simple link is sufficient to express this
-information. The nature of the data and connection is known - it is
-the trace data running from source to sink. The linked components are
-guaranteed to be registered coresight devices
-
-However, the requirement for the CTI is different.
-
-CTI is not limited to connecting to other coresight devices. Any
-device can be wired into a CTI trigger signal. These devices may or
-may not have drivers  / entries in the device tree.
-For each connection a client needs to know the signals connected to
-the cti, the signal directions, the signal prupose if possible, and
-the device connected.
-For this reason we dynamically fill out a connections infomation
-sub-dir in sysfs containing _name, _trigin_sig, _trigout_sig,
-_trigin_type, _trigout_type - described in the patch [1].
-
-This information is sufficient and necessary to enable a user to
-program a CTI in most cases.
-
-As an example look at the Juno dtsi in [2].
-CTI 0 is connected to ETR, ETF, STM and TPIU - all coresight devices.
-CTI 1 is connected to REF_CLK, system profiler and watchdog - no
-coresight devices at all.
-CTI 2 is connected to ETF, and two ELA devices - so 1 coresight device
-and 2 not coresight devices.
-
-So my view is that for the case where CTI is connected to another
-CoreSight device the sysfs link could be used in addition to the
-information described above.
-
-Regards.
-
-Mike
-
-[1] https://lists.linaro.org/pipermail/coresight/2019-May/002587.html
-[2] https://lists.linaro.org/pipermail/coresight/2019-May/002589.html
-
-> >
-> > When you send out the new patch for exposing device connection, please
-> > loop me so that I can base on it for perf testing related works.
->
-> Sure, will do. As such, the perf testing should not be affected by that
-> series. It is just a helper to demonstrate the connections. But yes, it
-> will definitely help you to choose an ETF for a cluster, if you had multiple
-> ETFs on the system. Otherwise, you should be OK.
->
-> Please be aware that the power management support is missing on ACPI platform.
-> So you must make sure, by other means, that the debug domain is powered up.
->
->
-> Cheers
-> Suzuki
-> _______________________________________________
-> CoreSight mailing list
-> CoreSight@lists.linaro.org
-> https://lists.linaro.org/mailman/listinfo/coresight
+thanks,
+jirka
 
 
+---
+It's preffered to use group's is_visible callback, so
+we do not need to use condition attribute assignment.
 
---
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ arch/x86/events/intel/core.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 85afe7e98c7d..cfd61b71136d 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -4386,7 +4386,7 @@ static DEVICE_ATTR(allow_tsx_force_abort, 0644,
+ 
+ static struct attribute *intel_pmu_attrs[] = {
+ 	&dev_attr_freeze_on_smi.attr,
+-	NULL, /* &dev_attr_allow_tsx_force_abort.attr.attr */
++	&dev_attr_allow_tsx_force_abort.attr,
+ 	NULL,
+ };
+ 
+@@ -4414,6 +4414,15 @@ exra_is_visible(struct kobject *kobj, struct attribute *attr, int i)
+ 	return x86_pmu.version >= 2 ? attr->mode : 0;
+ }
+ 
++static umode_t
++default_is_visible(struct kobject *kobj, struct attribute *attr, int i)
++{
++	if (attr == &dev_attr_allow_tsx_force_abort.attr)
++		return x86_pmu.flags & PMU_FL_TFA ? attr->mode : 0;
++
++	return attr->mode;
++}
++
+ static struct attribute_group group_events_td  = {
+ 	.name = "events",
+ };
+@@ -4450,7 +4459,8 @@ static struct attribute_group group_format_extra_skl = {
+ };
+ 
+ static struct attribute_group group_default = {
+-	.attrs = intel_pmu_attrs,
++	.attrs      = intel_pmu_attrs,
++	.is_visible = default_is_visible,
+ };
+ 
+ static const struct attribute_group *attr_update[] = {
+@@ -4973,7 +4983,6 @@ __init int intel_pmu_init(void)
+ 			x86_pmu.get_event_constraints = tfa_get_event_constraints;
+ 			x86_pmu.enable_all = intel_tfa_pmu_enable_all;
+ 			x86_pmu.commit_scheduling = intel_tfa_commit_scheduling;
+-			intel_pmu_attrs[1] = &dev_attr_allow_tsx_force_abort.attr;
+ 		}
+ 
+ 		pr_cont("Skylake events, ");
+-- 
+2.20.1
+
