@@ -2,215 +2,103 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F25C282E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BEFBC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2C8D21851
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:01:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B45921850
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:02:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n+9qKeth"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="J6E7gPFq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391180AbfEXRBt (ORCPT
+        id S2391260AbfEXRCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 13:01:49 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:39808 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390532AbfEXRBs (ORCPT
+        Fri, 24 May 2019 13:02:17 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:33227 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390532AbfEXRCR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 13:01:48 -0400
-Received: by mail-io1-f68.google.com with SMTP id r185so3410116iod.6;
-        Fri, 24 May 2019 10:01:47 -0700 (PDT)
+        Fri, 24 May 2019 13:02:17 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 66so9352713otq.0
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 10:02:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=wi5iXQAuQRuJb87dDlNdyPBw5MwH0ZxO9RU+lAP+m88=;
-        b=n+9qKethpxgvbN01CCm/ntTwbzKvY57e+2N0itpKvqNUR0BkF8REmtX3MrkOwN1ZVg
-         N5AGM26ZiMuM8yq9VldaVCE0ESFpPQfAISsdaZTelCfIxn91pnTgKHDzvHnhMWfa02FW
-         NbL9J6VfYPLR/voilyW4uAF4/ocTAFKYaExFYsXTa2RP7nVRgRd8wHpqPRd7KQi+S2qe
-         PyJ5fwvGNrTUyInLe7LYQ0gUbw7R7evl3LONcks+3tOjzNPoZqQ+BEuxiLChW+A/nLyb
-         eaUfrBsO/uaswiZ8oZpjR7Ur9R6y1QIjYEjoyLbokCey+HCgD96FXob1NO4eFJsmvjgX
-         QFPA==
+        bh=uxIEMvL9NPIZt76HNNKGot2fHQFb8ScQQVFnfVEGVdE=;
+        b=J6E7gPFqhGjQkK6F3GbGp2bqy4JZqM2JGDp4Q4363sxZZKkY1eebXwTOzadjVyNxa/
+         AwEmFnD2OnTGLyCOsb4EVByimH7YKeH+ofbH0xOkO83ECfI0kA1wzco1g7dCyhxMmqn1
+         lAjQLIEU87kbYcXgUjMEft09EG/s78/uSMvtXR561r30xuSwzTQgeEs/f23iRNxDK0Oq
+         iv1DfXdnUJiXSNllUJOnrj1nEQzbEEh613meCgyIzDBkPavcXHBSW8mDbIRUarQv5EPB
+         dh51oEmUu1WNnPiJZf+vDq4g8Yp9QXZQJUaZzJ7lJ/aNehbHAk4st7jpd1AxQslcrFO3
+         kCKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=wi5iXQAuQRuJb87dDlNdyPBw5MwH0ZxO9RU+lAP+m88=;
-        b=dqxsy76Xxab/zo0qV8+ilOlXINuBrxZK06c4JS9VfOFttNC7Me7jiAoaPGGOK1roXo
-         jaN09WRWCRZ1oNvvrDAKuCrXmWTRUeVwVPM5wyhxt8OqBlzHcpVaWvSrEliNGYp0hig+
-         mXA4wOYnQVqF8UXA2hZNl8eO18IF4sZJgJwvLt3c9UDlIdNMBWMmuWavfJD4iw5Wdgho
-         UDRvR9+c7sno4lEd3T9BS67D4zH4r71q2GA08quR4COGyWf4JkD2LnAITefx/5/b3c8Y
-         bxbFJiqRSEzZvEuwpztt0cNmcHZ5JDmoHdY+Q8G8pG0ISxZ/C6nnF1bpeUaSTjjU40yI
-         PFqA==
-X-Gm-Message-State: APjAAAXGhdQZSDj2H4q9iHEi4acqU4QVqjbGyj61zKetfMhFfg3jK+Lt
-        DNOfh/D8KIofChEerz9iaqiWLfPXS9E/V7TM+q0=
-X-Google-Smtp-Source: APXvYqx1kYvKHTOKnp8yYdox48+3r2bIuMfvOK2BV3xJgnIWA+AVqzhi6xBBSa8FqgGcBWUg8NSomAy0gHvMDZrq5Es=
-X-Received: by 2002:a6b:c411:: with SMTP id y17mr3164801ioa.265.1558717307374;
- Fri, 24 May 2019 10:01:47 -0700 (PDT)
+        bh=uxIEMvL9NPIZt76HNNKGot2fHQFb8ScQQVFnfVEGVdE=;
+        b=VR3Xsk4Xe2nx1DSVe/7CoRxwi6PR+3fK6Zov7lBXNWfGt3OKsbwUwVLvk2O1hoj64E
+         Nap8+u5E09boEOdC56QJDFep2dv+JTNr7cST9o3Kuek3J7i7Qc8uSkF4qlP1zn7XSdlc
+         fkecWnVjsuP5HrxU9kxa5xybyXSWlngxOh82qnRXHfFstLvEdgRreane359WhSDtKHWa
+         YPu1fOXjhIGEu4ws3udB2QKhEEf5j/oL0gl04ATqKupCXAzDt7CxZbcNp1KuhSiq+ICK
+         Yj3HUnpUy/XPLktbx0ChysPI+BlLf697uE7pTZc7zF/Rj8ZtwPbOGVvr3CULUOdjmxkJ
+         jXqw==
+X-Gm-Message-State: APjAAAWu+Z+cck6ya/cGHgKt6TNa8Znld4R8J5dm6XRGd8k4zFnnf2e5
+        iOaNJdyM/89w5YzuREZnsgsOJsxjn/15krV6JfEHkQ==
+X-Google-Smtp-Source: APXvYqxVRQpBpCep9TCI1kPQh1cOH82JFn3Gk+gMokzzTN7nj9KB6DFm/LKWbO3WZKAfI141c5e4MkYQ3VfCFR+tiNo=
+X-Received: by 2002:a9d:2963:: with SMTP id d90mr14793834otb.126.1558717336323;
+ Fri, 24 May 2019 10:02:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190522161407.GB4915@redhat.com> <CABeXuvpjrW5Gt95JC-_rYkOA=6RCD5OtkEQdwZVVqGCE3GkQOQ@mail.gmail.com>
- <4f7b6dbeab1d424baaebd7a5df116349@AcuMS.aculab.com> <20190523145944.GB23070@redhat.com>
- <345cfba5edde470f9a68d913f44fa342@AcuMS.aculab.com> <20190523163604.GE23070@redhat.com>
- <f0eced5677c144debfc5a69d0d327bc1@AcuMS.aculab.com> <CABeXuvo-wey+NHWb4gi=FSRrjJOKkVcLPQ-J+dchJeHEbhGQ6g@mail.gmail.com>
- <20190524141054.GB2655@redhat.com> <CABeXuvqSzy+v=3Y5NnMmfob7bvuNkafmdDqoex8BVENN3atqZA@mail.gmail.com>
- <20190524163310.GG2655@redhat.com>
-In-Reply-To: <20190524163310.GG2655@redhat.com>
-From:   Deepa Dinamani <deepa.kernel@gmail.com>
-Date:   Fri, 24 May 2019 10:01:32 -0700
-Message-ID: <CABeXuvrUKZnECj+NgLdpe5uhKBEmSynrakD-3q9XHqk8Aef5UQ@mail.gmail.com>
-Subject: Re: [PATCH v2] signal: Adjust error codes according to restore_user_sigmask()
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     David Laight <David.Laight@aculab.com>,
+References: <1557417933-15701-1-git-send-email-larry.bassel@oracle.com>
+ <1557417933-15701-3-git-send-email-larry.bassel@oracle.com>
+ <20190514130147.2pk2xx32aiomm57b@box> <20190524160711.GF19025@ubuette>
+In-Reply-To: <20190524160711.GF19025@ubuette>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 24 May 2019 10:02:04 -0700
+Message-ID: <CAPcyv4hkocsPQLQ6sfF8SuwVoot_uXge_bTZtuM-6f4XxwFVhg@mail.gmail.com>
+Subject: Re: [PATCH, RFC 2/2] Implement sharing/unsharing of PMDs for FS/DAX
+To:     Larry Bassel <larry.bassel@oracle.com>
+Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Linux MM <linux-mm@kvack.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "dbueso@suse.de" <dbueso@suse.de>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        Davidlohr Bueso <dave@stgolabs.net>, Eric Wong <e@80x24.org>,
-        Jason Baron <jbaron@akamai.com>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        linux-aio <linux-aio@kvack.org>,
-        Omar Kilani <omar.kilani@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
+        linux-nvdimm <linux-nvdimm@lists.01.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 9:33 AM Oleg Nesterov <oleg@redhat.com> wrote:
->
-> On 05/24, Deepa Dinamani wrote:
-> >
-> > On Fri, May 24, 2019 at 7:11 AM Oleg Nesterov <oleg@redhat.com> wrote:
+On Fri, May 24, 2019 at 9:07 AM Larry Bassel <larry.bassel@oracle.com> wrote:
+> On 14 May 19 16:01, Kirill A. Shutemov wrote:
+> > On Thu, May 09, 2019 at 09:05:33AM -0700, Larry Bassel wrote:
+[..]
+> > > diff --git a/mm/memory.c b/mm/memory.c
+> > > index f7d962d..4c1814c 100644
+> > > --- a/mm/memory.c
+> > > +++ b/mm/memory.c
+> > > @@ -3845,6 +3845,109 @@ static vm_fault_t handle_pte_fault(struct vm_fault *vmf)
+> > >     return 0;
+> > >  }
 > > >
-> > > On 05/23, Deepa Dinamani wrote:
-> > > >
-> > > > Ok, since there has been quite a bit of argument here, I will
-> > > > backtrack a little bit and maybe it will help us understand what's
-> > > > happening here.
-> > > > There are many scenarios being discussed on this thread:
-> > > > a. State of code before 854a6ed56839a
-> > >
-> > > I think everything was correct,
+> > > +#ifdef CONFIG_MAY_SHARE_FSDAX_PMD
+> > > +static pmd_t *huge_pmd_offset(struct mm_struct *mm,
+> > > +                         unsigned long addr, unsigned long sz)
 > >
-> > There were 2 things that were wrong:
+> > Could you explain what this function suppose to do?
 > >
-> > 1. If an unblocked signal was received, after the ep_poll(), then the
-> > return status did not indicate that.
+> > As far as I can see vma_mmu_pagesize() is always PAGE_SIZE of DAX
+> > filesystem. So we have 'sz' == PAGE_SIZE here.
 >
-> Yes,
->
-> > This is expected behavior
-> > according to man page. If this is indeed what is expected then the man
-> > page should note that signal will be delivered in this case and return
-> > code will still be 0.
-> >
-> > "EINTR
-> > The call was interrupted by a signal handler before either any of the
-> > requested events occurred or the timeout expired; see signal(7)."
->
-> and what do you think the man page could say?
+> I thought so too, but in my testing I found that vma_mmu_pagesize() returns
+> 4KiB, which differs from the DAX filesystem's 2MiB pagesize.
 
-Maybe clarify that a signal handler can be invoked even if the syscall
-return indicates a success.
-
-Maybe a crude userspace application could do something like this:
-
-sig_handler()
-{
-  set global abort = 1
-}
-
-poll_the_fds()
-{
-           ret = epoll_pwait()
-           if (ret)
-              return ret
-          if (abort)              # but this abort should be ignored
-if ret was 0.
-            return try_again
-
-}
-
-> This is obviously possible for any syscall, and we can't avoid this. A signal
-> can come right after syscall insn completes. The signal handler will be called
-> but this won't change $rax, user-space can see return code == 0 or anything else.
->
-> And this doesn't differ from the case when the signal comes before syscall returns.
-
-But, these syscalls are depending on there signals. I would assume for
-the purpose of these syscalls that the execution is done when we
-updated the saved_sigmask. We can pick a different point per syscall
-like ep_poll() also, but then we need to probably make it clear for
-each such syscall.
-
-> > 2. The restoring of the sigmask is done right in the syscall part and
-> > not while exiting the syscall and if you get a blocked signal here,
-> > you will deliver this to userspace.
->
-> So I assume that this time you are talking about epoll_pwait() and not epoll_wait()...
-
-Yes.
-
-> And I simply can't understand you. But yes, if the original mask doesn't include
-> the pending signal it will be delivered while the syscall can return success/timout
-> or -EFAULT or anything.
->
-> This is correct, see above.
-
-Look at the code before 854a6ed56839a:
-
-  /*
-        * If we changed the signal mask, we need to restore the original one.
-        * In case we've got a signal while waiting, we do not restore the
-        * signal mask yet, and we allow do_signal() to deliver the signal on
-        * the way back to userspace, before the signal mask is restored.
-        */
-       if (sigmask) {
-              ####### This err has not been changed since ep_poll()
-              ####### So if there is a signal before this point, but
-err = 0, then we goto else.
-               if (err == -EINTR) {
-                       memcpy(&current->saved_sigmask, &sigsaved,
-                              sizeof(sigsaved));
-                       set_restore_sigmask();
-               } else
-                     ############ This is a problem if there is signal
-pending that is sigmask should block.
-                     ########### This is the whole reason we have
-current->saved_sigmask?
-                       set_current_blocked(&sigsaved);
-       }
-
-> > > > b. State after 854a6ed56839a
-> > >
-> > > obviously buggy,
-> >
-> > Ok, then can you point out what specifically was wrong with
-> > 854a6ed56839a?
->
-> Cough. If nothing else the lost -EINTR?
-
-This was my theory. My basis behind the theory was [1](the issue with
-return value not being updated) above. And, you are saying this is ok.
-
-854a6ed56839a also has timing differences compared to the original
-code. So unless we are sure what was uncovered because of
-854a6ed56839a, we might just be masking a pre-existing problem by
-reverting it. So I think we should code review 854a6ed56839a and
-figure out what is wrong programatically before just reverting it.
-
-> > And, not how it could be more simple?
-
-Oh, I was not asking here. I was saying let's please discuss what's
-wrong before simplifying the code.
-
--Deepa
+A given filesystem-dax vma is allowed to support both 4K and 2M
+mappings, so the vma_mmu_pagesize() is not granular enough to describe
+the capabilities of a filesystem-dax vma. In the device-dax case,
+where there are mapping guarantees, the implementation does arrange
+for vma_mmu_pagesize() to reflect the right page size.
