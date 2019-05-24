@@ -2,144 +2,103 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97495C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 19:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9EDC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 19:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76F7120673
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 19:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEA9220673
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 19:42:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kzEow1LS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732138AbfEXTme (ORCPT
+        id S2391736AbfEXTmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 15:42:34 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:27738 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732071AbfEXTme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 15:42:34 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7DFC0368E0;
-        Fri, 24 May 2019 19:42:33 +0000 (UTC)
-Received: from llong.com (dhcp-17-85.bos.redhat.com [10.18.17.85])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E923D5F7C5;
-        Fri, 24 May 2019 19:42:29 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>,
-        Waiman Long <longman@redhat.com>
-Subject: [PATCH v4] locking/lock_events: Use this_cpu_add() when necessary
-Date:   Fri, 24 May 2019 15:42:22 -0400
-Message-Id: <20190524194222.8398-1-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Fri, 24 May 2019 19:42:33 +0000 (UTC)
+        Fri, 24 May 2019 15:42:47 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:39207 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391698AbfEXTmq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 15:42:46 -0400
+Received: by mail-vs1-f67.google.com with SMTP id m1so6627647vsr.6
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 12:42:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vhfSnlcb3x0OEuOnYAwcBMXnyJQgUsGnRJ+13Y0a02s=;
+        b=kzEow1LScPr0enEDbSBaWZVHM+oGAipxBS3m7HV5oQz7OQNb3t2AmVYQZBUQYUhexI
+         TsS9HO6+u4FcWXx7elZE7xdqB6g40xn4EvHS6xv2hem9W0knfP5zMmNdYApaESDksFIC
+         d7rlSo+5FRrv6voyWPr8P32El2IIflL0sukfXL39lSFLXvoV1C4i9i3vQlY9h3apOE2x
+         dM2chmb/A9ysLdANeNazZhjzvq/2p0QOnYevhi4AqOvbVH7C4EubFmiLWP/mTjdcVaw5
+         699KF0NYSqKzCqGiVbt+l3Vu1dAfOY+pfVYGeDAKXuggBVAlqp2uhJwBuHVq9Z4O0lEI
+         7onw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vhfSnlcb3x0OEuOnYAwcBMXnyJQgUsGnRJ+13Y0a02s=;
+        b=pXP9V7skNCmf1RhqDf6xOa+I+Q6y3hJ4+U/IWz5L7J0YHbTt7T8Y56AUY7HgwHeRzA
+         Sh28tHlkAHSuyFPwmsKSFklK4VATC8tsW7kJwUsIDiIruM36cG6sIDx2CmiblIV6aH+n
+         esonNnwcM9vWnLZIAhTbxUNw18q+M0qRJVtwr3Rt+Y+71uIX5sXlsZYO0+Y4YsXiUIzW
+         nXhH1NdpAjMzk5i/MWCnx8+iyN9ltom0CfC+vLfu32AUou6e81bi0M2s6kYcCeugnD70
+         eIVlm85iBaI92nYS5tWI5hpeSTneOFtQ9/UxJGSCzBzsTeHCifFS860UFy5NknRu2a2h
+         PZnw==
+X-Gm-Message-State: APjAAAWfXyxZr0rKdthXQIW6A+UALi8zThZNf+x+bE9X9sCYBQPWBgAX
+        F4LcA8yKP6Ogw3WqAVhVfqzcxYX4SJ7vhkMZsbalG0iz
+X-Google-Smtp-Source: APXvYqydhFkJ5j/OYLRQSG1qS83AsM1W3XSP0BUpGur6e6gs1XAx8XpWdRBGVAmAC0ZEBLOdixV/zcoMo3xKq2J539Q=
+X-Received: by 2002:a67:b408:: with SMTP id x8mr17258650vsl.236.1558726965545;
+ Fri, 24 May 2019 12:42:45 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190524175324.GA3024@ogabbay-VM> <20190524180122.GA27745@kroah.com>
+In-Reply-To: <20190524180122.GA27745@kroah.com>
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+Date:   Fri, 24 May 2019 22:42:21 +0300
+Message-ID: <CAFCwf12CKwuD-ciA0N+uE+k2iPJPgnbcZ9LbHYiLeBM_oG4wUw@mail.gmail.com>
+Subject: Re: [git pull] habanalabs fixes for 5.2-rc2/3
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kernel test robot has reported that the use of __this_cpu_add()
-causes bug messages like:
+On Fri, May 24, 2019 at 9:01 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Fri, May 24, 2019 at 08:53:24PM +0300, Oded Gabbay wrote:
+> > Hi Greg,
+> >
+> > This is the pull request containing fixes for 5.2-rc2/3.
+> >
+> > It supersedes the pull request from 12/5, so you can discard that pull
+> > request, as I see you didn't merge it anyway.
+> >
+> > It contains 3 fixes and 1 change to a new IOCTL that was introduced to
+> > kernel 5.2 in the previous pull requests.
+> >
+> > See the tag comment for more details.
+> >
+> > Thanks,
+> > Oded
+> >
+> > The following changes since commit b0576f9ecb5c51e9932531d23c447b2739261841:
+> >
+> >   misc: sgi-xp: Properly initialize buf in xpc_get_rsvd_page_pa (2019-05-24 19:00:54 +0200)
+>
+> Wait, that is my char-misc-testing branch, which moves to char-misc-next, not char-misc-linus.
+>
+> Please rebase this series on char-misc-linus, as the patches in
+> char-misc-testing are NOT for 5.2-final.
+>
+> thanks,
+>
+> greg k-h
 
-  BUG: using __this_cpu_add() in preemptible [00000000] code: ...
+sure, np.
+I'll remember this from now on.
 
-Given the imprecise nature of the count and the possibility of resetting
-the count and doing the measurement again, this is not really a big
-problem to use the unprotected __this_cpu_*() functions.
-
-To make the preemption checking code happy, the this_cpu_*() functions
-will be used if CONFIG_DEBUG_PREEMPT is defined.
-
-The imprecise nature of the locking counts are also documented with
-the suggestion that we should run the measurement a few times with the
-counts reset in between to get a better picture of what is going on
-under the hood.
-
-Fixes: a8654596f0371 ("locking/rwsem: Enable lock event counting")
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- kernel/locking/lock_events.h | 42 ++++++++++++++++++++++++++++++++++--
- 1 file changed, 40 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/locking/lock_events.h b/kernel/locking/lock_events.h
-index feb1acc54611..46b71af8eef2 100644
---- a/kernel/locking/lock_events.h
-+++ b/kernel/locking/lock_events.h
-@@ -30,13 +30,51 @@ enum lock_events {
-  */
- DECLARE_PER_CPU(unsigned long, lockevents[lockevent_num]);
- 
-+/*
-+ * The purpose of the lock event counting subsystem is to provide a low
-+ * overhead way to record the number of specific locking events by using
-+ * percpu counters. It is the percpu sum that matters, not specifically
-+ * how many of them happens in each cpu.
-+ *
-+ * It is possible that the same percpu counter may be modified in both
-+ * the process and interrupt contexts. For architectures that perform
-+ * percpu operation with multiple instructions, it is possible to lose
-+ * count if a process context percpu update is interrupted in the middle
-+ * and the same counter is updated in the interrupt context. Therefore,
-+ * the generated percpu sum may not be precise. The error, if any, should
-+ * be small and insignificant.
-+ *
-+ * For those architectures that do multi-instruction percpu operation,
-+ * preemption in the middle and moving the task to another cpu may cause
-+ * a larger error in the count. Again, this will be few and far between.
-+ * Given the imprecise nature of the count and the possibility of resetting
-+ * the count and doing the measurement again, this is not really a big
-+ * problem.
-+ *
-+ * To get a better picture of what is happening under the hood, it is
-+ * suggested that a few measurements should be taken with the counts
-+ * reset in between to stamp out outliner because of these possible
-+ * error conditions.
-+ *
-+ * To minimize overhead, we use __this_cpu_*() in all cases except when
-+ * CONFIG_DEBUG_PREEMPT is defined. In this particular case, this_cpu_*()
-+ * will be used to avoid the appearance of unwanted BUG messages.
-+ */
-+#ifdef CONFIG_DEBUG_PREEMPT
-+#define lockevent_percpu_inc(x)		this_cpu_inc(x)
-+#define lockevent_percpu_add(x, v)	this_cpu_add(x, v)
-+#else
-+#define lockevent_percpu_inc(x)		__this_cpu_inc(x)
-+#define lockevent_percpu_add(x, v)	__this_cpu_add(x, v)
-+#endif
-+
- /*
-  * Increment the PV qspinlock statistical counters
-  */
- static inline void __lockevent_inc(enum lock_events event, bool cond)
- {
- 	if (cond)
--		__this_cpu_inc(lockevents[event]);
-+		lockevent_percpu_inc(lockevents[event]);
- }
- 
- #define lockevent_inc(ev)	  __lockevent_inc(LOCKEVENT_ ##ev, true)
-@@ -44,7 +82,7 @@ static inline void __lockevent_inc(enum lock_events event, bool cond)
- 
- static inline void __lockevent_add(enum lock_events event, int inc)
- {
--	__this_cpu_add(lockevents[event], inc);
-+	lockevent_percpu_add(lockevents[event], inc);
- }
- 
- #define lockevent_add(ev, c)	__lockevent_add(LOCKEVENT_ ##ev, c)
--- 
-2.18.1
-
+Oded
