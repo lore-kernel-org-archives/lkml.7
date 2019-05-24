@@ -3,217 +3,129 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 804ECC282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29163C282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4622721850
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:51:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YJg0ERBg"
+	by mail.kernel.org (Postfix) with ESMTP id E99EA217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:54:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558734851;
+	bh=8568j9U5dXFzD1kKJdpRtZ824hg6Kz1VWUSZLe7+WZk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vXQgg8Q2rj3rBrUleMmhMmXSkReFlj0+gw8CI1nSue96/TNObDYpPZ9+a+AM00nbV
+	 L8Ij+/TjnY6uG5zcobQJPXJUMefVGWN6cFNV3d1yx9tJilTZR+tUzv6BSbCnpF+sdS
+	 44j/UYZxzlB5qgABaR+Z5tpBwIgLFZMl56kZHiN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404427AbfEXVvw (ORCPT
+        id S2404430AbfEXVyK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 17:51:52 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:42658 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404176AbfEXVvw (ORCPT
+        Fri, 24 May 2019 17:54:10 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:41200 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404163AbfEXVyJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 17:51:52 -0400
-Received: by mail-oi1-f193.google.com with SMTP id w9so8088310oic.9
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 14:51:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/3kgNn6NL4JYVxHLJQOHqTYeAocP9fpuKYr/bgz9xX4=;
-        b=YJg0ERBgRmU8/PhbbxteKlV3jmW1XQ/qYJ+UMfFuYI07medwvIBJTkYAoT/cj0AqQc
-         rtCAp7LU6Op9rb/cgu58oSr7RO5Tw0/hEf5swzeTpaHuqwu21WXzG4+4oUlBsdZzrqD6
-         sd6KD+WCyYPNt3M7BXKCvSTXvLzEf4iRXBqHORZOPGwq+jxtovbyZ8l2aouj6NbbIivr
-         Xes+QPwYHBvG781JN9HvxjYPL24HEOezBclZXNWTAyfF/3VKhNOTHe/7p8FxpN4D02mk
-         B+sDG1AdTOLfXYh/DBCyx9apCh43/Cvap3gknlPVNTpS1ufvCx9q0GPYFxR+FP315aFQ
-         JHHg==
+        Fri, 24 May 2019 17:54:09 -0400
+Received: by mail-ot1-f67.google.com with SMTP id l25so9995971otp.8;
+        Fri, 24 May 2019 14:54:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/3kgNn6NL4JYVxHLJQOHqTYeAocP9fpuKYr/bgz9xX4=;
-        b=E18viYuTIGTs3enHGXsM6QNR6zW1uxoBN/M/LS8mO0euatXhm5YlwOjw450htavhev
-         +x2+oJZJNTGDIcEWiF2CyB5aLN2oxuszgQSpac87Y7pWIoWv7IboDty/JiL9mG84X1CG
-         3XAKJy/dbgqyICpCdKulBPc6Bxfvoh/Z4x4oE5eldUCbP1mAK3cB0mKUgLxBQCIjHfIE
-         qguFnQOJMIXbv45ZDUTg7wwAYFJWhOtG8x2qn+28IOA+wz4YwFG7oj+Kjooo2QGBRu40
-         ZR0g3cNXZFef64FZhtSa0lqRJwAPoywa7maU1Q/6Qg3PwApEZetNhrlfI7wcUbgTSl7g
-         fpQg==
-X-Gm-Message-State: APjAAAXt3vTf2eh4J5UvJXqoXDC/vkC1ubIGNRXxZhvJqFq0RECmKxfx
-        5wPHycdLpcyLAUA026T2hz9YBzEXjodEf6FqdtJziA==
-X-Google-Smtp-Source: APXvYqxAjo5u3tbx8eh2UKBmXVrKKt0S9AqD/I57DzCtyGLtoT/LinXiux6eXqXRMu/lvC8FhHNfz85eZjKQAqew1lw=
-X-Received: by 2002:aca:ec0f:: with SMTP id k15mr7306013oih.43.1558734710979;
- Fri, 24 May 2019 14:51:50 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ocTPW25nWKpvKq/JRulYN0S/pGd+SXijFY/6jO39icc=;
+        b=LR+y4dfzQ1En/48ndRBMDMCzCcy5jZO/Cj5wqKrwm/5gJP9+hNp2c/1NBejMfsfD8u
+         xSqQg4R1LeTqKdsFW8y6JXE/nbnlmlgMrzu8dVsUNbcN/4HuCNKHQtha9CvwfybGD7vi
+         GYUVfPEMDHx58SnSUbnTsl/8WbfC/CIrft4Ru6qm32edtI7gedzHqr7wMajWREaWThKa
+         qhm9q4M7nLyQTwY2tInkomF1CgXOfTb73XTI5I/PEAdQPGp82Gv3G70MxaZm2Xq/V9RA
+         aiuueAaOOeAwV+39zEXp2JNkfLAQb0HZzIXuVdiJMwN41DVZcb3YUl4IRvIkdQMqRFGh
+         lS1g==
+X-Gm-Message-State: APjAAAX34cqbRUqUYwjFVUxSaWWwCNHAqDXYI9QWY5qDSji4Ky3sEnhz
+        vD1o20gKDnyA8mkntPk/pw==
+X-Google-Smtp-Source: APXvYqxz7j6TAqcCOb7TkXaiVR8I/EoSc62MSkmCQ9hdBLYDFZ+4Dlt6IECHsh8xO5wmRSqntod77A==
+X-Received: by 2002:a9d:6248:: with SMTP id i8mr198636otk.276.1558734848769;
+        Fri, 24 May 2019 14:54:08 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id p64sm1425346oif.8.2019.05.24.14.54.07
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 24 May 2019 14:54:08 -0700 (PDT)
+Date:   Fri, 24 May 2019 16:54:07 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        CK HU <ck.hu@mediatek.com>,
+        Daniel Kurtz <djkurtz@chromium.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        YT Shen <yt.shen@mediatek.com>,
+        Daoyuan Huang <daoyuan.huang@mediatek.com>,
+        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
+        Dennis-YC Hsieh 
+        <dennis-yc.hsimediatek/mtkcam/drv/fdvt/4.0/cam_fdvt_v4l2.cppeh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com
+Subject: Re: [PATCH v6 04/12] dt-binding: gce: add binding for gce event
+ property
+Message-ID: <20190524215407.GA7214@bogus>
+References: <20190516090224.59070-1-bibby.hsieh@mediatek.com>
+ <20190516090224.59070-5-bibby.hsieh@mediatek.com>
 MIME-Version: 1.0
-References: <20190524010117.225219-1-saravanak@google.com> <CAL_JsqKiXEKECMZpZR3j+uRqnsec5f0vN301tagT687HRhu6Nw@mail.gmail.com>
-In-Reply-To: <CAL_JsqKiXEKECMZpZR3j+uRqnsec5f0vN301tagT687HRhu6Nw@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Fri, 24 May 2019 14:51:15 -0700
-Message-ID: <CAGETcx-KwwjNgAy7BLv4+1=5N_s-UdmfSnTtHP8V5gc7t48W=Q@mail.gmail.com>
-Subject: Re: [PATCH v1 0/5] Solve postboot supplier cleanup and optimize probe ordering
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190516090224.59070-5-bibby.hsieh@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Before I address all the comments, a friendly reminder: Whatever
-solution we come up with needs to work on a system with loadable
-modules and shouldn't depend on userspace for correctness.
+On Thu, May 16, 2019 at 05:02:16PM +0800, Bibby Hsieh wrote:
+> Client hardware would send event to GCE hardware,
+> mediatek,gce-event-names and mediatek,gce-events
 
-On Fri, May 24, 2019 at 6:04 AM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Thu, May 23, 2019 at 8:01 PM Saravana Kannan <saravanak@google.com> wrote:
-> >
-> > Add a generic "depends-on" property that allows specifying mandatory
-> > functional dependencies between devices. Add device-links after the
-> > devices are created (but before they are probed) by looking at this
-> > "depends-on" property.
->
-> The DT already has dependency information. A node with 'clocks'
-> property has its dependency right there. We should use that. We don't
-> need to duplicate the information.
+We removed mediatek,gce-event-names?
 
-So, are you saying all clock bindings are mandatory for a device for
-all possible users of DT + Linux? Do you think if we have a patch that
-makes all clock bindings mandatory dependencies, no one would object
-to that?
+> can be used to present the event.
+> 
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/mailbox/mtk-gce.txt | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> index dceab63ccd06..265bb58da7bd 100644
+> --- a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> +++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> @@ -35,6 +35,8 @@ Required properties for a client device:
+>  Optional properties for a client device:
+>  - mediatek,gce-client-reg: u32, specify the sub-system id which is corresponding
+>    to the register address.
+> +- mediatek,gce-events: u32, the event number defined in
+> +  'dt-bindings/gce/mt8173-gce.h' or 'dt-binding/gce/mt8183-gce.h'.
 
-> > This property is used instead of existing DT properties that specify
-> > phandles of other devices (Eg: clocks, pinctrl, regulators, etc). This
-> > is because not all resources referred to by existing DT properties are
-> > mandatory functional dependencies. Some devices/drivers might be able
-> > to operate with reduced functionality when some of the resources
-> > aren't available. For example, a device could operate in polling mode
-> > if no IRQ is available, a device could skip doing power management if
-> > clock or voltage control isn't available and they are left on, etc.
->
-> Yeah, but none of these examples are typically what you'd want to
-> happen. These cases are a property of the OS, not the DT. For example,
-> until recently, If you added pinctrl bindings to your DT, the kernel
-> would no longer boot because it would be looking for pinctrl driver.
-> That's wrong because the DT should not be coupled to the OS like that.
-> Adding this property will cause the same problem.
+This and the example don't match. Is it an u32 or an array of u32? If 
+the latter, how many elements?
 
-Isn't the a perfect example of the pinctrl being an optional
-dependency in that specific case? The kernel still booted if pinctrl
-wasn't available?
-
-I don't agree that the dependency is purely a property of the OS. If
-there's no clock to clock the hardware core, then the hardware just
-can't work. There's no question about that. However, there can be
-clock bindings that aren't mandatory for functionality but are needed
-just for performance/power control.
-
-Another perfect example are clock providers. Clock providers often get
-input clocks from multiple other clock providers and even have cyclic
-clock bindings. But only some of them are mandatory for the clock
-provider to work. For example, clock provider A has input clocks from
-clock providers B and C, but it only needs B to function (provides
-root clock to all clocks). Not having C would only affect 4 (out of
-100s of clocks) from clock provider A and those 4 are clocks depend on
-an input clock from C (basically clock from C going to A to have some
-clock gates and dividers added and sent back to C). This isn't even a
-made up scenario -- there are SoCs that actually have this.
-
-The OS could still choose to not probe the device unless full
-functionality is available or it could assume all clocks are left on
-by the bootloader and provide basic functionality. THAT would be the
-property of the OS. But that doesn't remove the fact that some of the
-resources are absolutely mandatory for the hardware to function. I'm
-proposing the depends-on to capture the true hardware dependency --
-not what the SW chooses to do with it.
-
-> > So, adding mandatory functional dependency links between devices by
-> > looking at referred phandles in DT properties won't work as it would
-> > prevent probing devices that could be probed. By having an explicit
-> > depends-on property, we can handle these cases correctly.
-> >
-> > Having functional dependencies explicitly called out in DT and
-> > automatically added before the devices are probed, provides the
-> > following benefits:
-> >
-> > - Optimizes device probe order and avoids the useless work of
-> >   attempting probes of devices that will not probe successfully
-> >   (because their suppliers aren't present or haven't probed yet).
-> >
-> >   For example, in a commonly available mobile SoC, registering just
-> >   one consumer device's driver at an initcall level earlier than the
-> >   supplier device's driver causes 11 failed probe attempts before the
-> >   consumer device probes successfully. This was with a kernel with all
-> >   the drivers statically compiled in. This problem gets a lot worse if
-> >   all the drivers are loaded as modules without direct symbol
-> >   dependencies.
->
-> Do you have data on how much time is spent. Past 'smarter probing'
-> attempts have not shown a significant difference.
-
-"avoids the useless work attempting probes of devices that will not
-probe successfully" -- I never claimed to save boot up time. Your
-argument about having to save wall clock time is a moot point as a ton
-of kernel features that optimize code won't save wall clock time (the
-CPU would just run faster to make up for the inefficiency). Those
-features just make the kernel less resource hungry and more efficient.
-I'd understand your argument if this patch series is insanely complex
--- but that's not the case here.
-
-> > - Supplier devices like clock providers, regulators providers, etc
-> >   need to keep the resources they provide active and at a particular
-> >   state(s) during boot up even if their current set of consumers don't
-> >   request the resource to be active. This is because the rest of the
-> >   consumers might not have probed yet and turning off the resource
-> >   before all the consumers have probed could lead to a hang or
-> >   undesired user experience.
->
-> We already know generally what devices are dependencies because you
-> just listed them. Why don't we make the kernel smarter by
-> instantiating these core devices/drivers first instead of relying on
-> initcall and link order.
-
-That's what this patch series is -- it makes the kernel smarter by
-just using the data from DT instead of relying on manual tweaking of
-initcall and link order.
-
-> >   Some frameworks (Eg: regulator) handle this today by turning off
-> >   "unused" resources at late_initcall_sync and hoping all the devices
-> >   have probed by then. This is not a valid assumption for systems with
-> >   loadable modules. Other frameworks (Eg: clock) just don't handle
-> >   this due to the lack of a clear signal for when they can turn off
-> >   resources. This leads to downstream hacks to handle cases like this
-> >   that can easily be solved in the upstream kernel.
->
-> IMO, we should get rid of this auto disabling.
-
-Well, you need to back that opinion with reasoning. IMO we should
-disable unused resources so that we don't waste power -- especially on
-devices operating on batteries.
-
-Also, I explicitly said "need to keep the resources they provide
-active and at a particular state(s) during boot up". So it's not even
-about auto disabling. For example, in the case of a voltage regulator
-supplying multiple devices, if the first device probes and says it
-only need the lowest voltage level, you can't just drop the voltage.
-Because the other devices in the same voltage rail haven't probed yet
-and you can crash the system if you just drop the voltage. You need to
-wait for all the devices to be probed and then you can let the voltage
-regulator operate normally. And you can't depend on late_initcall
-because it falls apart on systems with modules.
-
-
--Saravana
+>  
+>  Some vaules of properties are defined in 'dt-bindings/gce/mt8173-gce.h'
+>  or 'dt-binding/gce/mt8183-gce.h'. Such as sub-system ids, thread priority, event ids.
+> @@ -57,8 +59,8 @@ Example for a client device:
+>  		compatible = "mediatek,mt8173-mmsys";
+>  		mboxes = <&gce 0 CMDQ_THR_PRIO_LOWEST 1>,
+>  			 <&gce 1 CMDQ_THR_PRIO_LOWEST 1>;
+> -		mutex-event-eof = <CMDQ_EVENT_MUTEX0_STREAM_EOF
+> -				CMDQ_EVENT_MUTEX1_STREAM_EOF>;
+> +		mediatek,gce-events = <CMDQ_EVENT_MDP_RDMA0_SOF>,
+> +				      <CMDQ_EVENT_MDP_RSZ0_SOF>;
+>  		mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0x3000 0x1000>,
+>  					  <&gce SUBSYS_1401XXXX 0x2000 0x100>;
+>  		...
+> -- 
+> 2.18.0
+> 
