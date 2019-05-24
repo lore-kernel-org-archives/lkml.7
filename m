@@ -2,111 +2,95 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5436EC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:06:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF934C282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D4662175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:06:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="g/ueHChD"
+	by mail.kernel.org (Postfix) with ESMTP id C88EE2186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:07:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731905AbfEXRGq (ORCPT
+        id S1731936AbfEXRHG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 13:06:46 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37708 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729681AbfEXRGq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 13:06:46 -0400
-Received: by mail-pf1-f193.google.com with SMTP id a23so5694330pff.4
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 10:06:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Nd2Lj9Q7aDsjzQ8w/THzJxRiwvjWHcaNNXAaDuTseEo=;
-        b=g/ueHChDmzv10RhToAZSHSTBKjmteHa2+GUrTouq4WT3zsId5XyPYsDLo0VEZ2lsk8
-         xxwdc+zYgqElB7Hvgr2sCKnjTYGslk7l0zl7pL6buSlo4cp3mxDXesT1bju4whIW9YTD
-         Xuy4SOumA5cjyBIoyw9VlY9FgRNaGt/IqUr+XyQYlD5nDnja70C44raTby78ZUIDd1gl
-         a5Sp9sBHrPzzyBHOEJQJe5yj3Kd+hIFzn2zlMyvZHtC4Byo12tj+FkG/59LC1tfn7w8G
-         Pxe7hqzs2TKDKBOdg5W94Xk89woskg4bqexiagAxDpcv/zg5EhumBoaR1/Fa0bIqYdRx
-         aAIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Nd2Lj9Q7aDsjzQ8w/THzJxRiwvjWHcaNNXAaDuTseEo=;
-        b=YdBBuVY6JV8jq5cKzv3NRIpaA0I92NtfFzciogsNmvgjAkmDBeqwiaLRtQMN6snSzE
-         YNslh9uYAkBdq2Bdr1aq7XJ2M4+7xjwNJLSArN2MekVY1jvmxiJGOiONmG2IBfVqchHk
-         7Mm+g1CGAYlTgQQbn4wKwKJBKbcrlX8AJDZD6dmu8u7AMtcoITF73Op6g2Z4QFJMUe77
-         RI7JwtBt1R6+jcQUPE3APArnxf83BvgpVa7yokxKt10WZ4bOcleMD45bv2oIFcLbs9Vf
-         wH0onr/8IaTqYEtsGfaUuuqpF3MtA0dJwCAITxy71gpXlbp/XrGVZibT8ms4QLgmjEy4
-         3kDw==
-X-Gm-Message-State: APjAAAXqssDvYXvEGw8dqUgwqZlshRKiYsHT+lonLp9/mTdMP4puOwA6
-        l1r5Cc9BWzquyM2M+sVLHReW9w==
-X-Google-Smtp-Source: APXvYqyCulQRmI3PhrXkVMrT+R32nDK0uKlw4vnyyo1uY2kcnPUkhXPwQBLT45X7DGw97sr105YGzg==
-X-Received: by 2002:a17:90a:a616:: with SMTP id c22mr10749010pjq.46.1558717605295;
-        Fri, 24 May 2019 10:06:45 -0700 (PDT)
-Received: from localhost ([2620:10d:c090:180::805])
-        by smtp.gmail.com with ESMTPSA id h5sm3485126pfk.163.2019.05.24.10.06.44
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 24 May 2019 10:06:44 -0700 (PDT)
-Date:   Fri, 24 May 2019 13:06:42 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Shakeel Butt <shakeelb@google.com>,
+        Fri, 24 May 2019 13:07:06 -0400
+Received: from mga05.intel.com ([192.55.52.43]:37043 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731468AbfEXRHF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 13:07:05 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 May 2019 10:07:05 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by orsmga005.jf.intel.com with ESMTP; 24 May 2019 10:07:04 -0700
+Date:   Fri, 24 May 2019 10:07:04 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     "Xing, Cedric" <cedric.xing@intel.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>
-Subject: Re: xarray breaks thrashing detection and cgroup isolation
-Message-ID: <20190524170642.GA20546@cmpxchg.org>
-References: <20190523174349.GA10939@cmpxchg.org>
- <20190523183713.GA14517@bombadil.infradead.org>
- <CALvZod4o0sA8CM961ZCCp-Vv+i6awFY0U07oJfXFDiVfFiaZfg@mail.gmail.com>
- <20190523190032.GA7873@bombadil.infradead.org>
- <20190523192117.GA5723@cmpxchg.org>
- <20190523194130.GA4598@bombadil.infradead.org>
- <20190523195933.GA6404@cmpxchg.org>
- <20190524161146.GC1075@bombadil.infradead.org>
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+Message-ID: <20190524170704.GA3401@linux.intel.com>
+References: <20190522153836.GA24833@linux.intel.com>
+ <CALCETrUS8xyF1JJmQs18BGTDhPRXf+s81BkMZCZwmY73r7M+zg@mail.gmail.com>
+ <20190523023517.GA31950@linux.intel.com>
+ <20190523102628.GC10955@linux.intel.com>
+ <20190523141752.GA12078@linux.intel.com>
+ <CALCETrUzx3LPAKCLFf75P-XshAkRcr+JLET3LA_kHDs9MA11FA@mail.gmail.com>
+ <20190523234044.GC12078@linux.intel.com>
+ <CALCETrV4DVEfW6EJ6DnQGGYDJAiA5M1QcuYJTiroumOM+D6Jjg@mail.gmail.com>
+ <960B34DE67B9E140824F1DCDEC400C0F654E8956@ORSMSX116.amr.corp.intel.com>
+ <CALCETrX0WqouSWgdM+LNxMzypa0ZHZXTmJ+nNkuPuL8UOF_f2w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190524161146.GC1075@bombadil.infradead.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <CALCETrX0WqouSWgdM+LNxMzypa0ZHZXTmJ+nNkuPuL8UOF_f2w@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 09:11:46AM -0700, Matthew Wilcox wrote:
-> On Thu, May 23, 2019 at 03:59:33PM -0400, Johannes Weiner wrote:
-> > My point is that we cannot have random drivers' internal data
-> > structures charge to and pin cgroups indefinitely just because they
-> > happen to do the modprobing or otherwise interact with the driver.
-> > 
-> > It makes no sense in terms of performance or cgroup semantics.
+On Fri, May 24, 2019 at 09:43:27AM -0700, Andy Lutomirski wrote:
+> On Fri, May 24, 2019 at 12:24 AM Xing, Cedric <cedric.xing@intel.com> wrote:
+> > /**
+> >  * Summary:
+> >  * - The enclave file resembles a shared object that contains RO/RX/RW segments
+> >  * - FILE__* are assigned to /dev/sgx/enclave, to determine acceptable permissions to mmap()/mprotect(), valid combinations are
+> >  *   + FILE__READ - Allow SGX1 enclaves only
+> >  *   + FILE__READ|FILE__WRITE - Allow SGX2 enclaves to expand data segments (e.g. heaps, stacks, etc.)
 > 
-> But according to Roman, you already have that problem with the page
-> cache.
-> https://lore.kernel.org/linux-mm/20190522222254.GA5700@castle/T/
-> 
-> So this argument doesn't make sense to me.
+> I think this is a non-starter :(  FILE__WRITE also means that you can
+> write to the file, and the admin / policy author will almost never
+> want to allow that.
 
-You haven't addressed the rest of the argument though: why every user
-of the xarray, and data structures based on it, should incur the
-performance cost of charging memory to a cgroup, even when we have no
-interest in tracking those allocations on behalf of a cgroup.
-
-Which brings me to repeating the semantics argument: it doesn't make
-sense to charge e.g. driver memory, which is arguably a shared system
-resource, to whoever cgroup happens to do the modprobe / ioctl etc.
-
-Anyway, this seems like a fairly serious regression, and it would make
-sense to find a self-contained, backportable fix instead of something
-that has subtle implications for every user of the xarray / ida code.
+Why would FILE__WRITE on /dev/sgx/enclave be a problem?  An actual
+write to /dev/sgx/enclave would yield -EINVAL, no?
