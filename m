@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE7DDC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:20:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E67C282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B75B12175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:20:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C92122175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:20:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="UZSJzWDz"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Bae3o2bv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389609AbfEXIUp (ORCPT
+        id S2389573AbfEXIUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 04:20:45 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:35564 "EHLO
+        Fri, 24 May 2019 04:20:42 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:35506 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389493AbfEXIUj (ORCPT
+        by vger.kernel.org with ESMTP id S2389234AbfEXIUh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 04:20:39 -0400
+        Fri, 24 May 2019 04:20:37 -0400
 Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 4F73DC0130;
-        Fri, 24 May 2019 08:20:46 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 5BC13C0120;
+        Fri, 24 May 2019 08:20:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1558686046; bh=uTHC7HW05fXW680blqEJrzIbPmSTo0MD/lwCtSi5WtE=;
+        t=1558686044; bh=/xA5D2KU4oFCZigXo3GxuD0B41696Ac9xBvAFVj5Z6Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=UZSJzWDziYEAwBvxYW3aYw8abS+FBt4PKQfFVz6BHVKxuP0Ap7WbCDWGqra4Vp4y5
-         ifh85FVKZ1aXHXKJxPHZhCN1WtDmk81OQJ7BcqsbFgthEvljvGHzzX+Obv83+cY03J
-         h1YbwrDqFvRFVftVhdwpgfklwn1uPDQAzJy9hEiMOg5dPuhWmPHBcChQbJMvXYuSgW
-         u385SZAoMOCwe6SHGWex7RaMPrLmhGBcW24E5zGC9zHBLEV+JIdrpz0ubZ996DT0x2
-         9ApFprhb0mOYw1ZtuEpDAnqLYTz41CsIrW9d7hn2PUujl57fTFNmgbW8onbIedC3EU
-         cTy9Duyc+7rHg==
-Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 923A0A0258;
-        Fri, 24 May 2019 08:20:38 +0000 (UTC)
+        b=Bae3o2bvEw06Q0eF3S+tayz5A5GOShwub/DQkIW5skGo6YQJhVQ/5ncwfHv60dxch
+         t6o1iOVJ+RkUQMy9LIvTEnoui4IjtjNQZvPsJjityLweTGeV5II2UxgbZ2eOiRS0Vg
+         +/YlOK3vfU5+id/DHcyU1D03FKwniClTZ/qoN0Ym4lMLQTsvkPDKlUsZXaVOz9xiNi
+         8O+tLL8Pzv1TXdYBLUp+MYf3dyGRRk/8WE/E/wNkw1pWbZCVQg0uMSDBLRlduEX8EY
+         LGfMspXzpoSQ6e3GjVGgSfc5rBrCl/xYSQxZSYym4lKlD7gWhBREbkAnuiBS2ixYeJ
+         9THD+UecDtoOw==
+Received: from de02.synopsys.com (germany.internal.synopsys.com [10.225.17.21])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 77A62A00AC;
+        Fri, 24 May 2019 08:20:36 +0000 (UTC)
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id A8B143FB29;
-        Fri, 24 May 2019 10:20:36 +0200 (CEST)
+        by de02.synopsys.com (Postfix) with ESMTP id 730673FAF0;
+        Fri, 24 May 2019 10:20:35 +0200 (CEST)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
@@ -51,9 +51,9 @@ Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
         "David S . Miller" <davem@davemloft.net>,
         Giuseppe Cavallaro <peppe.cavallaro@st.com>,
         Alexandre Torgue <alexandre.torgue@st.com>
-Subject: [PATCH net-next v2 18/18] net: stmmac: Prevent missing interrupts when running NAPI
-Date:   Fri, 24 May 2019 10:20:26 +0200
-Message-Id: <e66362fde1dac9bb814646c8264c8dc3c4dbeeea.1558685828.git.joabreu@synopsys.com>
+Subject: [PATCH net-next v2 02/18] net: stmmac: dwmac100: Add MAC loopback support
+Date:   Fri, 24 May 2019 10:20:10 +0200
+Message-Id: <201a716d054b8f474a73efd18c50e7c53e1e44c7.1558685827.git.joabreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1558685827.git.joabreu@synopsys.com>
 References: <cover.1558685827.git.joabreu@synopsys.com>
@@ -64,12 +64,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When we trigger NAPI we are disabling interrupts but in case we receive
-or send a packet in the meantime, as interrupts are disabled, we will
-miss this event.
-
-Trigger both NAPI instances (RX and TX) when at least one event happens
-so that we don't miss any interrupts.
+In preparation for the addition of stmmac selftests we implement the MAC
+loopback callback in dwmac100 core.
 
 Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 Cc: Joao Pinto <jpinto@synopsys.com>
@@ -77,23 +73,40 @@ Cc: David S. Miller <davem@davemloft.net>
 Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
 Cc: Alexandre Torgue <alexandre.torgue@st.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/dwmac100_core.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index ce77a9a2eb56..a87ec70b19f1 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -2058,6 +2058,9 @@ static int stmmac_napi_check(struct stmmac_priv *priv, u32 chan)
- 						 &priv->xstats, chan);
- 	struct stmmac_channel *ch = &priv->channel[chan];
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac100_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac100_core.c
+index b735143987e1..d621b5189c41 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac100_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac100_core.c
+@@ -160,6 +160,18 @@ static void dwmac100_pmt(struct mac_device_info *hw, unsigned long mode)
+ 	return;
+ }
  
-+	if (status)
-+		status |= handle_rx | handle_tx;
++static void dwmac100_set_mac_loopback(void __iomem *ioaddr, bool enable)
++{
++	u32 value = readl(ioaddr + MAC_CONTROL);
 +
- 	if ((status & handle_rx) && (chan < priv->plat->rx_queues_to_use)) {
- 		stmmac_disable_dma_irq(priv, priv->ioaddr, chan);
- 		napi_schedule_irqoff(&ch->rx_napi);
++	if (enable)
++		value |= MAC_CONTROL_OM;
++	else
++		value &= ~MAC_CONTROL_OM;
++
++	writel(value, ioaddr + MAC_CONTROL);
++}
++
+ const struct stmmac_ops dwmac100_ops = {
+ 	.core_init = dwmac100_core_init,
+ 	.set_mac = stmmac_set_mac,
+@@ -171,6 +183,7 @@ const struct stmmac_ops dwmac100_ops = {
+ 	.pmt = dwmac100_pmt,
+ 	.set_umac_addr = dwmac100_set_umac_addr,
+ 	.get_umac_addr = dwmac100_get_umac_addr,
++	.set_mac_loopback = dwmac100_set_mac_loopback,
+ };
+ 
+ int dwmac100_setup(struct stmmac_priv *priv)
 -- 
 2.7.4
 
