@@ -2,188 +2,144 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC00C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FED7C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D402720868
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:27:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kpjbLOrP"
+	by mail.kernel.org (Postfix) with ESMTP id 3C8E420868
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:29:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404207AbfEXU1Y (ORCPT
+        id S2404184AbfEXU3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 16:27:24 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:37334 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404009AbfEXU1X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 16:27:23 -0400
-Received: by mail-lj1-f193.google.com with SMTP id h19so1369482ljj.4;
-        Fri, 24 May 2019 13:27:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=X0NNP/ceUaOcZTctpbxE4TiNS5zH4TOE3WlAv64HR/g=;
-        b=kpjbLOrPSSy9sifdIbDi4jRhh/Jy+JCPqPjUQq5wPuXi/nG3mMBOlW3hZ5PwempipX
-         qgGJYNFj4k8KEhvhnY4ote3orQX6Mo8fbD1KmebAAOl7Nor75f49QomLDCn2I1w/aopf
-         ZH0a9B8N5a/P9/wfydjUYz+9Sn8mzET6JZQPC5yqif+/mCdmIpoHESub0btf6YaV9ldP
-         eZYPRaJQEUWkNlv5Ar/CFJjuOUu2ShAf3eBlKI4mhaeIZ62SaK/2hjYcXLX2fRf3DO4H
-         jx8pMtXye1QpXt1+MyhM0j3Br3Kr3uYf8BkKT2y+l77NvcHp9+KfyUx43IWRLJUnTMtJ
-         fxJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=X0NNP/ceUaOcZTctpbxE4TiNS5zH4TOE3WlAv64HR/g=;
-        b=reWbVFszrrtJIBomQAqq5ZgFNMW06xv3Utv3vGhYtNIxRJ/g2s4LgKOZNaSUHOwCbl
-         3QU/9T7oJRQO6VVGZPvpJIVfVg+E2WRrbjxFi9hOdZUUFfggt1q9dUhpt6V8z3vSWWeD
-         yvg7Fh/HGoJO8fWwPDBhZJTiNZ04ChN44ABwZAqmPIXEB0MMSfuwaa1D1Gt0mU1Ci84m
-         PKh6abLs1oKL9DiTsX4cAksf5JZ0N7VYCzUGQx4M/SrdTriMegwLy5GLaCwcqgd0bHkn
-         SoWfJO0r2Jr4SEV/JScKcJyf1nthxxq9dOC2NUI6bOLvgEarFRqLaS9qQmtpeY0EEJsX
-         gMmQ==
-X-Gm-Message-State: APjAAAWnSmRPN7tDU0y3EZp0bMzCgXuEbea/DYiWSMnoGoqOxlNkduMp
-        wyS4sT9Bp2YvVf4EVnmWOpFliwZl
-X-Google-Smtp-Source: APXvYqzeQDdwTESFjREjwkS3y07HJNLyFT1jSpVbsdMzSWVvVysxmtZS/guhNkBmUZVfS5DHlq1s1A==
-X-Received: by 2002:a2e:8909:: with SMTP id d9mr5878371lji.93.1558729639850;
-        Fri, 24 May 2019 13:27:19 -0700 (PDT)
-Received: from [192.168.1.17] (bkq212.neoplus.adsl.tpnet.pl. [83.28.184.212])
-        by smtp.gmail.com with ESMTPSA id g14sm794143lfb.20.2019.05.24.13.27.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 13:27:19 -0700 (PDT)
-Subject: Re: linux-next: Tree for May 24 (leds-lm3697)
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org
-References: <20190524140727.19d1e349@canb.auug.org.au>
- <f8300d14-972d-1c03-3266-836b94c1ec9a@infradead.org>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <06097597-2d41-64a0-f4bc-d14ce2c832b5@gmail.com>
-Date:   Fri, 24 May 2019 22:27:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 24 May 2019 16:29:44 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52310 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403760AbfEXU3o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 16:29:44 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 940B630821B3;
+        Fri, 24 May 2019 20:29:35 +0000 (UTC)
+Received: from ultra.random (ovpn-120-242.rdu2.redhat.com [10.10.120.242])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 51E0868B02;
+        Fri, 24 May 2019 20:29:32 +0000 (UTC)
+Date:   Fri, 24 May 2019 16:29:31 -0400
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     David Rientjes <rientjes@google.com>, Mel Gorman <mgorman@suse.de>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Zi Yan <zi.yan@cs.rutgers.edu>,
+        Stefan Priebe - Profihost AG <s.priebe@profihost.ag>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] Revert "mm, thp: restore node-local hugepage
+ allocations"
+Message-ID: <20190524202931.GB11202@redhat.com>
+References: <20190503223146.2312-1-aarcange@redhat.com>
+ <20190503223146.2312-3-aarcange@redhat.com>
+ <alpine.DEB.2.21.1905151304190.203145@chino.kir.corp.google.com>
+ <20190520153621.GL18914@techsingularity.net>
+ <alpine.DEB.2.21.1905201018480.96074@chino.kir.corp.google.com>
+ <20190523175737.2fb5b997df85b5d117092b5b@linux-foundation.org>
 MIME-Version: 1.0
-In-Reply-To: <f8300d14-972d-1c03-3266-836b94c1ec9a@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190523175737.2fb5b997df85b5d117092b5b@linux-foundation.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Fri, 24 May 2019 20:29:43 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Randy,
+Hello everyone,
 
-Thank you for the report.
-
-On 5/24/19 5:42 PM, Randy Dunlap wrote:
-> On 5/23/19 9:07 PM, Stephen Rothwell wrote:
->> Hi all,
->>
->> News: there will be no linux-next release on Monday.
->>
->> Changes since 20190523:
->>
->> The input-current tree gained a build failure so I reverted a commit.
->>
->> The drm-fixes tree gained a build failure so I reverted a commit.
->>
->> The v4l-dvb tree gained a conflict against Linus' tree.
->>
->> Non-merge commits (relative to Linus' tree): 1814
->>   1870 files changed, 61172 insertions(+), 32723 deletions(-)
->>
->> ----------------------------------------------------------------------------
->>
->> I have created today's linux-next tree at
->> git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
->> (patches at http://www.kernel.org/pub/linux/kernel/next/ ).  If you
->> are tracking the linux-next tree using git, you should not use "git pull"
->> to do so as that will try to merge the new linux-next release with the
->> old one.  You should use "git fetch" and checkout or reset to the new
->> master.
->>
->> You can see which trees have been included by looking in the Next/Trees
->> file in the source.  There are also quilt-import.log and merge.log
->> files in the Next directory.  Between each merge, the tree was built
->> with a ppc64_defconfig for powerpc, an allmodconfig for x86_64, a
->> multi_v7_defconfig for arm and a native build of tools/perf. After
->> the final fixups (if any), I do an x86_64 modules_install followed by
->> builds for x86_64 allnoconfig, powerpc allnoconfig (32 and 64 bit),
->> ppc44x_defconfig, allyesconfig and pseries_le_defconfig and i386, sparc
->> and sparc64 defconfig. And finally, a simple boot test of the powerpc
->> pseries_le_defconfig kernel in qemu (with and without kvm enabled).
->>
->> Below is a summary of the state of the merge.
->>
->> I am currently merging 290 trees (counting Linus' and 70 trees of bug
->> fix patches pending for the current merge release).
->>
->> Stats about the size of the tree over time can be seen at
->> http://neuling.org/linux-next-size.html .
->>
->> Status of my local build tests will be at
->> http://kisskb.ellerman.id.au/linux-next .  If maintainers want to give
->> advice about cross compilers/configs that work, we are always open to add
->> more builds.
->>
->> Thanks to Randy Dunlap for doing many randconfig builds.  And to Paul
->> Gortmaker for triage and bug fixes.
->>
+On Thu, May 23, 2019 at 05:57:37PM -0700, Andrew Morton wrote:
+> On Mon, 20 May 2019 10:54:16 -0700 (PDT) David Rientjes <rientjes@google.com> wrote:
 > 
-> seen on i386:
+> > We are going in circles, *yes* there is a problem for potential swap 
+> > storms today because of the poor interaction between memory compaction and 
+> > directed reclaim but this is a result of a poor API that does not allow 
+> > userspace to specify that its workload really will span multiple sockets 
+> > so faulting remotely is the best course of action.  The fix is not to 
+> > cause regressions for others who have implemented a userspace stack that 
+> > is based on the past 3+ years of long standing behavior or for specialized 
+> > workloads where it is known that it spans multiple sockets so we want some 
+> > kind of different behavior.  We need to provide a clear and stable API to 
+> > define these terms for the page allocator that is independent of any 
+> > global setting of thp enabled, defrag, zone_reclaim_mode, etc.  It's 
+> > workload dependent.
 > 
-> ld: drivers/leds/leds-lm3697.o: in function `lm3697_probe':
-> leds-lm3697.c:(.text+0x451): undefined reference to `devm_of_led_classdev_register'
-> 
-> CONFIG_LEDS_CLASS=m
-> CONFIG_LEDS_TI_LMU_COMMON=y
-> CONFIG_LEDS_LM3697=y
-> 
-> 
-> It looks to me like this is needed:
-> 
-> 	depends on LEDS_CLASS && I2C && OF
-> ?
-> 
+> um, who is going to do this work?
 
-Thanks for the hint.
+That's a good question. It's going to be a not simple patch to
+backport to -stable: it'll be intrusive and it will affect
+mm/page_alloc.c significantly so it'll reject heavy. I wouldn't
+consider it -stable material at least in the short term, it will
+require some testing.
 
-I believe the following amendment would fit best:
+This is why applying a simple fix that avoids the swap storms (and the
+swap-less pathological THP regression for vfio device assignment GUP
+pinning) is preferable before adding an alloc_pages_multi_order (or
+equivalent) so that it'll be the allocator that will decide when
+exactly to fallback from 2M to 4k depending on the NUMA distance and
+memory availability during the zonelist walk. The basic idea is to
+call alloc_pages just once (not first for 2M and then for 4k) and
+alloc_pages will decide which page "order" to return.
 
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index e2f19f3cc6ca..ab0ac84e4c62 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -785,6 +785,7 @@ config LEDS_NIC78BX
+> Implementing a new API doesn't help existing userspace which is hurting
+> from the problem which this patch addresses.
 
-  config LEDS_TI_LMU_COMMON
-         tristate "LED driver for TI LMU"
-+       depends on LEDS_CLASS
-         depends on REGMAP
-         help
-           Say Y to enable the LED driver for TI LMU devices.
-@@ -794,6 +795,7 @@ config LEDS_TI_LMU_COMMON
-  config LEDS_LM3697
-         tristate "LED driver for LM3697"
-         depends on LEDS_TI_LMU_COMMON
-+       depends on I2C && OF
-         help
-           Say Y to enable the LM3697 LED driver for TI LMU devices.
-           This supports the LED device LM3697.
+Yes, we can't change all apps that may not fit in a single NUMA
+node. Currently it's unsafe to turn "transparent_hugepages/defrag =
+always" or the bad behavior can then materialize also outside of
+MADV_HUGEPAGE. Those apps that use MADV_HUGEPAGE on their long lived
+allocations (i.e. guest physical memory) like qemu are affected even
+with the default "defrag = madvise". Those apps are using
+MADV_HUGEPAGE for more than 3 years and they are widely used and open
+source of course.
 
-But for now I'm dropping the patch set anyway until we agree on how
-it should be merged across subsystems.
+> It does appear to me that this patch does more good than harm for the
+> totality of kernel users, so I'm inclined to push it through and to try
+> to talk Linus out of reverting it again.  
 
--- 
-Best regards,
-Jacek Anaszewski
+That sounds great. It's also what 3 enterprise distributions had to do
+already.
+
+As Mel described in detail, remote THP can't be slower than the swap
+I/O (even if we'd swap on a nvdimm it wouldn't change this).
+
+As Michael suggested a dynamic "numa_node_id()" mbind could be pursued
+orthogonally to still be able to retain the current upstream behavior
+for small apps that can fit in the node and do extremely long lived
+static allocations and that don't care if they cause a swap storm
+during startup. All we argue about is the default "defrag = always"
+and MADV_HUGEPAGE behavior.
+
+The current behavior of "defrag = always" and MADV_HUGEPAGE is way
+more aggressive than zone_reclaim_mode in fact, which is also not
+enabled by default for similar reasons (but enabling zone_reclaim_mode
+by default would cause much less risk of pathological regressions to
+large workloads that can't fit in a single node). Enabling
+zone_reclaim_mode would eventually fallback to remote nodes
+gracefully. As opposed the fallback to remote nodes with
+__GFP_THISNODE can only happen after the 2M allocation has failed and
+the problem is that 2M allocation don't fail because
+compaction+reclaim interleaving keeps succeeding by swapping out more
+and more memory, which would the perfectly right behavior for
+compaction+reclaim interleaving if only the whole system would be out
+of memory in all nodes (and it isn't).
+
+The false positive result from the automated testing (where swapping
+overall performance decreased because fariness increased) wasn't
+anybody's fault and so the revert at the end of the merge window was a
+safe approach. So we can try again to fix it now.
+
+Thanks!
+Andrea
