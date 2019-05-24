@@ -2,121 +2,121 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4124FC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BE9C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06F8921874
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:27:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558718848;
-	bh=7lOWChVxREIQYWm+4ctdfW7a/QuYaHP746/1aJHMsrc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=eDDoSloV9N7DFTTLKv0r438WAvX3hoC+lAk28sUKN1J4Dkf8+j9ftwAybCkkG/K6r
-	 wKi5jRKEfWIBEAz6Xb0uLzGFWTyyXm8Tdb/2taWKz3C/MV3PCGAELk2fL5e+jJrrL0
-	 obSxVXfKCRJjD/ZrpDbpOuO3ZnSrKle2F1419edk=
+	by mail.kernel.org (Postfix) with ESMTP id C2B6A217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:28:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731955AbfEXR11 (ORCPT
+        id S1731988AbfEXR2t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 13:27:27 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:44881 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726381AbfEXR10 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 13:27:26 -0400
-Received: by mail-lf1-f68.google.com with SMTP id n134so7699746lfn.11
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 10:27:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JVbYfBRHpnXnuZnhe+2+ac0OMNvjOmYpbXsicIs9pLQ=;
-        b=fZGovy5ICIPj2aTx3nROHLOtIcKT9sS4s6Sn1H4OYj0TOF2nY+XH68z+VGIfPwKY3W
-         Q/GaNi2eagm/paKz1dcVaXJGg6NwQAHxy77juANp4RUTExlXhiRo0ZtzYKFzNLoWCS/M
-         W2XhIvfJKg6KBKdZnjdIqJyROtdat1scDiogQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JVbYfBRHpnXnuZnhe+2+ac0OMNvjOmYpbXsicIs9pLQ=;
-        b=BfDKTP+cBawqHHon3wGG+dL2UDmVE9O71GXUK5lcAMEKAvF9/rtytciVkIxCMBYxth
-         M6BgId2DSP6Zln+yTiNwJA+U6Hb0mLc5JD4Qdn6sRWZMj2Gru9NweEo6dSZlHVGhXO34
-         fUVphd+J0gEkfjazeGR6GIXshVV/Xqw3zKPVWY/QzZs5Je9GMGVb0etCcto9WYGeL110
-         51tB9vi3Z08HRFeSWyYhscaPNwJYT6bWNZbVmwKo0JFmSwTdjgRwvelRZGBWy5vWuaaL
-         BO5HAibChsR5LduUQ3TWQ80j3oY7xVAJXVs24ReL4ODNGADBt0oGxDIsHuGLme65lcRI
-         Ui5g==
-X-Gm-Message-State: APjAAAVSG1lAG0OEyTOYd70h9mBzobtx1KB42fgvDeOa455f98avUe7f
-        8GIIO6wrVpJ6iBuO1MgdED4sUZ3kEJc=
-X-Google-Smtp-Source: APXvYqyWn1UHGUwQryHphwHel8bXDnO1v5NchDNcO9WawMqmULzJz6KOy70s84bAGX1fW95C9eHwAQ==
-X-Received: by 2002:ac2:5935:: with SMTP id v21mr10157201lfi.117.1558718843153;
-        Fri, 24 May 2019 10:27:23 -0700 (PDT)
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
-        by smtp.gmail.com with ESMTPSA id y8sm602595ljk.79.2019.05.24.10.27.21
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 10:27:22 -0700 (PDT)
-Received: by mail-lf1-f47.google.com with SMTP id u27so7710612lfg.10
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 10:27:21 -0700 (PDT)
-X-Received: by 2002:a19:9150:: with SMTP id y16mr5084871lfj.106.1558718841613;
- Fri, 24 May 2019 10:27:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190524165346.26373-1-longman@redhat.com> <20190524171939.GA9120@fuggles.cambridge.arm.com>
-In-Reply-To: <20190524171939.GA9120@fuggles.cambridge.arm.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 24 May 2019 10:27:05 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiQ3kbk1G40ofSMu7qGhrX4PgngN64jGnttOcNCvKy6EA@mail.gmail.com>
-Message-ID: <CAHk-=wiQ3kbk1G40ofSMu7qGhrX4PgngN64jGnttOcNCvKy6EA@mail.gmail.com>
+        Fri, 24 May 2019 13:28:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44724 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726674AbfEXR2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 13:28:49 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 028C3305B16F;
+        Fri, 24 May 2019 17:28:49 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-85.bos.redhat.com [10.18.17.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CD5EB5D71B;
+        Fri, 24 May 2019 17:28:47 +0000 (UTC)
 Subject: Re: [PATCH v2] locking/lock_events: Use this_cpu_add() when necessary
 To:     Will Deacon <will.deacon@arm.com>
-Cc:     Waiman Long <longman@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Tim Chen <tim.c.chen@linux.intel.com>,
         huang ying <huang.ying.caritas@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+References: <20190524165346.26373-1-longman@redhat.com>
+ <20190524171939.GA9120@fuggles.cambridge.arm.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <d47289ad-0255-5ce4-e21a-c4bdebe65fe9@redhat.com>
+Date:   Fri, 24 May 2019 13:28:47 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190524171939.GA9120@fuggles.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Fri, 24 May 2019 17:28:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 10:19 AM Will Deacon <will.deacon@arm.com> wrote:
->
+On 5/24/19 1:19 PM, Will Deacon wrote:
+> On Fri, May 24, 2019 at 12:53:46PM -0400, Waiman Long wrote:
+>> The kernel test robot has reported that the use of __this_cpu_add()
+>> causes bug messages like:
+>>
+>>   BUG: using __this_cpu_add() in preemptible [00000000] code: ...
+>>
+>> This is only an issue on preempt kernel where preemption can happen in
+>> the middle of a percpu operation. We are still using __this_cpu_*() for
+>> !preempt kernel to avoid additional overhead in case CONFIG_PREEMPT_COUNT
+>> is set.
+>>
+>>  v2: Simplify the condition to just preempt or !preempt.
+>>
+>> Fixes: a8654596f0371 ("locking/rwsem: Enable lock event counting")
+>> Signed-off-by: Waiman Long <longman@redhat.com>
+>> ---
+>>  kernel/locking/lock_events.h | 23 +++++++++++++++++++++--
+>>  1 file changed, 21 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/kernel/locking/lock_events.h b/kernel/locking/lock_events.h
+>> index feb1acc54611..05f34068ec06 100644
+>> --- a/kernel/locking/lock_events.h
+>> +++ b/kernel/locking/lock_events.h
+>> @@ -30,13 +30,32 @@ enum lock_events {
+>>   */
+>>  DECLARE_PER_CPU(unsigned long, lockevents[lockevent_num]);
+>>  
+>> +/*
+>> + * The purpose of the lock event counting subsystem is to provide a low
+>> + * overhead way to record the number of specific locking events by using
+>> + * percpu counters. It is the percpu sum that matters, not specifically
+>> + * how many of them happens in each cpu.
+>> + *
+>> + * In !preempt kernel, we can just use __this_cpu_*() as preemption
+>> + * won't happen in the middle of the percpu operation. In preempt kernel,
+>> + * preemption happens in the middle of the percpu operation may produce
+>> + * incorrect result.
+>> + */
+>> +#ifdef CONFIG_PREEMPT
+>> +#define lockevent_percpu_inc(x)		this_cpu_inc(x)
+>> +#define lockevent_percpu_add(x, v)	this_cpu_add(x, v)
+>> +#else
+>> +#define lockevent_percpu_inc(x)		__this_cpu_inc(x)
+>> +#define lockevent_percpu_add(x, v)	__this_cpu_add(x, v)
 > Are you sure this works wrt IRQs? For example, if I take an interrupt when
 > trying to update the counter, and then the irq handler takes a qspinlock
 > which in turn tries to update the counter. Would I lose an update in that
 > scenario?
+>
+> Will
 
-Sounds about right.
+Good point! But this will be an issue even if we use the non-underscore
+version as I don't think it will disable interrupt. Also it is only a
+problem if the percpu operation is more than 1 instruction. It is a
+single instruction for x86. Other architectures may require more than 1
+instruction. In those cases, we may lose count, but it is still better
+than getting the count from one CPU and put it into another CPU.
 
-We might decide that the lock event counters are not necessarily
-precise, but just rough guide-line statistics ("close enough in
-practice")
+Cheers,
+Longman
 
-But that would imply that it shouldn't be dependent on CONFIG_PREEMPT
-at all, and we should always use the double-underscore version, except
-without the debug checking.
-
-Maybe the #ifdef should just be CONFIG_PREEMPT_DEBUG, with a comment
-saying "we're not exact, but debugging complains, so if you enable
-debugging it will be slower and precise". Because I don't think we
-have a "do this unsafely and without any debugging" option.
-
-And the whole "not precise" thing should be documented, of course.
-
-I can't imagine that people would rely on _exact_ lock statistics, but
-hey, there are a lot of things people do that I can't fathom, so
-that's not necessarily a strong argument.
-
-Comments?
-
-                  Linus
