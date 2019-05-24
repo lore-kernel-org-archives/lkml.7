@@ -2,189 +2,129 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C82F6C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09248C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 974CF217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:41:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7F772184B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:41:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389080AbfEXHlE convert rfc822-to-8bit (ORCPT
+        id S2389119AbfEXHlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 03:41:04 -0400
-Received: from twhmllg3.macronix.com ([211.75.127.131]:58264 "EHLO
-        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388960AbfEXHlD (ORCPT
+        Fri, 24 May 2019 03:41:11 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:40121 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388960AbfEXHlK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 03:41:03 -0400
-Received: from twhfmlp1.macronix.com (twhfm1p1.macronix.com [172.17.20.91])
-        by TWHMLLG3.macronix.com with ESMTP id x4O7euXb008092;
-        Fri, 24 May 2019 15:40:56 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
-        by Forcepoint Email with ESMTP id 2CB04E329FEC00A82B3B;
-        Fri, 24 May 2019 15:40:57 +0800 (CST)
-In-Reply-To: <20190521104713.4b3a7769@xps13>
-References: <1558076001-29579-1-git-send-email-masonccyang@mxic.com.tw> <20190520143438.46248bfc@xps13>
-        <OFDCB9EA90.C6F8EA4C-ON48258401.000981AF-48258401.000ED713@mxic.com.tw> <20190521104713.4b3a7769@xps13>
-To:     "Miquel Raynal" <miquel.raynal@bootlin.com>
-Cc:     bbrezillon@kernel.org, computersforpeace@gmail.com,
-        dwmw2@infradead.org, frieder.schrempf@kontron.de,
-        juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, marek.vasut@gmail.com,
-        richard@nod.at, vigneshr@ti.com, zhengxunli@mxic.com.tw
-Subject: Re: [PATCH v2] mtd: rawnand: Add Macronix NAND read retry support
+        Fri, 24 May 2019 03:41:10 -0400
+Received: by mail-qk1-f193.google.com with SMTP id q197so6033838qke.7
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 00:41:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FRYxcsA8gB9FibohJrWOdhqpBp517njxkreby+OWZAA=;
+        b=a5i0hc5HW8w1Q7zIUP9Y7DPRDw4v8USDI6kD/nh9++tvffpz1+pgiRf+aAWJCuQAvc
+         OIBY6KFziDqoUfqsDk4O8SSfsHBCc31jzc/FwSqDjEjnEaV6VHe3X5K5lB/RstOu6hL9
+         6CBlzXrLrpyAJoqlrkVjZ+tF9DJfKL63h6Lo156jmtIPoH1W+ZAGO0a2+cW4cXIytmOc
+         h5wPK2oeuI+jYnGTp4IRuEob+oJ8PTmig6ExqmPWRNIwhP43sScFJPdsstJuTgX3J/Ts
+         MWPDI6l//x6qkrE65S1luOK+DeMthJi+YNLJML9Es5IOQ8yzvWdi+9LneyLUVHQP9RJe
+         kndg==
+X-Gm-Message-State: APjAAAW72Ci0vCiVaABYqUXR6hnFXMLStBV1GipmXcGSA1nvfm5IQhKT
+        koA87j/MdXUDHVrfdJe81IhW9nhznkluqXATU5E=
+X-Google-Smtp-Source: APXvYqwKjoorl+i2iSi0wJjXdbgxY2NnU3CoD/Rr8CXva8Z9KCBM7/GgIHAXtDLbf7tJIkQBQvIgx6lRi0X7Yz2ZISg=
+X-Received: by 2002:a37:3ce:: with SMTP id 197mr78391397qkd.14.1558683664367;
+ Fri, 24 May 2019 00:41:04 -0700 (PDT)
 MIME-Version: 1.0
-X-KeepSent: 2FAE9766:C611328F-48258404:0029BF19;
- type=4; name=$KeepSent
-X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
-Message-ID: <OF2FAE9766.C611328F-ON48258404.0029BF19-48258404.002A337A@mxic.com.tw>
-From:   masonccyang@mxic.com.tw
-Date:   Fri, 24 May 2019 15:40:57 +0800
-X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
- 2019/05/24 PM 03:40:57,
-        Serialize complete at 2019/05/24 PM 03:40:57
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-X-MAIL: TWHMLLG3.macronix.com x4O7euXb008092
+References: <CAAzmS69VFrTPzZ8DY_NPPTZYtBssocRnQOFAyo3VbSTO4CesbA@mail.gmail.com>
+ <20190523161532.122421-1-natechancellor@gmail.com> <CAKwvOdmjQvCh__ZH+gLLgcKy4u1n5cgJQPU1WRuitEp+UZra5w@mail.gmail.com>
+In-Reply-To: <CAKwvOdmjQvCh__ZH+gLLgcKy4u1n5cgJQPU1WRuitEp+UZra5w@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 24 May 2019 09:40:47 +0200
+Message-ID: <CAK8P3a3RE3Jwft6WTNavV7St3P+mVFwRyCQFVaO3==LB7j29rw@mail.gmail.com>
+Subject: Re: [PATCH] misc: sgi-xp: Properly initialize buf in xpc_get_rsvd_page_pa
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Cliff Whickman <cpw@sgi.com>,
+        Robin Holt <robinmholt@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Stephen Hines <srhines@google.com>,
+        Tony Luck <tony.luck@intel.com>, rja@sgi.com,
+        Fenghua Yu <fenghua.yu@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 23, 2019 at 8:05 PM 'Nick Desaulniers' via Clang Built
+Linux <clang-built-linux@googlegroups.com> wrote:
+>
+> On Thu, May 23, 2019 at 9:20 AM Nathan Chancellor
+> <natechancellor@gmail.com> wrote:
+> >
+> > Clang warns:
+> >
+> > drivers/misc/sgi-xp/xpc_partition.c:73:14: warning: variable 'buf' is
+> > uninitialized when used within its own initialization [-Wuninitialized]
+> >         void *buf = buf;
+> >               ~~~   ^~~
+> > 1 warning generated.
+> >
+> > Initialize it to NULL, which is more deterministic.
+> >
+> > Fixes: 279290294662 ("[IA64-SGI] cleanup the way XPC locates the reserved page")
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/466
+> > Suggested-by: Stephen Hines <srhines@google.com>
+> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+>
+> From https://github.com/ClangBuiltLinux/linux/issues/466#issuecomment-488781917
+> I tried to follow the rabbit hole, but eventually these void* get
+> converted to u64's and passed along to function that I have no idea
+> whether they handle the value `(u64)(void*)0` or not.  Either way,
+> they definitely don't handle uninitialized values/UB.
+>
+> I was going to cc Robin who's already cc'ed, but looks like this code
+> was last touched 7-10 years ago. + Tony and Fenghua for ia64 since
+> sn_partition_reserved_page_pa is defined in
+> arch/ia64/include/asm/sn/sn_sal.h.
+>
+> In absence of consensus, I'll prefer NULL to uninitialized.
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> Thanks Nathan for following up on this.
 
-Hi Miquel,
+I also had to take a look, and I think I understand what's going on,
+and interestingly, the code is correct, both before and after your patch.
+It's described in this comment:
 
+/*
+ * Returns the physical address of the partition's reserved page through
+ * an iterative number of calls.
+ *
+ * On first call, 'cookie' and 'len' should be set to 0, and 'addr'
+ * set to the nasid of the partition whose reserved page's address is
+ * being sought.
+ * On subsequent calls, pass the values, that were passed back on the
+ * previous call.
+ *
+ * While the return status equals SALRET_MORE_PASSES, keep calling
+ * this function after first copying 'len' bytes starting at 'addr'
+ * into 'buf'. Once the return status equals SALRET_OK, 'addr' will
+ * be the physical address of the partition's reserved page. If the
+ * return status equals neither of these, an error as occurred.
+ */
+static inline s64
+sn_partition_reserved_page_pa(u64 buf, u64 *cookie, u64 *addr, u64 *len)
 
-> > > 
-> > > > +
-> > > > +      ret =  nand_get_features(chip, feature_addr, feature);
-> > > > +      if (ret || feature[0] != mode)
-> > > > +         pr_err("Failed to verify read retry moded:%d(%d)\n",
-> > > > +                mode, feature[0]); 
-> > > 
-> > > if ret == 0 but feature[0] != mode, shouldn't you return an error? 
-> > 
-> > okay, will fix.
-> > 
-> > > 
-> > > > +   }
-> > > > +
-> > > > +   return ret; 
-> > > 
-> > > This will produce a Warning at compile time (ret may be used
-> > > uninitialized). Have you tested it? 
-> > 
-> > Tool chain I used is "gcc-arm-linux-gnueabi" and no Warning at compile 
+so *len is set to zero on the first call and tells the bios how many bytes
+are accessible at 'buf', and it does get updated by the BIOS to tell
+us how many bytes it needs, and then we allocate that and try again.
 
-> > time.
-> 
-> What's the output of:
-> gcc-arm-linux-gnueabi -v
-> ?
-> 
+With that explanation added,
 
-Oops, it's gcc 4.8.3 20131111 and kind of obsolete.
-That's why no Warning at compile time.
-
-> > 
-> > Patch it to:
-> > 
------------------------------------------------------------------------------> 
- 
-> >  static int macronix_nand_setup_read_retry(struct nand_chip *chip, int 
-
-> > mode)
-> >  {
-> >          u8 feature[ONFI_SUBFEATURE_PARAM_LEN];
-> >          int ret, feature_addr = ONFI_FEATURE_ADDR_READ_RETRY;
-> > 
-> >          if (chip->parameters.supports_set_get_features &&
-> >              test_bit(feature_addr, chip->parameters.set_feature_list) 
-&&
-> >              test_bit(feature_addr, 
-chip->parameters.get_feature_list)) {
-> > 
-> >                  feature[0] = mode;
-> >                  ret =  nand_set_features(chip, feature_addr, 
-feature);
-> 
->                          ^ extra space, please be careful with the
->                          typos, and run checkpatch.pl --strict before
->                          sending patches.
-> 
-> >                  if (ret) {
-> >                          pr_err("Failed to set read retry moded:%d\n", 
-
-> > mode);
-> >                          goto err_out;
-> >                  }
-> > 
-> >                  ret =  nand_get_features(chip, feature_addr, 
-feature);
-> >                  if (ret) {
-> >                          pr_err("Failed to get read retry moded:%d\n", 
-
-> > mode);
-> >                          goto err_out;
-> >                  } else if (feature[0] != mode) {
-> >                          pr_err("Failed to verify read retry 
-> > moded:%d(%d)\n",
-> >                                  mode, feature[0]);
-> >                          return -EIO;
-> 
-> That's not what I meant. You can keep the former condition but if !ret
-> then ret = -EIO for instance.
-> 
-> >                  }
-> >          }
-> > 
-> >  err_out:
-> >          return ret;
-> 
-> Again, do not jump to a single return call, directly do the return from
-> the point where you want to quit the function.
-> 
-> The problem should be that ret may be used uninitialized, the compiler
-> should tell you that.
-
-got it and thanks for your review.
-
-> 
-> Thanks,
-> Miquèl
-
-best regards,
-Mason
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
