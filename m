@@ -2,435 +2,173 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3ADDC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 859C0C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A80482184B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:07:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB4C42175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:07:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="lvVH5C8f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390572AbfEXKHI (ORCPT
+        id S2390366AbfEXKHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 06:07:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36062 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390248AbfEXKHI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 06:07:08 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 73300AF33;
-        Fri, 24 May 2019 10:07:06 +0000 (UTC)
-Date:   Fri, 24 May 2019 11:07:02 +0100
-From:   Mel Gorman <mgorman@suse.de>
-To:     David Rientjes <rientjes@google.com>
-Cc:     Andrea Arcangeli <aarcange@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Zi Yan <zi.yan@cs.rutgers.edu>,
-        Stefan Priebe - Profihost AG <s.priebe@profihost.ag>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] Revert "mm, thp: restore node-local hugepage
- allocations"
-Message-ID: <20190524100702.GD23719@suse.de>
-References: <20190503223146.2312-1-aarcange@redhat.com>
- <20190503223146.2312-3-aarcange@redhat.com>
- <alpine.DEB.2.21.1905151304190.203145@chino.kir.corp.google.com>
- <20190520153621.GL18914@techsingularity.net>
- <alpine.DEB.2.21.1905201018480.96074@chino.kir.corp.google.com>
+        Fri, 24 May 2019 06:07:50 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:38985 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390106AbfEXKHt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 06:07:49 -0400
+Received: by mail-it1-f196.google.com with SMTP id 9so12982967itf.4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 03:07:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v2UKxBj/16PFnPT0opJ+Wxp3U9KN6SIstIRPi4CR6Dg=;
+        b=lvVH5C8fcVBxVLdFKCCU7ZqdcvQC84ZTeT1hnQfp2l+m4+WAl8xKSkJ62hp4jGjoRP
+         pZZCtvosTk3b1cuR8ZH2y5aeRTZiaMcez8/hglgDIG8f+BgvYF1xQa8Q16acwfmqNtsP
+         EAORiPyjxlLePwEQdO4Ju5Xmo5mFeB9cGNrWw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v2UKxBj/16PFnPT0opJ+Wxp3U9KN6SIstIRPi4CR6Dg=;
+        b=WPvvRAfoRp3SeORuDvrCSNmhWIqB+MPD/vCP0883a5ecIoKSJZg1E7BtXO3CZ6OyKT
+         6Xe7Mxx48aTZdOu90ESSQVrdTeCvSq22aZ2URt82BC9lZW7ET6yu84vgpc4roLJXP/9k
+         UX6O4LsCkQ8M4y3TCHYwwzJSGX2SF7zwMTfIewNRNzhetB6q89Au3VupNf+03xaGtoL5
+         vbfw7XIjQJsR2iE85zdIydffBu1u2TdAyk8HzPBS+t4Z45nxjmQl9WevnUvT5eJr759Q
+         /2YYWv3C2TSsPpg2Re+P+1wq3lY6HJm1MRa1gMxE+g0iNdGS64tAo4uiVsh4elFpbmkk
+         ffuw==
+X-Gm-Message-State: APjAAAV59wSgD3F9VD5dL2rQwYiYJZYuf1MVA8iCglwfQa8rGePIaJU+
+        C7cLg1mqrw0i5K3QMU/WbV6AF7zSEoU3cHge4+4AYQ==
+X-Google-Smtp-Source: APXvYqzZYv+7JHLFo0KwfeFhhGoWLlvdvku8Io/xT0x0+uSdJAzpclvRy5FUulBPbGFLltElswI7+88s+Lg69y+sBgc=
+X-Received: by 2002:a24:a004:: with SMTP id o4mr16634448ite.167.1558692468219;
+ Fri, 24 May 2019 03:07:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1905201018480.96074@chino.kir.corp.google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190520090318.27570-1-jagan@amarulasolutions.com>
+ <20190520090318.27570-5-jagan@amarulasolutions.com> <20190523204823.mx7l4ozklzdh7npn@flea>
+In-Reply-To: <20190523204823.mx7l4ozklzdh7npn@flea>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Fri, 24 May 2019 15:37:36 +0530
+Message-ID: <CAMty3ZA0S=+8NBrQZvP6sFdzSYWqhNZL_KjkJAQ0jTc2RVivrw@mail.gmail.com>
+Subject: Re: [PATCH v10 04/11] drm/sun4i: tcon: Compute DCLK dividers based on
+ format, lanes
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Chen-Yu Tsai <wens@csie.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Bhushan Shah <bshah@mykolab.com>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        =?UTF-8?B?5Z2a5a6a5YmN6KGM?= <powerpan@qq.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 10:54:16AM -0700, David Rientjes wrote:
-> On Mon, 20 May 2019, Mel Gorman wrote:
-> 
-> > > There was exhausting discussion subsequent to this that caused Linus to 
-> > > have to revert the offending commit late in an rc series that is not 
-> > > described here. 
-> > 
-> > Yes, at the crux of that matter was which regression introduced was more
-> > important -- the one causing swap storms which Andrea is trying to address
-> > or a latency issue due to assumptions of locality when MADV_HUGEPAGE
-> > is used.
-> > 
-> > More people are affected by swap storms and distributions are carrying
-> > out-of-tree patches to address it. Furthermore, multiple people unrelated
-> > to each other can trivially reproduce the problem with test cases and
-> > experience the problem with real workloads. Only you has a realistic
-> > workload sensitive to the latency issue and we've asked repeatedly for
-> > a test case (most recently Michal Hocko on May 4th) which is still not
-> > available.
-> > 
-> 
-> Hi Mel,
-> 
-> Any workload that does MADV_HUGEPAGE will be impacted if remote hugepage 
-> access latency is greater than local native page access latency and is 
-> using the long-standing behavior of the past three years. 
+On Fri, May 24, 2019 at 2:18 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> On Mon, May 20, 2019 at 02:33:11PM +0530, Jagan Teki wrote:
+> > pll-video => pll-mipi => tcon0 => tcon0-pixel-clock is the typical
+> > MIPI clock topology in Allwinner DSI controller.
+> >
+> > TCON dotclock driver is computing the desired DCLK divider based on
+> > panel pixel clock along with input DCLK min, max divider values from
+> > tcon driver and that would eventually set the pll-mipi clock rate.
+> >
+> > The current code is passing dsi min and max divider value as 4 via
+> > tcon driver which would ended-up triggering below vblank wait timed out
+> > warning on "bananapi,s070wv20-ct16" panel.
+> >
+> >  WARNING: CPU: 0 PID: 31 at drivers/gpu/drm/drm_atomic_helper.c:1429 drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0
+> >  [CRTC:46:crtc-0] vblank wait timed out
+> >  Modules linked in:
+> >  CPU: 0 PID: 31 Comm: kworker/0:1 Not tainted 5.1.0-next-20190514-00025-g5186cdf10757-dirty #6
+> >  Hardware name: Allwinner sun8i Family
+> >  Workqueue: events deferred_probe_work_func
+> >  [<c010ed54>] (unwind_backtrace) from [<c010b76c>] (show_stack+0x10/0x14)
+> >  [<c010b76c>] (show_stack) from [<c0688c70>] (dump_stack+0x84/0x98)
+> >  [<c0688c70>] (dump_stack) from [<c011d9e4>] (__warn+0xfc/0x114)
+> >  [<c011d9e4>] (__warn) from [<c011da40>] (warn_slowpath_fmt+0x44/0x68)
+> >  [<c011da40>] (warn_slowpath_fmt) from [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0)
+> >  [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1) from [<c040e694>] (drm_atomic_helper_commit_tail_rpm+0x5c/0x6c)
+> >  [<c040e694>] (drm_atomic_helper_commit_tail_rpm) from [<c040e4dc>] (commit_tail+0x40/0x6c)
+> >  [<c040e4dc>] (commit_tail) from [<c040e5cc>] (drm_atomic_helper_commit+0xbc/0x128)
+> >  [<c040e5cc>] (drm_atomic_helper_commit) from [<c0411b64>] (restore_fbdev_mode_atomic+0x1cc/0x1dc)
+> >  [<c0411b64>] (restore_fbdev_mode_atomic) from [<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked+0x54/0xa0)
+> >  [<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked) from [<c0415774>] (drm_fb_helper_set_par+0x30/0x54)
+> >  [<c0415774>] (drm_fb_helper_set_par) from [<c03ad450>] (fbcon_init+0x560/0x5ac)
+> >  [<c03ad450>] (fbcon_init) from [<c03eb8a0>] (visual_init+0xbc/0x104)
+> >  [<c03eb8a0>] (visual_init) from [<c03ed1b8>] (do_bind_con_driver+0x1b0/0x390)
+> >  [<c03ed1b8>] (do_bind_con_driver) from [<c03ed780>] (do_take_over_console+0x13c/0x1c4)
+> >  [<c03ed780>] (do_take_over_console) from [<c03ad800>] (do_fbcon_takeover+0x74/0xcc)
+> >  [<c03ad800>] (do_fbcon_takeover) from [<c013c9c8>] (notifier_call_chain+0x44/0x84)
+> >  [<c013c9c8>] (notifier_call_chain) from [<c013cd20>] (__blocking_notifier_call_chain+0x48/0x60)
+> >  [<c013cd20>] (__blocking_notifier_call_chain) from [<c013cd50>] (blocking_notifier_call_chain+0x18/0x20)
+> >  [<c013cd50>] (blocking_notifier_call_chain) from [<c03a6e44>] (register_framebuffer+0x1e0/0x2f8)
+> >  [<c03a6e44>] (register_framebuffer) from [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock+0x2fc/0x50c)
+> >  [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock) from [<c04158c8>] (drm_fbdev_client_hotplug+0xe8/0x1b8)
+> >  [<c04158c8>] (drm_fbdev_client_hotplug) from [<c0415a20>] (drm_fbdev_generic_setup+0x88/0x118)
+> >  [<c0415a20>] (drm_fbdev_generic_setup) from [<c043f060>] (sun4i_drv_bind+0x128/0x160)
+> >  [<c043f060>] (sun4i_drv_bind) from [<c044b588>] (try_to_bring_up_master+0x164/0x1a0)
+> >  [<c044b588>] (try_to_bring_up_master) from [<c044b658>] (__component_add+0x94/0x140)
+> >  [<c044b658>] (__component_add) from [<c0445e0c>] (sun6i_dsi_probe+0x144/0x234)
+> >  [<c0445e0c>] (sun6i_dsi_probe) from [<c0452ee4>] (platform_drv_probe+0x48/0x9c)
+> >  [<c0452ee4>] (platform_drv_probe) from [<c04512bc>] (really_probe+0x1dc/0x2c8)
+> >  [<c04512bc>] (really_probe) from [<c0451508>] (driver_probe_device+0x60/0x160)
+> >  [<c0451508>] (driver_probe_device) from [<c044f794>] (bus_for_each_drv+0x74/0xb8)
+> >  [<c044f794>] (bus_for_each_drv) from [<c045106c>] (__device_attach+0xd0/0x13c)
+> >  [<c045106c>] (__device_attach) from [<c0450464>] (bus_probe_device+0x84/0x8c)
+> >  [<c0450464>] (bus_probe_device) from [<c04508f0>] (deferred_probe_work_func+0x64/0x90)
+> >  [<c04508f0>] (deferred_probe_work_func) from [<c0135970>] (process_one_work+0x204/0x420)
+> >  [<c0135970>] (process_one_work) from [<c013690c>] (worker_thread+0x274/0x5a0)
+> >  [<c013690c>] (worker_thread) from [<c013b3d8>] (kthread+0x11c/0x14c)
+> >  [<c013b3d8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
+> >  Exception stack(0xde539fb0 to 0xde539ff8)
+> >  9fa0:                                     00000000 00000000 00000000 00000000
+> >  9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+> >  9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> >  ---[ end trace 4017fea4906ab391 ]---
+> >
+> > But accordingly to Allwinner A33, A64 BSP codes [1] [2] this divider
+> > is clearly using 'format/lanes' for dsi divider value, dsi_clk.clk_div
+> >
+> > Which would compute the pll_freq and set a clock rate for it in
+> > [3] and [4] respectively.
+> >
+> > The same issue has reproduced in A33, A64 with 4-lane and 2-lane devices
+> > and got fixed with this computation logic 'format/lanes', so this patch
+> > using dclk min and max dividers as per BSP.
+> >
+> > [1] https://github.com/BPI-SINOVOIP/BPI-M2M-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp/de/disp_lcd.c#L1106
+> > [2] https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/disp_al.c#L213
+> > [3] https://github.com/BPI-SINOVOIP/BPI-M2M-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp/de/disp_lcd.c#L1127
+> > [4] https://github.com/BPI-SINOVOIP/BPI-M2M-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp/de/disp_lcd.c#L1161
+>
+> In that mail, I've pointed out that clk_div isn't used for the TCON dclk divider:
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2019-February/629596.html
+>
+> The only reply you've sent is that you indeed see that the divider is
+> set to 4 in the BSP, but you're now saying that the BSP can change
+> it. If so, then please point exactly the flaw in the explanation in
+> that mail.
 
-And prior to that, THP usage could cause massive latencies due to reclaim
-and compaction that was adjusted over time to cause the least harm. We've
-had changes in behaviour for THP and madvise before -- largely due to cases
-where THP allocation caused large stalls that users found surprising. These
-stalls generated quite a substantial number of bugs in the field.
+Frankly, I have explained these details in commit message and previous
+version patch[1] with print messages on the code.
 
-As before, what is important is causing the least harm to the most
-people when corner cases are hit.
+BSP has tcon_div and dsi_div. dsi_div is dynamic which depends on
+bpp/lanes and it indeed depends on PLL computation (not tcon_div),
+anyway I have explained again on this initial link you mentioned.
+Please have a look and get back.
 
-> The test case 
-> would be rather straight forward: induce node local fragmentation (easiest 
-> to do by injecting a kernel module), do MADV_HUGEPAGE over a large range, 
-> fault, and measure random access latency.  This is readily observable and 
-> can be done synthetically to measure the random access latency of local 
-> native pages vs remote hugepages.  Andrea provided this testcase in the 
-> original thread.  My results from right now:
-> 
-> # numactl -m 0 -C 0 ./numa-thp-bench
-> random writes MADV_HUGEPAGE 17492771 usec
-> random writes MADV_NOHUGEPAGE 21344846 usec
-> random writes MADV_NOHUGEPAGE 21399545 usec
-> random writes MADV_HUGEPAGE 17481949 usec
-> # numactl -m 0 -C 64 ./numa-thp-bench
-> random writes MADV_HUGEPAGE 26858061 usec
-> random writes MADV_NOHUGEPAGE 31067825 usec
-> random writes MADV_NOHUGEPAGE 31334770 usec
-> random writes MADV_HUGEPAGE 26785942 usec
-> 
-
-Ok, lets consider two scenarios.
-
-The first one is very basic -- using a large buffer that is larger than
-a memory node size. The demonstation program is simple
-
---8<-- mmap-demo.c --8<--
-#include <sys/mman.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#define LOOPS 3
-#ifndef MADV_FLAGS
-#define MADV_FLAGS 0
-#endif
-
-int main(int argc, char **argv)
-{
-	char *buf;
-	int i;
-	size_t length;
-
-	if (argc != 2) {
-		printf("Specify buffer size in bytes\n");
-		exit(EXIT_FAILURE);
-	}
-
-	length = atol(argv[1]) & ~4095;
-	buf = mmap(NULL, length, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, 0, 0);
-	if (buf == MAP_FAILED) {
-		perror("mmap failed");
-		exit(EXIT_FAILURE);
-	}
-
-	if (MADV_FLAGS)
-		madvise(buf, length, MADV_FLAGS);
-
-	printf("Address %p Length %lu MB\n", buf, length / 1048576);
-	for (i = 0; i < LOOPS; i++) {
-		memset(buf, i, length);
-		printf(".");
-		fflush(NULL);
-	}
-	printf("\n");
-}
---8<-- mmap-demo.c --8<--
-
-All it's doing is writing a large anonymous array. Lets see how it
-behaves
-
-# Set buffer size to 80% of memory -- machine has 2 nodes that are
-# equal size so this will spill over
-$ BUFSIZE=$((`free -b | grep Mem: | awk '{print $2}'`*8/10))
-
-# Scenario 1: default setting, no madvise. Using CPUs from only one
-# node as otherwise numa balancing or cpu balancing will migrate
-# the task based on locality. Not particularly unusual when packing
-# virtual machines in a box
-$ gcc -O2 mmap-demo.c -o mmap-demo && numactl --cpunodebind 0 /usr/bin/time ./mmap-demo $BUFSIZE
-Address 0x7fdc5b890000 Length 51236 MB
-...
-25.48user 30.19system 0:55.68elapsed 99%CPU (0avgtext+0avgdata 52467180maxresident)k
-0inputs+0outputs (0major+15388156minor)pagefaults 0swaps
-
-Total time is 55.68 seconds to execute, lots of minor faults for the
-allocations (some may be NUMA balancing). vmstat for the time it was
-running was as follows
-
-procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
- r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
- 0  0      0 65001004     32 279528    0    1     1     1    1    1  0  0 100  0  0
- 1  0      0 48025796     32 279516    0    0     0     1  281   75  0  2 98  0  0
- 1  0      0 30927108     32 279444    0    0     0     0  285   54  0  2 98  0  0
- 1  0      0 22250504     32 279284    0    0     0     0  277   44  0  2 98  0  0
- 1  0      0 13665116     32 279272    0    0     0     0  288   67  0  2 98  0  0
- 1  0      0 12432096     32 279196    0    0     0     0  276   46  2  0 98  0  0
- 1  0      0 12429580     32 279452    0    0     0   598  297   96  1  1 98  0  0
- 1  0      0 12429604     32 279432    0    0     0     3  278   50  1  1 98  0  0
- 1  0      0 12429856     32 279432    0    0     0     0  289   68  1  1 98  0  0
- 1  0      0 12429864     32 279420    0    0     0     0  275   43  2  0 98  0  0
- 1  0      0 12429936     32 279420    0    0     0     0  298   61  1  1 98  0  0
- 1  0      0 12429944     32 279416    0    0     0     0  275   42  1  1 98  0  0
-
-That's fairly straight-forward. Memory gets used, no particularly
-unusual activity when the buffer is allocated and updated. Now, lets
-use MADV_HUGEPAGE
-
-$ gcc -DMADV_FLAGS=MADV_HUGEPAGE -O2 mmap-demo.c -o mmap-demo && numactl --cpunodebind 0 /usr/bin/time ./mmap-demo $BUFSIZE
-Address 0x7fe8b947d000 Length 51236 MB
-...
-25.46user 33.12system 1:06.80elapsed 87%CPU (0avgtext+0avgdata 52467172maxresident)k
-1932184inputs+0outputs (30197major+15103633minor)pagefaults 0swaps
-
-Just 10 seconds more due to being a simple case with few loops but look
-at the major faults, there are non-zero even though there was plenty of
-memory. Lets look at vmstat
-
-procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
- r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
- 0  0      0 64997812     32 279380    0    1     1     1    1    1  0  0 100  0  0
- 1  0      0 47230624     32 279392    0    0     0     1  286   74  0  2 98  0  0
- 0  1 324104 32915756     32 233752    0 64786     3 64790  350  330  0  1 98  0  0
- 1  0 1048572 31166652     32 223076   32 144950    32 144950  485 2117  0  1 99  1  0
- 1  0 1048572 23839632     32 223076    0    0     0     0  277 5777  0  2 98  0  0
- 1  0 1048572 16598116     32 223064    0    0     0     0  281 5714  0  2 98  0  0
- 0  1 502444 12947660     32 223064 107547    0 107549     0 3840 16245  0  1 99  0  0
- 1  0    944 12515736     32 224368 85670    0 85737   629 3219 11098  1  0 99  0  0
- 1  0    944 12514224     32 224368    0    0     0     0  275   42  2  1 98  0  0
- 1  0    944 12514228     32 224364    0    0     0     0  280   52  1  1 98  0  0
- 1  0    944 12514228     32 224364    0    0     0     0  275   44  1  1 98  0  0
- 1  0    944 12513712     32 224364    0    0     0     0  291   69  2  0 98  0  0
- 1  0    944 12513964     32 224364    0    0     0     0  274   43  1  1 98  0  0
- 1  1 216228 12643952     32 224132    0 43008     0 43008  747  130  1  1 98  0  0
- 1  0   1188 65081364     32 224464   57  819    62   819  296  111  0  1 99  0  0
-
-That is showing large amounts of swaps out and in. This demonstration
-case could be made much worse but it's illustrative of what has been
-observed -- __GFP_THISNODE is harmful to MADV_HUGEPAGE.
-
-Now, contrast this with your example
-
-o Induce node local fragmentation using a kernel module that must be
-  developed. No description on whether this should be equivalent to
-  anonymous memory, file-backed or pinned like it was slab objects.
-  No statment on whether the module memory should be able to migrate
-  like what compaction does.
-o Measure random access latency -- requires specific application
-  knowledge or detailed perf analysis
-o Applicable to applications that are extremely latency sensitive only
-
-My example can be demonstrated by a 1st year computer programmer with
-minimal effort. It is also visible to anyone creating a KVM instance
-that is larger than a NUMA node if the virtual machine is using enough
-of its memory.
-
-Your example requires implementation of a kernel module with much
-guesswork as to what is a realistic means and then implement an
-application that is latency sensitive.
-
-The bottom line is that far more people with much less experience can
-detect a swap storm and know its bad. Furthermore, if MADV_HUGEPAGE is
-used by something like KVM, there isn't a workaround except for
-disabling THP for the application which for KVM is a big penalty. Your
-scenario of having a latency access penalty is harder to detect and
-depends on the state of the system at the time the application executes.
-
-Contrast that with the workarounds for your situation where the system
-is fragmented. There are multiple choices
-
-1. Enable zone reclaim mode for the initialisation phase
-2. Memory bind the application to the target node
-3. "Flush" memory before the application starts with with something like
-   numactl --membind=0 memhog -r10 $HIGH_PERCENTAGE_OF_NODE_0
-
-It's clumsy but it's workable in the short term.
-
-> > > This isn't an argument in support of this patch, there is a difference 
-> > > between (1) pages of the native page size being faulted first locally
-> > > falling back remotely and (2) hugepages being faulted first locally and 
-> > > falling back to native pages locally because it has better access latency 
-> > > on most platforms for workloads that do not span multiple nodes.  Note 
-> > > that the page allocator is unaware whether the workload spans multiple 
-> > > nodes so it cannot make this distinction today, and that's what I'd prefer 
-> > > to focus on rather than changing an overall policy for everybody.
-> > > 
-> > 
-> > Overall, I think it would be ok to have behaviour whereby local THP is
-> > allocated if cheaply, followed by base pages local followed by the remote
-> > options. However, __GFP_THISNODE removes the possibility of allowing
-> > remote fallback and instead causing a swap storm and swap storms are
-> > trivial to generate on NUMA machine running a mainline kernel today.
-> > 
-> 
-> Yes, this is hopefully what we can focus on and I hope we can make forward 
-> progress with (1) extending mempolicies to allow specifying hugepage 
-> specific policies, (2) the prctl(), (3) improving the feedback loop 
-> between compaction and direct reclaim, and/or (4) resolving the overloaded 
-> the conflicting meanings of 
-> /sys/kernel/mm/transparent_hugepage/{enabled,defrag} and 
-> MADV_HUGEPAGE/MADV_NOHUGEPAGE.
-> 
-
-3 should be partially done with the latest compaction series, it's unclear
-how far it goes for your case because it cannot be trivially reproduced
-outside of your test environment. I never got any report back on how it
-affected your workload but for the trivial cases, it helped (modulo bugs
-that had to be fixed for corner cases on zone boundary handling).
-
-1, 2 and 4 are undefined at this point because it's unclear what sort of
-policies would suit your given scenario and whether you would be even
-willing to rebuild the applications. For everybody else it's a simple
-"do not use __GFP_THISNODE for MADV_HUGEPAGE". In the last few months,
-there also has been no evidence of what policies would suit you or
-associated patches.
-
-What you want is zone_reclaim_mode for huge pages but for whatever
-reason, are unwilling to enable zone_reclaim_mode. However, it would
-make some sense to extend it. The current definition is
-
-This is value ORed together of
-1       = Zone reclaim on
-2       = Zone reclaim writes dirty pages out
-4       = Zone reclaim swaps pages
-
-An optional extra would be
-
-8	= Zone reclaim on for THP applications for MADV_HUGEPAGE
-	  mappings to require both THP where possible and local
-	  memory
-
-The default would be off. Your systems would need to or the 8 value
-
-Would that be generally acceptable? It would give sensible default
-behaviour for everyone and the option for those users that know for a
-fact their application fits in a NUMA node *and* is latency sensitive to
-remote accesses.
-
-> The issue here is the overloaded nature of what MADV_HUGEPAGE means and 
-> what the system-wide thp settings mean. 
-
-MADV_HUGEPAGE is documented to mean "Enable Transparent Huge Pages (THP)
-for pages in the range specified by addr  and  length". It says nothing
-about locality. Locality decisions are set by policies, not madvise.
-MPOL_BIND would be the obvious choice for strict locality but that is
-not always necessary the best decision. It is unclear if a policy like
-MPOL_CPU_LOCAL for both base and THP allocations would actually help
-you because the semantics could be defined in multiple ways. Critically,
-there is little information on what level of effort the kernel should do
-to give local memory.
-
-> It cannot possibly provide sane 
-> behavior of all possible workloads given only two settings.  MADV_HUGEPAGE 
-> itself has *four* meanings: (1) determine hugepage eligiblity when not 
-> default, (2) try to do sychronous compaction/reclaim at fault, (3) 
-> determine eligiblity of khugepaged, (4) control defrag settings based on 
-> system-wide setting.  The patch here is adding a fifth: (5) prefer remote 
-> allocation when local memory is fragmented.  None of this is sustainable.
-> 
-
-Given that locality and reclaim behaviour for *all* pages was specified
-by zone_reclaim_mode, it could be extended to cover special casing of THP.
-
-> Note that this patch is also preferring remote hugepage allocation *over* 
-> local hugepages before trying memory compaction locally depending on the 
-> setting of vm.zone_reclaim_mode so it is infringing on the long-standing 
-> behavior of (2) as well.
-> 
-
-Again, extending zone_reclaim_mode would act as a band-aid until the
-various policies can be defined and agreed upon. Once that API is set,
-it will be with us for a while and right now, we have swap storms.
-
-> In situations such as these, it is not surprising that there are issues 
-> reported with any combination of flags or settings and patches get 
-> proposed to are very workload dependent.  My suggestion has been to move 
-> in a direction where this can be resolved such that userspace has a clean 
-> and stable API and we can allow remote hugepage allocation for workloads 
-> that specifically opt-in, but not incur 25.8% greater access latency for 
-> using the behavior of the past 3+ years.
-> 
-
-You suggest moving in a some direction but have offered very little in
-terms of reproducing your problematic scenario or defining exactly what
-those policies should mean. For most people if they want memory to be
-local, they use MPOL_BIND and call it a day. It's not clear what policy
-you would define that gets translated into behaviour you find acceptable.
-
-> Another point that has consistently been raised on LKML is the inability 
-> to disable MADV_HUGEPAGE once set: i.e. if you set it for faulting your 
-> workload, you are required to do MADV_NOHUGEPAGE to clear it and then are 
-> explicitly asking that this memory is not backed by hugepages.
-> 
-
-I missed that one but it does not sound like an impossible problem to
-define another MADV flag for it.
-
-> > > It may not have been meant to provide this, but when IBM changed this 
-> > > three years ago because of performance regressions and others have started 
-> > > to use MADV_HUGEPAGE with that policy in mind, it is the reality of what 
-> > > the madvise advice has provided.  What was meant to be semantics of 
-> > > MADV_HUGEPAGE three years ago is irrelevant today if it introduces 
-> > > performance regressions for users who have used the advice mode during 
-> > > that past three years.
-> > > 
-> > 
-> > Incurring swap storms when there is plenty of free memory available is
-> > terrible. If the working set size is larger than a node, the swap storm
-> > may even persist indefinitely.
-> > 
-> 
-> Let's fix it.
-> 
-
-That's what Andrea's patch does -- fixes trivial swap storms. It
-does require you use existing memory policies *or* temporarily
-enable zone_reclaim_mode during initialisation to get the locality
-you want. Alternatively, we extend zone_reclaim_mode to apply to
-THP+MADV_HUGEPAGE. You could also carry a revert seeing as the kernel is
-used for an internal workload where as some of us have to support all
-classes of users running general workloads where causing the least harm
-is important for supportability.
-
-> > The current behaviour is potential swap storms that are difficult to
-> > avoid because the behaviour is hard-wired into the kernel internals.
-> > Only disabling THP, either on a task or global basis, avoids it when
-> > encountered.
-> > 
-> 
-> We are going in circles, *yes* there is a problem for potential swap 
-> storms today because of the poor interaction between memory compaction and 
-> directed reclaim but this is a result of a poor API that does not allow 
-> userspace to specify that its workload really will span multiple sockets 
-> so faulting remotely is the best course of action. 
-
-Yes, we're going in circles. I find it amazing that you think leaving
-users with trivial to reproduce swap storms is acceptable until some
-unreproducible workload can be fixed with some undefined set of
-unimplemented memory policies.
-
-What we have right now is a concrete problem with a fix that is being
-naked with a counter-proposal being "someone should implement the test case
-for me then define/implement policies that suit that specific test case".
-
--- 
-Mel Gorman
-SUSE Labs
+[1] https://patchwork.freedesktop.org/patch/291525/
