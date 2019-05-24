@@ -2,134 +2,100 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75063C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A67C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47BC421851
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:59:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558724343;
-	bh=FXyHqZv9AoEoKKx2HiWPcCTBKjBsIHHJ+fKkrvtAwEg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XhmjGhmPqD4OqTGEh1kWIIo3u77QRQSg98a7UtCIMs4Ues/QGWDdxyUfrjx37QDLo
-	 u6RukVjLTixzzTCRuJcOJ3CGKUrV5vxrGsBu1XsaqvwXZl9luFYnp+fI4XvUwV4Jwf
-	 SDtYci72AwwKt609CATGcK5gvCyOUhc7mGEEDcUk=
+	by mail.kernel.org (Postfix) with ESMTP id 32CFA21848
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:59:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391473AbfEXS7C (ORCPT
+        id S2403958AbfEXS7a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 14:59:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60936 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729416AbfEXS7B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 14:59:01 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DD082184E;
-        Fri, 24 May 2019 18:59:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558724340;
-        bh=FXyHqZv9AoEoKKx2HiWPcCTBKjBsIHHJ+fKkrvtAwEg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k8lWmisXxYgrd1wQoQJaGzDwVjbUmDYHxkNucYNCOGlmAA9Ym6N5wWtEoSEuvras9
-         1AQAZVu/JwLwNi3aGvoaYR+DP7K4ZpeiowJNuN7UOJTn1hEtjJeJhAGIseqFzu7q72
-         gNox1tdXJ+PkMHQ+yvbl5jX0N1ubWtHQF6hb9fVA=
-Date:   Fri, 24 May 2019 20:58:58 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     richard.gong@linux.intel.com
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@kernel.org,
-        atull@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, sen.li@intel.com,
-        Richard Gong <richard.gong@intel.com>
-Subject: Re: [PATCHv3 2/4] firmware: add Intel Stratix10 remote system update
- driver
-Message-ID: <20190524185858.GB13200@kroah.com>
-References: <1558616610-499-1-git-send-email-richard.gong@linux.intel.com>
- <1558616610-499-3-git-send-email-richard.gong@linux.intel.com>
+        Fri, 24 May 2019 14:59:30 -0400
+Received: from emh01.mail.saunalahti.fi ([62.142.5.107]:45636 "EHLO
+        emh01.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391592AbfEXS71 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 14:59:27 -0400
+Received: from t60.musicnaut.iki.fi (85-76-86-221-nat.elisa-mobile.fi [85.76.86.221])
+        by emh01.mail.saunalahti.fi (Postfix) with ESMTP id C12E020014;
+        Fri, 24 May 2019 21:59:22 +0300 (EEST)
+Date:   Fri, 24 May 2019 21:59:22 +0300
+From:   Aaro Koskinen <aaro.koskinen@iki.fi>
+To:     Peter Maydell <peter.maydell@linaro.org>,
+        Thomas Huth <thuth@redhat.com>
+Cc:     Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@redhat.com>,
+        Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>,
+        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [Qemu-devel] Running linux on qemu omap
+Message-ID: <20190524185922.GA4597@t60.musicnaut.iki.fi>
+References: <20190520190533.GA28160@Red>
+ <20190521232323.GD3621@darkstar.musicnaut.iki.fi>
+ <20190522093341.GA32154@Red>
+ <20190522181904.GE3621@darkstar.musicnaut.iki.fi>
+ <8977e2bb-8d9e-f4fd-4c44-b4f67e0e7314@redhat.com>
+ <c2972889-fe60-7614-fb6e-e57ddf780a54@redhat.com>
+ <20190523183623.GB5234@darkstar.musicnaut.iki.fi>
+ <CAFEAcA8C0WN5FwaW2kfWiRm1T8wML_fWXDKqRXP-Lv_P7ysy8A@mail.gmail.com>
+ <20190524150018.GA3156@t60.musicnaut.iki.fi>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1558616610-499-3-git-send-email-richard.gong@linux.intel.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190524150018.GA3156@t60.musicnaut.iki.fi>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 08:03:28AM -0500, richard.gong@linux.intel.com wrote:
-> +static int stratix10_rsu_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct stratix10_rsu_priv *priv;
-> +	int ret;
-> +
-> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	priv->client.dev = dev;
-> +	priv->client.receive_cb = NULL;
-> +	priv->client.priv = priv;
-> +	priv->status.current_image = 0;
-> +	priv->status.fail_image = 0;
-> +	priv->status.error_location = 0;
-> +	priv->status.error_details = 0;
-> +	priv->status.version = 0;
-> +	priv->status.state = 0;
-> +
-> +	mutex_init(&priv->lock);
-> +	priv->chan = stratix10_svc_request_channel_byname(&priv->client,
-> +							  SVC_CLIENT_RSU);
-> +	if (IS_ERR(priv->chan)) {
-> +		dev_err(dev, "couldn't get service channel %s\n",
-> +			SVC_CLIENT_RSU);
-> +		return PTR_ERR(priv->chan);
-> +	}
-> +
-> +	init_completion(&priv->completion);
-> +	platform_set_drvdata(pdev, priv);
-> +
-> +	/* status is only updated after reboot */
-> +	ret = rsu_send_msg(priv, COMMAND_RSU_STATUS,
-> +			   0, rsu_status_callback);
-> +	if (ret) {
-> +		dev_err(dev, "Error, getting RSU status %i\n", ret);
-> +		stratix10_svc_free_channel(priv->chan);
-> +	}
-> +
-> +	ret = devm_device_add_groups(dev, rsu_groups);
-> +	if (ret) {
-> +		dev_err(dev, "unable to create sysfs group");
-> +		stratix10_svc_free_channel(priv->chan);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static int stratix10_rsu_remove(struct platform_device *pdev)
-> +{
-> +	struct stratix10_rsu_priv *priv = platform_get_drvdata(pdev);
-> +
-> +	stratix10_svc_free_channel(priv->chan);
-> +	devm_device_remove_groups(&pdev->dev, rsu_groups);
+Hi,
 
-When you are the only caller of a function in the kernel, that's a HUGE
-flag that maybe you should not be calling it...
+On Fri, May 24, 2019 at 06:00:18PM +0300, Aaro Koskinen wrote:
+> Please don't delete OMAP boards quite yet :) In the mainline kernel
+> they are not orphaned, they frequently get tested using actual hardware,
+> and QEMU would help in additional testing. I'll try to get N8x0 boot to
+> work with the minimal kernel I use on real HW.
 
-Which reminds me, I need to go remove this...
+So it was only a matter of attaching the serial console at the QEMU side
+(a hackish patch at the end of the mail).
 
-Anyway, no, don't do this, you are racing userspace with your sysfs
-files.  Reference the groups in the platform_driver structure and the
-driver core will properly create, and remove, them for you, and
-userspace will be happy they show up at the correct time.
+$ qemu-system-arm --version
+QEMU emulator version 4.0.0 (v4.0.0-dirty)
+Copyright (c) 2003-2019 Fabrice Bellard and the QEMU Project developers
+$ qemu-system-arm -M n810 -kernel zImage -nographic
+Uncompressing Linux... done, booting the kernel.
+[    0.000000] Booting Linux on physical CPU 0x0
+[    0.000000] Linux version 5.1.0-n8x0_tiny-los_b1ac4+-00007-g7435e73d8ac4 (aaro@amd-fx-6350) (gcc version 8.3.0 (GCC)) #1 Fri May 24 20:43:02 EEST 2019
+[    0.000000] CPU: ARMv6-compatible processor [4107b362] revision 2 (ARMv6TEJ), cr=00c5387d
+[    0.000000] CPU: VIPT aliasing data cache, unknown instruction cache
+[    0.000000] OF: fdt: Machine model: Nokia N810
+[    0.000000] printk: bootconsole [earlycon0] enabled
+[    0.000000] Memory policy: Data cache writeback
+[    0.000000] OMAP2420
+[...]
 
-This also makes your probe/remove function smaller.
+However there are plenty of WARNs that are not present on real hardware.
+Anyway, it's a start.
 
-thanks,
+A.
 
-greg k-h
+...
+
+diff --git a/hw/arm/nseries.c b/hw/arm/nseries.c
+index 906b7ca22d43..52ff83ec5147 100644
+--- a/hw/arm/nseries.c
++++ b/hw/arm/nseries.c
+@@ -792,6 +792,7 @@ static void n8x0_uart_setup(struct n800_s *s)
+     qdev_connect_gpio_out(s->mpu->gpio, N8X0_BT_WKUP_GPIO,
+                     csrhci_pins_get(radio)[csrhci_pin_wakeup]);
+ 
++    omap_uart_attach(s->mpu->uart[2], serial_hd(0));
+     omap_uart_attach(s->mpu->uart[BT_UART], radio);
+ }
+ 
