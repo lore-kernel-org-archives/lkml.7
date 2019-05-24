@@ -2,98 +2,128 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE3A3C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CFB5C282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A225B217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:43:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k//C0g7e"
+	by mail.kernel.org (Postfix) with ESMTP id 2FC66217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:44:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389854AbfEXPnS (ORCPT
+        id S2390083AbfEXPoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 11:43:18 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33704 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389206AbfEXPnR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 11:43:17 -0400
-Received: by mail-pg1-f195.google.com with SMTP id h17so5284567pgv.0;
-        Fri, 24 May 2019 08:43:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=b667PaiUgQ8Q7PpALzJt/7gtzGVjETB3D6yMZYIALTM=;
-        b=k//C0g7exdcOJUzXWpFbNqGCMszp+12V7HlLpivolIypgaoPAXyanHxWMU4qG1gZcw
-         j1aKpX5rg9hmij2IMvONUlM7bHhfdSlddZ9/R01ZA/zH/TJ5ijO7uDi0K2YYu7Rp+sAO
-         vydLknKzVLK8+FqaHvqN7AmvInf2J6sfzVZNkLzeIAkAksKw1kc1y4VO6zlrDoBE2pVs
-         da+DIMZQSrtnYqqjXcd+MybTXwHcrqDWHYikIlBJFmraFEGxoqcBklt7RwffmlQUXlkC
-         Zd15JQuglsWt0Bmx0kQy2RRFlZH8ZwL+eEJQr1PoD989P1TC75l4ymQk7jyq81nc/YAS
-         jGhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=b667PaiUgQ8Q7PpALzJt/7gtzGVjETB3D6yMZYIALTM=;
-        b=mtqTagC6fE2MvlfdVBfUnwjPFbJNqW9coFtwoHa9ZQeKTG20WvfUSLEPsU0HHK+2gk
-         MpONsvGlLgFt0Osx8BP+PhXQHL9RG9huHlCW0q8I/IzHXqoAHSnjDBaqFweiBC+vf/pi
-         EbAVieQ8Z4qNOaQ2f/X1y20x/3wu6m4uMQBXcTXKF9jA9BA3lyzjYAfksz0XhnbbunSm
-         c7lxIeOadkjOdpCKI9mtqoP0zXHPJcb+2XCgPoWn7yCSH5VclUnZfj71rQemTXUhY9Xv
-         lQoKu3D9Fv6iAFsf58yXUijZdt7Gh0meTsFkz5gVzDVjUD0RoOuAwhhgopP8JNIXd2uM
-         dAVg==
-X-Gm-Message-State: APjAAAWoVeSDiVStdz091e+KRFF8ffkIVW4XynVft4cJUpErWCUj8aIC
-        ITdxYvdU880NRCj0axxeIPY=
-X-Google-Smtp-Source: APXvYqwhRl211cWfEVTBxkcGOE9w1J3jhmtE5k3PSWuOj9tEW3/mOIt0iLAt0La053XLjoZSI4kECg==
-X-Received: by 2002:a62:e0cb:: with SMTP id d72mr20598365pfm.242.1558712597167;
-        Fri, 24 May 2019 08:43:17 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([66.42.35.75])
-        by smtp.gmail.com with ESMTPSA id e73sm4397753pfh.59.2019.05.24.08.43.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 08:43:16 -0700 (PDT)
-Date:   Fri, 24 May 2019 23:42:52 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     lgirdwood@gmail.com, perex@perex.cz, alsa-devel@alsa-project.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tegra_wm9712: Fix a memory leaking bug in
- tegra_wm9712_driver_probe()
-Message-ID: <20190524154252.GA10186@zhanggen-UX430UQ>
-References: <20190524005014.GA2289@zhanggen-UX430UQ>
- <b2d43dfe-17e5-a975-435b-49f2aa2ad550@nvidia.com>
- <20190524143309.GA8631@zhanggen-UX430UQ>
- <e52f4140-a119-a584-40a2-6359d6e1784a@nvidia.com>
- <20190524150053.GA9235@zhanggen-UX430UQ>
- <1740686f-a466-430c-9d01-ab83ea6998ac@nvidia.com>
+        Fri, 24 May 2019 11:44:39 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36768 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389206AbfEXPoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 11:44:39 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 95F5DC09AD13;
+        Fri, 24 May 2019 15:44:33 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 4A11C63F62;
+        Fri, 24 May 2019 15:44:26 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Fri, 24 May 2019 17:44:33 +0200 (CEST)
+Date:   Fri, 24 May 2019 17:44:25 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     'Deepa Dinamani' <deepa.kernel@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "dbueso@suse.de" <dbueso@suse.de>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        Davidlohr Bueso <dave@stgolabs.net>, Eric Wong <e@80x24.org>,
+        Jason Baron <jbaron@akamai.com>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        linux-aio <linux-aio@kvack.org>,
+        Omar Kilani <omar.kilani@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH v2] signal: Adjust error codes according to
+ restore_user_sigmask()
+Message-ID: <20190524154425.GE2655@redhat.com>
+References: <CABeXuvrPM5xvzqUydbREapvwgy6deYreHp0aaMoSHyLB6+HGRg@mail.gmail.com>
+ <20190522161407.GB4915@redhat.com>
+ <CABeXuvpjrW5Gt95JC-_rYkOA=6RCD5OtkEQdwZVVqGCE3GkQOQ@mail.gmail.com>
+ <4f7b6dbeab1d424baaebd7a5df116349@AcuMS.aculab.com>
+ <20190523145944.GB23070@redhat.com>
+ <345cfba5edde470f9a68d913f44fa342@AcuMS.aculab.com>
+ <20190523163604.GE23070@redhat.com>
+ <f0eced5677c144debfc5a69d0d327bc1@AcuMS.aculab.com>
+ <20190524132911.GA2655@redhat.com>
+ <766510cbbec640b18fd99f3946b37475@AcuMS.aculab.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1740686f-a466-430c-9d01-ab83ea6998ac@nvidia.com>
+In-Reply-To: <766510cbbec640b18fd99f3946b37475@AcuMS.aculab.com>
 User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 24 May 2019 15:44:38 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 04:36:54PM +0100, Jon Hunter wrote:
-> There could well be cases where you need to explicitly call
-> devm_kfree(), but having a quick glance at the example above, I don't
-> see why you would call devm_kfree() here and yes looks like that code
-> could be simplified significantly. Notice that hisi_sas_debugfs_exit()
-> does not free any memory as it is not necessary to explicitly do so.
-> 
-> Cheers
-> Jon
-> 
-> -- 
-> nvpublic
-Thanks for your suggestions, Jon! I think I need to e-mail to those
-maintainers about this issue.
+On 05/24, David Laight wrote:
+>
+> From: Oleg Nesterov
+> > Sent: 24 May 2019 14:29
+> > It seems that we all are just trying to confuse each other. I got lost.
+>
+> I'm always lost :-)
 
-Thanks
-Gen
+same here ;)
+
+> To my mind changing the signal mask should be enough to get a masked
+> signal handler called - even if the mask is reset before the syscall exits.
+
+well, the kernel doesn't do this, and on purpose.
+
+> There shouldn't be any need for an interruptible wait to be interrupted.
+
+can't parse ;)
+
+> I suspect that if you send a signal to a process that is looping
+> in userspace (on a different) the signal handler is called on the next
+> exit to userspace regardless as to whether the kernel blocks.
+>
+> epoll and pselect shouldn't be any different.
+
+They differ exactly because they manipulate the blocked mask,
+
+> Having the signal unmasked at any time should be enough to get it called.
+
+No. The sigmask passed to pselect() tells the kernel which signals should
+interrupt the syscall if it blocks. The fact that pselect() actually unblocks
+a signal is just the internal implementation detail.
+
+> > > I suspect you need to defer the re-instatement of the original mask
+> > > to the code that calls the signal handlers (which probably should
+> > > be called with the programs signal mask).
+> >
+> > This is what the kernel does when the signal is delivered, the original mask
+> > is restored after the signal handler runs.
+>
+> I'd have thought that the original signal mask (all blocked in the examples)
+> should be restored before the signal handler is called.
+
+No. And this means that if you have 2 pending signals, they both will be delivered.
+Unless of course sigaction->sa_mask includes the 2nd one.
+
+> After all the signal handler is allowed to modify the processes signal mask.
+
+only untill the handler returns.
+
+> I've had horrid thoughts about SIG_SUSPEND :-)
+
+google knows nothing about SIG_SUSPEND, neither me ;)
+
+Oleg.
+
