@@ -2,122 +2,191 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D99BBC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEB5DC282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A281C2175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:26:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 832B72175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:27:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="5bSbWAh6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388117AbfEXF0O (ORCPT
+        id S2388281AbfEXF1U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 01:26:14 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:40966 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387874AbfEXF0O (ORCPT
+        Fri, 24 May 2019 01:27:20 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:57996 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726601AbfEXF1U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 01:26:14 -0400
-Received: from [125.35.49.90] (helo=[10.0.0.21])
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <hui.wang@canonical.com>)
-        id 1hU2iV-0006de-Dr; Fri, 24 May 2019 05:26:08 +0000
-Subject: =?UTF-8?B?UmU6IOetlOWkjTog562U5aSNOiDnrZTlpI06IFtQQVRDSF0gaW5wdXQ6?=
- =?UTF-8?Q?_alps-fix_the_issue_the_special_alps_trackpoint_do_not_work=2e?=
-To:     Peter Hutterer <peter.hutterer@who-t.net>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
-Cc:     Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>,
-        dmitry.torokhov@gmail.com, XiaoXiao Liu <sliuuxiaonxiao@gmail.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Xiaojian Cao <xiaojian.cao@cn.alps.com>,
-        "zhangfp1@lenovo.com" <zhangfp1@lenovo.com>
-References: <20190520110149.27107-1-sliuuxiaonxiao@gmail.com>
- <OSBPR01MB485510A2A32CD9D2CE5EF7A1DA070@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <345b62e1-407e-7a03-9b03-486bbf5a0a8e@canonical.com>
- <20190521094622.syeub6tcqhbyc7sg@pali>
- <OSBPR01MB4855D744473149D037612506DA000@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <20190522063546.kb74mxeprkauicul@pali>
- <OSBPR01MB48550B43F78BBFBDC20D414DDA000@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <20190522074030.64sy7xt3wnomtxjb@pali> <20190523060154.GA10526@jelly>
-From:   Hui Wang <hui.wang@canonical.com>
-Message-ID: <38ec4a40-d51a-aeb1-a5e8-dbaed1142298@canonical.com>
-Date:   Fri, 24 May 2019 13:25:52 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 24 May 2019 01:27:20 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4O5Oa9M125490;
+        Fri, 24 May 2019 05:26:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=2aOPtxdLHzGw7Dt5RbmFViI6+cHz5U3e+/7S2hdY2yo=;
+ b=5bSbWAh6ORhjFoe5e8Ud++LhyOIRKEpBDq3BVVv/PpnMsWUhV2LIesc2uDaz5JtlSAXZ
+ t1KsfNCUcxiicLYkbvRVuNf5sL5J0o7Wuff3A7Ghx3bqxtwR8xN591hUJ+z9zSfxM8n2
+ GIfonrdnwqGnVMSsomLjO4qwVwmjQLZojqzkIl+ZW6gKjXz8VTOoDRFeuTOaPWnjEELE
+ Bt0LkJ4ryqOb0OhhAQNkfR+CYl70IkJ5dZfF0F0AdnebnX9XWDU1YrRz0Gs8UBHNb0Qv
+ ESmV//N4btvVBuFX784fk0z4vpc7h3n/VWX+8DkKHaHElKINdYpG2p+rKPhUsDVbuuQ8 uQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2130.oracle.com with ESMTP id 2smsk5pmar-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 May 2019 05:26:26 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4O5P9ud195612;
+        Fri, 24 May 2019 05:26:25 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3030.oracle.com with ESMTP id 2smshfnajx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 24 May 2019 05:26:25 +0000
+Received: from userp3030.oracle.com (userp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x4O5QPYn002381;
+        Fri, 24 May 2019 05:26:25 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2smshfnajs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 May 2019 05:26:25 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4O5QJ6j012291;
+        Fri, 24 May 2019 05:26:19 GMT
+Received: from localhost (/10.159.211.99)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 24 May 2019 05:26:19 +0000
+Date:   Fri, 24 May 2019 01:26:16 -0400
+From:   Kris Van Hees <kris.van.hees@oracle.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Kris Van Hees <kris.van.hees@oracle.com>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        dtrace-devel@oss.oracle.com, linux-kernel@vger.kernel.org,
+        mhiramat@kernel.org, acme@kernel.org, ast@kernel.org,
+        daniel@iogearbox.net, peterz@infradead.org
+Subject: Re: [RFC PATCH 00/11] bpf, trace, dtrace: DTrace BPF program type
+ implementation and sample use
+Message-ID: <20190524052616.GW2422@oracle.com>
+References: <20190521214325.rr7emn5z3b7wqiiy@ast-mbp.dhcp.thefacebook.com>
+ <20190521174757.74ec8937@gandalf.local.home>
+ <20190522052327.GN2422@oracle.com>
+ <20190522205329.uu26oq2saj56og5m@ast-mbp.dhcp.thefacebook.com>
+ <20190523054610.GR2422@oracle.com>
+ <20190523211330.hng74yi75ixmcznc@ast-mbp.dhcp.thefacebook.com>
+ <20190523190243.54221053@gandalf.local.home>
+ <20190524003148.pk7qbxn7ysievhym@ast-mbp.dhcp.thefacebook.com>
+ <20190523215737.6601ab7c@oasis.local.home>
+ <20190524020849.vxg3hqjtnhnicyzp@ast-mbp.dhcp.thefacebook.com>
 MIME-Version: 1.0
-In-Reply-To: <20190523060154.GA10526@jelly>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190524020849.vxg3hqjtnhnicyzp@ast-mbp.dhcp.thefacebook.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9266 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905240037
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 23, 2019 at 07:08:51PM -0700, Alexei Starovoitov wrote:
+> On Thu, May 23, 2019 at 09:57:37PM -0400, Steven Rostedt wrote:
+> > On Thu, 23 May 2019 17:31:50 -0700
+> > Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+> > 
+> > 
+> > > > Now from what I'm reading, it seams that the Dtrace layer may be
+> > > > abstracting out fields from the kernel. This is actually something I
+> > > > have been thinking about to solve the "tracepoint abi" issue. There's
+> > > > usually basic ideas that happen. An interrupt goes off, there's a
+> > > > handler, etc. We could abstract that out that we trace when an
+> > > > interrupt goes off and the handler happens, and record the vector
+> > > > number, and/or what device it was for. We have tracepoints in the
+> > > > kernel that do this, but they do depend a bit on the implementation.
+> > > > Now, if we could get a layer that abstracts this information away from
+> > > > the implementation, then I think that's a *good* thing.  
+> > > 
+> > > I don't like this deferred irq idea at all.
+> > 
+> > What do you mean deferred?
+> 
+> that's how I interpreted your proposal: 
+> "interrupt goes off and the handler happens, and record the vector number"
+> It's not a good thing to tell about irq later.
+> Just like saying lets record perf counter event and report it later.
 
-On 2019/5/23 下午2:01, Peter Hutterer wrote:
-> On Wed, May 22, 2019 at 09:40:30AM +0200, Pali Rohár wrote:
->> On Wednesday 22 May 2019 07:30:43 Xiaoxiao Liu wrote:
->>> Hi Pali,
->>>
->>> Ok, and cannot you set ALPS_DUALPOINT flag based on that
->>> alps_check_is_trackpoint() result and then update
->>> alps_process_packet_ss4_v3() code to supports also
->>> V8 trackpoint packets?
->>> --> Yes, we can do like so, when we use the v8 method to process the trackpoint , the mouse speed is not ideal.
->>>        Then we choose the standard mouse driver.
->> Mouse speed is something which is configurable. Have you configured it
->> somehow? Also there is libinput project should handle these settings
->> more properly.
->>
->> Adding Peter Hutterer, maintainer of libinput to loop. I think he could
->> help with this problem.
-> libinput has a quirk for a magic multiplier on trackpoints. it was the only
-> solution I found that came close to "working" given that every device seems
-> to provide some other random magic data. Doc for it is here:
-> https://wayland.freedesktop.org/libinput/doc/latest/trackpoint-configuration.html
+The abstraction I mentioned does not defer anything - it merely provides a way
+for all probe events to be processed as a generic probe with a set of values
+associated with it (e.g. syscall arguments for a syscall entry probe).  The
+program that implements what needs to happen when that probe fires still does
+whatever is necessary to collect information, and dump data in the output
+buffers before execution continues.
 
-Hello Peter Hutterer,
+I could trace entry into a syscall by using a syscall entry tracepoint or by
+putting a kprobe on the syscall function itself.  I am usually interested in
+whether the syscall was called, what the arguments were, and perhaps I need to
+collect some other data related to it.  More often than not, both probes would
+get the job done.  With an abstraction that hides the implementation details
+of the probe mechanism itself, both cases are essentially the same.
 
-To adjust the trackpoint speed from userspace:
+> > > Abstracting details from the users is _never_ a good idea.
+> > 
+> > Really? Most everything we do is to abstract details from the user. The
+> > key is to make the abstraction more meaningful than the raw data.
+> > 
+> > > A ton of people use bcc scripts and bpftrace because they want those details.
+> > > They need to know what kernel is doing to make better decisions.
+> > > Delaying irq record is the opposite.
+> > 
+> > I never said anything about delaying the record. Just getting the
+> > information that is needed.
+> > 
+> > > > 
+> > > > I wish that was totally true, but tracepoints *can* be an abi. I had
+> > > > code reverted because powertop required one to be a specific
+> > > > format. To this day, the wakeup event has a "success" field that
+> > > > writes in a hardcoded "1", because there's tools that depend on it,
+> > > > and they only work if there's a success field and the value is 1.  
+> > > 
+> > > I really think that you should put powertop nightmares to rest.
+> > > That was long ago. The kernel is different now.
+> > 
+> > Is it?
+> > 
+> > > Linus made it clear several times that it is ok to change _all_
+> > > tracepoints. Period. Some maintainers somehow still don't believe
+> > > that they can do it.
+> > 
+> > From what I remember him saying several times, is that you can change
+> > all tracepoints, but if it breaks a tool that is useful, then that
+> > change will get reverted. He will allow you to go and fix that tool and
+> > bring back the change (which was the solution to powertop).
+> 
+> my interpretation is different.
+> We changed tracepoints. It broke scripts. People changed scripts.
 
-If the libinput version is lower than 1.9.0, we could set 
-POINTINGSTICK_CONST_ACCEL=0.25
+In my world, the sequence is more like: tracepoints get changed, scripts
+break, I fix the provider (abstraction), scripts work again.  Users really
+appreciate that aspect because many of our users are not kernel experts.
 
-If the libinput version is higher than 1.12.0, we could set 
-AttrTrackpointMultiplier=0.25
-
-But if we use libinput-1.10.0,  how could we adjust the speed?
-
-Many thanks in advance.
-
-Hui.
-
-
->
-> There are also different speeds depending on which xorg driver you'd use (or
-> libinput/Wayland), so a "mouse speed is not ideal" is almost a guarantee,
-> given a large enough variety of setups :) That's why we have the speed
-> toggle, but I'm happy to hear any suggestions on how to make the trackpoint
-> more useful (in libinput anyway).
->
->> I do not think it is a good idea to force back to generic PS/2 mouse
->> driver for touchpads and trackpoints. Native drivers for touchpads and
->> trackpoints supports multitouch, absolute reporting and lot of other
->> things... Also calculation of mouse speed from absolute positions on
->> touchpads can be more easily fixed as from emulated relative movements.
-> Yeah, agree. Using PS/2 mouse drivers means you lose *all* the extra
-> features touchpads have like palm detection, tapping, scrolling, gestures,
-> etc.
->
-> Cheers,
->     Peter
->
->> Dmitry, what is your opinion about this problem? What should psmouse.ko
->> do in this situation? Disallow usage of absolute mode and force bare
->> PS/2 relative mode?
->
+> > > Some tracepoints are used more than others and more people will
+> > > complain: "ohh I need to change my script" when that tracepoint
+> > > changes. But the kernel development is not going to be hampered by a
+> > > tracepoint. No matter how widespread its usage in scripts.
+> > 
+> > That's because we'll treat bpf (and Dtrace) scripts like modules (no
+> > abi), at least we better. But if there's a tool that doesn't use the
+> > script and reads the tracepoint directly via perf, then that's a
+> > different story.
+> 
+> absolutely not.
+> tracepoint is a tracepoint. It can change regardless of what
+> and how is using it.
