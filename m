@@ -2,126 +2,69 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E9FC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 064F8C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:06:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7450221773
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:05:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEF772133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:06:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558699610;
+	bh=cPBX6jHeyb1Yu8aEf1AqEQATln5ZXRSmxrNwVvHQB98=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=LgSzOhOEPKisFAQEE1Lm1DZ9aGFntUgw4x4rSVfoQddSF5LYLnri981seN31G2Tjh
+	 llPOGu35D417lMl3fH5a4cyfK9jVrT7BmyfiA36ZmAjMY3vbUDwfrqrLbJs9rLdILm
+	 s2okE2XuImAQSG48fu9Cc6Jm0YJR5er0bKnXcnjo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391328AbfEXMF5 (ORCPT
+        id S2391381AbfEXMGu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 08:05:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47342 "EHLO mail.kernel.org"
+        Fri, 24 May 2019 08:06:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391216AbfEXMF5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 08:05:57 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2391216AbfEXMGt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 08:06:49 -0400
+Received: from [192.168.0.101] (unknown [58.212.135.189])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3653120851;
-        Fri, 24 May 2019 12:05:55 +0000 (UTC)
-Date:   Fri, 24 May 2019 08:05:53 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "Frank Ch. Eigler" <fche@redhat.com>
-Subject: Re: [RFC][PATCH 01/14 v2] function_graph: Convert ret_stack to a
- series of longs
-Message-ID: <20190524080553.354f1cae@gandalf.local.home>
-In-Reply-To: <20190524111144.GI2589@hirez.programming.kicks-ass.net>
-References: <20190520142001.270067280@goodmis.org>
-        <20190520142156.704372433@goodmis.org>
-        <20190524111144.GI2589@hirez.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F46820851;
+        Fri, 24 May 2019 12:06:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558699609;
+        bh=cPBX6jHeyb1Yu8aEf1AqEQATln5ZXRSmxrNwVvHQB98=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=wJUG4DC4hWwkvGhOSJJeh9CQ5ucC72V1/D+TF5HyxTwqTkOfuajz3sFtIASyYtRiv
+         n1/KjXhUUdZNJS1R0vgGMfcbtKd00qvT85DJ8jNaMMjQxqz47u6Cps5Dverpt3l4BU
+         GBXYa2+GzroKOQ+RK6iB9VDkAcKkrPRfKyt8EQ8Y=
+Subject: Re: [f2fs-dev] [PATCH] f2fs: fix f2fs_show_options to show nodiscard
+ mount option
+To:     Sahitya Tummala <stummala@codeaurora.org>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        linux-f2fs-devel@lists.sourceforge.net
+Cc:     linux-kernel@vger.kernel.org
+References: <1558688919-561-1-git-send-email-stummala@codeaurora.org>
+From:   Chao Yu <chao@kernel.org>
+Message-ID: <f1fb0153-3b77-5e08-d13a-162ea87ac0ff@kernel.org>
+Date:   Fri, 24 May 2019 20:06:37 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <1558688919-561-1-git-send-email-stummala@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 May 2019 13:11:44 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
-
-> On Mon, May 20, 2019 at 10:20:02AM -0400, Steven Rostedt wrote:
+On 2019-5-24 17:08, Sahitya Tummala wrote:
+> Fix f2fs_show_options to show nodiscard mount option.
 > 
-> > +#define FGRAPH_RET_SIZE (sizeof(struct ftrace_ret_stack))
-> > +#define FGRAPH_RET_INDEX (ALIGN(FGRAPH_RET_SIZE, sizeof(long)) / sizeof(long))  
-> 
-> I think you want to write that like:
-> 
-> 	BUILD_BUG_ON(sizeof(ftrace_ret_stack) % sizeof(long));
+> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
 
-Sure.
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
 
-> 
-> It'd be very weird for that sizeof not to be right.
-
-Agreed, but I was paranoid. The BUILD_BUG_ON() would also work.
-
-> 
-> > +#define SHADOW_STACK_SIZE (PAGE_SIZE)  
-> 
-> Do we really need that big a shadow stack?
-
-Well, this is a sticky point. I allow up to 16 users at a time
-(although I can't imagine more than 5, but you never know), and each
-user adds a long and up to 4 more words (which is probably unlikely
-anyway). And then we can have deep call stacks (we are getting deeper
-each release it seems).
-
-I figured, I start with a page size, and then in the future we can make
-it dynamic, or shrink it if it proves to be too much.
-
-> 
-> > +#define SHADOW_STACK_INDEX			\
-> > +	(ALIGN(SHADOW_STACK_SIZE, sizeof(long)) / sizeof(long))
-> > +/* Leave on a buffer at the end */
-> > +#define SHADOW_STACK_MAX_INDEX (SHADOW_STACK_INDEX - FGRAPH_RET_INDEX)
-> > +
-> > +#define RET_STACK(t, index) ((struct ftrace_ret_stack *)(&(t)->ret_stack[index]))
-> > +#define RET_STACK_INC(c) ({ c += FGRAPH_RET_INDEX; })
-> > +#define RET_STACK_DEC(c) ({ c -= FGRAPH_RET_INDEX; })  
-> 
-> I'm thinking something like:
-> 
-> #define RET_PUSH(s, val)				\
-> do {							\
-> 	(s) -= sizeof(val);				\
-> 	(typeof(val) *)(s) = val;			\
-> } while (0)
-> 
-> #define RET_POP(s, type)				\
-> ({							\
-> 	type *__ptr = (void *)(s);			\
-> 	(s) += sizeof(type);				\
-> 	*__ptr;						\
-> })
-> 
-> Would me clearer?
-
-Due to races with interrupts, and this not being an atomic operation, I
-had to play tricks with moving the stack pointer and adding data to it.
-So I wanted to keep the changing of the stack pointer and adding and
-retrieving of the stack data separate.
-
-Later patches remove the RET_STACK_INC/DEC() anyway.
-
-Thanks for taking the time to look at these patches!
-
--- Steve
-
+Thanks,
