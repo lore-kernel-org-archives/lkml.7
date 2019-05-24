@@ -2,206 +2,351 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B8F7C282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21BD5C282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B7E621773
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:18:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D05C621773
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:19:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558732774;
+	bh=918Aj82+uK6r/eS4KIPDN0H9HwWo2TehqxJkMAAW1ZM=;
+	h=To:Cc:From:Subject:Date:List-ID:From;
+	b=P9ZkrPbSK8yArGcrrAkbbwedGj5EKit0T0PndzenqPZ/zZYHWp/Busz6g9B7R2AYU
+	 dgs/3UCi+vi7u2MRzSDCenPCUQY0ZriyHFf2yFFhZvNXbvmLNwSQW5scfvGazB4+ry
+	 topWfmCQej5SDfzjl4mKSPH7A9PA1+gbCyltCx3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404253AbfEXVSH (ORCPT
+        id S2404257AbfEXVTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 17:18:07 -0400
-Received: from mail-it1-f200.google.com ([209.85.166.200]:52568 "EHLO
-        mail-it1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391745AbfEXVSG (ORCPT
+        Fri, 24 May 2019 17:19:33 -0400
+Received: from mail-io1-f53.google.com ([209.85.166.53]:46903 "EHLO
+        mail-io1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404156AbfEXVTc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 17:18:06 -0400
-Received: by mail-it1-f200.google.com with SMTP id z128so9763558itb.2
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 14:18:05 -0700 (PDT)
+        Fri, 24 May 2019 17:19:32 -0400
+Received: by mail-io1-f53.google.com with SMTP id q21so8812196iog.13
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 14:19:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language;
+        bh=KYXQt2whxv6x7kpRG6iEs+vvTF4+uz3zFZJURRtED+s=;
+        b=XWsYcJOsGthJS8ikaosBR2+hY/Po31NL67DTA9TzIFypwW344BUbHheOQQk5j1dy3d
+         3kVIPcNch1VUKoH8K1+Q4V/zwa2Ts1Q2+KJQ0yHJd6I7VZeAbXUc3IXA2ELoy26Ux0da
+         iN4Bxy5xOq4AbgRDZmn0Ja7Es+/YyT9ppW8Bk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=iwQ0M9CA7WD3CQrUHbNlAadS5e9SUIuyFRzHEIBPCXM=;
-        b=eNf22Z/lwicPgu2Y8NgNrx85kmJtiTUAYqTqU6AbL+foM65Qgr6/KIvIecN7Iqy58u
-         KfpzRoa53BJn2DVd9hKlbyDTiPT4r80rPDrZRezaCfGxMA6Wd26JAFiy64sHw3jEiObl
-         qQsCUFl9vQpriciM8TewCZA81qENpJ/S4pj48m8Jp1Mqv3ebgrPrMXsL0NWktYYHAlkI
-         vix35kcqTi57RDRLyULFkur9Kud8A2AXJ6rYdvjw2zGlPYBvD98o22ETYCyV7YFuf3uV
-         BiAKTNhoSb0op8JOzD/XnK5nuO+N99exY3xT/NxGrx9aX6duXjGwlmBDRh1Nk+Bhsz/d
-         CQMA==
-X-Gm-Message-State: APjAAAXOJNmGkeFbAw/4YRGE73s/IJRr9jI6Obffo2Vn8nS8I4cUCqc7
-        cfxKllY+wvbhdeeRPd2ABguoeOmOMl0QRolPULDrUfuHKHSy
-X-Google-Smtp-Source: APXvYqw2HB6J75GoxtRxYkMnf6F2vK1JXy8Y5ouepC1qjzt+mjoav9oNRh5I4tAnqwBGDCpiyiyP7tdKO2lNbWz7DpOji1jwbcQA
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language;
+        bh=KYXQt2whxv6x7kpRG6iEs+vvTF4+uz3zFZJURRtED+s=;
+        b=rzGQfe5q2H5fDJY+RaU9KN8WbSbxyv+7UfNUIs5D+1YBhS1F9Y+3B4SVv/OXKhbIYE
+         hKjjj+CEZMhPzxy4EnH4gKmGLs6ve3mkI/gVBdCEqXCjLVpSwXOR8SeFV8w4vQF78TW1
+         TxVNVe1NBTdu/vTObsF1oDyk++rX6tPTJGBMPaIqPQ2oAAVKe02/em5L7c0Vbc456YTb
+         QrAP9Gdh8oLUXa5Y1vfVCB7kVPxhs2zIi+lNa1BLszPEWjZipsfQdnBM97uTxJiH75BM
+         51vodR68O0cR4SoXPPiaoJ6QqBPCq8w1B+v8AxXMBLR57H9UeFVLmmwVtBGOwUfKkW/G
+         k7nw==
+X-Gm-Message-State: APjAAAWc1LYGcdAUWxfL+33AwvGlMTPGuO9UDZnU3IzcrmLK0km8qWIf
+        634oWW9si+mrVL8w+oaVaIkg98KvwjU=
+X-Google-Smtp-Source: APXvYqyGRqVSIpEzwmE2FXWOJuny+ypfonApKNSsX2sTpzbIXTgM1Q6K6vMvy1Dkw3aAbMeOGntcGQ==
+X-Received: by 2002:a6b:8b49:: with SMTP id n70mr35095442iod.198.1558732771302;
+        Fri, 24 May 2019 14:19:31 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id h125sm1720701ita.44.2019.05.24.14.19.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 May 2019 14:19:30 -0700 (PDT)
+To:     torvalds@linux-foundation.org
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>, Tong Bo <bo.tong@intel.com>,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Subject: [GIT PULL] Kselftest fixes update for Linux 5.2-rc2
+Message-ID: <46b8fc51-ac8f-c03d-443e-4bd265cd4527@linuxfoundation.org>
+Date:   Fri, 24 May 2019 15:19:29 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-Received: by 2002:a5e:8805:: with SMTP id l5mr5254873ioj.90.1558732685179;
- Fri, 24 May 2019 14:18:05 -0700 (PDT)
-Date:   Fri, 24 May 2019 14:18:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000000c060589a8bc66@google.com>
-Subject: memory leak in tipc_buf_acquire
-From:   syzbot <syzbot+78fbe679c8ca8d264a8d@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, jon.maloy@ericsson.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com,
-        tipc-discussion@lists.sourceforge.net, ying.xue@windriver.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: multipart/mixed;
+ boundary="------------7A70FC3819073854B4F83C8C"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+This is a multi-part message in MIME format.
+--------------7A70FC3819073854B4F83C8C
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-syzbot found the following crash on:
+Hi Linus,
 
-HEAD commit:    4dde821e Merge tag 'xfs-5.2-fixes-1' of git://git.kernel.o..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=107db73aa00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=61dd9e15a761691d
-dashboard link: https://syzkaller.appspot.com/bug?extid=78fbe679c8ca8d264a8d
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=162bd84ca00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=160c605ca00000
+Please pull the following Kselftest fixes update for Linux 5.2-rc2.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+78fbe679c8ca8d264a8d@syzkaller.appspotmail.com
+This Kselftest fixes update for Linux 5.2-rc2 consists of:
 
-type=1400 audit(1558701681.775:36): avc:  denied  { map } for  pid=7128  
-comm="syz-executor987" path="/root/syz-executor987656147" dev="sda1"  
-ino=15900 scontext=unconfined_u:system_r:insmod_t:s0-s0:c0.c1023  
-tcontext=unconfined_u:object_r:user_home_t:s0 tclass=file permissive=1
-executing program
-executing program
-executing program
-executing program
-BUG: memory leak
-unreferenced object 0xffff88810df83c00 (size 512):
-   comm "softirq", pid 0, jiffies 4294942354 (age 19.830s)
-   hex dump (first 32 bytes):
-     38 1a 0d 0f 81 88 ff ff 38 1a 0d 0f 81 88 ff ff  8.......8.......
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<000000009375ee42>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:55 [inline]
-     [<000000009375ee42>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<000000009375ee42>] slab_alloc_node mm/slab.c:3269 [inline]
-     [<000000009375ee42>] kmem_cache_alloc_node+0x153/0x2a0 mm/slab.c:3579
-     [<000000004c563922>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:198
-     [<00000000ec87bfa1>] alloc_skb_fclone include/linux/skbuff.h:1107  
-[inline]
-     [<00000000ec87bfa1>] tipc_buf_acquire+0x2f/0x80 net/tipc/msg.c:66
-     [<00000000d151ef84>] tipc_msg_create+0x37/0xe0 net/tipc/msg.c:98
-     [<000000008bb437b0>] tipc_group_create_event+0xb3/0x1b0  
-net/tipc/group.c:679
-     [<00000000947b1d0f>] tipc_group_proto_rcv+0x569/0x640  
-net/tipc/group.c:781
-     [<00000000b75ab039>] tipc_sk_proto_rcv net/tipc/socket.c:1996 [inline]
-     [<00000000b75ab039>] tipc_sk_filter_rcv+0x9ac/0xf20  
-net/tipc/socket.c:2163
-     [<000000000dab7a6c>] tipc_sk_enqueue net/tipc/socket.c:2255 [inline]
-     [<000000000dab7a6c>] tipc_sk_rcv+0x494/0x8a0 net/tipc/socket.c:2306
-     [<00000000023a7ddd>] tipc_node_xmit+0x196/0x1f0 net/tipc/node.c:1442
-     [<00000000337dd9eb>] tipc_node_xmit_skb net/tipc/node.c:1491 [inline]
-     [<00000000337dd9eb>] tipc_node_distr_xmit+0x7d/0x120  
-net/tipc/node.c:1506
-     [<00000000b6375182>] tipc_group_delete+0xe6/0x130 net/tipc/group.c:224
-     [<000000000361ba2b>] tipc_sk_leave+0x57/0xb0 net/tipc/socket.c:2925
-     [<000000009df90505>] tipc_release+0x7b/0x5e0 net/tipc/socket.c:584
-     [<000000009f3189da>] __sock_release+0x4b/0xe0 net/socket.c:607
-     [<00000000d3568ee0>] sock_close+0x1b/0x30 net/socket.c:1279
-     [<00000000266a6215>] __fput+0xed/0x300 fs/file_table.c:280
+- 2 fixes to regressions introduced in kselftest Makefile test run
+   output refactoring work from Kees Cook.
+- Adding Atom support to syscall_arg_fault test from Tong Bo.
 
-BUG: memory leak
-unreferenced object 0xffff888111895400 (size 1024):
-   comm "softirq", pid 0, jiffies 4294942354 (age 19.830s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000e2e2855e>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:55 [inline]
-     [<00000000e2e2855e>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000e2e2855e>] slab_alloc_node mm/slab.c:3269 [inline]
-     [<00000000e2e2855e>] kmem_cache_alloc_node_trace+0x15b/0x2a0  
-mm/slab.c:3597
-     [<00000000a5030ce7>] __do_kmalloc_node mm/slab.c:3619 [inline]
-     [<00000000a5030ce7>] __kmalloc_node_track_caller+0x38/0x50  
-mm/slab.c:3634
-     [<0000000039212451>] __kmalloc_reserve.isra.0+0x40/0xb0  
-net/core/skbuff.c:142
-     [<00000000307cb4cf>] __alloc_skb+0xa0/0x210 net/core/skbuff.c:210
-     [<00000000ec87bfa1>] alloc_skb_fclone include/linux/skbuff.h:1107  
-[inline]
-     [<00000000ec87bfa1>] tipc_buf_acquire+0x2f/0x80 net/tipc/msg.c:66
-     [<00000000d151ef84>] tipc_msg_create+0x37/0xe0 net/tipc/msg.c:98
-     [<000000008bb437b0>] tipc_group_create_event+0xb3/0x1b0  
-net/tipc/group.c:679
-     [<00000000947b1d0f>] tipc_group_proto_rcv+0x569/0x640  
-net/tipc/group.c:781
-     [<00000000b75ab039>] tipc_sk_proto_rcv net/tipc/socket.c:1996 [inline]
-     [<00000000b75ab039>] tipc_sk_filter_rcv+0x9ac/0xf20  
-net/tipc/socket.c:2163
-     [<000000000dab7a6c>] tipc_sk_enqueue net/tipc/socket.c:2255 [inline]
-     [<000000000dab7a6c>] tipc_sk_rcv+0x494/0x8a0 net/tipc/socket.c:2306
-     [<00000000023a7ddd>] tipc_node_xmit+0x196/0x1f0 net/tipc/node.c:1442
-     [<00000000337dd9eb>] tipc_node_xmit_skb net/tipc/node.c:1491 [inline]
-     [<00000000337dd9eb>] tipc_node_distr_xmit+0x7d/0x120  
-net/tipc/node.c:1506
-     [<00000000b6375182>] tipc_group_delete+0xe6/0x130 net/tipc/group.c:224
-     [<000000000361ba2b>] tipc_sk_leave+0x57/0xb0 net/tipc/socket.c:2925
-     [<000000009df90505>] tipc_release+0x7b/0x5e0 net/tipc/socket.c:584
-     [<000000009f3189da>] __sock_release+0x4b/0xe0 net/socket.c:607
+diff is attached.
 
-BUG: memory leak
-unreferenced object 0xffff88810e63de00 (size 512):
-   comm "softirq", pid 0, jiffies 4294943548 (age 7.890s)
-   hex dump (first 32 bytes):
-     38 10 0d 0f 81 88 ff ff 38 10 0d 0f 81 88 ff ff  8.......8.......
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<000000009375ee42>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:55 [inline]
-     [<000000009375ee42>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<000000009375ee42>] slab_alloc_node mm/slab.c:3269 [inline]
-     [<000000009375ee42>] kmem_cache_alloc_node+0x153/0x2a0 mm/slab.c:3579
-     [<000000004c563922>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:198
-     [<00000000ec87bfa1>] alloc_skb_fclone include/linux/skbuff.h:1107  
-[inline]
-     [<00000000ec87bfa1>] tipc_buf_acquire+0x2f/0x80 net/tipc/msg.c:66
-     [<00000000d151ef84>] tipc_msg_create+0x37/0xe0 net/tipc/msg.c:98
-     [<000000008bb437b0>] tipc_group_create_event+0xb3/0x1b0  
-net/tipc/group.c:679
-     [<00000000947b1d0f>] tipc_group_proto_rcv+0x569/0x640  
-net/tipc/group.c:781
-     [<00000000b75ab039>] tipc_sk_proto_rcv net/tipc/socket.c:1996 [inline]
-     [<00000000b75ab039>] tipc_sk_filter_rcv+0x9ac/0xf20  
-net/tipc/socket.c:2163
-     [<000000000dab7a6c>] tipc_sk_enqueue net/tipc/socket.c:2255 [inline]
-     [<000000000dab7a6c>] tipc_sk_rcv+0x494/0x8a0 net/tipc/socket.c:2306
-     [<00000000023a7ddd>] tipc_node_xmit+0x196/0x1f0 net/tipc/node.c:1442
-     [<00000000337dd9eb>] tipc_node_xmit_skb net/tipc/node.c:1491 [inline]
-     [<00000000337dd9eb>] tipc_node_distr_xmit+0x7d/0x120  
-net/tipc/node.c:1506
-     [<00000000b6375182>] tipc_group_delete+0xe6/0x130 net/tipc/group.c:224
-     [<000000000361ba2b>] tipc_sk_leave+0x57/0xb0 net/tipc/socket.c:2925
-     [<000000009df90505>] tipc_release+0x7b/0x5e0 net/tipc/socket.c:584
-     [<000000009f3189da>] __sock_release+0x4b/0xe0 net/socket.c:607
-     [<00000000d3568ee0>] sock_close+0x1b/0x30 net/socket.c:1279
-     [<00000000266a6215>] __fput+0xed/0x300 fs/file_table.c:280
+thanks,
+-- Shuah
 
 
+----------------------------------------------------------------
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+   Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+are available in the Git repository at:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest 
+tags/linux-kselftest-5.2-rc2
+
+for you to fetch changes up to fe48319243a626c860fd666ca032daacc2ba84a5:
+
+   selftests/timers: Add missing fflush(stdout) calls (2019-05-21 
+09:24:31 -0600)
+
+----------------------------------------------------------------
+linux-kselftest-5.2-rc2
+
+This Kselftest fixes update for Linux 5.2-rc2 consists of:
+
+- 2 fixes to regressions introduced in kselftest Makefile test run output
+   refactoring work from Kees Cook.
+- Adding Atom support to syscall_arg_fault test from Tong Bo.
+
+----------------------------------------------------------------
+Kees Cook (2):
+       selftests: Remove forced unbuffering for test running
+       selftests/timers: Add missing fflush(stdout) calls
+
+Tong Bo (1):
+       selftests/x86: Support Atom for syscall_arg_fault test
+
+  tools/testing/selftests/kselftest/runner.sh     | 12 +-----------
+  tools/testing/selftests/timers/adjtick.c        |  1 +
+  tools/testing/selftests/timers/leapcrash.c      |  1 +
+  tools/testing/selftests/timers/mqueue-lat.c     |  1 +
+  tools/testing/selftests/timers/nanosleep.c      |  1 +
+  tools/testing/selftests/timers/nsleep-lat.c     |  1 +
+  tools/testing/selftests/timers/raw_skew.c       |  1 +
+  tools/testing/selftests/timers/set-tai.c        |  1 +
+  tools/testing/selftests/timers/set-tz.c         |  2 ++
+  tools/testing/selftests/timers/threadtest.c     |  1 +
+  tools/testing/selftests/timers/valid-adjtimex.c |  2 ++
+  tools/testing/selftests/x86/syscall_arg_fault.c | 10 ++++++++--
+  12 files changed, 21 insertions(+), 13 deletions(-)
+
+----------------------------------------------------------------
+
+--------------7A70FC3819073854B4F83C8C
+Content-Type: text/x-patch;
+ name="linux-kselftest-5.2-rc2.diff"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="linux-kselftest-5.2-rc2.diff"
+
+diff --git a/tools/testing/selftests/kselftest/runner.sh b/tools/testing/selftests/kselftest/runner.sh
+index eff3ee303d0d..00c9020bdda8 100644
+--- a/tools/testing/selftests/kselftest/runner.sh
++++ b/tools/testing/selftests/kselftest/runner.sh
+@@ -24,16 +24,6 @@ tap_prefix()
+ 	fi
+ }
+ 
+-# If stdbuf is unavailable, we must fall back to line-at-a-time piping.
+-tap_unbuffer()
+-{
+-	if ! which stdbuf >/dev/null ; then
+-		"$@"
+-	else
+-		stdbuf -i0 -o0 -e0 "$@"
+-	fi
+-}
+-
+ run_one()
+ {
+ 	DIR="$1"
+@@ -54,7 +44,7 @@ run_one()
+ 		echo "not ok $test_num $TEST_HDR_MSG"
+ 	else
+ 		cd `dirname $TEST` > /dev/null
+-		(((((tap_unbuffer ./$BASENAME_TEST 2>&1; echo $? >&3) |
++		(((((./$BASENAME_TEST 2>&1; echo $? >&3) |
+ 			tap_prefix >&4) 3>&1) |
+ 			(read xs; exit $xs)) 4>>"$logfile" &&
+ 		echo "ok $test_num $TEST_HDR_MSG") ||
+diff --git a/tools/testing/selftests/timers/adjtick.c b/tools/testing/selftests/timers/adjtick.c
+index 0caca3a06bd2..54d8d87f36b3 100644
+--- a/tools/testing/selftests/timers/adjtick.c
++++ b/tools/testing/selftests/timers/adjtick.c
+@@ -136,6 +136,7 @@ int check_tick_adj(long tickval)
+ 
+ 	eppm = get_ppm_drift();
+ 	printf("%lld usec, %lld ppm", systick + (systick * eppm / MILLION), eppm);
++	fflush(stdout);
+ 
+ 	tx1.modes = 0;
+ 	adjtimex(&tx1);
+diff --git a/tools/testing/selftests/timers/leapcrash.c b/tools/testing/selftests/timers/leapcrash.c
+index 830c462f605d..dc80728ed191 100644
+--- a/tools/testing/selftests/timers/leapcrash.c
++++ b/tools/testing/selftests/timers/leapcrash.c
+@@ -101,6 +101,7 @@ int main(void)
+ 		}
+ 		clear_time_state();
+ 		printf(".");
++		fflush(stdout);
+ 	}
+ 	printf("[OK]\n");
+ 	return ksft_exit_pass();
+diff --git a/tools/testing/selftests/timers/mqueue-lat.c b/tools/testing/selftests/timers/mqueue-lat.c
+index 1867db5d6f5e..7916cf5cc6ff 100644
+--- a/tools/testing/selftests/timers/mqueue-lat.c
++++ b/tools/testing/selftests/timers/mqueue-lat.c
+@@ -102,6 +102,7 @@ int main(int argc, char **argv)
+ 	int ret;
+ 
+ 	printf("Mqueue latency :                          ");
++	fflush(stdout);
+ 
+ 	ret = mqueue_lat_test();
+ 	if (ret < 0) {
+diff --git a/tools/testing/selftests/timers/nanosleep.c b/tools/testing/selftests/timers/nanosleep.c
+index 8adb0bb51d4d..71b5441c2fd9 100644
+--- a/tools/testing/selftests/timers/nanosleep.c
++++ b/tools/testing/selftests/timers/nanosleep.c
+@@ -142,6 +142,7 @@ int main(int argc, char **argv)
+ 			continue;
+ 
+ 		printf("Nanosleep %-31s ", clockstring(clockid));
++		fflush(stdout);
+ 
+ 		length = 10;
+ 		while (length <= (NSEC_PER_SEC * 10)) {
+diff --git a/tools/testing/selftests/timers/nsleep-lat.c b/tools/testing/selftests/timers/nsleep-lat.c
+index c3c3dc10db17..eb3e79ed7b4a 100644
+--- a/tools/testing/selftests/timers/nsleep-lat.c
++++ b/tools/testing/selftests/timers/nsleep-lat.c
+@@ -155,6 +155,7 @@ int main(int argc, char **argv)
+ 			continue;
+ 
+ 		printf("nsleep latency %-26s ", clockstring(clockid));
++		fflush(stdout);
+ 
+ 		length = 10;
+ 		while (length <= (NSEC_PER_SEC * 10)) {
+diff --git a/tools/testing/selftests/timers/raw_skew.c b/tools/testing/selftests/timers/raw_skew.c
+index dcf73c5dab6e..b41d8dd0c40c 100644
+--- a/tools/testing/selftests/timers/raw_skew.c
++++ b/tools/testing/selftests/timers/raw_skew.c
+@@ -112,6 +112,7 @@ int main(int argv, char **argc)
+ 		printf("WARNING: ADJ_OFFSET in progress, this will cause inaccurate results\n");
+ 
+ 	printf("Estimating clock drift: ");
++	fflush(stdout);
+ 	sleep(120);
+ 
+ 	get_monotonic_and_raw(&mon, &raw);
+diff --git a/tools/testing/selftests/timers/set-tai.c b/tools/testing/selftests/timers/set-tai.c
+index 70fed27d8fd3..8c4179ee2ca2 100644
+--- a/tools/testing/selftests/timers/set-tai.c
++++ b/tools/testing/selftests/timers/set-tai.c
+@@ -55,6 +55,7 @@ int main(int argc, char **argv)
+ 	printf("tai offset started at %i\n", ret);
+ 
+ 	printf("Checking tai offsets can be properly set: ");
++	fflush(stdout);
+ 	for (i = 1; i <= 60; i++) {
+ 		ret = set_tai(i);
+ 		ret = get_tai();
+diff --git a/tools/testing/selftests/timers/set-tz.c b/tools/testing/selftests/timers/set-tz.c
+index 877fd5532fee..62bd33eb16f0 100644
+--- a/tools/testing/selftests/timers/set-tz.c
++++ b/tools/testing/selftests/timers/set-tz.c
+@@ -65,6 +65,7 @@ int main(int argc, char **argv)
+ 	printf("tz_minuteswest started at %i, dst at %i\n", min, dst);
+ 
+ 	printf("Checking tz_minuteswest can be properly set: ");
++	fflush(stdout);
+ 	for (i = -15*60; i < 15*60; i += 30) {
+ 		ret = set_tz(i, dst);
+ 		ret = get_tz_min();
+@@ -76,6 +77,7 @@ int main(int argc, char **argv)
+ 	printf("[OK]\n");
+ 
+ 	printf("Checking invalid tz_minuteswest values are caught: ");
++	fflush(stdout);
+ 
+ 	if (!set_tz(-15*60-1, dst)) {
+ 		printf("[FAILED] %i didn't return failure!\n", -15*60-1);
+diff --git a/tools/testing/selftests/timers/threadtest.c b/tools/testing/selftests/timers/threadtest.c
+index 759c9c06f1a0..cf3e48919874 100644
+--- a/tools/testing/selftests/timers/threadtest.c
++++ b/tools/testing/selftests/timers/threadtest.c
+@@ -163,6 +163,7 @@ int main(int argc, char **argv)
+ 	strftime(buf, 255, "%a, %d %b %Y %T %z", localtime(&start));
+ 	printf("%s\n", buf);
+ 	printf("Testing consistency with %i threads for %ld seconds: ", thread_count, runtime);
++	fflush(stdout);
+ 
+ 	/* spawn */
+ 	for (i = 0; i < thread_count; i++)
+diff --git a/tools/testing/selftests/timers/valid-adjtimex.c b/tools/testing/selftests/timers/valid-adjtimex.c
+index d9d3ab93b31a..5397de708d3c 100644
+--- a/tools/testing/selftests/timers/valid-adjtimex.c
++++ b/tools/testing/selftests/timers/valid-adjtimex.c
+@@ -123,6 +123,7 @@ int validate_freq(void)
+ 	/* Set the leap second insert flag */
+ 
+ 	printf("Testing ADJ_FREQ... ");
++	fflush(stdout);
+ 	for (i = 0; i < NUM_FREQ_VALID; i++) {
+ 		tx.modes = ADJ_FREQUENCY;
+ 		tx.freq = valid_freq[i];
+@@ -250,6 +251,7 @@ int set_bad_offset(long sec, long usec, int use_nano)
+ int validate_set_offset(void)
+ {
+ 	printf("Testing ADJ_SETOFFSET... ");
++	fflush(stdout);
+ 
+ 	/* Test valid values */
+ 	if (set_offset(NSEC_PER_SEC - 1, 1))
+diff --git a/tools/testing/selftests/x86/syscall_arg_fault.c b/tools/testing/selftests/x86/syscall_arg_fault.c
+index 7db4fc9fa09f..d2548401921f 100644
+--- a/tools/testing/selftests/x86/syscall_arg_fault.c
++++ b/tools/testing/selftests/x86/syscall_arg_fault.c
+@@ -43,7 +43,7 @@ static sigjmp_buf jmpbuf;
+ 
+ static volatile sig_atomic_t n_errs;
+ 
+-static void sigsegv(int sig, siginfo_t *info, void *ctx_void)
++static void sigsegv_or_sigbus(int sig, siginfo_t *info, void *ctx_void)
+ {
+ 	ucontext_t *ctx = (ucontext_t*)ctx_void;
+ 
+@@ -73,7 +73,13 @@ int main()
+ 	if (sigaltstack(&stack, NULL) != 0)
+ 		err(1, "sigaltstack");
+ 
+-	sethandler(SIGSEGV, sigsegv, SA_ONSTACK);
++	sethandler(SIGSEGV, sigsegv_or_sigbus, SA_ONSTACK);
++	/*
++	 * The actual exception can vary.  On Atom CPUs, we get #SS
++	 * instead of #PF when the vDSO fails to access the stack when
++	 * ESP is too close to 2^32, and #SS causes SIGBUS.
++	 */
++	sethandler(SIGBUS, sigsegv_or_sigbus, SA_ONSTACK);
+ 	sethandler(SIGILL, sigill, SA_ONSTACK);
+ 
+ 	/*
+
+--------------7A70FC3819073854B4F83C8C--
