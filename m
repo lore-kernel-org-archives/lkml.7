@@ -2,165 +2,114 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56FACC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 19:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB16DC282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 19:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2347B217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 19:30:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Omm51I/H"
+	by mail.kernel.org (Postfix) with ESMTP id AF89C21850
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 19:30:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558726259;
+	bh=++eJML+V7at8ynu0Gghi2KtbxEtQiKNCqvYyHJW4D1g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=nQV7Wa1Nrj5/ybkLxKUJIMym9+zYl4YYBqPqnuBpXdGjBfi0gWakFhWXHVb9TqW91
+	 pqDi4JvHmTKLucpwK9qcJHGgtX0wCImcdSEbgunmL72AMRB9favW/y5S2o28nqsHAJ
+	 dLU8DiQ6SsSeUgFyEbC/vUqgk7UqfUmnQOgVQyyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732090AbfEXTaJ (ORCPT
+        id S2391668AbfEXTa7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 15:30:09 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:46671 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727115AbfEXTaJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 15:30:09 -0400
-Received: by mail-ed1-f67.google.com with SMTP id f37so15715042edb.13;
-        Fri, 24 May 2019 12:30:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=bevgnpwWp43eLyKYVX1neQ0UpZhiFx6WSxipgBSsKRk=;
-        b=Omm51I/HC8uqeMOORrTprPgd8EI0GEG2/vdjRflGw6kD4ao+xJC++uyCNJChLeTp7/
-         diqPKe29SGQhAYwnjtB5W1SVme/jv2KbE4Kx5hqEYDQRWo1gG6Eyzguv4X+8vshr/OiK
-         CSFPo+j5TsK9FGba/4m6xMj76y3/NRFNYq+FsOza6sL2gfD2r+6DM9fkkMV/KzFw8tpb
-         80aQGS2QAltLMofWker9rQY+PLNZh1mGtqm4hpuVJsVZdAOpH37I5sxrXkhYDaUUyoEy
-         NsXJbyV0TE4q8dIpWOgnePyDfOAOAeLbYZm/ceLzOekPUO1cRVhKsm5000Egk1nd9V9v
-         rpoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=bevgnpwWp43eLyKYVX1neQ0UpZhiFx6WSxipgBSsKRk=;
-        b=DEHslOi5EmzB0S3/wq4Dn0D3zVPahxUllkbNTA1pyQY5fFDt4qOFoVidLX8lejHeqr
-         jXsz3CCyYsbpWdDRwoINZ6k9OISzi+/yNPiCR2HLanE/V9SLBmPzGWnmporQqAYCFiTT
-         71PITVOARfqlUWbuS9HBZVLMUYuHk06sNU0AQF7xAUhS97G0Yj5y4LPgGoOiPCfNTpBp
-         j0LcakPC+neM2NJW6djs3y2Uyx4WbVmYqIX5w/0SnqLzMUa7mlKb3Vd1ALmHCCJJwidq
-         aG0Ck1XOqQw4ZfvKUw6vU+nHumDUuFo8E7m6XaeitLhJsGjWCcR31oUax0yF1x9AaE9U
-         S+WA==
-X-Gm-Message-State: APjAAAXOK0jKUCfmQPPm5YyiveG31+OlW8/N59racpQqzEzDkefBu486
-        kvFy4tIAxFcKp4L1uNIy7LlOinn1+uoIGMsmPjI=
-X-Google-Smtp-Source: APXvYqyS2Gr9Ox8h2x39qvakn/evhg5BERIyfc6ZfJWEkcvPeJmxxQycHb293J3FqUvkicWp3WNJTIyNkiHpZ5tELEo=
-X-Received: by 2002:aa7:ca54:: with SMTP id j20mr105844637edt.23.1558726206280;
- Fri, 24 May 2019 12:30:06 -0700 (PDT)
+        Fri, 24 May 2019 15:30:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47514 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729918AbfEXTa6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 15:30:58 -0400
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A523321882
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 19:30:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558726257;
+        bh=++eJML+V7at8ynu0Gghi2KtbxEtQiKNCqvYyHJW4D1g=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=gpba4nvhqX6NHqtFJ0DX/6Shq7xMP0QKoNvfrDVV3xkDOBWCDw5N6YSWROb4D5Zsd
+         YGWK6QSvX2KpgKTRZlio6xCZ0RViGeRa53/YyUp+E/Tfon1Xxt61VpzWYYHwEKOXug
+         46je9P+s2sQxCc9G30mS5qMHz5KhkDO05Ar9qt2c=
+Received: by mail-wm1-f54.google.com with SMTP id 198so10452501wme.3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 12:30:57 -0700 (PDT)
+X-Gm-Message-State: APjAAAWlwJgV9WKpUXL8Adzh69wKadiS8w4c4lc4an6t0u179xP/5TU5
+        n8+nh6zXEeu9f78PJv3UVMaueH9BrfCU4m/6GOGKxQ==
+X-Google-Smtp-Source: APXvYqyLb4T/bZMdmeEdv3r/4ynyWFeM04ByJvHBR7hqFkVePfmxiSgk3D8BRYB56wOHtSETPWa/diJlf770zautMsU=
+X-Received: by 2002:a1c:1d4:: with SMTP id 203mr1051004wmb.76.1558726256158;
+ Fri, 24 May 2019 12:30:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190523210651.80902-1-fklassen@appneta.com> <20190523210651.80902-2-fklassen@appneta.com>
- <CAF=yD-Jf95De=z_nx9WFkGDa6+nRUqM_1PqGkjwaFPzOe+PfXg@mail.gmail.com>
- <AE8E0772-7256-4B9C-A990-96930E834AEE@appneta.com> <CAF=yD-LtAKpND601LQrC1+=iF6spSUXVdUapcsbJdv5FYa=5Jg@mail.gmail.com>
- <AFC1ECC8-BFAC-4718-B0C9-97CC4BD1F397@appneta.com>
-In-Reply-To: <AFC1ECC8-BFAC-4718-B0C9-97CC4BD1F397@appneta.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Fri, 24 May 2019 15:29:29 -0400
-Message-ID: <CAF=yD-Le-eTadOi7PL8WFEQCG=yLqb5gvKiks+s5Akeq8TenBQ@mail.gmail.com>
-Subject: Re: [PATCH net 1/4] net/udp_gso: Allow TX timestamp with UDP GSO
-To:     Fred Klassen <fklassen@appneta.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        Willem de Bruijn <willemb@google.com>
+References: <20190523102628.GC10955@linux.intel.com> <20190523141752.GA12078@linux.intel.com>
+ <CALCETrUzx3LPAKCLFf75P-XshAkRcr+JLET3LA_kHDs9MA11FA@mail.gmail.com>
+ <20190523234044.GC12078@linux.intel.com> <CALCETrV4DVEfW6EJ6DnQGGYDJAiA5M1QcuYJTiroumOM+D6Jjg@mail.gmail.com>
+ <960B34DE67B9E140824F1DCDEC400C0F654E8956@ORSMSX116.amr.corp.intel.com>
+ <dda0912b-cb15-3c07-d368-345159e995f7@tycho.nsa.gov> <20190524174243.GA365@linux.intel.com>
+ <20190524175458.GB365@linux.intel.com> <960B34DE67B9E140824F1DCDEC400C0F654E8E1D@ORSMSX116.amr.corp.intel.com>
+ <20190524191344.GD365@linux.intel.com>
+In-Reply-To: <20190524191344.GD365@linux.intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 24 May 2019 12:30:44 -0700
+X-Gmail-Original-Message-ID: <CALCETrVp+r_wz=sOwLC8oW2P54r=sudBtV+J-Ycq_JE2QxwxEQ@mail.gmail.com>
+Message-ID: <CALCETrVp+r_wz=sOwLC8oW2P54r=sudBtV+J-Ycq_JE2QxwxEQ@mail.gmail.com>
+Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     "Xing, Cedric" <cedric.xing@intel.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Andy Lutomirski <luto@kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 12:34 PM Fred Klassen <fklassen@appneta.com> wrote:
+On Fri, May 24, 2019 at 12:13 PM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
 >
-> > Interesting. TCP timestamping takes the opposite choice and does
-> > timestamp the last byte in the sendmsg request.
-> >
->
-> I have a difficult time with the philosophy of TX timestamping the last
-> segment. The actual timestamp occurs just before the last segment
-> is sent. This is neither the start  nor the end of a GSO packet, which
-> to me seems somewhat arbitrary. It is even more arbitrary when using
-> software TX tiimestamping. These are timestamps represent the
-> time that the packet is queued onto the NIC=E2=80=99s buffer, not actual
-> time leaving the wire.
+> On Fri, May 24, 2019 at 11:34:32AM -0700, Xing, Cedric wrote:
+> > > From: linux-sgx-owner@vger.kernel.org [mailto:linux-sgx-
+> > > owner@vger.kernel.org] On Behalf Of Sean Christopherson
+> > > Sent: Friday, May 24, 2019 10:55 AM
 
-It is the last moment that a timestamp can be generated for the last
-byte, I don't see how that is "neither the start nor the end of a GSO
-packet".
+> I don't see a fundamental difference between having RWX in an enclave and
+> RWX in normal memory, either way the process can execute arbitrary code,
+> i.e. PROCESS__EXECMEM is appropriate.  Yes, an enclave will #UD on certain
+> instructions, but that's easily sidestepped by having a trampoline in the
+> host (marked RX) and piping arbitrary code into the enclave.  Or using
+> EEXIT to do a bit of ROP.
 
-> Queuing to a ring buffer is usually much faster
-> than wire rates. Therefore, say the timestamp of the last 1500 byte
-> segment of a 64K GSO packet may in reality be representing a time
-> about half way through the burst.
->
-> Since the timestamp of a TX packet occurs just before any data is sent,
-> I have found it most valuable to timestamp just before the first byte of
-> the packet or burst. Conversely, I find it most valuable to get an RX
-> timestamp  after the last byte arrives.
->
-> > It sounds like it depends on the workload. Perhaps this then needs to
-> > be configurable with an SOF_.. flag.
-> >
->
-> It would be interesting if a practical case can be made for timestamping
-> the last segment. In my mind, I don=E2=80=99t see how that would be valua=
-ble.
-
-It depends whether you are interested in measuring network latency or
-host transmit path latency.
-
-For the latter, knowing the time from the start of the sendmsg call to
-the moment the last byte hits the wire is most relevant. Or in absence
-of (well defined) hardware support, the last byte being queued to the
-device is the next best thing.
-
-It would make sense for this software implementation to follow
-established hardware behavior. But as far as I know, the exact time a
-hardware timestamp is taken is not consistent across devices, either.
-
-For fine grained timestamped data, perhaps GSO is simply not a good
-mechanism. That said, it still has to queue a timestamp if requested.
-
-> > Another option would be to return a timestamp for every segment. But
-> > they would all return the same tskey. And it causes different behavior
-> > with and without hardware offload.
->
-> When it comes to RX packets, getting per-packet (or per segment)
-> timestamps is invaluable. They represent actual wire times. However
-> my previous research into TX timestamping has led me to conclude
-> that there is no practical value when timestamping every packet of
-> a back-to-back burst.
->
-> When using software TX timestamping, The inter-packet timestamps
-> are typically much faster than line rate. Whereas you may be sending
-> on a GigE link, you may measure 20Gbps. At higher rates, I have found
-> that the overhead of per-packet software timestamping can produce
-> gaps in packets.
->
-> When using hardware timestamping, I think you will find that nearly all
-> adapters only allow one timestamp at a time. Therefore only one
-> packet in a burst would get timestamped.
-
-Can you elaborate? When the host queues N packets all with hardware
-timestamps requested, all N completions will have a timestamp? Or is
-that not guaranteed?
-
-> There are exceptions, for
-> example I am playing with a 100G Mellanox adapter that has
-> per-packet TX timestamping. However, I suspect that when I am
-> done testing, all I will see is timestamps that are representing wire
-> rate (e.g. 123nsec per 1500 byte packet).
->
-> Beyond testing the accuracy of a NIC=E2=80=99s timestamping capabilities,=
- I
-> see very little value in doing per-segment timestamping.
-
-Ack. Great detailed argument, thanks.
+There's a difference, albeit a somewhat weak one, if sigstructs are
+whitelisted.  FILE__EXECMOD on
+either /dev/sgx/enclave or on the sigstruct is not an entirely crazy
+way to express this.
