@@ -2,150 +2,88 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DEA5C282E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 236BAC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5702F21773
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:40:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1EF221773
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:41:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391586AbfEXRkS (ORCPT
+        id S2391362AbfEXRlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 13:40:18 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:45463 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726381AbfEXRkR (ORCPT
+        Fri, 24 May 2019 13:41:02 -0400
+Received: from smtprelay0252.hostedemail.com ([216.40.44.252]:47426 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726381AbfEXRlB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 13:40:17 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id C440720023;
-        Fri, 24 May 2019 19:40:12 +0200 (CEST)
-Date:   Fri, 24 May 2019 19:40:11 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Jani Nikula <jani.nikula@intel.com>
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>
-Subject: Re: [RFC 1/3] kbuild: add support for ensuring headers are
- self-contained
-Message-ID: <20190524174011.GA23737@ravnborg.org>
-References: <20190516194818.29230-1-jani.nikula@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190516194818.29230-1-jani.nikula@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=taGs_qngAAAA:8
-        a=c-n4J4-pAAAA:8 a=NZ-89VFvAAAA:8 a=QyXUC8HyAAAA:8 a=p_TaepwW8ewYzqXrKMIA:9
-        a=CjuIK1q_8ugA:10 a=DM_PlaNYpjARcMQr2apF:22 a=L0NDqeB7ZLmQzAogN4cw:22
-        a=pm31WBKQz9GEXVZSZ1ft:22
+        Fri, 24 May 2019 13:41:01 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 8BD81181D3377;
+        Fri, 24 May 2019 17:41:00 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: oven15_5ff195265d71a
+X-Filterd-Recvd-Size: 2257
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf17.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 24 May 2019 17:40:59 +0000 (UTC)
+Message-ID: <bc58c62d67f60678c980539fb3259683ea8bd21d.camel@perches.com>
+Subject: Re: [PATCH] printk: Monitor change of console loglevel.
+From:   Joe Perches <joe@perches.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Date:   Fri, 24 May 2019 10:40:56 -0700
+In-Reply-To: <CAHk-=wi35ezFsFuHHJ-MbrUAUj0ohQJM4iHHw8n1vyqXMYbVcg@mail.gmail.com>
+References: <1557501546-10263-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+         <CAHk-=wi35ezFsFuHHJ-MbrUAUj0ohQJM4iHHw8n1vyqXMYbVcg@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.1-1build1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jani
-
-> Sometimes it's useful to be able to explicitly ensure certain headers
-> remain self-contained, i.e. that they are compilable as standalone
-> units, by including and/or forward declaring everything they depend on.
+On Fri, 2019-05-24 at 10:17 -0700, Linus Torvalds wrote:
+> > This patch is intended for testing on linux-next.git only, and
+> > will be removed after we found what is wrong.
 > 
-> Add special target header-test-y where individual Makefiles can add
-> headers to be tested if CONFIG_HEADER_TEST is enabled. This will
-> generate a dummy C file per header that gets built as part of extra-y.
-
-Very useful, thanks.
-I have cooked up something ad-hoc a couple of times but having it as a
-standard feature in the build system is much better.
-The we can let some of our infrastructure pick up an issues
-automatically.
-
+> Honestly, wouldn't it be much better to try to come up with a patch
+> that might be acceptable in general.
 > 
-> Cc: Chris Wilson <chris@chris-wilson.co.uk>
-> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Cc: Michal Marek <michal.lkml@markovi.net>
-> Signed-off-by: Jani Nikula <jani.nikula@intel.com>
-> ---
->  Documentation/kbuild/makefiles.txt |  7 +++++++
->  init/Kconfig                       |  9 +++++++++
->  scripts/Makefile.build             | 10 ++++++++++
->  scripts/Makefile.lib               |  3 +++
->  4 files changed, 29 insertions(+)
+> For example, how about a config option that just hardcodes
+> console_loglevel as a compile-time constant, and where you can't
+> change it at all? There are not that many paths that set the console
+> log-level, and the few that do could be made to use
 > 
-> diff --git a/Documentation/kbuild/makefiles.txt b/Documentation/kbuild/makefiles.txt
-> index 03c065855eaf..73df58e5ea0c 100644
-> --- a/Documentation/kbuild/makefiles.txt
-> +++ b/Documentation/kbuild/makefiles.txt
-> @@ -1036,6 +1036,13 @@ When kbuild executes, the following steps are followed (roughly):
->  	In this example, extra-y is used to list object files that
->  	shall be built, but shall not be linked as part of built-in.a.
->  
-> +    header-test-y
-> +
-> +	header-test-y specifies headers (*.h) in the current directory that
-> +	should be compile tested to ensure they are self-contained,
-> +	i.e. compilable as standalone units. If CONFIG_HEADER_TEST is enabled,
-> +	this autogenerates dummy sources to include the headers, and builds them
-> +	as part of extra-y.
-Do we want to restrict this to current directory only?
-Sometimes we could use this for headers in include/ but let it
-trigger for the relevant subsystem.
-So for example drivers/gpu/drm/Makefile will include the rules
-for all headers in include/drm/*
+>     set_console_log_level(x);
+> 
+> instead of
+> 
+>     console_loglevel = x;
+> 
+> like they do.
+> 
+> We already have a number of loglevel config options, adding another
+> that says "fix log levels at compile time" doesn't sound too bad, and
+> I suspect a patch that introduces that set_console_log_level() kind of
+> model and just makes "console_loglevel" a constant #define wouldn't be
+> too ugly.
+> 
+> A config option or two that help syzbot doesn't sound like a bad idea to me.
+> 
+> Hmm?
 
-The alternative would be Makefiles (of Kbuild files)
-scattered in the directories with headers and then some
-infrastructure to visit those.
-
-Follow patch extend the header-test feature to work with
-headers in include/
-
-Example:
-# Header files from this directory
-header-test-y += drm_crtc_helper_internal.h
-header-test-y += drm_crtc_internal.h
-..
-.
-# Header files from include/drm
-header-test-y += drm/amd_asic_type.h
-header-test-y += drm/ati_pcigart.h
-...
+That could also help eliminate unnecessary pr_<foo> output
+from object code.
 
 
-In the patch $* is used to get the "stem" from the pattern.
-This is the filname of the header file without extension.
-
-
-	Sam
-
-
-diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-index 4d4bf698467a..ca132ab3a551 100644
---- a/scripts/Makefile.build
-+++ b/scripts/Makefile.build
-@@ -295,11 +295,10 @@ $(obj)/%.lst: $(src)/%.c FORCE
- # ---------------------------------------------------------------------------
- 
- quiet_cmd_header_test = HDRTEST $@
--      cmd_header_test = echo "\#include \"$(<F)\"" > $@
-+      cmd_header_test = echo "\#include <$(2).h>" > $@
- 
--# FIXME: would be nice to be able to limit this implicit rule to header-test-y
--$(obj)/%.header_test.c: $(src)/%.h FORCE
--	$(call if_changed,header_test)
-+$(obj)/%.header_test.c:
-+	$(call cmd,header_test,$*)
- 
- # Compile assembler sources (.S)
- # ---------------------------------------------------------------------------
 
