@@ -2,95 +2,105 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2193C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1DFEC282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71B9721850
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A0A821773
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:18:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gJ1stP/+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dWcgLrZo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391121AbfEXLRP (ORCPT
+        id S2390876AbfEXLSk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 07:17:15 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40053 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390906AbfEXLQn (ORCPT
+        Fri, 24 May 2019 07:18:40 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37842 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390759AbfEXLSk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 07:16:43 -0400
-Received: by mail-wr1-f65.google.com with SMTP id t4so1326474wrx.7
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 04:16:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=wJ/OTTzXkpFYyCPQfFmBGF9g9r7JKprAJcxNABvYugk=;
-        b=gJ1stP/+skWInP/MCWzv188wslOchZmZz7clJcjMeGjOAKJVQ8ZUw6DC3QDutVoMw0
-         P9CD1wa68T48LNgzOL7NlendOV281v85ONTsvsKVKy7YZIlATB8R96UEy2fslY9V+hNP
-         +AD88uTiybNf3E+9E77v6ACNBfmmGwR8DBJ4X0lOPm0ygG1/ayhIkfa66R06mrzcqHqz
-         Bwge7jwBG8R++lmUEjjQwHdjlVQVZG28lqF4cR+8pO2kDAoNE7liSM+Qtt86AhCrDxw8
-         WyjbpoBwIOpNWeny42n9gNyVfmFWBgVcxTsD9vz4BKVE6P/Xyxvpx4mnB6NAQORjH68h
-         RzTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=wJ/OTTzXkpFYyCPQfFmBGF9g9r7JKprAJcxNABvYugk=;
-        b=Vj+wcGup37+AcHBAjvkdaemg7BTh+xo0scB2v2SIAJStmD9VZMu43MhxNJjBIkMUpT
-         JWp1i7G2U/Fqva8vNubkM+sk6stjGIqR0vveDSCyOBCoWdWJoZTNIUVpj2NycKmYwQ72
-         1giiEZ/gIZRJUQeY/bYobYMlQ37boxakP+390IlT8BTaBf1OF8oe3p0CAeUQvYDx9h10
-         LhfrNRZsbxe4bGgVoRkm6b8XYMiON4tg9HqgKa6jorM9UZjqE1su8zFlT+3cT0wwdlP7
-         CXgSuiv6iJNAgbqrryfTnXMM2M5+k4YJM7/Bfkpf8ZhoIBIuQeY0OmMljxxORxt5n5xe
-         RBtg==
-X-Gm-Message-State: APjAAAW8WrC42vqAF/vP0Ap5rKCoexyxGMpaGR9CJugRtUGZ4FmYyPSp
-        bRgczp0cysjn/NaSHHjOHWAh2lleLes=
-X-Google-Smtp-Source: APXvYqwLT4QBS8z2EMD4tz2k+B7csRsPTzLT+U55/TpTh9wgMAjKbffrAFoN1cIOiCh1GuX1fcR2FA==
-X-Received: by 2002:adf:e9ca:: with SMTP id l10mr4153207wrn.47.1558696601880;
-        Fri, 24 May 2019 04:16:41 -0700 (PDT)
-Received: from clegane.local (73.82.95.92.rev.sfr.net. [92.95.82.73])
-        by smtp.gmail.com with ESMTPSA id h12sm2575392wre.14.2019.05.24.04.16.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 04:16:41 -0700 (PDT)
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     tglx@linutronix.de
-Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@linux.intel.com
-Subject: [PATCH V2 4/9] genirq/timings: Use the min kernel macro
-Date:   Fri, 24 May 2019 13:16:10 +0200
-Message-Id: <20190524111615.4891-5-daniel.lezcano@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190524111615.4891-1-daniel.lezcano@linaro.org>
-References: <20190524111615.4891-1-daniel.lezcano@linaro.org>
+        Fri, 24 May 2019 07:18:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=MwsXLs7WTZaHxJpnrqoGN4CLjyg7waRkeF8Z+h9pCfA=; b=dWcgLrZoVDg62DirK77o+eC7x
+        wxkOHptuRv34IPZg2fqfuDEf6hyMn/LD2xO3ZHyILpKXC4tM1ngwnCthGFgR2rIjAWHT/GVmnF51O
+        1yda5LCb1txf0XlYovXt7RubaokJKOGKRXr5RJYNoU6VLvd89D8nCREMM4DgNYog35uIJ9vf3o3fh
+        7QE0auEW8jgKa/i90HKXp8nCDU7WZS/tRqSRwAikitk5LLL048PsizIudFbJSH22Gj9cnwNvaivMz
+        tlaUJ6NGTbuwHEderejD+yg0bd41IniWaRXaxxYQ/2IPEiBCBLImAfvTpBuinnxJV/lOdKBvzVuWu
+        tvdK2oLSg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hU8DB-0007nx-Ar; Fri, 24 May 2019 11:18:09 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A486A2029B0A3; Fri, 24 May 2019 13:18:07 +0200 (CEST)
+Date:   Fri, 24 May 2019 13:18:07 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
+        linux-kernel@vger.kernel.org, will.deacon@arm.com,
+        aou@eecs.berkeley.edu, arnd@arndb.de, bp@alien8.de,
+        catalin.marinas@arm.com, davem@davemloft.net, fenghua.yu@intel.com,
+        heiko.carstens@de.ibm.com, herbert@gondor.apana.org.au,
+        ink@jurassic.park.msu.ru, jhogan@kernel.org, linux@armlinux.org.uk,
+        mattst88@gmail.com, mingo@kernel.org, mpe@ellerman.id.au,
+        palmer@sifive.com, paul.burton@mips.com, paulus@samba.org,
+        ralf@linux-mips.org, rth@twiddle.net, stable@vger.kernel.org,
+        tglx@linutronix.de, tony.luck@intel.com, vgupta@synopsys.com,
+        gregkh@linuxfoundation.org, jhansen@vmware.com, vdasa@vmware.com,
+        aditr@vmware.com, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH 00/18] locking/atomic: atomic64 type cleanup
+Message-ID: <20190524111807.GS2650@hirez.programming.kicks-ass.net>
+References: <20190522132250.26499-1-mark.rutland@arm.com>
+ <20190523083013.GA4616@andrea>
+ <20190523101926.GA3370@lakrids.cambridge.arm.com>
+ <20190524103731.GN2606@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190524103731.GN2606@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The' min' is available as a kernel macro. Use it instead of writing
-the same code.
+On Fri, May 24, 2019 at 12:37:31PM +0200, Peter Zijlstra wrote:
+> On Thu, May 23, 2019 at 11:19:26AM +0100, Mark Rutland wrote:
+> 
+> > [mark@lakrids:~/src/linux]% git grep '\(return\|=\)\s\+atomic\(64\)\?_set'
+> > include/linux/vmw_vmci_defs.h:  return atomic_set((atomic_t *)var, (u32)new_val);
+> > include/linux/vmw_vmci_defs.h:  return atomic64_set(var, new_val);
+> > 
+> 
+> Oh boy, what a load of crap you just did find.
+> 
+> How about something like the below? I've not read how that buffer is
+> used, but the below preserves all broken without using atomic*_t.
 
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Clarified by something along these lines?
+
 ---
- kernel/irq/timings.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ Documentation/atomic_t.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/kernel/irq/timings.c b/kernel/irq/timings.c
-index 06bde5253a7d..8928601b4b42 100644
---- a/kernel/irq/timings.c
-+++ b/kernel/irq/timings.c
-@@ -406,8 +406,7 @@ static u64 __irq_timings_next_event(struct irqt_stat *irqs, int irq, u64 now)
- 	/*
- 	 * 'count' will depends if the circular buffer wrapped or not
- 	 */
--	count = irqs->count < IRQ_TIMINGS_SIZE ?
--		irqs->count : IRQ_TIMINGS_SIZE;
-+	count = min_t(int, irqs->count,  IRQ_TIMINGS_SIZE);
+diff --git a/Documentation/atomic_t.txt b/Documentation/atomic_t.txt
+index dca3fb0554db..125c95ddbbc0 100644
+--- a/Documentation/atomic_t.txt
++++ b/Documentation/atomic_t.txt
+@@ -83,6 +83,9 @@ The non-RMW ops are (typically) regular LOADs and STOREs and are canonically
+ implemented using READ_ONCE(), WRITE_ONCE(), smp_load_acquire() and
+ smp_store_release() respectively.
  
- 	start = irqs->count < IRQ_TIMINGS_SIZE ?
- 		0 : (irqs->count & IRQ_TIMINGS_MASK);
--- 
-2.17.1
-
++Therefore, if you find yourself only using the Non-RMW operations of atomic_t,
++you do not in fact need atomic_t at all and are doing it wrong.
++
+ The one detail to this is that atomic_set{}() should be observable to the RMW
+ ops. That is:
+ 
