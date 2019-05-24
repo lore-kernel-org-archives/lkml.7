@@ -2,149 +2,185 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,UNWANTED_LANGUAGE_BODY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D91C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0152C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BECC217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:55:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6662C217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:55:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="U7qLd1q8"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="A84J3j6y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390039AbfEXIyY (ORCPT
+        id S2390009AbfEXIyX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 04:54:24 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:2118 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389964AbfEXIyT (ORCPT
+        Fri, 24 May 2019 04:54:23 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:39270 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389963AbfEXIyS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 04:54:19 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ce7b1350000>; Fri, 24 May 2019 01:54:13 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 24 May 2019 01:54:18 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 24 May 2019 01:54:18 -0700
-Received: from HQMAIL108.nvidia.com (172.18.146.13) by HQMAIL106.nvidia.com
- (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 24 May
- 2019 08:54:17 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL108.nvidia.com
- (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 24 May 2019 08:54:18 +0000
-Received: from moonraker.nvidia.com (Not Verified[10.21.132.148]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ce7b1380001>; Fri, 24 May 2019 01:54:17 -0700
-From:   Jon Hunter <jonathanh@nvidia.com>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Jon Hunter <jonathanh@nvidia.com>
-Subject: [PATCH] Revert "ASoC: simple-card: Fix configuration of DAI format"
-Date:   Fri, 24 May 2019 09:54:04 +0100
-Message-ID: <1558688044-22025-1-git-send-email-jonathanh@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-X-NVConfidentiality: public
+        Fri, 24 May 2019 04:54:18 -0400
+Received: by mail-ed1-f67.google.com with SMTP id e24so13342348edq.6
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 01:54:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=z5iZhjuR5FCK/3TxL7IjS7BEtXamfSAXEK7faRMJIyY=;
+        b=A84J3j6yA9uBLJ4ynLq1hkbX6gaeWiJBlrLbMqTJZ8UL/PCTKWUctpHKWgggmpBGPf
+         I8KeLGCgt5cQA9HVi3LQAUwxnb1KiMFfk+3rbZjqd6yF4kX0nRL+Crqvs1W6zyDbd5LA
+         yXVpa3vQNEoL/t8Djh76UgtdUToi4TPriNRZ4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=z5iZhjuR5FCK/3TxL7IjS7BEtXamfSAXEK7faRMJIyY=;
+        b=RIBkWa5k5/xbPD26hK54L06Jx40sxbD1mdUqqDubJAXKB7BUgcx8u0o1ZR06dVvMgk
+         PfURuYwy2yjgzSnY+tDIAdGz3xLqObYkv2JTWspgCk77jKcB5muuea3Qlr0fOsmIJsxb
+         eL9KotkaYPCGwZU3GZrWkhFiBPwhq+M3Zqb9YvhUmG8wMkIFjc6XKJuUqC+bMXlJrNHi
+         TleUmih8bUOwW336TGnlwSiLKz6Ub0/93AxOypVCUwxgHzQLrEZu14VX85j0Tn4kP3CB
+         SaqOsS5S5EeFd301vu/VDVz4942/Zj6k6ABVlh53oMyi5QfsR3jd9Msicg3VOKZWnTxz
+         Vi5w==
+X-Gm-Message-State: APjAAAXyXaoKUf2duT1JzJEJ7F3M39ap2e1UVzbAMaLrCfRKP/IOSwkT
+        3aNxBMKRPMTWlQUxIxhYQ0HyeBelmuo=
+X-Google-Smtp-Source: APXvYqw+C7uEvcSOzAqBpZKzIjQB+kCYivog+9nN4dN0rkn4Uvf91qd6a0Cft/NG3LdotqRz3PN/jA==
+X-Received: by 2002:a17:906:1c4a:: with SMTP id l10mr14985452ejg.124.1558688056848;
+        Fri, 24 May 2019 01:54:16 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id 96sm567082edq.68.2019.05.24.01.54.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 May 2019 01:54:16 -0700 (PDT)
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 11/33] fbdev/sh_mobile: remove sh_mobile_lcdc_display_notify
+Date:   Fri, 24 May 2019 10:53:32 +0200
+Message-Id: <20190524085354.27411-12-daniel.vetter@ffwll.ch>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190524085354.27411-1-daniel.vetter@ffwll.ch>
+References: <20190524085354.27411-1-daniel.vetter@ffwll.ch>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1558688053; bh=nLIuj+dWoHUdiLPx4+WIEBrzL5eS8acbrvzehEuKewA=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         X-NVConfidentiality:MIME-Version:Content-Type;
-        b=U7qLd1q8OQQZhGp7qzKaeHeA6i3Xdhy1PU+tomyMsdXeT4AGyOeWMWaCXa08lSbM6
-         Ph7h2yRh/+ZedkiWZQnPeGmW0K5ElEw0egotjTyGYhWPBzT205VlCYFU2ppM+kiBFz
-         m6eeyCwAzBO5/yYdYJBIWWnlr27Xx09z0RcImMFsqbe39IRJV06XrGA44rpdD6hpqQ
-         h/N7mlX7YjWvHukBqJEUgsWu1oC14osKxZbMIztu1lG9IE63xMMpwIwDJLsr79cVTg
-         wkmj8u9jXSR5Ma0APD7hh6Y3raoh7J6UeY9SXog8GRaf8PvgiOEWs4vL0SQsWm8P2N
-         wpIIL0Of/k6UA==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Revert commit 069d037aea98 ("ASoC: simple-card: Fix configuration of
-DAI format"). During further review, it turns out that the actual issue
-was caused by an incorrectly formatted device-tree node describing the
-soundcard.
+It's dead code, and removing it avoids me having to understand
+what it's doing with lock_fb_info.
 
-The following is incorrect because the simple-audio-card
-'bitclock-master' and 'frame-master' properties should not reference the
-actual codec phandle ...
-
-	sound {
-		compatible = "simple-audio-card";
-		...
-	=>	simple-audio-card,bitclock-master = <&codec>;
-	=>	simple-audio-card,frame-master = <&codec>;
-		...
-
-		simple-audio-card,cpu {
-			sound-dai = <&xxx>;
-		};
-
-		simple-audio-card,codec {
-	=>		sound-dai = <&codec>;
-		};
-	};
-
-Rather, these properties should reference the phandle to the
-'simple-audio-card,codec' property as shown below ...
-
-	sound {
-		compatible = "simple-audio-card";
-		...
-	=>	simple-audio-card,bitclock-master = <&codec>;
-	=>	simple-audio-card,frame-master = <&codec>;
-		...
-
-		simple-audio-card,cpu {
-			sound-dai = <&xxx>;
-		};
-
-	=>	codec: simple-audio-card,codec { /* simple-card wants here */
-			sound-dai = <&xxx>;	 /* not here */
-		};
-	};
-
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
 ---
- sound/soc/generic/simple-card.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/video/fbdev/sh_mobile_lcdcfb.c | 63 --------------------------
+ drivers/video/fbdev/sh_mobile_lcdcfb.h |  5 --
+ 2 files changed, 68 deletions(-)
 
-diff --git a/sound/soc/generic/simple-card.c b/sound/soc/generic/simple-card.c
-index c2a2c5fd0801..d16e894fce2b 100644
---- a/sound/soc/generic/simple-card.c
-+++ b/sound/soc/generic/simple-card.c
-@@ -283,6 +283,11 @@ static int simple_dai_link_of(struct asoc_simple_priv *priv,
- 	codec_dai		=
- 	dai_props->codec_dai	= &priv->dais[li->dais++];
+diff --git a/drivers/video/fbdev/sh_mobile_lcdcfb.c b/drivers/video/fbdev/sh_mobile_lcdcfb.c
+index dc46be38c970..c5924f5e98c6 100644
+--- a/drivers/video/fbdev/sh_mobile_lcdcfb.c
++++ b/drivers/video/fbdev/sh_mobile_lcdcfb.c
+@@ -556,67 +556,6 @@ sh_mobile_lcdc_must_reconfigure(struct sh_mobile_lcdc_chan *ch,
+ static int sh_mobile_lcdc_check_var(struct fb_var_screeninfo *var,
+ 				    struct fb_info *info);
  
-+	ret = asoc_simple_parse_daifmt(dev, node, codec,
-+				       prefix, &dai_link->dai_fmt);
-+	if (ret < 0)
-+		goto dai_link_of_err;
-+
- 	simple_parse_mclk_fs(top, cpu, codec, dai_props, prefix);
- 
- 	ret = asoc_simple_parse_cpu(cpu, dai_link, &single_cpu);
-@@ -293,11 +298,6 @@ static int simple_dai_link_of(struct asoc_simple_priv *priv,
- 	if (ret < 0)
- 		goto dai_link_of_err;
- 
--	ret = asoc_simple_parse_daifmt(dev, node, dai_link->codecs->of_node,
--				       prefix, &dai_link->dai_fmt);
--	if (ret < 0)
--		goto dai_link_of_err;
+-static int sh_mobile_lcdc_display_notify(struct sh_mobile_lcdc_chan *ch,
+-					 enum sh_mobile_lcdc_entity_event event,
+-					 const struct fb_videomode *mode,
+-					 const struct fb_monspecs *monspec)
+-{
+-	struct fb_info *info = ch->info;
+-	struct fb_var_screeninfo var;
+-	int ret = 0;
 -
- 	ret = asoc_simple_parse_platform(plat, dai_link);
- 	if (ret < 0)
- 		goto dai_link_of_err;
+-	switch (event) {
+-	case SH_MOBILE_LCDC_EVENT_DISPLAY_CONNECT:
+-		/* HDMI plug in */
+-		console_lock();
+-		if (lock_fb_info(info)) {
+-
+-
+-			ch->display.width = monspec->max_x * 10;
+-			ch->display.height = monspec->max_y * 10;
+-
+-			if (!sh_mobile_lcdc_must_reconfigure(ch, mode) &&
+-			    info->state == FBINFO_STATE_RUNNING) {
+-				/* First activation with the default monitor.
+-				 * Just turn on, if we run a resume here, the
+-				 * logo disappears.
+-				 */
+-				info->var.width = ch->display.width;
+-				info->var.height = ch->display.height;
+-				sh_mobile_lcdc_display_on(ch);
+-			} else {
+-				/* New monitor or have to wake up */
+-				fb_set_suspend(info, 0);
+-			}
+-
+-
+-			unlock_fb_info(info);
+-		}
+-		console_unlock();
+-		break;
+-
+-	case SH_MOBILE_LCDC_EVENT_DISPLAY_DISCONNECT:
+-		/* HDMI disconnect */
+-		console_lock();
+-		if (lock_fb_info(info)) {
+-			fb_set_suspend(info, 1);
+-			unlock_fb_info(info);
+-		}
+-		console_unlock();
+-		break;
+-
+-	case SH_MOBILE_LCDC_EVENT_DISPLAY_MODE:
+-		/* Validate a proposed new mode */
+-		fb_videomode_to_var(&var, mode);
+-		var.bits_per_pixel = info->var.bits_per_pixel;
+-		var.grayscale = info->var.grayscale;
+-		ret = sh_mobile_lcdc_check_var(&var, info);
+-		break;
+-	}
+-
+-	return ret;
+-}
+-
+ /* -----------------------------------------------------------------------------
+  * Format helpers
+  */
+@@ -2540,8 +2479,6 @@ sh_mobile_lcdc_channel_init(struct sh_mobile_lcdc_chan *ch)
+ 	unsigned int max_size;
+ 	unsigned int i;
+ 
+-	ch->notify = sh_mobile_lcdc_display_notify;
+-
+ 	/* Validate the format. */
+ 	format = sh_mobile_format_info(cfg->fourcc);
+ 	if (format == NULL) {
+diff --git a/drivers/video/fbdev/sh_mobile_lcdcfb.h b/drivers/video/fbdev/sh_mobile_lcdcfb.h
+index b8e47a8bd8ab..589400372098 100644
+--- a/drivers/video/fbdev/sh_mobile_lcdcfb.h
++++ b/drivers/video/fbdev/sh_mobile_lcdcfb.h
+@@ -87,11 +87,6 @@ struct sh_mobile_lcdc_chan {
+ 	unsigned long base_addr_c;
+ 	unsigned int line_size;
+ 
+-	int (*notify)(struct sh_mobile_lcdc_chan *ch,
+-		      enum sh_mobile_lcdc_entity_event event,
+-		      const struct fb_videomode *mode,
+-		      const struct fb_monspecs *monspec);
+-
+ 	/* Backlight */
+ 	struct backlight_device *bl;
+ 	unsigned int bl_brightness;
 -- 
-2.7.4
+2.20.1
 
