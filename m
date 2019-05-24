@@ -2,112 +2,163 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 197BEC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C28CC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:50:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA80A217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:48:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FBA9217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:50:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="yNndyyEt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390616AbfEXKsf (ORCPT
+        id S2390665AbfEXKuR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 06:48:35 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33276 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389448AbfEXKse (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 06:48:34 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1673230821F8;
-        Fri, 24 May 2019 10:48:34 +0000 (UTC)
-Received: from [10.3.116.116] (ovpn-116-116.phx2.redhat.com [10.3.116.116])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5303561354;
-        Fri, 24 May 2019 10:48:33 +0000 (UTC)
-Subject: Re: [PATCH] drm: assure aux_dev is nonzero before using it
-To:     Jani Nikula <jani.nikula@linux.intel.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc:     airlied@linux.ie, dkwon@redhat.com
-References: <20190523110905.22445-1-tcamuso@redhat.com>
- <87v9y0mept.fsf@intel.com>
-From:   tony camuso <tcamuso@redhat.com>
-Message-ID: <04ae1fb0-02ab-88e9-94b3-e36f48cc65d5@redhat.com>
-Date:   Fri, 24 May 2019 06:48:32 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <87v9y0mept.fsf@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Fri, 24 May 2019 06:50:17 -0400
+Received: from mail-eopbgr140075.outbound.protection.outlook.com ([40.107.14.75]:40877
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389448AbfEXKuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 06:50:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/xqeAvNqdBn60d0nx9GinGOt5ujMTtwBY7H9n0wfzBk=;
+ b=yNndyyEtBKVvwirkyzCze9iwXc+rGNbJIHNI33qSe3iiujUjugStQeB1N/tDZjHQGjiBZGvYujSsVpbEoqE8npCyj/6P5pFVOM5tdEigzpOkSTFY1icqhFtqP3YXl7xldhzRvivXrIlVj7rWxoglwnzUmb293M3xtL5Perwh5aE=
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
+ VE1PR08MB4671.eurprd08.prod.outlook.com (10.255.115.10) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.17; Fri, 24 May 2019 10:50:12 +0000
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::206b:5cf6:97e:1358]) by VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::206b:5cf6:97e:1358%7]) with mapi id 15.20.1922.017; Fri, 24 May 2019
+ 10:50:12 +0000
+From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+To:     "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
+CC:     Liviu Dudau <Liviu.Dudau@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        nd <nd@arm.com>
+Subject: Re: [PATCH] drm/komeda: Creates plane alpha and blend mode properties
+Thread-Topic: [PATCH] drm/komeda: Creates plane alpha and blend mode
+ properties
+Thread-Index: AQHVEh52xJ4Oo9wXlU+wcwM2IPE1kA==
+Date:   Fri, 24 May 2019 10:50:12 +0000
+Message-ID: <20190524105006.GA18826@james-ThinkStation-P300>
+References: <1558689598-2215-1-git-send-email-lowry.li@arm.com>
+In-Reply-To: <1558689598-2215-1-git-send-email-lowry.li@arm.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Fri, 24 May 2019 10:48:34 +0000 (UTC)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mutt/1.9.4 (2018-02-28)
+x-originating-ip: [113.29.88.7]
+x-clientproxiedby: HK0PR03CA0050.apcprd03.prod.outlook.com
+ (2603:1096:203:52::14) To VE1PR08MB5006.eurprd08.prod.outlook.com
+ (2603:10a6:803:113::31)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f6165d8d-9ec6-4147-57f5-08d6e03598ea
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VE1PR08MB4671;
+x-ms-traffictypediagnostic: VE1PR08MB4671:
+x-ms-exchange-purlcount: 5
+nodisclaimer: True
+x-microsoft-antispam-prvs: <VE1PR08MB46718AA9F9BEB9600D029B7BB3020@VE1PR08MB4671.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 0047BC5ADE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(346002)(376002)(136003)(366004)(39860400002)(396003)(199004)(189003)(66446008)(66476007)(66556008)(64756008)(478600001)(54906003)(81156014)(81166006)(7736002)(14454004)(8936002)(58126008)(66946007)(5660300002)(8676002)(6486002)(73956011)(966005)(66066001)(5024004)(256004)(305945005)(33656002)(9686003)(6512007)(6636002)(6306002)(71200400001)(71190400001)(86362001)(6436002)(33716001)(386003)(6506007)(4326008)(55236004)(229853002)(6246003)(6862004)(53936002)(6116002)(102836004)(3846002)(26005)(25786009)(186003)(1076003)(316002)(68736007)(76176011)(52116002)(446003)(2906002)(476003)(99286004)(11346002)(486006);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB4671;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: tUG3+C6inCWKDDkgogpgEm7tQQ+fpcDJ1YDeLJ5MueKBt4PetBpIqdvgnhb+NPoj18osByM1tqP2VXlDE4cjGDGN5R+mftHjuXoZvvyVqv1TF1LzWZw2UmV1xkXmzNkN9bVBsS9zywj+x4Lsl76ib+C24CDHAqOEjWwj79olYzXD0N3WaJXlAYGaAoEb1Z6+PgAWjcDw1m4xy0lv00jmgxg52TAZjYpdy2fTsxg9KQMI8Q7C5lnLHfF+5Qz7nTRzW6ulKCxDWC8adERfGqBoMT1TolBzBdZ6XJZb9f1CiqJhvJqHlLA+Au9zHrgDurHKOFgmt4SQLon0X+bKpAWU+xAK4DiKbE4W99kETna8Jb5+fhpxEQPz4f3BwQx5uzXM5PQMLUuSzj56gimnZ5+DEGyJWht1QIhTh41p7/UpGEk=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <6181A7944D56264781C2D7AE991D99DD@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f6165d8d-9ec6-4147-57f5-08d6e03598ea
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 May 2019 10:50:12.6615
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: james.qian.wang@arm.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB4671
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/24/19 4:36 AM, Jani Nikula wrote:
-> On Thu, 23 May 2019, tcamuso <tcamuso@redhat.com> wrote:
->>  From Daniel Kwon <dkwon@redhat.com>
->>
->> The system was crashed due to invalid memory access while trying to access
->> auxiliary device.
->>
->> crash> bt
->> PID: 9863   TASK: ffff89d1bdf11040  CPU: 1   COMMAND: "ipmitool"
->>   #0 [ffff89cedd7f3868] machine_kexec at ffffffffb0663674
->>   #1 [ffff89cedd7f38c8] __crash_kexec at ffffffffb071cf62
->>   #2 [ffff89cedd7f3998] crash_kexec at ffffffffb071d050
->>   #3 [ffff89cedd7f39b0] oops_end at ffffffffb0d6d758
->>   #4 [ffff89cedd7f39d8] no_context at ffffffffb0d5bcde
->>   #5 [ffff89cedd7f3a28] __bad_area_nosemaphore at ffffffffb0d5bd75
->>   #6 [ffff89cedd7f3a78] bad_area at ffffffffb0d5c085
->>   #7 [ffff89cedd7f3aa0] __do_page_fault at ffffffffb0d7080c
->>   #8 [ffff89cedd7f3b10] do_page_fault at ffffffffb0d70905
->>   #9 [ffff89cedd7f3b40] page_fault at ffffffffb0d6c758
->>      [exception RIP: drm_dp_aux_dev_get_by_minor+0x3d]
->>      RIP: ffffffffc0a589bd  RSP: ffff89cedd7f3bf0  RFLAGS: 00010246
->>      RAX: 0000000000000000  RBX: 0000000000000000  RCX: ffff89cedd7f3fd8
->>      RDX: 0000000000000000  RSI: 0000000000000000  RDI: ffffffffc0a613e0
->>      RBP: ffff89cedd7f3bf8   R8: ffff89f1bcbabbd0   R9: 0000000000000000
->>      R10: ffff89f1be7a1cc0  R11: 0000000000000000  R12: 0000000000000000
->>      R13: ffff89f1b32a2830  R14: ffff89d18fadfa00  R15: 0000000000000000
->>      ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
->>      RIP: 00002b45f0d80d30  RSP: 00007ffc416066a0  RFLAGS: 00010246
->>      RAX: 0000000000000002  RBX: 000056062e212d80  RCX: 00007ffc41606810
->>      RDX: 0000000000000000  RSI: 0000000000000002  RDI: 00007ffc41606ec0
->>      RBP: 0000000000000000   R8: 000056062dfed229   R9: 00002b45f0cdf14d
->>      R10: 0000000000000002  R11: 0000000000000246  R12: 00007ffc41606ec0
->>      R13: 00007ffc41606ed0  R14: 00007ffc41606ee0  R15: 0000000000000000
->>      ORIG_RAX: 0000000000000002  CS: 0033  SS: 002b
->>
->> ----------------------------------------------------------------------------
->>
->> It was trying to open '/dev/ipmi0', but as no entry in aux_dir, it returned
->> NULL from 'idr_find()'. This drm_dp_aux_dev_get_by_minor() should have done a
->> check on this, but had failed to do it.
-> 
-> I think the better question is, *why* does the idr_find() return NULL? I
-> don't think it should, under any circumstances. I fear adding the check
-> here papers over some other problem, taking us further away from the
-> root cause.
+On Fri, May 24, 2019 at 05:20:24PM +0800, Lowry Li (Arm Technology China) w=
+rote:
+> From: "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
+>=20
+> Creates plane alpha and blend mode properties attached to plane.
+>=20
+> This patch depends on:
+> - https://patchwork.freedesktop.org/series/59915/
+> - https://patchwork.freedesktop.org/series/58665/
+> - https://patchwork.freedesktop.org/series/59000/
+> - https://patchwork.freedesktop.org/series/59002/
+> - https://patchwork.freedesktop.org/series/59471/
+>=20
+> Changes since v1:
+> - Adds patch denpendency in the comment
+>=20
+> Changes since v2:
+> - Remove [RFC] from the subject
+>=20
+> Changes since v3:
+> - Rebase the code
+>=20
+> Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
+> ---
+>  drivers/gpu/drm/arm/display/komeda/komeda_plane.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>=20
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_plane.c b/drivers/=
+gpu/drm/arm/display/komeda/komeda_plane.c
+> index e7cd690..9b87c25 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_plane.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_plane.c
+> @@ -303,6 +303,17 @@ static int komeda_plane_add(struct komeda_kms_dev *k=
+ms,
+> =20
+>  	drm_plane_helper_add(plane, &komeda_plane_helper_funcs);
+> =20
+> +	err =3D drm_plane_create_alpha_property(plane);
+> +	if (err)
+> +		goto cleanup;
+> +
+> +	err =3D drm_plane_create_blend_mode_property(plane,
+> +			BIT(DRM_MODE_BLEND_PIXEL_NONE) |
+> +			BIT(DRM_MODE_BLEND_PREMULTI)   |
+> +			BIT(DRM_MODE_BLEND_COVERAGE));
+> +	if (err)
+> +		goto cleanup;
+> +
+>  	err =3D komeda_plane_create_layer_properties(kplane, layer);
+>  	if (err)
+>  		goto cleanup;
+> --=20
+> 1.9.1
+>=20
 
-That's a very good question.
+lgtm.
 
-> Also, can you reproduce this on a recent upstream kernel? The aux device
-> nodes were introduced in kernel v4.6. Whatever you reproduced on v3.10
-> is pretty much irrelevant for upstream.
-
-I will look into this deeper, using the upstream kernel.
-
-> 
-> 
-> BR,
-> Jani.
-
--- snip --
-
+Reviewed-by: James Qian Wang (Arm Technology China) <james.qian.wang@arm.co=
+m>
