@@ -2,142 +2,152 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 598C5C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 03:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A08C282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 03:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 137C8217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 03:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9617721773
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 03:11:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KwcgVa2a";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WuQbAxZ9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a7Sc0Zml"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388784AbfEXDKG (ORCPT
+        id S2388744AbfEXDL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 23:10:06 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:59272 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387559AbfEXDKF (ORCPT
+        Thu, 23 May 2019 23:11:28 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:39143 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387559AbfEXDL1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 23:10:05 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 57A496087A; Fri, 24 May 2019 03:10:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558667404;
-        bh=O7cQI3hKqwLum3dHopYKUX9rFdvXxU3XnAEloPidYkw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KwcgVa2aLbELxlhUSZKkPZEkpNP+qGfug1/VE4DtHmC5AIZQAiqt+W1R3LkCvb/sN
-         PEmBPBONx4nN3iS2WKb7lSVrRwcpr6GcVPH502i3r3hBToAuz/yxH37xdcqs82ZVjq
-         aC72j52i4R9fd7DSpGsLnjCGa09hneTV44ishI8g=
-Received: from codeaurora.org (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: stummala@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D418660878;
-        Fri, 24 May 2019 03:10:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558667403;
-        bh=O7cQI3hKqwLum3dHopYKUX9rFdvXxU3XnAEloPidYkw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WuQbAxZ9GbJEdO1ImtXt4dxUx6Brtsq+dRj53DdHfIAxhNCxoNf45ng0buMrWweno
-         txVw4F0fyn0jiRnVKgrWmB2p2KK3W8b64PvP87ms7v1JsBYnwBBZBPeolxtR7BCVl4
-         sOctgbc2rTrMZ+16uESeWBzZcyT2EL6t8Va1Z8JM=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D418660878
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
-Date:   Fri, 24 May 2019 08:39:58 +0530
-From:   Sahitya Tummala <stummala@codeaurora.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     sunqiuyang <sunqiuyang@huawei.com>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [PATCH v6 1/1] f2fs: ioctl for removing a range from F2FS
-Message-ID: <20190524030958.GB10043@codeaurora.org>
-References: <20190524015555.12622-1-sunqiuyang@huawei.com>
- <e7cfed52-0212-834f-aed8-0c5abc07f779@huawei.com>
+        Thu, 23 May 2019 23:11:27 -0400
+Received: by mail-it1-f194.google.com with SMTP id 9so11694522itf.4;
+        Thu, 23 May 2019 20:11:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E7hznSwoqjG8X1odMBGc2satoFe87v1Y0P/9fKHS9SY=;
+        b=a7Sc0ZmlEG6jC7OpcrRVUkNXq0SBb3Dc/hNdk5Vi6ayUDLd0Dm8M0wWvJFgwttZZ4M
+         aninTKfSUZDRjfNGqPsMzWLja++EezX/hO4fX5nJBzfyFI6kNO7dvjypaoVQz4ys7+R5
+         9IVPBxW1C4i6BRZ4f3bqLocvJh1c9QUTPILj4gipCVXMgVTUpT9LBYkMiRDL2TaalXNe
+         rQ6wJugIty6JwVWYs5nF97JpvrTENcxT3PWNqVTqRhEna4JwxQokvn2SUzkeP09LHMDC
+         DgccA6RcG2CmDNt2DoIHjZymnDK30hw9WxWvnBoApiNxfRbL6LLAu65RJr1Ih71O/P5e
+         SodQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E7hznSwoqjG8X1odMBGc2satoFe87v1Y0P/9fKHS9SY=;
+        b=Ezz2Tgeoxjdv/gvVJ/MA5BphhJp0ROY7eGuEAPB34pjOfZ9Qhjq2ttOZI492SrJqID
+         oYb+trVWohcEsTTnuvrXvqhM9++ob+KDmqye9lu5WGczS9UEq2zlUGooX0bFUTQ7eDNO
+         73TpY8KHHy+M7pkUnZ7s50p4JClZ/FVH+/BnIUFnJHG2PFE26yzI5AaPHTyZc6iITSaB
+         nqFqf1RuwcGj8pV4vQ7v0OO0m5cntojFaB/EJT2diuKOwc2KO87DKUsVqyDu/xj3efNO
+         jRbywuuPXIY3ktLzuRoSCd49qjhz+CSclAPfHslijAnC/ldpKQ38cq/SakMisXgIe5f4
+         /CnQ==
+X-Gm-Message-State: APjAAAU/nXJChSYn3/OkCY5jM66bpCt/c1PazWN/OjkBlJQ/qjpoKeug
+        A1Ap6yIXeByCvDlPB2sRDwiDyk7343xDzT5OICXlSzV8sA==
+X-Google-Smtp-Source: APXvYqz4ssg3ircx9GKZ/bOQFSdzkDIVdQtquf3WB1GzGhZLWMOO7FDaVjBjQGy32wO2lRBtVYsHwdCKMGdQi1fBKFw=
+X-Received: by 2002:a24:1dce:: with SMTP id 197mr16766439itj.16.1558667486023;
+ Thu, 23 May 2019 20:11:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e7cfed52-0212-834f-aed8-0c5abc07f779@huawei.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <1556087581-14513-1-git-send-email-kernelfans@gmail.com>
+ <10dc5468-6cd9-85c7-ba66-1dfa5aa922b7@suse.com> <CAFgQCTstd667wP6g+maxYekz4u3iBR2R=FHUiS1V=XxTs6MKUw@mail.gmail.com>
+ <CAFgQCTtQm7SuBRfXik6B065Aa+uQ=Mx6i+Y1q+NJU1GEiUgH4g@mail.gmail.com>
+In-Reply-To: <CAFgQCTtQm7SuBRfXik6B065Aa+uQ=Mx6i+Y1q+NJU1GEiUgH4g@mail.gmail.com>
+From:   Pingfan Liu <kernelfans@gmail.com>
+Date:   Fri, 24 May 2019 11:11:13 +0800
+Message-ID: <CAFgQCTuAEbST8ZdSJmPDTPbqkL3uZ8j6U-vTWT879wARDhUwTw@mail.gmail.com>
+Subject: Re: [PATCHv2] kernel/crash: make parse_crashkernel()'s return value
+ more indicant
+To:     Matthias Brugger <mbrugger@suse.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Rich Felker <dalias@libc.org>,
+        linux-ia64@vger.kernel.org,
+        Julien Thierry <julien.thierry@arm.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>, x86@kernel.org,
+        linux-mips@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-s390@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        linux-sh@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        David Hildenbrand <david@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Hogan <jhogan@kernel.org>,
+        Dave Young <dyoung@redhat.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        Ananth N Mavinakayanahalli <ananth@linux.vnet.ibm.com>,
+        Borislav Petkov <bp@alien8.de>, Stefan Agner <stefan@agner.ch>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Jens Axboe <axboe@kernel.dk>, Tony Luck <tony.luck@intel.com>,
+        Baoquan He <bhe@redhat.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Paul Burton <paul.burton@mips.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Greg Hackmann <ghackmann@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 10:32:07AM +0800, Chao Yu wrote:
-> +Cc Sahitya,
-> 
-> On 2019/5/24 9:55, sunqiuyang wrote:
-> > From: Qiuyang Sun <sunqiuyang@huawei.com>
-> > 
-> > This ioctl shrinks a given length (aligned to sections) from end of the
-> > main area. Any cursegs and valid blocks will be moved out before
-> > invalidating the range.
-> > 
-> > This feature can be used for adjusting partition sizes online.
-> > --
-> > Changlog v1 ==> v2:
-> > 
-> > Sahitya Tummala:
-> >  - Add this ioctl for f2fs_compat_ioctl() as well.
-> >  - Fix debugfs status to reflect the online resize changes.
-> >  - Fix potential race between online resize path and allocate new data
-> >    block path or gc path.
-> > 
-> > Others:
-> >  - Rename some identifiers.
-> >  - Add some error handling branches.
-> >  - Clear sbi->next_victim_seg[BG_GC/FG_GC] in shrinking range.
-> > --
-> > Changelog v2 ==> v3:
-> > Implement this interface as ext4's, and change the parameter from shrunk
-> > bytes to new block count of F2FS.
-> > --
-> > Changelog v3 ==> v4:
-> >  - During resizing, force to empty sit_journal and forbid adding new
-> >    entries to it, in order to avoid invalid segno in journal after resize.
-> >  - Reduce sbi->user_block_count before resize starts.
-> >  - Commit the updated superblock first, and then update in-memory metadata
-> >    only when the former succeeds.
-> >  - Target block count must align to sections.
-> > --
-> > Changelog v4 ==> v5:
-> > Write checkpoint before and after committing the new superblock, w/o
-> > CP_FSCK_FLAG respectively, so that the FS can be fixed by fsck even if
-> > resize fails after the new superblock is committed.
-> > --
-> > Changelog v5 ==> v6:
-> >  - In free_segment_range(), reduce granularity of gc_mutex.
-> >  - Add protection on curseg migration.
-> > 
-> > Signed-off-by: Qiuyang Sun <sunqiuyang@huawei.com>
-> > Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> > Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-> 
-> Looks good to me now,
-> 
-> Reviewed-by: Chao Yu <yuchao0@huawei.com>
-> 
-> To Sahitya, is it okay to you merging all your fixes and adding Signed-off in
-> original patch? We can still separate them from this patch if you object this,
-> let us know.
-> 
-
-Hi Chao,
-
-I am okay with merging.
+Matthias, ping? Any suggestions?
 
 Thanks,
-Sahitya.
+Pingfan
 
-> Thanks,
 
--- 
---
-Sent by a consultant of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+On Thu, May 2, 2019 at 2:22 PM Pingfan Liu <kernelfans@gmail.com> wrote:
+>
+> On Thu, Apr 25, 2019 at 4:20 PM Pingfan Liu <kernelfans@gmail.com> wrote:
+> >
+> > On Wed, Apr 24, 2019 at 4:31 PM Matthias Brugger <mbrugger@suse.com> wrote:
+> > >
+> > >
+> > [...]
+> > > > @@ -139,6 +141,8 @@ static int __init parse_crashkernel_simple(char *cmdline,
+> > > >               pr_warn("crashkernel: unrecognized char: %c\n", *cur);
+> > > >               return -EINVAL;
+> > > >       }
+> > > > +     if (*crash_size == 0)
+> > > > +             return -EINVAL;
+> > >
+> > > This covers the case where I pass an argument like "crashkernel=0M" ?
+> > > Can't we fix that by using kstrtoull() in memparse and check if the return value
+> > > is < 0? In that case we could return without updating the retptr and we will be
+> > > fine.
+> After a series of work, I suddenly realized that it can not be done
+> like this way. "0M" causes kstrtoull() to return -EINVAL, but this is
+> caused by "M", not "0". If passing "0" to kstrtoull(), it will return
+> 0 on success.
+>
+> > >
+> > It seems that kstrtoull() treats 0M as invalid parameter, while
+> > simple_strtoull() does not.
+> >
+> My careless going through the code. And I tested with a valid value
+> "256M" using kstrtoull(), it also returned -EINVAL.
+>
+> So I think there is no way to distinguish 0 from a positive value
+> inside this basic math function.
+> Do I miss anything?
+>
+> Thanks and regards,
+> Pingfan
