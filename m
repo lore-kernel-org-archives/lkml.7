@@ -2,105 +2,125 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22092C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CAF1C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB6B8217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:36:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21D0720815
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:37:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M8SbDGA6"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="W+2G8WaQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390549AbfEXPgF (ORCPT
+        id S2390134AbfEXPg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 11:36:05 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:42620 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389812AbfEXPfb (ORCPT
+        Fri, 24 May 2019 11:36:59 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:4921 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389419AbfEXPg6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 11:35:31 -0400
-Received: by mail-lj1-f196.google.com with SMTP id 188so9022869ljf.9;
-        Fri, 24 May 2019 08:35:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ETNkw8fFUbaK1GsH9w3HEMnksKyWiZUE22AHo7ajX+U=;
-        b=M8SbDGA6wwIJlmM9rMvcJz72o9PQH/mhr5Xd3uiGXyBk3T8rXuFqMzmQd1cUm4L7uz
-         O8g0B/IKq/fbBcj9Op6t9h+Tj3P/7f4l6s6Y/kykIekuFqFQtzCpZykezYT+pHepTeZ+
-         bOheDeNGW9I5ivbvwtIYGTSNsIEoykhfE8kH3oCAVtF0m52WEiUVbZUimsetAKMRiu41
-         Yn9IKtQeZbrDv1lK3RNuw/zCVfaCb9hAHINcnIo1j+Vl4QIor3zjvJqHUGR0w6t7dtT7
-         KgESQJZpOY6LOO+cey8d9kQtcIcMGebmgB/gZHKp5P14yD7S0JOPGK5uKkC8FSHbvy8Z
-         qWRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ETNkw8fFUbaK1GsH9w3HEMnksKyWiZUE22AHo7ajX+U=;
-        b=RH4OTt3/intpEDRm7LZoGxTFXmcnVjyFz9kg/ERmQBX9w9hWj6rQ1gPUzYzpo9L2XO
-         aPlbdXQUH+R7W6X28BDGhbRmxgwRgSeM3+xH7SkTSGU4v/V4MA8OvskdBg2uZ0xMGxOC
-         V36nC71iRrGJDNKTwLdrf3qI9NBhB/7eL8nfx9cnMDEU46lVjVyBz7W1TewfeseXv/aq
-         zJ4pnkGILkXqMP7sfRbKM9aLI19+gjYjPevTCUlf2REnZqK1xNKWmcadtXMcC6Cg2YuR
-         7ORblUqmwPpyes1XlMS33SWmHnjVScPedppr0oM3wrTJweu9EdmZohVAC5O0mMsPvvWU
-         ni1w==
-X-Gm-Message-State: APjAAAXEfcJtqcZt8cWQeIubULOnP0GxBjMpGBF5m+gh+WLtfNv6Jwpn
-        +6fyEUsgsCgcqgpSccrdZ+w=
-X-Google-Smtp-Source: APXvYqwgYtRJtqCKzf13z18XN4hNoPCaa7YIbnQ6b4deXZBTzTVZx5mLqsRee1lTE/FHhnhA6jXSRg==
-X-Received: by 2002:a2e:b0d0:: with SMTP id g16mr27106796ljl.132.1558712129183;
-        Fri, 24 May 2019 08:35:29 -0700 (PDT)
-Received: from localhost.localdomain ([94.29.35.141])
-        by smtp.gmail.com with ESMTPSA id y14sm572316ljh.60.2019.05.24.08.35.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 08:35:28 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Joseph Lo <josephl@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nicolas Chauvet <kwizart@gmail.com>
-Subject: [PATCH v3 3/8] clocksource/drivers/tegra: Reset hardware state on init
-Date:   Fri, 24 May 2019 18:32:48 +0300
-Message-Id: <20190524153253.28564-4-digetx@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190524153253.28564-1-digetx@gmail.com>
-References: <20190524153253.28564-1-digetx@gmail.com>
+        Fri, 24 May 2019 11:36:58 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ce80f9a0000>; Fri, 24 May 2019 08:36:58 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 24 May 2019 08:36:58 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 24 May 2019 08:36:58 -0700
+Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 24 May
+ 2019 15:36:56 +0000
+Subject: Re: [PATCH] tegra_wm9712: Fix a memory leaking bug in
+ tegra_wm9712_driver_probe()
+To:     Gen Zhang <blackgod016574@gmail.com>
+CC:     <lgirdwood@gmail.com>, <perex@perex.cz>,
+        <alsa-devel@alsa-project.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190524005014.GA2289@zhanggen-UX430UQ>
+ <b2d43dfe-17e5-a975-435b-49f2aa2ad550@nvidia.com>
+ <20190524143309.GA8631@zhanggen-UX430UQ>
+ <e52f4140-a119-a584-40a2-6359d6e1784a@nvidia.com>
+ <20190524150053.GA9235@zhanggen-UX430UQ>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <1740686f-a466-430c-9d01-ab83ea6998ac@nvidia.com>
+Date:   Fri, 24 May 2019 16:36:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190524150053.GA9235@zhanggen-UX430UQ>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1558712218; bh=rDbHj92qicJ93c3g6qztLoh7zaFndpxTw1RYqjrPd9Q=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=W+2G8WaQZfLr2917mkUcJkjSRe6m9eWd6+SU1muUO0R1zbqSow4az4woRWlAcdpz0
+         fsfq12f8q/MWRiLOGWNTcMx+g0bVlol5gS32f9/xGKd9WlZSoM3cec6x3okEVHDC7s
+         h8x/Pn7dUGal0TW0+4RyaT4MULKI0FidG/EnuyVhw3j1vDe4fk5dg1WIvBg80MEHKh
+         oBTcTgUSnSEBH+5CLGby4Vv30My1eOhEEOgYK/HP784zcm9LPIUxi8ztVFGY7h5IB7
+         d/NvHRHJh46Z5Mb7sAOGKiNRXXpPe/0i1Byc7sZzpcIhQiXs2RZjOScqbMC2BFWcl/
+         QlpZ6KKsmlufQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reset timer's hardware state to ensure that initially it is in a
-predictable state.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/clocksource/timer-tegra20.c | 3 +++
- 1 file changed, 3 insertions(+)
+On 24/05/2019 16:00, Gen Zhang wrote:
+> On Fri, May 24, 2019 at 03:47:34PM +0100, Jon Hunter wrote:
+>>
+>> On 24/05/2019 15:33, Gen Zhang wrote:
+>>> On Fri, May 24, 2019 at 09:33:13AM +0100, Jon Hunter wrote:
+>>>>
+>>>> On 24/05/2019 01:50, Gen Zhang wrote:
+>>>>> In tegra_wm9712_driver_probe(), 'machine->codec' is allocated by
+>>>>> platform_device_alloc(). When it is NULL, function returns ENOMEM.
+>>>>> However, 'machine' is allocated by devm_kzalloc() before this site.
+>>>>> Thus we should free 'machine' before function ends to prevent memory
+>>>>> leaking.
+>>>>
+>>>> Memory allocated by devm_xxx() is automatically freed on failure so this
+>>>> is not correct.
+>>> Thanks for your comments, Jon. But after I examined the code, I am still
+>>> confused about the usage of devm_kmalloc(). You can kindly refer to 
+>>> hisi_sas_debugfs_init() in drivers/scsi/hisi_sas/hisi_sas_main.c. And
+>>> devm_kfree() is used to free a memory allocated by devm_kmalloc(). And
+>>> I found other situations similar to this in other files.
+>>>
+>>> So, I hope you can give me some guidance on this. Thanks!
+>>
+>> Please refer to the devres documentation [0].
+>>
+>> Cheers,
+>> Jon
+>>
+>> [0] https://www.kernel.org/doc/Documentation/driver-model/devres.txt
+>>
+>> -- 
+>> nvpublic
+> Thanks for your reply. I figured out that devm_kmalloc will free the 
+> memory no matter fail or not. But I still want to ask why other codes
+> as I above mentioned use devm_kfree() to free memory allocated by 
+> devm_kmalloc(). If the memory is automatically freed, is this 
+> devm_kfee() redundant codes that should be removed? Am I 
+> misunderstanding this again or it is something else?
 
-diff --git a/drivers/clocksource/timer-tegra20.c b/drivers/clocksource/timer-tegra20.c
-index 57e7aa2b80a3..739f83fdb318 100644
---- a/drivers/clocksource/timer-tegra20.c
-+++ b/drivers/clocksource/timer-tegra20.c
-@@ -132,6 +132,9 @@ static int tegra_timer_setup(unsigned int cpu)
- {
- 	struct timer_of *to = per_cpu_ptr(&tegra_to, cpu);
- 
-+	writel(0, timer_of_base(to) + TIMER_PTV);
-+	writel(TIMER_PCR_INTR_CLR, timer_of_base(to) + TIMER_PCR);
-+
- 	irq_force_affinity(to->clkevt.irq, cpumask_of(cpu));
- 	enable_irq(to->clkevt.irq);
- 
+There could well be cases where you need to explicitly call
+devm_kfree(), but having a quick glance at the example above, I don't
+see why you would call devm_kfree() here and yes looks like that code
+could be simplified significantly. Notice that hisi_sas_debugfs_exit()
+does not free any memory as it is not necessary to explicitly do so.
+
+Cheers
+Jon
+
 -- 
-2.21.0
-
+nvpublic
