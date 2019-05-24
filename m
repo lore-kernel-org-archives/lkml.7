@@ -3,67 +3,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E36AC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8117EC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F11DF21773
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C3E621773
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:36:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390603AbfEXKgY (ORCPT
+        id S2390624AbfEXKgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 06:36:24 -0400
-Received: from relay.sw.ru ([185.231.240.75]:56218 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389448AbfEXKgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 06:36:24 -0400
-Received: from [172.16.25.169]
-        by relay.sw.ru with esmtp (Exim 4.91)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1hU7YU-0005xE-Bo; Fri, 24 May 2019 13:36:06 +0300
-Subject: Re: [PATCH v2 0/7] mm: process_vm_mmap() -- syscall for duplication a
- process mapping
-To:     Andy Lutomirski <luto@kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+        Fri, 24 May 2019 06:36:46 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:60716 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389448AbfEXKgq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 06:36:46 -0400
+Received: from fsav303.sakura.ne.jp (fsav303.sakura.ne.jp [153.120.85.134])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x4OAZW6N082260;
+        Fri, 24 May 2019 19:35:32 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav303.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav303.sakura.ne.jp);
+ Fri, 24 May 2019 19:35:32 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav303.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126012062002.bbtec.net [126.12.62.2])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x4OAZQQO082192
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Fri, 24 May 2019 19:35:32 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH] printk: Monitor change of console loglevel.
+To:     Dmitry Vyukov <dvyukov@google.com>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Keith Busch <keith.busch@intel.com>,
-        alexander.h.duyck@linux.intel.com, Weiny Ira <ira.weiny@intel.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        arunks@codeaurora.org, Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Lameter <cl@linux.com>,
-        Rik van Riel <riel@surriel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Roman Gushchin <guro@fb.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        daniel.m.jordan@oracle.com, Jann Horn <jannh@google.com>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Linux API <linux-api@vger.kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>
-References: <155836064844.2441.10911127801797083064.stgit@localhost.localdomain>
- <CALCETrU221N6uPmdaj4bRDDsf+Oc5tEfPERuyV24wsYKHn+spA@mail.gmail.com>
- <9638a51c-4295-924f-1852-1783c7f3e82d@virtuozzo.com>
- <CALCETrUMDTGRtLFocw6vnN___7rkb6r82ULehs0=yQO5PZL8MA@mail.gmail.com>
- <67d1321e-ffd6-24a3-407f-cd26c82e46b8@virtuozzo.com>
- <CALCETrWzuH3=Uh91UeGwpCj28kjQ82Lj2OTuXm7_3d871PyZSA@mail.gmail.com>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <58ad677d-677f-5e16-ecf9-565fcc3b7145@virtuozzo.com>
-Date:   Fri, 24 May 2019 13:36:05 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <1557501546-10263-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+ <20190514091917.GA26804@jagdpanzerIV>
+ <3e2cf31d-25af-e7c3-b308-62f64d650974@i-love.sakura.ne.jp>
+ <4d1a4b51-999b-63c6-5ce3-a704013cecb6@i-love.sakura.ne.jp>
+ <CACT4Y+YNNzsMHpjDUpfHNYJMqYA+foHtSBdrg_NSeKJKadoGwQ@mail.gmail.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <68486fcf-325f-fbd3-adb4-14666d477917@i-love.sakura.ne.jp>
+Date:   Fri, 24 May 2019 19:35:28 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <CALCETrWzuH3=Uh91UeGwpCj28kjQ82Lj2OTuXm7_3d871PyZSA@mail.gmail.com>
+In-Reply-To: <CACT4Y+YNNzsMHpjDUpfHNYJMqYA+foHtSBdrg_NSeKJKadoGwQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -72,39 +62,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23.05.2019 19:19, Andy Lutomirski wrote:
-> On Tue, May 21, 2019 at 10:44 AM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+On 2019/05/24 16:55, Dmitry Vyukov wrote:
+> On Thu, May 23, 2019 at 11:57 AM Tetsuo Handa
+> <penguin-kernel@i-love.sakura.ne.jp> wrote:
 >>
->> On 21.05.2019 19:43, Andy Lutomirski wrote:
->>> On Tue, May 21, 2019 at 8:52 AM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
->>>>
->>>> On 21.05.2019 17:43, Andy Lutomirski wrote:
-> 
->>> Do you mean that the code you sent rejects this case?  If so, please
->>> document it.  In any case, I looked at the code, and it seems to be
->>> trying to handle MAP_SHARED and MAP_ANONYMOUS.  I don't see where it
->>> would reject copying a vDSO.
+>> Well, the culprit of this problem might be syz_execute_func().
 >>
->> I prohibit all the VMAs, which contain on of flags: VM_HUGETLB|VM_DONTEXPAND|VM_PFNMAP|VM_IO.
->> I'll check carefully, whether it's enough for vDSO.
+>>   https://twitter.com/ed_maste/status/1131165065485398016
+>>
+>> Then, blacklisting specific syscalls/arguments might not work.
+>> We will need to guard specific paths on the kernel side using
+>> some kernel config option...
 > 
-> I think you could make the new syscall a lot more comprehensible bg
-> restricting it to just MAP_ANONYMOUS, by making it unmap the source,
-> or possibly both.  If the new syscall unmaps the source (in order so
-> that the source is gone before the newly mapped pages become
-> accessible), then you avoid issues in which you need to define
-> sensible semantics for what happens if both copies are accessed
-> simultaneously.
+> Yes, that's a nasty issue. We could stop running random code, or
+> setuid into nobody, but then we will lose lots of test coverage...
+> 
 
-In case of we unmap source, this does not introduce a new principal
-behavior with the same page mapped twice in a single process like
-Kirill pointed. This sounds as a good idea and this covers my
-application area.
+I think that guarding specific paths on the kernel side is better.
+TOMOYO already added CONFIG_SECURITY_TOMOYO_INSECURE_BUILTIN_SETTING for
+avoid emitting WARNING: string and getting more test coverage. There are
+other codes emitting WARNING: string that confuses syzbot. If we guard
+critical paths like reboot/poweroff request that will destroy the target
+VM instance, we can get more test coverage while reducing pointless reports.
 
-The only new principal thing is a child process will be able to inherit
-a parent's VMA, which is not possible now. But it looks like we never
-depend on processes relationship in the mapping code, and process
-reparenting already gives many combinations, so the new change should
-not affect much on this.
-
-Kirill
