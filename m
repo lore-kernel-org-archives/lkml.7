@@ -2,144 +2,184 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E75DC282E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A652C282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AD5C20665
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:02:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48046206A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:02:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="smAVCUCy"
+	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="L2Kw5XJ/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391394AbfEXNCK (ORCPT
+        id S2391483AbfEXNCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 09:02:10 -0400
-Received: from onstation.org ([52.200.56.107]:54248 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391045AbfEXNCK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 09:02:10 -0400
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id B68C73E88C;
-        Fri, 24 May 2019 13:02:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1558702928;
-        bh=z0jLt5GmPMP9SlehCoH5XOtq6l1p49diMIagJEvp4Qk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=smAVCUCykCHg++Dm5V8KlqfT5bsIWumj7ZrBGCUTy1m2iBlT5OcjhX8UojJtSkArp
-         oO1iKMD08rTaMxV65tpG71BGKZI74eEZXsPUcu8XJmKDy+Un1OI9m7V5vCceJ9SDAz
-         +SeCUTfxNxkazFQxBs6dIPwU4/AU/YhAZhx6naOQ=
-Date:   Fri, 24 May 2019 09:02:08 -0400
-From:   Brian Masney <masneyb@onstation.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     ulf.hansson@linaro.org, faiz_abbas@ti.com,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH] mmc: sdhci: queue work after sdhci_defer_done()
-Message-ID: <20190524130208.GA16322@basecamp>
-References: <20190524111053.12228-1-masneyb@onstation.org>
- <70782901-a9ac-5647-1abe-89c86a44a01b@intel.com>
+        Fri, 24 May 2019 09:02:30 -0400
+Received: from mail-eopbgr00107.outbound.protection.outlook.com ([40.107.0.107]:45792
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2391045AbfEXNCa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 09:02:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
+ s=selector1-nokia-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vKlcIklVWRnfj7lNbh0yVu4idBEZKxzMhwhf/rkK5OY=;
+ b=L2Kw5XJ/QNnRIf/Jim4qzS30zOqp32QMaHjT7n7vLtdN70NfxNLDrmlby0ZVpXw+wK9DbTOtWaRteDbp38Hw7NRK6POC8wmhwpxGn6rB94HyEEBtACVFP9OfP1xwhilslbJ4oQAMhe55edXQVoYEWA01n7iGlxseAS9HucwKdMo=
+Received: from VI1PR07MB3165.eurprd07.prod.outlook.com (10.175.243.15) by
+ VI1PR07MB6159.eurprd07.prod.outlook.com (20.178.124.160) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.10; Fri, 24 May 2019 13:02:24 +0000
+Received: from VI1PR07MB3165.eurprd07.prod.outlook.com
+ ([fe80::1403:5377:c11d:a41a]) by VI1PR07MB3165.eurprd07.prod.outlook.com
+ ([fe80::1403:5377:c11d:a41a%7]) with mapi id 15.20.1943.007; Fri, 24 May 2019
+ 13:02:24 +0000
+From:   "Sverdlin, Alexander (Nokia - DE/Ulm)" <alexander.sverdlin@nokia.com>
+To:     "Adamski, Krzysztof (Nokia - PL/Wroclaw)" 
+        <krzysztof.adamski@nokia.com>, Guenter Roeck <linux@roeck-us.net>,
+        Jean Delvare <jdelvare@suse.com>
+CC:     "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] adm1275: support PMBUS_VIRT_*_SAMPLES
+Thread-Topic: [PATCH] adm1275: support PMBUS_VIRT_*_SAMPLES
+Thread-Index: AQHVEi8WZbhhz1TyCEmlx6WeByshdKZ6PXiA
+Date:   Fri, 24 May 2019 13:02:24 +0000
+Message-ID: <771ca386-8fdd-f2d3-a9e6-5519b067e5e2@nokia.com>
+References: <20190524124841.GA25728@localhost.localdomain>
+In-Reply-To: <20190524124841.GA25728@localhost.localdomain>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [131.228.32.167]
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+x-clientproxiedby: HE1PR0902CA0031.eurprd09.prod.outlook.com
+ (2603:10a6:7:15::20) To VI1PR07MB3165.eurprd07.prod.outlook.com
+ (2603:10a6:802:21::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=alexander.sverdlin@nokia.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 71cde337-1362-4c25-816d-08d6e048109c
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR07MB6159;
+x-ms-traffictypediagnostic: VI1PR07MB6159:
+x-microsoft-antispam-prvs: <VI1PR07MB615957908649F6762D8EE10188020@VI1PR07MB6159.eurprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5236;
+x-forefront-prvs: 0047BC5ADE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(346002)(396003)(39860400002)(366004)(376002)(189003)(199004)(6116002)(25786009)(4326008)(7736002)(186003)(6486002)(102836004)(31686004)(64126003)(26005)(54906003)(110136005)(305945005)(5660300002)(3846002)(14454004)(2906002)(508600001)(53936002)(6512007)(99286004)(71190400001)(256004)(52116002)(36756003)(31696002)(71200400001)(14444005)(86362001)(76176011)(229853002)(11346002)(66946007)(66446008)(2616005)(65956001)(66066001)(66476007)(66556008)(65806001)(486006)(64756008)(476003)(81166006)(53546011)(6506007)(386003)(68736007)(6436002)(81156014)(73956011)(8676002)(316002)(58126008)(6246003)(8936002)(65826007)(446003);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR07MB6159;H:VI1PR07MB3165.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nokia.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: GddHGEi94sg/2cIn9xsPw/5ShR5JHKrg0WTKK+hqXw2L1+7i9qyhnBlT56aCOEN/MZFTYqwCb4Ntvh0ChusQRu0zEKEPQYsd/TP7x6KoxncfHv+JozpOP+2Bn7T9ui0npAGj3N5N5UYjozKmsIDeo7YnegJRqu8pguXvjR4imSmOqCGPd0LwhtQl0CszE7XxXNib+fY2TLle0EdRjKZxPQgvP2szFS9pYuPVmNneC7pSPBuLunZTNL2ZR3J3FN6fAYaK7JhpaQTGNNurgUoMKDH+uVIF5Hpo/F4af/Aa2Z4lL8DvPpptFbsKsedfKT4veqpSxbxHS3vlfAaJVYjYlZqr4m5DBA9Ats0B7LNMLebPpKIqXjJgXxKZrt78vCxo03Kjzw+5bbMXGi0hJwZVu9Yofz/1snnTCUWxG2l003s=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <3971BC478225CC4CA562C1AEB6A9D01F@eurprd07.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <70782901-a9ac-5647-1abe-89c86a44a01b@intel.com>
+X-OriginatorOrg: nokia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 71cde337-1362-4c25-816d-08d6e048109c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 May 2019 13:02:24.2592
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: alexander.sverdlin@nokia.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR07MB6159
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 03:17:13PM +0300, Adrian Hunter wrote:
-> On 24/05/19 2:10 PM, Brian Masney wrote:
-> > WiFi stopped working on the LG Nexus 5 phone and the issue was bisected
-> > to the commit c07a48c26519 ("mmc: sdhci: Remove finish_tasklet") that
-> > moved from using a tasklet to a work queue. That patch also changed
-> > sdhci_irq() to return IRQ_WAKE_THREAD instead of finishing the work when
-> > sdhci_defer_done() is true. Change it to queue work to the complete work
-> > queue if sdhci_defer_done() is true so that the functionality is
-> > equilivent to what was there when the finish_tasklet was present. This
-> > corrects the WiFi breakage on the Nexus 5 phone.
-> > 
-> > Signed-off-by: Brian Masney <masneyb@onstation.org>
-> > Fixes: c07a48c26519 ("mmc: sdhci: Remove finish_tasklet")
-> > ---
-> > See 'sdhci@f98a4900' in qcom-msm8974-lge-nexus5-hammerhead.dts for
-> > details about how the WiFi is wired into sdhci on this platform.
-> > 
-> > bisect log:
-> > 
-> >  git bisect start
-> >  # bad: [4dde821e4296e156d133b98ddc4c45861935a4fb] Merge tag 'xfs-5.2-fixes-1' of git://git.kernel.org/pub/scm/fs/xfs/xfs-linux
-> >  git bisect bad 4dde821e4296e156d133b98ddc4c45861935a4fb
-> >  # good: [e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd] Linux 5.1
-> >  git bisect good e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd
-> >  # bad: [8c79f4cd441b27df6cadd11b70a50e06b3b3a2bf] Merge tag 'docs-5.2' of git://git.lwn.net/linux
-> >  git bisect bad 8c79f4cd441b27df6cadd11b70a50e06b3b3a2bf
-> >  # bad: [67a242223958d628f0ba33283668e3ddd192d057] Merge tag 'for-5.2/block-20190507' of git://git.kernel.dk/linux-block
-> >  git bisect bad 67a242223958d628f0ba33283668e3ddd192d057
-> >  # good: [8ff468c29e9a9c3afe9152c10c7b141343270bf3] Merge branch 'x86-fpu-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
-> >  git bisect good 8ff468c29e9a9c3afe9152c10c7b141343270bf3
-> >  # good: [e2a5be107f52cefb9010ccae6f569c3ddaa954cc] staging: kpc2000: kpc_spi: Fix build error for {read,write}q
-> >  git bisect good e2a5be107f52cefb9010ccae6f569c3ddaa954cc
-> >  # bad: [cf482a49af564a3044de3178ea28f10ad5921b38] Merge tag 'driver-core-5.2-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core
-> >  git bisect bad cf482a49af564a3044de3178ea28f10ad5921b38
-> >  # good: [9f2e3a53f7ec9ef55e9d01bc29a6285d291c151e] Merge tag 'for-5.2-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
-> >  git bisect good 9f2e3a53f7ec9ef55e9d01bc29a6285d291c151e
-> >  # good: [b4b52b881cf08e13d110eac811d4becc0775abbf] Merge tag 'Wimplicit-fallthrough-5.2-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux
-> >  git bisect good b4b52b881cf08e13d110eac811d4becc0775abbf
-> >  # bad: [d5f758f2df8015b8dcf47b6403cc192e4cef734d] mmc: meson-gx: disable HS400
-> >  git bisect bad d5f758f2df8015b8dcf47b6403cc192e4cef734d
-> >  # good: [b3fb9d64b497b890f7b779a9f0b40b5cc269ea18] mmc: mmci: define get_dctrl_cfg for legacy variant
-> >  git bisect good b3fb9d64b497b890f7b779a9f0b40b5cc269ea18
-> >  # good: [ade024f130f742725da9219624b01666f04bc4a6] memstick: jmb38x_ms: remove set but not used variable 'data'
-> >  git bisect good ade024f130f742725da9219624b01666f04bc4a6
-> >  # bad: [42c38d4a1bc41e78dedbf73b0fb35e44007789bb] mmc: core: Fix warning and undefined behavior in mmc voltage handling
-> >  git bisect bad 42c38d4a1bc41e78dedbf73b0fb35e44007789bb
-> >  # good: [19d2f695f4e82794df7465b029c02b104d1b9903] mmc: sdhci: Call mmc_request_done() from IRQ handler if possible
-> >  git bisect good 19d2f695f4e82794df7465b029c02b104d1b9903
-> >  # bad: [71c733c4e1aeb83e8221e89caeec893d51f88b7b] mmc: tegra: add sdhci tegra suspend and resume
-> >  git bisect bad 71c733c4e1aeb83e8221e89caeec893d51f88b7b
-> >  # bad: [c07a48c2651965e84d35cf193dfc0e5f7892d612] mmc: sdhci: Remove finish_tasklet
-> >  git bisect bad c07a48c2651965e84d35cf193dfc0e5f7892d612
-> >  # first bad commit: [c07a48c2651965e84d35cf193dfc0e5f7892d612] mmc: sdhci: Remove finish_tasklet
-> > 
-> >  drivers/mmc/host/sdhci.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> > index 97158344b862..3563c3bc57c9 100644
-> > --- a/drivers/mmc/host/sdhci.c
-> > +++ b/drivers/mmc/host/sdhci.c
-> > @@ -3115,7 +3115,7 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
-> >  			continue;
-> >  
-> >  		if (sdhci_defer_done(host, mrq)) {
-> > -			result = IRQ_WAKE_THREAD;
-> > +			queue_work(host->complete_wq, &host->complete_work);
-> 
-> The IRQ thread has a lot less latency than the work queue, which is why it
-> is done that way.
-> 
-> I am not sure why you say this change is equivalent to what was there
-> before, nor why it fixes your problem.
-> 
-> Can you explain some more?
-
-What I meant by the equivalent change was that tasklet_schedule() used
-to be called in this situation rather than returning IRQ_WAKE_THREAD.
-
-I'm honestly not sure exactly what's going on yet. Without the patch I
-sent out, wlan0 is not detected on the phone. Perhaps there is a subtle
-race condition somewhere that is exposed with the reduction in latency
-since I assume tasklet_schedule() is more expensive than doing the
-processing in the bottom half?
-
-I'll do some more digging and see if I can find more information. I sent
-this out to get a discussion started.
-
-Brian
+SGkhDQoNCk9uIDI0LzA1LzIwMTkgMTQ6NDksIEFkYW1za2ksIEtyenlzenRvZiAoTm9raWEgLSBQ
+TC9Xcm9jbGF3KSB3cm90ZToNCj4gVGhlIGRldmljZSBzdXBwb3J0cyBzZXR0aW5nIHRoZSBudW1i
+ZXIgb2Ygc2FtcGxlcyBmb3IgYXZlcmFnaW5nIHRoZQ0KPiBtZWFzdXJlbWVudHMuIFRoZXJlIGFy
+ZSB0d28gc2VwYXJhdGUgc2V0dGluZ3MgLSBQV1JfQVZHIGZvciBhdmVyYWdpbmcNCj4gUElOIGFu
+ZCBWSV9BVkcgZm9yIGF2ZXJhZ2luZyBWSU4vVkFVWC9JT1VULCBib3RoIGJlaW5nIHBhcnQgb2YN
+Cj4gUE1PTl9DT05GSUcgcmVnaXN0ZXIuIFRoZSB2YWx1ZXMgYXJlIHN0b3JlZCBhcyBleHBvbmVu
+dCBvZiBiYXNlIDIgb2YgdGhlDQo+IGFjdHVhbCBudW1iZXIgb2Ygc2FtcGxlcyB0aGF0IHdpbGwg
+YmUgdGFrZW4uDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBLcnp5c3p0b2YgQWRhbXNraSA8a3J6eXN6
+dG9mLmFkYW1za2lAbm9raWEuY29tPg0KDQpSZXZpZXdlZC1ieTogQWxleGFuZGVyIFN2ZXJkbGlu
+IDxhbGV4YW5kZXIuc3ZlcmRsaW5Abm9raWEuY29tPg0KDQo+IC0tLQ0KPiAgZHJpdmVycy9od21v
+bi9wbWJ1cy9hZG0xMjc1LmMgfCA2OCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+LQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDY3IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4g
+DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2h3bW9uL3BtYnVzL2FkbTEyNzUuYyBiL2RyaXZlcnMv
+aHdtb24vcG1idXMvYWRtMTI3NS5jDQo+IGluZGV4IGY1NjkzNzJjOTIwNC4uNGVmZTFhOWRmNTYz
+IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2h3bW9uL3BtYnVzL2FkbTEyNzUuYw0KPiArKysgYi9k
+cml2ZXJzL2h3bW9uL3BtYnVzL2FkbTEyNzUuYw0KPiBAQCAtMjMsNiArMjMsOCBAQA0KPiAgI2lu
+Y2x1ZGUgPGxpbnV4L3NsYWIuaD4NCj4gICNpbmNsdWRlIDxsaW51eC9pMmMuaD4NCj4gICNpbmNs
+dWRlIDxsaW51eC9iaXRvcHMuaD4NCj4gKyNpbmNsdWRlIDxsaW51eC9iaXRmaWVsZC5oPg0KPiAr
+I2luY2x1ZGUgPGxpbnV4L2xvZzIuaD4NCj4gICNpbmNsdWRlICJwbWJ1cy5oIg0KPiAgDQo+ICBl
+bnVtIGNoaXBzIHsgYWRtMTA3NSwgYWRtMTI3MiwgYWRtMTI3NSwgYWRtMTI3NiwgYWRtMTI3OCwg
+YWRtMTI5MywgYWRtMTI5NCB9Ow0KPiBAQCAtNzgsNiArODAsMTAgQEAgZW51bSBjaGlwcyB7IGFk
+bTEwNzUsIGFkbTEyNzIsIGFkbTEyNzUsIGFkbTEyNzYsIGFkbTEyNzgsIGFkbTEyOTMsIGFkbTEy
+OTQgfTsNCj4gICNkZWZpbmUgQURNMTA3NV9WQVVYX09WX1dBUk4JCUJJVCg3KQ0KPiAgI2RlZmlu
+ZSBBRE0xMDc1X1ZBVVhfVVZfV0FSTgkJQklUKDYpDQo+ICANCj4gKyNkZWZpbmUgQURNMTI3NV9Q
+V1JfQVZHX01BU0sJCUdFTk1BU0soMTMsIDExKQ0KPiArI2RlZmluZSBBRE0xMjc1X1ZJX0FWR19N
+QVNLCQlHRU5NQVNLKDEwLCA4KQ0KPiArI2RlZmluZSBBRE0xMjc1X1NBTVBMRVNfQVZHX01BWAkx
+MjgNCj4gKw0KPiAgc3RydWN0IGFkbTEyNzVfZGF0YSB7DQo+ICAJaW50IGlkOw0KPiAgCWJvb2wg
+aGF2ZV9vY19mYXVsdDsNCj4gQEAgLTkwLDYgKzk2LDcgQEAgc3RydWN0IGFkbTEyNzVfZGF0YSB7
+DQo+ICAJYm9vbCBoYXZlX3Bpbl9tYXg7DQo+ICAJYm9vbCBoYXZlX3RlbXBfbWF4Ow0KPiAgCXN0
+cnVjdCBwbWJ1c19kcml2ZXJfaW5mbyBpbmZvOw0KPiArCXN0cnVjdCBtdXRleCBsb2NrOw0KPiAg
+fTsNCj4gIA0KPiAgI2RlZmluZSB0b19hZG0xMjc1X2RhdGEoeCkgIGNvbnRhaW5lcl9vZih4LCBz
+dHJ1Y3QgYWRtMTI3NV9kYXRhLCBpbmZvKQ0KPiBAQCAtMTY0LDYgKzE3MSwzOCBAQCBzdGF0aWMg
+Y29uc3Qgc3RydWN0IGNvZWZmaWNpZW50cyBhZG0xMjkzX2NvZWZmaWNpZW50c1tdID0gew0KPiAg
+CVsxOF0gPSB7IDc2NTgsIDAsIC0zIH0sCQkvKiBwb3dlciwgMjFWLCBpcmFuZ2UyMDAgKi8NCj4g
+IH07DQo+ICANCj4gK3N0YXRpYyBpbmxpbmUgaW50IGFkbTEyNzVfcmVhZF9wbW9uX2NvbmZpZyhz
+dHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50LCB1NjQgbWFzaykNCj4gK3sNCj4gKwlpbnQgcmV0Ow0K
+PiArDQo+ICsJcmV0ID0gaTJjX3NtYnVzX3JlYWRfd29yZF9kYXRhKGNsaWVudCwgQURNMTI3NV9Q
+TU9OX0NPTkZJRyk7DQo+ICsJaWYgKHJldCA8IDApDQo+ICsJCXJldHVybiByZXQ7DQo+ICsNCj4g
+KwlyZXR1cm4gRklFTERfR0VUKG1hc2ssIHJldCk7DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyBpbmxp
+bmUgaW50IGFkbTEyNzVfd3JpdGVfcG1vbl9jb25maWcoc3RydWN0IGkyY19jbGllbnQgKmNsaWVu
+dCwgdTY0IG1hc2ssDQo+ICsJCQkJCSAgICB1MTYgd29yZCkNCj4gK3sNCj4gKwljb25zdCBzdHJ1
+Y3QgcG1idXNfZHJpdmVyX2luZm8gKmluZm8gPSBwbWJ1c19nZXRfZHJpdmVyX2luZm8oY2xpZW50
+KTsNCj4gKwlzdHJ1Y3QgYWRtMTI3NV9kYXRhICpkYXRhID0gdG9fYWRtMTI3NV9kYXRhKGluZm8p
+Ow0KPiArCWludCByZXQ7DQo+ICsNCj4gKwltdXRleF9sb2NrKCZkYXRhLT5sb2NrKTsNCj4gKwly
+ZXQgPSBpMmNfc21idXNfcmVhZF93b3JkX2RhdGEoY2xpZW50LCBBRE0xMjc1X1BNT05fQ09ORklH
+KTsNCj4gKwlpZiAocmV0IDwgMCkgew0KPiArCQltdXRleF91bmxvY2soJmRhdGEtPmxvY2spOw0K
+PiArCQlyZXR1cm4gcmV0Ow0KPiArCX0NCj4gKw0KPiArCXdvcmQgPSBGSUVMRF9QUkVQKG1hc2ss
+IHdvcmQpIHwgKHJldCAmIH5tYXNrKTsNCj4gKwlyZXQgPSBpMmNfc21idXNfd3JpdGVfd29yZF9k
+YXRhKGNsaWVudCwgQURNMTI3NV9QTU9OX0NPTkZJRywgd29yZCk7DQo+ICsJbXV0ZXhfdW5sb2Nr
+KCZkYXRhLT5sb2NrKTsNCj4gKw0KPiArCXJldHVybiByZXQ7DQo+ICt9DQo+ICsNCj4gIHN0YXRp
+YyBpbnQgYWRtMTI3NV9yZWFkX3dvcmRfZGF0YShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50LCBp
+bnQgcGFnZSwgaW50IHJlZykNCj4gIHsNCj4gIAljb25zdCBzdHJ1Y3QgcG1idXNfZHJpdmVyX2lu
+Zm8gKmluZm8gPSBwbWJ1c19nZXRfZHJpdmVyX2luZm8oY2xpZW50KTsNCj4gQEAgLTI0Miw2ICsy
+ODEsMTkgQEAgc3RhdGljIGludCBhZG0xMjc1X3JlYWRfd29yZF9kYXRhKHN0cnVjdCBpMmNfY2xp
+ZW50ICpjbGllbnQsIGludCBwYWdlLCBpbnQgcmVnKQ0KPiAgCQlpZiAoIWRhdGEtPmhhdmVfdGVt
+cF9tYXgpDQo+ICAJCQlyZXR1cm4gLUVOWElPOw0KPiAgCQlicmVhazsNCj4gKwljYXNlIFBNQlVT
+X1ZJUlRfUE9XRVJfU0FNUExFUzoNCj4gKwkJcmV0ID0gYWRtMTI3NV9yZWFkX3Btb25fY29uZmln
+KGNsaWVudCwgQURNMTI3NV9QV1JfQVZHX01BU0spOw0KPiArCQlpZiAocmV0IDwgMCkNCj4gKwkJ
+CWJyZWFrOw0KPiArCQlyZXQgPSAxIDw8IHJldDsNCj4gKwkJYnJlYWs7DQo+ICsJY2FzZSBQTUJV
+U19WSVJUX0lOX1NBTVBMRVM6DQo+ICsJY2FzZSBQTUJVU19WSVJUX0NVUlJfU0FNUExFUzoNCj4g
+KwkJcmV0ID0gYWRtMTI3NV9yZWFkX3Btb25fY29uZmlnKGNsaWVudCwgQURNMTI3NV9WSV9BVkdf
+TUFTSyk7DQo+ICsJCWlmIChyZXQgPCAwKQ0KPiArCQkJYnJlYWs7DQo+ICsJCXJldCA9IDEgPDwg
+cmV0Ow0KPiArCQlicmVhazsNCj4gIAlkZWZhdWx0Og0KPiAgCQlyZXQgPSAtRU5PREFUQTsNCj4g
+IAkJYnJlYWs7DQo+IEBAIC0yODYsNiArMzM4LDE3IEBAIHN0YXRpYyBpbnQgYWRtMTI3NV93cml0
+ZV93b3JkX2RhdGEoc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCwgaW50IHBhZ2UsIGludCByZWcs
+DQo+ICAJY2FzZSBQTUJVU19WSVJUX1JFU0VUX1RFTVBfSElTVE9SWToNCj4gIAkJcmV0ID0gcG1i
+dXNfd3JpdGVfd29yZF9kYXRhKGNsaWVudCwgMCwgQURNMTI3OF9QRUFLX1RFTVAsIDApOw0KPiAg
+CQlicmVhazsNCj4gKwljYXNlIFBNQlVTX1ZJUlRfUE9XRVJfU0FNUExFUzoNCj4gKwkJd29yZCA9
+IGNsYW1wX3ZhbCh3b3JkLCAxLCBBRE0xMjc1X1NBTVBMRVNfQVZHX01BWCk7DQo+ICsJCXJldCA9
+IGFkbTEyNzVfd3JpdGVfcG1vbl9jb25maWcoY2xpZW50LCBBRE0xMjc1X1BXUl9BVkdfTUFTSywN
+Cj4gKwkJCQkJCWlsb2cyKHdvcmQpKTsNCj4gKwkJYnJlYWs7DQo+ICsJY2FzZSBQTUJVU19WSVJU
+X0lOX1NBTVBMRVM6DQo+ICsJY2FzZSBQTUJVU19WSVJUX0NVUlJfU0FNUExFUzoNCj4gKwkJd29y
+ZCA9IGNsYW1wX3ZhbCh3b3JkLCAxLCBBRE0xMjc1X1NBTVBMRVNfQVZHX01BWCk7DQo+ICsJCXJl
+dCA9IGFkbTEyNzVfd3JpdGVfcG1vbl9jb25maWcoY2xpZW50LCBBRE0xMjc1X1ZJX0FWR19NQVNL
+LA0KPiArCQkJCQkJaWxvZzIod29yZCkpOw0KPiArCQlicmVhazsNCj4gIAlkZWZhdWx0Og0KPiAg
+CQlyZXQgPSAtRU5PREFUQTsNCj4gIAkJYnJlYWs7DQo+IEBAIC00MjIsNiArNDg1LDggQEAgc3Rh
+dGljIGludCBhZG0xMjc1X3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQsDQo+ICAJaWYg
+KCFkYXRhKQ0KPiAgCQlyZXR1cm4gLUVOT01FTTsNCj4gIA0KPiArCW11dGV4X2luaXQoJmRhdGEt
+PmxvY2spOw0KPiArDQo+ICAJaWYgKG9mX3Byb3BlcnR5X3JlYWRfdTMyKGNsaWVudC0+ZGV2Lm9m
+X25vZGUsDQo+ICAJCQkJICJzaHVudC1yZXNpc3Rvci1taWNyby1vaG1zIiwgJnNodW50KSkNCj4g
+IAkJc2h1bnQgPSAxMDAwOyAvKiAxIG1PaG0gaWYgbm90IHNldCB2aWEgRFQgKi8NCj4gQEAgLTQz
+OSw3ICs1MDQsOCBAQCBzdGF0aWMgaW50IGFkbTEyNzVfcHJvYmUoc3RydWN0IGkyY19jbGllbnQg
+KmNsaWVudCwNCj4gIAlpbmZvLT5mb3JtYXRbUFNDX0NVUlJFTlRfT1VUXSA9IGRpcmVjdDsNCj4g
+IAlpbmZvLT5mb3JtYXRbUFNDX1BPV0VSXSA9IGRpcmVjdDsNCj4gIAlpbmZvLT5mb3JtYXRbUFND
+X1RFTVBFUkFUVVJFXSA9IGRpcmVjdDsNCj4gLQlpbmZvLT5mdW5jWzBdID0gUE1CVVNfSEFWRV9J
+T1VUIHwgUE1CVVNfSEFWRV9TVEFUVVNfSU9VVDsNCj4gKwlpbmZvLT5mdW5jWzBdID0gUE1CVVNf
+SEFWRV9JT1VUIHwgUE1CVVNfSEFWRV9TVEFUVVNfSU9VVCB8DQo+ICsJCQlQTUJVU19IQVZFX1NB
+TVBMRVM7DQo+ICANCj4gIAlpbmZvLT5yZWFkX3dvcmRfZGF0YSA9IGFkbTEyNzVfcmVhZF93b3Jk
+X2RhdGE7DQo+ICAJaW5mby0+cmVhZF9ieXRlX2RhdGEgPSBhZG0xMjc1X3JlYWRfYnl0ZV9kYXRh
+Ow0KDQotLSANCkJlc3QgcmVnYXJkcywNCkFsZXhhbmRlciBTdmVyZGxpbi4NCg==
