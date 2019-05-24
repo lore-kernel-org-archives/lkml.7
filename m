@@ -2,172 +2,107 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F21C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59961C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28DB221841
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:08:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B7982186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:09:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="CVxFnRIe"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="NhG5otDu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389295AbfEXIIk (ORCPT
+        id S2389298AbfEXIJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 04:08:40 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:37169 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388959AbfEXIIj (ORCPT
+        Fri, 24 May 2019 04:09:42 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39998 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389147AbfEXIJl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 04:08:39 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4O88EkV118439
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 24 May 2019 01:08:14 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4O88EkV118439
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1558685295;
-        bh=SwMpO8MEB+Y8QLnlfgnGBVMC/j9d1mGCQWrUxsdytHc=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=CVxFnRIerqb4f0HyywT+8N3VI9hViK0+CSmdIrrIrOvmnHVzuqQiKUwHTh7PrjwQ1
-         eXnVL70RkLDsghZSMUqAx8yTTBUmWr5rrv/tF4PTLLEsNMVnlPGE14uB9IZrFKFADy
-         JkmwahZgIMgjbFdcOHNrfGGZ4+RyuI7OjInUplwnPqMUW7pjcU9/q3iyduf3YKwkyP
-         s8Oq0TlS3sNzJrHRcHtvUtAy6yC0trUpwmCg2jSUv5Qh9PzI+OXVgZge3V3DHMtegU
-         PswI5PrjizHwP4fxF1QKDocc1vZcaNGRvJ9WLb0TpVivKRWn6i0iaFYUXk5YlhbH7a
-         BjPE3iWZt4wlg==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4O88DMm118436;
-        Fri, 24 May 2019 01:08:13 -0700
-Date:   Fri, 24 May 2019 01:08:13 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Yabin Cui <tipbot@zytor.com>
-Message-ID: <tip-1b038c6e05ff70a1e66e3e571c2e6106bdb75f53@git.kernel.org>
-Cc:     jolsa@redhat.com, hpa@zytor.com, torvalds@linux-foundation.org,
-        peterz@infradead.org, linux-kernel@vger.kernel.org,
-        namhyung@kernel.org, tglx@linutronix.de, acme@kernel.org,
-        eranian@google.com, mingo@kernel.org, yabinc@google.com,
-        alexander.shishkin@linux.intel.com, acme@redhat.com,
-        vincent.weaver@maine.edu
-Reply-To: tglx@linutronix.de, linux-kernel@vger.kernel.org,
-          namhyung@kernel.org, torvalds@linux-foundation.org,
-          peterz@infradead.org, hpa@zytor.com, jolsa@redhat.com,
-          vincent.weaver@maine.edu, acme@redhat.com,
-          alexander.shishkin@linux.intel.com, yabinc@google.com,
-          mingo@kernel.org, acme@kernel.org, eranian@google.com
-In-Reply-To: <20190517115418.224478157@infradead.org>
-References: <20190517115418.224478157@infradead.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf/ring_buffer: Fix exposing a temporarily
- decreased data_head
-Git-Commit-ID: 1b038c6e05ff70a1e66e3e571c2e6106bdb75f53
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Fri, 24 May 2019 04:09:41 -0400
+Received: by mail-ot1-f66.google.com with SMTP id u11so7908934otq.7
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 01:09:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YuE0856TsTDzOr+71DW3ES+79KQ8yfmx0fgvjM9w/1k=;
+        b=NhG5otDuKj+xoYuqWMZ8PG2WA2QVSXgCAotFXiApL9qn+lNO9iLE9Iqscjht011rS7
+         /JdGphDVJAgCROpPSVvDsWfZy5wi6hUW4hvYY9rBdAKg5cyUYwOTcd88yDwY2qkpBNE9
+         wPxsQh/OoT6+xGc/qZ2ghPwLXHIymQxMHJods=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YuE0856TsTDzOr+71DW3ES+79KQ8yfmx0fgvjM9w/1k=;
+        b=t4QwaediUNTzvzRHM6W4t71En2suINhd+bB9Dvy8RMy8AqfxomDoW+vhUAHjVG+qHc
+         DaHeIF0v/7eZzK73BjAFQuU//OJQxlWvNYN3Ze7yH5jAwXsgXTDRuXmfU66OJCYrvimS
+         4nM6fAiw4QIdOgz8QoUzj4ilkCcWgKYa7QqG7r80zkNAardDyuOz8hLNI2n93bX65uKk
+         4bvvcFyZZlyNYI9g92Mk0A4kJUhG6YcIBJdKMRuX/pU6dhs9eNIWf45alTS0uy7aQHEc
+         deu2+ZNMKs/hKERrFX0XGn/yfAAskb5RvIyJzixsmmnJE3fFYysqktX/itGlx/SysqPv
+         OQOA==
+X-Gm-Message-State: APjAAAXvN6MxFgBcVQDoVi3w0qsH0CuRR9qcixq8eVy1575dZQoEZXiF
+        c+B9zncVl29kGMZ+11X8JtFUQtDoWUQ0cOCLXmVAow==
+X-Google-Smtp-Source: APXvYqwTQvXvByfrzF4XOqJaZR3DWhg2Aui8um312pfGys3LkCBzcYSph7Loao897bvhjCqFHYARbNInZuy8DwKhvxg=
+X-Received: by 2002:a9d:6e1a:: with SMTP id e26mr61890768otr.188.1558685381035;
+ Fri, 24 May 2019 01:09:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+References: <20190524082926.6e1a7d8f@canb.auug.org.au>
+In-Reply-To: <20190524082926.6e1a7d8f@canb.auug.org.au>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Fri, 24 May 2019 10:09:28 +0200
+Message-ID: <CAKMK7uGSfOev71DKF+ygRjU0rMWcrW3rL7-=Xhbwdm9STUWntQ@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the drm-fixes tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Dave Airlie <airlied@linux.ie>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  1b038c6e05ff70a1e66e3e571c2e6106bdb75f53
-Gitweb:     https://git.kernel.org/tip/1b038c6e05ff70a1e66e3e571c2e6106bdb75f53
-Author:     Yabin Cui <yabinc@google.com>
-AuthorDate: Fri, 17 May 2019 13:52:31 +0200
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Fri, 24 May 2019 09:00:10 +0200
+On Fri, May 24, 2019 at 12:29 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> After merging the drm-fixes tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+>
+> drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm.c: In function 'load_dmcu_fw':
+> drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm.c:667:7: error: implicit declaration of function 'ASICREV_IS_PICASSO'; did you mean 'ASICREV_IS_VEGA12_P'? [-Werror=implicit-function-declaration]
+>    if (ASICREV_IS_PICASSO(adev->external_rev_id))
+>        ^~~~~~~~~~~~~~~~~~
+>        ASICREV_IS_VEGA12_P
+>
+> Caused by commit
+>
+>   55143dc23ca4 ("drm/amd/display: Don't load DMCU for Raven 1")
+>
+> I have reverted that commit for today.
 
-perf/ring_buffer: Fix exposing a temporarily decreased data_head
+Seems to compile fine here, and Dave just sent out the pull so I guess
+works for him too. What's your .config?
+-Daniel
 
-In perf_output_put_handle(), an IRQ/NMI can happen in below location and
-write records to the same ring buffer:
+>
+> --
+> Cheers,
+> Stephen Rothwell
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
-	...
-	local_dec_and_test(&rb->nest)
-	...                          <-- an IRQ/NMI can happen here
-	rb->user_page->data_head = head;
-	...
 
-In this case, a value A is written to data_head in the IRQ, then a value
-B is written to data_head after the IRQ. And A > B. As a result,
-data_head is temporarily decreased from A to B. And a reader may see
-data_head < data_tail if it read the buffer frequently enough, which
-creates unexpected behaviors.
 
-This can be fixed by moving dec(&rb->nest) to after updating data_head,
-which prevents the IRQ/NMI above from updating data_head.
-
-[ Split up by peterz. ]
-
-Signed-off-by: Yabin Cui <yabinc@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: mark.rutland@arm.com
-Fixes: ef60777c9abd ("perf: Optimize the perf_output() path by removing IRQ-disables")
-Link: http://lkml.kernel.org/r/20190517115418.224478157@infradead.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- kernel/events/ring_buffer.c | 24 ++++++++++++++++++++----
- 1 file changed, 20 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index 674b35383491..009467a60578 100644
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -51,11 +51,18 @@ again:
- 	head = local_read(&rb->head);
- 
- 	/*
--	 * IRQ/NMI can happen here, which means we can miss a head update.
-+	 * IRQ/NMI can happen here and advance @rb->head, causing our
-+	 * load above to be stale.
- 	 */
- 
--	if (!local_dec_and_test(&rb->nest))
-+	/*
-+	 * If this isn't the outermost nesting, we don't have to update
-+	 * @rb->user_page->data_head.
-+	 */
-+	if (local_read(&rb->nest) > 1) {
-+		local_dec(&rb->nest);
- 		goto out;
-+	}
- 
- 	/*
- 	 * Since the mmap() consumer (userspace) can run on a different CPU:
-@@ -87,9 +94,18 @@ again:
- 	rb->user_page->data_head = head;
- 
- 	/*
--	 * Now check if we missed an update -- rely on previous implied
--	 * compiler barriers to force a re-read.
-+	 * We must publish the head before decrementing the nest count,
-+	 * otherwise an IRQ/NMI can publish a more recent head value and our
-+	 * write will (temporarily) publish a stale value.
-+	 */
-+	barrier();
-+	local_set(&rb->nest, 0);
-+
-+	/*
-+	 * Ensure we decrement @rb->nest before we validate the @rb->head.
-+	 * Otherwise we cannot be sure we caught the 'last' nested update.
- 	 */
-+	barrier();
- 	if (unlikely(head != local_read(&rb->head))) {
- 		local_inc(&rb->nest);
- 		goto again;
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
