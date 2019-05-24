@@ -2,91 +2,126 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D2BC282E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3489EC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3AEB20645
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:39:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D51E620645
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:41:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S1rw7AVx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A3eoary3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390252AbfEXJjp (ORCPT
+        id S2390177AbfEXJlu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 05:39:45 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:46785 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389841AbfEXJjo (ORCPT
+        Fri, 24 May 2019 05:41:50 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46236 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390058AbfEXJlu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 05:39:44 -0400
-Received: by mail-lj1-f195.google.com with SMTP id m15so8035372ljg.13;
-        Fri, 24 May 2019 02:39:42 -0700 (PDT)
+        Fri, 24 May 2019 05:41:50 -0400
+Received: by mail-wr1-f67.google.com with SMTP id r7so9263389wrr.13
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 02:41:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=pLG4HwSPDeFqFoO0sL50L7Vp6hlITsqcMm3GOLkhZSg=;
-        b=S1rw7AVxIco9LK6fEnDYEhZWjhsLjsaf0KZWWwQgI2dj/4gnOotXrrFy63e0XqGHZU
-         /r6jKDGcZcYZY2VXAc7UxTXaHrk/LwFPWNGlp51jgXUsH6MLebUBW482GONEdj2G0PIW
-         63ROnxduLs5ZSa6Uf3++Chm8Clp9XI9YOnpkjBMM4tTuZAt5a2nA2iQix2e5mU2rLjkc
-         FTjyhptESjaXpN0JlWkaOEDjzdAcplXds5nEWT7PN9k4qq/3hr8F0AelWMFcE9x4SM9l
-         G9lJqE10DJcWmq8IIsLRiC7sB6TUh8nHgId65ZBTVjfxAl/OpJ5Ow3F7fjIdY+qvFEy4
-         XpuQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=y5N3blBOF57aEuNrqnxupdWMUAa8sEMVdsUI1rflzSQ=;
+        b=A3eoary35mP/ldGozEDAvNCMcz//E5Pp2NMOTYth62qhOZRHuBL/1IULlsfXC0iE9P
+         2U0gHdxYDJUaj4/6vWvRNMk5HbYNmIhmOG5NAYpgm3RxPw/J/9h8cmhnbF+Cey7mkEbG
+         ccMh7n93p3TomLg1SElpLdEG6psgy5ls35POE7RF/bxByT7tjwKwdXvhdPmpWY0gf3O7
+         OtZsfHFApGsWlB1Rnobgx9Pxe8YvME0Af3Da4OtTI/6CIJtdOY4QyTRafmL1vqAuDiFa
+         BzxusJ/C1QxGVMQzSZsPcl8j+TmsdyWxL3P+T5qGGixYakACt/r6OdNpNGJAvo2oZI61
+         SFlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=pLG4HwSPDeFqFoO0sL50L7Vp6hlITsqcMm3GOLkhZSg=;
-        b=sb2yVv23p6ymlu9NbcyXk0u5WgkuJYJz21nh7ZCkdw1PGyGEPMZuju8cWOuN0zgKts
-         q1hlG7X7iz2/bTv2jUAbJ30r3zwAREpNM5JpqX90tRPvjbpWA1eDjTWJp6tFPAjPtkOQ
-         MLIXC9a4A/bXk7UTcDpuE0cIGiwd0pvP+qpg7Y2YF7zpqnXlLg9GP7zL9ZNNEDbFUTTA
-         9bbJgbUHRekjom0UKwOl5r7/U3y0bzPEfR2x83xhUPqWNcmZT1fp+1dljbiwnH5R1wcm
-         dwJR++W3nyi+Jt18AQVFbkNjjYLWFEmpAtIK8jpAqyR4iz7NOmy7VZQpNf17aAUBNj++
-         X4iw==
-X-Gm-Message-State: APjAAAVhaU2Whpjzevai+vXwIWMuQXV6Gz7Su3o0Zvy/smMlIg4EU+T5
-        ikrFN45+qOHqGloh+vXcyBs=
-X-Google-Smtp-Source: APXvYqyIjCahILMqH7knW6yLej57c4Hug7DNGZ788l61rXSXB7+g5mLd36evjocxtJLNdYcZLGOzjQ==
-X-Received: by 2002:a2e:9b46:: with SMTP id o6mr14898732ljj.76.1558690782127;
-        Fri, 24 May 2019 02:39:42 -0700 (PDT)
-Received: from [10.17.182.120] (ll-22.209.223.85.sovam.net.ua. [85.223.209.22])
-        by smtp.gmail.com with ESMTPSA id f189sm497368lfe.66.2019.05.24.02.39.40
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=y5N3blBOF57aEuNrqnxupdWMUAa8sEMVdsUI1rflzSQ=;
+        b=CQl3n77U0SmdReydIaCZYtJCI92YC1Y3vBWwG+6AsiQJPZcz0cK5DnIw1yLOStUge8
+         c7Gvf2idzSnucH5MW4NyNv3m5XFKBduyfCjFKbuOhpZ11YYV9lH6xGcCY+Pn9pkDyPuV
+         komHNiX4U345IQoK8hBmhfrcnaKZwVZcEhztLm4akqBhjbOD3iDdyd688SNquEUL4Z5m
+         6XDbgph2j2Fm5jqo7SizQrDlFdbB43MzDQ8ufNwV0R1zh22qK8r31gB7A9IxxD1D/+Px
+         1OnZ4qReX4CAC0EZDyJ67Z80v3QZN1sUyC7gue5PMXzaGQnwTH0AMXIN0piQiUU82E4g
+         k1XQ==
+X-Gm-Message-State: APjAAAX3xFVjq0O/kS9kXVsH6t5OAiQD6Lm0ExPeWSn2dj3e6sPQIvsf
+        3VZs9VWoDCngbor9zGUpX5d1Ag==
+X-Google-Smtp-Source: APXvYqwPRO4pFpxSPn86THLU1S+1gsKxZpAqGiQDN/sY0wzkykgkTLwXk57Z0fyJ2AQwWnT5Lmk4kQ==
+X-Received: by 2002:adf:aa09:: with SMTP id p9mr9813762wrd.59.1558690909082;
+        Fri, 24 May 2019 02:41:49 -0700 (PDT)
+Received: from apalos (ppp-94-66-229-5.home.otenet.gr. [94.66.229.5])
+        by smtp.gmail.com with ESMTPSA id o23sm247011wro.13.2019.05.24.02.41.47
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 02:39:41 -0700 (PDT)
-Subject: Re: [PATCH V5] ARM: mach-shmobile: Don't init CNTVOFF/counter if PSCI
- is available
-From:   Oleksandr <olekstysh@gmail.com>
-To:     linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     julien.grall@arm.com, horms@verge.net.au, magnus.damm@gmail.com,
-        linux@armlinux.org.uk, geert@linux-m68k.org,
-        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-References: <1558087093-22113-1-git-send-email-olekstysh@gmail.com>
-Message-ID: <b51b7d40-0023-0ddb-c00c-02ad8c5a0529@gmail.com>
-Date:   Fri, 24 May 2019 12:39:40 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 24 May 2019 02:41:48 -0700 (PDT)
+Date:   Fri, 24 May 2019 12:41:45 +0300
+From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
+To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc:     grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net,
+        ast@kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        netdev@vger.kernel.org, daniel@iogearbox.net,
+        jakub.kicinski@netronome.com, john.fastabend@gmail.com
+Subject: Re: [PATCH net-next 0/3] net: ethernet: ti: cpsw: Add XDP support
+Message-ID: <20190524094145.GA24675@apalos>
+References: <20190523182035.9283-1-ivan.khoronzhuk@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <1558087093-22113-1-git-send-email-olekstysh@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190523182035.9283-1-ivan.khoronzhuk@linaro.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Ivan,
 
-Hello, all
-
-
-Gentle reminder...
-
--- 
-Regards,
-
-Oleksandr Tyshchenko
-
+More XDP drivers, that's good!
+> This patchset add XDP support for TI cpsw driver and base it on
+> page_pool allocator. It was verified on af_xdp socket drop,
+> af_xdp l2f, ebpf XDP_DROP, XDP_REDIRECT, XDP_PASS, XDP_TX.
+> 
+> It was verified with following configs enabled:
+> CONFIG_JIT=y
+> CONFIG_BPFILTER=y
+> CONFIG_BPF_SYSCALL=y
+> CONFIG_XDP_SOCKETS=y
+> CONFIG_BPF_EVENTS=y
+> CONFIG_HAVE_EBPF_JIT=y
+> CONFIG_BPF_JIT=y
+> CONFIG_CGROUP_BPF=y
+> 
+> Link on previous RFC:
+> https://lkml.org/lkml/2019/4/17/861
+> 
+The recycling pattern has changed i'll have a closer look in the weekend and let
+you know
+> Also regular tests with iperf2 were done in order to verify impact on
+> regular netstack performance, compared with base commit:
+> https://pastebin.com/JSMT0iZ4
+Do you have any XDP related numbers?
+> 
+> Based on net-next/master
+> 
+> Ivan Khoronzhuk (3):
+>   net: ethernet: ti: davinci_cpdma: add dma mapped submit
+>   net: ethernet: ti: davinci_cpdma: return handler status
+>   net: ethernet: ti: cpsw: add XDP support
+> 
+>  drivers/net/ethernet/ti/Kconfig         |   1 +
+>  drivers/net/ethernet/ti/cpsw.c          | 570 +++++++++++++++++++++---
+>  drivers/net/ethernet/ti/cpsw_ethtool.c  |  55 ++-
+>  drivers/net/ethernet/ti/cpsw_priv.h     |   9 +-
+>  drivers/net/ethernet/ti/davinci_cpdma.c | 122 +++--
+>  drivers/net/ethernet/ti/davinci_cpdma.h |   6 +-
+>  drivers/net/ethernet/ti/davinci_emac.c  |  18 +-
+>  7 files changed, 675 insertions(+), 106 deletions(-)
+> 
+> -- 
+> 2.17.1
+> 
+Thanks
+/Ilias
