@@ -2,115 +2,129 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A28AAC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A3DC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E0102177E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:50:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c2DllOps"
+	by mail.kernel.org (Postfix) with ESMTP id 883C7217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:51:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558666274;
+	bh=mGxUo/+4R9E64TUxiYnoUO+bFwL9PHRzl0hlVota7eM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=zyNi2P07JZzuNpo1ro6jCotkrgUA4WKkEwD2v9MZlE84QgD+Hm+K9lGSksxhrlvHy
+	 948jmp+Mei97dDq6VrjNlNcQyWdl2Dc8g/aRet01NrfyCygTCEqyMy+5iDCZGcyEBO
+	 t8iUl89R+qLYEbsiKpSgVZKyejK5gPHNCLNjgW6c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388156AbfEXCuW (ORCPT
+        id S2388381AbfEXCvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 22:50:22 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39404 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731522AbfEXCuV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 22:50:21 -0400
-Received: by mail-pf1-f194.google.com with SMTP id z26so4375309pfg.6;
-        Thu, 23 May 2019 19:50:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5EPIY/pbD369tpqlqejU7R1YiZWbc6ywy0lqYpQEtdM=;
-        b=c2DllOpso5AVzkkHXVu+qbWk5XqTYnoaosdSauvtXEM6CeATCXPU2HbEJcF7sjbW2j
-         TctxTr8i0XTElyxQgQO5Cyzi10Fs0nJqM3koRiym1kOGcBD8El8jm3dTnQSkq5XDXls8
-         4w/DkMIq9xau7ZdH1c8zIlFllzEjGkV5jf33ZMAoVTksfzStb3YB7mn3O3eywQNPzUIN
-         nzC8V4sMyWqYAEE39MHX1uj2bTIA7DtybWVdTBbzXpQ5n4rfOx9/N2vNw3FrjOQ1Ir5q
-         TLtiA9EbTD4WbfE+edftd8w3vC8Hmh0/KQ6qJeHIEm37bfihy4sH7qJi3ikT7AtF3WFD
-         RXzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5EPIY/pbD369tpqlqejU7R1YiZWbc6ywy0lqYpQEtdM=;
-        b=cPxTpLhgbxlC1WRmcNrxqM10dVQg4yCsqbFKd5JWjw6tjz7TKEqp4+DnLrPjn5RSJM
-         08cOlCX29/k0FU/UuYv6Mhm9I4mF+HMqGsjP4VhBEVyAMH9jPiqRuN2lKV67FtfejOEQ
-         eQQplsmkaXmAOM4XYU2OknaSg9ZVXri4PA8/0j0brrM+jIxRK3PQ/B34SLQzEOxu2ONX
-         TJkhMywDsjjCJN6eWir+kKaFA85I2EkVDrlJLabHnb+PEBUsHtk+nqp2whMqTlQdxji4
-         i03QlQIr6Sl8FsGc6ll6GLl9nQLG9Np6cDMZ3KkrgA+qQQWmfYUwMvLDT1s8Wl87HqMB
-         Vfbw==
-X-Gm-Message-State: APjAAAVXfhm1PQ73dXYqKeI3xBP+vdAqe/ckiS0/JeRkJvSLj82VZE9J
-        jN428WLduxraNiDWFjiYO0w=
-X-Google-Smtp-Source: APXvYqwxVidXiS0+EqeoVmwsLOqoIKJwKRoOXpXMybgw5n+Fqj9odHC+S6EmYXD29O06mFuOfNB+0w==
-X-Received: by 2002:a63:1e4d:: with SMTP id p13mr103218869pgm.125.1558666220433;
-        Thu, 23 May 2019 19:50:20 -0700 (PDT)
-Received: from localhost.localdomain ([2601:644:8201:32e0:7256:81ff:febd:926d])
-        by smtp.gmail.com with ESMTPSA id y16sm750850pfl.140.2019.05.23.19.50.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 19:50:19 -0700 (PDT)
-Date:   Thu, 23 May 2019 19:50:18 -0700
-From:   Eduardo Valentin <edubezval@gmail.com>
-To:     Yuantian Tang <andy.tang@nxp.com>
-Cc:     rui.zhang@intel.com, robh+dt@kernel.org, daniel.lezcano@linaro.org,
-        mark.rutland@arm.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: thermal: Make cooling-maps property optional
-Message-ID: <20190524025017.GA4146@localhost.localdomain>
-References: <20190515093647.47656-1-andy.tang@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190515093647.47656-1-andy.tang@nxp.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Thu, 23 May 2019 22:51:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35360 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387654AbfEXCvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 22:51:13 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C5612177E;
+        Fri, 24 May 2019 02:51:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558666271;
+        bh=mGxUo/+4R9E64TUxiYnoUO+bFwL9PHRzl0hlVota7eM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=c1MNF1n66YWPAvd2JfLrXxTUDIWXPLg9dpZj21BOdke6Vz/KMRd1INezZgN22rOni
+         UyL7wL9nEoHFq6WfrSKSWbmvCM1gQPJOfxlHJSvLA8fBAH6QKK0EBvOj1mNTRmRccm
+         FZb/sxCvARG8NFUtGqugIfGq5O4n3gx2Q36bD+dg=
+Date:   Thu, 23 May 2019 19:51:10 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Yury Norov <yury.norov@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Amritha Nambiar <amritha.nambiar@intel.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Tobin C . Harding" <tobin@kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Vineet Gupta <vineet.gupta1@synopsys.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        linux-kernel@vger.kernel.org, Yury Norov <ynorov@marvell.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: Re: [PATCH 5/7] lib: rework bitmap_parse()
+Message-Id: <20190523195110.f98e60898c8c29884d231a6e@linux-foundation.org>
+In-Reply-To: <20190510022633.GA30629@yury-thinkpad>
+References: <20190501010636.30595-1-ynorov@marvell.com>
+        <20190501010636.30595-6-ynorov@marvell.com>
+        <20190508084632.GY9224@smile.fi.intel.com>
+        <20190510022633.GA30629@yury-thinkpad>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 05:36:47PM +0800, Yuantian Tang wrote:
-> There may be no cooling device on system, or there are no enough
-> cooling devices for each thermal zone in multiple thermal zone
-> cases since cooling devices can't be shared.
-> So make this property optional to remove such limitations.
+On Thu, 9 May 2019 19:26:33 -0700 Yury Norov <yury.norov@gmail.com> wrote:
 
-Yeah, I am  not sure that is enough reason to make this property
-optional. Let me maybe ask you why do you care creating a thermal
-zone if your control has no actions? Or rather, why bothering
-setting up a control that has no actuators?
+> Hi Andy,
+> 
+> Thanks for thorough review.
+> 
+> On Wed, May 08, 2019 at 11:46:32AM +0300, Andy Shevchenko wrote:
+> > On Tue, Apr 30, 2019 at 06:06:34PM -0700, Yury Norov wrote:
+> > > bitmap_parse() is ineffective and full of opaque variables and opencoded
+> > > parts. It leads to hard understanding and usage of it. This rework
+> > > includes:
+> > >  - remove bitmap_shift_left() call from the cycle. Now it makes the
+> > >    complexity of the algorithm as O(nbits^2). In the suggested approach
+> > >    the input string is parsed in reverse direction, so no shifts needed;
+> > >  - relax requirement on a single comma and no white spaces between chunks.
+> > >    It is considered useful in scripting, and it aligns with
+> > >    bitmap_parselist();
+> > >  - split bitmap_parse() to small readable helpers;
+> > >  - make an explicit calculation of the end of input line at the
+> > >    beginning, so users of the bitmap_parse() won't bother doing this.
+> > 
+> > > +static inline bool in_str(const char *start, const char *ptr)
+> > > +{
+> > > +	return start <= ptr;
+> > > +}
+> > > +
+> > 
+> > The explicit use of the conditional is better.
+> > 
+> > -- 
+> > With Best Regards,
+> > Andy Shevchenko
+> 
+> I still think that is_str() is more verbose, but it's minor issue
+> anyways, so I obey. Below is the patch that removes the function.
+> It's up to Andrew finally, either apply it or not.
 
-> 
-> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
-> ---
->  .../devicetree/bindings/thermal/thermal.txt        |    4 ++--
->  1 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
-> index ca14ba9..694e834 100644
-> --- a/Documentation/devicetree/bindings/thermal/thermal.txt
-> +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
-> @@ -142,11 +142,11 @@ Required properties:
->  - trips:		A sub-node which is a container of only trip point nodes
->    Type: sub-node	required to describe the thermal zone.
+I agree with Andy - open-coding the comparisons makes it easier to
+understand the varoius in_str() callsites, IMO.
+
+> @@ -653,7 +648,7 @@ int bitmap_parse(const char *start, unsigned int buflen,
+>  	u32 *bitmap = (u32 *)maskp;
+>  	int unset_bit;
 >  
-> +
-> +Optional property:
->  - cooling-maps:		A sub-node which is a container of only cooling device
->    Type: sub-node	map nodes, used to describe the relation between trips
->  			and cooling devices.
-> -
-> -Optional property:
->  - coefficients:		An array of integers (one signed cell) containing
->    Type: array		coefficients to compose a linear relation between
->    Elem size: one cell	the sensors listed in the thermal-sensors property.
-> -- 
-> 1.7.1
-> 
+> -	while (in_str(start, (end = bitmap_find_region_reverse(start, end)))) {
+> +	while (start <= (end = bitmap_find_region_reverse(start, end))) {
+
+This statement hurts my little brain.  Can it be broken into easier to digest
+chunks?
+
+>  		if (!chunks--)
+>  			return -EOVERFLOW;
+>  
