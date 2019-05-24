@@ -2,102 +2,94 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71802C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C07DC282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EDAB21880
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:01:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41DA52175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:01:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558710107;
+	bh=Oj9G6qrOx4MxnHRPww+ypylXeuYaU/WyJccmTQzoOtE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sz5GiZ+wzeQe37/teEmodPf9UvcTG01IyKOcK8+qLxuJtm8Rq5IVNg3lk6XLqiGQd
+	 t1XEpj3g11Qho+z0vE/kPUD9c1eLS24fzdMrz0sTxZ1u/PsZrSVcO40MDs+45k11Cm
+	 4RDuotV8lBZzyRBj5tZYdbGmjQCQJeJ9cwqa/Cf0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389316AbfEXPBk (ORCPT
+        id S2389410AbfEXPBq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 11:01:40 -0400
-Received: from foss.arm.com ([217.140.101.70]:44812 "EHLO foss.arm.com"
+        Fri, 24 May 2019 11:01:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389057AbfEXPBk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 11:01:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D812980D;
-        Fri, 24 May 2019 08:01:39 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5D2813F575;
-        Fri, 24 May 2019 08:01:38 -0700 (PDT)
-Date:   Fri, 24 May 2019 16:01:35 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@android.com
-Subject: Re: [PATCH v1 3/5] dt-bindings: Add depends-on property
-Message-ID: <20190524150135.GD15566@lakrids.cambridge.arm.com>
-References: <20190524010117.225219-1-saravanak@google.com>
- <20190524010117.225219-4-saravanak@google.com>
+        id S2389321AbfEXPBq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 11:01:46 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FB202133D;
+        Fri, 24 May 2019 15:01:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558710105;
+        bh=Oj9G6qrOx4MxnHRPww+ypylXeuYaU/WyJccmTQzoOtE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=C2VSzfNUuSipCKR6sjE+RO1OEJY1PD4PP83Ir859Xe/Ks1jNMT3Y5+jTEjMvsRlJk
+         ruWw/EO7E54vWagaedSY+NIrxq/vRJJhCwzZySoe2QXw3ZOAS80FHatOZzmRIPPaw8
+         cTGPQQftqlN+pzT0X8lqDAQRBJF9mxch+wDYPgLI=
+Date:   Fri, 24 May 2019 17:01:43 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Subject: Re: [PATCH 5.1 000/122] 5.1.5-stable review
+Message-ID: <20190524150143.GC9757@kroah.com>
+References: <20190523181705.091418060@linuxfoundation.org>
+ <CA+G9fYsY+=+kMgc+Wz88YP-L5zba0iTn0c1JfCFQEHKDHhFAxg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190524010117.225219-4-saravanak@google.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+G9fYsY+=+kMgc+Wz88YP-L5zba0iTn0c1JfCFQEHKDHhFAxg@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 06:01:14PM -0700, Saravana Kannan wrote:
-> The depends-on property is used to list the mandatory functional
-> dependencies of a consumer device on zero or more supplier devices.
+On Fri, May 24, 2019 at 02:23:49PM +0530, Naresh Kamboju wrote:
+> On Fri, 24 May 2019 at 00:56, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > This is the start of the stable review cycle for the 5.1.5 release.
+> > There are 122 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Sat 25 May 2019 06:14:44 PM UTC.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.5-rc1.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
 > 
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> ---
->  .../devicetree/bindings/depends-on.txt        | 26 +++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/depends-on.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/depends-on.txt b/Documentation/devicetree/bindings/depends-on.txt
-> new file mode 100644
-> index 000000000000..1cbddd11cf17
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/depends-on.txt
-> @@ -0,0 +1,26 @@
-> +Functional dependency linking
-> +=============================
-> +
-> +Apart from parent-child relationships, devices (consumers) often have
-> +functional dependencies on other devices (suppliers). Common examples of
-> +suppliers are clock, regulators, pinctrl, etc. However not all of them are
-> +dependencies with well defined devicetree bindings. 
+> Results from Linaro’s test farm.
+> No regressions on arm64, arm, x86_64, and i386.
 
-For clocks, regualtors, and pinctrl, that dependency is already implicit
-in the consumer node's properties. We should be able to derive those
-dependencies within the kernel.
+Great!  Thanks for testing all of these and letting me know.
 
-Can you give an example of where a dependency is not implicit in an
-existing binding?
-
-> Also, not all functional
-> +dependencies are mandatory as the device might be able to operate in a limited
-> +mode without some of the dependencies.
-
-Whether something is a mandatory dependency will depend on the driver
-and dynamic runtime details more than it will depend on the hardware.
-
-For example, assume I have an IP block that functions as both a
-clocksource and a watchdog that can reset the system, with those two
-functions derived from separate input clocks.
-
-I could use the device as just a clocksource, or as just a watchdog, and
-neither feature in isolation is necessarily mandatory for the device to
-be somewhat useful to the OS.
-
-We need better ways of dynamically providing and managing this
-information. For example, if a driver could register its dynamic
-dependencies at probe (or some new pre-probe callback), we'd be able to
-notify it immediately when its dependencies are available.
-
-Thanks,
-Mark.
+greg k-h
