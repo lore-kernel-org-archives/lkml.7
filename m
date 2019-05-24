@@ -2,133 +2,103 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F211C282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 22:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3399C282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 22:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25AE921872
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 22:20:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 724FC20862
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 22:21:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="bv+fvRCE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RQPcqx6o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404327AbfEXWUq (ORCPT
+        id S2404364AbfEXWVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 18:20:46 -0400
-Received: from node.akkea.ca ([192.155.83.177]:58206 "EHLO node.akkea.ca"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404176AbfEXWUp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 18:20:45 -0400
-Received: by node.akkea.ca (Postfix, from userid 33)
-        id 734D24E204B; Fri, 24 May 2019 22:20:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1558736445; bh=p20jB4BQU4AvtbWwn3XeTjPaRii6ZgAKH7/dXJoEJig=;
-        h=To:Subject:Date:From:Cc:In-Reply-To:References;
-        b=bv+fvRCEnBF18NNZaLElZPetLVBlma51ewNgSeJNF1Qvp7gLdBtgiTJau8DCU5HMK
-         tQ1T5dyWfnVgopujkczBCJZ4f2vyPlhBNzBh5raJh2ecZaxp81wzQVtcNnjWx4PCXv
-         gJUumLG5Tk7k9rsX4g57s2Io3/u5jqyQvRd7EouY=
-To:     Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v13 2/4] arm64: dts: fsl: librem5: Add a device tree for  the Librem5 devkit
-X-PHP-Originating-Script: 1000:rcube.php
+        Fri, 24 May 2019 18:21:15 -0400
+Received: from mail-wr1-f48.google.com ([209.85.221.48]:44298 "EHLO
+        mail-wr1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404332AbfEXWVP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 18:21:15 -0400
+Received: by mail-wr1-f48.google.com with SMTP id w13so3015447wru.11;
+        Fri, 24 May 2019 15:21:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:mime-version:message-id:in-reply-to
+         :references:user-agent:content-transfer-encoding;
+        bh=kV6iJR4xfy9BRC6MyG7RFLVo/Wi9XJHicoj8GiJ50zE=;
+        b=RQPcqx6ozrqP8a1MxQY745UDH4f80SGRWFECqSzzyeASqseyw2aQlzRzIn1wiM81sg
+         xsbUtqjNLpiZTDR/k11/K9wPe+t70ZSe1+78iAG390Y/HLpNbDtocRJNNPfHN4GRQG/G
+         AvmvGxT33F/Nounqxq/tVmwfrkbNL2OspUTiWl/KPhxixJkuhxaArg2hRwQ2s4oey+ZJ
+         NXsVa6G+37JjbFSaKF2s6IHQnDl4KXaesPaA5Y9yaTT6QReo1UvSaCciJixjZiMNOaXw
+         z0WWhoz3l/w4vT5on4FVVwrbCe5qkPePBrHdGNYWF/jRUpSTOzW9ACEU42qBBEMl+fXy
+         B1jA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:mime-version:message-id
+         :in-reply-to:references:user-agent:content-transfer-encoding;
+        bh=kV6iJR4xfy9BRC6MyG7RFLVo/Wi9XJHicoj8GiJ50zE=;
+        b=qELDDdwBLBUhiZSa1qgmtr1csFhSTo6VmOy3nw4vY6YY9Fn7zdpgsSqAreN1kXJ7x9
+         Qeeaj/jjJhd4bQpVdD7GGiV8KmRYExc26AysXeUqa1g/ZFxq90y6pDUiWvQ37sS6gBA9
+         GUxHH6hvf4BZ7B9Cy5Cl0i8Vl8am0rEsq9LbCHzvqn2uMhIVYUNx8p8ss/4L58zskMHX
+         1MCyjaMU99dtzAhRTpT6oZZOzFLSpZr01SLhVzhFMUr+eWUsbfu3D+HV4PhSsWqpVzn5
+         1ZMRN7jdWMs6ZUcZIatXKfbY2IFArdj6gWlA9KW90upIVA82rY8rWboNiIDAD8sR52wS
+         Mgqw==
+X-Gm-Message-State: APjAAAVQR0YQ73I02Er2Zd1yToNDgBEhVyD5kXW8DG/+1qWjPM3W7NEl
+        +IzXlGqteEKkrpvghNr3CMSYq3qTSCP5Bg==
+X-Google-Smtp-Source: APXvYqyiO9AqF/rXwvpnWtzQtWh6QNPh6n/g/DmOpGzsA7BmBQUI/Z91rD8hQzpSoz5Dwi9toVKNZg==
+X-Received: by 2002:a5d:628d:: with SMTP id k13mr7050635wru.319.1558736473197;
+        Fri, 24 May 2019 15:21:13 -0700 (PDT)
+Received: from localhost ([92.59.185.54])
+        by smtp.gmail.com with ESMTPSA id l18sm3880043wrv.38.2019.05.24.15.21.11
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 24 May 2019 15:21:12 -0700 (PDT)
+From:   Vicente Bergas <vicencb@gmail.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: =?iso-8859-1?Q?d=5Flookup:_Unable_to_handle_kernel_paging_request?=
+Date:   Sat, 25 May 2019 00:21:11 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 24 May 2019 15:20:45 -0700
-From:   Angus Ainslie <angus@akkea.ca>
-Cc:     angus.ainslie@puri.sm, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <1e6c0664949f38452b8f14b901bff513@www.akkea.ca>
-References: <20190520142330.3556-1-angus@akkea.ca>
- <20190520142330.3556-3-angus@akkea.ca>
- <20190523191926.GB3803@xo-6d-61-c0.localdomain>
- <1e6c0664949f38452b8f14b901bff513@www.akkea.ca>
-Message-ID: <64cc01b6cc6590e328e7b488bedb9dc8@www.akkea.ca>
-X-Sender: angus@akkea.ca
-User-Agent: Roundcube Webmail/1.1.3
+Message-ID: <b1f6ba08-6774-4be9-9e96-563f95e9ccdf@gmail.com>
+In-Reply-To: <20190522162945.GN17978@ZenIV.linux.org.uk>
+References: <23950bcb-81b0-4e07-8dc8-8740eb53d7fd@gmail.com>
+ <20190522135331.GM17978@ZenIV.linux.org.uk>
+ <bdc8b245-afca-4662-99e2-a082f25fc927@gmail.com>
+ <20190522162945.GN17978@ZenIV.linux.org.uk>
+User-Agent: Trojita
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel,
+On Wednesday, May 22, 2019 6:29:46 PM CEST, Al Viro wrote:
+> On Wed, May 22, 2019 at 05:44:30PM +0200, Vicente Bergas wrote:
+> ...
+> IOW, here we have also run into bogus hlist forward pointer or head -
+> same 0x1000000 in one case and 0x0000880001000000 in two others.
+>
+> Have you tried to see if KASAN catches anything on those loads?
+> Use-after-free, for example...  Another thing to try: slap
+> =09WARN_ON(entry->d_flags & DCACHE_NORCU);
+> in __d_rehash() and see if it triggers.
 
-On 2019-05-24 15:00, Angus Ainslie wrote:
-> Hi Pavel,
-> 
-> On 2019-05-23 12:19, Pavel Machek wrote:
->> Hi!
->> 
->>> - LEDs
->>> - gyro
->>> - magnetometer
->> 
->>> +	leds {
->>> +		compatible = "gpio-leds";
->>> +		pinctrl-names = "default";
->>> +		pinctrl-0 = <&pinctrl_gpio_leds>;
->>> +
->>> +		led1 {
->>> +			label = "LED 1";
->> 
->> So, what kind of LED do you have, and what color is it? label should
->> probably be something like
->> notify:green.
->> 
-> 
-> As we don't have a specific use for these yet does it really matter if
-> there is a colour or a number associated with them ?
-> 
->>> +	charger@6b { /* bq25896 */
->>> +		compatible = "ti,bq25890";
->>> +		reg = <0x6b>;
->>> +		pinctrl-names = "default";
->>> +		pinctrl-0 = <&pinctrl_charger>;
->>> +		interrupt-parent = <&gpio3>;
->>> +		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
->>> +		ti,battery-regulation-voltage = <4192000>; /* 4.192V */
->>> +		ti,charge-current = <1600000>; /* 1.6 A */
->> 
->> No space before A, for consistency.
->> 
->>> +		ti,termination-current = <66000>;  /* 66mA */
->>> +		ti,precharge-current = <1300000>; /* 1.3A */
->> 
->> I thought precharge is usually something low, because you are not yet
->> sure of battery health...?
->> 
-> 
-> I think I put that in incorrectly. The intention was 130mA.
-> 
->>> +		ti,minimum-sys-voltage = <2750000>; /* 2.75V */
->> 
->> Are you sure? Normally systems shut down at 3.2V, 3V or so. Li-ion
->> batteries don't
->> really like to be discharged _this_ deep.
-> 
-> You are correct. I'll fix it for the next version.
-> 
+Hi,
+i have been running 3 days with KASAN enabled and also with
+diff a/fs/dcache.c b/fs/dcache.c
+@@ -2395,3 +2395,4 @@ static void __d_rehash(struct dentry *entry)
+ =09struct hlist_bl_head *b =3D d_hash(entry->d_name.hash);
+=20
++=09WARN_ON(entry->d_flags & DCACHE_NORCU);
+ =09hlist_bl_lock(b);
+but the issue has not appeared again.
+Next week i will try -rc2 without KASAN and with WARN_ON and see if it
+triggers.
 
-Looking into it further Sanyo and Panasonic get over 300 cycles bringing 
-the NCR18650 down to 2.5V so 2.75V should be fine.
-
-http://www.batteryonestop.com/baotongusa/products/datasheets/li-ion/SANYO-NCR18650B-3400mAh.pdf
-https://industrial.panasonic.com/ww/products/batteries/secondary-batteries/lithium-ion/cylindrical-type/NCR18650PF
-
-Angus
-
-> Thanks
-> Angus
-> 
->> 
->> 										Pavel
+Regards,
+  Vicen=C3=A7.
 
