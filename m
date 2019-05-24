@@ -2,137 +2,104 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13CC7C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 840C3C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC46421773
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:49:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 550A22070D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:50:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AWLrG+8C"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tv321/z+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391028AbfEXQtY (ORCPT
+        id S2391109AbfEXQuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 12:49:24 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:46434 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390346AbfEXQtX (ORCPT
+        Fri, 24 May 2019 12:50:15 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33200 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390346AbfEXQuP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 12:49:23 -0400
-Received: by mail-pl1-f195.google.com with SMTP id r18so4381572pls.13;
-        Fri, 24 May 2019 09:49:23 -0700 (PDT)
+        Fri, 24 May 2019 12:50:15 -0400
+Received: by mail-pg1-f195.google.com with SMTP id h17so5376507pgv.0;
+        Fri, 24 May 2019 09:50:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=1Fl+pCsc5xkUmcECPowd4yxBNgbA084+jBwh/Q97ymc=;
-        b=AWLrG+8Cq6qh5hLHBHjsxRMhFHEaO1Vp9YvkNQ57ms9VckR63mRPBzusZdN3Rh6pMQ
-         rZFW0Qvy0F3oOS+bfj7IH+ZQ69U5tlw6xQHhpkGrAuPM0xY2g2vrF2nDnNsDAqxHbE8r
-         RLSs7vdCfSe9oCAwuw3gPNGZgHNRUcTUDC3AzqaW9RHpQj+LgPYHxi4BPF4CNtYeBgX2
-         Sm9kngvDGcxgXQMbetAH+uBXLPJWD7K6z5FUO+pV+TPXtf6bAeoNeXDC7ExZMAEBXVMC
-         z6xPo/RbBM9UXh07Mmv1u8lGXcHgkxYQ/xcfBuYU2eAi1i1UuKg2KrJ2pzDfPzQu0eIk
-         UCwA==
+        bh=4ljKG1FSpAnI0fQI5UQvftJwABxyuwurggQoq2c5RGI=;
+        b=Tv321/z+MZyNy1WU4jYRew/fqti/jyFeedE6AWrYE/Hhoj+nobHJg19kUk2klY/onN
+         gu+Rko03axvYxETQjvxIe6ThSTouOFGb/12AgI92orwfSPIp5BI4P9o8wibrqzQCvVvh
+         VszAFZlGZPizC3+RHL9//QgV82WYtyJiSdxcdsZOvr1lRCeRiP1E1BjnVHEy4jvjTJbD
+         Xx7dlKD8Qkmvf/A9Q327g+eftACu1shDuuv5XAB/6iLXd5T/ZIenxoEknDVshYwGNJ0F
+         H8mO592uIz5fp0hgCid+ZEH4LkQ9EhdJ00NjfQWVAWWavf9SBbJsjK2SuklZBc76rMM3
+         Coug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=1Fl+pCsc5xkUmcECPowd4yxBNgbA084+jBwh/Q97ymc=;
-        b=UK1WLlK7Hd2LIw/KDGAJgiUE1H9ZWhsVFYgcLEY3sx3Xkd+pTwMi35EpQVGGX0mW5U
-         EVrZDLbY58imcMj+DbNGhDaMPQypEwaTlViTNPJMRFBPg0GG+gyIM0QuGsDVERxQG09+
-         EBS3sPpWP9xPEQyA8MdK8pQgMMEyfm8NkmAkOi1qlyUDEJRbcATB01c/43J1b3NGE68U
-         ZhXW4gOAVQy5d2gTXrJ0j6zw2doZZZkW8OP56pDaLLApywy+ImKIfKFeDF0hwbWbdN+c
-         dymLTVjtx2+CRAxuCC/0cnEwy/mbOqB08Fytw6CaLtKimvo/ErUyJSDKaMPUgvwE+smd
-         uSyQ==
-X-Gm-Message-State: APjAAAXOCFuZ+v1lSXHxRnUPSWn2NjlrPKOWDohAqG7fse7Gy1XnHjIj
-        R6zz6sDt/1GEgwnDZNc7hgbT53BGWyZnSCryF00=
-X-Google-Smtp-Source: APXvYqyyPR11DXypiZGhxXSFgKI0dABNyJ+dNM096QAOso0rcvPnxyjwuVjX/1XFED6quda5v3NLLFn/8fwBHmLu2wI=
-X-Received: by 2002:a17:902:24b:: with SMTP id 69mr17524490plc.255.1558716563115;
- Fri, 24 May 2019 09:49:23 -0700 (PDT)
+        bh=4ljKG1FSpAnI0fQI5UQvftJwABxyuwurggQoq2c5RGI=;
+        b=kvwSl5C8lxijsaBCB+17aXtk483baL8Dc7OdMTliLPFXaft/E9fVA1ZREQVGCPYVQt
+         1pUfJqZoOvzxF1VMa3bN8C1YPJRAo0Bq5t72TYWKpfqOU3OG5+2nQ/RjgAUku2/VYch/
+         uTRnqaK89+2BrLF9wKPI7pGX/vnuCgTkU25p6qxpUAR/1+sZc7Y7VaLroUee7bP5Fqk5
+         Fsg048vjZjudP4gW0mUVBA606Q9hsJVUb/wcc6v4qGqMWrq4GTSlM0wn0urAj/lgr6Yf
+         zM1aOj26OD6c3/HpsyUn0Ue5zlplCZflMOighl1vwn4u8A2N6eSXpPXxhRbZCWRVoxfx
+         YmHg==
+X-Gm-Message-State: APjAAAW6i04mWhJPu1edAjvCSLrrF4UB0rp7NBPKgMmNAsQbHHb8l6n+
+        abOIPTi45R1Q5bYuQFbaRLgbBF+/6P3WQpdJ0H0=
+X-Google-Smtp-Source: APXvYqwCvw4pVTu0bgA3402cpeKLR/7D4aZKVYALe14wdz62BWmzOOdEFkCmumnnV+7hiG5WARjBPs3YUqvAnHxwbGU=
+X-Received: by 2002:a63:fb05:: with SMTP id o5mr23546629pgh.203.1558716614556;
+ Fri, 24 May 2019 09:50:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190523190913.5801-1-danct12@disroot.org>
-In-Reply-To: <20190523190913.5801-1-danct12@disroot.org>
+References: <20190429150135.15070-1-hdegoede@redhat.com> <CAHp75VeE=88mCcgVx3Y3PQJPQ819Z7=3s=jRGz1y=t09phk=rA@mail.gmail.com>
+ <085c5b6e-d220-ebd1-38d2-def7efca24b8@redhat.com> <CAHp75Vfe9uK_b_V+uG29wb1L6J7u1hpbU+P4beXso9KNPM+8Rg@mail.gmail.com>
+ <568ba27d-a6a5-b158-bab1-f22cd8ccb34e@redhat.com> <155726027056.14659.1724431433952718602@swboyd.mtv.corp.google.com>
+ <10c8864c-6ee7-4dfd-6274-b1996e767653@redhat.com> <CAHp75VdnxRQi3X6J9hLGUjGsOYTkjoPN5MakJc=mUSumoC+wag@mail.gmail.com>
+ <c5546043-4f2d-979a-3718-a46f72bae20b@redhat.com>
+In-Reply-To: <c5546043-4f2d-979a-3718-a46f72bae20b@redhat.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 24 May 2019 19:49:12 +0300
-Message-ID: <CAHp75Vdh=ny16mEnDw0pMfUzyOcrA97AnXKfyW+BcEcZ-W1ryQ@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add info for the CHUWI
- Hi10 Plus tablet.
-To:     Daniel Smith <danct12@disroot.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
+Date:   Fri, 24 May 2019 19:50:04 +0300
+Message-ID: <CAHp75VfVfig-R1mVhdMdWrbfpA92VV3hc55SXgopmWT+kn6rnQ@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: pmc_atom: Add Lex 3I380D industrial PC to
+ critclk_systems DMI table
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
         Darren Hart <dvhart@infradead.org>,
         Andy Shevchenko <andy@infradead.org>,
-        linux-input <linux-input@vger.kernel.org>,
+        Kai Heng Feng <kai.heng.feng@canonical.com>,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Semyon Verchenko <semverchenko@factor-ts.ru>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 10:12 PM Daniel Smith <danct12@disroot.org> wrote:
+On Wed, May 22, 2019 at 3:32 PM Hans de Goede <hdegoede@redhat.com> wrote:
 >
-> Added touch screen info for CHUWI Hi10 Plus tablet.
+> Hi
 >
+> On 08-05-19 10:42, Andy Shevchenko wrote:
+> > On Wed, May 8, 2019 at 10:48 AM Hans de Goede <hdegoede@redhat.com> wrote:
+> >> On 07-05-19 22:17, Stephen Boyd wrote:
+> >>> Quoting Hans de Goede (2019-05-06 08:05:42)
+> >
+> >>> I guess this is urgent?
+> >>
+> >> Somewhat, getting this into e.g. rc2 would be fine too, waiting till 5.3
+> >> would be bad.
+> >
+> > So, I can do it as a fixes for rc2, just ping me after merge window.
+>
+> The merge window is done now, can you please get the patch from this
+> thread and the
+> "PATCH 1/1] platform/x86: pmc_atom: Add several Beckhoff Automation boards to critclk_systems DMI table"
+> patch queued up as fixes for 5.2 now ?
 
-Pushed to my review and testing queue, thanks!
-
-> Signed-off-by: Daniel Smith <danct12@disroot.org>
-> ---
->  drivers/platform/x86/touchscreen_dmi.c | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
->
-> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-> index bd0856d2e825..1dbb53c3f1e7 100644
-> --- a/drivers/platform/x86/touchscreen_dmi.c
-> +++ b/drivers/platform/x86/touchscreen_dmi.c
-> @@ -91,6 +91,22 @@ static const struct ts_dmi_data chuwi_hi10_air_data = {
->         .properties     = chuwi_hi10_air_props,
->  };
->
-> +static const struct property_entry chuwi_hi10_plus_props[] = {
-> +       PROPERTY_ENTRY_U32("touchscreen-min-x", 0),
-> +       PROPERTY_ENTRY_U32("touchscreen-min-y", 5),
-> +       PROPERTY_ENTRY_U32("touchscreen-size-x", 1914),
-> +       PROPERTY_ENTRY_U32("touchscreen-size-y", 1283),
-> +       PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-chuwi-hi10plus.fw"),
-> +       PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-> +       PROPERTY_ENTRY_BOOL("silead,home-button"),
-> +       { }
-> +};
-> +
-> +static const struct ts_dmi_data chuwi_hi10_plus_data = {
-> +       .acpi_name      = "MSSL0017:00",
-> +       .properties     = chuwi_hi10_plus_props,
-> +};
-> +
->  static const struct property_entry chuwi_vi8_props[] = {
->         PROPERTY_ENTRY_U32("touchscreen-min-x", 4),
->         PROPERTY_ENTRY_U32("touchscreen-min-y", 6),
-> @@ -605,6 +621,15 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
->                         DMI_MATCH(DMI_PRODUCT_SKU, "P1W6_C109D_B"),
->                 },
->         },
-> +       {
-> +               /* Chuwi Hi10 Plus (CWI527) */
-> +               .driver_data = (void *)&chuwi_hi10_plus_data,
-> +               .matches = {
-> +                       DMI_MATCH(DMI_BOARD_VENDOR, "Hampoo"),
-> +                       DMI_MATCH(DMI_PRODUCT_NAME, "Hi10 plus tablet"),
-> +                       DMI_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
-> +               },
-> +       },
->         {
->                 /* Chuwi Vi8 (CWI506) */
->                 .driver_data = (void *)&chuwi_vi8_data,
-> --
-> 2.21.0
->
-
+PR had been sent couple of hours ago, thanks!
 
 -- 
 With Best Regards,
