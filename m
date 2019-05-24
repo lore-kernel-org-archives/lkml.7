@@ -2,85 +2,103 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8B6C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62713C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F0882133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:01:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558720887;
-	bh=hmSLAfBO3B9Og9aItR4btdT06y7xyGsHU8gyrdSeqt8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1NrVTehAimteLCDlgkiI8Wm9TY8QoFWVbljBUPuqgmFwWg7LEK6tgwEOZnNUXtxWF
-	 Pf3hMGyVgcm/vJlnXhvddx7B6mFM99+nonivbmocOQ2Lj9WM8udMmlL+gHtLe4U8tP
-	 cHGe658ROyv8hXpDRchRRRgRwBRbi9nZ1V/t8nY4=
+	by mail.kernel.org (Postfix) with ESMTP id 35EDD2133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:02:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dUwYBvqs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727598AbfEXSB0 (ORCPT
+        id S1728956AbfEXSCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 14:01:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39900 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726079AbfEXSB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 14:01:26 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A6872133D;
-        Fri, 24 May 2019 18:01:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558720885;
-        bh=hmSLAfBO3B9Og9aItR4btdT06y7xyGsHU8gyrdSeqt8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CXtj/7Od54AwnGkCQeboo2JY4mfMa22TS+bCHWQk+HNmeJUqiqSfrIeyMKlGzD1Ue
-         0Zg+wqMhey54mk//qwwlK9uZB/NU+L/Y33gohUs3tn3EoAHzuRl96Q/wWQQfi3Tle5
-         5iQneSg6gm1LK4va9VTGxMoWXRWSbfxcpTVVwlA0=
-Date:   Fri, 24 May 2019 20:01:22 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Oded Gabbay <oded.gabbay@gmail.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [git pull] habanalabs fixes for 5.2-rc2/3
-Message-ID: <20190524180122.GA27745@kroah.com>
-References: <20190524175324.GA3024@ogabbay-VM>
+        Fri, 24 May 2019 14:02:10 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:42595 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726079AbfEXSCJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 14:02:09 -0400
+Received: by mail-vs1-f66.google.com with SMTP id z11so6417925vsq.9;
+        Fri, 24 May 2019 11:02:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:message-id:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-disposition:content-transfer-encoding;
+        bh=/c0F+parR6bN86hWiP5Ifn7/OM8gtFo/WuXGn5Kkvqs=;
+        b=dUwYBvqs93lG4d1TS6FrWkYK9tjJF9joMVDSL+Frt8pUlxzut/kmSCA5F9x/IU5HLf
+         OoBHrLOkbUQma48nVJBleDgqrJYVB9bno19PtnMIXm5MSRl+TW2Y9qNDWFMqQv5ma4Ol
+         WjSdzrRhIc2CGzwiPCiZ2vtm9QVt+AVcUFbE7KvdItXF/0I04vXPptA8DVj/hUxjHexf
+         YACmhaHjnhH2pLJZ2Uh0kdLkjx5ur8m8pq0I2Y9zjKutjG8gBC5Ikse6SIkFwjELriH2
+         bm0n3PU56/N2S+xOvd76Mmap0xep4s7CWFnsdlLexmCAlLuPb8MA15WBen61ogxWozmJ
+         GYOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
+         :references:mime-version:content-disposition
+         :content-transfer-encoding;
+        bh=/c0F+parR6bN86hWiP5Ifn7/OM8gtFo/WuXGn5Kkvqs=;
+        b=YnOAhwv+EO5OXsiRI2nnMyos/TAiNnlrtySkCLPlJyB2SURJTA6RC8SbPelX0cOFOe
+         4BRIgPzTqnhu/Fsf1J0VT72EsenYM/xtl429YQFESu/UgZDA5/02GFVP3ZyCcfxx8plJ
+         TN5CE94v4JFYxD/ptLzOV/x0bdZ56MZng5U8gOWsvd0wC7be7w6KcJOSMZaVeHbM8KJk
+         PZWKYL+J9GG4uS0DibSMoW4dZ+3PU+zmP4zWCyl5tqbNIvP+gDZANLGI1rBQ+fY0KX7u
+         /IHWf/cSOpxAE5+sYdJUTMlqRInQ0SQBHOpChkhWiwqOufAeN/1XgIxYWKVD9g5qIp0l
+         HKLA==
+X-Gm-Message-State: APjAAAUr3yJnN6bS09lbR00nQUPT28xQTs+JehxOTQ1bYFvOch85aCCU
+        Wnhd88q6XnyJUKs8Tn55Rqc=
+X-Google-Smtp-Source: APXvYqxS4mzDEMERjcL67EgtD6e5diif4cIUBmshIzjF+TLMxZDmVbuWnI4nfhb3p3xAxtS9dD6oDw==
+X-Received: by 2002:a67:f303:: with SMTP id p3mr41457576vsf.166.1558720928663;
+        Fri, 24 May 2019 11:02:08 -0700 (PDT)
+Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
+        by smtp.gmail.com with ESMTPSA id w9sm1537289vkh.53.2019.05.24.11.02.07
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 24 May 2019 11:02:07 -0700 (PDT)
+Date:   Fri, 24 May 2019 14:02:06 -0400
+Message-ID: <20190524140206.GF17138@t480s.localdomain>
+From:   Vivien Didelot <vivien.didelot@gmail.com>
+To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 3/5] net: dsa: implement vtu_getnext and vtu_loadpurge
+ for mv88e6250
+In-Reply-To: <20190524085921.11108-4-rasmus.villemoes@prevas.dk>
+References: <20190501193126.19196-1-rasmus.villemoes@prevas.dk>
+ <20190524085921.11108-1-rasmus.villemoes@prevas.dk>
+ <20190524085921.11108-4-rasmus.villemoes@prevas.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190524175324.GA3024@ogabbay-VM>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 08:53:24PM +0300, Oded Gabbay wrote:
-> Hi Greg,
+On Fri, 24 May 2019 09:00:27 +0000, Rasmus Villemoes <rasmus.villemoes@prevas.dk> wrote:
+> These are almost identical to the 6185 variants, but have fewer bits
+> for the FID.
 > 
-> This is the pull request containing fixes for 5.2-rc2/3.
+> Bit 10 of the VTU_OP register (offset 0x05) is the VidPolicy bit,
+> which one should probably preserve in mv88e6xxx_g1_vtu_op(), instead
+> of always writing a 0. However, on the 6352 family, that bit is
+> located at bit 12 in the VTU FID register (offset 0x02), and is always
+> unconditionally cleared by the mv88e6xxx_g1_vtu_fid_write()
+> function.
 > 
-> It supersedes the pull request from 12/5, so you can discard that pull
-> request, as I see you didn't merge it anyway.
+> Since nothing in the existing driver seems to know or care about that
+> bit, it seems reasonable to not add the boilerplate to preserve it for
+> the 6250 (which would require adding a chip-specific vtu_op function,
+> or adding chip-quirks to the existing one).
 > 
-> It contains 3 fixes and 1 change to a new IOCTL that was introduced to
-> kernel 5.2 in the previous pull requests.
-> 
-> See the tag comment for more details.
-> 
-> Thanks,
-> Oded
-> 
-> The following changes since commit b0576f9ecb5c51e9932531d23c447b2739261841:
-> 
->   misc: sgi-xp: Properly initialize buf in xpc_get_rsvd_page_pa (2019-05-24 19:00:54 +0200)
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
 
-Wait, that is my char-misc-testing branch, which moves to char-misc-next, not char-misc-linus.
-
-Please rebase this series on char-misc-linus, as the patches in
-char-misc-testing are NOT for 5.2-final.
-
-thanks,
-
-greg k-h
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
