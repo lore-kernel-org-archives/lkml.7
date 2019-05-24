@@ -2,75 +2,118 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD64DC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4797DC282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A62902184B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:04:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FFEA20675
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:07:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ji/F2CZo"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qpMoa01N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390774AbfEXQEV (ORCPT
+        id S2390326AbfEXQHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 12:04:21 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:33868 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389962AbfEXQET (ORCPT
+        Fri, 24 May 2019 12:07:23 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:33425 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389888AbfEXQHW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 12:04:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=udHsjQBKP68t9TZ4H27l2j3R7dmm1NcGJYaKWehd8PE=; b=Ji/F2CZobt5eaIwXFU270PPtZ
-        lWbro9qD58JzH3u5iSrGABrhavNQGlQG9qOowF/I85/KPNwLZ/LLPJ3k03wbqOSNrdWu7Vcl8p4KU
-        bUFsA2uPdJWh2n12f6c/VJBEQA2R1g88Oc8wLksp4s/GZSbW6SV1861BU2uUfdKtbl1HxRwp8L6yb
-        SFtMKbaNlRT/dD+kfvCgm+8cbrjk3onqOCJChb5H0SKJuXWv8jpQrNEtNSZGLej37oK//Zql4ElqN
-        XfEldQJv31OFhsagwQYQolonLFHt5VjX4CxLIAY99YW1Ib0FJB/8j9g29HrB6scmWY36BOpf2/h1Q
-        4/QI6Oc/w==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hUCg6-0000DK-3y; Fri, 24 May 2019 16:04:18 +0000
-Date:   Fri, 24 May 2019 09:04:17 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH] mm: fix page cache convergence regression
-Message-ID: <20190524160417.GB1075@bombadil.infradead.org>
-References: <20190524153148.18481-1-hannes@cmpxchg.org>
+        Fri, 24 May 2019 12:07:22 -0400
+Received: by mail-it1-f193.google.com with SMTP id j17so11368795itk.0
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 09:07:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=F51aUjlAcqEydtw/abs3ans4pwxkW6lbFz/6ZM6GbTY=;
+        b=qpMoa01Nr6q98RY9URswE31bXIom/0XVP8pqvsALmpMM+lROv9SlDc/sFfcFS9f+lb
+         7NSkiPcVnyTEWYQgvqGTDVilgbIM+pxgO5gSWljvE8YzbuTIXsajSA3nRpgSwfTeWKl/
+         2Sv8jFS0JOZ/6D7nKvCzZYm0eGDkRRdpwU6E6qsMMcn9bS+jeZByzO+H+9nJSpuHY0N8
+         YjwSNbcjr1ZfxRSMaSq8UrGeP4ksjiqynFtkLWPrn8A/KdYUSBJZ0Pww0ha7dx1ILssU
+         pXYrVHaxp+WZvevnABkNklvmiy0gaYvXAh54CaS5Exs9uMvu49yNQGejtfSEg9fkAlxn
+         TQmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=F51aUjlAcqEydtw/abs3ans4pwxkW6lbFz/6ZM6GbTY=;
+        b=BIpA1Av/ex3oA4otD8W2OB2cCFwTn58ChDCBup1t5sZOdCCLRi/D0meMoRhMUSieqX
+         +dYDd0EUUhzqNAIv92nxsgWUxpBaIp/4oxgLeUVtD2x419GTK4HLJNeQKNc9ItMUtzNC
+         LjO9eNbX55AkfBoyPL4z5sBuq2R4ZOrf+7zgndTuPgLrPRhd28zVufbZ/UycLVAuyBlj
+         ZOon4wWaHydTvMb2UkeuSItd7S2Rl3BhMXPLAS7F0ewuO43ilbyq2nzcJLX/G5MCR6yc
+         SXbFfVONp/ymYsjQ/T94Wm4hPtlwY77wgq2ZOwAlbxHCTkDZRXJS2srkV8jKtj/25Ohw
+         b6KA==
+X-Gm-Message-State: APjAAAUeU8W7YD1WI6MpiqSWMD1AJ0pJdNz7Svl4AG13Y1+pb3vMxgOY
+        bTUnLvxs6uZxbSdxupKRI3DdEfhmCewDDhO2nzz8ZA==
+X-Google-Smtp-Source: APXvYqwWGKSkuIwcjfo3DOKE37Iaan3beO3UWxqHzJZRo2ZSSoO3FCyCbj6drihvINLMWgP9KLmQfsYCCKGIkYN8qU0=
+X-Received: by 2002:a02:a494:: with SMTP id d20mr4001601jam.62.1558714042097;
+ Fri, 24 May 2019 09:07:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190524153148.18481-1-hannes@cmpxchg.org>
-User-Agent: Mutt/1.9.2 (2017-12-15)
+References: <20190517082633.GA3890@zhanggen-UX430UQ> <CAKv+Gu98JNK34Q6MNOe3aq0W5rbv6hUFiuc7cHxHJat5aTk_gg@mail.gmail.com>
+ <20190517090628.GA4162@zhanggen-UX430UQ> <CAKv+Gu_mwFpdtNZm9QMFn69+vOMTOpv9gvuhnBL2NBXvwkhXqg@mail.gmail.com>
+ <20190523005133.GA14881@zhanggen-UX430UQ>
+In-Reply-To: <20190523005133.GA14881@zhanggen-UX430UQ>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Fri, 24 May 2019 18:07:10 +0200
+Message-ID: <CAKv+Gu_wRYZdDYXso0B5m_BPJznGQXpCWq4_0u34bConu0V1ow@mail.gmail.com>
+Subject: Re: [PATCH v2] efi_64: Fix a missing-check bug in arch/x86/platform/efi/efi_64.c
+To:     Gen Zhang <blackgod016574@gmail.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 11:31:48AM -0400, Johannes Weiner wrote:
-> diff --git a/include/linux/xarray.h b/include/linux/xarray.h
-> index 0e01e6129145..cbbf76e4c973 100644
-> --- a/include/linux/xarray.h
-> +++ b/include/linux/xarray.h
-> @@ -292,6 +292,7 @@ struct xarray {
->  	spinlock_t	xa_lock;
->  /* private: The rest of the data structure is not to be used directly. */
->  	gfp_t		xa_flags;
-> +	gfp_t		xa_gfp;
->  	void __rcu *	xa_head;
->  };
+On Thu, 23 May 2019 at 02:51, Gen Zhang <blackgod016574@gmail.com> wrote:
+>
+> In efi_call_phys_prolog(), save_pgd is allocated by kmalloc_array().
+> And it is dereferenced in the following codes. However, memory
+> allocation functions such as kmalloc_array() may fail. Dereferencing
+> this save_pgd null pointer may cause the kernel go wrong. Thus we
+> should check this allocation.
+> Further, if efi_call_phys_prolog() returns NULL, we should abort the
+> process in phys_efi_set_virtual_address_map(), and return EFI_ABORTED.
+>
+> Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+>
+> ---
+> diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+> index e1cb01a..a7189a3 100644
+> --- a/arch/x86/platform/efi/efi.c
+> +++ b/arch/x86/platform/efi/efi.c
+> @@ -85,6 +85,8 @@ static efi_status_t __init phys_efi_set_virtual_address_map(
+>         pgd_t *save_pgd;
+>
+>         save_pgd = efi_call_phys_prolog();
+> +       if (!save_pgd)
+> +               return EFI_ABORTED;
+>
+>         /* Disable interrupts around EFI calls: */
+>         local_irq_save(flags);
+> diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+> index cf0347f..828460a 100644
+> --- a/arch/x86/platform/efi/efi_64.c
+> +++ b/arch/x86/platform/efi/efi_64.c
+> @@ -91,6 +91,8 @@ pgd_t * __init efi_call_phys_prolog(void)
+>
+>         n_pgds = DIV_ROUND_UP((max_pfn << PAGE_SHIFT), PGDIR_SIZE);
+>         save_pgd = kmalloc_array(n_pgds, sizeof(*save_pgd), GFP_KERNEL);
+> +       if (!save_pgd)
+> +               return NULL;
+>
+>         /*
+>          * Build 1:1 identity mapping for efi=old_map usage. Note that
+> ---
 
-No.  I'm willing to go for a xa_flag which says to use __GFP_ACCOUNT, but
-you can't add another element to the struct xarray.
+Apologies for only spotting this now, but I seem to have given some bad advice.
 
-We haven't even finished the discussion from yesterday.  I'm going to
-go back to that thread and keep discussing there.
+efi_call_phys_prolog() in efi_64.c will also return NULL if
+(!efi_enabled(EFI_OLD_MEMMAP)), but this is not an error condition. So
+that occurrence has to be updated: please return efi_mm.pgd instead.
