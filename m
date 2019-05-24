@@ -2,145 +2,261 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D2DCC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23910C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03B1821773
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:58:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8CEF217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:59:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="flCMFwoY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390208AbfEXJ6d (ORCPT
+        id S2390262AbfEXJ7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 05:58:33 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:39412 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389758AbfEXJ6c (ORCPT
+        Fri, 24 May 2019 05:59:12 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:46944 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389758AbfEXJ7M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 05:58:32 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id uk-mta-4-v0DLxGEwM9yGbvCb2AhJBQ-1;
- Fri, 24 May 2019 10:58:27 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Fri, 24 May 2019 10:58:26 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Fri, 24 May 2019 10:58:26 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Deepa Dinamani' <deepa.kernel@gmail.com>
-CC:     Oleg Nesterov <oleg@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "dbueso@suse.de" <dbueso@suse.de>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        Davidlohr Bueso <dave@stgolabs.net>, Eric Wong <e@80x24.org>,
-        Jason Baron <jbaron@akamai.com>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        linux-aio <linux-aio@kvack.org>,
-        Omar Kilani <omar.kilani@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH v2] signal: Adjust error codes according to
- restore_user_sigmask()
-Thread-Topic: [PATCH v2] signal: Adjust error codes according to
- restore_user_sigmask()
-Thread-Index: AQHVELwtsgR+BAQFXk2JV68Wk/7LjKZ4aINAgABVkoCAAB2x0P///TgAgAARdkCAAAfWgIABCrvA
-Date:   Fri, 24 May 2019 09:58:26 +0000
-Message-ID: <761e28606d344963a32eda6195a4e899@AcuMS.aculab.com>
-References: <20190522032144.10995-1-deepa.kernel@gmail.com>
- <20190522150505.GA4915@redhat.com>
- <CABeXuvrPM5xvzqUydbREapvwgy6deYreHp0aaMoSHyLB6+HGRg@mail.gmail.com>
- <20190522161407.GB4915@redhat.com>
- <CABeXuvpjrW5Gt95JC-_rYkOA=6RCD5OtkEQdwZVVqGCE3GkQOQ@mail.gmail.com>
- <4f7b6dbeab1d424baaebd7a5df116349@AcuMS.aculab.com>
- <20190523145944.GB23070@redhat.com>
- <345cfba5edde470f9a68d913f44fa342@AcuMS.aculab.com>
- <20190523163604.GE23070@redhat.com>
- <f0eced5677c144debfc5a69d0d327bc1@AcuMS.aculab.com>
- <CABeXuvo-wey+NHWb4gi=FSRrjJOKkVcLPQ-J+dchJeHEbhGQ6g@mail.gmail.com>
-In-Reply-To: <CABeXuvo-wey+NHWb4gi=FSRrjJOKkVcLPQ-J+dchJeHEbhGQ6g@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Fri, 24 May 2019 05:59:12 -0400
+Received: by mail-qk1-f196.google.com with SMTP id a132so6528245qkb.13
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 02:59:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6oalq3CMmiJBlCEpwN42b3yUfJ7oUOazx3wK2cdStxY=;
+        b=flCMFwoYifq590DFJHjOXRrZ1QfXMndUkyyCizWPN86+503mvUxwRuVgXjzui7LhKw
+         +HjHiFsbRiWLjqxOB3aGw+74KMn38pJGkX9tonSVLCmYhFsaBcvsigzPGoqfRbxGEtHi
+         peWsKwCd5RS9H7SqUO+zyXtYyeOLQJrS+hUr/Vj1s/rSWluHq/0KkrFy1betZmBl6h1X
+         lBNJbSOCr2GN9oTrReH8rS/LSxx1PGRv4km2Ota64sa+p8/sc/znWPhemm46rtvy5+l2
+         XfGTT6TFqzDG3KLltqkIX9gP06tnDcjdz5IJcpiBXvmf2mcSkOaxGYQU4yztgRofPbgJ
+         xJAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6oalq3CMmiJBlCEpwN42b3yUfJ7oUOazx3wK2cdStxY=;
+        b=hgogrg2hCzAVB0jR3Uq5pD6WSHip8VAr1M4ECAnbhqp0vRfbKG4Tqyf/u+V9YaJKRC
+         ZTdsr3iv/8b0AQ9q5oUTDkHYfMadm8DhTW6n0GiQH8/1T0jqGQr2RFQdQrQsZlgawz26
+         mF8AcyEDoktveCCz1DnbYhXePq+ZqSo79Ku5oj9W40w4bDdEPESc+2BuHOveCyXqQZ7j
+         135dYKCa1Vweua6lMIyWnlqh68dMA9bSRnWgj7O2QSnYhPbIagzBrtIIKmrBGakL8EKV
+         Iowbspu/yvnkx0sKpkVqUvkB1oQ7I3Sujy/Z/YXHXmzp97m2GQZtdVQx8172uGBA/KVv
+         f3zA==
+X-Gm-Message-State: APjAAAU6+PCXEFKxzqf6h8/ctYu0feae2OK6omiKII6/aCB2LLaHDvBV
+        U0Nr4wiOm3d9OnQiY0RvNdprhlsDZY65NXjtAFOpaHSG
+X-Google-Smtp-Source: APXvYqx1LL5RGxurj8Gy1LyaHHYdIwO14hgwzF61a8TbXLIsmD3njSRzTSm3wBpcg9bPIM1h6qlDVxu4nUz4xvQZ8tI=
+X-Received: by 2002:a37:6b07:: with SMTP id g7mr9383760qkc.217.1558691950844;
+ Fri, 24 May 2019 02:59:10 -0700 (PDT)
 MIME-Version: 1.0
-X-MC-Unique: v0DLxGEwM9yGbvCb2AhJBQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+References: <CAPM=9txEn_xBG7fW+P40v6VZW8txMUn9usQnC4L_KXumXNXMjw@mail.gmail.com>
+ <CAKMK7uGL3gFb-_RoNe5oLS51VLuKy5sZXS9g5w=_FzcdXo_LPA@mail.gmail.com>
+In-Reply-To: <CAKMK7uGL3gFb-_RoNe5oLS51VLuKy5sZXS9g5w=_FzcdXo_LPA@mail.gmail.com>
+From:   Dave Airlie <airlied@gmail.com>
+Date:   Fri, 24 May 2019 19:58:59 +1000
+Message-ID: <CAPM=9tzGzE4jAwD9v8EyuHrt3GrCdPgan4ttTw+nRkFiXr_sgA@mail.gmail.com>
+Subject: Re: [git pull] drm fixes for 5.2-rc2
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogRGVlcGEgRGluYW1hbmkNCj4gU2VudDogMjMgTWF5IDIwMTkgMTk6MDcNCj4gT2ssIHNp
-bmNlIHRoZXJlIGhhcyBiZWVuIHF1aXRlIGEgYml0IG9mIGFyZ3VtZW50IGhlcmUsIEkgd2lsbA0K
-PiBiYWNrdHJhY2sgYSBsaXR0bGUgYml0IGFuZCBtYXliZSBpdCB3aWxsIGhlbHAgdXMgdW5kZXJz
-dGFuZCB3aGF0J3MNCj4gaGFwcGVuaW5nIGhlcmUuDQo+IFRoZXJlIGFyZSBtYW55IHNjZW5hcmlv
-cyBiZWluZyBkaXNjdXNzZWQgb24gdGhpcyB0aHJlYWQ6DQo+IGEuIFN0YXRlIG9mIGNvZGUgYmVm
-b3JlIDg1NGE2ZWQ1NjgzOWENCj4gYi4gU3RhdGUgYWZ0ZXIgODU0YTZlZDU2ODM5YQ0KPiBjLiBQ
-cm9wb3NlZCBmaXggYXMgcGVyIHRoZSBwYXRjaHNldCBpbiBxdWVzdGlvbi4NCj4gDQo+IE9sZWcs
-IEkgd2lsbCBkaXNjdXNzIHRoZXNlIGZpcnN0IGFuZCB0aGVuIHdlIGNhbiBkaXNjdXNzIHRoZQ0K
-PiBhZGRpdGlvbmFsIGNoYW5nZXMgeW91IHN1Z2dlc3RlZC4NCj4gDQo+IFNvbWUgYmFja2dyb3Vu
-ZCBvbiB3aHkgd2UgaGF2ZSB0aGVzZSBzeXNjYWxscyB0aGF0IHRha2Ugc2lnbWFzayBhcyBhbg0K
-PiBhcmd1bWVudC4gVGhpcyBpcyBqdXN0IGZvciB0aGUgc2FrZSBvZiBjb21wbGV0ZW5lc3Mgb2Yg
-dGhlIGFyZ3VtZW50Lg0KPiANCj4gVGhlc2UgYXJlIHBhcnRpY3VsYXJseSBtZWFudCBmb3IgYSBz
-Y2VuYXJpbyhkKSBzdWNoIGFzIGJlbG93Og0KPiANCj4gMS4gYmxvY2sgdGhlIHNpZ25hbHMgeW91
-IGRvbid0IGNhcmUgYWJvdXQuDQo+IDIuIHN5c2NhbGwoKQ0KPiAzLiB1bmJsb2NrIHRoZSBzaWdu
-YWxzIGJsb2NrZWQgaW4gMS4NCj4gDQo+IFRoZSBwcm9ibGVtIGhlcmUgaXMgdGhhdCBpZiB0aGVy
-ZSBpcyBhIHNpZ25hbCB0aGF0IGlzIG5vdCBibG9ja2VkIGJ5IDENCj4gYW5kIHN1Y2ggYSBzaWdu
-YWwgaXMgZGVsaXZlcmVkIGJldHdlZW4gMSBhbmQgMihzaW5jZSB0aGV5IGFyZSBub3QNCj4gYXRv
-bWljKSwgdGhlIHN5c2NhbGwgaW4gMiBtaWdodCBibG9jayBmb3JldmVyIGFzIGl0IG5ldmVyIGZv
-dW5kIG91dA0KPiBhYm91dCB0aGUgc2lnbmFsLg0KDQpJIHRoaW5rIHdlIGFsbCBhZ3JlZSBhYm91
-dCB0aGUgdW5kZXJseWluZyBwcm9ibGVtIHRoZXNlIHN5c3RlbSBjYWxscyBzb2x2ZS4NCg0KPiBB
-cyBwZXIgW2FdIGFuZCBsZXQncyBjb25zaWRlciB0aGUgY2FzZSBvZiBlcG9sbF9wd2FpdCBvbmx5
-IGZpcnN0IGZvciBzaW1wbGljaXR5Lg0KRm9yIHNpbXBsaWNpdHkgeW91IG91Z2h0IHRvIGNvbnNp
-ZGVyIHNpZ3dhaXRpbmZvKCkgOi0pDQoNCj4gQXMgSSBzYWlkIGJlZm9yZSwgZXBfcG9sbCgpIGlz
-IHdoYXQgY2hlY2tzIGZvciBzaWduYWxfcGVuZGluZygpIGFuZCBpcw0KPiByZXNwb25zaWJsZSBm
-b3Igc2V0dGluZyBlcnJubyB0byAtRUlOVFIgd2hlbiB0aGVyZSBpcyBhIHNpZ25hbC4NCg0KQWgs
-IHRoZXJlIGluIGxpZXMgdGhlIHByb2JsZW0gKHdlbGwgb25lIG9mIHRoZW0pLg0KZXBfcG9sbCgp
-IHNob3VsZCBvbmx5IHJldHVybiAtRUlOVFIgaWYgaXRzIHNsZWVwICh3YWl0aW5nIGZvciBhbiBm
-ZCB0bw0KYmUgcmVhZHkpIGlzIGludGVycnVwdGVkLg0KVGhlIHNpZ25hbCBoYW5kbGVyKHMpIHNo
-b3VsZCBzdGlsbCBiZSBjYWxsZWQgdGhvdWdoLg0KSWYgdGhlIHRpbWVvdXQgaXMgMCB0aGVuIGFu
-eSBzaWduYWwgaGFuZGxlciBzaG91bGQgYmUgY2FsbGVkLCBidXQgdGhlDQpyZXR1cm4gdmFsdWUg
-aXMgc3RpbGwgMCAoaWYgbm8gZmQgYXJlICdyZWFkeScpLg0KDQo+IFNvIGlmIGEgc2lnbmFsIGlz
-IHJlY2VpdmVkIGFmdGVyIGVwX3BvbGwoKSBhbmQgZXBfcG9sbCgpIHJldHVybnMNCj4gc3VjY2Vz
-cywgaXQgaXMgbmV2ZXIgbm90aWNlZCBieSB0aGUgc3lzY2FsbCBkdXJpbmcgZXhlY3V0aW9uLg0K
-PiBTbyB0aGUgcXVlc3Rpb24gaXMgZG9lcyB0aGUgdXNlcnNwYWNlIGhhdmUgdG8ga25vdyBhYm91
-dCB0aGlzIHNpZ25hbA0KPiBvciBub3QuIEZyb20gc2NlbmFyaW8gW2RdIGFib3ZlLCBJIHdvdWxk
-IHNheSBpdCBzaG91bGQsIGV2ZW4gaWYgYWxsDQo+IHRoZSBmZCdzIGNvbXBsZXRlZCBzdWNjZXNz
-ZnVsbHkuDQoNCldoYXQgaXMgc2NlbmFyaW8gW2RdPyBZb3UndmUgY29kZSB2ZXJzaW9ucyBhL2Iv
-YyBidXQgbm8gc2NlbmFyaW9zLg0KDQo+IFRoaXMgZG9lcyBub3QgaGFwcGVuIGluIFthXS4gU28g
-dGhpcyBpcyB3aGF0IEkgc2FpZCB3YXMgYWxyZWFkeSBicm9rZW4uDQo+IA0KPiBXaGF0IFtiXSBk
-b2VzIGlzIHRvIG1vdmUgdGhlIHNpZ25hbCBjaGVjayBjbG9zZXIgdG8gdGhlIHJlc3RvcmF0aW9u
-IG9mDQo+IHRoZSBzaWduYWwuIFRoaXMgd2F5IGl0IGlzIGdvb2QuIFNvLCBpZiB0aGVyZSBpcyBh
-IHNpZ25hbCBhZnRlcg0KPiBlcF9wb2xsKCkgcmV0dXJucyBzdWNjZXNzLCBpdCBpcyBub3RpY2Vk
-IGFuZCB0aGUgc2lnbmFsIGlzIGRlbGl2ZXJlZA0KPiB3aGVuIHRoZSBzeXNjYWxsIGV4aXRzLiBC
-dXQsIHRoZSBzeXNjYWxsIGVycm9yIHN0YXR1cyBpdHNlbGYgaXMgMC4NCg0KQnkgMCB5b3UgbWVh
-biA+PSAwID8/DQoNCj4gU28gbm93IFtjXSBpcyBhZGp1c3RpbmcgdGhlIHJldHVybiB2YWx1ZXMg
-YmFzZWQgb24gd2hldGhlciBleHRyYQ0KPiBzaWduYWxzIHdlcmUgZGV0ZWN0ZWQgYWZ0ZXIgZXBf
-cG9sbCgpLiBUaGlzIHBhcnQgd2FzIG5lZWRlZCBldmVuIGZvcg0KPiBbYV0uDQoNCklNSE8gVGhl
-IHJldHVybiB2YWx1ZSBzaG91bGQgbmV2ZXIgYmUgY2hhbmdlZC4NCk11Y2ggbGlrZSB3cml0ZSgp
-IGNhbiByZXR1cm4gYSBwYXJ0aWFsIGxlbmd0aCBpZiBhIHNpZ25hbCBoYXBwZW5zLg0KDQpJU1RN
-IHRoYXQgYSB1c2VyIHNpZ25hbCBoYW5kbGVyIHNob3VsZCBiZSBzY2hlZHVsZWQgdG8gYmUgcnVu
-DQppZiB0aGUgc2lnbmFsIGlzIHBlbmRpbmcgYW5kIG5vdCBtYXNrZWQuDQpPbiByZXR1cm4gdG8g
-dXNlciBhbGwgc2NoZWR1bGVkIHNpZ25hbCBoYW5kbGVycyBhcmUgY2FsbGVkDQoocmVnYXJkbGVz
-cyBhcyB0byB3aGV0aGVyIHRoZSBzaWduYWwgaXMgbWFza2VkIGF0IHRoYXQgdGltZSkuDQpUaGlz
-IG1pZ2h0IG1lYW4gZ2V0dGluZyB0aGUgJ3JldHVybiB0byB1c2VyJyBjb2RlIHRvIHJlc3RvcmUN
-CnRoZSBvcmlnaW5hbCBzaWduYWwgbWFzayBzYXZlZCBmb3IgZXBvbGxfcHdhaXQoKSBhbmQgcHNl
-bGVjdCgpIGV0Yy4NCg0KSWYsIGZvciBzb21lIHBlcnZlcnRlZCByZWFzb24gKGNvbXBhdGliaWxp
-dHkgd2l0aCBicm9rZW4gYXBwcyksDQp5b3UgbmVlZCBlcG9sbF9wd2FpdCgpIHRvIHJldHVybiBF
-SU5UUiBpbnN0ZWFkIG9mIDAgdGhlIHlvdQ0KcHJvYmFibHkgbmVlZCBhIHNwZWNpYWwgJ2tlcm5l
-bCBpbnRlcm5hbCcgZXJybm8gdmFsdWUgdGhhdA0KaXMgYWx3YXlzIGNvbnZlcnRlZCBieSB0aGUg
-c3lzY2FsbCBleGl0IGNvZGUgdG8gRUlOVFIvMA0KKGFuZCBhIHNlY29uZCBvbmUgdGhhdCBpcyBF
-SU5UUi9FQUdBSU4gZXRjKS4NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtl
-c2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBV
-Sw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
+On Fri, 24 May 2019 at 18:11, Daniel Vetter <daniel.vetter@ffwll.ch> wrote:
+>
+> fyi sfr reported that 55143dc23ca4 ("drm/amd/display: Don't load DMCU
+> for Raven 1") breaks the build on x86-64. But I can't repro and didn't
+> immediately see what Kconfig it would need to trigger this, so no
+> idea. So just heads up in case this is real and there's some odd
+> config that hits a bug here ...
+> -Daniel
 
+Okay I've dropped a revert onto fixes, new PR coming up for Linus.
+
+Dave.
+
+>
+>
+> On Fri, May 24, 2019 at 6:28 AM Dave Airlie <airlied@gmail.com> wrote:
+> >
+> > Hey Linus,
+> >
+> > Nothing too unusual here for rc2.
+> >
+> > i915:
+> > - boosting fix
+> > - bump ready task fixes
+> > - GVT - reset fix, error return, TRTT handling fix
+> >
+> > amdgpu:
+> > - DMCU firmware loading fix
+> > - Polaris 10 pci id for kfd
+> > - picasso screen corruption fix
+> > - SR-IOV fixes
+> > - vega driver reload fixes
+> > - SMU locking fix
+> > - compute profile fix for kfd
+> >
+> > vmwgfx:
+> > - integer overflow fixes
+> > - dma sg fix
+> >
+> > sun4i:
+> > - HDMI phy fixes
+> >
+> > gma500:
+> > - LVDS detection fix
+> >
+> > panfrost:
+> > - devfreq selection fix
+> >
+> > drm-fixes-2019-05-24:
+> > drm i915, amdgpu, vmwgfx, sun4i, panfrost, gma500 fixes.
+> > The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+> >
+> >   Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+> >
+> > are available in the Git repository at:
+> >
+> >   git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2019-05-24
+> >
+> > for you to fetch changes up to e1e52981f292b4e321781794eaf6e8a087f4f300:
+> >
+> >   Merge tag 'drm-intel-fixes-2019-05-23' of
+> > git://anongit.freedesktop.org/drm/drm-intel into drm-fixes (2019-05-24
+> > 14:01:00 +1000)
+> >
+> > ----------------------------------------------------------------
+> > drm i915, amdgpu, vmwgfx, sun4i, panfrost, gma500 fixes.
+> >
+> > ----------------------------------------------------------------
+> > Alex Deucher (2):
+> >       drm/amdgpu/soc15: skip reset on init
+> >       drm/amdgpu/gmc9: set vram_width properly for SR-IOV
+> >
+> > Chris Wilson (5):
+> >       drm/i915: Rearrange i915_scheduler.c
+> >       drm/i915: Pass i915_sched_node around internally
+> >       drm/i915: Bump signaler priority on adding a waiter
+> >       drm/i915: Downgrade NEWCLIENT to non-preemptive
+> >       drm/i915: Truly bump ready tasks ahead of busywaits
+> >
+> > Dan Carpenter (2):
+> >       drm/amd/powerplay: fix locking in smu_feature_set_supported()
+> >       drm/i915/gvt: Fix an error code in ppgtt_populate_spt_by_guest_entry()
+> >
+> > Dave Airlie (4):
+> >       Merge branch 'vmwgfx-fixes-5.2' of
+> > git://people.freedesktop.org/~thomash/linux into drm-fixes
+> >       Merge tag 'drm-misc-fixes-2019-05-22' of
+> > git://anongit.freedesktop.org/drm/drm-misc into drm-fixes
+> >       Merge branch 'drm-fixes-5.2' of
+> > git://people.freedesktop.org/~agd5f/linux into drm-fixes
+> >       Merge tag 'drm-intel-fixes-2019-05-23' of
+> > git://anongit.freedesktop.org/drm/drm-intel into drm-fixes
+> >
+> > Ezequiel Garcia (1):
+> >       drm/panfrost: Select devfreq
+> >
+> > Flora Cui (1):
+> >       drm/amdgpu: keep stolen memory on picasso
+> >
+> > Harish Kasiviswanathan (1):
+> >       drm/amdkfd: Fix compute profile switching
+> >
+> > Harry Wentland (2):
+> >       drm/amd/display: Add ASICREV_IS_PICASSO
+> >       drm/amd/display: Don't load DMCU for Raven 1
+> >
+> > Jagan Teki (1):
+> >       drm/sun4i: sun6i_mipi_dsi: Fix hsync_porch overflow
+> >
+> > Jernej Skrabec (2):
+> >       drm/sun4i: Fix sun8i HDMI PHY clock initialization
+> >       drm/sun4i: Fix sun8i HDMI PHY configuration for > 148.5 MHz
+> >
+> > Joonas Lahtinen (1):
+> >       Merge tag 'gvt-fixes-2019-05-21' of
+> > https://github.com/intel/gvt-linux into drm-intel-fixes
+> >
+> > Kent Russell (1):
+> >       drm/amdkfd: Add missing Polaris10 ID
+> >
+> > Murray McAllister (2):
+> >       drm/vmwgfx: NULL pointer dereference from vmw_cmd_dx_view_define()
+> >       drm/vmwgfx: integer underflow in vmw_cmd_dx_set_shader() leading
+> > to an invalid read
+> >
+> > Patrik Jakobsson (1):
+> >       drm/gma500/cdv: Check vbt config bits when detecting lvds panels
+> >
+> > Sean Paul (1):
+> >       Merge drm-misc-next-fixes-2019-05-20 into drm-misc-fixes
+> >
+> > Thomas Hellstrom (4):
+> >       drm/vmwgfx: Don't send drm sysfs hotplug events on initial master set
+> >       drm/vmwgfx: Fix user space handle equal to zero
+> >       drm/vmwgfx: Fix compat mode shader operation
+> >       drm/vmwgfx: Use the dma scatter-gather iterator to get dma addresses
+> >
+> > Weinan (1):
+> >       drm/i915/gvt: emit init breadcrumb for gvt request
+> >
+> > Yan Zhao (4):
+> >       drm/i915/gvt: use cmd to restore in-context mmios to hw for gen9 platform
+> >       drm/i915/gvt: Tiled Resources mmios are in-context mmios for gen9+
+> >       drm/i915/gvt: add 0x4dfc to gen9 save-restore list
+> >       drm/i915/gvt: do not let TRTTE and 0x4dfc write passthrough to hardware
+> >
+> > Yintian Tao (1):
+> >       drm/amdgpu: skip fw pri bo alloc for SRIOV
+> >
+> >  drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c            |  17 +-
+> >  drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c              |  11 +-
+> >  drivers/gpu/drm/amd/amdgpu/soc15.c                 |   5 +
+> >  drivers/gpu/drm/amd/amdkfd/kfd_device.c            |  17 ++
+> >  .../gpu/drm/amd/amdkfd/kfd_device_queue_manager.c  |  11 +-
+> >  drivers/gpu/drm/amd/amdkfd/kfd_priv.h              |   7 +
+> >  drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c  |  12 +-
+> >  drivers/gpu/drm/amd/display/include/dal_asic_id.h  |   7 +-
+> >  drivers/gpu/drm/amd/powerplay/amdgpu_smu.c         |   2 +-
+> >  drivers/gpu/drm/gma500/cdv_intel_lvds.c            |   3 +
+> >  drivers/gpu/drm/gma500/intel_bios.c                |   3 +
+> >  drivers/gpu/drm/gma500/psb_drv.h                   |   1 +
+> >  drivers/gpu/drm/i915/gvt/cmd_parser.c              |  14 +-
+> >  drivers/gpu/drm/i915/gvt/gtt.c                     |   4 +-
+> >  drivers/gpu/drm/i915/gvt/handlers.c                |  15 --
+> >  drivers/gpu/drm/i915/gvt/mmio_context.c            |  23 +-
+> >  drivers/gpu/drm/i915/gvt/scheduler.c               |  23 +-
+> >  drivers/gpu/drm/i915/i915_priolist_types.h         |   5 +-
+> >  drivers/gpu/drm/i915/i915_request.c                |  42 ++--
+> >  drivers/gpu/drm/i915/i915_scheduler.c              | 255 +++++++++++----------
+> >  drivers/gpu/drm/i915/i915_scheduler_types.h        |   3 +-
+> >  drivers/gpu/drm/i915/intel_lrc.c                   |   2 +-
+> >  drivers/gpu/drm/i915/selftests/intel_lrc.c         |  12 +-
+> >  drivers/gpu/drm/panfrost/Kconfig                   |   1 +
+> >  drivers/gpu/drm/panfrost/panfrost_devfreq.c        |  13 +-
+> >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c             |   5 +-
+> >  drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c             |  29 +--
+> >  drivers/gpu/drm/vmwgfx/ttm_object.c                |   2 +-
+> >  drivers/gpu/drm/vmwgfx/vmwgfx_drv.c                |   8 +-
+> >  drivers/gpu/drm/vmwgfx/vmwgfx_drv.h                |   2 +-
+> >  drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c            |  20 +-
+> >  drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c         |  27 +--
+> >  32 files changed, 336 insertions(+), 265 deletions(-)
+>
+>
+>
+> --
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> +41 (0) 79 365 57 48 - http://blog.ffwll.ch
