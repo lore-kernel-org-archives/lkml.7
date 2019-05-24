@@ -2,107 +2,189 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D6B8C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C82F6C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A307217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:39:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 974CF217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:41:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389176AbfEXHjE (ORCPT
+        id S2389080AbfEXHlE convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 03:39:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51854 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388911AbfEXHjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 03:39:03 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AE2663092663;
-        Fri, 24 May 2019 07:38:54 +0000 (UTC)
-Received: from MiWiFi-R3L-srv.redhat.com (ovpn-12-43.pek2.redhat.com [10.72.12.43])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 164815B689;
-        Fri, 24 May 2019 07:38:50 +0000 (UTC)
-From:   Baoquan He <bhe@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     tglx@linutronix.de, mingo@kernel.org, bp@alien8.de, hpa@zytor.com,
-        kirill.shutemov@linux.intel.com, x86@kernel.org, dyoung@redhat.com,
-        Baoquan He <bhe@redhat.com>
-Subject: [PATCH v5 3/3] x86/kdump/64: Change the upper limit of crashkernel reservation
-Date:   Fri, 24 May 2019 15:38:10 +0800
-Message-Id: <20190524073810.24298-4-bhe@redhat.com>
-In-Reply-To: <20190524073810.24298-1-bhe@redhat.com>
-References: <20190524073810.24298-1-bhe@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 24 May 2019 07:39:03 +0000 (UTC)
+        Fri, 24 May 2019 03:41:04 -0400
+Received: from twhmllg3.macronix.com ([211.75.127.131]:58264 "EHLO
+        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388960AbfEXHlD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 03:41:03 -0400
+Received: from twhfmlp1.macronix.com (twhfm1p1.macronix.com [172.17.20.91])
+        by TWHMLLG3.macronix.com with ESMTP id x4O7euXb008092;
+        Fri, 24 May 2019 15:40:56 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
+        by Forcepoint Email with ESMTP id 2CB04E329FEC00A82B3B;
+        Fri, 24 May 2019 15:40:57 +0800 (CST)
+In-Reply-To: <20190521104713.4b3a7769@xps13>
+References: <1558076001-29579-1-git-send-email-masonccyang@mxic.com.tw> <20190520143438.46248bfc@xps13>
+        <OFDCB9EA90.C6F8EA4C-ON48258401.000981AF-48258401.000ED713@mxic.com.tw> <20190521104713.4b3a7769@xps13>
+To:     "Miquel Raynal" <miquel.raynal@bootlin.com>
+Cc:     bbrezillon@kernel.org, computersforpeace@gmail.com,
+        dwmw2@infradead.org, frieder.schrempf@kontron.de,
+        juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, marek.vasut@gmail.com,
+        richard@nod.at, vigneshr@ti.com, zhengxunli@mxic.com.tw
+Subject: Re: [PATCH v2] mtd: rawnand: Add Macronix NAND read retry support
+MIME-Version: 1.0
+X-KeepSent: 2FAE9766:C611328F-48258404:0029BF19;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OF2FAE9766.C611328F-ON48258404.0029BF19-48258404.002A337A@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Fri, 24 May 2019 15:40:57 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2019/05/24 PM 03:40:57,
+        Serialize complete at 2019/05/24 PM 03:40:57
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8BIT
+X-MAIL: TWHMLLG3.macronix.com x4O7euXb008092
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Restrict kdump to only reserve crashkernel below 64TB.
 
-The reaons is that the kdump may jump from 5-level to 4-level, and if
-the kdump kernel is put above 64TB, then the jumping will fail. While the
-1st kernel reserves crashkernel region during bootup, we don't know yet
-which kind of kernel will be loaded after system bootup, 5-level kernel
-or 4-level kernel.
+Hi Miquel,
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Acked-by: Dave Young <dyoung@redhat.com>
----
- arch/x86/kernel/setup.c | 15 ++++++++++++---
- include/linux/sizes.h   |  1 +
- 2 files changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 08a5f4a131f5..dcbdf54fb5c1 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -453,15 +453,24 @@ static void __init memblock_x86_reserve_range_setup_data(void)
- #define CRASH_ALIGN		SZ_16M
+> > > 
+> > > > +
+> > > > +      ret =  nand_get_features(chip, feature_addr, feature);
+> > > > +      if (ret || feature[0] != mode)
+> > > > +         pr_err("Failed to verify read retry moded:%d(%d)\n",
+> > > > +                mode, feature[0]); 
+> > > 
+> > > if ret == 0 but feature[0] != mode, shouldn't you return an error? 
+> > 
+> > okay, will fix.
+> > 
+> > > 
+> > > > +   }
+> > > > +
+> > > > +   return ret; 
+> > > 
+> > > This will produce a Warning at compile time (ret may be used
+> > > uninitialized). Have you tested it? 
+> > 
+> > Tool chain I used is "gcc-arm-linux-gnueabi" and no Warning at compile 
+
+> > time.
+> 
+> What's the output of:
+> gcc-arm-linux-gnueabi -v
+> ?
+> 
+
+Oops, it's gcc 4.8.3 20131111 and kind of obsolete.
+That's why no Warning at compile time.
+
+> > 
+> > Patch it to:
+> > 
+-----------------------------------------------------------------------------> 
  
- /*
-- * Keep the crash kernel below this limit.  On 32 bits earlier kernels
-- * would limit the kernel to the low 512 MiB due to mapping restrictions.
-+ * Keep the crash kernel below this limit.
-+ *
-+ * On 32 bits earlier kernels would limit the kernel to the low 512 MiB
-+ * due to mapping restrictions.
-+ *
-+ * On 64bit, kdump kernel need be restricted to be under 64TB, which is
-+ * the upper limit of system RAM in 4-level paing mode. Since the kdump
-+ * jumping could be from 5-level to 4-level, the jumping will fail if
-+ * kernel is put above 64TB, and there's no way to detect the paging mode
-+ * of the kernel which will be loaded for dumping during the 1st kernel
-+ * bootup.
-  */
- #ifdef CONFIG_X86_32
- # define CRASH_ADDR_LOW_MAX	SZ_512M
- # define CRASH_ADDR_HIGH_MAX	SZ_512M
- #else
- # define CRASH_ADDR_LOW_MAX	SZ_4G
--# define CRASH_ADDR_HIGH_MAX	MAXMEM
-+# define CRASH_ADDR_HIGH_MAX	SZ_64T
- #endif
- 
- static int __init reserve_crashkernel_low(void)
-diff --git a/include/linux/sizes.h b/include/linux/sizes.h
-index fbde0bc7e882..8651269cb46c 100644
---- a/include/linux/sizes.h
-+++ b/include/linux/sizes.h
-@@ -47,5 +47,6 @@
- #define SZ_2G				0x80000000
- 
- #define SZ_4G				_AC(0x100000000, ULL)
-+#define SZ_64T				_AC(0x400000000000, ULL)
- 
- #endif /* __LINUX_SIZES_H__ */
--- 
-2.17.2
+> >  static int macronix_nand_setup_read_retry(struct nand_chip *chip, int 
+
+> > mode)
+> >  {
+> >          u8 feature[ONFI_SUBFEATURE_PARAM_LEN];
+> >          int ret, feature_addr = ONFI_FEATURE_ADDR_READ_RETRY;
+> > 
+> >          if (chip->parameters.supports_set_get_features &&
+> >              test_bit(feature_addr, chip->parameters.set_feature_list) 
+&&
+> >              test_bit(feature_addr, 
+chip->parameters.get_feature_list)) {
+> > 
+> >                  feature[0] = mode;
+> >                  ret =  nand_set_features(chip, feature_addr, 
+feature);
+> 
+>                          ^ extra space, please be careful with the
+>                          typos, and run checkpatch.pl --strict before
+>                          sending patches.
+> 
+> >                  if (ret) {
+> >                          pr_err("Failed to set read retry moded:%d\n", 
+
+> > mode);
+> >                          goto err_out;
+> >                  }
+> > 
+> >                  ret =  nand_get_features(chip, feature_addr, 
+feature);
+> >                  if (ret) {
+> >                          pr_err("Failed to get read retry moded:%d\n", 
+
+> > mode);
+> >                          goto err_out;
+> >                  } else if (feature[0] != mode) {
+> >                          pr_err("Failed to verify read retry 
+> > moded:%d(%d)\n",
+> >                                  mode, feature[0]);
+> >                          return -EIO;
+> 
+> That's not what I meant. You can keep the former condition but if !ret
+> then ret = -EIO for instance.
+> 
+> >                  }
+> >          }
+> > 
+> >  err_out:
+> >          return ret;
+> 
+> Again, do not jump to a single return call, directly do the return from
+> the point where you want to quit the function.
+> 
+> The problem should be that ret may be used uninitialized, the compiler
+> should tell you that.
+
+got it and thanks for your review.
+
+> 
+> Thanks,
+> Miquèl
+
+best regards,
+Mason
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
 
