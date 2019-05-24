@@ -2,127 +2,78 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA82C282E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B31C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74864206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:50:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P3DLjgak"
+	by mail.kernel.org (Postfix) with ESMTP id 6DE43206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:51:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403929AbfEXNun (ORCPT
+        id S2403944AbfEXNu7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 09:50:43 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:35671 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391124AbfEXNum (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 09:50:42 -0400
-Received: by mail-qk1-f196.google.com with SMTP id c15so7640585qkl.2;
-        Fri, 24 May 2019 06:50:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=p8F4WyQZW+GI44XlYkE2TwGfMqACxuEMgKBoIKdGQcU=;
-        b=P3DLjgakvjT7EAxdRbyr6rciA5GOllMVOr5E5Qalw2k7kdxVQRBO5KJoQWjVXPFDbr
-         2LXSXh/tlmEDqR3dnEYOWJQQSWQv2lcz+5gxg0hBY7wow5DpVBwYTPHNmreVZAKlNG8Q
-         BSBG09n9QlR6TBvyRaeUp+zTs8Amn+Z2mMUFMZgSdR6LSvxLVnNwbmwlMbl0sk80WKo6
-         6+NBDTPmQ72c6VgiwkRs7a4b9rQGKRWGPTtEQWwQgG6GipX6DyHgNpy6Ng+A7U0cek0M
-         qcGoE0VWSc2W3m+uLHHttAPTwQH0MbqBUyh9oK2wiJhDAd6whVpsz1t8hvnYV+lXV+mX
-         ytdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=p8F4WyQZW+GI44XlYkE2TwGfMqACxuEMgKBoIKdGQcU=;
-        b=LrY5xsBu/rBQW/NZvTaIqdhVMc0+Dh5ulkHr9d4WWCa55xgM9kDzlcS1p0ZYmdwxEk
-         TszH7kl0VLuOcJMJSrKjOtu7lk1ecMDg3hoUcOoKk1jWKLA6OnnFbLZg/JyaW7/0gUb5
-         7QfreZxA0Nz+yijyyjkLxP5n/GG7K6YQvi6UcWSaxUS8XEbw25lIOKl+lMRcST0vQ7E5
-         Rf2K+qjauleaOzwuLOyq9nFNXjHDQ5Z883CkoLg4ig8B/Je3bbWtnEQauxl8AtXsFaM7
-         vxUeAhp18g/NbxZIWTC/NRiMHO5461sEEgjm3M2nKNTQDtwGYBtf9TJetQVrItEB/Mkp
-         jlAQ==
-X-Gm-Message-State: APjAAAWYH3VR+EnN84oDHPPUMxLkJ3xwO0yWJYmzPuW0TcJNB1yqka1K
-        GRHWgt7YzBY8L0aGt2N9r+o=
-X-Google-Smtp-Source: APXvYqxIb7KnFdaoUvh+xhdTgH619i0pVWqH9VkoiettkG+ekigRjW25Pf0XMhomyWxIbx+I7n2LbQ==
-X-Received: by 2002:ac8:2e74:: with SMTP id s49mr85793416qta.23.1558705841124;
-        Fri, 24 May 2019 06:50:41 -0700 (PDT)
-Received: from smtp.gmail.com ([143.107.45.1])
-        by smtp.gmail.com with ESMTPSA id u2sm1064043qtq.45.2019.05.24.06.50.37
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 24 May 2019 06:50:40 -0700 (PDT)
-Date:   Fri, 24 May 2019 10:50:35 -0300
-From:   Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To:     Alexandru Ardelean <ardeleanalex@gmail.com>
-Cc:     Rodrigo Ribeiro <rodrigorsdc@gmail.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        LKML <linux-kernel@vger.kernel.org>, kernel-usp@googlegroups.com,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: Re: [PATCH] staging: iio: adis16240: add of_match_table entry
-Message-ID: <20190524135034.u2mbtq2jwhp6ent7@smtp.gmail.com>
-References: <20190524032950.2398-1-rodrigorsdc@gmail.com>
- <CA+U=DspqLFBMrRcV6VmypHOpE6Qs7OqmiDzWAd6pxpA7B=4S4g@mail.gmail.com>
+        Fri, 24 May 2019 09:50:59 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54908 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403833AbfEXNu7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 09:50:59 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 37795C079901;
+        Fri, 24 May 2019 13:50:59 +0000 (UTC)
+Received: from plouf.redhat.com (ovpn-204-178.brq.redhat.com [10.40.204.178])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1CD397BE7E;
+        Fri, 24 May 2019 13:50:53 +0000 (UTC)
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        KT Liao <kt.liao@emc.com.tw>, Rob Herring <robh+dt@kernel.org>,
+        Aaron Ma <aaron.ma@canonical.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: [PATCH v3 0/8] Fix Elan I2C touchpads in latest generation from Lenovo
+Date:   Fri, 24 May 2019 15:50:38 +0200
+Message-Id: <20190524135046.17710-1-benjamin.tissoires@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+U=DspqLFBMrRcV6VmypHOpE6Qs7OqmiDzWAd6pxpA7B=4S4g@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Fri, 24 May 2019 13:50:59 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexandru,
+Here comes the v3.
 
-On 05/24, Alexandru Ardelean wrote:
-> On Fri, May 24, 2019 at 6:30 AM Rodrigo Ribeiro <rodrigorsdc@gmail.com> wrote:
-> >
-> > This patch adds of_match_table entry in device driver in order to
-> > enable spi fallback probing.
-> >
-> > Signed-off-by: Rodrigo Ribeiro <rodrigorsdc@gmail.com>
-> > Reviewed-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> > ---
-> >  drivers/staging/iio/accel/adis16240.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/staging/iio/accel/adis16240.c b/drivers/staging/iio/accel/adis16240.c
-> > index 8c6d23604eca..b80c8529784b 100644
-> > --- a/drivers/staging/iio/accel/adis16240.c
-> > +++ b/drivers/staging/iio/accel/adis16240.c
-> > @@ -444,6 +444,7 @@ MODULE_DEVICE_TABLE(of, adis16240_of_match);
-> >  static struct spi_driver adis16240_driver = {
-> >         .driver = {
-> >                 .name = "adis16240",
-> > +               .of_match_table = adis16240_of_match,
-> 
-> This patch is missing the actual table.
+Very few changes from v2:
+- dropped the last 2 patches where I tried to be smart, and it turns out
+  that it was not very a good idea
+- also removed the only other blacklisted model, as it has been tested with
+  the v2 and it is also now working properly
 
-Struct with compatible devices table was included separately in a
-previous patch at commit d9e533b6c0a26c7ef8116b7f3477c164c07bb6fb.
-Yeah, I also thought it was missing the match table the first time I was
-this patch. It's really confusing when we have two patches, one
-depending on another, that are not part of the same patch set. We're
-trying to avoid things like this the most but that slipped out from our
-internal review. We're sorry about that.
+Cheers,
+Benjamin
 
-> 
-> >         },
-> >         .probe = adis16240_probe,
-> >         .remove = adis16240_remove,
-> > --
-> > 2.20.1
-> >
+Benjamin Tissoires (8):
+  Input: elantech - query the min/max information beforehand too
+  Input: elantech - add helper function elantech_is_buttonpad()
+  Input: elantech - detect middle button based on firmware version
+  dt-bindings: add more optional properties for elan_i2c touchpads
+  Input: elan_i2c - do not query the info if they are provided
+  Input: elantech/SMBus - export all capabilities from the PS/2 node
+  Input: elan_i2c - handle physical middle button
+  Input: elantech: remove P52 and P72 from SMBus blacklist
+
+ .../devicetree/bindings/input/elan_i2c.txt    |  11 +
+ drivers/input/mouse/elan_i2c_core.c           |  72 +++-
+ drivers/input/mouse/elantech.c                | 320 ++++++++++--------
+ drivers/input/mouse/elantech.h                |   8 +
+ 4 files changed, 246 insertions(+), 165 deletions(-)
+
+-- 
+2.21.0
+
