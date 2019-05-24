@@ -2,71 +2,75 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 859C0C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE43AC282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB4C42175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:07:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CD0C2175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 10:07:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="lvVH5C8f"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="TF4cfbuI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390366AbfEXKHu (ORCPT
+        id S2390577AbfEXKHz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 06:07:50 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:38985 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390106AbfEXKHt (ORCPT
+        Fri, 24 May 2019 06:07:55 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:33615 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390106AbfEXKHy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 06:07:49 -0400
-Received: by mail-it1-f196.google.com with SMTP id 9so12982967itf.4
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 03:07:48 -0700 (PDT)
+        Fri, 24 May 2019 06:07:54 -0400
+Received: by mail-io1-f66.google.com with SMTP id z4so7353843iol.0
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 03:07:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=v2UKxBj/16PFnPT0opJ+Wxp3U9KN6SIstIRPi4CR6Dg=;
-        b=lvVH5C8fcVBxVLdFKCCU7ZqdcvQC84ZTeT1hnQfp2l+m4+WAl8xKSkJ62hp4jGjoRP
-         pZZCtvosTk3b1cuR8ZH2y5aeRTZiaMcez8/hglgDIG8f+BgvYF1xQa8Q16acwfmqNtsP
-         EAORiPyjxlLePwEQdO4Ju5Xmo5mFeB9cGNrWw=
+        bh=TUgAZ6G4gvf+slUqb9uc+iwVC1m/3d6V2K633s4jrTg=;
+        b=TF4cfbuIVUIf/mM/PjvuU2rmu3iPkhWBbwQvKTiRwPaDZyMqpwaKIV/Ucx5tADKIQ2
+         HLgZhqUi739/CEIDRH8pBVVku19c3lIdQQttRRB+KAnl+kisiJ3tkBVxtDROIujKuFJY
+         D29ppmoHxK/mAIUKubq81TwX1b4yPzj94Jlok=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=v2UKxBj/16PFnPT0opJ+Wxp3U9KN6SIstIRPi4CR6Dg=;
-        b=WPvvRAfoRp3SeORuDvrCSNmhWIqB+MPD/vCP0883a5ecIoKSJZg1E7BtXO3CZ6OyKT
-         6Xe7Mxx48aTZdOu90ESSQVrdTeCvSq22aZ2URt82BC9lZW7ET6yu84vgpc4roLJXP/9k
-         UX6O4LsCkQ8M4y3TCHYwwzJSGX2SF7zwMTfIewNRNzhetB6q89Au3VupNf+03xaGtoL5
-         vbfw7XIjQJsR2iE85zdIydffBu1u2TdAyk8HzPBS+t4Z45nxjmQl9WevnUvT5eJr759Q
-         /2YYWv3C2TSsPpg2Re+P+1wq3lY6HJm1MRa1gMxE+g0iNdGS64tAo4uiVsh4elFpbmkk
-         ffuw==
-X-Gm-Message-State: APjAAAV59wSgD3F9VD5dL2rQwYiYJZYuf1MVA8iCglwfQa8rGePIaJU+
-        C7cLg1mqrw0i5K3QMU/WbV6AF7zSEoU3cHge4+4AYQ==
-X-Google-Smtp-Source: APXvYqzZYv+7JHLFo0KwfeFhhGoWLlvdvku8Io/xT0x0+uSdJAzpclvRy5FUulBPbGFLltElswI7+88s+Lg69y+sBgc=
-X-Received: by 2002:a24:a004:: with SMTP id o4mr16634448ite.167.1558692468219;
- Fri, 24 May 2019 03:07:48 -0700 (PDT)
+        bh=TUgAZ6G4gvf+slUqb9uc+iwVC1m/3d6V2K633s4jrTg=;
+        b=IjuZ5MOOmgsAc5CxDOrExIFMz7a2z7wIzkcnwlF+mRHiUi1biiKl+qpWvERAIKzu54
+         KOTZ9Rw9n4FGl8sxVeA0W3J2fb9/Uii5MsSFqsF4p1aq3C1qPmFZJ/tyz42ahW/dOG07
+         BXF2Qjcqawif2nsKQCKeArxdvfwX2rFHsaobhxopkl+nkzeIaOJPWhlEqEAu0MzyUmAl
+         GUh3CK1CgMe70L6DjpoME6xABfL0i36NmltFFtbkERcQIVO6+NcflUJQR7dDbNZ18201
+         BcQ1fVdMA73vZzyOgwZk8hWKHxvGdmlxyJ31qSSMGMwvbzInTXvobOmmxqu53NAv6qjU
+         8vfA==
+X-Gm-Message-State: APjAAAWuhpr/EodOpgyEppq+Zpl+cM1mu7lgfA+Pwbd78hJXCZl5qYDt
+        ZjUYc/e8e3LsB6+RhAupvog0v9qbu/LEox9kIGqixw==
+X-Google-Smtp-Source: APXvYqwmVWbvA8JWDP7ZREuSZZ6USfKRDsF78w4YD1IvT2iQBryzh6GoPGvJRrLGpAZC28dLBcMDdVE9LG5qi3N05aQ=
+X-Received: by 2002:a5d:994d:: with SMTP id v13mr4961505ios.77.1558692473939;
+ Fri, 24 May 2019 03:07:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190520090318.27570-1-jagan@amarulasolutions.com>
- <20190520090318.27570-5-jagan@amarulasolutions.com> <20190523204823.mx7l4ozklzdh7npn@flea>
-In-Reply-To: <20190523204823.mx7l4ozklzdh7npn@flea>
+References: <20190124195900.22620-1-jagan@amarulasolutions.com>
+ <20190124195900.22620-12-jagan@amarulasolutions.com> <20190125212433.ni2jg3wvpyjazlxf@flea>
+ <CAMty3ZAsH2iZ+JEqTE3D58aXfGuhMSg9YoO56ZhhOeE4c4yQHQ@mail.gmail.com>
+ <20190129151348.mh27btttsqcmeban@flea> <CAMty3ZAjAoti8Zu80c=OyCA+u-jtQnkidsKSNz_c2OaRswqc3w@mail.gmail.com>
+ <20190201143102.rcvrxstc365mezvx@flea>
+In-Reply-To: <20190201143102.rcvrxstc365mezvx@flea>
 From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Fri, 24 May 2019 15:37:36 +0530
-Message-ID: <CAMty3ZA0S=+8NBrQZvP6sFdzSYWqhNZL_KjkJAQ0jTc2RVivrw@mail.gmail.com>
-Subject: Re: [PATCH v10 04/11] drm/sun4i: tcon: Compute DCLK dividers based on
- format, lanes
+Date:   Fri, 24 May 2019 15:37:42 +0530
+Message-ID: <CAMty3ZC3_+z1upH4Y08R1z=Uq1C=OpWETNrBO8nGRoHhuNrHSA@mail.gmail.com>
+Subject: Re: [PATCH v6 11/22] clk: sunxi-ng: a64: Add minimum rate for PLL_MIPI
 To:     Maxime Ripard <maxime.ripard@bootlin.com>
 Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Chen-Yu Tsai <wens@csie.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        Bhushan Shah <bshah@mykolab.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        =?UTF-8?B?5Z2a5a6a5YmN6KGM?= <powerpan@qq.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
         Michael Trimarchi <michael@amarulasolutions.com>,
         linux-amarula <linux-amarula@amarulasolutions.com>,
         linux-sunxi <linux-sunxi@googlegroups.com>
@@ -76,99 +80,176 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 2:18 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+On Fri, Feb 1, 2019 at 8:01 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 >
-> On Mon, May 20, 2019 at 02:33:11PM +0530, Jagan Teki wrote:
-> > pll-video => pll-mipi => tcon0 => tcon0-pixel-clock is the typical
-> > MIPI clock topology in Allwinner DSI controller.
+> On Tue, Jan 29, 2019 at 11:01:31PM +0530, Jagan Teki wrote:
+> > On Tue, Jan 29, 2019 at 8:43 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > >
+> > > On Mon, Jan 28, 2019 at 03:06:10PM +0530, Jagan Teki wrote:
+> > > > On Sat, Jan 26, 2019 at 2:54 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > > > >
+> > > > > On Fri, Jan 25, 2019 at 01:28:49AM +0530, Jagan Teki wrote:
+> > > > > > Minimum PLL used for MIPI is 500MHz, as per manual, but
+> > > > > > lowering the min rate by 300MHz can result proper working
+> > > > > > nkms divider with the help of desired dclock rate from
+> > > > > > panel driver.
+> > > > > >
+> > > > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > > > > Acked-by: Stephen Boyd <sboyd@kernel.org>
+> > > > >
+> > > > > Going 200MHz below the minimum doesn't seem really reasonable. What
+> > > > > is the issue that you are trying to fix here?
+> > > > >
+> > > > > It looks like it's picking bad dividers, but if that's the case, this
+> > > > > isn't the proper fix.
+> > > >
+> > > > As I stated in earlier patches, the whole idea is pick the desired
+> > > > dclk divider based dclk rate. So the dotclock, sun4i_dclk_round_rate
+> > > > is unable to get the proper dclk divider at the end, so it eventually
+> > > > picking up wrong divider value and fired vblank timeout.
+> > > >
+> > > > So, we come-up with optimal and working min_rate 300MHz in pll-mipi to
+> > > > get the desired clock something like below.
+> > > > [    2.415773] [drm] No driver support for vblank timestamp query.
+> > > > [    2.424116] sun4i_dclk_round_rate: min_div = 4 max_div = 127, rate = 55000000
+> > > > [    2.424172] ideal = 220000000, rounded = 0
+> > > > [    2.424176] ideal = 275000000, rounded = 0
+> > > > [    2.424194] ccu_nkm_round_rate: rate = 330000000
+> > > > [    2.424197] ideal = 330000000, rounded = 330000000
+> > > > [    2.424201] sun4i_dclk_round_rate: div = 6 rate = 55000000
+> > > > [    2.424205] sun4i_dclk_round_rate: min_div = 4 max_div = 127, rate = 55000000
+> > > > [    2.424209] ideal = 220000000, rounded = 0
+> > > > [    2.424213] ideal = 275000000, rounded = 0
+> > > > [    2.424230] ccu_nkm_round_rate: rate = 330000000
+> > > > [    2.424233] ideal = 330000000, rounded = 330000000
+> > > > [    2.424236] sun4i_dclk_round_rate: div = 6 rate = 55000000
+> > > > [    2.424253] ccu_nkm_round_rate: rate = 330000000
+> > > > [    2.424270] ccu_nkm_round_rate: rate = 330000000
+> > > > [    2.424278] sun4i_dclk_recalc_rate: val = 1, rate = 330000000
+> > > > [    2.424281] sun4i_dclk_recalc_rate: val = 1, rate = 330000000
+> > > > [    2.424306] ccu_nkm_set_rate: rate = 330000000, parent_rate = 297000000
+> > > > [    2.424309] ccu_nkm_set_rate: _nkm.n = 5
+> > > > [    2.424311] ccu_nkm_set_rate: _nkm.k = 2
+> > > > [    2.424313] ccu_nkm_set_rate: _nkm.m = 9
+> > > > [    2.424661] sun4i_dclk_set_rate div 6
+> > > > [    2.424668] sun4i_dclk_recalc_rate: val = 6, rate = 55000000
+> > > >
+> > > > But look like this wouldn't valid for all other dclock rates, say BPI
+> > > > panel has 30MHz clock that would failed with this logic.
+> > > >
+> > > > On the other side Allwinner BSP calculating dclk divider based on the
+> > > > SoC's. for A33 [1] it is fixed dclk divider of 4 and for A64 is is
+> > > > calculated based on the bpp/lanes.
+> > >
+> > > It looks like the A64 has the same divider of 4:
+> > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c#L12
+> > >
+> > > I think you're confusing it with the ratio between the pixel clock and
+> > > the dotclock, called dsi_div:
+> > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/disp_al.c#L198
 > >
-> > TCON dotclock driver is computing the desired DCLK divider based on
-> > panel pixel clock along with input DCLK min, max divider values from
-> > tcon driver and that would eventually set the pll-mipi clock rate.
+> > Ahh.. I thought this initially but as far as DSI clock computation is
+> > concern, the L12 tcon_div is local variable which is used for edge0
+> > computation in burst mode and not for the dsi clock computation. Since
+> > the BSP is unable to get the tcon_div during edge0 computation, they
+> > defined it locally I think.
 > >
-> > The current code is passing dsi min and max divider value as 4 via
-> > tcon driver which would ended-up triggering below vblank wait timed out
-> > warning on "bananapi,s070wv20-ct16" panel.
+> > You can see the lcd_clk_config() code [2], where we can see DSI clock
+> > computation using dsi_div value.
 > >
-> >  WARNING: CPU: 0 PID: 31 at drivers/gpu/drm/drm_atomic_helper.c:1429 drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0
-> >  [CRTC:46:crtc-0] vblank wait timed out
-> >  Modules linked in:
-> >  CPU: 0 PID: 31 Comm: kworker/0:1 Not tainted 5.1.0-next-20190514-00025-g5186cdf10757-dirty #6
-> >  Hardware name: Allwinner sun8i Family
-> >  Workqueue: events deferred_probe_work_func
-> >  [<c010ed54>] (unwind_backtrace) from [<c010b76c>] (show_stack+0x10/0x14)
-> >  [<c010b76c>] (show_stack) from [<c0688c70>] (dump_stack+0x84/0x98)
-> >  [<c0688c70>] (dump_stack) from [<c011d9e4>] (__warn+0xfc/0x114)
-> >  [<c011d9e4>] (__warn) from [<c011da40>] (warn_slowpath_fmt+0x44/0x68)
-> >  [<c011da40>] (warn_slowpath_fmt) from [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0)
-> >  [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1) from [<c040e694>] (drm_atomic_helper_commit_tail_rpm+0x5c/0x6c)
-> >  [<c040e694>] (drm_atomic_helper_commit_tail_rpm) from [<c040e4dc>] (commit_tail+0x40/0x6c)
-> >  [<c040e4dc>] (commit_tail) from [<c040e5cc>] (drm_atomic_helper_commit+0xbc/0x128)
-> >  [<c040e5cc>] (drm_atomic_helper_commit) from [<c0411b64>] (restore_fbdev_mode_atomic+0x1cc/0x1dc)
-> >  [<c0411b64>] (restore_fbdev_mode_atomic) from [<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked+0x54/0xa0)
-> >  [<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked) from [<c0415774>] (drm_fb_helper_set_par+0x30/0x54)
-> >  [<c0415774>] (drm_fb_helper_set_par) from [<c03ad450>] (fbcon_init+0x560/0x5ac)
-> >  [<c03ad450>] (fbcon_init) from [<c03eb8a0>] (visual_init+0xbc/0x104)
-> >  [<c03eb8a0>] (visual_init) from [<c03ed1b8>] (do_bind_con_driver+0x1b0/0x390)
-> >  [<c03ed1b8>] (do_bind_con_driver) from [<c03ed780>] (do_take_over_console+0x13c/0x1c4)
-> >  [<c03ed780>] (do_take_over_console) from [<c03ad800>] (do_fbcon_takeover+0x74/0xcc)
-> >  [<c03ad800>] (do_fbcon_takeover) from [<c013c9c8>] (notifier_call_chain+0x44/0x84)
-> >  [<c013c9c8>] (notifier_call_chain) from [<c013cd20>] (__blocking_notifier_call_chain+0x48/0x60)
-> >  [<c013cd20>] (__blocking_notifier_call_chain) from [<c013cd50>] (blocking_notifier_call_chain+0x18/0x20)
-> >  [<c013cd50>] (blocking_notifier_call_chain) from [<c03a6e44>] (register_framebuffer+0x1e0/0x2f8)
-> >  [<c03a6e44>] (register_framebuffer) from [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock+0x2fc/0x50c)
-> >  [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock) from [<c04158c8>] (drm_fbdev_client_hotplug+0xe8/0x1b8)
-> >  [<c04158c8>] (drm_fbdev_client_hotplug) from [<c0415a20>] (drm_fbdev_generic_setup+0x88/0x118)
-> >  [<c0415a20>] (drm_fbdev_generic_setup) from [<c043f060>] (sun4i_drv_bind+0x128/0x160)
-> >  [<c043f060>] (sun4i_drv_bind) from [<c044b588>] (try_to_bring_up_master+0x164/0x1a0)
-> >  [<c044b588>] (try_to_bring_up_master) from [<c044b658>] (__component_add+0x94/0x140)
-> >  [<c044b658>] (__component_add) from [<c0445e0c>] (sun6i_dsi_probe+0x144/0x234)
-> >  [<c0445e0c>] (sun6i_dsi_probe) from [<c0452ee4>] (platform_drv_probe+0x48/0x9c)
-> >  [<c0452ee4>] (platform_drv_probe) from [<c04512bc>] (really_probe+0x1dc/0x2c8)
-> >  [<c04512bc>] (really_probe) from [<c0451508>] (driver_probe_device+0x60/0x160)
-> >  [<c0451508>] (driver_probe_device) from [<c044f794>] (bus_for_each_drv+0x74/0xb8)
-> >  [<c044f794>] (bus_for_each_drv) from [<c045106c>] (__device_attach+0xd0/0x13c)
-> >  [<c045106c>] (__device_attach) from [<c0450464>] (bus_probe_device+0x84/0x8c)
-> >  [<c0450464>] (bus_probe_device) from [<c04508f0>] (deferred_probe_work_func+0x64/0x90)
-> >  [<c04508f0>] (deferred_probe_work_func) from [<c0135970>] (process_one_work+0x204/0x420)
-> >  [<c0135970>] (process_one_work) from [<c013690c>] (worker_thread+0x274/0x5a0)
-> >  [<c013690c>] (worker_thread) from [<c013b3d8>] (kthread+0x11c/0x14c)
-> >  [<c013b3d8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
-> >  Exception stack(0xde539fb0 to 0xde539ff8)
-> >  9fa0:                                     00000000 00000000 00000000 00000000
-> >  9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> >  9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> >  ---[ end trace 4017fea4906ab391 ]---
+> > Here is dump after the in Line 792 which is after computation[3]
+> > [   10.800737] lcd_clk_config: dsi_div = 6, tcon_div = 4, lcd_div = 1
+> > [   10.800743] lcd_clk_config: lcd_dclk_freq = 55, dclk_rate = 55000000
+> > [   10.800749] lcd_clk_config: lcd_rate = 330000000, pll_rate = 330000000
 > >
-> > But accordingly to Allwinner A33, A64 BSP codes [1] [2] this divider
-> > is clearly using 'format/lanes' for dsi divider value, dsi_clk.clk_div
-> >
-> > Which would compute the pll_freq and set a clock rate for it in
-> > [3] and [4] respectively.
-> >
-> > The same issue has reproduced in A33, A64 with 4-lane and 2-lane devices
-> > and got fixed with this computation logic 'format/lanes', so this patch
-> > using dclk min and max dividers as per BSP.
-> >
-> > [1] https://github.com/BPI-SINOVOIP/BPI-M2M-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp/de/disp_lcd.c#L1106
-> > [2] https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/disp_al.c#L213
-> > [3] https://github.com/BPI-SINOVOIP/BPI-M2M-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp/de/disp_lcd.c#L1127
-> > [4] https://github.com/BPI-SINOVOIP/BPI-M2M-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp/de/disp_lcd.c#L1161
+> > The above dump the lcd_rate 330MHz is computed with panel clock, 55MHz
+> > into dsi_div 6. So this can be our actual divider values dclk_min_div,
+> > dclk_max_div in sun4i_dclk_round_rate (from
+> > drivers/gpu/drm/sun4i/sun4i_dotclock.c)
 >
-> In that mail, I've pointed out that clk_div isn't used for the TCON dclk divider:
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2019-February/629596.html
+> I wish it was in your commit log in the first place, instead of having
+> to exchange multiple mails over this.
 >
-> The only reply you've sent is that you indeed see that the divider is
-> set to 4 in the BSP, but you're now saying that the BSP can change
-> it. If so, then please point exactly the flaw in the explanation in
-> that mail.
+> However, I don't think that's quite true, and it might be a bug in
+> Allwinner's implementation (or rather something quite confusing).
+>
+> You're right that the lcd_rate and pll_rate seem to be generated from
+> the pixel clock, and it indeed looks like the ratio between the pixel
+> clock and the TCON dotclock is defined through the number of bits per
+> lanes.
+>
+> However, in this case, dsi_rate is actually the same than lcd_rate,
+> since pll_rate is going to be divided by dsi_div:
+> https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L791
+>
+> Since lcd_div is 1, it also means that in this case, dsi_rate ==
+> dclk_rate.
+>
+> The DSI module clock however, is always set to 148.5 MHz. Indeed, if
+> we look at:
+> https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L804
+>
+> We can see that the rate in clk_info is used if it's different than
+> 0. This is filled by disp_al_lcd_get_clk_info, which, in the case of a
+> DSI panel, will hardcode it to 148.5 MHz:
+> https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/disp_al.c#L164
+>
+> So, the DSI clock is set to this here:
+> https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L805
+>
+> The TCON *module* clock (the one in the clock controller) has been set
+> to lcd_rate (so the pixel clock times the number of bits per lane) here:
+> https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L800
+>
+> And the PLL has been set to the same rate here:
+> https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L794
 
-Frankly, I have explained these details in commit message and previous
-version patch[1] with print messages on the code.
+Let me explain, something more.
 
-BSP has tcon_div and dsi_div. dsi_div is dynamic which depends on
-bpp/lanes and it indeed depends on PLL computation (not tcon_div),
-anyway I have explained again on this initial link you mentioned.
-Please have a look and get back.
+According to bsp there are clk_info.tcon_div which I will explain below.
+clk_info.dsi_div which is dynamic and it depends on bpp/lanes, so it
+is 6 for 24bpp and 4 lanes devices.
 
-[1] https://patchwork.freedesktop.org/patch/291525/
+PLL rate here depends on dsi_div (not tcon_div)
+
+Code here
+https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L784
+
+is computing the actual set rate, which depends on dsi_rate.
+
+lcd_rate = dclk_rate * clk_info.dsi_div;
+dsi_rate = pll_rate / clk_info.dsi_div;
+
+Say if the dclk_rate 148MHz then the dsi_rate is 888MHz which set rate
+for above link you mentioned.
+
+Here are the evidence with some prints.
+
+https://gist.github.com/openedev/9bae2d87d2fcc06b999fe48c998b7043
+https://gist.github.com/openedev/700de2e3701b2bf3ad1aa0f0fa862c9a
+
+>
+> Let's take a step back now: that function we were looking at,
+> lcd_clk_config, is called by lcd_clk_enable, which is in turn called
+> by disp_lcd_enable here:
+> https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L1328
+>
+> The next function being called is disp_al_lcd_cfg, and that function
+> will hardcode the TCON dotclock divider to 4, here:
+> https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/disp_al.c#L240
+
+tcon_div from BSP point-of-view of there are two variants
+00) clk_info.tcon_div which is 4 and same is set the divider position
+in SUN4I_TCON0_DCLK_REG (like above link refer)
+01) tcon_div which is 4 and used for edge timings computation
+https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c#L12
+
+The real reason for 01) is again 4 is they set the divider to 4 in 00)
+which is technically wrong because the dividers which used during
+dotclock in above (dsi_div) should be used here as well. Since there
+is no dynamic way of doing this BSP hard-coding these values.
+
+Patches 5,6,7 on this series doing this
+https://patchwork.freedesktop.org/series/60847/
+
+Hope this explanation helps?
