@@ -2,140 +2,230 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F37C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 19:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C8BC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 19:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D845F206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 19:49:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 587BA217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 19:53:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fkt1xXfH"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="zAMh4vLL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732131AbfEXTtf (ORCPT
+        id S2403792AbfEXTxI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 15:49:35 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43248 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729017AbfEXTte (ORCPT
+        Fri, 24 May 2019 15:53:08 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:42722 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730068AbfEXTxI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 15:49:34 -0400
-Received: by mail-wr1-f68.google.com with SMTP id l17so2700583wrm.10
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 12:49:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=5NKdljWifItqg0lBXQOL6XHIUxxttCmzpNdraOrTMhc=;
-        b=fkt1xXfHy0LTigBiwV5C3pONwOUeNGPtVJ4EFQf1Pl3DhRQ2lcGy6ZjYe8jpNsp03L
-         ad3DxnnQZehIRvn4STNWuo7w/4aNiZaHb6Aij/SCnp2vNbm2Cqz8vySKh8jVhGxp0x1a
-         9PKgMNhw3IjYPJYhNTujdGeO2C8eesu2Mwqqw/L2A87e5P3Ien02ML4t1/eiYmG5ehX1
-         EtWP/7elC8Lhb59Anef3yyYBo3AodHKnLTa76x1iGc4uYAjREyOn1Pz7MFyUTTjH5IKF
-         wtgDATHJ1x053YsCB4ERKYDXxJVRR1fyPFJ4iRdOuQTS/KrwEWjBhKdWw0fAnXZmkZ2g
-         36/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=5NKdljWifItqg0lBXQOL6XHIUxxttCmzpNdraOrTMhc=;
-        b=XZRr/7cPjfQEALukLT1ityatoo88q0vJULSM9zyoywe1b21AdF/+slCLrmoue1nI12
-         QFrcjG1rBNz1MozPDNJekum4HdjIA+hXGohwvRbCN8+vrBzDOp8IT6eg8Un7dhimkaV2
-         pTiwkGZiDQZ9qQTeBmz36Gunr1whkR2sTrtG60+EVD361OFm3fqeMSi6f9yZs+any3TB
-         DXd92e8v1dYpSsfUTGBV0lnI6S0zxvtGxcrnmP3tghtWCLCs5ZQvMNd8pCIc85+exl2i
-         8pdR3/Zk5bMy/33LZ3Gk4lyrZSF6WvEJ2A9Jlz+iEvYrnF3LcbsgUAZfj1hLiEcMnCsC
-         5dbw==
-X-Gm-Message-State: APjAAAVNCjSUFXCsWYw+vKVwH7SdwvewFpVTUGhGTte9N6Ot4r5U+qiI
-        UHb/7iAWld0DNfhdrTQw8bG28U3X
-X-Google-Smtp-Source: APXvYqwM3UA8hEMFf89nmRr7aaqgWi2rgVO+rQ62xenWqKPKg0+BUdcuPGNOPKZzu9zt4vK8mgk1QA==
-X-Received: by 2002:adf:dc0c:: with SMTP id t12mr52443182wri.101.1558727372998;
-        Fri, 24 May 2019 12:49:32 -0700 (PDT)
-Received: from ogabbay-VM ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id 205sm4374479wmd.43.2019.05.24.12.49.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 24 May 2019 12:49:32 -0700 (PDT)
-Date:   Fri, 24 May 2019 22:49:30 +0300
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [git pull v2] habanalabs fixes for 5.2-rc2/3
-Message-ID: <20190524194930.GA13219@ogabbay-VM>
+        Fri, 24 May 2019 15:53:08 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4OJnMJ0064336;
+        Fri, 24 May 2019 19:52:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=aD5lIz4S5DcWGmDB5gw9KrDZWimDr6bYMSbzU7GZoAI=;
+ b=zAMh4vLLGP04GUagKaWof9gdEM7JeK5pQFj3XVLfNFiAk46Go/Z0QOvYixJS1BRAUu4d
+ BOv5HcQ2XndYyFCcSVMDGdKOq6ymaF5hoFsR4iShCrIKwmzwb5y36X+gIax24i0qgrFE
+ 957fzrZ2WgpmCH5j5EN1pFO0nKd5LcriArR277W3xFDTXF1HVO7De9UKoq72W6jpiWzO
+ xdSSWgnEPdMoaGHpCa6TRCU7iqIYVg+uoHeqgfxhVum6TAX6THS1VPsDg9HfmRGBTvnn
+ R+iM6znGpGWj8TeAUyvVXhK8N5AelLhvVbZg8xs2HoRpufnp250GfUmuSFe3/X2H09Ql 5g== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2smsk5k52q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 May 2019 19:52:48 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4OJpjUu010094;
+        Fri, 24 May 2019 19:52:47 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3030.oracle.com with ESMTP id 2smsgu2jhy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 24 May 2019 19:52:47 +0000
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x4OJqlqd011608;
+        Fri, 24 May 2019 19:52:47 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2smsgu2jhp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 May 2019 19:52:46 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4OJqi9V020054;
+        Fri, 24 May 2019 19:52:45 GMT
+Received: from [10.159.247.224] (/10.159.247.224)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 24 May 2019 19:52:44 +0000
+Subject: Re: [Ocfs2-devel] [PATCH V3 2/2] ocfs2: add locking filter debugfs
+ file
+To:     Gang He <ghe@suse.com>
+Cc:     jlbec@evilplan.org, mark@fasheh.com, jiangqi903@gmail.com,
+        ocfs2-devel@oss.oracle.com, linux-kernel@vger.kernel.org
+References: <20190523104047.14794-1-ghe@suse.com>
+ <20190523104047.14794-2-ghe@suse.com>
+ <da93442d-3333-5bd6-ce0a-edb66a58109d@oracle.com>
+ <5CE753AB020000F900067E5D@prv1-mh.provo.novell.com>
+From:   Wengang Wang <wen.gang.wang@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <bcdefc65-7173-8911-3ba1-197b064b5fa5@oracle.com>
+Date:   Fri, 24 May 2019 12:52:41 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <5CE753AB020000F900067E5D@prv1-mh.provo.novell.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9267 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905240129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+Hi Gang,
 
-This is the pull request containing fixes for 5.2-rc2/3. It is now
-correctly rebased on your char-misc-linux branch.
+OK, I was thinking you are dumping the new last access time field too.
 
-It supersedes the pull request from 12/5, so you can discard that pull
-request, as I see you didn't merge it anyway.
+thanks,
+wengang
 
-It contains 3 fixes and 1 change to a new IOCTL that was introduced to
-kernel 5.2 in the previous pull requests.
-
-See the tag comment for more details.
-
-Thanks,
-Oded
-
-The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
-
-  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
-
-are available in the Git repository at:
-
-  git://people.freedesktop.org/~gabbayo/linux tags/misc-habanalabs-fixes-2019-05-24
-
-for you to fetch changes up to 8d45f1de3994c566cb5ce9b3cb07ff1518e68ddb:
-
-  habanalabs: Avoid using a non-initialized MMU cache mutex (2019-05-24 22:46:15 +0300)
-
-----------------------------------------------------------------
-This tag contains the following fixes:
-
-- Halt debug engines when user process closes the FD. We can't allow the
-  device to issue transactions for a user which doesn't exists anymore.
-
-- Fix various security holes in debugfs API.
-
-- Add a new opcode to the DEBUG IOCTL API. The opcode is designed
-  for setting the device into and out of debug mode. Although not a fix
-  per-se, because this is a new IOCTL which is upstreamed in kernel 5.2, I
-  think this is justified at this point because we won't be able to change
-  the API later.
-
-- Fix a bug where the code used an uninitialized mutex
-
-----------------------------------------------------------------
-Jann Horn (1):
-      habanalabs: fix debugfs code
-
-Oded Gabbay (1):
-      uapi/habanalabs: add opcode for enable/disable device debug mode
-
-Omer Shpigelman (1):
-      habanalabs: halt debug engines on user process close
-
-Tomer Tayar (1):
-      habanalabs: Avoid using a non-initialized MMU cache mutex
-
- drivers/misc/habanalabs/context.c             |  6 +++
- drivers/misc/habanalabs/debugfs.c             | 60 ++++++++-------------------
- drivers/misc/habanalabs/device.c              |  2 +
- drivers/misc/habanalabs/goya/goya.c           |  3 +-
- drivers/misc/habanalabs/goya/goyaP.h          |  1 +
- drivers/misc/habanalabs/goya/goya_coresight.c | 17 ++++++++
- drivers/misc/habanalabs/habanalabs.h          |  2 +
- drivers/misc/habanalabs/mmu.c                 |  8 +---
- include/uapi/misc/habanalabs.h                | 22 +++++++++-
- 9 files changed, 69 insertions(+), 52 deletions(-)
+On 2019/5/23 19:15, Gang He wrote:
+> Hello Wengang,
+>
+> This patch is used to add a filter attribute(the default value is 0), the kernel module can use this attribute value to filter the lock resources dumping.
+> By default(the value is 0), the kernel module does not filter any lock resources dumping, the behavior is like before.
+> If the user set a value(N) of this attribute, the kernel module will only dump the latest N seconds active lock resources, this will avoid dumping lots of inactive lock resources.
+>
+> Thanks
+> Gang
+>
+>>>> On 2019/5/24 at 0:43, in message
+> <da93442d-3333-5bd6-ce0a-edb66a58109d@oracle.com>, Wengang
+> <wen.gang.wang@oracle.com> wrote:
+>> Hi Gang,
+>>
+>> Could you paste an example of outputs before patch VS that after patch?
+>> I think that would directly show what the patch does.
+>>
+>> thanks,
+>> wengang
+>>
+>> On 05/23/2019 03:40 AM, Gang He wrote:
+>>> Add locking filter debugfs file, which is used to filter lock
+>>> resources dump from locking_state debugfs file.
+>>> We use d_filter_secs field to filter lock resources dump,
+>>> the default d_filter_secs(0) value filters nothing,
+>>> otherwise, only dump the last N seconds active lock resources.
+>>> This enhancement can avoid dumping lots of old records.
+>>> The d_filter_secs value can be changed via locking_filter file.
+>>>
+>>> Compared with v2, ocfs2_dlm_init_debug() returns directly with
+>>> error when creating locking filter debugfs file is failed, since
+>>> ocfs2_dlm_shutdown_debug() will handle this failure perfectly.
+>>> Compared with v1, the main change is to add CONFIG_OCFS2_FS_STATS
+>>> macro definition judgment.
+>>>
+>>> Signed-off-by: Gang He <ghe@suse.com>
+>>> Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+>>> ---
+>>>    fs/ocfs2/dlmglue.c | 36 ++++++++++++++++++++++++++++++++++++
+>>>    fs/ocfs2/ocfs2.h   |  2 ++
+>>>    2 files changed, 38 insertions(+)
+>>>
+>>> diff --git a/fs/ocfs2/dlmglue.c b/fs/ocfs2/dlmglue.c
+>>> index dccf4136f8c1..fbe4562cf4fe 100644
+>>> --- a/fs/ocfs2/dlmglue.c
+>>> +++ b/fs/ocfs2/dlmglue.c
+>>> @@ -3006,6 +3006,8 @@ struct ocfs2_dlm_debug *ocfs2_new_dlm_debug(void)
+>>>    	kref_init(&dlm_debug->d_refcnt);
+>>>    	INIT_LIST_HEAD(&dlm_debug->d_lockres_tracking);
+>>>    	dlm_debug->d_locking_state = NULL;
+>>> +	dlm_debug->d_locking_filter = NULL;
+>>> +	dlm_debug->d_filter_secs = 0;
+>>>    out:
+>>>    	return dlm_debug;
+>>>    }
+>>> @@ -3104,11 +3106,33 @@ static int ocfs2_dlm_seq_show(struct seq_file *m,
+>> void *v)
+>>>    {
+>>>    	int i;
+>>>    	char *lvb;
+>>> +	u32 now, last = 0;
+>>>    	struct ocfs2_lock_res *lockres = v;
+>>> +	struct ocfs2_dlm_debug *dlm_debug =
+>>> +			((struct ocfs2_dlm_seq_priv *)m->private)->p_dlm_debug;
+>>>    
+>>>    	if (!lockres)
+>>>    		return -EINVAL;
+>>>    
+>>> +	if (dlm_debug->d_filter_secs) {
+>>> +		now = ktime_to_timespec(ktime_get()).tv_sec;
+>>> +#ifdef CONFIG_OCFS2_FS_STATS
+>>> +		if (lockres->l_lock_prmode.ls_last >
+>>> +		    lockres->l_lock_exmode.ls_last)
+>>> +			last = lockres->l_lock_prmode.ls_last;
+>>> +		else
+>>> +			last = lockres->l_lock_exmode.ls_last;
+>>> +#endif
+>>> +		/*
+>>> +		 * Use d_filter_secs field to filter lock resources dump,
+>>> +		 * the default d_filter_secs(0) value filters nothing,
+>>> +		 * otherwise, only dump the last N seconds active lock
+>>> +		 * resources.
+>>> +		 */
+>>> +		if ((now - last) > dlm_debug->d_filter_secs)
+>>> +			return 0;
+>>> +	}
+>>> +
+>>>    	seq_printf(m, "0x%x\t", OCFS2_DLM_DEBUG_STR_VERSION);
+>>>    
+>>>    	if (lockres->l_type == OCFS2_LOCK_TYPE_DENTRY)
+>>> @@ -3258,6 +3282,17 @@ static int ocfs2_dlm_init_debug(struct ocfs2_super
+>> *osb)
+>>>    		goto out;
+>>>    	}
+>>>    
+>>> +	dlm_debug->d_locking_filter = debugfs_create_u32("locking_filter",
+>>> +						0600,
+>>> +						osb->osb_debug_root,
+>>> +						&dlm_debug->d_filter_secs);
+>>> +	if (!dlm_debug->d_locking_filter) {
+>>> +		ret = -EINVAL;
+>>> +		mlog(ML_ERROR,
+>>> +		     "Unable to create locking filter debugfs file.\n");
+>>> +		goto out;
+>>> +	}
+>>> +
+>>>    	ocfs2_get_dlm_debug(dlm_debug);
+>>>    out:
+>>>    	return ret;
+>>> @@ -3269,6 +3304,7 @@ static void ocfs2_dlm_shutdown_debug(struct
+>> ocfs2_super *osb)
+>>>    
+>>>    	if (dlm_debug) {
+>>>    		debugfs_remove(dlm_debug->d_locking_state);
+>>> +		debugfs_remove(dlm_debug->d_locking_filter);
+>>>    		ocfs2_put_dlm_debug(dlm_debug);
+>>>    	}
+>>>    }
+>>> diff --git a/fs/ocfs2/ocfs2.h b/fs/ocfs2/ocfs2.h
+>>> index 8efa022684f4..f4da51099889 100644
+>>> --- a/fs/ocfs2/ocfs2.h
+>>> +++ b/fs/ocfs2/ocfs2.h
+>>> @@ -237,6 +237,8 @@ struct ocfs2_orphan_scan {
+>>>    struct ocfs2_dlm_debug {
+>>>    	struct kref d_refcnt;
+>>>    	struct dentry *d_locking_state;
+>>> +	struct dentry *d_locking_filter;
+>>> +	u32 d_filter_secs;
+>>>    	struct list_head d_lockres_tracking;
+>>>    };
+>>>    
