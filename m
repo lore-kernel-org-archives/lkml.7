@@ -3,129 +3,269 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29163C282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC65C282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E99EA217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:54:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558734851;
-	bh=8568j9U5dXFzD1kKJdpRtZ824hg6Kz1VWUSZLe7+WZk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vXQgg8Q2rj3rBrUleMmhMmXSkReFlj0+gw8CI1nSue96/TNObDYpPZ9+a+AM00nbV
-	 L8Ij+/TjnY6uG5zcobQJPXJUMefVGWN6cFNV3d1yx9tJilTZR+tUzv6BSbCnpF+sdS
-	 44j/UYZxzlB5qgABaR+Z5tpBwIgLFZMl56kZHiN0=
+	by mail.kernel.org (Postfix) with ESMTP id EE22E217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:54:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DEE+cNtp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404430AbfEXVyK (ORCPT
+        id S2404443AbfEXVy2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 17:54:10 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:41200 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404163AbfEXVyJ (ORCPT
+        Fri, 24 May 2019 17:54:28 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:42796 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404432AbfEXVy1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 17:54:09 -0400
-Received: by mail-ot1-f67.google.com with SMTP id l25so9995971otp.8;
-        Fri, 24 May 2019 14:54:09 -0700 (PDT)
+        Fri, 24 May 2019 17:54:27 -0400
+Received: by mail-oi1-f194.google.com with SMTP id w9so8091818oic.9
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 14:54:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VOVy+eA5Es/JQEi08yaQJGsynx8z/iqEEF4W9xTnK14=;
+        b=DEE+cNtpxM+TxHhD3P8cYfZKGz9MyojBOgb2YydbcynuzsCvU1Mj3OH5/ZWoWmfjED
+         TTeftJIHDnn2mgemDsvYathfrTzeNPyuWXego30ZR/KmEk9M8o3QVGa/Y57ONGmgcIy9
+         0cBc7ShnZPhxI8ze3nPwe0vob56Bs6uaPLecGDyHMnspV0uX7cmHVrzIo/3tvwv8pG0r
+         tSz0PHwPch+kJQSqp9XwBb/Lt1srtriZ9WswWTYWspTkf23AvxK/XLP0HSm0nNuZ4cTL
+         6JelxiiwzKZj+3X7jey4R+HOoxv/KFuaUhUsBIpnaniYMT/CpohkSsxRvdELSaQ85tjl
+         sPLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ocTPW25nWKpvKq/JRulYN0S/pGd+SXijFY/6jO39icc=;
-        b=LR+y4dfzQ1En/48ndRBMDMCzCcy5jZO/Cj5wqKrwm/5gJP9+hNp2c/1NBejMfsfD8u
-         xSqQg4R1LeTqKdsFW8y6JXE/nbnlmlgMrzu8dVsUNbcN/4HuCNKHQtha9CvwfybGD7vi
-         GYUVfPEMDHx58SnSUbnTsl/8WbfC/CIrft4Ru6qm32edtI7gedzHqr7wMajWREaWThKa
-         qhm9q4M7nLyQTwY2tInkomF1CgXOfTb73XTI5I/PEAdQPGp82Gv3G70MxaZm2Xq/V9RA
-         aiuueAaOOeAwV+39zEXp2JNkfLAQb0HZzIXuVdiJMwN41DVZcb3YUl4IRvIkdQMqRFGh
-         lS1g==
-X-Gm-Message-State: APjAAAX34cqbRUqUYwjFVUxSaWWwCNHAqDXYI9QWY5qDSji4Ky3sEnhz
-        vD1o20gKDnyA8mkntPk/pw==
-X-Google-Smtp-Source: APXvYqxz7j6TAqcCOb7TkXaiVR8I/EoSc62MSkmCQ9hdBLYDFZ+4Dlt6IECHsh8xO5wmRSqntod77A==
-X-Received: by 2002:a9d:6248:: with SMTP id i8mr198636otk.276.1558734848769;
-        Fri, 24 May 2019 14:54:08 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id p64sm1425346oif.8.2019.05.24.14.54.07
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 24 May 2019 14:54:08 -0700 (PDT)
-Date:   Fri, 24 May 2019 16:54:07 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        CK HU <ck.hu@mediatek.com>,
-        Daniel Kurtz <djkurtz@chromium.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        YT Shen <yt.shen@mediatek.com>,
-        Daoyuan Huang <daoyuan.huang@mediatek.com>,
-        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
-        Dennis-YC Hsieh 
-        <dennis-yc.hsimediatek/mtkcam/drv/fdvt/4.0/cam_fdvt_v4l2.cppeh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com
-Subject: Re: [PATCH v6 04/12] dt-binding: gce: add binding for gce event
- property
-Message-ID: <20190524215407.GA7214@bogus>
-References: <20190516090224.59070-1-bibby.hsieh@mediatek.com>
- <20190516090224.59070-5-bibby.hsieh@mediatek.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VOVy+eA5Es/JQEi08yaQJGsynx8z/iqEEF4W9xTnK14=;
+        b=ZiUEJrJLKTvdrI1L2neOCGB6ZkuHShtcsgeTOICCAYvQ677xyvBFSZeIN3RTuoaqwm
+         ml32uZC+fYeyS82qIa0ORqGvhfVV02OBcSDVIyGHYzuJoPMv8IIn00KKIEMx9bytP//y
+         6zHWYdu2ZF8MGTAe+bpfzGTUPRjhGBdcQcB9oQZXr8JXUAhIOi9g0Q6IoI0OZVnRikze
+         LADXfaZItBQLG8w7pZUwpQ/lGxaDa0WNcG2g3RQJcJhNlqkzDavFMkWujrHvOjkDyMue
+         RMnqLo8aFuxtFMLXYLcuMFvfcq07qPLFZNveE8pHchy2h5+n/PNECUNY2qPuj/IGmq7E
+         ozpA==
+X-Gm-Message-State: APjAAAWuE9elGoGLPlGE64IPWe4lEWjRZ3iqueHg+u63+KTLsAp6WmJG
+        xTAV+bT3sTBSsqhYzKp1/5uv2UcZGiGvQWwkXEEvkg==
+X-Google-Smtp-Source: APXvYqwm30LNDREqho2iDmcXv3izZZCxRoM5xL8RXi6OIM4dcoV6R7EIaPk1oIg7wOBpyj/UBjYHGaSkTUqPuD6e4xg=
+X-Received: by 2002:aca:3111:: with SMTP id x17mr7836503oix.172.1558734866368;
+ Fri, 24 May 2019 14:54:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190516090224.59070-5-bibby.hsieh@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190524010117.225219-1-saravanak@google.com> <06b479e2-e8a0-b3e8-567c-7fa0f1c5bdf6@gmail.com>
+In-Reply-To: <06b479e2-e8a0-b3e8-567c-7fa0f1c5bdf6@gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Fri, 24 May 2019 14:53:50 -0700
+Message-ID: <CAGETcx-21GEoBKhpzcsrDt3sEo-vUpwqnr3To7VbSPd8aW86Nw@mail.gmail.com>
+Subject: Re: [PATCH v1 0/5] Solve postboot supplier cleanup and optimize probe ordering
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 05:02:16PM +0800, Bibby Hsieh wrote:
-> Client hardware would send event to GCE hardware,
-> mediatek,gce-event-names and mediatek,gce-events
+On Fri, May 24, 2019 at 10:49 AM Frank Rowand <frowand.list@gmail.com> wrote:
+>
+> On 5/23/19 6:01 PM, Saravana Kannan wrote:
+> > Add a generic "depends-on" property that allows specifying mandatory
+> > functional dependencies between devices. Add device-links after the
+> > devices are created (but before they are probed) by looking at this
+> > "depends-on" property.
+> >
+> > This property is used instead of existing DT properties that specify
+> > phandles of other devices (Eg: clocks, pinctrl, regulators, etc). This
+> > is because not all resources referred to by existing DT properties are
+> > mandatory functional dependencies. Some devices/drivers might be able> to operate with reduced functionality when some of the resources
+> > aren't available. For example, a device could operate in polling mode
+> > if no IRQ is available, a device could skip doing power management if
+> > clock or voltage control isn't available and they are left on, etc.
+> >
+> > So, adding mandatory functional dependency links between devices by
+> > looking at referred phandles in DT properties won't work as it would
+> > prevent probing devices that could be probed. By having an explicit
+> > depends-on property, we can handle these cases correctly.
+>
+> Trying to wrap my brain around the concept, this series seems to be
+> adding the ability to declare that an apparent dependency (eg an IRQ
+> specified by a phandle) is _not_ actually a dependency.
 
-We removed mediatek,gce-event-names?
+The current implementation completely ignores existing bindings for
+dependencies and so does the current tip of the kernel. So it's not
+really overriding anything. However, if I change the implementation so
+that depends-on becomes the source of truth if it exists and falls
+back to existing common bindings if "depends-on" isn't present -- then
+depends-on would truly be overriding existing bindings for
+dependencies. It depends on how we want to define the DT property.
 
-> can be used to present the event.
-> 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> ---
->  Documentation/devicetree/bindings/mailbox/mtk-gce.txt | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> index dceab63ccd06..265bb58da7bd 100644
-> --- a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> +++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> @@ -35,6 +35,8 @@ Required properties for a client device:
->  Optional properties for a client device:
->  - mediatek,gce-client-reg: u32, specify the sub-system id which is corresponding
->    to the register address.
-> +- mediatek,gce-events: u32, the event number defined in
-> +  'dt-bindings/gce/mt8173-gce.h' or 'dt-binding/gce/mt8183-gce.h'.
+> The phandle already implies the dependency.
 
-This and the example don't match. Is it an u32 or an array of u32? If 
-the latter, how many elements?
+Sure, it might imply, but it's not always true.
 
->  
->  Some vaules of properties are defined in 'dt-bindings/gce/mt8173-gce.h'
->  or 'dt-binding/gce/mt8183-gce.h'. Such as sub-system ids, thread priority, event ids.
-> @@ -57,8 +59,8 @@ Example for a client device:
->  		compatible = "mediatek,mt8173-mmsys";
->  		mboxes = <&gce 0 CMDQ_THR_PRIO_LOWEST 1>,
->  			 <&gce 1 CMDQ_THR_PRIO_LOWEST 1>;
-> -		mutex-event-eof = <CMDQ_EVENT_MUTEX0_STREAM_EOF
-> -				CMDQ_EVENT_MUTEX1_STREAM_EOF>;
-> +		mediatek,gce-events = <CMDQ_EVENT_MDP_RDMA0_SOF>,
-> +				      <CMDQ_EVENT_MDP_RSZ0_SOF>;
->  		mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0x3000 0x1000>,
->  					  <&gce SUBSYS_1401XXXX 0x2000 0x100>;
->  		...
-> -- 
-> 2.18.0
-> 
+> Creating a separate
+> depends-on property provides a method of ignoring the implied
+> dependencies.
+
+implied != true
+
+> This is not just hardware description.  It is instead a combination
+> of hardware functionality and driver functionality.  An example
+> provided in the second paragraph of the email I am replying to
+> suggests a device could operate in polling mode if no IRQ is
+> available.  Using this example, the devicetree does not know
+> whether the driver requires the IRQ (currently an implied
+> dependency since the IRQ phandle exists).  My understanding
+> of this example is that the device node would _not_ have a
+> depends-on property for the IRQ phandle so the IRQ would be
+> optional.  But this is an attribute of the driver, not the
+> hardware.
+
+Not really. The interrupt could be for "SD card plugged in". That's
+never a mandatory dependency for the SD card controller to work. So
+the IRQ provider won't be a "depends-on" in this case. But if there is
+no power supply or clock for the SD card controller, it isn't going to
+work -- so they'd be listed in the "depends-on". So, this is still
+defining the hardware and not the OS.
+
+> This is also configuration, declaring whether the
+> system is willing to accept polling mode instead of interrupt
+> mode.
+
+Whether the driver will choose to operate without the IRQ is up to it.
+The OS could also assume the power supply is never turned off and
+still try to use the device. Depending on the hardware configuration,
+that might or might not work.
+
+> Devicetree is not the proper place for driver description or
+> for configuration.
+
+But depends-on isn't describing the driver configuration though.
+
+Overall, the clock provider example I gave in another reply is a much
+better example. If you just assume implied dependencies are mandatory
+dependencies, some devices will never be probe because the kernel is
+using them incorrectly (they aren't meant to list mandatory
+dependencies).
+
+> Another flaw with this method is that existing device trees
+> will be broken after the kernel is modified, because existing
+> device trees do not have the depends-on property.  This breaks
+> the devicetree compatibility rules.
+
+This is 100% not true with the current implementation. I actually
+tested this. This is fully backwards compatible. That's another reason
+for adding depends-on and going by just what it says. The existing
+bindings were never meant to describe only mandatory dependencies. So
+using them as such is what would break backwards compatibility.
+
+> > Having functional dependencies explicitly called out in DT and
+> > automatically added before the devices are probed, provides the
+> > following benefits:
+> >
+> > - Optimizes device probe order and avoids the useless work of
+> >   attempting probes of devices that will not probe successfully
+> >   (because their suppliers aren't present or haven't probed yet).
+> >
+> >   For example, in a commonly available mobile SoC, registering just
+> >   one consumer device's driver at an initcall level earlier than the
+> >   supplier device's driver causes 11 failed probe attempts before the
+> >   consumer device probes successfully. This was with a kernel with all
+> >   the drivers statically compiled in. This problem gets a lot worse if
+> >   all the drivers are loaded as modules without direct symbol
+> >   dependencies.
+> >
+> > - Supplier devices like clock providers, regulators providers, etc
+> >   need to keep the resources they provide active and at a particular
+> >   state(s) during boot up even if their current set of consumers don't
+> >   request the resource to be active. This is because the rest of the
+> >   consumers might not have probed yet and turning off the resource
+> >   before all the consumers have probed could lead to a hang or
+> >   undesired user experience.
+> >
+> >   Some frameworks (Eg: regulator) handle this today by turning off
+> >   "unused" resources at late_initcall_sync and hoping all the devices
+> >   have probed by then. This is not a valid assumption for systems with
+> >   loadable modules. Other frameworks (Eg: clock) just don't handle
+> >   this due to the lack of a clear signal for when they can turn off
+> >   resources. This leads to downstream hacks to handle cases like this
+> >   that can easily be solved in the upstream kernel.
+> >
+> >   By linking devices before they are probed, we give suppliers a clear
+>
+> By linking devices to suppliers before they are probed, we give suppliers a clear
+
+Ack
+
+> >   count of the number of dependent consumers. Once all of the
+> >   consumers are active, the suppliers can turn off the unused
+> >   resources without making assumptions about the number of consumers.
+> >
+> > By default we just add device-links to track "driver presence" (probe
+> > succeeded) of the supplier device. If any other functionality provided
+> > by device-links are needed, it is left to the consumer/supplier
+> > devices to change the link when they probe.
+> >
+> >
+> > Saravana Kannan (5):
+> >   of/platform: Speed up of_find_device_by_node()
+> >   driver core: Add device links support for pending links to suppliers
+> >   dt-bindings: Add depends-on property
+> >   of/platform: Add functional dependency link from "depends-on" property
+> >   driver core: Add sync_state driver/bus callback
+> >
+> >  .../devicetree/bindings/depends-on.txt        |  26 +++++
+> >  drivers/base/core.c                           | 106 ++++++++++++++++++
+> >  drivers/of/platform.c                         |  75 ++++++++++++-
+> >  include/linux/device.h                        |  24 ++++
+> >  include/linux/of.h                            |   3 +
+> >  5 files changed, 233 insertions(+), 1 deletion(-)
+> >  create mode 100644 Documentation/devicetree/bindings/depends-on.txt
+> >
+>
+> The above issues make this specific implementation not acceptable.
+> I like the analysis of the problem areas, and I like the concepts of
+> trying to solve not only probe ordering, but also the problem of
+> when to turn off resources that will not be needed.
+
+Beating a dead horse here, but I want to make sure I get this into as
+many minds as possible:
+It is NOT just about turning off resources. It's about the kernel
+taking full control of resources (allowing the full range of voltages,
+clock frequencies, bus configurations, etc) and syncing the HW state
+to the SW state as determined by the consumers.
+
+> But at the
+> moment, I don't have a suggestion of a way to implement a solution.
+
+The problem of syncing resources to SW state after boot up completed
+has been broken for a long time in the kernel. It's high time we fix
+it. I'm open to other suggestions, but we can't just say "we don't
+have a solution".
+
+For example, we can have a kernel command line argument that'll use
+all common implicit bindings as mandatory dependencies and allow
+"depends-on" to override them for the few cases where the implicit
+dependencies don't match mandatory dependencies. Then:
+- The kernel will be 100% backwards compatible with existing DT if the
+command line arg isn't provided.
+- New DT + old kernel will be no worse than today because old kernel
+doesn't do any dependency tracking.
+- Command line arg + new kernel + hardware where all implicit
+dependencies are actually mandatory dependencies == things work
+better.
+- Command line arg + new kernel + hardware where all implicit
+dependencies don't match mandatory dependencies + depends-on for those
+exception case == things work better.
+
+Would that be an acceptable use of "depends-on" to track mandatory dependencies?
+
+
+
+-Saravana
