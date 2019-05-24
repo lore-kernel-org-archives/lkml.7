@@ -2,180 +2,149 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B88EFC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FADBC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:30:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9131520851
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:28:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=posk.io header.i=@posk.io header.b="DGIG2OEH"
+	by mail.kernel.org (Postfix) with ESMTP id 4FEC520851
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:30:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390832AbfEXQ2o (ORCPT
+        id S2390646AbfEXQax (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 12:28:44 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:34393 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390380AbfEXQ2n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 12:28:43 -0400
-Received: by mail-ed1-f65.google.com with SMTP id p27so15216111eda.1
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 09:28:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=posk.io; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yDvF8ijGMjXKswBaAKmkx4e+4Hw2+kdouMbMASjbcVw=;
-        b=DGIG2OEHCcGy9pFLL1EUTPA4Q4CAVvRVSxI5Oc+ftogN0WouSQiw4CkW6FvYzATM9u
-         ClIQ91EObEDk5+xk+Db1HLIcdXFFuMPIOsZi/ynjLiGlVMhl/kbGGjgRky/TkxKY4Me2
-         xzYJrKIvRKLbKNaP3qqpHmAoTJ/JQ3d4sPq89OYTaG8owOhepVzXN66yjaaer9Izy2SS
-         qTjH3H89y+/LJtOFvkdN9jSUNZgTpFEtjOu6eNz0lxbTe9KFPvtRTt8b/UUnKJ5oytwz
-         kThh1ZhyaTdMQlFifrR5G9Ks9tDDGJ0bwgMNbCiWtD+vY9hAX4TzdC6W3zgBBEwwWNqT
-         ljEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yDvF8ijGMjXKswBaAKmkx4e+4Hw2+kdouMbMASjbcVw=;
-        b=tuPuIvXueAIOS9HryR8A9O4cd0pNCKsxmXgeo4oS2w52Lux2cvH1YP752rSl8tatNL
-         yf+KCh1KhFnDPQimFSCeeutt76DxUTH+NF2REXAIEuOQwLn0BVyLlPaQpAyJUC1CwENT
-         rchNqtBmKlNDy3TsxHTaC1DrIqCuFnis/GuzivMir/w0qcpGdWX4JawFo9KI/cMh12+9
-         wnA5gpYtLkQXsD8xpTMVEslxzVF7MsIQqUFm9nCSK9TbaYg+C7BhZEITcAxVvYCnqQ/d
-         /+ODQPPAKbj8DbMg7foHyMFgVaqCvwPvIlA7oMdP9EK2pK93h2+Tuk6oBuI+vE6OXicx
-         4y0Q==
-X-Gm-Message-State: APjAAAWQLnZJ99VJzgd0WGNMYB+7Z+NKnrwjh/zgr2N3f4Zj4V24fbXb
-        q1MkrZQNC1Cet6ObEQKibFCE9o6pLqxCzYcWsNco5w==
-X-Google-Smtp-Source: APXvYqxGzwVO1ZkMJIM3Mnc1FEnNtAkwAMMiTeH+RINJrdbRUCyXo6u4j5F2/YpAI/m4f9JnvvvTDSL73V4y4hQty84=
-X-Received: by 2002:aa7:c44e:: with SMTP id n14mr32345338edr.203.1558715321234;
- Fri, 24 May 2019 09:28:41 -0700 (PDT)
+        Fri, 24 May 2019 12:30:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42190 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390021AbfEXQax (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 12:30:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 93715AF68;
+        Fri, 24 May 2019 16:30:50 +0000 (UTC)
+Subject: Re: [RFC][PATCH] kernel.h: Add generic roundup_64() macro
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Roger Willcocks <roger@filmlight.ltd.uk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau@lists.freedesktop.org,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20190523100013.52a8d2a6@gandalf.local.home>
+ <CAHk-=wg5HqJ2Kfgpub+tCWQ2_FiFwEW9H1Rm+an-BLGaGvDDXw@mail.gmail.com>
+ <20190523112740.7167aba4@gandalf.local.home>
+ <e4e875f0-2aa5-89f4-f462-78bedb9c5cde@filmlight.ltd.uk>
+ <20190524112656.5ef67c6c@gandalf.local.home>
+From:   Nikolay Borisov <nborisov@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
+ mQINBFiKBz4BEADNHZmqwhuN6EAzXj9SpPpH/nSSP8YgfwoOqwrP+JR4pIqRK0AWWeWCSwmZ
+ T7g+RbfPFlmQp+EwFWOtABXlKC54zgSf+uulGwx5JAUFVUIRBmnHOYi/lUiE0yhpnb1KCA7f
+ u/W+DkwGerXqhhe9TvQoGwgCKNfzFPZoM+gZrm+kWv03QLUCr210n4cwaCPJ0Nr9Z3c582xc
+ bCUVbsjt7BN0CFa2BByulrx5xD9sDAYIqfLCcZetAqsTRGxM7LD0kh5WlKzOeAXj5r8DOrU2
+ GdZS33uKZI/kZJZVytSmZpswDsKhnGzRN1BANGP8sC+WD4eRXajOmNh2HL4P+meO1TlM3GLl
+ EQd2shHFY0qjEo7wxKZI1RyZZ5AgJnSmehrPCyuIyVY210CbMaIKHUIsTqRgY5GaNME24w7h
+ TyyVCy2qAM8fLJ4Vw5bycM/u5xfWm7gyTb9V1TkZ3o1MTrEsrcqFiRrBY94Rs0oQkZvunqia
+ c+NprYSaOG1Cta14o94eMH271Kka/reEwSZkC7T+o9hZ4zi2CcLcY0DXj0qdId7vUKSJjEep
+ c++s8ncFekh1MPhkOgNj8pk17OAESanmDwksmzh1j12lgA5lTFPrJeRNu6/isC2zyZhTwMWs
+ k3LkcTa8ZXxh0RfWAqgx/ogKPk4ZxOXQEZetkEyTFghbRH2BIwARAQABtCNOaWtvbGF5IEJv
+ cmlzb3YgPG5ib3Jpc292QHN1c2UuY29tPokCOAQTAQIAIgUCWIo48QIbAwYLCQgHAwIGFQgC
+ CQoLBBYCAwECHgECF4AACgkQcb6CRuU/KFc0eg/9GLD3wTQz9iZHMFbjiqTCitD7B6dTLV1C
+ ddZVlC8Hm/TophPts1bWZORAmYIihHHI1EIF19+bfIr46pvfTu0yFrJDLOADMDH+Ufzsfy2v
+ HSqqWV/nOSWGXzh8bgg/ncLwrIdEwBQBN9SDS6aqsglagvwFD91UCg/TshLlRxD5BOnuzfzI
+ Leyx2c6YmH7Oa1R4MX9Jo79SaKwdHt2yRN3SochVtxCyafDlZsE/efp21pMiaK1HoCOZTBp5
+ VzrIP85GATh18pN7YR9CuPxxN0V6IzT7IlhS4Jgj0NXh6vi1DlmKspr+FOevu4RVXqqcNTSS
+ E2rycB2v6cttH21UUdu/0FtMBKh+rv8+yD49FxMYnTi1jwVzr208vDdRU2v7Ij/TxYt/v4O8
+ V+jNRKy5Fevca/1xroQBICXsNoFLr10X5IjmhAhqIH8Atpz/89ItS3+HWuE4BHB6RRLM0gy8
+ T7rN6ja+KegOGikp/VTwBlszhvfLhyoyjXI44Tf3oLSFM+8+qG3B7MNBHOt60CQlMkq0fGXd
+ mm4xENl/SSeHsiomdveeq7cNGpHi6i6ntZK33XJLwvyf00PD7tip/GUj0Dic/ZUsoPSTF/mG
+ EpuQiUZs8X2xjK/AS/l3wa4Kz2tlcOKSKpIpna7V1+CMNkNzaCOlbv7QwprAerKYywPCoOSC
+ 7P25Ag0EWIoHPgEQAMiUqvRBZNvPvki34O/dcTodvLSyOmK/MMBDrzN8Cnk302XfnGlW/YAQ
+ csMWISKKSpStc6tmD+2Y0z9WjyRqFr3EGfH1RXSv9Z1vmfPzU42jsdZn667UxrRcVQXUgoKg
+ QYx055Q2FdUeaZSaivoIBD9WtJq/66UPXRRr4H/+Y5FaUZx+gWNGmBT6a0S/GQnHb9g3nonD
+ jmDKGw+YO4P6aEMxyy3k9PstaoiyBXnzQASzdOi39BgWQuZfIQjN0aW+Dm8kOAfT5i/yk59h
+ VV6v3NLHBjHVw9kHli3jwvsizIX9X2W8tb1SefaVxqvqO1132AO8V9CbE1DcVT8fzICvGi42
+ FoV/k0QOGwq+LmLf0t04Q0csEl+h69ZcqeBSQcIMm/Ir+NorfCr6HjrB6lW7giBkQl6hhomn
+ l1mtDP6MTdbyYzEiBFcwQD4terc7S/8ELRRybWQHQp7sxQM/Lnuhs77MgY/e6c5AVWnMKd/z
+ MKm4ru7A8+8gdHeydrRQSWDaVbfy3Hup0Ia76J9FaolnjB8YLUOJPdhI2vbvNCQ2ipxw3Y3c
+ KhVIpGYqwdvFIiz0Fej7wnJICIrpJs/+XLQHyqcmERn3s/iWwBpeogrx2Lf8AGezqnv9woq7
+ OSoWlwXDJiUdaqPEB/HmGfqoRRN20jx+OOvuaBMPAPb+aKJyle8zABEBAAGJAh8EGAECAAkF
+ AliKBz4CGwwACgkQcb6CRuU/KFdacg/+M3V3Ti9JYZEiIyVhqs+yHb6NMI1R0kkAmzsGQ1jU
+ zSQUz9AVMR6T7v2fIETTT/f5Oout0+Hi9cY8uLpk8CWno9V9eR/B7Ifs2pAA8lh2nW43FFwp
+ IDiSuDbH6oTLmiGCB206IvSuaQCp1fed8U6yuqGFcnf0ZpJm/sILG2ECdFK9RYnMIaeqlNQm
+ iZicBY2lmlYFBEaMXHoy+K7nbOuizPWdUKoKHq+tmZ3iA+qL5s6Qlm4trH28/fPpFuOmgP8P
+ K+7LpYLNSl1oQUr+WlqilPAuLcCo5Vdl7M7VFLMq4xxY/dY99aZx0ZJQYFx0w/6UkbDdFLzN
+ upT7NIN68lZRucImffiWyN7CjH23X3Tni8bS9ubo7OON68NbPz1YIaYaHmnVQCjDyDXkQoKC
+ R82Vf9mf5slj0Vlpf+/Wpsv/TH8X32ajva37oEQTkWNMsDxyw3aPSps6MaMafcN7k60y2Wk/
+ TCiLsRHFfMHFY6/lq/c0ZdOsGjgpIK0G0z6et9YU6MaPuKwNY4kBdjPNBwHreucrQVUdqRRm
+ RcxmGC6ohvpqVGfhT48ZPZKZEWM+tZky0mO7bhZYxMXyVjBn4EoNTsXy1et9Y1dU3HVJ8fod
+ 5UqrNrzIQFbdeM0/JqSLrtlTcXKJ7cYFa9ZM2AP7UIN9n1UWxq+OPY9YMOewVfYtL8M=
+Message-ID: <bd4a85fc-dc56-aae0-4986-003ad4a11ef4@suse.com>
+Date:   Fri, 24 May 2019 19:30:45 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <1558121424-2914-1-git-send-email-chiluk+linux@indeed.com>
- <1558637087-20283-1-git-send-email-chiluk+linux@indeed.com>
- <1558637087-20283-2-git-send-email-chiluk+linux@indeed.com>
- <CAFTs51W0KdK4nw6wydn2HjNYvFRC8DYMmVeKX9FAe+4YUGEAZg@mail.gmail.com>
- <20190524143204.GB4684@lorien.usersys.redhat.com> <CAC=E7cXxsyMLw1PR+8QchTH8FYL7WX6_8LBVdqueR1yjW+VVkQ@mail.gmail.com>
-In-Reply-To: <CAC=E7cXxsyMLw1PR+8QchTH8FYL7WX6_8LBVdqueR1yjW+VVkQ@mail.gmail.com>
-From:   Peter Oskolkov <posk@posk.io>
-Date:   Fri, 24 May 2019 09:28:30 -0700
-Message-ID: <CAFTs51Vm258CkDXi_Jj_cGOMotTvhdYR_VW8aUwAUvgistZOFQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] sched/fair: Fix low cpu usage with high throttling
- by removing expiration of cpu-local slices
-To:     Dave Chiluk <chiluk+linux@indeed.com>
-Cc:     Phil Auld <pauld@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, cgroups@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Brendan Gregg <bgregg@netflix.com>,
-        Kyle Anderson <kwa@yelp.com>,
-        Gabriel Munos <gmunoz@netflix.com>,
-        John Hammond <jhammond@indeed.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        Ben Segall <bsegall@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190524112656.5ef67c6c@gandalf.local.home>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 8:15 AM Dave Chiluk <chiluk+linux@indeed.com> wrote:
->
-> On Fri, May 24, 2019 at 9:32 AM Phil Auld <pauld@redhat.com> wrote:
-> > On Thu, May 23, 2019 at 02:01:58PM -0700 Peter Oskolkov wrote:
->
-> > > If the machine runs at/close to capacity, won't the overallocation
-> > > of the quota to bursty tasks necessarily negatively impact every other
-> > > task? Should the "unused" quota be available only on idle CPUs?
-> > > (Or maybe this is the behavior achieved here, and only the comment and
-> > > the commit message should be fixed...)
-> > >
-> >
-> > It's bounded by the amount left unused from the previous period. So
-> > theoretically a process could use almost twice its quota. But then it
-> > would have nothing left over in the next period. To repeat it would have
-> > to not use any that next period. Over a longer number of periods it's the
-> > same amount of CPU usage.
-> >
-> > I think that is more fair than throttling a process that has never used
-> > its full quota.
-> >
-> > And it removes complexity.
-> >
-> > Cheers,
-> > Phil
->
-> Actually it's not even that bad.  The overallocation of quota to a
-> bursty task in a period is limited to at most one slice per cpu, and
-> that slice must not have been used in the previous periods.  The slice
-> size is set with /proc/sys/kernel/sched_cfs_bandwidth_slice_us and
-> defaults to 5ms.  If a bursty task goes from underutilizing quota to
-> using it's entire quota, it will not be able to burst in the
-> subsequent periods.  Therefore in an absolute worst case contrived
-> scenario, a bursty task can add at most 5ms to the latency of other
-> threads on the same CPU.  I think this worst case 5ms tradeoff is
-> entirely worth it.
->
-> This does mean that a theoretically a poorly written massively
-> threaded application on an 80 core box, that spreads itself onto 80
-> cpu run queues, can overutilize it's quota in a period by at most 5ms
-> * 80 CPUs in a sincle period (slice * number of runqueues the
-> application is running on).  But that means that each of those threads
->  would have had to not be use their quota in a previous period, and it
-> also means that the application would have to be carefully written to
-> exacerbate this behavior.
->
-> Additionally if cpu bound threads underutilize a slice of their quota
-> in a period due to the cfs choosing a bursty task to run, they should
-> theoretically be able to make it up in the following periods when the
-> bursty task is unable to "burst".
 
-OK, so it is indeed possible that CPU bound threads will underutilize a slice
-of their quota in a period as a result of this patch. This should probably
-be clearly stated in the code comments and in the commit message.
 
-In addition, I believe that although many workloads will indeed be
-indifferent to getting their fair share "later", some latency-sensitive
-workloads will definitely be negatively affected by this temporary
-CPU quota stealing by bursty antagonists. So there should probably be
-a way to limit this behavior; for example, by making it tunable
-per cgroup.
+On 24.05.19 г. 18:26 ч., Steven Rostedt wrote:
+> On Fri, 24 May 2019 16:11:14 +0100
+> Roger Willcocks <roger@filmlight.ltd.uk> wrote:
+> 
+>> On 23/05/2019 16:27, Steven Rostedt wrote:
+>>>
+>>> I haven't yet tested this, but what about something like the following:
+>>>
+>>> ...perhaps forget about the constant check, and just force
+>>> the power of two check:
+>>>
+>>> 							\
+>>> 	if (!(__y & (__y >> 1))) {			\
+>>> 		__x = round_up(x, y);			\
+>>> 	} else {					\  
+>>
+>> You probably want
+>>
+>>             if (!(__y & (__y - 1))
+>>
+>> --
+> 
+> Yes I do. I corrected it in my next email.
+> 
+>  http://lkml.kernel.org/r/20190523133648.591f9e78@gandalf.local.home
 
->
-> Please be careful here quota and slice are being treated differently.
-> Quota does not roll-over between periods, only slices of quota that
-> has already been allocated to per cpu run queues. If you allocate
-> 100ms of quota per period to an application, but it only spreads onto
-> 3 cpu run queues that means it can in the worst case use 3 x slice
-> size = 15ms in periods following underutilization.
->
-> So why does this matter.  Well applications that use thread pools
-> *(*cough* java *cough*) with lots of tiny little worker threads, tend
-> to spread themselves out onto a lot of run queues.  These worker
-> threads grab quota slices in order to run, then rarely use all of
-> their slice (1 or 2ms out of the 5ms).  This results in those worker
-> threads starving the main application of quota, and then expiring the
-> remainder of that quota slice on the per-cpu.  Going back to my
-> earlier 100ms quota / 80 cpu example.  That means only
-> 100ms/cfs_bandwidth_slice_us(5ms) = 20 slices are available in a
-> period.  So only 20 out of these 80 cpus ever get a slice allocated to
-> them.  By allowing these per-cpu run queues to use their remaining
-> slice in following periods these worker threads do not need to be
-> allocated additional slice, and thereby the main threads are actually
-> able to use the allocated cpu quota.
->
-> This can be experienced by running fibtest available at
-> https://github.com/indeedeng/fibtest/.
-> $ runfibtest 1
-> runs a single fast thread taskset to cpu 0
-> $ runfibtest 8
-> Runs a single fast thread taskset to cpu 0, and 7 slow threads taskset
-> to cpus 1-7.  This run is expected to show less iterations, but the
-> worse problem is that the cpu usage is far less than the 500ms that it
-> should have received.
->
-> Thanks for the engagement on this,
-> Dave Chiluk
+Or perhaps just using is_power_of_2 from include/linux/log2.h ?
+> 
+>> #define roundup(x, y) (					\
+>> {							\
+>> 	typeof(y) __y = y;				\
+>> 	typeof(x) __x;					\
+>> 							\
+>> 	if (__y & (__y - 1))				\
+>> 		__x = round_up(x, __y);			\
+>> 	else						\
+>> 		__x = (((x) + (__y - 1)) / __y) * __y;	\
+>> 	__x;						\
+>> })
+> 
+> 
+> -- Steve
+> 
