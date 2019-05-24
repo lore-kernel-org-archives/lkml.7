@@ -2,115 +2,98 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=CHARSET_FARAWAY_HEADER,
-	FROM_EXCESS_BASE64,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10452C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 03:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6246AC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 03:24:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB70D2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 03:23:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C2B62075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 03:24:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CcpG+Ue4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731854AbfEXDXH (ORCPT
+        id S1731876AbfEXDYv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 23:23:07 -0400
-Received: from emcscan.emc.com.tw ([192.72.220.5]:40852 "EHLO
-        emcscan.emc.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729972AbfEXDXG (ORCPT
+        Thu, 23 May 2019 23:24:51 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46347 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729972AbfEXDYu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 23:23:06 -0400
-X-Greylist: delayed 588 seconds by postgrey-1.27 at vger.kernel.org; Thu, 23 May 2019 23:23:05 EDT
-X-IronPort-AV: E=Sophos;i="5.56,253,1539619200"; 
-   d="scan'208";a="30739610"
-Received: from unknown (HELO webmail.emc.com.tw) ([192.168.10.1])
-  by emcscan.emc.com.tw with SMTP; 24 May 2019 11:13:14 +0800
-Received: from 192.168.10.23
-        by webmail.emc.com.tw with MailAudit ESMTP Server V5.0(174508:0:AUTH_RELAY)
-        (envelope-from <kt.liao@emc.com.tw>); Fri, 24 May 2019 11:13:13 +0800 (CST)
-Received: from 192.168.81.85
-        by webmail.emc.com.tw with Mail2000 ESMTPA Server V7.00(119328:0:AUTH_LOGIN)
-        (envelope-from <kt.liao@emc.com.tw>); Fri, 24 May 2019 11:13:10 +0800 (CST)
-From:   =?big5?B?ufmxUrph?= <kt.liao@emc.com.tw>
-To:     "'Benjamin Tissoires'" <benjamin.tissoires@redhat.com>,
-        "'Dmitry Torokhov'" <dmitry.torokhov@gmail.com>,
-        "'Rob Herring'" <robh+dt@kernel.org>,
-        "'Aaron Ma'" <aaron.ma@canonical.com>,
-        "'Hans de Goede'" <hdegoede@redhat.com>
-Cc:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20190521132712.2818-1-benjamin.tissoires@redhat.com> <20190521132712.2818-10-benjamin.tissoires@redhat.com>
-In-Reply-To: <20190521132712.2818-10-benjamin.tissoires@redhat.com>
-Subject: RE: [PATCH v2 09/10] Input: elan_i2c - correct the width/size base value
-Date:   Fri, 24 May 2019 11:13:10 +0800
-Message-ID: <003d01d511de$9da229c0$d8e67d40$@emc.com.tw>
+        Thu, 23 May 2019 23:24:50 -0400
+Received: by mail-pg1-f193.google.com with SMTP id o11so4030172pgm.13;
+        Thu, 23 May 2019 20:24:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=/3n9FVywoExtKHdkxZu9NrddyvBpvJrl+Pr5EEoKl20=;
+        b=CcpG+Ue4Ng1l292fJ93tY8QlAkl2aWLXgmO6zSkeeRHEagqKsMNTlAtRP/FXRmwkVs
+         sQQTI46f8MB+47ZgVveBNa/7toU7lKKrR1nbOLxQjMtZK5JF4Q2pBMNC0sXJZzSf5vyp
+         F40SCXnp9cN0vJUczmjCiqvZ3UhSiBPfF1wehAeNaX8oxs8rp0X8/Tu+lkBVZg9cYEeQ
+         MgeGTmq0Aqp442Knh6YtgOa8NFPklvr63lLmgqrXYvYbQccip/RDFF5I2SZCs4Sg8WP9
+         fFL0EKno6ZurHxvMaiR1Oi6jjnD0t57yHXCverz9a3GwGFiYSDzIEdn2huwbLT/FCbSJ
+         xR0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=/3n9FVywoExtKHdkxZu9NrddyvBpvJrl+Pr5EEoKl20=;
+        b=UczkeOduvA7iCzvMmLosn8/efeHOBIGhvdqlOewDjPeHzzsyxpdQPtl8H366UKFzwU
+         7rfEVNRs9TBGT4gH0yf6NKZMp028AFDkXXieCFiHBnTJdCbqH/SS2b9WwLndzlXpT2nz
+         sB2H3sPla05U51S9lwEQXY5jnYho4aaz2y9H+c8EhKxyRPEFOo35H877jdPKUYpvpngA
+         8Ml+bc6pqispLHgH3D5nrf/AtiF4gJQ78UjXtG4g2a5aqUwcRIUN9NBpVSsiuqWzVPkd
+         bHViEd0AO6IFzDn2oWB/qJ//WAqb3B0zjwy1kwLO8bqQrEd3NZAAuz0HSFdDy95TvXKz
+         Ix3w==
+X-Gm-Message-State: APjAAAVjqDBW4KYca3VTQqUyw1lC6ny7LSp1Aiujj28gEa0XRRBpKVgK
+        rWB6uzUIz+plfiDqKWsZJaY=
+X-Google-Smtp-Source: APXvYqzZetGfZUTYWk7vL5KaitobRvOM3BuGxx0RvRGsV4ZBCnkhMgNMZWUUF5Plj4EA78qqHUbspg==
+X-Received: by 2002:a62:75d8:: with SMTP id q207mr77026148pfc.35.1558668289353;
+        Thu, 23 May 2019 20:24:49 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([66.42.35.75])
+        by smtp.gmail.com with ESMTPSA id a69sm999617pfa.81.2019.05.23.20.24.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 May 2019 20:24:48 -0700 (PDT)
+Date:   Fri, 24 May 2019 11:24:26 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
+        songliubraving@fb.com, yhs@fb.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH] ip_sockglue: Fix missing-check bug in ip_ra_control()
+Message-ID: <20190524032337.GA6513@zhanggen-UX430UQ>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="big5"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 14.0
-Thread-Index: AQMBv+jJqV7WAwqWtnh8gdestIYR9QG8pxropBJQxXA=
-Content-Language: zh-tw
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcOTIwNzNcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy1kYWY4ZjI2OC03ZGQxLTExZTktYjdjYy01YzUxNGY0NmFhNDVcYW1lLXRlc3RcZGFmOGYyNmEtN2RkMS0xMWU5LWI3Y2MtNWM1MTRmNDZhYTQ1Ym9keS50eHQiIHN6PSIxODA1IiB0PSIxMzIwMzE0MTE4OTgyOTk3MjkiIGg9Imhma2hVUXdmZjdmRWhRVTZWeE1pbEI0Ry9Tcz0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
-x-dg-rorf: true
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Benjamin,
+In function ip_ra_control(), the pointer new_ra is allocated a memory 
+space via kmalloc(). And it is used in the following codes. However, 
+when  there is a memory allocation error, kmalloc() fails. Thus null 
+pointer dereference may happen. And it will cause the kernel to crash. 
+Therefore, we should check the return value and handle the error.
 
-Thanks so much for all you do for Elan touchpad.
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
 
-For the width_*, I have a question for it.
-Our antenna sensors fully occupied the whole touchpad PCB.
-
-The Gap between 2 sensors are 7.5 mil (0.19mm).
-That's why we did not minus one trace.
-
-
-Thanks
-KT
------Original Message-----
-From: Benjamin Tissoires [mailto:benjamin.tissoires@redhat.com] 
-Sent: Tuesday, May 21, 2019 9:27 PM
-To: Dmitry Torokhov; KT Liao; Rob Herring; Aaron Ma; Hans de Goede
-Cc: linux-input@vger.kernel.org; linux-kernel@vger.kernel.org;
-devicetree@vger.kernel.org; Benjamin Tissoires
-Subject: [PATCH v2 09/10] Input: elan_i2c - correct the width/size base
-value
-
-*_traces are the number of antennas. width_* is thus the space between 2
-antennas. Which means, we should subtract 1 to the number of antennas to
-divide the touchpad by the number of holes between each antenna.
-
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-
---
-
-new in v2
 ---
- drivers/input/mouse/elan_i2c_core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/input/mouse/elan_i2c_core.c
-b/drivers/input/mouse/elan_i2c_core.c
-index 6f4feedb7765..3375eaa9a72e 100644
---- a/drivers/input/mouse/elan_i2c_core.c
-+++ b/drivers/input/mouse/elan_i2c_core.c
-@@ -398,8 +398,8 @@ static int elan_query_device_parameters(struct
-elan_tp_data *data)
- 		if (error)
- 			return error;
- 	}
--	data->width_x = data->max_x / x_traces;
--	data->width_y = data->max_y / y_traces;
-+	data->width_x = data->max_x / (x_traces - 1);
-+	data->width_y = data->max_y / (y_traces - 1);
+diff --git a/net/ipv4/ip_sockglue.c b/net/ipv4/ip_sockglue.c
+index 82f341e..aa3fd61 100644
+--- a/net/ipv4/ip_sockglue.c
++++ b/net/ipv4/ip_sockglue.c
+@@ -343,6 +343,8 @@ int ip_ra_control(struct sock *sk, unsigned char on,
+ 		return -EINVAL;
  
- 	if (device_property_read_u32(&client->dev,
- 				     "touchscreen-x-mm", &x_mm) ||
---
-2.21.0
-
+ 	new_ra = on ? kmalloc(sizeof(*new_ra), GFP_KERNEL) : NULL;
++	if (on && !new_ra)
++		return -ENOMEM;
+ 
+ 	mutex_lock(&net->ipv4.ra_mutex);
+ 	for (rap = &net->ipv4.ra_chain;
