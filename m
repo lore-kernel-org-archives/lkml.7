@@ -2,113 +2,118 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C45C282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE2B6C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 155A82133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:56:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C971C2133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:57:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729213AbfEXR4t (ORCPT
+        id S1731981AbfEXR5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 13:56:49 -0400
-Received: from mga14.intel.com ([192.55.52.115]:33046 "EHLO mga14.intel.com"
+        Fri, 24 May 2019 13:57:08 -0400
+Received: from mga07.intel.com ([134.134.136.100]:64010 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728222AbfEXR4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 13:56:48 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1726071AbfEXR5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 13:57:07 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 May 2019 10:56:48 -0700
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 May 2019 10:57:07 -0700
 X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by orsmga001.jf.intel.com with ESMTP; 24 May 2019 10:56:45 -0700
-Date:   Fri, 24 May 2019 10:56:47 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-Message-ID: <20190524175647.GC365@linux.intel.com>
-References: <20190523023517.GA31950@linux.intel.com>
- <20190523102628.GC10955@linux.intel.com>
- <20190523141752.GA12078@linux.intel.com>
- <CALCETrUzx3LPAKCLFf75P-XshAkRcr+JLET3LA_kHDs9MA11FA@mail.gmail.com>
- <20190523234044.GC12078@linux.intel.com>
- <CALCETrV4DVEfW6EJ6DnQGGYDJAiA5M1QcuYJTiroumOM+D6Jjg@mail.gmail.com>
- <960B34DE67B9E140824F1DCDEC400C0F654E8956@ORSMSX116.amr.corp.intel.com>
- <dda0912b-cb15-3c07-d368-345159e995f7@tycho.nsa.gov>
- <20190524174243.GA365@linux.intel.com>
- <56EA6C7C-F69E-42EB-9CFB-CD0300549298@amacapital.net>
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga002.jf.intel.com with ESMTP; 24 May 2019 10:57:07 -0700
+Date:   Fri, 24 May 2019 11:00:05 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        joro@8bytes.org, alex.williamson@redhat.com,
+        yi.l.liu@linux.intel.com, iommu@lists.linux-foundation.org,
+        ashok.raj@intel.com, linux-kernel@vger.kernel.org,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH 3/4] iommu: Introduce device fault report API
+Message-ID: <20190524110005.55c3eade@jacob-builder>
+In-Reply-To: <e56244fd-86fd-1fc9-17f7-d00179d586ac@arm.com>
+References: <20190523180613.55049-1-jean-philippe.brucker@arm.com>
+        <20190523180613.55049-4-jean-philippe.brucker@arm.com>
+        <e56244fd-86fd-1fc9-17f7-d00179d586ac@arm.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <56EA6C7C-F69E-42EB-9CFB-CD0300549298@amacapital.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 10:54:34AM -0700, Andy Lutomirski wrote:
-> 
-> > On May 24, 2019, at 10:42 AM, Sean Christopherson <sean.j.christopherson@intel.com> wrote:
-> > 
-> > Hmm, I've been thinking more about pulling permissions from the source
-> > page.  Conceptually I'm not sure we need to meet the same requirements as
-> > non-enclave DSOs while the enclave is being built, i.e. do we really need
-> > to force userspace to fully map the enclave in normal memory?
-> > 
-> > Consider the Graphene scenario where it's building an enclave on the fly.
-> > Pulling permissions from the source VMAs means Graphene has to map the
-> > code pages of the enclave with X.  This means Graphene will need EXEDMOD
-> > (or EXECMEM if Graphene isn't careful).  In a non-SGX scenario this makes
-> > perfect sense since there is no way to verify the end result of RW->RX.
-> > 
-> > But for SGX, assuming enclaves are whitelisted by their sigstruct (checked
-> > at EINIT) and because page permissions affect sigstruct.MRENCLAVE, it *is*
-> > possible to verify the resulting RX contents.  E.g. for the purposes of
-> > LSMs, can't we use the .sigstruct file as a proxy for the enclave and
-> > require FILE__EXECUTE on the .sigstruct inode to map/run the enclave?
-> 
-> I think it’s sound for some but not all use cases. I would imagine that a lot
-> of users won’t restrict sigstruct at all — the “use this as a sigstruct”
-> permission will be granted to everything and maybe even to memfd. But even
-> users like that might want to force their enclaves to be hardened such that
-> writable pages are never executable, in which case Graphene may need an
-> exception to run.
+On Thu, 23 May 2019 19:56:54 +0100
+Robin Murphy <robin.murphy@arm.com> wrote:
 
-Heh, I belatedly had the same thought.  See my follow-up about EXECMEM.
+> On 23/05/2019 19:06, Jean-Philippe Brucker wrote:
+> > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > 
+> > Traditionally, device specific faults are detected and handled
+> > within their own device drivers. When IOMMU is enabled, faults such
+> > as DMA related transactions are detected by IOMMU. There is no
+> > generic reporting mechanism to report faults back to the in-kernel
+> > device driver or the guest OS in case of assigned devices.
+> > 
+> > This patch introduces a registration API for device specific fault
+> > handlers. This differs from the existing iommu_set_fault_handler/
+> > report_iommu_fault infrastructures in several ways:
+> > - it allows to report more sophisticated fault events (both
+> >    unrecoverable faults and page request faults) due to the nature
+> >    of the iommu_fault struct
+> > - it is device specific and not domain specific.
+> > 
+> > The current iommu_report_device_fault() implementation only handles
+> > the "shoot and forget" unrecoverable fault case. Handling of page
+> > request faults or stalled faults will come later.
+> > 
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+> > Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+> > Signed-off-by: Eric Auger <eric.auger@redhat.com>
+> > ---
+> >   drivers/iommu/iommu.c | 127
+> > ++++++++++++++++++++++++++++++++++++++++++ include/linux/iommu.h |
+> > 29 ++++++++++ 2 files changed, 156 insertions(+)
+> > 
+> > diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> > index 67ee6623f9b2..d546f7baa0d4 100644
+> > --- a/drivers/iommu/iommu.c
+> > +++ b/drivers/iommu/iommu.c
+> > @@ -644,6 +644,13 @@ int iommu_group_add_device(struct iommu_group
+> > *group, struct device *dev) goto err_free_name;
+> >   	}
+> >   
+> > +	dev->iommu_param = kzalloc(sizeof(*dev->iommu_param),
+> > GFP_KERNEL);
+> > +	if (!dev->iommu_param) {
+> > +		ret = -ENOMEM;
+> > +		goto err_free_name;
+> > +	}
+> > +	mutex_init(&dev->iommu_param->lock);
+> > +  
+> 
+> Note that this gets a bit tricky when we come to move to move the 
+> fwspec/ops/etc. into iommu_param, since that data can have a longer 
+> lifespan than the group association. I'd suggest moving this
+> management out to the iommu_{probe,release}_device() level from the
+> start, but maybe we're happy to come back and change things later as
+> necessary.
+> 
+Agreed, I can't think of any downside of moving it earlier.
+> Robin.
+> 
+>  [...]  
+> _______________________________________________
+> iommu mailing list
+> iommu@lists.linux-foundation.org
+> https://lists.linuxfoundation.org/mailman/listinfo/iommu
 
-> But maybe I’m nuts.
+[Jacob Pan]
