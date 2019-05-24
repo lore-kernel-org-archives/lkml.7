@@ -2,139 +2,184 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB315C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 012B4C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE9092175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:53:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B971E2133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:54:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iWkxArrm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dpjVyjFq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731928AbfEXRx3 (ORCPT
+        id S1731999AbfEXRyL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 13:53:29 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39351 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbfEXRx3 (ORCPT
+        Fri, 24 May 2019 13:54:11 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:40137 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbfEXRyL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 13:53:29 -0400
-Received: by mail-wm1-f66.google.com with SMTP id z23so5985253wma.4
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 10:53:28 -0700 (PDT)
+        Fri, 24 May 2019 13:54:11 -0400
+Received: by mail-vs1-f68.google.com with SMTP id c24so6396017vsp.7;
+        Fri, 24 May 2019 10:54:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=/v7rO2riDcOGiIUFO4drw/u2pyOBxp849lgEWGaPgNI=;
-        b=iWkxArrmodDcPGTK65Lkp/FDdZXihxS4Qn6aZoemVO+smwByoaL9bGeaZ7huplqcvy
-         RUmgFnBwmPhHSDW7pR8+KMAyM9zDw56KH7PC7Os2qMJpBJXinjzmuIfI7z+wKYp8HmlW
-         6r3GMBeXuP24YtSKRKFkpCwnprbX/9YBhFPnur7aXxtP7oJ8tQLX1sQXVgJxrnnDg3Ox
-         th3fP495EaUQllXFgUBod5q/UoeyU7kV5VVuJiZijbFRbw8rgJjxGvi+sd3nmu6FCooJ
-         BMjy8WBMIlnLjmIyE5d+3ab7CVMnCrSfvDp37LFZ1CsxzpFWQIyPn45osBuqIj3lAaL9
-         637A==
+        h=date:message-id:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-disposition:content-transfer-encoding;
+        bh=z/GiW9YkKP3qylPckCwFQzVR25kk7Ib6EX6x6dIKwWY=;
+        b=dpjVyjFq+TRJtqkLPUE5puUr3vkNMM/zUwEXNQ81LFDh07pAI60TXaj7OkiPMtkFOS
+         iV462lc72G4/dL4seUCt4FrtE/JDeqObHt7ba/tWHzOfi9+3u7jk01MQnE91zASKuRR/
+         L1zmCQGqTbX46t9pyz/ejsbRJCYikuBKGcOwOSFjumHIstxknfdO7RASj2lwK4lGGlJr
+         GN0am1EMMxcpuOVwtBAul6/F2SeKt+414zVgTdykwu9XzovRIJQ7ylE1jnFHaLQhu0UD
+         FZqq4iCD8HL9HXjPNShoUo+oH6ebvxXAH6LCl/sQRXNadqdr6uZyNRWBesyZp4lHV//s
+         iL3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=/v7rO2riDcOGiIUFO4drw/u2pyOBxp849lgEWGaPgNI=;
-        b=aScal7RdbTTnuVz4q8Xeh3Yps0uqw9vYs6IYCPeTfIXMm8vPWhgPyrrUpSJ2qPTvp9
-         U7pJVUEmFHJk6W8xL5ZgCTM4TqXvT8a3ivBO6k6oETrgxqeEnx7Jf5fkPqp1gfe0E8/E
-         4qrQYUOUF1eFsVLRexIrogLOcqjI9F/rAK9aVvHBic8A2TMDTwwq3K9tDLNE54JzMQpH
-         Y+DcS7h28XwWXcwRVYiPAdRfthHB3Bdg+Yej7POX0VfIb7Y5hfd4IICsD98KGToP4uHK
-         0isnlmHxFmm6YvKSEdP4r1p9Why5Drbn8goB2hwbzFk0zy4J522tI9dREid0EuFcyd2N
-         WStw==
-X-Gm-Message-State: APjAAAXRV1P+B0rnHmCx1tq06lMB/A+J8pLR1/c65a/PR/j/zXM4G0VR
-        gkdEaeJSfktSKz7060gmtIqrXJu1
-X-Google-Smtp-Source: APXvYqwD0TvNBL+yXWrFSw0JZb+RatKnrMJtB3tEpjVrSKSQmAN230zH+lhqIUbyuiziN9cbENXZyw==
-X-Received: by 2002:a1c:1f44:: with SMTP id f65mr780201wmf.177.1558720407211;
-        Fri, 24 May 2019 10:53:27 -0700 (PDT)
-Received: from ogabbay-VM ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id x187sm3244490wmb.33.2019.05.24.10.53.26
+        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
+         :references:mime-version:content-disposition
+         :content-transfer-encoding;
+        bh=z/GiW9YkKP3qylPckCwFQzVR25kk7Ib6EX6x6dIKwWY=;
+        b=k8ckdxTXaGDHWmBCTyp1YJnsykq67DuMNS2WbFylNPo/dLXTCEpoIuW3bbr6LUFuEJ
+         VIrxcTCi3aKiKaM7rgnWA1foMuN+xyPVeyBPcmA6zU5cwCumwdyBHWxUJk8eyxi5LYT4
+         cg/fxAIlxE3nPhxfNQojcQqozVKNz3DODEXZjWYFQBFfQKelyHI1+5drmSMYaab906rY
+         o5wxDTK5HC8a3xVBP6tMNXq07AVicWf+mtCHU07zTUiGeaxYVn6EV4LRcQNwqhRTiY+L
+         ND4lg32Xf/1YapISLNZCN0fpFqpxH8rbtJzHwNQf/GGKNMF4qRKFf5DJf2O98Ea/jMJa
+         iQGw==
+X-Gm-Message-State: APjAAAXxRQTHC18ECN39v7zqwXz2mbWvcwhU6lpcud4b15xI13Hg1rnT
+        3SHkdjQ0f2rnhS55i8v8uNw=
+X-Google-Smtp-Source: APXvYqx2FtFxLzeAVdjsO+APUeOuwrh1AIJiq7GeETKG+Fsc8hIpj5f7udh3JFVWICgM0bMtD64k4A==
+X-Received: by 2002:a67:eb8b:: with SMTP id e11mr25080730vso.115.1558720449839;
+        Fri, 24 May 2019 10:54:09 -0700 (PDT)
+Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
+        by smtp.gmail.com with ESMTPSA id c71sm1322139vke.19.2019.05.24.10.54.08
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 24 May 2019 10:53:26 -0700 (PDT)
-Date:   Fri, 24 May 2019 20:53:24 +0300
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [git pull] habanalabs fixes for 5.2-rc2/3
-Message-ID: <20190524175324.GA3024@ogabbay-VM>
+        Fri, 24 May 2019 10:54:08 -0700 (PDT)
+Date:   Fri, 24 May 2019 13:54:07 -0400
+Message-ID: <20190524135407.GB17138@t480s.localdomain>
+From:   Vivien Didelot <vivien.didelot@gmail.com>
+To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/5] net: dsa: mv88e6xxx: introduce support for two
+ chips using direct smi addressing
+In-Reply-To: <20190524085921.11108-2-rasmus.villemoes@prevas.dk>
+References: <20190501193126.19196-1-rasmus.villemoes@prevas.dk>
+ <20190524085921.11108-1-rasmus.villemoes@prevas.dk>
+ <20190524085921.11108-2-rasmus.villemoes@prevas.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+Hi Rasmus,
 
-This is the pull request containing fixes for 5.2-rc2/3.
+On Fri, 24 May 2019 09:00:24 +0000, Rasmus Villemoes <rasmus.villemoes@prevas.dk> wrote:
+> The 88e6250 (as well as 6220, 6071, 6070, 6020) do not support
+> multi-chip (indirect) addressing. However, one can still have two of
+> them on the same mdio bus, since the device only uses 16 of the 32
+> possible addresses, either addresses 0x00-0x0F or 0x10-0x1F depending
+> on the ADDR4 pin at reset [since ADDR4 is internally pulled high, the
+> latter is the default].
+> 
+> In order to prepare for supporting the 88e6250 and friends, introduce
+> mv88e6xxx_info::dual_chip to allow having a non-zero sw_addr while
+> still using direct addressing.
+> 
+> Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+> ---
+>  drivers/net/dsa/mv88e6xxx/chip.h |  6 ++++++
+>  drivers/net/dsa/mv88e6xxx/smi.c  | 25 ++++++++++++++++++++++++-
+>  2 files changed, 30 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/dsa/mv88e6xxx/chip.h b/drivers/net/dsa/mv88e6xxx/chip.h
+> index faa3fa889f19..74777c3bc313 100644
+> --- a/drivers/net/dsa/mv88e6xxx/chip.h
+> +++ b/drivers/net/dsa/mv88e6xxx/chip.h
+> @@ -112,6 +112,12 @@ struct mv88e6xxx_info {
+>  	 * when it is non-zero, and use indirect access to internal registers.
+>  	 */
+>  	bool multi_chip;
+> +	/* Dual-chip Addressing Mode
+> +	 * Some chips respond to only half of the 32 SMI addresses,
+> +	 * allowing two to coexist on the same SMI interface.
+> +	 */
+> +	bool dual_chip;
+> +
+>  	enum dsa_tag_protocol tag_protocol;
+>  
+>  	/* Mask for FromPort and ToPort value of PortVec used in ATU Move
+> diff --git a/drivers/net/dsa/mv88e6xxx/smi.c b/drivers/net/dsa/mv88e6xxx/smi.c
+> index 96f7d2685bdc..1151b5b493ea 100644
+> --- a/drivers/net/dsa/mv88e6xxx/smi.c
+> +++ b/drivers/net/dsa/mv88e6xxx/smi.c
+> @@ -24,6 +24,10 @@
+>   * When ADDR is non-zero, the chip uses Multi-chip Addressing Mode, allowing
+>   * multiple devices to share the SMI interface. In this mode it responds to only
+>   * 2 registers, used to indirectly access the internal SMI devices.
+> + *
+> + * Some chips use a different scheme: Only the ADDR4 pin is used for
+> + * configuration, and the device responds to 16 of the 32 SMI
+> + * addresses, allowing two to coexist on the same SMI interface.
+>   */
+>  
+>  static int mv88e6xxx_smi_direct_read(struct mv88e6xxx_chip *chip,
+> @@ -76,6 +80,23 @@ static const struct mv88e6xxx_bus_ops mv88e6xxx_smi_direct_ops = {
+>  	.write = mv88e6xxx_smi_direct_write,
+>  };
+>  
+> +static int mv88e6xxx_smi_dual_direct_read(struct mv88e6xxx_chip *chip,
+> +					  int dev, int reg, u16 *data)
+> +{
+> +	return mv88e6xxx_smi_direct_read(chip, dev + chip->sw_addr, reg, data);
 
-It supersedes the pull request from 12/5, so you can discard that pull
-request, as I see you didn't merge it anyway.
+Using chip->sw_addr + dev seems more idiomatic to me than dev + chip->sw_addr.
 
-It contains 3 fixes and 1 change to a new IOCTL that was introduced to
-kernel 5.2 in the previous pull requests.
+> +}
+> +
+> +static int mv88e6xxx_smi_dual_direct_write(struct mv88e6xxx_chip *chip,
+> +					   int dev, int reg, u16 data)
+> +{
+> +	return mv88e6xxx_smi_direct_write(chip, dev + chip->sw_addr, reg, data);
+> +}
+> +
+> +static const struct mv88e6xxx_bus_ops mv88e6xxx_smi_dual_direct_ops = {
+> +	.read = mv88e6xxx_smi_dual_direct_read,
+> +	.write = mv88e6xxx_smi_dual_direct_write,
+> +};
+> +
+>  /* Offset 0x00: SMI Command Register
+>   * Offset 0x01: SMI Data Register
+>   */
+> @@ -144,7 +165,9 @@ static const struct mv88e6xxx_bus_ops mv88e6xxx_smi_indirect_ops = {
+>  int mv88e6xxx_smi_init(struct mv88e6xxx_chip *chip,
+>  		       struct mii_bus *bus, int sw_addr)
+>  {
+> -	if (sw_addr == 0)
+> +	if (chip->info->dual_chip)
+> +		chip->smi_ops = &mv88e6xxx_smi_dual_direct_ops;
+> +	else if (sw_addr == 0)
+>  		chip->smi_ops = &mv88e6xxx_smi_direct_ops;
+>  	else if (chip->info->multi_chip)
+>  		chip->smi_ops = &mv88e6xxx_smi_indirect_ops;
 
-See the tag comment for more details.
+Please submit respins (v2, v3, and so on) as independent threads,
+not as a reply to the previous version.
+
+Otherwise this looks good to me:
+
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
 
 Thanks,
-Oded
-
-The following changes since commit b0576f9ecb5c51e9932531d23c447b2739261841:
-
-  misc: sgi-xp: Properly initialize buf in xpc_get_rsvd_page_pa (2019-05-24 19:00:54 +0200)
-
-are available in the Git repository at:
-
-  git://people.freedesktop.org/~gabbayo/linux tags/misc-habanalabs-fixes-2019-05-24
-
-for you to fetch changes up to 0dfda3cf06aac2f339442ee5934a38566619c059:
-
-  habanalabs: Avoid using a non-initialized MMU cache mutex (2019-05-24 20:38:04 +0300)
-
-----------------------------------------------------------------
-This tag contains the following fixes:
-
-- Halt debug engines when user process closes the FD. We can't allow the
-  device to issue transactions for a user which doesn't exists anymore.
-
-- Fix various security holes in debugfs API.
-
-- Add a new opcode to the DEBUG IOCTL API. The opcode is designed
-  for setting the device into and out of debug mode. Although not a fix
-  per-se, because this is a new IOCTL which is upstreamed in kernel 5.2, I
-  think this is justified at this point because we won't be able to change
-  the API later.
-
-- Fix a bug where the code used an un-initialized mutex
-
-----------------------------------------------------------------
-Jann Horn (1):
-      habanalabs: fix debugfs code
-
-Oded Gabbay (1):
-      uapi/habanalabs: add opcode for enable/disable device debug mode
-
-Omer Shpigelman (1):
-      habanalabs: halt debug engines on user process close
-
-Tomer Tayar (1):
-      habanalabs: Avoid using a non-initialized MMU cache mutex
-
- drivers/misc/habanalabs/context.c             |  6 +++
- drivers/misc/habanalabs/debugfs.c             | 60 ++++++++-------------------
- drivers/misc/habanalabs/device.c              |  2 +
- drivers/misc/habanalabs/goya/goya.c           |  3 +-
- drivers/misc/habanalabs/goya/goyaP.h          |  1 +
- drivers/misc/habanalabs/goya/goya_coresight.c | 17 ++++++++
- drivers/misc/habanalabs/habanalabs.h          |  2 +
- drivers/misc/habanalabs/mmu.c                 |  8 +---
- include/uapi/misc/habanalabs.h                | 22 +++++++++-
- 9 files changed, 69 insertions(+), 52 deletions(-)
+Vivien
