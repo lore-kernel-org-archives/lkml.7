@@ -3,96 +3,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7E3C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B05C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAE86217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:54:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C71ED2177E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:54:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387731AbfEXCy1 (ORCPT
+        id S2388287AbfEXCya (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 23 May 2019 22:54:30 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:37342 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387560AbfEXCy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 May 2019 22:54:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36514 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731522AbfEXCy0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 22:54:26 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5080C2177E;
-        Fri, 24 May 2019 02:54:25 +0000 (UTC)
-Date:   Thu, 23 May 2019 22:54:23 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Jason Behmer <jbehmer@google.com>
-Cc:     Craig Barabas <craigbarabas@google.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: Correct commit mask for page data size
-Message-ID: <20190523225423.372ef0b0@oasis.local.home>
-In-Reply-To: <CAMmhGq+VCHWp4s-Xh3ZUtxEudgqK-C1LYhttFpc4MUOrzRD3Ag@mail.gmail.com>
-References: <CAMmhGq+VCHWp4s-Xh3ZUtxEudgqK-C1LYhttFpc4MUOrzRD3Ag@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 377D3BC6E59CB42BC67B;
+        Fri, 24 May 2019 10:54:25 +0800 (CST)
+Received: from [127.0.0.1] (10.184.191.73) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Fri, 24 May 2019
+ 10:54:21 +0800
+Subject: Re: BUG: spinlock bad magic in rhashtable_walk_enter
+To:     syzbot <syzbot+01dd5c4b3c34a5cf9308@syzkaller.appspotmail.com>,
+        <davem@davemloft.net>, <jon.maloy@ericsson.com>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <syzkaller-bugs@googlegroups.com>,
+        <tipc-discussion@lists.sourceforge.net>, <ying.xue@windriver.com>
+References: <0000000000003df61e05899887d3@google.com>
+From:   hujunwei <hujunwei4@huawei.com>
+Message-ID: <7da38946-ae8f-93bf-99c3-28949eb46354@huawei.com>
+Date:   Fri, 24 May 2019 10:53:24 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <0000000000003df61e05899887d3@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.184.191.73]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 1 Apr 2019 06:49:07 -0700
-Jason Behmer <jbehmer@google.com> wrote:
 
-Hi Jason,
 
-I just noticed this email. I know it's a late response, but since you
-Cc'd LKML, I figured I would respond anyway, and at least have an
-answer in the archives ;-)
-
-> Hi Steven,
-> We're wondering what the correct number of bits to take from the
-> commit field is when determining the size of the page data.  The
-> format file shows the bottom 56 bits not overlapping with anything:
+On 2019/5/24 9:58, syzbot wrote:
+> syzbot has bisected this bug to:
 > 
->         field: local_t commit;  offset:8;       size:8; signed:1;
->         field: int overwrite;   offset:8;       size:1; signed:1;
+> commit 7e27e8d6130c5e88fac9ddec4249f7f2337fe7f8
+> Author: Junwei Hu <hujunwei4@huawei.com>
+> Date:   Thu May 16 02:51:15 2019 +0000
 > 
-> We first naively interpreted this as the size, but eventually ran into
-> cases where this gave back a nonsense result.  But then in our
-> investigation of what the correct thing to do is, we found conflicting
-> answers.
-
-Yeah, I hated that above, but the format didn't have a good way to show
-the overwrite without breaking existing tools :-/
-
+>     tipc: switch order of device registration to fix a crash>
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17c22c72a00000
+> start commit:   510e2ced ipv6: fix src addr routing with the exception table
+> git tree:       net
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=14222c72a00000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=10222c72a00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=82f0809e8f0a8c87
+> dashboard link: https://syzkaller.appspot.com/bug?extid=01dd5c4b3c34a5cf9308
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16b6373ca00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1251e73ca00000
 > 
-> In the kernel we see that commit is often updated to write, which is
-> masked against RB_WRITE_MASK.  So it seems taking the bottom 20 bits
-> is correct.  However, in trace-cmd, a fairly authoritative parser, we
-> see that COMMIT_MASK is set to take the bottom 27 bits and set that to
-> the page data size.
-
-The way the kernel uses that number is that the first 20 bits are the
-size. Then we have an internal counter (top 12 bits) used for
-synchronizing when the trace crosses pages. But these internal numbers
-will never be exposed when it is sent off to the reader. Hence, those
-bits are meaningless.
-
-Now I probably could make the trace-cmd header just use those 20 bits,
-as they never will be used for the size. When I wrote that, I just made
-sure that the flags that are added to the page by the reader code was
-not set. Which is why there is a discrepancy between the two masks.
+> Reported-by: syzbot+01dd5c4b3c34a5cf9308@syzkaller.appspotmail.com
+> Fixes: 7e27e8d6130c ("tipc: switch order of device registration to fix a crash")
 > 
-> Could you provide some guidance?
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> 
+> .
+> 
 
-Thanks for pointing this out. Again, the reason for the difference is
-that they were created from two different perspectives. One was that it
-would use the top 12 bytes for internal purposes, the other was just to
-allow for up to 5 flags by the reader.
+This bug was fixed by:
+commit 526f5b851a96 (" tipc: fix modprobe tipc failed after switch order of device registration")
 
-Does that make sense?
-
--- Steve
+Regards,
+Junwei
 
