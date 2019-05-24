@@ -2,87 +2,122 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB09C282E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D99BBC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59B3B2175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:24:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="LpIsdpkg"
+	by mail.kernel.org (Postfix) with ESMTP id A281C2175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:26:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387832AbfEXFYr (ORCPT
+        id S2388117AbfEXF0O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 01:24:47 -0400
-Received: from first.geanix.com ([116.203.34.67]:50982 "EHLO first.geanix.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726601AbfEXFYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 01:24:47 -0400
-Received: from localhost (87-49-45-10-mobile.dk.customer.tdc.net [87.49.45.10])
-        by first.geanix.com (Postfix) with ESMTPSA id D64061134;
-        Fri, 24 May 2019 05:23:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
-        t=1558675432; bh=bdQl35s2cuuWkN1UfvO+LGl5WOpmsTcZEQ4aijDY8w4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=LpIsdpkgKouTTv1nspseSd4pulyBCVbWv7f1peEdupHKAUQycikuoU78PO/Z35RFu
-         Z+udO7Tl3EfVyZ0pXHAUGUcBSIJ9ZP2DH4RYSksWY7pZBHZDcNjDU8o5SNxjPfFKZ7
-         9Uy1/w75KRnAkJMpgmWPSkXmvLeR2UflLQLQCRtUlco+VJMT38vmNtu1JJhhXe3PUa
-         vubnh4BPDBKo+Thzd+n+mLnYpFN0Leorj+7BinV5GTFsIHU2CLEaVvcjwMXWs3EHtF
-         0VYBMYUEii9P5Vt23k1sAsPwmtK0f+rd3YunB5RQI/mWydA8dfYsYA2kSTeZi+TTdI
-         yOhEmt4B3qbag==
-From:   Esben Haabendal <esben@geanix.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        YueHaibing <yuehaibing@huawei.com>,
-        =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] net: ll_temac: Fix compile error
-Date:   Fri, 24 May 2019 07:24:42 +0200
-Message-Id: <20190524052444.2983-1-esben@geanix.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190524094709.3f9830f2@canb.auug.org.au>
-References: <20190524094709.3f9830f2@canb.auug.org.au>
+        Fri, 24 May 2019 01:26:14 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:40966 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387874AbfEXF0O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 01:26:14 -0400
+Received: from [125.35.49.90] (helo=[10.0.0.21])
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <hui.wang@canonical.com>)
+        id 1hU2iV-0006de-Dr; Fri, 24 May 2019 05:26:08 +0000
+Subject: =?UTF-8?B?UmU6IOetlOWkjTog562U5aSNOiDnrZTlpI06IFtQQVRDSF0gaW5wdXQ6?=
+ =?UTF-8?Q?_alps-fix_the_issue_the_special_alps_trackpoint_do_not_work=2e?=
+To:     Peter Hutterer <peter.hutterer@who-t.net>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
+Cc:     Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>,
+        dmitry.torokhov@gmail.com, XiaoXiao Liu <sliuuxiaonxiao@gmail.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Xiaojian Cao <xiaojian.cao@cn.alps.com>,
+        "zhangfp1@lenovo.com" <zhangfp1@lenovo.com>
+References: <20190520110149.27107-1-sliuuxiaonxiao@gmail.com>
+ <OSBPR01MB485510A2A32CD9D2CE5EF7A1DA070@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+ <345b62e1-407e-7a03-9b03-486bbf5a0a8e@canonical.com>
+ <20190521094622.syeub6tcqhbyc7sg@pali>
+ <OSBPR01MB4855D744473149D037612506DA000@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+ <20190522063546.kb74mxeprkauicul@pali>
+ <OSBPR01MB48550B43F78BBFBDC20D414DDA000@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+ <20190522074030.64sy7xt3wnomtxjb@pali> <20190523060154.GA10526@jelly>
+From:   Hui Wang <hui.wang@canonical.com>
+Message-ID: <38ec4a40-d51a-aeb1-a5e8-dbaed1142298@canonical.com>
+Date:   Fri, 24 May 2019 13:25:52 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190523060154.GA10526@jelly>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes: 1b3fa5cf859b ("net: ll_temac: Cleanup multicast filter on change")
-Signed-off-by: Esben Haabendal <esben@geanix.com>
----
- drivers/net/ethernet/xilinx/ll_temac_main.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/xilinx/ll_temac_main.c b/drivers/net/ethernet/xilinx/ll_temac_main.c
-index 22a52b884821..21c1b4322ea7 100644
---- a/drivers/net/ethernet/xilinx/ll_temac_main.c
-+++ b/drivers/net/ethernet/xilinx/ll_temac_main.c
-@@ -452,7 +452,7 @@ static void temac_set_multicast_list(struct net_device *ndev)
- {
- 	struct temac_local *lp = netdev_priv(ndev);
- 	u32 multi_addr_msw, multi_addr_lsw;
--	int i;
-+	int i = 0;
- 	unsigned long flags;
- 	bool promisc_mode_disabled = false;
- 
-@@ -468,7 +468,6 @@ static void temac_set_multicast_list(struct net_device *ndev)
- 	if (!netdev_mc_empty(ndev)) {
- 		struct netdev_hw_addr *ha;
- 
--		i = 0;
- 		netdev_for_each_mc_addr(ha, ndev) {
- 			if (WARN_ON(i >= MULTICAST_CAM_TABLE_NUM))
- 				break;
--- 
-2.21.0
+On 2019/5/23 下午2:01, Peter Hutterer wrote:
+> On Wed, May 22, 2019 at 09:40:30AM +0200, Pali Rohár wrote:
+>> On Wednesday 22 May 2019 07:30:43 Xiaoxiao Liu wrote:
+>>> Hi Pali,
+>>>
+>>> Ok, and cannot you set ALPS_DUALPOINT flag based on that
+>>> alps_check_is_trackpoint() result and then update
+>>> alps_process_packet_ss4_v3() code to supports also
+>>> V8 trackpoint packets?
+>>> --> Yes, we can do like so, when we use the v8 method to process the trackpoint , the mouse speed is not ideal.
+>>>        Then we choose the standard mouse driver.
+>> Mouse speed is something which is configurable. Have you configured it
+>> somehow? Also there is libinput project should handle these settings
+>> more properly.
+>>
+>> Adding Peter Hutterer, maintainer of libinput to loop. I think he could
+>> help with this problem.
+> libinput has a quirk for a magic multiplier on trackpoints. it was the only
+> solution I found that came close to "working" given that every device seems
+> to provide some other random magic data. Doc for it is here:
+> https://wayland.freedesktop.org/libinput/doc/latest/trackpoint-configuration.html
 
+Hello Peter Hutterer,
+
+To adjust the trackpoint speed from userspace:
+
+If the libinput version is lower than 1.9.0, we could set 
+POINTINGSTICK_CONST_ACCEL=0.25
+
+If the libinput version is higher than 1.12.0, we could set 
+AttrTrackpointMultiplier=0.25
+
+But if we use libinput-1.10.0,  how could we adjust the speed?
+
+Many thanks in advance.
+
+Hui.
+
+
+>
+> There are also different speeds depending on which xorg driver you'd use (or
+> libinput/Wayland), so a "mouse speed is not ideal" is almost a guarantee,
+> given a large enough variety of setups :) That's why we have the speed
+> toggle, but I'm happy to hear any suggestions on how to make the trackpoint
+> more useful (in libinput anyway).
+>
+>> I do not think it is a good idea to force back to generic PS/2 mouse
+>> driver for touchpads and trackpoints. Native drivers for touchpads and
+>> trackpoints supports multitouch, absolute reporting and lot of other
+>> things... Also calculation of mouse speed from absolute positions on
+>> touchpads can be more easily fixed as from emulated relative movements.
+> Yeah, agree. Using PS/2 mouse drivers means you lose *all* the extra
+> features touchpads have like palm detection, tapping, scrolling, gestures,
+> etc.
+>
+> Cheers,
+>     Peter
+>
+>> Dmitry, what is your opinion about this problem? What should psmouse.ko
+>> do in this situation? Disallow usage of absolute mode and force bare
+>> PS/2 relative mode?
+>
