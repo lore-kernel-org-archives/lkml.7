@@ -2,111 +2,79 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B3E2C282E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 627E6C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E469C20868
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:23:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558729429;
-	bh=94yP1P6UpoVLTkRfVTU2NEbWZYyrs6GV6Or3cr3SAkE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mq6IcxcSwj5JErI4hvh9nYlEtXz09m3GUkuyyR/li/VHKXUnRcxXSd27bokk26dH1
-	 Ao0eDhyaYngDAckIdh3mz0DPvMlrK/weXfZDhXsomJmMcSLsi2FS+RxYf6hs9dYYsY
-	 L+XPKY1yrDqkySjtZmhxT6ntJTePN9IlQDRw0y7c=
+	by mail.kernel.org (Postfix) with ESMTP id 25795217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:24:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404166AbfEXUXs (ORCPT
+        id S2404209AbfEXUYk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 16:23:48 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40502 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403762AbfEXUXr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 16:23:47 -0400
-Received: by mail-ot1-f65.google.com with SMTP id u11so9821760otq.7;
-        Fri, 24 May 2019 13:23:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yoB0L3qe36S2IhBoaOpwEJu+NSznEiRoc0Yquw1YBGY=;
-        b=P3eXJvDoJn+fgNCnmKj6jTepCycuoFfWmIcg8dodiBorpp7EaMwbgawn8VJdvkHMAN
-         i1JBNExBsqttLHiyhSLfsme8onhFnCLKoV7BsxtTDg6cDbR62M4cRGkXQxHpZYj+TQlj
-         8IFWAHr5ug73oCSQnfQdhTwlw75tWwhLTabYzA0oCxdj+V+5QZkxn8bRT53yyCyLHCan
-         MUjAANQ1PkkACrTdeK/YblZGBJsHK2yln8+llU4rxjwv2yKRAivvfBEncgOdPJvk2CDS
-         v6zz64O6IBigNAs/6kYpC6JrVJFl/Gbd1HOy98HC/KaOhUjEBPXUhACfbUKfn+/V7kME
-         XFgg==
-X-Gm-Message-State: APjAAAWWDOh+xU/rhaBv+5kipoO6P25otz2MDamXou0jdAGFhyO7maqG
-        A/TRY4r5Njjpc615sTnTVw==
-X-Google-Smtp-Source: APXvYqx0cRVBGu29WLtO7LQL9zHXwDoo3Y1496B2qClf9uMx1CjkdOw+AKOuxaRyoDl6F19tKtn2HA==
-X-Received: by 2002:a9d:6a10:: with SMTP id g16mr64874698otn.203.1558729426956;
-        Fri, 24 May 2019 13:23:46 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id r205sm1371259oig.0.2019.05.24.13.23.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 24 May 2019 13:23:46 -0700 (PDT)
-Date:   Fri, 24 May 2019 15:23:45 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com,
-        will.deacon@arm.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, mperttunen@nvidia.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, vidyas@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V7 06/15] dt-bindings: PCI: designware: Add binding for
- CDM register check
-Message-ID: <20190524202345.GA24243@bogus>
-References: <20190517123846.3708-1-vidyas@nvidia.com>
- <20190517123846.3708-7-vidyas@nvidia.com>
+        Fri, 24 May 2019 16:24:40 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45278 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2403762AbfEXUYk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 16:24:40 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DD832AD47;
+        Fri, 24 May 2019 20:24:38 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 7C4A6E00A9; Fri, 24 May 2019 22:24:38 +0200 (CEST)
+Date:   Fri, 24 May 2019 22:24:38 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH] kvm: fix compilation on s390
+Message-ID: <20190524202438.GE30439@unicorn.suse.cz>
+References: <1558725957-22998-1-git-send-email-pbonzini@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190517123846.3708-7-vidyas@nvidia.com>
+In-Reply-To: <1558725957-22998-1-git-send-email-pbonzini@redhat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 May 2019 18:08:37 +0530, Vidya Sagar wrote:
-> Add support to enable CDM (Configuration Dependent Module) registers check
-> for any data corruption. CDM registers include standard PCIe configuration
-> space registers, Port Logic registers and iATU and DMA registers.
-> Refer Section S.4 of Synopsys DesignWare Cores PCI Express Controller Databook
-> Version 4.90a
-> 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
-> Changes since [v6]:
-> * Changed "enable-cdm-check" to "snps,enable-cdm-check"
-> 
-> Changes since [v5]:
-> * None
-> 
-> Changes since [v4]:
-> * None
-> 
-> Changes since [v3]:
-> * None
-> 
-> Changes since [v2]:
-> * Changed flag name from 'cdm-check' to 'enable-cdm-check'
-> * Added info about Port Logic and DMA registers being part of CDM
-> 
-> Changes since [v1]:
-> * This is a new patch in v2 series
-> 
->  Documentation/devicetree/bindings/pci/designware-pcie.txt | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
+On Fri, May 24, 2019 at 09:25:57PM +0200, Paolo Bonzini wrote:
+> s390 does not have memremap, even though in this particular case it
+> would be useful.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+This is not completely true: memremap() is built when HAS_IOMEM is
+defined which on s390 depends on CONFIG_PCI. So for "normal" configs
+HAS_IOMEM would be enabled and memremap() would be available. We only
+encountered the build error with a special minimal config for zfcpdump.
+
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  virt/kvm/kvm_main.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index 1fadfb9cf36e..134ec0283a8a 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -1761,8 +1761,10 @@ static int __kvm_map_gfn(struct kvm_memory_slot *slot, gfn_t gfn,
+>  	if (pfn_valid(pfn)) {
+>  		page = pfn_to_page(pfn);
+>  		hva = kmap(page);
+> +#ifdef CONFIG_HAS_IOMEM
+>  	} else {
+>  		hva = memremap(pfn_to_hpa(pfn), PAGE_SIZE, MEMREMAP_WB);
+> +#endif
+>  	}
+>  
+>  	if (!hva)
+> -- 
+> 1.8.3.1
+
+I would have to run a test build to be sure but IMHO you will also need
+to handle the memunmap() call in kvm_vcpu_unmap().
+
+Michal Kubecek
