@@ -2,84 +2,179 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B05C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 782F9C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:55:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C71ED2177E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:54:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A6EB2177E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:55:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="ePWRj/pn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388287AbfEXCya (ORCPT
+        id S2388449AbfEXCzx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 22:54:30 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:37342 "EHLO huawei.com"
+        Thu, 23 May 2019 22:55:53 -0400
+Received: from mail-eopbgr30056.outbound.protection.outlook.com ([40.107.3.56]:26606
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387560AbfEXCy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 22:54:27 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 377D3BC6E59CB42BC67B;
-        Fri, 24 May 2019 10:54:25 +0800 (CST)
-Received: from [127.0.0.1] (10.184.191.73) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Fri, 24 May 2019
- 10:54:21 +0800
-Subject: Re: BUG: spinlock bad magic in rhashtable_walk_enter
-To:     syzbot <syzbot+01dd5c4b3c34a5cf9308@syzkaller.appspotmail.com>,
-        <davem@davemloft.net>, <jon.maloy@ericsson.com>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <syzkaller-bugs@googlegroups.com>,
-        <tipc-discussion@lists.sourceforge.net>, <ying.xue@windriver.com>
-References: <0000000000003df61e05899887d3@google.com>
-From:   hujunwei <hujunwei4@huawei.com>
-Message-ID: <7da38946-ae8f-93bf-99c3-28949eb46354@huawei.com>
-Date:   Fri, 24 May 2019 10:53:24 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <0000000000003df61e05899887d3@google.com>
-Content-Type: text/plain; charset="utf-8"
+        id S2387412AbfEXCzw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 22:55:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector1-arm-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eVSu/nEfhJKftFbch/0iUkLJh2GfIX7qVgVQ1SbPFlY=;
+ b=ePWRj/pn7HJN4XcbX3jleVptaM0xoETMNKaJBFlG96ahPyk6NulbDepKdzbqCnNyqcmrjedNPA1XMqCowGohjEX/b0nbmkB/qphd3quf0C+M1tpHtRXa+XhJPUBhe+R/65GHquLJyQMZzYT6qBZom1P1tZ0P5odv8BaJtRWWqhU=
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
+ VE1PR08MB4736.eurprd08.prod.outlook.com (10.255.112.76) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1878.24; Fri, 24 May 2019 02:55:46 +0000
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::206b:5cf6:97e:1358]) by VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::206b:5cf6:97e:1358%7]) with mapi id 15.20.1922.017; Fri, 24 May 2019
+ 02:55:45 +0000
+From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+To:     Liviu Dudau <Liviu.Dudau@arm.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "sean@poorly.run" <sean@poorly.run>
+CC:     "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
+        "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>,
+        nd <nd@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Ben Davis <Ben.Davis@arm.com>,
+        "Oscar Zhang (Arm Technology China)" <Oscar.Zhang@arm.com>,
+        "Channing Chen (Arm Technology China)" <Channing.Chen@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+Subject: [PATCH] drm/komeda: Refine function to_d71_input_id
+Thread-Topic: [PATCH] drm/komeda: Refine function to_d71_input_id
+Thread-Index: AQHVEdwuBJcfhXXS+U+jyK/WXjH9OA==
+Date:   Fri, 24 May 2019 02:55:45 +0000
+Message-ID: <20190524025525.19134-1-james.qian.wang@arm.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.184.191.73]
-X-CFilter-Loop: Reflected
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [113.29.88.7]
+x-clientproxiedby: HK0PR01CA0028.apcprd01.prod.exchangelabs.com
+ (2603:1096:203:3e::16) To VE1PR08MB5006.eurprd08.prod.outlook.com
+ (2603:10a6:803:113::31)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4f9cc606-7c04-4580-f719-08d6dff3508f
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VE1PR08MB4736;
+x-ms-traffictypediagnostic: VE1PR08MB4736:
+x-ms-exchange-purlcount: 1
+nodisclaimer: True
+x-microsoft-antispam-prvs: <VE1PR08MB47361766F05E7EC7CE66E629B3020@VE1PR08MB4736.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5236;
+x-forefront-prvs: 0047BC5ADE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(346002)(39860400002)(396003)(366004)(199004)(189003)(36756003)(486006)(316002)(476003)(2616005)(6306002)(6512007)(6436002)(305945005)(478600001)(50226002)(14444005)(256004)(7736002)(86362001)(81166006)(6486002)(8676002)(71200400001)(966005)(2201001)(8936002)(81156014)(71190400001)(53936002)(2501003)(25786009)(5660300002)(2906002)(4326008)(386003)(14454004)(66446008)(1076003)(6506007)(52116002)(66556008)(66066001)(54906003)(99286004)(110136005)(3846002)(186003)(6116002)(64756008)(103116003)(66946007)(102836004)(26005)(55236004)(68736007)(73956011)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB4736;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: BDS40woZHowihxgx+RHI6Up9maH3rYbYsTtHMHsetYayN9VSSBd0qugAKoLOXkcKeS1h6vFwdrEAbKjAOXIivEY2fBzoa36T4c2gfHvK1p+w76tqlykJ6ckaRwIg+xxW3W8Uha0hH+izd9pwsvulMRgyDMNMR7QHb0SmmSZMvW7QXryZd5NMWe2o6Gtky4e6ZPCIZsKB/jWIcCfJFqfh7NcKobucSZhYb9XWLlA70GUTjCIU2VIwdQJu41nLsg0IBPSFCRZUqZ/PdrLbFMxmn6kjHSL+GajqiAvfJVcPTg/hWHqlpHPLt0oKvkIgYGkDSISM9NEDehr0c7Fzf6tbrUnqBl9z/4/ZKy7Z2Hrkb7Z+VG7L3h3Xfp7atC0msPp21fKe0kkmNj1l0WohFImm4j9103HHm76hmavQPGivXKE=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4f9cc606-7c04-4580-f719-08d6dff3508f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 May 2019 02:55:45.8153
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB4736
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019/5/24 9:58, syzbot wrote:
-> syzbot has bisected this bug to:
-> 
-> commit 7e27e8d6130c5e88fac9ddec4249f7f2337fe7f8
-> Author: Junwei Hu <hujunwei4@huawei.com>
-> Date:   Thu May 16 02:51:15 2019 +0000
-> 
->     tipc: switch order of device registration to fix a crash>
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17c22c72a00000
-> start commit:   510e2ced ipv6: fix src addr routing with the exception table
-> git tree:       net
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=14222c72a00000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=10222c72a00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=82f0809e8f0a8c87
-> dashboard link: https://syzkaller.appspot.com/bug?extid=01dd5c4b3c34a5cf9308
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16b6373ca00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1251e73ca00000
-> 
-> Reported-by: syzbot+01dd5c4b3c34a5cf9308@syzkaller.appspotmail.com
-> Fixes: 7e27e8d6130c ("tipc: switch order of device registration to fix a crash")
-> 
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> 
-> .
-> 
-
-This bug was fixed by:
-commit 526f5b851a96 (" tipc: fix modprobe tipc failed after switch order of device registration")
-
-Regards,
-Junwei
-
+U2luY2UgdGhlIGNvbXBvbmVudF9zdGF0ZS0+aW5wdXRbaV0gaXMgb25seSB2YWxpZCB3aGVuIGl0
+IGlzIGFjdGl2ZSwgdGhlDQpjb250ZW50IG9mIGlucHV0W2ldIGlzIHVuZGVmaW5lZCBpZiBpdCBp
+cyBpbmFjdGl2ZS4gVGhlIHVzZXIgbXVzdCBjaGVjayB0aGUNCnN0YXRlLT5hY3RpdmVfaW5wdXRz
+IHdpdGggaW5wdXQgaW5kZXggZmlyc3RseSBiZWZvcmUgdXNpbmcgc3RhdGUtPmlucHV0W2ldLg0K
+UmVmaW5lIHRoZSBmdW5jdGlvbiB0b19kNzFfaW5wdXRfaWQgYW5kIGRpcmVjdGx5IG1vdmUgc3Vj
+aCBjaGVjayBpbnRvIGl0Lg0KU2ltcGxpZnkgdGhlIHVzaW5nIGFuZCBhdm9pZCBwcm9ibGVtIHRo
+YXQgY2FsbGVyIGZvcmdldCB0aGUgdmFsaWQgY2hlY2suDQoNCkRlcGVuZHMgb246DQotIGh0dHBz
+Oi8vcGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9yZy9zZXJpZXMvNjA4NTYvDQoNClNpZ25lZC1vZmYt
+Ynk6IEphbWVzIFFpYW4gV2FuZyAoQXJtIFRlY2hub2xvZ3kgQ2hpbmEpIDxqYW1lcy5xaWFuLndh
+bmdAYXJtLmNvbT4NCi0tLQ0KIC4uLi9hcm0vZGlzcGxheS9rb21lZGEvZDcxL2Q3MV9jb21wb25l
+bnQuYyAgICB8IDMyICsrKysrKysrKystLS0tLS0tLS0NCiAxIGZpbGUgY2hhbmdlZCwgMTcgaW5z
+ZXJ0aW9ucygrKSwgMTUgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9k
+cm0vYXJtL2Rpc3BsYXkva29tZWRhL2Q3MS9kNzFfY29tcG9uZW50LmMgYi9kcml2ZXJzL2dwdS9k
+cm0vYXJtL2Rpc3BsYXkva29tZWRhL2Q3MS9kNzFfY29tcG9uZW50LmMNCmluZGV4IGQxMDFhNWNj
+Mjc2Ni4uZmZmOWZjOGZhYjE1IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNw
+bGF5L2tvbWVkYS9kNzEvZDcxX2NvbXBvbmVudC5jDQorKysgYi9kcml2ZXJzL2dwdS9kcm0vYXJt
+L2Rpc3BsYXkva29tZWRhL2Q3MS9kNzFfY29tcG9uZW50LmMNCkBAIC0xNTYsMTEgKzE1NiwxNSBA
+QCBzdGF0aWMgdTMyIHRvX2FkX2N0cmwodTY0IG1vZGlmaWVyKQ0KIAlyZXR1cm4gYWZiY19jdHJs
+Ow0KIH0NCiANCi1zdGF0aWMgaW5saW5lIHUzMiB0b19kNzFfaW5wdXRfaWQoc3RydWN0IGtvbWVk
+YV9jb21wb25lbnRfb3V0cHV0ICpvdXRwdXQpDQorc3RhdGljIGlubGluZSB1MzIgdG9fZDcxX2lu
+cHV0X2lkKHN0cnVjdCBrb21lZGFfY29tcG9uZW50X3N0YXRlICpzdCwgaW50IGlkeCkNCiB7DQot
+CXN0cnVjdCBrb21lZGFfY29tcG9uZW50ICpjb21wID0gb3V0cHV0LT5jb21wb25lbnQ7DQorCXN0
+cnVjdCBrb21lZGFfY29tcG9uZW50X291dHB1dCAqaW5wdXQgPSAmc3QtPmlucHV0c1tpZHhdOw0K
+IA0KLQlyZXR1cm4gY29tcCA/IChjb21wLT5od19pZCArIG91dHB1dC0+b3V0cHV0X3BvcnQpIDog
+MDsNCisJLyogaWYgaW5wdXQgaXMgbm90IGFjdGl2ZSwgc2V0IGh3IGlucHV0X2lkKDApIHRvIGRp
+c2FibGUgaXQgKi8NCisJaWYgKGhhc19iaXQoaWR4LCBzdC0+YWN0aXZlX2lucHV0cykpDQorCQly
+ZXR1cm4gaW5wdXQtPmNvbXBvbmVudC0+aHdfaWQgKyBpbnB1dC0+b3V0cHV0X3BvcnQ7DQorCWVs
+c2UNCisJCXJldHVybiAwOw0KIH0NCiANCiBzdGF0aWMgdm9pZCBkNzFfbGF5ZXJfdXBkYXRlX2Zi
+KHN0cnVjdCBrb21lZGFfY29tcG9uZW50ICpjLA0KQEAgLTM4OCw3ICszOTIsNyBAQCBzdGF0aWMg
+dm9pZCBkNzFfd2JfbGF5ZXJfdXBkYXRlKHN0cnVjdCBrb21lZGFfY29tcG9uZW50ICpjLA0KIAkJ
+Y3RybCB8PSBMV19UQlVfRU47DQogDQogCW1hbGlkcF93cml0ZTMyKHJlZywgQkxLX0lOX1NJWkUs
+IEhWX1NJWkUoc3QtPmhzaXplLCBzdC0+dnNpemUpKTsNCi0JbWFsaWRwX3dyaXRlMzIocmVnLCBC
+TEtfSU5QVVRfSUQwLCB0b19kNzFfaW5wdXRfaWQoJnN0YXRlLT5pbnB1dHNbMF0pKTsNCisJbWFs
+aWRwX3dyaXRlMzIocmVnLCBCTEtfSU5QVVRfSUQwLCB0b19kNzFfaW5wdXRfaWQoc3RhdGUsIDAp
+KTsNCiAJbWFsaWRwX3dyaXRlMzJfbWFzayhyZWcsIEJMS19DT05UUk9MLCBtYXNrLCBjdHJsKTsN
+CiB9DQogDQpAQCAtNTEyLDE1ICs1MTYsMTUgQEAgc3RhdGljIHZvaWQgZDcxX2NvbXBpel91cGRh
+dGUoc3RydWN0IGtvbWVkYV9jb21wb25lbnQgKmMsDQogCXN0cnVjdCBrb21lZGFfY29tcGl6X3N0
+YXRlICpzdCA9IHRvX2NvbXBpel9zdChzdGF0ZSk7DQogCXUzMiBfX2lvbWVtICpyZWcgPSBjLT5y
+ZWc7DQogCXUzMiBfX2lvbWVtICppZF9yZWcsICpjZmdfcmVnOw0KLQl1MzIgaW5kZXgsIGlucHV0
+X2h3X2lkOw0KKwl1MzIgaW5kZXg7DQogDQogCWZvcl9lYWNoX2NoYW5nZWRfaW5wdXQoc3RhdGUs
+IGluZGV4KSB7DQogCQlpZF9yZWcgPSByZWcgKyBpbmRleDsNCiAJCWNmZ19yZWcgPSByZWcgKyBp
+bmRleCAqIENVX1BFUl9JTlBVVF9SRUdTOw0KLQkJaW5wdXRfaHdfaWQgPSB0b19kNzFfaW5wdXRf
+aWQoJnN0YXRlLT5pbnB1dHNbaW5kZXhdKTsNCiAJCWlmIChzdGF0ZS0+YWN0aXZlX2lucHV0cyAm
+IEJJVChpbmRleCkpIHsNCiAJCQljb21waXpfZW5hYmxlX2lucHV0KGlkX3JlZywgY2ZnX3JlZywN
+Ci0JCQkJCSAgICBpbnB1dF9od19pZCwgJnN0LT5jaW5zW2luZGV4XSk7DQorCQkJCQkgICAgdG9f
+ZDcxX2lucHV0X2lkKHN0YXRlLCBpbmRleCksDQorCQkJCQkgICAgJnN0LT5jaW5zW2luZGV4XSk7
+DQogCQl9IGVsc2Ugew0KIAkJCW1hbGlkcF93cml0ZTMyKGlkX3JlZywgQkxLX0lOUFVUX0lEMCwg
+MCk7DQogCQkJbWFsaWRwX3dyaXRlMzIoY2ZnX3JlZywgQ1VfSU5QVVQwX0NPTlRST0wsIDApOw0K
+QEAgLTY5Niw3ICs3MDAsNyBAQCBzdGF0aWMgdm9pZCBkNzFfc2NhbGVyX3VwZGF0ZShzdHJ1Y3Qg
+a29tZWRhX2NvbXBvbmVudCAqYywNCiAJCWN0cmwgfD0gU0NfQ1RSTF9MUzsNCiANCiAJbWFsaWRw
+X3dyaXRlMzIocmVnLCBCTEtfQ09OVFJPTCwgY3RybCk7DQotCW1hbGlkcF93cml0ZTMyKHJlZywg
+QkxLX0lOUFVUX0lEMCwgdG9fZDcxX2lucHV0X2lkKCZzdGF0ZS0+aW5wdXRzWzBdKSk7DQorCW1h
+bGlkcF93cml0ZTMyKHJlZywgQkxLX0lOUFVUX0lEMCwgdG9fZDcxX2lucHV0X2lkKHN0YXRlLCAw
+KSk7DQogfQ0KIA0KIHN0YXRpYyB2b2lkIGQ3MV9zY2FsZXJfZHVtcChzdHJ1Y3Qga29tZWRhX2Nv
+bXBvbmVudCAqYywgc3RydWN0IHNlcV9maWxlICpzZikNCkBAIC03NzIsNyArNzc2LDcgQEAgc3Rh
+dGljIHZvaWQgZDcxX21lcmdlcl91cGRhdGUoc3RydWN0IGtvbWVkYV9jb21wb25lbnQgKmMsDQog
+DQogCWZvcl9lYWNoX2NoYW5nZWRfaW5wdXQoc3RhdGUsIGluZGV4KQ0KIAkJbWFsaWRwX3dyaXRl
+MzIocmVnLCBNR19JTlBVVF9JRDAgKyBpbmRleCAqIDQsDQotCQkJICAgICAgIHRvX2Q3MV9pbnB1
+dF9pZCgmc3RhdGUtPmlucHV0c1tpbmRleF0pKTsNCisJCQkgICAgICAgdG9fZDcxX2lucHV0X2lk
+KHN0YXRlLCBpbmRleCkpOw0KIA0KIAltYWxpZHBfd3JpdGUzMihyZWcsIE1HX1NJWkUsIEhWX1NJ
+WkUoc3QtPmhzaXplX21lcmdlZCwNCiAJCQkJCSAgICAgc3QtPnZzaXplX21lcmdlZCkpOw0KQEAg
+LTgzOSwxMyArODQzLDExIEBAIHN0YXRpYyB2b2lkIGQ3MV9pbXByb2NfdXBkYXRlKHN0cnVjdCBr
+b21lZGFfY29tcG9uZW50ICpjLA0KIHsNCiAJc3RydWN0IGtvbWVkYV9pbXByb2Nfc3RhdGUgKnN0
+ID0gdG9faW1wcm9jX3N0KHN0YXRlKTsNCiAJdTMyIF9faW9tZW0gKnJlZyA9IGMtPnJlZzsNCi0J
+dTMyIGluZGV4LCBpbnB1dF9od19pZDsNCisJdTMyIGluZGV4Ow0KIA0KLQlmb3JfZWFjaF9jaGFu
+Z2VkX2lucHV0KHN0YXRlLCBpbmRleCkgew0KLQkJaW5wdXRfaHdfaWQgPSBzdGF0ZS0+YWN0aXZl
+X2lucHV0cyAmIEJJVChpbmRleCkgPw0KLQkJCSAgICAgIHRvX2Q3MV9pbnB1dF9pZCgmc3RhdGUt
+PmlucHV0c1tpbmRleF0pIDogMDsNCi0JCW1hbGlkcF93cml0ZTMyKHJlZywgQkxLX0lOUFVUX0lE
+MCArIGluZGV4ICogNCwgaW5wdXRfaHdfaWQpOw0KLQl9DQorCWZvcl9lYWNoX2NoYW5nZWRfaW5w
+dXQoc3RhdGUsIGluZGV4KQ0KKwkJbWFsaWRwX3dyaXRlMzIocmVnLCBCTEtfSU5QVVRfSUQwICsg
+aW5kZXggKiA0LA0KKwkJCSAgICAgICB0b19kNzFfaW5wdXRfaWQoc3RhdGUsIGluZGV4KSk7DQog
+DQogCW1hbGlkcF93cml0ZTMyKHJlZywgQkxLX1NJWkUsIEhWX1NJWkUoc3QtPmhzaXplLCBzdC0+
+dnNpemUpKTsNCiB9DQotLSANCjIuMTcuMQ0KDQo=
