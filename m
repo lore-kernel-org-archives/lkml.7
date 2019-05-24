@@ -2,77 +2,104 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C57E2C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 011DFC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A96802133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:26:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB2F720863
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:27:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="NH9RDoNq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391651AbfEXO0g (ORCPT
+        id S2391677AbfEXO1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 10:26:36 -0400
-Received: from foss.arm.com ([217.140.101.70]:44164 "EHLO foss.arm.com"
+        Fri, 24 May 2019 10:27:33 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:56108 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390885AbfEXO0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 10:26:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 234CAA78;
-        Fri, 24 May 2019 07:26:34 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E36243F575;
-        Fri, 24 May 2019 07:26:32 -0700 (PDT)
-Date:   Fri, 24 May 2019 15:26:30 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "van.freenix@gmail.com" <van.freenix@gmail.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH] firmware: arm_scmi: clock: set rate_discrete
-Message-ID: <20190524142630.GB4408@e107155-lin>
-References: <20190522102912.1032-1-peng.fan@nxp.com>
+        id S2390885AbfEXO1c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 10:27:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=Qg8YPqC0sLWiiM2apj3tRNk0cAK9VGI3Riy94bmfmbk=; b=NH9RDoNq1BbwA3D+/zz9k9LOFC
+        HaPaDOrD60MJ7EjI/YPI7N2i2XgqptON4aeWgXA1l9aqzwW5VC75rEz3KMQAzpdTpjwgfNHTLJlqI
+        Wwa58E47QFJAFtiSYhkYhkCAxLzdU80uaQE4922ZLA8DuZ2cOmxtA9HgRkBPyHX8Cfko=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hUBAO-0001b5-N0; Fri, 24 May 2019 16:27:28 +0200
+Date:   Fri, 24 May 2019 16:27:28 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 5/5] net: dsa: add support for mv88e6250
+Message-ID: <20190524142728.GL2979@lunn.ch>
+References: <20190501193126.19196-1-rasmus.villemoes@prevas.dk>
+ <20190524085921.11108-1-rasmus.villemoes@prevas.dk>
+ <20190524085921.11108-6-rasmus.villemoes@prevas.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190522102912.1032-1-peng.fan@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190524085921.11108-6-rasmus.villemoes@prevas.dk>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 10:15:21AM +0000, Peng Fan wrote:
-> The rate_discrete needs to be assigned to clk->rate_discrete,
-> then scmi_clk_round_rate could get the value.
->
+> @@ -4841,6 +4910,10 @@ static const struct of_device_id mv88e6xxx_of_match[] = {
+>  		.compatible = "marvell,mv88e6190",
+>  		.data = &mv88e6xxx_table[MV88E6190],
+>  	},
+> +	{
+> +		.compatible = "marvell,mv88e6250",
+> +		.data = &mv88e6xxx_table[MV88E6250],
+> +	},
+>  	{ /* sentinel */ },
+>  };
 
-Thanks for the fix, applied.
+Ah, yes. I had not thought about that. A device at address 0 would be
+found, but a device at address 16 would be missed.
 
-> Fixes: 5f6c6430e904 ("firmware: arm_scmi: add initial support for clock protocol")
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  drivers/firmware/arm_scmi/clock.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/firmware/arm_scmi/clock.c b/drivers/firmware/arm_scmi/clock.c
-> index 30fc04e28431..0a194af92438 100644
-> --- a/drivers/firmware/arm_scmi/clock.c
-> +++ b/drivers/firmware/arm_scmi/clock.c
-> @@ -185,6 +185,8 @@ scmi_clock_describe_rates_get(const struct scmi_handle *handle, u32 clk_id,
->  	if (rate_discrete)
->  		clk->list.num_rates = tot_rate_cnt;
+Please add this compatible string to Documentation/devicetree/bindings/net/dsa/marvell.txt 
+
+> +++ b/drivers/net/dsa/mv88e6xxx/global1.c
+> @@ -182,6 +182,25 @@ int mv88e6185_g1_reset(struct mv88e6xxx_chip *chip)
+>  	return mv88e6185_g1_wait_ppu_polling(chip);
+>  }
 >  
-> +	clk->rate_discrete = rate_discrete;
+> +int mv88e6250_g1_reset(struct mv88e6xxx_chip *chip)
+> +{
+> +	u16 val;
+> +	int err;
 > +
->  err:
->  	scmi_xfer_put(handle, t);
->  	return ret;
-> -- 
-> 2.16.4
-> 
+> +	/* Set the SWReset bit 15 */
+> +	err = mv88e6xxx_g1_read(chip, MV88E6XXX_G1_CTL1, &val);
+> +	if (err)
+> +		return err;
+> +
+> +	val |= MV88E6XXX_G1_CTL1_SW_RESET;
+> +
+> +	err = mv88e6xxx_g1_write(chip, MV88E6XXX_G1_CTL1, val);
+> +	if (err)
+> +		return err;
+> +
+> +	return mv88e6xxx_g1_wait_init_ready(chip);
+> +}
+
+It looks like you could refactor mv88e6352_g1_reset() to call
+this function, and then mv88e6352_g1_wait_ppu_polling(chip);
+
+Otherwise, this looks good.
+
+   Andrew
