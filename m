@@ -2,160 +2,88 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B94C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D603EC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 625F8206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:56:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA86F206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:57:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403969AbfEXN4d (ORCPT
+        id S2403985AbfEXN5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 09:56:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34720 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403843AbfEXN4d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 09:56:33 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 24 May 2019 09:57:00 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:44992 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403843AbfEXN47 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 09:56:59 -0400
+Received: from [IPv6:2a00:5f00:102:0:6dae:eb08:2e0f:5281] (unknown [IPv6:2a00:5f00:102:0:6dae:eb08:2e0f:5281])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 56B193087BD2;
-        Fri, 24 May 2019 13:56:29 +0000 (UTC)
-Received: from hp-dl360pgen8-07.khw2.lab.eng.bos.redhat.com (hp-dl360pgen8-07.khw2.lab.eng.bos.redhat.com [10.16.210.135])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4DE482CFD6;
-        Fri, 24 May 2019 13:56:25 +0000 (UTC)
-From:   Jarod Wilson <jarod@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Jarod Wilson <jarod@redhat.com>,
-        Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Subject: [PATCH net] bonding: make debugging output more succinct
-Date:   Fri, 24 May 2019 09:56:23 -0400
-Message-Id: <20190524135623.17326-1-jarod@redhat.com>
+        (Authenticated sender: gtucker)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 34688283DBD;
+        Fri, 24 May 2019 14:56:58 +0100 (BST)
+Subject: Re: mainline/master boot bisection: v5.2-rc1-172-g4dde821e4296 on
+ meson-g12a-x96-max
+To:     Kevin Hilman <khilman@baylibre.com>
+Cc:     tomeu.vizoso@collabora.com, mgalka@collabora.com,
+        Neil Armstrong <narmstrong@baylibre.com>, broonie@kernel.org,
+        matthew.hart@linaro.org, enric.balletbo@collabora.com,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+References: <5ce78689.1c69fb81.58097.eacf@mx.google.com>
+ <7hmujc0xnp.fsf@baylibre.com>
+From:   Guillaume Tucker <guillaume.tucker@collabora.com>
+Message-ID: <f01b812e-ee18-528b-1859-620dd8f0fb53@collabora.com>
+Date:   Fri, 24 May 2019 14:56:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Fri, 24 May 2019 13:56:32 +0000 (UTC)
+In-Reply-To: <7hmujc0xnp.fsf@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Seeing bonding debug log data along the lines of "event: 5" is a bit spartan,
-and often requires a lookup table if you don't remember what every event is.
-Make use of netdev_cmd_to_name for an improved debugging experience, so for
-the prior example, you'll see: "bond_netdev_event received NETDEV_REGISTER"
-instead (both are prefixed with the device for which the event pertains).
+On 24/05/2019 14:50, Kevin Hilman wrote:
+> "kernelci.org bot" <bot@kernelci.org> writes:
+> 
+>> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+>> * This automated bisection report was sent to you on the basis  *
+>> * that you may be involved with the breaking commit it has      *
+>> * found.  No manual investigation has been done to verify it,   *
+>> * and the root cause of the problem may be somewhere else.      *
+>> * Hope this helps!                                              *
+>> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+>>
+>> mainline/master boot bisection: v5.2-rc1-172-g4dde821e4296 on meson-g12a-x96-max
+>>
+>> Summary:
+>>   Start:      4dde821e4296 Merge tag 'xfs-5.2-fixes-1' of git://git.kernel.org/pub/scm/fs/xfs/xfs-linux
+>>   Details:    https://kernelci.org/boot/id/5ce72c6259b514ed817a3640
+>>   Plain log:  https://storage.kernelci.org//mainline/master/v5.2-rc1-172-g4dde821e4296/arm64/defconfig+CONFIG_RANDOMIZE_BASE=y/gcc-8/lab-baylibre/boot-meson-g12a-x96-max.txt
+>>   HTML log:   https://storage.kernelci.org//mainline/master/v5.2-rc1-172-g4dde821e4296/arm64/defconfig+CONFIG_RANDOMIZE_BASE=y/gcc-8/lab-baylibre/boot-meson-g12a-x96-max.html
+>>   Result:     11a7bea17c9e arm64: dts: meson: g12a: add pinctrl support controllers
+> 
+> False alarm.
+> 
+> This one is failing in one lab but passing in another:
+> https://kernelci.org/boot/all/job/mainline/branch/master/kernel/v5.2-rc1-172-g4dde821e4296/
+> 
+> I'll look into what's the difference between labs.
 
-There are also quite a few places that the netdev_dbg output could stand to
-mention exactly which slave the message pertains to (gets messy if you have
-multiple slaves all spewing at once to know which one they pertain to).
+Thanks for clarifying this.  I guess we should fix the logic
+which detects regressions to discard cases where there is a
+conflict between results in different labs.
 
-CC: Jay Vosburgh <j.vosburgh@gmail.com>
-CC: Veaceslav Falico <vfalico@gmail.com>
-CC: Andy Gospodarek <andy@greyhouse.net>
-CC: "David S. Miller" <davem@davemloft.net>
-CC: netdev@vger.kernel.org
-Signed-off-by: Jarod Wilson <jarod@redhat.com>
----
- drivers/net/bonding/bond_main.c | 27 ++++++++++++++++++---------
- 1 file changed, 18 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index 407f4095a37a..4acc352b316b 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -1515,7 +1515,8 @@ int bond_enslave(struct net_device *bond_dev, struct net_device *slave_dev,
- 	new_slave->original_mtu = slave_dev->mtu;
- 	res = dev_set_mtu(slave_dev, bond->dev->mtu);
- 	if (res) {
--		netdev_dbg(bond_dev, "Error %d calling dev_set_mtu\n", res);
-+		netdev_dbg(bond_dev, "Error %d calling dev_set_mtu for slave %s\n",
-+			   res, slave_dev->name);
- 		goto err_free;
- 	}
- 
-@@ -1536,7 +1537,8 @@ int bond_enslave(struct net_device *bond_dev, struct net_device *slave_dev,
- 		res = dev_set_mac_address(slave_dev, (struct sockaddr *)&ss,
- 					  extack);
- 		if (res) {
--			netdev_dbg(bond_dev, "Error %d calling set_mac_address\n", res);
-+			netdev_dbg(bond_dev, "Error %d calling set_mac_address for slave %s\n",
-+				   res, slave_dev->name);
- 			goto err_restore_mtu;
- 		}
- 	}
-@@ -1636,7 +1638,8 @@ int bond_enslave(struct net_device *bond_dev, struct net_device *slave_dev,
- 
- 	if (new_slave->link != BOND_LINK_DOWN)
- 		new_slave->last_link_up = jiffies;
--	netdev_dbg(bond_dev, "Initial state of slave_dev is BOND_LINK_%s\n",
-+	netdev_dbg(bond_dev, "%s: Initial state of slave_dev %s is BOND_LINK_%s\n",
-+		   __func__, slave_dev->name,
- 		   new_slave->link == BOND_LINK_DOWN ? "DOWN" :
- 		   (new_slave->link == BOND_LINK_UP ? "UP" : "BACK"));
- 
-@@ -1679,7 +1682,8 @@ int bond_enslave(struct net_device *bond_dev, struct net_device *slave_dev,
- 		bond_set_slave_inactive_flags(new_slave, BOND_SLAVE_NOTIFY_NOW);
- 		break;
- 	default:
--		netdev_dbg(bond_dev, "This slave is always active in trunk mode\n");
-+		netdev_dbg(bond_dev, "This slave (%s) is always active in trunk mode\n",
-+			   slave_dev->name);
- 
- 		/* always active in trunk mode */
- 		bond_set_active_slave(new_slave);
-@@ -1698,7 +1702,8 @@ int bond_enslave(struct net_device *bond_dev, struct net_device *slave_dev,
- #ifdef CONFIG_NET_POLL_CONTROLLER
- 	if (bond->dev->npinfo) {
- 		if (slave_enable_netpoll(new_slave)) {
--			netdev_info(bond_dev, "master_dev is using netpoll, but new slave device does not support netpoll\n");
-+			netdev_info(bond_dev, "master_dev is using netpoll, but new slave device %s does not support netpoll\n",
-+				    slave_dev->name);
- 			res = -EBUSY;
- 			goto err_detach;
- 		}
-@@ -1711,19 +1716,22 @@ int bond_enslave(struct net_device *bond_dev, struct net_device *slave_dev,
- 	res = netdev_rx_handler_register(slave_dev, bond_handle_frame,
- 					 new_slave);
- 	if (res) {
--		netdev_dbg(bond_dev, "Error %d calling netdev_rx_handler_register\n", res);
-+		netdev_dbg(bond_dev, "Error %d calling netdev_rx_handler_register for slave %s\n",
-+			   res, slave_dev->name);
- 		goto err_detach;
- 	}
- 
- 	res = bond_master_upper_dev_link(bond, new_slave, extack);
- 	if (res) {
--		netdev_dbg(bond_dev, "Error %d calling bond_master_upper_dev_link\n", res);
-+		netdev_dbg(bond_dev, "Error %d calling bond_master_upper_dev_link for slave %s\n",
-+			   res, slave_dev->name);
- 		goto err_unregister;
- 	}
- 
- 	res = bond_sysfs_slave_add(new_slave);
- 	if (res) {
--		netdev_dbg(bond_dev, "Error %d calling bond_sysfs_slave_add\n", res);
-+		netdev_dbg(bond_dev, "Error %d calling bond_sysfs_slave_add for slave %s\n",
-+			   res, slave_dev->name);
- 		goto err_upper_unlink;
- 	}
- 
-@@ -3212,7 +3220,8 @@ static int bond_netdev_event(struct notifier_block *this,
- {
- 	struct net_device *event_dev = netdev_notifier_info_to_dev(ptr);
- 
--	netdev_dbg(event_dev, "event: %lx\n", event);
-+	netdev_dbg(event_dev, "%s received %s\n",
-+		   __func__, netdev_cmd_to_name(event));
- 
- 	if (!(event_dev->priv_flags & IFF_BONDING))
- 		return NOTIFY_DONE;
--- 
-2.20.1
-
+Guillaume
