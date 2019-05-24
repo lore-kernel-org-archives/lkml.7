@@ -2,105 +2,91 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7286C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D2BC282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A541620645
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:38:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3AEB20645
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:39:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S1rw7AVx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390185AbfEXJiw (ORCPT
+        id S2390252AbfEXJjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 05:38:52 -0400
-Received: from foss.arm.com ([217.140.101.70]:38156 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389881AbfEXJiw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 05:38:52 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C6D65A78;
-        Fri, 24 May 2019 02:38:51 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1FD4E3F703;
-        Fri, 24 May 2019 02:38:47 -0700 (PDT)
-Date:   Fri, 24 May 2019 10:38:41 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Atish Patra <atish.patra@wdc.com>,
-        linux-kernel@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Andreas Schwab <schwab@suse.de>,
-        Anup Patel <anup@brainfault.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        devicetree@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        linux-riscv@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Otto Sabart <ottosabart@seberm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [RFT PATCH v5 3/5] cpu-topology: Move cpu topology code to
- common code.
-Message-ID: <20190524093754.GA3432@fuggles.cambridge.arm.com>
-References: <20190524000653.13005-1-atish.patra@wdc.com>
- <20190524000653.13005-4-atish.patra@wdc.com>
- <20190524081333.GA15566@kroah.com>
- <20190524085720.GA13121@e107155-lin>
+        Fri, 24 May 2019 05:39:45 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46785 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389841AbfEXJjo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 05:39:44 -0400
+Received: by mail-lj1-f195.google.com with SMTP id m15so8035372ljg.13;
+        Fri, 24 May 2019 02:39:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=pLG4HwSPDeFqFoO0sL50L7Vp6hlITsqcMm3GOLkhZSg=;
+        b=S1rw7AVxIco9LK6fEnDYEhZWjhsLjsaf0KZWWwQgI2dj/4gnOotXrrFy63e0XqGHZU
+         /r6jKDGcZcYZY2VXAc7UxTXaHrk/LwFPWNGlp51jgXUsH6MLebUBW482GONEdj2G0PIW
+         63ROnxduLs5ZSa6Uf3++Chm8Clp9XI9YOnpkjBMM4tTuZAt5a2nA2iQix2e5mU2rLjkc
+         FTjyhptESjaXpN0JlWkaOEDjzdAcplXds5nEWT7PN9k4qq/3hr8F0AelWMFcE9x4SM9l
+         G9lJqE10DJcWmq8IIsLRiC7sB6TUh8nHgId65ZBTVjfxAl/OpJ5Ow3F7fjIdY+qvFEy4
+         XpuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=pLG4HwSPDeFqFoO0sL50L7Vp6hlITsqcMm3GOLkhZSg=;
+        b=sb2yVv23p6ymlu9NbcyXk0u5WgkuJYJz21nh7ZCkdw1PGyGEPMZuju8cWOuN0zgKts
+         q1hlG7X7iz2/bTv2jUAbJ30r3zwAREpNM5JpqX90tRPvjbpWA1eDjTWJp6tFPAjPtkOQ
+         MLIXC9a4A/bXk7UTcDpuE0cIGiwd0pvP+qpg7Y2YF7zpqnXlLg9GP7zL9ZNNEDbFUTTA
+         9bbJgbUHRekjom0UKwOl5r7/U3y0bzPEfR2x83xhUPqWNcmZT1fp+1dljbiwnH5R1wcm
+         dwJR++W3nyi+Jt18AQVFbkNjjYLWFEmpAtIK8jpAqyR4iz7NOmy7VZQpNf17aAUBNj++
+         X4iw==
+X-Gm-Message-State: APjAAAVhaU2Whpjzevai+vXwIWMuQXV6Gz7Su3o0Zvy/smMlIg4EU+T5
+        ikrFN45+qOHqGloh+vXcyBs=
+X-Google-Smtp-Source: APXvYqyIjCahILMqH7knW6yLej57c4Hug7DNGZ788l61rXSXB7+g5mLd36evjocxtJLNdYcZLGOzjQ==
+X-Received: by 2002:a2e:9b46:: with SMTP id o6mr14898732ljj.76.1558690782127;
+        Fri, 24 May 2019 02:39:42 -0700 (PDT)
+Received: from [10.17.182.120] (ll-22.209.223.85.sovam.net.ua. [85.223.209.22])
+        by smtp.gmail.com with ESMTPSA id f189sm497368lfe.66.2019.05.24.02.39.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 May 2019 02:39:41 -0700 (PDT)
+Subject: Re: [PATCH V5] ARM: mach-shmobile: Don't init CNTVOFF/counter if PSCI
+ is available
+From:   Oleksandr <olekstysh@gmail.com>
+To:     linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     julien.grall@arm.com, horms@verge.net.au, magnus.damm@gmail.com,
+        linux@armlinux.org.uk, geert@linux-m68k.org,
+        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+References: <1558087093-22113-1-git-send-email-olekstysh@gmail.com>
+Message-ID: <b51b7d40-0023-0ddb-c00c-02ad8c5a0529@gmail.com>
+Date:   Fri, 24 May 2019 12:39:40 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190524085720.GA13121@e107155-lin>
-User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
+In-Reply-To: <1558087093-22113-1-git-send-email-olekstysh@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 09:57:40AM +0100, Sudeep Holla wrote:
-> On Fri, May 24, 2019 at 10:13:33AM +0200, Greg Kroah-Hartman wrote:
-> > On Thu, May 23, 2019 at 05:06:50PM -0700, Atish Patra wrote:
-> > > Both RISC-V & ARM64 are using cpu-map device tree to describe
-> > > their cpu topology. It's better to move the relevant code to
-> > > a common place instead of duplicate code.
-> > > 
-> > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> > > Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
-> > > ---
-> > >  arch/arm64/include/asm/topology.h |  23 ---
-> > >  arch/arm64/kernel/topology.c      | 303 +-----------------------------
-> > >  drivers/base/arch_topology.c      | 296 +++++++++++++++++++++++++++++
-> > >  include/linux/arch_topology.h     |  28 +++
-> > >  include/linux/topology.h          |   1 +
-> > >  5 files changed, 329 insertions(+), 322 deletions(-)
-> >
-> > What, now _I_ have to maintain drivers/base/arch_topology.c?  That's
-> > nice for everyone else, but not me :(
-> >
-> > Ugh.
-> >
-> > Anyway, what are you wanting to happen to this series?  I think we need
-> > some ARM people to sign off on it before I can take the whole thing,
-> > right?
-> >
-> 
-> Greg, I am ready to take ownership. Juri the original author of this file
-> agreed and I have been reviewing this file since Juri first wrote it.
-> I am happy to submit a patch assuming maintainership for this file, was
-> just waiting to hear from you when I asked explicitly you and Juri in
-> last version of the patch when Will wanted someone from ARM to be reviewer
-> of this file at-least. I am happy to take over as reviewer or maintainer
-> which ever you prefer.
 
-Yes, please just include this update to MAINTAINERS as part of the series.
-I'll ack it.
+Hello, all
 
-Will
+
+Gentle reminder...
+
+-- 
+Regards,
+
+Oleksandr Tyshchenko
+
