@@ -2,80 +2,111 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0BD3C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B3E2C282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:23:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBB4B20868
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:23:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="54q42ja2"
+	by mail.kernel.org (Postfix) with ESMTP id E469C20868
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 20:23:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558729429;
+	bh=94yP1P6UpoVLTkRfVTU2NEbWZYyrs6GV6Or3cr3SAkE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mq6IcxcSwj5JErI4hvh9nYlEtXz09m3GUkuyyR/li/VHKXUnRcxXSd27bokk26dH1
+	 Ao0eDhyaYngDAckIdh3mz0DPvMlrK/weXfZDhXsomJmMcSLsi2FS+RxYf6hs9dYYsY
+	 L+XPKY1yrDqkySjtZmhxT6ntJTePN9IlQDRw0y7c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404137AbfEXUXg (ORCPT
+        id S2404166AbfEXUXs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 16:23:36 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:57128 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403773AbfEXUXf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 16:23:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=bDsqxALkxYQxXBvbrK01Y5BlnfSQ+RN3jo811XTmmO8=; b=54q42ja2NlfDNGqztWs/Z93ghp
-        og9BN7MpDq6doBjHZIysXr+fOhtRDpVndBSEh53BL58wZttpsVNNpF/okJ4bc9wXD/1DzppZAoIfM
-        eUyFsZZNS8eTC90nUQ02LYd898DL/rr58WDaGAssoN2vxirDz7NbYPtzhKHPjXn2+it0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hUGip-0004Ys-P6; Fri, 24 May 2019 22:23:23 +0200
-Date:   Fri, 24 May 2019 22:23:23 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     "Ruslan Babayev (fib)" <fib@cisco.com>
-Cc:     "20190505220524.37266-2-ruslan@babayev.com" 
-        <20190505220524.37266-2-ruslan@babayev.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "wsa@the-dreams.de" <wsa@the-dreams.de>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "xe-linux-external(mailer list)" <xe-linux-external@cisco.com>
-Subject: Re: [PATCH RFC v2 net-next 2/2] net: phy: sfp: enable i2c-bus
- detection on ACPI based systems
-Message-ID: <20190524202323.GS21208@lunn.ch>
-References: <20190505220524.37266-2-ruslan@babayev.com>
- <20190507003557.40648-3-ruslan@babayev.com>
- <20190507023812.GA12262@lunn.ch>
- <BYAPR11MB3383B74F06254EDA7157D314AD310@BYAPR11MB3383.namprd11.prod.outlook.com>
- <BYAPR11MB33837495646A3A0BB23AD1B4AD000@BYAPR11MB3383.namprd11.prod.outlook.com>
+        Fri, 24 May 2019 16:23:48 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40502 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403762AbfEXUXr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 16:23:47 -0400
+Received: by mail-ot1-f65.google.com with SMTP id u11so9821760otq.7;
+        Fri, 24 May 2019 13:23:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yoB0L3qe36S2IhBoaOpwEJu+NSznEiRoc0Yquw1YBGY=;
+        b=P3eXJvDoJn+fgNCnmKj6jTepCycuoFfWmIcg8dodiBorpp7EaMwbgawn8VJdvkHMAN
+         i1JBNExBsqttLHiyhSLfsme8onhFnCLKoV7BsxtTDg6cDbR62M4cRGkXQxHpZYj+TQlj
+         8IFWAHr5ug73oCSQnfQdhTwlw75tWwhLTabYzA0oCxdj+V+5QZkxn8bRT53yyCyLHCan
+         MUjAANQ1PkkACrTdeK/YblZGBJsHK2yln8+llU4rxjwv2yKRAivvfBEncgOdPJvk2CDS
+         v6zz64O6IBigNAs/6kYpC6JrVJFl/Gbd1HOy98HC/KaOhUjEBPXUhACfbUKfn+/V7kME
+         XFgg==
+X-Gm-Message-State: APjAAAWWDOh+xU/rhaBv+5kipoO6P25otz2MDamXou0jdAGFhyO7maqG
+        A/TRY4r5Njjpc615sTnTVw==
+X-Google-Smtp-Source: APXvYqx0cRVBGu29WLtO7LQL9zHXwDoo3Y1496B2qClf9uMx1CjkdOw+AKOuxaRyoDl6F19tKtn2HA==
+X-Received: by 2002:a9d:6a10:: with SMTP id g16mr64874698otn.203.1558729426956;
+        Fri, 24 May 2019 13:23:46 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id r205sm1371259oig.0.2019.05.24.13.23.46
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 24 May 2019 13:23:46 -0700 (PDT)
+Date:   Fri, 24 May 2019 15:23:45 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com,
+        will.deacon@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, mperttunen@nvidia.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, vidyas@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V7 06/15] dt-bindings: PCI: designware: Add binding for
+ CDM register check
+Message-ID: <20190524202345.GA24243@bogus>
+References: <20190517123846.3708-1-vidyas@nvidia.com>
+ <20190517123846.3708-7-vidyas@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <BYAPR11MB33837495646A3A0BB23AD1B4AD000@BYAPR11MB3383.namprd11.prod.outlook.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190517123846.3708-7-vidyas@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 07:29:06PM +0000, Ruslan Babayev (fib) wrote:
-> Hi Andrew,
+On Fri, 17 May 2019 18:08:37 +0530, Vidya Sagar wrote:
+> Add support to enable CDM (Configuration Dependent Module) registers check
+> for any data corruption. CDM registers include standard PCIe configuration
+> space registers, Port Logic registers and iATU and DMA registers.
+> Refer Section S.4 of Synopsys DesignWare Cores PCI Express Controller Databook
+> Version 4.90a
 > 
-> Just wanted to follow up on the patch. Does it look good? Do you have any other feedback, concerns with this patch?
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> Changes since [v6]:
+> * Changed "enable-cdm-check" to "snps,enable-cdm-check"
+> 
+> Changes since [v5]:
+> * None
+> 
+> Changes since [v4]:
+> * None
+> 
+> Changes since [v3]:
+> * None
+> 
+> Changes since [v2]:
+> * Changed flag name from 'cdm-check' to 'enable-cdm-check'
+> * Added info about Port Logic and DMA registers being part of CDM
+> 
+> Changes since [v1]:
+> * This is a new patch in v2 series
+> 
+>  Documentation/devicetree/bindings/pci/designware-pcie.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
 
-Hi Ruslan
-
-From what i remember, it is O.K.
-
-I will review it again when you repost it.
-
-  Andrew
+Reviewed-by: Rob Herring <robh@kernel.org>
