@@ -7,57 +7,60 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F294CC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:11:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B5FCC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B67B62075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:11:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E40D92075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:11:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Xvczf2tB"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="bOeWLx4E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389442AbfEXILK (ORCPT
+        id S2389468AbfEXILW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 04:11:10 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:59421 "EHLO
+        Fri, 24 May 2019 04:11:22 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:58945 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389142AbfEXILJ (ORCPT
+        with ESMTP id S2389397AbfEXILV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 04:11:09 -0400
+        Fri, 24 May 2019 04:11:21 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4O8Awv7119070
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4O88urr118516
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 24 May 2019 01:10:58 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4O8Awv7119070
+        Fri, 24 May 2019 01:08:56 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4O88urr118516
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1558685459;
-        bh=QuzX0rf8B5EgG1b2rUQWn/FFr7x3DA/wf0KS8rFHils=;
+        s=2019051801; t=1558685336;
+        bh=/g2qr/niuIcpb3juF6H+paxatAK0nWwxC7eMCGVMUWY=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=Xvczf2tBEGd1AbMmp2kv9iSD0MMXMVxBMOxCIQmuJLVosb7FikD5M1lbV6EWMC8uj
-         oIHVEXXp/RIpbZ4GPqlmY44u7TH46ZXsSdvCwQ7ceaLWnmDmBVVE4/PgkZZpPO8S0W
-         ovCGibhw359p0rHuvMSj3kVRPcwaKoEdHGc2BCW3HVScWUl+NOLG0a0htULE3NdT+a
-         ArlR8Z9HVbzzFQnRjJ/fNUwnbPpTFzpyzk1vqx0iYEij/UHUNGzYJw6OFzGbtGTZZF
-         gWBG/nZF7GPkQk9skAsAQ22GYISIFBS6iOLcAnIUJz1ZWcaKEd+regO/qGsUYEBxew
-         co1JSXatdH+sg==
+        b=bOeWLx4EGKIfw7OmyYR7jw0m68++5ZHEeCOxptrGm4fsynTfxKpOPA+GXaLt5iGxF
+         t5FF21U2gwy2iR9pY0gi+/HBp0zaMWeqYz3OTtyFiJrpdhzIoZ4+rlxkSkkAQ+IXau
+         8ALC+iwgXelRPirBY7xYBH1sL6hKxWV+klclt4rKDprKcIaSlBt3cittWKGpkKh/M0
+         mdZstIPdenbxtGyhZn7mIGNNRGwiq6hlDtPzePnfzZFDBfvyogZ1DIWmrQj8yqj+sd
+         ZtOsYJ6110TgtsZdEuiQZbBbJ5GgCelyjpWq8bPB9lBw2C9Vt5B4FIXZ8+pxIQDrxz
+         OYlUe5iZq3O7Q==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4O8AwEn119067;
-        Fri, 24 May 2019 01:10:58 -0700
-Date:   Fri, 24 May 2019 01:10:58 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4O88tuU118513;
+        Fri, 24 May 2019 01:08:55 -0700
+Date:   Fri, 24 May 2019 01:08:55 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Anders Roxell <tipbot@zytor.com>
-Message-ID: <tip-c0090c4c85c27d1fa3d785c935501b7207cd2869@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        peterz@infradead.org, tglx@linutronix.de, mingo@kernel.org,
-        anders.roxell@linaro.org, hpa@zytor.com
-Reply-To: anders.roxell@linaro.org, hpa@zytor.com,
-          linux-kernel@vger.kernel.org, peterz@infradead.org,
-          mingo@kernel.org, torvalds@linux-foundation.org,
-          tglx@linutronix.de
-In-Reply-To: <20190516191326.27003-1-anders.roxell@linaro.org>
-References: <20190516191326.27003-1-anders.roxell@linaro.org>
+From:   tip-bot for Peter Zijlstra <tipbot@zytor.com>
+Message-ID: <tip-3f9fbe9bd86c534eba2faf5d840fd44c6049f50e@git.kernel.org>
+Cc:     yabinc@google.com, eranian@google.com, mingo@kernel.org,
+        jolsa@redhat.com, linux-kernel@vger.kernel.org, acme@redhat.com,
+        tglx@linutronix.de, vincent.weaver@maine.edu, peterz@infradead.org,
+        torvalds@linux-foundation.org, hpa@zytor.com,
+        alexander.shishkin@linux.intel.com
+Reply-To: peterz@infradead.org, linux-kernel@vger.kernel.org,
+          jolsa@redhat.com, vincent.weaver@maine.edu, eranian@google.com,
+          mingo@kernel.org, alexander.shishkin@linux.intel.com,
+          hpa@zytor.com, torvalds@linux-foundation.org, acme@redhat.com,
+          tglx@linutronix.de, yabinc@google.com
+In-Reply-To: <20190517115418.309516009@infradead.org>
+References: <20190517115418.309516009@infradead.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:locking/core] locking/lockdep: Remove the unused
- print_lock_trace() function
-Git-Commit-ID: c0090c4c85c27d1fa3d785c935501b7207cd2869
+Subject: [tip:perf/urgent] perf/ring_buffer: Add ordering to rb->nest
+ increment
+Git-Commit-ID: 3f9fbe9bd86c534eba2faf5d840fd44c6049f50e
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -71,46 +74,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  c0090c4c85c27d1fa3d785c935501b7207cd2869
-Gitweb:     https://git.kernel.org/tip/c0090c4c85c27d1fa3d785c935501b7207cd2869
-Author:     Anders Roxell <anders.roxell@linaro.org>
-AuthorDate: Thu, 16 May 2019 21:13:26 +0200
+Commit-ID:  3f9fbe9bd86c534eba2faf5d840fd44c6049f50e
+Gitweb:     https://git.kernel.org/tip/3f9fbe9bd86c534eba2faf5d840fd44c6049f50e
+Author:     Peter Zijlstra <peterz@infradead.org>
+AuthorDate: Fri, 17 May 2019 13:52:32 +0200
 Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Fri, 24 May 2019 09:05:46 +0200
+CommitDate: Fri, 24 May 2019 09:00:10 +0200
 
-locking/lockdep: Remove the unused print_lock_trace() function
+perf/ring_buffer: Add ordering to rb->nest increment
 
-gcc warns that function print_lock_trace() is unused if
-CONFIG_PROVE_LOCKING isn't set:
+Similar to how decrementing rb->next too early can cause data_head to
+(temporarily) be observed to go backward, so too can this happen when
+we increment too late.
 
-../kernel/locking/lockdep.c:2820:13: warning: ‘print_lock_trace’ defined but not used [-Wunused-function]
+This barrier() ensures the rb->head load happens after the increment,
+both the one in the 'goto again' path, as the one from
+perf_output_get_handle() -- albeit very unlikely to matter for the
+latter.
 
-Rework so we remove the function if CONFIG_PROVE_LOCKING isn't set.
-
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+Suggested-by: Yabin Cui <yabinc@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: will.deacon@arm.com
-Fixes: c120bce78065 ("lockdep: Simplify stack trace handling")
-Link: http://lkml.kernel.org/r/20190516191326.27003-1-anders.roxell@linaro.org
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: acme@kernel.org
+Cc: mark.rutland@arm.com
+Cc: namhyung@kernel.org
+Fixes: ef60777c9abd ("perf: Optimize the perf_output() path by removing IRQ-disables")
+Link: http://lkml.kernel.org/r/20190517115418.309516009@infradead.org
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/locking/lockdep.c | 4 ----
- 1 file changed, 4 deletions(-)
+ kernel/events/ring_buffer.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 6b283b4f87aa..8d32ae7768a7 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -2818,10 +2818,6 @@ static inline int validate_chain(struct task_struct *curr,
- {
- 	return 1;
- }
--
--static void print_lock_trace(struct lock_trace *trace, unsigned int spaces)
--{
--}
- #endif
+diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+index 009467a60578..4b5f8d932400 100644
+--- a/kernel/events/ring_buffer.c
++++ b/kernel/events/ring_buffer.c
+@@ -48,6 +48,15 @@ static void perf_output_put_handle(struct perf_output_handle *handle)
+ 	unsigned long head;
  
- /*
+ again:
++	/*
++	 * In order to avoid publishing a head value that goes backwards,
++	 * we must ensure the load of @rb->head happens after we've
++	 * incremented @rb->nest.
++	 *
++	 * Otherwise we can observe a @rb->head value before one published
++	 * by an IRQ/NMI happening between the load and the increment.
++	 */
++	barrier();
+ 	head = local_read(&rb->head);
+ 
+ 	/*
