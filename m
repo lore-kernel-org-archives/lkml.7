@@ -2,339 +2,71 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,UNWANTED_LANGUAGE_BODY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E380C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 03:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D207FC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 03:35:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EEC6217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 03:31:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ECFB217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 03:35:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558668672;
-	bh=/8PChrNts2sHp4IS5n85grGVaeMjGZMHII9MmvZjPW0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GNvBlMiYPf3RZusNRCEHG91KY2oVBuTCJH+1o8M/Hs3E0BMjV0J929Ty200gg15Vk
-	 MOASKs/xC0ECbWqr42BPQSaRxEPn+rEJSQIPa+ghxkf5qkM87h69J8c5jnphlauVEJ
-	 Ionv4J9dQ+Ibq+5VsbCAvb6cStwDnjlwzvGjOwIc=
+	s=default; t=1558668926;
+	bh=GbrlHKi71gaVsN79M3+9tkZQr3yHgBtNIIbYV9ulLS0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=H8SCZ+4SkoukN3tFss73b7oiE98s8XYrjUU2NllPArGiI0LQHGvrcOQKAO7Mz0fo3
+	 pBXjJC4V9aHcoimatCUF4nnSmWympenmcxd4EP1CY7l3xeGlp9QvfeyknHTWFjvmmO
+	 wCmzynFXLwEp9YbcOogHLUG7HAGY/igz6dgx85nM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388879AbfEXDbL (ORCPT
+        id S2388131AbfEXDfZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 23:31:11 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:40191 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387559AbfEXDbI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 23:31:08 -0400
-Received: by mail-it1-f194.google.com with SMTP id h11so11738235itf.5
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 20:31:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=NOUKIenyWb7JRfVgX8S9ZQxhYo8YmVHyOF5VfRnqqnU=;
-        b=X0ZyTNLUV4MYdlt/N9pw7L0gcErjDhxg4776cUOYRdKvdZE6axWY4ADF/n4JSJL45S
-         yc41KrztoFZ55N/9hhs9G+aRFN9SV65DFmTe4qiwZq1VZ69vgyBxmvtVkZ6qxEFa8Sdm
-         7JR0xozjFco66xO7BLKXBUUWaxwmEyat0S5+Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=NOUKIenyWb7JRfVgX8S9ZQxhYo8YmVHyOF5VfRnqqnU=;
-        b=QAJouZ4+erAqdF1sIxkjjcRyiE5Gcde1RuCvnneRxfPgtF6tCQKDMH+uWvGoF0Dbzu
-         TGAwpgCpAJIoDAG5U8C58KlN1WyqQP/2Ruxj07V9qmVWlokOoG2Budnv/rRtPLeaBkKk
-         AYUgTZb3TtDVmNrQatzdvKuGMXJbuVM+RZyKia3/i0U6nerEC0QGZr1QuUxreh896U83
-         ikcYo35d9jJj5s4mJouUFR6QAYwKGlU/dsUbbup8nwUs4Nx2n4om/eN77pW1CevBSblQ
-         OUA/kQuWBpduj+Dm8UpchfLw3Zgz+ojw9DQRlAd60HUhzPBZKdLfxaawBxycaw7lo6fs
-         q6gQ==
-X-Gm-Message-State: APjAAAV2Yr6ws2tw2opNl5k8WcoxHqZy4/WBbvTfpwlWL6+4BmxAH+na
-        TRuo4mWZsUIOe/Wn2V3UrLTgqg==
-X-Google-Smtp-Source: APXvYqxrC7TCMRHK8N8IHE5h7ev8RjCQc4FxNge1LGVH5IeG8wiGGrGpvbHa86ZtBjIaAtF1NprWpQ==
-X-Received: by 2002:a24:8957:: with SMTP id s84mr14440493itd.131.1558668666550;
-        Thu, 23 May 2019 20:31:06 -0700 (PDT)
-Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id h185sm794380itb.16.2019.05.23.20.31.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 20:31:06 -0700 (PDT)
-From:   Shuah Khan <skhan@linuxfoundation.org>
-To:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
-        helen.koike@collabora.com
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] vimc: fix BUG: unable to handle kernel NULL pointer dereference
-Date:   Thu, 23 May 2019 21:31:02 -0600
-Message-Id: <8186974e3b6976e1391343e5b0da11ffc98ac75d.1558667245.git.skhan@linuxfoundation.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.1558667245.git.skhan@linuxfoundation.org>
-References: <cover.1558667245.git.skhan@linuxfoundation.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 23 May 2019 23:35:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44536 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387559AbfEXDfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 23:35:25 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F32F42133D;
+        Fri, 24 May 2019 03:35:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558668924;
+        bh=GbrlHKi71gaVsN79M3+9tkZQr3yHgBtNIIbYV9ulLS0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=jDvnv6tpy2BH/IrlaiJ8KlyFoOOljEmmW5ldVVIqoKOdBfDVA5/5n+eWzf29LjIXF
+         /C/g7IqdobNb0zQtemFkAjy7UP66ezdDoX+0GHtiIQL5BiEWE/VEBErHnmXjuBSaze
+         b2uGxIwsCPkUNuxboZF+aIC0bPy92DqHazUsWteY=
+Date:   Thu, 23 May 2019 20:35:23 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Gen Zhang <blackgod016574@gmail.com>
+Cc:     rppt@linux.ibm.com, david.engraf@sysgo.com, steven.price@arm.com,
+        osandov@fb.com, luc.vanoostenryck@gmail.com, axboe@kernel.dk,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] initramfs: Fix a missing-chek bug in dir_add()
+Message-Id: <20190523203523.8f638f378b54df0ef7a18f9d@linux-foundation.org>
+In-Reply-To: <20190524033045.GA6628@zhanggen-UX430UQ>
+References: <20190524033045.GA6628@zhanggen-UX430UQ>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If vimc module is removed while streaming is active, vimc_exit runs
-into NULL pointer dereference error when streaming thread tries to
-access and lock graph_mutex in the struct media_device.
+On Fri, 24 May 2019 11:30:45 +0800 Gen Zhang <blackgod016574@gmail.com> wrote:
 
-media_device is embedded in struct vimc_device and when vimc is removed
-vimc_device and the embedded media_device goes with it, while the active
-stream and vimc_capture continue to access it.
+> In dir_add() and do_name(), de->name and vcollected are allocated by
+> kstrdup(). And de->name and vcollected are dereferenced in the following
+> codes. However, memory allocation functions such as kstrdup() may fail. 
+> Dereferencing this null pointer may cause the kernel go wrong. Thus we
+> should check these two kstrdup() operations.
+> Further, if kstrdup() returns NULL, we should free de in dir_add().
 
-Fix the media_device lifetime problem by changing vimc to create shared
-media_device using Media Device Allocator API and vimc_capture getting
-a reference to vimc module. With this change, vimc module can be removed
-only when the references are gone. vimc can be removed after vimc_capture
-is removed.
-
-The following panic is fixed with this change.
-
- kernel: [ 1844.098372] Call Trace:
- kernel: [ 1844.098376]  lock_acquire+0xb4/0x160
- kernel: [ 1844.098379]  ? media_pipeline_stop+0x23/0x40
- kernel: [ 1844.098381]  ? media_pipeline_stop+0x23/0x40
- kernel: [ 1844.098385]  __mutex_lock+0x8b/0x950
- kernel: [ 1844.098386]  ? media_pipeline_stop+0x23/0x40
- kernel: [ 1844.098389]  ? wait_for_completion+0xac/0x150
- kernel: [ 1844.098391]  ? wait_for_completion+0x12a/0x150
- kernel: [ 1844.098395]  ? wake_up_q+0x80/0x80
- kernel: [ 1844.098397]  mutex_lock_nested+0x1b/0x20
- kernel: [ 1844.098398]  ? mutex_lock_nested+0x1b/0x20
- kernel: [ 1844.098400]  media_pipeline_stop+0x23/0x40
- kernel: [ 1844.098404]  vimc_cap_stop_streaming+0x28/0x40 [vimc_capture]
- kernel: [ 1844.098406]  __vb2_queue_cancel+0x30/0x2a0
- kernel: [ 1844.098408]  vb2_core_queue_release+0x23/0x50
- kernel: [ 1844.098410]  vb2_queue_release+0xe/0x10
- kernel: [ 1844.098412]  vimc_cap_comp_unbind+0x1d/0x40 [vimc_capture]
- kernel: [ 1844.098414]  component_unbind.isra.8+0x27/0x40
- kernel: [ 1844.098416]  component_unbind_all+0xaa/0xc0
- kernel: [ 1844.098418]  vimc_comp_unbind+0x2d/0x60 [vimc]
- kernel: [ 1844.098420]  take_down_master+0x24/0x40
- kernel: [ 1844.098422]  component_master_del+0x5e/0x80
- kernel: [ 1844.098424]  vimc_remove+0x27/0x90 [vimc]
- kernel: [ 1844.098426]  platform_drv_remove+0x28/0x50
- kernel: [ 1844.098428]  device_release_driver_internal+0xec/0x1c0
- kernel: [ 1844.098429]  driver_detach+0x49/0x90
- kernel: [ 1844.098432]  bus_remove_driver+0x5c/0xd0
- kernel: [ 1844.098433]  driver_unregister+0x2c/0x40
- kernel: [ 1844.098435]  platform_driver_unregister+0x12/0x20
- kernel: [ 1844.098437]  vimc_exit+0x10/0x9fa [vimc]
- kernel: [ 1844.098439]  __x64_sys_delete_module+0x148/0x280
- kernel: [ 1844.098443]  do_syscall_64+0x5a/0x120
- kernel: [ 1844.098446]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
----
- drivers/media/platform/vimc/vimc-capture.c | 17 +++++-
- drivers/media/platform/vimc/vimc-core.c    | 60 ++++++++++++----------
- 2 files changed, 50 insertions(+), 27 deletions(-)
-
-diff --git a/drivers/media/platform/vimc/vimc-capture.c b/drivers/media/platform/vimc/vimc-capture.c
-index e7d0fc2228a6..2e5cf794f60f 100644
---- a/drivers/media/platform/vimc/vimc-capture.c
-+++ b/drivers/media/platform/vimc/vimc-capture.c
-@@ -22,6 +22,7 @@
- #include <media/v4l2-ioctl.h>
- #include <media/videobuf2-core.h>
- #include <media/videobuf2-vmalloc.h>
-+#include <media/media-dev-allocator.h>
- 
- #include "vimc-common.h"
- #include "vimc-streamer.h"
-@@ -72,6 +73,8 @@ struct vimc_cap_device {
- 	struct mutex lock;
- 	u32 sequence;
- 	struct vimc_stream stream;
-+	/* Used for holding reference to media dev allocated by vimc-core */
-+	struct media_device *mdev;
- };
- 
- static const struct v4l2_pix_format fmt_default = {
-@@ -371,6 +374,7 @@ static void vimc_cap_release(struct video_device *vdev)
- 		container_of(vdev, struct vimc_cap_device, vdev);
- 
- 	vimc_pads_cleanup(vcap->ved.pads);
-+	media_device_delete(vcap->mdev, VIMC_CAP_DRV_NAME, THIS_MODULE);
- 	kfree(vcap);
- }
- 
-@@ -440,12 +444,21 @@ static int vimc_cap_comp_bind(struct device *comp, struct device *master,
- 	if (!vcap)
- 		return -ENOMEM;
- 
-+	/* first get reference to media device allocated by vimc */
-+	vcap->mdev = media_device_allocate(master, NULL, NULL,
-+					   VIMC_CAP_DRV_NAME,
-+					   THIS_MODULE);
-+	if (!vcap->mdev) {
-+		ret = PTR_ERR(vcap->mdev);
-+		goto err_free_vcap;
-+	}
-+
- 	/* Allocate the pads */
- 	vcap->ved.pads =
- 		vimc_pads_init(1, (const unsigned long[1]) {MEDIA_PAD_FL_SINK});
- 	if (IS_ERR(vcap->ved.pads)) {
- 		ret = PTR_ERR(vcap->ved.pads);
--		goto err_free_vcap;
-+		goto err_mdev_rls_ref;
- 	}
- 
- 	/* Initialize the media entity */
-@@ -524,6 +537,8 @@ static int vimc_cap_comp_bind(struct device *comp, struct device *master,
- 	media_entity_cleanup(&vcap->vdev.entity);
- err_clean_pads:
- 	vimc_pads_cleanup(vcap->ved.pads);
-+err_mdev_rls_ref:
-+	media_device_delete(vcap->mdev, VIMC_CAP_DRV_NAME, THIS_MODULE);
- err_free_vcap:
- 	kfree(vcap);
- 
-diff --git a/drivers/media/platform/vimc/vimc-core.c b/drivers/media/platform/vimc/vimc-core.c
-index 3aa62d7e3d0e..d381993f3d7e 100644
---- a/drivers/media/platform/vimc/vimc-core.c
-+++ b/drivers/media/platform/vimc/vimc-core.c
-@@ -20,6 +20,7 @@
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <media/media-device.h>
-+#include <media/media-dev-allocator.h>
- #include <media/v4l2-device.h>
- 
- #include "vimc-common.h"
-@@ -42,7 +43,7 @@ struct vimc_device {
- 	const struct vimc_pipeline_config *pipe_cfg;
- 
- 	/* The Associated media_device parent */
--	struct media_device mdev;
-+	struct media_device *mdev;
- 
- 	/* Internal v4l2 parent device*/
- 	struct v4l2_device v4l2_dev;
-@@ -182,9 +183,9 @@ static int vimc_comp_bind(struct device *master)
- 	dev_dbg(master, "bind");
- 
- 	/* Register the v4l2 struct */
--	ret = v4l2_device_register(vimc->mdev.dev, &vimc->v4l2_dev);
-+	ret = v4l2_device_register(vimc->mdev->dev, &vimc->v4l2_dev);
- 	if (ret) {
--		dev_err(vimc->mdev.dev,
-+		dev_err(vimc->mdev->dev,
- 			"v4l2 device register failed (err=%d)\n", ret);
- 		return ret;
- 	}
-@@ -200,9 +201,9 @@ static int vimc_comp_bind(struct device *master)
- 		goto err_comp_unbind_all;
- 
- 	/* Register the media device */
--	ret = media_device_register(&vimc->mdev);
-+	ret = media_device_register(vimc->mdev);
- 	if (ret) {
--		dev_err(vimc->mdev.dev,
-+		dev_err(vimc->mdev->dev,
- 			"media device register failed (err=%d)\n", ret);
- 		goto err_comp_unbind_all;
- 	}
-@@ -210,7 +211,7 @@ static int vimc_comp_bind(struct device *master)
- 	/* Expose all subdev's nodes*/
- 	ret = v4l2_device_register_subdev_nodes(&vimc->v4l2_dev);
- 	if (ret) {
--		dev_err(vimc->mdev.dev,
-+		dev_err(vimc->mdev->dev,
- 			"vimc subdev nodes registration failed (err=%d)\n",
- 			ret);
- 		goto err_mdev_unregister;
-@@ -219,8 +220,7 @@ static int vimc_comp_bind(struct device *master)
- 	return 0;
- 
- err_mdev_unregister:
--	media_device_unregister(&vimc->mdev);
--	media_device_cleanup(&vimc->mdev);
-+	media_device_delete(vimc->mdev, VIMC_PDEV_NAME, THIS_MODULE);
- err_comp_unbind_all:
- 	component_unbind_all(master, NULL);
- err_v4l2_unregister:
-@@ -236,8 +236,7 @@ static void vimc_comp_unbind(struct device *master)
- 
- 	dev_dbg(master, "unbind");
- 
--	media_device_unregister(&vimc->mdev);
--	media_device_cleanup(&vimc->mdev);
-+	media_device_delete(vimc->mdev, VIMC_PDEV_NAME, THIS_MODULE);
- 	component_unbind_all(master, NULL);
- 	v4l2_device_unregister(&vimc->v4l2_dev);
- }
-@@ -301,42 +300,51 @@ static int vimc_probe(struct platform_device *pdev)
- 	struct vimc_device *vimc = container_of(pdev, struct vimc_device, pdev);
- 	struct component_match *match = NULL;
- 	int ret;
-+	char bus_info[32]; /* same size as struct media_device bus_info */
- 
- 	dev_dbg(&pdev->dev, "probe");
- 
--	memset(&vimc->mdev, 0, sizeof(vimc->mdev));
-+	/* Initialize media device */
-+	snprintf(bus_info, sizeof(bus_info), "platform:%s", VIMC_PDEV_NAME);
-+	vimc->mdev = media_device_allocate(&pdev->dev,
-+					   VIMC_MDEV_MODEL_NAME,
-+					   bus_info,
-+					   VIMC_PDEV_NAME,
-+					   THIS_MODULE);
-+	if (!vimc->mdev)
-+		return -ENOMEM;
- 
- 	/* Create platform_device for each entity in the topology*/
- 	vimc->subdevs = devm_kcalloc(&vimc->pdev.dev, vimc->pipe_cfg->num_ents,
- 				     sizeof(*vimc->subdevs), GFP_KERNEL);
--	if (!vimc->subdevs)
--		return -ENOMEM;
-+	if (!vimc->subdevs) {
-+		ret = -ENOMEM;
-+		goto err_delete_media_device;
-+	}
- 
- 	match = vimc_add_subdevs(vimc);
--	if (IS_ERR(match))
--		return PTR_ERR(match);
-+	if (IS_ERR(match)) {
-+		ret = PTR_ERR(match);
-+		goto err_delete_media_device;
-+	}
- 
- 	/* Link the media device within the v4l2_device */
--	vimc->v4l2_dev.mdev = &vimc->mdev;
--
--	/* Initialize media device */
--	strscpy(vimc->mdev.model, VIMC_MDEV_MODEL_NAME,
--		sizeof(vimc->mdev.model));
--	snprintf(vimc->mdev.bus_info, sizeof(vimc->mdev.bus_info),
--		 "platform:%s", VIMC_PDEV_NAME);
--	vimc->mdev.dev = &pdev->dev;
--	media_device_init(&vimc->mdev);
-+	vimc->v4l2_dev.mdev = vimc->mdev;
- 
- 	/* Add self to the component system */
- 	ret = component_master_add_with_match(&pdev->dev, &vimc_comp_ops,
- 					      match);
- 	if (ret) {
--		media_device_cleanup(&vimc->mdev);
- 		vimc_rm_subdevs(vimc);
--		return ret;
-+		goto err_delete_media_device;
- 	}
- 
- 	return 0;
-+
-+err_delete_media_device:
-+	media_device_delete(vimc->mdev, VIMC_PDEV_NAME, THIS_MODULE);
-+
-+	return ret;
- }
- 
- static int vimc_remove(struct platform_device *pdev)
--- 
-2.17.1
-
+We generally assume that memory allocations within __init code cannot
+fail.  If one does fail, something quite horrid has happened.  The
+resulting oops will provide the same information as the proposed panic()
+anyway.
