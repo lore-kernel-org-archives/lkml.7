@@ -2,108 +2,109 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C0FDC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9070DC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCF56217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:24:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43C6721841
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:24:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wFonep2d"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="D6N1xI62"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390027AbfEXJY0 (ORCPT
+        id S2390087AbfEXJYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 05:24:26 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:39950 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389788AbfEXJY0 (ORCPT
+        Fri, 24 May 2019 05:24:37 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:40634 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389710AbfEXJYh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 05:24:26 -0400
-Received: by mail-it1-f193.google.com with SMTP id h11so12807763itf.5
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 02:24:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=HYgiw9gdlhueg6+WRAGyhJKX3AtGrR1zYnjTbOTRfuY=;
-        b=wFonep2dku0EgPsJQkwjn4qapIzbxEItS07MsYZtekZBxqqCxFWH+MeuyJ6bjDF28a
-         KpuMxHLx4Dey+j1/UoQ0wEodShezvwCAaVP8ACNkyacJvevRpu9drmOiaT4m7EKklQqk
-         jQU3VG3IbBvFEEQ+u2u2r/Z4MWdh9ywg9cey7DPiNvK/PTrUhJdOQ4lcCn+invrdaAB9
-         x/MFN1bt83Gy7Rpatti38cgt1xZ5RA1W4y+lRbbLgzBM7IYWHHeSbgceaYm3DhNY1M1Z
-         uftoxhYDz76QZHEF+QurEEU+8+XHbJ3lQGO1ZP47YB5JC53IIMAZtqQX7S8S95j5YX1g
-         xlgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=HYgiw9gdlhueg6+WRAGyhJKX3AtGrR1zYnjTbOTRfuY=;
-        b=KS3WxqJVvgdNKsa13pRgE+N3/Mo37LYe7K88aze65ChyUm+/2afR0MMOXDkK6sdbP8
-         8CHBa7s5LPu8CmCjipj7+NxFvOsF+TQuQUhjoNP5WJUB5ABCRaP5ILx7O+rlC22TNNMe
-         wX7S50bbX786Je6+nKcbnhZc1nXpYKWmspfQOs3CnBe/f7oS9VQVtSe0RVGnT97l21fH
-         og3e0Df+xS54SHkJ/ayCb2yehASk1o33sUeqOa3LswX7NjfTKFVOIbN1vHf96axnpNfP
-         t79/3iFGFCBo4sUEMXwNtyfjsu5HcFsR3uTkV/LMDUnXrvOQbBWk8dvJP4NydUvQ9ayC
-         Wswg==
-X-Gm-Message-State: APjAAAWqcAygilUmnc279RbRCtFt+SXpxqUZ3Izl0wHzVYJ/xQB7okA7
-        IyZ3rVt78RHEFd+vBbrsIq9Rr5rb90AtmteeZfcK2g==
-X-Google-Smtp-Source: APXvYqzSFjcTrQ2rHAw6gfH24REoDGsW3b8LRVtsKU42COArxlGqgL+aTZ/NtgQ7xnvLKEwhjywv57YGeuFjAvP552U=
-X-Received: by 2002:a02:1384:: with SMTP id 126mr60762476jaz.72.1558689865209;
- Fri, 24 May 2019 02:24:25 -0700 (PDT)
+        Fri, 24 May 2019 05:24:37 -0400
+Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 667C4C0137;
+        Fri, 24 May 2019 09:24:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1558689862; bh=AVU6oZcHCROGnmkLrcWIelylachVoYTTTsYDpq5qRGE=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=D6N1xI62ExfnhyeopDP2KepGh9+jcTsoEdBgNxKAB8EyL2fnL9XREOHFmEEC3hEsi
+         +sV5eTIn2eDF0X+zGLIclMhVbRmsCn1mnXSf8b6YXmO+JCj257l1HAgFEsprkN4IBi
+         vaW9W8eRRXX+nnYrR92XoZ1bY6GQaFnMeybI/KjollFkG5VPauhnhwClD/xulaMaUJ
+         mW55DXwY3yipCq7jOQRVF9ySTeXKTPNqceFkFoWHyrAVq6/Kky44Bhc3rbPQ5X0znp
+         yZC8zLePl0nck3VrGBfDDtBFePDEP5Xy2yj/Mg+RJWCkK2qYWId9+WkoKX1J3JhSKy
+         mKwbWs8/Mpt7g==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 5716EA0070;
+        Fri, 24 May 2019 09:24:34 +0000 (UTC)
+Received: from DE02WEHTCB.internal.synopsys.com (10.225.19.94) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 24 May 2019 02:24:33 -0700
+Received: from DE02WEMBXB.internal.synopsys.com ([fe80::95ce:118a:8321:a099])
+ by DE02WEHTCB.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Fri,
+ 24 May 2019 11:24:31 +0200
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     biao huang <biao.huang@mediatek.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>
+CC:     "davem@davemloft.net" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "yt.shen@mediatek.com" <yt.shen@mediatek.com>,
+        "jianguo.zhang@mediatek.comi" <jianguo.zhang@mediatek.comi>,
+        "boon.leong.ong@intel.com" <boon.leong.ong@intel.com>
+Subject: RE: [v2, PATCH] net: stmmac: add support for hash table size
+ 128/256 in dwmac4
+Thread-Topic: [v2, PATCH] net: stmmac: add support for hash table size
+ 128/256 in dwmac4
+Thread-Index: AQHVCgFP5uFdcKuEVU64Pxj/Ha7yEaZ5v7KAgABABhD//+D6AIAAL/0w
+Date:   Fri, 24 May 2019 09:24:31 +0000
+Message-ID: <78EB27739596EE489E55E81C33FEC33A0B92D26F@DE02WEMBXB.internal.synopsys.com>
+References: <1557802843-31718-1-git-send-email-biao.huang@mediatek.com>
+         <1557802843-31718-2-git-send-email-biao.huang@mediatek.com>
+         <1558679617.24897.43.camel@mhfsdcap03>
+         <78EB27739596EE489E55E81C33FEC33A0B92CDA0@DE02WEMBXB.internal.synopsys.com>
+ <1558686704.24897.45.camel@mhfsdcap03>
+In-Reply-To: <1558686704.24897.45.camel@mhfsdcap03>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.107.19.176]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <0000000000008666df05899b7663@google.com> <649cac1e-c77c-daf8-6ae7-b02c8571b988@iogearbox.net>
-In-Reply-To: <649cac1e-c77c-daf8-6ae7-b02c8571b988@iogearbox.net>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Fri, 24 May 2019 11:24:14 +0200
-Message-ID: <CACT4Y+Y_iA=5Bdtcg+X-ky7Q3m5hxGOexo+246b6b2ow_GLUGg@mail.gmail.com>
-Subject: Re: bpf build error
-To:     Daniel Borkmann <daniel@iogearbox.net>
-Cc:     syzbot <syzbot+cbe357153903f8d9409a@syzkaller.appspotmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 10:08 AM Daniel Borkmann <daniel@iogearbox.net> wro=
-te:
->
-> On 05/24/2019 07:28 AM, syzbot wrote:
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    e6f6cd0d bpf: sockmap, fix use after free from sleep in=
- ps..
-> > git tree:       bpf
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=3D16f116e4a00=
-000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dfc045131472=
-947d7
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=3Dcbe357153903f=
-8d9409a
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >
-> > Unfortunately, I don't have any reproducer for this crash yet.
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the comm=
-it:
-> > Reported-by: syzbot+cbe357153903f8d9409a@syzkaller.appspotmail.com
-> >
-> > net/core/skbuff.c:2340:6: error: =E2=80=98struct msghdr=E2=80=99 has no=
- member named =E2=80=98flags=E2=80=99
->
-> Disregard, tossed from bpf tree.
-
-Let's close it then
-
-#syz invalid
-
-or it will hang open on the dashboard distracting people looking for
-open bugs and new bpf build breakages won't be reported.
+RnJvbTogYmlhbyBodWFuZyA8Ymlhby5odWFuZ0BtZWRpYXRlay5jb20+DQpEYXRlOiBGcmksIE1h
+eSAyNCwgMjAxOSBhdCAwOTozMTo0NA0KDQo+IE9uIEZyaSwgMjAxOS0wNS0yNCBhdCAwODoyNCAr
+MDAwMCwgSm9zZSBBYnJldSB3cm90ZToNCj4gPiBGcm9tOiBiaWFvIGh1YW5nIDxiaWFvLmh1YW5n
+QG1lZGlhdGVrLmNvbT4NCj4gPiBEYXRlOiBGcmksIE1heSAyNCwgMjAxOSBhdCAwNzozMzozNw0K
+PiA+IA0KPiA+ID4gYW55IGNvbW1lbnRzIGFib3V0IHRoaXMgcGF0Y2g/DQo+ID4gDQo+ID4gQ2Fu
+IHlvdSBwbGVhc2UgdGVzdCB5b3VyIHNlcmllcyBvbiB0b3Agb2YgdGhpcyBvbmUgWzFdIGFuZCBs
+ZXQgbWUga25vdyANCj4gPiB0aGUgb3V0cHV0IG9mIDoNCj4gPiAjIGV0aHRvb2wgLXQgZXRoMA0K
+PiAiZXRodG9sIC1UIGV0aDAiPyBUaGlzIHBhdGNoIG9ubHkgYWZmZWN0IGhhc2ggdGFibGUgZmls
+dGVyLCBzZWVtcyBubw0KPiByZWxhdGlvbiB0byB0aW1lc3RhbXAuDQo+ID4gDQo+ID4gSnVzdCB0
+byBtYWtlIHN1cmUgdGhhdCB0aGlzIHBhdGNoIGRvZXMgbm90IGludHJvZHVjZSBhbnkgcmVncmVz
+c2lvbnMuIFRoZSANCj4gPiByZW1haW5pbmcgb25lcyBvZiB0aGUgc2VyaWVzIGxvb2sgZmluZSBi
+eSBtZSENCj4gPiANCj4gPiBbMV0gDQo+IHdoaWNoIG9uZT8gRGlkIEkgbWlzcyBhbnl0aGluZyBo
+ZXJlPw0KDQpTb3JyeSwgbXkgbWFpbCBjbGllbnQgdHJpZWQgdG8gd3JhcCB0aGUgbG9uZyBsaW5r
+IGFuZCBlbmRlZCB1cCBpbiBhIA0KbG9vb29uZyBlbWFpbC4NCg0KWzFdIGh0dHBzOi8vcGF0Y2h3
+b3JrLm96bGFicy5vcmcvcHJvamVjdC9uZXRkZXYvbGlzdC8/c2VyaWVzPTEwOTY5OQ0KDQpUaGFu
+a3MsDQpKb3NlIE1pZ3VlbCBBYnJldQ0K
