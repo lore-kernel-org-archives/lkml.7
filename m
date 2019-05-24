@@ -2,160 +2,171 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5CC8C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 783D6C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8145B217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:52:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jrjdlO2A"
+	by mail.kernel.org (Postfix) with ESMTP id 4236A21773
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:53:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390184AbfEXJwQ (ORCPT
+        id S2390212AbfEXJxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 05:52:16 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39280 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389582AbfEXJwP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 05:52:15 -0400
-Received: by mail-wr1-f66.google.com with SMTP id e2so558050wrv.6;
-        Fri, 24 May 2019 02:52:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=SZlgdWghXcOx29IJ3YpRkLUJGC5gsx+9Sxo+2Gik714=;
-        b=jrjdlO2AntaltwpcLnkrsJX6gM9QxY/Jw39kNl8hmQUOhViJK+GnF6ntE9xZniEIcD
-         pzwc6ZiagUdIBg4kWq2fPr/EnQEs+e5XXKvtfrnT9sVeyfakLbpbFuwbUH9ZJs/lmZEb
-         IxGNn4eftCWeUw2WX3QhIMMPOTotMNac/27itGdTAT/O13URcopN3LyvMMjFKXD1eBQ6
-         PpmS1RP7JCpzmGsr5ELvor32yVG0ozlUFxipWCoXVU7i4NkP61Jr0vlYYmJ7WNSVcnUg
-         Mp1IXEuBnH/4iBP4uqhqRNpe5qj96PWzO48js1YylZM3ih47gb5GMlTX4OSO4DCziiK8
-         BRxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=SZlgdWghXcOx29IJ3YpRkLUJGC5gsx+9Sxo+2Gik714=;
-        b=rkL0io0NPRUtOMBYwaYRn9ZUnSkfCrLJRCSkaIIrgi3Vbb2YF3ZzswoQtJsoc1SIJ0
-         r5N4/3/hBhvuE+balTKR4YW+ejdK47MQVM6/RkshDa/1kteTJ6oIiQA5Ug3NAdtVBYLa
-         e7fjA7Bqog22ZBU1xtvGdL40xOra3myiw8azwL673l6WhnLGBsrlNiLKrqru+p+QBohM
-         m434LtbQVr1i80/8IflLqx3avudXD25ggFCkf3axsdynh6NKj+hiZPfwM1xMK1RGxqj1
-         5xHvTW8IBSHNdtb+91/McygEf66+DVhkLMjKHlV0VfeJqs/tQF7nrFrTSmYOPiqIz/yC
-         h+1w==
-X-Gm-Message-State: APjAAAWRhGIsBsDGLV2I6s6oXbLxBtWrXK3m/dnXxSoIeElh/b/KsOHM
-        kB+gdUeBd/eDeov/7mpv+2k=
-X-Google-Smtp-Source: APXvYqxPjtYlHBthTHveuzTO3uZdtAaeckc2jmNSuYLALzSHS1CHfyQHt6ggKigbBuqoxx5HqjOKtw==
-X-Received: by 2002:a5d:6108:: with SMTP id v8mr6961359wrt.150.1558691533362;
-        Fri, 24 May 2019 02:52:13 -0700 (PDT)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id y130sm1767931wmc.44.2019.05.24.02.52.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 24 May 2019 02:52:12 -0700 (PDT)
-Date:   Fri, 24 May 2019 11:52:11 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Peter Hutterer <peter.hutterer@who-t.net>
-Cc:     Hui Wang <hui.wang@canonical.com>,
-        Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>,
-        dmitry.torokhov@gmail.com, XiaoXiao Liu <sliuuxiaonxiao@gmail.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Xiaojian Cao <xiaojian.cao@cn.alps.com>,
-        "zhangfp1@lenovo.com" <zhangfp1@lenovo.com>
-Subject: Re: =?utf-8?B?562U5aSNOiDnrZTlpI06IOetlA==?=
- =?utf-8?B?5aSNOiBbUEFUQ0hdIGlucHV0?= =?utf-8?Q?=3A?= alps-fix the issue the
- special alps trackpoint do not work.
-Message-ID: <20190524095211.wfvqxt3ihu2ft7lw@pali>
-References: <OSBPR01MB4855D744473149D037612506DA000@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <20190522063546.kb74mxeprkauicul@pali>
- <OSBPR01MB48550B43F78BBFBDC20D414DDA000@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <20190522074030.64sy7xt3wnomtxjb@pali>
- <20190523060154.GA10526@jelly>
- <38ec4a40-d51a-aeb1-a5e8-dbaed1142298@canonical.com>
- <20190524053648.GA16379@jelly>
- <d1fd207d-68e1-0b57-f0dc-c254bfc9352c@canonical.com>
- <20190524072648.6zqgz7rpwpcv22pb@pali>
- <20190524093238.GA1119@jelly>
+        Fri, 24 May 2019 05:53:36 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:38428 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389582AbfEXJxf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 05:53:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9282FA78;
+        Fri, 24 May 2019 02:53:35 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 626C93F703;
+        Fri, 24 May 2019 02:53:33 -0700 (PDT)
+Subject: Re: [PATCH] clocksource/arm_arch_timer: Don't trace count reader
+ functions
+To:     Julien Thierry <julien.thierry@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>
+References: <1558689025-50679-1-git-send-email-julien.thierry@arm.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: ARM Ltd
+Message-ID: <9adf92c2-b7a5-00a3-ff09-58484d9bb9db@arm.com>
+Date:   Fri, 24 May 2019 10:53:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <1558689025-50679-1-git-send-email-julien.thierry@arm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190524093238.GA1119@jelly>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday 24 May 2019 19:32:38 Peter Hutterer wrote:
-> On Fri, May 24, 2019 at 09:26:48AM +0200, Pali Rohár wrote:
-> > On Friday 24 May 2019 13:50:53 Hui Wang wrote:
-> > > On 2019/5/24 下午1:36, Peter Hutterer wrote:
-> > > > On Fri, May 24, 2019 at 01:25:52PM +0800, Hui Wang wrote:
-> > > > > On 2019/5/23 下午2:01, Peter Hutterer wrote:
-> > > > > > On Wed, May 22, 2019 at 09:40:30AM +0200, Pali Rohár wrote:
-> > > > > > > On Wednesday 22 May 2019 07:30:43 Xiaoxiao Liu wrote:
-> > > > > > > > Hi Pali,
-> > > > > > > > 
-> > > > > > > > Ok, and cannot you set ALPS_DUALPOINT flag based on that
-> > > > > > > > alps_check_is_trackpoint() result and then update
-> > > > > > > > alps_process_packet_ss4_v3() code to supports also
-> > > > > > > > V8 trackpoint packets?
-> > > > > > > > --> Yes, we can do like so, when we use the v8 method to process the trackpoint , the mouse speed is not ideal.
-> > > > > > > >         Then we choose the standard mouse driver.
-> > > > > > > Mouse speed is something which is configurable. Have you configured it
-> > > > > > > somehow? Also there is libinput project should handle these settings
-> > > > > > > more properly.
-> > > > > > > 
-> > > > > > > Adding Peter Hutterer, maintainer of libinput to loop. I think he could
-> > > > > > > help with this problem.
-> > > > > > libinput has a quirk for a magic multiplier on trackpoints. it was the only
-> > > > > > solution I found that came close to "working" given that every device seems
-> > > > > > to provide some other random magic data. Doc for it is here:
-> > > > > > https://wayland.freedesktop.org/libinput/doc/latest/trackpoint-configuration.html
-> > > > > Hello Peter Hutterer,
-> > > > > 
-> > > > > To adjust the trackpoint speed from userspace:
-> > > > > 
-> > > > > If the libinput version is lower than 1.9.0, we could set
-> > > > > POINTINGSTICK_CONST_ACCEL=0.25
-> > > > > 
-> > > > > If the libinput version is higher than 1.12.0, we could set
-> > > > > AttrTrackpointMultiplier=0.25
-> > > > > 
-> > > > > But if we use libinput-1.10.0,  how could we adjust the speed?
-> > > > The LIBINPUT_ATTR_TRACKPOINT_RANGE property, which didn't end up working
-> > > > well (hence why it got replaced again). See the docs here though:
-> > > > https://wayland.freedesktop.org/libinput/doc/1.10.0/trackpoints.html
-> > > > 
-> > > > Cheers,
-> > > >     Peter
-> > > 
-> > > OK, got it, Thanks.
-> > 
-> > Is not here some database where for input device name / id is specified
-> > that property? So users do not have to invent what is correct value for
-> > their hardware?
+On 24/05/2019 10:10, Julien Thierry wrote:
+> With v5.2-rc1, The ftrace functions_graph tracer locks up whenever it is
+> enabled on arm64.
 > 
-> yeah, libinput ships with a quirks database that sets those, but it relies
-> on users to submit the quirks.
-> https://gitlab.freedesktop.org/libinput/libinput/tree/master/quirks
+> Since commit 0ea415390cd3 ("clocksource/arm_arch_timer: Use
+> arch_timer_read_counter to access stable counters") a function pointer
+> is consistently used to read the counter instead of potentially
+> referencing an inlinable function.
+> 
+> The graph tacers relies on accessing the timer counters to compute the
 
-That is enough!
+nit: tracers
 
-> There's no "correct" value anyway, if you ask 3 users what the trackpoint
-> should do you'll get 5 answers :)
+> time spent in functions which causes the lockup when attempting to trace
+> these code paths.
+> 
+> Annontate the arm arch timer counter accessors as notrace.
 
-I know :) but reason for such database is to provide some sane defaults.
-Which seems it is already there.
+nit: Annotate
 
+> 
+> Fixes: 0ea415390cd3 ("clocksource/arm_arch_timer: Use
+>        arch_timer_read_counter to access stable counters")
+> Signed-off-by: Julien Thierry <julien.thierry@arm.com>
+> Cc: Marc Zyngier <marc.zyngier@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> ---
+>  drivers/clocksource/arm_arch_timer.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
+> index b2a951a..5c69c9a 100644
+> --- a/drivers/clocksource/arm_arch_timer.c
+> +++ b/drivers/clocksource/arm_arch_timer.c
+> @@ -149,22 +149,22 @@ u32 arch_timer_reg_read(int access, enum arch_timer_reg reg,
+>  	return val;
+>  }
+>  
+> -static u64 arch_counter_get_cntpct_stable(void)
+> +static notrace u64 arch_counter_get_cntpct_stable(void)
+>  {
+>  	return __arch_counter_get_cntpct_stable();
+>  }
+>  
+> -static u64 arch_counter_get_cntpct(void)
+> +static notrace u64 arch_counter_get_cntpct(void)
+>  {
+>  	return __arch_counter_get_cntpct();
+>  }
+>  
+> -static u64 arch_counter_get_cntvct_stable(void)
+> +static notrace u64 arch_counter_get_cntvct_stable(void)
+>  {
+>  	return __arch_counter_get_cntvct_stable();
+>  }
+>  
+> -static u64 arch_counter_get_cntvct(void)
+> +static notrace u64 arch_counter_get_cntvct(void)
+>  {
+>  	return __arch_counter_get_cntvct();
+>  }
+> 
+
+Well spotted, thanks Julien.
+
+Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+
+Daniel, can you please pick this up for the next batch of clocksource fixes?
+
+Thanks,
+
+	M.
 -- 
-Pali Rohár
-pali.rohar@gmail.com
+Jazz is not dead. It just smells funny...
