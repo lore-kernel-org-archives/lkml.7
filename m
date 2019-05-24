@@ -2,145 +2,202 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC31C46460
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E6F6C282E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1FD620868
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:10:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="SQ92VKPG"
+	by mail.kernel.org (Postfix) with ESMTP id 3008D21848
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 21:11:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404218AbfEXVKr (ORCPT
+        id S2404244AbfEXVLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 17:10:47 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:45133 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391771AbfEXVKq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 17:10:46 -0400
-Received: by mail-qk1-f193.google.com with SMTP id j1so9504844qkk.12
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 14:10:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NqwnG1uIANfo29FPPFO9XzdxaIL8u/YShBseQ7nZRAg=;
-        b=SQ92VKPGzUpQMVWPmzyFFvqntCrKJfUDQ81Kl1fc2lDQ4knAU0wvsoetXOYHQzC5mC
-         aM/JAZnnPh/EYJMQRWlUfVk2UwIhyXH1lNN0LU3qXnZjLBul+NnypLeh7o5b4HJkgfj9
-         NaJWpGlQqNt5X397cFWigSHMLSIrVHSV+E3/q42XVK+D+pdJQMDMHAYBU1EayTMIgYdv
-         QkfDq8h7q+9cj5n2X9diEXG5BmSEJMeZiLoCbo5jdwXGnvE+ooU3nujenKRix/cVslAG
-         5GbBpmWX66iMdRFHApqRCoJTb4konvSDaXKPupYgO7jRIVi1WOXtaKuxqduRfE4R9pfr
-         DdNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NqwnG1uIANfo29FPPFO9XzdxaIL8u/YShBseQ7nZRAg=;
-        b=F4W7DRcb/TeM1jeVZiuL11/ueDxa9hP770owOQAMFlV8ZDfuEcbrvoo7iJECVPNYL/
-         buvI+UWg47AT7bnFOu8fuyrp+4DpyPMw0X1DB5azHuvVv4XorD4bWnfFsldxtVSa3bQ4
-         jPBCaqRYzBBXA0ZfmnNpNDIwbJb8142seg9w7S2LRB6FFEENHhHg6Eeynb8dJvx4JOKh
-         xctmap/I3NftB6bsJL2tGb/p821VOnO5WqjrksBZmv/vOOMZQ9mqUZhbI8TRBdCUE5nQ
-         e/8pYpGo5nDDy/lwcV2osfmdru8GsLnsPQs85kryhkxq2HkOvZ6DhXmEuxH3qBN7aKt4
-         Qamg==
-X-Gm-Message-State: APjAAAXT9f4bSdoDRzddFm0kBgxzP55gU74JJxtISUhVgiLTwof42sbT
-        AQ4bwaK6UHsVjlWWemRwOPsIiOJdim8oDUMn4lLKqQ==
-X-Google-Smtp-Source: APXvYqw53TxiSztmeS5aG/lRAscCWEBCg60ghArjRRHg8ms6Qa8DVfD44TDY+uL/Ii2z9W8E3g1ie46yeMnAfbL/JOU=
-X-Received: by 2002:a0c:b04f:: with SMTP id l15mr70291951qvc.191.1558732245610;
- Fri, 24 May 2019 14:10:45 -0700 (PDT)
+        Fri, 24 May 2019 17:11:13 -0400
+Received: from mga09.intel.com ([134.134.136.24]:51843 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404197AbfEXVLN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 17:11:13 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 May 2019 14:11:12 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by fmsmga006.fm.intel.com with ESMTP; 24 May 2019 14:11:11 -0700
+Date:   Fri, 24 May 2019 14:11:11 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     "Xing, Cedric" <cedric.xing@intel.com>
+Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
+        Andy Lutomirski <luto@kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+Message-ID: <20190524211111.GI365@linux.intel.com>
+References: <CALCETrUzx3LPAKCLFf75P-XshAkRcr+JLET3LA_kHDs9MA11FA@mail.gmail.com>
+ <20190523234044.GC12078@linux.intel.com>
+ <CALCETrV4DVEfW6EJ6DnQGGYDJAiA5M1QcuYJTiroumOM+D6Jjg@mail.gmail.com>
+ <960B34DE67B9E140824F1DCDEC400C0F654E8956@ORSMSX116.amr.corp.intel.com>
+ <dda0912b-cb15-3c07-d368-345159e995f7@tycho.nsa.gov>
+ <20190524174243.GA365@linux.intel.com>
+ <20190524175458.GB365@linux.intel.com>
+ <960B34DE67B9E140824F1DCDEC400C0F654E8E1D@ORSMSX116.amr.corp.intel.com>
+ <20190524191344.GD365@linux.intel.com>
+ <960B34DE67B9E140824F1DCDEC400C0F654E8FC2@ORSMSX116.amr.corp.intel.com>
 MIME-Version: 1.0
-References: <c8cdb347-e206-76b2-0d43-546ef660ffb7@gmail.com> <35811fe2-7aac-aa3c-46dc-2bef515b0f47@gmail.com>
-In-Reply-To: <35811fe2-7aac-aa3c-46dc-2bef515b0f47@gmail.com>
-From:   Daniel Drake <drake@endlessm.com>
-Date:   Fri, 24 May 2019 15:10:34 -0600
-Message-ID: <CAD8Lp45kFO47N9KpgF4SACLUZmjOEG49_=ZLgP8fZyOYh_qYJg@mail.gmail.com>
-Subject: Re: [PATCH v4 04/13] platform/x86: wmi: Add function to get _UID of
- WMI device
-To:     Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
-Cc:     Corentin Chary <corentin.chary@gmail.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Chris Chiu <chiu@endlessm.com>,
-        acpi4asus-user <acpi4asus-user@lists.sourceforge.net>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <960B34DE67B9E140824F1DCDEC400C0F654E8FC2@ORSMSX116.amr.corp.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 12:59 PM Yurii Pavlovskyi
-<yurii.pavlovskyi@gmail.com> wrote:
+On Fri, May 24, 2019 at 01:42:13PM -0700, Xing, Cedric wrote:
+> > From: linux-sgx-owner@vger.kernel.org [mailto:linux-sgx-
+> > owner@vger.kernel.org] On Behalf Of Sean Christopherson
+> > Sent: Friday, May 24, 2019 12:14 PM
+> > 
+> > My point is that enclaves have different properties than shared objects.
+> > 
+> > Normal LSM behavior with regard to executing files is to label files
+> > with e.g. FILE__EXECUTE.  Because an enclave must be built to the exact
+> > specifications of .sigstruct, requring FILE__EXECUTE on the .sigstruct
+> > is effectively the same as requiring FILE__EXECUTE on the enclave itself.
+> > 
+> > Addressing your scenario of loading an executable page in EPC, doing so
+> > would require one of the following:
+> > 
+> >   - Ability to install a .sigstruct with FILE__EXECUTE
+> > 
+> >   - PROCESS__EXECMEM
+> > 
+> >   - FILE__EXECMOD and SGX2 support
+> 
+> Now I got your point. It sounds a great idea to me!
+> 
+> But instead of using .sigstruct file, I'd still recommend using file mapping
+> (i.e. SIGSTRUCT needs to reside in executable memory). But then there'll be a
+
+Why?  Even in the Graphene case the final .sigstruct can be known ahead of
+time.  Userspace can always use memfd() if it's generating SIGSTRUCT on
+the fly.
+
+> hole - a process having FILE__EXECMOD on any file could use that file as a
+> SIGSTRUCT. Probably we'll need a new type in SELinux to label
+> enclave/sigstruct files.
 >
-> Add a new function to acpi.h / wmi.c that returns _UID of the ACPI WMI
-> device. For example, it returns "ATK" for the following declaration in
-> DSDT:
-> Device (ATKD)
-> {
->     Name (_HID, "PNP0C14" /* Windows Management Instrumentation Device */)
->       // _HID: Hardware ID
->     Name (_UID, "ATK")  // _UID: Unique ID
->     ..
->
-> Generally, it is possible that multiple PNP0C14 ACPI devices are present in
-> the system as mentioned in the commit message of commit bff431e49ff5
-> ("ACPI: WMI: Add ACPI-WMI mapping driver").
->
-> Therefore the _UID is returned for a specific ACPI device that declares the
-> given GUID, to which it is also mapped by other methods of wmi module.
->
-> Signed-off-by: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
+> > I don't see a fundamental difference between having RWX in an enclave
+> > and RWX in normal memory, either way the process can execute arbitrary
+> > code, i.e. PROCESS__EXECMEM is appropriate.  Yes, an enclave will #UD on
+> > certain instructions, but that's easily sidestepped by having a
+> > trampoline in the host (marked RX) and piping arbitrary code into the
+> > enclave.  Or using EEXIT to do a bit of ROP.
+> 
+> I'm with you.
+> 
+> With your proposal only FILE__EXECMOD is needed on /dev/sgx/enclave to launch
+> Graphene enclaves or the like.
 
-Some extra background may be useful when reviewing this.
+It wouldn't even need FILE__EXECMOD, assuming Graphene does all of its
+libc rewriting before building the enclave, i.e. doesn't EADD RWX pages.
 
-As researched in
-https://marc.info/?l=linux-kernel&m=155498017207933&w=2, we are
-dealing with a tricky situation.
+> > > > > No changes are required to LSMs, SGX1 has a single LSM touchpoint
+> > > > > in
+> > > > its
+> > > > > mmap(), and I *think* the only required userspace change is to
+> > > > > mmap() PROT_NONE when allocating the enclave's virtual address
+> > range.
+> > >
+> > > I'm not sure I understand the motivation behind this proposal to
+> > > decouple initial EPC permissions from source pages.
+> > 
+> > Pulling permissions from source pages means userspace needs to fully map
+> > the in normal memory, including marking pages executable.  That exposes
+> > the loader to having executable pages in its address space that it has
+> > no intention of executing (outside of the enclave).  And for Graphene,
+> > it means having to actively avoid PROCESS__EXECMEM, e.g. by using a
+> > dummy backing file to build the enclave instead of anon memory.
+> 
+> Agreed.
+> 
+> > 
+> > > I don't think it a big deal to fully mmap() enclave files, which have
+> > > to be parsed by user mode anyway to determine various things including
+> > > but not limited to the size of heap(s), size and number of
+> > > TCSs/stacks/TLS areas, and the overall enclave size. So with PHDRs
+> > > parsed, it's trivial to mmap() each segment with permissions from its
+> > PHDR.
+> > >
+> > > > > As for Graphene, it doesn't need extra permissions to run its
+> > > > > enclaves, it just needs a way to install .sigstruct, which is a
+> > > > > generic permissions problem and not SGX specific.
+> > > > >
+> > > > >
+> > > > > For SGX2 maybe:
+> > > > >
+> > > > >   - No additional requirements to map an EAUG'd page as RW page.
+> > Not
+> > > > >     aligned with standard MAP_SHARED behavior, but we really don't
+> > want
+> > > > >     to require FILE__WRITE, and thus allow writes to .sigstruct.
+> > > > >
+> > > > >   - Require FILE__EXECMOD on the .sigstruct to map previously
+> > writable
+> > > > >     page as executable (which indirectly includes all EAUG'd
+> > pages).
+> > > > >     Wiring this up will be a little funky, but we again we don't
+> > want
+> > > > >     to require FILE__WRITE on .sigstruct.
+> > > > >
+> > >
+> > > I'm lost. Why is EAUG tied to permissions on .sigstruct?
+> > 
+> > Because for the purposes of LSM checks, .sigstruct is the enclave's
+> > backing file, and mapping a previously writable enclave page as
+> > exectuable is roughly equivalent to mapping a CoW'd page as exectuable.
+> 
+> I think I've got your idea. You are trying to use permissions on .sigstruct
+> to determine whether EAUG will be available to that specific enclave. Am I
+> right?
 
-asus-wmi currently serves two different classes of device: eeepci-wmi
-and asus-nb-wmi.
+Yep.
 
-The eeepci devices have:
-  _WDG : includes a METHOD block with GUID ASUS_WMI_MGMT_GUID, and an
-EVENT block with GUID EEEPC_WMI_EVENT_GUID
- _UID : ASUSWMI
+> I'd tie EAUG to the permissions of /dev/sgx/enclave instead. But why? There
+> are couple of reasons. For one, a SIGSTRUCT identifies the behavior of the
+> enclave, hence the SGX features needed by that enclave. So if an enclave
+> requires EAUG, the .sigstruct has to allow EAUG or the enclave wouldn't work.
+> That means the system admin wouldn't have a choice but to match up what's
+> needed by the enclave. For two, whether to allow, say loading code
+> dynamically into an enclave, depends on whether the host process can tolerate
+> the inherent risk. And that decision is seldom made on individual enclaves
+> but to the host process as a whole. And /dev/sgx/enclave serves that purpose.
 
-The asus-nb-wmi devices have:
- _ WDG : includes a METHOD block with GUID ASUS_WMI_MGMT_GUID (same as
-eeepc), and an EVENT block with GUID ASUS_NB_WMI_EVENT_GUID
- _UID : ATK
-
-To support new devices we now need to start concretely identifying
-which of these we are working with. But complications include:
- - The main MGMT_GUID used for matching at the moment is shared over
-both device types
- - Some Asus products have both of these (via two separate two
-separate PNP0C14 WMI devices).
-
-Currently eeepci-wmi and asus-nb-wmi register themselves with
-asus-wmi, which registers a platform device for each one. The platform
-dev probe then succeeds the platform device probe when it finds any
-_WDG entry for the main MGMT_GUID and the _WDG entry for the
-corresponding event GUID (not necessarily as part of the same
-underlying ACPI Device). In the case of both devices being present
-with duplicate MGMT, the first one that is parsed wins, and the other
-is ignored (see guid_already_parsed()).
-
-Sticking with the current approach, which is imperfect for devices
-that have both devices, adding a method to detect the _UID seems
-reasonable. Although actually I just realised you could probably also
-detect the difference by using wmi_has_guid() on the EVENT UUID
-without having to add a new function.
-
-I'll keep thinking about how to improve the situation around two
-devices present (but don't want to needlessly conflate this patch
-series with that).
-
-Daniel
+I think I'd be ok either way?  What I really care about is having line of
+sight to a sane way to support for SGX2, and both seem sane.  I.e. we can
+hash this detail out when SGX2 goes in.
