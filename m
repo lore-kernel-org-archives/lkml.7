@@ -2,149 +2,150 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE3CC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9486DC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 346C52175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:35:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 592FF20675
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 08:35:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="COOin8sW"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="Ojaeizz5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389572AbfEXIfW (ORCPT
+        id S2389643AbfEXIfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 04:35:22 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:43712 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389046AbfEXIfV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 04:35:21 -0400
-Received: by mail-qk1-f195.google.com with SMTP id z6so6200606qkl.10
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 01:35:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=stihjVpyL81uND5ibC7iaE+uqyg/RcZbMfoVKMB+mtE=;
-        b=COOin8sWa/lSfTHzEbCe7QsWKGFHiwbo+Kuqmt7jQDTjGn3ID2t5iZEWRjwnG6By71
-         uv4qD+B6V+lTSd1cGxfjm6xdUqKzNvZcPCCozGAex2g3HPLoSyGt0NRZJNju326CVrUV
-         MZiPPpSrfATRPBRj69TBl8hi4mwSD9d9Ry0RIkDRDarSJhV7v4vh0sMntfyLf1zjBRF6
-         ur+A0Nr18atc8xLW4L1cLh+ev5aI/b8CI+deN/SFEn4H6FL/TkNMHhBha/cCFesIbyQj
-         44MwusoS5aJ1WsuHrDOHZoGBVhNW/7ciTNwIzlDSGh3AbxWasZnSztVK7nzT87PYKu6H
-         HZOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=stihjVpyL81uND5ibC7iaE+uqyg/RcZbMfoVKMB+mtE=;
-        b=E96jCn8EMxIDO5qwFrH0M6Y58+7mqrLg7f5WiBTBRi/SS9+TIDZDz21zKUCSXT/BV7
-         Me5mY1xaGf1UdyQM7LJ1C2PCaRbiJgylwIs8PZeckY8qDs7hOch7fi5hbPoc+1/NbucV
-         XZWgV59nJkGE3rHbVBZbcFvapHDNel8Bouo8LY6diJWtdbo2B9P9398PR2hRaWcpd6Lc
-         0N0T66QcxOqzLQL/mvWAjWtZ/gdsUL/oH1DxuCK/eDPuX79qKnc6H9QmrcSLmfq/os8j
-         DeVsSl/RXV5NEDhDs839ZdPK7SAv+EuveOXhHYIPTgqPfBHeYQ6sjEsDFQ+D2/VtkT2E
-         SLlw==
-X-Gm-Message-State: APjAAAWnya7nPZzhn+hclzb+PBzwoI6HhjUdtXwMV0EQIUNtfQ68bPLE
-        t7jdcqxcdv375992Cub9eNjo7Et5GWy6DMmNQCLuiQ==
-X-Google-Smtp-Source: APXvYqzoub85iC3qRkUT/1rqPcbCAqf2PraA42mUh6gZCy1soKl7824Xl/NLHnNFN2zZSje+ohS+z/SwZ9ZQTmdisuQ=
-X-Received: by 2002:a0c:ad85:: with SMTP id w5mr11932788qvc.242.1558686920808;
- Fri, 24 May 2019 01:35:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <1557753318-11218-1-git-send-email-yannick.fertre@st.com> <317f94d6-846f-92e2-bd0f-b44377ea7845@st.com>
-In-Reply-To: <317f94d6-846f-92e2-bd0f-b44377ea7845@st.com>
-From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Date:   Fri, 24 May 2019 10:35:10 +0200
-Message-ID: <CA+M3ks77XPTZubS8icLdTF3mpQ3OHsvSqX35hHQik3ygRiGSZg@mail.gmail.com>
-Subject: Re: [PATCH v2] drm/stm: ltdc: remove clk_round_rate comment
-To:     Philippe CORNU <philippe.cornu@st.com>
-Cc:     Yannick FERTRE <yannick.fertre@st.com>,
-        Benjamin GAIGNARD <benjamin.gaignard@st.com>,
-        Vincent ABRIOU <vincent.abriou@st.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
+        Fri, 24 May 2019 04:35:41 -0400
+Received: from mail.z3ntu.xyz ([128.199.32.197]:37286 "EHLO mail.z3ntu.xyz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389514AbfEXIfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 04:35:41 -0400
+Received: from g550jk.localnet (80-110-121-20.cgn.dynamic.surfer.at [80.110.121.20])
+        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 6D2B1C1D14;
+        Fri, 24 May 2019 08:35:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
+        t=1558686937; bh=8QxbOGfJLKmBY8BnGjqJHLbP9D2w96jkIDyZThAA41g=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=Ojaeizz5pLdCcF0xdLCfW2ni1k4DaVA/6/5fp3iYD4hTrR7fARGyYCfz5XnQRDoHI
+         7h/ZuL2OpPXI3J+LHDxh1JlHJgpGe2DJBb1PlzoBfqK8WFhvQ3wa5it0XQv1AD4S2X
+         FKdfKRnUKtB9iNVgwby3tNXv0SssAzJNxWfoQYqE=
+From:   Luca Weiss <luca@z3ntu.xyz>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
         <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arm64: dts: allwinner: a64: Add lradc node
+Date:   Fri, 24 May 2019 10:35:36 +0200
+Message-ID: <4343071.IDWclfcoxo@g550jk>
+In-Reply-To: <20190521142544.ma2xfu77bamk4hvc@flea>
+References: <20190518170929.24789-1-luca@z3ntu.xyz> <EF411F71-D257-41FC-9248-B0E3F686B6B9@z3ntu.xyz> <20190521142544.ma2xfu77bamk4hvc@flea>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le lun. 13 mai 2019 =C3=A0 16:46, Philippe CORNU <philippe.cornu@st.com> a =
-=C3=A9crit :
->
-> Dear Yannick,
->
-> Acked-by: Philippe Cornu <philippe.cornu@st.com>
->
-Applied on drm-misc-next,
+On Dienstag, 21. Mai 2019 16:25:44 CEST Maxime Ripard wrote:
+> On Tue, May 21, 2019 at 03:52:47PM +0200, luca@z3ntu.xyz wrote:
+> > On May 21, 2019 3:09:55 PM GMT+02:00, Maxime Ripard 
+<maxime.ripard@bootlin.com> wrote:
+> > >On Tue, May 21, 2019 at 08:43:45AM +0200, luca@z3ntu.xyz wrote:
+> > >> On May 20, 2019 1:07:42 PM GMT+02:00, Maxime Ripard
+> > >
+> > ><maxime.ripard@bootlin.com> wrote:
+> > >> >On Sat, May 18, 2019 at 07:09:30PM +0200, Luca Weiss wrote:
+> > >> >> Add a node describing the KEYADC on the A64.
+> > >> >> 
+> > >> >> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+> > >> >> ---
+> > >> >> 
+> > >> >>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 7 +++++++
+> > >> >>  1 file changed, 7 insertions(+)
+> > >> >> 
+> > >> >> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > >> >
+> > >> >b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > >> >
+> > >> >> index 7734f70e1057..dc1bf8c1afb5 100644
+> > >> >> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > >> >> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > >> >> @@ -704,6 +704,13 @@
+> > >> >> 
+> > >> >>  			status = "disabled";
+> > >> >>  		
+> > >> >>  		};
+> > >> >> 
+> > >> >> +		lradc: lradc@1c21800 {
+> > >> >> +			compatible = "allwinner,sun4i-a10-lradc-
+keys";
+> > >> >> +			reg = <0x01c21800 0x100>;
+> > >> >> +			interrupts = <GIC_SPI 30 
+IRQ_TYPE_LEVEL_HIGH>;
+> > >> >> +			status = "disabled";
+> > >> >> +		};
+> > >> >> +
+> > >> >
+> > >> >The controller is pretty different on the A64 compared to the A10.
+> > >
+> > >The
+> > >
+> > >> >A10 has two channels for example, while the A64 has only one.
+> > >> >
+> > >> >It looks like the one in the A83t though, so you can use that
+> > >> >compatible instead.
+> > >> 
+> > >> Looking at the patch for the A83t, the only difference is that it
+> > >> uses a 3/4 instead of a 2/3 voltage divider, nothing is changed with
+> > >> the channels.
+> > >
+> > >I guess you can reuse the A83t compatible here then, and a more
+> > >specific a64 compatible in case we ever need to fix this.
+> > >
+> > >> But I'm also not sure which one (or a different one)
+> > >> is used from looking at the "A64 User Manual".
+> > >
+> > >I'm sorry, what are you referring to with "one" in that sentence?
+> > 
+> > Sorry, I meant I didn't find anything in the A64 user manual whether
+> > a 3/4 or a 2/3 voltage divider (or one with different values) is
+> > used on the A64.
+> 
+> Ok :)
+> 
+> I guess you can just reuse the A83t compatible then, together with the
+> A64's.
+> 
+> Maxime
+> 
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
 
-Benjamin
+Hi Maxime,
+I'd submit a v2 with these changes to v1 then:
+                lradc: lradc@1c21800 {
+-                       compatible = "allwinner,sun4i-a10-lradc-keys";
+-                       reg = <0x01c21800 0x100>;
++                       compatible = "allwinner,sun50i-a64-lradc-keys",
++                                    "allwinner,sun8i-a83t-r-lradc";
++                       reg = <0x01c21800 0x400>;
+                        interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
+                        status = "disabled";
+                };
+Does that look okay?
+The reg change is due to me not spotting the address being 0x01C2 
+1800---0x01C2 1BFF, so the size should be 0x400 and not 0x100.
 
-> Thank you,
->
-> Philippe :-)
->
-> On 5/13/19 3:15 PM, Yannick Fertr=C3=A9 wrote:
-> > Clk_round_rate returns rounded clock without changing
-> > the hardware in any way.
-> > This function couldn't replace set_rate/get_rate calls.
-> > Todo comment has been removed & a new log inserted.
-> >
-> > Signed-off-by: Yannick Fertr=C3=A9 <yannick.fertre@st.com>
-> > ---
-> > Changes in v2:
-> >       - Clk_enable & clk_disable are needed for the SOC STM32F7
-> >        (not for STM32MP1). I return this part of the patch to make sure=
- the
-> >        driver is compatible with all SOC STM32.
-> >
-> >   drivers/gpu/drm/stm/ltdc.c | 8 +++-----
-> >   1 file changed, 3 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
-> > index 97912e2..1104e78 100644
-> > --- a/drivers/gpu/drm/stm/ltdc.c
-> > +++ b/drivers/gpu/drm/stm/ltdc.c
-> > @@ -507,11 +507,6 @@ static bool ltdc_crtc_mode_fixup(struct drm_crtc *=
-crtc,
-> >       struct ltdc_device *ldev =3D crtc_to_ltdc(crtc);
-> >       int rate =3D mode->clock * 1000;
-> >
-> > -     /*
-> > -      * TODO clk_round_rate() does not work yet. When ready, it can
-> > -      * be used instead of clk_set_rate() then clk_get_rate().
-> > -      */
-> > -
-> >       clk_disable(ldev->pixel_clk);
-> >       if (clk_set_rate(ldev->pixel_clk, rate) < 0) {
-> >               DRM_ERROR("Cannot set rate (%dHz) for pixel clk\n", rate)=
-;
-> > @@ -521,6 +516,9 @@ static bool ltdc_crtc_mode_fixup(struct drm_crtc *c=
-rtc,
-> >
-> >       adjusted_mode->clock =3D clk_get_rate(ldev->pixel_clk) / 1000;
-> >
-> > +     DRM_DEBUG_DRIVER("requested clock %dkHz, adjusted clock %dkHz\n",
-> > +                      mode->clock, adjusted_mode->clock);
-> > +
-> >       return true;
-> >   }
-> >
-> > --
-> > 2.7.4
-> >
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Thanks for the feedback,
+Luca
+
+
