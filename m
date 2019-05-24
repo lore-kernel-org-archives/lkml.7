@@ -2,84 +2,198 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F70C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 04:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 461DEC282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 04:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB8BE2081C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 04:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A3302081C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 04:06:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WgyI+my0"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ocHCDk5D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725853AbfEXEFt (ORCPT
+        id S1726298AbfEXEGh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 00:05:49 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:33426 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfEXEFt (ORCPT
+        Fri, 24 May 2019 00:06:37 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:42052 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfEXEGg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 00:05:49 -0400
-Received: by mail-lj1-f193.google.com with SMTP id w1so7435353ljw.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 21:05:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bMvKtFN1e33kpboGuviLZvfkEjRfz5jbm8LdT4mUCDU=;
-        b=WgyI+my0JXdOEJsdGY3Vs1l2Q/d27f1OZS0CNv5G8gYHThrU3eKCmbG0Ks9W0F6obh
-         2b1UUXdsa23Epz6r+vhmbgVPgbExpEmKy1okLJE5KBf9j7roDhQ1NU8X4tn5tbqNdHgw
-         SYck62IL79urnywL2GC9eTu6+dov4ELvohsy4Banqu/68bCA1dUKlBg+YYZHQjYhBvQ0
-         15c3wnoUfq+Qb+bUkL9w82hNs4nbkbIKKWiOu0Ampnv6qB4W2GdWvQjnCZmA7DcU3NS2
-         hRtdmt1Os28GQcaTTlvO1p0lBEfjmfJK8IQ/ILHhkgPP5kG+UTY5Q8D16KpYlUEMI7fr
-         BxuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bMvKtFN1e33kpboGuviLZvfkEjRfz5jbm8LdT4mUCDU=;
-        b=jszY5GNRY9kIVX2ngEL5KySyXeMJ0kjc2WtDYdmgsM48PZMLCbup4yDyGVRgZyuvov
-         g+0FBlrDZZYJ7urQntxx1QqH7x2JqyzEcyw010qQxVcGQjxQZwKLG8NZt0uvhp6eVdVY
-         kgbVwOSHqfe21ecNrcoIexFAWidYpYgsHj+OcfyrISJ8hGcDvgp9MIuas3cKkSBAQ8As
-         9pvCjP7XKv3jPdn0G2Od3p8Ia0QME18H1O+Wt/ga8L9OUKyA6R63yejylxweWwq4DWQ9
-         zfjXBWw1M1hiUU4NDKtNJHWY7NnPUplOgATS0o7H6GFFtsfuaITjnuAZsYNbPTAD85ZL
-         ynQA==
-X-Gm-Message-State: APjAAAU5l3dbX1GQJd8cWi3VTmEKwv3F1xPbxUCFAWx+mSyFwku+iEQB
-        YHUSA+YN3bHht67gTlr4Bor5SUftBWLcUlJdRwk=
-X-Google-Smtp-Source: APXvYqx2COq+bydPlaV1tCE964ZlkfqtZ8TL30G7mGs9JJdsmHxxZkT2dz3Jc6A1xFhshtcbOczpwiaeyXLbndRY2lA=
-X-Received: by 2002:a2e:2b58:: with SMTP id q85mr52647970lje.179.1558670747341;
- Thu, 23 May 2019 21:05:47 -0700 (PDT)
+        Fri, 24 May 2019 00:06:36 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4O43pD0068348;
+        Fri, 24 May 2019 04:05:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=GCTsI00gkNvHBP4Xpk/j0wuaNXUl5LjVwQVHtGmjRyU=;
+ b=ocHCDk5DdkOxbzHxWTr4+wIHXxwBq2vHM7kuECEQlftnbtOWhqdtE7Syft5Jsd5/MndE
+ 64IG8H40SCsXKansF2xDHMW31I7x/Obutno8Zz+dSN/IjFp6NL3t3OnbTQWvt4S5YyFb
+ SU5TbxBsCLvhMoIaGVkEXpQDxYZL+rKWJbW0clZj1D4vzt5O3l+Nbb2B5VRPSamV6QQ5
+ bHTMzYF5uyIYLCJiGcoMnd5lieCnQexED7oaXJZlNtVQND2+v3crsn4oFb+O5sZVANYf
+ iltccHN5E8Z40977hvVEg/5kzrBzMAg2tShTPRRnHcYmFwP4FJSryfH7EBTsMwC7tt0Q ug== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2130.oracle.com with ESMTP id 2smsk5pc4b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 May 2019 04:05:38 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4O43krk107841;
+        Fri, 24 May 2019 04:05:37 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3020.oracle.com with ESMTP id 2smsgvvhcu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 24 May 2019 04:05:37 +0000
+Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x4O45alM113125;
+        Fri, 24 May 2019 04:05:36 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2smsgvvhcq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 May 2019 04:05:36 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4O45YEk025803;
+        Fri, 24 May 2019 04:05:34 GMT
+Received: from localhost (/10.159.211.99)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 24 May 2019 04:05:33 +0000
+Date:   Fri, 24 May 2019 00:05:27 -0400
+From:   Kris Van Hees <kris.van.hees@oracle.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Kris Van Hees <kris.van.hees@oracle.com>,
+        Steven Rostedt <rostedt@goodmis.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, dtrace-devel@oss.oracle.com,
+        linux-kernel@vger.kernel.org, mhiramat@kernel.org, acme@kernel.org,
+        ast@kernel.org, daniel@iogearbox.net, peterz@infradead.org
+Subject: Re: [RFC PATCH 00/11] bpf, trace, dtrace: DTrace BPF program type
+ implementation and sample use
+Message-ID: <20190524040527.GU2422@oracle.com>
+References: <20190521175617.ipry6ue7o24a2e6n@ast-mbp.dhcp.thefacebook.com>
+ <20190521184137.GH2422@oracle.com>
+ <20190521205533.evfszcjvdouby7vp@ast-mbp.dhcp.thefacebook.com>
+ <20190521173618.2ebe8c1f@gandalf.local.home>
+ <20190521214325.rr7emn5z3b7wqiiy@ast-mbp.dhcp.thefacebook.com>
+ <20190521174757.74ec8937@gandalf.local.home>
+ <20190522052327.GN2422@oracle.com>
+ <20190522205329.uu26oq2saj56og5m@ast-mbp.dhcp.thefacebook.com>
+ <20190523054610.GR2422@oracle.com>
+ <20190523211330.hng74yi75ixmcznc@ast-mbp.dhcp.thefacebook.com>
 MIME-Version: 1.0
-References: <20190523124535.GA12931@gmail.com> <20190523221210.4a2bb326@oasis.local.home>
-In-Reply-To: <20190523221210.4a2bb326@oasis.local.home>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Fri, 24 May 2019 06:05:36 +0200
-Message-ID: <CANiq72=J_RkEByD1ToX1Y2MwkwrCdg0SFZKK02jwu_PpyADPoQ@mail.gmail.com>
-Subject: Re: [PATCH] tracing: silence GCC 9 array bounds warning
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190523211330.hng74yi75ixmcznc@ast-mbp.dhcp.thefacebook.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9266 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905240026
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 4:12 AM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Thu, 23 May 2019 14:45:35 +0200
-> Miguel Ojeda <miguel.ojeda.sandonis@gmail.com> wrote:
->
-> I still prefer the typecast of void *, as that's used a bit more in the
-> kernel, but since char * is also used (not as much), I'll leave it. But
-> the parenthesis around iter are unnecessary. I'll remove them.
+On Thu, May 23, 2019 at 02:13:31PM -0700, Alexei Starovoitov wrote:
+> On Thu, May 23, 2019 at 01:46:10AM -0400, Kris Van Hees wrote:
+> > 
+> > I think there is a difference between a solution and a good solution.  Adding
+> > a lot of knowledge in the userspace component about how things are imeplemented
+> > at the kernel level makes for a more fragile infrastructure and involves
+> > breaking down well established boundaries in DTrace that are part of the design
+> > specifically to ensure that userspace doesn't need to depend on such intimate
+> > knowledge.
+> 
+> argh. see more below. This is fundamental disagreement.
+> 
+> > > > Another advantage of being able to operate on a more abstract probe concept
+> > > > that is not tied to a specific probe type is that the userspace component does
+> > > > not need to know about the implementation details of the specific probes.
+> > > 
+> > > If that is indeed the case that dtrace is broken _by design_
+> > > and nothing on the kernel side can fix it.
+> > > 
+> > > bpf prog attached to NMI is running in NMI.
+> > > That is very different execution context vs kprobe.
+> > > kprobe execution context is also different from syscall.
+> > > 
+> > > The user writing the script has to be aware in what context
+> > > that script will be executing.
+> > 
+> > The design behind DTrace definitely recognizes that different types of probes
+> > operate in different ways and have different data associated with them.  That
+> > is why probes (in legacy DTrace) are managed by providers, one for each type
+> > of probe.  The providers handle the specifics of a probe type, and provide a
+> > generic probe API to the processing component of DTrace:
+> > 
+> >     SDT probes -----> SDT provider -------+
+> >                                           |
+> >     FBT probes -----> FBT provider -------+--> DTrace engine
+> >                                           |
+> >     syscall probes -> systrace provider --+
+> > 
+> > This means that the DTrace processing component can be implemented based on a
+> > generic probe concept, and the providers will take care of the specifics.  In
+> > that sense, it is similar to so many other parts of the kernel where a generic
+> > API is exposed so that higher level components don't need to know implementation
+> > details.
+> > 
+> > In DTrace, people write scripts based on UAPI-style interfaces and they don't
+> > have to concern themselves with e.g. knowing how to get the value of the 3rd
+> > argument that was passed by the firing probe.  All they need to know is that
+> > the probe will have a 3rd argument, and that the 3rd argument to *any* probe
+> > can be accessed as 'arg2' (or args[2] for typed arguments, if the provider is
+> > capable of providing that).  Different probes have different ways of passing
+> > arguments, and only the provider code for each probe type needs to know how
+> > to retrieve the argument values.
+> > 
+> > Does this help bring clarity to the reasons why an abstract (generic) probe
+> > concept is part of DTrace's design?
+> 
+> It actually sounds worse than I thought.
+> If dtrace script reads some kernel field it's considered to be uapi?! ouch.
+> It means dtrace development philosophy is incompatible with the linux kernel.
+> There is no way kernel is going to bend itself to make dtrace scripts
+> runnable if that means that all dtrace accessible fields become uapi.
 
-If the preferred style in the kernel is void *, change it on your
-side, please! :-) Maybe we should mention it in the coding guidelines.
+No, no, that is not at all what I am saying.  In DTrace, the particulars of
+how you get to e.g. probe arguments or current task information are not
+something that script writers need to concern themselves about.  Similar to
+how BPF contexts have a public (uapi) declaration and a kernel-level context
+declaration taht is used to actually implement accessing the data (using the
+is_valid_access and convert_ctx_access functions that prog types implement).
+DTrace exposes an abstract probe entity to script writers where they can
+access probe arguments as arg0 through arg9.  Nothing in the userspace needs
+to know how you obtain the value of those arguments.  So, scripts can be
+written for any kind of probe, and the only information that is used to
+verify programs is obtained from the abstract probe description (things like
+its unique id, number of arguments, and possible type information for each
+argument).  The knowledge of how to get to the value of the probe arguments
+is only known at the level of the kernel, so that when the implementation of
+the probe in the kernel is modified, the mapping from actual probe to abstract
+representation of the probe (in the kernel) can be modified along with it,
+and userspace won't even notice that anything changed.
 
-Cheers,
-Miguel
+Many parts of the kernel work the same way.  E.g. file system implementations
+change, yet the API to use the file systems remains the same.
+
+> In stark contrast to dtrace all of bpf tracing scripts (bcc scripts
+> and bpftrace scripts) are written for specific kernel with intimate
+> knowledge of kernel details. They do break all the time when kernel changes.
+> kprobe and tracepoints are NOT uapi. All of them can change.
+> tracepoints are a bit more stable than kprobes, but they are not uapi.
+
+Sure, and I understand why.  And in DTrace, there is an extra layer in the
+design of the tracing framework that isolates implementation changes at the
+level of the probes from what is exposed to userspace.  That way changes can
+be made at the kernel level without worrying about the implications for
+userspace.  Of course one can simply not care about userspace altogether,
+whether there is an abstraction in place or not, but the added bonus of the
+abstraction is that not caring about userspace won't affect userspace much :)
+
+By the way, the point behind this design is also that it doesn't enforce the
+use of that abstraction.  Nothing prevents people from using probes directly.
+But it provides a generic probe concept that isolates the probe implementation
+details from the tracing tool.
