@@ -2,103 +2,121 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C1DC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 053FDC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B11B220868
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:32:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="V+op6iY5"
+	by mail.kernel.org (Postfix) with ESMTP id C5C8D21841
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 07:38:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389016AbfEXHc1 (ORCPT
+        id S2389036AbfEXHiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 03:32:27 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:55158 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388847AbfEXHc0 (ORCPT
+        Fri, 24 May 2019 03:38:16 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:42748 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388911AbfEXHiQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 03:32:26 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4O7SaIv023093;
-        Fri, 24 May 2019 09:32:12 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=rSgRCWj1dSxytynGUKRNJBEIpJ83+teCJf2ciuwtYiQ=;
- b=V+op6iY5LZ12igQ1k5lJV/4rwtgsRGnCU2l9TQlPntKFuzyMiiKdYsGYdNE6lISEGZ6u
- Y3/157O9jRDY5kDWnsiNVN8Ax4/3N0NFAGMBw327HBQFZE5riXbE+gGPx6aDTzTQJLXc
- Y0faPPyoRbmT6TQmlLgUxTrqdc8A/dLcRt6ah6th3G+CJqpO6soKXGnrNYN9lPiWOUZx
- 78QdY3ZuPxWM26FCwezx7E3308RLIaNrk1Exbr2MHN3X6SUz/HXf/6EZ95Ve8qtu/vd5
- cvaEOFVRu+ZJT7j+Xh5+XM8K22sF2U+3DXH4rpN+TdV8SCNOC96w3AqwIzm+hwkxOFmd vA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2sj7h1c9y2-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 24 May 2019 09:32:12 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 31EC059;
-        Fri, 24 May 2019 07:32:07 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8076C1658;
-        Fri, 24 May 2019 07:32:07 +0000 (GMT)
-Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS23.st.com
- (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 24 May
- 2019 09:32:06 +0200
-Received: from localhost (10.201.20.5) by Webmail-ga.st.com (10.75.90.48) with
- Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 24 May 2019 09:32:06 +0200
-From:   Amelie Delaunay <amelie.delaunay@st.com>
-To:     Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>, <kbuild-all@01.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCH v2] pinctrl: stmfx: Fix compile issue when CONFIG_OF_GPIO is not defined
-Date:   Fri, 24 May 2019 09:32:05 +0200
-Message-ID: <1558683125-31882-1-git-send-email-amelie.delaunay@st.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 24 May 2019 03:38:16 -0400
+Received: from [125.35.49.90] (helo=[10.0.0.21])
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <hui.wang@canonical.com>)
+        id 1hU4mH-0001fz-SS; Fri, 24 May 2019 07:38:10 +0000
+Subject: =?UTF-8?B?UmU6IOetlOWkjTog562U5aSNOiDnrZTlpI06IFtQQVRDSF0gaW5wdXQ6?=
+ =?UTF-8?Q?_alps-fix_the_issue_the_special_alps_trackpoint_do_not_work=2e?=
+To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
+Cc:     Peter Hutterer <peter.hutterer@who-t.net>,
+        Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>,
+        dmitry.torokhov@gmail.com, XiaoXiao Liu <sliuuxiaonxiao@gmail.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Xiaojian Cao <xiaojian.cao@cn.alps.com>,
+        "zhangfp1@lenovo.com" <zhangfp1@lenovo.com>
+References: <345b62e1-407e-7a03-9b03-486bbf5a0a8e@canonical.com>
+ <20190521094622.syeub6tcqhbyc7sg@pali>
+ <OSBPR01MB4855D744473149D037612506DA000@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+ <20190522063546.kb74mxeprkauicul@pali>
+ <OSBPR01MB48550B43F78BBFBDC20D414DDA000@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+ <20190522074030.64sy7xt3wnomtxjb@pali> <20190523060154.GA10526@jelly>
+ <38ec4a40-d51a-aeb1-a5e8-dbaed1142298@canonical.com>
+ <20190524053648.GA16379@jelly>
+ <d1fd207d-68e1-0b57-f0dc-c254bfc9352c@canonical.com>
+ <20190524072648.6zqgz7rpwpcv22pb@pali>
+From:   Hui Wang <hui.wang@canonical.com>
+Message-ID: <d0b659bf-e6ed-bbbb-a3ab-17daf525a577@canonical.com>
+Date:   Fri, 24 May 2019 15:37:57 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.20.5]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-24_02:,,
- signatures=0
+In-Reply-To: <20190524072648.6zqgz7rpwpcv22pb@pali>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CONFIG_GPIO_OF is not defined, struct gpio_chip 'of_node' member does
-not exist:
-drivers/pinctrl/pinctrl-stmfx.c: In function 'stmfx_pinctrl_probe':
-drivers/pinctrl/pinctrl-stmfx.c:652:17: error: 'struct gpio_chip' has no member named 'of_node'
-     pctl->gpio_chip.of_node = np;
 
-Fixes: 1490d9f841b1 ("pinctrl: Add STMFX GPIO expander Pinctrl/GPIO driver")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
----
- drivers/pinctrl/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 2019/5/24 下午3:26, Pali Rohár wrote:
+> On Friday 24 May 2019 13:50:53 Hui Wang wrote:
+>> On 2019/5/24 下午1:36, Peter Hutterer wrote:
+>>> On Fri, May 24, 2019 at 01:25:52PM +0800, Hui Wang wrote:
+>>>> On 2019/5/23 下午2:01, Peter Hutterer wrote:
+>>>>> On Wed, May 22, 2019 at 09:40:30AM +0200, Pali Rohár wrote:
+>>>>>> On Wednesday 22 May 2019 07:30:43 Xiaoxiao Liu wrote:
+>>>>>>> Hi Pali,
+>>>>>>>
+>>>>>>> Ok, and cannot you set ALPS_DUALPOINT flag based on that
+>>>>>>> alps_check_is_trackpoint() result and then update
+>>>>>>> alps_process_packet_ss4_v3() code to supports also
+>>>>>>> V8 trackpoint packets?
+>>>>>>> --> Yes, we can do like so, when we use the v8 method to process the trackpoint , the mouse speed is not ideal.
+>>>>>>>          Then we choose the standard mouse driver.
+>>>>>> Mouse speed is something which is configurable. Have you configured it
+>>>>>> somehow? Also there is libinput project should handle these settings
+>>>>>> more properly.
+>>>>>>
+>>>>>> Adding Peter Hutterer, maintainer of libinput to loop. I think he could
+>>>>>> help with this problem.
+>>>>> libinput has a quirk for a magic multiplier on trackpoints. it was the only
+>>>>> solution I found that came close to "working" given that every device seems
+>>>>> to provide some other random magic data. Doc for it is here:
+>>>>> https://wayland.freedesktop.org/libinput/doc/latest/trackpoint-configuration.html
+>>>> Hello Peter Hutterer,
+>>>>
+>>>> To adjust the trackpoint speed from userspace:
+>>>>
+>>>> If the libinput version is lower than 1.9.0, we could set
+>>>> POINTINGSTICK_CONST_ACCEL=0.25
+>>>>
+>>>> If the libinput version is higher than 1.12.0, we could set
+>>>> AttrTrackpointMultiplier=0.25
+>>>>
+>>>> But if we use libinput-1.10.0,  how could we adjust the speed?
+>>> The LIBINPUT_ATTR_TRACKPOINT_RANGE property, which didn't end up working
+>>> well (hence why it got replaced again). See the docs here though:
+>>> https://wayland.freedesktop.org/libinput/doc/1.10.0/trackpoints.html
+>>>
+>>> Cheers,
+>>>      Peter
+>> OK, got it, Thanks.
+> Is not here some database where for input device name / id is specified
+> that property? So users do not have to invent what is correct value for
+> their hardware?
 
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index 1f380ca..7a33207 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -268,7 +268,7 @@ config PINCTRL_ST
- config PINCTRL_STMFX
- 	tristate "STMicroelectronics STMFX GPIO expander pinctrl driver"
- 	depends on I2C
--	depends on OF || COMPILE_TEST
-+	depends on OF_GPIO
- 	select GENERIC_PINCONF
- 	select GPIOLIB_IRQCHIP
- 	select MFD_STMFX
--- 
-2.7.4
+Since the libinput version in the ubuntu 18.04 is 1.10,  I tried to set 
+LIBINPUT_ATTR_TRACKPOINT_RANGE with different values (from 25, 20, 10, 
+5) in the udev hwdb database, I checked it with "udevadm info 
+/dev/input/eventX" to confirm the value is set to 
+LIBINPUT_ATTR_TRACKPOINT_RANGE successfully, but looks like the cursor 
+speed doesn't change at all. So for ubuntu 18.04,  looks like we have to 
+adjust the speed in the kernel driver.
+
+Thanks,
+
+Hui.
 
