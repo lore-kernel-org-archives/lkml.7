@@ -2,114 +2,115 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60CF7C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E121C282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E4C520868
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:23:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2545420868
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:26:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hZ0bD/CU"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="UBkDOjp+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391474AbfEXMXd (ORCPT
+        id S2391513AbfEXM0c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 08:23:33 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:43677 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391216AbfEXMXd (ORCPT
+        Fri, 24 May 2019 08:26:32 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:6870 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2391299AbfEXM0c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 08:23:33 -0400
-Received: by mail-lf1-f65.google.com with SMTP id u27so6987008lfg.10;
-        Fri, 24 May 2019 05:23:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=C+myfdGRYFPLLSybMtkNtVx2Tt/XQimBNXiCQ/VdObg=;
-        b=hZ0bD/CUdsrgatmNXy5higdZbx3OSCJT8sw3LgkqkYgqbLtDn/gLs9c3g8mirUEDrG
-         l+4o7a9TAxKLDBrPxE1t79fM9XPEqezMkBejfXLFW1INWkfF6OniubiwX8l6JtdYRW5M
-         tFXRga1iZyPaMA5IfgLcUNsVq0/n8CPAA7ngiZ2vlfacytZlLloQGm7izI50MYXleqvm
-         ISGNwOfcAGX8Xe6oTUH7CHfM9HQ/3MXe5c0F3fumRQ20D6mMK9Uiok4uhyMArRoFFH+q
-         u4G3Opyv18dM583Kp0bxWnPFYDg/9AdqBdoV4pWXcATSuvokXHnSxlg9lkFRrlKRVbRQ
-         1utQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=C+myfdGRYFPLLSybMtkNtVx2Tt/XQimBNXiCQ/VdObg=;
-        b=ATbpaZOburacXnUixjr3z/A5JcWc7SrFgtcMouhpbA3rHTkYQH6bQ71mwBmSP3dlJn
-         1L3rKnIdKqI1UqTPvAT3wpC9UcTX6oZfi5dB13yGAr9Xu2isz17jrjBXmmTdM4aQi5x9
-         8w11HwZPYyQUx4Ffg33lF4BQNV2vnek3d9jV6FxouTG5r7u4SmxNxo1GE18tFqhmQHNG
-         2vajgS54+rCdwXrioYJKlE8nJMK6zHgBsS6nr70GA99jlVs12SqchXLLsTwKANWOvRSk
-         ZIssYtL4UACQ3JtZFV80PBjyfdeLA0YhS6N9RLJzhaXxYFftQIN1ZL34k59DquX9MUvF
-         CoJQ==
-X-Gm-Message-State: APjAAAXX9xNq4o0if/ZgrxaSSYIdLoK5keA8MVFOo7CtFXb8glj9wxIg
-        ooo6ecTMCJcv1A3vl0C0uObaFlAYOrqydMHPrDg=
-X-Google-Smtp-Source: APXvYqzNQQPTSEiT9TgbJ91HH92JPe3O9NL20r1waVsd3eYrkSbkO8SrKpooDjZEBXWcbK0tw4yY2uokVzdzBVZa5zc=
-X-Received: by 2002:ac2:4428:: with SMTP id w8mr46274166lfl.99.1558700610795;
- Fri, 24 May 2019 05:23:30 -0700 (PDT)
+        Fri, 24 May 2019 08:26:32 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4OCJ6Hq021165;
+        Fri, 24 May 2019 14:26:21 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=MRkkLHdMQA+fa243SgLqmgSMuMqZksxq6zRTMMLwqTI=;
+ b=UBkDOjp+86RcHTz7CrpA0k7LNC39DmwaTk3HVvoWoQGecrJtUjcvL29dWEKfb/b/sJgW
+ qXPr18nlCniLI3rhEv4fCjUGz/9rNmlf6HeEwh3gEwxrNcSSJVcSSueBDcH1JVgmmFCT
+ VWhdz34tvJpQLziQRDBJXlzWz3Q7g0D5ZMbAhL9v3MVnqAdC/IBzGyHRO/hoJmYsmO9b
+ pgsVSILuEZvytnIPiBXjxUhdLNqkUxIxxkyLJLNcvbaPB7+U9nHiZKgwLf43Ialw9uJP
+ QeOUiNJBLqyWdvOfSzReKN7Hsgd/oo9z9p4262dpW1KPVXLUSsAiRoaOHxGAJtJuCOlK BA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2sj774nmu5-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 24 May 2019 14:26:21 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 23DA034;
+        Fri, 24 May 2019 12:26:21 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id EEDDD2BCC;
+        Fri, 24 May 2019 12:26:20 +0000 (GMT)
+Received: from [10.48.0.204] (10.75.127.50) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 24 May
+ 2019 14:26:20 +0200
+Subject: Re: [PATCH 0/2] pinctrl: stm32: add suspend/resume management
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+CC:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <1557474150-19618-1-git-send-email-alexandre.torgue@st.com>
+ <CACRpkdYgTbTa6RmM3y-myk31ZxLGZ+8KvLof1XHkockrX4tofA@mail.gmail.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <4a35e070-b18a-e0f5-76b6-72054eb98b43@st.com>
+Date:   Fri, 24 May 2019 14:26:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <cover.1557657814.git.agx@sigxcpu.org> <2000bc4564175abd7966207a5e9fbb9bb7d82059.1557657814.git.agx@sigxcpu.org>
-In-Reply-To: <2000bc4564175abd7966207a5e9fbb9bb7d82059.1557657814.git.agx@sigxcpu.org>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Fri, 24 May 2019 09:23:30 -0300
-Message-ID: <CAOMZO5BaFYJxh1v46n2mdPyc+-jg6LgvoGR1rTE+yHZg_0Z8PA@mail.gmail.com>
-Subject: Re: [PATCH v11 2/2] phy: Add driver for mixel mipi dphy found on
- NXP's i.MX8 SoCs
-To:     =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Thierry Reding <treding@nvidia.com>,
-        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Johan Hovold <johan@kernel.org>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Abel Vesa <abel.vesa@nxp.com>, Li Jun <jun.li@nxp.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CACRpkdYgTbTa6RmM3y-myk31ZxLGZ+8KvLof1XHkockrX4tofA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.50]
+X-ClientProxiedBy: SFHDAG5NODE2.st.com (10.75.127.14) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-24_05:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kishon,
 
-On Sun, May 12, 2019 at 7:49 AM Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
->
-> This adds support for the Mixel DPHY as found on i.MX8 CPUs but since
-> this is an IP core it will likely be found on others in the future. So
-> instead of adding this to the nwl host driver make it a generic PHY
-> driver.
->
-> The driver supports the i.MX8MQ. Support for i.MX8QM and i.MX8QXP can be
-> added once the necessary system controller bits are in via
-> mixel_dphy_devdata.
->
-> Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org>
-> Co-developed-by: Robert Chiras <robert.chiras@nxp.com>
-> Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
-> Reviewed-by: Fabio Estevam <festevam@gmail.com>
-> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 
-Would you have any comments on this series, please?
+On 5/24/19 1:24 PM, Linus Walleij wrote:
+> On Fri, May 10, 2019 at 9:42 AM Alexandre Torgue
+> <alexandre.torgue@st.com> wrote:
+> 
+>> During power sequence, GPIO hardware registers could be lost if the power
+>> supply is switched off. Each device using pinctrl API is in charge of
+>> managing pins during suspend/resume sequences. But for pins used as gpio or
+>> irq stm32 pinctrl driver has to save the hardware configuration.
+>> Each register will be saved at runtime and restored during resume sequence.
+> 
+> Both patches applied.
+> 
+> On the same pinctrl devel branch is also Benjamin's patches to support
+> the "link_consumers" property on the pin controller descriptor to
+> enable links from pin control consumers back to their pin controller
+> suppliers, especially important for STMFX.
+> 
+> Would you please check if it work fine if you turn on this feature
+> for the SoC STM32 pin controller?
+> 
 
-Thanks
+Sure. Either today or next Monday.
+
+I let you know.
+
+regards
+Alex
+
+> I am working a bit on refining the patches, so I want to enable testing
+> with some SoC pin controllers as well and possibly make the
+> behavior default.
+> 
+> Yours,
+> Linus Walleij
+> 
