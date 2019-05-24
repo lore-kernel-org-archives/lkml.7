@@ -2,127 +2,130 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B61C282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61412C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9509D217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:20:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cOX4GWm3"
+	by mail.kernel.org (Postfix) with ESMTP id 218C3217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:21:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388207AbfEXCUs (ORCPT
+        id S2388393AbfEXCVF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 22:20:48 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42203 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387654AbfEXCUr (ORCPT
+        Thu, 23 May 2019 22:21:05 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:32963 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388221AbfEXCVE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 22:20:47 -0400
-Received: by mail-pl1-f196.google.com with SMTP id go2so3497344plb.9;
-        Thu, 23 May 2019 19:20:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8i6sdY7hQZvF0VE8bmdd+Eg6UX6pwW91eLCHd9wKizE=;
-        b=cOX4GWm3SirJ0mfbzCgcw3AZqCJyholEQXV89WdBtgj14h6xZwMLjcZuoFGQqzIlBc
-         d7tV/mEa2ulUXk9lU9t627pEmV9b/Xj0QFNnbi7vxGBTooW8bIuHGDXcevIn+sUypy9n
-         ApLEVHIocW/Vn9FhI5Jjw80Cmr3T3y+dH4turBtTPjLJ2OmZ3nno5mdLJy9F56XxMZb0
-         CgWolSYYG87kk8MnQdVuxeZQmDYfsmMEdBvpDgIHVrlSAItDAyhosEqq23ag8Ql9wIn9
-         aIHLZMXNHeoafO/9zUYUbXIOT1EkcamcX3Uyt7zMMrITCgTq3e3b+XGgLcjvsgKT6F1o
-         D/Iw==
+        Thu, 23 May 2019 22:21:04 -0400
+Received: by mail-io1-f67.google.com with SMTP id z4so6594242iol.0
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 19:21:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8i6sdY7hQZvF0VE8bmdd+Eg6UX6pwW91eLCHd9wKizE=;
-        b=D/vEy50xUDKoJKxiIBxCRZQI1kSFoLCAm4cE3QpXaXk40itBZxPvTptLBQTpm1F1sY
-         wSCQvTE8NVBXpCqFB1dvlLYMXas8+K/XpUvEo/i/ESuYpdqda8NWVVu+XgYNW8vuppsj
-         Z1zjOU5ulr8+MI8ne+WMJHGwwPCTkUF16K0gQpOiMaUAWNaptyGvmMHw7xqA/Z98sU9l
-         WMxS/Krkx/OiMdpFc6ph8lg0klLo09lQ5T1jGfQSG4VPdP22LPHZXY95jKiQlN5T2oS7
-         NpSGU8OYGbpQt3OcS5hge8qYSjhUGLyZ1OTxVVIAm4MFMbEhQ9XklL4Gt92Ge+LpZX9X
-         5Vpg==
-X-Gm-Message-State: APjAAAVHAdYoqGBrixPGbqZYZEDHsLfkWP14gbibjuxRA2SXAeHkfKnA
-        ryiFFg2IK15XG4a/2lMaOSE=
-X-Google-Smtp-Source: APXvYqy8IsUKhin/UgEK4yCtU0skPkff11e+FW8nFuiATBxaJlXG+/rqhfIN5xqSVctGKNxteeaTdA==
-X-Received: by 2002:a17:902:a407:: with SMTP id p7mr12856160plq.41.1558664446375;
-        Thu, 23 May 2019 19:20:46 -0700 (PDT)
-Received: from localhost.localdomain ([2601:644:8201:32e0:7256:81ff:febd:926d])
-        by smtp.gmail.com with ESMTPSA id c23sm880199pfp.0.2019.05.23.19.20.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 19:20:45 -0700 (PDT)
-Date:   Thu, 23 May 2019 19:20:43 -0700
-From:   Eduardo Valentin <edubezval@gmail.com>
-To:     Doug Anderson <dianders@chromium.org>,
-        Elaine Zhang <zhangqing@rock-chips.com>
-Cc:     Heiko Stuebner <heiko@sntech.de>, Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        zhangqing <zhangqing@rock-chips.com>,
-        Enric Balletbo Serra <eballetbo@gmail.com>,
-        Brian Norris <briannorris@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH] Revert "thermal: rockchip: fix up the tsadc pinctrl
- setting error"
-Message-ID: <20190524022042.GA1936@localhost.localdomain>
-References: <20190522141236.26987-1-heiko@sntech.de>
- <CAD=FV=UxwqkHpsxXhEHrQDY6MtymeT3Gn_G4Q5xSh6pZVWTRHA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TU9aYcgfNn+o19/ZAhWzQtbz6o/09lUEz74yQbsbrOs=;
+        b=IYmFlcrCbLJvf+DMaU0f07icE+57EErMva7k0BG1s06+uLm5pg5EzoyKFoqhRbzPw/
+         PtfRMIxkIzTAWwbbO3qKnPbSzeeCOQV+wdisuoA6PWCk8bCvZcu0afoe1tz8XJU6GPMW
+         zPmRb0iYbJjwq+3MfeoLd+jsDZEo9kmXyG4QZ9XzXJyGOTJPoBR4rVyt1XYhURjQh6eK
+         9XzBhuFumtDdyv22Auuk+5OehhamWrkd/VnQoZRXMPKHA3cGpY/9tkF5BovrPwuOOdrQ
+         fkSPvxymrrErfg35AllMx/QSVUnpX6NbZuiwocN3NJchrUcKbDZrca16tAXReG9gDS2p
+         r6Bg==
+X-Gm-Message-State: APjAAAUnkjP7v1Hgxh5yQmpTjHyVebEVLauBxC2XpJeF5dDaMYdunEf0
+        qTq4359oflruaARtbYI/U+uJo7012cHrQO88PsvgrA==
+X-Google-Smtp-Source: APXvYqxbzwmKP5zCOrF9d/b6xGv/Y8vObXzFIyCgXMb5NFMNIrNQb6s8fIjcHFafIn6tV0z6EJRKgM+nov7KtbhNUjM=
+X-Received: by 2002:a05:6602:211a:: with SMTP id x26mr5453533iox.202.1558664464183;
+ Thu, 23 May 2019 19:21:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=UxwqkHpsxXhEHrQDY6MtymeT3Gn_G4Q5xSh6pZVWTRHA@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <CACPcB9cpNp5CBqoRs+XMCwufzAFa8Pj-gbmj9fb+g5wVdue=ig@mail.gmail.com>
+ <20190522140233.GC16275@worktop.programming.kicks-ass.net>
+ <ab047883-69f6-1175-153f-5ad9462c6389@fb.com> <20190522174517.pbdopvookggen3d7@treble>
+ <20190522234635.a47bettklcf5gt7c@treble> <CACPcB9dRJ89YAMDQdKoDMU=vFfpb5AaY0mWC_Xzw1ZMTFBf6ng@mail.gmail.com>
+ <20190523133253.tad6ywzzexks6hrp@treble> <CACPcB9fQKg7xhzhCZaF4UGi=EQs1HLTFgg-C_xJQaUfho3yMyA@mail.gmail.com>
+ <20190523152413.m2pbnamihu3s2c5s@treble> <CACPcB9e0mL6jdNWfH-2K-rkvmQiz=G6mtLiZ+AEmp3-V0x+Z8A@mail.gmail.com>
+ <20190523172714.6fkzknfsuv2t44se@treble>
+In-Reply-To: <20190523172714.6fkzknfsuv2t44se@treble>
+From:   Kairui Song <kasong@redhat.com>
+Date:   Fri, 24 May 2019 10:20:52 +0800
+Message-ID: <CACPcB9dHzht9v9G9_z6oe5AAwgxCTuswRLxTB29vhWphqBO5Ng@mail.gmail.com>
+Subject: Re: Getting empty callchain from perf_callchain_kernel()
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Alexei Starovoitov <ast@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 08:34:34AM -0700, Doug Anderson wrote:
-> Hi,
-> 
-> On Wed, May 22, 2019 at 7:12 AM Heiko Stuebner <heiko@sntech.de> wrote:
+On Fri, May 24, 2019 at 1:27 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+>
+> On Fri, May 24, 2019 at 12:41:59AM +0800, Kairui Song wrote:
+> >  On Thu, May 23, 2019 at 11:24 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> > >
+> > > On Thu, May 23, 2019 at 10:50:24PM +0800, Kairui Song wrote:
+> > > > > > Hi Josh, this still won't fix the problem.
+> > > > > >
+> > > > > > Problem is not (or not only) with ___bpf_prog_run, what actually went
+> > > > > > wrong is with the JITed bpf code.
+> > > > >
+> > > > > There seem to be a bunch of issues.  My patch at least fixes the failing
+> > > > > selftest reported by Alexei for ORC.
+> > > > >
+> > > > > How can I recreate your issue?
+> > > >
+> > > > Hmm, I used bcc's example to attach bpf to trace point, and with that
+> > > > fix stack trace is still invalid.
+> > > >
+> > > > CMD I used with bcc:
+> > > > python3 ./tools/stackcount.py t:sched:sched_fork
+> > >
+> > > I've had problems in the past getting bcc to build, so I was hoping it
+> > > was reproducible with a standalone selftest.
+> > >
+> > > > And I just had another try applying your patch, self test is also failing.
+> > >
+> > > Is it the same selftest reported by Alexei?
+> > >
+> > >   test_stacktrace_map:FAIL:compare_map_keys stackid_hmap vs. stackmap err -1 errno 2
+> > >
+> > > > I'm applying on my local master branch, a few days older than
+> > > > upstream, I can update and try again, am I missing anything?
+> > >
+> > > The above patch had some issues, so with some configs you might see an
+> > > objtool warning for ___bpf_prog_run(), in which case the patch doesn't
+> > > fix the test_stacktrace_map selftest.
+> > >
+> > > Here's the latest version which should fix it in all cases (based on
+> > > tip/master):
+> > >
+> > >   https://git.kernel.org/pub/scm/linux/kernel/git/jpoimboe/linux.git/commit/?h=bpf-orc-fix
 > >
-> > This reverts commit 28694e009e512451ead5519dd801f9869acb1f60.
+> > Hmm, I still get the failure:
+> > test_stacktrace_map:FAIL:compare_map_keys stackid_hmap vs. stackmap
+> > err -1 errno 2
 > >
-> > The commit causes multiple issues in that:
-> > - the added call to ->control does potentially run unclocked
-> >   causing a hang of the machine
-> > - the added pinctrl-states are undocumented in the binding
-> > - the added pinctrl-states are not backwards compatible, breaking
-> >   old devicetrees.
-> >
-> > Fixes: 28694e009e51 ("thermal: rockchip: fix up the tsadc pinctrl setting error")
-> > Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-> > ---
-> >  drivers/thermal/rockchip_thermal.c | 36 +++---------------------------
-> >  1 file changed, 3 insertions(+), 33 deletions(-)
-> 
-> In case it helps with the urgency, there are lots of people who have
-> all independently needed to identify which commit stopped their boards
-> from booting mainline or broke temperature reading.  I'm aware of at
-> least these reports:
-> 
-> Reported-by: kernelci.org bot <bot@kernelci.org>
-> Reported-by: Enric Balletbo Serra <eballetbo@gmail.com>
-> Reported-by: Vicente Bergas <vicencb@gmail.com>
-> Reported-by: Jack Mitchell <ml@embed.me.uk>
-> Reported-by: Douglas Anderson <dianders@chromium.org>
-> 
-> I can confirm that my board boots again after this revert, thus:
-> 
-> Tested-by: Douglas Anderson <dianders@chromium.org>
+> > And I didn't see how this will fix the issue. As long as ORC need to
+> > unwind through the JITed code it will fail. And that will happen
+> > before reaching ___bpf_prog_run.
+>
+> Ok, I was able to recreate by doing
+>
+>   echo 1 > /proc/sys/net/core/bpf_jit_enable
+>
+> first.  I'm guessing you have CONFIG_BPF_JIT_ALWAYS_ON.
+>
 
-I see. I can collect this revert if that is what unblocks you guys.
+Yes, with JIT off it will be fixed. I can confirm that.
 
-Elaine, do you mind checking why these pinctrl changes are causing
-boot issues?
-
-
+--
+Best Regards,
+Kairui Song
