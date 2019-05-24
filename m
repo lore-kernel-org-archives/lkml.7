@@ -2,184 +2,181 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 012B4C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4093C282E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B971E2133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86F6E2133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 17:54:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dpjVyjFq"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="xsYcq8Zf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731999AbfEXRyL (ORCPT
+        id S1732021AbfEXRyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 13:54:11 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:40137 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbfEXRyL (ORCPT
+        Fri, 24 May 2019 13:54:37 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33440 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729348AbfEXRyh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 13:54:11 -0400
-Received: by mail-vs1-f68.google.com with SMTP id c24so6396017vsp.7;
-        Fri, 24 May 2019 10:54:10 -0700 (PDT)
+        Fri, 24 May 2019 13:54:37 -0400
+Received: by mail-pg1-f196.google.com with SMTP id h17so5457870pgv.0
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 10:54:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:message-id:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-disposition:content-transfer-encoding;
-        bh=z/GiW9YkKP3qylPckCwFQzVR25kk7Ib6EX6x6dIKwWY=;
-        b=dpjVyjFq+TRJtqkLPUE5puUr3vkNMM/zUwEXNQ81LFDh07pAI60TXaj7OkiPMtkFOS
-         iV462lc72G4/dL4seUCt4FrtE/JDeqObHt7ba/tWHzOfi9+3u7jk01MQnE91zASKuRR/
-         L1zmCQGqTbX46t9pyz/ejsbRJCYikuBKGcOwOSFjumHIstxknfdO7RASj2lwK4lGGlJr
-         GN0am1EMMxcpuOVwtBAul6/F2SeKt+414zVgTdykwu9XzovRIJQ7ylE1jnFHaLQhu0UD
-         FZqq4iCD8HL9HXjPNShoUo+oH6ebvxXAH6LCl/sQRXNadqdr6uZyNRWBesyZp4lHV//s
-         iL3Q==
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=AiMq7X5uRUkfXWr/ckuGxaqgoZKW7dxJE49YSCmv3tk=;
+        b=xsYcq8ZfW6SqZcBbIa0/V8+xcIXwI0l1zVXr2xWrNReCk0h9CVlougOI1XggA/M0nl
+         LQzNvJNqQjYenemF25dgf0n29it65/GaYpITe4UFHzYQUxYrLetYTKx2x3dHHYS2zNIY
+         m5QMClj7/RML+Zo0ANSYT0y9IOGrlkdTZQTi6NfS+YBSFAgddu8EnMssVsiW6NIZCOsZ
+         sfPNxJR6B8z+BWJI1zQUAl+5t0RK0vuU7q8DwyTd5pfsXY7vhzS6L/w4So5b/J1fMf7P
+         OGzpH3p4NqOKB1lKVCYY543Sp6vXaH3zCqJvaB7TsaddIwmJu6mR9FAvPh9aRG0ga517
+         qqAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
-         :references:mime-version:content-disposition
-         :content-transfer-encoding;
-        bh=z/GiW9YkKP3qylPckCwFQzVR25kk7Ib6EX6x6dIKwWY=;
-        b=k8ckdxTXaGDHWmBCTyp1YJnsykq67DuMNS2WbFylNPo/dLXTCEpoIuW3bbr6LUFuEJ
-         VIrxcTCi3aKiKaM7rgnWA1foMuN+xyPVeyBPcmA6zU5cwCumwdyBHWxUJk8eyxi5LYT4
-         cg/fxAIlxE3nPhxfNQojcQqozVKNz3DODEXZjWYFQBFfQKelyHI1+5drmSMYaab906rY
-         o5wxDTK5HC8a3xVBP6tMNXq07AVicWf+mtCHU07zTUiGeaxYVn6EV4LRcQNwqhRTiY+L
-         ND4lg32Xf/1YapISLNZCN0fpFqpxH8rbtJzHwNQf/GGKNMF4qRKFf5DJf2O98Ea/jMJa
-         iQGw==
-X-Gm-Message-State: APjAAAXxRQTHC18ECN39v7zqwXz2mbWvcwhU6lpcud4b15xI13Hg1rnT
-        3SHkdjQ0f2rnhS55i8v8uNw=
-X-Google-Smtp-Source: APXvYqx2FtFxLzeAVdjsO+APUeOuwrh1AIJiq7GeETKG+Fsc8hIpj5f7udh3JFVWICgM0bMtD64k4A==
-X-Received: by 2002:a67:eb8b:: with SMTP id e11mr25080730vso.115.1558720449839;
-        Fri, 24 May 2019 10:54:09 -0700 (PDT)
-Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
-        by smtp.gmail.com with ESMTPSA id c71sm1322139vke.19.2019.05.24.10.54.08
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 24 May 2019 10:54:08 -0700 (PDT)
-Date:   Fri, 24 May 2019 13:54:07 -0400
-Message-ID: <20190524135407.GB17138@t480s.localdomain>
-From:   Vivien Didelot <vivien.didelot@gmail.com>
-To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/5] net: dsa: mv88e6xxx: introduce support for two
- chips using direct smi addressing
-In-Reply-To: <20190524085921.11108-2-rasmus.villemoes@prevas.dk>
-References: <20190501193126.19196-1-rasmus.villemoes@prevas.dk>
- <20190524085921.11108-1-rasmus.villemoes@prevas.dk>
- <20190524085921.11108-2-rasmus.villemoes@prevas.dk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=AiMq7X5uRUkfXWr/ckuGxaqgoZKW7dxJE49YSCmv3tk=;
+        b=c1BnG+Q0JW8/9aY8bfp1U1ZJLMNzlKWLSueurddpBmuQVFa+WNhFiiy+RCGXHy+M7B
+         33hCNx3+5CGHllWlaDuPiPX77/tw4P/a6WRsosSldqXfreJGKcvWzqABLTDoHn3frvnc
+         D0jM5kcxjEv+8/1AfmpT55c7KNYSqogdaHI/yvKN1y2/nPeV6/zg9NblsFIBePD67W7e
+         bqgmd4AJx2bPWsn/b44K8NbhmlVokqD8vKhpBEF9vGquonqR9WCwVAFx4gYKhkv6m9sW
+         MEUVxNaDyxxLNNsMeoTwav2pFI9u175w/LkJ6ED/C77BCmfbklW/wXStjikRrT+4HI+l
+         h0qQ==
+X-Gm-Message-State: APjAAAUZQ20MhgNuSQpzjaMas0sJ0l3maMw7vg0k6XTCFT0s6CHtCgEM
+        K4KReRS7w3xGvKKugyYebmXxjA==
+X-Google-Smtp-Source: APXvYqwhceudFEnABJG5KjuF1THk0ddwVSYE5f+E/bItsNyrOdizHLXZ4zANMS6vhBdtXIKf04YIDg==
+X-Received: by 2002:a63:184:: with SMTP id 126mr80473568pgb.420.1558720476456;
+        Fri, 24 May 2019 10:54:36 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:25e7:e273:cc72:2b04? ([2601:646:c200:1ef2:25e7:e273:cc72:2b04])
+        by smtp.gmail.com with ESMTPSA id g83sm3432782pfb.158.2019.05.24.10.54.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 May 2019 10:54:35 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16E227)
+In-Reply-To: <20190524174243.GA365@linux.intel.com>
+Date:   Fri, 24 May 2019 10:54:34 -0700
+Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <56EA6C7C-F69E-42EB-9CFB-CD0300549298@amacapital.net>
+References: <20190522153836.GA24833@linux.intel.com> <CALCETrUS8xyF1JJmQs18BGTDhPRXf+s81BkMZCZwmY73r7M+zg@mail.gmail.com> <20190523023517.GA31950@linux.intel.com> <20190523102628.GC10955@linux.intel.com> <20190523141752.GA12078@linux.intel.com> <CALCETrUzx3LPAKCLFf75P-XshAkRcr+JLET3LA_kHDs9MA11FA@mail.gmail.com> <20190523234044.GC12078@linux.intel.com> <CALCETrV4DVEfW6EJ6DnQGGYDJAiA5M1QcuYJTiroumOM+D6Jjg@mail.gmail.com> <960B34DE67B9E140824F1DCDEC400C0F654E8956@ORSMSX116.amr.corp.intel.com> <dda0912b-cb15-3c07-d368-345159e995f7@tycho.nsa.gov> <20190524174243.GA365@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rasmus,
 
-On Fri, 24 May 2019 09:00:24 +0000, Rasmus Villemoes <rasmus.villemoes@prevas.dk> wrote:
-> The 88e6250 (as well as 6220, 6071, 6070, 6020) do not support
-> multi-chip (indirect) addressing. However, one can still have two of
-> them on the same mdio bus, since the device only uses 16 of the 32
-> possible addresses, either addresses 0x00-0x0F or 0x10-0x1F depending
-> on the ADDR4 pin at reset [since ADDR4 is internally pulled high, the
-> latter is the default].
-> 
-> In order to prepare for supporting the 88e6250 and friends, introduce
-> mv88e6xxx_info::dual_chip to allow having a non-zero sw_addr while
-> still using direct addressing.
-> 
-> Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-> ---
->  drivers/net/dsa/mv88e6xxx/chip.h |  6 ++++++
->  drivers/net/dsa/mv88e6xxx/smi.c  | 25 ++++++++++++++++++++++++-
->  2 files changed, 30 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/dsa/mv88e6xxx/chip.h b/drivers/net/dsa/mv88e6xxx/chip.h
-> index faa3fa889f19..74777c3bc313 100644
-> --- a/drivers/net/dsa/mv88e6xxx/chip.h
-> +++ b/drivers/net/dsa/mv88e6xxx/chip.h
-> @@ -112,6 +112,12 @@ struct mv88e6xxx_info {
->  	 * when it is non-zero, and use indirect access to internal registers.
->  	 */
->  	bool multi_chip;
-> +	/* Dual-chip Addressing Mode
-> +	 * Some chips respond to only half of the 32 SMI addresses,
-> +	 * allowing two to coexist on the same SMI interface.
-> +	 */
-> +	bool dual_chip;
-> +
->  	enum dsa_tag_protocol tag_protocol;
->  
->  	/* Mask for FromPort and ToPort value of PortVec used in ATU Move
-> diff --git a/drivers/net/dsa/mv88e6xxx/smi.c b/drivers/net/dsa/mv88e6xxx/smi.c
-> index 96f7d2685bdc..1151b5b493ea 100644
-> --- a/drivers/net/dsa/mv88e6xxx/smi.c
-> +++ b/drivers/net/dsa/mv88e6xxx/smi.c
-> @@ -24,6 +24,10 @@
->   * When ADDR is non-zero, the chip uses Multi-chip Addressing Mode, allowing
->   * multiple devices to share the SMI interface. In this mode it responds to only
->   * 2 registers, used to indirectly access the internal SMI devices.
-> + *
-> + * Some chips use a different scheme: Only the ADDR4 pin is used for
-> + * configuration, and the device responds to 16 of the 32 SMI
-> + * addresses, allowing two to coexist on the same SMI interface.
->   */
->  
->  static int mv88e6xxx_smi_direct_read(struct mv88e6xxx_chip *chip,
-> @@ -76,6 +80,23 @@ static const struct mv88e6xxx_bus_ops mv88e6xxx_smi_direct_ops = {
->  	.write = mv88e6xxx_smi_direct_write,
->  };
->  
-> +static int mv88e6xxx_smi_dual_direct_read(struct mv88e6xxx_chip *chip,
-> +					  int dev, int reg, u16 *data)
-> +{
-> +	return mv88e6xxx_smi_direct_read(chip, dev + chip->sw_addr, reg, data);
 
-Using chip->sw_addr + dev seems more idiomatic to me than dev + chip->sw_addr.
+> On May 24, 2019, at 10:42 AM, Sean Christopherson <sean.j.christopherson@i=
+ntel.com> wrote:
+>=20
+>> On Fri, May 24, 2019 at 11:41:29AM -0400, Stephen Smalley wrote:
+>>> On 5/24/19 3:24 AM, Xing, Cedric wrote:
+>>> /**
+>>> * Summary:
+>>> * - The enclave file resembles a shared object that contains RO/RX/RW se=
+gments
+>>> * - FILE__* are assigned to /dev/sgx/enclave, to determine acceptable pe=
+rmissions to mmap()/mprotect(), valid combinations are
+>>> *   + FILE__READ - Allow SGX1 enclaves only
+>>> *   + FILE__READ|FILE__WRITE - Allow SGX2 enclaves to expand data segmen=
+ts (e.g. heaps, stacks, etc.)
+>>> *   + FILE__READ|FILE__WRITE|FILE__EXECUTE - Allow SGX2 enclaves to expe=
+nd both data and code segments. This is necessary to support dynamically lin=
+ked enclaves (e.g. Graphene)
+>>> *   + FILE__READ|FILE__EXECUTE - Allow RW->RX changes for SGX1 enclaves -=
+ necessary to support dynamically linked enclaves (e.g. Graphene) on SGX1. E=
+XECMEM is also required for this to work
+>>=20
+>> I think EXECMOD would fit better than EXECMEM for this case; the former i=
+s
+>> applied for RW->RX changes for private file mappings while the latter is
+>> applied for WX private file mappings.
+>>=20
+>>> *   + <None> - Disallow the calling process to launch any enclaves
+>>> */
+>>>=20
+>>> /* Step 1: mmap() the enclave file according to the segment attributes (=
+similar to what dlopen() would do for regular shared objects) */
+>>> int image_fd =3D open("/path/to/enclave/file", O_RDONLY);
+>>=20
+>> FILE__READ checked to enclave file upon open().
+>>=20
+>>> foreach phdr in loadable segments /* phdr->p_type =3D=3D PT_LOAD */ {
+>>>    /* <segment permission> below is subject to LSM checks */
+>>>    loadable_segments[i] =3D mmap(NULL, phdr->p_memsz, MAP_PRIATE, <segme=
+nt permission>, image_fd, phdr->p_offset);
+>>=20
+>> FILE__READ revalidated and FILE__EXECUTE checked to enclave file upon mma=
+p()
+>> for PROT_READ and PROT_EXEC respectively.  FILE__WRITE not checked even f=
+or
+>> PROT_WRITE mappings since it is a private file mapping and writes do not
+>> reach the file.  EXECMEM checked if any segment permission has both W and=
+ X
+>> simultaneously.  EXECMOD checked on any subsequent mprotect() RW->RX chan=
+ges
+>> (if modified).
+>=20
+> Hmm, I've been thinking more about pulling permissions from the source
+> page.  Conceptually I'm not sure we need to meet the same requirements as
+> non-enclave DSOs while the enclave is being built, i.e. do we really need
+> to force userspace to fully map the enclave in normal memory?
+>=20
+> Consider the Graphene scenario where it's building an enclave on the fly.
+> Pulling permissions from the source VMAs means Graphene has to map the
+> code pages of the enclave with X.  This means Graphene will need EXEDMOD
+> (or EXECMEM if Graphene isn't careful).  In a non-SGX scenario this makes
+> perfect sense since there is no way to verify the end result of RW->RX.
+>=20
+> But for SGX, assuming enclaves are whitelisted by their sigstruct (checked=
 
-> +}
-> +
-> +static int mv88e6xxx_smi_dual_direct_write(struct mv88e6xxx_chip *chip,
-> +					   int dev, int reg, u16 data)
-> +{
-> +	return mv88e6xxx_smi_direct_write(chip, dev + chip->sw_addr, reg, data);
-> +}
-> +
-> +static const struct mv88e6xxx_bus_ops mv88e6xxx_smi_dual_direct_ops = {
-> +	.read = mv88e6xxx_smi_dual_direct_read,
-> +	.write = mv88e6xxx_smi_dual_direct_write,
-> +};
-> +
->  /* Offset 0x00: SMI Command Register
->   * Offset 0x01: SMI Data Register
->   */
-> @@ -144,7 +165,9 @@ static const struct mv88e6xxx_bus_ops mv88e6xxx_smi_indirect_ops = {
->  int mv88e6xxx_smi_init(struct mv88e6xxx_chip *chip,
->  		       struct mii_bus *bus, int sw_addr)
->  {
-> -	if (sw_addr == 0)
-> +	if (chip->info->dual_chip)
-> +		chip->smi_ops = &mv88e6xxx_smi_dual_direct_ops;
-> +	else if (sw_addr == 0)
->  		chip->smi_ops = &mv88e6xxx_smi_direct_ops;
->  	else if (chip->info->multi_chip)
->  		chip->smi_ops = &mv88e6xxx_smi_indirect_ops;
+> at EINIT) and because page permissions affect sigstruct.MRENCLAVE, it *is*=
 
-Please submit respins (v2, v3, and so on) as independent threads,
-not as a reply to the previous version.
+> possible to verify the resulting RX contents.  E.g. for the purposes of
+> LSMs, can't we use the .sigstruct file as a proxy for the enclave and
+> require FILE__EXECUTE on the .sigstruct inode to map/run the enclave?
 
-Otherwise this looks good to me:
+I think it=E2=80=99s sound for some but not all use cases. I would imagine t=
+hat a lot of users won=E2=80=99t restrict sigstruct at all =E2=80=94 the =E2=
+=80=9Cuse this as a sigstruct=E2=80=9D permission will be granted to everyth=
+ing and maybe even to memfd. But even users like that might want to force th=
+eir enclaves to be hardened such that writable pages are never executable, i=
+n which case Graphene may need an exception to run.
 
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
-
-Thanks,
-Vivien
+But maybe I=E2=80=99m nuts.
