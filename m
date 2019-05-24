@@ -2,239 +2,194 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0982C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C321CC282E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEE6620644
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:14:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9933B20644
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 13:16:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oODzF+T/"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jD0wZt/i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391626AbfEXNO7 (ORCPT
+        id S2391631AbfEXNQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 09:14:59 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:33255 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391519AbfEXNO6 (ORCPT
+        Fri, 24 May 2019 09:16:00 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:44848 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391496AbfEXNP7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 09:14:58 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v19so1191254wmh.0
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 06:14:56 -0700 (PDT)
+        Fri, 24 May 2019 09:15:59 -0400
+Received: by mail-ot1-f65.google.com with SMTP id g18so8607195otj.11
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 06:15:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Jxhy/ZRQVu0N4aJfmO4/71R3nY5TFqXIBTeivwXcm7c=;
-        b=oODzF+T/DBIACYMaX7aHy66ZJ0K51vFiAnrjhIknXiU2IQxFg913Gu6Cg+FlRRfiuh
-         S5GUjihxQFm4xR1q+lidtwGrtLoYHDoRB9hOBOrlcGKDVlDGAmF1tjgPI4gIsGWyCfpU
-         kj9Fx6b6VMOCHWPFMrUPO4naNdGs2tipdpQbor14GkrMjZ9fVkRgrjJcHI70rfk8C6Xs
-         sgKAF0Ya9dy5GL+WK2/X7yT2JGMT53WKaWWlnMxgWYNNOFCs4n2WABHH265It5ZteviM
-         p51rXRXpCbHSTYRfHtMmHnMNccAMNwDcckfWvui/KRYnthGnbUDkPRRMp0QrMty72Sip
-         +vWg==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=WbM2LHjiKTY+9+3kLdGdCgm4glTt5XXlGcOyxX/K4fI=;
+        b=jD0wZt/ia++5OEv1+vFgCsAfXbjJ3WLF8YSvAMbMdw5PtHEWttTs8Lvkuciy7k+JBf
+         6Cb/fBWFKt6h8h43NOnZbDokjOnbh0JYYSb8gorylXTGmV7yL4QxMUk8m8xAjRn9h9P3
+         go1OMNLBf7T70y8UzgJfNYWAD0WEmSKTpRkD0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Jxhy/ZRQVu0N4aJfmO4/71R3nY5TFqXIBTeivwXcm7c=;
-        b=CkxrkkBPsEexqQ1HG9G+6+/krICw/sHLIyTTDuxomYTe8T4duSZ3JcGMlhBITfnCKQ
-         IhT/FNRGNi+ySym6t5E8hWbWZb5+2f2eVJ5Nv6u6znhRDXQvyh/P+Ku2X2RO7oKdgowF
-         +oHWU6ysE0DXv+hKqM22TuyC4Asvqgk3odrpg8YdPsHU2btPMgcyH/qlMutwgzKaWFvo
-         ioePz7RsQQQs0jzvHf9NwcAHx/9g0IFbNdCVdtNxILE1bKUvS4jWykpiOBEpxlfaGXT3
-         RLp0qpvcf60ql4mlR/GrqAU8MKYY/7dNJ6Ah2r2GoAs6BOn/IBYAya8GymGMP3FN7P9h
-         2Qxg==
-X-Gm-Message-State: APjAAAUg+uurUHOh519WOpUfOmQ3HEuT1pPzTSKTW93EA5GOj+RnqD2X
-        kbYCNMaPNBaBWyC+U1t8201zkEXcZeJ9ZQ==
-X-Google-Smtp-Source: APXvYqwi0SONwzrBG+bKNWxlmxVsSZIFFN9uvG5c+wwCuUu9sceMvEKZ4iR2jWYn7FUUKI4fD4enyw==
-X-Received: by 2002:a7b:cb84:: with SMTP id m4mr3870520wmi.50.1558703695698;
-        Fri, 24 May 2019 06:14:55 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id v184sm3859002wma.6.2019.05.24.06.14.54
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 24 May 2019 06:14:54 -0700 (PDT)
-Date:   Fri, 24 May 2019 14:14:53 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Richard Purdie <rpurdie@rpsys.net>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Yisheng Xie <ysxie@foxmail.com>, linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH 24/33] Revert "backlight/fbcon: Add FB_EVENT_CONBLANK"
-Message-ID: <20190524131453.e6mefygqyg46jeuf@holly.lan>
-References: <20190524085354.27411-1-daniel.vetter@ffwll.ch>
- <20190524085354.27411-25-daniel.vetter@ffwll.ch>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=WbM2LHjiKTY+9+3kLdGdCgm4glTt5XXlGcOyxX/K4fI=;
+        b=OYOp4hgysZOWGJDpup1udxqXJ7qi01/14RfzM3iI/6HIzWFXRqSc/m6yFyRmY7Qwif
+         DCKWweJmptIHFFAbYt6cYU7+yAns27Z2U60w+iJfh7QXCtdrWDhDKkyjJsIUVvofkRHr
+         doFZTIU9KiCEKGaknHMCKcrn4uO6opELda46oLWlo7AKbb4glNtz0vmKK4fXfDbCR6t+
+         kNdSiPdGLa80HfeUFNZqinirkiRKkonZV5IgXRYkFm/iUptSKEWaPgkTys/mRCxyIz9R
+         cwyqYW3JiBv1wHsWnGmBET47LL2XgHUz9wN2XE+4uEmePfhb3TiJCLQzY6qFG3IX7Pp/
+         Tg6A==
+X-Gm-Message-State: APjAAAVjCPq45S3dv1Gdwix21LaJCprQOrmwmG0Jh2Ses2w+/pOn1fjs
+        CdJhsFbL48g1JbcxojnIeOyVD313of+dxqLSTVGccg==
+X-Google-Smtp-Source: APXvYqzYvbI98itpS0F9VsEq/N+NUGgG7PndBlowPnu06UxQRS9rukPdoQcI9sAIXURDXo30fEZWH1MRe9ln7CpXfI8=
+X-Received: by 2002:a9d:6e07:: with SMTP id e7mr28531134otr.53.1558703758437;
+ Fri, 24 May 2019 06:15:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190524085354.27411-25-daniel.vetter@ffwll.ch>
-User-Agent: NeoMutt/20180716
+References: <CGME20190523215902epcas5p40e3aca0efb342c8d778529fef416c3fd@epcas5p4.samsung.com>
+ <20190523215853.16622-1-robdclark@gmail.com> <9c63ac15-9917-7adc-3ef8-3e44060797bd@samsung.com>
+In-Reply-To: <9c63ac15-9917-7adc-3ef8-3e44060797bd@samsung.com>
+From:   Rob Clark <robdclark@chromium.org>
+Date:   Fri, 24 May 2019 06:15:46 -0700
+Message-ID: <CAJs_Fx4hw3nrUAksQxTrVrJubQAxADE5FmBrSs+EOmE3jwL9bg@mail.gmail.com>
+Subject: Re: [PATCH] PM / devfreq: try_then_request_governor should not return NULL
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     Rob Clark <robdclark@gmail.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        linux-pm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 10:53:45AM +0200, Daniel Vetter wrote:
-> This reverts commit 994efacdf9a087b52f71e620b58dfa526b0cf928.
-> 
-> The justification is that if hw blanking fails (i.e. fbops->fb_blank)
-> fails, then we still want to shut down the backlight. Which is exactly
-> _not_ what fb_blank() does and so rather inconsistent if we end up
-> with different behaviour between fbcon and direct fbdev usage. Given
-> that the entire notifier maze is getting in the way anyway I figured
-> it's simplest to revert this not well justified commit.
-> 
-> v2: Add static inline to the dummy version.
-> 
-> Cc: Richard Purdie <rpurdie@rpsys.net>
-> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Daniel Thompson <daniel.thompson@linaro.org>
-> Cc: Jingoo Han <jingoohan1@gmail.com>
-> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: Yisheng Xie <ysxie@foxmail.com>
-> Cc: linux-fbdev@vger.kernel.org
+Ahh, thanks, I've not moved to the latest -rc yet..
 
-Hi Daniel
+That commit would be a good candidate for 5.1.y stable branch
 
-When this goes round again could you add me to the covering letter?
+BR,
+-R
 
-I looked at all three of the patches and no objections on my side but
-I'm reluctant to send out acks because I'm not sure I understood the
-wider picture well enough.
-
-
-Daniel.
-
-
-> ---
->  drivers/video/backlight/backlight.c |  2 +-
->  drivers/video/fbdev/core/fbcon.c    | 14 +-------------
->  drivers/video/fbdev/core/fbmem.c    |  1 +
->  include/linux/fb.h                  |  4 +---
->  include/linux/fbcon.h               |  2 ++
->  5 files changed, 6 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/video/backlight/backlight.c b/drivers/video/backlight/backlight.c
-> index deb824bef6e2..c55590ec0057 100644
-> --- a/drivers/video/backlight/backlight.c
-> +++ b/drivers/video/backlight/backlight.c
-> @@ -46,7 +46,7 @@ static int fb_notifier_callback(struct notifier_block *self,
->  	int fb_blank = 0;
->  
->  	/* If we aren't interested in this event, skip it immediately ... */
-> -	if (event != FB_EVENT_BLANK && event != FB_EVENT_CONBLANK)
-> +	if (event != FB_EVENT_BLANK)
->  		return 0;
->  
->  	bd = container_of(self, struct backlight_device, fb_notif);
-> diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
-> index 259cdd118475..d9f545f1a81b 100644
-> --- a/drivers/video/fbdev/core/fbcon.c
-> +++ b/drivers/video/fbdev/core/fbcon.c
-> @@ -2350,8 +2350,6 @@ static int fbcon_switch(struct vc_data *vc)
->  static void fbcon_generic_blank(struct vc_data *vc, struct fb_info *info,
->  				int blank)
->  {
-> -	struct fb_event event;
-> -
->  	if (blank) {
->  		unsigned short charmask = vc->vc_hi_font_mask ?
->  			0x1ff : 0xff;
-> @@ -2362,13 +2360,6 @@ static void fbcon_generic_blank(struct vc_data *vc, struct fb_info *info,
->  		fbcon_clear(vc, 0, 0, vc->vc_rows, vc->vc_cols);
->  		vc->vc_video_erase_char = oldc;
->  	}
-> -
-> -
-> -	lock_fb_info(info);
-> -	event.info = info;
-> -	event.data = &blank;
-> -	fb_notifier_call_chain(FB_EVENT_CONBLANK, &event);
-> -	unlock_fb_info(info);
->  }
->  
->  static int fbcon_blank(struct vc_data *vc, int blank, int mode_switch)
-> @@ -3240,7 +3231,7 @@ int fbcon_fb_registered(struct fb_info *info)
->  	return ret;
->  }
->  
-> -static void fbcon_fb_blanked(struct fb_info *info, int blank)
-> +void fbcon_fb_blanked(struct fb_info *info, int blank)
->  {
->  	struct fbcon_ops *ops = info->fbcon_par;
->  	struct vc_data *vc;
-> @@ -3344,9 +3335,6 @@ static int fbcon_event_notify(struct notifier_block *self,
->  		con2fb = event->data;
->  		con2fb->framebuffer = con2fb_map[con2fb->console - 1];
->  		break;
-> -	case FB_EVENT_BLANK:
-> -		fbcon_fb_blanked(info, *(int *)event->data);
-> -		break;
->  	case FB_EVENT_REMAP_ALL_CONSOLE:
->  		idx = info->node;
->  		fbcon_remap_all(idx);
-> diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
-> index ddc0c16b8bbf..9366fbe99a58 100644
-> --- a/drivers/video/fbdev/core/fbmem.c
-> +++ b/drivers/video/fbdev/core/fbmem.c
-> @@ -1068,6 +1068,7 @@ fb_blank(struct fb_info *info, int blank)
->  	event.data = &blank;
->  
->  	early_ret = fb_notifier_call_chain(FB_EARLY_EVENT_BLANK, &event);
-> +	fbcon_fb_blanked(info, blank);
->  
->  	if (info->fbops->fb_blank)
->   		ret = info->fbops->fb_blank(blank, info);
-> diff --git a/include/linux/fb.h b/include/linux/fb.h
-> index 0d86aa31bf8d..1e66fac3124f 100644
-> --- a/include/linux/fb.h
-> +++ b/include/linux/fb.h
-> @@ -137,12 +137,10 @@ struct fb_cursor_user {
->  #define FB_EVENT_GET_CONSOLE_MAP        0x07
->  /*      CONSOLE-SPECIFIC: set console to framebuffer mapping */
->  #define FB_EVENT_SET_CONSOLE_MAP        0x08
-> -/*      A hardware display blank change occurred */
-> +/*      A display blank is requested       */
->  #define FB_EVENT_BLANK                  0x09
->  /*      Private modelist is to be replaced */
->  #define FB_EVENT_MODE_CHANGE_ALL	0x0B
-> -/*	A software display blank change occurred */
-> -#define FB_EVENT_CONBLANK               0x0C
->  /*      CONSOLE-SPECIFIC: remap all consoles to new fb - for vga_switcheroo */
->  #define FB_EVENT_REMAP_ALL_CONSOLE      0x0F
->  /*      A hardware display blank early change occurred */
-> diff --git a/include/linux/fbcon.h b/include/linux/fbcon.h
-> index 305e4f2eddac..d67d7ec51ef9 100644
-> --- a/include/linux/fbcon.h
-> +++ b/include/linux/fbcon.h
-> @@ -14,6 +14,7 @@ int fbcon_mode_deleted(struct fb_info *info,
->  void fbcon_new_modelist(struct fb_info *info);
->  void fbcon_get_requirement(struct fb_info *info,
->  			   struct fb_blit_caps *caps);
-> +void fbcon_fb_blanked(struct fb_info *info, int blank);
->  #else
->  static inline void fb_console_init(void) {}
->  static inline void fb_console_exit(void) {}
-> @@ -27,6 +28,7 @@ static inline int fbcon_mode_deleted(struct fb_info *info,
->  static inline void fbcon_new_modelist(struct fb_info *info) {}
->  static inline void fbcon_get_requirement(struct fb_info *info,
->  					 struct fb_blit_caps *caps) {}
-> +static inline void fbcon_fb_blanked(struct fb_info *info, int blank) {}
->  #endif
->  
->  #endif /* _LINUX_FBCON_H */
-> -- 
-> 2.20.1
-> 
+On Fri, May 24, 2019 at 12:13 AM Chanwoo Choi <cw00.choi@samsung.com> wrote=
+:
+>
+> Hi,
+>
+> This issue[1] is already fixed on latest linux.git
+> You can check it. Thanks.
+>
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/co=
+mmit/?id=3Db53b0128052ffd687797d5f4deeb76327e7b5711
+>
+> Regards,
+> Chanwoo Choi
+>
+>
+> On 19. 5. 24. =EC=98=A4=EC=A0=84 6:58, Rob Clark wrote:
+> > From: Rob Clark <robdclark@chromium.org>
+> >
+> > The two spots it is called expect either an IS_ERR() or a valid pointer=
+,
+> > but not NULL.
+> >
+> > Fixes this crash that I came across:
+> >
+> >    Unable to handle kernel NULL pointer dereference at virtual address =
+0000000000000030
+> >    Mem abort info:
+> >      ESR =3D 0x96000005
+> >      Exception class =3D DABT (current EL), IL =3D 32 bits
+> >      SET =3D 0, FnV =3D 0
+> >      EA =3D 0, S1PTW =3D 0
+> >    Data abort info:
+> >      ISV =3D 0, ISS =3D 0x00000005
+> >      CM =3D 0, WnR =3D 0
+> >    [0000000000000030] user address but active_mm is swapper
+> >    Internal error: Oops: 96000005 [#1] PREEMPT SMP
+> >    Modules linked in:
+> >    Process kworker/2:1 (pid: 212, stack limit =3D 0x(____ptrval____))
+> >    CPU: 2 PID: 212 Comm: kworker/2:1 Not tainted 5.1.0-43338-g460e69846=
+75c-dirty #54
+> >    Hardware name: Google Cheza (rev3+) (DT)
+> >    Workqueue: events deferred_probe_work_func
+> >    pstate: 00c00009 (nzcv daif +PAN +UAO)
+> >    pc : devfreq_add_device+0x2e4/0x410
+> >    lr : devfreq_add_device+0x2d4/0x410
+> >    sp : ffffff8013d93740
+> >    x29: ffffff8013d93790 x28: ffffffc0f54f8670
+> >    x27: 0000000000000001 x26: 0000000000000007
+> >    x25: ffffff80124abfd8 x24: 0000000000000000
+> >    x23: ffffffc0fabc4048 x22: ffffffc0fabc4388
+> >    x21: ffffffc0fabc4010 x20: ffffffc0fa243010
+> >    x19: ffffffc0fabc4000 x18: 0000000091c3d373
+> >    x17: 0000000000000400 x16: 000000000000001a
+> >    x15: 000000019e06d400 x14: 0000000000000001
+> >    x13: 0000000000000000 x12: 00000000000006b6
+> >    x11: 0000000000000000 x10: 0000000000000000
+> >    x9 : ffffffc0fa18ba00 x8 : 0000000000000000
+> >    x7 : 0000000000000000 x6 : ffffff80127a3d9a
+> >    x5 : ffffff8013d93550 x4 : 0000000000000000
+> >    x3 : 0000000000000000 x2 : 0000000000000000
+> >    x1 : 00000000000000fe x0 : 0000000000000000
+> >    Call trace:
+> >     devfreq_add_device+0x2e4/0x410
+> >     devm_devfreq_add_device+0x64/0xac
+> >     msm_gpu_init+0x320/0x5c0
+> >     adreno_gpu_init+0x21c/0x274
+> >     a6xx_gpu_init+0x68/0xf4
+> >     adreno_bind+0x158/0x284
+> >     component_bind_all+0x110/0x204
+> >     msm_drm_bind+0x118/0x5b8
+> >     try_to_bring_up_master+0x15c/0x19c
+> >     component_master_add_with_match+0xb4/0xec
+> >     msm_pdev_probe+0x1f0/0x27c
+> >     platform_drv_probe+0x90/0xb0
+> >     really_probe+0x120/0x298
+> >     driver_probe_device+0x64/0xfc
+> >     __device_attach_driver+0x8c/0xa4
+> >     bus_for_each_drv+0x88/0xd0
+> >     __device_attach+0xac/0x134
+> >     device_initial_probe+0x20/0x2c
+> >     bus_probe_device+0x34/0x90
+> >     deferred_probe_work_func+0x74/0xac
+> >     process_one_work+0x210/0x428
+> >     worker_thread+0x278/0x3e4
+> >     kthread+0x120/0x130
+> >     ret_from_fork+0x10/0x18
+> >    Code: aa0003f8 b13ffc1f 54000762 f901c278 (f9401b08)
+> >    ---[ end trace a6ecc18ce5894375 ]---
+> >    Kernel panic - not syncing: Fatal exception
+> >
+> > Signed-off-by: Rob Clark <robdclark@chromium.org>
+> > ---
+> >  drivers/devfreq/devfreq.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+> > index 0ae3de76833b..d29f66f0e52a 100644
+> > --- a/drivers/devfreq/devfreq.c
+> > +++ b/drivers/devfreq/devfreq.c
+> > @@ -254,7 +254,7 @@ static struct devfreq_governor *try_then_request_go=
+vernor(const char *name)
+> >               /* Restore previous state before return */
+> >               mutex_lock(&devfreq_list_lock);
+> >               if (err)
+> > -                     return NULL;
+> > +                     return ERR_PTR(err);
+> >
+> >               governor =3D find_devfreq_governor(name);
+> >       }
+> >
+>
+>
+> --
+> Best Regards,
+> Chanwoo Choi
+> Samsung Electronics
