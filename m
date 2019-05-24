@@ -2,178 +2,84 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C050C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D93C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 148462075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:16:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gCMAYpHJ"
+	by mail.kernel.org (Postfix) with ESMTP id 5EA5720815
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:19:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389658AbfEXPQk (ORCPT
+        id S2389524AbfEXPTN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 11:16:40 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:52357 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389079AbfEXPQk (ORCPT
+        Fri, 24 May 2019 11:19:13 -0400
+Received: from smtprelay0117.hostedemail.com ([216.40.44.117]:33270 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2389079AbfEXPTN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 11:16:40 -0400
-Received: by mail-it1-f196.google.com with SMTP id t184so16345783itf.2;
-        Fri, 24 May 2019 08:16:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ue5iAQh3o+RrZq+T4VgTKmLqWN6Wlxd8oVLaY6JmVVo=;
-        b=gCMAYpHJfYJUrKtc5oOniur8lpNW+N8uTuzjZHgP4or1AcKLVGkYZ2hbf2zteQLJ/m
-         jg76i3nOzn+IbZxbv9LoKRkSgtNnVhHve6C+dLnYj7BV8WPhGpddv1RufLS3jhn3r0tU
-         ZM3dUTSV9xcGr0h3RfQKPjNokDHrUTwCofbQJffzfQPs22BUW3cVaDM06QFHsExF4kny
-         X3VBDYAQEbBjGc7PJkT+cNO+4snLWNICiBwGBJTDJOGhoibDfZY5NkUf032uNqT0Yunx
-         OfAfdaueUXCZfV/9fljZSkcppYLcmXdv3Tk/TZQ3ij/EyjMDd6Kftsrv1rDCivBoazpE
-         FnGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ue5iAQh3o+RrZq+T4VgTKmLqWN6Wlxd8oVLaY6JmVVo=;
-        b=KrAUR/3sUqFhS2fCA07BIQfUfTQsa39xhUDOdWsDsyVfdlreBPKV8b9qvhPDDlZ8dW
-         z3z07GBorW1c0TV6bwmTkP17mXuPcLVz7XOALHTFuSQJrS45yRX0PcPdMuBS0voS4QPn
-         ShqBwVQlLros5JjeV+dsT1sQW9wsP1vtRJxn2NOCUPGfGDoO4GJpV7EKvrkGu2A7wJus
-         S5rK1Hgxhl/96VLE81BpkSDy//jfGAi60Jtf7Dch24dM0a5S6u4vL8Ic8c26ddvGTlWc
-         y1ZnreJMpZkyjrUgJRUYXNq9TSgU4i8iycBZQUhZX2qcbOAVwZ5lWozehfvMTkvLM18U
-         JIqw==
-X-Gm-Message-State: APjAAAXDf35vNMhjj7IOuX/1akj+pDcPZra0QqPl32X82aS8nGYnQ6VR
-        qKWy16ckcaX11PNEJXddrBaYgAMLvfeDyoIlp6E=
-X-Google-Smtp-Source: APXvYqxR6m7vbnGIM+BEYmZgfSpPLI1ndiLHiIaQVaa2rr9P87vKtLr6igqahreqyvbvw7yowifJCB5gCbe0P38NhbY=
-X-Received: by 2002:a24:e084:: with SMTP id c126mr17512124ith.124.1558710998913;
- Fri, 24 May 2019 08:16:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190522150505.GA4915@redhat.com> <CABeXuvrPM5xvzqUydbREapvwgy6deYreHp0aaMoSHyLB6+HGRg@mail.gmail.com>
- <20190522161407.GB4915@redhat.com> <CABeXuvpjrW5Gt95JC-_rYkOA=6RCD5OtkEQdwZVVqGCE3GkQOQ@mail.gmail.com>
- <4f7b6dbeab1d424baaebd7a5df116349@AcuMS.aculab.com> <20190523145944.GB23070@redhat.com>
- <345cfba5edde470f9a68d913f44fa342@AcuMS.aculab.com> <20190523163604.GE23070@redhat.com>
- <f0eced5677c144debfc5a69d0d327bc1@AcuMS.aculab.com> <CABeXuvo-wey+NHWb4gi=FSRrjJOKkVcLPQ-J+dchJeHEbhGQ6g@mail.gmail.com>
- <20190524141054.GB2655@redhat.com>
-In-Reply-To: <20190524141054.GB2655@redhat.com>
-From:   Deepa Dinamani <deepa.kernel@gmail.com>
-Date:   Fri, 24 May 2019 08:16:23 -0700
-Message-ID: <CABeXuvqSzy+v=3Y5NnMmfob7bvuNkafmdDqoex8BVENN3atqZA@mail.gmail.com>
-Subject: Re: [PATCH v2] signal: Adjust error codes according to restore_user_sigmask()
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     David Laight <David.Laight@aculab.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "dbueso@suse.de" <dbueso@suse.de>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        Davidlohr Bueso <dave@stgolabs.net>, Eric Wong <e@80x24.org>,
-        Jason Baron <jbaron@akamai.com>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        linux-aio <linux-aio@kvack.org>,
-        Omar Kilani <omar.kilani@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 24 May 2019 11:19:13 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 6A263837F252;
+        Fri, 24 May 2019 15:19:11 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: eye33_15cd51fc83639
+X-Filterd-Recvd-Size: 2470
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf01.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 24 May 2019 15:19:09 +0000 (UTC)
+Message-ID: <f6286af05b1eda38b103ef1337cd7086d3ea4372.camel@perches.com>
+Subject: Re: [PATCH net] bonding: make debugging output more succinct
+From:   Joe Perches <joe@perches.com>
+To:     Jarod Wilson <jarod@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Date:   Fri, 24 May 2019 08:19:07 -0700
+In-Reply-To: <20190524135623.17326-1-jarod@redhat.com>
+References: <20190524135623.17326-1-jarod@redhat.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.1-1build1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 7:11 AM Oleg Nesterov <oleg@redhat.com> wrote:
->
-> On 05/23, Deepa Dinamani wrote:
-> >
-> > Ok, since there has been quite a bit of argument here, I will
-> > backtrack a little bit and maybe it will help us understand what's
-> > happening here.
-> > There are many scenarios being discussed on this thread:
-> > a. State of code before 854a6ed56839a
->
-> I think everything was correct,
+On Fri, 2019-05-24 at 09:56 -0400, Jarod Wilson wrote:
+> Seeing bonding debug log data along the lines of "event: 5" is a bit spartan,
+> and often requires a lookup table if you don't remember what every event is.
+> Make use of netdev_cmd_to_name for an improved debugging experience, so for
+> the prior example, you'll see: "bond_netdev_event received NETDEV_REGISTER"
+> instead (both are prefixed with the device for which the event pertains).
+> 
+> There are also quite a few places that the netdev_dbg output could stand to
+> mention exactly which slave the message pertains to (gets messy if you have
+> multiple slaves all spewing at once to know which one they pertain to).
+[]
+> diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+[]
+> @@ -1515,7 +1515,8 @@ int bond_enslave(struct net_device *bond_dev, struct net_device *slave_dev,
+>  	new_slave->original_mtu = slave_dev->mtu;
+>  	res = dev_set_mtu(slave_dev, bond->dev->mtu);
+>  	if (res) {
+> -		netdev_dbg(bond_dev, "Error %d calling dev_set_mtu\n", res);
+> +		netdev_dbg(bond_dev, "Error %d calling dev_set_mtu for slave %s\n",
+> +			   res, slave_dev->name);
 
-There were 2 things that were wrong:
+Perhaps better to add and use helper mechanisms like:
 
-1. If an unblocked signal was received, after the ep_poll(), then the
-return status did not indicate that. This is expected behavior
-according to man page. If this is indeed what is expected then the man
-page should note that signal will be delivered in this case and return
-code will still be 0.
+#define slave_dbg(bond_dev, slave_dev, fmt, ...)				\
+	netdev_dbg(bond_dev, "(slave %s) " fmt, (slave_dev)->name, ##__VA_ARGS__)
 
-"EINTR
-The call was interrupted by a signal handler before either any of the
-requested events occurred or the timeout expired; see signal(7)."
+So this might be
+		slave_dbg(bond_dev, slave_dev, "Error %d calling dev_set_mtu\n",
+			  res);
+etc...
 
-2. The restoring of the sigmask is done right in the syscall part and
-not while exiting the syscall and if you get a blocked signal here,
-you will deliver this to userspace.
+So there would be a unified style to grep in the logs.
 
-> > b. State after 854a6ed56839a
->
-> obviously buggy,
-
-Ok, then can you point out what specifically was wrong with
-854a6ed56839a? And, not how it could be more simple?
-
-> > c. Proposed fix as per the patchset in question.
->
-> > As per [a] and let's consider the case of epoll_pwait only first for simplicity.
-> >
-> > As I said before, ep_poll() is what checks for signal_pending() and is
-> > responsible for setting errno to -EINTR when there is a signal.
->
-> To clarify, if do_epoll_wait() return -EINTR then signal_pending() is true,
-> right?
-
-Yes, the case I'm talking about is when do_epoll_wait() returns 0 and
-then you get a signal.
-
-> > So if a signal is received after ep_poll() and ep_poll() returns
-> > success, it is never noticed by the syscall during execution.
->
-> What you are saying looks very confusing to me, I will assume that you
-> meant something like
->
->         - a signal SIG_XXX was blocked before sys_epoll_pwait() was called
->
->         - sys_epoll_pwait(sigmask) unblocks SIG_XXX according to sigmask
->
->         - sys_epoll_pwait() calls do_epoll_wait() which returns success
->
->         - SIG_XXX comes after that and it is "never noticed"
->
-> Yes. Everything is correct. And see my reply to David, SIG_XXX can even
-> come _before_ sys_epoll_pwait() was called.
-
-No, I'm talking about a signal that was not blocked.
-
-> > So the question is does the userspace have to know about this signal
-> > or not.
->
-> If userspace needs to know about SIG_XXX it should not block it, that is all.
-
-What should be the return value if a signal is detected after a fd completed?
-
-> > What [b] does is to move the signal check closer to the restoration of
-> > the signal.
->
-> FOR NO REASON, afaics (to simplify, lets forget the problem with the wrong
-> return value you are trying to fix).
-
-As I already pointed out, the restoring of the sigmask is done during
-the syscall and not while exiting the syscall and if you get a blocked
-signal here, you will deliver this to userspace.
-
-> And even if there were ANY reason to do this, note that (with or without this
-> fix) the signal_pending() check inside restore_user_sigmask() can NOT help,
-> simply because SIG_XXX can come right after this check.
-
-This I pointed out already that we should probably make this sequence atomic.
-
-
--Deepa
