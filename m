@@ -2,269 +2,69 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A07C0C282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CC1C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7962721848
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:19:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="UHexDVlZ"
+	by mail.kernel.org (Postfix) with ESMTP id 6A76D21851
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 18:20:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558722019;
+	bh=EbCatF+nk6Yrrx+RopsbQWZdXfG/uf+mUj9qs2Y1cw4=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=M2a6/K8ZqZmGKZqZnfulIHES+UJp/nQMurGPwBrXZsj3vH0n6MUPJG+2WhCKK4fXW
+	 /B8if4onJwQMO1wJDbtlnVOaKiG5d/Uihzv2/CnxP7s3jO1wRiUbJLNW2jM6M5CX3y
+	 oEtd2xjkLObZNaWYX1Y3cc5lQrd3vCpmvEjb+EHI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391576AbfEXSTv (ORCPT
+        id S2391663AbfEXSUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 14:19:51 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36221 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729348AbfEXSTt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 14:19:49 -0400
-Received: by mail-wm1-f67.google.com with SMTP id v22so2864818wml.1
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 11:19:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=CMwpxmkiGGLj4LCUsjsXv0reA0jujs/nc9A8nY8SSPI=;
-        b=UHexDVlZQnrlflu++xZeqp3+kXzwHwQxVNyVA4s0XysLJxw4bOA/fNezB3O55xHeeI
-         e9r31Ts0F83VTO1oxBzHc8Yp84Wa4K0U5mvtIrHdyHn9T9Ux7Af8l9yWKscJDhifFeSF
-         rQ7ZMwr07ggFveiQG3oJ/gJh7Z2oPKQLcN1ywgweuWNKb4zZhHOXQoXf3mIuKL3buiG5
-         0qyy7pvtzyImFT5jjqqSKrxvzJ+hvCTrt8KmZjR5G57VufYOYvk5glbrfOXdsUWkcyHS
-         AqxVn4IJzCgDsWej9viPIefzvxXOC/mFEBAZ7RKBEra1CavFioRdliWZORGFaPadS/yt
-         kqCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=CMwpxmkiGGLj4LCUsjsXv0reA0jujs/nc9A8nY8SSPI=;
-        b=HV1eF7oO9AD4tL0jrgaJyIpLA3bCbDa4/+2WNxpv0WQ2zhRhKnPeeLxEMaU9OZO0HK
-         Y6hXFxHFgKjMMPvlQDiMfoC4E4O83BvEmyq0cXVy3v8PQGY660A4vGCab/ytfOk+62tR
-         jIwyAO7dZ+ZQfdaWavGNukuqrb4rYwV7vImjsGbMwFswN8Hsph+yYFN5n0Eor89TL5tx
-         BigwRRapfgorCABSx3RnIAa90D/zdRsTV+OT6Qp5tj6xgVPXDN1UzMjlueW2+75NlGsY
-         2jSPIHE7HM56Z4GCKSTd+o0snpBosKZ6D/mQi8UF8ABePqBuk4ZvxcCtI1+nMuBemtZM
-         nbUQ==
-X-Gm-Message-State: APjAAAU3Axs4xb7yqJq0gERKH2U5SWjJEGY5gIeRjLw/T0XZxgb2YkX5
-        OW7K9N83tgFkRLKjYjBqRmQ=
-X-Google-Smtp-Source: APXvYqxUVmMZGD2QAsoiuMcXM1uIrp3IpLv9aSyFm9DtNCaDblKukgF4ht4RPM/gSyNpgKqwCynEuw==
-X-Received: by 2002:a1c:a00a:: with SMTP id j10mr820472wme.41.1558721987620;
-        Fri, 24 May 2019 11:19:47 -0700 (PDT)
-Received: from blackbox.darklights.net (p200300F133EE7100D0AA8776F4474B72.dip0.t-ipconnect.de. [2003:f1:33ee:7100:d0aa:8776:f447:4b72])
-        by smtp.googlemail.com with ESMTPSA id i15sm3181831wre.30.2019.05.24.11.19.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 11:19:46 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     linux-amlogic@lists.infradead.org, khilman@baylibre.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        hexdump0815@googlemail.com,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 1/1] ARM: dts: meson8b: mxq: improve support for the TRONFY MXQ S805
-Date:   Fri, 24 May 2019 20:19:36 +0200
-Message-Id: <20190524181936.29470-2-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190524181936.29470-1-martin.blumenstingl@googlemail.com>
-References: <20190524181936.29470-1-martin.blumenstingl@googlemail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 24 May 2019 14:20:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46394 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391618AbfEXSUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 14:20:18 -0400
+Subject: Re: [GIT PULL] arm64: Second round of fixes for -rc2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558722017;
+        bh=EbCatF+nk6Yrrx+RopsbQWZdXfG/uf+mUj9qs2Y1cw4=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=xVELS5AZpMr7x2GkF7U7Ut/dhQ80wTsGzrrQhxAHfUFsDOuZVwwpDUMMHAH/7Jgl6
+         iHJ7XiX7oeS7XticboJGpA1tLamQUIXsfVoQQv5Bu+8bKyZwETWpgi5VksS9wrnrJD
+         04dnjx1MYUGjB9ZqB2K7yoPrX8B+pyc/9E9fDze0=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190524174357.GC9120@fuggles.cambridge.arm.com>
+References: <20190524174357.GC9120@fuggles.cambridge.arm.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190524174357.GC9120@fuggles.cambridge.arm.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git
+ tags/arm64-fixes
+X-PR-Tracked-Commit-Id: edbcf50eb8aea5f81ae6d83bb969cb0bc02805a1
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 0a72ef89901409847036664c23ba6eee7cf08e0e
+Message-Id: <155872201757.27843.1132229878974057804.pr-tracker-bot@kernel.org>
+Date:   Fri, 24 May 2019 18:20:17 +0000
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com,
+        lorenzo.pieralisi@arm.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The TRONFY MXQ comes with either 1GB or 2GB RAM.
+The pull request you sent on Fri, 24 May 2019 18:43:57 +0100:
 
-Both variants share (like most boards based on Amlogic reference
-designs):
-- 10/100 PHY (IC Plus IP101GR) with GPIOH_4 being the reset line and
-  GPIOH_3 the interrupt line
-- SD card slot with the card detection GPIO at CARD_6
-- VCCK is generated by PWM_C with a period of 1148ns and XTAL as input
-  clock
-- USB OTG exposed on one of the USB-A connectors
-- 4-port USB hub with 3 ports exposed to the outside
+> git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-fixes
 
-There seem the multiple board revision out there according to various
-forum posts:
-- storage: eMMC or NAND flash
-- wifi: Ampak AP6210 or Realtek 8189
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/0a72ef89901409847036664c23ba6eee7cf08e0e
 
-Add support for the following functionality:
-- SoC temperature (hwmon)
-- changing the CPU voltage
-- Ethernet connectivity
-- SD card
-- USB
+Thank you!
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- arch/arm/boot/dts/meson8b-mxq.dts | 139 ++++++++++++++++++++++++++++++
- 1 file changed, 139 insertions(+)
-
-diff --git a/arch/arm/boot/dts/meson8b-mxq.dts b/arch/arm/boot/dts/meson8b-mxq.dts
-index 08ddd7fb0bf8..07f1cc513f8a 100644
---- a/arch/arm/boot/dts/meson8b-mxq.dts
-+++ b/arch/arm/boot/dts/meson8b-mxq.dts
-@@ -45,6 +45,9 @@
-  */
- 
- /dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+
- #include "meson8b.dtsi"
- 
- / {
-@@ -63,6 +66,126 @@
- 		device_type = "memory";
- 		reg = <0x40000000 0x40000000>;
- 	};
-+
-+	iio-hwmon {
-+		compatible = "iio-hwmon";
-+		io-channels = <&saradc 8>;
-+	};
-+
-+	vcck: regulator-vcck {
-+		compatible = "pwm-regulator";
-+
-+		regulator-name = "VCCK";
-+		regulator-min-microvolt = <860000>;
-+		regulator-max-microvolt = <1140000>;
-+
-+		pwms = <&pwm_cd 0 1148 0>;
-+		pwm-dutycycle-range = <100 0>;
-+
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	vcc_1v8: regulator-vcc1v8 {
-+		compatible = "regulator-fixed";
-+
-+		regulator-name = "VCC1V8";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+
-+		vin-supply = <&vcc_3v3>;
-+	};
-+
-+	vcc_3v3: regulator-vcc3v3 {
-+		compatible = "regulator-fixed";
-+
-+		regulator-name = "VCC3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+
-+		vin-supply = <&vcc_5v>;
-+	};
-+
-+	vcc_5v: regulator-vcc5v {
-+		compatible = "regulator-fixed";
-+
-+		regulator-name = "VCC5V";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+};
-+
-+&cpu0 {
-+	cpu-supply = <&vcck>;
-+};
-+
-+&ethmac {
-+	status = "okay";
-+
-+	pinctrl-0 = <&eth_rmii_pins>;
-+	pinctrl-names = "default";
-+
-+	phy-handle = <&eth_phy0>;
-+	phy-mode = "rmii";
-+
-+	snps,reset-gpio = <&gpio GPIOH_4 0>;
-+	snps,reset-delays-us = <0 10000 1000000>;
-+	snps,reset-active-low;
-+
-+	mdio {
-+		compatible = "snps,dwmac-mdio";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		eth_phy0: ethernet-phy@0 {
-+			/* IC Plus IP101A/G (0x02430c54) */
-+			reg = <0>;
-+			icplus,select-interrupt;
-+			interrupt-parent = <&gpio_intc>;
-+			/* GPIOH_3 */
-+			interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
-+		};
-+	};
-+};
-+
-+&saradc {
-+	status = "okay";
-+	vref-supply = <&vcc_1v8>;
-+};
-+
-+&sdio {
-+	status = "okay";
-+
-+	pinctrl-0 = <&sd_b_pins>;
-+	pinctrl-names = "default";
-+
-+	/* SD card */
-+	sd_card_slot: slot@1 {
-+		compatible = "mmc-slot";
-+		reg = <1>;
-+		status = "okay";
-+
-+		bus-width = <4>;
-+		no-sdio;
-+		cap-mmc-highspeed;
-+		cap-sd-highspeed;
-+		disable-wp;
-+
-+		cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
-+
-+		vmmc-supply = <&vcc_3v3>;
-+	};
-+};
-+
-+&pwm_cd {
-+	status = "okay";
-+	pinctrl-0 = <&pwm_c1_pins>;
-+	pinctrl-names = "default";
-+	clocks = <&clkc CLKID_XTAL>;
-+	clock-names = "clkin0";
- };
- 
- &uart_AO {
-@@ -70,3 +193,19 @@
- 	pinctrl-0 = <&uart_ao_a_pins>;
- 	pinctrl-names = "default";
- };
-+
-+&usb0 {
-+	status = "okay";
-+};
-+
-+&usb0_phy {
-+	status = "okay";
-+};
-+
-+&usb1 {
-+	status = "okay";
-+};
-+
-+&usb1_phy {
-+	status = "okay";
-+};
 -- 
-2.21.0
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
