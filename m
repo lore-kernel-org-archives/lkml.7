@@ -2,98 +2,134 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 862FEC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA37C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DAE22081C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 05:56:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AY/0k4r8"
+	by mail.kernel.org (Postfix) with ESMTP id 3B9A820851
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 06:00:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388579AbfEXF4W (ORCPT
+        id S1731820AbfEXGAI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 01:56:22 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45340 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387622AbfEXF4W (ORCPT
+        Fri, 24 May 2019 02:00:08 -0400
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:41636 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725886AbfEXGAH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 01:56:22 -0400
-Received: by mail-pf1-f196.google.com with SMTP id s11so4623587pfm.12
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 22:56:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AoxtaitWGEKFSZOEKz/v/lg67nbZ3fMxSFB5YHzG0Zk=;
-        b=AY/0k4r8s0g1pZ0kq+WyGw30gp9iBBM6N/4oGMC4X8ToyKe1a+5qbj4F2mJa54l+ba
-         sRvxKw+ypCdS9FwSiPQfbK/3PoRxwGNROKxcUc4wjuo9+Qeh+1sLJCpcvlXR/X/dlQ2d
-         SjJw4SA/crQN57zKdk8Ep14IMaaxVVryF/+CinzK1ymLYOFwJveNSs6GDq1I1QB3lYZ+
-         p6bbw+J5vjsQyDUWimuZMqZpVvHRlr1UzhEw60PI2pbuVdVIW2D9r1aUOtvMwE+BlUsr
-         LsSABLfs72VwRdWoRK0uPaYugFGYrdWfPvKaklCSU+zjlv8CqLq/NzYuTH1JFVuY1Tnz
-         9r1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AoxtaitWGEKFSZOEKz/v/lg67nbZ3fMxSFB5YHzG0Zk=;
-        b=nDTlpHtDLa2v5eqBGDziEz6uJwF5Ykwwa/shqTuq9NSirb+M+AXeKvSSs4dI1sLP5d
-         HKSBwE+U4ouGc5sd1fS5qrQyZ4Afd7b0KtbG/HtKHeKAPlxVojBy+WDHO7NW1SwDXaxT
-         i1tA2WV/MYcLZyY57UgTX2+bexkggieNFR6Zrj+9I1kevDdLxxqN9wsniwonRtzQI0t+
-         +4rrPBfKUWuAO89i/T7zCOTPB2HFi1juiPK74Vzvhx2B966XnCVgjBnXtY4UL0INmroA
-         O7shZipJNU94DLeP8T05JRP3KYh67KkH4tIZMXd/dmp6gcbrfkevJ60Wggr2v/862/hR
-         tkVw==
-X-Gm-Message-State: APjAAAVK6wpdxEah14DpvaJGApxJBD5VBKL1H/OAAVTzRz0shbApojmM
-        dlmvgkAbhwG7NdHoZGgP3kKLzFxuRzM=
-X-Google-Smtp-Source: APXvYqzui1RlsbgsXSuGOMkUiXJP91mqSn9EV/ojt8Fi8wiX31QqbqmpC429LfG3fikeBVMYKIMA1w==
-X-Received: by 2002:a63:c64a:: with SMTP id x10mr101968551pgg.195.1558677381296;
-        Thu, 23 May 2019 22:56:21 -0700 (PDT)
-Received: from localhost.localdomain ([110.225.17.212])
-        by smtp.gmail.com with ESMTPSA id x18sm1907129pfj.17.2019.05.23.22.56.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 22:56:20 -0700 (PDT)
-From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
-To:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        Fri, 24 May 2019 02:00:07 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TSXfk8M_1558677600;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TSXfk8M_1558677600)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 24 May 2019 14:00:01 +0800
+Subject: Re: [v4 PATCH 2/2] mm: vmscan: correct some vmscan counters for
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     ying.huang@intel.com, hannes@cmpxchg.org, mhocko@suse.com,
+        mgorman@techsingularity.net, kirill.shutemov@linux.intel.com,
+        josef@toxicpanda.com, hughd@google.com, shakeelb@google.com,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Subject: [PATCH] staging: ks7010: Remove initialisation
-Date:   Fri, 24 May 2019 11:26:02 +0530
-Message-Id: <20190524055602.3694-1-nishkadg.linux@gmail.com>
-X-Mailer: git-send-email 2.19.1
+References: <20190524055125.3036-1-hdanton@sina.com>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <fbc9a823-7e6a-f923-92e1-c7e93a256aff@linux.alibaba.com>
+Date:   Fri, 24 May 2019 14:00:00 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190524055125.3036-1-hdanton@sina.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As the initial value of the return variable result is never used, it can
-be removed.
-Issue found with Coccinelle.
 
-Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
----
- drivers/staging/ks7010/ks7010_sdio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/ks7010/ks7010_sdio.c b/drivers/staging/ks7010/ks7010_sdio.c
-index 74551eb717fc..4b379542ecd5 100644
---- a/drivers/staging/ks7010/ks7010_sdio.c
-+++ b/drivers/staging/ks7010/ks7010_sdio.c
-@@ -380,7 +380,7 @@ int ks_wlan_hw_tx(struct ks_wlan_private *priv, void *p, unsigned long size,
- 					   struct sk_buff *skb),
- 		  struct sk_buff *skb)
- {
--	int result = 0;
-+	int result;
- 	struct hostif_hdr *hdr;
- 
- 	hdr = (struct hostif_hdr *)p;
--- 
-2.19.1
+On 5/24/19 1:51 PM, Hillf Danton wrote:
+> On Fri, 24 May 2019 09:27:02 +0800 Yang Shi wrote:
+>> On 5/23/19 11:51 PM, Hillf Danton wrote:
+>>> On Thu, 23 May 2019 10:27:38 +0800 Yang Shi wrote:
+>>>> @ -1642,14 +1650,14 @@ static unsigned long isolate_lru_pages(unsigned long nr_to_scan,
+>>>>    	unsigned long nr_zone_taken[MAX_NR_ZONES] = { 0 };
+>>>>    	unsigned long nr_skipped[MAX_NR_ZONES] = { 0, };
+>>>>    	unsigned long skipped = 0;
+>>>> -	unsigned long scan, total_scan, nr_pages;
+>>>> +	unsigned long scan, total_scan;
+>>>> +	unsigned long nr_pages;
+>>> Change for no earn:)
+>> Aha, yes.
+>>
+>>>>    	LIST_HEAD(pages_skipped);
+>>>>    	isolate_mode_t mode = (sc->may_unmap ? 0 : ISOLATE_UNMAPPED);
+>>>> +	total_scan = 0;
+>>>>    	scan = 0;
+>>>> -	for (total_scan = 0;
+>>>> -	     scan < nr_to_scan && nr_taken < nr_to_scan && !list_empty(src);
+>>>> -	     total_scan++) {
+>>>> +	while (scan < nr_to_scan && !list_empty(src)) {
+>>>>    		struct page *page;
+>>> AFAICS scan currently prevents us from looping for ever, while nr_taken bails
+>>> us out once we get what's expected, so I doubt it makes much sense to cut
+>>> nr_taken off.
+>> It is because "scan < nr_to_scan && nr_taken >= nr_to_scan" is
+>> impossible now with the units fixed.
+>>
+> With the units fixed, nr_taken is no longer checked.
+
+It is because scan would be always >= nr_taken.
+
+>
+>>>>    		page = lru_to_page(src);
+>>>> @@ -1657,9 +1665,12 @@ static unsigned long isolate_lru_pages(unsigned long nr_to_scan,
+>>>>    		VM_BUG_ON_PAGE(!PageLRU(page), page);
+>>>> +		nr_pages = 1 << compound_order(page);
+>>>> +		total_scan += nr_pages;
+>>>> +
+>>>>    		if (page_zonenum(page) > sc->reclaim_idx) {
+>>>>    			list_move(&page->lru, &pages_skipped);
+>>>> -			nr_skipped[page_zonenum(page)]++;
+>>>> +			nr_skipped[page_zonenum(page)] += nr_pages;
+>>>>    			continue;
+>>>>    		}
+>>>> @@ -1669,10 +1680,9 @@ static unsigned long isolate_lru_pages(unsigned long nr_to_scan,
+>>>>    		 * ineligible pages.  This causes the VM to not reclaim any
+>>>>    		 * pages, triggering a premature OOM.
+>>>>    		 */
+>>>> -		scan++;
+>>>> +		scan += nr_pages;
+>>> The comment looks to defy the change if we fail to add a huge page to
+>>> the dst list; otherwise nr_taken knows how to do the right thing. What
+>>> I prefer is to let scan to do one thing a time.
+>> I don't get your point. Do you mean the comment "Do not count skipped
+>> pages because that makes the function return with no isolated pages if
+>> the LRU mostly contains ineligible pages."? I'm supposed the comment is
+>> used to explain why not count skipped page.
+>>
+> Well consider the case where there is a huge page in the second place
+> reversely on the src list along with other 20 regular pages, and we are
+> not able to add the huge page to the dst list. Currently we can go on and
+> try to scan other pages, provided nr_to_scan is 32; with the units fixed,
+> however, scan goes over nr_to_scan, leaving us no chance to scan any page
+> that may be not busy. I wonder that triggers a premature OOM, because I
+> think scan means the number of list nodes we try to isolate, and
+> nr_taken the number of regular pages successfully isolated.
+
+Yes, good point. I think I just need roll back to what v3 did here to 
+get scan accounted for each case separately to avoid the possible 
+over-account.
+
+>>>>    		switch (__isolate_lru_page(page, mode)) {
+>>>>    		case 0:
+>>>> -			nr_pages = hpage_nr_pages(page);
+>>>>    			nr_taken += nr_pages;
+>>>>    			nr_zone_taken[page_zonenum(page)] += nr_pages;
+>>>>    			list_move(&page->lru, dst);
+>>>> --
+>>>> 1.8.3.1
+> Best Regards
+> Hillf
 
