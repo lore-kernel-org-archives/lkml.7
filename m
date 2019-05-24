@@ -2,105 +2,113 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA2FC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:31:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35877C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18F24217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:31:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F223521773
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 02:31:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731799AbfEXCbS (ORCPT
+        id S1731821AbfEXCbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 22:31:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59668 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731604AbfEXCbS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 22:31:18 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F91121773;
-        Fri, 24 May 2019 02:31:16 +0000 (UTC)
-Date:   Thu, 23 May 2019 22:31:14 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Shuah Khan <shuah@kernel.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Juerg Haefliger <juerg.haefliger@canonical.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH selftests 0/2] Add checkbashisms meta-testcase
-Message-ID: <20190523223114.4feb6239@oasis.local.home>
-In-Reply-To: <20190323192746.59739e5e9ea0445791ac14ed@kernel.org>
-References: <155079878723.5157.12433171255092403676.stgit@devbox>
-        <20190323192746.59739e5e9ea0445791ac14ed@kernel.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 23 May 2019 22:31:47 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:6535 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731604AbfEXCbr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 22:31:47 -0400
+Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id 08CDACD0FCDCB345E1F8;
+        Fri, 24 May 2019 10:31:45 +0800 (CST)
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 24 May 2019 10:31:44 +0800
+Received: from [10.134.22.195] (10.134.22.195) by
+ dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Fri, 24 May 2019 10:31:43 +0800
+Subject: Re: [PATCH v6 1/1] f2fs: ioctl for removing a range from F2FS
+To:     sunqiuyang <sunqiuyang@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20190524015555.12622-1-sunqiuyang@huawei.com>
+From:   Chao Yu <yuchao0@huawei.com>
+CC:     Sahitya Tummala <stummala@codeaurora.org>
+Message-ID: <e7cfed52-0212-834f-aed8-0c5abc07f779@huawei.com>
+Date:   Fri, 24 May 2019 10:32:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190524015555.12622-1-sunqiuyang@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-ClientProxiedBy: dggeme718-chm.china.huawei.com (10.1.199.114) To
+ dggeme763-chm.china.huawei.com (10.3.19.109)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
++Cc Sahitya,
 
-Shuah,
-
-Want to take this or would you want me to?
-
--- Steve
-
-
-On Sat, 23 Mar 2019 19:27:46 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
-
-> Hi Shuah,
+On 2019/5/24 9:55, sunqiuyang wrote:
+> From: Qiuyang Sun <sunqiuyang@huawei.com>
 > 
-> Could you pick this to your tree? I think this can prevent further
-> simillar errors before release...
+> This ioctl shrinks a given length (aligned to sections) from end of the
+> main area. Any cursegs and valid blocks will be moved out before
+> invalidating the range.
 > 
-> Thank you,
+> This feature can be used for adjusting partition sizes online.
+> --
+> Changlog v1 ==> v2:
 > 
-> On Fri, 22 Feb 2019 10:26:27 +0900
-> Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> Sahitya Tummala:
+>  - Add this ioctl for f2fs_compat_ioctl() as well.
+>  - Fix debugfs status to reflect the online resize changes.
+>  - Fix potential race between online resize path and allocate new data
+>    block path or gc path.
 > 
-> > Hi,
-> > 
-> > Here are patches for making sure the ftracetest testcases
-> > are checkbashisms clean.
-> > 
-> > This actually needs a patch from Juerg, "selftests/ftrace:
-> > Make the coloring POSIX compliant" to complete the work.
-> > 
-> > http://lkml.kernel.org/r/20190220161333.28109-1-juergh@canonical.com
-> > (Note that this is still under development)
-> > 
-> > So as Juerg pointed, recently ftracetest becomes not POSIX
-> > compliant, and such kind of issues happened repeatedly.
-> > To avoid those anymore, I decided to introduce a testcase
-> > which runs checkbasisms on ftracetest and its testcases.
-> > I think this can help us to find out whether it was
-> > written in a way out of POSIX.
-> > 
-> > Thank you,
-> > 
-> > ---
-> > 
-> > Masami Hiramatsu (2):
-> >       selftests/ftrace: Make a script checkbashisms clean
-> >       selftests/ftrace: Add checkbashisms meta-testcase
-> > 
-> > 
-> >  tools/testing/selftests/ftrace/ftracetest          |    1 +
-> >  .../ftrace/test.d/kprobe/kprobe_ftrace.tc          |    2 +-
-> >  .../selftests/ftrace/test.d/selftest/bashisms.tc   |   21 ++++++++++++++++++++
-> >  3 files changed, 23 insertions(+), 1 deletion(-)
-> >  create mode 100644 tools/testing/selftests/ftrace/test.d/selftest/bashisms.tc
-> > 
-> > --
-> > Masami Hiramatsu (Linaro) <mhiramat@kernel.org>  
+> Others:
+>  - Rename some identifiers.
+>  - Add some error handling branches.
+>  - Clear sbi->next_victim_seg[BG_GC/FG_GC] in shrinking range.
+> --
+> Changelog v2 ==> v3:
+> Implement this interface as ext4's, and change the parameter from shrunk
+> bytes to new block count of F2FS.
+> --
+> Changelog v3 ==> v4:
+>  - During resizing, force to empty sit_journal and forbid adding new
+>    entries to it, in order to avoid invalid segno in journal after resize.
+>  - Reduce sbi->user_block_count before resize starts.
+>  - Commit the updated superblock first, and then update in-memory metadata
+>    only when the former succeeds.
+>  - Target block count must align to sections.
+> --
+> Changelog v4 ==> v5:
+> Write checkpoint before and after committing the new superblock, w/o
+> CP_FSCK_FLAG respectively, so that the FS can be fixed by fsck even if
+> resize fails after the new superblock is committed.
+> --
+> Changelog v5 ==> v6:
+>  - In free_segment_range(), reduce granularity of gc_mutex.
+>  - Add protection on curseg migration.
 > 
-> 
+> Signed-off-by: Qiuyang Sun <sunqiuyang@huawei.com>
+> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
 
+Looks good to me now,
+
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+
+To Sahitya, is it okay to you merging all your fixes and adding Signed-off in
+original patch? We can still separate them from this patch if you object this,
+let us know.
+
+Thanks,
