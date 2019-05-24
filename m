@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B18E4C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22066C46470
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:12:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 869F721871
+	by mail.kernel.org (Postfix) with ESMTP id EB84421872
 	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 12:12:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558699972;
-	bh=QUID8il93BT5YYEJvSxD9CdqWmogcOK+zuFTAfzJMkY=;
+	s=default; t=1558699973;
+	bh=L9CanpSZDv0uNP5T2onbvMs66pNwY33FdYckjnTHo7Y=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=2lTm0GF++46Si9Rcl/NUaqjB+dO1zeu1K/FIb+pIL4z/OPxuvZ1bwz8hRLuLYbPs4
-	 R3Zg56hhOH/oRsLOgD8O4bVYxSqR2Uz6gPqnmJSBE3+8zbBj4S4bAXFM8BAH6Aau/n
-	 1yuwn+AreKQ08ZrZ/nuVZDYow2siIErarM5iykS8=
+	b=kgZHYFsDdTYrSa0xyz2EakIyiGjQ0yFARuV5zrrOzPhmZYcaPq4CLDpkYGior5Er/
+	 0A/I8vMR0ZRa0hDlovwa2IIPrr8NwTFHMPhx83oa02PCtF8bp3UMuNq4wS2AXl/xQg
+	 u5zo8qy2pnI9bgm2psy4k3Z13YAEif3AcpjEF7T0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391487AbfEXMMv (ORCPT
+        id S2391506AbfEXMMw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 08:12:51 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:43310 "EHLO
+        Fri, 24 May 2019 08:12:52 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:43346 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391449AbfEXMMv (ORCPT
+        with ESMTP id S2391462AbfEXMMv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 24 May 2019 08:12:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,28 +34,29 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=1jfbm+ilo7jODaRxd8Scvr0X0nhcAhiF59hj2x7IHRk=; b=ShjilB1EhGZQ
-        Sd50u6x0iF3W13fvmbZze9Hnc5JpyFGWcRvuPq4HHsmTqGKgmgaVbPWIGPwvnhcXw82ADLoX9QQS1
-        tjbrRiXwN71Yym0BWnPOuYASF8ZcMQZhGCQBUvbH+rize5FixWquy4SpF5n3Tj8bui+BiIt5ot/Sc
-        Dkr00=;
+        List-Archive; bh=AvMpC7Jz5X1XI3BJzxwbegp9Vy5WFXCNZ3EH9Hh+SNM=; b=aFHsGJCgf2iV
+        df4A+dqMywe9Q+gYMIVBeLEduaAznTZhJSwUc6mYB3lZGLz+5b5oXbR1T7EZYzX42GvsQAJmTP4EQ
+        w1L/ddmB3gwBesAuwjcDNDmcKGyNebPnZICYAID61AkUS/p22U/P1Kph8MIUACMiKfkSmeEJryuM7
+        bKegg=;
 Received: from [176.12.107.140] (helo=finisterre.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hU943-0003DW-EW; Fri, 24 May 2019 12:12:47 +0000
+        id 1hU93v-0003Ct-3q; Fri, 24 May 2019 12:12:39 +0000
 Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 804B1440046; Fri, 24 May 2019 13:12:46 +0100 (BST)
+        id 0163B440049; Fri, 24 May 2019 13:12:37 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Eric Jeong <eric.jeong.opensource@diasemi.com>,
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Support Opensource <support.opensource@diasemi.com>
-Subject: Applied "regulator: slg51000: Remove unneeded regl_pdata from struct slg51000" to the regulator tree
-In-Reply-To: <20190524100247.7267-2-axel.lin@ingics.com>
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: simple-card: Restore original configuration of DAI format" to the asoc tree
+In-Reply-To: <1558688044-22025-1-git-send-email-jonathanh@nvidia.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190524121246.804B1440046@finisterre.sirena.org.uk>
-Date:   Fri, 24 May 2019 13:12:46 +0100 (BST)
+Message-Id: <20190524121238.0163B440049@finisterre.sirena.org.uk>
+Date:   Fri, 24 May 2019 13:12:37 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -63,11 +64,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: slg51000: Remove unneeded regl_pdata from struct slg51000
+   ASoC: simple-card: Restore original configuration of DAI format
 
-has been applied to the regulator tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.3
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.2
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -88,61 +89,90 @@ to this mail.
 Thanks,
 Mark
 
-From 12c574d84c8e492320a4e75b2c1157f8b61e4092 Mon Sep 17 00:00:00 2001
-From: Axel Lin <axel.lin@ingics.com>
-Date: Fri, 24 May 2019 18:02:47 +0800
-Subject: [PATCH] regulator: slg51000: Remove unneeded regl_pdata from struct
- slg51000
+From 4819d06292c9b57eabdd6d1603e49a27baf183be Mon Sep 17 00:00:00 2001
+From: Jon Hunter <jonathanh@nvidia.com>
+Date: Fri, 24 May 2019 09:54:04 +0100
+Subject: [PATCH] ASoC: simple-card: Restore original configuration of DAI
+ format
 
-Just use a local variable *ena_gpiod in slg51000_of_parse_cb instead.
-With this change, the struct slg51000_pdata can be removed.
+Revert commit 069d037aea98 ("ASoC: simple-card: Fix configuration of
+DAI format"). During further review, it turns out that the actual issue
+was caused by an incorrectly formatted device-tree node describing the
+soundcard.
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
+The following is incorrect because the simple-audio-card
+'bitclock-master' and 'frame-master' properties should not reference the
+actual codec phandle ...
+
+	sound {
+		compatible = "simple-audio-card";
+		...
+	=>	simple-audio-card,bitclock-master = <&codec>;
+	=>	simple-audio-card,frame-master = <&codec>;
+		...
+
+		simple-audio-card,cpu {
+			sound-dai = <&xxx>;
+		};
+
+		simple-audio-card,codec {
+	=>		sound-dai = <&codec>;
+		};
+	};
+
+Rather, these properties should reference the phandle to the
+'simple-audio-card,codec' property as shown below ...
+
+	sound {
+		compatible = "simple-audio-card";
+		...
+	=>	simple-audio-card,bitclock-master = <&codec>;
+	=>	simple-audio-card,frame-master = <&codec>;
+		...
+
+		simple-audio-card,cpu {
+			sound-dai = <&xxx>;
+		};
+
+	=>	codec: simple-audio-card,codec { /* simple-card wants here */
+			sound-dai = <&xxx>;	 /* not here */
+		};
+	};
+
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/slg51000-regulator.c | 17 ++++++-----------
- 1 file changed, 6 insertions(+), 11 deletions(-)
+ sound/soc/generic/simple-card.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/regulator/slg51000-regulator.c b/drivers/regulator/slg51000-regulator.c
-index a06a18f220e0..04b732991d69 100644
---- a/drivers/regulator/slg51000-regulator.c
-+++ b/drivers/regulator/slg51000-regulator.c
-@@ -35,14 +35,9 @@ enum slg51000_regulators {
- 	SLG51000_MAX_REGULATORS,
- };
+diff --git a/sound/soc/generic/simple-card.c b/sound/soc/generic/simple-card.c
+index c2c8dcbcf795..9b568f578bcd 100644
+--- a/sound/soc/generic/simple-card.c
++++ b/sound/soc/generic/simple-card.c
+@@ -283,6 +283,11 @@ static int simple_dai_link_of(struct asoc_simple_priv *priv,
+ 	codec_dai		=
+ 	dai_props->codec_dai	= &priv->dais[li->dais++];
  
--struct slg51000_pdata {
--	struct gpio_desc *ena_gpiod;
--};
++	ret = asoc_simple_parse_daifmt(dev, node, codec,
++				       prefix, &dai_link->dai_fmt);
++	if (ret < 0)
++		goto dai_link_of_err;
++
+ 	simple_parse_mclk_fs(top, cpu, codec, dai_props, prefix);
+ 
+ 	ret = asoc_simple_parse_cpu(cpu, dai_link, &single_cpu);
+@@ -293,11 +298,6 @@ static int simple_dai_link_of(struct asoc_simple_priv *priv,
+ 	if (ret < 0)
+ 		goto dai_link_of_err;
+ 
+-	ret = asoc_simple_parse_daifmt(dev, node, dai_link->codecs->of_node,
+-				       prefix, &dai_link->dai_fmt);
+-	if (ret < 0)
+-		goto dai_link_of_err;
 -
- struct slg51000 {
- 	struct device *dev;
- 	struct regmap *regmap;
--	struct slg51000_pdata regl_pdata[SLG51000_MAX_REGULATORS];
- 	struct regulator_desc *rdesc[SLG51000_MAX_REGULATORS];
- 	struct regulator_dev *rdev[SLG51000_MAX_REGULATORS];
- 	struct gpio_desc *cs_gpiod;
-@@ -204,14 +199,14 @@ static int slg51000_of_parse_cb(struct device_node *np,
- 				struct regulator_config *config)
- {
- 	struct slg51000 *chip = config->driver_data;
--	struct slg51000_pdata *rpdata = &chip->regl_pdata[desc->id];
-+	struct gpio_desc *ena_gpiod;
- 	enum gpiod_flags gflags = GPIOD_OUT_LOW | GPIOD_FLAGS_BIT_NONEXCLUSIVE;
- 
--	rpdata->ena_gpiod = devm_gpiod_get_from_of_node(chip->dev, np,
--							"enable-gpios", 0,
--							gflags, "gpio-en-ldo");
--	if (rpdata->ena_gpiod) {
--		config->ena_gpiod = rpdata->ena_gpiod;
-+	ena_gpiod = devm_gpiod_get_from_of_node(chip->dev, np,
-+						"enable-gpios", 0,
-+						gflags, "gpio-en-ldo");
-+	if (ena_gpiod) {
-+		config->ena_gpiod = ena_gpiod;
- 		devm_gpiod_unhinge(chip->dev, config->ena_gpiod);
- 	}
- 
+ 	ret = asoc_simple_parse_platform(plat, dai_link);
+ 	if (ret < 0)
+ 		goto dai_link_of_err;
 -- 
 2.20.1
 
