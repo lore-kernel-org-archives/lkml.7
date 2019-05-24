@@ -2,219 +2,209 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CFC2C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA80C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:57:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EA80217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25B192133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 14:57:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404190AbfEXOxM (ORCPT
+        id S2404144AbfEXO5Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 10:53:12 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:44662 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403860AbfEXOxM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 10:53:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A735080D;
-        Fri, 24 May 2019 07:53:11 -0700 (PDT)
-Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 27EFA3F575;
-        Fri, 24 May 2019 07:53:09 -0700 (PDT)
-Date:   Fri, 24 May 2019 15:53:06 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-arch@vger.kernel.org, "H.J. Lu" <hjl.tools@gmail.com>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Paul Elliott <paul.elliott@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sudakshina Das <sudi.das@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 4/8] arm64: Basic Branch Target Identification support
-Message-ID: <20190524145306.GZ28398@e103592.cambridge.arm.com>
-References: <1558693533-13465-1-git-send-email-Dave.Martin@arm.com>
- <1558693533-13465-5-git-send-email-Dave.Martin@arm.com>
- <20190524130217.GA15566@lakrids.cambridge.arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190524130217.GA15566@lakrids.cambridge.arm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Fri, 24 May 2019 10:57:16 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37312 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2403917AbfEXO5Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 10:57:16 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4OEkvGN135185
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 10:57:14 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2spfj7a9jr-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 10:57:14 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Fri, 24 May 2019 15:57:12 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 24 May 2019 15:57:08 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4OEv76r22478954
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 May 2019 14:57:07 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B26D842041;
+        Fri, 24 May 2019 14:57:07 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 44B1C42047;
+        Fri, 24 May 2019 14:57:06 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.111.39])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 24 May 2019 14:57:06 +0000 (GMT)
+Subject: Re: [PATCH v6 1/3] Add a new ima hook ima_kexec_cmdline to measure
+ cmdline args
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Prakhar Srivastava <prsriva02@gmail.com>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     mjg59@google.com, roberto.sassu@huawei.com, vgoyal@redhat.com
+Date:   Fri, 24 May 2019 10:56:55 -0400
+In-Reply-To: <20190521000645.16227-2-prsriva02@gmail.com>
+References: <20190521000645.16227-1-prsriva02@gmail.com>
+         <20190521000645.16227-2-prsriva02@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19052414-0016-0000-0000-0000027F1275
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052414-0017-0000-0000-000032DC0F9A
+Message-Id: <1558709815.3977.56.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-24_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905240099
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 02:02:17PM +0100, Mark Rutland wrote:
-> Hi Dave,
+Hi Prakhar,
+
+On Mon, 2019-05-20 at 17:06 -0700, Prakhar Srivastava wrote:
+> Currently during kexec_file_load(soft reboot) the cmdline args
+> passed are not measured and the PCR values are not reset.
+
+This patch addresses not measuring the kexec boot cmdline.  I don't
+see a reason for mentioning anything about the PCR values not being
+reset.  Keep it simple.
+
+> This results in the new kernel to assume a secure boot was
+> followed. The boot args used to launch the new kernel need to be
+> measured and carried over to the next kernel to be used for
+> attestation. IMA supports only measuring files, no functionality
+> exists to measure a buffer(kexec cmdline).
 > 
-> This generally looks good, but I have a few comments below.
+> This change adds a new functionality to measure buffers
+> process_buffer_measurement which uses the hash of the buffer
+> instead of file hash to add an entry in the ima log.
+> A new ima hook ima_kexec_cmdline is also defined which calls
+> into process_buffer_measurement to add the kexec_cmdline args
+> to the log.
 > 
-> On Fri, May 24, 2019 at 11:25:29AM +0100, Dave Martin wrote:
-> > +#define arch_calc_vm_prot_bits(prot, pkey) arm64_calc_vm_prot_bits(prot)
-> > +static inline unsigned long arm64_calc_vm_prot_bits(unsigned long prot)
-> > +{
-> > +	if (system_supports_bti() && (prot & PROT_BTI_GUARDED))
-> > +		return VM_ARM64_GP;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +#define arch_vm_get_page_prot(vm_flags) arm64_vm_get_page_prot(vm_flags)
-> > +static inline pgprot_t arm64_vm_get_page_prot(unsigned long vm_flags)
-> > +{
-> > +	return (vm_flags & VM_ARM64_GP) ? __pgprot(PTE_GP) : __pgprot(0);
-> > +}
+> A new policy KEXEC_CMDLINE is also defined to control measuring the
+> kexec_cmdline buffer.
+> This patch only adds IMA_MEASURE as a supported functionality.
 > 
-> While the architectural name for the PTE bit is GP, it might make more
-> sense to call the vm flag VM_ARM64_BTI, since people are more likely to
-> recognise BTI than GP as a mnemonic.
+> - A new ima hook ima_kexec_cmdline is defined to be called by the
+> kexec code.
+> - A new function process_buffer_measurement is defined to measure
+> the buffer hash into the ima log.
+> - A new func policy KEXEC_CMDLINE is defined to control the measurement.
+
+Missing is how to verify the digest of the measurement list kexec boot
+cmdline entry based on /proc/cmdline.  Everything before the "root="
+in the /proc entry needs to be removed before calculating the hash.
+ Please include a sample shell command.
+
+Matthew's patch "IMA: Allow profiles to define the desired IMA
+template" will require changes to this patch.  Please rebase this
+patch set on top of it, once Matthew addresses the comments and re-
+posts.
+
+(Reminder: the patch description should be 70 - 75 characters.)
+
 > 
-> Not a big deal either way, though.
+> Signed-off-by: Prakhar Srivastava <prsriva02@gmail.com>
+> ---
 
-I'm happy to change it.  It's a kernel internal flag used in
-approximately zero places.  So whatever name is most intuitive for
-kernel maintainers is fine.  Nobody else needs to look at it.
+< snip >
 
-> > diff --git a/arch/arm64/include/asm/ptrace.h b/arch/arm64/include/asm/ptrace.h
-> > index b2de329..b868ef11 100644
-> > --- a/arch/arm64/include/asm/ptrace.h
-> > +++ b/arch/arm64/include/asm/ptrace.h
-> > @@ -41,6 +41,7 @@
-> >  
-> >  /* Additional SPSR bits not exposed in the UABI */
-> >  #define PSR_IL_BIT		(1 << 20)
-> > +#define PSR_BTYPE_CALL		(2 << 10)
-> 
-> I thought BTYPE was a 2-bit field, so isn't there at leat one other
-> value to have a mnemonic for?
-> 
-> Is it an enumeration or a bitmask?
+> --- a/security/integrity/ima/ima_main.c
+> +++ b/security/integrity/ima/ima_main.c
+> @@ -576,6 +576,83 @@ int ima_load_data(enum kernel_load_data_id id)
+>  	return 0;
+>  }
+>  
+> +/*
+> + * process_buffer_measurement - Measure the buffer to ima log.
+> + * @buf: pointer to the buffer that needs to be added to the log.
+> + * @size: size of buffer(in bytes).
+> + * @eventname: event name to be used for the buffer entry.
+> + * @cred: a pointer to a credentials structure for user validation.
+> + * @secid: the secid of the task to be validated.
+> + *
+> + * Based on policy, the buffer is measured into the ima log.
+> + */
+> +static void process_buffer_measurement(const void *buf, int size,
+> +				const char *eventname, const struct cred *cred,
+> +				u32 secid)
+> +{
+> +	int ret = 0;
+> +	struct ima_template_entry *entry = NULL;
+> +	struct integrity_iint_cache tmp_iint, *iint = &tmp_iint;
+> +	struct ima_event_data event_data = {iint, NULL, NULL,
+> +						NULL, 0, NULL};
 
-It's a 2-bit enumeration, and for now this is the only value that the
-kernel uses: this determines the types of BTI landing pad permitted at
-signal handler entry points in BTI guarded pages.
+Thiago's clean up patch initializes only specific variables, as
+needed.  Please initialize event_data like:
 
-Possibly it would be clearer to write it
+struct ima_event_data event_data = {.iint = iint};
 
-#define PSR_BTYPE_CALL		(0b10 << 10)
 
-but we don't write other ptrace.h constants this way.  In UAPI headers
-we should avoid GCC-isms, but here it's OK since we already rely on this
-syntax internally.
+> +	struct {
+> +		struct ima_digest_data hdr;
+> +		char digest[IMA_MAX_DIGEST_SIZE];
+> +	} hash;
+> +	int violation = 0;
+> +	int pcr = CONFIG_IMA_MEASURE_PCR_IDX;
+> +	int action = 0;
+> +
+> +	action = ima_get_action(NULL, cred, secid, 0, KEXEC_CMDLINE, &pcr);
+> +	if (!(action & IMA_MEASURE))
+> +		goto out;
+> +
+> +	memset(iint, 0, sizeof(*iint));
+> +	memset(&hash, 0, sizeof(hash));
+> +
+> +	event_data.filename = eventname;
+> +
+> +	iint->ima_hash = &hash.hdr;
+> +	iint->ima_hash->algo = ima_hash_algo;
+> +	iint->ima_hash->length = hash_digest_size[ima_hash_algo];
+> +
+> +	ret = ima_calc_buffer_hash(buf, size, iint->ima_hash);
+> +	if (ret < 0)
+> +		goto out;
+> +
+> +	ret = ima_alloc_init_template(&event_data, &entry);
+> +	if (ret < 0)
+> +		goto out;
+> +
+> +	if (action & IMA_MEASURE)
+> +		ret = ima_store_template(entry, violation, NULL, buf, pcr);
+> +
+> +	if (ret < 0) {
+> +		ima_free_template_entry(entry);
+> +	}
 
-I can change it if you prefer, though my preference is to leave it.
+Remove brackets.
 
-> >  #endif /* _UAPI__ASM_HWCAP_H */
-> > diff --git a/arch/arm64/include/uapi/asm/mman.h b/arch/arm64/include/uapi/asm/mman.h
-> > new file mode 100644
-> > index 0000000..4776b43
-> > --- /dev/null
-> > +++ b/arch/arm64/include/uapi/asm/mman.h
-> > @@ -0,0 +1,9 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> > +#ifndef _UAPI__ASM_MMAN_H
-> > +#define _UAPI__ASM_MMAN_H
-> > +
-> > +#include <asm-generic/mman.h>
-> > +
-> > +#define PROT_BTI_GUARDED	0x10		/* BTI guarded page */
-> 
-> From prior discussions, I thought this would be PROT_BTI, without the
-> _GUARDED suffix. Do we really need that?
-> 
-> AFAICT, all other PROT_* definitions only have a single underscore, and
-> the existing arch-specific flags are PROT_ADI on sparc, and PROT_SAO on
-> powerpc.
+Mimi
 
-No strong opinon.  I was trying to make the name less obscure, but I'm
-equally happy with PROT_BTI if people prefer that.
+> +
+> +out:
+> +	return;
+> +}
 
-> > diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
-> > index b82e0a9..3717b06 100644
-> > --- a/arch/arm64/kernel/ptrace.c
-> > +++ b/arch/arm64/kernel/ptrace.c
-> > @@ -1860,7 +1860,7 @@ void syscall_trace_exit(struct pt_regs *regs)
-> >   */
-> >  #define SPSR_EL1_AARCH64_RES0_BITS \
-> >  	(GENMASK_ULL(63, 32) | GENMASK_ULL(27, 25) | GENMASK_ULL(23, 22) | \
-> > -	 GENMASK_ULL(20, 13) | GENMASK_ULL(11, 10) | GENMASK_ULL(5, 5))
-> > +	 GENMASK_ULL(20, 13) | GENMASK_ULL(5, 5))
-> >  #define SPSR_EL1_AARCH32_RES0_BITS \
-> >  	(GENMASK_ULL(63, 32) | GENMASK_ULL(22, 22) | GENMASK_ULL(20, 20))
-> 
-> Phew; I was worried this would be missed!
-
-It was.  I had fun debugging that one :)
-
-> > @@ -741,6 +741,11 @@ static void setup_return(struct pt_regs *regs, struct k_sigaction *ka,
-> >  	regs->regs[29] = (unsigned long)&user->next_frame->fp;
-> >  	regs->pc = (unsigned long)ka->sa.sa_handler;
-> >  
-> > +	if (system_supports_bti()) {
-> > +		regs->pstate &= ~(regs->pstate & PSR_BTYPE_MASK);
-> 
-> Nit: that can be:
-> 
-> 		regs->pstate &= ~PSR_BTYPE_MASK;
-
-x & ~y is sensitive to the type of y and can clobber high bits, so I
-prefer not to write it.  GCC generates the same code either way.
-
-However, this will also trip us up elsewhere when the time comes, so
-maybe it's a waste of time working around it here.
-
-If you feel strongly, I'm happy to change it.
-
-> > diff --git a/arch/arm64/kernel/syscall.c b/arch/arm64/kernel/syscall.c
-> > index 5610ac0..85b456b 100644
-> > --- a/arch/arm64/kernel/syscall.c
-> > +++ b/arch/arm64/kernel/syscall.c
-> > @@ -66,6 +66,7 @@ static void el0_svc_common(struct pt_regs *regs, int scno, int sc_nr,
-> >  	unsigned long flags = current_thread_info()->flags;
-> >  
-> >  	regs->orig_x0 = regs->regs[0];
-> > +	regs->pstate &= ~(regs->pstate & PSR_BTYPE_MASK);
-> 
-> Likewise:
-> 
-> 	regs->pstate &= ~PSR_BTYPE_MASK;
-> 
-> ... though I don't understand why that would matter to syscalls, nor how
-> those bits could ever be set given we had to execute an SVC to get here.
-> 
-> What am I missing?
-
-The behaviour is counterintuivite here.  The architecture guarantees to
-preserve BTYPE for traps, faults and asynchronous exceptions, but for a
-synchronous execption from normal architectural execution of an
-exception-generating instruction (SVC/HVC/SMC) the architecture leaves
-it IMP DEF whether BTYPE is preserved or zeroed in SPSR.
-
-I suppose precisely because there's only one way to reach the SVC
-handler, software knows for certain whether zero SPSR.BTYPE in that
-case.  So hardware doesn't need to do it.
-
-This may also simplify some trapping/emulation scenarios, but I need to
-think about that.
-
-Hmmm, I need to go and look at the HVC entry points and SMC emulation in
-KVM though -- similar issues likely apply.  I didn't look.
-
-Same for the bootwrapper, and anything else with exception vectors.
-
-[...]
-
-Cheers
----Dave
