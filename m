@@ -2,204 +2,87 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C8DFC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 01:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90DD8C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 01:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9A5B2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 01:27:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=appneta.com header.i=@appneta.com header.b="GaZBo4/N"
+	by mail.kernel.org (Postfix) with ESMTP id 56CB52168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 01:30:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388769AbfEXB1q (ORCPT
+        id S2388770AbfEXBaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 21:27:46 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43081 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388654AbfEXB1q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 21:27:46 -0400
-Received: by mail-pg1-f196.google.com with SMTP id f25so4060181pgv.10
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 18:27:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=appneta.com; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=EVMg6Qtj7ikChCelvTU+2YJkv4PCfrgHPBFORJX3mFA=;
-        b=GaZBo4/N13xcQn4sMkr2O5w7wNgDefNiWAKdsS7AGvCIFyaNC0NzPzgxQN43sRjTao
-         mu3oRTyvQFjyVjkGf1I75HDbuiUS3N2KZGuRo/07GUpV/KVTxTLDd/Eys5H8BNiLOMUU
-         YsBrJYnINu4jiox+VecZg3XLXSm/9PU8Xh1TI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=EVMg6Qtj7ikChCelvTU+2YJkv4PCfrgHPBFORJX3mFA=;
-        b=j8OOUcxR5yJl/5zJeBrtTAVJdcM8tWiq3c9xm8NRkGvhh8dK9iXk6AMvqkMZQrJhr+
-         GsMB1r9p0lzhgIbhJZG+VGPujSmSEHeBmB1XkAMEqQOPl77z6lYQ3mMlWaObOHWJWEcr
-         zokqR22O3rszafphdGdtJE2Z6xk7XE+6e4pbOJ5XOcEFVAV+v7QCHOHwbFlh0xkGbnu/
-         OCl3uG5SqnGOj22zif8cHbCvvPUlgorrtce5KzmESxjmNp8wJvbOBiQlWs/ys9DS2kZj
-         tAII9kxTidpKQbRrosqgCV/qHW30dzZvucD8kOUuuLF3IgywoNKaYa3GFqBRAF2XKp3N
-         JDIg==
-X-Gm-Message-State: APjAAAXGSJI9qihEGiJ4/DO5BM1G/zpS91KXUEeKP11UR+ppp1FMLOuG
-        ONkJSj58s3WvxL3lSNDSBuyYqQ==
-X-Google-Smtp-Source: APXvYqyKssmrS9+A0qv02q3F8yGSQprA43jRQmjfROvEFJaqxDoRlQelfPhryzHN6zl2OxVRx0Wh3A==
-X-Received: by 2002:a17:90a:e390:: with SMTP id b16mr5606709pjz.137.1558661264376;
-        Thu, 23 May 2019 18:27:44 -0700 (PDT)
-Received: from [10.0.1.19] (S010620c9d00fc332.vf.shawcable.net. [70.71.167.160])
-        by smtp.gmail.com with ESMTPSA id c14sm516923pgl.43.2019.05.23.18.27.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 18:27:43 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH net 4/4] net/udpgso_bench_tx: audit error queue
-From:   Fred Klassen <fklassen@appneta.com>
-In-Reply-To: <CAF=yD-KBNLr5KY-YQ1KMmZGCpYNefSJKaJkZNOwd8nRiedpQtA@mail.gmail.com>
-Date:   Thu, 23 May 2019 18:27:41 -0700
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        Willem de Bruijn <willemb@google.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D68C643B-C6A4-4EC5-8E4F-368BDE03760B@appneta.com>
-References: <20190523210651.80902-1-fklassen@appneta.com>
- <20190523210651.80902-5-fklassen@appneta.com>
- <CAF=yD-KBNLr5KY-YQ1KMmZGCpYNefSJKaJkZNOwd8nRiedpQtA@mail.gmail.com>
-To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-X-Mailer: Apple Mail (2.3445.104.8)
+        Thu, 23 May 2019 21:30:10 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:34382 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388141AbfEXBaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 21:30:10 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 545011A0345;
+        Fri, 24 May 2019 03:30:08 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 946971A0342;
+        Fri, 24 May 2019 03:30:04 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 9D0824029F;
+        Fri, 24 May 2019 09:29:59 +0800 (SGT)
+From:   Yuantian Tang <andy.tang@nxp.com>
+To:     shawnguo@kernel.org
+Cc:     leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Yuantian Tang <andy.tang@nxp.com>
+Subject: [PATCH] arm64: dts: ls1028a: Add temperature sensor node
+Date:   Fri, 24 May 2019 09:21:51 +0800
+Message-Id: <20190524012151.31840-1-andy.tang@nxp.com>
+X-Mailer: git-send-email 2.14.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Willem, this is only my 2nd patch, and my last one was a one liner.
-I=E2=80=99ll try to work through this, but let me know if I am doing a =
-rookie
-mistake (learning curve and all).
+Add nxp sa56004 chip node for temperature monitor.
 
+Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts | 5 +++++
+ arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts | 5 +++++
+ 2 files changed, 10 insertions(+)
 
-> On May 23, 2019, at 2:56 PM, Willem de Bruijn =
-<willemdebruijn.kernel@gmail.com> wrote:
->=20
-> On Thu, May 23, 2019 at 5:11 PM Fred Klassen <fklassen@appneta.com> =
-wrote:
->>=20
->> This enhancement adds the '-a' option, which will count all CMSG
->> messages on the error queue and print a summary report.
->>=20
->> Fixes: 3a687bef148d ("selftests: udp gso benchmark")
->=20
-> Also not a fix, but an extension.
-
-I=E2=80=99ll make a v2 patch and remove =E2=80=9CFixes:".
-
->=20
->>=20
->> Example:
->>=20
->>    # ./udpgso_bench_tx -4uT -a -l5 -S 1472 -D 172.16.120.189
->>    udp tx:    492 MB/s     8354 calls/s   8354 msg/s
->>    udp tx:    477 MB/s     8106 calls/s   8106 msg/s
->>    udp tx:    488 MB/s     8288 calls/s   8288 msg/s
->>    udp tx:    882 MB/s    14975 calls/s  14975 msg/s
->>    Summary over 5.000 seconds ...
->>    sum udp tx:    696 MB/s      57696 calls (11539/s)  57696 msgs =
-(11539/s)
->>    Tx Timestamps: received:     57696   errors: 0
->>=20
->> This can be useful in tracking loss of messages when under load. For =
-example,
->> adding the '-z' option results in loss of TX timestamp messages:
->>=20
->>    # ./udpgso_bench_tx -4ucT -a -l5 -S 1472 -D 172.16.120.189 -p 3239 =
--z
->>    udp tx:    490 MB/s     8325 calls/s   8325 msg/s
->>    udp tx:    500 MB/s     8492 calls/s   8492 msg/s
->>    udp tx:    883 MB/s    14985 calls/s  14985 msg/s
->>    udp tx:    756 MB/s    12823 calls/s  12823 msg/s
->>    Summary over 5.000 seconds ...
->>    sum udp tx:    657 MB/s      54429 calls (10885/s)  54429 msgs =
-(10885/s)
->>    Tx Timestamps: received:     34046   errors: 0
->>    Zerocopy acks: received:     54422   errors: 0
->=20
-> This would probably also be more useful as regression test if it is in
-> the form of a pass/fail test: if timestamps are requested and total
-> count is zero, then the feature is broken and the process should exit
-> with an error.
->=20
-
-I=E2=80=99ll add a hard failure for zero response for TX Timestamps or =
-Zerocopy,
-or if any errors occur.
-
-
->>=20
->> Fixes: 3a687bef148d ("selftests: udp gso benchmark")
->=20
-> Repeated
-
-Will fix.
->=20
->> Signed-off-by: Fred Klassen <fklassen@appneta.com>
->> ---
->> tools/testing/selftests/net/udpgso_bench_tx.c | 152 =
-+++++++++++++++++++-------
->> 1 file changed, 113 insertions(+), 39 deletions(-)
->>=20
->> diff --git a/tools/testing/selftests/net/udpgso_bench_tx.c =
-b/tools/testing/selftests/net/udpgso_bench_tx.c
->> index 56e0d890b066..9924342a0b03 100644
->> --- a/tools/testing/selftests/net/udpgso_bench_tx.c
->> +++ b/tools/testing/selftests/net/udpgso_bench_tx.c
->> @@ -62,10 +62,19 @@ static bool cfg_tcp;
->> static uint32_t        cfg_tx_ts =3D SOF_TIMESTAMPING_TX_SOFTWARE;
->> static bool    cfg_tx_tstamp;
->> static uint32_t        cfg_tos;
->> +static bool    cfg_audit;
->> static bool    cfg_verbose;
->> static bool    cfg_zerocopy;
->> static int     cfg_msg_nr;
->> static uint16_t        cfg_gso_size;
->> +static unsigned long total_num_msgs;
->> +static unsigned long total_num_sends;
->> +static unsigned long stat_tx_ts;
->> +static unsigned long stat_tx_ts_errors;
->> +static unsigned long tstart;
->> +static unsigned long tend;
->> +static unsigned long stat_zcopies;
->> +static unsigned long stat_zcopy_errors;
->>=20
->> static socklen_t cfg_alen;
->> static struct sockaddr_storage cfg_dst_addr;
->> @@ -137,8 +146,11 @@ static void flush_cmsg(struct cmsghdr *cmsg)
->>                        struct my_scm_timestamping *tss;
->>=20
->>                        tss =3D (struct my_scm_timestamping =
-*)CMSG_DATA(cmsg);
->> -                       fprintf(stderr, "tx timestamp =3D =
-%lu.%09lu\n",
->> -                               tss->ts[i].tv_sec, =
-tss->ts[i].tv_nsec);
->> +                       if (tss->ts[i].tv_sec =3D=3D 0)
->> +                               stat_tx_ts_errors++;
->> +                       if (cfg_verbose)
->> +                               fprintf(stderr, "tx timestamp =3D =
-%lu.%09lu\n",
->> +                                       tss->ts[i].tv_sec, =
-tss->ts[i].tv_nsec);
->=20
-> changes unrelated to this feature?
-
-I=E2=80=99ll remove. Do you think that I should pull out any messages =
-related
-to =E2=80=9Ccfg_verbose=E2=80=9D?=20
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+index b359068d9605..31fd626dd344 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+@@ -131,6 +131,11 @@
+ 				compatible = "atmel,24c512";
+ 				reg = <0x57>;
+ 			};
++
++			temp@4c {
++				compatible = "nxp,sa56004";
++				reg = <0x4c>;
++			};
+ 		};
+ 
+ 		i2c@5 {
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+index f9c272fb0738..012b3f8696b7 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+@@ -119,6 +119,11 @@
+ 				compatible = "nxp,pcf2129";
+ 				reg = <0x51>;
+ 			};
++
++			temp@4c {
++				compatible = "nxp,sa56004";
++				reg = <0x4c>;
++			};
+ 		};
+ 	};
+ };
+-- 
+2.17.1
 
