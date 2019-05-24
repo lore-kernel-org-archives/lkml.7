@@ -2,73 +2,92 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FB6C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E2FC282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:43:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96FA721773
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:43:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C9fFwYVN"
+	by mail.kernel.org (Postfix) with ESMTP id 7656021773
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:43:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558716226;
+	bh=ggW23MrZkRt9rW5CmH9tG1BXOSlW9TRFJp98uIdvoKI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=AfAgvO3a9IGYMdGOKeVBCNsQrgm4572XXp30iqjpXZLBofVSBDt4fKbToxHcW9FgN
+	 wc9CfUsNHh3HSDcfLUZy/5us66x8cas4Qj+qWey3F8ASQrW5RXIvRhOeJpUyJuauPu
+	 yawlj/KMieeZmEr+3n67Lka7c42id2Oqf0pZRXgs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390813AbfEXQnm (ORCPT
+        id S2390915AbfEXQnq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 12:43:42 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46432 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390314AbfEXQnl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 12:43:41 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y11so795736pfm.13;
-        Fri, 24 May 2019 09:43:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Hs6h6Dgd1YCJieChdKMoYG/F0MKYbjsY/eSGua0Qxeg=;
-        b=C9fFwYVN6U5H/GTP4DwlmFxR9piykObPH4+srce8G0o5RRfx3Vm1ask5lZK/DnNoXY
-         f6m41rrMmP0p1W9D2fIAUSMy954o8chKiMp4sQh4j9/Ip2JlbW0ruTucLPWUC8gk5172
-         ykxfoa/Sr2U/Cgl6+L1i0HUErRjEWNuLsrvVlRaYG0X3kTykuKUKSrrkWJ5nIJgUMBnW
-         ZpfChUvXEncy3me+h3PJgztLJvPwA7t2EUkyM/cUbCHFbBiimJ+VpQP/m0l8Oosvd78b
-         tiBlg9/0pvZGpi700v8ib8owf3SPZ1qe5xpDgGcRWIxFAQcJR2Ig52OP7wHUPV5rXyu8
-         pmVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Hs6h6Dgd1YCJieChdKMoYG/F0MKYbjsY/eSGua0Qxeg=;
-        b=PVDcCqSceIyItNQpETNKeOJ5XiJW16gV4wY5Bc/h0JZjsomSJPxJEfeg5jCpzfgKPY
-         MAiOF+xL1/LbAohCMvhcbQNvSlyS6gFowuTwfaZvVD++lq1ZiQ7f0LIXhgAg7ecJekRx
-         rK0Tk2Ia49Kp9mHP2E/2TBCmRRTSyBe/gy8UiKz6946mGQw+D4B8LEiPxOknXciRZmXt
-         1ZB5tlpN+ilKxDkH9igWPqtcYGhILyGkKyqOZAeUe0BEX5KrLxinNSv1QtL0HFiH06G8
-         eCGBX0J7KXytmaSF+AnH0DHjFFx+EBaLtS0lbFSF9M/6mt3MIOiSqdxHaPdILWdrFaO6
-         UscQ==
-X-Gm-Message-State: APjAAAUDZlLLeAKzRfb6OWpiVASYNZ8KZwb8TZ98BFNLTD/Id1Hv1w6j
-        V4hdhb756v6vAD0u2SmF31Sn8oNTs2W/gY8RP7o=
-X-Google-Smtp-Source: APXvYqzXSRVvNXdMjkTZ+soAuasix3Sv25okqcaS75wOeO+F4gLU2nJjITJsHMTnEQ1/fzx+rOiK3DTLi+kBuLwlvi0=
-X-Received: by 2002:a17:90a:778b:: with SMTP id v11mr10825449pjk.132.1558716220822;
+        Fri, 24 May 2019 12:43:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40626 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390605AbfEXQnn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 12:43:43 -0400
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C613921873
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 16:43:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558716222;
+        bh=ggW23MrZkRt9rW5CmH9tG1BXOSlW9TRFJp98uIdvoKI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jBQ0Q2nxFeX8XMrkvwPiJGo7pwylggWf2/AyVI2PbYXi7qr65UaaQpTHCRAVkeNQd
+         SkIjpqT59HmsQJkrUovhNQAVEdd1GqLw7qi5lCcFYpOKaEWViUELx9+sl5g67pPwey
+         USG1epbHZl0BoGkrG+LWoa7w/PJlzomL6a1Q3Lq0=
+Received: by mail-wr1-f45.google.com with SMTP id f8so10699152wrt.1
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 09:43:41 -0700 (PDT)
+X-Gm-Message-State: APjAAAWWybpC7/fbPNS66Lz4jNApi/+PIhfUS7gh8W9CqYMvNwOCsRgR
+        lReTfiDXL02h3E1mTn7B08RlYcRlJ6L4VAK/m1ABCg==
+X-Google-Smtp-Source: APXvYqyggkvONNjNv0hDqKOGkisM3NKy4emIEsenROzIg+slkkM4mIbFl4MeDSbBPYXfV6Uy6VAslybbXyN+JYL5RVA=
+X-Received: by 2002:adf:e9ca:: with SMTP id l10mr5325072wrn.47.1558716220228;
  Fri, 24 May 2019 09:43:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190521062837.3887-1-hdegoede@redhat.com>
-In-Reply-To: <20190521062837.3887-1-hdegoede@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 24 May 2019 19:43:30 +0300
-Message-ID: <CAHp75Vf6qzq3O1qz481FRuT1MN2EZOV43FpoSCC-vqATzyRF8w@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: asus-wmi: Only Tell EC the OS will handle
- display hotkeys from asus_nb_wmi
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        acpi4asus-user <acpi4asus-user@lists.sourceforge.net>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
+References: <20190521155140.GE22089@linux.intel.com> <20190522132022.GC31176@linux.intel.com>
+ <20190522132227.GD31176@linux.intel.com> <0e183cce-c4b4-0e10-dbb6-bd81bea58b66@tycho.nsa.gov>
+ <20190522153836.GA24833@linux.intel.com> <CALCETrUS8xyF1JJmQs18BGTDhPRXf+s81BkMZCZwmY73r7M+zg@mail.gmail.com>
+ <20190523023517.GA31950@linux.intel.com> <20190523102628.GC10955@linux.intel.com>
+ <20190523141752.GA12078@linux.intel.com> <CALCETrUzx3LPAKCLFf75P-XshAkRcr+JLET3LA_kHDs9MA11FA@mail.gmail.com>
+ <20190523234044.GC12078@linux.intel.com> <CALCETrV4DVEfW6EJ6DnQGGYDJAiA5M1QcuYJTiroumOM+D6Jjg@mail.gmail.com>
+ <960B34DE67B9E140824F1DCDEC400C0F654E8956@ORSMSX116.amr.corp.intel.com>
+In-Reply-To: <960B34DE67B9E140824F1DCDEC400C0F654E8956@ORSMSX116.amr.corp.intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 24 May 2019 09:43:27 -0700
+X-Gmail-Original-Message-ID: <CALCETrX0WqouSWgdM+LNxMzypa0ZHZXTmJ+nNkuPuL8UOF_f2w@mail.gmail.com>
+Message-ID: <CALCETrX0WqouSWgdM+LNxMzypa0ZHZXTmJ+nNkuPuL8UOF_f2w@mail.gmail.com>
+Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+To:     "Xing, Cedric" <cedric.xing@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,118 +95,294 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 9:28 AM Hans de Goede <hdegoede@redhat.com> wrote:
+On Fri, May 24, 2019 at 12:24 AM Xing, Cedric <cedric.xing@intel.com> wrote=
+:
 >
-> Commit 78f3ac76d9e5 ("platform/x86: asus-wmi: Tell the EC the OS will
-> handle the display off hotkey") causes the backlight to be permanently of=
-f
-> on various EeePC laptop models using the eeepc-wmi driver (Asus EeePC
-> 1015BX, Asus EeePC 1025C).
+> Hi Andy,
 >
-> The asus_wmi_set_devstate(ASUS_WMI_DEVID_BACKLIGHT, 2, NULL) call added
-> by that commit is made conditional in this commit and only enabled in
-> the quirk_entry structs in the asus-nb-wmi driver fixing the broken
-> display / backlight on various EeePC laptop models.
+> > From: Andy Lutomirski [mailto:luto@kernel.org]
+> > Sent: Thursday, May 23, 2019 6:18 PM
+> >
+> > On Thu, May 23, 2019 at 4:40 PM Sean Christopherson <sean.j.christopher=
+son@intel.com>
+> > wrote:
+> > >
+> > > On Thu, May 23, 2019 at 08:38:17AM -0700, Andy Lutomirski wrote:
+> > > > On Thu, May 23, 2019 at 7:17 AM Sean Christopherson
+> > > > <sean.j.christopherson@intel.com> wrote:
+> > > > >
+> > > > > On Thu, May 23, 2019 at 01:26:28PM +0300, Jarkko Sakkinen wrote:
+> > > > > > On Wed, May 22, 2019 at 07:35:17PM -0700, Sean Christopherson w=
+rote:
+> > > > > > > But actually, there's no need to disallow mmap() after ECREAT=
+E
+> > > > > > > since the LSM checks also apply to mmap(), e.g. FILE__EXECUTE
+> > > > > > > would be needed to
+> > > > > > > mmap() any enclave pages PROT_EXEC.  I guess my past self
+> > > > > > > thought mmap() bypassed LSM checks?  The real problem is that
+> > > > > > > mmap()'ng an existing enclave would require FILE__WRITE and
+> > > > > > > FILE__EXECUTE, which puts us back at square one.
+> > > > > >
+> > > > > > I'm lost with the constraints we want to set.
+> > > > >
+> > > > > As is today, SELinux policies would require enclave loaders to
+> > > > > have FILE__WRITE and FILE__EXECUTE permissions on
+> > > > > /dev/sgx/enclave.  Presumably other LSMs have similar
+> > > > > requirements.  Requiring all processes to have
+> > > > > FILE__{WRITE,EXECUTE} permissions means the permissions don't add
+> > > > > much value, e.g. they can't be used to distinguish between an
+> > > > > enclave that is being loaded from an unmodified file and an encla=
+ve that is being
+> > generated on the fly, e.g. Graphene.
+> > > > >
+> > > > > Looking back at Andy's mail, he was talking about requiring
+> > > > > FILE__EXECUTE to run an enclave, so perhaps it's only FILE__WRITE
+> > > > > that we're trying to special case.
+> > > > >
+> > > >
+> > > > I thought about this some more, and I have a new proposal that help=
+s
+> > > > address the ELRANGE alignment issue and the permission issue at the
+> > > > cost of some extra verbosity.  Maybe you all can poke holes in it :=
+)
+> > > > The basic idea is to make everything more explicit from a user's
+> > > > perspective.  Here's how it works:
+> > > >
+> > > > Opening /dev/sgx/enclave gives an enclave_fd that, by design,
+> > > > doesn't give EXECUTE or WRITE.  mmap() on the enclave_fd only works
+> > > > if you pass PROT_NONE and gives the correct alignment.  The
+> > > > resulting VMA cannot be mprotected or mremapped.  It can't be
+> > > > mmapped at all until
+> > >
+> > > I assume you're thinking of clearing all VM_MAY* flags in sgx_mmap()?
+> > >
+> > > > after ECREATE because the alignment isn't known before that.
+> > >
+> > > I don't follow.  The alignment is known because userspace knows the
+> > > size of its enclave.  The initial unknown is the address, but that
+> > > becomes known once the initial mmap() completes.
+> >
+> > [...]
+> >
+> > I think I made the mistake of getting too carried away with implementat=
+ion details rather
+> > than just getting to the point.  And I misremembered the ECREATE flow -=
+- oops.  Let me try
+> > again.  First, here are some problems with some earlier proposals (mine=
+, yours
+> > Cedric's):
+> >
+> >  - Having the EADD operation always work but have different effects dep=
+ending on the
+> > source memory permissions is, at the very least, confusing.
+>
+> Inheriting permissions from source pages IMHO is the easiest way to valid=
+ate the EPC permissions without any changes to LSM. And the argument about =
+its security is also easy to make.
+>
+> I understand that it may take some effort to document it properly but oth=
+erwise don't see any practical issues with it.
+
+My objection is to the fact that it's implicit.  I have no problem
+with some operation succeeding if the source address is X and failing
+if it's !X, but I don't think it's fantastic to have it succeed in
+either case but do different things.
+
+For what it's worth, while this is a bit of a theoretical issue for X,
+but I think it's a real problem with W.  To avoid accidentally mapping
+an enclave page X and then later mapping the same page W (potentially
+in a different VMA), I think it will be a lot simpler if the driver
+can track which pages are allowed to ever be W.  We definitely *don't*
+want an interface in which the eventual writability of a page is
+inferred from the W permission on the source address, since we do
+*not* want to force anyone to map their enclave file PROT_WRITE or
+even to open it O_RDWR.
+
+With the explicit MAXPERM passed in, this issue goes away.  You can
+specify W if you want W.
+
+>
+> >
+> >  - If we want to encourage user programs to be well-behaved, we want to=
+ make it easy to
+> > map the RX parts of an enclave RX, the RW parts RW, the RO parts R, etc=
+.  But this
+> > interacts poorly with the sgx_mmap() alignment magic, as you've pointed=
+ out.
+> >
+> >  - We don't want to couple LSMs with SGX too tightly.
+> >
+> > So here's how a nice interface might work:
+> >
+> > int enclave_fd =3D open("/dev/sgx/enclave", O_RDWR);
+> >
+> > /* enclave_fd points to a totally blank enclave. Before ECREATE, we nee=
+d to decide on an
+> > address. */
+> >
+> > void *addr =3D mmap(NULL, size, PROT_NONE, MAP_SHARED, enclave_fd, 0);
+> >
+> > /* we have an address! */
+> >
+> > ioctl(enclave_fd, ECREATE, ...);
+> >
+> > /* now add some data to the enclave.  We want the RWX addition to fail
+> > immediately unless we have the relevant LSM pemission.   Similarly, we
+> > want the RX addition to fail immediately unless the source VMA is appro=
+priate. */
+> >
+> > ioctl(enclave_fd, EADD, rx_source_1, MAXPERM=3DRX, ...);  [the ...
+> > includes SECINFO, which the kernel doesn't really care about] ioctl(enc=
+lave_fd, EADD,
+> > ro_source_1, MAXPERM=3DRX ...); ioctl(enclave_fd, EADD, rw_source_1, MA=
+XPERM=3DRW ...);
+> > ioctl(enclave_fd, EADD, rwx_source_1, MAXPERM=3DRWX ...);
+>
+> If MAXPERM is taken from ioctl parameters, the real question here is how =
+to validate MAXPERM. Guess we shouldn't allow arbitrary MAXPERM to be speci=
+fied by user code, and the only logical source I can think of is from the s=
+ource pages (or from the enclave source file, but memory mapping is preferr=
+ed because it offers more flexibility).
+
+That's exactly what I intended here.  If you specify MAXPERM=3DRX, then
+the kernel can validate that the source address is executable.
+
+>
+> >
+> > ioctl(enclave_fd, EINIT, ...);  /* presumably pass sigstruct_fd here, t=
+oo. */
+> >
+> > /* at this point, all is well except that the enclave is mapped PROT_NO=
+NE. There are a
+> > couple ways I can imagine to fix this. */
+> >
+> > We could use mmap:
+> >
+> > mmap(baseaddr+offset, len, PROT_READ, MAP_SHARED | MAP_FIXED, enclave_f=
+d, 0);  /* only
+> > succeeds if MAXPERM & R =3D=3D R */
+> >
+> > But this has some annoying implications with regard to sgx_get_unmapped=
+_area().  We could
+> > use an ioctl:
+>
+> There's an easy fix. Just let sgx_get_unmapped_area() do the natural alig=
+nment only if MAP_FIXED is *not* set, otherwise, honor both address and len=
+.
+>
+> But mmap() is subject to LSM check (probably against /dev/sgx/enclave?). =
+How to do mmap(RX) if FILE__EXECUTE is *not* granted for /dev/sgx/enclave, =
+even if MAXPERM=3DRX?
+
+I think we just let /dev/sgx/enclave be FILE__EXECUTE.  We don't
+*have* to make it so that FILE__WRITE and FILE__EXECUTE on
+/dev/sgx/enclave means you can create RWX enclave mappings.
+
+>
+> >
+> > ioctl(enclave_fd, SGX_IOC_MPROTECT, offset, len, PROT_READ);
+> >
+> > which has the potentially nice property that we can completely bypass t=
+he LSM hooks,
+> > because the LSM has *already* vetted everything when the EADD calls wer=
+e allowed.  Or we
+> > could maybe even just use
+> > mprotect() itself:
+> >
+> > mprotect(baseaddr + offset, len, PROT_READ);
+>
+> How to bypass LSM hooks in this mprotect()?
+
+Hmm.  I guess we either use FILE__WRITE and FILE__EXECUTE or we use ioctl()=
+.
+
+>
+> >
+> > Or, for the really evil option, we could use a bit of magic in .fault a=
+nd do nothing here.
+> > Instead we'd make the initial mapping PROT_READ|PROT_WRITE|PROT_EXEC an=
+d have .fault
+> > actually instantiate the PTEs with the intersection of the VMA permissi=
+ons and MAXPERM.  I
+> > don't think I like this alternative, since it feels more magical than n=
+eeded and it will
+> > be harder to debug.  I like the fact that /proc/self/maps shows the act=
+ual permissions in
+> > all the other variants.
+>
+> Agreed.
+>
+> >
+> >
+> > All of the rest of the crud in my earlier email was just implementation=
+ details.  The
+> > point I was trying to make was that I think it's possible to implement =
+this without making
+> > too much of a mess internally.  I think I favor the mprotect() approach=
+ since it makes the
+> > behavior fairly obvious.
+> >
+> > I don't think any of this needs to change for SGX2.  We'd have an
+> > ioctl() that does EAUG and specifies MAXPERM.  Trying to mprotect() a p=
+age that hasn't
+> > been added yet with any permission other than PROT_NONE would fail.  I =
+suppose we might
+> > end up needing a way to let the EAUG operation *change* MAXPERM, and th=
+is operation would
+> > have to do some more LSM checks and walk all the existing mappings to m=
+ake sure they're
+> > consistent with the new MAXPERM.
+>
+> EAUG ioctl could be a solution, but isn't optimal at least. What we've do=
+ne is #PF based. Specifically, an SGX2 enclave will have its heap mapped as=
+ RW, but without any pages populated before EINIT. Then when the enclave ne=
+eds a new page in its heap, it issues EACCEPT, which will cause a #PF and t=
+he driver will respond by EAUG a new EPC page. And then the enclave will be=
+ resumed and the faulted EACCEPT will be retried (and succeed).
 >
 
-Hmm... doesn't apply.
+If the driver works like that, then whatever call sets up this lazily
+allocated heap could do the MAXPERM part.
 
-> Cc: Jo=C3=A3o Paulo Rechi Vita <jprvita@endlessm.com>
-> Fixes: 78f3ac76d9e5 ("platform/x86: asus-wmi: Tell the EC the OS will han=
-dle the display off hotkey")
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/platform/x86/asus-nb-wmi.c | 8 ++++++++
->  drivers/platform/x86/asus-wmi.c    | 2 +-
->  drivers/platform/x86/asus-wmi.h    | 1 +
->  3 files changed, 10 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/as=
-us-nb-wmi.c
-> index b6f2ff95c3ed..59f3a37a44d7 100644
-> --- a/drivers/platform/x86/asus-nb-wmi.c
-> +++ b/drivers/platform/x86/asus-nb-wmi.c
-> @@ -78,10 +78,12 @@ static bool asus_q500a_i8042_filter(unsigned char dat=
-a, unsigned char str,
->
->  static struct quirk_entry quirk_asus_unknown =3D {
->         .wapf =3D 0,
-> +       .wmi_backlight_set_devstate =3D true,
->  };
->
->  static struct quirk_entry quirk_asus_q500a =3D {
->         .i8042_filter =3D asus_q500a_i8042_filter,
-> +       .wmi_backlight_set_devstate =3D true,
->  };
->
->  /*
-> @@ -92,26 +94,32 @@ static struct quirk_entry quirk_asus_q500a =3D {
->  static struct quirk_entry quirk_asus_x55u =3D {
->         .wapf =3D 4,
->         .wmi_backlight_power =3D true,
-> +       .wmi_backlight_set_devstate =3D true,
->         .no_display_toggle =3D true,
->  };
->
->  static struct quirk_entry quirk_asus_wapf4 =3D {
->         .wapf =3D 4,
-> +       .wmi_backlight_set_devstate =3D true,
->  };
->
->  static struct quirk_entry quirk_asus_x200ca =3D {
->         .wapf =3D 2,
-> +       .wmi_backlight_set_devstate =3D true,
->  };
->
->  static struct quirk_entry quirk_asus_ux303ub =3D {
->         .wmi_backlight_native =3D true,
-> +       .wmi_backlight_set_devstate =3D true,
->  };
->
->  static struct quirk_entry quirk_asus_x550lb =3D {
-> +       .wmi_backlight_set_devstate =3D true,
->         .xusb2pr =3D 0x01D9,
->  };
->
->  static struct quirk_entry quirk_asus_forceals =3D {
-> +       .wmi_backlight_set_devstate =3D true,
->         .wmi_force_als_set =3D true,
->  };
->
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-=
-wmi.c
-> index ee1fa93708ec..a66e99500c12 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -2131,7 +2131,7 @@ static int asus_wmi_add(struct platform_device *pde=
-v)
->                 err =3D asus_wmi_backlight_init(asus);
->                 if (err && err !=3D -ENODEV)
->                         goto fail_backlight;
-> -       } else
-> +       } else if (asus->driver->quirks->wmi_backlight_set_devstate)
->                 err =3D asus_wmi_set_devstate(ASUS_WMI_DEVID_BACKLIGHT, 2=
-, NULL);
->
->         status =3D wmi_install_notify_handler(asus->driver->event_guid,
-> diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-=
-wmi.h
-> index 6c1311f4b04d..57a79bddb286 100644
-> --- a/drivers/platform/x86/asus-wmi.h
-> +++ b/drivers/platform/x86/asus-wmi.h
-> @@ -44,6 +44,7 @@ struct quirk_entry {
->         bool store_backlight_power;
->         bool wmi_backlight_power;
->         bool wmi_backlight_native;
-> +       bool wmi_backlight_set_devstate;
->         bool wmi_force_als_set;
->         int wapf;
->         /*
-> --
-> 2.21.0
->
+That being said, is the performance advantage from putting this logic
+in the kernel instead of in the untrusted part of the SDK really
+worthwhile?
 
+> >
+> > As an aside, I wonder if Linus et all would be okay with a new MAP_FULL=
+Y_ALIGNED mmap()
+> > flag that allocated memory aligned to the requested size.  Then we coul=
+d get rid of yet
+> > another bit of magic.
+> >
+> > --Andy
+>
+> I've also got a chance to think more about it lately.
+>
+> When we talk about EPC page permissions with SGX2 in mind, I think we sho=
+uld distinguish between initial permissions and runtime permissions. Initia=
+l permissions refer to the page permissions set at EADD. They are technical=
+ly set by "untrusted" code so should go by policies similar to those applic=
+able to regular shared objects. Runtime permissions refer to the permission=
+s granted by EMODPE, EAUG and EACCEPTCOPY. They are resulted from inherent =
+behavior of the enclave, which in theory is determined by the enclave's mea=
+surements (MRENCLAVE and/or MRSIGNER).
+>
+> And we have 2 distinct files to work with - the enclave file and /dev/sgx=
+/enclave. And I consider the enclave file a logical source for initial perm=
+issions while /dev/sgx/enclave is a means to control runtime permissions. T=
+hen we can have a simpler approach like the pseudo code below.
+>
+> /**
+>  * Summary:
+>  * - The enclave file resembles a shared object that contains RO/RX/RW se=
+gments
+>  * - FILE__* are assigned to /dev/sgx/enclave, to determine acceptable pe=
+rmissions to mmap()/mprotect(), valid combinations are
+>  *   + FILE__READ - Allow SGX1 enclaves only
+>  *   + FILE__READ|FILE__WRITE - Allow SGX2 enclaves to expand data segmen=
+ts (e.g. heaps, stacks, etc.)
 
---=20
-With Best Regards,
-Andy Shevchenko
+I think this is a non-starter :(  FILE__WRITE also means that you can
+write to the file, and the admin / policy author will almost never
+want to allow that.
