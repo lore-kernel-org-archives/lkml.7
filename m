@@ -2,97 +2,121 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36894C282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 22:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B44C282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 22:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED7142184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 22:27:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558736843;
-	bh=SDoIvluJch9/n7yS60HKo4yatPF0jkw/bEYV06KPYVM=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=YVA6nZKqdelZTWbYixLRJlQJXw79PpSFvwWIwvLykUjaBKA9Ib+zn6lVKhb8n/dUh
-	 3ogFpGnw+h1ehT7QOb1PV1ByNWqDay71ZdnJos88s9gSn2E1gb1USJ8hb0dI7gRlDi
-	 gcXZx5NvkYPGKC15rH0O816bRIvpf42KcjVkIYW8=
+	by mail.kernel.org (Postfix) with ESMTP id DAC2621848
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 22:32:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404392AbfEXW1W (ORCPT
+        id S2404393AbfEXWcL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 18:27:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60674 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404343AbfEXW1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 18:27:21 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 786DF21848;
-        Fri, 24 May 2019 22:27:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558736841;
-        bh=SDoIvluJch9/n7yS60HKo4yatPF0jkw/bEYV06KPYVM=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=St9heaFc1DBQI4jtZg82szDgH3oHDso9H4ueTv1e3yw8VjnbQ68w00gU6ToxklC1J
-         NMLfhfeMdLwB4zP+yqchvWdqMGG5CFEZil6VqhXwtuyqZPtknjvFGZLTr9JEzeR4rr
-         SkpHSrHEZeyhx1MyGGtorXkeliIVadoW0Gkygj2k=
-Date:   Sat, 25 May 2019 00:27:17 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Keith Busch <kbusch@kernel.org>
-cc:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        Hannes Reinecke <hare@suse.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org
-Subject: Re: [5.2-rc1 regression]: nvme vs. hibernation
-In-Reply-To: <20190524154429.GE15192@localhost.localdomain>
-Message-ID: <nycvar.YFH.7.76.1905250023380.1962@cbobk.fhfr.pm>
-References: <nycvar.YFH.7.76.1905241706280.1962@cbobk.fhfr.pm> <20190524154429.GE15192@localhost.localdomain>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Fri, 24 May 2019 18:32:11 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:35339 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404176AbfEXWcK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 18:32:10 -0400
+Received: by mail-ot1-f68.google.com with SMTP id n14so10107588otk.2;
+        Fri, 24 May 2019 15:32:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MVeRAKhCRQ02qZS9WMOT7P0FRvYl1V3YDTvinSJEfGc=;
+        b=QYpqU2LNG33XuZDh3KHkAfGzoCU/ce312YNG6R47+HxEGgFE6YIqczhQMpd9nVW0bl
+         eAuRS4PQCOBBOpeYNlANAe07HhRYm1zJ0o4FM/1Qij62+RuH0neM/MFIJhLn8EKg6kIe
+         QNZWkY1pgQVEfOm78tYhG9G6j5ywqvDmgXAYBhTFN3B/VfNWYgnryE/vRpMPCAPt8lAI
+         BgTNxs2y0+lxPBqQWqgURABMGwTsD33VeSye41HXENiqbw5Ev9uoGVAOCc1JZEw/IMpr
+         ltWAHVT3xuuTa1/CTGj72Mg0DHH1jd4FgGQTHxqGXjVRLZTlH3hUX8m0TuO3ykkHoZEP
+         Kacw==
+X-Gm-Message-State: APjAAAVtxusubqHky5JcFupYUIBykA4giTFDuOIndTN8fXDCgF9iZRnl
+        bc7ruIuPjhLKOOZQMSuwbeiLltUtpyg=
+X-Google-Smtp-Source: APXvYqygcOrEBg6geV/M3/I/lozE/24T1Vv3zX1xouapOwgVnoX3RrTYQbQ+5plBUTkonD0gey6l5g==
+X-Received: by 2002:a9d:6e17:: with SMTP id e23mr35208419otr.258.1558737129778;
+        Fri, 24 May 2019 15:32:09 -0700 (PDT)
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com. [209.85.167.172])
+        by smtp.gmail.com with ESMTPSA id v134sm1403132oie.54.2019.05.24.15.32.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 May 2019 15:32:09 -0700 (PDT)
+Received: by mail-oi1-f172.google.com with SMTP id 203so8129437oid.13;
+        Fri, 24 May 2019 15:32:08 -0700 (PDT)
+X-Received: by 2002:aca:5f07:: with SMTP id t7mr2665286oib.175.1558737128772;
+ Fri, 24 May 2019 15:32:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20190524012151.31840-1-andy.tang@nxp.com>
+In-Reply-To: <20190524012151.31840-1-andy.tang@nxp.com>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Fri, 24 May 2019 17:31:57 -0500
+X-Gmail-Original-Message-ID: <CADRPPNRYwq0NABXobC1jQrT3QMxxm+e6zvoNwoZ-fu6NU9qDMA@mail.gmail.com>
+Message-ID: <CADRPPNRYwq0NABXobC1jQrT3QMxxm+e6zvoNwoZ-fu6NU9qDMA@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: ls1028a: Add temperature sensor node
+To:     Yuantian Tang <andy.tang@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 May 2019, Keith Busch wrote:
+On Thu, May 23, 2019 at 8:30 PM Yuantian Tang <andy.tang@nxp.com> wrote:
+>
+> Add nxp sa56004 chip node for temperature monitor.
+>
+> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts | 5 +++++
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts | 5 +++++
+>  2 files changed, 10 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+> index b359068d9605..31fd626dd344 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+> @@ -131,6 +131,11 @@
+>                                 compatible = "atmel,24c512";
+>                                 reg = <0x57>;
+>                         };
+> +
+> +                       temp@4c {
 
-> > Something is broken in Linus' tree (4dde821e429) with respec to 
-> > hibernation on my thinkpad x270, and it seems to be nvme related.
-> > 
-> > I reliably see the warning below during hibernation, and then sometimes 
-> > resume sort of works but the machine misbehaves here and there (seems like 
-> > lost IRQs), sometimes it never comes back from the hibernated state.
-> > 
-> > I will not have too much have time to look into this over weekend, so I am 
-> > sending this out as-is in case anyone has immediate idea. Otherwise I'll 
-> > bisect it on monday (I don't even know at the moment what exactly was the 
-> > last version that worked reliably, I'll have to figure that out as well 
-> > later).
-> 
-> I believe the warning call trace was introduced when we converted nvme to
-> lock-less completions. On device shutdown, we'll check queues for any
-> pending completions, and we temporarily disable the interrupts to make
-> sure that queues interrupt handler can't run concurrently.
+The recommended name for temperature senor in dts spec is temperature-sensor.
 
-Yeah, the completion changes were the primary reason why I brought this up 
-with all of you guys in CC.
+> +                               compatible = "nxp,sa56004";
 
-> On hibernation, most CPUs are offline, and the interrupt re-enabling
-> is hitting this warning that says the IRQ is not associated with any
-> online CPUs.
-> 
-> I'm sure we can find a way to fix this warning, but I'm not sure that
-> explains the rest of the symptoms you're describing though.
+The binding says the following property is required.  If it is not the
+case, probably we should update the binding.
+- vcc-supply: vcc regulator for the supply voltage.
 
-It seems to be more or less reliable enough for bisect. I'll try that on 
-monday and will let you know.
-
-Thanks,
-
--- 
-Jiri Kosina
-SUSE Labs
+> +                               reg = <0x4c>;
+> +                       };
+>                 };
+>
+>                 i2c@5 {
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+> index f9c272fb0738..012b3f8696b7 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+> @@ -119,6 +119,11 @@
+>                                 compatible = "nxp,pcf2129";
+>                                 reg = <0x51>;
+>                         };
+> +
+> +                       temp@4c {
+> +                               compatible = "nxp,sa56004";
+> +                               reg = <0x4c>;
+> +                       };
+>                 };
+>         };
+>  };
+> --
+> 2.17.1
+>
