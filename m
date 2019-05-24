@@ -2,129 +2,167 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B319EC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 427E3C282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77CF92168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15169217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 09:20:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389830AbfEXJTP convert rfc822-to-8bit (ORCPT
+        id S2389915AbfEXJUO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 05:19:15 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:41474 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389569AbfEXJTP (ORCPT
+        Fri, 24 May 2019 05:20:14 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:50543 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389710AbfEXJUN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 05:19:15 -0400
-Received: by mail-qk1-f196.google.com with SMTP id m18so6398796qki.8
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 02:19:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=7+56V34UO6f1yOAZuwtgojwUdZjIaQZjLcC9WjhkGCQ=;
-        b=IyHf/WRrKHqFTo+D64eyTWFIIpzDdRFUwSrakRL6BUQM5v5fBDQ7if9SKKcwuQDOvJ
-         u1d6m2xv3ivLP0UuAvsYrOPru/La3G+hRZbvIZZ054x2XvUCqfplZyy7JU0aPVwgvrc5
-         fiV3d8JaUN8KHalJQ/QuyFLcPUXIrmcTMXAgfd3CTZ44CpnQPSh8vHV13gNEw3TWk8Fq
-         1gV16FNPr8UuknTyLRGmpuSOy1hc2pJ3/DbJgN5L/vOluVAEVr0+36SAFowCzKptSmr4
-         CtRawi3eLHlVHK6lRI8OIUP+qKzKJhaXIdSCLP9P8RIokMoz4ZdKkKm2VC53GjZPfYcW
-         jiZg==
-X-Gm-Message-State: APjAAAX17XO5mJgDVzQ+a6olUULd6HF4R69ml/HnLCqXqYl+KfRcH+6u
-        bKwLkOi9YoetCtRyF/tnl4odlvizA6mMnTeWDVVUEA==
-X-Google-Smtp-Source: APXvYqyqRQ8qrEWXLm6DLEhWSrO4D17JdjftR/wwDYbEaVtlNU2URLnO29TsiKgTY4ax7bO0iBI4+FiH/tbgRbNM1WQ=
-X-Received: by 2002:a37:ea16:: with SMTP id t22mr53587620qkj.337.1558689554600;
- Fri, 24 May 2019 02:19:14 -0700 (PDT)
+        Fri, 24 May 2019 05:20:13 -0400
+Received: from localhost (aaubervilliers-681-1-27-134.w90-88.abo.wanadoo.fr [90.88.147.134])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 37F45240016;
+        Fri, 24 May 2019 09:20:01 +0000 (UTC)
+Date:   Fri, 24 May 2019 11:20:01 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Luca Weiss <luca@z3ntu.xyz>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arm64: dts: allwinner: a64: Add lradc node
+Message-ID: <20190524092001.ztf3kntaj4uiswnv@flea>
+References: <20190518170929.24789-1-luca@z3ntu.xyz>
+ <EF411F71-D257-41FC-9248-B0E3F686B6B9@z3ntu.xyz>
+ <20190521142544.ma2xfu77bamk4hvc@flea>
+ <4343071.IDWclfcoxo@g550jk>
 MIME-Version: 1.0
-References: <20190521132712.2818-1-benjamin.tissoires@redhat.com>
- <20190521132712.2818-10-benjamin.tissoires@redhat.com> <003d01d511de$9da229c0$d8e67d40$@emc.com.tw>
- <CAO-hwJLnjxVxdodqAkKdQpqjAPGV1QYnugM+9t_86xRD92WJ-Q@mail.gmail.com> <011a01d5120f$146265e0$3d2731a0$@emc.com.tw>
-In-Reply-To: <011a01d5120f$146265e0$3d2731a0$@emc.com.tw>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Fri, 24 May 2019 11:19:03 +0200
-Message-ID: <CAO-hwJJMwX0w8wTwC66axCQrn8GemH4AFhRv3=30YZ0er2HkwQ@mail.gmail.com>
-Subject: Re: [PATCH v2 09/10] Input: elan_i2c - correct the width/size base value
-To:     =?UTF-8?B?5buW5bSH5qau?= <kt.liao@emc.com.tw>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Aaron Ma <aaron.ma@canonical.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="fjx5mpewtig2icgo"
+Content-Disposition: inline
+In-Reply-To: <4343071.IDWclfcoxo@g550jk>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 11:00 AM 廖崇榮 <kt.liao@emc.com.tw> wrote:
->
-> Hi
->
-> -----Original Message-----
-> From: Benjamin Tissoires [mailto:benjamin.tissoires@redhat.com]
-> Sent: Friday, May 24, 2019 3:06 PM
-> To: 廖崇榮
-> Cc: Dmitry Torokhov; Rob Herring; Aaron Ma; Hans de Goede; open list:HID CORE LAYER; lkml; devicetree@vger.kernel.org
-> Subject: Re: [PATCH v2 09/10] Input: elan_i2c - correct the width/size base value
->
-> On Fri, May 24, 2019 at 5:13 AM 廖崇榮 <kt.liao@emc.com.tw> wrote:
-> >
-> > Hi Benjamin,
-> >
-> > Thanks so much for all you do for Elan touchpad.
-> >
-> > For the width_*, I have a question for it.
-> > Our antenna sensors fully occupied the whole touchpad PCB.
-> >
-> > The Gap between 2 sensors are 7.5 mil (0.19mm).
-> > That's why we did not minus one trace.
->
-> So, with the P52 I have:
-> [  +0.000009] max:    (3045,1731) drivers/input/mouse/elan_i2c_core.c:428
-> [  +0.000003] traces: (24,14) drivers/input/mouse/elan_i2c_core.c:429
-> [  +0.000002] size:   (98,55) drivers/input/mouse/elan_i2c_core.c:430
-> [  +0.000001] res:    (31,31) drivers/input/mouse/elan_i2c_core.c:431
->
-> calculated size (max/res): 98 x 56 mm
-> true size, as measured: 101 x 60 mm
->
-> I list layout information of P52 touchpad as below.
-> Physical size : 99 x 58 mm
-> Active Area size : ~ 97 * 56 mm, (boarding is 1.008mm for each side)
->
-> Sensor layout:
-> X Pitch : 4.0286 mm
-> Y Pitch : 4.0147 mm
->
-> Which gives (without the minus 1):
-> width_x = max_x / x_traces = 3045 / 24 = 126.875 -> 3.9885 mm width_y = max_y / y_traces = 1731 / 14 = 123.643 -> 4.0927 mm
->
-> -> this gives a total size of the touchpad of: 96 x 57 mm (width_x *
-> 24, width_y * 14)
->
-> With the minus 1:
-> width_x = max_x / x_traces = 3045 / 23 = 132.391 -> 4.2707 mm width_y = max_y / y_traces = 1731 / 14 = 133.154 -> 4.2953 mm
->
-> -> this gives a total size of the touchpad of: 102 x 60 mm (width_x *
-> 24, width_y * 14)
-> and considering traces-1: 98 x 56 mm
->
-> Removing 1 to the number of traces gave a squarer values in rows and columns, and this is what is done in the PS/2 driver.
-> Also, going back to the size of the touchpad gives a better value when removing 1 on the *traces.
-> So maybe when forwarding the properties we should remove one there in the PS/2 driver?
->
-> Removing 1 trace may be better for some of previous touchpad. (depending on sensor pattern)
-> mk_* indicate the number of trace which is touched, and it's not a precise value.
-> I think the usability won't change too much whether removing one trace.
-> PS/2 have supported plenty of touchpad. It's better to remain the same.
->
 
-OK, so I guess I should just drop this patch from the series then.
+--fjx5mpewtig2icgo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Cheers,
-Benjamin
+On Fri, May 24, 2019 at 10:35:36AM +0200, Luca Weiss wrote:
+> On Dienstag, 21. Mai 2019 16:25:44 CEST Maxime Ripard wrote:
+> > On Tue, May 21, 2019 at 03:52:47PM +0200, luca@z3ntu.xyz wrote:
+> > > On May 21, 2019 3:09:55 PM GMT+02:00, Maxime Ripard
+> <maxime.ripard@bootlin.com> wrote:
+> > > >On Tue, May 21, 2019 at 08:43:45AM +0200, luca@z3ntu.xyz wrote:
+> > > >> On May 20, 2019 1:07:42 PM GMT+02:00, Maxime Ripard
+> > > >
+> > > ><maxime.ripard@bootlin.com> wrote:
+> > > >> >On Sat, May 18, 2019 at 07:09:30PM +0200, Luca Weiss wrote:
+> > > >> >> Add a node describing the KEYADC on the A64.
+> > > >> >>
+> > > >> >> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+> > > >> >> ---
+> > > >> >>
+> > > >> >>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 7 +++++++
+> > > >> >>  1 file changed, 7 insertions(+)
+> > > >> >>
+> > > >> >> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > >> >
+> > > >> >b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > >> >
+> > > >> >> index 7734f70e1057..dc1bf8c1afb5 100644
+> > > >> >> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > >> >> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > >> >> @@ -704,6 +704,13 @@
+> > > >> >>
+> > > >> >>  			status = "disabled";
+> > > >> >>
+> > > >> >>  		};
+> > > >> >>
+> > > >> >> +		lradc: lradc@1c21800 {
+> > > >> >> +			compatible = "allwinner,sun4i-a10-lradc-
+> keys";
+> > > >> >> +			reg = <0x01c21800 0x100>;
+> > > >> >> +			interrupts = <GIC_SPI 30
+> IRQ_TYPE_LEVEL_HIGH>;
+> > > >> >> +			status = "disabled";
+> > > >> >> +		};
+> > > >> >> +
+> > > >> >
+> > > >> >The controller is pretty different on the A64 compared to the A10.
+> > > >
+> > > >The
+> > > >
+> > > >> >A10 has two channels for example, while the A64 has only one.
+> > > >> >
+> > > >> >It looks like the one in the A83t though, so you can use that
+> > > >> >compatible instead.
+> > > >>
+> > > >> Looking at the patch for the A83t, the only difference is that it
+> > > >> uses a 3/4 instead of a 2/3 voltage divider, nothing is changed with
+> > > >> the channels.
+> > > >
+> > > >I guess you can reuse the A83t compatible here then, and a more
+> > > >specific a64 compatible in case we ever need to fix this.
+> > > >
+> > > >> But I'm also not sure which one (or a different one)
+> > > >> is used from looking at the "A64 User Manual".
+> > > >
+> > > >I'm sorry, what are you referring to with "one" in that sentence?
+> > >
+> > > Sorry, I meant I didn't find anything in the A64 user manual whether
+> > > a 3/4 or a 2/3 voltage divider (or one with different values) is
+> > > used on the A64.
+> >
+> > Ok :)
+> >
+> > I guess you can just reuse the A83t compatible then, together with the
+> > A64's.
+>
+> I'd submit a v2 with these changes to v1 then:
+>                 lradc: lradc@1c21800 {
+> -                       compatible = "allwinner,sun4i-a10-lradc-keys";
+> -                       reg = <0x01c21800 0x100>;
+> +                       compatible = "allwinner,sun50i-a64-lradc-keys",
+> +                                    "allwinner,sun8i-a83t-r-lradc";
+> +                       reg = <0x01c21800 0x400>;
+>                         interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
+>                         status = "disabled";
+>                 };
+> Does that look okay?
+> The reg change is due to me not spotting the address being 0x01C2
+> 1800---0x01C2 1BFF, so the size should be 0x400 and not 0x100.
+
+It would be great to drop the -keys from the compatible, and to
+document the bindings
+
+Looks good otherwise
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--fjx5mpewtig2icgo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOe3QQAKCRDj7w1vZxhR
+xWfqAQDx49qWsSlXSPCIFr0j7LgzCl6/USKYCbeA7Gmm78/oGgEA7OyIV/rpYtNc
+ksrLp0izVlRyo3tYAqHBk8DXRXEeoAw=
+=xKwX
+-----END PGP SIGNATURE-----
+
+--fjx5mpewtig2icgo--
