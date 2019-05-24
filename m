@@ -2,175 +2,110 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7334DC282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FB6C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:59:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A30720863
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:58:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 878DE20863
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 16:59:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="fPQsvYSJ"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="F+JKEfzZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391074AbfEXQ6Q (ORCPT
+        id S2391125AbfEXQ7U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 12:58:16 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:54149 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390511AbfEXQ6Q (ORCPT
+        Fri, 24 May 2019 12:59:20 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41977 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390210AbfEXQ7U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 12:58:16 -0400
-Received: by mail-it1-f194.google.com with SMTP id m141so16889035ita.3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 09:58:15 -0700 (PDT)
+        Fri, 24 May 2019 12:59:20 -0400
+Received: by mail-ot1-f66.google.com with SMTP id l25so9300096otp.8
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 09:59:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        d=ffwll.ch; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=MoMLCOnVhZSHe+BQlTmS5wevE0lJU4Hf7dR7NZTK0SA=;
-        b=fPQsvYSJ7q6ZkPN90gdwNY/gQFwW2BaNnP1VwwHH5cSJOM97xQcxAYi/ejEfDdwLUF
-         trMZf7pzYgvhyTAZInqDKQOFn1cyKxmEpjkQK/1MUgGJc0EAk98MHydqd/Rdfqiv4HO9
-         0rzP7L2tUL2e9UyqcDSFdQltXMrBWBEkqmq1WYe0nGW3kz2bpvkXi25HzKwgIlvyH5RA
-         VhfUn2vUXnc2+nxXtlMk7B4ydxKMwlCRIVALMRSTz1D28y7y0KGdSVXiZ4HuPtqH4r8F
-         fXM8PL4o8NK3EDm4JmW8FvSjtq3NyfUr4q7VH32Jc1vVX7mKV+4JyWwiGh+JRSiP6zOn
-         JKbQ==
+         :cc;
+        bh=gEsvEvFjlwXN7UDcC7wBfcVN0ngYDlTviwk40lFh0VE=;
+        b=F+JKEfzZoisl55BG48UjSnmshBQgO9/0HkQVAr6Vyzhbpu8ZE5OYQdCLS2r7gg5Fet
+         xsFTm/CY0rb9DvK2SU4u8wLrvEc5OpWNJcfbSDisSY2sMAlLWvWz1GZjZ2H3Uqu7oCCF
+         IQMwHXKRFilGrj1cyLDjSwk6YUEP2rgdWgWYA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=MoMLCOnVhZSHe+BQlTmS5wevE0lJU4Hf7dR7NZTK0SA=;
-        b=Clk+QnqfH752Erok8WlT/LgqnGoNyZWrj4axSMIqMbkzw4HkdzM8iLEpK+P/AapxmL
-         PsyQ8Tw57p18niCL3BFNXFCY8Kg/XxLfVaomoqzqea+ITN/89zHvAomaxKgndzCAGGJN
-         pI+akUQkunOVBps03uUx3koumUH/yGivx2KZGxe50+7K5HG8AyEgTy3HwIhE+nP499A5
-         qxW4V54Jx6rK998cbaBLsOaluZGlX35/a6wgx/oAt0262hkwN0wXj034EGyTWamkp+jJ
-         4zYNQUDydqiZeWRR6VXCXcW1d8xhvEz7IWkZWhAFeYJSj2vrj1cfSUsMztBffJhmo3Mu
-         Vn2g==
-X-Gm-Message-State: APjAAAX/c7Ie2nPKigq7bewJGltcW6x93wqU3kyh74eCXZeiCSr1Zr/0
-        Jz+kgazOQW5+6DJNsmDASfR8kM6CGMlj2ySqDiTet8Cj
-X-Google-Smtp-Source: APXvYqzKAKOCGT1463jp43t7UOHxZ8/WT2omEyVHLyOVE3HNbV4Ak5HVMslMSUYhRfOX/SuzDLSdg7lxhnGTI3w9lSk=
-X-Received: by 2002:a05:6638:233:: with SMTP id f19mr6778463jaq.24.1558717095212;
- Fri, 24 May 2019 09:58:15 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=gEsvEvFjlwXN7UDcC7wBfcVN0ngYDlTviwk40lFh0VE=;
+        b=ggm7nqyZxWDVDlP6xqdt1Gg42n4/6mwF2/lZoDoCDZ3zjZUhoZBgYJN4HCf7fQCFM0
+         lT11MXAYHmC12GRgEqmOYg5+Oj5vYAh7chW881/Ako8OZFRK0DPmezEQDP5cTHRK93m4
+         vczS8Smgrnt0raBCDloM9imXucPvITK618678kYp3SkvAo/z0EmcO38Ij46CX+kXD3yW
+         C6MXtQNvr2bZkdZR1G0J9voxCcgbVmDmDw4PTB3OsDF0TxlTSIXFFcQLM6BK+qCx+aLE
+         mPaCaqqh64HZXKHfYHq0brfrH+2/ezmJAWcGv0XvUc8ZluLniI1v7Aj3ryuZjilAXxia
+         kkEA==
+X-Gm-Message-State: APjAAAXwjr4Cvy+fBOpdle43HIT1nLh5ZEhkc4NuRSBTrAduXBaQH4g/
+        ZsO2zS91TxUGEuSzZmp+6NcEJ+k/3pC9tsocIwdaIw==
+X-Google-Smtp-Source: APXvYqyPbMvtr56mDew3jzxBkjA+50maDgvK6bd7zBN/VZAbXpM4qVtqYD8AqQh52rPXg2kktDPJwMkBLyw2j0YmSis=
+X-Received: by 2002:a05:6830:16d2:: with SMTP id l18mr29769854otr.303.1558717159283;
+ Fri, 24 May 2019 09:59:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190417152701.23391-1-brgl@bgdev.pl> <20190417152701.23391-5-brgl@bgdev.pl>
- <CAHCN7xKVaYqd5LLvRx7i8ik+JnTFdpexZf2WXt0R2N1W1skOJA@mail.gmail.com> <CAMpxmJW9yWcQ8497OwOhMN8wj-Cmc3-UP7Rh-yoU_uDaQkVVSw@mail.gmail.com>
-In-Reply-To: <CAMpxmJW9yWcQ8497OwOhMN8wj-Cmc3-UP7Rh-yoU_uDaQkVVSw@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 24 May 2019 18:58:04 +0200
-Message-ID: <CAMRc=Me9hwsLdpDVfs+cb_rqrWs=+bJOa9nEFY+xs_vs5LAXXA@mail.gmail.com>
-Subject: Re: [PATCH v5 4/5] ARM: dts: da850-evm: enable cpufreq
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Adam Ford <aford173@gmail.com>, Sekhar Nori <nsekhar@ti.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        David Lechner <david@lechnology.com>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190523154149.GB12159@ziepe.ca> <20190523155207.GC5104@redhat.com>
+ <20190523163429.GC12159@ziepe.ca> <20190523173302.GD5104@redhat.com>
+ <20190523175546.GE12159@ziepe.ca> <20190523182458.GA3571@redhat.com>
+ <20190523191038.GG12159@ziepe.ca> <20190524064051.GA28855@infradead.org>
+ <20190524124455.GB16845@ziepe.ca> <20190524162709.GD21222@phenom.ffwll.local> <20190524165301.GD16845@ziepe.ca>
+In-Reply-To: <20190524165301.GD16845@ziepe.ca>
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+Date:   Fri, 24 May 2019 18:59:07 +0200
+Message-ID: <CAKMK7uHODeVX4DHdM-w2xkqCmN71MaQH1ZiRZcPN38Hhy0A-sQ@mail.gmail.com>
+Subject: Re: RFC: Run a dedicated hmm.git for 5.3
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Airlie <airlied@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-rdma@vger.kernel.org, Leon Romanovsky <leonro@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Artemy Kovalyov <artemyko@mellanox.com>,
+        Moni Shoua <monis@mellanox.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Linux MM <linux-mm@kvack.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wt., 23 kwi 2019 o 11:15 Bartosz Golaszewski
-<bgolaszewski@baylibre.com> napisa=C5=82(a):
+On Fri, May 24, 2019 at 6:53 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
 >
-> =C5=9Br., 17 kwi 2019 o 19:09 Adam Ford <aford173@gmail.com> napisa=C5=82=
-(a):
-> >
-> > On Wed, Apr 17, 2019 at 10:27 AM Bartosz Golaszewski <brgl@bgdev.pl> wr=
-ote:
-> > >
-> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > >
-> > > Enable cpufreq-dt support for da850-evm. The cvdd is supplied by the
-> > > tps65070 pmic with configurable output voltage. By default da850-evm
-> > > boards support frequencies up to 375MHz so enable this operating
-> > > point.
-> >
-> > Have you done any testing with the LCD on any of the devices you have?
-> >
-> > I enabled the ondemand governor, and I got a bunch of splat from the
-> > LCD controller:
-> >
-> > tilcdc 1e13000.display: effective pixel clock rate (50000000Hz)
-> > differs from the calculated rate (54000000Hz)
-> > tilcdc 1e13000.display: tilcdc_crtc_irq(0x00000161): FIFO underflow
-> > tilcdc 1e13000.display: tilcdc_crtc_irq(0x00000161): FIFO underflow
-> > ... [ snip]
-> > tilcdc 1e13000.display: effective pixel clock rate (50000000Hz)
-> > differs from the calculated rate (54000000Hz)
-> > tilcdc 1e13000.display: effective pixel clock rate (50000000Hz)
-> > differs from the calculated rate (54000000Hz)
-> > tilcdc 1e13000.display: tilcdc_crtc_irq(0x00000161): FIFO underflow
-> >
-> > It appears to go on forever.  I don't necessarily want to hold it up,
-> > but I don't know the clocking system well enough to know where to go
-> > investigate it.  I can certainly live without ondemand.  Using
-> > userspace as the default governor is fine for me for now.
-> >
-> > adam
+> On Fri, May 24, 2019 at 06:27:09PM +0200, Daniel Vetter wrote:
+> > Sure topic branch sounds fine, we do that all the time with various
+> > subsystems all over. We have ready made scripts for topic branches and
+> > applying pulls from all over, so we can even soak test everything in our
+> > integration tree. In case there's conflicts or just to make sure
+> > everything works, before we bake the topic branch into permanent history
+> > (the main drm.git repo just can't be rebased, too much going on and too
+> > many people involvd).
 >
-> Hi Adam,
+> We don't rebase rdma.git either for the same reasons and nor does
+> netdev
 >
-> I did test the tilcdc on da850-lcdk. The only message I'm getting
-> during transitions is a single:
->
-> tilcdc <name>: tilcdc_crtc_irq(<address>): FIFO underflow
->
-> but this is fairly normal - we also get this during modeset and it
-> doesn't affect the display.
->
-> The problem with the pixel clock may come from the bootloader - are
-> you using a recent version of u-boot?
->
-> Bart
->
-> > >
-> > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > Reviewed-by: Adam Ford <aford173@gmail.com>
-> > > ---
-> > >  arch/arm/boot/dts/da850-evm.dts | 13 +++++++++++++
-> > >  1 file changed, 13 insertions(+)
-> > >
-> > > diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da85=
-0-evm.dts
-> > > index f04bc3e15332..f94bb38fdad9 100644
-> > > --- a/arch/arm/boot/dts/da850-evm.dts
-> > > +++ b/arch/arm/boot/dts/da850-evm.dts
-> > > @@ -191,6 +191,19 @@
-> > >         };
-> > >  };
-> > >
-> > > +&cpu {
-> > > +       cpu-supply =3D <&vdcdc3_reg>;
-> > > +};
-> > > +
-> > > +/*
-> > > + * The standard da850-evm kits and SOM's are 375MHz so enable this o=
-perating
-> > > + * point by default. Higher frequencies must be enabled for custom b=
-oards with
-> > > + * other variants of the SoC.
-> > > + */
-> > > +&opp_375 {
-> > > +       status =3D "okay";
-> > > +};
-> > > +
-> > >  &sata {
-> > >         status =3D "okay";
-> > >  };
-> > > --
-> > > 2.21.0
-> > >
+> So the usual flow for a shared topic branch is also no-rebase -
+> testing/etc needs to be done before things get applied to it.
 
-Hi Adam,
-
-did you figure out the problem by chance? Are you OK with merging this seri=
-es?
-
-Bart
+Rebasing before it gets baked into any tree is still ok. And for
+something like this we do need a test branch first, which might need a
+fixup patch squashed in. On the drm side we have a drm-local
+integration tree for this stuff (like linux-next, but without all the
+other stuff that's not relevant for graphics). But yeah that's just
+details, easy to figure out.
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
