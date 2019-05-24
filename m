@@ -2,70 +2,84 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 255D5C072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A42D8C072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E64FF2184B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:45:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558698352;
-	bh=DtwbMLQuxLL8JPucnEoCkrw7f7w9/RQzp/gzFsIZI6s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IHndTRJTGLgNAmIoC0q9L59AY6GCKJlXZSgtEzYZuWBPkoq5rMPAaiTAR+5qeGFgz
-	 Tjttcf8PWHXWUgD45mOAu+pvh1OYdLHQHTS6RIUDAYhWPX+L+I56ViPSfj34pQBsGj
-	 uqdhPOfmeU5kYH6rRuJ8HAhR1pqfeUmeM9ejLMg4=
+	by mail.kernel.org (Postfix) with ESMTP id 6A16521841
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 11:49:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kqFzBgdp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391225AbfEXLpv (ORCPT
+        id S2391231AbfEXLtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 07:45:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40962 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390743AbfEXLpu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 07:45:50 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4169C2168B;
-        Fri, 24 May 2019 11:45:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558698350;
-        bh=DtwbMLQuxLL8JPucnEoCkrw7f7w9/RQzp/gzFsIZI6s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yKRLd1qN3FDzsK+9OH+CIoXIAeFWfGHgQhTyiTVlNjv4vsc6f6B20VPvbD1En3TlN
-         bwHSKqyeDNUFj23catdQieWwCwbge9w7qptMwQVNGaceQR6oQPtMi12YjPThp4litt
-         EhT06EbicenLUhUV1F1CvCn3QEbstAbQoZShehxI=
-Date:   Fri, 24 May 2019 13:45:47 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jinpu Wang <jinpu.wang@cloud.ionos.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, tony.luck@intel.com,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        linux-kernel@vger.kernel.org,
-        Elmar Gerdes <elmar.gerdes@cloud.ionos.com>
-Subject: Re: Is 2nd Generation Intel(R) Xeon(R) Processors (Formerly Cascade
- Lake) affected by MDS
-Message-ID: <20190524114547.GA686@kroah.com>
-References: <CAMGffE=xsHWMNoGn75wzv9CLrQ81OizgLiwDEwqKw14i_eVj8Q@mail.gmail.com>
+        Fri, 24 May 2019 07:49:16 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:41108 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390772AbfEXLtP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 07:49:15 -0400
+Received: by mail-lj1-f196.google.com with SMTP id q16so11907ljj.8
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 04:49:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pOvtRlpgwrennubIJ2Y/ol1Fu3d5Vq/WpGfePTtRPuA=;
+        b=kqFzBgdp+KA8oZ07ITq8Vy9oGfQPEKsOwl/CwI541Nc8qn68LWFMJoH4xxcPFYHbOf
+         BBSOhvUgvgJH705+GF2itw1f+g81VrnNQyEjiPsudL6kbamAcHWjvip6WBJLR4yk7A5m
+         UrNlKRknWbO5tAhNGmhZLpsI/GaNM+T2bbKk/VqHAZFUrEtKa8Ru+eIbTnUE5DOGCatL
+         aI4bNiNMKwwkUprr5vmFCjo655fsZOLkLll6AjPi/CkJX3woHsMdyyN6kC8kQ+ji6+vJ
+         udk6IW9q4oJGvWOCjvOgZcBpgGXIE/ZR0Eg5TbaVqpfmW2NJaM8rIlCcHgg8H6TbEhhX
+         P19w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pOvtRlpgwrennubIJ2Y/ol1Fu3d5Vq/WpGfePTtRPuA=;
+        b=Z9E+KTmCoHlCO8fIa6f6IxcTvk0Q1nWQRMKeJZsHmmn7Jkt+Qqno6z1gyJ+Uhe4nbT
+         a+nhQuOujyMxVZfghgqHD50kD6IMr8XE5H9ibSpx5rYgWt/wAhgBFaGnUHmmW++mXmqg
+         hM5pXCpG111ZNWWk9en3zyE9AsPE54pJu4QOycKzAu3ZZk+srHXj0m2uc7Xpy59EJrWM
+         VEYTkpbbHK7VJhKgevXUGcdkU4zWvsZUASwOaCrjcbeSmcKgKohpSVwPAovme33jqT5W
+         yaKwfbv5ninfNZHzxpLfzfIUB9hWs13ZXohu4SA5Wt+LToQS4XLctfoEERBMLkEnhhlJ
+         dikw==
+X-Gm-Message-State: APjAAAWg1lleAgaBqVVoBtUsGxSYTaDlZ0JtTicq8Wu8UMbB8nVpfleH
+        X8PtiXpNvL/wNNESU1NmNweVf8CAi0+8s5jm4FNLRw==
+X-Google-Smtp-Source: APXvYqx12Jd/oGdeYccOTNL544l6qLoeJ1js/R4g159jdpy6s0xveqSPxI2AZMsqesCBeYpmFKamqshKWqG/AN7gB/A=
+X-Received: by 2002:a2e:89cc:: with SMTP id c12mr44977574ljk.90.1558698553619;
+ Fri, 24 May 2019 04:49:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMGffE=xsHWMNoGn75wzv9CLrQ81OizgLiwDEwqKw14i_eVj8Q@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190516151339.25846-1-jbrunet@baylibre.com> <20190516151339.25846-2-jbrunet@baylibre.com>
+In-Reply-To: <20190516151339.25846-2-jbrunet@baylibre.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 24 May 2019 13:49:02 +0200
+Message-ID: <CACRpkdaKDXCbR9di6upx_iezGfajGbqw7Y3p+LZnwYWdJ5dJRA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: meson: add output support in pinconf
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 11:23:40AM +0200, Jinpu Wang wrote:
-> This e-mail may contain confidential and/or privileged information. If
-> you are not the intended recipient of this e-mail, you are hereby
-> notified that saving, distribution or use of the content of this
-> e-mail in any way is prohibited. If you have received this e-mail in
-> error, please notify the sender and delete the e-mail.
+On Thu, May 16, 2019 at 5:13 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
 
-I am not allowed to respond to such emails as they do not mix well with
-Linux kernel development requirements, sorry.
+> add support for the pinconf DT property output-enable, output-disable,
+> output-low and output-high in the meson pinctrl driver.
+>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+
+Only standard properties so patch applied as obviously correct.
+
+Yours,
+Linus Walleij
