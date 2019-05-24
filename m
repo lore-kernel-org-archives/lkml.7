@@ -2,138 +2,153 @@ Return-Path: <SRS0=Z4g5=TY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7236DC072B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D9AC072B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CFDC20851
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:50:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="I9od8GE6"
+	by mail.kernel.org (Postfix) with ESMTP id DD9A62075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 May 2019 15:50:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390355AbfEXPuA (ORCPT
+        id S2390379AbfEXPuv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 11:50:00 -0400
-Received: from onstation.org ([52.200.56.107]:54660 "EHLO onstation.org"
+        Fri, 24 May 2019 11:50:51 -0400
+Received: from mga17.intel.com ([192.55.52.151]:55161 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389870AbfEXPt7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 11:49:59 -0400
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id B81873E88C;
-        Fri, 24 May 2019 15:49:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1558712998;
-        bh=wE008nmdMIJ1X3Gb62XmLrTtKKI/KWwzvPpHDDz1U4k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=I9od8GE6a5uUN5eHfSjy5Y39lMjTk6Ryd8gsBJlrW3cz1+75/RY2WRaytdTdC8v1E
-         osdrxr4Wb8DN3aakOG6M1NWM27D3bd0C7vVnvA+1oDdfcKfjgdYxN4KgwYb8Aep1fE
-         HFkWtwy/TzcvoTapcnOKBmAyowHqRHqVw9VrLn3c=
-Date:   Fri, 24 May 2019 11:49:58 -0400
-From:   Brian Masney <masneyb@onstation.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     ulf.hansson@linaro.org, faiz_abbas@ti.com,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH] mmc: sdhci: queue work after sdhci_defer_done()
-Message-ID: <20190524154958.GB16322@basecamp>
-References: <20190524111053.12228-1-masneyb@onstation.org>
- <70782901-a9ac-5647-1abe-89c86a44a01b@intel.com>
+        id S2389496AbfEXPuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 11:50:50 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 May 2019 08:50:50 -0700
+X-ExtLoop1: 1
+Received: from orsmsx102.amr.corp.intel.com ([10.22.225.129])
+  by fmsmga001.fm.intel.com with ESMTP; 24 May 2019 08:50:49 -0700
+Received: from orsmsx126.amr.corp.intel.com (10.22.240.126) by
+ ORSMSX102.amr.corp.intel.com (10.22.225.129) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Fri, 24 May 2019 08:50:49 -0700
+Received: from orsmsx112.amr.corp.intel.com ([169.254.3.79]) by
+ ORSMSX126.amr.corp.intel.com ([169.254.4.35]) with mapi id 14.03.0415.000;
+ Fri, 24 May 2019 08:50:49 -0700
+From:   "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+To:     "davem@davemloft.net" <davem@davemloft.net>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "mroos@linux.ee" <mroos@linux.ee>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "namit@vmware.com" <namit@vmware.com>,
+        "luto@kernel.org" <luto@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>
+Subject: Re: [PATCH v2] vmalloc: Fix issues with flush flag
+Thread-Topic: [PATCH v2] vmalloc: Fix issues with flush flag
+Thread-Index: AQHVD0ezpbXySuUS5EinefGl750kkaZ0/uwAgAALkwCAAAiygIAAGYEAgAADqwCAAA0vgIAABnMAgAAEjYCAApkWgIAAHb0AgAA1/4CAArJUAA==
+Date:   Fri, 24 May 2019 15:50:48 +0000
+Message-ID: <c9c96d83838beab6eb3a5309ad6b4b409fbce0f3.camel@intel.com>
+References: <a43f9224e6b245ade4b587a018c8a21815091f0f.camel@intel.com>
+         <20190520.184336.743103388474716249.davem@davemloft.net>
+         <339ef85d984f329aa66f29fa80781624e6e4aecc.camel@intel.com>
+         <20190522.104019.40493905027242516.davem@davemloft.net>
+         <01a23900329e605fcd41ad8962cfd8f2d9b1fa44.camel@intel.com>
+         <2d8c59be7e591a0d0ff17627ea34ea1eaa110a09.camel@intel.com>
+In-Reply-To: <2d8c59be7e591a0d0ff17627ea34ea1eaa110a09.camel@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.30.1 (3.30.1-1.fc29) 
+x-originating-ip: [10.251.0.167]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <3FAE5003E9627F419617E9DC8A2441C1@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <70782901-a9ac-5647-1abe-89c86a44a01b@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 03:17:13PM +0300, Adrian Hunter wrote:
-> On 24/05/19 2:10 PM, Brian Masney wrote:
-> > WiFi stopped working on the LG Nexus 5 phone and the issue was bisected
-> > to the commit c07a48c26519 ("mmc: sdhci: Remove finish_tasklet") that
-> > moved from using a tasklet to a work queue. That patch also changed
-> > sdhci_irq() to return IRQ_WAKE_THREAD instead of finishing the work when
-> > sdhci_defer_done() is true. Change it to queue work to the complete work
-> > queue if sdhci_defer_done() is true so that the functionality is
-> > equilivent to what was there when the finish_tasklet was present. This
-> > corrects the WiFi breakage on the Nexus 5 phone.
-> > 
-> > Signed-off-by: Brian Masney <masneyb@onstation.org>
-> > Fixes: c07a48c26519 ("mmc: sdhci: Remove finish_tasklet")
-> > ---
-> > See 'sdhci@f98a4900' in qcom-msm8974-lge-nexus5-hammerhead.dts for
-> > details about how the WiFi is wired into sdhci on this platform.
-> > 
-> > bisect log:
-> > 
-> >  git bisect start
-> >  # bad: [4dde821e4296e156d133b98ddc4c45861935a4fb] Merge tag 'xfs-5.2-fixes-1' of git://git.kernel.org/pub/scm/fs/xfs/xfs-linux
-> >  git bisect bad 4dde821e4296e156d133b98ddc4c45861935a4fb
-> >  # good: [e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd] Linux 5.1
-> >  git bisect good e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd
-> >  # bad: [8c79f4cd441b27df6cadd11b70a50e06b3b3a2bf] Merge tag 'docs-5.2' of git://git.lwn.net/linux
-> >  git bisect bad 8c79f4cd441b27df6cadd11b70a50e06b3b3a2bf
-> >  # bad: [67a242223958d628f0ba33283668e3ddd192d057] Merge tag 'for-5.2/block-20190507' of git://git.kernel.dk/linux-block
-> >  git bisect bad 67a242223958d628f0ba33283668e3ddd192d057
-> >  # good: [8ff468c29e9a9c3afe9152c10c7b141343270bf3] Merge branch 'x86-fpu-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
-> >  git bisect good 8ff468c29e9a9c3afe9152c10c7b141343270bf3
-> >  # good: [e2a5be107f52cefb9010ccae6f569c3ddaa954cc] staging: kpc2000: kpc_spi: Fix build error for {read,write}q
-> >  git bisect good e2a5be107f52cefb9010ccae6f569c3ddaa954cc
-> >  # bad: [cf482a49af564a3044de3178ea28f10ad5921b38] Merge tag 'driver-core-5.2-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core
-> >  git bisect bad cf482a49af564a3044de3178ea28f10ad5921b38
-> >  # good: [9f2e3a53f7ec9ef55e9d01bc29a6285d291c151e] Merge tag 'for-5.2-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
-> >  git bisect good 9f2e3a53f7ec9ef55e9d01bc29a6285d291c151e
-> >  # good: [b4b52b881cf08e13d110eac811d4becc0775abbf] Merge tag 'Wimplicit-fallthrough-5.2-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux
-> >  git bisect good b4b52b881cf08e13d110eac811d4becc0775abbf
-> >  # bad: [d5f758f2df8015b8dcf47b6403cc192e4cef734d] mmc: meson-gx: disable HS400
-> >  git bisect bad d5f758f2df8015b8dcf47b6403cc192e4cef734d
-> >  # good: [b3fb9d64b497b890f7b779a9f0b40b5cc269ea18] mmc: mmci: define get_dctrl_cfg for legacy variant
-> >  git bisect good b3fb9d64b497b890f7b779a9f0b40b5cc269ea18
-> >  # good: [ade024f130f742725da9219624b01666f04bc4a6] memstick: jmb38x_ms: remove set but not used variable 'data'
-> >  git bisect good ade024f130f742725da9219624b01666f04bc4a6
-> >  # bad: [42c38d4a1bc41e78dedbf73b0fb35e44007789bb] mmc: core: Fix warning and undefined behavior in mmc voltage handling
-> >  git bisect bad 42c38d4a1bc41e78dedbf73b0fb35e44007789bb
-> >  # good: [19d2f695f4e82794df7465b029c02b104d1b9903] mmc: sdhci: Call mmc_request_done() from IRQ handler if possible
-> >  git bisect good 19d2f695f4e82794df7465b029c02b104d1b9903
-> >  # bad: [71c733c4e1aeb83e8221e89caeec893d51f88b7b] mmc: tegra: add sdhci tegra suspend and resume
-> >  git bisect bad 71c733c4e1aeb83e8221e89caeec893d51f88b7b
-> >  # bad: [c07a48c2651965e84d35cf193dfc0e5f7892d612] mmc: sdhci: Remove finish_tasklet
-> >  git bisect bad c07a48c2651965e84d35cf193dfc0e5f7892d612
-> >  # first bad commit: [c07a48c2651965e84d35cf193dfc0e5f7892d612] mmc: sdhci: Remove finish_tasklet
-> > 
-> >  drivers/mmc/host/sdhci.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> > index 97158344b862..3563c3bc57c9 100644
-> > --- a/drivers/mmc/host/sdhci.c
-> > +++ b/drivers/mmc/host/sdhci.c
-> > @@ -3115,7 +3115,7 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
-> >  			continue;
-> >  
-> >  		if (sdhci_defer_done(host, mrq)) {
-> > -			result = IRQ_WAKE_THREAD;
-> > +			queue_work(host->complete_wq, &host->complete_work);
-> 
-> The IRQ thread has a lot less latency than the work queue, which is why it
-> is done that way.
-> 
-> I am not sure why you say this change is equivalent to what was there
-> before, nor why it fixes your problem.
-> 
-> Can you explain some more?
-
-drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c calls
-sdio_claim_host() and it appears to never return.
-
-I'm not going to be able to look into this more today but I should have
-time this weekend to dig in more with ftrace.
-
-Brian
+T24gV2VkLCAyMDE5LTA1LTIyIGF0IDE1OjQwIC0wNzAwLCBSaWNrIEVkZ2Vjb21iZSB3cm90ZToN
+Cj4gT24gV2VkLCAyMDE5LTA1LTIyIGF0IDEyOjI2IC0wNzAwLCBSaWNrIEVkZ2Vjb21iZSB3cm90
+ZToNCj4gPiBPbiBXZWQsIDIwMTktMDUtMjIgYXQgMTA6NDAgLTA3MDAsIERhdmlkIE1pbGxlciB3
+cm90ZToNCj4gPiA+IEZyb206ICJFZGdlY29tYmUsIFJpY2sgUCIgPHJpY2sucC5lZGdlY29tYmVA
+aW50ZWwuY29tPg0KPiA+ID4gRGF0ZTogVHVlLCAyMSBNYXkgMjAxOSAwMTo1OTo1NCArMDAwMA0K
+PiA+ID4gDQo+ID4gPiA+IE9uIE1vbiwgMjAxOS0wNS0yMCBhdCAxODo0MyAtMDcwMCwgRGF2aWQg
+TWlsbGVyIHdyb3RlOg0KPiA+ID4gPiA+IEZyb206ICJFZGdlY29tYmUsIFJpY2sgUCIgPHJpY2su
+cC5lZGdlY29tYmVAaW50ZWwuY29tPg0KPiA+ID4gPiA+IERhdGU6IFR1ZSwgMjEgTWF5IDIwMTkg
+MDE6MjA6MzMgKzAwMDANCj4gPiA+ID4gPiANCj4gPiA+ID4gPiA+IFNob3VsZCBpdCBoYW5kbGUg
+ZXhlY3V0aW5nIGFuIHVubWFwcGVkIHBhZ2UgZ3JhY2VmdWxseT8NCj4gPiA+ID4gPiA+IEJlY2F1
+c2UNCj4gPiA+ID4gPiA+IHRoaXMNCj4gPiA+ID4gPiA+IGNoYW5nZSBpcyBjYXVzaW5nIHRoYXQg
+dG8gaGFwcGVuIG11Y2ggZWFybGllci4gSWYgc29tZXRoaW5nDQo+ID4gPiA+ID4gPiB3YXMNCj4g
+PiA+ID4gPiA+IHJlbHlpbmcNCj4gPiA+ID4gPiA+IG9uIGEgY2FjaGVkIHRyYW5zbGF0aW9uIHRv
+IGV4ZWN1dGUgc29tZXRoaW5nIGl0IGNvdWxkIGZpbmQNCj4gPiA+ID4gPiA+IHRoZQ0KPiA+ID4g
+PiA+ID4gbWFwcGluZw0KPiA+ID4gPiA+ID4gZGlzYXBwZWFyLg0KPiA+ID4gPiA+IA0KPiA+ID4g
+PiA+IERvZXMgdGhpcyB3b3JrIGJ5IG5vdCBtYXBwaW5nIGFueSBrZXJuZWwgbWFwcGluZ3MgYXQg
+dGhlDQo+ID4gPiA+ID4gYmVnaW5uaW5nLA0KPiA+ID4gPiA+IGFuZCB0aGVuIGZpbGxpbmcgaW4g
+dGhlIEJQRiBtYXBwaW5ncyBpbiByZXNwb25zZSB0byBmYXVsdHM/DQo+ID4gPiA+IE5vLCBub3Ro
+aW5nIHRvbyBmYW5jeS4gSXQganVzdCBmbHVzaGVzIHRoZSB2bSBtYXBwaW5nDQo+ID4gPiA+IGlt
+bWVkaWF0bHkNCj4gPiA+ID4gaW4NCj4gPiA+ID4gdmZyZWUgZm9yIGV4ZWN1dGUgKGFuZCBSTykg
+bWFwcGluZ3MuIFRoZSBvbmx5IHRoaW5nIHRoYXQNCj4gPiA+ID4gaGFwcGVucw0KPiA+ID4gPiBh
+cm91bmQNCj4gPiA+ID4gYWxsb2NhdGlvbiB0aW1lIGlzIHNldHRpbmcgb2YgYSBuZXcgZmxhZyB0
+byB0ZWxsIHZtYWxsb2MgdG8gZG8NCj4gPiA+ID4gdGhlDQo+ID4gPiA+IGZsdXNoLg0KPiA+ID4g
+PiANCj4gPiA+ID4gVGhlIHByb2JsZW0gYmVmb3JlIHdhcyB0aGF0IHRoZSBwYWdlcyB3b3VsZCBi
+ZSBmcmVlZCBiZWZvcmUgdGhlDQo+ID4gPiA+IGV4ZWN1dGUNCj4gPiA+ID4gbWFwcGluZyB3YXMg
+Zmx1c2hlZC4gU28gdGhlbiB3aGVuIHRoZSBwYWdlcyBnb3QgcmVjeWNsZWQsDQo+ID4gPiA+IHJh
+bmRvbSwNCj4gPiA+ID4gc29tZXRpbWVzIGNvbWluZyBmcm9tIHVzZXJzcGFjZSwgZGF0YSB3b3Vs
+ZCBiZSBtYXBwZWQgYXMNCj4gPiA+ID4gZXhlY3V0YWJsZQ0KPiA+ID4gPiBpbg0KPiA+ID4gPiB0
+aGUga2VybmVsIGJ5IHRoZSB1bi1mbHVzaGVkIHRsYiBlbnRyaWVzLg0KPiA+ID4gDQo+ID4gPiBJ
+ZiBJIGFtIHRvIHVuZGVyc3RhbmQgdGhpbmdzIGNvcnJlY3RseSwgdGhlcmUgd2FzIGEgY2FzZSB3
+aGVyZQ0KPiA+ID4gJ2VuZCcNCj4gPiA+IGNvdWxkIGJlIHNtYWxsZXIgdGhhbiAnc3RhcnQnIHdo
+ZW4gZG9pbmcgYSByYW5nZSBmbHVzaC4gIFRoYXQNCj4gPiA+IHdvdWxkDQo+ID4gPiBkZWZpbml0
+ZWx5IGtpbGwgc29tZSBvZiB0aGUgc3BhcmM2NCBUTEIgZmx1c2ggcm91dGluZXMuDQo+ID4gDQo+
+ID4gT2ssIHRoYW5rcy4NCj4gPiANCj4gPiBUaGUgcGF0Y2ggYXQgdGhlIGJlZ2lubmluZyBvZiB0
+aGlzIHRocmVhZCBkb2Vzbid0IGhhdmUgdGhhdA0KPiA+IGJlaGF2aW9yDQo+ID4gdGhvdWdoIGFu
+ZCBpdCBhcHBhcmVudGx5IHN0aWxsIGh1bmcuIEkgYXNrZWQgaWYgTWVlbGlzIGNvdWxkIHRlc3QN
+Cj4gPiB3aXRoDQo+ID4gdGhpcyBmZWF0dXJlIGRpc2FibGVkIGFuZCBERUJVR19QQUdFQUxMT0Mg
+b24sIHNpbmNlIGl0IGZsdXNoZXMgb24NCj4gPiBldmVyeQ0KPiA+IHZmcmVlIGFuZCBpcyBub3Qg
+bmV3IGxvZ2ljLCBhbmQgYWxzbyB3aXRoIGEgcGF0Y2ggdGhhdCBsb2dzIGV4YWN0DQo+ID4gVExC
+DQo+ID4gZmx1c2ggcmFuZ2VzIGFuZCBmYXVsdCBhZGRyZXNzZXMgb24gdG9wIG9mIHRoZSBrZXJu
+ZWwgaGF2aW5nIHRoaXMNCj4gPiBpc3N1ZS4gSG9wZWZ1bGx5IHRoYXQgd2lsbCBzaGVkIHNvbWUg
+bGlnaHQuDQo+ID4gDQo+ID4gU29ycnkgZm9yIGFsbCB0aGUgbm9pc2UgYW5kIHNwZWN1bGF0aW9u
+IG9uIHRoaXMuIEl0IGhhcyBiZWVuDQo+ID4gZGlmZmljdWx0DQo+ID4gdG8gZGVidWcgcmVtb3Rl
+bHkgd2l0aCBhIHRlc3RlciBhbmQgZGV2ZWxvcGVyIGluIGRpZmZlcmVudCB0aW1lDQo+ID4gem9u
+ZXMuDQo+ID4gDQo+ID4gDQo+IE9rLCBzbyB3aXRoIGEgcGF0Y2ggdG8gZGlzYWJsZSBzZXR0aW5n
+IHRoZSBuZXcgdm1hbGxvYyBmbHVzaCBmbGFnIG9uDQo+IGFyY2hpdGVjdHVyZXMgdGhhdCBoYXZl
+IG5vcm1hbCBtZW1vcnkgYXMgZXhlY3V0YWJsZSAoaW5jbHVkZXMgc3BhcmMpLA0KPiBib290IHN1
+Y2NlZWRzLg0KPiANCj4gV2l0aCB0aGlzIGRpc2FibGUgcGF0Y2ggYW5kIERFQlVHX1BBR0VBTExP
+QyBvbiwgaXQgaGFuZ3MgZWFybGllciB0aGFuDQo+IGJlZm9yZS4gR29pbmcgZnJvbSBjbHVlcyBp
+biBvdGhlciBsb2dzLCBpdCBsb29rcyBsaWtlIGl0IGhhbmdzIHJpZ2h0DQo+IGF0DQo+IHRoZSBm
+aXJzdCBub3JtYWwgdmZyZWUuDQo+IA0KPiBUaGFua3MgZm9yIGFsbCB0aGUgdGVzdGluZyBNZWVs
+aXMhDQo+IA0KPiBTbyBpdCBzZWVtcyBsaWtlIG90aGVyLCBub3QgbmV3LCBUTEIgZmx1c2hlcyBh
+bHNvIHRyaWdnZXIgdGhlIGhhbmcuDQo+IA0KPiBGcm9tIGVhcmxpZXIgbG9ncyBwcm92aWRlZCwg
+dGhpcyB2ZnJlZSB3b3VsZCBiZSB0aGUgZmlyc3QgY2FsbCB0bw0KPiBmbHVzaF90bGJfa2VybmVs
+X3JhbmdlKCksIGFuZCBiZWZvcmUgYW55IEJQRiBhbGxvY2F0aW9ucyBhcHBlYXIgaW4NCj4gdGhl
+DQo+IGxvZ3MuIFNvIEkgYW0gc3VzcGVjdGluZyBzb21lIG90aGVyIGNhdXNlIHRoYW4gdGhlIGJp
+c2VjdGVkIHBhdGNoIGF0DQo+IHRoaXMgcG9pbnQsIGJ1dCBJIGd1ZXNzIGl0J3Mgbm90IGZ1bGx5
+IGNvbmNsdXNpdmUuDQo+IA0KPiBJdCBjb3VsZCBiZSBpbmZvcm1hdGl2ZSB0byBiaXNlY3QgdXBz
+dHJlYW0gYWdhaW4gd2l0aCB0aGUNCj4gREVCVUdfUEFHRUFMTE9DIGNvbmZpZ3Mgb24sIHRvIHNl
+ZSBpZiBpdCBpbmRlZWQgcG9pbnRzIHRvIGFuIGVhcmxpZXINCj4gY29tbWl0Lg0KDQpTbyBub3cg
+TWVlbGlzIGhhcyBmb3VuZCB0aGF0IHRoZSBjb21taXQgYmVmb3JlIGFueSBvZiBteSB2bWFsbG9j
+DQpjaGFuZ2VzIGFsc28gaGFuZ3MgZHVyaW5nIGJvb3Qgd2l0aCBERUJVR19QQUdFQUxMT0Mgb24u
+IEl0IGRvZXMgdGhpcw0Kc2hvcnRseSBhZnRlciB0aGUgZmlyc3QgdmZyZWUsIHdoaWNoIERFQlVH
+X1BBR0VBTExPQyB3b3VsZCBvZiBjb3Vyc2UNCm1ha2UgdHJpZ2dlciBhIGZsdXNoX3RsYl9rZXJu
+ZWxfcmFuZ2UoKSBvbiB0aGUgYWxsb2NhdGlvbiBqdXN0IGxpa2UgbXkNCnZtYWxsb2MgY2hhbmdl
+cyBkbyBvbiBjZXJ0YWluIHZtYWxsb2NzLiBUaGUgdXBzdHJlYW0gY29kZSBjYWxscw0Kdm1fdW5t
+YXBfYWxpYXNlcygpIGluc3RlYWQgb2YgdGhlIGZsdXNoX3RsYl9rZXJuZWxfcmFuZ2UoKSBkaXJl
+Y3RseSwNCmJ1dCB3ZSBhbHNvIHRlc3RlZCBhIHZlcnNpb24gdGhhdCBjYWxsZWQgdGhlIGZsdXNo
+IGRpcmVjdGx5IG9uIGp1c3QgdGhlDQphbGxvY2F0aW9uIGFuZCBpdCBhbHNvIGh1bmcuIFNvIGl0
+IHNlZW1zIGxpa2UgaXNzdWVzIGZsdXNoaW5nIHZtYWxsb2NzDQpvbiB0aGlzIHBsYXRmb3JtIGV4
+aXN0IG91dHNpZGUgbXkgY29tbWl0cy4NCg0KSG93IGRvIHBlb3BsZSBmZWVsIGFib3V0IGNhbGxp
+bmcgdGhpcyBhIHNwYXJjIHNwZWNpZmljIGlzc3VlIHVuY292ZXJlZA0KYnkgbXkgcGF0Y2ggaW5z
+dGVhZCBvZiBjYXVzZWQgYnkgaXQgYXQgdGhpcyBwb2ludD8NCg0KSWYgcGVvcGxlIGFncmVlIHdp
+dGggdGhpcyBhc3Nlc21lbnQsIGl0IG9mIGNvdXJzZSBzdGlsbCBzZWVtcyBsaWtlIHRoZQ0KbmV3
+IGNoYW5nZXMgdHVybiB0aGUgcm9vdCBjYXVzZSBpbnRvIGEgbW9yZSBpbXBhY3RmdWwgaXNzdWUg
+Zm9yIHRoaXMNCnNwZWNpZmljIGNvbWJpbmF0aW9uLiBPbiB0aGUgb3RoZXIgaGFuZCBJIGFtIG5v
+dCB0aGUgcmlnaHQgcGVyc29uIHRvDQpmaXggdGhlIHJvb3QgY2F1c2UgZm9yIHNldmVyYWwgcmVh
+c29ucyBpbmNsdWRpbmcgbm8gaGFyZHdhcmUgYWNjZXNzLiANCg0KT3RoZXJ3aXNlIEkgY291bGQg
+c3VibWl0IGEgcGF0Y2ggdG8gZGlzYWJsZSB0aGlzIGZvciBzcGFyYyBzaW5jZSBpdA0KZG9lc24n
+dCByZWFsbHkgZ2V0IGEgc2VjdXJpdHkgYmVuZWZpdCBmcm9tIGl0IGFueXdheS4gV2hhdCBkbyBw
+ZW9wbGUNCnRoaW5rPw0K
