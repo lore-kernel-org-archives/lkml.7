@@ -2,165 +2,120 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 758CCC07542
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 18:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EDE3C07542
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 18:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5004120879
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 18:14:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0952720815
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 18:16:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="X0CnhJKS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E3O488YV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727541AbfEYSOM (ORCPT
+        id S1727431AbfEYSQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 14:14:12 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39800 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727325AbfEYSOL (ORCPT
+        Sat, 25 May 2019 14:16:49 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:40460 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727300AbfEYSQs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 14:14:11 -0400
-Received: by mail-pf1-f194.google.com with SMTP id z26so7206840pfg.6
-        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 11:14:10 -0700 (PDT)
+        Sat, 25 May 2019 14:16:48 -0400
+Received: by mail-pf1-f196.google.com with SMTP id u17so7205517pfn.7
+        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 11:16:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=WMR94oFTY+OqH2rjdVLemgAhQSEwpDtMoTvHog5j0sQ=;
-        b=X0CnhJKSN5RJR4iBBE0j8IyN20bJySbgLRYLCC51oQloSv5szaUMYCNZpmOF7YbrDu
-         djpT8FbnXBj3XQkIAMR6RR9RpzFcWEVC3LhAMyeOqLUzZjvP8fjtU34iUpZcXld1un1M
-         b02atJSdTlxwLlu/aDOH5x6Q5ekm4aDR1+1vE=
+        bh=/ii9WpqD7iEAJKDcuy2CpZ/y9+8YtSKEyLsD7jWsNAQ=;
+        b=E3O488YVP8TgapmTW0WHrHr5ag7JIOkw2T6nXC6lEd/a1hMULi+DdyrxSINGbd5xGc
+         sUSAbhzND1I0stBU7o+1u8mSI48Daarvhj55rAbL/1vhpivBXI190VPU+y9L/pcIWJE7
+         bfKWvxY68+2gtByETnQ9w6hEowzfxRrG02eW82rPQv2LvVXCXiPU7lyvE6g0LNSGY7OR
+         kCGHOkkSESFeOZNhP6ieNVyxpo4H2sAbr6pAee6pLlSnvADsydU2iLqzalTMy1kol+f8
+         +yb/AaoYxpNYnw7UkoFrVGy95QbvWwZnwiPtvDT5gCN88MtAHn3HaUy3ya6MRiAyKObS
+         errQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WMR94oFTY+OqH2rjdVLemgAhQSEwpDtMoTvHog5j0sQ=;
-        b=XHDWD+91SwqiacvFHEhYxjbfQ1/g+hGWDmWpcfPE+iSvTHARdBeNeDUmgpDNRbTDML
-         MFLtjain0tjwvvIh64JB/wnV547BlHpwjZHnRv69KWEiafostazscq51HZxiNYbFP19b
-         EPKazsk7+YA/qy5wrahFdO/mmkckXAX+0NcoF/CbOFDvYIzESqwQdalEcqTiDhIytxix
-         S6WagEZSFozYCXQRinJZmIaa9oEKv56JhHSZ8fX8clCCUNcP66JWZtF0rM7J/K4vWs+l
-         0ZOqfn5WVc8kOwbH1L0NghIwr31RQ7FbEKRku3v4SDEFIcXrV7eIsGiqQndU2RcNvCuB
-         a0AQ==
-X-Gm-Message-State: APjAAAVqSWufhnhU+1Vc2d4qN8pRucQ3GMPXcGhqoh9HHCxR/r8noA78
-        e8yHDdAyNenjI+Sozh41grtIbA==
-X-Google-Smtp-Source: APXvYqyQRiZeJdnv8NV0jJQ1QNMV+NOKlT6Luw5GwD0AE0gpx9GAm4B91udlCkCjw5QI0crgiiIVzA==
-X-Received: by 2002:a63:4710:: with SMTP id u16mr11132086pga.447.1558808050038;
-        Sat, 25 May 2019 11:14:10 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id y13sm8409814pfb.143.2019.05.25.11.14.08
+        bh=/ii9WpqD7iEAJKDcuy2CpZ/y9+8YtSKEyLsD7jWsNAQ=;
+        b=cW0AXAaN6hVpX0ErqwICkYiIIyU/mSIsXITzXyjIM+C/UV0WQH5ZqBDpJVSXxM/J06
+         KLrsZFXLL34R4djrfeLWmg8U4NWKABNPzwxyFKq+3GRy4y/s3dNqELShCpHd1QPepTRB
+         KXdlPGofDGykggae/5+JzOxDS0HJiQhxPYcvzDx1J8K1cZOa4hKCSt7TeqFzJQwTxp9S
+         YU7L7dBTm8lFzf69Ra2h6ZFZOtPWylknl6pQ0/ePQZiCvN/tdcmn7bWBBYIlIQdWJxym
+         rgjoErQxpVpYnASzmQJ1WZ3OfwAC2Stc9KPekShF5m9Qt3UMXZuBTYXo2iqn6dZ5sIR9
+         ILzg==
+X-Gm-Message-State: APjAAAVg281Cg9cuja9zPlLldIQ6Tf9Nz+s79cmXp8FBsevB4EOACG8o
+        z/XtXapg+ecQRm5uKqqMTVeq/A==
+X-Google-Smtp-Source: APXvYqxBA7lJ3zAgZZL0FnYp4GQtRBbRIxVuoz1SqGkSgJaOy62aJMDPdmEgBEATozTa5f+xEy64mQ==
+X-Received: by 2002:aa7:8dc3:: with SMTP id j3mr123366686pfr.141.1558808207644;
+        Sat, 25 May 2019 11:16:47 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id i101sm6691470pje.9.2019.05.25.11.16.45
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 25 May 2019 11:14:08 -0700 (PDT)
-Date:   Sat, 25 May 2019 14:14:07 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>, kvm-ppc@vger.kernel.org,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Paul Mackerras <paulus@ozlabs.org>, rcu@vger.kernel.org
-Subject: Re: [PATCH RFC 0/5] Remove some notrace RCU APIs
-Message-ID: <20190525181407.GA220326@google.com>
-References: <20190524234933.5133-1-joel@joelfernandes.org>
- <20190524232458.4bcf4eb4@gandalf.local.home>
- <20190525081444.GC197789@google.com>
- <20190525070826.16f76ee7@gandalf.local.home>
- <20190525141954.GA176647@google.com>
- <20190525155035.GE28207@linux.ibm.com>
+        Sat, 25 May 2019 11:16:46 -0700 (PDT)
+Date:   Sat, 25 May 2019 11:17:14 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 2/4] soc: qcom: Add AOSS QMP driver
+Message-ID: <20190525181714.GI2085@tuxbook-pro>
+References: <20190501043734.26706-1-bjorn.andersson@linaro.org>
+ <20190501043734.26706-3-bjorn.andersson@linaro.org>
+ <3d2c61ca-b91b-fdc7-7837-af6a3b71af7e@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190525155035.GE28207@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <3d2c61ca-b91b-fdc7-7837-af6a3b71af7e@codeaurora.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 25, 2019 at 08:50:35AM -0700, Paul E. McKenney wrote:
-> On Sat, May 25, 2019 at 10:19:54AM -0400, Joel Fernandes wrote:
-> > On Sat, May 25, 2019 at 07:08:26AM -0400, Steven Rostedt wrote:
-> > > On Sat, 25 May 2019 04:14:44 -0400
-> > > Joel Fernandes <joel@joelfernandes.org> wrote:
-> > > 
-> > > > > I guess the difference between the _raw_notrace and just _raw variants
-> > > > > is that _notrace ones do a rcu_check_sparse(). Don't we want to keep
-> > > > > that check?  
-> > > > 
-> > > > This is true.
-> > > > 
-> > > > Since the users of _raw_notrace are very few, is it worth keeping this API
-> > > > just for sparse checking? The API naming is also confusing. I was expecting
-> > > > _raw_notrace to do fewer checks than _raw, instead of more. Honestly, I just
-> > > > want to nuke _raw_notrace as done in this series and later we can introduce a
-> > > > sparse checking version of _raw if need-be. The other option could be to
-> > > > always do sparse checking for _raw however that used to be the case and got
-> > > > changed in http://lists.infradead.org/pipermail/linux-afs/2016-July/001016.html
-> > > 
-> > > What if we just rename _raw to _raw_nocheck, and _raw_notrace to _raw ?
+On Sat 25 May 10:53 PDT 2019, Sai Prakash Ranjan wrote:
+
+> On 5/1/2019 10:07 AM, Bjorn Andersson wrote:
+> > The Always On Subsystem (AOSS) Qualcomm Messaging Protocol (QMP) driver
+> > is used to communicate with the AOSS for certain side-channel requests,
+> > that are not available through the RPMh interface.
 > > 
-> > That would also mean changing 160 usages of _raw to _raw_nocheck in the
-> > kernel :-/.
+> > The communication is a very simple synchronous mechanism of messages
+> > being written in message RAM and a doorbell in the AOSS is rung. As the
+> > AOSS has processed the message length is cleared and an interrupt is
+> > fired by the AOSS as acknowledgment.
 > > 
-> > The tracing usage of _raw_notrace is only like 2 or 3 users. Can we just call
-> > rcu_check_sparse directly in the calling code for those and eliminate the APIs?
+> > The driver exposes the QDSS clock as a clock and the low-power state
+> > associated with the remoteprocs in the system as a set of power-domains.
 > > 
-> > I wonder what Paul thinks about the matter as well.
-> 
-> My thought is that it is likely that a goodly number of the current uses
-> of _raw should really be some form of _check, with lockdep expressions
-> spelled out.  Not that working out what exactly those lockdep expressions
-> should be is necessarily a trivial undertaking.  ;-)
-
-Yes, currently where I am a bit stuck is the rcu_dereference_raw()
-cannot possibly know what SRCU domain it is under, so lockdep cannot check if
-an SRCU lock is held without the user also passing along the SRCU domain. I
-am trying to change lockdep to see if it can check if *any* srcu domain lock
-is held (regardless of which one) and complain if none are. This is at least
-better than no check at all.
-
-However, I think it gets tricky for mutexes. If you have something like:
-mutex_lock(some_mutex);
-p = rcu_dereference_raw(gp);
-mutex_unlock(some_mutex);
-
-This might be a perfectly valid invocation of _raw, however my checks (patch
-is still cooking) trigger a lockdep warning becase _raw cannot know that this
-is Ok. lockdep thinks it is not in a reader section. This then gets into the
-territory of a new rcu_derference_raw_protected(gp, assert_held(some_mutex))
-which sucks because its yet another API. To circumvent this issue, can we
-just have callers of rcu_dereference_raw ensure that they call
-rcu_read_lock() if they are protecting dereferences by a mutex? That would
-make things a lot easier and also may be Ok since rcu_read_lock is quite
-cheap.
-
-> That aside, if we are going to change the name of an API that is
-> used 160 places throughout the tree, we would need to have a pretty
-> good justification.  Without such a justification, it will just look
-> like pointless churn to the various developers and maintainers on the
-> receiving end of the patches.
-
-Actually, the API name change is not something I want to do, it is Steven
-suggestion. My suggestion is let us just delete _raw_notrace and just use the
-_raw API for tracing, since _raw doesn't do any tracing anyway. Steve pointed
-that _raw_notrace does sparse checking unlike _raw, but I think that isn't an
-issue since _raw doesn't do such checking at the moment anyway.. (if possible
-check my cover letter again for details/motivation of this series).
-
-thanks!
-
- - Joel
-
-> 							Thanx, Paul
-> 
-> > thanks, Steven!
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > ---
+> > 
+> > Changes since v6:
+> > - Squash the pd into the same driver as the communication, to simplify
+> >    the interaction.
+> > - Representing the QDSS clocks as a clock/power domain turns out to
+> >    cascade into a request to make all Coresight drivers have a secondary
+> >    compatible to replace the required bus clock with a required power
+> >    domain. So in v7 this is exposed as a clock instead.
+> > - Some error checking updates, as reported by Doug.
 > > 
 > 
+> Thanks for the patch Bjorn.
+> Tested the QDSS functionality on SDM845 based Cheza board with this
+> change and it works just fine.
+> 
+> Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+
+Thanks for the confirmation Sai!
+
+Regards,
+Bjorn
