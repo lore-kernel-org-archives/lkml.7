@@ -2,107 +2,110 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BA9C07542
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB65C07542
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:53:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 525CB20863
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:44:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9257F20862
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:53:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mu55dkKE"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BgXEnwqs";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AhvQjd1G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727183AbfEYRoW (ORCPT
+        id S1727187AbfEYRxn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 13:44:22 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38058 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726395AbfEYRoV (ORCPT
+        Sat, 25 May 2019 13:53:43 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:42086 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725838AbfEYRxn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 13:44:21 -0400
-Received: by mail-pl1-f193.google.com with SMTP id f97so5433759plb.5;
-        Sat, 25 May 2019 10:44:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=HBBbVG82QaZnu+ByWQxbSng2FF/splMwlHyR9tDwYd4=;
-        b=Mu55dkKEf3Q0XHw1cx3eLiYIjHMoihyXfRYsyq2xBoW17W5etjNHXjPTO6n/jIS/Cx
-         4keoFkMisEQxIQHTSfqVGCzyD/uLioOCzIQRqIWy85iLttEbdeRdau8pikqSiVZOf0Es
-         6aew72FVU4pRYxhwDVah62vMZdtm8qblWq4Bh2jeRjlH9oz4z0zA4t52c9IlOKB/6Swu
-         Q2XmvmJn+g5m+4Ub8wojUtrnVRHa8m9r8t51BeOIfurEqf4siJV1tettNa6wJ8dWuAdL
-         wo03+vOhZHXn9L1YsqRO93JAYWcyTLXUMG/oAwav15ep2VoJ6xxHuWkfd6zebreIEChc
-         3w1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=HBBbVG82QaZnu+ByWQxbSng2FF/splMwlHyR9tDwYd4=;
-        b=I1JWzcBhyPx+cVUdBZ2UO15fN86Mpc9sINgNZ2SoxBV8me+apurA6Swq0IdZnM5m0A
-         n3JpncdBZS2GCmT9wSYYDq8BlqQSon/9X9LB9pdllqb4Gfsl3SccxEvg3nY9Obn1WGh0
-         Drshm06qUKyF+Q14b/XOLnwzUosKcRFky2cim1b89/Wqvnu264NmxWZV/BYtQgdNdDWL
-         AiyQAWua9n9xTStt7pTtfd236OjUhvR9cqE4xE7co2er0FszRgHkyE2o9WcjoiuPoA2K
-         EQXvLyRsQiYAG20PKlUN0vx8uLXJSK24EuOme6n0NBE4xh72lJuBi2tjLDrch267deHK
-         eA8A==
-X-Gm-Message-State: APjAAAXSpBJryK8B3JqShLpgw0Oitu2w9XYjyDpivohCf1bmrv3RCmKw
-        e032RV/k0XyICVZc+n5ghl0=
-X-Google-Smtp-Source: APXvYqwR/AYBys7vAhckZqKznuWDoJXs7aeyZs2h5ID5Khi81ZvERndEb8ALKTHiMkm0p7kAs87ztw==
-X-Received: by 2002:a17:902:1029:: with SMTP id b38mr73906099pla.72.1558806261207;
-        Sat, 25 May 2019 10:44:21 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.92.73])
-        by smtp.gmail.com with ESMTPSA id a12sm3624932pgq.0.2019.05.25.10.44.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 25 May 2019 10:44:20 -0700 (PDT)
-Date:   Sat, 25 May 2019 23:14:16 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        Sat, 25 May 2019 13:53:43 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 1A51960C5F; Sat, 25 May 2019 17:53:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1558806822;
+        bh=jzgn7rg3s5o3zpXbF8z5WWZpHYb1TEcoJmOALP8joCg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=BgXEnwqsQtglDsn26d091gsab2jvK9eX60DBAj3Sb35YVk8e20LyNcO17POyPz/qA
+         XeHQKa1D6dg1r+ofxGIWlG12NCCi/1BF6UOnyblc7uq3KDKXxDjCsMJb7KziiEXQVf
+         7C+P2vVgN1x1lDr3xGeUFlHc7QmtsFmhzXtqoBsU=
+Received: from [192.168.1.101] (unknown [157.45.255.98])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C6CAF601D4;
+        Sat, 25 May 2019 17:53:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1558806821;
+        bh=jzgn7rg3s5o3zpXbF8z5WWZpHYb1TEcoJmOALP8joCg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=AhvQjd1G+fm8dGu6jDuDybm6UFdOcyr5aXzXC+7+TtNTb6dikoxLweF9ECtqAwEd6
+         AY59Ce5O14emuv7Ou2IajldTA0rzRJqbHE0zXer/5aoLX/PIPxx96C2mLD3lylNyOV
+         osSg39oiCXUuZu3J1AQRvVQtRq/leRGMocTXDmyM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C6CAF601D4
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+Subject: Re: [PATCH v7 2/4] soc: qcom: Add AOSS QMP driver
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] target/iscsi: fix possible condition with no effect (if ==
- else)
-Message-ID: <20190525174416.GA21510@hari-Inspiron-1545>
+References: <20190501043734.26706-1-bjorn.andersson@linaro.org>
+ <20190501043734.26706-3-bjorn.andersson@linaro.org>
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Message-ID: <3d2c61ca-b91b-fdc7-7837-af6a3b71af7e@codeaurora.org>
+Date:   Sat, 25 May 2019 23:23:33 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190501043734.26706-3-bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fix below warning reported by coccicheck
+On 5/1/2019 10:07 AM, Bjorn Andersson wrote:
+> The Always On Subsystem (AOSS) Qualcomm Messaging Protocol (QMP) driver
+> is used to communicate with the AOSS for certain side-channel requests,
+> that are not available through the RPMh interface.
+> 
+> The communication is a very simple synchronous mechanism of messages
+> being written in message RAM and a doorbell in the AOSS is rung. As the
+> AOSS has processed the message length is cleared and an interrupt is
+> fired by the AOSS as acknowledgment.
+> 
+> The driver exposes the QDSS clock as a clock and the low-power state
+> associated with the remoteprocs in the system as a set of power-domains.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+> 
+> Changes since v6:
+> - Squash the pd into the same driver as the communication, to simplify
+>    the interaction.
+> - Representing the QDSS clocks as a clock/power domain turns out to
+>    cascade into a request to make all Coresight drivers have a secondary
+>    compatible to replace the required bus clock with a required power
+>    domain. So in v7 this is exposed as a clock instead.
+> - Some error checking updates, as reported by Doug.
+> 
 
-drivers/target/iscsi/iscsi_target_nego.c:175:6-8: WARNING: possible
-condition with no effect (if == else)
+Thanks for the patch Bjorn.
+Tested the QDSS functionality on SDM845 based Cheza board with this
+change and it works just fine.
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- drivers/target/iscsi/iscsi_target_nego.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 
-diff --git a/drivers/target/iscsi/iscsi_target_nego.c b/drivers/target/iscsi/iscsi_target_nego.c
-index 8a5e8d1..b6fb70a 100644
---- a/drivers/target/iscsi/iscsi_target_nego.c
-+++ b/drivers/target/iscsi/iscsi_target_nego.c
-@@ -168,12 +168,7 @@ static u32 iscsi_handle_authentication(
- 	else if (strstr("CHAP", authtype))
- 		return chap_main_loop(conn, auth, in_buf, out_buf,
- 				&in_length, out_length);
--	else if (strstr("SPKM1", authtype))
--		return 2;
--	else if (strstr("SPKM2", authtype))
--		return 2;
--	else if (strstr("KRB5", authtype))
--		return 2;
-+	/* ret 2 in  SPKM1,SPKM2,KRB5 cases */
- 	else
- 		return 2;
- }
 -- 
-2.7.4
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
