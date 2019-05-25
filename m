@@ -2,117 +2,309 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B02A9C28CBF
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 11:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E71D0C282CE
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 11:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 934C92175B
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 11:36:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A64612175B
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 11:37:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="imAFbrIT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbfEYLga (ORCPT
+        id S1726830AbfEYLhn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 07:36:30 -0400
-Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:38613 "EHLO
-        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726484AbfEYLga (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 07:36:30 -0400
-Received: from [IPv6:2001:983:e9a7:1:6081:f7d7:b93c:24af] ([IPv6:2001:983:e9a7:1:6081:f7d7:b93c:24af])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id UUyQhPCuZsDWyUUyRhUFdc; Sat, 25 May 2019 13:36:28 +0200
-Subject: Re: [PATCH v5 3/4] media: pixfmt: Document the HEVC slice pixel
- format
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
-        linux-sunxi@googlegroups.com
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-References: <20190524093635.1832-1-paul.kocialkowski@bootlin.com>
- <20190524093635.1832-4-paul.kocialkowski@bootlin.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <de925df1-e15e-6293-31b5-b046060e7359@xs4all.nl>
-Date:   Sat, 25 May 2019 13:36:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sat, 25 May 2019 07:37:43 -0400
+Received: from mail-eopbgr760078.outbound.protection.outlook.com ([40.107.76.78]:62784
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726723AbfEYLhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 May 2019 07:37:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Fpg4Njla/xBdpRsCM3B/g0kGnZsxEycXpWDuC7/E0Wk=;
+ b=imAFbrITMxOx3g8rknPox5EKb2fC1AY0dMwRed3BYDlYRvM54q/K0WJgONwCItkPsAmDegEu5injYzHo6dysHg26zo5I2hkQerD/9TmcgBoMX0qgWtUxu9tQfRso+W1BGPhVePJKks2J1LKWKlvPKx0q97/6WC+7P/57E/M7qHU=
+Received: from BL0PR02CA0042.namprd02.prod.outlook.com (2603:10b6:207:3d::19)
+ by CY4PR02MB2680.namprd02.prod.outlook.com (2603:10b6:903:120::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1922.18; Sat, 25 May
+ 2019 11:37:37 +0000
+Received: from SN1NAM02FT064.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::204) by BL0PR02CA0042.outlook.office365.com
+ (2603:10b6:207:3d::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1922.17 via Frontend
+ Transport; Sat, 25 May 2019 11:37:36 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.80.198)
+ smtp.mailfrom=xilinx.com; arndb.de; dkim=none (message not signed)
+ header.d=none;arndb.de; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.80.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.80.198; helo=xir-pvapexch02.xlnx.xilinx.com;
+Received: from xir-pvapexch02.xlnx.xilinx.com (149.199.80.198) by
+ SN1NAM02FT064.mail.protection.outlook.com (10.152.72.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.20.1922.16 via Frontend Transport; Sat, 25 May 2019 11:37:35 +0000
+Received: from xir-pvapexch01.xlnx.xilinx.com (172.21.17.15) by
+ xir-pvapexch02.xlnx.xilinx.com (172.21.17.17) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1531.3; Sat, 25 May 2019 12:37:34 +0100
+Received: from smtp.xilinx.com (172.21.105.198) by
+ xir-pvapexch01.xlnx.xilinx.com (172.21.17.15) with Microsoft SMTP Server id
+ 15.1.1531.3 via Frontend Transport; Sat, 25 May 2019 12:37:34 +0100
+Envelope-to: arnd@arndb.de,
+ gregkh@linuxfoundation.org,
+ michal.simek@xilinx.com,
+ linux-arm-kernel@lists.infradead.org,
+ robh+dt@kernel.org,
+ mark.rutland@arm.com,
+ devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ dragan.cvetic@xilinx.com,
+ derek.kiernan@xilinx.com
+Received: from [149.199.110.15] (port=57194 helo=xirdraganc40.xilinx.com)
+        by smtp.xilinx.com with esmtp (Exim 4.90)
+        (envelope-from <dragan.cvetic@xilinx.com>)
+        id 1hUUzW-00058U-Mv; Sat, 25 May 2019 12:37:34 +0100
+From:   Dragan Cvetic <dragan.cvetic@xilinx.com>
+To:     <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
+        <michal.simek@xilinx.com>, <linux-arm-kernel@lists.infradead.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>,
+        Derek Kiernan <derek.kiernan@xilinx.com>
+Subject: [PATCH V4 06/12] misc: xilinx_sdfec: Add ability to configure turbo
+Date:   Sat, 25 May 2019 12:37:19 +0100
+Message-ID: <1558784245-108751-7-git-send-email-dragan.cvetic@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1558784245-108751-1-git-send-email-dragan.cvetic@xilinx.com>
+References: <1558784245-108751-1-git-send-email-dragan.cvetic@xilinx.com>
 MIME-Version: 1.0
-In-Reply-To: <20190524093635.1832-4-paul.kocialkowski@bootlin.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfL5ASQGLGKFdBxYetB5w++UJszYGQx9k/wzBFOSR0d1qvZS8Dyyn9JMjmSBnoMDWOPuEkfLPS+B9eJV4AXBrcbrQ8rKdPJD3VlNeP9BgVFDQyJMtVG8e
- NdcszGQdoOq6xbmoeJI5TlASl41wxbKOXnlYhsbP7imNZSHMlmoliT3GGSQg9MzWbMpcNHsUyaQ9i4BlwJKaNq7A5nHlCpNlNvP+EXqSNioz3biSS669EmIg
- CtYfm/AclOe1UeaPKc3/aDioOvAjzrXYYdWKk6xGTSi/QxRiw3b+kjAfMHK802x7mHlUQH3IRoGiceW8C9fkka0e8XB3Ma2cNjQ2+6ocukUDEo/c48AFZx0u
- qLDrUPcgP3ZLXoowScD55gR3K030KQbKnBAxJWhc3Vopfu2x88JLMn/FrW6AQYJrt5k0pMP3cqOIQhdYV0dY9PmaRxzZx6yAw4HGW36FjkWW50Pfo0sVYybv
- D8JJTAVew5NVqf5xUUAy3H6sGsMIm77HSNtGfuUh3lpfilNUxThMdVtoyvSLRFFAZlRsr2c4/PH7hSVMNfvXlqZ0h2RwuqzlgFF9Ec60tjIlszGRFt7ejqWw
- tO/Epet1eDCs9mXuCXFJE/+Fe+sf9i6rppSys54pFSPgcB6Asf0h3cXyPxbH8gvcTtrZ/Iz9JA0p225QJ9ZAf3B55L1PJN+kgYctd3vQqVh1bmIwoeXY82NI
- +nvO2Ff5XT38voye3UdfMdjCdJJbSpJ9N2k0hRshCZvGxSSZGitczTX5aAAwIuepT3tzpFSLpsvMwU2M5P6SpGb/y0pstXOPYBdcS2pf31u50lmdGrj4OOgB
- /1B2HzykKbyzRQAvS1yk2tiAWjBddRcAskMJJ0Zqgc4aRyeEVB1XObgy53gyQQ==
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.80.198;IPV:CAL;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(39860400002)(376002)(136003)(346002)(2980300002)(189003)(199004)(2201001)(47776003)(356004)(7636002)(126002)(6666004)(71366001)(2906002)(186003)(5660300002)(478600001)(486006)(14444005)(28376004)(11346002)(305945005)(48376002)(60926002)(446003)(426003)(44832011)(26826003)(336012)(956004)(50466002)(2616005)(476003)(70206006)(9786002)(107886003)(76130400001)(26005)(70586007)(246002)(50226002)(4326008)(106002)(8936002)(36756003)(51416003)(54906003)(8676002)(16586007)(76176011)(316002)(7696005)(36906005)(110136005)(102446001)(461764006);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR02MB2680;H:xir-pvapexch02.xlnx.xilinx.com;FPR:;SPF:Pass;LANG:en;PTR:unknown-80-198.xilinx.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c2ba9916-6613-4430-747c-08d6e1056282
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(4709054)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328);SRVR:CY4PR02MB2680;
+X-MS-TrafficTypeDiagnostic: CY4PR02MB2680:
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-Microsoft-Antispam-PRVS: <CY4PR02MB26801E7CAA6339D7BEC709C5CB030@CY4PR02MB2680.namprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-Forefront-PRVS: 0048BCF4DA
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: iVFLYOF1nfkApwVJ3YcQlSWL0U3UgkTzp0EAsRt4ChadwFc8gj7julO/ZfvginCyQxgCMa36fmLSta4Atkd33HX8w4CobU+KXBvUmN5dVPfhRtQcRRMphiWg6TDv0/sqgnyAojCBSP+NUJJ0SgejDa5M8w3Asd0S7QqLLTseig6UBwAGOP5n/bQtrcJSx7SuGcRXPHzLM40dmVQ9SaYQfhLiZl9ZKX6usNoREhCHYjXph/85KsIWzhmm+bF58kw2AiLxJsnDAjqYF2Ay4SUx9u8HK3Ka1cJB3doEc++VpAur5Mz04fqJs242UI0HTfNN4Ti6LVvgAYrPrONQTM29ri44NCoWtTI6GcImkekajZxtOehy1lRDI9NWzToizZ4JFPsiQiF7mDtjptU0DpfTYyGSG1o74GKDL3ccy8hOOIw=
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 May 2019 11:37:35.9545
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c2ba9916-6613-4430-747c-08d6e1056282
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.80.198];Helo=[xir-pvapexch02.xlnx.xilinx.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR02MB2680
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/24/19 11:36 AM, Paul Kocialkowski wrote:
-> Document the current state of the HEVC slice pixel format.
-> The format will need to evolve in the future, which is why it is
-> not part of the public API.
-> 
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> ---
->  .../media/uapi/v4l/pixfmt-compressed.rst      | 21 +++++++++++++++++++
->  1 file changed, 21 insertions(+)
-> 
-> diff --git a/Documentation/media/uapi/v4l/pixfmt-compressed.rst b/Documentation/media/uapi/v4l/pixfmt-compressed.rst
-> index 4b701fc7653e..9d4195723c3e 100644
-> --- a/Documentation/media/uapi/v4l/pixfmt-compressed.rst
-> +++ b/Documentation/media/uapi/v4l/pixfmt-compressed.rst
-> @@ -143,6 +143,27 @@ Compressed Formats
->        - ``V4L2_PIX_FMT_HEVC``
->        - 'HEVC'
->        - HEVC/H.265 video elementary stream.
-> +    * .. _V4L2-PIX-FMT-HEVC-SLICE:
-> +
-> +      - ``V4L2_PIX_FMT_HEVC_SLICE``
-> +      - 'S265'
-> +      - HEVC parsed slice data, as extracted from the HEVC bitstream.
-> +	This format is adapted for stateless video decoders that implement a
-> +	HEVC pipeline (using the :ref:`codec` and :ref:`media-request-api`).
+mode
 
-Should be :ref:`mem2mem`.
+Add the capability to configure and retrieve turbo mode
+via the ioctls XSDFEC_SET_TURBO and XSDFEC_GET_TURBO.
 
-Regards,
+Tested-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
+Signed-off-by: Derek Kiernan <derek.kiernan@xilinx.com>
+Signed-off-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
+---
+ drivers/misc/xilinx_sdfec.c      | 61 ++++++++++++++++++++++++++++++++++
+ include/uapi/misc/xilinx_sdfec.h | 71 ++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 132 insertions(+)
 
-	Hans
-
-> +	Metadata associated with the frame to decode is required to be passed
-> +	through the following controls :
-> +        * ``V4L2_CID_MPEG_VIDEO_HEVC_SPS``
-> +        * ``V4L2_CID_MPEG_VIDEO_HEVC_PPS``
-> +        * ``V4L2_CID_MPEG_VIDEO_HEVC_SLICE_PARAMS``
-> +	See the :ref:`associated Codec Control IDs <v4l2-mpeg-hevc>`.
-> +	Buffers associated with this pixel format must contain the appropriate
-> +	number of macroblocks to decode a full corresponding frame.
-> +
-> +	.. note::
-> +
-> +	   This format is not yet part of the public kernel API and it
-> +	   is expected to change.
-> +
->      * .. _V4L2-PIX-FMT-FWHT:
->  
->        - ``V4L2_PIX_FMT_FWHT``
-> 
+diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
+index c19df6b..1f02109 100644
+--- a/drivers/misc/xilinx_sdfec.c
++++ b/drivers/misc/xilinx_sdfec.c
+@@ -103,6 +103,12 @@ static atomic_t xsdfec_ndevs = ATOMIC_INIT(0);
+ /* BYPASS Register */
+ #define XSDFEC_BYPASS_ADDR (0x3C)
+ 
++/* Turbo Code Register */
++#define XSDFEC_TURBO_ADDR (0x100)
++#define XSDFEC_TURBO_SCALE_MASK (0xFFF)
++#define XSDFEC_TURBO_SCALE_BIT_POS (8)
++#define XSDFEC_TURBO_SCALE_MAX (15)
++
+ /**
+  * struct xsdfec_clks - For managing SD-FEC clocks
+  * @core_clk: Main processing clock for core
+@@ -217,6 +223,55 @@ static int xsdfec_dev_release(struct inode *iptr, struct file *fptr)
+ 	return 0;
+ }
+ 
++static int xsdfec_set_turbo(struct xsdfec_dev *xsdfec, void __user *arg)
++{
++	struct xsdfec_turbo turbo;
++	int err;
++	u32 turbo_write;
++
++	err = copy_from_user(&turbo, arg, sizeof(turbo));
++	if (err)
++		return -EFAULT;
++
++	if (turbo.alg >= XSDFEC_TURBO_ALG_MAX)
++		return -EINVAL;
++
++	if (turbo.scale > XSDFEC_TURBO_SCALE_MAX)
++		return -EINVAL;
++
++	/* Check to see what device tree says about the FEC codes */
++	if (xsdfec->config.code == XSDFEC_LDPC_CODE)
++		return -EIO;
++
++	turbo_write = ((turbo.scale & XSDFEC_TURBO_SCALE_MASK)
++		       << XSDFEC_TURBO_SCALE_BIT_POS) |
++		      turbo.alg;
++	xsdfec_regwrite(xsdfec, XSDFEC_TURBO_ADDR, turbo_write);
++	return err;
++}
++
++static int xsdfec_get_turbo(struct xsdfec_dev *xsdfec, void __user *arg)
++{
++	u32 reg_value;
++	struct xsdfec_turbo turbo_params;
++	int err;
++
++	if (xsdfec->config.code == XSDFEC_LDPC_CODE)
++		return -EIO;
++
++	reg_value = xsdfec_regread(xsdfec, XSDFEC_TURBO_ADDR);
++
++	turbo_params.scale = (reg_value & XSDFEC_TURBO_SCALE_MASK) >>
++			     XSDFEC_TURBO_SCALE_BIT_POS;
++	turbo_params.alg = reg_value & 0x1;
++
++	err = copy_to_user(arg, &turbo_params, sizeof(turbo_params));
++	if (err)
++		err = -EFAULT;
++
++	return err;
++}
++
+ static u32
+ xsdfec_translate_axis_width_cfg_val(enum xsdfec_axis_width axis_width_cfg)
+ {
+@@ -302,6 +357,12 @@ static long xsdfec_dev_ioctl(struct file *fptr, unsigned int cmd,
+ 	}
+ 
+ 	switch (cmd) {
++	case XSDFEC_SET_TURBO:
++		rval = xsdfec_set_turbo(xsdfec, arg);
++		break;
++	case XSDFEC_GET_TURBO:
++		rval = xsdfec_get_turbo(xsdfec, arg);
++		break;
+ 	default:
+ 		/* Should not get here */
+ 		dev_warn(xsdfec->dev, "Undefined SDFEC IOCTL");
+diff --git a/include/uapi/misc/xilinx_sdfec.h b/include/uapi/misc/xilinx_sdfec.h
+index 15647ef..756d788 100644
+--- a/include/uapi/misc/xilinx_sdfec.h
++++ b/include/uapi/misc/xilinx_sdfec.h
+@@ -41,6 +41,22 @@ enum xsdfec_order {
+ };
+ 
+ /**
++ * enum xsdfec_turbo_alg - Turbo Algorithm Type.
++ * @XSDFEC_MAX_SCALE: Max Log-Map algorithm with extrinsic scaling. When
++ *		      scaling is set to this is equivalent to the Max Log-Map
++ *		      algorithm.
++ * @XSDFEC_MAX_STAR: Log-Map algorithm.
++ * @XSDFEC_TURBO_ALG_MAX: Used to indicate out of bound Turbo algorithms.
++ *
++ * This enum specifies which Turbo Decode algorithm is in use.
++ */
++enum xsdfec_turbo_alg {
++	XSDFEC_MAX_SCALE = 0,
++	XSDFEC_MAX_STAR,
++	XSDFEC_TURBO_ALG_MAX,
++};
++
++/**
+  * enum xsdfec_state - State.
+  * @XSDFEC_INIT: Driver is initialized.
+  * @XSDFEC_STARTED: Driver is started.
+@@ -98,6 +114,33 @@ enum xsdfec_axis_word_include {
+ };
+ 
+ /**
++ * struct xsdfec_turbo - User data for Turbo codes.
++ * @alg: Specifies which Turbo decode algorithm to use
++ * @scale: Specifies the extrinsic scaling to apply when the Max Scale algorithm
++ *	   has been selected
++ *
++ * Turbo code structure to communicate parameters to XSDFEC driver.
++ */
++struct xsdfec_turbo {
++	enum xsdfec_turbo_alg alg;
++	__u8 scale;
++};
++
++/**
++ * struct xsdfec_status - Status of SD-FEC core.
++ * @fec_id: ID of SD-FEC instance. ID is limited to the number of active
++ *          SD-FEC's in the FPGA and is related to the driver instance
++ *          Minor number.
++ * @state: State of the SD-FEC core
++ * @activity: Describes if the SD-FEC instance is Active
++ */
++struct xsdfec_status {
++	__s32 fec_id;
++	enum xsdfec_state state;
++	__s8 activity;
++};
++
++/**
+  * struct xsdfec_irq - Enabling or Disabling Interrupts.
+  * @enable_isr: If true enables the ISR
+  * @enable_ecc_isr: If true enables the ECC ISR
+@@ -139,4 +182,32 @@ struct xsdfec_config {
+  * XSDFEC IOCTL List
+  */
+ #define XSDFEC_MAGIC 'f'
++/**
++ * DOC: XSDFEC_SET_TURBO
++ * @Parameters
++ *
++ * @struct xsdfec_turbo *
++ *	Pointer to the &struct xsdfec_turbo that contains the Turbo decode
++ *	settings for the SD-FEC core
++ *
++ * @Description
++ *
++ * ioctl that sets the SD-FEC Turbo parameter values
++ *
++ * This can only be used when the driver is in the XSDFEC_STOPPED state
++ */
++#define XSDFEC_SET_TURBO _IOW(XSDFEC_MAGIC, 4, struct xsdfec_turbo)
++/**
++ * DOC: XSDFEC_GET_TURBO
++ * @Parameters
++ *
++ * @struct xsdfec_turbo *
++ *	Pointer to the &struct xsdfec_turbo that contains the current Turbo
++ *	decode settings of the SD-FEC Block
++ *
++ * @Description
++ *
++ * ioctl that returns SD-FEC turbo param values
++ */
++#define XSDFEC_GET_TURBO _IOR(XSDFEC_MAGIC, 7, struct xsdfec_turbo)
+ #endif /* __XILINX_SDFEC_H__ */
+-- 
+2.7.4
 
