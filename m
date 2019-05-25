@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6709C282E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 754EAC282E5
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A245520863
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:38:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51907216E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:38:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727313AbfEYRiK (ORCPT
+        id S1727342AbfEYRiP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 13:38:10 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:45584 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726606AbfEYRiG (ORCPT
+        Sat, 25 May 2019 13:38:15 -0400
+Received: from mail-it1-f199.google.com ([209.85.166.199]:56374 "EHLO
+        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726772AbfEYRiG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 25 May 2019 13:38:06 -0400
-Received: by mail-io1-f71.google.com with SMTP id z2so10089506iog.12
-        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 10:38:05 -0700 (PDT)
+Received: by mail-it1-f199.google.com with SMTP id l124so6790844itg.6
+        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 10:38:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=W0sM+dkM5p+EzGcOUhbNOnMkSf+3EYQYnJRlw+QErig=;
-        b=SP3KUGKWOnhK7O6liRCkBd1jL1wt2HfrPhypimINi8Gc9SZZEUMdIZpNCMCROU5HyV
-         YuEBeFZ7CwhzpgMVhw0N/xGSkUi/s5U0lUVdTQJZFvJJlb8Jo/xkxeZrw1zC5Dld8D5w
-         UD+uanZzsykbW+vzkbV42XOqlCl4uY5WfaPQxxlNe/2LDiovNc7Lsw5rkGclaGJsaR78
-         cO85D22YNTTuactWAY+oKqT6OeaBVujntaqk0zHIsLqbqJF56f6UqVx1wXuavNfWfEDo
-         F3EIEt8OzV2j8hyaeg5aW1qGX9/ybSw7hTJaqlEz2G8c93yvmAfYbryENRXuPCv6H8BY
-         ND+g==
-X-Gm-Message-State: APjAAAVVf6UjBNA/jl7mPr6qynGOuaaM8n6ECTlg133W5OPiVPalnnO3
-        fHE9fjc1FJ67jJz4yGEG2Lb6pKLFZe4lsaGG9pYwWSAhFW41
-X-Google-Smtp-Source: APXvYqzmCzxmhXot/pkKNomMM3XaJxwIL1NaHND0Utz8T5kE3LtJd7GN/NO/HFZnk5/+gXXmbaITmho3ro/+PY/Va91xxzpwx+Kb
+        bh=CpgloL8+onz68GPgmg9tXtXXtVgIppru3CwueKNVn1M=;
+        b=GQ7pmgu0w2qZIFtkHob5nCG3PqlihCmbtkn/roG73QZKNv4TJ8B40FLu41b19YYcB4
+         U9ALGRmHO6JP/RnLc7ophBE4HWFqUlp5pkBZyouDlw12Vcq6SSTouVBtp+pFUGOM3E78
+         nUVlkKRWXVhFTaxiSkLUxCJctO5XGKutNdhz9vZkHZs/vjwyXQywwyf2y0vBTfHnmETU
+         yofAYqYCuO3zmCLvy3UmfV9I09xYkCG1G0Hj3JGPhfPY50aS2xuJM0d1ScK6hNmQnYAn
+         XsYLCR6V2ahu0Lwazp7RTxz+g67lMZox4Hsrxt5a/fzJrSgG3HQYoLET2VP+qW+x84pw
+         eoXw==
+X-Gm-Message-State: APjAAAWX9iigyj71X2XWthtSP2YCSvdiARWSZLMs8wQBUeFHvXIQv+FY
+        /BoZhqSui5qJMroypRinjKmZTmqmZYK39KmGIC9MIvTxgCee
+X-Google-Smtp-Source: APXvYqyE0Jyhh6VMGfVY8tyiGNU+fB9Yn0ef/lFln7vD4bJPM0xETATwopqivsVpYCTq8b42O1CePf1IV1oBWXPPk/hFfPxiKtCR
 MIME-Version: 1.0
-X-Received: by 2002:a02:c7c9:: with SMTP id s9mr982338jao.82.1558805885471;
+X-Received: by 2002:a5e:9907:: with SMTP id t7mr13326663ioj.24.1558805885897;
  Sat, 25 May 2019 10:38:05 -0700 (PDT)
 Date:   Sat, 25 May 2019 10:38:05 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000013d4880589b9c7d3@google.com>
-Subject: memory leak in bcsp_recv
-From:   syzbot <syzbot+98162c885993b72f19c4@syzkaller.appspotmail.com>
-To:     johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org,
-        linux-kernel@vger.kernel.org, marcel@holtmann.org,
-        syzkaller-bugs@googlegroups.com
+Message-ID: <0000000000001a546b0589b9c74f@google.com>
+Subject: KASAN: use-after-free Read in class_equal
+From:   syzbot <syzbot+83c135be90fc92db7e13@syzkaller.appspotmail.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -60,249 +59,79 @@ syzbot found the following crash on:
 
 HEAD commit:    c50bbf61 Merge tag 'platform-drivers-x86-v5.2-2' of git://..
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=113f684ca00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=61dd9e15a761691d
-dashboard link: https://syzkaller.appspot.com/bug?extid=98162c885993b72f19c4
+console output: https://syzkaller.appspot.com/x/log.txt?x=12130c9aa00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=fc045131472947d7
+dashboard link: https://syzkaller.appspot.com/bug?extid=83c135be90fc92db7e13
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=143fcb8aa00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=137bd84ca00000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12e7d84ca00000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+98162c885993b72f19c4@syzkaller.appspotmail.com
+Reported-by: syzbot+83c135be90fc92db7e13@syzkaller.appspotmail.com
 
-9 tx timeout
-BUG: memory leak
-unreferenced object 0xffff888123ccbc00 (size 224):
-   comm "syz-executor717", pid 7249, jiffies 4295003727 (age 28.450s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000600479ed>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:55 [inline]
-     [<00000000600479ed>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000600479ed>] slab_alloc_node mm/slab.c:3269 [inline]
-     [<00000000600479ed>] kmem_cache_alloc_node+0x153/0x2a0 mm/slab.c:3579
-     [<0000000059f3ba6b>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:198
-     [<0000000074e70f06>] alloc_skb include/linux/skbuff.h:1058 [inline]
-     [<0000000074e70f06>] bt_skb_alloc include/net/bluetooth/bluetooth.h:339  
-[inline]
-     [<0000000074e70f06>] bcsp_recv+0x1c3/0x540  
-drivers/bluetooth/hci_bcsp.c:685
-     [<00000000edf8c323>] hci_uart_tty_receive+0xba/0x200  
-drivers/bluetooth/hci_ldisc.c:607
-     [<000000009051651a>] tiocsti drivers/tty/tty_io.c:2195 [inline]
-     [<000000009051651a>] tty_ioctl+0x81c/0xa30 drivers/tty/tty_io.c:2571
-     [<000000005695f2c9>] vfs_ioctl fs/ioctl.c:46 [inline]
-     [<000000005695f2c9>] file_ioctl fs/ioctl.c:509 [inline]
-     [<000000005695f2c9>] do_vfs_ioctl+0x62a/0x810 fs/ioctl.c:696
-     [<00000000be82d55d>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
-     [<00000000d19fa7dc>] __do_sys_ioctl fs/ioctl.c:720 [inline]
-     [<00000000d19fa7dc>] __se_sys_ioctl fs/ioctl.c:718 [inline]
-     [<00000000d19fa7dc>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
-     [<0000000051eaf016>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<000000000b0b6970>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+==================================================================
+BUG: KASAN: use-after-free in class_equal+0x40/0x50  
+kernel/locking/lockdep.c:1527
+Read of size 8 at addr ffff88807aedf360 by task syz-executor.0/9275
 
-BUG: memory leak
-unreferenced object 0xffff888123ccbc00 (size 224):
-   comm "syz-executor717", pid 7249, jiffies 4295003727 (age 30.380s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000600479ed>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:55 [inline]
-     [<00000000600479ed>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000600479ed>] slab_alloc_node mm/slab.c:3269 [inline]
-     [<00000000600479ed>] kmem_cache_alloc_node+0x153/0x2a0 mm/slab.c:3579
-     [<0000000059f3ba6b>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:198
-     [<0000000074e70f06>] alloc_skb include/linux/skbuff.h:1058 [inline]
-     [<0000000074e70f06>] bt_skb_alloc include/net/bluetooth/bluetooth.h:339  
-[inline]
-     [<0000000074e70f06>] bcsp_recv+0x1c3/0x540  
-drivers/bluetooth/hci_bcsp.c:685
-     [<00000000edf8c323>] hci_uart_tty_receive+0xba/0x200  
-drivers/bluetooth/hci_ldisc.c:607
-     [<000000009051651a>] tiocsti drivers/tty/tty_io.c:2195 [inline]
-     [<000000009051651a>] tty_ioctl+0x81c/0xa30 drivers/tty/tty_io.c:2571
-     [<000000005695f2c9>] vfs_ioctl fs/ioctl.c:46 [inline]
-     [<000000005695f2c9>] file_ioctl fs/ioctl.c:509 [inline]
-     [<000000005695f2c9>] do_vfs_ioctl+0x62a/0x810 fs/ioctl.c:696
-     [<00000000be82d55d>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
-     [<00000000d19fa7dc>] __do_sys_ioctl fs/ioctl.c:720 [inline]
-     [<00000000d19fa7dc>] __se_sys_ioctl fs/ioctl.c:718 [inline]
-     [<00000000d19fa7dc>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
-     [<0000000051eaf016>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<000000000b0b6970>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+CPU: 0 PID: 9275 Comm: syz-executor.0 Not tainted 5.2.0-rc1+ #7
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
 
-BUG: memory leak
-unreferenced object 0xffff888123ccbc00 (size 224):
-   comm "syz-executor717", pid 7249, jiffies 4295003727 (age 31.350s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000600479ed>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:55 [inline]
-     [<00000000600479ed>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000600479ed>] slab_alloc_node mm/slab.c:3269 [inline]
-     [<00000000600479ed>] kmem_cache_alloc_node+0x153/0x2a0 mm/slab.c:3579
-     [<0000000059f3ba6b>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:198
-     [<0000000074e70f06>] alloc_skb include/linux/skbuff.h:1058 [inline]
-     [<0000000074e70f06>] bt_skb_alloc include/net/bluetooth/bluetooth.h:339  
-[inline]
-     [<0000000074e70f06>] bcsp_recv+0x1c3/0x540  
-drivers/bluetooth/hci_bcsp.c:685
-     [<00000000edf8c323>] hci_uart_tty_receive+0xba/0x200  
-drivers/bluetooth/hci_ldisc.c:607
-     [<000000009051651a>] tiocsti drivers/tty/tty_io.c:2195 [inline]
-     [<000000009051651a>] tty_ioctl+0x81c/0xa30 drivers/tty/tty_io.c:2571
-     [<000000005695f2c9>] vfs_ioctl fs/ioctl.c:46 [inline]
-     [<000000005695f2c9>] file_ioctl fs/ioctl.c:509 [inline]
-     [<000000005695f2c9>] do_vfs_ioctl+0x62a/0x810 fs/ioctl.c:696
-     [<00000000be82d55d>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
-     [<00000000d19fa7dc>] __do_sys_ioctl fs/ioctl.c:720 [inline]
-     [<00000000d19fa7dc>] __se_sys_ioctl fs/ioctl.c:718 [inline]
-     [<00000000d19fa7dc>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
-     [<0000000051eaf016>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<000000000b0b6970>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Allocated by task 9264:
+  save_stack+0x23/0x90 mm/kasan/common.c:71
+  set_track mm/kasan/common.c:79 [inline]
+  __kasan_kmalloc mm/kasan/common.c:489 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:462
+  kasan_slab_alloc+0xf/0x20 mm/kasan/common.c:497
+  slab_post_alloc_hook mm/slab.h:437 [inline]
+  slab_alloc mm/slab.c:3326 [inline]
+  kmem_cache_alloc+0x11a/0x6f0 mm/slab.c:3488
+  getname_flags fs/namei.c:138 [inline]
+  getname_flags+0xd6/0x5b0 fs/namei.c:128
+  getname+0x1a/0x20 fs/namei.c:209
+  do_sys_open+0x2c9/0x5d0 fs/open.c:1064
+  __do_sys_open fs/open.c:1088 [inline]
+  __se_sys_open fs/open.c:1083 [inline]
+  __x64_sys_open+0x7e/0xc0 fs/open.c:1083
+  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-BUG: memory leak
-unreferenced object 0xffff888123ccbc00 (size 224):
-   comm "syz-executor717", pid 7249, jiffies 4295003727 (age 31.400s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000600479ed>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:55 [inline]
-     [<00000000600479ed>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000600479ed>] slab_alloc_node mm/slab.c:3269 [inline]
-     [<00000000600479ed>] kmem_cache_alloc_node+0x153/0x2a0 mm/slab.c:3579
-     [<0000000059f3ba6b>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:198
-     [<0000000074e70f06>] alloc_skb include/linux/skbuff.h:1058 [inline]
-     [<0000000074e70f06>] bt_skb_alloc include/net/bluetooth/bluetooth.h:339  
-[inline]
-     [<0000000074e70f06>] bcsp_recv+0x1c3/0x540  
-drivers/bluetooth/hci_bcsp.c:685
-     [<00000000edf8c323>] hci_uart_tty_receive+0xba/0x200  
-drivers/bluetooth/hci_ldisc.c:607
-     [<000000009051651a>] tiocsti drivers/tty/tty_io.c:2195 [inline]
-     [<000000009051651a>] tty_ioctl+0x81c/0xa30 drivers/tty/tty_io.c:2571
-     [<000000005695f2c9>] vfs_ioctl fs/ioctl.c:46 [inline]
-     [<000000005695f2c9>] file_ioctl fs/ioctl.c:509 [inline]
-     [<000000005695f2c9>] do_vfs_ioctl+0x62a/0x810 fs/ioctl.c:696
-     [<00000000be82d55d>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
-     [<00000000d19fa7dc>] __do_sys_ioctl fs/ioctl.c:720 [inline]
-     [<00000000d19fa7dc>] __se_sys_ioctl fs/ioctl.c:718 [inline]
-     [<00000000d19fa7dc>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
-     [<0000000051eaf016>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<000000000b0b6970>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Freed by task 9264:
+  save_stack+0x23/0x90 mm/kasan/common.c:71
+  set_track mm/kasan/common.c:79 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:451
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:459
+  __cache_free mm/slab.c:3432 [inline]
+  kmem_cache_free+0x86/0x260 mm/slab.c:3698
+  putname+0xef/0x130 fs/namei.c:259
+  do_sys_open+0x318/0x5d0 fs/open.c:1079
+  __do_sys_open fs/open.c:1088 [inline]
+  __se_sys_open fs/open.c:1083 [inline]
+  __x64_sys_open+0x7e/0xc0 fs/open.c:1083
+  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-BUG: memory leak
-unreferenced object 0xffff888123ccbc00 (size 224):
-   comm "syz-executor717", pid 7249, jiffies 4295003727 (age 32.360s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000600479ed>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:55 [inline]
-     [<00000000600479ed>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000600479ed>] slab_alloc_node mm/slab.c:3269 [inline]
-     [<00000000600479ed>] kmem_cache_alloc_node+0x153/0x2a0 mm/slab.c:3579
-     [<0000000059f3ba6b>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:198
-     [<0000000074e70f06>] alloc_skb include/linux/skbuff.h:1058 [inline]
-     [<0000000074e70f06>] bt_skb_alloc include/net/bluetooth/bluetooth.h:339  
-[inline]
-     [<0000000074e70f06>] bcsp_recv+0x1c3/0x540  
-drivers/bluetooth/hci_bcsp.c:685
-     [<00000000edf8c323>] hci_uart_tty_receive+0xba/0x200  
-drivers/bluetooth/hci_ldisc.c:607
-     [<000000009051651a>] tiocsti drivers/tty/tty_io.c:2195 [inline]
-     [<000000009051651a>] tty_ioctl+0x81c/0xa30 drivers/tty/tty_io.c:2571
-     [<000000005695f2c9>] vfs_ioctl fs/ioctl.c:46 [inline]
-     [<000000005695f2c9>] file_ioctl fs/ioctl.c:509 [inline]
-     [<000000005695f2c9>] do_vfs_ioctl+0x62a/0x810 fs/ioctl.c:696
-     [<00000000be82d55d>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
-     [<00000000d19fa7dc>] __do_sys_ioctl fs/ioctl.c:720 [inline]
-     [<00000000d19fa7dc>] __se_sys_ioctl fs/ioctl.c:718 [inline]
-     [<00000000d19fa7dc>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
-     [<0000000051eaf016>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<000000000b0b6970>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+The buggy address belongs to the object at ffff88807aede580
+  which belongs to the cache names_cache of size 4096
+The buggy address is located 3552 bytes inside of
+  4096-byte region [ffff88807aede580, ffff88807aedf580)
+The buggy address belongs to the page:
+page:ffffea0001ebb780 refcount:1 mapcount:0 mapping:ffff8880aa596c40  
+index:0x0 compound_mapcount: 0
+flags: 0x1fffc0000010200(slab|head)
+raw: 01fffc0000010200 ffffea0001ebb708 ffffea0001ebb908 ffff8880aa596c40
+raw: 0000000000000000 ffff88807aede580 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
 
-BUG: memory leak
-unreferenced object 0xffff888123ccbc00 (size 224):
-   comm "syz-executor717", pid 7249, jiffies 4295003727 (age 33.320s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000600479ed>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:55 [inline]
-     [<00000000600479ed>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000600479ed>] slab_alloc_node mm/slab.c:3269 [inline]
-     [<00000000600479ed>] kmem_cache_alloc_node+0x153/0x2a0 mm/slab.c:3579
-     [<0000000059f3ba6b>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:198
-     [<0000000074e70f06>] alloc_skb include/linux/skbuff.h:1058 [inline]
-     [<0000000074e70f06>] bt_skb_alloc include/net/bluetooth/bluetooth.h:339  
-[inline]
-     [<0000000074e70f06>] bcsp_recv+0x1c3/0x540  
-drivers/bluetooth/hci_bcsp.c:685
-     [<00000000edf8c323>] hci_uart_tty_receive+0xba/0x200  
-drivers/bluetooth/hci_ldisc.c:607
-     [<000000009051651a>] tiocsti drivers/tty/tty_io.c:2195 [inline]
-     [<000000009051651a>] tty_ioctl+0x81c/0xa30 drivers/tty/tty_io.c:2571
-     [<000000005695f2c9>] vfs_ioctl fs/ioctl.c:46 [inline]
-     [<000000005695f2c9>] file_ioctl fs/ioctl.c:509 [inline]
-     [<000000005695f2c9>] do_vfs_ioctl+0x62a/0x810 fs/ioctl.c:696
-     [<00000000be82d55d>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
-     [<00000000d19fa7dc>] __do_sys_ioctl fs/ioctl.c:720 [inline]
-     [<00000000d19fa7dc>] __se_sys_ioctl fs/ioctl.c:718 [inline]
-     [<00000000d19fa7dc>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
-     [<0000000051eaf016>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<000000000b0b6970>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff888123ccbc00 (size 224):
-   comm "syz-executor717", pid 7249, jiffies 4295003727 (age 33.370s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000600479ed>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:55 [inline]
-     [<00000000600479ed>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000600479ed>] slab_alloc_node mm/slab.c:3269 [inline]
-     [<00000000600479ed>] kmem_cache_alloc_node+0x153/0x2a0 mm/slab.c:3579
-     [<0000000059f3ba6b>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:198
-     [<0000000074e70f06>] alloc_skb include/linux/skbuff.h:1058 [inline]
-     [<0000000074e70f06>] bt_skb_alloc include/net/bluetooth/bluetooth.h:339  
-[inline]
-     [<0000000074e70f06>] bcsp_recv+0x1c3/0x540  
-drivers/bluetooth/hci_bcsp.c:685
-     [<00000000edf8c323>] hci_uart_tty_receive+0xba/0x200  
-drivers/bluetooth/hci_ldisc.c:607
-     [<000000009051651a>] tiocsti drivers/tty/tty_io.c:2195 [inline]
-     [<000000009051651a>] tty_ioctl+0x81c/0xa30 drivers/tty/tty_io.c:2571
-     [<000000005695f2c9>] vfs_ioctl fs/ioctl.c:46 [inline]
-     [<000000005695f2c9>] file_ioctl fs/ioctl.c:509 [inline]
-     [<000000005695f2c9>] do_vfs_ioctl+0x62a/0x810 fs/ioctl.c:696
-     [<00000000be82d55d>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
-     [<00000000d19fa7dc>] __do_sys_ioctl fs/ioctl.c:720 [inline]
-     [<00000000d19fa7dc>] __se_sys_ioctl fs/ioctl.c:718 [inline]
-     [<00000000d19fa7dc>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
-     [<0000000051eaf016>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<000000000b0b6970>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-executing program
+Memory state around the buggy address:
+  ffff88807aedf200: 00 00 fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff88807aedf280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb f1 f1
+> ffff88807aedf300: f1 f1 00 f2 f2 f2 00 f2 f2 f2 fb fb fb fb 00 00
+                                                        ^
+  ffff88807aedf380: 00 f3 f3 f3 f3 f3 fb fb fb fb fb fb fb fb fb fb
+  ffff88807aedf400: fb fb fb fb fb fb fb fb fb fb fb fb fb 00 00 00
+==================================================================
 
 
 ---
