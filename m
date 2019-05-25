@@ -2,534 +2,110 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DATE_IN_PAST_03_06,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C70C282E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 01:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F133C282E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 01:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6D9920879
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 01:03:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5963E20879
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 01:05:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JLGjVGtA"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="NT3VV33a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726372AbfEYBDp (ORCPT
+        id S1726441AbfEYBFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 21:03:45 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:42133 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726220AbfEYBDp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 21:03:45 -0400
-Received: by mail-ot1-f65.google.com with SMTP id i2so10263578otr.9
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 18:03:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=22+PXXOPSv6IL2oZHjFxXn397VuL6lNA8gFxmKEg3Kw=;
-        b=JLGjVGtAAyTQYVXevD/oYmvyKTF0fZDpMM6j1pnE7VOsyHreTnGMLtaC/mEOWXgW8U
-         xcKsIJfE4jU/zlPSisNwU4X+C7IfSAY2p/DEVrZkzu0Eu09zV2iepGS5UXm7FgJSW+WV
-         riI0dWQK2ib29Gc/rz8AsBSBqNH2d3WQ3w2zQzHvnLkLPLLyrfTGfqX1tx0Koq8a+8wS
-         0zJgjtRUNL6OrMux/zkiSackjOWrjA2vDMULC1OoAH+x8DGQBbqK4aG79MbiUTX1QhBd
-         AAA8yZ8grp8U3qaSTxXqyVYU8nBfakRZBnwqb0CN81EFR7sUEAy3KymsIe8NBSXqzB4f
-         wppQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=22+PXXOPSv6IL2oZHjFxXn397VuL6lNA8gFxmKEg3Kw=;
-        b=oqPAe6+EHYfxbeAfxsVNdbXQXptgk5eqV96Zifv9elyvYUdXQzUaIb/hv4jvLNWBvM
-         cbCuFSfSXisoK4VJTXQcQzkfGRVeFKhrS0sll9hakzY3amkEFBmi99l80bO0Jr6BBmHe
-         y1CwLPiJO2F2z4FfwRPf8bt0LvlNS3S4y3jQ0wlPmpH9MdixJUHroGUU/fIU1Fc7Dcyv
-         /RPDApfwAaJChi2o9Trjg8WmmS5v2Vnu1+Mkh/mcCEDI8349AHAXKJaP532cIImIHw0s
-         VCVKnuMFSLkXfVsmOVypkr9/O5+wLGl14vc1kjb3qafrmuE1YwVvli437q41BlpYcUf1
-         Vk2g==
-X-Gm-Message-State: APjAAAWkszp8GR5qXbHab7TUNymVLk45bMnAnl/gArPo2K5tRvklXHvU
-        PsPDZV6av1kjbMPd3FgfX3BN9BUCFcOMz5XH91guNST/
-X-Google-Smtp-Source: APXvYqyUsGEb3e2UGxugb8NgiUyGUSwEEMnBn6i60XlYea+4+ol8yPq5voMMsfbKOpy/T/KGlC/9WZoHaU/9rYgoAYU=
-X-Received: by 2002:a9d:71d1:: with SMTP id z17mr38069179otj.22.1558746224187;
- Fri, 24 May 2019 18:03:44 -0700 (PDT)
+        Fri, 24 May 2019 21:05:00 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:57564 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726220AbfEYBE7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 21:04:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=/leK6BrYDpRbnBbfmgnP0FFU1Et8b8QTAuc98yARIyk=; b=NT3VV33a2rMFOcZQZMsHb19cFA
+        znq0wrszYxlCKa1v7J/h5hnX8syLQlW9zskdtp2ehW/yxFLtT9yXtRJuhirKTI4AB1+wacebppBnY
+        NvXBiIWIsDUNIjP8PIcv56m6CbarlsemgzvO6Z4WfqsVqEUiAj4dgBNP7Iet2kI+lUgU=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hUL79-00064G-PH; Sat, 25 May 2019 03:04:47 +0200
+Date:   Sat, 25 May 2019 03:04:47 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Ruslan Babayev <ruslan@babayev.com>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        xe-linux-external@cisco.com,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2 2/2] net: phy: sfp: enable i2c-bus detection
+ on ACPI based systems
+Message-ID: <20190525010447.GQ2979@lunn.ch>
+References: <20190505193435.3248-1-ruslan@babayev.com>
+ <20190525005302.27164-2-ruslan@babayev.com>
 MIME-Version: 1.0
-References: <20190521113448.20654-1-christian@brauner.io>
-In-Reply-To: <20190521113448.20654-1-christian@brauner.io>
-From:   Michael Tirado <mtirado418@gmail.com>
-Date:   Fri, 24 May 2019 20:32:43 +0000
-Message-ID: <CAMkWEXNTjgK3rB77uqoSEU2asv5UN+OiFbVSip41Hhx1zogh0g@mail.gmail.com>
-Subject: Re: [PATCH 1/2] open: add close_range()
-To:     Christian Brauner <christian@brauner.io>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190525005302.27164-2-ruslan@babayev.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-What I do in ring=non-supervisor is close all fd's while
-checking against an array of exemptions. if /proc is not
-mounted I close RLIMIT_NOFILE, if that fails I use a dumb
-loop to close everything(slooow). This new system call could
-significantly increase the fallback code, but If you use a
-range then you may have to call this in batches, depending
-on the fd number sequence?
-
-Here's what it looks like in practice:
-
-   int exempt[] = { STDIN_FILENO, STDOUT_FILENO, STDERR_FILENO };
-   if (close_descriptors(exempt, 3))
-      return -1;
-
-On Tue, May 21, 2019 at 11:41 AM Christian Brauner <christian@brauner.io> wrote:
->
-> This adds the close_range() syscall. It allows to efficiently close a range
-> of file descriptors up to all file descriptors of a calling task.
->
-> The syscall came up in a recent discussion around the new mount API and
-> making new file descriptor types cloexec by default. During this
-> discussion, Al suggested the close_range() syscall (cf. [1]). Note, a
-> syscall in this manner has been requested by various people over time.
->
-> First, it helps to close all file descriptors of an exec()ing task. This
-> can be done safely via (quoting Al's example from [1] verbatim):
->
->         /* that exec is sensitive */
->         unshare(CLONE_FILES);
->         /* we don't want anything past stderr here */
->         close_range(3, ~0U);
->         execve(....);
->
-> The code snippet above is one way of working around the problem that file
-> descriptors are not cloexec by default. This is aggravated by the fact that
-> we can't just switch them over without massively regressing userspace. For
-> a whole class of programs having an in-kernel method of closing all file
-> descriptors is very helpful (e.g. demons, service managers, programming
-> language standard libraries, container managers etc.).
-> (Please note, unshare(CLONE_FILES) should only be needed if the calling
->  task is multi-threaded and shares the file descriptor table with another
->  thread in which case two threads could race with one thread allocating
->  file descriptors and the other one closing them via close_range(). For the
->  general case close_range() before the execve() is sufficient.)
->
-> Second, it allows userspace to avoid implementing closing all file
-> descriptors by parsing through /proc/<pid>/fd/* and calling close() on each
-> file descriptor. From looking at various large(ish) userspace code bases
-> this or similar patterns are very common in:
-> - service managers (cf. [4])
-> - libcs (cf. [6])
-> - container runtimes (cf. [5])
-> - programming language runtimes/standard libraries
->   - Python (cf. [2])
->   - Rust (cf. [7], [8])
-> As Dmitry pointed out there's even a long-standing glibc bug about missing
-> kernel support for this task (cf. [3]).
-> In addition, the syscall will also work for tasks that do not have procfs
-> mounted and on kernels that do not have procfs support compiled in. In such
-> situations the only way to make sure that all file descriptors are closed
-> is to call close() on each file descriptor up to UINT_MAX or RLIMIT_NOFILE,
-> OPEN_MAX trickery (cf. comment [8] on Rust).
->
-> The performance is striking. For good measure, comparing the following
-> simple close_all_fds() userspace implementation that is essentially just
-> glibc's version in [6]:
->
-> static int close_all_fds(void)
+On Fri, May 24, 2019 at 05:53:02PM -0700, Ruslan Babayev wrote:
+> Lookup I2C adapter using the "i2c-bus" device property on ACPI based
+> systems similar to how it's done with DT.
+> 
+> An example DSD describing an SFP on an ACPI based system:
+> 
+> Device (SFP0)
 > {
->         DIR *dir;
->         struct dirent *direntp;
->
->         dir = opendir("/proc/self/fd");
->         if (!dir)
->                 return -1;
->
->         while ((direntp = readdir(dir))) {
->                 int fd;
->                 if (strcmp(direntp->d_name, ".") == 0)
->                         continue;
->                 if (strcmp(direntp->d_name, "..") == 0)
->                         continue;
->                 fd = atoi(direntp->d_name);
->                 if (fd == 0 || fd == 1 || fd == 2)
->                         continue;
->                 close(fd);
->         }
->
->         closedir(dir); /* cannot fail */
->         return 0;
+>     Name (_HID, "PRP0001")
+>     Name (_CRS, ResourceTemplate()
+>     {
+>         GpioIo(Exclusive, PullDefault, 0, 0, IoRestrictionNone,
+>                "\\_SB.PCI0.RP01.GPIO", 0, ResourceConsumer)
+>             { 0, 1, 2, 3, 4 }
+>     })
+>     Name (_DSD, Package ()
+>     {
+>         ToUUID ("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+>         Package () {
+>             Package () { "compatible", "sff,sfp" },
+>             Package () { "i2c-bus", \_SB.PCI0.RP01.I2C.MUX.CH0 },
+>             Package () { "maximum-power-milliwatt", 1000 },
+>             Package () { "tx-disable-gpios", Package () { ^SFP0, 0, 0, 1} },
+>             Package () { "reset-gpio",       Package () { ^SFP0, 0, 1, 1} },
+>             Package () { "mod-def0-gpios",   Package () { ^SFP0, 0, 2, 1} },
+>             Package () { "tx-fault-gpios",   Package () { ^SFP0, 0, 3, 0} },
+>             Package () { "los-gpios",        Package () { ^SFP0, 0, 4, 1} },
+>         },
+>     })
 > }
->
-> to close_range() yields:
-> 1. closing 4 open files:
->    - close_all_fds(): ~280 us
->    - close_range():    ~24 us
->
-> 2. closing 1000 open files:
->    - close_all_fds(): ~5000 us
->    - close_range():   ~800 us
->
-> close_range() is designed to allow for some flexibility. Specifically, it
-> does not simply always close all open file descriptors of a task. Instead,
-> callers can specify an upper bound.
-> This is e.g. useful for scenarios where specific file descriptors are
-> created with well-known numbers that are supposed to be excluded from
-> getting closed.
-> For extra paranoia close_range() comes with a flags argument. This can e.g.
-> be used to implement extension. Once can imagine userspace wanting to stop
-> at the first error instead of ignoring errors under certain circumstances.
-> There might be other valid ideas in the future. In any case, a flag
-> argument doesn't hurt and keeps us on the safe side.
->
-> From an implementation side this is kept rather dumb. It saw some input
-> from David and Jann but all nonsense is obviously my own!
-> - Errors to close file descriptors are currently ignored. (Could be changed
->   by setting a flag in the future if needed.)
-> - __close_range() is a rather simplistic wrapper around __close_fd().
->   My reasoning behind this is based on the nature of how __close_fd() needs
->   to release an fd. But maybe I misunderstood specifics:
->   We take the files_lock and rcu-dereference the fdtable of the calling
->   task, we find the entry in the fdtable, get the file and need to release
->   files_lock before calling filp_close().
->   In the meantime the fdtable might have been altered so we can't just
->   retake the spinlock and keep the old rcu-reference of the fdtable
->   around. Instead we need to grab a fresh reference to the fdtable.
->   If my reasoning is correct then there's really no point in fancyfying
->   __close_range(): We just need to rcu-dereference the fdtable of the
->   calling task once to cap the max_fd value correctly and then go on
->   calling __close_fd() in a loop.
->
-> /* References */
-> [1]: https://lore.kernel.org/lkml/20190516165021.GD17978@ZenIV.linux.org.uk/
-> [2]: https://github.com/python/cpython/blob/9e4f2f3a6b8ee995c365e86d976937c141d867f8/Modules/_posixsubprocess.c#L220
-> [3]: https://sourceware.org/bugzilla/show_bug.cgi?id=10353#c7
-> [4]: https://github.com/systemd/systemd/blob/5238e9575906297608ff802a27e2ff9effa3b338/src/basic/fd-util.c#L217
-> [5]: https://github.com/lxc/lxc/blob/ddf4b77e11a4d08f09b7b9cd13e593f8c047edc5/src/lxc/start.c#L236
-> [6]: https://sourceware.org/git/?p=glibc.git;a=blob;f=sysdeps/unix/sysv/linux/grantpt.c;h=2030e07fa6e652aac32c775b8c6e005844c3c4eb;hb=HEAD#l17
->      Note that this is an internal implementation that is not exported.
->      Currently, libc seems to not provide an exported version of this
->      because of missing kernel support to do this.
-> [7]: https://github.com/rust-lang/rust/issues/12148
-> [8]: https://github.com/rust-lang/rust/blob/5f47c0613ed4eb46fca3633c1297364c09e5e451/src/libstd/sys/unix/process2.rs#L303-L308
->      Rust's solution is slightly different but is equally unperformant.
->      Rust calls getdtablesize() which is a glibc library function that
->      simply returns the current RLIMIT_NOFILE or OPEN_MAX values. Rust then
->      goes on to call close() on each fd. That's obviously overkill for most
->      tasks. Rarely, tasks - especially non-demons - hit RLIMIT_NOFILE or
->      OPEN_MAX.
->      Let's be nice and assume an unprivileged user with RLIMIT_NOFILE set
->      to 1024. Even in this case, there's a very high chance that in the
->      common case Rust is calling the close() syscall 1021 times pointlessly
->      if the task just has 0, 1, and 2 open.
->
-> Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
-> Signed-off-by: Christian Brauner <christian@brauner.io>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Jann Horn <jannh@google.com>
-> Cc: David Howells <dhowells@redhat.com>
-> Cc: Dmitry V. Levin <ldv@altlinux.org>
-> Cc: Oleg Nesterov <oleg@redhat.com>
-> Cc: Florian Weimer <fweimer@redhat.com>
-> Cc: linux-api@vger.kernel.org
-> ---
->  arch/alpha/kernel/syscalls/syscall.tbl      |  1 +
->  arch/arm/tools/syscall.tbl                  |  1 +
->  arch/arm64/include/asm/unistd32.h           |  2 ++
->  arch/ia64/kernel/syscalls/syscall.tbl       |  1 +
->  arch/m68k/kernel/syscalls/syscall.tbl       |  1 +
->  arch/microblaze/kernel/syscalls/syscall.tbl |  1 +
->  arch/mips/kernel/syscalls/syscall_n32.tbl   |  1 +
->  arch/mips/kernel/syscalls/syscall_n64.tbl   |  1 +
->  arch/mips/kernel/syscalls/syscall_o32.tbl   |  1 +
->  arch/parisc/kernel/syscalls/syscall.tbl     |  1 +
->  arch/powerpc/kernel/syscalls/syscall.tbl    |  1 +
->  arch/s390/kernel/syscalls/syscall.tbl       |  1 +
->  arch/sh/kernel/syscalls/syscall.tbl         |  1 +
->  arch/sparc/kernel/syscalls/syscall.tbl      |  1 +
->  arch/x86/entry/syscalls/syscall_32.tbl      |  1 +
->  arch/x86/entry/syscalls/syscall_64.tbl      |  1 +
->  arch/xtensa/kernel/syscalls/syscall.tbl     |  1 +
->  fs/file.c                                   | 30 +++++++++++++++++++++
->  fs/open.c                                   | 20 ++++++++++++++
->  include/linux/fdtable.h                     |  2 ++
->  include/linux/syscalls.h                    |  2 ++
->  include/uapi/asm-generic/unistd.h           |  4 ++-
->  22 files changed, 75 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/alpha/kernel/syscalls/syscall.tbl b/arch/alpha/kernel/syscalls/syscall.tbl
-> index 9e7704e44f6d..b55d93af8096 100644
-> --- a/arch/alpha/kernel/syscalls/syscall.tbl
-> +++ b/arch/alpha/kernel/syscalls/syscall.tbl
-> @@ -473,3 +473,4 @@
->  541    common  fsconfig                        sys_fsconfig
->  542    common  fsmount                         sys_fsmount
->  543    common  fspick                          sys_fspick
-> +545    common  close_range                     sys_close_range
-> diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
-> index aaf479a9e92d..0125c97c75dd 100644
-> --- a/arch/arm/tools/syscall.tbl
-> +++ b/arch/arm/tools/syscall.tbl
-> @@ -447,3 +447,4 @@
->  431    common  fsconfig                        sys_fsconfig
->  432    common  fsmount                         sys_fsmount
->  433    common  fspick                          sys_fspick
-> +435    common  close_range                     sys_close_range
-> diff --git a/arch/arm64/include/asm/unistd32.h b/arch/arm64/include/asm/unistd32.h
-> index c39e90600bb3..9a3270d29b42 100644
-> --- a/arch/arm64/include/asm/unistd32.h
-> +++ b/arch/arm64/include/asm/unistd32.h
-> @@ -886,6 +886,8 @@ __SYSCALL(__NR_fsconfig, sys_fsconfig)
->  __SYSCALL(__NR_fsmount, sys_fsmount)
->  #define __NR_fspick 433
->  __SYSCALL(__NR_fspick, sys_fspick)
-> +#define __NR_close_range 435
-> +__SYSCALL(__NR_close_range, sys_close_range)
->
->  /*
->   * Please add new compat syscalls above this comment and update
-> diff --git a/arch/ia64/kernel/syscalls/syscall.tbl b/arch/ia64/kernel/syscalls/syscall.tbl
-> index e01df3f2f80d..1a90b464e96f 100644
-> --- a/arch/ia64/kernel/syscalls/syscall.tbl
-> +++ b/arch/ia64/kernel/syscalls/syscall.tbl
-> @@ -354,3 +354,4 @@
->  431    common  fsconfig                        sys_fsconfig
->  432    common  fsmount                         sys_fsmount
->  433    common  fspick                          sys_fspick
-> +435    common  close_range                     sys_close_range
-> diff --git a/arch/m68k/kernel/syscalls/syscall.tbl b/arch/m68k/kernel/syscalls/syscall.tbl
-> index 7e3d0734b2f3..2dee2050f9ef 100644
-> --- a/arch/m68k/kernel/syscalls/syscall.tbl
-> +++ b/arch/m68k/kernel/syscalls/syscall.tbl
-> @@ -433,3 +433,4 @@
->  431    common  fsconfig                        sys_fsconfig
->  432    common  fsmount                         sys_fsmount
->  433    common  fspick                          sys_fspick
-> +435    common  close_range                     sys_close_range
-> diff --git a/arch/microblaze/kernel/syscalls/syscall.tbl b/arch/microblaze/kernel/syscalls/syscall.tbl
-> index 26339e417695..923ef69e5a76 100644
-> --- a/arch/microblaze/kernel/syscalls/syscall.tbl
-> +++ b/arch/microblaze/kernel/syscalls/syscall.tbl
-> @@ -439,3 +439,4 @@
->  431    common  fsconfig                        sys_fsconfig
->  432    common  fsmount                         sys_fsmount
->  433    common  fspick                          sys_fspick
-> +435    common  close_range                     sys_close_range
-> diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl b/arch/mips/kernel/syscalls/syscall_n32.tbl
-> index 0e2dd68ade57..967ed9de51cd 100644
-> --- a/arch/mips/kernel/syscalls/syscall_n32.tbl
-> +++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
-> @@ -372,3 +372,4 @@
->  431    n32     fsconfig                        sys_fsconfig
->  432    n32     fsmount                         sys_fsmount
->  433    n32     fspick                          sys_fspick
-> +435    n32     close_range                     sys_close_range
-> diff --git a/arch/mips/kernel/syscalls/syscall_n64.tbl b/arch/mips/kernel/syscalls/syscall_n64.tbl
-> index 5eebfa0d155c..71de731102b1 100644
-> --- a/arch/mips/kernel/syscalls/syscall_n64.tbl
-> +++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
-> @@ -348,3 +348,4 @@
->  431    n64     fsconfig                        sys_fsconfig
->  432    n64     fsmount                         sys_fsmount
->  433    n64     fspick                          sys_fspick
-> +435    n64     close_range                     sys_close_range
-> diff --git a/arch/mips/kernel/syscalls/syscall_o32.tbl b/arch/mips/kernel/syscalls/syscall_o32.tbl
-> index 3cc1374e02d0..5a325ab29f88 100644
-> --- a/arch/mips/kernel/syscalls/syscall_o32.tbl
-> +++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
-> @@ -421,3 +421,4 @@
->  431    o32     fsconfig                        sys_fsconfig
->  432    o32     fsmount                         sys_fsmount
->  433    o32     fspick                          sys_fspick
-> +435    o32     close_range                     sys_close_range
-> diff --git a/arch/parisc/kernel/syscalls/syscall.tbl b/arch/parisc/kernel/syscalls/syscall.tbl
-> index c9e377d59232..dcc0a0879139 100644
-> --- a/arch/parisc/kernel/syscalls/syscall.tbl
-> +++ b/arch/parisc/kernel/syscalls/syscall.tbl
-> @@ -430,3 +430,4 @@
->  431    common  fsconfig                        sys_fsconfig
->  432    common  fsmount                         sys_fsmount
->  433    common  fspick                          sys_fspick
-> +435    common  close_range                     sys_close_range
-> diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
-> index 103655d84b4b..ba2c1f078cbd 100644
-> --- a/arch/powerpc/kernel/syscalls/syscall.tbl
-> +++ b/arch/powerpc/kernel/syscalls/syscall.tbl
-> @@ -515,3 +515,4 @@
->  431    common  fsconfig                        sys_fsconfig
->  432    common  fsmount                         sys_fsmount
->  433    common  fspick                          sys_fspick
-> +435    common  close_range                     sys_close_range
-> diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
-> index e822b2964a83..d7c9043d2902 100644
-> --- a/arch/s390/kernel/syscalls/syscall.tbl
-> +++ b/arch/s390/kernel/syscalls/syscall.tbl
-> @@ -436,3 +436,4 @@
->  431  common    fsconfig                sys_fsconfig                    sys_fsconfig
->  432  common    fsmount                 sys_fsmount                     sys_fsmount
->  433  common    fspick                  sys_fspick                      sys_fspick
-> +435  common    close_range             sys_close_range                 sys_close_range
-> diff --git a/arch/sh/kernel/syscalls/syscall.tbl b/arch/sh/kernel/syscalls/syscall.tbl
-> index 016a727d4357..9b5e6bf0ce32 100644
-> --- a/arch/sh/kernel/syscalls/syscall.tbl
-> +++ b/arch/sh/kernel/syscalls/syscall.tbl
-> @@ -436,3 +436,4 @@
->  431    common  fsconfig                        sys_fsconfig
->  432    common  fsmount                         sys_fsmount
->  433    common  fspick                          sys_fspick
-> +435    common  close_range                     sys_close_range
-> diff --git a/arch/sparc/kernel/syscalls/syscall.tbl b/arch/sparc/kernel/syscalls/syscall.tbl
-> index e047480b1605..8c674a1e0072 100644
-> --- a/arch/sparc/kernel/syscalls/syscall.tbl
-> +++ b/arch/sparc/kernel/syscalls/syscall.tbl
-> @@ -479,3 +479,4 @@
->  431    common  fsconfig                        sys_fsconfig
->  432    common  fsmount                         sys_fsmount
->  433    common  fspick                          sys_fspick
-> +435    common  close_range                     sys_close_range
-> diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
-> index ad968b7bac72..7f7a89a96707 100644
-> --- a/arch/x86/entry/syscalls/syscall_32.tbl
-> +++ b/arch/x86/entry/syscalls/syscall_32.tbl
-> @@ -438,3 +438,4 @@
->  431    i386    fsconfig                sys_fsconfig                    __ia32_sys_fsconfig
->  432    i386    fsmount                 sys_fsmount                     __ia32_sys_fsmount
->  433    i386    fspick                  sys_fspick                      __ia32_sys_fspick
-> +435    i386    close_range             sys_close_range                 __ia32_sys_close_range
-> diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
-> index b4e6f9e6204a..0f7d47ae921c 100644
-> --- a/arch/x86/entry/syscalls/syscall_64.tbl
-> +++ b/arch/x86/entry/syscalls/syscall_64.tbl
-> @@ -355,6 +355,7 @@
->  431    common  fsconfig                __x64_sys_fsconfig
->  432    common  fsmount                 __x64_sys_fsmount
->  433    common  fspick                  __x64_sys_fspick
-> +435    common  close_range             __x64_sys_close_range
->
->  #
->  # x32-specific system call numbers start at 512 to avoid cache impact
-> diff --git a/arch/xtensa/kernel/syscalls/syscall.tbl b/arch/xtensa/kernel/syscalls/syscall.tbl
-> index 5fa0ee1c8e00..b489532265d0 100644
-> --- a/arch/xtensa/kernel/syscalls/syscall.tbl
-> +++ b/arch/xtensa/kernel/syscalls/syscall.tbl
-> @@ -404,3 +404,4 @@
->  431    common  fsconfig                        sys_fsconfig
->  432    common  fsmount                         sys_fsmount
->  433    common  fspick                          sys_fspick
-> +435    common  close_range                     sys_close_range
-> diff --git a/fs/file.c b/fs/file.c
-> index 3da91a112bab..3680977a685a 100644
-> --- a/fs/file.c
-> +++ b/fs/file.c
-> @@ -641,6 +641,36 @@ int __close_fd(struct files_struct *files, unsigned fd)
->  }
->  EXPORT_SYMBOL(__close_fd); /* for ksys_close() */
->
-> +/**
-> + * __close_range() - Close all file descriptors in a given range.
-> + *
-> + * @fd:     starting file descriptor to close
-> + * @max_fd: last file descriptor to close
-> + *
-> + * This closes a range of file descriptors. All file descriptors
-> + * from @fd up to and including @max_fd are closed.
-> + */
-> +int __close_range(struct files_struct *files, unsigned fd, unsigned max_fd)
-> +{
-> +       unsigned int cur_max;
-> +
-> +       if (fd > max_fd)
-> +               return -EINVAL;
-> +
-> +       rcu_read_lock();
-> +       cur_max = files_fdtable(files)->max_fds;
-> +       rcu_read_unlock();
-> +
-> +       /* cap to last valid index into fdtable */
-> +       if (max_fd >= cur_max)
-> +               max_fd = cur_max - 1;
-> +
-> +       while (fd <= max_fd)
-> +               __close_fd(files, fd++);
-> +
-> +       return 0;
-> +}
-> +
->  /*
->   * variant of __close_fd that gets a ref on the file for later fput
->   */
-> diff --git a/fs/open.c b/fs/open.c
-> index 9c7d724a6f67..c7baaee7aa47 100644
-> --- a/fs/open.c
-> +++ b/fs/open.c
-> @@ -1174,6 +1174,26 @@ SYSCALL_DEFINE1(close, unsigned int, fd)
->         return retval;
->  }
->
-> +/**
-> + * close_range() - Close all file descriptors in a given range.
-> + *
-> + * @fd:     starting file descriptor to close
-> + * @max_fd: last file descriptor to close
-> + * @flags:  reserved for future extensions
-> + *
-> + * This closes a range of file descriptors. All file descriptors
-> + * from @fd up to and including @max_fd are closed.
-> + * Currently, errors to close a given file descriptor are ignored.
-> + */
-> +SYSCALL_DEFINE3(close_range, unsigned int, fd, unsigned int, max_fd,
-> +               unsigned int, flags)
-> +{
-> +       if (flags)
-> +               return -EINVAL;
-> +
-> +       return __close_range(current->files, fd, max_fd);
-> +}
-> +
->  /*
->   * This routine simulates a hangup on the tty, to arrange that users
->   * are given clean terminals at login time.
-> diff --git a/include/linux/fdtable.h b/include/linux/fdtable.h
-> index f07c55ea0c22..fcd07181a365 100644
-> --- a/include/linux/fdtable.h
-> +++ b/include/linux/fdtable.h
-> @@ -121,6 +121,8 @@ extern void __fd_install(struct files_struct *files,
->                       unsigned int fd, struct file *file);
->  extern int __close_fd(struct files_struct *files,
->                       unsigned int fd);
-> +extern int __close_range(struct files_struct *files, unsigned int fd,
-> +                        unsigned int max_fd);
->  extern int __close_fd_get_file(unsigned int fd, struct file **res);
->
->  extern struct kmem_cache *files_cachep;
-> diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-> index e2870fe1be5b..c0189e223255 100644
-> --- a/include/linux/syscalls.h
-> +++ b/include/linux/syscalls.h
-> @@ -441,6 +441,8 @@ asmlinkage long sys_fchown(unsigned int fd, uid_t user, gid_t group);
->  asmlinkage long sys_openat(int dfd, const char __user *filename, int flags,
->                            umode_t mode);
->  asmlinkage long sys_close(unsigned int fd);
-> +asmlinkage long sys_close_range(unsigned int fd, unsigned int max_fd,
-> +                               unsigned int flags);
->  asmlinkage long sys_vhangup(void);
->
->  /* fs/pipe.c */
-> diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
-> index a87904daf103..3f36c8745d24 100644
-> --- a/include/uapi/asm-generic/unistd.h
-> +++ b/include/uapi/asm-generic/unistd.h
-> @@ -844,9 +844,11 @@ __SYSCALL(__NR_fsconfig, sys_fsconfig)
->  __SYSCALL(__NR_fsmount, sys_fsmount)
->  #define __NR_fspick 433
->  __SYSCALL(__NR_fspick, sys_fspick)
-> +#define __NR_close_range 435
-> +__SYSCALL(__NR_close_range, sys_close_range)
->
->  #undef __NR_syscalls
-> -#define __NR_syscalls 434
-> +#define __NR_syscalls 436
->
->  /*
->   * 32 bit systems traditionally used different
-> --
-> 2.21.0
->
+> 
+> Device (PHY0)
+> {
+>     Name (_HID, "PRP0001")
+>     Name (_DSD, Package ()
+>     {
+>         ToUUID ("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+>         Package () {
+>             Package () { "compatible", "ethernet-phy-ieee802.3-c45" },
+>             Package () { "sfp", \_SB.PCI0.RP01.SFP0 },
+>             Package () { "managed", "in-band-status" },
+>             Package () { "phy-mode", "sgmii" },
+>         },
+>     })
+> }
+> 
+> Signed-off-by: Ruslan Babayev <ruslan@babayev.com>
+> Cc: xe-linux-external@cisco.com
+
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+
+    Andrew
