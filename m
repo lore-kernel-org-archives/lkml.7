@@ -2,167 +2,380 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF3DC07542
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A4B5C28CC0
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:01:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72266216FD
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A16D216FD
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:01:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558803666;
+	bh=N+9Np/PnvfSMz+KO9ReLU6Sq0wMYMQ5P67Pr4gFoXAM=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=dXd8fsH/qaNOtAk6d51rYmAkqm/gF6+7r/tLnbk/HYC6jGgzoTeq1KteAr6kDyx2Y
+	 JD+twy7o5XBB6xEKgjJsUhiQBTic5r81iT7924yYLrnRghUT9m2M3/WAgXnaDFEJJ/
+	 Zqlt9uupKN2BmtUz8/ss16ihbnRFdIlxnpNh5PA8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbfEYRBC (ORCPT
+        id S1727454AbfEYRBF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 13:01:02 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:46722 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727249AbfEYRBB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 13:01:01 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
+        Sat, 25 May 2019 13:01:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49620 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727410AbfEYRBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 May 2019 13:01:03 -0400
+Received: from localhost (unknown [62.129.28.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 3D9D92013A;
-        Sat, 25 May 2019 19:00:56 +0200 (CEST)
-Date:   Sat, 25 May 2019 19:00:54 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH 25/33] fbmem: pull fbcon_fb_blanked out of fb_blank
-Message-ID: <20190525170054.GA9076@ravnborg.org>
-References: <20190524085354.27411-1-daniel.vetter@ffwll.ch>
- <20190524085354.27411-26-daniel.vetter@ffwll.ch>
+        by mail.kernel.org (Postfix) with ESMTPSA id 40B3B21707;
+        Sat, 25 May 2019 17:01:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558803661;
+        bh=N+9Np/PnvfSMz+KO9ReLU6Sq0wMYMQ5P67Pr4gFoXAM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=fgfFj+rr6wnaIo0flXGqosGkvrbn4c3pJDTt9lyJfoK7vys49v++epWPi74+nf3k1
+         5B3yJKfNl0rUvYjhfqpzqMUIIhCTGEQJWpvbQ2S2PYdAtA3tTVfPWJnJdHzBibfjsq
+         yUfNsHlpmxGWwzS8ZsVOMLHcr2SI47dpiYigX/us=
+Date:   Sat, 25 May 2019 19:00:59 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Linux 4.14.122
+Message-ID: <20190525170059.GA7545@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="oyUTqETQ0mS9luUI"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190524085354.27411-26-daniel.vetter@ffwll.ch>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=IkcTkHD0fZMA:10 a=QyXUC8HyAAAA:8
-        a=hD80L64hAAAA:8 a=20KFwNOVAAAA:8 a=pGLkceISAAAA:8 a=e5mUnYsNAAAA:8
-        a=LPur_4bgEY2nh4B5VZsA:9 a=QEXdDO2ut3YA:10 a=Vxmtnl_E_bksehYqCbjh:22
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel.
 
-On Fri, May 24, 2019 at 10:53:46AM +0200, Daniel Vetter wrote:
-> There's a callchain of:
-> 
-> fbcon_fb_blaned -> do_(un)blank_screen -> consw->con_blank
-           ^^^^^^
-Spelling error - as this is a callchain it would be good to have it
-fixed.
+--oyUTqETQ0mS9luUI
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Patch itself looks fine.
+I'm announcing the release of the 4.14.122 kernel.
 
-	Sam
+All users of the 4.14 kernel series must upgrade.
 
-> 	-> fbcon_blank -> fb_blank
-> 
-> Things don't go horribly wrong because the BKL console_lock safes the
-> day, but that's about it. And the seeming recursion is broken in 2
-> ways:
-> - Starting from the fbdev ioctl we set FBINFO_MISC_USEREVENT, which
->   tells the fbcon_blank code to not call fb_blank. This was required
->   to not deadlock when recursing on the fb_notifier_chain mutex.
-> - Starting from the con_blank hook we're getting saved by the
->   console_blanked checks in do_blank/unblank_screen. Or at least
->   that's my theory.
-> 
-> Anyway, recursion isn't awesome, so let's stop it. Breaking the
-> recursion avoids the need to be in the FBINFO_MISC_USEREVENT critical
-> section, so lets move it out of that too.
-> 
-> The astute reader will notice that fb_blank seems to require
-> lock_fb_info(), which the fbcon code seems to ignore. I have no idea
-> how to fix that problem, so let's keep ignoring it.
-> 
-> v2: I forgot the sysfs blanking code.
-> 
-> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> Cc: "Michał Mirosław" <mirq-linux@rere.qmqm.pl>
-> Cc: Peter Rosin <peda@axentia.se>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: Mikulas Patocka <mpatocka@redhat.com>
-> Cc: Rob Clark <robdclark@gmail.com>
-> ---
->  drivers/video/fbdev/core/fbmem.c   | 4 +++-
->  drivers/video/fbdev/core/fbsysfs.c | 8 ++++++--
->  2 files changed, 9 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
-> index 9366fbe99a58..d6713dce9e31 100644
-> --- a/drivers/video/fbdev/core/fbmem.c
-> +++ b/drivers/video/fbdev/core/fbmem.c
-> @@ -1068,7 +1068,6 @@ fb_blank(struct fb_info *info, int blank)
->  	event.data = &blank;
->  
->  	early_ret = fb_notifier_call_chain(FB_EARLY_EVENT_BLANK, &event);
-> -	fbcon_fb_blanked(info, blank);
->  
->  	if (info->fbops->fb_blank)
->   		ret = info->fbops->fb_blank(blank, info);
-> @@ -1198,6 +1197,9 @@ static long do_fb_ioctl(struct fb_info *info, unsigned int cmd,
->  		info->flags |= FBINFO_MISC_USEREVENT;
->  		ret = fb_blank(info, arg);
->  		info->flags &= ~FBINFO_MISC_USEREVENT;
-> +
-> +		/* might again call into fb_blank */
-> +		fbcon_fb_blanked(info, arg);
->  		unlock_fb_info(info);
->  		console_unlock();
->  		break;
-> diff --git a/drivers/video/fbdev/core/fbsysfs.c b/drivers/video/fbdev/core/fbsysfs.c
-> index 5f329278e55f..252d4f52d2a5 100644
-> --- a/drivers/video/fbdev/core/fbsysfs.c
-> +++ b/drivers/video/fbdev/core/fbsysfs.c
-> @@ -18,6 +18,7 @@
->  #include <linux/kernel.h>
->  #include <linux/slab.h>
->  #include <linux/fb.h>
-> +#include <linux/fbcon.h>
->  #include <linux/console.h>
->  #include <linux/module.h>
->  
-> @@ -305,12 +306,15 @@ static ssize_t store_blank(struct device *device,
->  {
->  	struct fb_info *fb_info = dev_get_drvdata(device);
->  	char *last = NULL;
-> -	int err;
-> +	int err, arg;
->  
-> +	arg = simple_strtoul(buf, &last, 0);
->  	console_lock();
->  	fb_info->flags |= FBINFO_MISC_USEREVENT;
-> -	err = fb_blank(fb_info, simple_strtoul(buf, &last, 0));
-> +	err = fb_blank(fb_info, arg);
->  	fb_info->flags &= ~FBINFO_MISC_USEREVENT;
-> +	/* might again call into fb_blank */
-> +	fbcon_fb_blanked(fb_info, arg);
->  	console_unlock();
->  	if (err < 0)
->  		return err;
-> -- 
-> 2.20.1
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+The updated 4.14.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linu=
+x-4.14.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3Ds=
+ummary
+
+thanks,
+
+greg k-h
+
+------------
+
+ Makefile                                            |    2=20
+ arch/parisc/boot/compressed/head.S                  |    6=20
+ arch/parisc/include/asm/assembly.h                  |    6=20
+ arch/parisc/kernel/head.S                           |    4=20
+ arch/parisc/kernel/process.c                        |    1=20
+ arch/parisc/kernel/syscall.S                        |    2=20
+ arch/x86/entry/entry_64.S                           |   18 +
+ arch/x86/include/asm/text-patching.h                |   28 ++
+ arch/x86/kernel/ftrace.c                            |   32 ++
+ arch/x86/lib/Makefile                               |   12=20
+ drivers/base/dd.c                                   |    5=20
+ drivers/clk/hisilicon/clk-hi3660.c                  |    6=20
+ drivers/clk/rockchip/clk-rk3328.c                   |   18 -
+ drivers/clk/tegra/clk-pll.c                         |    4=20
+ drivers/hwtracing/intel_th/msu.c                    |   35 ++
+ drivers/hwtracing/stm/core.c                        |    2=20
+ drivers/iommu/tegra-smmu.c                          |   25 +-
+ drivers/md/dm-cache-metadata.c                      |    9=20
+ drivers/md/dm-delay.c                               |    3=20
+ drivers/md/dm-zoned-metadata.c                      |    5=20
+ drivers/md/md.c                                     |    6=20
+ drivers/md/raid5.c                                  |   29 +-
+ drivers/media/i2c/ov6650.c                          |    2=20
+ drivers/memory/tegra/mc.c                           |    2=20
+ drivers/net/Makefile                                |    2=20
+ drivers/net/ethernet/mellanox/mlx4/mcg.c            |    2=20
+ drivers/net/ppp/ppp_deflate.c                       |   20 +
+ drivers/net/usb/qmi_wwan.c                          |    2=20
+ drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c       |   28 +-
+ drivers/net/wireless/intersil/p54/p54pci.c          |    3=20
+ drivers/parisc/led.c                                |    3=20
+ drivers/pci/pcie/aspm.c                             |   49 ++--
+ drivers/pci/quirks.c                                |   19 +
+ drivers/power/supply/cpcap-battery.c                |    3=20
+ drivers/power/supply/power_supply_sysfs.c           |    6=20
+ drivers/video/fbdev/sm712.h                         |   12=20
+ drivers/video/fbdev/sm712fb.c                       |  243 +++++++++++++++=
++----
+ fs/btrfs/extent-tree.c                              |   25 +-
+ fs/ceph/super.c                                     |    7=20
+ fs/cifs/smb2ops.c                                   |   14 -
+ fs/cifs/smb2pdu.c                                   |    1=20
+ fs/fuse/file.c                                      |    9=20
+ fs/nfs/filelayout/filelayout.c                      |    2=20
+ fs/nfs/nfs4state.c                                  |    4=20
+ fs/ufs/util.h                                       |    2=20
+ include/linux/bpf.h                                 |    1=20
+ include/linux/of.h                                  |    4=20
+ include/linux/pci.h                                 |    2=20
+ include/linux/skbuff.h                              |    9=20
+ kernel/bpf/hashtab.c                                |   23 +
+ kernel/bpf/syscall.c                                |    5=20
+ kernel/sched/cpufreq_schedutil.c                    |    1=20
+ kernel/trace/trace_events.c                         |    3=20
+ lib/Makefile                                        |   11=20
+ net/core/dev.c                                      |    2=20
+ net/ipv4/esp4.c                                     |   20 +
+ net/ipv4/ip_vti.c                                   |    5=20
+ net/ipv4/xfrm4_policy.c                             |   24 +
+ net/ipv6/xfrm6_tunnel.c                             |    4=20
+ net/mac80211/iface.c                                |    3=20
+ net/tipc/core.c                                     |   14 -
+ net/vmw_vsock/virtio_transport.c                    |   13 -
+ net/vmw_vsock/virtio_transport_common.c             |    7=20
+ net/xfrm/xfrm_user.c                                |    2=20
+ security/apparmor/apparmorfs.c                      |   13 -
+ security/inode.c                                    |   13 -
+ tools/objtool/Makefile                              |    3=20
+ tools/perf/bench/numa.c                             |    4=20
+ tools/perf/util/intel-pt-decoder/intel-pt-decoder.c |   31 +-
+ virt/kvm/arm/arm.c                                  |   11=20
+ 70 files changed, 720 insertions(+), 226 deletions(-)
+
+Adrian Hunter (3):
+      perf intel-pt: Fix instructions sampling rate
+      perf intel-pt: Fix improved sample timestamp
+      perf intel-pt: Fix sample timestamp wrt non-taken branches
+
+Al Viro (3):
+      securityfs: fix use-after-free on symlink traversal
+      apparmorfs: fix use-after-free on symlink traversal
+      ufs: fix braino in ufs_get_inode_gid() for solaris UFS flavour
+
+Alexander Shishkin (1):
+      intel_th: msu: Fix single mode with IOMMU
+
+Andrew Jones (1):
+      KVM: arm/arm64: Ensure vcpu target is unset on reset failure
+
+Andrey Smirnov (1):
+      power: supply: sysfs: prevent endless uevent loop with CONFIG_POWER_S=
+UPPLY_DEBUG
+
+Arnaldo Carvalho de Melo (1):
+      perf bench numa: Add define for RUSAGE_THREAD if not present
+
+Bhagavathi Perumal S (1):
+      mac80211: Fix kernel panic due to use of txq after free
+
+Christoph Probst (1):
+      cifs: fix strcat buffer overflow and reduce raciness in smb21_set_opl=
+ock_level()
+
+Damien Le Moal (1):
+      dm zoned: Fix zone report handling
+
+Daniel Borkmann (2):
+      bpf: add map_lookup_elem_sys_only for lookups from syscall side
+      bpf, lru: avoid messing with eviction heuristics upon syscall lookup
+
+Daniele Palmas (1):
+      net: usb: qmi_wwan: add Telit 0x1260 and 0x1261 compositions
+
+Dmitry Osipenko (3):
+      clk: tegra: Fix PLLM programming on Tegra124+ when PMC overrides divi=
+der
+      iommu/tegra-smmu: Fix invalid ASID bits on Tegra30/114
+      memory: tegra: Fix integer overflow on tick value calculation
+
+Elazar Leibovich (1):
+      tracing: Fix partial reading of trace event's id file
+
+Eric Dumazet (1):
+      net: avoid weird emergency message
+
+Florian Fainelli (1):
+      net: Always descend into dsa/
+
+Gary Hook (1):
+      x86/mm/mem_encrypt: Disable all instrumentation for early SME setup
+
+Greg Kroah-Hartman (2):
+      Revert "cifs: fix memory leak in SMB2_read"
+      Linux 4.14.122
+
+Helge Deller (4):
+      parisc: Export running_on_qemu symbol for modules
+      parisc: Skip registering LED when running in QEMU
+      parisc: Use PA_ASM_LEVEL in boot code
+      parisc: Rename LEVEL to PA_ASM_LEVEL to avoid name clash with DRBD co=
+de
+
+James Prestwood (1):
+      PCI: Mark Atheros AR9462 to avoid bus reset
+
+Janusz Krzysztofik (1):
+      media: ov6650: Fix sensor possibly not detected on probe
+
+Jeff Layton (1):
+      ceph: flush dirty inodes before proceeding with remount
+
+Jeremy Sowden (1):
+      vti4: ipip tunnel deregistration fixes.
+
+John Garry (1):
+      driver core: Postpone DMA tear-down until after devres release for pr=
+obe failure
+
+Jonas Karlman (1):
+      clk: rockchip: fix wrong clock definitions for rk3328
+
+Jorge E. Moreira (1):
+      vsock/virtio: Initialize core virtio vsock before registering the dri=
+ver
+
+Josh Poimboeuf (1):
+      x86_64: Add gap to int3 to allow for call emulation
+
+Junwei Hu (2):
+      tipc: switch order of device registration to fix a crash
+      tipc: fix modprobe tipc failed after switch order of device registrat=
+ion
+
+Leo Yan (1):
+      clk: hi3660: Mark clk_gate_ufs_subsys as critical
+
+Liu Bo (1):
+      fuse: honor RLIMIT_FSIZE in fuse_file_fallocate
+
+Luca Coelho (1):
+      iwlwifi: mvm: check for length correctness in iwl_mvm_create_skb()
+
+Miklos Szeredi (1):
+      fuse: fix writepages on 32bit
+
+Mikulas Patocka (1):
+      dm delay: fix a crash when invalid device is specified
+
+Nathan Chancellor (1):
+      objtool: Allow AR to be overridden with HOSTAR
+
+Nigel Croxon (1):
+      md/raid: raid5 preserve the writeback action after the parity check
+
+Nikolai Kostrigin (1):
+      PCI: Mark AMD Stoney Radeon R7 GPU ATS as broken
+
+Nikolay Borisov (1):
+      btrfs: Honour FITRIM range constraints during free space trim
+
+Nikos Tsironis (1):
+      dm cache metadata: Fix loading discard bitset
+
+Olga Kornievskaia (1):
+      PNFS fallback to MDS if no deviceid found
+
+Pan Bian (1):
+      p54: drop device reference count if fails to enable device
+
+Peter Zijlstra (2):
+      x86_64: Allow breakpoints to emulate call instructions
+      ftrace/x86_64: Emulate call function while updating in breakpoint han=
+dler
+
+Phong Tran (1):
+      of: fix clang -Wunsequenced for be32_to_cpu()
+
+Sabrina Dubroca (1):
+      esp4: add length check for UDP encapsulation
+
+Song Liu (1):
+      Revert "Don't jump to compute_result state from check_result state"
+
+Stefan M=E4tje (2):
+      PCI: Factor out pcie_retrain_link() function
+      PCI: Work around Pericom PCIe-to-PCI bridge Retrain Link erratum
+
+Stefano Garzarella (1):
+      vsock/virtio: free packets during the socket release
+
+Steffen Klassert (1):
+      xfrm4: Fix uninitialized memory read in _decode_session4
+
+Su Yanjun (1):
+      xfrm6_tunnel: Fix potential panic when unloading xfrm6_tunnel module
+
+Tingwei Zhang (1):
+      stm class: Fix channel free in stm output free path
+
+Tobin C. Harding (1):
+      sched/cpufreq: Fix kobject memleak
+
+Tony Lindgren (1):
+      power: supply: cpcap-battery: Fix division by zero
+
+Willem de Bruijn (1):
+      net: test nouarg before dereferencing zerocopy pointers
+
+Yifeng Li (9):
+      fbdev: sm712fb: fix brightness control on reboot, don't set SR30
+      fbdev: sm712fb: fix VRAM detection, don't set SR70/71/74/75
+      fbdev: sm712fb: fix white screen of death on reboot, don't set CR3B-C=
+R3F
+      fbdev: sm712fb: fix boot screen glitch when sm712fb replaces VGA
+      fbdev: sm712fb: fix crashes during framebuffer writes by correctly ma=
+pping VRAM
+      fbdev: sm712fb: fix support for 1024x768-16 mode
+      fbdev: sm712fb: use 1024x768 by default on non-MIPS, fix garbled disp=
+lay
+      fbdev: sm712fb: fix crashes and garbled display during DPMS modesetti=
+ng
+      fbdev: sm712fb: fix memory frequency by avoiding a switch/case fallth=
+rough
+
+YueHaibing (2):
+      ppp: deflate: Fix possible crash in deflate_init
+      xfrm: policy: Fix out-of-bound array accesses in __xfrm_policy_unlink
+
+Yufen Yu (1):
+      md: add mddev->pers to avoid potential NULL pointer dereference
+
+Yunjian Wang (1):
+      net/mlx4_core: Change the error print to info print
+
+ZhangXiaoxu (1):
+      NFS4: Fix v4.0 client state corruption when mount
+
+
+--oyUTqETQ0mS9luUI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAlzpdMsACgkQONu9yGCS
+aT5HYhAAufX9tGrnOLfX7j+t7P/d5Fhr6A9U64LBiDovcBN7p825bptVWnwry9jS
+UNyMtQqBwtToEeQRJGg2r2BHzbizWv0W+gNarNm7Ciwj2fO+UCi+A8hRwBHm4anV
+uQXeEBh2jnPPKhSx6SEPX5goQ31q+b1SmxRXIpq88LXu5V0JZD1c/TB4ywrIcn7t
+pQrtSlNMvlJq8VBIecRUrGp7RUD4zIQXGYugVuAFllfjAYsl1/kPCxOUVndtO276
+KBxvuKZZYwnt/MPKj2S4mGDy7I9vH6jmuSwlcxo69kmQHmL0iLF65UZqGytc/5nx
+f0+33XvYwegd+Ggu1SHA+DSrO8+0Ue7Qltj+falVkN4G/fHJ45NtbeZ/FI5B5xXX
+t5qov8RMav9bwBCmMtGOPth2S4bY40t69R7dtqnEU9Obk0+MuerNZdzPqfhZQier
+eF003iFLpBMoeycfM6rvbWOrQtCuzW/txeUbHqDEDvRMUjpe3m7bVGdbyXsWyBh5
+bE1pygz6CZKsnhQWbrLjOeQpIIpTOcnANaKc8uvTSWjoCAAXgn366KvjimvG/KNa
+fpnkStYq8Uise3fpgwAyUR3s1gvkSKzNG9regSPBzMWj3SFqO4dz7pHpHnytVn1a
+RYJKqWU45xGGgWh47Fgue6IpyJDwREtEcSh2ks0KZKO3/ZSSVcM=
+=49uB
+-----END PGP SIGNATURE-----
+
+--oyUTqETQ0mS9luUI--
