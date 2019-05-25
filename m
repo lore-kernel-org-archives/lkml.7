@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF04C282CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 11:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03FF6C282E5
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 11:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CCBB2168B
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 11:37:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CABF7217F9
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 11:37:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="STpW8Msz"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="o6lz4sv1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbfEYLhx (ORCPT
+        id S1727008AbfEYLh4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 07:37:53 -0400
-Received: from mail-eopbgr770059.outbound.protection.outlook.com ([40.107.77.59]:13666
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        Sat, 25 May 2019 07:37:56 -0400
+Received: from mail-eopbgr710050.outbound.protection.outlook.com ([40.107.71.50]:42662
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726833AbfEYLhu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 07:37:50 -0400
+        id S1726957AbfEYLhv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 May 2019 07:37:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector1-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J2CIgSmoR1CVPz5PQbVsVEzA12CsVNylhOAIMEoKc0g=;
- b=STpW8MszxiE5lFFkX5jb8rBBVBBs4EpLNJ7IbJsz4vXzS6Os0lTG9WyLg6931akeZP7a9FX5r2APHI4QK73BV46eHRYWaIyj8q5XIBZUJ0tzD7nUSw70wLU946dxMCERlcsHoBOzsI9kLiYMOyM9V4oh8SGDUkcmBREvhw83FN4=
-Received: from BL0PR02CA0046.namprd02.prod.outlook.com (2603:10b6:207:3d::23)
- by BN6PR02MB2676.namprd02.prod.outlook.com (2603:10b6:404:fa::14) with
+ bh=4hjqJyf9U47Y9Mq3PANrHJbeTaLRGGAiKMEfWT1UBvM=;
+ b=o6lz4sv15RmAw/9GoAfqcReqUQzpjCpapx2j9pwf0Sj5M1lBbEv3pW/ERAYtbq/B5gVL8Sws2JMy0FGqjJDF/E7bURD+VLKG7Vks3LGaQfzlRN+o9qh4zIKDU7b09Y8Tjbb73Z5LrekejcYGhiX5cZA80QVudZxenCYfCJ4e14c=
+Received: from CY4PR02CA0002.namprd02.prod.outlook.com (2603:10b6:903:18::12)
+ by BN6PR02MB2673.namprd02.prod.outlook.com (2603:10b6:404:fd::9) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1922.16; Sat, 25 May
- 2019 11:37:42 +0000
-Received: from SN1NAM02FT064.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::207) by BL0PR02CA0046.outlook.office365.com
- (2603:10b6:207:3d::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1922.15 via Frontend
- Transport; Sat, 25 May 2019 11:37:42 +0000
+ 2019 11:37:48 +0000
+Received: from SN1NAM02FT047.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::202) by CY4PR02CA0002.outlook.office365.com
+ (2603:10b6:903:18::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1922.17 via Frontend
+ Transport; Sat, 25 May 2019 11:37:47 +0000
 Authentication-Results: spf=pass (sender IP is 149.199.80.198)
  smtp.mailfrom=xilinx.com; arndb.de; dkim=none (message not signed)
  header.d=none;arndb.de; dmarc=bestguesspass action=none
  header.from=xilinx.com;
 Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
  149.199.80.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.80.198; helo=xir-pvapexch02.xlnx.xilinx.com;
-Received: from xir-pvapexch02.xlnx.xilinx.com (149.199.80.198) by
- SN1NAM02FT064.mail.protection.outlook.com (10.152.72.143) with Microsoft SMTP
+ client-ip=149.199.80.198; helo=xir-pvapexch01.xlnx.xilinx.com;
+Received: from xir-pvapexch01.xlnx.xilinx.com (149.199.80.198) by
+ SN1NAM02FT047.mail.protection.outlook.com (10.152.72.201) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.20.1922.16 via Frontend Transport; Sat, 25 May 2019 11:37:41 +0000
+ 15.20.1922.16 via Frontend Transport; Sat, 25 May 2019 11:37:47 +0000
 Received: from xir-pvapexch01.xlnx.xilinx.com (172.21.17.15) by
- xir-pvapexch02.xlnx.xilinx.com (172.21.17.17) with Microsoft SMTP Server
+ xir-pvapexch01.xlnx.xilinx.com (172.21.17.15) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
  15.1.1531.3; Sat, 25 May 2019 12:37:34 +0100
 Received: from smtp.xilinx.com (172.21.105.198) by
@@ -69,7 +69,7 @@ Envelope-to: arnd@arndb.de,
 Received: from [149.199.110.15] (port=57194 helo=xirdraganc40.xilinx.com)
         by smtp.xilinx.com with esmtp (Exim 4.90)
         (envelope-from <dragan.cvetic@xilinx.com>)
-        id 1hUUzW-00058U-PO; Sat, 25 May 2019 12:37:34 +0100
+        id 1hUUzW-00058U-S8; Sat, 25 May 2019 12:37:34 +0100
 From:   Dragan Cvetic <dragan.cvetic@xilinx.com>
 To:     <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
         <michal.simek@xilinx.com>, <linux-arm-kernel@lists.infradead.org>,
@@ -78,9 +78,9 @@ To:     <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
 CC:     <linux-kernel@vger.kernel.org>,
         Dragan Cvetic <dragan.cvetic@xilinx.com>,
         Derek Kiernan <derek.kiernan@xilinx.com>
-Subject: [PATCH V4 09/12] misc: xilinx_sdfec: Support poll file operation
-Date:   Sat, 25 May 2019 12:37:22 +0100
-Message-ID: <1558784245-108751-10-git-send-email-dragan.cvetic@xilinx.com>
+Subject: [PATCH V4 12/12] MAINTAINERS: add maintainer for SD-FEC
+Date:   Sat, 25 May 2019 12:37:25 +0100
+Message-ID: <1558784245-108751-13-git-send-email-dragan.cvetic@xilinx.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1558784245-108751-1-git-send-email-dragan.cvetic@xilinx.com>
 References: <1558784245-108751-1-git-send-email-dragan.cvetic@xilinx.com>
@@ -88,444 +88,63 @@ MIME-Version: 1.0
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.80.198;IPV:CAL;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(396003)(346002)(136003)(376002)(2980300002)(199004)(189003)(5660300002)(4326008)(76176011)(9786002)(356004)(6666004)(8936002)(246002)(50226002)(8676002)(107886003)(36756003)(48376002)(305945005)(2906002)(50466002)(51416003)(486006)(2616005)(336012)(44832011)(446003)(426003)(76130400001)(476003)(71366001)(956004)(126002)(16586007)(106002)(7696005)(36906005)(11346002)(30864003)(26005)(7636002)(54906003)(110136005)(186003)(60926002)(47776003)(28376004)(70586007)(2201001)(26826003)(14444005)(316002)(70206006)(478600001)(102446001);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR02MB2676;H:xir-pvapexch02.xlnx.xilinx.com;FPR:;SPF:Pass;LANG:en;PTR:unknown-80-198.xilinx.com;A:1;MX:1;
+X-Forefront-Antispam-Report: CIP:149.199.80.198;IPV:CAL;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(1496009)(136003)(39860400002)(376002)(346002)(396003)(2980300002)(199004)(189003)(36756003)(50226002)(486006)(50466002)(28376004)(7696005)(9786002)(51416003)(356004)(76176011)(8676002)(54906003)(2906002)(36906005)(106002)(16586007)(4326008)(76130400001)(8936002)(110136005)(316002)(6666004)(26826003)(478600001)(5660300002)(4744005)(70206006)(107886003)(26005)(44832011)(246002)(336012)(2201001)(60926002)(71366001)(126002)(186003)(7636002)(956004)(446003)(48376002)(70586007)(476003)(426003)(305945005)(11346002)(47776003)(2616005)(102446001);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR02MB2673;H:xir-pvapexch01.xlnx.xilinx.com;FPR:;SPF:Pass;LANG:en;PTR:unknown-80-198.xilinx.com;A:1;MX:1;
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 77e98fcf-29d2-4401-0f30-08d6e10565f0
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(4709054)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328);SRVR:BN6PR02MB2676;
-X-MS-TrafficTypeDiagnostic: BN6PR02MB2676:
+X-MS-Office365-Filtering-Correlation-Id: a833c740-0cc2-4f7a-911e-08d6e105694b
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(4709054)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328);SRVR:BN6PR02MB2673;
+X-MS-TrafficTypeDiagnostic: BN6PR02MB2673:
 X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-Microsoft-Antispam-PRVS: <BN6PR02MB26765C56E17A015BFCBD66C5CB030@BN6PR02MB2676.namprd02.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
+X-Microsoft-Antispam-PRVS: <BN6PR02MB2673A287139FE155DA2DD7CCCB030@BN6PR02MB2673.namprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1079;
 X-Forefront-PRVS: 0048BCF4DA
 X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: XjPxTnoJVh4T7UU7rONwzlCh5z3d+Ovhw5XCYRD+ohVrEF1KChWLX9gfwZzbStMvqLjhXIq+YAOUMfMF/OlqHOPUZL2dfB0g62PbCczvdM3sxUCk0l0VV23wkiFLGd95NqYPW23dJCWF7hgqeAj7NV7kdnE4DQegLRq1+tHVcw4H6fOeAMcv2bxJ42vMDWcwqgnVRrCkXv+oAsSsLbh1Z/bpPuA3rETNs+lTXtKknR8OdYAjUgiBCSHBNomR8khccFBU+HUwO6LBRYM4o01/caQcm3wAZ/V7nqGTK8vCjRcNmad/Luw59va3oiCngbZvH61lWOkGNVv5xxvpQMXFHVrgNZv6hSn5l8BvY/lpHHpfT+668INYLUzedM4iJtI0FZUHQMx1cnQoLAV47iTQjyFN38h+s6gUTzrhBAnTIWQ=
+X-Microsoft-Antispam-Message-Info: 1CCc9GSr/WXwhCM2gfGORLl6Srzz0Z7pO3GiQEt+O3OxSkWECC/U46iPv2Muu+0Q4JLwY8vzWK+YQ4kOmXv3OvYDf/qi/ikkEiZQMkWJ7P+HSllvgkVY3+gZ19Kn8j6OiBCsRfSGSZvrYeruGyCOAM9tz7EcZ1SuG9IbTxlXN5JW+N7UQvgqDc4qI2N5h9h+ff8fGb0E5LkZ1AHgMKo8Yeky2uwHbwu8GV6hYWWFHR67Qnl2/ivZNygtH7rAJgMs1LlMtoWMuohCB6GPk/cJCgCBEXLzuWXoYCFJd1pQTcv2kCplN0Ncf3zzZzSZdQHqqbaASsQUVren+vLiGiX3Q6+NPMkV4hnAsYXwH3wTFPVPK6AiAbbTv7wmLZx6l6wEqnUDd91eGmIoJnSYLh/TPkc55ZGyunYvsXPypvxZOxU=
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 May 2019 11:37:41.7078
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 May 2019 11:37:47.3415
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 77e98fcf-29d2-4401-0f30-08d6e10565f0
+X-MS-Exchange-CrossTenant-Network-Message-Id: a833c740-0cc2-4f7a-911e-08d6e105694b
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.80.198];Helo=[xir-pvapexch02.xlnx.xilinx.com]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.80.198];Helo=[xir-pvapexch01.xlnx.xilinx.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR02MB2676
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR02MB2673
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Support monitoring and detecting the SD-FEC error events
-through IRQ and poll file operation.
+support
 
-The SD-FEC device can detect one-error or multi-error events.
-An error triggers an interrupt which creates and run the ONE_SHOT
-IRQ thread.
-The ONE_SHOT IRQ thread detects type of error and pass that
-information to the poll function.
-The file_operation callback poll(), collects the events and
-updates the statistics accordingly.
-The function poll blocks() on waiting queue which can be
-unblocked by ONE_SHOT IRQ handling thread.
+Add maintainer entry for Xilinx SD-FEC driver support.
 
-Support SD-FEC interrupt set ioctl callback.
-The SD-FEC can detect two type of errors: coding errors (ECC) and
-a data interface errors (TLAST).
-The errors are  events which can trigger an IRQ if enabled.
-The driver can monitor and detect these errors through IRQ.
-Also the driver updates the statistical data.
-
-Tested-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
 Signed-off-by: Derek Kiernan <derek.kiernan@xilinx.com>
 Signed-off-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
 ---
- drivers/misc/xilinx_sdfec.c      | 286 +++++++++++++++++++++++++++++++++++++++
- include/uapi/misc/xilinx_sdfec.h |  13 ++
- 2 files changed, 299 insertions(+)
+ MAINTAINERS | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
-index f1c96c7..544e746 100644
---- a/drivers/misc/xilinx_sdfec.c
-+++ b/drivers/misc/xilinx_sdfec.c
-@@ -189,7 +189,14 @@ struct xsdfec_clks {
-  * @dev: pointer to device struct
-  * @state: State of the SDFEC device
-  * @config: Configuration of the SDFEC device
-+ * @state_updated: indicates State updated by interrupt handler
-+ * @stats_updated: indicates Stats updated by interrupt handler
-+ * @isr_err_count: Count of ISR errors
-+ * @cecc_count: Count of Correctable ECC errors (SBE)
-+ * @uecc_count: Count of Uncorrectable ECC errors (MBE)
-+ * @irq: IRQ number
-  * @miscdev: Misc device handle
-+ * @waitq: Driver wait queue
-  * @irq_lock: Driver spinlock
-  * @clks: Clocks managed by the SDFEC driver
-  *
-@@ -200,9 +207,17 @@ struct xsdfec_dev {
- 	struct device *dev;
- 	enum xsdfec_state state;
- 	struct xsdfec_config config;
-+	bool state_updated;
-+	bool stats_updated;
-+	atomic_t isr_err_count;
-+	atomic_t cecc_count;
-+	atomic_t uecc_count;
-+	int irq;
- 	struct miscdevice miscdev;
-+	wait_queue_head_t waitq;
- 	/* Spinlock to protect state_updated and stats_updated */
- 	spinlock_t irq_lock;
-+	unsigned long flags;
- 	struct xsdfec_clks clks;
- };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 5cfbea4..6e558ae 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -17345,6 +17345,18 @@ S:	Supported
+ F:	Documentation/filesystems/xfs.txt
+ F:	fs/xfs/
  
-@@ -286,6 +301,90 @@ static int xsdfec_get_config(struct xsdfec_dev *xsdfec, void __user *arg)
- 	return err;
- }
- 
-+static int xsdfec_isr_enable(struct xsdfec_dev *xsdfec, bool enable)
-+{
-+	u32 mask_read;
++XILINX SD-FEC IP CORES
++M:	Derek Kiernan <derek.kiernan@xilinx.com>
++M:	Dragan Cvetic <dragan.cvetic@xilinx.com>
++S:	Maintained
++F:	Documentation/devicetree/bindings/misc/xlnx,sd-fec.txt
++F:	Documentation/misc-devices/xilinx_sdfec.rst
++F:	Documentation/misc-devices/index.rst
++F:	drivers/misc/xilinx_sdfec.c
++F:	drivers/misc/Kconfig
++F:	drivers/misc/Makefile
++F:	include/uapi/misc/xilinx_sdfec.h
 +
-+	if (enable) {
-+		/* Enable */
-+		xsdfec_regwrite(xsdfec, XSDFEC_IER_ADDR, XSDFEC_ISR_MASK);
-+		mask_read = xsdfec_regread(xsdfec, XSDFEC_IMR_ADDR);
-+		if (mask_read & XSDFEC_ISR_MASK) {
-+			dev_dbg(xsdfec->dev,
-+				"SDFEC enabling irq with IER failed");
-+			return -EIO;
-+		}
-+	} else {
-+		/* Disable */
-+		xsdfec_regwrite(xsdfec, XSDFEC_IDR_ADDR, XSDFEC_ISR_MASK);
-+		mask_read = xsdfec_regread(xsdfec, XSDFEC_IMR_ADDR);
-+		if ((mask_read & XSDFEC_ISR_MASK) != XSDFEC_ISR_MASK) {
-+			dev_dbg(xsdfec->dev,
-+				"SDFEC disabling irq with IDR failed");
-+			return -EIO;
-+		}
-+	}
-+	return 0;
-+}
-+
-+static int xsdfec_ecc_isr_enable(struct xsdfec_dev *xsdfec, bool enable)
-+{
-+	u32 mask_read;
-+
-+	if (enable) {
-+		/* Enable */
-+		xsdfec_regwrite(xsdfec, XSDFEC_ECC_IER_ADDR,
-+				XSDFEC_ALL_ECC_ISR_MASK);
-+		mask_read = xsdfec_regread(xsdfec, XSDFEC_ECC_IMR_ADDR);
-+		if (mask_read & XSDFEC_ALL_ECC_ISR_MASK) {
-+			dev_dbg(xsdfec->dev,
-+				"SDFEC enabling ECC irq with ECC IER failed");
-+			return -EIO;
-+		}
-+	} else {
-+		/* Disable */
-+		xsdfec_regwrite(xsdfec, XSDFEC_ECC_IDR_ADDR,
-+				XSDFEC_ALL_ECC_ISR_MASK);
-+		mask_read = xsdfec_regread(xsdfec, XSDFEC_ECC_IMR_ADDR);
-+		if (!(((mask_read & XSDFEC_ALL_ECC_ISR_MASK) ==
-+		       XSDFEC_ECC_ISR_MASK) ||
-+		      ((mask_read & XSDFEC_ALL_ECC_ISR_MASK) ==
-+		       XSDFEC_PL_INIT_ECC_ISR_MASK))) {
-+			dev_dbg(xsdfec->dev,
-+				"SDFEC disable ECC irq with ECC IDR failed");
-+			return -EIO;
-+		}
-+	}
-+	return 0;
-+}
-+
-+static int xsdfec_set_irq(struct xsdfec_dev *xsdfec, void __user *arg)
-+{
-+	struct xsdfec_irq irq;
-+	int err;
-+	int isr_err;
-+	int ecc_err;
-+
-+	err = copy_from_user(&irq, arg, sizeof(irq));
-+	if (err)
-+		return -EFAULT;
-+
-+	/* Setup tlast related IRQ */
-+	isr_err = xsdfec_isr_enable(xsdfec, irq.enable_isr);
-+	if (!isr_err)
-+		xsdfec->config.irq.enable_isr = irq.enable_isr;
-+
-+	/* Setup ECC related IRQ */
-+	ecc_err = xsdfec_ecc_isr_enable(xsdfec, irq.enable_ecc_isr);
-+	if (!ecc_err)
-+		xsdfec->config.irq.enable_ecc_isr = irq.enable_ecc_isr;
-+
-+	if (isr_err < 0 || ecc_err < 0)
-+		err = -EIO;
-+
-+	return err;
-+}
-+
- static int xsdfec_set_turbo(struct xsdfec_dev *xsdfec, void __user *arg)
- {
- 	struct xsdfec_turbo turbo;
-@@ -776,6 +875,9 @@ static long xsdfec_dev_ioctl(struct file *fptr, unsigned int cmd,
- 	case XSDFEC_GET_CONFIG:
- 		rval = xsdfec_get_config(xsdfec, arg);
- 		break;
-+	case XSDFEC_SET_IRQ:
-+		rval = xsdfec_set_irq(xsdfec, arg);
-+		break;
- 	case XSDFEC_SET_TURBO:
- 		rval = xsdfec_set_turbo(xsdfec, arg);
- 		break;
-@@ -810,11 +912,36 @@ static long xsdfec_dev_compat_ioctl(struct file *file, unsigned int cmd,
- }
- #endif
- 
-+static unsigned int xsdfec_poll(struct file *file, poll_table *wait)
-+{
-+	unsigned int mask = 0;
-+	struct xsdfec_dev *xsdfec;
-+
-+	xsdfec = container_of(file->private_data, struct xsdfec_dev, miscdev);
-+
-+	if (!xsdfec)
-+		return POLLNVAL | POLLHUP;
-+
-+	poll_wait(file, &xsdfec->waitq, wait);
-+
-+	/* XSDFEC ISR detected an error */
-+	spin_lock_irqsave(&xsdfec->irq_lock, xsdfec->flags);
-+	if (xsdfec->state_updated)
-+		mask |= POLLIN | POLLPRI;
-+
-+	if (xsdfec->stats_updated)
-+		mask |= POLLIN | POLLRDNORM;
-+	spin_unlock_irqrestore(&xsdfec->irq_lock, xsdfec->flags);
-+
-+	return mask;
-+}
-+
- static const struct file_operations xsdfec_fops = {
- 	.owner = THIS_MODULE,
- 	.open = xsdfec_dev_open,
- 	.release = xsdfec_dev_release,
- 	.unlocked_ioctl = xsdfec_dev_ioctl,
-+	.poll = xsdfec_poll,
- #ifdef CONFIG_COMPAT
- 	.compat_ioctl = xsdfec_dev_compat_ioctl,
- #endif
-@@ -908,6 +1035,146 @@ static int xsdfec_parse_of(struct xsdfec_dev *xsdfec)
- 	return 0;
- }
- 
-+static void xsdfec_count_and_clear_ecc_multi_errors(struct xsdfec_dev *xsdfec,
-+						    u32 uecc)
-+{
-+	u32 uecc_event;
-+
-+	/* Update ECC ISR error counts */
-+	atomic_add(hweight32(uecc), &xsdfec->uecc_count);
-+	xsdfec->stats_updated = true;
-+
-+	/* Clear ECC errors */
-+	xsdfec_regwrite(xsdfec, XSDFEC_ECC_ISR_ADDR,
-+			XSDFEC_ALL_ECC_ISR_MBE_MASK);
-+	/* Clear ECC events */
-+	if (uecc & XSDFEC_ECC_ISR_MBE_MASK) {
-+		uecc_event = uecc >> XSDFEC_ECC_ISR_MBE_TO_EVENT_SHIFT;
-+		xsdfec_regwrite(xsdfec, XSDFEC_ECC_ISR_ADDR, uecc_event);
-+	} else if (uecc & XSDFEC_PL_INIT_ECC_ISR_MBE_MASK) {
-+		uecc_event = uecc >> XSDFEC_PL_INIT_ECC_ISR_MBE_TO_EVENT_SHIFT;
-+		xsdfec_regwrite(xsdfec, XSDFEC_ECC_ISR_ADDR, uecc_event);
-+	}
-+}
-+
-+static void xsdfec_count_and_clear_ecc_single_errors(struct xsdfec_dev *xsdfec,
-+						     u32 cecc, u32 sbe_mask)
-+{
-+	/* Update ECC ISR error counts */
-+	atomic_add(hweight32(cecc), &xsdfec->cecc_count);
-+	xsdfec->stats_updated = true;
-+
-+	/* Clear ECC errors */
-+	xsdfec_regwrite(xsdfec, XSDFEC_ECC_ISR_ADDR, sbe_mask);
-+}
-+
-+static void xsdfec_count_and_clear_isr_errors(struct xsdfec_dev *xsdfec,
-+					      u32 isr_err)
-+{
-+	/* Update ISR error counts */
-+	atomic_add(hweight32(isr_err), &xsdfec->isr_err_count);
-+	xsdfec->stats_updated = true;
-+
-+	/* Clear ISR error status */
-+	xsdfec_regwrite(xsdfec, XSDFEC_ISR_ADDR, XSDFEC_ISR_MASK);
-+}
-+
-+static void xsdfec_update_state_for_isr_err(struct xsdfec_dev *xsdfec)
-+{
-+	xsdfec->state = XSDFEC_NEEDS_RESET;
-+	xsdfec->state_updated = true;
-+}
-+
-+static void xsdfec_update_state_for_ecc_err(struct xsdfec_dev *xsdfec,
-+					    u32 ecc_err)
-+{
-+	if (ecc_err & XSDFEC_ECC_ISR_MBE_MASK)
-+		xsdfec->state = XSDFEC_NEEDS_RESET;
-+	else if (ecc_err & XSDFEC_PL_INIT_ECC_ISR_MBE_MASK)
-+		xsdfec->state = XSDFEC_PL_RECONFIGURE;
-+
-+	xsdfec->state_updated = true;
-+}
-+
-+static int xsdfec_get_sbe_mask(u32 ecc_err)
-+{
-+	u32 sbe_mask = XSDFEC_ALL_ECC_ISR_SBE_MASK;
-+
-+	if (ecc_err & XSDFEC_ECC_ISR_MBE_MASK) {
-+		sbe_mask = (XSDFEC_ECC_ISR_MBE_MASK - ecc_err) >>
-+			   XSDFEC_ECC_ISR_MBE_TO_EVENT_SHIFT;
-+	} else if (ecc_err & XSDFEC_PL_INIT_ECC_ISR_MBE_MASK)
-+		sbe_mask = (XSDFEC_PL_INIT_ECC_ISR_MBE_MASK - ecc_err) >>
-+			   XSDFEC_PL_INIT_ECC_ISR_MBE_TO_EVENT_SHIFT;
-+
-+	return sbe_mask;
-+}
-+
-+static irqreturn_t xsdfec_irq_thread(int irq, void *dev_id)
-+{
-+	struct xsdfec_dev *xsdfec = dev_id;
-+	irqreturn_t ret = IRQ_HANDLED;
-+	u32 ecc_err;
-+	u32 isr_err;
-+	u32 err_value;
-+	u32 sbe_mask;
-+
-+	WARN_ON(xsdfec->irq != irq);
-+
-+	/* Mask Interrupts */
-+	xsdfec_isr_enable(xsdfec, false);
-+	xsdfec_ecc_isr_enable(xsdfec, false);
-+
-+	/* Read Interrupt Status Registers */
-+	ecc_err = xsdfec_regread(xsdfec, XSDFEC_ECC_ISR_ADDR);
-+	isr_err = xsdfec_regread(xsdfec, XSDFEC_ISR_ADDR);
-+
-+	spin_lock_irqsave(&xsdfec->irq_lock, xsdfec->flags);
-+
-+	err_value = ecc_err & XSDFEC_ALL_ECC_ISR_MBE_MASK;
-+	if (err_value) {
-+		dev_dbg(xsdfec->dev, "Multi-bit error on xsdfec%d",
-+			xsdfec->config.fec_id);
-+		/* Count and clear multi-bit errors and associated events */
-+		xsdfec_count_and_clear_ecc_multi_errors(xsdfec, err_value);
-+		xsdfec_update_state_for_ecc_err(xsdfec, ecc_err);
-+	}
-+
-+	/*
-+	 * Update SBE mask to remove events associated with MBE if present.
-+	 * If no MBEs are present will return mask for all SBE bits
-+	 */
-+	sbe_mask = xsdfec_get_sbe_mask(err_value);
-+	err_value = ecc_err & sbe_mask;
-+	if (err_value) {
-+		dev_dbg(xsdfec->dev, "Correctable error on xsdfec%d",
-+			 xsdfec->config.fec_id);
-+		xsdfec_count_and_clear_ecc_single_errors(xsdfec, err_value,
-+							 sbe_mask);
-+	}
-+
-+	err_value = isr_err & XSDFEC_ISR_MASK;
-+	if (err_value) {
-+		dev_dbg(xsdfec->dev,
-+			"Tlast,or DIN_WORDS or DOUT_WORDS not correct");
-+		xsdfec_count_and_clear_isr_errors(xsdfec, err_value);
-+		xsdfec_update_state_for_isr_err(xsdfec);
-+	}
-+
-+	if (xsdfec->state_updated || xsdfec->stats_updated)
-+		wake_up_interruptible(&xsdfec->waitq);
-+	else
-+		ret = IRQ_NONE;
-+
-+	/* Unmask Interrupts */
-+	xsdfec_isr_enable(xsdfec, true);
-+	xsdfec_ecc_isr_enable(xsdfec, true);
-+
-+	spin_unlock_irqrestore(&xsdfec->irq_lock, xsdfec->flags);
-+
-+	return ret;
-+}
-+
- static int xsdfec_clk_init(struct platform_device *pdev,
- 			   struct xsdfec_clks *clks)
- {
-@@ -1069,6 +1336,7 @@ static int xsdfec_probe(struct platform_device *pdev)
- 	struct resource *res;
- 	int err;
- 	char buf[NAMEBUF_SIZE];
-+	bool irq_enabled = true;
- 
- 	xsdfec = devm_kzalloc(&pdev->dev, sizeof(*xsdfec), GFP_KERNEL);
- 	if (!xsdfec)
-@@ -1091,6 +1359,12 @@ static int xsdfec_probe(struct platform_device *pdev)
- 		goto err_xsdfec_dev;
- 	}
- 
-+	xsdfec->irq = platform_get_irq(pdev, 0);
-+	if (xsdfec->irq < 0) {
-+		dev_dbg(dev, "platform_get_irq failed");
-+		irq_enabled = false;
-+	}
-+
- 	err = xsdfec_parse_of(xsdfec);
- 	if (err < 0)
- 		goto err_xsdfec_dev;
-@@ -1100,6 +1374,18 @@ static int xsdfec_probe(struct platform_device *pdev)
- 	/* Save driver private data */
- 	platform_set_drvdata(pdev, xsdfec);
- 
-+	if (irq_enabled) {
-+		init_waitqueue_head(&xsdfec->waitq);
-+		/* Register IRQ thread */
-+		err = devm_request_threaded_irq(dev, xsdfec->irq, NULL,
-+						xsdfec_irq_thread, IRQF_ONESHOT,
-+						"xilinx-sdfec16", xsdfec);
-+		if (err < 0) {
-+			dev_err(dev, "unable to request IRQ%d", xsdfec->irq);
-+			goto err_xsdfec_dev;
-+		}
-+	}
-+
- 	snprintf(buf, NAMEBUF_SIZE, "xsdfec%d", xsdfec->config.fec_id);
- 	xsdfec->miscdev.minor = MISC_DYNAMIC_MINOR;
- 	xsdfec->miscdev.name = buf;
-diff --git a/include/uapi/misc/xilinx_sdfec.h b/include/uapi/misc/xilinx_sdfec.h
-index 82e58b3..890930d 100644
---- a/include/uapi/misc/xilinx_sdfec.h
-+++ b/include/uapi/misc/xilinx_sdfec.h
-@@ -260,6 +260,19 @@ struct xsdfec_ldpc_param_table_sizes {
-  */
- #define XSDFEC_MAGIC 'f'
- /**
-+ * DOC: XSDFEC_SET_IRQ
-+ * @Parameters
-+ *
-+ * @struct xsdfec_irq *
-+ *	Pointer to the &struct xsdfec_irq that contains the interrupt settings
-+ *	for the SD-FEC core
-+ *
-+ * @Description
-+ *
-+ * ioctl to enable or disable irq
-+ */
-+#define XSDFEC_SET_IRQ _IOW(XSDFEC_MAGIC, 3, struct xsdfec_irq)
-+/**
-  * DOC: XSDFEC_SET_TURBO
-  * @Parameters
-  *
+ XILINX AXI ETHERNET DRIVER
+ M:	Anirudha Sarangi <anirudh@xilinx.com>
+ M:	John Linn <John.Linn@xilinx.com>
 -- 
 2.7.4
 
