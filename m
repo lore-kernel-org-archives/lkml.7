@@ -2,75 +2,82 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 260D7C282CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 11:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 776D4C28CBF
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 11:09:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0458D2168B
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 11:08:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 457A92085A
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 11:09:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="c67OmT7B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbfEYLIb (ORCPT
+        id S1726830AbfEYLJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 07:08:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38230 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726484AbfEYLIa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 07:08:30 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B2D22085A;
-        Sat, 25 May 2019 11:08:28 +0000 (UTC)
-Date:   Sat, 25 May 2019 07:08:26 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>, kvm-ppc@vger.kernel.org,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Paul Mackerras <paulus@ozlabs.org>, rcu@vger.kernel.org
-Subject: Re: [PATCH RFC 0/5] Remove some notrace RCU APIs
-Message-ID: <20190525070826.16f76ee7@gandalf.local.home>
-In-Reply-To: <20190525081444.GC197789@google.com>
-References: <20190524234933.5133-1-joel@joelfernandes.org>
-        <20190524232458.4bcf4eb4@gandalf.local.home>
-        <20190525081444.GC197789@google.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 25 May 2019 07:09:06 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36424 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726484AbfEYLJF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 May 2019 07:09:05 -0400
+Received: by mail-oi1-f195.google.com with SMTP id y124so8878353oiy.3;
+        Sat, 25 May 2019 04:09:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Fa2wab8YpKsUwDpZ6LomoWPNcWTcG/N9TaMQ1o+zIL0=;
+        b=c67OmT7BgSIatc+fEm5zkVjKvMjEwSFy5vAdHSlzMFO25BVsv0RZjruxNDkuzn2iLx
+         klGHoFDq4TNqHvQ1LKtjckQh2sN0bJ1riF1s518ZE7aQtAZJT4/6SkFJcNS3hU6EJS40
+         V3SrTBSGSQRf6tg3FUQmIJz6f5BJOLv6nGUUWxbqZpLyjO3b3QNugBptVaawlsUmjMb4
+         tNmUb29hf5nj7bMpPfgbEkLEf1nQ2J3QSjxvQMQqZKA0+fVgzQx/mbzW9bfDLxsuEUrU
+         YjN57innUMc3zgo620zmAMjqZPQ6GEhoIXqNGLnSaHAFhs+q1HQYUG/zq4T20X8MTle9
+         jUGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Fa2wab8YpKsUwDpZ6LomoWPNcWTcG/N9TaMQ1o+zIL0=;
+        b=MLJThN/aPcqHIfjsaGVlVby8ISwwT2cHKz0Nj6ZQdZFodOMih9AsbeyId3kKzlDZiZ
+         9dbm9sdCrTvISFQpYMvwMPNTlOBXjRUEJJUzeP6GFjDD09iQOOvuXkj0VcdSojTg0ixo
+         X/6XSMVRGgPoJff8HypafjtpebE1P6+z+BBxzFnOiGvib+BeWFhUwUOuKHe5zUmZia24
+         ajozDq8IFRnxp6bH2axXwnToNuINizmsu2vaMhDr1iOmoGjN3h1uF3FJUaGOOsZX6a6E
+         Un2i9jOn8RRc4kl+sGwodW0gctqT3GfHnUQKdVXXlA0Ve2XnFTE/Av5iP2ahB1w2qbu6
+         M73w==
+X-Gm-Message-State: APjAAAXapYzX4RWUCTxVGcCaycSmwks5asfAkLak8Fk451JhqbbU2ebM
+        Sn7yu3FDAefVTINT2HooqLfR+oPGEfpWys4rXMrnibLGSpw=
+X-Google-Smtp-Source: APXvYqxC8ae50HwEo+Xc34XhxDEEcl6oJoQQN+XKJjwNIs/j8rmSnhxVMwtlaFf+eLf3WdRuGsP210KJP9D4bZIv480=
+X-Received: by 2002:aca:ab04:: with SMTP id u4mr2626924oie.15.1558782545011;
+ Sat, 25 May 2019 04:09:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190524091532.28973-1-amergnat@baylibre.com>
+In-Reply-To: <20190524091532.28973-1-amergnat@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Sat, 25 May 2019 13:08:54 +0200
+Message-ID: <CAFBinCADSKoDc3cUofAtFxDMeQ819FsXe=ULtCmn1g0drSmtTA@mail.gmail.com>
+Subject: Re: [PATCH] clk: meson: g12a: fix hifi typo in mali parent_names
+To:     Alexandre Mergnat <amergnat@baylibre.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        baylibre-upstreaming@groups.io, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
+        Jerome Brunet <jbrunet@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 25 May 2019 04:14:44 -0400
-Joel Fernandes <joel@joelfernandes.org> wrote:
-
-> > I guess the difference between the _raw_notrace and just _raw variants
-> > is that _notrace ones do a rcu_check_sparse(). Don't we want to keep
-> > that check?  
-> 
-> This is true.
-> 
-> Since the users of _raw_notrace are very few, is it worth keeping this API
-> just for sparse checking? The API naming is also confusing. I was expecting
-> _raw_notrace to do fewer checks than _raw, instead of more. Honestly, I just
-> want to nuke _raw_notrace as done in this series and later we can introduce a
-> sparse checking version of _raw if need-be. The other option could be to
-> always do sparse checking for _raw however that used to be the case and got
-> changed in http://lists.infradead.org/pipermail/linux-afs/2016-July/001016.html
-
-What if we just rename _raw to _raw_nocheck, and _raw_notrace to _raw ?
-
--- Steve
+On Fri, May 24, 2019 at 11:16 AM Alexandre Mergnat
+<amergnat@baylibre.com> wrote:
+>
+> Replace hihi by hifi in the mali parent_names of the g12a SoC family.
+>
+> Fixes: 085a4ea93d54 ("clk: meson: g12a: add peripheral clock controller")
+> Cc: Jerome Brunet <jbrunet@baylibre.com>
+> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+this is "obviously correct" and double-checked with
+buildroot-openlinux-A113-201901, so it's:
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
