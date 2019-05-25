@@ -2,156 +2,170 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A330C07542
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 15:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34CE4C282E5
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 15:21:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3C532168B
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 15:08:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558796899;
-	bh=8+q4Zssz7rb0t6IthvndGsVaCVXTKJumxhD/Z4lonK4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=ntJGl3Y0jfgADFqONi30pM3Tz0vXolO6HMcPR1KxL3PFNLWrAucizqdJ5CNraPXxg
-	 a3XRT1ubzyMbenvrXWnnc97Gd8nBBDV3Wbe5/iJp/kszvC98bCI7Y3kFTu5zPZjlSM
-	 f8C3K8tUB7TOb6k3jFhdsJMf9ZzlBTCk5Y/5nMIU=
+	by mail.kernel.org (Postfix) with ESMTP id 0E9BC216E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 15:21:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uS7W7fBC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbfEYPIS (ORCPT
+        id S1727110AbfEYPVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 11:08:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60904 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727002AbfEYPIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 11:08:17 -0400
-Received: from localhost.localdomain (unknown [58.212.135.189])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B8FB2075E;
-        Sat, 25 May 2019 15:08:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558796896;
-        bh=8+q4Zssz7rb0t6IthvndGsVaCVXTKJumxhD/Z4lonK4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ddTPviWhU2UKgUAASn8DJn9XZdQeiBJBaupbdkbL4hJMnWJ/DV/GbDpKMt6XDF/at
-         zlkG9gsCIVGlgSwnZXEXEowNHpEVvgC2p4bt8JOgxsAKjuuuBfN00Gjf+lc6k0pDam
-         A7fE0gd95YmLpIaCoSYUwB4nfhst2rPz29KGzPJI=
-From:   Chao Yu <chao@kernel.org>
-To:     jaegeuk@kernel.org
-Cc:     linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH v3] f2fs: fix to do sanity check on segment bitmap of LFS curseg
-Date:   Sat, 25 May 2019 23:07:25 +0800
-Message-Id: <20190525150725.3113-1-chao@kernel.org>
-X-Mailer: git-send-email 2.18.0
+        Sat, 25 May 2019 11:21:00 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:43353 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726991AbfEYPVA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 May 2019 11:21:00 -0400
+Received: by mail-yw1-f65.google.com with SMTP id t5so4859749ywf.10
+        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 08:20:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=SFixVte+KRZ0eDi2dM904QnB5LrKYVziMe7pK+9vKpA=;
+        b=uS7W7fBCo8MN4KH49ynbBJFE22ReYcNJXR65W82MPwze63XpTnI1Jl/vuoRl4hPLTr
+         YmDDJj+vlCp92KxAOZuN01blzuOusbBGeYPQ17ubOS6S/2KYA3DDu5dvsSjb1v1lvnbH
+         VCvbxa5V4BszgCANSd1SXNWKDbhS7sGlzvrPSoDcqGHgVA4QQT+cdZo0q1e4nk+Elo1P
+         dNDYfMsvWWaPskxYOvhoOtnB8WifeIEaQYde27cdX3HIxt0KTnrgVHVGQCdXLnw5w0dR
+         YmDG0PjAq3c4aQj0f3vfwdVnQDP7nWIXq/3qBfQ8IKmsaki1eGDldE6d/SOalLcg0J00
+         ZXSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=SFixVte+KRZ0eDi2dM904QnB5LrKYVziMe7pK+9vKpA=;
+        b=WlXegd0Atv2b79I74v1XV5T5pdPv+cp1VahI5DnwQnETuX8e8xV5shPtSfBbilxFNe
+         dOjUE3v4SVHl39xWEJOvtjE94BQIKiIhQjsw5hvdyrLxK8qxvT5ZSEs9igFCfG8JAgQ1
+         nSE7F4uQzvHq+kDcyIN501QTakBsBRJLac3ECsem2W23KX7hhOCggPwmK3uvT/paNVh2
+         X2S33lQmPoH07xsOtzhg26VHo6MbUdAiEipvvP0yrleC8TmJ4zW/XYp9gncmH+ET+VA4
+         A9pgCJMk3/tR7GJJMvVFs7OczWtRIn9l9VPkZLCt6mex7LlOQ4D3WlyK/lDJqPIk871G
+         OP6w==
+X-Gm-Message-State: APjAAAWSLeFRr7AzhUsbzbXjplSxo9Rp3CpOq+HQ31tOFNcG7J1ePz7L
+        ZUkgspC7wBrbbf0pKkJqlzeoOjHH
+X-Google-Smtp-Source: APXvYqx7I7FplxAnGI81hXmfnrcc831nyvSJ6Ivl3muFnTlSrDud/ZvcDTftVrqFtGHulNFNHZ1+hw==
+X-Received: by 2002:a81:2343:: with SMTP id j64mr4693324ywj.224.1558797657856;
+        Sat, 25 May 2019 08:20:57 -0700 (PDT)
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com. [209.85.219.180])
+        by smtp.gmail.com with ESMTPSA id v8sm1467520ywv.82.2019.05.25.08.20.56
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 25 May 2019 08:20:56 -0700 (PDT)
+Received: by mail-yb1-f180.google.com with SMTP id e128so4822606ybc.12
+        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 08:20:56 -0700 (PDT)
+X-Received: by 2002:a25:f509:: with SMTP id a9mr50352842ybe.391.1558797656141;
+ Sat, 25 May 2019 08:20:56 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190523210651.80902-1-fklassen@appneta.com> <20190523210651.80902-2-fklassen@appneta.com>
+ <CAF=yD-Jf95De=z_nx9WFkGDa6+nRUqM_1PqGkjwaFPzOe+PfXg@mail.gmail.com>
+ <AE8E0772-7256-4B9C-A990-96930E834AEE@appneta.com> <CAF=yD-LtAKpND601LQrC1+=iF6spSUXVdUapcsbJdv5FYa=5Jg@mail.gmail.com>
+ <AFC1ECC8-BFAC-4718-B0C9-97CC4BD1F397@appneta.com> <CAF=yD-Le-eTadOi7PL8WFEQCG=yLqb5gvKiks+s5Akeq8TenBQ@mail.gmail.com>
+ <90E3853F-107D-45BA-93DC-D0BE8AC6FCBB@appneta.com>
+In-Reply-To: <90E3853F-107D-45BA-93DC-D0BE8AC6FCBB@appneta.com>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Sat, 25 May 2019 11:20:16 -0400
+X-Gmail-Original-Message-ID: <CA+FuTScNr9Srsn9QFBSj=oT4TnMh1QuOZ2h40g=joNjSwccqMg@mail.gmail.com>
+Message-ID: <CA+FuTScNr9Srsn9QFBSj=oT4TnMh1QuOZ2h40g=joNjSwccqMg@mail.gmail.com>
+Subject: Re: [PATCH net 1/4] net/udp_gso: Allow TX timestamp with UDP GSO
+To:     Fred Klassen <fklassen@appneta.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+On Fri, May 24, 2019 at 6:01 PM Fred Klassen <fklassen@appneta.com> wrote:
+>
+>
+>
+> > On May 24, 2019, at 12:29 PM, Willem de Bruijn <willemdebruijn.kernel@g=
+mail.com> wrote:
+> >
+> > It is the last moment that a timestamp can be generated for the last
+> > byte, I don't see how that is "neither the start nor the end of a GSO
+> > packet=E2=80=9D.
+>
+> My misunderstanding. I thought TCP did last segment timestamping, not
+> last byte. In that case, your statements make sense.
+>
+> >> It would be interesting if a practical case can be made for timestampi=
+ng
+> >> the last segment. In my mind, I don=E2=80=99t see how that would be va=
+luable.
+> >
+> > It depends whether you are interested in measuring network latency or
+> > host transmit path latency.
+> >
+> > For the latter, knowing the time from the start of the sendmsg call to
+> > the moment the last byte hits the wire is most relevant. Or in absence
+> > of (well defined) hardware support, the last byte being queued to the
+> > device is the next best thing.
 
-As Jungyeon Reported in bugzilla:
+Sounds to me like both cases have a legitimate use case, and we want
+to support both.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=203233
+Implementation constraints are that storage for this timestamp
+information is scarce and we cannot add new cold cacheline accesses in
+the datapath.
 
-- Reproduces
-gcc poc_13.c
-./run.sh f2fs
+The simplest approach would be to unconditionally timestamp both the
+first and last segment. With the same ID. Not terribly elegant. But it
+works.
 
-- Kernel messages
- F2FS-fs (sdb): Bitmap was wrongly set, blk:4608
- kernel BUG at fs/f2fs/segment.c:2133!
- RIP: 0010:update_sit_entry+0x35d/0x3e0
- Call Trace:
-  f2fs_allocate_data_block+0x16c/0x5a0
-  do_write_page+0x57/0x100
-  f2fs_do_write_node_page+0x33/0xa0
-  __write_node_page+0x270/0x4e0
-  f2fs_sync_node_pages+0x5df/0x670
-  f2fs_write_checkpoint+0x364/0x13a0
-  f2fs_sync_fs+0xa3/0x130
-  f2fs_do_sync_file+0x1a6/0x810
-  do_fsync+0x33/0x60
-  __x64_sys_fsync+0xb/0x10
-  do_syscall_64+0x43/0x110
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+If conditional, tx_flags has only one bit left. I think we can harvest
+some, as not all defined bits are in use at the same stages in the
+datapath, but that is not a trivial change. Some might also better be
+set in the skb, instead of skb_shinfo. Which would also avoids
+touching that cacheline. We could possibly repurpose bits from u32
+tskey.
 
-The testcase fails because that, in fuzzed image, current segment was
-allocated with LFS type, its .next_blkoff should point to an unused
-block address, but actually, its bitmap shows it's not. So during
-allocation, f2fs crash when setting bitmap.
+All that can come later. Initially, unless we can come up with
+something more elegant, I would suggest that UDP follows the rule
+established by TCP and timestamps the last byte. And we add an
+explicit SOF_TIMESTAMPING_OPT_FIRSTBYTE that is initially only
+supported for UDP, sets a new SKBTX_TX_FB_TSTAMP bit in
+__sock_tx_timestamp and is interpreted in __udp_gso_segment.
 
-Introducing sanity_check_curseg() to check such inconsistence of
-current in-used segment.
+> >
+> > It would make sense for this software implementation to follow
+> > established hardware behavior. But as far as I know, the exact time a
+> > hardware timestamp is taken is not consistent across devices, either.
+> >
+> > For fine grained timestamped data, perhaps GSO is simply not a good
+> > mechanism. That said, it still has to queue a timestamp if requested.
+>
+> I see your point. Makes sense to me.
+>
+> >> When using hardware timestamping, I think you will find that nearly al=
+l
+> >> adapters only allow one timestamp at a time. Therefore only one
+> >> packet in a burst would get timestamped.
+> >
+> > Can you elaborate? When the host queues N packets all with hardware
+> > timestamps requested, all N completions will have a timestamp? Or is
+> > that not guaranteed?
+> >
+>
+> It is not guaranteed. The best example is in ixgbe_main.c and search for
+> =E2=80=98SKBTX_HW_TSTAMP=E2=80=99.  If there is a PTP TX timestamp in pro=
+gress,
+> =E2=80=98__IXGBE_PTP_TX_IN_PROGRESS=E2=80=99 is set and no other timestam=
+ps
+> are possible. The flag is cleared after transmit softirq, and only then
+> can another TX timestamp be taken.
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
-v3:
-- make sanity_check_curseg() static.
- fs/f2fs/segment.c | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
-
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 5f6e4cd2eff2..a034e0da004a 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -4239,6 +4239,41 @@ static int build_dirty_segmap(struct f2fs_sb_info *sbi)
- 	return init_victim_secmap(sbi);
- }
- 
-+static int sanity_check_curseg(struct f2fs_sb_info *sbi)
-+{
-+	int i;
-+
-+	/*
-+	 * In LFS/SSR curseg, .next_blkoff should point to an unused blkaddr;
-+	 * In LFS curseg, all blkaddr after .next_blkoff should be unused.
-+	 */
-+	for (i = 0; i < NO_CHECK_TYPE; i++) {
-+		struct curseg_info *curseg = CURSEG_I(sbi, i);
-+		struct seg_entry *se = get_seg_entry(sbi, curseg->segno);
-+		unsigned int blkofs = curseg->next_blkoff;
-+
-+		if (f2fs_test_bit(blkofs, se->cur_valid_map))
-+			goto out;
-+
-+		if (curseg->alloc_type == SSR)
-+			continue;
-+
-+		for (blkofs += 1; blkofs < sbi->blocks_per_seg; blkofs++) {
-+			if (!f2fs_test_bit(blkofs, se->cur_valid_map))
-+				continue;
-+out:
-+			f2fs_msg(sbi->sb, KERN_ERR,
-+				"Current segment's next free block offset is "
-+				"inconsistent with bitmap, logtype:%u, "
-+				"segno:%u, type:%u, next_blkoff:%u, blkofs:%u",
-+				i, curseg->segno, curseg->alloc_type,
-+				curseg->next_blkoff, blkofs);
-+			return -EINVAL;
-+		}
-+	}
-+	return 0;
-+}
-+
- /*
-  * Update min, max modified time for cost-benefit GC algorithm
-  */
-@@ -4334,6 +4369,10 @@ int f2fs_build_segment_manager(struct f2fs_sb_info *sbi)
- 	if (err)
- 		return err;
- 
-+	err = sanity_check_curseg(sbi);
-+	if (err)
-+		return err;
-+
- 	init_min_max_mtime(sbi);
- 	return 0;
- }
--- 
-2.18.0
-
+Interesting, thanks. I had no idea.
