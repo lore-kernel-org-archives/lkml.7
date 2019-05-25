@@ -4,37 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22597C282CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 12:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09AE1C282CE
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 12:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB46D2175B
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 12:44:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D231120863
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 12:46:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbfEYMoS (ORCPT
+        id S1726908AbfEYMqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 08:44:18 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:17571 "EHLO huawei.com"
+        Sat, 25 May 2019 08:46:11 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:52810 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726808AbfEYMoS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 08:44:18 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 8FFA33F58BB835726D12;
-        Sat, 25 May 2019 20:42:12 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Sat, 25 May 2019
- 20:42:06 +0800
+        id S1726585AbfEYMqL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 May 2019 08:46:11 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id E42F518765FCF115AD0F;
+        Sat, 25 May 2019 20:46:07 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Sat, 25 May 2019
+ 20:45:59 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
-To:     <kashyap.desai@broadcom.com>, <sumit.saxena@broadcom.com>,
-        <shivasharan.srikanteshwara@broadcom.com>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <megaraidlinux.pdl@broadcom.com>,
+To:     <vishal@chelsio.com>, <davem@davemloft.net>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
         YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] scsi: megaraid_sas: remove set but not used variables 'host' and 'wait_time'
-Date:   Sat, 25 May 2019 20:42:02 +0800
-Message-ID: <20190525124202.8120-1-yuehaibing@huawei.com>
+Subject: [PATCH net-next] cxgb4: Make t4_get_tp_e2c_map static
+Date:   Sat, 25 May 2019 20:45:10 +0800
+Message-ID: <20190525124510.13864-1-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -45,60 +42,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warnings:
+Fix sparse warning:
 
-drivers/scsi/megaraid/megaraid_sas_base.c: In function megasas_suspend:
-drivers/scsi/megaraid/megaraid_sas_base.c:7269:20: warning: variable host set but not used [-Wunused-but-set-variable]
-drivers/scsi/megaraid/megaraid_sas_base.c: In function megasas_aen_polling:
-drivers/scsi/megaraid/megaraid_sas_base.c:8397:15: warning: variable wait_time set but not used [-Wunused-but-set-variable]
+drivers/net/ethernet/chelsio/cxgb4/t4_hw.c:6216:14:
+ warning: symbol 't4_get_tp_e2c_map' was not declared. Should it be static?
 
-'host' is never used since introduction in
-commit 31ea7088974c ("[SCSI] megaraid_sas: add hibernation support")
-
-'wait_time' is not used since commit
-11c71cb4ab7c ("megaraid_sas: Do not allow PCI access during OCR")
-
+Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/scsi/megaraid/megaraid_sas_base.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ drivers/net/ethernet/chelsio/cxgb4/t4_hw.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-index 92e576228d5f..ed0f6ca578e5 100644
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -7239,11 +7239,9 @@ static void megasas_shutdown_controller(struct megasas_instance *instance,
- static int
- megasas_suspend(struct pci_dev *pdev, pm_message_t state)
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
+index 8c17d1c75e84..a0a2eefc4687 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
+@@ -6213,7 +6213,7 @@ unsigned int t4_get_mps_bg_map(struct adapter *adapter, int pidx)
+  *      @adapter: the adapter
+  *      @pidx: the port index
+  */
+-unsigned int t4_get_tp_e2c_map(struct adapter *adapter, int pidx)
++static unsigned int t4_get_tp_e2c_map(struct adapter *adapter, int pidx)
  {
--	struct Scsi_Host *host;
- 	struct megasas_instance *instance;
- 
- 	instance = pci_get_drvdata(pdev);
--	host = instance->host;
- 	instance->unload = 1;
- 
- 	dev_info(&pdev->dev, "%s is called\n", __func__);
-@@ -8367,7 +8365,7 @@ megasas_aen_polling(struct work_struct *work)
- 	struct megasas_instance *instance = ev->instance;
- 	union megasas_evt_class_locale class_locale;
- 	int event_type = 0;
--	u32 seq_num, wait_time = MEGASAS_RESET_WAIT_TIME;
-+	u32 seq_num;
- 	int error;
- 	u8  dcmd_ret = DCMD_SUCCESS;
- 
-@@ -8377,10 +8375,6 @@ megasas_aen_polling(struct work_struct *work)
- 		return;
- 	}
- 
--	/* Adjust event workqueue thread wait time for VF mode */
--	if (instance->requestorId)
--		wait_time = MEGASAS_ROUTINE_WAIT_TIME_VF;
--
- 	/* Don't run the event workqueue thread if OCR is running */
- 	mutex_lock(&instance->reset_mutex);
- 
+ 	unsigned int nports;
+ 	u32 param, val = 0;
 -- 
 2.17.1
 
