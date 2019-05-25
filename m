@@ -2,92 +2,106 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 291D8C282CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 09:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BECC04AB0
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 09:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00EA92168B
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 09:18:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42B692133D
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 09:24:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ceHJWOcl"
+	dkim=pass (2048-bit key) header.d=nikanor-nu.20150623.gappssmtp.com header.i=@nikanor-nu.20150623.gappssmtp.com header.b="O2xcEAc6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbfEYJSu (ORCPT
+        id S1726748AbfEYJYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 05:18:50 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:35832 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726453AbfEYJSt (ORCPT
+        Sat, 25 May 2019 05:24:09 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:36472 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726497AbfEYJYJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 05:18:49 -0400
-Received: by mail-it1-f193.google.com with SMTP id u186so17314239ith.0
-        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 02:18:49 -0700 (PDT)
+        Sat, 25 May 2019 05:24:09 -0400
+Received: by mail-lf1-f68.google.com with SMTP id y10so8810450lfl.3
+        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 02:24:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XET7OF75wNiBS0S9YBCqjrCeD8nZnzrXhbrqUvMdrP8=;
-        b=ceHJWOclYeyDuJd7Q+aBCyW8OCwNFP8/2cWymfgFMO3AHiV4OddjDn8yfqX+xarEuT
-         QDG0HGrexSN7InLbYaWJc2k4H5kadELuPS8oT/40UksxXj9l1VNDDQqVXZ5jR9AaTaqw
-         MQvnpIeWvRKTyesCYEN4KeoUdjR2inujPC0435YZvqMqunD5W6k1bDxy+xa6RjdN7n3K
-         dmPEMXbwYu/QtRnAnOD9DEmXFcafL68r+OEYi5eqHiEOefJosh1ceV2DTQM6ZmE3nj16
-         Iu4C5tFR8tDL/XibRnPlSvqjCOOaG+NCyaWEXHT04A/s1pATYUJPIIrw37Ec+fCtEKCs
-         MLrA==
+        d=nikanor-nu.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=zLPXe8YfAMWrMxZxyor/59W4BIdpO5GJjp5HzwcajBk=;
+        b=O2xcEAc62rrzl5ZEYLoz6T0zW68KCQMp9xLEnRtfDTBVONdXteRWJBL3z1vwwO5nb3
+         g3I8gtYILSeK6gkJKljYdYKdMSG+Q5Izz6Whe0179wVLBIPGuYYL0BM6hZ2VWj8W2xCd
+         cGLEdSDVus4RM60IYAQbIesFBt70sYFHnJgSeQSgkVPNpUa0txrEzBsmeQNsre+KGwpG
+         yJRrhr3SDWmzL8GduHA0Ck3AzUJo6q6xS1LWKcpFJ9nLhdYds5rY9tmJ5sWHvJlOn6Rq
+         9dSpI5V4ug6pjb/yh9xUEtMPnx8nfS1km03uRPB7B0roBf0Vl/tACBRZnLUIN19WuPzg
+         vsPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XET7OF75wNiBS0S9YBCqjrCeD8nZnzrXhbrqUvMdrP8=;
-        b=mUNjfOPVtNsWJHOOdtd5VTFMn/5Y9GN5Oqhra9jxtnwLW/FCzBgwGNb7kG4p1mY14r
-         PmYlyQXpUEKV5Y79zNPZz6ehLgL5X5sA9fGlGtfNQ4RhxR8NfbE1w3xFGvpWQKo44yHk
-         x6J5RPO8swDl/1Va8a5PeGV73Z4heKcMI+geSkwW1qHHdQ/GXXrPNp2ltxrMbWpKc4sx
-         FlGmK3kSruR/OwYKhkhkcUUgbU5d1UmatWx+VnpatbTimp1zQS9jYOtHZQcqRNIETLJy
-         FyCD5D9/Qk44FRxALdYJHZlG0wZ2JwnoB+QPmjuGDp9DtdQiIYmH3+Yw/W02f10UKrqR
-         xUnQ==
-X-Gm-Message-State: APjAAAXzUGXODrhoQgCO9j5z07jED2Vt88YmKWb/rmEgfBcMVnHCMimc
-        WkkoKCcWjmwupvXfcUlCPwOGkrrK0W+6RXdEUjAFgUCrgE4HxQ==
-X-Google-Smtp-Source: APXvYqz59acG8/T/AZt2D2LSZs/6ic5Hm2z3iRvDn8ZZchk6sOZJbigHdn6crFhkOiYJp3hj4oetxEMkqhWgvWAmWTM=
-X-Received: by 2002:a24:d00e:: with SMTP id m14mr19817246itg.153.1558775928708;
- Sat, 25 May 2019 02:18:48 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=zLPXe8YfAMWrMxZxyor/59W4BIdpO5GJjp5HzwcajBk=;
+        b=f313L+RoPDtXFU/3J39RpQsPzE1QV70X9Im0BfColU3MIPRuedfc18IBm3jIzydJZr
+         Bi1qijdCY1aSV9QQb33ChMnU335SbUMa5jfKS8Fxc32kU9g0wWX6y7/BRyknRs4kihh/
+         k2iZP3qKyi/GgHvKQRxYEH/QSZPD3jvs9AsVnrevdhH3JGW5OXCwFLCYCt12aPBRxu7r
+         2jm/l2DDVwQ37aVTI6iq65vR5RonMeNM7brwaeP26wvD0oEWhMrANZA4plAK7fUvf1uu
+         MyDuN6co+ATjZ3rtMiFG2lWrp7XbTPSoP2g2h4Voiesn4meJgvLqCHfl80O5MhzX74lK
+         NpIA==
+X-Gm-Message-State: APjAAAUC54mzeFpa0mFfYuY6MXlYLU52Lea1aYeLG3/XNeHXCQIgMiHP
+        akVJ1PepfT0SsxsIBl6S9Poprx+nqsUnIw==
+X-Google-Smtp-Source: APXvYqybSZykR0c6vHf89ir+w3lQi90PZd4QnIShqRFeafVjYcq59+X5gjxiJ/oXmhEnHMIAM6oduw==
+X-Received: by 2002:ac2:51a3:: with SMTP id f3mr807910lfk.125.1558776247159;
+        Sat, 25 May 2019 02:24:07 -0700 (PDT)
+Received: from dev.nikanor.nu (78-72-133-4-no161.tbcn.telia.com. [78.72.133.4])
+        by smtp.gmail.com with ESMTPSA id h14sm979318ljj.11.2019.05.25.02.24.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 25 May 2019 02:24:06 -0700 (PDT)
+Date:   Sat, 25 May 2019 11:24:04 +0200
+From:   Simon =?utf-8?Q?Sandstr=C3=B6m?= <simon@nikanor.nu>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] staging: kpc2000: add missing dependencies for
+ kpc2000
+Message-ID: <20190525092404.go3qlfknra6g3fot@dev.nikanor.nu>
+References: <20190524203058.30022-1-simon@nikanor.nu>
+ <20190524203058.30022-3-simon@nikanor.nu>
+ <20190525050017.GA18684@kroah.com>
+ <20190525083918.dxa5qtomlu5yyqw5@dev.nikanor.nu>
 MIME-Version: 1.0
-References: <20190517082633.GA3890@zhanggen-UX430UQ> <CAKv+Gu98JNK34Q6MNOe3aq0W5rbv6hUFiuc7cHxHJat5aTk_gg@mail.gmail.com>
- <20190517090628.GA4162@zhanggen-UX430UQ> <CAKv+Gu_mwFpdtNZm9QMFn69+vOMTOpv9gvuhnBL2NBXvwkhXqg@mail.gmail.com>
- <20190523005133.GA14881@zhanggen-UX430UQ> <CAKv+Gu_wRYZdDYXso0B5m_BPJznGQXpCWq4_0u34bConu0V1ow@mail.gmail.com>
- <20190525023608.GA11613@zhanggen-UX430UQ>
-In-Reply-To: <20190525023608.GA11613@zhanggen-UX430UQ>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Sat, 25 May 2019 11:18:36 +0200
-Message-ID: <CAKv+Gu-agMymoGm0G8Yj-siXwtPnqYjAHeu-wQwRT47Jqd27JA@mail.gmail.com>
-Subject: Re: [PATCH v2] efi_64: Fix a missing-check bug in arch/x86/platform/efi/efi_64.c
-To:     Gen Zhang <blackgod016574@gmail.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190525083918.dxa5qtomlu5yyqw5@dev.nikanor.nu>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 25 May 2019 at 04:36, Gen Zhang <blackgod016574@gmail.com> wrote:
->
-> On Fri, May 24, 2019 at 06:07:10PM +0200, Ard Biesheuvel wrote:
-> > Apologies for only spotting this now, but I seem to have given some bad advice.
-> >
-> > efi_call_phys_prolog() in efi_64.c will also return NULL if
-> > (!efi_enabled(EFI_OLD_MEMMAP)), but this is not an error condition. So
-> > that occurrence has to be updated: please return efi_mm.pgd instead.
-> Thanks for your reply, Ard. You mean that we should return efi_mm.pgd
-> when allcoation fails? And we should delete return EFI_ABORTED on the
-> caller site, right? In that case, how should we handle the NULL pointer
-> returned by condition if(!efi_enabled(EFI_OLD_MEMMAP)) on the caller
-> site?
->
+On Sat, May 25, 2019 at 10:39:18AM +0200, Simon Sandström wrote:
+> On Sat, May 25, 2019 at 07:00:17AM +0200, Greg KH wrote:
+> > 
+> > This is already in linux-next (in a different form), are you sure you
+> > are working against the latest kernel tree?
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> 
+> It's based on your staging tree. I think that I have to go back and read
+> about next trees again, because I thought it took longer time for things
+> to get from staging-next to linux-next.
+> 
+> Anyway, neither the MFD_CORE nor the typo fix is in linux-next so I
+> guess that I could just rebase this on linux-next and re-send as v2.
+> I'm not sure if MFD_CORE should be "depends on" or "select" though...
+> 
+> 
+> - Simon
 
-No, the other way around. I have already updated the patch, so don't
-worry about it.
+Oh, it must be "select MFD_CORE" because there is no prompt for
+MFD_CORE? Should I just rebase it on linux-next and re-send as v2 then?
 
-https://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git/commit/?h=urgent&id=d2dc2bc7b60b936b95da4b04c2912c02974c3e9f
+
+- Simon
