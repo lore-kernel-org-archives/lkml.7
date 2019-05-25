@@ -2,260 +2,320 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0927FC07542
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 18:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A54EC07542
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 18:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C98A120862
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 18:48:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44EA6216E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 18:48:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="hn+A+m/6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g0VlUeJT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727548AbfEYSs0 (ORCPT
+        id S1727286AbfEYSs3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 14:48:26 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51349 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725935AbfEYSs0 (ORCPT
+        Sat, 25 May 2019 14:48:29 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:50648 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727252AbfEYSs0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 25 May 2019 14:48:26 -0400
-Received: by mail-wm1-f65.google.com with SMTP id f10so4944228wmb.1
-        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 11:48:23 -0700 (PDT)
+Received: by mail-it1-f196.google.com with SMTP id a186so11131043itg.0;
+        Sat, 25 May 2019 11:48:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from:cc;
-        bh=ySFaYHIgJnSSeFFCY31CR/SnL7eO3yPDG4N0jJWAz44=;
-        b=hn+A+m/6tEtfN0K+o2BfWU9V1gwMDgf0Z3i9yjjZhMtYesszuOniQIwt/8aSgdFxgf
-         uTf8/Qv7Il9UbIhlksNn7oZ3PBhglwqygNl2Hnd9L9YQHc8vEZn0G/i/ZilDhEzFmpvA
-         i/6s6uP4KW5rqOtc2WtjoDzkSNVhdF2CwpACXd5VXAX5RKxfW0WMkxJsAvW10rvJ6YgL
-         5dWox4XGijSWySaIT9IAPA8nJz6JPZpAxKId+n6++pbhdNhQIUv/jt1yj5ClcEg8C2ib
-         BBagIOUVp7ihHbpg826e+BX4yo4Im9Y770pUpziPBGd7gMXsc/6hJGtWRmfZPlWwfxvZ
-         uxBQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=sZoCbpozx2WzELJxdxaEDmEhop+Xro7Vi+HBCV+TS1o=;
+        b=g0VlUeJTLjDj5kTn6r0gK/cmgEqbLqLXv/SixD12M7rAecVh4wyIoDyB1RIZZX1bNq
+         XLZzlKhjoNlZTRqsXwAiyjiSA8j+2YKfYWaGWwMHigj9naufogTW+W09t2VTXJ1IgVop
+         ezhiQ5R7WL0pj3/99Xxt9Xgl7KrlCfyKwKRsarGozt2fCLtwNeCf/6awYLoIDQBDZzar
+         dnYzUd+rKaezLtLUlWf8Pr/7+zWAYQAuCCHGB3rScQ7vrjmbvBgAM3bwpApjMyjOEkxL
+         kw7joZYoRDgo2uXv6tTjCNhrVmCo4XowRbYPNsw/IBGiiH8rtAktmYkE0c05OP3LFx0b
+         U8XQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from:cc;
-        bh=ySFaYHIgJnSSeFFCY31CR/SnL7eO3yPDG4N0jJWAz44=;
-        b=QSCd7TROijQQL9F4vll60DV3cAtQOqCeEOiFQky8iEfyXmdoNjvgban3o64AW5FlET
-         zDvQMD4gmE56AV0iUvFpOC8Nwn3nvfo306EaJV1qcNfCAUlHIfMSyh5eqm1ZQfdpvARy
-         qkw+t/RnFIHgXPTHFe/n76c2lvuY8LlgtL0GI5vnVqj1qmcvifRMJzuZXBaeiiPplFRC
-         kn+KF70plJ0f3cEYSO/zHXFqEIYFBNYLeoP4ZgIAIEx3bhUnG5EOTpsUPHhotqhsK0A9
-         /gvI7V5DNsE6uKECQ0FlWCPzHfI7OeGAj0QHejmY7wu6GmyBCFohj8YojoPFpYgSy3jy
-         +Itw==
-X-Gm-Message-State: APjAAAWM/jL2D+wHv2T4EZbZcYDAQyTiGABCIaPMFcZCjzqUmUMD7QFF
-        nxfzycAGBExw3ul9dpn8k4vL2A==
-X-Google-Smtp-Source: APXvYqzjP0tOHFRy29TMsL/iuwZ1L+rKIFnyv5RQt10o6h2pyJqGaVT5UoZYKZWb6ixHNTXoxp7NuQ==
-X-Received: by 2002:a1c:7a0a:: with SMTP id v10mr4304867wmc.57.1558810103202;
-        Sat, 25 May 2019 11:48:23 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id s11sm3040359wro.17.2019.05.25.11.48.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 25 May 2019 11:48:22 -0700 (PDT)
-Message-ID: <5ce98df6.1c69fb81.d2103.feb3@mx.google.com>
-Date:   Sat, 25 May 2019 11:48:22 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:content-transfer-encoding;
+        bh=sZoCbpozx2WzELJxdxaEDmEhop+Xro7Vi+HBCV+TS1o=;
+        b=feoLV4YXWsjf/PuyU5PkcbQNSNAvvNhgNLQMB8upPMtErRiqISMgIKa6Tdxxv8VFSF
+         wDwBOoX90Iclhf0OF12cH4+cqf88BbpEwvz/1Xppzo44Nriy5PbLp2O+FSRcPTzQlkx3
+         D9J6WNEPWxUWebrKspIx73UW/haC52GZc1Zk6kr3sSmkmgV6p9/pYbM8y+0MxaWc134i
+         gLTTw7fKys3UFKJQZs4f2PFKeaRBnU8LjKvGHGU1YzxIIdJ1vPrjSpP10oYDxuzE3ToH
+         hQkxorIRbmiz3KxTD4azKLZdEOAdA0HdcHR2JocVG147h4W3UhdzSyoFVpQVYl9xTD2Y
+         CUAQ==
+X-Gm-Message-State: APjAAAUbSMhfaye96EPiK+j6F4pPTVqRFl13fVmzEafUhjDDbtWzvfYZ
+        ez0G1HN8ZuH83RLO/H2pkaybfIrC9rX1JWN8S6A=
+X-Google-Smtp-Source: APXvYqztVIy2Z3QZqJKHiF6I+2B4HprXc4s8f7rIl/bjVuS8V9KQ9z4GtrTMWDdHlIylrt/2fcxNBjuSxvgr6pbHjE4=
+X-Received: by 2002:a02:cabb:: with SMTP id e27mr19684986jap.12.1558810105828;
+ Sat, 25 May 2019 11:48:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: bisect
-X-Kernelci-Tree: mainline
-X-Kernelci-Lab-Name: lab-baylibre
-X-Kernelci-Branch: master
-X-Kernelci-Kernel: v5.2-rc1-369-g2409207a73cc
-Subject: mainline/master boot bisection: v5.2-rc1-369-g2409207a73cc on
- meson-g12a-x96-max
-To:     tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com,
-        mgalka@collabora.com, Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>, broonie@kernel.org,
-        matthew.hart@linaro.org, khilman@baylibre.com,
-        enric.balletbo@collabora.com, Jerome Brunet <jbrunet@baylibre.com>
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-amlogic@lists.infradead.org,
+References: <20190512082614.9045-1-tiny.windzz@gmail.com> <20190512082614.9045-3-tiny.windzz@gmail.com>
+ <20190512221612.ubmknvim4utnqpl4@core.my.home> <CAEExFWv5A5mhpV7afQT=AaYx2ko5QnfbM6HvfuTgT1Na=ssOcw@mail.gmail.com>
+ <20190516182936.h6xdzp3gtg4ikave@core.my.home> <CAEExFWvDO3wJd6wp1hFudf3EGF0NixgKAwAd5-b1=VLF+7-jCw@mail.gmail.com>
+ <20190519142239.eolisexp5mrdyafz@core.my.home>
+In-Reply-To: <20190519142239.eolisexp5mrdyafz@core.my.home>
+From:   Frank Lee <tiny.windzz@gmail.com>
+Date:   Sun, 26 May 2019 02:48:13 +0800
+Message-ID: <CAEExFWsc_YB8NORW4ULfuoicL=xr_oAdtHSaxz4ELv53qvCAsQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] thermal: sun50i: add thermal driver for h6
+To:     Frank Lee <tiny.windzz@gmail.com>, rui.zhang@intel.com,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>, robh+dt@kernel.org,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, catalin.marinas@arm.com,
+        will.deacon@arm.com, David Miller <davem@davemloft.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan.Cameron@huawei.com,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        paulmck@linux.ibm.com, Andy Gross <andy.gross@linaro.org>,
+        olof@lixom.net, bjorn.andersson@linaro.org,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        marc.w.gonzalez@free.fr, stefan.wahren@i2se.com,
+        enric.balletbo@collabora.com, devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-* This automated bisection report was sent to you on the basis  *
-* that you may be involved with the breaking commit it has      *
-* found.  No manual investigation has been done to verify it,   *
-* and the root cause of the problem may be somewhere else.      *
-* Hope this helps!                                              *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+HI Ond=C5=99ej,
 
-mainline/master boot bisection: v5.2-rc1-369-g2409207a73cc on meson-g12a-x9=
-6-max
+On Sun, May 19, 2019 at 10:22 PM Ond=C5=99ej Jirman <megous@megous.com> wro=
+te:
+>
+> Hello Yangtao,
+>
+> On Sat, May 18, 2019 at 12:34:57AM +0800, Frank Lee wrote:
+> > HI,
+> >
+> > On Fri, May 17, 2019 at 2:29 AM Ond=C5=99ej Jirman <megous@megous.com> =
+wrote:
+> > >
+> > > Hi Yangtao,
+> > >
+> > > thank you for work on this driver.
+> > >
+> > > On Fri, May 17, 2019 at 02:06:53AM +0800, Frank Lee wrote:
+> > > > HI Ond=C5=99ej,
+> > > >
+> > > > On Mon, May 13, 2019 at 6:16 AM Ond=C5=99ej Jirman <megous@megous.c=
+om> wrote:
+> > > > > > +
+> > > > > > +/* Temp Unit: millidegree Celsius */
+> > > > > > +static int tsens_reg2temp(struct tsens_device *tmdev,
+> > > > > > +                           int reg)
+> > > > >
+> > > > > Please name all functions so that they are more clearly identifia=
+ble
+> > > > > in stack traces as belonging to this driver. For example:
+> > > > >
+> > > > >   sun8i_ths_reg2temp
+> > > > >
+> > > > > The same applies for all tsens_* functions below. tsens_* is too
+> > > > > generic.
+> > > >
+> > > > Done but no sun8i_ths_reg2temp.
+> > > >
+> > > > ths_reg2tem() should be a generic func.
+> > > > I think it should be suitable for all platforms=EF=BC=8C so no plat=
+form prefix.
+> > >
+> > > You've missed my point. The driver name is sun8i_thermal and if you g=
+et
+> > > and oops from the kernel you'll get a stack trace where there are jus=
+t function
+> > > names. If you use too generic function names, it will not be clear wh=
+ich
+> > > driver is oopsing.
+> > >
+> > >   - sun8i_ths_reg2temp will tell you much more clearly where to searc=
+h than
+> > >   - ths_reg2temp
+> > >
+> > > Of course you can always grep, but most thermal drivers are thermal s=
+ensor (ths)
+> > > drivers, and if multiple of them used this too-generic naming scheme =
+you'd
+> > > have hard time debugging.
+> > >
+> > > Look at other thermal drivers. They usually encode driver name in the=
+ function
+> > > names to help with identification (even if these are static driver-lo=
+cal
+> > > functions).
+> > >
+> >
+> > Can we change to sunxi_ths_ prefix?
+>
+> It should probably match the driver name, but yes, that's better.
+>
+> > > > > > +static int tsens_probe(struct platform_device *pdev)
+> > > > > > +{
+> > > > > > +     struct tsens_device *tmdev;
+> > > > > > +     struct device *dev =3D &pdev->dev;
+> > > > > > +     int ret;
+> > > > > > +
+> > > > > > +     tmdev =3D devm_kzalloc(dev, sizeof(*tmdev), GFP_KERNEL);
+> > > > > > +     if (!tmdev)
+> > > > > > +             return -ENOMEM;
+> > > > > > +
+> > > > > > +     tmdev->dev =3D dev;
+> > > > > > +     tmdev->chip =3D of_device_get_match_data(&pdev->dev);
+> > > > > > +     if (!tmdev->chip)
+> > > > > > +             return -EINVAL;
+> > > > > > +
+> > > > > > +     ret =3D tsens_init(tmdev);
+> > > > > > +     if (ret)
+> > > > > > +             return ret;
+> > > > > > +
+> > > > > > +     ret =3D tsens_register(tmdev);
+> > > > > > +     if (ret)
+> > > > > > +             return ret;
+> > > > >
+> > > > > Why split this out of probe into separate functions?
+> > > > >
+> > > > > > +     ret =3D tmdev->chip->enable(tmdev);
+> > > > > > +     if (ret)
+> > > > > > +             return ret;
+> > > > > > +
+> > > > > > +     platform_set_drvdata(pdev, tmdev);
+> > > > > > +
+> > > > > > +     return ret;
+> > > > > > +}
+> > > > > > +
+> > > > > > +static int tsens_remove(struct platform_device *pdev)
+> > > > > > +{
+> > > > > > +     struct tsens_device *tmdev =3D platform_get_drvdata(pdev)=
+;
+> > > > > > +
+> > > > > > +     tmdev->chip->disable(tmdev);
+> > > > > > +
+> > > > > > +     return 0;
+> > > > > > +}
+> > > > > > +
+> > > > > > +static int sun50i_thermal_enable(struct tsens_device *tmdev)
+> > > > > > +{
+> > > > > > +     int ret, val;
+> > > > > > +
+> > > > > > +     ret =3D reset_control_deassert(tmdev->reset);
+> > > > > > +     if (ret)
+> > > > > > +             return ret;
+> > > > > > +
+> > > > > > +     ret =3D clk_prepare_enable(tmdev->bus_clk);
+> > > > > > +     if (ret)
+> > > > > > +             goto assert_reset;
+> > > > > > +
+> > > > > > +     ret =3D tsens_calibrate(tmdev);
+> > > > > > +     if (ret)
+> > > > > > +             return ret;
+> > > > >
+> > > > > If this fails (it may likely fail with EPROBE_DEFER) you are leav=
+ing reset
+> > > > > deasserted, and clock enabled.
+> > > > >
+> > > > > Overall, I think, reset/clock management and nvmem reading will b=
+e common
+> > > > > to all the HW variants, so it doesn't make much sense splitting i=
+t out
+> > > > > of probe into separate functions, and makes it more error prone.
+> > > >
+> > > > Our long-term goal is to support all platforms.
+> > > > Bacicallt there is a differencr between each generation.
+> > > > So I feel it necessary to isolate these differences.
+> > > >
+> > > > Maybe:
+> > > > At some point, we can draw a part of the public part and platform
+> > > > difference into different
+> > > > files. something like qcom thermal driver.
+> > >
+> > > I understand, but I wrote ths drivers for H3/H5/A83T and it so far it=
+ looks like
+> > > all of them would share these 3 calls.
+> > >
+> > > You'll be enabling clock/reset and callibrating everywhere. So puttin=
+g this to
+> > > per-SoC function seems premature.
+> >
+> > In fact, enalbe and disable are the suspend and resume functions.(PM
+> > callback will be added in the future)
+> > When exiting from s2ram, the register will become the initial value.
+> > We need to do all the work, enabling reset/clk ,calibrating and
+> > initializing other reg.
+> >
+> > So I think it is no need to put enabling reset/clk and calibrating to
+> > probe func, and I'd like
+> > to keep enable and disable func.
+>
+> I know, I don't think it needs to be per-soc. These actions are all share=
+d by
+> all SoCs. Maybe with an exception that some SoCs may need one more clock,=
+ but
+> that can be made optionally-required by some flag in struct sunxi_thermal=
+_chip.
+>
+> Only highly SoC specific thing is configuring the THS registers for sampl=
+ing
+> frequency/averaging/enabling interrupts. The reset/clock enable is generi=
+c, and
+> already abstracted by the clock/reset framework.
+>
+> So what I suggest is having:
+>
+> sunxi_ths_enable()
+>         reset deassert
+>         bus clock prepare enable
+>         optionally module clock prepare enable (in the future)
+>         call per-soc calibration
+>         call per-soc setup callback
+>
+> sunxi_ths_disable()
+>         reset assert
+>         bus clock unprepare disable
+>         optionally module clock unprepare disable
+>
+> And if you could move devm_nvmem_cell_get to probe that should make per-S=
+oC
+> calibration callback also less repetitive and could avoid undoing the ena=
+ble
+> in case it returns EPROBE_DEFER (which is possible).
+>
+> All this should make it easier to support PM in the future and add less
+> cumbersome to add support for A83T and H3/H5.
+>
+> BTW, what are your plans for more SoC support? I'd like to add support fo=
+r
+> A83T and H3/H5, maybe even during the 5.3 cycle if this driver happens to=
+ land
+> early enough. If you don't have any plans I'll take it on.
+>
 
-Summary:
-  Start:      2409207a73cc Merge tag 'scsi-fixes' of git://git.kernel.org/p=
-ub/scm/linux/kernel/git/jejb/scsi
-  Details:    https://kernelci.org/boot/id/5ce8b16e59b514388a7a362a
-  Plain log:  https://storage.kernelci.org//mainline/master/v5.2-rc1-369-g2=
-409207a73cc/arm64/defconfig+CONFIG_RANDOMIZE_BASE=3Dy/gcc-8/lab-baylibre/bo=
-ot-meson-g12a-x96-max.txt
-  HTML log:   https://storage.kernelci.org//mainline/master/v5.2-rc1-369-g2=
-409207a73cc/arm64/defconfig+CONFIG_RANDOMIZE_BASE=3Dy/gcc-8/lab-baylibre/bo=
-ot-meson-g12a-x96-max.html
-  Result:     11a7bea17c9e arm64: dts: meson: g12a: add pinctrl support con=
-trollers
+I plan to support h3 and a33 later.
+Can you support other platforms?
 
-Checks:
-  revert:     PASS
-  verify:     PASS
+Cheers,
+Yangtao
 
-Parameters:
-  Tree:       mainline
-  URL:        git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.=
-git
-  Branch:     master
-  Target:     meson-g12a-x96-max
-  CPU arch:   arm64
-  Lab:        lab-baylibre
-  Compiler:   gcc-8
-  Config:     defconfig+CONFIG_RANDOMIZE_BASE=3Dy
-  Test suite: boot
-
-Breaking commit found:
-
----------------------------------------------------------------------------=
-----
-commit 11a7bea17c9e0a36daab934d83e15a760f402147
-Author: Jerome Brunet <jbrunet@baylibre.com>
-Date:   Mon Mar 18 10:58:45 2019 +0100
-
-    arm64: dts: meson: g12a: add pinctrl support controllers
-    =
-
-    Add the peripheral and always-on pinctrl controllers to the g12a soc.
-    =
-
-    Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-    Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-    Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/=
-dts/amlogic/meson-g12a.dtsi
-index abfa167751af..5e07e4ca3f4b 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-@@ -104,6 +104,29 @@
- 				#address-cells =3D <2>;
- 				#size-cells =3D <2>;
- 				ranges =3D <0x0 0x0 0x0 0x34400 0x0 0x400>;
-+
-+				periphs_pinctrl: pinctrl@40 {
-+					compatible =3D "amlogic,meson-g12a-periphs-pinctrl";
-+					#address-cells =3D <2>;
-+					#size-cells =3D <2>;
-+					ranges;
-+
-+					gpio: bank@40 {
-+						reg =3D <0x0 0x40  0x0 0x4c>,
-+						      <0x0 0xe8  0x0 0x18>,
-+						      <0x0 0x120 0x0 0x18>,
-+						      <0x0 0x2c0 0x0 0x40>,
-+						      <0x0 0x340 0x0 0x1c>;
-+						reg-names =3D "gpio",
-+							    "pull",
-+							    "pull-enable",
-+							    "mux",
-+							    "ds";
-+						gpio-controller;
-+						#gpio-cells =3D <2>;
-+						gpio-ranges =3D <&periphs_pinctrl 0 0 86>;
-+					};
-+				};
- 			};
- =
-
- 			hiu: bus@3c000 {
-@@ -150,6 +173,25 @@
- 					clocks =3D <&xtal>, <&clkc CLKID_CLK81>;
- 					clock-names =3D "xtal", "mpeg-clk";
- 				};
-+
-+				ao_pinctrl: pinctrl@14 {
-+					compatible =3D "amlogic,meson-g12a-aobus-pinctrl";
-+					#address-cells =3D <2>;
-+					#size-cells =3D <2>;
-+					ranges;
-+
-+					gpio_ao: bank@14 {
-+						reg =3D <0x0 0x14 0x0 0x8>,
-+						      <0x0 0x1c 0x0 0x8>,
-+						      <0x0 0x24 0x0 0x14>;
-+						reg-names =3D "mux",
-+							    "ds",
-+							    "gpio";
-+						gpio-controller;
-+						#gpio-cells =3D <2>;
-+						gpio-ranges =3D <&ao_pinctrl 0 0 15>;
-+					};
-+				};
- 			};
- =
-
- 			sec_AO: ao-secure@140 {
----------------------------------------------------------------------------=
-----
-
-
-Git bisection log:
-
----------------------------------------------------------------------------=
-----
-git bisect start
-# good: [a455eda33faafcaac1effb31d682765b14ef868c] Merge branch 'linus' of =
-git://git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-thermal
-git bisect good a455eda33faafcaac1effb31d682765b14ef868c
-# bad: [2409207a73cc8e4aff75ceccf6fe5c3ce4d391bc] Merge tag 'scsi-fixes' of=
- git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi
-git bisect bad 2409207a73cc8e4aff75ceccf6fe5c3ce4d391bc
-# bad: [311f71281ff4b24f86a39c60c959f485c68a6d36] Merge tag 'for-5.2/dm-cha=
-nges-v2' of git://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/lin=
-ux-dm
-git bisect bad 311f71281ff4b24f86a39c60c959f485c68a6d36
-# bad: [be058ba65d9e43f40d31d9b16b99627f0a20de1b] Merge tag 'imx-dt-5.2' of=
- git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux into arm/dt
-git bisect bad be058ba65d9e43f40d31d9b16b99627f0a20de1b
-# bad: [7996313656b83ba516a1546d51f08f1a0fab4e06] Merge tag 'omap-for-v5.2/=
-dt-am3-signed' of git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linu=
-x-omap into arm/dt
-git bisect bad 7996313656b83ba516a1546d51f08f1a0fab4e06
-# bad: [2140eaf2f46faf2627ec030d7cabf2dda2cb546b] Merge tag 'stm32-dt-for-v=
-5.2-1' of git://git.kernel.org/pub/scm/linux/kernel/git/atorgue/stm32 into =
-arm/dt
-git bisect bad 2140eaf2f46faf2627ec030d7cabf2dda2cb546b
-# bad: [1a88083b9349b8310b25d9a9a96802ee4447e6b9] Merge tag 'v5.2-rockchip-=
-dts64-1' of git://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockc=
-hip into arm/dt
-git bisect bad 1a88083b9349b8310b25d9a9a96802ee4447e6b9
-# bad: [1c93235a6d92deaab38bbb1cfc764b0757331ebb] Merge tag 'amlogic-dt' of=
- https://git.kernel.org/pub/scm/linux/kernel/git/khilman/linux-amlogic into=
- arm/dt
-git bisect bad 1c93235a6d92deaab38bbb1cfc764b0757331ebb
-# bad: [ff4f8b6cab5885ebc2c6b21fd058db8544e2eebb] arm64: dts: meson: g12a: =
-Add UART A, B & C nodes and pins
-git bisect bad ff4f8b6cab5885ebc2c6b21fd058db8544e2eebb
-# good: [965c827ac37e71f76d3ac55c75ac08909f2a4eed] arm64: dts: meson: g12a:=
- add efuse
-git bisect good 965c827ac37e71f76d3ac55c75ac08909f2a4eed
-# bad: [11a7bea17c9e0a36daab934d83e15a760f402147] arm64: dts: meson: g12a: =
-add pinctrl support controllers
-git bisect bad 11a7bea17c9e0a36daab934d83e15a760f402147
-# good: [b019f4a4199f865b054262ff78f606ca70f7b981] arm64: dts: meson: g12a:=
- Add AO Clock + Reset Controller support
-git bisect good b019f4a4199f865b054262ff78f606ca70f7b981
-# first bad commit: [11a7bea17c9e0a36daab934d83e15a760f402147] arm64: dts: =
-meson: g12a: add pinctrl support controllers
----------------------------------------------------------------------------=
-----
+> thank you and regards,
+>         o.
+>
+> > >
+> > > thank you and regards,
+> > >         o.
+> > >
+> > > > Regards,
+> > > > Yangtao
+> >
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
