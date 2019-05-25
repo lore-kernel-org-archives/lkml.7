@@ -2,181 +2,122 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_DR,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E6CC282CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B22EC07542
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17BB720815
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:33:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11C5920863
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:38:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727282AbfEYRds (ORCPT
+        id S1727252AbfEYRiH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 13:33:48 -0400
-Received: from wind.enjellic.com ([76.10.64.91]:33738 "EHLO wind.enjellic.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726126AbfEYRds (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 13:33:48 -0400
-Received: from wind.enjellic.com (localhost [127.0.0.1])
-        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id x4PHVHAU026665;
-        Sat, 25 May 2019 12:31:17 -0500
-Received: (from greg@localhost)
-        by wind.enjellic.com (8.15.2/8.15.2/Submit) id x4PHVDl4026664;
-        Sat, 25 May 2019 12:31:13 -0500
-Date:   Sat, 25 May 2019 12:31:13 -0500
-From:   "Dr. Greg" <greg@enjellic.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-Message-ID: <20190525173113.GA25854@wind.enjellic.com>
-Reply-To: "Dr. Greg" <greg@enjellic.com>
-References: <CALCETrUzx3LPAKCLFf75P-XshAkRcr+JLET3LA_kHDs9MA11FA@mail.gmail.com> <20190523234044.GC12078@linux.intel.com> <CALCETrV4DVEfW6EJ6DnQGGYDJAiA5M1QcuYJTiroumOM+D6Jjg@mail.gmail.com> <960B34DE67B9E140824F1DCDEC400C0F654E8956@ORSMSX116.amr.corp.intel.com> <dda0912b-cb15-3c07-d368-345159e995f7@tycho.nsa.gov> <20190524174243.GA365@linux.intel.com> <20190524175458.GB365@linux.intel.com> <960B34DE67B9E140824F1DCDEC400C0F654E8E1D@ORSMSX116.amr.corp.intel.com> <CALCETrUw5sEr-MHPMU4CzEzkrejDs-JOThHB9Buhoxo5-rdpRw@mail.gmail.com> <20190524200333.GF365@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190524200333.GF365@linux.intel.com>
-User-Agent: Mutt/1.4i
-X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Sat, 25 May 2019 12:31:17 -0500 (CDT)
+        Sat, 25 May 2019 13:38:07 -0400
+Received: from mail-it1-f200.google.com ([209.85.166.200]:41198 "EHLO
+        mail-it1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726335AbfEYRiG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 May 2019 13:38:06 -0400
+Received: by mail-it1-f200.google.com with SMTP id p19so11797436itp.6
+        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 10:38:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=C1QpvOqRQF2vRExtqnpzqBeyxJrBH7Be9SR2G/geGRo=;
+        b=J+XUzID1VPDRaTrqOqSCLW0TKdK4elCUOJtbwjwPECUK8r7nqer1JTXckRHUcx4DGw
+         03Z/YUHy+YmPrMZMRyPjchqTT1jPZ/NSunTmwgMvorvuyzKP4GFjLclVme7Y89+TCUF4
+         qDZB5DsZB0yYjfECSC/faUb5cmvxlAcC7iyPO+DCjfI/QX733xotmLbhTr88VHV1j7i2
+         AQ1HvOG4c7y5XChO36wf54xxzkcZC0fkBVQ+5yVr0dbdRkg3K9iLH+47d7JpJirmX0rP
+         SeIVLMf6TkoK09VgQBKGrg38HoBs2BaVnNtqp9Hp9dVhXanVuSdmIn5t9irgkgHPqWXM
+         Lt/Q==
+X-Gm-Message-State: APjAAAW047c9NjfpEffDSaoKNif/3JwZWda4ZOZ6pOh7OcarfW/Wd3n4
+        PA+fev64PVID6H8ehxKB5MSwlTiKDDnjfi93hREWB/5yaDnJ
+X-Google-Smtp-Source: APXvYqwCJ6U/tfPvT9K8pyvAxiPB4BF1A6afdUmApSOMSTBTtvia1yPma71VW5KxJPLlU+oC2PfBv3gQwxhAo5PbDK5eeS/VbGhe
+MIME-Version: 1.0
+X-Received: by 2002:a24:cdc6:: with SMTP id l189mr13278586itg.177.1558805885300;
+ Sat, 25 May 2019 10:38:05 -0700 (PDT)
+Date:   Sat, 25 May 2019 10:38:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000113abb0589b9c77c@google.com>
+Subject: memory leak in pfkey_xfrm_policy2msg_prep
+From:   syzbot <syzbot+4f0529365f7f2208d9f0@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        steffen.klassert@secunet.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 01:03:33PM -0700, Sean Christopherson wrote:
+Hello,
 
-Good morning, I hope the weekend is going well for everyone.  Skunky
-holiday weather out here in West-Central Minnesota.
+syzbot found the following crash on:
 
-> On Fri, May 24, 2019 at 12:37:44PM -0700, Andy Lutomirski wrote:
-> > If we go this route, the only substantial change to the existing
-> > driver that's needed for an initial upstream merge is the maxperm
-> > mechanism and whatever hopefully minimal API changes are needed to
-> > allow users to conveniently set up the mappings.  And we don't need to
-> > worry about how to hack around mprotect() calling into the LSM,
-> > because the LSM will actually be aware of SGX and can just do the
-> > right thing.
+HEAD commit:    4dde821e Merge tag 'xfs-5.2-fixes-1' of git://git.kernel.o..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=176fcb8aa00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=61dd9e15a761691d
+dashboard link: https://syzkaller.appspot.com/bug?extid=4f0529365f7f2208d9f0
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=179bd84ca00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=124004a2a00000
 
-> This doesn't address restricting which processes can run which
-> enclaves, it only allows restricting the build flow.  Or are you
-> suggesting this be done in addition to whitelisting sigstructs?
->
-> What's the value prop beyond whitelisting sigstructs?
-> Realistically, I doubt LSMs/users will want to take the performance
-> hit of scanning the source bytes every time an enclave is loaded.
->
-> We could add seomthing like security_enclave_mprotect() in lieu of
-> abusing security_file_mprotect(), but passing the full source bytes
-> seems a bit much.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+4f0529365f7f2208d9f0@syzkaller.appspotmail.com
 
-It would seem that we hold the moniker of responsibility for this
-conversation, since without our provocation regarding cryptographic
-verification of enclave source, there would be a driver headed
-upstream whose only constraint against W^X sourced executable code,
-running with full confidentiality and integrity protections, would be
-a character device with o666 permissions.  Given that, a couple of
-reflections to facilitate further conversation, if nothing else for
-the benefit of Jonathan Corbet and his bystanders... :-)
+ed '10.128.1.31' (ECDSA) to the list of known hosts.
+executing program
+executing program
+executing program
+BUG: memory leak
+unreferenced object 0xffff888126306200 (size 224):
+   comm "softirq", pid 0, jiffies 4294944009 (age 13.770s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+   backtrace:
+     [<00000000dbfa6a53>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:55 [inline]
+     [<00000000dbfa6a53>] slab_post_alloc_hook mm/slab.h:439 [inline]
+     [<00000000dbfa6a53>] slab_alloc_node mm/slab.c:3269 [inline]
+     [<00000000dbfa6a53>] kmem_cache_alloc_node+0x153/0x2a0 mm/slab.c:3579
+     [<00000000963741ad>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:198
+     [<000000006fea5c94>] alloc_skb include/linux/skbuff.h:1058 [inline]
+     [<000000006fea5c94>] pfkey_xfrm_policy2msg_prep+0x2a/0x50  
+net/key/af_key.c:2054
+     [<0000000069777b1f>] dump_sp net/key/af_key.c:2692 [inline]
+     [<0000000069777b1f>] dump_sp+0x64/0x110 net/key/af_key.c:2682
+     [<000000006ac00402>] xfrm_policy_walk+0xd4/0x230  
+net/xfrm/xfrm_policy.c:1841
+     [<00000000f7271518>] pfkey_dump_sp+0x2a/0x30 net/key/af_key.c:2719
+     [<00000000652376b8>] pfkey_do_dump+0x3b/0xe0 net/key/af_key.c:289
+     [<000000006ac94254>] pfkey_spddump+0x81/0xb0 net/key/af_key.c:2746
+     [<000000006bacb6ca>] pfkey_process+0x28a/0x2d0 net/key/af_key.c:2836
+     [<0000000037320f8e>] pfkey_sendmsg+0x188/0x2e0 net/key/af_key.c:3675
+     [<0000000026dba653>] sock_sendmsg_nosec net/socket.c:652 [inline]
+     [<0000000026dba653>] sock_sendmsg+0x54/0x70 net/socket.c:671
+     [<000000004931d76f>] ___sys_sendmsg+0x393/0x3c0 net/socket.c:2292
+     [<00000000ca71443f>] __sys_sendmsg+0x80/0xf0 net/socket.c:2330
+     [<000000005d43081c>] __do_sys_sendmsg net/socket.c:2339 [inline]
+     [<000000005d43081c>] __se_sys_sendmsg net/socket.c:2337 [inline]
+     [<000000005d43081c>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2337
+     [<000000005fdf8054>] do_syscall_64+0x76/0x1a0  
+arch/x86/entry/common.c:301
+     [<000000000c8dd476>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-As the conversations to date have indicated, imposing LSM controls on
-enclave executable code is a bit problematic, in no small part since
-it is the theological equivalent of driving a square peg into a round
-hole.  SGX, as a technology, was designed around the concept of
-cryptographic verification of code provenance and origin.
 
-The decision to take that off the table, for reasons of political
-idealogy only, means that mainstream Linux will not be a platform that
-can achieve the full hardware security capabilities and protections of
-SGX, nor will mainstream Linux be able to enjoy full protections from
-the technology itself.
 
-We will be dealing with that, from a driver and runtime perspective,
-but that is a conversation for another day.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-The issue of SGX2 and Enclave Dynamic Memory Management (EDMM) has
-come up and to date there doesn't appear to have been a serious
-conversation regarding whether or not all of the LSM machinations in
-the world will make any difference when this technology goes mainline.
-The agenda driving mainlining of the driver is to support Graphene for
-cloud based solutions and without EDMM, dynamic code loading support
-is decidedly more problematic.
-
-Dynamic enclave code loading isn't problematic from a security
-perspective when the code is being loaded from the platform itself,
-since presumably, the encompassing conversation will result in LSM
-controls being applied to the necessary code paths.  However, with the
-ability to exploit SGX2 instructions, an enclave with adverserial
-intent could simply setup a mutually attested security context and
-pull whatever executable code it wants from the INTERNET at large,
-using an encrypted and integrity protected communications channel.
-
-That has at least been our interpretation and experience with the
-ENCLU[EMODPE] and ENCLU[EACCEPTCOPY] instructions and the out-of-tree
-driver.  Given the use of an encrypted channel, and the fact that
-these instructions are ring 3 enclave mode only, it would seem that
-all of the LSM controls in the world won't have visibility or control
-over code that is being loaded and executed using such a mechanism.
-
-We could have arguably missed something that the new driver will do to
-address this issue.  To date the only discussion seems to have been
-about controls over ENCLS[EAUG], which are arguably a bit blunt for
-this purpose.
-
-In the land of SGX, if one is intellectually honest from an
-engineering perspective, the only solid security contract one has to
-work with is the notion of cryptographic identity.  Hence our concern
-and patches that implemented an absolutely minimal footprint ring-0
-control infrastructure over the contents of an enclave's SIGSTRUCT.
-Which is where we have arguably circled back to after 3-4 months and
-one kernel release cycle.
-
-Wrapping an LSM hook around our policy mechanism would seem to
-achieve, from a security perspective, about the same level of security
-effect that more major and invasive modifications would achieve, given
-Cedric's proposal to inherit page permissions from the source, which
-is what our runtime already does.
-
-As always, apologies for excessive verbosity beyond LKML sensibilities.
-
-Best wishes for a pleasant remainder of the spring weekend to
-everyone.
-
-Dr. Greg
-
-As always,
-Dr. G.W. Wettstein, Ph.D.   Enjellic Systems Development, LLC.
-4206 N. 19th Ave.           Specializing in information infra-structure
-Fargo, ND  58102            development.
-PH: 701-281-1686
-FAX: 701-281-3949           EMAIL: greg@enjellic.com
-------------------------------------------------------------------------------
-"Heaven goes by favor.  If it went by merit, you would stay out and your
- dog would go in."
-                                -- Mark Twain
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
