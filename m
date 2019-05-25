@@ -4,34 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1546BC28CBF
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 12:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DBF4C282CE
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 12:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E546F217F9
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 12:29:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23E8F2168B
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 12:34:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726902AbfEYM3o (ORCPT
+        id S1726864AbfEYMeU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 08:29:44 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:54680 "EHLO huawei.com"
+        Sat, 25 May 2019 08:34:20 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:43094 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726808AbfEYM3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 08:29:43 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id E5E25F651719228DE6B0;
-        Sat, 25 May 2019 20:29:37 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Sat, 25 May 2019
- 20:29:27 +0800
+        id S1726755AbfEYMeT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 May 2019 08:34:19 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id E4A9A79CAAB69822807A;
+        Sat, 25 May 2019 20:34:14 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Sat, 25 May 2019
+ 20:34:05 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
-To:     <viro@zeniv.linux.org.uk>, <axboe@kernel.dk>
-CC:     <linux-kernel@vger.kernel.org>, <linux-block@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] io_uring: remove set but not used variable 'ret'
-Date:   Sat, 25 May 2019 20:29:04 +0800
-Message-ID: <20190525122904.12792-1-yuehaibing@huawei.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>
+CC:     <linux-kernel@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] ASoC: cx2072x: remove set but not used variable 'is_right_j '
+Date:   Sat, 25 May 2019 20:32:04 +0800
+Message-ID: <20190525123204.16148-1-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -44,36 +45,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fixes gcc '-Wunused-but-set-variable' warning:
 
-fs/io_uring.c: In function io_ring_submit:
-fs/io_uring.c:2279:7: warning: variable ret set but not used [-Wunused-but-set-variable]
+sound/soc/codecs/cx2072x.c: In function cx2072x_config_i2spcm:
+sound/soc/codecs/cx2072x.c:679:6: warning: variable is_right_j set but not used [-Wunused-but-set-variable]
 
-It's not used since commit f3fafe4103bd ("io_uring: add support for sqe links")
+It's never used and can be removed.
 
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- fs/io_uring.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ sound/soc/codecs/cx2072x.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 8ef9d8d3c88b..e2bbd227ab2a 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2276,7 +2276,6 @@ static int io_ring_submit(struct io_ring_ctx *ctx, unsigned int to_submit)
+diff --git a/sound/soc/codecs/cx2072x.c b/sound/soc/codecs/cx2072x.c
+index 23d2b25fe04c..a066ef83de1a 100644
+--- a/sound/soc/codecs/cx2072x.c
++++ b/sound/soc/codecs/cx2072x.c
+@@ -676,7 +676,6 @@ static int cx2072x_config_i2spcm(struct cx2072x_priv *cx2072x)
+ 	unsigned int bclk_rate = 0;
+ 	int is_i2s = 0;
+ 	int has_one_bit_delay = 0;
+-	int is_right_j = 0;
+ 	int is_frame_inv = 0;
+ 	int is_bclk_inv = 0;
+ 	int pulse_len = 1;
+@@ -740,7 +739,6 @@ static int cx2072x_config_i2spcm(struct cx2072x_priv *cx2072x)
  
- 	for (i = 0; i < to_submit; i++) {
- 		struct sqe_submit s;
--		int ret;
- 
- 		if (!io_get_sqring(ctx, &s))
- 			break;
-@@ -2292,7 +2291,7 @@ static int io_ring_submit(struct io_ring_ctx *ctx, unsigned int to_submit)
- 		s.needs_fixed_file = false;
- 		submit++;
- 
--		ret = io_submit_sqe(ctx, &s, statep, &link);
-+		io_submit_sqe(ctx, &s, statep, &link);
- 	}
- 	io_commit_sqring(ctx);
+ 	case SND_SOC_DAIFMT_RIGHT_J:
+ 		is_i2s = 1;
+-		is_right_j = 1;
+ 		pulse_len = frame_len / 2;
+ 		break;
  
 -- 
 2.17.1
