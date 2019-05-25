@@ -4,44 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DECB2C282E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 00:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66045C282E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 00:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF8D420863
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 00:53:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46BC120863
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 00:53:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbfEYAxW (ORCPT
+        id S1726432AbfEYAxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 20:53:22 -0400
-Received: from alln-iport-2.cisco.com ([173.37.142.89]:56341 "EHLO
-        alln-iport-2.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726062AbfEYAxV (ORCPT
+        Fri, 24 May 2019 20:53:24 -0400
+Received: from rcdn-iport-8.cisco.com ([173.37.86.79]:56383 "EHLO
+        rcdn-iport-8.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726273AbfEYAxV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 24 May 2019 20:53:21 -0400
 X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0AYAQDdkOhc/5FdJa1lHAEBAQQBAQc?=
- =?us-ascii?q?EAQGBVAQBAQsBghCBOgEyKKxshxUJAQEBDi8BAYMsgRQCgj8jNwYOAQMBAQQ?=
- =?us-ascii?q?BAQIBBG0ohUsGeRBRVwYBEoMiggunJohrgUYUgSABhnyEVheBf4ERg1CEDYY?=
- =?us-ascii?q?ZBIs/iFuUMwmCD16SKCdzlVItjDyWG4FlIoFXMxoIGxWDJ4IbF45AHwMwjEi?=
- =?us-ascii?q?CUgEB?=
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0BXAACmkOhc/5FdJa1lHAEBAQQBAQc?=
+ =?us-ascii?q?EAQGBUwUBAQsBghCBOgEyKLIGFIFnCQEBAQ4vAQGEQAKCPyM2Bw4BAwEBBAE?=
+ =?us-ascii?q?BAgEEbSiFSwYnUhAZOFcGARKDIoILpnIziGuBRhSBIAGGfIRWF4F/gRGDUIQ?=
+ =?us-ascii?q?oBYV5BJMJgRGUMwmCD16SKCdzlVKMaZYbgVYDLoFXMxoIGxWDJ4JGjiwfAzC?=
+ =?us-ascii?q?PGgEB?=
 X-IronPort-AV: E=Sophos;i="5.60,509,1549929600"; 
-   d="scan'208";a="278591105"
+   d="scan'208";a="562308315"
 Received: from rcdn-core-9.cisco.com ([173.37.93.145])
-  by alln-iport-2.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 25 May 2019 00:53:20 +0000
+  by rcdn-iport-8.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 25 May 2019 00:53:21 +0000
 Received: from tusi.cisco.com (tusi.cisco.com [172.24.98.27])
-        by rcdn-core-9.cisco.com (8.15.2/8.15.2) with ESMTP id x4P0rJ7d018538;
-        Sat, 25 May 2019 00:53:19 GMT
+        by rcdn-core-9.cisco.com (8.15.2/8.15.2) with ESMTP id x4P0rJ7e018538;
+        Sat, 25 May 2019 00:53:20 GMT
 From:   Ruslan Babayev <ruslan@babayev.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Cc:     xe-linux-external@cisco.com, linux-i2c@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2 1/2] i2c: acpi: export i2c_acpi_find_adapter_by_handle
-Date:   Fri, 24 May 2019 17:53:01 -0700
-Message-Id: <20190525005302.27164-1-ruslan@babayev.com>
+To:     Russell King <linux@armlinux.org.uk>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     xe-linux-external@cisco.com,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v2 2/2] net: phy: sfp: enable i2c-bus detection on ACPI based systems
+Date:   Fri, 24 May 2019 17:53:02 -0700
+Message-Id: <20190525005302.27164-2-ruslan@babayev.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190505193435.3248-1-ruslan@babayev.com>
 References: <20190505193435.3248-1-ruslan@babayev.com>
@@ -53,68 +54,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows drivers to lookup i2c adapters on ACPI based systems similar to
-of_get_i2c_adapter_by_node() with DT based systems.
+Lookup I2C adapter using the "i2c-bus" device property on ACPI based
+systems similar to how it's done with DT.
+
+An example DSD describing an SFP on an ACPI based system:
+
+Device (SFP0)
+{
+    Name (_HID, "PRP0001")
+    Name (_CRS, ResourceTemplate()
+    {
+        GpioIo(Exclusive, PullDefault, 0, 0, IoRestrictionNone,
+               "\\_SB.PCI0.RP01.GPIO", 0, ResourceConsumer)
+            { 0, 1, 2, 3, 4 }
+    })
+    Name (_DSD, Package ()
+    {
+        ToUUID ("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+        Package () {
+            Package () { "compatible", "sff,sfp" },
+            Package () { "i2c-bus", \_SB.PCI0.RP01.I2C.MUX.CH0 },
+            Package () { "maximum-power-milliwatt", 1000 },
+            Package () { "tx-disable-gpios", Package () { ^SFP0, 0, 0, 1} },
+            Package () { "reset-gpio",       Package () { ^SFP0, 0, 1, 1} },
+            Package () { "mod-def0-gpios",   Package () { ^SFP0, 0, 2, 1} },
+            Package () { "tx-fault-gpios",   Package () { ^SFP0, 0, 3, 0} },
+            Package () { "los-gpios",        Package () { ^SFP0, 0, 4, 1} },
+        },
+    })
+}
+
+Device (PHY0)
+{
+    Name (_HID, "PRP0001")
+    Name (_DSD, Package ()
+    {
+        ToUUID ("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+        Package () {
+            Package () { "compatible", "ethernet-phy-ieee802.3-c45" },
+            Package () { "sfp", \_SB.PCI0.RP01.SFP0 },
+            Package () { "managed", "in-band-status" },
+            Package () { "phy-mode", "sgmii" },
+        },
+    })
+}
 
 Signed-off-by: Ruslan Babayev <ruslan@babayev.com>
 Cc: xe-linux-external@cisco.com
 ---
- drivers/i2c/i2c-core-acpi.c | 3 ++-
- include/linux/i2c.h         | 6 ++++++
- 2 files changed, 8 insertions(+), 1 deletion(-)
+ drivers/net/phy/sfp.c | 33 +++++++++++++++++++++++++--------
+ 1 file changed, 25 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
-index 272800692088..964687534754 100644
---- a/drivers/i2c/i2c-core-acpi.c
-+++ b/drivers/i2c/i2c-core-acpi.c
-@@ -337,7 +337,7 @@ static int i2c_acpi_find_match_device(struct device *dev, void *data)
- 	return ACPI_COMPANION(dev) == data;
- }
- 
--static struct i2c_adapter *i2c_acpi_find_adapter_by_handle(acpi_handle handle)
-+struct i2c_adapter *i2c_acpi_find_adapter_by_handle(acpi_handle handle)
+diff --git a/drivers/net/phy/sfp.c b/drivers/net/phy/sfp.c
+index d4635c2178d1..7a6c8df8899b 100644
+--- a/drivers/net/phy/sfp.c
++++ b/drivers/net/phy/sfp.c
+@@ -9,6 +9,7 @@
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ #include <linux/of.h>
++#include <linux/acpi.h>
+ #include <linux/phy.h>
+ #include <linux/platform_device.h>
+ #include <linux/rtnetlink.h>
+@@ -1783,6 +1784,7 @@ static int sfp_probe(struct platform_device *pdev)
  {
- 	struct device *dev;
+ 	const struct sff_data *sff;
+ 	struct sfp *sfp;
++	struct i2c_adapter *i2c = NULL;
+ 	bool poll = false;
+ 	int irq, err, i;
  
-@@ -345,6 +345,7 @@ static struct i2c_adapter *i2c_acpi_find_adapter_by_handle(acpi_handle handle)
- 			      i2c_acpi_find_match_adapter);
- 	return dev ? i2c_verify_adapter(dev) : NULL;
- }
-+EXPORT_SYMBOL_GPL(i2c_acpi_find_adapter_by_handle);
+@@ -1801,7 +1803,6 @@ static int sfp_probe(struct platform_device *pdev)
+ 	if (pdev->dev.of_node) {
+ 		struct device_node *node = pdev->dev.of_node;
+ 		const struct of_device_id *id;
+-		struct i2c_adapter *i2c;
+ 		struct device_node *np;
  
- static struct i2c_client *i2c_acpi_find_client_by_adev(struct acpi_device *adev)
- {
-diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-index 1308126fc384..78f7d39ea5bc 100644
---- a/include/linux/i2c.h
-+++ b/include/linux/i2c.h
-@@ -21,6 +21,7 @@
- #include <linux/rtmutex.h>
- #include <linux/irqdomain.h>		/* for Host Notify IRQ */
- #include <linux/of.h>		/* for struct device_node */
-+#include <linux/acpi.h>		/* for acpi_handle */
- #include <linux/swab.h>		/* for swab16 */
- #include <uapi/linux/i2c.h>
+ 		id = of_match_node(sfp_of_match, node);
+@@ -1818,14 +1819,30 @@ static int sfp_probe(struct platform_device *pdev)
  
-@@ -981,6 +982,7 @@ bool i2c_acpi_get_i2c_resource(struct acpi_resource *ares,
- u32 i2c_acpi_find_bus_speed(struct device *dev);
- struct i2c_client *i2c_acpi_new_device(struct device *dev, int index,
- 				       struct i2c_board_info *info);
-+struct i2c_adapter *i2c_acpi_find_adapter_by_handle(acpi_handle handle);
- #else
- static inline bool i2c_acpi_get_i2c_resource(struct acpi_resource *ares,
- 					     struct acpi_resource_i2c_serialbus **i2c)
-@@ -996,6 +998,10 @@ static inline struct i2c_client *i2c_acpi_new_device(struct device *dev,
- {
- 	return NULL;
- }
-+struct i2c_adapter *i2c_acpi_find_adapter_by_handle(acpi_handle handle)
-+{
-+	return NULL;
-+}
- #endif /* CONFIG_ACPI */
+ 		i2c = of_find_i2c_adapter_by_node(np);
+ 		of_node_put(np);
+-		if (!i2c)
+-			return -EPROBE_DEFER;
+-
+-		err = sfp_i2c_configure(sfp, i2c);
+-		if (err < 0) {
+-			i2c_put_adapter(i2c);
+-			return err;
++	} else if (ACPI_COMPANION(&pdev->dev)) {
++		struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
++		struct fwnode_handle *fw = acpi_fwnode_handle(adev);
++		struct fwnode_reference_args args;
++		struct acpi_handle *acpi_handle;
++		int ret;
++
++		ret = acpi_node_get_property_reference(fw, "i2c-bus", 0, &args);
++		if (ACPI_FAILURE(ret) || !is_acpi_device_node(args.fwnode)) {
++			dev_err(&pdev->dev, "missing 'i2c-bus' property\n");
++			return -ENODEV;
+ 		}
++
++		acpi_handle = ACPI_HANDLE_FWNODE(args.fwnode);
++		i2c = i2c_acpi_find_adapter_by_handle(acpi_handle);
++	}
++
++	if (!i2c)
++		return -EPROBE_DEFER;
++
++	err = sfp_i2c_configure(sfp, i2c);
++	if (err < 0) {
++		i2c_put_adapter(i2c);
++		return err;
+ 	}
  
- #endif /* _LINUX_I2C_H */
+ 	for (i = 0; i < GPIO_MAX; i++)
 -- 
 2.17.1
 
