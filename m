@@ -2,147 +2,273 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B8A2C282E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 19:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDEDDC07542
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 19:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41A0220665
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 19:34:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 714BA216FD
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 19:50:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="IDBl5Wkr";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="PdcLVF6u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OstiajoX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727490AbfEYTea (ORCPT
+        id S1727501AbfEYTu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 15:34:30 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:40046 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726366AbfEYTe3 (ORCPT
+        Sat, 25 May 2019 15:50:57 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38887 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725791AbfEYTu5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 15:34:29 -0400
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4PJXeTo013917;
-        Sat, 25 May 2019 12:34:03 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : subject :
- date : message-id : references : in-reply-to : content-type : content-id :
- content-transfer-encoding : mime-version; s=facebook;
- bh=kjFwkEK44ugJ5yrTvFwAGEcNwMbh3zs6bQNy3KjB/7Y=;
- b=IDBl5WkrhCDeyn+7Y73lGNFOU34QIo/cYGrVm4rDFQ47kE5V7PgyaF/j4ltbcXxq4UCb
- he1kCcYSCsaPnylc3Y6cUcjFFlSodBAobZ1ivNJE05OkMDgDglonvpr4v63RIlsaN8V8
- ktOPgZT53sgPJW7SrFy+M1mOI3uozK4znjQ= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2sq2t89210-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Sat, 25 May 2019 12:34:03 -0700
-Received: from ash-exopmbx201.TheFacebook.com (2620:10d:c0a8:83::8) by
- ash-exhub104.TheFacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sat, 25 May 2019 12:34:02 -0700
-Received: from ash-exhub102.TheFacebook.com (2620:10d:c0a8:82::f) by
- ash-exopmbx201.TheFacebook.com (2620:10d:c0a8:83::8) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sat, 25 May 2019 12:34:02 -0700
-Received: from NAM03-DM3-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.172) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Sat, 25 May 2019 12:34:02 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kjFwkEK44ugJ5yrTvFwAGEcNwMbh3zs6bQNy3KjB/7Y=;
- b=PdcLVF6uKdL1HnTa96JjeyGVfKqnHnc38oL+oiipbpHwOPofmwvYk+XnO9sHP/r+8t6PpeA1aPrLSTSyEjSkWf56CmH+mUhOWtSYF8kSrLbGzDsKzaefjHhP70eNv6LGvghsRwZjUmAlsMSz98u/alR/rFxFxQvm6bsK8GW9jNI=
-Received: from BN8PR15MB3380.namprd15.prod.outlook.com (20.179.75.139) by
- BN8PR15MB2753.namprd15.prod.outlook.com (20.179.139.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.22; Sat, 25 May 2019 19:33:45 +0000
-Received: from BN8PR15MB3380.namprd15.prod.outlook.com
- ([fe80::9059:5076:c91d:672a]) by BN8PR15MB3380.namprd15.prod.outlook.com
- ([fe80::9059:5076:c91d:672a%7]) with mapi id 15.20.1922.021; Sat, 25 May 2019
- 19:33:45 +0000
-From:   Yonghong Song <yhs@fb.com>
-To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        "Jesper Dangaard Brouer" <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>
-Subject: Re: [PATCH] libbpf: fix warning PTR_ERR_OR_ZERO can be used
-Thread-Topic: [PATCH] libbpf: fix warning PTR_ERR_OR_ZERO can be used
-Thread-Index: AQHVEtivAG5/EXh3z0e90A/GY8EZ6aZ8O8cA
-Date:   Sat, 25 May 2019 19:33:44 +0000
-Message-ID: <2d147a2f-ac12-4e97-d281-c0d3463a5405@fb.com>
-References: <20190525090257.GA12104@hari-Inspiron-1545>
-In-Reply-To: <20190525090257.GA12104@hari-Inspiron-1545>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR1401CA0017.namprd14.prod.outlook.com
- (2603:10b6:301:4b::27) To BN8PR15MB3380.namprd15.prod.outlook.com
- (2603:10b6:408:a6::11)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:180::d262]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 74e2ec2c-d58c-4e2a-019f-08d6e147e67b
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN8PR15MB2753;
-x-ms-traffictypediagnostic: BN8PR15MB2753:
-x-microsoft-antispam-prvs: <BN8PR15MB27536AE41B6439059972B685D3030@BN8PR15MB2753.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:213;
-x-forefront-prvs: 0048BCF4DA
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(396003)(39860400002)(376002)(346002)(189003)(199004)(11346002)(446003)(476003)(2616005)(46003)(486006)(2906002)(25786009)(53936002)(14454004)(6246003)(5660300002)(478600001)(66556008)(66476007)(66946007)(73956011)(4744005)(66446008)(64756008)(99286004)(8936002)(81156014)(8676002)(81166006)(110136005)(2501003)(7736002)(305945005)(2201001)(86362001)(14444005)(256004)(7416002)(386003)(6506007)(53546011)(71200400001)(71190400001)(31696002)(76176011)(102836004)(52116002)(229853002)(6486002)(36756003)(6116002)(186003)(6436002)(6512007)(316002)(68736007)(31686004)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR15MB2753;H:BN8PR15MB3380.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: iqZc0n/XW03W9ThAXTuyoeZFwGp11nEhgq3JT9/TRv7iLzwIG+YHKlPAMcab9hg0Dc2uO+h7aTbm/Mt9tN+6MWMgXGsp9o+qTn84ByzEH1NCZjM3IvZBMWDrDc3cIlE1RX/dTwzIDi//YGGrewvmIhjIYDirfQMbbarMid/zfAumlP5lsAidFhiEcm1OZVUyBOC2/0DN+aUZ9FtldJpRLhpSd/A2MSY1UxTaHcbXSM70GlilRsO9yOeKyfVnzUEnUNBiZdkCHnrJTShiIwTarF54VRcxZPQpoqLJ7X/9j4sYfqq9tJmv3u53UrbXyoTcaKjKAiczIPdxbWwgJGxGTxR/8ej79QHssXginLiJhDdrTaNgoY7o4VXVhvHDHVJT7hEsRSKM34tEsR1TytVOIOpaKP0VXXXb62BGJrL912s=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <39D77CFF63DBDE42824E52F6659BE541@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Sat, 25 May 2019 15:50:57 -0400
+Received: by mail-wr1-f66.google.com with SMTP id d18so13079756wrs.5;
+        Sat, 25 May 2019 12:50:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ZcYPCLZRiQ5K7DYB5WujiUGNLt4GcC2QMNo60dWqOik=;
+        b=OstiajoXFzr8xn1GWXjVng2KUZPv1FpE26rnp+DZLjVAPoxD7Byqr11XQpCq8jTUzf
+         Y1XDFCZ4Pu/99whHMyYu3EXOhEob5zAGVnJ2DS585qYBWvy6RTBDueIFeMMVp3CCFFB+
+         6tDXPN8F1GdJDM42tpq66M+t/D3oe2j7klsnZkwmo47Qg+sUNZUcVgZAI1lbcEoMjLOF
+         ds+diH1HvlA6W2geXXowspcUfv9Rd8vE1BBgGcJ9Xe6Vdv3ECO5LJI6BINSqAOtxbUHO
+         m4+4X0BA6EjZV0FE3b3DL7jxfNuddAdQja7UZ/0o0KLsMMnOqtSYa20L5QXvRII02uHF
+         AQgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ZcYPCLZRiQ5K7DYB5WujiUGNLt4GcC2QMNo60dWqOik=;
+        b=ZnyzjECUFxLVYxId4Oc4FV8jciSso/JUXbjSgY0Je3EFAfqE3iGuwBfCVGIOLu7kPO
+         9Ri9cFqTiRF0SdUFp5XFO64YLP662QstohxmkeZ8cwx39BaJvAN+Gk/J8El2FwZS0XrV
+         13GfnKB1g20r5GK5JYK+crB1q0/wlIxAMSNzKJomEN3lbB34GY/8ZRrXnjFNVdUyFqQB
+         RRuysiH5jxzW6UtttwjryO5wFexk7VND9DjvrsveX3emyNCPkF7BlSDsLG67CChEAId8
+         2W8f5OTKfs9y6vyG5c46Gbom6Z6VyRVczl82NejGEA1XzteCEASjfIa79fY37RZ96ziU
+         lAaA==
+X-Gm-Message-State: APjAAAVP5i6rt+Rqwfq/EKw/U1ZheYBWsT1IkxVrmprAgqT7iMAh91SI
+        FFm9WkQhsKp/NcXOIfoL/9I=
+X-Google-Smtp-Source: APXvYqz1Hc3st2m4yyaJ9QXusSb5WMHqrM7kgmyyrpaFPx9sCy5y1AsOTj+npZi0tXjPz1nzPZ0YgA==
+X-Received: by 2002:adf:eb09:: with SMTP id s9mr10319702wrn.127.1558813855045;
+        Sat, 25 May 2019 12:50:55 -0700 (PDT)
+Received: from jernej-laptop.localnet (89-212-178-211.dynamic.t-2.net. [89.212.178.211])
+        by smtp.gmail.com with ESMTPSA id t17sm3704510wmj.7.2019.05.25.12.50.52
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 25 May 2019 12:50:53 -0700 (PDT)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To:     linux-sunxi@googlegroups.com, robin.murphy@arm.com
+Cc:     Rob Herring <rob.e.herring@gmail.com>,
+        =?ISO-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [linux-sunxi] Re: [PATCH v4 0/8] Allwinner H6 Mali GPU support
+Date:   Sat, 25 May 2019 21:50:51 +0200
+Message-ID: <259803076.m90EgR4Zsz@jernej-laptop>
+In-Reply-To: <e8618889-9b22-7f9f-7451-3c08a80a0f9b@arm.com>
+References: <20190512174608.10083-1-peron.clem@gmail.com> <CAC=3edbn1yXih5vP0SwsDkqRB0j5q0c4FL0jhCq9DQ9Wt2-hAA@mail.gmail.com> <e8618889-9b22-7f9f-7451-3c08a80a0f9b@arm.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 74e2ec2c-d58c-4e2a-019f-08d6e147e67b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 May 2019 19:33:44.9619
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yhs@fb.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR15MB2753
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-25_13:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905250138
-X-FB-Internal: deliver
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDUvMjUvMTkgMjowMiBBTSwgSGFyaXByYXNhZCBLZWxhbSB3cm90ZToNCj4gZml4IGJl
-bG93IHdhcm5pbmcgcmVwb3J0ZWQgYnkgY29jY2ljaGVjaw0KPiANCj4gL3Rvb2xzL2xpYi9icGYv
-bGliYnBmLmM6MzQ2MToxLTM6IFdBUk5JTkc6IFBUUl9FUlJfT1JfWkVSTyBjYW4gYmUgdXNlZA0K
-PiANCj4gU2lnbmVkLW9mZi1ieTogSGFyaXByYXNhZCBLZWxhbSA8aGFyaXByYXNhZC5rZWxhbUBn
-bWFpbC5jb20+DQpBY2tlZC1ieTogWW9uZ2hvbmcgU29uZyA8eWhzQGZiLmNvbT4NCg0KPiAtLS0N
-Cj4gICB0b29scy9saWIvYnBmL2xpYmJwZi5jIHwgNCArLS0tDQo+ICAgMSBmaWxlIGNoYW5nZWQs
-IDEgaW5zZXJ0aW9uKCspLCAzIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL3Rvb2xz
-L2xpYi9icGYvbGliYnBmLmMgYi90b29scy9saWIvYnBmL2xpYmJwZi5jDQo+IGluZGV4IDE5N2I1
-NzQuLjMzYzI1YjYgMTAwNjQ0DQo+IC0tLSBhL3Rvb2xzL2xpYi9icGYvbGliYnBmLmMNCj4gKysr
-IGIvdG9vbHMvbGliL2JwZi9saWJicGYuYw0KPiBAQCAtMzQ1OCw5ICszNDU4LDcgQEAgYnBmX29i
-amVjdF9fZmluZF9tYXBfYnlfb2Zmc2V0KHN0cnVjdCBicGZfb2JqZWN0ICpvYmosIHNpemVfdCBv
-ZmZzZXQpDQo+ICAgDQo+ICAgbG9uZyBsaWJicGZfZ2V0X2Vycm9yKGNvbnN0IHZvaWQgKnB0cikN
-Cj4gICB7DQo+IC0JaWYgKElTX0VSUihwdHIpKQ0KPiAtCQlyZXR1cm4gUFRSX0VSUihwdHIpOw0K
-PiAtCXJldHVybiAwOw0KPiArCXJldHVybiBQVFJfRVJSX09SX1pFUk8ocHRyKTsNCj4gICB9DQo+
-ICAgDQo+ICAgaW50IGJwZl9wcm9nX2xvYWQoY29uc3QgY2hhciAqZmlsZSwgZW51bSBicGZfcHJv
-Z190eXBlIHR5cGUsDQo+IA0K
+Hi!
+
+Dne =C4=8Detrtek, 16. maj 2019 ob 13:19:06 CEST je Robin Murphy napisal(a):
+> On 16/05/2019 00:22, Rob Herring wrote:
+> > On Wed, May 15, 2019 at 5:06 PM Cl=C3=A9ment P=C3=A9ron <peron.clem@gma=
+il.com>=20
+wrote:
+> >> Hi Robin,
+> >>=20
+> >> On Tue, 14 May 2019 at 23:57, Robin Murphy <robin.murphy@arm.com> wrot=
+e:
+> >>> On 2019-05-14 10:22 pm, Cl=C3=A9ment P=C3=A9ron wrote:
+> >>>> Hi,
+> >>>>=20
+> >>>> On Tue, 14 May 2019 at 17:17, Cl=C3=A9ment P=C3=A9ron <peron.clem@gm=
+ail.com>=20
+wrote:
+> >>>>> Hi,
+> >>>>>=20
+> >>>>> On Tue, 14 May 2019 at 12:29, Neil Armstrong <narmstrong@baylibre.c=
+om>=20
+wrote:
+> >>>>>> Hi,
+> >>>>>>=20
+> >>>>>> On 13/05/2019 17:14, Daniel Vetter wrote:
+> >>>>>>> On Sun, May 12, 2019 at 07:46:00PM +0200, peron.clem@gmail.com=20
+wrote:
+> >>>>>>>> From: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> >>>>>>>>=20
+> >>>>>>>> Hi,
+> >>>>>>>>=20
+> >>>>>>>> The Allwinner H6 has a Mali-T720 MP2. The drivers are
+> >>>>>>>> out-of-tree so this series only introduce the dt-bindings.
+> >>>>>>>=20
+> >>>>>>> We do have an in-tree midgard driver now (since 5.2). Does this
+> >>>>>>> stuff work
+> >>>>>>> together with your dt changes here?
+> >>>>>>=20
+> >>>>>> No, but it should be easy to add.
+> >>>>>=20
+> >>>>> I will give it a try and let you know.
+> >>>>=20
+> >>>> Added the bus_clock and a ramp delay to the gpu_vdd but the driver
+> >>>> fail at probe.
+> >>>>=20
+> >>>> [    3.052919] panfrost 1800000.gpu: clock rate =3D 432000000
+> >>>> [    3.058278] panfrost 1800000.gpu: bus_clock rate =3D 100000000
+> >>>> [    3.179772] panfrost 1800000.gpu: mali-t720 id 0x720 major 0x1
+> >>>> minor 0x1 status 0x0
+> >>>> [    3.187432] panfrost 1800000.gpu: features: 00000000,10309e40,
+> >>>> issues: 00000000,21054400
+> >>>> [    3.195531] panfrost 1800000.gpu: Features: L2:0x07110206
+> >>>> Shader:0x00000000 Tiler:0x00000809 Mem:0x1 MMU:0x00002821 AS:0xf
+> >>>> JS:0x7
+> >>>> [    3.207178] panfrost 1800000.gpu: shader_present=3D0x3 l2_present=
+=3D0x1
+> >>>> [    3.238257] panfrost 1800000.gpu: Fatal error during GPU init
+> >>>> [    3.244165] panfrost: probe of 1800000.gpu failed with error -12
+> >>>>=20
+> >>>> The ENOMEM is coming from "panfrost_mmu_init"
+> >>>> alloc_io_pgtable_ops(ARM_MALI_LPAE, &pfdev->mmu->pgtbl_cfg,
+> >>>>=20
+> >>>>                                            pfdev);
+> >>>>=20
+> >>>> Which is due to a check in the pgtable alloc "cfg->ias !=3D 48"
+> >>>> arm-lpae io-pgtable: arm_mali_lpae_alloc_pgtable cfg->ias 33 cfg->oas
+> >>>> 40
+> >>>>=20
+> >>>> DRI stack is totally new for me, could you give me a little clue abo=
+ut
+> >>>> this issue ?
+> >>>=20
+> >>> Heh, this is probably the one bit which doesn't really count as "DRI
+> >>> stack".
+> >>>=20
+> >>> That's merely a somewhat-conservative sanity check - I'm pretty sure =
+it
+> >>> *should* be fine to change the test to "cfg->ias > 48" (io-pgtable
+> >>> itself ought to cope). You'll just get to be the first to actually te=
+st
+> >>> a non-48-bit configuration here :)
+> >>=20
+> >> Thanks a lot, the probe seems fine now :)
+> >>=20
+> >> I try to run glmark2 :
+> >> # glmark2-es2-drm
+> >> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D
+> >>=20
+> >>      glmark2 2017.07
+> >>=20
+> >> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D
+> >>=20
+> >>      OpenGL Information
+> >>      GL_VENDOR:     panfrost
+> >>      GL_RENDERER:   panfrost
+> >>      GL_VERSION:    OpenGL ES 2.0 Mesa 19.1.0-rc2
+> >>=20
+> >> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D
+> >> [build] use-vbo=3Dfalse:
+> >>=20
+> >> But it seems that H6 is not so easy to add :(.
+> >>=20
+> >> [  345.204813] panfrost 1800000.gpu: mmu irq status=3D1
+> >> [  345.209617] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
+> >> 0x0000000002400400
+> >> [  345.209617] Reason: TODO
+> >> [  345.209617] raw fault status: 0x800002C1
+> >> [  345.209617] decoded fault status: SLAVE FAULT
+> >> [  345.209617] exception type 0xC1: TRANSLATION_FAULT_LEVEL1
+> >> [  345.209617] access type 0x2: READ
+> >> [  345.209617] source id 0x8000
+> >> [  345.729957] panfrost 1800000.gpu: gpu sched timeout, js=3D0,
+> >> status=3D0x8, head=3D0x2400400, tail=3D0x2400400, sched_job=3D00000000=
+9e204de9
+> >> [  346.055876] panfrost 1800000.gpu: mmu irq status=3D1
+> >> [  346.060680] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
+> >> 0x0000000002C00A00
+> >> [  346.060680] Reason: TODO
+> >> [  346.060680] raw fault status: 0x810002C1
+> >> [  346.060680] decoded fault status: SLAVE FAULT
+> >> [  346.060680] exception type 0xC1: TRANSLATION_FAULT_LEVEL1
+> >> [  346.060680] access type 0x2: READ
+> >> [  346.060680] source id 0x8100
+> >> [  346.561955] panfrost 1800000.gpu: gpu sched timeout, js=3D1,
+> >> status=3D0x8, head=3D0x2c00a00, tail=3D0x2c00a00, sched_job=3D00000000=
+b55a9a85
+> >> [  346.573913] panfrost 1800000.gpu: mmu irq status=3D1
+> >> [  346.578707] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
+> >> 0x0000000002C00B80
+> >> [  346.578707] Reason: TODO
+> >> [  346.578707] raw fault status: 0x800002C1
+> >> [  346.578707] decoded fault status: SLAVE FAULT
+> >> [  346.578707] exception type 0xC1: TRANSLATION_FAULT_LEVEL1
+> >> [  346.578707] access type 0x2: READ
+> >> [  346.578707] source id 0x8000
+> >> [  347.073947] panfrost 1800000.gpu: gpu sched timeout, js=3D0,
+> >> status=3D0x8, head=3D0x2c00b80, tail=3D0x2c00b80, sched_job=3D00000000=
+cf6af8e8
+> >> [  347.104125] panfrost 1800000.gpu: mmu irq status=3D1
+> >> [  347.108930] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
+> >> 0x0000000002800900
+> >> [  347.108930] Reason: TODO
+> >> [  347.108930] raw fault status: 0x810002C1
+> >> [  347.108930] decoded faultn thi status: SLAVE FAULT
+> >> [  347.108930] exception type 0xC1: TRANSLATION_FAULT_LEVEL1
+> >> [  347.108930] access type 0x2: READ
+> >> [  347.108930] source id 0x8100
+> >> [  347.617950] panfrost 1800000.gpu: gpu sched timeout, js=3D1,
+> >> status=3D0x8, head=3D0x2800900, tail=3D0x2800900, sched_job=3D00000000=
+9325fdb7
+> >> [  347.629902] panfrost 1800000.gpu: mmu irq status=3D1
+> >> [  347.634696] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
+> >> 0x0000000002800A80
+> >=20
+> > Is this 32 or 64 bit userspace? I think 64-bit does not work with
+> > T7xx. You might need this[1].
+>=20
+> [ Oooh... that makes T620 actually do stuff without falling over
+> dereferencing VA 0 somewhere halfway through the job chain :D
+>=20
+> I shall continue to play... ]
+>=20
+> > You may also be the first to try T720,
+> > so it could be something else.
+>=20
+> I was expecting to see a similar behaviour to my T620 (which I now
+> assume was down to 64-bit job descriptors sort-of-but-not-quite working)
+> but this does look a bit more fundamental - the fact that it's a level 1
+> fault with VA =3D=3D head =3D=3D tail suggests to me that the MMU can't s=
+ee the
+> page tables at all to translate anything. I really hope that the H6 GPU
+> integration doesn't suffer from the same DMA offset as the Allwinner
+> display pipeline stuff, because that would be a real pain to support in
+> io-pgtable.
+
+DMA offset is present only on early SoCs with DE1. DE2 and DE3 (used on H6)=
+=20
+have no offset.
+
+Best regards,
+Jernej
+
+
+
