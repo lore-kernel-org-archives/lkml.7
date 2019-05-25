@@ -2,511 +2,552 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14BE1C07542
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 16:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0CAEC282CE
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 16:58:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C96F321880
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 16:58:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qzAesuET"
+	by mail.kernel.org (Postfix) with ESMTP id 65CB820879
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 16:58:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558803526;
+	bh=uVfgFATFH/5XTQPK6CtZRWfL1Qfhj2dJrDMoOohWJBA=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=IGjSnEYfAXChsyGDiMEp3e/yTr6isujiBM2VYv890Ju6H1vdl1UVXhRXpfE0x2c4c
+	 Y1VNdqvH40dBuqJIwnHXEPMFssaIvFzshO3gpoKyLxfe8HWvzMOR4cAx/skKPjwLmL
+	 n7d0+kMRdauCIhHFxJqHAL9L9FzdfofOljiYOTB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbfEYQ6W (ORCPT
+        id S1727358AbfEYQ6p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 12:58:22 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:39236 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727281AbfEYQ6P (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 12:58:15 -0400
-Received: by mail-pf1-f195.google.com with SMTP id z26so7149072pfg.6
-        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 09:58:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=l6Ok3IrguF2w1UNDIJgSTy+I8Zmwuoc6IbFdNBt6nUU=;
-        b=qzAesuETlraPJhYKZmqSDwoyzWizXlnwA1D6xMUWlTqex4dchzF3z57+htTIR9Pooo
-         derXJ9QpqBqQfwmg+M4gqPHfcJehMJtiNXISfrYZ7/g+gei/1U2gZPJMcDpZUdMNeJL7
-         bA15q2EFRFyK5e4nsuLOa2VnQPHD42BvGz4YKwfxy+y5fOD7Q9r9+JQMYBKJj9gPNXqR
-         9TMoKPqXwB+AcsfoYZwISh+xvFVC/XYAVAYWJnWJkVIJrvAz6d5kecHZyI9wIGrLLDd0
-         dY8mXicG7t4HF6rw3vrHoUsZ/i6goVRo8hqueXATNGoS5ijXLLiWMVslaT+QUyHUo10L
-         5g2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=l6Ok3IrguF2w1UNDIJgSTy+I8Zmwuoc6IbFdNBt6nUU=;
-        b=Vj7cCw7cSwsr5PEMHGi4lSu+vSak6frjmWp/7q72377lE1/eX2ytOvDOBDKKidYcM7
-         cviPF+o1Bp612GghT1t4EfLzx5lLuy5v3YPJ0r+0HiItt6eoIWFZSsv/dQQP+BRfHlcB
-         t73glCoc89LT5GTbFTMFfxhnVWAkynrfhgLrt3hF3c0phiXgBmXx+o37EafL1TITBBK3
-         PUXKO6jH1fihJ7uOItiu44Xr0KO+DblO4OIflnHnjULQ1nvJ7rvgs5374D36BojUDEeb
-         RPbxUJthu2T7T4J7Nex+4OneQPCUaAXyXI4FtXNQgvKfXR4aWn3ixSgPn/LAQpf+UjxM
-         j6yA==
-X-Gm-Message-State: APjAAAVVJwOi4EIQGluVfLyEW0oy043jvCN7PYNWK/lu7s+VFa9+SPk7
-        nBBULo6yMaWP2UFXxD3QDL62gR76
-X-Google-Smtp-Source: APXvYqyw9K8H1EcUKcohhZCLa6T4pZNlcO5Dy/3/CXZG/uaBVs4IRlGAMDe3BdKiUryCSjfrp93kRQ==
-X-Received: by 2002:a63:5c5f:: with SMTP id n31mr114897039pgm.325.1558803493923;
-        Sat, 25 May 2019 09:58:13 -0700 (PDT)
-Received: from tw-172-25-31-76.office.twttr.net ([8.25.197.24])
-        by smtp.gmail.com with ESMTPSA id q142sm8787585pfc.27.2019.05.25.09.58.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 25 May 2019 09:58:13 -0700 (PDT)
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: [PATCH 4/4] trace: introduce trace event injection
-Date:   Sat, 25 May 2019 09:58:02 -0700
-Message-Id: <20190525165802.25944-5-xiyou.wangcong@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190525165802.25944-1-xiyou.wangcong@gmail.com>
-References: <20190525165802.25944-1-xiyou.wangcong@gmail.com>
+        Sat, 25 May 2019 12:58:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48476 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727158AbfEYQ6o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 May 2019 12:58:44 -0400
+Received: from localhost (unknown [62.129.28.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19ACB20879;
+        Sat, 25 May 2019 16:58:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558803522;
+        bh=uVfgFATFH/5XTQPK6CtZRWfL1Qfhj2dJrDMoOohWJBA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=u0/YjbM8zVSuNbKpyt2iZsxB+Nsf6tS7ldbdU4k+6lqGCn7mGJ2E6hcYeo+f3ovif
+         jbk9XeQBn/EcmKT2axxonOQNp+nMJAiY7VIUYoziICsz9qN6Os4i757wLswzjdtxqK
+         gJLnnkZk9p3Zbs9sHgbTTH0aewio1rIlmfTw1f1I=
+Date:   Sat, 25 May 2019 18:58:40 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Linux 5.1.5
+Message-ID: <20190525165840.GA7034@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="DocE+STaALJfprDB"
+Content-Disposition: inline
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have been trying to use rasdaemon to monitor hardware errors like
-correctable memory errors. rasdaemon uses trace events to monitor
-various hardware errors. In order to test it, we have to inject some
-hardware errors, unfortunately not all of them provide error
-injections. MCE does provide a way to inject MCE errors, but errors
-like PCI error and devlink error don't, it is not easy to add error
-injection to each of them. Instead, it is relatively easier to just
-allow users to inject trace events in a generic way so that all trace
-events can be injected.
 
-This patch introduces trace event injection, where a new 'inject' is
-added to each tracepoint directory. Users could write into this file
-with key=value pairs to specify the value of each fields of the trace
-event, all unspecified fields are set to zero values by default.
+--DocE+STaALJfprDB
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-For example, for the net/net_dev_queue tracepoint, we can inject:
+I'm announcing the release of the 5.1.5 kernel.
 
-  INJECT=/sys/kernel/debug/tracing/events/net/net_dev_queue/inject
-  echo "" > $INJECT
-  echo "name='test'" > $INJECT
-  echo "name='test' len=1024" > $INJECT
-  cat /sys/kernel/debug/tracing/trace
-  ...
-   <...>-614   [000] ....    36.571483: net_dev_queue: dev= skbaddr=00000000fbf338c2 len=0
-   <...>-614   [001] ....   136.588252: net_dev_queue: dev=test skbaddr=00000000fbf338c2 len=0
-   <...>-614   [001] .N..   208.431878: net_dev_queue: dev=test skbaddr=00000000fbf338c2 len=1024
+All users of the 5.1 kernel series must upgrade.
 
-Triggers could be triggered as usual too:
+The updated 5.1.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linu=
+x-5.1.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3Ds=
+ummary
 
-  echo "stacktrace if len == 1025" > /sys/kernel/debug/tracing/events/net/net_dev_queue/trigger
-  echo "len=1025" > $INJECT
-  cat /sys/kernel/debug/tracing/trace
-  ...
-      bash-614   [000] ....    36.571483: net_dev_queue: dev= skbaddr=00000000fbf338c2 len=0
-      bash-614   [001] ....   136.588252: net_dev_queue: dev=test skbaddr=00000000fbf338c2 len=0
-      bash-614   [001] .N..   208.431878: net_dev_queue: dev=test skbaddr=00000000fbf338c2 len=1024
-      bash-614   [001] .N.1   284.236349: <stack trace>
- => event_inject_write
- => vfs_write
- => ksys_write
- => do_syscall_64
- => entry_SYSCALL_64_after_hwframe
+thanks,
 
-The only thing that can't be injected is string pointers as they
-require constant string pointers, this can't be done at run time.
+greg k-h
 
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
----
- kernel/trace/Makefile              |   1 +
- kernel/trace/trace.h               |   1 +
- kernel/trace/trace_events.c        |   4 +
- kernel/trace/trace_events_inject.c | 330 +++++++++++++++++++++++++++++
- 4 files changed, 336 insertions(+)
- create mode 100644 kernel/trace/trace_events_inject.c
+------------
 
-diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
-index c2b2148bb1d2..3c7bbacf4c18 100644
---- a/kernel/trace/Makefile
-+++ b/kernel/trace/Makefile
-@@ -69,6 +69,7 @@ obj-$(CONFIG_EVENT_TRACING) += trace_event_perf.o
- endif
- obj-$(CONFIG_EVENT_TRACING) += trace_events_filter.o
- obj-$(CONFIG_EVENT_TRACING) += trace_events_trigger.o
-+obj-$(CONFIG_EVENT_TRACING) += trace_events_inject.o
- obj-$(CONFIG_HIST_TRIGGERS) += trace_events_hist.o
- obj-$(CONFIG_BPF_EVENTS) += bpf_trace.o
- obj-$(CONFIG_KPROBE_EVENTS) += trace_kprobe.o
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 1974ce818ddb..69b5ce0ad597 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -1583,6 +1583,7 @@ extern struct list_head ftrace_events;
- 
- extern const struct file_operations event_trigger_fops;
- extern const struct file_operations event_hist_fops;
-+extern const struct file_operations event_inject_fops;
- 
- #ifdef CONFIG_HIST_TRIGGERS
- extern int register_trigger_hist_cmd(void);
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 98df044d34ce..d23d6d6685e7 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -2018,6 +2018,10 @@ event_create_dir(struct dentry *parent, struct trace_event_file *file)
- 	trace_create_file("format", 0444, file->dir, call,
- 			  &ftrace_event_format_fops);
- 
-+	if (call->event.type && call->class->reg)
-+		trace_create_file("inject", 0200, file->dir, file,
-+				  &event_inject_fops);
-+
- 	return 0;
- }
- 
-diff --git a/kernel/trace/trace_events_inject.c b/kernel/trace/trace_events_inject.c
-new file mode 100644
-index 000000000000..cdd7db7f2724
---- /dev/null
-+++ b/kernel/trace/trace_events_inject.c
-@@ -0,0 +1,330 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * trace_events_inject - trace event injection
-+ *
-+ * Copyright (C) 2019 Cong Wang <cwang@twitter.com>
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/ctype.h>
-+#include <linux/mutex.h>
-+#include <linux/slab.h>
-+#include <linux/rculist.h>
-+
-+#include "trace.h"
-+
-+static int
-+trace_inject_entry(struct trace_event_file *file, void *rec, int len)
-+{
-+	struct trace_event_buffer fbuffer;
-+	struct ring_buffer *buffer;
-+	int written = 0;
-+	void *entry;
-+
-+	buffer = file->tr->trace_buffer.buffer;
-+	ring_buffer_nest_start(buffer);
-+
-+	entry = trace_event_buffer_reserve(&fbuffer, file, len);
-+	if (entry) {
-+		memcpy(entry, rec, len);
-+		written = len;
-+		trace_event_buffer_commit(&fbuffer);
-+	}
-+
-+	ring_buffer_nest_end(buffer);
-+	return written;
-+}
-+
-+static int
-+parse_field(char *str, struct trace_event_call *call,
-+	    struct ftrace_event_field **pf, u64 *pv)
-+{
-+	struct ftrace_event_field *field;
-+	char *field_name;
-+	int s, i = 0;
-+	char *p;
-+	int len;
-+	u64 val;
-+
-+	if (!str[i])
-+		return 0;
-+	/* First find the field to associate to */
-+	while (isspace(str[i]))
-+		i++;
-+	s = i;
-+	while (isalnum(str[i]) || str[i] == '_')
-+		i++;
-+	len = i - s;
-+	if (!len)
-+		return -EINVAL;
-+
-+	field_name = kmemdup_nul(str + s, len, GFP_KERNEL);
-+	if (!field_name)
-+		return -ENOMEM;
-+	field = trace_find_event_field(call, field_name);
-+	kfree(field_name);
-+	if (!field)
-+		return -ENOENT;
-+
-+	*pf = field;
-+	p = strchr(str + i, '=');
-+	if (!p)
-+		return -EINVAL;
-+	i = p + 1 - str;
-+	while (isspace(str[i]))
-+		i++;
-+	s = i;
-+	if (isdigit(str[i]) || str[i] == '-') {
-+		char num_buf[24];	/* Big enough to hold an address */
-+		int ret;
-+
-+		/* Make sure the field is not a string */
-+		if (is_string_field(field))
-+			return -EINVAL;
-+
-+		if (str[i] == '-')
-+			i++;
-+
-+		/* We allow 0xDEADBEEF */
-+		while (isalnum(str[i]))
-+			i++;
-+
-+		len = i - s;
-+		/* 0xfeedfacedeadbeef is 18 chars max */
-+		if (len >= sizeof(num_buf))
-+			return -EINVAL;
-+
-+		strncpy(num_buf, str + s, len);
-+		num_buf[len] = 0;
-+
-+		/* Make sure it is a value */
-+		if (field->is_signed)
-+			ret = kstrtoll(num_buf, 0, &val);
-+		else
-+			ret = kstrtoull(num_buf, 0, &val);
-+		if (ret)
-+			return ret;
-+
-+		*pv = val;
-+		return i;
-+	} else if (str[i] == '\'' || str[i] == '"') {
-+		char q = str[i];
-+
-+		/* Make sure the field is OK for strings */
-+		if (!is_string_field(field))
-+			return -EINVAL;
-+
-+		for (i++; str[i]; i++) {
-+			if (str[i] == q)
-+				break;
-+		}
-+		if (!str[i])
-+			return -EINVAL;
-+
-+		/* Skip quotes */
-+		s++;
-+		len = i - s;
-+		if (len >= MAX_FILTER_STR_VAL)
-+			return -EINVAL;
-+
-+		*pv = (unsigned long)(str + s);
-+		str[i] = 0;
-+		/* go past the last quote */
-+		i++;
-+		return i;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static int trace_get_entry_size(struct trace_event_call *call)
-+{
-+	struct ftrace_event_field *field;
-+	struct list_head *head;
-+	int size = 0;
-+
-+	head = trace_get_fields(call);
-+	list_for_each_entry(field, head, link)
-+		if (field->size + field->offset > size)
-+			size = field->size + field->offset;
-+
-+	return size;
-+}
-+
-+static void *trace_alloc_entry(struct trace_event_call *call, int *size)
-+{
-+	int entry_size = trace_get_entry_size(call);
-+	struct ftrace_event_field *field;
-+	struct list_head *head;
-+	void *entry = NULL;
-+
-+	/* We need an extra '\0' at the end. */
-+	entry = kzalloc(entry_size + 1, GFP_KERNEL);
-+	if (!entry)
-+		return NULL;
-+
-+	head = trace_get_fields(call);
-+	list_for_each_entry(field, head, link) {
-+		if (!is_string_field(field))
-+			continue;
-+		if (field->filter_type == FILTER_STATIC_STRING)
-+			continue;
-+		if (field->filter_type == FILTER_DYN_STRING) {
-+			u32 *str_item;
-+			int str_len = 0;
-+			int str_loc = entry_size & 0xffff;
-+
-+			str_item = (u32 *)(entry + field->offset);
-+			*str_item = (str_len << 16) | str_loc;
-+		} else {
-+			char **paddr;
-+
-+			paddr = (char **)(entry + field->offset);
-+			*paddr = "";
-+		}
-+	}
-+
-+	*size = entry_size + 1;
-+	return entry;
-+}
-+
-+#define INJECT_STRING "STATIC STRING CAN NOT BE INJECTED"
-+
-+static int parse_entry(char *str, struct trace_event_call *call, void **pentry)
-+{
-+	struct ftrace_event_field *field;
-+	unsigned long irq_flags;
-+	void *entry = NULL;
-+	int entry_size;
-+	u64 val;
-+	int len;
-+
-+	entry = trace_alloc_entry(call, &entry_size);
-+	*pentry = entry;
-+	if (!entry)
-+		return -ENOMEM;
-+
-+	local_save_flags(irq_flags);
-+	tracing_generic_entry_update(entry, call->event.type, irq_flags,
-+				     preempt_count());
-+
-+	while ((len = parse_field(str, call, &field, &val)) > 0) {
-+		if (is_function_field(field))
-+			return -EINVAL;
-+
-+		if (is_string_field(field)) {
-+			char *addr = (char *)(unsigned long) val;
-+
-+			if (field->filter_type == FILTER_STATIC_STRING) {
-+				strlcpy(entry + field->offset, addr, field->size);
-+			} else if (field->filter_type == FILTER_DYN_STRING) {
-+				u32 *str_item;
-+				int str_len = strlen(addr) + 1;
-+				int str_loc = entry_size & 0xffff;
-+
-+				entry_size += str_len;
-+				*pentry = krealloc(entry, entry_size, GFP_KERNEL);
-+				entry = *pentry;
-+				if (!entry)
-+					return -ENOMEM;
-+
-+				strlcpy(entry + (entry_size - str_len), addr, str_len);
-+				str_item = (u32 *)(entry + field->offset);
-+				*str_item = (str_len << 16) | str_loc;
-+			} else {
-+				char **paddr;
-+
-+				/* TODO: can we find the constant string? */
-+				paddr = (char **)(entry + field->offset);
-+				*paddr = INJECT_STRING;
-+			}
-+		} else {
-+			switch (field->size) {
-+			case 1: {
-+				u8 tmp = (u8) val;
-+
-+				memcpy(entry + field->offset, &tmp, 1);
-+				break;
-+			}
-+			case 2: {
-+				u16 tmp = (u16) val;
-+
-+				memcpy(entry + field->offset, &tmp, 2);
-+				break;
-+			}
-+			case 4: {
-+				u32 tmp = (u32) val;
-+
-+				memcpy(entry + field->offset, &tmp, 4);
-+				break;
-+			}
-+			case 8:
-+				memcpy(entry + field->offset, &val, 8);
-+				break;
-+			default:
-+				return -EINVAL;
-+			}
-+		}
-+
-+		str += len;
-+	}
-+
-+	if (len < 0)
-+		return len;
-+
-+	return entry_size;
-+}
-+
-+static ssize_t
-+event_inject_write(struct file *filp, const char __user *ubuf, size_t cnt,
-+		   loff_t *ppos)
-+{
-+	struct trace_event_call *call;
-+	struct trace_event_file *file;
-+	int err = -ENODEV, size;
-+	void *entry = NULL;
-+	char *buf;
-+
-+	if (cnt >= PAGE_SIZE)
-+		return -EINVAL;
-+
-+	buf = memdup_user_nul(ubuf, cnt);
-+	if (IS_ERR(buf))
-+		return PTR_ERR(buf);
-+	strim(buf);
-+
-+	mutex_lock(&event_mutex);
-+	file = event_file_data(filp);
-+	if (file) {
-+		call = file->event_call;
-+		size = parse_entry(buf, call, &entry);
-+		if (size < 0)
-+			err = size;
-+		else
-+			err = trace_inject_entry(file, entry, size);
-+	}
-+	mutex_unlock(&event_mutex);
-+
-+	kfree(entry);
-+	kfree(buf);
-+
-+	if (err < 0)
-+		return err;
-+
-+	*ppos += err;
-+	return cnt;
-+}
-+
-+static ssize_t
-+event_inject_read(struct file *file, char __user *buf, size_t size,
-+		  loff_t *ppos)
-+{
-+	return -EPERM;
-+}
-+
-+const struct file_operations event_inject_fops = {
-+	.open = tracing_open_generic,
-+	.read = event_inject_read,
-+	.write = event_inject_write,
-+};
-+
--- 
-2.21.0
+ Documentation/filesystems/porting                       |    5=20
+ Makefile                                                |    2=20
+ arch/Kconfig                                            |    2=20
+ arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi           |    2=20
+ arch/mips/kernel/perf_event_mipsxx.c                    |   21 -
+ arch/parisc/boot/compressed/head.S                      |    6=20
+ arch/parisc/include/asm/assembly.h                      |    6=20
+ arch/parisc/include/asm/cache.h                         |   10=20
+ arch/parisc/kernel/head.S                               |    4=20
+ arch/parisc/kernel/process.c                            |    1=20
+ arch/parisc/kernel/syscall.S                            |    2=20
+ arch/parisc/mm/init.c                                   |    2=20
+ arch/powerpc/include/asm/mmu_context.h                  |    1=20
+ arch/um/include/asm/mmu_context.h                       |    1=20
+ arch/unicore32/include/asm/mmu_context.h                |    1=20
+ arch/x86/entry/entry_64.S                               |   18 +
+ arch/x86/include/asm/mmu_context.h                      |    6=20
+ arch/x86/include/asm/mpx.h                              |   15=20
+ arch/x86/include/asm/text-patching.h                    |   28 +
+ arch/x86/kernel/ftrace.c                                |   32 +-
+ arch/x86/mm/mpx.c                                       |   10=20
+ block/blk-core.c                                        |    2=20
+ block/blk-mq-sysfs.c                                    |    6=20
+ block/blk-mq.c                                          |    8=20
+ block/blk-mq.h                                          |    2=20
+ drivers/base/dd.c                                       |    5=20
+ drivers/block/brd.c                                     |    7=20
+ drivers/clk/hisilicon/clk-hi3660.c                      |    6=20
+ drivers/clk/mediatek/clk-pll.c                          |   48 ++-
+ drivers/clk/rockchip/clk-rk3328.c                       |   18 -
+ drivers/clk/tegra/clk-pll.c                             |    4=20
+ drivers/dma/imx-sdma.c                                  |   15=20
+ drivers/hwtracing/intel_th/msu.c                        |   35 ++
+ drivers/hwtracing/stm/core.c                            |    9=20
+ drivers/infiniband/hw/mlx5/main.c                       |    5=20
+ drivers/infiniband/ulp/ipoib/ipoib_main.c               |   13=20
+ drivers/iommu/tegra-smmu.c                              |   25 +
+ drivers/md/dm-cache-metadata.c                          |    9=20
+ drivers/md/dm-crypt.c                                   |    9=20
+ drivers/md/dm-delay.c                                   |    3=20
+ drivers/md/dm-init.c                                    |    8=20
+ drivers/md/dm-integrity.c                               |    4=20
+ drivers/md/dm-ioctl.c                                   |    6=20
+ drivers/md/dm-mpath.c                                   |    2=20
+ drivers/md/dm-zoned-metadata.c                          |    5=20
+ drivers/md/dm.c                                         |    4=20
+ drivers/md/md.c                                         |  180 +++++------
+ drivers/md/md.h                                         |   25 -
+ drivers/md/raid5.c                                      |   29 +
+ drivers/media/i2c/ov6650.c                              |    2=20
+ drivers/media/platform/Kconfig                          |    2=20
+ drivers/memory/tegra/mc.c                               |    2=20
+ drivers/net/Makefile                                    |    2=20
+ drivers/net/ethernet/mellanox/mlx4/mcg.c                |    2=20
+ drivers/net/ethernet/mellanox/mlx5/core/Kconfig         |    1=20
+ drivers/net/ethernet/mellanox/mlx5/core/ecpf.c          |    2=20
+ drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c    |   18 +
+ drivers/net/ethernet/mellanox/mlx5/core/en_rep.c        |   19 +
+ drivers/net/ethernet/mellanox/mlx5/core/en_tc.c         |    2=20
+ drivers/net/ethernet/mellanox/mlx5/core/fs_core.c       |    2=20
+ drivers/net/ethernet/mellanox/mlx5/core/lib/clock.c     |   30 -
+ drivers/net/ethernet/mellanox/mlxsw/core.c              |    6=20
+ drivers/net/ethernet/mellanox/mlxsw/core.h              |    2=20
+ drivers/net/ethernet/mellanox/mlxsw/core_env.c          |   18 +
+ drivers/net/ethernet/mellanox/mlxsw/core_hwmon.c        |    3=20
+ drivers/net/ethernet/mellanox/mlxsw/core_thermal.c      |    6=20
+ drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.c |   17 -
+ drivers/net/ppp/ppp_deflate.c                           |   20 -
+ drivers/net/usb/qmi_wwan.c                              |    2=20
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/dmi.c  |   26 +
+ drivers/net/wireless/intersil/p54/p54pci.c              |    3=20
+ drivers/parisc/led.c                                    |    3=20
+ drivers/pci/controller/pcie-rcar.c                      |   21 +
+ drivers/pci/pci.h                                       |    2=20
+ drivers/pci/pcie/aspm.c                                 |   49 ++-
+ drivers/pci/probe.c                                     |   23 -
+ drivers/pci/quirks.c                                    |   77 +++++
+ drivers/phy/ti/phy-ti-pipe3.c                           |    2=20
+ drivers/regulator/core.c                                |   11=20
+ drivers/staging/media/imx/imx-ic-common.c               |    2=20
+ drivers/staging/media/imx/imx-media-csi.c               |   18 -
+ drivers/staging/media/imx/imx-media-dev.c               |   11=20
+ drivers/staging/media/imx/imx-media-internal-sd.c       |   32 --
+ drivers/staging/media/imx/imx-media-of.c                |   73 +++-
+ drivers/staging/media/imx/imx-media-vdic.c              |    2=20
+ drivers/staging/media/imx/imx-media.h                   |    7=20
+ drivers/staging/media/imx/imx7-media-csi.c              |    2=20
+ drivers/video/fbdev/efifb.c                             |    8=20
+ drivers/video/fbdev/sm712.h                             |   12=20
+ drivers/video/fbdev/sm712fb.c                           |  243 +++++++++++=
++----
+ drivers/video/fbdev/udlfb.c                             |  114 +++++--
+ fs/btrfs/relocation.c                                   |   12=20
+ fs/ceph/super.c                                         |    7=20
+ fs/cifs/cifsglob.h                                      |    1=20
+ fs/cifs/cifssmb.c                                       |    2=20
+ fs/cifs/smb2ops.c                                       |   14=20
+ fs/cifs/transport.c                                     |   10=20
+ fs/dcache.c                                             |   24 -
+ fs/fuse/file.c                                          |   13=20
+ fs/nfs/filelayout/filelayout.c                          |    2=20
+ fs/nfs/nfs4state.c                                      |    4=20
+ fs/notify/fsnotify.c                                    |   41 ++
+ fs/nsfs.c                                               |    3=20
+ fs/overlayfs/copy_up.c                                  |    6=20
+ fs/overlayfs/file.c                                     |    5=20
+ fs/overlayfs/overlayfs.h                                |    2=20
+ fs/proc/base.c                                          |    5=20
+ include/asm-generic/mm_hooks.h                          |    1=20
+ include/linux/bpf.h                                     |    1=20
+ include/linux/dcache.h                                  |    2=20
+ include/linux/fsnotify.h                                |   33 --
+ include/linux/fsnotify_backend.h                        |    4=20
+ include/linux/mlx5/driver.h                             |    1=20
+ include/linux/of.h                                      |    4=20
+ include/linux/pci.h                                     |    2=20
+ include/linux/skbuff.h                                  |    9=20
+ include/net/flow_offload.h                              |    2=20
+ include/net/ip6_fib.h                                   |    3=20
+ include/uapi/linux/fuse.h                               |    2=20
+ include/video/udlfb.h                                   |    7=20
+ kernel/bpf/hashtab.c                                    |   23 +
+ kernel/bpf/inode.c                                      |    2=20
+ kernel/bpf/syscall.c                                    |    5=20
+ kernel/trace/trace_events.c                             |    3=20
+ kernel/trace/trace_probe.c                              |   13=20
+ mm/mmap.c                                               |   15=20
+ net/core/dev.c                                          |    2=20
+ net/core/flow_offload.c                                 |    7=20
+ net/core/rtnetlink.c                                    |   16 -
+ net/ipv6/ip6_fib.c                                      |   12=20
+ net/ipv6/route.c                                        |   58 ++-
+ net/tipc/core.c                                         |   14=20
+ net/vmw_vsock/virtio_transport.c                        |   13=20
+ net/vmw_vsock/virtio_transport_common.c                 |    7=20
+ scripts/gcc-plugins/arm_ssp_per_task_plugin.c           |    2=20
+ tools/objtool/Makefile                                  |    3=20
+ tools/perf/util/intel-pt-decoder/intel-pt-decoder.c     |   31 +-
+ 137 files changed, 1366 insertions(+), 648 deletions(-)
 
+Adam Ford (2):
+      ARM: dts: imx6q-logicpd: Reduce inrush current on USBH1
+      ARM: dts: imx6q-logicpd: Reduce inrush current on start
+
+Adrian Hunter (3):
+      perf intel-pt: Fix instructions sampling rate
+      perf intel-pt: Fix improved sample timestamp
+      perf intel-pt: Fix sample timestamp wrt non-taken branches
+
+Al Viro (1):
+      dcache: sort the freeing-without-RCU-delay mess for good.
+
+Alexander Shishkin (2):
+      stm class: Fix channel bitmap on 32-bit systems
+      intel_th: msu: Fix single mode with IOMMU
+
+Amir Goldstein (2):
+      ovl: fix missing upper fs freeze protection on copy up for ioctl
+      fsnotify: fix unlink performance regression
+
+Angus Ainslie (Purism) (1):
+      dmaengine: imx-sdma: Only check ratio on parts that support 1:1
+
+Ard Biesheuvel (1):
+      fbdev/efifb: Ignore framebuffer memmap entries that lack any memory t=
+ypes
+
+Arnd Bergmann (2):
+      media: seco-cec: fix building with RC_CORE=3Dm
+      y2038: Make CONFIG_64BIT_TIME unconditional
+
+Bodong Wang (1):
+      net/mlx5: Fix peer pf disable hca command
+
+Chenbo Feng (1):
+      bpf: relax inode permission check for retrieving bpf program
+
+Chris Packham (1):
+      gcc-plugins: arm_ssp_per_task_plugin: Fix for older GCC < 6
+
+Christoph Hellwig (1):
+      md: add a missing endianness conversion in check_sb_changes
+
+Christoph Probst (1):
+      cifs: fix strcat buffer overflow and reduce raciness in smb21_set_opl=
+ock_level()
+
+Colin Ian King (1):
+      phy: ti-pipe3: fix missing bit-wise or operator when assigning val
+
+Damien Le Moal (1):
+      dm zoned: Fix zone report handling
+
+Daniel Borkmann (2):
+      bpf: add map_lookup_elem_sys_only for lookups from syscall side
+      bpf, lru: avoid messing with eviction heuristics upon syscall lookup
+
+Daniele Palmas (1):
+      net: usb: qmi_wwan: add Telit 0x1260 and 0x1261 compositions
+
+Dave Hansen (1):
+      x86/mpx, mm/core: Fix recursive munmap() corruption
+
+Dmitry Osipenko (3):
+      clk: tegra: Fix PLLM programming on Tegra124+ when PMC overrides divi=
+der
+      iommu/tegra-smmu: Fix invalid ASID bits on Tegra30/114
+      memory: tegra: Fix integer overflow on tick value calculation
+
+Dmytro Linkin (2):
+      net/mlx5e: Add missing ethtool driver info for representors
+      net/mlx5e: Additional check for flow destination comparison
+
+Edward Cree (1):
+      flow_offload: support CVLAN match
+
+Elazar Leibovich (1):
+      tracing: Fix partial reading of trace event's id file
+
+Eric Dumazet (2):
+      ipv6: prevent possible fib6 leaks
+      net: avoid weird emergency message
+
+Florian Fainelli (2):
+      net: Always descend into dsa/
+      MIPS: perf: Fix build with CONFIG_CPU_BMIPS5000 enabled
+
+Greg Kroah-Hartman (1):
+      Linux 5.1.5
+
+Hans de Goede (1):
+      brcmfmac: Add DMI nvram filename quirk for ACEPC T8 and T11 mini PCs
+
+Helen Koike (2):
+      dm init: fix max devices/targets checks
+      dm ioctl: fix hang in early create error condition
+
+Helge Deller (6):
+      parisc: Export running_on_qemu symbol for modules
+      parisc: Skip registering LED when running in QEMU
+      parisc: Add memory barrier to asm pdc and sync instructions
+      parisc: Allow live-patching of __meminit functions
+      parisc: Use PA_ASM_LEVEL in boot code
+      parisc: Rename LEVEL to PA_ASM_LEVEL to avoid name clash with DRBD co=
+de
+
+Hou Tao (1):
+      brd: re-enable __GFP_HIGHMEM in brd_insert_page()
+
+James Prestwood (1):
+      PCI: Mark Atheros AR9462 to avoid bus reset
+
+Janusz Krzysztofik (1):
+      media: ov6650: Fix sensor possibly not detected on probe
+
+Jason Gunthorpe (1):
+      RDMA/mlx5: Use get_zeroed_page() for clock_info
+
+Jean-Philippe Brucker (1):
+      PCI: Init PCIe feature bits for managed host bridge alloc
+
+Jeff Layton (1):
+      ceph: flush dirty inodes before proceeding with remount
+
+Jianbo Liu (1):
+      net/mlx5e: Fix calling wrong function to get inner vlan key and mask
+
+Jisheng Zhang (1):
+      PCI/AER: Change pci_aer_init() stub to return void
+
+John David Anglin (1):
+      parisc: Add memory clobber to TLB purges
+
+John Garry (1):
+      driver core: Postpone DMA tear-down until after devres release for pr=
+obe failure
+
+Jonas Karlman (1):
+      clk: rockchip: fix wrong clock definitions for rk3328
+
+Jorge E. Moreira (1):
+      vsock/virtio: Initialize core virtio vsock before registering the dri=
+ver
+
+Josh Poimboeuf (1):
+      x86_64: Add gap to int3 to allow for call emulation
+
+Junwei Hu (2):
+      tipc: switch order of device registration to fix a crash
+      tipc: fix modprobe tipc failed after switch order of device registrat=
+ion
+
+Kazufumi Ikeda (1):
+      PCI: rcar: Add the initialization of PCIe link in resume_noirq()
+
+Kirill Smelkov (1):
+      fuse: Add FOPEN_STREAM to use stream_open()
+
+Leo Yan (1):
+      clk: hi3660: Mark clk_gate_ufs_subsys as critical
+
+Leon Romanovsky (1):
+      RDMA/ipoib: Allow user space differentiate between valid dev_port
+
+Liu Bo (1):
+      fuse: honor RLIMIT_FSIZE in fuse_file_fallocate
+
+Lyude Paul (1):
+      PCI: Reset Lenovo ThinkPad P50 nvgpu at boot if necessary
+
+Martin Wilck (1):
+      dm mpath: always free attached_handler_name in parse_path()
+
+Masami Hiramatsu (1):
+      tracing: probeevent: Fix to make the type of $comm string
+
+Michael Lass (1):
+      dm: make sure to obey max_io_len_target_boundary
+
+Miklos Szeredi (1):
+      fuse: fix writepages on 32bit
+
+Mikulas Patocka (5):
+      udlfb: delete the unused parameter for dlfb_handle_damage
+      udlfb: fix sleeping inside spinlock
+      udlfb: introduce a rendering mutex
+      dm delay: fix a crash when invalid device is specified
+      dm integrity: correctly calculate the size of metadata area
+
+Milan Broz (1):
+      dm crypt: move detailed message into debug level
+
+Ming Lei (1):
+      blk-mq: free hw queue's resource in hctx's release handler
+
+Nathan Chancellor (1):
+      objtool: Allow AR to be overridden with HOSTAR
+
+NeilBrown (2):
+      Revert "MD: fix lock contention for flush bios"
+      md: batch flush requests.
+
+Nigel Croxon (1):
+      md/raid: raid5 preserve the writeback action after the parity check
+
+Nikolai Kostrigin (1):
+      PCI: Mark AMD Stoney Radeon R7 GPU ATS as broken
+
+Nikos Tsironis (1):
+      dm cache metadata: Fix loading discard bitset
+
+Olga Kornievskaia (1):
+      PNFS fallback to MDS if no deviceid found
+
+Owen Chen (1):
+      clk: mediatek: Disable tuner_en before change PLL rate
+
+Pan Bian (1):
+      p54: drop device reference count if fails to enable device
+
+Paul Moore (1):
+      proc: prevent changes to overridden credentials
+
+Peter Zijlstra (2):
+      x86_64: Allow breakpoints to emulate call instructions
+      ftrace/x86_64: Emulate call function while updating in breakpoint han=
+dler
+
+Phong Tran (1):
+      of: fix clang -Wunsequenced for be32_to_cpu()
+
+Pieter Jansen van Vuuren (1):
+      nfp: flower: add rcu locks when accessing netdev for tunnels
+
+Qu Wenruo (1):
+      btrfs: reloc: Fix NULL pointer dereference due to expanded reloc_root=
+ lifespan
+
+Ronnie Sahlberg (1):
+      cifs: fix credits leak for SMB1 oplock breaks
+
+Sabrina Dubroca (1):
+      rtnetlink: always put IFLA_LINK for links with a link-netnsid
+
+Saeed Mahameed (2):
+      net/mlx5: Imply MLXFW in mlx5_core
+      net/mlx5e: Fix ethtool rxfh commands when CONFIG_MLX5_EN_RXNFC is dis=
+abled
+
+Song Liu (1):
+      Revert "Don't jump to compute_result state from check_result state"
+
+Stefan M=E4tje (2):
+      PCI: Factor out pcie_retrain_link() function
+      PCI: Work around Pericom PCIe-to-PCI bridge Retrain Link erratum
+
+Stefano Garzarella (1):
+      vsock/virtio: free packets during the socket release
+
+Steve Longerbeam (4):
+      media: imx: csi: Allow unknown nearest upstream entities
+      media: imx: Clear fwnode link struct for each endpoint iteration
+      media: imx: Rename functions that add IPU-internal subdevs
+      media: imx: Don't register IPU subdevs/links if CSI port missing
+
+Steve Twiss (1):
+      regulator: core: fix error path for regulator_set_voltage_unlocked
+
+Tingwei Zhang (1):
+      stm class: Fix channel free in stm output free path
+
+Vadim Pasternak (2):
+      mlxsw: core: Prevent QSFP module initialization for old hardware
+      mlxsw: core: Prevent reading unsupported slave address from SFP EEPROM
+
+Wei Wang (1):
+      ipv6: fix src addr routing with the exception table
+
+Willem de Bruijn (1):
+      net: test nouarg before dereferencing zerocopy pointers
+
+Yifeng Li (9):
+      fbdev: sm712fb: fix brightness control on reboot, don't set SR30
+      fbdev: sm712fb: fix VRAM detection, don't set SR70/71/74/75
+      fbdev: sm712fb: fix white screen of death on reboot, don't set CR3B-C=
+R3F
+      fbdev: sm712fb: fix boot screen glitch when sm712fb replaces VGA
+      fbdev: sm712fb: fix crashes during framebuffer writes by correctly ma=
+pping VRAM
+      fbdev: sm712fb: fix support for 1024x768-16 mode
+      fbdev: sm712fb: use 1024x768 by default on non-MIPS, fix garbled disp=
+lay
+      fbdev: sm712fb: fix crashes and garbled display during DPMS modesetti=
+ng
+      fbdev: sm712fb: fix memory frequency by avoiding a switch/case fallth=
+rough
+
+YueHaibing (1):
+      ppp: deflate: Fix possible crash in deflate_init
+
+Yufen Yu (1):
+      md: add mddev->pers to avoid potential NULL pointer dereference
+
+Yunjian Wang (1):
+      net/mlx4_core: Change the error print to info print
+
+ZhangXiaoxu (1):
+      NFS4: Fix v4.0 client state corruption when mount
+
+
+--DocE+STaALJfprDB
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAlzpdD0ACgkQONu9yGCS
+aT4gQRAAt1aSfEimYR/8JXEwviawBAcgmEC0IiNHzkMKNWkUdot2p/1vdrfJ5sJV
+WbOoNSE1EYXMfQ2j5SAyfI+o/uKMhJOBip8miFDQeITyE+eFhWKs5LAXscgRXfvU
+ZXXnAtscr2qgZY7Lyv/uXkA4rjJDQDdXsiGiQtnC/N8gTE35AuCef7nSrPAV7K5w
+kXnYKEmRjkOJZEPI8Mk449zgNzPf6bUvV6e1cRs6xSfCY5HVWnNiKLWIU1TJBGB7
+cTqkEDAV41WxPbYbrje/1xlDNMXYtvyhmHlrSqwDfzU8m0iaM6WY9CwI+o4gIbQU
+xNofk7+5PRCc7D/wdxJWIgoPvOd1ExojsqmbYkhHNMwpUCN64p+B42TP2qmFxpK8
+CkdUgBa/v/ansGdXHHxDW/ZYsOrJzVyeGVK0oTUy1NptUHmmrcScGvISzfl7nIQr
+jljVTWMF+F7+DcY3lJWoRfkILv9q82Fds3xYOpYS85wQqSpi5xEdePkWH2Cu/WL6
+6wc5HUMF8gAvrARKQF9vyo+i5fSNcpnWjSU9KP5haU98Lh1IgonRz78dqgu2RVCG
+klR8cT/3ZdthxTBTb8bn1YlONGr9tePUpjYY+Rjz4BU4uBqBeO7RlIa1v8CazDY0
+3K1ccZ73I17QYovWU9bF/DLhUfnIAZEApT3nBJgGLXnKpIuQ43w=
+=pppN
+-----END PGP SIGNATURE-----
+
+--DocE+STaALJfprDB--
