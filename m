@@ -2,94 +2,110 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B12B0C07542
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:19:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A18AFC07542
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 873AA20862
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:19:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7594520862
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:20:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oQzOmXyi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbfEYRTd (ORCPT
+        id S1727215AbfEYRUH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 13:19:33 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:51064 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726001AbfEYRTd (ORCPT
+        Sat, 25 May 2019 13:20:07 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:43035 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726001AbfEYRUH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 13:19:33 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 3EF86803C0;
-        Sat, 25 May 2019 19:19:30 +0200 (CEST)
-Date:   Sat, 25 May 2019 19:19:28 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH 00/33] fbcon notifier begone!
-Message-ID: <20190525171928.GA13526@ravnborg.org>
-References: <20190524085354.27411-1-daniel.vetter@ffwll.ch>
+        Sat, 25 May 2019 13:20:07 -0400
+Received: by mail-pf1-f193.google.com with SMTP id c6so7159341pfa.10
+        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 10:20:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=M6D54Y9cAdwUjftrKOdf9/RVXWKvemPtHhP4qHuwDPc=;
+        b=oQzOmXyiswoQAHAKdEwj0INIkSyCBfdhsp23Y8yvpbSv8OJ2y/xrSB3fNaGfHTEsPE
+         W494Lrnnzdh6Pc5FTSRe2bSKc3BFDH80azlAPda+MXGuMa/F+kilgPgcAX4czQo+zxvB
+         hBHLzWpxzkarYsDEMelf7pCRrYIeYMZ9TPPWuGytLZci/MZU8ob3V4HFNUIZrS6t3b9q
+         lR5iMBZ9pxPp8ZCSK8t31Ia/Mwd6LEjyTla4/g+T6LEvGx61Lo2vtisNEmwtlQVwU8Ej
+         euRNnaTfXzldXKhMeAeihdQCFngYhzDGMutFTVlrAKwsot0DAccO2/xg51hL3PARDTjl
+         KzkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=M6D54Y9cAdwUjftrKOdf9/RVXWKvemPtHhP4qHuwDPc=;
+        b=qg8b0c4SqUnb0n9mLaFii6W/FuqwBVCafpqX079ojNrJUCtzm2HeJFjJcY8ErbL7el
+         G//YoVVo1B9x/c6cAeE1ZC1Hh0Owe7NpgHENNMmiu3LJSEXTvi8BlGr6b6ypqe61AuIM
+         thGOC0B9ixynBqGM/xY+5SHsQ5Xq9ZK0ailk8L1tTDZAiaZMVsnaDDGiKSqrm/eSmxVt
+         5jZPhrdEUkJnmrcVnNahRK3rwY3ArVuq3M6ZRXVs9uwev9+gqUUbtxjnl8qnCiUJ3kcO
+         3gjrFJ7DXw9xjDkX5KO3pBkNvFyRbKwRJjXfhKNYt++Sptrif1+VRCMpWmmOuwq1JVwj
+         CJZA==
+X-Gm-Message-State: APjAAAUWLPXs7/iDNq/yw5g3J9ZnWOpPZzAZg4DKQ6d1wNNFeZslEwjw
+        pZU9jpBs/hRHZQaet9sJhB4=
+X-Google-Smtp-Source: APXvYqyhqu3gDCAGd3Nfla0MLJAy5xt2tYnQsgvABDULwzrRsJo83IWwUZxnXD//ER5h4B+4Id/SBw==
+X-Received: by 2002:a63:c24c:: with SMTP id l12mr114354053pgg.173.1558804806540;
+        Sat, 25 May 2019 10:20:06 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.92.73])
+        by smtp.gmail.com with ESMTPSA id m9sm6861513pgd.23.2019.05.25.10.20.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 25 May 2019 10:20:05 -0700 (PDT)
+Date:   Sat, 25 May 2019 22:50:00 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] Staging: rtl8723bs: hal: fix warning possible condition with
+ no effect (if == else)
+Message-ID: <20190525172000.GA18730@hari-Inspiron-1545>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190524085354.27411-1-daniel.vetter@ffwll.ch>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
-        a=ZE5gt9_PBDywe7APGxUA:9 a=FsULZnL4HXkDZy8N:21 a=dmQ2iDlEpyUWv4jE:21
-        a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel.
+this patch fixes below coccicheck warning
 
-Good work, nice cleanup all over.
+./drivers/staging/rtl8723bs/hal/odm_DIG.c:499:1-3: WARNING: possible
+condition with no effect (if == else)
 
-A few comments to a few patches - not something that warrant a
-new series to be posted as long as it is fixed before the patches are
-applied.
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/staging/rtl8723bs/hal/odm_DIG.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
+diff --git a/drivers/staging/rtl8723bs/hal/odm_DIG.c b/drivers/staging/rtl8723bs/hal/odm_DIG.c
+index d7d87fa..70d98c5 100644
+--- a/drivers/staging/rtl8723bs/hal/odm_DIG.c
++++ b/drivers/staging/rtl8723bs/hal/odm_DIG.c
+@@ -496,13 +496,8 @@ void odm_DIGInit(void *pDM_VOID)
+ 	/* To Initi BT30 IGI */
+ 	pDM_DigTable->BT30_CurIGI = 0x32;
+ 
+-	if (pDM_Odm->BoardType & (ODM_BOARD_EXT_PA|ODM_BOARD_EXT_LNA)) {
+-		pDM_DigTable->rx_gain_range_max = DM_DIG_MAX_NIC;
+-		pDM_DigTable->rx_gain_range_min = DM_DIG_MIN_NIC;
+-	} else {
+-		pDM_DigTable->rx_gain_range_max = DM_DIG_MAX_NIC;
+-		pDM_DigTable->rx_gain_range_min = DM_DIG_MIN_NIC;
+-	}
++	pDM_DigTable->rx_gain_range_max = DM_DIG_MAX_NIC;
++	pDM_DigTable->rx_gain_range_min = DM_DIG_MIN_NIC;
+ 
+ }
+ 
+-- 
+2.7.4
 
-> btw for future plans: I think this is tricky enough (it's old code and all
-> that) that we should let this soak for 2-3 kernel releases. I think the
-> following would be nice subsequent cleanup/fixes:
-> 
-> - push the console lock completely from fbmem.c to fbcon.c. I think we're
->   mostly there with prep, but needs to pondering of corner cases.
-I wonder - should this code consistently use __acquire() etc so we could
-get a little static analysis help for the locking?
-
-I have not played with this for several years and I do not know the
-maturity of this today.
-
-> - move fbcon.c from using indices for tracking fb_info (and accessing
->   registered_fbs without proper locking all the time) to real fb_info
->   pointers with the right amount of refcounting. Mostly motivated by the
->   fun I had trying to simplify fbcon_exit().
-> 
-> - make sure that fbcon call lock/unlock_fb when it calls fbmem.c
->   functions, and sprinkle assert_lockdep_held around in fbmem.c. This
->   needs the console_lock cleanups first.
-> 
-> But I think that's material for maybe next year or so.
-Or maybe after next kernel release.
-Could we put this nice plan into todo.rst or similar so we do not have
-to hunt it down by asking google?
-
-For the whole series you can add my:
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-
-Some parts are reviewed as "this looks entirely correct", other parts
-I would claim that I actually understood.
-And after having spend some hours on this a r-b seems in order.
-
-	Sam
