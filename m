@@ -2,110 +2,88 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4376AC46470
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 01:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2D2C282E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 01:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19A51217D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 01:27:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MXuSHxcr"
+	by mail.kernel.org (Postfix) with ESMTP id 2E97A217D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 01:34:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbfEYB1C (ORCPT
+        id S1726443AbfEYBd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 21:27:02 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:40269 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726220AbfEYB1C (ORCPT
+        Fri, 24 May 2019 21:33:58 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:33549 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726220AbfEYBd6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 21:27:02 -0400
-Received: by mail-qk1-f195.google.com with SMTP id q197so10106537qke.7;
-        Fri, 24 May 2019 18:27:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=AzraHFE6wMYG71k7o5b4Wv/r7uKs8Bdv2wavFnwb5sY=;
-        b=MXuSHxcr3kQqN04w7FF8uyXbTEVHLiCIpTF24nNdD1DkgKtq4oZEUKBLzMBYaAnOpM
-         Nkvo0yWKSG7UIR+R2dqYJAOt9B5sRcVwgTE1jNBecCp/MrT5MP4nXgUjYTX5RZMAce1U
-         3kSRtBR+86x293fBDv0c1OAppdvGKTE6TjbA0SSVmvod5tRFAiivgvoXSszotzPhNaD1
-         z+f7NHDoR5zaAp0LSM3vpKHqz4dcLR01qbcJwSS0PMVW1JfllZiBXWbTXMbKtfTXB9V3
-         51iMreCGM2wfy3kE0z/M882zlV5w2Cv+YS0ktUenT7dz4ndc/ukU2J//ESIw0H9/ZUqZ
-         sGPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AzraHFE6wMYG71k7o5b4Wv/r7uKs8Bdv2wavFnwb5sY=;
-        b=r0q8PkV9kObm8itdNlfpcwJ7jPS2QamGpePSHZ9ER1GZ6H2c8Jf3nGVFVDjdHMQ38U
-         Zrm6e+0ojenBFLdCGiFyGCkMgxLhPIY/fxdTCQ6s0xihpmv1JvVK2UGGm6OsOJEt0ILF
-         5cMDa0k70qqAREFCGT5Nv1DW3nEWxjphrA4KM4jNZi6ENS0w4bKf1Iwx6LTKMcFtqH0x
-         5aKamCnLFgczIYPyZbqjsRGOe77SmxvzRBENpfzox3EaMqBug/2o+fkCwN/IQw1qPIR2
-         dG/gnbWzRtsaubMSKiq2d9K2uCHbAMcBopDREyI9XQJbJfiRLUMd+7yVJxZq5Vyn+hZS
-         Xgrg==
-X-Gm-Message-State: APjAAAVTF5ZQWWnfIB2jLQFCM8RfH2dbHkdkG3Y/Ad8EKnxK3JFZ8avI
-        ipNIAc2r+OEhaUeYMKVU70I=
-X-Google-Smtp-Source: APXvYqxp0RKzd8fLOKxLWCeIvyLUlr6GJyUlqGQb8MD83JBEVlGRLQnd7AOyRANibvoyirIffixJew==
-X-Received: by 2002:a0c:d023:: with SMTP id u32mr28733854qvg.23.1558747621134;
-        Fri, 24 May 2019 18:27:01 -0700 (PDT)
-Received: from renatolg ([186.220.0.156])
-        by smtp.gmail.com with ESMTPSA id j14sm1461656qtp.40.2019.05.24.18.26.57
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 24 May 2019 18:27:00 -0700 (PDT)
-Date:   Fri, 24 May 2019 22:26:55 -0300
-From:   Renato Lui Geh <renatogeh@gmail.com>
-To:     lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
-        knaack.h@gmx.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org,
-        stefan.popa@analog.com, alexandru.Ardelean@analog.com,
-        robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com,
-        devicetree@vger.kernel.org
-Subject: [PATCH v2 2/2] MAINTAINERS: add entry for ad7780 adc driver
-Message-ID: <7ccb64ba4da8f24981009187e975d71372d62fbf.1558746978.git.renatogeh@gmail.com>
-References: <cover.1558746978.git.renatogeh@gmail.com>
+        Fri, 24 May 2019 21:33:58 -0400
+Received: from [111.196.77.193] (helo=[192.168.1.104])
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <hui.wang@canonical.com>)
+        id 1hULZK-00018K-06; Sat, 25 May 2019 01:33:54 +0000
+Subject: =?UTF-8?B?UmU6IOetlOWkjTog562U5aSNOiDnrZTlpI06IFtQQVRDSF0gaW5wdXQ6?=
+ =?UTF-8?Q?_alps-fix_the_issue_the_special_alps_trackpoint_do_not_work=2e?=
+To:     Peter Hutterer <peter.hutterer@who-t.net>
+Cc:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>,
+        Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>,
+        dmitry.torokhov@gmail.com, XiaoXiao Liu <sliuuxiaonxiao@gmail.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Xiaojian Cao <xiaojian.cao@cn.alps.com>,
+        "zhangfp1@lenovo.com" <zhangfp1@lenovo.com>
+References: <OSBPR01MB48550B43F78BBFBDC20D414DDA000@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+ <20190522074030.64sy7xt3wnomtxjb@pali> <20190523060154.GA10526@jelly>
+ <38ec4a40-d51a-aeb1-a5e8-dbaed1142298@canonical.com>
+ <20190524053648.GA16379@jelly>
+ <d1fd207d-68e1-0b57-f0dc-c254bfc9352c@canonical.com>
+ <20190524072648.6zqgz7rpwpcv22pb@pali>
+ <d0b659bf-e6ed-bbbb-a3ab-17daf525a577@canonical.com>
+ <20190524093729.GB1119@jelly>
+ <f0c2dff9-519e-d54d-4cd0-2be666656dc2@canonical.com>
+ <20190524105822.GA3358@jelly>
+From:   Hui Wang <hui.wang@canonical.com>
+Message-ID: <721b91b0-f231-5f7d-a438-09dd85f63513@canonical.com>
+Date:   Sat, 25 May 2019 09:33:46 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190524105822.GA3358@jelly>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <cover.1558746978.git.renatogeh@gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a MAINTAINERS entry for the AD7780 ADC driver.
 
-Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
----
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
+On 2019/5/24 下午6:58, Peter Hutterer wrote:
+> On Fri, May 24, 2019 at 06:43:58PM +0800, Hui Wang wrote:
+>> On 2019/5/24 下午5:37, Peter Hutterer wrote:
+>>> On Fri, May 24, 2019 at 03:37:57PM +0800, Hui Wang wrote:
+>>>>
+>> OK, that is sth we need to do.  But anyway it is a bit risky to backport
+>> that much code and the whole folder of quirks to libinput 1.10.4,  we need
+>> to do lots of test to make sure there is no regression on other machines.
+>>
+>> Probably we only need to keep the quirks/30-vendor-alps.quirks to 1.10.4 and
+>> drop other quirks, that will be better for our testing effort.
+> might be worth looking at what is in 1.10.7, e.g.  a3b3e85c0e looks like it
+> may be of interest. That one suggests the range on some ALPS devices is over
+> 100, so testing with 5-25 may really not have had any effect.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 54c8e14fae98..d12685c5b09a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -880,6 +880,15 @@ S:	Supported
- F:	drivers/iio/adc/ad7768-1.c
- F:	Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.txt
- 
-+ANALOG DEVICES INC AD7780 DRIVER
-+M:	Michael Hennerich <Michael.Hennerich@analog.com>
-+M:	Renato Lui Geh <renatogeh@gmail.com>
-+L:	linux-iio@vger.kernel.org
-+W:	http://ez.analog.com/community/linux-device-drivers
-+S:	Supported
-+F:	drivers/iio/adc/ad7780.c
-+F:	Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
-+
- ANALOG DEVICES INC AD9389B DRIVER
- M:	Hans Verkuil <hans.verkuil@cisco.com>
- L:	linux-media@vger.kernel.org
--- 
-2.21.0
+Oh, looks exactly the same as our issue, will have a try with it.
 
+Thanks,
+
+Hui.
+
+
+>
+> Cheers,
+>     Peter
+>
