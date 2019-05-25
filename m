@@ -2,109 +2,216 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A73C07542
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 19:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D4B0C07542
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 19:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 365D220851
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 19:02:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49B5F20863
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 19:13:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="LI/UOUKE"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="AH5if3JP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727433AbfEYTCM (ORCPT
+        id S1727427AbfEYTNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 15:02:12 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53939 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726343AbfEYTCM (ORCPT
+        Sat, 25 May 2019 15:13:31 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:48590 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725791AbfEYTNb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 15:02:12 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 198so12388316wme.3
-        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 12:02:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FMgRwBoum0Ejn339EXDQoU9BYTUMpQqabDlvOkJFkRA=;
-        b=LI/UOUKEetrDqZGCWdjAdtJcMs/WfNEF/yvH0JEZyz9Bs4zcUNdVEcw5EX9KDVAK0I
-         Hmp8mN3pH1u6IKYCMkFQ7FNhBx5xhAiVUB8KjboEdh2NsZG8eKLdtzRkltjRKiTp/Cs1
-         Y6dncQe7+lN/1Ia9pYnByRlCp1sPe1IkVhKzUczHmlHn0z84O7RHWJGRI0qzG0ZNBiK9
-         LGm8sDARfU4nAVttZAXUXxABSceTuj7pflgl8fUWEJnekuRma/b4GXocdaHFk7pHqtIH
-         zK6w+le3nOIyHZwlCNRD7y9FPQhbo3Ogv5/0TG7O6tg1+A2zdEtizmI9k90fIgYW67tD
-         PmDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FMgRwBoum0Ejn339EXDQoU9BYTUMpQqabDlvOkJFkRA=;
-        b=VudPokIwf3cwHu/YTpXKlEcUqvs9VUPZP7lq8YIPSxvHDU1LAt5XceVyQK79t2PHu0
-         e9eWcGHySKs50M0iqK/C6DJRBmmQrxlatw8x23fVQh1A1JpJOCkC1ND/4549RiFkZhH4
-         YncExwsC4F2XJCpzXFzB/LqbDHcgxJMwWzLwmbb10txbzGVXAKhncW1L6fyBsjejRmPQ
-         HDGtwuh4yPUNgVyIyEx6jhrcbMIWiUKoZl22haz5dyjv4eCY6rq2bxU/RIowwj6vr2/t
-         Ud4+GA3Fldm89QH5b7vN1+azO1WBZHd32sBOGk3FQpok7QzE3UTxbmiNdbdUBiCN3arO
-         TbhA==
-X-Gm-Message-State: APjAAAV7wCRklloXlTeS4Q5QNP6KB2rb709+dmPiE2ypdVa9+kkb0Prv
-        kWYmorGPUN+rjwcH2y41OLk=
-X-Google-Smtp-Source: APXvYqzsGZFaNFf0zprRY/s7WMFdZxHwCQ2PrEP35RUVc95UKMBki5ybO45bWRmlM2Em8nC8+Ua8Fw==
-X-Received: by 2002:a1c:2dcd:: with SMTP id t196mr20662035wmt.141.1558810929981;
-        Sat, 25 May 2019 12:02:09 -0700 (PDT)
-Received: from blackbox.darklights.net (p200300F133DDA4007CB8841254CD64FD.dip0.t-ipconnect.de. [2003:f1:33dd:a400:7cb8:8412:54cd:64fd])
-        by smtp.googlemail.com with ESMTPSA id f2sm6870426wme.12.2019.05.25.12.02.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 25 May 2019 12:02:09 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     linux-amlogic@lists.infradead.org, khilman@baylibre.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 0/4] ARM: dts: meson8b: add VDDEE / mali-supply
-Date:   Sat, 25 May 2019 21:02:00 +0200
-Message-Id: <20190525190204.7897-1-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.21.0
+        Sat, 25 May 2019 15:13:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1558811606; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vnk800G1JVnIKGZ4wjv2ZwB3JURC8YSA1aiWxwD8qPY=;
+        b=AH5if3JPmyCbQgwcfuJeUGYe6Pj4ZsMs3TLhc1G/Jx0jb4IMDepAHoFWjclTE168W2rvzu
+        mSbk8Qdcc68fs/w9N8TkKHbSmp0licq6b0R55TSdQc+0Zbit4TVFzMBzqx2rwgRYjjggzj
+        5Mwz2vff2kCChadmRWi0X2pm358VaP8=
+Date:   Sat, 25 May 2019 21:13:16 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v12 03/13] dt-bindings: Add doc for the Ingenic TCU
+ drivers
+To:     Rob Herring <robh@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mathieu Malaterre <malat@debian.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-clk@vger.kernel.org, od@zcrc.me
+Message-Id: <1558811596.2016.1@crapouillou.net>
+In-Reply-To: <20190524202103.GA15650@bogus>
+References: <20190521145141.9813-1-paul@crapouillou.net>
+        <20190521145141.9813-4-paul@crapouillou.net> <20190524202103.GA15650@bogus>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-EC-100 and Odroid-C1 use a "copy" of the VCCK regulator as "VDDEE"
-regulator. VDDEE supplies the Mali GPU and various other bits within
-the SoC.
-
-The VDDEE regulator is not exclusive to the Mali GPU so it must not
-change it's voltage. The GPU OPP table has a fixed voltage for all
-frequencies of 1.10V. This matches with what u-boot sets on my EC-100
-and Odroid-C1.
-
-Dependencies:
-- compile time: patch #4 depends on my other patch "ARM: meson8b-mxq:
-  better support for the TRONFY MXQ" from [0]
-- runtime: we don't want the kernel to change the output of the VDDEE
-  regulator to the maximum value. Thus the PWM driver has to be able
-  to read the PWM period and duty cycle from u-boot. This is supported
-  with my series called "pwm-meson: cleanups and improvements" from [1]
 
 
-[0] https://patchwork.kernel.org/patch/10960283/
-[1] https://patchwork.kernel.org/cover/10961073/
+Le ven. 24 mai 2019 =E0 22:21, Rob Herring <robh@kernel.org> a =E9crit :
+> On Tue, May 21, 2019 at 04:51:31PM +0200, Paul Cercueil wrote:
+>>  Add documentation about how to properly use the Ingenic TCU
+>>  (Timer/Counter Unit) drivers from devicetree.
+>>=20
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  ---
+>>=20
+>>  Notes:
+>>      v4: New patch in this series. Corresponds to V2 patches 3-4-5=20
+>> with
+>>       added content.
+>>=20
+>>      v5: - Edited PWM/watchdog DT bindings documentation to point to=20
+>> the new
+>>         document.
+>>       - Moved main document to
+>>         Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+>>       - Updated documentation to reflect the new devicetree bindings.
+>>=20
+>>      v6: - Removed PWM/watchdog documentation files as asked by=20
+>> upstream
+>>       - Removed doc about properties that should be implicit
+>>       - Removed doc about ingenic,timer-channel /
+>>         ingenic,clocksource-channel as they are gone
+>>       - Fix WDT clock name in the binding doc
+>>       - Fix lengths of register areas in watchdog/pwm nodes
+>>=20
+>>      v7: No change
+>>=20
+>>      v8: - Fix address of the PWM node
+>>       - Added doc about system timer and clocksource children nodes
+>>=20
+>>      v9: - Remove doc about system timer and clocksource children
+>>         nodes...
+>>      - Add doc about ingenic,pwm-channels-mask property
+>>=20
+>>      v10: No change
+>>=20
+>>      v11: Fix info about default value of ingenic,pwm-channels-mask
+>>=20
+>>      v12: Drop sub-nodes for now; they will be introduced in a=20
+>> follow-up
+>>      	 patchset.
+>=20
+> Why? I believe I acked them.
 
+The patchset was too big, and I've already been trying to get it=20
+upstream for
+more than one year now. So I cut it in half in hope that it'll be=20
+easier to
+upstream it that way.
 
-Martin Blumenstingl (4):
-  ARM: dts: meson8b: add the PWM_D output pin
-  ARM: dts: meson8b: ec100: add the VDDEE regulator
-  ARM: dts: meson8b: odroidc1: add the VDDEE regulator
-  ARM: dts: meson8b: mxq: add the VDDEE regulator
+>>=20
+>>   .../devicetree/bindings/timer/ingenic,tcu.txt | 59=20
+>> +++++++++++++++++++
+>>   1 file changed, 59 insertions(+)
+>>   create mode 100644=20
+>> Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+>>=20
+>>  diff --git=20
+>> a/Documentation/devicetree/bindings/timer/ingenic,tcu.txt=20
+>> b/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+>>  new file mode 100644
+>>  index 000000000000..d101cd72c9b0
+>>  --- /dev/null
+>>  +++ b/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+>>  @@ -0,0 +1,59 @@
+>>  +Ingenic JZ47xx SoCs Timer/Counter Unit devicetree bindings
+>>  +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>>  +
+>>  +For a description of the TCU hardware and drivers, have a look at
+>>  +Documentation/mips/ingenic-tcu.txt.
+>>  +
+>>  +Required properties:
+>>  +
+>>  +- compatible: Must be one of:
+>>  +  * "ingenic,jz4740-tcu"
+>>  +  * "ingenic,jz4725b-tcu"
+>>  +  * "ingenic,jz4770-tcu"
+>>  +- reg: Should be the offset/length value corresponding to the TCU=20
+>> registers
+>>  +- clocks: List of phandle & clock specifiers for clocks external=20
+>> to the TCU.
+>>  +  The "pclk", "rtc" and "ext" clocks should be provided. The "tcu"=20
+>> clock
+>>  +  should be provided if the SoC has it.
+>>  +- clock-names: List of name strings for the external clocks.
+>>  +- #clock-cells: Should be <1>;
+>>  +  Clock consumers specify this argument to identify a clock. The=20
+>> valid values
+>>  +  may be found in <dt-bindings/clock/ingenic,tcu.h>.
+>>  +- interrupt-controller : Identifies the node as an interrupt=20
+>> controller
+>>  +- #interrupt-cells : Specifies the number of cells needed to=20
+>> encode an
+>>  +  interrupt source. The value should be 1.
+>>  +- interrupt-parent : phandle of the interrupt controller.
+>=20
+> Drop this 'interrupt-parent' is implied and could be in a parent node.
+>=20
+>>  +- interrupts : Specifies the interrupt the controller is connected=20
+>> to.
+>>  +
+>>  +Optional properties:
+>>  +
+>>  +- ingenic,pwm-channels-mask: Bitmask of TCU channels reserved for=20
+>> PWM use.
+>>  +  Default value is 0xfc.
+>>  +
+>>  +
+>>  +Example
+>>  +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>>  +
+>>  +#include <dt-bindings/clock/jz4770-cgu.h>
+>>  +
+>>  +/ {
+>>  +	tcu: timer@10002000 {
+>>  +		compatible =3D "ingenic,jz4770-tcu";
+>>  +		reg =3D <0x10002000 0x1000>;
+>>  +		#address-cells =3D <1>;
+>>  +		#size-cells =3D <1>;
+>>  +		ranges =3D <0x0 0x10002000 0x1000>;
+>>  +
+>>  +		#clock-cells =3D <1>;
+>>  +
+>>  +		clocks =3D <&cgu JZ4770_CLK_RTC
+>>  +			  &cgu JZ4770_CLK_EXT
+>>  +			  &cgu JZ4770_CLK_PCLK>;
+>>  +		clock-names =3D "rtc", "ext", "pclk";
+>>  +
+>>  +		interrupt-controller;
+>>  +		#interrupt-cells =3D <1>;
+>>  +
+>>  +		interrupt-parent =3D <&intc>;
+>>  +		interrupts =3D <27 26 25>;
+>>  +	};
+>>  +};
+>>  --
+>>  2.21.0.593.g511ec345e18
+>>=20
 
- arch/arm/boot/dts/meson8b-ec100.dts    | 31 +++++++++++++++++++++++---
- arch/arm/boot/dts/meson8b-mxq.dts      | 26 ++++++++++++++++++---
- arch/arm/boot/dts/meson8b-odroidc1.dts | 27 +++++++++++++++++++---
- arch/arm/boot/dts/meson8b.dtsi         |  8 +++++++
- 4 files changed, 83 insertions(+), 9 deletions(-)
-
--- 
-2.21.0
+=
 
