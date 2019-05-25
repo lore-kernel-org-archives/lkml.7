@@ -2,170 +2,111 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34CE4C282E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 15:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C43FFC07542
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 15:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E9BC216E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 15:21:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 923E120862
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 15:40:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uS7W7fBC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Aziml0Df"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbfEYPVA (ORCPT
+        id S1727104AbfEYPd3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 11:21:00 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:43353 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726991AbfEYPVA (ORCPT
+        Sat, 25 May 2019 11:33:29 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:58770 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726971AbfEYPd2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 11:21:00 -0400
-Received: by mail-yw1-f65.google.com with SMTP id t5so4859749ywf.10
-        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 08:20:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=SFixVte+KRZ0eDi2dM904QnB5LrKYVziMe7pK+9vKpA=;
-        b=uS7W7fBCo8MN4KH49ynbBJFE22ReYcNJXR65W82MPwze63XpTnI1Jl/vuoRl4hPLTr
-         YmDDJj+vlCp92KxAOZuN01blzuOusbBGeYPQ17ubOS6S/2KYA3DDu5dvsSjb1v1lvnbH
-         VCvbxa5V4BszgCANSd1SXNWKDbhS7sGlzvrPSoDcqGHgVA4QQT+cdZo0q1e4nk+Elo1P
-         dNDYfMsvWWaPskxYOvhoOtnB8WifeIEaQYde27cdX3HIxt0KTnrgVHVGQCdXLnw5w0dR
-         YmDG0PjAq3c4aQj0f3vfwdVnQDP7nWIXq/3qBfQ8IKmsaki1eGDldE6d/SOalLcg0J00
-         ZXSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=SFixVte+KRZ0eDi2dM904QnB5LrKYVziMe7pK+9vKpA=;
-        b=WlXegd0Atv2b79I74v1XV5T5pdPv+cp1VahI5DnwQnETuX8e8xV5shPtSfBbilxFNe
-         dOjUE3v4SVHl39xWEJOvtjE94BQIKiIhQjsw5hvdyrLxK8qxvT5ZSEs9igFCfG8JAgQ1
-         nSE7F4uQzvHq+kDcyIN501QTakBsBRJLac3ECsem2W23KX7hhOCggPwmK3uvT/paNVh2
-         X2S33lQmPoH07xsOtzhg26VHo6MbUdAiEipvvP0yrleC8TmJ4zW/XYp9gncmH+ET+VA4
-         A9pgCJMk3/tR7GJJMvVFs7OczWtRIn9l9VPkZLCt6mex7LlOQ4D3WlyK/lDJqPIk871G
-         OP6w==
-X-Gm-Message-State: APjAAAWSLeFRr7AzhUsbzbXjplSxo9Rp3CpOq+HQ31tOFNcG7J1ePz7L
-        ZUkgspC7wBrbbf0pKkJqlzeoOjHH
-X-Google-Smtp-Source: APXvYqx7I7FplxAnGI81hXmfnrcc831nyvSJ6Ivl3muFnTlSrDud/ZvcDTftVrqFtGHulNFNHZ1+hw==
-X-Received: by 2002:a81:2343:: with SMTP id j64mr4693324ywj.224.1558797657856;
-        Sat, 25 May 2019 08:20:57 -0700 (PDT)
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com. [209.85.219.180])
-        by smtp.gmail.com with ESMTPSA id v8sm1467520ywv.82.2019.05.25.08.20.56
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 25 May 2019 08:20:56 -0700 (PDT)
-Received: by mail-yb1-f180.google.com with SMTP id e128so4822606ybc.12
-        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 08:20:56 -0700 (PDT)
-X-Received: by 2002:a25:f509:: with SMTP id a9mr50352842ybe.391.1558797656141;
- Sat, 25 May 2019 08:20:56 -0700 (PDT)
+        Sat, 25 May 2019 11:33:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:Subject:From:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=WbqNo38oKnDgLfSlhou/YoifuG7iR4GfTM4BUKO+d6k=; b=Aziml0Df0lZtGqU4JQOokX4zeR
+        W84UhKbObsOL6zhpEJztqvHhfHJiX1SE+rFAwG8XC7jNWzineA9cArXQvuYmMQxcq7ea7sEOLYLg+
+        KSsYL+jkmVP2/jNyJgXgQzKDsmQU8QfgZXIKHL/MCgA1QsJJ20n2GzGmaMgDUOLm9ScDjzmxIV2wA
+        rU93BaaR3mFTlUXz7dE+b3GSQNWfQhXaY77rHjTD+NLb55urKX10c9bTW48hfHL24tspy6aiUb0MA
+        6FzB6TlYhpvEny2/wQPl6yvV3Jz6l+rZo3XgmDdJkrhJRl7J6rp8Rp0zOMYzqKkkbTF061YaC+9Xo
+        yw0rxJYg==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hUYfb-0005u5-Bb; Sat, 25 May 2019 15:33:15 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: lib/test_overflow.c causes WARNING and tainted kernel
+To:     Kees Cook <keescook@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <9fa84db9-084b-cf7f-6c13-06131efb0cfa@infradead.org>
+ <CAGXu5j+yRt_yf2CwvaZDUiEUMwTRRiWab6aeStxqodx9i+BR4g@mail.gmail.com>
+Message-ID: <e2646ac0-c194-4397-c021-a64fa2935388@infradead.org>
+Date:   Sat, 25 May 2019 08:33:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190523210651.80902-1-fklassen@appneta.com> <20190523210651.80902-2-fklassen@appneta.com>
- <CAF=yD-Jf95De=z_nx9WFkGDa6+nRUqM_1PqGkjwaFPzOe+PfXg@mail.gmail.com>
- <AE8E0772-7256-4B9C-A990-96930E834AEE@appneta.com> <CAF=yD-LtAKpND601LQrC1+=iF6spSUXVdUapcsbJdv5FYa=5Jg@mail.gmail.com>
- <AFC1ECC8-BFAC-4718-B0C9-97CC4BD1F397@appneta.com> <CAF=yD-Le-eTadOi7PL8WFEQCG=yLqb5gvKiks+s5Akeq8TenBQ@mail.gmail.com>
- <90E3853F-107D-45BA-93DC-D0BE8AC6FCBB@appneta.com>
-In-Reply-To: <90E3853F-107D-45BA-93DC-D0BE8AC6FCBB@appneta.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Sat, 25 May 2019 11:20:16 -0400
-X-Gmail-Original-Message-ID: <CA+FuTScNr9Srsn9QFBSj=oT4TnMh1QuOZ2h40g=joNjSwccqMg@mail.gmail.com>
-Message-ID: <CA+FuTScNr9Srsn9QFBSj=oT4TnMh1QuOZ2h40g=joNjSwccqMg@mail.gmail.com>
-Subject: Re: [PATCH net 1/4] net/udp_gso: Allow TX timestamp with UDP GSO
-To:     Fred Klassen <fklassen@appneta.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAGXu5j+yRt_yf2CwvaZDUiEUMwTRRiWab6aeStxqodx9i+BR4g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 6:01 PM Fred Klassen <fklassen@appneta.com> wrote:
->
->
->
-> > On May 24, 2019, at 12:29 PM, Willem de Bruijn <willemdebruijn.kernel@g=
-mail.com> wrote:
-> >
-> > It is the last moment that a timestamp can be generated for the last
-> > byte, I don't see how that is "neither the start nor the end of a GSO
-> > packet=E2=80=9D.
->
-> My misunderstanding. I thought TCP did last segment timestamping, not
-> last byte. In that case, your statements make sense.
->
-> >> It would be interesting if a practical case can be made for timestampi=
-ng
-> >> the last segment. In my mind, I don=E2=80=99t see how that would be va=
-luable.
-> >
-> > It depends whether you are interested in measuring network latency or
-> > host transmit path latency.
-> >
-> > For the latter, knowing the time from the start of the sendmsg call to
-> > the moment the last byte hits the wire is most relevant. Or in absence
-> > of (well defined) hardware support, the last byte being queued to the
-> > device is the next best thing.
+On 3/13/19 7:53 PM, Kees Cook wrote:
+> Hi!
+> 
+> On Wed, Mar 13, 2019 at 2:29 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>>
+>> This is v5.0-11053-gebc551f2b8f9, MAR-12 around 4:00pm PT.
+>>
+>> In the first test_kmalloc() in test_overflow_allocation():
+>>
+>> [54375.073895] test_overflow: ok: (s64)(0 << 63) == 0
+>> [54375.074228] WARNING: CPU: 2 PID: 5462 at ../mm/page_alloc.c:4584 __alloc_pages_nodemask+0x33f/0x540
+>> [...]
+>> [54375.079236] ---[ end trace 754acb68d8d1a1cb ]---
+>> [54375.079313] test_overflow: kmalloc detected saturation
+> 
+> Yup! This is expected and operating as intended: it is exercising the
+> allocator's detection of insane allocation sizes. :)
+> 
+> If we want to make it less noisy, perhaps we could add a global flag
+> the allocators could check before doing their WARNs?
+> 
+> -Kees
 
-Sounds to me like both cases have a legitimate use case, and we want
-to support both.
+I didn't like that global flag idea.  I also don't like the kernel becoming
+tainted by this test.
 
-Implementation constraints are that storage for this timestamp
-information is scarce and we cannot add new cold cacheline accesses in
-the datapath.
+Would it make sense to change the WARN_ON_ONCE() to a call to warn_alloc()
+instead?  or use a plain raw printk_once()?
 
-The simplest approach would be to unconditionally timestamp both the
-first and last segment. With the same ID. Not terribly elegant. But it
-works.
+warn_alloc() does the _NOWARN check and does rate limiting.
 
-If conditional, tx_flags has only one bit left. I think we can harvest
-some, as not all defined bits are in use at the same stages in the
-datapath, but that is not a trivial change. Some might also better be
-set in the skb, instead of skb_shinfo. Which would also avoids
-touching that cacheline. We could possibly repurpose bits from u32
-tskey.
 
-All that can come later. Initially, unless we can come up with
-something more elegant, I would suggest that UDP follows the rule
-established by TCP and timestamps the last byte. And we add an
-explicit SOF_TIMESTAMPING_OPT_FIRSTBYTE that is initially only
-supported for UDP, sets a new SKBTX_TX_FB_TSTAMP bit in
-__sock_tx_timestamp and is interpreted in __udp_gso_segment.
+--- lnx-51-rc2.orig/mm/page_alloc.c
++++ lnx-51-rc2/mm/page_alloc.c
+@@ -4581,7 +4581,8 @@ __alloc_pages_nodemask(gfp_t gfp_mask, u
+ 	 * so bail out early if the request is out of bound.
+ 	 */
+ 	if (unlikely(order >= MAX_ORDER)) {
+-		WARN_ON_ONCE(!(gfp_mask & __GFP_NOWARN));
++		warn_alloc(gfp_mask, NULL,
++				"page allocation failure: order:%u", order);
+ 		return NULL;
+ 	}
+ 
 
-> >
-> > It would make sense for this software implementation to follow
-> > established hardware behavior. But as far as I know, the exact time a
-> > hardware timestamp is taken is not consistent across devices, either.
-> >
-> > For fine grained timestamped data, perhaps GSO is simply not a good
-> > mechanism. That said, it still has to queue a timestamp if requested.
->
-> I see your point. Makes sense to me.
->
-> >> When using hardware timestamping, I think you will find that nearly al=
-l
-> >> adapters only allow one timestamp at a time. Therefore only one
-> >> packet in a burst would get timestamped.
-> >
-> > Can you elaborate? When the host queues N packets all with hardware
-> > timestamps requested, all N completions will have a timestamp? Or is
-> > that not guaranteed?
-> >
->
-> It is not guaranteed. The best example is in ixgbe_main.c and search for
-> =E2=80=98SKBTX_HW_TSTAMP=E2=80=99.  If there is a PTP TX timestamp in pro=
-gress,
-> =E2=80=98__IXGBE_PTP_TX_IN_PROGRESS=E2=80=99 is set and no other timestam=
-ps
-> are possible. The flag is cleared after transmit softirq, and only then
-> can another TX timestamp be taken.
 
-Interesting, thanks. I had no idea.
+-- 
+~Randy
