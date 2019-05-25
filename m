@@ -8,64 +8,67 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84ADFC04AB0
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 07:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7561AC04AB0
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 07:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42261217D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 07:25:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 272B9217D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 07:30:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iJGtl5if"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gC7rjIYR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbfEYHZP (ORCPT
+        id S1726504AbfEYHad (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 03:25:15 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46022 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726145AbfEYHZP (ORCPT
+        Sat, 25 May 2019 03:30:33 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36546 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726145AbfEYHac (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 03:25:15 -0400
-Received: by mail-pg1-f194.google.com with SMTP id w34so1591823pga.12
-        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 00:25:15 -0700 (PDT)
+        Sat, 25 May 2019 03:30:32 -0400
+Received: by mail-pf1-f193.google.com with SMTP id v80so6638562pfa.3
+        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 00:30:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:subject:message-id:mime-version:content-disposition
          :user-agent;
-        bh=3/HXmCveeAbDHijcuKaxjc8S8ha3SNVf6PI9wjQHBaU=;
-        b=iJGtl5ifVwJd8BjCR93hGbqtuqBchM1RWraUzeQUQoQ2O9vIRPkkaX9QRvxuuCr4Uc
-         nQD2tWFlXUVRN+Qig2B3ShbJzo1YM4FdaCl3vEoU2LA25xV4K3POmnQM9RLw3b0RVF4L
-         oC+iDk+pdJfldY2GLBfZhy6+jAuqsoLK8koBh0lwLGgX0CQz3ZtsocUEk6RDP1PhizlR
-         D2Mg+l5vVefIdCFCLeGSphk4tzW+C2r3SUjG5HPYmk+YIiuBSH7BYAhJHnTW+H/57C6h
-         n+b5SXSTPcPntvqtNyhhfOYSjTfMXxC3jqx+oiQ4RlfO5u9nPu6z+m9AZvq7IBWtgNIo
-         1Wcg==
+        bh=CBmogAJUB339Ep3aXj31B9OMK/rErdF2S8y1zyAwxG8=;
+        b=gC7rjIYRif8KrFeSxZoE9bJlUrDLPnpp7ZpN+7izHNxWjxDoQuzz+UUUnL8ZzbKXlV
+         +B+vMKfrWfIeZyu50/RqmmDvaZvvcomBBnbCxByHK6MTJdZcLSf7b3kOD/TPwmc1G/HV
+         T7FpRL9zA9x8q8pUhh2pIBE5QzA0M1V2F1PiMju/i8P2djnihcmj4OPTnLX6LL6Qs6qw
+         9HjzQeghf/VQlKZikMYyWp2YZ+oeTA3Z1/1YOqRybLOeU91UzmgyCrbGB1qoRZ6CaWdP
+         kiBY5F2yRud1Ug9od78Uhw+qnYJVCXz71BY5XFLIVtfzLQlxIpVAur1T79R9plOEgy93
+         uHww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:subject:message-id:mime-version
          :content-disposition:user-agent;
-        bh=3/HXmCveeAbDHijcuKaxjc8S8ha3SNVf6PI9wjQHBaU=;
-        b=MymIF3zzPUb/u9+XS0qXX5IPpGFs3R9ZLk6zPyZZUefc3iJaiK1pheoiNf0HWP5frb
-         EEPUc+2VlWnQ7iajoIduQaCd05x7M6c7Q6W0WhQNA5EPaxozSCnkpoLD3ES68ILA8o4N
-         vm8/PQoArZ9WPdyXIjmSpbV016Gq/e5DMsF9tnkTF6VaTtAmLetdC6m0ry/od/6Kq/vd
-         0GHGBH2mD37EuEPezQfhg0EEXs/jwKWYE0rJTcJwq/czzunK0N7JD//Opcqlu3S3uExy
-         fgLN/qOOpvOCcLOoXfz/rlEWVep3WTRupAuQD19q+UUXlH/7/zxePa5O2iTMpP1gBzfq
-         6CBg==
-X-Gm-Message-State: APjAAAXuRSnKcB5Zkra2NIDC83nQOnX1VB3nY1a+lNnB28LTOsn1P4fx
-        k2MOPlpkBawTCFo5t4T4lYQ=
-X-Google-Smtp-Source: APXvYqzI7XugKhrUD2ISKoSITMC4xDXu1F2+tRQ/O+1otSv26NNTnycbocgJEljBBIvtNXuOVEpEZg==
-X-Received: by 2002:a65:4349:: with SMTP id k9mr22299168pgq.243.1558769114822;
-        Sat, 25 May 2019 00:25:14 -0700 (PDT)
+        bh=CBmogAJUB339Ep3aXj31B9OMK/rErdF2S8y1zyAwxG8=;
+        b=Iz2HI3TpUmiS3105KhGI+jHMZ+jPgJ7flyI3VZJ/lKZx6WB3+VpfleTYxE6m0xdrRO
+         +5apKCO8UO6xumJ9sQoGpzEyFRUJdAQbAucQ7LyTWmeTEbOVL9DUfUu7exzcgE4m5nAf
+         vIbEfb2kS+KA9dST3CoH3qxGYnpP4sujkQoR52TK1BP3988aQI6sBKftx6XALt7hICLb
+         ZYV/OdhcQ3CaX2LJ7cLWURaa3bi9bYpiGou9QwtSdPmoGxyJxeOjNCuf4T/bRxCI15ue
+         0+SYb8XuWV/LKcGMgj4Ef5uOCfP+aaezUs2qi0xE8pW2daMy4TXX/rFdKuFzKTZtqd2f
+         WbGQ==
+X-Gm-Message-State: APjAAAXVAB7C0+zYoNCCBO83lYwzIKeHWzbNukcyp7AIiKwd7VL0lEaq
+        FvOstwv+sO4iifMXnUEhmuA=
+X-Google-Smtp-Source: APXvYqw7Nq85Uzgu9ty/HtMjyUAeqWceKF3Gt7yedRT3adN5M/+iBJ1YlHGs4JhsHdTqos3PGcqKCA==
+X-Received: by 2002:a17:90a:9bc4:: with SMTP id b4mr14672395pjw.100.1558769432212;
+        Sat, 25 May 2019 00:30:32 -0700 (PDT)
 Received: from hari-Inspiron-1545 ([183.83.92.73])
-        by smtp.gmail.com with ESMTPSA id w12sm3997009pgp.51.2019.05.25.00.25.11
+        by smtp.gmail.com with ESMTPSA id o1sm11126605pfa.66.2019.05.25.00.30.28
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 25 May 2019 00:25:14 -0700 (PDT)
-Date:   Sat, 25 May 2019 12:55:09 +0530
+        Sat, 25 May 2019 00:30:31 -0700 (PDT)
+Date:   Sat, 25 May 2019 13:00:26 +0530
 From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>,
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
         David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/sun4i: fix warning PTR_ERR_OR_ZERO can be used
-Message-ID: <20190525072509.GA6979@hari-Inspiron-1545>
+        Daniel Vetter <daniel@ffwll.ch>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Matteo Croce <mcroce@redhat.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/omapdrm: fix warning PTR_ERR_OR_ZERO can be used
+Message-ID: <20190525073026.GA7114@hari-Inspiron-1545>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -77,99 +80,81 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 fix below warnings reported by coccicheck
 
-./drivers/gpu/drm/sun4i/sun8i_hdmi_phy_clk.c:174:1-3: WARNING:
+./drivers/gpu/drm/omapdrm/dss/hdmi_phy.c:197:1-3: WARNING:
 PTR_ERR_OR_ZERO can be used
-./drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c:236:1-3: WARNING:
+./drivers/gpu/drm/omapdrm/dss/hdmi4_core.c:937:1-3: WARNING:
 PTR_ERR_OR_ZERO can be used
-./drivers/gpu/drm/sun4i/sun4i_hdmi_i2c.c:285:1-3: WARNING:
+./drivers/gpu/drm/omapdrm/dss/hdmi5_core.c:913:1-3: WARNING:
 PTR_ERR_OR_ZERO can be used
-./drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c:142:1-3: WARNING:
-PTR_ERR_OR_ZERO can be used
-./drivers/gpu/drm/sun4i/sun4i_dotclock.c:198:1-3: WARNING:
-PTR_ERR_OR_ZERO can be used
+./drivers/gpu/drm/omapdrm/dss/hdmi4.c:601:1-3: WARNING: PTR_ERR_OR_ZERO
+can be used
 
 Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 ---
- drivers/gpu/drm/sun4i/sun4i_dotclock.c      | 4 +---
- drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c  | 4 +---
- drivers/gpu/drm/sun4i/sun4i_hdmi_i2c.c      | 4 +---
- drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c | 4 +---
- drivers/gpu/drm/sun4i/sun8i_hdmi_phy_clk.c  | 4 +---
- 5 files changed, 5 insertions(+), 15 deletions(-)
+ drivers/gpu/drm/omapdrm/dss/hdmi4.c      | 5 +----
+ drivers/gpu/drm/omapdrm/dss/hdmi4_core.c | 6 ++----
+ drivers/gpu/drm/omapdrm/dss/hdmi5_core.c | 4 +---
+ drivers/gpu/drm/omapdrm/dss/hdmi_phy.c   | 4 +---
+ 4 files changed, 5 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_dotclock.c b/drivers/gpu/drm/sun4i/sun4i_dotclock.c
-index 2a15f2f..e0fd19d 100644
---- a/drivers/gpu/drm/sun4i/sun4i_dotclock.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_dotclock.c
-@@ -195,10 +195,8 @@ int sun4i_dclk_create(struct device *dev, struct sun4i_tcon *tcon)
- 	dclk->hw.init = &init;
+diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi4.c b/drivers/gpu/drm/omapdrm/dss/hdmi4.c
+index 6339e27..cce53f3 100644
+--- a/drivers/gpu/drm/omapdrm/dss/hdmi4.c
++++ b/drivers/gpu/drm/omapdrm/dss/hdmi4.c
+@@ -598,10 +598,7 @@ static int hdmi_audio_register(struct omap_hdmi *hdmi)
+ 		&hdmi->pdev->dev, "omap-hdmi-audio", PLATFORM_DEVID_AUTO,
+ 		&pdata, sizeof(pdata));
  
- 	tcon->dclk = clk_register(dev, &dclk->hw);
--	if (IS_ERR(tcon->dclk))
--		return PTR_ERR(tcon->dclk);
- 
+-	if (IS_ERR(hdmi->audio_pdev))
+-		return PTR_ERR(hdmi->audio_pdev);
+-
 -	return 0;
-+	return PTR_ERR_OR_ZERO(tcon->dclk);
- }
- EXPORT_SYMBOL(sun4i_dclk_create);
- 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
-index e826da3..1e74040 100644
---- a/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
-@@ -139,8 +139,6 @@ int sun4i_ddc_create(struct sun4i_hdmi *hdmi, struct clk *parent)
- 	ddc->m_offset = hdmi->variant->ddc_clk_m_offset;
- 
- 	hdmi->ddc_clk = devm_clk_register(hdmi->dev, &ddc->hw);
--	if (IS_ERR(hdmi->ddc_clk))
--		return PTR_ERR(hdmi->ddc_clk);
- 
--	return 0;
-+	return PTR_ERR_OR_ZERO(hdmi->ddc_clk);
- }
-diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_i2c.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_i2c.c
-index 58e9d37..b72f9c7 100644
---- a/drivers/gpu/drm/sun4i/sun4i_hdmi_i2c.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_i2c.c
-@@ -282,10 +282,8 @@ static int sun4i_hdmi_init_regmap_fields(struct sun4i_hdmi *hdmi)
- 	hdmi->field_ddc_sck_en =
- 		devm_regmap_field_alloc(hdmi->dev, hdmi->regmap,
- 					hdmi->variant->field_ddc_sck_en);
--	if (IS_ERR(hdmi->field_ddc_sck_en))
--		return PTR_ERR(hdmi->field_ddc_sck_en);
- 
--	return 0;
-+	return PTR_ERR_OR_ZERO(hdmi->field_ddc_sck_en);
++	return PTR_ERR_OR_ZERO(hdmi->audio_pdev);
  }
  
- int sun4i_hdmi_i2c_create(struct device *dev, struct sun4i_hdmi *hdmi)
-diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c
-index 2598741..389c1c5 100644
---- a/drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c
-@@ -233,8 +233,6 @@ int sun4i_tmds_create(struct sun4i_hdmi *hdmi)
- 	tmds->div_offset = hdmi->variant->tmds_clk_div_offset;
+ /* -----------------------------------------------------------------------------
+diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c b/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c
+index e384b95..1bcdb54 100644
+--- a/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c
++++ b/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c
+@@ -934,8 +934,6 @@ int hdmi4_core_init(struct platform_device *pdev, struct hdmi_core_data *core)
  
- 	hdmi->tmds_clk = devm_clk_register(hdmi->dev, &tmds->hw);
--	if (IS_ERR(hdmi->tmds_clk))
--		return PTR_ERR(hdmi->tmds_clk);
- 
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "core");
+ 	core->base = devm_ioremap_resource(&pdev->dev, res);
+-	if (IS_ERR(core->base))
+-		return PTR_ERR(core->base);
+-
 -	return 0;
-+	return PTR_ERR_OR_ZERO(hdmi->tmds_clk);
++	
++	return PTR_ERR_OR_ZERO(core->base);
  }
-diff --git a/drivers/gpu/drm/sun4i/sun8i_hdmi_phy_clk.c b/drivers/gpu/drm/sun4i/sun8i_hdmi_phy_clk.c
-index a4d31fe..d52f581 100644
---- a/drivers/gpu/drm/sun4i/sun8i_hdmi_phy_clk.c
-+++ b/drivers/gpu/drm/sun4i/sun8i_hdmi_phy_clk.c
-@@ -171,8 +171,6 @@ int sun8i_phy_clk_create(struct sun8i_hdmi_phy *phy, struct device *dev,
- 	priv->hw.init = &init;
+diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi5_core.c b/drivers/gpu/drm/omapdrm/dss/hdmi5_core.c
+index 02efabc..022c2ce 100644
+--- a/drivers/gpu/drm/omapdrm/dss/hdmi5_core.c
++++ b/drivers/gpu/drm/omapdrm/dss/hdmi5_core.c
+@@ -910,8 +910,6 @@ int hdmi5_core_init(struct platform_device *pdev, struct hdmi_core_data *core)
  
- 	phy->clk_phy = devm_clk_register(dev, &priv->hw);
--	if (IS_ERR(phy->clk_phy))
--		return PTR_ERR(phy->clk_phy);
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "core");
+ 	core->base = devm_ioremap_resource(&pdev->dev, res);
+-	if (IS_ERR(core->base))
+-		return PTR_ERR(core->base);
  
 -	return 0;
-+	return PTR_ERR_OR_ZERO(phy->clk_phy);
++	return PTR_ERR_OR_ZERO(core->base);
+ }
+diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi_phy.c b/drivers/gpu/drm/omapdrm/dss/hdmi_phy.c
+index 9915923..a7d7040 100644
+--- a/drivers/gpu/drm/omapdrm/dss/hdmi_phy.c
++++ b/drivers/gpu/drm/omapdrm/dss/hdmi_phy.c
+@@ -194,8 +194,6 @@ int hdmi_phy_init(struct platform_device *pdev, struct hdmi_phy_data *phy,
+ 
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy");
+ 	phy->base = devm_ioremap_resource(&pdev->dev, res);
+-	if (IS_ERR(phy->base))
+-		return PTR_ERR(phy->base);
+ 
+-	return 0;
++	return PTR_ERR_OR_ZERO(phy->base);
  }
 -- 
 2.7.4
