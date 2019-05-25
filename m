@@ -2,148 +2,181 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_DR,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 198F2C07542
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E6CC282CE
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0AEE20815
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:32:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iFWPNFkW"
+	by mail.kernel.org (Postfix) with ESMTP id 17BB720815
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:33:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727228AbfEYRct (ORCPT
+        id S1727282AbfEYRds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 13:32:49 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40880 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726126AbfEYRcs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 13:32:48 -0400
-Received: by mail-ot1-f66.google.com with SMTP id u11so11474839otq.7
-        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 10:32:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=Gy9W1697bnJcZZYL9JPR13RWL43dUSo9hT4REu7ye88=;
-        b=iFWPNFkW/msjuLBcH1597P5z4p04Oh2a5rg9i23EXl8eHTZLZ8x4Xb7VKbO5ERrBOc
-         Ou3T1kdVwVnvAIkwRx2aXrnqOhf0BWokJrU6ARtpeKnimQXrZQLpT7lqNJz1u6ohw3N7
-         RhkW4oggrur4UWZjaTO/qI3TEp2qhkkWMr2XYG6e1zwXV26WmH8YQPSXDgnCMkAHJAOD
-         YqC2eDGARMY45KF6aPgL1PyeYkr6Fo5cqJLekG5Aw8a7F5pRUv5ISEqj3x141FTuSGh9
-         GMuq2ORD/QbFkD66n3C1Q6F/OAEHhdvZ0ix/DorC2vHmJB8t0ntym9/U1RaomsyKoq2o
-         vXXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=Gy9W1697bnJcZZYL9JPR13RWL43dUSo9hT4REu7ye88=;
-        b=bVdPjivJeVjYZNkF2VLM6ND36g2/Mrd4vYwcgD5atKl6W8Q9lKogx+okuzOkdZjalC
-         p8N1JBjrrOzvz86Yv4CazeHjFDeSj3649jrlsh9xsLGmGZx3ptCpzH1X+ScR814sN3Qw
-         3gs9aFLw6aK1Zqbj6y2z7Z62xD80bgrgT5MOx8R5ePbYfDhEFPMRtBCzGumYdX1Zmyvs
-         DWR7XLRmLmTnKm9Iv0iOy4pDbxquYhVUrD65x5mQshCBP/sR5uNXxpkxk1K3HJBhCFWY
-         kepdh7l85GdzDJHqOpkReM9st46rFZB59F/ZAE44yisEnrlMEJ3KkJ9CFdp3rM/VerTm
-         M5TQ==
-X-Gm-Message-State: APjAAAUexFljPWbLzmoOWBuIwbgcoD4aMEeQxr0RiwZC2rJwRbVwrNbL
-        1THym4PvQmlyUn1T5kTN0Q140w==
-X-Google-Smtp-Source: APXvYqwHPDK5YDX5n1VmM8qsxD8m2BvhBoawwa+maja28PntVCqHAA2nLLN3ZPpUVp/9axALAfH3gQ==
-X-Received: by 2002:a05:6830:1545:: with SMTP id l5mr32208199otp.69.1558805567517;
-        Sat, 25 May 2019 10:32:47 -0700 (PDT)
-Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id b127sm2413034oih.43.2019.05.25.10.32.46
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sat, 25 May 2019 10:32:46 -0700 (PDT)
-Date:   Sat, 25 May 2019 10:32:31 -0700 (PDT)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Pavel Machek <pavel@ucw.cz>
-cc:     Hugh Dickins <hughd@google.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Revert "leds: avoid races with workqueue"?
-In-Reply-To: <20190525093759.GA17767@amd>
-Message-ID: <alpine.LSU.2.11.1905251025300.1112@eggly.anvils>
-References: <alpine.LSU.2.11.1905241540080.1674@eggly.anvils> <20190525093759.GA17767@amd>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
-MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+        Sat, 25 May 2019 13:33:48 -0400
+Received: from wind.enjellic.com ([76.10.64.91]:33738 "EHLO wind.enjellic.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726126AbfEYRds (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 May 2019 13:33:48 -0400
+Received: from wind.enjellic.com (localhost [127.0.0.1])
+        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id x4PHVHAU026665;
+        Sat, 25 May 2019 12:31:17 -0500
+Received: (from greg@localhost)
+        by wind.enjellic.com (8.15.2/8.15.2/Submit) id x4PHVDl4026664;
+        Sat, 25 May 2019 12:31:13 -0500
+Date:   Sat, 25 May 2019 12:31:13 -0500
+From:   "Dr. Greg" <greg@enjellic.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+Message-ID: <20190525173113.GA25854@wind.enjellic.com>
+Reply-To: "Dr. Greg" <greg@enjellic.com>
+References: <CALCETrUzx3LPAKCLFf75P-XshAkRcr+JLET3LA_kHDs9MA11FA@mail.gmail.com> <20190523234044.GC12078@linux.intel.com> <CALCETrV4DVEfW6EJ6DnQGGYDJAiA5M1QcuYJTiroumOM+D6Jjg@mail.gmail.com> <960B34DE67B9E140824F1DCDEC400C0F654E8956@ORSMSX116.amr.corp.intel.com> <dda0912b-cb15-3c07-d368-345159e995f7@tycho.nsa.gov> <20190524174243.GA365@linux.intel.com> <20190524175458.GB365@linux.intel.com> <960B34DE67B9E140824F1DCDEC400C0F654E8E1D@ORSMSX116.amr.corp.intel.com> <CALCETrUw5sEr-MHPMU4CzEzkrejDs-JOThHB9Buhoxo5-rdpRw@mail.gmail.com> <20190524200333.GF365@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190524200333.GF365@linux.intel.com>
+User-Agent: Mutt/1.4i
+X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Sat, 25 May 2019 12:31:17 -0500 (CDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 25 May 2019, Pavel Machek wrote:
+On Fri, May 24, 2019 at 01:03:33PM -0700, Sean Christopherson wrote:
 
-> Hi!
-> 
-> > I'm having to revert 0db37915d912 ("leds: avoid races with workqueue")
-> > from my 5.2-rc testing tree, because lockdep and other debug options
-> > don't like it: net/mac80211/led.c arranges for led_blink_setup() to be
-> > called at softirq time, and flush_work() is not good for calling
-> > then.
-> 
-> This should keep X60 working (as well as it is now; X60 will still
-> have problems with lost events in setup like yours).
-> 
-> Can you test this instead of the revert?
+Good morning, I hope the weekend is going well for everyone.  Skunky
+holiday weather out here in West-Central Minnesota.
 
-Thanks, Pavel: yes, that works fine for me on the T420s, no debug
-complaints, good and silent; and the wifi LED is blinking as before.
+> On Fri, May 24, 2019 at 12:37:44PM -0700, Andy Lutomirski wrote:
+> > If we go this route, the only substantial change to the existing
+> > driver that's needed for an initial upstream merge is the maxperm
+> > mechanism and whatever hopefully minimal API changes are needed to
+> > allow users to conveniently set up the mappings.  And we don't need to
+> > worry about how to hack around mprotect() calling into the LSM,
+> > because the LSM will actually be aware of SGX and can just do the
+> > right thing.
 
-Hugh
+> This doesn't address restricting which processes can run which
+> enclaves, it only allows restricting the build flow.  Or are you
+> suggesting this be done in addition to whitelisting sigstructs?
+>
+> What's the value prop beyond whitelisting sigstructs?
+> Realistically, I doubt LSMs/users will want to take the performance
+> hit of scanning the source bytes every time an enclave is loaded.
+>
+> We could add seomthing like security_enclave_mprotect() in lieu of
+> abusing security_file_mprotect(), but passing the full source bytes
+> seems a bit much.
 
-> 
-> Thanks,
-> 								Pavel
-> 
-> diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
-> index aefac4d..ebaac4d 100644
-> --- a/drivers/leds/led-core.c
-> +++ b/drivers/leds/led-core.c
-> @@ -158,19 +159,14 @@ static void led_set_software_blink(struct led_classdev *led_cdev,
->  	}
->  
->  	set_bit(LED_BLINK_SW, &led_cdev->work_flags);
-> -	mod_timer(&led_cdev->blink_timer, jiffies + 1);
-> +	mod_timer(&led_cdev->blink_timer, jiffies + 1); /* Why oh why? Just call it directly? */
->  }
->  
-> -
-> +/* May not block */
->  static void led_blink_setup(struct led_classdev *led_cdev,
->  		     unsigned long *delay_on,
->  		     unsigned long *delay_off)
->  {
-> -	/*
-> -	 * If "set brightness to 0" is pending in workqueue, we don't
-> -	 * want that to be reordered after blink_set()
-> -	 */
-> -	flush_work(&led_cdev->set_brightness_work);
->  	if (!test_bit(LED_BLINK_ONESHOT, &led_cdev->work_flags) &&
->  	    led_cdev->blink_set &&
->  	    !led_cdev->blink_set(led_cdev, delay_on, delay_off))
-> diff --git a/drivers/leds/trigger/ledtrig-timer.c b/drivers/leds/trigger/ledtrig-timer.c
-> index ca898c1..427fc3c 100644
-> --- a/drivers/leds/trigger/ledtrig-timer.c
-> +++ b/drivers/leds/trigger/ledtrig-timer.c
-> @@ -113,6 +113,11 @@ static int timer_trig_activate(struct led_classdev *led_cdev)
->  		led_cdev->flags &= ~LED_INIT_DEFAULT_TRIGGER;
->  	}
->  
-> +	/*
-> +	 * If "set brightness to 0" is pending in workqueue, we don't
-> +	 * want that to be reordered after blink_set()
-> +	 */
-> +	flush_work(&led_cdev->set_brightness_work);
->  	led_blink_set(led_cdev, &led_cdev->blink_delay_on,
->  		      &led_cdev->blink_delay_off);
->  
-> 
-> 
-> 
-> -- 
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+It would seem that we hold the moniker of responsibility for this
+conversation, since without our provocation regarding cryptographic
+verification of enclave source, there would be a driver headed
+upstream whose only constraint against W^X sourced executable code,
+running with full confidentiality and integrity protections, would be
+a character device with o666 permissions.  Given that, a couple of
+reflections to facilitate further conversation, if nothing else for
+the benefit of Jonathan Corbet and his bystanders... :-)
+
+As the conversations to date have indicated, imposing LSM controls on
+enclave executable code is a bit problematic, in no small part since
+it is the theological equivalent of driving a square peg into a round
+hole.  SGX, as a technology, was designed around the concept of
+cryptographic verification of code provenance and origin.
+
+The decision to take that off the table, for reasons of political
+idealogy only, means that mainstream Linux will not be a platform that
+can achieve the full hardware security capabilities and protections of
+SGX, nor will mainstream Linux be able to enjoy full protections from
+the technology itself.
+
+We will be dealing with that, from a driver and runtime perspective,
+but that is a conversation for another day.
+
+The issue of SGX2 and Enclave Dynamic Memory Management (EDMM) has
+come up and to date there doesn't appear to have been a serious
+conversation regarding whether or not all of the LSM machinations in
+the world will make any difference when this technology goes mainline.
+The agenda driving mainlining of the driver is to support Graphene for
+cloud based solutions and without EDMM, dynamic code loading support
+is decidedly more problematic.
+
+Dynamic enclave code loading isn't problematic from a security
+perspective when the code is being loaded from the platform itself,
+since presumably, the encompassing conversation will result in LSM
+controls being applied to the necessary code paths.  However, with the
+ability to exploit SGX2 instructions, an enclave with adverserial
+intent could simply setup a mutually attested security context and
+pull whatever executable code it wants from the INTERNET at large,
+using an encrypted and integrity protected communications channel.
+
+That has at least been our interpretation and experience with the
+ENCLU[EMODPE] and ENCLU[EACCEPTCOPY] instructions and the out-of-tree
+driver.  Given the use of an encrypted channel, and the fact that
+these instructions are ring 3 enclave mode only, it would seem that
+all of the LSM controls in the world won't have visibility or control
+over code that is being loaded and executed using such a mechanism.
+
+We could have arguably missed something that the new driver will do to
+address this issue.  To date the only discussion seems to have been
+about controls over ENCLS[EAUG], which are arguably a bit blunt for
+this purpose.
+
+In the land of SGX, if one is intellectually honest from an
+engineering perspective, the only solid security contract one has to
+work with is the notion of cryptographic identity.  Hence our concern
+and patches that implemented an absolutely minimal footprint ring-0
+control infrastructure over the contents of an enclave's SIGSTRUCT.
+Which is where we have arguably circled back to after 3-4 months and
+one kernel release cycle.
+
+Wrapping an LSM hook around our policy mechanism would seem to
+achieve, from a security perspective, about the same level of security
+effect that more major and invasive modifications would achieve, given
+Cedric's proposal to inherit page permissions from the source, which
+is what our runtime already does.
+
+As always, apologies for excessive verbosity beyond LKML sensibilities.
+
+Best wishes for a pleasant remainder of the spring weekend to
+everyone.
+
+Dr. Greg
+
+As always,
+Dr. G.W. Wettstein, Ph.D.   Enjellic Systems Development, LLC.
+4206 N. 19th Ave.           Specializing in information infra-structure
+Fargo, ND  58102            development.
+PH: 701-281-1686
+FAX: 701-281-3949           EMAIL: greg@enjellic.com
+------------------------------------------------------------------------------
+"Heaven goes by favor.  If it went by merit, you would stay out and your
+ dog would go in."
+                                -- Mark Twain
