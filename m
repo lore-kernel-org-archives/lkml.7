@@ -2,169 +2,127 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB1DC07542
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 18:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E22BC07542
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 18:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C81EB20815
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 18:09:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ACBD21734
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 18:09:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B28z101M"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hA1ETWwq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727263AbfEYSJU (ORCPT
+        id S1727347AbfEYSJc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 14:09:20 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46925 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726647AbfEYSJU (ORCPT
+        Sat, 25 May 2019 14:09:32 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34991 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727278AbfEYSJc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 14:09:20 -0400
-Received: by mail-ot1-f67.google.com with SMTP id j49so11484992otc.13
-        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 11:09:19 -0700 (PDT)
+        Sat, 25 May 2019 14:09:32 -0400
+Received: by mail-wr1-f66.google.com with SMTP id m3so12958037wrv.2;
+        Sat, 25 May 2019 11:09:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=rFgOoMr190otbVvdh7Sjz5mXZ2cf+5wMmXCKsssM39U=;
-        b=B28z101MMb+xz5ZuNz32ZuUK400uyAbJBivZiOA8Ofss6C9wnz+t8aMAIY6qnP6Y/I
-         P54tSGwQ1vux1+VjpZ4y98ugvd/Eu0/gtBhIPrMTfDUvHFQF2X+iuKxPXQa8FZQRNTni
-         +ScKBaPz28JBqoQlc7xdrZMUM9Ww6A3FqoWXemzaPoEG39IvwPAl4IwKlliTRK/9Noz2
-         KO6hQubO8lSixzp/98fTUR4SAY9Ng1h0Ml/60gSb1ifOHIVmSF/dlf36quAIYfgCRVC6
-         t/byTjyZDPpqdU9nLdy+Tjqwviescps0rKHMYcj89Ewxhr/A4ttctv6pECjWvVgdgw0m
-         aPgw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=arTMrDnZfRr2oC1YgiWwIELzhnqDrvGvkslS7X+mMzM=;
+        b=hA1ETWwq1RFBgDXp0XWT3rlQ3Bx3tpvsW2EE7raknAvoDXNzyoYA0j+i8HCVZmc6yi
+         yEp9NzEFFne7+6R3HHR8IGwD7XunbJDXrKd+PXcPqGrU6ybNXKaK9ICB34zGJcd2Xv3M
+         ahOUapJrs+00YIS4U3AdFwvYkfXQIrwjw0DCA8E3+O3WY+naic1C/czUPt0l6T5DlDrq
+         VaLMLdLWeSaN40yxzmkZuBn6IPi7OsM7z7+xi0sAEjUp1A350K6iaCogHORkdVZqz279
+         LYFNgNldW8dZCrqB9qkWLmGhngvEJsYCQOTgLKKzhQcwLaLEtGGPDCJWJOAylxklbx4/
+         tieA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=rFgOoMr190otbVvdh7Sjz5mXZ2cf+5wMmXCKsssM39U=;
-        b=SAIYQHV20eyK77vsqMDvviXPqQIifSBZC1SB8US+PScJqLZpx0hhJYbcZjh9lf8mMP
-         rX8/d6Blne0Fv6Yee1vJXKBSNWSD7JAXzfxPgEdAPhq1gIwbL3rWoYW0IMKdvKoUj+Sc
-         MOaqbJ6HT1dIbSwWgrU/wdfAaTtvu7+4lKD97ygZRjAGta1pNHf7vfnEQMqcZAKo+hZr
-         zIgrJ7SMgSU0zgYvKpyToF+kQNgLVxbUyhxsf11U4EcHk616z5RNWEQAKzs4KstDoA4L
-         OjbP2py6PCIvtDDDHRucD++TD/BuvJ4k8XVeHzscQdIk33YKClygk/RAiSFhRY9rBAJn
-         NsAg==
-X-Gm-Message-State: APjAAAVYQvV37pRkvQWPepCC3FHi6qOg4FBeHOaGd4msUNAwxnS/B5l0
-        3taCGndqsNCWgZ1ipylLgJLAGw==
-X-Google-Smtp-Source: APXvYqztKqxbD7Ywnn+rPPPQ3SnRUYAxabnSeTaKypF4Rdw++p7KkbtL+Op+f9Wc+EjZOoaAvNXy7w==
-X-Received: by 2002:a9d:69c8:: with SMTP id v8mr12339129oto.6.1558807759055;
-        Sat, 25 May 2019 11:09:19 -0700 (PDT)
-Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id x91sm2377705otb.10.2019.05.25.11.09.17
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sat, 25 May 2019 11:09:17 -0700 (PDT)
-Date:   Sat, 25 May 2019 11:09:15 -0700 (PDT)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-cc:     Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrea Arcangeli <aarcange@redhat.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Borislav Petkov <bp@suse.de>,
-        Pavel Machek <pavel@ucw.cz>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: Re: [PATCH] mm/gup: continue VM_FAULT_RETRY processing event for
- pre-faults
-In-Reply-To: <20190525084546.fap2wkefepeia22f@linutronix.de>
-Message-ID: <alpine.LSU.2.11.1905251033230.1112@eggly.anvils>
-References: <1557844195-18882-1-git-send-email-rppt@linux.ibm.com> <20190522122113.a2edc8aba32f0fad189bae21@linux-foundation.org> <20190522194322.5k52docwgp5zkdcj@linutronix.de> <alpine.LSU.2.11.1905241429460.1141@eggly.anvils>
- <20190525084546.fap2wkefepeia22f@linutronix.de>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=arTMrDnZfRr2oC1YgiWwIELzhnqDrvGvkslS7X+mMzM=;
+        b=jV3bAXHHgXq3/QUCgC/Q2x2SfZOWSrunjOLcJ6vlDvCW/OaO92zooSmdzHTTyOKjkY
+         lR/EK0sbpo8+XaPxjvmzSLlFrNJpwvPxEFVu+jKwamDZdtYtEl4YG4Zejy4MXdNt53bA
+         ikwwCHxODxh83o7aLNhuu9za4blaO7j60avnqxtI+gVpL26nEgX01L1BD087C3l/ZL4O
+         MEXrJ8eb7zkkO5BkQbOk8R2wJ4PHHihGRfMhZlmaN/u7NsuIC3P2JBXzrzsmt6DIcDTE
+         GgwLDd2mgNkVJLrHlALyWmSGExzPVPNjbE9LZBHxHHA5Xv6t5xMHPwBHXBQsrMblN9gL
+         7vvw==
+X-Gm-Message-State: APjAAAWz2clE90tKMhWMoz0iu6QL4oCAjB1smcDuVMIHWYjTtYIrZ/XD
+        lkMz/i6u5Az4aeQtKwknQZLuol9Vm/Qppg==
+X-Google-Smtp-Source: APXvYqzwGqeGwmwYPdmQPkcptYHBYFkXN5Iham1dBSArtqgGwT0omke9cxGVq8Sux1JvKcwJUpXPJg==
+X-Received: by 2002:a5d:624c:: with SMTP id m12mr3990228wrv.354.1558807769625;
+        Sat, 25 May 2019 11:09:29 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
+        by smtp.gmail.com with ESMTPSA id s127sm5656914wmf.48.2019.05.25.11.09.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 25 May 2019 11:09:28 -0700 (PDT)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH 00/10] Allwiner A64/H6 IR support
+Date:   Sat, 25 May 2019 20:09:13 +0200
+Message-Id: <20190525180923.6105-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 25 May 2019, Sebastian Andrzej Siewior wrote:
-> On 2019-05-24 15:22:51 [-0700], Hugh Dickins wrote:
-> > I've now run a couple of hours of load successfully with Mike's patch
-> > to GUP, no problem; but whatever the merits of that patch in general,
-> > I agree with Andrew that fault_in_pages_writeable() seems altogether
-> > more appropriate for copy_fpstate_to_sigframe(), and have now run a
-> > couple of hours of load successfully with this instead (rewrite to taste):
-> 
-> so this patch instead of Mike's GUP patch fixes the issue you observed?
+Hi,
 
-Yes.
+A64 IR support series[1] pointed out that an A31 bindinds should be
+introduced.
 
-> Is this just a taste question or limitation of the function in general?
+This series introduce the A31 compatible bindings, then switch it on
+the already existing board.
 
-I'd say it's just a taste question. Though the the fact that your
-usage showed up a bug in the get_user_pages_unlocked() implementation,
-demanding a fix, does indicate that it's a more fragile and complex
-route, better avoided if there's a good simple alternative. If it were
-not already on your slowpath, I'd also argue fault_in_pages_writeable()
-is a more efficient way to do it.
+Finally introduce A64 and H6 support.
 
-> 
-> I'm asking because it has been suggested and is used in MPX code (in the
-> signal path but .mmap) and I'm not aware of any limitation. But as I
-> wrote earlier to akpm, if the MM folks suggest to use this instead I am
-> happy to switch.
+Regards,
+Clément
 
-I know nothing of MPX, beyond that Dave Hansen has posted patches to
-remove that support entirely, so I'm surprised arch/x86/mm/mpx.c is
-still in the tree. But peering at it now, it looks as if it's using
-get_user_pages() while holding mmap_sem, whereas you (sensibly enough)
-used get_user_pages_unlocked() to handle the mmap_sem for you -
-the trouble with that is that since it knows it's in control of
-mmap_sem, it feels free to drop it internally, and that takes it
-down the path of the premature return when pages NULL that Mike is
-fixing. MPX's get_user_pages() is not free to go that way.
+[1] https://lore.kernel.org/patchwork/patch/1031390/#1221464
 
-> 
-> > --- 5.2-rc1/arch/x86/kernel/fpu/signal.c
-> > +++ linux/arch/x86/kernel/fpu/signal.c
-> > @@ -3,6 +3,7 @@
-> >   * FPU signal frame handling routines.
-> >   */
-> >  
-> > +#include <linux/pagemap.h>
-> >  #include <linux/compat.h>
-> >  #include <linux/cpu.h>
-> >  
-> > @@ -189,15 +190,7 @@ retry:
-> >  	fpregs_unlock();
-> >  
-> >  	if (ret) {
-> > -		int aligned_size;
-> > -		int nr_pages;
-> > -
-> > -		aligned_size = offset_in_page(buf_fx) + fpu_user_xstate_size;
-> > -		nr_pages = DIV_ROUND_UP(aligned_size, PAGE_SIZE);
-> > -
-> > -		ret = get_user_pages_unlocked((unsigned long)buf_fx, nr_pages,
-> > -					      NULL, FOLL_WRITE);
-> > -		if (ret == nr_pages)
-> > +		if (!fault_in_pages_writeable(buf_fx, fpu_user_xstate_size))
-> >  			goto retry;
-> >  		return -EFAULT;
-> >  	}
-> > 
-> > (I did wonder whether there needs to be an access_ok() check on buf_fx;
-> > but if so, then I think it would already have been needed before the
-> > earlier copy_fpregs_to_sigframe(); but I didn't get deep enough into
-> > that to be sure, nor into whether access_ok() check on buf covers buf_fx.)
-> 
-> There is an access_ok() at the begin of copy_fpregs_to_sigframe(). The
-> memory is allocated from user's stack and there is (later) an
-> access_ok() for the whole region (which can be more than the memory used
-> by the FPU code).
+Clément Péron (8):
+  dt-bindings: media: A31 compatible
+  media: rc: sunxi: Add A31 compatible
+  ARM: dts: sunxi: prefer A31 instead of A13 for ir
+  dt-bindings: media: sunxi-ir: Add A64 compatible
+  dt-bindings: media: sunxi-ir: Add H6 compatible
+  arm64: dts: allwiner: h6: Add IR receiver node
+  arm64: dts: allwinner: h6: Enable IR on H6 boards
+  arm64: defconfig: enable IR SUNXI option
 
-Yes, but remember I know nothing of this FPU signal code, so I cannot
-tell whether an access_ok(buf, size) is good enough to cover the range
-of an access_ok(buf_fx, fpu_user_xstate_size).
+Igors Makejevs (1):
+  arm64: dts: allwinner: a64: Add IR node
 
-Your "(later)" worries me a little - I hope you're not writing first
-and checking the limits later; but what you're doing may be perfectly
-correct, I'm just too far from understanding the details to say; but
-raised the matter because (I think) get_user_pages_unlocked() would
-entail an access_ok() check where fault_in_pages_writable() would not.
+Jernej Skrabec (1):
+  arm64: dts: allwinner: a64: Enable IR on Orange Pi Win
 
-Hugh
+ .../devicetree/bindings/media/sunxi-ir.txt    |  7 ++++++-
+ arch/arm/boot/dts/sun6i-a31.dtsi              |  2 +-
+ arch/arm/boot/dts/sun8i-a83t.dtsi             |  2 +-
+ arch/arm/boot/dts/sun9i-a80.dtsi              |  2 +-
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi            |  2 +-
+ .../dts/allwinner/sun50i-a64-orangepi-win.dts |  4 ++++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 18 ++++++++++++++++++
+ .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  4 ++++
+ .../dts/allwinner/sun50i-h6-orangepi.dtsi     |  4 ++++
+ .../boot/dts/allwinner/sun50i-h6-pine-h64.dts |  4 ++++
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 19 +++++++++++++++++++
+ arch/arm64/configs/defconfig                  |  1 +
+ drivers/media/rc/sunxi-cir.c                  |  1 +
+ 13 files changed, 65 insertions(+), 5 deletions(-)
+
+-- 
+2.20.1
+
