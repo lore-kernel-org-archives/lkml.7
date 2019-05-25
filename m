@@ -2,114 +2,128 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B408C04AB0
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 08:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7499C04AB0
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 08:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBF022168B
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 08:33:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558773208;
-	bh=UCF/QpCLHVEegx0leALKUm5Pa8j8WS2xH+G4wjKUqSc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Q7RichmwjIltsa1LgCf7niU6bxENeYGnIswMTO3tt0a4/bny3bKN3LumlmVH60pwp
-	 AoPkuhFOX7UOUWZqgWZJ/k7FoLyzMHxyPGPw0BRilQdBe12D1mAwpkKAg5WqgSMR14
-	 ghgsgN28hovIrTh9pkGfjiJJJtnq8mH+ZtkN40+c=
+	by mail.kernel.org (Postfix) with ESMTP id A30CA2133D
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 08:38:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="KExin2AM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbfEYIcM (ORCPT
+        id S1726562AbfEYIiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 04:32:12 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35592 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726399AbfEYIcM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 04:32:12 -0400
-Received: by mail-wr1-f65.google.com with SMTP id m3so12114071wrv.2
-        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 01:32:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sQbVID2ep13TGIgOz1JsmCpNAIO8RhQi0YFufJhbVVg=;
-        b=cXr+B1OaoOHx5XXFQAmraT6+oC+LtO/uueZajx03oz2zrDSI2V0D2pVkzaQdnr/rwg
-         le1iP3fpz+vm3EMxwByByMtq+Qw8dKDEimREQA380o3+m2wAjii31o31sKrNikbTdilH
-         I8GsPiCTo/UPEjClUpqAmYhoKl4FI5BBHil3yy/91GDgNnBMKil5AGuCvyeILdUQHg2i
-         02DYECixrrwX3u+0r8/eVHGt5A0l1I2NBmRcWo0aXMQ/QWQ36WBKEUj3ggw0218TFeqf
-         /h1Kz+Vv+1aTdheOXu5hJh9U5qtw1eGUt0D3gKeX6i68n5soANylggKKDshJPlvVJoFE
-         mhEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sQbVID2ep13TGIgOz1JsmCpNAIO8RhQi0YFufJhbVVg=;
-        b=nvv6iSlVBopxl8aiBaGnK6Wn682fBg9/vrHGPr4im1pYJLa4wxLIxLJQ61oY0sjpzt
-         CNmzc20vLgLMN09Yd0zzX2oqgD17jD6Y/NO31iF6ccDHjFzcZv5v9MxAZ1wGz3lMw4CG
-         LhRsb95QatfRplqJOucqWP9qtKQMxYMw8D6c0KLCXQ5vwLmMGwi44UaLCybV3XYAz3We
-         VI0ARJF0jgHyDz4ryd0oCVy7CiCVqWNcBVdDKgK6nt6W92IMW4QKKN1MWkDu4s2dQHTl
-         BOpTOTqPTY0pqmk6CjaBpP0ApQsdHGwl5IGCDMiK9RE2ndjn8Yf90ZoSRBzsDI9DHJ2N
-         f6yg==
-X-Gm-Message-State: APjAAAUx2ZtLjbZP9Rb7agNkcIzctqTrn7kYRg+t2V2yc8yG0oFOMAxr
-        snramFdqzhCoUFG5GpvALOI=
-X-Google-Smtp-Source: APXvYqym44vxLaO199UeocHvueOCW9xu3QQGA4Heyat8Lyc5FF/zldxf45aDJNQBgZ4CCG6FKh9TWw==
-X-Received: by 2002:adf:e94b:: with SMTP id m11mr8614797wrn.133.1558773130481;
-        Sat, 25 May 2019 01:32:10 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id 205sm6271769wmd.43.2019.05.25.01.32.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 25 May 2019 01:32:09 -0700 (PDT)
-Date:   Sat, 25 May 2019 10:32:07 +0200
-From:   Ingo Molnar <mingo@kernel.org>
+        Sat, 25 May 2019 04:38:14 -0400
+Received: from mail-eopbgr680041.outbound.protection.outlook.com ([40.107.68.41]:51968
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726376AbfEYIiO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 May 2019 04:38:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=r6J2DvToHqUoKJMZU5ckrb26c5lekjhb7vISkynKHyI=;
+ b=KExin2AMte4c/j7+rFNWbofR0BeuSUpBWbQDy6w+XHknTeULNVIPux87gv+iYLDZ/oN2OHErnPVp4LlTZ7pLfmVEL+my2NfdGmegE6nVyiqGtdO2NPMkq7AKSVSHMgkPG+mu/GHApqF3ySrNqj76N56MGThU5AK01GXqk0co0Mg=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB4615.namprd05.prod.outlook.com (52.135.233.24) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.13; Sat, 25 May 2019 08:38:06 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::2cb6:a3d1:f675:ced8]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::2cb6:a3d1:f675:ced8%3]) with mapi id 15.20.1943.007; Sat, 25 May 2019
+ 08:38:06 +0000
+From:   Nadav Amit <namit@vmware.com>
 To:     Nadav Amit <namit@vmware.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
+CC:     Ingo Molnar <mingo@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [RFC PATCH 2/6] cpumask: Purify cpumask_next()
-Message-ID: <20190525083207.GA102394@gmail.com>
+        Borislav Petkov <bp@alien8.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "x86@kernel.org" <x86@kernel.org>, Juergen Gross <jgross@suse.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
+Subject: Re: [RFC PATCH 5/6] x86/mm/tlb: Flush remote and local TLBs
+ concurrently
+Thread-Topic: [RFC PATCH 5/6] x86/mm/tlb: Flush remote and local TLBs
+ concurrently
+Thread-Index: AQHVEtL3brMxLnyQKEm7V/vFcW9jOKZ7hLGA
+Date:   Sat, 25 May 2019 08:38:05 +0000
+Message-ID: <F9875905-7383-4815-B6F6-B3EA73B7BF3F@vmware.com>
 References: <20190525082203.6531-1-namit@vmware.com>
- <20190525082203.6531-3-namit@vmware.com>
+ <20190525082203.6531-6-namit@vmware.com>
+In-Reply-To: <20190525082203.6531-6-namit@vmware.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [2601:647:4580:b719:c833:b364:6fe3:b42b]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a0ecb8eb-24df-456a-89f4-08d6e0ec4eed
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB4615;
+x-ms-traffictypediagnostic: BYAPR05MB4615:
+x-microsoft-antispam-prvs: <BYAPR05MB461521666233A75FC7AA838CD0030@BYAPR05MB4615.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0048BCF4DA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(396003)(136003)(346002)(376002)(199004)(189003)(82746002)(99286004)(229853002)(66556008)(64756008)(66446008)(73956011)(66476007)(66946007)(25786009)(53546011)(54906003)(14444005)(14454004)(256004)(6200100001)(37006003)(8936002)(81166006)(81156014)(6506007)(8676002)(7416002)(33656002)(6436002)(76176011)(86362001)(76116006)(305945005)(7736002)(316002)(478600001)(6512007)(486006)(6486002)(476003)(5660300002)(446003)(6862004)(46003)(11346002)(36756003)(4744005)(2616005)(6246003)(2906002)(53936002)(4326008)(186003)(102836004)(6116002)(71200400001)(71190400001)(68736007)(83716004);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB4615;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: +MzpgiAwJJ1Y0+54CC/xVsiJ4fsLrUc+V0z0BaUwSLpHi6Mi7JLHsskn5Gv3BeLeI8Wb/WhcQ0SOfBPPg1IVALSCW1hImG0HugvyeMPmYwW98wqjf87+iqYUo5egeAHCsNnguUht6k8YuhR7IEcZbiOlQdMlJJmDC90xta/NvEyAWOxp796E841P/hJHBnIaFUGfF8cHkUCb5uWt91nCE7mRNboQUIOO9f1ZW3VgN6/DoRvnHdQgV613iTDauyBS61xGRtOJJv9qT9Bjq5+1Q4JLhCKtsv+4u07av/oXlRbgQAnrJoJeIXgV39kO12HScwXMTHEPHlkARtAubi+1xPaeXzCqvsx0pwkF1epyppKLH0xf9k65U2hqZgxUt3o32n7X4a3R4i8mUKJbZZTD8VyXBka88JwTe1snJxBmMuA=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <75106B379062644D9E12CC0F943F0E87@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190525082203.6531-3-namit@vmware.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a0ecb8eb-24df-456a-89f4-08d6e0ec4eed
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 May 2019 08:38:05.9608
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB4615
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> On May 25, 2019, at 1:22 AM, Nadav Amit <namit@vmware.com> wrote:
+>=20
+> To improve TLB shootdown performance, flush the remote and local TLBs
+> concurrently. Introduce flush_tlb_multi() that does so. The current
+> flush_tlb_others() interface is kept, since paravirtual interfaces need
+> to be adapted first before it can be removed. This is left for future
+> work. In such PV environments, TLB flushes are not performed, at this
+> time, concurrently.
+>=20
+> +void native_flush_tlb_multi(const struct cpumask *cpumask,
+> +			    const struct flush_tlb_info *info)
+> {
+> +	/*
+> +	 * native_flush_tlb_multi() can handle a single CPU, but it is
+> +	 * suboptimal if the local TLB should be flushed, and therefore should
+> +	 * not be used in such case. Check that it is not used in such case,
+> +	 * and use this assumption for tracing and accounting of remote TLB
+> +	 * flushes.
+> +	 */
+> +	VM_WARN_ON(!cpumask_any_but(cpumask, smp_processor_id()));
 
-* Nadav Amit <namit@vmware.com> wrote:
+This warning might fire off incorrectly and will be removed.
 
-> cpumask_next() has no side-effects. Mark it as pure.
-> 
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Signed-off-by: Nadav Amit <namit@vmware.com>
-> ---
->  include/linux/cpumask.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
-> index 147bdec42215..20df46705f9c 100644
-> --- a/include/linux/cpumask.h
-> +++ b/include/linux/cpumask.h
-> @@ -209,7 +209,7 @@ static inline unsigned int cpumask_last(const struct cpumask *srcp)
->  	return find_last_bit(cpumask_bits(srcp), nr_cpumask_bits);
->  }
->  
-> -unsigned int cpumask_next(int n, const struct cpumask *srcp);
-> +unsigned int __pure cpumask_next(int n, const struct cpumask *srcp);
-
-I suppose this makes a code generation difference somewhere, right?
-
-I'm wondering, couldn't it also be marked a const function? That's 
-supposedly an even better category.
-
-Thanks,
-
-	Ingo
