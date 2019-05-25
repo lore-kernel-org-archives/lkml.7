@@ -2,91 +2,67 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BAEDC282E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 03:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE0B6C282E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 03:25:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD7D82075C
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 03:24:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="I9KkUanw"
+	by mail.kernel.org (Postfix) with ESMTP id C88A12177E
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 03:25:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbfEYDY0 (ORCPT
+        id S1726723AbfEYDZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 23:24:26 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:56674 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726390AbfEYDY0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 23:24:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=deYuWwVEMDx9F2BngHYcJsyLMkvbKf//OE69QqYwX9Y=; b=I9KkUanwg6WfwkWup0o0Ly/SVM
-        Ao/p0qI1tVg/HmlWcLPVGHBbzPuAMDbb3yuQRJ57VeiyxYDI5Yh6rhMliNzK3hkNQyT4/Ct5mv/ez
-        KaOoEoyviE4WsMQxc4UiFckxLd+MMZP12HrD9C4MMrbtsO/G8dpu/++Mm1UAGs9aRjL2BsIj/hcnC
-        hpjLLfwyJUcCOxGgh43urhrzTuTussOdDRo6XP/oqw8AP+g1KymdcORY6bJtNrsTEy8j6glkJhSGA
-        vU2MhWV1/KzgSlHEO6S5vtaTMf+71s7IuWSc/uEK/c3yOFH0TR3fSU+og0uCnhhMHOC1OPcDaXjPi
-        Wwy7b+5g==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hUNIE-0001Fb-W2; Sat, 25 May 2019 03:24:23 +0000
-Subject: Re: `SATA_AHCI` not selected by default with `make olddefconfig`
-To:     Paul Menzel <pmenzel@molgen.mpg.de>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     linux-ide@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>
-References: <c2733e6e-2b45-9311-1a90-67c0b814a01b@molgen.mpg.de>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <91d3b405-1da0-fe89-14d3-f45043167822@infradead.org>
-Date:   Fri, 24 May 2019 20:24:19 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 24 May 2019 23:25:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38888 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726390AbfEYDZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 23:25:03 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84AF82075C;
+        Sat, 25 May 2019 03:25:01 +0000 (UTC)
+Date:   Fri, 24 May 2019 23:24:58 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>, kvm-ppc@vger.kernel.org,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Paul Mackerras <paulus@ozlabs.org>, rcu@vger.kernel.org
+Subject: Re: [PATCH RFC 0/5] Remove some notrace RCU APIs
+Message-ID: <20190524232458.4bcf4eb4@gandalf.local.home>
+In-Reply-To: <20190524234933.5133-1-joel@joelfernandes.org>
+References: <20190524234933.5133-1-joel@joelfernandes.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <c2733e6e-2b45-9311-1a90-67c0b814a01b@molgen.mpg.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/10/19 6:43 AM, Paul Menzel wrote:
-> Dear Linux folks,
+On Fri, 24 May 2019 19:49:28 -0400
+"Joel Fernandes (Google)" <joel@joelfernandes.org> wrote:
+
+> The series removes users of the following APIs, and the APIs themselves, since
+> the regular non - _notrace variants don't do any tracing anyway.
+>  * hlist_for_each_entry_rcu_notrace
+>  * rcu_dereference_raw_notrace
 > 
-> 
-> There were some PCI Kconfig changes, which seem to cause problems
-> with components depending on PCI. With the attached minimal config,
-> running `make olddefconfig` on Linux 4.20 and older caused
-> `SATA_AHCI` to be selected. But, with Linux 5.0-rc1 it is not
-> selected.
-> 
-> 
-> Kind regards,
-> 
-> Paul
 
-[adding linux-pci for posterity]
+I guess the difference between the _raw_notrace and just _raw variants
+is that _notrace ones do a rcu_check_sparse(). Don't we want to keep
+that check?
 
-Hi Paul,
-
-I guess this is called progress.  Anyway, it's good that you noticed and
-reported it.
-
-
-In 4.20 (and earlier), PCI defaults to y.
-As you hint, in 5.x, PCI does not default to y, so Kconfig symbols that
-depend on PCI will not be set/enabled by "make olddefconfig", including
-SATA_AHCI even though SATA_AHCI is set in your old .config file.
-
-
--- 
-~Randy
+-- Steve
