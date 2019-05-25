@@ -2,70 +2,81 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC7DEC28CBF
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 11:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC43C282CE
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 12:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DF182085A
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 11:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E22620675
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 12:07:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbfEYLxp (ORCPT
+        id S1726884AbfEYMHl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 07:53:45 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:54438 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726484AbfEYLxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 07:53:45 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 663B9E6C2804F89FB817;
-        Sat, 25 May 2019 19:53:38 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.439.0; Sat, 25 May 2019 19:53:29 +0800
-From:   Kefeng Wang <wangkefeng.wang@huawei.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>
-Subject: [PATCH] drivers: base: power: Use of_clk_get_parent_count()
-Date:   Sat, 25 May 2019 20:01:55 +0800
-Message-ID: <20190525120155.108948-1-wangkefeng.wang@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Sat, 25 May 2019 08:07:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60322 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726585AbfEYMHl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 May 2019 08:07:41 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5EA3C308A9BE;
+        Sat, 25 May 2019 12:07:41 +0000 (UTC)
+Received: from [10.72.12.46] (ovpn-12-46.pek2.redhat.com [10.72.12.46])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CDE322DE9E;
+        Sat, 25 May 2019 12:07:36 +0000 (UTC)
+Subject: Re: [PATCH] ceph: fix warning PTR_ERR_OR_ZERO can be used
+To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+        ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190525091559.GA14633@hari-Inspiron-1545>
+From:   "Yan, Zheng" <zyan@redhat.com>
+Message-ID: <d17e2d82-81d2-2308-fef8-77b6a5204ad5@redhat.com>
+Date:   Sat, 25 May 2019 20:07:34 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190525091559.GA14633@hari-Inspiron-1545>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Sat, 25 May 2019 12:07:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use of_clk_get_parent_count() instead of open coding.
+On 5/25/19 5:15 PM, Hariprasad Kelam wrote:
+> change1: fix below warning  reported by coccicheck
+> 
+> /fs/ceph/export.c:371:33-39: WARNING: PTR_ERR_OR_ZERO can be used
+> 
+> change2: typecasted PTR_ERR_OR_ZERO to long as dout expecting long
+> 
+> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+> ---
+>   fs/ceph/export.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/ceph/export.c b/fs/ceph/export.c
+> index d3ef7ee42..15ff1b0 100644
+> --- a/fs/ceph/export.c
+> +++ b/fs/ceph/export.c
+> @@ -368,7 +368,7 @@ static struct dentry *ceph_get_parent(struct dentry *child)
+>   	}
+>   out:
+>   	dout("get_parent %p ino %llx.%llx err=%ld\n",
+> -	     child, ceph_vinop(inode), (IS_ERR(dn) ? PTR_ERR(dn) : 0));
+> +	     child, ceph_vinop(inode), (long)PTR_ERR_OR_ZERO(dn));
+>   	return dn;
+>   }
+>   
+> 
 
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
----
- drivers/base/power/clock_ops.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Applied.
 
-diff --git a/drivers/base/power/clock_ops.c b/drivers/base/power/clock_ops.c
-index 59d19dd64928..9c7e83267eac 100644
---- a/drivers/base/power/clock_ops.c
-+++ b/drivers/base/power/clock_ops.c
-@@ -195,8 +195,7 @@ int of_pm_clk_add_clks(struct device *dev)
- 	if (!dev || !dev->of_node)
- 		return -EINVAL;
- 
--	count = of_count_phandle_with_args(dev->of_node, "clocks",
--					   "#clock-cells");
-+	count = of_clk_get_parent_count(dev->of_node);
- 	if (count <= 0)
- 		return -ENODEV;
- 
--- 
-2.20.1
-
+Thanks
+Yan, Zheng
