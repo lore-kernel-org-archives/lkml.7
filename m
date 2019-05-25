@@ -2,67 +2,89 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE0B6C282E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 03:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8731C282E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 03:28:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C88A12177E
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 03:25:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9374A2075C
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 03:28:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbfEYDZE (ORCPT
+        id S1726738AbfEYD2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 23:25:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38888 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726390AbfEYDZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 23:25:03 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84AF82075C;
-        Sat, 25 May 2019 03:25:01 +0000 (UTC)
-Date:   Fri, 24 May 2019 23:24:58 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>, kvm-ppc@vger.kernel.org,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Paul Mackerras <paulus@ozlabs.org>, rcu@vger.kernel.org
-Subject: Re: [PATCH RFC 0/5] Remove some notrace RCU APIs
-Message-ID: <20190524232458.4bcf4eb4@gandalf.local.home>
-In-Reply-To: <20190524234933.5133-1-joel@joelfernandes.org>
-References: <20190524234933.5133-1-joel@joelfernandes.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 24 May 2019 23:28:48 -0400
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:39771 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726587AbfEYD2r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 23:28:47 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TScWUY1_1558754913;
+Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TScWUY1_1558754913)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 25 May 2019 11:28:42 +0800
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+To:     ying.huang@intel.com, hannes@cmpxchg.org, mhocko@suse.com,
+        mgorman@techsingularity.net, kirill.shutemov@linux.intel.com,
+        josef@toxicpanda.com, hughd@google.com, shakeelb@google.com,
+        akpm@linux-foundation.org
+Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [v5 PATCH 1/2] mm: vmscan: remove double slab pressure by inc'ing sc->nr_scanned
+Date:   Sat, 25 May 2019 11:28:32 +0800
+Message-Id: <1558754913-96989-1-git-send-email-yang.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 May 2019 19:49:28 -0400
-"Joel Fernandes (Google)" <joel@joelfernandes.org> wrote:
+The commit 9092c71bb724 ("mm: use sc->priority for slab shrink targets")
+has broken up the relationship between sc->nr_scanned and slab pressure.
+The sc->nr_scanned can't double slab pressure anymore.  So, it sounds no
+sense to still keep sc->nr_scanned inc'ed.  Actually, it would prevent
+from adding pressure on slab shrink since excessive sc->nr_scanned would
+prevent from scan->priority raise.
 
-> The series removes users of the following APIs, and the APIs themselves, since
-> the regular non - _notrace variants don't do any tracing anyway.
->  * hlist_for_each_entry_rcu_notrace
->  * rcu_dereference_raw_notrace
-> 
+The bonnie test doesn't show this would change the behavior of
+slab shrinkers.
 
-I guess the difference between the _raw_notrace and just _raw variants
-is that _notrace ones do a rcu_check_sparse(). Don't we want to keep
-that check?
+				w/		w/o
+			  /sec    %CP      /sec      %CP
+Sequential delete: 	3960.6    94.6    3997.6     96.2
+Random delete: 		2518      63.8    2561.6     64.6
 
--- Steve
+The slight increase of "/sec" without the patch would be caused by the
+slight increase of CPU usage.
+
+Cc: Josef Bacik <josef@toxicpanda.com>
+Cc: Michal Hocko <mhocko@kernel.org>
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+---
+v4: Added Johannes's ack
+
+ mm/vmscan.c | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 7acd0af..b65bc50 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -1137,11 +1137,6 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+ 		if (!sc->may_unmap && page_mapped(page))
+ 			goto keep_locked;
+ 
+-		/* Double the slab pressure for mapped and swapcache pages */
+-		if ((page_mapped(page) || PageSwapCache(page)) &&
+-		    !(PageAnon(page) && !PageSwapBacked(page)))
+-			sc->nr_scanned++;
+-
+ 		may_enter_fs = (sc->gfp_mask & __GFP_FS) ||
+ 			(PageSwapCache(page) && (sc->gfp_mask & __GFP_IO));
+ 
+-- 
+1.8.3.1
+
