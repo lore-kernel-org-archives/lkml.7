@@ -6,31 +6,32 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A91C07542
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 13:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4CDC07542
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 14:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3595E2168B
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 13:57:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D93D420863
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 14:09:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbfEYN50 (ORCPT
+        id S1726987AbfEYOHc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 09:57:26 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:17156 "EHLO huawei.com"
+        Sat, 25 May 2019 10:07:32 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:17157 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726898AbfEYN50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 09:57:26 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id C8AF8ADA2498956F5CEC;
-        Sat, 25 May 2019 21:57:22 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Sat, 25 May 2019
- 21:57:13 +0800
+        id S1726855AbfEYOHc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 May 2019 10:07:32 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 818245DBAAB06E20B619;
+        Sat, 25 May 2019 22:07:27 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Sat, 25 May 2019
+ 22:07:19 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
-To:     <airlied@linux.ie>, <arnd@arndb.de>, <gregkh@linuxfoundation.org>
+To:     <dushistov@mail.ru>, <viro@zeniv.linux.org.uk>, <arnd@arndb.de>,
+        <akpm@linux-foundation.org>
 CC:     <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] agp: remove some set but not used variables
-Date:   Sat, 25 May 2019 21:56:52 +0800
-Message-ID: <20190525135652.3688-1-yuehaibing@huawei.com>
+Subject: [PATCH -next] ufs: remove set but not used variable 'usb3'
+Date:   Sat, 25 May 2019 22:06:54 +0800
+Message-ID: <20190525140654.15924-1-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -41,91 +42,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warnings:
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-drivers/char/agp/frontend.c: In function agp_find_seg_in_client:
-drivers/char/agp/frontend.c:105:6: warning: variable num_segments set but not used [-Wunused-but-set-variable]
-drivers/char/agp/isoch.c: In function agp_3_5_isochronous_node_enable:
-drivers/char/agp/isoch.c:87:5: warning: variable mcapndx set but not used [-Wunused-but-set-variable]
-drivers/char/agp/isoch.c: In function agp_3_5_enable:
-drivers/char/agp/isoch.c:322:13: warning: variable arqsz set but not used [-Wunused-but-set-variable]
+fs/ufs/super.c: In function ufs_statfs:
+fs/ufs/super.c:1409:32: warning: variable usb3 set but not used [-Wunused-but-set-variable]
 
-They are never used and can be removed.
+It is not used since commmit c596961d1b4c ("ufs: fix s_size/s_dsize users")
 
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/char/agp/frontend.c | 3 +--
- drivers/char/agp/isoch.c    | 9 +--------
- 2 files changed, 2 insertions(+), 10 deletions(-)
+ fs/ufs/super.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/char/agp/frontend.c b/drivers/char/agp/frontend.c
-index f6955888e676..47098648502d 100644
---- a/drivers/char/agp/frontend.c
-+++ b/drivers/char/agp/frontend.c
-@@ -102,14 +102,13 @@ agp_segment_priv *agp_find_seg_in_client(const struct agp_client *client,
- 					    int size, pgprot_t page_prot)
- {
- 	struct agp_segment_priv *seg;
--	int num_segments, i;
-+	int i;
- 	off_t pg_start;
- 	size_t pg_count;
+diff --git a/fs/ufs/super.c b/fs/ufs/super.c
+index 3d247c0d92aa..4ed0dca52ec8 100644
+--- a/fs/ufs/super.c
++++ b/fs/ufs/super.c
+@@ -1407,11 +1407,9 @@ static int ufs_statfs(struct dentry *dentry, struct kstatfs *buf)
+ 	struct super_block *sb = dentry->d_sb;
+ 	struct ufs_sb_private_info *uspi= UFS_SB(sb)->s_uspi;
+ 	unsigned  flags = UFS_SB(sb)->s_flags;
+-	struct ufs_super_block_third *usb3;
+ 	u64 id = huge_encode_dev(sb->s_bdev->bd_dev);
  
- 	pg_start = offset / 4096;
- 	pg_count = size / 4096;
- 	seg = *(client->segments);
--	num_segments = client->num_segments;
- 
- 	for (i = 0; i < client->num_segments; i++) {
- 		if ((seg[i].pg_start == pg_start) &&
-diff --git a/drivers/char/agp/isoch.c b/drivers/char/agp/isoch.c
-index 31c374b1b91b..7ecf20a6d19c 100644
---- a/drivers/char/agp/isoch.c
-+++ b/drivers/char/agp/isoch.c
-@@ -84,7 +84,6 @@ static int agp_3_5_isochronous_node_enable(struct agp_bridge_data *bridge,
- 	unsigned int cdev = 0;
- 	u32 mnistat, tnistat, tstatus, mcmd;
- 	u16 tnicmd, mnicmd;
--	u8 mcapndx;
- 	u32 tot_bw = 0, tot_n = 0, tot_rq = 0, y_max, rq_isoch, rq_async;
- 	u32 step, rem, rem_isoch, rem_async;
- 	int ret = 0;
-@@ -138,8 +137,6 @@ static int agp_3_5_isochronous_node_enable(struct agp_bridge_data *bridge,
- 		cur = list_entry(pos, struct agp_3_5_dev, list);
- 		dev = cur->dev;
- 
--		mcapndx = cur->capndx;
--
- 		pci_read_config_dword(dev, cur->capndx+AGPNISTAT, &mnistat);
- 
- 		master[cdev].maxbw = (mnistat >> 16) & 0xff;
-@@ -251,8 +248,6 @@ static int agp_3_5_isochronous_node_enable(struct agp_bridge_data *bridge,
- 		cur = master[cdev].dev;
- 		dev = cur->dev;
- 
--		mcapndx = cur->capndx;
--
- 		master[cdev].rq += (cdev == ndevs - 1)
- 		              ? (rem_async + rem_isoch) : step;
- 
-@@ -319,7 +314,7 @@ int agp_3_5_enable(struct agp_bridge_data *bridge)
- {
- 	struct pci_dev *td = bridge->dev, *dev = NULL;
- 	u8 mcapndx;
--	u32 isoch, arqsz;
-+	u32 isoch;
- 	u32 tstatus, mstatus, ncapid;
- 	u32 mmajor;
- 	u16 mpstat;
-@@ -334,8 +329,6 @@ int agp_3_5_enable(struct agp_bridge_data *bridge)
- 	if (isoch == 0)	/* isoch xfers not available, bail out. */
- 		return -ENODEV;
- 
--	arqsz     = (tstatus >> 13) & 0x7;
--
- 	/*
- 	 * Allocate a head for our AGP 3.5 device list
- 	 * (multiple AGP v3 devices are allowed behind a single bridge).
+ 	mutex_lock(&UFS_SB(sb)->s_lock);
+-	usb3 = ubh_get_usb_third(uspi);
+ 	
+ 	if ((flags & UFS_TYPE_MASK) == UFS_TYPE_UFS2)
+ 		buf->f_type = UFS2_MAGIC;
 -- 
 2.17.1
 
