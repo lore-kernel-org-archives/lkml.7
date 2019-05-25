@@ -4,34 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FFBC07542
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 14:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 209E7C282CE
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 14:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D7DE2133D
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 14:38:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC94520879
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 14:42:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbfEYOi0 (ORCPT
+        id S1727100AbfEYOmO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 10:38:26 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:49686 "EHLO huawei.com"
+        Sat, 25 May 2019 10:42:14 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:17160 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727007AbfEYOiZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 10:38:25 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 69BACF60F0138FAA61DA;
-        Sat, 25 May 2019 22:38:23 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Sat, 25 May 2019
- 22:38:14 +0800
+        id S1726126AbfEYOmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 May 2019 10:42:13 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id F199C4B7FDF832421FFA;
+        Sat, 25 May 2019 22:42:10 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Sat, 25 May 2019
+ 22:42:02 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
-To:     <stern@rowland.harvard.edu>, <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+To:     <sschaeck@cisco.com>, <bp@alien8.de>, <mchehab@kernel.org>,
+        <james.morse@arm.com>, <joel@jms.id.au>, <andrew@aj.id.au>
+CC:     <linux-kernel@vger.kernel.org>, <linux-aspeed@lists.ozlabs.org>,
+        <linux-edac@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
         YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] USB: ohci-spear: Remove set but not used variable 'ohci'
-Date:   Sat, 25 May 2019 22:38:08 +0800
-Message-ID: <20190525143808.14308-1-yuehaibing@huawei.com>
+Subject: [PATCH -next] EDAC: aspeed: Remove set but not used variable 'np'
+Date:   Sat, 25 May 2019 22:41:53 +0800
+Message-ID: <20190525144153.2028-1-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -44,37 +48,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fixes gcc '-Wunused-but-set-variable' warning:
 
-drivers/usb/host/ohci-spear.c: In function spear_ohci_hcd_drv_probe:
-drivers/usb/host/ohci-spear.c:38:19: warning: variable ohci set but not used [-Wunused-but-set-variable]
+drivers/edac/aspeed_edac.c: In function aspeed_probe:
+drivers/edac/aspeed_edac.c:284:22: warning: variable np set but not used [-Wunused-but-set-variable]
 
-It is never used since commit 1cc6ac59ffaa ("USB:
-OHCI: make ohci-spear a separate driver")
+It is never used and can be removed.
+
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/usb/host/ohci-spear.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/edac/aspeed_edac.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/usb/host/ohci-spear.c b/drivers/usb/host/ohci-spear.c
-index 69fa04697793..5cc05449281c 100644
---- a/drivers/usb/host/ohci-spear.c
-+++ b/drivers/usb/host/ohci-spear.c
-@@ -35,7 +35,6 @@ static struct hc_driver __read_mostly ohci_spear_hc_driver;
- static int spear_ohci_hcd_drv_probe(struct platform_device *pdev)
- {
- 	const struct hc_driver *driver = &ohci_spear_hc_driver;
--	struct ohci_hcd *ohci;
- 	struct usb_hcd *hcd = NULL;
- 	struct clk *usbh_clk;
- 	struct spear_ohci *sohci_p;
-@@ -85,8 +84,6 @@ static int spear_ohci_hcd_drv_probe(struct platform_device *pdev)
+diff --git a/drivers/edac/aspeed_edac.c b/drivers/edac/aspeed_edac.c
+index 11833c0a5d07..5634437bb39d 100644
+--- a/drivers/edac/aspeed_edac.c
++++ b/drivers/edac/aspeed_edac.c
+@@ -281,15 +281,11 @@ static int aspeed_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	struct edac_mc_layer layers[2];
+ 	struct mem_ctl_info *mci;
+-	struct device_node *np;
+ 	struct resource *res;
+ 	void __iomem *regs;
+ 	u32 reg04;
+ 	int rc;
  
- 	clk_prepare_enable(sohci_p->clk);
- 
--	ohci = hcd_to_ohci(hcd);
+-	/* setup regmap */
+-	np = dev->of_node;
 -
- 	retval = usb_add_hcd(hcd, platform_get_irq(pdev, 0), 0);
- 	if (retval == 0) {
- 		device_wakeup_enable(hcd->self.controller);
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	if (!res)
+ 		return -ENOENT;
 -- 
 2.17.1
 
