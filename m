@@ -2,131 +2,109 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3194C04AB0
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 09:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51000C282E5
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 09:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AB102175B
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 09:38:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29BEB2175B
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 09:41:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Je7TqJvX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfEYJiE (ORCPT
+        id S1726764AbfEYJlI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 05:38:04 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:39451 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726464AbfEYJiE (ORCPT
+        Sat, 25 May 2019 05:41:08 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37129 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726453AbfEYJlH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 05:38:04 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 968FB80358; Sat, 25 May 2019 11:37:50 +0200 (CEST)
-Date:   Sat, 25 May 2019 11:37:59 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Hugh Dickins <hughd@google.com>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Revert "leds: avoid races with workqueue"?
-Message-ID: <20190525093759.GA17767@amd>
-References: <alpine.LSU.2.11.1905241540080.1674@eggly.anvils>
+        Sat, 25 May 2019 05:41:07 -0400
+Received: by mail-pf1-f196.google.com with SMTP id a23so6768243pff.4;
+        Sat, 25 May 2019 02:41:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jiTZ2o51d/sXyhPszg2Yj4q0qpn+Df3pI4yEQ+F+CaU=;
+        b=Je7TqJvXMENlCk3KNfujP2JkxLFkRJ216vC0Pn/xn9SjRXrCQTi/Wt9sIKeYqRqlG2
+         05v409w0p5WS2azWc8YEdW+mBWMaJM4Z2oznxJRoxm20gwGNcVijA+CRZ4Zr5TZhBCmn
+         6NhhmYFiT0UPe2jvDG4EUdX2JlVZp2bWjxwFykOxUqT7B5PKrx6uRwS1kzv8YXW9JmVu
+         rtn9w592U9knYw3AEW+j/NDrp5xlYv+jOFbhj1n6wQuMHldhjkPXCFGqUnx/h8bj8UDh
+         AISuuICfKbz7o9/kp3VX+oEXrj2uK6V4A9W+jFnOzDT0Ji4olXXeD7oLA7WDgeW+tnbF
+         a8eQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jiTZ2o51d/sXyhPszg2Yj4q0qpn+Df3pI4yEQ+F+CaU=;
+        b=ig+pn8o0s+PZeYhIY/LdMxPUi4AiqBmtPjJBuXq3Un+oflbU3IBm+GGb/jFkBrHVKO
+         3IsthW8i3lHQnS+PBR1pP7pcnul1W03eRhydY5htQNQo+OTGTdevIsUqjqQrmSuS6b5C
+         fGA75HF5c5PRI6hNumtq/dC3aC/sFbuyZwE4842hiapsk58T6ZCbaXwRHSGMQpADsYn/
+         KFZvZgmctMxNiScGjMfmVMBfH7glnAcdXcWqKqTBcS3O+ZQ0qt1E4BlYxZ/w7oULrpAL
+         uJ2wt3yDioomb/klHfrBsl+lfikKuvb3SvR/bW/8lMbger8BJZsaqQ8iiUTxRufyTHGM
+         Xhiw==
+X-Gm-Message-State: APjAAAVJJ+iAybwCwl0kq7YN5YWB9DXozZ7KmUwFmDmgoD9a7oYB2lh4
+        Rw+hGY8PdVAOlW/vrWOwFT0=
+X-Google-Smtp-Source: APXvYqzzWIEPodUUePFSoAYLslp64HJ+9tPcEwWIi6JyrCzBEdEYh4VWXmIHQtKNIIQ+Gu/Ecs0ujA==
+X-Received: by 2002:a62:590f:: with SMTP id n15mr27824591pfb.204.1558777266747;
+        Sat, 25 May 2019 02:41:06 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([66.42.35.75])
+        by smtp.gmail.com with ESMTPSA id k22sm4951489pfk.54.2019.05.25.02.41.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 25 May 2019 02:41:05 -0700 (PDT)
+Date:   Sat, 25 May 2019 17:40:52 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] efi_64: Fix a missing-check bug in
+ arch/x86/platform/efi/efi_64.c
+Message-ID: <20190525094052.GA13189@zhanggen-UX430UQ>
+References: <20190517082633.GA3890@zhanggen-UX430UQ>
+ <CAKv+Gu98JNK34Q6MNOe3aq0W5rbv6hUFiuc7cHxHJat5aTk_gg@mail.gmail.com>
+ <20190517090628.GA4162@zhanggen-UX430UQ>
+ <CAKv+Gu_mwFpdtNZm9QMFn69+vOMTOpv9gvuhnBL2NBXvwkhXqg@mail.gmail.com>
+ <20190523005133.GA14881@zhanggen-UX430UQ>
+ <CAKv+Gu_wRYZdDYXso0B5m_BPJznGQXpCWq4_0u34bConu0V1ow@mail.gmail.com>
+ <20190525023608.GA11613@zhanggen-UX430UQ>
+ <CAKv+Gu-agMymoGm0G8Yj-siXwtPnqYjAHeu-wQwRT47Jqd27JA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="zYM0uCDKw75PZbzx"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.11.1905241540080.1674@eggly.anvils>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <CAKv+Gu-agMymoGm0G8Yj-siXwtPnqYjAHeu-wQwRT47Jqd27JA@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, May 25, 2019 at 11:18:36AM +0200, Ard Biesheuvel wrote:
+> On Sat, 25 May 2019 at 04:36, Gen Zhang <blackgod016574@gmail.com> wrote:
+> >
+> > On Fri, May 24, 2019 at 06:07:10PM +0200, Ard Biesheuvel wrote:
+> > > Apologies for only spotting this now, but I seem to have given some bad advice.
+> > >
+> > > efi_call_phys_prolog() in efi_64.c will also return NULL if
+> > > (!efi_enabled(EFI_OLD_MEMMAP)), but this is not an error condition. So
+> > > that occurrence has to be updated: please return efi_mm.pgd instead.
+> > Thanks for your reply, Ard. You mean that we should return efi_mm.pgd
+> > when allcoation fails? And we should delete return EFI_ABORTED on the
+> > caller site, right? In that case, how should we handle the NULL pointer
+> > returned by condition if(!efi_enabled(EFI_OLD_MEMMAP)) on the caller
+> > site?
+> >
+> 
+> No, the other way around. I have already updated the patch, so don't
+> worry about it.
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git/commit/?h=urgent&id=d2dc2bc7b60b936b95da4b04c2912c02974c3e9f
+Thanks for your reply and update, Ard! That's really nice of you.
 
---zYM0uCDKw75PZbzx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> I'm having to revert 0db37915d912 ("leds: avoid races with workqueue")
-> from my 5.2-rc testing tree, because lockdep and other debug options
-> don't like it: net/mac80211/led.c arranges for led_blink_setup() to be
-> called at softirq time, and flush_work() is not good for calling
-> then.
-
-This should keep X60 working (as well as it is now; X60 will still
-have problems with lost events in setup like yours).
-
-Can you test this instead of the revert?
-
-Thanks,
-								Pavel
-
-diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
-index aefac4d..ebaac4d 100644
---- a/drivers/leds/led-core.c
-+++ b/drivers/leds/led-core.c
-@@ -158,19 +159,14 @@ static void led_set_software_blink(struct led_classde=
-v *led_cdev,
- 	}
-=20
- 	set_bit(LED_BLINK_SW, &led_cdev->work_flags);
--	mod_timer(&led_cdev->blink_timer, jiffies + 1);
-+	mod_timer(&led_cdev->blink_timer, jiffies + 1); /* Why oh why? Just call =
-it directly? */
- }
-=20
--
-+/* May not block */
- static void led_blink_setup(struct led_classdev *led_cdev,
- 		     unsigned long *delay_on,
- 		     unsigned long *delay_off)
- {
--	/*
--	 * If "set brightness to 0" is pending in workqueue, we don't
--	 * want that to be reordered after blink_set()
--	 */
--	flush_work(&led_cdev->set_brightness_work);
- 	if (!test_bit(LED_BLINK_ONESHOT, &led_cdev->work_flags) &&
- 	    led_cdev->blink_set &&
- 	    !led_cdev->blink_set(led_cdev, delay_on, delay_off))
-diff --git a/drivers/leds/trigger/ledtrig-timer.c b/drivers/leds/trigger/le=
-dtrig-timer.c
-index ca898c1..427fc3c 100644
---- a/drivers/leds/trigger/ledtrig-timer.c
-+++ b/drivers/leds/trigger/ledtrig-timer.c
-@@ -113,6 +113,11 @@ static int timer_trig_activate(struct led_classdev *le=
-d_cdev)
- 		led_cdev->flags &=3D ~LED_INIT_DEFAULT_TRIGGER;
- 	}
-=20
-+	/*
-+	 * If "set brightness to 0" is pending in workqueue, we don't
-+	 * want that to be reordered after blink_set()
-+	 */
-+	flush_work(&led_cdev->set_brightness_work);
- 	led_blink_set(led_cdev, &led_cdev->blink_delay_on,
- 		      &led_cdev->blink_delay_off);
-=20
-
-
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---zYM0uCDKw75PZbzx
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlzpDPcACgkQMOfwapXb+vJBTQCdGXyvrKhaF+8tfO2Ckd9ww0th
-AsAAmwXZqlXOMenyO2Hnp6+x7P7ekSsP
-=nRA5
------END PGP SIGNATURE-----
-
---zYM0uCDKw75PZbzx--
+Thanks
+Gen
