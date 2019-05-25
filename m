@@ -2,84 +2,127 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D05C282E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 02:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E60AAC282E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 02:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AA8C217F9
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 02:03:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6E75217D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 02:09:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BFXINTg7"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LpSfcMLD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbfEYCDV (ORCPT
+        id S1726574AbfEYCJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 22:03:21 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38685 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726341AbfEYCDV (ORCPT
+        Fri, 24 May 2019 22:09:33 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:45773 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbfEYCJd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 22:03:21 -0400
-Received: by mail-pf1-f193.google.com with SMTP id b76so6319843pfb.5
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 19:03:20 -0700 (PDT)
+        Fri, 24 May 2019 22:09:33 -0400
+Received: by mail-ot1-f66.google.com with SMTP id t24so10335064otl.12
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 19:09:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=G6O0Sas8lBJuyEn431+Rs5xpmoWk5tFF1phh4Kv0UMU=;
-        b=BFXINTg7r3Z8E8euEm7haR4A7qqhJSLm7KQ6iqEcqFBrUDIg0VUgZakI9M+yWwkAfF
-         14fMDvv2aLgNsjOXv3mnZWzRCcoeUdLOH8WAUsSvXmXdsJZpYtal5b3mYL3Ovbu+d/FQ
-         3QEsq7Dwyh45RO1ALWJnnMJI7Vd/PnUyxAlx/xJ1in/iVoV510apnGOnp9bVtAHou9vZ
-         FRJsmHY7uwEZde3GM6tdyebr/clu44UzvWaAqx7pyMwz4Abv/4Q5tWKpVH0o26voapS1
-         fxVDAqIvFq8YtdbM2DMTfPnNK3Fbogt3gXkRGw2NEUwoHQOhMGLXMejVEJKJ6+nFd7K0
-         tYGg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LZzs5xzeqtVuzgwwnEv2OC+wDQwHzVptWWlrVSZVAQI=;
+        b=LpSfcMLDiUhQLwFnbv22EYTidAmanIzvxucTe3e3Huy/p1Pv+V8iQonG/LTIbtqSWP
+         9Mp9d+nb8WvRERLdmhJmbQ41VSRNvOmAVJ5D0lN8KdiLk4w0FDjGQaU4ppwrVx+S+WjV
+         in5CGq3+upoHcc5SpSSxDe+e1+p84Psxss2SgCpq5LjgwHvBkTBVC9utrFESDIqTzsPz
+         O57+O5yBKxJBq7ZHP3q+xSNxtVV+bcMRif+DI+fCRXXh2Un/j/BDDcmVQosE/Wr3BsER
+         8OoeFAnK0EHvaGtU91i4CNa5tspsh08desjK5wg9SPtIzbYyu5O4iF05+Hrb1Fw3F+9L
+         wz3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=G6O0Sas8lBJuyEn431+Rs5xpmoWk5tFF1phh4Kv0UMU=;
-        b=JghEwKTYgEoiHDojqEVtohBEDODbJ+dqmxQoRE9Bo4kG0K1gruZ1+ymlbtsxvlacNl
-         IVF/T0fBpQ48uK6Y5m5UrDEOr0anNs/GIcvoYPSFejStK7BvPdF5U0k1h3Lu67yyuk3t
-         z8Dw1WAfocDFU3wDcIONWyXOePEJTgS5lGnknoNljHzlEEHs2WVSUpNj1ZoU33UJ1xa/
-         MAC2p6DYStcGKF1WLvMxbngoURFmeJeMd4mCguzqgY88Y3J6LrhNTpG8yJOHywUKGn2n
-         f5FPoCsVwrVkH683fFvNPTWyJeuduI8+6f4R1GIRxcKgHGIG54i4GZaQLwPi48hizVhT
-         wjGg==
-X-Gm-Message-State: APjAAAWCy+h9etSfSHbTuAvQV28J4klCdBF2xgimwIBNXK5NDNRkRNY/
-        NWDwI5juBlrdPtDg3/Dzf/s=
-X-Google-Smtp-Source: APXvYqw65nbWnbdgvMIvwULij18wNBNdl9vjwH5luRXLOUXKgLjASuOfq3fOY6XQIzen+15G/zb3mg==
-X-Received: by 2002:a63:fc61:: with SMTP id r33mr2251680pgk.294.1558749800415;
-        Fri, 24 May 2019 19:03:20 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([66.42.35.75])
-        by smtp.gmail.com with ESMTPSA id b23sm3844777pfi.6.2019.05.24.19.03.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 19:03:19 -0700 (PDT)
-Date:   Sat, 25 May 2019 10:03:05 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     rafael@kernel.org, gregkh@linuxfoundation.org
-Cc:     jonathanh@nvidia.com, linux-kernel@vger.kernel.org
-Subject: [devm_kfree() usage] When should devm_kfree() be used?
-Message-ID: <20190525020305.GA10933@zhanggen-UX430UQ>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LZzs5xzeqtVuzgwwnEv2OC+wDQwHzVptWWlrVSZVAQI=;
+        b=IYKU58MqY8G22sgOnltmeI74YqsD7q7r1VO1iKF4Rdlksrmbc2lSLiAhNF7r3UGIG4
+         8RoRYEZay5z6lAA2XA3xq40sypETdXIxWxJD8o7Ndqn0kuwJylFrvsdSmZG0vAeU6Gbb
+         lOuLCUgqaenzMFeoLXSMzB9oPUD2yYbncf0xQgNAtl75oYBNk9zSmXnf7bLcKnCZxSnT
+         r6q3krFrc3XTR79x3ZN2nyVjbY23vKQDpkPMFNbxhmD3g/Xk/SVUPvnmWqosaoHsUyMp
+         vEaSls6d8nIFuO7CiindFvT/jZ5WNUj05HX0HosRKJKaN2nd1FXld5LwOm3saNAOM8FJ
+         mMMQ==
+X-Gm-Message-State: APjAAAWuedXSACzTbJPBvOUVnbzXMprrQb+7L/cVFS7rCpXd+3HyfuMk
+        oLHAca2uhU/s/EWM8CEMWeLQyyAkKXs8vaLHlD2Zsg==
+X-Google-Smtp-Source: APXvYqywCXHUTcsaMeWUQ99nmh25iIlVZDM17cQeOhrhvN/0hvRddyY0+adbYQ5SE14e+43owKTnBffphfwKTj126pQ=
+X-Received: by 2002:a9d:3b49:: with SMTP id z67mr53168810otb.236.1558750172585;
+ Fri, 24 May 2019 19:09:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190524010117.225219-1-saravanak@google.com> <06b479e2-e8a0-b3e8-567c-7fa0f1c5bdf6@gmail.com>
+ <CAGETcx-21GEoBKhpzcsrDt3sEo-vUpwqnr3To7VbSPd8aW86Nw@mail.gmail.com>
+ <6d3995c1-e1e7-35ff-d091-501822c97ecd@gmail.com> <0634ea45-2941-73fb-f8d8-b536e929a4a8@gmail.com>
+In-Reply-To: <0634ea45-2941-73fb-f8d8-b536e929a4a8@gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Fri, 24 May 2019 19:08:56 -0700
+Message-ID: <CAGETcx-bNhnfaThygrSbnbAmQ8PqEGHj8eVO3OvhJAomJ936Eg@mail.gmail.com>
+Subject: Re: [PATCH v1 0/5] Solve postboot supplier cleanup and optimize probe ordering
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-devm_kmalloc() is used to allocate memory for a driver dev. Comments
-above the definition and doc 
-(https://www.kernel.org/doc/Documentation/driver-model/devres.txt) all
-imply that allocated the memory is automatically freed on driver attach,
-no matter allocation fail or not. However, I examined the code, and
-there are many sites that devm_kfree() is used to free devm_kmalloc().
-e.g. hisi_sas_debugfs_init() in drivers/scsi/hisi_sas/hisi_sas_main.c.
-So I am totally confused about this issue. Can anybody give me some
-guidance? When should we use devm_kfree()?
+Ugh... mobile app is sending HTML emails. Replying again.
 
-Thanks
-Gen
+On Fri, May 24, 2019 at 5:25 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>
+> On 5/24/19 5:22 PM, Frank Rowand wrote:
+> > On 5/24/19 2:53 PM, Saravana Kannan wrote:
+> >> On Fri, May 24, 2019 at 10:49 AM Frank Rowand <frowand.list@gmail.com> wrote:
+> >>>
+> >>> On 5/23/19 6:01 PM, Saravana Kannan wrote:
+> >
+> > < snip >
+> >
+> >>> Another flaw with this method is that existing device trees
+> >>> will be broken after the kernel is modified, because existing
+> >>> device trees do not have the depends-on property.  This breaks
+> >>> the devicetree compatibility rules.
+> >>
+> >> This is 100% not true with the current implementation. I actually
+> >> tested this. This is fully backwards compatible. That's another reason
+> >> for adding depends-on and going by just what it says. The existing
+> >> bindings were never meant to describe only mandatory dependencies. So
+> >> using them as such is what would break backwards compatibility.
+> >
+> > Are you saying that an existing, already compiled, devicetree (an FDT)
+> > can be used to boot a new kernel that has implemented this patch set?
+> >
+> > The new kernel will boot with the existing FDT that does not have
+> > any depends-on properties?
+
+You sent out a lot of emails on this topic. But to answer them all.
+The existing implementation is 100% backwards compatible.
+
+> I overlooked something you said in the email I replied to.  You said:
+>
+>    "that depends-on becomes the source of truth if it exists and falls
+>    back to existing common bindings if "depends-on" isn't present"
+
+This is referring to an alternate implementation where implicit
+dependencies are used by the kernel but new "depends-on" property
+would allow overriding in cases where the implicit dependencies are
+wrong. But this will need a kernel command line flag to enable this
+feature so that we can be backwards compatible. Otherwise it won't be.
+
+> Let me go back to look at the patch series to see how it falls back
+> to the existing bindings.
+
+Current patch series doesn't really "fallback" but rather it only acts
+on this new property. Existing FDT binaries simply don't have this. So
+it won't have any impact on the kernel behavior. But yes, looking at
+the patches again will help :)
+
+-Saravana
