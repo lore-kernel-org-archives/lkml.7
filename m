@@ -2,104 +2,88 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13677C282E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 00:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29670C282E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 00:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E30CC21874
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 00:05:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECE822075E
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 00:06:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558742804;
+	bh=R5AKhhljVFaewfHEJrRuX+cMSqD/1Iy0pRTZaZD5wOA=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=grCh9il+g/iCTiADM/XmoGxCTNTuN2VoWTEpwZwlaVxptJMrMMntSuK4KMY1BApQy
+	 RYS+l/FQKNNos9J8O6HHQiZhvfIa/TlWVinwpESB23HWOfXsLJdDTm8wpVsUnDzZ4B
+	 CzvI+MiIrf8oioT3H8q2I1aT6xl6C+5tcv54KwQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbfEYAFh (ORCPT
+        id S1726362AbfEYAGm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 20:05:37 -0400
-Received: from mga01.intel.com ([192.55.52.88]:36240 "EHLO mga01.intel.com"
+        Fri, 24 May 2019 20:06:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726015AbfEYAFQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 20:05:16 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 May 2019 17:05:15 -0700
-X-ExtLoop1: 1
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by orsmga005.jf.intel.com with ESMTP; 24 May 2019 17:05:15 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     "Thomas Gleixner" <tglx@linutronix.de>,
-        "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
-        "H Peter Anvin" <hpa@zytor.com>,
-        "Andy Lutomirski" <luto@amacapital.net>,
-        "Andrew Cooper" <andrew.cooper3@citrix.com>,
-        "Ashok Raj" <ashok.raj@intel.com>,
-        "Tony Luck" <tony.luck@intel.com>,
-        "Ravi V Shankar" <ravi.v.shankar@intel.com>
-Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
-        "x86" <x86@kernel.org>, Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH v3 1/5] x86/cpufeatures: Enumerate user wait instructions
-Date:   Fri, 24 May 2019 16:55:58 -0700
-Message-Id: <1558742162-73402-2-git-send-email-fenghua.yu@intel.com>
-X-Mailer: git-send-email 2.5.0
-In-Reply-To: <1558742162-73402-1-git-send-email-fenghua.yu@intel.com>
-References: <1558742162-73402-1-git-send-email-fenghua.yu@intel.com>
+        id S1726015AbfEYAGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 20:06:41 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73F5C2075E;
+        Sat, 25 May 2019 00:06:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558742800;
+        bh=R5AKhhljVFaewfHEJrRuX+cMSqD/1Iy0pRTZaZD5wOA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=gCiElU+nd/lFG9ym/Rld6sfSG6dgF4ypBbDXnsWuBOAJPxmOH5Ruw1x0wSNYyzIkd
+         gqUvYt2Y1Hy9DiuXT88sEqhkTCfDgtxngUDv7/Zax9v7o/YFOOvrbPtp66lSut0EWI
+         t6IPvgPj2T76F4J4cGrkn+8xspQXslqqsQa5l2hI=
+Subject: Re: [PATCH v2 1/3] kselftest/cgroup: fix unexpected testing failure
+ on test_memcontrol
+To:     Tejun Heo <tj@kernel.org>, Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     cgroups@vger.kernel.org, Roman Gushchin <guro@fb.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jay Kamat <jgkamat@fb.com>, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20190520030140.203605-1-alex.shi@linux.alibaba.com>
+ <20190520030140.203605-2-alex.shi@linux.alibaba.com>
+ <20190524214035.GG374014@devbig004.ftw2.facebook.com>
+ <0c6b76b8-e20c-33f0-21da-64a5d5da30a9@kernel.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <ea5514c1-80a1-3c41-de1c-43582b6f1a49@kernel.org>
+Date:   Fri, 24 May 2019 18:06:39 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <0c6b76b8-e20c-33f0-21da-64a5d5da30a9@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-umonitor, umwait, and tpause are a set of user wait instructions.
+On 5/24/19 3:44 PM, shuah wrote:
+> On 5/24/19 3:40 PM, Tejun Heo wrote:
+>> Hello,
+>>
+>> All three patches look good to me.  Please feel free to add my
+>> acked-by.  Shuah, should I route these through cgroup tree or would
+>> the kselftest tree be a better fit?
+>>
+>> Thanks.
+>>
+> 
+> 
+> Tejun, I can take them through kselftest tree.
+> 
 
-umonitor arms address monitoring hardware using an address. The
-address range is determined by using CPUID.0x5. A store to
-an address within the specified address range triggers the
-monitoring hardware to wake up the processor waiting in umwait.
+Alex,
 
-umwait instructs the processor to enter an implementation-dependent
-optimized state while monitoring a range of addresses. The optimized
-state may be either a light-weight power/performance optimized state
-(C0.1 state) or an improved power/performance optimized state
-(C0.2 state).
+patches 1/3 and 2/3 failed checkpatch. Could you please the warns
+and send v3. Go ahead and send all v3 for all 3 patches
 
-tpause instructs the processor to enter an implementation-dependent
-optimized state C0.1 or C0.2 state and wake up when time-stamp counter
-reaches specified timeout.
-
-The three instructions may be executed at any privilege level.
-
-The instructions provide power saving method while waiting in
-user space. Additionally, they can allow a sibling hyperthread to
-make faster progress while this thread is waiting. One example of an
-application usage of umwait is when waiting for input data from another
-application, such as a user level multi-threaded packet processing
-engine.
-
-Availability of the user wait instructions is indicated by the presence
-of the CPUID feature flag WAITPKG CPUID.0x07.0x0:ECX[5].
-
-Detailed information on the instructions and CPUID feature WAITPKG flag
-can be found in the latest Intel Architecture Instruction Set Extensions
-and Future Features Programming Reference and Intel 64 and IA-32
-Architectures Software Developer's Manual.
-
-Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-Reviewed-by: Ashok Raj <ashok.raj@intel.com>
----
- arch/x86/include/asm/cpufeatures.h | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index 75f27ee2c263..b8bd428ae5bc 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -322,6 +322,7 @@
- #define X86_FEATURE_UMIP		(16*32+ 2) /* User Mode Instruction Protection */
- #define X86_FEATURE_PKU			(16*32+ 3) /* Protection Keys for Userspace */
- #define X86_FEATURE_OSPKE		(16*32+ 4) /* OS Protection Keys Enable */
-+#define X86_FEATURE_WAITPKG		(16*32+ 5) /* UMONITOR/UMWAIT/TPAUSE Instructions */
- #define X86_FEATURE_AVX512_VBMI2	(16*32+ 6) /* Additional AVX512 Vector Bit Manipulation Instructions */
- #define X86_FEATURE_GFNI		(16*32+ 8) /* Galois Field New Instructions */
- #define X86_FEATURE_VAES		(16*32+ 9) /* Vector AES */
--- 
-2.19.1
+thanks,
+-- Shuah
 
