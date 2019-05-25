@@ -2,110 +2,117 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB65C07542
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54FB6C07542
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:54:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9257F20862
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:53:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2649220862
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:54:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BgXEnwqs";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AhvQjd1G"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WjLdOQG9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727187AbfEYRxn (ORCPT
+        id S1727248AbfEYRyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 13:53:43 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:42086 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725838AbfEYRxn (ORCPT
+        Sat, 25 May 2019 13:54:32 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46772 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725838AbfEYRyc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 13:53:43 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 1A51960C5F; Sat, 25 May 2019 17:53:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558806822;
-        bh=jzgn7rg3s5o3zpXbF8z5WWZpHYb1TEcoJmOALP8joCg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=BgXEnwqsQtglDsn26d091gsab2jvK9eX60DBAj3Sb35YVk8e20LyNcO17POyPz/qA
-         XeHQKa1D6dg1r+ofxGIWlG12NCCi/1BF6UOnyblc7uq3KDKXxDjCsMJb7KziiEXQVf
-         7C+P2vVgN1x1lDr3xGeUFlHc7QmtsFmhzXtqoBsU=
-Received: from [192.168.1.101] (unknown [157.45.255.98])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C6CAF601D4;
-        Sat, 25 May 2019 17:53:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558806821;
-        bh=jzgn7rg3s5o3zpXbF8z5WWZpHYb1TEcoJmOALP8joCg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=AhvQjd1G+fm8dGu6jDuDybm6UFdOcyr5aXzXC+7+TtNTb6dikoxLweF9ECtqAwEd6
-         AY59Ce5O14emuv7Ou2IajldTA0rzRJqbHE0zXer/5aoLX/PIPxx96C2mLD3lylNyOV
-         osSg39oiCXUuZu3J1AQRvVQtRq/leRGMocTXDmyM=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C6CAF601D4
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-Subject: Re: [PATCH v7 2/4] soc: qcom: Add AOSS QMP driver
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Sat, 25 May 2019 13:54:32 -0400
+Received: by mail-pf1-f194.google.com with SMTP id y11so2337769pfm.13
+        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 10:54:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=DEpuhQuBsGwiHo827HWHBFzX5NQZPFzzYlkuA72/SiA=;
+        b=WjLdOQG9mrCp0ELu/bt3O7UbVIAvTh0Vx7MQoek6qs57GO34xUppozMYwVWZmRFIwT
+         G5iGj3R3oNgfcluvs8nU/wSndGgci99HUZxy8+HkvbtYyDpHGCjuEebjCP8qncM+xKgF
+         xDW+dw2o1phUBlNvLqik6tZMYK3B0ORF6g/NFvFJXgMaUFZLv28GTtjhPmeLLgE5LMPd
+         iDFiFUGCrEY4iSjXKSJ4lDquw57Dp30z62mB0tFiefEICYvHXaw6SiOaMuBwmtwrBO0U
+         19B1NlFFf50I5VPVxRePkMRGabg3CBp0upUgpaqdsP6qxFPRjA9RmRLaWx+pW1mBFOY7
+         F6GA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=DEpuhQuBsGwiHo827HWHBFzX5NQZPFzzYlkuA72/SiA=;
+        b=rah3e8td220NleXCHEQcbmW/XP5M/Bm+hFpnZPqGzXIYL8c7EZPfVM1Iki4t1FZeBa
+         VM3rCqvx80FwGuHql3AlGarVybeMTIVe3rpNE4MDOVl9exiPmggDrDAsggWT0Ep4qKQd
+         Gh+elpZjCjiwvrJvZZkZe3imQV2qMpyjP1Bsfxi542fRuHY87MkDQSLWKb8TbtLMvvCX
+         RoIW6b5m29p5E+63j/lkJ6jCzbHqOZ9tp0D1kADyhwd+Lfgu33BnYeayb1wPvVS+FKHx
+         tPyGKAcAe5HGxIZkfhQDJBwOtiFokIaXyx2NSGcNnEfWVaOkGz2BoQ5KGO0EF5xeeSyi
+         Xf+w==
+X-Gm-Message-State: APjAAAVnQ8oW2Hu/SNNcAA9E89dG+/37sXDdsu7WLA1x1UKDxqDT1P3/
+        JN/RZkwymHtyPmo+9+u8udE=
+X-Google-Smtp-Source: APXvYqzAWlK2XPpvnHqjfejsJLvRg/XDSSsH8LlOZKQ8J+6/TfVO6G+fL/q7U6zjHi3hCRZ4ZIuOLQ==
+X-Received: by 2002:a63:2f47:: with SMTP id v68mr28837402pgv.251.1558806871591;
+        Sat, 25 May 2019 10:54:31 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.92.73])
+        by smtp.gmail.com with ESMTPSA id p90sm16977127pfa.18.2019.05.25.10.54.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 25 May 2019 10:54:29 -0700 (PDT)
+Date:   Sat, 25 May 2019 23:24:23 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Charlene Liu <charlene.liu@amd.com>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Ken Chalmers <ken.chalmers@amd.com>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org
-References: <20190501043734.26706-1-bjorn.andersson@linaro.org>
- <20190501043734.26706-3-bjorn.andersson@linaro.org>
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Message-ID: <3d2c61ca-b91b-fdc7-7837-af6a3b71af7e@codeaurora.org>
-Date:   Sat, 25 May 2019 23:23:33 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+Subject: [PATCH] drm/amd/display: fix  possible condition with no effect (if
+ == else)
+Message-ID: <20190525175423.GA27834@hari-Inspiron-1545>
 MIME-Version: 1.0
-In-Reply-To: <20190501043734.26706-3-bjorn.andersson@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/1/2019 10:07 AM, Bjorn Andersson wrote:
-> The Always On Subsystem (AOSS) Qualcomm Messaging Protocol (QMP) driver
-> is used to communicate with the AOSS for certain side-channel requests,
-> that are not available through the RPMh interface.
-> 
-> The communication is a very simple synchronous mechanism of messages
-> being written in message RAM and a doorbell in the AOSS is rung. As the
-> AOSS has processed the message length is cleared and an interrupt is
-> fired by the AOSS as acknowledgment.
-> 
-> The driver exposes the QDSS clock as a clock and the low-power state
-> associated with the remoteprocs in the system as a set of power-domains.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
-> 
-> Changes since v6:
-> - Squash the pd into the same driver as the communication, to simplify
->    the interaction.
-> - Representing the QDSS clocks as a clock/power domain turns out to
->    cascade into a request to make all Coresight drivers have a secondary
->    compatible to replace the required bus clock with a required power
->    domain. So in v7 this is exposed as a clock instead.
-> - Some error checking updates, as reported by Doug.
-> 
+fix below warning reported by coccicheck
 
-Thanks for the patch Bjorn.
-Tested the QDSS functionality on SDM845 based Cheza board with this
-change and it works just fine.
+./drivers/gpu/drm/amd/display/dc/calcs/dce_calcs.c:1364:3-5: WARNING:
+possible condition with no effect (if == else)
 
-Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/gpu/drm/amd/display/dc/calcs/dce_calcs.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
+diff --git a/drivers/gpu/drm/amd/display/dc/calcs/dce_calcs.c b/drivers/gpu/drm/amd/display/dc/calcs/dce_calcs.c
+index f3aa7b5..0706ced 100644
+--- a/drivers/gpu/drm/amd/display/dc/calcs/dce_calcs.c
++++ b/drivers/gpu/drm/amd/display/dc/calcs/dce_calcs.c
+@@ -1361,13 +1361,7 @@ static void calculate_bandwidth(
+ 	/*if stutter and dram clock state change are gated before cursor then the cursor latency hiding does not limit stutter or dram clock state change*/
+ 	for (i = 0; i <= maximum_number_of_surfaces - 1; i++) {
+ 		if (data->enable[i]) {
+-			if (dceip->graphics_lb_nodownscaling_multi_line_prefetching == 1) {
+-				data->maximum_latency_hiding[i] = bw_add(data->minimum_latency_hiding[i], bw_mul(bw_frc_to_fixed(5, 10), data->total_dmifmc_urgent_latency));
+-			}
+-			else {
+-				/*maximum_latency_hiding(i) = minimum_latency_hiding(i) + 1 / vsr(i) * h_total(i) / pixel_rate(i) + 0.5 * total_dmifmc_urgent_latency*/
+-				data->maximum_latency_hiding[i] = bw_add(data->minimum_latency_hiding[i], bw_mul(bw_frc_to_fixed(5, 10), data->total_dmifmc_urgent_latency));
+-			}
++			data->maximum_latency_hiding[i] = bw_add(data->minimum_latency_hiding[i], bw_mul(bw_frc_to_fixed(5, 10), data->total_dmifmc_urgent_latency));
+ 			data->maximum_latency_hiding_with_cursor[i] = bw_min2(data->maximum_latency_hiding[i], data->cursor_latency_hiding[i]);
+ 		}
+ 	}
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.7.4
+
