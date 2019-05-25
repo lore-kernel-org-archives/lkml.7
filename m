@@ -2,160 +2,122 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D96C07542
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A387C282E5
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B7D92081C
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:02:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CpGmafQ+"
+	by mail.kernel.org (Postfix) with ESMTP id 021F42081C
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:06:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558803967;
+	bh=JCyz2AHEnuFqjY1vov/YDirUQKDfQDhkKPswnqOMK3Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gi21CHtUByzth3t09K+LUGONb/5tMH3XjGz6M2DOgBowuaj4MAYZH0nNRjv7R6jup
+	 nrBZIZddcg2SVuK5+J0qyd/zf7A/fiqdnpSAbxMf1/12Rge29QEH5zEBeMHH2ehK1j
+	 eQGUla9CrNs3rwLO9xnV7Fq3P/CzNBvmXVd1u7qk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727281AbfEYRCv (ORCPT
+        id S1727248AbfEYRGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 13:02:51 -0400
-Received: from mail-wr1-f47.google.com ([209.85.221.47]:34481 "EHLO
-        mail-wr1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727163AbfEYRCv (ORCPT
+        Sat, 25 May 2019 13:06:06 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33865 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727149AbfEYRGF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 13:02:51 -0400
-Received: by mail-wr1-f47.google.com with SMTP id f8so12881762wrt.1;
-        Sat, 25 May 2019 10:02:50 -0700 (PDT)
+        Sat, 25 May 2019 13:06:05 -0400
+Received: by mail-lj1-f195.google.com with SMTP id j24so11293023ljg.1
+        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 10:06:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FJMoSwtFQuobGh2l0B0WBCf8j6tqYKncVNKUYyAji8A=;
-        b=CpGmafQ+qVpsOQbVUKOQiNc7xR6tV3cpqn54YbP2vby9m+RfFwdE3eDkyfUhj/rEqi
-         QvCq7yR5VjkzzRQxo9rr+Qf5krJLS/DsSKN697XolV1hDjiCym8l7C+YTAH8JT3sEDUD
-         v9NhEytvdj6junaHrffRXg3xJ6yYddujZp7h03kzOM/JcdNTnsBNEkNePw79yYFTMN1F
-         4/euU/n3t+jSnUvgTEpViipWbvRnRx+S9ZGE8ZD1AQVEos8jW2jB2c2xR+QHZ4LdOQky
-         I/feJ4+c5mGxPWSK8avwHCM1bSKtUYqeRFhcMwrRYNQ9bwU/mPzMaLSNicTIXWJUEArM
-         j9uw==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eUnPUEw25xH84DOq6zJ0v6Aw5NodbUsM/I1jFeyU0KM=;
+        b=ZvNWnuQZMG/SkUan4dFz03SkF+F6NtqRC/Cgx2fb5lXthFpCjyzEbczW/SDraYncIR
+         zQgHz3FqW2dkuJzWrU9AHwiQ6MhmEIkM0Uwmoc25goSdoXSqyrERxHA6nnEdyvmvjOcJ
+         rQ898QL/9J9sDjvhm9K66P/TQWm9eicsR7EOM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FJMoSwtFQuobGh2l0B0WBCf8j6tqYKncVNKUYyAji8A=;
-        b=EgX5dFzhiXEQKqVye2gaweGEVoTR9FMMeBj+GZNrl2pKeTWnrvJBh3EcrSnTKDGWXx
-         8yzObDU2Tsz7sUVPJkxnH7ldbF8jYZek9Gmf55b2j5XnyOUZnLD94W6kL997Q5RYmmEm
-         LBoddzkrt6T2xahPHQFW4nT74PTb13m1sF5U5r7Ly6Jm8Ok3lHOuiMMUZDMDNzyWpEwy
-         YaOVkQmjUQzSm02aXGZaexqEgmpEUzZgKqhX7aUaeNaQx4UzE6vfhMPhoMONjHaJmHcB
-         U3X3rQBX4T6aU/nqIIl1CAqrcS11bPhvMcY2eePFPDxkMVM6WA0bIHxr3uDbAqr83rEs
-         3hsw==
-X-Gm-Message-State: APjAAAWEJCjdVx+m3wyoEKgZCdqmAB76nYWxOE7uJpkDnS8brKlUy+Oz
-        5BA3ZBcp1u/4/a9OnGzbgWw=
-X-Google-Smtp-Source: APXvYqw5P1CelOdOgtr1cAg0hcd5NyvRppNxOrlMEyRrdwvj6F5tqZXNxYWNGReNCE5zz1JHSRW/Ag==
-X-Received: by 2002:a5d:4302:: with SMTP id h2mr21205957wrq.137.1558803769874;
-        Sat, 25 May 2019 10:02:49 -0700 (PDT)
-Received: from [192.168.1.17] (dku44.neoplus.adsl.tpnet.pl. [83.24.24.44])
-        by smtp.gmail.com with ESMTPSA id l14sm5335503wrt.57.2019.05.25.10.02.48
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eUnPUEw25xH84DOq6zJ0v6Aw5NodbUsM/I1jFeyU0KM=;
+        b=fH+n1EFUY/da6ce1y9wY5VEc9/xVl/1l5wg/2yU4B9azk7Cr06Eat3EPitCIB/jza2
+         3MNr+DqDqr/uEVXYxIAE1fBtVBTANUzPL0HnJDMIkmZD5VUlIpNQgoF5eUfUC8MyaSgV
+         mYs6XUyhegqy+vDtso894wJr8wHefbzY3zOoPxQxZvsE8ti+yWIAkS3z8kfIOQ0WwEOJ
+         JRFcOuO/ezeE9lqifyberz1we7qHVZzYOXo6RIp5QHwQ86+pso3cHARFxehThVovRbIJ
+         A8wgK2vxb+LLxqcByjovYstIzHZ6duPyU4m8ZsfjQCEvfddVshadK2f7840TnhnrqfJ5
+         0RmA==
+X-Gm-Message-State: APjAAAWAuFnniQKon7DoAZ9K5rUutVBbGMwOebCZLGHuNwoxrwtaloTv
+        7lgEjsK6BShIV1ZXGlVMzIDQWYCkN6U=
+X-Google-Smtp-Source: APXvYqyfzysI69SI4LuUEiFOj3SfKlxFw/58Rijm/70+VvKZw4o7RHbZQaJxKaohIGsCZTiyl02JAg==
+X-Received: by 2002:a2e:5b52:: with SMTP id p79mr2137135ljb.208.1558803962572;
+        Sat, 25 May 2019 10:06:02 -0700 (PDT)
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com. [209.85.167.52])
+        by smtp.gmail.com with ESMTPSA id y25sm1248214lfy.59.2019.05.25.10.06.01
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 25 May 2019 10:02:49 -0700 (PDT)
-Subject: Re: Disk activity trigger: keeps blinking under full load
-To:     Pavel Machek <pavel@ucw.cz>, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     linus.walleij@linaro.org, linz@li-pro.net, rpurdie@rpsys.net
-References: <20190523214301.GA14788@amd>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <67fee5a8-cba1-79aa-104c-84bbe0e168e9@gmail.com>
-Date:   Sat, 25 May 2019 19:02:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sat, 25 May 2019 10:06:01 -0700 (PDT)
+Received: by mail-lf1-f52.google.com with SMTP id n22so1546405lfe.12
+        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 10:06:01 -0700 (PDT)
+X-Received: by 2002:ac2:59c9:: with SMTP id x9mr629669lfn.52.1558803961013;
+ Sat, 25 May 2019 10:06:01 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190523214301.GA14788@amd>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190525133203.25853-1-hch@lst.de> <20190525133203.25853-5-hch@lst.de>
+In-Reply-To: <20190525133203.25853-5-hch@lst.de>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat, 25 May 2019 10:05:45 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg-KDU9Gp8NGTAffEO2Vh6F_xA4SE9=PCOMYamnEj0D4w@mail.gmail.com>
+Message-ID: <CAHk-=wg-KDU9Gp8NGTAffEO2Vh6F_xA4SE9=PCOMYamnEj0D4w@mail.gmail.com>
+Subject: Re: [PATCH 4/6] mm: add a gup_fixup_start_addr hook
+To:     Christoph Hellwig <hch@lst.de>,
+        Khalid Aziz <khalid.aziz@oracle.com>
+Cc:     Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        linux-mips@vger.kernel.org,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        sparclinux@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+[ Adding Khalid, who added the sparc64 code ]
 
-On 5/23/19 11:43 PM, Pavel Machek wrote:
-> Hi!
-> 
-> I'm trying to use disk activity trigger on a scrollock LED... but it
-> significantly differs from "usual" disk LED: even under "full" disk
-> activity (linear read) where it should be solidly "on", it keeps
-> blinking.
-> 
-> I guess that's what led_trigger_blink_oneshot() does. I tried to
-> change the parameters... off_delay == 0 breaks it completely, and even
-> with delay of 1 it behaves very weirdly.
-> 
-> Is there better helper I should use?
+On Sat, May 25, 2019 at 6:32 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> This will allow sparc64 to override its ADI tags for
+> get_user_pages and get_user_pages_fast.  I have no idea why this
+> is not required for plain old get_user_pages, but it keeps the
+> existing sparc64 behavior.
 
-It seems this is the way how led_blink_set_oneshot() works.
-It initially checks whether timer is pending and doesn't
-reset the timer in this case:
+This is actually generic. ARM64 has tagged pointers too. Right now the
+system call interfaces are all supposed to mask off the tags, but
+there's been noise about having the kernel understand them.
 
-         if (test_bit(LED_BLINK_ONESHOT, &led_cdev->work_flags) &&
-              timer_pending(&led_cdev->blink_timer))
-                 return;
+That said:
 
-In effect you get gaps between timer expiration and setting of a new
-blink shot.
+> +#ifndef gup_fixup_start_addr
+> +#define gup_fixup_start_addr(start)    (start)
+> +#endif
 
-Best regards,
-Jacek Anaszewski
+I'd rather name this much more specifically (ie make it very much
+about "clean up pointer tags") and I'm also not clear on why sparc64
+actually wants this. I thought the sparc64 rules were the same as the
+(current) arm64 rules: any addresses passed to the kernel have to be
+the non-tagged ones.
 
-> 
-> 								Pavel
-> 
-> diff --git a/drivers/leds/trigger/ledtrig-disk.c b/drivers/leds/trigger/ledtrig-disk.c
-> index 9816b0d..cf40ef2 100644
-> --- a/drivers/leds/trigger/ledtrig-disk.c
-> +++ b/drivers/leds/trigger/ledtrig-disk.c
-> @@ -15,7 +15,7 @@
->   #include <linux/init.h>
->   #include <linux/leds.h>
->   
-> -#define BLINK_DELAY 30
-> +#define BLINK_DELAY 10
->   
->   DEFINE_LED_TRIGGER(ledtrig_disk);
->   DEFINE_LED_TRIGGER(ledtrig_disk_read);
-> @@ -25,17 +25,18 @@ DEFINE_LED_TRIGGER(ledtrig_ide);
->   void ledtrig_disk_activity(bool write)
->   {
->   	unsigned long blink_delay = BLINK_DELAY;
-> +	unsigned long off_delay = 1;
->   
->   	led_trigger_blink_oneshot(ledtrig_disk,
-> -				  &blink_delay, &blink_delay, 0);
-> +				  &blink_delay, &off_delay, 0);
->   	led_trigger_blink_oneshot(ledtrig_ide,
-> -				  &blink_delay, &blink_delay, 0);
-> +				  &blink_delay, &off_delay, 0);
->   	if (write)
->   		led_trigger_blink_oneshot(ledtrig_disk_write,
-> -					  &blink_delay, &blink_delay, 0);
-> +					  &blink_delay, &off_delay, 0);
->   	else
->   		led_trigger_blink_oneshot(ledtrig_disk_read,
-> -					  &blink_delay, &blink_delay, 0);
-> +					  &blink_delay, &off_delay, 0);
->   }
->   EXPORT_SYMBOL(ledtrig_disk_activity);
->   
-> @@ -44,6 +45,7 @@ static int __init ledtrig_disk_init(void)
->   	led_trigger_register_simple("disk-activity", &ledtrig_disk);
->   	led_trigger_register_simple("disk-read", &ledtrig_disk_read);
->   	led_trigger_register_simple("disk-write", &ledtrig_disk_write);
-> +	/* deprecate? */
->   	led_trigger_register_simple("ide-disk", &ledtrig_ide);
->   
->   	return 0;
-> 
-> 
-> 
-> 
+As you say, nothing *else* in the kernel does that address cleanup,
+why should get_user_pages_fast() do it?
 
+David? Khalid? Why does sparc64 actually need this? It looks like the
+generic get_user_pages() doesn't do it.
+
+                Linus
