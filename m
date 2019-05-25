@@ -2,101 +2,124 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71428C04AB0
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 08:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CA4C04AB0
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 08:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DA702168B
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 08:18:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S8T4eCKa"
+	by mail.kernel.org (Postfix) with ESMTP id 9CCF42168B
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 08:22:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726457AbfEYISc (ORCPT
+        id S1726464AbfEYIWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 04:18:32 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46585 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbfEYISb (ORCPT
+        Sat, 25 May 2019 04:22:08 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:43600 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726256AbfEYIWI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 04:18:31 -0400
-Received: by mail-pf1-f196.google.com with SMTP id y11so1825923pfm.13
-        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 01:18:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=urwobqpVOqeWHUA2ik1ydI/vY7DJ9p3a1at1hajr40U=;
-        b=S8T4eCKaCoYsoURxZ5mZBNX54bF7p1VWFjVaAtDfSyoYOL1oGf/FpFWkPfTaqRIwuS
-         uXtpM6TcZP+6F240cKgqYAMOonZlz9PyjkeP9ZhY5VIFgGK0/GXVnFJURRZJeTqbO/sR
-         JKEWxmzoEtnWUczQyQvw8qAjvsYBQVJb/FKjjOgouFLT9yh0ZFgcZAuxWFiDTkFy4167
-         63gKGjTFSu4xM17yJajcm6Wgz1FezfIptRs6ODVZvT34GZ1Niv2HLUdc1er8LwZG1VYi
-         QGdDyOVTvrh01VbOH6SYZDDpYB9GVPLTRGH2clzU0oGihl9mh8RRq7lbXeoy/MO3cRAb
-         xCDQ==
+        Sat, 25 May 2019 04:22:08 -0400
+Received: by mail-pl1-f196.google.com with SMTP id gn7so5066130plb.10
+        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 01:22:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=urwobqpVOqeWHUA2ik1ydI/vY7DJ9p3a1at1hajr40U=;
-        b=MwiV606s6Li11VSbM5+8PfGge99NuH1AZlB+iHxgN76WMRxra1RnWSWgI2jlV+0HWC
-         9o+jZxm80nJTKL6fnaHmsOkti8HRvmW3BfrWQo+qLhrsWkQuiRyX4VUT/OoaHk9xaoiO
-         gWvLNsaYOPqqgygWSLCml8UvqwFcnPMlZGhVKoDcHdKCRCQjVw1P/w1tdRSUm0hgCZBQ
-         d5I6ryiR5NrcDpUjxepf6iY4mg89M57wbxjJ5PTkgyXdwvHgYpH0NPCr8iufgjTeUXWG
-         8NBmSnp5UeWQOd+g5YjBo6uiEeINNXUXeRQLIdnoNCicKfrosoF0y5wsqWo67aWrkITB
-         zsoA==
-X-Gm-Message-State: APjAAAVhqKwwgeeKN/hay1EuZPzYLbB+VfgzCDW/mwxSFOoJVy73A9yx
-        JG70oZZ+5E0JIAKAxz/FcL/+XvSe
-X-Google-Smtp-Source: APXvYqwVnT/dAB9dGOwGLRu5tGnahqFl1pMKIgJnXcVKcQB8TBxC/YB0ec9BzvU9W4fuwa/WtKEAGQ==
-X-Received: by 2002:a63:4006:: with SMTP id n6mr111844911pga.424.1558772311004;
-        Sat, 25 May 2019 01:18:31 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.92.73])
-        by smtp.gmail.com with ESMTPSA id b3sm6763549pfr.146.2019.05.25.01.18.28
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mpUnwXaCrHUxBfP+dD3o1HbeuqOVCqCAHXyENTvsZfQ=;
+        b=d9EGjBRGz2jywdv7MKd1Y5prO/7ScaPL83/gCOgQgepO9MCzAO7KW3N68yNmyrPS7Q
+         pM7hn4Tb8reMzzgqMgatF3rxuvZ4CFR6gry2wabn7P9uaqoh5fX7rJcPfTi8D2FHZXYQ
+         l8AJ6jkqz/7ihI/u5NDk7FLMUyzUzi3cl+SJqao5boeqRa7PN1XkpAOutdryrXF/2MX+
+         HD6VtJko8UHm6qj5hdDC0AVFOg6R1MZauNcFXYvLwmRQZJrcVkdx1P9AAAzHgBpMbNF6
+         z7m0Plt5xnm2aUyHkH5S+OcmnaAN06YbyeUyK+lw9YTAdJ5syMLqHGNOKTFsCuTCEwk3
+         um9g==
+X-Gm-Message-State: APjAAAVi7cWCMrKgmGayJ+IGsi8ykADtYIt/Mig/LA+qHzF/3Kl5A5ff
+        c89BlR/iKst1wpr0kDitlzM=
+X-Google-Smtp-Source: APXvYqwseZfbdlWz9+o1XwtSz+T9B+4xXaYZWc8ocbnHCM9tX5TgGXhvfF/CWIkK1QtZiG1JGwA2jw==
+X-Received: by 2002:a17:902:b58a:: with SMTP id a10mr82126174pls.83.1558772527060;
+        Sat, 25 May 2019 01:22:07 -0700 (PDT)
+Received: from htb-2n-eng-dhcp405.eng.vmware.com ([66.170.99.1])
+        by smtp.gmail.com with ESMTPSA id e4sm1438505pgi.80.2019.05.25.01.22.05
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 25 May 2019 01:18:30 -0700 (PDT)
-Date:   Sat, 25 May 2019 13:48:26 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] drivers/dca: fix warning PTR_ERR_OR_ZERO can be used
-Message-ID: <20190525081826.GA9002@hari-Inspiron-1545>
+        Sat, 25 May 2019 01:22:05 -0700 (PDT)
+From:   Nadav Amit <namit@vmware.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
+        Nadav Amit <namit@vmware.com>
+Subject: [RFC PATCH 0/6] x86/mm: Flush remote and local TLBs concurrently
+Date:   Sat, 25 May 2019 01:21:57 -0700
+Message-Id: <20190525082203.6531-1-namit@vmware.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fix below warning reported by coccicheck
+Currently, local and remote TLB flushes are not performed concurrently,
+which introduces unnecessary overhead - each INVLPG can take 100s of
+cycles. This patch-set allows TLB flushes to be run concurrently: first
+request the remote CPUs to initiate the flush, then run it locally, and
+finally wait for the remote CPUs to finish their work.
 
-./drivers/dca/dca-sysfs.c:43:1-3: WARNING: PTR_ERR_OR_ZERO can be used
+The proposed changes should also improve the performance of other
+invocations of on_each_cpu(). Hopefully, no one has relied on the
+behavior of on_each_cpu() that functions were first executed remotely
+and only then locally.
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- drivers/dca/dca-sysfs.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+On my Haswell machine (bare-metal), running a TLB flush microbenchmark
+(MADV_DONTNEED/touch for a single page on one thread), takes the
+following time (ns):
 
-diff --git a/drivers/dca/dca-sysfs.c b/drivers/dca/dca-sysfs.c
-index 126cf29..5270705 100644
---- a/drivers/dca/dca-sysfs.c
-+++ b/drivers/dca/dca-sysfs.c
-@@ -40,9 +40,8 @@ int dca_sysfs_add_req(struct dca_provider *dca, struct device *dev, int slot)
- 
- 	cd = device_create(dca_class, dca->cd, MKDEV(0, slot + 1), NULL,
- 			   "requester%d", req_count++);
--	if (IS_ERR(cd))
--		return PTR_ERR(cd);
--	return 0;
-+
-+	return PTR_ERR_OR_ZERO(cd);
- }
- 
- void dca_sysfs_remove_req(struct dca_provider *dca, int slot)
+	n_threads	before		after
+	---------	------		-----
+	1		661		663
+	2		1436		1225 (-14%)
+	4		1571		1421 (-10%)
+
+Note that since the benchmark also causes page-faults, the actual
+speedup of TLB shootdowns is actually greater. Also note the higher
+improvement in performance with 2 thread (a single remote TLB flush
+target). This seems to be a side-effect of holding synchronization
+data-structures (csd) off the stack, unlike the way it is currently done
+(in smp_call_function_single()).
+
+Patches 1-2 do small cleanup. Patches 3-5 actually implement the
+concurrent execution of TLB flushes. Patch 6 restores local TLB flushes
+performance, which was hurt by the optimization, to be as good as it was
+before these changes by introducing a fast-pass for this specific case.
+
+Nadav Amit (6):
+  smp: Remove smp_call_function() and on_each_cpu() return values
+  cpumask: Purify cpumask_next()
+  smp: Run functions concurrently in smp_call_function_many()
+  x86/mm/tlb: Refactor common code into flush_tlb_on_cpus()
+  x86/mm/tlb: Flush remote and local TLBs concurrently
+  x86/mm/tlb: Optimize local TLB flushes
+
+ arch/alpha/kernel/smp.c               |  19 +---
+ arch/alpha/oprofile/common.c          |   6 +-
+ arch/ia64/kernel/perfmon.c            |  12 +--
+ arch/ia64/kernel/uncached.c           |   8 +-
+ arch/x86/hyperv/mmu.c                 |   2 +
+ arch/x86/include/asm/paravirt.h       |   8 ++
+ arch/x86/include/asm/paravirt_types.h |   6 ++
+ arch/x86/include/asm/tlbflush.h       |   6 ++
+ arch/x86/kernel/kvm.c                 |   1 +
+ arch/x86/kernel/paravirt.c            |   3 +
+ arch/x86/lib/cache-smp.c              |   3 +-
+ arch/x86/mm/tlb.c                     | 137 +++++++++++++++++--------
+ arch/x86/xen/mmu_pv.c                 |   2 +
+ drivers/char/agp/generic.c            |   3 +-
+ include/linux/cpumask.h               |   2 +-
+ include/linux/smp.h                   |  32 ++++--
+ kernel/smp.c                          | 139 ++++++++++++--------------
+ kernel/up.c                           |   3 +-
+ 18 files changed, 230 insertions(+), 162 deletions(-)
+
 -- 
-2.7.4
+2.20.1
 
