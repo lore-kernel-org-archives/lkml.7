@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5FAC282CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 06:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35FAFC282CE
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 06:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAD052133D
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 06:24:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 129D82133D
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 06:25:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726408AbfEYGYp (ORCPT
+        id S1726568AbfEYGZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 02:24:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44356 "EHLO mx1.suse.de"
+        Sat, 25 May 2019 02:25:12 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44468 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726091AbfEYGYp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 02:24:45 -0400
+        id S1726091AbfEYGZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 May 2019 02:25:12 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D1719AC32;
-        Sat, 25 May 2019 06:24:43 +0000 (UTC)
-Date:   Sat, 25 May 2019 08:24:43 +0200
-Message-ID: <s5hmujbaw5w.wl-tiwai@suse.de>
+        by mx1.suse.de (Postfix) with ESMTP id E2B92AC2C;
+        Sat, 25 May 2019 06:25:10 +0000 (UTC)
+Date:   Sat, 25 May 2019 08:25:10 +0200
+Message-ID: <s5hlfyvaw55.wl-tiwai@suse.de>
 From:   Takashi Iwai <tiwai@suse.de>
 To:     "Colin King" <colin.king@canonical.com>
 Cc:     <alsa-devel@alsa-project.org>,
@@ -32,9 +32,9 @@ Cc:     <alsa-devel@alsa-project.org>,
         "Mark Brown" <broonie@kernel.org>,
         "Jaroslav Kysela" <perex@perex.cz>,
         <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH][next] ASoC: cx2072x: remove redundant assignment to pulse_len
-In-Reply-To: <20190524214419.25075-1-colin.king@canonical.com>
-References: <20190524214419.25075-1-colin.king@canonical.com>
+Subject: Re: [PATCH][next] ASoC: cx2072x: fix integer overflow on unsigned int multiply
+In-Reply-To: <20190524222551.26573-1-colin.king@canonical.com>
+References: <20190524222551.26573-1-colin.king@canonical.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
  (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -45,16 +45,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 May 2019 23:44:19 +0200,
+On Sat, 25 May 2019 00:25:51 +0200,
 Colin King wrote:
 > 
 > From: Colin Ian King <colin.king@canonical.com>
 > 
-> Variable pulse_len is being initialized to 1 however this value is
-> never read and pulse_len is being re-assigned later in a switch
-> statement.  Clean up the code by removing the redundant initialization.
+> In the case where frac_div larger than 96 the result of an unsigned
+> multiplication overflows an unsigned int.  For example, this can
+> happen when the sample_rate is 192000 and pll_input is 122.  Fix
+> this by casing the first term of the mutiply to a u64. Also remove
+> the extraneous parentheses around the expression.
 > 
-> Addresses-Coverity: ("Unused value")
+> Addresses-Coverity: ("Unintentional integer overflow")
+> Fixes: a497a4363706 ("ASoC: Add support for Conexant CX2072X CODEC")
 > Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
 Reviewed-by: Takashi Iwai <tiwai@suse.de>
