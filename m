@@ -2,161 +2,116 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36EE5C07542
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 16:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0557FC282E5
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 16:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D80F216FD
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 16:24:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D12E1216FD
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 16:37:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IC/CSiPk"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="TPpiil9i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727290AbfEYQYD (ORCPT
+        id S1727176AbfEYQh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 12:24:03 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38201 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727187AbfEYQXh (ORCPT
+        Sat, 25 May 2019 12:37:57 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:54714 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727125AbfEYQh4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 12:23:37 -0400
-Received: by mail-wm1-f67.google.com with SMTP id t5so11926476wmh.3;
-        Sat, 25 May 2019 09:23:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=qbqoVQVB81rH9/Oh9EOj+HyMcRISA85POp2mDoREhbs=;
-        b=IC/CSiPkuVdpssu8k6hyO+0c5RveetIZXR6bHj0clPiaSo481s8Kz0b35tw6ux0MM6
-         XakvCZ0VqtyJsK2wvvw6/51opcLYyUBE0t03LlA4AyOZTtUaR/4H4kGNn7QMeVbWbfga
-         4zwyJLg8jkYRqpHPaeAkbus2T76g3FRtO00o1vfPA0vsIxVmdeqMox++FmjjInLiaHF3
-         7o3mqdOm+XSUdy32aAILd5079DyDQjnnFzQ09fOs2DzU/XHE5ADe+YbNIaDJjpMEnf0u
-         QSdsmDXiS4kF0elymiH1UTbahwRbOka8I5kfz81Pb04JXXN74gcPlisFmeWeN9qWhhar
-         dbyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qbqoVQVB81rH9/Oh9EOj+HyMcRISA85POp2mDoREhbs=;
-        b=X+938dqLC81N3TQ/3v/F8u88F2Hn/Nb6envhu2M9EGXD/0f3ItXXMmJ4Ne2yQ2xjKz
-         w52MdIVzIujpWqIpqFMM4yAf1Y59OZ5yXCv2xY9mN9d/fhhex3Odeoz3v17Vy4j83B2b
-         +jy6O2A29l7oU3vwGMDVxXNtN78IdFz0zPHM0ZwkPcL4RLkegp6rZ/2Y0JXj2gRyJP8h
-         WrCkksvaa4A8PojfASK4KJykUZk5xAUnvgbJBbgvs44D0N43P4A7jLwXxm8UJVh4BX1X
-         dQope741Nqu0nXCjXMOrl171iSRXw8/M0z/518atoGLYmQna+Hc0BvKgMdNIVs4gzKRY
-         vdmQ==
-X-Gm-Message-State: APjAAAVQCeRcA1/Nb4HMpv9LR//1f6uNfprk5KSjC4AnfXCLENYKDcLA
-        d0N7l6qj3kQPETFrpNpBC0k=
-X-Google-Smtp-Source: APXvYqxTUPHfbkGRqrcv73CLbSTer8ARaAejduD0uldwBW1Mn/rySStC4X1Si4JaSs/8XWn7bL01tA==
-X-Received: by 2002:a05:600c:204a:: with SMTP id p10mr4187874wmg.161.1558801414715;
-        Sat, 25 May 2019 09:23:34 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
-        by smtp.gmail.com with ESMTPSA id k184sm13194409wmk.0.2019.05.25.09.23.33
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 25 May 2019 09:23:33 -0700 (PDT)
-From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jagan Teki <jagan@amarulasolutions.com>
-Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v3 3/7] ASoC: sun4i-spdif: Add TX fifo bit flush quirks
-Date:   Sat, 25 May 2019 18:23:19 +0200
-Message-Id: <20190525162323.20216-4-peron.clem@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190525162323.20216-1-peron.clem@gmail.com>
-References: <20190525162323.20216-1-peron.clem@gmail.com>
+        Sat, 25 May 2019 12:37:56 -0400
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x4PGYaOR022380
+        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 09:37:55 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=5RTPfI6UzZo8h/nwiW8QfQd6DBgTvw5sKSvqdQKtb2o=;
+ b=TPpiil9iO3VW4SB2PmqCp9qNWGOvc8+rJRLqlnPEeKiuoRpjr1zbk59/iNkN0Td3xokU
+ lcEQKnPuwKfjThy0/xEBlee717DwDqV0E5f+cVPd+4LOcwjNI/kCltJLw6FqkghIPQu8
+ qY/6g7VDt9ODi0BoBb5ESAfmkFJWRC/OFZw= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by m0089730.ppops.net with ESMTP id 2sq16r8wey-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 09:37:55 -0700
+Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
+ mail.thefacebook.com (2620:10d:c081:35::127) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
+ Sat, 25 May 2019 09:37:54 -0700
+Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
+        id 2E29D126D83B1; Sat, 25 May 2019 09:37:43 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
+To:     Alexei Starovoitov <ast@kernel.org>, <bpf@vger.kernel.org>
+CC:     Daniel Borkmann <daniel@iogearbox.net>, <netdev@vger.kernel.org>,
+        Tejun Heo <tj@kernel.org>, <kernel-team@fb.com>,
+        <cgroups@vger.kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+        Yonghong Song <yhs@fb.com>, <linux-kernel@vger.kernel.org>,
+        Roman Gushchin <guro@fb.com>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH v5 bpf-next 0/4] cgroup bpf auto-detachment
+Date:   Sat, 25 May 2019 09:37:38 -0700
+Message-ID: <20190525163742.2616471-1-guro@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-25_11:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=743 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905250117
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allwinner H6 has a different bit to flush the TX FIFO.
+This patchset implements a cgroup bpf auto-detachment functionality:
+bpf programs are detached as soon as possible after removal of the
+cgroup, without waiting for the release of all associated resources.
 
-Add a quirks to prepare introduction of H6 SoC.
+Patches 2 and 3 are required to implement a corresponding kselftest
+in patch 4.
 
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
----
- sound/soc/sunxi/sun4i-spdif.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+v5:
+  1) rebase
 
-diff --git a/sound/soc/sunxi/sun4i-spdif.c b/sound/soc/sunxi/sun4i-spdif.c
-index b6c66a62e915..8317bbee0712 100644
---- a/sound/soc/sunxi/sun4i-spdif.c
-+++ b/sound/soc/sunxi/sun4i-spdif.c
-@@ -166,10 +166,12 @@
-  *
-  * @reg_dac_tx_data: TX FIFO offset for DMA config.
-  * @has_reset: SoC needs reset deasserted.
-+ * @reg_fctl_ftx: TX FIFO flush bitmask.
-  */
- struct sun4i_spdif_quirks {
- 	unsigned int reg_dac_txdata;
- 	bool has_reset;
-+	unsigned int reg_fctl_ftx;
- };
- 
- struct sun4i_spdif_dev {
-@@ -180,16 +182,19 @@ struct sun4i_spdif_dev {
- 	struct snd_soc_dai_driver cpu_dai_drv;
- 	struct regmap *regmap;
- 	struct snd_dmaengine_dai_dma_data dma_params_tx;
-+	const struct sun4i_spdif_quirks *quirks;
- };
- 
- static void sun4i_spdif_configure(struct sun4i_spdif_dev *host)
- {
-+	const struct sun4i_spdif_quirks *quirks = host->quirks;
-+
- 	/* soft reset SPDIF */
- 	regmap_write(host->regmap, SUN4I_SPDIF_CTL, SUN4I_SPDIF_CTL_RESET);
- 
- 	/* flush TX FIFO */
- 	regmap_update_bits(host->regmap, SUN4I_SPDIF_FCTL,
--			   SUN4I_SPDIF_FCTL_FTX, SUN4I_SPDIF_FCTL_FTX);
-+			   quirks->reg_fctl_ftx, quirks->reg_fctl_ftx);
- 
- 	/* clear TX counter */
- 	regmap_write(host->regmap, SUN4I_SPDIF_TXCNT, 0);
-@@ -418,15 +423,18 @@ static struct snd_soc_dai_driver sun4i_spdif_dai = {
- 
- static const struct sun4i_spdif_quirks sun4i_a10_spdif_quirks = {
- 	.reg_dac_txdata	= SUN4I_SPDIF_TXFIFO,
-+	.reg_fctl_ftx   = SUN4I_SPDIF_FCTL_FTX,
- };
- 
- static const struct sun4i_spdif_quirks sun6i_a31_spdif_quirks = {
- 	.reg_dac_txdata	= SUN4I_SPDIF_TXFIFO,
-+	.reg_fctl_ftx   = SUN4I_SPDIF_FCTL_FTX,
- 	.has_reset	= true,
- };
- 
- static const struct sun4i_spdif_quirks sun8i_h3_spdif_quirks = {
- 	.reg_dac_txdata	= SUN8I_SPDIF_TXFIFO,
-+	.reg_fctl_ftx   = SUN4I_SPDIF_FCTL_FTX,
- 	.has_reset	= true,
- };
- 
-@@ -507,6 +515,7 @@ static int sun4i_spdif_probe(struct platform_device *pdev)
- 		dev_err(&pdev->dev, "Failed to determine the quirks to use\n");
- 		return -ENODEV;
- 	}
-+	host->quirks = quirks;
- 
- 	host->regmap = devm_regmap_init_mmio(&pdev->dev, base,
- 						&sun4i_spdif_regmap_config);
+v4:
+  1) release cgroup bpf data using a workqueue
+  2) add test_cgroup_attach to .gitignore
+
+v3:
+  1) some minor changes and typo fixes
+
+v2:
+  1) removed a bogus check in patch 4
+  2) moved buf[len] = 0 in patch 2
+
+
+Roman Gushchin (4):
+  bpf: decouple the lifetime of cgroup_bpf from cgroup itself
+  selftests/bpf: convert test_cgrp2_attach2 example into kselftest
+  selftests/bpf: enable all available cgroup v2 controllers
+  selftests/bpf: add auto-detach test
+
+ include/linux/bpf-cgroup.h                    |  11 +-
+ include/linux/cgroup.h                        |  18 +++
+ kernel/bpf/cgroup.c                           |  41 ++++-
+ kernel/cgroup/cgroup.c                        |  11 +-
+ samples/bpf/Makefile                          |   2 -
+ tools/testing/selftests/bpf/.gitignore        |   1 +
+ tools/testing/selftests/bpf/Makefile          |   3 +-
+ tools/testing/selftests/bpf/cgroup_helpers.c  |  57 +++++++
+ .../selftests/bpf/test_cgroup_attach.c        | 146 ++++++++++++++++--
+ 9 files changed, 261 insertions(+), 29 deletions(-)
+ rename samples/bpf/test_cgrp2_attach2.c => tools/testing/selftests/bpf/test_cgroup_attach.c (79%)
+
 -- 
-2.20.1
+2.21.0
 
