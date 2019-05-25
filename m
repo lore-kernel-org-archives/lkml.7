@@ -2,206 +2,260 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27233C07542
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 18:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0927FC07542
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 18:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E119220862
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 18:47:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C98A120862
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 18:48:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=appneta.com header.i=@appneta.com header.b="IV1fxz+f"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="hn+A+m/6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727527AbfEYSrp (ORCPT
+        id S1727548AbfEYSs0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 14:47:45 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45216 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725935AbfEYSro (ORCPT
+        Sat, 25 May 2019 14:48:26 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51349 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725935AbfEYSs0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 14:47:44 -0400
-Received: by mail-pg1-f195.google.com with SMTP id w34so2163731pga.12
-        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 11:47:44 -0700 (PDT)
+        Sat, 25 May 2019 14:48:26 -0400
+Received: by mail-wm1-f65.google.com with SMTP id f10so4944228wmb.1
+        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 11:48:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=appneta.com; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=YDOaRpq6cneaxNOt199jCWjQbuCNeTQ0/HDa1/buiiI=;
-        b=IV1fxz+fdPOULLAy8vhVdakqb5/2dFHvC6XZr4vvrb/fa/UcOhSW0ZE6ZgES3r3DIK
-         Y9GboccTSoyHrV/YF6d1am9zq1vo/eycJWEuXygGW8EA9jWEwHe2l4n7HUvyqXwtGMa8
-         mc7z+XXI6xYBQ7bPJiYm6mRfJOcPcq9qiurmA=
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from:cc;
+        bh=ySFaYHIgJnSSeFFCY31CR/SnL7eO3yPDG4N0jJWAz44=;
+        b=hn+A+m/6tEtfN0K+o2BfWU9V1gwMDgf0Z3i9yjjZhMtYesszuOniQIwt/8aSgdFxgf
+         uTf8/Qv7Il9UbIhlksNn7oZ3PBhglwqygNl2Hnd9L9YQHc8vEZn0G/i/ZilDhEzFmpvA
+         i/6s6uP4KW5rqOtc2WtjoDzkSNVhdF2CwpACXd5VXAX5RKxfW0WMkxJsAvW10rvJ6YgL
+         5dWox4XGijSWySaIT9IAPA8nJz6JPZpAxKId+n6++pbhdNhQIUv/jt1yj5ClcEg8C2ib
+         BBagIOUVp7ihHbpg826e+BX4yo4Im9Y770pUpziPBGd7gMXsc/6hJGtWRmfZPlWwfxvZ
+         uxBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=YDOaRpq6cneaxNOt199jCWjQbuCNeTQ0/HDa1/buiiI=;
-        b=hsc6mo7fCnhKmnx90ogVgDHnIE881fmR6d2tasJo+/MG/2q8gzXZfWSLaKPHCUCu4Q
-         dhsMyrVjRAY4Qbj5Ua3dgl74xeA/I22kViZc/EsYVmJlrdGT0oM2jC2eGjQZsYEjXGbf
-         YuyKVD44G7PAERRL/vh/NELwMdYyuUlT3v85DUEh7YfyZMI9j2j/e3dh0z4KH8v9J23G
-         TiIG8EKl+1v+q5dk7ax6ucdksOTwNVDbKKWUli8i6T+xSCl5PM+9b1UFYbiHrr5dF/cr
-         TjwdYldRKF5iZP8kAGZT2ozxwJ1qvf+Z8jVGRn6CSYXnHjGyzxPg79ePlHS3vvlVwzlo
-         QK/Q==
-X-Gm-Message-State: APjAAAWZSCLrPYo6nRKn8I/TbgOxGB3HtQ1LMTKQl0injQjay+GkDlDc
-        22Sm4SQeAhk4kqozkyn+l72cWg==
-X-Google-Smtp-Source: APXvYqyMLYOtBbRXBLKKejVKV0kG1+iyNGtisu5tqZGtwaDIV20GdsXNVUhoGhWi8kxRq/9P4UTeog==
-X-Received: by 2002:aa7:9a99:: with SMTP id w25mr28840800pfi.249.1558810063530;
-        Sat, 25 May 2019 11:47:43 -0700 (PDT)
-Received: from [10.0.1.19] (S010620c9d00fc332.vf.shawcable.net. [70.71.167.160])
-        by smtp.gmail.com with ESMTPSA id u123sm7337414pfu.67.2019.05.25.11.47.42
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from:cc;
+        bh=ySFaYHIgJnSSeFFCY31CR/SnL7eO3yPDG4N0jJWAz44=;
+        b=QSCd7TROijQQL9F4vll60DV3cAtQOqCeEOiFQky8iEfyXmdoNjvgban3o64AW5FlET
+         zDvQMD4gmE56AV0iUvFpOC8Nwn3nvfo306EaJV1qcNfCAUlHIfMSyh5eqm1ZQfdpvARy
+         qkw+t/RnFIHgXPTHFe/n76c2lvuY8LlgtL0GI5vnVqj1qmcvifRMJzuZXBaeiiPplFRC
+         kn+KF70plJ0f3cEYSO/zHXFqEIYFBNYLeoP4ZgIAIEx3bhUnG5EOTpsUPHhotqhsK0A9
+         /gvI7V5DNsE6uKECQ0FlWCPzHfI7OeGAj0QHejmY7wu6GmyBCFohj8YojoPFpYgSy3jy
+         +Itw==
+X-Gm-Message-State: APjAAAWM/jL2D+wHv2T4EZbZcYDAQyTiGABCIaPMFcZCjzqUmUMD7QFF
+        nxfzycAGBExw3ul9dpn8k4vL2A==
+X-Google-Smtp-Source: APXvYqzjP0tOHFRy29TMsL/iuwZ1L+rKIFnyv5RQt10o6h2pyJqGaVT5UoZYKZWb6ixHNTXoxp7NuQ==
+X-Received: by 2002:a1c:7a0a:: with SMTP id v10mr4304867wmc.57.1558810103202;
+        Sat, 25 May 2019 11:48:23 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id s11sm3040359wro.17.2019.05.25.11.48.22
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 25 May 2019 11:47:42 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH net 1/4] net/udp_gso: Allow TX timestamp with UDP GSO
-From:   Fred Klassen <fklassen@appneta.com>
-In-Reply-To: <CA+FuTScNr9Srsn9QFBSj=oT4TnMh1QuOZ2h40g=joNjSwccqMg@mail.gmail.com>
-Date:   Sat, 25 May 2019 11:47:41 -0700
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org
+        Sat, 25 May 2019 11:48:22 -0700 (PDT)
+Message-ID: <5ce98df6.1c69fb81.d2103.feb3@mx.google.com>
+Date:   Sat, 25 May 2019 11:48:22 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <4032C02B-EA43-4540-8283-8466CDD0B8D2@appneta.com>
-References: <20190523210651.80902-1-fklassen@appneta.com>
- <20190523210651.80902-2-fklassen@appneta.com>
- <CAF=yD-Jf95De=z_nx9WFkGDa6+nRUqM_1PqGkjwaFPzOe+PfXg@mail.gmail.com>
- <AE8E0772-7256-4B9C-A990-96930E834AEE@appneta.com>
- <CAF=yD-LtAKpND601LQrC1+=iF6spSUXVdUapcsbJdv5FYa=5Jg@mail.gmail.com>
- <AFC1ECC8-BFAC-4718-B0C9-97CC4BD1F397@appneta.com>
- <CAF=yD-Le-eTadOi7PL8WFEQCG=yLqb5gvKiks+s5Akeq8TenBQ@mail.gmail.com>
- <90E3853F-107D-45BA-93DC-D0BE8AC6FCBB@appneta.com>
- <CA+FuTScNr9Srsn9QFBSj=oT4TnMh1QuOZ2h40g=joNjSwccqMg@mail.gmail.com>
-To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+X-Kernelci-Report-Type: bisect
+X-Kernelci-Tree: mainline
+X-Kernelci-Lab-Name: lab-baylibre
+X-Kernelci-Branch: master
+X-Kernelci-Kernel: v5.2-rc1-369-g2409207a73cc
+Subject: mainline/master boot bisection: v5.2-rc1-369-g2409207a73cc on
+ meson-g12a-x96-max
+To:     tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com,
+        mgalka@collabora.com, Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>, broonie@kernel.org,
+        matthew.hart@linaro.org, khilman@baylibre.com,
+        enric.balletbo@collabora.com, Jerome Brunet <jbrunet@baylibre.com>
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-amlogic@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* This automated bisection report was sent to you on the basis  *
+* that you may be involved with the breaking commit it has      *
+* found.  No manual investigation has been done to verify it,   *
+* and the root cause of the problem may be somewhere else.      *
+* Hope this helps!                                              *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+mainline/master boot bisection: v5.2-rc1-369-g2409207a73cc on meson-g12a-x9=
+6-max
+
+Summary:
+  Start:      2409207a73cc Merge tag 'scsi-fixes' of git://git.kernel.org/p=
+ub/scm/linux/kernel/git/jejb/scsi
+  Details:    https://kernelci.org/boot/id/5ce8b16e59b514388a7a362a
+  Plain log:  https://storage.kernelci.org//mainline/master/v5.2-rc1-369-g2=
+409207a73cc/arm64/defconfig+CONFIG_RANDOMIZE_BASE=3Dy/gcc-8/lab-baylibre/bo=
+ot-meson-g12a-x96-max.txt
+  HTML log:   https://storage.kernelci.org//mainline/master/v5.2-rc1-369-g2=
+409207a73cc/arm64/defconfig+CONFIG_RANDOMIZE_BASE=3Dy/gcc-8/lab-baylibre/bo=
+ot-meson-g12a-x96-max.html
+  Result:     11a7bea17c9e arm64: dts: meson: g12a: add pinctrl support con=
+trollers
+
+Checks:
+  revert:     PASS
+  verify:     PASS
+
+Parameters:
+  Tree:       mainline
+  URL:        git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.=
+git
+  Branch:     master
+  Target:     meson-g12a-x96-max
+  CPU arch:   arm64
+  Lab:        lab-baylibre
+  Compiler:   gcc-8
+  Config:     defconfig+CONFIG_RANDOMIZE_BASE=3Dy
+  Test suite: boot
+
+Breaking commit found:
+
+---------------------------------------------------------------------------=
+----
+commit 11a7bea17c9e0a36daab934d83e15a760f402147
+Author: Jerome Brunet <jbrunet@baylibre.com>
+Date:   Mon Mar 18 10:58:45 2019 +0100
+
+    arm64: dts: meson: g12a: add pinctrl support controllers
+    =
+
+    Add the peripheral and always-on pinctrl controllers to the g12a soc.
+    =
+
+    Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+    Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+    Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/=
+dts/amlogic/meson-g12a.dtsi
+index abfa167751af..5e07e4ca3f4b 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+@@ -104,6 +104,29 @@
+ 				#address-cells =3D <2>;
+ 				#size-cells =3D <2>;
+ 				ranges =3D <0x0 0x0 0x0 0x34400 0x0 0x400>;
++
++				periphs_pinctrl: pinctrl@40 {
++					compatible =3D "amlogic,meson-g12a-periphs-pinctrl";
++					#address-cells =3D <2>;
++					#size-cells =3D <2>;
++					ranges;
++
++					gpio: bank@40 {
++						reg =3D <0x0 0x40  0x0 0x4c>,
++						      <0x0 0xe8  0x0 0x18>,
++						      <0x0 0x120 0x0 0x18>,
++						      <0x0 0x2c0 0x0 0x40>,
++						      <0x0 0x340 0x0 0x1c>;
++						reg-names =3D "gpio",
++							    "pull",
++							    "pull-enable",
++							    "mux",
++							    "ds";
++						gpio-controller;
++						#gpio-cells =3D <2>;
++						gpio-ranges =3D <&periphs_pinctrl 0 0 86>;
++					};
++				};
+ 			};
+ =
+
+ 			hiu: bus@3c000 {
+@@ -150,6 +173,25 @@
+ 					clocks =3D <&xtal>, <&clkc CLKID_CLK81>;
+ 					clock-names =3D "xtal", "mpeg-clk";
+ 				};
++
++				ao_pinctrl: pinctrl@14 {
++					compatible =3D "amlogic,meson-g12a-aobus-pinctrl";
++					#address-cells =3D <2>;
++					#size-cells =3D <2>;
++					ranges;
++
++					gpio_ao: bank@14 {
++						reg =3D <0x0 0x14 0x0 0x8>,
++						      <0x0 0x1c 0x0 0x8>,
++						      <0x0 0x24 0x0 0x14>;
++						reg-names =3D "mux",
++							    "ds",
++							    "gpio";
++						gpio-controller;
++						#gpio-cells =3D <2>;
++						gpio-ranges =3D <&ao_pinctrl 0 0 15>;
++					};
++				};
+ 			};
+ =
+
+ 			sec_AO: ao-secure@140 {
+---------------------------------------------------------------------------=
+----
 
 
-> On May 25, 2019, at 8:20 AM, Willem de Bruijn =
-<willemdebruijn.kernel@gmail.com> wrote:
->=20
-> On Fri, May 24, 2019 at 6:01 PM Fred Klassen <fklassen@appneta.com> =
-wrote:
->>=20
->>=20
->>=20
->>> On May 24, 2019, at 12:29 PM, Willem de Bruijn =
-<willemdebruijn.kernel@gmail.com> wrote:
->>>=20
->>> It is the last moment that a timestamp can be generated for the last
->>> byte, I don't see how that is "neither the start nor the end of a =
-GSO
->>> packet=E2=80=9D.
->>=20
->> My misunderstanding. I thought TCP did last segment timestamping, not
->> last byte. In that case, your statements make sense.
->>=20
->>>> It would be interesting if a practical case can be made for =
-timestamping
->>>> the last segment. In my mind, I don=E2=80=99t see how that would be =
-valuable.
->>>=20
->>> It depends whether you are interested in measuring network latency =
-or
->>> host transmit path latency.
->>>=20
->>> For the latter, knowing the time from the start of the sendmsg call =
-to
->>> the moment the last byte hits the wire is most relevant. Or in =
-absence
->>> of (well defined) hardware support, the last byte being queued to =
-the
->>> device is the next best thing.
->=20
-> Sounds to me like both cases have a legitimate use case, and we want
-> to support both.
->=20
-> Implementation constraints are that storage for this timestamp
-> information is scarce and we cannot add new cold cacheline accesses in
-> the datapath.
->=20
-> The simplest approach would be to unconditionally timestamp both the
-> first and last segment. With the same ID. Not terribly elegant. But it
-> works.
->=20
-> If conditional, tx_flags has only one bit left. I think we can harvest
-> some, as not all defined bits are in use at the same stages in the
-> datapath, but that is not a trivial change. Some might also better be
-> set in the skb, instead of skb_shinfo. Which would also avoids
-> touching that cacheline. We could possibly repurpose bits from u32
-> tskey.
->=20
-> All that can come later. Initially, unless we can come up with
-> something more elegant, I would suggest that UDP follows the rule
-> established by TCP and timestamps the last byte. And we add an
-> explicit SOF_TIMESTAMPING_OPT_FIRSTBYTE that is initially only
-> supported for UDP, sets a new SKBTX_TX_FB_TSTAMP bit in
-> __sock_tx_timestamp and is interpreted in __udp_gso_segment.
->=20
+Git bisection log:
 
-I don=E2=80=99t see how to practically TX timestamp the last byte of any =
-packet
-(UDP GSO or otherwise). The best we could do is timestamp the last
-segment,  or rather the time that the last segment is queued. Let me
-attempt to explain.
-
-First let=E2=80=99s look at software TX timestamps which are for are =
-generated
-by skb_tx_timestamp() in nearly every network driver=E2=80=99s xmit =
-routine. It
-states:
-
-=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=
-=80=94=E2=80=94 cut =E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=
-=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94
- * Ethernet MAC Drivers should call this function in their hard_xmit()
- * function immediately before giving the sk_buff to the MAC hardware.
-=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=
-=80=94=E2=80=94 cut =E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=
-=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94
-
-That means that the sk_buff will get timestamped just before rather
-than just after it is sent. To truly capture the timestamp of the last
-byte, this routine routine would have to be called a second time, right
-after sending to MAC hardware. Then the user program would have
-sort out the 2 timestamps. My guess is that this isn=E2=80=99t something =
-that
-NIC vendors would be willing to implement in their drivers.
-
-So, the best we can do is timestamp is just before the last segment.
-Suppose UDP GSO sends 3000 bytes to a 1500 byte MTU adapter.
-If we set SKBTX_HW_TSTAMP flag on the last segment, the timestamp
-occurs half way through the burst. But it may not be exactly half way
-because the segments may get queued much faster than wire rate.
-Therefore the time between segment 1 and segment 2 may be much
-much smaller than their spacing on the wire. I would not find this
-useful.
-
-I propose that we stick with the method used for IP fragments, which
-is timestamping just before the first byte is sent. Put another way, I=20=
-
-propose that we start the clock in an automobile race just before the
-front of the first car crosses the start line rather than when the front
-of the last car crosses the start line.
-
-TX timestamping in hardware has even more limitations. For the most
-part, we can only do one timestamp per packet or burst.  If we requested
-a timestamp of only the last segment of a packet, we would have work
-backwards to calculate the start time of the packet, but that would
-only be be a best guess. For extremely time sensitive applications
-(such as the one we develop), this would not be practical.
-
-We could still consider setting a flag that would allow the timestamping
-the last segment rather than the first. However since we cannot=20
-truly measure the timestamp of the last byte, I would question the value
-in doing so.
-
+---------------------------------------------------------------------------=
+----
+git bisect start
+# good: [a455eda33faafcaac1effb31d682765b14ef868c] Merge branch 'linus' of =
+git://git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-thermal
+git bisect good a455eda33faafcaac1effb31d682765b14ef868c
+# bad: [2409207a73cc8e4aff75ceccf6fe5c3ce4d391bc] Merge tag 'scsi-fixes' of=
+ git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi
+git bisect bad 2409207a73cc8e4aff75ceccf6fe5c3ce4d391bc
+# bad: [311f71281ff4b24f86a39c60c959f485c68a6d36] Merge tag 'for-5.2/dm-cha=
+nges-v2' of git://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/lin=
+ux-dm
+git bisect bad 311f71281ff4b24f86a39c60c959f485c68a6d36
+# bad: [be058ba65d9e43f40d31d9b16b99627f0a20de1b] Merge tag 'imx-dt-5.2' of=
+ git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux into arm/dt
+git bisect bad be058ba65d9e43f40d31d9b16b99627f0a20de1b
+# bad: [7996313656b83ba516a1546d51f08f1a0fab4e06] Merge tag 'omap-for-v5.2/=
+dt-am3-signed' of git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linu=
+x-omap into arm/dt
+git bisect bad 7996313656b83ba516a1546d51f08f1a0fab4e06
+# bad: [2140eaf2f46faf2627ec030d7cabf2dda2cb546b] Merge tag 'stm32-dt-for-v=
+5.2-1' of git://git.kernel.org/pub/scm/linux/kernel/git/atorgue/stm32 into =
+arm/dt
+git bisect bad 2140eaf2f46faf2627ec030d7cabf2dda2cb546b
+# bad: [1a88083b9349b8310b25d9a9a96802ee4447e6b9] Merge tag 'v5.2-rockchip-=
+dts64-1' of git://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockc=
+hip into arm/dt
+git bisect bad 1a88083b9349b8310b25d9a9a96802ee4447e6b9
+# bad: [1c93235a6d92deaab38bbb1cfc764b0757331ebb] Merge tag 'amlogic-dt' of=
+ https://git.kernel.org/pub/scm/linux/kernel/git/khilman/linux-amlogic into=
+ arm/dt
+git bisect bad 1c93235a6d92deaab38bbb1cfc764b0757331ebb
+# bad: [ff4f8b6cab5885ebc2c6b21fd058db8544e2eebb] arm64: dts: meson: g12a: =
+Add UART A, B & C nodes and pins
+git bisect bad ff4f8b6cab5885ebc2c6b21fd058db8544e2eebb
+# good: [965c827ac37e71f76d3ac55c75ac08909f2a4eed] arm64: dts: meson: g12a:=
+ add efuse
+git bisect good 965c827ac37e71f76d3ac55c75ac08909f2a4eed
+# bad: [11a7bea17c9e0a36daab934d83e15a760f402147] arm64: dts: meson: g12a: =
+add pinctrl support controllers
+git bisect bad 11a7bea17c9e0a36daab934d83e15a760f402147
+# good: [b019f4a4199f865b054262ff78f606ca70f7b981] arm64: dts: meson: g12a:=
+ Add AO Clock + Reset Controller support
+git bisect good b019f4a4199f865b054262ff78f606ca70f7b981
+# first bad commit: [11a7bea17c9e0a36daab934d83e15a760f402147] arm64: dts: =
+meson: g12a: add pinctrl support controllers
+---------------------------------------------------------------------------=
+----
