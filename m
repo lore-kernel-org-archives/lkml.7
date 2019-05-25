@@ -2,113 +2,79 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB25C282CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 12:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1D1C282CE
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 12:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B27FD217F9
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 12:51:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04AEC20862
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 12:54:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbfEYMvm (ORCPT
+        id S1726940AbfEYMyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 08:51:42 -0400
-Received: from mailoutvs9.siol.net ([185.57.226.200]:53339 "EHLO mail.siol.net"
+        Sat, 25 May 2019 08:54:17 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:17155 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726585AbfEYMvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 08:51:42 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 37BEE52243C;
-        Sat, 25 May 2019 14:51:38 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id mbbF_S_xVf-j; Sat, 25 May 2019 14:51:37 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id BC98B522442;
-        Sat, 25 May 2019 14:51:37 +0200 (CEST)
-Received: from jernej-laptop.localnet (89-212-178-211.dynamic.t-2.net [89.212.178.211])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id 2A20C52243C;
-        Sat, 25 May 2019 14:51:35 +0200 (CEST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
-        linux-sunxi@googlegroups.com,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v5 2/4] media: pixfmt: Add HEVC slice pixel format
-Date:   Sat, 25 May 2019 14:51:34 +0200
-Message-ID: <9334832.WyQZ0g7QqJ@jernej-laptop>
-In-Reply-To: <20190524093635.1832-3-paul.kocialkowski@bootlin.com>
-References: <20190524093635.1832-1-paul.kocialkowski@bootlin.com> <20190524093635.1832-3-paul.kocialkowski@bootlin.com>
+        id S1726585AbfEYMyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 May 2019 08:54:16 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 33796C97306223C53443;
+        Sat, 25 May 2019 20:54:13 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Sat, 25 May 2019
+ 20:54:07 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <viro@zeniv.linux.org.uk>, <akpm@linux-foundation.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] binfmt_flat: remove set but not used variable 'inode'
+Date:   Sat, 25 May 2019 20:53:41 +0800
+Message-ID: <20190525125341.9844-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Dne petek, 24. maj 2019 ob 11:36:33 CEST je Paul Kocialkowski napisal(a):
-> Introduce the V4L2_PIX_FMT_HEVC_SLICE pixel format, which currently
-> describes an output buffer with enough appended slice data for
-> producing one decoded frame with a stateless video decoder.
-> 
-> This will need to be reworked (along with the controls and the core) to
-> allow passing slice data individually, as it is the natural decoding
-> unit in HEVC.
-> 
-> We also need to figure out the description of the possible source data:
-> * Compressed slice data only, with slice controls attached;
-> * Slice data in Annex-B format (with raw slice header), without slice
->   controls attached;
-> * Slice data in Annex-B format (with raw slice header), with slice
->   controls attached.
-> 
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> ---
->  include/media/hevc-ctrls.h | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/include/media/hevc-ctrls.h b/include/media/hevc-ctrls.h
-> index 9ea013c88afc..2de83d9f6d47 100644
-> --- a/include/media/hevc-ctrls.h
-> +++ b/include/media/hevc-ctrls.h
-> @@ -11,6 +11,9 @@
->  #ifndef _HEVC_CTRLS_H_
->  #define _HEVC_CTRLS_H_
-> 
-> +/* The pixel format isn't stable at the moment and will likely be renamed.
-> */ +#define V4L2_PIX_FMT_HEVC_SLICE v4l2_fourcc('S', '2', '6', '5') /* HEVC
+fs/binfmt_flat.c: In function load_flat_file:
+fs/binfmt_flat.c:419:16: warning: variable inode set but not used [-Wunused-but-set-variable]
 
-You should add include to cover v4l2_fourcc() macro.
+It's never used and can be removed.
 
-Best regards,
-Jernej
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ fs/binfmt_flat.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-> parsed slices */ +
->  #define V4L2_CID_MPEG_VIDEO_HEVC_SPS		(V4L2_CID_MPEG_BASE + 
-1008)
->  #define V4L2_CID_MPEG_VIDEO_HEVC_PPS		(V4L2_CID_MPEG_BASE + 
-1009)
->  #define V4L2_CID_MPEG_VIDEO_HEVC_SLICE_PARAMS	(V4L2_CID_MPEG_BASE + 
-1010)
-
-
+diff --git a/fs/binfmt_flat.c b/fs/binfmt_flat.c
+index 82a48e830018..2eea4b68c331 100644
+--- a/fs/binfmt_flat.c
++++ b/fs/binfmt_flat.c
+@@ -416,7 +416,6 @@ static int load_flat_file(struct linux_binprm *bprm,
+ 	u32 text_len, data_len, bss_len, stack_len, full_data, flags;
+ 	unsigned long len, memp, memp_size, extra, rlim;
+ 	u32 __user *reloc, *rp;
+-	struct inode *inode;
+ 	int i, rev, relocs;
+ 	loff_t fpos;
+ 	unsigned long start_code, end_code;
+@@ -424,7 +423,6 @@ static int load_flat_file(struct linux_binprm *bprm,
+ 	int ret;
+ 
+ 	hdr = ((struct flat_hdr *) bprm->buf);		/* exec-header */
+-	inode = file_inode(bprm->file);
+ 
+ 	text_len  = ntohl(hdr->data_start);
+ 	data_len  = ntohl(hdr->data_end) - ntohl(hdr->data_start);
+-- 
+2.17.1
 
 
