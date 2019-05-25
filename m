@@ -2,112 +2,93 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAFFEC07542
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 18:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B19C07542
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 18:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9901F20815
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 18:18:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="kkcebdla"
+	by mail.kernel.org (Postfix) with ESMTP id 9B0FB20863
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 18:28:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558808938;
+	bh=o915ziI83Wq3DsJM16MhIJ37dE0MX7hNkXvLF1mxSSs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=oyZP9tRLoIlLr7MuoE+2pUbTMO9kV0adK596dnTh651R1VGRmvtn0KYupuiEItHYQ
+	 hfRav4fp9yKt6yEH0App3+8pbWZJ2By8rF0iZVu5c9M+OzPBOGLtFlQn2nJrd3+jA6
+	 MshjyK6q/PPVtUDQO0Ad5rDphn+Jln4MAP03FXLU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727456AbfEYSSW (ORCPT
+        id S1727372AbfEYS2y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 14:18:22 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:44358 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727148AbfEYSSV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 14:18:21 -0400
-Received: by mail-pg1-f194.google.com with SMTP id n2so6798717pgp.11
-        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 11:18:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=pwUwT3IH5HpGo/L8sP6//cCZtClp5/ip6vUnZdkkz+4=;
-        b=kkcebdlaAxI4tg4ycJmEqrzHnyewgh+jjzD8JuWykQMD1lxIZbs14DxRaS3JzJWrkx
-         D3zUk40qEzDf9b4/+3m3e4ZQvAeZltgNBFxxlJjzMPDywJcvPdcoFqhPgZYDwqU6gPKo
-         ZKBP/5ISTo1G00dTfWL1Nmxp2HkYKifVw8IVU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pwUwT3IH5HpGo/L8sP6//cCZtClp5/ip6vUnZdkkz+4=;
-        b=KB/Mk9CNfDMlfvP9/LmKecjw7L5+riGzqbfhLbZ3HMsXu7UI7WXtnLz5HyJXq23Se1
-         laj5EfRzxUnadSObUaF+xnxVG9KGer59RPAw691A1NcgqRhNh0oSVmX113UgHnC/WkaG
-         5hkUEZO5Ryr/TrNPrGZwljO5KI3H47auptGwTtNxUI9Il6UJY4pWl7Co9v8MOuIVfLV9
-         stp+IiCm5P4yHhmhhnc5c1v60SvAMnB6KN43IYrl/1I3bxGyNbTfHvze1VMwT2FI06fC
-         WPuiHBuozmkuc4KfP3ULi9rvI0wFyUnLYXzcCl9NeV0a3FK1fAzOrOxMo1jaBOPsAZ24
-         TMZA==
-X-Gm-Message-State: APjAAAVsm1LZurcTuWfDmggOeE3+4aNQFu4FCnoh+q7vxEs/tdcCBnTB
-        Ak/deBgXYAHUmV7Lnox2p54Ttg==
-X-Google-Smtp-Source: APXvYqx/tYCXEdllU2F4/1JetbgrhH8TFsHxXRye9Amlmvbkp4RD4ve2+88VYqD+upEJsBYYCIqDXw==
-X-Received: by 2002:aa7:8554:: with SMTP id y20mr121952964pfn.258.1558808300867;
-        Sat, 25 May 2019 11:18:20 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id s24sm6537148pfe.57.2019.05.25.11.18.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 25 May 2019 11:18:20 -0700 (PDT)
-Date:   Sat, 25 May 2019 14:18:18 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>, kvm-ppc@vger.kernel.org,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Paul Mackerras <paulus@ozlabs.org>, rcu@vger.kernel.org
-Subject: Re: [PATCH RFC 0/5] Remove some notrace RCU APIs
-Message-ID: <20190525181818.GA225569@google.com>
-References: <20190524234933.5133-1-joel@joelfernandes.org>
- <20190524232458.4bcf4eb4@gandalf.local.home>
- <20190525081444.GC197789@google.com>
- <20190525070826.16f76ee7@gandalf.local.home>
- <20190525141954.GA176647@google.com>
- <20190525155035.GE28207@linux.ibm.com>
- <20190525181407.GA220326@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190525181407.GA220326@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sat, 25 May 2019 14:28:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48960 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725730AbfEYS2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 May 2019 14:28:53 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDAB320863;
+        Sat, 25 May 2019 18:28:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558808932;
+        bh=o915ziI83Wq3DsJM16MhIJ37dE0MX7hNkXvLF1mxSSs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=c268qRQWAtxOlxLXaieeHQKVwLydKfkQ1kaOAyUmD8rZ5kPgeuW35L3VundqMz2ws
+         TKpWRCTzZ8coWST9lgDMHXMzGATDQxarTquKm4ZuZQkbKIhDrGjeXU+rXigaTuPjPT
+         LPC2G49gKq0gH2eeygnFjTHww2cX8TsGOwqjPKMc=
+Date:   Sat, 25 May 2019 11:28:51 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     zhong jiang <zhongjiang@huawei.com>
+Cc:     <osalvador@suse.de>, <khandual@linux.vnet.ibm.com>,
+        <mhocko@suse.com>, <mgorman@techsingularity.net>,
+        <aarcange@redhat.com>, <rcampbell@nvidia.com>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH] mm/mempolicy: Fix an incorrect rebind node in
+ mpol_rebind_nodemask
+Message-Id: <20190525112851.ee196bcbbc33bf9e0d869236@linux-foundation.org>
+In-Reply-To: <1558768043-23184-1-git-send-email-zhongjiang@huawei.com>
+References: <1558768043-23184-1-git-send-email-zhongjiang@huawei.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 25, 2019 at 02:14:07PM -0400, Joel Fernandes wrote:
-[snip]
-> > That aside, if we are going to change the name of an API that is
-> > used 160 places throughout the tree, we would need to have a pretty
-> > good justification.  Without such a justification, it will just look
-> > like pointless churn to the various developers and maintainers on the
-> > receiving end of the patches.
+(Cc Vlastimil)
+
+On Sat, 25 May 2019 15:07:23 +0800 zhong jiang <zhongjiang@huawei.com> wrote:
+
+> We bind an different node to different vma, Unluckily,
+> it will bind different vma to same node by checking the /proc/pid/numa_maps.   
+> Commit 213980c0f23b ("mm, mempolicy: simplify rebinding mempolicies when updating cpusets")
+> has introduced the issue.  when we change memory policy by seting cpuset.mems,
+> A process will rebind the specified policy more than one times. 
+> if the cpuset_mems_allowed is not equal to user specified nodes. hence the issue will trigger.
+> Maybe result in the out of memory which allocating memory from same node.
 > 
-> Actually, the API name change is not something I want to do, it is Steven
-> suggestion. My suggestion is let us just delete _raw_notrace and just use the
-> _raw API for tracing, since _raw doesn't do any tracing anyway. Steve pointed
-> that _raw_notrace does sparse checking unlike _raw, but I think that isn't an
-> issue since _raw doesn't do such checking at the moment anyway.. (if possible
-> check my cover letter again for details/motivation of this series).
+> --- a/mm/mempolicy.c
+> +++ b/mm/mempolicy.c
+> @@ -345,7 +345,7 @@ static void mpol_rebind_nodemask(struct mempolicy *pol, const nodemask_t *nodes)
+>  	else {
+>  		nodes_remap(tmp, pol->v.nodes,pol->w.cpuset_mems_allowed,
+>  								*nodes);
+> -		pol->w.cpuset_mems_allowed = tmp;
+> +		pol->w.cpuset_mems_allowed = *nodes;
+>  	}
+>  
+>  	if (nodes_empty(tmp))
 
-Come to think of it, if we/I succeed in adding lockdep checking in _raw, then
-we can just keep the current APIs and not delete anything. And we can have
-_raw_notrace skip the lockdep checks. The sparse check question would still
-be an open one though, since _raw doesn't do sparse checks at the moment
-unlike _raw_notrace as Steve pointed.
+hm, I'm not surprised the code broke.  What the heck is going on in
+there?  It used to have a perfunctory comment, but Vlastimil deleted
+it.
 
-Thanks,
-
- - Joel
+Could someone please propose a comment for the above code block
+explaining why we're doing what we do?
 
