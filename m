@@ -6,60 +6,70 @@ X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16DF8C282CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 06:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 201DFC282CE
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 06:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E69342175B
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 06:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF8BB2175B
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 06:56:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbfEYGzF (ORCPT
+        id S1726672AbfEYG42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 02:55:05 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:49325 "EHLO
+        Sat, 25 May 2019 02:56:28 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:49398 "EHLO
         asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726145AbfEYGzF (ORCPT
+        with ESMTP id S1726145AbfEYG41 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 02:55:05 -0400
+        Sat, 25 May 2019 02:56:27 -0400
 Received: from ravnborg.org (unknown [158.248.194.18])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 8CD3120096;
-        Sat, 25 May 2019 08:55:03 +0200 (CEST)
-Date:   Sat, 25 May 2019 08:55:02 +0200
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 3D13420096;
+        Sat, 25 May 2019 08:56:23 +0200 (CEST)
+Date:   Sat, 25 May 2019 08:56:21 +0200
 From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Lukasz Majewski <lukma@denx.de>
-Cc:     Daniel Vetter <daniel@ffwll.ch>,
+To:     =?iso-8859-1?Q?S=E9bastien?= Szymanski 
+        <sebastien.szymanski@armadeus.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        David Airlie <airlied@linux.ie>, stable@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Thierry Reding <treding@nvidia.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v4 2/2] drm/panel: simple: Add KOE tx14d24vm1bpa display
- support (320x240)
-Message-ID: <20190525065502.GB9586@ravnborg.org>
-References: <20180412143715.6828-1-lukma@denx.de>
- <20190515160612.6529-1-lukma@denx.de>
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH RE-RESEND 1/2] drm/panel: Add support for Armadeus ST0700
+ Adapt
+Message-ID: <20190525065621.GC9586@ravnborg.org>
+References: <20190507152713.27494-1-sebastien.szymanski@armadeus.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190515160612.6529-1-lukma@denx.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190507152713.27494-1-sebastien.szymanski@armadeus.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 X-CMAE-Score: 0
 X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
         a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=VwQbUJbxAAAA:8
-        a=8OUv0a95HpZqKKHEGkIA:9 a=CjuIK1q_8ugA:10 a=2oGYGDbRtGoA:10
-        a=egZzndLFD_8A:10 a=AjGcO6oz07-iQ99wixmX:22
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=8nJEP1OIZ-IA:10 a=VwQbUJbxAAAA:8
+        a=k4gcJ1N8AAAA:8 a=rQ_wcCec06wBi9E7-2gA:9 a=wPNLvfGTeEIA:10
+        a=AjGcO6oz07-iQ99wixmX:22 a=0EuUHwVWM4Mljrm1lpjw:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 06:06:12PM +0200, Lukasz Majewski wrote:
-> This commit adds support for KOE's 5.7" display.
+On Tue, May 07, 2019 at 05:27:12PM +0200, Sébastien Szymanski wrote:
+> This patch adds support for the Armadeus ST0700 Adapt. It comes with a
+> Santek ST0700I5Y-RBSLW 7.0" WVGA (800x480) TFT and an adapter board so
+> that it can be connected on the TFT header of Armadeus Dev boards.
 > 
-> Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> Cc: stable@vger.kernel.org # v4.19
 > Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
 
 Thanks, applied.
+Only patch 1/2 applied, as patch 2/2 is missing review.
 
 	Sam
