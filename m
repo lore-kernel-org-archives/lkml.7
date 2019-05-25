@@ -2,81 +2,106 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC43C282CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 12:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D0EC46470
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 12:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E22620675
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 12:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BD3D2175B
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 12:09:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbfEYMHl (ORCPT
+        id S1726898AbfEYMJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 08:07:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60322 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726585AbfEYMHl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 08:07:41 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5EA3C308A9BE;
-        Sat, 25 May 2019 12:07:41 +0000 (UTC)
-Received: from [10.72.12.46] (ovpn-12-46.pek2.redhat.com [10.72.12.46])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CDE322DE9E;
-        Sat, 25 May 2019 12:07:36 +0000 (UTC)
-Subject: Re: [PATCH] ceph: fix warning PTR_ERR_OR_ZERO can be used
-To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
-        ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190525091559.GA14633@hari-Inspiron-1545>
-From:   "Yan, Zheng" <zyan@redhat.com>
-Message-ID: <d17e2d82-81d2-2308-fef8-77b6a5204ad5@redhat.com>
-Date:   Sat, 25 May 2019 20:07:34 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Sat, 25 May 2019 08:09:25 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:42620 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726585AbfEYMJZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 May 2019 08:09:25 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 941F98029F; Sat, 25 May 2019 14:09:12 +0200 (CEST)
+Date:   Sat, 25 May 2019 14:08:35 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Nigel Croxon <ncroxon@redhat.com>, Xiao Ni <xni@redhat.com>,
+        Song Liu <songliubraving@fb.com>
+Subject: Re: [PATCH 4.19 108/114] Revert "Dont jump to compute_result state
+ from check_result state"
+Message-ID: <20190525120835.GA2975@xo-6d-61-c0.localdomain>
+References: <20190523181731.372074275@linuxfoundation.org>
+ <20190523181740.646499661@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <20190525091559.GA14633@hari-Inspiron-1545>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Sat, 25 May 2019 12:07:41 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190523181740.646499661@linuxfoundation.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/25/19 5:15 PM, Hariprasad Kelam wrote:
-> change1: fix below warning  reported by coccicheck
+On Thu 2019-05-23 21:06:47, Greg Kroah-Hartman wrote:
+> From: Song Liu <songliubraving@fb.com>
 > 
-> /fs/ceph/export.c:371:33-39: WARNING: PTR_ERR_OR_ZERO can be used
+> commit a25d8c327bb41742dbd59f8c545f59f3b9c39983 upstream.
 > 
-> change2: typecasted PTR_ERR_OR_ZERO to long as dout expecting long
+> This reverts commit 4f4fd7c5798bbdd5a03a60f6269cf1177fbd11ef.
 > 
-> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Nigel Croxon <ncroxon@redhat.com>
+> Cc: Xiao Ni <xni@redhat.com>
+> Signed-off-by: Song Liu <songliubraving@fb.com>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+We normally reject patches without changelog, and this has none. Why
+make exception here?
+
+									Pavel
+
+> 
 > ---
->   fs/ceph/export.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/md/raid5.c |   19 +++++++++++++++----
+>  1 file changed, 15 insertions(+), 4 deletions(-)
 > 
-> diff --git a/fs/ceph/export.c b/fs/ceph/export.c
-> index d3ef7ee42..15ff1b0 100644
-> --- a/fs/ceph/export.c
-> +++ b/fs/ceph/export.c
-> @@ -368,7 +368,7 @@ static struct dentry *ceph_get_parent(struct dentry *child)
->   	}
->   out:
->   	dout("get_parent %p ino %llx.%llx err=%ld\n",
-> -	     child, ceph_vinop(inode), (IS_ERR(dn) ? PTR_ERR(dn) : 0));
-> +	     child, ceph_vinop(inode), (long)PTR_ERR_OR_ZERO(dn));
->   	return dn;
->   }
->   
+> --- a/drivers/md/raid5.c
+> +++ b/drivers/md/raid5.c
+> @@ -4221,15 +4221,26 @@ static void handle_parity_checks6(struct
+>  	case check_state_check_result:
+>  		sh->check_state = check_state_idle;
+>  
+> -		if (s->failed > 1)
+> -			break;
+>  		/* handle a successful check operation, if parity is correct
+>  		 * we are done.  Otherwise update the mismatch count and repair
+>  		 * parity if !MD_RECOVERY_CHECK
+>  		 */
+>  		if (sh->ops.zero_sum_result == 0) {
+> -			/* Any parity checked was correct */
+> -			set_bit(STRIPE_INSYNC, &sh->state);
+> +			/* both parities are correct */
+> +			if (!s->failed)
+> +				set_bit(STRIPE_INSYNC, &sh->state);
+> +			else {
+> +				/* in contrast to the raid5 case we can validate
+> +				 * parity, but still have a failure to write
+> +				 * back
+> +				 */
+> +				sh->check_state = check_state_compute_result;
+> +				/* Returning at this point means that we may go
+> +				 * off and bring p and/or q uptodate again so
+> +				 * we make sure to check zero_sum_result again
+> +				 * to verify if p or q need writeback
+> +				 */
+> +			}
+>  		} else {
+>  			atomic64_add(STRIPE_SECTORS, &conf->mddev->resync_mismatches);
+>  			if (test_bit(MD_RECOVERY_CHECK, &conf->mddev->recovery)) {
 > 
 
-Applied.
-
-Thanks
-Yan, Zheng
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
