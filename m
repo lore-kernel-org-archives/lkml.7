@@ -2,112 +2,94 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B31E7C04AB0
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 07:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E25EC04AB0
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 08:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81642217D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 07:34:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W1U98WMI"
+	by mail.kernel.org (Postfix) with ESMTP id 250042133D
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 08:05:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbfEYHe5 (ORCPT
+        id S1726462AbfEYIFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 03:34:57 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:39785 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726145AbfEYHe5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 03:34:57 -0400
-Received: by mail-pl1-f196.google.com with SMTP id g9so5041258plm.6
-        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 00:34:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=JvzE9AyV74L/dTo6OIidUVMz2Tg/YkysokYHJ1eyAEI=;
-        b=W1U98WMIUt2Y1NL0+hUD6ifWc5gAad3cySCvCzhQ4hereZF6+1LqJFJGAVKOVG60UI
-         9jXSo7SC3PVFYkEeh7Rs5UXtH4GFFHc/841cpx3R0dnSILiIiWuKwJQ/MG63RvtGZa2R
-         iTKPOYS+ozX3dyowPA10b/Hw2WrcOsbhX9QvGe1w3X3eGJtxUDHVgn+fYMEUwNHjV1QN
-         Cd6Y1AHaTelpT8Xp+x9wxyKuD8cbq1+wOWtlARrWfdoCoWgA1ff6yY3YkEf5cG2s9r4S
-         8SjwdmHPVxdqFaxlxDrnwPqV2D9+MlJtT4RLt5b6gVhpbYTvIYPCxmOm50bsVb2esdIK
-         QA4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=JvzE9AyV74L/dTo6OIidUVMz2Tg/YkysokYHJ1eyAEI=;
-        b=afM6nq9gTmj5fK3ckvA2NtswzCqZsBuTxHOmzRbT3vjtL22A4OaKW1oWufNi8KQHaB
-         V3DaAgz8RcmFPQLUFk4mK0vV5u7345R+qUqQECxzPjdrZ4Arcffe0TPTg0Aab7xxxcnj
-         edcB4WC86ooNEOMivEGg3BQSIMSmuUNmP4wokTN3OlkI58SbHg5K60ujVq2/UUnjggTE
-         YLVeU2ywluOEJJTSHuhUis64fFtsfqZMpmvUfIMK/lPvfrau8+3E8xNLL4gOmGhMcF/r
-         E7c2tGL6EoHO/Uo/CSeM1Mt48v/lBatSPUglaPfCom8PLegOEMsEPhVHGGU4lr9hNJEJ
-         OqEg==
-X-Gm-Message-State: APjAAAWTVp1jfo+fphRNBjIvv+J+c6g7N9ujavbK0SQObe93HmJifXrc
-        galGV370/eaDASNiykewdZo=
-X-Google-Smtp-Source: APXvYqzuwCZTB4XD4UxzRtNwZzdpVIiEv9uj7w5oO7kYYG8sg+hiUzQaOw5wFZIZoT7DFcvcOlrvdA==
-X-Received: by 2002:a17:902:9a07:: with SMTP id v7mr112122498plp.180.1558769696584;
-        Sat, 25 May 2019 00:34:56 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.92.73])
-        by smtp.gmail.com with ESMTPSA id v93sm4512115pjb.6.2019.05.25.00.34.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 25 May 2019 00:34:56 -0700 (PDT)
-Date:   Sat, 25 May 2019 13:04:49 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        hersen wu <hersenxs.wu@amd.com>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        David Francis <David.Francis@amd.com>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        kbuild test robot <fengguang.wu@intel.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/amd: fix warning PTR_ERR_OR_ZERO can be used
-Message-ID: <20190525073449.GA7278@hari-Inspiron-1545>
+        Sat, 25 May 2019 04:05:02 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:58434 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726256AbfEYIFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 May 2019 04:05:02 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id C69EB89F2EF8727085CA;
+        Sat, 25 May 2019 16:04:58 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
+ 14.3.439.0; Sat, 25 May 2019 16:04:49 +0800
+From:   Mao Wenan <maowenan@huawei.com>
+To:     <gregkh@linuxfoundation.org>, <jeremy@azazel.net>
+CC:     <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>, Mao Wenan <maowenan@huawei.com>
+Subject: [PATCH -next v2] =?UTF-8?q?staging:=20kpc2000:=20Remove=20set=20b?= =?UTF-8?q?ut=20not=20used=20variable=20=E2=80=98status=E2=80=99?=
+Date:   Sat, 25 May 2019 16:13:21 +0800
+Message-ID: <20190525081321.121294-1-maowenan@huawei.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190525042642.78482-1-maowenan@huawei.com>
+References: <20190525042642.78482-1-maowenan@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fix below warnings reported by coccicheck
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-./drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c:1057:1-3:
-WARNING: PTR_ERR_OR_ZERO can be used
+drivers/staging/kpc2000/kpc_spi/spi_driver.c: In function
+‘kp_spi_transfer_one_message’:
+drivers/staging/kpc2000/kpc_spi/spi_driver.c:282:9: warning: variable
+‘status’ set but not used [-Wunused-but-set-variable]
+     int status = 0;
+         ^~~~~~
+The variable 'status' is not used any more, remve it.
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ v2: change the subject of the patch.
+---
+ drivers/staging/kpc2000/kpc_spi/spi_driver.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c
-index 1d5fc5a..1b1ec12 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c
-@@ -1054,8 +1054,6 @@ int dtn_debugfs_init(struct amdgpu_device *adev)
- 
- 	ent = debugfs_create_file_unsafe("amdgpu_dm_visual_confirm", 0644, root,
- 					 adev, &visual_confirm_fops);
--	if (IS_ERR(ent))
--		return PTR_ERR(ent);
- 
--	return 0;
-+	return PTR_ERR_OR_ZERO(ent);
- }
+diff --git a/drivers/staging/kpc2000/kpc_spi/spi_driver.c b/drivers/staging/kpc2000/kpc_spi/spi_driver.c
+index 86df16547a92..16f9518f8d63 100644
+--- a/drivers/staging/kpc2000/kpc_spi/spi_driver.c
++++ b/drivers/staging/kpc2000/kpc_spi/spi_driver.c
+@@ -279,7 +279,6 @@ kp_spi_transfer_one_message(struct spi_master *master, struct spi_message *m)
+     struct kp_spi       *kpspi;
+     struct spi_transfer *transfer;
+     union kp_spi_config sc;
+-    int status = 0;
+     
+     spidev = m->spi;
+     kpspi = spi_master_get_devdata(master);
+@@ -332,7 +331,6 @@ kp_spi_transfer_one_message(struct spi_master *master, struct spi_message *m)
+     /* do the transfers for this message */
+     list_for_each_entry(transfer, &m->transfers, transfer_list) {
+         if (transfer->tx_buf == NULL && transfer->rx_buf == NULL && transfer->len) {
+-            status = -EINVAL;
+             break;
+         }
+         
+@@ -370,7 +368,6 @@ kp_spi_transfer_one_message(struct spi_master *master, struct spi_message *m)
+             m->actual_length += count;
+             
+             if (count != transfer->len) {
+-                status = -EIO;
+                 break;
+             }
+         }
 -- 
-2.7.4
+2.20.1
 
