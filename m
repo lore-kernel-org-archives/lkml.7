@@ -4,64 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2AF1C07542
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 21:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F299C07542
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 22:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 893B820856
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 21:51:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2545920879
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 22:10:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558821082;
-	bh=9GojVzJw4LUT0FwL1uJ2uxQz/GR22xKEGuM8E5lF4U4=;
+	s=default; t=1558822209;
+	bh=VuyQV9yCcfmzDbrICJDTkT3K0+YFQkMCZif6CxZr9/4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=GdipJRvGmbve4VKkA13NwMFO/I3ySD2wFY7+4ZzgIXSIw/nEmsm3SbxeT7phwYG1K
-	 O08bD08Pp+SfEhvjPgyByY1VSeWA3tlSpWQit9W9T7MW9iccakslN6TA3tRDRHs+9J
-	 gn2eF8W/L271dmQ1tYos+oJwezg1COqmUwLn60nw=
+	b=jMahEz6b1NJRV5lTcueGo7Id51Zee9yDvZbmZH3vRHYgNI6VWHZpoPC+4qJlG+ndR
+	 fG9sZQW/Wr97fIkUQZZWVxtjpT0MqpVNhm6Rb3KgKLgNfWz6bHqX6zWcsSi+cFhudM
+	 rFyuTLl11ibSgPqQpRmacv2pTUXZa2cEk3qqY/xg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727544AbfEYVvV (ORCPT
+        id S1727439AbfEYWJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 17:51:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36054 "EHLO mail.kernel.org"
+        Sat, 25 May 2019 18:09:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726061AbfEYVvV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 17:51:21 -0400
+        id S1726061AbfEYWJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 May 2019 18:09:50 -0400
 Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7150B20717;
-        Sat, 25 May 2019 21:51:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4322120815;
+        Sat, 25 May 2019 22:09:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558821080;
-        bh=9GojVzJw4LUT0FwL1uJ2uxQz/GR22xKEGuM8E5lF4U4=;
+        s=default; t=1558822189;
+        bh=VuyQV9yCcfmzDbrICJDTkT3K0+YFQkMCZif6CxZr9/4=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=yeCoL/9YBkEk1sCDuZGtqcOLLhjEc3XPpvmQxhmXpl1ivii7ueziKdgVyPiry9ByA
-         ADOT2OgdVR0DYv4LRRgW5QSfW6vt2A05lzKc6kYMl7/+P1G4g6y87rsbUW7KSF+/pj
-         wELWVZx/6l9yaDm7Gysp2a6pdP0M1R6mJkI2X3yI=
-Date:   Sat, 25 May 2019 14:51:18 -0700
+        b=IQRUA5tkhswTF2Ciz/q+MUTYpYHiMtvkI3APccoGTImDGfdlv5vmiGY5LrGrHMTKN
+         H/Or5yB8oZzFuI5ssnXzUeMz5mTrGxdtkgFwmp59zW2pqjrbHutRzawwgO5y8R4mCH
+         PfjyYmoFSkzBP7IcoZi8FEjLWBDmxLPlonQLTcu8=
+Date:   Sat, 25 May 2019 15:09:48 -0700
 From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>, Alan Tull <atull@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christoph Lameter <cl@linux.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Moritz Fischer <mdf@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Steve Sistare <steven.sistare@oracle.com>,
-        Wu Hao <hao.wu@intel.com>, linux-mm@kvack.org,
-        kvm@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mm: add account_locked_vm utility function
-Message-Id: <20190525145118.bfda2d75a14db05a001e49ad@linux-foundation.org>
-In-Reply-To: <20190524175045.26897-1-daniel.m.jordan@oracle.com>
-References: <de375582-2c35-8e8a-4737-c816052a8e58@ozlabs.ru>
-        <20190524175045.26897-1-daniel.m.jordan@oracle.com>
+To:     Vitaly Wool <vitalywool@gmail.com>
+Cc:     Linux-MM <linux-mm@kvack.org>, linux-kernel@vger.kernel.org,
+        Dan Streetman <ddstreet@ieee.org>,
+        Oleksiy.Avramchenko@sony.com,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Uladzislau Rezki <urezki@gmail.com>
+Subject: Re: [PATCH] z3fold: add inter-page compaction
+Message-Id: <20190525150948.e1ff1a2a894ca8110abc8183@linux-foundation.org>
+In-Reply-To: <20190524174918.71074b358001bdbf1c23cd77@gmail.com>
+References: <20190524174918.71074b358001bdbf1c23cd77@gmail.com>
 X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -71,46 +59,189 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 May 2019 13:50:45 -0400 Daniel Jordan <daniel.m.jordan@oracle.com> wrote:
+On Fri, 24 May 2019 17:49:18 +0200 Vitaly Wool <vitalywool@gmail.com> wrote:
 
-> locked_vm accounting is done roughly the same way in five places, so
-> unify them in a helper.  Standardize the debug prints, which vary
-> slightly, but include the helper's caller to disambiguate between
-> callsites.
+> For each page scheduled for compaction (e. g. by z3fold_free()),
+> try to apply inter-page compaction before running the traditional/
+> existing intra-page compaction. That means, if the page has only one
+> buddy, we treat that buddy as a new object that we aim to place into
+> an existing z3fold page. If such a page is found, that object is
+> transferred and the old page is freed completely. The transferred
+> object is named "foreign" and treated slightly differently thereafter.
 > 
-> Error codes stay the same, so user-visible behavior does too.  The one
-> exception is that the -EPERM case in tce_account_locked_vm is removed
-> because Alexey has never seen it triggered.
+> Namely, we increase "foreign handle" counter for the new page. Pages
+> with non-zero "foreign handle" count become unmovable. This patch
+> implements "foreign handle" detection when a handle is freed to
+> decrement the foreign handle counter accordingly, so a page may as
+> well become movable again as the time goes by.
+> 
+> As a result, we almost always have exactly 3 objects per page and
+> significantly better average compression ratio.
 > 
 > ...
 >
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -1564,6 +1564,25 @@ long get_user_pages_unlocked(unsigned long start, unsigned long nr_pages,
->  int get_user_pages_fast(unsigned long start, int nr_pages,
->  			unsigned int gup_flags, struct page **pages);
->  
-> +int __account_locked_vm(struct mm_struct *mm, unsigned long pages, bool inc,
-> +			struct task_struct *task, bool bypass_rlim);
-> +
-> +static inline int account_locked_vm(struct mm_struct *mm, unsigned long pages,
-> +				    bool inc)
-> +{
-> +	int ret;
-> +
-> +	if (pages == 0 || !mm)
-> +		return 0;
-> +
-> +	down_write(&mm->mmap_sem);
-> +	ret = __account_locked_vm(mm, pages, inc, current,
-> +				  capable(CAP_IPC_LOCK));
-> +	up_write(&mm->mmap_sem);
-> +
-> +	return ret;
-> +}
+> +static inline struct z3fold_header *handle_to_z3fold_header(unsigned long);
+> +static inline struct z3fold_pool *zhdr_to_pool(struct z3fold_header *);
 
-That's quite a mouthful for an inlined function.  How about uninlining
-the whole thing and fiddling drivers/vfio/vfio_iommu_type1.c to suit. 
-I wonder why it does down_write_killable and whether it really needs
-to...
+Forward-declaring inline functions is peculiar, but it does appear to work.
+
+z3fold is quite inline-happy.  Fortunately the compiler will ignore the
+inline hint if it seems a bad idea.  Even then, the below shrinks
+z3fold.o text from 30k to 27k.  Which might even make it faster....
+
+--- a/mm/z3fold.c~a
++++ a/mm/z3fold.c
+@@ -185,8 +185,8 @@ enum z3fold_handle_flags {
+ 	HANDLES_ORPHANED = 0,
+ };
+ 
+-static inline struct z3fold_header *handle_to_z3fold_header(unsigned long);
+-static inline struct z3fold_pool *zhdr_to_pool(struct z3fold_header *);
++static struct z3fold_header *handle_to_z3fold_header(unsigned long);
++static struct z3fold_pool *zhdr_to_pool(struct z3fold_header *);
+ static struct z3fold_header *__z3fold_alloc(struct z3fold_pool *, size_t, bool);
+ static void add_to_unbuddied(struct z3fold_pool *, struct z3fold_header *);
+ 
+@@ -205,7 +205,7 @@ static int size_to_chunks(size_t size)
+ 
+ static void compact_page_work(struct work_struct *w);
+ 
+-static inline struct z3fold_buddy_slots *alloc_slots(struct z3fold_pool *pool,
++static struct z3fold_buddy_slots *alloc_slots(struct z3fold_pool *pool,
+ 							gfp_t gfp)
+ {
+ 	struct z3fold_buddy_slots *slots = kmem_cache_alloc(pool->c_handle,
+@@ -220,17 +220,17 @@ static inline struct z3fold_buddy_slots
+ 	return slots;
+ }
+ 
+-static inline struct z3fold_pool *slots_to_pool(struct z3fold_buddy_slots *s)
++static struct z3fold_pool *slots_to_pool(struct z3fold_buddy_slots *s)
+ {
+ 	return (struct z3fold_pool *)(s->pool & ~HANDLE_FLAG_MASK);
+ }
+ 
+-static inline struct z3fold_buddy_slots *handle_to_slots(unsigned long handle)
++static struct z3fold_buddy_slots *handle_to_slots(unsigned long handle)
+ {
+ 	return (struct z3fold_buddy_slots *)(handle & ~(SLOTS_ALIGN - 1));
+ }
+ 
+-static inline void free_handle(unsigned long handle)
++static void free_handle(unsigned long handle)
+ {
+ 	struct z3fold_buddy_slots *slots;
+ 	struct z3fold_header *zhdr;
+@@ -423,7 +423,7 @@ static unsigned long encode_handle(struc
+ 	return (unsigned long)&slots->slot[idx];
+ }
+ 
+-static inline struct z3fold_header *__get_z3fold_header(unsigned long handle,
++static struct z3fold_header *__get_z3fold_header(unsigned long handle,
+ 							bool lock)
+ {
+ 	struct z3fold_buddy_slots *slots;
+@@ -648,7 +648,7 @@ static int num_free_chunks(struct z3fold
+ }
+ 
+ /* Add to the appropriate unbuddied list */
+-static inline void add_to_unbuddied(struct z3fold_pool *pool,
++static void add_to_unbuddied(struct z3fold_pool *pool,
+ 				struct z3fold_header *zhdr)
+ {
+ 	if (zhdr->first_chunks == 0 || zhdr->last_chunks == 0 ||
+@@ -664,7 +664,7 @@ static inline void add_to_unbuddied(stru
+ 	}
+ }
+ 
+-static inline void *mchunk_memmove(struct z3fold_header *zhdr,
++static void *mchunk_memmove(struct z3fold_header *zhdr,
+ 				unsigned short dst_chunk)
+ {
+ 	void *beg = zhdr;
+@@ -673,7 +673,7 @@ static inline void *mchunk_memmove(struc
+ 		       zhdr->middle_chunks << CHUNK_SHIFT);
+ }
+ 
+-static inline bool buddy_single(struct z3fold_header *zhdr)
++static bool buddy_single(struct z3fold_header *zhdr)
+ {
+ 	return !((zhdr->first_chunks && zhdr->middle_chunks) ||
+ 			(zhdr->first_chunks && zhdr->last_chunks) ||
+@@ -884,7 +884,7 @@ static void compact_page_work(struct wor
+ }
+ 
+ /* returns _locked_ z3fold page header or NULL */
+-static inline struct z3fold_header *__z3fold_alloc(struct z3fold_pool *pool,
++static struct z3fold_header *__z3fold_alloc(struct z3fold_pool *pool,
+ 						size_t size, bool can_sleep)
+ {
+ 	struct z3fold_header *zhdr = NULL;
+_
+
+
+>
+> ...
+>
+> +static inline struct z3fold_header *__get_z3fold_header(unsigned long handle,
+> +							bool lock)
+> +{
+> +	struct z3fold_buddy_slots *slots;
+> +	struct z3fold_header *zhdr;
+> +	unsigned int seq;
+> +	bool is_valid;
+> +
+> +	if (!(handle & (1 << PAGE_HEADLESS))) {
+> +		slots = handle_to_slots(handle);
+> +		do {
+> +			unsigned long addr;
+> +
+> +			seq = read_seqbegin(&slots->seqlock);
+> +			addr = *(unsigned long *)handle;
+> +			zhdr = (struct z3fold_header *)(addr & PAGE_MASK);
+> +			preempt_disable();
+
+Why is this done?
+
+> +			is_valid = !read_seqretry(&slots->seqlock, seq);
+> +			if (!is_valid) {
+> +				preempt_enable();
+> +				continue;
+> +			}
+> +			/*
+> +			 * if we are here, zhdr is a pointer to a valid z3fold
+> +			 * header. Lock it! And then re-check if someone has
+> +			 * changed which z3fold page this handle points to
+> +			 */
+> +			if (lock)
+> +				z3fold_page_lock(zhdr);
+> +			preempt_enable();
+> +			/*
+> +			 * we use is_valid as a "cached" value: if it's false,
+> +			 * no other checks needed, have to go one more round
+> +			 */
+> +		} while (!is_valid || (read_seqretry(&slots->seqlock, seq) &&
+> +			(lock ? ({ z3fold_page_unlock(zhdr); 1; }) : 1)));
+> +	} else {
+> +		zhdr = (struct z3fold_header *)(handle & PAGE_MASK);
+> +	}
+> +
+> +	return zhdr;
+> +}
+>
+> ...
+>
+>  static unsigned short handle_to_chunks(unsigned long handle)
+>  {
+> -	unsigned long addr = *(unsigned long *)handle;
+> +	unsigned long addr;
+> +	struct z3fold_buddy_slots *slots = handle_to_slots(handle);
+> +	unsigned int seq;
+> +
+> +	do {
+> +		seq = read_seqbegin(&slots->seqlock);
+> +		addr = *(unsigned long *)handle;
+> +	} while (read_seqretry(&slots->seqlock, seq));
+
+It isn't done here (I think).
 
