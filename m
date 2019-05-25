@@ -2,60 +2,61 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE23C282CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 16:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEEF1C07542
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 16:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2460C21707
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 16:38:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4BF321707
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 16:38:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZCG5JA+b"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fpeHWHLe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727295AbfEYQi2 (ORCPT
+        id S1727341AbfEYQif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 12:38:28 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33577 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727125AbfEYQi1 (ORCPT
+        Sat, 25 May 2019 12:38:35 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33318 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727125AbfEYQi3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 12:38:27 -0400
-Received: by mail-wr1-f67.google.com with SMTP id d9so12841990wrx.0;
-        Sat, 25 May 2019 09:38:26 -0700 (PDT)
+        Sat, 25 May 2019 12:38:29 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v19so3327869wmh.0;
+        Sat, 25 May 2019 09:38:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=P1PyjslIuFkdLZ1LECH2oSAMmTt5Um4BAQa4nOZIt94=;
-        b=ZCG5JA+bIRDyleKl2mXDSKEp9k5JUA0n0iBeFRwDKw1Fs5sbHew+pHrqpO+AVaYcDk
-         GbQOzYLEetuN7tzq4YO2itG3MCd0VrWiWvlBNLP94BenthcKgYrio9BbozLM3VDqavWR
-         Lo3Fwl8QSY+FZ9HXd2H4JNg7yUGxpNKQ491HSncL5MczBDs8dD7y9dFezntMKpIq+L51
-         w1KoNwprxk7lGvNIy+iEbrJSSNU3qpKTgUCgSLso/uqyZVSNyiOJc9LXQcUx3+4ZSUAX
-         H0m3RQkTcQ2B2h/17Gf96fzMNShsQRNGONnkY7JcSB0If1UlSrdDXOecxZnumgXMJcEq
-         RWQA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=pQgSnfiOxm9+C2oUtvzxOg9ar7+568ZBuQBswlwkWls=;
+        b=fpeHWHLeMpy/ARUQ6sMkHjNaXac4FvLA9S2KevDr16zz1QEVFtD3ifGfXYHBW8m2eI
+         XaZrIdWmCf/dcE8UEyAm5sCamqwlsNOFXkTvls5yI4nWCqIFYopOzVwdtM2ZP3r3gDBv
+         WlPqgnGg9IH1hdGFgbvE+pUObBOGhHtryeLxB+lU/nBN3pJcn2U5Z7OwGAlqVy5YgVc7
+         ylQt0W3joyjuwQJ2rLIYkCYsXQD9npOvrNKrHjQgCd2u1CqTR2VCoxZVxYtujhRuIK38
+         ukg2oVJfEJi76zoGouU9C+TNfVuUH38/lk8Ljlbq5b1Rh7X/6MpY3rd8yYWPktffTgNi
+         pwTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=P1PyjslIuFkdLZ1LECH2oSAMmTt5Um4BAQa4nOZIt94=;
-        b=Bo+QOThZNsb0D2Be3NXIbRR1vNwoj+9KZblWOQQNpb6MTaAThycfuVEr3cynyPLWdu
-         +sqh695f0eDMTkP7b5gaUrC2SEG7Jd0Z2iCDdOqmJXENlmPJeh4kokq0BiB6aa6LTtQa
-         jW9RA3l9UtCKImuXhqxD5lMHd70qK4iRDd4FDIVcixGMMBNE2zYSRfASGlgwIvEMNLfU
-         J9hDsgsBHAJdBgv981uk+tNo1dfomAU8oRcry6LnrvHrpt3oeCPiK33a1th8cKkraMsd
-         5eagUAoh6y/YtyljHEdXMRVlL4oIIpq6ufFYkB7nQZ0qybf81hsKshpw0MLgsrAkEgeD
-         3ozg==
-X-Gm-Message-State: APjAAAXEp+f2tF7QaC214WZivr7R2qhaNgyRgktehoamY0PCt0FVQdrS
-        gxkSx2J6a6NJ5OkK2u44zew=
-X-Google-Smtp-Source: APXvYqz78k3LlnXP7jY3H0OnrSSVjujSRE2IRywudpy2P67AUT4Fy3Xl69vJWmYaBl5Bg9zioHfo+Q==
-X-Received: by 2002:a5d:6b03:: with SMTP id v3mr7769108wrw.309.1558802305724;
-        Sat, 25 May 2019 09:38:25 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=pQgSnfiOxm9+C2oUtvzxOg9ar7+568ZBuQBswlwkWls=;
+        b=YSbVQoE1BQVrQeaot2Mdyg/JsDr8LmUREpSV7TRRN8d4sFuKQVZs+eVAgGXO6rwn/K
+         YXwPlyOHLIF3dn8URTg+/43jeHKOKqwFOa+YGoNWoLYzLSbh2DWQ55UkPqS5EwrLWw2o
+         RmrY7Eq/ZUsdSGAqH+v7HLE0+ykBKiOEli/znqEVe2dIrBH7hHh3ai8pqWVOywVOJ/kM
+         FunLV2vtR7GLbpL0d2+Pljyl9khTweO5U1f1NV3R3Wm50Lmct+kCsNrNaH8pwdbfywbm
+         ItMwPHw/qpd9O1GDsNr0hlIHaYankDpxMYCERxV1qKnYfTqeXmQVwOFjAhNHdfQRqYOC
+         tsmQ==
+X-Gm-Message-State: APjAAAVHAShJ7iuLv31xnzSeXA50zEQ+qbH2n/k2Yv61Cb55f9s+k8hH
+        9Vexax08reOXzEl6WMYO/C8=
+X-Google-Smtp-Source: APXvYqxY3a/zzzGNpLhQ0PR3vJOW0d0UoB7TVKBeKA8nVBQivbcnkllLZLs+Vh2RVKjGex2r/tP54w==
+X-Received: by 2002:a1c:1a49:: with SMTP id a70mr19873320wma.120.1558802307817;
+        Sat, 25 May 2019 09:38:27 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
-        by smtp.gmail.com with ESMTPSA id f65sm9306498wmg.45.2019.05.25.09.38.24
+        by smtp.gmail.com with ESMTPSA id f65sm9306498wmg.45.2019.05.25.09.38.26
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 25 May 2019 09:38:25 -0700 (PDT)
+        Sat, 25 May 2019 09:38:27 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -64,11 +65,14 @@ To:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>
 Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v2 0/7] Allwinner H6 DMA support
-Date:   Sat, 25 May 2019 18:38:12 +0200
-Message-Id: <20190525163819.21055-1-peron.clem@gmail.com>
+Subject: [PATCH v2 2/7] dmaengine: sun6i: Add a quirk for additional mbus clock
+Date:   Sat, 25 May 2019 18:38:14 +0200
+Message-Id: <20190525163819.21055-3-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190525163819.21055-1-peron.clem@gmail.com>
+References: <20190525163819.21055-1-peron.clem@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -77,57 +81,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-This series has been first proposed by Jernej Skrabec[1].
-As this series is mandatory for SPDIF/I2S support and because he is
-busy on Cedrus stuff. I asked him to make the minor change requested
-and repost it.
-Authorship remains to him.
+H6 DMA controller needs additional mbus clock to be enabled.
 
-I have tested this series with SPDIF driver and added a patch to enable
-DMA_SUN6I_CONFIG for arm64.
+Add a quirk for it and handle it accordingly.
 
-Original Post:
-"
-DMA engine engine on H6 almost the same as on older SoCs. The biggest
-difference is that it has slightly rearranged bits in registers and
-it needs additional clock, probably due to iommu.
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Signed-off-by: Clément Péron <peron.clem@gmail.com>
+---
+ drivers/dma/sun6i-dma.c | 23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
-These patches were tested with I2S connected to HDMI. I2S needs
-additional patches which will be sent later.
-
-Please take a look.
-
-Best regards,
-Jernej
-"
-
-Thanks,
-Clément
-
-Changes since v1:
- - Enable DMA_SUN6I in arm64 defconfig
- - Change mbus_clk to has_mbus_clk
- - Collect Rob H. reviewed-by
-
-Clément Péron (1):
-  arm64: defconfig: enable Allwinner DMA drivers
-
-Jernej Skrabec (6):
-  dt-bindings: arm64: allwinner: h6: Add binding for DMA controller
-  dmaengine: sun6i: Add a quirk for additional mbus clock
-  dmaengine: sun6i: Add a quirk for setting DRQ fields
-  dmaengine: sun6i: Add a quirk for setting mode fields
-  dmaengine: sun6i: Add support for H6 DMA
-  arm64: dts: allwinner: h6: Add DMA node
-
- .../devicetree/bindings/dma/sun6i-dma.txt     |   9 +-
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  12 ++
- arch/arm64/configs/defconfig                  |   1 +
- drivers/dma/sun6i-dma.c                       | 147 +++++++++++++-----
- 4 files changed, 132 insertions(+), 37 deletions(-)
-
+diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
+index 0cd13f17fc11..7d9606997251 100644
+--- a/drivers/dma/sun6i-dma.c
++++ b/drivers/dma/sun6i-dma.c
+@@ -129,6 +129,7 @@ struct sun6i_dma_config {
+ 	u32 dst_burst_lengths;
+ 	u32 src_addr_widths;
+ 	u32 dst_addr_widths;
++	bool has_mbus_clk;
+ };
+ 
+ /*
+@@ -182,6 +183,7 @@ struct sun6i_dma_dev {
+ 	struct dma_device	slave;
+ 	void __iomem		*base;
+ 	struct clk		*clk;
++	struct clk		*clk_mbus;
+ 	int			irq;
+ 	spinlock_t		lock;
+ 	struct reset_control	*rstc;
+@@ -1208,6 +1210,14 @@ static int sun6i_dma_probe(struct platform_device *pdev)
+ 		return PTR_ERR(sdc->clk);
+ 	}
+ 
++	if (sdc->cfg->has_mbus_clk) {
++		sdc->clk_mbus = devm_clk_get(&pdev->dev, "mbus");
++		if (IS_ERR(sdc->clk_mbus)) {
++			dev_err(&pdev->dev, "No mbus clock specified\n");
++			return PTR_ERR(sdc->clk_mbus);
++		}
++	}
++
+ 	sdc->rstc = devm_reset_control_get(&pdev->dev, NULL);
+ 	if (IS_ERR(sdc->rstc)) {
+ 		dev_err(&pdev->dev, "No reset controller specified\n");
+@@ -1312,11 +1322,19 @@ static int sun6i_dma_probe(struct platform_device *pdev)
+ 		goto err_reset_assert;
+ 	}
+ 
++	if (sdc->cfg->has_mbus_clk) {
++		ret = clk_prepare_enable(sdc->clk_mbus);
++		if (ret) {
++			dev_err(&pdev->dev, "Couldn't enable mbus clock\n");
++			goto err_clk_disable;
++		}
++	}
++
+ 	ret = devm_request_irq(&pdev->dev, sdc->irq, sun6i_dma_interrupt, 0,
+ 			       dev_name(&pdev->dev), sdc);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Cannot request IRQ\n");
+-		goto err_clk_disable;
++		goto err_mbus_clk_disable;
+ 	}
+ 
+ 	ret = dma_async_device_register(&sdc->slave);
+@@ -1341,6 +1359,8 @@ static int sun6i_dma_probe(struct platform_device *pdev)
+ 	dma_async_device_unregister(&sdc->slave);
+ err_irq_disable:
+ 	sun6i_kill_tasklet(sdc);
++err_mbus_clk_disable:
++	clk_disable_unprepare(sdc->clk_mbus);
+ err_clk_disable:
+ 	clk_disable_unprepare(sdc->clk);
+ err_reset_assert:
+@@ -1359,6 +1379,7 @@ static int sun6i_dma_remove(struct platform_device *pdev)
+ 
+ 	sun6i_kill_tasklet(sdc);
+ 
++	clk_disable_unprepare(sdc->clk_mbus);
+ 	clk_disable_unprepare(sdc->clk);
+ 	reset_control_assert(sdc->rstc);
+ 
 -- 
 2.20.1
 
