@@ -2,80 +2,145 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 320ACC282E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 02:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A355C282E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 03:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF847217D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 02:59:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Npl7Jrit"
+	by mail.kernel.org (Postfix) with ESMTP id 73C5F2133D
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 03:11:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbfEYC7C (ORCPT
+        id S1726604AbfEYDLK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 22:59:02 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:38917 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbfEYC7B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 22:59:01 -0400
-Received: by mail-lf1-f65.google.com with SMTP id f1so8429613lfl.6;
-        Fri, 24 May 2019 19:59:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=I42CaPGNEMCFp3CHpIjUQ2oZUjvywz2zdl78AKj9zEo=;
-        b=Npl7JritObxy1JJtlBqRQBvGcd9kLRUokl3Hh45MqZDJO+4MrshCR34M05VrIvOl5Y
-         7f9W+Y1KJ86KiuCVz9dvL0lNdu9ZB0+6wfr1n4Ik1zPE/CqBALBGRxFt9/0+iL3+vlLV
-         +l4y/No601fB74ol5PrSq7LUUCjkSanJhME/4DlQgANAb0rAnO/AczsBVXIhfAu4iq86
-         OiVQZctd9z6t9w6I32409WzNDlo+fNLX7t/y8in8Kvqq1sJp8BYRt/xSrZmNwXZFm1Gt
-         +bFok46TVwxJQKsLBcMyCBz3IRZK709ykkEj1oG3cA+YFod+3jEhl1X9VeJCalvWbnOQ
-         uoZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=I42CaPGNEMCFp3CHpIjUQ2oZUjvywz2zdl78AKj9zEo=;
-        b=uIbf4Lv2zMdso44WPiDq8Nz/90msMFojMHBcbEi9Lw/UxCNGCgXngPcexWu4uZq6Uj
-         bdCiYmlGJmqpk92POJhRBfzzsGLgLEF+KA1LA0mzx38u6woZy7o9Kv2Enml3VuyT2zJv
-         3vpAUv4jEWltjFbxhwFUtXlpjVERxAsaKNShurzCZIMyYmtgq9ZtzqM9zVMZ/QwwjxmZ
-         8gw79dAhBWLu73O1t+/acJtamJbiSzP7rYlZlKWPgvEjbzwxtmlBuoLFXZ07tf47pmmH
-         21CfwEpaGXykK1tRkykD/W6eI56Val2O9QVG2NSsFaWfKYWRRKvMBmrfITC4xdnJu74V
-         zzOA==
-X-Gm-Message-State: APjAAAVfGWqJIIfAoZDtAAi2+YpXeVP39x5P/97pGjYa5ZBbMqG8pKnl
-        i4gKeYltN9nUfY47EnmbBMmWCtP3AsFvyKh+87Q=
-X-Google-Smtp-Source: APXvYqynMZ4i/b/sNcnC/qUMa8ryVMxbvDaU/zePZGwG5YMv1GIvEFr8MFNfQCSXwi4k+SgGsgWFtuR4Yx6yDk7DpWA=
-X-Received: by 2002:ac2:4252:: with SMTP id m18mr19148041lfl.100.1558753139417;
- Fri, 24 May 2019 19:58:59 -0700 (PDT)
+        Fri, 24 May 2019 23:11:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54730 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726452AbfEYDLK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 23:11:10 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABA5A2133D;
+        Sat, 25 May 2019 03:11:08 +0000 (UTC)
+Date:   Fri, 24 May 2019 23:11:06 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Jagadeesh Pagadala <jagdsh.linux@gmail.com>
+Subject: [GIT PULL] tracing: Small fixes to histogram code and header
+ cleanup
+Message-ID: <20190524231106.5812936b@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190524195912.4966-1-mcroce@redhat.com>
-In-Reply-To: <20190524195912.4966-1-mcroce@redhat.com>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Fri, 24 May 2019 19:58:47 -0700
-Message-ID: <CAADnVQJzb7ruKZu1Wr8=S6J4Yp9tw_kX0tKEL1FrZroUwy4j7Q@mail.gmail.com>
-Subject: Re: [PATCH bpf] samples: bpf: add ibumad sample to .gitignore
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     Xdp <xdp-newbies@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 12:59 PM Matteo Croce <mcroce@redhat.com> wrote:
->
-> This commit adds ibumad to .gitignore which is
-> currently ommited from the ignore file.
->
-> Signed-off-by: Matteo Croce <mcroce@redhat.com>
 
-Applied. Thanks
+
+Linus,
+
+Tom Zanussi sent me some small fixes and cleanups to the histogram
+code and I forgot to incorporate them.
+
+I also added a small clean up patch that was sent to me a while ago
+and I just noticed it.
+
+
+Please pull the latest trace-v5.2-rc1 tree, which can be found at:
+
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
+trace-v5.2-rc1
+
+Tag SHA1: bceb0fd66744c3aa0cd8f3bba3e4b45ca38b3aaa
+Head SHA1: 4eebe38a37f9397ffecd4bd3afbdf36838a97969
+
+
+Jagadeesh Pagadala (1):
+      kernel/trace/trace.h: Remove duplicate header of trace_seq.h
+
+Tom Zanussi (3):
+      tracing: Prevent hist_field_var_ref() from accessing NULL tracing_map_elts
+      tracing: Check keys for variable references in expressions too
+      tracing: Add a check_val() check before updating cond_snapshot() track_val
+
+----
+ kernel/trace/trace.h             |  1 -
+ kernel/trace/trace_events_hist.c | 13 +++++++++++--
+ 2 files changed, 11 insertions(+), 3 deletions(-)
+---------------------------
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 1974ce818ddb..82c70b63d375 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -15,7 +15,6 @@
+ #include <linux/trace_seq.h>
+ #include <linux/trace_events.h>
+ #include <linux/compiler.h>
+-#include <linux/trace_seq.h>
+ #include <linux/glob.h>
+ 
+ #ifdef CONFIG_FTRACE_SYSCALLS
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 7fca3457c705..ca6b0dff60c5 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -59,7 +59,7 @@
+ 	C(NO_CLOSING_PAREN,	"No closing paren found"),		\
+ 	C(SUBSYS_NOT_FOUND,	"Missing subsystem"),			\
+ 	C(INVALID_SUBSYS_EVENT,	"Invalid subsystem or event name"),	\
+-	C(INVALID_REF_KEY,	"Using variable references as keys not supported"), \
++	C(INVALID_REF_KEY,	"Using variable references in keys not supported"), \
+ 	C(VAR_NOT_FOUND,	"Couldn't find variable"),		\
+ 	C(FIELD_NOT_FOUND,	"Couldn't find field"),
+ 
+@@ -1854,6 +1854,9 @@ static u64 hist_field_var_ref(struct hist_field *hist_field,
+ 	struct hist_elt_data *elt_data;
+ 	u64 var_val = 0;
+ 
++	if (WARN_ON_ONCE(!elt))
++		return var_val;
++
+ 	elt_data = elt->private_data;
+ 	var_val = elt_data->var_ref_vals[hist_field->var_ref_idx];
+ 
+@@ -3582,14 +3585,20 @@ static bool cond_snapshot_update(struct trace_array *tr, void *cond_data)
+ 	struct track_data *track_data = tr->cond_snapshot->cond_data;
+ 	struct hist_elt_data *elt_data, *track_elt_data;
+ 	struct snapshot_context *context = cond_data;
++	struct action_data *action;
+ 	u64 track_val;
+ 
+ 	if (!track_data)
+ 		return false;
+ 
++	action = track_data->action_data;
++
+ 	track_val = get_track_val(track_data->hist_data, context->elt,
+ 				  track_data->action_data);
+ 
++	if (!action->track_data.check_val(track_data->track_val, track_val))
++		return false;
++
+ 	track_data->track_val = track_val;
+ 	memcpy(track_data->key, context->key, track_data->key_len);
+ 
+@@ -4503,7 +4512,7 @@ static int create_key_field(struct hist_trigger_data *hist_data,
+ 			goto out;
+ 		}
+ 
+-		if (hist_field->flags & HIST_FIELD_FL_VAR_REF) {
++		if (field_has_hist_vars(hist_field, 0))	{
+ 			hist_err(tr, HIST_ERR_INVALID_REF_KEY, errpos(field_str));
+ 			destroy_hist_field(hist_field, 0);
+ 			ret = -EINVAL;
+
