@@ -4,198 +4,141 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DACEAC46460
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 15:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2861BC07542
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 15:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE4F62168B
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 15:40:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B53E20862
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 15:50:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbfEYPid (ORCPT
+        id S1727139AbfEYPuo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 11:38:33 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:41204 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726971AbfEYPic (ORCPT
+        Sat, 25 May 2019 11:50:44 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42766 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727031AbfEYPuo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 11:38:32 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 8CEE0200EF;
-        Sat, 25 May 2019 17:38:27 +0200 (CEST)
-Date:   Sat, 25 May 2019 17:38:26 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Prarit Bhargava <prarit@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Yisheng Xie <ysxie@foxmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Konstantin Khorenko <khorenko@virtuozzo.com>
-Subject: Re: [PATCH 09/33] fbcon: Remove fbcon_has_exited
-Message-ID: <20190525153826.GA8661@ravnborg.org>
-References: <20190524085354.27411-1-daniel.vetter@ffwll.ch>
- <20190524085354.27411-10-daniel.vetter@ffwll.ch>
+        Sat, 25 May 2019 11:50:44 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4PFgPxR035129
+        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 11:50:42 -0400
+Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sq1pr2e50-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 11:50:42 -0400
+Received: from localhost
+        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Sat, 25 May 2019 16:50:41 +0100
+Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
+        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 25 May 2019 16:50:35 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4PFoYP633227200
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 25 May 2019 15:50:34 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6EC8CB206A;
+        Sat, 25 May 2019 15:50:34 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4D0D0B205F;
+        Sat, 25 May 2019 15:50:34 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.80.199.73])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Sat, 25 May 2019 15:50:34 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 1DB1C16C32DC; Sat, 25 May 2019 08:50:35 -0700 (PDT)
+Date:   Sat, 25 May 2019 08:50:35 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>, kvm-ppc@vger.kernel.org,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Paul Mackerras <paulus@ozlabs.org>, rcu@vger.kernel.org
+Subject: Re: [PATCH RFC 0/5] Remove some notrace RCU APIs
+Reply-To: paulmck@linux.ibm.com
+References: <20190524234933.5133-1-joel@joelfernandes.org>
+ <20190524232458.4bcf4eb4@gandalf.local.home>
+ <20190525081444.GC197789@google.com>
+ <20190525070826.16f76ee7@gandalf.local.home>
+ <20190525141954.GA176647@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190524085354.27411-10-daniel.vetter@ffwll.ch>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=e5mUnYsNAAAA:8
-        a=DzVgexfn9IsVGKuEcHIA:9 a=mS0BKyo6H8Xd97p-:21 a=5wqHtdtA96AT7Bqp:21
-        a=CjuIK1q_8ugA:10 a=Vxmtnl_E_bksehYqCbjh:22
+In-Reply-To: <20190525141954.GA176647@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19052515-0060-0000-0000-00000347D01F
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011161; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01208442; UDB=6.00634729; IPR=6.00989440;
+ MB=3.00027049; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-25 15:50:40
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052515-0061-0000-0000-0000497ECEE0
+Message-Id: <20190525155035.GE28207@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-25_11:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905250110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel.
-
-One detail I noticed while brosing the changes.
-
->  
-> @@ -1064,9 +1062,13 @@ static void fbcon_init(struct vc_data *vc, int init)
->  	int logo = 1, new_rows, new_cols, rows, cols, charcnt = 256;
->  	int cap, ret;
->  
-> -	if (info_idx == -1 || info == NULL)
-> +	if (WARN_ON(info_idx == -1))
->  	    return;
->  
-> +	if (con2fb_map[vc->vc_num] == -1)
-> +		con2fb_map[vc->vc_num] = info_idx;
-> +
-> +	info = registered_fb[con2fb_map[vc->vc_num]];
->  	cap = info->flags;
-
-When info is defined it is also assigned:
-struct fb_info *info = registered_fb[con2fb_map[vc->vc_num]];
-
-As the test for info is gone this assignment is no longer
-requrired and can be deleted.
-
-The code now assumes that there is always an fb_info if con2fb_map[]
-is not set to -1. I could not determine if this is OK, but this
-likely boils down to your locking concern of registered_fb.
-
-	Sam
-
->  
->  	if (logo_shown < 0 && console_loglevel <= CONSOLE_LOGLEVEL_QUIET)
-> @@ -3336,14 +3338,6 @@ static int fbcon_event_notify(struct notifier_block *self,
->  	struct fb_blit_caps *caps;
->  	int idx, ret = 0;
->  
-> -	/*
-> -	 * ignore all events except driver registration and deregistration
-> -	 * if fbcon is not active
-> -	 */
-> -	if (fbcon_has_exited && !(action == FB_EVENT_FB_REGISTERED ||
-> -				  action == FB_EVENT_FB_UNREGISTERED))
-> -		goto done;
-> -
->  	switch(action) {
->  	case FB_EVENT_SUSPEND:
->  		fbcon_suspended(info);
-> @@ -3396,7 +3390,6 @@ static int fbcon_event_notify(struct notifier_block *self,
->  		fbcon_remap_all(idx);
->  		break;
->  	}
-> -done:
->  	return ret;
->  }
->  
-> @@ -3443,9 +3436,6 @@ static ssize_t store_rotate(struct device *device,
->  	int rotate, idx;
->  	char **last = NULL;
->  
-> -	if (fbcon_has_exited)
-> -		return count;
-> -
->  	console_lock();
->  	idx = con2fb_map[fg_console];
->  
-> @@ -3468,9 +3458,6 @@ static ssize_t store_rotate_all(struct device *device,
->  	int rotate, idx;
->  	char **last = NULL;
->  
-> -	if (fbcon_has_exited)
-> -		return count;
-> -
->  	console_lock();
->  	idx = con2fb_map[fg_console];
->  
-> @@ -3491,9 +3478,6 @@ static ssize_t show_rotate(struct device *device,
->  	struct fb_info *info;
->  	int rotate = 0, idx;
->  
-> -	if (fbcon_has_exited)
-> -		return 0;
-> -
->  	console_lock();
->  	idx = con2fb_map[fg_console];
->  
-> @@ -3514,9 +3498,6 @@ static ssize_t show_cursor_blink(struct device *device,
->  	struct fbcon_ops *ops;
->  	int idx, blink = -1;
->  
-> -	if (fbcon_has_exited)
-> -		return 0;
-> -
->  	console_lock();
->  	idx = con2fb_map[fg_console];
->  
-> @@ -3543,9 +3524,6 @@ static ssize_t store_cursor_blink(struct device *device,
->  	int blink, idx;
->  	char **last = NULL;
->  
-> -	if (fbcon_has_exited)
-> -		return count;
-> -
->  	console_lock();
->  	idx = con2fb_map[fg_console];
->  
-> @@ -3668,9 +3646,6 @@ static void fbcon_exit(void)
->  	struct fb_info *info;
->  	int i, j, mapped;
->  
-> -	if (fbcon_has_exited)
-> -		return;
-> -
->  #ifdef CONFIG_FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER
->  	if (deferred_takeover) {
->  		dummycon_unregister_output_notifier(&fbcon_output_nb);
-> @@ -3695,7 +3670,7 @@ static void fbcon_exit(void)
->  		for (j = first_fb_vc; j <= last_fb_vc; j++) {
->  			if (con2fb_map[j] == i) {
->  				mapped = 1;
-> -				break;
-> +				con2fb_map[j] = -1;
->  			}
->  		}
->  
-> @@ -3718,8 +3693,6 @@ static void fbcon_exit(void)
->  				info->queue.func = NULL;
->  		}
->  	}
-> -
-> -	fbcon_has_exited = 1;
->  }
->  
->  void __init fb_console_init(void)
-> -- 
-> 2.20.1
+On Sat, May 25, 2019 at 10:19:54AM -0400, Joel Fernandes wrote:
+> On Sat, May 25, 2019 at 07:08:26AM -0400, Steven Rostedt wrote:
+> > On Sat, 25 May 2019 04:14:44 -0400
+> > Joel Fernandes <joel@joelfernandes.org> wrote:
+> > 
+> > > > I guess the difference between the _raw_notrace and just _raw variants
+> > > > is that _notrace ones do a rcu_check_sparse(). Don't we want to keep
+> > > > that check?  
+> > > 
+> > > This is true.
+> > > 
+> > > Since the users of _raw_notrace are very few, is it worth keeping this API
+> > > just for sparse checking? The API naming is also confusing. I was expecting
+> > > _raw_notrace to do fewer checks than _raw, instead of more. Honestly, I just
+> > > want to nuke _raw_notrace as done in this series and later we can introduce a
+> > > sparse checking version of _raw if need-be. The other option could be to
+> > > always do sparse checking for _raw however that used to be the case and got
+> > > changed in http://lists.infradead.org/pipermail/linux-afs/2016-July/001016.html
+> > 
+> > What if we just rename _raw to _raw_nocheck, and _raw_notrace to _raw ?
 > 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> That would also mean changing 160 usages of _raw to _raw_nocheck in the
+> kernel :-/.
+> 
+> The tracing usage of _raw_notrace is only like 2 or 3 users. Can we just call
+> rcu_check_sparse directly in the calling code for those and eliminate the APIs?
+> 
+> I wonder what Paul thinks about the matter as well.
+
+My thought is that it is likely that a goodly number of the current uses
+of _raw should really be some form of _check, with lockdep expressions
+spelled out.  Not that working out what exactly those lockdep expressions
+should be is necessarily a trivial undertaking.  ;-)
+
+That aside, if we are going to change the name of an API that is
+used 160 places throughout the tree, we would need to have a pretty
+good justification.  Without such a justification, it will just look
+like pointless churn to the various developers and maintainers on the
+receiving end of the patches.
+
+							Thanx, Paul
+
+> thanks, Steven!
+> 
+
