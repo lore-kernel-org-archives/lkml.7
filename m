@@ -2,164 +2,132 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAEE8C07542
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 16:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE23C282CE
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 16:38:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A42A4216E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 16:38:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2460C21707
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 16:38:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="TGSed2VJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZCG5JA+b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727266AbfEYQiM (ORCPT
+        id S1727295AbfEYQi2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 12:38:12 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:53616 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727143AbfEYQh5 (ORCPT
+        Sat, 25 May 2019 12:38:28 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33577 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727125AbfEYQi1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 12:37:57 -0400
-Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4PGYSKS030581
-        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 09:37:56 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=facebook; bh=lKhanow2gCoKTpUe2uSEXYyid+Hsa+6G59YaV2LcGMw=;
- b=TGSed2VJDZP1+kKX1HnQpAO/Zm8VWr/wATK/sU+BJi4Zi9Rcrw/Oe3DnJohlT162AxBg
- 19f72gpGSIeNeRTI5O5sY5yuyqPRsH2i524/meFsVEWRQI/Pzvtdu7+NktXrJ+GXjrN6
- q6hLeGtnQV4S9Q4tI/myhHiqxxRKmkvDyss= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2sq3ee8p6s-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 09:37:56 -0700
-Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sat, 25 May 2019 09:37:55 -0700
-Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
-        id 38B76126D83B7; Sat, 25 May 2019 09:37:43 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
-To:     Alexei Starovoitov <ast@kernel.org>, <bpf@vger.kernel.org>
-CC:     Daniel Borkmann <daniel@iogearbox.net>, <netdev@vger.kernel.org>,
-        Tejun Heo <tj@kernel.org>, <kernel-team@fb.com>,
-        <cgroups@vger.kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-        Yonghong Song <yhs@fb.com>, <linux-kernel@vger.kernel.org>,
-        Roman Gushchin <guro@fb.com>
-Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH v5 bpf-next 3/4] selftests/bpf: enable all available cgroup v2 controllers
-Date:   Sat, 25 May 2019 09:37:41 -0700
-Message-ID: <20190525163742.2616471-4-guro@fb.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190525163742.2616471-1-guro@fb.com>
-References: <20190525163742.2616471-1-guro@fb.com>
-X-FB-Internal: Safe
+        Sat, 25 May 2019 12:38:27 -0400
+Received: by mail-wr1-f67.google.com with SMTP id d9so12841990wrx.0;
+        Sat, 25 May 2019 09:38:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=P1PyjslIuFkdLZ1LECH2oSAMmTt5Um4BAQa4nOZIt94=;
+        b=ZCG5JA+bIRDyleKl2mXDSKEp9k5JUA0n0iBeFRwDKw1Fs5sbHew+pHrqpO+AVaYcDk
+         GbQOzYLEetuN7tzq4YO2itG3MCd0VrWiWvlBNLP94BenthcKgYrio9BbozLM3VDqavWR
+         Lo3Fwl8QSY+FZ9HXd2H4JNg7yUGxpNKQ491HSncL5MczBDs8dD7y9dFezntMKpIq+L51
+         w1KoNwprxk7lGvNIy+iEbrJSSNU3qpKTgUCgSLso/uqyZVSNyiOJc9LXQcUx3+4ZSUAX
+         H0m3RQkTcQ2B2h/17Gf96fzMNShsQRNGONnkY7JcSB0If1UlSrdDXOecxZnumgXMJcEq
+         RWQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=P1PyjslIuFkdLZ1LECH2oSAMmTt5Um4BAQa4nOZIt94=;
+        b=Bo+QOThZNsb0D2Be3NXIbRR1vNwoj+9KZblWOQQNpb6MTaAThycfuVEr3cynyPLWdu
+         +sqh695f0eDMTkP7b5gaUrC2SEG7Jd0Z2iCDdOqmJXENlmPJeh4kokq0BiB6aa6LTtQa
+         jW9RA3l9UtCKImuXhqxD5lMHd70qK4iRDd4FDIVcixGMMBNE2zYSRfASGlgwIvEMNLfU
+         J9hDsgsBHAJdBgv981uk+tNo1dfomAU8oRcry6LnrvHrpt3oeCPiK33a1th8cKkraMsd
+         5eagUAoh6y/YtyljHEdXMRVlL4oIIpq6ufFYkB7nQZ0qybf81hsKshpw0MLgsrAkEgeD
+         3ozg==
+X-Gm-Message-State: APjAAAXEp+f2tF7QaC214WZivr7R2qhaNgyRgktehoamY0PCt0FVQdrS
+        gxkSx2J6a6NJ5OkK2u44zew=
+X-Google-Smtp-Source: APXvYqz78k3LlnXP7jY3H0OnrSSVjujSRE2IRywudpy2P67AUT4Fy3Xl69vJWmYaBl5Bg9zioHfo+Q==
+X-Received: by 2002:a5d:6b03:: with SMTP id v3mr7769108wrw.309.1558802305724;
+        Sat, 25 May 2019 09:38:25 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
+        by smtp.gmail.com with ESMTPSA id f65sm9306498wmg.45.2019.05.25.09.38.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 25 May 2019 09:38:25 -0700 (PDT)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v2 0/7] Allwinner H6 DMA support
+Date:   Sat, 25 May 2019 18:38:12 +0200
+Message-Id: <20190525163819.21055-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-25_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=872 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905250117
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable all available cgroup v2 controllers when setting up
-the environment for the bpf kselftests. It's required to properly test
-the bpf prog auto-detach feature. Also it will generally increase
-the code coverage.
+Hi,
 
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Acked-by: Yonghong Song <yhs@fb.com>
----
- tools/testing/selftests/bpf/cgroup_helpers.c | 57 ++++++++++++++++++++
- 1 file changed, 57 insertions(+)
+This series has been first proposed by Jernej Skrabec[1].
+As this series is mandatory for SPDIF/I2S support and because he is
+busy on Cedrus stuff. I asked him to make the minor change requested
+and repost it.
+Authorship remains to him.
 
-diff --git a/tools/testing/selftests/bpf/cgroup_helpers.c b/tools/testing/selftests/bpf/cgroup_helpers.c
-index 6692a40a6979..0d89f0396be4 100644
---- a/tools/testing/selftests/bpf/cgroup_helpers.c
-+++ b/tools/testing/selftests/bpf/cgroup_helpers.c
-@@ -33,6 +33,60 @@
- 	snprintf(buf, sizeof(buf), "%s%s%s", CGROUP_MOUNT_PATH, \
- 		 CGROUP_WORK_DIR, path)
- 
-+/**
-+ * enable_all_controllers() - Enable all available cgroup v2 controllers
-+ *
-+ * Enable all available cgroup v2 controllers in order to increase
-+ * the code coverage.
-+ *
-+ * If successful, 0 is returned.
-+ */
-+int enable_all_controllers(char *cgroup_path)
-+{
-+	char path[PATH_MAX + 1];
-+	char buf[PATH_MAX];
-+	char *c, *c2;
-+	int fd, cfd;
-+	size_t len;
-+
-+	snprintf(path, sizeof(path), "%s/cgroup.controllers", cgroup_path);
-+	fd = open(path, O_RDONLY);
-+	if (fd < 0) {
-+		log_err("Opening cgroup.controllers: %s", path);
-+		return 1;
-+	}
-+
-+	len = read(fd, buf, sizeof(buf) - 1);
-+	if (len < 0) {
-+		close(fd);
-+		log_err("Reading cgroup.controllers: %s", path);
-+		return 1;
-+	}
-+	buf[len] = 0;
-+	close(fd);
-+
-+	/* No controllers available? We're probably on cgroup v1. */
-+	if (len == 0)
-+		return 0;
-+
-+	snprintf(path, sizeof(path), "%s/cgroup.subtree_control", cgroup_path);
-+	cfd = open(path, O_RDWR);
-+	if (cfd < 0) {
-+		log_err("Opening cgroup.subtree_control: %s", path);
-+		return 1;
-+	}
-+
-+	for (c = strtok_r(buf, " ", &c2); c; c = strtok_r(NULL, " ", &c2)) {
-+		if (dprintf(cfd, "+%s\n", c) <= 0) {
-+			log_err("Enabling controller %s: %s", c, path);
-+			close(cfd);
-+			return 1;
-+		}
-+	}
-+	close(cfd);
-+	return 0;
-+}
-+
- /**
-  * setup_cgroup_environment() - Setup the cgroup environment
-  *
-@@ -71,6 +125,9 @@ int setup_cgroup_environment(void)
- 		return 1;
- 	}
- 
-+	if (enable_all_controllers(cgroup_workdir))
-+		return 1;
-+
- 	return 0;
- }
- 
+I have tested this series with SPDIF driver and added a patch to enable
+DMA_SUN6I_CONFIG for arm64.
+
+Original Post:
+"
+DMA engine engine on H6 almost the same as on older SoCs. The biggest
+difference is that it has slightly rearranged bits in registers and
+it needs additional clock, probably due to iommu.
+
+These patches were tested with I2S connected to HDMI. I2S needs
+additional patches which will be sent later.
+
+Please take a look.
+
+Best regards,
+Jernej
+"
+
+Thanks,
+Clément
+
+Changes since v1:
+ - Enable DMA_SUN6I in arm64 defconfig
+ - Change mbus_clk to has_mbus_clk
+ - Collect Rob H. reviewed-by
+
+Clément Péron (1):
+  arm64: defconfig: enable Allwinner DMA drivers
+
+Jernej Skrabec (6):
+  dt-bindings: arm64: allwinner: h6: Add binding for DMA controller
+  dmaengine: sun6i: Add a quirk for additional mbus clock
+  dmaengine: sun6i: Add a quirk for setting DRQ fields
+  dmaengine: sun6i: Add a quirk for setting mode fields
+  dmaengine: sun6i: Add support for H6 DMA
+  arm64: dts: allwinner: h6: Add DMA node
+
+ .../devicetree/bindings/dma/sun6i-dma.txt     |   9 +-
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  12 ++
+ arch/arm64/configs/defconfig                  |   1 +
+ drivers/dma/sun6i-dma.c                       | 147 +++++++++++++-----
+ 4 files changed, 132 insertions(+), 37 deletions(-)
+
 -- 
-2.21.0
+2.20.1
 
