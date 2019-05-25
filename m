@@ -8,67 +8,73 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7561AC04AB0
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 07:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B31E7C04AB0
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 07:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 272B9217D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 07:30:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81642217D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 07:34:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gC7rjIYR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W1U98WMI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbfEYHad (ORCPT
+        id S1726574AbfEYHe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 03:30:33 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36546 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726145AbfEYHac (ORCPT
+        Sat, 25 May 2019 03:34:57 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:39785 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726145AbfEYHe5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 03:30:32 -0400
-Received: by mail-pf1-f193.google.com with SMTP id v80so6638562pfa.3
-        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 00:30:32 -0700 (PDT)
+        Sat, 25 May 2019 03:34:57 -0400
+Received: by mail-pl1-f196.google.com with SMTP id g9so5041258plm.6
+        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 00:34:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:subject:message-id:mime-version:content-disposition
          :user-agent;
-        bh=CBmogAJUB339Ep3aXj31B9OMK/rErdF2S8y1zyAwxG8=;
-        b=gC7rjIYRif8KrFeSxZoE9bJlUrDLPnpp7ZpN+7izHNxWjxDoQuzz+UUUnL8ZzbKXlV
-         +B+vMKfrWfIeZyu50/RqmmDvaZvvcomBBnbCxByHK6MTJdZcLSf7b3kOD/TPwmc1G/HV
-         T7FpRL9zA9x8q8pUhh2pIBE5QzA0M1V2F1PiMju/i8P2djnihcmj4OPTnLX6LL6Qs6qw
-         9HjzQeghf/VQlKZikMYyWp2YZ+oeTA3Z1/1YOqRybLOeU91UzmgyCrbGB1qoRZ6CaWdP
-         kiBY5F2yRud1Ug9od78Uhw+qnYJVCXz71BY5XFLIVtfzLQlxIpVAur1T79R9plOEgy93
-         uHww==
+        bh=JvzE9AyV74L/dTo6OIidUVMz2Tg/YkysokYHJ1eyAEI=;
+        b=W1U98WMIUt2Y1NL0+hUD6ifWc5gAad3cySCvCzhQ4hereZF6+1LqJFJGAVKOVG60UI
+         9jXSo7SC3PVFYkEeh7Rs5UXtH4GFFHc/841cpx3R0dnSILiIiWuKwJQ/MG63RvtGZa2R
+         iTKPOYS+ozX3dyowPA10b/Hw2WrcOsbhX9QvGe1w3X3eGJtxUDHVgn+fYMEUwNHjV1QN
+         Cd6Y1AHaTelpT8Xp+x9wxyKuD8cbq1+wOWtlARrWfdoCoWgA1ff6yY3YkEf5cG2s9r4S
+         8SjwdmHPVxdqFaxlxDrnwPqV2D9+MlJtT4RLt5b6gVhpbYTvIYPCxmOm50bsVb2esdIK
+         QA4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:subject:message-id:mime-version
          :content-disposition:user-agent;
-        bh=CBmogAJUB339Ep3aXj31B9OMK/rErdF2S8y1zyAwxG8=;
-        b=Iz2HI3TpUmiS3105KhGI+jHMZ+jPgJ7flyI3VZJ/lKZx6WB3+VpfleTYxE6m0xdrRO
-         +5apKCO8UO6xumJ9sQoGpzEyFRUJdAQbAucQ7LyTWmeTEbOVL9DUfUu7exzcgE4m5nAf
-         vIbEfb2kS+KA9dST3CoH3qxGYnpP4sujkQoR52TK1BP3988aQI6sBKftx6XALt7hICLb
-         ZYV/OdhcQ3CaX2LJ7cLWURaa3bi9bYpiGou9QwtSdPmoGxyJxeOjNCuf4T/bRxCI15ue
-         0+SYb8XuWV/LKcGMgj4Ef5uOCfP+aaezUs2qi0xE8pW2daMy4TXX/rFdKuFzKTZtqd2f
-         WbGQ==
-X-Gm-Message-State: APjAAAXVAB7C0+zYoNCCBO83lYwzIKeHWzbNukcyp7AIiKwd7VL0lEaq
-        FvOstwv+sO4iifMXnUEhmuA=
-X-Google-Smtp-Source: APXvYqw7Nq85Uzgu9ty/HtMjyUAeqWceKF3Gt7yedRT3adN5M/+iBJ1YlHGs4JhsHdTqos3PGcqKCA==
-X-Received: by 2002:a17:90a:9bc4:: with SMTP id b4mr14672395pjw.100.1558769432212;
-        Sat, 25 May 2019 00:30:32 -0700 (PDT)
+        bh=JvzE9AyV74L/dTo6OIidUVMz2Tg/YkysokYHJ1eyAEI=;
+        b=afM6nq9gTmj5fK3ckvA2NtswzCqZsBuTxHOmzRbT3vjtL22A4OaKW1oWufNi8KQHaB
+         V3DaAgz8RcmFPQLUFk4mK0vV5u7345R+qUqQECxzPjdrZ4Arcffe0TPTg0Aab7xxxcnj
+         edcB4WC86ooNEOMivEGg3BQSIMSmuUNmP4wokTN3OlkI58SbHg5K60ujVq2/UUnjggTE
+         YLVeU2ywluOEJJTSHuhUis64fFtsfqZMpmvUfIMK/lPvfrau8+3E8xNLL4gOmGhMcF/r
+         E7c2tGL6EoHO/Uo/CSeM1Mt48v/lBatSPUglaPfCom8PLegOEMsEPhVHGGU4lr9hNJEJ
+         OqEg==
+X-Gm-Message-State: APjAAAWTVp1jfo+fphRNBjIvv+J+c6g7N9ujavbK0SQObe93HmJifXrc
+        galGV370/eaDASNiykewdZo=
+X-Google-Smtp-Source: APXvYqzuwCZTB4XD4UxzRtNwZzdpVIiEv9uj7w5oO7kYYG8sg+hiUzQaOw5wFZIZoT7DFcvcOlrvdA==
+X-Received: by 2002:a17:902:9a07:: with SMTP id v7mr112122498plp.180.1558769696584;
+        Sat, 25 May 2019 00:34:56 -0700 (PDT)
 Received: from hari-Inspiron-1545 ([183.83.92.73])
-        by smtp.gmail.com with ESMTPSA id o1sm11126605pfa.66.2019.05.25.00.30.28
+        by smtp.gmail.com with ESMTPSA id v93sm4512115pjb.6.2019.05.25.00.34.52
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 25 May 2019 00:30:31 -0700 (PDT)
-Date:   Sat, 25 May 2019 13:00:26 +0530
+        Sat, 25 May 2019 00:34:56 -0700 (PDT)
+Date:   Sat, 25 May 2019 13:04:49 +0530
 From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
+To:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        hersen wu <hersenxs.wu@amd.com>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        David Francis <David.Francis@amd.com>,
         Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        Matteo Croce <mcroce@redhat.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/omapdrm: fix warning PTR_ERR_OR_ZERO can be used
-Message-ID: <20190525073026.GA7114@hari-Inspiron-1545>
+        kbuild test robot <fengguang.wu@intel.com>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/amd: fix warning PTR_ERR_OR_ZERO can be used
+Message-ID: <20190525073449.GA7278@hari-Inspiron-1545>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -80,81 +86,27 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 fix below warnings reported by coccicheck
 
-./drivers/gpu/drm/omapdrm/dss/hdmi_phy.c:197:1-3: WARNING:
-PTR_ERR_OR_ZERO can be used
-./drivers/gpu/drm/omapdrm/dss/hdmi4_core.c:937:1-3: WARNING:
-PTR_ERR_OR_ZERO can be used
-./drivers/gpu/drm/omapdrm/dss/hdmi5_core.c:913:1-3: WARNING:
-PTR_ERR_OR_ZERO can be used
-./drivers/gpu/drm/omapdrm/dss/hdmi4.c:601:1-3: WARNING: PTR_ERR_OR_ZERO
-can be used
+./drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c:1057:1-3:
+WARNING: PTR_ERR_OR_ZERO can be used
 
 Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 ---
- drivers/gpu/drm/omapdrm/dss/hdmi4.c      | 5 +----
- drivers/gpu/drm/omapdrm/dss/hdmi4_core.c | 6 ++----
- drivers/gpu/drm/omapdrm/dss/hdmi5_core.c | 4 +---
- drivers/gpu/drm/omapdrm/dss/hdmi_phy.c   | 4 +---
- 4 files changed, 5 insertions(+), 14 deletions(-)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi4.c b/drivers/gpu/drm/omapdrm/dss/hdmi4.c
-index 6339e27..cce53f3 100644
---- a/drivers/gpu/drm/omapdrm/dss/hdmi4.c
-+++ b/drivers/gpu/drm/omapdrm/dss/hdmi4.c
-@@ -598,10 +598,7 @@ static int hdmi_audio_register(struct omap_hdmi *hdmi)
- 		&hdmi->pdev->dev, "omap-hdmi-audio", PLATFORM_DEVID_AUTO,
- 		&pdata, sizeof(pdata));
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c
+index 1d5fc5a..1b1ec12 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c
+@@ -1054,8 +1054,6 @@ int dtn_debugfs_init(struct amdgpu_device *adev)
  
--	if (IS_ERR(hdmi->audio_pdev))
--		return PTR_ERR(hdmi->audio_pdev);
--
--	return 0;
-+	return PTR_ERR_OR_ZERO(hdmi->audio_pdev);
- }
- 
- /* -----------------------------------------------------------------------------
-diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c b/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c
-index e384b95..1bcdb54 100644
---- a/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c
-+++ b/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c
-@@ -934,8 +934,6 @@ int hdmi4_core_init(struct platform_device *pdev, struct hdmi_core_data *core)
- 
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "core");
- 	core->base = devm_ioremap_resource(&pdev->dev, res);
--	if (IS_ERR(core->base))
--		return PTR_ERR(core->base);
--
--	return 0;
-+	
-+	return PTR_ERR_OR_ZERO(core->base);
- }
-diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi5_core.c b/drivers/gpu/drm/omapdrm/dss/hdmi5_core.c
-index 02efabc..022c2ce 100644
---- a/drivers/gpu/drm/omapdrm/dss/hdmi5_core.c
-+++ b/drivers/gpu/drm/omapdrm/dss/hdmi5_core.c
-@@ -910,8 +910,6 @@ int hdmi5_core_init(struct platform_device *pdev, struct hdmi_core_data *core)
- 
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "core");
- 	core->base = devm_ioremap_resource(&pdev->dev, res);
--	if (IS_ERR(core->base))
--		return PTR_ERR(core->base);
+ 	ent = debugfs_create_file_unsafe("amdgpu_dm_visual_confirm", 0644, root,
+ 					 adev, &visual_confirm_fops);
+-	if (IS_ERR(ent))
+-		return PTR_ERR(ent);
  
 -	return 0;
-+	return PTR_ERR_OR_ZERO(core->base);
- }
-diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi_phy.c b/drivers/gpu/drm/omapdrm/dss/hdmi_phy.c
-index 9915923..a7d7040 100644
---- a/drivers/gpu/drm/omapdrm/dss/hdmi_phy.c
-+++ b/drivers/gpu/drm/omapdrm/dss/hdmi_phy.c
-@@ -194,8 +194,6 @@ int hdmi_phy_init(struct platform_device *pdev, struct hdmi_phy_data *phy,
- 
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy");
- 	phy->base = devm_ioremap_resource(&pdev->dev, res);
--	if (IS_ERR(phy->base))
--		return PTR_ERR(phy->base);
- 
--	return 0;
-+	return PTR_ERR_OR_ZERO(phy->base);
++	return PTR_ERR_OR_ZERO(ent);
  }
 -- 
 2.7.4
