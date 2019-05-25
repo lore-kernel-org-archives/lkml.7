@@ -2,127 +2,108 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E60AAC282E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 02:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E5CC282E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 02:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6E75217D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 02:09:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18F9D217D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 02:12:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LpSfcMLD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UYLFZkl8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbfEYCJd (ORCPT
+        id S1726553AbfEYCMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 22:09:33 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:45773 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbfEYCJd (ORCPT
+        Fri, 24 May 2019 22:12:55 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37214 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbfEYCMy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 22:09:33 -0400
-Received: by mail-ot1-f66.google.com with SMTP id t24so10335064otl.12
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 19:09:33 -0700 (PDT)
+        Fri, 24 May 2019 22:12:54 -0400
+Received: by mail-pf1-f194.google.com with SMTP id a23so6342709pff.4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2019 19:12:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LZzs5xzeqtVuzgwwnEv2OC+wDQwHzVptWWlrVSZVAQI=;
-        b=LpSfcMLDiUhQLwFnbv22EYTidAmanIzvxucTe3e3Huy/p1Pv+V8iQonG/LTIbtqSWP
-         9Mp9d+nb8WvRERLdmhJmbQ41VSRNvOmAVJ5D0lN8KdiLk4w0FDjGQaU4ppwrVx+S+WjV
-         in5CGq3+upoHcc5SpSSxDe+e1+p84Psxss2SgCpq5LjgwHvBkTBVC9utrFESDIqTzsPz
-         O57+O5yBKxJBq7ZHP3q+xSNxtVV+bcMRif+DI+fCRXXh2Un/j/BDDcmVQosE/Wr3BsER
-         8OoeFAnK0EHvaGtU91i4CNa5tspsh08desjK5wg9SPtIzbYyu5O4iF05+Hrb1Fw3F+9L
-         wz3g==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FRDE8zF4HYPjOCqdG8lC3nxgKH0V38BmEnSIPI9sFw8=;
+        b=UYLFZkl8IJmwIFCA8qvyNuh98srotDtLaopvcyJPJBLxAtsP0W+4Gera1xQDqnmH0a
+         1TOxqqwGQx1haiv7yQR6sbE7OLPiYwEA2Pi7kVdrA13+9y5TUUuaVwC+RzhQRmUQA6Fj
+         mE5qL38rueRbbBqdQZCYf5Jpvz4qaku6mEeSvPK6i4IVsEckGj4EyKhZSBssXxRSpgDg
+         W0FwziDBRN8K5tebnLX/cSBHQGn+SYOnBFanpPu/ATm8RtoWZ1JFZ8xksXwhIt0GZt/T
+         XUtjE69uCy672Ls6dXrMtATF4JHahBdKhj00kMivKDZp0D/0oMc957OyuNQs4m2O64Yt
+         jozw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LZzs5xzeqtVuzgwwnEv2OC+wDQwHzVptWWlrVSZVAQI=;
-        b=IYKU58MqY8G22sgOnltmeI74YqsD7q7r1VO1iKF4Rdlksrmbc2lSLiAhNF7r3UGIG4
-         8RoRYEZay5z6lAA2XA3xq40sypETdXIxWxJD8o7Ndqn0kuwJylFrvsdSmZG0vAeU6Gbb
-         lOuLCUgqaenzMFeoLXSMzB9oPUD2yYbncf0xQgNAtl75oYBNk9zSmXnf7bLcKnCZxSnT
-         r6q3krFrc3XTR79x3ZN2nyVjbY23vKQDpkPMFNbxhmD3g/Xk/SVUPvnmWqosaoHsUyMp
-         vEaSls6d8nIFuO7CiindFvT/jZ5WNUj05HX0HosRKJKaN2nd1FXld5LwOm3saNAOM8FJ
-         mMMQ==
-X-Gm-Message-State: APjAAAWuedXSACzTbJPBvOUVnbzXMprrQb+7L/cVFS7rCpXd+3HyfuMk
-        oLHAca2uhU/s/EWM8CEMWeLQyyAkKXs8vaLHlD2Zsg==
-X-Google-Smtp-Source: APXvYqywCXHUTcsaMeWUQ99nmh25iIlVZDM17cQeOhrhvN/0hvRddyY0+adbYQ5SE14e+43owKTnBffphfwKTj126pQ=
-X-Received: by 2002:a9d:3b49:: with SMTP id z67mr53168810otb.236.1558750172585;
- Fri, 24 May 2019 19:09:32 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FRDE8zF4HYPjOCqdG8lC3nxgKH0V38BmEnSIPI9sFw8=;
+        b=UgfQwEfj0iVkAkocllKAYxS68DOoWD/ol/FXRc3eC4Zy33/BFKx1mB3MW1Kn+ae6O1
+         ac9SASR2DPZsxfmSFzoGtT/zocNNrwSL9xQzwXZW+jvPyBxOe1Y7veE7Cw4yJq95djoD
+         0gM/cRgn4gkU5EShklKDn6DWyaf0bCk4YpmXyLqv5FkLw/0LsGQIj8lwKEBUFnBlVRHZ
+         mhbfNHnOYCTZvGqN+p1ChGNyjZqlc1Um0jG/RkgoVjfvYcbxgXOVvf/7kIhXEuUPGShM
+         f5OKXAmIX/HyQ10q37q2KEeHW817cclNtQX5gP+MB+B2mIaaY81Gpq5JmTIGpsBeMvY+
+         SxMw==
+X-Gm-Message-State: APjAAAUEXKkiLIxnucdrDG9Y4PKDmDqbwRGpWSMnWUZbgZlbHFbHGTP0
+        0Sanih55JLGv/7CfuCRvWy+Ilc+l/rM=
+X-Google-Smtp-Source: APXvYqypLIELMrs+fdRtN94TJOHWAuh6nlm9jd5xqNsuV+tcwc54hP0RiDLjIuah0akPCGFCKJIAEw==
+X-Received: by 2002:a17:90a:808a:: with SMTP id c10mr13269730pjn.67.1558750374065;
+        Fri, 24 May 2019 19:12:54 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([66.42.35.75])
+        by smtp.gmail.com with ESMTPSA id d13sm4331537pfh.113.2019.05.24.19.12.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 May 2019 19:12:53 -0700 (PDT)
+Date:   Sat, 25 May 2019 10:12:41 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [A General Question] What should I do after getting Reviewed-by
+ from a maintainer?
+Message-ID: <20190525021241.GA11472@zhanggen-UX430UQ>
+References: <20190523011723.GA15242@zhanggen-UX430UQ>
+ <7510e8a7-3567-fc22-d8e3-6d6142c06ff3@infradead.org>
 MIME-Version: 1.0
-References: <20190524010117.225219-1-saravanak@google.com> <06b479e2-e8a0-b3e8-567c-7fa0f1c5bdf6@gmail.com>
- <CAGETcx-21GEoBKhpzcsrDt3sEo-vUpwqnr3To7VbSPd8aW86Nw@mail.gmail.com>
- <6d3995c1-e1e7-35ff-d091-501822c97ecd@gmail.com> <0634ea45-2941-73fb-f8d8-b536e929a4a8@gmail.com>
-In-Reply-To: <0634ea45-2941-73fb-f8d8-b536e929a4a8@gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Fri, 24 May 2019 19:08:56 -0700
-Message-ID: <CAGETcx-bNhnfaThygrSbnbAmQ8PqEGHj8eVO3OvhJAomJ936Eg@mail.gmail.com>
-Subject: Re: [PATCH v1 0/5] Solve postboot supplier cleanup and optimize probe ordering
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7510e8a7-3567-fc22-d8e3-6d6142c06ff3@infradead.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ugh... mobile app is sending HTML emails. Replying again.
+On Fri, May 24, 2019 at 04:21:36PM -0700, Randy Dunlap wrote:
+> On 5/22/19 6:17 PM, Gen Zhang wrote:
+> > Hi Andrew,
+> > I am starting submitting patches these days and got some patches 
+> > "Reviewed-by" from maintainers. After checking the 
+> > submitting-patches.html, I figured out what "Reviewed-by" means. But I
+> > didn't get the guidance on what to do after getting "Reviewed-by".
+> > Am I supposed to send this patch to more maintainers? Or something else?
+> > Thanks
+> > Gen
+> > 
+> 
+> [Yes, I am not Andrew. ;]
+> 
+> Patches should be sent to a maintainer who is responsible for merging
+> changes for the driver or $arch or subsystem.
+> And they should also be Cc-ed to the appropriate mailing list(s) and
+> source code author(s), usually [unless they are no longer active].
+> 
+> Some source files have author email addresses in them.
+> Or in a kernel git tree, you can use "git log path/to/source/file.c" to see
+> who has been making & merging patches to that file.c.
+> Probably the easiest thing to do is run ./scripts/get_maintainer.pl and
+> it will try to tell you who to send the patch to.
+> 
+> HTH.
+> -- 
+> ~Randy
+Thanks for your patient instructions, Randy! I alrady figured it out.
 
-On Fri, May 24, 2019 at 5:25 PM Frank Rowand <frowand.list@gmail.com> wrote:
->
-> On 5/24/19 5:22 PM, Frank Rowand wrote:
-> > On 5/24/19 2:53 PM, Saravana Kannan wrote:
-> >> On Fri, May 24, 2019 at 10:49 AM Frank Rowand <frowand.list@gmail.com> wrote:
-> >>>
-> >>> On 5/23/19 6:01 PM, Saravana Kannan wrote:
-> >
-> > < snip >
-> >
-> >>> Another flaw with this method is that existing device trees
-> >>> will be broken after the kernel is modified, because existing
-> >>> device trees do not have the depends-on property.  This breaks
-> >>> the devicetree compatibility rules.
-> >>
-> >> This is 100% not true with the current implementation. I actually
-> >> tested this. This is fully backwards compatible. That's another reason
-> >> for adding depends-on and going by just what it says. The existing
-> >> bindings were never meant to describe only mandatory dependencies. So
-> >> using them as such is what would break backwards compatibility.
-> >
-> > Are you saying that an existing, already compiled, devicetree (an FDT)
-> > can be used to boot a new kernel that has implemented this patch set?
-> >
-> > The new kernel will boot with the existing FDT that does not have
-> > any depends-on properties?
-
-You sent out a lot of emails on this topic. But to answer them all.
-The existing implementation is 100% backwards compatible.
-
-> I overlooked something you said in the email I replied to.  You said:
->
->    "that depends-on becomes the source of truth if it exists and falls
->    back to existing common bindings if "depends-on" isn't present"
-
-This is referring to an alternate implementation where implicit
-dependencies are used by the kernel but new "depends-on" property
-would allow overriding in cases where the implicit dependencies are
-wrong. But this will need a kernel command line flag to enable this
-feature so that we can be backwards compatible. Otherwise it won't be.
-
-> Let me go back to look at the patch series to see how it falls back
-> to the existing bindings.
-
-Current patch series doesn't really "fallback" but rather it only acts
-on this new property. Existing FDT binaries simply don't have this. So
-it won't have any impact on the kernel behavior. But yes, looking at
-the patches again will help :)
-
--Saravana
+Thanks
+Gen
