@@ -3,174 +3,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66045C282E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 00:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A746C282E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 00:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46BC120863
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 00:53:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03AF620863
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 00:54:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726432AbfEYAxY (ORCPT
+        id S1726462AbfEYAyu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 20:53:24 -0400
-Received: from rcdn-iport-8.cisco.com ([173.37.86.79]:56383 "EHLO
-        rcdn-iport-8.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726273AbfEYAxV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 20:53:21 -0400
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0BXAACmkOhc/5FdJa1lHAEBAQQBAQc?=
- =?us-ascii?q?EAQGBUwUBAQsBghCBOgEyKLIGFIFnCQEBAQ4vAQGEQAKCPyM2Bw4BAwEBBAE?=
- =?us-ascii?q?BAgEEbSiFSwYnUhAZOFcGARKDIoILpnIziGuBRhSBIAGGfIRWF4F/gRGDUIQ?=
- =?us-ascii?q?oBYV5BJMJgRGUMwmCD16SKCdzlVKMaZYbgVYDLoFXMxoIGxWDJ4JGjiwfAzC?=
- =?us-ascii?q?PGgEB?=
-X-IronPort-AV: E=Sophos;i="5.60,509,1549929600"; 
-   d="scan'208";a="562308315"
-Received: from rcdn-core-9.cisco.com ([173.37.93.145])
-  by rcdn-iport-8.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 25 May 2019 00:53:21 +0000
-Received: from tusi.cisco.com (tusi.cisco.com [172.24.98.27])
-        by rcdn-core-9.cisco.com (8.15.2/8.15.2) with ESMTP id x4P0rJ7e018538;
-        Sat, 25 May 2019 00:53:20 GMT
-From:   Ruslan Babayev <ruslan@babayev.com>
-To:     Russell King <linux@armlinux.org.uk>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     xe-linux-external@cisco.com,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2 2/2] net: phy: sfp: enable i2c-bus detection on ACPI based systems
-Date:   Fri, 24 May 2019 17:53:02 -0700
-Message-Id: <20190525005302.27164-2-ruslan@babayev.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190505193435.3248-1-ruslan@babayev.com>
-References: <20190505193435.3248-1-ruslan@babayev.com>
-X-Auto-Response-Suppress: DR, OOF, AutoReply
-X-Outbound-SMTP-Client: 172.24.98.27, tusi.cisco.com
-X-Outbound-Node: rcdn-core-9.cisco.com
+        Fri, 24 May 2019 20:54:50 -0400
+Received: from ozlabs.org ([203.11.71.1]:42955 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726273AbfEYAyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 20:54:49 -0400
+Received: by ozlabs.org (Postfix, from userid 1034)
+        id 459lBb45HVz9sB8; Sat, 25 May 2019 10:54:47 +1000 (AEST)
+X-powerpc-patch-notification: thanks
+X-powerpc-patch-commit: 3202e35ec1c8fc19cea24253ff83edf702a60a02
+X-Patchwork-Hint: ignore
+In-Reply-To: <20190511024217.4013-2-ravi.bangoria@linux.ibm.com>
+To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>, peterz@infradead.org,
+        jolsa@redhat.com, maddy@linux.vnet.ibm.com
+From:   Michael Ellerman <patch-notifications@ellerman.id.au>
+Cc:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        acme@kernel.org
+Subject: Re: [PATCH 2/2] powerpc/perf: Fix mmcra corruption by bhrb_filter
+Message-Id: <459lBb45HVz9sB8@ozlabs.org>
+Date:   Sat, 25 May 2019 10:54:47 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lookup I2C adapter using the "i2c-bus" device property on ACPI based
-systems similar to how it's done with DT.
+On Sat, 2019-05-11 at 02:42:17 UTC, Ravi Bangoria wrote:
+> Consider a scenario where user creates two events:
+> 
+>   1st event:
+>     attr.sample_type |= PERF_SAMPLE_BRANCH_STACK;
+>     attr.branch_sample_type = PERF_SAMPLE_BRANCH_ANY;
+>     fd = perf_event_open(attr, 0, 1, -1, 0);
+> 
+>   This sets cpuhw->bhrb_filter to 0 and returns valid fd.
+> 
+>   2nd event:
+>     attr.sample_type |= PERF_SAMPLE_BRANCH_STACK;
+>     attr.branch_sample_type = PERF_SAMPLE_BRANCH_CALL;
+>     fd = perf_event_open(attr, 0, 1, -1, 0);
+> 
+>   It overrides cpuhw->bhrb_filter to -1 and returns with error.
+> 
+> Now if power_pmu_enable() gets called by any path other than
+> power_pmu_add(), ppmu->config_bhrb(-1) will set mmcra to -1.
+> 
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+> Reviewed-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
 
-An example DSD describing an SFP on an ACPI based system:
+Applied to powerpc fixes, thanks.
 
-Device (SFP0)
-{
-    Name (_HID, "PRP0001")
-    Name (_CRS, ResourceTemplate()
-    {
-        GpioIo(Exclusive, PullDefault, 0, 0, IoRestrictionNone,
-               "\\_SB.PCI0.RP01.GPIO", 0, ResourceConsumer)
-            { 0, 1, 2, 3, 4 }
-    })
-    Name (_DSD, Package ()
-    {
-        ToUUID ("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-        Package () {
-            Package () { "compatible", "sff,sfp" },
-            Package () { "i2c-bus", \_SB.PCI0.RP01.I2C.MUX.CH0 },
-            Package () { "maximum-power-milliwatt", 1000 },
-            Package () { "tx-disable-gpios", Package () { ^SFP0, 0, 0, 1} },
-            Package () { "reset-gpio",       Package () { ^SFP0, 0, 1, 1} },
-            Package () { "mod-def0-gpios",   Package () { ^SFP0, 0, 2, 1} },
-            Package () { "tx-fault-gpios",   Package () { ^SFP0, 0, 3, 0} },
-            Package () { "los-gpios",        Package () { ^SFP0, 0, 4, 1} },
-        },
-    })
-}
+https://git.kernel.org/powerpc/c/3202e35ec1c8fc19cea24253ff83edf7
 
-Device (PHY0)
-{
-    Name (_HID, "PRP0001")
-    Name (_DSD, Package ()
-    {
-        ToUUID ("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-        Package () {
-            Package () { "compatible", "ethernet-phy-ieee802.3-c45" },
-            Package () { "sfp", \_SB.PCI0.RP01.SFP0 },
-            Package () { "managed", "in-band-status" },
-            Package () { "phy-mode", "sgmii" },
-        },
-    })
-}
-
-Signed-off-by: Ruslan Babayev <ruslan@babayev.com>
-Cc: xe-linux-external@cisco.com
----
- drivers/net/phy/sfp.c | 33 +++++++++++++++++++++++++--------
- 1 file changed, 25 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/net/phy/sfp.c b/drivers/net/phy/sfp.c
-index d4635c2178d1..7a6c8df8899b 100644
---- a/drivers/net/phy/sfp.c
-+++ b/drivers/net/phy/sfp.c
-@@ -9,6 +9,7 @@
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/of.h>
-+#include <linux/acpi.h>
- #include <linux/phy.h>
- #include <linux/platform_device.h>
- #include <linux/rtnetlink.h>
-@@ -1783,6 +1784,7 @@ static int sfp_probe(struct platform_device *pdev)
- {
- 	const struct sff_data *sff;
- 	struct sfp *sfp;
-+	struct i2c_adapter *i2c = NULL;
- 	bool poll = false;
- 	int irq, err, i;
- 
-@@ -1801,7 +1803,6 @@ static int sfp_probe(struct platform_device *pdev)
- 	if (pdev->dev.of_node) {
- 		struct device_node *node = pdev->dev.of_node;
- 		const struct of_device_id *id;
--		struct i2c_adapter *i2c;
- 		struct device_node *np;
- 
- 		id = of_match_node(sfp_of_match, node);
-@@ -1818,14 +1819,30 @@ static int sfp_probe(struct platform_device *pdev)
- 
- 		i2c = of_find_i2c_adapter_by_node(np);
- 		of_node_put(np);
--		if (!i2c)
--			return -EPROBE_DEFER;
--
--		err = sfp_i2c_configure(sfp, i2c);
--		if (err < 0) {
--			i2c_put_adapter(i2c);
--			return err;
-+	} else if (ACPI_COMPANION(&pdev->dev)) {
-+		struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
-+		struct fwnode_handle *fw = acpi_fwnode_handle(adev);
-+		struct fwnode_reference_args args;
-+		struct acpi_handle *acpi_handle;
-+		int ret;
-+
-+		ret = acpi_node_get_property_reference(fw, "i2c-bus", 0, &args);
-+		if (ACPI_FAILURE(ret) || !is_acpi_device_node(args.fwnode)) {
-+			dev_err(&pdev->dev, "missing 'i2c-bus' property\n");
-+			return -ENODEV;
- 		}
-+
-+		acpi_handle = ACPI_HANDLE_FWNODE(args.fwnode);
-+		i2c = i2c_acpi_find_adapter_by_handle(acpi_handle);
-+	}
-+
-+	if (!i2c)
-+		return -EPROBE_DEFER;
-+
-+	err = sfp_i2c_configure(sfp, i2c);
-+	if (err < 0) {
-+		i2c_put_adapter(i2c);
-+		return err;
- 	}
- 
- 	for (i = 0; i < GPIO_MAX; i++)
--- 
-2.17.1
-
+cheers
