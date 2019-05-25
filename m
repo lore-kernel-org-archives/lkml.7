@@ -2,105 +2,88 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC319C282E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 08:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5324EC04AB0
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 08:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B1572133D
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 08:45:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 316F52133D
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 08:46:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbfEYIpz (ORCPT
+        id S1726669AbfEYIqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 04:45:55 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:44474 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726376AbfEYIpz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 04:45:55 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1hUSJH-0001zt-6b; Sat, 25 May 2019 10:45:47 +0200
-Date:   Sat, 25 May 2019 10:45:46 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Hugh Dickins <hughd@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrea Arcangeli <aarcange@redhat.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Borislav Petkov <bp@suse.de>,
-        Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH] mm/gup: continue VM_FAULT_RETRY processing event for
- pre-faults
-Message-ID: <20190525084546.fap2wkefepeia22f@linutronix.de>
-References: <1557844195-18882-1-git-send-email-rppt@linux.ibm.com>
- <20190522122113.a2edc8aba32f0fad189bae21@linux-foundation.org>
- <20190522194322.5k52docwgp5zkdcj@linutronix.de>
- <alpine.LSU.2.11.1905241429460.1141@eggly.anvils>
+        Sat, 25 May 2019 04:46:00 -0400
+Received: from skyboo.net ([94.40.87.198]:41804 "EHLO skyboo.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726376AbfEYIp7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 May 2019 04:45:59 -0400
+Received: from manio by skyboo.net with local (Exim 4.91)
+        (envelope-from <manio@skyboo.net>)
+        id 1hUSJR-0007xV-DF; Sat, 25 May 2019 10:45:57 +0200
+From:   Mariusz Bialonczyk <manio@skyboo.net>
+To:     linux-kernel@vger.kernel.org, Greg Kroah-Hartman <greg@kroah.com>
+Cc:     Mariusz Bialonczyk <manio@skyboo.net>
+Date:   Sat, 25 May 2019 10:45:38 +0200
+Message-Id: <20190525084538.29389-1-manio@skyboo.net>
+X-Mailer: git-send-email 2.19.0.rc1
+In-Reply-To: <20190524182109.GA26827@kroah.com>
+References: <20190524182109.GA26827@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.11.1905241429460.1141@eggly.anvils>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, greg@kroah.com, manio@skyboo.net
+X-SA-Exim-Mail-From: manio@skyboo.net
+Subject: [PATCH 4/4 v2] w1: ds2805: rename w1_family struct, fixing c-p typo
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on skyboo.net)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-05-24 15:22:51 [-0700], Hugh Dickins wrote:
-> I've now run a couple of hours of load successfully with Mike's patch
-> to GUP, no problem; but whatever the merits of that patch in general,
-> I agree with Andrew that fault_in_pages_writeable() seems altogether
-> more appropriate for copy_fpstate_to_sigframe(), and have now run a
-> couple of hours of load successfully with this instead (rewrite to taste):
+The ds2805 has a structure named: w1_family_2d, which surely
+comes from a w1_ds2431 module. This commit fixes this name to
+prevent confusion and mark a correct family name.
 
-so this patch instead of Mike's GUP patch fixes the issue you observed?
-Is this just a taste question or limitation of the function in general?
+Signed-off-by: Mariusz Bialonczyk <manio@skyboo.net>
+---
+Changes in v2:
+    Added a missing commit msg.
 
-I'm asking because it has been suggested and is used in MPX code (in the
-signal path but .mmap) and I'm not aware of any limitation. But as I
-wrote earlier to akpm, if the MM folks suggest to use this instead I am
-happy to switch.
+ drivers/w1/slaves/w1_ds2805.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> --- 5.2-rc1/arch/x86/kernel/fpu/signal.c
-> +++ linux/arch/x86/kernel/fpu/signal.c
-> @@ -3,6 +3,7 @@
->   * FPU signal frame handling routines.
->   */
->  
-> +#include <linux/pagemap.h>
->  #include <linux/compat.h>
->  #include <linux/cpu.h>
->  
-> @@ -189,15 +190,7 @@ retry:
->  	fpregs_unlock();
->  
->  	if (ret) {
-> -		int aligned_size;
-> -		int nr_pages;
-> -
-> -		aligned_size = offset_in_page(buf_fx) + fpu_user_xstate_size;
-> -		nr_pages = DIV_ROUND_UP(aligned_size, PAGE_SIZE);
-> -
-> -		ret = get_user_pages_unlocked((unsigned long)buf_fx, nr_pages,
-> -					      NULL, FOLL_WRITE);
-> -		if (ret == nr_pages)
-> +		if (!fault_in_pages_writeable(buf_fx, fpu_user_xstate_size))
->  			goto retry;
->  		return -EFAULT;
->  	}
-> 
-> (I did wonder whether there needs to be an access_ok() check on buf_fx;
-> but if so, then I think it would already have been needed before the
-> earlier copy_fpregs_to_sigframe(); but I didn't get deep enough into
-> that to be sure, nor into whether access_ok() check on buf covers buf_fx.)
+diff --git a/drivers/w1/slaves/w1_ds2805.c b/drivers/w1/slaves/w1_ds2805.c
+index 29348d283a65..ab349604531a 100644
+--- a/drivers/w1/slaves/w1_ds2805.c
++++ b/drivers/w1/slaves/w1_ds2805.c
+@@ -288,7 +288,7 @@ static struct w1_family_ops w1_f0d_fops = {
+ 	.remove_slave   = w1_f0d_remove_slave,
+ };
+ 
+-static struct w1_family w1_family_2d = {
++static struct w1_family w1_family_0d = {
+ 	.fid = W1_EEPROM_DS2805,
+ 	.fops = &w1_f0d_fops,
+ };
+@@ -296,13 +296,13 @@ static struct w1_family w1_family_2d = {
+ static int __init w1_f0d_init(void)
+ {
+ 	pr_info("%s()\n", __func__);
+-	return w1_register_family(&w1_family_2d);
++	return w1_register_family(&w1_family_0d);
+ }
+ 
+ static void __exit w1_f0d_fini(void)
+ {
+ 	pr_info("%s()\n", __func__);
+-	w1_unregister_family(&w1_family_2d);
++	w1_unregister_family(&w1_family_0d);
+ }
+ 
+ module_init(w1_f0d_init);
+-- 
+2.19.0.rc1
 
-There is an access_ok() at the begin of copy_fpregs_to_sigframe(). The
-memory is allocated from user's stack and there is (later) an
-access_ok() for the whole region (which can be more than the memory used
-by the FPU code).
-
-> Hugh
-
-Sebastian
