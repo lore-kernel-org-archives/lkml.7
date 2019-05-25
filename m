@@ -6,93 +6,91 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC26C07542
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BAAAC07542
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D6C220862
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:07:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 414BE20862
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 17:09:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558804073;
-	bh=1NOG9vvuSugzbmEHIFTbaXcD4xyXPjqW8u8Apo5aY6E=;
+	s=default; t=1558804180;
+	bh=+XwBRdDqf2cefonLYXPsV4ttbkmRhV7xvCo/f3bHe6o=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=cxrmjVTmzqiloANxLA2N2Pi85LMO8Qyq042LDNyrhXA9kJuexcs2s5gUa4BVLaalE
-	 EJJL+EIVIPruWU1wql2nsOsk3T8hzHsdycBZ/+eitN7o4UWD1Dd7GPKMLpVf90pi+N
-	 yUCFdXUs85qn25kCw23K9LxsRQfNEic8rdqw8U3s=
+	b=Vspbh2IRnomMoLe18jvQD/qvNqtClG1et3giHXdly9IYAc6seoUDw2FxXk0KVYgwf
+	 ujA1aivR+e8HxCnXPn67wATeWwmnQZqbPq7SVPtDLjs43IHaKfN4P7lJdKPme3CZYz
+	 h81k+pFxkLX3cRFwsuewlwcGmywpiReEcCeHlses=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727277AbfEYRHw (ORCPT
+        id S1727261AbfEYRJj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 13:07:52 -0400
-Received: from mail-lf1-f42.google.com ([209.85.167.42]:39842 "EHLO
+        Sat, 25 May 2019 13:09:39 -0400
+Received: from mail-lf1-f42.google.com ([209.85.167.42]:34389 "EHLO
         mail-lf1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727104AbfEYRHw (ORCPT
+        with ESMTP id S1727104AbfEYRJi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 13:07:52 -0400
-Received: by mail-lf1-f42.google.com with SMTP id f1so9263739lfl.6
-        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 10:07:51 -0700 (PDT)
+        Sat, 25 May 2019 13:09:38 -0400
+Received: by mail-lf1-f42.google.com with SMTP id v18so9292454lfi.1
+        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 10:09:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=G5ktK9kr4E0UpbbeaHLRBxZcSjVJhVPG4g8QF69sVmY=;
-        b=blWPgG96+VVQqIzaWJtzwSPl1QZ1S0Z04iNWgu72UYrrEMJjAjb0uL1VklvosGRad1
-         QjwqdkB2pvLto1OJmIjJxoAO0TOZpQ+qmzwwgKrs9zICCkP//YwaeBtPKJ0BOb1W3+mo
-         iEJkOggeA90YvBtGTsZFgAObtE+OMxPecZ/Qg=
+        bh=Ink6tdpfa9FrEwBdLArsv4qZyUiZrqIcUZxDK9FC2vI=;
+        b=Ds5mxIVVkkDaiO0G4morahNnZq3g/ToUEgKs91oKCSEyORayxyJ5c1Z4rC6a/yHXzW
+         RQYQVCt2Xiwt5MStZ2/uTF1dWxW6A6T0qX+pvYvvCofCh7NPzHgyPrL+zVJb7WuS6TyV
+         VJwo0paU/h7nzNibfofM2AhRgmp6NXEV7XtiQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=G5ktK9kr4E0UpbbeaHLRBxZcSjVJhVPG4g8QF69sVmY=;
-        b=OTi2oOQcQjpvK8AD3IMTMJ++zDBFJ8lZwhhm2OFb3PRVnTtDi1jr14wv4cKMifC4NL
-         Kz4P4jFWKOGDVSRZZxM0dH0DxKdeAMUmFR9e1UErtRGLdCytc70+VwOPf6z8XSX3JQxb
-         CCmxU2bxRow1N40siZZ1agx9qGNQMuULLH/66aARRKXTyDp0TtIXT+vXwuI1/wCPpl4S
-         8L5iQTPXAqPPQ54o5KTO1OtzR/Ehnq1+gm1LMB1/xuLnPJQxiCYydeLIrIJ2IYCwRETz
-         ApAVj46u1PoQw0W6DNC+BglgDEAdLh6NZpumh7QPPzC75dmRpeJs95rk/ckC3sZf1HkO
-         pJug==
-X-Gm-Message-State: APjAAAVt/YMnB/VquPRjprWVulZbI2X//gaqUfPAwZoNiLmHuzGE8UYX
-        IyEFxw+8eL5mf0zOGodWEO99BcoTD/8=
-X-Google-Smtp-Source: APXvYqypU5CkD+xvY2xsivuV+v6m7tA2+qRdfK+MpzCTCC1hh0EwBftJMesiJXKn9L/eDlSRTmlgwA==
-X-Received: by 2002:ac2:43c2:: with SMTP id u2mr2153497lfl.159.1558804069762;
-        Sat, 25 May 2019 10:07:49 -0700 (PDT)
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
-        by smtp.gmail.com with ESMTPSA id g15sm1163526ljk.83.2019.05.25.10.07.48
+        bh=Ink6tdpfa9FrEwBdLArsv4qZyUiZrqIcUZxDK9FC2vI=;
+        b=a6aEHZPHHJyw2gtjyaT2AkMwRPpSoflxp/xzIC7nPeCftxpE2m15s7yabL+QofjsoZ
+         C/WQBzxF2oV30ng7d/2l7xMtcEZrOJSW/hiY1xNGVglkqMTzhb2TUJyrxLRi8BjyDue2
+         +w9W21T8Du+rZdYrORpZbGjuIL0qYGCGZtPCvo4hCTiCGWEcAK2PT9atJ2e2JIgVG20X
+         wo3Yv0h64o6xrOtiPqxoOH4PcQ4Tmo4Ld031vYMHk1pMBlTG33FizFwiA7oBZbQrmEVH
+         lRcVcHKEVA4N/tzRpBfRk0zoq7dm4OCRy/bMznqhnvohWvrkvhspEfOdlYGQ2UipRpfd
+         cAkQ==
+X-Gm-Message-State: APjAAAVFUKZZuEYROyteMJe3xVmGPqXhG/bcheKT36an8UgxrejBQyf+
+        xahq2BnDbjdQV1SvdgM8lDe0Fkk7Gfs=
+X-Google-Smtp-Source: APXvYqyif2WtaezjQaselIS1/EZlnJnCu3IxYrVClV9sc4qQ0hF+WQ2ekgP5/HGmQWbdAD/Zqe96fA==
+X-Received: by 2002:ac2:46c3:: with SMTP id p3mr3039827lfo.178.1558804176674;
+        Sat, 25 May 2019 10:09:36 -0700 (PDT)
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
+        by smtp.gmail.com with ESMTPSA id n1sm1228121lfl.77.2019.05.25.10.09.35
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 25 May 2019 10:07:49 -0700 (PDT)
-Received: by mail-lf1-f54.google.com with SMTP id c17so9295803lfi.2
-        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 10:07:48 -0700 (PDT)
-X-Received: by 2002:a19:be17:: with SMTP id o23mr28987773lff.170.1558804068519;
- Sat, 25 May 2019 10:07:48 -0700 (PDT)
+        Sat, 25 May 2019 10:09:35 -0700 (PDT)
+Received: by mail-lj1-f182.google.com with SMTP id m15so11243848ljg.13
+        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 10:09:35 -0700 (PDT)
+X-Received: by 2002:a2e:85d1:: with SMTP id h17mr40164026ljj.1.1558804175144;
+ Sat, 25 May 2019 10:09:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190525133203.25853-1-hch@lst.de>
-In-Reply-To: <20190525133203.25853-1-hch@lst.de>
+References: <20190524231106.5812936b@gandalf.local.home>
+In-Reply-To: <20190524231106.5812936b@gandalf.local.home>
 From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 25 May 2019 10:07:32 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi7=yxWUwao10GfUvE1aecidtHm8TGTPAUnvg0kbH8fpA@mail.gmail.com>
-Message-ID: <CAHk-=wi7=yxWUwao10GfUvE1aecidtHm8TGTPAUnvg0kbH8fpA@mail.gmail.com>
-Subject: Re: RFC: switch the remaining architectures to use generic GUP
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        linux-mips@vger.kernel.org,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        sparclinux@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Date:   Sat, 25 May 2019 10:09:19 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgseDTYAw-O7=21j4vQmufm=eZCMqeq9Z+PtCst9WkmnA@mail.gmail.com>
+Message-ID: <CAHk-=wgseDTYAw-O7=21j4vQmufm=eZCMqeq9Z+PtCst9WkmnA@mail.gmail.com>
+Subject: Re: [GIT PULL] tracing: Small fixes to histogram code and header cleanup
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Jagadeesh Pagadala <jagdsh.linux@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good to me apart from the question about sparc64 (that you also
-raised) and requesting that interface to be re-named if it is really
-needed.
+On Fri, May 24, 2019 at 8:11 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> Tom Zanussi sent me some small fixes and cleanups to the histogram
+> code and I forgot to incorporate them.
+>
+> I also added a small clean up patch that was sent to me a while ago
+> and I just noticed it.
 
-Let's just do it (but presumably for 5.3), and any architecture that
-doesn't react to this and gets broken because it wasn't tested can get
-fixed up later when/if they notice.
+Why not the warning avoidance patch? It changes no actual code, and
+avoids two 20-line build warnings for me that are very annoying..
 
-              Linus
+               Linus
