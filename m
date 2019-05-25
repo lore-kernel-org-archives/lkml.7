@@ -2,120 +2,117 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 460CFC282E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 11:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B02A9C28CBF
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 11:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F0A32168B
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 11:26:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xk7crZ3S"
+	by mail.kernel.org (Postfix) with ESMTP id 934C92175B
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 11:36:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbfEYL0J (ORCPT
+        id S1726764AbfEYLga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 07:26:09 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:56287 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726653AbfEYL0H (ORCPT
+        Sat, 25 May 2019 07:36:30 -0400
+Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:38613 "EHLO
+        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726484AbfEYLga (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 07:26:07 -0400
-Received: by mail-wm1-f68.google.com with SMTP id x64so11749881wmb.5
-        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 04:26:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=OUI4/EWFs7dysvkWkmT8oqHBgaMA7PctBGeEQk1P8DM=;
-        b=Xk7crZ3SgaYp2op+gqS6Fwuo61nMeTjeaMhkrpOXWcTSb1xfkjUrv4qgMftwU/IlHy
-         dmd71IcLoKhv3YHnv8AZmZuTsg4jpSLsGXYM6/1C+zs43ioBxvvNoHRI/5JwgHN+XYdg
-         j/Z7lCyFj5QKDWn53ydL4gVFUQZpsjutjJhKEWcpqQMQugKiz2kR5VuJx1KGOo3E+Nda
-         Npzq01tKsupdUU7myMcCnFUImgtIcE5+zDslXII4YBhFm6GEiQYQcSsxAhKCxl9s7mTw
-         WcR43lBzU4NZLs10wB6Id/eI0J9TqsVC/wEVtt9E0FK78MoO54vaPBFBfACfaURgaczz
-         QSYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=OUI4/EWFs7dysvkWkmT8oqHBgaMA7PctBGeEQk1P8DM=;
-        b=d0/49fyTd/hKYL4TqxIjHkC2eC+BY1bzD+Q9RmYDQZjBpfurapblPPeOMqWUkAa5jN
-         7DEuFljIw3qKQfjx+iPuGMJeWqDZf3qNn2RETfaLnR9GVECTQHf6lkmYo5tKY/MRgUkz
-         yQK0YoOYIxrEK4jHjOBRpCOjdYf2y7kY7upJRIYlPlzyYbV8kmP2EMIL1coJmexSkEGd
-         ID5H0R+6jccF53WWsn32g3jQPj3nzpat9zo9xYnQHj4Z+x+yXdfVWe263l/0bzRo17+c
-         PLP4R5BWMI+AKAG/L4GIw1Gg+l+XEAy/sxfieRF4nE6Y8g/8TBhGH4eFC+s/2B20g8yX
-         BBjw==
-X-Gm-Message-State: APjAAAVYIbFWfcDVAR73D7YDhPJyGHyolus3XLJ7uy1RiAZqL0he9mSI
-        0fnpmCPp9QSocYuTnjHtydH7xw==
-X-Google-Smtp-Source: APXvYqwSAn6kgtZ1x7GaFjsTqxhVYOxcP041eLBnfHvj1a7k3ZX05vxANVyJConZNz4fmBZsZ3o3/g==
-X-Received: by 2002:a1c:1a47:: with SMTP id a68mr3134852wma.88.1558783566097;
-        Sat, 25 May 2019 04:26:06 -0700 (PDT)
-Received: from sudo.home ([2a01:cb1d:112:6f00:3ccc:7074:9336:6a6e])
-        by smtp.gmail.com with ESMTPSA id y16sm4942010wru.28.2019.05.25.04.26.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 25 May 2019 04:26:05 -0700 (PDT)
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-kernel@vger.kernel.org, Gen Zhang <blackgod016574@gmail.com>,
-        Rob Bradford <robert.bradford@intel.com>
-Subject: [PATCH 2/2] efi: Allow the number of EFI configuration tables entries to be zero
-Date:   Sat, 25 May 2019 13:25:59 +0200
-Message-Id: <20190525112559.7917-3-ard.biesheuvel@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190525112559.7917-1-ard.biesheuvel@linaro.org>
-References: <20190525112559.7917-1-ard.biesheuvel@linaro.org>
+        Sat, 25 May 2019 07:36:30 -0400
+Received: from [IPv6:2001:983:e9a7:1:6081:f7d7:b93c:24af] ([IPv6:2001:983:e9a7:1:6081:f7d7:b93c:24af])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id UUyQhPCuZsDWyUUyRhUFdc; Sat, 25 May 2019 13:36:28 +0200
+Subject: Re: [PATCH v5 3/4] media: pixfmt: Document the HEVC slice pixel
+ format
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@googlegroups.com
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+References: <20190524093635.1832-1-paul.kocialkowski@bootlin.com>
+ <20190524093635.1832-4-paul.kocialkowski@bootlin.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <de925df1-e15e-6293-31b5-b046060e7359@xs4all.nl>
+Date:   Sat, 25 May 2019 13:36:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190524093635.1832-4-paul.kocialkowski@bootlin.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfL5ASQGLGKFdBxYetB5w++UJszYGQx9k/wzBFOSR0d1qvZS8Dyyn9JMjmSBnoMDWOPuEkfLPS+B9eJV4AXBrcbrQ8rKdPJD3VlNeP9BgVFDQyJMtVG8e
+ NdcszGQdoOq6xbmoeJI5TlASl41wxbKOXnlYhsbP7imNZSHMlmoliT3GGSQg9MzWbMpcNHsUyaQ9i4BlwJKaNq7A5nHlCpNlNvP+EXqSNioz3biSS669EmIg
+ CtYfm/AclOe1UeaPKc3/aDioOvAjzrXYYdWKk6xGTSi/QxRiw3b+kjAfMHK802x7mHlUQH3IRoGiceW8C9fkka0e8XB3Ma2cNjQ2+6ocukUDEo/c48AFZx0u
+ qLDrUPcgP3ZLXoowScD55gR3K030KQbKnBAxJWhc3Vopfu2x88JLMn/FrW6AQYJrt5k0pMP3cqOIQhdYV0dY9PmaRxzZx6yAw4HGW36FjkWW50Pfo0sVYybv
+ D8JJTAVew5NVqf5xUUAy3H6sGsMIm77HSNtGfuUh3lpfilNUxThMdVtoyvSLRFFAZlRsr2c4/PH7hSVMNfvXlqZ0h2RwuqzlgFF9Ec60tjIlszGRFt7ejqWw
+ tO/Epet1eDCs9mXuCXFJE/+Fe+sf9i6rppSys54pFSPgcB6Asf0h3cXyPxbH8gvcTtrZ/Iz9JA0p225QJ9ZAf3B55L1PJN+kgYctd3vQqVh1bmIwoeXY82NI
+ +nvO2Ff5XT38voye3UdfMdjCdJJbSpJ9N2k0hRshCZvGxSSZGitczTX5aAAwIuepT3tzpFSLpsvMwU2M5P6SpGb/y0pstXOPYBdcS2pf31u50lmdGrj4OOgB
+ /1B2HzykKbyzRQAvS1yk2tiAWjBddRcAskMJJ0Zqgc4aRyeEVB1XObgy53gyQQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Bradford <robert.bradford@intel.com>
+On 5/24/19 11:36 AM, Paul Kocialkowski wrote:
+> Document the current state of the HEVC slice pixel format.
+> The format will need to evolve in the future, which is why it is
+> not part of the public API.
+> 
+> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> ---
+>  .../media/uapi/v4l/pixfmt-compressed.rst      | 21 +++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+> 
+> diff --git a/Documentation/media/uapi/v4l/pixfmt-compressed.rst b/Documentation/media/uapi/v4l/pixfmt-compressed.rst
+> index 4b701fc7653e..9d4195723c3e 100644
+> --- a/Documentation/media/uapi/v4l/pixfmt-compressed.rst
+> +++ b/Documentation/media/uapi/v4l/pixfmt-compressed.rst
+> @@ -143,6 +143,27 @@ Compressed Formats
+>        - ``V4L2_PIX_FMT_HEVC``
+>        - 'HEVC'
+>        - HEVC/H.265 video elementary stream.
+> +    * .. _V4L2-PIX-FMT-HEVC-SLICE:
+> +
+> +      - ``V4L2_PIX_FMT_HEVC_SLICE``
+> +      - 'S265'
+> +      - HEVC parsed slice data, as extracted from the HEVC bitstream.
+> +	This format is adapted for stateless video decoders that implement a
+> +	HEVC pipeline (using the :ref:`codec` and :ref:`media-request-api`).
 
-Only try and access the EFI configuration tables if there there are any
-reported. This allows EFI to be continued to used on systems where there
-are no configuration table entries.
+Should be :ref:`mem2mem`.
 
-Signed-off-by: Rob Bradford <robert.bradford@intel.com>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
----
- arch/x86/platform/efi/quirks.c | 3 +++
- drivers/firmware/efi/efi.c     | 3 +++
- 2 files changed, 6 insertions(+)
+Regards,
 
-diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-index a25a9fd987a9..e92ab8002dc5 100644
---- a/arch/x86/platform/efi/quirks.c
-+++ b/arch/x86/platform/efi/quirks.c
-@@ -512,6 +512,9 @@ int __init efi_reuse_config(u64 tables, int nr_tables)
- 	void *p, *tablep;
- 	struct efi_setup_data *data;
- 
-+	if (nr_tables == 0)
-+		return 0;
-+
- 	if (!efi_setup)
- 		return 0;
- 
-diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-index 55b77c576c42..521a541d02ad 100644
---- a/drivers/firmware/efi/efi.c
-+++ b/drivers/firmware/efi/efi.c
-@@ -636,6 +636,9 @@ int __init efi_config_init(efi_config_table_type_t *arch_tables)
- 	void *config_tables;
- 	int sz, ret;
- 
-+	if (efi.systab->nr_tables == 0)
-+		return 0;
-+
- 	if (efi_enabled(EFI_64BIT))
- 		sz = sizeof(efi_config_table_64_t);
- 	else
--- 
-2.20.1
+	Hans
+
+> +	Metadata associated with the frame to decode is required to be passed
+> +	through the following controls :
+> +        * ``V4L2_CID_MPEG_VIDEO_HEVC_SPS``
+> +        * ``V4L2_CID_MPEG_VIDEO_HEVC_PPS``
+> +        * ``V4L2_CID_MPEG_VIDEO_HEVC_SLICE_PARAMS``
+> +	See the :ref:`associated Codec Control IDs <v4l2-mpeg-hevc>`.
+> +	Buffers associated with this pixel format must contain the appropriate
+> +	number of macroblocks to decode a full corresponding frame.
+> +
+> +	.. note::
+> +
+> +	   This format is not yet part of the public kernel API and it
+> +	   is expected to change.
+> +
+>      * .. _V4L2-PIX-FMT-FWHT:
+>  
+>        - ``V4L2_PIX_FMT_FWHT``
+> 
 
