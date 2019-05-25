@@ -2,91 +2,71 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E59C282CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 11:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98EB3C46460
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 11:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A10BD2168B
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 11:49:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="CdYjXNoh"
+	by mail.kernel.org (Postfix) with ESMTP id 7BE512175B
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 11:49:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbfEYLtk (ORCPT
+        id S1726910AbfEYLtw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 07:49:40 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:19685 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726697AbfEYLtk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 07:49:40 -0400
-Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id x4PBnLmr006832;
-        Sat, 25 May 2019 20:49:22 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x4PBnLmr006832
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1558784962;
-        bh=GcQ0/FUcETTNQeH6qzQKxM8A8Qu2qmHKXiYNQ7p/tn0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=CdYjXNohyx7syAc6Z486jL4ktqGmdHFwPBG20R/Sk6klfweBdmLxmZOwLjGGiW56y
-         /3Q7Hiz3cdDUnBlyGx+kOeW1e3jtr8fTfsD9YamQNastvfc0efpTvmxWsfIs/Z/fzT
-         uwF8NRs0sCOUnceAYciwtwLAG3kPu/ciwqHRS6AfuDxg8j9/cifs9EkO7EJm2b/vx8
-         DwyUf8XNjhMp8CQj9rkmio7asncHBE3f4wg+ZflbXiFgDUm8AtpubgqAC0RaCyAh8j
-         0jMB8m4iqLHfKTnCj0rXdBh0D3PyJTrjs6W5iw0UFb6lrzvM31lOk0Ru5SciX0AIzR
-         6u6F1ILeUp/vw==
-X-Nifty-SrcIP: [126.125.154.139]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] kconfig: tests: fix recursive inclusion unit test
-Date:   Sat, 25 May 2019 20:49:19 +0900
-Message-Id: <20190525114919.26188-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Sat, 25 May 2019 07:49:52 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:51548 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726697AbfEYLtw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 May 2019 07:49:52 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id B4D5E6F2072E705EE811;
+        Sat, 25 May 2019 19:49:44 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.439.0; Sat, 25 May 2019 19:49:36 +0800
+From:   Kefeng Wang <wangkefeng.wang@huawei.com>
+To:     Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>
+CC:     <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>
+Subject: [PATCH] usb: dwc3: qcom: Use of_clk_get_parent_count()
+Date:   Sat, 25 May 2019 19:58:08 +0800
+Message-ID: <20190525115808.108142-1-wangkefeng.wang@huawei.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding SPDX license identifier is pretty safe; however, here is one
-exception.
+Use of_clk_get_parent_count() instead of open coding.
 
-Since commit ec8f24b7faaf ("treewide: Add SPDX license identifier -
-Makefile/Kconfig"), "make testconfig" would not pass.
-
-When Kconfig detects a circular file inclusion, it displays error
-messages with a file name and a line number prefixed to each line.
-
-The unit test checks if Kconfig emits the error messages correctly
-(this also checks the line number correctness).
-
-Now that the test input has the SPDX license identifier at the very top,
-the line numbers in the expected stderr should be incremented by 1.
-
-Fixes: ec8f24b7faaf ("treewide: Add SPDX license identifier - Makefile/Kconfig")
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
 ---
+ drivers/usb/dwc3/dwc3-qcom.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
- scripts/kconfig/tests/err_recursive_inc/expected_stderr | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/scripts/kconfig/tests/err_recursive_inc/expected_stderr b/scripts/kconfig/tests/err_recursive_inc/expected_stderr
-index 6b582eee2176..b070a31fdfeb 100644
---- a/scripts/kconfig/tests/err_recursive_inc/expected_stderr
-+++ b/scripts/kconfig/tests/err_recursive_inc/expected_stderr
-@@ -1,6 +1,6 @@
- Recursive inclusion detected.
- Inclusion path:
-   current file : Kconfig.inc1
--  included from: Kconfig.inc3:1
--  included from: Kconfig.inc2:3
--  included from: Kconfig.inc1:4
-+  included from: Kconfig.inc3:2
-+  included from: Kconfig.inc2:4
-+  included from: Kconfig.inc1:5
+diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+index 184df4daa590..821f5179d7b6 100644
+--- a/drivers/usb/dwc3/dwc3-qcom.c
++++ b/drivers/usb/dwc3/dwc3-qcom.c
+@@ -446,8 +446,7 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
+ 		goto reset_assert;
+ 	}
+ 
+-	ret = dwc3_qcom_clk_init(qcom, of_count_phandle_with_args(np,
+-						"clocks", "#clock-cells"));
++	ret = dwc3_qcom_clk_init(qcom, of_clk_get_parent_count(np));
+ 	if (ret) {
+ 		dev_err(dev, "failed to get clocks\n");
+ 		goto reset_assert;
 -- 
-2.17.1
+2.20.1
 
