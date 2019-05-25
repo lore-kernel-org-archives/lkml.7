@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A39C282E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 03:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0CADC282E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 03:18:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1575A2175B
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 03:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8785321773
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 03:18:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbfEYDSh (ORCPT
+        id S1727026AbfEYDSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 23:18:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60930 "EHLO mail.kernel.org"
+        Fri, 24 May 2019 23:18:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726547AbfEYDRs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726663AbfEYDRs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 24 May 2019 23:17:48 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A639F2189E;
-        Sat, 25 May 2019 03:17:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 915FC2186A;
+        Sat, 25 May 2019 03:17:47 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92)
         (envelope-from <rostedt@goodmis.org>)
-        id 1hUNBp-0001ii-Lr; Fri, 24 May 2019 23:17:45 -0400
-Message-Id: <20190525031745.556089635@goodmis.org>
+        id 1hUNBq-0001lc-M6; Fri, 24 May 2019 23:17:46 -0400
+Message-Id: <20190525031746.569488607@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Fri, 24 May 2019 23:16:36 -0400
+Date:   Fri, 24 May 2019 23:16:42 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
@@ -44,7 +44,7 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Namhyung Kim <namhyung@kernel.org>,
         "Frank Ch. Eigler" <fche@redhat.com>
-Subject: [PATCH 03/16 v3] fgraph: Have the current->ret_stack go down not up
+Subject: [PATCH 09/16 v3] ftrace: Allow ftrace startup flags exist without dynamic ftrace
 References: <20190525031633.811342628@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -55,142 +55,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-Change the direction of the current->ret_stack shadown stack to move the
-same as most normal arch stacks do.
+Some of the flags for ftrace_startup() may be exposed even when
+CONFIG_DYNAMIC_FTRACE is not configured in. This is fine as the difference
+between dynamic ftrace and static ftrace is done within the internals of
+ftrace itself. No need to have use cases fail to compile because dynamic
+ftrace is disabled.
 
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
+This change is needed to move some of the logic of what is passed to
+ftrace_startup() out of the parameters of ftrace_startup().
+
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/trace/fgraph.c | 39 ++++++++++++++++++++-------------------
- 1 file changed, 20 insertions(+), 19 deletions(-)
+ include/linux/ftrace.h | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index 63e701771c20..b0f8ae269351 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -27,8 +27,9 @@
- #define FGRAPH_RET_INDEX (FGRAPH_RET_SIZE / sizeof(long))
- #define SHADOW_STACK_SIZE (PAGE_SIZE)
- #define SHADOW_STACK_INDEX (SHADOW_STACK_SIZE / sizeof(long))
--/* Leave on a buffer at the end */
--#define SHADOW_STACK_MAX_INDEX (SHADOW_STACK_INDEX - FGRAPH_RET_INDEX)
-+#define SHADOW_STACK_MAX_INDEX SHADOW_STACK_INDEX
-+/* Leave on a little buffer at the bottom */
-+#define SHADOW_STACK_MIN_INDEX FGRAPH_RET_INDEX
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index 766c565ba243..d0307c9b866e 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -286,6 +286,15 @@ static inline void stack_tracer_disable(void) { }
+ static inline void stack_tracer_enable(void) { }
+ #endif
  
- #define RET_STACK(t, index) ((struct ftrace_ret_stack *)(&(t)->ret_stack[index]))
- #define RET_STACK_INC(c) ({ c += FGRAPH_RET_INDEX; })
-@@ -89,16 +90,16 @@ ftrace_push_return_trace(unsigned long ret, unsigned long func,
- 	smp_rmb();
++enum {
++	FTRACE_UPDATE_CALLS		= (1 << 0),
++	FTRACE_DISABLE_CALLS		= (1 << 1),
++	FTRACE_UPDATE_TRACE_FUNC	= (1 << 2),
++	FTRACE_START_FUNC_RET		= (1 << 3),
++	FTRACE_STOP_FUNC_RET		= (1 << 4),
++	FTRACE_MAY_SLEEP		= (1 << 5),
++};
++
+ #ifdef CONFIG_DYNAMIC_FTRACE
  
- 	/* The return trace stack is full */
--	if (current->curr_ret_stack >= SHADOW_STACK_MAX_INDEX) {
-+	if (current->curr_ret_stack <= SHADOW_STACK_MIN_INDEX) {
- 		atomic_inc(&current->trace_overrun);
- 		return -EBUSY;
- 	}
+ int ftrace_arch_code_modify_prepare(void);
+@@ -373,15 +382,6 @@ void ftrace_set_global_notrace(unsigned char *buf, int len, int reset);
+ void ftrace_free_filter(struct ftrace_ops *ops);
+ void ftrace_ops_set_global_filter(struct ftrace_ops *ops);
  
- 	calltime = trace_clock_local();
- 
--	index = current->curr_ret_stack;
--	RET_STACK_INC(current->curr_ret_stack);
--	ret_stack = RET_STACK(current, index);
-+	RET_STACK_DEC(current->curr_ret_stack);
-+	ret_stack = RET_STACK(current, current->curr_ret_stack);
-+	/* Make sure interrupts see the current value of curr_ret_stack */
- 	barrier();
- 	ret_stack->ret = ret;
- 	ret_stack->func = func;
-@@ -129,7 +130,7 @@ int function_graph_enter(unsigned long ret, unsigned long func,
- 
- 	return 0;
-  out_ret:
--	RET_STACK_DEC(current->curr_ret_stack);
-+	RET_STACK_INC(current->curr_ret_stack);
-  out:
- 	current->curr_ret_depth--;
- 	return -EBUSY;
-@@ -144,9 +145,8 @@ ftrace_pop_return_trace(struct ftrace_graph_ret *trace, unsigned long *ret,
- 	int index;
- 
- 	index = current->curr_ret_stack;
--	RET_STACK_DEC(index);
- 
--	if (unlikely(index < 0 || index > SHADOW_STACK_MAX_INDEX)) {
-+	if (unlikely(index < 0 || index >= SHADOW_STACK_MAX_INDEX)) {
- 		ftrace_graph_stop();
- 		WARN_ON(1);
- 		/* Might as well panic, otherwise we have no where to go */
-@@ -239,7 +239,7 @@ unsigned long ftrace_return_to_handler(unsigned long frame_pointer)
- 	 * curr_ret_stack is after that.
- 	 */
- 	barrier();
--	RET_STACK_DEC(current->curr_ret_stack);
-+	RET_STACK_INC(current->curr_ret_stack);
- 
- 	if (unlikely(!ret)) {
- 		ftrace_graph_stop();
-@@ -302,9 +302,9 @@ unsigned long ftrace_graph_ret_addr(struct task_struct *task, int *idx,
- 	if (ret != (unsigned long)return_to_handler)
- 		return ret;
- 
--	RET_STACK_DEC(index);
-+	RET_STACK_INC(index);
- 
--	for (i = index; i >= 0; RET_STACK_DEC(i)) {
-+	for (i = index; i < SHADOW_STACK_MAX_INDEX; RET_STACK_INC(i)) {
- 		ret_stack = RET_STACK(task, i);
- 		if (ret_stack->retp == retp)
- 			return ret_stack->ret;
-@@ -322,13 +322,13 @@ unsigned long ftrace_graph_ret_addr(struct task_struct *task, int *idx,
- 		return ret;
- 
- 	task_idx = task->curr_ret_stack;
--	RET_STACK_DEC(task_idx);
-+	RET_STACK_INC(task_idx);
- 
--	if (!task->ret_stack || task_idx < *idx)
-+	if (!task->ret_stack || task_idx > *idx)
- 		return ret;
- 
- 	task_idx -= *idx;
--	RET_STACK_INC(*idx);
-+	RET_STACK_DEC(*idx);
- 
- 	return RET_STACK(task, task_idx);
- }
-@@ -391,7 +391,7 @@ static int alloc_retstack_tasklist(unsigned long **ret_stack_list)
- 		if (t->ret_stack == NULL) {
- 			atomic_set(&t->tracing_graph_pause, 0);
- 			atomic_set(&t->trace_overrun, 0);
--			t->curr_ret_stack = 0;
-+			t->curr_ret_stack = SHADOW_STACK_MAX_INDEX;
- 			t->curr_ret_depth = -1;
- 			/* Make sure the tasks see the 0 first: */
- 			smp_wmb();
-@@ -436,10 +436,11 @@ ftrace_graph_probe_sched_switch(void *ignore, bool preempt,
- 	 */
- 	timestamp -= next->ftrace_timestamp;
- 
--	for (index = next->curr_ret_stack - FGRAPH_RET_INDEX; index >= 0; ) {
-+	for (index = next->curr_ret_stack + FGRAPH_RET_INDEX;
-+	     index < SHADOW_STACK_MAX_INDEX; ) {
- 		ret_stack = RET_STACK(next, index);
- 		ret_stack->calltime += timestamp;
--		index -= FGRAPH_RET_INDEX;
-+		index += FGRAPH_RET_INDEX;
- 	}
- }
- 
-@@ -530,7 +531,7 @@ void ftrace_graph_init_task(struct task_struct *t)
- {
- 	/* Make sure we do not use the parent ret_stack */
- 	t->ret_stack = NULL;
--	t->curr_ret_stack = 0;
-+	t->curr_ret_stack = SHADOW_STACK_MAX_INDEX;
- 	t->curr_ret_depth = -1;
- 
- 	if (ftrace_graph_active) {
+-enum {
+-	FTRACE_UPDATE_CALLS		= (1 << 0),
+-	FTRACE_DISABLE_CALLS		= (1 << 1),
+-	FTRACE_UPDATE_TRACE_FUNC	= (1 << 2),
+-	FTRACE_START_FUNC_RET		= (1 << 3),
+-	FTRACE_STOP_FUNC_RET		= (1 << 4),
+-	FTRACE_MAY_SLEEP		= (1 << 5),
+-};
+-
+ /*
+  * The FTRACE_UPDATE_* enum is used to pass information back
+  * from the ftrace_update_record() and ftrace_test_record()
 -- 
 2.20.1
 
