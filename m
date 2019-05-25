@@ -6,64 +6,62 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A746C282E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 00:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CADCDC282E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 00:54:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03AF620863
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 00:54:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9C0B20863
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 00:54:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbfEYAyu (ORCPT
+        id S1726490AbfEYAyx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 May 2019 20:54:50 -0400
-Received: from ozlabs.org ([203.11.71.1]:42955 "EHLO ozlabs.org"
+        Fri, 24 May 2019 20:54:53 -0400
+Received: from ozlabs.org ([203.11.71.1]:38857 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726273AbfEYAyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 May 2019 20:54:49 -0400
+        id S1726273AbfEYAyv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 May 2019 20:54:51 -0400
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 459lBb45HVz9sB8; Sat, 25 May 2019 10:54:47 +1000 (AEST)
+        id 459lBd53mCz9sBr; Sat, 25 May 2019 10:54:49 +1000 (AEST)
 X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: 3202e35ec1c8fc19cea24253ff83edf702a60a02
+X-powerpc-patch-commit: 8b909e3548706cbebc0a676067b81aadda57f47e
 X-Patchwork-Hint: ignore
-In-Reply-To: <20190511024217.4013-2-ravi.bangoria@linux.ibm.com>
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>, peterz@infradead.org,
-        jolsa@redhat.com, maddy@linux.vnet.ibm.com
+In-Reply-To: <20190522220158.18479-1-bauerman@linux.ibm.com>
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        acme@kernel.org
-Subject: Re: [PATCH 2/2] powerpc/perf: Fix mmcra corruption by bhrb_filter
-Message-Id: <459lBb45HVz9sB8@ozlabs.org>
-Date:   Sat, 25 May 2019 10:54:47 +1000 (AEST)
+Cc:     kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Subject: Re: [PATCH] powerpc: Fix loading of kernel + initramfs with kexec_file_load()
+Message-Id: <459lBd53mCz9sBr@ozlabs.org>
+Date:   Sat, 25 May 2019 10:54:49 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-05-11 at 02:42:17 UTC, Ravi Bangoria wrote:
-> Consider a scenario where user creates two events:
+On Wed, 2019-05-22 at 22:01:58 UTC, Thiago Jung Bauermann wrote:
+> Commit b6664ba42f14 ("s390, kexec_file: drop arch_kexec_mem_walk()")
+> changed kexec_add_buffer() to skip searching for a memory location if
+> kexec_buf.mem is already set, and use the address that is there.
 > 
->   1st event:
->     attr.sample_type |= PERF_SAMPLE_BRANCH_STACK;
->     attr.branch_sample_type = PERF_SAMPLE_BRANCH_ANY;
->     fd = perf_event_open(attr, 0, 1, -1, 0);
+> In powerpc code we reuse a kexec_buf variable for loading both the kernel
+> and the initramfs by resetting some of the fields between those uses, but
+> not mem. This causes kexec_add_buffer() to try to load the kernel at the
+> same address where initramfs will be loaded, which is naturally rejected:
 > 
->   This sets cpuhw->bhrb_filter to 0 and returns valid fd.
+>   # kexec -s -l --initrd initramfs vmlinuz
+>   kexec_file_load failed: Invalid argument
 > 
->   2nd event:
->     attr.sample_type |= PERF_SAMPLE_BRANCH_STACK;
->     attr.branch_sample_type = PERF_SAMPLE_BRANCH_CALL;
->     fd = perf_event_open(attr, 0, 1, -1, 0);
+> Setting the mem field before every call to kexec_add_buffer() fixes this
+> regression.
 > 
->   It overrides cpuhw->bhrb_filter to -1 and returns with error.
-> 
-> Now if power_pmu_enable() gets called by any path other than
-> power_pmu_add(), ppmu->config_bhrb(-1) will set mmcra to -1.
-> 
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-> Reviewed-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+> Fixes: b6664ba42f14 ("s390, kexec_file: drop arch_kexec_mem_walk()")
+> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+> Reviewed-by: Dave Young <dyoung@redhat.com>
 
 Applied to powerpc fixes, thanks.
 
-https://git.kernel.org/powerpc/c/3202e35ec1c8fc19cea24253ff83edf7
+https://git.kernel.org/powerpc/c/8b909e3548706cbebc0a676067b81aad
 
 cheers
