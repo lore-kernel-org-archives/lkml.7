@@ -4,34 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26257C46460
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 14:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A74E2C07542
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 14:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07135217F9
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 14:09:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7737320863
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 14:11:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbfEYOJz (ORCPT
+        id S1727033AbfEYOLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 10:09:55 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:17158 "EHLO huawei.com"
+        Sat, 25 May 2019 10:11:54 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:17574 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726917AbfEYOJz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 10:09:55 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 138424CFE908AEBA324E;
-        Sat, 25 May 2019 22:09:52 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Sat, 25 May 2019
- 22:09:42 +0800
+        id S1726126AbfEYOLy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 May 2019 10:11:54 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id E345C50BA5424489044A;
+        Sat, 25 May 2019 22:11:45 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Sat, 25 May 2019
+ 22:11:37 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
-To:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>
+To:     <dmitry.torokhov@gmail.com>, <cheiny@synaptics.com>,
+        <nick@shmanahar.org>
 CC:     <linux-kernel@vger.kernel.org>, <linux-input@vger.kernel.org>,
         YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] HID: logitech-dj: fix return value of logi_dj_recv_query_hidpp_devices
-Date:   Sat, 25 May 2019 22:09:08 +0800
-Message-ID: <20190525140908.2804-1-yuehaibing@huawei.com>
+Subject: [PATCH -next] Input: synaptics-rmi4 - Remove set but not used variable 'sensor_flags'
+Date:   Sat, 25 May 2019 22:11:19 +0800
+Message-ID: <20190525141119.11852-1-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -42,28 +43,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We should return 'retval' as the correct return value
-instead of always zero.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Fixes: 74808f9115ce ("HID: logitech-dj: add support for non unifying receivers")
+drivers/input/rmi4/rmi_f12.c: In function rmi_f12_read_sensor_tuning:
+drivers/input/rmi4/rmi_f12.c:76:6: warning: variable sensor_flags set but not used [-Wunused-but-set-variable]
+
+It's not used since introduction in
+commit b43d2c1e9353 ("Input: synaptics-rmi4 - add support for F12")
+
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/hid/hid-logitech-dj.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/input/rmi4/rmi_f12.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-logitech-dj.c
-index 41baa4dbbfcc..7f8db602eec0 100644
---- a/drivers/hid/hid-logitech-dj.c
-+++ b/drivers/hid/hid-logitech-dj.c
-@@ -1133,7 +1133,7 @@ static int logi_dj_recv_query_hidpp_devices(struct dj_receiver_dev *djrcv_dev)
- 				    HID_REQ_SET_REPORT);
+diff --git a/drivers/input/rmi4/rmi_f12.c b/drivers/input/rmi4/rmi_f12.c
+index 5c7f48915779..72b5498e1a9f 100644
+--- a/drivers/input/rmi4/rmi_f12.c
++++ b/drivers/input/rmi4/rmi_f12.c
+@@ -73,7 +73,6 @@ static int rmi_f12_read_sensor_tuning(struct f12_data *f12)
+ 	int pitch_y = 0;
+ 	int rx_receivers = 0;
+ 	int tx_receivers = 0;
+-	int sensor_flags = 0;
  
- 	kfree(hidpp_report);
--	return 0;
-+	return retval;
- }
+ 	item = rmi_get_register_desc_item(&f12->control_reg_desc, 8);
+ 	if (!item) {
+@@ -129,10 +128,8 @@ static int rmi_f12_read_sensor_tuning(struct f12_data *f12)
+ 		offset += 2;
+ 	}
  
- static int logi_dj_recv_query_paired_devices(struct dj_receiver_dev *djrcv_dev)
+-	if (rmi_register_desc_has_subpacket(item, 4)) {
+-		sensor_flags = buf[offset];
++	if (rmi_register_desc_has_subpacket(item, 4))
+ 		offset += 1;
+-	}
+ 
+ 	sensor->x_mm = (pitch_x * rx_receivers) >> 12;
+ 	sensor->y_mm = (pitch_y * tx_receivers) >> 12;
 -- 
 2.17.1
 
