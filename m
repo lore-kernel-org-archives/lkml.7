@@ -4,34 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DD8C28CBF
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 12:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1546BC28CBF
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 12:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB6262168B
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 12:23:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E546F217F9
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 12:29:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbfEYMX4 (ORCPT
+        id S1726902AbfEYM3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 08:23:56 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:34914 "EHLO huawei.com"
+        Sat, 25 May 2019 08:29:44 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:54680 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726688AbfEYMX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 08:23:56 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 4247E5C72E4B0C50A544;
-        Sat, 25 May 2019 20:23:43 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Sat, 25 May 2019
- 20:23:32 +0800
+        id S1726808AbfEYM3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 May 2019 08:29:43 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id E5E25F651719228DE6B0;
+        Sat, 25 May 2019 20:29:37 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Sat, 25 May 2019
+ 20:29:27 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
-To:     <ralf@linux-mips.org>, <paul.burton@mips.com>, <jhogan@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-mips@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] MIPS: uprobes: remove set but not used variable 'epc'
-Date:   Sat, 25 May 2019 20:20:24 +0800
-Message-ID: <20190525122024.4908-1-yuehaibing@huawei.com>
+To:     <viro@zeniv.linux.org.uk>, <axboe@kernel.dk>
+CC:     <linux-kernel@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] io_uring: remove set but not used variable 'ret'
+Date:   Sat, 25 May 2019 20:29:04 +0800
+Message-ID: <20190525122904.12792-1-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -44,31 +44,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fixes gcc '-Wunused-but-set-variable' warning:
 
-arch/mips/kernel/uprobes.c: In function 'arch_uprobe_pre_xol':
-arch/mips/kernel/uprobes.c:115:17: warning: variable 'epc' set but not used [-Wunused-but-set-variable]
+fs/io_uring.c: In function io_ring_submit:
+fs/io_uring.c:2279:7: warning: variable ret set but not used [-Wunused-but-set-variable]
 
-It's never used since introduction in
-commit 40e084a506eb ("MIPS: Add uprobes support.")
+It's not used since commit f3fafe4103bd ("io_uring: add support for sqe links")
 
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- arch/mips/kernel/uprobes.c | 3 ---
- 1 file changed, 3 deletions(-)
+ fs/io_uring.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/mips/kernel/uprobes.c b/arch/mips/kernel/uprobes.c
-index 4aaff3b3175c..6dbe4eab0a0e 100644
---- a/arch/mips/kernel/uprobes.c
-+++ b/arch/mips/kernel/uprobes.c
-@@ -112,9 +112,6 @@ int arch_uprobe_pre_xol(struct arch_uprobe *aup, struct pt_regs *regs)
- 	 */
- 	aup->resume_epc = regs->cp0_epc + 4;
- 	if (insn_has_delay_slot((union mips_instruction) aup->insn[0])) {
--		unsigned long epc;
--
--		epc = regs->cp0_epc;
- 		__compute_return_epc_for_insn(regs,
- 			(union mips_instruction) aup->insn[0]);
- 		aup->resume_epc = regs->cp0_epc;
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 8ef9d8d3c88b..e2bbd227ab2a 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2276,7 +2276,6 @@ static int io_ring_submit(struct io_ring_ctx *ctx, unsigned int to_submit)
+ 
+ 	for (i = 0; i < to_submit; i++) {
+ 		struct sqe_submit s;
+-		int ret;
+ 
+ 		if (!io_get_sqring(ctx, &s))
+ 			break;
+@@ -2292,7 +2291,7 @@ static int io_ring_submit(struct io_ring_ctx *ctx, unsigned int to_submit)
+ 		s.needs_fixed_file = false;
+ 		submit++;
+ 
+-		ret = io_submit_sqe(ctx, &s, statep, &link);
++		io_submit_sqe(ctx, &s, statep, &link);
+ 	}
+ 	io_commit_sqring(ctx);
+ 
 -- 
 2.17.1
 
