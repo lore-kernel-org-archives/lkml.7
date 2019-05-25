@@ -2,143 +2,121 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2861BC07542
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 15:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57FF5C07542
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 16:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B53E20862
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 15:50:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2367220879
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 16:07:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="A3R14F4I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727139AbfEYPuo (ORCPT
+        id S1727143AbfEYQFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 11:50:44 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42766 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727031AbfEYPuo (ORCPT
+        Sat, 25 May 2019 12:05:16 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44419 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727031AbfEYQFP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 11:50:44 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4PFgPxR035129
-        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 11:50:42 -0400
-Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sq1pr2e50-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 11:50:42 -0400
-Received: from localhost
-        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Sat, 25 May 2019 16:50:41 +0100
-Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
-        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 25 May 2019 16:50:35 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4PFoYP633227200
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 25 May 2019 15:50:34 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6EC8CB206A;
-        Sat, 25 May 2019 15:50:34 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4D0D0B205F;
-        Sat, 25 May 2019 15:50:34 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.80.199.73])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Sat, 25 May 2019 15:50:34 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 1DB1C16C32DC; Sat, 25 May 2019 08:50:35 -0700 (PDT)
-Date:   Sat, 25 May 2019 08:50:35 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>, kvm-ppc@vger.kernel.org,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Paul Mackerras <paulus@ozlabs.org>, rcu@vger.kernel.org
-Subject: Re: [PATCH RFC 0/5] Remove some notrace RCU APIs
-Reply-To: paulmck@linux.ibm.com
-References: <20190524234933.5133-1-joel@joelfernandes.org>
- <20190524232458.4bcf4eb4@gandalf.local.home>
- <20190525081444.GC197789@google.com>
- <20190525070826.16f76ee7@gandalf.local.home>
- <20190525141954.GA176647@google.com>
+        Sat, 25 May 2019 12:05:15 -0400
+Received: by mail-ot1-f66.google.com with SMTP id g18so11336960otj.11
+        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 09:05:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=l19XRunZ4edmyDiZ8/eCl7rM5qgS/YH9jQvm1C3vHc0=;
+        b=A3R14F4IdcV5sGeshPkMMlET6bqHANhBQb2J1bCY9X4ch70IWyGnvHDaWX7d/Mp9Hp
+         079KwzmPK2FQg0CKC4tmO05nGMcJDwLLCcUXRJCjur91/spbZ+8t1wyYdfue3wSQR/bI
+         rzz5FyPKSdgU5EZd67GNobxk3dpzASrGl/OQyjqlRV0tOj1qXaEiTpa2uhaIdr8CfPcf
+         4NR2FhFt9nxCD0WYLWKucNTfXEL208ZaFL8Jr6G8nuln3V0oAoIaAMIK6qrEkWBmb8S8
+         bobds6NAOD3zO8pK0cz+ipbFoYEH4f4ObUqbSIr9KIUzJmXO31+WLiZIgH7hMWFOvsHC
+         u4Zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=l19XRunZ4edmyDiZ8/eCl7rM5qgS/YH9jQvm1C3vHc0=;
+        b=dWsTby9t5qT2ujCPoGzHw0Glk91uYoY6jFrxdqLoQB4vd4dMfMH4YjeT0t9hl2QgQw
+         vZpv6vQ7u4/1/yGHqwgwZ3qGNIZSN0Zc4SEyA46ijEEKIXT3JrSS/19ln/7omL1GcsqS
+         O6kxPGPAofNtZ5PeAn+IKtSvoiJ209tuP720O5tw2cs0M85yC+/2xy18sj4jQl1K6tpN
+         02xMxQmhfFaqwQ6QWP+V9lMfOE73FEeJlm6UX9BMqID9WW5ABMQ66aSkanN8JPJlElRK
+         NF4yGixnIG771SOZ48BFNzceMFIs9aYIYV0aDwns/TIAtlAmOlQqGC+UO1YC/Acf37sd
+         l10Q==
+X-Gm-Message-State: APjAAAW22MWgx4kEfhzvlIpXq/XNbQgGpS/shGrmeDXSYTXMmDC4FKyo
+        QREgdtwQORriZdMCD/5qyZLxOgOyq/u6GbdeiBDco1w5pNc=
+X-Google-Smtp-Source: APXvYqzCSOOpLKL4h1itEOlv/uZne/4BHXc4Cc3fThbuUcmz5bHH1XQuhj/0zSI48i6WyVWu0nKtZVfmMlH6epbuGBk=
+X-Received: by 2002:a9d:6e96:: with SMTP id a22mr841087otr.207.1558800314745;
+ Sat, 25 May 2019 09:05:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190525141954.GA176647@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19052515-0060-0000-0000-00000347D01F
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011161; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01208442; UDB=6.00634729; IPR=6.00989440;
- MB=3.00027049; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-25 15:50:40
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052515-0061-0000-0000-0000497ECEE0
-Message-Id: <20190525155035.GE28207@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-25_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905250110
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Sat, 25 May 2019 09:05:03 -0700
+Message-ID: <CAPcyv4ghA3bGeTFw+wVV5N8cb-izpwdi9BQU5Ec6wNTw8ZywMw@mail.gmail.com>
+Subject: [GIT PULL] libnvdimm fixes for v5.2-rc2
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 25, 2019 at 10:19:54AM -0400, Joel Fernandes wrote:
-> On Sat, May 25, 2019 at 07:08:26AM -0400, Steven Rostedt wrote:
-> > On Sat, 25 May 2019 04:14:44 -0400
-> > Joel Fernandes <joel@joelfernandes.org> wrote:
-> > 
-> > > > I guess the difference between the _raw_notrace and just _raw variants
-> > > > is that _notrace ones do a rcu_check_sparse(). Don't we want to keep
-> > > > that check?  
-> > > 
-> > > This is true.
-> > > 
-> > > Since the users of _raw_notrace are very few, is it worth keeping this API
-> > > just for sparse checking? The API naming is also confusing. I was expecting
-> > > _raw_notrace to do fewer checks than _raw, instead of more. Honestly, I just
-> > > want to nuke _raw_notrace as done in this series and later we can introduce a
-> > > sparse checking version of _raw if need-be. The other option could be to
-> > > always do sparse checking for _raw however that used to be the case and got
-> > > changed in http://lists.infradead.org/pipermail/linux-afs/2016-July/001016.html
-> > 
-> > What if we just rename _raw to _raw_nocheck, and _raw_notrace to _raw ?
-> 
-> That would also mean changing 160 usages of _raw to _raw_nocheck in the
-> kernel :-/.
-> 
-> The tracing usage of _raw_notrace is only like 2 or 3 users. Can we just call
-> rcu_check_sparse directly in the calling code for those and eliminate the APIs?
-> 
-> I wonder what Paul thinks about the matter as well.
+Hi Linus, please pull from:
 
-My thought is that it is likely that a goodly number of the current uses
-of _raw should really be some form of _check, with lockdep expressions
-spelled out.  Not that working out what exactly those lockdep expressions
-should be is necessarily a trivial undertaking.  ;-)
+  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
+tags/libnvdimm-fixes-5.2-rc2
 
-That aside, if we are going to change the name of an API that is
-used 160 places throughout the tree, we would need to have a pretty
-good justification.  Without such a justification, it will just look
-like pointless churn to the various developers and maintainers on the
-receiving end of the patches.
+...to receive a regression fix, a small (2 line code change)
+performance enhancement, and some miscellaneous compilation warning
+fixes. These have soaked in -next the past week with no known issues.
+The device-mapper touches have Mike's ack, and the hardened user-copy
+bypass was reviewed with Kees.
 
-							Thanx, Paul
+---
 
-> thanks, Steven!
-> 
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
 
+  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
+tags/libnvdimm-fixes-5.2-rc2
+
+for you to fetch changes up to 52f476a323f9efc959be1c890d0cdcf12e1582e0:
+
+  libnvdimm/pmem: Bypass CONFIG_HARDENED_USERCOPY overhead (2019-05-20
+20:43:32 -0700)
+
+----------------------------------------------------------------
+libnvdimm fixes v5.2-rc2
+
+- Fix a regression that disabled device-mapper dax support
+
+- Remove unnecessary hardened-user-copy overhead (>30%) for dax
+  read(2)/write(2).
+
+- Fix some compilation warnings.
+
+----------------------------------------------------------------
+Dan Williams (2):
+      dax: Arrange for dax_supported check to span multiple devices
+      libnvdimm/pmem: Bypass CONFIG_HARDENED_USERCOPY overhead
+
+Qian Cai (1):
+      libnvdimm: Fix compilation warnings with W=1
+
+ drivers/dax/super.c          | 88 ++++++++++++++++++++++++++++----------------
+ drivers/md/dm-table.c        | 17 ++++++---
+ drivers/md/dm.c              | 20 ++++++++++
+ drivers/md/dm.h              |  1 +
+ drivers/nvdimm/bus.c         |  4 +-
+ drivers/nvdimm/label.c       |  2 +
+ drivers/nvdimm/label.h       |  2 -
+ drivers/nvdimm/pmem.c        | 11 +++++-
+ drivers/s390/block/dcssblk.c |  1 +
+ include/linux/dax.h          | 26 +++++++++++++
+ 10 files changed, 129 insertions(+), 43 deletions(-)
