@@ -2,150 +2,102 @@ Return-Path: <SRS0=wu79=TZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D10C7C07542
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 18:13:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F17BC07542
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 18:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9559216FD
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 18:13:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E982E20815
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 May 2019 18:13:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="OyX8MuNv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lYsmCkkV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727719AbfEYSNC (ORCPT
+        id S1727497AbfEYSNe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 14:13:02 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43024 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727126AbfEYSLq (ORCPT
+        Sat, 25 May 2019 14:13:34 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:46509 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727126AbfEYSNd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 14:11:46 -0400
-Received: by mail-wr1-f66.google.com with SMTP id l17so4550936wrm.10;
-        Sat, 25 May 2019 11:11:45 -0700 (PDT)
+        Sat, 25 May 2019 14:13:33 -0400
+Received: by mail-pl1-f195.google.com with SMTP id r18so5426145pls.13;
+        Sat, 25 May 2019 11:13:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=3846hpA0VZMszmYc1Od49f4w97KJgiyEWxP34Iw+ZOI=;
-        b=OyX8MuNvfMozqpjcWk85AijY5aGyCBnJ+ElHglWl19+arEUmY2zSi/hOQI73ILV5/c
-         hM/vKqcAfRjelxp/tfzddetGO8gSlXmfEgrYICHsyxLFBtLDNwCy6jyTtLF4maK8Y2Ox
-         637QHArHJeamZp7+cQheJX5gnLcrUnK694X5vJPQzKHqkD3tKHUGkyqtCPWAyoIe0/m3
-         PyVMzInd+JWvTSQa9Plw/HRaAwwPH214WBhQnkgXPn8VQBZuYdtXgIYqxmsI8XaeobH5
-         EVGFcPq4Z6PybieiNqHuEmGfkGXi/8gSd/aQuyTzJ14SQWy8d5xauxyDA4+hUOZeO3i9
-         qUqQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=HRYu8PaHsPuH7ZyD14nhDXouGF0HQ0zAn0UWWEnt2PY=;
+        b=lYsmCkkVrUO+2GVeYbd8F9i/q2/xfvb5RQaKK7m/KL/+kIXt518Vp9x9T9rPXbou5j
+         CbzxHipr4SspD1HHGyqpABcxJr/VMf/28A3DfaK1PbeeLhARtdml0Wut3luUm92nvkIw
+         cjWtZywhhDlQGNDrW/efMSGGNoPw8pEtxmUvar8w+zrp8oHuvVDjbBQ6FqQRvzpW4V/B
+         YZeqAuddyhDNArChQY2SGnpeUK+RwQ93lhLu0BPQto4WCMzMcJ/tqPCR+fBsTaMECK+X
+         7TpooFstkZ6bfWNtAx6v9hp98L600rHvqcKHuYfhtYC2o6vRnoy0zv/U0PRzLfXB4oBs
+         IblA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3846hpA0VZMszmYc1Od49f4w97KJgiyEWxP34Iw+ZOI=;
-        b=HB/lhqiSBTBfCwgFfrMZY0fW8zy6EEjJ8ObADreOtSRanMOum30jDheJ3byP6W2PRe
-         clVlnXjvlJB5//9l6nOG1PEdQwFJqg22ehgaGQlCD4V4RZBlCj0b3eiY59xSSmhXeRmy
-         4Jn+xMUCJ37+K9ItgU6JYK+i3O7UF0AkicxGcepZWIKXYUUQUGcRWfT+PqxKMHn+NeD6
-         E+a/a5Zx6GTrTKxkA6+DaRfuE23rGopQR9W/FTa7YDWkeIUrxbfAsGYw47JNoOaOUytL
-         wa6xQCeIWa4leLMRFbj+0Hrl/QmhNY+IxyyUEAx8NX8/UO+l1qLOeLePkTPe5+huxbJp
-         gJdw==
-X-Gm-Message-State: APjAAAUi6LkCnnNXAUtDrhurbvMI3GwG5OPffp4zY0xgz6ECKm1tasdN
-        z7MUSLwXGxLMPSfx1IT+QLs=
-X-Google-Smtp-Source: APXvYqxiEfQUfycp8WtTaBUuBjs1RcNwjRJBotfEUd51P4MlDVWY5N1voIp3VdWZ9thnCsPEH/s33g==
-X-Received: by 2002:a5d:6189:: with SMTP id j9mr3534497wru.151.1558807905134;
-        Sat, 25 May 2019 11:11:45 -0700 (PDT)
-Received: from blackbox.darklights.net (p200300F133DDA4007CB8841254CD64FD.dip0.t-ipconnect.de. [2003:f1:33dd:a400:7cb8:8412:54cd:64fd])
-        by smtp.googlemail.com with ESMTPSA id o8sm12794540wra.4.2019.05.25.11.11.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 25 May 2019 11:11:44 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
-        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 01/14] pwm: meson: unify the parameter list of meson_pwm_{enable,disable}
-Date:   Sat, 25 May 2019 20:11:20 +0200
-Message-Id: <20190525181133.4875-2-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190525181133.4875-1-martin.blumenstingl@googlemail.com>
-References: <20190525181133.4875-1-martin.blumenstingl@googlemail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=HRYu8PaHsPuH7ZyD14nhDXouGF0HQ0zAn0UWWEnt2PY=;
+        b=SJ7z51fFCwqbT3Hikpr4OZJEgQ3JsTDqNPLI2dztaJHRYWjLAAeZJiTiFh7Mt68QcX
+         TElLUMc2Q5v3arO6sY+0D8sMvg8gqrfHNhIUkhAo5jWjTX0lPU7p92oLERiU3O1TCh/B
+         pKSbE7yp6SCXeX8Os3nlasspM2ZWMl0GvHjKKBgrW7q0NX78kn9dORzN4m9qFOsH1z8U
+         HJRBGgqPvqB0MJtKSxvvoIcU9/Zw+z7x7GGYPaSfh+qo5VwclrcLXRJr+Qt1+2cscMOa
+         tJd0hqJKC8d1S6mbo6OOP1VlDd09zTufihBrWh3qwauvQ/u2dFZmH6ApFk5CSqasabE9
+         vuPw==
+X-Gm-Message-State: APjAAAWg1BplXiSB3myUslL6qYRTNKNmGTRXvR107tgdi/ItGcEw2ses
+        jsetfXjrX061WawWAqlEPx0=
+X-Google-Smtp-Source: APXvYqwgce5AQBttT/IsT2xQ37eli2VMim3NEhCJnvjdhjhv2dmB0Yci4JaHaLapKWGYuKBBm/Lyqw==
+X-Received: by 2002:a17:902:1029:: with SMTP id b38mr74079371pla.72.1558808012389;
+        Sat, 25 May 2019 11:13:32 -0700 (PDT)
+Received: from localhost (68.168.130.77.16clouds.com. [68.168.130.77])
+        by smtp.gmail.com with ESMTPSA id z125sm8011552pfb.75.2019.05.25.11.13.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 25 May 2019 11:13:31 -0700 (PDT)
+From:   Yangtao Li <tiny.windzz@gmail.com>
+To:     rui.zhang@intel.com, edubezval@gmail.com,
+        daniel.lezcano@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org,
+        davem@davemloft.net, mchehab+samsung@kernel.org,
+        gregkh@linuxfoundation.org, linus.walleij@linaro.org,
+        nicolas.ferre@microchip.com, paulmck@linux.ibm.com
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Yangtao Li <tiny.windzz@gmail.com>
+Subject: [PATCH v3 0/3] add thermal driver for h6 
+Date:   Sat, 25 May 2019 14:13:26 -0400
+Message-Id: <20190525181329.18657-1-tiny.windzz@gmail.com>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a preparation for a future cleanup. Pass struct pwm_device
-instead of passing the individual values required by each function as
-these can be obtained for each struct pwm_device instance.
+This patchset add support for H6 thermal sensor.
 
-As a nice side-effect the driver now uses "switch (pwm->hwpwm)"
-everywhere. Before some functions used "switch (id)" while others used
-"switch (pwm->hwpwm)".
+BWY, do a cleanup in thermal makfile.
 
-No functional changes.
+Yangtao Li (3):
+  thermal: sun8i: add thermal driver for h6
+  dt-bindings: thermal: add binding document for h6 thermal controller
+  thermal: fix indentation in makefile
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+ .../bindings/thermal/sun8i-thermal.yaml       |  71 +++
+ MAINTAINERS                                   |   7 +
+ drivers/thermal/Kconfig                       |  14 +
+ drivers/thermal/Makefile                      |   9 +-
+ drivers/thermal/sun8i_thermal.c               | 437 ++++++++++++++++++
+ 5 files changed, 534 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
+ create mode 100644 drivers/thermal/sun8i_thermal.c
+
 ---
- drivers/pwm/pwm-meson.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-index 5fef7e925282..3fbbc4128ce8 100644
---- a/drivers/pwm/pwm-meson.c
-+++ b/drivers/pwm/pwm-meson.c
-@@ -183,15 +183,14 @@ static int meson_pwm_calc(struct meson_pwm *meson,
- 	return 0;
- }
- 
--static void meson_pwm_enable(struct meson_pwm *meson,
--			     struct meson_pwm_channel *channel,
--			     unsigned int id)
-+static void meson_pwm_enable(struct meson_pwm *meson, struct pwm_device *pwm)
- {
-+	struct meson_pwm_channel *channel = pwm_get_chip_data(pwm);
- 	u32 value, clk_shift, clk_enable, enable;
- 	unsigned int offset;
- 	unsigned long flags;
- 
--	switch (id) {
-+	switch (pwm->hwpwm) {
- 	case 0:
- 		clk_shift = MISC_A_CLK_DIV_SHIFT;
- 		clk_enable = MISC_A_CLK_EN;
-@@ -228,12 +227,12 @@ static void meson_pwm_enable(struct meson_pwm *meson,
- 	spin_unlock_irqrestore(&meson->lock, flags);
- }
- 
--static void meson_pwm_disable(struct meson_pwm *meson, unsigned int id)
-+static void meson_pwm_disable(struct meson_pwm *meson, struct pwm_device *pwm)
- {
- 	u32 value, enable;
- 	unsigned long flags;
- 
--	switch (id) {
-+	switch (pwm->hwpwm) {
- 	case 0:
- 		enable = MISC_A_EN;
- 		break;
-@@ -266,7 +265,7 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 		return -EINVAL;
- 
- 	if (!state->enabled) {
--		meson_pwm_disable(meson, pwm->hwpwm);
-+		meson_pwm_disable(meson, pwm);
- 		channel->state.enabled = false;
- 
- 		return 0;
-@@ -293,7 +292,7 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	}
- 
- 	if (state->enabled && !channel->state.enabled) {
--		meson_pwm_enable(meson, channel, pwm->hwpwm);
-+		meson_pwm_enable(meson, pwm);
- 		channel->state.enabled = true;
- 	}
- 
--- 
-2.21.0
+v3:
+-Add a sun8i prefix to some function
+-Remove disable callback and rename enable to init
+-Remove clock enable, calibration from init callback
+-Convert driver to interrupt based
+-Convert doc to yaml file
+---
+2.17.0
 
