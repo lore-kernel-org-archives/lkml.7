@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E59EC07542
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 01:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA96EC07542
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 01:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 233B1214DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 01:19:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FD02214DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 01:19:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bl5RYhYl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oW0SsEHy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727727AbfEZBT4 (ORCPT
+        id S1727738AbfEZBT6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 21:19:56 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:44080 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727650AbfEZBTg (ORCPT
+        Sat, 25 May 2019 21:19:58 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:46422 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727622AbfEZBTf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 21:19:36 -0400
-Received: by mail-ua1-f66.google.com with SMTP id i48so4468785uae.11
-        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 18:19:35 -0700 (PDT)
+        Sat, 25 May 2019 21:19:35 -0400
+Received: by mail-ua1-f65.google.com with SMTP id a95so5139513uaa.13
+        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 18:19:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=g9RckfaOyTf+xFTNPpwPEwsOHKNyfyEU38Mp+/sU6tA=;
-        b=Bl5RYhYlgHEhSe+fBzBodm5gri9kU46xOgubbeARfaOCNWwXx2s4plzGJ9QIB4bX6l
-         Xl1WsEcrCWXFebX6rOjCpQWq68SQPGD8yd0eV7YrwrwRfthm+qqJ+0sEVCoCpDa5pSl3
-         Kl8FsX46jh2CycJjApTTqMSPPQ+X5ejSHE8XjjYGtDpKBOmGtim8wDGXZ0VxIZvZsSKP
-         kzWmwcbvMmZv/iMHOmm3BDyWP77yvAMUra9onJSTNmj09wIZufJK7WU0xRTfYdpUhQVR
-         q2x5ZfQfMM60zny5ZvtNqC/o1yyprl7Jmga07pmSK1ic/CmL1PIc+qtLMja849IJfj2D
-         8J5w==
+        bh=2CttEDFzuoOFmumd7c7+k8vupiNFD+Q2bYe9G0CKDuU=;
+        b=oW0SsEHygGL0sKM58xiqfbayaqbZjznt9MDUh4lZYFb58UDHS8dxF46H7vxjPptB9K
+         JVaVtSu8DhKQjmqlxgYHI73nYcxGYqtyAae+SHOH/gKb+6Te04kv+9zhsmHsMe8lLn0+
+         rCyUTaMeSnib+jQjnyYlmMAI99NR/LXUyX8Lwf0znYMuxK5bceAZ8ibSUaponibj0BKq
+         ms7P3Yq21plDwdfpClJryb/ySv57CUiiHaRtVLRnM6RlXhMCbV1AlgrNHVmta3kT1HaE
+         D2oUSuIAr01aOFxmYsJ4EiUdZ8M8l4vf8N1zxeyMY9rm/iro4lL8SFwvMvQanCMNQ7vd
+         9EfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=g9RckfaOyTf+xFTNPpwPEwsOHKNyfyEU38Mp+/sU6tA=;
-        b=lqYzIRw8VSJDtPN4DAAxirBMerdRMDMDgEBr2FrggMgw1RahP+oMOkj0QsfzTUuAgz
-         N9Wgr7BY3ibyanFHicx+BrcIgW5UEuOpTHaY+kQgVxgxJI6ni0lpP0eERrjhindF64Xs
-         dZ0/LmK+lPoV8wY8sG/xzmNbghujgU8nBYYzDbQnnlPPAP+E0//a9gAw/JryhQJGXDeo
-         TQhOtydt3Ap48nRPgOxfur4O7gA/0TB78mVAWzHA5/HF6yxrAP60cHRSqio9ap+EMIHp
-         50l1w7tsv4BN2KXH5olH2FL0hVeHErQTP9s9KKLzFhIa/xkRuAUipwdEjDrWjrr9stwS
-         Y62w==
-X-Gm-Message-State: APjAAAWIQ97wGkMD3Ife1JCOGfpWg/VIVLgsd04ZAI94wGaeqamCuFrr
-        c5xTsTKvDriIix6BOZWvgS0=
-X-Google-Smtp-Source: APXvYqznsTQ083SoPXMAQSzFkUgHLRBwZDotN+YfrQ5Yrk2chJVhMIt0WSVTLDIFdzCKIsWw+3172A==
-X-Received: by 2002:ab0:3499:: with SMTP id c25mr12364917uar.56.1558833575389;
-        Sat, 25 May 2019 18:19:35 -0700 (PDT)
-Received: from arch-01.home (c-73-132-202-198.hsd1.md.comcast.net. [73.132.202.198])
-        by smtp.gmail.com with ESMTPSA id 9sm4593181vkk.43.2019.05.25.18.19.34
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        bh=2CttEDFzuoOFmumd7c7+k8vupiNFD+Q2bYe9G0CKDuU=;
+        b=VNpg8ila2W7nztcP7cDLcquutla2JnMf5ofQ6gGWAdbSgZp/0LGlvZzZK+ofppp0uM
+         x5ly5l1YKFLhShY5ji9D/rBbWWTlgvniSp8FOMOoi4B41eFeAxo28JkoKtvvcRBv5BSu
+         2X06daRiHMnKQ2F8vX+puRCmpkVGikvkv8aOOuOztVKPdtY2Z+zL1wta+oVYButmDZ48
+         3otyy3CwwZ+KfieFBvmV9KXH88NDdtwlK349tff/Y1jxjrKtjDqw9wPdyXYo/YGJ0jW9
+         6x9eRE7UuhH6Qb4m9pzJu1HvkaVq3oZRRoO5Pmo/N6jWKsBE4D3jjtwNgjYxUuc+VWy1
+         mvWA==
+X-Gm-Message-State: APjAAAW6hxoHZmmNNwWbLYVUjzXeNBryfPWOE4Zaqr4Sxb2YYfVYb7mJ
+        gHMqCrj0nmLWoogJgFsEJjQ=
+X-Google-Smtp-Source: APXvYqxzLV1COOV54LKZZseEpXVOSvSlUvrKCJ/XQK6mA2Uf7ZZeBLjOfvDwUvtXLu53OeL2PFMFKA==
+X-Received: by 2002:ab0:688b:: with SMTP id t11mr24261965uar.70.1558833574217;
         Sat, 25 May 2019 18:19:34 -0700 (PDT)
+Received: from arch-01.home (c-73-132-202-198.hsd1.md.comcast.net. [73.132.202.198])
+        by smtp.gmail.com with ESMTPSA id 9sm4593181vkk.43.2019.05.25.18.19.33
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 25 May 2019 18:19:33 -0700 (PDT)
 From:   Geordan Neukum <gneukum1@gmail.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
         Geordan Neukum <gneukum1@gmail.com>
-Subject: [PATCH 5/8] staging: kpc2000: kpc_i2c: Use drvdata instead of platform_data
-Date:   Sun, 26 May 2019 01:18:31 +0000
-Message-Id: <e0fff0beaa24a58eee777e7afca3d5be73359025.1558832514.git.gneukum1@gmail.com>
+Subject: [PATCH 4/8] staging: kpc2000: kpc_i2c: Remove unnecessary consecutive newlines
+Date:   Sun, 26 May 2019 01:18:30 +0000
+Message-Id: <3e02066001a8e32632bf2fe287be727944254fef.1558832514.git.gneukum1@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1558832514.git.gneukum1@gmail.com>
 References: <cover.1558832514.git.gneukum1@gmail.com>
@@ -74,39 +74,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kpc_i2c driver stashes private state data in the platform_data
-member of its device structure. In general, the platform_data structure
-is used for passing data to the driver during probe() rather than as a
-storage area for runtime state data. Instead, use the drvdata member
-for all state info meant to be accessible in driver callbacks.
+The kpc2000_i2c.c file contains instances of unnecessary consecutive
+newlines which impact the readability of the file. Remove these
+unnecessary newlines.
 
 Signed-off-by: Geordan Neukum <gneukum1@gmail.com>
 ---
- drivers/staging/kpc2000/kpc2000_i2c.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/staging/kpc2000/kpc2000_i2c.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
 diff --git a/drivers/staging/kpc2000/kpc2000_i2c.c b/drivers/staging/kpc2000/kpc2000_i2c.c
-index 1767f351a116..e4bbb91af972 100644
+index 1d100bb7c548..1767f351a116 100644
 --- a/drivers/staging/kpc2000/kpc2000_i2c.c
 +++ b/drivers/staging/kpc2000/kpc2000_i2c.c
-@@ -589,7 +589,7 @@ static int pi2c_probe(struct platform_device *pldev)
- 	res = platform_get_resource(pldev, IORESOURCE_MEM, 0);
- 	priv->smba = (unsigned long)ioremap_nocache(res->start, resource_size(res));
+@@ -115,7 +115,6 @@ struct i2c_device {
+ #define PCI_DEVICE_ID_INTEL_LYNXPOINT_SMBUS         0x8c22
+ #define PCI_DEVICE_ID_INTEL_LYNXPOINT_LP_SMBUS      0x9c22
  
--	pldev->dev.platform_data = priv;
-+	platform_set_drvdata(pldev, priv);
+-
+ #define FEATURE_SMBUS_PEC       BIT(0)
+ #define FEATURE_BLOCK_BUFFER    BIT(1)
+ #define FEATURE_BLOCK_PROC      BIT(2)
+@@ -521,8 +520,6 @@ static s32 i801_access(struct i2c_adapter *adap, u16 addr, unsigned short flags,
+ 	return 0;
+ }
  
- 	priv->features |= FEATURE_IDF;
- 	priv->features |= FEATURE_I2C_BLOCK_READ;
-@@ -620,7 +620,7 @@ static int pi2c_remove(struct platform_device *pldev)
+-
+-
+ static u32 i801_func(struct i2c_adapter *adapter)
  {
- 	struct i2c_device *lddev;
+ 	struct i2c_device *priv = i2c_get_adapdata(adapter);
+@@ -571,8 +568,6 @@ static const struct i2c_algorithm smbus_algorithm = {
+ 	.functionality  = i801_func,
+ };
  
--	lddev = (struct i2c_device *)pldev->dev.platform_data;
-+	lddev = (struct i2c_device *)platform_get_drvdata(pldev);
- 
- 	i2c_del_adapter(&lddev->adapter);
- 
+-
+-
+ /********************************
+  *** Part 2 - Driver Handlers ***
+  ********************************/
 -- 
 2.21.0
 
