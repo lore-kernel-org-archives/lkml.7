@@ -2,104 +2,118 @@ Return-Path: <SRS0=Y9JJ=T2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DAC3C282E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 21:11:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E71C282E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 21:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 697702075B
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 21:11:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nKYJGWJJ"
+	by mail.kernel.org (Postfix) with ESMTP id 635412075B
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 21:18:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726034AbfEZVLU (ORCPT
+        id S1725985AbfEZVSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 17:11:20 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33519 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbfEZVLT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 17:11:19 -0400
-Received: by mail-pg1-f195.google.com with SMTP id h17so7915648pgv.0;
-        Sun, 26 May 2019 14:11:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=H/s1c3xrkzJqE7fvuIk7YfMaFCYI6mxb2cD/B5SRqLM=;
-        b=nKYJGWJJImv54mEf6P93K11vI0OopiCxN7Vv9ZUnoMCNgzFSsOI3mg4JzhbCKaU1OR
-         bI7osL7lN/fyY1xDWXXa+GclvNoqPW1CANF7vAiBbcYLws4Je27JQcEA8BEC9S+aRl6E
-         WyHM40V5+uQt/lqK17KoXPStaVBVOgxVdH7UdQGnjxaltPCMrY+VaAgAXtMFOaB20Gbf
-         95XzReVLR9RnZwfa/Mwwdi6rJduujodEN1ErFAb2XqLaHlaIWSiz3VuVAJxOrF1WvYcG
-         64TogM6SJmhSFO0v3w2W8G27oz9w5ozxUBigpV7yEq95+GPWrRC2t2KeugbHHwucb+pD
-         MeSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H/s1c3xrkzJqE7fvuIk7YfMaFCYI6mxb2cD/B5SRqLM=;
-        b=Bnl3wUtMKYRYd8B2fA5FVhcljkS4UgiF9nFQ1hL/FFApHpCxvk/opjB2dC55MWGREu
-         swthyNaE493MU429mcUVEZocN3L3FeQWUZRG+0Hq+IHBzfh+zGt28eUZl2J4U4OWWiJq
-         EXULlefaWrjoto989Z7Rg0fqDQyfBDTEr+GNkmgO5b+xAXy5E10P6QaLdAHuSK74akpq
-         lunhg7VEoAZZG9RsRs9XlUO360fSqGSTU0Biym0vP0TsOWC3149w649zBV3XGLVPPGOo
-         HymIkOTEOxqmWcNO1Cy90cVjFmIv/8y7Aezt2spfK3LwylIUozwKzQwvyuETUC0RR1Lb
-         /5oA==
-X-Gm-Message-State: APjAAAWyPQR8oxmacn87sVDxZIJaZgZceVLp2DxcNnkIxuJSd8mbAWxP
-        QOimfcbng9FMYee7KmAvZaFu2FTJgZgxFZIoQ5M=
-X-Google-Smtp-Source: APXvYqw+OZ4Zj7rUTNJJCU3HKL52vbJ3UpDqWzlVlfJ88iYux43wW69tyN8mUd4335tJ/dOo4HzwH6gRP9ObMQpnupg=
-X-Received: by 2002:aa7:804c:: with SMTP id y12mr56786473pfm.94.1558905079160;
- Sun, 26 May 2019 14:11:19 -0700 (PDT)
+        Sun, 26 May 2019 17:18:50 -0400
+Received: from mail-oln040092070031.outbound.protection.outlook.com ([40.92.70.31]:1346
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725747AbfEZVSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 May 2019 17:18:50 -0400
+Received: from VE1EUR03FT043.eop-EUR03.prod.protection.outlook.com
+ (10.152.18.56) by VE1EUR03HT173.eop-EUR03.prod.protection.outlook.com
+ (10.152.19.133) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1922.16; Sun, 26 May
+ 2019 21:18:46 +0000
+Received: from VI1PR03MB4206.eurprd03.prod.outlook.com (10.152.18.55) by
+ VE1EUR03FT043.mail.protection.outlook.com (10.152.19.122) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.1922.16 via Frontend Transport; Sun, 26 May 2019 21:18:46 +0000
+Received: from VI1PR03MB4206.eurprd03.prod.outlook.com
+ ([fe80::883e:1bd6:cd36:5fb0]) by VI1PR03MB4206.eurprd03.prod.outlook.com
+ ([fe80::883e:1bd6:cd36:5fb0%4]) with mapi id 15.20.1922.021; Sun, 26 May 2019
+ 21:18:46 +0000
+From:   Jonas Karlman <jonas@kwiboo.se>
+To:     "a.hajda@samsung.com" <a.hajda@samsung.com>,
+        "Laurent.pinchart@ideasonboard.com" 
+        <Laurent.pinchart@ideasonboard.com>
+CC:     Jonas Karlman <jonas@kwiboo.se>,
+        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>,
+        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
+        "khilman@baylibre.com" <khilman@baylibre.com>,
+        "zhengyang@rock-chips.com" <zhengyang@rock-chips.com>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        "wens@csie.org" <wens@csie.org>,
+        "hjc@rock-chips.com" <hjc@rock-chips.com>,
+        "heiko@sntech.de" <heiko@sntech.de>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/4] drm/bridge: dw-hdmi: Add support for HDR metadata
+Thread-Topic: [PATCH 0/4] drm/bridge: dw-hdmi: Add support for HDR metadata
+Thread-Index: AQHVFAiaQjT/HgX19UmwJWGXQ9hJLA==
+Date:   Sun, 26 May 2019 21:18:46 +0000
+Message-ID: <VI1PR03MB420621617DDEAB3596700DE0AC1C0@VI1PR03MB4206.eurprd03.prod.outlook.com>
+Accept-Language: sv-SE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM5P190CA0001.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:206:14::14) To VI1PR03MB4206.eurprd03.prod.outlook.com
+ (2603:10a6:803:51::23)
+x-incomingtopheadermarker: OriginalChecksum:79BA76E179A41E8010C690CE41FB37BF4D738EC631F3885DEB54BF2DEFDEF101;UpperCasedChecksum:2F9A0D3F638AD527A90A65420103E9544D32B1E2324656B5852FDEF2687ACCD9;SizeAsReceived:7897;Count:48
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-tmn:  [gDiwXeLjQZWi2jFHnRO1p1AkD+uCRGEn]
+x-microsoft-original-message-id: <20190526211823.31739-1-jonas@kwiboo.se>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 48
+x-eopattributedmessage: 0
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031322404)(2017031323274)(2017031324274)(1601125500)(1603101475)(1701031045);SRVR:VE1EUR03HT173;
+x-ms-traffictypediagnostic: VE1EUR03HT173:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-message-info: ySOKTNi/kQ5CAYx4/JSJgcwZM7rCQw/IuCBFENhMXnh8K4P+/mF/vVGm0TiEjxGAvRrKjebQo5uQWpep820PwlfAJGOXO4gA/1K7TU89Exa6inY5wkt6CUyCs0iY6F1M3fO1RBnr1OJzMyyPiwG5OM49fxguu3wlN1o8hEew5VwAm6x2PR5QSzwEHe1q7wa2
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <f3c89197-90dc-240b-d96b-aa1286af756a@gmx.de> <5b3f9ac3-a0b4-5b7a-ac7d-d643a2b5963f@infradead.org>
-In-Reply-To: <5b3f9ac3-a0b4-5b7a-ac7d-d643a2b5963f@infradead.org>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Sun, 26 May 2019 14:11:07 -0700
-Message-ID: <CAM_iQpV7M7_yp5uRxYDW3F6qMW1sMUVXR4m7PP64gk_om8e8dg@mail.gmail.com>
-Subject: Re: Linux 5.1.5 (a regression: kernel BUG at lib/list_debug.c:29!)
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     "rwarsow@gmx.de" <rwarsow@gmx.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Jon Maloy <jon.maloy@ericsson.com>,
-        Ying Xue <ying.xue@windriver.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 13c5775b-deca-48c1-7e05-08d6e21fbd12
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 May 2019 21:18:46.7440
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1EUR03HT173
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 25, 2019 at 6:15 PM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> On 5/25/19 1:37 PM, rwarsow@gmx.de wrote:
-> > hallo
-> >
-> > I today I got a regression
-> >
-> > see the attached dmesg
-> >
-> > --
-> >
-> > Ronald
->
->
-> [adding netdev + TIPC maintainers]
-
-
-This should have been fixed by the revert of commit
-532b0f7ece4cb2ffd24dc723ddf55242d1188e5e:
-
-commit 5593530e56943182ebb6d81eca8a3be6db6dbba4
-Author: David S. Miller <davem@davemloft.net>
-Date:   Fri May 17 12:15:05 2019 -0700
-
-    Revert "tipc: fix modprobe tipc failed after switch order of
-device registration"
-
-    This reverts commit 532b0f7ece4cb2ffd24dc723ddf55242d1188e5e.
-
-    More revisions coming up.
-
-    Signed-off-by: David S. Miller <davem@davemloft.net>
+QWRkIHN1cHBvcnQgZm9yIEhEUiBtZXRhZGF0YSB1c2luZyB0aGUgaGRyX291dHB1dF9tZXRhZGF0
+YSBjb25uZWN0b3IgcHJvcGVydHksDQpjb25maWd1cmUgRHluYW1pYyBSYW5nZSBhbmQgTWFzdGVy
+aW5nIEluZm9GcmFtZSBhY2NvcmRpbmdseS4NCg0KQSBkcm1faW5mb2ZyYW1lIGZsYWcgaXMgYWRk
+ZWQgdG8gZHdfaGRtaV9wbGF0X2RhdGEgdGhhdCBwbGF0Zm9ybSBkcml2ZXJzDQpjYW4gdXNlIHRv
+IHNpZ25hbCB3aGVuIER5bmFtaWMgUmFuZ2UgYW5kIE1hc3RlcmluZyBpbmZvZnJhbWVzIGlzIHN1
+cHBvcnRlZC4NClRoaXMgZmxhZyBpcyBuZWVkZWQgYmVjYXVzZSBBbWxvZ2ljIEdYQkIgYW5kIEdY
+TCByZXBvcnQgc2FtZSBEVy1IRE1JIHZlcnNpb24sDQphbmQgb25seSBHWEwgc3VwcG9ydCBEUk0g
+SW5mb0ZyYW1lLg0KDQpUaGUgZmlyc3QgcGF0Y2ggYWRkIGZ1bmN0aW9uYWxpdHkgdG8gY29uZmln
+dXJlIERSTSBJbmZvRnJhbWUgYmFzZWQgb24gdGhlDQpoZHJfb3V0cHV0X21ldGFkYXRhIGNvbm5l
+Y3RvciBwcm9wZXJ0eS4NCg0KVGhlIHJlbWFpbmluZyBwYXRjaGVzIHNldHMgdGhlIGRybV9pbmZv
+ZnJhbWUgZmxhZyBvbiBzb21lIFNvQ3Mgc3VwcG9ydGluZw0KRHluYW1pYyBSYW5nZSBhbmQgTWFz
+dGVyaW5nIEluZm9GcmFtZS4NCg0KTm90ZSB0aGF0IHRoaXMgd2FzIGJhc2VkIG9uIHRvcCBvZiBk
+cm0tbWlzYy1uZXh0IGFuZCBOZWlsIEFybXN0cm9uZydzDQoiZHJtL21lc29uOiBBZGQgc3VwcG9y
+dCBmb3IgSERNSTIuMCBZVVY0MjAgNGs2MCIgc2VyaWVzIGF0IFsxXQ0KDQpbMV0gaHR0cHM6Ly9w
+YXRjaHdvcmsuZnJlZWRlc2t0b3Aub3JnL3Nlcmllcy81ODcyNS8jcmV2Mg0KDQpKb25hcyBLYXJs
+bWFuICg0KToNCiAgZHJtL2JyaWRnZTogZHctaGRtaTogQWRkIER5bmFtaWMgUmFuZ2UgYW5kIE1h
+c3RlcmluZyBJbmZvRnJhbWUgc3VwcG9ydA0KICBkcm0vcm9ja2NoaXA6IEVuYWJsZSBEUk0gSW5m
+b0ZyYW1lIHN1cHBvcnQgb24gUkszMzI4IGFuZCBSSzMzOTkNCiAgZHJtL21lc29uOiBFbmFibGUg
+RFJNIEluZm9GcmFtZSBzdXBwb3J0IG9uIEdYTCwgR1hNIGFuZCBHMTJBDQogIGRybS9zdW40aTog
+RW5hYmxlIERSTSBJbmZvRnJhbWUgc3VwcG9ydCBvbiBINg0KDQogZHJpdmVycy9ncHUvZHJtL2Jy
+aWRnZS9zeW5vcHN5cy9kdy1oZG1pLmMgICB8IDEwOSArKysrKysrKysrKysrKysrKysrKw0KIGRy
+aXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctaGRtaS5oICAgfCAgMzcgKysrKysrKw0K
+IGRyaXZlcnMvZ3B1L2RybS9tZXNvbi9tZXNvbl9kd19oZG1pLmMgICAgICAgfCAgIDUgKw0KIGRy
+aXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kd19oZG1pLXJvY2tjaGlwLmMgfCAgIDIgKw0KIGRyaXZl
+cnMvZ3B1L2RybS9zdW40aS9zdW44aV9kd19oZG1pLmMgICAgICAgfCAgIDIgKw0KIGRyaXZlcnMv
+Z3B1L2RybS9zdW40aS9zdW44aV9kd19oZG1pLmggICAgICAgfCAgIDEgKw0KIGluY2x1ZGUvZHJt
+L2JyaWRnZS9kd19oZG1pLmggICAgICAgICAgICAgICAgfCAgIDEgKw0KIDcgZmlsZXMgY2hhbmdl
+ZCwgMTU3IGluc2VydGlvbnMoKykNCg0KLS0gDQoyLjE3LjENCg0K
