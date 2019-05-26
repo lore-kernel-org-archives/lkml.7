@@ -2,71 +2,51 @@ Return-Path: <SRS0=Y9JJ=T2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D34C46470
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 09:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA2BC282E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 09:48:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63F1620863
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 09:36:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 851482075C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 09:48:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kgffFgbW"
+	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="AbJFSzTp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727717AbfEZJf7 (ORCPT
+        id S1727717AbfEZJsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 05:35:59 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:43869 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727639AbfEZJf6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 05:35:58 -0400
-Received: by mail-lj1-f194.google.com with SMTP id z5so12133612lji.10;
-        Sun, 26 May 2019 02:35:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xlsLGGue5NzaOqNGq4CRCj25EgHuy55qJULT51w7Sg8=;
-        b=kgffFgbWHPphtY5PBVnHsRK2xV+X9po+LErsWTqi3oEEnTWIskEIXVxJyo08fF+lX9
-         LhbXJo91v5iSeJS/BELs2WJ9RFylCAoQ33w3luSxCMvyRn5dtpo1fy+FulNGjI5T1ri6
-         5+VrLjsISiHnvdV0mEYJrDTA4onRE43jeFAkvj16+Gs5huNaAEGFERpI1xKcskUjKdMK
-         dG5fCu4lA0XonnRpAroyIni5r+MorPStfXycPAeXJMMBc8iyhIQXfM/PfYZJQuQK/iI7
-         ywgWzuwS1UoR9NlemvLz1tJIJKD6blqeewVCt3NX/maUT+W3R4XlvwqWO3u9nquDmJrY
-         V7fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xlsLGGue5NzaOqNGq4CRCj25EgHuy55qJULT51w7Sg8=;
-        b=q8TJX0zRBjtwcpNIS5oWc/iLaA/Yu+FiP7VueunK7i2XyweUziGukJ2a7xYLxRvxIB
-         iOmf7j334iXsgKnFOgQv+6A+KYA3jz8wnctlNCsPMG6KWc1Fw+gm1X/7ZltEj7BRnDXb
-         wldeOnOuLKDsOBPJ+iTu4b127Rmg7kIndVZ0RwrMQqzx1j+SlIWIBxRwsT32WcjL9ctL
-         A2dwa7EJcs68/vIa9S61QFACiXf2kNxqDqDZ5fFEg4dD6BM5a1kZG0mfoD+tcv7U4Q1e
-         JYgZlujQjxcd9AIRDPu1EWv3nTvOMKIvu0M+ABKUjD084b3oli0+SR0BZRXkCp3PWh/W
-         7E8w==
-X-Gm-Message-State: APjAAAXS4MpnRwYBHoTEbNDKPhEhZ4snw1PCvkp33qwnyj461jI/1dtu
-        uk35xe28CpCrfL3wv5/xC9A=
-X-Google-Smtp-Source: APXvYqzXI9dUMnt69jPd5UMR3eiQUOvTGInlLgUoTEn/5HuMtyAdh4rh7sxCznDuGSmvz1rVjsqJBg==
-X-Received: by 2002:a2e:1284:: with SMTP id 4mr27143486ljs.138.1558863356611;
-        Sun, 26 May 2019 02:35:56 -0700 (PDT)
-Received: from localhost.localdomain (mm-78-96-44-37.mgts.dynamic.pppoe.byfly.by. [37.44.96.78])
-        by smtp.gmail.com with ESMTPSA id n9sm1563426ljj.10.2019.05.26.02.35.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 26 May 2019 02:35:55 -0700 (PDT)
-From:   "Pavel Begunkov (Silence)" <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Sun, 26 May 2019 05:48:16 -0400
+Received: from mx1.riseup.net ([198.252.153.129]:41888 "EHLO mx1.riseup.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727639AbfEZJsQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 May 2019 05:48:16 -0400
+Received: from capuchin.riseup.net (capuchin-pn.riseup.net [10.0.1.176])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (Client CN "*.riseup.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (verified OK))
+        by mx1.riseup.net (Postfix) with ESMTPS id EB5721A0CAF;
+        Sun, 26 May 2019 02:48:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
+        t=1558864095; bh=8OaqU8bvZuIXA7nF3gCJ4vUP6PXw6ku0VUrbHfqjHAQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=AbJFSzTpy+q0/Tly14xp4E0gE66+KV+sX4Pv4MNcTkczonBjKea1eclojC481a33W
+         QOsKILLMLBykNx9COt9boiw+h1qp6Gtwjv8cCxpRQn8dWlrHhQNkMUsxetjKuWqGq+
+         GNNatU64LAdFB/pti6KAlFD1dEXZXTG/Ytl2Magc=
+X-Riseup-User-ID: F570A3085F3311A36801C4EC41F2616F67BF4FC43DF8360ACC0A436D2EF42768
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+         by capuchin.riseup.net (Postfix) with ESMTPSA id 4C351120896;
+        Sun, 26 May 2019 02:48:11 -0700 (PDT)
+From:   Yegor Timoshenko <yegortimoshenko@riseup.net>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     Pavel Begunkov <asml.silence@gmail.com>
-Subject: [PATCH 1/1] io_uring: Fix __io_uring_register() false success
-Date:   Sun, 26 May 2019 12:35:47 +0300
-Message-Id: <f9e0372fd0e52ca276bb307da1271908cab4efb4.1558862678.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.21.0
+Cc:     Yegor Timoshenko <yegortimoshenko@riseup.net>
+Subject: [PATCH] arm64: dts: allwinner: a64: bananapi-m64: enable UART2
+Date:   Sun, 26 May 2019 12:47:15 +0300
+Message-Id: <20190526094715.12289-1-yegortimoshenko@riseup.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,29 +54,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Begunkov <asml.silence@gmail.com>
+BananaPi M64 exposes UART2 interface that is supposed to be enabled
+by default (see "Default Function" in the pin definition table from
+the manufacturer [1]).
 
-If io_copy_iov() fails, it will break the loop and report success,
-albeit partially completed operation.
+[1]: https://bananapi.gitbooks.io/bpi-m64/en/bpi-m64gpiopindefine.html
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+Signed-off-by: Yegor Timoshenko <yegortimoshenko@riseup.net>
 ---
- fs/io_uring.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 310f8d17c53e..0fbb486a320e 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2616,7 +2616,7 @@ static int io_sqe_buffer_register(struct io_ring_ctx *ctx, void __user *arg,
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+index 094cfed13df9..100d1a8fd292 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+@@ -54,6 +54,7 @@
+ 		ethernet0 = &emac;
+ 		serial0 = &uart0;
+ 		serial1 = &uart1;
++		serial2 = &uart2;
+ 	};
  
- 		ret = io_copy_iov(ctx, &iov, arg, i);
- 		if (ret)
--			break;
-+			goto err;
+ 	chosen {
+@@ -312,6 +313,12 @@
+ 	status = "okay";
+ };
  
- 		/*
- 		 * Don't impose further limits on the size and buffer
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart2_pins>;
++	status = "okay";
++};
++
+ &usb_otg {
+ 	dr_mode = "otg";
+ 	status = "okay";
 -- 
-2.21.0
+2.20.1
 
