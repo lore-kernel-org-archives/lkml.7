@@ -2,228 +2,172 @@ Return-Path: <SRS0=Y9JJ=T2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF661C28CBF
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 19:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E6B4C282E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 19:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C8022075E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 19:12:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nkH3ufJ7"
+	by mail.kernel.org (Postfix) with ESMTP id 267E22146E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 19:15:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbfEZTMt (ORCPT
+        id S1727120AbfEZTPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 15:12:49 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:42255 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbfEZTMt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 15:12:49 -0400
-Received: by mail-yb1-f195.google.com with SMTP id a21so5768315ybg.9;
-        Sun, 26 May 2019 12:12:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=3qfwkMk3jqUycxqYw8c0sLECnRBzwPP2sK1DjD5g7pM=;
-        b=nkH3ufJ7uMj10iENbT39YlCH+iUTC+YBXyf6Ig5HTiaxvN6alZi1tRnWnVANOxsQVj
-         FnW2AKt0BjYU3eu87fmmDxie6cg4tcd6TPrSYU72zA2Clpov7Tj1YIsEwvu4vE7qROs7
-         UfgXpVAtM0b6mhPJlKS6HOOflmc8rt7Y+K9xF5a89adRMnzrEXJ8Yp6eF6nWOWFiJwxv
-         sIEcSZoLpTKxpkxHajCLwOr2zhw/EDuqc8gPI/rTz9CoyF1GDXp9kMQkKrDUo+7pnwGv
-         CbY0cnX5+rydeOWg3waohBLkFZni4Qzs3Knb98FUu5W7jAJVqnDTlnAfl8kys1zZiNY5
-         s2fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3qfwkMk3jqUycxqYw8c0sLECnRBzwPP2sK1DjD5g7pM=;
-        b=Op3DZMgF+PLqT2W7ENjKEoyBvD+/+vAK5Nqqx/K/mo1EixE365gtqEGv1UPXnC2LGX
-         pc0MLoviJHqAqmOMQh1Z3ZsETGmWH8ULyfbTJHaPF+BHjda0XSDj0Ymtipz9fYM1Fe5T
-         zQzCkF+EcYI2j65bhua8f1n1TXSbfXzOZTnwVWujJwKzbu6xPoFf6u0n+O0iDX7TgCEL
-         VfRegTEObW6y++2eSi29bCIksTdyFJxXU5jQoxID5W5B7JdXgQhPikhyvH5/32g8zrAj
-         qtXG3ZYTKjjcZDhj9/8AzY71AwKlgONQHkhFArUVmGS/ikWe89wEkVgpldu2E+aPAwWT
-         o0zg==
-X-Gm-Message-State: APjAAAVr71X8o/hkqaC4adETByeBIwBKu6Ho50Mdy2wUqt8PdCLZqoSq
-        P4KNAGD7Ibt91l3nmuaqSVO+BkfgkS3P+cuQRx0=
-X-Google-Smtp-Source: APXvYqzrtpZcSrZuQRqwCwZ6caVJMS0tu3mLbwnZtrsAf+VmyJuuEGHn5L+hB9h5GZOF5b3IoegKPZ3NkGJPQPxAMYU=
-X-Received: by 2002:a25:cecd:: with SMTP id x196mr6392089ybe.203.1558897967849;
- Sun, 26 May 2019 12:12:47 -0700 (PDT)
+        Sun, 26 May 2019 15:15:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57612 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726163AbfEZTPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 May 2019 15:15:51 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FBDF2075E;
+        Sun, 26 May 2019 19:15:50 +0000 (UTC)
+Date:   Sun, 26 May 2019 15:15:48 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Subject: [GIT PULL] tracing: Silence GCC 9 array bounds warning
+Message-ID: <20190526151548.2d7bc6bc@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190525163819.21055-1-peron.clem@gmail.com> <20190525163819.21055-6-peron.clem@gmail.com>
- <20190526183425.nbhrk5pa264p7tdy@flea>
-In-Reply-To: <20190526183425.nbhrk5pa264p7tdy@flea>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Sun, 26 May 2019 21:12:36 +0200
-Message-ID: <CAJiuCcfe7LHehZTzGvW+0LzqvDRs4dSjmGhRxkDHgbHrD2+MKA@mail.gmail.com>
-Subject: Re: [PATCH v2 5/7] dmaengine: sun6i: Add support for H6 DMA
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime,
 
-On Sun, 26 May 2019 at 20:34, Maxime Ripard <maxime.ripard@bootlin.com> wro=
-te:
->
-> On Sat, May 25, 2019 at 06:38:17PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> > From: Jernej Skrabec <jernej.skrabec@siol.net>
-> >
-> > H6 DMA has more than 32 supported DRQs, which means that configuration
-> > register is slightly rearranged. It also needs additional clock to be
-> > enabled.
-> >
-> > Add support for it.
-> >
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > ---
-> >  drivers/dma/sun6i-dma.c | 44 +++++++++++++++++++++++++++++++++++++++--
-> >  1 file changed, 42 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
-> > index f5cb5e89bf7b..8d44ddae926a 100644
-> > --- a/drivers/dma/sun6i-dma.c
-> > +++ b/drivers/dma/sun6i-dma.c
-> > @@ -69,14 +69,19 @@
-> >
-> >  #define DMA_CHAN_CUR_CFG     0x0c
-> >  #define DMA_CHAN_MAX_DRQ_A31         0x1f
-> > +#define DMA_CHAN_MAX_DRQ_H6          0x3f
-> >  #define DMA_CHAN_CFG_SRC_DRQ_A31(x)  ((x) & DMA_CHAN_MAX_DRQ_A31)
-> > +#define DMA_CHAN_CFG_SRC_DRQ_H6(x)   ((x) & DMA_CHAN_MAX_DRQ_H6)
-> >  #define DMA_CHAN_CFG_SRC_MODE_A31(x) (((x) & 0x1) << 5)
-> > +#define DMA_CHAN_CFG_SRC_MODE_H6(x)  (((x) & 0x1) << 8)
-> >  #define DMA_CHAN_CFG_SRC_BURST_A31(x)        (((x) & 0x3) << 7)
-> >  #define DMA_CHAN_CFG_SRC_BURST_H3(x) (((x) & 0x3) << 6)
-> >  #define DMA_CHAN_CFG_SRC_WIDTH(x)    (((x) & 0x3) << 9)
-> >
-> >  #define DMA_CHAN_CFG_DST_DRQ_A31(x)  (DMA_CHAN_CFG_SRC_DRQ_A31(x) << 1=
-6)
-> > +#define DMA_CHAN_CFG_DST_DRQ_H6(x)   (DMA_CHAN_CFG_SRC_DRQ_H6(x) << 16=
-)
-> >  #define DMA_CHAN_CFG_DST_MODE_A31(x) (DMA_CHAN_CFG_SRC_MODE_A31(x) << =
-16)
-> > +#define DMA_CHAN_CFG_DST_MODE_H6(x)  (DMA_CHAN_CFG_SRC_MODE_H6(x) << 1=
-6)
-> >  #define DMA_CHAN_CFG_DST_BURST_A31(x)        (DMA_CHAN_CFG_SRC_BURST_A=
-31(x) << 16)
-> >  #define DMA_CHAN_CFG_DST_BURST_H3(x) (DMA_CHAN_CFG_SRC_BURST_H3(x) << =
-16)
-> >  #define DMA_CHAN_CFG_DST_WIDTH(x)    (DMA_CHAN_CFG_SRC_WIDTH(x) << 16)
-> > @@ -319,12 +324,24 @@ static void sun6i_set_drq_a31(u32 *p_cfg, s8 src_=
-drq, s8 dst_drq)
-> >                 DMA_CHAN_CFG_DST_DRQ_A31(dst_drq);
-> >  }
-> >
-> > +static void sun6i_set_drq_h6(u32 *p_cfg, s8 src_drq, s8 dst_drq)
-> > +{
-> > +     *p_cfg |=3D DMA_CHAN_CFG_SRC_DRQ_H6(src_drq) |
-> > +               DMA_CHAN_CFG_DST_DRQ_H6(dst_drq);
-> > +}
-> > +
-> >  static void sun6i_set_mode_a31(u32 *p_cfg, s8 src_mode, s8 dst_mode)
-> >  {
-> >       *p_cfg |=3D DMA_CHAN_CFG_SRC_MODE_A31(src_mode) |
-> >                 DMA_CHAN_CFG_DST_MODE_A31(dst_mode);
-> >  }
-> >
-> > +static void sun6i_set_mode_h6(u32 *p_cfg, s8 src_mode, s8 dst_mode)
-> > +{
-> > +     *p_cfg |=3D DMA_CHAN_CFG_SRC_MODE_H6(src_mode) |
-> > +               DMA_CHAN_CFG_DST_MODE_H6(dst_mode);
-> > +}
-> > +
-> >  static size_t sun6i_get_chan_size(struct sun6i_pchan *pchan)
-> >  {
-> >       struct sun6i_desc *txd =3D pchan->desc;
-> > @@ -1160,6 +1177,28 @@ static struct sun6i_dma_config sun50i_a64_dma_cf=
-g =3D {
-> >                            BIT(DMA_SLAVE_BUSWIDTH_8_BYTES),
-> >  };
-> >
-> > +/*
-> > + * The H6 binding uses the number of dma channels from the
-> > + * device tree node.
-> > + */
-> > +static struct sun6i_dma_config sun50i_h6_dma_cfg =3D {
-> > +     .clock_autogate_enable =3D sun6i_enable_clock_autogate_h3,
-> > +     .set_burst_length =3D sun6i_set_burst_length_h3,
-> > +     .set_drq          =3D sun6i_set_drq_h6,
-> > +     .set_mode         =3D sun6i_set_mode_h6,
-> > +     .src_burst_lengths =3D BIT(1) | BIT(4) | BIT(8) | BIT(16),
-> > +     .dst_burst_lengths =3D BIT(1) | BIT(4) | BIT(8) | BIT(16),
-> > +     .src_addr_widths   =3D BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
-> > +                          BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
-> > +                          BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
-> > +                          BIT(DMA_SLAVE_BUSWIDTH_8_BYTES),
-> > +     .dst_addr_widths   =3D BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
-> > +                          BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
-> > +                          BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
-> > +                          BIT(DMA_SLAVE_BUSWIDTH_8_BYTES),
-> > +     .has_mbus_clk =3D true,
-> > +};
-> > +
-> >  /*
-> >   * The V3s have only 8 physical channels, a maximum DRQ port id of 23,
-> >   * and a total of 24 usable source and destination endpoints.
-> > @@ -1190,6 +1229,7 @@ static const struct of_device_id sun6i_dma_match[=
-] =3D {
-> >       { .compatible =3D "allwinner,sun8i-h3-dma", .data =3D &sun8i_h3_d=
-ma_cfg },
-> >       { .compatible =3D "allwinner,sun8i-v3s-dma", .data =3D &sun8i_v3s=
-_dma_cfg },
-> >       { .compatible =3D "allwinner,sun50i-a64-dma", .data =3D &sun50i_a=
-64_dma_cfg },
-> > +     { .compatible =3D "allwinner,sun50i-h6-dma", .data =3D &sun50i_h6=
-_dma_cfg },
-> >       { /* sentinel */ }
-> >  };
-> >  MODULE_DEVICE_TABLE(of, sun6i_dma_match);
-> > @@ -1288,8 +1328,8 @@ static int sun6i_dma_probe(struct platform_device=
- *pdev)
-> >       ret =3D of_property_read_u32(np, "dma-requests", &sdc->max_reques=
-t);
-> >       if (ret && !sdc->max_request) {
-> >               dev_info(&pdev->dev, "Missing dma-requests, using %u.\n",
-> > -                      DMA_CHAN_MAX_DRQ_A31);
-> > -             sdc->max_request =3D DMA_CHAN_MAX_DRQ_A31;
-> > +                      DMA_CHAN_MAX_DRQ_H6);
-> > +             sdc->max_request =3D DMA_CHAN_MAX_DRQ_H6;
->
-> This is changing the binding though, since we're changing the
-> default. This should be reflected in the binding, and we should keep
-> the same default in the device tree binding.
+Linus,
 
-Agree, H6 device-tree will have the "dma-request" property.
-As this modification is not mandatory, we can drop it to avoid
-bindings modification.
+Make the GCC 9 warning for sub struct memset go away.
 
-What do you think?
+GCC 9 now warns about calling memset() on partial structures when it
+goes across multiple fields. This adds a helper for the place in
+tracing that does this type of clearing of a structure.
 
-Thanks for your review,
-Cl=C3=A9ment
 
->
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+Please pull the latest trace-v5.2-rc1-2 tree, which can be found at:
+
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
+trace-v5.2-rc1-2
+
+Tag SHA1: 5fa176f243ceb9deaec360cc3f88062e466498b8
+Head SHA1: 0c97bf863efce63d6ab7971dad811601e6171d2f
+
+
+Miguel Ojeda (1):
+      tracing: Silence GCC 9 array bounds warning
+
+----
+ kernel/trace/trace.c     |  6 +-----
+ kernel/trace/trace.h     | 18 ++++++++++++++++++
+ kernel/trace/trace_kdb.c |  6 +-----
+ 3 files changed, 20 insertions(+), 10 deletions(-)
+---------------------------
+commit 0c97bf863efce63d6ab7971dad811601e6171d2f
+Author: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Thu May 23 14:45:35 2019 +0200
+
+    tracing: Silence GCC 9 array bounds warning
+    
+    Starting with GCC 9, -Warray-bounds detects cases when memset is called
+    starting on a member of a struct but the size to be cleared ends up
+    writing over further members.
+    
+    Such a call happens in the trace code to clear, at once, all members
+    after and including `seq` on struct trace_iterator:
+    
+        In function 'memset',
+            inlined from 'ftrace_dump' at kernel/trace/trace.c:8914:3:
+        ./include/linux/string.h:344:9: warning: '__builtin_memset' offset
+        [8505, 8560] from the object at 'iter' is out of the bounds of
+        referenced subobject 'seq' with type 'struct trace_seq' at offset
+        4368 [-Warray-bounds]
+          344 |  return __builtin_memset(p, c, size);
+              |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    In order to avoid GCC complaining about it, we compute the address
+    ourselves by adding the offsetof distance instead of referring
+    directly to the member.
+    
+    Since there are two places doing this clear (trace.c and trace_kdb.c),
+    take the chance to move the workaround into a single place in
+    the internal header.
+    
+    Link: http://lkml.kernel.org/r/20190523124535.GA12931@gmail.com
+    
+    Signed-off-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+    [ Removed unnecessary parenthesis around "iter" ]
+    Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 2c92b3d9ea30..1c80521fd436 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -8910,12 +8910,8 @@ void ftrace_dump(enum ftrace_dump_mode oops_dump_mode)
+ 
+ 		cnt++;
+ 
+-		/* reset all but tr, trace, and overruns */
+-		memset(&iter.seq, 0,
+-		       sizeof(struct trace_iterator) -
+-		       offsetof(struct trace_iterator, seq));
++		trace_iterator_reset(&iter);
+ 		iter.iter_flags |= TRACE_FILE_LAT_FMT;
+-		iter.pos = -1;
+ 
+ 		if (trace_find_next_entry_inc(&iter) != NULL) {
+ 			int ret;
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 82c70b63d375..005f08629b8b 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -1966,4 +1966,22 @@ static inline void tracer_hardirqs_off(unsigned long a0, unsigned long a1) { }
+ 
+ extern struct trace_iterator *tracepoint_print_iter;
+ 
++/*
++ * Reset the state of the trace_iterator so that it can read consumed data.
++ * Normally, the trace_iterator is used for reading the data when it is not
++ * consumed, and must retain state.
++ */
++static __always_inline void trace_iterator_reset(struct trace_iterator *iter)
++{
++	const size_t offset = offsetof(struct trace_iterator, seq);
++
++	/*
++	 * Keep gcc from complaining about overwriting more than just one
++	 * member in the structure.
++	 */
++	memset((char *)iter + offset, 0, sizeof(struct trace_iterator) - offset);
++
++	iter->pos = -1;
++}
++
+ #endif /* _LINUX_KERNEL_TRACE_H */
+diff --git a/kernel/trace/trace_kdb.c b/kernel/trace/trace_kdb.c
+index 6c1ae6b752d1..cca65044c14c 100644
+--- a/kernel/trace/trace_kdb.c
++++ b/kernel/trace/trace_kdb.c
+@@ -37,12 +37,8 @@ static void ftrace_dump_buf(int skip_entries, long cpu_file)
+ 	if (skip_entries)
+ 		kdb_printf("(skipping %d entries)\n", skip_entries);
+ 
+-	/* reset all but tr, trace, and overruns */
+-	memset(&iter.seq, 0,
+-		   sizeof(struct trace_iterator) -
+-		   offsetof(struct trace_iterator, seq));
++	trace_iterator_reset(&iter);
+ 	iter.iter_flags |= TRACE_FILE_LAT_FMT;
+-	iter.pos = -1;
+ 
+ 	if (cpu_file == RING_BUFFER_ALL_CPUS) {
+ 		for_each_tracing_cpu(cpu) {
