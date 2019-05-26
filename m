@@ -2,95 +2,104 @@ Return-Path: <SRS0=Y9JJ=T2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31ED3C282E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 15:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 334FEC282E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 16:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDB1020815
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 15:52:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558885932;
-	bh=J3mt7Azde0vnhSY2+g03dKViMaYLBZ6fXqc7Dxi/gEA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ZaCTti1ZMr4uqHVkYvuH+V6uWRunChSSzf5qy8j29k3RJuHGLckIjx6Dwgb9kZ98W
-	 aaRx8gJV6a9z5cVXgtIHk4W+3B0Iuk9abtkYJNBsDiJSvskZ4xkELZb/LyreLHsfl/
-	 Kz1pV67PuGjV4hNA/dSOkbq/H9aSFb1cWVciK5TU=
+	by mail.kernel.org (Postfix) with ESMTP id 098F02075B
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 16:05:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VXFsLaIa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbfEZPwL (ORCPT
+        id S1727906AbfEZQF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 11:52:11 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:45122 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727833AbfEZPwK (ORCPT
+        Sun, 26 May 2019 12:05:27 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37750 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726759AbfEZQF0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 11:52:10 -0400
-Received: by mail-lf1-f66.google.com with SMTP id n22so2604205lfe.12
-        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2019 08:52:09 -0700 (PDT)
+        Sun, 26 May 2019 12:05:26 -0400
+Received: by mail-pl1-f193.google.com with SMTP id p15so6065259pll.4
+        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2019 09:05:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QHoFdmqYPstpJxz64t3x628SCZa/yDvhSqOoPOA4w6g=;
-        b=HiVrlb3j4Y5yNwh6/jTPn8HCpEbqXkEXDwOcla5O5f8dWYrdyYwvVOYh79ZPa5sLuR
-         posfmVSL3U7+kfupnep0eUcaME8BznR+rnxBQnRGiLRiCqJigRr8Gn1qraU3yTBtQxsN
-         V4wSIbMLLzvD35ihMOTj7pcvMESgxu3h5Wr1Q=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=T+Mawwo8dbExPe1NlhGh5Bdm0Ad60nu3jrGl8X5WPJ0=;
+        b=VXFsLaIa7EYxnHazNCjxhigloJgxfdWS1DKn8IeifcHtyLp72pGDS0aAIuMGoOLXRJ
+         TFyRAuGYRjr0C41tHH3+rezHo2BkDg8S2kMbYM00NRATYQmKg8JutK1XGRtiXDA4P/65
+         lVX0Xto1g0VAf14C2rvDPoJ+svg71eNJr+SVqZk9ambFofpHf3vlgW503KiRbmiCHbCr
+         TP1HCmrDUXSVHLPG8YOXrMbhs3Wpw8YHhafNrevR3kLYch6/w/iNfmlZufGIAGdGENsu
+         Z86aRqFwff2YiiSg+ggQzizTGUEg5bLtEjwDdCDV5cEtPwILSnZH9PJhrKLUURaTGopf
+         YVXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QHoFdmqYPstpJxz64t3x628SCZa/yDvhSqOoPOA4w6g=;
-        b=q1Tv1+n0Y6ZJ9Vj/DBgQ/vZS4zyDevUycNNjvZcLho9N6VWYvztnVJ8me0DnJxP6ft
-         fkKzOZzoanm7M9dwETgLeSpR2e5lX/KpOAFp+YlnaL9HNZkPnSsh0PssFPExGxiCfSIf
-         Tqhzm+R2NAauC2RB5tMUe+iXNXVQ02+ZotGZrkQhwnbcGuoBzwOCNKRyaeS34iaLB3+E
-         r9XsQLP7URSoYl6XKCw1OZY1tGEl9kyyaPSreKOVf35YK/E/Z1VuZz9qDamCIojx0xbS
-         6b4rLFU3QbDZx/3mOAaOtQBRH9CpDZ7Aq7FWLfUxM0r/5Q+BBUIbzSyyid+Tk6yfYRkP
-         iKhg==
-X-Gm-Message-State: APjAAAUIdIdIOLZ9x4UxofeKWLr20y2jfiA1WSnMGgzi9gGS3uvV4oBP
-        +p9XytFBJLhBlIOlpjH+UWAYpoQf0P8=
-X-Google-Smtp-Source: APXvYqyq0YgUzEZEliMLL/q3dTI9lZ1oLa6i7gonwDbByXuuaxOs+I2nHzJe/S1IXeqsqjj//+ESOw==
-X-Received: by 2002:ac2:429a:: with SMTP id m26mr17748777lfh.152.1558885928128;
-        Sun, 26 May 2019 08:52:08 -0700 (PDT)
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
-        by smtp.gmail.com with ESMTPSA id f11sm1745739lfa.48.2019.05.26.08.52.07
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 26 May 2019 08:52:07 -0700 (PDT)
-Received: by mail-lf1-f45.google.com with SMTP id h13so10334080lfc.7
-        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2019 08:52:07 -0700 (PDT)
-X-Received: by 2002:a19:7418:: with SMTP id v24mr12467788lfe.79.1558885926829;
- Sun, 26 May 2019 08:52:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <1558864555-53503-1-git-send-email-pbonzini@redhat.com>
-In-Reply-To: <1558864555-53503-1-git-send-email-pbonzini@redhat.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 26 May 2019 08:51:51 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi3YcO4JTpkeENETz3fqf3DeKc7-tvXwqPmVcq-pgKg5g@mail.gmail.com>
-Message-ID: <CAHk-=wi3YcO4JTpkeENETz3fqf3DeKc7-tvXwqPmVcq-pgKg5g@mail.gmail.com>
-Subject: Re: [GIT PULL] KVM changes for Linux 5.2-rc2
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        KVM list <kvm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=T+Mawwo8dbExPe1NlhGh5Bdm0Ad60nu3jrGl8X5WPJ0=;
+        b=IL817cdjcIDdyuYGPRsu4gPqrrehKddcmy6qU6Y49HJ6y6VkPCKYsp0meCU5ervyL2
+         PyyzGcCV/SN0Q/aZzGc8+Rfl1Juyzl8YiwfvYFuQhQaSAs2t/u7AA7TPwTeWJfSjFMmw
+         YqXK28y64WWNWr4Uct9yGG3IOUIfvT6ge5hP4xHK36q2sgVS0bVmBya5RWmCpe45Q/un
+         Eqjbz/EssCHLU4sYARQ0kFtRy1N8kFzrIzah075MRC5bdlCot+tITRnBZZ+IhZ+n32E6
+         mC2GUCSjtdkiyPER0w+mpQYLhgqm2/CcQp3ZM4MkQlD3NK+mxP0hnvZxKH0zSALPa9kr
+         zT6w==
+X-Gm-Message-State: APjAAAUHO/lYgotCvaHCim2xoDtgr3e3xXy823xEVFvkwxOcB0fk+zP4
+        mB1fUc5UAjn3NDX6+YhjyCAysoYg
+X-Google-Smtp-Source: APXvYqzJ/y5UOIz6wFJpg6jL7zMyOUJw2MoqTh3us4EgRArwpUuULvhziV721W/Sfm4B0u1Ud3Np2A==
+X-Received: by 2002:a17:902:b18c:: with SMTP id s12mr101967606plr.181.1558886726098;
+        Sun, 26 May 2019 09:05:26 -0700 (PDT)
+Received: from jordon-HP-15-Notebook-PC.domain.name ([106.51.23.119])
+        by smtp.gmail.com with ESMTPSA id h60sm8716246pjb.10.2019.05.26.09.05.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 26 May 2019 09:05:24 -0700 (PDT)
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+To:     miguel.ojeda.sandonis@gmail.com
+Cc:     linux-kernel@vger.kernel.org, willy@infradead.org,
+        Souptick Joarder <jrdr.linux@gmail.com>
+Subject: [PATCH 1/2] auxdisplay/cfag12864bfb.c: Convert to use vm_map_pages_zero()
+Date:   Sun, 26 May 2019 21:40:27 +0530
+Message-Id: <1558887028-4026-1-git-send-email-jrdr.linux@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 26, 2019 at 2:56 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
->
->   https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+While using mmap, the incorrect values of length and vm_pgoff are
+ignored and this driver goes ahead with mapping cfag12864b_buffer
+to user vma.
 
-This says it's a tag, but it's not. It's just a commit pointer (also
-called a "lightweight tag", because while it technically is exactly
-the same thing as a branch, it's obviously in the tag namespace and
-git will _treat_ it like a tag).
+Convert vm_insert_pages() to use vm_map_pages_zero(). We could later
+"fix" these drivers to behave according to the normal vm_pgoff
+offsetting simply by removing the _zero suffix on the function name and
+if that causes regressions, it gives us an easy way to revert.
 
-Normally your tags are proper signed tags. So I'm not pulling this,
-waiting for confirmation.
+Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+---
+v2: Fixed minor typo.
 
-               Linus
+ drivers/auxdisplay/cfag12864bfb.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/auxdisplay/cfag12864bfb.c b/drivers/auxdisplay/cfag12864bfb.c
+index 40c8a55..4074886 100644
+--- a/drivers/auxdisplay/cfag12864bfb.c
++++ b/drivers/auxdisplay/cfag12864bfb.c
+@@ -52,8 +52,9 @@
+ 
+ static int cfag12864bfb_mmap(struct fb_info *info, struct vm_area_struct *vma)
+ {
+-	return vm_insert_page(vma, vma->vm_start,
+-		virt_to_page(cfag12864b_buffer));
++	struct page *pages = virt_to_page(cfag12864b_buffer);
++
++	return vm_map_pages_zero(vma, &pages, 1);
+ }
+ 
+ static struct fb_ops cfag12864bfb_ops = {
+-- 
+1.9.1
+
