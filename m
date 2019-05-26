@@ -2,74 +2,83 @@ Return-Path: <SRS0=Y9JJ=T2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07AC9C282E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 12:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA68C282E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 12:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB9D220815
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 12:07:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED02220815
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 12:07:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=redchan.it header.i=@redchan.it header.b="nCvnG+cH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbfEZMHV (ORCPT
+        id S1727804AbfEZMH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 08:07:21 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:42272 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbfEZMHV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 08:07:21 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hUrvr-0008Af-Cx; Sun, 26 May 2019 12:07:19 +0000
-Date:   Sun, 26 May 2019 13:07:19 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     "J. R. Okajima" <hooanon05g@gmail.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kolyshkin@gmail.com
-Subject: Re: [PATCH] concrete /proc/mounts
-Message-ID: <20190526120719.GQ17978@ZenIV.linux.org.uk>
-References: <17910.1558861894@jrobl>
+        Sun, 26 May 2019 08:07:59 -0400
+Received: from mx1.cock.li ([185.10.68.5]:49791 "EHLO cock.li"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726296AbfEZMH6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 May 2019 08:07:58 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <17910.1558861894@jrobl>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=redchan.it; s=mail;
+        t=1558872475; bh=wuUBDF0jyWru+ouZ2T+IcAKfNTStJpqVWWVkqhj44i8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=nCvnG+cH3041MkbBQJNqdFiG6UyJrteu21xtHd8yVSc05/ZUGQnQR/9Ddqi/ZO4IV
+         s7d4ptJXbOxqDrgU5jIqaPXxxP5Khg1g9xsR0pGMstp80iq0ePCmecgHKZatJavMj/
+         ndTUNLvCxWi/d2f02NcWWmmlTkFwBrDoYzw3Pz8gjRXgvVshAoy/+YA9zqmvKqIry5
+         MVIzyitKc20ha5V+s1zdE0M/oJqWxDtoSLv9i+4GaHS6QoymC0kJNkp6K/Rqm+XJgd
+         K7bHpww3qIGZaEslsHH27mEm897lZnnxwSxoo5ivwI8b687uREh83kVsSiJWmRB0JL
+         WS5UFHXn4B7Hw==
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Sun, 26 May 2019 12:07:55 +0000
+From:   mikeeusa@redchan.it
+To:     Jeff.Read@ExpertCM.com
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: Revokist
+Message-ID: <e5ce9faf6d0307f3c3ea4c9c364b74a1@redchan.it>
+X-Sender: mikeeusa@redchan.it
+User-Agent: Roundcube Webmail/1.3.6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 26, 2019 at 06:11:34PM +0900, J. R. Okajima wrote:
-> commit 1e83f8634c6efe7dd4e6036ee202ca10bdbca0b3
-> Author: J. R. Okajima <hooanon05g@gmail.com>
-> Date:   Sat May 25 18:35:13 2019 +0900
+Lawsuits take money and alot of time, Jeff. No suit has yet been filed: 
+why do you decree that an issue that is only a few months old is 
+"settled"? You may have noticed that the Geek Feminists, as far as I 
+know, have not chosen to re-post the work of authorship in question, nor 
+do they, as far as I know, distribute it at all, post-revocation. Tell 
+me, Jeff, what would they be sued for? Their license was revoked and 
+they have not chosen to redistribute the work or make derivatives 
+post-revocation.
+
+There was no "attempt": the license _was_ revoked.
+It seems you are ignorant of property law, Jeff, along with licensing 
+and the differences between licenses and license contracts.
+
+
+> Jeff Read on 2019-05-14 at 18:14:21 said:
 > 
->     concrete /proc/mounts
->     
->     When the size of /proc/mounts exceeds PAGE_SIZE, seq_read() has to
->     release namespace_sem via mounts_op.m_stop().  It means if someone else
->     issues mount(2) or umount(2) and the mounts list got changed, then the
->     continuous getmntent(3) calls show the incomplete mounts list and some
->     entries may not appear in it.
->     
->     This patch generates the full mounts list when mounts_op.m_start() is
->     called, and keep it in the seq_file buffer until the file is closed.
->     The size of the buffer increases if necessary.  Other operations m_next,
->     m_stop, m_show become meaningless, but still necessary for the seq_file
->     manner.
->     
->     I don't think the size of the buffer matters because many /proc entries
->     already keep the similar PAGE_SIZE buffer.  Increasing /proc/mounts
->     buffer is to keep the correctness of the mount list.
->     
->     Reported-by: Kirill Kolyshkin <kolyshkin@gmail.com>
->     See-also: https://github.com/kolyshkin/procfs-test
->     Signed-off-by: J. R. Okajima <hooanon05g@gmail.com>
-
-Translation: let's generate the entire contents on the first read() and keep
-it until the sucker's closed; that way userland wont' see anything changing
-under it.  Oh, wait...
-
-NAK.
+> My guess: none of it. I think most if not all of the revokist 
+> shitposting being conducted here and on lkml has been mikeeUSA himself. 
+> Note that when one of the revokist posts appears here, it often gets 
+> sidetracked into ramblings about how men built open source and how an 
+> adult man should be able to marry, rape, or rape and then marry a girl 
+> as young as 12 or 13 per Biblical law. These are all mikee talking 
+> points. Have been since 2005. They could be a really good faker, but I 
+> doubt anyone would risk shitting up lkml with nonsense, trigger the 
+> more senstive readers, or just act like an unprofessional ass if they 
+> want to remain in good standing.
+> 
+> Besides, Mikee put his revokist theories to the test earlier this year, 
+> by attempting to rescind modification and distribution rights under the 
+> GPL from Geek Feminism wiki members to the only significant code 
+> he\u2019s ever written: a shitty text mode slot machine game.
+> 
+> Nothing more to see here. Revokism is a failed revolution by a single 
+> man \u2014 a man who has made no substantive contribution to open 
+> source and who believes that God gave him the right to fuck kids.
