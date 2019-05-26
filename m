@@ -2,158 +2,294 @@ Return-Path: <SRS0=Y9JJ=T2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F5AC282E5
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 09:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B9EC282E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 09:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87D232085A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 09:28:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D677520863
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 09:34:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727702AbfEZJ2a convert rfc822-to-8bit (ORCPT
+        id S1727706AbfEZJeD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 05:28:30 -0400
-Received: from linux-libre.fsfla.org ([209.51.188.54]:49130 "EHLO
-        linux-libre.fsfla.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727639AbfEZJ23 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 05:28:29 -0400
-X-Greylist: delayed 466 seconds by postgrey-1.27 at vger.kernel.org; Sun, 26 May 2019 05:28:28 EDT
-Received: from free.home (home.lxoliva.fsfla.org [172.31.160.164])
-        by linux-libre.fsfla.org (8.15.2/8.15.2/Debian-3) with ESMTP id x4Q9JdKg031188;
-        Sun, 26 May 2019 09:19:41 GMT
-Received: from livre (livre.home [172.31.160.2])
-        by free.home (8.15.2/8.15.2) with ESMTP id x4Q9J058102102;
-        Sun, 26 May 2019 06:19:01 -0300
-From:   Alexandre Oliva <lxoliva@fsfla.org>
-To:     "Maciej W. Rozycki" <macro@linux-mips.org>
-Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>, Tom Li <tomli@tomli.me>,
-        James Hogan <jhogan@kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Ralf Baechle <ralf@linux-mips.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC] On the Current Troubles of Mainlining Loongson Platform Drivers
-Organization: Free thinker, not speaking for FSF Latin America
-References: <20190208083038.GA1433@localhost.localdomain>
-        <orbm3i5xrn.fsf@lxoliva.fsfla.org>
-        <20190211125506.GA21280@localhost.localdomain>
-        <orimxq3q9j.fsf@lxoliva.fsfla.org>
-        <20190211230614.GB22242@darkstar.musicnaut.iki.fi>
-        <orva1jj9ht.fsf@lxoliva.fsfla.org>
-        <20190217235951.GA20700@darkstar.musicnaut.iki.fi>
-        <orpnrpj2rk.fsf@lxoliva.fsfla.org>
-        <alpine.LFD.2.21.1902180227090.15915@eddie.linux-mips.org>
-        <orlg1ryyo2.fsf@lxoliva.fsfla.org>
-        <alpine.LFD.2.21.1903071744560.7728@eddie.linux-mips.org>
-        <orwolaw5u1.fsf@lxoliva.fsfla.org>
-        <alpine.LFD.2.21.1903082347330.31648@eddie.linux-mips.org>
-Date:   Sun, 26 May 2019 06:19:00 -0300
-In-Reply-To: <alpine.LFD.2.21.1903082347330.31648@eddie.linux-mips.org>
-        (Maciej W. Rozycki's message of "Fri, 8 Mar 2019 23:56:03 +0000
-        (GMT)")
-Message-ID: <or7ead4lq3.fsf@lxoliva.fsfla.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Sun, 26 May 2019 05:34:03 -0400
+Received: from gofer.mess.org ([88.97.38.141]:35407 "EHLO gofer.mess.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727639AbfEZJeC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 May 2019 05:34:02 -0400
+Received: by gofer.mess.org (Postfix, from userid 1000)
+        id 0CBE1603DB; Sun, 26 May 2019 10:33:59 +0100 (BST)
+Date:   Sun, 26 May 2019 10:33:57 +0100
+From:   Sean Young <sean@mess.org>
+To:     Tobias Klausmann <tobias.johannes.klausmann@mni.thm.de>
+Cc:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        mchehab@kernel.org
+Subject: Re: [PATCH] drivers/media/dvb-frontends: Implement probe/remove for
+ stv6110x
+Message-ID: <20190526093355.ednxp725ui6lwoji@gofer.mess.org>
+References: <20190509195118.23027-1-tobias.johannes.klausmann@mni.thm.de>
+ <ba914388-04d1-8a57-77eb-3f303941b9bf@mni.thm.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Scanned-By: MIMEDefang 2.84
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ba914388-04d1-8a57-77eb-3f303941b9bf@mni.thm.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mar  8, 2019, "Maciej W. Rozycki" <macro@linux-mips.org> wrote:
+Hi Tobias,
 
->  Anyway I meant: does `war_io_reorder_wmb' expand to `wmb' on your system?
+On Sun, May 12, 2019 at 04:53:06PM +0200, Tobias Klausmann wrote:
+> Ping,
+> 
+> comments for this patch are appreciated!
 
-No, it expands to `barrier' on the yeeloong:
+Sorry for not back to you earlier. 
 
-CONFIG_CPU_LOONGSON2F=y
-CONFIG_CPU_LOONGSON2F_WORKAROUNDS=y
-CONFIG_CPU_LOONGSON2=y
-CONFIG_SYS_HAS_CPU_LOONGSON2F=y
+Please run script/checkpatch.pl --strict on your patch. There are several
+cosmetic changes needed.
+> 
+> Thanks,
+> 
+> Tobias
+> 
+> 
+> On 09.05.19 21:51, Tobias Klausmann wrote:
+> > Refactor out the common parts of stv6110x_probe() and stv6110x_attach() into
+> > separate functions.
+> > 
+> > This provides the needed functionality to use dvb_module_probe() instead of
+> > dvb_attach()!
+
+The lines shouldn't be longer than 75 characters.
+
+This is a great improvement. It would be nice to see an actual driver use
+dvb_module_probe() rather than dvb_attach(), so that the new code paths
+are used. Do you have hardware to test this?
+
+> > 
+> > Signed-off-by: Tobias Klausmann <tobias.johannes.klausmann@mni.thm.de>
+> > ---
+> >   drivers/media/dvb-frontends/stv6110x.c      | 125 ++++++++++++++++----
+> >   drivers/media/dvb-frontends/stv6110x.h      |   3 +
+> >   drivers/media/dvb-frontends/stv6110x_priv.h |   3 +-
+> >   3 files changed, 109 insertions(+), 22 deletions(-)
+> > 
+> > diff --git a/drivers/media/dvb-frontends/stv6110x.c b/drivers/media/dvb-frontends/stv6110x.c
+> > index 82c002d3833a..17bc7adf3771 100644
+> > --- a/drivers/media/dvb-frontends/stv6110x.c
+> > +++ b/drivers/media/dvb-frontends/stv6110x.c
+> > @@ -345,6 +345,33 @@ static void stv6110x_release(struct dvb_frontend *fe)
+> >   	kfree(stv6110x);
+> >   }
+> > +void st6110x_init_regs(struct stv6110x_state *stv6110x)
+> > +{
+> > +	u8 default_regs[] = {0x07, 0x11, 0xdc, 0x85, 0x17, 0x01, 0xe6, 0x1e};
+> > +
+> > +	memcpy(stv6110x->regs, default_regs, 8);
+> > +}
+> > +
+> > +void stv6110x_setup_divider(struct stv6110x_state *stv6110x)
+> > +{
+> > +	switch (stv6110x->config->clk_div) {
+> > +	default:
+> > +	case 1:
+> > +		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2], CTRL2_CO_DIV, 0);
+> > +		break;
+> > +	case 2:
+> > +		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2], CTRL2_CO_DIV, 1);
+> > +		break;
+> > +	case 4:
+> > +		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2], CTRL2_CO_DIV, 2);
+> > +		break;
+> > +	case 8:
+> > +	case 0:
+> > +		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2], CTRL2_CO_DIV, 3);
+> > +		break;
+> > +	}
+> > +}
+> > +
+> >   static const struct dvb_tuner_ops stv6110x_ops = {
+> >   	.info = {
+> >   		.name		  = "STV6110(A) Silicon Tuner",
+> > @@ -354,7 +381,7 @@ static const struct dvb_tuner_ops stv6110x_ops = {
+> >   	.release		= stv6110x_release
+> >   };
+> > -static const struct stv6110x_devctl stv6110x_ctl = {
+> > +static struct stv6110x_devctl stv6110x_ctl = {
+> >   	.tuner_init		= stv6110x_init,
+> >   	.tuner_sleep		= stv6110x_sleep,
+> >   	.tuner_set_mode		= stv6110x_set_mode,
+> > @@ -368,39 +395,77 @@ static const struct stv6110x_devctl stv6110x_ctl = {
+> >   	.tuner_get_status	= stv6110x_get_status,
+> >   };
+> > +void stv6110x_set_frontend_opts(struct stv6110x_state *stv6110x)
+> > +{
+> > +	stv6110x->frontend->tuner_priv		= stv6110x;
+> > +	stv6110x->frontend->ops.tuner_ops	= stv6110x_ops;
+> > +}
+> > +
+> > +static struct stv6110x_devctl *stv6110x_get_devctl(struct i2c_client *client)
+> > +{
+> > +	struct stv6110x_state *stv6110x = i2c_get_clientdata(client);
+> > +
+> > +	dev_dbg(&client->dev, "\n");
+> > +
+> > +	return stv6110x->devctl;
+> > +}
+> > +
+> > +static int stv6110x_probe(struct i2c_client *client,
+> > +			const struct i2c_device_id *id)
+> > +{
+> > +	struct stv6110x_config *config = client->dev.platform_data;
+> > +
+> > +	struct stv6110x_state *stv6110x;
+> > +
+> > +	stv6110x = kzalloc(sizeof(struct stv6110x_state), GFP_KERNEL);
+
+This should be:
+	stv6110x = kzalloc(sizeof(*stv6110x), GFP_KERNEL);
+
+> > +	if (!stv6110x)
+> > +		return -ENOMEM;
+> > +
+> > +	stv6110x->frontend	= config->frontend;
+> > +	stv6110x->i2c		= client->adapter;
+> > +	stv6110x->config	= config;
+> > +	stv6110x->devctl	= &stv6110x_ctl;
+> > +
+> > +	st6110x_init_regs(stv6110x);
+> > +	stv6110x_setup_divider(stv6110x);
+> > +	stv6110x_set_frontend_opts(stv6110x);
+> > +
+> > +	printk(KERN_INFO "%s: Probed STV6110x\n", __func__);
+
+Please use dev_info().
+
+> > +
+> > +	i2c_set_clientdata(client, stv6110x);
+> > +
+> > +	/* setup callbacks */
+> > +	config->get_devctl = stv6110x_get_devctl;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int stv6110x_remove(struct i2c_client *client)
+> > +{
+> > +	struct stv6110x_state *stv6110x = i2c_get_clientdata(client);
+> > +
+> > +	stv6110x_release(stv6110x->frontend);
+> > +	return 0;
+> > +}
+> > +
+> >   const struct stv6110x_devctl *stv6110x_attach(struct dvb_frontend *fe,
+> >   					const struct stv6110x_config *config,
+> >   					struct i2c_adapter *i2c)
+> >   {
+> >   	struct stv6110x_state *stv6110x;
+> > -	u8 default_regs[] = {0x07, 0x11, 0xdc, 0x85, 0x17, 0x01, 0xe6, 0x1e};
+> > -	stv6110x = kzalloc(sizeof (struct stv6110x_state), GFP_KERNEL);
+> > +	stv6110x = kzalloc(sizeof(struct stv6110x_state), GFP_KERNEL);
+
+	stv6110x = kzalloc(sizeof(*stv6110x), GFP_KERNEL);
+
+Maybe we can patch up the dvb_attach() call sites and do away with
+stv6110x_attach completely. Do you have dvb hardware with this frontend
+to test?
 
 
-I've finally managed to do the bisection on object files I mentioned I'd
-do to try to pinpoint where __BUILT_IOPORT_PFX with barrier rather than
-!barrier regressed.
+> >   	if (!stv6110x)
+> >   		return NULL;
+> > +	stv6110x->frontend	= fe;
+> >   	stv6110x->i2c		= i2c;
+> >   	stv6110x->config	= config;
+> >   	stv6110x->devctl	= &stv6110x_ctl;
+> > -	memcpy(stv6110x->regs, default_regs, 8);
+> > -	/* setup divider */
+> > -	switch (stv6110x->config->clk_div) {
+> > -	default:
+> > -	case 1:
+> > -		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2], CTRL2_CO_DIV, 0);
+> > -		break;
+> > -	case 2:
+> > -		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2], CTRL2_CO_DIV, 1);
+> > -		break;
+> > -	case 4:
+> > -		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2], CTRL2_CO_DIV, 2);
+> > -		break;
+> > -	case 8:
+> > -	case 0:
+> > -		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2], CTRL2_CO_DIV, 3);
+> > -		break;
+> > -	}
+> > +	st6110x_init_regs(stv6110x);
+> > +	stv6110x_setup_divider(stv6110x);
+> > +	stv6110x_set_frontend_opts(stv6110x);
+> >   	fe->tuner_priv		= stv6110x;
+> >   	fe->ops.tuner_ops	= stv6110x_ops;
+> > @@ -410,6 +475,24 @@ const struct stv6110x_devctl *stv6110x_attach(struct dvb_frontend *fe,
+> >   }
+> >   EXPORT_SYMBOL(stv6110x_attach);
+> > +static const struct i2c_device_id stv6110x_id_table[] = {
+> > +	{"stv6110x", 0},
+> > +	{}
+> > +};
+> > +MODULE_DEVICE_TABLE(i2c, stv6110x_id_table);
+> > +
+> > +static struct i2c_driver stv6110x_driver = {
+> > +	.driver = {
+> > +		.name	= "stv6110x",
+> > +		.suppress_bind_attrs = true,
+> > +	},
+> > +	.probe		= stv6110x_probe,
+> > +	.remove		= stv6110x_remove,
+> > +	.id_table	= stv6110x_id_table,
+> > +};
+> > +
+> > +module_i2c_driver(stv6110x_driver);
+> > +
+> >   MODULE_AUTHOR("Manu Abraham");
+> >   MODULE_DESCRIPTION("STV6110x Silicon tuner");
+> >   MODULE_LICENSE("GPL");
+> > diff --git a/drivers/media/dvb-frontends/stv6110x.h b/drivers/media/dvb-frontends/stv6110x.h
+> > index 696b6e5b9e7b..7714adea5242 100644
+> > --- a/drivers/media/dvb-frontends/stv6110x.h
+> > +++ b/drivers/media/dvb-frontends/stv6110x.h
+> > @@ -27,6 +27,9 @@ struct stv6110x_config {
+> >   	u8	addr;
+> >   	u32	refclk;
+> >   	u8	clk_div; /* divisor value for the output clock */
+> > +	struct dvb_frontend		*frontend;
+> > +
+> > +	struct stv6110x_devctl* (*get_devctl)(struct i2c_client *);
 
-I found that forcing barrier off for drivers/irqchip/irq-i8259 was
-enough to avoid the problem.
+The i2c_client needs an argument name.
 
-(I further narrowed it down to byte I/O, which is no surprise
-considering irq-i8259 doesn't seem to use any non-byte I/O.)
-
-Then I narrowed it down to output only.
-
-A Loongson2F kernel built with the patch below works at normal speed.
-I've also keyed the -1 barrier selector to compiling the irq-i8259
-driver only, and that got me a functional kernel, but I'm not confident
-that the same issues that affect the interrupt controller, preventing it
-from initializing correctly, is not also affecting other drivers, just
-in less visible ways, so the patch conservatively reverts to the older
-barriers for all I/O (i.e., non-mem) out primitives.
-
-I've tested this on a yeeloong on top of v5.1.5.
-
-I'm tempted to start using this patch in my Freeloong builds of GNU
-Linux-libre for gnewsense/yeeloong of 5.0 and 5.1 stable releases, to
-try to make them usable.  Can anyone suggest any reason why it might be
-risky to do so, moving on as much as I could to the new barriers,
-sticking to the 4.19-one only for non-mem out?  As in, could mixing the
-barriers be riskier than reverting to the 4.19 barriers everywhere?
-
-Thanks in advance for any insights and recommendations,
+> >   };
+> >   enum tuner_mode {
+> > diff --git a/drivers/media/dvb-frontends/stv6110x_priv.h b/drivers/media/dvb-frontends/stv6110x_priv.h
+> > index 109dfaf4ba42..383549d25268 100644
+> > --- a/drivers/media/dvb-frontends/stv6110x_priv.h
+> > +++ b/drivers/media/dvb-frontends/stv6110x_priv.h
+> > @@ -66,11 +66,12 @@
+> >   #define REFCLOCK_MHz				(stv6110x->config->refclk / 1000000)
+> >   struct stv6110x_state {
+> > +	struct dvb_frontend		*frontend;
+> >   	struct i2c_adapter		*i2c;
+> >   	const struct stv6110x_config	*config;
+> >   	u8				regs[8];
+> > -	const struct stv6110x_devctl	*devctl;
+> > +	struct stv6110x_devctl	*devctl;
+> >   };
+> >   #endif /* __STV6110x_PRIV_H */
 
 
-diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
-index 845fbbc7a2e3..04be4758d4ff 100644
---- a/arch/mips/include/asm/io.h
-+++ b/arch/mips/include/asm/io.h
-@@ -416,7 +416,7 @@ static inline void pfx##out##bwlq##p(type val, unsigned long port)	\
- 	volatile type *__addr;						\
- 	type __val;							\
- 									\
--	if (barrier)							\
-+	if (barrier > 0)						\
- 		iobarrier_rw();						\
- 	else								\
- 		war_io_reorder_wmb();					\
-@@ -467,13 +467,22 @@ BUILDIO_MEM(w, u16)
- BUILDIO_MEM(l, u32)
- BUILDIO_MEM(q, u64)
- 
--#define __BUILD_IOPORT_PFX(bus, bwlq, type)				\
--	__BUILD_IOPORT_SINGLE(bus, bwlq, type, 1, 0,)			\
--	__BUILD_IOPORT_SINGLE(bus, bwlq, type, 1, 0, _p)
-+#define __BUILD_IOPORT_PFX(bus, bwlq, type, barrier)			\
-+	__BUILD_IOPORT_SINGLE(bus, bwlq, type, barrier, 0,)		\
-+	__BUILD_IOPORT_SINGLE(bus, bwlq, type, barrier, 0, _p)
-+
-+/* Choose the kind of barrier used for out in __BUILD_IOPORT_SINGLE in
-+   non-__mem_ variants.  On Loongson2F, irq-i8259 fails to initialize
-+   when this is defined to 1.  */
-+#if defined(CONFIG_CPU_LOONGSON2)
-+#define USE_IO_BARRIER_FOR_NON_MEM_OUT -1
-+#else
-+#define USE_IO_BARRIER_FOR_NON_MEM_OUT 1
-+#endif
- 
- #define BUILDIO_IOPORT(bwlq, type)					\
--	__BUILD_IOPORT_PFX(, bwlq, type)				\
--	__BUILD_IOPORT_PFX(__mem_, bwlq, type)
-+	__BUILD_IOPORT_PFX(, bwlq, type, USE_IO_BARRIER_FOR_NON_MEM_OUT) \
-+	__BUILD_IOPORT_PFX(__mem_, bwlq, type, 2)
- 
- BUILDIO_IOPORT(b, u8)
- BUILDIO_IOPORT(w, u16)
+Thanks,
 
-
--- 
-Alexandre Oliva, freedom fighter  he/him   https://FSFLA.org/blogs/lxo
-Be the change, be Free!                 FSF Latin America board member
-GNU Toolchain Engineer                        Free Software Evangelist
-Hay que enGNUrecerse, pero sin perder la terGNUra jamás - Che GNUevara
+Sean
