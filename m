@@ -2,97 +2,107 @@ Return-Path: <SRS0=Y9JJ=T2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C779C282E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 06:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2024CC282E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 07:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 680892075B
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 06:51:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDBE12085A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 07:13:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vZ+5axbl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727591AbfEZGvD (ORCPT
+        id S1727185AbfEZHN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 02:51:03 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:56194 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726470AbfEZGvC (ORCPT
+        Sun, 26 May 2019 03:13:29 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40434 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726348AbfEZHN3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 02:51:02 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: gtucker)
-        with ESMTPSA id 5A6F6283B69
-Subject: Re: mainline/master boot bisection: v5.2-rc1-172-g4dde821e4296 on
- meson-g12a-x96-max
-To:     Kevin Hilman <khilman@baylibre.com>
-Cc:     tomeu.vizoso@collabora.com, mgalka@collabora.com,
-        Neil Armstrong <narmstrong@baylibre.com>, broonie@kernel.org,
-        matthew.hart@linaro.org, enric.balletbo@collabora.com,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-References: <5ce78689.1c69fb81.58097.eacf@mx.google.com>
- <7hmujc0xnp.fsf@baylibre.com>
- <f01b812e-ee18-528b-1859-620dd8f0fb53@collabora.com>
- <7hh89j1ze4.fsf@baylibre.com>
-From:   Guillaume Tucker <guillaume.tucker@collabora.com>
-Message-ID: <fef4eb85-cde7-6fb4-7586-cfd45b60365d@collabora.com>
-Date:   Sun, 26 May 2019 07:50:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sun, 26 May 2019 03:13:29 -0400
+Received: by mail-pg1-f195.google.com with SMTP id d30so7315787pgm.7
+        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2019 00:13:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=cz2fi9b1NEdvG3USz4empRfMlJ8de9OfWLCS3YX3h5I=;
+        b=vZ+5axblbVTq6lqFclbj+ZWvS6CR33hW7FI3rTwB08+YsSclCieOvcZKR0BYiKd246
+         wPWV6pqKQ0o9IMGhNxPduLOwa3kOP/XqV/Tf3r70Nz2iiGOAZQftzsqPmesb4mjRhGIT
+         j8cOq902MreDIdxtNL+BbCYMEb4kix5xvAK/sh4F8JNZKJCaw9Xh7JNiBzXFHlnWYMdW
+         ZKiIYvljPHe4WyVochIUE08b78Gg05gorUM8SK27BuBrjAiSFmg5tMaxxBO6Zrk0SCea
+         XbgSKYFbF13vYgDRe/WsYXVpfaRPigMBlYdovZN3ahxzcYtUm3h1rYFN+z65zvuXJjqq
+         pyqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=cz2fi9b1NEdvG3USz4empRfMlJ8de9OfWLCS3YX3h5I=;
+        b=Js1/thUW3gf2HC2OOzVVCHn0DCL/S0oluIdLLLkVkY85Pk0WR4y0zmQgjG3N+crysE
+         c4C2xFCvq2FhnkFe0J6NLAswWXG6XOgv7wclqYwfZ+EJ+VRVmEQyxRL/VzGR+awIRl51
+         BD5RzQVGzWKZaa/+OhFCzfCK9s3/39USBRpLj3YZP1kospIHBw7zTr1+gDSAYseVmcLs
+         tqebvYGRpsIS9Sf0C34MjirlibpgwdtpStPWmSoih2Kj/U0xfzoLQsT3yE+CF+XKHh4s
+         LXrmezUMCqM/r9pm84z+S2F/y0cKV1xTqOUoEKMrCOGsUVvq1bg3xbLtaPcvl5MUpjhE
+         tAxw==
+X-Gm-Message-State: APjAAAX+5GXXb1yEXW1qob7KnXyNGf2p2HrFPFYmnwb1k1YO1OIR3MrO
+        /eSF6nLv3KjjkxrQC5gDh/o=
+X-Google-Smtp-Source: APXvYqzfx47Hb0iOhg81v85bCDZ2+5/0lnmGrEVIuTBo06UnNUVy7bpwJ3UxVttqvYAdqz0DBJ47tg==
+X-Received: by 2002:a63:d615:: with SMTP id q21mr114467914pgg.401.1558854808818;
+        Sun, 26 May 2019 00:13:28 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.92.73])
+        by smtp.gmail.com with ESMTPSA id c129sm9381274pfg.178.2019.05.26.00.13.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 26 May 2019 00:13:27 -0700 (PDT)
+Date:   Sun, 26 May 2019 12:43:22 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     William Hubbs <w.d.hubbs@gmail.com>,
+        Chris Brannon <chris@the-brannons.com>,
+        Kirk Reiser <kirk@reisers.ca>,
+        Samuel Thibault <samuel.thibault@ens-lyon.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        speakup@linux-speakup.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] drivers: staging: speakup: serialio: fix warning
+ linux/serial.h is included more than once
+Message-ID: <20190526071322.GA3830@hari-Inspiron-1545>
 MIME-Version: 1.0
-In-Reply-To: <7hh89j1ze4.fsf@baylibre.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/05/2019 19:27, Kevin Hilman wrote:
-> Guillaume Tucker <guillaume.tucker@collabora.com> writes:
-> 
->> On 24/05/2019 14:50, Kevin Hilman wrote:
->>> "kernelci.org bot" <bot@kernelci.org> writes:
->>>
->>>> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
->>>> * This automated bisection report was sent to you on the basis  *
->>>> * that you may be involved with the breaking commit it has      *
->>>> * found.  No manual investigation has been done to verify it,   *
->>>> * and the root cause of the problem may be somewhere else.      *
->>>> * Hope this helps!                                              *
->>>> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
->>>>
->>>> mainline/master boot bisection: v5.2-rc1-172-g4dde821e4296 on meson-g12a-x96-max
->>>>
->>>> Summary:
->>>>   Start:      4dde821e4296 Merge tag 'xfs-5.2-fixes-1' of git://git.kernel.org/pub/scm/fs/xfs/xfs-linux
->>>>   Details:    https://kernelci.org/boot/id/5ce72c6259b514ed817a3640
->>>>   Plain log:  https://storage.kernelci.org//mainline/master/v5.2-rc1-172-g4dde821e4296/arm64/defconfig+CONFIG_RANDOMIZE_BASE=y/gcc-8/lab-baylibre/boot-meson-g12a-x96-max.txt
->>>>   HTML log:   https://storage.kernelci.org//mainline/master/v5.2-rc1-172-g4dde821e4296/arm64/defconfig+CONFIG_RANDOMIZE_BASE=y/gcc-8/lab-baylibre/boot-meson-g12a-x96-max.html
->>>>   Result:     11a7bea17c9e arm64: dts: meson: g12a: add pinctrl support controllers
->>>
->>> False alarm.
->>>
->>> This one is failing in one lab but passing in another:
->>> https://kernelci.org/boot/all/job/mainline/branch/master/kernel/v5.2-rc1-172-g4dde821e4296/
->>>
->>> I'll look into what's the difference between labs.
->>
->> Thanks for clarifying this.  I guess we should fix the logic
->> which detects regressions to discard cases where there is a
->> conflict between results in different labs.
-> 
-> Yes, we should.  If there are conflicts between labs, it's almost
-> certainly not worth the effort to automatically bisect (or at least not
-> worth it to send out the email.)
+fix below warning reported by  includecheck
 
-I've disabled bisections in lab-baylibre for now to stop the
-misleading reports until lab conflicts are better handled.
+./drivers/staging/speakup/serialio.h: linux/serial.h is included more
+than once.
 
-Guillaume
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/staging/speakup/serialio.h | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/drivers/staging/speakup/serialio.h b/drivers/staging/speakup/serialio.h
+index aa691e4..6f8f86f 100644
+--- a/drivers/staging/speakup/serialio.h
++++ b/drivers/staging/speakup/serialio.h
+@@ -4,9 +4,6 @@
+ 
+ #include <linux/serial.h>	/* for rs_table, serial constants */
+ #include <linux/serial_reg.h>	/* for more serial constants */
+-#ifndef __sparc__
+-#include <linux/serial.h>
+-#endif
+ #include <linux/serial_core.h>
+ 
+ #include "spk_priv.h"
+-- 
+2.7.4
+
