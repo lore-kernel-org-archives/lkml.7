@@ -2,131 +2,104 @@ Return-Path: <SRS0=Y9JJ=T2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FAFC282E5
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 07:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8772AC282E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 07:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CB7620863
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 07:32:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5319A2075C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 07:33:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VgeAfWFV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lInDxgR8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727577AbfEZHce (ORCPT
+        id S1727633AbfEZHdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 03:32:34 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:34746 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726455AbfEZHce (ORCPT
+        Sun, 26 May 2019 03:33:03 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36558 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727591AbfEZHdD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 03:32:34 -0400
-Received: by mail-wm1-f67.google.com with SMTP id e19so4794358wme.1;
-        Sun, 26 May 2019 00:32:32 -0700 (PDT)
+        Sun, 26 May 2019 03:33:03 -0400
+Received: by mail-pf1-f193.google.com with SMTP id u22so458638pfm.3
+        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2019 00:33:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UVuD9ss56U9sjpvXxMwharf1LQEDo1M9zASmKf39Kxc=;
-        b=VgeAfWFVOr0qHBa6VhzD0GN+zu2A0bPjA+1k0a1YA5Prod7bgvZ/Xej/Cj+XiGZ7DY
-         kunaYdG+VhIDNLFM0Jy8pQypVsjjow9tbmaylB4kECl9vM3D7mkFQcC8DMcsFRfB4rWw
-         93dkIhvXixORMnFOs1EF0tVefsc4X+yIgnTO5JVV+XEUNXuMECpX9ImeEBgXf1eBMqdf
-         /ULYdtiLHeDOx2h9gEEfYszAEVosODd/5BOCjHV7EmoSTGpRUOqW/Q7UoiQx0ErMkPPF
-         dYxG1gXDOV5+v8bGxzoxHPUFAF7nl2O/ps9QJ3xmhH8+D1hDAxqaWQfDxXnhIp/pm2KS
-         l7Ug==
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=Cg/vgbjG/t5rG/2rIMWKtSp0D9gxhMUNGBD8lfkvzS0=;
+        b=lInDxgR8++aiOOZRRg7PG6aQtERRyRMGsmCHU6znVpDZc33N+8MpiwAJx8drlR10dO
+         ELNAGAeiqJFGXlisYv4hQcaHFN7P5g5Wynl15duks0SHXubMzJbMUzPGfHn01RslVPSu
+         tHH48FIHLaQa3TXfb0hikzk0yOTGBas5C8SayH22GHTFQQVy0ZfeP3Hd0P66KRSfmCb/
+         Ngpnzrs6jxXiL1SJlxJWUhk31y7WwugDhakoIJeXw8AFSJyTyvcq0O9ywMAd2Sce7UKM
+         pZHr55rv0Mh6mD3Idu/mb1cxgHRM0pVtFKHJL/Ze8V3/mh1Jn6fReiA9Ig/1mnQZk3dx
+         RE4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UVuD9ss56U9sjpvXxMwharf1LQEDo1M9zASmKf39Kxc=;
-        b=IrnfG6RviiSP4/jCdq6DKQfWmNmjuuWqhNgDCxo4CT7v9qar9VuUP5mp5I7pfwggMG
-         LQjf8Lq0k9REWmWAaRzL+7KZfgSllBTffVcL14nUABPTOXLo7K4JIoCthDA1utaEiDDs
-         XikMUCwuoj2z9oyib3xYwdxq5iM6pdFc8s2RRiE03lt5y5BsZP7T4/SQOPRKVy/zu/Jk
-         31pTUq6xzU8wQiUJSszr4WezDQ08eNtTPhb/2ATaksb7uXqIvCoV+VWb4mbqWST4xnai
-         7/9q5Y4IoZlScj9EL9qZzRtLkLM1sGaVJyDpE97j4kow1Q2hgnL6nqm6BS5vSbyGICmx
-         zHPw==
-X-Gm-Message-State: APjAAAViLIRU18AgePDXFm/Zu+cJNdBnDC2pmgkcdLGrYW+415/nKL0o
-        C9EBmcSvguaOuIy36yH4IvjrJRKhIoqc7kH4CKkPl9bi
-X-Google-Smtp-Source: APXvYqzm9M8KkLfk/5hX5ZOaMKIyu/5pNqFSW/xUrcHVPcp1Ji/Id0uJb78l351nF6cjuLNGQw+LH1l7WPcPa1JNBWw=
-X-Received: by 2002:a1c:80d7:: with SMTP id b206mr22505025wmd.48.1558855951958;
- Sun, 26 May 2019 00:32:31 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=Cg/vgbjG/t5rG/2rIMWKtSp0D9gxhMUNGBD8lfkvzS0=;
+        b=G5Ztepn9fo+17kL2RJUprBi17fB5aTpgQfqS84POwELNSCoyDSVH1/65t5ZHpzZCS3
+         GuZmbi1rxO10giopKNf5BfGmkyEWylzCWkyCQVqoExR6ZXrkDk5DpG1+oIW6VLqb35LV
+         gsHKsbIF6/A8rUUhubcMiMHlwpM1tiya5/R6tDkDg6XSzGoN/Va58bqLyD/x5dEMGFEI
+         JV5XUZSKtRkZvEF39wMtUvLla69+ah/KsCvvTt/7++JSMhV21vALSDIzsGRxJrr0cQ7W
+         StBwpbdZGV2RGrCVHxSILf+90ohL+rQsSoOEJFGzUQ9UngyDajRZy5CK9Epq4ChjOW/L
+         UNLg==
+X-Gm-Message-State: APjAAAUTLaSejO31pGdGj3YgW60JnFx7zrKZPdbZNfViclY+q/NxhEh9
+        C6/OgdVDB6BXj5lPip9eKmTnFrfzyGk=
+X-Google-Smtp-Source: APXvYqxQfNCd1WBIL1/OjP2muAsSzBBETx0VADMdKojpASOPaJ/A7j+32WalD3l/bEIL0ShiPa0T8w==
+X-Received: by 2002:a17:90a:a4c7:: with SMTP id l7mr21999145pjw.49.1558855982428;
+        Sun, 26 May 2019 00:33:02 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.92.73])
+        by smtp.gmail.com with ESMTPSA id z9sm6652704pgc.82.2019.05.26.00.32.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 26 May 2019 00:33:01 -0700 (PDT)
+Date:   Sun, 26 May 2019 13:02:54 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Evan Quan <evan.quan@amd.com>,
+        Huang Rui <ray.huang@amd.com>, Rex Zhu <Rex.Zhu@amd.com>,
+        Feifei Xu <Feifei.Xu@amd.com>, Likun Gao <Likun.Gao@amd.com>,
+        James Zhu <James.Zhu@amd.com>, Shirish S <shirish.s@amd.com>,
+        Trigger Huang <Trigger.Huang@amd.com>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/amd/amdgpu: Remove duplicate including duplicate header
+Message-ID: <20190526073254.GA8567@hari-Inspiron-1545>
 MIME-Version: 1.0
-References: <CADqhmmcCA_UjV899cHn8SOTSp89BvjMgnd5TcijCWqp6KnhdJw@mail.gmail.com>
- <20190401160629.GA20725@kroah.com> <20190401165853.GA1929@kroah.com>
-In-Reply-To: <20190401165853.GA1929@kroah.com>
-From:   Evalds Iodzevics <evalds.iodzevics@gmail.com>
-Date:   Sun, 26 May 2019 10:32:29 +0300
-Message-ID: <CADqhmmeCYNpYpCCG6Y0t+0gxacK-834Bshc+bLmav7ei+Xzx9g@mail.gmail.com>
-Subject: Re: missing patch
-To:     stable@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, sorry for super long delay i was a little bit busy but i finally
-got time to work this out in full.
-This applies to 4.4 and 4.9.
+remove duplicate entry of soc15.h. Issue identified by includecheck
 
-Intel requires CPUID eax=1 for microcode operations, microcode
-routines use sync_core() for this.
-Back in December of 2016 Andy Lutomirski submitted few patches
-https://lore.kernel.org/lkml/cover.1481307769.git.luto@kernel.org/
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Second patch does not apply to 4.4 and 4.9 as it is revert
+diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
+index c763733..d723332 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
+@@ -34,7 +34,6 @@
+ #include "vega10_enum.h"
+ #include "hdp/hdp_4_0_offset.h"
+ 
+-#include "soc15.h"
+ #include "soc15_common.h"
+ #include "clearstate_gfx9.h"
+ #include "v9_structs.h"
+-- 
+2.7.4
 
-Unfortunately only the first one got backported to 4.4 and 4.9 and
-broke microcode early loading on 32 bit platforms because it always
-jumps past cpuid in sync_core() as data structure boot_cpu_data are
-not populated so early in code.
-
-Thanks to Your recent backport of 4167709bbf826512a52ebd6aafda2be104adaec9
-the only place that uses sync_core() is
-arch/x86/include/microcode_intel.h it should use native_cpuid_eax(1)
-as in original Boris submitt.
-To make this work we should apply
-5dedade6dfa243c130b85d1e4daba6f027805033 witch defines
-native_cpuid_eax and others.
-
-As for c198b121b1a1d7a7171770c634cd49191bac4477 i think it is a good
-idea to include this as sync_core in present state behaves differently
-depending on call time, those compiler warnings can be ignored, on
-older compiler they are not generated and this compiles fine. I tested
-it on GCC 5.5
-
-On Mon, Apr 1, 2019 at 7:59 PM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Mon, Apr 01, 2019 at 06:06:29PM +0200, Greg KH wrote:
-> > On Sat, Mar 30, 2019 at 06:13:16PM +0200, Evalds Iodzevics wrote:
-> > > Hi back in the December of 2016 there was commit
-> > > "1c52d859cb2d417e7216d3e56bb7fea88444cec9"
-> > >
-> > > witch was followed shortly by  "c198b121b1a1d7a7171770c634cd49191bac4477"
-> > >
-> > > Unfortunately only the first commit was later included in long-term kernel
-> > > branches such as 4.4 and 4.9 witch left some of microcode functionality
-> > > broken on 32 bit systems
-> > >
-> > > I guess it should be easily fixed by including
-> > > "c198b121b1a1d7a7171770c634cd49191bac4477" in those branches
-> >
-> > Now queued up, thanks!
->
-> Hm, no, it causes a bunch of build warnings that look like things are
-> about to break:
-> arch/x86/kernel/alternative.o: warning: objtool: do_sync_core()+0x1b: unsupported instruction in callable function
-> arch/x86/kernel/alternative.o: warning: objtool: text_poke_early()+0x83: unsupported instruction in callable function
-> arch/x86/kernel/alternative.o: warning: objtool: apply_alternatives()+0x366: unsupported instruction in callable function
-> arch/x86/kernel/alternative.o: warning: objtool: text_poke()+0x196: unsupported instruction in callable function
->
-> So I'm going to drop this patch from both trees now.  Can you provide a
-> working backported version, or find what else needs to be applied as
-> well for this patch?
->
-> thanks,
->
-> greg k-h
