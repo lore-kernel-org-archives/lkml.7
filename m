@@ -2,338 +2,401 @@ Return-Path: <SRS0=Y9JJ=T2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 750E7C282E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 14:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD0EC282E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 14:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4044020815
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 14:15:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 500702085A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 14:36:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=cs.unibo.it header.i=@cs.unibo.it header.b="BJaFV42a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbfEZOPq (ORCPT
+        id S1727922AbfEZOgi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 10:15:46 -0400
-Received: from mslow2.mail.gandi.net ([217.70.178.242]:42930 "EHLO
-        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727774AbfEZOPp (ORCPT
+        Sun, 26 May 2019 10:36:38 -0400
+Received: from mail.virtlab.unibo.it ([130.136.161.50]:56014 "EHLO
+        mail.virtlab.unibo.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727767AbfEZOgi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 10:15:45 -0400
-Received: from relay3-d.mail.gandi.net (unknown [217.70.183.195])
-        by mslow2.mail.gandi.net (Postfix) with ESMTP id 1168F3AA1C5;
-        Sun, 26 May 2019 13:52:47 +0000 (UTC)
-X-Originating-IP: 79.86.19.127
-Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 968C260004;
-        Sun, 26 May 2019 13:52:29 +0000 (UTC)
-From:   Alexandre Ghiti <alex@ghiti.fr>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Alexandre Ghiti <alex@ghiti.fr>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: [PATCH v4 04/14] arm64, mm: Move generic mmap layout functions to mm
-Date:   Sun, 26 May 2019 09:47:36 -0400
-Message-Id: <20190526134746.9315-5-alex@ghiti.fr>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190526134746.9315-1-alex@ghiti.fr>
-References: <20190526134746.9315-1-alex@ghiti.fr>
+        Sun, 26 May 2019 10:36:38 -0400
+X-Greylist: delayed 656 seconds by postgrey-1.27 at vger.kernel.org; Sun, 26 May 2019 10:36:35 EDT
+Received: from cs.unibo.it (host0.studiodavoli.it [109.234.61.1])
+        by mail.virtlab.unibo.it (Postfix) with ESMTPSA id 94DBE1FF56;
+        Sun, 26 May 2019 16:25:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=cs.unibo.it;
+        s=virtlab; t=1558880738;
+        bh=C+N35ZzXj0U6TNHCXxgyJtcRMzkF1WAh1wwcXUynMic=;
+        h=Date:From:To:Cc:Subject:From;
+        b=BJaFV42a2QEk7d9YIb2049DqKUj1/iwlBGt2h5i/mPZ3mu/pVtQtvqIUsYItyK6vy
+         iJWGaOI7DRpNhuxRIR3EEvyVP5wU4b5nRy+xzknCPLUtArlz+ReG3/UBNCSwwSXkQc
+         HWhXZwyBjrnXd+NtEmBp4LroVv59xkDY0eYWjoco=
+Date:   Sun, 26 May 2019 16:25:21 +0200
+From:   Renzo Davoli <renzo@cs.unibo.it>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Davide Libenzi <davidel@xmailserver.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     linux-api@vger.kernel.org
+Subject: [PATCH 1/1] eventfd new tag EFD_VPOLL: generate epoll events
+Message-ID: <20190526142521.GA21842@cs.unibo.it>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-arm64 handles top-down mmap layout in a way that can be easily reused
-by other architectures, so make it available in mm.
-It then introduces a new config ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
-that can be set by other architectures to benefit from those functions.
-Note that this new config depends on MMU being enabled, if selected
-without MMU support, a warning will be thrown.
+This patch implements an extension of eventfd to define file descriptors 
+whose I/O events can be generated at user level. These file descriptors
+trigger notifications for [p]select/[p]poll/epoll.
 
-Suggested-by: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+This feature is useful for user-level implementations of network stacks
+or virtual device drivers as libraries.
+
+Development and porting of code often requires to find the way to wait for I/O
+events both coming from file descriptors and generated by user-level code (e.g.
+user-implemented net stacks or drivers).  While it is possible to provide a
+partial support (e.g. using pipes or socketpairs), a clean and complete
+solution is still missing (as far as I have seen); e.g. I have not seen any
+clean way to generate EPOLLPRI, EPOLLERR, etc.
+
+This proposal is based on a new tag for eventfd2(2): EFD_VPOLL.
+
+This statement:
+	fd = eventfd(EPOLLOUT, EFD_VPOLL | EFD_CLOEXEC);
+creates a file descriptor for I/O event generation. In this case EPOLLOUT is
+initially true.
+
+Likewise all the other eventfs services, read(2) and write(2) use a 8-byte 
+integer argument.
+
+read(2) returns the current state of the pending events.
+
+The argument of write(2) is an or-composition of a control command
+(EFD_VPOLL_ADDEVENTS, EFD_VPOLL_DELEVENTS or EFD_VPOLL_MODEVENTS) and the
+bitmap of events to be added, deleted to the current set of pending events.
+EFD_VPOLL_MODEVENTS completely redefines the set of pending events.
+
+e.g.:
+	uint64_t request = EFD_VPOLL_ADDEVENTS | EPOLLIN | EPOLLPRI;
+	write(fd, &request, sizeof(request);
+adds EPOLLIN and EPOLLPRI to the set of pending events.
+
+These are examples of messages asking for a feature like EFD_VPOLL:
+https://stackoverflow.com/questions/909189/simulating-file-descriptor-in-user-space
+https://stackoverflow.com/questions/1648147/running-a-simple-tcp-server-with-poll-how-do-i-trigger-events-artificially
+... and I need it to write networking and device modules for vuos:
+https://github.com/virtualsquare/vuos
+(it is the new codebase of ViewOS, see www.virtualsquare.org).
+
+EXAMPLE:
+The following program creates an eventfd/EFD_VPOLL file descriptor and then forks
+a child process.  While the parent waits for events using epoll_wait the child
+generates a sequence of events. When the parent receives an event (or a set of events)
+it prints it and disarm it.
+The following shell session shows a sample run of the program:
+	timeout...
+	timeout...
+	GOT event 1
+	timeout...
+	GOT event 1
+	timeout...
+	GOT event 3
+	timeout...
+	GOT event 2
+	timeout...
+	GOT event 4
+	timeout...
+	GOT event 10
+
+Program source:
+#include <sys/eventfd.h>
+#include <sys/epoll.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdint.h>             /* Definition of uint64_t */
+
+#ifndef EFD_VPOLL
+#define EFD_VPOLL (1 << 1)
+#define EFD_VPOLL_ADDEVENTS (1UL << 32)
+#define EFD_VPOLL_DELEVENTS (2UL << 32)
+#define EFD_VPOLL_MODEVENTS (3UL << 32)
+#endif
+
+#define handle_error(msg) \
+	do { perror(msg); exit(EXIT_FAILURE); } while (0)
+
+static void vpoll_ctl(int fd, uint64_t request) {
+	ssize_t s;
+	s = write(fd, &request, sizeof(request));
+	if (s != sizeof(uint64_t))
+		handle_error("write");
+}
+
+int
+main(int argc, char *argv[])
+{
+	int efd, epollfd; 
+	struct epoll_event ev;
+	ev.events = EPOLLIN | EPOLLRDHUP | EPOLLERR | EPOLLOUT | EPOLLHUP | EPOLLPRI;
+	ev.data.u64 = 0;
+
+	efd = eventfd(0, EFD_VPOLL | EFD_CLOEXEC);
+	if (efd == -1)
+		handle_error("eventfd");
+	epollfd = epoll_create1(EPOLL_CLOEXEC);
+	if (efd == -1)
+		handle_error("epoll_create1");
+	if (epoll_ctl(epollfd, EPOLL_CTL_ADD, efd, &ev) == -1) 
+		handle_error("epoll_ctl");
+
+	switch (fork()) {
+		case 0:
+			sleep(3);
+			vpoll_ctl(efd, EFD_VPOLL_ADDEVENTS | EPOLLIN);
+			sleep(2);
+			vpoll_ctl(efd, EFD_VPOLL_ADDEVENTS | EPOLLIN);
+			sleep(2);
+			vpoll_ctl(efd, EFD_VPOLL_ADDEVENTS | EPOLLIN | EPOLLPRI);
+			sleep(2);
+			vpoll_ctl(efd, EFD_VPOLL_ADDEVENTS | EPOLLPRI);
+			sleep(2);
+			vpoll_ctl(efd, EFD_VPOLL_ADDEVENTS | EPOLLOUT);
+			sleep(2);
+			vpoll_ctl(efd, EFD_VPOLL_ADDEVENTS | EPOLLHUP);
+			exit(EXIT_SUCCESS);
+		default:
+			while (1) {
+				int nfds;
+				nfds = epoll_wait(epollfd, &ev, 1, 1000);
+				if (nfds < 0)
+					handle_error("epoll_wait");
+				else if (nfds == 0)
+					printf("timeout...\n");
+				else {
+					printf("GOT event %x\n", ev.events);
+					vpoll_ctl(efd, EFD_VPOLL_DELEVENTS | ev.events);
+					if (ev.events & EPOLLHUP)
+						break;
+				}
+			}
+		case -1:
+			handle_error("fork");
+	}
+	close(epollfd);
+	close(efd);
+	return 0;
+}
+
+Signed-off-by: Renzo Davoli <renzo@cs.unibo.it>
 ---
- arch/Kconfig                       | 10 ++++
- arch/arm64/Kconfig                 |  1 +
- arch/arm64/include/asm/processor.h |  2 -
- arch/arm64/mm/mmap.c               | 76 -----------------------------
- kernel/sysctl.c                    |  6 ++-
- mm/util.c                          | 78 +++++++++++++++++++++++++++++-
- 6 files changed, 92 insertions(+), 81 deletions(-)
+ fs/eventfd.c                   | 115 +++++++++++++++++++++++++++++++--
+ include/linux/eventfd.h        |   7 +-
+ include/uapi/linux/eventpoll.h |   2 +
+ 3 files changed, 116 insertions(+), 8 deletions(-)
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index c47b328eada0..df3ab04270fa 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -701,6 +701,16 @@ config HAVE_ARCH_COMPAT_MMAP_BASES
- 	  and vice-versa 32-bit applications to call 64-bit mmap().
- 	  Required for applications doing different bitness syscalls.
+diff --git a/fs/eventfd.c b/fs/eventfd.c
+index 8aa0ea8c55e8..f83b7d02307e 100644
+--- a/fs/eventfd.c
++++ b/fs/eventfd.c
+@@ -3,6 +3,7 @@
+  *  fs/eventfd.c
+  *
+  *  Copyright (C) 2007  Davide Libenzi <davidel@xmailserver.org>
++ *  EFD_VPOLL support: 2019 Renzo Davoli <renzo@cs.unibo.it>
+  *
+  */
  
-+# This allows to use a set of generic functions to determine mmap base
-+# address by giving priority to top-down scheme only if the process
-+# is not in legacy mode (compat task, unlimited stack size or
-+# sysctl_legacy_va_layout).
-+# Architecture that selects this option can provide its own version of:
-+# - STACK_RND_MASK
-+config ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
-+	bool
-+	depends on MMU
-+
- config HAVE_COPY_THREAD_TLS
- 	bool
- 	help
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 4780eb7af842..3d754c19c11e 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -69,6 +69,7 @@ config ARM64
- 	select ARCH_SUPPORTS_INT128 if GCC_VERSION >= 50000 || CC_IS_CLANG
- 	select ARCH_SUPPORTS_NUMA_BALANCING
- 	select ARCH_WANT_COMPAT_IPC_PARSE_VERSION
-+	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
- 	select ARCH_WANT_FRAME_POINTERS
- 	select ARCH_HAS_UBSAN_SANITIZE_ALL
- 	select ARM_AMBA
-diff --git a/arch/arm64/include/asm/processor.h b/arch/arm64/include/asm/processor.h
-index fcd0e691b1ea..3bd818edf319 100644
---- a/arch/arm64/include/asm/processor.h
-+++ b/arch/arm64/include/asm/processor.h
-@@ -282,8 +282,6 @@ static inline void spin_lock_prefetch(const void *ptr)
- 		     "nop") : : "p" (ptr));
+@@ -30,12 +31,24 @@ struct eventfd_ctx {
+ 	struct kref kref;
+ 	wait_queue_head_t wqh;
+ 	/*
+-	 * Every time that a write(2) is performed on an eventfd, the
+-	 * value of the __u64 being written is added to "count" and a
+-	 * wakeup is performed on "wqh". A read(2) will return the "count"
+-	 * value to userspace, and will reset "count" to zero. The kernel
+-	 * side eventfd_signal() also, adds to the "count" counter and
+-	 * issue a wakeup.
++	 * If the EFD_VPOLL flag was NOT set at eventfd creation:
++	 *   Every time that a write(2) is performed on an eventfd, the
++	 *   value of the __u64 being written is added to "count" and a
++	 *   wakeup is performed on "wqh". A read(2) will return the "count"
++	 *   value to userspace, and will reset "count" to zero (or decrement
++	 *   "count" by 1 if the flag EFD_SEMAPHORE has been set). The kernel
++	 *   side eventfd_signal() also, adds to the "count" counter and
++	 *   issue a wakeup.
++	 *
++	 * If the EFD_VPOLL flag was set at eventfd creation:
++	 *   count is the set of pending EPOLL events.
++	 *   read(2) returns the current value of count.
++	 *   The argument of write(2) is an 8-byte integer:
++	 *   it is an or-composition of a control command (EFD_VPOLL_ADDEVENTS,
++	 *   EFD_VPOLL_DELEVENTS or EFD_VPOLL_MODEVENTS) and the bitmap of
++	 *   events to be added, deleted to the current set of pending events.
++	 *   (i.e. which bits of "count" must be set or reset).
++	 *   EFD_VPOLL_MODEVENTS redefines the set of pending events.
+ 	 */
+ 	__u64 count;
+ 	unsigned int flags;
+@@ -295,6 +308,78 @@ static ssize_t eventfd_write(struct file *file, const char __user *buf, size_t c
+ 	return res;
  }
  
--#define HAVE_ARCH_PICK_MMAP_LAYOUT
--
- #endif
- 
- extern unsigned long __ro_after_init signal_minsigstksz; /* sigframe size */
-diff --git a/arch/arm64/mm/mmap.c b/arch/arm64/mm/mmap.c
-index ac89686c4af8..c74224421216 100644
---- a/arch/arm64/mm/mmap.c
-+++ b/arch/arm64/mm/mmap.c
-@@ -31,82 +31,6 @@
- 
- #include <asm/cputype.h>
- 
--/*
-- * Leave enough space between the mmap area and the stack to honour ulimit in
-- * the face of randomisation.
-- */
--#define MIN_GAP (SZ_128M)
--#define MAX_GAP	(STACK_TOP/6*5)
--
--static int mmap_is_legacy(struct rlimit *rlim_stack)
--{
--	if (current->personality & ADDR_COMPAT_LAYOUT)
--		return 1;
--
--	if (rlim_stack->rlim_cur == RLIM_INFINITY)
--		return 1;
--
--	return sysctl_legacy_va_layout;
--}
--
--unsigned long arch_mmap_rnd(void)
--{
--	unsigned long rnd;
--
--#ifdef CONFIG_COMPAT
--	if (is_compat_task())
--		rnd = get_random_long() & ((1UL << mmap_rnd_compat_bits) - 1);
--	else
--#endif
--		rnd = get_random_long() & ((1UL << mmap_rnd_bits) - 1);
--	return rnd << PAGE_SHIFT;
--}
--
--static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
--{
--	unsigned long gap = rlim_stack->rlim_cur;
--	unsigned long pad = stack_guard_gap;
--
--	/* Account for stack randomization if necessary */
--	if (current->flags & PF_RANDOMIZE)
--		pad += (STACK_RND_MASK << PAGE_SHIFT);
--
--	/* Values close to RLIM_INFINITY can overflow. */
--	if (gap + pad > gap)
--		gap += pad;
--
--	if (gap < MIN_GAP)
--		gap = MIN_GAP;
--	else if (gap > MAX_GAP)
--		gap = MAX_GAP;
--
--	return PAGE_ALIGN(STACK_TOP - gap - rnd);
--}
--
--/*
-- * This function, called very early during the creation of a new process VM
-- * image, sets up which VM layout function to use:
-- */
--void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
--{
--	unsigned long random_factor = 0UL;
--
--	if (current->flags & PF_RANDOMIZE)
--		random_factor = arch_mmap_rnd();
--
--	/*
--	 * Fall back to the standard layout if the personality bit is set, or
--	 * if the expected stack growth is unlimited:
--	 */
--	if (mmap_is_legacy(rlim_stack)) {
--		mm->mmap_base = TASK_UNMAPPED_BASE + random_factor;
--		mm->get_unmapped_area = arch_get_unmapped_area;
--	} else {
--		mm->mmap_base = mmap_base(random_factor, rlim_stack);
--		mm->get_unmapped_area = arch_get_unmapped_area_topdown;
--	}
--}
--
- /*
-  * You really shouldn't be using read() or write() on /dev/mem.  This might go
-  * away in the future.
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 943c89178e3d..aebd03cc4b65 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -271,7 +271,8 @@ extern struct ctl_table epoll_table[];
- extern struct ctl_table firmware_config_table[];
- #endif
- 
--#ifdef HAVE_ARCH_PICK_MMAP_LAYOUT
-+#if defined(HAVE_ARCH_PICK_MMAP_LAYOUT) || \
-+    defined(CONFIG_ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT)
- int sysctl_legacy_va_layout;
- #endif
- 
-@@ -1566,7 +1567,8 @@ static struct ctl_table vm_table[] = {
- 		.proc_handler	= proc_dointvec,
- 		.extra1		= &zero,
- 	},
--#ifdef HAVE_ARCH_PICK_MMAP_LAYOUT
-+#if defined(HAVE_ARCH_PICK_MMAP_LAYOUT) || \
-+    defined(CONFIG_ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT)
- 	{
- 		.procname	= "legacy_va_layout",
- 		.data		= &sysctl_legacy_va_layout,
-diff --git a/mm/util.c b/mm/util.c
-index dab33b896146..717f5d75c16e 100644
---- a/mm/util.c
-+++ b/mm/util.c
-@@ -15,7 +15,12 @@
- #include <linux/vmalloc.h>
- #include <linux/userfaultfd_k.h>
- #include <linux/elf.h>
-+#include <linux/elf-randomize.h>
-+#include <linux/personality.h>
- #include <linux/random.h>
-+#include <linux/processor.h>
-+#include <linux/sizes.h>
-+#include <linux/compat.h>
- 
- #include <linux/uaccess.h>
- 
-@@ -313,7 +318,78 @@ unsigned long randomize_stack_top(unsigned long stack_top)
- #endif
- }
- 
--#if defined(CONFIG_MMU) && !defined(HAVE_ARCH_PICK_MMAP_LAYOUT)
-+#ifdef CONFIG_ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
-+#ifdef CONFIG_ARCH_HAS_ELF_RANDOMIZE
-+unsigned long arch_mmap_rnd(void)
++static __poll_t eventfd_vpoll_poll(struct file *file, poll_table *wait)
 +{
-+	unsigned long rnd;
++	struct eventfd_ctx *ctx = file->private_data;
++	__poll_t events = 0;
++	u64 count;
 +
-+#ifdef CONFIG_HAVE_ARCH_MMAP_RND_COMPAT_BITS
-+	if (is_compat_task())
-+		rnd = get_random_long() & ((1UL << mmap_rnd_compat_bits) - 1);
-+	else
-+#endif /* CONFIG_HAVE_ARCH_MMAP_RND_COMPAT_BITS */
-+		rnd = get_random_long() & ((1UL << mmap_rnd_bits) - 1);
++	poll_wait(file, &ctx->wqh, wait);
 +
-+	return rnd << PAGE_SHIFT;
-+}
-+#endif /* CONFIG_ARCH_HAS_ELF_RANDOMIZE */
++	count = READ_ONCE(ctx->count);
 +
-+static int mmap_is_legacy(struct rlimit *rlim_stack)
-+{
-+	if (current->personality & ADDR_COMPAT_LAYOUT)
-+		return 1;
++	events = (count & EPOLLALLMASK);
 +
-+	if (rlim_stack->rlim_cur == RLIM_INFINITY)
-+		return 1;
-+
-+	return sysctl_legacy_va_layout;
++	return events;
 +}
 +
-+/*
-+ * Leave enough space between the mmap area and the stack to honour ulimit in
-+ * the face of randomisation.
-+ */
-+#define MIN_GAP		(SZ_128M)
-+#define MAX_GAP		(STACK_TOP / 6 * 5)
-+
-+static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
++static ssize_t eventfd_vpoll_read(struct file *file, char __user *buf,
++		size_t count, loff_t *ppos)
 +{
-+	unsigned long gap = rlim_stack->rlim_cur;
-+	unsigned long pad = stack_guard_gap;
++	struct eventfd_ctx *ctx = file->private_data;
++	ssize_t res;
++	__u64 ucnt = 0;
 +
-+	/* Account for stack randomization if necessary */
-+	if (current->flags & PF_RANDOMIZE)
-+		pad += (STACK_RND_MASK << PAGE_SHIFT);
++	if (count < sizeof(ucnt))
++		return -EINVAL;
++	res = sizeof(ucnt);
++	ucnt = READ_ONCE(ctx->count);
++	if (put_user(ucnt, (__u64 __user *)buf))
++		return -EFAULT;
 +
-+	/* Values close to RLIM_INFINITY can overflow. */
-+	if (gap + pad > gap)
-+		gap += pad;
-+
-+	if (gap < MIN_GAP)
-+		gap = MIN_GAP;
-+	else if (gap > MAX_GAP)
-+		gap = MAX_GAP;
-+
-+	return PAGE_ALIGN(STACK_TOP - gap - rnd);
++	return res;
 +}
 +
-+void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
++static ssize_t eventfd_vpoll_write(struct file *file, const char __user *buf,
++		size_t count, loff_t *ppos)
 +{
-+	unsigned long random_factor = 0UL;
++	struct eventfd_ctx *ctx = file->private_data;
++	ssize_t res;
++	__u64 ucnt;
++	__u32 events;
 +
-+	if (current->flags & PF_RANDOMIZE)
-+		random_factor = arch_mmap_rnd();
++	if (count < sizeof(ucnt))
++		return -EINVAL;
++	if (copy_from_user(&ucnt, buf, sizeof(ucnt)))
++		return -EFAULT;
++	spin_lock_irq(&ctx->wqh.lock);
 +
-+	if (mmap_is_legacy(rlim_stack)) {
-+		mm->mmap_base = TASK_UNMAPPED_BASE + random_factor;
-+		mm->get_unmapped_area = arch_get_unmapped_area;
-+	} else {
-+		mm->mmap_base = mmap_base(random_factor, rlim_stack);
-+		mm->get_unmapped_area = arch_get_unmapped_area_topdown;
++	events = ucnt & EPOLLALLMASK;
++	res = sizeof(ucnt);
++	switch (ucnt & ~((__u64)EPOLLALLMASK)) {
++	case EFD_VPOLL_ADDEVENTS:
++		ctx->count |= events;
++		break;
++	case EFD_VPOLL_DELEVENTS:
++		ctx->count &= ~(events);
++		break;
++	case EFD_VPOLL_MODEVENTS:
++		ctx->count = (ctx->count & ~EPOLLALLMASK) | events;
++		break;
++	default:
++		res = -EINVAL;
 +	}
++
++	/* wake up waiting threads */
++	if (res >= 0 && waitqueue_active(&ctx->wqh))
++		wake_up_locked_poll(&ctx->wqh, res);
++
++	spin_unlock_irq(&ctx->wqh.lock);
++
++	return res;
++
 +}
-+#elif defined(CONFIG_MMU) && !defined(HAVE_ARCH_PICK_MMAP_LAYOUT)
- void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
++
+ #ifdef CONFIG_PROC_FS
+ static void eventfd_show_fdinfo(struct seq_file *m, struct file *f)
  {
- 	mm->mmap_base = TASK_UNMAPPED_BASE;
+@@ -319,6 +404,17 @@ static const struct file_operations eventfd_fops = {
+ 	.llseek		= noop_llseek,
+ };
+ 
++static const struct file_operations eventfd_vpoll_fops = {
++#ifdef CONFIG_PROC_FS
++	.show_fdinfo	= eventfd_show_fdinfo,
++#endif
++	.release	= eventfd_release,
++	.poll		= eventfd_vpoll_poll,
++	.read		= eventfd_vpoll_read,
++	.write		= eventfd_vpoll_write,
++	.llseek		= noop_llseek,
++};
++
+ /**
+  * eventfd_fget - Acquire a reference of an eventfd file descriptor.
+  * @fd: [in] Eventfd file descriptor.
+@@ -391,6 +487,7 @@ EXPORT_SYMBOL_GPL(eventfd_ctx_fileget);
+ static int do_eventfd(unsigned int count, int flags)
+ {
+ 	struct eventfd_ctx *ctx;
++	const struct file_operations *fops = &eventfd_fops;
+ 	int fd;
+ 
+ 	/* Check the EFD_* constants for consistency.  */
+@@ -410,7 +507,11 @@ static int do_eventfd(unsigned int count, int flags)
+ 	ctx->flags = flags;
+ 	ctx->id = ida_simple_get(&eventfd_ida, 0, 0, GFP_KERNEL);
+ 
+-	fd = anon_inode_getfd("[eventfd]", &eventfd_fops, ctx,
++	if (flags & EFD_VPOLL) {
++		fops = &eventfd_vpoll_fops;
++		ctx->count &= EPOLLALLMASK;
++	}
++	fd = anon_inode_getfd("[eventfd]", fops, ctx,
+ 			      O_RDWR | (flags & EFD_SHARED_FCNTL_FLAGS));
+ 	if (fd < 0)
+ 		eventfd_free_ctx(ctx);
+diff --git a/include/linux/eventfd.h b/include/linux/eventfd.h
+index ffcc7724ca21..63258cf29344 100644
+--- a/include/linux/eventfd.h
++++ b/include/linux/eventfd.h
+@@ -21,11 +21,16 @@
+  * shared O_* flags.
+  */
+ #define EFD_SEMAPHORE (1 << 0)
++#define EFD_VPOLL (1 << 1)
+ #define EFD_CLOEXEC O_CLOEXEC
+ #define EFD_NONBLOCK O_NONBLOCK
+ 
+ #define EFD_SHARED_FCNTL_FLAGS (O_CLOEXEC | O_NONBLOCK)
+-#define EFD_FLAGS_SET (EFD_SHARED_FCNTL_FLAGS | EFD_SEMAPHORE)
++#define EFD_FLAGS_SET (EFD_SHARED_FCNTL_FLAGS | EFD_SEMAPHORE | EFD_VPOLL)
++
++#define EFD_VPOLL_ADDEVENTS (1UL << 32)
++#define EFD_VPOLL_DELEVENTS (2UL << 32)
++#define EFD_VPOLL_MODEVENTS (3UL << 32)
+ 
+ struct eventfd_ctx;
+ struct file;
+diff --git a/include/uapi/linux/eventpoll.h b/include/uapi/linux/eventpoll.h
+index 8a3432d0f0dc..814de6d869c7 100644
+--- a/include/uapi/linux/eventpoll.h
++++ b/include/uapi/linux/eventpoll.h
+@@ -41,6 +41,8 @@
+ #define EPOLLMSG	(__force __poll_t)0x00000400
+ #define EPOLLRDHUP	(__force __poll_t)0x00002000
+ 
++#define EPOLLALLMASK	((__force __poll_t)0x0fffffff)
++
+ /* Set exclusive wakeup mode for the target file descriptor */
+ #define EPOLLEXCLUSIVE	((__force __poll_t)(1U << 28))
+ 
 -- 
 2.20.1
 
