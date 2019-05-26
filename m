@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 223F8C282E5
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 22:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F05AC282E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 22:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE66F21726
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 22:25:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50BC82075C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 22:26:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DyTp61SP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ixgQJky1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726155AbfEZWZt (ORCPT
+        id S1726339AbfEZWZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 18:25:49 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:34270 "EHLO
+        Sun, 26 May 2019 18:25:58 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39068 "EHLO
         mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726034AbfEZWZs (ORCPT
+        with ESMTP id S1726245AbfEZWZz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 18:25:48 -0400
-Received: by mail-wm1-f66.google.com with SMTP id e19so5829643wme.1;
-        Sun, 26 May 2019 15:25:46 -0700 (PDT)
+        Sun, 26 May 2019 18:25:55 -0400
+Received: by mail-wm1-f66.google.com with SMTP id z23so9891123wma.4;
+        Sun, 26 May 2019 15:25:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=tSjq6cIX1DBnOadzNlGlYQSWPqtvc5vqU2shjVT0VqA=;
-        b=DyTp61SP0Ajg+qJr5HMvRFP8uWUstjPCGfpVpH1DtwYvX6E8jkV3KDuQ7XAKg0rHPJ
-         kwFIoJheoQUBARMO10TNkMWn53v7M7fEhyxHghmvvaFptYKopQQkHvf5nsEsVHpK1JJA
-         8Zp/vwbQdBxS5KiY14QdI5A5noMG1ipZLgb97xgv+RdmHuenldFZhp1EL639uWmc9zd6
-         Ea58bLdfhEfG+KgE5EXgFphIwd/8hz4SBhzo1q0AUMzAZw4p7JtwLvaA/iUO+El/jUb4
-         RA23qWDcUOTs1/LVYXkSlFjfyF6WjGd5G25vzWCYpl4o/U2yyymxSbN/qf/SnHVNulmc
-         CoJA==
+        bh=f1zmDm9n7G9V5x4Qey/KRvnzXY0A1V0uEl3s5XqqEzY=;
+        b=ixgQJky1wVVtXXRKn3zr7saZgE0rP9pmcvwINRRzOo4E+4yOBlqJp6zBzQcTxeQxvd
+         oLoeCKu2uMQBjgggE97DtGKGjWrO65/MEGPh47rscGdM1xqxkksgLkxo7Z/U0g6nDjue
+         Rlono7E6sbZPeJcpU/fE+rm69q09z4XJRCCDSIcRjbymMEY/ITp79RXGhsLlBrFnKRrc
+         HScM3R8OvipPRfq/knihNMJxa+4FAP740gDYm+xAf/jnnpdpL4a89frAoGULifp/juvV
+         p4Wsq1PIe4uO80qdaewWnRzlQxMgaXe0tmgTBXaiATFozPohVQPODnSS733FOcYgzr03
+         o4Wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=tSjq6cIX1DBnOadzNlGlYQSWPqtvc5vqU2shjVT0VqA=;
-        b=B7hdlOmV/Eq1rGpeUmg8h61xaG+GTa8URJ1nDGpDKtGHGUkagqLP952IFbAW5Hbg8H
-         PGMkPtULX6cD9fYbaBcyeJwepVqQbm1xFUmILU75v9ygDnZpo401BrdOe+7EmgkCruIL
-         teajMPwAAXhDJrvkUK8NB2kHJxgn7GkqL9OAO5rv0EfR5clKs9YoyLZPURnMNPZU4WMp
-         1WC0HH09bFQ/EzaPIZP7DbJqI3JTH4OMDmqiLFYrew+KhFhtysjO5FkvTOzQIvSfh9nF
-         4gtUw/fGW6kjM82r/d+RmlYzFlVTR5bfxCYsl3ILjoX9tJas2DIlYK++oEFF0daOEZ5J
-         vltw==
-X-Gm-Message-State: APjAAAWMD/NKflg5OLN90r3BIsR9BISEnPMdmGiIEa0V3WYRLGR7Ljpg
-        TYDLPsct1wS8oqVXyKbN+F8=
-X-Google-Smtp-Source: APXvYqyD4ft6i0D2tWp18wsIxIDnCCerDip6b9YYpNjRi+NTD88o8jCyOH5HkT8sp25ZVDrosHjoPA==
-X-Received: by 2002:a1c:1947:: with SMTP id 68mr7674843wmz.171.1558909545865;
-        Sun, 26 May 2019 15:25:45 -0700 (PDT)
+        bh=f1zmDm9n7G9V5x4Qey/KRvnzXY0A1V0uEl3s5XqqEzY=;
+        b=Fopo2jWw/pf+gc+SUEL6RR9fSLhpr04OcZkVD6xvbP4qwQn4qTyoWsRs/JKio4k8ze
+         VzYdwHiLN3XeIGwTC0O6aU12FqcLVwBivKe/qVpQ07XuvUun19LcSXKytblZPNoMp+R7
+         pK5y2ixkEaoVhJXdTEQlle3cV+Klu8JUDqLbqNHE6SXLO1Z1/fMnVE3wViQFHyp6gCsI
+         /P1SbgYHH7l+GxwjK7rWuOxOwQaQwaJs2siz0r71G4q8fGWQlJmU5SpcMkqo/WSZnhOx
+         /lca4OzYZK8BmPQNyiQnQObdymhM1hwtMtIpYPmG8QDFuNWF/HNlYpQDlyed0UFzFGkY
+         IiAw==
+X-Gm-Message-State: APjAAAXu5/Yc2Z1ZIocEr8Umo2RMAC5o2KqcwTCxS1E2cs9X/8u+lkBg
+        lsv/oJunIkh6SJq//UxOuZc=
+X-Google-Smtp-Source: APXvYqzNxMDvJErVSAYX1CErZnfVjsHwRpfsjf26f1XbSjKAv9Dl2F0QIgr6Sh6x3Y/xidX4lHWv2Q==
+X-Received: by 2002:a05:600c:228b:: with SMTP id 11mr108670wmf.26.1558909552439;
+        Sun, 26 May 2019 15:25:52 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
-        by smtp.gmail.com with ESMTPSA id o20sm10368398wro.2.2019.05.26.15.25.44
+        by smtp.gmail.com with ESMTPSA id o20sm10368398wro.2.2019.05.26.15.25.51
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 26 May 2019 15:25:45 -0700 (PDT)
+        Sun, 26 May 2019 15:25:51 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -67,9 +67,9 @@ Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-sunxi@googlegroups.com,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v2 02/10] media: rc: sunxi: Add A31 compatible
-Date:   Mon, 27 May 2019 00:25:28 +0200
-Message-Id: <20190526222536.10917-3-peron.clem@gmail.com>
+Subject: [PATCH v2 08/10] arm64: dts: allwinner: h6: Add IR receiver node
+Date:   Mon, 27 May 2019 00:25:34 +0200
+Message-Id: <20190526222536.10917-9-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190526222536.10917-1-peron.clem@gmail.com>
 References: <20190526222536.10917-1-peron.clem@gmail.com>
@@ -81,26 +81,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allwiner A31 has a different memory mapping so add the compatible
-we will need it later.
+Allwinner H6 IR is similar to A31 and can use same driver.
+
+Add support for it.
 
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- drivers/media/rc/sunxi-cir.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/drivers/media/rc/sunxi-cir.c b/drivers/media/rc/sunxi-cir.c
-index 307e44714ea0..29ac33b68596 100644
---- a/drivers/media/rc/sunxi-cir.c
-+++ b/drivers/media/rc/sunxi-cir.c
-@@ -319,6 +319,7 @@ static int sunxi_ir_remove(struct platform_device *pdev)
- static const struct of_device_id sunxi_ir_match[] = {
- 	{ .compatible = "allwinner,sun4i-a10-ir", },
- 	{ .compatible = "allwinner,sun5i-a13-ir", },
-+	{ .compatible = "allwinner,sun6i-a31-ir", },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, sunxi_ir_match);
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 16c5c3d0fd81..649cbdfe452e 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -647,6 +647,25 @@
+ 				pins = "PL0", "PL1";
+ 				function = "s_i2c";
+ 			};
++
++			r_ir_rx_pin: r-ir-rx-pin {
++				pins = "PL9";
++				function = "s_cir_rx";
++			};
++		};
++
++		r_ir: ir@7040000 {
++				compatible = "allwinner,sun50i-h6-ir",
++					     "allwinner,sun6i-a31-ir";
++				reg = <0x07040000 0x400>;
++				interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&r_ccu CLK_R_APB1_IR>,
++					 <&r_ccu CLK_IR>;
++				clock-names = "apb", "ir";
++				resets = <&r_ccu RST_R_APB1_IR>;
++				pinctrl-names = "default";
++				pinctrl-0 = <&r_ir_rx_pin>;
++				status = "disabled";
+ 		};
+ 
+ 		r_i2c: i2c@7081400 {
 -- 
 2.20.1
 
