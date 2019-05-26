@@ -2,117 +2,156 @@ Return-Path: <SRS0=Y9JJ=T2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA96EC07542
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 01:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A0A5C07542
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 01:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FD02214DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 01:19:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51806214DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 01:24:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oW0SsEHy"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="Oxb0w8/z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727738AbfEZBT6 (ORCPT
+        id S1727605AbfEZBYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 May 2019 21:19:58 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:46422 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727622AbfEZBTf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 May 2019 21:19:35 -0400
-Received: by mail-ua1-f65.google.com with SMTP id a95so5139513uaa.13
-        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 18:19:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=2CttEDFzuoOFmumd7c7+k8vupiNFD+Q2bYe9G0CKDuU=;
-        b=oW0SsEHygGL0sKM58xiqfbayaqbZjznt9MDUh4lZYFb58UDHS8dxF46H7vxjPptB9K
-         JVaVtSu8DhKQjmqlxgYHI73nYcxGYqtyAae+SHOH/gKb+6Te04kv+9zhsmHsMe8lLn0+
-         rCyUTaMeSnib+jQjnyYlmMAI99NR/LXUyX8Lwf0znYMuxK5bceAZ8ibSUaponibj0BKq
-         ms7P3Yq21plDwdfpClJryb/ySv57CUiiHaRtVLRnM6RlXhMCbV1AlgrNHVmta3kT1HaE
-         D2oUSuIAr01aOFxmYsJ4EiUdZ8M8l4vf8N1zxeyMY9rm/iro4lL8SFwvMvQanCMNQ7vd
-         9EfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=2CttEDFzuoOFmumd7c7+k8vupiNFD+Q2bYe9G0CKDuU=;
-        b=VNpg8ila2W7nztcP7cDLcquutla2JnMf5ofQ6gGWAdbSgZp/0LGlvZzZK+ofppp0uM
-         x5ly5l1YKFLhShY5ji9D/rBbWWTlgvniSp8FOMOoi4B41eFeAxo28JkoKtvvcRBv5BSu
-         2X06daRiHMnKQ2F8vX+puRCmpkVGikvkv8aOOuOztVKPdtY2Z+zL1wta+oVYButmDZ48
-         3otyy3CwwZ+KfieFBvmV9KXH88NDdtwlK349tff/Y1jxjrKtjDqw9wPdyXYo/YGJ0jW9
-         6x9eRE7UuhH6Qb4m9pzJu1HvkaVq3oZRRoO5Pmo/N6jWKsBE4D3jjtwNgjYxUuc+VWy1
-         mvWA==
-X-Gm-Message-State: APjAAAW6hxoHZmmNNwWbLYVUjzXeNBryfPWOE4Zaqr4Sxb2YYfVYb7mJ
-        gHMqCrj0nmLWoogJgFsEJjQ=
-X-Google-Smtp-Source: APXvYqxzLV1COOV54LKZZseEpXVOSvSlUvrKCJ/XQK6mA2Uf7ZZeBLjOfvDwUvtXLu53OeL2PFMFKA==
-X-Received: by 2002:ab0:688b:: with SMTP id t11mr24261965uar.70.1558833574217;
-        Sat, 25 May 2019 18:19:34 -0700 (PDT)
-Received: from arch-01.home (c-73-132-202-198.hsd1.md.comcast.net. [73.132.202.198])
-        by smtp.gmail.com with ESMTPSA id 9sm4593181vkk.43.2019.05.25.18.19.33
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 25 May 2019 18:19:33 -0700 (PDT)
-From:   Geordan Neukum <gneukum1@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Geordan Neukum <gneukum1@gmail.com>
-Subject: [PATCH 4/8] staging: kpc2000: kpc_i2c: Remove unnecessary consecutive newlines
-Date:   Sun, 26 May 2019 01:18:30 +0000
-Message-Id: <3e02066001a8e32632bf2fe287be727944254fef.1558832514.git.gneukum1@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1558832514.git.gneukum1@gmail.com>
-References: <cover.1558832514.git.gneukum1@gmail.com>
+        Sat, 25 May 2019 21:24:48 -0400
+Received: from vps.xff.cz ([195.181.215.36]:53546 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727474AbfEZBYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 May 2019 21:24:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1558833885; bh=vvKWkGbp9K2vIliSPzvDEraQISpPMpRwGfH6Zi4LJd4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Oxb0w8/z/TFyS6ZmcEarY5+TIxaVwuNA6TUXSEQ3SiFSPdI/nMZGijsppYnTUG/M/
+         lJ2b9JECtdxy4o8UojXPuIIlNXC6gmmHHJ+vdmvGbF86+mefO7jPQKGGlcyjWBodep
+         cXx0Gle207O0oDNP0DPNyf+RzVduWqxpfr9U+FJI=
+Date:   Sun, 26 May 2019 03:24:44 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Frank Lee <tiny.windzz@gmail.com>
+Cc:     rui.zhang@intel.com, Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>, robh+dt@kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, catalin.marinas@arm.com,
+        will.deacon@arm.com, David Miller <davem@davemloft.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan.Cameron@huawei.com,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        paulmck@linux.ibm.com, Andy Gross <andy.gross@linaro.org>,
+        olof@lixom.net, bjorn.andersson@linaro.org,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        marc.w.gonzalez@free.fr, stefan.wahren@i2se.com,
+        enric.balletbo@collabora.com, devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH 2/3] thermal: sun50i: add thermal driver for h6
+Message-ID: <20190526012444.yrcellg3xdrt3bo5@core.my.home>
+Mail-Followup-To: Frank Lee <tiny.windzz@gmail.com>, rui.zhang@intel.com,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>, robh+dt@kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, catalin.marinas@arm.com,
+        will.deacon@arm.com, David Miller <davem@davemloft.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan.Cameron@huawei.com,
+        Nicolas Ferre <nicolas.ferre@microchip.com>, paulmck@linux.ibm.com,
+        Andy Gross <andy.gross@linaro.org>, olof@lixom.net,
+        bjorn.andersson@linaro.org, Jagan Teki <jagan@amarulasolutions.com>,
+        marc.w.gonzalez@free.fr, stefan.wahren@i2se.com,
+        enric.balletbo@collabora.com, devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+References: <20190512082614.9045-1-tiny.windzz@gmail.com>
+ <20190512082614.9045-3-tiny.windzz@gmail.com>
+ <20190512221612.ubmknvim4utnqpl4@core.my.home>
+ <CAEExFWv5A5mhpV7afQT=AaYx2ko5QnfbM6HvfuTgT1Na=ssOcw@mail.gmail.com>
+ <20190516182936.h6xdzp3gtg4ikave@core.my.home>
+ <CAEExFWvDO3wJd6wp1hFudf3EGF0NixgKAwAd5-b1=VLF+7-jCw@mail.gmail.com>
+ <20190519142239.eolisexp5mrdyafz@core.my.home>
+ <CAEExFWsc_YB8NORW4ULfuoicL=xr_oAdtHSaxz4ELv53qvCAsQ@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEExFWsc_YB8NORW4ULfuoicL=xr_oAdtHSaxz4ELv53qvCAsQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kpc2000_i2c.c file contains instances of unnecessary consecutive
-newlines which impact the readability of the file. Remove these
-unnecessary newlines.
+Hello Yangtao,
 
-Signed-off-by: Geordan Neukum <gneukum1@gmail.com>
----
- drivers/staging/kpc2000/kpc2000_i2c.c | 5 -----
- 1 file changed, 5 deletions(-)
+On Sun, May 26, 2019 at 02:48:13AM +0800, Frank Lee wrote:
+> On Sun, May 19, 2019 at 10:22 PM Ondřej Jirman <megous@megous.com> wrote:
+> >
+> > I know, I don't think it needs to be per-soc. These actions are all shared by
+> > all SoCs. Maybe with an exception that some SoCs may need one more clock, but
+> > that can be made optionally-required by some flag in struct sunxi_thermal_chip.
+> >
+> > Only highly SoC specific thing is configuring the THS registers for sampling
+> > frequency/averaging/enabling interrupts. The reset/clock enable is generic, and
+> > already abstracted by the clock/reset framework.
+> >
+> > So what I suggest is having:
+> >
+> > sunxi_ths_enable()
+> >         reset deassert
+> >         bus clock prepare enable
+> >         optionally module clock prepare enable (in the future)
+> >         call per-soc calibration
+> >         call per-soc setup callback
+> >
+> > sunxi_ths_disable()
+> >         reset assert
+> >         bus clock unprepare disable
+> >         optionally module clock unprepare disable
+> >
+> > And if you could move devm_nvmem_cell_get to probe that should make per-SoC
+> > calibration callback also less repetitive and could avoid undoing the enable
+> > in case it returns EPROBE_DEFER (which is possible).
+> >
+> > All this should make it easier to support PM in the future and add less
+> > cumbersome to add support for A83T and H3/H5.
+> >
+> > BTW, what are your plans for more SoC support? I'd like to add support for
+> > A83T and H3/H5, maybe even during the 5.3 cycle if this driver happens to land
+> > early enough. If you don't have any plans I'll take it on.
+> >
+> 
+> I plan to support h3 and a33 later.
+> Can you support other platforms?
 
-diff --git a/drivers/staging/kpc2000/kpc2000_i2c.c b/drivers/staging/kpc2000/kpc2000_i2c.c
-index 1d100bb7c548..1767f351a116 100644
---- a/drivers/staging/kpc2000/kpc2000_i2c.c
-+++ b/drivers/staging/kpc2000/kpc2000_i2c.c
-@@ -115,7 +115,6 @@ struct i2c_device {
- #define PCI_DEVICE_ID_INTEL_LYNXPOINT_SMBUS         0x8c22
- #define PCI_DEVICE_ID_INTEL_LYNXPOINT_LP_SMBUS      0x9c22
- 
--
- #define FEATURE_SMBUS_PEC       BIT(0)
- #define FEATURE_BLOCK_BUFFER    BIT(1)
- #define FEATURE_BLOCK_PROC      BIT(2)
-@@ -521,8 +520,6 @@ static s32 i801_access(struct i2c_adapter *adap, u16 addr, unsigned short flags,
- 	return 0;
- }
- 
--
--
- static u32 i801_func(struct i2c_adapter *adapter)
- {
- 	struct i2c_device *priv = i2c_get_adapdata(adapter);
-@@ -571,8 +568,6 @@ static const struct i2c_algorithm smbus_algorithm = {
- 	.functionality  = i801_func,
- };
- 
--
--
- /********************************
-  *** Part 2 - Driver Handlers ***
-  ********************************/
--- 
-2.21.0
+Yes, I can do A83T. H5 is similar (the same?) as H3.
 
+thank you and regards,
+	o.
+
+> Cheers,
+> Yangtao
+> 
+> > thank you and regards,
+> >         o.
+> >
+> > > >
+> > > > thank you and regards,
+> > > >         o.
+> > > >
+> > > > > Regards,
+> > > > > Yangtao
+> > >
+> > > _______________________________________________
+> > > linux-arm-kernel mailing list
+> > > linux-arm-kernel@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
