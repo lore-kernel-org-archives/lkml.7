@@ -2,274 +2,172 @@ Return-Path: <SRS0=Y9JJ=T2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53FE6C282E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 22:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C0C5C282E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 23:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FEC42070D
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 22:55:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FDCE21707
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 23:37:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dL9U/Hs0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="xwkq7pij"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726030AbfEZWzK (ORCPT
+        id S1725981AbfEZXhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 18:55:10 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45794 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725846AbfEZWzJ (ORCPT
+        Sun, 26 May 2019 19:37:02 -0400
+Received: from gateway31.websitewelcome.com ([192.185.144.218]:42723 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725838AbfEZXhC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 18:55:09 -0400
-Received: by mail-wr1-f65.google.com with SMTP id b18so14985917wrq.12;
-        Sun, 26 May 2019 15:55:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=OMUk3Qi7ehStox1DKoqfw3m6PEg9rEqP98IUbifxH40=;
-        b=dL9U/Hs0k07/elOl2yV3Sfr5qMcxJeT6cjMsUmUZJA3LlNCcJKrMFVVv2fUK1Li/1x
-         uEkLV78dO0oOnaD7IxTCWipjmoIAmpxYXWfq8MgJxcjFTgHGcq/0nEUtBuWPdRG1/bfC
-         pqkRkoUP331yG072PeaywNnAcFwgpu5oDo/ZBuPY9TTTnbVcXf9f0hOeED+MTXuRsOJc
-         hd4G1qrBRWElra2bY5T7eqK2IJBYbfESroRTfaPnmHm6D9TB11xtdeGNcNziO45sjf8w
-         dxVbXHa6eZh1ZxrXhs7Gby0PRqEYQsmrggJiEfA68zI27ik/EfbX/fXH5wIXcAU5Okww
-         zukQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=OMUk3Qi7ehStox1DKoqfw3m6PEg9rEqP98IUbifxH40=;
-        b=n/Kv2IWZvdueTDjtF9fFuD/D2MD+OSlbV396m1MB1NIMTeVeTjWB0uOe8QRprhfUbu
-         bG+c/yoix73Hqtheny90R9abGLCsZmZL7xZgQ/zIfLAkL5fyFkS6if9ElqiuNDX+r4PZ
-         O7cLqJigxwdR1W8hlZOF9XiD2g3MBdYEWO2Ed7FdiWKv1X7HzYmOThh+zchegno25b7g
-         pKaksDPrzXOvb3mhboeNGjFYdBS3Ge/3ZA7dS54Ubox/7XIPtsTFCpjY3b6MLPAaDT9M
-         H7bhGMdEm4Tdih35zv2hhR7x0VfRYLMjwiqynCiknQpcuLeb69OekWFXKGfH6CP0a7by
-         IsEQ==
-X-Gm-Message-State: APjAAAU/ucY6ZM2Npk3SKEQtM9B+GHpb7rnwqSWPWfMz0Ousj9RxBdA0
-        4RXhCN/p/LCCgBm0x3AFG2c0CrbKGL0=
-X-Google-Smtp-Source: APXvYqwsZJrMq2FvJYmaIUI2oleYd9y7vg8Rz7ZHXC5bOcQoX+zWMHLdmD+YOybLAcHepTNVEmL9xA==
-X-Received: by 2002:adf:8b83:: with SMTP id o3mr63637568wra.278.1558911306386;
-        Sun, 26 May 2019 15:55:06 -0700 (PDT)
-Received: from vm.nix.is ([2a01:4f8:120:2468::2])
-        by smtp.gmail.com with ESMTPSA id z21sm9502851wmf.25.2019.05.26.15.55.05
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 26 May 2019 15:55:05 -0700 (PDT)
-From:   =?UTF-8?q?=C3=86var=20Arnfj=C3=B6r=C3=B0=20Bjarmason?= 
-        <avarab@gmail.com>
-To:     git@vger.kernel.org
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Junio C Hamano <gitster@pobox.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        KVM list <kvm@vger.kernel.org>,
-        Michael Haggerty <mhagger@alum.mit.edu>,
-        =?UTF-8?q?=C3=86var=20Arnfj=C3=B6r=C3=B0=20Bjarmason?= 
-        <avarab@gmail.com>
-Subject: [RFC/PATCH] refs: tone down the dwimmery in refname_match() for {heads,tags,remotes}/*
-Date:   Mon, 27 May 2019 00:54:45 +0200
-Message-Id: <20190526225445.21618-1-avarab@gmail.com>
-X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a
-In-Reply-To: <CAHk-=wgzKzAwS=_ySikL1f=Gr62YXL_WXGh82wZKMOvzJ9+2VA@mail.gmail.com>
-References: <CAHk-=wgzKzAwS=_ySikL1f=Gr62YXL_WXGh82wZKMOvzJ9+2VA@mail.gmail.com>
+        Sun, 26 May 2019 19:37:02 -0400
+X-Greylist: delayed 1404 seconds by postgrey-1.27 at vger.kernel.org; Sun, 26 May 2019 19:37:01 EDT
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id 5813C9D35
+        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2019 18:13:36 -0500 (CDT)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id V2KehXAjmYTGMV2KehX8ug; Sun, 26 May 2019 18:13:36 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=CxkfiD4KZYM31MyYyEMRm8MEp37SM1b9k7E3WaUhpIk=; b=xwkq7pijV48c7i+TemwbqEMd/0
+        qZYoc8x5OHRwXRietoDv7B7CCRb0f1LGrOAB0niRk+xIAQZwq2vybBbmD3GCfaJTGhW7QSktyyHHu
+        poe0HtRtJbSuaSMkhwn+uAlMrBDNwPzgA8YUF+lnifmeyBM8X1BX5X3B29I+/1QG1Rmq+dnZHcEa1
+        wLxAsJGayBpvYqse8wbLVamsROkFuJidefqlcW+34N0XVLnD/geLZBkzcktw1wFER9sMS3Dsr7ifV
+        m7hT9uq5oUhcSDhvv7MbeSd09T6N2Y717xFClQfKdsP/R6WyXCpzW5b1y6HGr55iM3cTVVyn+jHTd
+        6RIG0YSQ==;
+Received: from [177.34.20.96] (port=44604 helo=[192.168.0.28])
+        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1hV2Kd-0021VO-LO; Sun, 26 May 2019 20:13:35 -0300
+Subject: Re: [PATCH v2 2/4] dt-bindings: power: supply: Max17040: Add low
+ level SOC alert threshold
+To:     Rob Herring <robh@kernel.org>
+Cc:     sre@kernel.org, krzk@kernel.org, mark.rutland@arm.com,
+        cw00.choi@samsung.com, b.zolnierkie@samsung.com,
+        lee.jones@linaro.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <CAJKOXPfvs=uETF0-xpwCWc5khSpWjpz2zz354Jcx1bVjm9cG2A@mail.gmail.com>
+ <20190415012635.6369-1-matheus@castello.eng.br>
+ <20190415012635.6369-3-matheus@castello.eng.br>
+ <20190429221353.GA25837@bogus>
+From:   Matheus Castello <matheus@castello.eng.br>
+Message-ID: <bca953be-8e9e-b20c-abeb-42f3615c7ddb@castello.eng.br>
+Date:   Sun, 26 May 2019 20:13:31 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190429221353.GA25837@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 177.34.20.96
+X-Source-L: No
+X-Exim-ID: 1hV2Kd-0021VO-LO
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.28]) [177.34.20.96]:44604
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 10
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a refspec like HEAD:tags/x is pushed where HEAD is a branch,
-we'll push a *branch* that'll be located at "refs/heads/tags/x". This
-is part of the rather straightforward rules I documented in
-2219c09e23 ("push doc: document the DWYM behavior pushing to
-unqualified <dst>", 2018-11-13).
-
-However, if there exists a refs/tags/x on the remote the
-count_refspec_match() logic will, as a result of calling
-refname_match() match the detected branch type of the LHS of the
-refspec to refs/tags/x, because it's in a loop where it tries to match
-"tags/x" to "refs/tags/X', then "refs/tags/tags/x" etc.
-
-This resulted in a case[1] where someone on LKML did:
-
-    git push kvm +HEAD:tags/for-linus
-
-Which would have created a new "tags/for-linus" branch in their "kvm"
-repository, except because they happened to have an existing
-"refs/tags/for-linus" reference we pushed there instead, and replaced
-an annotated tag with a lightweight tag.
-
-Let's tone this down a bit and not match the more general expansions
-if they'd overlap with later expansions.
-
-This patch is a hack, and should not be applied. We probably want to
-fix this for "push", but we use refname_match() all over the place. We
-probably want to start by undoing part of
-54457fe509 ("refname_match(): always use the rules in
-ref_rev_parse_rules", 2014-01-14) and having special rules just for
-push.
-
-Furthermore ref_rev_parse_rules is used elsewhere, should we be doing
-this in other places? I think not if we undo most of 54457fe509 and
-can just have a custom matcher just for count_refspec_match(). That
-one shouldn't need any sort of magic, because elsewhere in the remote
-push DWYM code we try to add implicit refs/{tags,heads}/ prefixes.
-
-As the t/t5150-request-pull.sh change shows this results in a failing
-test where a local "full" branch is being pushed to a remote
-"refs/tags/full". So maybe this is something LKML people actually want
-for some reason.
-
-1. https://lore.kernel.org/lkml/2d55fd2a-afbf-1b7c-ca82-8bffaa18e0d0@redhat.com/
-
-Signed-off-by: Ævar Arnfjörð Bjarmason <avarab@gmail.com>
----
-
-On Sun, May 26 2019, Linus Torvalds wrote:
-
-> On Sun, May 26, 2019 at 10:53 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+On 4/29/19 7:13 PM, Rob Herring wrote:
+> On Sun, Apr 14, 2019 at 10:26:33PM -0300, Matheus Castello wrote:
+>> For configure low level state of charge threshold alert signaled from
+>> max17040 we add "maxim,alert-soc-level" property.
 >>
->> The interesting thing is that not only git will treat lightweight tags
->> like, well, tags:
->
-> Yeah, that's very much by design - lightweight tags are very
-> comvenient for local temporary stuff where you don't want signing etc
-> (think automated test infrastructure, or just local reminders).
->
->> In addition, because I _locally_ had a tag object that
->> pointed to the same commit and had the same name, git-request-pull
->> included my local tag's message in its output!  I wonder if this could
->> be considered a bug.
->
-> Yeah, I think git request-pull should at least *warn* about the tag
-> not being the same object locally as in the remote you're asking me to
-> pull.
->
-> Are you sure you didn't get a warning, and just missed it? But adding
-> Junio and the Git list just as a possible heads-up for this in case
-> git request-pull really only compares the object the tag points to,
-> rather than the SHA1 of the tag itself.
+>> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+>> ---
+>>   .../power/supply/max17040_battery.txt         | 24 +++++++++++++++++++
+>>   1 file changed, 24 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+>> new file mode 100644
+>> index 000000000000..9b2cc67d556f
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+>> @@ -0,0 +1,24 @@
+>> +max17040_battery
+>> +~~~~~~~~~~~~~~~~
+>> +
+>> +Required properties :
+>> + - compatible : "maxim,max17040" or "maxim,max77836-battery"
+> 
+> This is really a charger, not a battery.
+> 
 
-This behavior looks like a bug to me. This RFC-quality patch is an
-initial stab at fixing it, and is all I had time for today.
+max17040 is a fuel gauge, max77836 MUIC has it integrated. Because of 
+this we use it in the compatible list.
 
- refs.c                   |  8 +++++++-
- t/t5150-request-pull.sh  |  2 +-
- t/t5505-remote.sh        | 17 +++++++++++++++++
- t/t9101-git-svn-props.sh | 12 ++++++------
- 4 files changed, 31 insertions(+), 8 deletions(-)
+>> +
+>> +Optional properties :
+>> +- maxim,alert-soc-level :	The alert threshold that sets the state of
+>> + 				charge level where an interrupt is generated.
+>> +                          	Can be configured from 1 up to 32. If skipped
+>> +				the power up default value of 4 will be used.
+> 
+> Units? This is a low or high alert? Does a common property make sense
+> here?
+> 
 
-diff --git a/refs.c b/refs.c
-index 92d1f6dbdd..729b921328 100644
---- a/refs.c
-+++ b/refs.c
-@@ -514,9 +514,15 @@ int refname_match(const char *abbrev_name, const char *full_name)
- 	const int abbrev_name_len = strlen(abbrev_name);
- 	const int num_rules = NUM_REV_PARSE_RULES;
- 
--	for (p = ref_rev_parse_rules; *p; p++)
-+	for (p = ref_rev_parse_rules; *p; p++) {
-+		if (!strcmp(*p, "refs/%.*s") &&
-+		    (starts_with(abbrev_name, "tags/") ||
-+		     starts_with(abbrev_name, "heads/") ||
-+		     starts_with(abbrev_name, "remotes/")))
-+			continue;
- 		if (!strcmp(full_name, mkpath(*p, abbrev_name_len, abbrev_name)))
- 			return &ref_rev_parse_rules[num_rules] - p;
-+	}
- 
- 	return 0;
- }
-diff --git a/t/t5150-request-pull.sh b/t/t5150-request-pull.sh
-index fca001eb9b..0265871cf4 100755
---- a/t/t5150-request-pull.sh
-+++ b/t/t5150-request-pull.sh
-@@ -212,7 +212,7 @@ test_expect_success 'pull request format' '
- 		cd local &&
- 		git checkout initial &&
- 		git merge --ff-only master &&
--		git push origin tags/full &&
-+		git push origin full:refs/tags/full &&
- 		git request-pull initial "$downstream_url" tags/full >../request
- 	) &&
- 	<request sed -nf fuzz.sed >request.fuzzy &&
-diff --git a/t/t5505-remote.sh b/t/t5505-remote.sh
-index 883b32efa0..52507b9e50 100755
---- a/t/t5505-remote.sh
-+++ b/t/t5505-remote.sh
-@@ -1277,4 +1277,21 @@ test_expect_success 'refs/remotes/* <src> refspec and unqualified <dst> DWIM and
- 	)
- '
- 
-+test_expect_success 'HEAD:tags/A and HEAD:tags/B should not be different one of refs/tags/[AB] exists' '
-+	git clone "file://$PWD/two" tags-match &&
-+	(
-+		cd tags-match &&
-+		test_commit A &&
-+		git rev-parse HEAD >expected &&
-+
-+		git push origin HEAD:tags/my-not-a-tag &&
-+		git -C ../two rev-parse refs/heads/tags/my-not-a-tag >actual &&
-+		test_cmp expected actual &&
-+
-+		git push origin HEAD:tags/my-tag &&
-+		git -C ../two rev-parse refs/heads/tags/my-tag >actual &&
-+		test_cmp expected actual
-+	)
-+'
-+
- test_done
-diff --git a/t/t9101-git-svn-props.sh b/t/t9101-git-svn-props.sh
-index c26c4b0927..f9e43f4e97 100755
---- a/t/t9101-git-svn-props.sh
-+++ b/t/t9101-git-svn-props.sh
-@@ -73,11 +73,11 @@ test_expect_success 'fetch revisions from svn' 'git svn fetch'
- 
- name='test svn:keywords ignoring'
- test_expect_success "$name" \
--	'git checkout -b mybranch remotes/git-svn &&
-+	'git checkout -b mybranch refs/remotes/git-svn &&
- 	echo Hi again >> kw.c &&
- 	git commit -a -m "test keywords ignoring" &&
--	git svn set-tree remotes/git-svn..mybranch &&
--	git pull . remotes/git-svn'
-+	git svn set-tree refs/remotes/git-svn..mybranch &&
-+	git pull . refs/remotes/git-svn'
- 
- expect='/* $Id$ */'
- got="$(sed -ne 2p kw.c)"
-@@ -95,7 +95,7 @@ test_expect_success "propset CR on crlf files" '
- 
- test_expect_success 'fetch and pull latest from svn and checkout a new wc' \
- 	'git svn fetch &&
--	 git pull . remotes/git-svn &&
-+	 git pull . refs/remotes/git-svn &&
- 	 svn_cmd co "$svnrepo" new_wc'
- 
- for i in crlf ne_crlf lf ne_lf cr ne_cr empty_cr empty_lf empty empty_crlf
-@@ -117,7 +117,7 @@ cd test_wc
- 	 svn_cmd commit -m "propset CRLF on cr files"'
- cd ..
- test_expect_success 'fetch and pull latest from svn' \
--	'git svn fetch && git pull . remotes/git-svn'
-+	'git svn fetch && git pull . refs/remotes/git-svn'
- 
- b_cr="$(git hash-object cr)"
- b_ne_cr="$(git hash-object ne_cr)"
-@@ -168,7 +168,7 @@ cat >create-ignore-index.expect <<\EOF
- EOF
- 
- test_expect_success 'test create-ignore' "
--	git svn fetch && git pull . remotes/git-svn &&
-+	git svn fetch && git pull . refs/remotes/git-svn &&
- 	git svn create-ignore &&
- 	cmp ./.gitignore create-ignore.expect &&
- 	cmp ./deeply/.gitignore create-ignore.expect &&
--- 
-2.21.0.1020.gf2820cf01a
+It is a low level alert. I will change the name of the property to 
+"maxim,alert-low-soc-level" to make this clear and I will put the 
+percent unit in the description.
 
+I do not find any common property that I can use here, if I am wrong let 
+me know.
+
+>> +- interrupt-parent : 		The GPIO bank from the interrupt line.
+> 
+> Drop this. interrupt-parent is implied.
+
+Ok, I will do.
+
+> 
+>> +- interrupts : 			Interrupt line see Documentation/devicetree/
+>> +				bindings/interrupt-controller/interrupts.txt
+>> +
+>> +Example:
+>> +
+>> +	battery-charger@36 {
+>> +		compatible = "maxim,max17040";
+>> +		reg = <0x36>;
+>> +		maxim,alert-soc-level = <10>;
+>> +		interrupt-parent = <&gpio7>;
+>> +		interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
+> 
+> Usually there are battery properties that need to be described too...
+> 
+
+I will fix this for "battery-fuel-gauge@36". I will also add the 
+description for wake-source as optional property.
+
+Thanks.
+
+Best Regards,
+Matheus Castello
+
+>> +	};
+>> -- 
+>> 2.17.0
+>>
