@@ -2,387 +2,224 @@ Return-Path: <SRS0=Y9JJ=T2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF0DC282E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 05:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17113C282E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 05:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B90752085A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 05:44:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qFn12MPz"
+	by mail.kernel.org (Postfix) with ESMTP id D2B012085A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 05:47:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726522AbfEZFoi (ORCPT
+        id S1727185AbfEZFrO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 01:44:38 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42501 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725880AbfEZFoi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 01:44:38 -0400
-Received: by mail-pf1-f196.google.com with SMTP id r22so4806725pfh.9
-        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 22:44:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cGG8hm4JITH3d45CXrq+jmFB4VDR5sa+87gOYxGAPAI=;
-        b=qFn12MPzpE3AUlRHmme3uj0a2Lca0nuN97hCxkIyWQmWIxWSTLclLqs6Pd1u7c4VQo
-         y+k68VueKxJd7Kfikanm84/irnBvPnYKtCRMtrK40ZRkHSJX4TvTnyyFQOS6zB/7/F2s
-         uCfIl+u1Dp2gcoKTXkl/DHvMl5d0zbfNPHhHF4ebQY6I0fevTZHc1cMiZ/u9OaxwLS+0
-         vG/dpQYn58ccSzvGweE5oA4NcmizN7oDhaaDjpj08T3xKktQWrBKEhEvgZduOkDEbewC
-         K5ENp783w4LE4g1/OAKZpf6UY8eEiG5apURfTxG9EPWcd5bTOst5F8n1sQftNS+CXxRB
-         bQWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cGG8hm4JITH3d45CXrq+jmFB4VDR5sa+87gOYxGAPAI=;
-        b=SVCElsLRT7QmpE/looe0zyNvqS69HIXh5nL80rUftPzFGN+98BLqNapsNffeUrIAok
-         W8rbxj/SJafAtkbVTY1dbF+dNPnedbtJBWeaUfBbLWiKOoWL4AQZ3mJsPzXb/FW+ques
-         fO+5M5GodNGRfc4hZHkR+OqDgvW84Uv1IxTqqyn+Jds880l8PbvP3XPL3ujYFqLZQZmi
-         FNT9ulFam4fwjvv+dvMbZwH5Zno/MvIaemrMgsPzojRo0HIxm5oVTY470rCXbHtvIrPU
-         wWUtfbwAwOLh9thYdQIczG0rwYUdezIdF94GeKv9KdYwx6IT7DpmIn4DGjHgi25HSK4Z
-         WgZQ==
-X-Gm-Message-State: APjAAAVurSQFFiSAZpWEpThkmVWYewVY4p+4/clRDMi0suFO0XNtVUri
-        ft504iZLTFwx4mR1OZvvVwywMg==
-X-Google-Smtp-Source: APXvYqx4zW6HVHahrgBAj/rBrC8D0nb5D+t2hMkxGBFnusvz3gcRYCOEgpWDzH8eYgUaMm4pmLJ9yw==
-X-Received: by 2002:a65:56c5:: with SMTP id w5mr116833991pgs.434.1558849477130;
-        Sat, 25 May 2019 22:44:37 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id c15sm7327493pfi.172.2019.05.25.22.44.34
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 25 May 2019 22:44:35 -0700 (PDT)
-Date:   Sat, 25 May 2019 22:45:03 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: pinctrl: fix spelling mistakes in pinctl
- documentation
-Message-ID: <20190526054503.GJ2085@tuxbook-pro>
-References: <20190525204228.8546-1-colin.king@canonical.com>
+        Sun, 26 May 2019 01:47:14 -0400
+Received: from mx2.mailbox.org ([80.241.60.215]:38096 "EHLO mx2.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725812AbfEZFrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 May 2019 01:47:13 -0400
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx2.mailbox.org (Postfix) with ESMTPS id 13D18A01BD;
+        Sun, 26 May 2019 07:47:09 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter03.heinlein-hosting.de (spamfilter03.heinlein-hosting.de [80.241.56.117]) (amavisd-new, port 10030)
+        with ESMTP id G4iR3GBHN5nz; Sun, 26 May 2019 07:46:56 +0200 (CEST)
+Date:   Sun, 26 May 2019 15:46:38 +1000
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Christian Brauner <christian@brauner.io>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Subject: Re: [PATCH v7 5/5] namei: resolveat(2) syscall
+Message-ID: <20190526054638.jftyco7nviurn47h@yavin>
+References: <20190507164317.13562-1-cyphar@cyphar.com>
+ <20190507164317.13562-6-cyphar@cyphar.com>
+ <CAHk-=whbFMg4+HuWOBuHpvDNiAyowX2HUowv3+pt8vPWk5W-YQ@mail.gmail.com>
+ <20190525070307.bxbvjh2254sx2z6g@yavin>
+ <CAHk-=wiKFi5wi33AmJ4XJmzQaCMHa21-Z-GD_OKPNz=js7R7ig@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="pl4a3gpuunbanplp"
 Content-Disposition: inline
-In-Reply-To: <20190525204228.8546-1-colin.king@canonical.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <CAHk-=wiKFi5wi33AmJ4XJmzQaCMHa21-Z-GD_OKPNz=js7R7ig@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 25 May 13:42 PDT 2019, Colin King wrote:
 
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The spelling of configured is incorrect in the documentation. Fix it.
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+--pl4a3gpuunbanplp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+On 2019-05-25, Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> In fact, I think resolveat() as a model is fundamentally wrong for yet
+> another reason: O_CREAT. If you want to _create_ a new file, and you
+> want to still have the path resolution modifiers in place, the
+> resolveat() model is broken, because it only gives you path resolution
+> for the lookup, and then when you do openat(O_CREAT) for the final
+> component, you now don't have any way to limit that last component.
+>=20
+> Sure,  you can probably effectively hack around it with resolveat() on
+> everything but the last component, and then
+> openat(O_CREAT|O_EXCL|O_NOFOLLOW) on the last component, because the
+> O_EXCL|O_NOFOLLOW should mean that it won't do any of the unsafe
+> things. And then (if you didn't actually want the O_EXCL), you handle
+> the race between "somebody else got there first" by re-trying etc. So
+> I suspect the O_CREAT thing could be worked around with extra
+> complexity, but it's an example of how the O_PATH model really screws
+> you over.
+>=20
+> End result: I really think resolveat() is broken. It absolutely
+> *needs* to be a full-fledged "openat()" system call, just with added
+> path resolution flags.
 
-Thanks,
-Bjorn
+That's a very good point. I was starting to work on O_CREAT via
+resolveat(2) and it definitely was much harder than most people would be
+happy to deal with -- I'm not even sure that I handled all the cases.
 
-> ---
->  .../devicetree/bindings/pinctrl/qcom,apq8084-pinctrl.txt    | 6 +++---
->  .../devicetree/bindings/pinctrl/qcom,ipq8074-pinctrl.txt    | 6 +++---
->  .../devicetree/bindings/pinctrl/qcom,mdm9615-pinctrl.txt    | 6 +++---
->  .../devicetree/bindings/pinctrl/qcom,msm8916-pinctrl.txt    | 6 +++---
->  .../devicetree/bindings/pinctrl/qcom,msm8960-pinctrl.txt    | 6 +++---
->  .../devicetree/bindings/pinctrl/qcom,msm8994-pinctrl.txt    | 6 +++---
->  .../devicetree/bindings/pinctrl/qcom,msm8996-pinctrl.txt    | 6 +++---
->  .../devicetree/bindings/pinctrl/qcom,msm8998-pinctrl.txt    | 6 +++---
->  .../devicetree/bindings/pinctrl/qcom,qcs404-pinctrl.txt     | 6 +++---
->  .../devicetree/bindings/pinctrl/qcom,sdm660-pinctrl.txt     | 6 +++---
->  .../devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt     | 6 +++---
->  11 files changed, 33 insertions(+), 33 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,apq8084-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,apq8084-pinctrl.txt
-> index 68e93d5b7ede..c9782397ff14 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,apq8084-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,apq8084-pinctrl.txt
-> @@ -122,17 +122,17 @@ to specify in a pin configuration subnode:
->  - bias-disable:
->  	Usage: optional
->  	Value type: <none>
-> -	Definition: The specified pins should be configued as no pull.
-> +	Definition: The specified pins should be configured as no pull.
->  
->  - bias-pull-down:
->  	Usage: optional
->  	Value type: <none>
-> -	Definition: The specified pins should be configued as pull down.
-> +	Definition: The specified pins should be configured as pull down.
->  
->  - bias-pull-up:
->  	Usage: optional
->  	Value type: <none>
-> -	Definition: The specified pins should be configued as pull up.
-> +	Definition: The specified pins should be configured as pull up.
->  
->  - output-high:
->  	Usage: optional
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq8074-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,ipq8074-pinctrl.txt
-> index 6dd72f8599e9..7b151894f5a0 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,ipq8074-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,ipq8074-pinctrl.txt
-> @@ -118,17 +118,17 @@ to specify in a pin configuration subnode:
->  - bias-disable:
->  	Usage: optional
->  	Value type: <none>
-> -	Definition: The specified pins should be configued as no pull.
-> +	Definition: The specified pins should be configured as no pull.
->  
->  - bias-pull-down:
->  	Usage: optional
->  	Value type: <none>
-> -	Definition: The specified pins should be configued as pull down.
-> +	Definition: The specified pins should be configured as pull down.
->  
->  - bias-pull-up:
->  	Usage: optional
->  	Value type: <none>
-> -	Definition: The specified pins should be configued as pull up.
-> +	Definition: The specified pins should be configured as pull up.
->  
->  - output-high:
->  	Usage: optional
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,mdm9615-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,mdm9615-pinctrl.txt
-> index 86ecdcfc4fb8..d46973968873 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,mdm9615-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,mdm9615-pinctrl.txt
-> @@ -97,17 +97,17 @@ to specify in a pin configuration subnode:
->  - bias-disable:
->  	Usage: optional
->  	Value type: <none>
-> -	Definition: The specified pins should be configued as no pull.
-> +	Definition: The specified pins should be configured as no pull.
->  
->  - bias-pull-down:
->  	Usage: optional
->  	Value type: <none>
-> -	Definition: The specified pins should be configued as pull down.
-> +	Definition: The specified pins should be configured as pull down.
->  
->  - bias-pull-up:
->  	Usage: optional
->  	Value type: <none>
-> -	Definition: The specified pins should be configued as pull up.
-> +	Definition: The specified pins should be configured as pull up.
->  
->  - output-high:
->  	Usage: optional
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8916-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8916-pinctrl.txt
-> index 195a7a0ef0cc..3354a63296d9 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,msm8916-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8916-pinctrl.txt
-> @@ -130,17 +130,17 @@ to specify in a pin configuration subnode:
->  - bias-disable:
->  	Usage: optional
->  	Value type: <none>
-> -	Definition: The specified pins should be configued as no pull.
-> +	Definition: The specified pins should be configured as no pull.
->  
->  - bias-pull-down:
->  	Usage: optional
->  	Value type: <none>
-> -	Definition: The specified pins should be configued as pull down.
-> +	Definition: The specified pins should be configured as pull down.
->  
->  - bias-pull-up:
->  	Usage: optional
->  	Value type: <none>
-> -	Definition: The specified pins should be configued as pull up.
-> +	Definition: The specified pins should be configured as pull up.
->  
->  - output-high:
->  	Usage: optional
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8960-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8960-pinctrl.txt
-> index 5034eb6653c7..a7dd213c77c6 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,msm8960-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8960-pinctrl.txt
-> @@ -124,17 +124,17 @@ to specify in a pin configuration subnode:
->  - bias-disable:
->  	Usage: optional
->  	Value type: <none>
-> -	Definition: The specified pins should be configued as no pull.
-> +	Definition: The specified pins should be configured as no pull.
->  
->  - bias-pull-down:
->  	Usage: optional
->  	Value type: <none>
-> -	Definition: The specified pins should be configued as pull down.
-> +	Definition: The specified pins should be configured as pull down.
->  
->  - bias-pull-up:
->  	Usage: optional
->  	Value type: <none>
-> -	Definition: The specified pins should be configued as pull up.
-> +	Definition: The specified pins should be configured as pull up.
->  
->  - output-high:
->  	Usage: optional
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8994-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8994-pinctrl.txt
-> index f15443f6e78e..da52df6273bc 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,msm8994-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8994-pinctrl.txt
-> @@ -128,17 +128,17 @@ to specify in a pin configuration subnode:
->  - bias-disable:
->  	Usage: optional
->  	Value type: <none>
-> -	Definition: The specified pins should be configued as no pull.
-> +	Definition: The specified pins should be configured as no pull.
->  
->  - bias-pull-down:
->  	Usage: optional
->  	Value type: <none>
-> -	Definition: The specified pins should be configued as pull down.
-> +	Definition: The specified pins should be configured as pull down.
->  
->  - bias-pull-up:
->  	Usage: optional
->  	Value type: <none>
-> -	Definition: The specified pins should be configued as pull up.
-> +	Definition: The specified pins should be configured as pull up.
->  
->  - output-high:
->  	Usage: optional
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8996-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8996-pinctrl.txt
-> index fa97f609fe45..a56cb882830c 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,msm8996-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8996-pinctrl.txt
-> @@ -149,17 +149,17 @@ to specify in a pin configuration subnode:
->  - bias-disable:
->  	Usage: optional
->  	Value type: <none>
-> -	Definition: The specified pins should be configued as no pull.
-> +	Definition: The specified pins should be configured as no pull.
->  
->  - bias-pull-down:
->  	Usage: optional
->  	Value type: <none>
-> -	Definition: The specified pins should be configued as pull down.
-> +	Definition: The specified pins should be configured as pull down.
->  
->  - bias-pull-up:
->  	Usage: optional
->  	Value type: <none>
-> -	Definition: The specified pins should be configued as pull up.
-> +	Definition: The specified pins should be configured as pull up.
->  
->  - output-high:
->  	Usage: optional
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8998-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8998-pinctrl.txt
-> index e70c79bbbc5b..00174f08ba1d 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,msm8998-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8998-pinctrl.txt
-> @@ -135,17 +135,17 @@ to specify in a pin configuration subnode:
->  - bias-disable:
->  	Usage: optional
->  	Value type: <none>
-> -	Definition: The specified pins should be configued as no pull.
-> +	Definition: The specified pins should be configured as no pull.
->  
->  - bias-pull-down:
->  	Usage: optional
->  	Value type: <none>
-> -	Definition: The specified pins should be configued as pull down.
-> +	Definition: The specified pins should be configured as pull down.
->  
->  - bias-pull-up:
->  	Usage: optional
->  	Value type: <none>
-> -	Definition: The specified pins should be configued as pull up.
-> +	Definition: The specified pins should be configured as pull up.
->  
->  - output-high:
->  	Usage: optional
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,qcs404-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,qcs404-pinctrl.txt
-> index 2b8f77762edc..a50e74684195 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,qcs404-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,qcs404-pinctrl.txt
-> @@ -150,17 +150,17 @@ to specify in a pin configuration subnode:
->  - bias-disable:
->  	Usage: optional
->  	Value type: <none>
-> -	Definition: The specified pins should be configued as no pull.
-> +	Definition: The specified pins should be configured as no pull.
->  
->  - bias-pull-down:
->  	Usage: optional
->  	Value type: <none>
-> -	Definition: The specified pins should be configued as pull down.
-> +	Definition: The specified pins should be configured as pull down.
->  
->  - bias-pull-up:
->  	Usage: optional
->  	Value type: <none>
-> -	Definition: The specified pins should be configued as pull up.
-> +	Definition: The specified pins should be configured as pull up.
->  
->  - output-high:
->  	Usage: optional
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdm660-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sdm660-pinctrl.txt
-> index 769ca83bb40d..be034d329e10 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sdm660-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sdm660-pinctrl.txt
-> @@ -142,17 +142,17 @@ to specify in a pin configuration subnode:
->  - bias-disable:
->  	Usage: optional
->  	Value type: <none>
-> -	Definition: The specified pins should be configued as no pull.
-> +	Definition: The specified pins should be configured as no pull.
->  
->  - bias-pull-down:
->  	Usage: optional
->  	Value type: <none>
-> -	Definition: The specified pins should be configued as pull down.
-> +	Definition: The specified pins should be configured as pull down.
->  
->  - bias-pull-up:
->  	Usage: optional
->  	Value type: <none>
-> -	Definition: The specified pins should be configued as pull up.
-> +	Definition: The specified pins should be configured as pull up.
->  
->  - output-high:
->  	Usage: optional
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
-> index 665aadb5ea28..321bdb9be0d2 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
-> @@ -118,17 +118,17 @@ to specify in a pin configuration subnode:
->  - bias-disable:
->  	Usage: optional
->  	Value type: <none>
-> -	Definition: The specified pins should be configued as no pull.
-> +	Definition: The specified pins should be configured as no pull.
->  
->  - bias-pull-down:
->  	Usage: optional
->  	Value type: <none>
-> -	Definition: The specified pins should be configued as pull down.
-> +	Definition: The specified pins should be configured as pull down.
->  
->  - bias-pull-up:
->  	Usage: optional
->  	Value type: <none>
-> -	Definition: The specified pins should be configued as pull up.
-> +	Definition: The specified pins should be configured as pull up.
->  
->  - output-high:
->  	Usage: optional
-> -- 
-> 2.20.1
-> 
+I'll go for an openat2(2) then. Thinking about it some more -- since
+it's a new syscall, I could actually implement the O_PATH link-mode as
+being just the regular mode argument (since openat(2) ignores the mode
+for non-O_CREAT anyway). The openat(2) wrapper might be more than
+one-line as a result but it should avoid polluting the resolution flags
+with mode flags (since openat(O_PATH) needs to have a g+rwx mode for
+backwards-compatibility).
+
+> >   openat2(rootfd, "path/to/file", O_PATH, RESOLVE_IN_ROOT, &statbuf);
+>=20
+> Note that for O_CREAT, it either needs the 'mode' parameter too, or
+> the statbuf would need to be an in-out thing. I think the in-out model
+> might be nice (the varargs model with a conditional 'mode' parameter
+> is horrid, I think), but at some point it's just bike-shedding.
+>=20
+> Also, I'm not absolutely married to the statbuf, but I do think it
+> might be a useful extension. A *lot* of users need the size of the
+> file for subsequent mmap() calls (or for buffer management for
+> read/write interface) or for things like just headers (ie
+> "Content-length:" in html etc).
+>=20
+> I'm not sure people actually want a full 'struct stat', but people
+> historically also do st_ino/st_dev for indexing into existing
+> user-space caches (or to check permissions like that it's on the right
+> filesystem, but the resolve flags kind of make that less of an issue).
+> And st_mode to verify that it's a proper regular file etc etc.
+>=20
+> You can always just leave it as NULL if you don't care, there's almost
+> no downside to adding it, and I do think that people who want a "walk
+> pathname carefully" model almost always would want to also check the
+> end result anyway.
+
+Yeah, I agree -- most folks would want to double-check what they've
+opened or O_PATH'd. Though I'm still not clear what is the best way of
+doing the "stat" argument is -- especially given how much fun
+architecture-specific shenanigans are in fs/stat.c (should I only use
+cp_new_stat64 or have a separate 64-bit syscall).
+
+> > Is there a large amount of overhead or downside to the current
+> > open->fstat way of doing things, or is this more of a "if we're going to
+> > add more ways of opening we might as well add more useful things"?
+>=20
+> Right now, system calls are sadly very expensive on a lot of hardware.
+> We used to be very proud of the fact that Linux system calls were
+> fast, but with meltdown and retpoline etc, we're back to "system calls
+> can be several thousand cycles each, just in overhead, on commonly
+> available hardware".
+>=20
+> Is "several thousand cycles" fatal? Not necessarily. But I think that
+> if we do add a new system call, particularly a fancy one for special
+> security-conscious models, we should look at what people need and use,
+> and want. And performance should always be a concern.
+>=20
+> I realize that people who come at this from primarily just a security
+> issue background may think that security is the primary goal. But no.
+> Security always needs to realize that the _primary_ goal is to have
+> people _use_ it. Without users, security is entirely pointless. And
+> the users part is partly performance, but mostly "it's convenient".
+
+Yup, I agree. I was hoping to shunt most of the convenience to userspace
+to avoid ruffling feathers in VFS-land, but I'm more than happy to make
+the kernel ABI more convenient.
+
+> The whole "this is Linux-specific" is a big inconvenience point
+
+I hope that other OSes will take our lead and have a similar interface
+so that the particular inconvenience can go away eventually (this was
+one of the arguments for resolveat(2) -- it's a clear "this is a new
+idea" interface rather than mixing it with other O_* flags).
+
+> Talking about securely opening things - another flag that we may want
+> to avoid issues is a "don't open device nodes" flag. Sure, O_NONBLOCK
+> plus checking the st_mode of the result is usually sufficient, but
+> it's actually fairly easy to get that wrong. Things like /dev/tty and
+> /dev/zero often need to be available for various reasons, and have
+> been used to screw careless "open and read" users up that missed a
+> check.
+
+Sure, this could be added -- though I'm sure folks would have
+disagreements over whether it should be a resolution flag on an open
+flag.
+
+> I also do wonder that if the only actual user-facing interface for the
+> resolution flags is a new system call, should we not make the
+> *default* value be "don't open anything odd at all".
+>
+> So instead of saying RESOLVE_XDEV for "don't cross mount points",
+> maybe the flags should be the other way around, and say "yes, allow
+> mount point crossings", and "yes, explicitly allow device node
+> opening", and "yes, allow DOTDOT" etc.
+
+This seems like a reasonable default, except for the cases of
+RESOLVE_BENEATH and RESOLVE_IN_ROOT (that would make using AT_FDCWD more
+cumbersome than necessary). But other than that, I'd be happy to invert
+all the other flags.
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--pl4a3gpuunbanplp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEb6Gz4/mhjNy+aiz1Snvnv3Dem58FAlzqKDoACgkQSnvnv3De
+m5+xjxAAke9SQAW+9C0as3a35Uq0klL3PZQdKgg0w5vK1bwWyJQ+4MmeRz6b2CFI
+337arwIuSxJcLXLCTuRi15No6PTT/ctxZc0R7/b50zCgc9+iD6ovoI3z9EcnFkrL
+GsDs9zcDJ1dBn4LR/fYnb89TSgCt2yrvIoX/iVV5daWqMPb6buLwXqpKI4P7PqNS
+OH2kx5XlBF2mQKVeXifkYBqZTDCf1mTDdDfz6bIH+ZYx4Niu5SW/L31YVJsYLv9/
+y3k7ZmECmSsSjhHM3qcme6dvZOOmqIvIW+RqMJ0a29x4w71uwQwRpa6/pyFZ3B0d
+EpAwJNwOdxRuTI0Hje9Pm4eAzfjIrlh2RCSnj2CNdkpAIgU6mDJ53TnIyXktFGio
+4S/5n60YxvQfBlhL9v6ZzHDpOX9ohguIBuPQedkV6nP2EpI29Ee0lQlTmXF/fU8m
+niCzBaZqPeXxpCJOkq++exIAa6Xg76rn+xNTXP0pe5omEbXoYFiUfx5gUdHGSfDq
+bebpl9NmeGY6AJcvNYfUGajKvbt+miCoSlu/S4DE7/t/W2RnCroq38l202HQKEll
+wOzZlnVjgxF9ikOxWqd+RqX5pKMzlFQF6wZFKsPkv6yoF3mBR4eQq4cOBBMItZuL
+sBUpp1J+qxaeaRfRBWcG/dF+cI6WaESgZOvoATEQucKpFuhGz54=
+=0I//
+-----END PGP SIGNATURE-----
+
+--pl4a3gpuunbanplp--
