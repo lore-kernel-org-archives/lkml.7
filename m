@@ -5,65 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8445DC282E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 06:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F06E2C282E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 06:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E537206BA
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 06:40:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C879A212F5
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 06:43:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fkkRsj7V"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m6Mjp9Yw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbfEZGkE (ORCPT
+        id S1727588AbfEZGnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 02:40:04 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:39001 "EHLO
+        Sun, 26 May 2019 02:43:16 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44570 "EHLO
         mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725868AbfEZGkE (ORCPT
+        with ESMTP id S1725972AbfEZGnP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 02:40:04 -0400
-Received: by mail-io1-f65.google.com with SMTP id r185so5992359iod.6
-        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 23:40:03 -0700 (PDT)
+        Sun, 26 May 2019 02:43:15 -0400
+Received: by mail-io1-f65.google.com with SMTP id f22so10876207iol.11
+        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2019 23:43:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Mac88AXIZVYEge7FmGHAzepQi9wUqNvqvrSB29BmdjQ=;
-        b=fkkRsj7VabbXTAJZL4y6jgyxjsVy0dhj2Us0DhIy0PX0ZFbsEo2dzmPlbdYSsHDTN6
-         Fqebs+PA9BFe1dqEIyt2tihBOIKFI+tNFU1BpaGDEYFfZIvKvX5lzypgOqqlbUjm8hMw
-         QaeNxtuYzhIqErrPD2vWPulBffY/8bMj8751DDg0jQ1IYyRgedMcXD0LUm85HqF4sVDH
-         v5tRvpVdzmJpMbHXxP+IQTocSnC9J6oD3u/K3va2KLOi1fu/aaWDuRB89tgdO1XbIRsW
-         09+XppCljPnQk5xBmVE+uxTi1cM7rM6svXhkftra/4lLhSrRD6sIZv1SeJaKLfmJ4FTn
-         NJ3A==
+        bh=ykvxJITftYjuXxiA50DtpHZBYlqXNVskwhB9Mpf150E=;
+        b=m6Mjp9YwG+MO3GK3/WiJs8xMKUyMflKU3POY+nzvZwJon57SHLuJJaPdItjQTu2h+L
+         YWVXgcXz8NuEwKLZsoqOOIMu497tHmO9lLoT8iGLEKZmvBgnyAAgjpp6myuRntsOZlRv
+         PGfX4tRUYCq/MbvaaMeLlLxmyUTYXZVCSzKULIwg5j/KTgNmesJ3pkR4AVb1km/8O6Bq
+         AVIzYiO6xuJC9i2tWYfQ7yNzm66A60o7tt38tg+2uC975pzVF8nQsgJapfTIghTZedcb
+         RsvWxJg57lMAW1hzL5eqF/yzmgPNx8YKQQl9ygiiaFgp31wnluUNQX+BpI+AQskxao9w
+         GKOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Mac88AXIZVYEge7FmGHAzepQi9wUqNvqvrSB29BmdjQ=;
-        b=FNJY7bJPD1alvz9D9i+Skj5ApooNOi/GKMqbjJQ8k0kod5J7aciw68MsAauQKPHQRT
-         jvStYC9B1S8bGk3rrMyQOIfeyP5rPAV8f9BF+SQ8whYeQOMXQJ0DHA83pjTTTgsmQnpf
-         X8q/O43eC0JM7EwWYbj65RyffVK9rxp0nwJ6RQVETqKucnwzvPIATsV/NSQW4bi2118C
-         DoMIYPDRxLt1Ke3dvmqnfqfyINCGLEw7j4hHmIq7FtSe+MpV4GFRUik3uLvCRH9MeIUK
-         1xhkX22jS5H1txVJAg9TSjsxlxfZxtKReb7pJ0cLwTa4P4Mg+Qk8NkiBcBNTOJ6kWAsv
-         EOmg==
-X-Gm-Message-State: APjAAAVn0M8dp+14n7BJPOqJ0BWrH9UCWM8yAr1WkNq3mHGgdNRftEa0
-        PRoyeARW9OkWa8eNGOAeHUrZWHNwDkAjqW8Qnqtj0g==
-X-Google-Smtp-Source: APXvYqwr+Pbfv9HVtVvN4paEdgzLh64zq2Bz4HBoqNNJWROVH+MXUxZ6H6H9tss02/3v7gqNHGb16hV+0Ctqt0bTtCg=
-X-Received: by 2002:a6b:6006:: with SMTP id r6mr2046417iog.231.1558852802751;
- Sat, 25 May 2019 23:40:02 -0700 (PDT)
+        bh=ykvxJITftYjuXxiA50DtpHZBYlqXNVskwhB9Mpf150E=;
+        b=lwcSGFKSv5vhYAJaaMomuvvAqje4h4g3WPse2GLUEu7U3SC7HzEMrIM5nmzCYpR0B8
+         EndIkYtslTOE7TkbZ142lSAhfmT595y52TOoZkh75KIERujZyUI2MXmPgAnEdYSqgT5L
+         mXBzFDBmrpOtHjyvvRq4uJ0929jR6UfUKeR9ZoCI1D06C5H81D9RNSuMCSLZiObBvNeD
+         HXO9mTWVk5Re8BEaf0AFWWnvVcekgozjBYrOlKSIUWr5w6RVf8KnMaUH2cF7+ao6xOvh
+         GfSgCjgXTyMG+qd50BurYxF3G6cvdR1SaPNhWmWBoHEuu4VCqUJYcjPTh//a4oaB7eYK
+         PO/Q==
+X-Gm-Message-State: APjAAAUSbR3mkErpkNspjFMpby2tJm8IJvkBi3qk1T9dLBwDqmro5ACX
+        e7c1ski+8y7Wo9S+AdjpiVk6JCQvVeuGPxZ4c3gAtg==
+X-Google-Smtp-Source: APXvYqyjpTDjnSSHq2fQV4pZzfv+tFE5wgmT0Hz3I1nXVoGdzPZUfQv3VVFhV2rsLC3qe5ChyymvplhalIYwWsedv34=
+X-Received: by 2002:a6b:dc0d:: with SMTP id s13mr35756721ioc.144.1558852994241;
+ Sat, 25 May 2019 23:43:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <00000000000016cb560589b9c7c4@google.com>
-In-Reply-To: <00000000000016cb560589b9c7c4@google.com>
+References: <0000000000001a546b0589b9c74f@google.com>
+In-Reply-To: <0000000000001a546b0589b9c74f@google.com>
 From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Sun, 26 May 2019 08:39:50 +0200
-Message-ID: <CACT4Y+Yi=hLvp7MfAnZ2YbGE=pTmqNHFZ0kZ=y7uuUYALnnUbg@mail.gmail.com>
-Subject: Re: KASAN: slab-out-of-bounds Read in class_equal
-To:     syzbot <syzbot+3d04999521633dceb439@syzkaller.appspotmail.com>,
-        bpf <bpf@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Date:   Sun, 26 May 2019 08:43:03 +0200
+Message-ID: <CACT4Y+bME3hecCNXQHvr6uwWjYY6BEqCnu8W4RUMZCm7XemPmQ@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in class_equal
+To:     syzbot <syzbot+83c135be90fc92db7e13@syzkaller.appspotmail.com>,
+        bpf <bpf@vger.kernel.org>, kasan-dev <kasan-dev@googlegroups.com>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -71,83 +72,99 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Sat, May 25, 2019 at 7:38 PM syzbot
-<syzbot+3d04999521633dceb439@syzkaller.appspotmail.com> wrote:
+<syzbot+83c135be90fc92db7e13@syzkaller.appspotmail.com> wrote:
 >
 > Hello,
 >
 > syzbot found the following crash on:
 >
-> HEAD commit:    af5136f9 selftests/net: SO_TXTIME with ETF and FQ
-> git tree:       net-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=13164ee4a00000
+> HEAD commit:    c50bbf61 Merge tag 'platform-drivers-x86-v5.2-2' of git://..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=12130c9aa00000
 > kernel config:  https://syzkaller.appspot.com/x/.config?x=fc045131472947d7
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3d04999521633dceb439
+> dashboard link: https://syzkaller.appspot.com/bug?extid=83c135be90fc92db7e13
 > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1661b6e4a00000
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12e7d84ca00000
 
-Looking at the reproducer, it may be bpf-related. +bpf mailing list.
+From the repro looks like
+
+#syz dup: KASAN: slab-out-of-bounds Read in class_equal
+
++bpf mailing list
+
+If bpf maps started badly smashing memory in a way that KASAN can't
+detect, please fix asap. Or we will start getting dozens of random
+reports. The usual question: why does not KASAN detect the root cause
+smash? How can we make it detect it?
 
 
-> Bisection is inconclusive: the first bad commit could be any of:
->
-> 7c00e8ae Merge tag 'armsoc-soc' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc
-> a2b7ab45 Merge tag 'linux-watchdog-4.18-rc1' of
-> git://www.linux-watchdog.org/linux-watchdog
-> 721afaa2 Merge tag 'armsoc-dt' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc
->
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1062daaaa00000
->
 > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+3d04999521633dceb439@syzkaller.appspotmail.com
+> Reported-by: syzbot+83c135be90fc92db7e13@syzkaller.appspotmail.com
 >
 > ==================================================================
-> BUG: KASAN: slab-out-of-bounds in class_equal+0x40/0x50
+> BUG: KASAN: use-after-free in class_equal+0x40/0x50
 > kernel/locking/lockdep.c:1527
-> Read of size 8 at addr ffff8880813cdab0 by task syz-executor.0/9147
+> Read of size 8 at addr ffff88807aedf360 by task syz-executor.0/9275
 >
-> CPU: 0 PID: 9147 Comm: syz-executor.0 Not tainted 5.2.0-rc1+ #6
+> CPU: 0 PID: 9275 Comm: syz-executor.0 Not tainted 5.2.0-rc1+ #7
 > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
 > Google 01/01/2011
 > Call Trace:
 >
-> Allocated by task 2266519551:
-> ------------[ cut here ]------------
-> kernel BUG at mm/slab.c:4178!
-> invalid opcode: 0000 [#1] PREEMPT SMP KASAN
-> CPU: 0 PID: 9147 Comm: syz-executor.0 Not tainted 5.2.0-rc1+ #6
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> RIP: 0010:__check_heap_object+0xa5/0xb3 mm/slab.c:4178
-> Code: 2b 48 c7 c7 4d fc 61 88 e8 28 ad 07 00 5d c3 41 8b 91 04 01 00 00 48
-> 29 c7 48 39 d7 77 bd 48 01 d0 48 29 c8 4c 39 c0 72 b2 c3 <0f> 0b 48 c7 c7
-> 4d fc 61 88 e8 3c b2 07 00 44 89 e1 48 c7 c7 08 fd
-> RSP: 0018:ffff8880813cd370 EFLAGS: 00010046
-> RAX: 0000000000000001 RBX: 0000000000000001 RCX: 000000000000000c
-> RDX: ffff8880813cc340 RSI: 0000000000000000 RDI: ffff8880813cd468
-> RBP: ffff8880813cd3c0 R08: 0000000000000001 R09: ffff8880aa594c40
-> R10: 0000000000000f23 R11: 0000000000000000 R12: ffff8880813cd468
-> R13: ffffea000204f300 R14: ffff8880813cd469 R15: 0000000000000001
-> FS:  00005555564e1940(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: ffffffff8c046bd8 CR3: 000000009a952000 CR4: 00000000001406f0
-> Call Trace:
-> Modules linked in:
-> ---[ end trace e78aeeb619bc791b ]---
-> RIP: 0010:__check_heap_object+0xa5/0xb3 mm/slab.c:4178
-> Code: 2b 48 c7 c7 4d fc 61 88 e8 28 ad 07 00 5d c3 41 8b 91 04 01 00 00 48
-> 29 c7 48 39 d7 77 bd 48 01 d0 48 29 c8 4c 39 c0 72 b2 c3 <0f> 0b 48 c7 c7
-> 4d fc 61 88 e8 3c b2 07 00 44 89 e1 48 c7 c7 08 fd
-> RSP: 0018:ffff8880813cd370 EFLAGS: 00010046
-> RAX: 0000000000000001 RBX: 0000000000000001 RCX: 000000000000000c
-> RDX: ffff8880813cc340 RSI: 0000000000000000 RDI: ffff8880813cd468
-> RBP: ffff8880813cd3c0 R08: 0000000000000001 R09: ffff8880aa594c40
-> R10: 0000000000000f23 R11: 0000000000000000 R12: ffff8880813cd468
-> R13: ffffea000204f300 R14: ffff8880813cd469 R15: 0000000000000001
-> FS:  00005555564e1940(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: ffffffff8c046bd8 CR3: 000000009a952000 CR4: 00000000001406f0
+> Allocated by task 9264:
+>   save_stack+0x23/0x90 mm/kasan/common.c:71
+>   set_track mm/kasan/common.c:79 [inline]
+>   __kasan_kmalloc mm/kasan/common.c:489 [inline]
+>   __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:462
+>   kasan_slab_alloc+0xf/0x20 mm/kasan/common.c:497
+>   slab_post_alloc_hook mm/slab.h:437 [inline]
+>   slab_alloc mm/slab.c:3326 [inline]
+>   kmem_cache_alloc+0x11a/0x6f0 mm/slab.c:3488
+>   getname_flags fs/namei.c:138 [inline]
+>   getname_flags+0xd6/0x5b0 fs/namei.c:128
+>   getname+0x1a/0x20 fs/namei.c:209
+>   do_sys_open+0x2c9/0x5d0 fs/open.c:1064
+>   __do_sys_open fs/open.c:1088 [inline]
+>   __se_sys_open fs/open.c:1083 [inline]
+>   __x64_sys_open+0x7e/0xc0 fs/open.c:1083
+>   do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>
+> Freed by task 9264:
+>   save_stack+0x23/0x90 mm/kasan/common.c:71
+>   set_track mm/kasan/common.c:79 [inline]
+>   __kasan_slab_free+0x102/0x150 mm/kasan/common.c:451
+>   kasan_slab_free+0xe/0x10 mm/kasan/common.c:459
+>   __cache_free mm/slab.c:3432 [inline]
+>   kmem_cache_free+0x86/0x260 mm/slab.c:3698
+>   putname+0xef/0x130 fs/namei.c:259
+>   do_sys_open+0x318/0x5d0 fs/open.c:1079
+>   __do_sys_open fs/open.c:1088 [inline]
+>   __se_sys_open fs/open.c:1083 [inline]
+>   __x64_sys_open+0x7e/0xc0 fs/open.c:1083
+>   do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>
+> The buggy address belongs to the object at ffff88807aede580
+>   which belongs to the cache names_cache of size 4096
+> The buggy address is located 3552 bytes inside of
+>   4096-byte region [ffff88807aede580, ffff88807aedf580)
+> The buggy address belongs to the page:
+> page:ffffea0001ebb780 refcount:1 mapcount:0 mapping:ffff8880aa596c40
+> index:0x0 compound_mapcount: 0
+> flags: 0x1fffc0000010200(slab|head)
+> raw: 01fffc0000010200 ffffea0001ebb708 ffffea0001ebb908 ffff8880aa596c40
+> raw: 0000000000000000 ffff88807aede580 0000000100000001 0000000000000000
+> page dumped because: kasan: bad access detected
+>
+> Memory state around the buggy address:
+>   ffff88807aedf200: 00 00 fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>   ffff88807aedf280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb f1 f1
+> > ffff88807aedf300: f1 f1 00 f2 f2 f2 00 f2 f2 f2 fb fb fb fb 00 00
+>                                                         ^
+>   ffff88807aedf380: 00 f3 f3 f3 f3 f3 fb fb fb fb fb fb fb fb fb fb
+>   ffff88807aedf400: fb fb fb fb fb fb fb fb fb fb fb fb fb 00 00 00
+> ==================================================================
 >
 >
 > ---
@@ -157,12 +174,11 @@ Looking at the reproducer, it may be bpf-related. +bpf mailing list.
 >
 > syzbot will keep track of this bug report. See:
 > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 > syzbot can test patches for this bug, for details see:
 > https://goo.gl/tpsmEJ#testing-patches
 >
 > --
 > You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
 > To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/00000000000016cb560589b9c7c4%40google.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/0000000000001a546b0589b9c74f%40google.com.
 > For more options, visit https://groups.google.com/d/optout.
