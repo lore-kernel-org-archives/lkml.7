@@ -2,132 +2,112 @@ Return-Path: <SRS0=Y9JJ=T2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7FB6C28CBF
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 12:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E7EFC282E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 12:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A076120815
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 12:21:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="H3WM8l28"
+	by mail.kernel.org (Postfix) with ESMTP id 0C1B92075B
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 12:48:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558874933;
+	bh=0kP0uFxY+zGoK8qulWQc6G+GdSqhCAH+/Wmk8Onqpwg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rehxxWcLxbzkk80mwq6fKma1p6sZD5x+iZHF1uo3ZthFb81JW+OgNDWs9U+M6KGa7
+	 EF9SluBcPtkSzukhXAhKeVcMFy/A6QaSjS/T4qgNm7URyEzhDAkmzVK/rcmmTD/cSz
+	 MWBzYRdf659m5MCcowtlqhZcdhKtL57kVPQAvLrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727666AbfEZMVj (ORCPT
+        id S1727785AbfEZMsw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 08:21:39 -0400
-Received: from onstation.org ([52.200.56.107]:34294 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727577AbfEZMVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 08:21:38 -0400
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 3D8283E8DE;
-        Sun, 26 May 2019 12:21:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1558873297;
-        bh=+pZchRi39jPHP0qQqNkASaPmePyovKRsrhb/epkA3O8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=H3WM8l28X85rNtXbObGWCc0HVfSkpKpZ4nzWbVIS8dppFuFhg/AlCGbCqvRRNgC8a
-         e8Cj3LHOIuzlbWyJrije+DpG8X8yUbh2/xsmoKgL+auQ0VxtR7cWL3ZJjUe3uPZXTe
-         TgOkNqLbnLUq7YQEo1PjCt7ljwsFbS4hgb/UxgmI=
-Date:   Sun, 26 May 2019 08:21:36 -0400
-From:   Brian Masney <masneyb@onstation.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>
-Cc:     ulf.hansson@linaro.org, faiz_abbas@ti.com,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
-Subject: Issue with Broadcom wireless in 5.2rc1 (was Re: [PATCH] mmc: sdhci:
- queue work after sdhci_defer_done())
-Message-ID: <20190526122136.GA26456@basecamp>
-References: <20190524111053.12228-1-masneyb@onstation.org>
- <70782901-a9ac-5647-1abe-89c86a44a01b@intel.com>
- <20190524154958.GB16322@basecamp>
+        Sun, 26 May 2019 08:48:52 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54792 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727666AbfEZMsv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 May 2019 08:48:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=6zgWbrZCatruS6U0cRn/mz67ZNTBDqWHlZXO65j6CD0=; b=lX0gb4WieEikt7XGVfntiny+o
+        Fb0KjWM/GhznWZLrMfA5KfGgg984tOM5zGE/C+VaZI6dvmeRDpMUbmV71Offh8t/AKqIjDwF/80F+
+        buPt0N44elY+JQKZFeIzV+t7RMdRLRCAvXF16nz3eUiF2oW/vKX3tqnXuJfdRQVz5QzuE=;
+Received: from 92.40.249.190.threembb.co.uk ([92.40.249.190] helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hUsZw-0002cN-Mp; Sun, 26 May 2019 12:48:45 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id 83189440046; Sun, 26 May 2019 13:48:38 +0100 (BST)
+Date:   Sun, 26 May 2019 13:48:38 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, lgirdwood@gmail.com,
+        lee.jones@linaro.org, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH v4 1/6] regulator: lm363x: Make the gpio register
+ enable flexible
+Message-ID: <20190526124838.GH2456@sirena.org.uk>
+References: <20190522192733.13422-1-dmurphy@ti.com>
+ <20190522192733.13422-2-dmurphy@ti.com>
+ <20190523130311.GA17245@sirena.org.uk>
+ <d4673abc-442c-83eb-1830-7f7ed9d8419e@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="8/pVXlBMPtxfSuJG"
 Content-Disposition: inline
-In-Reply-To: <20190524154958.GB16322@basecamp>
+In-Reply-To: <d4673abc-442c-83eb-1830-7f7ed9d8419e@ti.com>
+X-Cookie: The other line moves faster.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ Broadcom wireless maintainers
 
-On Fri, May 24, 2019 at 11:49:58AM -0400, Brian Masney wrote:
-> On Fri, May 24, 2019 at 03:17:13PM +0300, Adrian Hunter wrote:
-> > On 24/05/19 2:10 PM, Brian Masney wrote:
-> > > WiFi stopped working on the LG Nexus 5 phone and the issue was bisected
-> > > to the commit c07a48c26519 ("mmc: sdhci: Remove finish_tasklet") that
-> > > moved from using a tasklet to a work queue. That patch also changed
-> > > sdhci_irq() to return IRQ_WAKE_THREAD instead of finishing the work when
-> > > sdhci_defer_done() is true. Change it to queue work to the complete work
-> > > queue if sdhci_defer_done() is true so that the functionality is
-> > > equilivent to what was there when the finish_tasklet was present. This
-> > > corrects the WiFi breakage on the Nexus 5 phone.
-> > > 
-> > > Signed-off-by: Brian Masney <masneyb@onstation.org>
-> > > Fixes: c07a48c26519 ("mmc: sdhci: Remove finish_tasklet")
-> > > ---
-> > > [ ... ]
-> > > 
-> > >  drivers/mmc/host/sdhci.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> > > index 97158344b862..3563c3bc57c9 100644
-> > > --- a/drivers/mmc/host/sdhci.c
-> > > +++ b/drivers/mmc/host/sdhci.c
-> > > @@ -3115,7 +3115,7 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
-> > >  			continue;
-> > >  
-> > >  		if (sdhci_defer_done(host, mrq)) {
-> > > -			result = IRQ_WAKE_THREAD;
-> > > +			queue_work(host->complete_wq, &host->complete_work);
-> > 
-> > The IRQ thread has a lot less latency than the work queue, which is why it
-> > is done that way.
-> > 
-> > I am not sure why you say this change is equivalent to what was there
-> > before, nor why it fixes your problem.
-> > 
-> > Can you explain some more?
->
-> [ ... ]
-> 
-> drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c calls
-> sdio_claim_host() and it appears to never return.
+--8/pVXlBMPtxfSuJG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-When the brcmfmac driver is loaded, the firmware is requested from disk,
-and that's when the deadlock occurs in 5.2rc1. Specifically:
+On Thu, May 23, 2019 at 08:50:20AM -0500, Dan Murphy wrote:
+> On 5/23/19 8:03 AM, Mark Brown wrote:
+> > On Wed, May 22, 2019 at 02:27:28PM -0500, Dan Murphy wrote:
 
-1) brcmf_sdio_download_firmware() in
-   drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c calls
-   sdio_claim_host()
+> > Is it guaranteed that the bitmask for enabling the use of the GPIO is
+> > going to be the same for all regulators?  The bitmasks for the regulator
+> > enable look to be different, and it also looks like this setting might
+> > affect multiple regulators since it seems there are multiple enable bits
+> > in the same register.  If this affects multiple regulators then how's
+> > that working at the minute?
 
-2) brcmf_sdio_firmware_callback() is called and brcmf_sdiod_ramrw()
-   tries to claim the host, but has to wait since its already claimed
-   in #1 and the deadlock occurs.
+> Yes for the 3632 and 36274 bit0 is the EXT_EN for LCM on these chips.
+> LM3631 does not have LCM GPIO control so there is no setting and this should not be called.
+> If it is then the developer implemented the DT wrong.
 
-I tried to release the host before the firmware is requested, however
-parts of brcmf_chip_set_active() needs the host to be claimed, and a
-similar deadlock occurs in brcmf_sdiod_ramrw() if I claim the host
-before calling brcmf_chip_set_active().
+This feels fragile - it works for the current users but it's just
+assuming that the placement of this bit will always be in the same
+position in the same register as the enable and will silently fail if a
+new chip variant does things differently.  Either storing the data
+separately somewhere driver specific or just having explicit switch
+statements would be more robust.
 
-I started to look at moving the sdio_{claim,release}_host() calls out of
-brcmf_sdiod_ramrw() but there's a fair number of callers, so I'd like to
-get feedback about the best course of action here.
+--8/pVXlBMPtxfSuJG
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Brian
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzqiyUACgkQJNaLcl1U
+h9DtKwgAgwYVujK+ai00tAc8vMnYP77hZtQP9CqqTq6PKk5xDoaPXdedWl0j84c6
+4cf103WBzETd4ECf09dnm5ssZQBw/KQCjspYm20+oQdMqVytCdxRzq3nhC3YBbpy
+Wg2Bg550H8KDNNvHLwoFn7H1FdMtpD98mdJJ7vTXuLFx14vdKZ4Ya5oDEqHXAI4u
+ed5a4UPMTW7ptNb2jk2Mo5vDYP+9K7Z1+pLaCBo7EWUMlYkTKfHk1gnXea/6zCKa
+A6AZtafNbxcsToTsVoWBML7bw3FLH8oyWkm79NFIUZuGB+Zw0Ms98pR63gJXihLf
+rm1njloC7RIodeEOcKIzPVqSKwsjcg==
+=wc2b
+-----END PGP SIGNATURE-----
+
+--8/pVXlBMPtxfSuJG--
