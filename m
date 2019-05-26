@@ -5,62 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED3BDC282E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 18:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CBFC282E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 19:00:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDEE420863
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 18:47:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFC4A204EC
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 19:00:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q1uQWPIX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xkg3tPCA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbfEZSrr (ORCPT
+        id S1726950AbfEZTAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 14:47:47 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:34881 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728004AbfEZSrr (ORCPT
+        Sun, 26 May 2019 15:00:42 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:36956 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726163AbfEZTAm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 14:47:47 -0400
-Received: by mail-yb1-f194.google.com with SMTP id s69so5593579ybi.2;
-        Sun, 26 May 2019 11:47:47 -0700 (PDT)
+        Sun, 26 May 2019 15:00:42 -0400
+Received: by mail-yw1-f67.google.com with SMTP id 186so5804965ywo.4;
+        Sun, 26 May 2019 12:00:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=dH+6euD3B/9U0jUYqmwCTtJnJvDIWL4nGrMm/sJmAbk=;
-        b=q1uQWPIXf6n7CSZVMkB81U0t5u4wk16K6Z4bYxaUjaY6GyKMNeUNBq1UregxK9PZJD
-         5pG/s/7VAQS0uBM0QzSa6AFpPBr1HXM7KPbb1z3etQgMn31w3cf1hoi4PTCAOVIHAWFE
-         x7uKPAMdYaWCGVuAn/dXAX2Sg8IJSFXCr2bf28Nx8M6yi731QAJm9TttmwRJ+7uIStDR
-         cykxfVwBxPxXYXD6G/8PjJwDWBS93kHa4sXAB6SM7c2NIH64KBqzu9kT26/h6HULwJIF
-         7wvkLvKxaywz/7T9bac3bCb8TRciPUKT3XO8PzdaSGfe3qIYAcTzJBuRvYR2doocDDuW
-         oBMQ==
+        bh=ozbpBHH7tRCrsdtMEQjsQDlxSXHNruEgExveiJhJ0fo=;
+        b=Xkg3tPCAZXTRWbYvkia1rPlSLig1Y7GQZ4mFLN0JUZWf8a7xttjpv80JLmoXWsOBbI
+         0z5tsEfJ5nw5U0tJswI6KRnYhiqLRxuwKaeoE6H4UWUH/smXoDXabl5oLPh2ynvTLh8c
+         wnqxAo2TCmsdS+P71y14Di7yBEB7eOjOMPlaJWe9hUW39slwAWULG8sF7qwmdNQWv/sj
+         HzjypXp6N0DZ270bB+5GuMoPT4yQI8gq860sBzESkWOj82dBBSZ2n+2pp8Heap0BI9u7
+         dzm4duCz3dWwXIQ5z/MCEiOFu/09RivNT5GdjFnr2W5UnUxoBL2neIt5NZ8/hy8oXPRy
+         i2Vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=dH+6euD3B/9U0jUYqmwCTtJnJvDIWL4nGrMm/sJmAbk=;
-        b=DlQ/e5LgSjZPJRIfJr6JUv0X5H/uAWJsGlAzwc343CqS+ISQl3yYAXcBmIRZDGCPvL
-         lIc3t/TiZQwLuTj47C4Rlh7V/LCzwMxw4RwPud23fSCLxMGMnPUNlTOFIRsOpE7JsElx
-         7+SBU87zHaAenJcdBgNwCGc9gej6hpPucYQIh7Itu1AR6ntFiPRlpwZ8v/IYSrZoSxvI
-         aXUerNhn6Tb2CI+U91ypbU7WZG1aPpt4/bpAQTYWmul1HwL99enGSVJeZ75IeHJfM/y5
-         4F2NJlsoMi+Xg7LVrPt5YzW7Sx5OPjii9ViXLKEk00S6zLVLJ77hLCLei4r4o+/WbAK5
-         eRBg==
-X-Gm-Message-State: APjAAAXlbJSKj4Loe1zq7D08brfq82xopqJdtW3iK1XW1zDlohsBCUDQ
-        1a2/tzzAIZrgB/KpPGJng2HBld4DGVspCIxXXgw=
-X-Google-Smtp-Source: APXvYqxyveUEULLdiXn9xTempg9RokzTgBzz+s8S8SgwFeVu0aCdcbHIFT8+mi573Ck83EXCxT0cCvaTPPxJknmnL0U=
-X-Received: by 2002:a25:340e:: with SMTP id b14mr13139570yba.82.1558896466232;
- Sun, 26 May 2019 11:47:46 -0700 (PDT)
+        bh=ozbpBHH7tRCrsdtMEQjsQDlxSXHNruEgExveiJhJ0fo=;
+        b=hUhQ+HKZCJRQNPdFvhKSXujj3YmbpjTGXxsHDnLJyVzvElPjS3chwLd4fopP6JAcSO
+         ggCXuBafLpJ5BKEo0Bdd5gu7P5mA6OeVo9C48qGcGH0K9KgYjJUqp1/OgpEDA5owLei5
+         ZuGAAxWklNVH8i6D1WWYRStfKQAmANymAkNNmWxwIpMENr1uCu4CR42Fz98AR6WMIA8I
+         m3wAbl696vnXN6Yupe1EVOd90a3xjXsiEh9gv1ALT5Um1pdNJt4IwWOSHiTynUu512EW
+         EpOnk8hr6cAW4XUKWK0LJN59vd/NrbUvyFtO68yvjofGD+eXAuVRKCC4sywCdch2NHWt
+         F9lg==
+X-Gm-Message-State: APjAAAVu8q9GcbOBv2fzYs1XaNeqTNjeysyEEWVZfkjdL5ORf8oUYNdL
+        GdOHWmrHMg7EEigbksw3roaq96Fhe69Nplfo9A4=
+X-Google-Smtp-Source: APXvYqwkYlyYZ5uwbz25lwZOwmW3dEb1r4wBA/RfRkCDhUCYp59oYMFH5GkzlWv0BwlS71J2R9iK0ZxtOpmwQ6F8a0g=
+X-Received: by 2002:a81:997:: with SMTP id 145mr7897486ywj.457.1558897241180;
+ Sun, 26 May 2019 12:00:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190525162323.20216-1-peron.clem@gmail.com> <20190525162323.20216-2-peron.clem@gmail.com>
- <20190526182220.hgajlcyssujjkmiu@flea>
-In-Reply-To: <20190526182220.hgajlcyssujjkmiu@flea>
+References: <20190525162323.20216-1-peron.clem@gmail.com> <20190525162323.20216-4-peron.clem@gmail.com>
+ <20190526182410.soqb6bne6w66d5j6@flea>
+In-Reply-To: <20190526182410.soqb6bne6w66d5j6@flea>
 From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Sun, 26 May 2019 20:47:35 +0200
-Message-ID: <CAJiuCcf4d-5-U++wQ4wkrcSSk_SyeuHnxyz0DMvHaS4YuOsx3A@mail.gmail.com>
-Subject: Re: [PATCH v3 1/7] dt-bindings: sound: sun4i-spdif: Add Allwinner H6 compatible
+Date:   Sun, 26 May 2019 21:00:30 +0200
+Message-ID: <CAJiuCce8UNbA+Ljkbw92ZJu3Ni6N9ciFKGsLtBYJ0_J8E1Gi2g@mail.gmail.com>
+Subject: Re: [PATCH v3 3/7] ASoC: sun4i-spdif: Add TX fifo bit flush quirks
 To:     Maxime Ripard <maxime.ripard@bootlin.com>
 Cc:     Liam Girdwood <lgirdwood@gmail.com>,
         Mark Brown <broonie@kernel.org>,
@@ -72,8 +71,7 @@ Cc:     Liam Girdwood <lgirdwood@gmail.com>,
         Linux-ALSA <alsa-devel@alsa-project.org>,
         devicetree <devicetree@vger.kernel.org>,
         linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -83,45 +81,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi Maxime,
 
-On Sun, 26 May 2019 at 20:22, Maxime Ripard <maxime.ripard@bootlin.com> wro=
+On Sun, 26 May 2019 at 20:24, Maxime Ripard <maxime.ripard@bootlin.com> wro=
 te:
 >
-> On Sat, May 25, 2019 at 06:23:17PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> > Allwinner H6 has a SPDIF controller with an increase of the fifo
-> > size and a sligher difference in memory mapping compare to H3/A64.
+> On Sat, May 25, 2019 at 06:23:19PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> > Allwinner H6 has a different bit to flush the TX FIFO.
 > >
-> > This make it not compatible with the previous generation.
-> >
-> > Introduce a specific bindings for H6 SoC.
+> > Add a quirks to prepare introduction of H6 SoC.
 > >
 > > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
 > > ---
-> >  Documentation/devicetree/bindings/sound/sunxi,sun4i-spdif.txt | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >  sound/soc/sunxi/sun4i-spdif.c | 11 ++++++++++-
+> >  1 file changed, 10 insertions(+), 1 deletion(-)
 > >
-> > diff --git a/Documentation/devicetree/bindings/sound/sunxi,sun4i-spdif.=
-txt b/Documentation/devicetree/bindings/sound/sunxi,sun4i-spdif.txt
-> > index 0c64a209c2e9..c0fbb50a4df9 100644
-> > --- a/Documentation/devicetree/bindings/sound/sunxi,sun4i-spdif.txt
-> > +++ b/Documentation/devicetree/bindings/sound/sunxi,sun4i-spdif.txt
-> > @@ -7,10 +7,11 @@ For now only playback is supported.
-> >
-> >  Required properties:
-> >
-> > -  - compatible               : should be one of the following:
-> > +  - compatible               : Should be one of the following:
-> >      - "allwinner,sun4i-a10-spdif": for the Allwinner A10 SoC
-> >      - "allwinner,sun6i-a31-spdif": for the Allwinner A31 SoC
-> >      - "allwinner,sun8i-h3-spdif": for the Allwinner H3 SoC
-> > +    - "allwinner,sun50i-h6-spdif": for the allwinner H6 SoC
+> > diff --git a/sound/soc/sunxi/sun4i-spdif.c b/sound/soc/sunxi/sun4i-spdi=
+f.c
+> > index b6c66a62e915..8317bbee0712 100644
+> > --- a/sound/soc/sunxi/sun4i-spdif.c
+> > +++ b/sound/soc/sunxi/sun4i-spdif.c
+> > @@ -166,10 +166,12 @@
+> >   *
+> >   * @reg_dac_tx_data: TX FIFO offset for DMA config.
+> >   * @has_reset: SoC needs reset deasserted.
+> > + * @reg_fctl_ftx: TX FIFO flush bitmask.
 >
-> This won't apply anymore on top of next, we've moved to a YAML
-> schemas.
+> It's a bit weird to use the same prefix for a register offset
+> (reg_dac_tx_data) and a value (reg_fctl_ftx).
 
-Indeed I have based this series on sunxi instead of sound.
-Thanks for pointing out that.
+I just look at sun4i-codec and they use a regmap, But I think it's a
+bit overkill no?
+
+What do you think about val_fctl_ftx ?
+
+Thanks for your review,
 Cl=C3=A9ment
 
 >
