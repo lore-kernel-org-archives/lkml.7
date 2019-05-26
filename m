@@ -2,103 +2,74 @@ Return-Path: <SRS0=Y9JJ=T2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A9AC282E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 11:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07AC9C282E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 12:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABA122075E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 11:38:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vq9hIrZQ"
+	by mail.kernel.org (Postfix) with ESMTP id CB9D220815
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 12:07:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbfEZLiX (ORCPT
+        id S1727782AbfEZMHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 07:38:23 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:45005 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727658AbfEZLiX (ORCPT
+        Sun, 26 May 2019 08:07:21 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:42272 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726296AbfEZMHV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 07:38:23 -0400
-Received: by mail-pl1-f195.google.com with SMTP id c5so5925294pll.11;
-        Sun, 26 May 2019 04:38:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=vHyiWIrxCKbF82jHEx3dPDyuEINmnCFpVzzmHglDTDU=;
-        b=Vq9hIrZQXQAcBJNa2Jvwml7Vo4eoyG6F+c+016aZD/7Q6IPGiD1Ngf+Y5PtTFbGEri
-         5YwrEmOPv64T4Ff9w9Z7zb4klhEYemZBxiJtHzHQYgZ9n0BeUQhwwfLNOBQEBoSN5Kc7
-         9wsTbcVxK9saGxCmm2169a81jE5Qhr4jWOHrwCSwm3S3a9A2LFb8MPRTVJ5tNMez2TV5
-         li4n1IZc9KffzwIH+ZRv8y9Px14XacpXwxYyoZpYGNHj+DWrYaecp/7xhgaUaTQB4AD+
-         qASL/oNHndLicoUWpBQDTSLxXfZ/WEI2jWiaEGRQoUiLr2YD9F52MjgGkjbqqQcF7+Dd
-         iJDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=vHyiWIrxCKbF82jHEx3dPDyuEINmnCFpVzzmHglDTDU=;
-        b=D/sk0y0yb1R1D+uh2gZ8cDCIe/23pmAnnJzMsrp6AD3/vb6JgxclpFENPkMOtyAKru
-         KDBnA+2Yeq9xy/+ZP/PXiBU9waCl2hHE5EgDNPzFxg6G5iKDzpjTr/WPcTFX2N7O07Hj
-         SKUahHkOU/QhWiZrQz0AolJVY/8ObV1rAo9RY2eQDJbXRaPiReph8QGkuxHn6Urq5rFe
-         Wh7rjPI2gzZuN3wUgMFqLpVo+TWH8k/IjlCdyJJ7ydOOwUtmqCp3c7W/t6/bxURJX3Eh
-         92ETf3qJtD8BguopvQdShtAaTwPekbLiIVIodSMCmwS1wPAPaOuZAFLHIJimDHEdvbNW
-         AQ/w==
-X-Gm-Message-State: APjAAAXn45zzFA5Gz8f6a+mHqulBCaAYx15SU6PXP6tUhDrUezbsT4w1
-        iyqhM+brxZudIVARltIc8+NVtJON
-X-Google-Smtp-Source: APXvYqyVScmWg74EtVIen6Cs4u7grE7ear46zwMSqGZTsVgp8Ph3T8Wb2RqlrR0VhJZPGnGfBfPZZQ==
-X-Received: by 2002:a17:902:2bc9:: with SMTP id l67mr85855288plb.171.1558870702896;
-        Sun, 26 May 2019 04:38:22 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.92.73])
-        by smtp.gmail.com with ESMTPSA id f1sm1836101pfg.154.2019.05.26.04.38.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 26 May 2019 04:38:22 -0700 (PDT)
-Date:   Sun, 26 May 2019 17:08:16 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] iwlwifi: fix warning iwl-trans.h is included more than once
-Message-ID: <20190526113815.GA6328@hari-Inspiron-1545>
+        Sun, 26 May 2019 08:07:21 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hUrvr-0008Af-Cx; Sun, 26 May 2019 12:07:19 +0000
+Date:   Sun, 26 May 2019 13:07:19 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     "J. R. Okajima" <hooanon05g@gmail.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kolyshkin@gmail.com
+Subject: Re: [PATCH] concrete /proc/mounts
+Message-ID: <20190526120719.GQ17978@ZenIV.linux.org.uk>
+References: <17910.1558861894@jrobl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <17910.1558861894@jrobl>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-remove duplication include of iwl-trans.h
+On Sun, May 26, 2019 at 06:11:34PM +0900, J. R. Okajima wrote:
+> commit 1e83f8634c6efe7dd4e6036ee202ca10bdbca0b3
+> Author: J. R. Okajima <hooanon05g@gmail.com>
+> Date:   Sat May 25 18:35:13 2019 +0900
+> 
+>     concrete /proc/mounts
+>     
+>     When the size of /proc/mounts exceeds PAGE_SIZE, seq_read() has to
+>     release namespace_sem via mounts_op.m_stop().  It means if someone else
+>     issues mount(2) or umount(2) and the mounts list got changed, then the
+>     continuous getmntent(3) calls show the incomplete mounts list and some
+>     entries may not appear in it.
+>     
+>     This patch generates the full mounts list when mounts_op.m_start() is
+>     called, and keep it in the seq_file buffer until the file is closed.
+>     The size of the buffer increases if necessary.  Other operations m_next,
+>     m_stop, m_show become meaningless, but still necessary for the seq_file
+>     manner.
+>     
+>     I don't think the size of the buffer matters because many /proc entries
+>     already keep the similar PAGE_SIZE buffer.  Increasing /proc/mounts
+>     buffer is to keep the correctness of the mount list.
+>     
+>     Reported-by: Kirill Kolyshkin <kolyshkin@gmail.com>
+>     See-also: https://github.com/kolyshkin/procfs-test
+>     Signed-off-by: J. R. Okajima <hooanon05g@gmail.com>
 
-issue identified by includecheck
+Translation: let's generate the entire contents on the first read() and keep
+it until the sucker's closed; that way userland wont' see anything changing
+under it.  Oh, wait...
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- drivers/net/wireless/intel/iwlwifi/iwl-devtrace.h | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-devtrace.h b/drivers/net/wireless/intel/iwlwifi/iwl-devtrace.h
-index fc649b2..f5a56c5 100644
---- a/drivers/net/wireless/intel/iwlwifi/iwl-devtrace.h
-+++ b/drivers/net/wireless/intel/iwlwifi/iwl-devtrace.h
-@@ -86,7 +86,6 @@ static inline size_t iwl_rx_trace_len(const struct iwl_trans *trans,
- 
- #include <linux/tracepoint.h>
- #include <linux/device.h>
--#include "iwl-trans.h"
- 
- 
- #if !defined(CONFIG_IWLWIFI_DEVICE_TRACING) || defined(__CHECKER__)
--- 
-2.7.4
-
+NAK.
