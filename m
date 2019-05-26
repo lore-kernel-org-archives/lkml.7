@@ -2,121 +2,109 @@ Return-Path: <SRS0=Y9JJ=T2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C94C282E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 21:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F009CC46470
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 21:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 527C820863
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 21:20:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C713321707
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 21:22:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kcR3EHVi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726207AbfEZVUm (ORCPT
+        id S1726254AbfEZVWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 17:20:42 -0400
-Received: from mail-oln040092069069.outbound.protection.outlook.com ([40.92.69.69]:16550
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725747AbfEZVUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 17:20:41 -0400
-Received: from VE1EUR02FT016.eop-EUR02.prod.protection.outlook.com
- (10.152.12.57) by VE1EUR02HT120.eop-EUR02.prod.protection.outlook.com
- (10.152.13.63) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1922.16; Sun, 26 May
- 2019 21:20:39 +0000
-Received: from VI1PR03MB4206.eurprd03.prod.outlook.com (10.152.12.55) by
- VE1EUR02FT016.mail.protection.outlook.com (10.152.12.90) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.1922.16 via Frontend Transport; Sun, 26 May 2019 21:20:39 +0000
-Received: from VI1PR03MB4206.eurprd03.prod.outlook.com
- ([fe80::883e:1bd6:cd36:5fb0]) by VI1PR03MB4206.eurprd03.prod.outlook.com
- ([fe80::883e:1bd6:cd36:5fb0%4]) with mapi id 15.20.1922.021; Sun, 26 May 2019
- 21:20:39 +0000
-From:   Jonas Karlman <jonas@kwiboo.se>
-To:     "a.hajda@samsung.com" <a.hajda@samsung.com>,
-        "Laurent.pinchart@ideasonboard.com" 
-        <Laurent.pinchart@ideasonboard.com>
-CC:     Jonas Karlman <jonas@kwiboo.se>,
-        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>,
-        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
-        "khilman@baylibre.com" <khilman@baylibre.com>,
-        "zhengyang@rock-chips.com" <zhengyang@rock-chips.com>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        "wens@csie.org" <wens@csie.org>,
-        "hjc@rock-chips.com" <hjc@rock-chips.com>,
-        "heiko@sntech.de" <heiko@sntech.de>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH 4/4] drm/sun4i: Enable DRM InfoFrame support on H6
-Thread-Topic: [PATCH 4/4] drm/sun4i: Enable DRM InfoFrame support on H6
-Thread-Index: AQHVFAjd+8FRSaD9s06/eG9Vpeitjg==
-Date:   Sun, 26 May 2019 21:20:38 +0000
-Message-ID: <VI1PR03MB4206740285A775280063E303AC1C0@VI1PR03MB4206.eurprd03.prod.outlook.com>
-References: <VI1PR03MB420621617DDEAB3596700DE0AC1C0@VI1PR03MB4206.eurprd03.prod.outlook.com>
-In-Reply-To: <VI1PR03MB420621617DDEAB3596700DE0AC1C0@VI1PR03MB4206.eurprd03.prod.outlook.com>
-Accept-Language: sv-SE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM6PR0202CA0018.eurprd02.prod.outlook.com
- (2603:10a6:209:15::31) To VI1PR03MB4206.eurprd03.prod.outlook.com
- (2603:10a6:803:51::23)
-x-incomingtopheadermarker: OriginalChecksum:39FDC37F0D6079638BEBDC4B6495A92E1FFE3068C06548128ADA719A139E386A;UpperCasedChecksum:4E0C77E1B0E4F7AB2251787617D700249A49BF8898BC910E9254900F4B98C5D3;SizeAsReceived:8091;Count:50
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-tmn:  [vP+N9OTlA2i0XOtrhUj0j49BqiSlFZhC]
-x-microsoft-original-message-id: <20190526212029.32049-1-jonas@kwiboo.se>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 50
-x-eopattributedmessage: 0
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031322404)(2017031323274)(2017031324274)(1601125500)(1603101475)(1701031045);SRVR:VE1EUR02HT120;
-x-ms-traffictypediagnostic: VE1EUR02HT120:
-x-microsoft-antispam-message-info: DwfEtM1U/LPIbKulFrNml/1YpEh91v8Yy9Ye7COkwcN+pVsIcdgZhftt/zFcdBRoTmkPvZUz28+oGrRZbewv6NAxrRlEO1AaVpF4WxCNEfGOQuyHqFCLFSeDGNFjZ2zwnzirnuG96JrSR6WEQhjyhQKID4stVttn6wzzxQFdf2voWHovyFvgLrstyz4P8otF
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: e1f35009-a6f0-4b72-2d11-08d6e21ffff8
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 May 2019 21:20:38.9439
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1EUR02HT120
+        Sun, 26 May 2019 17:22:24 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46022 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfEZVWY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 May 2019 17:22:24 -0400
+Received: by mail-lj1-f195.google.com with SMTP id r76so2156758lja.12
+        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2019 14:22:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=vtj4XT/ZctSQODcPHrULbEup14IpWl4DXPhGkbiblZ8=;
+        b=kcR3EHViTkCoCb1N2awgeF9OeRkJWwcfKpP07EdHbgyQFo8vKpDK0aRXM3GwhZPsaj
+         Z0ntvNWKQGs9mtvVsyfw3I+9a7Jc2eTG4JvkKEsa2afeWbWuiQHpxAhZ4v/H1nY/eK/0
+         bRq0tZqa2NrOSVYRjTyw6PdpDSymSqWnk+ZYABf64kbagoHIhSDdtxhjrwfPM+dL9dwA
+         pl5BmPtTUEeag4LXamYdkIQkCOknqfDbZQJfQCKPIHkVhpIrBNVtVmOqzYfp1FZ/EkIb
+         nR29zqmU2Il2oqY0oTm/4AIf4+o9BVd3tY5nUfIJPT5HawBq8EWTenEaljGBnrKD4sNB
+         3Ttg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=vtj4XT/ZctSQODcPHrULbEup14IpWl4DXPhGkbiblZ8=;
+        b=BxKoC9yoZ3W6qDBkglAGCav58WzBYloxNjI5DktGrM3SKQVm0oz6Z5juK7ullCGqxZ
+         DTZaSrkJ/AYe/cqBCQun+BLasSD6tMgp/KOiKaLXRLZLmL6HfW8z31IBgGR0O7shyVeH
+         j8Q+O//13leHvlvF+cjU2pSGE+MJHUlFj4RJxljXEEzupK1XzT4q0hg3Vxtn67J6KFUT
+         4Y42D5yO4oMW/6pWfqfTBPlUtY451vkLl7Rd2Z+PaUeqkQt1JHQG2Dg/v77rP1Oq5kDa
+         cXTIbS/5yjpyFHgRJPPFfgUh6xe6HXdhnkIjxKGBWVglnD5c/t5JjyH/kEOyaM1dfb2o
+         WYjw==
+X-Gm-Message-State: APjAAAWbOgXv3H/OwxdeNB9y+3Yrwf3A4VHFVoOf4ccS1TufAWPX5q1q
+        PVEG4F4h/9CHaH26WtClP9qTBPGZbBw=
+X-Google-Smtp-Source: APXvYqzar+sCX4oRkXtYVKukzADiEbq3x2cKytb+az/edc4sgrVA4QR/aBDDj3wxFRa5uyMImh0XsA==
+X-Received: by 2002:a2e:90d1:: with SMTP id o17mr45693469ljg.187.1558905742256;
+        Sun, 26 May 2019 14:22:22 -0700 (PDT)
+Received: from pc636.lan (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id y4sm1885105lje.24.2019.05.26.14.22.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 26 May 2019 14:22:21 -0700 (PDT)
+From:   "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
+Cc:     Roman Gushchin <guro@fb.com>, Uladzislau Rezki <urezki@gmail.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Garnier <thgarnie@google.com>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joelaf@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, Tejun Heo <tj@kernel.org>
+Subject: [PATCH v2 0/4] Some cleanups for the KVA/vmalloc
+Date:   Sun, 26 May 2019 23:22:09 +0200
+Message-Id: <20190526212213.5944-1-urezki@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhpcyBwYXRjaCBlbmFibGVzIER5bmFtaWMgUmFuZ2UgYW5kIE1hc3RlcmluZyBJbmZvRnJhbWUg
-b24gSDYuDQoNCkNjOiBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlwYXJkQGJvb3RsaW4uY29tPg0K
-Q2M6IEplcm5laiBTa3JhYmVjIDxqZXJuZWouc2tyYWJlY0BzaW9sLm5ldD4NClNpZ25lZC1vZmYt
-Ynk6IEpvbmFzIEthcmxtYW4gPGpvbmFzQGt3aWJvby5zZT4NCi0tLQ0KIGRyaXZlcnMvZ3B1L2Ry
-bS9zdW40aS9zdW44aV9kd19oZG1pLmMgfCAyICsrDQogZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1
-bjhpX2R3X2hkbWkuaCB8IDEgKw0KIDIgZmlsZXMgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspDQoN
-CmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuOGlfZHdfaGRtaS5jIGIvZHJp
-dmVycy9ncHUvZHJtL3N1bjRpL3N1bjhpX2R3X2hkbWkuYw0KaW5kZXggMzlkODUwOWQ5NmEwLi5i
-ODAxNjRkZDhhZDggMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuOGlfZHdf
-aGRtaS5jDQorKysgYi9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuOGlfZHdfaGRtaS5jDQpAQCAt
-MTg5LDYgKzE4OSw3IEBAIHN0YXRpYyBpbnQgc3VuOGlfZHdfaGRtaV9iaW5kKHN0cnVjdCBkZXZp
-Y2UgKmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVyLA0KIAlzdW44aV9oZG1pX3BoeV9pbml0KGhk
-bWktPnBoeSk7DQogDQogCXBsYXRfZGF0YS0+bW9kZV92YWxpZCA9IGhkbWktPnF1aXJrcy0+bW9k
-ZV92YWxpZDsNCisJcGxhdF9kYXRhLT5kcm1faW5mb2ZyYW1lID0gaGRtaS0+cXVpcmtzLT5kcm1f
-aW5mb2ZyYW1lOw0KIAlzdW44aV9oZG1pX3BoeV9zZXRfb3BzKGhkbWktPnBoeSwgcGxhdF9kYXRh
-KTsNCiANCiAJcGxhdGZvcm1fc2V0X2RydmRhdGEocGRldiwgaGRtaSk7DQpAQCAtMjU1LDYgKzI1
-Niw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgc3VuOGlfZHdfaGRtaV9xdWlya3Mgc3VuOGlfYTgz
-dF9xdWlya3MgPSB7DQogDQogc3RhdGljIGNvbnN0IHN0cnVjdCBzdW44aV9kd19oZG1pX3F1aXJr
-cyBzdW41MGlfaDZfcXVpcmtzID0gew0KIAkubW9kZV92YWxpZCA9IHN1bjhpX2R3X2hkbWlfbW9k
-ZV92YWxpZF9oNiwNCisJLmRybV9pbmZvZnJhbWUgPSB0cnVlLA0KIH07DQogDQogc3RhdGljIGNv
-bnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgc3VuOGlfZHdfaGRtaV9kdF9pZHNbXSA9IHsNCmRpZmYg
-LS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuOGlfZHdfaGRtaS5oIGIvZHJpdmVycy9n
-cHUvZHJtL3N1bjRpL3N1bjhpX2R3X2hkbWkuaA0KaW5kZXggNzIwYzVhYThhZGMxLi4yYTBlYzA4
-ZWUyMzYgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuOGlfZHdfaGRtaS5o
-DQorKysgYi9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuOGlfZHdfaGRtaS5oDQpAQCAtMTc4LDYg
-KzE3OCw3IEBAIHN0cnVjdCBzdW44aV9kd19oZG1pX3F1aXJrcyB7DQogCWVudW0gZHJtX21vZGVf
-c3RhdHVzICgqbW9kZV92YWxpZCkoc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvciwNCiAJ
-CQkJCSAgIGNvbnN0IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlICptb2RlKTsNCiAJdW5zaWduZWQg
-aW50IHNldF9yYXRlIDogMTsNCisJdW5zaWduZWQgaW50IGRybV9pbmZvZnJhbWUgOiAxOw0KIH07
-DQogDQogc3RydWN0IHN1bjhpX2R3X2hkbWkgew0KLS0gDQoyLjE3LjENCg0K
+Patch [1] removes an unused argument "node" from the __alloc_vmap_area()
+function and that is it.
+
+Patch [2] is not driven by any particular workload that fails or so,
+it is just better approach to handle one specific split case.
+
+Patch [3] some cleanups in merging path. Basically on a first step
+the mergeable node is detached and there is no reason to "unlink" it.
+The same concerns the second step unless it has been merged on first
+one.
+
+Patch [4] moves BUG_ON()/RB_EMPTY_NODE() checks under "unlink" logic.
+After [3] merging path "unlink" only linked nodes. Therefore we can say
+that removing detached object is a bug in all cases.
+
+v1->v2:
+    - update the commit message. [2] patch;
+    - fix typos in comments. [2] patch;
+    - do the "preload" for NUMA awareness. [2] patch;
+
+Uladzislau Rezki (Sony) (4):
+  mm/vmap: remove "node" argument
+  mm/vmap: preload a CPU with one object for split purpose
+  mm/vmap: get rid of one single unlink_va() when merge
+  mm/vmap: move BUG_ON() check to the unlink_va()
+
+ mm/vmalloc.c | 116 +++++++++++++++++++++++++++++++++++++++++++++--------------
+ 1 file changed, 90 insertions(+), 26 deletions(-)
+
+-- 
+2.11.0
+
