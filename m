@@ -2,68 +2,104 @@ Return-Path: <SRS0=Y9JJ=T2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4643C282E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 20:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DAC3C282E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 21:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B6A92075E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 20:55:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558904121;
-	bh=yRzCBsdoKKAB4no/aHvH1cvo7Bj2T6zZ/bZaBlVOnYg=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=sIPrT47eQ+1OUqYvTQTi4yAhnIZXi2WHfp0sOyi9NSLfYX7f4pf6fBtywhzihp1F7
-	 6c0do1pZy+tM6hNQICg7jnWNUNOEDLJL/z2FiwgftBzD3DtItGLFxb+ogWKOaZ1l8s
-	 feN3nuIK70OQ4hTWzUEtxCliM2ZiUnfoSqsbwQRQ=
+	by mail.kernel.org (Postfix) with ESMTP id 697702075B
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 21:11:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nKYJGWJJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726008AbfEZUzQ (ORCPT
+        id S1726034AbfEZVLU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 16:55:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47538 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725747AbfEZUzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 16:55:16 -0400
-Subject: Re: [GIT PULL] KVM changes for Linux 5.2-rc2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558904115;
-        bh=yRzCBsdoKKAB4no/aHvH1cvo7Bj2T6zZ/bZaBlVOnYg=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=twEUe5rHnrtnSJWMJHlf/NMQlvFF2CwquKqI6UHeASc0vg9spBbKhbZk5Z8xIH5d4
-         S60HRPGIaeAW/oIugDIe8NqLyHL5TzyyvPCPHnA1fNhkEC9MHMg5ZJdjXI5KyOqYuf
-         O/a6q0hLu/VN4nCkrb4SRQB6oRRyUPzaMGjQKP9g=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <1558864555-53503-1-git-send-email-pbonzini@redhat.com>
-References: <1558864555-53503-1-git-send-email-pbonzini@redhat.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <1558864555-53503-1-git-send-email-pbonzini@redhat.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/virt/kvm/kvm.git
- tags/for-linus
-X-PR-Tracked-Commit-Id: 66f61c92889ff3ca365161fb29dd36d6354682ba
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 862f0a3227b337cea11d0488b0345dc2670fc297
-Message-Id: <155890411588.17135.4509437635494463225.pr-tracker-bot@kernel.org>
-Date:   Sun, 26 May 2019 20:55:15 +0000
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        rkrcmar@redhat.com, kvm@vger.kernel.org
+        Sun, 26 May 2019 17:11:20 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33519 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725843AbfEZVLT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 May 2019 17:11:19 -0400
+Received: by mail-pg1-f195.google.com with SMTP id h17so7915648pgv.0;
+        Sun, 26 May 2019 14:11:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=H/s1c3xrkzJqE7fvuIk7YfMaFCYI6mxb2cD/B5SRqLM=;
+        b=nKYJGWJJImv54mEf6P93K11vI0OopiCxN7Vv9ZUnoMCNgzFSsOI3mg4JzhbCKaU1OR
+         bI7osL7lN/fyY1xDWXXa+GclvNoqPW1CANF7vAiBbcYLws4Je27JQcEA8BEC9S+aRl6E
+         WyHM40V5+uQt/lqK17KoXPStaVBVOgxVdH7UdQGnjxaltPCMrY+VaAgAXtMFOaB20Gbf
+         95XzReVLR9RnZwfa/Mwwdi6rJduujodEN1ErFAb2XqLaHlaIWSiz3VuVAJxOrF1WvYcG
+         64TogM6SJmhSFO0v3w2W8G27oz9w5ozxUBigpV7yEq95+GPWrRC2t2KeugbHHwucb+pD
+         MeSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=H/s1c3xrkzJqE7fvuIk7YfMaFCYI6mxb2cD/B5SRqLM=;
+        b=Bnl3wUtMKYRYd8B2fA5FVhcljkS4UgiF9nFQ1hL/FFApHpCxvk/opjB2dC55MWGREu
+         swthyNaE493MU429mcUVEZocN3L3FeQWUZRG+0Hq+IHBzfh+zGt28eUZl2J4U4OWWiJq
+         EXULlefaWrjoto989Z7Rg0fqDQyfBDTEr+GNkmgO5b+xAXy5E10P6QaLdAHuSK74akpq
+         lunhg7VEoAZZG9RsRs9XlUO360fSqGSTU0Biym0vP0TsOWC3149w649zBV3XGLVPPGOo
+         HymIkOTEOxqmWcNO1Cy90cVjFmIv/8y7Aezt2spfK3LwylIUozwKzQwvyuETUC0RR1Lb
+         /5oA==
+X-Gm-Message-State: APjAAAWyPQR8oxmacn87sVDxZIJaZgZceVLp2DxcNnkIxuJSd8mbAWxP
+        QOimfcbng9FMYee7KmAvZaFu2FTJgZgxFZIoQ5M=
+X-Google-Smtp-Source: APXvYqw+OZ4Zj7rUTNJJCU3HKL52vbJ3UpDqWzlVlfJ88iYux43wW69tyN8mUd4335tJ/dOo4HzwH6gRP9ObMQpnupg=
+X-Received: by 2002:aa7:804c:: with SMTP id y12mr56786473pfm.94.1558905079160;
+ Sun, 26 May 2019 14:11:19 -0700 (PDT)
+MIME-Version: 1.0
+References: <f3c89197-90dc-240b-d96b-aa1286af756a@gmx.de> <5b3f9ac3-a0b4-5b7a-ac7d-d643a2b5963f@infradead.org>
+In-Reply-To: <5b3f9ac3-a0b4-5b7a-ac7d-d643a2b5963f@infradead.org>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Sun, 26 May 2019 14:11:07 -0700
+Message-ID: <CAM_iQpV7M7_yp5uRxYDW3F6qMW1sMUVXR4m7PP64gk_om8e8dg@mail.gmail.com>
+Subject: Re: Linux 5.1.5 (a regression: kernel BUG at lib/list_debug.c:29!)
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     "rwarsow@gmx.de" <rwarsow@gmx.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Jon Maloy <jon.maloy@ericsson.com>,
+        Ying Xue <ying.xue@windriver.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 26 May 2019 11:55:55 +0200:
+On Sat, May 25, 2019 at 6:15 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> On 5/25/19 1:37 PM, rwarsow@gmx.de wrote:
+> > hallo
+> >
+> > I today I got a regression
+> >
+> > see the attached dmesg
+> >
+> > --
+> >
+> > Ronald
+>
+>
+> [adding netdev + TIPC maintainers]
 
-> https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/862f0a3227b337cea11d0488b0345dc2670fc297
+This should have been fixed by the revert of commit
+532b0f7ece4cb2ffd24dc723ddf55242d1188e5e:
 
-Thank you!
+commit 5593530e56943182ebb6d81eca8a3be6db6dbba4
+Author: David S. Miller <davem@davemloft.net>
+Date:   Fri May 17 12:15:05 2019 -0700
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+    Revert "tipc: fix modprobe tipc failed after switch order of
+device registration"
+
+    This reverts commit 532b0f7ece4cb2ffd24dc723ddf55242d1188e5e.
+
+    More revisions coming up.
+
+    Signed-off-by: David S. Miller <davem@davemloft.net>
