@@ -2,172 +2,117 @@ Return-Path: <SRS0=Y9JJ=T2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E6B4C282E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 19:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53279C282E5
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 19:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 267E22146E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 19:15:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28EFB216FD
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 19:16:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D8JnONzv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbfEZTPw (ORCPT
+        id S1727140AbfEZTQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 15:15:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57612 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726163AbfEZTPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 15:15:51 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FBDF2075E;
-        Sun, 26 May 2019 19:15:50 +0000 (UTC)
-Date:   Sun, 26 May 2019 15:15:48 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Subject: [GIT PULL] tracing: Silence GCC 9 array bounds warning
-Message-ID: <20190526151548.2d7bc6bc@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 26 May 2019 15:16:06 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:37312 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726163AbfEZTQF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 May 2019 15:16:05 -0400
+Received: by mail-yw1-f66.google.com with SMTP id 186so5815849ywo.4;
+        Sun, 26 May 2019 12:16:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=noskaXJB+lKStgYLNqjD43scq/LOmprbRcl7XPqZyEI=;
+        b=D8JnONzvJVlbSq818NlO2tEUyWIfBoSFmPsh5zvcDyBHWIlsg/7WbzUDiBGXDGAa7t
+         t7q/y9nPrbUqqkKlGdqnb0djhVmy6zqH1f47Z4PDzhqU1x2w7hZNelCNTCOpD13xVL1O
+         ZXbpqJTWIhIkHYxjvmoGoEFYcUfZ7ezMF2AkwVJlNHt4HR36YZKr2zCpBrXoR3LnYP1K
+         PXKJcdeEEjMtuWmQN0LmMdGXR4WGYNss6d30qaK4MmrC9KOQmgn6/n9ZxVEiEa787Ywe
+         ZHeqUNq1DmIrBF1UNo7bLY4/n1OEYs7At07Uz5vFO5lZL7KPf6H57qHjmR7U1zykp5tQ
+         Qptg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=noskaXJB+lKStgYLNqjD43scq/LOmprbRcl7XPqZyEI=;
+        b=q3OMvuAI+N1vAgBgWFO9dEkDsdTyyRGG4Md5LtGzjhdI7xR4gMIKzhQV3rmx9RNUIq
+         HwKyTo1fGjrMeWYlOC0M79JO5nGKzw3zWX8pBF7PRse3V9sqNZvCd/yLT8DPvADnIwus
+         jKqyIG08VZLJz+mbzdSHbepoEYDHoI0YiUYzT3Ni8UUvegLqhwHH7L5/x4DCGMwFDo+L
+         BJ48zxpBHg2Wk0P0QJKHVAW9bG86KwGkk3aEa3ignIQARtajVSu3Ud/H11Dj+Oejds1B
+         9YyGZP03RT6b3Yf9AMOVRjatSw+GQeNe1AjSCKXKoighZMUzRQxukDDb43abaM2y7rC2
+         bp/g==
+X-Gm-Message-State: APjAAAXGskhURqx+xSrHo+W8SVkGg8cGtIsvUh+C+m0gArds2eisH+Og
+        pWoVypFGMIwq8+B9pbZAm7wMxOuL0fIR6jS7ip8=
+X-Google-Smtp-Source: APXvYqz+VzNt0oKUMWNius14IRSdTfbNvnD/DEiP9e5FvjbEQtR2ABEeJ+6nuk7ooQZFFcE+eOm26NaadqAoXgSQSww=
+X-Received: by 2002:a81:9a4b:: with SMTP id r72mr30838628ywg.422.1558898160019;
+ Sun, 26 May 2019 12:16:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190525180923.6105-1-peron.clem@gmail.com> <20190525180923.6105-5-peron.clem@gmail.com>
+ <20190526190410.ngrvrclp5ge5rdqy@flea>
+In-Reply-To: <20190526190410.ngrvrclp5ge5rdqy@flea>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Sun, 26 May 2019 21:15:49 +0200
+Message-ID: <CAJiuCceHhxYt=BY0Jvfv6+80ekKcMLUSv5UWBorYuvtO-DkOtg@mail.gmail.com>
+Subject: Re: [PATCH 04/10] dt-bindings: media: sunxi-ir: Add A64 compatible
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-media@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Maxime,
 
-Linus,
+On Sun, 26 May 2019 at 21:04, Maxime Ripard <maxime.ripard@bootlin.com> wro=
+te:
+>
+> On Sat, May 25, 2019 at 08:09:17PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> > There is some minor differences between A31 and A64 driver.
+> >
+> > But A31 IR driver is compatible with A64.
+> >
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > ---
+> >  Documentation/devicetree/bindings/media/sunxi-ir.txt | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/media/sunxi-ir.txt b/Doc=
+umentation/devicetree/bindings/media/sunxi-ir.txt
+> > index 53e88ebb53fe..da5aeba843de 100644
+> > --- a/Documentation/devicetree/bindings/media/sunxi-ir.txt
+> > +++ b/Documentation/devicetree/bindings/media/sunxi-ir.txt
+> > @@ -5,6 +5,7 @@ Required properties:
+> >       "allwinner,sun4i-a10-ir"
+> >       "allwinner,sun5i-a13-ir"
+> >       "allwinner,sun6i-a31-ir"
+> > +     "allwinner,sun50i-a64-ir", "allwinner,sun6i-a31-ir"
+>
+> I guess resets is mandatory for the A31 onwards too, right?
 
-Make the GCC 9 warning for sub struct memset go away.
+Indeed, I will add this information in the device-tree bindings.
+Ideally, we should also introduce a quirks with a "has_reset" property.
 
-GCC 9 now warns about calling memset() on partial structures when it
-goes across multiple fields. This adds a helper for the place in
-tracing that does this type of clearing of a structure.
+Thanks for your review,
+Cl=C3=A9ment
 
-
-Please pull the latest trace-v5.2-rc1-2 tree, which can be found at:
-
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
-trace-v5.2-rc1-2
-
-Tag SHA1: 5fa176f243ceb9deaec360cc3f88062e466498b8
-Head SHA1: 0c97bf863efce63d6ab7971dad811601e6171d2f
-
-
-Miguel Ojeda (1):
-      tracing: Silence GCC 9 array bounds warning
-
-----
- kernel/trace/trace.c     |  6 +-----
- kernel/trace/trace.h     | 18 ++++++++++++++++++
- kernel/trace/trace_kdb.c |  6 +-----
- 3 files changed, 20 insertions(+), 10 deletions(-)
----------------------------
-commit 0c97bf863efce63d6ab7971dad811601e6171d2f
-Author: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Thu May 23 14:45:35 2019 +0200
-
-    tracing: Silence GCC 9 array bounds warning
-    
-    Starting with GCC 9, -Warray-bounds detects cases when memset is called
-    starting on a member of a struct but the size to be cleared ends up
-    writing over further members.
-    
-    Such a call happens in the trace code to clear, at once, all members
-    after and including `seq` on struct trace_iterator:
-    
-        In function 'memset',
-            inlined from 'ftrace_dump' at kernel/trace/trace.c:8914:3:
-        ./include/linux/string.h:344:9: warning: '__builtin_memset' offset
-        [8505, 8560] from the object at 'iter' is out of the bounds of
-        referenced subobject 'seq' with type 'struct trace_seq' at offset
-        4368 [-Warray-bounds]
-          344 |  return __builtin_memset(p, c, size);
-              |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
-    In order to avoid GCC complaining about it, we compute the address
-    ourselves by adding the offsetof distance instead of referring
-    directly to the member.
-    
-    Since there are two places doing this clear (trace.c and trace_kdb.c),
-    take the chance to move the workaround into a single place in
-    the internal header.
-    
-    Link: http://lkml.kernel.org/r/20190523124535.GA12931@gmail.com
-    
-    Signed-off-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-    [ Removed unnecessary parenthesis around "iter" ]
-    Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 2c92b3d9ea30..1c80521fd436 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -8910,12 +8910,8 @@ void ftrace_dump(enum ftrace_dump_mode oops_dump_mode)
- 
- 		cnt++;
- 
--		/* reset all but tr, trace, and overruns */
--		memset(&iter.seq, 0,
--		       sizeof(struct trace_iterator) -
--		       offsetof(struct trace_iterator, seq));
-+		trace_iterator_reset(&iter);
- 		iter.iter_flags |= TRACE_FILE_LAT_FMT;
--		iter.pos = -1;
- 
- 		if (trace_find_next_entry_inc(&iter) != NULL) {
- 			int ret;
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 82c70b63d375..005f08629b8b 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -1966,4 +1966,22 @@ static inline void tracer_hardirqs_off(unsigned long a0, unsigned long a1) { }
- 
- extern struct trace_iterator *tracepoint_print_iter;
- 
-+/*
-+ * Reset the state of the trace_iterator so that it can read consumed data.
-+ * Normally, the trace_iterator is used for reading the data when it is not
-+ * consumed, and must retain state.
-+ */
-+static __always_inline void trace_iterator_reset(struct trace_iterator *iter)
-+{
-+	const size_t offset = offsetof(struct trace_iterator, seq);
-+
-+	/*
-+	 * Keep gcc from complaining about overwriting more than just one
-+	 * member in the structure.
-+	 */
-+	memset((char *)iter + offset, 0, sizeof(struct trace_iterator) - offset);
-+
-+	iter->pos = -1;
-+}
-+
- #endif /* _LINUX_KERNEL_TRACE_H */
-diff --git a/kernel/trace/trace_kdb.c b/kernel/trace/trace_kdb.c
-index 6c1ae6b752d1..cca65044c14c 100644
---- a/kernel/trace/trace_kdb.c
-+++ b/kernel/trace/trace_kdb.c
-@@ -37,12 +37,8 @@ static void ftrace_dump_buf(int skip_entries, long cpu_file)
- 	if (skip_entries)
- 		kdb_printf("(skipping %d entries)\n", skip_entries);
- 
--	/* reset all but tr, trace, and overruns */
--	memset(&iter.seq, 0,
--		   sizeof(struct trace_iterator) -
--		   offsetof(struct trace_iterator, seq));
-+	trace_iterator_reset(&iter);
- 	iter.iter_flags |= TRACE_FILE_LAT_FMT;
--	iter.pos = -1;
- 
- 	if (cpu_file == RING_BUFFER_ALL_CPUS) {
- 		for_each_tracing_cpu(cpu) {
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
