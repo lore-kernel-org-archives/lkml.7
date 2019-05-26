@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B945CC282E5
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 19:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A0AC282E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 19:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BC7C2075E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 19:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0843D2075E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 19:19:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727400AbfEZTTA (ORCPT
+        id S1727370AbfEZTS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 15:19:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58970 "EHLO mail.kernel.org"
+        Sun, 26 May 2019 15:18:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727198AbfEZTSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 15:18:50 -0400
+        id S1727039AbfEZTSt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 May 2019 15:18:49 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60271217F4;
-        Sun, 26 May 2019 19:18:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E755421734;
+        Sun, 26 May 2019 19:18:47 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92)
         (envelope-from <rostedt@goodmis.org>)
-        id 1hUyfQ-0004dT-HJ; Sun, 26 May 2019 15:18:48 -0400
-Message-Id: <20190526191848.425725176@goodmis.org>
+        id 1hUyfP-0004Z6-2C; Sun, 26 May 2019 15:18:47 -0400
+Message-Id: <20190526191846.952471971@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Sun, 26 May 2019 15:18:41 -0400
+Date:   Sun, 26 May 2019 15:18:32 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [for-next][PATCH 13/16] tracing/kprobe: Add kprobe_event= boot parameter
+Subject: [for-next][PATCH 04/16] uaccess: Add non-pagefault user-space read functions
 References: <20190526191828.466305460@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -46,162 +46,222 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Masami Hiramatsu <mhiramat@kernel.org>
 
-Add kprobe_event= boot parameter to define kprobe events
-at boot time.
-The definition syntax is similar to tracefs/kprobe_events
-interface, but use ',' and ';' instead of ' ' and '\n'
-respectively. e.g.
+Add probe_user_read(), strncpy_from_unsafe_user() and
+strnlen_unsafe_user() which allows caller to access user-space
+in IRQ context.
 
-  kprobe_event=p,vfs_read,$arg1,$arg2
+Current probe_kernel_read() and strncpy_from_unsafe() are
+not available for user-space memory, because it sets
+KERNEL_DS while accessing data. On some arch, user address
+space and kernel address space can be co-exist, but others
+can not. In that case, setting KERNEL_DS means given
+address is treated as a kernel address space.
+Also strnlen_user() is only available from user context since
+it can sleep if pagefault is enabled.
 
-This puts a probe on vfs_read with argument1 and 2, and
-enable the new event.
+To access user-space memory without pagefault, we need
+these new functions which sets USER_DS while accessing
+the data.
 
-Link: http://lkml.kernel.org/r/155851395498.15728.830529496248543583.stgit@devnote2
+Link: http://lkml.kernel.org/r/155789869802.26965.4940338412595759063.stgit@devnote2
 
+Acked-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- .../admin-guide/kernel-parameters.txt         | 13 +++++
- Documentation/trace/kprobetrace.rst           | 14 +++++
- kernel/trace/trace_kprobe.c                   | 54 +++++++++++++++++++
- 3 files changed, 81 insertions(+)
+ include/linux/uaccess.h |  14 +++++
+ mm/maccess.c            | 122 ++++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 130 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 138f6664b2e2..11b9ffb265eb 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -2007,6 +2007,19 @@
- 			Built with CONFIG_DEBUG_KMEMLEAK_DEFAULT_OFF=y,
- 			the default is off.
+diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+index 5a43ef7db492..9c435c3f2105 100644
+--- a/include/linux/uaccess.h
++++ b/include/linux/uaccess.h
+@@ -242,6 +242,17 @@ static inline unsigned long __copy_from_user_inatomic_nocache(void *to,
+ extern long probe_kernel_read(void *dst, const void *src, size_t size);
+ extern long __probe_kernel_read(void *dst, const void *src, size_t size);
  
-+	kprobe_event=[probe-list]
-+			[FTRACE] Add kprobe events and enable at boot time.
-+			The probe-list is a semicolon delimited list of probe
-+			definitions. Each definition is same as kprobe_events
-+			interface, but the parameters are comma delimited.
-+			For example, to add a kprobe event on vfs_read with
-+			arg1 and arg2, add to the command line;
++/*
++ * probe_user_read(): safely attempt to read from a location in user space
++ * @dst: pointer to the buffer that shall take the data
++ * @src: address to read from
++ * @size: size of the data chunk
++ *
++ * Safely read from address @src to the buffer at @dst.  If a kernel fault
++ * happens, handle that and return -EFAULT.
++ */
++extern long probe_user_read(void *dst, const void __user *src, size_t size);
 +
-+			      kprobe_event=p,vfs_read,$arg1,$arg2
-+
-+			See also Documentation/trace/kprobetrace.rst "Kernel
-+			Boot Parameter" section.
-+
- 	kpti=		[ARM64] Control page table isolation of user
- 			and kernel address spaces.
- 			Default: enabled on cores which need mitigation.
-diff --git a/Documentation/trace/kprobetrace.rst b/Documentation/trace/kprobetrace.rst
-index 09ff474493e1..af776989caca 100644
---- a/Documentation/trace/kprobetrace.rst
-+++ b/Documentation/trace/kprobetrace.rst
-@@ -146,6 +146,20 @@ You can check the total number of probe hits and probe miss-hits via
- The first column is event name, the second is the number of probe hits,
- the third is the number of probe miss-hits.
+ /*
+  * probe_kernel_write(): safely attempt to write to a location
+  * @dst: address to write to
+@@ -255,6 +266,9 @@ extern long notrace probe_kernel_write(void *dst, const void *src, size_t size);
+ extern long notrace __probe_kernel_write(void *dst, const void *src, size_t size);
  
-+Kernel Boot Parameter
-+---------------------
-+You can add and enable new kprobe events when booting up the kernel by
-+"kprobe_event=" parameter. The parameter accepts a semicolon-delimited
-+kprobe events, which format is similar to the kprobe_events.
-+The difference is that the probe definition parameters are comma-delimited
-+instead of space. For example, adding myprobe event on do_sys_open like below
-+
-+  p:myprobe do_sys_open dfd=%ax filename=%dx flags=%cx mode=+4($stack)
-+
-+should be below for kernel boot parameter (just replace spaces with comma)
-+
-+  p:myprobe,do_sys_open,dfd=%ax,filename=%dx,flags=%cx,mode=+4($stack)
-+
+ extern long strncpy_from_unsafe(char *dst, const void *unsafe_addr, long count);
++extern long strncpy_from_unsafe_user(char *dst, const void __user *unsafe_addr,
++				     long count);
++extern long strnlen_unsafe_user(const void __user *unsafe_addr, long count);
  
- Usage examples
- --------------
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 2c5357dddb92..004fffd24ec1 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -12,6 +12,8 @@
- #include <linux/rculist.h>
- #include <linux/error-injection.h>
+ /**
+  * probe_kernel_address(): safely attempt to read from a location
+diff --git a/mm/maccess.c b/mm/maccess.c
+index ec00be51a24f..19c8c3dc14df 100644
+--- a/mm/maccess.c
++++ b/mm/maccess.c
+@@ -5,8 +5,20 @@
+ #include <linux/mm.h>
+ #include <linux/uaccess.h>
  
-+#include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
-+
- #include "trace_dynevent.h"
- #include "trace_kprobe_selftest.h"
- #include "trace_probe.h"
-@@ -19,6 +21,17 @@
- 
- #define KPROBE_EVENT_SYSTEM "kprobes"
- #define KRETPROBE_MAXACTIVE_MAX 4096
-+#define MAX_KPROBE_CMDLINE_SIZE 1024
-+
-+/* Kprobe early definition from command line */
-+static char kprobe_boot_events_buf[COMMAND_LINE_SIZE] __initdata;
-+
-+static int __init set_kprobe_boot_events(char *str)
++static __always_inline long
++probe_read_common(void *dst, const void __user *src, size_t size)
 +{
-+	strlcpy(kprobe_boot_events_buf, str, COMMAND_LINE_SIZE);
-+	return 0;
++	long ret;
++
++	pagefault_disable();
++	ret = __copy_from_user_inatomic(dst, src, size);
++	pagefault_enable();
++
++	return ret ? -EFAULT : 0;
 +}
-+__setup("kprobe_event=", set_kprobe_boot_events);
++
+ /**
+- * probe_kernel_read(): safely attempt to read from a location
++ * probe_kernel_read(): safely attempt to read from a kernel-space location
+  * @dst: pointer to the buffer that shall take the data
+  * @src: address to read from
+  * @size: size of the data chunk
+@@ -29,16 +41,40 @@ long __probe_kernel_read(void *dst, const void *src, size_t size)
+ 	mm_segment_t old_fs = get_fs();
  
- static int trace_kprobe_create(int argc, const char **argv);
- static int trace_kprobe_show(struct seq_file *m, struct dyn_event *ev);
-@@ -1494,6 +1507,44 @@ void destroy_local_trace_kprobe(struct trace_event_call *event_call)
+ 	set_fs(KERNEL_DS);
+-	pagefault_disable();
+-	ret = __copy_from_user_inatomic(dst,
+-			(__force const void __user *)src, size);
+-	pagefault_enable();
++	ret = probe_read_common(dst, (__force const void __user *)src, size);
+ 	set_fs(old_fs);
+ 
+-	return ret ? -EFAULT : 0;
++	return ret;
  }
- #endif /* CONFIG_PERF_EVENTS */
+ EXPORT_SYMBOL_GPL(probe_kernel_read);
  
-+static __init void enable_boot_kprobe_events(void)
-+{
-+	struct trace_array *tr = top_trace_array();
-+	struct trace_event_file *file;
-+	struct trace_kprobe *tk;
-+	struct dyn_event *pos;
++/**
++ * probe_user_read(): safely attempt to read from a user-space location
++ * @dst: pointer to the buffer that shall take the data
++ * @src: address to read from. This must be a user address.
++ * @size: size of the data chunk
++ *
++ * Safely read from user address @src to the buffer at @dst. If a kernel fault
++ * happens, handle that and return -EFAULT.
++ */
 +
-+	mutex_lock(&event_mutex);
-+	for_each_trace_kprobe(tk, pos) {
-+		list_for_each_entry(file, &tr->events, list)
-+			if (file->event_call == &tk->tp.call)
-+				trace_event_enable_disable(file, 1, 0);
++long __weak probe_user_read(void *dst, const void __user *src, size_t size)
++    __attribute__((alias("__probe_user_read")));
++
++long __probe_user_read(void *dst, const void __user *src, size_t size)
++{
++	long ret = -EFAULT;
++	mm_segment_t old_fs = get_fs();
++
++	set_fs(USER_DS);
++	if (access_ok(src, size))
++		ret = probe_read_common(dst, src, size);
++	set_fs(old_fs);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(probe_user_read);
++
+ /**
+  * probe_kernel_write(): safely attempt to write to a location
+  * @dst: address to write to
+@@ -66,6 +102,7 @@ long __probe_kernel_write(void *dst, const void *src, size_t size)
+ }
+ EXPORT_SYMBOL_GPL(probe_kernel_write);
+ 
++
+ /**
+  * strncpy_from_unsafe: - Copy a NUL terminated string from unsafe address.
+  * @dst:   Destination address, in kernel space.  This buffer must be at
+@@ -105,3 +142,76 @@ long strncpy_from_unsafe(char *dst, const void *unsafe_addr, long count)
+ 
+ 	return ret ? -EFAULT : src - unsafe_addr;
+ }
++
++/**
++ * strncpy_from_unsafe_user: - Copy a NUL terminated string from unsafe user
++ *				address.
++ * @dst:   Destination address, in kernel space.  This buffer must be at
++ *         least @count bytes long.
++ * @unsafe_addr: Unsafe user address.
++ * @count: Maximum number of bytes to copy, including the trailing NUL.
++ *
++ * Copies a NUL-terminated string from unsafe user address to kernel buffer.
++ *
++ * On success, returns the length of the string INCLUDING the trailing NUL.
++ *
++ * If access fails, returns -EFAULT (some data may have been copied
++ * and the trailing NUL added).
++ *
++ * If @count is smaller than the length of the string, copies @count-1 bytes,
++ * sets the last byte of @dst buffer to NUL and returns @count.
++ */
++long strncpy_from_unsafe_user(char *dst, const void __user *unsafe_addr,
++			      long count)
++{
++	mm_segment_t old_fs = get_fs();
++	long ret;
++
++	if (unlikely(count <= 0))
++		return 0;
++
++	set_fs(USER_DS);
++	pagefault_disable();
++	ret = strncpy_from_user(dst, unsafe_addr, count);
++	pagefault_enable();
++	set_fs(old_fs);
++
++	if (ret >= count) {
++		ret = count;
++		dst[ret - 1] = '\0';
++	} else if (ret > 0) {
++		ret++;
 +	}
-+	mutex_unlock(&event_mutex);
++
++	return ret;
 +}
 +
-+static __init void setup_boot_kprobe_events(void)
++/**
++ * strnlen_unsafe_user: - Get the size of a user string INCLUDING final NUL.
++ * @unsafe_addr: The string to measure.
++ * @count: Maximum count (including NUL)
++ *
++ * Get the size of a NUL-terminated string in user space without pagefault.
++ *
++ * Returns the size of the string INCLUDING the terminating NUL.
++ *
++ * If the string is too long, returns a number larger than @count. User
++ * has to check the return value against "> count".
++ * On exception (or invalid count), returns 0.
++ *
++ * Unlike strnlen_user, this can be used from IRQ handler etc. because
++ * it disables pagefaults.
++ */
++long strnlen_unsafe_user(const void __user *unsafe_addr, long count)
 +{
-+	char *p, *cmd = kprobe_boot_events_buf;
++	mm_segment_t old_fs = get_fs();
 +	int ret;
 +
-+	strreplace(kprobe_boot_events_buf, ',', ' ');
++	set_fs(USER_DS);
++	pagefault_disable();
++	ret = strnlen_user(unsafe_addr, count);
++	pagefault_enable();
++	set_fs(old_fs);
 +
-+	while (cmd && *cmd != '\0') {
-+		p = strchr(cmd, ';');
-+		if (p)
-+			*p++ = '\0';
-+
-+		ret = trace_run_command(cmd, create_or_delete_trace_kprobe);
-+		if (ret)
-+			pr_warn("Failed to add event(%d): %s\n", ret, cmd);
-+
-+		cmd = p;
-+	}
-+
-+	enable_boot_kprobe_events();
++	return ret;
 +}
-+
- /* Make a tracefs interface for controlling probe points */
- static __init int init_kprobe_trace(void)
- {
-@@ -1525,6 +1576,9 @@ static __init int init_kprobe_trace(void)
- 
- 	if (!entry)
- 		pr_warn("Could not create tracefs 'kprobe_profile' entry\n");
-+
-+	setup_boot_kprobe_events();
-+
- 	return 0;
- }
- fs_initcall(init_kprobe_trace);
 -- 
 2.20.1
 
