@@ -2,97 +2,101 @@ Return-Path: <SRS0=Y9JJ=T2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D43D2C282E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 10:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B69C282E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 10:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0EC52085A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 10:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15ABC2075C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 10:59:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Qy+4nwkT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rO2OJ6bU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727688AbfEZK64 (ORCPT
+        id S1727730AbfEZK7n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 06:58:56 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:42899 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726837AbfEZK6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 06:58:55 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45BcY86wXTz9s9N;
-        Sun, 26 May 2019 20:58:52 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1558868333;
-        bh=SQrMuVmoa66E1VrCf9mHRafTDuGQ7fBOzb0ZaH25TPw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Qy+4nwkTuFJiQ9mIlV/Qsa7s6ya4oX/LGrLp+vw4scmYfAEZu1CyKKiKuAgrZq9Rp
-         8TQNvYuKXTEffhgWi2DuX2gvNeW3Cyme9HMLmnFnYWrInp4/lsvM5bLymZ6+YuyctU
-         KShL3HU4RZjzHjdefoWTJm293eMdH9ZMcIvElBKPuvhLGfLSgvvp7lgqNmA85fVxsS
-         14R1zBOAqVeQVH9GhXY7wWkzecee93yD6DSjNcUfNQ0bOuth2WLANcx8LMLJie8amg
-         aG73ezmU7WpV6Bc0btkQtmjPps3O07SyNeFHqPJeSXwoFYcTJw3I8N0v3J+2QGtETf
-         QAWdoj64Ib1SA==
-Date:   Sun, 26 May 2019 20:58:51 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Theodore Ts'o <tytso@mit.edu>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Fixes tag needs some work in the random tree
-Message-ID: <20190526205851.48679169@canb.auug.org.au>
+        Sun, 26 May 2019 06:59:43 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:41374 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726837AbfEZK7m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 May 2019 06:59:42 -0400
+Received: by mail-pl1-f194.google.com with SMTP id d14so368989pls.8
+        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2019 03:59:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=2pMI0TxvbszUYLNen9JiMBX7dkFbg/aa3u3WzyR2uKI=;
+        b=rO2OJ6bUDdn6tVbaU9JLevvxpMRho/K0ImE8V7MP/hoeb0j8tancISakTvTwhJxSUi
+         HqQ1L9zqv5raxhOOpIvvhFuUquFEVkT0zu929Byuil3v4RTy3I6v5p6h8jN7QvlKYBYr
+         CZCo63eDlK0eF1Omb3y1Sq5JuCayY8yW7nuzh8FlvOzQwln621/3DWUX+LW0qvIJys6r
+         U8Ty97aCxHfYqc2NNqVs0L2CkV6xJyJBjkBtbopzyuLo2UKVKwpUpui/c5DEWFlWpTNT
+         dWaHAeK2KFxnHFQ3MUSkBqpbEAlwqtOAzcQIcBLJv6qRgpkxlIyqL4P+YiVwqI64NyZU
+         UKbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=2pMI0TxvbszUYLNen9JiMBX7dkFbg/aa3u3WzyR2uKI=;
+        b=S2tTOfOi7EicQ+8Rnw/6I4p36gIShg4d9nYYRVutIbPJgQAPfdLgeVWz9EqVtEe0DY
+         NJvvQgEE1lt2f7WeW0HGP8zZoK9JXSI6aTvxD+jY6sCubxAk5FwFeMOEZJig0WTmFUvl
+         86SysHYBdtA/NOvVVy+Tw//RMRWZUIvSm0UyhOc3G+6UdbDCBmBIW5J/+XUThLdwfWfN
+         vjMPwCo8iWr6iPRTijDeUodW0PHKhZEV50W1ErxVrLi0VC4rD1qVipq4DWrZ/8fpV7j1
+         JMC2n9HC4tg9IvZssMmrRrChY16tTe2TfP3miitvfQv89JFF4RnbkzL1dI9U5wAnvydY
+         5hpA==
+X-Gm-Message-State: APjAAAWUvwh7hoi4ynTJzs+W7tU+4RqvEOfbj7DuCbt+RoZaYde/hiIM
+        jn4joptTWwB/DGJZfn0Q3Wc=
+X-Google-Smtp-Source: APXvYqzZ/Ql4lxowsEEZVCxTIcuNT0XsMDFt0ghrVHkXu7ZIypKWI/BiwkKkceYcHwozVWeOxD7pNw==
+X-Received: by 2002:a17:902:e40a:: with SMTP id ci10mr73060394plb.195.1558868382078;
+        Sun, 26 May 2019 03:59:42 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.92.73])
+        by smtp.gmail.com with ESMTPSA id d85sm9011325pfd.94.2019.05.26.03.59.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 26 May 2019 03:59:41 -0700 (PDT)
+Date:   Sun, 26 May 2019 16:29:36 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/nouveau/dispnv04: subdev/bios.h is included more than
+ once
+Message-ID: <20190526105935.GA2983@hari-Inspiron-1545>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/9TiOUxuDquE3YUtIei3ko7p"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/9TiOUxuDquE3YUtIei3ko7p
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+remove duplicate inclusion of subdev/bios.h
 
-Hi Ted,
+Issue identified by includecheck
 
-In commit
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/gpu/drm/nouveau/dispnv04/disp.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-  58be0106c530 ("random: fix soft lockup when trying to read from an uninit=
-ialized blocking pool")
+diff --git a/drivers/gpu/drm/nouveau/dispnv04/disp.h b/drivers/gpu/drm/nouveau/dispnv04/disp.h
+index c6ed20a..195d899 100644
+--- a/drivers/gpu/drm/nouveau/dispnv04/disp.h
++++ b/drivers/gpu/drm/nouveau/dispnv04/disp.h
+@@ -161,7 +161,6 @@ nv_match_device(struct drm_device *dev, unsigned device,
+ 		dev->pdev->subsystem_device == sub_device;
+ }
+ 
+-#include <subdev/bios.h>
+ #include <subdev/bios/init.h>
+ 
+ static inline void
+-- 
+2.7.4
 
-Fixes tag
-
-  Fixes: eb9d1bf079bb: "random: only read from /dev/random after its pool h=
-as received 128 bits"
-
-has these problem(s):
-
-  - the ':' after the SHA1 is unexpected
-  - the subject is usually surrounded by '("")'
-    Just use
-	git log -1 --format=3D'Fixes: %h ("%s")'
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/9TiOUxuDquE3YUtIei3ko7p
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzqcWsACgkQAVBC80lX
-0Gy5nAgAhHJswXVcZV94a/e4bTys4MhF6LQsBWvb6AvWAcLBt3ht4btH74KxINjA
-0LHdHnQbt9+abudMI0fhoVd20PCwkHvDAoAwjR1al2YYGOoCBNLPyFrNNjPK026F
-j12m+iRoyVKtUi4IgyXKp0iWLW9WqZVGkLlxmdoNzsXgKfFOl/0bkMD9O03zkzyf
-1qsSl4M0frgNtjW5hJmMkNv1+62yBQJC1Bm1ZLqaKXq1sA6icVqc/VENYiQ9iYCl
-gkmwnTap+T0oaJnmb837qwRr+JphpCKUgiQxPaN8pT3CBqpbhfYLM4TYEjovT6SR
-Sus6G06+48l/qc2H1TK7L5H2hxXk7Q==
-=xa14
------END PGP SIGNATURE-----
-
---Sig_/9TiOUxuDquE3YUtIei3ko7p--
