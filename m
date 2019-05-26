@@ -3,95 +3,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F105C282E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 17:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F65C28CBF
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 18:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57E5B20717
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 17:53:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CD2A214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 18:22:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbfEZRxz (ORCPT
+        id S1728065AbfEZSW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 13:53:55 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43231 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727972AbfEZRxy (ORCPT
+        Sun, 26 May 2019 14:22:58 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:48133 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727988AbfEZSW5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 13:53:54 -0400
-Received: by mail-wr1-f66.google.com with SMTP id l17so6224730wrm.10
-        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2019 10:53:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3E6kp+r7OBI+9gX6jKnLvemsSLfWQYZx5SlrWEsr91k=;
-        b=uQoCkVfOa3mKlGmbIro1dqhChMhzFDxfe5KBa53zd4QcbYMUct0vZEKTYIa1yUYqKD
-         OWn4AXA4mAHqXyjhJ/YSe0fL7HWsqXAzFf5bQUG7cV45OZ7pybXL4kreplFU14ba3G1r
-         p84pZxng0KLULOLSIxWfcixUgDYTlhjJRoXuL/y+HkZYqWEwBGZ0nUg+cX0ydQMUgM09
-         2ojSuem5oLncLKodckltIJ/Ro2CJfgqFVYzA2KqD6bpN6A23+/EYhwlSA2nlt+vOsRL2
-         o1BSFNr6R+rbdkVcWtW9WNKiiTjZK6+H6ql+CDbvSzGSuQpAVRuoZ5EsMKKjxQZQmkp2
-         lgwQ==
-X-Gm-Message-State: APjAAAUxxkut+0aBE0j45hWlbUMn1Q8nWjfBzMoexZBVGCBxZa6Rd2p5
-        D07kzjPDE7JeeipjhUxNx3wbwZ5o4dI=
-X-Google-Smtp-Source: APXvYqzQOxQEM8sgEkxzsO2Ks3B+FO1y/Lc06FIhA94o3VdiVhvDVjoDuFE1oO8eaQRV+PbB7yXgnA==
-X-Received: by 2002:adf:8062:: with SMTP id 89mr678539wrk.97.1558893232941;
-        Sun, 26 May 2019 10:53:52 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:7428:5a9c:3100:a747? ([2001:b07:6468:f312:7428:5a9c:3100:a747])
-        by smtp.gmail.com with ESMTPSA id n10sm418987wrr.11.2019.05.26.10.53.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 26 May 2019 10:53:52 -0700 (PDT)
-Subject: Re: [GIT PULL] KVM changes for Linux 5.2-rc2
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        KVM list <kvm@vger.kernel.org>
-References: <1558864555-53503-1-git-send-email-pbonzini@redhat.com>
- <CAHk-=wi3YcO4JTpkeENETz3fqf3DeKc7-tvXwqPmVcq-pgKg5g@mail.gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <2d55fd2a-afbf-1b7c-ca82-8bffaa18e0d0@redhat.com>
-Date:   Sun, 26 May 2019 19:53:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sun, 26 May 2019 14:22:57 -0400
+X-Originating-IP: 90.89.68.76
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 7CA4DC0003;
+        Sun, 26 May 2019 18:22:49 +0000 (UTC)
+Date:   Sun, 26 May 2019 20:22:49 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/7] ASoC: sun4i-spdif: Move quirks to the top
+Message-ID: <20190526182249.nx7ql7bghzuah7rd@flea>
+References: <20190525162323.20216-1-peron.clem@gmail.com>
+ <20190525162323.20216-3-peron.clem@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wi3YcO4JTpkeENETz3fqf3DeKc7-tvXwqPmVcq-pgKg5g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="6o7q3ljfvpuo6cyn"
+Content-Disposition: inline
+In-Reply-To: <20190525162323.20216-3-peron.clem@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/05/19 17:51, Linus Torvalds wrote:
-> On Sun, May 26, 2019 at 2:56 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
->>
->>   https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
-> 
-> This says it's a tag, but it's not. It's just a commit pointer (also
-> called a "lightweight tag", because while it technically is exactly
-> the same thing as a branch, it's obviously in the tag namespace and
-> git will _treat_ it like a tag).
-> 
-> Normally your tags are proper signed tags. So I'm not pulling this,
-> waiting for confirmation.
 
-Shell history shows that I typed
+--6o7q3ljfvpuo6cyn
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-	git push kvm +HEAD:tags/for-linus
+On Sat, May 25, 2019 at 06:23:18PM +0200, Cl=E9ment P=E9ron wrote:
+> The quirks are actually defines in the middle of the file with
+> short explanation.
+>
+> Move this at the top and add a section to have coherency with
+> sun4i-i2s.
+>
+> Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
 
-(which matches the "git push kvm +HEAD:queue" that I often do, and
-therefore can be explained by muscle memory).
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
-The interesting thing is that not only git will treat lightweight tags
-like, well, tags: in addition, because I _locally_ had a tag object that
-pointed to the same commit and had the same name, git-request-pull
-included my local tag's message in its output!  I wonder if this could
-be considered a bug.
+Maxime
 
-I have now pushed the actual tag object to the same place.
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-Paolo
+--6o7q3ljfvpuo6cyn
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOrZeQAKCRDj7w1vZxhR
+xYznAQCG1ejGnz0/Amek60TIzTGn7GCQXJ14lwLZt7fBCIsxdgD9FkDn/kl+sLzC
+xhVYYDDY3qXuamvmvEtLHOuGs4SYgQM=
+=+pbe
+-----END PGP SIGNATURE-----
+
+--6o7q3ljfvpuo6cyn--
