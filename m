@@ -2,127 +2,158 @@ Return-Path: <SRS0=Y9JJ=T2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87FBEC282E5
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 09:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F5AC282E5
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 09:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 609882085A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 09:25:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="HpZSmkBG"
+	by mail.kernel.org (Postfix) with ESMTP id 87D232085A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 09:28:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727681AbfEZJZX (ORCPT
+        id S1727702AbfEZJ2a convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 05:25:23 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34013 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726837AbfEZJZX (ORCPT
+        Sun, 26 May 2019 05:28:30 -0400
+Received: from linux-libre.fsfla.org ([209.51.188.54]:49130 "EHLO
+        linux-libre.fsfla.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727639AbfEZJ23 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 05:25:23 -0400
-Received: by mail-wr1-f65.google.com with SMTP id f8so13914005wrt.1
-        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2019 02:25:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MaesAHV7XbucgNbiX6OEnJaTvbcp9LTAjcsWKT9apy8=;
-        b=HpZSmkBG5yyJgVVoofGsSRQfmey+l43gl9PUqNRclL6w8CVkPCcFOuqsSlc91v9JIc
-         Yz/ILGMJiB+Br8Mufv1bWwHiCA607k2r5A9o16WZNXzi1NXZmukoZrE4amEZMKDBvNo3
-         BHhzv05eJWB++qV43IXe8CDAa0pBPaWHIi+OBaU71FqooX+XxzutFyD330Z9aqXuck1y
-         jMmHW9PspEA25HW15U16nSp8UpLyRYyB0IVStjhBZF0v/OyK+n6NbGFnLK4J3kUQIuv+
-         V5GMOoObewmbq+MObJoNxACGmkNYRstcCXJMVQ4JkmnzJxaw/8lyGcwnXLlWl5BKhLLH
-         J6bQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MaesAHV7XbucgNbiX6OEnJaTvbcp9LTAjcsWKT9apy8=;
-        b=KYvqFGCjGXcXUb2XO7grcqW2/wxZ/mmtrpUui27UZ2M5Rs8rXk3hGwemmdVXn7UMWT
-         Bv30iBAKrlPvE7A3g102kHGWi6yYkQne2JwLzHKLHCDDKN3wDcKjVy24gbWXeiD9Vg7j
-         kbmrJB/5hiHrjIqKuFo18gqWrBVvvoC2QSgQrmk8DdBggiDrfWpZ6bkfPedK6LeEXv9s
-         4IomG2cwVNFq7LWK5RwQ2b0AaLUy34KUzEeoFok8D9Fh3IyC9id1DyPnE8KpjAyDVyOZ
-         BSEL4qZmUaCIv8MIXp34wAqZgKIpBbGAfpty6joazgVrHhVuDidzs30FrFDO/WCndM6j
-         gxGg==
-X-Gm-Message-State: APjAAAU9jFVOiK2o9ydxlpySt7Mb+YGiEWXWi6KwXBop9W/2l73ucrxd
-        nozvG3Wev+ZPtrNw95EDiIFDhg==
-X-Google-Smtp-Source: APXvYqyXhB9Fp4BreffTcI4MFuMN8qCp3lquVgXTuMHyrWCrJ3Vn6T79xNKuEO2OCeBzSZMPGKIpgA==
-X-Received: by 2002:a5d:68cd:: with SMTP id p13mr4891186wrw.0.1558862721287;
-        Sun, 26 May 2019 02:25:21 -0700 (PDT)
-Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id 88sm22042444wrc.33.2019.05.26.02.25.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 26 May 2019 02:25:20 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Lucas De Marchi <lucas.demarchi@intel.com>
-Cc:     linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [kmod][PATCH] module: fix error path in kmod_module_probe_insert_module()
-Date:   Sun, 26 May 2019 11:25:12 +0200
-Message-Id: <20190526092512.993-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.21.0
+        Sun, 26 May 2019 05:28:29 -0400
+X-Greylist: delayed 466 seconds by postgrey-1.27 at vger.kernel.org; Sun, 26 May 2019 05:28:28 EDT
+Received: from free.home (home.lxoliva.fsfla.org [172.31.160.164])
+        by linux-libre.fsfla.org (8.15.2/8.15.2/Debian-3) with ESMTP id x4Q9JdKg031188;
+        Sun, 26 May 2019 09:19:41 GMT
+Received: from livre (livre.home [172.31.160.2])
+        by free.home (8.15.2/8.15.2) with ESMTP id x4Q9J058102102;
+        Sun, 26 May 2019 06:19:01 -0300
+From:   Alexandre Oliva <lxoliva@fsfla.org>
+To:     "Maciej W. Rozycki" <macro@linux-mips.org>
+Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>, Tom Li <tomli@tomli.me>,
+        James Hogan <jhogan@kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Ralf Baechle <ralf@linux-mips.org>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC] On the Current Troubles of Mainlining Loongson Platform Drivers
+Organization: Free thinker, not speaking for FSF Latin America
+References: <20190208083038.GA1433@localhost.localdomain>
+        <orbm3i5xrn.fsf@lxoliva.fsfla.org>
+        <20190211125506.GA21280@localhost.localdomain>
+        <orimxq3q9j.fsf@lxoliva.fsfla.org>
+        <20190211230614.GB22242@darkstar.musicnaut.iki.fi>
+        <orva1jj9ht.fsf@lxoliva.fsfla.org>
+        <20190217235951.GA20700@darkstar.musicnaut.iki.fi>
+        <orpnrpj2rk.fsf@lxoliva.fsfla.org>
+        <alpine.LFD.2.21.1902180227090.15915@eddie.linux-mips.org>
+        <orlg1ryyo2.fsf@lxoliva.fsfla.org>
+        <alpine.LFD.2.21.1903071744560.7728@eddie.linux-mips.org>
+        <orwolaw5u1.fsf@lxoliva.fsfla.org>
+        <alpine.LFD.2.21.1903082347330.31648@eddie.linux-mips.org>
+Date:   Sun, 26 May 2019 06:19:00 -0300
+In-Reply-To: <alpine.LFD.2.21.1903082347330.31648@eddie.linux-mips.org>
+        (Maciej W. Rozycki's message of "Fri, 8 Mar 2019 23:56:03 +0000
+        (GMT)")
+Message-ID: <or7ead4lq3.fsf@lxoliva.fsfla.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Scanned-By: MIMEDefang 2.84
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Mar  8, 2019, "Maciej W. Rozycki" <macro@linux-mips.org> wrote:
 
-The documentation says that kmod_module_probe_insert_module() will
-return >0 if "stopped by a reason given in @flags" but it returns a
-negative value if KMOD_PROBE_FAIL_ON_LOADED flag is passed and the
-relevant module is already loaded. Fix the error path by using a
-positive error value where required.
+>  Anyway I meant: does `war_io_reorder_wmb' expand to `wmb' on your system?
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- libkmod/libkmod-module.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+No, it expands to `barrier' on the yeeloong:
 
-diff --git a/libkmod/libkmod-module.c b/libkmod/libkmod-module.c
-index bffe715..a3afaba 100644
---- a/libkmod/libkmod-module.c
-+++ b/libkmod/libkmod-module.c
-@@ -1253,7 +1253,7 @@ KMOD_EXPORT int kmod_module_probe_insert_module(struct kmod_module *mod,
- 	if (!(flags & KMOD_PROBE_IGNORE_LOADED)
- 					&& module_is_inkernel(mod)) {
- 		if (flags & KMOD_PROBE_FAIL_ON_LOADED)
--			return -EEXIST;
-+			return EEXIST;
- 		else
- 			return 0;
- 	}
-@@ -1304,7 +1304,7 @@ KMOD_EXPORT int kmod_module_probe_insert_module(struct kmod_module *mod,
- 						&& module_is_inkernel(m)) {
- 			DBG(mod->ctx, "Ignoring module '%s': already loaded\n",
- 								m->name);
--			err = -EEXIST;
-+			err = EEXIST;
- 			goto finish_module;
- 		}
+CONFIG_CPU_LOONGSON2F=y
+CONFIG_CPU_LOONGSON2F_WORKAROUNDS=y
+CONFIG_CPU_LOONGSON2=y
+CONFIG_SYS_HAS_CPU_LOONGSON2F=y
+
+
+I've finally managed to do the bisection on object files I mentioned I'd
+do to try to pinpoint where __BUILT_IOPORT_PFX with barrier rather than
+!barrier regressed.
+
+I found that forcing barrier off for drivers/irqchip/irq-i8259 was
+enough to avoid the problem.
+
+(I further narrowed it down to byte I/O, which is no surprise
+considering irq-i8259 doesn't seem to use any non-byte I/O.)
+
+Then I narrowed it down to output only.
+
+A Loongson2F kernel built with the patch below works at normal speed.
+I've also keyed the -1 barrier selector to compiling the irq-i8259
+driver only, and that got me a functional kernel, but I'm not confident
+that the same issues that affect the interrupt controller, preventing it
+from initializing correctly, is not also affecting other drivers, just
+in less visible ways, so the patch conservatively reverts to the older
+barriers for all I/O (i.e., non-mem) out primitives.
+
+I've tested this on a yeeloong on top of v5.1.5.
+
+I'm tempted to start using this patch in my Freeloong builds of GNU
+Linux-libre for gnewsense/yeeloong of 5.0 and 5.1 stable releases, to
+try to make them usable.  Can anyone suggest any reason why it might be
+risky to do so, moving on as much as I could to the new barriers,
+sticking to the 4.19-one only for non-mem out?  As in, could mixing the
+barriers be riskier than reverting to the 4.19 barriers everywhere?
+
+Thanks in advance for any insights and recommendations,
+
+
+diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
+index 845fbbc7a2e3..04be4758d4ff 100644
+--- a/arch/mips/include/asm/io.h
++++ b/arch/mips/include/asm/io.h
+@@ -416,7 +416,7 @@ static inline void pfx##out##bwlq##p(type val, unsigned long port)	\
+ 	volatile type *__addr;						\
+ 	type __val;							\
+ 									\
+-	if (barrier)							\
++	if (barrier > 0)						\
+ 		iobarrier_rw();						\
+ 	else								\
+ 		war_io_reorder_wmb();					\
+@@ -467,13 +467,22 @@ BUILDIO_MEM(w, u16)
+ BUILDIO_MEM(l, u32)
+ BUILDIO_MEM(q, u64)
  
-@@ -1340,14 +1340,14 @@ finish_module:
- 		 * been loaded between the check and the moment we try to
- 		 * insert it.
- 		 */
--		if (err == -EEXIST && m == mod &&
-+		if (err == EEXIST && m == mod &&
- 				(flags & KMOD_PROBE_FAIL_ON_LOADED))
- 			break;
+-#define __BUILD_IOPORT_PFX(bus, bwlq, type)				\
+-	__BUILD_IOPORT_SINGLE(bus, bwlq, type, 1, 0,)			\
+-	__BUILD_IOPORT_SINGLE(bus, bwlq, type, 1, 0, _p)
++#define __BUILD_IOPORT_PFX(bus, bwlq, type, barrier)			\
++	__BUILD_IOPORT_SINGLE(bus, bwlq, type, barrier, 0,)		\
++	__BUILD_IOPORT_SINGLE(bus, bwlq, type, barrier, 0, _p)
++
++/* Choose the kind of barrier used for out in __BUILD_IOPORT_SINGLE in
++   non-__mem_ variants.  On Loongson2F, irq-i8259 fails to initialize
++   when this is defined to 1.  */
++#if defined(CONFIG_CPU_LOONGSON2)
++#define USE_IO_BARRIER_FOR_NON_MEM_OUT -1
++#else
++#define USE_IO_BARRIER_FOR_NON_MEM_OUT 1
++#endif
  
- 		/*
- 		 * Ignore errors from softdeps
- 		 */
--		if (err == -EEXIST || !m->required)
-+		if (err == EEXIST || !m->required)
- 			err = 0;
+ #define BUILDIO_IOPORT(bwlq, type)					\
+-	__BUILD_IOPORT_PFX(, bwlq, type)				\
+-	__BUILD_IOPORT_PFX(__mem_, bwlq, type)
++	__BUILD_IOPORT_PFX(, bwlq, type, USE_IO_BARRIER_FOR_NON_MEM_OUT) \
++	__BUILD_IOPORT_PFX(__mem_, bwlq, type, 2)
  
- 		else if (err < 0)
+ BUILDIO_IOPORT(b, u8)
+ BUILDIO_IOPORT(w, u16)
+
+
 -- 
-2.21.0
-
+Alexandre Oliva, freedom fighter  he/him   https://FSFLA.org/blogs/lxo
+Be the change, be Free!                 FSF Latin America board member
+GNU Toolchain Engineer                        Free Software Evangelist
+Hay que enGNUrecerse, pero sin perder la terGNUra jamás - Che GNUevara
