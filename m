@@ -2,185 +2,696 @@ Return-Path: <SRS0=Y9JJ=T2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D39C282E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 19:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F1EDC28CBF
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 20:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 787C420815
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 19:42:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2845E20815
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 20:07:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="arAvVpaK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727273AbfEZTle (ORCPT
+        id S1725853AbfEZUHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 15:41:34 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:40241 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727097AbfEZTld (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 15:41:33 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hUz1F-0004BC-5J; Sun, 26 May 2019 21:41:21 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hUz1E-00018L-9V; Sun, 26 May 2019 21:41:20 +0200
-Date:   Sun, 26 May 2019 21:41:20 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de
-Subject: Re: [PATCH 10/14] pwm: meson: simplify the calculation of the
- pre-divider and count
-Message-ID: <20190526194120.uzuq6ncz5l2z4hfm@pengutronix.de>
-References: <20190525181133.4875-1-martin.blumenstingl@googlemail.com>
- <20190525181133.4875-11-martin.blumenstingl@googlemail.com>
+        Sun, 26 May 2019 16:07:09 -0400
+Received: from onstation.org ([52.200.56.107]:35478 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725616AbfEZUHJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 May 2019 16:07:09 -0400
+Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 700773E8E5;
+        Sun, 26 May 2019 19:58:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1558900699;
+        bh=TUA6JZfxlSWxScOkrxtzPe5Lg4052BmxFjSCN9g7SFw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=arAvVpaK+44wOAy5qVFzIZwPh7Ay0WJtubuRhnwKqMWngLaGGx9nzHmsKyQiIJSg5
+         z/WXRjyrYtVo/N2GnBQwbTeIfe8RQJYzRqDaARN4AIP+yHx4lhzksz1bWE0pfreNci
+         Q45Kd85n/VHdFbdvfU3xa/SOtyPpHQOhJOMKO/8s=
+Date:   Sun, 26 May 2019 15:58:19 -0400
+From:   Brian Masney <masneyb@onstation.org>
+To:     Arend Van Spriel <arend.vanspriel@broadcom.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>, ulf.hansson@linaro.org,
+        faiz_abbas@ti.com, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Kalle Valo <kvalo@codeaurora.org>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+Subject: Re: Issue with Broadcom wireless in 5.2rc1 (was Re: [PATCH] mmc:
+ sdhci: queue work after sdhci_defer_done())
+Message-ID: <20190526195819.GA29665@basecamp>
+References: <20190524111053.12228-1-masneyb@onstation.org>
+ <70782901-a9ac-5647-1abe-89c86a44a01b@intel.com>
+ <20190524154958.GB16322@basecamp>
+ <20190526122136.GA26456@basecamp>
+ <e8c049ce-07e1-8b34-678d-41b3d6d41983@broadcom.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/mixed; boundary="SLDf9lqlvOQaIe6s"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190525181133.4875-11-martin.blumenstingl@googlemail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <e8c049ce-07e1-8b34-678d-41b3d6d41983@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 25, 2019 at 08:11:29PM +0200, Martin Blumenstingl wrote:
-> Replace the loop to calculate the pre-divider and count with two
-> separate div64_u64() calculations. This makes the code easier to read
-> and improves the precision.
+
+--SLDf9lqlvOQaIe6s
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Sun, May 26, 2019 at 08:42:21PM +0200, Arend Van Spriel wrote:
+> On 5/26/2019 2:21 PM, Brian Masney wrote:
+> > + Broadcom wireless maintainers
+> > 
+> > On Fri, May 24, 2019 at 11:49:58AM -0400, Brian Masney wrote:
+> > > On Fri, May 24, 2019 at 03:17:13PM +0300, Adrian Hunter wrote:
+> > > > On 24/05/19 2:10 PM, Brian Masney wrote:
+> > > > > WiFi stopped working on the LG Nexus 5 phone and the issue was bisected
+> > > > > to the commit c07a48c26519 ("mmc: sdhci: Remove finish_tasklet") that
+> > > > > moved from using a tasklet to a work queue. That patch also changed
+> > > > > sdhci_irq() to return IRQ_WAKE_THREAD instead of finishing the work when
+> > > > > sdhci_defer_done() is true. Change it to queue work to the complete work
+> > > > > queue if sdhci_defer_done() is true so that the functionality is
+> > > > > equilivent to what was there when the finish_tasklet was present. This
+> > > > > corrects the WiFi breakage on the Nexus 5 phone.
+> > > > > 
+> > > > > Signed-off-by: Brian Masney <masneyb@onstation.org>
+> > > > > Fixes: c07a48c26519 ("mmc: sdhci: Remove finish_tasklet")
+> > > > > ---
+> > > > > [ ... ]
+> > > > > 
+> > > > >   drivers/mmc/host/sdhci.c | 2 +-
+> > > > >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > > 
+> > > > > diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> > > > > index 97158344b862..3563c3bc57c9 100644
+> > > > > --- a/drivers/mmc/host/sdhci.c
+> > > > > +++ b/drivers/mmc/host/sdhci.c
+> > > > > @@ -3115,7 +3115,7 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
+> > > > >   			continue;
+> > > > >   		if (sdhci_defer_done(host, mrq)) {
+> > > > > -			result = IRQ_WAKE_THREAD;
+> > > > > +			queue_work(host->complete_wq, &host->complete_work);
+> > > > 
+> > > > The IRQ thread has a lot less latency than the work queue, which is why it
+> > > > is done that way.
+> > > > 
+> > > > I am not sure why you say this change is equivalent to what was there
+> > > > before, nor why it fixes your problem.
+> > > > 
+> > > > Can you explain some more?
+> > > 
+> > > [ ... ]
+> > > 
+> > > drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c calls
+> > > sdio_claim_host() and it appears to never return.
+> > 
+> > When the brcmfmac driver is loaded, the firmware is requested from disk,
+> > and that's when the deadlock occurs in 5.2rc1. Specifically:
+> > 
+> > 1) brcmf_sdio_download_firmware() in
+> >     drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c calls
+> >     sdio_claim_host()
+> > 
+> > 2) brcmf_sdio_firmware_callback() is called and brcmf_sdiod_ramrw()
+> >     tries to claim the host, but has to wait since its already claimed
+> >     in #1 and the deadlock occurs.
 > 
-> Two example cases:
-> 1) 32.768kHz LPO clock for the SDIO wifi chip on Khadas VIM
->    clock input: 500MHz (FCLK_DIV4)
->    period: 30518ns
->    duty cycle: 15259ns
-> old algorithm: pre_div=0, cnt=15259
-> new algorithm: pre_div=0, cnt=15259
-> (no difference in calculated values)
+> This does not make any sense to me. brcmf_sdio_download_firmware() is called
+> from brcmf_sdio_firmware_callback() so they are in the same context. So #2
+> is not waiting for #1, but something else I would say. Also #2 calls
+> sdio_claim_host() after brcmf_sdio_download_firmware has completed so
+> definitely not waiting for #1.
+
+I attached a patch that shows how I was able to determine what had
+already claimed the host. It's messy; please don't judge me negatively
+for this. :) Anyways, sdio_claim_host() is mostly a wrapper for
+__mmc_claim_host() and there is a mmc_ctx structure that contains a
+task struct. This context can be NULL. I added a description field
+to the context structure and put the function name that claimed the
+host in there. The mmc_host structure already contained a 'claimer'
+member, so that made it easy.
+
+I see the following messages in dmesg that shows what has already
+claimed the host when loading the brcmfmac module in 5.2rc1:
+
+cfg80211: Loading compiled-in X.509 certificates for regulatory database
+cfg80211: Loaded X.509 cert 'sforshee: 00b28ddf47aef9cea7'
+platform regulatory.0: Direct firmware load for regulatory.db failed with error -2
+cfg80211: failed to load regulatory.db
+brcmfmac: brcmf_fw_alloc_request: using brcm/brcmfmac4339-sdio for chip BCM4339/2
+brcmfmac mmc1:0001:1: Direct firmware load for brcm/brcmfmac4339-sdio.lge,hammerhead.txt failed with error -2
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 5 at drivers/mmc/core/core.c:819 __mmc_claim_host+0x28c/0x2c0
+Modules linked in: brcmfmac brcmutil cfg80211 dm_mod
+CPU: 0 PID: 5 Comm: kworker/0:0 Not tainted 5.2.0-rc1-00175-g9899510d2cd1-dirty #420
+Hardware name: Generic DT based system
+Workqueue: events request_firmware_work_func
+[<c03122dc>] (unwind_backtrace) from [<c030d5dc>] (show_stack+0x10/0x14)
+[<c030d5dc>] (show_stack) from [<c0ac284c>] (dump_stack+0x78/0x8c)
+[<c0ac284c>] (dump_stack) from [<c0321438>] (__warn.part.3+0xb8/0xd4)
+[<c0321438>] (__warn.part.3) from [<c03215b0>] (warn_slowpath_null+0x44/0x4c)
+[<c03215b0>] (warn_slowpath_null) from [<c093e608>] (__mmc_claim_host+0x28c/0x2c0)
+[<c093e608>] (__mmc_claim_host) from [<bf115018>] (brcmf_sdiod_ramrw+0x9c/0x200 [brcmfmac])
+[<bf115018>] (brcmf_sdiod_ramrw [brcmfmac]) from [<bf110508>] (brcmf_sdio_firmware_callback+0xe8/0x7b4 [brcmfmac])
+[<bf110508>] (brcmf_sdio_firmware_callback [brcmfmac]) from [<bf108830>] (brcmf_fw_request_done+0xf0/0x110 [brcmfmac])
+[<bf108830>] (brcmf_fw_request_done [brcmfmac]) from [<c081a4e8>] (request_firmware_work_func+0x4c/0x88)
+[<c081a4e8>] (request_firmware_work_func) from [<c033c260>] (process_one_work+0x1fc/0x564)
+[<c033c260>] (process_one_work) from [<c033ceb8>] (worker_thread+0x44/0x584)
+[<c033ceb8>] (worker_thread) from [<c034226c>] (kthread+0x148/0x150)
+[<c034226c>] (kthread) from [<c03010e8>] (ret_from_fork+0x14/0x2c)
+Exception stack(0xee8bdfb0 to 0xee8bdff8)
+dfa0:                                     00000000 00000000 00000000 00000000
+dfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+dfe0: 00000000 00000000 00000000 00000000 00000013 00000000
+---[ end trace 4ab1b01efc876120 ]---
+mmc_host mmc1: __mmc_claim_host: FIXME - before schedule() - descr=brcmf_sdiod_ramrw, claimer=brcmf_sdio_download_firmware
+
+The 'after schedule()' line is not shown and WiFi doesn't work.
+
+> > I tried to release the host before the firmware is requested, however
+> > parts of brcmf_chip_set_active() needs the host to be claimed, and a
+> > similar deadlock occurs in brcmf_sdiod_ramrw() if I claim the host
+> > before calling brcmf_chip_set_active().
+> > 
+> > I started to look at moving the sdio_{claim,release}_host() calls out of
+> > brcmf_sdiod_ramrw() but there's a fair number of callers, so I'd like to
+> > get feedback about the best course of action here.
 > 
-> 2) PWM LED on Khadas VIM
->    clock input: 24MHz (XTAL)
->    period: 7812500ns
->    duty cycle: 7812500ns
-> old algorithm: pre_div=2, cnt=62004
-> new algorithm: pre_div=2, cnt=62500
-> Using a scope (24MHz sampling rate) shows the actual difference:
-> - old: 7753000ns, off by -59500ns (0.7616%)
-> - new: 7815000ns, off by +2500ns (0.032%)
+> Long ago Franky reworked the sdio critical sections requiring sdio
+> claim/release and I am pretty sure they are correct.
 > 
-> Suggested-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> ---
->  drivers/pwm/pwm-meson.c | 25 ++++++++++---------------
->  1 file changed, 10 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-> index 27915d6475e3..9afa1e5aaebf 100644
-> --- a/drivers/pwm/pwm-meson.c
-> +++ b/drivers/pwm/pwm-meson.c
-> @@ -12,6 +12,7 @@
->  #include <linux/err.h>
->  #include <linux/io.h>
->  #include <linux/kernel.h>
-> +#include <linux/math64.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/of_device.h>
-> @@ -145,7 +146,6 @@ static int meson_pwm_calc(struct meson_pwm *meson, struct pwm_device *pwm,
->  	struct meson_pwm_channel *channel = pwm_get_chip_data(pwm);
->  	unsigned int duty, period, pre_div, cnt, duty_cnt;
->  	unsigned long fin_freq = -1;
-> -	u64 fin_ps;
->  
->  	duty = state->duty_cycle;
->  	period = state->period;
-> @@ -164,24 +164,19 @@ static int meson_pwm_calc(struct meson_pwm *meson, struct pwm_device *pwm,
->  	}
->  
->  	dev_dbg(meson->chip.dev, "fin_freq: %lu Hz\n", fin_freq);
-> -	fin_ps = (u64)NSEC_PER_SEC * 1000;
-> -	do_div(fin_ps, fin_freq);
-> -
-> -	/* Calc pre_div with the period */
-> -	for (pre_div = 0; pre_div <= MISC_CLK_DIV_MASK; pre_div++) {
-> -		cnt = DIV_ROUND_CLOSEST_ULL((u64)period * 1000,
-> -					    fin_ps * (pre_div + 1));
-> -		dev_dbg(meson->chip.dev, "fin_ps=%llu pre_div=%u cnt=%u\n",
-> -			fin_ps, pre_div, cnt);
-> -		if (cnt <= 0xffff)
-> -			break;
-> -	}
->  
-> +	pre_div = div64_u64(fin_freq * (u64)period, NSEC_PER_SEC * 0xffffLL);
->  	if (pre_div > MISC_CLK_DIV_MASK) {
->  		dev_err(meson->chip.dev, "unable to get period pre_div\n");
->  		return -EINVAL;
->  	}
->  
-> +	cnt = div64_u64(fin_freq * (u64)period, NSEC_PER_SEC * (pre_div + 1));
-> +	if (cnt > 0xffff) {
-> +		dev_err(meson->chip.dev, "unable to get period cnt\n");
-> +		return -EINVAL;
-> +	}
-> +
+> Could you try with lockdep kernel and see if that brings any more
+> information. In the mean time I will update my dev branch to 5.2-rc1 and see
+> if I can find any clues.
 
-There is a slight modification in the calculation of pre_div that isn't
-catched by the examples above.
+My .config has CONFIG_LOCKDEP_SUPPORT enabled. I haven't used lockdep
+but my understanding is that it should print something in dmesg if a
+deadlock occurs. I assume it won't pick up cases like this where
+schedule() is called.
 
-Before this patch we had:
+Brian
 
-	pick smallest pre_div such that
-		round_closest(period * 1000 / (round_down(1e12 / fin_freq) * (pre_div + 1)) <= 0xffff
+--SLDf9lqlvOQaIe6s
+Content-Type: text/x-diff; charset=us-ascii
+Content-Disposition: attachment; filename="0001-troubleshoot-broadcom-wireless-lockup-in-5.2rc1.patch"
 
-New approach is:
+From 496c4deaa3787bf619baff58493142e11cd6757f Mon Sep 17 00:00:00 2001
+From: Brian Masney <masneyb@onstation.org>
+Date: Sun, 26 May 2019 15:36:40 -0400
+Subject: [PATCH] troubleshoot broadcom wireless lockup in 5.2rc1
 
-	pre_div = round_down(fin_freq * period / (1e9 * 0xffff))
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+---
+ drivers/mmc/core/core.c                       | 15 ++++
+ .../broadcom/brcm80211/brcmfmac/bcmsdh.c      | 32 ++++---
+ .../broadcom/brcm80211/brcmfmac/sdio.c        | 85 ++++++++++++-------
+ include/linux/mmc/host.h                      |  1 +
+ 4 files changed, 93 insertions(+), 40 deletions(-)
 
-An advantage of the new approach is better as it rounds only once and is
-easier.
-
-Consider fin_freq = 99990001 and period = 655355, then the old algorithm
-picks pre_div = 1 while the new picks pre_div = 0.
-
-I didn't continue here to check which are the resulting waveforms, I
-assume they are different though.
-
-As there is currently no definition what is a "better" approximation for
-a given requested pair (duty_cycle, period) I cannot say if these
-changes are good or not.
-
-And that's a pity, so I still think there should be a documented
-definition that lays down how a lowlevel driver should round. Without
-that a consumer that cares about fine differences can not rely an the
-abstraction provided by the PWM framework because each low-level driver
-might behave differently.
-
-@Thierry: So can you please continue the discussion about this topic.
-The longer this is delayed the more patches are created and submitted
-that eventually might be wrong which is a waste of developer and
-reviewer time.
-
-Assuming the people who care about meson don't object after reading this
-I wouldn't want to stop this patch going in though. So:
-
-	Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-
-Best regards
-Uwe
-
+diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
+index 6db36dc870b5..768acabf029b 100644
+--- a/drivers/mmc/core/core.c
++++ b/drivers/mmc/core/core.c
+@@ -814,7 +814,22 @@ int __mmc_claim_host(struct mmc_host *host, struct mmc_ctx *ctx,
+ 		if (stop || !host->claimed || mmc_ctx_matches(host, ctx, task))
+ 			break;
+ 		spin_unlock_irqrestore(&host->lock, flags);
++
++		if (ctx != NULL && ctx->descr != NULL) {
++			WARN_ON(1);
++			dev_info(&host->class_dev, "%s: FIXME - before schedule() - descr=%s, claimer=%s\n",
++				 __func__, ctx->descr,
++				 host->claimer != NULL ? host->claimer->descr : NULL);
++		}
++
+ 		schedule();
++
++		if (ctx != NULL && ctx->descr != NULL) {
++			dev_info(&host->class_dev, "%s: FIXME - after schedule() - descr=%s, claimer=%s\n",
++				 __func__, ctx->descr,
++				 host->claimer != NULL ? host->claimer->descr : NULL);
++		}
++
+ 		spin_lock_irqsave(&host->lock, flags);
+ 	}
+ 	set_current_state(TASK_RUNNING);
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
+index 60aede5abb4d..aa947fcea736 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
+@@ -47,6 +47,8 @@
+ #include "sdio.h"
+ #include "core.h"
+ #include "common.h"
++#include "../../../../../mmc/core/host.h"
++#include "../../../../../mmc/core/core.h"
+ 
+ #define SDIOH_API_ACCESS_RETRY_LIMIT	2
+ 
+@@ -59,6 +61,16 @@
+ 
+ #define BRCMF_DEFAULT_RXGLOM_SIZE	32  /* max rx frames in glom chain */
+ 
++static void sdio_claim_host_with_descr(struct sdio_func *func,
++				       const char *descr)
++{
++	struct mmc_ctx mmc_ctx;
++
++	mmc_ctx.task = NULL;
++	mmc_ctx.descr = descr;
++	__mmc_claim_host(func->card->host, &mmc_ctx, NULL);
++}
++
+ struct brcmf_sdiod_freezer {
+ 	atomic_t freezing;
+ 	atomic_t thread_count;
+@@ -132,7 +144,7 @@ int brcmf_sdiod_intr_register(struct brcmf_sdio_dev *sdiodev)
+ 		}
+ 		sdiodev->irq_wake = true;
+ 
+-		sdio_claim_host(sdiodev->func1);
++		sdio_claim_host_with_descr(sdiodev->func1, __func__);
+ 
+ 		if (sdiodev->bus_if->chip == BRCM_CC_43362_CHIP_ID) {
+ 			/* assign GPIO to SDIO core */
+@@ -162,7 +174,7 @@ int brcmf_sdiod_intr_register(struct brcmf_sdio_dev *sdiodev)
+ 		sdio_release_host(sdiodev->func1);
+ 	} else {
+ 		brcmf_dbg(SDIO, "Entering\n");
+-		sdio_claim_host(sdiodev->func1);
++		sdio_claim_host_with_descr(sdiodev->func1, __func__);
+ 		sdio_claim_irq(sdiodev->func1, brcmf_sdiod_ib_irqhandler);
+ 		sdio_claim_irq(sdiodev->func2, brcmf_sdiod_dummy_irqhandler);
+ 		sdio_release_host(sdiodev->func1);
+@@ -183,7 +195,7 @@ void brcmf_sdiod_intr_unregister(struct brcmf_sdio_dev *sdiodev)
+ 		struct brcmfmac_sdio_pd *pdata;
+ 
+ 		pdata = &sdiodev->settings->bus.sdio;
+-		sdio_claim_host(sdiodev->func1);
++		sdio_claim_host_with_descr(sdiodev->func1, __func__);
+ 		brcmf_sdiod_func0_wb(sdiodev, SDIO_CCCR_BRCM_SEPINT, 0, NULL);
+ 		brcmf_sdiod_func0_wb(sdiodev, SDIO_CCCR_IENx, 0, NULL);
+ 		sdio_release_host(sdiodev->func1);
+@@ -199,7 +211,7 @@ void brcmf_sdiod_intr_unregister(struct brcmf_sdio_dev *sdiodev)
+ 	}
+ 
+ 	if (sdiodev->sd_irq_requested) {
+-		sdio_claim_host(sdiodev->func1);
++		sdio_claim_host_with_descr(sdiodev->func1, __func__);
+ 		sdio_release_irq(sdiodev->func2);
+ 		sdio_release_irq(sdiodev->func1);
+ 		sdio_release_host(sdiodev->func1);
+@@ -695,7 +707,7 @@ brcmf_sdiod_ramrw(struct brcmf_sdio_dev *sdiodev, bool write, u32 address,
+ 	else
+ 		dsize = size;
+ 
+-	sdio_claim_host(sdiodev->func1);
++	sdio_claim_host_with_descr(sdiodev->func1, __func__);
+ 
+ 	/* Do the transfer(s) */
+ 	while (size) {
+@@ -827,7 +839,7 @@ static int brcmf_sdiod_freezer_on(struct brcmf_sdio_dev *sdiodev)
+ 	brcmf_sdio_trigger_dpc(sdiodev->bus);
+ 	wait_event(sdiodev->freezer->thread_freeze,
+ 		   atomic_read(expect) == sdiodev->freezer->frozen_count);
+-	sdio_claim_host(sdiodev->func1);
++	sdio_claim_host_with_descr(sdiodev->func1, __func__);
+ 	res = brcmf_sdio_sleep(sdiodev->bus, true);
+ 	sdio_release_host(sdiodev->func1);
+ 	return res;
+@@ -835,7 +847,7 @@ static int brcmf_sdiod_freezer_on(struct brcmf_sdio_dev *sdiodev)
+ 
+ static void brcmf_sdiod_freezer_off(struct brcmf_sdio_dev *sdiodev)
+ {
+-	sdio_claim_host(sdiodev->func1);
++	sdio_claim_host_with_descr(sdiodev->func1, __func__);
+ 	brcmf_sdio_sleep(sdiodev->bus, false);
+ 	sdio_release_host(sdiodev->func1);
+ 	atomic_set(&sdiodev->freezer->freezing, 0);
+@@ -887,12 +899,12 @@ static int brcmf_sdiod_remove(struct brcmf_sdio_dev *sdiodev)
+ 	brcmf_sdiod_freezer_detach(sdiodev);
+ 
+ 	/* Disable Function 2 */
+-	sdio_claim_host(sdiodev->func2);
++	sdio_claim_host_with_descr(sdiodev->func2, __func__);
+ 	sdio_disable_func(sdiodev->func2);
+ 	sdio_release_host(sdiodev->func2);
+ 
+ 	/* Disable Function 1 */
+-	sdio_claim_host(sdiodev->func1);
++	sdio_claim_host_with_descr(sdiodev->func1, __func__);
+ 	sdio_disable_func(sdiodev->func1);
+ 	sdio_release_host(sdiodev->func1);
+ 
+@@ -915,7 +927,7 @@ static int brcmf_sdiod_probe(struct brcmf_sdio_dev *sdiodev)
+ {
+ 	int ret = 0;
+ 
+-	sdio_claim_host(sdiodev->func1);
++	sdio_claim_host_with_descr(sdiodev->func1, __func__);
+ 
+ 	ret = sdio_set_block_size(sdiodev->func1, SDIO_FUNC1_BLOCKSIZE);
+ 	if (ret) {
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+index 22b73da42822..31acdb347e59 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+@@ -45,6 +45,8 @@
+ #include "core.h"
+ #include "common.h"
+ #include "bcdc.h"
++#include "../../../../../mmc/core/host.h"
++#include "../../../../../mmc/core/core.h"
+ 
+ #define DCMD_RESP_TIMEOUT	msecs_to_jiffies(2500)
+ #define CTL_DONE_TIMEOUT	msecs_to_jiffies(2500)
+@@ -651,6 +653,16 @@ static const struct brcmf_firmware_mapping brcmf_sdio_fwnames[] = {
+ 	BRCMF_FW_ENTRY(CY_CC_43012_CHIP_ID, 0xFFFFFFFF, 43012)
+ };
+ 
++static void sdio_claim_host_with_descr(struct sdio_func *func,
++				       const char *descr)
++{
++	struct mmc_ctx mmc_ctx;
++
++	mmc_ctx.task = NULL;
++	mmc_ctx.descr = descr;
++	__mmc_claim_host(func->card->host, &mmc_ctx, NULL);
++}
++
+ static void pkt_align(struct sk_buff *p, int len, int align)
+ {
+ 	uint datalign;
+@@ -995,7 +1007,7 @@ static int brcmf_sdio_readshared(struct brcmf_sdio *bus,
+ 	struct sdpcm_shared_le sh_le;
+ 	__le32 addr_le;
+ 
+-	sdio_claim_host(bus->sdiodev->func1);
++	sdio_claim_host_with_descr(bus->sdiodev->func1, __func__);
+ 	brcmf_sdio_bus_sleep(bus, false, false);
+ 
+ 	/*
+@@ -1583,7 +1595,7 @@ static u8 brcmf_sdio_rxglom(struct brcmf_sdio *bus, u8 rxseq)
+ 		 * read directly into the chained packet, or allocate a large
+ 		 * packet and and copy into the chain.
+ 		 */
+-		sdio_claim_host(bus->sdiodev->func1);
++		sdio_claim_host_with_descr(bus->sdiodev->func1, __func__);
+ 		errcode = brcmf_sdiod_recv_chain(bus->sdiodev,
+ 						 &bus->glom, dlen);
+ 		sdio_release_host(bus->sdiodev->func1);
+@@ -1594,7 +1606,8 @@ static u8 brcmf_sdio_rxglom(struct brcmf_sdio *bus, u8 rxseq)
+ 			brcmf_err("glom read of %d bytes failed: %d\n",
+ 				  dlen, errcode);
+ 
+-			sdio_claim_host(bus->sdiodev->func1);
++			sdio_claim_host_with_descr(bus->sdiodev->func1,
++						   __func__);
+ 			brcmf_sdio_rxfail(bus, true, false);
+ 			bus->sdcnt.rxglomfail++;
+ 			brcmf_sdio_free_glom(bus);
+@@ -1608,7 +1621,7 @@ static u8 brcmf_sdio_rxglom(struct brcmf_sdio *bus, u8 rxseq)
+ 
+ 		rd_new.seq_num = rxseq;
+ 		rd_new.len = dlen;
+-		sdio_claim_host(bus->sdiodev->func1);
++		sdio_claim_host_with_descr(bus->sdiodev->func1, __func__);
+ 		errcode = brcmf_sdio_hdparse(bus, pfirst->data, &rd_new,
+ 					     BRCMF_SDIO_FT_SUPER);
+ 		sdio_release_host(bus->sdiodev->func1);
+@@ -1626,7 +1639,8 @@ static u8 brcmf_sdio_rxglom(struct brcmf_sdio *bus, u8 rxseq)
+ 
+ 			rd_new.len = pnext->len;
+ 			rd_new.seq_num = rxseq++;
+-			sdio_claim_host(bus->sdiodev->func1);
++			sdio_claim_host_with_descr(bus->sdiodev->func1,
++						   __func__);
+ 			errcode = brcmf_sdio_hdparse(bus, pnext->data, &rd_new,
+ 						     BRCMF_SDIO_FT_SUB);
+ 			sdio_release_host(bus->sdiodev->func1);
+@@ -1638,7 +1652,8 @@ static u8 brcmf_sdio_rxglom(struct brcmf_sdio *bus, u8 rxseq)
+ 
+ 		if (errcode) {
+ 			/* Terminate frame on error */
+-			sdio_claim_host(bus->sdiodev->func1);
++			sdio_claim_host_with_descr(bus->sdiodev->func1,
++						   __func__);
+ 			brcmf_sdio_rxfail(bus, true, false);
+ 			bus->sdcnt.rxglomfail++;
+ 			brcmf_sdio_free_glom(bus);
+@@ -1849,7 +1864,7 @@ static uint brcmf_sdio_readframes(struct brcmf_sdio *bus, uint maxframes)
+ 
+ 		rd->len_left = rd->len;
+ 		/* read header first for unknow frame length */
+-		sdio_claim_host(bus->sdiodev->func1);
++		sdio_claim_host_with_descr(bus->sdiodev->func1, __func__);
+ 		if (!rd->len) {
+ 			ret = brcmf_sdiod_recv_buf(bus->sdiodev,
+ 						   bus->rxhdr, BRCMF_FIRSTREAD);
+@@ -1916,7 +1931,8 @@ static uint brcmf_sdio_readframes(struct brcmf_sdio *bus, uint maxframes)
+ 			brcmf_err("read %d bytes from channel %d failed: %d\n",
+ 				  rd->len, rd->channel, ret);
+ 			brcmu_pkt_buf_free_skb(pkt);
+-			sdio_claim_host(bus->sdiodev->func1);
++			sdio_claim_host_with_descr(bus->sdiodev->func1,
++						   __func__);
+ 			brcmf_sdio_rxfail(bus, true,
+ 					    RETRYCHAN(rd->channel));
+ 			sdio_release_host(bus->sdiodev->func1);
+@@ -1930,7 +1946,8 @@ static uint brcmf_sdio_readframes(struct brcmf_sdio *bus, uint maxframes)
+ 		} else {
+ 			memcpy(bus->rxhdr, pkt->data, SDPCM_HDRLEN);
+ 			rd_new.seq_num = rd->seq_num;
+-			sdio_claim_host(bus->sdiodev->func1);
++			sdio_claim_host_with_descr(bus->sdiodev->func1,
++						   __func__);
+ 			if (brcmf_sdio_hdparse(bus, bus->rxhdr, &rd_new,
+ 					       BRCMF_SDIO_FT_NORMAL)) {
+ 				rd->len = 0;
+@@ -1963,7 +1980,8 @@ static uint brcmf_sdio_readframes(struct brcmf_sdio *bus, uint maxframes)
+ 					  rd_new.seq_num);
+ 				/* Force retry w/normal header read */
+ 				rd->len = 0;
+-				sdio_claim_host(bus->sdiodev->func1);
++				sdio_claim_host_with_descr(bus->sdiodev->func1,
++							   __func__);
+ 				brcmf_sdio_rxfail(bus, false, true);
+ 				sdio_release_host(bus->sdiodev->func1);
+ 				brcmu_pkt_buf_free_skb(pkt);
+@@ -1988,7 +2006,8 @@ static uint brcmf_sdio_readframes(struct brcmf_sdio *bus, uint maxframes)
+ 			} else {
+ 				brcmf_err("%s: glom superframe w/o "
+ 					  "descriptor!\n", __func__);
+-				sdio_claim_host(bus->sdiodev->func1);
++				sdio_claim_host_with_descr(bus->sdiodev->func1,
++							   __func__);
+ 				brcmf_sdio_rxfail(bus, false, false);
+ 				sdio_release_host(bus->sdiodev->func1);
+ 			}
+@@ -2267,7 +2286,7 @@ static int brcmf_sdio_txpkt(struct brcmf_sdio *bus, struct sk_buff_head *pktq,
+ 	if (ret)
+ 		goto done;
+ 
+-	sdio_claim_host(bus->sdiodev->func1);
++	sdio_claim_host_with_descr(bus->sdiodev->func1, __func__);
+ 	ret = brcmf_sdiod_send_pkt(bus->sdiodev, pktq);
+ 	bus->sdcnt.f2txdata++;
+ 
+@@ -2330,7 +2349,8 @@ static uint brcmf_sdio_sendfromq(struct brcmf_sdio *bus, uint maxframes)
+ 		/* In poll mode, need to check for other events */
+ 		if (!bus->intr) {
+ 			/* Check device status, signal pending interrupt */
+-			sdio_claim_host(bus->sdiodev->func1);
++			sdio_claim_host_with_descr(bus->sdiodev->func1,
++						   __func__);
+ 			intstatus = brcmf_sdiod_readl(bus->sdiodev,
+ 						      intstat_addr, &ret);
+ 			sdio_release_host(bus->sdiodev->func1);
+@@ -2442,7 +2462,7 @@ static void brcmf_sdio_bus_stop(struct device *dev)
+ 	}
+ 
+ 	if (sdiodev->state != BRCMF_SDIOD_NOMEDIUM) {
+-		sdio_claim_host(sdiodev->func1);
++		sdio_claim_host_with_descr(sdiodev->func1, __func__);
+ 
+ 		/* Enable clock for device interrupts */
+ 		brcmf_sdio_bus_sleep(bus, false, false);
+@@ -2552,7 +2572,7 @@ static void brcmf_sdio_dpc(struct brcmf_sdio *bus)
+ 
+ 	brcmf_dbg(SDIO, "Enter\n");
+ 
+-	sdio_claim_host(bus->sdiodev->func1);
++	sdio_claim_host_with_descr(bus->sdiodev->func1, __func__);
+ 
+ 	/* If waiting for HTAVAIL, check status */
+ 	if (!bus->sr_enabled && bus->clkstate == CLK_PENDING) {
+@@ -2658,7 +2678,7 @@ static void brcmf_sdio_dpc(struct brcmf_sdio *bus)
+ 
+ 	if (bus->ctrl_frame_stat && (bus->clkstate == CLK_AVAIL) &&
+ 	    data_ok(bus)) {
+-		sdio_claim_host(bus->sdiodev->func1);
++		sdio_claim_host_with_descr(bus->sdiodev->func1, __func__);
+ 		if (bus->ctrl_frame_stat) {
+ 			err = brcmf_sdio_tx_ctrlframe(bus,  bus->ctrl_frame_buf,
+ 						      bus->ctrl_frame_len);
+@@ -2682,7 +2702,8 @@ static void brcmf_sdio_dpc(struct brcmf_sdio *bus)
+ 		brcmf_err("failed backplane access over SDIO, halting operation\n");
+ 		atomic_set(&bus->intstatus, 0);
+ 		if (bus->ctrl_frame_stat) {
+-			sdio_claim_host(bus->sdiodev->func1);
++			sdio_claim_host_with_descr(bus->sdiodev->func1,
++						   __func__);
+ 			if (bus->ctrl_frame_stat) {
+ 				bus->ctrl_frame_err = -ENODEV;
+ 				wmb();
+@@ -2904,7 +2925,7 @@ brcmf_sdio_bus_txctl(struct device *dev, unsigned char *msg, uint msglen)
+ 					 CTL_DONE_TIMEOUT);
+ 	ret = 0;
+ 	if (bus->ctrl_frame_stat) {
+-		sdio_claim_host(bus->sdiodev->func1);
++		sdio_claim_host_with_descr(bus->sdiodev->func1, __func__);
+ 		if (bus->ctrl_frame_stat) {
+ 			brcmf_dbg(SDIO, "ctrl_frame timeout\n");
+ 			bus->ctrl_frame_stat = false;
+@@ -3048,7 +3069,7 @@ static int brcmf_sdio_assert_info(struct seq_file *seq, struct brcmf_sdio *bus,
+ 		return 0;
+ 	}
+ 
+-	sdio_claim_host(bus->sdiodev->func1);
++	sdio_claim_host_with_descr(bus->sdiodev->func1, __func__);
+ 	if (sh->assert_file_addr != 0) {
+ 		error = brcmf_sdiod_ramrw(bus->sdiodev, false,
+ 					  sh->assert_file_addr, (u8 *)file, 80);
+@@ -3340,7 +3361,7 @@ static int brcmf_sdio_download_firmware(struct brcmf_sdio *bus,
+ 	int bcmerror;
+ 	u32 rstvec;
+ 
+-	sdio_claim_host(bus->sdiodev->func1);
++	sdio_claim_host_with_descr(bus->sdiodev->func1, __func__);
+ 	brcmf_sdio_clkctl(bus, CLK_AVAIL, false);
+ 
+ 	rstvec = get_unaligned_le32(fw->data);
+@@ -3564,7 +3585,7 @@ static int brcmf_sdio_bus_get_memdump(struct device *dev, void *data,
+ 
+ 	address = bus->ci->rambase;
+ 	offset = err = 0;
+-	sdio_claim_host(sdiodev->func1);
++	sdio_claim_host_with_descr(sdiodev->func1, __func__);
+ 	while (offset < mem_size) {
+ 		len = ((offset + MEMBLOCK) < mem_size) ? MEMBLOCK :
+ 		      mem_size - offset;
+@@ -3637,7 +3658,8 @@ static void brcmf_sdio_bus_watchdog(struct brcmf_sdio *bus)
+ 			if (!bus->dpc_triggered) {
+ 				u8 devpend;
+ 
+-				sdio_claim_host(bus->sdiodev->func1);
++				sdio_claim_host_with_descr(bus->sdiodev->func1,
++							   __func__);
+ 				devpend = brcmf_sdiod_func0_rb(bus->sdiodev,
+ 						  SDIO_CCCR_INTx, NULL);
+ 				sdio_release_host(bus->sdiodev->func1);
+@@ -3666,7 +3688,8 @@ static void brcmf_sdio_bus_watchdog(struct brcmf_sdio *bus)
+ 		bus->console.count += jiffies_to_msecs(BRCMF_WD_POLL);
+ 		if (bus->console.count >= bus->console_interval) {
+ 			bus->console.count -= bus->console_interval;
+-			sdio_claim_host(bus->sdiodev->func1);
++			sdio_claim_host_with_descr(bus->sdiodev->func1,
++						   __func__);
+ 			/* Make sure backplane clock is on */
+ 			brcmf_sdio_bus_sleep(bus, false, false);
+ 			if (brcmf_sdio_readconsole(bus) < 0)
+@@ -3685,7 +3708,8 @@ static void brcmf_sdio_bus_watchdog(struct brcmf_sdio *bus)
+ 			bus->idlecount++;
+ 			if (bus->idlecount > bus->idletime) {
+ 				brcmf_dbg(SDIO, "idle\n");
+-				sdio_claim_host(bus->sdiodev->func1);
++				sdio_claim_host_with_descr(bus->sdiodev->func1,
++							   __func__);
+ 				brcmf_sdio_wd_timer(bus, false);
+ 				bus->idlecount = 0;
+ 				brcmf_sdio_bus_sleep(bus, true, false);
+@@ -3903,7 +3927,7 @@ brcmf_sdio_probe_attach(struct brcmf_sdio *bus)
+ 	u32 drivestrength;
+ 
+ 	sdiodev = bus->sdiodev;
+-	sdio_claim_host(sdiodev->func1);
++	sdio_claim_host_with_descr(sdiodev->func1, __func__);
+ 
+ 	pr_debug("F1 signature read @0x18000000=0x%4x\n",
+ 		 brcmf_sdiod_readl(sdiodev, SI_ENUM_BASE, NULL));
+@@ -4147,7 +4171,7 @@ static void brcmf_sdio_firmware_callback(struct device *dev, int err,
+ 	bus->sdcnt.tickcnt = 0;
+ 	brcmf_sdio_wd_timer(bus, true);
+ 
+-	sdio_claim_host(sdiod->func1);
++	sdio_claim_host_with_descr(sdiod->func1, __func__);
+ 
+ 	/* Make sure backplane clock is on, needed to generate F2 interrupt */
+ 	brcmf_sdio_clkctl(bus, CLK_AVAIL, false);
+@@ -4255,7 +4279,7 @@ static void brcmf_sdio_firmware_callback(struct device *dev, int err,
+ 	err = brcmf_attach(sdiod->dev, sdiod->settings);
+ 	if (err != 0) {
+ 		brcmf_err("brcmf_attach failed\n");
+-		sdio_claim_host(sdiod->func1);
++		sdio_claim_host_with_descr(sdiod->func1, __func__);
+ 		goto checkdied;
+ 	}
+ 
+@@ -4361,7 +4385,7 @@ struct brcmf_sdio *brcmf_sdio_probe(struct brcmf_sdio_dev *sdiodev)
+ 	bus->blocksize = bus->sdiodev->func2->cur_blksize;
+ 	bus->roundup = min(max_roundup, bus->blocksize);
+ 
+-	sdio_claim_host(bus->sdiodev->func1);
++	sdio_claim_host_with_descr(bus->sdiodev->func1, __func__);
+ 
+ 	/* Disable F2 to clear any intermediate frame state on the dongle */
+ 	sdio_disable_func(bus->sdiodev->func2);
+@@ -4428,7 +4452,8 @@ void brcmf_sdio_remove(struct brcmf_sdio *bus)
+ 
+ 		if (bus->ci) {
+ 			if (bus->sdiodev->state != BRCMF_SDIOD_NOMEDIUM) {
+-				sdio_claim_host(bus->sdiodev->func1);
++				sdio_claim_host_with_descr(bus->sdiodev->func1,
++							   __func__);
+ 				brcmf_sdio_wd_timer(bus, false);
+ 				brcmf_sdio_clkctl(bus, CLK_AVAIL, false);
+ 				/* Leave the device in state where it is
+@@ -4485,7 +4510,7 @@ int brcmf_sdio_sleep(struct brcmf_sdio *bus, bool sleep)
+ {
+ 	int ret;
+ 
+-	sdio_claim_host(bus->sdiodev->func1);
++	sdio_claim_host_with_descr(bus->sdiodev->func1, __func__);
+ 	ret = brcmf_sdio_bus_sleep(bus, sleep, false);
+ 	sdio_release_host(bus->sdiodev->func1);
+ 
+diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
+index 43d0f0c496f6..6ccc76150f45 100644
+--- a/include/linux/mmc/host.h
++++ b/include/linux/mmc/host.h
+@@ -267,6 +267,7 @@ struct mmc_supply {
+ };
+ 
+ struct mmc_ctx {
++	const char *descr;
+ 	struct task_struct *task;
+ };
+ 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+2.20.1
+
+
+--SLDf9lqlvOQaIe6s--
