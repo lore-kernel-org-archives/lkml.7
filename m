@@ -2,199 +2,102 @@ Return-Path: <SRS0=Y9JJ=T2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A95F6C282E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 08:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71FAEC282E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 08:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F7E22075C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 08:16:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="YUGEq/ca"
+	by mail.kernel.org (Postfix) with ESMTP id 4B9412075C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 08:18:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727621AbfEZIQr (ORCPT
+        id S1727658AbfEZISJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 04:16:47 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:33197 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726348AbfEZIQr (ORCPT
+        Sun, 26 May 2019 04:18:09 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:40586 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726763AbfEZISI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 04:16:47 -0400
-Received: by mail-it1-f196.google.com with SMTP id j17so14689071itk.0
-        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2019 01:16:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=+xjDVW4ItsMdn0KgPfwxOYy40rJX/wc+PFxqfPBiNPQ=;
-        b=YUGEq/caM4ivcKxNRTadkbp2V83qUOwbxQvgGaMOGoJpyfhGFhA7KfDstIXJtlPg6Q
-         UPaiJEsQA5CsVs2CCvz023dOEMnKq1XNAHXCFDRKNNcG+d7CG65oAYgX2+gR2JaCEpMr
-         kv0rABKTgWxEvPxnie65Hk97liwFL+jeNme/rnHg/B48F+K0vqn5RMNIkayFKpEmVW/R
-         XNkb4dT0JFEFIPsmAsPCTmQPTE4o6N469KWbHslvipqCrjTgxfxcBRfPbNcEm5nymVma
-         JBipPCJa4MCkDnzafeO6e4NsHWUz92gpsmSCgVRi5gui510jBNLmvAH4H0HCzy5KEEO4
-         ndWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=+xjDVW4ItsMdn0KgPfwxOYy40rJX/wc+PFxqfPBiNPQ=;
-        b=Zob81wXfeRIgngF0q+EIOvQpdFn7/9G6CJ4rgols+NTOqXoiEfxiVASzsSKpIBi7d+
-         Ug/W3OVCg+MYybmUg/+DCxR/q321GuM+Ld860lN5nBReRu8fj2HUjZ0KX5iMQP+CZgmu
-         3kp9xGq1x/wv5gnLbmYCH3oMrVgM3OmKCj1w1PFKAX56BWvvX2scZhvsVEpjvfvbDf4H
-         KZueV6WYXXxrT0L3E7zciIHXpcBHQEpXj7C+kEPYb9EfLCu/vqQ0Bj85Foh2nWS5K7Br
-         CFDaXmu9fX0UFZOz9qMfMj/bYpMT1sric/3On5JEULCd6srjVpwg11ZDmFBJQ+bjl1ty
-         5viA==
-X-Gm-Message-State: APjAAAWS4JVjd2tvHyjcdkGprh4luL+sA+EcdKylV9u22LPZ0DEXQpeI
-        NUlJql6Wsy4bq86J3sbGb7Vj1Q6DRttIMErX9b+9NA==
-X-Google-Smtp-Source: APXvYqwBjd6nuMsqoYDspPt3JLyslN/KOvPirQqYRZlPd9BEe17+YaYcLbclALwDs1PeN3fYdZ3o8N6iFxazetw3K/w=
-X-Received: by 2002:a02:1986:: with SMTP id b128mr75479151jab.136.1558858605958;
- Sun, 26 May 2019 01:16:45 -0700 (PDT)
+        Sun, 26 May 2019 04:18:08 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id E73AC802D3; Sun, 26 May 2019 10:17:56 +0200 (CEST)
+Date:   Sun, 26 May 2019 10:18:06 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linus.walleij@linaro.org, linz@li-pro.net, rpurdie@rpsys.net
+Subject: Re: Disk activity trigger: keeps blinking under full load
+Message-ID: <20190526081806.GA16279@amd>
+References: <20190523214301.GA14788@amd>
+ <67fee5a8-cba1-79aa-104c-84bbe0e168e9@gmail.com>
 MIME-Version: 1.0
-References: <20190523125813.29506-1-brgl@bgdev.pl> <20190523125813.29506-2-brgl@bgdev.pl>
- <dbe04cda-4f42-46b5-0808-e756a65180d2@linaro.org> <CAMRc=MfUFE_yBSqS-s4fVcU9W11Amgeer-eXWNBrkG0Z7KD4tA@mail.gmail.com>
- <5f513fdc-7768-43b8-9d0c-56f07a60768f@linaro.org> <CAMRc=MeFMQ9rz-=8GktGtaQm1j-X66RsCBTqR3-mofc4Bju8-w@mail.gmail.com>
- <a4585f30-5fa7-7fde-bbbd-c32464c0f060@linaro.org>
-In-Reply-To: <a4585f30-5fa7-7fde-bbbd-c32464c0f060@linaro.org>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Sun, 26 May 2019 10:16:34 +0200
-Message-ID: <CAMRc=Mcx55yJ2HmTi7ui4sxa5L+Fwgudra-chaxgYccgg8Vtfw@mail.gmail.com>
-Subject: Re: [RFC v2 1/2] clocksource: davinci-timer: add support for clockevents
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        David Lechner <david@lechnology.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="sm4nu43k4a2Rpi4c"
+Content-Disposition: inline
+In-Reply-To: <67fee5a8-cba1-79aa-104c-84bbe0e168e9@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sob., 25 maj 2019 o 16:16 Daniel Lezcano <daniel.lezcano@linaro.org> napisa=
-=C5=82(a):
->
-> On 24/05/2019 13:53, Bartosz Golaszewski wrote:
-> > pt., 24 maj 2019 o 10:59 Daniel Lezcano <daniel.lezcano@linaro.org> nap=
-isa=C5=82(a):
-> >>
-> >> On 24/05/2019 09:28, Bartosz Golaszewski wrote:
-> >>> czw., 23 maj 2019 o 18:38 Daniel Lezcano <daniel.lezcano@linaro.org> =
-napisa=C5=82(a):
-> >>>>
-> >>>> On 23/05/2019 14:58, Bartosz Golaszewski wrote:
-> >>>>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >>>>>
-> >>>>> Currently the clocksource and clockevent support for davinci platfo=
-rms
-> >>>>> lives in mach-davinci. It hard-codes many things, uses global varia=
-bles,
-> >>>>> implements functionalities unused by any platform and has code frag=
-ments
-> >>>>> scattered across many (often unrelated) files.
-> >>>>>
-> >>>>> Implement a new, modern and simplified timer driver and put it into
-> >>>>> drivers/clocksource. We still need to support legacy board files so
-> >>>>> export a config structure and a function that allows machine code t=
-o
-> >>>>> register the timer.
-> >>>>>
-> >>>>> The timer we're using is 64-bit but can be programmed in dual 32-bi=
-t
-> >>>>> mode (both chained and unchained). We're using dual 32-bit mode to
-> >>>>> have separate counters for clockevents and clocksource.
-> >>>>>
-> >>>>> This patch contains the core code and support for clockevent. The
-> >>>>> clocksource code will be included in a subsequent patch.
-> >>>>>
->
-> [ ... ]
->
-> >>>>> +static unsigned int
-> >>>>> +davinci_clockevent_read(struct davinci_clockevent *clockevent,
-> >>>>> +                     unsigned int reg)
-> >>>>> +{
-> >>>>> +     return readl_relaxed(clockevent->base + reg);
-> >>>>> +}
-> >>>>> +
-> >>>>> +static void davinci_clockevent_write(struct davinci_clockevent *cl=
-ockevent,
-> >>>>> +                                  unsigned int reg, unsigned int v=
-al)
-> >>>>> +{
-> >>>>> +     writel_relaxed(val, clockevent->base + reg);
-> >>>>> +}
-> >>>>> +
-> >>>>> +static void davinci_tcr_update(void __iomem *base,
-> >>>>> +                            unsigned int mask, unsigned int val)
-> >>>>> +{
-> >>>>> +     davinci_tcr &=3D ~mask;
-> >>>>> +     davinci_tcr |=3D val & mask;
-> >>>>
-> >>>>
-> >>>> I don't see when the davinci_tcr is initialized.
-> >>>>
-> >>>
-> >>> It's set to 0x0 by the compiler and we're setting the register to 0x0
-> >>> in davinci_timer_init().
-> >>
-> >> Why did you need to readl before in the previous version? The idea of
-> >> caching the value was to save an extra readl.
-> >>
-> >> If it is always zero, then we don't need this variable neither the rea=
-d,
-> >> just doing:
-> >>
-> >> writel_relaxed(val & mask, base + DAVINCI_TIMER_REG_TCR);
-> >>
-> >> should work no ?
+
+--sm4nu43k4a2Rpi4c
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sat 2019-05-25 19:02:47, Jacek Anaszewski wrote:
+> Hi,
+>=20
+> On 5/23/19 11:43 PM, Pavel Machek wrote:
+> >Hi!
 > >
-> > It's not always zero. Its reset value is zero and we write 0 to it at
-> > init time just to make sure, but then we modify it according to the
-> > configuration. The single TCR register controls both halves of the
-> > timer, so we do need an actual update, not a simple write.
->
-> Ok but the driver can be oneshot or disabled in the code (mutually
-> exclusive), no ?
->
-> So doing
->
->  - writel(oneshot, base);
->  - writel(disabled, base);
->
-> works without any mask computation, no?
->
-> Well the above assumes other part of the register aren't changed by
-> other subsystems (or by the timer itself).
->
->
+> >I'm trying to use disk activity trigger on a scrollock LED... but it
+> >significantly differs from "usual" disk LED: even under "full" disk
+> >activity (linear read) where it should be solidly "on", it keeps
+> >blinking.
+> >
+> >I guess that's what led_trigger_blink_oneshot() does. I tried to
+> >change the parameters... off_delay =3D=3D 0 breaks it completely, and ev=
+en
+> >with delay of 1 it behaves very weirdly.
+> >
+> >Is there better helper I should use?
+>=20
+> It seems this is the way how led_blink_set_oneshot() works.
+> It initially checks whether timer is pending and doesn't
+> reset the timer in this case:
+>=20
+>         if (test_bit(LED_BLINK_ONESHOT, &led_cdev->work_flags) &&
+>              timer_pending(&led_cdev->blink_timer))
+>                 return;
+>=20
+> In effect you get gaps between timer expiration and setting of a new
+> blink shot.
 
-I'm not sure I understand. You can be using two timers. Both
-controlled by a single TCR register. In your example oneshot can equal
-(0x00, or 0x01) and either be shifted left by 6 or 22 for TIM12 and
-TIM34 respectively. If you do writel(oneshot-for-time12, base) you'll
-set tim34 to disabled.
+Yep. I consider it a bug (it differs from hardware disk activity LEDs
+and looks horrible).
 
-Bart
+Is there someone who considers it a feature?
+								Pavel
+							=09
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
->
->
->
->
->
->
->
->
->
-> -- :
->  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
-RM SoCs
->
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
->
+--sm4nu43k4a2Rpi4c
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEUEARECAAYFAlzqS74ACgkQMOfwapXb+vK5lwCY2aJx2EmQ02TQvwWY1vYObBB3
+eQCeLxM5YOpHbDuCdqBQMAtiKqCmIiQ=
+=qDzm
+-----END PGP SIGNATURE-----
+
+--sm4nu43k4a2Rpi4c--
