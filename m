@@ -8,65 +8,63 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B69C282E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 10:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7979AC282E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 11:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15ABC2075C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 10:59:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F86B2075C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 11:06:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rO2OJ6bU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oZY5h4tG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727730AbfEZK7n (ORCPT
+        id S1727717AbfEZLGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 06:59:43 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41374 "EHLO
+        Sun, 26 May 2019 07:06:31 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:33067 "EHLO
         mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726837AbfEZK7m (ORCPT
+        with ESMTP id S1727611AbfEZLGb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 06:59:42 -0400
-Received: by mail-pl1-f194.google.com with SMTP id d14so368989pls.8
-        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2019 03:59:42 -0700 (PDT)
+        Sun, 26 May 2019 07:06:31 -0400
+Received: by mail-pl1-f194.google.com with SMTP id g21so5935396plq.0
+        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2019 04:06:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:subject:message-id:mime-version:content-disposition
          :user-agent;
-        bh=2pMI0TxvbszUYLNen9JiMBX7dkFbg/aa3u3WzyR2uKI=;
-        b=rO2OJ6bUDdn6tVbaU9JLevvxpMRho/K0ImE8V7MP/hoeb0j8tancISakTvTwhJxSUi
-         HqQ1L9zqv5raxhOOpIvvhFuUquFEVkT0zu929Byuil3v4RTy3I6v5p6h8jN7QvlKYBYr
-         CZCo63eDlK0eF1Omb3y1Sq5JuCayY8yW7nuzh8FlvOzQwln621/3DWUX+LW0qvIJys6r
-         U8Ty97aCxHfYqc2NNqVs0L2CkV6xJyJBjkBtbopzyuLo2UKVKwpUpui/c5DEWFlWpTNT
-         dWaHAeK2KFxnHFQ3MUSkBqpbEAlwqtOAzcQIcBLJv6qRgpkxlIyqL4P+YiVwqI64NyZU
-         UKbg==
+        bh=vt37nqdxlvUB79ggM15T2/FTTWBxfQWNhWkq11PROKQ=;
+        b=oZY5h4tGiVYinWyRxT4+1A4A+uF6w2KMaCBv+yFqFaeRS84d+1dj/uLlcm5HJK2QEh
+         F62VzSUcL6oZJzCV2Y2W6uU7mRSwWEP0tS4q+1FJxeETehd3qC3uzciM4atAmRGBTjay
+         aRO6oeswN8RJxrGce2AOsB6C3EBsYfOMFCQuYG3R9scC7sRrRy3xa9+DbS/vazfBRfkC
+         bTA7yaeIHkO17h8P/INMiYBXWkXoxWr0ijlXBRvMNtzO0VqJTnqhH3ZbmgaACeD6iTc4
+         PuNwrQJ0qmIUB6Q9MwO9fHDdc/PWbyyGrMqtOloXnoeDJ5Xq0+Bp8vgVFOyAvRuYm7Cn
+         FG2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:subject:message-id:mime-version
          :content-disposition:user-agent;
-        bh=2pMI0TxvbszUYLNen9JiMBX7dkFbg/aa3u3WzyR2uKI=;
-        b=S2tTOfOi7EicQ+8Rnw/6I4p36gIShg4d9nYYRVutIbPJgQAPfdLgeVWz9EqVtEe0DY
-         NJvvQgEE1lt2f7WeW0HGP8zZoK9JXSI6aTvxD+jY6sCubxAk5FwFeMOEZJig0WTmFUvl
-         86SysHYBdtA/NOvVVy+Tw//RMRWZUIvSm0UyhOc3G+6UdbDCBmBIW5J/+XUThLdwfWfN
-         vjMPwCo8iWr6iPRTijDeUodW0PHKhZEV50W1ErxVrLi0VC4rD1qVipq4DWrZ/8fpV7j1
-         JMC2n9HC4tg9IvZssMmrRrChY16tTe2TfP3miitvfQv89JFF4RnbkzL1dI9U5wAnvydY
-         5hpA==
-X-Gm-Message-State: APjAAAWUvwh7hoi4ynTJzs+W7tU+4RqvEOfbj7DuCbt+RoZaYde/hiIM
-        jn4joptTWwB/DGJZfn0Q3Wc=
-X-Google-Smtp-Source: APXvYqzZ/Ql4lxowsEEZVCxTIcuNT0XsMDFt0ghrVHkXu7ZIypKWI/BiwkKkceYcHwozVWeOxD7pNw==
-X-Received: by 2002:a17:902:e40a:: with SMTP id ci10mr73060394plb.195.1558868382078;
-        Sun, 26 May 2019 03:59:42 -0700 (PDT)
+        bh=vt37nqdxlvUB79ggM15T2/FTTWBxfQWNhWkq11PROKQ=;
+        b=QoQy4ZraLiPA1jmRIGgnfNSRG8Yi+Ca4Sjjq3VmjN5zB8lepSDaumtcIIesNrW87CY
+         7WBgI4M44gooHKvfGK2JmwTfJL6AA67JdhYoGPrwtquUfkP9cpDgSAJNgtHvQOTepAtw
+         ipsu0x3gT7tsmPxMRc57hrYsl704G+h0KspPTm0nHlqKoLOiWZ5ybEiSl3FTeq1uSJPY
+         dDWKknNmGGUaay1BsYPZqRKEk0Tb6THxK3exnlTEP0wPiNZQs20DBwrApjQwFAin0RQz
+         DBXK4b7Oez+Bv0BIChVGOursWA5d9QTa3LcDDJTx85+y35pRtc9R+QTC1FVl65JaSUE/
+         9m1g==
+X-Gm-Message-State: APjAAAVDBviWKAMYcw6KmjcvBh5k3jHJDvKLWshNCh1rpxK4c1A97soa
+        tWq8xVbxVWm+pSuiUhh+nZ1eI691
+X-Google-Smtp-Source: APXvYqy4cPE5PR9Hq/DSIi+6zKOL0c30nNvj1cvkRhBjHOi+pePjkOCD21SRo6BUuxGBnPb8jTlJgQ==
+X-Received: by 2002:a17:902:e30b:: with SMTP id cg11mr120042307plb.3.1558868790574;
+        Sun, 26 May 2019 04:06:30 -0700 (PDT)
 Received: from hari-Inspiron-1545 ([183.83.92.73])
-        by smtp.gmail.com with ESMTPSA id d85sm9011325pfd.94.2019.05.26.03.59.38
+        by smtp.gmail.com with ESMTPSA id z7sm9343311pfr.23.2019.05.26.04.06.28
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 26 May 2019 03:59:41 -0700 (PDT)
-Date:   Sun, 26 May 2019 16:29:36 +0530
+        Sun, 26 May 2019 04:06:30 -0700 (PDT)
+Date:   Sun, 26 May 2019 16:36:25 +0530
 From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
 To:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
         dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/nouveau/dispnv04: subdev/bios.h is included more than
- once
-Message-ID: <20190526105935.GA2983@hari-Inspiron-1545>
+Subject: [PATCH] drm/nouveau: fix nvif/device.h is included more than once
+Message-ID: <20190526110625.GA3143@hari-Inspiron-1545>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -76,27 +74,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-remove duplicate inclusion of subdev/bios.h
+remove duplicate inclusion of nvif/device.h
 
 Issue identified by includecheck
 
 Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 ---
- drivers/gpu/drm/nouveau/dispnv04/disp.h | 1 -
+ drivers/gpu/drm/nouveau/nouveau_drv.h | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/nouveau/dispnv04/disp.h b/drivers/gpu/drm/nouveau/dispnv04/disp.h
-index c6ed20a..195d899 100644
---- a/drivers/gpu/drm/nouveau/dispnv04/disp.h
-+++ b/drivers/gpu/drm/nouveau/dispnv04/disp.h
-@@ -161,7 +161,6 @@ nv_match_device(struct drm_device *dev, unsigned device,
- 		dev->pdev->subsystem_device == sub_device;
+diff --git a/drivers/gpu/drm/nouveau/nouveau_drv.h b/drivers/gpu/drm/nouveau/nouveau_drv.h
+index 35ff0ca..cfebb14 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_drv.h
++++ b/drivers/gpu/drm/nouveau/nouveau_drv.h
+@@ -127,7 +127,6 @@ nouveau_cli(struct drm_file *fpriv)
  }
  
--#include <subdev/bios.h>
- #include <subdev/bios/init.h>
+ #include <nvif/object.h>
+-#include <nvif/device.h>
  
- static inline void
+ struct nouveau_drm {
+ 	struct nouveau_cli master;
 -- 
 2.7.4
 
