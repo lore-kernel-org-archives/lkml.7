@@ -2,118 +2,148 @@ Return-Path: <SRS0=Y9JJ=T2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 508EFC282E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 15:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A21DC282E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 15:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2639E20815
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 15:35:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=appneta.com header.i=@appneta.com header.b="fqBXmSi5"
+	by mail.kernel.org (Postfix) with ESMTP id 703F920815
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 15:37:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbfEZPfw (ORCPT
+        id S1727940AbfEZPhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 11:35:52 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:40171 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727892AbfEZPfv (ORCPT
+        Sun, 26 May 2019 11:37:21 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:46023 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726744AbfEZPhU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 11:35:51 -0400
-Received: by mail-pl1-f195.google.com with SMTP id g69so6049547plb.7
-        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2019 08:35:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=appneta.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=0l7QFOq9rpOhcfdcebxs2xSgloj45bF1H4poSZVVNXU=;
-        b=fqBXmSi5i7K6JXD15jMSMBLJMxPKC3oMoCeeErPhCrD52WoGCKhw9TAw513pXSev1F
-         +N1RK50nt7uAQTZikeAi59ZVuec9Ea6SUO/0V8G2lc9wE66o6gNb913uyM0gmgrUpBZW
-         0GgmwXMxXUQ+opscuQCcwRZMYQGZ/dCfaW9pk=
+        Sun, 26 May 2019 11:37:20 -0400
+Received: by mail-pg1-f196.google.com with SMTP id w34so2991225pga.12;
+        Sun, 26 May 2019 08:37:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=0l7QFOq9rpOhcfdcebxs2xSgloj45bF1H4poSZVVNXU=;
-        b=Uaa1so8a6AwSOdK3YHQ3MzcXCrxSFxrpx1fZMv0r8NfZbXVKcSBXxS2ShvmzAlYPh6
-         c5frWbJuTxbtL2sULYauKSZgTCPeveYExXlPRgJnZxC/BXZkwIWbSku+0FAeSEjwSNcv
-         1Q1ZJ1qlQETunvuQ4o1MqITrmoTDswlNYPagHnvKX7rC+JsHv6ogWm+rXpCTIUbsnPiL
-         MTIikhxq0anhlI7X+NeBa0gPZh2MLGakj5QdRRe6cy4hmrerTkCTjVXMdW1FeiB9fgvX
-         0k05yYLNfa9Yc8s/svwYCygkxchyEBydOpLfLiK5twtM+EMGBZu54Ow423IJbFOaAIpD
-         8xFQ==
-X-Gm-Message-State: APjAAAVwiZddh0KCkdAR2CEsSXnKAzi4M2XxqwTUFItDh44vnRa8inqG
-        uJ3Ho14obG6jN+EcaecASoUjIQ==
-X-Google-Smtp-Source: APXvYqzZL52EThif+oVPOrW5FnO/OwTkSeTsr1RTnmUwagyhIU9kunR8h/ekeCWlGniwHWnqabpKHg==
-X-Received: by 2002:a17:902:201:: with SMTP id 1mr76787907plc.263.1558884950639;
-        Sun, 26 May 2019 08:35:50 -0700 (PDT)
-Received: from localhost.localdomain (S010620c9d00fc332.vf.shawcable.net. [70.71.167.160])
-        by smtp.googlemail.com with ESMTPSA id y25sm10523637pfp.182.2019.05.26.08.35.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 26 May 2019 08:35:49 -0700 (PDT)
-From:   Fred Klassen <fklassen@appneta.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        Willem de Bruijn <willemb@google.com>
-Cc:     Fred Klassen <fklassen@appneta.com>
-Subject: [PATCH net v2 1/1] net/udp_gso: Allow TX timestamp with UDP GSO
-Date:   Sun, 26 May 2019 08:33:57 -0700
-Message-Id: <20190526153357.82293-2-fklassen@appneta.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190526153357.82293-1-fklassen@appneta.com>
-References: <20190526153357.82293-1-fklassen@appneta.com>
+        h=x-gm-message-state:subject:to:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=URGml5/Z89pUst9mDYx5afNNgEbFqd7kb3vtTLohUmw=;
+        b=En3WiXfP/CRsoLLfHEjTIRqYAnSZiZbZt2dd7wRCdiXQOUD0gI0JQF5qe/UivFYDBb
+         Ds6OfpVH6kNISutLf5pnT2YqtJHVxK0YMIX6coCwI+NV41gvzgj7a2qUTPHsG/EDc3D3
+         TpeKsaDIiY3nhyfbZfumtz56NOh0ditZLsAn/nKEEhsdGZ/dklNmLzPIrIiUISeH5XdX
+         JKDmWsQLIxtmo0BhivCdz1lYyzzxTrByYPcS81fevj+PQJ6CB2BBEqJth6vWFGJjc/Ep
+         oKEHJhoMaQfqko5JTj0zxJEIAUdNCux2hhiEcwbXQQ/2ajaBIbAoAZLkwiYav1Tq8BdK
+         LhWw==
+X-Gm-Message-State: APjAAAUvvcnkQqVqhL76xy3Kjikq/gfbzMHOcffgF1BpV0KD+OIj2Zgq
+        OezbZtKxC1C6W/5iucSwWfW9LfCB
+X-Google-Smtp-Source: APXvYqy9T603n8qQzto83AO2/b0/mhODJYy/zzI98wbVtqIz/FuiU3uXlkpieijJaSOxwvKB1QugvQ==
+X-Received: by 2002:a05:6a00:cc:: with SMTP id e12mr16068634pfj.207.1558885039820;
+        Sun, 26 May 2019 08:37:19 -0700 (PDT)
+Received: from asus.site ([2601:647:4000:5dd1:a41e:80b4:deb3:fb66])
+        by smtp.gmail.com with ESMTPSA id t2sm8513249pfh.166.2019.05.26.08.37.17
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Sun, 26 May 2019 08:37:18 -0700 (PDT)
+Subject: Re: [PATCH] drivers/scsi: fix warning PTR_ERR_OR_ZERO can be used
+To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        qla2xxx-upstream@qlogic.com,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        Wei Li <liwei213@huawei.com>,
+        Geng Jianfeng <gengjianfeng@hisilicon.com>,
+        Zang Leigang <zangleigang@hisilicon.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Kangjie Lu <kjlu@umn.edu>, Arnd Bergmann <arnd@arndb.de>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190525094205.GA21778@hari-Inspiron-1545>
+From:   Bart Van Assche <bvanassche@acm.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <2f7f51f7-e2a1-6667-3fed-642157437ea2@acm.org>
+Date:   Sun, 26 May 2019 08:37:16 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190525094205.GA21778@hari-Inspiron-1545>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes an issue where TX Timestamps are not arriving on the error queue
-when UDP_SEGMENT CMSG type is combined with CMSG type SO_TIMESTAMPING.
-This can be illustrated with an updated updgso_bench_tx program which
-includes the '-T' option to test for this condition.
+On 5/25/19 2:42 AM, Hariprasad Kelam wrote:
+> fix below warnig reported by coccicheck
+> 
+> /drivers/scsi/ufs/ufs-hisi.c:459:1-3: WARNING: PTR_ERR_OR_ZERO can be
+> used
+> ./drivers/scsi/qla2xxx/tcm_qla2xxx.c:1477:1-3: WARNING: PTR_ERR_OR_ZERO
+> can be used
+> 
+> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+> ---
+>  drivers/scsi/qla2xxx/tcm_qla2xxx.c | 4 +---
+>  drivers/scsi/ufs/ufs-hisi.c        | 4 +---
+>  2 files changed, 2 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/scsi/qla2xxx/tcm_qla2xxx.c b/drivers/scsi/qla2xxx/tcm_qla2xxx.c
+> index ec9f199..4357b34 100644
+> --- a/drivers/scsi/qla2xxx/tcm_qla2xxx.c
+> +++ b/drivers/scsi/qla2xxx/tcm_qla2xxx.c
+> @@ -1474,10 +1474,8 @@ static int tcm_qla2xxx_check_initiator_node_acl(
+>  				       sizeof(struct qla_tgt_cmd),
+>  				       TARGET_PROT_ALL, port_name,
+>  				       qlat_sess, tcm_qla2xxx_session_cb);
+> -	if (IS_ERR(se_sess))
+> -		return PTR_ERR(se_sess);
+>  
+> -	return 0;
+> +	return PTR_ERR_OR_ZERO(se_sess);
+>  }
+>  
+>  static void tcm_qla2xxx_update_sess(struct fc_port *sess, port_id_t s_id,
+> diff --git a/drivers/scsi/ufs/ufs-hisi.c b/drivers/scsi/ufs/ufs-hisi.c
+> index 7aed0a1..f506044 100644
+> --- a/drivers/scsi/ufs/ufs-hisi.c
+> +++ b/drivers/scsi/ufs/ufs-hisi.c
+> @@ -456,10 +456,8 @@ static int ufs_hisi_get_resource(struct ufs_hisi_host *host)
+>  	/* get resource of ufs sys ctrl */
+>  	mem_res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+>  	host->ufs_sys_ctrl = devm_ioremap_resource(dev, mem_res);
+> -	if (IS_ERR(host->ufs_sys_ctrl))
+> -		return PTR_ERR(host->ufs_sys_ctrl);
+>  
+> -	return 0;
+> +	return PTR_ERR_OR_ZERO(host->ufs_sys_ctrl);
+>  }
 
-    ./udpgso_bench_tx -4ucTPv -S 1472 -l2 -D 172.16.120.18
-    poll timeout
-    udp tx:      0 MB/s        1 calls/s      1 msg/s
+Although I'm not sure this patch improves readability of the source code:
 
-The "poll timeout" message above indicates that TX timestamp never
-arrived.
-
-It also appears that other TX CMSG types cause similar issues, for
-example trying to set SOL_IP/IP_TOS.
-
-    ./udpgso_bench_tx -4ucPv -S 1472 -q 182 -l2 -D 172.16.120.18
-    poll timeout
-    udp tx:      0 MB/s        1 calls/s      1 msg/s
-
-This patch preserves tx_flags for the first UDP GSO segment. This
-mirrors the stack's behaviour for IPv4 fragments.
-
-Fixes: ee80d1ebe5ba ("udp: add udp gso")
-Signed-off-by: Fred Klassen <fklassen@appneta.com>
----
- net/ipv4/udp_offload.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/net/ipv4/udp_offload.c b/net/ipv4/udp_offload.c
-index 065334b41d57..33de347695ae 100644
---- a/net/ipv4/udp_offload.c
-+++ b/net/ipv4/udp_offload.c
-@@ -228,6 +228,10 @@ struct sk_buff *__udp_gso_segment(struct sk_buff *gso_skb,
- 	seg = segs;
- 	uh = udp_hdr(seg);
- 
-+	/* preserve TX timestamp and zero-copy info for first segment */
-+	skb_shinfo(seg)->tskey = skb_shinfo(gso_skb)->tskey;
-+	skb_shinfo(seg)->tx_flags = skb_shinfo(gso_skb)->tx_flags;
-+
- 	/* compute checksum adjustment based on old length versus new */
- 	newlen = htons(sizeof(*uh) + mss);
- 	check = csum16_add(csum16_sub(uh->check, uh->len), newlen);
--- 
-2.11.0
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
 
