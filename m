@@ -2,120 +2,109 @@ Return-Path: <SRS0=Y9JJ=T2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4096AC282E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 20:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A1BC28CBF
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 20:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1162D2075E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 20:48:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h6tdj+sL"
+	by mail.kernel.org (Postfix) with ESMTP id 5FDF32075E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 20:49:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558903778;
+	bh=sUOwnOdEE0jz59BMmNZppuyhvfl7Fxz8XluSR/W26lY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Cx+HsRLXGnDSB+BXpcBsgj10QIx4l3WkTkDTpWn6mNswDd4XgaZIYYmpb904lA+46
+	 2XaKRtIszbA2Tg+KosIAPpbmlODTNBrEWowFPJeuuELSNbEkCLvUsA2CvGTGHkF3uN
+	 GoohKPyFhqbDCnZm922YkedsYmUwoAea+9+mWGaU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbfEZUsc (ORCPT
+        id S1726276AbfEZUth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 16:48:32 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41151 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726106AbfEZUsS (ORCPT
+        Sun, 26 May 2019 16:49:37 -0400
+Received: from mail-lf1-f46.google.com ([209.85.167.46]:39682 "EHLO
+        mail-lf1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725827AbfEZUth (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 16:48:18 -0400
-Received: by mail-lj1-f196.google.com with SMTP id q16so4530021ljj.8;
-        Sun, 26 May 2019 13:48:16 -0700 (PDT)
+        Sun, 26 May 2019 16:49:37 -0400
+Received: by mail-lf1-f46.google.com with SMTP id f1so10579297lfl.6
+        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2019 13:49:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=yxy8jhb7vj4f583mX+9bjwUeoCyJQOsv4k9GjkXUQ2g=;
-        b=h6tdj+sL53sdFiNAj75lH6fUo0CsOzTPQ7xv1AERtT/h1WVe35E4pq/nB90f9V/C+v
-         WHORIAj3z4FRPd24Z2dwdelOP5Yf05LMyqDj5HGxWqNXp50gGmyFnAXVZFCg7uhOEM8J
-         7dJRsJ4htsB3CDvLc6j+GbjBe88DML8fUMdpFzYpFTYNg5icFqxfRJEi8aimcrUc7QiY
-         MQZbDjfUfvC60XnIwlMoqYInsEZn9P+iDMKfGQIDMFRNo6j4GPfKD17sSprcD/Oxa491
-         lCvEVEhZKZGNePdbgFhtpolAfYzL0IrfCzqCsc55FUUXf2yk4D5sNMD4Ym6JHg/jpQNn
-         p5qg==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IJg/yCjfVM3Ozhpb5ZCNN4WebegqjDbfI7FMAeP5e48=;
+        b=GD3ZVbCtAZQtaJFSDPqrCMmGJBcOkN8aadPzlAK4DlrCkWV1mtFgYPxuS4XgVoIFNB
+         07DttpIS7YSA6RHknmleBz7ZadImeyD5hn2YsmsOhxL1gJeJcYNAfteCCxReSzZW5Sy7
+         HXffCAFYiq7pFrgWGoGWbWSP6Y+fjHTJprbE0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=yxy8jhb7vj4f583mX+9bjwUeoCyJQOsv4k9GjkXUQ2g=;
-        b=Yc9F4mB1xhp8voF8CxhXMe6AJU2HWZMh/DxFdNV+sCyhtSg1X8MSLJ9Irq88h3inX0
-         yU3DgiuvfqSGuXh5iLmniKa187Xrd2CaTJzcK1aq4Vd/FtegDEhJSv+dAt++k8eFijV7
-         Ty7w38st/ciwOMytF0wWaantMaCpe62P/a61HT2siZYS2CRc+lDkF+yn72SDTxPTG609
-         TuuMsIwyH5rY3TmwOSa+36Edqm5GQHz40K/n7tbQ7ReEP8mnypbd59zCdvin/0Vh56V5
-         z8YbSozILYalMrXnnM7awCfQSdk22+UU21EC+x+8cSJR0ajrRhCOcAyl+sQAi14WnAm2
-         e8Og==
-X-Gm-Message-State: APjAAAWlQ7NPrRRh9h1/vjz555DzD0+u1a5l62Wd3BR3AotqgVLSgcJ5
-        zLLwGN1xA7DUdbx/PVUvesM=
-X-Google-Smtp-Source: APXvYqxdqLj3Qk75k2XIFwOaySBHWie+VHdFb+eGV2zH1WXrGaxvKJfUF+5xAiND0OBA1r98FCNhEQ==
-X-Received: by 2002:a2e:900e:: with SMTP id h14mr39180739ljg.77.1558903696049;
-        Sun, 26 May 2019 13:48:16 -0700 (PDT)
-Received: from z50.gdansk-morena.vectranet.pl (109241207190.gdansk.vectranet.pl. [109.241.207.190])
-        by smtp.gmail.com with ESMTPSA id i187sm1859475lfe.64.2019.05.26.13.48.14
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IJg/yCjfVM3Ozhpb5ZCNN4WebegqjDbfI7FMAeP5e48=;
+        b=bJ24pBRsEfIsWHezbD62Z/pSGUslDRKC5I7QI4ecEov2KG2L1+ll6Pr/tALRtQLUSV
+         wqNNT1FO7fx78DSLxlBiLK5d46VnDe4FHrMXNDOyp2PxuLYowJzQCX3Nx0JN0Tko5/jK
+         FdA3luaDgZX8MICRFEgtEl8A0uL8R59kHc+RE9D56OmtHTL/7JX20pFFQBsGLyPJlawx
+         Pq9yPBCz6Pwr9hY8xNOUQaB7yO6nye5y2a4DOgFvswrUdsaZG0ZwdzoSkilI1UR60Os4
+         ip08m6DraN32wa0XY/wTL8lVRRYEH7YGI1l7uQrIiGYqvBLZS/uJqu9lFJGRf7Hw5Wek
+         Sw6A==
+X-Gm-Message-State: APjAAAXpiY7Co44hINiSjjpvMc9PcAm91rZxg+UGSnQgwSfYqNkd+qug
+        chFDRoB8bWEO+8K+VqgumCPSx4bNuao=
+X-Google-Smtp-Source: APXvYqxBo0MqNerB/5bSupuiUIDzJUu975cHC1s38sSeRKYM27Kf9lq1iGxl+URXHxnh/vVBlUW7nw==
+X-Received: by 2002:a19:8116:: with SMTP id c22mr1363358lfd.111.1558903774248;
+        Sun, 26 May 2019 13:49:34 -0700 (PDT)
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com. [209.85.167.52])
+        by smtp.gmail.com with ESMTPSA id j19sm1033420lfb.84.2019.05.26.13.49.33
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 26 May 2019 13:48:15 -0700 (PDT)
-From:   Janusz Krzysztofik <jmkrzyszt@gmail.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Subject: [RFC PATCH 4/5] media: ov6650: Fix frame scaling not reset on crop
-Date:   Sun, 26 May 2019 22:47:57 +0200
-Message-Id: <20190526204758.1904-5-jmkrzyszt@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190526204758.1904-1-jmkrzyszt@gmail.com>
-References: <20190526204758.1904-1-jmkrzyszt@gmail.com>
+        Sun, 26 May 2019 13:49:33 -0700 (PDT)
+Received: by mail-lf1-f52.google.com with SMTP id m15so9976102lfh.4
+        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2019 13:49:33 -0700 (PDT)
+X-Received: by 2002:a19:521a:: with SMTP id m26mr10136807lfb.134.1558903772902;
+ Sun, 26 May 2019 13:49:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1558864555-53503-1-git-send-email-pbonzini@redhat.com>
+ <CAHk-=wi3YcO4JTpkeENETz3fqf3DeKc7-tvXwqPmVcq-pgKg5g@mail.gmail.com> <2d55fd2a-afbf-1b7c-ca82-8bffaa18e0d0@redhat.com>
+In-Reply-To: <2d55fd2a-afbf-1b7c-ca82-8bffaa18e0d0@redhat.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 26 May 2019 13:49:16 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgzKzAwS=_ySikL1f=Gr62YXL_WXGh82wZKMOvzJ9+2VA@mail.gmail.com>
+Message-ID: <CAHk-=wgzKzAwS=_ySikL1f=Gr62YXL_WXGh82wZKMOvzJ9+2VA@mail.gmail.com>
+Subject: Re: [GIT PULL] KVM changes for Linux 5.2-rc2
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Junio Hamano C <gitster@pobox.com>
+Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        KVM list <kvm@vger.kernel.org>,
+        Git List Mailing <git@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to V4L2 subdevice interface specification, frame scaling
-factors should be reset to default values on modification of input frame
-format.  Assuming that requirement also applies in case of crop
-rectangle modification unless V4L2_SEL_FLAG_KEEP_CONFIG is requested,
-the driver now does not respect it.
+On Sun, May 26, 2019 at 10:53 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> The interesting thing is that not only git will treat lightweight tags
+> like, well, tags:
 
-The KEEP_CONFIG case is already implemented, fix the other path.
+Yeah, that's very much by design - lightweight tags are very
+comvenient for local temporary stuff where you don't want signing etc
+(think automated test infrastructure, or just local reminders).
 
-Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
----
- drivers/media/i2c/ov6650.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+> In addition, because I _locally_ had a tag object that
+> pointed to the same commit and had the same name, git-request-pull
+> included my local tag's message in its output!  I wonder if this could
+> be considered a bug.
 
-diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
-index 47590cd51190..cc70d8952999 100644
---- a/drivers/media/i2c/ov6650.c
-+++ b/drivers/media/i2c/ov6650.c
-@@ -472,6 +472,8 @@ static int ov6650_get_selection(struct v4l2_subdev *sd,
- 	}
- }
- 
-+static int ov6650_s_fmt(struct v4l2_subdev *sd, u32 code, bool half_scale);
-+
- static int ov6650_set_selection(struct v4l2_subdev *sd,
- 		struct v4l2_subdev_pad_config *cfg,
- 		struct v4l2_subdev_selection *sel)
-@@ -515,7 +517,13 @@ static int ov6650_set_selection(struct v4l2_subdev *sd,
- 	}
- 	if (!ret)
- 		priv->rect.height = sel->r.height;
-+	else
-+		return ret;
- 
-+	if (priv->half_scale) {
-+		/* turn off half scaling, preserve media bus format */
-+		ret = ov6650_s_fmt(sd, priv->code, false);
-+	}
- 	return ret;
- }
- 
--- 
-2.21.0
+Yeah, I think git request-pull should at least *warn* about the tag
+not being the same object locally as in the remote you're asking me to
+pull.
 
+Are you sure you didn't get a warning, and just missed it? But adding
+Junio and the Git list just as a possible heads-up for this in case
+git request-pull really only compares the object the tag points to,
+rather than the SHA1 of the tag itself.
+
+             Linus
