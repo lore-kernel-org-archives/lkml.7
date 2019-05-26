@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AAA5C282E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 22:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C22C28CBF
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 22:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D217620863
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 22:26:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EDF621726
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 22:26:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vAPJYNIg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RRVbu4sW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbfEZW0K (ORCPT
+        id S1726256AbfEZWZy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 18:26:10 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38663 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726274AbfEZWZz (ORCPT
+        Sun, 26 May 2019 18:25:54 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35664 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726034AbfEZWZu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 18:25:55 -0400
-Received: by mail-wm1-f65.google.com with SMTP id t5so13955197wmh.3;
-        Sun, 26 May 2019 15:25:54 -0700 (PDT)
+        Sun, 26 May 2019 18:25:50 -0400
+Received: by mail-wr1-f65.google.com with SMTP id m3so14994337wrv.2;
+        Sun, 26 May 2019 15:25:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=R6G/HHE3Lw7PsZVrg7cAYjp5rZiFrvQ8UHmrA7ixhEk=;
-        b=vAPJYNIgJbg379x5TSG1UjdT8jbZpl4hvt21vzKGAjZJEvX/UJix9FBFG7hjmFhzy4
-         za/2ff4UluXZZxfPhzoxKWemEWXzv1PFVnX1aVc1T5RGYLH4TwEV56cE9cT7Ufth1mXi
-         fAl3w3sCU+zz2VVSaIYQQjWozvEiMKFkukqb5DKWk8I2ohzlBo4wrnh1nNnqee4UIUXc
-         KIDlXY+a0J4HR3GMMXKSv1nTV9qD3Wpo+/vgwcNeVVxJLj5DnHLODnv8OutEdud+ISrB
-         Q62+GJ09cDr91x5MOsD0T2l6RLhawzGUmfdnYfnThqmzwPzaFLcAVyRd1XE3KeOzzVLQ
-         dzVw==
+        bh=q27XYokGtE0PF+e6Jf1zBq2DoW5PvxIGPkQQOfCJr1E=;
+        b=RRVbu4sWt4ZxcFOTHYisTJtdivqZZowGwZPI/XaQ7zxtSBnu+8QMqs1QnGKrRM6E3O
+         oJ9jcOLXnxxQbh71CsgMwIGsxntR/R+BBLtRa9dCzu+uEbg6KBVS2zQreHSzNvV4laIM
+         u7dG8Lv9ZarOC733yOpZjdBIOnf8m6VhZdwIsyZyTlBzJHX9sE9l9KL8I5rZdusKY67S
+         k0aEyUSKAGlVZkJcZ2NyTJMB8d9syVbtxnissO2DY3nSHDPsSuH1rjk0v41cJM56CZg8
+         OnHr20kuTuk2TUkrYnE0FSkzeauTZXLd2F7pdj6ZcJCB1tx6kYmWdOE0qf8YLDiLKDQb
+         PmtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=R6G/HHE3Lw7PsZVrg7cAYjp5rZiFrvQ8UHmrA7ixhEk=;
-        b=nkqJfy/UApUIbowxrArXvFyGwJC9k2lAqMJPjBlp0w6HR76Rrz+FDit+seNm0NdSIr
-         KN8MSpvYX/zUrs4aQSGCnamjOHSAMwmh9Wpsc/D5VDqsBfMInN68xFTVOb1+1QkOcTs4
-         UFI44frh8Xdi8OSLpYr0pP3DesV0tnzmM3xYJdOouyijrHFUCNkDyQKAmAGf1OU2Cyw+
-         F4p1a7jMtOoSFkZftIlj3b3dbioQeeCSN/T6dMloF0wnt9n1HgJPhHMf/YPn79+9xAaY
-         YIgjUwEymoIzm06+gtQN9EMihMYWQHpjXSxDkB2USQ/eVLDtSV5O9YbLXEqSyW0h3FFz
-         /buQ==
-X-Gm-Message-State: APjAAAUQe8v8bLc00yjZ2LD3cZx0LrWFcASmbxrjnPyXXptyA8xKTiKd
-        IrHAVwV6AiiDsPjI9cbEXrQ=
-X-Google-Smtp-Source: APXvYqwKDaZc9r4kJO6lse9EMVISrv3fmUs9dX0gWrCzsdIlT+3R6I2IjzVSJxdAXiChfzLxDrB1mw==
-X-Received: by 2002:a1c:cb05:: with SMTP id b5mr7808670wmg.146.1558909553540;
-        Sun, 26 May 2019 15:25:53 -0700 (PDT)
+        bh=q27XYokGtE0PF+e6Jf1zBq2DoW5PvxIGPkQQOfCJr1E=;
+        b=QmFEGYbpvXJ2fFEYm/dIQxF/BsBbC4l3lYV6jrjXz24LA3nWv9iDjys2RjGUrE4wL3
+         fnwsfsnaWHFgfBaD3k2fpRXmdI0KMH9stIhjohcWS/4OzcOInMZO568X2appZvLkEFC/
+         S/5NSP7/vL8OnmM0LXNSBaXt71gtjK2JO5JUtJeVtkttCfArHlV7xw1281gqjT+TdSe9
+         aUe7uWasENS4U6FyqGt34NR1FWhie/upBqdkKviIHXToFT2lc9KE4agQpteUUVHJHnPS
+         h7czKe+xzv9/na/h47HozRxyYquCk6KAeqwu+uooYYKi8kBa4o+qD6tiA5YLBw+pq7Lv
+         qdSg==
+X-Gm-Message-State: APjAAAX4vEdcJ6xsbGRLBjlQGFVyvUsEl1JvbikCMPKARDfZLsQR8Qn7
+        02YvzrIk8QAwvYrCJBBa4Hg=
+X-Google-Smtp-Source: APXvYqxb8yu+YLnqa5xxB88D8WdyrJlaqZ/IkWQ0b2ii4BOvjanFcCdF7BqfxTsFG/o1zIYIXGXAtA==
+X-Received: by 2002:adf:a4d8:: with SMTP id h24mr15570038wrb.171.1558909549290;
+        Sun, 26 May 2019 15:25:49 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
-        by smtp.gmail.com with ESMTPSA id o20sm10368398wro.2.2019.05.26.15.25.52
+        by smtp.gmail.com with ESMTPSA id o20sm10368398wro.2.2019.05.26.15.25.48
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 26 May 2019 15:25:52 -0700 (PDT)
+        Sun, 26 May 2019 15:25:48 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -65,11 +65,12 @@ To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Chen-Yu Tsai <wens@csie.org>
 Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com,
+        linux-sunxi@googlegroups.com, Igors Makejevs <git_bb@bwzone.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v2 09/10] arm64: dts: allwinner: h6: Enable IR on H6 boards
-Date:   Mon, 27 May 2019 00:25:35 +0200
-Message-Id: <20190526222536.10917-10-peron.clem@gmail.com>
+Subject: [PATCH v2 05/10] arm64: dts: allwinner: a64: Add IR node
+Date:   Mon, 27 May 2019 00:25:31 +0200
+Message-Id: <20190526222536.10917-6-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190526222536.10917-1-peron.clem@gmail.com>
 References: <20190526222536.10917-1-peron.clem@gmail.com>
@@ -81,62 +82,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Beelink GS1, OrangePi H6 boards and Pine H64 have an IR receiver.
+From: Igors Makejevs <git_bb@bwzone.com>
 
-Enable it in their device-tree.
+IR peripheral is completely compatible with A31 one.
 
+Signed-off-by: Igors Makejevs <git_bb@bwzone.com>
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts | 4 ++++
- arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi   | 4 ++++
- arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts    | 4 ++++
- 3 files changed, 12 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-index 0dc33c90dd60..680dc29cb089 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-@@ -232,6 +232,10 @@
- 	};
- };
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 8c5b521e6389..b22b0aa89515 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -1072,6 +1072,19 @@
+ 			#size-cells = <0>;
+ 		};
  
-+&r_ir {
-+	status = "okay";
-+};
++		r_ir: ir@1f02000 {
++			compatible = "allwinner,sun50i-a64-ir",
++				     "allwinner,sun6i-a31-ir";
++			reg = <0x01f02000 0x400>;
++			clocks = <&r_ccu CLK_APB0_IR>, <&r_ccu CLK_IR>;
++			clock-names = "apb", "ir";
++			resets = <&r_ccu RST_APB0_IR>;
++			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&r_ir_rx_pin>;
++			status = "disabled";
++		};
 +
- &r_pio {
- 	/*
- 	 * PL0 and PL1 are used for PMIC I2C
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-index 62e27948a3fa..ec9b6a578e3f 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-@@ -189,6 +189,10 @@
- 	};
- };
+ 		r_pwm: pwm@1f03800 {
+ 			compatible = "allwinner,sun50i-a64-pwm",
+ 				     "allwinner,sun5i-a13-pwm";
+@@ -1099,6 +1112,11 @@
+ 				function = "s_i2c";
+ 			};
  
-+&r_ir {
-+	status = "okay";
-+};
++			r_ir_rx_pin: r-ir-rx-pin {
++				pins = "PL11";
++				function = "s_cir_rx";
++			};
 +
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_ph_pins>;
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-index 4802902e128f..ae12ee4fcc77 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-@@ -247,6 +247,10 @@
- 	};
- };
- 
-+&r_ir {
-+	status = "okay";
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_ph_pins>;
+ 			r_pwm_pin: r-pwm-pin {
+ 				pins = "PL10";
+ 				function = "s_pwm";
 -- 
 2.20.1
 
