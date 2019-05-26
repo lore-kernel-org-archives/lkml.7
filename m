@@ -4,49 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5666AC282E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 18:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA68C282E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 18:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 229DA2171F
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 18:27:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53BBB2075E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 18:34:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728083AbfEZS1b (ORCPT
+        id S1728056AbfEZSec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 14:27:31 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:60655 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727988AbfEZS1b (ORCPT
+        Sun, 26 May 2019 14:34:32 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:46797 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728004AbfEZSeb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 14:27:31 -0400
+        Sun, 26 May 2019 14:34:31 -0400
 Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
         (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 96A96240003;
-        Sun, 26 May 2019 18:27:19 +0000 (UTC)
-Date:   Sun, 26 May 2019 20:27:18 +0200
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 7E4EC200006;
+        Sun, 26 May 2019 18:34:26 +0000 (UTC)
+Date:   Sun, 26 May 2019 20:34:25 +0200
 From:   Maxime Ripard <maxime.ripard@bootlin.com>
 To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
+Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 5/7] arm64: dts: allwinner: Add SPDIF node for
- Allwinner H6
-Message-ID: <20190526182718.45cqjx6xsu44ycy6@flea>
-References: <20190525162323.20216-1-peron.clem@gmail.com>
- <20190525162323.20216-6-peron.clem@gmail.com>
+        Chen-Yu Tsai <wens@csie.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: Re: [PATCH v2 5/7] dmaengine: sun6i: Add support for H6 DMA
+Message-ID: <20190526183425.nbhrk5pa264p7tdy@flea>
+References: <20190525163819.21055-1-peron.clem@gmail.com>
+ <20190525163819.21055-6-peron.clem@gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="iksylkttz4pes7dd"
+        protocol="application/pgp-signature"; boundary="geomrocia5ckksq4"
 Content-Disposition: inline
-In-Reply-To: <20190525162323.20216-6-peron.clem@gmail.com>
+In-Reply-To: <20190525163819.21055-6-peron.clem@gmail.com>
 User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -54,34 +50,133 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---iksylkttz4pes7dd
+--geomrocia5ckksq4
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, May 25, 2019 at 06:23:21PM +0200, Cl=E9ment P=E9ron wrote:
-> The Allwinner H6 has a SPDIF controller called OWA (One Wire Audio).
+On Sat, May 25, 2019 at 06:38:17PM +0200, Cl=E9ment P=E9ron wrote:
+> From: Jernej Skrabec <jernej.skrabec@siol.net>
 >
-> Only one pinmuxing is available so set it as default.
+> H6 DMA has more than 32 supported DRQs, which means that configuration
+> register is slightly rearranged. It also needs additional clock to be
+> enabled.
 >
+> Add support for it.
+>
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 > Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
 > ---
->  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 38 ++++++++++++++++++++
->  1 file changed, 38 insertions(+)
+>  drivers/dma/sun6i-dma.c | 44 +++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 42 insertions(+), 2 deletions(-)
 >
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/bo=
-ot/dts/allwinner/sun50i-h6.dtsi
-> index f4ea596c82ce..307d3c896ff2 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> @@ -83,6 +83,24 @@
->  		method =3D "smc";
->  	};
+> diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
+> index f5cb5e89bf7b..8d44ddae926a 100644
+> --- a/drivers/dma/sun6i-dma.c
+> +++ b/drivers/dma/sun6i-dma.c
+> @@ -69,14 +69,19 @@
 >
-> +	sound_spdif {
+>  #define DMA_CHAN_CUR_CFG	0x0c
+>  #define DMA_CHAN_MAX_DRQ_A31		0x1f
+> +#define DMA_CHAN_MAX_DRQ_H6		0x3f
+>  #define DMA_CHAN_CFG_SRC_DRQ_A31(x)	((x) & DMA_CHAN_MAX_DRQ_A31)
+> +#define DMA_CHAN_CFG_SRC_DRQ_H6(x)	((x) & DMA_CHAN_MAX_DRQ_H6)
+>  #define DMA_CHAN_CFG_SRC_MODE_A31(x)	(((x) & 0x1) << 5)
+> +#define DMA_CHAN_CFG_SRC_MODE_H6(x)	(((x) & 0x1) << 8)
+>  #define DMA_CHAN_CFG_SRC_BURST_A31(x)	(((x) & 0x3) << 7)
+>  #define DMA_CHAN_CFG_SRC_BURST_H3(x)	(((x) & 0x3) << 6)
+>  #define DMA_CHAN_CFG_SRC_WIDTH(x)	(((x) & 0x3) << 9)
+>
+>  #define DMA_CHAN_CFG_DST_DRQ_A31(x)	(DMA_CHAN_CFG_SRC_DRQ_A31(x) << 16)
+> +#define DMA_CHAN_CFG_DST_DRQ_H6(x)	(DMA_CHAN_CFG_SRC_DRQ_H6(x) << 16)
+>  #define DMA_CHAN_CFG_DST_MODE_A31(x)	(DMA_CHAN_CFG_SRC_MODE_A31(x) << 16)
+> +#define DMA_CHAN_CFG_DST_MODE_H6(x)	(DMA_CHAN_CFG_SRC_MODE_H6(x) << 16)
+>  #define DMA_CHAN_CFG_DST_BURST_A31(x)	(DMA_CHAN_CFG_SRC_BURST_A31(x) << =
+16)
+>  #define DMA_CHAN_CFG_DST_BURST_H3(x)	(DMA_CHAN_CFG_SRC_BURST_H3(x) << 16)
+>  #define DMA_CHAN_CFG_DST_WIDTH(x)	(DMA_CHAN_CFG_SRC_WIDTH(x) << 16)
+> @@ -319,12 +324,24 @@ static void sun6i_set_drq_a31(u32 *p_cfg, s8 src_dr=
+q, s8 dst_drq)
+>  		  DMA_CHAN_CFG_DST_DRQ_A31(dst_drq);
+>  }
+>
+> +static void sun6i_set_drq_h6(u32 *p_cfg, s8 src_drq, s8 dst_drq)
+> +{
+> +	*p_cfg |=3D DMA_CHAN_CFG_SRC_DRQ_H6(src_drq) |
+> +		  DMA_CHAN_CFG_DST_DRQ_H6(dst_drq);
+> +}
+> +
+>  static void sun6i_set_mode_a31(u32 *p_cfg, s8 src_mode, s8 dst_mode)
+>  {
+>  	*p_cfg |=3D DMA_CHAN_CFG_SRC_MODE_A31(src_mode) |
+>  		  DMA_CHAN_CFG_DST_MODE_A31(dst_mode);
+>  }
+>
+> +static void sun6i_set_mode_h6(u32 *p_cfg, s8 src_mode, s8 dst_mode)
+> +{
+> +	*p_cfg |=3D DMA_CHAN_CFG_SRC_MODE_H6(src_mode) |
+> +		  DMA_CHAN_CFG_DST_MODE_H6(dst_mode);
+> +}
+> +
+>  static size_t sun6i_get_chan_size(struct sun6i_pchan *pchan)
+>  {
+>  	struct sun6i_desc *txd =3D pchan->desc;
+> @@ -1160,6 +1177,28 @@ static struct sun6i_dma_config sun50i_a64_dma_cfg =
+=3D {
+>  			     BIT(DMA_SLAVE_BUSWIDTH_8_BYTES),
+>  };
+>
+> +/*
+> + * The H6 binding uses the number of dma channels from the
+> + * device tree node.
+> + */
+> +static struct sun6i_dma_config sun50i_h6_dma_cfg =3D {
+> +	.clock_autogate_enable =3D sun6i_enable_clock_autogate_h3,
+> +	.set_burst_length =3D sun6i_set_burst_length_h3,
+> +	.set_drq          =3D sun6i_set_drq_h6,
+> +	.set_mode         =3D sun6i_set_mode_h6,
+> +	.src_burst_lengths =3D BIT(1) | BIT(4) | BIT(8) | BIT(16),
+> +	.dst_burst_lengths =3D BIT(1) | BIT(4) | BIT(8) | BIT(16),
+> +	.src_addr_widths   =3D BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
+> +			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
+> +			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
+> +			     BIT(DMA_SLAVE_BUSWIDTH_8_BYTES),
+> +	.dst_addr_widths   =3D BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
+> +			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
+> +			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
+> +			     BIT(DMA_SLAVE_BUSWIDTH_8_BYTES),
+> +	.has_mbus_clk =3D true,
+> +};
+> +
+>  /*
+>   * The V3s have only 8 physical channels, a maximum DRQ port id of 23,
+>   * and a total of 24 usable source and destination endpoints.
+> @@ -1190,6 +1229,7 @@ static const struct of_device_id sun6i_dma_match[] =
+=3D {
+>  	{ .compatible =3D "allwinner,sun8i-h3-dma", .data =3D &sun8i_h3_dma_cfg=
+ },
+>  	{ .compatible =3D "allwinner,sun8i-v3s-dma", .data =3D &sun8i_v3s_dma_c=
+fg },
+>  	{ .compatible =3D "allwinner,sun50i-a64-dma", .data =3D &sun50i_a64_dma=
+_cfg },
+> +	{ .compatible =3D "allwinner,sun50i-h6-dma", .data =3D &sun50i_h6_dma_c=
+fg },
+>  	{ /* sentinel */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, sun6i_dma_match);
+> @@ -1288,8 +1328,8 @@ static int sun6i_dma_probe(struct platform_device *=
+pdev)
+>  	ret =3D of_property_read_u32(np, "dma-requests", &sdc->max_request);
+>  	if (ret && !sdc->max_request) {
+>  		dev_info(&pdev->dev, "Missing dma-requests, using %u.\n",
+> -			 DMA_CHAN_MAX_DRQ_A31);
+> -		sdc->max_request =3D DMA_CHAN_MAX_DRQ_A31;
+> +			 DMA_CHAN_MAX_DRQ_H6);
+> +		sdc->max_request =3D DMA_CHAN_MAX_DRQ_H6;
 
-This generates a warning in DTC, underscores are not valid characters
-for a node name.
+This is changing the binding though, since we're changing the
+default. This should be reflected in the binding, and we should keep
+the same default in the device tree binding.
 
 Maxime
 
@@ -90,15 +185,15 @@ Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
 
---iksylkttz4pes7dd
+--geomrocia5ckksq4
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOrahgAKCRDj7w1vZxhR
-xdKwAPsHomOKKXkOdAwjQzfEiGjCGMKndgCW4QIPcHfoGF2i9wEA/n2QpcwvKM+h
-v3+J2k21QAGTy70Kmd28V/tnaZEJewM=
-=YZ2A
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOrcMQAKCRDj7w1vZxhR
+xTmGAQDZGYjzPAjokaPobd60xQy1t549hb1zwKRPlrxEnYyWgwEA8bqUI9dAqgRj
+Fyp08DKygJ7yRMfzdfmURUm9kIVtRQ8=
+=gZ3v
 -----END PGP SIGNATURE-----
 
---iksylkttz4pes7dd--
+--geomrocia5ckksq4--
