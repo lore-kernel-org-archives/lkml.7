@@ -6,73 +6,84 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE36C282E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 17:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF6F3C282E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 17:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF3D1206BA
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 17:20:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 929F52085A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 17:26:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727988AbfEZRUm (ORCPT
+        id S1727979AbfEZR0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 13:20:42 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:53467 "EHLO
+        Sun, 26 May 2019 13:26:10 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:53611 "EHLO
         atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727926AbfEZRUm (ORCPT
+        with ESMTP id S1727926AbfEZR0K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 13:20:42 -0400
+        Sun, 26 May 2019 13:26:10 -0400
 Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id E829280404; Sun, 26 May 2019 19:20:29 +0200 (CEST)
-Date:   Sun, 26 May 2019 19:20:02 +0200
+        id 021E4803F7; Sun, 26 May 2019 19:25:57 +0200 (CEST)
+Date:   Sun, 26 May 2019 19:25:09 +0200
 From:   Pavel Machek <pavel@ucw.cz>
 To:     Hugh Dickins <hughd@google.com>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Revert "leds: avoid races with workqueue"?
-Message-ID: <20190526172002.GB1282@xo-6d-61-c0.localdomain>
-References: <alpine.LSU.2.11.1905241540080.1674@eggly.anvils>
- <20190525093759.GA17767@amd>
- <alpine.LSU.2.11.1905251025300.1112@eggly.anvils>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrea Arcangeli <aarcange@redhat.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Borislav Petkov <bp@suse.de>
+Subject: Re: [PATCH] mm/gup: continue VM_FAULT_RETRY processing event for
+ pre-faults
+Message-ID: <20190526172509.GC1282@xo-6d-61-c0.localdomain>
+References: <1557844195-18882-1-git-send-email-rppt@linux.ibm.com>
+ <20190522122113.a2edc8aba32f0fad189bae21@linux-foundation.org>
+ <20190522194322.5k52docwgp5zkdcj@linutronix.de>
+ <alpine.LSU.2.11.1905241429460.1141@eggly.anvils>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.11.1905251025300.1112@eggly.anvils>
+In-Reply-To: <alpine.LSU.2.11.1905241429460.1141@eggly.anvils>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 2019-05-25 10:32:31, Hugh Dickins wrote:
-> On Sat, 25 May 2019, Pavel Machek wrote:
+On Fri 2019-05-24 15:22:51, Hugh Dickins wrote:
+> On Wed, 22 May 2019, Sebastian Andrzej Siewior wrote:
+> > On 2019-05-22 12:21:13 [-0700], Andrew Morton wrote:
+> > > On Tue, 14 May 2019 17:29:55 +0300 Mike Rapoport <rppt@linux.ibm.com> wrote:
+> > > 
+> > > > When get_user_pages*() is called with pages = NULL, the processing of
+> > > > VM_FAULT_RETRY terminates early without actually retrying to fault-in all
+> > > > the pages.
+> > > > 
+> > > > If the pages in the requested range belong to a VMA that has userfaultfd
+> > > > registered, handle_userfault() returns VM_FAULT_RETRY *after* user space
+> > > > has populated the page, but for the gup pre-fault case there's no actual
+> > > > retry and the caller will get no pages although they are present.
+> > > > 
+> > > > This issue was uncovered when running post-copy memory restore in CRIU
+> > > > after commit d9c9ce34ed5c ("x86/fpu: Fault-in user stack if
+> > > > copy_fpstate_to_sigframe() fails").
 > 
-> > Hi!
-> > 
-> > > I'm having to revert 0db37915d912 ("leds: avoid races with workqueue")
-> > > from my 5.2-rc testing tree, because lockdep and other debug options
-> > > don't like it: net/mac80211/led.c arranges for led_blink_setup() to be
-> > > called at softirq time, and flush_work() is not good for calling
-> > > then.
-> > 
-> > This should keep X60 working (as well as it is now; X60 will still
-> > have problems with lost events in setup like yours).
-> > 
-> > Can you test this instead of the revert?
+> I've been getting unexplained segmentation violations, and "make" giving
+> up early, when running kernel builds under swapping memory pressure: no
+> CRIU involved.
 > 
-> Thanks, Pavel: yes, that works fine for me on the T420s, no debug
-> complaints, good and silent; and the wifi LED is blinking as before.
+> Bisected last night to that same x86/fpu commit, not itself guilty, but
+> suffering from the odd behavior of get_user_pages_unlocked() giving up
+> too early.
+> 
+> (I wondered at first if copy_fpstate_to_sigframe() ought to retry if
+> non-negative ret < nr_pages, but no, that would be wrong: a present page
+> followed by an invalid area would repeatedly return 1 for nr_pages 2.)
+> 
+> Cc'ing Pavel, who's been having segfault trouble in emacs: maybe same?
 
-I'd like to prevent recurrence of similar problem, and I wonder if you
-can give me a hint.
+The emacs segfault was always during process exit. This sounds different...
 
-I can annotate code that can sleep with might_sleep().
+I don't see problems with make.
 
-How can I annotate code that can not sleep? I might do 
+But its true that at least one of affected machines uses swap heavily.
 
-spin_lock(&dummy);
-this_should_not_sleep();
-spin_unlock(&dummy);
-
-But I don't really need extra serialization. I just want annotations for
-lockdep. Any ideas?
-
+Best regards,
 								Pavel
