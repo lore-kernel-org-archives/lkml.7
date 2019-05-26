@@ -2,331 +2,103 @@ Return-Path: <SRS0=Y9JJ=T2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE92AC28CBF
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 13:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B30AC282E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 13:32:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDEA120863
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 13:11:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31FC32075B
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 13:32:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbfEZNLs (ORCPT
+        id S1727838AbfEZNc4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 09:11:48 -0400
-Received: from mout1.fh-giessen.de ([212.201.18.42]:59100 "EHLO
-        mout1.fh-giessen.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726953AbfEZNLr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 09:11:47 -0400
-Received: from mx3.fh-giessen.de ([212.201.18.28])
-        by mout1.fh-giessen.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <tobias.johannes.klausmann@mni.thm.de>)
-        id 1hUswD-0002J6-9g; Sun, 26 May 2019 15:11:45 +0200
-Received: from mailgate-3.its.fh-giessen.de ([212.201.18.34])
-        by mx3.fh-giessen.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <tobias.johannes.klausmann@mni.thm.de>)
-        id 1hUswD-00HA7V-4D; Sun, 26 May 2019 15:11:45 +0200
-Received: from p2e5610f3.dip0.t-ipconnect.de ([46.86.16.243] helo=zwei.fritz.box)
-        by mailgate-3.its.fh-giessen.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <tobias.johannes.klausmann@mni.thm.de>)
-        id 1hUswC-000F1z-Rc; Sun, 26 May 2019 15:11:44 +0200
-Subject: Re: [PATCH] drivers/media/dvb-frontends: Implement probe/remove for
- stv6110x
-To:     Sean Young <sean@mess.org>
-Cc:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        mchehab@kernel.org
-References: <20190509195118.23027-1-tobias.johannes.klausmann@mni.thm.de>
- <ba914388-04d1-8a57-77eb-3f303941b9bf@mni.thm.de>
- <20190526093355.ednxp725ui6lwoji@gofer.mess.org>
-From:   Tobias Klausmann <tobias.johannes.klausmann@mni.thm.de>
-Message-ID: <b6fcf803-707a-f3c3-6513-f2a79caf83d6@mni.thm.de>
-Date:   Sun, 26 May 2019 15:11:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:69.0) Gecko/20100101
- Thunderbird/69.0a1
+        Sun, 26 May 2019 09:32:56 -0400
+Received: from mga14.intel.com ([192.55.52.115]:7991 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726953AbfEZNcz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 May 2019 09:32:55 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 May 2019 06:32:54 -0700
+X-ExtLoop1: 1
+Received: from likexu-e5-2699-v4.sh.intel.com ([10.239.48.178])
+  by FMSMGA003.fm.intel.com with ESMTP; 26 May 2019 06:32:53 -0700
+From:   Like Xu <like.xu@linux.intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
+Cc:     =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
+Subject: [RESEND PATCH v3] KVM: x86: Add Intel CPUID.1F cpuid emulation support
+Date:   Sun, 26 May 2019 21:30:52 +0800
+Message-Id: <20190526133052.4069-1-like.xu@linux.intel.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20190526093355.ednxp725ui6lwoji@gofer.mess.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Add support to expose Intel V2 Extended Topology Enumeration Leaf for
+some new systems with multiple software-visible die within each package.
 
-answers, if appropriate, inline!
+Per Intel's SDM, when CPUID executes with EAX set to 1FH, the processor
+returns information about extended topology enumeration data. Software
+must detect the presence of CPUID leaf 1FH by verifying (a) the highest
+leaf index supported by CPUID is >= 1FH, and (b) CPUID.1FH:EBX[15:0]
+reports a non-zero value.
 
+Co-developed-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
+Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
+Signed-off-by: Like Xu <like.xu@linux.intel.com>
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+==changelog==
+v3:
+- Refine commit message and comment
 
-On 26.05.19 11:33, Sean Young wrote:
-> Hi Tobias,
->
-> On Sun, May 12, 2019 at 04:53:06PM +0200, Tobias Klausmann wrote:
->> Ping,
->>
->> comments for this patch are appreciated!
-> Sorry for not back to you earlier.
+v2: https://lkml.org/lkml/2019/4/25/1246
 
-No problem, thanks for reviewing!
+- Apply cpuid.1f check rule on Intel SDM page 3-222 Vol.2A
+- Add comment to handle 0x1f anf 0xb in common code
+- Reduce check time in a descending-break style
 
->
-> Please run script/checkpatch.pl --strict on your patch. There are several
-> cosmetic changes needed.
+v1: https://lkml.org/lkml/2019/4/22/28
 
-Will do!
+ arch/x86/kvm/cpuid.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
->> Thanks,
->>
->> Tobias
->>
->>
->> On 09.05.19 21:51, Tobias Klausmann wrote:
->>> Refactor out the common parts of stv6110x_probe() and stv6110x_attach() into
->>> separate functions.
->>>
->>> This provides the needed functionality to use dvb_module_probe() instead of
->>> dvb_attach()!
-> The lines shouldn't be longer than 75 characters.
->
-> This is a great improvement. It would be nice to see an actual driver use
-> dvb_module_probe() rather than dvb_attach(), so that the new code paths
-> are used. Do you have hardware to test this?
-
-I have hardware for a driver living out of tree (sadly): saa716x. So 
-that driver was used to test the new functionality provided by this 
-patch. I could convert the drivers in-tree to use the new 
-dvb_module_probe(), yet without actually testing it.
-
->
->>> Signed-off-by: Tobias Klausmann <tobias.johannes.klausmann@mni.thm.de>
->>> ---
->>>    drivers/media/dvb-frontends/stv6110x.c      | 125 ++++++++++++++++----
->>>    drivers/media/dvb-frontends/stv6110x.h      |   3 +
->>>    drivers/media/dvb-frontends/stv6110x_priv.h |   3 +-
->>>    3 files changed, 109 insertions(+), 22 deletions(-)
->>>
->>> diff --git a/drivers/media/dvb-frontends/stv6110x.c b/drivers/media/dvb-frontends/stv6110x.c
->>> index 82c002d3833a..17bc7adf3771 100644
->>> --- a/drivers/media/dvb-frontends/stv6110x.c
->>> +++ b/drivers/media/dvb-frontends/stv6110x.c
->>> @@ -345,6 +345,33 @@ static void stv6110x_release(struct dvb_frontend *fe)
->>>    	kfree(stv6110x);
->>>    }
->>> +void st6110x_init_regs(struct stv6110x_state *stv6110x)
->>> +{
->>> +	u8 default_regs[] = {0x07, 0x11, 0xdc, 0x85, 0x17, 0x01, 0xe6, 0x1e};
->>> +
->>> +	memcpy(stv6110x->regs, default_regs, 8);
->>> +}
->>> +
->>> +void stv6110x_setup_divider(struct stv6110x_state *stv6110x)
->>> +{
->>> +	switch (stv6110x->config->clk_div) {
->>> +	default:
->>> +	case 1:
->>> +		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2], CTRL2_CO_DIV, 0);
->>> +		break;
->>> +	case 2:
->>> +		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2], CTRL2_CO_DIV, 1);
->>> +		break;
->>> +	case 4:
->>> +		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2], CTRL2_CO_DIV, 2);
->>> +		break;
->>> +	case 8:
->>> +	case 0:
->>> +		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2], CTRL2_CO_DIV, 3);
->>> +		break;
->>> +	}
->>> +}
->>> +
->>>    static const struct dvb_tuner_ops stv6110x_ops = {
->>>    	.info = {
->>>    		.name		  = "STV6110(A) Silicon Tuner",
->>> @@ -354,7 +381,7 @@ static const struct dvb_tuner_ops stv6110x_ops = {
->>>    	.release		= stv6110x_release
->>>    };
->>> -static const struct stv6110x_devctl stv6110x_ctl = {
->>> +static struct stv6110x_devctl stv6110x_ctl = {
->>>    	.tuner_init		= stv6110x_init,
->>>    	.tuner_sleep		= stv6110x_sleep,
->>>    	.tuner_set_mode		= stv6110x_set_mode,
->>> @@ -368,39 +395,77 @@ static const struct stv6110x_devctl stv6110x_ctl = {
->>>    	.tuner_get_status	= stv6110x_get_status,
->>>    };
->>> +void stv6110x_set_frontend_opts(struct stv6110x_state *stv6110x)
->>> +{
->>> +	stv6110x->frontend->tuner_priv		= stv6110x;
->>> +	stv6110x->frontend->ops.tuner_ops	= stv6110x_ops;
->>> +}
->>> +
->>> +static struct stv6110x_devctl *stv6110x_get_devctl(struct i2c_client *client)
->>> +{
->>> +	struct stv6110x_state *stv6110x = i2c_get_clientdata(client);
->>> +
->>> +	dev_dbg(&client->dev, "\n");
->>> +
->>> +	return stv6110x->devctl;
->>> +}
->>> +
->>> +static int stv6110x_probe(struct i2c_client *client,
->>> +			const struct i2c_device_id *id)
->>> +{
->>> +	struct stv6110x_config *config = client->dev.platform_data;
->>> +
->>> +	struct stv6110x_state *stv6110x;
->>> +
->>> +	stv6110x = kzalloc(sizeof(struct stv6110x_state), GFP_KERNEL);
-> This should be:
-> 	stv6110x = kzalloc(sizeof(*stv6110x), GFP_KERNEL);
->
->>> +	if (!stv6110x)
->>> +		return -ENOMEM;
->>> +
->>> +	stv6110x->frontend	= config->frontend;
->>> +	stv6110x->i2c		= client->adapter;
->>> +	stv6110x->config	= config;
->>> +	stv6110x->devctl	= &stv6110x_ctl;
->>> +
->>> +	st6110x_init_regs(stv6110x);
->>> +	stv6110x_setup_divider(stv6110x);
->>> +	stv6110x_set_frontend_opts(stv6110x);
->>> +
->>> +	printk(KERN_INFO "%s: Probed STV6110x\n", __func__);
-> Please use dev_info().
->
->>> +
->>> +	i2c_set_clientdata(client, stv6110x);
->>> +
->>> +	/* setup callbacks */
->>> +	config->get_devctl = stv6110x_get_devctl;
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static int stv6110x_remove(struct i2c_client *client)
->>> +{
->>> +	struct stv6110x_state *stv6110x = i2c_get_clientdata(client);
->>> +
->>> +	stv6110x_release(stv6110x->frontend);
->>> +	return 0;
->>> +}
->>> +
->>>    const struct stv6110x_devctl *stv6110x_attach(struct dvb_frontend *fe,
->>>    					const struct stv6110x_config *config,
->>>    					struct i2c_adapter *i2c)
->>>    {
->>>    	struct stv6110x_state *stv6110x;
->>> -	u8 default_regs[] = {0x07, 0x11, 0xdc, 0x85, 0x17, 0x01, 0xe6, 0x1e};
->>> -	stv6110x = kzalloc(sizeof (struct stv6110x_state), GFP_KERNEL);
->>> +	stv6110x = kzalloc(sizeof(struct stv6110x_state), GFP_KERNEL);
-> 	stv6110x = kzalloc(sizeof(*stv6110x), GFP_KERNEL);
->
-> Maybe we can patch up the dvb_attach() call sites and do away with
-> stv6110x_attach completely. Do you have dvb hardware with this frontend
-> to test?
-
-See answer above!
-
-
->
->
->>>    	if (!stv6110x)
->>>    		return NULL;
->>> +	stv6110x->frontend	= fe;
->>>    	stv6110x->i2c		= i2c;
->>>    	stv6110x->config	= config;
->>>    	stv6110x->devctl	= &stv6110x_ctl;
->>> -	memcpy(stv6110x->regs, default_regs, 8);
->>> -	/* setup divider */
->>> -	switch (stv6110x->config->clk_div) {
->>> -	default:
->>> -	case 1:
->>> -		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2], CTRL2_CO_DIV, 0);
->>> -		break;
->>> -	case 2:
->>> -		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2], CTRL2_CO_DIV, 1);
->>> -		break;
->>> -	case 4:
->>> -		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2], CTRL2_CO_DIV, 2);
->>> -		break;
->>> -	case 8:
->>> -	case 0:
->>> -		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2], CTRL2_CO_DIV, 3);
->>> -		break;
->>> -	}
->>> +	st6110x_init_regs(stv6110x);
->>> +	stv6110x_setup_divider(stv6110x);
->>> +	stv6110x_set_frontend_opts(stv6110x);
->>>    	fe->tuner_priv		= stv6110x;
->>>    	fe->ops.tuner_ops	= stv6110x_ops;
->>> @@ -410,6 +475,24 @@ const struct stv6110x_devctl *stv6110x_attach(struct dvb_frontend *fe,
->>>    }
->>>    EXPORT_SYMBOL(stv6110x_attach);
->>> +static const struct i2c_device_id stv6110x_id_table[] = {
->>> +	{"stv6110x", 0},
->>> +	{}
->>> +};
->>> +MODULE_DEVICE_TABLE(i2c, stv6110x_id_table);
->>> +
->>> +static struct i2c_driver stv6110x_driver = {
->>> +	.driver = {
->>> +		.name	= "stv6110x",
->>> +		.suppress_bind_attrs = true,
->>> +	},
->>> +	.probe		= stv6110x_probe,
->>> +	.remove		= stv6110x_remove,
->>> +	.id_table	= stv6110x_id_table,
->>> +};
->>> +
->>> +module_i2c_driver(stv6110x_driver);
->>> +
->>>    MODULE_AUTHOR("Manu Abraham");
->>>    MODULE_DESCRIPTION("STV6110x Silicon tuner");
->>>    MODULE_LICENSE("GPL");
->>> diff --git a/drivers/media/dvb-frontends/stv6110x.h b/drivers/media/dvb-frontends/stv6110x.h
->>> index 696b6e5b9e7b..7714adea5242 100644
->>> --- a/drivers/media/dvb-frontends/stv6110x.h
->>> +++ b/drivers/media/dvb-frontends/stv6110x.h
->>> @@ -27,6 +27,9 @@ struct stv6110x_config {
->>>    	u8	addr;
->>>    	u32	refclk;
->>>    	u8	clk_div; /* divisor value for the output clock */
->>> +	struct dvb_frontend		*frontend;
->>> +
->>> +	struct stv6110x_devctl* (*get_devctl)(struct i2c_client *);
-> The i2c_client needs an argument name.
->
->>>    };
->>>    enum tuner_mode {
->>> diff --git a/drivers/media/dvb-frontends/stv6110x_priv.h b/drivers/media/dvb-frontends/stv6110x_priv.h
->>> index 109dfaf4ba42..383549d25268 100644
->>> --- a/drivers/media/dvb-frontends/stv6110x_priv.h
->>> +++ b/drivers/media/dvb-frontends/stv6110x_priv.h
->>> @@ -66,11 +66,12 @@
->>>    #define REFCLOCK_MHz				(stv6110x->config->refclk / 1000000)
->>>    struct stv6110x_state {
->>> +	struct dvb_frontend		*frontend;
->>>    	struct i2c_adapter		*i2c;
->>>    	const struct stv6110x_config	*config;
->>>    	u8				regs[8];
->>> -	const struct stv6110x_devctl	*devctl;
->>> +	struct stv6110x_devctl	*devctl;
->>>    };
->>>    #endif /* __STV6110x_PRIV_H */
->
-> Thanks,
->
-> Sean
-
-
-for the other comments: Adaptations will come with a v2 patch!
-
-Thanks,
-
-Tobias
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 80a642a0143d..f9b41f0103b3 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -426,6 +426,11 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+ 
+ 	switch (function) {
+ 	case 0:
++		/* Check if the cpuid leaf 0x1f is actually implemented */
++		if (entry->eax >= 0x1f && (cpuid_ebx(0x1f) & 0x0000ffff)) {
++			entry->eax = 0x1f;
++			break;
++		}
+ 		entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
+ 		break;
+ 	case 1:
+@@ -545,7 +550,11 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+ 		entry->edx = edx.full;
+ 		break;
+ 	}
+-	/* function 0xb has additional index. */
++	/*
++	 * Per Intel's SDM, 0x1f is a superset of 0xb, thus they can be handled
++	 * by common code.
++	 */
++	case 0x1f:
+ 	case 0xb: {
+ 		int i, level_type;
+ 
+-- 
+2.21.0
 
