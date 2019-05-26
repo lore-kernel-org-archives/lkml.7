@@ -2,165 +2,125 @@ Return-Path: <SRS0=Y9JJ=T2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C76CC282E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 16:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 984F1C282E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 16:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BE5C20657
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 16:13:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66F6A20657
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 16:19:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yzj1MZMx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728400AbfEZQM7 (ORCPT
+        id S1727950AbfEZQTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 12:12:59 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43376 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728028AbfEZQM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 12:12:57 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E9BF8C056899;
-        Sun, 26 May 2019 16:12:56 +0000 (UTC)
-Received: from laptop.redhat.com (ovpn-116-67.ams2.redhat.com [10.36.116.67])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DB43B191BE;
-        Sun, 26 May 2019 16:12:50 +0000 (UTC)
-From:   Eric Auger <eric.auger@redhat.com>
-To:     eric.auger.pro@gmail.com, eric.auger@redhat.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
-        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
-        yi.l.liu@intel.com, jean-philippe.brucker@arm.com,
-        will.deacon@arm.com, robin.murphy@arm.com
-Cc:     kevin.tian@intel.com, ashok.raj@intel.com, marc.zyngier@arm.com,
-        peter.maydell@linaro.org, vincent.stehle@arm.com
-Subject: [PATCH v8 29/29] vfio: Document nested stage control
-Date:   Sun, 26 May 2019 18:10:04 +0200
-Message-Id: <20190526161004.25232-30-eric.auger@redhat.com>
-In-Reply-To: <20190526161004.25232-1-eric.auger@redhat.com>
-References: <20190526161004.25232-1-eric.auger@redhat.com>
+        Sun, 26 May 2019 12:19:43 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:41004 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727847AbfEZQTn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 May 2019 12:19:43 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q17so3277482pfq.8;
+        Sun, 26 May 2019 09:19:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lJ3OpNMCdALqETy0qV5AcNhUPuYZT+J/DUPQVFJRLrg=;
+        b=Yzj1MZMxRBURL4/0AbkPkUdnFTzelszWr8GQM+ybm1VxPKjvHkTwlQ3sj3osgf9jzp
+         qr1J7/0u1N/fo+clTbcqoWLfTusD4q7Zn6uRZEfiLyyGpMpDFQIwAkLxHjbrBz2fnzdu
+         HiHXRHubIGaQuonnipHj42EMFBtWYXAMDIYl3PTgT2BwqJDBJFGySd45V76liEBBcOai
+         /7NFZb5Z55a+UR9PGHQ16pyp5df/QeB+W0QwtmvbPYnFDFJJ2Mb3rGIu70coSyu0Wk6H
+         3r/5Swfuswrd2XU6O6dGaT7hdjkb/qcqz422h7mPxHeTX37i0mlnz8dbM22jB5xImJzE
+         UYzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lJ3OpNMCdALqETy0qV5AcNhUPuYZT+J/DUPQVFJRLrg=;
+        b=KCZ4s3o7muq+Ql/jwpFuAwqR4g4gcyAQXvbGPJqYGRUySDpqQihzsHViJF4ZfecsNg
+         etDF7UWUyaWiVgDivMgo143hUqsYSGzIkMEYC+eBjVb+Q9jjgPuhZluHhPvW7vAu2syL
+         xhmuojWrkMsyO1us8hvZyBI9j1051Wn5rYqcChPSOvQXiELamBvfokcD5+Chx2/0d0Xg
+         idvVIASVtNqxFzcCcb0TQcOrNU+Rmr1REqKXVWvu3GBh2Bq9Ou9ZLaaCCnXOfX1Ov7NH
+         hXu6v/BjeaBziyG4afmlN213vSRoyH76UnXxwEMF0JTfTbeJDvKvl05T7uMlhYXsFs+t
+         4OlA==
+X-Gm-Message-State: APjAAAUOhXajK+CSpDhK4SfkbOG0Jy8p4Oc17qXyMU51rAf0U5BF/GUW
+        N8uTh0rgSru2kOnwGCj2HAXrE60I
+X-Google-Smtp-Source: APXvYqyYEON9Xr5P99XYoWbOI3hC46I2FaQxJzEmoSFufFpmE1Bkb1AymXxw3Q6LDrfc1BAZKUOZOw==
+X-Received: by 2002:a63:d901:: with SMTP id r1mr36281064pgg.271.1558887581720;
+        Sun, 26 May 2019 09:19:41 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id q142sm11649009pfc.27.2019.05.26.09.19.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 26 May 2019 09:19:40 -0700 (PDT)
+Date:   Sun, 26 May 2019 09:19:39 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     cheiny@synaptics.com, nick@shmanahar.org,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: Re: [PATCH -next] Input: synaptics-rmi4 - Remove set but not used
+ variable 'sensor_flags'
+Message-ID: <20190526161939.GA256861@dtor-ws>
+References: <20190525141119.11852-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Sun, 26 May 2019 16:12:57 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190525141119.11852-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-New iotcls were introduced to pass information about guest stage1
-to the host through VFIO. Let's document the nested stage control.
+On Sat, May 25, 2019 at 10:11:19PM +0800, YueHaibing wrote:
+> Fixes gcc '-Wunused-but-set-variable' warning:
+> 
+> drivers/input/rmi4/rmi_f12.c: In function rmi_f12_read_sensor_tuning:
+> drivers/input/rmi4/rmi_f12.c:76:6: warning: variable sensor_flags set but not used [-Wunused-but-set-variable]
+> 
+> It's not used since introduction in
+> commit b43d2c1e9353 ("Input: synaptics-rmi4 - add support for F12")
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Signed-off-by: Eric Auger <eric.auger@redhat.com>
+Applied, thank you.
 
----
+> ---
+>  drivers/input/rmi4/rmi_f12.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+> 
+> diff --git a/drivers/input/rmi4/rmi_f12.c b/drivers/input/rmi4/rmi_f12.c
+> index 5c7f48915779..72b5498e1a9f 100644
+> --- a/drivers/input/rmi4/rmi_f12.c
+> +++ b/drivers/input/rmi4/rmi_f12.c
+> @@ -73,7 +73,6 @@ static int rmi_f12_read_sensor_tuning(struct f12_data *f12)
+>  	int pitch_y = 0;
+>  	int rx_receivers = 0;
+>  	int tx_receivers = 0;
+> -	int sensor_flags = 0;
+>  
+>  	item = rmi_get_register_desc_item(&f12->control_reg_desc, 8);
+>  	if (!item) {
+> @@ -129,10 +128,8 @@ static int rmi_f12_read_sensor_tuning(struct f12_data *f12)
+>  		offset += 2;
+>  	}
+>  
+> -	if (rmi_register_desc_has_subpacket(item, 4)) {
+> -		sensor_flags = buf[offset];
+> +	if (rmi_register_desc_has_subpacket(item, 4))
+>  		offset += 1;
+> -	}
+>  
+>  	sensor->x_mm = (pitch_x * rx_receivers) >> 12;
+>  	sensor->y_mm = (pitch_y * tx_receivers) >> 12;
+> -- 
+> 2.17.1
+> 
+> 
 
-v2 -> v3:
-- document the new fault API
-
-v1 -> v2:
-- use the new ioctl names
-- add doc related to fault handling
----
- Documentation/vfio.txt | 83 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 83 insertions(+)
-
-diff --git a/Documentation/vfio.txt b/Documentation/vfio.txt
-index f1a4d3c3ba0b..aab59ddf5ebd 100644
---- a/Documentation/vfio.txt
-+++ b/Documentation/vfio.txt
-@@ -239,6 +239,89 @@ group and can access them as follows::
- 	/* Gratuitous device reset and go... */
- 	ioctl(device, VFIO_DEVICE_RESET);
- 
-+IOMMU Dual Stage Control
-+------------------------
-+
-+Some IOMMUs support 2 stages/levels of translation. "Stage" corresponds to
-+the ARM terminology while "level" corresponds to Intel's VTD terminology. In
-+the following text we use either without distinction.
-+
-+This is useful when the guest is exposed with a virtual IOMMU and some
-+devices are assigned to the guest through VFIO. Then the guest OS can use
-+stage 1 (IOVA -> GPA), while the hypervisor uses stage 2 for VM isolation
-+(GPA -> HPA).
-+
-+The guest gets ownership of the stage 1 page tables and also owns stage 1
-+configuration structures. The hypervisor owns the root configuration structure
-+(for security reason), including stage 2 configuration. This works as long
-+configuration structures and page table format are compatible between the
-+virtual IOMMU and the physical IOMMU.
-+
-+Assuming the HW supports it, this nested mode is selected by choosing the
-+VFIO_TYPE1_NESTING_IOMMU type through:
-+
-+ioctl(container, VFIO_SET_IOMMU, VFIO_TYPE1_NESTING_IOMMU);
-+
-+This forces the hypervisor to use the stage 2, leaving stage 1 available for
-+guest usage.
-+
-+Once groups are attached to the container, the guest stage 1 translation
-+configuration data can be passed to VFIO by using
-+
-+ioctl(container, VFIO_IOMMU_BIND_PASID_TABLE, &pasid_table_info);
-+
-+This allows to combine guest stage 1 configuration structure along with
-+hypervisor stage 2 configuration structure. stage 1 configuration structures
-+are dependent on the IOMMU type.
-+
-+As the stage 1 translation is fully delegated to the HW, physical events that
-+may occur (especially translation faults), need to be propagated up to
-+the virtualizer and re-injected into the guest.
-+
-+The userspace must be prepared to receive faults. The VFIO-PCI device
-+exposes 2 regions dedicated to HW faults: one read-only "producer" fault
-+region (kernel is the producer and writes into this region) and one
-+write-only "consumer" fault region, type/subtype respectively:
-+- VFIO_REGION_TYPE_NESTED/VFIO_REGION_SUBTYPE_NESTED_FAULT_PROD
-+- VFIO_REGION_TYPE_NESTED/VFIO_REGION_SUBTYPE_NESTED_FAULT_CONS
-+
-+The producer fault region exposes a VFIO_REGION_INFO_CAP_PRODUCER_FAULT
-+region capability that allows the userspace to retrieve the max fault
-+ABI version supported by the kernel.
-+
-+The ABI version can be negotiated: the userspace writes the version it
-+wants in the consumer region (greater or equal than 1). Once set, the
-+ABI version cannot be changed.
-+
-+Then by using VFIO_DEVICE_SET_IRQS along with the VFIO_PCI_DMA_FAULT_IRQ_INDEX
-+index, the virtualizer can register an eventfd signalled whenever a fault is
-+observed at physical level.
-+
-+The kernel writes the fault records formatted according to the negotiated
-+ABI version in the producer region fault queue. This part of the producer
-+fault region can be mmapped (see VFIO_REGION_INFO_CAP_SPARSE_MMAP result).
-+
-+When the userspace consumes a fault in the queue, it should increment
-+the consumer index to allow new fault records to replace the used ones.
-+The queue size and the entry size can be retrieved in the producer region.
-+The consumer index should never overshoot the producer index as in any
-+other circular buffer scheme. Also it must be less than the queue size
-+otherwise the change is ignored by the kernel.
-+
-+When the guest invalidates stage 1 related caches, invalidations must be
-+forwarded to the host through
-+ioctl(container, VFIO_IOMMU_CACHE_INVALIDATE, &inv_data);
-+Those invalidations can happen at various granularity levels, page, context, ...
-+
-+The ARM SMMU specification introduces another challenge: MSIs are translated by
-+both the virtual SMMU and the physical SMMU. To build a nested mapping for the
-+IOVA programmed into the assigned device, the guest needs to pass its IOVA/MSI
-+doorbell GPA binding to the host. Then the hypervisor can build a nested stage 2
-+binding eventually translating into the physical MSI doorbell.
-+
-+This is achieved by
-+ioctl(container, VFIO_IOMMU_BIND_MSI, &guest_binding);
-+
- VFIO User API
- -------------------------------------------------------------------------------
- 
 -- 
-2.20.1
-
+Dmitry
