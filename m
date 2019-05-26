@@ -2,403 +2,133 @@ Return-Path: <SRS0=Y9JJ=T2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97918C46460
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 22:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE323C282E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 22:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F6E020863
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 22:08:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 961B221721
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 22:25:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=cs.unibo.it header.i=@cs.unibo.it header.b="IDpJNWXx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u8wTFbct"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726112AbfEZWIr (ORCPT
+        id S1726024AbfEZWZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 18:08:47 -0400
-Received: from mail.virtlab.unibo.it ([130.136.161.50]:56385 "EHLO
-        mail.virtlab.unibo.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbfEZWIq (ORCPT
+        Sun, 26 May 2019 18:25:46 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38654 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725834AbfEZWZp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 18:08:46 -0400
-Received: from cs.unibo.it (host0.studiodavoli.it [109.234.61.1])
-        by mail.virtlab.unibo.it (Postfix) with ESMTPSA id 11605225FE;
-        Mon, 27 May 2019 00:08:40 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=cs.unibo.it;
-        s=virtlab; t=1558908521;
-        bh=0HWirris31+qqea/vgj/SS+WN43fD0hJcn5mNbGyJg0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=IDpJNWXx7HEC0DU6aHznSEZGtQiBijgM7zM8gTlNZtiYOtGz7d1DEK8uB3pcn8yGK
-         HvIE8c3odyvBEgegv0/OCGQ4Y1vvBn5M90tooBX46D5dadTRX7tK5wclzrL7px13vy
-         o6zUUUssYnbIF6VIsEoEmJq9tCxEfOEN7FDOQZAo=
-Date:   Mon, 27 May 2019 00:08:38 +0200
-From:   Renzo Davoli <renzo@cs.unibo.it>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Davide Libenzi <davidel@xmailserver.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     linux-api@vger.kernel.org
-Subject: [PATCH v2 1/1] eventfd new tag EFD_VPOLL: generate epoll events
-Message-ID: <20190526220838.GB21842@cs.unibo.it>
+        Sun, 26 May 2019 18:25:45 -0400
+Received: by mail-wm1-f68.google.com with SMTP id t5so13955018wmh.3;
+        Sun, 26 May 2019 15:25:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ramFDJ3R+AtjRxaNB0t90s4XaqyMkSnufLHrPP/uUT8=;
+        b=u8wTFbctX+VkQPsaKwnQiOa7Q/qWSO0/49O6yzkVmMH1Fsqsbre6TXAGzcmIH8sNwn
+         VApqqWSpQUwA3AV4NvahQdf9OdXEmrBJb6t4AE0tAQ3vXVlZ12Am6VoaIz2+mzCHV65I
+         4kuA/LBgY0HiY8YFHgv7IrOjy6fBzJpiHUa7FoqMdhL6CQ/KSZx4YreQAEBoVoME8IJA
+         OLjq+NYluGqo4zVlXLPgeaewpoVDy9Yybfvwrh8hmIjU7CtDX4ML5RDCYqQUfyQrLnec
+         U+iaDqMuC16auKaqzMHk2LTppxOimXqCEIatfWbIB1hMv+erLHrBuVYnUEXM6StmpH3U
+         q07g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ramFDJ3R+AtjRxaNB0t90s4XaqyMkSnufLHrPP/uUT8=;
+        b=VGCG0ycu8eMXimQKFfRMklUEz41+XxDM0DgQkZWqb+nEYdKRZAllgwcyibTQv9Awrh
+         Ggmv2rrNlZcbRtZ0NtJyqBPCOlrMD3OYYiprcRk5QJW9BxToEL358NF+owGjXMcHCma5
+         m/3KrzGhPOSILwdB/ZErv1sVe2Xnq0hTAcpDkHcnDJwI0qxYj3db+i/ZBII9bfvhM0XX
+         AXAndVxqoFs8KXPJX17aPOsYcZ6A/+ntUaK8vB6IN4d3CQgIFIsdriOdpOE1M18ip3eZ
+         CcC9DViKmGA0QCpoz6kgu1t7/sYW0Aza/mVllZsYQkyiIF6O5y6W0dvYslWdn/JfeN8b
+         QvRg==
+X-Gm-Message-State: APjAAAWaO90CwBHuaAkOTOuxkNGOGi8Ge9tPY1LgSU/k2nTnFQnwO7YH
+        nlaM6xYevgmvIU64t5rgLzc=
+X-Google-Smtp-Source: APXvYqyzDtTcZ0+M8W2DNUeGoD1ely2DBDSjR+tF+T9XGtoxcsHT6c+tUu5WqGbSeT5IhmzohWEHZg==
+X-Received: by 2002:a7b:cbcc:: with SMTP id n12mr8029506wmi.167.1558909543004;
+        Sun, 26 May 2019 15:25:43 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
+        by smtp.gmail.com with ESMTPSA id o20sm10368398wro.2.2019.05.26.15.25.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 26 May 2019 15:25:42 -0700 (PDT)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v2 00/10] Allwinner A64/H6 IR support
+Date:   Mon, 27 May 2019 00:25:26 +0200
+Message-Id: <20190526222536.10917-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch implements an extension of eventfd to define file descriptors 
-whose I/O events can be generated at user level. These file descriptors
-trigger notifications for [p]select/[p]poll/epoll.
+Hi,
 
-This feature is useful for user-level implementations of network stacks
-or virtual device drivers as libraries.
+A64 IR support series[1] pointed out that an A31 bindings should be
+introduced.
 
-Development and porting of code often requires to find the way to wait for I/O
-events both coming from file descriptors and generated by user-level code (e.g.
-user-implemented net stacks or drivers).  While it is possible to provide a
-partial support (e.g. using pipes or socketpairs), a clean and complete
-solution is still missing (as far as I have seen); e.g. I have not seen any
-clean way to generate EPOLLPRI, EPOLLERR, etc.
+This series introduce the A31 compatible bindings, then switch it on
+the already existing board.
 
-This proposal is based on a new tag for eventfd2(2): EFD_VPOLL.
+Finally introduce A64 and H6 support.
 
-This statement:
-	fd = eventfd(EPOLLOUT, EFD_VPOLL | EFD_CLOEXEC);
-creates a file descriptor for I/O event generation. In this case EPOLLOUT is
-initially true.
+Regards,
+Clément
 
-Likewise all the other eventfs services, read(2) and write(2) use a 8-byte 
-integer argument.
+[1] https://lore.kernel.org/patchwork/patch/1031390/#1221464
 
-read(2) returns the current state of the pending events.
+Changes since v1:
+ - Document reset lines as required since A31
+ - Explain the memory mapping difference in commit log
+ - Fix misspelling "Allwiner" to "Allwinner"
 
-The argument of write(2) is an or-composition of a control command
-(EFD_VPOLL_ADDEVENTS, EFD_VPOLL_DELEVENTS or EFD_VPOLL_MODEVENTS) and the
-bitmap of events to be added, deleted to the current set of pending events.
-EFD_VPOLL_MODEVENTS completely redefines the set of pending events.
+Clément Péron (8):
+  dt-bindings: media: sunxi-ir: add A31 compatible
+  media: rc: sunxi: Add A31 compatible
+  ARM: dts: sunxi: prefer A31 instead of A13 for ir
+  dt-bindings: media: sunxi-ir: Add A64 compatible
+  dt-bindings: media: sunxi-ir: Add H6 compatible
+  arm64: dts: allwinner: h6: Add IR receiver node
+  arm64: dts: allwinner: h6: Enable IR on H6 boards
+  arm64: defconfig: enable IR SUNXI option
 
-e.g.:
-	uint64_t request = EFD_VPOLL_ADDEVENTS | EPOLLIN | EPOLLPRI;
-	write(fd, &request, sizeof(request);
-adds EPOLLIN and EPOLLPRI to the set of pending events.
+Igors Makejevs (1):
+  arm64: dts: allwinner: a64: Add IR node
 
-These are examples of messages asking for a feature like EFD_VPOLL:
-https://stackoverflow.com/questions/909189/simulating-file-descriptor-in-user-space
-https://stackoverflow.com/questions/1648147/running-a-simple-tcp-server-with-poll-how-do-i-trigger-events-artificially
-... and I need it to write networking and device modules for vuos:
-https://github.com/virtualsquare/vuos
-(it is the new codebase of ViewOS, see www.virtualsquare.org).
+Jernej Skrabec (1):
+  arm64: dts: allwinner: a64: Enable IR on Orange Pi Win
 
-EXAMPLE:
-The following program creates an eventfd/EFD_VPOLL file descriptor and then forks
-a child process.  While the parent waits for events using epoll_wait the child
-generates a sequence of events. When the parent receives an event (or a set of events)
-it prints it and disarm it.
-The following shell session shows a sample run of the program:
-	timeout...
-	timeout...
-	GOT event 1
-	timeout...
-	GOT event 1
-	timeout...
-	GOT event 3
-	timeout...
-	GOT event 2
-	timeout...
-	GOT event 4
-	timeout...
-	GOT event 10
+ .../devicetree/bindings/media/sunxi-ir.txt    | 11 +++++++++--
+ arch/arm/boot/dts/sun6i-a31.dtsi              |  2 +-
+ arch/arm/boot/dts/sun8i-a83t.dtsi             |  2 +-
+ arch/arm/boot/dts/sun9i-a80.dtsi              |  2 +-
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi            |  2 +-
+ .../dts/allwinner/sun50i-a64-orangepi-win.dts |  4 ++++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 18 ++++++++++++++++++
+ .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  4 ++++
+ .../dts/allwinner/sun50i-h6-orangepi.dtsi     |  4 ++++
+ .../boot/dts/allwinner/sun50i-h6-pine-h64.dts |  4 ++++
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 19 +++++++++++++++++++
+ arch/arm64/configs/defconfig                  |  1 +
+ drivers/media/rc/sunxi-cir.c                  |  1 +
+ 13 files changed, 68 insertions(+), 6 deletions(-)
 
-Program source:
-#include <sys/eventfd.h>
-#include <sys/epoll.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <stdint.h>             /* Definition of uint64_t */
-
-#ifndef EFD_VPOLL
-#define EFD_VPOLL (1 << 1)
-#define EFD_VPOLL_ADDEVENTS (1ULL << 32)
-#define EFD_VPOLL_DELEVENTS (2ULL << 32)
-#define EFD_VPOLL_MODEVENTS (3ULL << 32)
-#endif
-
-#define handle_error(msg) \
-	do { perror(msg); exit(EXIT_FAILURE); } while (0)
-
-static void vpoll_ctl(int fd, uint64_t request) {
-	ssize_t s;
-	s = write(fd, &request, sizeof(request));
-	if (s != sizeof(uint64_t))
-		handle_error("write");
-}
-
-int
-main(int argc, char *argv[])
-{
-	int efd, epollfd; 
-	struct epoll_event ev;
-	ev.events = EPOLLIN | EPOLLRDHUP | EPOLLERR | EPOLLOUT | EPOLLHUP | EPOLLPRI;
-	ev.data.u64 = 0;
-
-	efd = eventfd(0, EFD_VPOLL | EFD_CLOEXEC);
-	if (efd == -1)
-		handle_error("eventfd");
-	epollfd = epoll_create1(EPOLL_CLOEXEC);
-	if (efd == -1)
-		handle_error("epoll_create1");
-	if (epoll_ctl(epollfd, EPOLL_CTL_ADD, efd, &ev) == -1) 
-		handle_error("epoll_ctl");
-
-	switch (fork()) {
-		case 0:
-			sleep(3);
-			vpoll_ctl(efd, EFD_VPOLL_ADDEVENTS | EPOLLIN);
-			sleep(2);
-			vpoll_ctl(efd, EFD_VPOLL_ADDEVENTS | EPOLLIN);
-			sleep(2);
-			vpoll_ctl(efd, EFD_VPOLL_ADDEVENTS | EPOLLIN | EPOLLPRI);
-			sleep(2);
-			vpoll_ctl(efd, EFD_VPOLL_ADDEVENTS | EPOLLPRI);
-			sleep(2);
-			vpoll_ctl(efd, EFD_VPOLL_ADDEVENTS | EPOLLOUT);
-			sleep(2);
-			vpoll_ctl(efd, EFD_VPOLL_ADDEVENTS | EPOLLHUP);
-			exit(EXIT_SUCCESS);
-		default:
-			while (1) {
-				int nfds;
-				nfds = epoll_wait(epollfd, &ev, 1, 1000);
-				if (nfds < 0)
-					handle_error("epoll_wait");
-				else if (nfds == 0)
-					printf("timeout...\n");
-				else {
-					printf("GOT event %x\n", ev.events);
-					vpoll_ctl(efd, EFD_VPOLL_DELEVENTS | ev.events);
-					if (ev.events & EPOLLHUP)
-						break;
-				}
-			}
-		case -1:
-			handle_error("fork");
-	}
-	close(epollfd);
-	close(efd);
-	return 0;
-}
-
-Signed-off-by: Renzo Davoli <renzo@cs.unibo.it>
----
- fs/eventfd.c                   | 115 +++++++++++++++++++++++++++++++--
- include/linux/eventfd.h        |   7 +-
- include/uapi/linux/eventpoll.h |   2 +
- 3 files changed, 116 insertions(+), 8 deletions(-)
-
-Changes in v2:
- - Fix size of EFD_VPOLL_*EVENTS constants for 32 bit architectures
-
-diff --git a/fs/eventfd.c b/fs/eventfd.c
-index 8aa0ea8c55e8..f83b7d02307e 100644
---- a/fs/eventfd.c
-+++ b/fs/eventfd.c
-@@ -3,6 +3,7 @@
-  *  fs/eventfd.c
-  *
-  *  Copyright (C) 2007  Davide Libenzi <davidel@xmailserver.org>
-+ *  EFD_VPOLL support: 2019 Renzo Davoli <renzo@cs.unibo.it>
-  *
-  */
- 
-@@ -30,12 +31,24 @@ struct eventfd_ctx {
- 	struct kref kref;
- 	wait_queue_head_t wqh;
- 	/*
--	 * Every time that a write(2) is performed on an eventfd, the
--	 * value of the __u64 being written is added to "count" and a
--	 * wakeup is performed on "wqh". A read(2) will return the "count"
--	 * value to userspace, and will reset "count" to zero. The kernel
--	 * side eventfd_signal() also, adds to the "count" counter and
--	 * issue a wakeup.
-+	 * If the EFD_VPOLL flag was NOT set at eventfd creation:
-+	 *   Every time that a write(2) is performed on an eventfd, the
-+	 *   value of the __u64 being written is added to "count" and a
-+	 *   wakeup is performed on "wqh". A read(2) will return the "count"
-+	 *   value to userspace, and will reset "count" to zero (or decrement
-+	 *   "count" by 1 if the flag EFD_SEMAPHORE has been set). The kernel
-+	 *   side eventfd_signal() also, adds to the "count" counter and
-+	 *   issue a wakeup.
-+	 *
-+	 * If the EFD_VPOLL flag was set at eventfd creation:
-+	 *   count is the set of pending EPOLL events.
-+	 *   read(2) returns the current value of count.
-+	 *   The argument of write(2) is an 8-byte integer:
-+	 *   it is an or-composition of a control command (EFD_VPOLL_ADDEVENTS,
-+	 *   EFD_VPOLL_DELEVENTS or EFD_VPOLL_MODEVENTS) and the bitmap of
-+	 *   events to be added, deleted to the current set of pending events.
-+	 *   (i.e. which bits of "count" must be set or reset).
-+	 *   EFD_VPOLL_MODEVENTS redefines the set of pending events.
- 	 */
- 	__u64 count;
- 	unsigned int flags;
-@@ -295,6 +308,78 @@ static ssize_t eventfd_write(struct file *file, const char __user *buf, size_t c
- 	return res;
- }
- 
-+static __poll_t eventfd_vpoll_poll(struct file *file, poll_table *wait)
-+{
-+	struct eventfd_ctx *ctx = file->private_data;
-+	__poll_t events = 0;
-+	u64 count;
-+
-+	poll_wait(file, &ctx->wqh, wait);
-+
-+	count = READ_ONCE(ctx->count);
-+
-+	events = (count & EPOLLALLMASK);
-+
-+	return events;
-+}
-+
-+static ssize_t eventfd_vpoll_read(struct file *file, char __user *buf,
-+		size_t count, loff_t *ppos)
-+{
-+	struct eventfd_ctx *ctx = file->private_data;
-+	ssize_t res;
-+	__u64 ucnt = 0;
-+
-+	if (count < sizeof(ucnt))
-+		return -EINVAL;
-+	res = sizeof(ucnt);
-+	ucnt = READ_ONCE(ctx->count);
-+	if (put_user(ucnt, (__u64 __user *)buf))
-+		return -EFAULT;
-+
-+	return res;
-+}
-+
-+static ssize_t eventfd_vpoll_write(struct file *file, const char __user *buf,
-+		size_t count, loff_t *ppos)
-+{
-+	struct eventfd_ctx *ctx = file->private_data;
-+	ssize_t res;
-+	__u64 ucnt;
-+	__u32 events;
-+
-+	if (count < sizeof(ucnt))
-+		return -EINVAL;
-+	if (copy_from_user(&ucnt, buf, sizeof(ucnt)))
-+		return -EFAULT;
-+	spin_lock_irq(&ctx->wqh.lock);
-+
-+	events = ucnt & EPOLLALLMASK;
-+	res = sizeof(ucnt);
-+	switch (ucnt & ~((__u64)EPOLLALLMASK)) {
-+	case EFD_VPOLL_ADDEVENTS:
-+		ctx->count |= events;
-+		break;
-+	case EFD_VPOLL_DELEVENTS:
-+		ctx->count &= ~(events);
-+		break;
-+	case EFD_VPOLL_MODEVENTS:
-+		ctx->count = (ctx->count & ~EPOLLALLMASK) | events;
-+		break;
-+	default:
-+		res = -EINVAL;
-+	}
-+
-+	/* wake up waiting threads */
-+	if (res >= 0 && waitqueue_active(&ctx->wqh))
-+		wake_up_locked_poll(&ctx->wqh, res);
-+
-+	spin_unlock_irq(&ctx->wqh.lock);
-+
-+	return res;
-+
-+}
-+
- #ifdef CONFIG_PROC_FS
- static void eventfd_show_fdinfo(struct seq_file *m, struct file *f)
- {
-@@ -319,6 +404,17 @@ static const struct file_operations eventfd_fops = {
- 	.llseek		= noop_llseek,
- };
- 
-+static const struct file_operations eventfd_vpoll_fops = {
-+#ifdef CONFIG_PROC_FS
-+	.show_fdinfo	= eventfd_show_fdinfo,
-+#endif
-+	.release	= eventfd_release,
-+	.poll		= eventfd_vpoll_poll,
-+	.read		= eventfd_vpoll_read,
-+	.write		= eventfd_vpoll_write,
-+	.llseek		= noop_llseek,
-+};
-+
- /**
-  * eventfd_fget - Acquire a reference of an eventfd file descriptor.
-  * @fd: [in] Eventfd file descriptor.
-@@ -391,6 +487,7 @@ EXPORT_SYMBOL_GPL(eventfd_ctx_fileget);
- static int do_eventfd(unsigned int count, int flags)
- {
- 	struct eventfd_ctx *ctx;
-+	const struct file_operations *fops = &eventfd_fops;
- 	int fd;
- 
- 	/* Check the EFD_* constants for consistency.  */
-@@ -410,7 +507,11 @@ static int do_eventfd(unsigned int count, int flags)
- 	ctx->flags = flags;
- 	ctx->id = ida_simple_get(&eventfd_ida, 0, 0, GFP_KERNEL);
- 
--	fd = anon_inode_getfd("[eventfd]", &eventfd_fops, ctx,
-+	if (flags & EFD_VPOLL) {
-+		fops = &eventfd_vpoll_fops;
-+		ctx->count &= EPOLLALLMASK;
-+	}
-+	fd = anon_inode_getfd("[eventfd]", fops, ctx,
- 			      O_RDWR | (flags & EFD_SHARED_FCNTL_FLAGS));
- 	if (fd < 0)
- 		eventfd_free_ctx(ctx);
-diff --git a/include/linux/eventfd.h b/include/linux/eventfd.h
-index ffcc7724ca21..5b1e6ef56651 100644
---- a/include/linux/eventfd.h
-+++ b/include/linux/eventfd.h
-@@ -21,11 +21,16 @@
-  * shared O_* flags.
-  */
- #define EFD_SEMAPHORE (1 << 0)
-+#define EFD_VPOLL (1 << 1)
- #define EFD_CLOEXEC O_CLOEXEC
- #define EFD_NONBLOCK O_NONBLOCK
- 
- #define EFD_SHARED_FCNTL_FLAGS (O_CLOEXEC | O_NONBLOCK)
--#define EFD_FLAGS_SET (EFD_SHARED_FCNTL_FLAGS | EFD_SEMAPHORE)
-+#define EFD_FLAGS_SET (EFD_SHARED_FCNTL_FLAGS | EFD_SEMAPHORE | EFD_VPOLL)
-+
-+#define EFD_VPOLL_ADDEVENTS (1ULL << 32)
-+#define EFD_VPOLL_DELEVENTS (2ULL << 32)
-+#define EFD_VPOLL_MODEVENTS (3ULL << 32)
- 
- struct eventfd_ctx;
- struct file;
-diff --git a/include/uapi/linux/eventpoll.h b/include/uapi/linux/eventpoll.h
-index 8a3432d0f0dc..814de6d869c7 100644
---- a/include/uapi/linux/eventpoll.h
-+++ b/include/uapi/linux/eventpoll.h
-@@ -41,6 +41,8 @@
- #define EPOLLMSG	(__force __poll_t)0x00000400
- #define EPOLLRDHUP	(__force __poll_t)0x00002000
- 
-+#define EPOLLALLMASK	((__force __poll_t)0x0fffffff)
-+
- /* Set exclusive wakeup mode for the target file descriptor */
- #define EPOLLEXCLUSIVE	((__force __poll_t)(1U << 28))
- 
 -- 
 2.20.1
 
