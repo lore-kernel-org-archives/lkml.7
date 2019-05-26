@@ -2,366 +2,96 @@ Return-Path: <SRS0=Y9JJ=T2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B36C46470
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 17:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F105C282E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 17:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F786212F5
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 17:50:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558893016;
-	bh=4RM6HYIAkVdicbPI6ObbbcySK0L/DNIMzRDkdPiV9xc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=VLrEo0pkrHdB7zx9oSGBvFAq7iug0UUuyr6DSlZt/4i/ZGciSQxJ/T2om7AN15g24
-	 1Sw7LFoAnfk02V5z8q34c2CkoNwkUODfjpb+eLoh3TpoH3lN9lUak1d1XSj3pI7qdd
-	 m1mdgE63Rj5+oHE2VTS4Czc+IwiSqK5ubkZn+Vis=
+	by mail.kernel.org (Postfix) with ESMTP id 57E5B20717
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 17:53:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728020AbfEZRuP (ORCPT
+        id S1728048AbfEZRxz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 13:50:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35844 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727950AbfEZRuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 13:50:15 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B3D72075E;
-        Sun, 26 May 2019 17:50:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558893013;
-        bh=4RM6HYIAkVdicbPI6ObbbcySK0L/DNIMzRDkdPiV9xc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=2nePc8kXjKAIecH5nsEySC0xpCHkO7tXgcqhLSa7cdB4eWBm1aLeXvyaLSZ8YxQFJ
-         CFz9W5r9rxJ31VZl6T13wpl8TeNye4CSsVD+Dk5/HUS9Qs508vJB4HCwMPu1QD7VV1
-         jA7+41sT0Ff9byeYatkYAf8S4wrYVdUOvACdzVWg=
-Date:   Sun, 26 May 2019 18:50:07 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Renato Lui Geh <renatogeh@gmail.com>
-Cc:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        "kernel-usp@googlegroups.com" <kernel-usp@googlegroups.com>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] dt-bindings: iio: adc: add adi,ad7780.yaml binding
-Message-ID: <20190526185007.41b5f016@archlinux>
-In-Reply-To: <20190525002801.ccq54fczbj3wxhan@renatolg>
-References: <9992a318aec777b9b7788bb40d976aa89e5963fe.1558219042.git.renatogeh@gmail.com>
-        <20190519123208.26c864ce@archlinux>
-        <5d7ad2935d1e357f1c0885badc5ce3c351c8ed89.camel@analog.com>
-        <20190525002801.ccq54fczbj3wxhan@renatolg>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 26 May 2019 13:53:55 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43231 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727972AbfEZRxy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 May 2019 13:53:54 -0400
+Received: by mail-wr1-f66.google.com with SMTP id l17so6224730wrm.10
+        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2019 10:53:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3E6kp+r7OBI+9gX6jKnLvemsSLfWQYZx5SlrWEsr91k=;
+        b=uQoCkVfOa3mKlGmbIro1dqhChMhzFDxfe5KBa53zd4QcbYMUct0vZEKTYIa1yUYqKD
+         OWn4AXA4mAHqXyjhJ/YSe0fL7HWsqXAzFf5bQUG7cV45OZ7pybXL4kreplFU14ba3G1r
+         p84pZxng0KLULOLSIxWfcixUgDYTlhjJRoXuL/y+HkZYqWEwBGZ0nUg+cX0ydQMUgM09
+         2ojSuem5oLncLKodckltIJ/Ro2CJfgqFVYzA2KqD6bpN6A23+/EYhwlSA2nlt+vOsRL2
+         o1BSFNr6R+rbdkVcWtW9WNKiiTjZK6+H6ql+CDbvSzGSuQpAVRuoZ5EsMKKjxQZQmkp2
+         lgwQ==
+X-Gm-Message-State: APjAAAUxxkut+0aBE0j45hWlbUMn1Q8nWjfBzMoexZBVGCBxZa6Rd2p5
+        D07kzjPDE7JeeipjhUxNx3wbwZ5o4dI=
+X-Google-Smtp-Source: APXvYqzQOxQEM8sgEkxzsO2Ks3B+FO1y/Lc06FIhA94o3VdiVhvDVjoDuFE1oO8eaQRV+PbB7yXgnA==
+X-Received: by 2002:adf:8062:: with SMTP id 89mr678539wrk.97.1558893232941;
+        Sun, 26 May 2019 10:53:52 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:7428:5a9c:3100:a747? ([2001:b07:6468:f312:7428:5a9c:3100:a747])
+        by smtp.gmail.com with ESMTPSA id n10sm418987wrr.11.2019.05.26.10.53.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 26 May 2019 10:53:52 -0700 (PDT)
+Subject: Re: [GIT PULL] KVM changes for Linux 5.2-rc2
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        KVM list <kvm@vger.kernel.org>
+References: <1558864555-53503-1-git-send-email-pbonzini@redhat.com>
+ <CAHk-=wi3YcO4JTpkeENETz3fqf3DeKc7-tvXwqPmVcq-pgKg5g@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <2d55fd2a-afbf-1b7c-ca82-8bffaa18e0d0@redhat.com>
+Date:   Sun, 26 May 2019 19:53:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <CAHk-=wi3YcO4JTpkeENETz3fqf3DeKc7-tvXwqPmVcq-pgKg5g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 May 2019 21:28:02 -0300
-Renato Lui Geh <renatogeh@gmail.com> wrote:
+On 26/05/19 17:51, Linus Torvalds wrote:
+> On Sun, May 26, 2019 at 2:56 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>>
+>>   https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+> 
+> This says it's a tag, but it's not. It's just a commit pointer (also
+> called a "lightweight tag", because while it technically is exactly
+> the same thing as a branch, it's obviously in the tag namespace and
+> git will _treat_ it like a tag).
+> 
+> Normally your tags are proper signed tags. So I'm not pulling this,
+> waiting for confirmation.
 
-> Hi Jonathan, Alex,
-> 
-> Thanks for the review. Some comments inline.
-> 
-> Thanks,
-> Renato
-> 
-> On 05/20, Ardelean, Alexandru wrote:
-> >On Sun, 2019-05-19 at 12:32 +0100, Jonathan Cameron wrote:  
-> >> [External]
-> >>
-> >>
-> >> On Sat, 18 May 2019 19:41:12 -0300
-> >> Renato Lui Geh <renatogeh@gmail.com> wrote:
-> >>  
-> >> > This patch adds a YAML binding for the Analog Devices AD7780/1 and
-> >> > AD7170/1 analog-to-digital converters.
-> >> >
-> >> > Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>  
-> >>
-> >> One comment inline.  I'll also be needing an ack from Analog on this,
-> >> preferably Michael's.
-> >>
-> >> Thanks,
-> >>
-> >> Jonathan  
-> >> > ---
-> >> >  .../bindings/iio/adc/adi,ad7780.txt           | 48 -----------
-> >> >  .../bindings/iio/adc/adi,ad7780.yaml          | 85 +++++++++++++++++++  
-> >
-> >You should also update the MAINTAINERS file.
-> >Maybe in a following patch.
-> >It looks like there is not entry in there, so maybe you need to add a new
-> >one.
-> >
-> >Something like:
-> >
-> >
-> >ANALOG DEVICES INC AD7780 DRIVER
-> >M:      Michael Hennerich <Michael.Hennerich@analog.com>
-> >M:      Renato Lui Geh <renatogeh@gmail.com>
-> >L:      linux-iio@vger.kernel.org
-> >W:      http://ez.analog.com/community/linux-device-drivers
-> >S:      Supported
-> >F:      drivers/iio/adc/ad7780.c
-> >F:      Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
-> >
-> >This should be after this block
-> >ANALOG DEVICES INC AD7768-1 DRIVER
-> >
-> >Note that I added you as a co-maintainer.
-> >If you want, you do not need to add that line.
-> >  
-> >> >  2 files changed, 85 insertions(+), 48 deletions(-)
-> >> >  delete mode 100644
-> >> > Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
-> >> >  create mode 100644
-> >> > Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
-> >> >
-> >> > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
-> >> > b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
-> >> > deleted file mode 100644
-> >> > index 440e52555349..000000000000
-> >> > --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
-> >> > +++ /dev/null
-> >> > @@ -1,48 +0,0 @@
-> >> > -* Analog Devices AD7170/AD7171/AD7780/AD7781
-> >> > -
-> >> > -Data sheets:
-> >> > -
-> >> > -- AD7170:
-> >> > -     *
-> >> > https://www.analog.com/media/en/technical-documentation/data-sheets/AD7170.pdf
-> >> > -- AD7171:
-> >> > -     *
-> >> > https://www.analog.com/media/en/technical-documentation/data-sheets/AD7171.pdf
-> >> > -- AD7780:
-> >> > -     *
-> >> > https://www.analog.com/media/en/technical-documentation/data-sheets/ad7780.pdf
-> >> > -- AD7781:
-> >> > -     *
-> >> > https://www.analog.com/media/en/technical-documentation/data-sheets/AD7781.pdf
-> >> > -
-> >> > -Required properties:
-> >> > -
-> >> > -- compatible: should be one of
-> >> > -     * "adi,ad7170"
-> >> > -     * "adi,ad7171"
-> >> > -     * "adi,ad7780"
-> >> > -     * "adi,ad7781"
-> >> > -- reg: spi chip select number for the device
-> >> > -- vref-supply: the regulator supply for the ADC reference voltage
-> >> > -
-> >> > -Optional properties:
-> >> > -
-> >> > -- powerdown-gpios:  must be the device tree identifier of the PDRST
-> >> > pin. If
-> >> > -                 specified, it will be asserted during driver probe.
-> >> > As the
-> >> > -                 line is active high, it should be marked
-> >> > GPIO_ACTIVE_HIGH.
-> >> > -- adi,gain-gpios:   must be the device tree identifier of the GAIN
-> >> > pin. Only for
-> >> > -                 the ad778x chips. If specified, it will be asserted
-> >> > during
-> >> > -                 driver probe. As the line is active low, it should be
-> >> > marked
-> >> > -                 GPIO_ACTIVE_LOW.
-> >> > -- adi,filter-gpios: must be the device tree identifier of the FILTER
-> >> > pin. Only
-> >> > -                 for the ad778x chips. If specified, it will be
-> >> > asserted
-> >> > -                 during driver probe. As the line is active low, it
-> >> > should be
-> >> > -                 marked GPIO_ACTIVE_LOW.
-> >> > -
-> >> > -Example:
-> >> > -
-> >> > -adc@0 {
-> >> > -     compatible =  "adi,ad7780";
-> >> > -     reg =         <0>;
-> >> > -     vref-supply = <&vdd_supply>
-> >> > -
-> >> > -     powerdown-gpios  = <&gpio 12 GPIO_ACTIVE_HIGH>;
-> >> > -     adi,gain-gpios   = <&gpio  5 GPIO_ACTIVE_LOW>;
-> >> > -     adi,filter-gpios = <&gpio 15 GPIO_ACTIVE_LOW>;
-> >> > -};
-> >> > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
-> >> > b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
-> >> > new file mode 100644
-> >> > index 000000000000..931bc4f8ec04
-> >> > --- /dev/null
-> >> > +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
-> >> > @@ -0,0 +1,85 @@
-> >> > +# SPDX-License-Identifier: GPL-2.0
-> >> > +%YAML 1.2
-> >> > +---
-> >> > +$id: http://devicetree.org/schemas/iio/adc/adi,ad7780.yaml#
-> >> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> > +
-> >> > +title: Analog Devices AD7170/AD7171/AD7780/AD7781 analog to digital
-> >> > converters
-> >> > +
-> >> > +maintainers:
-> >> > +  - Michael Hennerich <michael.hennerich@analog.com>
-> >> > +
-> >> > +description: |
-> >> > +  The ad7780 is a sigma-delta analog to digital converter. This driver
-> >> > provides
-> >> > +  reading voltage values and status bits from both the ad778x and
-> >> > ad717x series.
-> >> > +  Its interface also allows writing on the FILTER and GAIN GPIO pins
-> >> > on the
-> >> > +  ad778x.
-> >> > +
-> >> > +  Specifications on the converters can be found at:
-> >> > +    AD7170:
-> >> > +
-> >> > https://www.analog.com/media/en/technical-documentation/data-sheets/AD7170.pdf
-> >> > +    AD7171:
-> >> > +
-> >> > https://www.analog.com/media/en/technical-documentation/data-sheets/AD7171.pdf
-> >> > +    AD7780:
-> >> > +
-> >> > https://www.analog.com/media/en/technical-documentation/data-sheets/ad7780.pdf
-> >> > +    AD7781:
-> >> > +
-> >> > https://www.analog.com/media/en/technical-documentation/data-sheets/AD7781.pdf
-> >> > +
-> >> > +properties:
-> >> > +  compatible:
-> >> > +    enum:
-> >> > +      - adi,ad7170
-> >> > +      - adi,ad7171
-> >> > +      - adi,ad7780
-> >> > +      - adi,ad7781
-> >> > +
-> >> > +  reg:
-> >> > +    description:
-> >> > +      Chip select number for the device  
-> >
-> >No need to add a description.
-> >This is pretty standard.
-> >  
-> >> > +    maxItems: 1
-> >> > +
-> >> > +  vref-supply:
-> >> > +    description:
-> >> > +      The regulator supply for the ADC reference voltage
-> >> > +    maxItems: 1
-> >> > +  
-> >
-> >As I see in the driver, it's not vref-supply, it's avdd-supply.  
-> 
-> You're absolutely right. Shouldn't have mindlessly copied
-> from the txt, even though the txt's was also my fault.
-> 
-> By the way, a quick look at ad7170 and ad7780's datasheets
-> shows that the 7170 uses VDD, and the 7780, AVDD. Are they
-> equivalent?
-> >  
-> >> > +  powerdown-gpios:
-> >> > +    description:
-> >> > +      Must be the device tree identifier of the PDRST pin. If
-> >> > +      specified, it will be asserted during driver probe. As the
-> >> > +      line is active high, it should be marked GPIO_ACTIVE_HIGH.
-> >> > +    maxItems: 1
-> >> > +
-> >> > +  adi,gain-gpios:
-> >> > +    description:
-> >> > +      Must be the device tree identifier of the GAIN pin. Only for
-> >> > +      the ad778x chips. If specified, it will be asserted during
-> >> > +      driver probe. As the line is active low, it should be marked
-> >> > +      GPIO_ACTIVE_LOW.
-> >> > +    maxItems: 1
-> >> > +
-> >> > +  adi,filter-gpios:
-> >> > +    description:
-> >> > +      Must be the device tree identifier of the FILTER pin. Only
-> >> > +      for the ad778x chips. If specified, it will be asserted
-> >> > +      during driver probe. As the line is active low, it should be
-> >> > +      marked GPIO_ACTIVE_LOW.
-> >> > +    maxItems: 1
-> >> > +
-> >> > +required:
-> >> > +  - compatible
-> >> > +  - reg
-> >> > +  - vref-supply  
-> >>
-> >> Is that actually true?  I'd imagine it'll use a stub regulator if
-> >> it isn't supplied.  
-> >
-> >Hmm, I also think this can be omitted as required.
-> >devm_regulator_get() is used.
-> >devm_regulator_get_exclusive() would be needed to make this required.  
-> 
-> I see. So the difference between devm_regulator_get and
-> devm_regulator_get_optional is that the former uses a stub
-> when the requested reg isn't supplied, and the latter
-> doesn't?
-Correct.  If you 'require' a regulator you actually have to use
-the optional form and then check if you got one. Otherwise you get
-a stub and only find out later that you can't read it's current
-value.
+Shell history shows that I typed
 
-Jonathan
+	git push kvm +HEAD:tags/for-linus
 
-> >  
-> >>  
-> >> > +
-> >> > +examples:
-> >> > +  - |
-> >> > +    #include <dt-bindings/gpio/gpio.h>
-> >> > +    adc@0 {  
-> >
-> >The adc@0 block should be included in a spi block.
-> >
-> >So, something like
-> >
-> >spi0 {
-> >     adc@0 {
-> >            compatible =  "adi,ad7780";
-> >            reg =         <0>;
-> >            avdd-supply = <&vdd_supply>
-> >
-> >            powerdown-gpios  = <&gpio 12 GPIO_ACTIVE_HIGH>;
-> >            adi,gain-gpios   = <&gpio  5 GPIO_ACTIVE_LOW>;
-> >            adi,filter-gpios = <&gpio 15 GPIO_ACTIVE_LOW>;
-> >     };
-> >};
-> >
-> >I know this wasn't the case before, but it should be (from what I recall).
-> >  
-> >> > +      compatible =  "adi,ad7780";
-> >> > +      reg = <0>;
-> >> > +      vref-supply = <&vdd_supply>;
-> >> > +
-> >> > +      powerdown-gpios  = <&gpio0 12 GPIO_ACTIVE_HIGH>;
-> >> > +      adi,gain-gpios   = <&gpio1  5 GPIO_ACTIVE_LOW>;
-> >> > +      adi,filter-gpios = <&gpio2 15 GPIO_ACTIVE_LOW>;  
-> >
-> >Rest looks good.
-> >
-> >Thanks
-> >Alex
-> >  
-> >> > +    };  
-> >>
-> >>  
+(which matches the "git push kvm +HEAD:queue" that I often do, and
+therefore can be explained by muscle memory).
+
+The interesting thing is that not only git will treat lightweight tags
+like, well, tags: in addition, because I _locally_ had a tag object that
+pointed to the same commit and had the same name, git-request-pull
+included my local tag's message in its output!  I wonder if this could
+be considered a bug.
+
+I have now pushed the actual tag object to the same place.
+
+Paolo
 
