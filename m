@@ -2,121 +2,95 @@ Return-Path: <SRS0=Y9JJ=T2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B74C282E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 16:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA6DC282E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 16:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9E8920657
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 16:19:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB1B620657
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 16:20:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oO3BCPCo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H9kOov7C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727974AbfEZQTx (ORCPT
+        id S1727978AbfEZQUw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 12:19:53 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42250 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727847AbfEZQTw (ORCPT
+        Sun, 26 May 2019 12:20:52 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:39463 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726622AbfEZQUw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 12:19:52 -0400
-Received: by mail-pg1-f195.google.com with SMTP id 33so4727533pgv.9;
-        Sun, 26 May 2019 09:19:51 -0700 (PDT)
+        Sun, 26 May 2019 12:20:52 -0400
+Received: by mail-lf1-f68.google.com with SMTP id f1so10349915lfl.6;
+        Sun, 26 May 2019 09:20:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fXlRZNcEP4F8WPTd31esv+LF/56xwIupnxT391VRU90=;
-        b=oO3BCPCozi542Ht2j7sFL+U6TOnJZTsfJF9jzHp0tQeVtNbbKFzaNNFM/gumOsO6Xc
-         uWpY2YY7oAVWfJCiMQ+KcRoXItwz/pdx02Aienqq6OS01dkJwzYqcPc90fQknx7Jn6Dt
-         yDL1ireEYKLKCJbOeAbMHO3xbMdx+Jy/8avYnA09jfJN6AgxAJ/Ap8ERvSo2cPR0etLC
-         na5Q3FW9icdLALaFSLVGCuwVCpybAqKAZQRby9xZV12tv0sZ+aX1FliRMGIEwdBLAj7H
-         RphPbTTcWzGhjijVsZz8Rwas4+rfPTBf7W2mAwflYt2Hzlvg1HNsxs56T2lbTVHnRcuW
-         EXxA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=01nMFHopGBCZI/oY5AFsKMqNsMt7+AjmjgP0ZjkgZD0=;
+        b=H9kOov7CMbdB+pTxe0jciE/0X9oGCvFwZWDK1QndljD3nCAkXWhPqQrhRAkQi59WA+
+         d1eMVPPgA648vZfajLaltDW4PpoUB4pt83MyTL8K46y+UiuRDyXY5HNuTOJif87Lqecv
+         kL+pn979wtoM5zsiZjVxsKyorZ5fDMvXc5EYdLwfb29E7UMtLbbi6SY6+B9EjVK9V9N9
+         jppYbzw6fnq8W4DKmTORjKAQGOTgjdVW0TITDNwUDfmzZIQ2GHdOG9eZLBAnZ2U1JIpK
+         oZea98ME0YjW6/g1Ch8EirFC6vsAF2YeXFVxSa5XzAQMHPBzbwOOEGdLWTiIgXY9fDAt
+         gF9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fXlRZNcEP4F8WPTd31esv+LF/56xwIupnxT391VRU90=;
-        b=q5X0S4wwrhgQGkGtYKWySjkBB17IcTal53YV8+D+8/kPIz9KjRTHH8mDeoy6oWr3lJ
-         93oNUAdqqsdOn5G8MZwRPdR158GJlPmlyBmXHXpVUxJ/8SDnq0+SL0g/383FOWlTC97Q
-         CsduDE26yibqUB4ftIRi+mX8wHKPvyRFAJpZHMpLw+Fl8bmQWFKaar4wxNq6cZMxg+FR
-         CjKstKnFDK8LxeqdImGQ5ijT2EIPejLeV5y7Y/HJg8xdny/NIpPsa98+iVLgj4QSrSYX
-         Z6qvqBTm4bPLxD/8aNSphNaT9pAcdpt//3vzuaijk2B3ko8tbkRk04p6diWu5KV7NFRb
-         mVrQ==
-X-Gm-Message-State: APjAAAXU0VmLAVcmuaPfYFFyS54dzSndgnDkuyZ+UbG7YOIEmYx1Gzo9
-        iqNE5IB+UF7TelSA9FTEB5c=
-X-Google-Smtp-Source: APXvYqzMqjvEUEkHP+zNKu/eS325KBiM0HUe+6ypWP7FJmlJYDdV3JD6xSm5L090Q8oLh/Cm/B5ffQ==
-X-Received: by 2002:aa7:9a8c:: with SMTP id w12mr44945770pfi.187.1558887591334;
-        Sun, 26 May 2019 09:19:51 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id f4sm8704963pfn.118.2019.05.26.09.19.50
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 26 May 2019 09:19:50 -0700 (PDT)
-Date:   Sun, 26 May 2019 09:19:49 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: Re: [PATCH -next] Input: tca8418 - Remove set but not used variable
- ''
-Message-ID: <20190526161949.GB256861@dtor-ws>
-References: <20190525142921.18812-1-yuehaibing@huawei.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=01nMFHopGBCZI/oY5AFsKMqNsMt7+AjmjgP0ZjkgZD0=;
+        b=d+AT28OZkvToROcSkbKH5jDUExZ2jL1zqXBWcbMzoaO5CnNKnVwB4Bdnv/W9KjTRCj
+         LtlVH9zLz1zZpsECumMdLbQtQPydUVjZ1DJSGiiGjbqKCz316yY1s1DHHpGls2UBrZKr
+         70XoB052Ee96vNxu3VhyGszjCIu9cHaG1T+l0kV831yzStmRS1azl4oaS7xwX9fesJNN
+         kC4oWA5SZ98+J6gUY78k+Dz51z5EN01n2QMNAv2DinP0MhSyYnigXOH/kESj5qemSyVP
+         OMNu3YFRAOLJx1txpji9nm1pU2hnV0lfrfprdNodnK0C/qEtUGW1r8vKtb2w83gi6h9R
+         VL8Q==
+X-Gm-Message-State: APjAAAWE8sW+PDz2rv9j219t4UDEqbUKp3r4ucW1/rFp753PEqoinbW2
+        +HLac4dosE5i5QcANESRCNwOqGu5BeI41VXG1Pw=
+X-Google-Smtp-Source: APXvYqwxMEk0IUeAy9UBTsg3h8S+c0X1iydUjhxKYRUIOzNVGYIXzMI1MwgnfY73XGd4ekjkgDqWVxxMzKH40Taah+c=
+X-Received: by 2002:ac2:4213:: with SMTP id y19mr4505084lfh.66.1558887650127;
+ Sun, 26 May 2019 09:20:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190525142921.18812-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190524234933.5133-1-joel@joelfernandes.org> <20190524234933.5133-5-joel@joelfernandes.org>
+In-Reply-To: <20190524234933.5133-5-joel@joelfernandes.org>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Sun, 26 May 2019 18:20:39 +0200
+Message-ID: <CANiq72noLXGXo7iarC1vCYX3X5L4fXq1DASK9gMtD_25-VEuHA@mail.gmail.com>
+Subject: Re: [PATCH RFC 4/5] rculist: Remove hlist_for_each_entry_rcu_notrace
+ since no users
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>, kvm-ppc@vger.kernel.org,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Paul Mackerras <paulus@ozlabs.org>, rcu@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 25, 2019 at 10:29:21PM +0800, YueHaibing wrote:
-> Fixes gcc '-Wunused-but-set-variable' warning:
-> 
-> drivers/input/keyboard/tca8418_keypad.c: In function tca8418_keypad_probe:
-> drivers/input/keyboard/tca8418_keypad.c:269:24: warning: variable max_keys set but not used [-Wunused-but-set-variable]
-> 
-> It's not used since commit 16ff7cb1848a ("Input:
-> tca8418-keypad - switch to using managed resources")
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-
-Applied, thank you.
-
+On Sat, May 25, 2019 at 1:50 AM Joel Fernandes (Google)
+<joel@joelfernandes.org> wrote:
+>
+> The series removes all users of the API and with this patch, the API
+> itself.
+>
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 > ---
->  drivers/input/keyboard/tca8418_keypad.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/input/keyboard/tca8418_keypad.c b/drivers/input/keyboard/tca8418_keypad.c
-> index 6da607d3b811..3bbd7e652533 100644
-> --- a/drivers/input/keyboard/tca8418_keypad.c
-> +++ b/drivers/input/keyboard/tca8418_keypad.c
-> @@ -266,7 +266,7 @@ static int tca8418_keypad_probe(struct i2c_client *client,
->  	struct tca8418_keypad *keypad_data;
->  	struct input_dev *input;
->  	u32 rows = 0, cols = 0;
-> -	int error, row_shift, max_keys;
-> +	int error, row_shift;
->  	u8 reg;
->  
->  	/* Check i2c driver capabilities */
-> @@ -291,7 +291,6 @@ static int tca8418_keypad_probe(struct i2c_client *client,
->  	}
->  
->  	row_shift = get_count_order(cols);
-> -	max_keys = rows << row_shift;
->  
->  	/* Allocate memory for keypad_data and input device */
->  	keypad_data = devm_kzalloc(dev, sizeof(*keypad_data), GFP_KERNEL);
-> -- 
-> 2.17.1
-> 
-> 
+>  .clang-format           |  1 -
 
--- 
-Dmitry
+Ack for clang-format, and thanks for removing it there too! :-)
+
+Cheers,
+Miguel
