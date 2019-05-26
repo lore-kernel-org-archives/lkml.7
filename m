@@ -2,99 +2,99 @@ Return-Path: <SRS0=Y9JJ=T2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7979AC282E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 11:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9863C282E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 11:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F86B2075C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 11:06:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C08B2075C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 11:07:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oZY5h4tG"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KpKeoXxD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727717AbfEZLGb (ORCPT
+        id S1727757AbfEZLGf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 07:06:31 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33067 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727611AbfEZLGb (ORCPT
+        Sun, 26 May 2019 07:06:35 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:46122 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726837AbfEZLGf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 07:06:31 -0400
-Received: by mail-pl1-f194.google.com with SMTP id g21so5935396plq.0
-        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2019 04:06:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=vt37nqdxlvUB79ggM15T2/FTTWBxfQWNhWkq11PROKQ=;
-        b=oZY5h4tGiVYinWyRxT4+1A4A+uF6w2KMaCBv+yFqFaeRS84d+1dj/uLlcm5HJK2QEh
-         F62VzSUcL6oZJzCV2Y2W6uU7mRSwWEP0tS4q+1FJxeETehd3qC3uzciM4atAmRGBTjay
-         aRO6oeswN8RJxrGce2AOsB6C3EBsYfOMFCQuYG3R9scC7sRrRy3xa9+DbS/vazfBRfkC
-         bTA7yaeIHkO17h8P/INMiYBXWkXoxWr0ijlXBRvMNtzO0VqJTnqhH3ZbmgaACeD6iTc4
-         PuNwrQJ0qmIUB6Q9MwO9fHDdc/PWbyyGrMqtOloXnoeDJ5Xq0+Bp8vgVFOyAvRuYm7Cn
-         FG2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=vt37nqdxlvUB79ggM15T2/FTTWBxfQWNhWkq11PROKQ=;
-        b=QoQy4ZraLiPA1jmRIGgnfNSRG8Yi+Ca4Sjjq3VmjN5zB8lepSDaumtcIIesNrW87CY
-         7WBgI4M44gooHKvfGK2JmwTfJL6AA67JdhYoGPrwtquUfkP9cpDgSAJNgtHvQOTepAtw
-         ipsu0x3gT7tsmPxMRc57hrYsl704G+h0KspPTm0nHlqKoLOiWZ5ybEiSl3FTeq1uSJPY
-         dDWKknNmGGUaay1BsYPZqRKEk0Tb6THxK3exnlTEP0wPiNZQs20DBwrApjQwFAin0RQz
-         DBXK4b7Oez+Bv0BIChVGOursWA5d9QTa3LcDDJTx85+y35pRtc9R+QTC1FVl65JaSUE/
-         9m1g==
-X-Gm-Message-State: APjAAAVDBviWKAMYcw6KmjcvBh5k3jHJDvKLWshNCh1rpxK4c1A97soa
-        tWq8xVbxVWm+pSuiUhh+nZ1eI691
-X-Google-Smtp-Source: APXvYqy4cPE5PR9Hq/DSIi+6zKOL0c30nNvj1cvkRhBjHOi+pePjkOCD21SRo6BUuxGBnPb8jTlJgQ==
-X-Received: by 2002:a17:902:e30b:: with SMTP id cg11mr120042307plb.3.1558868790574;
-        Sun, 26 May 2019 04:06:30 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.92.73])
-        by smtp.gmail.com with ESMTPSA id z7sm9343311pfr.23.2019.05.26.04.06.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 26 May 2019 04:06:30 -0700 (PDT)
-Date:   Sun, 26 May 2019 16:36:25 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/nouveau: fix nvif/device.h is included more than once
-Message-ID: <20190526110625.GA3143@hari-Inspiron-1545>
+        Sun, 26 May 2019 07:06:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=dnRlIwzLsh5gtE410Wzg4R0DjN2uPpGflfJ056ZS7Vo=; b=KpKeoXxDjqBDfQZZgp1AuGzjs
+        C3p5lYMN8SnDhpWYllf1E7TWYwBI6oGBT2jXgmJYCKD4gCtkUT6wAlQxetGESzhFLp0kixvl0PKz6
+        sAIZ8McSchStRWXueMYMAzUEef1vD2eo20gCnaFS9GlxjNZ6NofnoZ95FC3RIG5QAZ5R47DmON+Qo
+        JdOQPQ1LUXvgqEpgmOO5i6saVR6L0Xi+3VJ1CQlW12vxdRwBwl+0dLPYwev5/IQbIN2AjGvY27PsJ
+        6Pv6/5pS3hIlEgR1RuK7uJxg+BLAGf0eWCGlaxQFawlyO5JV9eBonzUDeprQ1j6UJOqA3XCCfRY7o
+        RH6eOeHcQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hUqz2-00036Y-1M; Sun, 26 May 2019 11:06:32 +0000
+Date:   Sun, 26 May 2019 04:06:31 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     john.hubbard@gmail.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        LKML <linux-kernel@vger.kernel.org>, linux-rdma@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Christian Benvenuti <benve@cisco.com>, Jan Kara <jack@suse.cz>,
+        Ira Weiny <ira.weiny@intel.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH v2] infiniband/mm: convert put_page() to put_user_page*()
+Message-ID: <20190526110631.GD1075@bombadil.infradead.org>
+References: <20190525014522.8042-1-jhubbard@nvidia.com>
+ <20190525014522.8042-2-jhubbard@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190525014522.8042-2-jhubbard@nvidia.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-remove duplicate inclusion of nvif/device.h
+On Fri, May 24, 2019 at 06:45:22PM -0700, john.hubbard@gmail.com wrote:
+> For infiniband code that retains pages via get_user_pages*(),
+> release those pages via the new put_user_page(), or
+> put_user_pages*(), instead of put_page()
 
-Issue identified by includecheck
+I have no objection to this particular patch, but ...
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- drivers/gpu/drm/nouveau/nouveau_drv.h | 1 -
- 1 file changed, 1 deletion(-)
+> This is a tiny part of the second step of fixing the problem described
+> in [1]. The steps are:
+> 
+> 1) Provide put_user_page*() routines, intended to be used
+>    for releasing pages that were pinned via get_user_pages*().
+> 
+> 2) Convert all of the call sites for get_user_pages*(), to
+>    invoke put_user_page*(), instead of put_page(). This involves dozens of
+>    call sites, and will take some time.
+> 
+> 3) After (2) is complete, use get_user_pages*() and put_user_page*() to
+>    implement tracking of these pages. This tracking will be separate from
+>    the existing struct page refcounting.
+> 
+> 4) Use the tracking and identification of these pages, to implement
+>    special handling (especially in writeback paths) when the pages are
+>    backed by a filesystem. Again, [1] provides details as to why that is
+>    desirable.
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_drv.h b/drivers/gpu/drm/nouveau/nouveau_drv.h
-index 35ff0ca..cfebb14 100644
---- a/drivers/gpu/drm/nouveau/nouveau_drv.h
-+++ b/drivers/gpu/drm/nouveau/nouveau_drv.h
-@@ -127,7 +127,6 @@ nouveau_cli(struct drm_file *fpriv)
- }
- 
- #include <nvif/object.h>
--#include <nvif/device.h>
- 
- struct nouveau_drm {
- 	struct nouveau_cli master;
--- 
-2.7.4
+I thought we agreed at LSFMM that the future is a new get_user_bvec()
+/ put_user_bvec().  This is largely going to touch the same places as
+step 2 in your list above.  Is it worth doing step 2?
 
+One of the advantages of put_user_bvec() is that it would be quite easy
+to miss a conversion from put_page() to put_user_page(), but it'll be
+a type error to miss a conversion from put_page() to put_user_bvec().
