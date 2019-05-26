@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E24BAC282E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 19:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D7EC282E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 19:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C37C32175B
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 19:19:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1918F2175B
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 19:19:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727485AbfEZTTD (ORCPT
+        id S1727451AbfEZTTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 15:19:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58852 "EHLO mail.kernel.org"
+        Sun, 26 May 2019 15:19:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727202AbfEZTSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727147AbfEZTSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 26 May 2019 15:18:50 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B17E821707;
-        Sun, 26 May 2019 19:18:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9AB1E21744;
+        Sun, 26 May 2019 19:18:48 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92)
         (envelope-from <rostedt@goodmis.org>)
-        id 1hUyfQ-0004eR-Ra; Sun, 26 May 2019 15:18:48 -0400
-Message-Id: <20190526191848.738537461@goodmis.org>
+        id 1hUyfP-0004b2-Ot; Sun, 26 May 2019 15:18:47 -0400
+Message-Id: <20190526191847.658663935@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Sun, 26 May 2019 15:18:43 -0400
+Date:   Sun, 26 May 2019 15:18:36 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [for-next][PATCH 15/16] tracing/kprobe: Do not run kprobe boot tests if kprobe_event is on
- cmdline
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [for-next][PATCH 08/16] perf-probe: Add user memory access attribute support
 References: <20190526191828.466305460@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -44,82 +44,227 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-When having kprobe trace event start up tests enabled and adding a
-kprobe_event on the kernel command line, it produced the following:
+Add user memory access attribute for kprobe event arguments.
+If a given 'local variable' is in user-space, User can
+specify memory access method by '@user' suffix. This is
+not only for string but also for data structure.
 
- trace_kprobe: Testing kprobe tracing:
- WARNING: CPU: 5 PID: 1 at kernel/trace/trace_kprobe.c:1724 kprobe_trace_self_tests_init+0x32d/0x36b
- Modules linked in:
- CPU: 5 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc1-test+ #249
- Hardware name: Hewlett-Packard HP Compaq Pro 6300 SFF/339A, BIOS K01 v03.03 07/14/2016
- RIP: 0010:kprobe_trace_self_tests_init+0x32d/0x36b
- Code: b7 e8 4f 8d a2 fe 85 c0 74 10 0f 0b 48 c7 c7 c8 1b 0d b7 ff c3 e8 19 af 99 fe 48 c7 c7 40 93 27 b7 e8 7f 1a a5 fe 85 c0 74 10 <0f> 0b 48 c7 c7 f8 1b 0d b7 ff c3 e8 f9 ae
-9 a0 fe 85
- RSP: 0018:ffffb36e40653e08 EFLAGS: 00010286
- RAX: 00000000fffffff0 RBX: 0000000000000000 RCX: ffffb36e40653d5c
- RDX: 0000000000000000 RSI: ffffffffb72776e0 RDI: 0000000000000246
- RBP: ffff98414fe58ff8 R08: 0000000000000000 R09: 0000000000000000
- R10: 0000000000000000 R11: ffff98415d8aa940 R12: 0000000000000000
- R13: ffffffffb737c1b0 R14: 0000000000000000 R15: 0000000000000000
- FS:  0000000000000000(0000) GS:ffff98415ea80000(0000) knlGS:0000000000000000
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: 00007f959ce741b8 CR3: 000000011a210002 CR4: 00000000001606e0
- Call Trace:
-  ? init_kprobe_trace+0x19e/0x19e
-  ? do_early_param+0x8e/0x8e
-  do_one_initcall+0x6f/0x2b4
-  ? do_early_param+0x8e/0x8e
-  kernel_init_freeable+0x21d/0x2c6
-  ? rest_init+0x146/0x146
-  kernel_init+0xa/0x10a
-  ret_from_fork+0x3a/0x50
- ---[ end trace 488430c083a4c956 ]---
+If we access a field of data structure in user memory from
+kernel on some arch, it will fail. e.g.
 
-As with the trace events, if a trace event is set on the kernel command
-line, the trace events start up tests are suspended. The kprobe start up
-tests should do the same when a kprobe is enabled on the kernel command
-line.
+ perf probe -a "sched_setscheduler param->sched_priority"
 
+This will fail to access the "param->sched_priority" because
+the param is __user pointer. Instead, we can now specify
+@user suffix for such argument.
+
+ perf probe -a "sched_setscheduler param->sched_priority@user"
+
+Note that kernel memory access with "@user" must always fail
+on any arch.
+
+Link: http://lkml.kernel.org/r/155789874562.26965.10836126971405890891.stgit@devnote2
+
+Acked-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/trace/trace_kprobe.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ tools/perf/Documentation/perf-probe.txt |  3 ++-
+ tools/perf/util/probe-event.c           | 11 +++++++++++
+ tools/perf/util/probe-event.h           |  2 ++
+ tools/perf/util/probe-file.c            |  7 +++++++
+ tools/perf/util/probe-file.h            |  1 +
+ tools/perf/util/probe-finder.c          | 19 ++++++++++++-------
+ 6 files changed, 35 insertions(+), 8 deletions(-)
 
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 004fffd24ec1..7958da2fd922 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -25,6 +25,7 @@
+diff --git a/tools/perf/Documentation/perf-probe.txt b/tools/perf/Documentation/perf-probe.txt
+index b6866a05edd2..ed3ecfa422e1 100644
+--- a/tools/perf/Documentation/perf-probe.txt
++++ b/tools/perf/Documentation/perf-probe.txt
+@@ -194,12 +194,13 @@ PROBE ARGUMENT
+ --------------
+ Each probe argument follows below syntax.
  
- /* Kprobe early definition from command line */
- static char kprobe_boot_events_buf[COMMAND_LINE_SIZE] __initdata;
-+static bool kprobe_boot_events_enabled __initdata;
+- [NAME=]LOCALVAR|$retval|%REG|@SYMBOL[:TYPE]
++ [NAME=]LOCALVAR|$retval|%REG|@SYMBOL[:TYPE][@user]
  
- static int __init set_kprobe_boot_events(char *str)
- {
-@@ -1538,6 +1539,8 @@ static __init void setup_boot_kprobe_events(void)
- 		ret = trace_run_command(cmd, create_or_delete_trace_kprobe);
- 		if (ret)
- 			pr_warn("Failed to add event(%d): %s\n", ret, cmd);
-+		else
-+			kprobe_boot_events_enabled = true;
+ 'NAME' specifies the name of this argument (optional). You can use the name of local variable, local data structure member (e.g. var->field, var.field2), local array with fixed index (e.g. array[1], var->array[0], var->pointer[2]), or kprobe-tracer argument format (e.g. $retval, %ax, etc). Note that the name of this argument will be set as the last member name if you specify a local data structure member (e.g. field2 for 'var->field1.field2'.)
+ '$vars' and '$params' special arguments are also available for NAME, '$vars' is expanded to the local variables (including function parameters) which can access at given probe point. '$params' is expanded to only the function parameters.
+ 'TYPE' casts the type of this argument (optional). If omitted, perf probe automatically set the type based on debuginfo (*). Currently, basic types (u8/u16/u32/u64/s8/s16/s32/s64), hexadecimal integers (x/x8/x16/x32/x64), signedness casting (u/s), "string" and bitfield are supported. (see TYPES for detail)
+ On x86 systems %REG is always the short form of the register: for example %AX. %RAX or %EAX is not valid.
++"@user" is a special attribute which means the LOCALVAR will be treated as a user-space memory. This is only valid for kprobe event.
  
- 		cmd = p;
+ TYPES
+ -----
+diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+index 198e09ff611e..a7ca17be5fc5 100644
+--- a/tools/perf/util/probe-event.c
++++ b/tools/perf/util/probe-event.c
+@@ -1577,6 +1577,17 @@ static int parse_perf_probe_arg(char *str, struct perf_probe_arg *arg)
+ 		str = tmp + 1;
  	}
-@@ -1611,6 +1614,11 @@ static __init int kprobe_trace_self_tests_init(void)
- 	if (tracing_is_disabled())
- 		return -ENODEV;
  
-+	if (kprobe_boot_events_enabled) {
-+		pr_info("Skipping kprobe tests due to kprobe_event on cmdline\n");
-+		return 0;
++	tmp = strchr(str, '@');
++	if (tmp && tmp != str && strcmp(tmp + 1, "user")) { /* user attr */
++		if (!user_access_is_supported()) {
++			semantic_error("ftrace does not support user access\n");
++			return -EINVAL;
++		}
++		*tmp = '\0';
++		arg->user_access = true;
++		pr_debug("user_access ");
 +	}
 +
- 	target = kprobe_trace_selftest_target;
+ 	tmp = strchr(str, ':');
+ 	if (tmp) {	/* Type setting */
+ 		*tmp = '\0';
+diff --git a/tools/perf/util/probe-event.h b/tools/perf/util/probe-event.h
+index 05c8d571a901..96a319cd2378 100644
+--- a/tools/perf/util/probe-event.h
++++ b/tools/perf/util/probe-event.h
+@@ -37,6 +37,7 @@ struct probe_trace_point {
+ struct probe_trace_arg_ref {
+ 	struct probe_trace_arg_ref	*next;	/* Next reference */
+ 	long				offset;	/* Offset value */
++	bool				user_access;	/* User-memory access */
+ };
  
- 	pr_info("Testing kprobe tracing: ");
+ /* kprobe-tracer and uprobe-tracer tracing argument */
+@@ -82,6 +83,7 @@ struct perf_probe_arg {
+ 	char				*var;	/* Variable name */
+ 	char				*type;	/* Type name */
+ 	struct perf_probe_arg_field	*field;	/* Structure fields */
++	bool				user_access;	/* User-memory access */
+ };
+ 
+ /* Perf probe probing event (point + arg) */
+diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
+index 4062bc4412a9..89ce1a9c3798 100644
+--- a/tools/perf/util/probe-file.c
++++ b/tools/perf/util/probe-file.c
+@@ -1015,6 +1015,7 @@ enum ftrace_readme {
+ 	FTRACE_README_PROBE_TYPE_X = 0,
+ 	FTRACE_README_KRETPROBE_OFFSET,
+ 	FTRACE_README_UPROBE_REF_CTR,
++	FTRACE_README_USER_ACCESS,
+ 	FTRACE_README_END,
+ };
+ 
+@@ -1027,6 +1028,7 @@ static struct {
+ 	DEFINE_TYPE(FTRACE_README_PROBE_TYPE_X, "*type: * x8/16/32/64,*"),
+ 	DEFINE_TYPE(FTRACE_README_KRETPROBE_OFFSET, "*place (kretprobe): *"),
+ 	DEFINE_TYPE(FTRACE_README_UPROBE_REF_CTR, "*ref_ctr_offset*"),
++	DEFINE_TYPE(FTRACE_README_USER_ACCESS, "*[u]<offset>*"),
+ };
+ 
+ static bool scan_ftrace_readme(enum ftrace_readme type)
+@@ -1087,3 +1089,8 @@ bool uprobe_ref_ctr_is_supported(void)
+ {
+ 	return scan_ftrace_readme(FTRACE_README_UPROBE_REF_CTR);
+ }
++
++bool user_access_is_supported(void)
++{
++	return scan_ftrace_readme(FTRACE_README_USER_ACCESS);
++}
+diff --git a/tools/perf/util/probe-file.h b/tools/perf/util/probe-file.h
+index 2a249182f2a6..986c1c94f64f 100644
+--- a/tools/perf/util/probe-file.h
++++ b/tools/perf/util/probe-file.h
+@@ -70,6 +70,7 @@ int probe_cache__show_all_caches(struct strfilter *filter);
+ bool probe_type_is_available(enum probe_type type);
+ bool kretprobe_offset_is_supported(void);
+ bool uprobe_ref_ctr_is_supported(void);
++bool user_access_is_supported(void);
+ #else	/* ! HAVE_LIBELF_SUPPORT */
+ static inline struct probe_cache *probe_cache__new(const char *tgt __maybe_unused, struct nsinfo *nsi __maybe_unused)
+ {
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index c37fbef1711d..c202027716d0 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -294,7 +294,7 @@ static int convert_variable_location(Dwarf_Die *vr_die, Dwarf_Addr addr,
+ 
+ static int convert_variable_type(Dwarf_Die *vr_die,
+ 				 struct probe_trace_arg *tvar,
+-				 const char *cast)
++				 const char *cast, bool user_access)
+ {
+ 	struct probe_trace_arg_ref **ref_ptr = &tvar->ref;
+ 	Dwarf_Die type;
+@@ -334,7 +334,8 @@ static int convert_variable_type(Dwarf_Die *vr_die,
+ 	pr_debug("%s type is %s.\n",
+ 		 dwarf_diename(vr_die), dwarf_diename(&type));
+ 
+-	if (cast && strcmp(cast, "string") == 0) {	/* String type */
++	if (cast && (!strcmp(cast, "string") || !strcmp(cast, "ustring"))) {
++		/* String type */
+ 		ret = dwarf_tag(&type);
+ 		if (ret != DW_TAG_pointer_type &&
+ 		    ret != DW_TAG_array_type) {
+@@ -357,6 +358,7 @@ static int convert_variable_type(Dwarf_Die *vr_die,
+ 				pr_warning("Out of memory error\n");
+ 				return -ENOMEM;
+ 			}
++			(*ref_ptr)->user_access = user_access;
+ 		}
+ 		if (!die_compare_name(&type, "char") &&
+ 		    !die_compare_name(&type, "unsigned char")) {
+@@ -411,7 +413,7 @@ static int convert_variable_type(Dwarf_Die *vr_die,
+ static int convert_variable_fields(Dwarf_Die *vr_die, const char *varname,
+ 				    struct perf_probe_arg_field *field,
+ 				    struct probe_trace_arg_ref **ref_ptr,
+-				    Dwarf_Die *die_mem)
++				    Dwarf_Die *die_mem, bool user_access)
+ {
+ 	struct probe_trace_arg_ref *ref = *ref_ptr;
+ 	Dwarf_Die type;
+@@ -448,6 +450,7 @@ static int convert_variable_fields(Dwarf_Die *vr_die, const char *varname,
+ 				*ref_ptr = ref;
+ 		}
+ 		ref->offset += dwarf_bytesize(&type) * field->index;
++		ref->user_access = user_access;
+ 		goto next;
+ 	} else if (tag == DW_TAG_pointer_type) {
+ 		/* Check the pointer and dereference */
+@@ -519,17 +522,18 @@ static int convert_variable_fields(Dwarf_Die *vr_die, const char *varname,
+ 		}
+ 	}
+ 	ref->offset += (long)offs;
++	ref->user_access = user_access;
+ 
+ 	/* If this member is unnamed, we need to reuse this field */
+ 	if (!dwarf_diename(die_mem))
+ 		return convert_variable_fields(die_mem, varname, field,
+-						&ref, die_mem);
++						&ref, die_mem, user_access);
+ 
+ next:
+ 	/* Converting next field */
+ 	if (field->next)
+ 		return convert_variable_fields(die_mem, field->name,
+-					field->next, &ref, die_mem);
++				field->next, &ref, die_mem, user_access);
+ 	else
+ 		return 0;
+ }
+@@ -555,11 +559,12 @@ static int convert_variable(Dwarf_Die *vr_die, struct probe_finder *pf)
+ 	else if (ret == 0 && pf->pvar->field) {
+ 		ret = convert_variable_fields(vr_die, pf->pvar->var,
+ 					      pf->pvar->field, &pf->tvar->ref,
+-					      &die_mem);
++					      &die_mem, pf->pvar->user_access);
+ 		vr_die = &die_mem;
+ 	}
+ 	if (ret == 0)
+-		ret = convert_variable_type(vr_die, pf->tvar, pf->pvar->type);
++		ret = convert_variable_type(vr_die, pf->tvar, pf->pvar->type,
++					    pf->pvar->user_access);
+ 	/* *expr will be cached in libdw. Don't free it. */
+ 	return ret;
+ }
 -- 
 2.20.1
 
