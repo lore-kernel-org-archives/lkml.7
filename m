@@ -2,38 +2,50 @@ Return-Path: <SRS0=Y9JJ=T2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B30AC282E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 13:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE73C282E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 13:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31FC32075B
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 13:32:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81EDA20815
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 13:48:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbfEZNc4 (ORCPT
+        id S1727845AbfEZNsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 09:32:56 -0400
-Received: from mga14.intel.com ([192.55.52.115]:7991 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726953AbfEZNcz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 09:32:55 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 May 2019 06:32:54 -0700
-X-ExtLoop1: 1
-Received: from likexu-e5-2699-v4.sh.intel.com ([10.239.48.178])
-  by FMSMGA003.fm.intel.com with ESMTP; 26 May 2019 06:32:53 -0700
-From:   Like Xu <like.xu@linux.intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Cc:     =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH v3] KVM: x86: Add Intel CPUID.1F cpuid emulation support
-Date:   Sun, 26 May 2019 21:30:52 +0800
-Message-Id: <20190526133052.4069-1-like.xu@linux.intel.com>
-X-Mailer: git-send-email 2.21.0
+        Sun, 26 May 2019 09:48:01 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:43815 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726953AbfEZNsA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 May 2019 09:48:00 -0400
+Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id BD6A0100006;
+        Sun, 26 May 2019 13:47:48 +0000 (UTC)
+From:   Alexandre Ghiti <alex@ghiti.fr>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Alexandre Ghiti <alex@ghiti.fr>
+Subject: [PATCH v4 00/14] Provide generic top-down mmap layout functions
+Date:   Sun, 26 May 2019 09:47:32 -0400
+Message-Id: <20190526134746.9315-1-alex@ghiti.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -41,64 +53,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support to expose Intel V2 Extended Topology Enumeration Leaf for
-some new systems with multiple software-visible die within each package.
+This series introduces generic functions to make top-down mmap layout
+easily accessible to architectures, in particular riscv which was
+the initial goal of this series.
+The generic implementation was taken from arm64 and used successively
+by arm, mips and finally riscv.
 
-Per Intel's SDM, when CPUID executes with EAX set to 1FH, the processor
-returns information about extended topology enumeration data. Software
-must detect the presence of CPUID leaf 1FH by verifying (a) the highest
-leaf index supported by CPUID is >= 1FH, and (b) CPUID.1FH:EBX[15:0]
-reports a non-zero value.
+Note that in addition the series fixes 2 issues:
+- stack randomization was taken into account even if not necessary.
+- [1] fixed an issue with mmap base which did not take into account
+  randomization but did not report it to arm and mips, so by moving
+  arm64 into a generic library, this problem is now fixed for both
+  architectures.
 
-Co-developed-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
-Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
-Signed-off-by: Like Xu <like.xu@linux.intel.com>
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
-==changelog==
-v3:
-- Refine commit message and comment
+This work is an effort to factorize architecture functions to avoid
+code duplication and oversights as in [1].
 
-v2: https://lkml.org/lkml/2019/4/25/1246
+[1]: https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1429066.html
 
-- Apply cpuid.1f check rule on Intel SDM page 3-222 Vol.2A
-- Add comment to handle 0x1f anf 0xb in common code
-- Reduce check time in a descending-break style
+Changes in v4:
+  - Make ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT select ARCH_HAS_ELF_RANDOMIZE
+    by default as suggested by Kees,
+  - ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT depends on MMU and defines the
+    functions needed by ARCH_HAS_ELF_RANDOMIZE => architectures that use
+    the generic mmap topdown functions cannot have ARCH_HAS_ELF_RANDOMIZE
+    selected without MMU, but I think it's ok since randomization without
+    MMU does not add much security anyway.
+  - There is no common API to determine if a process is 32b, so I came up with
+    !IS_ENABLED(CONFIG_64BIT) || is_compat_task() in [PATCH v4 12/14].
+  - Mention in the change log that x86 already takes care of not offseting mmap
+    base address if the task does not want randomization.
+  - Re-introduce a comment that should not have been removed.
+  - Add Reviewed/Acked-By from Paul, Christoph and Kees, thank you for that.
+  - I tried to minimize the changes from the commits in v3 in order to make
+    easier the review of the v4, the commits changed or added are:
+    - [PATCH v4 5/14]
+    - [PATCH v4 8/14]
+    - [PATCH v4 11/14]
+    - [PATCH v4 12/14]
+    - [PATCH v4 13/14]
 
-v1: https://lkml.org/lkml/2019/4/22/28
+Changes in v3:
+  - Split into small patches to ease review as suggested by Christoph
+    Hellwig and Kees Cook
+  - Move help text of new config as a comment, as suggested by Christoph
+  - Make new config depend on MMU, as suggested by Christoph
 
- arch/x86/kvm/cpuid.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+Changes in v2 as suggested by Christoph Hellwig:
+  - Preparatory patch that moves randomize_stack_top
+  - Fix duplicate config in riscv
+  - Align #if defined on next line => this gives rise to a checkpatch
+    warning. I found this pattern all around the tree, in the same proportion
+    as the previous pattern which was less pretty:
+    git grep -C 1 -n -P "^#if defined.+\|\|.*\\\\$"
 
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 80a642a0143d..f9b41f0103b3 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -426,6 +426,11 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
- 
- 	switch (function) {
- 	case 0:
-+		/* Check if the cpuid leaf 0x1f is actually implemented */
-+		if (entry->eax >= 0x1f && (cpuid_ebx(0x1f) & 0x0000ffff)) {
-+			entry->eax = 0x1f;
-+			break;
-+		}
- 		entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
- 		break;
- 	case 1:
-@@ -545,7 +550,11 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
- 		entry->edx = edx.full;
- 		break;
- 	}
--	/* function 0xb has additional index. */
-+	/*
-+	 * Per Intel's SDM, 0x1f is a superset of 0xb, thus they can be handled
-+	 * by common code.
-+	 */
-+	case 0x1f:
- 	case 0xb: {
- 		int i, level_type;
- 
+Alexandre Ghiti (14):
+  mm, fs: Move randomize_stack_top from fs to mm
+  arm64: Make use of is_compat_task instead of hardcoding this test
+  arm64: Consider stack randomization for mmap base only when necessary
+  arm64, mm: Move generic mmap layout functions to mm
+  arm64, mm: Make randomization selected by generic topdown mmap layout
+  arm: Properly account for stack randomization and stack guard gap
+  arm: Use STACK_TOP when computing mmap base address
+  arm: Use generic mmap top-down layout and brk randomization
+  mips: Properly account for stack randomization and stack guard gap
+  mips: Use STACK_TOP when computing mmap base address
+  mips: Adjust brk randomization offset to fit generic version
+  mips: Replace arch specific way to determine 32bit task with generic
+    version
+  mips: Use generic mmap top-down layout and brk randomization
+  riscv: Make mmap allocation top-down by default
+
+ arch/Kconfig                       |  11 +++
+ arch/arm/Kconfig                   |   2 +-
+ arch/arm/include/asm/processor.h   |   2 -
+ arch/arm/kernel/process.c          |   5 --
+ arch/arm/mm/mmap.c                 |  52 --------------
+ arch/arm64/Kconfig                 |   2 +-
+ arch/arm64/include/asm/processor.h |   2 -
+ arch/arm64/kernel/process.c        |   8 ---
+ arch/arm64/mm/mmap.c               |  72 -------------------
+ arch/mips/Kconfig                  |   2 +-
+ arch/mips/include/asm/processor.h  |   5 --
+ arch/mips/mm/mmap.c                |  84 ----------------------
+ arch/riscv/Kconfig                 |  11 +++
+ fs/binfmt_elf.c                    |  20 ------
+ include/linux/mm.h                 |   2 +
+ kernel/sysctl.c                    |   6 +-
+ mm/util.c                          | 107 ++++++++++++++++++++++++++++-
+ 17 files changed, 137 insertions(+), 256 deletions(-)
+
 -- 
-2.21.0
+2.20.1
 
