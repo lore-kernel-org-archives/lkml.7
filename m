@@ -6,36 +6,37 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33407C282E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 19:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E22BC282E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 19:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B6C321707
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 19:19:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CEDF217D7
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 19:19:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727592AbfEZTTc (ORCPT
+        id S1727636AbfEZTTk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 15:19:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58818 "EHLO mail.kernel.org"
+        Sun, 26 May 2019 15:19:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727174AbfEZTSt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727013AbfEZTSt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 26 May 2019 15:18:49 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D227217D7;
-        Sun, 26 May 2019 19:18:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB75D2173B;
+        Sun, 26 May 2019 19:18:48 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92)
         (envelope-from <rostedt@goodmis.org>)
-        id 1hUyfQ-0004cz-CR; Sun, 26 May 2019 15:18:48 -0400
-Message-Id: <20190526191848.266163206@goodmis.org>
+        id 1hUyfQ-0004c0-2R; Sun, 26 May 2019 15:18:48 -0400
+Message-Id: <20190526191847.967002994@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Sun, 26 May 2019 15:18:40 -0400
+Date:   Sun, 26 May 2019 15:18:38 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
+        kbuild test robot <lkp@intel.com>,
         Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [for-next][PATCH 12/16] kprobes: Initialize kprobes at postcore_initcall
+Subject: [for-next][PATCH 10/16] uaccess: Add a prototype of non-static __probe_user_read()
 References: <20190526191828.466305460@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -46,39 +47,28 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Masami Hiramatsu <mhiramat@kernel.org>
 
-Initialize kprobes at postcore_initcall level instead of module_init
-since kprobes is not a module, and it depends on only subsystems
-initialized in core_initcall.
-This will allow ftrace kprobe event to add new events when it is
-initializing because ftrace kprobe event is initialized at
-later initcall level.
+Declare a prototype of non-static __probe_user_read() as
+same as __probe_kernel_read() at uaccess.h.
 
-Link: http://lkml.kernel.org/r/155851394736.15728.13626739508905120098.stgit@devnote2
-
+Reported-by: kbuild test robot <lkp@intel.com>
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/kprobes.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ include/linux/uaccess.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index b1ea30a5540e..54aaaad00a47 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -2289,6 +2289,7 @@ static int __init init_kprobes(void)
- 		init_test_probes();
- 	return err;
- }
-+postcore_initcall(init_kprobes);
+diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+index 9c435c3f2105..34a038563d97 100644
+--- a/include/linux/uaccess.h
++++ b/include/linux/uaccess.h
+@@ -252,6 +252,7 @@ extern long __probe_kernel_read(void *dst, const void *src, size_t size);
+  * happens, handle that and return -EFAULT.
+  */
+ extern long probe_user_read(void *dst, const void __user *src, size_t size);
++extern long __probe_user_read(void *dst, const void __user *src, size_t size);
  
- #ifdef CONFIG_DEBUG_FS
- static void report_probe(struct seq_file *pi, struct kprobe *p,
-@@ -2614,5 +2615,3 @@ static int __init debugfs_kprobe_init(void)
- 
- late_initcall(debugfs_kprobe_init);
- #endif /* CONFIG_DEBUG_FS */
--
--module_init(init_kprobes);
+ /*
+  * probe_kernel_write(): safely attempt to write to a location
 -- 
 2.20.1
 
