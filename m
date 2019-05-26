@@ -2,107 +2,106 @@ Return-Path: <SRS0=Y9JJ=T2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2024CC282E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 07:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A25C282E5
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 07:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDBE12085A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 07:13:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98E462085A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 May 2019 07:14:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vZ+5axbl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SlQO+gvK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbfEZHN3 (ORCPT
+        id S1727607AbfEZHOH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 03:13:29 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40434 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726348AbfEZHN3 (ORCPT
+        Sun, 26 May 2019 03:14:07 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34881 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726348AbfEZHOH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 03:13:29 -0400
-Received: by mail-pg1-f195.google.com with SMTP id d30so7315787pgm.7
-        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2019 00:13:29 -0700 (PDT)
+        Sun, 26 May 2019 03:14:07 -0400
+Received: by mail-pf1-f193.google.com with SMTP id d126so5553246pfd.2;
+        Sun, 26 May 2019 00:14:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=cz2fi9b1NEdvG3USz4empRfMlJ8de9OfWLCS3YX3h5I=;
-        b=vZ+5axblbVTq6lqFclbj+ZWvS6CR33hW7FI3rTwB08+YsSclCieOvcZKR0BYiKd246
-         wPWV6pqKQ0o9IMGhNxPduLOwa3kOP/XqV/Tf3r70Nz2iiGOAZQftzsqPmesb4mjRhGIT
-         j8cOq902MreDIdxtNL+BbCYMEb4kix5xvAK/sh4F8JNZKJCaw9Xh7JNiBzXFHlnWYMdW
-         ZKiIYvljPHe4WyVochIUE08b78Gg05gorUM8SK27BuBrjAiSFmg5tMaxxBO6Zrk0SCea
-         XbgSKYFbF13vYgDRe/WsYXVpfaRPigMBlYdovZN3ahxzcYtUm3h1rYFN+z65zvuXJjqq
-         pyqw==
+        h=from:to:cc:subject:date:message-id;
+        bh=gpKp1Ji3NbYE6dlIioVp6OmCdvPteX1H1EwDeUiYnRo=;
+        b=SlQO+gvKGyFVekP53VsMEkLrnYKIXnPeCfyVJpCc6L5giIU+OyiuvYGxLKys+i4eEg
+         x4Bxv0XjnhN+IX32qe7Y6ElOmFVk5JLdxHDQghLROUfhfkS/yI7y9AsqY8dDjZTmx9Qd
+         xQq6iB6wwJHfMzKKMnLuHIqOGcQm72DQLSdgSd8p2BRMGx11qnpAKZACoV3zQish1JUA
+         LHrdhVNgk2vQzJ78O0MaTc2cM+d8KmN9D06jyp3OatZm4LGXzYiLtYWkToQNPYiS/QdZ
+         HJroVs+UoCH+9+RMl3xE/lALsZKw7lFYjaYgbdr4apzaQv8q/VQyLTftAW25QN3sZjdX
+         a30w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=cz2fi9b1NEdvG3USz4empRfMlJ8de9OfWLCS3YX3h5I=;
-        b=Js1/thUW3gf2HC2OOzVVCHn0DCL/S0oluIdLLLkVkY85Pk0WR4y0zmQgjG3N+crysE
-         c4C2xFCvq2FhnkFe0J6NLAswWXG6XOgv7wclqYwfZ+EJ+VRVmEQyxRL/VzGR+awIRl51
-         BD5RzQVGzWKZaa/+OhFCzfCK9s3/39USBRpLj3YZP1kospIHBw7zTr1+gDSAYseVmcLs
-         tqebvYGRpsIS9Sf0C34MjirlibpgwdtpStPWmSoih2Kj/U0xfzoLQsT3yE+CF+XKHh4s
-         LXrmezUMCqM/r9pm84z+S2F/y0cKV1xTqOUoEKMrCOGsUVvq1bg3xbLtaPcvl5MUpjhE
-         tAxw==
-X-Gm-Message-State: APjAAAX+5GXXb1yEXW1qob7KnXyNGf2p2HrFPFYmnwb1k1YO1OIR3MrO
-        /eSF6nLv3KjjkxrQC5gDh/o=
-X-Google-Smtp-Source: APXvYqzfx47Hb0iOhg81v85bCDZ2+5/0lnmGrEVIuTBo06UnNUVy7bpwJ3UxVttqvYAdqz0DBJ47tg==
-X-Received: by 2002:a63:d615:: with SMTP id q21mr114467914pgg.401.1558854808818;
-        Sun, 26 May 2019 00:13:28 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.92.73])
-        by smtp.gmail.com with ESMTPSA id c129sm9381274pfg.178.2019.05.26.00.13.24
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=gpKp1Ji3NbYE6dlIioVp6OmCdvPteX1H1EwDeUiYnRo=;
+        b=oLZOJ9FPuAewNATYEEk0nfpNRP3WVCvctkkOyYZ1TC/xb2teyA6/2AV5U1citD45Mf
+         /0jwOOA22Gtm0zvtCGRzTesVe0RiOhuRKpOCgklRjTWLpOHCEeyoVs/HTuVycUsdd9NX
+         0M2fp7X2G4HhfT/FH3+ekfaCMxCkNjpqSzf8swcXYVQbJwCrB6y9AW6Bs5JN6jBtV7WE
+         EHOSFWe9qK6fZYElbUQUh3CRWl/inVGkyHTzAcyqAjxDi5beCgVk640A9wyuYQa4My5L
+         NGXMSfWZix/DXLYb3qVUmPHBK8nRXcWzFDacCL1bI1YuyH7+deDbt78RXq1plyVpaX7/
+         YSEw==
+X-Gm-Message-State: APjAAAWbPbcMDOou2b5MDTTL1177QiSQCXfvc7GCZwyuvn7L4HRYIhhv
+        Y+n0fpG7ngY/LfYmxt51AlEP6n4X
+X-Google-Smtp-Source: APXvYqwTC0FptfX7CPxxhryj2laivRpDqWwH7V8fygp/VEbP5GYpQPJX1vkSLqIrM2RDP7oYdhrGsA==
+X-Received: by 2002:aa7:8e46:: with SMTP id d6mr98123175pfr.91.1558854846680;
+        Sun, 26 May 2019 00:14:06 -0700 (PDT)
+Received: from localhost ([43.224.245.181])
+        by smtp.gmail.com with ESMTPSA id 4sm11313421pfj.111.2019.05.26.00.14.05
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 26 May 2019 00:13:27 -0700 (PDT)
-Date:   Sun, 26 May 2019 12:43:22 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     William Hubbs <w.d.hubbs@gmail.com>,
-        Chris Brannon <chris@the-brannons.com>,
-        Kirk Reiser <kirk@reisers.ca>,
-        Samuel Thibault <samuel.thibault@ens-lyon.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        speakup@linux-speakup.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] drivers: staging: speakup: serialio: fix warning
- linux/serial.h is included more than once
-Message-ID: <20190526071322.GA3830@hari-Inspiron-1545>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Sun, 26 May 2019 00:14:06 -0700 (PDT)
+From:   Weitao Hou <houweitaoo@gmail.com>
+To:     vkoul@kernel.org, dan.j.williams@intel.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com
+Cc:     dmaengine@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Weitao Hou <houweitaoo@gmail.com>
+Subject: [PATCH] dmaengine: use to_platform_device()
+Date:   Sun, 26 May 2019 15:13:24 +0800
+Message-Id: <20190526071324.15307-1-houweitaoo@gmail.com>
+X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fix below warning reported by  includecheck
+Use to_platform_device() instead of open-coding it.
 
-./drivers/staging/speakup/serialio.h: linux/serial.h is included more
-than once.
-
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Signed-off-by: Weitao Hou <houweitaoo@gmail.com>
 ---
- drivers/staging/speakup/serialio.h | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/dma/stm32-dmamux.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/staging/speakup/serialio.h b/drivers/staging/speakup/serialio.h
-index aa691e4..6f8f86f 100644
---- a/drivers/staging/speakup/serialio.h
-+++ b/drivers/staging/speakup/serialio.h
-@@ -4,9 +4,6 @@
+diff --git a/drivers/dma/stm32-dmamux.c b/drivers/dma/stm32-dmamux.c
+index a67119199c45..63af24d4c834 100644
+--- a/drivers/dma/stm32-dmamux.c
++++ b/drivers/dma/stm32-dmamux.c
+@@ -306,8 +306,7 @@ static int stm32_dmamux_probe(struct platform_device *pdev)
+ #ifdef CONFIG_PM
+ static int stm32_dmamux_runtime_suspend(struct device *dev)
+ {
+-	struct platform_device *pdev =
+-		container_of(dev, struct platform_device, dev);
++	struct platform_device *pdev = to_platform_device(dev);
+ 	struct stm32_dmamux_data *stm32_dmamux = platform_get_drvdata(pdev);
  
- #include <linux/serial.h>	/* for rs_table, serial constants */
- #include <linux/serial_reg.h>	/* for more serial constants */
--#ifndef __sparc__
--#include <linux/serial.h>
--#endif
- #include <linux/serial_core.h>
+ 	clk_disable_unprepare(stm32_dmamux->clk);
+@@ -317,8 +316,7 @@ static int stm32_dmamux_runtime_suspend(struct device *dev)
  
- #include "spk_priv.h"
+ static int stm32_dmamux_runtime_resume(struct device *dev)
+ {
+-	struct platform_device *pdev =
+-		container_of(dev, struct platform_device, dev);
++	struct platform_device *pdev = to_platform_device(dev);
+ 	struct stm32_dmamux_data *stm32_dmamux = platform_get_drvdata(pdev);
+ 	int ret;
+ 
 -- 
-2.7.4
+2.18.0
 
