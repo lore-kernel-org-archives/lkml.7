@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 334FCC07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 19:09:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D043C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 19:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19B74208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 19:09:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7415208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 19:09:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727307AbfE0TJB (ORCPT
+        id S1727346AbfE0TJD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 15:09:01 -0400
+        Mon, 27 May 2019 15:09:03 -0400
 Received: from mga14.intel.com ([192.55.52.115]:48012 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726758AbfE0TJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 15:09:00 -0400
+        id S1726758AbfE0TJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 15:09:01 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 May 2019 12:08:59 -0700
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 May 2019 12:09:01 -0700
 X-ExtLoop1: 1
 Received: from otc-lr-04.jf.intel.com ([10.54.39.157])
-  by FMSMGA003.fm.intel.com with ESMTP; 27 May 2019 12:08:59 -0700
+  by FMSMGA003.fm.intel.com with ESMTP; 27 May 2019 12:09:01 -0700
 From:   kan.liang@linux.intel.com
 To:     mingo@kernel.org, acme@redhat.com, peterz@infradead.org,
         vincent.weaver@maine.edu, linux-kernel@vger.kernel.org
 Cc:     alexander.shishkin@linux.intel.com, ak@linux.intel.com,
         jolsa@redhat.com, eranian@google.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V2 2/3] perf/x86/regs: Check reserved bits
-Date:   Mon, 27 May 2019 12:07:56 -0700
-Message-Id: <1558984077-7773-2-git-send-email-kan.liang@linux.intel.com>
+Subject: [PATCH V2 3/3] perf regs x86: Use PERF_REG_NON_GENERIC_MASK
+Date:   Mon, 27 May 2019 12:07:57 -0700
+Message-Id: <1558984077-7773-3-git-send-email-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1558984077-7773-1-git-send-email-kan.liang@linux.intel.com>
 References: <1558984077-7773-1-git-send-email-kan.liang@linux.intel.com>
@@ -45,60 +45,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-The perf fuzzer triggers a warning which map to:
+Use the macro defined in kernel ABI header to replace the local name.
 
-        if (WARN_ON_ONCE(idx >= ARRAY_SIZE(pt_regs_offset)))
-                return 0;
+No functional change.
 
-The bits between XMM registers and generic registers are reserved.
-But perf_reg_validate() doesn't check these bits.
-
-Add PERF_REG_X86_RESERVED for reserved bits on X86.
-Check the reserved bits in perf_reg_validate().
-
-Fixes: 878068ea270e ("perf/x86: Support outputting XMM registers")
-Reported-by: Vince Weaver <vincent.weaver@maine.edu>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
 
-Changes since V1:
-- Rename REG_RESERVED to PERF_REG_X86_RESERVED
+New for V2
 
- arch/x86/kernel/perf_regs.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ tools/arch/x86/include/uapi/asm/perf_regs.h | 3 +++
+ tools/perf/arch/x86/include/perf_regs.h     | 1 -
+ tools/perf/arch/x86/util/perf_regs.c        | 4 ++--
+ 3 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kernel/perf_regs.c b/arch/x86/kernel/perf_regs.c
-index 07c30ee..bb7e113 100644
---- a/arch/x86/kernel/perf_regs.c
-+++ b/arch/x86/kernel/perf_regs.c
-@@ -74,6 +74,9 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
- 	return regs_get_register(regs, pt_regs_offset[idx]);
- }
- 
-+#define PERF_REG_X86_RESERVED	(((1ULL << PERF_REG_X86_XMM0) - 1) & \
-+				 ~((1ULL << PERF_REG_X86_MAX) - 1))
+diff --git a/tools/arch/x86/include/uapi/asm/perf_regs.h b/tools/arch/x86/include/uapi/asm/perf_regs.h
+index ac67bbe..3a96971 100644
+--- a/tools/arch/x86/include/uapi/asm/perf_regs.h
++++ b/tools/arch/x86/include/uapi/asm/perf_regs.h
+@@ -52,4 +52,7 @@ enum perf_event_x86_regs {
+ 	/* These include both GPRs and XMMX registers */
+ 	PERF_REG_X86_XMM_MAX = PERF_REG_X86_XMM15 + 2,
+ };
 +
- #ifdef CONFIG_X86_32
- #define REG_NOSUPPORT ((1ULL << PERF_REG_X86_R8) | \
- 		       (1ULL << PERF_REG_X86_R9) | \
-@@ -86,7 +89,7 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
++#define PERF_REG_NON_GENERIC_MASK	(~((1ULL << PERF_REG_X86_XMM0) - 1))
++
+ #endif /* _ASM_X86_PERF_REGS_H */
+diff --git a/tools/perf/arch/x86/include/perf_regs.h b/tools/perf/arch/x86/include/perf_regs.h
+index b7cd91a..b732133 100644
+--- a/tools/perf/arch/x86/include/perf_regs.h
++++ b/tools/perf/arch/x86/include/perf_regs.h
+@@ -9,7 +9,6 @@
+ void perf_regs_load(u64 *regs);
  
- int perf_reg_validate(u64 mask)
- {
--	if (!mask || (mask & REG_NOSUPPORT))
-+	if (!mask || (mask & (REG_NOSUPPORT | PERF_REG_X86_RESERVED)))
- 		return -EINVAL;
+ #define PERF_REGS_MAX PERF_REG_X86_XMM_MAX
+-#define PERF_XMM_REGS_MASK	(~((1ULL << PERF_REG_X86_XMM0) - 1))
+ #ifndef HAVE_ARCH_X86_64_SUPPORT
+ #define PERF_REGS_MASK ((1ULL << PERF_REG_X86_32_MAX) - 1)
+ #define PERF_SAMPLE_REGS_ABI PERF_SAMPLE_REGS_ABI_32
+diff --git a/tools/perf/arch/x86/util/perf_regs.c b/tools/perf/arch/x86/util/perf_regs.c
+index 7886ca5..ef87f79 100644
+--- a/tools/perf/arch/x86/util/perf_regs.c
++++ b/tools/perf/arch/x86/util/perf_regs.c
+@@ -277,7 +277,7 @@ uint64_t arch__intr_reg_mask(void)
+ 		.type			= PERF_TYPE_HARDWARE,
+ 		.config			= PERF_COUNT_HW_CPU_CYCLES,
+ 		.sample_type		= PERF_SAMPLE_REGS_INTR,
+-		.sample_regs_intr	= PERF_XMM_REGS_MASK,
++		.sample_regs_intr	= PERF_REG_NON_GENERIC_MASK,
+ 		.precise_ip		= 1,
+ 		.disabled 		= 1,
+ 		.exclude_kernel		= 1,
+@@ -293,7 +293,7 @@ uint64_t arch__intr_reg_mask(void)
+ 	fd = sys_perf_event_open(&attr, 0, -1, -1, 0);
+ 	if (fd != -1) {
+ 		close(fd);
+-		return (PERF_XMM_REGS_MASK | PERF_REGS_MASK);
++		return (PERF_REG_NON_GENERIC_MASK | PERF_REGS_MASK);
+ 	}
  
- 	return 0;
-@@ -112,7 +115,7 @@ void perf_get_regs_user(struct perf_regs *regs_user,
- 
- int perf_reg_validate(u64 mask)
- {
--	if (!mask || (mask & REG_NOSUPPORT))
-+	if (!mask || (mask & (REG_NOSUPPORT | PERF_REG_X86_RESERVED)))
- 		return -EINVAL;
- 
- 	return 0;
+ 	return PERF_REGS_MASK;
 -- 
 2.7.4
 
