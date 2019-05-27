@@ -2,117 +2,137 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA65C07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 08:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98737C07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 09:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E622121721
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 08:59:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=teoenmingcorp.onmicrosoft.com header.i=@teoenmingcorp.onmicrosoft.com header.b="a2VSLtbJ"
+	by mail.kernel.org (Postfix) with ESMTP id 6A96321721
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 09:05:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbfE0I7w (ORCPT
+        id S1726457AbfE0JFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 04:59:52 -0400
-Received: from mail-eopbgr1300044.outbound.protection.outlook.com ([40.107.130.44]:49021
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725869AbfE0I7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 04:59:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=teoenmingcorp.onmicrosoft.com; s=selector1-teoenmingcorp-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Zro+nDYFvGjsarfznwo/kT7bH2VPYwn954WEL3JjOHA=;
- b=a2VSLtbJd6nErNOrOEIOvg0cenqMnfUqmnDFzJJhHJtN8T4yN8UO4fgvoi9vvEvBZ9VdlW4o8FptLw8m46/EzLHAk7WzUged/TnnjiAIx0KlRdPj9Ab+u8+/PpF6zoz6PByr+zC14Ulp7M8sCucijxuuM3nZ1jMCqrT3R8vwr/0=
-Received: from SG2PR01MB2141.apcprd01.prod.exchangelabs.com (10.170.143.19) by
- SG2PR01MB2581.apcprd01.prod.exchangelabs.com (20.177.95.85) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.18; Mon, 27 May 2019 08:59:47 +0000
-Received: from SG2PR01MB2141.apcprd01.prod.exchangelabs.com
- ([fe80::118b:a597:2b7f:3b01]) by SG2PR01MB2141.apcprd01.prod.exchangelabs.com
- ([fe80::118b:a597:2b7f:3b01%7]) with mapi id 15.20.1922.021; Mon, 27 May 2019
- 08:59:47 +0000
-From:   Turritopsis Dohrnii Teo En Ming <ceo@teo-en-ming-corp.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Turritopsis Dohrnii Teo En Ming <ceo@teo-en-ming-corp.com>
-Subject: Wow! Microsoft Loves Linux!
-Thread-Topic: Wow! Microsoft Loves Linux!
-Thread-Index: AQHVFGoENBDdi9I6RUaT2DTVyEzmKQ==
-Date:   Mon, 27 May 2019 08:59:47 +0000
-Message-ID: <SG2PR01MB2141879E255579DF60E40324871D0@SG2PR01MB2141.apcprd01.prod.exchangelabs.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ceo@teo-en-ming-corp.com; 
-x-originating-ip: [158.140.133.146]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0981c9ce-77d9-498e-7f1c-08d6e281aba7
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:SG2PR01MB2581;
-x-ms-traffictypediagnostic: SG2PR01MB2581:
-x-ms-exchange-purlcount: 5
-x-microsoft-antispam-prvs: <SG2PR01MB2581978C00827EE70703858A871D0@SG2PR01MB2581.apcprd01.prod.exchangelabs.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3383;
-x-forefront-prvs: 0050CEFE70
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(136003)(366004)(396003)(39830400003)(376002)(47530400004)(199004)(189003)(76116006)(66446008)(64756008)(66556008)(66476007)(73956011)(66946007)(68736007)(305945005)(5660300002)(966005)(7736002)(52230400001)(81156014)(8676002)(81166006)(86362001)(74316002)(25786009)(14454004)(8936002)(316002)(2351001)(4744005)(6916009)(4326008)(52536014)(7696005)(2501003)(53936002)(186003)(66066001)(6506007)(33656002)(6116002)(478600001)(2906002)(3846002)(99286004)(45080400002)(107886003)(26005)(6306002)(71200400001)(71190400001)(9686003)(102836004)(55016002)(486006)(476003)(256004)(6436002)(5640700003)(30393001);DIR:OUT;SFP:1101;SCL:1;SRVR:SG2PR01MB2581;H:SG2PR01MB2141.apcprd01.prod.exchangelabs.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: teo-en-ming-corp.com does not
- designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: eXOOUr7FdOeF7k+z+eUmMzf0ZSjtLp5AUcZlY2p8Xr9KX1nz/9psOHiuKzG5voU7dTBy9SQ1DWC7BlFm6EsNaD8F8jIyAtfA5I+k4puGQ44e0fFPVUf2m3JUlqpHSkDgjzno4knXPYbsro2nE4xhl6ceaeBsZ7RspZzHsOY5pSD1KULCT9T5yTJXbLJhLyhWMJfqxCDXJjwHxlI1QYTW8+UaDZ5IsLyPLZFgbhwm0ThTnKMLdE8qvDnIsAkVoEv5ToMz9BgyvSY53kCuJ0snPqngZxvCImKQ0v0jwFz4weZAB6ZtBbCcVig5LaLQq1xN6xs5nN6FL9RmD7u5kwwU/6MHBFg7bn8N+gGE0HobdIVwuo2G1hRXFSgEFuZAFPMJsk+3n9DlKaQesPM6SOjjIyeDGSOx2hmhXelUAFnoCqk=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 27 May 2019 05:05:07 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:34618 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726071AbfE0JFH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 05:05:07 -0400
+X-UUID: 9b45fc4f1566450c808686863345d682-20190527
+X-UUID: 9b45fc4f1566450c808686863345d682-20190527
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <erin.lo@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 2099036367; Mon, 27 May 2019 17:05:01 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 27 May 2019 17:04:59 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 27 May 2019 17:04:59 +0800
+From:   Erin Lo <erin.lo@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     <devicetree@vger.kernel.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        <linux-kernel@vger.kernel.org>, <linux-serial@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>, <erin.lo@mediatek.com>,
+        <mars.cheng@mediatek.com>, <eddie.huang@mediatek.com>
+Subject: [PATCH v11 0/6] Add basic node support for Mediatek MT8183 SoC
+Date:   Mon, 27 May 2019 17:04:41 +0800
+Message-ID: <1558947887-31084-1-git-send-email-erin.lo@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
 MIME-Version: 1.0
-X-OriginatorOrg: teo-en-ming-corp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0981c9ce-77d9-498e-7f1c-08d6e281aba7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 May 2019 08:59:47.6934
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 23b3f6ae-c453-4b93-aec9-f17508e5885c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ceo@teo-en-ming-corp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR01MB2581
+Content-Type: text/plain
+X-TM-SNTS-SMTP: A3A3979E730E1DEDDFD1A2DDEE29397448A5ACC75A9DFEC103545943F1E524CC2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Good afternoon from Singapore,
+MT8183 is a SoC based on 64bit ARMv8 architecture.
+It contains 4 CA53 and 4 CA73 cores.
+MT8183 share many HW IP with MT65xx series.
+This patchset was tested on MT8183 evaluation board and use correct clock to shell.
 
-I did a Google search on "Microsoft Loves Linux".
+Based on v5.2-rc1
 
-Google search URL:
+Change in v11:
+New add spi node, efuse node, pinctrl node, auxadc node, and capacity-dmips-mhz field
 
-https://www.google.com/search?q=3Dmicrosoft+loves+linux
+Change in v10:
+Add the L2 cache node to prevent warning on unable to detect cache
+hierarchy.
 
-Tons of results show up.=A0Lots of good reads.     =20
-=20
-=20
------BEGIN EMAIL SIGNATURE-----
+Change in v9:
+Remove pio node since binding is not documented yet
 
-The Gospel for all Targeted Individuals (TIs):
+Change in v8:
+1. Fix interrupt-parent of pio node
+2. Remove pinfunc.h and spi node patches
 
-[The New York Times] Microwave Weapons Are Prime Suspect in Ills of
-U.S. Embassy Workers
+Change in v7:
+1. Place all the MMIO peripherals under one or more simple-bus nodes
+2. Make the pinfunc.h and spi node into seperate patch
+3. Modify SPIs pamerater from 4 back to 3
+   and remove patch "support 4 interrupt parameters for sysirq"
+4. Rename intpol-controller to interrupt-controller
+5. Rename pinctrl@1000b000 to pinctrl@10005000
 
-Link: https://www.nytimes.com/2018/09/01/science/sonic-attack-cuba-microwav=
-e.html
+Change in v6:
+1. Remove power and iommu nodes
+2. Fix dtb build warning
+3. Fix pinctrl binding doc
+4. Fix '_' in node names
 
-***************************************************************************=
-*****************
+Change in v5:
+1. Collect all device tree nodes to the last patch
+2. Add PMU
+3. Add Signed-off-by
+4. Remove clock driver code and binding doc
+5. Add pinctrl, iommu, spi, and pwrap nodes
 
-Singaporean Mr. Turritopsis Dohrnii Teo En Ming's Academic
-Qualifications as at 14 Feb 2019
+Change in v4:
+1. Correct syntax error in dtsi
+2. Add MT8183 clock support
 
-[1] https://tdtemcerts.wordpress.com/
+Change in v3:
+1. Fill out GICC, GICH, GICV regions
+2. Update Copyright to 2018
 
-[2] https://tdtemcerts.blogspot.sg/
+Change in v2:
+1. Split dt-bindings into different patches
+2. Correct bindings for supported SoCs (mtk-uart.txt)
 
-[3] https://www.scribd.com/user/270125049/Teo-En-Ming
+Ben Ho (1):
+  arm64: dts: Add Mediatek SoC MT8183 and evaluation board dts and
+    Makefile
 
------END EMAIL SIGNATURE-----
-=20
-    =
+Erin Lo (1):
+  arm64: dts: mt8183: add spi node
+
+Hsin-Yi, Wang (1):
+  arm64: dts: mt8183: add capacity-dmips-mhz
+
+Michael Mei (1):
+  arm64: dts: mt8183: add efuse and Mediatek Chip id node to read
+
+Zhiyong Tao (2):
+  arm64: dts: mt8183: add pinctrl device node
+  arm64: dts: mt8183: Add auxadc device node
+
+ arch/arm64/boot/dts/mediatek/Makefile       |   1 +
+ arch/arm64/boot/dts/mediatek/mt8183-evb.dts | 140 ++++++
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi    | 447 ++++++++++++++++++++
+ 3 files changed, 588 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8183.dtsi
+
+--
+1.8.1.1.dirty
+
