@@ -6,33 +6,31 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D8AC04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7271CC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9086F20883
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:37:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5024D208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:37:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbfE0QhE (ORCPT
+        id S1726801AbfE0QhI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 12:37:04 -0400
+        Mon, 27 May 2019 12:37:08 -0400
 Received: from proxy04.fsdata.se ([89.221.252.227]:50417 "EHLO
         mail-gw01.fsdata.se" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725991AbfE0QhE (ORCPT
+        with ESMTP id S1726432AbfE0QhF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 12:37:04 -0400
+        Mon, 27 May 2019 12:37:05 -0400
 X-Greylist: delayed 911 seconds by postgrey-1.27 at vger.kernel.org; Mon, 27 May 2019 12:37:03 EDT
 Received: from localhost (94.234.40.49) by DAG01.HMC.local (192.168.46.11)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 27 May 2019 18:21:49
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 27 May 2019 18:21:50
  +0200
 From:   Mattias Jacobsson <2pi@mok.nu>
-To:     <dvhart@infradead.org>, <andy@infradead.org>,
-        <mario.limonciello@dell.com>, <mjg59@srcf.ucam.org>,
-        <pali.rohar@gmail.com>
+To:     <dvhart@infradead.org>, <andy@infradead.org>
 CC:     <2pi@mok.nu>, <platform-driver-x86@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/3] platform/x86: wmi: add context argument to the probe function
-Date:   Mon, 27 May 2019 18:21:30 +0200
-Message-ID: <4db1cd4649f5d169acfc08dde6e6a41cf308dd53.1558968964.git.2pi@mok.nu>
+Subject: [PATCH 3/3] platform/x86: wmi: add Xiaomi WMI key driver
+Date:   Mon, 27 May 2019 18:21:31 +0200
+Message-ID: <eb57957045495464539c8b4896a8d83b5d87377b.1558968964.git.2pi@mok.nu>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1558968964.git.2pi@mok.nu>
 References: <cover.1558968964.git.2pi@mok.nu>
@@ -47,131 +45,157 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The struct wmi_device_id has a context pointer field, forward this
-pointer as an argument to the probe function in struct wmi_driver.
+Some function keys on the built in keyboard on Xiaomi's notebooks does
+not produce any key events when pressed in combination with the function
+key. Some of these keys do report that they are being pressed via WMI
+events.
 
-Update existing users of the same probe function to accept this new
-context argument.
+This driver reports key events for Fn+F7 and double tap on Fn.
+
+Other WMI events that are reported by the hardware but not utilized by
+this driver are Caps Lock(which already work) and Fn lock/unlock.
 
 Signed-off-by: Mattias Jacobsson <2pi@mok.nu>
 ---
- drivers/platform/x86/dell-smbios-wmi.c       | 2 +-
- drivers/platform/x86/dell-wmi-descriptor.c   | 3 ++-
- drivers/platform/x86/dell-wmi.c              | 2 +-
- drivers/platform/x86/huawei-wmi.c            | 2 +-
- drivers/platform/x86/intel-wmi-thunderbolt.c | 3 ++-
- drivers/platform/x86/wmi-bmof.c              | 2 +-
- drivers/platform/x86/wmi.c                   | 3 ++-
- include/linux/wmi.h                          | 2 +-
- 8 files changed, 11 insertions(+), 8 deletions(-)
+ drivers/platform/x86/Kconfig      | 10 ++++
+ drivers/platform/x86/Makefile     |  1 +
+ drivers/platform/x86/xiaomi-wmi.c | 94 +++++++++++++++++++++++++++++++
+ 3 files changed, 105 insertions(+)
+ create mode 100644 drivers/platform/x86/xiaomi-wmi.c
 
-diff --git a/drivers/platform/x86/dell-smbios-wmi.c b/drivers/platform/x86/dell-smbios-wmi.c
-index c3ed3c8c17b9..add2687079f7 100644
---- a/drivers/platform/x86/dell-smbios-wmi.c
-+++ b/drivers/platform/x86/dell-smbios-wmi.c
-@@ -146,7 +146,7 @@ static long dell_smbios_wmi_filter(struct wmi_device *wdev, unsigned int cmd,
- 	return ret;
- }
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 5d5cc6111081..257a99134b64 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -781,6 +781,16 @@ config INTEL_WMI_THUNDERBOLT
+ 	  To compile this driver as a module, choose M here: the module will
+ 	  be called intel-wmi-thunderbolt.
  
--static int dell_smbios_wmi_probe(struct wmi_device *wdev)
-+static int dell_smbios_wmi_probe(struct wmi_device *wdev, const void *context)
- {
- 	struct wmi_driver *wdriver =
- 		container_of(wdev->dev.driver, struct wmi_driver, driver);
-diff --git a/drivers/platform/x86/dell-wmi-descriptor.c b/drivers/platform/x86/dell-wmi-descriptor.c
-index 14ab250b7d5a..9994fd1a5acf 100644
---- a/drivers/platform/x86/dell-wmi-descriptor.c
-+++ b/drivers/platform/x86/dell-wmi-descriptor.c
-@@ -106,7 +106,8 @@ EXPORT_SYMBOL_GPL(dell_wmi_get_hotfix);
-  * WMI buffer length        12       4    <length>
-  * WMI hotfix number        16       4    <hotfix>
-  */
--static int dell_wmi_descriptor_probe(struct wmi_device *wdev)
-+static int dell_wmi_descriptor_probe(struct wmi_device *wdev,
-+				     const void *context)
- {
- 	union acpi_object *obj = NULL;
- 	struct descriptor_priv *priv;
-diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-index d118bb73fcae..72b0a69a6ed0 100644
---- a/drivers/platform/x86/dell-wmi.c
-+++ b/drivers/platform/x86/dell-wmi.c
-@@ -672,7 +672,7 @@ static int dell_wmi_events_set_enabled(bool enable)
- 	return dell_smbios_error(ret);
- }
++config XIAOMI_WMI
++	  tristate "Xiaomi WMI key driver"
++	  depends on ACPI_WMI
++	  depends on INPUT
++	  help
++	  Say Y here if you want to support WMI-based keys on Xiaomi notebooks.
++
++	  To compile this driver as a module, choose M here: the module will
++	  be called xiaomi-wmi.
++
+ config MSI_WMI
+ 	tristate "MSI WMI extras"
+ 	depends on ACPI_WMI
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 87b0069bd781..f64445d69f99 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -51,6 +51,7 @@ obj-$(CONFIG_SURFACE3_WMI)	+= surface3-wmi.o
+ obj-$(CONFIG_TOPSTAR_LAPTOP)	+= topstar-laptop.o
+ obj-$(CONFIG_WMI_BMOF)		+= wmi-bmof.o
+ obj-$(CONFIG_INTEL_WMI_THUNDERBOLT)	+= intel-wmi-thunderbolt.o
++obj-$(CONFIG_XIAOMI_WMI)	+= xiaomi-wmi.o
  
--static int dell_wmi_probe(struct wmi_device *wdev)
-+static int dell_wmi_probe(struct wmi_device *wdev, const void *context)
- {
- 	struct dell_wmi_priv *priv;
- 	int ret;
-diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
-index 52fcac5b393a..195a7f3638cb 100644
---- a/drivers/platform/x86/huawei-wmi.c
-+++ b/drivers/platform/x86/huawei-wmi.c
-@@ -166,7 +166,7 @@ static int huawei_wmi_input_setup(struct wmi_device *wdev)
- 	return input_register_device(priv->idev);
- }
- 
--static int huawei_wmi_probe(struct wmi_device *wdev)
-+static int huawei_wmi_probe(struct wmi_device *wdev, const void *context)
- {
- 	struct huawei_wmi_priv *priv;
- 	int err;
-diff --git a/drivers/platform/x86/intel-wmi-thunderbolt.c b/drivers/platform/x86/intel-wmi-thunderbolt.c
-index 4dfa61434a76..974c22a7ff61 100644
---- a/drivers/platform/x86/intel-wmi-thunderbolt.c
-+++ b/drivers/platform/x86/intel-wmi-thunderbolt.c
-@@ -56,7 +56,8 @@ static const struct attribute_group tbt_attribute_group = {
- 	.attrs = tbt_attrs,
- };
- 
--static int intel_wmi_thunderbolt_probe(struct wmi_device *wdev)
-+static int intel_wmi_thunderbolt_probe(struct wmi_device *wdev,
-+				       const void *context)
- {
- 	int ret;
- 
-diff --git a/drivers/platform/x86/wmi-bmof.c b/drivers/platform/x86/wmi-bmof.c
-index 8751a13134be..105a82b6b076 100644
---- a/drivers/platform/x86/wmi-bmof.c
-+++ b/drivers/platform/x86/wmi-bmof.c
-@@ -54,7 +54,7 @@ read_bmof(struct file *filp, struct kobject *kobj,
- 	return count;
- }
- 
--static int wmi_bmof_probe(struct wmi_device *wdev)
-+static int wmi_bmof_probe(struct wmi_device *wdev, const void *context)
- {
- 	struct bmof_priv *priv;
- 	int ret;
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index f41f1410da9d..09bc6270ec16 100644
---- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -926,7 +926,8 @@ static int wmi_dev_probe(struct device *dev)
- 		dev_warn(dev, "failed to enable device -- probing anyway\n");
- 
- 	if (wdriver->probe) {
--		ret = wdriver->probe(dev_to_wdev(dev));
-+		ret = wdriver->probe(dev_to_wdev(dev),
-+				find_guid_context(wblock, wdriver));
- 		if (ret != 0)
- 			goto probe_failure;
- 	}
-diff --git a/include/linux/wmi.h b/include/linux/wmi.h
-index 592f81afecbb..1e84c474a993 100644
---- a/include/linux/wmi.h
-+++ b/include/linux/wmi.h
-@@ -44,7 +44,7 @@ struct wmi_driver {
- 	struct device_driver driver;
- 	const struct wmi_device_id *id_table;
- 
--	int (*probe)(struct wmi_device *wdev);
-+	int (*probe)(struct wmi_device *wdev, const void *context);
- 	int (*remove)(struct wmi_device *wdev);
- 	void (*notify)(struct wmi_device *device, union acpi_object *data);
- 	long (*filter_callback)(struct wmi_device *wdev, unsigned int cmd,
+ # toshiba_acpi must link after wmi to ensure that wmi devices are found
+ # before toshiba_acpi initializes
+diff --git a/drivers/platform/x86/xiaomi-wmi.c b/drivers/platform/x86/xiaomi-wmi.c
+new file mode 100644
+index 000000000000..4ff9df5eb88f
+--- /dev/null
++++ b/drivers/platform/x86/xiaomi-wmi.c
+@@ -0,0 +1,94 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * WMI driver for Xiaomi Laptops
++ *
++ */
++
++#include <linux/acpi.h>
++#include <linux/input.h>
++#include <linux/module.h>
++#include <linux/wmi.h>
++#include <uapi/linux/input-event-codes.h>
++
++#define XIAOMI_KEY_FN_ESC_0	"A2095CCE-0491-44E7-BA27-F8ED8F88AA86"
++#define XIAOMI_KEY_FN_ESC_1	"7BBE8E39-B486-473D-BA13-66F75C5805CD"
++#define XIAOMI_KEY_FN_FN	"409B028D-F06B-4C7C-8BBB-EE133A6BD87E"
++#define XIAOMI_KEY_CAPSLOCK	"83FE7607-053A-4644-822A-21532C621FC7"
++#define XIAOMI_KEY_FN_F7	"76E9027C-95D0-4180-8692-DA6747DD1C2D"
++
++#define XIAOMI_DEVICE(guid, key)		\
++	.guid_string = (guid),			\
++	.context = &(const unsigned int){key}
++
++struct xiaomi_wmi {
++	struct input_dev *input_dev;
++	unsigned int key_code;
++};
++
++int xiaomi_wmi_probe(struct wmi_device *wdev, const void *context)
++{
++	struct xiaomi_wmi *data;
++
++	if (wdev == NULL || context == NULL)
++		return -EINVAL;
++
++	data = devm_kzalloc(&wdev->dev, sizeof(struct xiaomi_wmi), GFP_KERNEL);
++	if (data == NULL)
++		return -ENOMEM;
++	dev_set_drvdata(&wdev->dev, data);
++
++	data->input_dev = devm_input_allocate_device(&wdev->dev);
++	if (data->input_dev == NULL)
++		return -ENOMEM;
++	data->input_dev->name = "Xiaomi WMI keys";
++	data->input_dev->phys = "wmi/input0";
++
++	data->key_code = *((const unsigned int *)context);
++	set_bit(EV_KEY, data->input_dev->evbit);
++	set_bit(data->key_code, data->input_dev->keybit);
++
++	return input_register_device(data->input_dev);
++}
++
++void xiaomi_wmi_notify(struct wmi_device *wdev, union acpi_object *_)
++{
++	struct xiaomi_wmi *data;
++
++	if (wdev == NULL)
++		return;
++
++	data = dev_get_drvdata(&wdev->dev);
++	if (data == NULL)
++		return;
++
++	input_report_key(data->input_dev, data->key_code, 1);
++	input_sync(data->input_dev);
++	input_report_key(data->input_dev, data->key_code, 0);
++	input_sync(data->input_dev);
++}
++
++static const struct wmi_device_id xiaomi_wmi_id_table[] = {
++	// { XIAOMI_DEVICE(XIAOMI_KEY_FN_ESC_0, KEY_FN_ESC) },
++	// { XIAOMI_DEVICE(XIAOMI_KEY_FN_ESC_1, KEY_FN_ESC) },
++	{ XIAOMI_DEVICE(XIAOMI_KEY_FN_FN, KEY_PROG1) },
++	// { XIAOMI_DEVICE(XIAOMI_KEY_CAPSLOCK, KEY_CAPSLOCK) },
++	{ XIAOMI_DEVICE(XIAOMI_KEY_FN_F7, KEY_CUT) },
++
++	/* Terminating entry */
++	{ }
++};
++
++static struct wmi_driver xiaomi_wmi_driver = {
++	.driver = {
++		.name = "xiaomi-wmi",
++	},
++	.id_table = xiaomi_wmi_id_table,
++	.probe = xiaomi_wmi_probe,
++	.notify = xiaomi_wmi_notify,
++};
++module_wmi_driver(xiaomi_wmi_driver);
++
++MODULE_DEVICE_TABLE(wmi, xiaomi_wmi_id_table);
++MODULE_AUTHOR("Mattias Jacobsson");
++MODULE_DESCRIPTION("Xiaomi WMI driver");
++MODULE_LICENSE("GPL v2");
 -- 
 2.21.0
 
