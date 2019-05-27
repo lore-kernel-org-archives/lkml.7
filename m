@@ -2,110 +2,71 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33CBBC04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 139FAC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0477E20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:17:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RbFHF85I"
+	by mail.kernel.org (Postfix) with ESMTP id E47AD20815
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:19:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726322AbfE0NRn (ORCPT
+        id S1726372AbfE0NTD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 09:17:43 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39883 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726108AbfE0NRm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 09:17:42 -0400
-Received: by mail-wr1-f68.google.com with SMTP id e2so8147987wrv.6
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 06:17:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3CdhkKFfggu7RKyEGJPDR3uKtKfRfN9PzQkEoRGpys0=;
-        b=RbFHF85ICbSpB/QDeuBoxpPshiJs01zY4pu/8n9Lf3BNzE4SFyL/GyytRGewLvfrPo
-         2SDaDIMtzrrdACNFufY1J9BG5RMntHYFdQZ9KdGNiSpf5Ii+VdlPrRo2G7fsVxBRTNLN
-         J1iKR6bK3sZ4mw3u79gezUI2/eCWN45qwQ5RubnV6Zw6OQFLOJjrYcLr1erCTdw+iRac
-         CNbXnm+xzAIGSw5+CSghe/JflH4LpDc3NJzcQuBXR1X4Uv4W0o3pIxwV0zL0746Q6N7r
-         VifVZCTVWUSX+uChCR7uBMMOnUW+VjxnHyXA3VW+Dq5T8FXYBqg+DNAl0h7762vib/5/
-         oKvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3CdhkKFfggu7RKyEGJPDR3uKtKfRfN9PzQkEoRGpys0=;
-        b=VQqlg4QG1oRqlteYmkvi6Ofkbdiyaqpuq4IIVnn+4caY6BdkegAxSLx5wOYVKyuabu
-         SI1bT9fETzRh/gHzfcrhDi9JPn4tTKNtD+Z5VQPaaanKKf8AhwANP/gKg0P0phFlWprA
-         /lWTH4p3Ex/Hme6B/qJN04LYEQv5K0/FYYD6kqjTa02zAxGcBdh4YoW2AL/Alj7aCW3X
-         Epgg3XGr6LhkYyUBVxL3uqqSU/JzONqkWy0hz3RD9p2pfgNholGZoYburK1+bWQIIG2H
-         PvEif+V4DYhtlITp1Wr3CZyyQjy0eF7i+axOoEXhdvHHkH9frujLDExCI7dtwBD9ZEvQ
-         U7Wg==
-X-Gm-Message-State: APjAAAUQWSCNLruHjUeC62mRuzB1ho033JFmx/T1zpAkYSyfrWUg/a8W
-        bPD1IN0+toY03TDVu3DdEBMn49O07pmRO76XD/E=
-X-Google-Smtp-Source: APXvYqxwsgyqKq3v6r0+iHi/zVPWhJzn/oWLFri6jGvIXh+zaY6enrZ38Uj3PrCQ1+XWh5tnUc1T76NEJbrPh7coDvQ=
-X-Received: by 2002:a5d:5406:: with SMTP id g6mr9664403wrv.286.1558963061338;
- Mon, 27 May 2019 06:17:41 -0700 (PDT)
+        Mon, 27 May 2019 09:19:03 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:41652 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726063AbfE0NTD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 09:19:03 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id D34D62D9B9A9D570627A;
+        Mon, 27 May 2019 21:18:46 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Mon, 27 May 2019
+ 21:18:38 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <tyhicks@canonical.com>, <viro@zeniv.linux.org.uk>
+CC:     <linux-kernel@vger.kernel.org>, <ecryptfs@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH 1/4] ecryptfs: remove unnessesary null check in ecryptfs_keyring_auth_tok_for_sig
+Date:   Mon, 27 May 2019 21:15:59 +0800
+Message-ID: <20190527131559.16088-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-References: <20190524181936.29470-1-martin.blumenstingl@googlemail.com> <20190524181936.29470-2-martin.blumenstingl@googlemail.com>
-In-Reply-To: <20190524181936.29470-2-martin.blumenstingl@googlemail.com>
-From:   hex dump <hexdump0815@gmail.com>
-Date:   Mon, 27 May 2019 15:17:47 +0200
-Message-ID: <CAKTihDV-zee+rodgg=h1xgBnyiq2oSg4UcaURtCcGCN-Qa4rsw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] ARM: dts: meson8b: mxq: improve support for the
- TRONFY MXQ S805
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     linux-amlogic@lists.infradead.org,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 8:19 PM Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
->
-> The TRONFY MXQ comes with either 1GB or 2GB RAM.
->
-> Both variants share (like most boards based on Amlogic reference
-> designs):
-> - 10/100 PHY (IC Plus IP101GR) with GPIOH_4 being the reset line and
->   GPIOH_3 the interrupt line
-> - SD card slot with the card detection GPIO at CARD_6
-> - VCCK is generated by PWM_C with a period of 1148ns and XTAL as input
->   clock
-> - USB OTG exposed on one of the USB-A connectors
-> - 4-port USB hub with 3 ports exposed to the outside
->
-> There seem the multiple board revision out there according to various
-> forum posts:
-> - storage: eMMC or NAND flash
-> - wifi: Ampak AP6210 or Realtek 8189
->
-> Add support for the following functionality:
-> - SoC temperature (hwmon)
-> - changing the CPU voltage
-> - Ethernet connectivity
-> - SD card
-> - USB
->
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Tested-by: hexdump <hexdump0815@googlemail.com>
+request_key and ecryptfs_get_encrypted_key never
+return a NULL pointer, so no need do a null check.
 
-BEFORE (no patches from this series applied):
-the mxq device was not really useable with the old mainline dtb as
-most peripeherals were not supported
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ fs/ecryptfs/keystore.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-AFTER (the patch applied):
-the rresulting dtb works perfectly fine with my mxq device and all
-mentioned supported functions work as expected
+diff --git a/fs/ecryptfs/keystore.c b/fs/ecryptfs/keystore.c
+index 95662fd46b1d..a1afb162b9d2 100644
+--- a/fs/ecryptfs/keystore.c
++++ b/fs/ecryptfs/keystore.c
+@@ -1626,9 +1626,9 @@ int ecryptfs_keyring_auth_tok_for_sig(struct key **auth_tok_key,
+ 	int rc = 0;
+ 
+ 	(*auth_tok_key) = request_key(&key_type_user, sig, NULL);
+-	if (!(*auth_tok_key) || IS_ERR(*auth_tok_key)) {
++	if (IS_ERR(*auth_tok_key)) {
+ 		(*auth_tok_key) = ecryptfs_get_encrypted_key(sig);
+-		if (!(*auth_tok_key) || IS_ERR(*auth_tok_key)) {
++		if (IS_ERR(*auth_tok_key)) {
+ 			printk(KERN_ERR "Could not find key with description: [%s]\n",
+ 			      sig);
+ 			rc = process_request_key_err(PTR_ERR(*auth_tok_key));
+-- 
+2.17.1
 
-best wishes - hexdump
+
