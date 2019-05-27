@@ -2,146 +2,150 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA2D6C07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1B1C07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A756E21707
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:11:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="M++fSJWI"
+	by mail.kernel.org (Postfix) with ESMTP id 4DA7C2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:15:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbfE0HLb (ORCPT
+        id S1726160AbfE0HO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 03:11:31 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:39762 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725943AbfE0HLb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 03:11:31 -0400
-Received: by mail-ed1-f68.google.com with SMTP id e24so25222065edq.6
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 00:11:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wA1JuhUgVmAMcVow8fyZg95eHwvIww+RlmWs6LbIHEw=;
-        b=M++fSJWIrvusFTZQ6drpas8GACMqPkJmizwitxjxCh2T5tic14cebDSsGUjQ5C3oKe
-         VvT54XZ4qbUx63jthl0C7W3mIHhORCyHmX8zG8ZFWKfrev0OvL1WfpFwNZix0KpRtkSA
-         dVwTfIRQixKE2cr5XCKMidd0wP6GhEiDcKelQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=wA1JuhUgVmAMcVow8fyZg95eHwvIww+RlmWs6LbIHEw=;
-        b=RbIPFFE72QiySRdCLDnHlfTgYMNUoWg0M9bxhx9Na3nN8PMUPaHFscAAbomqd/k54q
-         +EfWC8504m02C44RQYQtSd11gvlqY0+tRHoBnlSIEkF4VPuF9Sea2brBNlquk5ytiwKS
-         0JQhgcpx5JFu9oKckY6ega7IdJs4iPPbKu1zAoZy65wSOa8ya4ZevY007jdqsbZep5QF
-         pxiKPpNcvloynn8/KnGnI8y3WoXvSfCHrmhGB+oOY+cgqDvuv3shry0pbYg+WkDnH4lS
-         O7wYEyu8QEJ+pvqaYekb32TDM4rdvj+vZjZbFiBWrfQbSHq8t/t/FuariBoq7QJ9cRBH
-         bTXQ==
-X-Gm-Message-State: APjAAAX24emuilycWYPEHV0BbZVCtsgAyrhTLmcC/44HRN1LouhQgb9D
-        BGf2tPNLCAAIvy/lYztVUY7/FXrrZug=
-X-Google-Smtp-Source: APXvYqzQpmBvFwoEJCPko6O9rivTi+mlWfwidR3MWcOARh7DAtnArIQGclbOBWliqvv6nqMfC0ymbg==
-X-Received: by 2002:a50:ba1a:: with SMTP id g26mr120202668edc.90.1558941089378;
-        Mon, 27 May 2019 00:11:29 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id x22sm3057778edd.59.2019.05.27.00.11.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 27 May 2019 00:11:28 -0700 (PDT)
-Date:   Mon, 27 May 2019 09:11:26 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>
-Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Jens Frederich <jfrederich@gmail.com>,
-        Daniel Drake <dsd@laptop.org>,
-        Jon Nettleton <jon.nettleton@gmail.com>
-Subject: Re: [PATCH 32/33] staging/olpc_dcon: Add drm conversion to TODO
-Message-ID: <20190527071126.GL21222@phenom.ffwll.local>
-Mail-Followup-To: LKML <linux-kernel@vger.kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Jens Frederich <jfrederich@gmail.com>,
-        Daniel Drake <dsd@laptop.org>,
-        Jon Nettleton <jon.nettleton@gmail.com>
-References: <20190524085354.27411-1-daniel.vetter@ffwll.ch>
- <20190524085354.27411-33-daniel.vetter@ffwll.ch>
+        Mon, 27 May 2019 03:14:59 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:17163 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725940AbfE0HO7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 03:14:59 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 9B8B216F5327146B6375;
+        Mon, 27 May 2019 15:14:56 +0800 (CST)
+Received: from [127.0.0.1] (10.74.221.148) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Mon, 27 May 2019
+ 15:14:50 +0800
+Subject: Re: [PATCH v3 2/2] arm64: cacheinfo: Update cache_line_size detected
+ from DT or PPTT
+To:     Greg KH <gregkh@linuxfoundation.org>
+References: <1558922768-29155-1-git-send-email-zhangshaokun@hisilicon.com>
+ <1558922768-29155-2-git-send-email-zhangshaokun@hisilicon.com>
+ <20190527060829.GA8106@kroah.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Zhenfa Qiu <qiuzhenfa@hisilicon.com>
+From:   Zhangshaokun <zhangshaokun@hisilicon.com>
+Message-ID: <dd27d90c-e712-7aa5-b647-925042bb8669@hisilicon.com>
+Date:   Mon, 27 May 2019 15:14:50 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190524085354.27411-33-daniel.vetter@ffwll.ch>
-X-Operating-System: Linux phenom 4.14.0-3-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190527060829.GA8106@kroah.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.221.148]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 10:53:53AM +0200, Daniel Vetter wrote:
-> this driver is pretty horrible from a design pov, and needs a complete
-> overhaul. Concrete thing that annoys me is that it looks at
-> registered_fb, which is an internal thing to fbmem.c and fbcon.c. And
-> ofc it gets the lifetime rules all wrong (it should at least use
-> get/put_fb_info).
+Hi Greg,
+
+On 2019/5/27 14:08, Greg KH wrote:
+> On Mon, May 27, 2019 at 10:06:08AM +0800, Shaokun Zhang wrote:
+>> cache_line_size is derived from CTR_EL0.CWG field and is called mostly
+>> for I/O device drivers. For HiSilicon certain plantform, like the
+>> Kunpeng920 server SoC, cache line sizes are different between L1/2
+>> cache and L3 cache while L1 cache line size is 64-byte and L3 is 128-byte,
+>> but CTR_EL0.CWG is misreporting using L1 cache line size.
+>>
+>> We shall correct the right value which is important for I/O performance.
+>> Let's update the cache line size if it is detected from DT or PPTT
+>> information.
+>>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will.deacon@arm.com>
+>> Cc: Sudeep Holla <sudeep.holla@arm.com>
+>> Cc: Jeremy Linton <jeremy.linton@arm.com>
+>> Cc: Zhenfa Qiu <qiuzhenfa@hisilicon.com>
+>> Reported-by: Zhenfa Qiu <qiuzhenfa@hisilicon.com>
+>> Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
+>> Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+>> ---
+>>  arch/arm64/include/asm/cache.h |  6 +-----
+>>  arch/arm64/kernel/cacheinfo.c  | 11 +++++++++++
+>>  2 files changed, 12 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/arch/arm64/include/asm/cache.h b/arch/arm64/include/asm/cache.h
+>> index 926434f413fa..758af6340314 100644
+>> --- a/arch/arm64/include/asm/cache.h
+>> +++ b/arch/arm64/include/asm/cache.h
+>> @@ -91,11 +91,7 @@ static inline u32 cache_type_cwg(void)
+>>  
+>>  #define __read_mostly __attribute__((__section__(".data..read_mostly")))
+>>  
+>> -static inline int cache_line_size(void)
+>> -{
+>> -	u32 cwg = cache_type_cwg();
+>> -	return cwg ? 4 << cwg : ARCH_DMA_MINALIGN;
+>> -}
+>> +int cache_line_size(void);
+>>  
+>>  /*
+>>   * Read the effective value of CTR_EL0.
+>> diff --git a/arch/arm64/kernel/cacheinfo.c b/arch/arm64/kernel/cacheinfo.c
+>> index 0bf0a835122f..3d54b0024246 100644
+>> --- a/arch/arm64/kernel/cacheinfo.c
+>> +++ b/arch/arm64/kernel/cacheinfo.c
+>> @@ -28,6 +28,17 @@
+>>  #define CLIDR_CTYPE(clidr, level)	\
+>>  	(((clidr) & CLIDR_CTYPE_MASK(level)) >> CLIDR_CTYPE_SHIFT(level))
+>>  
+>> +int cache_line_size(void)
+>> +{
+>> +	u32 cwg = cache_type_cwg();
+>> +
+>> +	if (coherency_max_size != 0)
+>> +		return coherency_max_size;
 > 
-> Looking at the history, there's been an attempt at dropping this from
-> staging in 2016, but that had to be reverted. Since then not real
-> effort except the usual stream of trivial patches, and fbdev has been
-> formally closed for any new hw support. Time to try again and drop
-> this?
-> 
-> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> Cc: Jens Frederich <jfrederich@gmail.com>
-> Cc: Daniel Drake <dsd@laptop.org>
-> Cc: Jon Nettleton <jon.nettleton@gmail.com>
-
-Hi Greg
-
-Again get_mainatiners didn't pick you up on this somehow (I manually added
-you now for the next round). Do you want to pick this up to staging, or
-ack for merging through drm/fbdev as part of the larger fbdev/fbcon
-rework?
-
-Also, I think time to retry and attempt at dropping this imo ...
-
-Thanks, Daniel
-
-> ---
->  drivers/staging/olpc_dcon/TODO | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/staging/olpc_dcon/TODO b/drivers/staging/olpc_dcon/TODO
-> index 665a0b061719..fe09efbc7f77 100644
-> --- a/drivers/staging/olpc_dcon/TODO
-> +++ b/drivers/staging/olpc_dcon/TODO
-> @@ -1,4 +1,11 @@
->  TODO:
-> +	- complete rewrite:
-> +	  1. The underlying fbdev drivers need to be converted into drm kernel
-> +	     modesetting drivers.
-> +	  2. The dcon low-power display mode can then be integrated using the
-> +	     drm damage tracking and self-refresh helpers.
-> +	  This bolted-on self-refresh support that digs around in fbdev
-> +	  internals, but isn't properly integrated, is not the correct solution.
->  	- see if vx855 gpio API can be made similar enough to cs5535 so we can
->  	  share more code
->  	- convert all uses of the old GPIO API from <linux/gpio.h> to the
-> -- 
-> 2.20.1
+> Ah, you use it here.
 > 
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Yeah, we check it here.
+
+>> +
+>> +	return cwg ? 4 << cwg : ARCH_DMA_MINALIGN;
+> 
+> Shouldn't you set the variable if it is 0 here as well?
+> 
+
+As discussed this with Catalin,
+https://www.spinics.net/lists/arm-kernel/msg723848.html
+
+I think it is unnecessary, if coherency_max_size is not detected from firmware,
+We will return the cpu core reporting value as the cache line size and
+coherency_max_size won't be used in other place.
+
+>> +}
+>> +EXPORT_SYMBOL(cache_line_size);
+> 
+> EXPORT_SYMBOL_GPL()?
+> 
+
+Ok.
+
+Thanks,
+Shaokun
+
+> thanks,
+> 
+> greg k-h
+> 
+> .
+> 
+
