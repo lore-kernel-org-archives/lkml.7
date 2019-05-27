@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9CEDC04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35BDEC07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EE7D20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:22:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EE4D20883
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:22:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="bSGwfDwA"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="r2OcgSMZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfE0NWJ (ORCPT
+        id S1726633AbfE0NWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 09:22:09 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44270 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726274AbfE0NWG (ORCPT
+        Mon, 27 May 2019 09:22:12 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43410 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726568AbfE0NWJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 09:22:06 -0400
-Received: by mail-wr1-f68.google.com with SMTP id w13so8561070wru.11
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 06:22:04 -0700 (PDT)
+        Mon, 27 May 2019 09:22:09 -0400
+Received: by mail-wr1-f66.google.com with SMTP id l17so8527473wrm.10
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 06:22:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Z5tls13Db7MluddscEzD/cF6XBKT+xo8zEqe2ab5FrI=;
-        b=bSGwfDwAQNmN5af6mPI9aaBpl7ow9qoZBVLH4+zqLWruiKxLnW5XbtURKbDdTcnRQO
-         6vnjdz8rtc5Z/BRk5ivxx7l/c0jj3RbtJPJTGGmKIi5tT1npBVYDSYze3aReFnj0SWDp
-         so9B0iTixNrayDnNwS2qbh1fjLesU1G7I7cH+kVWL6zAnqkp7ouE6T+9RbCCrbAooG7d
-         Q5+jYo+x4dGc1HMfqMQMyxGyz0fEZ6cxyzW44yUiqd/bUjucvtApDQstXj5Hd7ScmY03
-         rdg2aTMEbG3A9OCaQ2K6SA+7/fo2JNpjnysCa8otZntQIsSV0ZYM7EfdXi70+NZnbQKU
-         Fyig==
+        bh=0UO6p2NGpn6/x+RK1bJoMUDg+U4e7UPzCJT+tP40PaA=;
+        b=r2OcgSMZb0v4j6KbwLI3lZude7y52PSXwphSwGgAIB9u+xVVV7O/ahSo2ZS/LMcwH4
+         wqshUKB2VvyaIvZhSS1V6K9UjnbU/mlFMiBkGhIM8CIkv4bJvseyfm2UDDmt9hu2xBT6
+         7mNhfmxgyl+059rx5X70BqJVEko6sOMPVDMUIj17uk3Mz9YHuInOrtmJOrdDUh5agYy3
+         HWxtSiW4Dv1vzm/RcshsbWCqdV4AwrqZqlNL4O7MUcXGlbc8UecfNomF9mp+IvnpLTmx
+         eKGYRgm+jZrmQ0ClplDsnJEqjxcxJ3Kyvw+9oxCoU9lggtjHlOnmPBVzAL0C5Y2ya6Ck
+         C2Hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Z5tls13Db7MluddscEzD/cF6XBKT+xo8zEqe2ab5FrI=;
-        b=SbrkGVtnVo0hSymUxUZ2G2svdjWGuDjiFXYJNnt+lNsLhcYI9QzN8EDobyavrYsNum
-         Vri9fCIGnyVLNHC1rsM3W0WGklVA1rxNLJIfqzZp0cOQ97iY4o+CqFsle54gq8kWrjmj
-         hDxWyEEiHQzpiQKBAc3S4t9/XCqq/mj5h5Izs8Zsa+6q78uenjjXsejJw66LRpDwHKwD
-         cz8vDHVXso9lXbhXPnKnd8mSVBYH4Q9Mwgsw9RAJSS0CTevCGepYid/6D5aTAjr3Y3il
-         j3xCW8NGZBIU4ty57CPfzci5gnU5acbUbxjwkirZvqS4vRQkWKC0xr6PUWSZ/IEgoQeU
-         fgxA==
-X-Gm-Message-State: APjAAAWr7zX6Ew3nqgP9X8y0U39G7Wrnlgl0bXf9k64bZnJNoqo4xaib
-        f48OfqGDWzlj+HROZA007YDyLQ==
-X-Google-Smtp-Source: APXvYqx4ak3U23GjVQ37/QuSEhrHTCPPogN0xcqSigoV1Oz/v7kkcfkYXBee31EHzam3stgt8gbEaA==
-X-Received: by 2002:adf:eec9:: with SMTP id a9mr21802706wrp.281.1558963323951;
-        Mon, 27 May 2019 06:22:03 -0700 (PDT)
+        bh=0UO6p2NGpn6/x+RK1bJoMUDg+U4e7UPzCJT+tP40PaA=;
+        b=EwnGaKaPXJMvGCetHLoEy6qaR5+yqCt1IPFjoola3pmwPuxpKcAbmqh6y1Ubc8Y4YT
+         kxRE6R2ITw0XkTyGyRx7UK48FgVgZyh3ae6Xj+cwb492Tbyh+HUGW8UGKaap5NXuwfI0
+         knu9n7QlG3AVm9naTgWPQ9L3zAoEPNPISQDtpY7oDaODc44dXD37I5SQ8FwhzzFlTax4
+         7boW8V7DJN8r00zthQaLLnWrDXTjKKJ6W+3tb8ULuDuKavARSQ7DkgCpvz5YCU4cgb/M
+         bxnpgYjHxmfvTwB4cSwelSmxwm97tK+/DosGbpth2QhSUq+jSmwcH+zhU0ie1e4dZGSq
+         tmEg==
+X-Gm-Message-State: APjAAAWsRVvkiqRqYa6bobwrD7p03MI5fMQh71AlD3cwc8ukpaJC5wiN
+        djpCVW+IJl5E6qgCQUmzjGjLXW6Jvh1W5g==
+X-Google-Smtp-Source: APXvYqzCwOlwTFCDqqaeLiT8HaxVqritfgZVZbXUj48aOqAe46yNkgcCzFHUbw7WVsspKUXNijl9Ug==
+X-Received: by 2002:adf:fe07:: with SMTP id n7mr134383wrr.7.1558963327475;
+        Mon, 27 May 2019 06:22:07 -0700 (PDT)
 Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id l12sm7019836wmj.22.2019.05.27.06.22.03
+        by smtp.gmail.com with ESMTPSA id l12sm7019836wmj.22.2019.05.27.06.22.06
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 27 May 2019 06:22:03 -0700 (PDT)
+        Mon, 27 May 2019 06:22:07 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     khilman@baylibre.com
-Cc:     Christian Hewitt <christianshewitt@gmail.com>,
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
         linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 02/10] arm64: dts: meson-gxm-khadas-vim2: fix Bluetooth support
-Date:   Mon, 27 May 2019 15:21:52 +0200
-Message-Id: <20190527132200.17377-3-narmstrong@baylibre.com>
+        christianshewitt@gmail.com
+Subject: [PATCH 06/10] arm64: dts: meson-gxbb-vega-s95: add HDMI nodes
+Date:   Mon, 27 May 2019 15:21:56 +0200
+Message-Id: <20190527132200.17377-7-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190527132200.17377-1-narmstrong@baylibre.com>
 References: <20190527132200.17377-1-narmstrong@baylibre.com>
@@ -75,47 +75,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Hewitt <christianshewitt@gmail.com>
+Add HDMI nodes to support graphics on Vega S95
 
-- Remove serial1 alias
-- Add support for uart_A rts/cts
-- Add bluetooth uart_A subnode qith shutdown gpio
-
-Fixes: b8b74dda3908 ("ARM64: dts: meson-gxm: Add support for Khadas VIM2")
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+Suggested-by: Christian Hewitt <christianshewitt@gmail.com>
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi | 23 +++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
-index 25079501f2bb..ff4f0780824d 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
-@@ -18,7 +18,6 @@
- 
- 	aliases {
- 		serial0 = &uart_AO;
--		serial1 = &uart_A;
- 		serial2 = &uart_AO_B;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
+index 760730d4e87b..6738b2aac9a0 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
+@@ -73,6 +73,17 @@
+ 		pwms = <&pwm_ef 0 30518 0>; /* PWM_E at 32.768KHz */
  	};
  
-@@ -403,8 +402,14 @@
- /* This one is connected to the Bluetooth module */
- &uart_A {
- 	status = "okay";
--	pinctrl-0 = <&uart_a_pins>;
-+	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
- 	pinctrl-names = "default";
-+	uart-has-rtscts;
++	hdmi-connector {
++		compatible = "hdmi-connector";
++		type = "a";
 +
-+	bluetooth {
-+		compatible = "brcm,bcm43438-bt";
-+		shutdown-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
++		port {
++			hdmi_connector_in: endpoint {
++				remote-endpoint = <&hdmi_tx_tmds_out>;
++			};
++		};
 +	};
++
+ 	sdio_pwrseq: sdio-pwrseq {
+ 		compatible = "mmc-pwrseq-simple";
+ 		reset-gpios = <&gpio GPIOX_6 GPIO_ACTIVE_LOW>,
+@@ -108,6 +119,18 @@
+ 	};
  };
  
- /* This is brought out on the Linux_RX (18) and Linux_TX (19) pins: */
++&hdmi_tx {
++	status = "okay";
++	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
++	pinctrl-names = "default";
++};
++
++&hdmi_tx_tmds_port {
++	hdmi_tx_tmds_out: endpoint {
++		remote-endpoint = <&hdmi_connector_in>;
++	};
++};
++
+ &ir {
+ 	status = "okay";
+ 	pinctrl-0 = <&remote_input_ao_pins>;
 -- 
 2.21.0
 
