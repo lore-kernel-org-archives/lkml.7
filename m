@@ -2,112 +2,128 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77DF7C28CBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8055C07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 450082173B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:31:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85C702173B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:32:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="KOFBijN4"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LF7vLq5d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726154AbfE0HbI (ORCPT
+        id S1726264AbfE0HcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 03:31:08 -0400
-Received: from mail-eopbgr80071.outbound.protection.outlook.com ([40.107.8.71]:3523
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725869AbfE0HbI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 03:31:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=79ZjyipAqebJuZXJXJz7EtcewtV9LhALiwRnr28aT5U=;
- b=KOFBijN4t3ebtlVA0HuyOLXWruv5+ska5nzSTGyEsm5RpCekX6r7LRqQsh8Hk5J0ygDpks0Wvr+Xzk5WppTpXvsiDGyjf5AcoQXzRH1Xlq2IbDqLZeTKz6tJd5iN6pFMbgq1KuMA5ZHqF8KQuRWcwlNaXdMo/FN46p78w0ErAd8=
-Received: from VI1PR04MB4543.eurprd04.prod.outlook.com (20.177.55.90) by
- VI1PR04MB3246.eurprd04.prod.outlook.com (10.170.229.33) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.19; Mon, 27 May 2019 07:31:01 +0000
-Received: from VI1PR04MB4543.eurprd04.prod.outlook.com
- ([fe80::5062:df97:a70b:93f8]) by VI1PR04MB4543.eurprd04.prod.outlook.com
- ([fe80::5062:df97:a70b:93f8%7]) with mapi id 15.20.1922.021; Mon, 27 May 2019
- 07:31:01 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     "vkoul@kernel.org" <vkoul@kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-Subject: Re: [PATCH v1 4/6] dmaengine: fsl-edma: add i.mx7ulp edma2 version
- support
-Thread-Topic: [PATCH v1 4/6] dmaengine: fsl-edma: add i.mx7ulp edma2 version
- support
-Thread-Index: AQHVBxkiWq7ELKRpKk+QnDmvsVTzcqZ+nkiAgACW+IA=
-Date:   Mon, 27 May 2019 07:31:01 +0000
-Message-ID: <1558971291.19282.3.camel@nxp.com>
-References: <1557512248-8440-1-git-send-email-yibin.gong@nxp.com>
-         <1557512248-8440-5-git-send-email-yibin.gong@nxp.com>
-         <20190527063431.GC15118@vkoul-mobl>
-In-Reply-To: <20190527063431.GC15118@vkoul-mobl>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yibin.gong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 09b42a95-d862-45b3-3036-08d6e27544e9
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB3246;
-x-ms-traffictypediagnostic: VI1PR04MB3246:
-x-microsoft-antispam-prvs: <VI1PR04MB324607F1CDA7C6106DD4B93F891D0@VI1PR04MB3246.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0050CEFE70
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(376002)(136003)(39860400002)(366004)(346002)(396003)(199004)(189003)(6246003)(2906002)(229853002)(5640700003)(81166006)(91956017)(8676002)(7416002)(81156014)(1730700003)(66066001)(53936002)(6116002)(3846002)(36756003)(486006)(14444005)(256004)(4326008)(25786009)(6436002)(6916009)(478600001)(6486002)(6512007)(14454004)(2616005)(476003)(11346002)(64756008)(186003)(54906003)(446003)(26005)(99286004)(68736007)(71190400001)(53546011)(71200400001)(6506007)(102836004)(86362001)(76176011)(305945005)(7736002)(76116006)(2351001)(4744005)(66556008)(103116003)(316002)(66446008)(66946007)(73956011)(66476007)(8936002)(2501003)(50226002)(5660300002)(99106002)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB3246;H:VI1PR04MB4543.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: sV2iTP617LRhCsZGbR4LQIRUFeEQ+78B+bWWXATWplo5BjX/5Pyj8ds0InC5msq0IKEHwDx7+jeyXUA/CAK211HzYvX0lmacIKcZ3SgKfkJYcRTr/F+wVRsMpdE9y7/AZv9W7IXP5EnK+wGWCcTqA3D8ct4x9PaesKr4iYdyW8kakrM1dNCFl3fGG+SA9I6zPvZ6/1bqkmPSXnVQzeZHCn6T+X/JMOfCs/jYGMVhtuitqucv62nB3Nixbwh2/pYFsnFdEMUOJRO3j7pU3iQpXGSkFDphOZX3BlS+wiuJPk/tv/4tCjWf4e9QKY44ha5Ln6Hpj75RreoiQY0WvGm6OqiLgPsSK7FMBq2gvgCBpOZz5Fpk6XAh2J5q1Mvwl0b8kgvuaHEF16fJcXbjkDczxu7NKbC4oMmxGkXgYd/uRV4=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <25F6E151E044984DB1AEB174A2075C0B@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 27 May 2019 03:32:18 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:60148 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725869AbfE0HcS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 03:32:18 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4R7Sp3Y025804;
+        Mon, 27 May 2019 07:32:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2018-07-02;
+ bh=Dj/c4jygPsLOwoeXy2QzAi6Z5tucTz7dWZXb8pwrNIY=;
+ b=LF7vLq5dVtLXBIjepZ2FjTaw9k6FsyFAt6nYbD4PYk91TIeK3SKmjHkpsZPS9FMEnVqf
+ XMYbeBLruRwmwGqQGatmtQQqGq94j7rEpn9t3sq1MIvSLXTfiVik3Gtp4iA4n1sT5jG4
+ 6lyqraSaDRLj7mOwbWwGmbGJMmCVqKjyKbXLU3BLCSY49/5aM0jsOBBcNU9Tambk+mZP
+ KCoJbrwrBDKlvv2BFOovdUAok0Cp1P6LDwusQy23uMnwS7r1Io6lbaoaWfDwL3Xyc13v
+ fa3QlZv7LJ6FRcfQAi0hGSgDjiOHsfNMoGJdDGFMbE+UcDMwJkEuneJu9DK5KdC5f1FL 5g== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2spw4t4p1f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 May 2019 07:32:12 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4R7VjON196133;
+        Mon, 27 May 2019 07:32:12 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2srbdw844a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 May 2019 07:32:12 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4R7W6rb021727;
+        Mon, 27 May 2019 07:32:09 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 27 May 2019 00:32:06 -0700
+Date:   Mon, 27 May 2019 10:31:59 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Simon =?iso-8859-1?Q?Sandstr=F6m?= <simon@nikanor.nu>
+Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] staging: kpc2000: add missing spaces in core.c
+Message-ID: <20190527073159.GX31203@kadam>
+References: <20190524110802.2953-1-simon@nikanor.nu>
+ <20190524110802.2953-4-simon@nikanor.nu>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 09b42a95-d862-45b3-3036-08d6e27544e9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 May 2019 07:31:01.3618
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yibin.gong@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB3246
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190524110802.2953-4-simon@nikanor.nu>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9269 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905270053
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9269 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905270053
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0wNS0yNyBhdCAwNjozNCArMDAwMCwgVmlub2QgS291bCB3cm90ZToNCj4gT24gMTAt
-MDUtMTksIDEwOjE0LCBSb2JpbiBHb25nIHdyb3RlOg0KPiA+IA0KPiA+IMKgDQo+ID4gKwlpZiAo
-b2ZfZGV2aWNlX2lzX2NvbXBhdGlibGUobnAsICJmc2wsaW14N3VscC1lZG1hIikpIHsNCj4gPiAr
-CQlmc2xfZWRtYS0+ZG1hbXV4X25yID0gMTsNCj4gPiArCQlmc2xfZWRtYS0+dmVyc2lvbiA9IHYz
-Ow0KPiB3ZWxsIHRoaXMgaXMgbm90IHJlYWxseSBzY2FsYWJsZSwgd2Ugd2lsbCBrZWVwIGFkZGlu
-ZyB2ZXJzaW9ucyBhbmQNCj4gY29tcGF0aWJsZSBhbmQgZXhwYW5kaW5nIHRoaXMgY2hlY2suIFNv
-IGl0IHdvdWxkIG1ha2Ugc2Vuc2UgdG8gY3JlYXRlDQo+IGENCj4gZHJpdmVyIGRhdGEgdGFibGUg
-d2hpY2ggY2FuIGJlIHNldCBmb3IgY29tcGF0aWJsZSBhbmQgd2UgdXNlIHRob3NlDQo+IHZhbHVl
-cyBhbmQgYXZvaWQgdGhlc2UgcnVudGltZSBjaGVja3MgZm9yIGNvbXBhdGlibGUuDQo+IA0KPiBC
-dHcgdGhlIGJpbmRpbmcgZG9jdW1lbnRhdGlvbiBzaG91bGQgcHJlY2VkZSB0aGUgY29kZSB1c2Fn
-ZSwgc28gdGhpcw0KPiBwYXRjaCBzaG91bGQgY29tZSBhZnRlciB0aGF0DQo+IA0KT2theSwgd2ls
-bCB1cGRhdGUgaW4gdjIu
+On Fri, May 24, 2019 at 01:08:01PM +0200, Simon Sandström wrote:
+> Fixes checkpatch.pl errors "space required before the open brace '{'"
+> and "(foo*)" should be "(foo *)".
+> 
+> Signed-off-by: Simon Sandström <simon@nikanor.nu>
+> ---
+>  drivers/staging/kpc2000/kpc2000/core.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/staging/kpc2000/kpc2000/core.c b/drivers/staging/kpc2000/kpc2000/core.c
+> index 40f65f96986b..bb3b427a72b1 100644
+> --- a/drivers/staging/kpc2000/kpc2000/core.c
+> +++ b/drivers/staging/kpc2000/kpc2000/core.c
+> @@ -308,7 +308,7 @@ static long kp2000_cdev_ioctl(struct file *filp, unsigned int ioctl_num,
+>  
+>  	dev_dbg(&pcard->pdev->dev, "kp2000_cdev_ioctl(filp = [%p], ioctl_num = 0x%08x, ioctl_param = 0x%016lx) pcard = [%p]\n", filp, ioctl_num, ioctl_param, pcard);
+>  
+> -	switch (ioctl_num){
+> +	switch (ioctl_num) {
+>  	case KP2000_IOCTL_GET_CPLD_REG:             return readq(pcard->sysinfo_regs_base + REG_CPLD_CONFIG);
+>  	case KP2000_IOCTL_GET_PCIE_ERROR_REG:       return readq(pcard->sysinfo_regs_base + REG_PCIE_ERROR_COUNT);
+>  
+> @@ -326,7 +326,7 @@ static long kp2000_cdev_ioctl(struct file *filp, unsigned int ioctl_num,
+>  		temp.ddna = pcard->ddna;
+>  		temp.cpld_reg = readq(pcard->sysinfo_regs_base + REG_CPLD_CONFIG);
+>  
+> -		ret = copy_to_user((void*)ioctl_param, (void*)&temp, sizeof(temp));
+> +		ret = copy_to_user((void *)ioctl_param, (void *)&temp, sizeof(temp));
+>  		if (ret)
+>  			return -EFAULT;
+
+This should really be written like so:
+
+		if (copy_to_user((void __user *)ioctl_param, &temp,
+				 sizeof(temp)))
+			return -EFAULT;
+
+temp is really the wrong name.  "temp" is for temperatures.  "tmp" means
+temporary.  But also "tmp" is wrong here because it's not a temporary
+variable.  It's better to call it "regs" here.
+
+regards,
+dan carpenter
+
