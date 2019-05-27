@@ -6,35 +6,32 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2511EC07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C84C07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6D172075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:37:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E4B72075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:38:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726114AbfE0Hhd (ORCPT
+        id S1726185AbfE0HiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 03:37:33 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49296 "EHLO mx1.suse.de"
+        Mon, 27 May 2019 03:38:06 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49366 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725869AbfE0Hhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 03:37:32 -0400
+        id S1725869AbfE0HiG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 03:38:06 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 84074AF34;
-        Mon, 27 May 2019 07:37:31 +0000 (UTC)
-Date:   Mon, 27 May 2019 09:37:30 +0200
-Message-ID: <s5h8sus9wlh.wl-tiwai@suse.de>
+        by mx1.suse.de (Postfix) with ESMTP id 5E815AF3E;
+        Mon, 27 May 2019 07:38:05 +0000 (UTC)
+Date:   Mon, 27 May 2019 09:38:05 +0200
+Message-ID: <s5h7eac9wki.wl-tiwai@suse.de>
 From:   Takashi Iwai <tiwai@suse.de>
-To:     "Colin King" <colin.king@canonical.com>
-Cc:     <alsa-devel@alsa-project.org>,
-        "Liam Girdwood" <lgirdwood@gmail.com>,
-        "Mark Brown" <broonie@kernel.org>,
-        "Jaroslav Kysela" <perex@perex.cz>,
-        <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH][next] ASoC: cx2072x: fix spelling mistake "configued" -> "configured"
-In-Reply-To: <20190525203244.7829-1-colin.king@canonical.com>
-References: <20190525203244.7829-1-colin.king@canonical.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -next] ASoC: cx2072x: remove set but not used variable 'is_right_j '
+In-Reply-To: <20190525123204.16148-1-yuehaibing@huawei.com>
+References: <20190525123204.16148-1-yuehaibing@huawei.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
  (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -45,14 +42,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 25 May 2019 22:32:44 +0200,
-Colin King wrote:
+On Sat, 25 May 2019 14:32:04 +0200,
+YueHaibing wrote:
 > 
-> From: Colin Ian King <colin.king@canonical.com>
+> Fixes gcc '-Wunused-but-set-variable' warning:
 > 
-> There is a spelling mistake in a dev_err error message. Fit it.
+> sound/soc/codecs/cx2072x.c: In function cx2072x_config_i2spcm:
+> sound/soc/codecs/cx2072x.c:679:6: warning: variable is_right_j set but not used [-Wunused-but-set-variable]
 > 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> It's never used and can be removed.
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
 Reviewed-by: Takashi Iwai <tiwai@suse.de>
 
@@ -63,23 +63,31 @@ Takashi
 
 
 > ---
->  sound/soc/codecs/cx2072x.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  sound/soc/codecs/cx2072x.c | 2 --
+>  1 file changed, 2 deletions(-)
 > 
 > diff --git a/sound/soc/codecs/cx2072x.c b/sound/soc/codecs/cx2072x.c
-> index e8e6fd2e97b6..f25376789c5c 100644
+> index 23d2b25fe04c..a066ef83de1a 100644
 > --- a/sound/soc/codecs/cx2072x.c
 > +++ b/sound/soc/codecs/cx2072x.c
-> @@ -933,7 +933,7 @@ static int cx2072x_hw_params(struct snd_pcm_substream *substream,
->  		return frame_size;
+> @@ -676,7 +676,6 @@ static int cx2072x_config_i2spcm(struct cx2072x_priv *cx2072x)
+>  	unsigned int bclk_rate = 0;
+>  	int is_i2s = 0;
+>  	int has_one_bit_delay = 0;
+> -	int is_right_j = 0;
+>  	int is_frame_inv = 0;
+>  	int is_bclk_inv = 0;
+>  	int pulse_len = 1;
+> @@ -740,7 +739,6 @@ static int cx2072x_config_i2spcm(struct cx2072x_priv *cx2072x)
 >  
->  	if (cx2072x->mclk_rate == 0) {
-> -		dev_err(dev, "Master clock rate is not configued\n");
-> +		dev_err(dev, "Master clock rate is not configured\n");
->  		return -EINVAL;
->  	}
+>  	case SND_SOC_DAIFMT_RIGHT_J:
+>  		is_i2s = 1;
+> -		is_right_j = 1;
+>  		pulse_len = frame_len / 2;
+>  		break;
 >  
 > -- 
-> 2.20.1
+> 2.17.1
+> 
 > 
 > 
