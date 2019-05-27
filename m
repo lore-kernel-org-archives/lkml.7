@@ -3,61 +3,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE39CC04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 22:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D27C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 22:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7C7E20859
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 22:41:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558996861;
-	bh=LUR9z8YUrouOfa2iWAAd0RCTcTyS2Am+Ti6wICsO9z8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V1Nbb0AIZ1OsBysa1MbmG8MrrrEz4pm+RNv4Vc1fbH6cZCbiiYY/XKhDGJ6LXF4Vw
-	 7xmu+fO8JWlNsGZoqX8UW2Kx0TJZlelA73weWaxyOPNrNRSYUuf+FiPIooejWds7cq
-	 vxbYM/Bc9oLp5y2RtZUQMrGJTKIJ+oPLrX4nWRPE=
+	by mail.kernel.org (Postfix) with ESMTP id E75792133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 22:41:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="jCk6OtNr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbfE0WlA (ORCPT
+        id S1728068AbfE0WlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 18:41:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46802 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727392AbfE0WlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 18:41:00 -0400
-Received: from quaco.ghostprotocols.net (179-240-171-7.3g.claro.net.br [179.240.171.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED2862081C;
-        Mon, 27 May 2019 22:40:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558996858;
-        bh=LUR9z8YUrouOfa2iWAAd0RCTcTyS2Am+Ti6wICsO9z8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uTu5G56gODRrKSpnHF7OehUe7Pwsk9YOWFiatcYsrTpJ0gVmR6Aozn3R/bprb4Jnx
-         7NfWv4rT2gqavFq+FuBygj8ic3AUzzN8yMQP66bhTG7hHe4NYHhNrEBjuJAPxWV0CF
-         n65h84ROrQhM+2/poTEbRv19DoT8mhhqxf61mw/Y=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Song Liu <songliubraving@fb.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stanislav Fomichev <sdf@google.com>
-Subject: [PATCH 40/44] perf script: Add --show-bpf-events to show eBPF related events
-Date:   Mon, 27 May 2019 19:37:26 -0300
-Message-Id: <20190527223730.11474-41-acme@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190527223730.11474-1-acme@kernel.org>
-References: <20190527223730.11474-1-acme@kernel.org>
+        Mon, 27 May 2019 18:41:05 -0400
+Received: from mail.kmu-office.ch ([178.209.48.109]:35254 "EHLO
+        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728065AbfE0WlD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 18:41:03 -0400
+Received: from zyt.lan (unknown [IPv6:2a02:169:3c0a::564])
+        by mail.kmu-office.ch (Postfix) with ESMTPSA id E9C155C0104;
+        Tue, 28 May 2019 00:40:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+        t=1558996860;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:
+         content-transfer-encoding:content-transfer-encoding:in-reply-to:
+         references; bh=RAept5Q5fVmuZ++ThCZbA37evns015LjBoUehasT/og=;
+        b=jCk6OtNrXck/LIzjSb18suAI3aialfD3oiTaItrudx/eaOX7FEdiT944EFpBD1wT/RQhUo
+        7JRRZ28/icNKcV51vJzREifORHjqWTqMfqOwxLF7y3hdGO4ZWiv/rjn5l5uyBIPF8Pmw6K
+        fvAoLLr794AEOmRxb7dD0k+pDqqPGGQ=
+From:   Stefan Agner <stefan@agner.ch>
+To:     arm@kernel.org, olof@lixom.net
+Cc:     linux@armlinux.org.uk, arnd@arndb.de, ard.biesheuvel@linaro.org,
+        robin.murphy@arm.com, nico@fluxnic.net, f.fainelli@gmail.com,
+        rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, kgene@kernel.org,
+        krzk@kernel.org, robh@kernel.org, ssantosh@kernel.org,
+        jason@lakedaemon.net, andrew@lunn.ch, gregory.clement@bootlin.com,
+        sebastian.hesselbarth@gmail.com, tony@atomide.com,
+        marc.w.gonzalez@free.fr, mans@mansr.com, ndesaulniers@google.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Stefan Agner <stefan@agner.ch>
+Subject: [PATCH v4 1/2] ARM: use arch_extension directive instead of arch argument
+Date:   Tue, 28 May 2019 00:40:50 +0200
+Message-Id: <c0ca465daa7c7663c19b0bcb848c70e8da22baff.1558996564.git.stefan@agner.ch>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -65,155 +58,318 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+The LLVM Target parser currently does not allow to specify the security
+extension as part of -march (see also LLVM Bug 40186 [0]). When trying
+to use Clang with LLVM's integrated assembler, this leads to build
+errors such as this:
+  clang-8: error: the clang compiler does not support '-Wa,-march=armv7-a+sec'
 
-Add the --show-bpf-events command line option to show the eBPF related events:
+Use ".arch_extension sec" to enable the security extension in a more
+portable fasion. Also make sure to use ".arch armv7-a" in case a v6/v7
+multi-platform kernel is being built.
 
-  PERF_RECORD_KSYMBOL
-  PERF_RECORD_BPF_EVENT
+Note that this is technically not exactly the same as the old code
+checked for availabilty of the security extension by calling as-instr.
+However, there are already other sites which use ".arch_extension sec"
+unconditionally, hence de-facto we need an assembler capable of
+".arch_extension sec" already today (arch/arm/mm/proc-v7.S). The
+arch extension "sec" is available since binutils 2.21 according to
+its documentation [1].
 
-Usage:
+[0] https://bugs.llvm.org/show_bug.cgi?id=40186
+[1] https://sourceware.org/binutils/docs-2.21/as/ARM-Options.html
 
-  # perf record -a
-  ...
-  # perf script --show-bpf-events
-  ...
-  swapper     0 [000]     0.000000: PERF_RECORD_KSYMBOL ksymbol event with addr ffffffffc0ef971d len 229 type 1 flags 0x0 name bpf_prog_2a142ef67aaad174
-  swapper     0 [000]     0.000000: PERF_RECORD_BPF_EVENT bpf event with type 1, flags 0, id 36
-  ...
-
-Committer testing:
-
-  # perf script --show-bpf-events | egrep -i 'PERF_RECORD_(BPF|KSY)'
-    0 PERF_RECORD_KSYMBOL ksymbol event with addr ffffffffc029a6c3 len 229 type 1 flags 0x0 name bpf_prog_7be49e3934a125ba
-    0 PERF_RECORD_BPF_EVENT bpf event with type 1, flags 0, id 47
-    0 PERF_RECORD_KSYMBOL ksymbol event with addr ffffffffc029c1ae len 229 type 1 flags 0x0 name bpf_prog_2a142ef67aaad174
-    0 PERF_RECORD_BPF_EVENT bpf event with type 1, flags 0, id 48
-    0 PERF_RECORD_KSYMBOL ksymbol event with addr ffffffffc02ddd1c len 229 type 1 flags 0x0 name bpf_prog_7be49e3934a125ba
-    0 PERF_RECORD_BPF_EVENT bpf event with type 1, flags 0, id 49
-    0 PERF_RECORD_KSYMBOL ksymbol event with addr ffffffffc02dfc11 len 229 type 1 flags 0x0 name bpf_prog_2a142ef67aaad174
-    0 PERF_RECORD_BPF_EVENT bpf event with type 1, flags 0, id 50
-    0 PERF_RECORD_KSYMBOL ksymbol event with addr ffffffffc045da0a len 229 type 1 flags 0x0 name bpf_prog_7be49e3934a125ba
-    0 PERF_RECORD_BPF_EVENT bpf event with type 1, flags 0, id 51
-    0 PERF_RECORD_KSYMBOL ksymbol event with addr ffffffffc04ef4b4 len 229 type 1 flags 0x0 name bpf_prog_2a142ef67aaad174
-    0 PERF_RECORD_BPF_EVENT bpf event with type 1, flags 0, id 52
-    0 PERF_RECORD_KSYMBOL ksymbol event with addr ffffffffc09e15da len 229 type 1 flags 0x0 name bpf_prog_7be49e3934a125ba
-    0 PERF_RECORD_BPF_EVENT bpf event with type 1, flags 0, id 53
-    0 PERF_RECORD_KSYMBOL ksymbol event with addr ffffffffc0d2b1a3 len 229 type 1 flags 0x0 name bpf_prog_2a142ef67aaad174
-    0 PERF_RECORD_BPF_EVENT bpf event with type 1, flags 0, id 54
-    0 PERF_RECORD_KSYMBOL ksymbol event with addr ffffffffc0fd9850 len 381 type 1 flags 0x0 name bpf_prog_819967866022f1e1_sys_enter
-    0 PERF_RECORD_BPF_EVENT bpf event with type 1, flags 0, id 179
-    0 PERF_RECORD_KSYMBOL ksymbol event with addr ffffffffc0feb1ec len 191 type 1 flags 0x0 name bpf_prog_c1bd85c092d6e4aa_sys_exit
-    0 PERF_RECORD_BPF_EVENT bpf event with type 1, flags 0, id 180
-  ^C[root@quaco pt]# perf evlist
-  intel_pt//ku
-  dummy:u
-  #
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Acked-by: Song Liu <songliubraving@fb.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stanislav Fomichev <sdf@google.com>
-Link: http://lkml.kernel.org/r/20190508132010.14512-11-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+Acked-by: Mans Rullgard <mans@mansr.com>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- tools/perf/Documentation/perf-script.txt |  3 ++
- tools/perf/builtin-script.c              | 42 ++++++++++++++++++++++++
- 2 files changed, 45 insertions(+)
+Changes since v1:
+- Explicitly specify assembler architecture as armv7-a to avoid
+  build issues when bulding v6/v7 multi arch kernel.
 
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index 9b0d04dd2a61..af8282782911 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -313,6 +313,9 @@ OPTIONS
- --show-round-events
- 	Display finished round events i.e. events of type PERF_RECORD_FINISHED_ROUND.
+Changes since v2:
+- Add armv7-a also in mach-tango
+- Move .arch armv7-a outside of ifdef'ed area in sleep44xx.S
+  to make the kernel compile also without CONFIG_SMP/PM.
+
+Changes since v3:
+- Rebase on top of v5.2-rc2
+
+ arch/arm/mach-bcm/Makefile         | 3 ---
+ arch/arm/mach-bcm/bcm_kona_smc.c   | 2 --
+ arch/arm/mach-exynos/Makefile      | 4 ----
+ arch/arm/mach-exynos/exynos-smc.S  | 3 ++-
+ arch/arm/mach-exynos/sleep.S       | 3 ++-
+ arch/arm/mach-highbank/Makefile    | 3 ---
+ arch/arm/mach-highbank/smc.S       | 3 ++-
+ arch/arm/mach-keystone/Makefile    | 3 ---
+ arch/arm/mach-keystone/smc.S       | 1 +
+ arch/arm/mach-omap2/Makefile       | 8 --------
+ arch/arm/mach-omap2/omap-headsmp.S | 2 ++
+ arch/arm/mach-omap2/omap-smc.S     | 3 ++-
+ arch/arm/mach-omap2/sleep33xx.S    | 1 +
+ arch/arm/mach-omap2/sleep34xx.S    | 2 ++
+ arch/arm/mach-omap2/sleep43xx.S    | 2 ++
+ arch/arm/mach-omap2/sleep44xx.S    | 3 +++
+ arch/arm/mach-tango/Makefile       | 3 ---
+ arch/arm/mach-tango/smc.S          | 2 ++
+ 18 files changed, 21 insertions(+), 30 deletions(-)
+
+diff --git a/arch/arm/mach-bcm/Makefile b/arch/arm/mach-bcm/Makefile
+index 8fd23b263c60..b59c813b1af4 100644
+--- a/arch/arm/mach-bcm/Makefile
++++ b/arch/arm/mach-bcm/Makefile
+@@ -40,9 +40,6 @@ obj-$(CONFIG_ARCH_BCM_MOBILE_L2_CACHE) += kona_l2_cache.o
  
-+--show-bpf-events
-+	Display bpf events i.e. events of type PERF_RECORD_KSYMBOL and PERF_RECORD_BPF_EVENT.
-+
- --demangle::
- 	Demangle symbol names to human readable form. It's enabled by default,
- 	disable with --no-demangle.
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 7adaa6c63a0b..3a48a2627670 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -1606,6 +1606,7 @@ struct perf_script {
- 	bool			show_namespace_events;
- 	bool			show_lost_events;
- 	bool			show_round_events;
-+	bool			show_bpf_events;
- 	bool			allocated;
- 	bool			per_event_dump;
- 	struct cpu_map		*cpus;
-@@ -2318,6 +2319,41 @@ process_finished_round_event(struct perf_tool *tool __maybe_unused,
- 	return 0;
- }
+ # Support for secure monitor traps
+ obj-$(CONFIG_ARCH_BCM_MOBILE_SMC) += bcm_kona_smc.o
+-ifeq ($(call as-instr,.arch_extension sec,as_has_sec),as_has_sec)
+-CFLAGS_bcm_kona_smc.o		+= -Wa,-march=armv7-a+sec -DREQUIRES_SEC
+-endif
  
-+static int
-+process_bpf_events(struct perf_tool *tool __maybe_unused,
-+		   union perf_event *event,
-+		   struct perf_sample *sample,
-+		   struct machine *machine)
-+{
-+	struct thread *thread;
-+	struct perf_script *script = container_of(tool, struct perf_script, tool);
-+	struct perf_session *session = script->session;
-+	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
-+
-+	if (machine__process_ksymbol(machine, event, sample) < 0)
-+		return -1;
-+
-+	if (!evsel->attr.sample_id_all) {
-+		perf_event__fprintf(event, stdout);
-+		return 0;
-+	}
-+
-+	thread = machine__findnew_thread(machine, sample->pid, sample->tid);
-+	if (thread == NULL) {
-+		pr_debug("problem processing MMAP event, skipping it.\n");
-+		return -1;
-+	}
-+
-+	if (!filter_cpu(sample)) {
-+		perf_sample__fprintf_start(sample, thread, evsel,
-+					   event->header.type, stdout);
-+		perf_event__fprintf(event, stdout);
-+	}
-+
-+	thread__put(thread);
-+	return 0;
-+}
-+
- static void sig_handler(int sig __maybe_unused)
- {
- 	session_done = 1;
-@@ -2420,6 +2456,10 @@ static int __cmd_script(struct perf_script *script)
- 		script->tool.ordered_events = false;
- 		script->tool.finished_round = process_finished_round_event;
- 	}
-+	if (script->show_bpf_events) {
-+		script->tool.ksymbol   = process_bpf_events;
-+		script->tool.bpf_event = process_bpf_events;
-+	}
+ # BCM2835
+ obj-$(CONFIG_ARCH_BCM2835)	+= board_bcm2835.o
+diff --git a/arch/arm/mach-bcm/bcm_kona_smc.c b/arch/arm/mach-bcm/bcm_kona_smc.c
+index a55a7ecf146a..541e850a736c 100644
+--- a/arch/arm/mach-bcm/bcm_kona_smc.c
++++ b/arch/arm/mach-bcm/bcm_kona_smc.c
+@@ -125,9 +125,7 @@ static int bcm_kona_do_smc(u32 service_id, u32 buffer_phys)
+ 		__asmeq("%2", "r4")
+ 		__asmeq("%3", "r5")
+ 		__asmeq("%4", "r6")
+-#ifdef REQUIRES_SEC
+ 		".arch_extension sec\n"
+-#endif
+ 		"	smc    #0\n"
+ 		: "=r" (ip), "=r" (r0)
+ 		: "r" (r4), "r" (r5), "r" (r6)
+diff --git a/arch/arm/mach-exynos/Makefile b/arch/arm/mach-exynos/Makefile
+index 264dbaa89c3d..5ccf9d7e58d4 100644
+--- a/arch/arm/mach-exynos/Makefile
++++ b/arch/arm/mach-exynos/Makefile
+@@ -14,9 +14,5 @@ obj-$(CONFIG_PM_SLEEP)		+= suspend.o
  
- 	if (perf_script__setup_per_event_dump(script)) {
- 		pr_err("Couldn't create the per event dump files\n");
-@@ -3439,6 +3479,8 @@ int cmd_script(int argc, const char **argv)
- 		    "Show lost events (if recorded)"),
- 	OPT_BOOLEAN('\0', "show-round-events", &script.show_round_events,
- 		    "Show round events (if recorded)"),
-+	OPT_BOOLEAN('\0', "show-bpf-events", &script.show_bpf_events,
-+		    "Show bpf related events (if recorded)"),
- 	OPT_BOOLEAN('\0', "per-event-dump", &script.per_event_dump,
- 		    "Dump trace output to files named by the monitored events"),
- 	OPT_BOOLEAN('f', "force", &symbol_conf.force, "don't complain, do it"),
+ obj-$(CONFIG_SMP)		+= platsmp.o headsmp.o
+ 
+-plus_sec := $(call as-instr,.arch_extension sec,+sec)
+-AFLAGS_exynos-smc.o		:=-Wa,-march=armv7-a$(plus_sec)
+-AFLAGS_sleep.o			:=-Wa,-march=armv7-a$(plus_sec)
+-
+ obj-$(CONFIG_MCPM)		+= mcpm-exynos.o
+ CFLAGS_mcpm-exynos.o		+= -march=armv7-a
+diff --git a/arch/arm/mach-exynos/exynos-smc.S b/arch/arm/mach-exynos/exynos-smc.S
+index d259532ba937..6da31e6a7acb 100644
+--- a/arch/arm/mach-exynos/exynos-smc.S
++++ b/arch/arm/mach-exynos/exynos-smc.S
+@@ -10,7 +10,8 @@
+ /*
+  * Function signature: void exynos_smc(u32 cmd, u32 arg1, u32 arg2, u32 arg3)
+  */
+-
++	.arch armv7-a
++	.arch_extension sec
+ ENTRY(exynos_smc)
+ 	stmfd	sp!, {r4-r11, lr}
+ 	dsb
+diff --git a/arch/arm/mach-exynos/sleep.S b/arch/arm/mach-exynos/sleep.S
+index 2783c3a0c06a..ed93f91853b8 100644
+--- a/arch/arm/mach-exynos/sleep.S
++++ b/arch/arm/mach-exynos/sleep.S
+@@ -44,7 +44,8 @@ ENTRY(exynos_cpu_resume)
+ ENDPROC(exynos_cpu_resume)
+ 
+ 	.align
+-
++	.arch armv7-a
++	.arch_extension sec
+ ENTRY(exynos_cpu_resume_ns)
+ 	mrc	p15, 0, r0, c0, c0, 0
+ 	ldr	r1, =CPU_MASK
+diff --git a/arch/arm/mach-highbank/Makefile b/arch/arm/mach-highbank/Makefile
+index 7e6732c16862..71cc68041d92 100644
+--- a/arch/arm/mach-highbank/Makefile
++++ b/arch/arm/mach-highbank/Makefile
+@@ -1,7 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ obj-y					:= highbank.o system.o smc.o
+ 
+-plus_sec := $(call as-instr,.arch_extension sec,+sec)
+-AFLAGS_smc.o				:=-Wa,-march=armv7-a$(plus_sec)
+-
+ obj-$(CONFIG_PM_SLEEP)			+= pm.o
+diff --git a/arch/arm/mach-highbank/smc.S b/arch/arm/mach-highbank/smc.S
+index 407d17baaaa9..860a79135b7b 100644
+--- a/arch/arm/mach-highbank/smc.S
++++ b/arch/arm/mach-highbank/smc.S
+@@ -16,7 +16,8 @@
+  * the monitor API number.
+  * Function signature : void highbank_smc1(u32 fn, u32 arg)
+  */
+-
++	.arch armv7-a
++	.arch_extension sec
+ ENTRY(highbank_smc1)
+ 	stmfd   sp!, {r4-r11, lr}
+ 	mov	r12, r0
+diff --git a/arch/arm/mach-keystone/Makefile b/arch/arm/mach-keystone/Makefile
+index f8b0dccac8dc..739b38be5696 100644
+--- a/arch/arm/mach-keystone/Makefile
++++ b/arch/arm/mach-keystone/Makefile
+@@ -1,9 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ obj-y					:= keystone.o smc.o
+ 
+-plus_sec := $(call as-instr,.arch_extension sec,+sec)
+-AFLAGS_smc.o				:=-Wa,-march=armv7-a$(plus_sec)
+-
+ obj-$(CONFIG_SMP)			+= platsmp.o
+ 
+ # PM domain driver for Keystone SOCs
+diff --git a/arch/arm/mach-keystone/smc.S b/arch/arm/mach-keystone/smc.S
+index d15de8179fab..ec03dc499270 100644
+--- a/arch/arm/mach-keystone/smc.S
++++ b/arch/arm/mach-keystone/smc.S
+@@ -21,6 +21,7 @@
+  *
+  * Return: Non zero value on failure
+  */
++	.arch_extension sec
+ ENTRY(keystone_cpu_smc)
+ 	stmfd   sp!, {r4-r11, lr}
+ 	smc	#0
+diff --git a/arch/arm/mach-omap2/Makefile b/arch/arm/mach-omap2/Makefile
+index 85d1b13c9215..f1d283995b31 100644
+--- a/arch/arm/mach-omap2/Makefile
++++ b/arch/arm/mach-omap2/Makefile
+@@ -41,11 +41,6 @@ obj-$(CONFIG_SOC_OMAP5)			+= $(omap-4-5-common) $(smp-y) sleep44xx.o
+ obj-$(CONFIG_SOC_AM43XX)		+= $(omap-4-5-common)
+ obj-$(CONFIG_SOC_DRA7XX)		+= $(omap-4-5-common) $(smp-y) sleep44xx.o
+ 
+-plus_sec := $(call as-instr,.arch_extension sec,+sec)
+-AFLAGS_omap-headsmp.o			:=-Wa,-march=armv7-a$(plus_sec)
+-AFLAGS_omap-smc.o			:=-Wa,-march=armv7-a$(plus_sec)
+-AFLAGS_sleep44xx.o			:=-Wa,-march=armv7-a$(plus_sec)
+-
+ # Functions loaded to SRAM
+ obj-$(CONFIG_SOC_OMAP2420)		+= sram242x.o
+ obj-$(CONFIG_SOC_OMAP2430)		+= sram243x.o
+@@ -95,9 +90,6 @@ obj-$(CONFIG_POWER_AVS_OMAP)		+= sr_device.o
+ obj-$(CONFIG_POWER_AVS_OMAP_CLASS3)    += smartreflex-class3.o
+ 
+ AFLAGS_sleep24xx.o			:=-Wa,-march=armv6
+-AFLAGS_sleep34xx.o			:=-Wa,-march=armv7-a$(plus_sec)
+-AFLAGS_sleep33xx.o			:=-Wa,-march=armv7-a$(plus_sec)
+-AFLAGS_sleep43xx.o			:=-Wa,-march=armv7-a$(plus_sec)
+ 
+ endif
+ 
+diff --git a/arch/arm/mach-omap2/omap-headsmp.S b/arch/arm/mach-omap2/omap-headsmp.S
+index 4c6f14cf92a8..b26c0daaa3c1 100644
+--- a/arch/arm/mach-omap2/omap-headsmp.S
++++ b/arch/arm/mach-omap2/omap-headsmp.S
+@@ -58,6 +58,8 @@ ENDPROC(omap5_secondary_startup)
+  * omap5_secondary_startup if the primary CPU was put into HYP mode by
+  * the boot loader.
+  */
++	.arch armv7-a
++	.arch_extension sec
+ ENTRY(omap5_secondary_hyp_startup)
+ wait_2:	ldr	r2, =AUX_CORE_BOOT0_PA	@ read from AuxCoreBoot0
+ 	ldr	r0, [r2]
+diff --git a/arch/arm/mach-omap2/omap-smc.S b/arch/arm/mach-omap2/omap-smc.S
+index 72506e6cf9e7..a14aee5e81d1 100644
+--- a/arch/arm/mach-omap2/omap-smc.S
++++ b/arch/arm/mach-omap2/omap-smc.S
+@@ -23,7 +23,8 @@
+  * link register "lr".
+  * Function signature : void omap_smc1(u32 fn, u32 arg)
+  */
+-
++	.arch armv7-a
++	.arch_extension sec
+ ENTRY(omap_smc1)
+ 	stmfd   sp!, {r2-r12, lr}
+ 	mov	r12, r0
+diff --git a/arch/arm/mach-omap2/sleep33xx.S b/arch/arm/mach-omap2/sleep33xx.S
+index 47a816468cdb..68fee339d3f1 100644
+--- a/arch/arm/mach-omap2/sleep33xx.S
++++ b/arch/arm/mach-omap2/sleep33xx.S
+@@ -24,6 +24,7 @@
+ #define BIT(nr)			(1 << (nr))
+ 
+ 	.arm
++	.arch armv7-a
+ 	.align 3
+ 
+ ENTRY(am33xx_do_wfi)
+diff --git a/arch/arm/mach-omap2/sleep34xx.S b/arch/arm/mach-omap2/sleep34xx.S
+index 22daf4efed68..4927304b5902 100644
+--- a/arch/arm/mach-omap2/sleep34xx.S
++++ b/arch/arm/mach-omap2/sleep34xx.S
+@@ -97,6 +97,8 @@ ENDPROC(enable_omap3630_toggle_l2_on_restore)
+  *
+  * r0 = physical address of the parameters
+  */
++	.arch armv7-a
++	.arch_extension sec
+ ENTRY(save_secure_ram_context)
+ 	stmfd	sp!, {r4 - r11, lr}	@ save registers on stack
+ 	mov	r3, r0			@ physical address of parameters
+diff --git a/arch/arm/mach-omap2/sleep43xx.S b/arch/arm/mach-omap2/sleep43xx.S
+index 0c1031442571..c1f4e4852644 100644
+--- a/arch/arm/mach-omap2/sleep43xx.S
++++ b/arch/arm/mach-omap2/sleep43xx.S
+@@ -56,6 +56,8 @@
+ #define RTC_PMIC_EXT_WAKEUP_EN				BIT(0)
+ 
+ 	.arm
++	.arch armv7-a
++	.arch_extension sec
+ 	.align 3
+ 
+ ENTRY(am43xx_do_wfi)
+diff --git a/arch/arm/mach-omap2/sleep44xx.S b/arch/arm/mach-omap2/sleep44xx.S
+index 0cae3b070208..fb559d3de1f2 100644
+--- a/arch/arm/mach-omap2/sleep44xx.S
++++ b/arch/arm/mach-omap2/sleep44xx.S
+@@ -21,8 +21,11 @@
+ #include "omap44xx.h"
+ #include "omap4-sar-layout.h"
+ 
++	.arch armv7-a
++
+ #if defined(CONFIG_SMP) && defined(CONFIG_PM)
+ 
++	.arch_extension sec
+ .macro	DO_SMC
+ 	dsb
+ 	smc	#0
+diff --git a/arch/arm/mach-tango/Makefile b/arch/arm/mach-tango/Makefile
+index da6c633d3cc0..97cd04508fa1 100644
+--- a/arch/arm/mach-tango/Makefile
++++ b/arch/arm/mach-tango/Makefile
+@@ -1,7 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0
+-plus_sec := $(call as-instr,.arch_extension sec,+sec)
+-AFLAGS_smc.o := -Wa,-march=armv7-a$(plus_sec)
+-
+ obj-y += setup.o smc.o
+ obj-$(CONFIG_SMP) += platsmp.o
+ obj-$(CONFIG_SUSPEND) += pm.o
+diff --git a/arch/arm/mach-tango/smc.S b/arch/arm/mach-tango/smc.S
+index 361a8dc89804..b1752aaa72bc 100644
+--- a/arch/arm/mach-tango/smc.S
++++ b/arch/arm/mach-tango/smc.S
+@@ -1,6 +1,8 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ #include <linux/linkage.h>
+ 
++	.arch armv7-a
++	.arch_extension sec
+ ENTRY(tango_smc)
+ 	push	{lr}
+ 	mov	ip, r1
 -- 
-2.20.1
+2.21.0
 
