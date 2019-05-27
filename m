@@ -2,155 +2,90 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE984C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 18:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB6BC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 18:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A071D20859
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 18:15:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D35020859
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 18:15:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="R35p3owa"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="tSvoWWkL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727145AbfE0SPg (ORCPT
+        id S1727176AbfE0SPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 14:15:36 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:34622 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726839AbfE0SPg (ORCPT
+        Mon, 27 May 2019 14:15:40 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:45973 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726839AbfE0SPj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 14:15:36 -0400
-Received: by mail-ua1-f66.google.com with SMTP id 7so6804913uah.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 11:15:35 -0700 (PDT)
+        Mon, 27 May 2019 14:15:39 -0400
+Received: by mail-ot1-f66.google.com with SMTP id t24so15492692otl.12
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 11:15:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8hNxMGBAGDDkJj992yk9VOgjaUK9vfpRQoQGfXOovpE=;
-        b=R35p3owaTNtpz8MKhE3eb7p90Rmi3WA5z/IJLfYWxVZBpq3sSmZbyPaLZ+g95OFPLj
-         9nln1OdB5Rvf8gwb4rQbRYIsNLusvEJXx7zGVj5EYwA83fEJtc5HaF1UNeCxOy5omeDa
-         GAyE56QpwHgC0CT68m18jw6FEeT/1n2spYPfWdSBhQgdW6IKW3e90iju4iJHMzcjoEr8
-         zyTxg1uWCQHDh7WZaUCrOJIKk18+S8uCyT77OMo4QJ0+v9wCEPzhPZEmgYXkMXXMm8VG
-         MtX0tokKVf2ITpLZZPa0p/ErpJtrljHSYPhMSlFxTmruq7ArzrEqc5QUvzfeuyQkWFG2
-         epXA==
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CZXI0Vn72E/kvqUVtGm0iU9miuWChUM3kAYpzpVGfLI=;
+        b=tSvoWWkLsY1P3+leYGrD5X5mo8Xnvw2PuTio2xXbcEWt1z6dDw9GiJpKsm1oJTF99b
+         fua5Ifgyz51Rodgs5JkfzurKlGPoPYJdBuLN1m7OIvMoRemkDDdZ/DrNo7Tj6AT3/O+g
+         hvuX/BVFs+41JDZY87oxiQcURLyGoACEjyGRe+Kj/42h4Bjc2ddBpQwWxY3FuKhkUjw7
+         CzbYIRM24oxp75+WPr1CAzTjmoXRl74YS99VRGYTXjtF4u7pDRKaokdXGFuQ+/oZrbu4
+         7wfs10chpRgTZsdocsWxitwrK2bByBfUSMB3bpm/RC9AtGRaRTl9LGvp2Hu3xyfRyxEd
+         zQUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8hNxMGBAGDDkJj992yk9VOgjaUK9vfpRQoQGfXOovpE=;
-        b=Ii20353rWwc/Cy5FwPR6hbXUo772gxePoVQFOLH0ZE+qVFB01pEXuQbkH0waDcWeqa
-         6JgLTVg1qcMTyciaEr+Uc0zcDe6TSNVJlgHBfOPsIsVxEGmt5ofoz5fxeCllkZkeW6zb
-         AShfy8klRLl8mLVsSc8e/ge/Jl2yMwWfQ/hQvPA2knBbBk4A2x/T61EDJ90GWNdjyTfF
-         EPxG4NRLa6ktLFKIxykiRPisvMYWjJoDb0NzMr1G97HDHqY6+iQBv2kGApFixeiuITEX
-         GY46XuIKV8u4+Liz8csdGWsI4Mj3X+6lcz3vD6YXdIVEBNe8PlOCtP1SXUbEjDtHQ4UV
-         LT3Q==
-X-Gm-Message-State: APjAAAX86rOdjxL7U62aw6LYLlTtrkNjgqWTiw4NZ4q8hyU8sFpuIsXO
-        POTT097CV7hYryqotaZw0/Aydg==
-X-Google-Smtp-Source: APXvYqwv7ANsIWSla6GVRQobbng/bEadzUM3um96jeSPyG6hwcnv7WioNf8L1mG+BSjhPwpAO5GK0w==
-X-Received: by 2002:ab0:4a97:: with SMTP id s23mr22342607uae.19.1558980935337;
-        Mon, 27 May 2019 11:15:35 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id b78sm4160999vkb.10.2019.05.27.11.15.34
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 27 May 2019 11:15:34 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hVK9m-0002cU-92; Mon, 27 May 2019 15:15:34 -0300
-Date:   Mon, 27 May 2019 15:15:34 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Ariel Levkovich <lariel@mellanox.com>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mlx5: avoid 64-bit division
-Message-ID: <20190527181534.GA10029@ziepe.ca>
-References: <20190520111902.7104DE0184@unicorn.suse.cz>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CZXI0Vn72E/kvqUVtGm0iU9miuWChUM3kAYpzpVGfLI=;
+        b=IsB1bKHWLPwg3PY7xq8PuuVx1KSH0rzwRC83cqD7AFynEkC+iS7rAa7GNSUztRxHOQ
+         u8OqFvcT63jCiERbxrJVM0zdj3K7gfBAbzMjZVagH4u2+2631QxZJQuc7slRvAJQl+Iz
+         LwHWkP8Kn6vmziHqoK0Pb3EZZjVRH9fLrJRlNLER0tFbexQzcIPXjUimDXVOJx0V8GZy
+         doWcUrB3HInPxFmY5+BzpdHC38lKuel7lNqqB2ANLQC+AamFcavI/o5bzmsMKDZ0xxAE
+         zTY0NnJBJ+8b52UEfBFn8tGhS6zVIY5I7vKrwhtaNuWon6BJmaWU5gwf0mmuTXErp2NM
+         7uPA==
+X-Gm-Message-State: APjAAAXsYuvaphG6dZjfE1tHHfhjGPH1ybAU2yhrEazjQnHD/blEuJbk
+        zVDlKBiQw4Pbt3Lkg1ERrZdWSya0AQqtdIxjP3g=
+X-Google-Smtp-Source: APXvYqytYrC2eskykBQx9xuR6VQWqrtmKRbQrCEpy1SQnswhueDhG3nDNwT5nAwRtA3pcFaY0y+7otf8sm0gM0iP2V0=
+X-Received: by 2002:a9d:2f08:: with SMTP id h8mr71839920otb.42.1558980938237;
+ Mon, 27 May 2019 11:15:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190520111902.7104DE0184@unicorn.suse.cz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190527132200.17377-1-narmstrong@baylibre.com> <20190527132200.17377-4-narmstrong@baylibre.com>
+In-Reply-To: <20190527132200.17377-4-narmstrong@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Mon, 27 May 2019 20:15:27 +0200
+Message-ID: <CAFBinCBJwVT0uMx--NPuuAYS7k2Zx-X-Ew+qNmRQiPV+Cmv=KA@mail.gmail.com>
+Subject: Re: [PATCH 03/10] arm64: dts: meson-gxbb-wetek: enable SARADC
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
+        Christian Hewitt <christianshewitt@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 01:19:02PM +0200, Michal Kubecek wrote:
-> Commit 25c13324d03d ("IB/mlx5: Add steering SW ICM device memory type")
-> breaks i386 build by introducing three 64-bit divisions. As the divisor
-> is MLX5_SW_ICM_BLOCK_SIZE() which is always a power of 2, we can replace
-> the division with bit operations.
-> 
-> Fixes: 25c13324d03d ("IB/mlx5: Add steering SW ICM device memory type")
-> Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
->  drivers/infiniband/hw/mlx5/cmd.c  | 9 +++++++--
->  drivers/infiniband/hw/mlx5/main.c | 2 +-
->  2 files changed, 8 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/infiniband/hw/mlx5/cmd.c b/drivers/infiniband/hw/mlx5/cmd.c
-> index e3ec79b8f7f5..6c8645033102 100644
-> +++ b/drivers/infiniband/hw/mlx5/cmd.c
-> @@ -190,12 +190,12 @@ int mlx5_cmd_alloc_sw_icm(struct mlx5_dm *dm, int type, u64 length,
->  			  u16 uid, phys_addr_t *addr, u32 *obj_id)
->  {
->  	struct mlx5_core_dev *dev = dm->dev;
-> -	u32 num_blocks = DIV_ROUND_UP(length, MLX5_SW_ICM_BLOCK_SIZE(dev));
->  	u32 out[MLX5_ST_SZ_DW(general_obj_out_cmd_hdr)] = {};
->  	u32 in[MLX5_ST_SZ_DW(create_sw_icm_in)] = {};
->  	unsigned long *block_map;
->  	u64 icm_start_addr;
->  	u32 log_icm_size;
-> +	u32 num_blocks;
->  	u32 max_blocks;
->  	u64 block_idx;
->  	void *sw_icm;
-> @@ -224,6 +224,8 @@ int mlx5_cmd_alloc_sw_icm(struct mlx5_dm *dm, int type, u64 length,
->  		return -EINVAL;
->  	}
->  
-> +	num_blocks = (length + MLX5_SW_ICM_BLOCK_SIZE(dev) - 1) >>
-> +		     MLX5_LOG_SW_ICM_BLOCK_SIZE(dev);
->  	max_blocks = BIT(log_icm_size - MLX5_LOG_SW_ICM_BLOCK_SIZE(dev));
->  	spin_lock(&dm->lock);
->  	block_idx = bitmap_find_next_zero_area(block_map,
-> @@ -266,13 +268,16 @@ int mlx5_cmd_dealloc_sw_icm(struct mlx5_dm *dm, int type, u64 length,
->  			    u16 uid, phys_addr_t addr, u32 obj_id)
->  {
->  	struct mlx5_core_dev *dev = dm->dev;
-> -	u32 num_blocks = DIV_ROUND_UP(length, MLX5_SW_ICM_BLOCK_SIZE(dev));
->  	u32 out[MLX5_ST_SZ_DW(general_obj_out_cmd_hdr)] = {};
->  	u32 in[MLX5_ST_SZ_DW(general_obj_in_cmd_hdr)] = {};
->  	unsigned long *block_map;
-> +	u32 num_blocks;
->  	u64 start_idx;
->  	int err;
->  
-> +	num_blocks = (length + MLX5_SW_ICM_BLOCK_SIZE(dev) - 1) >>
-> +		     MLX5_LOG_SW_ICM_BLOCK_SIZE(dev);
-> +
->  	switch (type) {
->  	case MLX5_IB_UAPI_DM_TYPE_STEERING_SW_ICM:
->  		start_idx =
-> diff --git a/drivers/infiniband/hw/mlx5/main.c b/drivers/infiniband/hw/mlx5/main.c
-> index abac70ad5c7c..340290b883fe 100644
-> +++ b/drivers/infiniband/hw/mlx5/main.c
-> @@ -2344,7 +2344,7 @@ static int handle_alloc_dm_sw_icm(struct ib_ucontext *ctx,
->  	/* Allocation size must a multiple of the basic block size
->  	 * and a power of 2.
->  	 */
-> -	act_size = roundup(attr->length, MLX5_SW_ICM_BLOCK_SIZE(dm_db->dev));
-> +	act_size = round_up(attr->length, MLX5_SW_ICM_BLOCK_SIZE(dm_db->dev));
->  	act_size = roundup_pow_of_two(act_size);
+On Mon, May 27, 2019 at 3:22 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> From: Christian Hewitt <christianshewitt@gmail.com>
+>
+> Enable SARADC on Wetek Boards.
+as far I as remember there's a story behind this (and it would be nice
+to have it documented here):
+some of the SCPI firmware revisions don't enable the SAR ADC clock
+when reading the SoCs temperature.
+if the SAR ADC is disabled in Linux then the common clock framework
+will disable the SAR ADC clock.
+now, when the SCPI firmware uses the SAR ADC to read the SoC
+temperature we only get garbage.
 
-It is kind of weird that we have round_up and the bitshift
-version.. None of this is performance critical so why not just use
-round_up everywhere?
+enabling the SAR ADC in Linux "fixes" this issue
 
-Ariel, it is true MLX5_SW_ICM_BLOCK_SIZE will always be a power of
-two?
-
-Jason
+> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+with that:
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
