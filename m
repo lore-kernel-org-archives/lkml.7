@@ -2,227 +2,191 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4822C282E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 03:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C7FC282E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 03:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BC462075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 03:15:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B0CA2075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 03:15:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726329AbfE0DPA (ORCPT
+        id S1726351AbfE0DPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 23:15:00 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:52195 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726071AbfE0DO5 (ORCPT
+        Sun, 26 May 2019 23:15:24 -0400
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:46762 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726330AbfE0DPY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 23:14:57 -0400
-X-UUID: 9dd9036daf5045d6bb154102aa5fec01-20190527
-X-UUID: 9dd9036daf5045d6bb154102aa5fec01-20190527
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
-        (envelope-from <biao.huang@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1485629280; Mon, 27 May 2019 11:14:50 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 27 May 2019 11:14:48 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 27 May 2019 11:14:48 +0800
-From:   Biao Huang <biao.huang@mediatek.com>
-To:     Jose Abreu <joabreu@synopsys.com>
-CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <netdev@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <yt.shen@mediatek.com>,
-        <biao.huang@mediatek.com>, <jianguo.zhang@mediatek.com>,
-        <boon.leong.ong@intel.com>
-Subject: [v3, PATCH] net: stmmac: add support for hash table size 128/256 in dwmac4
-Date:   Mon, 27 May 2019 11:14:27 +0800
-Message-ID: <1558926867-16472-2-git-send-email-biao.huang@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1558926867-16472-1-git-send-email-biao.huang@mediatek.com>
-References: <1558926867-16472-1-git-send-email-biao.huang@mediatek.com>
+        Sun, 26 May 2019 23:15:24 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R421e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TSm5gg0_1558926918;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TSm5gg0_1558926918)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 27 May 2019 11:15:19 +0800
+Subject: Re: [RESEND v5 PATCH 2/2] mm: vmscan: correct some vmscan counters
+ for THP swapout
+To:     "Huang, Ying" <ying.huang@intel.com>
+Cc:     hannes@cmpxchg.org, mhocko@suse.com, mgorman@techsingularity.net,
+        kirill.shutemov@linux.intel.com, josef@toxicpanda.com,
+        hughd@google.com, shakeelb@google.com, hdanton@sina.com,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1558922275-31782-1-git-send-email-yang.shi@linux.alibaba.com>
+ <1558922275-31782-2-git-send-email-yang.shi@linux.alibaba.com>
+ <87muj88x3p.fsf@yhuang-dev.intel.com>
+ <a32dbca4-6239-828b-9f81-f24d582ddd75@linux.alibaba.com>
+ <87imtw8uxs.fsf@yhuang-dev.intel.com>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <7035abc1-6f56-cce0-6a0b-29fceeefe339@linux.alibaba.com>
+Date:   Mon, 27 May 2019 11:15:15 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+In-Reply-To: <87imtw8uxs.fsf@yhuang-dev.intel.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1. get hash table size in hw feature reigster, and add support
-for taller hash table(128/256) in dwmac4.
-2. only clear GMAC_PACKET_FILTER bits used in this function,
-to avoid side effect to functions of other bits.
 
-Signed-off-by: Biao Huang <biao.huang@mediatek.com>
----
- drivers/net/ethernet/stmicro/stmmac/common.h      |    7 +--
- drivers/net/ethernet/stmicro/stmmac/dwmac4.h      |    4 +-
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c |   49 ++++++++++++---------
- drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c  |    1 +
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |    4 ++
- 5 files changed, 40 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
-index 1961fe9..26bbcd8 100644
---- a/drivers/net/ethernet/stmicro/stmmac/common.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/common.h
-@@ -335,6 +335,7 @@ struct dma_features {
- 	/* 802.3az - Energy-Efficient Ethernet (EEE) */
- 	unsigned int eee;
- 	unsigned int av;
-+	unsigned int hash_tb_sz;
- 	unsigned int tsoen;
- 	/* TX and RX csum */
- 	unsigned int tx_coe;
-@@ -428,9 +429,9 @@ struct mac_device_info {
- 	struct mii_regs mii;	/* MII register Addresses */
- 	struct mac_link link;
- 	void __iomem *pcsr;     /* vpointer to device CSRs */
--	int multicast_filter_bins;
--	int unicast_filter_entries;
--	int mcast_bits_log2;
-+	unsigned int multicast_filter_bins;
-+	unsigned int unicast_filter_entries;
-+	unsigned int mcast_bits_log2;
- 	unsigned int rx_csum;
- 	unsigned int pcs;
- 	unsigned int pmt;
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
-index 01c1089..a37e09b 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
-@@ -18,8 +18,7 @@
- /*  MAC registers */
- #define GMAC_CONFIG			0x00000000
- #define GMAC_PACKET_FILTER		0x00000008
--#define GMAC_HASH_TAB_0_31		0x00000010
--#define GMAC_HASH_TAB_32_63		0x00000014
-+#define GMAC_HASH_TAB(x)		(0x10 + x * 4)
- #define GMAC_RX_FLOW_CTRL		0x00000090
- #define GMAC_QX_TX_FLOW_CTRL(x)		(0x70 + x * 4)
- #define GMAC_TXQ_PRTY_MAP0		0x98
-@@ -184,6 +183,7 @@ enum power_event {
- #define GMAC_HW_FEAT_MIISEL		BIT(0)
- 
- /* MAC HW features1 bitmap */
-+#define GMAC_HW_HASH_TB_SZ		GENMASK(25, 24)
- #define GMAC_HW_FEAT_AVSEL		BIT(20)
- #define GMAC_HW_TSOEN			BIT(18)
- #define GMAC_HW_TXFIFOSIZE		GENMASK(10, 6)
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-index 5e98da4..029a3db 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-@@ -403,41 +403,50 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
- 			      struct net_device *dev)
- {
- 	void __iomem *ioaddr = (void __iomem *)dev->base_addr;
--	unsigned int value = 0;
-+	unsigned int value;
-+	int numhashregs = (hw->multicast_filter_bins >> 5);
-+	int mcbitslog2 = hw->mcast_bits_log2;
-+	int i;
- 
-+	value = readl(ioaddr + GMAC_PACKET_FILTER);
-+	value &= ~GMAC_PACKET_FILTER_HMC;
-+	value &= ~GMAC_PACKET_FILTER_HPF;
-+	value &= ~GMAC_PACKET_FILTER_PCF;
-+	value &= ~GMAC_PACKET_FILTER_PM;
-+	value &= ~GMAC_PACKET_FILTER_PR;
- 	if (dev->flags & IFF_PROMISC) {
- 		value = GMAC_PACKET_FILTER_PR | GMAC_PACKET_FILTER_PCF;
- 	} else if ((dev->flags & IFF_ALLMULTI) ||
--			(netdev_mc_count(dev) > HASH_TABLE_SIZE)) {
-+		   (netdev_mc_count(dev) > hw->multicast_filter_bins)) {
- 		/* Pass all multi */
--		value = GMAC_PACKET_FILTER_PM;
--		/* Set the 64 bits of the HASH tab. To be updated if taller
--		 * hash table is used
--		 */
--		writel(0xffffffff, ioaddr + GMAC_HASH_TAB_0_31);
--		writel(0xffffffff, ioaddr + GMAC_HASH_TAB_32_63);
-+		value |= GMAC_PACKET_FILTER_PM;
-+		/* Set all the bits of the HASH tab */
-+		for (i = 0; i < numhashregs; i++)
-+			writel(0xffffffff, ioaddr + GMAC_HASH_TAB(i));
- 	} else if (!netdev_mc_empty(dev)) {
--		u32 mc_filter[2];
-+		u32 mc_filter[8];
- 		struct netdev_hw_addr *ha;
- 
- 		/* Hash filter for multicast */
--		value = GMAC_PACKET_FILTER_HMC;
-+		value |= GMAC_PACKET_FILTER_HMC;
- 
- 		memset(mc_filter, 0, sizeof(mc_filter));
- 		netdev_for_each_mc_addr(ha, dev) {
--			/* The upper 6 bits of the calculated CRC are used to
--			 * index the content of the Hash Table Reg 0 and 1.
-+			/* The upper n bits of the calculated CRC are used to
-+			 * index the contents of the hash table. The number of
-+			 * bits used depends on the hardware configuration
-+			 * selected at core configuration time.
- 			 */
--			int bit_nr =
--				(bitrev32(~crc32_le(~0, ha->addr, 6)) >> 26);
--			/* The most significant bit determines the register
--			 * to use while the other 5 bits determines the bit
--			 * within the selected register
-+			int bit_nr = bitrev32(~crc32_le(~0, ha->addr,
-+					ETH_ALEN)) >> (32 - mcbitslog2);
-+			/* The most significant bit determines the register to
-+			 * use (H/L) while the other 5 bits determine the bit
-+			 * within the register.
- 			 */
--			mc_filter[bit_nr >> 5] |= (1 << (bit_nr & 0x1F));
-+			mc_filter[bit_nr >> 5] |= (1 << (bit_nr & 0x1f));
- 		}
--		writel(mc_filter[0], ioaddr + GMAC_HASH_TAB_0_31);
--		writel(mc_filter[1], ioaddr + GMAC_HASH_TAB_32_63);
-+		for (i = 0; i < numhashregs; i++)
-+			writel(mc_filter[i], ioaddr + GMAC_HASH_TAB(i));
- 	}
- 
- 	value |= GMAC_PACKET_FILTER_HPF;
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
-index edb6053..59afb53 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
-@@ -354,6 +354,7 @@ static void dwmac4_get_hw_feature(void __iomem *ioaddr,
- 
- 	/* MAC HW feature1 */
- 	hw_cap = readl(ioaddr + GMAC_HW_FEATURE1);
-+	dma_cap->hash_tb_sz = (hw_cap & GMAC_HW_HASH_TB_SZ) >> 24;
- 	dma_cap->av = (hw_cap & GMAC_HW_FEAT_AVSEL) >> 20;
- 	dma_cap->tsoen = (hw_cap & GMAC_HW_TSOEN) >> 18;
- 	/* RX and TX FIFO sizes are encoded as log2(n / 128). Undo that by
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 8fcbf22..ed0d10e 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -4166,6 +4166,10 @@ static int stmmac_hw_init(struct stmmac_priv *priv)
- 		priv->plat->enh_desc = priv->dma_cap.enh_desc;
- 		priv->plat->pmt = priv->dma_cap.pmt_remote_wake_up;
- 		priv->hw->pmt = priv->plat->pmt;
-+		if (priv->dma_cap.hash_tb_sz) {
-+			priv->hw->multicast_filter_bins = BIT(priv->dma_cap.hash_tb_sz) * 32;
-+			priv->hw->mcast_bits_log2 = ilog2(priv->hw->multicast_filter_bins);
-+		}
- 
- 		/* TXCOE doesn't work in thresh DMA mode */
- 		if (priv->plat->force_thresh_dma_mode)
--- 
-1.7.9.5
+On 5/27/19 10:58 AM, Huang, Ying wrote:
+> Yang Shi <yang.shi@linux.alibaba.com> writes:
+>
+>> On 5/27/19 10:11 AM, Huang, Ying wrote:
+>>> Yang Shi <yang.shi@linux.alibaba.com> writes:
+>>>
+>>>> Since commit bd4c82c22c36 ("mm, THP, swap: delay splitting THP after
+>>>> swapped out"), THP can be swapped out in a whole.  But, nr_reclaimed
+>>>> and some other vm counters still get inc'ed by one even though a whole
+>>>> THP (512 pages) gets swapped out.
+>>>>
+>>>> This doesn't make too much sense to memory reclaim.  For example, direct
+>>>> reclaim may just need reclaim SWAP_CLUSTER_MAX pages, reclaiming one THP
+>>>> could fulfill it.  But, if nr_reclaimed is not increased correctly,
+>>>> direct reclaim may just waste time to reclaim more pages,
+>>>> SWAP_CLUSTER_MAX * 512 pages in worst case.
+>>>>
+>>>> And, it may cause pgsteal_{kswapd|direct} is greater than
+>>>> pgscan_{kswapd|direct}, like the below:
+>>>>
+>>>> pgsteal_kswapd 122933
+>>>> pgsteal_direct 26600225
+>>>> pgscan_kswapd 174153
+>>>> pgscan_direct 14678312
+>>>>
+>>>> nr_reclaimed and nr_scanned must be fixed in parallel otherwise it would
+>>>> break some page reclaim logic, e.g.
+>>>>
+>>>> vmpressure: this looks at the scanned/reclaimed ratio so it won't
+>>>> change semantics as long as scanned & reclaimed are fixed in parallel.
+>>>>
+>>>> compaction/reclaim: compaction wants a certain number of physical pages
+>>>> freed up before going back to compacting.
+>>>>
+>>>> kswapd priority raising: kswapd raises priority if we scan fewer pages
+>>>> than the reclaim target (which itself is obviously expressed in order-0
+>>>> pages). As a result, kswapd can falsely raise its aggressiveness even
+>>>> when it's making great progress.
+>>>>
+>>>> Other than nr_scanned and nr_reclaimed, some other counters, e.g.
+>>>> pgactivate, nr_skipped, nr_ref_keep and nr_unmap_fail need to be fixed
+>>>> too since they are user visible via cgroup, /proc/vmstat or trace
+>>>> points, otherwise they would be underreported.
+>>>>
+>>>> When isolating pages from LRUs, nr_taken has been accounted in base
+>>>> page, but nr_scanned and nr_skipped are still accounted in THP.  It
+>>>> doesn't make too much sense too since this may cause trace point
+>>>> underreport the numbers as well.
+>>>>
+>>>> So accounting those counters in base page instead of accounting THP as
+>>>> one page.
+>>>>
+>>>> nr_dirty, nr_unqueued_dirty, nr_congested and nr_writeback are used by
+>>>> file cache, so they are not impacted by THP swap.
+>>>>
+>>>> This change may result in lower steal/scan ratio in some cases since
+>>>> THP may get split during page reclaim, then a part of tail pages get
+>>>> reclaimed instead of the whole 512 pages, but nr_scanned is accounted
+>>>> by 512, particularly for direct reclaim.  But, this should be not a
+>>>> significant issue.
+>>>>
+>>>> Cc: "Huang, Ying" <ying.huang@intel.com>
+>>>> Cc: Johannes Weiner <hannes@cmpxchg.org>
+>>>> Cc: Michal Hocko <mhocko@suse.com>
+>>>> Cc: Mel Gorman <mgorman@techsingularity.net>
+>>>> Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+>>>> Cc: Hugh Dickins <hughd@google.com>
+>>>> Cc: Shakeel Butt <shakeelb@google.com>
+>>>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+>>>> ---
+>>>> v5: Fixed sc->nr_scanned double accounting per Huang Ying
+>>>>       Added some comments to address the concern about premature OOM per Hillf Danton
+>>>> v4: Fixed the comments from Johannes and Huang Ying
+>>>> v3: Removed Shakeel's Reviewed-by since the patch has been changed significantly
+>>>>       Switched back to use compound_order per Matthew
+>>>>       Fixed more counters per Johannes
+>>>> v2: Added Shakeel's Reviewed-by
+>>>>       Use hpage_nr_pages instead of compound_order per Huang Ying and William Kucharski
+>>>>
+>>>>    mm/vmscan.c | 42 +++++++++++++++++++++++++++++++-----------
+>>>>    1 file changed, 31 insertions(+), 11 deletions(-)
+>>>>
+>>>> diff --git a/mm/vmscan.c b/mm/vmscan.c
+>>>> index b65bc50..f4f4d57 100644
+>>>> --- a/mm/vmscan.c
+>>>> +++ b/mm/vmscan.c
+>>>> @@ -1118,6 +1118,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+>>>>    		int may_enter_fs;
+>>>>    		enum page_references references = PAGEREF_RECLAIM_CLEAN;
+>>>>    		bool dirty, writeback;
+>>>> +		unsigned int nr_pages;
+>>>>      		cond_resched();
+>>>>    @@ -1129,6 +1130,13 @@ static unsigned long
+>>>> shrink_page_list(struct list_head *page_list,
+>>>>      		VM_BUG_ON_PAGE(PageActive(page), page);
+>>>>    +		nr_pages = 1 << compound_order(page);
+>>>> +
+>>>> +		/*
+>>>> +		 * Accounted one page for THP for now.  If THP gets swapped
+>>>> +		 * out in a whole, will account all tail pages later to
+>>>> +		 * avoid accounting tail pages twice.
+>>>> +		 */
+>>>>    		sc->nr_scanned++;
+>>>>      		if (unlikely(!page_evictable(page)))
+>>>> @@ -1250,7 +1258,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+>>>>    		case PAGEREF_ACTIVATE:
+>>>>    			goto activate_locked;
+>>>>    		case PAGEREF_KEEP:
+>>>> -			stat->nr_ref_keep++;
+>>>> +			stat->nr_ref_keep += nr_pages;
+>>>>    			goto keep_locked;
+>>>>    		case PAGEREF_RECLAIM:
+>>>>    		case PAGEREF_RECLAIM_CLEAN:
+>>> If the "Accessed bit" of a THP is set in the page table that maps it, it
+>>> will go PAGEREF_ACTIVATE path here.  And the sc->nr_scanned should
+>>> increase 512 instead of 1.  Otherwise sc->nr_activate may be larger than
+>>> sc->nr_scanned.
+>> Yes, it looks so. It seems the easiest way is to add "nr_pages - 1" in
+>> activate_locked label if the page is still a THP.
+> Add keep_locked label.
+>
+>> If we add all tail pages at the very beginning, then we have to minus
+>> tail pages when THP gets split, there are a few places do this.
+> I think we can do that in one place too.  Just before try_to_unmap() via
+> checking nr_pages and page order.  And we need to update nr_pages if
+> the THP is split anyway.
+
+Yes, I agree.
+
+>
+> Best Regards,
+> Huang, Ying
+>
+>>> Best Regards,
+>>> Huang, Ying
 
