@@ -2,112 +2,110 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F4FAC04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD12C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09C902075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:43:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F96D20815
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:43:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="F0OuPbca"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbfE0MnE convert rfc822-to-8bit (ORCPT
+        id S1726837AbfE0MnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 08:43:04 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:51783 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbfE0MnD (ORCPT
+        Mon, 27 May 2019 08:43:13 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54935 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726071AbfE0MnM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 08:43:03 -0400
-Received: from xps13 (aaubervilliers-681-1-27-134.w90-88.abo.wanadoo.fr [90.88.147.134])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 7C5A824000B;
-        Mon, 27 May 2019 12:42:51 +0000 (UTC)
-Date:   Mon, 27 May 2019 14:42:50 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     masonccyang@mxic.com.tw
-Cc:     bbrezillon@kernel.org, broonie@kernel.org,
-        christophe.kerello@st.com, computersforpeace@gmail.com,
-        devicetree@vger.kernel.org, dwmw2@infradead.org,
-        geert@linux-m68k.org, juliensu@mxic.com.tw, lee.jones@linaro.org,
-        liang.yang@amlogic.com, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
-        marcel.ziswiler@toradex.com, marek.vasut@gmail.com,
-        mark.rutland@arm.com, paul.burton@mips.com, richard@nod.at,
-        robh+dt@kernel.org, stefan@agner.ch, zhengxunli@mxic.com.tw
-Subject: Re: [PATCH v3 2/4] mtd: rawnand: Add Macronix MX25F0A NAND
- controller
-Message-ID: <20190527144250.71908bd9@xps13>
-In-Reply-To: <OFADC47344.0F9941B2-ON48258403.002336E3-48258403.003141F0@mxic.com.tw>
-References: <1555320234-15802-1-git-send-email-masonccyang@mxic.com.tw>
-        <1555320234-15802-3-git-send-email-masonccyang@mxic.com.tw>
-        <20190512151820.4f2dd9da@xps13>
-        <OF074A1F06.5C1A58BE-ON482583FD.0031CD95-482583FD.003437AD@mxic.com.tw>
-        <20190520142333.390091d5@xps13>
-        <OFADC47344.0F9941B2-ON48258403.002336E3-48258403.003141F0@mxic.com.tw>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 27 May 2019 08:43:12 -0400
+Received: by mail-wm1-f66.google.com with SMTP id i3so16016197wml.4
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 05:43:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NKi6i530JJNrkfWp8zdTE/DlNf+AJ6vpEuNiHI586GM=;
+        b=F0OuPbcaU47Vw5cIofDI7N8sCg5q5HjGbe75cSt5fxbmgeL/gwFfe0z2Wex7Xk06+v
+         KyG3eIWcX65wfRkP5yFfwX2MTmFf4YvIPSZ1sfR1vF1vL5KWjLpfqFxNLMzGW92WyTZ0
+         xQHBioJ2CSnMfPDUutyRdQFF8edHOg7JnkFzKVpAXmvHIL4ES9prSLURjwD+JEwbDGxK
+         ixEefmZ8lZXsS+0UWbqOEroGQcLF9GJipI2ge/K4pAZ7ZxZs8O4K2GqhChbwBA2HoQIf
+         KPQrFoIVhCSob5K6Aky/XPD+3Qw/jM0QmRhk1va3R4IzLIYlAEQiAuh2kDeG0+YVUM8H
+         IzPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NKi6i530JJNrkfWp8zdTE/DlNf+AJ6vpEuNiHI586GM=;
+        b=bJhBNQSnS7X4ssFq7hDShCJ5rqmePTCAZWKhcMvTymBC2gMZee3qcG0TEuXNiKPAZE
+         8+2wcFpI+5wRo9SUtQ9ykgAHAU3NURYV05qvFgy6JH8KnQ6Jmipkum7UF3GNbT7nuOO2
+         l9kdInnsQ4MXtUP0OFg5+u3lSm1GCEDBQ/gXu/9b114JLaY62ZsDz2e/TGIE1TJXmJzZ
+         STf/CITkb1prHg+X40hMvc8OQM8SUBVTofrJ5b7L4V6nHcZrbK/SY28Z+Az/zATsy960
+         pjtvhVcSNWWrqbs/7gJYXJHyI33933/4Vbapq2BDB6p84TSfrSlYexOir5qbcl/wsjPh
+         ZcWA==
+X-Gm-Message-State: APjAAAXiVRcjXA88g1glGHFdA/+cRzxaUSlDbe+tzRbOEF2O3bjhjM/x
+        +kPdk/IMFJc2CT3KmpVH+1GiIg==
+X-Google-Smtp-Source: APXvYqwLlj5CMrnZHpa7NOKgj27nP4BBbZEUNpyia+Gjsf8jHnw5YAJDwN7ERYC5zPTVIVnhO1qS3g==
+X-Received: by 2002:a1c:c706:: with SMTP id x6mr9242682wmf.35.1558960990603;
+        Mon, 27 May 2019 05:43:10 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id c14sm11494930wrt.45.2019.05.27.05.43.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 27 May 2019 05:43:10 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     ulf.hansson@linaro.org, khilman@baylibre.com
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-mmc@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] mmc: meson-gx: add dram-access-quirk support
+Date:   Mon, 27 May 2019 14:43:04 +0200
+Message-Id: <20190527124307.32075-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mason,
+On the Amlogic G12A SoC family, (only) the SDIO controller fails to access
+the data from DRAM, leading to a broken controller.
 
-masonccyang@mxic.com.tw wrote on Thu, 23 May 2019 16:58:02 +0800:
+Add the amlogic,ddr-access-quirk property so signal this particular
+controller has this bug and needs a quirk to work properly.
 
-> Hi Miquel,
-> 
-> > >   
-> > > > > +
-> > > > > +static void mxic_nand_select_chip(struct nand_chip *chip, int   
-> chipnr) 
-> > > > 
-> > > > _select_target() is preferred now   
-> > > 
-> > > Do you mean I implement mxic_nand_select_target() to control #CS ?
-> > > 
-> > > If so, I need to call mxic_nand_select_target( ) to control #CS ON
-> > > and then #CS OFF in _exec_op() due to nand_select_target()<in   
-> nand_base,c>  
-> > > is still calling chip->legacy.select_chip ?  
-> > 
-> > You must forget about the ->select_chip() callback. Now it should be
-> > handled directly from the controller driver. Please have a look at the
-> > commit pointed against the marvell_nand.c driver.  
-> 
-> I have no Marvell NFC datasheet and have one question.
-> 
-> In marvell_nand.c, there is no xxx_deselect_target() or 
-> something like that doing #CS OFF.
-> marvell_nfc_select_target() seems always to make one of chip or die
-> #CS keep low.
-> 
-> Is it right ?
+But each MMC controller has 1,5KiB of SRAM after the registers, that can
+be used as bounce buffer to avoid direct DDR access from the integrated
+DMAs (this SRAM may be used by the boot ROM when DRAM is not yet initialized).
 
-Yes, AFAIR there is no "de-assert" mechanism in this controller.
+The quirk is to disable the chained descriptor for this controller, and
+use this SRAM memory zone as buffer for the bounce buffer fallback mode.
 
-> 
-> How to make all #CS keep high for NAND to enter 
-> low-power standby mode if driver don't use "legacy.select_chip()" ?
+The performance hit hasn't been evaluated, but the fix has been tested
+using a WiFi AP6398S SDIO module, and the iperf3 Bandwidth measurement gave
+55.2 Mbits/sec over a 63 Hours long test, with the SDIO ios set as High-Speed
+at 50MHz clock. It gave around 170 Mbits/sec as SDR104 and 200MHz clock.
 
-See commit 02b4a52604a4 ("mtd: rawnand: Make ->select_chip() optional
-when ->exec_op() is implemented") which states:
+Changes since v1:
+* use DRAM instead of DDR, added details in bindings on internal DMA controller
+* fix probe() to not try to unallocate bounce buffer on error
+* replace DT patch adding SDIO property to patch adding SDIO controller
 
-        "When [->select_chip() is] not implemented, the core is assuming
-	the CS line is automatically asserted/deasserted by the driver
-	->exec_op() implementation."
+Jerome Brunet (1):
+  arm64: dts: meson: g12a: add SDIO controller
 
-Of course, the above is right only when the controller driver supports
-the ->exec_op() interface. 
+Neil Armstrong (2):
+  dt-bindings: mmc: meson-gx: add dram-access-quirk property
+  mmc: meson-gx: add dram-access-quirk
 
-So if you think it is not too time consuming and worth the trouble to
-assert/deassert the CS at each operation, you may do it in your driver.
+ .../bindings/mmc/amlogic,meson-gx.txt         |  4 ++
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi   | 37 ++++++++++
+ drivers/mmc/host/meson-gx-mmc.c               | 70 +++++++++++++++----
+ 3 files changed, 96 insertions(+), 15 deletions(-)
 
+-- 
+2.21.0
 
-Thanks,
-Miquèl
