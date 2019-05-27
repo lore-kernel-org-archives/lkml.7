@@ -2,115 +2,169 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB33C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED09EC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:29:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 605E121721
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:27:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD2D721721
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:29:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AiCWHoCA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbfE0O1v (ORCPT
+        id S1726620AbfE0O3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 10:27:51 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:44739 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbfE0O1u (ORCPT
+        Mon, 27 May 2019 10:29:34 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:39719 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbfE0O3d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 10:27:50 -0400
-Received: by mail-lf1-f67.google.com with SMTP id r15so2749475lfm.11
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 07:27:49 -0700 (PDT)
+        Mon, 27 May 2019 10:29:33 -0400
+Received: by mail-ed1-f65.google.com with SMTP id e24so27012775edq.6;
+        Mon, 27 May 2019 07:29:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:references:user-agent:in-reply-to:date
+         :message-id:mime-version:content-transfer-encoding;
+        bh=R1AzxQRXU80ZX5XlNuDiv+NBZP+OSp10LmHxXSL0x0w=;
+        b=AiCWHoCAvp7FsuBpthidNFx/02mjK0qH0iS0s0JJyqwmtUEJ7pK46F519eHsPQK9YD
+         iHApNZRWjr9Sqaj9pfDK11l1BTfugz2Aw2qi67tjsJwz9JdfyZ21ictjTY4OtHF9lfqk
+         UAT1fB1y84EsTHu7RIidW4w/pP025+m6r8rq4+sNHf1D8yHSDSkYLMUV1Vhm20aMmPuX
+         j5N8KxFO/30zdUe637oW2mJrZ4on+E0uMtGuGhYUGs5gL228gRn8aTuiXdupz+8ICsa2
+         wIUl11FDF34EqNDQS+5QhSPlyX2Y1kdeQfsiupaIfFesi40cWWfHnGugFAbF0PAvDtZF
+         zqjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lv4/05KV1MJXr8JW8E95cKD+niHNUN/s+/GEdaLT7zk=;
-        b=n/eaxXRrrsHvV0f+eStxUj3flr3IujLK6tPrhoHuw3u+PfOzEi6fVOH45bUxaPNIGN
-         Pn1vJHSEHN0pX0oEQGJLqII4cSdLSv3tqM6sr4u4ROHo4DZVWenpV153rqU4j+45qx1F
-         JWOUyGkStQNZbmMh0oSe2PBlauF7a4qLg03H5M3RwN98+d+0Omvmmq/5QkKFmgOH3Dk0
-         qi+coPYSdU3rqFpM/jVtt9bL+fDysXcWzhF2CjJgrK1MNjb5rjjGPHfMYXzi/pfu2EKE
-         8AFB54p0Bc+7myd0T/2H4s9UpgDUv8rUIckhJXyEnvMSCNC5DeO+Mznxpx3MLHV9rHdp
-         HqXQ==
-X-Gm-Message-State: APjAAAUzg1l07TPlybjBaqqFoAU0jCHzU0q1eFSGWQCKOK90S3zHE8uo
-        tUYBAuGVIlqQ0aAh3c+dvZzJIWnHGOTPqz0YFao=
-X-Google-Smtp-Source: APXvYqyxW8TMFs7m8kO3uZA+ackFyllrVL0q/7RvumaMTRDexubwz+FdZwsjxUXBThgtipi5LQym7ZYu+MRk1cWPjgI=
-X-Received: by 2002:a19:c142:: with SMTP id r63mr572576lff.49.1558967269083;
- Mon, 27 May 2019 07:27:49 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:references:user-agent
+         :in-reply-to:date:message-id:mime-version:content-transfer-encoding;
+        bh=R1AzxQRXU80ZX5XlNuDiv+NBZP+OSp10LmHxXSL0x0w=;
+        b=Ipxhhq3np0zp48SMXBBuQZ8DzNBvLssk7C8Kphg4/c+W5orPqgsPKGFq9QYME+wku1
+         +0q84AlonhsaSbnl+Jo+TKMfeLotxUu6Gnk7qlcEkwJBIpdPyJdpglO0IiIH7626uu3j
+         nGOurZD2ebztN5OdJeJ0vfJl945ArRHmt0LPVqa3LfnmdrmItp1diTsoja+XnHVl0eV9
+         atelkbNMrK7IpU7Eq7TetMUt2X5QcpxqckVODlR/zmRdl6e9TxFuaa+0lyoYake0xoNp
+         FIcdBZVghKZNeFyGx8peEP1gK9gm4vZYrzibrSAbk9Zk9otLA5x2/sNKoffFcofi9YbJ
+         UPMw==
+X-Gm-Message-State: APjAAAXMFMV4Q9isB32P639sW0G26MkXOevb2M88F4FfczI+Ro6x6KLp
+        1KhnuL8Sv1CR/EmfBPZOtME=
+X-Google-Smtp-Source: APXvYqxY4ajZ79OyA5ygAapQwFXXc0kzlW/Sjz7E9RhvuT2PC6ddGjwjP1kAcvHkPzknFkbdDKyoYg==
+X-Received: by 2002:a17:906:d215:: with SMTP id w21mr53198737ejz.122.1558967371143;
+        Mon, 27 May 2019 07:29:31 -0700 (PDT)
+Received: from evledraar ([5.57.21.48])
+        by smtp.gmail.com with ESMTPSA id v16sm3358696edm.56.2019.05.27.07.29.29
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 27 May 2019 07:29:29 -0700 (PDT)
+From:   =?utf-8?B?w4Z2YXIgQXJuZmrDtnLDsA==?= Bjarmason <avarab@gmail.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     git@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Junio C Hamano <gitster@pobox.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        KVM list <kvm@vger.kernel.org>,
+        Michael Haggerty <mhagger@alum.mit.edu>
+Subject: Re: [RFC/PATCH] refs: tone down the dwimmery in refname_match() for {heads,tags,remotes}/*
+References: <CAHk-=wgzKzAwS=_ySikL1f=Gr62YXL_WXGh82wZKMOvzJ9+2VA@mail.gmail.com> <20190526225445.21618-1-avarab@gmail.com> <5c9ce55c-2c3a-fce0-d6e3-dfe5f8fc9b01@redhat.com>
+User-agent: Debian GNU/Linux 10 (buster); Emacs 26.1; mu4e 1.1.0
+In-reply-to: <5c9ce55c-2c3a-fce0-d6e3-dfe5f8fc9b01@redhat.com>
+Date:   Mon, 27 May 2019 16:29:28 +0200
+Message-ID: <874l5gezsn.fsf@evledraar.gmail.com>
 MIME-Version: 1.0
-References: <20190527122309.5840-1-geert+renesas@glider.be> <20190527141201.GA1537@gmail.com>
-In-Reply-To: <20190527141201.GA1537@gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 27 May 2019 16:27:36 +0200
-Message-ID: <CAMuHMdV5TB4DRPuKkczYgCJ7+-yzEbnYp=TQydnK+3qmkPT4Tg@mail.gmail.com>
-Subject: Re: [PATCH] [trivial] perf: Spelling s/EACCESS/EACCES/
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Kosina <trivial@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ingo,
 
-On Mon, May 27, 2019 at 4:12 PM Ingo Molnar <mingo@kernel.org> wrote:
-> * Geert Uytterhoeven <geert+renesas@glider.be> wrote:
-> > The correct spelling is EACCES:
-> >
-> > include/uapi/asm-generic/errno-base.h:#define EACCES 13 /* Permission denied */
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Mon, May 27 2019, Paolo Bonzini wrote:
 
-> > --- a/include/linux/perf_event.h
-> > +++ b/include/linux/perf_event.h
-> > @@ -289,7 +289,7 @@ struct pmu {
-> >        *  -EBUSY      -- @event is for this PMU but PMU temporarily unavailable
-> >        *  -EINVAL     -- @event is for this PMU but @event is not valid
-> >        *  -EOPNOTSUPP -- @event is for this PMU, @event is valid, but not supported
-> > -      *  -EACCESS    -- @event is for this PMU, @event is valid, but no privilidges
-> > +      *  -EACCES     -- @event is for this PMU, @event is valid, but no privilidges
-> >        *
-> >        *  0           -- @event is for this PMU and valid
-> >        *
+> On 27/05/19 00:54, =C3=86var Arnfj=C3=B6r=C3=B0 Bjarmason wrote:
+>> This resulted in a case[1] where someone on LKML did:
+>>
+>>     git push kvm +HEAD:tags/for-linus
+>>
+>> Which would have created a new "tags/for-linus" branch in their "kvm"
+>> repository, except because they happened to have an existing
+>> "refs/tags/for-linus" reference we pushed there instead, and replaced
+>> an annotated tag with a lightweight tag.
 >
+> Actually, I would not be surprised even if "git push foo
+> someref:tags/foo" _always_ created a lightweight tag (i.e. push to
+> refs/tags/foo).
+
+That's not the intention (I think), and not what we document.
+
+It mostly (and I believe always should) works by looking at whether
+"someref" is a named ref, and e.g. looking at whether it's "master". We
+then see that it lives in "refs/heads/master" locally, and thus
+correspondingly add a "refs/heads/" to your <dst> "tags/foo", making it
+"refs/heads/tags/foo".
+
+*Or* we take e.g. <some random SHA-1>:master, the <some random...> is
+ambiguous, but we see that "master" unambiguously refers to
+"refs/heads/master" on the remote (so e.g. a refs/tags/master doesn't
+exist). If you had both refs/{heads,tags}/master refs on the remote we'd
+emit:
+
+    error: dst refspec master matches more than one
+
+(We should improve that error to note what conflicted, #leftoverbits)
+
+So your HEAD:tags/for-linus resulted in pushing a HEAD that referred to
+some refs/heads/* to refs/tags/for-linus. I believe that's an unintendedem
+ergent effect in how we try to apply these two rules. We should apply
+one, not both in combination.
+
+And as an aside none of these rules have to do with whether the <src> is
+a lightweight or annotated tag, and both types live in the refs/tags/*
+namespace.
+
+> In my opinion, the bug is that "git request-pull" should warn if the tag
+> is lightweight remotely but not locally, and possibly even vice versa.
+> Here is a simple testcase:
 >
-> Actually, -EACCES got typoed itself and survived due to historic reasons.
-
-Quite possible... Someone pointed out a while ago it is part of POSIX,
-hence it cannot be changed.
-
-Probably we can do "#define EACCESS EACCES"?
-
-> I think we can tolerate the 'typo' fixed in documentation, can we?
-
-IMHO we cannot, as e.g. "git grep -w" won't match both.
-Do you really want the documentation to differ from the implementation?
-
-> Also, the *far* bigger typo is, in the same line:
+>   # setup "local" repo
+>   mkdir -p testdir/a
+>   cd testdir/a
+>   git init
+>   echo a > test
+>   git add test
+>   git commit -minitial
 >
-> s/privilidges
->  /privileges
+>   # setup "remote" repo
+>   git clone --bare . ../b
+>
+>   # setup "local" tag
+>   echo b >> test
+>   git commit -msecond test
+>   git tag -mtag tag1
+>
+>   # create remote lightweight tag and prepare a pull request
+>   git push ../b HEAD:refs/tags/tag1
+>   git request-pull HEAD^ ../b tags/tag1
 
-Thanks, that one didn't show up with "git grep -w EACCESS" ;-)
-Will send v2...
+Yeah, maybe. I don't use git-request-pull. So maybe this is a simple
+mitigation for that tool since you supply a <remote> to it already.
 
-Gr{oetje,eeting}s,
+I was more interested and surprised by HEAD being implicitly resolved to
+refs/tags/* in a way that would be *different* than if you didn't have
+an existing tag there, but of course if we errored on that you might
+have just done "+HEAD:refs/tags/for-linus" and ended up with the same
+thing.
 
-                        Geert
+As an aside, in *general* tags, unlike branches, don't have "remote
+tracking". That's something we'd eventually want, but we're nowhere near
+the refstore and porcelain supporting that.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Thus such a check is hard to support in general, we'd always need a
+remote name and a network roundtrip. Otherwise we couldn't do anything
+sensible if you have 10 remotes of fellow LKML developers, all of whom
+have a "for-linus" tag, which I'm assuming is a common use-case.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+But since git-request-pull gets the remote it can (and does) check on
+that remote, but seems to satisfied to see that the ref exists somewhere
+on that remote.
