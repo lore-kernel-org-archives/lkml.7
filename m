@@ -4,193 +4,141 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A7E8C072B1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC505C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1CA52146F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:04:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8D6220883
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:06:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727172AbfE0MEs (ORCPT
+        id S1726968AbfE0MGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 08:04:48 -0400
-Received: from baptiste.telenet-ops.be ([195.130.132.51]:41514 "EHLO
-        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726722AbfE0MEQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 08:04:16 -0400
-Received: from ramsan ([84.194.111.163])
-        by baptiste.telenet-ops.be with bizsmtp
-        id HQ4D2000T3XaVaC01Q4DLD; Mon, 27 May 2019 14:04:13 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hVEMP-0001Pm-Ks; Mon, 27 May 2019 14:04:13 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hVEMP-00015l-Jh; Mon, 27 May 2019 14:04:13 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>
-Cc:     linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 5/5] irqchip/renesas-irqc: Convert to managed initializations
-Date:   Mon, 27 May 2019 14:04:12 +0200
-Message-Id: <20190527120412.4071-6-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190527120412.4071-1-geert+renesas@glider.be>
-References: <20190527120412.4071-1-geert+renesas@glider.be>
+        Mon, 27 May 2019 08:06:55 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:17580 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726071AbfE0MGy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 08:06:54 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 84DCA3273ECA518A4663;
+        Mon, 27 May 2019 20:06:52 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 27 May 2019 20:06:43 +0800
+From:   Kefeng Wang <wangkefeng.wang@huawei.com>
+To:     <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>
+Subject: [PATCH v2] media: saa7164: fix remove_proc_entry warning
+Date:   Mon, 27 May 2019 20:14:55 +0800
+Message-ID: <20190527121455.177296-1-wangkefeng.wang@huawei.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <a921e7c8-53a2-bc48-286e-76efa6c4ba07@xs4all.nl>
+References: <a921e7c8-53a2-bc48-286e-76efa6c4ba07@xs4all.nl>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Simplify error handling by converting the driver to use managed
-allocations and initializations.
+if saa7164_proc_create() fails, saa7164_fini() will trigger a warning,
 
-Note that platform_get_resource() and ioremap_nocache() are combined in
-devm_platform_ioremap_resource().
+name 'saa7164'
+WARNING: CPU: 1 PID: 6311 at fs/proc/generic.c:672 remove_proc_entry+0x1e8/0x3a0
+  ? remove_proc_entry+0x1e8/0x3a0
+  ? try_stop_module+0x7b/0x240
+  ? proc_readdir+0x70/0x70
+  ? rcu_read_lock_sched_held+0xd7/0x100
+  saa7164_fini+0x13/0x1f [saa7164]
+  __x64_sys_delete_module+0x30c/0x480
+  ? __ia32_sys_delete_module+0x480/0x480
+  ? __x64_sys_clock_gettime+0x11e/0x1c0
+  ? __x64_sys_timer_create+0x1a0/0x1a0
+  ? trace_hardirqs_off_caller+0x40/0x180
+  ? do_syscall_64+0x18/0x450
+  do_syscall_64+0x9f/0x450
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Fix it by checking the return of proc_create_single() before
+calling remove_proc_entry().
+
+Cc: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
 ---
-v2:
-  - Add Reviewed-by.
----
- drivers/irqchip/irq-renesas-irqc.c | 54 +++++++++---------------------
- 1 file changed, 15 insertions(+), 39 deletions(-)
+ drivers/media/pci/saa7164/saa7164-core.c | 33 ++++++++++++++++--------
+ 1 file changed, 22 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/irqchip/irq-renesas-irqc.c b/drivers/irqchip/irq-renesas-irqc.c
-index af03ee31a87bb11d..cde9f9c0687e94a4 100644
---- a/drivers/irqchip/irq-renesas-irqc.c
-+++ b/drivers/irqchip/irq-renesas-irqc.c
-@@ -126,16 +126,13 @@ static int irqc_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	const char *name = dev_name(dev);
- 	struct irqc_priv *p;
--	struct resource *io;
- 	struct resource *irq;
- 	int ret;
- 	int k;
- 
--	p = kzalloc(sizeof(*p), GFP_KERNEL);
--	if (!p) {
--		ret = -ENOMEM;
--		goto err0;
--	}
-+	p = devm_kzalloc(dev, sizeof(*p), GFP_KERNEL);
-+	if (!p)
-+		return -ENOMEM;
- 
- 	p->dev = dev;
- 	platform_set_drvdata(pdev, p);
-@@ -143,14 +140,6 @@ static int irqc_probe(struct platform_device *pdev)
- 	pm_runtime_enable(dev);
- 	pm_runtime_get_sync(dev);
- 
--	/* get hold of manadatory IOMEM */
--	io = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!io) {
--		dev_err(dev, "not enough IOMEM resources\n");
--		ret = -EINVAL;
--		goto err1;
--	}
--
- 	/* allow any number of IRQs between 1 and IRQC_IRQ_MAX */
- 	for (k = 0; k < IRQC_IRQ_MAX; k++) {
- 		irq = platform_get_resource(pdev, IORESOURCE_IRQ, k);
-@@ -166,14 +155,14 @@ static int irqc_probe(struct platform_device *pdev)
- 	if (p->number_of_irqs < 1) {
- 		dev_err(dev, "not enough IRQ resources\n");
- 		ret = -EINVAL;
--		goto err1;
-+		goto err_runtime_pm_disable;
- 	}
- 
- 	/* ioremap IOMEM and setup read/write callbacks */
--	p->iomem = ioremap_nocache(io->start, resource_size(io));
--	if (!p->iomem) {
--		ret = -ENXIO;
--		goto err2;
-+	p->iomem = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(p->iomem)) {
-+		ret = PTR_ERR(p->iomem);
-+		goto err_runtime_pm_disable;
- 	}
- 
- 	p->cpu_int_base = p->iomem + IRQC_INT_CPU_BASE(0); /* SYS-SPI */
-@@ -183,7 +172,7 @@ static int irqc_probe(struct platform_device *pdev)
- 	if (!p->irq_domain) {
- 		ret = -ENXIO;
- 		dev_err(dev, "cannot initialize irq domain\n");
--		goto err2;
-+		goto err_runtime_pm_disable;
- 	}
- 
- 	ret = irq_alloc_domain_generic_chips(p->irq_domain, p->number_of_irqs,
-@@ -191,7 +180,7 @@ static int irqc_probe(struct platform_device *pdev)
- 					     0, 0, IRQ_GC_INIT_NESTED_LOCK);
- 	if (ret) {
- 		dev_err(dev, "cannot allocate generic chip\n");
--		goto err3;
-+		goto err_remove_domain;
- 	}
- 
- 	p->gc = irq_get_domain_generic_chip(p->irq_domain, 0);
-@@ -206,46 +195,33 @@ static int irqc_probe(struct platform_device *pdev)
- 
- 	/* request interrupts one by one */
- 	for (k = 0; k < p->number_of_irqs; k++) {
--		if (request_irq(p->irq[k].requested_irq, irqc_irq_handler,
--				0, name, &p->irq[k])) {
-+		if (devm_request_irq(dev, p->irq[k].requested_irq,
-+				     irqc_irq_handler, 0, name, &p->irq[k])) {
- 			dev_err(dev, "failed to request IRQ\n");
- 			ret = -ENOENT;
--			goto err4;
-+			goto err_remove_domain;
- 		}
- 	}
- 
- 	dev_info(dev, "driving %d irqs\n", p->number_of_irqs);
- 
+diff --git a/drivers/media/pci/saa7164/saa7164-core.c b/drivers/media/pci/saa7164/saa7164-core.c
+index 05f25c9bb308..04d566b1b41e 100644
+--- a/drivers/media/pci/saa7164/saa7164-core.c
++++ b/drivers/media/pci/saa7164/saa7164-core.c
+@@ -1122,16 +1122,25 @@ static int saa7164_proc_show(struct seq_file *m, void *v)
  	return 0;
--err4:
--	while (--k >= 0)
--		free_irq(p->irq[k].requested_irq, &p->irq[k]);
- 
--err3:
-+err_remove_domain:
- 	irq_domain_remove(p->irq_domain);
--err2:
--	iounmap(p->iomem);
--err1:
-+err_runtime_pm_disable:
- 	pm_runtime_put(dev);
- 	pm_runtime_disable(dev);
--	kfree(p);
--err0:
- 	return ret;
  }
  
- static int irqc_remove(struct platform_device *pdev)
++static struct proc_dir_entry *saa7164_pe;
++
+ static int saa7164_proc_create(void)
  {
- 	struct irqc_priv *p = platform_get_drvdata(pdev);
--	int k;
+-	struct proc_dir_entry *pe;
 -
--	for (k = 0; k < p->number_of_irqs; k++)
--		free_irq(p->irq[k].requested_irq, &p->irq[k]);
+-	pe = proc_create_single("saa7164", S_IRUGO, NULL, saa7164_proc_show);
+-	if (!pe)
++	saa7164_pe = proc_create_single("saa7164", S_IRUGO, NULL, saa7164_proc_show);
++	if (!saa7164_pe)
+ 		return -ENOMEM;
  
- 	irq_domain_remove(p->irq_domain);
--	iounmap(p->iomem);
- 	pm_runtime_put(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
--	kfree(p);
  	return 0;
+ }
++
++static void saa7164_proc_destroy(void)
++{
++	if (saa7164_pe)
++		remove_proc_entry("saa7164", NULL);
++}
++#else
++static int saa7164_proc_create(void) { return 0; }
++static void saa7164_proc_destroy(void) {}
+ #endif
+ 
+ static int saa7164_thread_function(void *data)
+@@ -1503,19 +1512,21 @@ static struct pci_driver saa7164_pci_driver = {
+ 
+ static int __init saa7164_init(void)
+ {
+-	printk(KERN_INFO "saa7164 driver loaded\n");
++	int ret = pci_register_driver(&saa7164_pci_driver);
++
++	if (ret)
++		return ret;
+ 
+-#ifdef CONFIG_PROC_FS
+ 	saa7164_proc_create();
+-#endif
+-	return pci_register_driver(&saa7164_pci_driver);
++
++	printk(KERN_INFO "saa7164 driver loaded\n");
++
++	return 0;
+ }
+ 
+ static void __exit saa7164_fini(void)
+ {
+-#ifdef CONFIG_PROC_FS
+-	remove_proc_entry("saa7164", NULL);
+-#endif
++	saa7164_proc_destroy();
+ 	pci_unregister_driver(&saa7164_pci_driver);
  }
  
 -- 
-2.17.1
+2.20.1
 
