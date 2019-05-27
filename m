@@ -2,88 +2,238 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FB1C07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 09:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EAEC07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 09:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A554321734
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 09:10:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FhjjRkkX"
+	by mail.kernel.org (Postfix) with ESMTP id A051A21734
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 09:12:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726807AbfE0JK3 (ORCPT
+        id S1726481AbfE0JMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 05:10:29 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:35105 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbfE0JK3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 05:10:29 -0400
-Received: by mail-lj1-f193.google.com with SMTP id h11so14062910ljb.2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 02:10:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pEGlKR9cMXvIeUwusBglsYeiQ+SPB2PmHYL6y3sHsr0=;
-        b=FhjjRkkXUEVnfVIt6bTqWSZJb/80sf15Ilad86TcxGXBhK8aK4E1Q8KTgK9nZ7a3Wc
-         L+08R9RZF08RtWFv83jca1VyQfwi7ljQUoGUnI+MLWoxcugHRvse2TEQADWqDxxGDhkv
-         03VruCzQb3H2EC7bW3VH9sYFSU1DSddBsVfvpbfT+VLY9BvT7GtBotmkm3OzN5YNmVAG
-         kO6OSAhPlVJGlX/tgBr5UHCMZEYKdewpzcS9XDXgV/Z2rjnIc5B86w2RLERHCubNoixu
-         uI8Dtj9y6WlZ2f+MIDty1Q5bXXvSPYBMYwABhThGOV8v6RJF3aNCo0+PFKpKf3EFP0+Z
-         kd1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pEGlKR9cMXvIeUwusBglsYeiQ+SPB2PmHYL6y3sHsr0=;
-        b=OcLUmg/nZyXUpjb0ZcSKgxmqQ4AKa9Qz8UOfWzrDFlmyAopBG4RzGiPIzqpwdNGbz/
-         vDhd458SuCbed3Qb+HY94Cd273MegWM6WjL7cr7WyIjZDvHJdpHvM8ZKGfornp4A3w4k
-         Rdc/7t2DPcH/XxQuyHDseX0DDjcaPsOfWAvOvZg3jEuAwTTxkKBMSm6Bl4AReLKdXG2K
-         QYU5R2vvpoLAt8+h+zOBvQltt98t66A01hIxPVaDneIjx5WSPoynw9/NfCUgsjWoySH0
-         5Q24X1DmK6R3sJNc505Uflm5u5b+pemg5Sa3HFR02vUFcKtX7h6v8GuiBwmgHH87MBQ4
-         BtEQ==
-X-Gm-Message-State: APjAAAWYDC9zf0s18Xeav3uu/nvMCHEUuMlCu+6qOu/TeGrjBQg5Dv5o
-        WbSi18dsqld/x76gZj3gwXZvEIPbjzv6+U2+Pw7Qqg==
-X-Google-Smtp-Source: APXvYqx3PadhULZkWPFoOWBCluXUOl+KRGzn+HWRbMqV3BUzCYyZIRy5UR/oJ53rjISdwLm4eqiipmAdUSlkYMpbwu0=
-X-Received: by 2002:a2e:5c1:: with SMTP id 184mr52626256ljf.94.1558948227212;
- Mon, 27 May 2019 02:10:27 -0700 (PDT)
+        Mon, 27 May 2019 05:12:30 -0400
+Received: from mga02.intel.com ([134.134.136.20]:14216 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725869AbfE0JM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 05:12:29 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 May 2019 02:12:28 -0700
+X-ExtLoop1: 1
+Received: from zhen-hp.sh.intel.com (HELO zhen-hp) ([10.239.13.116])
+  by FMSMGA003.fm.intel.com with ESMTP; 27 May 2019 02:12:26 -0700
+Date:   Mon, 27 May 2019 17:11:13 +0800
+From:   Zhenyu Wang <zhenyuw@linux.intel.com>
+To:     Tina Zhang <tina.zhang@intel.com>
+Cc:     intel-gvt-dev@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kraxel@redhat.com,
+        zhenyuw@linux.intel.com, alex.williamson@redhat.com,
+        hang.yuan@intel.com, zhiyuan.lv@intel.com
+Subject: Re: [PATCH 2/2] drm/i915/gvt: Support delivering page flip event to
+ userspace
+Message-ID: <20190527091113.GF29553@zhen-hp.sh.intel.com>
+Reply-To: Zhenyu Wang <zhenyuw@linux.intel.com>
+References: <20190527084312.8872-1-tina.zhang@intel.com>
+ <20190527084312.8872-3-tina.zhang@intel.com>
 MIME-Version: 1.0
-References: <20190525204228.8546-1-colin.king@canonical.com>
-In-Reply-To: <20190525204228.8546-1-colin.king@canonical.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 27 May 2019 11:10:15 +0200
-Message-ID: <CACRpkdadikx9MPrVUQxXa6KYsmnuoakjYVTNEcv_HOoW0pCgZg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: pinctrl: fix spelling mistakes in pinctl documentation
-To:     Colin King <colin.king@canonical.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, kernel-janitors@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="BRE3mIcgqKzpedwo"
+Content-Disposition: inline
+In-Reply-To: <20190527084312.8872-3-tina.zhang@intel.com>
+User-Agent: Mutt/1.10.0 (2018-05-17)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 25, 2019 at 10:42 PM Colin King <colin.king@canonical.com> wrote:
 
-> From: Colin Ian King <colin.king@canonical.com>
->
-> The spelling of configured is incorrect in the documentation. Fix it.
->
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+--BRE3mIcgqKzpedwo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Patch applied with Bjorn's review tag.
+On 2019.05.27 16:43:12 +0800, Tina Zhang wrote:
+> Use the eventfd based signaling mechanism provided by vfio/display
+> to deliver vGPU framebuffer page flip event to userspace.
+>=20
+> Signed-off-by: Tina Zhang <tina.zhang@intel.com>
+> ---
+>  drivers/gpu/drm/i915/gvt/dmabuf.c   | 31 +++++++++++++++++++++++++++++
+>  drivers/gpu/drm/i915/gvt/dmabuf.h   |  1 +
+>  drivers/gpu/drm/i915/gvt/gvt.c      |  1 +
+>  drivers/gpu/drm/i915/gvt/gvt.h      |  2 ++
+>  drivers/gpu/drm/i915/gvt/handlers.c |  2 ++
+>  drivers/gpu/drm/i915/gvt/kvmgt.c    |  7 +++++++
+>  6 files changed, 44 insertions(+)
+>=20
+> diff --git a/drivers/gpu/drm/i915/gvt/dmabuf.c b/drivers/gpu/drm/i915/gvt=
+/dmabuf.c
+> index 4e1e425189ba..f2ed45616d72 100644
+> --- a/drivers/gpu/drm/i915/gvt/dmabuf.c
+> +++ b/drivers/gpu/drm/i915/gvt/dmabuf.c
+> @@ -538,6 +538,35 @@ int intel_vgpu_get_dmabuf(struct intel_vgpu *vgpu, u=
+nsigned int dmabuf_id)
+>  	return ret;
+>  }
+> =20
+> +static void release_flip_eventfd_ctx(struct intel_vgpu *vgpu)
+> +{
+> +	struct eventfd_ctx **trigger =3D &vgpu->page_flip_trigger;
+> +
+> +	if (*trigger) {
+> +		eventfd_ctx_put(*trigger);
+> +		*trigger =3D NULL;
+> +	}
 
-Yours,
-Linus Walleij
+Why so twisted?
+
+        if (vgpu->page_flip_trigger) {
+                eventfd_ctx_put(vgpu->page_flip_trigger);
+		vgpu->page_flip_trigger =3D NULL;
+        }
+
+> +}
+> +
+> +int intel_vgpu_set_flip_eventfd(struct intel_vgpu *vgpu, int fd)
+> +{
+> +	struct eventfd_ctx *trigger;
+> +
+> +	if (fd =3D=3D -1) {
+> +		release_flip_eventfd_ctx(vgpu);
+> +	} else if (fd >=3D 0) {
+> +		trigger =3D eventfd_ctx_fdget(fd);
+> +		if (IS_ERR(trigger)) {
+> +			gvt_vgpu_err("eventfd_ctx_fdget failed\n");
+> +			return PTR_ERR(trigger);
+> +		}
+> +		vgpu->page_flip_trigger =3D trigger;
+> +	} else
+> +		return -EINVAL;
+
+Better put (fd < 0) check earlier in ioctl handler to simplify this.
+
+> +
+> +	return 0;
+> +}
+> +
+>  void intel_vgpu_dmabuf_cleanup(struct intel_vgpu *vgpu)
+>  {
+>  	struct list_head *pos, *n;
+> @@ -561,4 +590,6 @@ void intel_vgpu_dmabuf_cleanup(struct intel_vgpu *vgp=
+u)
+> =20
+>  	}
+>  	mutex_unlock(&vgpu->dmabuf_lock);
+> +
+> +	release_flip_eventfd_ctx(vgpu);
+>  }
+> diff --git a/drivers/gpu/drm/i915/gvt/dmabuf.h b/drivers/gpu/drm/i915/gvt=
+/dmabuf.h
+> index 5f8f03fb1d1b..4d9caa3732d2 100644
+> --- a/drivers/gpu/drm/i915/gvt/dmabuf.h
+> +++ b/drivers/gpu/drm/i915/gvt/dmabuf.h
+> @@ -62,6 +62,7 @@ struct intel_vgpu_dmabuf_obj {
+> =20
+>  int intel_vgpu_query_plane(struct intel_vgpu *vgpu, void *args);
+>  int intel_vgpu_get_dmabuf(struct intel_vgpu *vgpu, unsigned int dmabuf_i=
+d);
+> +int intel_vgpu_set_flip_eventfd(struct intel_vgpu *vgpu, int fd);
+>  void intel_vgpu_dmabuf_cleanup(struct intel_vgpu *vgpu);
+> =20
+>  #endif
+> diff --git a/drivers/gpu/drm/i915/gvt/gvt.c b/drivers/gpu/drm/i915/gvt/gv=
+t.c
+> index 43f4242062dd..7fd4afa432ef 100644
+> --- a/drivers/gpu/drm/i915/gvt/gvt.c
+> +++ b/drivers/gpu/drm/i915/gvt/gvt.c
+> @@ -184,6 +184,7 @@ static const struct intel_gvt_ops intel_gvt_ops =3D {
+>  	.get_gvt_attrs =3D intel_get_gvt_attrs,
+>  	.vgpu_query_plane =3D intel_vgpu_query_plane,
+>  	.vgpu_get_dmabuf =3D intel_vgpu_get_dmabuf,
+> +	.vgpu_set_flip_eventfd =3D intel_vgpu_set_flip_eventfd,
+>  	.write_protect_handler =3D intel_vgpu_page_track_handler,
+>  	.emulate_hotplug =3D intel_vgpu_emulate_hotplug,
+>  };
+> diff --git a/drivers/gpu/drm/i915/gvt/gvt.h b/drivers/gpu/drm/i915/gvt/gv=
+t.h
+> index f5a328b5290a..86ca223f9a60 100644
+> --- a/drivers/gpu/drm/i915/gvt/gvt.h
+> +++ b/drivers/gpu/drm/i915/gvt/gvt.h
+> @@ -229,6 +229,7 @@ struct intel_vgpu {
+>  	struct completion vblank_done;
+> =20
+>  	u32 scan_nonprivbb;
+> +	struct eventfd_ctx *page_flip_trigger;
+>  };
+> =20
+>  /* validating GM healthy status*/
+> @@ -570,6 +571,7 @@ struct intel_gvt_ops {
+>  			struct attribute_group ***intel_vgpu_type_groups);
+>  	int (*vgpu_query_plane)(struct intel_vgpu *vgpu, void *);
+>  	int (*vgpu_get_dmabuf)(struct intel_vgpu *vgpu, unsigned int);
+> +	int (*vgpu_set_flip_eventfd)(struct intel_vgpu *vgpu, int fd);
+>  	int (*write_protect_handler)(struct intel_vgpu *, u64, void *,
+>  				     unsigned int);
+>  	void (*emulate_hotplug)(struct intel_vgpu *vgpu, bool connected);
+> diff --git a/drivers/gpu/drm/i915/gvt/handlers.c b/drivers/gpu/drm/i915/g=
+vt/handlers.c
+> index 18f01eeb2510..1b5455888bdf 100644
+> --- a/drivers/gpu/drm/i915/gvt/handlers.c
+> +++ b/drivers/gpu/drm/i915/gvt/handlers.c
+> @@ -763,6 +763,8 @@ static int pri_surf_mmio_write(struct intel_vgpu *vgp=
+u, unsigned int offset,
+>  	else
+>  		set_bit(event, vgpu->irq.flip_done_event[pipe]);
+> =20
+> +	eventfd_signal(vgpu->page_flip_trigger, 1);
+
+Need to check if page_flip_trigger is armed or not.
+
+> +
+>  	return 0;
+>  }
+> =20
+> diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c b/drivers/gpu/drm/i915/gvt/=
+kvmgt.c
+> index a68addf95c23..00c75bd76bc0 100644
+> --- a/drivers/gpu/drm/i915/gvt/kvmgt.c
+> +++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
+> @@ -1547,6 +1547,13 @@ static long intel_vgpu_ioctl(struct mdev_device *m=
+dev, unsigned int cmd,
+>  		dmabuf_fd =3D intel_gvt_ops->vgpu_get_dmabuf(vgpu, dmabuf_id);
+>  		return dmabuf_fd;
+> =20
+> +	} else if (cmd =3D=3D VFIO_DEVICE_SET_GFX_FLIP_EVENTFD) {
+> +		__s32 event_fd;
+> +
+> +		if (get_user(event_fd, (__s32 __user *)arg))
+> +			return -EFAULT;
+> +
+> +		return intel_gvt_ops->vgpu_set_flip_eventfd(vgpu, event_fd);
+>  	}
+> =20
+>  	return -ENOTTY;
+> --=20
+> 2.17.1
+>=20
+
+--=20
+Open Source Technology Center, Intel ltd.
+
+$gpg --keyserver wwwkeys.pgp.net --recv-keys 4D781827
+
+--BRE3mIcgqKzpedwo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQTXuabgHDW6LPt9CICxBBozTXgYJwUCXOupsQAKCRCxBBozTXgY
+JxbuAJ4kNMoua0PETExQpHBAIZ2hJDRvaQCfekjRkSFcY0VlZyW57GoruPc4/H4=
+=T0iT
+-----END PGP SIGNATURE-----
+
+--BRE3mIcgqKzpedwo--
