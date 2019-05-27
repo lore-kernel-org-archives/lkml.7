@@ -2,113 +2,173 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2CF1C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35BA8C46460
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A25CA21670
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:15:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="dhTS4Lyo"
+	by mail.kernel.org (Postfix) with ESMTP id 158E9214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:16:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbfE0MPL (ORCPT
+        id S1726999AbfE0MQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 08:15:11 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44525 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726722AbfE0MOL (ORCPT
+        Mon, 27 May 2019 08:16:33 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:48139 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725858AbfE0MQd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 08:14:11 -0400
-Received: by mail-wr1-f68.google.com with SMTP id w13so8345449wru.11
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 05:14:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=PE2qyWliumUSN347T63t3e5/xkurT9iBkthy1WXizA0=;
-        b=dhTS4Lyo6SbCjSE0fCEMltNu8hrg3FYreV6ihgKD/j5WlQmZ59l/hIEGDAS2WqhZmZ
-         MD+K9RIb5EUi9NdZnsBB3RTdFvv4BgR1o/M2VaiYcGnxPZEcgJcTCF9IUrDkLGxtLojN
-         uiryJJNMocYQifyuTO8UEQZjULzzqORfdm8GxBBLX7uhR4stQ1mR+LqM8oiICIgkfz5s
-         cHXU/cRd1XfmnM3TKS1ytiOTb3u+HjbphRNTHLKIwz0oiJAdPz9ZIz0+D+G22dSc/JaX
-         ZNcY9gexJzXKUMB5eD81sX/W4TlJUe0+ePBN5RUe05uuQ6F7tQd7qvgiphGssOwjBpjg
-         oN0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=PE2qyWliumUSN347T63t3e5/xkurT9iBkthy1WXizA0=;
-        b=dZ7aGCXdljSu5h7aMEQI4nQZkAcFqK0pP1p4xPOSYVOBa5G5/O0NLgjUHXwyqifF1l
-         FJS6N3XQ76mM6xRhk4piiUvavPy7aS2NTgjdSx19JDVp0JRiInjUyBOImPYwdgHQNHxa
-         1NIwmV+6i6q+/EDhFr2gov2/NZolWgg2K28a57IqZVWEUGD+fRNM3zRPqpRJZgyeZCMw
-         EajhqjzZzhyI1EHWqrWZdtuxHF9eKEYwpWSCXPbKjJpxnfSDeocarZuBrkfuYr/tiW4l
-         B6NXbKZBhgbgMS0DYPSr461wgdlOisVCEob1pvphfoixWXWs8kFSWaBSdHDMsGiji+kM
-         Hfgw==
-X-Gm-Message-State: APjAAAXpMm+ddHJIOuEIUF1J0F+yEfxr64wO6/tGd9zZIPI/Lf2o8cDH
-        a85IBB9yJ9TSrMbR5uCvypL0SQ==
-X-Google-Smtp-Source: APXvYqxFIeIFAETZTduZaUtWDN1ZmmLNb6kXNXnGerFOHnX/KETZawLZ46jctX7F/liDIJ5DEWDDew==
-X-Received: by 2002:adf:ee0c:: with SMTP id y12mr50236022wrn.34.1558959249250;
-        Mon, 27 May 2019 05:14:09 -0700 (PDT)
-Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id t7sm10699918wrq.76.2019.05.27.05.14.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 May 2019 05:14:08 -0700 (PDT)
-From:   Loys Ollivier <lollivier@baylibre.com>
-To:     Atish Patra <atish.patra@wdc.com>, linux-kernel@vger.kernel.org
-Cc:     mark.rutland@arm.com, Jonathan Corbet <corbet@lwn.net>,
-        Albert Ou <aou@eecs.berkeley.edu>, linux-doc@vger.kernel.org,
-        ard.biesheuvel@linaro.org, catalin.marinas@arm.com,
-        Anup Patel <Anup.Patel@wdc.com>, Zong Li <zong@andestech.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        Nick Kossifidis <mick@ics.forth.gr>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        "paul.walmsley\@sifive.com" <paul.walmsley@sifive.com>,
-        Karsten Merker <merker@debian.org>,
-        linux-riscv@lists.infradead.org,
-        "marek.vasut\@gmail.com" <marek.vasut@gmail.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [v4 PATCH] RISC-V: Add an Image header that boot loader can parse.
-In-Reply-To: <20190524041814.7497-1-atish.patra@wdc.com>
-References: <20190524041814.7497-1-atish.patra@wdc.com>
-Date:   Mon, 27 May 2019 14:14:03 +0200
-Message-ID: <86zhn8p01g.fsf@baylibre.com>
+        Mon, 27 May 2019 08:16:33 -0400
+Received: from localhost (aaubervilliers-681-1-27-134.w90-88.abo.wanadoo.fr [90.88.147.134])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 17976240018;
+        Mon, 27 May 2019 12:16:24 +0000 (UTC)
+Date:   Mon, 27 May 2019 14:16:24 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Yangtao Li <tiny.windzz@gmail.com>
+Cc:     rui.zhang@intel.com, edubezval@gmail.com,
+        daniel.lezcano@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, wens@csie.org, davem@davemloft.net,
+        mchehab+samsung@kernel.org, gregkh@linuxfoundation.org,
+        linus.walleij@linaro.org, nicolas.ferre@microchip.com,
+        paulmck@linux.ibm.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] dt-bindings: thermal: add binding document for h6
+ thermal controller
+Message-ID: <20190527121624.5qwrrzc4whrddbbe@flea>
+References: <20190525181329.18657-1-tiny.windzz@gmail.com>
+ <20190525181329.18657-3-tiny.windzz@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="5l3rwiguuszwblyx"
+Content-Disposition: inline
+In-Reply-To: <20190525181329.18657-3-tiny.windzz@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 23 May 2019 at 21:18, Atish Patra <atish.patra@wdc.com> wrote:
 
-> Currently, the last stage boot loaders such as U-Boot can accept only
-> uImage which is an unnecessary additional step in automating boot
-> process.
->
-> Add an image header that boot loader understands and boot Linux from
-> flat Image directly.
->
-> This header is based on ARM64 boot image header and provides an
-> opportunity to combine both ARM64 & RISC-V image headers in future.
->
-> Also make sure that PE/COFF header can co-exist in the same image so
-> that EFI stub can be supported for RISC-V in future. EFI specification
-> needs PE/COFF image header in the beginning of the kernel image in order
-> to load it as an EFI application. In order to support EFI stub, code0
-> should be replaced with "MZ" magic string and res4(at offset 0x3c)
-> should point to the rest of the PE/COFF header (which will be added
-> during EFI support).
->
-> Tested on both QEMU and HiFive Unleashed using OpenSBI + U-Boot + Linux.
+--5l3rwiguuszwblyx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks Atish, happy to have this support that makes the boot process
-more straightforward.
-Tested on HiFive Unleashed using OpenSBI + U-Boot v2019.07-rc2 + Linux.
+Hi,
 
+Thanks for working on this!
+
+On Sat, May 25, 2019 at 02:13:28PM -0400, Yangtao Li wrote:
+> This patch adds binding document for allwinner h6 thermal controller.
 >
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> Reviewed-by: Karsten Merker <merker@debian.org>
-> Tested-by: Karsten Merker <merker@debian.org> (QEMU+OpenSBI+U-Boot)
-Tested-by: Loys Ollivier <lollivier@baylibre.com>
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> ---
+>  .../bindings/thermal/sun8i-thermal.yaml       | 71 +++++++++++++++++++
+>
+>  1 file changed, 71 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml b/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
+> new file mode 100644
+> index 000000000000..54cf1277870e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
+> @@ -0,0 +1,71 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/thermal/sun8i-thermal.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Allwinner SUN8I Thermal Controller Device Tree Bindings
+> +
+> +maintainers:
+> +  - Yangtao Li <tiny.windzz@gmail.com>
+> +
+> +description: |-
+> +  This describes the device tree binding for the Allwinner thermal
+> +  controller which measures the on-SoC temperatures.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - allwinner,sun50i-h6-ths
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: ths bus clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: bus
+
+You don't need the items here, you can just do:
+
+clocks:
+  maxItems: 1
+  description:
+    Bus clock
+
+clock-names:
+  const: bus
+
+> +  "#thermal-sensor-cells":
+> +    enum: [ 0, 1 ]
+
+You should document when you would need one or the other.
+
+My guess is that you did it that way to deal with the A33? If so, we
+can just request the cell size to be 1 for now, and then expand it to
+an enum later on when we'll support the A33.
+
+> +  nvmem-cells:
+> +    items:
+> +      - description: ths calibrate data
+> +
+> +  nvmem-cell-names:
+> +    items:
+> +      - const: calib
+
+Same remark than for the clocks
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - reset
+> +  - clocks
+> +  - clock-names
+
+I guess you'd need #thermal-sensor-cells too?
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--5l3rwiguuszwblyx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOvVGAAKCRDj7w1vZxhR
+xYJvAQDS6LCy+f//B51XcJuEuSglOnKVFXxiNHV/4yLfVTR9lQD+Ory2sL/zzJ11
+NK/Cfa5T1w6p+sdl9MDDkpaVkRt9GQ8=
+=mlQq
+-----END PGP SIGNATURE-----
+
+--5l3rwiguuszwblyx--
