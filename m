@@ -2,142 +2,182 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ACF5C282E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 02:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A4C9C282E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 02:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72D3421707
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 02:47:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="pBZkokzn"
+	by mail.kernel.org (Postfix) with ESMTP id 1F6C320665
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 02:48:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726312AbfE0Crz (ORCPT
+        id S1726333AbfE0CsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 22:47:55 -0400
-Received: from gateway20.websitewelcome.com ([192.185.54.2]:37480 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725923AbfE0Crx (ORCPT
+        Sun, 26 May 2019 22:48:00 -0400
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:44515 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725923AbfE0Cr7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 22:47:53 -0400
-X-Greylist: delayed 1471 seconds by postgrey-1.27 at vger.kernel.org; Sun, 26 May 2019 22:47:52 EDT
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id F0ADC400C5945
-        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2019 20:23:07 -0500 (CDT)
-Received: from br164.hostgator.com.br ([192.185.176.180])
-        by cmsmtp with SMTP
-        id V5IGhcT3SdnCeV5IGhHjR1; Sun, 26 May 2019 21:23:20 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=I4VLnKJzdba2/tICr5vHEXDmUjBljIV86QHf5FlXteA=; b=pBZkokznjDxJn5J0nEp/+icHZt
-        YZukC0iqe8exicoGyoaaPdEHgzTPBSFsvRBwQ89W562CdIfWzRdc7i//G/aHpxbjSyDNfngXNx92V
-        pfKxPUwOuA0QrX8G9IBsO9vUXnw0Yx/E38IDVfhR39v0BWtKG7+FDfLGfBRz8kRPY7fVZ+PxCSdsL
-        e/f4tRW4IjuOOOaXY8YLrzuuOS7nJew6b+4S6Js6+n1X0gtq8zz9oIRBVUYCZCWoUHPGCG2wA3V/J
-        7QtxE1xobhSWBtwmx838KEf0O+VtjqKv2A09qHUhqiG9QU9k/W7YzG+OONtVXCIXDdgh4MKh3km7R
-        XrqP/Utg==;
-Received: from [177.34.20.96] (port=57660 helo=castello.castello.in)
-        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <matheus@castello.eng.br>)
-        id 1hV5IF-003JNX-JQ; Sun, 26 May 2019 23:23:20 -0300
-From:   Matheus Castello <matheus@castello.eng.br>
-To:     sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org
-Cc:     mark.rutland@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, lee.jones@linaro.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Matheus Castello <matheus@castello.eng.br>
-Subject: [PATCH v3 5/5] power: supply: max17040: Send uevent in SOC and status change
-Date:   Sun, 26 May 2019 23:22:58 -0300
-Message-Id: <20190527022258.32748-6-matheus@castello.eng.br>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190527022258.32748-1-matheus@castello.eng.br>
-References: <CAJKOXPf=nPrmw6Vzi_=LmO=dVsV4Gvoc-q75XP2FBEgm9Gxv0A@mail.gmail.com>
- <20190527022258.32748-1-matheus@castello.eng.br>
+        Sun, 26 May 2019 22:47:59 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TSlJH2R_1558925274;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TSlJH2R_1558925274)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 27 May 2019 10:47:55 +0800
+Subject: Re: [RESEND v5 PATCH 2/2] mm: vmscan: correct some vmscan counters
+ for THP swapout
+To:     "Huang, Ying" <ying.huang@intel.com>
+Cc:     hannes@cmpxchg.org, mhocko@suse.com, mgorman@techsingularity.net,
+        kirill.shutemov@linux.intel.com, josef@toxicpanda.com,
+        hughd@google.com, shakeelb@google.com, hdanton@sina.com,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1558922275-31782-1-git-send-email-yang.shi@linux.alibaba.com>
+ <1558922275-31782-2-git-send-email-yang.shi@linux.alibaba.com>
+ <87muj88x3p.fsf@yhuang-dev.intel.com>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <a32dbca4-6239-828b-9f81-f24d582ddd75@linux.alibaba.com>
+Date:   Mon, 27 May 2019 10:47:51 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - castello.eng.br
-X-BWhitelist: no
-X-Source-IP: 177.34.20.96
-X-Source-L: No
-X-Exim-ID: 1hV5IF-003JNX-JQ
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (castello.castello.in) [177.34.20.96]:57660
-X-Source-Auth: matheus@castello.eng.br
-X-Email-Count: 68
-X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
-X-Local-Domain: yes
+In-Reply-To: <87muj88x3p.fsf@yhuang-dev.intel.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Notify core through power_supply_changed() in case of changes in state
-of charge and power supply status. This is useful for user-space to
-efficiently update current battery level.
 
-Signed-off-by: Matheus Castello <matheus@castello.eng.br>
----
- drivers/power/supply/max17040_battery.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
-index 61e6fcfea8a1..34278845cfe5 100644
---- a/drivers/power/supply/max17040_battery.c
-+++ b/drivers/power/supply/max17040_battery.c
-@@ -176,6 +176,9 @@ static void max17040_get_online(struct i2c_client *client)
- static void max17040_get_status(struct i2c_client *client)
- {
- 	struct max17040_chip *chip = i2c_get_clientdata(client);
-+	int last_status;
-+
-+	last_status = chip->status;
+On 5/27/19 10:11 AM, Huang, Ying wrote:
+> Yang Shi <yang.shi@linux.alibaba.com> writes:
+>
+>> Since commit bd4c82c22c36 ("mm, THP, swap: delay splitting THP after
+>> swapped out"), THP can be swapped out in a whole.  But, nr_reclaimed
+>> and some other vm counters still get inc'ed by one even though a whole
+>> THP (512 pages) gets swapped out.
+>>
+>> This doesn't make too much sense to memory reclaim.  For example, direct
+>> reclaim may just need reclaim SWAP_CLUSTER_MAX pages, reclaiming one THP
+>> could fulfill it.  But, if nr_reclaimed is not increased correctly,
+>> direct reclaim may just waste time to reclaim more pages,
+>> SWAP_CLUSTER_MAX * 512 pages in worst case.
+>>
+>> And, it may cause pgsteal_{kswapd|direct} is greater than
+>> pgscan_{kswapd|direct}, like the below:
+>>
+>> pgsteal_kswapd 122933
+>> pgsteal_direct 26600225
+>> pgscan_kswapd 174153
+>> pgscan_direct 14678312
+>>
+>> nr_reclaimed and nr_scanned must be fixed in parallel otherwise it would
+>> break some page reclaim logic, e.g.
+>>
+>> vmpressure: this looks at the scanned/reclaimed ratio so it won't
+>> change semantics as long as scanned & reclaimed are fixed in parallel.
+>>
+>> compaction/reclaim: compaction wants a certain number of physical pages
+>> freed up before going back to compacting.
+>>
+>> kswapd priority raising: kswapd raises priority if we scan fewer pages
+>> than the reclaim target (which itself is obviously expressed in order-0
+>> pages). As a result, kswapd can falsely raise its aggressiveness even
+>> when it's making great progress.
+>>
+>> Other than nr_scanned and nr_reclaimed, some other counters, e.g.
+>> pgactivate, nr_skipped, nr_ref_keep and nr_unmap_fail need to be fixed
+>> too since they are user visible via cgroup, /proc/vmstat or trace
+>> points, otherwise they would be underreported.
+>>
+>> When isolating pages from LRUs, nr_taken has been accounted in base
+>> page, but nr_scanned and nr_skipped are still accounted in THP.  It
+>> doesn't make too much sense too since this may cause trace point
+>> underreport the numbers as well.
+>>
+>> So accounting those counters in base page instead of accounting THP as
+>> one page.
+>>
+>> nr_dirty, nr_unqueued_dirty, nr_congested and nr_writeback are used by
+>> file cache, so they are not impacted by THP swap.
+>>
+>> This change may result in lower steal/scan ratio in some cases since
+>> THP may get split during page reclaim, then a part of tail pages get
+>> reclaimed instead of the whole 512 pages, but nr_scanned is accounted
+>> by 512, particularly for direct reclaim.  But, this should be not a
+>> significant issue.
+>>
+>> Cc: "Huang, Ying" <ying.huang@intel.com>
+>> Cc: Johannes Weiner <hannes@cmpxchg.org>
+>> Cc: Michal Hocko <mhocko@suse.com>
+>> Cc: Mel Gorman <mgorman@techsingularity.net>
+>> Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+>> Cc: Hugh Dickins <hughd@google.com>
+>> Cc: Shakeel Butt <shakeelb@google.com>
+>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+>> ---
+>> v5: Fixed sc->nr_scanned double accounting per Huang Ying
+>>      Added some comments to address the concern about premature OOM per Hillf Danton
+>> v4: Fixed the comments from Johannes and Huang Ying
+>> v3: Removed Shakeel's Reviewed-by since the patch has been changed significantly
+>>      Switched back to use compound_order per Matthew
+>>      Fixed more counters per Johannes
+>> v2: Added Shakeel's Reviewed-by
+>>      Use hpage_nr_pages instead of compound_order per Huang Ying and William Kucharski
+>>
+>>   mm/vmscan.c | 42 +++++++++++++++++++++++++++++++-----------
+>>   1 file changed, 31 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/mm/vmscan.c b/mm/vmscan.c
+>> index b65bc50..f4f4d57 100644
+>> --- a/mm/vmscan.c
+>> +++ b/mm/vmscan.c
+>> @@ -1118,6 +1118,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+>>   		int may_enter_fs;
+>>   		enum page_references references = PAGEREF_RECLAIM_CLEAN;
+>>   		bool dirty, writeback;
+>> +		unsigned int nr_pages;
+>>   
+>>   		cond_resched();
+>>   
+>> @@ -1129,6 +1130,13 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+>>   
+>>   		VM_BUG_ON_PAGE(PageActive(page), page);
+>>   
+>> +		nr_pages = 1 << compound_order(page);
+>> +
+>> +		/*
+>> +		 * Accounted one page for THP for now.  If THP gets swapped
+>> +		 * out in a whole, will account all tail pages later to
+>> +		 * avoid accounting tail pages twice.
+>> +		 */
+>>   		sc->nr_scanned++;
+>>   
+>>   		if (unlikely(!page_evictable(page)))
+>> @@ -1250,7 +1258,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+>>   		case PAGEREF_ACTIVATE:
+>>   			goto activate_locked;
+>>   		case PAGEREF_KEEP:
+>> -			stat->nr_ref_keep++;
+>> +			stat->nr_ref_keep += nr_pages;
+>>   			goto keep_locked;
+>>   		case PAGEREF_RECLAIM:
+>>   		case PAGEREF_RECLAIM_CLEAN:
+> If the "Accessed bit" of a THP is set in the page table that maps it, it
+> will go PAGEREF_ACTIVATE path here.  And the sc->nr_scanned should
+> increase 512 instead of 1.  Otherwise sc->nr_activate may be larger than
+> sc->nr_scanned.
 
- 	if (!chip->pdata || !chip->pdata->charger_online
- 			|| !chip->pdata->charger_enable) {
-@@ -194,6 +197,9 @@ static void max17040_get_status(struct i2c_client *client)
+Yes, it looks so. It seems the easiest way is to add "nr_pages - 1" in 
+activate_locked label if the page is still a THP.
 
- 	if (chip->soc > MAX17040_BATTERY_FULL)
- 		chip->status = POWER_SUPPLY_STATUS_FULL;
-+
-+	if (last_status != chip->status)
-+		power_supply_changed(chip->battery);
- }
+If we add all tail pages at the very beginning, then we have to minus 
+tail pages when THP gets split, there are a few places do this.
 
- static void max17040_get_of_data(struct max17040_chip *chip)
-@@ -217,10 +223,18 @@ static void max17040_check_changes(struct i2c_client *client)
- static void max17040_work(struct work_struct *work)
- {
- 	struct max17040_chip *chip;
-+	int last_soc;
-
- 	chip = container_of(work, struct max17040_chip, work.work);
-+
-+	/* store SOC for check change */
-+	last_soc = chip->soc;
- 	max17040_check_changes(chip->client);
-
-+	/* check changes and send uevent */
-+	if (chip->soc >= 0 && last_soc != chip->soc)
-+		power_supply_changed(chip->battery);
-+
- 	queue_delayed_work(system_power_efficient_wq, &chip->work,
- 			   MAX17040_DELAY);
- }
---
-2.20.1
+>
+> Best Regards,
+> Huang, Ying
 
