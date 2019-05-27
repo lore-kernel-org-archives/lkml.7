@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6954AC07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B3CC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42D232133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A1A020883
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:22:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="U3aDFZjk"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="rxyG/Xbx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbfE0NW1 (ORCPT
+        id S1726735AbfE0NWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 09:22:27 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37787 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726609AbfE0NWL (ORCPT
+        Mon, 27 May 2019 09:22:31 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36159 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726553AbfE0NWJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 09:22:11 -0400
-Received: by mail-wr1-f67.google.com with SMTP id h1so2789501wro.4
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 06:22:10 -0700 (PDT)
+        Mon, 27 May 2019 09:22:09 -0400
+Received: by mail-wr1-f65.google.com with SMTP id s17so16951714wru.3
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 06:22:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=4VtDGZ3OVSVw6HZggJOqUTRYqY5ZUaLIQ9cwARYH99A=;
-        b=U3aDFZjkZXFYe7wNf6AFeyb2CzT8QJzBjLaQiB1ybT58exOolffDkQZVEQs9IwqDlR
-         QupHWofac4pMpepiaHEoTBoAoDbCYUXpGZXPIAHJVsg6zrVjb/cSCHRMpR6uLZMrAIWk
-         6rBE8L+83X9MjSsf0nrI/eChI1+CYF18c7AFPIb/WYqBGhWRRW4wCj9IwngIHnLdodiD
-         vJcNQV1d2auvf/HD178QOgLZxp/OqkiTLwo7k2i+po9wNsk1Vih74NuIrIR3bKMaDjOQ
-         clJSY0WBe8PP72dtaaKri3ykd9nxXqPJnaz84BsPl6+rXtGdeqp0Pso3z9BhRNexq2PC
-         Yjug==
+        bh=B15kJiNx0gB5GZgy154+cF2VY43Rpy+WChAQDJEB4z4=;
+        b=rxyG/XbxOY9xO0y8sz7iyV/GR+qomMOMyrjb46om9LbLfzHg+biOdo3QrM6hV19Wye
+         2RDnWMDDZXA2XaWC+ixE+k79juVBbkN9/GqFFk/x/Nyyr3G3l8ALH3meaEZAotFvrElm
+         BPz7tcSanuoSSu60aB755pCVvWBjgcaxfQWa6kWkVk5Nffcn87IzYwzFZYZG9Pm1bU5j
+         zdDsKtxX9Db3wfQTAPOE0KjSNjwhQzXlnDmBL4WOpgVJA3LUOWcscEeM3ooZUKWnfr4J
+         b+aa7hPn5TEA9MxVjJk6ZTUeKFZx6AJn8AhKbnC9ij52i6wQdgCZ3yKUiVzyda02xbom
+         dIdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=4VtDGZ3OVSVw6HZggJOqUTRYqY5ZUaLIQ9cwARYH99A=;
-        b=lHcFAYjuVnQKwGFPP94Z0Je8NzHWgYXzNKWCqX3MyJsaXTfmWDJUEl03XVDaCdSa16
-         +jviDezucl8GPCR8M6nbAoQnyoDu6ENkGmdfg2z8zBmczrJpBS0IFiQwrp8VFX3POHbl
-         wKJszjl7x01ZiXm/6exnN2E6L7ilK0ssSvxEulI+GqQLJir+eKnhVGRp7aaxeGoru7BL
-         FYoopxt+XoR02/Zo/cPqGggBNFZaVvcrrVf8aN0+c5cAbRUieYFBOMiNYFk01uTweWyA
-         sXAnHuAWmP/350C8Y21J+JCaMYfdIZc0Of1r83+cB/O82YiBLBcAYQSnvozOMwpBbiPu
-         PSmg==
-X-Gm-Message-State: APjAAAW6CG7rBAuOIbZoOt2vBqL8rA25baZpu0qp83lEviCmqnDzCw9x
-        3c8s25FV5lldEXb3ncs53fbdgg==
-X-Google-Smtp-Source: APXvYqxf3k/7Wb+ZKnTinne4Kei3iMcPjtfcFlS1vpIpQ2xmpLUmTWkDcbZC/+3pmja1wPjdeR5u2w==
-X-Received: by 2002:adf:ec8e:: with SMTP id z14mr45794613wrn.198.1558963329516;
-        Mon, 27 May 2019 06:22:09 -0700 (PDT)
+        bh=B15kJiNx0gB5GZgy154+cF2VY43Rpy+WChAQDJEB4z4=;
+        b=Zj29FxnM9KIIHi2IEkrnPxxp/RM7wkPsb7YZZmHTOlWgJnXc7Pzqlmq+bAGfBTvGcX
+         85COfhoE8TNtcykHhcDJHTaRVTbzia66D2C2GSNcTUvVwN7WYV6RgfU1Mz487ErT9kEN
+         Ti1+7ine+Er+he3uMjWpjzLoq36G2Ie/no/7yldP+HvaBOrVmeU1nfduAeiwyxj1gZlI
+         l0VaVA/289scA+XdGobckJhrfp/wCjh0ZiFIkSe9OnTBaypg8Zi5+/DRl2MWD26BZpUq
+         sex0GAL4ho9p8kf9vNpNdHVFKeViw2HZlMzvdV4QFiCuVUiep/tg/4O638EfjWeRerJ7
+         gBqg==
+X-Gm-Message-State: APjAAAXpuGDFrOZ9KcGw7SN3jdiAIX7C3oKIIM4s6l7g4bI9aMd3LzTr
+        U3YelIOXzj4w4sNDN+xQW2SSwQ==
+X-Google-Smtp-Source: APXvYqwNQZvfpu+TITjMJMn64RyU9BPmMPPPawWMAjqT5Dub5Vb5xePuM97dcekNw6lWKErVTVOkFA==
+X-Received: by 2002:adf:e30d:: with SMTP id b13mr58410891wrj.246.1558963326793;
+        Mon, 27 May 2019 06:22:06 -0700 (PDT)
 Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id l12sm7019836wmj.22.2019.05.27.06.22.08
+        by smtp.gmail.com with ESMTPSA id l12sm7019836wmj.22.2019.05.27.06.22.06
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 27 May 2019 06:22:08 -0700 (PDT)
+        Mon, 27 May 2019 06:22:06 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     khilman@baylibre.com
 Cc:     Neil Armstrong <narmstrong@baylibre.com>,
         linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         christianshewitt@gmail.com
-Subject: [PATCH 08/10] arm64: dts: meson-gxbb-vega-s95: enable SARADC
-Date:   Mon, 27 May 2019 15:21:58 +0200
-Message-Id: <20190527132200.17377-9-narmstrong@baylibre.com>
+Subject: [PATCH 05/10] arm64: dts: meson-gxbb-vega-s95: fix regulators
+Date:   Mon, 27 May 2019 15:21:55 +0200
+Message-Id: <20190527132200.17377-6-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190527132200.17377-1-narmstrong@baylibre.com>
 References: <20190527132200.17377-1-narmstrong@baylibre.com>
@@ -75,45 +75,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add SARARC node and associated regulator to support reading the
-ADC inputs on the Vega S95
+Align the regulator names with other GXBB SoCS for upcoming
+SARADC support and SDIO/SDCard fixes.
+Also fix how regulators are passed to MMC controllers & USB.
 
 Suggested-by: Christian Hewitt <christianshewitt@gmail.com>
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi | 34 ++++++++++++-------
+ 1 file changed, 21 insertions(+), 13 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-index be8799653ad7..4d2aa4dc59e7 100644
+index 623bcb6594b1..760730d4e87b 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
 +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-@@ -54,6 +54,13 @@
- 		regulator-max-microvolt = <3300000>;
+@@ -28,10 +28,10 @@
+ 		};
  	};
  
-+	vddio_ao18: regulator-vddio_ao18 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDIO_AO18";
+-	usb_vbus: regulator-usb0-vbus {
++	usb_pwr: regulator-usb-pwrs {
+ 		compatible = "regulator-fixed";
+ 
+-		regulator-name = "USB0_VBUS";
++		regulator-name = "USB_PWR";
+ 
+ 		regulator-min-microvolt = <5000000>;
+ 		regulator-max-microvolt = <5000000>;
+@@ -40,18 +40,25 @@
+ 		enable-active-high;
+ 	};
+ 
+-	vcc_3v3: regulator-vcc_3v3 {
++	vddio_boot: regulator-vddio_boot {
+ 		compatible = "regulator-fixed";
+-		regulator-name = "VCC_3V3";
++		regulator-name = "VDDIO_BOOT";
 +		regulator-min-microvolt = <1800000>;
 +		regulator-max-microvolt = <1800000>;
 +	};
 +
- 	vcc_3v3: regulator-vcc_3v3 {
++	vddao_3v3: regulator-vddao_3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "VDDAO_3V3";
+ 		regulator-min-microvolt = <3300000>;
+ 		regulator-max-microvolt = <3300000>;
+ 	};
+ 
+-	vcc_1v8: regulator-vcc_1v8 {
++	vcc_3v3: regulator-vcc_3v3 {
  		compatible = "regulator-fixed";
- 		regulator-name = "VCC_3V3";
-@@ -152,6 +159,11 @@
- 	clock-names = "clkin0";
+-		regulator-name = "VCC_1V8";
+-		regulator-min-microvolt = <1800000>;
+-		regulator-max-microvolt = <1800000>;
++		regulator-name = "VCC_3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
+ 	};
+ 
+ 	emmc_pwrseq: emmc-pwrseq {
+@@ -133,8 +140,8 @@
+ 
+ 	mmc-pwrseq = <&sdio_pwrseq>;
+ 
+-	vmmc-supply = <&vcc_3v3>;
+-	vqmmc-supply = <&vcc_1v8>;
++	vmmc-supply = <&vddao_3v3>;
++	vqmmc-supply = <&vddio_boot>;
+ 
+ 	brcmf: wifi@1 {
+ 		reg = <1>;
+@@ -156,7 +163,8 @@
+ 
+ 	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
+ 
+-	vmmc-supply = <&vcc_3v3>;
++	vmmc-supply = <&vddao_3v3>;
++	vqmmc-supply = <&vcc_3v3>;
  };
  
-+&saradc {
-+	status = "okay";
-+	vref-supply = <&vddio_ao18>;
-+};
-+
- /* Wireless SDIO Module */
- &sd_emmc_a {
+ /* eMMC */
+@@ -176,7 +184,7 @@
+ 
+ 	mmc-pwrseq = <&emmc_pwrseq>;
+ 	vmmc-supply = <&vcc_3v3>;
+-	vmmcq-sumpply = <&vcc_1v8>;
++	vqmmc-supply = <&vddio_boot>;
+ };
+ 
+ &uart_AO {
+@@ -187,7 +195,7 @@
+ 
+ &usb0_phy {
  	status = "okay";
+-	phy-supply = <&usb_vbus>;
++	phy-supply = <&usb_pwr>;
+ };
+ 
+ &usb1_phy {
 -- 
 2.21.0
 
