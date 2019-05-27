@@ -2,104 +2,100 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87916C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 608BFC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D1372081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:08:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C4012081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:08:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbfE0QIq (ORCPT
+        id S1726733AbfE0QIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 12:08:46 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:61506 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725991AbfE0QIq (ORCPT
+        Mon, 27 May 2019 12:08:53 -0400
+Received: from gateway20.websitewelcome.com ([192.185.65.13]:35775 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725991AbfE0QIw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 12:08:46 -0400
-X-UUID: f578e6e65ec34b80906ac5edcba129a2-20190528
-X-UUID: f578e6e65ec34b80906ac5edcba129a2-20190528
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <miles.chen@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1265670405; Tue, 28 May 2019 00:08:38 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 28 May 2019 00:08:36 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 28 May 2019 00:08:36 +0800
-From:   Miles Chen <miles.chen@mediatek.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        Miles Chen <miles.chen@mediatek.com>
-Subject: [PATCH] arm64: mm: make CONFIG_ZONE_DMA32 configurable
-Date:   Tue, 28 May 2019 00:08:35 +0800
-Message-ID: <1558973315-19655-1-git-send-email-miles.chen@mediatek.com>
-X-Mailer: git-send-email 1.9.1
+        Mon, 27 May 2019 12:08:52 -0400
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id 731CD40112065
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 10:08:13 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id VIAlhkce0YTGMVIAlhkSKK; Mon, 27 May 2019 11:08:27 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.47.159] (port=33436 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hVIAk-001oQ4-O2; Mon, 27 May 2019 11:08:26 -0500
+Date:   Mon, 27 May 2019 11:08:25 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Amit Kucheria <amit.kucheria@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] thermal: tsens: Remove unnecessary comparison of unsigned
+ integer with < 0
+Message-ID: <20190527160825.GA24219@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.47.159
+X-Source-L: No
+X-Exim-ID: 1hVIAk-001oQ4-O2
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.47.159]:33436
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 9
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change makes CONFIG_ZONE_DMA32 defuly y and allows users
-to overwrite it.
+There is no need to compare hw_id with < 0 because such comparison
+of an unsigned value is always false.
 
-For the SoCs that do not need CONFIG_ZONE_DMA32, this is the
-first step to manage all available memory by a single
-zone(normal zone) to reduce the overhead of multiple zones.
+Fix this by removing such comparison.
 
-The change also fixes a build error when CONFIG_NUMA=y and
-CONFIG_ZONE_DMA32=n.
-
-arch/arm64/mm/init.c:195:17: error: use of undeclared identifier 'ZONE_DMA32'
-                max_zone_pfns[ZONE_DMA32] = PFN_DOWN(max_zone_dma_phys());
-
-Signed-off-by: Miles Chen <miles.chen@mediatek.com>
+Addresses-Coverity-ID: 1445440 ("Unsigned compared against 0")
+Fixes: 3e6a8fb33084 ("drivers: thermal: tsens: Add new operation to check if a sensor is enabled")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- arch/arm64/Kconfig   | 3 ++-
- arch/arm64/mm/init.c | 2 ++
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ drivers/thermal/qcom/tsens-common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 76f6e4765f49..9d20a736d1d1 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -260,7 +260,8 @@ config GENERIC_CALIBRATE_DELAY
- 	def_bool y
+diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
+index 928e8e81ba69..94878ad35464 100644
+--- a/drivers/thermal/qcom/tsens-common.c
++++ b/drivers/thermal/qcom/tsens-common.c
+@@ -69,7 +69,7 @@ bool is_sensor_enabled(struct tsens_priv *priv, u32 hw_id)
+ 	u32 val;
+ 	int ret;
  
- config ZONE_DMA32
--	def_bool y
-+	bool "Support DMA32 zone"
-+	default y
- 
- config HAVE_GENERIC_GUP
- 	def_bool y
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index d2adffb81b5d..96829ce21f99 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -191,8 +191,10 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max)
- {
- 	unsigned long max_zone_pfns[MAX_NR_ZONES]  = {0};
- 
-+#ifdef CONFIG_ZONE_DMA32
- 	if (IS_ENABLED(CONFIG_ZONE_DMA32))
- 		max_zone_pfns[ZONE_DMA32] = PFN_DOWN(max_zone_dma_phys());
-+#endif
- 	max_zone_pfns[ZONE_NORMAL] = max;
- 
- 	free_area_init_nodes(max_zone_pfns);
+-	if ((hw_id > (priv->num_sensors - 1)) || (hw_id < 0))
++	if (hw_id > priv->num_sensors - 1)
+ 		return -EINVAL;
+ 	ret = regmap_field_read(priv->rf[SENSOR_EN], &val);
+ 	if (ret)
 -- 
-2.18.0
+2.21.0
 
