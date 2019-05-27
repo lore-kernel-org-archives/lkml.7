@@ -2,118 +2,132 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9858C46460
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7DDC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:45:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1C84214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:44:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558961055;
-	bh=VstgnnYA3yHcY6EX6YjqpE2CINUIH1dzwbRIglOv13w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yogQ6WK8ZTp+5J4zYIq9uzZFprSNnoyixfepW66u+y5x/fRznAjLjciQ9+YzQlHlg
-	 F2crJBf467yK+CfJsyM4//qYiTgUU87yj7HkJIufxdsCWz+G1EyBA9gkwSl12DMHnr
-	 /jCMdfNGXJ2sY+ovimxo0EsjLRpHmT5WYunBFrAw=
+	by mail.kernel.org (Postfix) with ESMTP id F192F20815
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:45:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726544AbfE0MoP (ORCPT
+        id S1726668AbfE0MpD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 08:44:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51800 "EHLO mx1.suse.de"
+        Mon, 27 May 2019 08:45:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52054 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725991AbfE0MoO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 08:44:14 -0400
+        id S1725991AbfE0MpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 08:45:02 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 21369ADE3;
-        Mon, 27 May 2019 12:44:13 +0000 (UTC)
-Date:   Mon, 27 May 2019 14:44:11 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>, linux-api@vger.kernel.org
-Subject: Re: [RFC 7/7] mm: madvise support MADV_ANONYMOUS_FILTER and
- MADV_FILE_FILTER
-Message-ID: <20190527124411.GC1658@dhcp22.suse.cz>
-References: <20190520035254.57579-1-minchan@kernel.org>
- <20190520035254.57579-8-minchan@kernel.org>
- <20190520092801.GA6836@dhcp22.suse.cz>
- <20190521025533.GH10039@google.com>
- <20190521062628.GE32329@dhcp22.suse.cz>
- <20190527075811.GC6879@google.com>
+        by mx1.suse.de (Postfix) with ESMTP id BD5F9AE15;
+        Mon, 27 May 2019 12:45:01 +0000 (UTC)
+Date:   Mon, 27 May 2019 14:45:01 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [PATCHv2 4/4] printk: make sure we always print console disabled
+ message
+Message-ID: <20190527124501.vabg7whwmufld3dt@pathway.suse.cz>
+References: <20190426053302.4332-1-sergey.senozhatsky@gmail.com>
+ <20190426053302.4332-5-sergey.senozhatsky@gmail.com>
+ <20190426054445.GA564@jagdpanzerIV>
+ <20190515144702.uja2mk2vfip6maws@pathway.suse.cz>
+ <20190523065947.GB18333@jagdpanzerIV>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190527075811.GC6879@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190523065947.GB18333@jagdpanzerIV>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 27-05-19 16:58:11, Minchan Kim wrote:
-> On Tue, May 21, 2019 at 08:26:28AM +0200, Michal Hocko wrote:
-> > On Tue 21-05-19 11:55:33, Minchan Kim wrote:
-> > > On Mon, May 20, 2019 at 11:28:01AM +0200, Michal Hocko wrote:
-> > > > [cc linux-api]
-> > > > 
-> > > > On Mon 20-05-19 12:52:54, Minchan Kim wrote:
-> > > > > System could have much faster swap device like zRAM. In that case, swapping
-> > > > > is extremely cheaper than file-IO on the low-end storage.
-> > > > > In this configuration, userspace could handle different strategy for each
-> > > > > kinds of vma. IOW, they want to reclaim anonymous pages by MADV_COLD
-> > > > > while it keeps file-backed pages in inactive LRU by MADV_COOL because
-> > > > > file IO is more expensive in this case so want to keep them in memory
-> > > > > until memory pressure happens.
-> > > > > 
-> > > > > To support such strategy easier, this patch introduces
-> > > > > MADV_ANONYMOUS_FILTER and MADV_FILE_FILTER options in madvise(2) like
-> > > > > that /proc/<pid>/clear_refs already has supported same filters.
-> > > > > They are filters could be Ored with other existing hints using top two bits
-> > > > > of (int behavior).
-> > > > 
-> > > > madvise operates on top of ranges and it is quite trivial to do the
-> > > > filtering from the userspace so why do we need any additional filtering?
-> > > > 
-> > > > > Once either of them is set, the hint could affect only the interested vma
-> > > > > either anonymous or file-backed.
-> > > > > 
-> > > > > With that, user could call a process_madvise syscall simply with a entire
-> > > > > range(0x0 - 0xFFFFFFFFFFFFFFFF) but either of MADV_ANONYMOUS_FILTER and
-> > > > > MADV_FILE_FILTER so there is no need to call the syscall range by range.
-> > > > 
-> > > > OK, so here is the reason you want that. The immediate question is why
-> > > > cannot the monitor do the filtering from the userspace. Slightly more
-> > > > work, all right, but less of an API to expose and that itself is a
-> > > > strong argument against.
+On Thu 2019-05-23 15:59:47, Sergey Senozhatsky wrote:
+> On (05/15/19 16:47), Petr Mladek wrote:
+> > On Fri 2019-04-26 14:44:45, Sergey Senozhatsky wrote:
 > > > 
-> > > What I should do if we don't have such filter option is to enumerate all of
-> > > vma via /proc/<pid>/maps and then parse every ranges and inode from string,
-> > > which would be painful for 2000+ vmas.
+> > > Forgot to mention that the series is still in RFC phase.
+> > > 
+> > > 
+> > > On (04/26/19 14:33), Sergey Senozhatsky wrote:
+> > > [..]
+> > > > +++ b/kernel/printk/printk.c
+> > > > @@ -2613,6 +2613,12 @@ static int __unregister_console(struct console *console)
+> > > >  	pr_info("%sconsole [%s%d] disabled\n",
+> > > >  		(console->flags & CON_BOOT) ? "boot" : "",
+> > > >  		console->name, console->index);
+> > > > +	/*
+> > > > +	 * Print 'console disabled' on all the consoles, including the
+> > > > +	 * one we are about to unregister.
+> > > > +	 */
+> > > > +	console_unlock();
+> > > > +	console_lock();
+> > > >  
+> > > >  	res = _braille_unregister_console(console);
+> > > >  	if (res)
+> > > 
+> > > Need to think more if this is race free...
 > > 
-> > Painful is not an argument to add a new user API. If the existing API
-> > suits the purpose then it should be used. If it is not usable, we can
-> > think of a different way.
+> > I am afraid that it is racy against for_each_console() when
+> > removing the boot consoles.
 > 
-> I measured 1568 vma parsing overhead of /proc/<pid>/maps in ARM64 modern
-> mobile CPU. It takes 60ms and 185ms on big cores depending on cpu governor.
-> It's never trivial.
+> Can you explain? Do you mean that we can execute two paths unregistering
+> the same bcon?
+> 
+> 	CPU0					CPU1
+> 
+> 	console_lock();
+> 	__unregister_console(bconA)		console_lock();
+> 	console_unlock();
+> 
+> 						__unregister_console(bconA);
+> 						for (a = console_drivers->next ...)
+> 							if (a == console)
+> 								unregister();
+> 							// console bconA is
+> 							// not in the list
+> 							// anymore
+> 						console_unlock();
+> 	for (a = console_drivers->next ...)
+> 		if (a == console)
+> 	console_unlock();
+> 
+> 
+> This CPU0 will never see bconA in the console drivers list.
+> But... it will try to do
+> 
+> 	console->flags &= ~CON_ENABLED;
+> 
+> Which we need to fix.
 
-This is not the only option. Have you tried to simply use
-/proc/<pid>/map_files interface? This will provide you with all the file
-backed mappings.
--- 
-Michal Hocko
-SUSE Labs
+I have to admit that I expected more races. But the most intuitive ones
+are avoided by the 2nd for-cycle in __unregister_console(). As a
+result, most operations are ignored when the console was
+already unregistered in parallel.
+
+Anyway, it is really tricky. My head is still spinning around it.
+The console_lock handling is really hard to follow. And it is
+error prone.
+
+To make it clear. The code has already been tricky. Your patchset has
+a potential. It fixes some races but it still keeps the code tricky
+anoter way.
+
+OK, all these nasty hacks are needed only because we need to flush
+the messages to the console.
+
+Much cleaner solution would be to refactor console_unlock()
+and allow to handle existing messages using a separate function.
+It is perfectly safe to flush all existing messages to all registered
+consoles without releasing console_lock.
+
+How does that sound, please?
+
+Best Regards,
+Petr
