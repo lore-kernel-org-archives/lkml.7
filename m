@@ -2,748 +2,158 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F31E3C072B1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 19:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DD2C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 19:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B326F208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 19:16:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEA86208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 19:20:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jeo2Ptya"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="LjI8ttQq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727388AbfE0TQO (ORCPT
+        id S1727351AbfE0TUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 15:16:14 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:51943 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727050AbfE0TQN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 15:16:13 -0400
-Received: by mail-it1-f193.google.com with SMTP id m3so686695itl.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 12:16:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=R8/iFdWejLczB8BKk2sa3IeHBpahb+b0Wsxw58n9MfY=;
-        b=jeo2Ptya1YMu0fev0kNjUIVZZTPjPc8Mmzv+cNCQ9ah3Uq9xBJeRaHIPrhV9DQPSAp
-         FTuCg0l3vMtBbhx7HuRdYd11W9IHk1ZJ2ZJfge+D/Fh0IMriZIaCtG2DtDNXLf4PCj5X
-         OJkhF5O8r5bN0Vo8ZC6OzEnXPFcXq2pOYo3VbYaP9HWlux41hf5qUoTBoOrOIHqbfdPU
-         InL401XoxpCraBhnHHh/jqDsfiDAS+Iv82zid53S9L61m9glNTQe6vMZhU4Nj8baZV73
-         1lisapIJanAsLvUDsCg7zW3ah5sik9GKq9Cd4+p3V2DbB6S9CnLcQdfeSH08VKfnMeFk
-         Qx4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=R8/iFdWejLczB8BKk2sa3IeHBpahb+b0Wsxw58n9MfY=;
-        b=tS8MLq0qn8CfTmAaxDhf976zDf9gMhb22Up9y6ObEJtpR0n6c6uVx7sMVj3Mg2NNM1
-         pwNz0FqsuYM5kVUoztZCfbVio34WbEC+s1ysxXSU9JFHNz9pF9uPhCZFnG3iY77A4sO/
-         Z31/HC+tAKf1IQOBdhfVAGsPLYsi9JoZBFe2XHzWu0c2d5vk+LG80+cfkx69+mO25koR
-         7Q8yZcP8kLzYHtUf1lm5S+VoB4MRD5g9P21qlnqpf3SH9quNvOkENktVkvc0Mb1pjlhH
-         AsPOxD86mlcIv89jgYTnjeH72T6/bBqmiKhlDqS14ZZiGW11GZsN6QcrSisxuOiqlzWB
-         Grfw==
-X-Gm-Message-State: APjAAAVOXqJmlukDqdeHxwSetvp7NqlvJumhjhqsKdyHh5sQT83PoKLX
-        53stNE7DBeUpwQsW9kz9KjbtRD3Z
-X-Google-Smtp-Source: APXvYqzs2bR57gQD3gU61Jdm9RH7M6/cgNwa7JB66L19wtp9SanMzs8VBCGygAxuxHan4uP6KSxd+Q==
-X-Received: by 2002:a24:c0c1:: with SMTP id u184mr439128itf.9.1558984572688;
-        Mon, 27 May 2019 12:16:12 -0700 (PDT)
-Received: from svens-asus.arcx.com ([184.94.50.30])
-        by smtp.gmail.com with ESMTPSA id h26sm176750itf.13.2019.05.27.12.16.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 May 2019 12:16:12 -0700 (PDT)
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
-To:     Russell King <linux@armlinux.org.uk>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Peter Rosin <peda@axentia.se>
-Subject: [PATCH v1 2/2] drm/i2c: tda998x: remove indirect reg_read/_write() calls
-Date:   Mon, 27 May 2019 15:15:52 -0400
-Message-Id: <20190527191552.10413-2-TheSven73@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190527191552.10413-1-TheSven73@gmail.com>
-References: <20190527191552.10413-1-TheSven73@gmail.com>
+        Mon, 27 May 2019 15:20:06 -0400
+Received: from mail-eopbgr20057.outbound.protection.outlook.com ([40.107.2.57]:43682
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726484AbfE0TUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 15:20:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ATFdzLuMxJOEBbPBZnb7bOdnaz3hYfrpWu1hA6a3vpY=;
+ b=LjI8ttQq1RhTGcGzCSO1GT//EgZJ74cLYPrJ76h5gVLFjBWV0Q2+p0jzbgxVeljOghkXvcqylQ5f1Rfc0D5RhsDgCJZGbsNeejnb38p5I9hwWIDKdLDt0TyYwUn/Xk4Qn8VvsAesJur7E/k4bt/A57zG7nryZKQzy05TLEi5Sig=
+Received: from VE1PR04MB6687.eurprd04.prod.outlook.com (20.179.235.152) by
+ VE1PR04MB6685.eurprd04.prod.outlook.com (20.179.235.150) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.18; Mon, 27 May 2019 19:19:58 +0000
+Received: from VE1PR04MB6687.eurprd04.prod.outlook.com
+ ([fe80::9e6:e136:4c09:fe67]) by VE1PR04MB6687.eurprd04.prod.outlook.com
+ ([fe80::9e6:e136:4c09:fe67%5]) with mapi id 15.20.1922.021; Mon, 27 May 2019
+ 19:19:58 +0000
+From:   Leo Li <leoyang.li@nxp.com>
+To:     Andy Tang <andy.tang@nxp.com>
+CC:     Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] Re: [PATCH] arm64: dts: ls1028a: Add temperature sensor
+ node
+Thread-Topic: [EXT] Re: [PATCH] arm64: dts: ls1028a: Add temperature sensor
+ node
+Thread-Index: AQHVEdA5vBlpwutLvUe9kqG6PS5PHaZ63V2AgAPKYSCAALahcA==
+Date:   Mon, 27 May 2019 19:19:58 +0000
+Message-ID: <VE1PR04MB6687BA478AAFD1DF1FAF170C8F1D0@VE1PR04MB6687.eurprd04.prod.outlook.com>
+References: <20190524012151.31840-1-andy.tang@nxp.com>
+ <CADRPPNRYwq0NABXobC1jQrT3QMxxm+e6zvoNwoZ-fu6NU9qDMA@mail.gmail.com>
+ <VI1PR04MB4333A3E635CFDBD860D3061DF31D0@VI1PR04MB4333.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR04MB4333A3E635CFDBD860D3061DF31D0@VI1PR04MB4333.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leoyang.li@nxp.com; 
+x-originating-ip: [136.49.234.194]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 94ea61cd-ef93-4fe5-d4e6-08d6e2d84ef2
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VE1PR04MB6685;
+x-ms-traffictypediagnostic: VE1PR04MB6685:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <VE1PR04MB668552615ECA0F6CF3FA5F7D8F1D0@VE1PR04MB6685.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 0050CEFE70
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(396003)(39860400002)(366004)(376002)(13464003)(189003)(199004)(74316002)(73956011)(33656002)(14454004)(7696005)(229853002)(66066001)(81156014)(186003)(14444005)(256004)(25786009)(26005)(53936002)(6506007)(8936002)(305945005)(76116006)(11346002)(102836004)(53546011)(2906002)(7736002)(76176011)(478600001)(6116002)(5660300002)(3846002)(99286004)(966005)(66476007)(316002)(6246003)(486006)(6436002)(71200400001)(6862004)(9686003)(6306002)(8676002)(81166006)(4326008)(52536014)(66556008)(66446008)(6636002)(64756008)(446003)(66946007)(54906003)(86362001)(476003)(55016002)(71190400001)(68736007);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6685;H:VE1PR04MB6687.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: lfN/+ytIvXxssqNERAk6MTD1O6QN5NA1cJpIjsDCrRuQePF7KUQHrgWjbSPFNA3QYx7guNYccfMoTGCk6DGDJyHRU1s9nQIsQSW1KS8Jg3MZKpqCjrbT2fh1G44sXeU3M4gqgA/zDHuCge5/NhRScUxJ7fIm6sR5rAnnrF9TAWC+sCVP/83Me0EWasZMDCkY0Ys98FNKUqlEto9XnAat9Q07GyolpoOnmw1XK4I0NeWSxQo7vFv5rHWXJbb8IqvnsAvYyb9R4Vw2q58B8DA7NxUiJPyRcIvaBDaba/SCnH0+4yvEvzbWYT03FquZ2N+/Pyq+2c6l8jTI9JdNkOdqYVTh9xWa0VEgIALcYWFsEJTf9FaiRAVnrcpC9FoxDf/+mw/ULZ+OSv1wJdI4sJvO2Iak+iTnCprZjdNJXrGIv8k=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 94ea61cd-ef93-4fe5-d4e6-08d6e2d84ef2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 May 2019 19:19:58.3584
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: leoyang.li@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6685
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove indirect reg_read/_write() calls, and replace them
-with direct calls to regmap functions.
-
-For the sake of readability, keep the following indirect
-register access calls:
-- reg_set()
-- reg_clear()
-- reg_write16()
-
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
----
- drivers/gpu/drm/i2c/tda998x_drv.c | 333 ++++++++++++++----------------
- 1 file changed, 157 insertions(+), 176 deletions(-)
-
-diff --git a/drivers/gpu/drm/i2c/tda998x_drv.c b/drivers/gpu/drm/i2c/tda998x_drv.c
-index 8153e2e19e18..1bddd2cf92ea 100644
---- a/drivers/gpu/drm/i2c/tda998x_drv.c
-+++ b/drivers/gpu/drm/i2c/tda998x_drv.c
-@@ -548,89 +548,59 @@ static void tda998x_cec_hook_release(void *data)
- }
- 
- static int
--reg_read_range(struct tda998x_priv *priv, u16 reg, char *buf, int cnt)
--{
--	int ret;
--
--	ret = regmap_bulk_read(priv->regmap, reg, buf, cnt);
--	if (ret < 0)
--		return ret;
--	return cnt;
--}
--
--static void
--reg_write_range(struct tda998x_priv *priv, u16 reg, u8 *p, int cnt)
--{
--	regmap_bulk_write(priv->regmap, reg, p, cnt);
--}
--
--static int
--reg_read(struct tda998x_priv *priv, u16 reg)
--{
--	int ret, val;
--
--	ret = regmap_read(priv->regmap, reg, &val);
--	if (ret < 0)
--		return ret;
--	return val;
--}
--
--static void
--reg_write(struct tda998x_priv *priv, u16 reg, u8 val)
--{
--	regmap_write(priv->regmap, reg, val);
--}
--
--static void
--reg_write16(struct tda998x_priv *priv, u16 reg, u16 val)
-+reg_write16(struct regmap *regmap, u16 reg, u16 val)
- {
- 	u8 buf[] = {val >> 8, val};
- 
--	regmap_bulk_write(priv->regmap, reg, buf, ARRAY_SIZE(buf));
-+	return regmap_bulk_write(regmap, reg, buf, ARRAY_SIZE(buf));
- }
- 
--static void
--reg_set(struct tda998x_priv *priv, u16 reg, u8 val)
-+static int
-+reg_set(struct regmap *regmap, u16 reg, u8 val)
- {
--	regmap_update_bits(priv->regmap, reg, val, val);
-+	return regmap_update_bits(regmap, reg, val, val);
- }
- 
--static void
--reg_clear(struct tda998x_priv *priv, u16 reg, u8 val)
-+static int
-+reg_clear(struct regmap *regmap, u16 reg, u8 val)
- {
--	regmap_update_bits(priv->regmap, reg, val, 0);
-+	return regmap_update_bits(regmap, reg, val, 0);
- }
- 
- static void
- tda998x_reset(struct tda998x_priv *priv)
- {
-+	struct regmap *regmap = priv->regmap;
-+
- 	/* reset audio and i2c master: */
--	reg_write(priv, REG_SOFTRESET, SOFTRESET_AUDIO | SOFTRESET_I2C_MASTER);
-+	regmap_write(regmap, REG_SOFTRESET,
-+			SOFTRESET_AUDIO | SOFTRESET_I2C_MASTER);
- 	msleep(50);
--	reg_write(priv, REG_SOFTRESET, 0);
-+	regmap_write(regmap, REG_SOFTRESET, 0);
- 	msleep(50);
- 
- 	/* reset transmitter: */
--	reg_set(priv, REG_MAIN_CNTRL0, MAIN_CNTRL0_SR);
--	reg_clear(priv, REG_MAIN_CNTRL0, MAIN_CNTRL0_SR);
-+	reg_set(regmap, REG_MAIN_CNTRL0, MAIN_CNTRL0_SR);
-+	reg_clear(regmap, REG_MAIN_CNTRL0, MAIN_CNTRL0_SR);
- 
- 	/* PLL registers common configuration */
--	reg_write(priv, REG_PLL_SERIAL_1, 0x00);
--	reg_write(priv, REG_PLL_SERIAL_2, PLL_SERIAL_2_SRL_NOSC(1));
--	reg_write(priv, REG_PLL_SERIAL_3, 0x00);
--	reg_write(priv, REG_SERIALIZER,   0x00);
--	reg_write(priv, REG_BUFFER_OUT,   0x00);
--	reg_write(priv, REG_PLL_SCG1,     0x00);
--	reg_write(priv, REG_AUDIO_DIV,    AUDIO_DIV_SERCLK_8);
--	reg_write(priv, REG_SEL_CLK,      SEL_CLK_SEL_CLK1 | SEL_CLK_ENA_SC_CLK);
--	reg_write(priv, REG_PLL_SCGN1,    0xfa);
--	reg_write(priv, REG_PLL_SCGN2,    0x00);
--	reg_write(priv, REG_PLL_SCGR1,    0x5b);
--	reg_write(priv, REG_PLL_SCGR2,    0x00);
--	reg_write(priv, REG_PLL_SCG2,     0x10);
-+	regmap_write(regmap, REG_PLL_SERIAL_1, 0x00);
-+	regmap_write(regmap, REG_PLL_SERIAL_2, PLL_SERIAL_2_SRL_NOSC(1));
-+	regmap_write(regmap, REG_PLL_SERIAL_3, 0x00);
-+	regmap_write(regmap, REG_SERIALIZER,   0x00);
-+	regmap_write(regmap, REG_BUFFER_OUT,   0x00);
-+	regmap_write(regmap, REG_PLL_SCG1,     0x00);
-+	regmap_write(regmap, REG_AUDIO_DIV,    AUDIO_DIV_SERCLK_8);
-+	regmap_write(regmap, REG_SEL_CLK,
-+				SEL_CLK_SEL_CLK1 | SEL_CLK_ENA_SC_CLK);
-+	regmap_write(regmap, REG_PLL_SCGN1,    0xfa);
-+	regmap_write(regmap, REG_PLL_SCGN2,    0x00);
-+	regmap_write(regmap, REG_PLL_SCGR1,    0x5b);
-+	regmap_write(regmap, REG_PLL_SCGR2,    0x00);
-+	regmap_write(regmap, REG_PLL_SCG2,     0x10);
- 
- 	/* Write the default value MUX register */
--	reg_write(priv, REG_MUX_VP_VIP_OUT, 0x24);
-+	regmap_write(regmap, REG_MUX_VP_VIP_OUT, 0x24);
- }
- 
- /*
-@@ -685,16 +655,18 @@ static void tda998x_detect_work(struct work_struct *work)
- static irqreturn_t tda998x_irq_thread(int irq, void *data)
- {
- 	struct tda998x_priv *priv = data;
--	u8 sta, cec, lvl, flag0, flag1, flag2;
-+	struct regmap *regmap = priv->regmap;
-+	u8 sta, cec, lvl;
-+	unsigned int flag0, flag1, flag2;
- 	bool handled = false;
- 
- 	sta = cec_read(priv, REG_CEC_INTSTATUS);
- 	if (sta & CEC_INTSTATUS_HDMI) {
- 		cec = cec_read(priv, REG_CEC_RXSHPDINT);
- 		lvl = cec_read(priv, REG_CEC_RXSHPDLEV);
--		flag0 = reg_read(priv, REG_INT_FLAGS_0);
--		flag1 = reg_read(priv, REG_INT_FLAGS_1);
--		flag2 = reg_read(priv, REG_INT_FLAGS_2);
-+		regmap_read(regmap, REG_INT_FLAGS_0, &flag0);
-+		regmap_read(regmap, REG_INT_FLAGS_1, &flag1);
-+		regmap_read(regmap, REG_INT_FLAGS_2, &flag2);
- 		DRM_DEBUG_DRIVER(
- 			"tda irq sta %02x cec %02x lvl %02x f0 %02x f1 %02x f2 %02x\n",
- 			sta, cec, lvl, flag0, flag1, flag2);
-@@ -725,6 +697,7 @@ static void
- tda998x_write_if(struct tda998x_priv *priv, u8 bit, u16 addr,
- 		 union hdmi_infoframe *frame)
- {
-+	struct regmap *regmap = priv->regmap;
- 	u8 buf[32];
- 	ssize_t len;
- 
-@@ -736,9 +709,9 @@ tda998x_write_if(struct tda998x_priv *priv, u8 bit, u16 addr,
- 		return;
- 	}
- 
--	reg_clear(priv, REG_DIP_IF_FLAGS, bit);
--	reg_write_range(priv, addr, buf, len);
--	reg_set(priv, REG_DIP_IF_FLAGS, bit);
-+	reg_clear(regmap, REG_DIP_IF_FLAGS, bit);
-+	regmap_bulk_write(regmap, addr, buf, len);
-+	reg_set(regmap, REG_DIP_IF_FLAGS, bit);
- }
- 
- static int tda998x_write_aif(struct tda998x_priv *priv,
-@@ -767,14 +740,14 @@ tda998x_write_avi(struct tda998x_priv *priv, const struct drm_display_mode *mode
- 
- /* Audio support */
- 
--static void tda998x_audio_mute(struct tda998x_priv *priv, bool on)
-+static void tda998x_audio_mute(struct regmap *regmap, bool on)
- {
- 	if (on) {
--		reg_set(priv, REG_SOFTRESET, SOFTRESET_AUDIO);
--		reg_clear(priv, REG_SOFTRESET, SOFTRESET_AUDIO);
--		reg_set(priv, REG_AIP_CNTRL_0, AIP_CNTRL_0_RST_FIFO);
-+		reg_set(regmap, REG_SOFTRESET, SOFTRESET_AUDIO);
-+		reg_clear(regmap, REG_SOFTRESET, SOFTRESET_AUDIO);
-+		reg_set(regmap, REG_AIP_CNTRL_0, AIP_CNTRL_0_RST_FIFO);
- 	} else {
--		reg_clear(priv, REG_AIP_CNTRL_0, AIP_CNTRL_0_RST_FIFO);
-+		reg_clear(regmap, REG_AIP_CNTRL_0, AIP_CNTRL_0_RST_FIFO);
- 	}
- }
- 
-@@ -782,25 +755,26 @@ static int
- tda998x_configure_audio(struct tda998x_priv *priv,
- 			struct tda998x_audio_params *params)
- {
-+	struct regmap *regmap = priv->regmap;
- 	u8 buf[6], clksel_aip, clksel_fs, cts_n, adiv;
- 	u32 n;
- 
- 	/* Enable audio ports */
--	reg_write(priv, REG_ENA_AP, params->config);
-+	regmap_write(regmap, REG_ENA_AP, params->config);
- 
- 	/* Set audio input source */
- 	switch (params->format) {
- 	case AFMT_SPDIF:
--		reg_write(priv, REG_ENA_ACLK, 0);
--		reg_write(priv, REG_MUX_AP, MUX_AP_SELECT_SPDIF);
-+		regmap_write(regmap, REG_ENA_ACLK, 0);
-+		regmap_write(regmap, REG_MUX_AP, MUX_AP_SELECT_SPDIF);
- 		clksel_aip = AIP_CLKSEL_AIP_SPDIF;
- 		clksel_fs = AIP_CLKSEL_FS_FS64SPDIF;
- 		cts_n = CTS_N_M(3) | CTS_N_K(3);
- 		break;
- 
- 	case AFMT_I2S:
--		reg_write(priv, REG_ENA_ACLK, 1);
--		reg_write(priv, REG_MUX_AP, MUX_AP_SELECT_I2S);
-+		regmap_write(regmap, REG_ENA_ACLK, 1);
-+		regmap_write(regmap, REG_MUX_AP, MUX_AP_SELECT_I2S);
- 		clksel_aip = AIP_CLKSEL_AIP_I2S;
- 		clksel_fs = AIP_CLKSEL_FS_ACLK;
- 		switch (params->sample_width) {
-@@ -824,10 +798,10 @@ tda998x_configure_audio(struct tda998x_priv *priv,
- 		return -EINVAL;
- 	}
- 
--	reg_write(priv, REG_AIP_CLKSEL, clksel_aip);
--	reg_clear(priv, REG_AIP_CNTRL_0, AIP_CNTRL_0_LAYOUT |
-+	regmap_write(regmap, REG_AIP_CLKSEL, clksel_aip);
-+	reg_clear(regmap, REG_AIP_CNTRL_0, AIP_CNTRL_0_LAYOUT |
- 					AIP_CNTRL_0_ACR_MAN);	/* auto CTS */
--	reg_write(priv, REG_CTS_N, cts_n);
-+	regmap_write(regmap, REG_CTS_N, cts_n);
- 
- 	/*
- 	 * Audio input somehow depends on HDMI line rate which is
-@@ -844,7 +818,7 @@ tda998x_configure_audio(struct tda998x_priv *priv,
- 	if (params->format == AFMT_SPDIF)
- 		adiv++;			/* AUDIO_DIV_SERCLK_16 or _32 */
- 
--	reg_write(priv, REG_AUDIO_DIV, adiv);
-+	regmap_write(regmap, REG_AUDIO_DIV, adiv);
- 
- 	/*
- 	 * This is the approximate value of N, which happens to be
-@@ -859,14 +833,14 @@ tda998x_configure_audio(struct tda998x_priv *priv,
- 	buf[3] = n;
- 	buf[4] = n >> 8;
- 	buf[5] = n >> 16;
--	reg_write_range(priv, REG_ACR_CTS_0, buf, 6);
-+	regmap_bulk_write(regmap, REG_ACR_CTS_0, buf, 6);
- 
- 	/* Set CTS clock reference */
--	reg_write(priv, REG_AIP_CLKSEL, clksel_aip | clksel_fs);
-+	regmap_write(regmap, REG_AIP_CLKSEL, clksel_aip | clksel_fs);
- 
- 	/* Reset CTS generator */
--	reg_set(priv, REG_AIP_CNTRL_0, AIP_CNTRL_0_RST_CTS);
--	reg_clear(priv, REG_AIP_CNTRL_0, AIP_CNTRL_0_RST_CTS);
-+	reg_set(regmap, REG_AIP_CNTRL_0, AIP_CNTRL_0_RST_CTS);
-+	reg_clear(regmap, REG_AIP_CNTRL_0, AIP_CNTRL_0_RST_CTS);
- 
- 	/* Write the channel status
- 	 * The REG_CH_STAT_B-registers skip IEC958 AES2 byte, because
-@@ -876,11 +850,11 @@ tda998x_configure_audio(struct tda998x_priv *priv,
- 	buf[1] = params->status[1];
- 	buf[2] = params->status[3];
- 	buf[3] = params->status[4];
--	reg_write_range(priv, REG_CH_STAT_B(0), buf, 4);
-+	regmap_bulk_write(regmap, REG_CH_STAT_B(0), buf, 4);
- 
--	tda998x_audio_mute(priv, true);
-+	tda998x_audio_mute(regmap, true);
- 	msleep(20);
--	tda998x_audio_mute(priv, false);
-+	tda998x_audio_mute(regmap, false);
- 
- 	return tda998x_write_aif(priv, &params->cea);
- }
-@@ -950,7 +924,7 @@ static void tda998x_audio_shutdown(struct device *dev, void *data)
- 
- 	mutex_lock(&priv->audio_mutex);
- 
--	reg_write(priv, REG_ENA_AP, 0);
-+	regmap_write(priv->regmap, REG_ENA_AP, 0);
- 
- 	priv->audio_params.format = AFMT_UNUSED;
- 
-@@ -963,7 +937,7 @@ int tda998x_audio_digital_mute(struct device *dev, void *data, bool enable)
- 
- 	mutex_lock(&priv->audio_mutex);
- 
--	tda998x_audio_mute(priv, enable);
-+	tda998x_audio_mute(priv->regmap, enable);
- 
- 	mutex_unlock(&priv->audio_mutex);
- 	return 0;
-@@ -1043,6 +1017,8 @@ static const struct drm_connector_funcs tda998x_connector_funcs = {
- static int read_edid_block(void *data, u8 *buf, unsigned int blk, size_t length)
- {
- 	struct tda998x_priv *priv = data;
-+	struct regmap *regmap = priv->regmap;
-+	unsigned int flag2;
- 	u8 offset, segptr;
- 	int ret, i;
- 
-@@ -1051,17 +1027,17 @@ static int read_edid_block(void *data, u8 *buf, unsigned int blk, size_t length)
- 
- 	mutex_lock(&priv->edid_mutex);
- 
--	reg_write(priv, REG_DDC_ADDR, 0xa0);
--	reg_write(priv, REG_DDC_OFFS, offset);
--	reg_write(priv, REG_DDC_SEGM_ADDR, 0x60);
--	reg_write(priv, REG_DDC_SEGM, segptr);
-+	regmap_write(regmap, REG_DDC_ADDR, 0xa0);
-+	regmap_write(regmap, REG_DDC_OFFS, offset);
-+	regmap_write(regmap, REG_DDC_SEGM_ADDR, 0x60);
-+	regmap_write(regmap, REG_DDC_SEGM, segptr);
- 
- 	/* enable reading EDID: */
- 	priv->wq_edid_wait = 1;
--	reg_write(priv, REG_EDID_CTRL, 0x1);
-+	regmap_write(regmap, REG_EDID_CTRL, 0x1);
- 
- 	/* flag must be cleared by sw: */
--	reg_write(priv, REG_EDID_CTRL, 0x0);
-+	regmap_write(regmap, REG_EDID_CTRL, 0x0);
- 
- 	/* wait for block read to complete: */
- 	if (priv->hdmi->irq) {
-@@ -1076,10 +1052,10 @@ static int read_edid_block(void *data, u8 *buf, unsigned int blk, size_t length)
- 	} else {
- 		for (i = 100; i > 0; i--) {
- 			msleep(1);
--			ret = reg_read(priv, REG_INT_FLAGS_2);
--			if (ret < 0)
-+			ret = regmap_read(regmap, REG_INT_FLAGS_2, &flag2);
-+			if (ret)
- 				goto failed;
--			if (ret & INT_FLAGS_2_EDID_BLK_RD)
-+			if (flag2 & INT_FLAGS_2_EDID_BLK_RD)
- 				break;
- 		}
- 	}
-@@ -1090,8 +1066,8 @@ static int read_edid_block(void *data, u8 *buf, unsigned int blk, size_t length)
- 		goto failed;
- 	}
- 
--	ret = reg_read_range(priv, REG_EDID_DATA_0, buf, length);
--	if (ret != length) {
-+	ret = regmap_bulk_read(regmap, REG_EDID_DATA_0, buf, length);
-+	if (ret) {
- 		dev_err(&priv->hdmi->dev, "failed to read edid block %d: %d\n",
- 			blk, ret);
- 		goto failed;
-@@ -1107,6 +1083,7 @@ static int read_edid_block(void *data, u8 *buf, unsigned int blk, size_t length)
- static int tda998x_connector_get_modes(struct drm_connector *connector)
- {
- 	struct tda998x_priv *priv = conn_to_tda998x_priv(connector);
-+	struct regmap *regmap = priv->regmap;
- 	struct edid *edid;
- 	int n;
- 
-@@ -1119,12 +1096,12 @@ static int tda998x_connector_get_modes(struct drm_connector *connector)
- 		return 0;
- 
- 	if (priv->rev == TDA19988)
--		reg_clear(priv, REG_TX4, TX4_PD_RAM);
-+		reg_clear(regmap, REG_TX4, TX4_PD_RAM);
- 
- 	edid = drm_do_get_edid(connector, read_edid_block, priv);
- 
- 	if (priv->rev == TDA19988)
--		reg_set(priv, REG_TX4, TX4_PD_RAM);
-+		reg_set(regmap, REG_TX4, TX4_PD_RAM);
- 
- 	if (!edid) {
- 		dev_warn(&priv->hdmi->dev, "failed to read EDID\n");
-@@ -1218,16 +1195,17 @@ static enum drm_mode_status tda998x_bridge_mode_valid(struct drm_bridge *bridge,
- static void tda998x_bridge_enable(struct drm_bridge *bridge)
- {
- 	struct tda998x_priv *priv = bridge_to_tda998x_priv(bridge);
-+	struct regmap *regmap = priv->regmap;
- 
- 	if (!priv->is_on) {
- 		/* enable video ports, audio will be enabled later */
--		reg_write(priv, REG_ENA_VP_0, 0xff);
--		reg_write(priv, REG_ENA_VP_1, 0xff);
--		reg_write(priv, REG_ENA_VP_2, 0xff);
-+		regmap_write(regmap, REG_ENA_VP_0, 0xff);
-+		regmap_write(regmap, REG_ENA_VP_1, 0xff);
-+		regmap_write(regmap, REG_ENA_VP_2, 0xff);
- 		/* set muxing after enabling ports: */
--		reg_write(priv, REG_VIP_CNTRL_0, priv->vip_cntrl_0);
--		reg_write(priv, REG_VIP_CNTRL_1, priv->vip_cntrl_1);
--		reg_write(priv, REG_VIP_CNTRL_2, priv->vip_cntrl_2);
-+		regmap_write(regmap, REG_VIP_CNTRL_0, priv->vip_cntrl_0);
-+		regmap_write(regmap, REG_VIP_CNTRL_1, priv->vip_cntrl_1);
-+		regmap_write(regmap, REG_VIP_CNTRL_2, priv->vip_cntrl_2);
- 
- 		priv->is_on = true;
- 	}
-@@ -1236,12 +1214,13 @@ static void tda998x_bridge_enable(struct drm_bridge *bridge)
- static void tda998x_bridge_disable(struct drm_bridge *bridge)
- {
- 	struct tda998x_priv *priv = bridge_to_tda998x_priv(bridge);
-+	struct regmap *regmap = priv->regmap;
- 
- 	if (priv->is_on) {
- 		/* disable video ports */
--		reg_write(priv, REG_ENA_VP_0, 0x00);
--		reg_write(priv, REG_ENA_VP_1, 0x00);
--		reg_write(priv, REG_ENA_VP_2, 0x00);
-+		regmap_write(regmap, REG_ENA_VP_0, 0x00);
-+		regmap_write(regmap, REG_ENA_VP_1, 0x00);
-+		regmap_write(regmap, REG_ENA_VP_2, 0x00);
- 
- 		priv->is_on = false;
- 	}
-@@ -1252,6 +1231,7 @@ static void tda998x_bridge_mode_set(struct drm_bridge *bridge,
- 				    const struct drm_display_mode *adjusted_mode)
- {
- 	struct tda998x_priv *priv = bridge_to_tda998x_priv(bridge);
-+	struct regmap *regmap = priv->regmap;
- 	unsigned long tmds_clock;
- 	u16 ref_pix, ref_line, n_pix, n_line;
- 	u16 hs_pix_s, hs_pix_e;
-@@ -1340,43 +1320,43 @@ static void tda998x_bridge_mode_set(struct drm_bridge *bridge,
- 	mutex_lock(&priv->audio_mutex);
- 
- 	/* mute the audio FIFO: */
--	reg_set(priv, REG_AIP_CNTRL_0, AIP_CNTRL_0_RST_FIFO);
-+	reg_set(regmap, REG_AIP_CNTRL_0, AIP_CNTRL_0_RST_FIFO);
- 
- 	/* set HDMI HDCP mode off: */
--	reg_write(priv, REG_TBG_CNTRL_1, TBG_CNTRL_1_DWIN_DIS);
--	reg_clear(priv, REG_TX33, TX33_HDMI);
--	reg_write(priv, REG_ENC_CNTRL, ENC_CNTRL_CTL_CODE(0));
-+	regmap_write(regmap, REG_TBG_CNTRL_1, TBG_CNTRL_1_DWIN_DIS);
-+	reg_clear(regmap, REG_TX33, TX33_HDMI);
-+	regmap_write(regmap, REG_ENC_CNTRL, ENC_CNTRL_CTL_CODE(0));
- 
- 	/* no pre-filter or interpolator: */
--	reg_write(priv, REG_HVF_CNTRL_0, HVF_CNTRL_0_PREFIL(0) |
-+	regmap_write(regmap, REG_HVF_CNTRL_0, HVF_CNTRL_0_PREFIL(0) |
- 			HVF_CNTRL_0_INTPOL(0));
--	reg_set(priv, REG_FEAT_POWERDOWN, FEAT_POWERDOWN_PREFILT);
--	reg_write(priv, REG_VIP_CNTRL_5, VIP_CNTRL_5_SP_CNT(0));
--	reg_write(priv, REG_VIP_CNTRL_4, VIP_CNTRL_4_BLANKIT(0) |
-+	reg_set(regmap, REG_FEAT_POWERDOWN, FEAT_POWERDOWN_PREFILT);
-+	regmap_write(regmap, REG_VIP_CNTRL_5, VIP_CNTRL_5_SP_CNT(0));
-+	regmap_write(regmap, REG_VIP_CNTRL_4, VIP_CNTRL_4_BLANKIT(0) |
- 			VIP_CNTRL_4_BLC(0));
- 
--	reg_clear(priv, REG_PLL_SERIAL_1, PLL_SERIAL_1_SRL_MAN_IZ);
--	reg_clear(priv, REG_PLL_SERIAL_3, PLL_SERIAL_3_SRL_CCIR |
-+	reg_clear(regmap, REG_PLL_SERIAL_1, PLL_SERIAL_1_SRL_MAN_IZ);
-+	reg_clear(regmap, REG_PLL_SERIAL_3, PLL_SERIAL_3_SRL_CCIR |
- 					  PLL_SERIAL_3_SRL_DE);
--	reg_write(priv, REG_SERIALIZER, 0);
--	reg_write(priv, REG_HVF_CNTRL_1, HVF_CNTRL_1_VQR(0));
-+	regmap_write(regmap, REG_SERIALIZER, 0);
-+	regmap_write(regmap, REG_HVF_CNTRL_1, HVF_CNTRL_1_VQR(0));
- 
- 	/* TODO enable pixel repeat for pixel rates less than 25Msamp/s */
- 	rep = 0;
--	reg_write(priv, REG_RPT_CNTRL, 0);
--	reg_write(priv, REG_SEL_CLK, SEL_CLK_SEL_VRF_CLK(0) |
-+	regmap_write(regmap, REG_RPT_CNTRL, 0);
-+	regmap_write(regmap, REG_SEL_CLK, SEL_CLK_SEL_VRF_CLK(0) |
- 			SEL_CLK_SEL_CLK1 | SEL_CLK_ENA_SC_CLK);
- 
--	reg_write(priv, REG_PLL_SERIAL_2, PLL_SERIAL_2_SRL_NOSC(div) |
-+	regmap_write(regmap, REG_PLL_SERIAL_2, PLL_SERIAL_2_SRL_NOSC(div) |
- 			PLL_SERIAL_2_SRL_PR(rep));
- 
- 	/* set color matrix bypass flag: */
--	reg_write(priv, REG_MAT_CONTRL, MAT_CONTRL_MAT_BP |
-+	regmap_write(regmap, REG_MAT_CONTRL, MAT_CONTRL_MAT_BP |
- 				MAT_CONTRL_MAT_SC(1));
--	reg_set(priv, REG_FEAT_POWERDOWN, FEAT_POWERDOWN_CSC);
-+	reg_set(regmap, REG_FEAT_POWERDOWN, FEAT_POWERDOWN_CSC);
- 
- 	/* set BIAS tmds value: */
--	reg_write(priv, REG_ANA_GENERAL, 0x09);
-+	regmap_write(regmap, REG_ANA_GENERAL, 0x09);
- 
- 	/*
- 	 * Sync on rising HSYNC/VSYNC
-@@ -1391,33 +1371,33 @@ static void tda998x_bridge_mode_set(struct drm_bridge *bridge,
- 		reg |= VIP_CNTRL_3_H_TGL;
- 	if (mode->flags & DRM_MODE_FLAG_NVSYNC)
- 		reg |= VIP_CNTRL_3_V_TGL;
--	reg_write(priv, REG_VIP_CNTRL_3, reg);
--
--	reg_write(priv, REG_VIDFORMAT, 0x00);
--	reg_write16(priv, REG_REFPIX_MSB, ref_pix);
--	reg_write16(priv, REG_REFLINE_MSB, ref_line);
--	reg_write16(priv, REG_NPIX_MSB, n_pix);
--	reg_write16(priv, REG_NLINE_MSB, n_line);
--	reg_write16(priv, REG_VS_LINE_STRT_1_MSB, vs1_line_s);
--	reg_write16(priv, REG_VS_PIX_STRT_1_MSB, vs1_pix_s);
--	reg_write16(priv, REG_VS_LINE_END_1_MSB, vs1_line_e);
--	reg_write16(priv, REG_VS_PIX_END_1_MSB, vs1_pix_e);
--	reg_write16(priv, REG_VS_LINE_STRT_2_MSB, vs2_line_s);
--	reg_write16(priv, REG_VS_PIX_STRT_2_MSB, vs2_pix_s);
--	reg_write16(priv, REG_VS_LINE_END_2_MSB, vs2_line_e);
--	reg_write16(priv, REG_VS_PIX_END_2_MSB, vs2_pix_e);
--	reg_write16(priv, REG_HS_PIX_START_MSB, hs_pix_s);
--	reg_write16(priv, REG_HS_PIX_STOP_MSB, hs_pix_e);
--	reg_write16(priv, REG_VWIN_START_1_MSB, vwin1_line_s);
--	reg_write16(priv, REG_VWIN_END_1_MSB, vwin1_line_e);
--	reg_write16(priv, REG_VWIN_START_2_MSB, vwin2_line_s);
--	reg_write16(priv, REG_VWIN_END_2_MSB, vwin2_line_e);
--	reg_write16(priv, REG_DE_START_MSB, de_pix_s);
--	reg_write16(priv, REG_DE_STOP_MSB, de_pix_e);
-+	regmap_write(regmap, REG_VIP_CNTRL_3, reg);
-+
-+	regmap_write(regmap, REG_VIDFORMAT, 0x00);
-+	reg_write16(regmap, REG_REFPIX_MSB, ref_pix);
-+	reg_write16(regmap, REG_REFLINE_MSB, ref_line);
-+	reg_write16(regmap, REG_NPIX_MSB, n_pix);
-+	reg_write16(regmap, REG_NLINE_MSB, n_line);
-+	reg_write16(regmap, REG_VS_LINE_STRT_1_MSB, vs1_line_s);
-+	reg_write16(regmap, REG_VS_PIX_STRT_1_MSB, vs1_pix_s);
-+	reg_write16(regmap, REG_VS_LINE_END_1_MSB, vs1_line_e);
-+	reg_write16(regmap, REG_VS_PIX_END_1_MSB, vs1_pix_e);
-+	reg_write16(regmap, REG_VS_LINE_STRT_2_MSB, vs2_line_s);
-+	reg_write16(regmap, REG_VS_PIX_STRT_2_MSB, vs2_pix_s);
-+	reg_write16(regmap, REG_VS_LINE_END_2_MSB, vs2_line_e);
-+	reg_write16(regmap, REG_VS_PIX_END_2_MSB, vs2_pix_e);
-+	reg_write16(regmap, REG_HS_PIX_START_MSB, hs_pix_s);
-+	reg_write16(regmap, REG_HS_PIX_STOP_MSB, hs_pix_e);
-+	reg_write16(regmap, REG_VWIN_START_1_MSB, vwin1_line_s);
-+	reg_write16(regmap, REG_VWIN_END_1_MSB, vwin1_line_e);
-+	reg_write16(regmap, REG_VWIN_START_2_MSB, vwin2_line_s);
-+	reg_write16(regmap, REG_VWIN_END_2_MSB, vwin2_line_e);
-+	reg_write16(regmap, REG_DE_START_MSB, de_pix_s);
-+	reg_write16(regmap, REG_DE_STOP_MSB, de_pix_e);
- 
- 	if (priv->rev == TDA19988) {
- 		/* let incoming pixels fill the active space (if any) */
--		reg_write(priv, REG_ENABLE_SPACE, 0x00);
-+		regmap_write(regmap, REG_ENABLE_SPACE, 0x00);
- 	}
- 
- 	/*
-@@ -1429,10 +1409,10 @@ static void tda998x_bridge_mode_set(struct drm_bridge *bridge,
- 		reg |= TBG_CNTRL_1_H_TGL;
- 	if (mode->flags & DRM_MODE_FLAG_NVSYNC)
- 		reg |= TBG_CNTRL_1_V_TGL;
--	reg_write(priv, REG_TBG_CNTRL_1, reg);
-+	regmap_write(regmap, REG_TBG_CNTRL_1, reg);
- 
- 	/* must be last register set: */
--	reg_write(priv, REG_TBG_CNTRL_0, 0);
-+	regmap_write(regmap, REG_TBG_CNTRL_0, 0);
- 
- 	priv->tmds_clock = adjusted_mode->clock;
- 
-@@ -1452,9 +1432,9 @@ static void tda998x_bridge_mode_set(struct drm_bridge *bridge,
- 	if (priv->supports_infoframes) {
- 		/* We need to turn HDMI HDCP stuff on to get audio through */
- 		reg &= ~TBG_CNTRL_1_DWIN_DIS;
--		reg_write(priv, REG_TBG_CNTRL_1, reg);
--		reg_write(priv, REG_ENC_CNTRL, ENC_CNTRL_CTL_CODE(1));
--		reg_set(priv, REG_TX33, TX33_HDMI);
-+		regmap_write(regmap, REG_TBG_CNTRL_1, reg);
-+		regmap_write(regmap, REG_ENC_CNTRL, ENC_CNTRL_CTL_CODE(1));
-+		reg_set(regmap, REG_TX33, TX33_HDMI);
- 
- 		tda998x_write_avi(priv, adjusted_mode);
- 
-@@ -1546,7 +1526,7 @@ static void tda998x_destroy(struct device *dev)
- 
- 	/* disable all IRQs and free the IRQ handler */
- 	cec_write(priv, REG_CEC_RXSHPDINTENA, 0);
--	reg_clear(priv, REG_INT_FLAGS_2, INT_FLAGS_2_EDID_BLK_RD);
-+	reg_clear(priv->regmap, REG_INT_FLAGS_2, INT_FLAGS_2_EDID_BLK_RD);
- 
- 	if (priv->audio_pdev)
- 		platform_device_unregister(priv->audio_pdev);
-@@ -1773,9 +1753,10 @@ static int tda998x_create(struct device *dev)
- 	struct i2c_client *client = to_i2c_client(dev);
- 	struct device_node *np = client->dev.of_node;
- 	struct i2c_board_info cec_info;
-+	unsigned int rev_lo, rev_hi, dummy;
- 	struct tda998x_priv *priv;
- 	u32 video;
--	int rev_lo, rev_hi, ret;
-+	int ret;
- 
- 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
-@@ -1811,16 +1792,16 @@ static int tda998x_create(struct device *dev)
- 	tda998x_reset(priv);
- 
- 	/* read version: */
--	rev_lo = reg_read(priv, REG_VERSION_LSB);
--	if (rev_lo < 0) {
--		dev_err(dev, "failed to read version: %d\n", rev_lo);
--		return rev_lo;
-+	ret = regmap_read(priv->regmap, REG_VERSION_LSB, &rev_lo);
-+	if (ret) {
-+		dev_err(dev, "failed to read version: %d\n", ret);
-+		return ret;
- 	}
- 
--	rev_hi = reg_read(priv, REG_VERSION_MSB);
--	if (rev_hi < 0) {
--		dev_err(dev, "failed to read version: %d\n", rev_hi);
--		return rev_hi;
-+	ret = regmap_read(priv->regmap, REG_VERSION_MSB, &rev_hi);
-+	if (ret) {
-+		dev_err(dev, "failed to read version: %d\n", ret);
-+		return ret;
- 	}
- 
- 	priv->rev = rev_lo | rev_hi << 8;
-@@ -1847,14 +1828,14 @@ static int tda998x_create(struct device *dev)
- 	}
- 
- 	/* after reset, enable DDC: */
--	reg_write(priv, REG_DDC_DISABLE, 0x00);
-+	regmap_write(priv->regmap, REG_DDC_DISABLE, 0x00);
- 
- 	/* set clock on DDC channel: */
--	reg_write(priv, REG_TX3, 39);
-+	regmap_write(priv->regmap, REG_TX3, 39);
- 
- 	/* if necessary, disable multi-master: */
- 	if (priv->rev == TDA19989)
--		reg_set(priv, REG_I2C_MASTER, I2C_MASTER_DIS_MM);
-+		reg_set(priv->regmap, REG_I2C_MASTER, I2C_MASTER_DIS_MM);
- 
- 	cec_write(priv, REG_CEC_FRO_IM_CLK_CTRL,
- 			CEC_FRO_IM_CLK_CTRL_GHOST_DIS | CEC_FRO_IM_CLK_CTRL_IMCLK_SEL);
-@@ -1864,9 +1845,9 @@ static int tda998x_create(struct device *dev)
- 
- 	/* clear pending interrupts */
- 	cec_read(priv, REG_CEC_RXSHPDINT);
--	reg_read(priv, REG_INT_FLAGS_0);
--	reg_read(priv, REG_INT_FLAGS_1);
--	reg_read(priv, REG_INT_FLAGS_2);
-+	regmap_read(priv->regmap, REG_INT_FLAGS_0, &dummy);
-+	regmap_read(priv->regmap, REG_INT_FLAGS_1, &dummy);
-+	regmap_read(priv->regmap, REG_INT_FLAGS_2, &dummy);
- 
- 	/* initialize the optional IRQ */
- 	if (client->irq) {
-@@ -1928,7 +1909,7 @@ static int tda998x_create(struct device *dev)
- 	}
- 
- 	/* enable EDID read irq: */
--	reg_set(priv, REG_INT_FLAGS_2, INT_FLAGS_2_EDID_BLK_RD);
-+	reg_set(priv->regmap, REG_INT_FLAGS_2, INT_FLAGS_2_EDID_BLK_RD);
- 
- 	if (np) {
- 		/* get the device tree parameters */
--- 
-2.17.1
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5keSBUYW5nDQo+IFNl
+bnQ6IE1vbmRheSwgTWF5IDI3LCAyMDE5IDM6MjcgQU0NCj4gVG86IExlbyBMaSA8bGVveWFuZy5s
+aUBueHAuY29tPg0KPiBDYzogU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPjsgUm9iIEhl
+cnJpbmcNCj4gPHJvYmgrZHRAa2VybmVsLm9yZz47IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5k
+QGFybS5jb20+Ow0KPiBtb2RlcmF0ZWQgbGlzdDpBUk0vRlJFRVNDQUxFIElNWCAvIE1YQyBBUk0g
+QVJDSElURUNUVVJFIDxsaW51eC1hcm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnPjsg
+b3BlbiBsaXN0Ok9QRU4gRklSTVdBUkUgQU5EIEZMQVRURU5FRA0KPiBERVZJQ0UgVFJFRSBCSU5E
+SU5HUyA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc+OyBsa21sIDxsaW51eC0NCj4ga2VybmVs
+QHZnZXIua2VybmVsLm9yZz4NCj4gU3ViamVjdDogUkU6IFtFWFRdIFJlOiBbUEFUQ0hdIGFybTY0
+OiBkdHM6IGxzMTAyOGE6IEFkZCB0ZW1wZXJhdHVyZSBzZW5zb3INCj4gbm9kZQ0KPiANCj4gSGkg
+TGVvLA0KPiANCj4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+IEZyb206IExpIFlh
+bmcgPGxlb3lhbmcubGlAbnhwLmNvbT4NCj4gPiBTZW50OiAyMDE55bm0NeaciDI15pelIDY6MzIN
+Cj4gPiBUbzogQW5keSBUYW5nIDxhbmR5LnRhbmdAbnhwLmNvbT4NCj4gPiBDYzogU2hhd24gR3Vv
+IDxzaGF3bmd1b0BrZXJuZWwub3JnPjsgUm9iIEhlcnJpbmcNCj4gPHJvYmgrZHRAa2VybmVsLm9y
+Zz47DQo+ID4gTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IG1vZGVyYXRlZCBs
+aXN0OkFSTS9GUkVFU0NBTEUNCj4gSU1YDQo+ID4gLyBNWEMgQVJNIEFSQ0hJVEVDVFVSRSA8bGlu
+dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnPjsNCj4gPiBvcGVuIGxpc3Q6T1BFTiBG
+SVJNV0FSRSBBTkQgRkxBVFRFTkVEIERFVklDRSBUUkVFIEJJTkRJTkdTDQo+ID4gPGRldmljZXRy
+ZWVAdmdlci5rZXJuZWwub3JnPjsgbGttbCA8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZz4N
+Cj4gPiBTdWJqZWN0OiBbRVhUXSBSZTogW1BBVENIXSBhcm02NDogZHRzOiBsczEwMjhhOiBBZGQg
+dGVtcGVyYXR1cmUgc2Vuc29yDQo+ID4gbm9kZQ0KPiA+DQo+ID4gQ2F1dGlvbjogRVhUIEVtYWls
+DQo+ID4NCj4gPiBPbiBUaHUsIE1heSAyMywgMjAxOSBhdCA4OjMwIFBNIFl1YW50aWFuIFRhbmcg
+PGFuZHkudGFuZ0BueHAuY29tPg0KPiA+IHdyb3RlOg0KPiA+ID4NCj4gPiA+IEFkZCBueHAgc2E1
+NjAwNCBjaGlwIG5vZGUgZm9yIHRlbXBlcmF0dXJlIG1vbml0b3IuDQo+ID4gPg0KPiA+ID4gU2ln
+bmVkLW9mZi1ieTogWXVhbnRpYW4gVGFuZyA8YW5keS50YW5nQG54cC5jb20+DQo+ID4gPiAtLS0N
+Cj4gPiA+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS1xZHMuZHRz
+IHwgNSArKysrKw0KPiA+ID4gYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAy
+OGEtcmRiLmR0cyB8IDUgKysrKysNCj4gPiA+ICAyIGZpbGVzIGNoYW5nZWQsIDEwIGluc2VydGlv
+bnMoKykNCj4gPiA+DQo+ID4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVl
+c2NhbGUvZnNsLWxzMTAyOGEtcWRzLmR0cw0KPiA+ID4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2Zy
+ZWVzY2FsZS9mc2wtbHMxMDI4YS1xZHMuZHRzDQo+ID4gPiBpbmRleCBiMzU5MDY4ZDk2MDUuLjMx
+ZmQ2MjZkZDM0NCAxMDA2NDQNCj4gPiA+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNj
+YWxlL2ZzbC1sczEwMjhhLXFkcy5kdHMNCj4gPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMv
+ZnJlZXNjYWxlL2ZzbC1sczEwMjhhLXFkcy5kdHMNCj4gPiA+IEBAIC0xMzEsNiArMTMxLDExIEBA
+DQo+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYXRt
+ZWwsMjRjNTEyIjsNCj4gPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0g
+PDB4NTc+Ow0KPiA+ID4gICAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4gPiA+ICsNCj4gPiA+
+ICsgICAgICAgICAgICAgICAgICAgICAgIHRlbXBANGMgew0KPiA+DQo+ID4gVGhlIHJlY29tbWVu
+ZGVkIG5hbWUgZm9yIHRlbXBlcmF0dXJlIHNlbm9yIGluIGR0cyBzcGVjIGlzDQo+ID4gdGVtcGVy
+YXR1cmUtc2Vuc29yLg0KPiBJIGRpZG4ndCBmaW5kIHRoZSBzcGVjIGZvciB0aGlzIHJlY29tbWVu
+ZGF0aW9uLiBDb3VsZCB5b3UgcGxlYXNlIHByb3ZpZGUgdGhlDQo+IGxpbms/DQoNCllvdSBjYW4g
+ZmluZCB0aGUgc3BlYyBvbiBodHRwczovL3d3dy5kZXZpY2V0cmVlLm9yZy8NCg0KPiBJIGxpa2Ug
+dG8gdXBkYXRlIGl0IHRvIHRlbXAtc2Vuc29yIHRob3VnaC4NCj4gDQo+ID4NCj4gPiA+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJueHAsc2E1NjAwNCI7DQo+
+ID4NCj4gPiBUaGUgYmluZGluZyBzYXlzIHRoZSBmb2xsb3dpbmcgcHJvcGVydHkgaXMgcmVxdWly
+ZWQuICBJZiBpdCBpcyBub3QgdGhlDQo+ID4gY2FzZSwgcHJvYmFibHkgd2Ugc2hvdWxkIHVwZGF0
+ZSB0aGUgYmluZGluZy4NCj4gPiAtIHZjYy1zdXBwbHk6IHZjYyByZWd1bGF0b3IgZm9yIHRoZSBz
+dXBwbHkgdm9sdGFnZS4NCj4gSSB3aWxsIGFkZCB0aGUgdmNjLXN1cHBseSB0byBjb21wbHkgdGhp
+cyByZXF1aXJlbWVudC4NCj4gDQo+IFRoYW5rcywNCj4gQW5keQ0KPiA+DQo+ID4gPiArICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweDRjPjsNCj4gPiA+ICsgICAgICAgICAg
+ICAgICAgICAgICAgIH07DQo+ID4gPiAgICAgICAgICAgICAgICAgfTsNCj4gPiA+DQo+ID4gPiAg
+ICAgICAgICAgICAgICAgaTJjQDUgew0KPiA+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9v
+dC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLXJkYi5kdHMNCj4gPiA+IGIvYXJjaC9hcm02NC9i
+b290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEtcmRiLmR0cw0KPiA+ID4gaW5kZXggZjljMjcy
+ZmIwNzM4Li4wMTJiM2Y4Njk2YjcgMTAwNjQ0DQo+ID4gPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3Qv
+ZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS1yZGIuZHRzDQo+ID4gPiArKysgYi9hcmNoL2FybTY0
+L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS1yZGIuZHRzDQo+ID4gPiBAQCAtMTE5LDYg
+KzExOSwxMSBAQA0KPiA+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRp
+YmxlID0gIm54cCxwY2YyMTI5IjsNCj4gPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgcmVnID0gPDB4NTE+Ow0KPiA+ID4gICAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4gPiA+
+ICsNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHRlbXBANGMgew0KPiA+ID4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gIm54cCxzYTU2MDA0IjsNCj4g
+PiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4NGM+Ow0KPiA+ID4g
+KyAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4gPiA+ICAgICAgICAgICAgICAgICB9Ow0KPiA+
+ID4gICAgICAgICB9Ow0KPiA+ID4gIH07DQo+ID4gPiAtLQ0KPiA+ID4gMi4xNy4xDQo+ID4gPg0K
