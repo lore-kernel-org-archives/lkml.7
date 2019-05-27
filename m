@@ -2,112 +2,105 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD23C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D175C07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 465112081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:42:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB0E72081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:43:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=teoenmingcorp.onmicrosoft.com header.i=@teoenmingcorp.onmicrosoft.com header.b="QRK2RQHm"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="OU+HYJGU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbfE0NmN (ORCPT
+        id S1726702AbfE0NnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 09:42:13 -0400
-Received: from mail-eopbgr1310050.outbound.protection.outlook.com ([40.107.131.50]:56929
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726511AbfE0NmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 09:42:13 -0400
+        Mon, 27 May 2019 09:43:23 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37426 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726262AbfE0NnX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 09:43:23 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 7so15902869wmo.2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 06:43:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=teoenmingcorp.onmicrosoft.com; s=selector1-teoenmingcorp-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GvK5Iqy3C4kcTvCGOPtlYTewvPyPSmsHigytoNNJFjw=;
- b=QRK2RQHmeZvvdT1tdQYyQ4M9MrwB0+p0PqgxrgEB/XO2vlfnOjO2ujDaezE6iGvXupmNn7MFx0XiA906B4mtsl+pImXVh13th4ZYHU8uTcTTV/4+7qYoy6bvve7OgFH8Loir9mA/fFzc0a5WTLBDo3THrvei8ZdZV1T3JtjgXLA=
-Received: from SG2PR01MB2141.apcprd01.prod.exchangelabs.com (10.170.143.19) by
- SG2PR01MB2741.apcprd01.prod.exchangelabs.com (20.177.171.73) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.17; Mon, 27 May 2019 13:42:08 +0000
-Received: from SG2PR01MB2141.apcprd01.prod.exchangelabs.com
- ([fe80::118b:a597:2b7f:3b01]) by SG2PR01MB2141.apcprd01.prod.exchangelabs.com
- ([fe80::118b:a597:2b7f:3b01%7]) with mapi id 15.20.1922.021; Mon, 27 May 2019
- 13:42:08 +0000
-From:   Turritopsis Dohrnii Teo En Ming <ceo@teo-en-ming-corp.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Turritopsis Dohrnii Teo En Ming <ceo@teo-en-ming-corp.com>
-Subject: Testing
-Thread-Topic: Testing
-Thread-Index: AQHVFJHvfGo+DC+fpEWhZiCHdrrqmA==
-Date:   Mon, 27 May 2019 13:42:08 +0000
-Message-ID: <SG2PR01MB2141CAFA4528005FA08C989C871D0@SG2PR01MB2141.apcprd01.prod.exchangelabs.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ceo@teo-en-ming-corp.com; 
-x-originating-ip: [118.189.211.120]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 653a8426-a0ae-4445-5b9a-08d6e2a91d2f
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:SG2PR01MB2741;
-x-ms-traffictypediagnostic: SG2PR01MB2741:
-x-ms-exchange-purlcount: 4
-x-microsoft-antispam-prvs: <SG2PR01MB2741B4105C6F763FB707461B871D0@SG2PR01MB2741.apcprd01.prod.exchangelabs.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3383;
-x-forefront-prvs: 0050CEFE70
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39830400003)(366004)(346002)(136003)(376002)(396003)(189003)(199004)(7116003)(486006)(476003)(26005)(5660300002)(86362001)(4744005)(66946007)(6916009)(66066001)(6436002)(221733001)(66476007)(66556008)(64756008)(66446008)(5640700003)(9686003)(186003)(6116002)(3846002)(52536014)(2906002)(14454004)(6306002)(73956011)(55016002)(3480700005)(76116006)(53936002)(7696005)(71200400001)(71190400001)(256004)(966005)(2351001)(478600001)(68736007)(316002)(305945005)(81166006)(81156014)(8676002)(99286004)(33656002)(8936002)(2501003)(7736002)(25786009)(74316002)(102836004)(6506007)(107886003)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:SG2PR01MB2741;H:SG2PR01MB2141.apcprd01.prod.exchangelabs.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: teo-en-ming-corp.com does not
- designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: sLg47e+v1xFcKgmf2yJ8jIZGqOlDAODoAIyqLrE9SYSKperS4GnVPKWgml5Xtg+3sIlGopGEqDnDJ9lvCQ89ZAPIvVxEqJkQXxElKxxFD+kytSia4tRg8lXmDa1qpbUhXbtAA4bPeKyE3OjfzOsnehidY5UU63ZUvjTbVxPMQN71KMiCSrUgwrUdvHChGFrunKaOO8A/M2LOLt741hW3Q3nMOYalaeaIxG1XCHJGPvn4ZJK0buINgaY6hEcZTxMm98reYwbmJTcOqBhTeSl5Mwl6yRIhkVvpwRaoC339ZrJsMD3xwTN6BhcYBrE+RK1j4tvKiGTM3BU9qL+z5E+b9H8+8UygFIxedb3riX9ogAJIuQ69SaxQMVGyJX8qYnrPOqcAGrmVickysvwfVGo4Tc3AETu0/3mC0DyXtTlsFoY=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kCiJ2Da6Bdx0f26fODvp2y3M2kismC8wC26JqfeJQ7M=;
+        b=OU+HYJGUyJkf6WspzAE2MO/L7hPgR/TCD9A7gpk41fnqGWvDnS/2YYprGRmbtyXVlM
+         WAK4BRaMdlleBVdPjeFZrLYt36k5CksvpLzZ5nYh8z/jnxf299e47VaP68Ipsex+X0qZ
+         0KRhfIZKEwMPvSBZ6CqW0ZxgMpXilxkJdI8GUyrUmyqZoV2RtDblYlaPpf+BrUFUv2Dr
+         3KA7YjSSTWmgnktkfBTtpz1FB6Dy7Ufr+qaGnOO5Uj5hNZJcn8dvXt4Om+7tSbPnxKZ2
+         +y5VQAiOVWzpdty3fLHtZHHUGzqFGuZQ2P3yog3VojGIlkqZ8HTVXU5t1YWKhcO9yK4u
+         4GFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kCiJ2Da6Bdx0f26fODvp2y3M2kismC8wC26JqfeJQ7M=;
+        b=sLumG+cK5ckIRpKqVFpe0a7hov917SqQCm+7utLTpVeQvdDfRzek0SJDMJJZKlp9gv
+         uGeuGePQ0ICeqZdP2smkpDVhme6OO4L9iBreRglxQdysdyDzw5RMnjj8FjBPvlnyudBs
+         Se3E7O0sDTTD69s7twO5HihPeGjfrSLlO12V/2maVFhUe0MoX1gm6f7cBX3lRlPSKECx
+         JVAcEZOcID2SNOkQ3CLZBefsZUYPiV5W36W5bbVAX5172HkYyHWyRpJGC1VO7vt6yoeU
+         Oig0bdCeotmH5bu2IUnh4Yh108L/UO14w8HVcwm4ydCPsuCc68sDMr4WGgukf+WLj5I5
+         dRvg==
+X-Gm-Message-State: APjAAAXctGC6GqgvL+5Ob3hpbKz2WIQEo6r05NfPMno35Q4fZYJNk80p
+        xsEYBJbuG349gh4zJPN1Iuwnrg==
+X-Google-Smtp-Source: APXvYqyWGZ1o+3JoKtMfo50PU7d32A1d9yTM0bYrWBeHwltd357tf1/9T5MWMWeTFOdN3r9igxK68Q==
+X-Received: by 2002:a05:600c:23ce:: with SMTP id p14mr24714908wmb.36.1558964600694;
+        Mon, 27 May 2019 06:43:20 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id n4sm12965536wrp.61.2019.05.27.06.43.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 27 May 2019 06:43:19 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     linux-iio@vger.kernel.org
+Cc:     martin.blumenstingl@googlemail.com,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v2] iio: adc: meson_saradc: update with SPDX Licence identifier
+Date:   Mon, 27 May 2019 15:43:14 +0200
+Message-Id: <20190527134314.4340-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-OriginatorOrg: teo-en-ming-corp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 653a8426-a0ae-4445-5b9a-08d6e2a91d2f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 May 2019 13:42:08.4898
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 23b3f6ae-c453-4b93-aec9-f17508e5885c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ceo@teo-en-ming-corp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR01MB2741
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Testing
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+Changes since v1:
+- Used correct GPL-2.0 license
 
+ drivers/iio/adc/meson_saradc.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-     =20
-=20
-=20
------BEGIN EMAIL SIGNATURE-----
+diff --git a/drivers/iio/adc/meson_saradc.c b/drivers/iio/adc/meson_saradc.c
+index 510d8b7ef3a0..7b28d045d271 100644
+--- a/drivers/iio/adc/meson_saradc.c
++++ b/drivers/iio/adc/meson_saradc.c
+@@ -1,14 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * Amlogic Meson Successive Approximation Register (SAR) A/D Converter
+  *
+  * Copyright (C) 2017 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+  */
+ 
+ #include <linux/bitfield.h>
+-- 
+2.21.0
 
-The Gospel for all Targeted Individuals (TIs):
-
-[The New York Times] Microwave Weapons Are Prime Suspect in Ills of
-U.S. Embassy Workers
-
-Link: https://www.nytimes.com/2018/09/01/science/sonic-attack-cuba-microwav=
-e.html
-
-***************************************************************************=
-*****************
-
-Singaporean Mr. Turritopsis Dohrnii Teo En Ming's Academic
-Qualifications as at 14 Feb 2019
-
-[1] https://tdtemcerts.wordpress.com/
-
-[2] https://tdtemcerts.blogspot.sg/
-
-[3] https://www.scribd.com/user/270125049/Teo-En-Ming
-
------END EMAIL SIGNATURE-----
-=20
-    =
