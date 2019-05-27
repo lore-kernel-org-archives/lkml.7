@@ -2,123 +2,112 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CCEC072B1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A40EC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25AB8214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D18262133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:45:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="dQu9VJgd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbfE0KpV (ORCPT
+        id S1726727AbfE0Kpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 06:45:21 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:44511 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725943AbfE0KpV (ORCPT
+        Mon, 27 May 2019 06:45:42 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38360 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726063AbfE0Kpl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 06:45:21 -0400
-Received: from 79.184.255.36.ipv4.supernova.orange.pl (79.184.255.36) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
- id 294efc5ec800b2d8; Mon, 27 May 2019 12:45:18 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux PM <linux-pm@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>
-Subject: [PATCH v2] PM: sleep: Add kerneldoc comments to some functions
-Date:   Mon, 27 May 2019 12:45:18 +0200
-Message-ID: <36259828.LPqo0PWuvG@kreacher>
+        Mon, 27 May 2019 06:45:41 -0400
+Received: by mail-pf1-f193.google.com with SMTP id b76so9377044pfb.5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 03:45:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=aE2uyZ37ZTI8bLLwug7sYYZgqvxeNTU6PhXTmRA7gLg=;
+        b=dQu9VJgdBq7ZkSxnXd6Vnw51QDGw13b6nH0fHvlJf3Rl6cRbyT8Xqfyu7bDEJFWESa
+         cHCLs/VwkcJluIRiY7IjbjeJxhkIGMdG8LMKC2tP0xErcmbqWsaCrjees9Sd33cXBpz8
+         vP4hJSvZRwBnhjHOx85hMczgGxEefDY5j9gN9f3ud7mMIVtLi02fjUmrKx8L766ahCgU
+         EFSme7aD96SMkFThjGlM+XqSAxDAZnBxlrPqgzuTv6hzNA4tEeaNGoc1zYQzHdNTw3s+
+         0XAhJBcSCJ1pcDsaZADdOhkMdNXLOcknyCtAlfbWUmUmxDRE+5NA1UDMJ14R/HTCuFwJ
+         0qwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aE2uyZ37ZTI8bLLwug7sYYZgqvxeNTU6PhXTmRA7gLg=;
+        b=SAgAKOnQKaLcKIwuI64Qje+sihoLBwiBm/dpsJECtdZPfgejhAkU/HbeJX0Os/qKHI
+         tXWbE/V2clndffKIcJmEN2ontteYvzQbs0sEhWtfpVNwYdw/8G4b1LDb5GGOYx5SyaOq
+         xN+ytVTUWsN4KsRpoBzGDL6TKoXdQpg5cez+mVNjlKNaFwV7G/9Z8MmAGE+s/0eAu4f5
+         xa7ugvtuDCvnVlXGUYALuWaHzVqgMwSWi6c5pxQHC/SCL+9Bg95SYLRNlSJvePLZNfnn
+         XLvkPnUICK7yS2d8GcrhlKkEeeComVZw+/h2thbKTw0VQBTBAgi/eWDYl/0Z13fSIKW0
+         oT9w==
+X-Gm-Message-State: APjAAAWbIgAaQkoU1AcXNphjPFGmBQ3u72POltifOqMkV+zU+IY9Cagm
+        Yg7UAmzGqFdManmpS4PlXd0ryDSl1w47DQ==
+X-Google-Smtp-Source: APXvYqxTnrwU1eKgSc9iQ0ApboFyS1UaBX+5oO/GHfL453T0/+RmxCYvvW89PUAefXa1VP6IaLpVvw==
+X-Received: by 2002:a17:90a:d803:: with SMTP id a3mr30625374pjv.48.1558953940763;
+        Mon, 27 May 2019 03:45:40 -0700 (PDT)
+Received: from brauner.io ([208.54.39.129])
+        by smtp.gmail.com with ESMTPSA id x7sm11077579pfm.82.2019.05.27.03.45.34
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 27 May 2019 03:45:40 -0700 (PDT)
+Date:   Mon, 27 May 2019 12:45:30 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jann Horn <jannh@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: [PATCH 2/2] arch: wire-up clone6() syscall on x86
+Message-ID: <20190527104528.cao7wamuj4vduh3u@brauner.io>
+References: <20190526102612.6970-1-christian@brauner.io>
+ <20190526102612.6970-2-christian@brauner.io>
+ <CAK8P3a1Ltsna_rtKxhMU7X0t=UOXDA75tKpph6s=OZ4itJe7VQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a1Ltsna_rtKxhMU7X0t=UOXDA75tKpph6s=OZ4itJe7VQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Mon, May 27, 2019 at 12:02:37PM +0200, Arnd Bergmann wrote:
+> On Sun, May 26, 2019 at 12:27 PM Christian Brauner <christian@brauner.io> wrote:
+> >
+> > Wire up the clone6() call on x86.
+> >
+> > This patch only wires up clone6() on x86. Some of the arches look like they
+> > need special assembly massaging and it is probably smarter if the
+> > appropriate arch maintainers would do the actual wiring.
+> 
+> Why do some architectures need special cases here? I'd prefer to have
+> new system calls always get defined in a way that avoids this, and
+> have a common entry point for everyone.
+> 
+> Looking at the m68k sys_clone comment in
+> arch/m68k/kernel/process.c, it seems that this was done as an
+> optimization to deal with an inferior ABI. Similar code is present
+> in h8300, ia64, nios2, and sparc. If all of them just do this to
+> shave off a few cycles from the system call entry, I really
+> couldn't care less.
 
-Add kerneldoc comments to pm_suspend_via_firmware(),
-pm_resume_via_firmware() and pm_suspend_via_s2idle() to explain
-what they do.
+I'm happy to wire all arches up at the same time in the next revision. I
+just wasn't sure why some of them were assemblying the living hell out
+of clone; especially ia64. I really didn't want to bother touching all
+of this just for an initial RFC.
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
-
--> v2:
-  Put more information into the pm_suspend_via_firmware() kerneldoc comment.
-
----
- include/linux/suspend.h |   31 +++++++++++++++++++++++++++++++
- kernel/power/suspend.c  |    6 ++++++
- 2 files changed, 37 insertions(+)
-
-Index: linux-pm/include/linux/suspend.h
-===================================================================
---- linux-pm.orig/include/linux/suspend.h
-+++ linux-pm/include/linux/suspend.h
-@@ -227,11 +227,42 @@ static inline void pm_set_resume_via_fir
- 	pm_suspend_global_flags |= PM_SUSPEND_FLAG_FW_RESUME;
- }
- 
-+/**
-+ * pm_suspend_via_firmware - Check if platform firmware will suspend the system.
-+ *
-+ * To be called during system-wide power management transitions to sleep states
-+ * or during the subsequent system-wide transitions back to the working state.
-+ *
-+ * Return 'true' if the platform firmware is going to be invoked at the end of
-+ * the system-wide power management transition (to a sleep state) in progress in
-+ * order to complete it, or if the platform firmware has been invoked in order
-+ * to complete the last (or preceding) transition of the system to a sleep
-+ * state.
-+ *
-+ * This matters if the caller needs or wants to carry out some special actions
-+ * depending on whether or not control will be passed to the platform firmware
-+ * subsequently (for example, the device may need to be reset before letting the
-+ * platform firmware manipulate it, which is not necessary when the platform
-+ * firmware is not going to be invoked) or when such special actions may have
-+ * been carried out during the preceding transition of the system to a sleep
-+ * state (as they may need to be taken into account).
-+ */
- static inline bool pm_suspend_via_firmware(void)
- {
- 	return !!(pm_suspend_global_flags & PM_SUSPEND_FLAG_FW_SUSPEND);
- }
- 
-+/**
-+ * pm_resume_via_firmware - Check if platform firmware has woken up the system.
-+ *
-+ * To be called during system-wide power management transitions from sleep
-+ * states.
-+ *
-+ * Return 'true' if the platform firmware has passed control to the kernel at
-+ * the beginning of the system-wide power management transition in progress, so
-+ * the event that woke up the system from sleep has been handled by the platform
-+ * firmware.
-+ */
- static inline bool pm_resume_via_firmware(void)
- {
- 	return !!(pm_suspend_global_flags & PM_SUSPEND_FLAG_FW_RESUME);
-Index: linux-pm/kernel/power/suspend.c
-===================================================================
---- linux-pm.orig/kernel/power/suspend.c
-+++ linux-pm/kernel/power/suspend.c
-@@ -62,6 +62,12 @@ static DECLARE_SWAIT_QUEUE_HEAD(s2idle_w
- enum s2idle_states __read_mostly s2idle_state;
- static DEFINE_RAW_SPINLOCK(s2idle_lock);
- 
-+/**
-+ * pm_suspend_via_s2idle - Check if suspend-to-idle is the default suspend.
-+ *
-+ * Return 'true' if suspend-to-idle has been selected as the default system
-+ * suspend method.
-+ */
- bool pm_suspend_via_s2idle(void)
- {
- 	return mem_sleep_current == PM_SUSPEND_TO_IDLE;
-
-
-
+Christian
