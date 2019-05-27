@@ -2,69 +2,81 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD65C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 20:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2F5C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 20:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDA6E2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 20:41:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DFDA2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 20:47:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727183AbfE0UlT (ORCPT
+        id S1727230AbfE0Ur3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 16:41:19 -0400
-Received: from www17.your-server.de ([213.133.104.17]:53762 "EHLO
-        www17.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726346AbfE0UlT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 16:41:19 -0400
-Received: from [88.198.220.130] (helo=sslproxy01.your-server.de)
-        by www17.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <thomas@m3y3r.de>)
-        id 1hVMQn-0006wV-Ed; Mon, 27 May 2019 22:41:17 +0200
-Received: from [2a02:908:4c22:ec00:915f:2518:d2f6:b586] (helo=maria.localdomain)
-        by sslproxy01.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <thomas@m3y3r.de>)
-        id 1hVMQm-0002Kt-4r; Mon, 27 May 2019 22:41:17 +0200
-Received: by maria.localdomain (sSMTP sendmail emulation); Mon, 27 May 2019 22:41:15 +0200
-From:   "Thomas Meyer" <thomas@m3y3r.de>
-Date:   Mon, 27 May 2019 22:41:15 +0200
-Subject: [PATCH] drm/omap: Make sure device_id tables are NULL terminated
-To:     tomi.valkeinen@ti.com, airlied@linux.ie, daniel@ffwll.ch,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Patch: Cocci
-X-Mailer: DiffSplit
-Message-ID: <1558989631162-1860150863-1-diffsplit-thomas@m3y3r.de>
-References: <1558989631144-20791398-0-diffsplit-thomas@m3y3r.de>
-In-Reply-To: <1558989631144-20791398-0-diffsplit-thomas@m3y3r.de>
-X-Serial-No: 1
-X-Authenticated-Sender: thomas@m3y3r.de
-X-Virus-Scanned: Clear (ClamAV 0.100.3/25462/Mon May 27 09:58:16 2019)
+        Mon, 27 May 2019 16:47:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39354 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727132AbfE0Ur3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 16:47:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id F30BEAF49;
+        Mon, 27 May 2019 20:47:27 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 7CC76E00A9; Mon, 27 May 2019 22:47:27 +0200 (CEST)
+Date:   Mon, 27 May 2019 22:47:27 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Ariel Levkovich <lariel@mellanox.com>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mlx5: avoid 64-bit division
+Message-ID: <20190527204727.GH30439@unicorn.suse.cz>
+References: <20190520111902.7104DE0184@unicorn.suse.cz>
+ <20190527181534.GA10029@ziepe.ca>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190527181534.GA10029@ziepe.ca>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make sure (of/i2c/platform)_device_id tables are NULL terminated.
+On Mon, May 27, 2019 at 03:15:34PM -0300, Jason Gunthorpe wrote:
+> On Mon, May 20, 2019 at 01:19:02PM +0200, Michal Kubecek wrote:
+> > diff --git a/drivers/infiniband/hw/mlx5/main.c b/drivers/infiniband/hw/mlx5/main.c
+> > index abac70ad5c7c..340290b883fe 100644
+> > +++ b/drivers/infiniband/hw/mlx5/main.c
+> > @@ -2344,7 +2344,7 @@ static int handle_alloc_dm_sw_icm(struct ib_ucontext *ctx,
+> >  	/* Allocation size must a multiple of the basic block size
+> >  	 * and a power of 2.
+> >  	 */
+> > -	act_size = roundup(attr->length, MLX5_SW_ICM_BLOCK_SIZE(dm_db->dev));
+> > +	act_size = round_up(attr->length, MLX5_SW_ICM_BLOCK_SIZE(dm_db->dev));
+> >  	act_size = roundup_pow_of_two(act_size);
+> 
+> It is kind of weird that we have round_up and the bitshift
+> version.. None of this is performance critical so why not just use
+> round_up everywhere?
+> 
+> Ariel, it is true MLX5_SW_ICM_BLOCK_SIZE will always be a power of
+> two?
 
-Signed-off-by: Thomas Meyer <thomas@m3y3r.de>
----
+If it weren't, the requirements from the comment above could never be
+satisfied as a power of two can only be a multiple of another power of
+two. Which also means that what the code above does is in fact
+equivalent to
 
-diff -u -p a/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c b/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
---- a/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
-+++ b/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
-@@ -198,6 +198,7 @@ static const struct of_device_id omapdss
- 	{ .compatible = "toppoly,td028ttec1" },
- 	{ .compatible = "tpo,td028ttec1" },
- 	{ .compatible = "tpo,td043mtea1" },
-+	{},
- };
- 
- static int __init omapdss_boot_init(void)
+	act_size = max_t(u64, roundup_pow_of_two(attr->length),
+			 MLX5_SW_ICM_BLOCK_SIZE(dm_db->dev));
+
+or
+
+	act_size = roundup_pow_of_two(max_t(u64, attr->length,
+					    MLX5_SW_ICM_BLOCK_SIZE(dm_db->dev));
+
+Michal Kubecek
