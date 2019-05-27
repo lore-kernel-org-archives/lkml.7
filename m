@@ -2,130 +2,207 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A7DAC04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18AC5C072B1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32D6A20673
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:24:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D84CC20859
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:25:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="V0EcI0Rt"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="OAXFYXR7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727165AbfE0MYg (ORCPT
+        id S1727172AbfE0MZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 08:24:36 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:39798 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726280AbfE0MYf (ORCPT
+        Mon, 27 May 2019 08:25:13 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33296 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbfE0MZM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 08:24:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=XYW6Bv1LchMVefhh2WDoaK3VxoyotGe8j5acHUJ6YR8=; b=V0EcI0RtOJJpB+YbYiMjW84SJ
-        RaFIbLmIDNiEbmjmJ8DGCudJ/OzXkWaMgB0SjYCi3/DWNR2QKQXFekISwvHnRrlv5ysM4blDvEEmG
-        G5aRvcIjzAgTxPtDCbcwcocVNHxH27LL5nKZXJivG+pmRc9tyjJwXcDD/Pcc5UsVHfX7AQCbzyOpL
-        InUesZfcRGLTQYJNF4Z9nSHl2jVqcuKpE/0rdDCn8MTWBltA9on+6DqS1/CsIT9wi1+KgL5KqnfGD
-        SEvP3cAO6zqGahEQ4X2aX/xTt3wDDdmYzmyxKfpTmfIE2ygIJ/f4lSZeEBBY3IrczBWHIHgKBbAGj
-        JcOcmE+qw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hVEfy-00039G-Jg; Mon, 27 May 2019 12:24:26 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 368AA20254842; Mon, 27 May 2019 14:24:25 +0200 (CEST)
-Date:   Mon, 27 May 2019 14:24:25 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Rick Edgecombe <rick.p.edgecombe@intel.com>
-Cc:     linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-mm@kvack.org, netdev@vger.kernel.org, luto@kernel.org,
-        dave.hansen@intel.com, namit@vmware.com,
-        Meelis Roos <mroos@linux.ee>,
-        "David S. Miller" <davem@davemloft.net>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH v4 2/2] vmalloc: Avoid rare case of flushing tlb with
- weird arguements
-Message-ID: <20190527122425.GQ2606@hirez.programming.kicks-ass.net>
-References: <20190521205137.22029-1-rick.p.edgecombe@intel.com>
- <20190521205137.22029-3-rick.p.edgecombe@intel.com>
+        Mon, 27 May 2019 08:25:12 -0400
+Received: by mail-wr1-f65.google.com with SMTP id d9so16765314wrx.0
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 05:25:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=sGKq4BVOhx+YoEDuHoZbnnRiDJ7L5mqSr1atGmHYHsY=;
+        b=OAXFYXR7xyjkw6rYeOaIlE2B+Zvbvs9mSYi3/1CihglxPJKMFFFPfQw2agA2xOn/VX
+         yqen6pnt0JpNcOluLTi0Nv+mh4msw98TTC/CM7ad7Z5PrcoIAW0JBp9E2BjgyFj0PBH8
+         brBIf35wR/psVOYGMohRcCL4BiBt6xIediybjmLh9UHffxtkgHWxL1wapEnYci8ipFAl
+         WR/o4C2avtWU/GJbdb/PC8tO2BIXG0yxck3JnPfneXZbvktD/tq7HWdugg4L6ohfILKV
+         2DGj8JTOrv7qj15oxKnNouO2H1u1hx5VxP/1M4mPtZqs8JzoePUmJ1YYuE9NmISVylr8
+         v8pQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=sGKq4BVOhx+YoEDuHoZbnnRiDJ7L5mqSr1atGmHYHsY=;
+        b=eoF44DadILU+UZT0yhMftwWxwTpLSYvPKihHKBUAb5c8gbMcrdpxvf1JSor7sau12C
+         zSQYd4UWLMiW7++aOndmDkexkjo9oQOtngasVU5Q19jxxvJDeLvgeu/VAGO5HCJQ5OxH
+         GKI3mZvMU6NZ6rVEmw3L5FjwxwPZnYKq6iJ6UIiUABrzT/YwuHrTtBJTjEykl9rUhXzH
+         UGvad1bl9kxoDwV3Xa5bUCWqvZ8xosjhgcPSnQLLCBWOU9vaZX1Rt1LCszf2dkLX9b/+
+         o3QtZVx20P77SPCgfavGL+hSt5nDY1kEB3CqoTkSKbGr/peoLnkoXI0+CI7IG+pbgqUi
+         gxHw==
+X-Gm-Message-State: APjAAAWLpCnms0/lEIFsx3zKoYMDk82hi4JfeFNSxKIR76a+lg8wzpVy
+        1PZ8Jvu9h+6OZ2UXlAQDpihrOg==
+X-Google-Smtp-Source: APXvYqxU3izd1btk+vMP58AKtWbDUacGuBFB8+c9b7OBPXUV/xBIYP3n8Xyvjqiry+ZGmJ+CpDpKWQ==
+X-Received: by 2002:a5d:5501:: with SMTP id b1mr53897257wrv.222.1558959909853;
+        Mon, 27 May 2019 05:25:09 -0700 (PDT)
+Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id g2sm9709001wru.37.2019.05.27.05.25.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 27 May 2019 05:25:08 -0700 (PDT)
+Subject: Re: [PATCH 01/14] pwm: meson: unify the parameter list of
+ meson_pwm_{enable, disable}
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
+        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20190525181133.4875-1-martin.blumenstingl@googlemail.com>
+ <20190525181133.4875-2-martin.blumenstingl@googlemail.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <bb920cb5-0e0b-ef1b-0ed9-35e865d54add@baylibre.com>
+Date:   Mon, 27 May 2019 14:25:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190521205137.22029-3-rick.p.edgecombe@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190525181133.4875-2-martin.blumenstingl@googlemail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 01:51:37PM -0700, Rick Edgecombe wrote:
-> In a rare case, flush_tlb_kernel_range() could be called with a start
-> higher than the end. Most architectures should be fine with with this, but
-> some may not like it, so avoid doing this.
+On 25/05/2019 20:11, Martin Blumenstingl wrote:
+> This is a preparation for a future cleanup. Pass struct pwm_device
+> instead of passing the individual values required by each function as
+> these can be obtained for each struct pwm_device instance.
 > 
-> In vm_remove_mappings(), in case page_address() returns 0 for all pages,
-> _vm_unmap_aliases() will be called with start = ULONG_MAX, end = 0 and
-> flush = 1.
+> As a nice side-effect the driver now uses "switch (pwm->hwpwm)"
+> everywhere. Before some functions used "switch (id)" while others used
+> "switch (pwm->hwpwm)".
 > 
-> If at the same time, the vmalloc purge operation is triggered by something
-> else while the current operation is between remove_vm_area() and
-> _vm_unmap_aliases(), then the vm mapping just removed will be already
-> purged. In this case the call of vm_unmap_aliases() may not find any other
-> mappings to flush and so end up flushing start = ULONG_MAX, end = 0. So
-> only set flush = true if we find something in the direct mapping that we
-> need to flush, and this way this can't happen.
+> No functional changes.
 > 
-> Fixes: 868b104d7379 ("mm/vmalloc: Add flag for freeing of special permsissions")
-> Cc: Meelis Roos <mroos@linux.ee>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Dave Hansen <dave.hansen@intel.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Andy Lutomirski <luto@kernel.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Nadav Amit <namit@vmware.com>
-> Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > ---
->  mm/vmalloc.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  drivers/pwm/pwm-meson.c | 15 +++++++--------
+>  1 file changed, 7 insertions(+), 8 deletions(-)
 > 
-> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> index 836888ae01f6..537d1134b40e 100644
-> --- a/mm/vmalloc.c
-> +++ b/mm/vmalloc.c
-> @@ -2125,6 +2125,7 @@ static void vm_remove_mappings(struct vm_struct *area, int deallocate_pages)
->  	unsigned long addr = (unsigned long)area->addr;
->  	unsigned long start = ULONG_MAX, end = 0;
->  	int flush_reset = area->flags & VM_FLUSH_RESET_PERMS;
-> +	int flush_dmap = 0;
->  	int i;
+> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
+> index 5fef7e925282..3fbbc4128ce8 100644
+> --- a/drivers/pwm/pwm-meson.c
+> +++ b/drivers/pwm/pwm-meson.c
+> @@ -183,15 +183,14 @@ static int meson_pwm_calc(struct meson_pwm *meson,
+>  	return 0;
+>  }
 >  
->  	/*
-> @@ -2163,6 +2164,7 @@ static void vm_remove_mappings(struct vm_struct *area, int deallocate_pages)
->  		if (addr) {
->  			start = min(addr, start);
->  			end = max(addr + PAGE_SIZE, end);
-> +			flush_dmap = 1;
->  		}
+> -static void meson_pwm_enable(struct meson_pwm *meson,
+> -			     struct meson_pwm_channel *channel,
+> -			     unsigned int id)
+> +static void meson_pwm_enable(struct meson_pwm *meson, struct pwm_device *pwm)
+>  {
+> +	struct meson_pwm_channel *channel = pwm_get_chip_data(pwm);
+>  	u32 value, clk_shift, clk_enable, enable;
+>  	unsigned int offset;
+>  	unsigned long flags;
+>  
+> -	switch (id) {
+> +	switch (pwm->hwpwm) {
+>  	case 0:
+>  		clk_shift = MISC_A_CLK_DIV_SHIFT;
+>  		clk_enable = MISC_A_CLK_EN;
+> @@ -228,12 +227,12 @@ static void meson_pwm_enable(struct meson_pwm *meson,
+>  	spin_unlock_irqrestore(&meson->lock, flags);
+>  }
+>  
+> -static void meson_pwm_disable(struct meson_pwm *meson, unsigned int id)
+> +static void meson_pwm_disable(struct meson_pwm *meson, struct pwm_device *pwm)
+>  {
+>  	u32 value, enable;
+>  	unsigned long flags;
+>  
+> -	switch (id) {
+> +	switch (pwm->hwpwm) {
+>  	case 0:
+>  		enable = MISC_A_EN;
+>  		break;
+> @@ -266,7 +265,7 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>  		return -EINVAL;
+>  
+>  	if (!state->enabled) {
+> -		meson_pwm_disable(meson, pwm->hwpwm);
+> +		meson_pwm_disable(meson, pwm);
+>  		channel->state.enabled = false;
+>  
+>  		return 0;
+> @@ -293,7 +292,7 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
 >  	}
 >  
-> @@ -2172,7 +2174,7 @@ static void vm_remove_mappings(struct vm_struct *area, int deallocate_pages)
->  	 * reset the direct map permissions to the default.
->  	 */
->  	set_area_direct_map(area, set_direct_map_invalid_noflush);
-> -	_vm_unmap_aliases(start, end, 1);
-> +	_vm_unmap_aliases(start, end, flush_dmap);
->  	set_area_direct_map(area, set_direct_map_default_noflush);
->  }
+>  	if (state->enabled && !channel->state.enabled) {
+> -		meson_pwm_enable(meson, channel, pwm->hwpwm);
+> +		meson_pwm_enable(meson, pwm);
+>  		channel->state.enabled = true;
+>  	}
+>  
+> 
 
-Hurmph.. another clue that this range flushing is crap I feel. The phys
-addrs of the page array can be scattered all over the place, a range
-doesn't properly represent things.
-
-But yes, this seems like a minimal fix in spirit with the existing code.
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
