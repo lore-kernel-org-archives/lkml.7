@@ -2,254 +2,71 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.7 required=3.0 tests=DATE_IN_PAST_12_24,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4840EC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE172C04E84
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB4242075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:55:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="lM6Gbu7j"
+	by mail.kernel.org (Postfix) with ESMTP id 90A1B2075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:56:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726649AbfE1IzJ (ORCPT
+        id S1726728AbfE1I4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 04:55:09 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:41742 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726394AbfE1IzI (ORCPT
+        Tue, 28 May 2019 04:56:18 -0400
+Received: from m97179.mail.qiye.163.com ([220.181.97.179]:10709 "EHLO
+        m97179.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726438AbfE1I4R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 04:55:08 -0400
-Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id F349FC1F35;
-        Tue, 28 May 2019 08:54:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1559033692; bh=FkFfnY0AkDJgmG4XxsfFGaS/2mNpPB8fw/BMIeXFMC4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=lM6Gbu7jXInf5Y5jrz79PdnBXnnBuP6dikSLo2CT1t8xVwLnWuyt0d2EIXmY0GHVd
-         AspwvtbFdMXxeBe9SlI5QtiW9x76iDvfoNOxP8sAwRsUSlxXHJUcTBYeYoJDB/bOqA
-         WpEi+++uqInF/WOR12NKGCR0nrcCgjYZZmkDnhFWnY+4uoYANCpMD7PefQHwbZJwKg
-         7ZcaCYoCJhsjc+gsR3CzNWGDp5iU4KkcW9wSA2vFInM0qm9pxT6+qAjgZ1Vn6hnztj
-         aNPzJ/4v1qXEHRWk7y6rQiprD9WjhD9Crt2Qca0ZfR+L6GdC2qMwTgUOM0i8QuNW3x
-         FrfFRiCsIMvxA==
-Received: from paltsev-e7480.internal.synopsys.com (unknown [10.121.8.58])
-        by mailhost.synopsys.com (Postfix) with ESMTP id CF2DBA0099;
-        Tue, 28 May 2019 08:55:06 +0000 (UTC)
-From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-To:     linux-snps-arc@lists.infradead.org,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: [PATCH] ARC: [plat-hsdk]: unify memory apertures configuration
-Date:   Tue, 28 May 2019 11:54:44 +0300
-Message-Id: <20190528085444.3813-1-Eugeniy.Paltsev@synopsys.com>
-X-Mailer: git-send-email 2.21.0
+        Tue, 28 May 2019 04:56:17 -0400
+Received: from localhost (unknown [120.132.1.243])
+        by m97179.mail.qiye.163.com (Hmail) with ESMTPA id 02FDBE01982;
+        Tue, 28 May 2019 16:56:05 +0800 (CST)
+Date:   Tue, 28 May 2019 02:29:25 +0800
+From:   Yao Liu <yotta.liu@ucloud.cn>
+To:     Josef Bacik <josef@toxicpanda.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        nbd@other.debian.org, linux-kernel@vger.kernel.org
+Subject: Re: Re: [PATCH 3/3] nbd: mark sock as dead even if it's the last one
+Message-ID: <20190527182925.GC20702@192-168-150-246.7~>
+References: <1558691036-16281-1-git-send-email-yotta.liu@ucloud.cn>
+ <1558691036-16281-3-git-send-email-yotta.liu@ucloud.cn>
+ <20190524131714.i3lbkbokad6xmotv@MacBook-Pro-91.local.dhcp.thefacebook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190524131714.i3lbkbokad6xmotv@MacBook-Pro-91.local.dhcp.thefacebook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-HM-Spam-Status: e1kIGBQJHllBWUtVQ01DQkJCTExCSUlPSEJNWVdZKFlBSUI3V1ktWUFJV1
+        kJDhceCFlBWTU0KTY6NyQpLjc#WQY+
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MFE6Qgw4IjgrCCNCIQscMQJR
+        Iw9PFDRVSlVKTk5CS0hITE1OSk1MVTMWGhIXVQIUDw8aVRcSDjsOGBcUDh9VGBVFWVdZEgtZQVlK
+        SUtVSkhJVUpVSU9IWVdZCAFZQUlISk83Bg++
+X-HM-Tid: 0a6afda75c9820bdkuqy02fdbe01982
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HSDK SOC has memory bridge which allows to configure memory map
-for different AXI masters in runtime.
-As of today we adjust memory apertures configuration in U-boot
-so we have different configuration in case of loading kernel
-via U-boot and JTAG.
+On Fri, May 24, 2019 at 09:17:15AM -0400, Josef Bacik wrote:
+> On Fri, May 24, 2019 at 05:43:56PM +0800, Yao Liu wrote:
+> > When sock dead, nbd_read_stat should return a ERR_PTR and then we should
+> > mark sock as dead and wait for a reconnection if the dead sock is the last
+> > one, because nbd_xmit_timeout won't resubmit while num_connections <= 1.
+> 
+> num_connections is the total number of connections that the device was set up
+> with, not how many are left.  Now since we have the dead_conn_timeout timeout
+> stuff now which didn't exist when I originally wrote this code I'd be ok with
+> doing that, but not the way you have it now.  It would be something more like
+> 
+> 	if (nbd_disconnected(config) ||
+> 	    (config->num_connections <= 1 &&
+> 	     !config->dead_conn_timeout)
+> 
+> instead.  Thanks,
+> 
+> Josef
+> 
 
-It isn't really critical in case of existing platform configuration
-as configuration differs for <currently> unused address space
-regions or unused AXI masters. However we may face with this
-issue when we'll bringup new peripherals or touch their address
-space.
-
-Fix that by copy memory apertures configuration from U-boot to
-HSDK platform code.
-
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
----
-This should be done a long time ago and this could save me from a lot
-of debugging while bringing up GPU on HSDKv2...
-
- arch/arc/plat-hsdk/platform.c | 144 ++++++++++++++++++++++++++++++++--
- 1 file changed, 136 insertions(+), 8 deletions(-)
-
-diff --git a/arch/arc/plat-hsdk/platform.c b/arch/arc/plat-hsdk/platform.c
-index 2588b842407c..e336e34925b7 100644
---- a/arch/arc/plat-hsdk/platform.c
-+++ b/arch/arc/plat-hsdk/platform.c
-@@ -35,8 +35,6 @@ static void __init hsdk_init_per_cpu(unsigned int cpu)
- 
- #define ARC_PERIPHERAL_BASE	0xf0000000
- #define CREG_BASE		(ARC_PERIPHERAL_BASE + 0x1000)
--#define CREG_PAE		(CREG_BASE + 0x180)
--#define CREG_PAE_UPDATE		(CREG_BASE + 0x194)
- 
- #define SDIO_BASE		(ARC_PERIPHERAL_BASE + 0xA000)
- #define SDIO_UHS_REG_EXT	(SDIO_BASE + 0x108)
-@@ -102,20 +100,150 @@ static void __init hsdk_enable_gpio_intc_wire(void)
- 	iowrite32(GPIO_INT_CONNECTED_MASK, (void __iomem *) GPIO_INTEN);
- }
- 
--static void __init hsdk_init_early(void)
-+enum hsdk_axi_masters {
-+	M_HS_CORE = 0,
-+	M_HS_RTT,
-+	M_AXI_TUN,
-+	M_HDMI_VIDEO,
-+	M_HDMI_AUDIO,
-+	M_USB_HOST,
-+	M_ETHERNET,
-+	M_SDIO,
-+	M_GPU,
-+	M_DMAC_0,
-+	M_DMAC_1,
-+	M_DVFS
-+};
-+
-+#define UPDATE_VAL	1
-+
-+/*
-+ * m	master		AXI_M_m_SLV0	AXI_M_m_SLV1	AXI_M_m_OFFSET0	AXI_M_m_OFFSET1
-+ * 0	HS (CBU)	0x11111111	0x63111111	0xFEDCBA98	0x0E543210
-+ * 1	HS (RTT)	0x77777777	0x77777777	0xFEDCBA98	0x76543210
-+ * 2	AXI Tunnel	0x88888888	0x88888888	0xFEDCBA98	0x76543210
-+ * 3	HDMI-VIDEO	0x77777777	0x77777777	0xFEDCBA98	0x76543210
-+ * 4	HDMI-ADUIO	0x77777777	0x77777777	0xFEDCBA98	0x76543210
-+ * 5	USB-HOST	0x77777777	0x77999999	0xFEDCBA98	0x76DCBA98
-+ * 6	ETHERNET	0x77777777	0x77999999	0xFEDCBA98	0x76DCBA98
-+ * 7	SDIO		0x77777777	0x77999999	0xFEDCBA98	0x76DCBA98
-+ * 8	GPU		0x77777777	0x77777777	0xFEDCBA98	0x76543210
-+ * 9	DMAC (port #1)	0x77777777	0x77777777	0xFEDCBA98	0x76543210
-+ * 10	DMAC (port #2)	0x77777777	0x77777777	0xFEDCBA98	0x76543210
-+ * 11	DVFS		0x00000000	0x60000000	0x00000000	0x00000000
-+ *
-+ * Please read ARC HS Development IC Specification, section 17.2 for more
-+ * information about apertures configuration.
-+ * NOTE: we intentionally modify default settings in U-boot. Default settings
-+ * are specified in "Table 111 CREG Address Decoder register reset values".
-+ */
-+
-+#define CREG_AXI_M_SLV0(m)  ((void __iomem *)(CREG_BASE + 0x020 * (m)))
-+#define CREG_AXI_M_SLV1(m)  ((void __iomem *)(CREG_BASE + 0x020 * (m) + 0x004))
-+#define CREG_AXI_M_OFT0(m)  ((void __iomem *)(CREG_BASE + 0x020 * (m) + 0x008))
-+#define CREG_AXI_M_OFT1(m)  ((void __iomem *)(CREG_BASE + 0x020 * (m) + 0x00C))
-+#define CREG_AXI_M_UPDT(m)  ((void __iomem *)(CREG_BASE + 0x020 * (m) + 0x014))
-+
-+#define CREG_AXI_M_HS_CORE_BOOT	((void __iomem *)(CREG_BASE + 0x010))
-+
-+#define CREG_PAE		((void __iomem *)(CREG_BASE + 0x180))
-+#define CREG_PAE_UPDT		((void __iomem *)(CREG_BASE + 0x194))
-+
-+static void __init hsdk_init_memory_bridge(void)
- {
-+	u32 reg;
-+
-+	/*
-+	 * M_HS_CORE has one unic register - BOOT.
-+	 * We need to clean boot mirror (BOOT[1:0]) bits in them.
-+	 */
-+	reg = readl(CREG_AXI_M_HS_CORE_BOOT) & (~0x3);
-+	writel(reg, CREG_AXI_M_HS_CORE_BOOT);
-+	writel(0x11111111, CREG_AXI_M_SLV0(M_HS_CORE));
-+	writel(0x63111111, CREG_AXI_M_SLV1(M_HS_CORE));
-+	writel(0xFEDCBA98, CREG_AXI_M_OFT0(M_HS_CORE));
-+	writel(0x0E543210, CREG_AXI_M_OFT1(M_HS_CORE));
-+	writel(UPDATE_VAL, CREG_AXI_M_UPDT(M_HS_CORE));
-+
-+	writel(0x77777777, CREG_AXI_M_SLV0(M_HS_RTT));
-+	writel(0x77777777, CREG_AXI_M_SLV1(M_HS_RTT));
-+	writel(0xFEDCBA98, CREG_AXI_M_OFT0(M_HS_RTT));
-+	writel(0x76543210, CREG_AXI_M_OFT1(M_HS_RTT));
-+	writel(UPDATE_VAL, CREG_AXI_M_UPDT(M_HS_RTT));
-+
-+	writel(0x88888888, CREG_AXI_M_SLV0(M_AXI_TUN));
-+	writel(0x88888888, CREG_AXI_M_SLV1(M_AXI_TUN));
-+	writel(0xFEDCBA98, CREG_AXI_M_OFT0(M_AXI_TUN));
-+	writel(0x76543210, CREG_AXI_M_OFT1(M_AXI_TUN));
-+	writel(UPDATE_VAL, CREG_AXI_M_UPDT(M_AXI_TUN));
-+
-+	writel(0x77777777, CREG_AXI_M_SLV0(M_HDMI_VIDEO));
-+	writel(0x77777777, CREG_AXI_M_SLV1(M_HDMI_VIDEO));
-+	writel(0xFEDCBA98, CREG_AXI_M_OFT0(M_HDMI_VIDEO));
-+	writel(0x76543210, CREG_AXI_M_OFT1(M_HDMI_VIDEO));
-+	writel(UPDATE_VAL, CREG_AXI_M_UPDT(M_HDMI_VIDEO));
-+
-+	writel(0x77777777, CREG_AXI_M_SLV0(M_HDMI_AUDIO));
-+	writel(0x77777777, CREG_AXI_M_SLV1(M_HDMI_AUDIO));
-+	writel(0xFEDCBA98, CREG_AXI_M_OFT0(M_HDMI_AUDIO));
-+	writel(0x76543210, CREG_AXI_M_OFT1(M_HDMI_AUDIO));
-+	writel(UPDATE_VAL, CREG_AXI_M_UPDT(M_HDMI_AUDIO));
-+
-+	writel(0x77777777, CREG_AXI_M_SLV0(M_USB_HOST));
-+	writel(0x77999999, CREG_AXI_M_SLV1(M_USB_HOST));
-+	writel(0xFEDCBA98, CREG_AXI_M_OFT0(M_USB_HOST));
-+	writel(0x76DCBA98, CREG_AXI_M_OFT1(M_USB_HOST));
-+	writel(UPDATE_VAL, CREG_AXI_M_UPDT(M_USB_HOST));
-+
-+	writel(0x77777777, CREG_AXI_M_SLV0(M_ETHERNET));
-+	writel(0x77999999, CREG_AXI_M_SLV1(M_ETHERNET));
-+	writel(0xFEDCBA98, CREG_AXI_M_OFT0(M_ETHERNET));
-+	writel(0x76DCBA98, CREG_AXI_M_OFT1(M_ETHERNET));
-+	writel(UPDATE_VAL, CREG_AXI_M_UPDT(M_ETHERNET));
-+
-+	writel(0x77777777, CREG_AXI_M_SLV0(M_SDIO));
-+	writel(0x77999999, CREG_AXI_M_SLV1(M_SDIO));
-+	writel(0xFEDCBA98, CREG_AXI_M_OFT0(M_SDIO));
-+	writel(0x76DCBA98, CREG_AXI_M_OFT1(M_SDIO));
-+	writel(UPDATE_VAL, CREG_AXI_M_UPDT(M_SDIO));
-+
-+	writel(0x77777777, CREG_AXI_M_SLV0(M_GPU));
-+	writel(0x77777777, CREG_AXI_M_SLV1(M_GPU));
-+	writel(0xFEDCBA98, CREG_AXI_M_OFT0(M_GPU));
-+	writel(0x76543210, CREG_AXI_M_OFT1(M_GPU));
-+	writel(UPDATE_VAL, CREG_AXI_M_UPDT(M_GPU));
-+
-+	writel(0x77777777, CREG_AXI_M_SLV0(M_DMAC_0));
-+	writel(0x77777777, CREG_AXI_M_SLV1(M_DMAC_0));
-+	writel(0xFEDCBA98, CREG_AXI_M_OFT0(M_DMAC_0));
-+	writel(0x76543210, CREG_AXI_M_OFT1(M_DMAC_0));
-+	writel(UPDATE_VAL, CREG_AXI_M_UPDT(M_DMAC_0));
-+
-+	writel(0x77777777, CREG_AXI_M_SLV0(M_DMAC_1));
-+	writel(0x77777777, CREG_AXI_M_SLV1(M_DMAC_1));
-+	writel(0xFEDCBA98, CREG_AXI_M_OFT0(M_DMAC_1));
-+	writel(0x76543210, CREG_AXI_M_OFT1(M_DMAC_1));
-+	writel(UPDATE_VAL, CREG_AXI_M_UPDT(M_DMAC_1));
-+
-+	writel(0x00000000, CREG_AXI_M_SLV0(M_DVFS));
-+	writel(0x60000000, CREG_AXI_M_SLV1(M_DVFS));
-+	writel(0x00000000, CREG_AXI_M_OFT0(M_DVFS));
-+	writel(0x00000000, CREG_AXI_M_OFT1(M_DVFS));
-+	writel(UPDATE_VAL, CREG_AXI_M_UPDT(M_DVFS));
-+
- 	/*
- 	 * PAE remapping for DMA clients does not work due to an RTL bug, so
- 	 * CREG_PAE register must be programmed to all zeroes, otherwise it
- 	 * will cause problems with DMA to/from peripherals even if PAE40 is
- 	 * not used.
- 	 */
-+	writel(0x00000000, CREG_PAE);
-+	writel(UPDATE_VAL, CREG_PAE_UPDT);
-+}
- 
--	/* Default is 1, which means "PAE offset = 4GByte" */
--	writel_relaxed(0, (void __iomem *) CREG_PAE);
--
--	/* Really apply settings made above */
--	writel(1, (void __iomem *) CREG_PAE_UPDATE);
-+static void __init hsdk_init_early(void)
-+{
-+	hsdk_init_memory_bridge();
- 
- 	/*
- 	 * Switch SDIO external ciu clock divider from default div-by-8 to
--- 
-2.21.0
-
+Your solution is better indeed.
