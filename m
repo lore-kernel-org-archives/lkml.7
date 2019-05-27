@@ -2,354 +2,114 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD11C072B1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC7EAC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73A6E20883
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:37:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A79932133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:38:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JDbo4KS1";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="HB/Yz2cN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726343AbfE0Kha (ORCPT
+        id S1726511AbfE0KiH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 06:37:30 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:51052 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725996AbfE0Kha (ORCPT
+        Mon, 27 May 2019 06:38:07 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:43464 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725996AbfE0KiH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 06:37:30 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 696A180491; Mon, 27 May 2019 12:37:17 +0200 (CEST)
-Date:   Mon, 27 May 2019 12:37:27 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     kernel list <linux-kernel@vger.kernel.org>, tglx@linutronix.de,
-        bp@suse.de, hpa@zytor.com, mingo@redhat.com, x86@kernel.org,
-        rjw@rjwysocki.net, lenb@kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: ACPI enable on Thinkpad X60 hangs when temperatures are high
-Message-ID: <20190527103727.GA3769@amd>
-References: <20190527085155.GA11421@xo-6d-61-c0.localdomain>
- <20190527093938.GA12391@xo-6d-61-c0.localdomain>
- <20190527103155.GB12391@xo-6d-61-c0.localdomain>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="HlL+5n6rz5pIUxbD"
-Content-Disposition: inline
-In-Reply-To: <20190527103155.GB12391@xo-6d-61-c0.localdomain>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Mon, 27 May 2019 06:38:07 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 7AEB560303; Mon, 27 May 2019 10:38:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1558953486;
+        bh=/Ncx2dTU4iPDuDOHevb/0Hm7K1eR/1l1da6675acaXo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=JDbo4KS1r8G/D9AeKWP8FfHlfUDrrNKz3xHRtoc8QIVJDVMZNuDX5TVwboIH7yUyL
+         ze6dnH31GSd29UhMpWHzyL2O8T0Mj3Jpoaxm5WedXpA/QHI4Z0c2Sdt5tNaaQxLYWH
+         nYtLp4NbdK3AlTg7v6x6o6LlANIcthLg6ZThrjgI=
+Received: from codeaurora.org (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: stummala@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0D88E60252;
+        Mon, 27 May 2019 10:38:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1558953485;
+        bh=/Ncx2dTU4iPDuDOHevb/0Hm7K1eR/1l1da6675acaXo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=HB/Yz2cN+KAbZF5y4AQf72vH5b4R5zj+IUKAvJzgHL2zVBuu5r1ADagr4wyXFnX65
+         lD5R+YwaWsR1HobeDAcR6jGh5Ce45HRpWYFwEdT4IF6McdXo6Nkok4YBUhjWy0PJ/Y
+         5g76QMN3d0gX2u3MyQQm1S35nUAbdpvvaYTLs/F0=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0D88E60252
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
+From:   Sahitya Tummala <stummala@codeaurora.org>
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        linux-f2fs-devel@lists.sourceforge.net
+Cc:     Sahitya Tummala <stummala@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] f2fs: ratelimit recovery messages
+Date:   Mon, 27 May 2019 16:07:55 +0530
+Message-Id: <1558953475-5258-1-git-send-email-stummala@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Ratelimit the recovery logs, which are expected in case
+of sudden power down and which could result into too
+many prints.
 
---HlL+5n6rz5pIUxbD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+---
+ fs/f2fs/recovery.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-Hi!
-
-> > > So if you compile a kernel, then reboot, boot will hang after "Freein=
-g SMP
-> > > alternatives memory" (and then wastes power, making thermal situation=
- even worse).
-> >=20
-> > Normally, next message is "smpboot: CPU0: Genuine Intel...".
-> >=20
-> > I added some printks, and check_bugs() returns. Then it goes to ACPI an=
-d never
-> > comes back...
-> >=20
-> > kernel-parameters.txt points to Documentation/acpi/debug.txt, but that =
-one does not exist.
-> >=20
-> > Any ideas what debugging parameters to use for ACPI? I either get nothi=
-ng or
-> > so much that machine does not boot...
->=20
-> I ended up adding printks...
->=20
-> It hangs in acpi_hw_set_mode().
->=20
-> ACPI enable: set mode: acpi
-> ACPI: hw_set_mode
-> ACPI: hw_set_mode mode switch
-> ACPI: write_port?
-> ACPI: os write port
->=20
-> we write to the port but that never returns.
->=20
-> I assume SMM is doing its magic at that point. Any ideas how to debug it =
-further?
->=20
-> Is it possible that it is some kind of screaming interrupt?
-
-Exact position of debug prints was this:
-
-diff --git a/drivers/acpi/acpica/evxfevnt.c b/drivers/acpi/acpica/evxfevnt.c
-index e528fe5..e9bb627 100644
---- a/drivers/acpi/acpica/evxfevnt.c
-+++ b/drivers/acpi/acpica/evxfevnt.c
-@@ -37,16 +37,20 @@ acpi_status acpi_enable(void)
-=20
- 	/* ACPI tables must be present */
-=20
-+	printk("ACPI enable: 1\n");
-+
- 	if (acpi_gbl_fadt_index =3D=3D ACPI_INVALID_TABLE_INDEX) {
- 		return_ACPI_STATUS(AE_NO_ACPI_TABLES);
- 	}
-=20
-+	printk("ACPI enable: 2\n");
- 	/* If the Hardware Reduced flag is set, machine is always in acpi mode */
-=20
- 	if (acpi_gbl_reduced_hardware) {
- 		return_ACPI_STATUS(AE_OK);
- 	}
-=20
-+	printk("ACPI enable: 3\n");=09
- 	/* Check current mode */
-=20
- 	if (acpi_hw_get_mode() =3D=3D ACPI_SYS_MODE_ACPI) {
-@@ -57,13 +61,17 @@ acpi_status acpi_enable(void)
-=20
- 	/* Transition to ACPI mode */
-=20
-+	printk("ACPI enable: set mode: acpi\n");	=09
- 	status =3D acpi_hw_set_mode(ACPI_SYS_MODE_ACPI);
-+	printk("ACPI enable: set mode: acpi done\n");	=09
- 	if (ACPI_FAILURE(status)) {
- 		ACPI_ERROR((AE_INFO,
- 			    "Could not transition to ACPI mode"));
- 		return_ACPI_STATUS(status);
- 	}
-=20
-+	printk("ACPI enable: sanity check\n");	=09
-+
- 	/* Sanity check that transition succeeded */
-=20
- 	for (retry =3D 0; retry < 30000; ++retry) {
-@@ -76,6 +84,8 @@ acpi_status acpi_enable(void)
- 		acpi_os_stall(100);	/* 100 usec */
- 	}
-=20
-+	printk("ACPI enable: sanity check done\n");	=09
-+
- 	ACPI_ERROR((AE_INFO, "Hardware did not enter ACPI mode"));
- 	return_ACPI_STATUS(AE_NO_HARDWARE_RESPONSE);
+diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
+index e04f82b..38b3b24a 100644
+--- a/fs/f2fs/recovery.c
++++ b/fs/f2fs/recovery.c
+@@ -188,8 +188,7 @@ static int recover_dentry(struct inode *inode, struct page *ipage,
+ 		name = "<encrypted>";
+ 	else
+ 		name = raw_inode->i_name;
+-	f2fs_msg(inode->i_sb, KERN_NOTICE,
+-			"%s: ino = %x, name = %s, dir = %lx, err = %d",
++	printk_ratelimited(KERN_NOTICE "%s: ino = %x, name = %s, dir = %lx, err = %d",
+ 			__func__, ino_of_node(ipage), name,
+ 			IS_ERR(dir) ? 0 : dir->i_ino, err);
+ 	return err;
+@@ -292,8 +291,7 @@ static int recover_inode(struct inode *inode, struct page *page)
+ 	else
+ 		name = F2FS_INODE(page)->i_name;
+ 
+-	f2fs_msg(inode->i_sb, KERN_NOTICE,
+-		"recover_inode: ino = %x, name = %s, inline = %x",
++	printk_ratelimited(KERN_NOTICE "recover_inode: ino = %x, name = %s, inline = %x",
+ 			ino_of_node(page), name, raw->i_inline);
+ 	return 0;
  }
-diff --git a/drivers/acpi/acpica/hwacpi.c b/drivers/acpi/acpica/hwacpi.c
-index 926f7e0..e8063f9 100644
---- a/drivers/acpi/acpica/hwacpi.c
-+++ b/drivers/acpi/acpica/hwacpi.c
-@@ -38,6 +38,7 @@ acpi_status acpi_hw_set_mode(u32 mode)
- 		return_ACPI_STATUS(AE_OK);
- 	}
-=20
-+	printk("ACPI: hw_set_mode\n");
- 	/*
- 	 * ACPI 2.0 clarified that if SMI_CMD in FADT is zero,
- 	 * system does not support mode transition.
-@@ -62,13 +63,17 @@ acpi_status acpi_hw_set_mode(u32 mode)
- 		return_ACPI_STATUS(AE_OK);
- 	}
-=20
-+	printk("ACPI: hw_set_mode mode switch\n");=09
- 	switch (mode) {
- 	case ACPI_SYS_MODE_ACPI:
-=20
- 		/* BIOS should have disabled ALL fixed and GP events */
-=20
-+		printk("ACPI: write_port?\n");=09
- 		status =3D acpi_hw_write_port(acpi_gbl_FADT.smi_command,
- 					    (u32) acpi_gbl_FADT.acpi_enable, 8);
-+		printk("ACPI: write_port done.\n");=09
-+
- 		ACPI_DEBUG_PRINT((ACPI_DB_INFO,
- 				  "Attempting to enable ACPI mode\n"));
- 		break;
-diff --git a/drivers/acpi/acpica/hwvalid.c b/drivers/acpi/acpica/hwvalid.c
-index cd57615..b3ed022 100644
---- a/drivers/acpi/acpica/hwvalid.c
-+++ b/drivers/acpi/acpica/hwvalid.c
-@@ -262,7 +262,9 @@ acpi_status acpi_hw_write_port(acpi_io_address address,=
- u32 value, u32 width)
-=20
- 	status =3D acpi_hw_validate_io_request(address, width);
- 	if (ACPI_SUCCESS(status)) {
-+		printk("ACPI: os write port\n");
- 		status =3D acpi_os_write_port(address, value, width);
-+		printk("ACPI: os write port done\n");	=09
- 		return (status);
- 	}
-=20
-diff --git a/drivers/acpi/acpica/utxfinit.c b/drivers/acpi/acpica/utxfinit.c
-index 9f3b1e3..4418fa9 100644
---- a/drivers/acpi/acpica/utxfinit.c
-+++ b/drivers/acpi/acpica/utxfinit.c
-@@ -45,6 +45,7 @@ acpi_status ACPI_INIT_FUNCTION acpi_initialize_subsystem(=
-void)
- 	ACPI_DEBUG_EXEC(acpi_ut_init_stack_ptr_trace());
-=20
- 	/* Initialize the OS-Dependent layer */
-+	printk("ACPI: os initialize\n");
-=20
- 	status =3D acpi_os_initialize();
- 	if (ACPI_FAILURE(status)) {
-@@ -53,6 +54,7 @@ acpi_status ACPI_INIT_FUNCTION acpi_initialize_subsystem(=
-void)
- 	}
-=20
- 	/* Initialize all globals used by the subsystem */
-+	printk("ACPI: globals\n");
-=20
- 	status =3D acpi_ut_init_globals();
- 	if (ACPI_FAILURE(status)) {
-@@ -62,6 +64,7 @@ acpi_status ACPI_INIT_FUNCTION acpi_initialize_subsystem(=
-void)
- 	}
-=20
- 	/* Create the default mutex objects */
-+	printk("ACPI: mutex\n");
-=20
- 	status =3D acpi_ut_mutex_initialize();
- 	if (ACPI_FAILURE(status)) {
-@@ -70,6 +73,8 @@ acpi_status ACPI_INIT_FUNCTION acpi_initialize_subsystem(=
-void)
- 		return_ACPI_STATUS(status);
- 	}
-=20
-+	printk("ACPI: ns root\n");
-+=09
- 	/*
- 	 * Initialize the namespace manager and
- 	 * the root of the namespace tree
-@@ -82,6 +87,7 @@ acpi_status ACPI_INIT_FUNCTION acpi_initialize_subsystem(=
-void)
- 	}
-=20
- 	/* Initialize the global OSI interfaces list with the static names */
-+	printk("ACPI: interfaces\n");
-=20
- 	status =3D acpi_ut_initialize_interfaces();
- 	if (ACPI_FAILURE(status)) {
-@@ -90,6 +96,8 @@ acpi_status ACPI_INIT_FUNCTION acpi_initialize_subsystem(=
-void)
- 		return_ACPI_STATUS(status);
- 	}
-=20
-+	printk("ACPI: all done, all ok\n");
-+
- 	return_ACPI_STATUS(AE_OK);
+@@ -642,10 +640,8 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
+ err:
+ 	f2fs_put_dnode(&dn);
+ out:
+-	f2fs_msg(sbi->sb, KERN_NOTICE,
+-		"recover_data: ino = %lx (i_size: %s) recovered = %d, err = %d",
+-		inode->i_ino,
+-		file_keep_isize(inode) ? "keep" : "recover",
++	printk_ratelimited(KERN_NOTICE "recover_data: ino = %lx (i_size: %s) recovered = %d, err = %d",
++		inode->i_ino, file_keep_isize(inode) ? "keep" : "recover",
+ 		recovered, err);
+ 	return err;
  }
-=20
-@@ -113,6 +121,7 @@ acpi_status ACPI_INIT_FUNCTION acpi_enable_subsystem(u3=
-2 flags)
-=20
- 	ACPI_FUNCTION_TRACE(acpi_enable_subsystem);
-=20
-+	printk("ACPI: enable subsys\n");
- 	/*
- 	 * The early initialization phase is complete. The namespace is loaded,
- 	 * and we can now support address spaces other than Memory, I/O, and
-@@ -124,19 +133,24 @@ acpi_status ACPI_INIT_FUNCTION acpi_enable_subsystem(=
-u32 flags)
-=20
- 	/* Enable ACPI mode */
-=20
-+	printk("ACPI: go to ACPI\n");=09
- 	if (!(flags & ACPI_NO_ACPI_ENABLE)) {
- 		ACPI_DEBUG_PRINT((ACPI_DB_EXEC,
- 				  "[Init] Going into ACPI mode\n"));
-=20
-+		printk("ACPI: get mode\n");
- 		acpi_gbl_original_mode =3D acpi_hw_get_mode();
-=20
-+		printk("ACPI: enable\n");
- 		status =3D acpi_enable();
-+		printk("ACPI: enable done\n");
- 		if (ACPI_FAILURE(status)) {
- 			ACPI_WARNING((AE_INFO, "AcpiEnable failed"));
- 			return_ACPI_STATUS(status);
- 		}
- 	}
-=20
-+	printk("ACPI: map FACS\n");=09
- 	/*
- 	 * Obtain a permanent mapping for the FACS. This is required for the
- 	 * Global Lock and the Firmware Waking Vector
-@@ -149,6 +163,7 @@ acpi_status ACPI_INIT_FUNCTION acpi_enable_subsystem(u3=
-2 flags)
- 		}
- 	}
-=20
-+	printk("ACPI: event handling\n");	=09
- 	/*
- 	 * Initialize ACPI Event handling (Fixed and General Purpose)
- 	 *
-@@ -173,6 +188,7 @@ acpi_status ACPI_INIT_FUNCTION acpi_enable_subsystem(u3=
-2 flags)
- 		}
- 	}
-=20
-+	printk("ACPI: SCI handler\n");		=09
- 	/*
- 	 * Install the SCI handler and Global Lock handler. This completes the
- 	 * hardware initialization.
-@@ -188,6 +204,7 @@ acpi_status ACPI_INIT_FUNCTION acpi_enable_subsystem(u3=
-2 flags)
- 	}
- #endif				/* !ACPI_REDUCED_HARDWARE */
-=20
-+	printk("ACPI: enable done\n");		=09
- 	return_ACPI_STATUS(status);
- }
-=20
-diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
-index eec263c..f712151 100644
---- a/drivers/acpi/bus.c
-+++ b/drivers/acpi/bus.c
-@@ -1105,9 +1105,12 @@ void __init acpi_subsystem_init(void)
- {
- 	acpi_status status;
-=20
-+	printk("ACPI: subsystem init\n");
-+
- 	if (acpi_disabled)
- 		return;
-=20
-+	printk("ACPI: enable subsystem\n");
- 	status =3D acpi_enable_subsystem(~ACPI_NO_ACPI_ENABLE);
- 	if (ACPI_FAILURE(status)) {
- 		printk(KERN_ERR PREFIX "Unable to enable ACPI\n");
-@@ -1121,6 +1124,7 @@ void __init acpi_subsystem_init(void)
- 		 */
- 		regulator_has_full_constraints();
- 	}
-+	printk("ACPI: init done\n");
- }
-=20
- static acpi_status acpi_bus_table_handler(u32 event, void *table, void *co=
-ntext)
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---HlL+5n6rz5pIUxbD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlzrvecACgkQMOfwapXb+vKiiACfZpOVEPRh3atPVCUgPaBYWAdB
-V2QAmgM410+42idThRThymgtvn5vRT1V
-=04Zt
------END PGP SIGNATURE-----
-
---HlL+5n6rz5pIUxbD--
