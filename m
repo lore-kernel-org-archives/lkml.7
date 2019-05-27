@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2D4C07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68195C07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F83120883
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4722E2147A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:12:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbfE0LM3 (ORCPT
+        id S1726792AbfE0LMc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 07:12:29 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41410 "EHLO mx1.redhat.com"
+        Mon, 27 May 2019 07:12:32 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59280 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726887AbfE0LM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 07:12:28 -0400
+        id S1726887AbfE0LMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 07:12:30 -0400
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AADC387621;
-        Mon, 27 May 2019 11:12:27 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id B17DE88319;
+        Mon, 27 May 2019 11:12:30 +0000 (UTC)
 Received: from t460s.redhat.com (ovpn-117-89.ams2.redhat.com [10.36.117.89])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B59CC2AA83;
-        Mon, 27 May 2019 11:12:23 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0FD3919C7F;
+        Mon, 27 May 2019 11:12:27 +0000 (UTC)
 From:   David Hildenbrand <david@redhat.com>
 To:     linux-mm@kvack.org
 Cc:     linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org,
@@ -36,85 +36,88 @@ Cc:     linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org,
         Wei Yang <richard.weiyang@gmail.com>,
         Igor Mammedov <imammedo@redhat.com>,
         David Hildenbrand <david@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Chintan Pandya <cpandya@codeaurora.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: [PATCH v3 04/11] arm64/mm: Add temporary arch_remove_memory() implementation
-Date:   Mon, 27 May 2019 13:11:45 +0200
-Message-Id: <20190527111152.16324-5-david@redhat.com>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: [PATCH v3 05/11] drivers/base/memory: Pass a block_id to init_memory_block()
+Date:   Mon, 27 May 2019 13:11:46 +0200
+Message-Id: <20190527111152.16324-6-david@redhat.com>
 In-Reply-To: <20190527111152.16324-1-david@redhat.com>
 References: <20190527111152.16324-1-david@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Mon, 27 May 2019 11:12:27 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Mon, 27 May 2019 11:12:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A proper arch_remove_memory() implementation is on its way, which also
-cleanly removes page tables in arch_add_memory() in case something goes
-wrong.
+We'll rework hotplug_memory_register() shortly, so it no longer consumes
+pass a section.
 
-As we want to use arch_remove_memory() in case something goes wrong
-during memory hotplug after arch_add_memory() finished, let's add
-a temporary hack that is sufficient enough until we get a proper
-implementation that cleans up page table entries.
-
-We will remove CONFIG_MEMORY_HOTREMOVE around this code in follow up
-patches.
-
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Chintan Pandya <cpandya@codeaurora.org>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Jun Yao <yaojun8558363@gmail.com>
-Cc: Yu Zhao <yuzhao@google.com>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- arch/arm64/mm/mmu.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ drivers/base/memory.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index a1bfc4413982..e569a543c384 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -1084,4 +1084,23 @@ int arch_add_memory(int nid, u64 start, u64 size,
- 	return __add_pages(nid, start >> PAGE_SHIFT, size >> PAGE_SHIFT,
- 			   restrictions);
+diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+index f180427e48f4..f914fa6fe350 100644
+--- a/drivers/base/memory.c
++++ b/drivers/base/memory.c
+@@ -651,21 +651,18 @@ int register_memory(struct memory_block *memory)
+ 	return ret;
  }
-+#ifdef CONFIG_MEMORY_HOTREMOVE
-+void arch_remove_memory(int nid, u64 start, u64 size,
-+			struct vmem_altmap *altmap)
-+{
-+	unsigned long start_pfn = start >> PAGE_SHIFT;
-+	unsigned long nr_pages = size >> PAGE_SHIFT;
-+	struct zone *zone;
-+
-+	/*
-+	 * FIXME: Cleanup page tables (also in arch_add_memory() in case
-+	 * adding fails). Until then, this function should only be used
-+	 * during memory hotplug (adding memory), not for memory
-+	 * unplug. ARCH_ENABLE_MEMORY_HOTREMOVE must not be
-+	 * unlocked yet.
-+	 */
-+	zone = page_zone(pfn_to_page(start_pfn));
-+	__remove_pages(zone, start_pfn, nr_pages, altmap);
-+}
-+#endif
- #endif
+ 
+-static int init_memory_block(struct memory_block **memory,
+-			     struct mem_section *section, unsigned long state)
++static int init_memory_block(struct memory_block **memory, int block_id,
++			     unsigned long state)
+ {
+ 	struct memory_block *mem;
+ 	unsigned long start_pfn;
+-	int scn_nr;
+ 	int ret = 0;
+ 
+ 	mem = kzalloc(sizeof(*mem), GFP_KERNEL);
+ 	if (!mem)
+ 		return -ENOMEM;
+ 
+-	scn_nr = __section_nr(section);
+-	mem->start_section_nr =
+-			base_memory_block_id(scn_nr) * sections_per_block;
++	mem->start_section_nr = block_id * sections_per_block;
+ 	mem->end_section_nr = mem->start_section_nr + sections_per_block - 1;
+ 	mem->state = state;
+ 	start_pfn = section_nr_to_pfn(mem->start_section_nr);
+@@ -694,7 +691,8 @@ static int add_memory_block(int base_section_nr)
+ 
+ 	if (section_count == 0)
+ 		return 0;
+-	ret = init_memory_block(&mem, __nr_to_section(section_nr), MEM_ONLINE);
++	ret = init_memory_block(&mem, base_memory_block_id(base_section_nr),
++				MEM_ONLINE);
+ 	if (ret)
+ 		return ret;
+ 	mem->section_count = section_count;
+@@ -707,6 +705,7 @@ static int add_memory_block(int base_section_nr)
+  */
+ int hotplug_memory_register(int nid, struct mem_section *section)
+ {
++	int block_id = base_memory_block_id(__section_nr(section));
+ 	int ret = 0;
+ 	struct memory_block *mem;
+ 
+@@ -717,7 +716,7 @@ int hotplug_memory_register(int nid, struct mem_section *section)
+ 		mem->section_count++;
+ 		put_device(&mem->dev);
+ 	} else {
+-		ret = init_memory_block(&mem, section, MEM_OFFLINE);
++		ret = init_memory_block(&mem, block_id, MEM_OFFLINE);
+ 		if (ret)
+ 			goto out;
+ 		mem->section_count++;
 -- 
 2.20.1
 
