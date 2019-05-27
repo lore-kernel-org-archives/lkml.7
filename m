@@ -2,142 +2,158 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95896C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 15:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1451AC072B1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 15:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 664DF20665
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 15:40:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1D39208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 15:41:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="pbqSdnuB"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ybdiq5GD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbfE0PkD (ORCPT
+        id S1726667AbfE0Pl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 11:40:03 -0400
-Received: from pb-smtp1.pobox.com ([64.147.108.70]:61109 "EHLO
-        pb-smtp1.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbfE0PkD (ORCPT
+        Mon, 27 May 2019 11:41:28 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36079 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726262AbfE0Pl2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 11:40:03 -0400
-Received: from pb-smtp1.pobox.com (unknown [127.0.0.1])
-        by pb-smtp1.pobox.com (Postfix) with ESMTP id 2F28713F397;
-        Mon, 27 May 2019 11:39:59 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=from:to:cc
-        :subject:references:date:in-reply-to:message-id:mime-version
-        :content-type:content-transfer-encoding; s=sasl; bh=9sDE2dodoZFO
-        Eve5TaqRjuw4g+k=; b=pbqSdnuBuHyQCi85vnKPCBzqkOAiQ7uwE93N1Q46Dg+Y
-        MCug1BeI8/W8MPtViYbXewniDF76NIlAdU6pg4yJojF5JwFy3niuN/gpi9aIqk5b
-        VJwRR+IlRAVKWVYz0CqKJoI/mqcO7QcRyCTB7U820LsVVWvW1zINAEyg53tdSPk=
-DomainKey-Signature: a=rsa-sha1; c=nofws; d=pobox.com; h=from:to:cc
-        :subject:references:date:in-reply-to:message-id:mime-version
-        :content-type:content-transfer-encoding; q=dns; s=sasl; b=Js0ffw
-        H9tb/MoQLH0rwl0z53DDCI370/R/3wKj8PcepkJTMJBDrPZMWpKaEWEanoBmt4LL
-        u7DzQ9Nb/UBid3FVkkMUfCp2WHFnTCKzB/L70nATSlGil+mWSUwvPYEgrOCg8AKd
-        qX2jSyfoHxFHK9gI2YMRBrUzIiE5fQbdDIG/k=
-Received: from pb-smtp1.nyi.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp1.pobox.com (Postfix) with ESMTP id 2532413F396;
-        Mon, 27 May 2019 11:39:59 -0400 (EDT)
-Received: from pobox.com (unknown [34.76.80.147])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by pb-smtp1.pobox.com (Postfix) with ESMTPSA id 8C46F13F393;
-        Mon, 27 May 2019 11:39:58 -0400 (EDT)
-From:   Junio C Hamano <gitster@pobox.com>
-To:     =?utf-8?B?w4Z2YXIgQXJuZmrDtnLDsA==?= Bjarmason <avarab@gmail.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, git@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        KVM list <kvm@vger.kernel.org>,
-        Michael Haggerty <mhagger@alum.mit.edu>
-Subject: Re: [RFC/PATCH] refs: tone down the dwimmery in refname_match() for {heads,tags,remotes}/*
-References: <CAHk-=wgzKzAwS=_ySikL1f=Gr62YXL_WXGh82wZKMOvzJ9+2VA@mail.gmail.com>
-        <20190526225445.21618-1-avarab@gmail.com>
-        <5c9ce55c-2c3a-fce0-d6e3-dfe5f8fc9b01@redhat.com>
-        <874l5gezsn.fsf@evledraar.gmail.com>
-Date:   Mon, 27 May 2019 08:39:57 -0700
-In-Reply-To: <874l5gezsn.fsf@evledraar.gmail.com> (=?utf-8?B?IsOGdmFyIEFy?=
- =?utf-8?B?bmZqw7Zyw7A=?= Bjarmason"'s
-        message of "Mon, 27 May 2019 16:29:28 +0200")
-Message-ID: <xmqqef4jewj6.fsf@gitster-ct.c.googlers.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        Mon, 27 May 2019 11:41:28 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v22so8920326wml.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 08:41:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Tdsw2aGiBLowdBKompMuLQW0FpeZcju49WmFG8bHyOw=;
+        b=ybdiq5GDzdAVwWuupgM0Vyj2TRBmG9n1bTEgd7DCD5KhZsLgMyduZvYjiBX98fmitU
+         bjqoEaotnbM2XtAXoWExidPPwYhpO+3qfQF0pgQ1E2bMOeUheDJayDWzbf6I8bm8z2dW
+         74NeFGQkTxKdwyV1QbqvLb5z4ykIgEmVs1qc/fNn+PKZUmrenAu+zBO7ZHsRBmPprdFr
+         Fk9aXYknb8WelAnOFM9JRIrQOtNVHqjdZitx6wkYHLlMny5I/OULokvXyJzg25c2TTLF
+         xJ5HeJcWPT37ChPr5pr2Tr3JBPb46yU0f4aojrereBVSGoH1x+ezLFvTY2aYnkZzwecr
+         hoWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Tdsw2aGiBLowdBKompMuLQW0FpeZcju49WmFG8bHyOw=;
+        b=hhVzg1rT/CLP9XQX+7EfI3ifA0tNWTYKcM6yIvWld3DTSKghQD7YtjKI7GAV9Uc5sO
+         Ob+eQm+kjrD0LTn1cKP60gtrUyFD+3s9gfo9nig/VWNL5dtkSKg1e93Kun5IPMyGaq3R
+         NOmxplN013V+WcaN9sCAPeICQnqapkN02xJkzj2z+eVV5TcMjUjiqtNTF9ImEVjo1QC5
+         KI+vFJn0Ig2IFM6FoKs1cNOT85o1aqoxTZ1hqEtyP3YckkutzMZZ3mG1oTCXXq/9Tu+j
+         bbgluk0p28uV2c8e3ypLqCYplx+bHB90emoIaClWEoZZETJRhHI713ts9XYp+aVmowPf
+         jPug==
+X-Gm-Message-State: APjAAAVMQv1AJKDqP/6tSA2bU9GxNuDNdrqnOH/gBrxdL13kf1L3uJTN
+        e5svslOYSbWQZd5Xbsbgt5dXi7+dul3TnFedxztvMw==
+X-Google-Smtp-Source: APXvYqy609IJf/GhOKyCiAwxR8WSs6/tX1M/ieVpzUVpTTjy82ChyMKy4v5VAw0i+AX1iLX+Rwq4+F1lz7sR5gM8dzg=
+X-Received: by 2002:a05:600c:2306:: with SMTP id 6mr10042110wmo.162.1558971685659;
+ Mon, 27 May 2019 08:41:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-X-Pobox-Relay-ID: AEFE72FC-8095-11E9-A21E-46F8B7964D18-77302942!pb-smtp1.pobox.com
-Content-Transfer-Encoding: quoted-printable
+References: <20190514135612.30822-1-mjourdan@baylibre.com> <20190514135612.30822-4-mjourdan@baylibre.com>
+ <07af1a22-d57c-aff6-b476-98fbf72135c1@xs4all.nl> <CAMO6naz-cG3F_h70Chjt+GprGWe2EShsMjrietu_JBAdLrPbpQ@mail.gmail.com>
+ <0821bfd9-58e4-5df3-4528-189476d35d89@xs4all.nl>
+In-Reply-To: <0821bfd9-58e4-5df3-4528-189476d35d89@xs4all.nl>
+From:   Maxime Jourdan <mjourdan@baylibre.com>
+Date:   Mon, 27 May 2019 17:41:14 +0200
+Message-ID: <CAMO6nayi+wWU5jqtWkY0riJc6emHiPh7eqpvdzP=U7NgewfwqA@mail.gmail.com>
+Subject: Re: [PATCH v6 3/4] media: meson: add v4l2 m2m video decoder driver
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C3=86var Arnfj=C3=B6r=C3=B0 Bjarmason <avarab@gmail.com> writes:
-
-> It mostly (and I believe always should) works by looking at whether
-> "someref" is a named ref, and e.g. looking at whether it's "master". We
-> then see that it lives in "refs/heads/master" locally, and thus
-> correspondingly add a "refs/heads/" to your <dst> "tags/foo", making it
-> "refs/heads/tags/foo".
-
-Yes.
-
-(I am still not up to speed, so pardon me if I sound nonsense)
-
-> *Or* we take e.g. <some random SHA-1>:master, the <some random...> is
-> ambiguous, but we see that "master" unambiguously refers to
-> "refs/heads/master" on the remote (so e.g. a refs/tags/master doesn't
-> exist). If you had both refs/{heads,tags}/master refs on the remote we'=
-d
-> emit:
+On Mon, May 27, 2019 at 4:54 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
 >
->     error: dst refspec master matches more than one
+> On 5/27/19 4:44 PM, Maxime Jourdan wrote:
+> > Hi Hans,
+> > On Mon, May 27, 2019 at 12:04 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
+> >>
+> >> Hi Maxime,
+> >>
+> >> First a high-level comment: I think this driver should go to staging.
+> >> Once we finalize the stateful decoder spec, and we've updated the
+> >> v4l2-compliance test, then this needs to be tested against that and
+> >> only if it passes can it be moved out of staging.
+> >>
+> >
+> > I chose to send the driver supporting only MPEG2 for now as it keeps
+> > it "to the point", but as it turns out it's one of the few formats on
+> > Amlogic that can't fully respect the spec at the moment because of the
+> > lack of support for V4L2_EVENT_SOURCE_CHANGE, thus the patch in the
+> > series that adds a new flag V4L2_FMT_FLAG_FIXED_RESOLUTION. It
+> > basically requires userspace to set the format (i.e coded resolution)
+> > since the driver/fw can't probe it.
+> > At the moment, this is described in the v3 spec like this:
+> >
+> >>
+> >> 1. Set the coded format on ``OUTPUT`` via :c:func:`VIDIOC_S_FMT`
+> >>
+> >>   * **Required fields:**
+> >>
+> >>     ``type``
+> >>         a ``V4L2_BUF_TYPE_*`` enum appropriate for ``OUTPUT``
+> >>
+> >>     ``pixelformat``
+> >>         a coded pixel format
+> >>
+> >>     ``width``, ``height``
+> >>         required only if cannot be parsed from the stream for the given
+> >>         coded format; optional otherwise - set to zero to ignore
+> >>
+> >
+> > But MPEG2 being a format where the coded resolution is inside the
+> > bitstream, this is purely an Amlogic issue where the firmware doesn't
+> > extend the capability to do this.
+> >
+> > Here's a proposal: if I were to resend the driver supporting only H264
+> > and conforming to the spec, would you be considering it for inclusion
+> > in the main tree ? Does your current iteration of v4l2-compliance
+> > support testing stateful decoders with H264 bitstreams ?
+>
+> The core problem is that the spec isn't finalized yet. The v3 spec you
+> refer to above is old already since there are various changes planned.
+>
+> If you want to test your driver with a v4l2-compliance that is likely
+> to be close to the final version of the spec, then you can use this
+> branch:
+>
+> https://git.linuxtv.org/hverkuil/v4l-utils.git/log/?h=vicodec
+>
+> You can test with:
+>
+> v4l2-compliance -s --stream-from <file>
+>
+> I wouldn't be too worried about keeping it in staging. Having it there
+> will already be very nice indeed. Just add a TODO file that states that
+> you are waiting for the final version of the stateful decoder spec and
+> the corresponding compliance tests.
+>
+> The V4L2_FMT_FLAG_FIXED_RESOLUTION isn't a blocker. That flag makes sense,
+> and so it has nothing to do with keeping this driver in staging.
+>
 
-OK, so you are saying "if the source is unique, try to qualify the
-destination to the same hierarchy (i.e. the previous paragraph). If
-the source is not a ref (this paragraph), try to find a unique match
-with the destination to determine where it should go".  I think that
-makes sense.
+Okay, I understand. I will send a v7 with the driver in
+staging+TODO+MAINTAINERS update.
 
-> (We should improve that error to note what conflicted, #leftoverbits)
+Regards,
+Maxime
 
-OK.
-
-> So your HEAD:tags/for-linus resulted in pushing a HEAD that
-> referred to some refs/heads/* to refs/tags/for-linus.  I believe
-> that's an unintendedem ergent effect in how we try to apply these
-> two rules. We should apply one, not both in combination.
-
-Are you saying that HEAD is locally dereferenced to a branch name
-(if you are not detached when pushing), and "if the source is unique
-ref" rule is applied first?  That is not how I recall we designed
-this dwimmery.  As we know there is no refs/heads/HEAD, it should be
-like pushing HEAD^0:tags/for-linus (i.e. it should behave the same
-way as pushing "<some random SHA-1>:tags/for-linus"), without "where
-is the source?  let's qualify the destination the same way" rule
-kicking in.  And because the repeated "Linus, please pull from that
-usual tag for this cycle" request is a norm, "does the destination
-uniquely exist at the receiving end" should kick in.  IOW, I think
-that is quite a deliberate behaviour that is desirable, or atleast
-was considered to be desirable when the feature was designed.
-
->> In my opinion, the bug is that "git request-pull" should warn if the t=
-ag
->> is lightweight remotely but not locally, and possibly even vice versa.
-
-Hmm (yes, I realize I am not commenting on what =C3=86var wrote)...
-
->>   # create remote lightweight tag and prepare a pull request
->>   git push ../b HEAD:refs/tags/tag1
->>   git request-pull HEAD^ ../b tags/tag1
-
-I do not think lightweight vs annotated should be the issue.  The
-tag that the requestor asks to be pulled (from repository ../b)
-should be what the requestor has locally when writing the request
-(in repository .).  Even if both tags at remote and local are
-annotated, we should still warn if they are different objects, no?
-
-Do we run ls-remote or something (or consult remote-trakcing branch)
-to see if that is the case in request-pull?
-?
+> Regards,
+>
+>         Hans
+>
+<snip>
