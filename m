@@ -2,162 +2,150 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC7AC04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 436B6C46470
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98982208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:38:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 233FD20815
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:39:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbfE0LiI (ORCPT
+        id S1726716AbfE0Ljb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 07:38:08 -0400
-Received: from mail-it1-f199.google.com ([209.85.166.199]:42647 "EHLO
-        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbfE0LiH (ORCPT
+        Mon, 27 May 2019 07:39:31 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44041 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726094AbfE0Lja (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 07:38:07 -0400
-Received: by mail-it1-f199.google.com with SMTP id s18so15696093itl.7
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 04:38:06 -0700 (PDT)
+        Mon, 27 May 2019 07:39:30 -0400
+Received: by mail-ot1-f66.google.com with SMTP id g18so14506656otj.11;
+        Mon, 27 May 2019 04:39:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=3ofJz0VOtKLU8MeevgDTLa64a60th9mQF2FKBUhaEfo=;
-        b=kIDahahgtT6NCFuaouiSD/yshgXLINM0+ya/f7rWdG8SBK8YGFL3aBczAQyPO6cu0v
-         z2LAKDexc4X3BHu15q6gaIyB2RXpYxhKDQ7Q2z9mVJRnMQ+6azpe+r9lmOL1IJXR5y2O
-         q+YK1yClPo1aPihU2q54sYqAqnP+0zwRhCm685tO5CRuzgemKsSSV05Q1Qwld5xWVxlL
-         HQUGwCmdD4DEDoTTcrLbgV9rcIHYBDjFqL9YC/SzkuJSpJyVpWaeqg44+SjGnduJrl7G
-         zbn8lnlJXDTniUHtfcxwNpzDc/0wTLmgiFgdz3k6Ulbiq+d6iMkf/1OOuIhXJsOWe3qL
-         ynew==
-X-Gm-Message-State: APjAAAXPKuQX0X8BkbVusy4sSi2b0ndbC4taUWu89mwQJkJZqp4p0qpJ
-        U1/EZBtdIobWuMaZI+OBX2ddWcKMRKzKBZY46TFyJj70vDPH
-X-Google-Smtp-Source: APXvYqx3RE6uJKijGeIKhmkzojrhR8IqNMfF5lo/O5KVrJ1mEjMuBtHdWc7JwKkln31iNhl+Vphvgo3ijbgtwRp9AlqVFXgYeGkv
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=V0OzTK0kT2ddqZaGr86QRO9HD6H6ELQHgY3vn9EoNSY=;
+        b=nxBPaLcOHEMMdpZHLjXHOILUXYM8fTOI5bfBJJzIuPdm5mvL9uczAcDCZzKQcheqrN
+         /sF7iVdTly8QcS37JohIugNQjMN+SdRwmaBlWSF/xXV+G21BU9sSG6IxvMYDy6VXPHka
+         fFkS2JnNuppbI0A+djLSGEumGqTrDD273Rcea3ZL1j3XS8ACje+k2KImh+nLJXhy2qgQ
+         7K+npPDh3CfHY22hHIYqECLOuBYeiWASF3C5kbgwIVMhNRZRDELzyr3e4j0wGdhtd3ch
+         n/RTnCJSfoeoWo1JNkNo4d5wo6AO5aBK5s7Iq7mjEAM5BnDWeIoU1nH0ddDGyz98XP9Q
+         4djg==
+X-Gm-Message-State: APjAAAV89id1kqpUo8Ajpos7Z4do0GkQNSRoWc00IV5DeQI2NoTE3B0V
+        qTmjmzwgYCtu+y4Fq030nQnnVHdu0JHoWMvMO34=
+X-Google-Smtp-Source: APXvYqzRJPkCqJiOx+VOhGWb3xNSagzD3mXtVwSHX6dsr/mX9srOC/7Nko7rnVoMhplnBtrellrsrHboMJ8YmHsuPBA=
+X-Received: by 2002:a9d:1a5:: with SMTP id e34mr44398857ote.59.1558957169445;
+ Mon, 27 May 2019 04:39:29 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a6b:5812:: with SMTP id m18mr1656876iob.13.1558957086368;
- Mon, 27 May 2019 04:38:06 -0700 (PDT)
-Date:   Mon, 27 May 2019 04:38:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005a6b660589dcfb60@google.com>
-Subject: WARNING in line6_pcm_acquire
-From:   syzbot <syzbot+192a537b5c634febc6cf@syzkaller.appspotmail.com>
-To:     alsa-devel@alsa-project.org, andreyknvl@google.com,
-        keescook@chromium.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, perex@perex.cz,
-        syzkaller-bugs@googlegroups.com, tiwai@suse.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20190521145141.9813-1-paul@crapouillou.net>
+In-Reply-To: <20190521145141.9813-1-paul@crapouillou.net>
+From:   Mathieu Malaterre <malat@debian.org>
+Date:   Mon, 27 May 2019 13:39:18 +0200
+Message-ID: <CA+7wUszagtyMV3oMxAi4VqpDeFcBY5ohXZ3PrXe-X5JV21bjBw@mail.gmail.com>
+Subject: Re: Ingenic Timer/Counter Unit (TCU) patchset v12
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-mips@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, May 21, 2019 at 4:51 PM Paul Cercueil <paul@crapouillou.net> wrote:
+>
+> Hi,
+>
+> Here's the V12 of my patchset to add support for the Timer/Counter Unit
+> (TCU) present on the JZ47xx SoCs from Ingenic.
+>
+> This patchset is much shorter at only 13 patches vs. 27 patches in V11;
+> the remaining patches will be sent in parallel (if applicable) or as a
+> follow-up patchset once this one is merged.
+>
+> In V11 the clocksource maintainers weren't happy with the size of the
+> ingenic-timer driver, which included clocks and irqchip setup code.
+> On the other hand, devicetree maintainers wanted one single node for
+> the TCU hardware since it's effectively just one hardware block.
+>
+> In this patchset the functionality is cut in four different drivers:
+> a MFD one to provide the regmap, probe the children and which provides
+> several API functions; a clocks driver; a irqchip driver; a clocksource
+> driver. All these drivers work with the same regmap, have the same
+> compatible strings, and will probe _with the same devicetree node_.
 
-syzbot found the following crash on:
+For the series:
 
-HEAD commit:    43151d6c usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=169fe1f8a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=95aff7278e7ff25e
-dashboard link: https://syzkaller.appspot.com/bug?extid=192a537b5c634febc6cf
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Tested-by: Mathieu Malaterre <malat@debian.org>
 
-Unfortunately, I don't have any reproducer for this crash yet.
+System: MIPS Creator CI20
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+192a537b5c634febc6cf@syzkaller.appspotmail.com
+For reference, here is my local patch:
 
-------------[ cut here ]------------
-do not call blocking ops when !TASK_RUNNING; state=1 set at  
-[<000000009424b595>] do_nanosleep+0x107/0x6a0 kernel/time/hrtimer.c:1675
-WARNING: CPU: 0 PID: 4661 at kernel/sched/core.c:6136  
-__might_sleep+0x135/0x190 kernel/sched/core.c:6136
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 4661 Comm: syz-executor.4 Not tainted 5.1.0-rc3+ #8
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  <IRQ>
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  panic+0x292/0x5e1 kernel/panic.c:214
-  __warn.cold+0x20/0x53 kernel/panic.c:571
-  report_bug+0x262/0x2a0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
-  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
-RIP: 0010:__might_sleep+0x135/0x190 kernel/sched/core.c:6136
-Code: 65 48 8b 1c 25 c0 de 01 00 48 8d 7b 10 48 89 fe 48 c1 ee 03 80 3c 06  
-00 75 2b 48 8b 73 10 48 c7 c7 c0 ec c5 85 e8 c6 4b f6 ff <0f> 0b e9 46 ff  
-ff ff e8 2f d0 45 00 e9 29 ff ff ff e8 25 d0 45 00
-RSP: 0018:ffff8881db207b48 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: ffff8881c7d71800 RCX: 0000000000000000
-RDX: 0000000000000100 RSI: ffffffff8127bbcd RDI: ffffed103b640f5b
-RBP: ffffffff85c622c0 R08: ffff8881c7d71800 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 000000000000038c
-R13: 0000000000000000 R14: 0000000000000000 R15: ffffffff849f6d40
-  __mutex_lock_common kernel/locking/mutex.c:908 [inline]
-  __mutex_lock+0xc8/0x12b0 kernel/locking/mutex.c:1072
-  line6_pcm_acquire+0x30/0x210 sound/usb/line6/pcm.c:311
-  call_timer_fn+0x15c/0x5e0 kernel/time/timer.c:1325
-  expire_timers kernel/time/timer.c:1362 [inline]
-  __run_timers kernel/time/timer.c:1681 [inline]
-  __run_timers kernel/time/timer.c:1649 [inline]
-  run_timer_softirq+0x586/0x1400 kernel/time/timer.c:1694
-  __do_softirq+0x21f/0x8bc kernel/softirq.c:293
-  invoke_softirq kernel/softirq.c:374 [inline]
-  irq_exit+0x17c/0x1a0 kernel/softirq.c:414
-  exiting_irq arch/x86/include/asm/apic.h:536 [inline]
-  smp_apic_timer_interrupt+0xf1/0x490 arch/x86/kernel/apic/apic.c:1062
-  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:807
-  </IRQ>
-RIP: 0010:arch_local_irq_restore arch/x86/include/asm/irqflags.h:81 [inline]
-RIP: 0010:__raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:160  
-[inline]
-RIP: 0010:_raw_spin_unlock_irqrestore+0x40/0x50  
-kernel/locking/spinlock.c:184
-Code: e8 25 19 bc fb 48 89 ef e8 dd f7 bc fb f6 c7 02 75 11 53 9d e8 a1 fd  
-d8 fb 65 ff 0d 0a 59 99 7a 5b 5d c3 e8 d2 fb d8 fb 53 9d <eb> ed 0f 1f 40  
-00 66 2e 0f 1f 84 00 00 00 00 00 55 48 89 fd 65 ff
-RSP: 0018:ffff8881b13ffba8 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
-RAX: 0000000000000007 RBX: 0000000000000246 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: 0000000000000006 RDI: ffff8881c7d72034
-RBP: ffff8881db224a80 R08: ffff8881c7d71800 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: dffffc0000000000
-R13: ffff8881db224b00 R14: ffff8881db224b00 R15: ffff8881db224a80
-  unlock_hrtimer_base kernel/time/hrtimer.c:878 [inline]
-  hrtimer_start_range_ns+0x5b0/0xad0 kernel/time/hrtimer.c:1109
-  hrtimer_start_expires include/linux/hrtimer.h:409 [inline]
-  do_nanosleep+0x19b/0x6a0 kernel/time/hrtimer.c:1676
-  hrtimer_nanosleep+0x258/0x510 kernel/time/hrtimer.c:1733
-  __do_sys_nanosleep kernel/time/hrtimer.c:1767 [inline]
-  __se_sys_nanosleep kernel/time/hrtimer.c:1754 [inline]
-  __x64_sys_nanosleep+0x19d/0x220 kernel/time/hrtimer.c:1754
-  do_syscall_64+0xbd/0x500 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x486570
-Code: 00 00 48 c7 c0 d4 ff ff ff 64 c7 00 16 00 00 00 31 c0 eb be 66 0f 1f  
-44 00 00 83 3d e1 01 5d 00 00 75 14 b8 23 00 00 00 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 b4 e0 f8 ff c3 48 83 ec 08 e8 ea 53 fd ff
-RSP: 002b:00007ffc588bb088 EFLAGS: 00000246 ORIG_RAX: 0000000000000023
-RAX: ffffffffffffffda RBX: 00000000000a95fa RCX: 0000000000486570
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00007ffc588bb090
-RBP: 00000000000002d5 R08: 0000000000000001 R09: 00000000027fc940
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000008
-R13: 00007ffc588bb0e0 R14: 00000000000a8e2a R15: 00007ffc588bb0f0
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi
+b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+index 1bfac58da5df..e7b7da32f278 100644
+--- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <dt-bindings/clock/jz4780-cgu.h>
++#include <dt-bindings/clock/ingenic,tcu.h>
+ #include <dt-bindings/dma/jz4780-dma.h>
+
+ / {
+@@ -80,6 +81,15 @@
+
+                interrupt-parent = <&intc>;
+                interrupts = <27 26 25>;
++
++               watchdog: watchdog@0 {
++                       compatible = "ingenic,jz4780-watchdog";
++                       reg = <0x0 0xc>;
++
++                       clocks = <&tcu TCU_CLK_WDT>;
++                       clock-names = "wdt";
++               };
++
+        };
+
+        rtc_dev: rtc@10003000 {
+@@ -287,14 +297,6 @@
+                status = "disabled";
+        };
+
+-       watchdog: watchdog@10002000 {
+-               compatible = "ingenic,jz4780-watchdog";
+-               reg = <0x10002000 0x10>;
+-
+-               clocks = <&cgu JZ4780_CLK_RTCLK>;
+-               clock-names = "rtc";
+-       };
+-
+        nemc: nemc@13410000 {
+                compatible = "ingenic,jz4780-nemc";
+                reg = <0x13410000 0x10000>;
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> Regards,
+> -Paul
+>
+>
