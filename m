@@ -2,191 +2,127 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF3D2C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11051C072B1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9838B2146F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:04:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD507208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:04:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Cs9QvTTl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfE0KEp (ORCPT
+        id S1726860AbfE0KE5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 06:04:45 -0400
-Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:52153 "EHLO
-        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725991AbfE0KEp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 06:04:45 -0400
-Received: from [IPv6:2001:983:e9a7:1:f4bd:6355:63eb:2e52] ([IPv6:2001:983:e9a7:1:f4bd:6355:63eb:2e52])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id VCUjha9zasDWyVCUkhYa6r; Mon, 27 May 2019 12:04:43 +0200
-Subject: Re: [PATCH v6 3/4] media: meson: add v4l2 m2m video decoder driver
-To:     Maxime Jourdan <mjourdan@baylibre.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-References: <20190514135612.30822-1-mjourdan@baylibre.com>
- <20190514135612.30822-4-mjourdan@baylibre.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <07af1a22-d57c-aff6-b476-98fbf72135c1@xs4all.nl>
-Date:   Mon, 27 May 2019 12:04:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190514135612.30822-4-mjourdan@baylibre.com>
-Content-Type: text/plain; charset=utf-8
+        Mon, 27 May 2019 06:04:57 -0400
+Received: from mail-eopbgr70087.outbound.protection.outlook.com ([40.107.7.87]:34286
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726560AbfE0KE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 06:04:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JF/O7UKKkH8RkrEcANCsfDz00eyxt9uiF1k74Vg303U=;
+ b=Cs9QvTTloeySjge2NQxo/h0zTBT2lSNlQZVSMjUYtEi2wehkA+H7Ca3L5uMVBohfixixtOI1OmO+0J2R+ADAPbr5H1w7Gs/HHIQlTd7TGtRzbVu5//dUQnACR/XwEh1+AguHds3QXn6JDozOzkUjiuKa0C9DY6tk0lHpPFgsMto=
+Received: from VI1PR04MB4543.eurprd04.prod.outlook.com (20.177.55.90) by
+ VI1PR04MB4960.eurprd04.prod.outlook.com (20.177.49.213) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.17; Mon, 27 May 2019 10:04:52 +0000
+Received: from VI1PR04MB4543.eurprd04.prod.outlook.com
+ ([fe80::5062:df97:a70b:93f8]) by VI1PR04MB4543.eurprd04.prod.outlook.com
+ ([fe80::5062:df97:a70b:93f8%7]) with mapi id 15.20.1922.021; Mon, 27 May 2019
+ 10:04:52 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+CC:     dl-linux-imx <linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: Re: [PATCH v2 6/7] dmaengine: fsl-edma: add i.mx7ulp edma2 version
+ support
+Thread-Topic: [PATCH v2 6/7] dmaengine: fsl-edma: add i.mx7ulp edma2 version
+ support
+Thread-Index: AQHVFGkz0t9zeFrYqUCYdK5UT0BVD6Z+rfOAgACXqQA=
+Date:   Mon, 27 May 2019 10:04:52 +0000
+Message-ID: <1558980522.19282.19.camel@nxp.com>
+References: <20190527085118.40423-1-yibin.gong@nxp.com>
+         <20190527085118.40423-7-yibin.gong@nxp.com>
+         <20190527090553.lek7tm3lyst3bhrd@pengutronix.de>
+In-Reply-To: <20190527090553.lek7tm3lyst3bhrd@pengutronix.de>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfAPUbd4gijip9ltc6qVw2YEjOF0VIgfB18qKQs3YdT8omNplMAt5egnMNAw3XdidYdjEBlmH04PQ1ljmVzJug/BCTYRoHjk/jEOeP5p4/ko40rneX8r/
- kZrBaQuTbkRY7Z3ce5qv1ALfpan9mfio53vmqQICqw3kYpLmuwL58u3vVg2qoOQUv8Q8VFEiI3FLzF+pvSL3cBLc4mSJAY9ni5NoOH1nrVK5jrhjEHNlssua
- 9uUc4NXWho+Q28lFs2SfLUDSH8BCkeF4Vghgbd51E3Uv9RPGTgfI0RuCT3YCa5kNWErG3+r5p4xTlE5T+LA5bOVs4P/hhoA4I8oUKEWo1+h352FDMQjABkCk
- 1PefiX2S62LqbA+e8aL+yBscJqB1hyoqz2lsC80AiOkJTP8qQZz1TTQ54k9i3BdouWOjfRvKbrxYxDbUVetxus9ytZS8EI3GK7axkhW50t9sca2TJj6FQWRL
- cSKtvMjk1LinxBFDaeFIc+yqBSdV/pcp8YbSaoSHwrveh1Rbhijy6zdKG3t/jxf9DavNnVKuuZJyF/qCM/rMjbsdDhdV2TOByc05dlakGs4jhelHMWMooNsV
- iSyFD0y9vHa3tQY5AmHFiqdZoFs8om1JsAlu1KQmZMj4cw557CBpNoErHL6b82IBwygpaCpDWUYpTQ4qoRhyDe8P
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yibin.gong@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f2587d9a-605c-4e00-1955-08d6e28ac336
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB4960;
+x-ms-traffictypediagnostic: VI1PR04MB4960:
+x-microsoft-antispam-prvs: <VI1PR04MB49604F55D102F58D9CCD8918891D0@VI1PR04MB4960.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0050CEFE70
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(39860400002)(346002)(366004)(136003)(189003)(199004)(478600001)(6486002)(229853002)(6246003)(2351001)(73956011)(256004)(7416002)(71200400001)(71190400001)(91956017)(76116006)(66556008)(64756008)(66446008)(14454004)(4326008)(66476007)(66946007)(66066001)(25786009)(103116003)(8936002)(6116002)(3846002)(8676002)(36756003)(5640700003)(5660300002)(81156014)(186003)(6506007)(53546011)(11346002)(81166006)(26005)(102836004)(68736007)(476003)(2616005)(446003)(486006)(2906002)(54906003)(76176011)(316002)(99286004)(305945005)(86362001)(7736002)(2501003)(50226002)(6512007)(53936002)(6436002)(6916009)(99106002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4960;H:VI1PR04MB4543.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ccE1UjTR8vtON0cdMdxuizdJYXSahrGA5W7O8mJtdgHkUpBszNVF/lzgMJ8g8GBCI6MegDd/L4mvnBjdMjbfFukeKZiV4aYH7FLgVSKYoNsJ4n0kY8kXXNdWEAB7suafnx9za6Joh0Du96ipl82rFkNTLclu+F5GCJj4MS+kPNPwg2+NoJ1gFQGDEqd+VVKsWr9b+B8wAWvbmJsUFgW27kA5v2jq2s4f44IaeZpaTRw0gXhauerV1ThJIww6AvaTYB/MujA4AMhDy3yPjWBsfg06r/ZKzGFnUJgDZ3+Ce0d0yD12eCss9iZxp6jzQMgGhVPhd6+/mB3glS2Qq9IK6DEPw0gqFXao1I5wKH6zdBx4V5VFPckuDprxe+Sa7Yyeddm5JDfQzjrT2JIQd+M1SUnCR6ylaSK9DyabEsu8EbY=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8E36FDC36F6C504D97207C792FF31B4D@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f2587d9a-605c-4e00-1955-08d6e28ac336
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 May 2019 10:04:52.7171
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yibin.gong@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4960
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime,
-
-First a high-level comment: I think this driver should go to staging.
-Once we finalize the stateful decoder spec, and we've updated the
-v4l2-compliance test, then this needs to be tested against that and
-only if it passes can it be moved out of staging.
-
-It is just a bit too soon to have this in mainline at this time.
-
-One other comment below:
-
-On 5/14/19 3:56 PM, Maxime Jourdan wrote:
-> Amlogic SoCs feature a powerful video decoder unit able to
-> decode many formats, with a performance of usually up to 4k60.
-> 
-> This is a driver for this IP that is based around the v4l2 m2m framework.
-> 
-> It features decoding for:
-> - MPEG 1
-> - MPEG 2
-> 
-> Supported SoCs are: GXBB (S905), GXL (S905X/W/D), GXM (S912)
-> 
-> There is also a hardware bitstream parser (ESPARSER) that is handled here.
-> 
-> Tested-by: Neil Armstrong <narmstrong@baylibre.com>
-> Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
-> ---
->  drivers/media/platform/Kconfig                |   10 +
->  drivers/media/platform/meson/Makefile         |    1 +
->  drivers/media/platform/meson/vdec/Makefile    |    8 +
->  .../media/platform/meson/vdec/codec_mpeg12.c  |  209 ++++
->  .../media/platform/meson/vdec/codec_mpeg12.h  |   14 +
->  drivers/media/platform/meson/vdec/dos_regs.h  |   98 ++
->  drivers/media/platform/meson/vdec/esparser.c  |  323 +++++
->  drivers/media/platform/meson/vdec/esparser.h  |   32 +
->  drivers/media/platform/meson/vdec/vdec.c      | 1071 +++++++++++++++++
->  drivers/media/platform/meson/vdec/vdec.h      |  265 ++++
->  drivers/media/platform/meson/vdec/vdec_1.c    |  229 ++++
->  drivers/media/platform/meson/vdec/vdec_1.h    |   14 +
->  .../media/platform/meson/vdec/vdec_ctrls.c    |   51 +
->  .../media/platform/meson/vdec/vdec_ctrls.h    |   14 +
->  .../media/platform/meson/vdec/vdec_helpers.c  |  441 +++++++
->  .../media/platform/meson/vdec/vdec_helpers.h  |   80 ++
->  .../media/platform/meson/vdec/vdec_platform.c |  107 ++
->  .../media/platform/meson/vdec/vdec_platform.h |   30 +
->  18 files changed, 2997 insertions(+)
->  create mode 100644 drivers/media/platform/meson/vdec/Makefile
->  create mode 100644 drivers/media/platform/meson/vdec/codec_mpeg12.c
->  create mode 100644 drivers/media/platform/meson/vdec/codec_mpeg12.h
->  create mode 100644 drivers/media/platform/meson/vdec/dos_regs.h
->  create mode 100644 drivers/media/platform/meson/vdec/esparser.c
->  create mode 100644 drivers/media/platform/meson/vdec/esparser.h
->  create mode 100644 drivers/media/platform/meson/vdec/vdec.c
->  create mode 100644 drivers/media/platform/meson/vdec/vdec.h
->  create mode 100644 drivers/media/platform/meson/vdec/vdec_1.c
->  create mode 100644 drivers/media/platform/meson/vdec/vdec_1.h
->  create mode 100644 drivers/media/platform/meson/vdec/vdec_ctrls.c
->  create mode 100644 drivers/media/platform/meson/vdec/vdec_ctrls.h
->  create mode 100644 drivers/media/platform/meson/vdec/vdec_helpers.c
->  create mode 100644 drivers/media/platform/meson/vdec/vdec_helpers.h
->  create mode 100644 drivers/media/platform/meson/vdec/vdec_platform.c
->  create mode 100644 drivers/media/platform/meson/vdec/vdec_platform.h
-> 
-
-<snip>
-
-> diff --git a/drivers/media/platform/meson/vdec/vdec_ctrls.c b/drivers/media/platform/meson/vdec/vdec_ctrls.c
-> new file mode 100644
-> index 000000000000..d5d6b1b97aa5
-> --- /dev/null
-> +++ b/drivers/media/platform/meson/vdec/vdec_ctrls.c
-> @@ -0,0 +1,51 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright (C) 2018 BayLibre, SAS
-> + * Author: Maxime Jourdan <mjourdan@baylibre.com>
-> + */
-> +
-> +#include "vdec_ctrls.h"
-> +
-> +static int vdec_op_g_volatile_ctrl(struct v4l2_ctrl *ctrl)
-> +{
-> +	struct amvdec_session *sess =
-> +	      container_of(ctrl->handler, struct amvdec_session, ctrl_handler);
-> +
-> +	switch (ctrl->id) {
-> +	case V4L2_CID_MIN_BUFFERS_FOR_CAPTURE:
-> +		ctrl->val = sess->dpb_size;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	};
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct v4l2_ctrl_ops vdec_ctrl_ops = {
-> +	.g_volatile_ctrl = vdec_op_g_volatile_ctrl,
-> +};
-> +
-> +int amvdec_init_ctrls(struct v4l2_ctrl_handler *ctrl_handler)
-> +{
-> +	int ret;
-> +	struct v4l2_ctrl *ctrl;
-> +
-> +	ret = v4l2_ctrl_handler_init(ctrl_handler, 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ctrl = v4l2_ctrl_new_std(ctrl_handler, &vdec_ctrl_ops,
-> +		V4L2_CID_MIN_BUFFERS_FOR_CAPTURE, 1, 32, 1, 1);
-> +	if (ctrl)
-> +		ctrl->flags |= V4L2_CTRL_FLAG_VOLATILE;
-
-Why is this volatile? That makes little sense.
-
-> +
-> +	ret = ctrl_handler->error;
-> +	if (ret) {
-> +		v4l2_ctrl_handler_free(ctrl_handler);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(amvdec_init_ctrls);
-
-<snip>
-
-Regards,
-
-	Hans
+T24gMjAxOS0wNS0yNyBhdCAxMTowNSArMDIwMCwgU2FzY2hhIEhhdWVyIHdyb3RlOg0KPiBPbiBN
+b24sIE1heSAyNywgMjAxOSBhdCAwNDo1MToxN1BNICswODAwLCB5aWJpbi5nb25nQG54cC5jb20g
+d3JvdGU6DQo+ID4gDQo+ID4gRnJvbTogUm9iaW4gR29uZyA8eWliaW4uZ29uZ0BueHAuY29tPg0K
+PiA+IA0KPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBmc2xfZWRtYV9kdF9p
+ZHNbXSA9IHsNCj4gPiArCXsgLmNvbXBhdGlibGUgPSAiZnNsLHZmNjEwLWVkbWEiLCAuZGF0YSA9
+ICh2b2lkICopdjEgfSwNCj4gPiArCXsgLmNvbXBhdGlibGUgPSAiZnNsLGlteDd1bHAtZWRtYSIs
+IC5kYXRhID0gKHZvaWQgKil2MyB9LA0KPiA+ICsJeyAvKiBzZW50aW5lbCAqLyB9DQo+IFBsZWFz
+ZSBwdXQgYSBzdHJ1Y3QgdHlwZSBiZWhpbmQgdGhlIC5kYXRhIHBvaW50ZXIgc28gdGhhdCB5b3Ug
+Y2FuDQo+IGNvbmZpZ3VyZS4uLg0KQnV0IGN1cnJlbnQgb25seSB2ZXJzaW9uIG5lZWRlZCwgc28g
+SSBnaXZlIHVwIHN0cnVjdCBkZWZpbmUuLi4uDQo+IA0KPiA+IA0KPiA+ICt9Ow0KPiA+ICtNT0RV
+TEVfREVWSUNFX1RBQkxFKG9mLCBmc2xfZWRtYV9kdF9pZHMpOw0KPiA+ICsNCj4gPiBAQCAtMjE4
+LDYgKzI3MiwyMiBAQCBzdGF0aWMgaW50IGZzbF9lZG1hX3Byb2JlKHN0cnVjdA0KPiA+IHBsYXRm
+b3JtX2RldmljZSAqcGRldikNCj4gPiDCoAlmc2xfZWRtYV9zZXR1cF9yZWdzKGZzbF9lZG1hKTsN
+Cj4gPiDCoAlyZWdzID0gJmZzbF9lZG1hLT5yZWdzOw0KPiA+IMKgDQo+ID4gKwlpZiAoZnNsX2Vk
+bWEtPnZlcnNpb24gPT0gdjMpIHsNCj4gPiArCQlmc2xfZWRtYS0+ZG1hbXV4X25yID0gMTsNCj4g
+Li4udGhpbmdzIGxpa2UgdGhpcy4uLg0KWWVzLCBkbWFtdXhfbnIgY291bGQgYmUgbW92ZWQgdG8g
+c3RydWN0IGF0IGxlYXN0Lg0KPiANCj4gPiANCj4gPiBAQCAtMjY0LDcgKzMzNCwxMSBAQCBzdGF0
+aWMgaW50IGZzbF9lZG1hX3Byb2JlKHN0cnVjdA0KPiA+IHBsYXRmb3JtX2RldmljZSAqcGRldikN
+Cj4gPiDCoAl9DQo+ID4gwqANCj4gPiDCoAllZG1hX3dyaXRlbChmc2xfZWRtYSwgfjAsIHJlZ3Mt
+PmludGwpOw0KPiA+IC0JcmV0ID0gZnNsX2VkbWFfaXJxX2luaXQocGRldiwgZnNsX2VkbWEpOw0K
+PiA+ICsNCj4gPiArCWlmIChmc2xfZWRtYS0+dmVyc2lvbiA9PSB2MykNCj4gPiArCQlyZXQgPSBm
+c2xfZWRtYTJfaXJxX2luaXQocGRldiwgZnNsX2VkbWEpOw0KPiA+ICsJZWxzZQ0KPiA+ICsJCXJl
+dCA9IGZzbF9lZG1hX2lycV9pbml0KHBkZXYsIGZzbF9lZG1hKTsNCj4gLi4uYW5kIHRoaXMgb25l
+IGluIHRoYXQgc3RydWN0IHJhdGhlciB0aGFuIGxpdHRlcmluZyB0aGUgY29kZSBtb3JlDQo+IGFu
+ZA0KPiBtb3JlIHdpdGggc3VjaCB2ZXJzaW9uIHRlc3RzLg0KWWVzLCBzdWNoIGlycSBzZXR1cCBm
+dW5jdGlvbiBjb3VsZCBiZSBtb3ZlZCB0byBzdHJ1Y3QsIHRodXMsIG5vIHZlcnNpb24NCnRlc3Qg
+aW4gdGhpcyBmaWxlLiBXaWxsIHJlZmluZSBpdCBpbiB2My4NCj4gDQo+IFNhc2NoYQ0KPiA=
