@@ -2,96 +2,162 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FA81C07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA418C07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3701121726
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:04:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558940660;
-	bh=BNsn1O1Jjx/fgP8OEF7ejUZfkpZpn6+6gvSCOKwpwUw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zjGBRmTLQ4XLBnme/QgOb9r2R60SJL05JKOX3f+m87hwyjX1PNkyHH3P7mV3L5YAX
-	 DWBkJNu1isnGNf84tG5+JY7cBcKit5HqZHDuFolyyg0aaBorn5Tq9wL2B55q21Gow5
-	 Domc/5j8DXWu0sydyGQkqqH9Gw6v6ahasv4VzjDA=
+	by mail.kernel.org (Postfix) with ESMTP id A0FBF2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:06:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbfE0HET (ORCPT
+        id S1726345AbfE0HGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 03:04:19 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44740 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725908AbfE0HET (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 03:04:19 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9EFD7AD9C;
-        Mon, 27 May 2019 07:04:17 +0000 (UTC)
-Date:   Mon, 27 May 2019 09:04:15 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc:     "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Jordan, Tobias" <Tobias.Jordan@elektrobit.com>,
-        akpm@linux-foundation.org, vbabka@suse.cz,
-        kirill.shutemov@linux.intel.com, linux-api@vger.kernel.org
-Subject: Re: [PATCH] mm: mlockall error for flag MCL_ONFAULT
-Message-ID: <20190527070415.GA1658@dhcp22.suse.cz>
-References: <20190522112329.GA25483@er01809n.ebgroup.elektrobit.com>
- <20190524214304.enntpu4tvzpyxzfe@ca-dmjordan1.us.oracle.com>
+        Mon, 27 May 2019 03:06:10 -0400
+Received: from mx1.mailbox.org ([80.241.60.212]:8350 "EHLO mx1.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725908AbfE0HGJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 03:06:09 -0400
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx1.mailbox.org (Postfix) with ESMTPS id 5FD0B4F2A0;
+        Mon, 27 May 2019 09:06:07 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
+        with ESMTP id LeklOLh5Mc4z; Mon, 27 May 2019 09:05:56 +0200 (CEST)
+Subject: Re: [PATCH 1/2 v2] serial: mctrl_gpio: Check if GPIO property exisits
+ before requesting it
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Yegor Yefremov <yegorslists@googlemail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Giulio Benetti <giulio.benetti@micronovasrl.com>
+References: <20190524094825.16151-1-sr@denx.de>
+ <20190524102002.GT2781@lahna.fi.intel.com>
+ <CAHp75VcMVrYv1MXmmqE9fDXShS=Y8pPdWZ4f1neo=ne88TLZDg@mail.gmail.com>
+ <287cdcc8-9a8f-4583-8be9-bd1f95936733@denx.de>
+ <20190524134657.GV9224@smile.fi.intel.com>
+From:   Stefan Roese <sr@denx.de>
+Message-ID: <1fcbe336-d372-e705-e041-894f637b8657@denx.de>
+Date:   Mon, 27 May 2019 09:05:55 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190524214304.enntpu4tvzpyxzfe@ca-dmjordan1.us.oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190524134657.GV9224@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 24-05-19 17:43:04, Daniel Jordan wrote:
-> [ Adding linux-api and some of the people who were involved in the
-> MCL_ONFAULT/mlock2/etc discussions.  Author of the Fixes patch appears to
-> have moved on. ]
+On 24.05.19 15:46, Andy Shevchenko wrote:
+> On Fri, May 24, 2019 at 01:29:34PM +0200, Stefan Roese wrote:
+>> On 24.05.19 13:11, Andy Shevchenko wrote:
+>>> On Fri, May 24, 2019 at 1:21 PM Mika Westerberg
+>>> <mika.westerberg@linux.intel.com> wrote:
+>>>>
+>>>> On Fri, May 24, 2019 at 11:48:24AM +0200, Stefan Roese wrote:
+>>>>> This patch adds a check for the GPIOs property existence, before the
+>>>>> GPIO is requested. This fixes an issue seen when the 8250 mctrl_gpio
+>>>>> support is added (2nd patch in this patch series) on x86 platforms using
+>>>>> ACPI.
+>>>>>
+>>>>> Here Mika's comments from 2016-08-09:
+>>>>>
+>>>>> "
+>>>>> I noticed that with v4.8-rc1 serial console of some of our Broxton
+>>>>> systems does not work properly anymore. I'm able to see output but input
+>>>>> does not work.
+>>>>>
+>>>>> I bisected it down to commit 4ef03d328769eddbfeca1f1c958fdb181a69c341
+>>>>> ("tty/serial/8250: use mctrl_gpio helpers").
+>>>>>
+>>>>> The reason why it fails is that in ACPI we do not have names for GPIOs
+>>>>> (except when _DSD is used) so we use the "idx" to index into _CRS GPIO
+>>>>> resources. Now mctrl_gpio_init_noauto() goes through a list of GPIOs
+>>>>> calling devm_gpiod_get_index_optional() passing "idx" of 0 for each. The
+>>>>> UART device in Broxton has following (simplified) ACPI description:
+>>>>>
+>>>>>       Device (URT4)
+>>>>>       {
+>>>>>           ...
+>>>>>           Name (_CRS, ResourceTemplate () {
+>>>>>               GpioIo (Exclusive, PullDefault, 0x0000, 0x0000, IoRestrictionOutputOnly,
+>>>>>                       "\\_SB.GPO0", 0x00, ResourceConsumer)
+>>>>>               {
+>>>>>                   0x003A
+>>>>>               }
+>>>>>               GpioIo (Exclusive, PullDefault, 0x0000, 0x0000, IoRestrictionOutputOnly,
+>>>>>                       "\\_SB.GPO0", 0x00, ResourceConsumer)
+>>>>>               {
+>>>>>                   0x003D
+>>>>>               }
+>>>>>           })
+>>>>>
+>>>>> In this case it finds the first GPIO (0x003A which happens to be RX pin
+>>>>> for that UART), turns it into GPIO which then breaks input for the UART
+>>>>> device. This also breaks systems with bluetooth connected to UART (those
+>>>>> typically have some GPIOs in their _CRS).
+>>>>>
+>>>>> Any ideas how to fix this?
+>>>>>
+>>>>> We cannot just drop the _CRS index lookup fallback because that would
+>>>>> break many existing machines out there so maybe we can limit this to
+>>>>> only DT enabled machines. Or alternatively probe if the property first
+>>>>> exists before trying to acquire the GPIOs (using
+>>>>> device_property_present()).
+>>>>> "
+>>>>>
+>>>>> This patch implements the fix suggested by Mika in his statement above.
+>>>>>
+>>>
+>>> We have a board where ASL provides _DSD for CTS and RxD pins.
+>>> I'm afraid this won't work on it.
+>>
+>> With "won't work" you mean, that the GPIO can't be used for modem
+>> control in this case in the current implementation (with this
+>> patchset)? Or do you mean, that the breakage (input does not work
+>> on Broxton systems) will not be solved by this patch?
 > 
-> On Wed, May 22, 2019 at 11:23:37AM +0000, Potyra, Stefan wrote:
-> > If mlockall() is called with only MCL_ONFAULT as flag,
-> > it removes any previously applied lockings and does
-> > nothing else.
+> It will solve RxD case, due to mctrl doesn't count RxD as a "control" line.
 > 
-> The change looks reasonable.  Hard to imagine any application relies on it, and
-> they really shouldn't be if they are.  Debian codesearch turned up only a few
-> cases where stress-ng was doing this for unknown reasons[1] and this change
-> isn't gonna break those.  In this case I think changing the syscall's behavior
-> is justified.  
+> Though we have CTS pin defined for the same purpose, which means the hardware
+> flow control won't work on a subset of Broxton boards.
 > 
-> > This behavior is counter-intuitive and doesn't match the
-> > Linux man page.
+>> If its the former, then I think that solving this issue is something
+>> for a new patch, to support modem-control on such platforms as well
+>> (if needed).
 > 
-> I'd quote it for the changelog:
+>> Please note that this patch is not trying to get modem-control working
+>> on such ACPI based systems.
 > 
->   For mlockall():
+> I understand that. At the same time it should not break existing systems.
 > 
->   EINVAL Unknown  flags were specified or MCL_ONFAULT was specified with‐
->          out either MCL_FUTURE or MCL_CURRENT.
+>> Its targeted for device-tree enabled
+>> platforms, using the 8250 serial driver, here specifically a MIPS
+>> MT7688 based board. And just wants to fix the latter issue mentioned
+>> above so that the 8250 modem-control support can be accepted in
+>> mainline.
 > 
-> With that you can add
+> As I said already we have to distinguish *the purpose* of these GPIOs.
+> (like CTS).
 > 
-> Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+> Can we apply this if and only if the device has no ACPI companion device?
 > 
-> [1] https://sources.debian.org/src/stress-ng/0.09.50-1/stress-mlock.c/?hl=203#L203
+> In this case DT will work as you expect and ACPI won't be broken.
 
-Well spotted and the fix looks reasonable as well. Quoting the man page
-seems useful as well.
+So your suggestion is to add a has_acpi_companion() check before
+mctrl_gpio_init() is called in serial8250_register_8250_port() and
+then only use the gpio related mctrl, if the GPIO's are really used?
 
-Acked-by: Michal Hocko <mhocko@suse.com>
+I can certainly change patch 2/2 to do this. It would be great though,
+if you (or someone else) could test this on such a ACPI based platform,
+as I don't have access to such a board.
 
-Thanks!
--- 
-Michal Hocko
-SUSE Labs
+Thanks,
+Stefan
