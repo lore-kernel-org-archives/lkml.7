@@ -7,65 +7,64 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6CBEC04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79660C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C18F20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 451512075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:43:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="RbixjwZf"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="iB8+5DWC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbfE0MnR (ORCPT
+        id S1726999AbfE0MnV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 08:43:17 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38315 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726579AbfE0MnN (ORCPT
+        Mon, 27 May 2019 08:43:21 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36596 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726844AbfE0MnP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 08:43:13 -0400
-Received: by mail-wr1-f65.google.com with SMTP id d18so16808917wrs.5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 05:43:12 -0700 (PDT)
+        Mon, 27 May 2019 08:43:15 -0400
+Received: by mail-wm1-f67.google.com with SMTP id v22so8463360wml.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 05:43:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=wfKAsx1k3aZxm1g3WHRqV/EWJCTGjV5kvipkF29KWgY=;
-        b=RbixjwZfkqTf7IjnopTanq0l4LQmRfQrKZvuDGX7vGcEw57/aoOmAB7MvWEgbsFEEQ
-         FnNubmDp9BOqpEMqt7ceQvKzMftLMFAlYy8DH6ClC2u3tTNNQyTt4j07CKKUSop2lyKK
-         O6BY8X+QzDpCyZneUK62VsxMklgpvmSbEBloeNMS8blv125hNBND2y7hPxGdRXhUasVA
-         2BKmUMDZse3jc8EwYgQfNqwVUguTsaERfTcXWFAeT/UUpTVqivGAIncepVhKdgPlYTfK
-         WttPp0FRlWnvcMT8iOT+SL2Yyn1PINPI2xPOErptKrxeTxaG1FcfI2gSKDI+Gzarc7QB
-         N8LA==
+        bh=EKFZPGKH5eGeLYYAtGCHsBSOPOjgodgPICLgkLIkvVM=;
+        b=iB8+5DWCZC8jbgq5YM8DCbSOJJwcr+GQNlJVIM1Xm9Kgl3QzC6aIjYYNFonvI2etoE
+         leQAh+sLaZW7zdKvONvUvItZZ60iVf9ZXxEta0ZS9OG1WKKsbQsXGC4ExCD+i2tCQMp/
+         8AuePwV/jFczhXlAgu2fKf5WXeDUnccIUFzyCLpexhBb/pQlG6Y3sKsyxFK+4Cn0Z1WL
+         B2J3/mX/QNUQ1dO8cQFy5j/EUFn5Ki8UGCxIcff3Nim0hADk88GN1zlOwJr1Lu2bJpzp
+         hGt1t86hYoAqbIHEQbBtGLzYIqhyJIh0YDg2bOzT97HEHdvNu1+tGFQB3cZZDaj0TX6U
+         Xoxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=wfKAsx1k3aZxm1g3WHRqV/EWJCTGjV5kvipkF29KWgY=;
-        b=OEdukgv/E9OvWltQGW1UhkN1h/OpHZ1DHrxUdXoucYiKx/6ieXAXkrdspM45t1VQv3
-         jhBCKz8ZNR0tf7V5ag+UZxHqD2eP4bRIldZ0c0pwpwr/mHLEGUn43ZjZWGW/iqO47668
-         4YVbna1t8OFzrOvURY6z9fbeUMTZdzn6NkyYOKFvjlmNbRFIm/RXu6Oher6mikFhBsfB
-         +3MrY6adRUw5eH0CcGvVtRi01T2ddYnGrmUuXy5RaLC3xAx/GRGkJ+qdkGggVi9pilzr
-         5hEddt3HBCPIHIR1ecMkl/zIQBokmIaC+Z4jdyg/Blczi1NUII2xkUc1JfgTBRbFGf3j
-         nK1A==
-X-Gm-Message-State: APjAAAVliC+l/O2rZFeBg/IBAFuVwcwibKTTe76UNNiEeKRMKxLstwMa
-        0gCBBvAGHaNnswYLfTylF1kkDQ==
-X-Google-Smtp-Source: APXvYqxnfjIHIRa4qi07Fsf6jQxGYjFAlyaqW/pJH4kjCXSboDIWvjhSeowBftxypf9mHpHl5S6bwQ==
-X-Received: by 2002:adf:db89:: with SMTP id u9mr36557444wri.294.1558960991581;
-        Mon, 27 May 2019 05:43:11 -0700 (PDT)
+        bh=EKFZPGKH5eGeLYYAtGCHsBSOPOjgodgPICLgkLIkvVM=;
+        b=Fr0eiK8f0OAVyjSSXIF6PCIOjCR13wBp1D+1s46kCCMevJsXQZc2Aw5bHzR6/G3zJk
+         lD86a+fISY8/rVHWLKpiuGnVIbN9GTICgjLV2xQRSQnsAgCXrWTWVm9YAB87OYRECLoE
+         oOvpjdpm81zQyA+QcnfVvy2oDhjaybU8MgtYfayJxSnQRbk/ImPtXsS8HsB73j9LTCr9
+         Hgd8PtxaS2AziAbLnX7AP1DGWuwgSYAQYNcAHmXp4umw1WxB6L7HlStOTaj3kJYvqq9H
+         CWEy30qp/qxlE7Tx07gKiDHBqZuWbgWQb40XhlITbQd15DOcT0neBTYGgVf+61qBswce
+         kmGw==
+X-Gm-Message-State: APjAAAV+fBpynmb8WNO1Uz15vD7My/QPAXRurcWOUWmsdJYU0Rd1TtZx
+        4tZobyKCaBWnqN3AajxvMatnNQ==
+X-Google-Smtp-Source: APXvYqzYFEfc+CAVT++3JgstGEGREHo3wv0+racX6ysjjaApP/NjpSOwnYG+6p8cWmXzewoznDOQ/w==
+X-Received: by 2002:a1c:7e08:: with SMTP id z8mr9087883wmc.36.1558960992583;
+        Mon, 27 May 2019 05:43:12 -0700 (PDT)
 Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id c14sm11494930wrt.45.2019.05.27.05.43.10
+        by smtp.gmail.com with ESMTPSA id c14sm11494930wrt.45.2019.05.27.05.43.11
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 27 May 2019 05:43:10 -0700 (PDT)
+        Mon, 27 May 2019 05:43:11 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     ulf.hansson@linaro.org, khilman@baylibre.com,
-        devicetree@vger.kernel.org
+To:     ulf.hansson@linaro.org, khilman@baylibre.com
 Cc:     Neil Armstrong <narmstrong@baylibre.com>,
         linux-mmc@vger.kernel.org, linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v2 1/3] dt-bindings: mmc: meson-gx: add dram-access-quirk property
-Date:   Mon, 27 May 2019 14:43:05 +0200
-Message-Id: <20190527124307.32075-2-narmstrong@baylibre.com>
+        Guillaume La Roque <glaroque@baylibre.com>
+Subject: [PATCH v2 2/3] mmc: meson-gx: add dram-access-quirk
+Date:   Mon, 27 May 2019 14:43:06 +0200
+Message-Id: <20190527124307.32075-3-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190527124307.32075-1-narmstrong@baylibre.com>
 References: <20190527124307.32075-1-narmstrong@baylibre.com>
@@ -76,33 +75,164 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On the Amlogic G12A SoC family, (only) the SDIO controller has a bug which
-makes any DRAM access from the MMC controller fail.
+On the Amlogic G12A SoC family, (only) the SDIO controller fails to access
+the data from DRAM, leading to a broken controller.
 
-Add the amlogic,dram-access-quirk property so signal this particular
-controller has this bug and needs a quirk to work properly.
+But each MMC controller has 1,5KiB of SRAM after the registers, that can
+be used as bounce buffer to avoid direct DRAM access from the integrated
+DMAs (this SRAM may be used by the boot ROM when DRAM is not yet initialized).
 
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+The quirk is to disable the chained descriptor for this controller, and
+use this SRAM memory zone as buffer for the bounce buffer fallback mode.
+
+The performance hit hasn't been evaluated, but the fix has been tested
+using a WiFi AP6398S SDIO module, and the iperf3 Bandwidth measurement gave
+55.2 Mbits/sec over a 63 Hours long test, with the SDIO ios set as High-Speed
+at 50MHz clock. It gave 170 Mbits/sec as SDR104 and 200MHz clock.
+
+Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+Tested-by: Guillaume La Roque <glaroque@baylibre.com>
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/mmc/host/meson-gx-mmc.c | 70 ++++++++++++++++++++++++++-------
+ 1 file changed, 55 insertions(+), 15 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt b/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
-index 13e70409e8ac..ccc5358db131 100644
---- a/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
-+++ b/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
-@@ -22,6 +22,10 @@ Required properties:
-   clock rate requested by the MMC core.
- - resets     : phandle of the internal reset line
+diff --git a/drivers/mmc/host/meson-gx-mmc.c b/drivers/mmc/host/meson-gx-mmc.c
+index c5a8af4ca76b..bcf1789d26b6 100644
+--- a/drivers/mmc/host/meson-gx-mmc.c
++++ b/drivers/mmc/host/meson-gx-mmc.c
+@@ -129,6 +129,9 @@
+ #define SD_EMMC_TXD 0x94
+ #define SD_EMMC_LAST_REG SD_EMMC_TXD
  
-+Optional properties:
-+- amlogic,dram-access-quirk: set when controller's internal DMA engine cannot access the
-+  DRAM memory, like on the G12A dedicated SDIO controller.
++#define SD_EMMC_SRAM_DATA_BUF_LEN 1536
++#define SD_EMMC_SRAM_DATA_BUF_OFF 0x200
 +
- Example:
+ #define SD_EMMC_CFG_BLK_SIZE 512 /* internal buffer max: 512 bytes */
+ #define SD_EMMC_CFG_RESP_TIMEOUT 256 /* in clock cycles */
+ #define SD_EMMC_CMD_TIMEOUT 1024 /* in ms */
+@@ -168,6 +171,8 @@ struct meson_host {
+ 	unsigned long req_rate;
+ 	bool ddr;
  
- 	sd_emmc_a: mmc@70000 {
++	bool dram_access_quirk;
++
+ 	struct pinctrl *pinctrl;
+ 	struct pinctrl_state *pins_default;
+ 	struct pinctrl_state *pins_clk_gate;
+@@ -232,11 +237,20 @@ static struct mmc_command *meson_mmc_get_next_command(struct mmc_command *cmd)
+ static void meson_mmc_get_transfer_mode(struct mmc_host *mmc,
+ 					struct mmc_request *mrq)
+ {
++	struct meson_host *host = mmc_priv(mmc);
+ 	struct mmc_data *data = mrq->data;
+ 	struct scatterlist *sg;
+ 	int i;
+ 	bool use_desc_chain_mode = true;
+ 
++	/*
++	 * When Controller DMA cannot directly access DDR memory, disable
++	 * support for Chain Mode to directly use the internal SRAM using
++	 * the bounce buffer mode.
++	 */
++	if (host->dram_access_quirk)
++		return;
++
+ 	/*
+ 	 * Broken SDIO with AP6255-based WiFi on Khadas VIM Pro has been
+ 	 * reported. For some strange reason this occurs in descriptor
+@@ -1049,6 +1063,10 @@ static int meson_mmc_probe(struct platform_device *pdev)
+ 	host->dev = &pdev->dev;
+ 	dev_set_drvdata(&pdev->dev, host);
+ 
++	/* The G12A SDIO Controller needs an SRAM bounce buffer */
++	host->dram_access_quirk = device_property_read_bool(&pdev->dev,
++					"amlogic,dram-access-quirk");
++
+ 	/* Get regulators and the supported OCR mask */
+ 	host->vqmmc_enabled = false;
+ 	ret = mmc_regulator_get_supply(mmc);
+@@ -1146,9 +1164,16 @@ static int meson_mmc_probe(struct platform_device *pdev)
+ 		goto err_init_clk;
+ 
+ 	mmc->caps |= MMC_CAP_CMD23;
+-	mmc->max_blk_count = CMD_CFG_LENGTH_MASK;
++	if (host->dram_access_quirk) {
++		/* Limit to the available sram memory */
++		mmc->max_segs = SD_EMMC_SRAM_DATA_BUF_LEN / mmc->max_blk_size;
++		mmc->max_blk_count = mmc->max_segs;
++	} else {
++		mmc->max_blk_count = CMD_CFG_LENGTH_MASK;
++		mmc->max_segs = SD_EMMC_DESC_BUF_LEN /
++				sizeof(struct sd_emmc_desc);
++	}
+ 	mmc->max_req_size = mmc->max_blk_count * mmc->max_blk_size;
+-	mmc->max_segs = SD_EMMC_DESC_BUF_LEN / sizeof(struct sd_emmc_desc);
+ 	mmc->max_seg_size = mmc->max_req_size;
+ 
+ 	/*
+@@ -1158,15 +1183,27 @@ static int meson_mmc_probe(struct platform_device *pdev)
+ 	 */
+ 	mmc->caps2 &= ~MMC_CAP2_HS400;
+ 
+-	/* data bounce buffer */
+-	host->bounce_buf_size = mmc->max_req_size;
+-	host->bounce_buf =
+-		dma_alloc_coherent(host->dev, host->bounce_buf_size,
+-				   &host->bounce_dma_addr, GFP_KERNEL);
+-	if (host->bounce_buf == NULL) {
+-		dev_err(host->dev, "Unable to map allocate DMA bounce buffer.\n");
+-		ret = -ENOMEM;
+-		goto err_free_irq;
++	if (host->dram_access_quirk) {
++		/*
++		 * The MMC Controller embeds 1,5KiB of internal SRAM
++		 * that can be used to be used as bounce buffer.
++		 * In the case of the G12A SDIO controller, use these
++		 * instead of the DDR memory
++		 */
++		host->bounce_buf_size = SD_EMMC_SRAM_DATA_BUF_LEN;
++		host->bounce_buf = host->regs + SD_EMMC_SRAM_DATA_BUF_OFF;
++		host->bounce_dma_addr = res->start + SD_EMMC_SRAM_DATA_BUF_OFF;
++	} else {
++		/* data bounce buffer */
++		host->bounce_buf_size = mmc->max_req_size;
++		host->bounce_buf =
++			dma_alloc_coherent(host->dev, host->bounce_buf_size,
++					   &host->bounce_dma_addr, GFP_KERNEL);
++		if (host->bounce_buf == NULL) {
++			dev_err(host->dev, "Unable to map allocate DMA bounce buffer.\n");
++			ret = -ENOMEM;
++			goto err_free_irq;
++		}
+ 	}
+ 
+ 	host->descs = dma_alloc_coherent(host->dev, SD_EMMC_DESC_BUF_LEN,
+@@ -1183,8 +1220,9 @@ static int meson_mmc_probe(struct platform_device *pdev)
+ 	return 0;
+ 
+ err_bounce_buf:
+-	dma_free_coherent(host->dev, host->bounce_buf_size,
+-			  host->bounce_buf, host->bounce_dma_addr);
++	if (!host->dram_access_quirk)
++		dma_free_coherent(host->dev, host->bounce_buf_size,
++				  host->bounce_buf, host->bounce_dma_addr);
+ err_free_irq:
+ 	free_irq(host->irq, host);
+ err_init_clk:
+@@ -1208,8 +1246,10 @@ static int meson_mmc_remove(struct platform_device *pdev)
+ 
+ 	dma_free_coherent(host->dev, SD_EMMC_DESC_BUF_LEN,
+ 			  host->descs, host->descs_dma_addr);
+-	dma_free_coherent(host->dev, host->bounce_buf_size,
+-			  host->bounce_buf, host->bounce_dma_addr);
++
++	if (!host->dram_access_quirk)
++		dma_free_coherent(host->dev, host->bounce_buf_size,
++				  host->bounce_buf, host->bounce_dma_addr);
+ 
+ 	clk_disable_unprepare(host->mmc_clk);
+ 	clk_disable_unprepare(host->core_clk);
 -- 
 2.21.0
 
