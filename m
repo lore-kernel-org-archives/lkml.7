@@ -2,100 +2,68 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1429CC07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 05:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48DC7C07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 05:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0DCA20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 05:02:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D27B2070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 05:04:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558933486;
+	bh=ZhaWRzbW4eDqGa/ywNz232vbX4q9/FJQELm4pI5OOJM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=E6KZ0ipU2izodbcss1CXtSvXU8QavJYtCQK5Ni6tcnZcRjTgaZnxWvwfZTygc2P3J
+	 ERD6lrYbtwjdzcfFH/AnUdtRZjwUvG+czPOFOSnUWE/e/pVc7HD2UTVH1IiR1QCRZ+
+	 JhcUs39ZkuyuAXXqwcOTAyKwrprmVw3bLGqssb6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726131AbfE0FC3 (ORCPT
+        id S1726114AbfE0FEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 01:02:29 -0400
-Received: from mx.socionext.com ([202.248.49.38]:48343 "EHLO mx.socionext.com"
+        Mon, 27 May 2019 01:04:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726052AbfE0FC2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 01:02:28 -0400
-Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 27 May 2019 14:02:26 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id C848818010A;
-        Mon, 27 May 2019 14:02:26 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Mon, 27 May 2019 14:02:26 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id 4956E1A04FC;
-        Mon, 27 May 2019 14:02:26 +0900 (JST)
-Received: from M20VSDK.e01.socionext.com (unknown [10.213.118.34])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id 0A229120ABF;
-        Mon, 27 May 2019 14:02:26 +0900 (JST)
-From:   Sugaya Taichi <sugaya.taichi@socionext.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-Cc:     Takao Orito <orito.takao@socionext.com>,
-        Kazuhiro Kasai <kasai.kazuhiro@socionext.com>,
-        Shinji Kanematsu <kanematsu.shinji@socionext.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-        Sugaya Taichi <sugaya.taichi@socionext.com>
-Subject: [PATCH] serial: Fix an invalid comparing statement
-Date:   Mon, 27 May 2019 14:01:27 +0900
-Message-Id: <1558933288-30023-1-git-send-email-sugaya.taichi@socionext.com>
-X-Mailer: git-send-email 1.9.1
+        id S1725774AbfE0FEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 01:04:45 -0400
+Received: from localhost (unknown [171.61.91.186])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACFA520657;
+        Mon, 27 May 2019 05:04:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558933484;
+        bh=ZhaWRzbW4eDqGa/ywNz232vbX4q9/FJQELm4pI5OOJM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lHKfQKhh+Q4udo9uLAkj+mtWghEYj0Rd5NYHRN96qmr1sU9gA7emY0jT/GxPLM+0u
+         vgrGxi7zcx5sEoV0HxxG5IhZbgE0XEx/pxUCBhuCzGyWTR+JC+AJfi/T/mG5zngBYK
+         paCwikr7D7b+3gwStpG6JdQY8Uhp1/ZkcS+FM5pw=
+Date:   Mon, 27 May 2019 10:34:38 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     sanyog.r.kale@intel.com, pierre-louis.bossart@linux.intel.com,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] soundwire: stream: fix out of boundary access on port
+ properties
+Message-ID: <20190527050438.GY15118@vkoul-mobl>
+References: <20190522162443.5780-1-srinivas.kandagatla@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190522162443.5780-1-srinivas.kandagatla@linaro.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop the if-statement which refers to 8th bit field of u8 variable.
-The bit field is no longer used.
+On 22-05-19, 17:24, Srinivas Kandagatla wrote:
+> Assigning local iterator to array element and using it again for
+> indexing would cross the array boundary.
+> Fix this by directly referring array element without using the local
+> variable.
 
-Fixes: ba44dc043004 ("serial: Add Milbeaut serial control")
-Reported-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Sugaya Taichi <sugaya.taichi@socionext.com>
----
- drivers/tty/serial/milbeaut_usio.c | 15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
+Applied, thanks
 
-diff --git a/drivers/tty/serial/milbeaut_usio.c b/drivers/tty/serial/milbeaut_usio.c
-index 949ab7e..d7207ab 100644
---- a/drivers/tty/serial/milbeaut_usio.c
-+++ b/drivers/tty/serial/milbeaut_usio.c
-@@ -56,7 +56,6 @@
- #define MLB_USIO_SSR_FRE		BIT(4)
- #define MLB_USIO_SSR_PE			BIT(5)
- #define MLB_USIO_SSR_REC		BIT(7)
--#define MLB_USIO_SSR_BRK		BIT(8)
- #define MLB_USIO_FCR_FE1		BIT(0)
- #define MLB_USIO_FCR_FE2		BIT(1)
- #define MLB_USIO_FCR_FCL1		BIT(2)
-@@ -180,18 +179,14 @@ static void mlb_usio_rx_chars(struct uart_port *port)
- 		if (status & MLB_USIO_SSR_ORE)
- 			port->icount.overrun++;
- 		status &= port->read_status_mask;
--		if (status & MLB_USIO_SSR_BRK) {
--			flag = TTY_BREAK;
-+		if (status & MLB_USIO_SSR_PE) {
-+			flag = TTY_PARITY;
- 			ch = 0;
- 		} else
--			if (status & MLB_USIO_SSR_PE) {
--				flag = TTY_PARITY;
-+			if (status & MLB_USIO_SSR_FRE) {
-+				flag = TTY_FRAME;
- 				ch = 0;
--			} else
--				if (status & MLB_USIO_SSR_FRE) {
--					flag = TTY_FRAME;
--					ch = 0;
--				}
-+			}
- 		if (flag)
- 			uart_insert_char(port, status, MLB_USIO_SSR_ORE,
- 					 ch, flag);
 -- 
-1.9.1
-
+~Vinod
