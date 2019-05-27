@@ -2,96 +2,107 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21AC3C07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6712C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:08:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED7B620883
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:08:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95BBA208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:08:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbfE0LIU (ORCPT
+        id S1726997AbfE0LI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 07:08:20 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:33778 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726476AbfE0LIT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 07:08:19 -0400
-Received: by mail-lf1-f68.google.com with SMTP id y17so3899079lfe.0;
-        Mon, 27 May 2019 04:08:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Amea0yxkLSVnpaE1taY7uaOdM5gfTzcYzLxuO6OKCas=;
-        b=BKs52VrGHojs+UDliJtM01DfUgVVHdsVVD5nzpm0ePBH9WsHF4xQhIyZCjdFlX9kvs
-         FD9qyFI7iZBjboRFl5Bl8uFNTTibGtV6bbBqF+L8/nqI4KWZla1bXFeB/JXayox5Fo7F
-         HrYumraLrj9FN3OK1AwuMZsFEgw84cK6wvRTBNtuY5OMvNd8biBtGqpCugtISBAe3nj/
-         mlgNFp+R8J4ve/Vc4uj8InYRrH16hg+GIl7O1yXTNBLaz7xPkr8txyRfYFogwU2mrb5w
-         A3wUlTFkWLsewA5h4zEvJTE6gnaFEkUmhmjpzV50zF13PcSKB+gi0Jpzf6ftC3eAYh+O
-         ax1g==
-X-Gm-Message-State: APjAAAUeXTNDE0xSOAiSALUTpYYSXqsrLsXQHulUthnOCkmduoYzQHP5
-        dnQsBa28ly4aemdAFlucVLeDx5iMi8hytC46y97JlYqS
-X-Google-Smtp-Source: APXvYqwcDy3XDaO0BzfXYp7vMfly1veQPO3ujWmlKLecl2HkSq5qfBAdcdVmkJpkAvRKefsRCQFJTTLWQ/j2c66om+Y=
-X-Received: by 2002:ac2:546a:: with SMTP id e10mr3644980lfn.75.1558955298038;
- Mon, 27 May 2019 04:08:18 -0700 (PDT)
+        Mon, 27 May 2019 07:08:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55352 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725814AbfE0LI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 07:08:28 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97D5120883;
+        Mon, 27 May 2019 11:08:26 +0000 (UTC)
+Date:   Mon, 27 May 2019 07:08:25 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        "Frank Ch. Eigler" <fche@redhat.com>
+Subject: Re: [RFC][PATCH 03/14 v2] function_graph: Allow multiple users to
+ attach to function graph
+Message-ID: <20190527070825.0aa31964@gandalf.local.home>
+In-Reply-To: <20190527101004.GW2623@hirez.programming.kicks-ass.net>
+References: <20190520142001.270067280@goodmis.org>
+        <20190520142156.992391836@goodmis.org>
+        <20190524112608.GJ2589@hirez.programming.kicks-ass.net>
+        <20190524081219.25de03f6@gandalf.local.home>
+        <20190524122724.GO2623@hirez.programming.kicks-ass.net>
+        <20190524085744.71557f32@gandalf.local.home>
+        <20190527101004.GW2623@hirez.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190525120155.108948-1-wangkefeng.wang@huawei.com>
-In-Reply-To: <20190525120155.108948-1-wangkefeng.wang@huawei.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 27 May 2019 13:08:05 +0200
-Message-ID: <CAMuHMdX=o+gT6fbpZcj8jQbHi9LJci9CX72DG5j+DKYxuSkYvQ@mail.gmail.com>
-Subject: Re: [PATCH] drivers: base: power: Use of_clk_get_parent_count()
-To:     Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kefeng,
-
-On Sat, May 25, 2019 at 1:54 PM Kefeng Wang <wangkefeng.wang@huawei.com> wrote:
-> Use of_clk_get_parent_count() instead of open coding.
->
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-
-Thanks for your patch!
-
-> --- a/drivers/base/power/clock_ops.c
-> +++ b/drivers/base/power/clock_ops.c
-> @@ -195,8 +195,7 @@ int of_pm_clk_add_clks(struct device *dev)
->         if (!dev || !dev->of_node)
->                 return -EINVAL;
->
-> -       count = of_count_phandle_with_args(dev->of_node, "clocks",
-> -                                          "#clock-cells");
-> +       count = of_clk_get_parent_count(dev->of_node);
->         if (count <= 0)
->                 return -ENODEV;
+On Mon, 27 May 2019 12:10:04 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
 
-Given of_clk_get_parent_count() is provided by <linux/of_clk.h>, I think
-you should add an include for that.
+> > rcu_tasks doesn't cross voluntary sleeps, which this does.  
+> 
+> Sure, but we can 'fix' that, surely.
 
-With the above fixed:
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Well, that's the point of the rcu_tasks. To let us know when a task has
+voluntarily slept. I don't think we want to "fix" that.
 
-Gr{oetje,eeting}s,
+> Alternatively we use SRCU, or
+> something else, a blend between SRCU and percpu-rwsem for example, SRCU
+> has that annoying smp_mb() on the read side, where percpu-rwsem doesn't
+> have that.
+> 
+> > > And delay the unreg until all active users are gone -- who gives a crap
+> > > that can take a while.  
+> > 
+> > It could literally be forever (well, until the machine reboots). And
+> > something that could appear to be a memory leak, although a very slow
+> > one. But probably be hard to have more than the number of tasks on the
+> > system.  
+> 
+> Again, who cares.. ? How often do you have return trace functions that
+> dissapear, afaict that only happens with modules, and neither
+> function_graph_trace nor kprobes are modules.
+> 
+> It'll just mean the module unload will be stuck, possibly forever.
+> That's not something I care about. Also, if we _really_ care, we can
+> mandate that module users use some sort of ugly trampoline that covers
+> their asses at the cost of some performance.
+> 
+> Getting rid of that array makes this code far saner (and I suspect
+> faster too).
 
-                        Geert
+The array is not the complex part of this. It was probably the easiest
+part of this patch series. It just shows up a lot in the beginning
+because I needed it to work before doing anything else. The more
+difficult parts came with the passing of data from entry to exit.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+I plan on keeping the array for now, as it is just an internal
+implementation detail, that gives us only a limitation of the array
+size that is noticed outside of the function graph code. If we find
+some kind of RCU alternative, then we can switch to that in the
+future and remove the array limitation.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- Steve
