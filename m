@@ -2,150 +2,148 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 436B6C46470
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B61C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:42:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 233FD20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B733720673
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:42:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfE0Ljb (ORCPT
+        id S1726371AbfE0Lmb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 07:39:31 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:44041 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726094AbfE0Lja (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 07:39:30 -0400
-Received: by mail-ot1-f66.google.com with SMTP id g18so14506656otj.11;
-        Mon, 27 May 2019 04:39:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V0OzTK0kT2ddqZaGr86QRO9HD6H6ELQHgY3vn9EoNSY=;
-        b=nxBPaLcOHEMMdpZHLjXHOILUXYM8fTOI5bfBJJzIuPdm5mvL9uczAcDCZzKQcheqrN
-         /sF7iVdTly8QcS37JohIugNQjMN+SdRwmaBlWSF/xXV+G21BU9sSG6IxvMYDy6VXPHka
-         fFkS2JnNuppbI0A+djLSGEumGqTrDD273Rcea3ZL1j3XS8ACje+k2KImh+nLJXhy2qgQ
-         7K+npPDh3CfHY22hHIYqECLOuBYeiWASF3C5kbgwIVMhNRZRDELzyr3e4j0wGdhtd3ch
-         n/RTnCJSfoeoWo1JNkNo4d5wo6AO5aBK5s7Iq7mjEAM5BnDWeIoU1nH0ddDGyz98XP9Q
-         4djg==
-X-Gm-Message-State: APjAAAV89id1kqpUo8Ajpos7Z4do0GkQNSRoWc00IV5DeQI2NoTE3B0V
-        qTmjmzwgYCtu+y4Fq030nQnnVHdu0JHoWMvMO34=
-X-Google-Smtp-Source: APXvYqzRJPkCqJiOx+VOhGWb3xNSagzD3mXtVwSHX6dsr/mX9srOC/7Nko7rnVoMhplnBtrellrsrHboMJ8YmHsuPBA=
-X-Received: by 2002:a9d:1a5:: with SMTP id e34mr44398857ote.59.1558957169445;
- Mon, 27 May 2019 04:39:29 -0700 (PDT)
+        Mon, 27 May 2019 07:42:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38470 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725858AbfE0Lma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 07:42:30 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C8DDBAD03;
+        Mon, 27 May 2019 11:42:28 +0000 (UTC)
+Date:   Mon, 27 May 2019 13:42:28 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [PATCHv2 3/4] printk: factor out register_console() code
+Message-ID: <20190527114228.uxg4awhtdovoi2cc@pathway.suse.cz>
+References: <20190426053302.4332-1-sergey.senozhatsky@gmail.com>
+ <20190426053302.4332-4-sergey.senozhatsky@gmail.com>
+ <20190515143631.vuhbda6btucrkskx@pathway.suse.cz>
+ <20190523065144.GA18333@jagdpanzerIV>
 MIME-Version: 1.0
-References: <20190521145141.9813-1-paul@crapouillou.net>
-In-Reply-To: <20190521145141.9813-1-paul@crapouillou.net>
-From:   Mathieu Malaterre <malat@debian.org>
-Date:   Mon, 27 May 2019 13:39:18 +0200
-Message-ID: <CA+7wUszagtyMV3oMxAi4VqpDeFcBY5ohXZ3PrXe-X5JV21bjBw@mail.gmail.com>
-Subject: Re: Ingenic Timer/Counter Unit (TCU) patchset v12
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-mips@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190523065144.GA18333@jagdpanzerIV>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 4:51 PM Paul Cercueil <paul@crapouillou.net> wrote:
->
-> Hi,
->
-> Here's the V12 of my patchset to add support for the Timer/Counter Unit
-> (TCU) present on the JZ47xx SoCs from Ingenic.
->
-> This patchset is much shorter at only 13 patches vs. 27 patches in V11;
-> the remaining patches will be sent in parallel (if applicable) or as a
-> follow-up patchset once this one is merged.
->
-> In V11 the clocksource maintainers weren't happy with the size of the
-> ingenic-timer driver, which included clocks and irqchip setup code.
-> On the other hand, devicetree maintainers wanted one single node for
-> the TCU hardware since it's effectively just one hardware block.
->
-> In this patchset the functionality is cut in four different drivers:
-> a MFD one to provide the regmap, probe the children and which provides
-> several API functions; a clocks driver; a irqchip driver; a clocksource
-> driver. All these drivers work with the same regmap, have the same
-> compatible strings, and will probe _with the same devicetree node_.
+On Thu 2019-05-23 15:51:44, Sergey Senozhatsky wrote:
+> Hello,
+> 
+> On (05/15/19 16:36), Petr Mladek wrote:
+> [..]
+> > >  
+> > >  	console_unlock();
+> > >  	console_sysfs_notify();
+> > > +	console_lock();
+> > 
+> > I have got an idea how to get rid of this weirdness:
+> >
+> > 1. The check for bcon seems to be just an optimization. There is not need
+> >    to remove boot consoles when there are none.
+> > 
+> > 2. The condition (newcon->flags & (CON_CONSDEV|CON_BOOT)) == CON_CONSDEV)
+> >    is valid only when the preferred console was really added.
+> > 
+> > Therefore we could move the code to a separate function, e.g.
+> > 
+> > void unregister_boot_consoles(void)
+> > {
+> > 	struct console *bcon;
+> > 
+> > 	console_lock();
+> > 	for_each_console(bcon)
+> > 		if (bcon->flags & CON_BOOT)
+> > 			__unregister_console(bcon);
+> > 	}
+> > 	console_unlock();
+> > 	console_sysfs_notify();
+> > }
+> > 
+> > Then we could do something like:
+> > 
+> > void register_console(struct console *newcon)
+> > {
+> > 	bool newcon_is_preferred = false;
+> > 
+> > 	console_lock();
+> > 	__register_console(newcon);
+> > 	if ((newcon->flags & (CON_CONSDEV|CON_BOOT)) == CON_CONSDEV)
+> > 		newcon_is_preferred = true;
+> > 	console_unlock();
+> > 	console_sysfs_notify();
+> > 
+> > 	/*
+> > 	 * By unregistering the bootconsoles after we enable the real console
+> > 	 * we get the "console xxx enabled" message on all the consoles -
+> > 	 * boot consoles, real consoles, etc - this is to ensure that end
+> > 	 * users know there might be something in the kernel's log buffer that
+> > 	 * went to the bootconsole (that they do not see on the real console)
+> > 	 */
+> > 	if (newcon_is_preferred && !keep_bootcon)
+> > 		unregister_boot_consoles();
+> > }
+> > 
+> > How does that sound?
+> 
+> Hmm, may be I'm missing something. I think that the 'weirdness'
+> is still needed.
 
-For the series:
+I probably used wrong words. For me the most weird thing was
+that the original code temporary released a lock that
+was originally taken in another function.
 
-Tested-by: Mathieu Malaterre <malat@debian.org>
+My proposal is just a refactoring. It allows to do all
+the locking/unlocking operations in a single function.
+It makes is easier to track.
 
-System: MIPS Creator CI20
+> 
+> 	console_lock();
+> 	__unregister_console(bcon);  // pr_info("%sconsole disabled\n")
+> 	console_unlock();
+> 
+> is going to change the visible behaviour - we need to show
+> pr_info("%sconsole [%s%d] disabled\n") on all consoles, especially
+> on the console which we are disabling.
 
-For reference, here is my local patch:
+It was the 1st patch that changed the behavior. It moved
+the pr_info() under console_lock. Therefore it never
+appears on the console.
 
-diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-index 1bfac58da5df..e7b7da32f278 100644
---- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <dt-bindings/clock/jz4780-cgu.h>
-+#include <dt-bindings/clock/ingenic,tcu.h>
- #include <dt-bindings/dma/jz4780-dma.h>
-
- / {
-@@ -80,6 +81,15 @@
-
-                interrupt-parent = <&intc>;
-                interrupts = <27 26 25>;
-+
-+               watchdog: watchdog@0 {
-+                       compatible = "ingenic,jz4780-watchdog";
-+                       reg = <0x0 0xc>;
-+
-+                       clocks = <&tcu TCU_CLK_WDT>;
-+                       clock-names = "wdt";
-+               };
-+
-        };
-
-        rtc_dev: rtc@10003000 {
-@@ -287,14 +297,6 @@
-                status = "disabled";
-        };
-
--       watchdog: watchdog@10002000 {
--               compatible = "ingenic,jz4780-watchdog";
--               reg = <0x10002000 0x10>;
--
--               clocks = <&cgu JZ4780_CLK_RTCLK>;
--               clock-names = "rtc";
--       };
--
-        nemc: nemc@13410000 {
-                compatible = "ingenic,jz4780-nemc";
-                reg = <0x13410000 0x10000>;
+The 4th patch tries to fix this but it looks racy. I am going
+to comment the race in the thread about the 4th patch.
 
 
+> Who knows, maybe that's the last remaining properly working
+> console. Doing __unregister_console() under console_sem will
+> end up in a lost/missing message on bcon (or
+> on any other console we are unregistering).
 
-> Regards,
-> -Paul
->
->
+I agree that we should make sure that the message is printed on
+the console that is being disabled.
+
+Sigh, I am afraid that a proper solution would result in a messy
+code. It would be pity. The original problem is rather theoretical.
+The fix is not worth making the code even more hairy.
+
+Best Regards,
+Petr
