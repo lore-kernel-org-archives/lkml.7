@@ -2,427 +2,191 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B45C07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 03:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB46C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 03:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A60521707
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 03:50:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E7D521721
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 03:51:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MJglQuI9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbfE0Dua (ORCPT
+        id S1726359AbfE0Dvo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 23:50:30 -0400
-Received: from mga14.intel.com ([192.55.52.115]:56286 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725923AbfE0Dua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 23:50:30 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 May 2019 20:50:28 -0700
-X-ExtLoop1: 1
-Received: from joy-optiplex-7040.sh.intel.com ([10.239.13.9])
-  by orsmga006.jf.intel.com with ESMTP; 26 May 2019 20:50:22 -0700
-From:   Yan Zhao <yan.y.zhao@intel.com>
-To:     intel-gvt-dev@lists.freedesktop.org
-Cc:     aik@ozlabs.ru, Zhengxiao.zx@alibaba-inc.com,
-        shuangtai.tst@alibaba-inc.com, qemu-devel@nongnu.org,
-        eauger@redhat.com, yi.l.liu@intel.com, ziye.yang@intel.com,
-        mlevitsk@redhat.com, pasic@linux.ibm.com, felipe@nutanix.com,
-        changpeng.liu@intel.com, Ken.Xue@amd.com,
-        jonathan.davies@nutanix.com, shaopeng.he@intel.com,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        libvir-list@redhat.com, alex.williamson@redhat.com,
-        eskultet@redhat.com, dgilbert@redhat.com, cohuck@redhat.com,
-        kevin.tian@intel.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, cjia@nvidia.com, kwankhede@nvidia.com,
-        berrange@redhat.com, dinechin@redhat.com,
-        Yan Zhao <yan.y.zhao@intel.com>
-Subject: [PATCH v3 2/2] drm/i915/gvt: export migration_version to mdev sysfs for Intel vGPU
-Date:   Sun, 26 May 2019 23:44:37 -0400
-Message-Id: <20190527034437.31594-1-yan.y.zhao@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190527034155.31473-1-yan.y.zhao@intel.com>
-References: <20190527034155.31473-1-yan.y.zhao@intel.com>
+        Sun, 26 May 2019 23:51:44 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:39834 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726055AbfE0Dvn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 May 2019 23:51:43 -0400
+Received: by mail-ed1-f65.google.com with SMTP id e24so24560837edq.6
+        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2019 20:51:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D0QV8qyfvSFrB2pCHlJaBkLaI6mf2LLeBc50MxxOpH8=;
+        b=MJglQuI93h/MaSGCbXpu+1/2njRn2SFnTRXg0exJjB8T3VjOTgwLuhH/Wnbh501X8T
+         pLiLZ+agaxbwhmWjj1kTZilthQ4/cuEYUj96l7xADwCpD7aCog/g6PqXbBiUBc48Dw6o
+         XqeoEdTY/p4h78o3Odmn+2BjwEbXmyr3yQWwA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D0QV8qyfvSFrB2pCHlJaBkLaI6mf2LLeBc50MxxOpH8=;
+        b=Sm7e1rdY1uoHjeY0ILTzrDloGQVEW+npoeRQmpEDFmyjEZfrcnve5nljCXtDo7FDgc
+         O7ygKn3+LdIx1zLvxEt+8pSWHF1a+lZKe8c2Aqoyz9FvABSnOs/NlXiyGMtUOFBdryA6
+         aE+nAasmrwhrIYHdOsi6UYVADKPqIxQs5Mez32yn35MP5YST8oYqGs/zNP8luPptfyqG
+         riZngKYncqLdZrB1OIymB1zOPkp6re1Bfj44+2fLf07PRn0js48u/Nk/JnH61kvGn1wc
+         4yYDWmVuLG1Hoek5muNk31H7RuPTOnydfBDanCBDHJmZEv6MRWoT/OKNS1MFupcWc8Tm
+         Mr+g==
+X-Gm-Message-State: APjAAAXmHGe/JD1Ceh+Qq2zbRMiWMlA0+OFJTFiIQRTI4FxKKTaB2IFX
+        qBoxEAVR3pXKrqOsgfEEIhY2uReQw9pI9w==
+X-Google-Smtp-Source: APXvYqyGzGVnX73M+NoWI4bQU318tyXLGrNO83wUjG2MXgAzzVA7D1M7UEz8dfqJGvN/Xx+Dt6jTpw==
+X-Received: by 2002:a17:906:66c5:: with SMTP id k5mr11066092ejp.146.1558929100797;
+        Sun, 26 May 2019 20:51:40 -0700 (PDT)
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com. [209.85.128.52])
+        by smtp.gmail.com with ESMTPSA id n55sm2901934edd.93.2019.05.26.20.51.38
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Sun, 26 May 2019 20:51:39 -0700 (PDT)
+Received: by mail-wm1-f52.google.com with SMTP id z23so10242079wma.4
+        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2019 20:51:38 -0700 (PDT)
+X-Received: by 2002:a1c:994f:: with SMTP id b76mr7388714wme.90.1558929098045;
+ Sun, 26 May 2019 20:51:38 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190117162008.25217-1-stanimir.varbanov@linaro.org>
+ <20190117162008.25217-11-stanimir.varbanov@linaro.org> <60b3efff-31c1-bc04-8af9-deebb8bc013a@xs4all.nl>
+ <fe51ae1e-6d2e-36bd-485a-d85520ad2386@linaro.org> <CAAFQd5Co3G1J4+HOcjtCb7p3rhLcm+1E=mPr2d=AtdOSuF_eKg@mail.gmail.com>
+ <c56930e0-be6f-2ade-fcea-8ee0ff6247ec@linaro.org> <CAAFQd5CNGsnqjpLsWSTf=8r+hSfyOgD8SU-tn5EbHCCuuSgH6A@mail.gmail.com>
+ <01b6683f-9378-e6f2-501f-e2213e6c690d@xs4all.nl>
+In-Reply-To: <01b6683f-9378-e6f2-501f-e2213e6c690d@xs4all.nl>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Mon, 27 May 2019 12:51:26 +0900
+X-Gmail-Original-Message-ID: <CAAFQd5Dw-1A2gXuC54Z7808L6Vm9mjPpE7Kbj-TZC18_k_FgVA@mail.gmail.com>
+Message-ID: <CAAFQd5Dw-1A2gXuC54Z7808L6Vm9mjPpE7Kbj-TZC18_k_FgVA@mail.gmail.com>
+Subject: Re: [PATCH 10/10] venus: dec: make decoder compliant with stateful
+ codec API
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Vikash Garodia <vgarodia@codeaurora.org>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Malathi Gottam <mgottam@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This feature implements the migration_version attribute for Intel's vGPU
-mdev devices.
+On Tue, May 21, 2019 at 9:27 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
+>
+> On 5/21/19 11:09 AM, Tomasz Figa wrote:
+> > Hi Stan,
+> >
+> > On Mon, May 20, 2019 at 11:47 PM Stanimir Varbanov
+> > <stanimir.varbanov@linaro.org> wrote:
+> >>
+> >> Hi Tomasz,
+> >>
+> >> On 4/24/19 3:39 PM, Tomasz Figa wrote:
+> >>> On Wed, Apr 24, 2019 at 9:15 PM Stanimir Varbanov
+> >>> <stanimir.varbanov@linaro.org> wrote:
+> >>>>
+> >>>> Hi Hans,
+> >>>>
+> >>>> On 2/15/19 3:44 PM, Hans Verkuil wrote:
+> >>>>> Hi Stanimir,
+> >>>>>
+> >>>>> I never paid much attention to this patch series since others were busy
+> >>>>> discussing it and I had a lot of other things on my plate, but then I heard
+> >>>>> that this patch made G_FMT blocking.
+> >>>>
+> >>>> OK, another option could be to block REQBUF(CAPTURE) until event from hw
+> >>>> is received that the stream is parsed and the resolution is correctly
+> >>>> set by application. Just to note that I'd think to this like a temporal
+> >>>> solution until gstreamer implements v4l events.
+> >>>>
+> >>>> Is that looks good to you?
+> >>>
+> >>> Hmm, I thought we concluded that gstreamer sets the width and height
+> >>> in OUTPUT queue before querying the CAPTURE queue and so making the
+> >>> driver calculate the CAPTURE format based on what's set on OUTPUT
+> >>> would work fine. Did I miss something?
+> >>
+> >> Nobody is miss something.
+> >>
+> >> First some background about how Venus implements stateful codec API.
+> >>
+> >> The Venus firmware can generate two events "sufficient" and
+> >> "insufficient" buffer requirements (this includes decoder output buffer
+> >> size and internal/scratch buffer sizes). Presently I always set minimum
+> >> possible decoder resolution no matter what the user said, and by that
+> >> way I'm sure that "insufficient" event will always be triggered by the
+> >> firmware (the other reason to take this path is because this is the
+> >> least-common-divider for all supported Venus hw/fw versions thus common
+> >> code in the driver). The reconfiguration (during codec Initialization
+> >> sequence) is made from STREAMON(CAPTURE) context. Now, to make that
+> >> re-configuration happen I need to wait for "insufficient" event from
+> >> firmware in order to know the real coded resolution.
+> >>
+> >> In the case of gstreamer where v4l2_events support is missing I have to
+> >> block (wait for firmware event) REQBUF(CAPTURE) (vb2::queue_setup) or
+> >> STREAMON(CAPTURE) (vb2::start_streaming).
+> >>
+> >> I tried to set the coded resolution to the firmware as-is it set by
+> >> gstreamer but then I cannot receive the "sufficient" event for VP8 and
+> >> VP9 codecs. So I return back to the solution with minimum resolution above.
+> >>
+> >> I'm open for suggestions.
+> >
+> > I think you could still keep setting the minimum size and wait for the
+> > "insufficient" event. At the same time, you could speculatively
+> > advertise the expected "sufficient" size on the CAPTURE queue before
+> > the hardware signals those. Even if you mispredict them, you'll get
+> > the event, update the CAPTURE resolution and send the source change
+> > event to the application, which would then give you the correct
+> > buffers. Would that work for you?
+>
+> As I understand it this still would require event support, which gstreamer
+> doesn't have.
 
-migration_version attribute is rw.
-It's used to check migration compatibility for two mdev devices of the
-same mdev type.
-migration_version string is defined by vendor driver and opaque to
-userspace.
+I don't think it matches what I remember from the earlier discussion.
+As long as Gstreamer sets the visible resolution (from the container
+AFAIR) on OUTPUT, the driver would adjust it to something that is
+expected to be the right framebuffer resolution and so Gstreamer would
+be able to continue. Of course if the expected value doesn't match, it
+wouldn't work, but it's the same as currently for Coda AFAICT.
 
-For Intel vGPU of gen8 and gen9, the format of migration_version string
-is:
-  <vendor id>-<device id>-<vgpu type>-<software version>.
+>
+> I think it is OK to have REQBUFS sleep in this case. However, I would only
 
-For future platforms, the format of migration_version string is to be
-expanded to include more meta data to identify Intel vGPUs for live
-migration compatibility check
+Why REQBUFS? While that could possibly allow us to allocate the right
+buffers, Gstreamer wouldn't be able to know the right format, because
+it would query it before REQBUFS, wouldn't it?
 
-For old platforms, and for GVT not supporting vGPU live migration
-feature, -ENODEV is returned on read(2)/write(2) of migration_version
-attribute.
-For vGPUs running old GVT who do not expose migration_version
-attribute, live migration is regarded as not supported for those vGPUs.
+For this reason, s5p-mfc makes G_FMT(CAPTURE) blocking and if we
+decide to forcefully keep the compatibility, even with in drivers, we
+should probably do the same here.
 
-Cc: Alex Williamson <alex.williamson@redhat.com>
-Cc: Erik Skultety <eskultet@redhat.com>
-Cc: "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-Cc: Cornelia Huck <cohuck@redhat.com>
-Cc: "Tian, Kevin" <kevin.tian@intel.com>
-Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
-Cc: "Wang, Zhi A" <zhi.a.wang@intel.com>
-c: Neo Jia <cjia@nvidia.com>
-Cc: Kirti Wankhede <kwankhede@nvidia.com>
+> enable this behavior if the application didn't subscribe to the SOURCE_CHANGE
+> event. That's easy enough to check in the driver. And that means that if the
+> application is well written, then the driver will behave in a completely
+> standard way that the compliance test can check.
 
-Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+I guess one could have some helpers for this. They would listen to the
+source change events internally and block / wake-up appropriate ioctls
+whenever necessary.
 
----
-v3:
-1. renamed version to migration_version
-(Christophe de Dinechin, Cornelia Huck, Alex Williamson)
-2. instead of generating migration version strings each time, storing
-them in vgpu types generated during initialization.
-(Zhenyu Wang, Cornelia Huck)
-3. replaced multiple snprintf to one big snprintf in
-intel_gvt_get_vfio_migration_version()
-(Dr. David Alan Gilbert)
-4. printed detailed error log
-(Alex Williamson, Erik Skultety, Cornelia Huck, Dr. David Alan Gilbert)
-5. incorporated <software version> into migration_version string
-(Alex Williamson)
-6. do not use ifndef macro to switch off migration_version attribute
-(Zhenyu Wang)
+Another question: If we intend this to be implemented in new drivers
+too, should it be documented in the spec?
 
-v2:
-1. removed 32 common part of version string
-(Alex Williamson)
-2. do not register version attribute for GVT not supporting live
-migration.(Cornelia Huck)
-3. for platforms out of gen8, gen9, return -EINVAL --> -ENODEV for
-incompatible. (Cornelia Huck)
----
- drivers/gpu/drm/i915/gvt/Makefile            |   2 +-
- drivers/gpu/drm/i915/gvt/gvt.c               |  39 +++++
- drivers/gpu/drm/i915/gvt/gvt.h               |   5 +
- drivers/gpu/drm/i915/gvt/migration_version.c | 167 +++++++++++++++++++
- drivers/gpu/drm/i915/gvt/vgpu.c              |  13 +-
- 5 files changed, 223 insertions(+), 3 deletions(-)
- create mode 100644 drivers/gpu/drm/i915/gvt/migration_version.c
-
-diff --git a/drivers/gpu/drm/i915/gvt/Makefile b/drivers/gpu/drm/i915/gvt/Makefile
-index 271fb46d4dd0..a9d561c93ab8 100644
---- a/drivers/gpu/drm/i915/gvt/Makefile
-+++ b/drivers/gpu/drm/i915/gvt/Makefile
-@@ -3,7 +3,7 @@ GVT_DIR := gvt
- GVT_SOURCE := gvt.o aperture_gm.o handlers.o vgpu.o trace_points.o firmware.o \
- 	interrupt.o gtt.o cfg_space.o opregion.o mmio.o display.o edid.o \
- 	execlist.o scheduler.o sched_policy.o mmio_context.o cmd_parser.o debugfs.o \
--	fb_decoder.o dmabuf.o page_track.o
-+	fb_decoder.o dmabuf.o page_track.o migration_version.o
- 
- ccflags-y				+= -I$(src) -I$(src)/$(GVT_DIR)
- i915-y					+= $(addprefix $(GVT_DIR)/, $(GVT_SOURCE))
-diff --git a/drivers/gpu/drm/i915/gvt/gvt.c b/drivers/gpu/drm/i915/gvt/gvt.c
-index 43f4242062dd..be2980e8ac75 100644
---- a/drivers/gpu/drm/i915/gvt/gvt.c
-+++ b/drivers/gpu/drm/i915/gvt/gvt.c
-@@ -105,14 +105,53 @@ static ssize_t description_show(struct kobject *kobj, struct device *dev,
- 		       type->weight);
- }
- 
-+static ssize_t migration_version_show(struct kobject *kobj, struct device *dev,
-+		char *buf)
-+{
-+	struct intel_vgpu_type *type;
-+	void *gvt = kdev_to_i915(dev)->gvt;
-+
-+	type = intel_gvt_find_vgpu_type(gvt, kobject_name(kobj));
-+	if (!type || !type->migration_version) {
-+		gvt_err("Does not support migraion on type %s. Please search previous detailed log\n",
-+				kobject_name(kobj));
-+		return -ENODEV;
-+	}
-+
-+	return snprintf(buf, strlen(type->migration_version) + 2,
-+			"%s\n", type->migration_version);
-+}
-+
-+static ssize_t migration_version_store(struct kobject *kobj, struct device *dev,
-+		const char *buf, size_t count)
-+{
-+	int ret = 0;
-+	struct intel_vgpu_type *type;
-+	void *gvt = kdev_to_i915(dev)->gvt;
-+
-+	type = intel_gvt_find_vgpu_type(gvt, kobject_name(kobj));
-+	if (!type || !type->migration_version) {
-+		gvt_err("Does not support migraion on type %s. Please search previous detailed log\n",
-+				kobject_name(kobj));
-+		return -ENODEV;
-+	}
-+
-+	ret = intel_gvt_check_vfio_migration_version(gvt,
-+			type->migration_version, buf);
-+
-+	return (ret < 0 ? ret : count);
-+}
-+
- static MDEV_TYPE_ATTR_RO(available_instances);
- static MDEV_TYPE_ATTR_RO(device_api);
- static MDEV_TYPE_ATTR_RO(description);
-+static MDEV_TYPE_ATTR_RW(migration_version);
- 
- static struct attribute *gvt_type_attrs[] = {
- 	&mdev_type_attr_available_instances.attr,
- 	&mdev_type_attr_device_api.attr,
- 	&mdev_type_attr_description.attr,
-+	&mdev_type_attr_migration_version.attr,
- 	NULL,
- };
- 
-diff --git a/drivers/gpu/drm/i915/gvt/gvt.h b/drivers/gpu/drm/i915/gvt/gvt.h
-index f5a328b5290a..265319d35c25 100644
---- a/drivers/gpu/drm/i915/gvt/gvt.h
-+++ b/drivers/gpu/drm/i915/gvt/gvt.h
-@@ -296,6 +296,7 @@ struct intel_vgpu_type {
- 	unsigned int fence;
- 	unsigned int weight;
- 	enum intel_vgpu_edid resolution;
-+	char *migration_version;
- };
- 
- struct intel_gvt {
-@@ -687,6 +688,10 @@ void intel_gvt_debugfs_remove_vgpu(struct intel_vgpu *vgpu);
- int intel_gvt_debugfs_init(struct intel_gvt *gvt);
- void intel_gvt_debugfs_clean(struct intel_gvt *gvt);
- 
-+ssize_t intel_gvt_check_vfio_migration_version(struct intel_gvt *gvt,
-+		const char *self, const char *remote);
-+char *intel_gvt_get_vfio_migration_version(struct intel_gvt *gvt,
-+		const char *vgpu_type);
- 
- #include "trace.h"
- #include "mpt.h"
-diff --git a/drivers/gpu/drm/i915/gvt/migration_version.c b/drivers/gpu/drm/i915/gvt/migration_version.c
-new file mode 100644
-index 000000000000..e6acf188b29a
---- /dev/null
-+++ b/drivers/gpu/drm/i915/gvt/migration_version.c
-@@ -0,0 +1,167 @@
-+/*
-+ * Copyright(c) 2011-2017 Intel Corporation. All rights reserved.
-+ *
-+ * Permission is hereby granted, free of charge, to any person obtaining a
-+ * copy of this software and associated documentation files (the "Software"),
-+ * to deal in the Software without restriction, including without limitation
-+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
-+ * and/or sell copies of the Software, and to permit persons to whom the
-+ * Software is furnished to do so, subject to the following conditions:
-+ *
-+ * The above copyright notice and this permission notice (including the next
-+ * paragraph) shall be included in all copies or substantial portions of the
-+ * Software.
-+ *
-+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
-+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-+ * SOFTWARE.
-+ *
-+ * Authors:
-+ *    Yan Zhao <yan.y.zhao@intel.com>
-+ */
-+#include <linux/vfio.h>
-+#include "i915_drv.h"
-+#include "gvt.h"
-+
-+#define INV_SOFTWARE_VERSION (-1U)
-+#define VENDOR_ID_LEN (4)
-+#define DEVICE_ID_LEN (4)
-+#define VGPU_TYPE_LEN (16)
-+#define SOFTWARE_VER_LEN (8)
-+
-+/* total length of vfio migration version string.
-+ * never exceed limit of PATH_MAX (4096)
-+ */
-+#define MIGRATION_VERSION_TOTAL_LEN (VENDOR_ID_LEN + DEVICE_ID_LEN + \
-+					VGPU_TYPE_LEN + SOFTWARE_VER_LEN + 4)
-+
-+#define GVT_VFIO_MIGRATION_SOFTWARE_VERSION INV_SOFTWARE_VERSION
-+
-+
-+#define PRINTF_FORMAT "%04x-%04x-%s-%08x"
-+#define SCANF_FORMAT "%x-%x-%16[^-]-%x"
-+
-+enum incompatible_reason {
-+	IREASON_WRONG_REMOTE_FORMAT = 0,
-+	IREASON_HARDWARE_MISMATCH,
-+	IREASON_SOFTWARE_VERSION_MISMATCH,
-+	IREASON_VGPU_TYPE_MISMATCH,
-+};
-+
-+static const char *const incompatible_reason_str[] = {
-+	[IREASON_WRONG_REMOTE_FORMAT] =
-+		"wrong string format. probably wrong GVT version",
-+	[IREASON_HARDWARE_MISMATCH] =
-+		"physical device not matched",
-+	[IREASON_SOFTWARE_VERSION_MISMATCH] =
-+		"migration software version not matched",
-+	[IREASON_VGPU_TYPE_MISMATCH] =
-+		"vgpu type not matched"
-+};
-+
-+static bool is_compatible(const char *local, const char *remote)
-+{
-+	bool ret;
-+
-+	ret = sysfs_streq(local, remote);
-+
-+	if (!ret) {
-+		int vid_l = 0, did_l = 0, vid_r = 0, did_r = 0;
-+		char type_l[VGPU_TYPE_LEN], type_r[VGPU_TYPE_LEN];
-+		u32 sv_l = 0, sv_r = 0;
-+		int rl = 0, rr = 0;
-+		enum incompatible_reason reason = IREASON_WRONG_REMOTE_FORMAT;
-+
-+		memset(type_l, 0, sizeof(type_l));
-+		memset(type_r, 0, sizeof(type_r));
-+
-+		rl = sscanf(local, SCANF_FORMAT,
-+				&vid_l, &did_l, type_l, &sv_l);
-+		rr = sscanf(remote, SCANF_FORMAT,
-+				&vid_r, &did_r, type_r, &sv_r);
-+
-+		if (rl == rr) {
-+			if (vid_l != vid_r || did_l != did_r)
-+				reason = IREASON_HARDWARE_MISMATCH;
-+			else if (sv_l != sv_r)
-+				reason = IREASON_SOFTWARE_VERSION_MISMATCH;
-+			else if (strncmp(type_l, type_r, VGPU_TYPE_LEN))
-+				reason = IREASON_VGPU_TYPE_MISMATCH;
-+		}
-+
-+		gvt_err("Migration version mismatched. Possible reason: %s. Local migration version:%s, Remote migration version:%s\n",
-+				incompatible_reason_str[reason], local,	remote);
-+
-+	}
-+	return ret;
-+
-+}
-+
-+
-+char *
-+intel_gvt_get_vfio_migration_version(struct intel_gvt *gvt,
-+		const char *vgpu_type)
-+{
-+	int cnt = 0;
-+	struct drm_i915_private *dev_priv = gvt->dev_priv;
-+	char *version = NULL;
-+
-+	/* currently only gen8 & gen9 are supported */
-+	if (!IS_GEN(dev_priv, 8) && !IS_GEN(dev_priv, 9)) {
-+		gvt_err("Local hardware does not support migration on %d\n",
-+				INTEL_INFO(dev_priv)->gen);
-+		return NULL;
-+	}
-+
-+	if (GVT_VFIO_MIGRATION_SOFTWARE_VERSION == INV_SOFTWARE_VERSION) {
-+		gvt_err("Local GVT does not support migration\n");
-+		return NULL;
-+	}
-+
-+	version = kzalloc(MIGRATION_VERSION_TOTAL_LEN, GFP_KERNEL);
-+
-+	if (unlikely(!version)) {
-+		gvt_err("memory allocation failed when get local migraiton version\n");
-+		return NULL;
-+	}
-+
-+	/* vendor id + device id + vgpu type + software version */
-+	cnt = snprintf(version, MIGRATION_VERSION_TOTAL_LEN, PRINTF_FORMAT,
-+			PCI_VENDOR_ID_INTEL,
-+			INTEL_DEVID(dev_priv),
-+			vgpu_type,
-+			GVT_VFIO_MIGRATION_SOFTWARE_VERSION);
-+
-+	if (cnt)
-+		return version;
-+
-+	gvt_err("string generation failed when get local migration version\n");
-+	return NULL;
-+}
-+
-+ssize_t intel_gvt_check_vfio_migration_version(struct intel_gvt *gvt,
-+		const char *self, const char *remote)
-+{
-+	struct drm_i915_private *dev_priv = gvt->dev_priv;
-+
-+	/* currently only gen8 & gen9 are supported */
-+	if (!IS_GEN(dev_priv, 8) && !IS_GEN(dev_priv, 9)) {
-+		gvt_err("Local hardware does not support migration on %d\n",
-+				INTEL_INFO(dev_priv)->gen);
-+		return -ENODEV;
-+	}
-+
-+	if (GVT_VFIO_MIGRATION_SOFTWARE_VERSION == INV_SOFTWARE_VERSION) {
-+		gvt_err("Local GVT does not support migration\n");
-+		return -ENODEV;
-+	}
-+
-+	if (!is_compatible(self, remote))
-+		return -EINVAL;
-+
-+	return 0;
-+}
-diff --git a/drivers/gpu/drm/i915/gvt/vgpu.c b/drivers/gpu/drm/i915/gvt/vgpu.c
-index 44ce3c2b9ac1..7642b21641bd 100644
---- a/drivers/gpu/drm/i915/gvt/vgpu.c
-+++ b/drivers/gpu/drm/i915/gvt/vgpu.c
-@@ -155,13 +155,18 @@ int intel_gvt_init_vgpu_types(struct intel_gvt *gvt)
- 			sprintf(gvt->types[i].name, "GVTg_V5_%s",
- 						vgpu_types[i].name);
- 
--		gvt_dbg_core("type[%d]: %s avail %u low %u high %u fence %u weight %u res %s\n",
-+		gvt->types[i].migration_version =
-+			intel_gvt_get_vfio_migration_version(gvt,
-+					gvt->types[i].name);
-+		gvt_dbg_core("type[%d]: %s avail %u low %u high %u fence %u weight %u res %s, migratio_version:%s\n",
- 			     i, gvt->types[i].name,
- 			     gvt->types[i].avail_instance,
- 			     gvt->types[i].low_gm_size,
- 			     gvt->types[i].high_gm_size, gvt->types[i].fence,
- 			     gvt->types[i].weight,
--			     vgpu_edid_str(gvt->types[i].resolution));
-+			     vgpu_edid_str(gvt->types[i].resolution),
-+			     (gvt->types[i].migration_version ?
-+			     gvt->types[i].migration_version : "null"));
- 	}
- 
- 	gvt->num_types = i;
-@@ -170,6 +175,10 @@ int intel_gvt_init_vgpu_types(struct intel_gvt *gvt)
- 
- void intel_gvt_clean_vgpu_types(struct intel_gvt *gvt)
- {
-+	int i;
-+
-+	for (i = 0; i < gvt->num_types; i++)
-+		kfree(gvt->types[i].migration_version);
- 	kfree(gvt->types);
- }
- 
--- 
-2.17.1
-
+Best regards,
+Tomasz
