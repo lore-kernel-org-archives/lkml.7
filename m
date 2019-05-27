@@ -2,95 +2,110 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E401C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33CBBC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4862D2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:15:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0477E20815
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:17:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RbFHF85I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726262AbfE0NPH (ORCPT
+        id S1726322AbfE0NRn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 09:15:07 -0400
-Received: from [101.13.1.131] ([101.13.1.131]:54272 "EHLO
-        E6440.gar.corp.intel.com" rhost-flags-FAIL-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726063AbfE0NPG (ORCPT
+        Mon, 27 May 2019 09:17:43 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39883 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726108AbfE0NRm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 09:15:06 -0400
-X-Greylist: delayed 379 seconds by postgrey-1.27 at vger.kernel.org; Mon, 27 May 2019 09:15:06 EDT
-Received: from E6440.gar.corp.intel.com (localhost [127.0.0.1])
-        by E6440.gar.corp.intel.com (Postfix) with ESMTP id CAFC6C0765;
-        Mon, 27 May 2019 21:08:45 +0800 (CST)
-From:   Harry Pan <harry.pan@intel.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     gs0622@gmail.com, Harry Pan <harry.pan@intel.com>,
-        Vishwanath Somayaji <vishwanath.somayaji@intel.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
-        Darren Hart <dvhart@infradead.org>
-Subject: [PATCH] platform/x86: intel_pmc_core: transform Pkg C-state residency from TSC ticks into microseconds
-Date:   Mon, 27 May 2019 21:08:10 +0800
-Message-Id: <20190527130811.450-1-harry.pan@intel.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 27 May 2019 09:17:42 -0400
+Received: by mail-wr1-f68.google.com with SMTP id e2so8147987wrv.6
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 06:17:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3CdhkKFfggu7RKyEGJPDR3uKtKfRfN9PzQkEoRGpys0=;
+        b=RbFHF85ICbSpB/QDeuBoxpPshiJs01zY4pu/8n9Lf3BNzE4SFyL/GyytRGewLvfrPo
+         2SDaDIMtzrrdACNFufY1J9BG5RMntHYFdQZ9KdGNiSpf5Ii+VdlPrRo2G7fsVxBRTNLN
+         J1iKR6bK3sZ4mw3u79gezUI2/eCWN45qwQ5RubnV6Zw6OQFLOJjrYcLr1erCTdw+iRac
+         CNbXnm+xzAIGSw5+CSghe/JflH4LpDc3NJzcQuBXR1X4Uv4W0o3pIxwV0zL0746Q6N7r
+         VifVZCTVWUSX+uChCR7uBMMOnUW+VjxnHyXA3VW+Dq5T8FXYBqg+DNAl0h7762vib/5/
+         oKvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3CdhkKFfggu7RKyEGJPDR3uKtKfRfN9PzQkEoRGpys0=;
+        b=VQqlg4QG1oRqlteYmkvi6Ofkbdiyaqpuq4IIVnn+4caY6BdkegAxSLx5wOYVKyuabu
+         SI1bT9fETzRh/gHzfcrhDi9JPn4tTKNtD+Z5VQPaaanKKf8AhwANP/gKg0P0phFlWprA
+         /lWTH4p3Ex/Hme6B/qJN04LYEQv5K0/FYYD6kqjTa02zAxGcBdh4YoW2AL/Alj7aCW3X
+         Epgg3XGr6LhkYyUBVxL3uqqSU/JzONqkWy0hz3RD9p2pfgNholGZoYburK1+bWQIIG2H
+         PvEif+V4DYhtlITp1Wr3CZyyQjy0eF7i+axOoEXhdvHHkH9frujLDExCI7dtwBD9ZEvQ
+         U7Wg==
+X-Gm-Message-State: APjAAAUQWSCNLruHjUeC62mRuzB1ho033JFmx/T1zpAkYSyfrWUg/a8W
+        bPD1IN0+toY03TDVu3DdEBMn49O07pmRO76XD/E=
+X-Google-Smtp-Source: APXvYqxwsgyqKq3v6r0+iHi/zVPWhJzn/oWLFri6jGvIXh+zaY6enrZ38Uj3PrCQ1+XWh5tnUc1T76NEJbrPh7coDvQ=
+X-Received: by 2002:a5d:5406:: with SMTP id g6mr9664403wrv.286.1558963061338;
+ Mon, 27 May 2019 06:17:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190524181936.29470-1-martin.blumenstingl@googlemail.com> <20190524181936.29470-2-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20190524181936.29470-2-martin.blumenstingl@googlemail.com>
+From:   hex dump <hexdump0815@gmail.com>
+Date:   Mon, 27 May 2019 15:17:47 +0200
+Message-ID: <CAKTihDV-zee+rodgg=h1xgBnyiq2oSg4UcaURtCcGCN-Qa4rsw@mail.gmail.com>
+Subject: Re: [PATCH 1/1] ARM: dts: meson8b: mxq: improve support for the
+ TRONFY MXQ S805
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     linux-amlogic@lists.infradead.org,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Refer to the Intel SDM Vol.4, the package C-state residency counters
-of modern IA micro-architecture are all ticking in TSC frequency,
-hence we can apply simple math to transform the ticks into microseconds.
-i.e.,
-residency (ms) = count / tsc_khz
-residency (us) = count / tsc_khz * 1000
+On Fri, May 24, 2019 at 8:19 PM Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
+>
+> The TRONFY MXQ comes with either 1GB or 2GB RAM.
+>
+> Both variants share (like most boards based on Amlogic reference
+> designs):
+> - 10/100 PHY (IC Plus IP101GR) with GPIOH_4 being the reset line and
+>   GPIOH_3 the interrupt line
+> - SD card slot with the card detection GPIO at CARD_6
+> - VCCK is generated by PWM_C with a period of 1148ns and XTAL as input
+>   clock
+> - USB OTG exposed on one of the USB-A connectors
+> - 4-port USB hub with 3 ports exposed to the outside
+>
+> There seem the multiple board revision out there according to various
+> forum posts:
+> - storage: eMMC or NAND flash
+> - wifi: Ampak AP6210 or Realtek 8189
+>
+> Add support for the following functionality:
+> - SoC temperature (hwmon)
+> - changing the CPU voltage
+> - Ethernet connectivity
+> - SD card
+> - USB
+>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Tested-by: hexdump <hexdump0815@googlemail.com>
 
-This also aligns to other sysfs debug entries of residency counter in
-the same metric in microseconds, benefits reading and scripting.
+BEFORE (no patches from this series applied):
+the mxq device was not really useable with the old mainline dtb as
+most peripeherals were not supported
 
-Signed-off-by: Harry Pan <harry.pan@intel.com>
+AFTER (the patch applied):
+the rresulting dtb works perfectly fine with my mxq device and all
+mentioned supported functions work as expected
 
----
-
- drivers/platform/x86/intel_pmc_core.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index f2c621b55f49..20e0843ebfb4 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -24,6 +24,7 @@
- #include <asm/cpu_device_id.h>
- #include <asm/intel-family.h>
- #include <asm/msr.h>
-+#include <asm/tsc.h>
- 
- #include "intel_pmc_core.h"
- 
-@@ -726,7 +727,6 @@ static int pmc_core_ltr_show(struct seq_file *s, void *unused)
- 	return 0;
- }
- DEFINE_SHOW_ATTRIBUTE(pmc_core_ltr);
--
- static int pmc_core_pkgc_show(struct seq_file *s, void *unused)
- {
- 	struct pmc_dev *pmcdev = s->private;
-@@ -738,8 +738,8 @@ static int pmc_core_pkgc_show(struct seq_file *s, void *unused)
- 		if (rdmsrl_safe(map[index].bit_mask, &pcstate_count))
- 			continue;
- 
--		seq_printf(s, "%-8s : 0x%llx\n", map[index].name,
--			   pcstate_count);
-+		seq_printf(s, "%-8s : %llu\n", map[index].name,
-+			   pcstate_count * 1000 / tsc_khz);
- 	}
- 
- 	return 0;
--- 
-2.20.1
-
+best wishes - hexdump
