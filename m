@@ -2,160 +2,108 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD714C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E3EC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 905EA2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:34:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2593C2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:35:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="OyerzEpW"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="AsSRTuOs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727344AbfE0MeV (ORCPT
+        id S1726959AbfE0Mf0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 08:34:21 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36356 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726837AbfE0MeU (ORCPT
+        Mon, 27 May 2019 08:35:26 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:49944 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726071AbfE0MfZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 08:34:20 -0400
-Received: by mail-wr1-f66.google.com with SMTP id s17so16800875wru.3
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 05:34:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vqu/vuzdkEYXoKFeag0Gx7i/C6AwfCJXqtUJbGQjm2g=;
-        b=OyerzEpWHETbFpy0c+A9OY8Lt73C0idp+PGHMM5Hk+LLRx9wwPHZQozpo8l5Eb9Ku2
-         BLL+C1+bX579kmC98+XU2vwo/p2jktBSuDST+iVX7syTwLwbwx/6JX64Ub9OuDZusIdp
-         kKDJjsTRUzHPtW0urZeRIYOMxMDrYawpqD1NAjav0wkLUtufk55DmMuotx1mhFELtMN4
-         Q60vEqDPAiRagFtyMVs2GMDqFy7ESvJPNzV96xt/3RBuo6MVwbffzkmsBK2QQuquT8WB
-         BK7IAAbiz5k5ehEhuF37CxBmtc7DPqcYWzk5hOTDEz1nr5FgutMoVyt1M6U6NprWQjVX
-         RLjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vqu/vuzdkEYXoKFeag0Gx7i/C6AwfCJXqtUJbGQjm2g=;
-        b=nkxJNi2PfMzX7MJVo05UuieE9HIRue2FDiFxTIwEH0A4Z6ybOnOYnkMeSS1LcKDM9S
-         7Qmj/60GfngBoZa9RQSq48W1iw2gBbduy9y+lPU9ZN2Q/Iuego1xH4sl3gaEwN9XxVJk
-         mE0KLu59t3cRl2ROi/IPTwNz6acFt3HF8sPoVYe2GQ4XPUYtpthILdJoT2Z8cnwfwRnE
-         ZOTBJA3x5zaKlE7CVZkgS5cB8C6vm7U50MZLjDzGMg5MBMyByGcMg714t/urf4iRvnyF
-         lRjvv7nVeJaWR6fI4PG0PEblOC9huifggJn9lzfSKALEsK3B8CGzuXy0Xqo7YbgGX82M
-         K+ig==
-X-Gm-Message-State: APjAAAX0DS4JJu5y5tDjzrgaXebK90MkKKOQ7HdkNoHyxINFPTLXbGHL
-        JrsFmq8vTmMZxojfD0YJeDxYchvaJMBkxg==
-X-Google-Smtp-Source: APXvYqxwrvDMfYdjYL3oXDcnUR6fu2NOHf3e/9SAIT1sxwsepQqVIryqUvD3CwCzUoQ/rcFzeIspgQ==
-X-Received: by 2002:adf:e2c7:: with SMTP id d7mr37257590wrj.272.1558960457999;
-        Mon, 27 May 2019 05:34:17 -0700 (PDT)
-Received: from brauner.io (p5097b50e.dip0.t-ipconnect.de. [80.151.181.14])
-        by smtp.gmail.com with ESMTPSA id r4sm8102395wrv.34.2019.05.27.05.34.16
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 27 May 2019 05:34:17 -0700 (PDT)
-Date:   Mon, 27 May 2019 14:34:15 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Arnd Bergmann <arnd@arndb.de>, linux-ia64@vger.kernel.org
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jann Horn <jannh@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: [PATCH 2/2] arch: wire-up clone6() syscall on x86
-Message-ID: <20190527123414.rv2r6g6de6y3ay6w@brauner.io>
-References: <20190526102612.6970-1-christian@brauner.io>
- <20190526102612.6970-2-christian@brauner.io>
- <CAK8P3a1Ltsna_rtKxhMU7X0t=UOXDA75tKpph6s=OZ4itJe7VQ@mail.gmail.com>
- <20190527104528.cao7wamuj4vduh3u@brauner.io>
- <CAK8P3a3q=5Ca0xoMp+kyCvOqNDRzDTgu28f+U8J-buMVcZcVaw@mail.gmail.com>
+        Mon, 27 May 2019 08:35:25 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4RCVt5j027663;
+        Mon, 27 May 2019 14:35:17 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : references : in-reply-to : content-type : content-id :
+ content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=fKfX2KVDIS1uJzzD4iw6of6U2XShNVpd8rTuvx0oIDA=;
+ b=AsSRTuOs6JOiTMu+NPeqGAWQW13YPOk/Rpu26Ig6e71du8IaslChveCq0mwquvaDECV3
+ LPJkgqpfBdqP4YTltsgsUrixL5V5+1vkVc/TaOo5dSeaK40pbkckpyruduLnWycHDHdi
+ if3H/V9Dap/bVSb1myYsD30U1dIfo8OQtLUNlu04mEKgLZEfQDjvc/QYrnX5lrQ3QbdB
+ Tk/QEG8dwb+wltOquxiPxhT9tb6amKO427itYpogiNrvaeuGW7rzv/s783geD57DrEFY
+ KYyv4/faskRBulbvMFCeRCYJHJZnasdrWllxtBed0oQ/U8IkgfUl/cQKbtuAYn72xttL mQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2spu602yxf-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 27 May 2019 14:35:17 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id F22063A;
+        Mon, 27 May 2019 12:35:15 +0000 (GMT)
+Received: from Webmail-eu.st.com (gpxdag3node4.st.com [10.75.127.71])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A83B7161E;
+        Mon, 27 May 2019 12:35:15 +0000 (GMT)
+Received: from GPXDAG6NODE6.st.com (10.75.127.82) by GPXDAG3NODE4.st.com
+ (10.75.127.71) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 27 May
+ 2019 14:35:14 +0200
+Received: from GPXDAG6NODE6.st.com ([fe80::57f:5f53:243f:cb11]) by
+ GPXDAG6NODE6.st.com ([fe80::57f:5f53:243f:cb11%19]) with mapi id
+ 15.00.1473.003; Mon, 27 May 2019 14:35:14 +0200
+From:   Philippe CORNU <philippe.cornu@st.com>
+To:     Yannick FERTRE <yannick.fertre@st.com>,
+        Benjamin GAIGNARD <benjamin.gaignard@st.com>,
+        Vincent ABRIOU <vincent.abriou@st.com>,
+        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/stm: ltdc: No message if probe
+Thread-Topic: [PATCH] drm/stm: ltdc: No message if probe
+Thread-Index: AQHVFHUOAd2ylTGCYUyXoJC5UGt+V6Z+xtGA
+Date:   Mon, 27 May 2019 12:35:14 +0000
+Message-ID: <961fa8ce-8094-5a39-eab1-cdb46cf76b92@st.com>
+References: <1558952075-14883-1-git-send-email-yannick.fertre@st.com>
+In-Reply-To: <1558952075-14883-1-git-send-email-yannick.fertre@st.com>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.44]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D824B6F181B08846A8E655B1873E2A39@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a3q=5Ca0xoMp+kyCvOqNDRzDTgu28f+U8J-buMVcZcVaw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-27_07:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 27, 2019 at 02:28:33PM +0200, Arnd Bergmann wrote:
-> On Mon, May 27, 2019 at 12:45 PM Christian Brauner <christian@brauner.io> wrote:
-> > On Mon, May 27, 2019 at 12:02:37PM +0200, Arnd Bergmann wrote:
-> > > On Sun, May 26, 2019 at 12:27 PM Christian Brauner <christian@brauner.io> wrote:
-> > > >
-> > > > Wire up the clone6() call on x86.
-> > > >
-> > > > This patch only wires up clone6() on x86. Some of the arches look like they
-> > > > need special assembly massaging and it is probably smarter if the
-> > > > appropriate arch maintainers would do the actual wiring.
-> > >
-> > > Why do some architectures need special cases here? I'd prefer to have
-> > > new system calls always get defined in a way that avoids this, and
-> > > have a common entry point for everyone.
-> > >
-> > > Looking at the m68k sys_clone comment in
-> > > arch/m68k/kernel/process.c, it seems that this was done as an
-> > > optimization to deal with an inferior ABI. Similar code is present
-> > > in h8300, ia64, nios2, and sparc. If all of them just do this to
-> > > shave off a few cycles from the system call entry, I really
-> > > couldn't care less.
-> >
-> > I'm happy to wire all arches up at the same time in the next revision. I
-> > just wasn't sure why some of them were assemblying the living hell out
-> > of clone; especially ia64. I really didn't want to bother touching all
-> > of this just for an initial RFC.
-> 
-> Don't worry about doing all architectures for the RFC, I mainly want this
-> to be done consistently by the time it gets into linux-next.
-> 
-> One thing to figure out though is whether we need the stack_size argument
-> that a couple of architectures pass. It's usually hardwired to zero,
-> but not all the time, and I don't know the history of this.
-
-Afaict, stack_size is *only* used on ia64:
-
-/*
- * sys_clone2(u64 flags, u64 ustack_base, u64 ustack_size, u64 parent_tidptr, u64 child_tidptr,
- *	      u64 tls)
- */
-GLOBAL_ENTRY(sys_clone2)
-	/*
-	 * Allocate 8 input registers since ptrace() may clobber them
-	 */
-	.prologue ASM_UNW_PRLG_RP|ASM_UNW_PRLG_PFS, ASM_UNW_PRLG_GRSAVE(8)
-	alloc r16=ar.pfs,8,2,6,0
-	DO_SAVE_SWITCH_STACK
-	adds r2=PT(R16)+IA64_SWITCH_STACK_SIZE+16,sp
-	mov loc0=rp
-	mov loc1=r16				// save ar.pfs across do_fork
-	.body
-	mov out1=in1
-	mov out2=in2
-	tbit.nz p6,p0=in0,CLONE_SETTLS_BIT
-	mov out3=in3	// parent_tidptr: valid only w/CLONE_PARENT_SETTID
-	;;
-(p6)	st8 [r2]=in5				// store TLS in r16 for copy_thread()
-	mov out4=in4	// child_tidptr:  valid only w/CLONE_CHILD_SETTID or CLONE_CHILD_CLEARTID
-	mov out0=in0				// out0 = clone_flags
-	br.call.sptk.many rp=do_fork
-.ret1:	.restore sp
-	adds sp=IA64_SWITCH_STACK_SIZE,sp	// pop the switch stack
-	mov ar.pfs=loc1
-	mov rp=loc0
-	br.ret.sptk.many rp
-END(sys_clone2)
-
-I'm not sure if this needs to be because of architectural constraints or
-if it just is a historic artifact.
-(Ccing ia64 now to see what they have to say.)
-
-Christian
+SGkgWWFubmljaywNCg0KVGhhbmsgeW91IGZvciB5b3VyIHBhdGNoDQoNCkFja2VkLWJ5OiBQaGls
+aXBwZSBDb3JudSA8cGhpbGlwcGUuY29ybnVAc3QuY29tPg0KDQpQaGlsaXBwZSA6LSkNCg0KT24g
+NS8yNy8xOSAxMjoxNCBQTSwgWWFubmljayBGZXJ0csOpIHdyb3RlOg0KPiBQcmludCBkaXNwbGF5
+IGNvbnRyb2xsZXIgaGFyZHdhcmUgdmVyc2lvbiBpbiBkZWJ1ZyBtb2RlIG9ubHkuDQo+IA0KPiBT
+aWduZWQtb2ZmLWJ5OiBZYW5uaWNrIEZlcnRyw6kgPHlhbm5pY2suZmVydHJlQHN0LmNvbT4NCj4g
+LS0tDQo+ICAgZHJpdmVycy9ncHUvZHJtL3N0bS9sdGRjLmMgfCAyICstDQo+ICAgMSBmaWxlIGNo
+YW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9ncHUvZHJtL3N0bS9sdGRjLmMgYi9kcml2ZXJzL2dwdS9kcm0vc3RtL2x0ZGMuYw0K
+PiBpbmRleCBkMjRmZmMyLi4xNmIxMTAzIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0v
+c3RtL2x0ZGMuYw0KPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vc3RtL2x0ZGMuYw0KPiBAQCAtMTIx
+MSw3ICsxMjExLDcgQEAgaW50IGx0ZGNfbG9hZChzdHJ1Y3QgZHJtX2RldmljZSAqZGRldikNCj4g
+ICAJCWdvdG8gZXJyOw0KPiAgIAl9DQo+ICAgDQo+IC0JRFJNX0lORk8oImx0ZGMgaHcgdmVyc2lv
+biAweCUwOHggLSByZWFkeVxuIiwgbGRldi0+Y2Fwcy5od192ZXJzaW9uKTsNCj4gKwlEUk1fREVC
+VUdfRFJJVkVSKCJsdGRjIGh3IHZlcnNpb24gMHglMDh4XG4iLCBsZGV2LT5jYXBzLmh3X3ZlcnNp
+b24pOw0KPiAgIA0KPiAgIAkvKiBBZGQgZW5kcG9pbnRzIHBhbmVscyBvciBicmlkZ2VzIGlmIGFu
+eSAqLw0KPiAgIAlmb3IgKGkgPSAwOyBpIDwgTUFYX0VORFBPSU5UUzsgaSsrKSB7DQo+IA==
