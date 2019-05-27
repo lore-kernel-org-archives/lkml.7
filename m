@@ -2,94 +2,63 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,PLING_QUERY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC6C7C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:04:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1971DC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B25A720859
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:04:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jC7eajPW"
+	by mail.kernel.org (Postfix) with ESMTP id ED85B20815
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:08:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbfE0NEk (ORCPT
+        id S1726291AbfE0NIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 09:04:40 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34958 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbfE0NEk (ORCPT
+        Mon, 27 May 2019 09:08:52 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:47671 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726184AbfE0NIv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 09:04:40 -0400
-Received: by mail-pg1-f196.google.com with SMTP id t1so9100932pgc.2;
-        Mon, 27 May 2019 06:04:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=8nEvWdeXB353GkLTXsYXaoTX1Inedn4FgEz1vhTKYzA=;
-        b=jC7eajPWyBEabmQ+SQNNVO0g3VpabETTz1MQAxcpb4lMaooOZtMfF2zyYCjg/KAm0D
-         cwrzVt8ONAxQgODhnP68iH98DZSoWrT1CFBmt0j5RuMnR6+qf+WUtO/BCudQKVfRhrsL
-         FO1Os+mvVGbYcFPJhhMEDjbxtdCQkBC9z36ed5JVjnLrrtdHzGc4/gWh23nHPqUd/L6j
-         C1Jimi9wb7Gzuhwv8DgMFimajTwd98nT8owUy9DkOTFmNz8P3/BcGoOWCX2V8Zg6tito
-         7lIDkkcaH6ks9MuaWi6FLJu/dVWAKI0WL/cMt3OMlNBBtCU9SGDs3WnC8XpvKXXb5xrN
-         qkxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=8nEvWdeXB353GkLTXsYXaoTX1Inedn4FgEz1vhTKYzA=;
-        b=Z1c84XYtpinfU87T4lGQ6kbjpMAq31mG0oRM8PigiC46RHN91lPiMWrZqkd9zAh76N
-         2TBGClrlwcexE130SxBXHZ/bSWz+66bMBdPTt+yUjSB9usU1q4VLb+mFIppElHUPhbNi
-         DeE4zsLAYdKv9t8SU8trxka7LX/MCVRusyqTQgU1wB287oy+1OJvhO70HzoBZTMU8S1n
-         sgxvo16fFiBcNWrFGIZW+Ooe4JZecfxPrU9kGWkSOLauUfdHSuORSIjrM390m+hRYdsZ
-         frE4Vb6nHdZcBXaMSklPbd2sg9KeNbAR85+nAxQZlcmOmf+JyWR57dOLAGzHtoaAJXHm
-         aeXw==
-X-Gm-Message-State: APjAAAXLVsqre0V+qD2HfmfDbTVWfFz6Ws49ZPAwlVYyHhVmHuYFi5Rf
-        5/yoOraEEl0lvZM9shfHaXhNMaLf
-X-Google-Smtp-Source: APXvYqzhiX5WieFozlD4LN379CfF6I6m6azS3kWics+rEo7niYRAQW+W9n5n2Y4ph7YP2fkrrufjNg==
-X-Received: by 2002:a62:ee05:: with SMTP id e5mr133336776pfi.117.1558962279371;
-        Mon, 27 May 2019 06:04:39 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([66.42.35.75])
-        by smtp.gmail.com with ESMTPSA id l7sm13469882pfl.9.2019.05.27.06.04.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 May 2019 06:04:38 -0700 (PDT)
-Date:   Mon, 27 May 2019 21:04:30 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     jassisinghbrar@gmail.com, thierry.reding@gmail.com
-Cc:     linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: [PATCH] tegra-hsp: fix a missing-check bug in
- tegra_hsp_doorbell_create()
-Message-ID: <20190527130430.GA5367@zhanggen-UX430UQ>
+        Mon, 27 May 2019 09:08:51 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1hVFMu-0004AJ-VY; Mon, 27 May 2019 15:08:49 +0200
+Date:   Mon, 27 May 2019 15:08:48 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     kernel list <linux-kernel@vger.kernel.org>, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org
+Subject: Re: 5.1.0-next-20190520 -- emacs segfaults on 32-bit machine Re:
+ 5.2-rc0.8: emacs segfaults?! x220, with 32-bit userland
+Message-ID: <20190527130848.lec6zp3ntyhemsbj@linutronix.de>
+References: <20190519221700.GA7154@amd>
+ <20190520160636.z6fpjiidc2d5ko5g@linutronix.de>
+ <20190520231342.GA20835@amd>
+ <20190521073240.mikv2ufwyriy4q7r@linutronix.de>
+ <20190522183329.GB10003@amd>
+ <20190523083724.GA21185@amd>
+ <20190523145035.wncfmwem57z2oxb7@linutronix.de>
+ <20190527130317.GB19795@amd>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190527130317.GB19795@amd>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In tegra_hsp_doorbell_create(), 'db->name' is allocated by 
-devm_kstrdup_const(). It returns NULL when fails. So 'db->name' should
-be checked.
+On 2019-05-27 15:03:17 [+0200], Pavel Machek wrote:
+> > could you please send me (offlist) your .config? Also, what kind of
+> > userland do you run? Something like Debian stable?
+> 
+> Yep, debian stable.
 
-Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
----
-diff --git a/drivers/mailbox/tegra-hsp.c b/drivers/mailbox/tegra-hsp.c
-index 11fc9fd..b613c46 100644
---- a/drivers/mailbox/tegra-hsp.c
-+++ b/drivers/mailbox/tegra-hsp.c
-@@ -292,6 +292,8 @@ tegra_hsp_doorbell_create(struct tegra_hsp *hsp, const char *name,
- 	db->channel.hsp = hsp;
- 
- 	db->name = devm_kstrdup_const(hsp->dev, name, GFP_KERNEL);
-+	if (!db->name)
-+		return ERR_PTR(-ENOMEM);
- 	db->master = master;
- 	db->index = index;
- 
----
+Since we had a little bit of development recently, could you please
+check if
+	http://lkml.kernel.org/r/20190526173325.lpt5qtg7c6rnbql5@linutronix.de
+
+makes any difference?
+
+Sebastian
