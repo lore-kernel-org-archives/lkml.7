@@ -2,31 +2,32 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14083C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE1DC07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D219B2166E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:22:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE3A52166E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:22:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="Xdft0VjQ"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="cQyrKuue"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbfE0QWm (ORCPT
+        id S1726966AbfE0QWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 12:22:42 -0400
-Received: from vps.xff.cz ([195.181.215.36]:52476 "EHLO vps.xff.cz"
+        Mon, 27 May 2019 12:22:43 -0400
+Received: from vps.xff.cz ([195.181.215.36]:52568 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725991AbfE0QWl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 12:22:41 -0400
+        id S1726757AbfE0QWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 12:22:42 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1558974159; bh=FM58/rXvCC2ZgZffUU7onMDJbM92qEgy2B6jGSR8HVY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Xdft0VjQJLDFdsHDfR8tZLN6fxztVyrUorgQGnz3MKfpMxAEbiEzmPZgVEavKPxfj
-         CMbljdxjMqhndLSL/H4aZMamrHaHyRRUf9+d8qcffGKIJe/Af4lMYNU1EO6mfKFBRH
-         XIlzLrw85EWcuan0YuVNJG5zxBh99HsmuDq6iB/Y=
+        t=1558974160; bh=nngIr0xvxUzPFucWAhkm6BkX4oH0a0zOi33I9wUZi5w=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cQyrKuueeB+WVAEMvYTzh1ZQzRGSjXkA2vn1vFnjbas7ys8YHOyucByJv/ZYO1si/
+         dLMZWBpaCtXBWdZEYZd9m1Kf3d6gVRzObfX21aIUMYFPpadVhe0dOy01xlEjawxKl4
+         9AWEEKXZF45HMJfhctOpZoF9YmjC0d29THiuKt0k=
 From:   megous@megous.com
 To:     linux-sunxi@googlegroups.com,
         Maxime Ripard <maxime.ripard@bootlin.com>,
@@ -42,9 +43,11 @@ Cc:     Ondrej Jirman <megous@megous.com>, David Airlie <airlied@linux.ie>,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH v6 0/6] Add support for Orange Pi 3
-Date:   Mon, 27 May 2019 18:22:31 +0200
-Message-Id: <20190527162237.18495-1-megous@megous.com>
+Subject: [PATCH v6 3/6] arm64: dts: allwinner: orange-pi-3: Enable ethernet
+Date:   Mon, 27 May 2019 18:22:34 +0200
+Message-Id: <20190527162237.18495-4-megous@megous.com>
+In-Reply-To: <20190527162237.18495-1-megous@megous.com>
+References: <20190527162237.18495-1-megous@megous.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -54,89 +57,91 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ondrej Jirman <megous@megous.com>
 
-This series implements support for Xunlong Orange Pi 3 board.
+Orange Pi 3 has two regulators that power the Realtek RTL8211E. According
+to the phy datasheet, both regulators need to be enabled at the same time,
+but we can only specify a single phy-supply in the DT.
 
-Unfortunately, this board needs some small driver patches, so I have
-split the boards DT patch into chunks that require patches for drivers
-in various subsystems.
+This can be achieved by making one regulator depedning on the other via
+vin-supply. While it's not a technically correct description of the
+hardware, it achieves the purpose.
 
-Suggested merging plan/dependencies:
+All values of RX/TX delay were tested exhaustively and a middle one of the
+working values was chosen.
 
-- stmmac patches are needed for ethernet support (patches 1-3)
-  - these should be ready now
-- HDMI support (patches 4-6)
-  - should be ready
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+---
+ .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 44 +++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-Changes in v2:
-- added dt-bindings documentation for the board's compatible string
-  (suggested by Clement)
-- addressed checkpatch warnings and code formatting issues (on Maxime's
-  suggestions)
-- stmmac: dropped useless parenthesis, reworded description of the patch
-  (suggested by Sergei)
-- drop useles dev_info() about the selected io bias voltage
-- docummented io voltage bias selection variant macros
-- wifi: marked WiFi DTS patch and realted mmc1_pins as "DO NOT MERGE",
-  because wifi depends on H6 RTC support that's not merged yet (suggested
-  by Clement)
-- added missing signed-of-bys
-- changed &usb2otg dr_mode to otg, and added a note about VBUS
-- improved wording of HDMI driver's DDC power supply patch
-
-Changes in v3:
-- dropped already applied patches
-- changed pinctrl I/O bias selection constants to enum and renamed
-- added /omit-if-no-ref/ to mmc1_pins
-- made mmc1_pins default pinconf for mmc1 in H6 dtsi
-- move ddc-supply to HDMI connector node, updated patch descriptions,
-  changed dt-bindings docs
-
-Changes in v4:
-- fix checkpatch warnings/style issues
-- use enum in struct sunxi_desc_function for io_bias_cfg_variant
-- collected acked-by's
-- fix compile error in drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c:156
-  caused by missing conversion from has_io_bias_cfg struct member
-  (I've kept the acked-by, because it's a trivial change, but feel free
-  to object.) (reported by Martin A. on github)
-  I did not have A80 pinctrl enabled for some reason, so I did not catch
-  this sooner.
-- dropped brcm firmware patch (was already applied)
-- dropped the wifi dts patch (will re-send after H6 RTC gets merged,
-  along with bluetooth support, in a separate series)
-
-Changes in v5:
-- dropped already applied patches (pinctrl patches, mmc1 pinconf patch)
-- rename GMAC-3V3 -> GMAC-3V to match the schematic (Jagan)
-- changed hdmi-connector's ddc-supply property to ddc-en-gpios
-  (Rob Herring)
-
-Changes in v6:
-- added dt-bindings reviewed-by tag
-- fix wording in stmmac commit (as suggested by Sergei)
-
-Please take a look.
-
-thank you and regards,
-  Ondrej Jirman
-
-Icenowy Zheng (2):
-  net: stmmac: sun8i: add support for Allwinner H6 EMAC
-  net: stmmac: sun8i: force select external PHY when no internal one
-
-Ondrej Jirman (4):
-  arm64: dts: allwinner: orange-pi-3: Enable ethernet
-  dt-bindings: display: hdmi-connector: Support DDC bus enable
-  drm: sun4i: Add support for enabling DDC I2C bus to sun8i_dw_hdmi glue
-  arm64: dts: allwinner: orange-pi-3: Enable HDMI output
-
- .../display/connector/hdmi-connector.txt      |  1 +
- .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 70 +++++++++++++++++++
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c         | 55 ++++++++++++++-
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h         |  3 +
- .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 21 ++++++
- 5 files changed, 147 insertions(+), 3 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+index 17d496990108..2c6807b74ff6 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+@@ -15,6 +15,7 @@
+ 
+ 	aliases {
+ 		serial0 = &uart0;
++		ethernet0 = &emac;
+ 	};
+ 
+ 	chosen {
+@@ -44,6 +45,27 @@
+ 		regulator-max-microvolt = <5000000>;
+ 		regulator-always-on;
+ 	};
++
++	/*
++	 * The board uses 2.5V RGMII signalling. Power sequence to enable
++	 * the phy is to enable GMAC-2V5 and GMAC-3V (aldo2) power rails
++	 * at the same time and to wait 100ms.
++	 */
++	reg_gmac_2v5: gmac-2v5 {
++		compatible = "regulator-fixed";
++		regulator-name = "gmac-2v5";
++		regulator-min-microvolt = <2500000>;
++		regulator-max-microvolt = <2500000>;
++		startup-delay-us = <100000>;
++		enable-active-high;
++		gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* PD6 */
++
++		/* The real parent of gmac-2v5 is reg_vcc5v, but we need to
++		 * enable two regulators to power the phy. This is one way
++		 * to achieve that.
++		 */
++		vin-supply = <&reg_aldo2>; /* GMAC-3V */
++	};
+ };
+ 
+ &cpu0 {
+@@ -58,6 +80,28 @@
+ 	status = "okay";
+ };
+ 
++&emac {
++	pinctrl-names = "default";
++	pinctrl-0 = <&ext_rgmii_pins>;
++	phy-mode = "rgmii";
++	phy-handle = <&ext_rgmii_phy>;
++	phy-supply = <&reg_gmac_2v5>;
++	allwinner,rx-delay-ps = <1500>;
++	allwinner,tx-delay-ps = <700>;
++	status = "okay";
++};
++
++&mdio {
++	ext_rgmii_phy: ethernet-phy@1 {
++		compatible = "ethernet-phy-ieee802.3-c22";
++		reg = <1>;
++
++		reset-gpios = <&pio 3 14 GPIO_ACTIVE_LOW>; /* PD14 */
++		reset-assert-us = <15000>;
++		reset-deassert-us = <40000>;
++	};
++};
++
+ &mmc0 {
+ 	vmmc-supply = <&reg_cldo1>;
+ 	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>; /* PF6 */
 -- 
 2.21.0
 
