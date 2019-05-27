@@ -2,143 +2,108 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 244B6C07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 03:55:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40934C07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 03:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED58F21707
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 03:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11A0621707
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 03:58:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726197AbfE0DzL convert rfc822-to-8bit (ORCPT
+        id S1726202AbfE0D6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 23:55:11 -0400
-Received: from emcscan.emc.com.tw ([192.72.220.5]:15704 "EHLO
-        emcscan.emc.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726068AbfE0DzK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 23:55:10 -0400
-X-IronPort-AV: E=Sophos;i="5.56,253,1539619200"; 
-   d="scan'208";a="30761744"
-Received: from unknown (HELO webmail.emc.com.tw) ([192.168.10.1])
-  by emcscan.emc.com.tw with SMTP; 27 May 2019 11:55:05 +0800
-Received: from 192.168.10.23
-        by webmail.emc.com.tw with MailAudit ESMTP Server V5.0(53080:1:AUTH_RELAY)
-        (envelope-from <kt.liao@emc.com.tw>); Mon, 27 May 2019 11:55:04 +0800 (CST)
-Received: from 192.168.33.46
-        by webmail.emc.com.tw with Mail2000 ESMTPA Server V7.00(119323:0:AUTH_LOGIN)
-        (envelope-from <kt.liao@emc.com.tw>); Mon, 27 May 2019 11:55:02 +0800 (CST)
-From:   =?UTF-8?B?5buW5bSH5qau?= <kt.liao@emc.com.tw>
-To:     "'Benjamin Tissoires'" <benjamin.tissoires@redhat.com>,
-        "'Dmitry Torokhov'" <dmitry.torokhov@gmail.com>,
-        "'Rob Herring'" <robh+dt@kernel.org>,
-        "'Aaron Ma'" <aaron.ma@canonical.com>,
-        "'Hans de Goede'" <hdegoede@redhat.com>
-Cc:     "'open list:HID CORE LAYER'" <linux-input@vger.kernel.org>,
-        "'lkml'" <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20190521132712.2818-1-benjamin.tissoires@redhat.com> <20190521132712.2818-9-benjamin.tissoires@redhat.com> <CAO-hwJJXGTZq7zRVhcFNwh-kOo0rUhZOsNtFX1yA93Km=L+ynA@mail.gmail.com>
-In-Reply-To: <CAO-hwJJXGTZq7zRVhcFNwh-kOo0rUhZOsNtFX1yA93Km=L+ynA@mail.gmail.com>
-Subject: RE: [PATCH v2 08/10] Input: elan_i2c - export true width/height
-Date:   Mon, 27 May 2019 11:55:01 +0800
-Message-ID: <00f901d5143f$f5ea8420$e1bf8c60$@emc.com.tw>
-MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Mailer: Microsoft Outlook 14.0
-Thread-Index: AQMBv+jJqV7WAwqWtnh8gdestIYR9QKF0mzQAgyUPwekAGglcA==
-Content-Language: zh-tw
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcOTIwNzNcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy0zMzMzMTMxYi04MDMzLTExZTktYjdjYy01YzUxNGY0NmFhNDVcYW1lLXRlc3RcMzMzMzEzMWQtODAzMy0xMWU5LWI3Y2MtNWM1MTRmNDZhYTQ1Ym9keS50eHQiIHN6PSIzNjU1IiB0PSIxMzIwMzQwMjkwMTM3NDM0NjEiIGg9IncwQmlIY3p1dmg1YUNNVzhoWVUzekRSWS9YST0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
-x-dg-rorf: true
+        Sun, 26 May 2019 23:58:39 -0400
+Received: from foss.arm.com ([217.140.101.70]:54410 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725973AbfE0D6i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 May 2019 23:58:38 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 25AF0A78;
+        Sun, 26 May 2019 20:58:38 -0700 (PDT)
+Received: from p8cg001049571a15.blr.arm.com (p8cg001049571a15.blr.arm.com [10.162.40.17])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9D3373F690;
+        Sun, 26 May 2019 20:58:35 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH] arm64/mm: Simplify protection flag creation for kernel huge mappings
+Date:   Mon, 27 May 2019 09:28:15 +0530
+Message-Id: <1558929495-19898-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+Even though they have got the same value, PMD_TYPE_SECT and PUD_TYPE_SECT
+get used for kernel huge mappings. But before that first the table bit gets
+cleared using leaf level PTE_TABLE_BIT. Though functionally they are same,
+we should use page table level specific macros to be consistent as per the
+MMU specifications. Create page table level specific wrappers for kernel
+huge mapping entries and just drop mk_sect_prot() which does not have any
+other user.
 
------Original Message-----
-From: Benjamin Tissoires [mailto:benjamin.tissoires@redhat.com] 
-Sent: Friday, May 24, 2019 5:37 PM
-To: Dmitry Torokhov; KT Liao; Rob Herring; Aaron Ma; Hans de Goede
-Cc: open list:HID CORE LAYER; lkml; devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 08/10] Input: elan_i2c - export true width/height
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+---
+ arch/arm64/include/asm/pgtable.h | 9 +++++++--
+ arch/arm64/mm/mmu.c              | 8 ++------
+ 2 files changed, 9 insertions(+), 8 deletions(-)
 
-On Tue, May 21, 2019 at 3:28 PM Benjamin Tissoires <benjamin.tissoires@redhat.com> wrote:
->
-> The width/height is actually in the same unit than X and Y. So we 
-> should not tamper the data, but just set the proper resolution, so 
-> that userspace can correctly detect which touch is a palm or a finger.
->
-> Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
->
-> --
->
-> new in v2
-> ---
->  drivers/input/mouse/elan_i2c_core.c | 11 ++++-------
->  1 file changed, 4 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/input/mouse/elan_i2c_core.c 
-> b/drivers/input/mouse/elan_i2c_core.c
-> index 7ff044c6cd11..6f4feedb7765 100644
-> --- a/drivers/input/mouse/elan_i2c_core.c
-> +++ b/drivers/input/mouse/elan_i2c_core.c
-> @@ -45,7 +45,6 @@
->  #define DRIVER_NAME            "elan_i2c"
->  #define ELAN_VENDOR_ID         0x04f3
->  #define ETP_MAX_PRESSURE       255
-> -#define ETP_FWIDTH_REDUCE      90
->  #define ETP_FINGER_WIDTH       15
->  #define ETP_RETRY_COUNT                3
->
-> @@ -915,12 +914,8 @@ static void elan_report_contact(struct elan_tp_data *data,
->                         return;
->                 }
->
-> -               /*
-> -                * To avoid treating large finger as palm, let's reduce the
-> -                * width x and y per trace.
-> -                */
-> -               area_x = mk_x * (data->width_x - ETP_FWIDTH_REDUCE);
-> -               area_y = mk_y * (data->width_y - ETP_FWIDTH_REDUCE);
-> +               area_x = mk_x * data->width_x;
-> +               area_y = mk_y * data->width_y;
->
->                 major = max(area_x, area_y);
->                 minor = min(area_x, area_y); @@ -1123,8 +1118,10 @@ 
-> static int elan_setup_input_device(struct elan_tp_data *data)
->                              ETP_MAX_PRESSURE, 0, 0);
->         input_set_abs_params(input, ABS_MT_TOUCH_MAJOR, 0,
->                              ETP_FINGER_WIDTH * max_width, 0, 0);
-> +       input_abs_set_res(input, ABS_MT_TOUCH_MAJOR, data->x_res);
->         input_set_abs_params(input, ABS_MT_TOUCH_MINOR, 0,
->                              ETP_FINGER_WIDTH * min_width, 0, 0);
-> +       input_abs_set_res(input, ABS_MT_TOUCH_MINOR, data->y_res);
-
-I had a chat with Peter on Wednesday, and he mentioned that this is dangerous as Major/Minor are max/min of the width and height. And given that we might have 2 different resolutions, we would need to do some computation in the kernel to ensure the data is correct with respect to the resolution.
-
-TL;DR: I don't think we should export the resolution there :(
-
-KT, should I drop the patch entirely, or is there a strong argument for keeping the ETP_FWIDTH_REDUCE around?
-I suggest you apply the patch, I have no idea why ETP_FWIDTH_REDUCE existed. 
-Our FW team know nothing about ETP_FWIDTH_REDUCE ether.
-
-The only side effect will happen on Chromebook because such computation have stayed in ChromeOS' kernel for four years.
-Chrome's finger/palm threshold may be different from other Linux distribution.
-We will discuss it with Google once the patch picked by chrome and cause something wrong.
-
-Cheers,
-Benjamin
-
-
->
->         data->input = input;
->
-> --
-> 2.21.0
->
+diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+index 2c41b04708fe..6478dd121228 100644
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -335,9 +335,14 @@ static inline pmd_t pte_pmd(pte_t pte)
+ 	return __pmd(pte_val(pte));
+ }
+ 
+-static inline pgprot_t mk_sect_prot(pgprot_t prot)
++static inline pgprot_t mk_pud_sect_prot(pgprot_t prot)
+ {
+-	return __pgprot(pgprot_val(prot) & ~PTE_TABLE_BIT);
++	return __pgprot((pgprot_val(prot) & ~PUD_TABLE_BIT) | PUD_TYPE_SECT);
++}
++
++static inline pgprot_t mk_pmd_sect_prot(pgprot_t prot)
++{
++	return __pgprot((pgprot_val(prot) & ~PMD_TABLE_BIT) | PMD_TYPE_SECT);
+ }
+ 
+ #ifdef CONFIG_NUMA_BALANCING
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index a1bfc4413982..22c2e4f0768f 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -971,9 +971,7 @@ int __init arch_ioremap_pmd_supported(void)
+ 
+ int pud_set_huge(pud_t *pudp, phys_addr_t phys, pgprot_t prot)
+ {
+-	pgprot_t sect_prot = __pgprot(PUD_TYPE_SECT |
+-					pgprot_val(mk_sect_prot(prot)));
+-	pud_t new_pud = pfn_pud(__phys_to_pfn(phys), sect_prot);
++	pud_t new_pud = pfn_pud(__phys_to_pfn(phys), mk_pud_sect_prot(prot));
+ 
+ 	/* Only allow permission changes for now */
+ 	if (!pgattr_change_is_safe(READ_ONCE(pud_val(*pudp)),
+@@ -987,9 +985,7 @@ int pud_set_huge(pud_t *pudp, phys_addr_t phys, pgprot_t prot)
+ 
+ int pmd_set_huge(pmd_t *pmdp, phys_addr_t phys, pgprot_t prot)
+ {
+-	pgprot_t sect_prot = __pgprot(PMD_TYPE_SECT |
+-					pgprot_val(mk_sect_prot(prot)));
+-	pmd_t new_pmd = pfn_pmd(__phys_to_pfn(phys), sect_prot);
++	pmd_t new_pmd = pfn_pmd(__phys_to_pfn(phys), mk_pmd_sect_prot(prot));
+ 
+ 	/* Only allow permission changes for now */
+ 	if (!pgattr_change_is_safe(READ_ONCE(pmd_val(*pmdp)),
+-- 
+2.20.1
 
