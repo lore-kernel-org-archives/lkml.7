@@ -2,112 +2,98 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A40EC04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F394C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:51:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D18262133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:45:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5726A20883
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:51:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="dQu9VJgd"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tigu461t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726727AbfE0Kpm (ORCPT
+        id S1726304AbfE0Kv3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 06:45:42 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38360 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726063AbfE0Kpl (ORCPT
+        Mon, 27 May 2019 06:51:29 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:46270 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725814AbfE0Kv3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 06:45:41 -0400
-Received: by mail-pf1-f193.google.com with SMTP id b76so9377044pfb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 03:45:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=aE2uyZ37ZTI8bLLwug7sYYZgqvxeNTU6PhXTmRA7gLg=;
-        b=dQu9VJgdBq7ZkSxnXd6Vnw51QDGw13b6nH0fHvlJf3Rl6cRbyT8Xqfyu7bDEJFWESa
-         cHCLs/VwkcJluIRiY7IjbjeJxhkIGMdG8LMKC2tP0xErcmbqWsaCrjees9Sd33cXBpz8
-         vP4hJSvZRwBnhjHOx85hMczgGxEefDY5j9gN9f3ud7mMIVtLi02fjUmrKx8L766ahCgU
-         EFSme7aD96SMkFThjGlM+XqSAxDAZnBxlrPqgzuTv6hzNA4tEeaNGoc1zYQzHdNTw3s+
-         0XAhJBcSCJ1pcDsaZADdOhkMdNXLOcknyCtAlfbWUmUmxDRE+5NA1UDMJ14R/HTCuFwJ
-         0qwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aE2uyZ37ZTI8bLLwug7sYYZgqvxeNTU6PhXTmRA7gLg=;
-        b=SAgAKOnQKaLcKIwuI64Qje+sihoLBwiBm/dpsJECtdZPfgejhAkU/HbeJX0Os/qKHI
-         tXWbE/V2clndffKIcJmEN2ontteYvzQbs0sEhWtfpVNwYdw/8G4b1LDb5GGOYx5SyaOq
-         xN+ytVTUWsN4KsRpoBzGDL6TKoXdQpg5cez+mVNjlKNaFwV7G/9Z8MmAGE+s/0eAu4f5
-         xa7ugvtuDCvnVlXGUYALuWaHzVqgMwSWi6c5pxQHC/SCL+9Bg95SYLRNlSJvePLZNfnn
-         XLvkPnUICK7yS2d8GcrhlKkEeeComVZw+/h2thbKTw0VQBTBAgi/eWDYl/0Z13fSIKW0
-         oT9w==
-X-Gm-Message-State: APjAAAWbIgAaQkoU1AcXNphjPFGmBQ3u72POltifOqMkV+zU+IY9Cagm
-        Yg7UAmzGqFdManmpS4PlXd0ryDSl1w47DQ==
-X-Google-Smtp-Source: APXvYqxTnrwU1eKgSc9iQ0ApboFyS1UaBX+5oO/GHfL453T0/+RmxCYvvW89PUAefXa1VP6IaLpVvw==
-X-Received: by 2002:a17:90a:d803:: with SMTP id a3mr30625374pjv.48.1558953940763;
-        Mon, 27 May 2019 03:45:40 -0700 (PDT)
-Received: from brauner.io ([208.54.39.129])
-        by smtp.gmail.com with ESMTPSA id x7sm11077579pfm.82.2019.05.27.03.45.34
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 27 May 2019 03:45:40 -0700 (PDT)
-Date:   Mon, 27 May 2019 12:45:30 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jann Horn <jannh@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: [PATCH 2/2] arch: wire-up clone6() syscall on x86
-Message-ID: <20190527104528.cao7wamuj4vduh3u@brauner.io>
-References: <20190526102612.6970-1-christian@brauner.io>
- <20190526102612.6970-2-christian@brauner.io>
- <CAK8P3a1Ltsna_rtKxhMU7X0t=UOXDA75tKpph6s=OZ4itJe7VQ@mail.gmail.com>
+        Mon, 27 May 2019 06:51:29 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4RAp5e6003020;
+        Mon, 27 May 2019 05:51:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1558954265;
+        bh=JrfdFuLps/wHBCl3PPKJylhuDG/GtLNZB8BGn4i9Njw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=tigu461trGyiuT0TlRN5C1lHPqzrrZKwO1Tq3bJjFQ1mt/4Eon/wHG+6dGlIwHUsf
+         d9tgY3aDjo/X82zi2jn2u4dWgeLIujSPHJueBjAK3yYBVDODRLcc+g6o/VgADzZNlo
+         WZE7Z3JUqxs9STSd02lydCJC50MgI7J07cIIOi9M=
+Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4RAp5Q1037617
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 27 May 2019 05:51:05 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 27
+ May 2019 05:51:04 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 27 May 2019 05:51:04 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4RAp2gC087418;
+        Mon, 27 May 2019 05:51:02 -0500
+Subject: Re: [PATCHv6 0/4] omapdrm: DSI command mode panel support
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+CC:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        <dri-devel@lists.freedesktop.org>, <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kernel@collabora.com>
+References: <20190523200756.25314-1-sebastian.reichel@collabora.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <60c45d23-de2f-d94a-c3d7-146a2bee538f@ti.com>
+Date:   Mon, 27 May 2019 13:51:02 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a1Ltsna_rtKxhMU7X0t=UOXDA75tKpph6s=OZ4itJe7VQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190523200756.25314-1-sebastian.reichel@collabora.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 27, 2019 at 12:02:37PM +0200, Arnd Bergmann wrote:
-> On Sun, May 26, 2019 at 12:27 PM Christian Brauner <christian@brauner.io> wrote:
-> >
-> > Wire up the clone6() call on x86.
-> >
-> > This patch only wires up clone6() on x86. Some of the arches look like they
-> > need special assembly massaging and it is probably smarter if the
-> > appropriate arch maintainers would do the actual wiring.
-> 
-> Why do some architectures need special cases here? I'd prefer to have
-> new system calls always get defined in a way that avoids this, and
-> have a common entry point for everyone.
-> 
-> Looking at the m68k sys_clone comment in
-> arch/m68k/kernel/process.c, it seems that this was done as an
-> optimization to deal with an inferior ABI. Similar code is present
-> in h8300, ia64, nios2, and sparc. If all of them just do this to
-> shave off a few cycles from the system call entry, I really
-> couldn't care less.
+Hi,
 
-I'm happy to wire all arches up at the same time in the next revision. I
-just wasn't sure why some of them were assemblying the living hell out
-of clone; especially ia64. I really didn't want to bother touching all
-of this just for an initial RFC.
+On 23/05/2019 23:07, Sebastian Reichel wrote:
+> Hi,
+> 
+> Here is another round of the DSI command mode panel patchset
+> integrating the feedback from PATCHv5. The patches are based
+> on v5.2-rc1 tag. It does not contain the patches required for
+> OMAP3 support (it needs a workaround for a hardware bug) and
+> for automatic display rotation. They should get their own series,
+> once after everything has been moved to DRM panel API. I think
+> DRM panel conversion should happen _after_ this series, since
+> otherwise there is a high risk of bricking DSI support completely.
+> I already started a WIP branch for converting DSI to the DRM panel
+> API on top of this patchset.
 
-Christian
+Looks good to me. For some reason I can't boot 5.2-rc2 (on x15) so I 
+haven't been able to test yet. I'll pick the series up in any case, and 
+I'll test it when I get the kernel booting.
+
+  Tomi
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
