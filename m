@@ -2,122 +2,148 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AFABC282E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 02:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE00C282E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 02:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 617352075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 02:33:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 182BE2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 02:43:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="c3cE4r+k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726139AbfE0Cdg (ORCPT
+        id S1726105AbfE0Cnk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 22:33:36 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:17162 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725973AbfE0Cdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 22:33:36 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id D7F0E9D3FE75A93C40BB;
-        Mon, 27 May 2019 10:33:33 +0800 (CST)
-Received: from [127.0.0.1] (10.177.96.96) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Mon, 27 May 2019
- 10:33:29 +0800
-Subject: =?UTF-8?Q?Re:_[PATCH_net]_staging:_Remove_set_but_not_used_variable?=
- =?UTF-8?B?IOKAmHN0YXR1c+KAmQ==?=
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-References: <20190525042642.78482-1-maowenan@huawei.com>
- <CAGngYiX04W+-jxqnWUD6CLh8LAr61FhtADGM0zbGcdeArqzC-Q@mail.gmail.com>
-CC:     Greg KH <gregkh@linuxfoundation.org>,
-        Jeremy Sowden <jeremy@azazel.net>,
-        <devel@driverdev.osuosl.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>,
-        "Matt Sickler" <matt.sickler@daktronics.com>
-From:   maowenan <maowenan@huawei.com>
-Message-ID: <05c9bfac-c3ad-5889-8f47-0e6f53844a76@huawei.com>
-Date:   Mon, 27 May 2019 10:33:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Sun, 26 May 2019 22:43:40 -0400
+Received: from gateway34.websitewelcome.com ([192.185.149.62]:31717 "EHLO
+        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725996AbfE0Cnj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 May 2019 22:43:39 -0400
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway34.websitewelcome.com (Postfix) with ESMTP id 63FCB105E8F6
+        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2019 21:23:17 -0500 (CDT)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id V5IDhLFXW2qH7V5IDhZVtt; Sun, 26 May 2019 21:23:17 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=wcUEqwCmSzTwTOScs99jj/v1rr1UHqi6aLYmirJnCNA=; b=c3cE4r+kv5BtL26BIf7GnVQFcK
+        8kNVtSVceNHPtN4Hf4vzCRKNOEU3r/xPt58ZvlYEUh4ztGzZkjpLiLPMNXXf14P7u/KkcX7yfxIum
+        oJBEQMDjNv+Cpisfx3z21lM0M2XKJW14IYAkEIperIiQUqxO0ehLY4jAvVrJLTl96XLaGIJ35XgDZ
+        rfUE/s19hh4LmGWN5uit5jB3NEhg5BTXmb7m+iiTIjq4M0MDU7+nAHOwynTo8vTHvSgy23HhGKetY
+        xmVoVYNJhRwqCpTiPEaD/nVST+LVFUfKEv/Uga/Tqc9eTueYoV+RyihuLb4PPKlos4r15bgrgl6h5
+        yJfSskAA==;
+Received: from [177.34.20.96] (port=57660 helo=castello.castello.in)
+        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1hV5IC-003JNX-Ip; Sun, 26 May 2019 23:23:16 -0300
+From:   Matheus Castello <matheus@castello.eng.br>
+To:     sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org
+Cc:     mark.rutland@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, lee.jones@linaro.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Matheus Castello <matheus@castello.eng.br>
+Subject: [PATCH v3 4/5] power: supply: max17040: Clear ALRT bit when the SOC are above threshold
+Date:   Sun, 26 May 2019 23:22:57 -0300
+Message-Id: <20190527022258.32748-5-matheus@castello.eng.br>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190527022258.32748-1-matheus@castello.eng.br>
+References: <CAJKOXPf=nPrmw6Vzi_=LmO=dVsV4Gvoc-q75XP2FBEgm9Gxv0A@mail.gmail.com>
+ <20190527022258.32748-1-matheus@castello.eng.br>
 MIME-Version: 1.0
-In-Reply-To: <CAGngYiX04W+-jxqnWUD6CLh8LAr61FhtADGM0zbGcdeArqzC-Q@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.96.96]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 177.34.20.96
+X-Source-L: No
+X-Exim-ID: 1hV5IC-003JNX-Ip
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (castello.castello.in) [177.34.20.96]:57660
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 57
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In order to not generate duplicate interrupts we clear the ALRT bit when
+the SOC is in a state that shows that the battery is charged above the set
+threshold for the SOC low level alert.
 
+Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+---
+ drivers/power/supply/max17040_battery.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-On 2019/5/25 20:59, Sven Van Asbroeck wrote:
-> On Sat, May 25, 2019 at 12:20 AM Mao Wenan <maowenan@huawei.com> wrote:
->>
->> The variable 'status' is not used any more, remve it.
-> 
->>      /* do the transfers for this message */
->>      list_for_each_entry(transfer, &m->transfers, transfer_list) {
->>          if (transfer->tx_buf == NULL && transfer->rx_buf == NULL && transfer->len) {
->> -            status = -EINVAL;
->>              break;
->>          }
-> 
-> This looks like an error condition that's not reported to the spi core.
-> 
-> Instead of removing the status variable (which also removes the error value!),
-> maybe this should be reported to the spi core instead ?
-> 
-> Other spi drivers appear to do the following on the error path:
-> m->status = status;
-> return status;
+diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
+index 2f4851608cfe..61e6fcfea8a1 100644
+--- a/drivers/power/supply/max17040_battery.c
++++ b/drivers/power/supply/max17040_battery.c
+@@ -48,6 +48,7 @@ struct max17040_chip {
+ 	int status;
+ 	/* Low alert threshold from 32% to 1% of the State of Charge */
+ 	u32 low_soc_alert_threshold;
++	int alert_bit;
+ };
 
-I have reviewed the code again, and it is good idea to store m->status in error path, like below?
+ static int max17040_get_property(struct power_supply *psy,
+@@ -107,6 +108,7 @@ static void max17040_reset(struct i2c_client *client)
+ static int max17040_set_low_soc_threshold_alert(struct i2c_client *client,
+ 	u32 level)
+ {
++	struct max17040_chip *chip = i2c_get_clientdata(client);
+ 	int ret;
+ 	u16 data;
 
-@@ -374,7 +374,7 @@ kp_spi_transfer_one_message(struct spi_master *master, struct spi_message *m)
-     list_for_each_entry(transfer, &m->transfers, transfer_list) {
-         if (transfer->tx_buf == NULL && transfer->rx_buf == NULL && transfer->len) {
-             status = -EINVAL;
--            break;
-+            goto error;
-         }
+@@ -118,6 +120,7 @@ static int max17040_set_low_soc_threshold_alert(struct i2c_client *client,
+ 		data &= MAX17040_ATHD_MASK;
+ 		data |= level;
+ 		max17040_write_reg(client, MAX17040_RCOMP, data);
++		chip->alert_bit = 0;
+ 		ret = 0;
+ 	} else {
+ 		ret = -EINVAL;
+@@ -144,6 +147,11 @@ static void max17040_get_soc(struct i2c_client *client)
+ 	soc = max17040_read_reg(client, MAX17040_SOC);
 
-         /* transfer */
-@@ -412,7 +412,7 @@ kp_spi_transfer_one_message(struct spi_master *master, struct spi_message *m)
-
-             if (count != transfer->len) {
-                 status = -EIO;
--                break;
-+                goto error;
-             }
-         }
-
-
-...
-
-     /* done work */
-     spi_finalize_current_message(master);
-     return 0;
+ 	chip->soc = (soc >> 8);
 +
-+ error:
-+    m->status = status;
-+    return status;
-
++	/* check SOC level to clear ALRT bit */
++	if (chip->soc > chip->low_soc_alert_threshold && chip->alert_bit)
++		max17040_set_low_soc_threshold_alert(client,
++			chip->low_soc_alert_threshold);
  }
 
+ static void max17040_get_version(struct i2c_client *client)
+@@ -229,6 +237,9 @@ static irqreturn_t max17040_thread_handler(int id, void *dev)
+ 	/* send uevent */
+ 	power_supply_changed(chip->battery);
 
-> 
->>
->> @@ -370,7 +368,6 @@ kp_spi_transfer_one_message(struct spi_master *master, struct spi_message *m)
->>
->>              if (count != transfer->len) {
->> -                status = -EIO;
->>                  break;
-> 
-> Same issue here.
-> 
-> 
++	/* ALRT bit is seted */
++	chip->alert_bit = 1;
++
+ 	return IRQ_HANDLED;
+ }
+
+--
+2.20.1
 
