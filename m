@@ -2,100 +2,79 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E119FC04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A739CC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEF1B2081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D65C2081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:10:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="S7Wnzx40"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbfE0QKf (ORCPT
+        id S1726899AbfE0QKo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 12:10:35 -0400
-Received: from shelob.surriel.com ([96.67.55.147]:52702 "EHLO
-        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725991AbfE0QKf (ORCPT
+        Mon, 27 May 2019 12:10:44 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38672 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725991AbfE0QKo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 12:10:35 -0400
-Received: from imladris.surriel.com ([96.67.55.152])
-        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.91)
-        (envelope-from <riel@shelob.surriel.com>)
-        id 1hVICn-0002G0-2I; Mon, 27 May 2019 12:10:33 -0400
-Message-ID: <26b598e342d34bbd1c2b65f9aaac0fd7a0d63860.camel@surriel.com>
-Subject: Re: [PATCH 3/7] sched/debug: Remove sd->*_idx range on sysctl
-From:   Rik van Riel <riel@surriel.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 27 May 2019 12:10:32 -0400
-In-Reply-To: <20190527062116.11512-4-dietmar.eggemann@arm.com>
-References: <20190527062116.11512-1-dietmar.eggemann@arm.com>
-         <20190527062116.11512-4-dietmar.eggemann@arm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-DRuyszJJMMUUjWdjmzcP"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Mon, 27 May 2019 12:10:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Uld6H3JrVxmYsW0FvI1LakKbPkrV6F+CRzlFk+Ay678=; b=S7Wnzx40jWRzxuYdrX3ExHijr
+        ttcQPC2/xOa4bly15NVNRQTksQvE8x/xLlevoxPzq9hv/P4tzZPXUQukgzCtSSYEByXAHUSKLcLSt
+        5bh37KkTxiFdYxek8o9Y0hyR/QM727OsS2xi3HbCeu9IC7xjIQAa59+SudhuSVvM2sczk1XpTxKjy
+        9g15OSHiwCavUrw5Q6N2Hbuu6UZYccQM+Vv/PXtdHUxE4PHH1jbiEKKLfJAe8CGvBKn3h/cYS5XNS
+        g/jL8JQ+/qpNybTVMD4eFZuO3bdLd0IRZcmCEbZpDOK2GK3F+GkcAVOGXP2VY/pMB3ezlMD+ODbdU
+        r4LFMSivg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hVICt-0006oi-98; Mon, 27 May 2019 16:10:41 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1D482202BF3E0; Mon, 27 May 2019 18:10:37 +0200 (CEST)
+Date:   Mon, 27 May 2019 18:10:37 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Imre Deak <imre.deak@intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
+        <ville.syrjala@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH v2 2/2] lockdep: Fix merging of hlocks with non-zero
+ references
+Message-ID: <20190527161037.GG2623@hirez.programming.kicks-ass.net>
+References: <20190524201509.9199-1-imre.deak@intel.com>
+ <20190524201509.9199-2-imre.deak@intel.com>
+ <20190527151438.GF2623@hirez.programming.kicks-ass.net>
+ <20190527154429.GC24536@ideak-desk.fi.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190527154429.GC24536@ideak-desk.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, May 27, 2019 at 06:44:29PM +0300, Imre Deak wrote:
+> On Mon, May 27, 2019 at 05:14:38PM +0200, Peter Zijlstra wrote:
+> > On Fri, May 24, 2019 at 11:15:09PM +0300, Imre Deak wrote:
 
---=-DRuyszJJMMUUjWdjmzcP
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> > > -				if (DEBUG_LOCKS_WARN_ON(hlock->references == UINT_MAX))
+> > 
+> > What tree is this against?
+> 
+> I just used our
+> 	git://anongit.freedesktop.org/drm-tip
+> and the most recent upstream commit in that is:
+> 
 
-On Mon, 2019-05-27 at 07:21 +0100, Dietmar Eggemann wrote:
-> This reverts commit 201c373e8e48 ("sched/debug: Limit sd->*_idx range
-> on
-> sysctl").
->=20
-> Load indexes (sd->*_idx) are no longer needed without rq->cpu_load[].
-> The range check for load indexes can be removed as well. Get rid of
-> it
-> before the rq->cpu_load[] since it uses CPU_LOAD_IDX_MAX.
->=20
-> At the same time, fix the following coding style issues detected by
-> scripts/checkpatch.pl:
->=20
->   ERROR: space prohibited before that ','
->   ERROR: space prohibited before that close parenthesis ')'
->=20
-> Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-
-Acked-by: Rik van Riel <riel@surriel.com>
-
---=20
-All Rights Reversed.
-
---=-DRuyszJJMMUUjWdjmzcP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAlzsC/gACgkQznnekoTE
-3oMX4gf/QoT1HjFvxTTqNtVLIq7X7yNsX4jjwPkCAV9dCuesW0piCV2Guq7mfeJt
-lmwzufN2K9VUN87P0nmCH1SIlYn68ucJUWVVfd5XGJpq24nEz2V2gGzunuk++++i
-kKu3JDh0rBclkoE07iMH8SF24YTsZRR3D5hmwr+0/hYqKGo0/YBVkyini0gENrsc
-q3xBsgQ4UOWgc6BtsDGQM2Ur/1EeaKciuMbiRFXD1btmvGuZtREd+63dUMKnOanN
-wrkmX7BsraVVtCCrR16pHMU2q8dPTovmcuXrK9SM3HQjR2wxYIVZIZZnFdaiFu/h
-16ywgGF0wouFylkX/UKlLAEtxKClBg==
-=hDFH
------END PGP SIGNATURE-----
-
---=-DRuyszJJMMUUjWdjmzcP--
-
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/lockdep.h#n270
