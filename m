@@ -4,141 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC505C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA5DFC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8D6220883
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:06:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F9A820883
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:07:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbfE0MGz (ORCPT
+        id S1727086AbfE0MHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 08:06:55 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:17580 "EHLO huawei.com"
+        Mon, 27 May 2019 08:07:01 -0400
+Received: from app1.whu.edu.cn ([202.114.64.88]:42472 "EHLO whu.edu.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726071AbfE0MGy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1725943AbfE0MGy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 27 May 2019 08:06:54 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 84DCA3273ECA518A4663;
-        Mon, 27 May 2019 20:06:52 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 27 May 2019 20:06:43 +0800
-From:   Kefeng Wang <wangkefeng.wang@huawei.com>
-To:     <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>
-Subject: [PATCH v2] media: saa7164: fix remove_proc_entry warning
-Date:   Mon, 27 May 2019 20:14:55 +0800
-Message-ID: <20190527121455.177296-1-wangkefeng.wang@huawei.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <a921e7c8-53a2-bc48-286e-76efa6c4ba07@xs4all.nl>
-References: <a921e7c8-53a2-bc48-286e-76efa6c4ba07@xs4all.nl>
+Received: from localhost (unknown [111.202.192.3])
+        by email1 (Coremail) with SMTP id AQBjCgAniKXW0utcGsnjAA--.59650S2;
+        Mon, 27 May 2019 20:06:50 +0800 (CST)
+From:   Peng Wang <rocking@whu.edu.cn>
+To:     axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peng Wang <rocking@whu.edu.cn>
+Subject: [PATCH] block: use KMEM_CACHE macro
+Date:   Mon, 27 May 2019 20:05:18 +0800
+Message-Id: <20190527120518.3703-1-rocking@whu.edu.cn>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQBjCgAniKXW0utcGsnjAA--.59650S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7urWfGFy7Cw4rKFWrWr4kZwb_yoW8JF4kpF
+        Z3GFn8Cr1jga1xuFWkAayxZry3Cw4vgF1xWa1Yv34Ykr9rCws2vF1vyr1UZrWxurWfCrW5
+        Xr48tryrXr1jkFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkm14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+        JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+        2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6ryU
+        MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr
+        0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0E
+        wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
+        W8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
+        IxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfU0CJPDUUUU
+X-CM-SenderInfo: qsqrijaqrviiqqxyq4lkxovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-if saa7164_proc_create() fails, saa7164_fini() will trigger a warning,
+Use the preferred KMEM_CACHE helper for brevity.
 
-name 'saa7164'
-WARNING: CPU: 1 PID: 6311 at fs/proc/generic.c:672 remove_proc_entry+0x1e8/0x3a0
-  ? remove_proc_entry+0x1e8/0x3a0
-  ? try_stop_module+0x7b/0x240
-  ? proc_readdir+0x70/0x70
-  ? rcu_read_lock_sched_held+0xd7/0x100
-  saa7164_fini+0x13/0x1f [saa7164]
-  __x64_sys_delete_module+0x30c/0x480
-  ? __ia32_sys_delete_module+0x480/0x480
-  ? __x64_sys_clock_gettime+0x11e/0x1c0
-  ? __x64_sys_timer_create+0x1a0/0x1a0
-  ? trace_hardirqs_off_caller+0x40/0x180
-  ? do_syscall_64+0x18/0x450
-  do_syscall_64+0x9f/0x450
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Fix it by checking the return of proc_create_single() before
-calling remove_proc_entry().
-
-Cc: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Signed-off-by: Peng Wang <rocking@whu.edu.cn>
 ---
- drivers/media/pci/saa7164/saa7164-core.c | 33 ++++++++++++++++--------
- 1 file changed, 22 insertions(+), 11 deletions(-)
+ block/blk-core.c | 3 +--
+ block/blk-ioc.c  | 3 +--
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/pci/saa7164/saa7164-core.c b/drivers/media/pci/saa7164/saa7164-core.c
-index 05f25c9bb308..04d566b1b41e 100644
---- a/drivers/media/pci/saa7164/saa7164-core.c
-+++ b/drivers/media/pci/saa7164/saa7164-core.c
-@@ -1122,16 +1122,25 @@ static int saa7164_proc_show(struct seq_file *m, void *v)
+diff --git a/block/blk-core.c b/block/blk-core.c
+index 1bf83a0df0f6..841bf0b12755 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -1789,8 +1789,7 @@ int __init blk_dev_init(void)
+ 	if (!kblockd_workqueue)
+ 		panic("Failed to create kblockd\n");
+ 
+-	blk_requestq_cachep = kmem_cache_create("request_queue",
+-			sizeof(struct request_queue), 0, SLAB_PANIC, NULL);
++	blk_requestq_cachep = KMEM_CACHE(request_queue, SLAB_PANIC);
+ 
+ #ifdef CONFIG_DEBUG_FS
+ 	blk_debugfs_root = debugfs_create_dir("block", NULL);
+diff --git a/block/blk-ioc.c b/block/blk-ioc.c
+index 5ed59ac6ae58..58c79aeca955 100644
+--- a/block/blk-ioc.c
++++ b/block/blk-ioc.c
+@@ -408,8 +408,7 @@ struct io_cq *ioc_create_icq(struct io_context *ioc, struct request_queue *q,
+ 
+ static int __init blk_ioc_init(void)
+ {
+-	iocontext_cachep = kmem_cache_create("blkdev_ioc",
+-			sizeof(struct io_context), 0, SLAB_PANIC, NULL);
++	iocontext_cachep = KMEM_CACHE(io_context, SLAB_PANIC);
  	return 0;
  }
- 
-+static struct proc_dir_entry *saa7164_pe;
-+
- static int saa7164_proc_create(void)
- {
--	struct proc_dir_entry *pe;
--
--	pe = proc_create_single("saa7164", S_IRUGO, NULL, saa7164_proc_show);
--	if (!pe)
-+	saa7164_pe = proc_create_single("saa7164", S_IRUGO, NULL, saa7164_proc_show);
-+	if (!saa7164_pe)
- 		return -ENOMEM;
- 
- 	return 0;
- }
-+
-+static void saa7164_proc_destroy(void)
-+{
-+	if (saa7164_pe)
-+		remove_proc_entry("saa7164", NULL);
-+}
-+#else
-+static int saa7164_proc_create(void) { return 0; }
-+static void saa7164_proc_destroy(void) {}
- #endif
- 
- static int saa7164_thread_function(void *data)
-@@ -1503,19 +1512,21 @@ static struct pci_driver saa7164_pci_driver = {
- 
- static int __init saa7164_init(void)
- {
--	printk(KERN_INFO "saa7164 driver loaded\n");
-+	int ret = pci_register_driver(&saa7164_pci_driver);
-+
-+	if (ret)
-+		return ret;
- 
--#ifdef CONFIG_PROC_FS
- 	saa7164_proc_create();
--#endif
--	return pci_register_driver(&saa7164_pci_driver);
-+
-+	printk(KERN_INFO "saa7164 driver loaded\n");
-+
-+	return 0;
- }
- 
- static void __exit saa7164_fini(void)
- {
--#ifdef CONFIG_PROC_FS
--	remove_proc_entry("saa7164", NULL);
--#endif
-+	saa7164_proc_destroy();
- 	pci_unregister_driver(&saa7164_pci_driver);
- }
- 
+ subsys_initcall(blk_ioc_init);
 -- 
-2.20.1
+2.19.1
 
