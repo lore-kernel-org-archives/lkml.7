@@ -2,99 +2,186 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FB8C07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 08:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A60C07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 08:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68DB921743
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 08:50:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AC542173B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 08:50:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="eXFCI9Im"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbfE0IuV (ORCPT
+        id S1726784AbfE0IuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 04:50:21 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:35986 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726722AbfE0IuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 04:50:16 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id DC2001A0B4A;
-        Mon, 27 May 2019 10:50:13 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 340AF1A0B56;
-        Mon, 27 May 2019 10:50:08 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 7EBCD40310;
-        Mon, 27 May 2019 16:49:56 +0800 (SGT)
-From:   yibin.gong@nxp.com
-To:     robh@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        festevam@gmail.com, mark.rutland@arm.com, vkoul@kernel.org,
-        dan.j.williams@intel.com
-Cc:     linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, kernel@pengutronix.de
-Subject: [PATCH v2 7/7] ARM: dts: imx7ulp: add edma device node
-Date:   Mon, 27 May 2019 16:51:18 +0800
-Message-Id: <20190527085118.40423-8-yibin.gong@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190527085118.40423-1-yibin.gong@nxp.com>
-References: <20190527085118.40423-1-yibin.gong@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 27 May 2019 04:50:24 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36100 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726757AbfE0IuW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 04:50:22 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v22so7734908wml.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 01:50:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=JSYe47ktmWDVImdRMdjKYkUfFXl23hlJNQIL3W+hEjY=;
+        b=eXFCI9ImDvCZKjk0jgbcXG/WbIcHIk+7MQNwJdKDwJNbEzr9PvGux3wik26Mz5q/tx
+         H2Ibzxqwhdwns143brs5zym7VWKd5/QQ2XIFU3HnPs1F09NqKgQzR3TZIqfpSabiDjKg
+         e2h4YOZwHNXtEVNoUyr2IuvyeaKI5tGdXv98g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=JSYe47ktmWDVImdRMdjKYkUfFXl23hlJNQIL3W+hEjY=;
+        b=FC7wLUIUGsdFHH77qK8R7fvBp3hg0VQJGmSYgZz+I0fqaXf0NOlE5c5Lrg7oOSLGky
+         Znz+WezhP8ejHcDsfiItfcpfw5DSD6K3AvcuJ5uzGFu/WBOldEP6uYi3mEJGhdK/7Boq
+         H4sE+IQh+FonmRYFPAsTwXWj6YxGSgyyoA/f8EBIyf2ywvvRhPeFfbHPFCBnkhB0Clzn
+         CdD/32nCsk6eaG5vOQ4dmONso53jDoqYv7wbSB41A60j0nkrlgbeA0W1p6Ab0QbPrKzU
+         V30h5X13Z4+din9R/2ATPfTVMFo6CWXxuvIxTIrJcvUPEUKPk6o2Iug1itnJOzWziFfu
+         9O2Q==
+X-Gm-Message-State: APjAAAXSxops5awQyyDRuLNNEhPHJquL0PnIZpAflEC/oZnR2KlQXApr
+        OToPKEK3CiHPcEFyRxNCbn6gJ7ZANEruUg==
+X-Google-Smtp-Source: APXvYqyCt7v/FXUTPMZGhsTlodF+U+d/X6SYkTSx9P2iis4pvWer/HfaVOOWbV7b5JQTHHKxXjxT0g==
+X-Received: by 2002:a7b:c943:: with SMTP id i3mr8400604wml.128.1558947019989;
+        Mon, 27 May 2019 01:50:19 -0700 (PDT)
+Received: from localhost.localdomain (86.100.broadband17.iol.cz. [109.80.100.86])
+        by smtp.gmail.com with ESMTPSA id f197sm10308637wme.39.2019.05.27.01.50.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 27 May 2019 01:50:19 -0700 (PDT)
+From:   Andrea Parri <andrea.parri@amarulasolutions.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH v2] rcu: Don't return a value from rcu_assign_pointer()
+Date:   Mon, 27 May 2019 10:49:57 +0200
+Message-Id: <1558946997-25559-1-git-send-email-andrea.parri@amarulasolutions.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Gong <yibin.gong@nxp.com>
+Quoting Paul [1]:
 
-Add edma device node in dts.
+  "Given that a quick (and perhaps error-prone) search of the uses
+   of rcu_assign_pointer() in v5.1 didn't find a single use of the
+   return value, let's please instead change the documentation and
+   implementation to eliminate the return value."
 
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+[1] https://lkml.kernel.org/r/20190523135013.GL28207@linux.ibm.com
+
+Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
+Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc: Josh Triplett <josh@joshtriplett.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Lai Jiangshan <jiangshanlai@gmail.com>
+Cc: Joel Fernandes <joel@joelfernandes.org>
+Cc: rcu@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx7ulp.dtsi | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+Changes in v2:
+  - Fix documentation and style (Paul E. McKenney)
+  - Improve subject line (Mark Rutland) 
+---
+ Documentation/RCU/whatisRCU.txt           | 8 ++++----
+ include/linux/rcupdate.h                  | 5 ++---
+ tools/include/linux/rcu.h                 | 4 ++--
+ tools/testing/radix-tree/linux/rcupdate.h | 2 +-
+ 4 files changed, 9 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx7ulp.dtsi b/arch/arm/boot/dts/imx7ulp.dtsi
-index d6b7110..b4f7adf 100644
---- a/arch/arm/boot/dts/imx7ulp.dtsi
-+++ b/arch/arm/boot/dts/imx7ulp.dtsi
-@@ -100,6 +100,34 @@
- 		reg = <0x40000000 0x800000>;
- 		ranges;
+diff --git a/Documentation/RCU/whatisRCU.txt b/Documentation/RCU/whatisRCU.txt
+index 981651a8b65d2..7e1a8721637ab 100644
+--- a/Documentation/RCU/whatisRCU.txt
++++ b/Documentation/RCU/whatisRCU.txt
+@@ -212,7 +212,7 @@ synchronize_rcu()
  
-+		edma1: dma-controller@40080000 {
-+			#dma-cells = <2>;
-+			compatible = "fsl,imx7ulp-edma";
-+			reg = <0x40080000 0x2000>,
-+				<0x40210000 0x1000>;
-+			dma-channels = <32>;
-+			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-names = "dma", "dmamux0";
-+			clocks = <&pcc2 IMX7ULP_CLK_DMA1>,
-+				 <&pcc2 IMX7ULP_CLK_DMA_MUX1>;
-+		};
-+
- 		lpuart4: serial@402d0000 {
- 			compatible = "fsl,imx7ulp-lpuart";
- 			reg = <0x402d0000 0x1000>;
+ rcu_assign_pointer()
+ 
+-	typeof(p) rcu_assign_pointer(p, typeof(p) v);
++	void rcu_assign_pointer(p, typeof(p) v);
+ 
+ 	Yes, rcu_assign_pointer() -is- implemented as a macro, though it
+ 	would be cool to be able to declare a function in this manner.
+@@ -220,9 +220,9 @@ rcu_assign_pointer()
+ 
+ 	The updater uses this function to assign a new value to an
+ 	RCU-protected pointer, in order to safely communicate the change
+-	in value from the updater to the reader.  This function returns
+-	the new value, and also executes any memory-barrier instructions
+-	required for a given CPU architecture.
++	in value from the updater to the reader.  This macro does not
++	evaluate to an rvalue, but it does execute any memory-barrier
++	instructions required for a given CPU architecture.
+ 
+ 	Perhaps just as important, it serves to document (1) which
+ 	pointers are protected by RCU and (2) the point at which a
+diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+index a8ed624da5556..0c9b92799abc7 100644
+--- a/include/linux/rcupdate.h
++++ b/include/linux/rcupdate.h
+@@ -367,7 +367,7 @@ static inline void rcu_preempt_sleep_check(void) { }
+  * other macros that it invokes.
+  */
+ #define rcu_assign_pointer(p, v)					      \
+-({									      \
++do {									      \
+ 	uintptr_t _r_a_p__v = (uintptr_t)(v);				      \
+ 	rcu_check_sparse(p, __rcu);					      \
+ 									      \
+@@ -375,8 +375,7 @@ static inline void rcu_preempt_sleep_check(void) { }
+ 		WRITE_ONCE((p), (typeof(p))(_r_a_p__v));		      \
+ 	else								      \
+ 		smp_store_release(&p, RCU_INITIALIZER((typeof(p))_r_a_p__v)); \
+-	_r_a_p__v;							      \
+-})
++} while (0)
+ 
+ /**
+  * rcu_swap_protected() - swap an RCU and a regular pointer
+diff --git a/tools/include/linux/rcu.h b/tools/include/linux/rcu.h
+index 7d02527e5bcea..9554d3fa54f33 100644
+--- a/tools/include/linux/rcu.h
++++ b/tools/include/linux/rcu.h
+@@ -19,7 +19,7 @@ static inline bool rcu_is_watching(void)
+ 	return false;
+ }
+ 
+-#define rcu_assign_pointer(p, v) ((p) = (v))
+-#define RCU_INIT_POINTER(p, v) p=(v)
++#define rcu_assign_pointer(p, v)	do { (p) = (v); } while (0)
++#define RCU_INIT_POINTER(p, v)	do { (p) = (v); } while (0)
+ 
+ #endif
+diff --git a/tools/testing/radix-tree/linux/rcupdate.h b/tools/testing/radix-tree/linux/rcupdate.h
+index fd280b070fdb1..fed468fb0c78d 100644
+--- a/tools/testing/radix-tree/linux/rcupdate.h
++++ b/tools/testing/radix-tree/linux/rcupdate.h
+@@ -7,6 +7,6 @@
+ #define rcu_dereference_raw(p) rcu_dereference(p)
+ #define rcu_dereference_protected(p, cond) rcu_dereference(p)
+ #define rcu_dereference_check(p, cond) rcu_dereference(p)
+-#define RCU_INIT_POINTER(p, v)	(p) = (v)
++#define RCU_INIT_POINTER(p, v)	do { (p) = (v); } while (0)
+ 
+ #endif
 -- 
 2.7.4
 
