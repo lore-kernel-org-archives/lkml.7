@@ -2,97 +2,92 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BE8C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 18:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D3DDC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 18:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6EB020859
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 18:10:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E11120859
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 18:12:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="TCX5m6h3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727189AbfE0SKz (ORCPT
+        id S1727120AbfE0SMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 14:10:55 -0400
-Received: from gateway30.websitewelcome.com ([192.185.152.11]:47418 "EHLO
-        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726346AbfE0SKx (ORCPT
+        Mon, 27 May 2019 14:12:45 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:37231 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726657AbfE0SMp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 14:10:53 -0400
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway30.websitewelcome.com (Postfix) with ESMTP id 30ED6412E
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 13:10:52 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id VK5EhEpSW4FKpVK5EhaPln; Mon, 27 May 2019 13:10:52 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.47.159] (port=37322 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hVK5D-002uvT-9J; Mon, 27 May 2019 13:10:51 -0500
-Date:   Mon, 27 May 2019 13:10:50 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ajay Gupta <ajayg@nvidia.com>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] usb: typec: ucsi: ccg: fix memory leak in do_flash
-Message-ID: <20190527181050.GA31496@embeddedor>
+        Mon, 27 May 2019 14:12:45 -0400
+Received: by mail-oi1-f194.google.com with SMTP id f4so12434712oib.4
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 11:12:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fdEdzKwrwwR+hZrRuekbTm4BMx8O7NzP4YL8a4f6Xyw=;
+        b=TCX5m6h3kSNswGNfH9xVf7MNEte1kWLAUZV2H9MaftkLrqoChQpWF9viqrvYi6oyn6
+         tMkNsoSpUVfYD/CCZosnrlppsI84qiMpucB5XKAzOQplFzM2KPYLEDMwfKyXFaG5RbO1
+         LjeZRTQ8cjEpmhm1Sy8uCqpD+io3/Cm0qwA84eSxw6osWF7EkPE/L2BoZPLI2SGA7aO3
+         NDcaBI3XhU0VFHOXVHwWcRXnr6l1uoOT6AIbk/0g1XMUq30s8F24O3na6AC+dtrGROBE
+         vqmZzoO6VI9MfrcgmrmHYS6/pPyFeezktzDMd7Bt7FZa2WF/szO/NCiryKq/lKy0KOeV
+         ErkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fdEdzKwrwwR+hZrRuekbTm4BMx8O7NzP4YL8a4f6Xyw=;
+        b=lJ7NQ9FXlVT5K+l4vptkMXwWbN56pNcj/KEXdbOPxQQ+mqfSiHD+c0If/NiCRBtgBm
+         so+DJr4efZo35cfN+reJx9rqrIaI+EjyzOZqttijEeG++hu0+4aJYE1v3KqYRepa0FuX
+         CC1W95W4KKOKKl9X7KkCcZpaFOQzX0DgEnqO39U7r4ppkq08eibPS6SiR24I9dItk6i6
+         23YqekguiOrpznv1Q5LTnC35l964B4mICbc1AXFdPxSOOGAq0k9oz/qpaJT4S1dabTNC
+         tQkmFotUdoLEcEFcn542bSi0J/moOHQDO3mZXBGfZdF12sQ9YI+o1IadRpXGdi43mADY
+         d/JA==
+X-Gm-Message-State: APjAAAVieZx/riXiAzYEuc8OZiPp5Vz6DS9jSviBFEnECQtM642PyMc+
+        UuCCN4z5KHvTT4HgzV9KIbPblOpI2ym6U6ZeqxvozKGavok=
+X-Google-Smtp-Source: APXvYqwmz7MYBR3RPfckjQ+bn80jPUguVMJFtd+LUXLXHyBI+ktAg+X8jo5YLRokDHP1QncBkXrVu3K0ewCBCk+mFp0=
+X-Received: by 2002:aca:4341:: with SMTP id q62mr175063oia.140.1558980764213;
+ Mon, 27 May 2019 11:12:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.47.159
-X-Source-L: No
-X-Exim-ID: 1hVK5D-002uvT-9J
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.47.159]:37322
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20190527140206.30392-1-narmstrong@baylibre.com> <20190527140206.30392-4-narmstrong@baylibre.com>
+In-Reply-To: <20190527140206.30392-4-narmstrong@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Mon, 27 May 2019 20:12:33 +0200
+Message-ID: <CAFBinCC+QrMhEErnt28ACe7x_VM65_envvOw7kFWAir53B=_nQ@mail.gmail.com>
+Subject: Re: [PATCH v4 3/3] arm64: dts: meson: Add minimal support for Odroid-N2
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case memory resources for *fw* were successfully allocated,
-release them before return.
-
-Addresses-Coverity-ID: 1445499 ("Resource leak")
-Fixes: 5c9ae5a87573 ("usb: typec: ucsi: ccg: add firmware flashing support")
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/usb/typec/ucsi/ucsi_ccg.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/usb/typec/ucsi/ucsi_ccg.c b/drivers/usb/typec/ucsi/ucsi_ccg.c
-index 9d46aa9e4e35..bf63074675fc 100644
---- a/drivers/usb/typec/ucsi/ucsi_ccg.c
-+++ b/drivers/usb/typec/ucsi/ucsi_ccg.c
-@@ -862,8 +862,10 @@ static int do_flash(struct ucsi_ccg *uc, enum enum_flash_mode mode)
- 
- not_signed_fw:
- 	wr_buf = kzalloc(CCG4_ROW_SIZE + 4, GFP_KERNEL);
--	if (!wr_buf)
--		return -ENOMEM;
-+	if (!wr_buf) {
-+		err = -ENOMEM;
-+		goto release_fw;
-+	}
- 
- 	err = ccg_cmd_enter_flashing(uc);
- 	if (err)
--- 
-2.21.0
-
+On Mon, May 27, 2019 at 4:03 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> This patch adds basic support for :
+> - Amlogic G12B, which is very similar to G12A
+> - The HardKernel Odroid-N2 based on the S922X SoC
+>
+> The Amlogic G12B SoC is very similar with the G12A SoC, sharing
+> most of the features and architecture, but with these differences :
+> - The first CPU cluster only has 2xCortex-A53 instead of 4
+> - G12B has a second cluster of 4xCortex-A73
+> - Both cluster can achieve 2GHz instead of 1,8GHz for G12A
+> - CPU Clock architecture is difference, thus needing a different
+>   compatible to handle this slight difference
+> - Supports a MIPI CSI input
+> - Embeds a Mali-G52 instead of a Mali-G31, but integration is the same
+>
+> Actual support is done in the same way as for the GXM support, including
+> the G12A dtsi and redefining the CPU clusters.
+> Unlike GXM, the first cluster is different, thus needing to remove
+> the last 2 cpu nodes of the first cluster.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
