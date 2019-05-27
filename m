@@ -2,127 +2,370 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11051C072B1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8734C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:06:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD507208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:04:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67F742146F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:06:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Cs9QvTTl"
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="IQgEK7oQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbfE0KE5 (ORCPT
+        id S1726867AbfE0KGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 06:04:57 -0400
-Received: from mail-eopbgr70087.outbound.protection.outlook.com ([40.107.7.87]:34286
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726560AbfE0KE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 06:04:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JF/O7UKKkH8RkrEcANCsfDz00eyxt9uiF1k74Vg303U=;
- b=Cs9QvTTloeySjge2NQxo/h0zTBT2lSNlQZVSMjUYtEi2wehkA+H7Ca3L5uMVBohfixixtOI1OmO+0J2R+ADAPbr5H1w7Gs/HHIQlTd7TGtRzbVu5//dUQnACR/XwEh1+AguHds3QXn6JDozOzkUjiuKa0C9DY6tk0lHpPFgsMto=
-Received: from VI1PR04MB4543.eurprd04.prod.outlook.com (20.177.55.90) by
- VI1PR04MB4960.eurprd04.prod.outlook.com (20.177.49.213) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.17; Mon, 27 May 2019 10:04:52 +0000
-Received: from VI1PR04MB4543.eurprd04.prod.outlook.com
- ([fe80::5062:df97:a70b:93f8]) by VI1PR04MB4543.eurprd04.prod.outlook.com
- ([fe80::5062:df97:a70b:93f8%7]) with mapi id 15.20.1922.021; Mon, 27 May 2019
- 10:04:52 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-CC:     dl-linux-imx <linux-imx@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: Re: [PATCH v2 6/7] dmaengine: fsl-edma: add i.mx7ulp edma2 version
- support
-Thread-Topic: [PATCH v2 6/7] dmaengine: fsl-edma: add i.mx7ulp edma2 version
- support
-Thread-Index: AQHVFGkz0t9zeFrYqUCYdK5UT0BVD6Z+rfOAgACXqQA=
-Date:   Mon, 27 May 2019 10:04:52 +0000
-Message-ID: <1558980522.19282.19.camel@nxp.com>
-References: <20190527085118.40423-1-yibin.gong@nxp.com>
-         <20190527085118.40423-7-yibin.gong@nxp.com>
-         <20190527090553.lek7tm3lyst3bhrd@pengutronix.de>
-In-Reply-To: <20190527090553.lek7tm3lyst3bhrd@pengutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yibin.gong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f2587d9a-605c-4e00-1955-08d6e28ac336
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB4960;
-x-ms-traffictypediagnostic: VI1PR04MB4960:
-x-microsoft-antispam-prvs: <VI1PR04MB49604F55D102F58D9CCD8918891D0@VI1PR04MB4960.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0050CEFE70
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(39860400002)(346002)(366004)(136003)(189003)(199004)(478600001)(6486002)(229853002)(6246003)(2351001)(73956011)(256004)(7416002)(71200400001)(71190400001)(91956017)(76116006)(66556008)(64756008)(66446008)(14454004)(4326008)(66476007)(66946007)(66066001)(25786009)(103116003)(8936002)(6116002)(3846002)(8676002)(36756003)(5640700003)(5660300002)(81156014)(186003)(6506007)(53546011)(11346002)(81166006)(26005)(102836004)(68736007)(476003)(2616005)(446003)(486006)(2906002)(54906003)(76176011)(316002)(99286004)(305945005)(86362001)(7736002)(2501003)(50226002)(6512007)(53936002)(6436002)(6916009)(99106002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4960;H:VI1PR04MB4543.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ccE1UjTR8vtON0cdMdxuizdJYXSahrGA5W7O8mJtdgHkUpBszNVF/lzgMJ8g8GBCI6MegDd/L4mvnBjdMjbfFukeKZiV4aYH7FLgVSKYoNsJ4n0kY8kXXNdWEAB7suafnx9za6Joh0Du96ipl82rFkNTLclu+F5GCJj4MS+kPNPwg2+NoJ1gFQGDEqd+VVKsWr9b+B8wAWvbmJsUFgW27kA5v2jq2s4f44IaeZpaTRw0gXhauerV1ThJIww6AvaTYB/MujA4AMhDy3yPjWBsfg06r/ZKzGFnUJgDZ3+Ce0d0yD12eCss9iZxp6jzQMgGhVPhd6+/mB3glS2Qq9IK6DEPw0gqFXao1I5wKH6zdBx4V5VFPckuDprxe+Sa7Yyeddm5JDfQzjrT2JIQd+M1SUnCR6ylaSK9DyabEsu8EbY=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <8E36FDC36F6C504D97207C792FF31B4D@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 27 May 2019 06:06:04 -0400
+Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:42576 "EHLO
+        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725973AbfE0KGE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 06:06:04 -0400
+Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
+        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 1F30B2E0954;
+        Mon, 27 May 2019 13:06:00 +0300 (MSK)
+Received: from smtpcorp1o.mail.yandex.net (smtpcorp1o.mail.yandex.net [2a02:6b8:0:1a2d::30])
+        by mxbackcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id OwJn8zAnJQ-5wpmSr5g;
+        Mon, 27 May 2019 13:06:00 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1558951560; bh=CQxEERr1BIi9CCcIXn6D3UIoYJZJlgFtBTDB1IkaSu8=;
+        h=Message-ID:Date:To:From:Subject:Cc;
+        b=IQgEK7oQm8wis5bpbA8YwPhFP2T7VClcMSokHBBCYQ4qCjG0zBDL6cO3BImi/e7oq
+         G+ZRiGSYMArxMg2Fa78/w5wSBC2r2x/euqAecttbszz8EahWvJoUYxKpKLw5pUeXqS
+         FIh/N5j0jpBBAuuUhvz0lF5a/I6FSqU5HgmaeOdM=
+Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:d877:17c:81de:6e43])
+        by smtpcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id L1algiQOax-5wluW1QG;
+        Mon, 27 May 2019 13:05:58 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: [PATCH RFC] mm/madvise: implement MADV_STOCKPILE (kswapd from user
+ space)
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc:     Michal Hocko <mhocko@suse.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Roman Gushchin <guro@fb.com>
+Date:   Mon, 27 May 2019 13:05:58 +0300
+Message-ID: <155895155861.2824.318013775811596173.stgit@buzz>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f2587d9a-605c-4e00-1955-08d6e28ac336
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 May 2019 10:04:52.7171
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yibin.gong@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4960
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0wNS0yNyBhdCAxMTowNSArMDIwMCwgU2FzY2hhIEhhdWVyIHdyb3RlOg0KPiBPbiBN
-b24sIE1heSAyNywgMjAxOSBhdCAwNDo1MToxN1BNICswODAwLCB5aWJpbi5nb25nQG54cC5jb20g
-d3JvdGU6DQo+ID4gDQo+ID4gRnJvbTogUm9iaW4gR29uZyA8eWliaW4uZ29uZ0BueHAuY29tPg0K
-PiA+IA0KPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBmc2xfZWRtYV9kdF9p
-ZHNbXSA9IHsNCj4gPiArCXsgLmNvbXBhdGlibGUgPSAiZnNsLHZmNjEwLWVkbWEiLCAuZGF0YSA9
-ICh2b2lkICopdjEgfSwNCj4gPiArCXsgLmNvbXBhdGlibGUgPSAiZnNsLGlteDd1bHAtZWRtYSIs
-IC5kYXRhID0gKHZvaWQgKil2MyB9LA0KPiA+ICsJeyAvKiBzZW50aW5lbCAqLyB9DQo+IFBsZWFz
-ZSBwdXQgYSBzdHJ1Y3QgdHlwZSBiZWhpbmQgdGhlIC5kYXRhIHBvaW50ZXIgc28gdGhhdCB5b3Ug
-Y2FuDQo+IGNvbmZpZ3VyZS4uLg0KQnV0IGN1cnJlbnQgb25seSB2ZXJzaW9uIG5lZWRlZCwgc28g
-SSBnaXZlIHVwIHN0cnVjdCBkZWZpbmUuLi4uDQo+IA0KPiA+IA0KPiA+ICt9Ow0KPiA+ICtNT0RV
-TEVfREVWSUNFX1RBQkxFKG9mLCBmc2xfZWRtYV9kdF9pZHMpOw0KPiA+ICsNCj4gPiBAQCAtMjE4
-LDYgKzI3MiwyMiBAQCBzdGF0aWMgaW50IGZzbF9lZG1hX3Byb2JlKHN0cnVjdA0KPiA+IHBsYXRm
-b3JtX2RldmljZSAqcGRldikNCj4gPiDCoAlmc2xfZWRtYV9zZXR1cF9yZWdzKGZzbF9lZG1hKTsN
-Cj4gPiDCoAlyZWdzID0gJmZzbF9lZG1hLT5yZWdzOw0KPiA+IMKgDQo+ID4gKwlpZiAoZnNsX2Vk
-bWEtPnZlcnNpb24gPT0gdjMpIHsNCj4gPiArCQlmc2xfZWRtYS0+ZG1hbXV4X25yID0gMTsNCj4g
-Li4udGhpbmdzIGxpa2UgdGhpcy4uLg0KWWVzLCBkbWFtdXhfbnIgY291bGQgYmUgbW92ZWQgdG8g
-c3RydWN0IGF0IGxlYXN0Lg0KPiANCj4gPiANCj4gPiBAQCAtMjY0LDcgKzMzNCwxMSBAQCBzdGF0
-aWMgaW50IGZzbF9lZG1hX3Byb2JlKHN0cnVjdA0KPiA+IHBsYXRmb3JtX2RldmljZSAqcGRldikN
-Cj4gPiDCoAl9DQo+ID4gwqANCj4gPiDCoAllZG1hX3dyaXRlbChmc2xfZWRtYSwgfjAsIHJlZ3Mt
-PmludGwpOw0KPiA+IC0JcmV0ID0gZnNsX2VkbWFfaXJxX2luaXQocGRldiwgZnNsX2VkbWEpOw0K
-PiA+ICsNCj4gPiArCWlmIChmc2xfZWRtYS0+dmVyc2lvbiA9PSB2MykNCj4gPiArCQlyZXQgPSBm
-c2xfZWRtYTJfaXJxX2luaXQocGRldiwgZnNsX2VkbWEpOw0KPiA+ICsJZWxzZQ0KPiA+ICsJCXJl
-dCA9IGZzbF9lZG1hX2lycV9pbml0KHBkZXYsIGZzbF9lZG1hKTsNCj4gLi4uYW5kIHRoaXMgb25l
-IGluIHRoYXQgc3RydWN0IHJhdGhlciB0aGFuIGxpdHRlcmluZyB0aGUgY29kZSBtb3JlDQo+IGFu
-ZA0KPiBtb3JlIHdpdGggc3VjaCB2ZXJzaW9uIHRlc3RzLg0KWWVzLCBzdWNoIGlycSBzZXR1cCBm
-dW5jdGlvbiBjb3VsZCBiZSBtb3ZlZCB0byBzdHJ1Y3QsIHRodXMsIG5vIHZlcnNpb24NCnRlc3Qg
-aW4gdGhpcyBmaWxlLiBXaWxsIHJlZmluZSBpdCBpbiB2My4NCj4gDQo+IFNhc2NoYQ0KPiA=
+Memory cgroup has no background memory reclaimer. Reclaiming after passing
+high-limit blocks task because works synchronously in task-work.
+
+This implements manual kswapd-style memory reclaim initiated by userspace.
+It reclaims both physical memory and cgroup pages. It works in context of
+task who calls syscall madvise thus cpu time is accounted correctly.
+
+Interface:
+
+ret = madvise(ptr, size, MADV_STOCKPILE)
+
+Returns:
+  0         - ok, free memory >= size
+  -EINVAL   - not supported
+  -ENOMEM   - not enough memory/cgroup limit
+  -EINTR    - interrupted by pending signal
+  -EAGAIN   - cannot reclaim enough memory
+
+Argument 'size' is interpreted size of required free memory.
+Implementation triggers direct reclaim until amount of free memory is
+lower than that size. Argument 'ptr' could points to vma for specifying
+numa allocation policy, right now should be NULL.
+
+Usage scenario: independent thread or standalone daemon estimates rate of
+allocations and calls MADV_STOCKPILE in loop to prepare free pages.
+Thus fast path avoids allocation latency induced by direct reclaim.
+
+We are using this embedded into memory allocator based on MADV_FREE.
+
+
+Demonstration in memory cgroup with limit 1G:
+
+touch zero
+truncate -s 5G zero
+
+Without stockpile:
+
+perf stat -e vmscan:* md5sum zero
+
+ Performance counter stats for 'md5sum zero':
+
+                 0      vmscan:mm_vmscan_kswapd_sleep
+                 0      vmscan:mm_vmscan_kswapd_wake
+                 0      vmscan:mm_vmscan_wakeup_kswapd
+                 0      vmscan:mm_vmscan_direct_reclaim_begin
+             10147      vmscan:mm_vmscan_memcg_reclaim_begin
+                 0      vmscan:mm_vmscan_memcg_softlimit_reclaim_begin
+                 0      vmscan:mm_vmscan_direct_reclaim_end
+             10147      vmscan:mm_vmscan_memcg_reclaim_end
+                 0      vmscan:mm_vmscan_memcg_softlimit_reclaim_end
+             99910      vmscan:mm_shrink_slab_start
+             99910      vmscan:mm_shrink_slab_end
+             39654      vmscan:mm_vmscan_lru_isolate
+                 0      vmscan:mm_vmscan_writepage
+             39652      vmscan:mm_vmscan_lru_shrink_inactive
+                 2      vmscan:mm_vmscan_lru_shrink_active
+             19982      vmscan:mm_vmscan_inactive_list_is_low
+
+      10.886832585 seconds time elapsed
+
+       8.928366000 seconds user
+       1.935212000 seconds sys
+
+With stockpile:
+
+stockpile 100 10 &   # up to 100M every 10ms
+perf stat -e vmscan:* md5sum zero
+
+ Performance counter stats for 'md5sum zero':
+
+                 0      vmscan:mm_vmscan_kswapd_sleep
+                 0      vmscan:mm_vmscan_kswapd_wake
+                 0      vmscan:mm_vmscan_wakeup_kswapd
+                 0      vmscan:mm_vmscan_direct_reclaim_begin
+                 0      vmscan:mm_vmscan_memcg_reclaim_begin
+                 0      vmscan:mm_vmscan_memcg_softlimit_reclaim_begin
+                 0      vmscan:mm_vmscan_direct_reclaim_end
+                 0      vmscan:mm_vmscan_memcg_reclaim_end
+                 0      vmscan:mm_vmscan_memcg_softlimit_reclaim_end
+                 0      vmscan:mm_shrink_slab_start
+                 0      vmscan:mm_shrink_slab_end
+                 0      vmscan:mm_vmscan_lru_isolate
+                 0      vmscan:mm_vmscan_writepage
+                 0      vmscan:mm_vmscan_lru_shrink_inactive
+                 0      vmscan:mm_vmscan_lru_shrink_active
+                 0      vmscan:mm_vmscan_inactive_list_is_low
+
+      10.469776675 seconds time elapsed
+
+       8.976261000 seconds user
+       1.491378000 seconds sys
+
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+---
+ include/linux/memcontrol.h             |    6 +++++
+ include/uapi/asm-generic/mman-common.h |    2 ++
+ mm/madvise.c                           |   39 ++++++++++++++++++++++++++++++
+ mm/memcontrol.c                        |   41 ++++++++++++++++++++++++++++++++
+ tools/vm/Makefile                      |    2 +-
+ tools/vm/stockpile.c                   |   30 +++++++++++++++++++++++
+ 6 files changed, 119 insertions(+), 1 deletion(-)
+ create mode 100644 tools/vm/stockpile.c
+
+diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+index bc74d6a4407c..25325f18ad55 100644
+--- a/include/linux/memcontrol.h
++++ b/include/linux/memcontrol.h
+@@ -517,6 +517,7 @@ unsigned long mem_cgroup_get_zone_lru_size(struct lruvec *lruvec,
+ }
+ 
+ void mem_cgroup_handle_over_high(void);
++int mem_cgroup_stockpile(unsigned long goal_pages);
+ 
+ unsigned long mem_cgroup_get_max(struct mem_cgroup *memcg);
+ 
+@@ -968,6 +969,11 @@ static inline void mem_cgroup_handle_over_high(void)
+ {
+ }
+ 
++static inline int mem_cgroup_stockpile(unsigned long goal_page)
++{
++	return 0;
++}
++
+ static inline void mem_cgroup_enter_user_fault(void)
+ {
+ }
+diff --git a/include/uapi/asm-generic/mman-common.h b/include/uapi/asm-generic/mman-common.h
+index abd238d0f7a4..675145864fee 100644
+--- a/include/uapi/asm-generic/mman-common.h
++++ b/include/uapi/asm-generic/mman-common.h
+@@ -64,6 +64,8 @@
+ #define MADV_WIPEONFORK 18		/* Zero memory on fork, child only */
+ #define MADV_KEEPONFORK 19		/* Undo MADV_WIPEONFORK */
+ 
++#define MADV_STOCKPILE	20		/* stockpile free pages */
++
+ /* compatibility flags */
+ #define MAP_FILE	0
+ 
+diff --git a/mm/madvise.c b/mm/madvise.c
+index 628022e674a7..f908b08ecc9f 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -686,6 +686,41 @@ static int madvise_inject_error(int behavior,
+ }
+ #endif
+ 
++static long madvise_stockpile(unsigned long start, size_t len)
++{
++	unsigned long goal_pages, progress;
++	struct zonelist *zonelist;
++	int ret;
++
++	if (start)
++		return -EINVAL;
++
++	goal_pages = len >> PAGE_SHIFT;
++
++	if (goal_pages > totalram_pages() - totalreserve_pages)
++		return -ENOMEM;
++
++	ret = mem_cgroup_stockpile(goal_pages);
++	if (ret)
++		return ret;
++
++	/* TODO: use vma mempolicy */
++	zonelist = node_zonelist(numa_node_id(), GFP_HIGHUSER);
++
++	while (global_zone_page_state(NR_FREE_PAGES) <
++			goal_pages + totalreserve_pages) {
++
++		if (signal_pending(current))
++			return -EINTR;
++
++		progress = try_to_free_pages(zonelist, 0, GFP_HIGHUSER, NULL);
++		if (!progress)
++			return -EAGAIN;
++	}
++
++	return 0;
++}
++
+ static long
+ madvise_vma(struct vm_area_struct *vma, struct vm_area_struct **prev,
+ 		unsigned long start, unsigned long end, int behavior)
+@@ -728,6 +763,7 @@ madvise_behavior_valid(int behavior)
+ 	case MADV_DODUMP:
+ 	case MADV_WIPEONFORK:
+ 	case MADV_KEEPONFORK:
++	case MADV_STOCKPILE:
+ #ifdef CONFIG_MEMORY_FAILURE
+ 	case MADV_SOFT_OFFLINE:
+ 	case MADV_HWPOISON:
+@@ -834,6 +870,9 @@ SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
+ 		return madvise_inject_error(behavior, start, start + len_in);
+ #endif
+ 
++	if (behavior == MADV_STOCKPILE)
++		return madvise_stockpile(start, len);
++
+ 	write = madvise_need_mmap_write(behavior);
+ 	if (write) {
+ 		if (down_write_killable(&current->mm->mmap_sem))
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index e50a2db5b4ff..dc23dc6bbeb3 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -2276,6 +2276,47 @@ void mem_cgroup_handle_over_high(void)
+ 	current->memcg_nr_pages_over_high = 0;
+ }
+ 
++int mem_cgroup_stockpile(unsigned long goal_pages)
++{
++	int nr_retries = MEM_CGROUP_RECLAIM_RETRIES;
++	unsigned long limit, nr_free, progress;
++	struct mem_cgroup *memcg, *pos;
++	int ret = 0;
++
++	pos = memcg = get_mem_cgroup_from_mm(current->mm);
++
++retry:
++	if (signal_pending(current)) {
++		ret = -EINTR;
++		goto out;
++	}
++
++	limit = min(pos->memory.max, pos->high);
++	if (goal_pages > limit) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	nr_free = limit - page_counter_read(&pos->memory);
++	if ((long)nr_free < (long)goal_pages) {
++		progress = try_to_free_mem_cgroup_pages(pos,
++				goal_pages - nr_free, GFP_HIGHUSER, true);
++		if (progress || nr_retries--)
++			goto retry;
++		ret = -EAGAIN;
++		goto out;
++	}
++
++	nr_retries = MEM_CGROUP_RECLAIM_RETRIES;
++	pos = parent_mem_cgroup(pos);
++	if (pos)
++		goto retry;
++
++out:
++	css_put(&memcg->css);
++	return ret;
++}
++
+ static int try_charge(struct mem_cgroup *memcg, gfp_t gfp_mask,
+ 		      unsigned int nr_pages)
+ {
+diff --git a/tools/vm/Makefile b/tools/vm/Makefile
+index 20f6cf04377f..e5b5bc0d9421 100644
+--- a/tools/vm/Makefile
++++ b/tools/vm/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # Makefile for vm tools
+ #
+-TARGETS=page-types slabinfo page_owner_sort
++TARGETS=page-types slabinfo page_owner_sort stockpile
+ 
+ LIB_DIR = ../lib/api
+ LIBS = $(LIB_DIR)/libapi.a
+diff --git a/tools/vm/stockpile.c b/tools/vm/stockpile.c
+new file mode 100644
+index 000000000000..245e24f293ec
+--- /dev/null
++++ b/tools/vm/stockpile.c
+@@ -0,0 +1,30 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <sys/mman.h>
++#include <stdlib.h>
++#include <unistd.h>
++#include <err.h>
++#include <errno.h>
++
++#ifndef MADV_STOCKPILE
++# define MADV_STOCKPILE	20
++#endif
++
++int main(int argc, char **argv)
++{
++	int interval;
++	size_t size;
++	int ret;
++
++	if (argc != 3)
++		errx(1, "usage: %s <size_mb> <interval_ms>", argv[0]);
++
++	size = atol(argv[1]) << 20;
++	interval = atoi(argv[2]) * 1000;
++
++	while (1) {
++		ret = madvise(NULL, size, MADV_STOCKPILE);
++		if (ret && errno != EAGAIN)
++			err(2, "madvise(NULL, %zu, MADV_STOCKPILE)", size);
++		usleep(interval);
++	}
++}
+
