@@ -2,191 +2,178 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06163C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 22:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B9EC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 22:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A854120859
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 22:12:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CRHbxWe1"
+	by mail.kernel.org (Postfix) with ESMTP id B7C202075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 22:17:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727459AbfE0WMM (ORCPT
+        id S1727339AbfE0WRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 18:12:12 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60620 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726905AbfE0WMM (ORCPT
+        Mon, 27 May 2019 18:17:12 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:34359 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726801AbfE0WRL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 18:12:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=PfsPPJX+22qktBAm2zdVwX0G/gToQNUHtQUKJKuMtpI=; b=CRHbxWe1nKn7QObflpDNNOe/1
-        O4ZnIp7maU9czCg7421iBA4xpE/ZsgG086AM69hUvATUwrjZ+IsX1EP34z6+Q1zSyzEkOmdHKS3N6
-        eQjyv0Rc1TSgg+7hEVceR9LdcNOb7e2mftHB5VUt7hlnmN7/cOkMDX50SHheo7SpNriXGw14otFdk
-        sfhRepYnItS0TV+S86sOfXO8kjTVPOmAkISCbcWoQVu37VmC1B7FoZuScq7qQ/Xi4pynMfbEr6WFR
-        YXT4roT75TuhiM9jx3R8iVWPcGVFu64xhwU+w4HfJq/Fq/qJKZmCf3qn3CCqh7FzELsW60rNaTgAF
-        V4TDkjxgw==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hVNqi-0004SY-TX; Mon, 27 May 2019 22:12:09 +0000
-Subject: Re: uapi headers userspace build results
-To:     Jayant Chowdhary <jchowdhary@google.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        kernel-team@android.com
-References: <8b90457a-5b1d-818c-d2d6-ba3d16ad3eaf@infradead.org>
- <1ef3a7b9-5172-9f7a-01fa-4866e765fbbe@google.com>
- <b5a73c3f-b70d-110f-896d-82fd81982cf8@infradead.org>
- <8a36d3ba-977b-49ca-c431-90ef53071f88@google.com>
- <9b76d1b6-08a4-36cf-4fc8-661b216ca433@infradead.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <becd3d01-509b-d470-df48-e5ef0e21ae2a@infradead.org>
-Date:   Mon, 27 May 2019 15:12:05 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 27 May 2019 18:17:11 -0400
+Received: from excalibur.cnev.de ([194.8.209.98]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MhlCa-1h0jzV2GtE-00dknW; Tue, 28 May 2019 00:16:25 +0200
+Received: from karsten by excalibur.cnev.de with local (Exim 4.89)
+        (envelope-from <merker@debian.org>)
+        id 1hVNul-0000rz-WA; Tue, 28 May 2019 00:16:20 +0200
+Date:   Tue, 28 May 2019 00:16:19 +0200
+From:   Karsten Merker <merker@debian.org>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Karsten Merker <merker@debian.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-riscv@lists.infradead.org,
+        Nick Kossifidis <mick@ics.forth.gr>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Zong Li <zong@andestech.com>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [v4 PATCH] RISC-V: Add an Image header that boot loader can
+ parse.
+Message-ID: <20190527221619.fkxtzk4jpeyfoptf@excalibur.cnev.de>
+References: <20190524041814.7497-1-atish.patra@wdc.com>
+ <CAKv+Gu9U56b50TrfriBfRFed_1aoXg2Y624tu7v5m2y+6DVq5w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <9b76d1b6-08a4-36cf-4fc8-661b216ca433@infradead.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKv+Gu9U56b50TrfriBfRFed_1aoXg2Y624tu7v5m2y+6DVq5w@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Provags-ID: V03:K1:IggtGFZrbp9GZe50tguh26rLf9NXZcqGQm/DxENZxO6zmFTT7ar
+ xrlreaf7E2MLlnT/NZ5xFEoQDP+tlltS3BsFa2S0/HZg/8G0NkmtrqFET36hPHZsHh/TnaG
+ fQx3pSKdqVTG2GdS2HHMt9yleoggHD7BUyP8DqxizgvAb9A0gxVC9+Uhxs0p+PD4DgwJc1O
+ rFR0o7Ab0r+BhUlhU7A6Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Zgr8CE5oZTc=:mCiXxlktW4T3elxbJzmy9h
+ ucPcOpiaHc/ZVs8XcLqtTBDU4ftCJUM7te/CIgMrHrzALY7QwXoKjVrRZf/7uTWQYMEVKeS+B
+ sT2AUUgEk5oATbyNHxOJvKOcu1Wv/mkOndeot2LBPno0YmYZPNQ0Ssw/h0Dy8GHKVoU+hibVP
+ jJbNDIJW7Y7iwbmRDTE25tPMU5LZYSezxn1LwvpgIYMcnBfudy05fqYF/c0hk7Sz3HMlAjlXV
+ Hyw9Rfgfum3p2rhOa024YmRdzr7XvC4Wu1192B9iU7SPaWkk1oNtCAMcP/n14ymVmrdr5Sdtp
+ EZo/ToGaQU+YfRxS9WnVddpRPO4w4er0Cs/XKefQhPNw6mmHhRuWm+bsnKT9tEApZ6KZMBxbO
+ nIBGw35tpBjvCmjYYWHlFxeaSplSeVyK0eW05IBRrqvNZSNPMZCP+8hYvQFssEbVcg8DtK8sx
+ WqR3vNrG6goAI6AJWmm5NKXcsqjl7psS5r4BAa/VghXBYDFJZDxpn6zpWokcUg96KP+fyauQd
+ +WRZxUy6lj060T4UBwydhr8qhz/HlZ7NEnWsmyphs7ecalmlxZVAuAOmD5UwMxUniArxo3j7n
+ V8dY5kdr8nkNwVGk3DKny0jI6xfnWEs+YzKQx24n9ddg8FDoOQJNSdZvKx7AV/Z1xisFHTIE7
+ /8wZiY9YemXFqAjlRb/jfbCiLtarGRyMdNkhV2fstxXQclS6dBmXmmrZ3ewpU97eE/KvvKtnd
+ MTuk3Rf3QPxWIQ2kC4aanwsguVF2VwIH4qYUTw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jayant,
+On Mon, May 27, 2019 at 04:34:57PM +0200, Ard Biesheuvel wrote:
+> On Fri, 24 May 2019 at 06:18, Atish Patra <atish.patra@wdc.com> wrote:
+> > Currently, the last stage boot loaders such as U-Boot can accept only
+> > uImage which is an unnecessary additional step in automating boot
+> > process.
+> >
+> > Add an image header that boot loader understands and boot Linux from
+> > flat Image directly.
+> >
+> > This header is based on ARM64 boot image header and provides an
+> > opportunity to combine both ARM64 & RISC-V image headers in future.
+> >
+> > Also make sure that PE/COFF header can co-exist in the same image so
+> > that EFI stub can be supported for RISC-V in future. EFI specification
+> > needs PE/COFF image header in the beginning of the kernel image in order
+> > to load it as an EFI application. In order to support EFI stub, code0
+> > should be replaced with "MZ" magic string and res4(at offset 0x3c)
+> > should point to the rest of the PE/COFF header (which will be added
+> > during EFI support).
+[...]
+> >  Documentation/riscv/boot-image-header.txt | 50 ++++++++++++++++++
+> >  arch/riscv/include/asm/image.h            | 64 +++++++++++++++++++++++
+> >  arch/riscv/kernel/head.S                  | 32 ++++++++++++
+> >  3 files changed, 146 insertions(+)
+> >  create mode 100644 Documentation/riscv/boot-image-header.txt
+> >  create mode 100644 arch/riscv/include/asm/image.h
+> >
+> > diff --git a/Documentation/riscv/boot-image-header.txt b/Documentation/riscv/boot-image-header.txt
+> > new file mode 100644
+> > index 000000000000..68abc2353cec
+> > --- /dev/null
+> > +++ b/Documentation/riscv/boot-image-header.txt
+> > @@ -0,0 +1,50 @@
+> > +                               Boot image header in RISC-V Linux
+> > +                       =============================================
+> > +
+> > +Author: Atish Patra <atish.patra@wdc.com>
+> > +Date  : 20 May 2019
+> > +
+> > +This document only describes the boot image header details for RISC-V Linux.
+> > +The complete booting guide will be available at Documentation/riscv/booting.txt.
+> > +
+> > +The following 64-byte header is present in decompressed Linux kernel image.
+> > +
+> > +       u32 code0;                /* Executable code */
+> > +       u32 code1;                /* Executable code */
+> 
+> Apologies for not mentioning this in my previous reply, but given that
+> you already know that you will need to put the magic string MZ at
+> offset 0x0, it makes more sense to not put any code there at all, but
+> educate the bootloader that the first executable instruction is at
+> offset 0x20, and put the spare fields right after it in case you ever
+> need more than 2 slots. (On arm64, we were lucky to be able to find an
+> opcode that happened to contain the MZ bit pattern and act almost like
+> a NOP, but it seems silly to rely on that for RISC-V as well)
+> 
+> So something like
+> 
+> u16 pe_res1;  /* MZ for EFI bootable images, don't care otherwise */
+> u8 magic[6];    /* "RISCV\0"
+> 
+> u64 text_offset;          /* Image load offset, little endian */
+> u64 image_size;           /* Effective Image size, little endian */
+> u64 flags;                /* kernel flags, little endian */
+> 
+> u32 code0;                /* Executable code */
+> u32 code1;                /* Executable code */
+> 
+> u64 reserved[2];     /* reserved for future use */
+> 
+> u32 version;              /* Version of this header */
+> u32 pe_res2;                 /* Reserved for PE COFF offset */
 
-What ever happened to this script and subsequent patches?
+Hello,
 
-thanks.
+wouldn't that immediately break existing systems (including qemu
+when loading kernels with the "-kernel" option) that rely on the
+fact that the kernel entry point is always at the kernel load
+address?  The ARM64 header and Atish's original RISC-V proposal
+based on the ARM64 header keep the property that jumping to the
+kernel load address always works, regardless of what the
+particular header looks like and which potential future
+extensions it includes, but the proposed change above wouldn't do
+that.
 
-On 6/19/18 11:17 AM, Randy Dunlap wrote:
-> On 06/18/2018 06:47 PM, Jayant Chowdhary wrote:
->> Hi Randy,
->>
->> On 06/12/2018 05:07 PM, Randy Dunlap wrote:
->>> On 06/12/2018 01:39 PM, Jayant Chowdhary wrote:
->>>> Hi Randy,
->>>>
->>>> On 06/11/2018 10:49 PM, Randy Dunlap wrote:
->>>>> Hi,
->>>>>
->>>>> Here is what I have so far.  It begins with a makefile and some
->>>>> template files that are added to.  There's a good bit of Perl also.
->>>>>
->>>>> I put all of these files in tools/uapi/ and run them from there.
->>>>>
->>>>> There is one .c file generated for each .h file in builddir/usr/include
->>>>> (O=builddir).
->>>>>
->>>>
->>>> Thanks for this! I wrote a small Makefile (uapi-compile.mk) which I'd put in
->>>> tools/build (I can change this to tools/uapi, if that is more apt).
->>>
->>> Your makefile foo is much better than mine is.
->>> Yes, I think that it deserves to be in its own sub-directory.
->>>
->>>> uapi-compile.mk straight-away compiles the uapi headers, without pulling them
->>>> into any generated c source files. It may also be invoked with an environment
->>>
->>> Hm, I didn't even know that is possible.
->>>
->>>> variable 'UAPI_DIR' specifying the directory, for which the user would like to
->>>> compile headers. This way we can test a directory at a time as well. In your
->>>
->>> Yes, good, I was planning to make a way to restrict the build to certain sub-dirs.
->>>
->>>> opinion, would this be simpler to have rather than having to auto-generate c
->>>> source files including each uapi header and also autog-enerating the make
->>>> targets? I feel like this approach would make maintaining these makefiles/
->>>> scripts easier as well.
->>>
->>> Sure, this is much better than my scripts.
->>>
->>>>> Out of 889 header files, I see 45 errors.  That is better than I expected.
->>>>>
->>>>> The makefiles and scripts are attached (tar), as well as the output (I used
->>>>> 'make -ik' so that make would keep going after errors and attempt to build
->>>>> all target files).
->>>>>
->>>>> have fun!
->>>>>
->>>>
->>>> I did a 'make ARCH=arm64 headers_install' from the kernel source's root, and
->>>> then a 'make -kf uapi-compile.mk all > build.log 2>&1' to compile all the
->>>> headers. Out of 864 headers, I see 20 compilation failures.
->>>>
->>>> I'm attaching uapi-compile.mk and the build.log file along.
->>>
->>> I have some usage comments.
->>>
->>> Since I ran 'make ARCH=x86_64 O=xx64 headers_install', I had to modify
->>> uapi-compile.mk to use that SRC_DIR:
->>>
->>> SRC_DIR :=../../xx64
->>>
->>> Also, I first tried to make BDIR as a sub-directory of tools/uapi/ and
->>> uapi-compile.mk did not work (when using BDIR=BDIR).
->>> Then I did 'mkdir ../../xx64/BDIR' and specified BDIR=../../xx64/BDIR and
->>> that worked.  But:  that sub-dir is not used:
->>>
->>> gcc -I../../xx64/usr/include/ --include=../../xx64/usr/include/linux/posix_types.h --include=../../xx64/usr/include/asm-generic/ipcbuf.h --include=stdarg.h --include=stdint.h --include=stddef.h -c ../../xx64/usr/include//linux/caif/caif_socket.h -o ../../xx64/BDIR/../../xx64/usr/include//linux/caif/caif_socket.o
->>> [see the next comment]
->>>
->>> Oh, this makefile builds the .o files in the same sub-dirs as their
->>> respective .h files.  I don't especially like that, but as long as
->>> make clean works, it will do.  [and make clean does work]
->>>
->>
->> Thanks for these comments. I'll take care of them in my patch-set. I've got a
->> couple of questions for you. Since most of the errors were found in the
->> include/uapi/linux directory, I tried investigating why.
-> 
-> Please also repost your latest patch-set.
-> 
->> 1) I found that multiple headers depend on the definition of types such as
->> pid_t, which have no definition in the set of uapi headers. There is a
->> definition (of pid_t) in include/linux/types.h, and I thought we could try
->> exposing that in the set of uapi headers. One problem I can see with that is
->> that the header has some definitions which depend on kernel configs: eg:
->> CONFIG_ARCH_DMA_ADDR_T_64BIT. Since user-land programs shouldn't really assume
->> kernel configs, I was thinking we should re-factor this header so that
->> appropriate parts can be exposed to user-land.
-> 
-> Sure, that's worth a try.  Mostly on a case-by-case basis.
-> 
-> I see that (at least in the distro that I am using)
-> /usr/include/asm-generic/posix_types.h has a typedef for __kernel_pid_t.
-> I wonder if that could be co-opted, but I expect that this would have
-> type/size issues.
-> 
-> OTOH, 'man getpid' uses pid_t and refers to <sys/types.h> and <unistd.h>,
-> so there should already be a pid_t for userspace.  Just #include more
-> headers files.  :)
-> 
->> 2) Some headers try to expose information which should probably not be exposed
->> to user-land. eg: wait_queue_head in linux/coda_psdev.h (this header should
->> probably be removed altogether ?)
-> 
-> I suppose that header file describes a kernel-to-userspace ("Venus") interface,
-> so maybe not removed altogether.  But the wait_queue_head_t part of it should
-> just be some padding/reserved field (of what size/type?).
-> 
-> 
->> Do you have better ideas ?
-> 
-> slow and steady.
-> 
+Although I agree that having to integrate the "MZ" string as an
+instruction isn't particularly nice, I don't think that this is a
+sufficient justification for breaking compatibility with prior
+kernel releases and/or existing boot firmware.  On RISC-V, the
+"MZ" string is a compressed load immediate to x20/s4, i.e. an
+instruction that should be "harmless" as far as the kernel boot
+flow is concerned as the x20/s4 register AFAIK doesn't contain any
+information that the kernel would use.
 
-
+Regards,
+Karsten
 -- 
-~Randy
+Ich widerspreche hiermit ausdrücklich der Nutzung sowie der
+Weitergabe meiner personenbezogenen Daten für Zwecke der Werbung
+sowie der Markt- oder Meinungsforschung.
