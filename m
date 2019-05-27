@@ -4,48 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE7DC282E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 03:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1910C282E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 03:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2139A216FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 03:00:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAE8D216FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 03:00:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726243AbfE0DAD (ORCPT
+        id S1726274AbfE0DAy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 23:00:03 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:55168 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725973AbfE0DAD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 23:00:03 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TSlZzX5_1558925998;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TSlZzX5_1558925998)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 27 May 2019 10:59:58 +0800
-Subject: Re: [RESEND v5 PATCH 2/2] mm: vmscan: correct some vmscan counters
- for THP swapout
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     hannes@cmpxchg.org, mhocko@suse.com, mgorman@techsingularity.net,
-        kirill.shutemov@linux.intel.com, josef@toxicpanda.com,
-        hughd@google.com, shakeelb@google.com, hdanton@sina.com,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <1558922275-31782-1-git-send-email-yang.shi@linux.alibaba.com>
- <1558922275-31782-2-git-send-email-yang.shi@linux.alibaba.com>
- <87muj88x3p.fsf@yhuang-dev.intel.com>
- <a32dbca4-6239-828b-9f81-f24d582ddd75@linux.alibaba.com>
-Message-ID: <e63dd512-c448-5bec-7461-32cd4e5c8cac@linux.alibaba.com>
-Date:   Mon, 27 May 2019 10:59:55 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Sun, 26 May 2019 23:00:54 -0400
+Received: from mga18.intel.com ([134.134.136.126]:61440 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725973AbfE0DAx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 May 2019 23:00:53 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 May 2019 20:00:53 -0700
+X-ExtLoop1: 1
+Received: from genxtest-ykzhao.sh.intel.com (HELO [10.239.143.71]) ([10.239.143.71])
+  by fmsmga001.fm.intel.com with ESMTP; 26 May 2019 20:00:51 -0700
+Subject: Re: [PATCH v6 4/4] x86/acrn: Add hypercall for ACRN guest
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de,
+        Jason Chen CJ <jason.cj.chen@intel.com>
+References: <1556595926-17910-1-git-send-email-yakui.zhao@intel.com>
+ <1556595926-17910-5-git-send-email-yakui.zhao@intel.com>
+ <20190515073715.GC24212@zn.tnic>
+From:   "Zhao, Yakui" <yakui.zhao@intel.com>
+Message-ID: <b8210e0e-bdf2-3e17-ce9a-d7a3ca0e6672@intel.com>
+Date:   Mon, 27 May 2019 10:57:09 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.6.0
 MIME-Version: 1.0
-In-Reply-To: <a32dbca4-6239-828b-9f81-f24d582ddd75@linux.alibaba.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190515073715.GC24212@zn.tnic>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -53,147 +50,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 5/27/19 10:47 AM, Yang Shi wrote:
->
->
-> On 5/27/19 10:11 AM, Huang, Ying wrote:
->> Yang Shi <yang.shi@linux.alibaba.com> writes:
+On 2019å¹´05æœˆ15æ—¥ 15:37, Borislav Petkov wrote:
+> On Tue, Apr 30, 2019 at 11:45:26AM +0800, Zhao Yakui wrote:
+>> When the ACRN hypervisor is detected, the hypercall is needed so that the
+>> ACRN guest can query/config some settings. For example: it can be used
+>> to query the resources in hypervisor and manage the CPU/memory/device/
+>> interrupt for guest operating system.
 >>
->>> Since commit bd4c82c22c36 ("mm, THP, swap: delay splitting THP after
->>> swapped out"), THP can be swapped out in a whole.  But, nr_reclaimed
->>> and some other vm counters still get inc'ed by one even though a whole
->>> THP (512 pages) gets swapped out.
->>>
->>> This doesn't make too much sense to memory reclaim.  For example, 
->>> direct
->>> reclaim may just need reclaim SWAP_CLUSTER_MAX pages, reclaiming one 
->>> THP
->>> could fulfill it.  But, if nr_reclaimed is not increased correctly,
->>> direct reclaim may just waste time to reclaim more pages,
->>> SWAP_CLUSTER_MAX * 512 pages in worst case.
->>>
->>> And, it may cause pgsteal_{kswapd|direct} is greater than
->>> pgscan_{kswapd|direct}, like the below:
->>>
->>> pgsteal_kswapd 122933
->>> pgsteal_direct 26600225
->>> pgscan_kswapd 174153
->>> pgscan_direct 14678312
->>>
->>> nr_reclaimed and nr_scanned must be fixed in parallel otherwise it 
->>> would
->>> break some page reclaim logic, e.g.
->>>
->>> vmpressure: this looks at the scanned/reclaimed ratio so it won't
->>> change semantics as long as scanned & reclaimed are fixed in parallel.
->>>
->>> compaction/reclaim: compaction wants a certain number of physical pages
->>> freed up before going back to compacting.
->>>
->>> kswapd priority raising: kswapd raises priority if we scan fewer pages
->>> than the reclaim target (which itself is obviously expressed in order-0
->>> pages). As a result, kswapd can falsely raise its aggressiveness even
->>> when it's making great progress.
->>>
->>> Other than nr_scanned and nr_reclaimed, some other counters, e.g.
->>> pgactivate, nr_skipped, nr_ref_keep and nr_unmap_fail need to be fixed
->>> too since they are user visible via cgroup, /proc/vmstat or trace
->>> points, otherwise they would be underreported.
->>>
->>> When isolating pages from LRUs, nr_taken has been accounted in base
->>> page, but nr_scanned and nr_skipped are still accounted in THP.  It
->>> doesn't make too much sense too since this may cause trace point
->>> underreport the numbers as well.
->>>
->>> So accounting those counters in base page instead of accounting THP as
->>> one page.
->>>
->>> nr_dirty, nr_unqueued_dirty, nr_congested and nr_writeback are used by
->>> file cache, so they are not impacted by THP swap.
->>>
->>> This change may result in lower steal/scan ratio in some cases since
->>> THP may get split during page reclaim, then a part of tail pages get
->>> reclaimed instead of the whole 512 pages, but nr_scanned is accounted
->>> by 512, particularly for direct reclaim.  But, this should be not a
->>> significant issue.
->>>
->>> Cc: "Huang, Ying" <ying.huang@intel.com>
->>> Cc: Johannes Weiner <hannes@cmpxchg.org>
->>> Cc: Michal Hocko <mhocko@suse.com>
->>> Cc: Mel Gorman <mgorman@techsingularity.net>
->>> Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
->>> Cc: Hugh Dickins <hughd@google.com>
->>> Cc: Shakeel Butt <shakeelb@google.com>
->>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
->>> ---
->>> v5: Fixed sc->nr_scanned double accounting per Huang Ying
->>>      Added some comments to address the concern about premature OOM 
->>> per Hillf Danton
->>> v4: Fixed the comments from Johannes and Huang Ying
->>> v3: Removed Shakeel's Reviewed-by since the patch has been changed 
->>> significantly
->>>      Switched back to use compound_order per Matthew
->>>      Fixed more counters per Johannes
->>> v2: Added Shakeel's Reviewed-by
->>>      Use hpage_nr_pages instead of compound_order per Huang Ying and 
->>> William Kucharski
->>>
->>>   mm/vmscan.c | 42 +++++++++++++++++++++++++++++++-----------
->>>   1 file changed, 31 insertions(+), 11 deletions(-)
->>>
->>> diff --git a/mm/vmscan.c b/mm/vmscan.c
->>> index b65bc50..f4f4d57 100644
->>> --- a/mm/vmscan.c
->>> +++ b/mm/vmscan.c
->>> @@ -1118,6 +1118,7 @@ static unsigned long shrink_page_list(struct 
->>> list_head *page_list,
->>>           int may_enter_fs;
->>>           enum page_references references = PAGEREF_RECLAIM_CLEAN;
->>>           bool dirty, writeback;
->>> +        unsigned int nr_pages;
->>>             cond_resched();
->>>   @@ -1129,6 +1130,13 @@ static unsigned long 
->>> shrink_page_list(struct list_head *page_list,
->>>             VM_BUG_ON_PAGE(PageActive(page), page);
->>>   +        nr_pages = 1 << compound_order(page);
->>> +
->>> +        /*
->>> +         * Accounted one page for THP for now.  If THP gets swapped
->>> +         * out in a whole, will account all tail pages later to
->>> +         * avoid accounting tail pages twice.
->>> +         */
->>>           sc->nr_scanned++;
->>>             if (unlikely(!page_evictable(page)))
->>> @@ -1250,7 +1258,7 @@ static unsigned long shrink_page_list(struct 
->>> list_head *page_list,
->>>           case PAGEREF_ACTIVATE:
->>>               goto activate_locked;
->>>           case PAGEREF_KEEP:
->>> -            stat->nr_ref_keep++;
->>> +            stat->nr_ref_keep += nr_pages;
->>>               goto keep_locked;
->>>           case PAGEREF_RECLAIM:
->>>           case PAGEREF_RECLAIM_CLEAN:
->> If the "Accessed bit" of a THP is set in the page table that maps it, it
->> will go PAGEREF_ACTIVATE path here.  And the sc->nr_scanned should
->> increase 512 instead of 1.  Otherwise sc->nr_activate may be larger than
->> sc->nr_scanned.
->
-> Yes, it looks so. It seems the easiest way is to add "nr_pages - 1" in 
-> activate_locked label if the page is still a THP.
->
-> If we add all tail pages at the very beginning, then we have to minus 
-> tail pages when THP gets split, there are a few places do this.
-
-Reiterating all the goto, it seems minus tail pages may be easier since 
-there are a lot places which goto activate_locked, keep_locked and keep 
-after THP has been added into swap cache. We can't tell if the tail 
-pages are accounted or not unless we introduce a new flag, otherwise 
-adding tails pages in those labels may account tail pages twice.
-
->
+>> Add the hypercall so that the ACRN guest can communicate with the
+>> low-level ACRN hypervisor. On x86 it is implemented with the VMCALL
+>> instruction.
 >>
->> Best Regards,
->> Huang, Ying
->
+>> Co-developed-by: Jason Chen CJ <jason.cj.chen@intel.com>
+>> Signed-off-by: Jason Chen CJ <jason.cj.chen@intel.com>
+>> Signed-off-by: Zhao Yakui <yakui.zhao@intel.com>
+>> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+>> ---
+>> V1->V2: Refine the comments for the function of acrn_hypercall0/1/2
+>> v2->v3: Use the "vmcall" mnemonic to replace hard-code byte definition
+>> v4->v5: Use _ASM_X86_ACRN_HYPERCALL_H instead of _ASM_X86_ACRNHYPERCALL_H.
+>>          Use the "VMCALL" mnemonic in comment/commit log.
+>>          Uppercase r8/rdi/rsi/rax for hypercall parameter register in comment.
+>> v5->v6: Remove explicit local register variable for inline assembly
+>> ---
+>>   arch/x86/include/asm/acrn_hypercall.h | 84 +++++++++++++++++++++++++++++++++++
+>>   1 file changed, 84 insertions(+)
+>>   create mode 100644 arch/x86/include/asm/acrn_hypercall.h
+>>
+>> diff --git a/arch/x86/include/asm/acrn_hypercall.h b/arch/x86/include/asm/acrn_hypercall.h
+>> new file mode 100644
+>> index 0000000..5cb438e
+>> --- /dev/null
+>> +++ b/arch/x86/include/asm/acrn_hypercall.h
+> 
+> Questions:
+> 
+> * why isn't this in acrn.h and needs to be a separate header?
 
+I refer to the Xen/KVM hypercall to add the ACRN hypercall in one 
+separate header.
+
+The ACRN hypercall is defined in one separate acrn_hypercall.h and can 
+be included explicitly by the *.c that needs the hypercall.
+
+
+> 
+> * why aren't those functions used anywhere?
+
+The hypercall will be used in driver part. Before the driver part is 
+added, it seems that the defined ACRN hypercall functions are not used.
+Do I need to add these functions together with driver part?
+
+Thanks
+    Yakui
+> 
