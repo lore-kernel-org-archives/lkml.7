@@ -2,108 +2,108 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30AAAC072B1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92487C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2F7321530
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:23:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="jtRJyTN0"
+	by mail.kernel.org (Postfix) with ESMTP id 764E12147A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:24:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727167AbfE0QXU (ORCPT
+        id S1726605AbfE0QYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 12:23:20 -0400
-Received: from vps.xff.cz ([195.181.215.36]:52504 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726733AbfE0QWl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 12:22:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1558974159; bh=W1eysqnIHUZkksJlW6Nnyz1rUD5/k0fxV0/y2AwBQ70=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jtRJyTN0mda0dMEzqcL/RsuQH3ecGfIJExMPybYmhP/91ewbQ8PMdd0t02M7thPNb
-         GLx+i1A+NAnqwhvXQb8kcP73pcszhszejUdUlmzP1pa+CTgXFB7L4O3QLKLmKczsFa
-         br6uJjWMkUjgR9ciFeZpdqhKN/3ii65yVduiLv/Y=
-From:   megous@megous.com
-To:     linux-sunxi@googlegroups.com,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>
-Cc:     Icenowy Zheng <icenowy@aosc.io>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        Ondrej Jirman <megous@megous.com>
-Subject: [PATCH v6 1/6] net: stmmac: sun8i: add support for Allwinner H6 EMAC
-Date:   Mon, 27 May 2019 18:22:32 +0200
-Message-Id: <20190527162237.18495-2-megous@megous.com>
-In-Reply-To: <20190527162237.18495-1-megous@megous.com>
-References: <20190527162237.18495-1-megous@megous.com>
+        Mon, 27 May 2019 12:24:12 -0400
+Received: from shelob.surriel.com ([96.67.55.147]:52766 "EHLO
+        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726202AbfE0QYM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 12:24:12 -0400
+Received: from imladris.surriel.com ([96.67.55.152])
+        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.91)
+        (envelope-from <riel@shelob.surriel.com>)
+        id 1hVIPw-0002KK-32; Mon, 27 May 2019 12:24:08 -0400
+Message-ID: <686351aab73911569a7c22a7e104d1b9f0d579b9.camel@surriel.com>
+Subject: Re: [PATCH 7/7] sched/fair: Rename weighted_cpuload() to cpu_load()
+From:   Rik van Riel <riel@surriel.com>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 27 May 2019 12:24:07 -0400
+In-Reply-To: <20190527062116.11512-8-dietmar.eggemann@arm.com>
+References: <20190527062116.11512-1-dietmar.eggemann@arm.com>
+         <20190527062116.11512-8-dietmar.eggemann@arm.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-1BIZliyhtxK7tTR1Ish4"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Icenowy Zheng <icenowy@aosc.io>
 
-The EMAC on Allwinner H6 is just like the one on A64. The "internal PHY" on
-H6 is on a co-packaged AC200 chip, and it's not really internal (it's
-connected via RMII at PA GPIO bank).
+--=-1BIZliyhtxK7tTR1Ish4
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add support for the Allwinner H6 EMAC in the dwmac-sun8i driver.
+On Mon, 2019-05-27 at 07:21 +0100, Dietmar Eggemann wrote:
+> This is done to align the per cpu (i.e. per rq) load with the util
+> counterpart (cpu_util(int cpu)). The term 'weighted' is not needed
+> since there is no 'unweighted' load to distinguish it from.
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-Signed-off-by: Ondrej Jirman <megous@megous.com>
----
- .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c    | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+I can see why you want to make cpu_util() and cpu_load()
+have the same parameter, but ...
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-index ba124a4da793..3258dec84d55 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-@@ -147,6 +147,20 @@ static const struct emac_variant emac_variant_a64 = {
- 	.tx_delay_max = 7,
- };
- 
-+static const struct emac_variant emac_variant_h6 = {
-+	.default_syscon_value = 0x50000,
-+	.syscon_field = &sun8i_syscon_reg_field,
-+	/* The "Internal PHY" of H6 is not on the die. It's on the
-+	 * co-packaged AC200 chip instead.
-+	 */
-+	.soc_has_internal_phy = false,
-+	.support_mii = true,
-+	.support_rmii = true,
-+	.support_rgmii = true,
-+	.rx_delay_max = 31,
-+	.tx_delay_max = 7,
-+};
-+
- #define EMAC_BASIC_CTL0 0x00
- #define EMAC_BASIC_CTL1 0x04
- #define EMAC_INT_STA    0x08
-@@ -1212,6 +1226,8 @@ static const struct of_device_id sun8i_dwmac_match[] = {
- 		.data = &emac_variant_r40 },
- 	{ .compatible = "allwinner,sun50i-a64-emac",
- 		.data = &emac_variant_a64 },
-+	{ .compatible = "allwinner,sun50i-h6-emac",
-+		.data = &emac_variant_h6 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, sun8i_dwmac_match);
--- 
-2.21.0
+> @@ -7931,7 +7928,7 @@ static inline void update_sg_lb_stats(struct
+> lb_env *env,
+>  		if ((env->flags & LBF_NOHZ_STATS) &&
+> update_nohz_stats(rq, false))
+>  			env->flags |=3D LBF_NOHZ_AGAIN;
+> =20
+> -		sgs->group_load +=3D weighted_cpuload(rq);
+> +		sgs->group_load +=3D cpu_load(i);
+>  		sgs->group_util +=3D cpu_util(i);
+>  		sgs->sum_nr_running +=3D rq->cfs.h_nr_running;
+
+... now we end up dereferencing cpu_rq(cpu) 3 times.
+
+I guess per-cpu variables are so cheap that we should
+never notice, but I thought I'd ask anyway while looking
+over these patches :)
+
+Thank you for removing a bunch of code that slowed down
+my understanding of fair.c
+
+--=20
+All Rights Reversed.
+
+--=-1BIZliyhtxK7tTR1Ish4
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAlzsDycACgkQznnekoTE
+3oPOgAgAo1RMB85AKGO4kRE5mqnTAEqZ4XsVpWt82sdgqnEcRfcIBT65E2hnuNqL
+I0bYLuK6CRgrVP2gM9aScBzjznLoTvuxnss0zN3N/MCeOzkn4Ab58om5ojLD61aq
+WMW21wl0Hulm9Svwn/ZpN+KRPbdZrFpttcb7SdSIFVUvXz4g0YAe2kBlZ+8kfLp9
+7oXe6JGAOLtQDx+Z2LNZhZHfQVP+VgCLmtCFbE95bS8bvz86dnCJ1Dl5ULphULN3
+hMgeqGedAFgYX/CJgZoXhKWlox14pCA4ozeyKRiKhos5Uai/McBZkYr76W4FCtwY
+5GfOV8IzhoqIsfoKPXf0bBWKBAR/1A==
+=+DUJ
+-----END PGP SIGNATURE-----
+
+--=-1BIZliyhtxK7tTR1Ish4--
 
