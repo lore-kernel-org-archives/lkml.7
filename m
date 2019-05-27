@@ -2,109 +2,106 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 058FDC28CBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 09:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A33DFC07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 09:06:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBA8921744
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 09:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8173021721
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 09:06:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbfE0JFp (ORCPT
+        id S1726852AbfE0JGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 05:05:45 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:31019 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726691AbfE0JFn (ORCPT
+        Mon, 27 May 2019 05:06:04 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:45339 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726831AbfE0JGE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 05:05:43 -0400
-X-UUID: ac4d7903a2d842ef9a7cced47deaeb51-20190527
-X-UUID: ac4d7903a2d842ef9a7cced47deaeb51-20190527
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <erin.lo@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 535520483; Mon, 27 May 2019 17:05:22 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 27 May 2019 17:05:20 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 27 May 2019 17:05:20 +0800
-From:   Erin Lo <erin.lo@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     <devicetree@vger.kernel.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        <linux-kernel@vger.kernel.org>, <linux-serial@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>, <erin.lo@mediatek.com>,
-        <mars.cheng@mediatek.com>, <eddie.huang@mediatek.com>,
-        Michael Mei <michael.mei@mediatek.com>
-Subject: [PATCH v11 6/6] arm64: dts: mt8183: add efuse and Mediatek Chip id node to read
-Date:   Mon, 27 May 2019 17:04:47 +0800
-Message-ID: <1558947887-31084-7-git-send-email-erin.lo@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
-In-Reply-To: <1558947887-31084-1-git-send-email-erin.lo@mediatek.com>
-References: <1558947887-31084-1-git-send-email-erin.lo@mediatek.com>
+        Mon, 27 May 2019 05:06:04 -0400
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <sha@pengutronix.de>)
+        id 1hVBZr-0004GD-6D; Mon, 27 May 2019 11:05:55 +0200
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <sha@pengutronix.de>)
+        id 1hVBZp-0001YR-Ic; Mon, 27 May 2019 11:05:53 +0200
+Date:   Mon, 27 May 2019 11:05:53 +0200
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     yibin.gong@nxp.com
+Cc:     robh@kernel.org, shawnguo@kernel.org, festevam@gmail.com,
+        mark.rutland@arm.com, vkoul@kernel.org, dan.j.williams@intel.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com, kernel@pengutronix.de,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 6/7] dmaengine: fsl-edma: add i.mx7ulp edma2 version
+ support
+Message-ID: <20190527090553.lek7tm3lyst3bhrd@pengutronix.de>
+References: <20190527085118.40423-1-yibin.gong@nxp.com>
+ <20190527085118.40423-7-yibin.gong@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: BC6772C244BE5BC8E09530FE258C73FF60A08144B109D9253A4ADFC41D8847CA2000:8
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190527085118.40423-7-yibin.gong@nxp.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 11:01:40 up 9 days, 15:19, 72 users,  load average: 0.51, 0.30, 0.17
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Mei <michael.mei@mediatek.com>
+On Mon, May 27, 2019 at 04:51:17PM +0800, yibin.gong@nxp.com wrote:
+> From: Robin Gong <yibin.gong@nxp.com>
+> 
+> +static const struct of_device_id fsl_edma_dt_ids[] = {
+> +	{ .compatible = "fsl,vf610-edma", .data = (void *)v1 },
+> +	{ .compatible = "fsl,imx7ulp-edma", .data = (void *)v3 },
+> +	{ /* sentinel */ }
 
-support for reading chip ID and efuse
+Please put a struct type behind the .data pointer so that you can
+configure...
 
-Signed-off-by: Michael Mei <michael.mei@mediatek.com>
-Signed-off-by: Erin Lo <erin.lo@mediatek.com>
----
-This patch is based on this patch:
-https://patchwork.kernel.org/patch/10953029/
----
- arch/arm64/boot/dts/mediatek/mt8183.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+> +};
+> +MODULE_DEVICE_TABLE(of, fsl_edma_dt_ids);
+> +
+> @@ -218,6 +272,22 @@ static int fsl_edma_probe(struct platform_device *pdev)
+>  	fsl_edma_setup_regs(fsl_edma);
+>  	regs = &fsl_edma->regs;
+>  
+> +	if (fsl_edma->version == v3) {
+> +		fsl_edma->dmamux_nr = 1;
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index 2e3063f..c2749c4 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -156,6 +156,15 @@
- 		compatible = "simple-bus";
- 		ranges;
- 
-+		soc_data: soc_data@8000000 {
-+			compatible = "mediatek,mt8183-efuse",
-+				     "mediatek,efuse";
-+			reg = <0 0x08000000 0 0x0010>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			status = "disabled";
-+		};
-+
- 		gic: interrupt-controller@c000000 {
- 			compatible = "arm,gic-v3";
- 			#interrupt-cells = <4>;
-@@ -369,6 +378,12 @@
- 			#clock-cells = <1>;
- 		};
- 
-+		efuse: efuse@11f10000 {
-+			compatible = "mediatek,mt8183-efuse",
-+				     "mediatek,efuse";
-+			reg = <0 0x11f10000 0 0x1000>;
-+		};
-+
- 		mfgcfg: syscon@13000000 {
- 			compatible = "mediatek,mt8183-mfgcfg", "syscon";
- 			reg = <0 0x13000000 0 0x1000>;
+...things like this...
+
+> @@ -264,7 +334,11 @@ static int fsl_edma_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	edma_writel(fsl_edma, ~0, regs->intl);
+> -	ret = fsl_edma_irq_init(pdev, fsl_edma);
+> +
+> +	if (fsl_edma->version == v3)
+> +		ret = fsl_edma2_irq_init(pdev, fsl_edma);
+> +	else
+> +		ret = fsl_edma_irq_init(pdev, fsl_edma);
+
+...and this one in that struct rather than littering the code more and
+more with such version tests.
+
+Sascha
+
 -- 
-1.8.1.1.dirty
-
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
