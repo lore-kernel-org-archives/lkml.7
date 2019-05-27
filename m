@@ -2,166 +2,232 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE81C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 22:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88DD0C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 22:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D9C42075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 22:55:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A2532075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 22:56:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=anastas.io header.i=@anastas.io header.b="Uq142o9M"
+	dkim=pass (1024-bit key) header.d=appneta.com header.i=@appneta.com header.b="SguEPv1c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbfE0Wzg (ORCPT
+        id S1727628AbfE0W4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 18:55:36 -0400
-Received: from alpha.anastas.io ([104.248.188.109]:60975 "EHLO
-        alpha.anastas.io" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726931AbfE0Wzc (ORCPT
+        Mon, 27 May 2019 18:56:35 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37338 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726905AbfE0W4e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 18:55:32 -0400
-Received: from authenticated-user (alpha.anastas.io [104.248.188.109])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by alpha.anastas.io (Postfix) with ESMTPSA id B891D7F8FC;
-        Mon, 27 May 2019 17:55:30 -0500 (CDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=anastas.io; s=mail;
-        t=1558997731; bh=NkudzRVjZwK8lfclmmYkCIVdF6pby8ZJf/uHpomfJrM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uq142o9McnLkIp2DJH96MbA0DlGTdiQl3UdGdTPVVTqtPR+wThcMWfmjZ5sVCDyyy
-         288GhoTV+cep2bsIPpqVMMUs44FtEYKdwg0U+2+6fqKIw6ytRgADBDDieatKMAi9CR
-         oHNmADp8/6oKo1QKUUpak0w4rkMn1blVt7wsWvETf6RbTf6y12CqVS06OPklUi4nHr
-         LtBlnGo5zZKslXoD4WfucEX6E5AgXBfc0oqBhT1ewlU9E2LUJv46mStANnW2OxSqxS
-         LRKu/z/xnJcn18kKFJo60+hJWWmj2RP2QxVSAbUq6M9QSlVjOXEokYLnxNaHaEJEhX
-         pAv5s+9O4+2oQ==
-From:   Shawn Anastasio <shawn@anastas.io>
-To:     linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc:     bhelgaas@google.com, benh@kernel.crashing.org, paulus@samba.org,
-        mpe@ellerman.id.au, sbobroff@linux.ibm.com,
-        xyjxie@linux.vnet.ibm.com, rppt@linux.ibm.com,
-        linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH 3/3] powerpc/pseries: Allow user-specified PCI resource alignment after init
-Date:   Mon, 27 May 2019 17:55:21 -0500
-Message-Id: <20190527225521.5884-4-shawn@anastas.io>
-In-Reply-To: <20190527225521.5884-1-shawn@anastas.io>
-References: <20190527225521.5884-1-shawn@anastas.io>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 27 May 2019 18:56:34 -0400
+Received: by mail-pf1-f196.google.com with SMTP id a23so10248787pff.4
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 15:56:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=appneta.com; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=P6RI3l1fBN4emHVBbfNwFsY0MoxApJj0NvjT9SiIoUI=;
+        b=SguEPv1ctl7ks8LdaSWZblzcETKs87BdVUDBAph8tutTP/bhiB5+IBJcbQNGriUaRD
+         ASlh9eX45Mgr4g3zci50yTcXruZsXMTWUKbRlLJiXo7G5yGmqkwDXvspYoUS3CjAuew9
+         HvDkZW7koDyBTHyl448gOYvGV3w9DQrNM2DWs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=P6RI3l1fBN4emHVBbfNwFsY0MoxApJj0NvjT9SiIoUI=;
+        b=FeErhw5HsesXodAFJ6WP5ALSEAv5GioOjqXlD+nd/isFhh4uksN8kniF6xoIEPDpHc
+         15f68B2zWATFpmbMXScreuA6/T19vCmJ38SgxBunon4e9vdH9ovXxX29AM1YRc8Qh0Lz
+         nPsSGjpLTtLZn7IjCfOZ4tvAlb7xfP/mMm0w/hK0PucmbJk04oowz/hVtPsiwNYjvYuG
+         f5DoGNbHH+AKqws5ljFt2NoH+9CNswbD0wu6laCLjstPUtLvpBNneqENd+oBpLyMYlpM
+         +waaWWPOHn8FtrKANZGIoJNoQVha47aKhNbo454EramY1KA8Le+rYN7mdnkjWMEMuzIm
+         yPuA==
+X-Gm-Message-State: APjAAAUWMbg0PZ77gZ6FlU8Mf981Cbl62H/O5DekUoNEKCUGOZEKeijI
+        CwsAUDb/THHHRAnr6iRhJzAVvQ==
+X-Google-Smtp-Source: APXvYqyyIFoAhLVQZ3IQictgghho6FQc7UOO7pQweWt1PqVWdv5C/elIhce54zSxBJB3ghUw6KKomA==
+X-Received: by 2002:a63:6f8e:: with SMTP id k136mr129149816pgc.104.1558997794013;
+        Mon, 27 May 2019 15:56:34 -0700 (PDT)
+Received: from jltm109.jaalam.net ([209.139.228.33])
+        by smtp.gmail.com with ESMTPSA id y17sm11809287pfn.79.2019.05.27.15.56.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 27 May 2019 15:56:33 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH net 4/4] net/udpgso_bench_tx: audit error queue
+From:   Fred Klassen <fklassen@appneta.com>
+In-Reply-To: <CAF=yD-LQT7=4vvMwMa96_SFuUd5GywMoae7hGi9n6rQeuhhxuQ@mail.gmail.com>
+Date:   Mon, 27 May 2019 15:56:31 -0700
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        Willem de Bruijn <willemb@google.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <5BB184F2-6C20-416B-B2AF-A678400CFE3E@appneta.com>
+References: <20190523210651.80902-1-fklassen@appneta.com>
+ <20190523210651.80902-5-fklassen@appneta.com>
+ <CAF=yD-KBNLr5KY-YQ1KMmZGCpYNefSJKaJkZNOwd8nRiedpQtA@mail.gmail.com>
+ <879E5DA6-3A4F-4CE1-9DA5-480EE30109DE@appneta.com>
+ <CAF=yD-LQT7=4vvMwMa96_SFuUd5GywMoae7hGi9n6rQeuhhxuQ@mail.gmail.com>
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On pseries, custom PCI resource alignment specified with the commandline
-argument pci=resource_alignment is disabled due to PCI resources being
-managed by the firmware. However, in the case of PCI hotplug the
-resources are managed by the kernel, so custom alignments should be
-honored in these cases. This is done by only honoring custom
-alignments after initial PCI initialization is done, to ensure that
-all devices managed by the firmware are excluded.
 
-Without this ability, sub-page BARs sometimes get mapped in between
-page boundaries for hotplugged devices and are therefore unusable
-with the VFIO framework. This change allows users to request
-page alignment for devices they wish to access via VFIO using
-the pci=resource_alignment commandline argument.
 
-In the future, this could be extended to provide page-aligned
-resources by default for hotplugged devices, similar to what is
-done on powernv by commit 382746376993 ("powerpc/powernv: Override
-pcibios_default_alignment() to force PCI devices to be page aligned")
+> On May 27, 2019, at 2:46 PM, Willem de Bruijn =
+<willemdebruijn.kernel@gmail.com> wrote:
+>> Also, I my v2 fix in net is still up for debate. In its current =
+state, it
+>> meets my application=E2=80=99s requirements, but may not meet all of =
+yours.
 
-Signed-off-by: Shawn Anastasio <shawn@anastas.io>
----
- arch/powerpc/include/asm/machdep.h     |  3 +++
- arch/powerpc/kernel/pci-common.c       |  9 +++++++++
- arch/powerpc/platforms/pseries/setup.c | 22 ++++++++++++++++++++++
- 3 files changed, 34 insertions(+)
+> I gave more specific feedback on issues with it (referencing zerocopy
+> and IP_TOS, say).
+>=20
 
-diff --git a/arch/powerpc/include/asm/machdep.h b/arch/powerpc/include/asm/machdep.h
-index 2fbfaa9176ed..46eb62c0954e 100644
---- a/arch/powerpc/include/asm/machdep.h
-+++ b/arch/powerpc/include/asm/machdep.h
-@@ -179,6 +179,9 @@ struct machdep_calls {
- 
- 	resource_size_t (*pcibios_default_alignment)(void);
- 
-+	/* Called when determining PCI resource alignment */
-+	int (*pcibios_ignore_alignment_request)(void);
-+
- #ifdef CONFIG_PCI_IOV
- 	void (*pcibios_fixup_sriov)(struct pci_dev *pdev);
- 	resource_size_t (*pcibios_iov_resource_alignment)(struct pci_dev *, int resno);
-diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
-index ff4b7539cbdf..1a6ded45a701 100644
---- a/arch/powerpc/kernel/pci-common.c
-+++ b/arch/powerpc/kernel/pci-common.c
-@@ -238,6 +238,15 @@ resource_size_t pcibios_default_alignment(void)
- 	return 0;
- }
- 
-+resource_size_t pcibios_ignore_alignment_request(void)
-+{
-+	if (ppc_md.pcibios_ignore_alignment_request)
-+		return ppc_md.pcibios_ignore_alignment_request();
-+
-+	/* Fall back to default method of checking PCI_PROBE_ONLY */
-+	return pci_has_flag(PCI_PROBE_ONLY);
-+}
-+
- #ifdef CONFIG_PCI_IOV
- resource_size_t pcibios_iov_resource_alignment(struct pci_dev *pdev, int resno)
- {
-diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
-index e4f0dfd4ae33..c6af2ed8ee0f 100644
---- a/arch/powerpc/platforms/pseries/setup.c
-+++ b/arch/powerpc/platforms/pseries/setup.c
-@@ -82,6 +82,8 @@ EXPORT_SYMBOL(CMO_PageSize);
- 
- int fwnmi_active;  /* TRUE if an FWNMI handler is present */
- 
-+int initial_pci_init_done; /* TRUE if initial pcibios init has completed */
-+
- static void pSeries_show_cpuinfo(struct seq_file *m)
- {
- 	struct device_node *root;
-@@ -749,6 +751,23 @@ static resource_size_t pseries_pci_iov_resource_alignment(struct pci_dev *pdev,
- }
- #endif
- 
-+static void pseries_after_init(void)
-+{
-+	initial_pci_init_done = 1;
-+}
-+
-+static int pseries_ignore_alignment_request(void)
-+{
-+	if (initial_pci_init_done)
-+		/*
-+		 * Allow custom alignments after init for things
-+		 * like PCI hotplugging.
-+		 */
-+		return 0;
-+
-+	return pci_has_flag(PCI_PROBE_ONLY);
-+}
-+
- static void __init pSeries_setup_arch(void)
- {
- 	set_arch_panic_timeout(10, ARCH_PANIC_TIMEOUT);
-@@ -797,6 +816,9 @@ static void __init pSeries_setup_arch(void)
- 	}
- 
- 	ppc_md.pcibios_root_bridge_prepare = pseries_root_bridge_prepare;
-+	ppc_md.pcibios_after_init = pseries_after_init;
-+	ppc_md.pcibios_ignore_alignment_request =
-+		pseries_ignore_alignment_request;
- }
- 
- static void pseries_panic(char *str)
--- 
-2.20.1
+Unfortunately I don=E2=80=99t have a very good email setup, and I found =
+a
+bunch of your comments in my junk folder. That was on Saturday,
+and on Sunday I spent some time implementing your suggestions.
+I have not pushed the changes up yet.=20
+
+I wanted to discuss whether or not to attach a buffer to the=20
+recvmsg(fd, &msg, MSG_ERRQUEUE). Without it, I have
+MSG_TRUNC errors in my msg_flags. Either I have to add
+a buffer, or ignore that error flag.=20
+
+> Also, it is safer to update only the relevant timestamp bits in
+> tx_flags, rather that blanket overwrite, given that some bits are
+> already set in skb_segment. I have not checked whether this is
+> absolutely necessary.
+>=20
+ I agree. See tcp_fragment_tstamp().
+
+I think this should work.
+
+skb_shinfo(seg)->tx_flags |=3D
+			(skb_shinfo(gso_skb)->tx_flags & =
+SKBTX_ANY_TSTAMP);
+
+>> I am still open to suggestions, but so far I don=E2=80=99t have an =
+alternate
+>> solution that doesn=E2=80=99t break what I need working.
+>=20
+> Did you see my response yesterday? I can live with the first segment.
+> Even if I don't think that it buys much in practice given xmit_more
+> (and it does cost something, e.g., during requeueing).
+>=20
+
+I=E2=80=99m sorry, I didn=E2=80=99t receive a response. Once again, I am =
+struggling
+with crappy email setup. Hopefully as of today my junk mail filters are
+set up properly.
+
+I=E2=80=99d like to see that comment. I have been wondering about =
+xmit_more
+myself. I don=E2=80=99t think it changes anything for software =
+timestamps,
+but it may with hardware timestamps.
+
+I have service contracts with Intel and Mellanox. I can open up a ticket
+with them to see exactly when the timestamp is taken. I believe you
+mentioned before that this is vendor specific.
+
+> It is not strictly necessary, but indeed often a nice to have. We
+> generally reference by SHA1, so wait with submitting the test until
+> the fix is merged. See also the ipv6 flowlabel test that I just sent
+> for one example.
+
+Thanks. I will hold off with the test until I get a final fix in net, =
+and I=E2=80=99ll use
+your example.
+
+>> Below is a sample output of the
+>> test, including a failure on IPv6 TCP Zerocopy audit (a failure that =
+may
+>> lead to a memory leak).
+>=20
+> Can you elaborate on this suspected memory leak?
+
+A user program cannot free a zerocopy buffer until it is reported as =
+free.
+If zerocopy events are not reported, that could be a memory leak.
+
+I may have a fix. I have added a -P option when I am running an audit.
+It doesn=E2=80=99t appear to affect performance, and since implementing =
+it I have
+received all error messages expected for both timestamp and zerocopy.
+
+I am still testing.=20
+
+>> I wanted to review the report with you before
+>> I push up the v2 patch into net-next.
+>>=20
+>> Are these extra tests what you were expecting? Is it OK that it =
+doesn=E2=80=99t
+>> flow well?
+>=20
+> Do you mean how the output looks? That seems fine.
+>=20
+
+Good. Thanks.
+
+>> Also, there is a failure about every 3rd time I run it,
+>> indicating that some TX or Zerocopy messages are lost. Is that OK?
+>=20
+> No that is not. These tests are run in a continuous test
+> infrastructure. We should try hard to avoid flakiness.
+>=20
+
+As per above comment, I think I removed the flakiness. I will run
+overnight to confirm.
+
+> If this intermittent failure is due to a real kernel bug, please move
+> that part to a flag (or just comment out) to temporarily exclude it
+> from continuous testing.
+>=20
+> More commonly it is an issue with the test itself. My SO_TXTIME test
+> from last week depends on timing, which has me somewhat worried when
+> run across a wide variety of (likely virtualized) platforms. I
+> purposely chose large timescales to minimize the risk.
+>=20
+> On a related note, tests run as part of continuous testing should run
+> as briefly as possible. Perhaps we need to reduce the time per run to
+> accommodate for the new variants you are adding.
+>=20
+
+I could reduce testing from 4 to 2 seconds. Anything below that and I
+miss some reports. When I found flakey results, I found I could =
+reproduce
+them in as little as 1 second.
+>> Summary over 4.000 seconds...
+>> sum tcp tx:   6921 MB/s     458580 calls (114645/s)     458580 msgs =
+(114645/s)
+>> ./udpgso_bench_tx: Unexpected number of Zerocopy completions:    =
+458580 expected    458578 received
+>=20
+> Is this the issue you're referring to? Good catch. Clearly this is a
+> good test to have :) That is likely due to some timing issue in the
+> test, e.g., no waiting long enough to harvest all completions. That is
+> something I can look into after the code is merged.
+
+Thanks.
+
+Should the test have failed at this point? I did return an error(), but
+the script kept running.
+
+As stated, I don=E2=80=99t want to push up until I have tested more =
+fully, and
+the fix is accepted (which requires a v3). If you want to review what
+I have, I can push it up now with the understanding that I may still
+fine tune things.=20
 
