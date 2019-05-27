@@ -2,150 +2,140 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC762C07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 09:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC27CC28CBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 09:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F89321721
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 09:44:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 807C821721
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 09:47:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h3rVlelG"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="P48Ta44X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbfE0Jo2 (ORCPT
+        id S1726626AbfE0Jr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 05:44:28 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36642 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbfE0Jo2 (ORCPT
+        Mon, 27 May 2019 05:47:28 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33032 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725973AbfE0Jr1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 05:44:28 -0400
-Received: by mail-pg1-f193.google.com with SMTP id a3so8821840pgb.3;
-        Mon, 27 May 2019 02:44:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=X2iALwhxJ2jL9uqOk1VEd05RuFjSSsyWOS5QI19bVso=;
-        b=h3rVlelG7JST4H5/ikCX/av5OwqsPcCNE78bfmrXnGHE6vDienD2JzXAsxQI6RuSuS
-         EvlAfC451GVWWIfi+QvvocmxHfmWnjP894cCCDwMCABGh+x69ctPRbJJ02Rb2uC2jEwF
-         uqrL45fFuEF5BY0nN1J9Vroy+9qeHIOzfkCsSN9yZxKtshKtgkWdXVqxp8opyiofI3KT
-         ZADTFGmhEXtXHL+oyrMDVRxWz/pdJCr9H8CV/X+e2wiZGd9E88yBkCCanJhuhfHRSDS/
-         Lmsy0rpBn9tRb2q77N/Zi03C1wrvj1Z/omfUFe7EiP8IZnbrbwDbwt7acSyyFdTG+Tqh
-         6KRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=X2iALwhxJ2jL9uqOk1VEd05RuFjSSsyWOS5QI19bVso=;
-        b=XPvxOQeGUXRerPisJssS6hGMg0p1qABBuxtMKDt7oThjls9y++iuh2Q/P2shyFK1qo
-         AQ6oApYDawT27cI/FjFQgLacOuaL52MLNpjXDmy9VyNDnz7aPwDA4xlunApCiXBtZgKF
-         2wbO4y1AM52R9+A0avzLEVmo9drQbseithCYbXC4WjibHVhtrSOxPVRcIeDWRqEMW25h
-         vxeGeqF43wcuaOzKl0X9zhS72kSj1QQEuMjKCKkCpfeSsKqpVLCVYVQNso3WNnuugsEo
-         9WjQsnBeThUHkD709reWP0m4g6MgeizAsaIxMLEb8CwaIwCDTdmA89t4f8y/O6wqjL04
-         VC8Q==
-X-Gm-Message-State: APjAAAVKU56TO+xH3c1LgkwJIWyPOAsZ5VVTVzayb0wDwD3PqexL7JAR
-        WCm02QEgjZITtzG2rjdjQaPNGu4f
-X-Google-Smtp-Source: APXvYqymAM4mV0yK506miBQOXPFTvWufOmaaZgBAKPPvVOzD8sLFOw23HLUO5XVvziPXk9TA29QDXw==
-X-Received: by 2002:a63:5d45:: with SMTP id o5mr1372683pgm.40.1558950267965;
-        Mon, 27 May 2019 02:44:27 -0700 (PDT)
-Received: from localhost ([45.32.43.45])
-        by smtp.gmail.com with ESMTPSA id c129sm12879564pfg.178.2019.05.27.02.44.26
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 27 May 2019 02:44:27 -0700 (PDT)
-From:   XiaoXiao Liu <sliuuxiaonxiao@gmail.com>
-To:     dmitry.torokhov@gmail.com, pali.rohar@gmail.com
-Cc:     peter.hutterer@who-t.net, hui.wang@canonical.com,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        xiaojian.cao@cn.alps.com, zhangfp1@lenovo.com,
-        xiaoxiao.liu-1@cn.alps.com, XiaoXiao Liu <sliuuxiaonxiao@gmail.com>
-Subject: [PATCH] input: alps-fix the issue alps cs19 trackstick do not work.
-Date:   Mon, 27 May 2019 05:44:22 -0400
-Message-Id: <20190527094422.7558-1-sliuuxiaonxiao@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 27 May 2019 05:47:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Ksp3G9sH2zzACmF2AeSPcK5YcZQtsXat2Vj9aWQQG+U=; b=P48Ta44XCwnjYxzE2Szf95Vt9
+        DEITVVm+74m8Bb8Gl3NWJwk4TRSHiqzI4me8sM/R8LN7Si+alfGfxq5Ygp+/unzlAUHOEAMaXGUUk
+        HuL4VHeNUavV/GmCXeXB52W+sv/19DgYqb/qYohVl88jHxI3npQnEgYu3MKj6swbywgxOS6yN9Lk2
+        ggd42AjgHwC1KtcbR/M+53ID/oVEZrZVSEO+zbA7krglgq0y/Y2vjIIbdMnDHz61fPgKs2Kwz9flF
+        pKEVmgKQJoY1Duv4IfUKMWiH98YTo0yL5G35fvQZCvb64DP0UzpuggBmHVFsYvhrFV2pbQAE053Kx
+        AIvf7QlvQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hVCDo-0006TR-FB; Mon, 27 May 2019 09:47:12 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8B475202BF402; Mon, 27 May 2019 11:47:10 +0200 (CEST)
+Date:   Mon, 27 May 2019 11:47:10 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Juergen Gross <jgross@suse.com>
+Cc:     Nadav Amit <namit@vmware.com>, Ingo Molnar <mingo@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        xen-devel@lists.xenproject.org
+Subject: Re: [RFC PATCH 5/6] x86/mm/tlb: Flush remote and local TLBs
+ concurrently
+Message-ID: <20190527094710.GU2623@hirez.programming.kicks-ass.net>
+References: <20190525082203.6531-1-namit@vmware.com>
+ <20190525082203.6531-6-namit@vmware.com>
+ <08b21fb5-2226-7924-30e3-31e4adcfc0a3@suse.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <08b21fb5-2226-7924-30e3-31e4adcfc0a3@suse.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The alps devices which detected to use the ALPS_PROTO_V8 procotol contains
-ALPS touchpad and ALPS trackstick.The ALPS_PROTO_V8 procotol do not
-support the trackstick device process by default.
+On Sat, May 25, 2019 at 10:54:50AM +0200, Juergen Gross wrote:
+> On 25/05/2019 10:22, Nadav Amit wrote:
 
-When the trackstick was detected to use ALPS_PROTO_V8 procotol,
-the v8 process_packet method alps_process_packet_ss4_v2 will reject to
-report the data when the device using ALPS_PROTO_V8 procotol is not set
-the ALPS_DUALPOINT flag.
+> > diff --git a/arch/x86/include/asm/paravirt_types.h b/arch/x86/include/asm/paravirt_types.h
+> > index 946f8f1f1efc..3a156e63c57d 100644
+> > --- a/arch/x86/include/asm/paravirt_types.h
+> > +++ b/arch/x86/include/asm/paravirt_types.h
+> > @@ -211,6 +211,12 @@ struct pv_mmu_ops {
+> >  	void (*flush_tlb_user)(void);
+> >  	void (*flush_tlb_kernel)(void);
+> >  	void (*flush_tlb_one_user)(unsigned long addr);
+> > +	/*
+> > +	 * flush_tlb_multi() is the preferred interface. When it is used,
+> > +	 * flush_tlb_others() should return false.
+> 
+> This comment does not make sense. flush_tlb_others() return type is
+> void.
 
-The alps cs19 trackstick is detected to use the ALPS_PROTO_V8 procotol
-but without ALPS_DUALPOINT flag, the alps driver will not report the
-input data. so the trackstick will not work.
+I suspect that is an artifact from before the static_key; an attempt to
+make the pv interface less awkward.
 
-solution: when the alps cs19 device detected, set the device
-ALPS_DUALPOINT flag,then the input data will be processed.
+Something like the below would work for KVM I suspect, the others
+(Hyper-V and Xen are more 'interesting').
 
-Signed-off-by: XiaoXiao Liu <sliuuxiaonxiao@gmail.com>
 ---
- drivers/input/mouse/alps.c | 25 +++++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/input/mouse/alps.c b/drivers/input/mouse/alps.c
-index 0a6f7ca883e7..a54677cf7474 100644
---- a/drivers/input/mouse/alps.c
-+++ b/drivers/input/mouse/alps.c
-@@ -24,7 +24,7 @@
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -580,7 +580,7 @@ static void __init kvm_apf_trap_init(voi
  
- #include "psmouse.h"
- #include "alps.h"
--
-+#include "trackpoint.h"
- /*
-  * Definitions for ALPS version 3 and 4 command mode protocol
-  */
-@@ -220,6 +220,23 @@ static bool alps_is_valid_first_byte(struct alps_data *priv,
- 	return (data & priv->mask0) == priv->byte0;
- }
+ static DEFINE_PER_CPU(cpumask_var_t, __pv_tlb_mask);
  
-+static int alps_check_cs19_trackstick(struct psmouse *psmouse)
-+{
-+	u8 param[2] = { 0 };
-+	int error;
-+
-+	error = ps2_command(&psmouse->ps2dev,
-+			    param, MAKE_PS2_CMD(0, 2, TP_READ_ID));
-+	if (error)
-+		return error;
-+
-+	if (param[0] == TP_VARIANT_ALPS && param[1] & 0x20) {
-+		psmouse_warn(psmouse, "It is alps cs19 trackstick");
-+		return 0;
-+	}
-+	return -1;
-+}
-+
- static void alps_report_buttons(struct input_dev *dev1, struct input_dev *dev2,
- 				int left, int right, int middle)
+-static void kvm_flush_tlb_others(const struct cpumask *cpumask,
++static void kvm_flush_tlb_multi(const struct cpumask *cpumask,
+ 			const struct flush_tlb_info *info)
  {
-@@ -2568,8 +2585,12 @@ static int alps_update_dual_info_ss4_v2(unsigned char otp[][4],
- 			alps_exit_command_mode(psmouse);
- 			ps2_command(ps2dev, NULL, PSMOUSE_CMD_ENABLE);
- 
--			if (reg_val == 0x0C || reg_val == 0x1D)
-+			if (reg_val == 0x0C || reg_val == 0x1D) {
-+				is_dual = true;
-+			} else if (alps_check_cs19_trackstick(psmouse) == 0) {
-+				//For support Thinkpad CS19 TrackStick
- 				is_dual = true;
-+			}
+ 	u8 state;
+@@ -594,6 +594,9 @@ static void kvm_flush_tlb_others(const s
+ 	 * queue flush_on_enter for pre-empted vCPUs
+ 	 */
+ 	for_each_cpu(cpu, flushmask) {
++		if (cpu == smp_processor_id())
++			continue;
++
+ 		src = &per_cpu(steal_time, cpu);
+ 		state = READ_ONCE(src->preempted);
+ 		if ((state & KVM_VCPU_PREEMPTED)) {
+@@ -603,7 +606,7 @@ static void kvm_flush_tlb_others(const s
  		}
  	}
  
--- 
-2.20.1
-
+-	native_flush_tlb_others(flushmask, info);
++	native_flush_tlb_multi(flushmask, info);
+ }
+ 
+ static void __init kvm_guest_init(void)
+@@ -628,9 +631,8 @@ static void __init kvm_guest_init(void)
+ 	if (kvm_para_has_feature(KVM_FEATURE_PV_TLB_FLUSH) &&
+ 	    !kvm_para_has_hint(KVM_HINTS_REALTIME) &&
+ 	    kvm_para_has_feature(KVM_FEATURE_STEAL_TIME)) {
+-		pv_ops.mmu.flush_tlb_others = kvm_flush_tlb_others;
++		pv_ops.mmu.flush_tlb_multi = kvm_flush_tlb_multi;
+ 		pv_ops.mmu.tlb_remove_table = tlb_remove_table;
+-		static_key_disable(&flush_tlb_multi_enabled.key);
+ 	}
+ 
+ 	if (kvm_para_has_feature(KVM_FEATURE_PV_EOI))
