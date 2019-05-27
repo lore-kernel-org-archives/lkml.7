@@ -2,89 +2,81 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 402A6C072B1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD02C28CC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B2002184E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:30:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="sZ+nULcN"
+	by mail.kernel.org (Postfix) with ESMTP id 36EAA21721
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:31:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbfE0Oag (ORCPT
+        id S1726722AbfE0ObZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 10:30:36 -0400
-Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:47398 "EHLO
-        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726191AbfE0Oag (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 10:30:36 -0400
-Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
-        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id BBD552E0443;
-        Mon, 27 May 2019 17:30:32 +0300 (MSK)
-Received: from smtpcorp1j.mail.yandex.net (smtpcorp1j.mail.yandex.net [2a02:6b8:0:1619::137])
-        by mxbackcorp2j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id e8Wsdjfvxe-UV5ivtGg;
-        Mon, 27 May 2019 17:30:32 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1558967432; bh=7qLRUcrPwsW5zqic4YMh4GiJeUahg2HnH6OlPeS5QxU=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=sZ+nULcNfpXw4488ph8T3fFpY67ss5VqhjNQj6mGo6huQCGDB8dRvy6foEzHo4b76
-         MJwIK5XNb5758igtdz2KoVwMsyi8QgIOH4swDHzKDl/9rL2JcDSLSd/L2nBp1hO+M2
-         LL5GB6yQRSYSm3bnHraLoeqW2e/3FIRnQxb4CG2w=
-Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:d877:17c:81de:6e43])
-        by smtpcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id I2Oi11RdUk-UV8COmwf;
-        Mon, 27 May 2019 17:30:31 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH RFC] mm/madvise: implement MADV_STOCKPILE (kswapd from
- user space)
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Roman Gushchin <guro@fb.com>, linux-api@vger.kernel.org
-References: <155895155861.2824.318013775811596173.stgit@buzz>
- <20190527141223.GD1658@dhcp22.suse.cz> <20190527142156.GE1658@dhcp22.suse.cz>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <e17e1370-9e88-e50c-94e3-736c122c1baf@yandex-team.ru>
-Date:   Mon, 27 May 2019 17:30:31 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 27 May 2019 10:31:25 -0400
+Received: from mga12.intel.com ([192.55.52.136]:49805 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726191AbfE0ObY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 10:31:24 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 May 2019 07:31:24 -0700
+X-ExtLoop1: 1
+Received: from pgomulkx-mobl.ger.corp.intel.com (HELO localhost) ([10.251.94.230])
+  by orsmga002.jf.intel.com with ESMTP; 27 May 2019 07:31:18 -0700
+Date:   Mon, 27 May 2019 17:31:03 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     James Morris <jmorris@namei.org>
+Cc:     Matthew Garrett <matthewgarrett@google.com>,
+        linux-integrity@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca,
+        roberto.sassu@huawei.com, linux-efi@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tweek@google.com, bsz@semihalf.com,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH V7 0/4] Add support for crypto agile logs
+Message-ID: <20190527143103.GA20497@linux.intel.com>
+References: <20190520205501.177637-1-matthewgarrett@google.com>
+ <20190523121449.GA9997@linux.intel.com>
+ <20190523122610.GA12327@linux.intel.com>
+ <alpine.LRH.2.21.1905240252440.31508@namei.org>
+ <20190524103846.GA11695@linux.intel.com>
+ <alpine.LRH.2.21.1905250506320.7233@namei.org>
 MIME-Version: 1.0
-In-Reply-To: <20190527142156.GE1658@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LRH.2.21.1905250506320.7233@namei.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27.05.2019 17:21, Michal Hocko wrote:
-> On Mon 27-05-19 16:12:23, Michal Hocko wrote:
->> [Cc linux-api. Please always cc this list when proposing a new user
->>   visible api. Keeping the rest of the email intact for reference]
->>
->> On Mon 27-05-19 13:05:58, Konstantin Khlebnikov wrote:
-> [...]
->>> This implements manual kswapd-style memory reclaim initiated by userspace.
->>> It reclaims both physical memory and cgroup pages. It works in context of
->>> task who calls syscall madvise thus cpu time is accounted correctly.
+On Sat, May 25, 2019 at 05:22:34AM +1000, James Morris wrote:
+> On Fri, 24 May 2019, Jarkko Sakkinen wrote:
 > 
-> I do not follow. Does this mean that the madvise always reclaims from
-> the memcg the process is member of?
+> > I'm referring to these:
+> > 
+> > https://lore.kernel.org/linux-integrity/20190329115544.GA27351@linux.intel.com/
+> > 
+> > I got response from you that those were applied and there is another
+> > response in that thread that they are being sent to Linus. That is why I
+> > haven't done anything since. Most of them are critical fixes to v5.1
+> > changes.
 > 
+> These are in Linus' tree.  
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=a556810d8e06aa2da8bbe22da3d105eb5a0d0c7d
+> 
+> I initially queued them in the next-tpm branch, but forgot to drop them 
+> from there after sending them to Linus as a v5.1 fix. Linus was not happy 
+> to see them again in the v5.2 merge window.
+> 
+> Apologies for the confusion.
 
-First it reclaims in its own memcg while limit - usage < requested.
-Then repeats this in parent memcg and so on. And at least pokes global
-direct reclaimer while system wide free memory is less than requested.
+OK, just to confirm, my next PR will go straight to Linus?
 
-So, if machine is divided into containers without overcommit global
-reclaim will never happens - memcg will free enough memory.
+/Jarkko
