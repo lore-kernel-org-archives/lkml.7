@@ -2,132 +2,115 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7DDC04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7E4C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F192F20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:45:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A17E2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:45:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbfE0MpD (ORCPT
+        id S1726871AbfE0MpV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 08:45:03 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52054 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725991AbfE0MpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 08:45:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id BD5F9AE15;
-        Mon, 27 May 2019 12:45:01 +0000 (UTC)
-Date:   Mon, 27 May 2019 14:45:01 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: [PATCHv2 4/4] printk: make sure we always print console disabled
- message
-Message-ID: <20190527124501.vabg7whwmufld3dt@pathway.suse.cz>
-References: <20190426053302.4332-1-sergey.senozhatsky@gmail.com>
- <20190426053302.4332-5-sergey.senozhatsky@gmail.com>
- <20190426054445.GA564@jagdpanzerIV>
- <20190515144702.uja2mk2vfip6maws@pathway.suse.cz>
- <20190523065947.GB18333@jagdpanzerIV>
+        Mon, 27 May 2019 08:45:21 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34949 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725991AbfE0MpV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 08:45:21 -0400
+Received: by mail-wr1-f67.google.com with SMTP id m3so16825194wrv.2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 05:45:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=q2cYYgwiWVJJBJqLCSUSB4vY9rqs6lWWDF70rTeYp2I=;
+        b=Paf9iVeoszHBnRKPHCz0DTUTPc6h34kPjVSNdzANESDsGV3GPKduruIq2bg+q11s9V
+         FUZaiu9Z+FQFh1mKjx3dbJdyvMWhmPCgo0S5VkdlLQ+KpoNciX4ls7h1ZYuyu9seGx2I
+         QCcK9hM/2+UGS/rjSUxzOIipqH3d/k2Iv28JR1K/aiwk43HLeIKvpoIlIOdbXDcMUY5n
+         R3EDs0Rdtxx9o8gx/5aH2dq/7ipG+Xy7nJtGf83D1OqA8KF4Bds6phXfFPBdu5XpDup7
+         lDrKLHe/NpW3sJL5vbzIcDjoNXPjomVwjkUgJEIUOoq9fyV+RiGyKQTWMZtWcjldHsUu
+         LlSw==
+X-Gm-Message-State: APjAAAVP0zliLxVQUdmHlZtFQDHIeqf6qhPOVklI42t8mJWmP+j+rmKR
+        +lilkHsd+OG3weDaB4vwIgL+FA==
+X-Google-Smtp-Source: APXvYqygU7qP4o2dkcY70xoK+YyGPQ+ieDW7hA+ZGXuE8LRMvLdpuQeC+BnMGifi0won+RJCrdExpA==
+X-Received: by 2002:adf:bc94:: with SMTP id g20mr21574548wrh.206.1558961119322;
+        Mon, 27 May 2019 05:45:19 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:c92d:f9e8:f150:3553? ([2001:b07:6468:f312:c92d:f9e8:f150:3553])
+        by smtp.gmail.com with ESMTPSA id o20sm13139362wro.2.2019.05.27.05.45.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 27 May 2019 05:45:18 -0700 (PDT)
+Subject: Re: [RFC PATCH 5/6] x86/mm/tlb: Flush remote and local TLBs
+ concurrently
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Juergen Gross <jgross@suse.com>, Nadav Amit <namit@vmware.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        xen-devel@lists.xenproject.org
+References: <20190525082203.6531-1-namit@vmware.com>
+ <20190525082203.6531-6-namit@vmware.com>
+ <08b21fb5-2226-7924-30e3-31e4adcfc0a3@suse.com>
+ <20190527094710.GU2623@hirez.programming.kicks-ass.net>
+ <e9c0dc1f-799a-b6e3-8d41-58f0a6b693cd@redhat.com>
+ <20190527123206.GC2623@hirez.programming.kicks-ass.net>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <81a67fa3-309d-79cc-5009-5c4908b18ba3@redhat.com>
+Date:   Mon, 27 May 2019 14:45:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190523065947.GB18333@jagdpanzerIV>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <20190527123206.GC2623@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 2019-05-23 15:59:47, Sergey Senozhatsky wrote:
-> On (05/15/19 16:47), Petr Mladek wrote:
-> > On Fri 2019-04-26 14:44:45, Sergey Senozhatsky wrote:
-> > > 
-> > > Forgot to mention that the series is still in RFC phase.
-> > > 
-> > > 
-> > > On (04/26/19 14:33), Sergey Senozhatsky wrote:
-> > > [..]
-> > > > +++ b/kernel/printk/printk.c
-> > > > @@ -2613,6 +2613,12 @@ static int __unregister_console(struct console *console)
-> > > >  	pr_info("%sconsole [%s%d] disabled\n",
-> > > >  		(console->flags & CON_BOOT) ? "boot" : "",
-> > > >  		console->name, console->index);
-> > > > +	/*
-> > > > +	 * Print 'console disabled' on all the consoles, including the
-> > > > +	 * one we are about to unregister.
-> > > > +	 */
-> > > > +	console_unlock();
-> > > > +	console_lock();
-> > > >  
-> > > >  	res = _braille_unregister_console(console);
-> > > >  	if (res)
-> > > 
-> > > Need to think more if this is race free...
-> > 
-> > I am afraid that it is racy against for_each_console() when
-> > removing the boot consoles.
+On 27/05/19 14:32, Peter Zijlstra wrote:
+> On Mon, May 27, 2019 at 12:21:59PM +0200, Paolo Bonzini wrote:
+>> On 27/05/19 11:47, Peter Zijlstra wrote:
 > 
-> Can you explain? Do you mean that we can execute two paths unregistering
-> the same bcon?
+>>> --- a/arch/x86/kernel/kvm.c
+>>> +++ b/arch/x86/kernel/kvm.c
+>>> @@ -580,7 +580,7 @@ static void __init kvm_apf_trap_init(voi
+>>>  
+>>>  static DEFINE_PER_CPU(cpumask_var_t, __pv_tlb_mask);
+>>>  
+>>> -static void kvm_flush_tlb_others(const struct cpumask *cpumask,
+>>> +static void kvm_flush_tlb_multi(const struct cpumask *cpumask,
+>>>  			const struct flush_tlb_info *info)
+>>>  {
+>>>  	u8 state;
+>>> @@ -594,6 +594,9 @@ static void kvm_flush_tlb_others(const s
+>>>  	 * queue flush_on_enter for pre-empted vCPUs
+>>>  	 */
+>>>  	for_each_cpu(cpu, flushmask) {
+>>> +		if (cpu == smp_processor_id())
+>>> +			continue;
+>>> +
+>>
+>> Even this would be just an optimization; the vCPU you're running on
+>> cannot be preempted.  You can just change others to multi.
 > 
-> 	CPU0					CPU1
-> 
-> 	console_lock();
-> 	__unregister_console(bconA)		console_lock();
-> 	console_unlock();
-> 
-> 						__unregister_console(bconA);
-> 						for (a = console_drivers->next ...)
-> 							if (a == console)
-> 								unregister();
-> 							// console bconA is
-> 							// not in the list
-> 							// anymore
-> 						console_unlock();
-> 	for (a = console_drivers->next ...)
-> 		if (a == console)
-> 	console_unlock();
-> 
-> 
-> This CPU0 will never see bconA in the console drivers list.
-> But... it will try to do
-> 
-> 	console->flags &= ~CON_ENABLED;
-> 
-> Which we need to fix.
+> Yeah, I know, but it felt weird so I added the explicit skip. No strong
+> feelings though.
 
-I have to admit that I expected more races. But the most intuitive ones
-are avoided by the 2nd for-cycle in __unregister_console(). As a
-result, most operations are ignored when the console was
-already unregistered in parallel.
+Neither here, and it would indeed deserve a comment if you left the if out.
 
-Anyway, it is really tricky. My head is still spinning around it.
-The console_lock handling is really hard to follow. And it is
-error prone.
+Paolo
 
-To make it clear. The code has already been tricky. Your patchset has
-a potential. It fixes some races but it still keeps the code tricky
-anoter way.
-
-OK, all these nasty hacks are needed only because we need to flush
-the messages to the console.
-
-Much cleaner solution would be to refactor console_unlock()
-and allow to handle existing messages using a separate function.
-It is perfectly safe to flush all existing messages to all registered
-consoles without releasing console_lock.
-
-How does that sound, please?
-
-Best Regards,
-Petr
