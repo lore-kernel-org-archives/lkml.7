@@ -2,151 +2,80 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 180F8C07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 08:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8955BC07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 08:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA28B2070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 08:03:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5182C2070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 08:04:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726282AbfE0IDu (ORCPT
+        id S1726346AbfE0IEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 04:03:50 -0400
-Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:39637 "EHLO
-        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725940AbfE0IDu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 04:03:50 -0400
-Received: from [IPv6:2001:983:e9a7:1:f4bd:6355:63eb:2e52] ([IPv6:2001:983:e9a7:1:f4bd:6355:63eb:2e52])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id VAbjhZIxOsDWyVAbkhXuwd; Mon, 27 May 2019 10:03:48 +0200
-Subject: Re: [PATCH] [media] saa7164: fix remove_proc_entry warning
-To:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-References: <20190504071057.58471-1-wangkefeng.wang@huawei.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <a921e7c8-53a2-bc48-286e-76efa6c4ba07@xs4all.nl>
-Date:   Mon, 27 May 2019 10:03:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 27 May 2019 04:04:40 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53052 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725940AbfE0IEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 04:04:40 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7AE0EAED0;
+        Mon, 27 May 2019 08:04:38 +0000 (UTC)
+From:   Andreas Schwab <schwab@suse.de>
+To:     Yash Shah <yash.shah@sifive.com>
+Cc:     davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, nicolas.ferre@microchip.com,
+        Palmer Dabbelt <palmer@sifive.com>, aou@eecs.berkeley.edu,
+        ynezz@true.cz, Paul Walmsley <paul.walmsley@sifive.com>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
+Subject: Re: [PATCH 0/2] net: macb: Add support for SiFive FU540-C000
+References: <1558611952-13295-1-git-send-email-yash.shah@sifive.com>
+        <mvmwoihfi9f.fsf@suse.de>
+        <CAJ2_jOEr5J7_-81MjUE63OSFKL-p9whEZ_FDBihojXP2wvadVg@mail.gmail.com>
+X-Yow:  ..  the MYSTERIANS are in here with my CORDUROY SOAP DISH!!
+Date:   Mon, 27 May 2019 10:04:36 +0200
+In-Reply-To: <CAJ2_jOEr5J7_-81MjUE63OSFKL-p9whEZ_FDBihojXP2wvadVg@mail.gmail.com>
+        (Yash Shah's message of "Fri, 24 May 2019 10:09:58 +0530")
+Message-ID: <mvm36l0fhm3.fsf@suse.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20190504071057.58471-1-wangkefeng.wang@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfLMXdyy8P4owi1zaozJ/tArHPThVSmQIWfesupukT3EQ3TjJ16wZunP5+4VKNBTztZL+8lwdukVxrQFdfeLi8FgvDPL+y+nW+QX54wkcVPvlDjO63GQN
- NJD5pHiea7uRl2GsSIpcYmnQHngPN5DxW/B9p2t8QEzqk7gK4ZZHYcR/esTzjgAEfI3uqt/XVSMY97h4ry0zXS9aAWoOs2u7ELVbqV87lzEOosXt1q4zdSfH
- 2tWpQEF4Vfn6Y3gOZenvxqP+qxZzHdmy/kqL2NuXW9mpYScr/E3yDcHHeTWkJwfpfDfweWPkp9vJf4monbGB8D4RnoOGITQ64mFuQvZfiw6Qa1lukJ4PTAsb
- F19ifHNR9AqTQrJJA5JOPUrmidoQmz3jQGnmnY58Lpz7Cl4RCERSO+CUbVQCWNyDjw+h9DLH
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/4/19 9:10 AM, Kefeng Wang wrote:
-> if saa7164_proc_create() fails, saa7164_fini() will trigger a warning,
-> 
-> name 'saa7164'
-> WARNING: CPU: 1 PID: 6311 at fs/proc/generic.c:672 remove_proc_entry+0x1e8/0x3a0
->   ? remove_proc_entry+0x1e8/0x3a0
->   ? try_stop_module+0x7b/0x240
->   ? proc_readdir+0x70/0x70
->   ? rcu_read_lock_sched_held+0xd7/0x100
->   saa7164_fini+0x13/0x1f [saa7164]
->   __x64_sys_delete_module+0x30c/0x480
->   ? __ia32_sys_delete_module+0x480/0x480
->   ? __x64_sys_clock_gettime+0x11e/0x1c0
->   ? __x64_sys_timer_create+0x1a0/0x1a0
->   ? trace_hardirqs_off_caller+0x40/0x180
->   ? do_syscall_64+0x18/0x450
->   do_syscall_64+0x9f/0x450
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 
-> Fix it by checking the return of proc_create_single() before
-> calling remove_proc_entry().
-> 
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-> ---
->  drivers/media/pci/saa7164/saa7164-core.c | 31 +++++++++++++++---------
->  1 file changed, 20 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/media/pci/saa7164/saa7164-core.c b/drivers/media/pci/saa7164/saa7164-core.c
-> index 05f25c9bb308..51dff0d84399 100644
-> --- a/drivers/media/pci/saa7164/saa7164-core.c
-> +++ b/drivers/media/pci/saa7164/saa7164-core.c
-> @@ -1122,16 +1122,23 @@ static int saa7164_proc_show(struct seq_file *m, void *v)
->  	return 0;
->  }
->  
-> +static struct proc_dir_entry *saa7164_pe;
+On Mai 24 2019, Yash Shah <yash.shah@sifive.com> wrote:
 
-Add empty line to separate this global from the function.
+> Hi Andreas,
+>
+> On Thu, May 23, 2019 at 6:19 PM Andreas Schwab <schwab@suse.de> wrote:
+>>
+>> On Mai 23 2019, Yash Shah <yash.shah@sifive.com> wrote:
+>>
+>> > On FU540, the management IP block is tightly coupled with the Cadence
+>> > MACB IP block. It manages many of the boundary signals from the MACB IP
+>> > This patchset controls the tx_clk input signal to the MACB IP. It
+>> > switches between the local TX clock (125MHz) and PHY TX clocks. This
+>> > is necessary to toggle between 1Gb and 100/10Mb speeds.
+>>
+>> Doesn't work for me:
+>>
+>> [  365.842801] macb: probe of 10090000.ethernet failed with error -17
+>>
+>
+> Make sure you have applied all the patches needed for testing found at
+> dev/yashs/ethernet branch of:
 
->  static int saa7164_proc_create(void)
->  {
-> -	struct proc_dir_entry *pe;
-> -
-> -	pe = proc_create_single("saa7164", S_IRUGO, NULL, saa7164_proc_show);
-> -	if (!pe)
-> +	saa7164_pe = proc_create_single("saa7164", S_IRUGO, NULL, saa7164_proc_show);
-> +	if (!saa7164_pe)
->  		return -ENOMEM;
->  
->  	return 0;
->  }
+Nope, try reloading the module.
 
-Add empty line to separate the two functions.
+Andreas.
 
-> +static void saa7164_proc_destory(void)
-
-destory -> destroy
-
-> +{
-> +	if (saa7164_pe)
-> +		remove_proc_entry("saa7164", NULL);
-> +}
-> +#else
-> +static int saa7164_proc_create(void) { return 0; }
-> +static void saa7164_proc_destory(void) {}
->  #endif
->  
->  static int saa7164_thread_function(void *data)
-> @@ -1503,19 +1510,21 @@ static struct pci_driver saa7164_pci_driver = {
->  
->  static int __init saa7164_init(void)
->  {
-> -	printk(KERN_INFO "saa7164 driver loaded\n");
-> +	int ret = pci_register_driver(&saa7164_pci_driver);
-> +
-> +	if (ret)
-> +		return ret;
->  
-> -#ifdef CONFIG_PROC_FS
->  	saa7164_proc_create();
-> -#endif
-> -	return pci_register_driver(&saa7164_pci_driver);
-> +
-> +	printk(KERN_INFO "saa7164 driver loaded\n");
-> +
-> +	return 0;
->  }
->  
->  static void __exit saa7164_fini(void)
->  {
-> -#ifdef CONFIG_PROC_FS
-> -	remove_proc_entry("saa7164", NULL);
-> -#endif
-> +	saa7164_proc_destory();
->  	pci_unregister_driver(&saa7164_pci_driver);
->  }
->  
-> 
-
-Regards,
-
-	Hans
+-- 
+Andreas Schwab, SUSE Labs, schwab@suse.de
+GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+"And now for something completely different."
