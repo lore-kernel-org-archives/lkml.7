@@ -2,116 +2,87 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76849C07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F83C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50D3D2070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:37:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D598A2183F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:38:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="sWfOaRVk";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="T3H3Hf1y"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="LgGId6hC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbfE0Ohx (ORCPT
+        id S1726813AbfE0OiN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 10:37:53 -0400
-Received: from pb-smtp2.pobox.com ([64.147.108.71]:51584 "EHLO
-        pb-smtp2.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726457AbfE0Ohx (ORCPT
+        Mon, 27 May 2019 10:38:13 -0400
+Received: from conuserg-07.nifty.com ([210.131.2.74]:41822 "EHLO
+        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726457AbfE0OiN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 10:37:53 -0400
-Received: from pb-smtp2.pobox.com (unknown [127.0.0.1])
-        by pb-smtp2.pobox.com (Postfix) with ESMTP id A081915EDF3;
-        Mon, 27 May 2019 10:37:48 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
-        :cc:subject:in-reply-to:message-id:references:mime-version
-        :content-type; s=sasl; bh=zot+SgMMZ6NLkAbEfpi2LUH3mQg=; b=sWfOaR
-        Vk+aJbCEAlII2KwizI8uEAjvrRCGxGjVlq9esNoojV6ynhwQKBcAvWyvfipnrCwE
-        OhZa7VZwY/DfU1CC3BDgEpBieBcuLXnVSMEG85s977vrD8xv6Lv/E2UY48runV0f
-        uH/YesulcIvXULY5X6xTYKZRXW5ZHalfCjWhI=
-Received: from pb-smtp2.nyi.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp2.pobox.com (Postfix) with ESMTP id 9757315EDF2;
-        Mon, 27 May 2019 10:37:48 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
- h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=iGYrYXMmcUG/e3dkcmXnxQB5h/4Pjc8UzTVPVZ4a6Eg=; b=T3H3Hf1yUjjiAwjwbeXLI2c1avRjSUaDRUKgwlobx330QqXp72MtELf0geJg99iyhaGzLXIlUYpcIbOfP5xWb9uoFIKnMPHdcNV+sz9wuy0HqpgoB7RvzxrmzlDZDCQWAuRxkJgosFDOLBGgEIAORfZIpwqMq4G2plGrOz46iuM=
-Received: from yoda.home (unknown [70.82.130.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by pb-smtp2.pobox.com (Postfix) with ESMTPSA id 08FEF15EDF1;
-        Mon, 27 May 2019 10:37:48 -0400 (EDT)
-Received: from xanadu.home (xanadu.home [192.168.2.2])
-        by yoda.home (Postfix) with ESMTPSA id E1ADA2DA045D;
-        Mon, 27 May 2019 10:37:46 -0400 (EDT)
-Date:   Mon, 27 May 2019 10:37:46 -0400 (EDT)
-From:   Nicolas Pitre <nico@fluxnic.net>
-To:     Jann Horn <jannh@google.com>
-cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-m68k@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] binfmt_flat: make load_flat_shared_library() work
-In-Reply-To: <CAG48ez36xJ9UA8gWef3+1rHQwob5nb8WP3RqnbT8GEOV9Z38jA@mail.gmail.com>
-Message-ID: <nycvar.YSQ.7.76.1905271031340.1558@knanqh.ubzr>
-References: <20190524201817.16509-1-jannh@google.com> <20190525144304.e2b9475a18a1f78a964c5640@linux-foundation.org> <CAG48ez36xJ9UA8gWef3+1rHQwob5nb8WP3RqnbT8GEOV9Z38jA@mail.gmail.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Pobox-Relay-ID: FF6CA618-808C-11E9-ACB2-72EEE64BB12D-78420484!pb-smtp2.pobox.com
+        Mon, 27 May 2019 10:38:13 -0400
+Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
+        by conuserg-07.nifty.com with ESMTP id x4REc8hm015915;
+        Mon, 27 May 2019 23:38:08 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x4REc8hm015915
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1558967888;
+        bh=siBtBPA2ikbJePyRuVksa8fbeB8c7TRUnog6oqyvTUk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=LgGId6hC386B3nnyyD6agXYnQ8QvaSLtSOiToLsm96nRrtFstP2tFADwPp9ZBATHV
+         9EG2tQ9SvgTVwE6+fxGapNk2VQUb1hc0oKsboG5zOiyEk5sypMsVPBdOZGK1GZYSjL
+         vRFMIdC2jEu/06326/n0G6PPE956Zy+TaCqG1dm4NZ5zjR+nWtaspab0nNRSpzkX59
+         V6pUqHi7dv339oSdsJ1vgpwIyXrZJCRykIG73b9tLN5AuAgUOKn70+lQm8Qwp1ireI
+         n7MiH+D8GqElKLCca0j6J02aEVbCu49/4iwydOjq4TEJqdHC6m7myeVPEIYHenmf5Z
+         7WHOFw4dy0jVg==
+X-Nifty-SrcIP: [126.125.154.139]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/5] kconfig: remove always false ifeq ($(KBUILD_DEFCONFIG,) conditional
+Date:   Mon, 27 May 2019 23:37:21 +0900
+Message-Id: <20190527143725.12542-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 May 2019, Jann Horn wrote:
+With the following two commits applied, all the arch Makefiles
+define KBUILD_DEFCONFIG.
 
-> On Sat, May 25, 2019 at 11:43 PM Andrew Morton
-> <akpm@linux-foundation.org> wrote:
-> > On Fri, 24 May 2019 22:18:17 +0200 Jann Horn <jannh@google.com> wrote:
-> > > load_flat_shared_library() is broken: It only calls load_flat_file() if
-> > > prepare_binprm() returns zero, but prepare_binprm() returns the number of
-> > > bytes read - so this only happens if the file is empty.
-> >
-> > ouch.
-> >
-> > > Instead, call into load_flat_file() if the number of bytes read is
-> > > non-negative. (Even if the number of bytes is zero - in that case,
-> > > load_flat_file() will see nullbytes and return a nice -ENOEXEC.)
-> > >
-> > > In addition, remove the code related to bprm creds and stop using
-> > > prepare_binprm() - this code is loading a library, not a main executable,
-> > > and it only actually uses the members "buf", "file" and "filename" of the
-> > > linux_binprm struct. Instead, call kernel_read() directly.
-> > >
-> > > Cc: stable@vger.kernel.org
-> > > Fixes: 287980e49ffc ("remove lots of IS_ERR_VALUE abuses")
-> > > Signed-off-by: Jann Horn <jannh@google.com>
-> > > ---
-> > > I only found the bug by looking at the code, I have not verified its
-> > > existence at runtime.
-> > > Also, this patch is compile-tested only.
-> > > It would be nice if someone who works with nommu Linux could have a
-> > > look at this patch.
-> >
-> > 287980e49ffc was three years ago!  Has it really been broken for all
-> > that time?  If so, it seems a good source of freed disk space...
-> 
-> Maybe... but I didn't want to rip it out without having one of the
-> maintainers confirm that this really isn't likely to be used anymore.
+- Commit f3e20ad67b4c ("s390: move arch/s390/defconfig to
+  arch/s390/configs/defconfig")
 
-Last time I played with this, I couldn't figure out the toolchain to 
-produce shared libs. Only static executables worked fine. If I recall, 
-existing binfmt_flat distros don't use shared libs either.
+- Commit 986a13769c4b ("alpha: move arch/alpha/defconfig to
+  arch/alpha/configs/defconfig")
 
-For shared lib support on no-MMU target, binfmt_elf_fdpic is a much 
-saner choice.
+The first conditional in the defconfig rule is always false.
 
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-Nicolas
+ scripts/kconfig/Makefile | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
+index 3f327e21f60e..059642bd6584 100644
+--- a/scripts/kconfig/Makefile
++++ b/scripts/kconfig/Makefile
+@@ -74,9 +74,7 @@ savedefconfig: $(obj)/conf
+ 	$< $(silent) --$@=defconfig $(Kconfig)
+ 
+ defconfig: $(obj)/conf
+-ifeq ($(KBUILD_DEFCONFIG),)
+-	$< $(silent) --defconfig $(Kconfig)
+-else ifneq ($(wildcard $(srctree)/arch/$(SRCARCH)/configs/$(KBUILD_DEFCONFIG)),)
++ifneq ($(wildcard $(srctree)/arch/$(SRCARCH)/configs/$(KBUILD_DEFCONFIG)),)
+ 	@$(kecho) "*** Default configuration is based on '$(KBUILD_DEFCONFIG)'"
+ 	$(Q)$< $(silent) --defconfig=arch/$(SRCARCH)/configs/$(KBUILD_DEFCONFIG) $(Kconfig)
+ else
+-- 
+2.17.1
+
