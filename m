@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 958DEC07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 06:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C26C07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 06:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75FCA2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 06:21:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 062F021726
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 06:21:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbfE0GVn (ORCPT
+        id S1726366AbfE0GVq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 02:21:43 -0400
-Received: from foss.arm.com ([217.140.101.70]:56154 "EHLO foss.arm.com"
+        Mon, 27 May 2019 02:21:46 -0400
+Received: from foss.arm.com ([217.140.101.70]:56172 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726150AbfE0GVl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 02:21:41 -0400
+        id S1726322AbfE0GVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 02:21:43 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3D67E374;
-        Sun, 26 May 2019 23:21:41 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 75D0B15A2;
+        Sun, 26 May 2019 23:21:43 -0700 (PDT)
 Received: from e107985-lin.cambridge.arm.com (e107985-lin.cambridge.arm.com [10.1.194.38])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4C5A13F59C;
-        Sun, 26 May 2019 23:21:39 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7D3BB3F59C;
+        Sun, 26 May 2019 23:21:41 -0700 (PDT)
 From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>
@@ -37,9 +37,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Valentin Schneider <valentin.schneider@arm.com>,
         Patrick Bellasi <patrick.bellasi@arm.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 4/7] sched: Remove rq->cpu_load[]
-Date:   Mon, 27 May 2019 07:21:13 +0100
-Message-Id: <20190527062116.11512-5-dietmar.eggemann@arm.com>
+Subject: [PATCH 5/7] sched: Remove sd->*_idx
+Date:   Mon, 27 May 2019 07:21:14 +0100
+Message-Id: <20190527062116.11512-6-dietmar.eggemann@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190527062116.11512-1-dietmar.eggemann@arm.com>
 References: <20190527062116.11512-1-dietmar.eggemann@arm.com>
@@ -48,70 +48,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The per rq load array values also disappear from the cpu#X sections in
-/proc/sched_debug.
+The sched domain per rq load index files also disappear from the
+/proc/sys/kernel/sched_domain/cpuX/domainY directories.
 
 Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
 ---
- kernel/sched/core.c  | 6 +-----
- kernel/sched/debug.c | 5 -----
- kernel/sched/sched.h | 2 --
- 3 files changed, 1 insertion(+), 12 deletions(-)
+ include/linux/sched/topology.h |  5 -----
+ kernel/sched/debug.c           | 25 ++++++++++---------------
+ kernel/sched/topology.c        | 10 ----------
+ 3 files changed, 10 insertions(+), 30 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index e8bee37b78fd..068b2dd5e456 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -5900,8 +5900,8 @@ DECLARE_PER_CPU(cpumask_var_t, select_idle_mask);
+diff --git a/include/linux/sched/topology.h b/include/linux/sched/topology.h
+index cfc0a89a7159..53afbe07354a 100644
+--- a/include/linux/sched/topology.h
++++ b/include/linux/sched/topology.h
+@@ -84,11 +84,6 @@ struct sched_domain {
+ 	unsigned int busy_factor;	/* less balancing by factor if busy */
+ 	unsigned int imbalance_pct;	/* No balance until over watermark */
+ 	unsigned int cache_nice_tries;	/* Leave cache hot tasks for # tries */
+-	unsigned int busy_idx;
+-	unsigned int idle_idx;
+-	unsigned int newidle_idx;
+-	unsigned int wake_idx;
+-	unsigned int forkexec_idx;
  
- void __init sched_init(void)
- {
--	int i, j;
- 	unsigned long alloc_size = 0, ptr;
-+	int i;
- 
- 	wait_bit_init();
- 
-@@ -6003,10 +6003,6 @@ void __init sched_init(void)
- #ifdef CONFIG_RT_GROUP_SCHED
- 		init_tg_rt_entry(&root_task_group, &rq->rt, NULL, i, NULL);
- #endif
--
--		for (j = 0; j < CPU_LOAD_IDX_MAX; j++)
--			rq->cpu_load[j] = 0;
--
- #ifdef CONFIG_SMP
- 		rq->sd = NULL;
- 		rq->rd = NULL;
+ 	int nohz_idle;			/* NOHZ IDLE status */
+ 	int flags;			/* See SD_* */
 diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-index b070fb61caca..c2eeaa44b274 100644
+index c2eeaa44b274..4d91c8e41962 100644
 --- a/kernel/sched/debug.c
 +++ b/kernel/sched/debug.c
-@@ -656,11 +656,6 @@ do {									\
- 	SEQ_printf(m, "  .%-30s: %ld\n", "curr->pid", (long)(task_pid_nr(rq->curr)));
- 	PN(clock);
- 	PN(clock_task);
--	P(cpu_load[0]);
--	P(cpu_load[1]);
--	P(cpu_load[2]);
--	P(cpu_load[3]);
--	P(cpu_load[4]);
- #undef P
- #undef PN
+@@ -251,25 +251,20 @@ set_table_entry(struct ctl_table *entry,
+ static struct ctl_table *
+ sd_alloc_ctl_domain_table(struct sched_domain *sd)
+ {
+-	struct ctl_table *table = sd_alloc_ctl_entry(14);
++	struct ctl_table *table = sd_alloc_ctl_entry(9);
  
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index a83827eec1d1..e43c29920fa8 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -812,8 +812,6 @@ struct rq {
- 	unsigned int		nr_preferred_running;
- 	unsigned int		numa_migrate_on;
+ 	if (table == NULL)
+ 		return NULL;
+ 
+-	set_table_entry(&table[0],  "min_interval",	   &sd->min_interval,	     sizeof(long), 0644, proc_doulongvec_minmax);
+-	set_table_entry(&table[1],  "max_interval",	   &sd->max_interval,	     sizeof(long), 0644, proc_doulongvec_minmax);
+-	set_table_entry(&table[2],  "busy_idx",		   &sd->busy_idx,	     sizeof(int),  0644, proc_dointvec_minmax);
+-	set_table_entry(&table[3],  "idle_idx",		   &sd->idle_idx,	     sizeof(int),  0644, proc_dointvec_minmax);
+-	set_table_entry(&table[4],  "newidle_idx",	   &sd->newidle_idx,	     sizeof(int),  0644, proc_dointvec_minmax);
+-	set_table_entry(&table[5],  "wake_idx",		   &sd->wake_idx,	     sizeof(int),  0644, proc_dointvec_minmax);
+-	set_table_entry(&table[6],  "forkexec_idx",	   &sd->forkexec_idx,	     sizeof(int),  0644, proc_dointvec_minmax);
+-	set_table_entry(&table[7],  "busy_factor",	   &sd->busy_factor,	     sizeof(int),  0644, proc_dointvec_minmax);
+-	set_table_entry(&table[8],  "imbalance_pct",	   &sd->imbalance_pct,	     sizeof(int),  0644, proc_dointvec_minmax);
+-	set_table_entry(&table[9],  "cache_nice_tries",	   &sd->cache_nice_tries,    sizeof(int),  0644, proc_dointvec_minmax);
+-	set_table_entry(&table[10], "flags",		   &sd->flags,		     sizeof(int),  0644, proc_dointvec_minmax);
+-	set_table_entry(&table[11], "max_newidle_lb_cost", &sd->max_newidle_lb_cost, sizeof(long), 0644, proc_doulongvec_minmax);
+-	set_table_entry(&table[12], "name",		   sd->name,		CORENAME_MAX_SIZE, 0444, proc_dostring);
+-	/* &table[13] is terminator */
++	set_table_entry(&table[0], "min_interval",	  &sd->min_interval,	    sizeof(long), 0644, proc_doulongvec_minmax);
++	set_table_entry(&table[1], "max_interval",	  &sd->max_interval,	    sizeof(long), 0644, proc_doulongvec_minmax);
++	set_table_entry(&table[2], "busy_factor",	  &sd->busy_factor,	    sizeof(int),  0644, proc_dointvec_minmax);
++	set_table_entry(&table[3], "imbalance_pct",	  &sd->imbalance_pct,	    sizeof(int),  0644, proc_dointvec_minmax);
++	set_table_entry(&table[4], "cache_nice_tries",	  &sd->cache_nice_tries,    sizeof(int),  0644, proc_dointvec_minmax);
++	set_table_entry(&table[5], "flags",		  &sd->flags,		    sizeof(int),  0644, proc_dointvec_minmax);
++	set_table_entry(&table[6], "max_newidle_lb_cost", &sd->max_newidle_lb_cost, sizeof(long), 0644, proc_doulongvec_minmax);
++	set_table_entry(&table[7], "name",		  sd->name,	       CORENAME_MAX_SIZE, 0444, proc_dostring);
++	/* &table[8] is terminator */
+ 
+ 	return table;
+ }
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index f53f89df837d..63184cf0d0d7 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -1344,11 +1344,6 @@ sd_init(struct sched_domain_topology_level *tl,
+ 		.imbalance_pct		= 125,
+ 
+ 		.cache_nice_tries	= 0,
+-		.busy_idx		= 0,
+-		.idle_idx		= 0,
+-		.newidle_idx		= 0,
+-		.wake_idx		= 0,
+-		.forkexec_idx		= 0,
+ 
+ 		.flags			= 1*SD_LOAD_BALANCE
+ 					| 1*SD_BALANCE_NEWIDLE
+@@ -1400,13 +1395,10 @@ sd_init(struct sched_domain_topology_level *tl,
+ 	} else if (sd->flags & SD_SHARE_PKG_RESOURCES) {
+ 		sd->imbalance_pct = 117;
+ 		sd->cache_nice_tries = 1;
+-		sd->busy_idx = 2;
+ 
+ #ifdef CONFIG_NUMA
+ 	} else if (sd->flags & SD_NUMA) {
+ 		sd->cache_nice_tries = 2;
+-		sd->busy_idx = 3;
+-		sd->idle_idx = 2;
+ 
+ 		sd->flags &= ~SD_PREFER_SIBLING;
+ 		sd->flags |= SD_SERIALIZE;
+@@ -1419,8 +1411,6 @@ sd_init(struct sched_domain_topology_level *tl,
  #endif
--	#define CPU_LOAD_IDX_MAX 5
--	unsigned long		cpu_load[CPU_LOAD_IDX_MAX];
- #ifdef CONFIG_NO_HZ_COMMON
- #ifdef CONFIG_SMP
- 	unsigned long		last_load_update_tick;
+ 	} else {
+ 		sd->cache_nice_tries = 1;
+-		sd->busy_idx = 2;
+-		sd->idle_idx = 1;
+ 	}
+ 
+ 	/*
 -- 
 2.17.1
 
