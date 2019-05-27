@@ -2,157 +2,153 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97094C072B1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 17:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53208C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 17:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66902208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 17:49:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26AD7208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 17:50:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="Chdi20eW"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="ACRGDPCU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbfE0RtK (ORCPT
+        id S1726937AbfE0Rup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 13:49:10 -0400
-Received: from mail-eopbgr720046.outbound.protection.outlook.com ([40.107.72.46]:59808
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726346AbfE0RtJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 13:49:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=84Agb6YxRcTQolVN89GeO41cT9eczLaKMoggrxBFaDo=;
- b=Chdi20eWe81DiAvpKogBQxu+0/kuUjWinUOicy3ohl0xg/FoB8Ftvqcm9N9ttGCtXQzozPLYiTABU6zfLM6yt6cCT4Ih17iAr62UerRIlojsmfik6ELwGlKoyvQzKi1ldVuHZ4rUmuu29ByRYy0dFQ7qPDIS19XySFreAnafGhc=
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
- BYAPR05MB5126.namprd05.prod.outlook.com (20.177.231.20) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.15; Mon, 27 May 2019 17:49:03 +0000
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::2cb6:a3d1:f675:ced8]) by BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::2cb6:a3d1:f675:ced8%3]) with mapi id 15.20.1943.007; Mon, 27 May 2019
- 17:49:03 +0000
-From:   Nadav Amit <namit@vmware.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     Juergen Gross <jgross@suse.com>, Ingo Molnar <mingo@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
-Subject: Re: [RFC PATCH 5/6] x86/mm/tlb: Flush remote and local TLBs
- concurrently
-Thread-Topic: [RFC PATCH 5/6] x86/mm/tlb: Flush remote and local TLBs
- concurrently
-Thread-Index: AQHVEtL3brMxLnyQKEm7V/vFcW9jOKZ7iV8AgAMzSQCAAIaiAA==
-Date:   Mon, 27 May 2019 17:49:03 +0000
-Message-ID: <AA36DE0F-04DB-47E1-B5D8-2E4522E9D6B3@vmware.com>
-References: <20190525082203.6531-1-namit@vmware.com>
- <20190525082203.6531-6-namit@vmware.com>
- <08b21fb5-2226-7924-30e3-31e4adcfc0a3@suse.com>
- <20190527094710.GU2623@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190527094710.GU2623@hirez.programming.kicks-ass.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=namit@vmware.com; 
-x-originating-ip: [66.170.99.2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b9b31594-5baf-436d-2703-08d6e2cb9b9b
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB5126;
-x-ms-traffictypediagnostic: BYAPR05MB5126:
-x-microsoft-antispam-prvs: <BYAPR05MB512671C8B694A1DB98E15C14D01D0@BYAPR05MB5126.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:913;
-x-forefront-prvs: 0050CEFE70
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(39860400002)(136003)(346002)(396003)(189003)(199004)(7736002)(6506007)(6486002)(53546011)(305945005)(76176011)(6436002)(476003)(446003)(2616005)(66946007)(66476007)(66556008)(64756008)(66446008)(76116006)(53936002)(11346002)(73956011)(486006)(33656002)(8676002)(66066001)(82746002)(26005)(6512007)(186003)(102836004)(36756003)(81156014)(81166006)(5660300002)(8936002)(478600001)(25786009)(316002)(83716004)(54906003)(6916009)(71200400001)(256004)(71190400001)(7416002)(86362001)(14454004)(99286004)(2906002)(68736007)(3846002)(229853002)(6116002)(6246003)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB5126;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: zBAId/Uz7q/Lk3k7ZY9fjNmTdC/c8lTbh1ATc32M5GHGD5n1WupgFXIz0GgW97yNw/1RlFZuJZP9v3WSPUGsH4eNl+MAW/IpaB/VeTFG+suY5+qCaDm1+uz1exPlNnkWMpHrsZOn32b15G0pS8kJ+4eaa+DRdv2UFKLddNKOYqQa4n+LBqC5UuxvuvIz2H8Lp93ylTVgiSTTldQTdDvifigxylHVuHijX3nPbO24ERZrnSZ1tfbeLCDZTGzR9PuOB/AHXkHUYMgGMJox7wSvxFaVlWo93l7rXnnhDJE2Z1b+FX1plFfINBCaDDNYEtt84C2CHY8tuVixMq3rbG+cQRdBFAvzLdsQt6x+KFM5AURE61hGtomqv0L5l0hZiqqbAuBj5KxWn0LJKRTg+Q3iUj+qQzyDXVZv8fE1NTEvkQ0=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A4055DEB35687B479CB0588C414C980D@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 27 May 2019 13:50:45 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:46731 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726484AbfE0Ruo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 13:50:44 -0400
+Received: by mail-ot1-f65.google.com with SMTP id j49so15414232otc.13;
+        Mon, 27 May 2019 10:50:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=szfrkxYTB3oS9uYVAvQcAHaVtZZAEKMCalggoiWkkvM=;
+        b=ACRGDPCU4JiUBP6ShAcgH9cmU4IWA3saNBYva6SUbvOIdRYMS1YRY0c0tWyhrYLrqd
+         NEKGiZ8tgEiva5giVOkczbf+nDGoO8A2RtrK30Q7QA4xidBN//QpiluqfksV7ZjJmGow
+         mtTpmd7JFUOI/KELjOsEbFMZylX2EBP/Oh42j64UkFnMAuH9ERIJrPNPpSyNgGUH+l7n
+         Sy2s6ZgJ3YZTVAod7zMIdEaVml2gG4dBiTb5wfVfhbyBIsFDv0zNeMUdTu57+FEuoM9E
+         SfNDxLg/nBNkc+NUBrkrj4ZZbs2/QeqPlPMI/uR4jGdkpnzKPE9kTu+O6+jVofxsXt7n
+         REkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=szfrkxYTB3oS9uYVAvQcAHaVtZZAEKMCalggoiWkkvM=;
+        b=eHAUwEYjKdNFQNHmS/ZCIjxh4/IS9zjEzcnfz3R5/18nAFQpT5PdTDjBG8YGHXZIdC
+         qGlVXMtzPI77RvOQdFppch61JtBxBMDfGE97LesPX0Lm7PjPmTniE0acnJuPAVmW0aYn
+         1u6wB13CVUH6U3ifsRbDL5D8+NZlSoD1jrBTuXcF6Hf5Oj9pOXOOZo8bnBkMf7W6TFYI
+         atxaGCpxRjK8Wcw+ZHWU9Gln0EtRzx8cMPVqhmE/cQVAeelPn2VElur8zoobF8/+qTkf
+         /HjONrQ9hMVXgJBthGFGdUEqKA5Gxjvno6AkZ7CaVxQPzwxgP88fTfxlm+TIPhnX93Zs
+         YU8g==
+X-Gm-Message-State: APjAAAWXGcmogjT9VCnpWiO0bdyE2N/wfUtkXqufwEDDfrVLcGS5MBVt
+        G9zP3HBDtg/44PN7dJpYcmnyeCEIzxVXqvqTerxgOj2L+to=
+X-Google-Smtp-Source: APXvYqw5Nce89yUOvRESxHDe40cny8RCzJRIgZJvL5llwkndlqbYEpXkgq2GWGpsOfknIkifaZkChPng2XztzeoskRg=
+X-Received: by 2002:a9d:69c8:: with SMTP id v8mr18512077oto.6.1558979443935;
+ Mon, 27 May 2019 10:50:43 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b9b31594-5baf-436d-2703-08d6e2cb9b9b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 May 2019 17:49:03.4330
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB5126
+References: <20190525181133.4875-1-martin.blumenstingl@googlemail.com>
+ <20190525181133.4875-14-martin.blumenstingl@googlemail.com> <4de7d436-32b7-e4ed-39b2-e85f75a17c16@baylibre.com>
+In-Reply-To: <4de7d436-32b7-e4ed-39b2-e85f75a17c16@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Mon, 27 May 2019 19:50:33 +0200
+Message-ID: <CAFBinCCPsnX+OqjHgVi+tshE3EdVWS0Bk9qK1V+cg6DALnT1qA@mail.gmail.com>
+Subject: Re: [PATCH 13/14] pwm: meson: add support PWM_POLARITY_INVERSED when disabling
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
+        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiBNYXkgMjcsIDIwMTksIGF0IDI6NDcgQU0sIFBldGVyIFppamxzdHJhIDxwZXRlcnpAaW5m
-cmFkZWFkLm9yZz4gd3JvdGU6DQo+IA0KPiBPbiBTYXQsIE1heSAyNSwgMjAxOSBhdCAxMDo1NDo1
-MEFNICswMjAwLCBKdWVyZ2VuIEdyb3NzIHdyb3RlOg0KPj4gT24gMjUvMDUvMjAxOSAxMDoyMiwg
-TmFkYXYgQW1pdCB3cm90ZToNCj4gDQo+Pj4gZGlmZiAtLWdpdCBhL2FyY2gveDg2L2luY2x1ZGUv
-YXNtL3BhcmF2aXJ0X3R5cGVzLmggYi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9wYXJhdmlydF90eXBl
-cy5oDQo+Pj4gaW5kZXggOTQ2ZjhmMWYxZWZjLi4zYTE1NmU2M2M1N2QgMTAwNjQ0DQo+Pj4gLS0t
-IGEvYXJjaC94ODYvaW5jbHVkZS9hc20vcGFyYXZpcnRfdHlwZXMuaA0KPj4+ICsrKyBiL2FyY2gv
-eDg2L2luY2x1ZGUvYXNtL3BhcmF2aXJ0X3R5cGVzLmgNCj4+PiBAQCAtMjExLDYgKzIxMSwxMiBA
-QCBzdHJ1Y3QgcHZfbW11X29wcyB7DQo+Pj4gCXZvaWQgKCpmbHVzaF90bGJfdXNlcikodm9pZCk7
-DQo+Pj4gCXZvaWQgKCpmbHVzaF90bGJfa2VybmVsKSh2b2lkKTsNCj4+PiAJdm9pZCAoKmZsdXNo
-X3RsYl9vbmVfdXNlcikodW5zaWduZWQgbG9uZyBhZGRyKTsNCj4+PiArCS8qDQo+Pj4gKwkgKiBm
-bHVzaF90bGJfbXVsdGkoKSBpcyB0aGUgcHJlZmVycmVkIGludGVyZmFjZS4gV2hlbiBpdCBpcyB1
-c2VkLA0KPj4+ICsJICogZmx1c2hfdGxiX290aGVycygpIHNob3VsZCByZXR1cm4gZmFsc2UuDQo+
-PiANCj4+IFRoaXMgY29tbWVudCBkb2VzIG5vdCBtYWtlIHNlbnNlLiBmbHVzaF90bGJfb3RoZXJz
-KCkgcmV0dXJuIHR5cGUgaXMNCj4+IHZvaWQuDQo+IA0KPiBJIHN1c3BlY3QgdGhhdCBpcyBhbiBh
-cnRpZmFjdCBmcm9tIGJlZm9yZSB0aGUgc3RhdGljX2tleTsgYW4gYXR0ZW1wdCB0bw0KPiBtYWtl
-IHRoZSBwdiBpbnRlcmZhY2UgbGVzcyBhd2t3YXJkLg0KDQpZZXMsIHJlbWFpbmRlcnMgdGhhdCBz
-aG91bGQgaGF2ZSBiZWVuIHJlbW92ZWQgLSBJIHdpbGwgcmVtb3ZlIHRoZW0gZm9yIHRoZQ0KbmV4
-dCB2ZXJzaW9uLg0KDQo+IFNvbWV0aGluZyBsaWtlIHRoZSBiZWxvdyB3b3VsZCB3b3JrIGZvciBL
-Vk0gSSBzdXNwZWN0LCB0aGUgb3RoZXJzDQo+IChIeXBlci1WIGFuZCBYZW4gYXJlIG1vcmUgJ2lu
-dGVyZXN0aW5nJykuDQo+IA0KPiAtLS0NCj4gLS0tIGEvYXJjaC94ODYva2VybmVsL2t2bS5jDQo+
-ICsrKyBiL2FyY2gveDg2L2tlcm5lbC9rdm0uYw0KPiBAQCAtNTgwLDcgKzU4MCw3IEBAIHN0YXRp
-YyB2b2lkIF9faW5pdCBrdm1fYXBmX3RyYXBfaW5pdCh2b2kNCj4gDQo+IHN0YXRpYyBERUZJTkVf
-UEVSX0NQVShjcHVtYXNrX3Zhcl90LCBfX3B2X3RsYl9tYXNrKTsNCj4gDQo+IC1zdGF0aWMgdm9p
-ZCBrdm1fZmx1c2hfdGxiX290aGVycyhjb25zdCBzdHJ1Y3QgY3B1bWFzayAqY3B1bWFzaywNCj4g
-K3N0YXRpYyB2b2lkIGt2bV9mbHVzaF90bGJfbXVsdGkoY29uc3Qgc3RydWN0IGNwdW1hc2sgKmNw
-dW1hc2ssDQo+IAkJCWNvbnN0IHN0cnVjdCBmbHVzaF90bGJfaW5mbyAqaW5mbykNCj4gew0KPiAJ
-dTggc3RhdGU7DQo+IEBAIC01OTQsNiArNTk0LDkgQEAgc3RhdGljIHZvaWQga3ZtX2ZsdXNoX3Rs
-Yl9vdGhlcnMoY29uc3Qgcw0KPiAJICogcXVldWUgZmx1c2hfb25fZW50ZXIgZm9yIHByZS1lbXB0
-ZWQgdkNQVXMNCj4gCSAqLw0KPiAJZm9yX2VhY2hfY3B1KGNwdSwgZmx1c2htYXNrKSB7DQo+ICsJ
-CWlmIChjcHUgPT0gc21wX3Byb2Nlc3Nvcl9pZCgpKQ0KPiArCQkJY29udGludWU7DQo+ICsNCj4g
-CQlzcmMgPSAmcGVyX2NwdShzdGVhbF90aW1lLCBjcHUpOw0KPiAJCXN0YXRlID0gUkVBRF9PTkNF
-KHNyYy0+cHJlZW1wdGVkKTsNCj4gCQlpZiAoKHN0YXRlICYgS1ZNX1ZDUFVfUFJFRU1QVEVEKSkg
-ew0KPiBAQCAtNjAzLDcgKzYwNiw3IEBAIHN0YXRpYyB2b2lkIGt2bV9mbHVzaF90bGJfb3RoZXJz
-KGNvbnN0IHMNCj4gCQl9DQo+IAl9DQo+IA0KPiAtCW5hdGl2ZV9mbHVzaF90bGJfb3RoZXJzKGZs
-dXNobWFzaywgaW5mbyk7DQo+ICsJbmF0aXZlX2ZsdXNoX3RsYl9tdWx0aShmbHVzaG1hc2ssIGlu
-Zm8pOw0KPiB9DQo+IA0KPiBzdGF0aWMgdm9pZCBfX2luaXQga3ZtX2d1ZXN0X2luaXQodm9pZCkN
-Cj4gQEAgLTYyOCw5ICs2MzEsOCBAQCBzdGF0aWMgdm9pZCBfX2luaXQga3ZtX2d1ZXN0X2luaXQo
-dm9pZCkNCj4gCWlmIChrdm1fcGFyYV9oYXNfZmVhdHVyZShLVk1fRkVBVFVSRV9QVl9UTEJfRkxV
-U0gpICYmDQo+IAkgICAgIWt2bV9wYXJhX2hhc19oaW50KEtWTV9ISU5UU19SRUFMVElNRSkgJiYN
-Cj4gCSAgICBrdm1fcGFyYV9oYXNfZmVhdHVyZShLVk1fRkVBVFVSRV9TVEVBTF9USU1FKSkgew0K
-PiAtCQlwdl9vcHMubW11LmZsdXNoX3RsYl9vdGhlcnMgPSBrdm1fZmx1c2hfdGxiX290aGVyczsN
-Cj4gKwkJcHZfb3BzLm1tdS5mbHVzaF90bGJfbXVsdGkgPSBrdm1fZmx1c2hfdGxiX211bHRpOw0K
-PiAJCXB2X29wcy5tbXUudGxiX3JlbW92ZV90YWJsZSA9IHRsYl9yZW1vdmVfdGFibGU7DQo+IC0J
-CXN0YXRpY19rZXlfZGlzYWJsZSgmZmx1c2hfdGxiX211bHRpX2VuYWJsZWQua2V5KTsNCj4gCX0N
-Cj4gDQo+IAlpZiAoa3ZtX3BhcmFfaGFzX2ZlYXR1cmUoS1ZNX0ZFQVRVUkVfUFZfRU9JKSkNCg0K
-VGhhdOKAmXMgd2hhdCBJIGhhdmUgYXMgd2VsbCA7LSkuDQoNCkFzIHlvdSBtZW50aW9uZWQgKGlu
-IGFub3RoZXIgZW1haWwpLCBzcGVjaWZpY2FsbHkgaHlwZXItdiBjb2RlIHNlZW1zDQpjb252b2x1
-dGVkIHRvIG1lLiBJbiBnZW5lcmFsLCBJIHByZWZlciBub3QgdG8gdG91Y2ggS1ZNL1hlbi9oeXBl
-ci12LCBidXQgeW91DQp0d2lzdCBteSBhcm0sIEkgd2lsbCBzZW5kIGEgY29tcGlsZS10ZXN0ZWQg
-dmVyc2lvbiBmb3IgWGVuIGFuZCBoeXBlci12Lg0KDQo=
+Hi Neil,
+
+On Mon, May 27, 2019 at 2:33 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> On 25/05/2019 20:11, Martin Blumenstingl wrote:
+> > meson_pwm_apply() has to consider the PWM polarity when disabling the
+> > output.
+> > With enabled=false and polarity=PWM_POLARITY_NORMAL the output needs to
+> > be LOW. The driver already supports this.
+> > With enabled=false and polarity=PWM_POLARITY_INVERSED the output needs
+> > to be HIGH. Implement this in the driver by internally enabling the
+> > output with the same settings that we already use for "period == duty".
+> >
+> > This fixes a PWM API violation which expects that the driver honors the
+> > polarity also for enabled=false. Due to the IP block not supporting this
+> > natively we only get "an as close as possible" to 100% HIGH signal (in
+> > my test setup with input clock of 24MHz and measuring the output with a
+> > logic analyzer at 24MHz sampling rate I got a duty cycle of 99.998475%
+> > on a Khadas VIM).
+> >
+> > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> > ---
+> >  drivers/pwm/pwm-meson.c | 23 ++++++++++++++++++++++-
+> >  1 file changed, 22 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
+> > index 900d362ec3c9..bb48ba85f756 100644
+> > --- a/drivers/pwm/pwm-meson.c
+> > +++ b/drivers/pwm/pwm-meson.c
+> > @@ -245,6 +245,7 @@ static void meson_pwm_disable(struct meson_pwm *meson, struct pwm_device *pwm)
+> >  static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> >                          struct pwm_state *state)
+> >  {
+> > +     struct meson_pwm_channel *channel = pwm_get_chip_data(pwm);
+> >       struct meson_pwm *meson = to_meson_pwm(chip);
+> >       int err = 0;
+> >
+> > @@ -252,7 +253,27 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> >               return -EINVAL;
+> >
+> >       if (!state->enabled) {
+> > -             meson_pwm_disable(meson, pwm);
+> > +             if (state->polarity == PWM_POLARITY_INVERSED) {
+> > +                     /*
+> > +                      * This IP block revision doesn't have an "always high"
+> > +                      * setting which we can use for "inverted disabled".
+> > +                      * Instead we achieve this using the same settings
+> > +                      * that we use a pre_div of 0 (to get the shortest
+> > +                      * possible duration for one "count") and
+> > +                      * "period == duty_cycle". This results in a signal
+> > +                      * which is LOW for one "count", while being HIGH for
+> > +                      * the rest of the (so the signal is HIGH for slightly
+> > +                      * less than 100% of the period, but this is the best
+> > +                      * we can achieve).
+> > +                      */
+> > +                     channel->pre_div = 0;
+> > +                     channel->hi = ~0;
+> > +                     channel->lo = 0;
+> > +
+> > +                     meson_pwm_enable(meson, pwm);
+> > +             } else {
+> > +                     meson_pwm_disable(meson, pwm);
+> > +             }
+> >       } else {
+> >               err = meson_pwm_calc(meson, pwm, state);
+> >               if (err < 0)
+> >
+>
+> While not perfect, it almost fills the gap.
+> Another way would be to use a specific pinctrl state setting the pin
+> in GPIO output in high level, but this implementation could stay
+> if the pinctrl state isn't available.
+I just noticed that Amlogic updated the PWM IP block in G12A:
+it now supports "constant enable" (REG_MISC_AB bits 28 and 29) as well
+as PWM_POLARITY_INVERSED (REG_MISC_AB bits 26 and 27) natively!
+
+I like your idea of having a specific pinctrl state.
+we can implement that for anything older than G12A once we actually need it.
+for G12A we can do better thanks to the updated IP block
+
+
+Martin
