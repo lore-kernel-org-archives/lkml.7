@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBDEC07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 06:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2F4C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 06:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3809C2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 06:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B82AC216FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 06:21:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726225AbfE0GVi (ORCPT
+        id S1726275AbfE0GVl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 02:21:38 -0400
-Received: from foss.arm.com ([217.140.101.70]:56106 "EHLO foss.arm.com"
+        Mon, 27 May 2019 02:21:41 -0400
+Received: from foss.arm.com ([217.140.101.70]:56122 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725961AbfE0GVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 02:21:35 -0400
+        id S1726150AbfE0GVh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 02:21:37 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A289F15A2;
-        Sun, 26 May 2019 23:21:34 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D2BF01684;
+        Sun, 26 May 2019 23:21:36 -0700 (PDT)
 Received: from e107985-lin.cambridge.arm.com (e107985-lin.cambridge.arm.com [10.1.194.38])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id AFB0E3F59C;
-        Sun, 26 May 2019 23:21:32 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DFD1B3F59C;
+        Sun, 26 May 2019 23:21:34 -0700 (PDT)
 From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>
@@ -37,9 +37,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Valentin Schneider <valentin.schneider@arm.com>,
         Patrick Bellasi <patrick.bellasi@arm.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/7] sched: Remove rq->cpu_load[] update code
-Date:   Mon, 27 May 2019 07:21:10 +0100
-Message-Id: <20190527062116.11512-2-dietmar.eggemann@arm.com>
+Subject: [PATCH 2/7] sched/fair: Replace source_load() & target_load() w/ weighted_cpuload()
+Date:   Mon, 27 May 2019 07:21:11 +0100
+Message-Id: <20190527062116.11512-3-dietmar.eggemann@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190527062116.11512-1-dietmar.eggemann@arm.com>
 References: <20190527062116.11512-1-dietmar.eggemann@arm.com>
@@ -48,372 +48,198 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With LB_BIAS disabled, there is no need to update the rq->cpu_load[idx]
-any more.
+With LB_BIAS disabled, source_load() & target_load() return
+weighted_cpuload(). Replace both with calls to weighted_cpuload().
+
+The function to obtain the load index (sd->*_idx) for an sd,
+get_sd_load_idx(), can be removed as well.
+
+Finally, get rid of the sched feature LB_BIAS.
 
 Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
 ---
- include/linux/sched/nohz.h |   8 --
- kernel/sched/core.c        |   1 -
- kernel/sched/fair.c        | 255 -------------------------------------
- kernel/sched/sched.h       |   6 -
- kernel/time/tick-sched.c   |   2 -
- 5 files changed, 272 deletions(-)
+ kernel/sched/fair.c     | 90 ++---------------------------------------
+ kernel/sched/features.h |  1 -
+ 2 files changed, 4 insertions(+), 87 deletions(-)
 
-diff --git a/include/linux/sched/nohz.h b/include/linux/sched/nohz.h
-index b36f4cf38111..1abe91ff6e4a 100644
---- a/include/linux/sched/nohz.h
-+++ b/include/linux/sched/nohz.h
-@@ -6,14 +6,6 @@
-  * This is the interface between the scheduler and nohz/dynticks:
-  */
- 
--#if defined(CONFIG_SMP) && defined(CONFIG_NO_HZ_COMMON)
--extern void cpu_load_update_nohz_start(void);
--extern void cpu_load_update_nohz_stop(void);
--#else
--static inline void cpu_load_update_nohz_start(void) { }
--static inline void cpu_load_update_nohz_stop(void) { }
--#endif
--
- #if defined(CONFIG_SMP) && defined(CONFIG_NO_HZ_COMMON)
- extern void nohz_balance_enter_idle(int cpu);
- extern int get_nohz_timer_target(void);
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 102dfcf0a29a..e8bee37b78fd 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3032,7 +3032,6 @@ void scheduler_tick(void)
- 
- 	update_rq_clock(rq);
- 	curr->sched_class->task_tick(rq, curr, 0);
--	cpu_load_update_active(rq);
- 	calc_global_load_tick(rq);
- 	psi_task_tick(rq);
- 
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index f35930f5e528..f619b93ca331 100644
+index f619b93ca331..88779c45e8e6 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -5325,71 +5325,6 @@ DEFINE_PER_CPU(cpumask_var_t, load_balance_mask);
- DEFINE_PER_CPU(cpumask_var_t, select_idle_mask);
+@@ -1467,8 +1467,6 @@ bool should_numa_migrate_memory(struct task_struct *p, struct page * page,
+ }
  
- #ifdef CONFIG_NO_HZ_COMMON
--/*
-- * per rq 'load' arrray crap; XXX kill this.
-- */
--
--/*
-- * The exact cpuload calculated at every tick would be:
-- *
-- *   load' = (1 - 1/2^i) * load + (1/2^i) * cur_load
-- *
-- * If a CPU misses updates for n ticks (as it was idle) and update gets
-- * called on the n+1-th tick when CPU may be busy, then we have:
-- *
-- *   load_n   = (1 - 1/2^i)^n * load_0
-- *   load_n+1 = (1 - 1/2^i)   * load_n + (1/2^i) * cur_load
-- *
-- * decay_load_missed() below does efficient calculation of
-- *
-- *   load' = (1 - 1/2^i)^n * load
-- *
-- * Because x^(n+m) := x^n * x^m we can decompose any x^n in power-of-2 factors.
-- * This allows us to precompute the above in said factors, thereby allowing the
-- * reduction of an arbitrary n in O(log_2 n) steps. (See also
-- * fixed_power_int())
-- *
-- * The calculation is approximated on a 128 point scale.
-- */
--#define DEGRADE_SHIFT		7
--
--static const u8 degrade_zero_ticks[CPU_LOAD_IDX_MAX] = {0, 8, 32, 64, 128};
--static const u8 degrade_factor[CPU_LOAD_IDX_MAX][DEGRADE_SHIFT + 1] = {
--	{   0,   0,  0,  0,  0,  0, 0, 0 },
--	{  64,  32,  8,  0,  0,  0, 0, 0 },
--	{  96,  72, 40, 12,  1,  0, 0, 0 },
--	{ 112,  98, 75, 43, 15,  1, 0, 0 },
--	{ 120, 112, 98, 76, 45, 16, 2, 0 }
--};
--
--/*
-- * Update cpu_load for any missed ticks, due to tickless idle. The backlog
-- * would be when CPU is idle and so we just decay the old load without
-- * adding any new load.
-- */
--static unsigned long
--decay_load_missed(unsigned long load, unsigned long missed_updates, int idx)
--{
--	int j = 0;
--
--	if (!missed_updates)
--		return load;
--
--	if (missed_updates >= degrade_zero_ticks[idx])
--		return 0;
--
--	if (idx == 1)
--		return load >> missed_updates;
--
--	while (missed_updates) {
--		if (missed_updates % 2)
--			load = (load * degrade_factor[idx][j]) >> DEGRADE_SHIFT;
--
--		missed_updates >>= 1;
--		j++;
--	}
--	return load;
--}
+ static unsigned long weighted_cpuload(struct rq *rq);
+-static unsigned long source_load(int cpu, int type);
+-static unsigned long target_load(int cpu, int type);
  
- static struct {
- 	cpumask_var_t idle_cpus_mask;
-@@ -5401,201 +5336,12 @@ static struct {
+ /* Cached statistics for all CPUs within a node */
+ struct numa_stats {
+@@ -5336,45 +5334,11 @@ static struct {
  
  #endif /* CONFIG_NO_HZ_COMMON */
  
--/**
-- * __cpu_load_update - update the rq->cpu_load[] statistics
-- * @this_rq: The rq to update statistics for
-- * @this_load: The current load
-- * @pending_updates: The number of missed updates
-- *
-- * Update rq->cpu_load[] statistics. This function is usually called every
-- * scheduler tick (TICK_NSEC).
-- *
-- * This function computes a decaying average:
-- *
-- *   load[i]' = (1 - 1/2^i) * load[i] + (1/2^i) * load
-- *
-- * Because of NOHZ it might not get called on every tick which gives need for
-- * the @pending_updates argument.
-- *
-- *   load[i]_n = (1 - 1/2^i) * load[i]_n-1 + (1/2^i) * load_n-1
-- *             = A * load[i]_n-1 + B ; A := (1 - 1/2^i), B := (1/2^i) * load
-- *             = A * (A * load[i]_n-2 + B) + B
-- *             = A * (A * (A * load[i]_n-3 + B) + B) + B
-- *             = A^3 * load[i]_n-3 + (A^2 + A + 1) * B
-- *             = A^n * load[i]_0 + (A^(n-1) + A^(n-2) + ... + 1) * B
-- *             = A^n * load[i]_0 + ((1 - A^n) / (1 - A)) * B
-- *             = (1 - 1/2^i)^n * (load[i]_0 - load) + load
-- *
-- * In the above we've assumed load_n := load, which is true for NOHZ_FULL as
-- * any change in load would have resulted in the tick being turned back on.
-- *
-- * For regular NOHZ, this reduces to:
-- *
-- *   load[i]_n = (1 - 1/2^i)^n * load[i]_0
-- *
-- * see decay_load_misses(). For NOHZ_FULL we get to subtract and add the extra
-- * term.
-- */
--static void cpu_load_update(struct rq *this_rq, unsigned long this_load,
--			    unsigned long pending_updates)
--{
--	unsigned long __maybe_unused tickless_load = this_rq->cpu_load[0];
--	int i, scale;
--
--	this_rq->nr_load_updates++;
--
--	/* Update our load: */
--	this_rq->cpu_load[0] = this_load; /* Fasttrack for idx 0 */
--	for (i = 1, scale = 2; i < CPU_LOAD_IDX_MAX; i++, scale += scale) {
--		unsigned long old_load, new_load;
--
--		/* scale is effectively 1 << i now, and >> i divides by scale */
--
--		old_load = this_rq->cpu_load[i];
--#ifdef CONFIG_NO_HZ_COMMON
--		old_load = decay_load_missed(old_load, pending_updates - 1, i);
--		if (tickless_load) {
--			old_load -= decay_load_missed(tickless_load, pending_updates - 1, i);
--			/*
--			 * old_load can never be a negative value because a
--			 * decayed tickless_load cannot be greater than the
--			 * original tickless_load.
--			 */
--			old_load += tickless_load;
--		}
--#endif
--		new_load = this_load;
--		/*
--		 * Round up the averaging division if load is increasing. This
--		 * prevents us from getting stuck on 9 if the load is 10, for
--		 * example.
--		 */
--		if (new_load > old_load)
--			new_load += scale - 1;
--
--		this_rq->cpu_load[i] = (old_load * (scale - 1) + new_load) >> i;
--	}
--}
--
- /* Used instead of source_load when we know the type == 0 */
+-/* Used instead of source_load when we know the type == 0 */
  static unsigned long weighted_cpuload(struct rq *rq)
  {
  	return cfs_rq_runnable_load_avg(&rq->cfs);
  }
  
--#ifdef CONFIG_NO_HZ_COMMON
 -/*
-- * There is no sane way to deal with nohz on smp when using jiffies because the
-- * CPU doing the jiffies update might drift wrt the CPU doing the jiffy reading
-- * causing off-by-one errors in observed deltas; {0,2} instead of {1,1}.
+- * Return a low guess at the load of a migration-source CPU weighted
+- * according to the scheduling class and "nice" value.
 - *
-- * Therefore we need to avoid the delta approach from the regular tick when
-- * possible since that would seriously skew the load calculation. This is why we
-- * use cpu_load_update_periodic() for CPUs out of nohz. However we'll rely on
-- * jiffies deltas for updates happening while in nohz mode (idle ticks, idle
-- * loop exit, nohz_idle_balance, nohz full exit...)
-- *
-- * This means we might still be one tick off for nohz periods.
+- * We want to under-estimate the load of migration sources, to
+- * balance conservatively.
 - */
--
--static void cpu_load_update_nohz(struct rq *this_rq,
--				 unsigned long curr_jiffies,
--				 unsigned long load)
+-static unsigned long source_load(int cpu, int type)
 -{
--	unsigned long pending_updates;
+-	struct rq *rq = cpu_rq(cpu);
+-	unsigned long total = weighted_cpuload(rq);
 -
--	pending_updates = curr_jiffies - this_rq->last_load_update_tick;
--	if (pending_updates) {
--		this_rq->last_load_update_tick = curr_jiffies;
--		/*
--		 * In the regular NOHZ case, we were idle, this means load 0.
--		 * In the NOHZ_FULL case, we were non-idle, we should consider
--		 * its weighted load.
--		 */
--		cpu_load_update(this_rq, load, pending_updates);
--	}
+-	if (type == 0 || !sched_feat(LB_BIAS))
+-		return total;
+-
+-	return min(rq->cpu_load[type-1], total);
 -}
 -
 -/*
-- * Called from nohz_idle_balance() to update the load ratings before doing the
-- * idle balance.
+- * Return a high guess at the load of a migration-target CPU weighted
+- * according to the scheduling class and "nice" value.
 - */
--static void cpu_load_update_idle(struct rq *this_rq)
+-static unsigned long target_load(int cpu, int type)
 -{
--	/*
--	 * bail if there's load or we're actually up-to-date.
--	 */
--	if (weighted_cpuload(this_rq))
--		return;
+-	struct rq *rq = cpu_rq(cpu);
+-	unsigned long total = weighted_cpuload(rq);
 -
--	cpu_load_update_nohz(this_rq, READ_ONCE(jiffies), 0);
+-	if (type == 0 || !sched_feat(LB_BIAS))
+-		return total;
+-
+-	return max(rq->cpu_load[type-1], total);
 -}
 -
--/*
-- * Record CPU load on nohz entry so we know the tickless load to account
-- * on nohz exit. cpu_load[0] happens then to be updated more frequently
-- * than other cpu_load[idx] but it should be fine as cpu_load readers
-- * shouldn't rely into synchronized cpu_load[*] updates.
-- */
--void cpu_load_update_nohz_start(void)
--{
--	struct rq *this_rq = this_rq();
--
--	/*
--	 * This is all lockless but should be fine. If weighted_cpuload changes
--	 * concurrently we'll exit nohz. And cpu_load write can race with
--	 * cpu_load_update_idle() but both updater would be writing the same.
--	 */
--	this_rq->cpu_load[0] = weighted_cpuload(this_rq);
--}
--
--/*
-- * Account the tickless load in the end of a nohz frame.
-- */
--void cpu_load_update_nohz_stop(void)
--{
--	unsigned long curr_jiffies = READ_ONCE(jiffies);
--	struct rq *this_rq = this_rq();
--	unsigned long load;
--	struct rq_flags rf;
--
--	if (curr_jiffies == this_rq->last_load_update_tick)
--		return;
--
--	load = weighted_cpuload(this_rq);
--	rq_lock(this_rq, &rf);
--	update_rq_clock(this_rq);
--	cpu_load_update_nohz(this_rq, curr_jiffies, load);
--	rq_unlock(this_rq, &rf);
--}
--#else /* !CONFIG_NO_HZ_COMMON */
--static inline void cpu_load_update_nohz(struct rq *this_rq,
--					unsigned long curr_jiffies,
--					unsigned long load) { }
--#endif /* CONFIG_NO_HZ_COMMON */
--
--static void cpu_load_update_periodic(struct rq *this_rq, unsigned long load)
--{
--#ifdef CONFIG_NO_HZ_COMMON
--	/* See the mess around cpu_load_update_nohz(). */
--	this_rq->last_load_update_tick = READ_ONCE(jiffies);
--#endif
--	cpu_load_update(this_rq, load, 1);
--}
--
--/*
-- * Called from scheduler_tick()
-- */
--void cpu_load_update_active(struct rq *this_rq)
--{
--	unsigned long load = weighted_cpuload(this_rq);
--
--	if (tick_nohz_tick_stopped())
--		cpu_load_update_nohz(this_rq, READ_ONCE(jiffies), load);
--	else
--		cpu_load_update_periodic(this_rq, load);
--}
--
- /*
-  * Return a low guess at the load of a migration-source CPU weighted
-  * according to the scheduling class and "nice" value.
-@@ -9879,7 +9625,6 @@ static bool _nohz_idle_balance(struct rq *this_rq, unsigned int flags,
- 
- 			rq_lock_irqsave(rq, &rf);
- 			update_rq_clock(rq);
--			cpu_load_update_idle(rq);
- 			rq_unlock_irqrestore(rq, &rf);
- 
- 			if (flags & NOHZ_BALANCE_KICK)
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index b52ed1ada0be..a83827eec1d1 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -96,12 +96,6 @@ extern atomic_long_t calc_load_tasks;
- extern void calc_global_load_tick(struct rq *this_rq);
- extern long calc_load_fold_active(struct rq *this_rq, long adjust);
- 
--#ifdef CONFIG_SMP
--extern void cpu_load_update_active(struct rq *this_rq);
--#else
--static inline void cpu_load_update_active(struct rq *this_rq) { }
--#endif
--
- /*
-  * Helpers for converting nanosecond timing to jiffy resolution
-  */
-diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-index f4ee1a3428ae..be9707f68024 100644
---- a/kernel/time/tick-sched.c
-+++ b/kernel/time/tick-sched.c
-@@ -782,7 +782,6 @@ static void tick_nohz_stop_tick(struct tick_sched *ts, int cpu)
- 	 */
- 	if (!ts->tick_stopped) {
- 		calc_load_nohz_start();
--		cpu_load_update_nohz_start();
- 		quiet_vmstat();
- 
- 		ts->last_tick = hrtimer_get_expires(&ts->sched_timer);
-@@ -829,7 +828,6 @@ static void tick_nohz_restart_sched_tick(struct tick_sched *ts, ktime_t now)
+ static unsigned long capacity_of(int cpu)
  {
- 	/* Update jiffies first */
- 	tick_do_update_jiffies64(now);
--	cpu_load_update_nohz_stop();
+ 	return cpu_rq(cpu)->cpu_capacity;
+@@ -5482,7 +5446,7 @@ wake_affine_weight(struct sched_domain *sd, struct task_struct *p,
+ 	s64 this_eff_load, prev_eff_load;
+ 	unsigned long task_load;
  
- 	/*
- 	 * Clear the timer idle flag, so we avoid IPIs on remote queueing and
+-	this_eff_load = target_load(this_cpu, sd->wake_idx);
++	this_eff_load = weighted_cpuload(cpu_rq(this_cpu));
+ 
+ 	if (sync) {
+ 		unsigned long current_load = task_h_load(current);
+@@ -5500,7 +5464,7 @@ wake_affine_weight(struct sched_domain *sd, struct task_struct *p,
+ 		this_eff_load *= 100;
+ 	this_eff_load *= capacity_of(prev_cpu);
+ 
+-	prev_eff_load = source_load(prev_cpu, sd->wake_idx);
++	prev_eff_load = weighted_cpuload(cpu_rq(this_cpu));
+ 	prev_eff_load -= task_load;
+ 	if (sched_feat(WA_BIAS))
+ 		prev_eff_load *= 100 + (sd->imbalance_pct - 100) / 2;
+@@ -5561,14 +5525,10 @@ find_idlest_group(struct sched_domain *sd, struct task_struct *p,
+ 	unsigned long this_runnable_load = ULONG_MAX;
+ 	unsigned long min_avg_load = ULONG_MAX, this_avg_load = ULONG_MAX;
+ 	unsigned long most_spare = 0, this_spare = 0;
+-	int load_idx = sd->forkexec_idx;
+ 	int imbalance_scale = 100 + (sd->imbalance_pct-100)/2;
+ 	unsigned long imbalance = scale_load_down(NICE_0_LOAD) *
+ 				(sd->imbalance_pct-100) / 100;
+ 
+-	if (sd_flag & SD_BALANCE_WAKE)
+-		load_idx = sd->wake_idx;
+-
+ 	do {
+ 		unsigned long load, avg_load, runnable_load;
+ 		unsigned long spare_cap, max_spare_cap;
+@@ -5592,12 +5552,7 @@ find_idlest_group(struct sched_domain *sd, struct task_struct *p,
+ 		max_spare_cap = 0;
+ 
+ 		for_each_cpu(i, sched_group_span(group)) {
+-			/* Bias balancing toward CPUs of our domain */
+-			if (local_group)
+-				load = source_load(i, load_idx);
+-			else
+-				load = target_load(i, load_idx);
+-
++			load = weighted_cpuload(cpu_rq(i));
+ 			runnable_load += load;
+ 
+ 			avg_load += cfs_rq_load_avg(&cpu_rq(i)->cfs);
+@@ -7679,34 +7634,6 @@ static inline void init_sd_lb_stats(struct sd_lb_stats *sds)
+ 	};
+ }
+ 
+-/**
+- * get_sd_load_idx - Obtain the load index for a given sched domain.
+- * @sd: The sched_domain whose load_idx is to be obtained.
+- * @idle: The idle status of the CPU for whose sd load_idx is obtained.
+- *
+- * Return: The load index.
+- */
+-static inline int get_sd_load_idx(struct sched_domain *sd,
+-					enum cpu_idle_type idle)
+-{
+-	int load_idx;
+-
+-	switch (idle) {
+-	case CPU_NOT_IDLE:
+-		load_idx = sd->busy_idx;
+-		break;
+-
+-	case CPU_NEWLY_IDLE:
+-		load_idx = sd->newidle_idx;
+-		break;
+-	default:
+-		load_idx = sd->idle_idx;
+-		break;
+-	}
+-
+-	return load_idx;
+-}
+-
+ static unsigned long scale_rt_capacity(struct sched_domain *sd, int cpu)
+ {
+ 	struct rq *rq = cpu_rq(cpu);
+@@ -7995,9 +7922,6 @@ static inline void update_sg_lb_stats(struct lb_env *env,
+ 				      struct sg_lb_stats *sgs,
+ 				      int *sg_status)
+ {
+-	int local_group = cpumask_test_cpu(env->dst_cpu, sched_group_span(group));
+-	int load_idx = get_sd_load_idx(env->sd, env->idle);
+-	unsigned long load;
+ 	int i, nr_running;
+ 
+ 	memset(sgs, 0, sizeof(*sgs));
+@@ -8008,13 +7932,7 @@ static inline void update_sg_lb_stats(struct lb_env *env,
+ 		if ((env->flags & LBF_NOHZ_STATS) && update_nohz_stats(rq, false))
+ 			env->flags |= LBF_NOHZ_AGAIN;
+ 
+-		/* Bias balancing toward CPUs of our domain: */
+-		if (local_group)
+-			load = target_load(i, load_idx);
+-		else
+-			load = source_load(i, load_idx);
+-
+-		sgs->group_load += load;
++		sgs->group_load += weighted_cpuload(rq);
+ 		sgs->group_util += cpu_util(i);
+ 		sgs->sum_nr_running += rq->cfs.h_nr_running;
+ 
+diff --git a/kernel/sched/features.h b/kernel/sched/features.h
+index 858589b83377..2410db5e9a35 100644
+--- a/kernel/sched/features.h
++++ b/kernel/sched/features.h
+@@ -39,7 +39,6 @@ SCHED_FEAT(WAKEUP_PREEMPTION, true)
+ 
+ SCHED_FEAT(HRTICK, false)
+ SCHED_FEAT(DOUBLE_TICK, false)
+-SCHED_FEAT(LB_BIAS, false)
+ 
+ /*
+  * Decrement CPU capacity based on time not spent running tasks
 -- 
 2.17.1
 
