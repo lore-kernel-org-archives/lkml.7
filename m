@@ -2,104 +2,89 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D433C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB6D4C07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC13520717
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5EEB20883
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:59:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbfE0N6Z (ORCPT
+        id S1726506AbfE0N75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 09:58:25 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:17166 "EHLO huawei.com"
+        Mon, 27 May 2019 09:59:57 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:50108 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726071AbfE0N6Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 09:58:24 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id A18F1DA764C56511616F;
-        Mon, 27 May 2019 21:58:22 +0800 (CST)
-Received: from [127.0.0.1] (10.177.29.68) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Mon, 27 May 2019
- 21:58:18 +0800
-Message-ID: <5CEBECF9.2060500@huawei.com>
-Date:   Mon, 27 May 2019 21:58:17 +0800
-From:   zhong jiang <zhongjiang@huawei.com>
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
+        id S1726185AbfE0N75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 09:59:57 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id BCDD59305DE19F6E293A;
+        Mon, 27 May 2019 21:44:03 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Mon, 27 May 2019
+ 21:43:55 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <amit.kucheria@linaro.org>, <agross@kernel.org>,
+        <david.brown@linaro.org>, <rui.zhang@intel.com>,
+        <edubezval@gmail.com>, <daniel.lezcano@linaro.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] drivers: thermal: tsens: Change hw_id type to int in is_sensor_enabled
+Date:   Mon, 27 May 2019 21:41:24 +0800
+Message-ID: <20190527134124.14784-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-To:     Vlastimil Babka <vbabka@suse.cz>
-CC:     Andrew Morton <akpm@linux-foundation.org>, <osalvador@suse.de>,
-        <khandual@linux.vnet.ibm.com>, <mhocko@suse.com>,
-        <mgorman@techsingularity.net>, <aarcange@redhat.com>,
-        <rcampbell@nvidia.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mm/mempolicy: Fix an incorrect rebind node in mpol_rebind_nodemask
-References: <1558768043-23184-1-git-send-email-zhongjiang@huawei.com> <20190525112851.ee196bcbbc33bf9e0d869236@linux-foundation.org> <2ff829ea-1d74-9d4b-8501-e9c2ebdc36ef@suse.cz>
-In-Reply-To: <2ff829ea-1d74-9d4b-8501-e9c2ebdc36ef@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.29.68]
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/5/27 20:23, Vlastimil Babka wrote:
-> On 5/25/19 8:28 PM, Andrew Morton wrote:
->> (Cc Vlastimil)
-> Oh dear, 2 years and I forgot all the details about how this works.
->
->> On Sat, 25 May 2019 15:07:23 +0800 zhong jiang <zhongjiang@huawei.com> wrote:
->>
->>> We bind an different node to different vma, Unluckily,
->>> it will bind different vma to same node by checking the /proc/pid/numa_maps.   
->>> Commit 213980c0f23b ("mm, mempolicy: simplify rebinding mempolicies when updating cpusets")
->>> has introduced the issue.  when we change memory policy by seting cpuset.mems,
->>> A process will rebind the specified policy more than one times. 
->>> if the cpuset_mems_allowed is not equal to user specified nodes. hence the issue will trigger.
->>> Maybe result in the out of memory which allocating memory from same node.
-> I have a hard time understanding what the problem is. Could you please
-> write it as a (pseudo) reproducer? I.e. an example of the process/admin
-> mempolicy/cpuset actions that have some wrong observed results vs the
-> correct expected result.
-Sorry, I havn't an testcase to reproduce the issue. At first, It was disappeared by
-my colleague to configure the xml to start an vm.  To his suprise, The bind mempolicy
-doesn't work.
+Sensor hw_id is int type other u32, is_sensor_enabled
+should use int to compare, this fix smatch warning:
 
-Thanks,
-zhong jiang
->>> --- a/mm/mempolicy.c
->>> +++ b/mm/mempolicy.c
->>> @@ -345,7 +345,7 @@ static void mpol_rebind_nodemask(struct mempolicy *pol, const nodemask_t *nodes)
->>>  	else {
->>>  		nodes_remap(tmp, pol->v.nodes,pol->w.cpuset_mems_allowed,
->>>  								*nodes);
->>> -		pol->w.cpuset_mems_allowed = tmp;
->>> +		pol->w.cpuset_mems_allowed = *nodes;
-> Looks like a mechanical error on my side when removing the code for
-> step1+step2 rebinding. Before my commit there was
->
-> pol->w.cpuset_mems_allowed = step ? tmp : *nodes;
->
-> Since 'step' was removed and thus 0, I should have used *nodes indeed.
-> Thanks for catching that.
->
->>>  	}
->>>  
->>>  	if (nodes_empty(tmp))
->> hm, I'm not surprised the code broke.  What the heck is going on in
->> there?  It used to have a perfunctory comment, but Vlastimil deleted
->> it.
-> Yeah the comment was specific for the case that was being removed.
->
->> Could someone please propose a comment for the above code block
->> explaining why we're doing what we do?
-> I'll have to relearn this first...
->
->
+drivers/thermal/qcom/tsens-common.c:72
+ is_sensor_enabled() warn: unsigned 'hw_id' is never less than zero.
+
+Fixes: 3e6a8fb33084 ("drivers: thermal: tsens: Add new operation to check if a sensor is enabled")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/thermal/qcom/tsens-common.c | 2 +-
+ drivers/thermal/qcom/tsens.h        | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
+index 928e8e81ba69..5df4eed84535 100644
+--- a/drivers/thermal/qcom/tsens-common.c
++++ b/drivers/thermal/qcom/tsens-common.c
+@@ -64,7 +64,7 @@ void compute_intercept_slope(struct tsens_priv *priv, u32 *p1,
+ 	}
+ }
+ 
+-bool is_sensor_enabled(struct tsens_priv *priv, u32 hw_id)
++bool is_sensor_enabled(struct tsens_priv *priv, int hw_id)
+ {
+ 	u32 val;
+ 	int ret;
+diff --git a/drivers/thermal/qcom/tsens.h b/drivers/thermal/qcom/tsens.h
+index eefe3844fb4e..15264806f6a8 100644
+--- a/drivers/thermal/qcom/tsens.h
++++ b/drivers/thermal/qcom/tsens.h
+@@ -315,7 +315,7 @@ void compute_intercept_slope(struct tsens_priv *priv, u32 *pt1, u32 *pt2, u32 mo
+ int init_common(struct tsens_priv *priv);
+ int get_temp_tsens_valid(struct tsens_priv *priv, int i, int *temp);
+ int get_temp_common(struct tsens_priv *priv, int i, int *temp);
+-bool is_sensor_enabled(struct tsens_priv *priv, u32 hw_id);
++bool is_sensor_enabled(struct tsens_priv *priv, int hw_id);
+ 
+ /* TSENS target */
+ extern const struct tsens_plat_data data_8960;
+-- 
+2.17.1
 
 
