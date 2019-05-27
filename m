@@ -2,70 +2,225 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 219DCC04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:30:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CFB4C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:31:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8302208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:30:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pYKF21PB"
+	by mail.kernel.org (Postfix) with ESMTP id 3D54E208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:31:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726343AbfE0KaT (ORCPT
+        id S1726470AbfE0Kbc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 06:30:19 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:38400 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725814AbfE0KaS (ORCPT
+        Mon, 27 May 2019 06:31:32 -0400
+Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:50267 "EHLO
+        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725943AbfE0Kbc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 06:30:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=fO4yzkLNvwCdtEhg2+HPTX4Reyxk7SMjLIEFxFLV1qg=; b=pYKF21PBn82fa2rICGxiMtwQK
-        t4RX9tPZfOsqVrIwLkSBvUDpxGCjSVECjEH9UDf1AM5h+k88M9da0PuEOcokdueJDRP1iQqcGfRL3
-        yizWRzNx+zl992HJ7vu9Up9W4b6bRGoSlYUszHF34bfWSRLc5SEvrZYyUYUNCM0EJeonttC6IxHRs
-        KBBpwT9Nbx2C5jetEzCAMldcFUDk+p4WwzVmvl31HKKvxvw9Uh4jV4M1o6rIlJM62xEJvuczATKCD
-        139WQc112sejHLe5eAzrgqHzEgbxPMHKMorztt9WDdki8vrIW1RlAfDFZZi51r52ZUE1xbBVeqp3V
-        eVwCt6+HA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hVCtI-0002IY-B8; Mon, 27 May 2019 10:30:05 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1B49D2027F766; Mon, 27 May 2019 12:30:03 +0200 (CEST)
-Date:   Mon, 27 May 2019 12:30:03 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Tao Xu <tao3.xu@intel.com>
-Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, corbet@lwn.net,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        sean.j.christopherson@intel.com, x86@kernel.org,
-        kvm@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jingqi.liu@intel.com
-Subject: Re: [PATCH v2 1/3] KVM: x86: add support for user wait instructions
-Message-ID: <20190527103003.GX2623@hirez.programming.kicks-ass.net>
-References: <20190524075637.29496-1-tao3.xu@intel.com>
- <20190524075637.29496-2-tao3.xu@intel.com>
+        Mon, 27 May 2019 06:31:32 -0400
+Received: from [IPv6:2001:983:e9a7:1:10b2:2e62:e4b1:bd13] ([IPv6:2001:983:e9a7:1:10b2:2e62:e4b1:bd13])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id VCuehaL2PsDWyVCufhYhnd; Mon, 27 May 2019 12:31:29 +0200
+Subject: Re: [PATCH v6 3/4] media: meson: add v4l2 m2m video decoder driver
+To:     Neil Armstrong <narmstrong@baylibre.com>,
+        Maxime Jourdan <mjourdan@baylibre.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+References: <20190514135612.30822-1-mjourdan@baylibre.com>
+ <20190514135612.30822-4-mjourdan@baylibre.com>
+ <07af1a22-d57c-aff6-b476-98fbf72135c1@xs4all.nl>
+ <480f2c43-9858-a4d3-7a6b-452756fb6076@baylibre.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <79491b42-9296-1dfd-59ec-3ce7d58b2119@xs4all.nl>
+Date:   Mon, 27 May 2019 12:31:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190524075637.29496-2-tao3.xu@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <480f2c43-9858-a4d3-7a6b-452756fb6076@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfCEa+gP20jycLyMtenMCXcxM2gS9GjwMobnKRsYfUiIMNSzGAirKt25OGsqJdWYV0Fv4hkRA2qRYQ5o0rDb11LEAeCMqQ4VvUKgDsJdKkkbGFCXcRwk9
+ H6HGVLolhV38puvk4WhdM1T5ZRgxrfpgbBEoatQfmx4z1z6rgJFwOIUJ3kfWrHYo9b4ngdSphORL/7YI0nX5mFyYaCmkJvP4xAHi8Wa54HjtS7m/wwf9P6BD
+ h3aAiv3hrOU3kjpRqAQDp40SUnH58KbOgs3P/xN2YHHU9gA7P+NxONgl2zpyiWiEqcmxdvQY4aycGJIi+mi7X2r4rUJaAJzFqHv941kglABR2bix3FyXYxd0
+ nIuhkqVrGekPqTajgEPUWr9LDMd05Gf/jr5+/Cj8hNHOT32tN7Q6xsKjqKFWA7ca5k67bmcjJuMAysSmyLlkPN67gn3HQtrBdZfdNSpgiyembennkdY3rhq/
+ Kzua5JWlTGpdRtFgFKIC0p6pm7yz9Y6YH9LsT21pTgS7x/CW81fO9Oxxzu1+c55qoNLQJ75f4qSH+R1OnhZNICAkTiNEjtpnZOSsoL2yDuBTxJQY495DP5GL
+ GOM43G+h4TovvmGSt2n7jKUYxRJySrBO9wXfzILfbBVyS8sygE1C4kMLqyOlcM/bphQSmjC/QtTsDmTCs2jtMDAk
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 03:56:35PM +0800, Tao Xu wrote:
-> This patch adds support for UMONITOR, UMWAIT and TPAUSE instructions
-> in kvm, and by default dont't expose it to kvm and provide a capability
-> to enable it.
+On 5/27/19 12:18 PM, Neil Armstrong wrote:
+> Hi Hans,
+> 
+> On 27/05/2019 12:04, Hans Verkuil wrote:
+>> Hi Maxime,
+>>
+>> First a high-level comment: I think this driver should go to staging.
+>> Once we finalize the stateful decoder spec, and we've updated the
+>> v4l2-compliance test, then this needs to be tested against that and
+>> only if it passes can it be moved out of staging.
+> 
+> I don't understand the reason since other stateful codecs are already
+> mainline and doesn't match the in-discussion stateful decoder spec either.
 
-I'm thinking this should be conditional on the guest being a 1:1 guest,
-and I also seem to remember we have bits for that already -- they were
-used to disable paravirt spinlocks for example.
+With new drivers we should do better: I don't want to add such drivers
+without them being fully tested for API compliance.
+
+There is a bit too much variation in existing drivers and the main reason
+for that was lack of compliance testing. We're close to having a proper
+spec and proper compliance tests, but as long as that's not finalized I
+want to keep new codec drivers in staging.
+
+Once the compliance tests are available, then we have an objective way
+of checking if a codec driver is following the spec.
+
+Existing codec drivers in mainline will also have to be checked, for that
+matter.
+
+Regards,
+
+	Hans
+
+> 
+> Neil
+> 
+>>
+>> It is just a bit too soon to have this in mainline at this time.
+>>
+>> One other comment below:
+>>
+>> On 5/14/19 3:56 PM, Maxime Jourdan wrote:
+>>> Amlogic SoCs feature a powerful video decoder unit able to
+>>> decode many formats, with a performance of usually up to 4k60.
+>>>
+>>> This is a driver for this IP that is based around the v4l2 m2m framework.
+>>>
+>>> It features decoding for:
+>>> - MPEG 1
+>>> - MPEG 2
+>>>
+>>> Supported SoCs are: GXBB (S905), GXL (S905X/W/D), GXM (S912)
+>>>
+>>> There is also a hardware bitstream parser (ESPARSER) that is handled here.
+>>>
+>>> Tested-by: Neil Armstrong <narmstrong@baylibre.com>
+>>> Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
+>>> ---
+>>>  drivers/media/platform/Kconfig                |   10 +
+>>>  drivers/media/platform/meson/Makefile         |    1 +
+>>>  drivers/media/platform/meson/vdec/Makefile    |    8 +
+>>>  .../media/platform/meson/vdec/codec_mpeg12.c  |  209 ++++
+>>>  .../media/platform/meson/vdec/codec_mpeg12.h  |   14 +
+>>>  drivers/media/platform/meson/vdec/dos_regs.h  |   98 ++
+>>>  drivers/media/platform/meson/vdec/esparser.c  |  323 +++++
+>>>  drivers/media/platform/meson/vdec/esparser.h  |   32 +
+>>>  drivers/media/platform/meson/vdec/vdec.c      | 1071 +++++++++++++++++
+>>>  drivers/media/platform/meson/vdec/vdec.h      |  265 ++++
+>>>  drivers/media/platform/meson/vdec/vdec_1.c    |  229 ++++
+>>>  drivers/media/platform/meson/vdec/vdec_1.h    |   14 +
+>>>  .../media/platform/meson/vdec/vdec_ctrls.c    |   51 +
+>>>  .../media/platform/meson/vdec/vdec_ctrls.h    |   14 +
+>>>  .../media/platform/meson/vdec/vdec_helpers.c  |  441 +++++++
+>>>  .../media/platform/meson/vdec/vdec_helpers.h  |   80 ++
+>>>  .../media/platform/meson/vdec/vdec_platform.c |  107 ++
+>>>  .../media/platform/meson/vdec/vdec_platform.h |   30 +
+>>>  18 files changed, 2997 insertions(+)
+>>>  create mode 100644 drivers/media/platform/meson/vdec/Makefile
+>>>  create mode 100644 drivers/media/platform/meson/vdec/codec_mpeg12.c
+>>>  create mode 100644 drivers/media/platform/meson/vdec/codec_mpeg12.h
+>>>  create mode 100644 drivers/media/platform/meson/vdec/dos_regs.h
+>>>  create mode 100644 drivers/media/platform/meson/vdec/esparser.c
+>>>  create mode 100644 drivers/media/platform/meson/vdec/esparser.h
+>>>  create mode 100644 drivers/media/platform/meson/vdec/vdec.c
+>>>  create mode 100644 drivers/media/platform/meson/vdec/vdec.h
+>>>  create mode 100644 drivers/media/platform/meson/vdec/vdec_1.c
+>>>  create mode 100644 drivers/media/platform/meson/vdec/vdec_1.h
+>>>  create mode 100644 drivers/media/platform/meson/vdec/vdec_ctrls.c
+>>>  create mode 100644 drivers/media/platform/meson/vdec/vdec_ctrls.h
+>>>  create mode 100644 drivers/media/platform/meson/vdec/vdec_helpers.c
+>>>  create mode 100644 drivers/media/platform/meson/vdec/vdec_helpers.h
+>>>  create mode 100644 drivers/media/platform/meson/vdec/vdec_platform.c
+>>>  create mode 100644 drivers/media/platform/meson/vdec/vdec_platform.h
+>>>
+>>
+>> <snip>
+>>
+>>> diff --git a/drivers/media/platform/meson/vdec/vdec_ctrls.c b/drivers/media/platform/meson/vdec/vdec_ctrls.c
+>>> new file mode 100644
+>>> index 000000000000..d5d6b1b97aa5
+>>> --- /dev/null
+>>> +++ b/drivers/media/platform/meson/vdec/vdec_ctrls.c
+>>> @@ -0,0 +1,51 @@
+>>> +// SPDX-License-Identifier: GPL-2.0+
+>>> +/*
+>>> + * Copyright (C) 2018 BayLibre, SAS
+>>> + * Author: Maxime Jourdan <mjourdan@baylibre.com>
+>>> + */
+>>> +
+>>> +#include "vdec_ctrls.h"
+>>> +
+>>> +static int vdec_op_g_volatile_ctrl(struct v4l2_ctrl *ctrl)
+>>> +{
+>>> +	struct amvdec_session *sess =
+>>> +	      container_of(ctrl->handler, struct amvdec_session, ctrl_handler);
+>>> +
+>>> +	switch (ctrl->id) {
+>>> +	case V4L2_CID_MIN_BUFFERS_FOR_CAPTURE:
+>>> +		ctrl->val = sess->dpb_size;
+>>> +		break;
+>>> +	default:
+>>> +		return -EINVAL;
+>>> +	};
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static const struct v4l2_ctrl_ops vdec_ctrl_ops = {
+>>> +	.g_volatile_ctrl = vdec_op_g_volatile_ctrl,
+>>> +};
+>>> +
+>>> +int amvdec_init_ctrls(struct v4l2_ctrl_handler *ctrl_handler)
+>>> +{
+>>> +	int ret;
+>>> +	struct v4l2_ctrl *ctrl;
+>>> +
+>>> +	ret = v4l2_ctrl_handler_init(ctrl_handler, 1);
+>>> +	if (ret)
+>>> +		return ret;
+>>> +
+>>> +	ctrl = v4l2_ctrl_new_std(ctrl_handler, &vdec_ctrl_ops,
+>>> +		V4L2_CID_MIN_BUFFERS_FOR_CAPTURE, 1, 32, 1, 1);
+>>> +	if (ctrl)
+>>> +		ctrl->flags |= V4L2_CTRL_FLAG_VOLATILE;
+>>
+>> Why is this volatile? That makes little sense.
+>>
+>>> +
+>>> +	ret = ctrl_handler->error;
+>>> +	if (ret) {
+>>> +		v4l2_ctrl_handler_free(ctrl_handler);
+>>> +		return ret;
+>>> +	}
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(amvdec_init_ctrls);
+>>
+>> <snip>
+>>
+>> Regards,
+>>
+>> 	Hans
+>>
+> 
+
