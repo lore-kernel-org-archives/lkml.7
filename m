@@ -2,208 +2,170 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E553C282E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 02:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 628D6C282E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 02:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC5A5216FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 02:09:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rh+GDAHK"
+	by mail.kernel.org (Postfix) with ESMTP id 2BD20216FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 02:11:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726282AbfE0CJn (ORCPT
+        id S1726154AbfE0CL6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 22:09:43 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:40884 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725923AbfE0CJn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 22:09:43 -0400
-Received: by mail-ed1-f68.google.com with SMTP id j12so24284893eds.7;
-        Sun, 26 May 2019 19:09:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=q4HXWJmocoqEFtedlcYgjjxcr1QIQlFzfUFPmoOlTHU=;
-        b=rh+GDAHK6pQFGGZrQW3bod/cUf5xtBHMN+oj7xv1Q2VansilSKTdHS79XLtPNeCQXo
-         Ds1E6ccW/srRA3BdoV8jN0+xGUD5AJ5qjjmi7lB6GX/E9ju+t7/bj0yWqn8Rabd9QAz/
-         E9w1FcPvzGr/sHE2w32mxIOlEgeY8Ia41gMGjBnL08puPizsl3rIaEYEYhIIKpZJqH0Q
-         21O1phfatUNJ6nYNtQiv0Fq1RGzjI3ajUkh9T2PGQT+2GhlVasPY/kQntYtpB9Ml2BeQ
-         /kfwn+hCEbYAnGw+HC9dwfsgSMNq667E25epsdzCZOXsXFVV+j0FbECmo4JV4TbZp4qA
-         E+9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=q4HXWJmocoqEFtedlcYgjjxcr1QIQlFzfUFPmoOlTHU=;
-        b=tVk4j9A1o9F+vaF9IDIAoATgFuQI7VByzVMeNmBJzTJ3rgbQtY0LI5Ymjc5rMGC9PA
-         Tdo/x+xHk41j2AU8tlHJva2wIH/mG+oG7U6ihD7oMI6B7PgjF7cfaNG17xMBadTxVc3i
-         yVGGirC/5kbDUwymOglHz/Kejfljw5+z14QUUrn5GlYmMfUAjKDImgiCwx6772+4sfWO
-         fuZohEUrRfJkdnEf4OmD+3SpidbluGhxxmyUWhwKgdwCvi7uVOMrGBFrSoTHgvrYz3eF
-         p/hPn3Bg394Az6rN3gb5YWn9p37BiRPYgm71yNacOdRzzgQ1CrmJ83t1RmbACHxUqVmT
-         Zvcw==
-X-Gm-Message-State: APjAAAXq1fnf6IrbvSnbQpINRHl0Pe4cveMV6yTDyxGYwMG+8+MqYqFQ
-        F77GXH5awcgNnsOymVbMnKCRsXChIqbEaFlQx94=
-X-Google-Smtp-Source: APXvYqz6NpK9v0jnj25FgAEd4xIKWArx0VCRzCH5JRTsYSZsbiJHVBNaK7Hq2t2Kjk0mqbclRpKlEFNL+Vwvdy7sX2U=
-X-Received: by 2002:a17:906:aacb:: with SMTP id kt11mr80812082ejb.246.1558922980858;
- Sun, 26 May 2019 19:09:40 -0700 (PDT)
+        Sun, 26 May 2019 22:11:58 -0400
+Received: from mga17.intel.com ([192.55.52.151]:15009 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725864AbfE0CL5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 May 2019 22:11:57 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 May 2019 19:11:56 -0700
+X-ExtLoop1: 1
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.29])
+  by orsmga005.jf.intel.com with ESMTP; 26 May 2019 19:11:54 -0700
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     <hannes@cmpxchg.org>, <mhocko@suse.com>,
+        <mgorman@techsingularity.net>, <kirill.shutemov@linux.intel.com>,
+        <josef@toxicpanda.com>, <hughd@google.com>, <shakeelb@google.com>,
+        <hdanton@sina.com>, <akpm@linux-foundation.org>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [RESEND v5 PATCH 2/2] mm: vmscan: correct some vmscan counters for THP swapout
+References: <1558922275-31782-1-git-send-email-yang.shi@linux.alibaba.com>
+        <1558922275-31782-2-git-send-email-yang.shi@linux.alibaba.com>
+Date:   Mon, 27 May 2019 10:11:54 +0800
+In-Reply-To: <1558922275-31782-2-git-send-email-yang.shi@linux.alibaba.com>
+        (Yang Shi's message of "Mon, 27 May 2019 09:57:55 +0800")
+Message-ID: <87muj88x3p.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <20190523210651.80902-1-fklassen@appneta.com> <20190523210651.80902-2-fklassen@appneta.com>
- <CAF=yD-Jf95De=z_nx9WFkGDa6+nRUqM_1PqGkjwaFPzOe+PfXg@mail.gmail.com>
- <AE8E0772-7256-4B9C-A990-96930E834AEE@appneta.com> <CAF=yD-LtAKpND601LQrC1+=iF6spSUXVdUapcsbJdv5FYa=5Jg@mail.gmail.com>
- <AFC1ECC8-BFAC-4718-B0C9-97CC4BD1F397@appneta.com> <CAF=yD-Le-eTadOi7PL8WFEQCG=yLqb5gvKiks+s5Akeq8TenBQ@mail.gmail.com>
- <90E3853F-107D-45BA-93DC-D0BE8AC6FCBB@appneta.com> <CA+FuTScNr9Srsn9QFBSj=oT4TnMh1QuOZ2h40g=joNjSwccqMg@mail.gmail.com>
- <4032C02B-EA43-4540-8283-8466CDD0B8D2@appneta.com> <CAF=yD-KTJGYY-yf=+zwa8SyrCNAfZjqjomJ=B=yFcs+juDeShA@mail.gmail.com>
-In-Reply-To: <CAF=yD-KTJGYY-yf=+zwa8SyrCNAfZjqjomJ=B=yFcs+juDeShA@mail.gmail.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Sun, 26 May 2019 21:09:03 -0500
-Message-ID: <CAF=yD-+h2qJP0M5XQrcFVfyn3TP7Jd0UJ1zFf0kbUeC9uKKNxQ@mail.gmail.com>
-Subject: Re: [PATCH net 1/4] net/udp_gso: Allow TX timestamp with UDP GSO
-To:     Fred Klassen <fklassen@appneta.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 26, 2019 at 8:30 PM Willem de Bruijn
-<willemdebruijn.kernel@gmail.com> wrote:
+Yang Shi <yang.shi@linux.alibaba.com> writes:
+
+> Since commit bd4c82c22c36 ("mm, THP, swap: delay splitting THP after
+> swapped out"), THP can be swapped out in a whole.  But, nr_reclaimed
+> and some other vm counters still get inc'ed by one even though a whole
+> THP (512 pages) gets swapped out.
 >
-> On Sat, May 25, 2019 at 1:47 PM Fred Klassen <fklassen@appneta.com> wrote=
-:
-> >
-> >
-> >
-> > > On May 25, 2019, at 8:20 AM, Willem de Bruijn <willemdebruijn.kernel@=
-gmail.com> wrote:
-> > >
-> > > On Fri, May 24, 2019 at 6:01 PM Fred Klassen <fklassen@appneta.com> w=
-rote:
-> > >>
-> > >>
-> > >>
-> > >>> On May 24, 2019, at 12:29 PM, Willem de Bruijn <willemdebruijn.kern=
-el@gmail.com> wrote:
-> > >>>
-> > >>> It is the last moment that a timestamp can be generated for the las=
-t
-> > >>> byte, I don't see how that is "neither the start nor the end of a G=
-SO
-> > >>> packet=E2=80=9D.
-> > >>
-> > >> My misunderstanding. I thought TCP did last segment timestamping, no=
-t
-> > >> last byte. In that case, your statements make sense.
-> > >>
-> > >>>> It would be interesting if a practical case can be made for timest=
-amping
-> > >>>> the last segment. In my mind, I don=E2=80=99t see how that would b=
-e valuable.
-> > >>>
-> > >>> It depends whether you are interested in measuring network latency =
-or
-> > >>> host transmit path latency.
-> > >>>
-> > >>> For the latter, knowing the time from the start of the sendmsg call=
- to
-> > >>> the moment the last byte hits the wire is most relevant. Or in abse=
-nce
-> > >>> of (well defined) hardware support, the last byte being queued to t=
-he
-> > >>> device is the next best thing.
-> > >
-> > > Sounds to me like both cases have a legitimate use case, and we want
-> > > to support both.
-> > >
-> > > Implementation constraints are that storage for this timestamp
-> > > information is scarce and we cannot add new cold cacheline accesses i=
-n
-> > > the datapath.
-> > >
-> > > The simplest approach would be to unconditionally timestamp both the
-> > > first and last segment. With the same ID. Not terribly elegant. But i=
-t
-> > > works.
-> > >
-> > > If conditional, tx_flags has only one bit left. I think we can harves=
-t
-> > > some, as not all defined bits are in use at the same stages in the
-> > > datapath, but that is not a trivial change. Some might also better be
-> > > set in the skb, instead of skb_shinfo. Which would also avoids
-> > > touching that cacheline. We could possibly repurpose bits from u32
-> > > tskey.
-> > >
-> > > All that can come later. Initially, unless we can come up with
-> > > something more elegant, I would suggest that UDP follows the rule
-> > > established by TCP and timestamps the last byte. And we add an
-> > > explicit SOF_TIMESTAMPING_OPT_FIRSTBYTE that is initially only
-> > > supported for UDP, sets a new SKBTX_TX_FB_TSTAMP bit in
-> > > __sock_tx_timestamp and is interpreted in __udp_gso_segment.
-> > >
-> >
-> > I don=E2=80=99t see how to practically TX timestamp the last byte of an=
-y packet
-> > (UDP GSO or otherwise). The best we could do is timestamp the last
-> > segment,  or rather the time that the last segment is queued. Let me
-> > attempt to explain.
-> >
-> > First let=E2=80=99s look at software TX timestamps which are for are ge=
-nerated
-> > by skb_tx_timestamp() in nearly every network driver=E2=80=99s xmit rou=
-tine. It
-> > states:
-> >
-> > =E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=
-=94=E2=80=94=E2=80=94 cut =E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=
-=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94
-> >  * Ethernet MAC Drivers should call this function in their hard_xmit()
-> >  * function immediately before giving the sk_buff to the MAC hardware.
-> > =E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=
-=94=E2=80=94=E2=80=94 cut =E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=
-=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94
-> >
-> > That means that the sk_buff will get timestamped just before rather
-> > than just after it is sent. To truly capture the timestamp of the last
-> > byte, this routine routine would have to be called a second time, right
-> > after sending to MAC hardware. Then the user program would have
-> > sort out the 2 timestamps. My guess is that this isn=E2=80=99t somethin=
-g that
-> > NIC vendors would be willing to implement in their drivers.
-> >
-> > So, the best we can do is timestamp is just before the last segment.
-> > Suppose UDP GSO sends 3000 bytes to a 1500 byte MTU adapter.
-> > If we set SKBTX_HW_TSTAMP flag on the last segment, the timestamp
-> > occurs half way through the burst. But it may not be exactly half way
-> > because the segments may get queued much faster than wire rate.
-> > Therefore the time between segment 1 and segment 2 may be much
-> > much smaller than their spacing on the wire. I would not find this
-> > useful.
+> This doesn't make too much sense to memory reclaim.  For example, direct
+> reclaim may just need reclaim SWAP_CLUSTER_MAX pages, reclaiming one THP
+> could fulfill it.  But, if nr_reclaimed is not increased correctly,
+> direct reclaim may just waste time to reclaim more pages,
+> SWAP_CLUSTER_MAX * 512 pages in worst case.
 >
-> For measuring host queueing latency, a timestamp at the existing
-> skb_tx_timestamp() for the last segment is perfectly informative.
+> And, it may cause pgsteal_{kswapd|direct} is greater than
+> pgscan_{kswapd|direct}, like the below:
+>
+> pgsteal_kswapd 122933
+> pgsteal_direct 26600225
+> pgscan_kswapd 174153
+> pgscan_direct 14678312
+>
+> nr_reclaimed and nr_scanned must be fixed in parallel otherwise it would
+> break some page reclaim logic, e.g.
+>
+> vmpressure: this looks at the scanned/reclaimed ratio so it won't
+> change semantics as long as scanned & reclaimed are fixed in parallel.
+>
+> compaction/reclaim: compaction wants a certain number of physical pages
+> freed up before going back to compacting.
+>
+> kswapd priority raising: kswapd raises priority if we scan fewer pages
+> than the reclaim target (which itself is obviously expressed in order-0
+> pages). As a result, kswapd can falsely raise its aggressiveness even
+> when it's making great progress.
+>
+> Other than nr_scanned and nr_reclaimed, some other counters, e.g.
+> pgactivate, nr_skipped, nr_ref_keep and nr_unmap_fail need to be fixed
+> too since they are user visible via cgroup, /proc/vmstat or trace
+> points, otherwise they would be underreported.
+>
+> When isolating pages from LRUs, nr_taken has been accounted in base
+> page, but nr_scanned and nr_skipped are still accounted in THP.  It
+> doesn't make too much sense too since this may cause trace point
+> underreport the numbers as well.
+>
+> So accounting those counters in base page instead of accounting THP as
+> one page.
+>
+> nr_dirty, nr_unqueued_dirty, nr_congested and nr_writeback are used by
+> file cache, so they are not impacted by THP swap.
+>
+> This change may result in lower steal/scan ratio in some cases since
+> THP may get split during page reclaim, then a part of tail pages get
+> reclaimed instead of the whole 512 pages, but nr_scanned is accounted
+> by 512, particularly for direct reclaim.  But, this should be not a
+> significant issue.
+>
+> Cc: "Huang, Ying" <ying.huang@intel.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Mel Gorman <mgorman@techsingularity.net>
+> Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+> Cc: Hugh Dickins <hughd@google.com>
+> Cc: Shakeel Butt <shakeelb@google.com>
+> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+> ---
+> v5: Fixed sc->nr_scanned double accounting per Huang Ying
+>     Added some comments to address the concern about premature OOM per Hillf Danton 
+> v4: Fixed the comments from Johannes and Huang Ying
+> v3: Removed Shakeel's Reviewed-by since the patch has been changed significantly
+>     Switched back to use compound_order per Matthew
+>     Fixed more counters per Johannes
+> v2: Added Shakeel's Reviewed-by
+>     Use hpage_nr_pages instead of compound_order per Huang Ying and William Kucharski
+>
+>  mm/vmscan.c | 42 +++++++++++++++++++++++++++++++-----------
+>  1 file changed, 31 insertions(+), 11 deletions(-)
+>
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index b65bc50..f4f4d57 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -1118,6 +1118,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+>  		int may_enter_fs;
+>  		enum page_references references = PAGEREF_RECLAIM_CLEAN;
+>  		bool dirty, writeback;
+> +		unsigned int nr_pages;
+>  
+>  		cond_resched();
+>  
+> @@ -1129,6 +1130,13 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+>  
+>  		VM_BUG_ON_PAGE(PageActive(page), page);
+>  
+> +		nr_pages = 1 << compound_order(page);
+> +
+> +		/*
+> +		 * Accounted one page for THP for now.  If THP gets swapped
+> +		 * out in a whole, will account all tail pages later to
+> +		 * avoid accounting tail pages twice.
+> +		 */
+>  		sc->nr_scanned++;
+>  
+>  		if (unlikely(!page_evictable(page)))
+> @@ -1250,7 +1258,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+>  		case PAGEREF_ACTIVATE:
+>  			goto activate_locked;
+>  		case PAGEREF_KEEP:
+> -			stat->nr_ref_keep++;
+> +			stat->nr_ref_keep += nr_pages;
+>  			goto keep_locked;
+>  		case PAGEREF_RECLAIM:
+>  		case PAGEREF_RECLAIM_CLEAN:
 
-In most cases all segments will be sent in a single xmit_more train.
-In which case the device doorbell is rung when the last segment is
-queued.
+If the "Accessed bit" of a THP is set in the page table that maps it, it
+will go PAGEREF_ACTIVATE path here.  And the sc->nr_scanned should
+increase 512 instead of 1.  Otherwise sc->nr_activate may be larger than
+sc->nr_scanned.
 
-A device may also pause in the middle of a train, causing the rest of
-the list to be requeued and resent after a tx completion frees up
-descriptors and wakes the device. This seems like a relevant exception
-to be able to measure.
-
-That said, I am not opposed to the first segment, if we have to make a
-binary choice for a default. Either option has cons. See more specific
-revision requests in the v2 patch.
+Best Regards,
+Huang, Ying
