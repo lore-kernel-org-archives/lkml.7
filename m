@@ -2,156 +2,157 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 271A2C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F921C07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E90A820859
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:54:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dR84Z3nu"
+	by mail.kernel.org (Postfix) with ESMTP id 1B44B2133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:56:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbfE0Kyi (ORCPT
+        id S1726768AbfE0K4K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 06:54:38 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:42432 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725858AbfE0Kyh (ORCPT
+        Mon, 27 May 2019 06:56:10 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:55312 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725814AbfE0K4K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 06:54:37 -0400
-Received: by mail-lf1-f65.google.com with SMTP id y13so11706354lfh.9
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 03:54:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=T2n4gBNEt3oKhgRBGoBZWnyBBkiJxP3xEBbVU5SxBlY=;
-        b=dR84Z3nuv3s5YOrQqiLB6Ix9wMQyT82iqcq3wrUTRa/kZxr+uBwRmuVxh7hx4Lj3FM
-         KEhFHkxTmGv6Kam6nBU+3HqKorCFNvjw9OKzYn2VNr6iYG7Vd9fuyzf40YRt32xz2mSg
-         bOlKoojrSHXP5UsyZ7jQAqUTsUqLpKSgzi5DR4/VRyJe0G/djkI1+RjUawiyvAvHZEv3
-         3XP1nkgpkAxPkHG7+BRQVTg9/MdbHsZdjvMS8pi4eVrG7fJTgAEcOXKiSiV6YDPNq6jw
-         6xUNJqhwJr+anTyRiB+gdR3lBXp1Y/etJgAXzlqqmzfgEdAxjIYaFfuQhg6wQqVmQwf3
-         vXaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=T2n4gBNEt3oKhgRBGoBZWnyBBkiJxP3xEBbVU5SxBlY=;
-        b=gnAkhaXxUbFbmYFSXjLqTXc01TffCzh331d2HSTtVn6d21W7tZFUb9TEOZwHxQEuU3
-         RzQWaI4bCoIWWgkTK4xVfoqi0WlDjvGcrI667h/9pWaqNjzFJ0BaxUAN0Tmp/OPSyFMF
-         8ksEuDobjD+gTx2hof1K8gq9+GfKkvtyZjHk5QzOlbNIrfqInEAe5/HjnNIavAxW6Kdy
-         iL62QDy7TRzp1o0KZwweO2qSVG7ywCy2mIzMt3P7/1+ZTgD/gGRk29icZFjr+/JN20bI
-         IT/uqPZDWiMJO1bNzW5A6BG6Bgwp2D5lEPMvRGMn0QLqetb318rIaOh0L/dbIMf/WaTT
-         4RLQ==
-X-Gm-Message-State: APjAAAV/oNEeutnI7acJBWNIgziL8+1G97ngpDalg9bYpSh9SwZqCDRk
-        WpslEPMdFcB+5i6PX3soEYcZzbsyBDb7kdZ0HEY=
-X-Google-Smtp-Source: APXvYqxlu5SnIBVa0aUlRiEJtdFyNmXZap0vDJRssM/5GGdUmvTYcWWazIPXEdPkaGYaXb7kqt5b4zLGBxOPmONRBqE=
-X-Received: by 2002:a19:9e46:: with SMTP id h67mr8374590lfe.120.1558954475111;
- Mon, 27 May 2019 03:54:35 -0700 (PDT)
+        Mon, 27 May 2019 06:56:10 -0400
+Received: from 79.184.255.36.ipv4.supernova.orange.pl (79.184.255.36) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
+ id c71e16143d68c4a3; Mon, 27 May 2019 12:56:08 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     x86 <x86@kernel.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Ido Schimmel <idosch@idosch.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Len Brown <len.brown@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Laura Abbott <labbott@fedoraproject.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Simon Schricker <sschricker@suse.de>,
+        Borislav Petkov <bp@suse.de>, Hannes Reinecke <hare@suse.de>
+Subject: [PATCH] x86: intel_epb: Do not build when CONFIG_PM is unset
+Date:   Mon, 27 May 2019 12:56:07 +0200
+Message-ID: <3844875.YPkTDDlcrF@kreacher>
+In-Reply-To: <20190509174338.GA24432@splinter>
+References: <1637073.gl2OfxWTjI@aspire.rjw.lan> <1627338.1fd8ofggM8@kreacher> <20190509174338.GA24432@splinter>
 MIME-Version: 1.0
-References: <20190524174918.71074b358001bdbf1c23cd77@gmail.com> <20190525150948.e1ff1a2a894ca8110abc8183@linux-foundation.org>
-In-Reply-To: <20190525150948.e1ff1a2a894ca8110abc8183@linux-foundation.org>
-From:   Vitaly Wool <vitalywool@gmail.com>
-Date:   Mon, 27 May 2019 12:54:23 +0200
-Message-ID: <CAMJBoFNXVc3BBdEOsKTSHO51reHL93GPQNO4Tjkx+OaDcpb22g@mail.gmail.com>
-Subject: Re: [PATCH] z3fold: add inter-page compaction
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux-MM <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        Dan Streetman <ddstreet@ieee.org>,
-        Oleksiy.Avramchenko@sony.com,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Uladzislau Rezki <urezki@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 26, 2019 at 12:09 AM Andrew Morton
-<akpm@linux-foundation.org> wrote:
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-<snip>
-> Forward-declaring inline functions is peculiar, but it does appear to work.
->
-> z3fold is quite inline-happy.  Fortunately the compiler will ignore the
-> inline hint if it seems a bad idea.  Even then, the below shrinks
-> z3fold.o text from 30k to 27k.  Which might even make it faster....
+Commit 9ed0985332a6 ("x86: intel_epb: Take CONFIG_PM into account")
+prevented the majority of the Performance and Energy Bias Hint (EPB)
+handling code from being built when CONFIG_PM is unset to fix a
+regression introduced by commit b9c273babce7 ("PM / arch: x86:
+MSR_IA32_ENERGY_PERF_BIAS sysfs interface").
 
-It is faster with inlines, I'll try to find a better balance between
-size and performance in the next version of the patch though.
+In hindsight, however, it would be better to skip all of the EPB
+handling code for CONFIG_PM unset as there really is no reason for
+it to be there in that case.  Namely, if the EPB is not touched
+by the kernel at all with CONFIG_PM unset, there is no need to
+worry about modifying the EPB inadvertently on CPU online and since
+the system will not suspend or hibernate then, there is no need to
+worry about possible modifications of the EPB by the platform
+firmware during system-wide PM transitions.
 
-<snip>
-> >
-> > ...
-> >
-> > +static inline struct z3fold_header *__get_z3fold_header(unsigned long handle,
-> > +                                                     bool lock)
-> > +{
-> > +     struct z3fold_buddy_slots *slots;
-> > +     struct z3fold_header *zhdr;
-> > +     unsigned int seq;
-> > +     bool is_valid;
-> > +
-> > +     if (!(handle & (1 << PAGE_HEADLESS))) {
-> > +             slots = handle_to_slots(handle);
-> > +             do {
-> > +                     unsigned long addr;
-> > +
-> > +                     seq = read_seqbegin(&slots->seqlock);
-> > +                     addr = *(unsigned long *)handle;
-> > +                     zhdr = (struct z3fold_header *)(addr & PAGE_MASK);
-> > +                     preempt_disable();
->
-> Why is this done?
->
-> > +                     is_valid = !read_seqretry(&slots->seqlock, seq);
-> > +                     if (!is_valid) {
-> > +                             preempt_enable();
-> > +                             continue;
-> > +                     }
-> > +                     /*
-> > +                      * if we are here, zhdr is a pointer to a valid z3fold
-> > +                      * header. Lock it! And then re-check if someone has
-> > +                      * changed which z3fold page this handle points to
-> > +                      */
-> > +                     if (lock)
-> > +                             z3fold_page_lock(zhdr);
-> > +                     preempt_enable();
-> > +                     /*
-> > +                      * we use is_valid as a "cached" value: if it's false,
-> > +                      * no other checks needed, have to go one more round
-> > +                      */
-> > +             } while (!is_valid || (read_seqretry(&slots->seqlock, seq) &&
-> > +                     (lock ? ({ z3fold_page_unlock(zhdr); 1; }) : 1)));
-> > +     } else {
-> > +             zhdr = (struct z3fold_header *)(handle & PAGE_MASK);
-> > +     }
-> > +
-> > +     return zhdr;
-> > +}
-> >
-> > ...
-> >
-> >  static unsigned short handle_to_chunks(unsigned long handle)
-> >  {
-> > -     unsigned long addr = *(unsigned long *)handle;
-> > +     unsigned long addr;
-> > +     struct z3fold_buddy_slots *slots = handle_to_slots(handle);
-> > +     unsigned int seq;
-> > +
-> > +     do {
-> > +             seq = read_seqbegin(&slots->seqlock);
-> > +             addr = *(unsigned long *)handle;
-> > +     } while (read_seqretry(&slots->seqlock, seq));
->
-> It isn't done here (I think).
+For this reason, revert the changes made by commit 9ed0985332a6
+and only allow intel_epb.o to be built when CONFIG_PM is set.
 
-handle_to_chunks() is always called with z3fold header locked which
-makes it a lot easier in this case. I'll add some comments in V2.
+Note that this changes the behavior of the kernels built with
+CONFIG_PM unset as they will not modify the EPB on boot if it is
+zero initially any more, so it is not a fix strictly speaking, but
+users building their kernels with CONFIG_PM unset really should not
+expect them to take energy efficiency into account.  Moreover, if
+CONFIG_PM is unset for performance reasons, leaving EPB as set
+initially by the platform firmware will actually be consistent
+with the user's expectations.
 
-Thanks,
-   Vitaly
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+
+This is complementary to the EPB handling changes made in the current
+development cycle, so IMO it would be good to do it in this cycle too
+if there are no technical concerns or objections regarding it.
+
+---
+ arch/x86/kernel/cpu/Makefile    |    5 ++++-
+ arch/x86/kernel/cpu/intel_epb.c |   22 +---------------------
+ 2 files changed, 5 insertions(+), 22 deletions(-)
+
+Index: linux-pm/arch/x86/kernel/cpu/Makefile
+===================================================================
+--- linux-pm.orig/arch/x86/kernel/cpu/Makefile
++++ linux-pm/arch/x86/kernel/cpu/Makefile
+@@ -28,7 +28,10 @@ obj-y			+= cpuid-deps.o
+ obj-$(CONFIG_PROC_FS)	+= proc.o
+ obj-$(CONFIG_X86_FEATURE_NAMES) += capflags.o powerflags.o
+ 
+-obj-$(CONFIG_CPU_SUP_INTEL)		+= intel.o intel_pconfig.o intel_epb.o
++ifdef CONFIG_CPU_SUP_INTEL
++obj-y			+= intel.o intel_pconfig.o
++obj-$(CONFIG_PM)	+= intel_epb.o
++endif
+ obj-$(CONFIG_CPU_SUP_AMD)		+= amd.o
+ obj-$(CONFIG_CPU_SUP_HYGON)		+= hygon.o
+ obj-$(CONFIG_CPU_SUP_CYRIX_32)		+= cyrix.o
+Index: linux-pm/arch/x86/kernel/cpu/intel_epb.c
+===================================================================
+--- linux-pm.orig/arch/x86/kernel/cpu/intel_epb.c
++++ linux-pm/arch/x86/kernel/cpu/intel_epb.c
+@@ -97,7 +97,6 @@ static void intel_epb_restore(void)
+ 	wrmsrl(MSR_IA32_ENERGY_PERF_BIAS, (epb & ~EPB_MASK) | val);
+ }
+ 
+-#ifdef CONFIG_PM
+ static struct syscore_ops intel_epb_syscore_ops = {
+ 	.suspend = intel_epb_save,
+ 	.resume = intel_epb_restore,
+@@ -194,25 +193,6 @@ static int intel_epb_offline(unsigned in
+ 	return 0;
+ }
+ 
+-static inline void register_intel_ebp_syscore_ops(void)
+-{
+-	register_syscore_ops(&intel_epb_syscore_ops);
+-}
+-#else /* !CONFIG_PM */
+-static int intel_epb_online(unsigned int cpu)
+-{
+-	intel_epb_restore();
+-	return 0;
+-}
+-
+-static int intel_epb_offline(unsigned int cpu)
+-{
+-	return intel_epb_save();
+-}
+-
+-static inline void register_intel_ebp_syscore_ops(void) {}
+-#endif
+-
+ static __init int intel_epb_init(void)
+ {
+ 	int ret;
+@@ -226,7 +206,7 @@ static __init int intel_epb_init(void)
+ 	if (ret < 0)
+ 		goto err_out_online;
+ 
+-	register_intel_ebp_syscore_ops();
++	register_syscore_ops(&intel_epb_syscore_ops);
+ 	return 0;
+ 
+ err_out_online:
+
+
+
