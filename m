@@ -3,47 +3,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C9B3C282E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 02:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AFABC282E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 02:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26E3E2075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 02:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 617352075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 02:33:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726096AbfE0CZE (ORCPT
+        id S1726139AbfE0Cdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 22:25:04 -0400
-Received: from mga02.intel.com ([134.134.136.20]:3428 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725923AbfE0CZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 22:25:04 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 May 2019 19:25:03 -0700
-X-ExtLoop1: 1
-Received: from genxtest-ykzhao.sh.intel.com (HELO [10.239.143.71]) ([10.239.143.71])
-  by fmsmga001.fm.intel.com with ESMTP; 26 May 2019 19:25:02 -0700
-Subject: Re: [PATCH v6 3/4] x86/acrn: Use HYPERVISOR_CALLBACK_VECTOR for ACRN
- guest upcall vector
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de,
-        Jason Chen CJ <jason.cj.chen@intel.com>
-References: <1556595926-17910-1-git-send-email-yakui.zhao@intel.com>
- <1556595926-17910-4-git-send-email-yakui.zhao@intel.com>
- <20190515172356.GL24212@zn.tnic>
-From:   "Zhao, Yakui" <yakui.zhao@intel.com>
-Message-ID: <27c20325-61b7-994f-2781-f4bc41badc6f@intel.com>
-Date:   Mon, 27 May 2019 10:21:20 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.6.0
+        Sun, 26 May 2019 22:33:36 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:17162 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725973AbfE0Cdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 May 2019 22:33:36 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id D7F0E9D3FE75A93C40BB;
+        Mon, 27 May 2019 10:33:33 +0800 (CST)
+Received: from [127.0.0.1] (10.177.96.96) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Mon, 27 May 2019
+ 10:33:29 +0800
+Subject: =?UTF-8?Q?Re:_[PATCH_net]_staging:_Remove_set_but_not_used_variable?=
+ =?UTF-8?B?IOKAmHN0YXR1c+KAmQ==?=
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+References: <20190525042642.78482-1-maowenan@huawei.com>
+ <CAGngYiX04W+-jxqnWUD6CLh8LAr61FhtADGM0zbGcdeArqzC-Q@mail.gmail.com>
+CC:     Greg KH <gregkh@linuxfoundation.org>,
+        Jeremy Sowden <jeremy@azazel.net>,
+        <devel@driverdev.osuosl.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>,
+        "Matt Sickler" <matt.sickler@daktronics.com>
+From:   maowenan <maowenan@huawei.com>
+Message-ID: <05c9bfac-c3ad-5889-8f47-0e6f53844a76@huawei.com>
+Date:   Mon, 27 May 2019 10:33:27 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-In-Reply-To: <20190515172356.GL24212@zn.tnic>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGngYiX04W+-jxqnWUD6CLh8LAr61FhtADGM0zbGcdeArqzC-Q@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.96.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -51,55 +54,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 2019年05月16日 01:23, Borislav Petkov wrote:
-> On Tue, Apr 30, 2019 at 11:45:25AM +0800, Zhao Yakui wrote:
->> @@ -30,6 +36,29 @@ static bool acrn_x2apic_available(void)
->>   	return false;
->>   }
->>   
->> +static void (*acrn_intr_handler)(void);
->> +
->> +__visible void __irq_entry acrn_hv_vector_handler(struct pt_regs *regs)
->> +{
->> +	struct pt_regs *old_regs = set_irq_regs(regs);
->> +
->> +	/*
->> +	 * The hypervisor requires that the APIC EOI should be acked.
->> +	 * If the APIC EOI is not acked, the APIC ISR bit for the
->> +	 * HYPERVISOR_CALLBACK_VECTOR will not be cleared and then it
->> +	 * will block the interrupt whose vector is lower than
->> +	 * HYPERVISOR_CALLBACK_VECTOR.
->> +	 */
->> +	entering_ack_irq();
+On 2019/5/25 20:59, Sven Van Asbroeck wrote:
+> On Sat, May 25, 2019 at 12:20 AM Mao Wenan <maowenan@huawei.com> wrote:
+>>
+>> The variable 'status' is not used any more, remve it.
+> 
+>>      /* do the transfers for this message */
+>>      list_for_each_entry(transfer, &m->transfers, transfer_list) {
+>>          if (transfer->tx_buf == NULL && transfer->rx_buf == NULL && transfer->len) {
+>> -            status = -EINVAL;
+>>              break;
+>>          }
+> 
+> This looks like an error condition that's not reported to the spi core.
+> 
+> Instead of removing the status variable (which also removes the error value!),
+> maybe this should be reported to the spi core instead ?
+> 
+> Other spi drivers appear to do the following on the error path:
+> m->status = status;
+> return status;
 
-Sorry for the late response.
+I have reviewed the code again, and it is good idea to store m->status in error path, like below?
 
-You are right. The "asm/apic.h" is missing.
-It will be added.
-Very sorry that this issue is not triggered as the used .config in my 
-test doesn't enable the check of "-Werror=implict-function-declaration".
+@@ -374,7 +374,7 @@ kp_spi_transfer_one_message(struct spi_master *master, struct spi_message *m)
+     list_for_each_entry(transfer, &m->transfers, transfer_list) {
+         if (transfer->tx_buf == NULL && transfer->rx_buf == NULL && transfer->len) {
+             status = -EINVAL;
+-            break;
++            goto error;
+         }
+
+         /* transfer */
+@@ -412,7 +412,7 @@ kp_spi_transfer_one_message(struct spi_master *master, struct spi_message *m)
+
+             if (count != transfer->len) {
+                 status = -EIO;
+-                break;
++                goto error;
+             }
+         }
+
+
+...
+
+     /* done work */
+     spi_finalize_current_message(master);
+     return 0;
++
++ error:
++    m->status = status;
++    return status;
+
+ }
+
 
 > 
-> arch/x86/kernel/cpu/acrn.c: In function ‘acrn_hv_vector_handler’:
-> arch/x86/kernel/cpu/acrn.c:52:2: error: implicit declaration of function ‘entering_ack_irq’; did you mean ‘spin_lock_irq’? [-Werror=implicit-function-declaration]
->    entering_ack_irq();
->    ^~~~~~~~~~~~~~~~
->    spin_lock_irq
-> arch/x86/kernel/cpu/acrn.c:58:2: error: implicit declaration of function ‘exiting_irq’; did you mean ‘in_irq’? [-Werror=implicit-function-declaration]
->    exiting_irq();
->    ^~~~~~~~~~~
->    in_irq
-> cc1: some warnings being treated as errors
-> make[3]: *** [scripts/Makefile.build:278: arch/x86/kernel/cpu/acrn.o] Error 1
-> make[3]: *** Waiting for unfinished jobs....
-> make[2]: *** [scripts/Makefile.build:489: arch/x86/kernel/cpu] Error 2
-> make[1]: *** [scripts/Makefile.build:489: arch/x86/kernel] Error 2
-> make: *** [Makefile:1073: arch/x86] Error 2
-> make: *** Waiting for unfinished jobs....
+>>
+>> @@ -370,7 +368,6 @@ kp_spi_transfer_one_message(struct spi_master *master, struct spi_message *m)
+>>
+>>              if (count != transfer->len) {
+>> -                status = -EIO;
+>>                  break;
 > 
-> Looks like it needs
+> Same issue here.
 > 
-> +#include <asm/apic.h>
 > 
-> config attached.
-> 
+
