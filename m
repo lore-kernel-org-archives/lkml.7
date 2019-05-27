@@ -2,162 +2,199 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA418C07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E3DC07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0FBF2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:06:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32CFD2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:06:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbfE0HGK (ORCPT
+        id S1726425AbfE0HGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 03:06:10 -0400
-Received: from mx1.mailbox.org ([80.241.60.212]:8350 "EHLO mx1.mailbox.org"
+        Mon, 27 May 2019 03:06:31 -0400
+Received: from mga17.intel.com ([192.55.52.151]:18791 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725908AbfE0HGJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 03:06:09 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx1.mailbox.org (Postfix) with ESMTPS id 5FD0B4F2A0;
-        Mon, 27 May 2019 09:06:07 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
-        with ESMTP id LeklOLh5Mc4z; Mon, 27 May 2019 09:05:56 +0200 (CEST)
-Subject: Re: [PATCH 1/2 v2] serial: mctrl_gpio: Check if GPIO property exisits
- before requesting it
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yegor Yefremov <yegorslists@googlemail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Giulio Benetti <giulio.benetti@micronovasrl.com>
-References: <20190524094825.16151-1-sr@denx.de>
- <20190524102002.GT2781@lahna.fi.intel.com>
- <CAHp75VcMVrYv1MXmmqE9fDXShS=Y8pPdWZ4f1neo=ne88TLZDg@mail.gmail.com>
- <287cdcc8-9a8f-4583-8be9-bd1f95936733@denx.de>
- <20190524134657.GV9224@smile.fi.intel.com>
-From:   Stefan Roese <sr@denx.de>
-Message-ID: <1fcbe336-d372-e705-e041-894f637b8657@denx.de>
-Date:   Mon, 27 May 2019 09:05:55 +0200
+        id S1725908AbfE0HGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 03:06:31 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 May 2019 00:06:30 -0700
+X-ExtLoop1: 1
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.29])
+  by orsmga005.jf.intel.com with ESMTP; 27 May 2019 00:06:28 -0700
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     <hannes@cmpxchg.org>, <mhocko@suse.com>,
+        <mgorman@techsingularity.net>, <kirill.shutemov@linux.intel.com>,
+        <josef@toxicpanda.com>, <hughd@google.com>, <shakeelb@google.com>,
+        <hdanton@sina.com>, <akpm@linux-foundation.org>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [v6 PATCH 2/2] mm: vmscan: correct some vmscan counters for THP swapout
+References: <1558929166-3363-1-git-send-email-yang.shi@linux.alibaba.com>
+        <1558929166-3363-2-git-send-email-yang.shi@linux.alibaba.com>
+Date:   Mon, 27 May 2019 15:06:27 +0800
+In-Reply-To: <1558929166-3363-2-git-send-email-yang.shi@linux.alibaba.com>
+        (Yang Shi's message of "Mon, 27 May 2019 11:52:46 +0800")
+Message-ID: <87ef4k8jgs.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20190524134657.GV9224@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24.05.19 15:46, Andy Shevchenko wrote:
-> On Fri, May 24, 2019 at 01:29:34PM +0200, Stefan Roese wrote:
->> On 24.05.19 13:11, Andy Shevchenko wrote:
->>> On Fri, May 24, 2019 at 1:21 PM Mika Westerberg
->>> <mika.westerberg@linux.intel.com> wrote:
->>>>
->>>> On Fri, May 24, 2019 at 11:48:24AM +0200, Stefan Roese wrote:
->>>>> This patch adds a check for the GPIOs property existence, before the
->>>>> GPIO is requested. This fixes an issue seen when the 8250 mctrl_gpio
->>>>> support is added (2nd patch in this patch series) on x86 platforms using
->>>>> ACPI.
->>>>>
->>>>> Here Mika's comments from 2016-08-09:
->>>>>
->>>>> "
->>>>> I noticed that with v4.8-rc1 serial console of some of our Broxton
->>>>> systems does not work properly anymore. I'm able to see output but input
->>>>> does not work.
->>>>>
->>>>> I bisected it down to commit 4ef03d328769eddbfeca1f1c958fdb181a69c341
->>>>> ("tty/serial/8250: use mctrl_gpio helpers").
->>>>>
->>>>> The reason why it fails is that in ACPI we do not have names for GPIOs
->>>>> (except when _DSD is used) so we use the "idx" to index into _CRS GPIO
->>>>> resources. Now mctrl_gpio_init_noauto() goes through a list of GPIOs
->>>>> calling devm_gpiod_get_index_optional() passing "idx" of 0 for each. The
->>>>> UART device in Broxton has following (simplified) ACPI description:
->>>>>
->>>>>       Device (URT4)
->>>>>       {
->>>>>           ...
->>>>>           Name (_CRS, ResourceTemplate () {
->>>>>               GpioIo (Exclusive, PullDefault, 0x0000, 0x0000, IoRestrictionOutputOnly,
->>>>>                       "\\_SB.GPO0", 0x00, ResourceConsumer)
->>>>>               {
->>>>>                   0x003A
->>>>>               }
->>>>>               GpioIo (Exclusive, PullDefault, 0x0000, 0x0000, IoRestrictionOutputOnly,
->>>>>                       "\\_SB.GPO0", 0x00, ResourceConsumer)
->>>>>               {
->>>>>                   0x003D
->>>>>               }
->>>>>           })
->>>>>
->>>>> In this case it finds the first GPIO (0x003A which happens to be RX pin
->>>>> for that UART), turns it into GPIO which then breaks input for the UART
->>>>> device. This also breaks systems with bluetooth connected to UART (those
->>>>> typically have some GPIOs in their _CRS).
->>>>>
->>>>> Any ideas how to fix this?
->>>>>
->>>>> We cannot just drop the _CRS index lookup fallback because that would
->>>>> break many existing machines out there so maybe we can limit this to
->>>>> only DT enabled machines. Or alternatively probe if the property first
->>>>> exists before trying to acquire the GPIOs (using
->>>>> device_property_present()).
->>>>> "
->>>>>
->>>>> This patch implements the fix suggested by Mika in his statement above.
->>>>>
->>>
->>> We have a board where ASL provides _DSD for CTS and RxD pins.
->>> I'm afraid this won't work on it.
->>
->> With "won't work" you mean, that the GPIO can't be used for modem
->> control in this case in the current implementation (with this
->> patchset)? Or do you mean, that the breakage (input does not work
->> on Broxton systems) will not be solved by this patch?
-> 
-> It will solve RxD case, due to mctrl doesn't count RxD as a "control" line.
-> 
-> Though we have CTS pin defined for the same purpose, which means the hardware
-> flow control won't work on a subset of Broxton boards.
-> 
->> If its the former, then I think that solving this issue is something
->> for a new patch, to support modem-control on such platforms as well
->> (if needed).
-> 
->> Please note that this patch is not trying to get modem-control working
->> on such ACPI based systems.
-> 
-> I understand that. At the same time it should not break existing systems.
-> 
->> Its targeted for device-tree enabled
->> platforms, using the 8250 serial driver, here specifically a MIPS
->> MT7688 based board. And just wants to fix the latter issue mentioned
->> above so that the 8250 modem-control support can be accepted in
->> mainline.
-> 
-> As I said already we have to distinguish *the purpose* of these GPIOs.
-> (like CTS).
-> 
-> Can we apply this if and only if the device has no ACPI companion device?
-> 
-> In this case DT will work as you expect and ACPI won't be broken.
+Yang Shi <yang.shi@linux.alibaba.com> writes:
 
-So your suggestion is to add a has_acpi_companion() check before
-mctrl_gpio_init() is called in serial8250_register_8250_port() and
-then only use the gpio related mctrl, if the GPIO's are really used?
+> Since commit bd4c82c22c36 ("mm, THP, swap: delay splitting THP after
+> swapped out"), THP can be swapped out in a whole.  But, nr_reclaimed
+> and some other vm counters still get inc'ed by one even though a whole
+> THP (512 pages) gets swapped out.
+>
+> This doesn't make too much sense to memory reclaim.  For example, direct
+> reclaim may just need reclaim SWAP_CLUSTER_MAX pages, reclaiming one THP
+> could fulfill it.  But, if nr_reclaimed is not increased correctly,
+> direct reclaim may just waste time to reclaim more pages,
+> SWAP_CLUSTER_MAX * 512 pages in worst case.
+>
+> And, it may cause pgsteal_{kswapd|direct} is greater than
+> pgscan_{kswapd|direct}, like the below:
+>
+> pgsteal_kswapd 122933
+> pgsteal_direct 26600225
+> pgscan_kswapd 174153
+> pgscan_direct 14678312
+>
+> nr_reclaimed and nr_scanned must be fixed in parallel otherwise it would
+> break some page reclaim logic, e.g.
+>
+> vmpressure: this looks at the scanned/reclaimed ratio so it won't
+> change semantics as long as scanned & reclaimed are fixed in parallel.
+>
+> compaction/reclaim: compaction wants a certain number of physical pages
+> freed up before going back to compacting.
+>
+> kswapd priority raising: kswapd raises priority if we scan fewer pages
+> than the reclaim target (which itself is obviously expressed in order-0
+> pages). As a result, kswapd can falsely raise its aggressiveness even
+> when it's making great progress.
+>
+> Other than nr_scanned and nr_reclaimed, some other counters, e.g.
+> pgactivate, nr_skipped, nr_ref_keep and nr_unmap_fail need to be fixed
+> too since they are user visible via cgroup, /proc/vmstat or trace
+> points, otherwise they would be underreported.
+>
+> When isolating pages from LRUs, nr_taken has been accounted in base
+> page, but nr_scanned and nr_skipped are still accounted in THP.  It
+> doesn't make too much sense too since this may cause trace point
+> underreport the numbers as well.
+>
+> So accounting those counters in base page instead of accounting THP as
+> one page.
+>
+> nr_dirty, nr_unqueued_dirty, nr_congested and nr_writeback are used by
+> file cache, so they are not impacted by THP swap.
+>
+> This change may result in lower steal/scan ratio in some cases since
+> THP may get split during page reclaim, then a part of tail pages get
+> reclaimed instead of the whole 512 pages, but nr_scanned is accounted
+> by 512, particularly for direct reclaim.  But, this should be not a
+> significant issue.
+>
+> Cc: "Huang, Ying" <ying.huang@intel.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Mel Gorman <mgorman@techsingularity.net>
+> Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+> Cc: Hugh Dickins <hughd@google.com>
+> Cc: Shakeel Butt <shakeelb@google.com>
+> Cc: Hillf Danton <hdanton@sina.com>
+> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+> ---
+> v6: Fixed the other double account issue introduced by v5 per Huang Ying
+> v5: Fixed sc->nr_scanned double accounting per Huang Ying
+>     Added some comments to address the concern about premature OOM per Hillf Danton 
+> v4: Fixed the comments from Johannes and Huang Ying
+> v3: Removed Shakeel's Reviewed-by since the patch has been changed significantly
+>     Switched back to use compound_order per Matthew
+>     Fixed more counters per Johannes
+> v2: Added Shakeel's Reviewed-by
+>     Use hpage_nr_pages instead of compound_order per Huang Ying and William Kucharski
+>
+>  mm/vmscan.c | 47 +++++++++++++++++++++++++++++++++++------------
+>  1 file changed, 35 insertions(+), 12 deletions(-)
+>
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index b65bc50..378edff 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -1118,6 +1118,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+>  		int may_enter_fs;
+>  		enum page_references references = PAGEREF_RECLAIM_CLEAN;
+>  		bool dirty, writeback;
+> +		unsigned int nr_pages;
+>  
+>  		cond_resched();
+>  
+> @@ -1129,7 +1130,10 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+>  
+>  		VM_BUG_ON_PAGE(PageActive(page), page);
+>  
+> -		sc->nr_scanned++;
+> +		nr_pages = 1 << compound_order(page);
+> +
+> +		/* Account the number of base pages even though THP */
+> +		sc->nr_scanned += nr_pages;
+>  
+>  		if (unlikely(!page_evictable(page)))
+>  			goto activate_locked;
+> @@ -1250,7 +1254,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+>  		case PAGEREF_ACTIVATE:
+>  			goto activate_locked;
+>  		case PAGEREF_KEEP:
+> -			stat->nr_ref_keep++;
+> +			stat->nr_ref_keep += nr_pages;
+>  			goto keep_locked;
+>  		case PAGEREF_RECLAIM:
+>  		case PAGEREF_RECLAIM_CLEAN:
+> @@ -1306,6 +1310,15 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+>  		}
+>  
+>  		/*
+> +		 * THP may get split above, need minus tail pages and update
+> +		 * nr_pages to avoid accounting tail pages twice.
+> +		 */
+> +		if ((nr_pages > 1) && !PageTransHuge(page)) {
+> +			sc->nr_scanned -= (nr_pages - 1);
+> +			nr_pages = 1;
+> +		}
 
-I can certainly change patch 2/2 to do this. It would be great though,
-if you (or someone else) could test this on such a ACPI based platform,
-as I don't have access to such a board.
+After checking the code again, it appears there's another hole in the
+code.  In the following code snippet.
 
-Thanks,
-Stefan
+				if (!add_to_swap(page)) {
+					if (!PageTransHuge(page))
+						goto activate_locked;
+					/* Fallback to swap normal pages */
+					if (split_huge_page_to_list(page,
+								    page_list))
+						goto activate_locked;
+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+					count_vm_event(THP_SWPOUT_FALLBACK);
+#endif
+					if (!add_to_swap(page))
+						goto activate_locked;
+				}
+
+
+If the THP is split, but the first or the second add_to_swap() fails, we
+still need to deal with sc->nr_scanned and nr_pages.
+
+How about add a new label before "activate_locked" to deal with that?
+
+Best Regards,
+Huang, Ying
