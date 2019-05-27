@@ -2,115 +2,151 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DAC1C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E55A4C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 716152147A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:17:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="syGD5pLw"
+	by mail.kernel.org (Postfix) with ESMTP id BB7EE2075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:22:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbfE0QRg (ORCPT
+        id S1726725AbfE0QW2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 12:17:36 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:10662 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726207AbfE0QRg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 12:17:36 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4RGGj9F003553;
-        Mon, 27 May 2019 18:17:22 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=8ub46LPrPqf6PivEatMxnOo+wOKNgOZwMhOATPEAYDc=;
- b=syGD5pLwRFIXk0Tl+AIThayna8PwIFezSNCwIIZOt0mX9lodsFkGdt+orN5H+UZVnOSk
- qe/pkZrdWPB0m3JmrfOZ0cZ4/WmXpU29D0Xx3AVIy3ECUCR6CB1dXazEh7rq269VvKTQ
- PggH4NMGxYxUfGN3IwLSatIuGh1y3Gc8hb9ZgpwjaKmziaFV+q0KlsSD2KypkeodSsh5
- S6qqftIpJfpzRd2APAvp7H+/QmP+B6l0AfMacZkanppKGnmrReV9ihQSvjFySiBcZ9zj
- JtzbcdbzljWxPw3nhEFVBmfp45rzjj+1+lwEnCnOPvdBbQgqpoNt4WYrwPF+U5Aqzxj4 /A== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2sptu9m574-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 27 May 2019 18:17:22 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id AF83534;
-        Mon, 27 May 2019 16:17:21 +0000 (GMT)
-Received: from Webmail-eu.st.com (gpxdag3node5.st.com [10.75.127.72])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8E8334F30;
-        Mon, 27 May 2019 16:17:21 +0000 (GMT)
-Received: from [10.48.0.204] (10.75.127.50) by GPXDAG3NODE5.st.com
- (10.75.127.72) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 27 May
- 2019 18:17:20 +0200
-Subject: Re: [PATCH 0/2] pinctrl: stm32: add suspend/resume management
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-CC:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <1557474150-19618-1-git-send-email-alexandre.torgue@st.com>
- <CACRpkdYgTbTa6RmM3y-myk31ZxLGZ+8KvLof1XHkockrX4tofA@mail.gmail.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <7c83e2e1-d5bc-0190-4795-a324a000a5c3@st.com>
-Date:   Mon, 27 May 2019 18:17:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 27 May 2019 12:22:28 -0400
+Received: from mga07.intel.com ([134.134.136.100]:35375 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725991AbfE0QW1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 12:22:27 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 May 2019 09:22:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,519,1549958400"; 
+   d="scan'208";a="178946686"
+Received: from ideak-desk.fi.intel.com ([10.237.72.204])
+  by fmsmga002.fm.intel.com with ESMTP; 27 May 2019 09:22:25 -0700
+Date:   Mon, 27 May 2019 19:21:49 +0300
+From:   Imre Deak <imre.deak@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
+        <ville.syrjala@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH v2 2/2] lockdep: Fix merging of hlocks with non-zero
+ references
+Message-ID: <20190527162149.GA25731@ideak-desk.fi.intel.com>
+Reply-To: imre.deak@intel.com
+References: <20190524201509.9199-1-imre.deak@intel.com>
+ <20190524201509.9199-2-imre.deak@intel.com>
+ <20190527151438.GF2623@hirez.programming.kicks-ass.net>
+ <20190527160618.GT2650@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdYgTbTa6RmM3y-myk31ZxLGZ+8KvLof1XHkockrX4tofA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG1NODE2.st.com (10.75.127.2) To GPXDAG3NODE5.st.com
- (10.75.127.72)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-27_08:,,
- signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190527160618.GT2650@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus
+On Mon, May 27, 2019 at 06:06:18PM +0200, Peter Zijlstra wrote:
+> On Mon, May 27, 2019 at 05:14:38PM +0200, Peter Zijlstra wrote:
+> > On Fri, May 24, 2019 at 11:15:09PM +0300, Imre Deak wrote:
+> > > diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+> > > index 967352d32af1..9e2a4ab6c731 100644
+> > > --- a/kernel/locking/lockdep.c
+> > > +++ b/kernel/locking/lockdep.c
+> > > @@ -3637,6 +3637,11 @@ print_lock_nested_lock_not_held(struct task_struct *curr,
+> > >  
+> > >  static int __lock_is_held(const struct lockdep_map *lock, int read);
+> > >  
+> > > +static int hlock_reference(int reference)
+> > > +{
+> > > +	return reference ? : 1;
+> > > +}
+> > > +
+> > >  /*
+> > >   * This gets called for every mutex_lock*()/spin_lock*() operation.
+> > >   * We maintain the dependency maps and validate the locking attempt:
+> > > @@ -3702,17 +3707,15 @@ static int __lock_acquire(struct lockdep_map *lock, unsigned int subclass,
+> > >  	if (depth) {
+> > >  		hlock = curr->held_locks + depth - 1;
+> > >  		if (hlock->class_idx == class_idx && nest_lock) {
+> > > -			if (hlock->references) {
+> > > -				/*
+> > > -				 * Check: unsigned int references overflow.
+> > > -				 */
+> > > -				if (DEBUG_LOCKS_WARN_ON(hlock->references == UINT_MAX))
+> > 
+> > What tree is this against? Afaict this is still 12 bits ?!
+> > 
+> > > -					return 0;
+> > > +			/*
+> > > +			 * Check: unsigned int references overflow.
+> > > +			 */
+> > > +			if (DEBUG_LOCKS_WARN_ON(hlock_reference(hlock->references) >
+> > > +						UINT_MAX - hlock_reference(references)))
+> > 
+> > Idem. Also very weird overflow check..
+> > 
+> > > +				return 0;
+> > >  
+> > > -				hlock->references++;
+> > > -			} else {
+> > > -				hlock->references = 2;
+> > > -			}
+> > > +			hlock->references = hlock_reference(hlock->references) +
+> > > +					    hlock_reference(references);
+> > >  
+> > >  			return 2;
+> > >  		}
+> 
+> I think you wanted something like this: ?
+> 
+> --- a/kernel/locking/lockdep.c
+> +++ b/kernel/locking/lockdep.c
+> @@ -3731,6 +3731,11 @@ print_lock_nested_lock_not_held(struct t
+>  
+>  static int __lock_is_held(const struct lockdep_map *lock, int read);
+>  
+> +static inline int hlock_references(struct held_lock *hlock)
+> +{
+> +	return hlock->references ? : 1;
+> +}
+> +
+>  /*
+>   * This gets called for every mutex_lock*()/spin_lock*() operation.
+>   * We maintain the dependency maps and validate the locking attempt:
+> @@ -3796,17 +3801,14 @@ static int __lock_acquire(struct lockdep
+>  	if (depth) {
+>  		hlock = curr->held_locks + depth - 1;
+>  		if (hlock->class_idx == class_idx && nest_lock) {
+> -			if (hlock->references) {
+> -				/*
+> -				 * Check: unsigned int references:12, overflow.
+> -				 */
+> -				if (DEBUG_LOCKS_WARN_ON(hlock->references == (1 << 12)-1))
+> -					return 0;
+> -
+> -				hlock->references++;
+> -			} else {
+> -				hlock->references = 2;
+> -			}
+> +			if (!references)
+> +				references++;
+> +
+> +			hlock->references = hlock_references(hlock) + references;
+> +
+> +			/* Overflow */
+> +			if (DEBUG_LOCKS_WARN_ON(hlock->references < references))
+> +				return 0;
 
-On 5/24/19 1:24 PM, Linus Walleij wrote:
-> On Fri, May 10, 2019 at 9:42 AM Alexandre Torgue
-> <alexandre.torgue@st.com> wrote:
-> 
->> During power sequence, GPIO hardware registers could be lost if the power
->> supply is switched off. Each device using pinctrl API is in charge of
->> managing pins during suspend/resume sequences. But for pins used as gpio or
->> irq stm32 pinctrl driver has to save the hardware configuration.
->> Each register will be saved at runtime and restored during resume sequence.
-> 
-> Both patches applied.
-> 
-> On the same pinctrl devel branch is also Benjamin's patches to support
-> the "link_consumers" property on the pin controller descriptor to
-> enable links from pin control consumers back to their pin controller
-> suppliers, especially important for STMFX.
-> 
-> Would you please check if it work fine if you turn on this feature
-> for the SoC STM32 pin controller?
+Yes, it works.
 
-I just tested with Benjamin's patches and set "link_consumers" property 
-for STM32 pinctrl. No changes on boot (except extra logs for each probe) 
-and no changes on power tests too.
-
-regards
-alex
-
-> 
-> I am working a bit on refining the patches, so I want to enable testing
-> with some SoC pin controllers as well and possibly make the
-> behavior default.
-> 
-> Yours,
-> Linus Walleij
-> 
+>  
+>  			return 2;
+>  		}
