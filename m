@@ -2,69 +2,91 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21240C46470
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 09:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A5DC28CBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 09:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02E0D2173C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 09:40:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 995182175B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 09:40:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726844AbfE0JkD (ORCPT
+        id S1726858AbfE0JkT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 05:40:03 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:49227 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbfE0JkD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 05:40:03 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 368A8804CB; Mon, 27 May 2019 11:39:51 +0200 (CEST)
-Date:   Mon, 27 May 2019 11:39:38 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     kernel list <linux-kernel@vger.kernel.org>, tglx@linutronix.de,
-        bp@suse.de, hpa@zytor.com, mingo@redhat.com, x86@kernel.org,
-        rjw@rjwysocki.net, lenb@kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: Thinkpad X60 fails to boot while "hot"
-Message-ID: <20190527093938.GA12391@xo-6d-61-c0.localdomain>
-References: <20190527085155.GA11421@xo-6d-61-c0.localdomain>
+        Mon, 27 May 2019 05:40:19 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:39720 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725991AbfE0JkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 05:40:18 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 3ECA3419BF0B28FDFABB;
+        Mon, 27 May 2019 17:40:16 +0800 (CST)
+Received: from SZX1000472652.huawei.com (100.100.247.164) by
+ DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 27 May 2019 17:40:05 +0800
+From:   Yongliang Gao <gaoyongliang@huawei.com>
+To:     <gregkh@linuxfoundation.org>, <rmk+kernel@armlinux.org.uk>,
+        <linux@armlinux.org.uk>, <punitagrawal@gmail.com>,
+        <rafael.j.wysocki@intel.com>, <marc.zyngier@arm.com>,
+        <james.morse@arm.com>, <linux-arm-kernel@lists.infradead.org>
+CC:     <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+        <chenjie6@huawei.com>, <nixiaoming@huawei.com>,
+        <zengweilin@huawei.com>, <shiwenlu@huawei.com>
+Subject: [PATCH] arm: fix using smp_processor_id() in preemptible context
+Date:   Mon, 27 May 2019 17:39:39 +0800
+Message-ID: <1558949979-129251-1-git-send-email-gaoyongliang@huawei.com>
+X-Mailer: git-send-email 1.8.5.6
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190527085155.GA11421@xo-6d-61-c0.localdomain>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain
+X-Originating-IP: [100.100.247.164]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 2019-05-27 10:51:55, Pavel Machek wrote:
-> Hi!
-> 
-> So if you compile a kernel, then reboot, boot will hang after "Freeing SMP
-> alternatives memory" (and then wastes power, making thermal situation even worse).
+harden_branch_predictor() call smp_processor_id() in preemptible
+context, this would cause a bug messages.
 
-Normally, next message is "smpboot: CPU0: Genuine Intel...".
+The bug messages is as follows:
+BUG: using smp_processor_id() in preemptible [00000000] code: syz-executor0/17992
+caller is harden_branch_predictor arch/arm/include/asm/system_misc.h:27 [inline]
+caller is __do_user_fault+0x34/0x114 arch/arm/mm/fault.c:200
+CPU: 1 PID: 17992 Comm: syz-executor0 Tainted: G O 4.4.176 #1
+Hardware name: Hisilicon A9
+[<c0114ae4>] (unwind_backtrace) from [<c010e6fc>] (show_stack+0x18/0x1c)
+[<c010e6fc>] (show_stack) from [<c0379514>] (dump_stack+0xc8/0x118)
+[<c0379514>] (dump_stack) from [<c039b5a0>] (check_preemption_disabled+0xf4/0x138)
+[<c039b5a0>] (check_preemption_disabled) from [<c011abe4>] (__do_user_fault+0x34/0x114)
+[<c011abe4>] (__do_user_fault) from [<c053b0d0>] (do_page_fault+0x3b4/0x3d8)
+[<c053b0d0>] (do_page_fault) from [<c01013dc>] (do_DataAbort+0x58/0xf8)
+[<c01013dc>] (do_DataAbort) from [<c053a880>] (__dabt_usr+0x40/0x60)
 
-I added some printks, and check_bugs() returns. Then it goes to ACPI and never
-comes back...
+Reported-by: Jingwen Qiu <qiujingwen@huawei.com>
+Signed-off-by: Yongliang Gao <gaoyongliang@huawei.com>
+Cc: <stable@vger.kernel.org>
+---
+ arch/arm/include/asm/system_misc.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-kernel-parameters.txt points to Documentation/acpi/debug.txt, but that one does not exist.
-
-Any ideas what debugging parameters to use for ACPI? I either get nothing or
-so much that machine does not boot...
-
-> Unfortunately, threshold for non-booting system is quite low, fan does _not_
-> go full speed after reboot. Annoying for kernel development :-(. Force power off,
-> wait for a while, power on, and it works again.
-> 
-> The bug is there for a long long time... probably 4.0 is affected, probably even
-> older.
-
-Quick test, and 4.6.0 seems to be affected.
-
+diff --git a/arch/arm/include/asm/system_misc.h b/arch/arm/include/asm/system_misc.h
+index 66f6a3a..4a55cfb 100644
+--- a/arch/arm/include/asm/system_misc.h
++++ b/arch/arm/include/asm/system_misc.h
+@@ -22,9 +22,10 @@
+ static inline void harden_branch_predictor(void)
+ {
+ 	harden_branch_predictor_fn_t fn = per_cpu(harden_branch_predictor_fn,
+-						  smp_processor_id());
++						  get_cpu());
+ 	if (fn)
+ 		fn();
++	put_cpu();
+ }
+ #else
+ #define harden_branch_predictor() do { } while (0)
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+1.8.5.6
+
