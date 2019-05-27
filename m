@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F1DEC04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E77B6C07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 185FA2133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:22:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE2542133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:22:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="g1CGoCwN"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Hg2CCl48"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbfE0NWI (ORCPT
+        id S1726756AbfE0NWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 09:22:08 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35691 "EHLO
+        Mon, 27 May 2019 09:22:38 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46155 "EHLO
         mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726395AbfE0NWF (ORCPT
+        with ESMTP id S1726546AbfE0NWH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 09:22:05 -0400
-Received: by mail-wr1-f68.google.com with SMTP id m3so16943027wrv.2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 06:22:04 -0700 (PDT)
+        Mon, 27 May 2019 09:22:07 -0400
+Received: by mail-wr1-f68.google.com with SMTP id r7so16908723wrr.13
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 06:22:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=T95ZQlA6lX+40Lhm6IUwdSzze46k73cFevOVZXOTee0=;
-        b=g1CGoCwNSEGKRD0Ut/4cJGCrE3QZykkRFvqivPRJa4jpyFrpTxQSksGSIRpFKDo5yl
-         QP+Olgb2asgUvOl5y20PXku1Us0ELGXqMh0Nph7H2pDsEFrPqUntPPdU9NxKbRahNjRJ
-         3LYBdOFznQQvzHJ7zRfAIKcfDkrO+2eMKt9AA//choxXBIIZfh51oSKuwjH6SNzoaX0g
-         2NdLZMFdjFNiX88qpPMYF4nwudX5uw3giLwzgXOB+t1AWvldAv4wHbznahlIXegaenLK
-         uri2HZForiU+R91YsE71oMEmjYgiQiGjslPXZjKyFy8B1dwE/SnhQ9OB2cM5RVT3H5VA
-         uxOg==
+        bh=1CiRqWREkgXuihOBunUI3fz+CBkOdeZkmwsLz+vnX0Y=;
+        b=Hg2CCl48NNB6AMXkrTWKa8IdPcIBCv4b8IP+DMrhifc8ubYGhMOkLQyDLeWo1LLLZu
+         JjN42+xp70/Pq4+VvnuCgjCMy/fujF0c5f9W+02piqOcWB6Vuq6txI+u/Qy7+sDhh9tI
+         J3HJIJ4xRyWnBOLDLZ0ZNjq9saFTrJe+p4mGJ2WI1pa1UCWbWHskqAlTPksoWQGPl6q3
+         gtzJglAvTqLuWJXateDZ/fmZHv9A5d8CUlk8xc3cCXdQrJVSMd0TBaGGEuWiF3opdJfI
+         doDO5PCC5S7u50ZOE1D+dRos4HDFw4O0CYZhd6VXJ4eQRKXg59Q1YJdhmTBggPvZ73dx
+         8TPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=T95ZQlA6lX+40Lhm6IUwdSzze46k73cFevOVZXOTee0=;
-        b=RnzPPUqS38C8Lgvll7iQJqNvZl/L8PMO2MevbVFKsMv84DL70GsjNkLC+yNJdOLA5T
-         SPvWG5Xkpn/khi9+Hg29KwO3QCG5I+jXjQPJmiVcgqnZ/IERkwddmcnEeqshrj8qOeJX
-         OzCVutSpbdG0RACVJs1nvMGfGHlvxkfgO12oofVD6yqTcnIAozcppGkSptN2GaP+4DEU
-         qr50BLRPMXNtyOFbXqZYaL8tbMQtl/ZBgrk1cM7EsfZap1NG3ZaFtAvCI/Km7SLuXXbs
-         TawHm9elHCLi+L34LdfWqhYqvL9Pr4A2+omJS9A63bbZ/dTO9fjHGEmekYJ13yOiAEtq
-         08Xg==
-X-Gm-Message-State: APjAAAU4+uEXeOg3p68hETt0Z0zlB2Y56JQILuWXGYWqrSFIOORIpDTC
-        yqYQnUKyK0tkUlOCAvAWpjAzNw==
-X-Google-Smtp-Source: APXvYqymA+dN50e6OgVbRt3gPhz5kZvcuJc9tJqA4+IAQr5buFHgQO7vfJ1KrGPvnu4NRcR62G9fyw==
-X-Received: by 2002:a5d:6588:: with SMTP id q8mr28940610wru.259.1558963323258;
-        Mon, 27 May 2019 06:22:03 -0700 (PDT)
+        bh=1CiRqWREkgXuihOBunUI3fz+CBkOdeZkmwsLz+vnX0Y=;
+        b=NKrSDv+P34aYyjyoooh2Gy1Ohnji6nt2lzaf4oUA1JK37l7elYtcKxbRZ+fZxnY/MY
+         CYFk5nTkFutkNOoTM0AhrqYQ9jGQ4Z6J1C66um6UwI0JrYtEuilFWVXnuB7OequRf0ju
+         MrRG4osm1tTuNh9zf3/IDz2bgSW6lrkm2ddD+InuxsVYlkiT/2tPE05l0kPGz+ccGWZY
+         umIhogUwofxq48VK4ADO++UwGhZjsU3GgoJutdGnOfIlRg2Vp9cahoTSS3Aq23Da/PVl
+         2rr1i5lCeZGCfdLO3gqybCO32fP4dPH3WzNu0CkqfwAdDbamhZsUPIJgOL521wHjBHI5
+         0u7Q==
+X-Gm-Message-State: APjAAAU5YUgjNk3fEXhyi3WzvP6/yFeUxvpYyyM9Tx55UMJcB3wFMDn7
+        4c36UcOpQm8G/k3cs9ID2+tYHg==
+X-Google-Smtp-Source: APXvYqzC4VmNhq9v3nbo8eE5sL9A319fsc//sxkeiH4qYeTzgim31C30hxhgbJLRajqBnZV/wSwEmw==
+X-Received: by 2002:a5d:4e89:: with SMTP id e9mr3774964wru.72.1558963326098;
+        Mon, 27 May 2019 06:22:06 -0700 (PDT)
 Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id l12sm7019836wmj.22.2019.05.27.06.22.02
+        by smtp.gmail.com with ESMTPSA id l12sm7019836wmj.22.2019.05.27.06.22.05
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 27 May 2019 06:22:02 -0700 (PDT)
+        Mon, 27 May 2019 06:22:05 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     khilman@baylibre.com
 Cc:     Christian Hewitt <christianshewitt@gmail.com>,
         linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 01/10] arm64: dts: meson-gxm-khadas-vim2: fix gpio-keys-polled node
-Date:   Mon, 27 May 2019 15:21:51 +0200
-Message-Id: <20190527132200.17377-2-narmstrong@baylibre.com>
+Subject: [PATCH 04/10] arm64: dts: meson-gxbb-wetek: enable bluetooth
+Date:   Mon, 27 May 2019 15:21:54 +0200
+Message-Id: <20190527132200.17377-5-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190527132200.17377-1-narmstrong@baylibre.com>
 References: <20190527132200.17377-1-narmstrong@baylibre.com>
@@ -77,36 +77,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Christian Hewitt <christianshewitt@gmail.com>
 
-Fix DTC warnings:
+This enables Bluetooth support for the following models:
 
-meson-gxm-khadas-vim2.dtb: Warning (avoid_unnecessary_addr_size):
-   /gpio-keys-polled: unnecessary #address-cells/#size-cells
-	without "ranges" or child "reg" property
+AP6335 in the WeTek Hub rev1 - BCM4335C0.hcd
+AP6255 in the WeTek Hub rev2 - BCM4345C0.hcd
+AP6330 in the WeTek Play 2 - BCM4330B1.hcd
 
-Fixes: b8b74dda3908 ("ARM64: dts: meson-gxm: Add support for Khadas VIM2")
-Suggested-by: Christian Hewitt <christianshewitt@gmail.com>
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
-index c5f3f90a42ae..25079501f2bb 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
-@@ -63,11 +63,9 @@
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
+index 45e306da2154..9ef6858779c1 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
+@@ -249,6 +249,19 @@
+ 	vqmmc-supply = <&vddio_boot>;
+ };
  
- 	gpio-keys-polled {
- 		compatible = "gpio-keys-polled";
--		#address-cells = <1>;
--		#size-cells = <0>;
- 		poll-interval = <100>;
- 
--		button@0 {
-+		power-button {
- 			label = "power";
- 			linux,code = <KEY_POWER>;
- 			gpios = <&gpio_ao GPIOAO_2 GPIO_ACTIVE_LOW>;
++/* This is connected to the Bluetooth module: */
++&uart_A {
++	status = "okay";
++	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
++	pinctrl-names = "default";
++	uart-has-rtscts;
++
++	bluetooth {
++		compatible = "brcm,bcm43438-bt";
++		shutdown-gpios = <&gpio GPIOX_20 GPIO_ACTIVE_HIGH>;
++	};
++};
++
+ /* This UART is brought out to the DB9 connector */
+ &uart_AO {
+ 	status = "okay";
 -- 
 2.21.0
 
