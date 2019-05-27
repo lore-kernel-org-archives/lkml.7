@@ -7,58 +7,59 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E906FC04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 18:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E173CC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 18:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAD6820883
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 18:05:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9EB520883
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 18:06:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="HFfUxrJh"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="HUmc6rir"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727094AbfE0SFy (ORCPT
+        id S1727161AbfE0SGR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 14:05:54 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:43273 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726346AbfE0SFy (ORCPT
+        Mon, 27 May 2019 14:06:17 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38253 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726346AbfE0SGR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 14:05:54 -0400
-Received: by mail-ot1-f65.google.com with SMTP id i8so15471279oth.10
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 11:05:54 -0700 (PDT)
+        Mon, 27 May 2019 14:06:17 -0400
+Received: by mail-oi1-f196.google.com with SMTP id u199so12419266oie.5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 11:06:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=TzjIw5BLJk5drmWsGbwMcT1IBdvLRxaPnalQTSSBes4=;
-        b=HFfUxrJhSYm2j8/HILqhg7e2ofeY9r3RcjD08fQe/AtwAyshGotCU0QD2P94+IP4yF
-         lmbV61UJFI262leGz2czn5IWnK3/vE/mGGnkPgG9pAsXSP14vdqNMg374KhFtDHe8OCm
-         VKWEXZwfnNnR6Uf/rgZ3ZbW4EDgagYKtCTsDyh4ZCf9L+P+e2JBxjQAKHpugULNHWsw/
-         mCTiF0GQt1Y1BqO7X5YtBwMgMOR6GKMiW+4WqN93UE3cQ2Cz20m/20Ab7zHDxYH3nIUQ
-         uD0qSU7sN/GwjuEDtUGoa3AZ7WMs1OsTw1LMnYEdp2+lHsmz77yja2LAikHUo8RgzeZk
-         95GA==
+        bh=snK6jJsPt2cSi+KLqPDOwYhYAz49h47RS/7FICnk118=;
+        b=HUmc6rirKmR1hS/gQsUVm0RGGqPT4N9PmeqPlzvBsEmT/AclV6qMqetS2k+ZqseZt1
+         O+Vonuz3IKhAeIac/8ALVXzw3wyEX0O0KXVQr/aS+HZJZcBcA17jb2xhJETkOllXc+Wz
+         lzNv6hMZa5n3nvVMipKtUhA6sEdtCOqtcfP9W1yPgc40bJsoseywMbjinhqauVzZzYDe
+         2DdtFuaMlbN4WS4utWCYQDwCF20MxmO6klYN0kIEqQldYJlwfqFroerA+UJZGPTxW9d4
+         5CVNp7lh14MpD36j0VFTNVHkO/i61eb1Tqq7GSTXPIU2pjympknGZG9RbML3wfZSQsAV
+         a4IA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TzjIw5BLJk5drmWsGbwMcT1IBdvLRxaPnalQTSSBes4=;
-        b=kFQLRBu1Nh9L+KMd1Z1VYbLPs4WqQOQF5i7AowAkT9M4hVPzTnSc/EqF8OFZeNZFkP
-         FZwjKBukascc892R3DPxpFJ/Zofx9x9JNaBowinwV1NYPFsjVduNBnYziBVcSdDmwZR9
-         6hC7qaSZKIezolInLq2eS494R03bjuumQblTJxv+U8J6UZ8emVsEHVY+08/Gg7xljO+n
-         A4GU1SBQ63vi6UfSdBE+2NMLnTBASI7YXGXkzoMm0C/xxsuo8Ti7AvaIYDKGM9+Ir+Kh
-         2mSPSIibVPJs6U7lUPHFfiNUqkViOSzBBv0309Xfaxny/N1bhDl9/v6cflmw5xDLbbJj
-         HeQA==
-X-Gm-Message-State: APjAAAUD0Jbyu3Xg9cqGQBs6G3hx++NYb1nypr3oZf3RHMBs3bkR4tkT
-        Mq9LY+NMMFnEICBI4u/M598g0afA/FLMPtB4rzm8ttTuZyg=
-X-Google-Smtp-Source: APXvYqx3kFWQFTkADAuGfjyGBlcOq0Ix3CuPnZhJhi9h13tqc0aa+NCakzhhRSzvyADIx87mSurffOEPjsyB55kp7Ew=
-X-Received: by 2002:a9d:2f08:: with SMTP id h8mr71809486otb.42.1558980353780;
- Mon, 27 May 2019 11:05:53 -0700 (PDT)
+        bh=snK6jJsPt2cSi+KLqPDOwYhYAz49h47RS/7FICnk118=;
+        b=XCYW/SoSXixrN8ekAhArGTSGdAr8WQeuV+wKqGMYDRY3MHmqDLosd7TUeDJdvKdVg0
+         RQXNYnD/9hm0yiyhPQwdD97JdATstlebuOD866AFB5ZWnoFI/a7rr0QlrA+JffZkjpxK
+         I1Gbq2xTKXal2TPnUKDeHbhjxh74J2ToTOgcLhRMWHmdb8aKnIF8bOi0mA8KJb5fBX1n
+         zn2o//o5eqMg634FOcFQktWjHJh52Dh5IokIX5wyddfod2dCsAILD82aMt4kmY3IZUyH
+         pGTJSHhNwr/dJU9mvNOO9UwJbParGMZdOi/oFJCUv4BvBDRuiggqNdE+CWtOyeEmGm90
+         sRPw==
+X-Gm-Message-State: APjAAAXd0eA2CdrICVwrTH5YIsCQ6JVj4dnYeE+vgg5t7pFQTRHthBRi
+        WjQxYuMFkbRlVG4krNVMZsJcXLSJCLq0tVhwesI=
+X-Google-Smtp-Source: APXvYqx9KJ2jcVtyv9sJYJEyKAm3S24vaMJ0KK9SArvolrcTJopXP7wsbVLGJgnh9WHreFlM6dw6JEOu0onvKFlRxFE=
+X-Received: by 2002:aca:f144:: with SMTP id p65mr141486oih.47.1558980376467;
+ Mon, 27 May 2019 11:06:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190527133857.30108-1-narmstrong@baylibre.com> <20190527133857.30108-2-narmstrong@baylibre.com>
-In-Reply-To: <20190527133857.30108-2-narmstrong@baylibre.com>
+References: <20190527133857.30108-1-narmstrong@baylibre.com> <20190527133857.30108-3-narmstrong@baylibre.com>
+In-Reply-To: <20190527133857.30108-3-narmstrong@baylibre.com>
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Mon, 27 May 2019 20:05:42 +0200
-Message-ID: <CAFBinCCz0v7iup21NBtsxDxOYXESON3TTFOqfurRHei3g__7vQ@mail.gmail.com>
-Subject: Re: [PATCH v2 01/10] ARM: dts: meson: update with SPDX Licence identifier
+Date:   Mon, 27 May 2019 20:06:05 +0200
+Message-ID: <CAFBinCArHofRSpA+2Ti1gWzBPeOV8R9H-=gxkm9xFiiBt+4Vbg@mail.gmail.com>
+Subject: Re: [PATCH v2 02/10] ARM: dts: meson6-atv1200: update with SPDX
+ Licence identifier
 To:     Neil Armstrong <narmstrong@baylibre.com>
 Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
@@ -76,4 +77,4 @@ On Mon, May 27, 2019 at 3:39 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
 > [0] https://spdx.org/licenses/MIT.html
 >
 > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
