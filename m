@@ -2,105 +2,143 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B7C0C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 15:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84690C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 15:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BFBD2189F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 15:19:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q7Xd8Leb"
+	by mail.kernel.org (Postfix) with ESMTP id 62A58217F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 15:20:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbfE0PTP (ORCPT
+        id S1726997AbfE0PUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 11:19:15 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39178 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726645AbfE0PTD (ORCPT
+        Mon, 27 May 2019 11:20:01 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:57502 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726297AbfE0PUA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 11:19:03 -0400
-Received: by mail-pg1-f193.google.com with SMTP id w22so9270921pgi.6;
-        Mon, 27 May 2019 08:19:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :content-transfer-encoding:user-agent;
-        bh=wKRYLSYKzE2k4jFHpZmRlCn5LnNbsStdg5D8PnYwlpE=;
-        b=q7Xd8Lebsp1l3HocpLrwjIl0tM4rnRkL6po/MBApZ5k16ZVpXwa4aXsP2VNvOuIuXC
-         Je4JosdBHlyx8uMt4k0yidbWD72peNmSMiPm4ioIz7N3PqL2WyXC6FdfhfzpNsoELPOi
-         rdwNK8SSP0FYy2TMNgByTWF2eOkEeRYpCuTuvQi1llZE/XWNVqi2piTU6d3ySUaozZQI
-         2phU5bXOWeGHfHexudFhebBo5tMjRtaVpjsH7kQSNI/U5n2IVU6+/kriyR2M2qnFRYdw
-         y0qXo387I9QuTRjr0s4eQkSkYkCBCffEdn7iXisSGENViN37J+bJB2FuHkMrP1gT4U96
-         v/PA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding:user-agent;
-        bh=wKRYLSYKzE2k4jFHpZmRlCn5LnNbsStdg5D8PnYwlpE=;
-        b=RJk9070P9764wT5R6f23J9cyT/k4sAtkCyGJFMlACfogUoQVr5tSQ43v2y01duSW+Z
-         HMwaif20dIhT7lYEeG89LDCCWd2n6T4ZscehOE3/BzbQ8IQSvDxjaseKIicaWOlvXxuI
-         sNdOm+gt7h0ibbTUNP0eHd/6gvjHCjdnEKH1WdHE6dTVWwgFF6eOfHksR2EFE42x2exx
-         j1fou4k4dhEnBVl/21nmKV3Aa9Mf4n0+5OLgrfPbF58qeYdLk9g+nF5gUDohOB95wee/
-         /9ZaU2wOsJ92HZnXBPmUWeVcg7Xzk9M1A9pq6fO0wgzEfSZc/Vyil/406AIpk90HLze6
-         GVYA==
-X-Gm-Message-State: APjAAAUdRZSP/GloaIKjJtiUBxZKdiCJ0Fnb18u5D+8HGZG3ut1e8JJ+
-        FS459EaY4hrWqbqqEXP/GSeEOrLP
-X-Google-Smtp-Source: APXvYqxMehS8QCzhcyqJ0WLGpmftug/4/G3fWnhju+fhqevVuE4AIJsX7qwJq+1QrO00UWRwmm2wMw==
-X-Received: by 2002:a17:90b:14e:: with SMTP id em14mr32106670pjb.19.1558970341885;
-        Mon, 27 May 2019 08:19:01 -0700 (PDT)
-Received: from ip-172-31-44-144.us-west-2.compute.internal (ec2-54-186-128-88.us-west-2.compute.amazonaws.com. [54.186.128.88])
-        by smtp.gmail.com with ESMTPSA id f20sm93168pgf.59.2019.05.27.08.19.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 27 May 2019 08:19:00 -0700 (PDT)
-Date:   Mon, 27 May 2019 15:18:59 +0000
-From:   Alakesh Haloi <alakesh.haloi@gmail.com>
-To:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Xu <peterx@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Shuah Khan <shuah@kernel.org>
-Subject: [PATCH] userfaultfd: selftest: fix compiler warning
-Message-ID: <20190527151859.GA3217@ip-172-31-44-144.us-west-2.compute.internal>
+        Mon, 27 May 2019 11:20:00 -0400
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4RFJEKg030074;
+        Mon, 27 May 2019 10:19:33 -0500
+Authentication-Results: ppops.net;
+        spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from mail4.cirrus.com ([87.246.98.35])
+        by mx0b-001ae601.pphosted.com with ESMTP id 2sq24q28p1-1;
+        Mon, 27 May 2019 10:19:33 -0500
+Received: from EDIEX01.ad.cirrus.com (ediex01.ad.cirrus.com [198.61.84.80])
+        by mail4.cirrus.com (Postfix) with ESMTP id 93021611C8AF;
+        Mon, 27 May 2019 10:20:24 -0500 (CDT)
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 27 May
+ 2019 16:19:32 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Mon, 27 May 2019 16:19:32 +0100
+Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 91C632DA;
+        Mon, 27 May 2019 16:19:32 +0100 (BST)
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     <wsa@the-dreams.de>, <mika.westerberg@linux.intel.com>
+CC:     <jarkko.nikula@linux.intel.com>,
+        <andriy.shevchenko@linux.intel.com>, <linux-i2c@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <benjamin.tissoires@redhat.com>, <jbroadus@gmail.com>,
+        <patches@opensource.cirrus.com>
+Subject: [PATCH v2 3/6] i2c: acpi: Factor out getting the IRQ from ACPI
+Date:   Mon, 27 May 2019 16:19:29 +0100
+Message-ID: <20190527151932.14310-3-ckeepax@opensource.cirrus.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20190527151932.14310-1-ckeepax@opensource.cirrus.com>
+References: <20190527151932.14310-1-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=946 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905270108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes following compiler warning
+In preparation for future refactoring factor out the fetch of the IRQ
+into its own helper function.
 
-userfaultfd.c: In function ‘usage’:
-userfaultfd.c:126:2: warning: format not a string literal and no format
-	arguments [-Wformat-security]
-  fprintf(stderr, examples);
-
-Signed-off-by: Alakesh Haloi <alakesh.haloi@gmail.com>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 ---
- tools/testing/selftests/vm/userfaultfd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/vm/userfaultfd.c b/tools/testing/selftests/vm/userfaultfd.c
-index 5d1db824f73a..b3e6497b080c 100644
---- a/tools/testing/selftests/vm/userfaultfd.c
-+++ b/tools/testing/selftests/vm/userfaultfd.c
-@@ -123,7 +123,7 @@ static void usage(void)
- 	fprintf(stderr, "Supported <test type>: anon, hugetlb, "
- 		"hugetlb_shared, shmem\n\n");
- 	fprintf(stderr, "Examples:\n\n");
--	fprintf(stderr, examples);
-+	fprintf(stderr, "%s", examples);
- 	exit(1);
+Changes since v1:
+ - Update function to just return the IRQ rather than use a pointer
+   argument.
+
+Thanks,
+Charles
+
+ drivers/i2c/i2c-core-acpi.c | 33 +++++++++++++++++++++------------
+ 1 file changed, 21 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
+index 4b0387d040698..f28d702dc6a89 100644
+--- a/drivers/i2c/i2c-core-acpi.c
++++ b/drivers/i2c/i2c-core-acpi.c
+@@ -148,14 +148,30 @@ static int i2c_acpi_add_resource(struct acpi_resource *ares, void *data)
+ 	return 1; /* No need to add resource to the list */
  }
  
++static int i2c_acpi_get_irq(struct acpi_device *adev)
++{
++	struct list_head resource_list;
++	int irq = -ENOENT;
++	int ret;
++
++	INIT_LIST_HEAD(&resource_list);
++
++	ret = acpi_dev_get_resources(adev, &resource_list,
++				     i2c_acpi_add_resource, &irq);
++	if (ret < 0)
++		return -EINVAL;
++
++	acpi_dev_free_resource_list(&resource_list);
++
++	return irq;
++}
++
+ static int i2c_acpi_get_info(struct acpi_device *adev,
+ 			     struct i2c_board_info *info,
+ 			     struct i2c_adapter *adapter,
+ 			     acpi_handle *adapter_handle)
+ {
+-	struct list_head resource_list;
+ 	struct i2c_acpi_lookup lookup;
+-	int irq = -ENOENT;
+ 	int ret;
+ 
+ 	memset(&lookup, 0, sizeof(lookup));
+@@ -186,16 +202,9 @@ static int i2c_acpi_get_info(struct acpi_device *adev,
+ 		*adapter_handle = lookup.adapter_handle;
+ 
+ 	/* Then fill IRQ number if any */
+-	INIT_LIST_HEAD(&resource_list);
+-	ret = acpi_dev_get_resources(adev, &resource_list,
+-				     i2c_acpi_add_resource, &irq);
+-	if (ret < 0)
+-		return -EINVAL;
+-
+-	if (irq >= 0)
+-		info->irq = irq;
+-
+-	acpi_dev_free_resource_list(&resource_list);
++	ret = i2c_acpi_get_irq(adev);
++	if (ret >= 0)
++		info->irq = ret;
+ 
+ 	acpi_set_modalias(adev, dev_name(&adev->dev), info->type,
+ 			  sizeof(info->type));
 -- 
-2.17.1
+2.11.0
 
