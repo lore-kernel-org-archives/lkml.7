@@ -2,174 +2,62 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C339C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 21:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB05C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 22:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3436720859
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 21:52:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558993927;
-	bh=BILIiSgCcEDXe+hUj5XxMcf+K0QyO7ryR9e7QwRjY7M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xI08FFmqav+Vwfm6iZ4SM6SGHRybTNSmGFAxhI+W250UUsK1ox6ppmgmGgpzuyPFT
-	 xY1utHrY2hIOlONCzX9ipujgfBSdr+x2Z3y0YLf4ITGOrjwVQ8rEqnL+ZwWlbbWq7Y
-	 70O0+Gn1ReZ2TxM+WQecKiaQ1spReJz4ETSHidQw=
+	by mail.kernel.org (Postfix) with ESMTP id 5987220673
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 22:09:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727588AbfE0Vvx (ORCPT
+        id S1727478AbfE0WJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 17:51:53 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49014 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727566AbfE0Vvt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 17:51:49 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2DDBD330265;
-        Mon, 27 May 2019 21:51:49 +0000 (UTC)
-Received: from krava.redhat.com (ovpn-204-17.brq.redhat.com [10.40.204.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 678031726D;
-        Mon, 27 May 2019 21:51:46 +0000 (UTC)
-From:   Jiri Olsa <jolsa@kernel.org>
-To:     Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Andy Lutomirski <luto@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5/8] perf/x86/rapl: Get rapl_cntr_mask from new probe framework
-Date:   Mon, 27 May 2019 23:51:26 +0200
-Message-Id: <20190527215129.10000-6-jolsa@kernel.org>
-In-Reply-To: <20190527215129.10000-1-jolsa@kernel.org>
-References: <20190527215129.10000-1-jolsa@kernel.org>
+        Mon, 27 May 2019 18:09:49 -0400
+Received: from zangief.bwidawsk.net ([107.170.211.233]:45662 "EHLO
+        mail.bwidawsk.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726905AbfE0WJt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 18:09:49 -0400
+X-Greylist: delayed 407 seconds by postgrey-1.27 at vger.kernel.org; Mon, 27 May 2019 18:09:49 EDT
+Received: by mail.bwidawsk.net (Postfix, from userid 5001)
+        id 66CFF12340B; Mon, 27 May 2019 15:03:01 -0700 (PDT)
+Received: from mail.bwidawsk.net (c-73-25-164-31.hsd1.or.comcast.net [73.25.164.31])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by mail.bwidawsk.net (Postfix) with ESMTPSA id D84311233FB;
+        Mon, 27 May 2019 15:02:58 -0700 (PDT)
+Date:   Mon, 27 May 2019 15:02:58 -0700
+From:   Ben Widawsky <ben@bwidawsk.net>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     hao.wu@intel.com, atull@kernel.org, mdf@kernel.org,
+        linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org
+Subject: Re: [PATCH -next] fpga: dfl: fme: Remove set but not used variable
+ 'fme'
+Message-ID: <20190527220258.jcbqfww4mxnhee3v@mail.bwidawsk.net>
+References: <20190527153424.10268-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Mon, 27 May 2019 21:51:49 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190527153424.10268-1-yuehaibing@huawei.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We get rapl_cntr_mask from perf_msr_probe call, as a replacement
-for current intel_rapl_init_fun::cntr_mask value for each model.
+On 19-05-27 23:34:24, YueHaibing wrote:
+> Fixes gcc '-Wunused-but-set-variable' warning:
+> 
+> drivers/fpga/dfl-fme-main.c: In function fme_dev_destroy:
+> drivers/fpga/dfl-fme-main.c:216:18: warning: variable fme set but not used [-Wunused-but-set-variable]
+> 
+> It's never used since introduction in commit 29de76240e86 ("fpga:
+> dfl: fme: add partial reconfiguration sub feature support")
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Ben Widawsky <ben@bwidawsk.net>
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- arch/x86/events/intel/rapl.c | 38 ++----------------------------------
- 1 file changed, 2 insertions(+), 36 deletions(-)
-
-diff --git a/arch/x86/events/intel/rapl.c b/arch/x86/events/intel/rapl.c
-index 997ed23b7049..6bfbb34e72be 100644
---- a/arch/x86/events/intel/rapl.c
-+++ b/arch/x86/events/intel/rapl.c
-@@ -95,33 +95,6 @@ static const char *const rapl_domain_names[NR_RAPL_DOMAINS] __initconst = {
- 	"psys",
- };
- 
--/* Clients have PP0, PKG */
--#define RAPL_IDX_CLN	(1<<RAPL_IDX_PP0_NRG_STAT|\
--			 1<<RAPL_IDX_PKG_NRG_STAT|\
--			 1<<RAPL_IDX_PP1_NRG_STAT)
--
--/* Servers have PP0, PKG, RAM */
--#define RAPL_IDX_SRV	(1<<RAPL_IDX_PP0_NRG_STAT|\
--			 1<<RAPL_IDX_PKG_NRG_STAT|\
--			 1<<RAPL_IDX_RAM_NRG_STAT)
--
--/* Servers have PP0, PKG, RAM, PP1 */
--#define RAPL_IDX_HSW	(1<<RAPL_IDX_PP0_NRG_STAT|\
--			 1<<RAPL_IDX_PKG_NRG_STAT|\
--			 1<<RAPL_IDX_RAM_NRG_STAT|\
--			 1<<RAPL_IDX_PP1_NRG_STAT)
--
--/* SKL clients have PP0, PKG, RAM, PP1, PSYS */
--#define RAPL_IDX_SKL_CLN (1<<RAPL_IDX_PP0_NRG_STAT|\
--			  1<<RAPL_IDX_PKG_NRG_STAT|\
--			  1<<RAPL_IDX_RAM_NRG_STAT|\
--			  1<<RAPL_IDX_PP1_NRG_STAT|\
--			  1<<RAPL_IDX_PSYS_NRG_STAT)
--
--/* Knights Landing has PKG, RAM */
--#define RAPL_IDX_KNL	(1<<RAPL_IDX_PKG_NRG_STAT|\
--			 1<<RAPL_IDX_RAM_NRG_STAT)
--
- /*
-  * event code: LSB 8 bits, passed in attr->config
-  * any other bit is reserved
-@@ -811,43 +784,36 @@ static int __init init_rapl_pmus(void)
- 
- struct intel_rapl_init_fun {
- 	bool apply_quirk;
--	int cntr_mask;
- 	struct attribute **attrs;
- };
- 
- static const struct intel_rapl_init_fun snb_rapl_init __initconst = {
- 	.apply_quirk = false,
--	.cntr_mask = RAPL_IDX_CLN,
- 	.attrs = rapl_events_cln_attr,
- };
- 
- static const struct intel_rapl_init_fun hsx_rapl_init __initconst = {
- 	.apply_quirk = true,
--	.cntr_mask = RAPL_IDX_SRV,
- 	.attrs = rapl_events_srv_attr,
- };
- 
- static const struct intel_rapl_init_fun hsw_rapl_init __initconst = {
- 	.apply_quirk = false,
--	.cntr_mask = RAPL_IDX_HSW,
- 	.attrs = rapl_events_hsw_attr,
- };
- 
- static const struct intel_rapl_init_fun snbep_rapl_init __initconst = {
- 	.apply_quirk = false,
--	.cntr_mask = RAPL_IDX_SRV,
- 	.attrs = rapl_events_srv_attr,
- };
- 
- static const struct intel_rapl_init_fun knl_rapl_init __initconst = {
- 	.apply_quirk = true,
--	.cntr_mask = RAPL_IDX_KNL,
- 	.attrs = rapl_events_knl_attr,
- };
- 
- static const struct intel_rapl_init_fun skl_rapl_init __initconst = {
- 	.apply_quirk = false,
--	.cntr_mask = RAPL_IDX_SKL_CLN,
- 	.attrs = rapl_events_skl_attr,
- };
- 
-@@ -976,7 +942,8 @@ static int __init rapl_pmu_init(void)
- 		return -ENODEV;
- 
- 	rm = (struct rapl_model *) id->driver_data;
--	perf_msr_probe(rapl_msrs, PERF_RAPL_MAX, (void *) &rm->events);
-+	rapl_cntr_mask = perf_msr_probe(rapl_msrs, PERF_RAPL_MAX,
-+					(void *) &rm->events);
- 
- 	id = x86_match_cpu(rapl_cpu_match);
- 	if (!id)
-@@ -984,7 +951,6 @@ static int __init rapl_pmu_init(void)
- 
- 	rapl_init = (struct intel_rapl_init_fun *)id->driver_data;
- 	apply_quirk = rapl_init->apply_quirk;
--	rapl_cntr_mask = rapl_init->cntr_mask;
- 	rapl_pmu_events_group.attrs = rapl_init->attrs;
- 
- 	ret = rapl_check_hw_unit(apply_quirk);
--- 
-2.20.1
-
+[snip]
