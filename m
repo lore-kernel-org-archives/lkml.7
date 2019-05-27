@@ -2,90 +2,70 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF01C07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:26:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 219DCC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A28642133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:26:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8302208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:30:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QjMR7B6E";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QjMR7B6E"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pYKF21PB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726304AbfE0K02 (ORCPT
+        id S1726343AbfE0KaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 06:26:28 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:38746 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725814AbfE0K02 (ORCPT
+        Mon, 27 May 2019 06:30:19 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:38400 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725814AbfE0KaS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 06:26:28 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id AF0FF6087D; Mon, 27 May 2019 10:26:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558952787;
-        bh=XSljrn9KDqKTIUNGpy8kHPqFJpqJPYruTEJmjtqHBIs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=QjMR7B6ErfMHcKJ+RIA67MABL5bx97vFiabqkj0HiG+mdP5TapL3QfuWvnDZXDVrI
-         0rfHG8LPocC75zAltZaZrzOfOUebB35/PSxoenQpAGJ5iyGFE7G/FVVCOPEcF+89n1
-         4z7JYbpOt2qWg2k5unJo8XjQyr0aOCpf233W7eMU=
-Received: from blr-ubuntu-41.ap.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id ACFFC60252;
-        Mon, 27 May 2019 10:26:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558952787;
-        bh=XSljrn9KDqKTIUNGpy8kHPqFJpqJPYruTEJmjtqHBIs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=QjMR7B6ErfMHcKJ+RIA67MABL5bx97vFiabqkj0HiG+mdP5TapL3QfuWvnDZXDVrI
-         0rfHG8LPocC75zAltZaZrzOfOUebB35/PSxoenQpAGJ5iyGFE7G/FVVCOPEcF+89n1
-         4z7JYbpOt2qWg2k5unJo8XjQyr0aOCpf233W7eMU=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org ACFFC60252
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
-From:   Vivek Gautam <vivek.gautam@codeaurora.org>
-To:     airlied@linux.ie, thierry.reding@gmail.com, daniel@ffwll.ch,
-        dri-devel@lists.freedesktop.org
-Cc:     linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org,
-        Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: [PATCH 1/1] drm/panel: truly: Add additional delay after pulling down reset gpio
-Date:   Mon, 27 May 2019 15:56:16 +0530
-Message-Id: <20190527102616.28315-1-vivek.gautam@codeaurora.org>
-X-Mailer: git-send-email 2.16.1.72.g5be1f00a9a70
+        Mon, 27 May 2019 06:30:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=fO4yzkLNvwCdtEhg2+HPTX4Reyxk7SMjLIEFxFLV1qg=; b=pYKF21PBn82fa2rICGxiMtwQK
+        t4RX9tPZfOsqVrIwLkSBvUDpxGCjSVECjEH9UDf1AM5h+k88M9da0PuEOcokdueJDRP1iQqcGfRL3
+        yizWRzNx+zl992HJ7vu9Up9W4b6bRGoSlYUszHF34bfWSRLc5SEvrZYyUYUNCM0EJeonttC6IxHRs
+        KBBpwT9Nbx2C5jetEzCAMldcFUDk+p4WwzVmvl31HKKvxvw9Uh4jV4M1o6rIlJM62xEJvuczATKCD
+        139WQc112sejHLe5eAzrgqHzEgbxPMHKMorztt9WDdki8vrIW1RlAfDFZZi51r52ZUE1xbBVeqp3V
+        eVwCt6+HA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hVCtI-0002IY-B8; Mon, 27 May 2019 10:30:05 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1B49D2027F766; Mon, 27 May 2019 12:30:03 +0200 (CEST)
+Date:   Mon, 27 May 2019 12:30:03 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Tao Xu <tao3.xu@intel.com>
+Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, corbet@lwn.net,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        sean.j.christopherson@intel.com, x86@kernel.org,
+        kvm@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jingqi.liu@intel.com
+Subject: Re: [PATCH v2 1/3] KVM: x86: add support for user wait instructions
+Message-ID: <20190527103003.GX2623@hirez.programming.kicks-ass.net>
+References: <20190524075637.29496-1-tao3.xu@intel.com>
+ <20190524075637.29496-2-tao3.xu@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190524075637.29496-2-tao3.xu@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MTP SDM845 panel seems to need additional delay to bring panel
-to a workable state. Running modetest without this change displays
-blurry artifacts.
+On Fri, May 24, 2019 at 03:56:35PM +0800, Tao Xu wrote:
+> This patch adds support for UMONITOR, UMWAIT and TPAUSE instructions
+> in kvm, and by default dont't expose it to kvm and provide a capability
+> to enable it.
 
-Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
----
- drivers/gpu/drm/panel/panel-truly-nt35597.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/gpu/drm/panel/panel-truly-nt35597.c b/drivers/gpu/drm/panel/panel-truly-nt35597.c
-index fc2a66c53db4..aa7153fd3be4 100644
---- a/drivers/gpu/drm/panel/panel-truly-nt35597.c
-+++ b/drivers/gpu/drm/panel/panel-truly-nt35597.c
-@@ -280,6 +280,7 @@ static int truly_35597_power_on(struct truly_nt35597 *ctx)
- 	gpiod_set_value(ctx->reset_gpio, 1);
- 	usleep_range(10000, 20000);
- 	gpiod_set_value(ctx->reset_gpio, 0);
-+	usleep_range(10000, 20000);
- 
- 	return 0;
- }
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
-
+I'm thinking this should be conditional on the guest being a 1:1 guest,
+and I also seem to remember we have bits for that already -- they were
+used to disable paravirt spinlocks for example.
