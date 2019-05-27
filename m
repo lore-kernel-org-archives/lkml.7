@@ -2,138 +2,110 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56191C07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 08:12:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C00D7C07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 08:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E47320673
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 08:12:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 972DD21726
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 08:15:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=elektrobit.onmicrosoft.com header.i=@elektrobit.onmicrosoft.com header.b="q8gjawXy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AVGdfQET"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726400AbfE0IM0 (ORCPT
+        id S1726441AbfE0IPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 04:12:26 -0400
-Received: from smtpgwcipde.automotive.elektrobit.com ([213.95.163.141]:44052
-        "EHLO smtpgwcipde.elektrobit.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725940AbfE0IMZ (ORCPT
+        Mon, 27 May 2019 04:15:18 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:41092 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726404AbfE0IPR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 04:12:25 -0400
-X-Greylist: delayed 1062 seconds by postgrey-1.27 at vger.kernel.org; Mon, 27 May 2019 04:12:22 EDT
-Received: from denue6es002.localdomain (denue6es002.automotive.elektrobit.com [213.95.163.135])
-        by smtpgwcipde.elektrobit.com  with ESMTP id x4R7rlge000382-x4R7rlgg000382
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=OK);
-        Mon, 27 May 2019 09:53:47 +0200
-Received: from denue6es002.securemail.local (localhost [127.0.0.1])
-        by denue6es002.localdomain (Postfix) with SMTP id 50A3419288;
-        Mon, 27 May 2019 09:53:47 +0200 (CEST)
-Received: from denue6es011.ebgroup.elektrobit.com (denue6es011.ebgroup.elektrobit.com [10.243.160.101])
-        by denue6es002.localdomain (Postfix) with ESMTPS;
-        Mon, 27 May 2019 09:53:45 +0200 (CEST)
-Received: from denue6es010.ebgroup.elektrobit.com (10.243.160.100) by
- denue6es011.ebgroup.elektrobit.com (10.243.160.101) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 27 May 2019 09:53:45 +0200
-Received: from NAM03-DM3-obe.outbound.protection.outlook.com (104.47.41.52) by
- denue6es010.ebgroup.elektrobit.com (10.243.160.100) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.1713.5 via Frontend Transport; Mon, 27 May 2019 09:53:44 +0200
+        Mon, 27 May 2019 04:15:17 -0400
+Received: by mail-yw1-f65.google.com with SMTP id t140so3706010ywe.8;
+        Mon, 27 May 2019 01:15:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=elektrobit.onmicrosoft.com; s=selector1-elektrobit-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IrDMXXLOZuqClmZUFX57XNpADLFT9wrLxaBakKxxt2U=;
- b=q8gjawXy7qgTd7slxXo5q2yG6gdM+23seC4MCsOORZvj8SHXTW+7hOPkhKfzHM6h4orrnl1ivQZZY8/Z/iuQV4mfSqQRnFWqi6/kz4y0GNXzC5h2jp1BZL5/l4YMi+vHLWxCHaOojN6W0nEAJBqbXuf3n9+sbZX2C8tOYTGwyQs=
-Received: from DM6PR08MB5195.namprd08.prod.outlook.com (20.176.118.25) by
- DM6PR08MB5977.namprd08.prod.outlook.com (20.179.69.209) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.15; Mon, 27 May 2019 07:53:42 +0000
-Received: from DM6PR08MB5195.namprd08.prod.outlook.com
- ([fe80::3165:8bdb:ef18:9e1a]) by DM6PR08MB5195.namprd08.prod.outlook.com
- ([fe80::3165:8bdb:ef18:9e1a%2]) with mapi id 15.20.1922.021; Mon, 27 May 2019
- 07:53:42 +0000
-From:   "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>
-To:     Michal Hocko <mhocko@kernel.org>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>
-CC:     "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Jordan, Tobias" <Tobias.Jordan@elektrobit.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "vbabka@suse.cz" <vbabka@suse.cz>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
-Subject: [PATCH v2] mm: mlockall error for flag MCL_ONFAULT
-Thread-Topic: [PATCH v2] mm: mlockall error for flag MCL_ONFAULT
-Thread-Index: AQHVFGFNv0h5WJVR6EeShGKsboxNMQ==
-Date:   Mon, 27 May 2019 07:53:42 +0000
-Message-ID: <20190527075333.GA6339@er01809n.ebgroup.elektrobit.com>
-References: <20190527070415.GA1658@dhcp22.suse.cz>
-In-Reply-To: <20190527070415.GA1658@dhcp22.suse.cz>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM6PR0202CA0025.eurprd02.prod.outlook.com
- (2603:10a6:209:15::38) To DM6PR08MB5195.namprd08.prod.outlook.com
- (2603:10b6:5:42::25)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Stefan.Potyra@elektrobit.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [213.95.148.172]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9bef0ffe-d812-49d7-f2f2-08d6e2786fcb
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM6PR08MB5977;
-x-ms-traffictypediagnostic: DM6PR08MB5977:
-x-microsoft-antispam-prvs: <DM6PR08MB59775BE33D076AE683353458801D0@DM6PR08MB5977.namprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4125;
-x-forefront-prvs: 0050CEFE70
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(396003)(346002)(376002)(39840400004)(366004)(189003)(199004)(1076003)(6436002)(6512007)(25786009)(33656002)(6486002)(14454004)(68736007)(64756008)(66446008)(66556008)(66476007)(72206003)(478600001)(316002)(66946007)(73956011)(52116002)(99286004)(486006)(76176011)(71190400001)(71200400001)(8676002)(8936002)(110136005)(54906003)(11346002)(186003)(446003)(102836004)(386003)(26005)(476003)(6506007)(53936002)(256004)(5660300002)(14444005)(4326008)(86362001)(6116002)(3846002)(305945005)(7736002)(81156014)(81166006)(66066001)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR08MB5977;H:DM6PR08MB5195.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: elektrobit.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: W8qP1zlKiH58N0Xa05QqiEfqPc7IAZ/IM+5SV7idtNtjnE8qob8gQrxjppB23rBl0XFZvhhrMBCA1CIDEZDJasztMjxJj8Y4WC/i1HcVaFnyDbQ9Et2gCBUTsoN8XEO4Xg7+pw03Cb1+BFyjoUJ2mz0ucGDKRSZAi67pnj3wkiVdS7zmu3R50Cmc0Og5Msj/7Vu1EZ1aNfGOM05enCsuI5SPzP1rttt4WtV3cvH6BR3xUL1UYG6SFc6ITgHq0d6ru086MlyA9u5TCj79LAvFDs2jrJTTe3TS/+YgDml0ECfmJ7SK+wlLlKCSdf5zJ7ptgUSA1q1zwlbUMh0fadqZ6dDw2oDjgBKLoI8tI7XRA45rBZDeG9G0SLwW2q+UhkFdffpR6STYkcV/QPIduyQmmkpvj7rLpETFOqP2sbkSIrM=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <45C0C401F4D9434B806A15C5EEE14E5F@namprd08.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=8L8FxJvLC6rdJRaEPp+bxb7cZDFl4i6J9lltUnwH0Us=;
+        b=AVGdfQETMoH5SxwK3z793+ehooy4pLBSM3xLn/Bswr3N0KfGnt0Fhqw3hoYJVQ40bl
+         M49M/c/NDMmzmjtfZLywbrm8ep9XCX3xUGH8WLrvvgpwk5OMkppGvpXIKgMytQLcUA8z
+         XZhjbyDG0kezcP3Xw6j5ljsSqTAl7x79r0eG3ZWc5aISMRYZ8Ml8eLVpkUf8kzyOOovF
+         ONjyUy3hzEvTBhp63PEusjXlmra2S3rD0e5iEu+Ji6mwBLngZLDJF79CU8k5wafQfvx8
+         f4c8sCr/yBIwNvwpHScSAK35aDc48IBSIytwpuUE30pfQpJht29hv+rAhz6BxRa8TSBq
+         FI9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=8L8FxJvLC6rdJRaEPp+bxb7cZDFl4i6J9lltUnwH0Us=;
+        b=QZFJ3w088GrnS4r+z1spgKKPHT9ZPg7qZRu5N4+5baFITZmOR5mkldu98blYwnqT7Q
+         dpRrQaGQ9zB6TnDHpGRECop+v5agpQrvu+ccRbswHoNHLyCFK/93/30jsq/NWilCFHQM
+         Hl02+mbRXaK1pZSSQpZNTR5Y4c5WIUMf4KTAqcp6W2PgwBszgz9kEGitfvJ6wN3o5NJE
+         d3/3e+qeEc6eF1JVXtTWco6uFKZa8Sye/ZGOM9mP4LyP/MOsZ8/UlrgcYhf+PSfnfeHE
+         GkmnaYZvvDBr+EIYJjE9/xhtKV3aFyKgSPSKidpmIRX12+kMhau8Y0KiY0GUs121VLr5
+         vVew==
+X-Gm-Message-State: APjAAAUGL4YZfFCD7kFQa3aSgpTnmq7N3E/acPa3khOs5JXsa9fYOhCB
+        EFtyVHyFGxZ+OyMsJhvFz4AJfSC3vI9UQYd6Cig=
+X-Google-Smtp-Source: APXvYqwRLS3tvAtNy9ARQjniVMZA3QRwur4yo4izgAaeMy+E02aGyKEzarZnYXXpC1mDOrmutQcTBxmiXCPytcJqrNQ=
+X-Received: by 2002:a0d:ea4c:: with SMTP id t73mr54679241ywe.472.1558944916838;
+ Mon, 27 May 2019 01:15:16 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9bef0ffe-d812-49d7-f2f2-08d6e2786fcb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 May 2019 07:53:42.2251
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: e764c36b-012e-4216-910d-8fd16283182d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Stefan.Potyra@elektrobit.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR08MB5977
-X-OriginatorOrg: elektrobit.com
+References: <20190526222536.10917-1-peron.clem@gmail.com> <20190526222536.10917-4-peron.clem@gmail.com>
+ <20190527074745.5oyt5tyuoc75ntiq@flea>
+In-Reply-To: <20190527074745.5oyt5tyuoc75ntiq@flea>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Mon, 27 May 2019 10:15:05 +0200
+Message-ID: <CAJiuCcd7Ekg5fHQy0sLaiJLdPtH2U0UaMgHkCfhZQOmPg=0RHw@mail.gmail.com>
+Subject: Re: [PATCH v2 03/10] ARM: dts: sunxi: prefer A31 instead of A13 for ir
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-media@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SWYgbWxvY2thbGwoKSBpcyBjYWxsZWQgd2l0aCBvbmx5IE1DTF9PTkZBVUxUIGFzIGZsYWcsDQpp
-dCByZW1vdmVzIGFueSBwcmV2aW91c2x5IGFwcGxpZWQgbG9ja2luZ3MgYW5kIGRvZXMNCm5vdGhp
-bmcgZWxzZS4NCg0KVGhpcyBiZWhhdmlvciBpcyBjb3VudGVyLWludHVpdGl2ZSBhbmQgZG9lc24n
-dCBtYXRjaCB0aGUNCkxpbnV4IG1hbiBwYWdlLg0KDQogIEZvciBtbG9ja2FsbCgpOg0KDQogIEVJ
-TlZBTCBVbmtub3duICBmbGFncyB3ZXJlIHNwZWNpZmllZCBvciBNQ0xfT05GQVVMVCB3YXMgc3Bl
-Y2lmaWVkIHdpdGjigJANCiAgICAgICAgIG91dCBlaXRoZXIgTUNMX0ZVVFVSRSBvciBNQ0xfQ1VS
-UkVOVC4NCg0KQ29uc2VxdWVudGx5LCByZXR1cm4gdGhlIGVycm9yIEVJTlZBTCwgaWYgb25seSBN
-Q0xfT05GQVVMVA0KaXMgcGFzc2VkLiBUaGF0IHdheSwgYXBwbGljYXRpb25zIHdpbGwgYXQgbGVh
-c3QgZGV0ZWN0IHRoYXQNCnRoZXkgYXJlIGNhbGxpbmcgbWxvY2thbGwoKSBpbmNvcnJlY3RseS4N
-Cg0KRml4ZXM6IGIwZjIwNWMyYTMwOCAoIm1tOiBtbG9jazogYWRkIG1sb2NrIGZsYWdzIHRvIGVu
-YWJsZSBWTV9MT0NLT05GQVVMVCB1c2FnZSIpDQpTaWduZWQtb2ZmLWJ5OiBTdGVmYW4gUG90eXJh
-IDxTdGVmYW4uUG90eXJhQGVsZWt0cm9iaXQuY29tPg0KUmV2aWV3ZWQtYnk6IERhbmllbCBKb3Jk
-YW4gPGRhbmllbC5tLmpvcmRhbkBvcmFjbGUuY29tPg0KQWNrZWQtYnk6IE1pY2hhbCBIb2NrbyA8
-bWhvY2tvQHN1c2UuY29tPg0KLS0tDQogbW0vbWxvY2suYyB8IDMgKystDQogMSBmaWxlIGNoYW5n
-ZWQsIDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KDQpkaWZmIC0tZ2l0IGEvbW0vbWxv
-Y2suYyBiL21tL21sb2NrLmMNCmluZGV4IGU0OTJhMTU1YzUxYS4uMDNmMzljYmRkNGM0IDEwMDY0
-NA0KLS0tIGEvbW0vbWxvY2suYw0KKysrIGIvbW0vbWxvY2suYw0KQEAgLTc5Nyw3ICs3OTcsOCBA
-QCBTWVNDQUxMX0RFRklORTEobWxvY2thbGwsIGludCwgZmxhZ3MpDQogCXVuc2lnbmVkIGxvbmcg
-bG9ja19saW1pdDsNCiAJaW50IHJldDsNCiANCi0JaWYgKCFmbGFncyB8fCAoZmxhZ3MgJiB+KE1D
-TF9DVVJSRU5UIHwgTUNMX0ZVVFVSRSB8IE1DTF9PTkZBVUxUKSkpDQorCWlmICghZmxhZ3MgfHwg
-KGZsYWdzICYgfihNQ0xfQ1VSUkVOVCB8IE1DTF9GVVRVUkUgfCBNQ0xfT05GQVVMVCkpIHx8DQor
-CSAgICBmbGFncyA9PSBNQ0xfT05GQVVMVCkNCiAJCXJldHVybiAtRUlOVkFMOw0KIA0KIAlpZiAo
-IWNhbl9kb19tbG9jaygpKQ0KLS0gDQoyLjIwLjENCg0K
+Hi Maxime,
+
+
+On Mon, 27 May 2019 at 09:47, Maxime Ripard <maxime.ripard@bootlin.com> wro=
+te:
+>
+> On Mon, May 27, 2019 at 12:25:29AM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> > Since A31, memory mapping of the IR driver has changed.
+> >
+> > Prefer the A31 bindings instead of A13.
+> >
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > ---
+> >  arch/arm/boot/dts/sun6i-a31.dtsi   | 2 +-
+> >  arch/arm/boot/dts/sun8i-a83t.dtsi  | 2 +-
+> >  arch/arm/boot/dts/sun9i-a80.dtsi   | 2 +-
+> >  arch/arm/boot/dts/sunxi-h3-h5.dtsi | 2 +-
+>
+> Can you split the H3 in a separate patch? this will go through a
+> separate branch.
+
+Ok I will,
+Thanks,
+Cl=C3=A9ment
+
+>
+> Thanks!
+> Maxime
+>
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
