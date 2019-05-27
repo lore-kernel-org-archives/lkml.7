@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23055C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 22:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E22C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 22:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA0CB2081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 22:39:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A868C20859
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 22:39:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558996794;
-	bh=ua6I4CLzAefT55wVsbJQWhe6NsT3WuAgTj2A2upB0No=;
+	s=default; t=1558996798;
+	bh=+ZvAnmNjuw0iWhWDTrueRdjXjuuNaGvKHIq2mTdbGMQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0Kngq9+n3h8Wcb7JNndXJB/GruQy4p/3C4n+UQLKz8UfEXM01Qg9ssBNj7p8ODu4q
-	 z66Vjk5ZdwwdWgVgsT8tXGLjV1k4ZZwAWq/HcSq9iirogFaBXrHFgqjRVya8SgAQdn
-	 va26J06PP/wtzITTSSmZTWLhQ9zhsklkVjCZykQ4=
+	b=2AA5ghQMD9JWTtPRvRAT6d2+Efm6nVsrL/FLbxvoMgmqh/VkT2W/ndShbHt9FJPfN
+	 rpwX5aPFEKkhVNi4BJpCKLkOp6iaWivosmqWLvBKyG38zUIAAdeFuRl5Emf5YjGw2u
+	 c8MVX8/140jAT89xK2E5+ZIpBWbvWwsQbxlZmRX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727934AbfE0Wjx (ORCPT
+        id S1727951AbfE0Wj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 18:39:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45664 "EHLO mail.kernel.org"
+        Mon, 27 May 2019 18:39:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727841AbfE0Wjv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 18:39:51 -0400
+        id S1727935AbfE0Wj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 18:39:56 -0400
 Received: from quaco.ghostprotocols.net (179-240-171-7.3g.claro.net.br [179.240.171.7])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A71420859;
-        Mon, 27 May 2019 22:39:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 242D8208C3;
+        Mon, 27 May 2019 22:39:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558996790;
-        bh=ua6I4CLzAefT55wVsbJQWhe6NsT3WuAgTj2A2upB0No=;
+        s=default; t=1558996795;
+        bh=+ZvAnmNjuw0iWhWDTrueRdjXjuuNaGvKHIq2mTdbGMQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pr3C0E88d7EpsjFaXwQUHY6dpELFbBM42/ACMZrjgHXYmifwpkxZe6dwYd/ImHrPz
-         AP+wGB3e3NrM4ZH/PpGQf0YmrmDibxquNF2gTkj1gSb+VrV66zk+qts78jk6vFArOk
-         OsXq/2gV5X2ug4ft5tI/1gYWp9oB52d0ISy70I2M=
+        b=BhREAO6jEIzn2SVNKITJiSFKZUCi5sgUIzvhbdi45Qz6p099X17TiCjUOjL3Fjy8e
+         4xx5j7XSxv9OU+QZEVNa8bCU1IeFaauBnh/NI6yalCzvXZe7694+sSSliTe54Fu+n8
+         tcCTDOI0rKQJ4jc9AyYc9PRjV+r+IQ3gGbdJTp+g=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -49,9 +49,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Jiri Olsa <jolsa@redhat.com>,
         Krister Johansen <kjlx@templeofstupid.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 27/44] perf session: Add missing swap ops for namespace events
-Date:   Mon, 27 May 2019 19:37:13 -0300
-Message-Id: <20190527223730.11474-28-acme@kernel.org>
+Subject: [PATCH 28/44] perf top: Add --namespaces option
+Date:   Mon, 27 May 2019 19:37:14 -0300
+Message-Id: <20190527223730.11474-29-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190527223730.11474-1-acme@kernel.org>
 References: <20190527223730.11474-1-acme@kernel.org>
@@ -64,58 +64,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Namhyung Kim <namhyung@kernel.org>
 
-In case it's recorded in a different arch.
+Since 'perf record' already have this option, let's have it for 'perf top'
+as well.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Cc: Hari Bathini <hbathini@linux.vnet.ibm.com> <hbathini@linux.vnet.ibm.com>
+Cc: Hari Bathini <hbathini@linux.vnet.ibm.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Krister Johansen <kjlx@templeofstupid.com>
-Fixes: f3b3614a284d ("perf tools: Add PERF_RECORD_NAMESPACES to include namespaces related info")
-Link: http://lkml.kernel.org/r/20190522053250.207156-3-namhyung@kernel.org
+Link: http://lkml.kernel.org/r/20190522053250.207156-4-namhyung@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/session.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ tools/perf/Documentation/perf-top.txt | 5 +++++
+ tools/perf/builtin-top.c              | 5 +++++
+ 2 files changed, 10 insertions(+)
 
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 2310a1752983..54cf163347f7 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -647,6 +647,26 @@ static void perf_event__throttle_swap(union perf_event *event,
- 		swap_sample_id_all(event, &event->throttle + 1);
- }
+diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documentation/perf-top.txt
+index 44d89fb9c788..cfea87c6f38e 100644
+--- a/tools/perf/Documentation/perf-top.txt
++++ b/tools/perf/Documentation/perf-top.txt
+@@ -262,6 +262,11 @@ Default is to monitor all CPUS.
+ 	The number of threads to run when synthesizing events for existing processes.
+ 	By default, the number of threads equals to the number of online CPUs.
  
-+static void perf_event__namespaces_swap(union perf_event *event,
-+					bool sample_id_all)
-+{
-+	u64 i;
++--namespaces::
++	Record events of type PERF_RECORD_NAMESPACES and display it with the
++	'cgroup_id' sort key.
 +
-+	event->namespaces.pid		= bswap_32(event->namespaces.pid);
-+	event->namespaces.tid		= bswap_32(event->namespaces.tid);
-+	event->namespaces.nr_namespaces	= bswap_64(event->namespaces.nr_namespaces);
 +
-+	for (i = 0; i < event->namespaces.nr_namespaces; i++) {
-+		struct perf_ns_link_info *ns = &event->namespaces.link_info[i];
+ INTERACTIVE PROMPTING KEYS
+ --------------------------
+ 
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index fbbb0da43abb..31d78d874fc7 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1208,6 +1208,9 @@ static int __cmd_top(struct perf_top *top)
+ 
+ 	init_process_thread(top);
+ 
++	if (opts->record_namespaces)
++		top->tool.namespace_events = true;
 +
-+		ns->dev = bswap_64(ns->dev);
-+		ns->ino = bswap_64(ns->ino);
-+	}
-+
-+	if (sample_id_all)
-+		swap_sample_id_all(event, &event->namespaces.link_info[i]);
-+}
-+
- static u8 revbyte(u8 b)
- {
- 	int rev = (b >> 4) | ((b & 0xf) << 4);
-@@ -887,6 +907,7 @@ static perf_event__swap_op perf_event__swap_ops[] = {
- 	[PERF_RECORD_LOST_SAMPLES]	  = perf_event__all64_swap,
- 	[PERF_RECORD_SWITCH]		  = perf_event__switch_swap,
- 	[PERF_RECORD_SWITCH_CPU_WIDE]	  = perf_event__switch_swap,
-+	[PERF_RECORD_NAMESPACES]	  = perf_event__namespaces_swap,
- 	[PERF_RECORD_HEADER_ATTR]	  = perf_event__hdr_attr_swap,
- 	[PERF_RECORD_HEADER_EVENT_TYPE]	  = perf_event__event_type_swap,
- 	[PERF_RECORD_HEADER_TRACING_DATA] = perf_event__tracing_data_swap,
+ 	ret = perf_event__synthesize_bpf_events(top->session, perf_event__process,
+ 						&top->session->machines.host,
+ 						&top->record_opts);
+@@ -1500,6 +1503,8 @@ int cmd_top(int argc, const char **argv)
+ 	OPT_BOOLEAN(0, "force", &symbol_conf.force, "don't complain, do it"),
+ 	OPT_UINTEGER(0, "num-thread-synthesize", &top.nr_threads_synthesize,
+ 			"number of thread to run event synthesize"),
++	OPT_BOOLEAN(0, "namespaces", &opts->record_namespaces,
++		    "Record namespaces events"),
+ 	OPT_END()
+ 	};
+ 	struct perf_evlist *sb_evlist = NULL;
 -- 
 2.20.1
 
