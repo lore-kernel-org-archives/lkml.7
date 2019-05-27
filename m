@@ -2,230 +2,103 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 073B6C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 19:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A30AC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 19:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEA6F20883
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 19:53:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="MiChMqP4"
+	by mail.kernel.org (Postfix) with ESMTP id 37FC420883
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 19:56:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbfE0Txd (ORCPT
+        id S1727084AbfE0T4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 15:53:33 -0400
-Received: from vps.xff.cz ([195.181.215.36]:54828 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726346AbfE0Txd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 15:53:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1558986810; bh=TQm1z7XV9OcXC3zOVs+6uPifYNf994Ug5KfUvl6jkw8=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=MiChMqP4U9HE88aPO9vEKcSp8Jkx39Bk5JYJZZyrLUPRveB4GmNseExAgdpO1fx5y
-         LTYKRGqy2jEcgC8v6Z3aeFiISGWD+syP8+yqb0uHMXdKmXh8dw7gt/kq2CEFqTd1Eu
-         7RqduuUIm5Qw2K+82XUblNp+fMCH0WN6HnaYW3wI=
-Date:   Mon, 27 May 2019 21:53:30 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH v2 00/10] Allwinner A64/H6 IR support
-Message-ID: <20190527195330.pugb7ypvnyv32fug@core.my.home>
-Mail-Followup-To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-media@vger.kernel.org
-References: <20190526222536.10917-1-peron.clem@gmail.com>
- <20190527134805.j7t4ffstrnhdml47@core.my.home>
- <CAJiuCcdnQa0TArduT4yBbUyd+dOaM0cQ1JcRUQLXLR6s_5e8sA@mail.gmail.com>
- <20190527163117.hpealt6cttqzqdxz@core.my.home>
- <20190527172337.5qxh5qeqnul55gsb@core.my.home>
- <CAJiuCccnRCqez2uG-pU8XY4Z=5S8rDwFB3rgsBovPHY1Uxyazw@mail.gmail.com>
- <20190527193016.yxngu5grsqnctx3z@core.my.home>
+        Mon, 27 May 2019 15:56:46 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:46823 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbfE0T4q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 15:56:46 -0400
+Received: from [192.168.1.110] ([95.115.42.131]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1N18MG-1gUDUG0dsw-012Y0Z; Mon, 27 May 2019 21:56:34 +0200
+Subject: Re: [PATCH 2/2] serial: 8250: Add support for 8250/16550 as MFD
+ function
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Esben Haabendal <esben@haabendal.dk>
+Cc:     Lee Jones <lee.jones@linaro.org>, linux-serial@vger.kernel.org,
+        Jiri Slaby <jslaby@suse.com>, Nishanth Menon <nm@ti.com>,
+        Vignesh R <vigneshr@ti.com>, Tony Lindgren <tony@atomide.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-kernel@vger.kernel.org
+References: <87bm05mpmx.fsf@haabendal.dk> <20190514104741.GO4319@dell>
+ <20190514122618.GA18859@kroah.com> <87imudky2o.fsf@haabendal.dk>
+ <20190521100904.GA13612@kroah.com> <87pnocm59v.fsf@haabendal.dk>
+ <20190521111817.GA24911@kroah.com> <87lfz0m3ge.fsf@haabendal.dk>
+ <20190521125651.GA6264@kroah.com> <87h89nnajr.fsf@haabendal.dk>
+ <20190521144319.GA28747@kroah.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <5c7e21b6-3701-a685-02c6-a584996aa811@metux.net>
+Date:   Mon, 27 May 2019 21:56:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190527193016.yxngu5grsqnctx3z@core.my.home>
+In-Reply-To: <20190521144319.GA28747@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:K7GEJZtbQJhy4IMLkG1/HregCwPnj0S7Td/78D9wZMC4RrPz3mE
+ GngyVqIgDk5XwhKx8Mo/hYcIWUOFY/dJ8MTC6Ij+sQy482FsKAkmBVlzF9lNFGYQo8x1w2X
+ cSEG7qHzysKTdoc80JyGfW4nP/hO4l3V69FjSw6r7gETAIdIVDVOH34KvV0TOBoTr2WlFsL
+ SptcrrBq/5Jui1CUM0mOQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:NeHRnzJkYP0=:6c4Z10cEv6QAFoYDO7mHfR
+ xjhz30RJUU3aPxaw91gITyNo8DOJrsTtC5aGRiv8b9YFsv+DP47FGFdoVDnNogQtN/KAPEtkj
+ aeG6phlUVUFcr7ShwFtE8CEdEJ3fJaJ0kxy4Gy6YjA63hSo1X0b0H0LSQ69t6xqMl1obJToRU
+ EoDY5zl+qtxLUQseyNAgYYfO2ZVkMoi/Izr/f6mFeDLotiUxLmnrpN2UNTFNVFFJ7K+P2x9fU
+ O/9Bf0sS64+EYNJF4giRdjMcUMHIqW/O8bYrm3mOQ6Qs6HSDO1IOEZea1O54A+Q4UwP2JD+7+
+ j8crVwZKiOdFNCa9UpwKYiQlOapdumXu3lc9TvHbdPey2Uv5knlFRC67JS2OY3Xcju+His2nU
+ ohImuPlKrU2ioAznUW9Rxa7RqL0ujF/zr/kNGRfSh/D/vWzZdf/9YIqulpVAz0k/QJJI5YPsS
+ cAUvc+BLHUCF/YKQQB0loDB1tvxMgCkamiqf+yiCyZ3429V94ppyOALzZ/xFvZjsOwQH9Flz4
+ vvQIPiIzoAMb8seO8BIsXS83YRlu8Tk8cUiUZYrFUnvujoBaQaL5HI/Dgv4txMjOIlnRAUdaS
+ oDuRQMQVOfaZZmnz8ZMOQ71+8aAjQgqZkWnzPf/8Kwq+jSSltEsS1z7PI25IwJKi+A+Ok44T+
+ IVni29vYsozZM5tFo7NQBo+eyaTDi5xx0pD0xp6ufMDwTBtHQqmiUK38oo5L657wWU3RiYMbT
+ 4+YT3yHPoQtw4uQ7w/pDR0GGVfwdy7bCJPRhFKUGB9LmBlb8LREbNyhTk5o=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Clément,
+On 21.05.19 16:43, Greg Kroah-Hartman wrote:
 
-On Mon, May 27, 2019 at 09:30:16PM +0200, verejna wrote:
-> Hi Clément,
-> 
-> On Mon, May 27, 2019 at 08:49:59PM +0200, Clément Péron wrote:
-> > Hi Ondrej,
-> > 
-> > >
-> > > I'm testing on Orange Pi 3.
-> > >
-> > > With your patches, I get kernel lockup after ~1 minute of use (ssh stops
-> > > responding/serial console stops responding). I don't have RC controller to test
-> > > the CIR. But just enabling the CIR causes kernel to hang shortly after boot.
-> > >
-> > > I tried booting multiple times. Other results:
-> > >
-> > > boot 2:
-> > >
-> > > - ssh hangs even before connecting (ethernet crashes/is reset)
-> > >
-> > > INFO: rcu_sched detected stalls on CPUs/tasks:
-> > > rcu:    0-....: (1 GPs behind) idle=64a/0/0x3 softirq=4091/4091 fqs=2437
-> > > dwmac-sun8i 5020000.ethernet eth0: Reset adapter.
-> > > rcu: INFO: rcu_sched detected expedited stalls on CPUs/tasks: { 0-... } 5696 jiffies s: 81 root: 0x1/.
-> > > rcu: blocking rcu_node structures:
-> > >  rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-> > > rcu:    0-....: (1 GPs behind) idle=64a/0/0x3 softirq=4091/4091 fqs=9714
-> > > rcu: INFO: rcu_sched detected expedited stalls on CPUs/tasks: { 0-... } 21568 jiffies s: 81 root: 0x1/.
-> > > rcu: blocking rcu_node structures:
-> > > rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-> > > rcu:    0-....: (1 GPs behind) idle=64a/0/0x3 softirq=4091/4091 fqs=17203
-> > >
-> > > above messages appear regularly.
-> > >
-> > > boot 3:
-> > >
-> > > rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-> > > rcu:    0-....: (9 GPs behind) idle=992/0/0x3 softirq=6123/6123 fqs=2600
-> > >
-> > >
-> > > Sometimes serial console keeps working. Sometimes it locks up too (but not
-> > > frequently). Storage locks up always (any program that was not run before
-> > > the crash can't be started and lock up the kernel hard, programs that
-> > > were executed prior, can be run again).
-> > >
-> > >
-> > > Exactly the same kernel build on H5 seems to work (or at least I was not able to
-> > > trigger the crash). So this seems to be limited to H6 for now.
-> > >
-> > > I suspect that the crash occurs sooner if I vary the light (turn on/off the table
-> > > lamp light).
-> > >
-> > > Without your patches, everything works fine on H6, and I never see
-> > > crashes/lockups.
-> > >
-> > > I tired physically covering the IR receiver, and that helps preventing the
-> > > crash. As soon as I uncover it, the crash happens again in 1s or so:
-> > >
-> > > rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-> > > rcu:    0-....: (1 GPs behind) idle=4ea/0/0x3 softirq=4483/4484 fqs=2444
-> > > rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-> > > rcu:    0-....: (1 GPs behind) idle=4ea/0/0x3 softirq=4483/4484 fqs=9777
-> > >
-> > > This time I got the hung task and reboot: (probably not directly related)
-> > >
-> > > INFO: task find:560 blocked for more than 120 seconds.
-> > >       Not tainted 5.2.0-rc2+ #7
-> > > "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> > > find            D    0   560    551 0x00000000
-> > > Call trace:
-> > >  __switch_to+0x6c/0x90
-> > >  __schedule+0x1f4/0x578
-> > >  schedule+0x28/0xa8
-> > >  io_schedule+0x18/0x38
-> > >  __lock_page+0x12c/0x208
-> > >  pagecache_get_page+0x238/0x2e8
-> > >  __get_node_page+0x6c/0x310
-> > >  f2fs_get_node_page+0x14/0x20
-> > >  f2fs_iget+0x70/0xc60
-> > >  f2fs_lookup+0xcc/0x218
-> > >  __lookup_slow+0x78/0x160
-> > >  lookup_slow+0x3c/0x60
-> > >  walk_component+0x1e4/0x2e0
-> > >  path_lookupat.isra.13+0x5c/0x1e0
-> > >  filename_lookup.part.23+0x6c/0xe8
-> > >  user_path_at_empty+0x4c/0x60
-> > >  vfs_statx+0x78/0xd8
-> > >  __se_sys_newfstatat+0x24/0x48
-> > >  __arm64_sys_newfstatat+0x18/0x20
-> > >  el0_svc_handler+0x9c/0x170
-> > >  el0_svc+0x8/0xc
-> > > Kernel panic - not syncing: hung_task: blocked tasks
-> > > CPU: 1 PID: 34 Comm: khungtaskd Not tainted 5.2.0-rc2+ #7
-> > > Hardware name: OrangePi 3 (DT)
-> > > Call trace:
-> > >  dump_backtrace+0x0/0xf8
-> > >  show_stack+0x14/0x20
-> > >  dump_stack+0xa8/0xcc
-> > >  panic+0x124/0x2dc
-> > >  proc_dohung_task_timeout_secs+0x0/0x40
-> > >  kthread+0x120/0x128
-> > >  ret_from_fork+0x10/0x18
-> > > SMP: stopping secondary CPUs
-> > > Kernel Offset: disabled
-> > > CPU features: 0x0002,20002000
-> > > Memory Limit: none
-> > > Rebooting in 3 seconds..
-> > >
-> > >
-> > > Meanwhile H5 based board now runs for 15 minutes without issues.
-> > >
-> > > So to sum up:
-> > >
-> > > - these crashes are definitely H6 IR related
-> > >   - the same kernel, on H5 works
-> > >   - covering the sensor prevents the crashes on H6
-> > >
-> > > So we should probably hold on with the series, until this is figured out.
-> > 
-> > Thanks for testing, but I think it's more hardware related.
-> > It seems that your IR is flooded or misconfigured for your board.
-> > Could you add a simple print in the "sunxi_ir_irq"
-> 
-> Yes, I get flood of IRQs with status = 0x30. (after I turn on the lamp,
-> but it persists even after I turn it off and cover the IR sensor).
+Hi,
 
-Interestingly, status also contains RAC, and it's 0 in this case. So the 
-interrupt if firing with "No available data in RX FIFO" repeatedly. Regardless
-of input.
+> Sometimes you need to go tell the hardware/firmware people not to do
+> foolish things.  You can not always fix their problems in software.
+> Please push back on this.
 
-So there's something else up.
+I've often been in the same situation. It's hopeless with those folks.
+Even worse: you give'em a clear spec on how the register interface
+shall look like, and they make something really weird out of it
+(shuffled byte orders, multiplexing irqs over a single gpio line and
+leave the other's empty instead of just one gpio per irq, ...)
 
-regards,
-	o.
+The kernel is full of buggy hardware, because hw folks seem not really
+capable of doing their homework :(
 
-> That's weird, because on H6 in CIR_RXSTA, bit 5 is undefined but corresponding 
-> bit in CIR_RXINT is DRQ_EN (RX FIFO DMA Enable)
-> 
-> So I'm not sure what it could be flooded with and why IRQs keep being
-> fired, even with no sensor input after the FIFO is read.
-> 
-> regards,
-> 	o.
-> 
-> > If it's confirmed, maybe tweak the threshold configuration or
-> > implement the new active_threshold will help.
-> > 
-> > With my hardware Beelink GS1 and on Jernej's board (A64) there is no issue.
-> > 
-> > I will disable all the other H6 boards until someone test it.
-> > 
-> > Regards,
-> > Clément
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Actually, the whole existance of these hundreds of different uart
+devices, IMHO, is a clear sing of hw folks not doing the homework.
+
+
+By the way: I've somewhat lost track of what the patch was actually
+about ... :o
+
+
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
