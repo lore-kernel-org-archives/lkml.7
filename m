@@ -2,292 +2,95 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE66C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 18:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C0AC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 18:33:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C93E208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 18:29:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 108DF208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 18:33:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Oxr5AXuI"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Qwju68uT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727264AbfE0S3c (ORCPT
+        id S1727207AbfE0SdL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 14:29:32 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:46226 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbfE0S3b (ORCPT
+        Mon, 27 May 2019 14:33:11 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:45105 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726839AbfE0SdL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 14:29:31 -0400
-Received: by mail-lj1-f194.google.com with SMTP id m15so587244ljg.13
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 11:29:29 -0700 (PDT)
+        Mon, 27 May 2019 14:33:11 -0400
+Received: by mail-oi1-f194.google.com with SMTP id w144so12455262oie.12
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 11:33:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CmpzWGArOJzCbtUDsEj3iOJkLX3jRRsxfmP2+PwxFOw=;
-        b=Oxr5AXuI4+EPpurShT2LXwgIb0yVyjwfYRwcfroe2YHT3bNq6xV/cgj5yiSQZPMeTc
-         MJbS0gPkNEYNEtjzem0ej4lG9y09lq1zoLSH+muFqOvuh/whPAUq5D55FJi5aIopu3h6
-         G5C5eM4ARj27GqlDhZFDfjJP3+hnb0lMEgGTU5LR8muG9iqYtnevtQPUaqlm2lY66GlL
-         NBQHo/QZWudT14B2u2oppFMQv3GbZzcMndHKxjxRy+SUjNujyS42qAwGuOX42+1c6Xv6
-         bTdl9ryStQ7NQ7uTLskPmpyos9JWUc9JQaZoy4zJMzv5hvP0WXh8idNwKZ+khNCl/Yh0
-         WJRg==
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=S+zfvQdj9FnUsclchCusxb5xJgJGQtK3Vq/yGcWOHbM=;
+        b=Qwju68uT26kSUsNGz9ECyX/QmQIUYdN0bXLJQ2iqz9YUkr7O0pMNJQfbARhG4gw6/Q
+         KTobXi+lze+W5BZKejwZx08yynKbyloFDgDk/VGCKMER+VEmJ60guYTJb0GHQ7MFCdkf
+         x+Rbun65sC8s8UBKooH8StlKmW18EcM1P3ctHRETKl0NLrG2BckZU7cqNCEQAkPGJ5xj
+         G+Hxde8BLzqNS+CRaaI6e0DFnfaj7eZZ/PYVxbkhdmKi0Maj7bfVOOtVuOEnZ/Cs/Sey
+         AGm7NAle/1CeA16DmFkAtWXxN+c0yxxJN8oeRaUJZq2vksaws9kf+Tuyb3HdJAVJXclz
+         EUyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=CmpzWGArOJzCbtUDsEj3iOJkLX3jRRsxfmP2+PwxFOw=;
-        b=sqIS/NRhuqH+MGRZOBUJXnWtksKVr8PFnrhYbCxckB0FhuiHUIwzo7de06+Ox/Ycw+
-         UxkN4m4raI9evD/r5V9PhKF+OrgPlXZtMz/4IHRwVA/Ux5c45v3DBZTH9G5Wl+0CU2F4
-         cYvatHKNli9LT6ORPKXDHPzAHU2RN4eRxBlXoxY4gw/eyis25e5cmo1kMt6013mhUL43
-         wiSYDh1sr1dIuwwJPd9XeOR1mTmvQpjDdY7u0tVDAUkk3868AtYcHT9jU5npOvKD6rNe
-         XXvYNNqsbGrXyKu/qyqHMkFEhqOaevang2x6wB3H6dYiHKPV5nrKme6rRLLUiod+Bvjs
-         Zviw==
-X-Gm-Message-State: APjAAAVXssicd3vkpBmIVpKEBLoNBkdfE8SW/QAMeieLCr5YoQxB2RrC
-        y6femuZiEVxChBFHSdPmdW+buw==
-X-Google-Smtp-Source: APXvYqysfZOwyQZXIVEJCqO1y539z7o+NHfuVL6GfyHjftA36GY7GAdfP+ejD0p5VnRUBnISGTybwg==
-X-Received: by 2002:a2e:121d:: with SMTP id t29mr52023166lje.29.1558981768615;
-        Mon, 27 May 2019 11:29:28 -0700 (PDT)
-Received: from khorivan (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
-        by smtp.gmail.com with ESMTPSA id y25sm2437089lfy.59.2019.05.27.11.29.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 27 May 2019 11:29:28 -0700 (PDT)
-Date:   Mon, 27 May 2019 21:29:25 +0300
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     grygorii <grygorii.strashko@ti.com>
-Cc:     hawk@kernel.org, davem@davemloft.net, ast@kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        xdp-newbies@vger.kernel.org, ilias.apalodimas@linaro.org,
-        netdev@vger.kernel.org, daniel@iogearbox.net,
-        jakub.kicinski@netronome.com, john.fastabend@gmail.com
-Subject: Re: [PATCH net-next 3/3] net: ethernet: ti: cpsw: add XDP support
-Message-ID: <20190527182924.GC4246@khorivan>
-Mail-Followup-To: grygorii <grygorii.strashko@ti.com>, hawk@kernel.org,
-        davem@davemloft.net, ast@kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
-        daniel@iogearbox.net, jakub.kicinski@netronome.com,
-        john.fastabend@gmail.com
-References: <20190523182035.9283-1-ivan.khoronzhuk@linaro.org>
- <20190523182035.9283-4-ivan.khoronzhuk@linaro.org>
- <6a88616b-9a49-77c3-577e-40670f62f953@ti.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=S+zfvQdj9FnUsclchCusxb5xJgJGQtK3Vq/yGcWOHbM=;
+        b=SZwIu08VkT7Z+oyzt9ZwzuSZAFL/8y+Z66SFfN4SOSCXYF3vrcww0jKwwiEutrOrpV
+         lnfhDEtHcnuMLvCA0G8f3vLbaEsk2F7wSZKxHMrQtOnmFffT40TdqgsDK0cD7uozHCES
+         wfaeq2QeOf6b62dIaoyoJ1AigLXL0bY380BAZft7+GRd0lKoZE+HCw+FNFyT0dpf68PI
+         nBN/8UH8117afYx9Vm5XQJyoUQeVoT/PfGf+Ur7Hd6IsQGCduaevQZPsV8O52rFLOMAk
+         TJgyQDvOtx60g13/9wSdWwZ8oGRPT1Sr3MP7HPWwNLKYL70hvcxwlGA3SGZIQguos08U
+         iO5A==
+X-Gm-Message-State: APjAAAU6kPAwQyEsA6GfWvriaAydw7/69e2dbACkAX5NRsllk7668dqP
+        UEsxtd/6Fu0LWQUH23QBZNg07dWuv6FsYT7VYkY=
+X-Google-Smtp-Source: APXvYqySfT2vqPTVM4SYEzWI5e34ATqeldWvpzGysG2wnPt7WXQGJZSA/rBCSZvvFctmaav3G5VWvp/bJDDNojbX7Oc=
+X-Received: by 2002:aca:3545:: with SMTP id c66mr199156oia.129.1558981990179;
+ Mon, 27 May 2019 11:33:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <6a88616b-9a49-77c3-577e-40670f62f953@ti.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190527132200.17377-1-narmstrong@baylibre.com> <20190527132200.17377-2-narmstrong@baylibre.com>
+In-Reply-To: <20190527132200.17377-2-narmstrong@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Mon, 27 May 2019 20:32:59 +0200
+Message-ID: <CAFBinCBhdJdHzof0jmy65GHnQi6b8A+tmBUvhZJAf_Nbw1ADvw@mail.gmail.com>
+Subject: Re: [PATCH 01/10] arm64: dts: meson-gxm-khadas-vim2: fix
+ gpio-keys-polled node
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
+        Christian Hewitt <christianshewitt@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 08:49:38PM +0300, grygorii wrote:
->Hi Ivan,
+On Mon, May 27, 2019 at 3:22 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
 >
->On 23/05/2019 21:20, Ivan Khoronzhuk wrote:
->>Add XDP support based on rx page_pool allocator, one frame per page.
->>Page pool allocator is used with assumption that only one rx_handler
->>is running simultaneously. DMA map/unmap is reused from page pool
->>despite there is no need to map whole page.
->>
->>Due to specific of cpsw, the same TX/RX handler can be used by 2
->>network devices, so special fields in buffer are added to identify
->>an interface the frame is destined to. Thus XDP works for both
->>interfaces, that allows to test xdp redirect between two interfaces
->>easily.
->>
->>XDP prog is common for all channels till appropriate changes are added
->>in XDP infrastructure.
->>
->>Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
->>---
->>  drivers/net/ethernet/ti/Kconfig        |   1 +
->>  drivers/net/ethernet/ti/cpsw.c         | 555 ++++++++++++++++++++++---
->>  drivers/net/ethernet/ti/cpsw_ethtool.c |  53 +++
->>  drivers/net/ethernet/ti/cpsw_priv.h    |   7 +
->>  4 files changed, 554 insertions(+), 62 deletions(-)
->>
->>diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
->>index bd05a977ee7e..3cb8c5214835 100644
->>--- a/drivers/net/ethernet/ti/Kconfig
->>+++ b/drivers/net/ethernet/ti/Kconfig
->>@@ -50,6 +50,7 @@ config TI_CPSW
->>  	depends on ARCH_DAVINCI || ARCH_OMAP2PLUS || COMPILE_TEST
->>  	select TI_DAVINCI_MDIO
->>  	select MFD_SYSCON
->>+	select PAGE_POOL
->>  	select REGMAP
->>  	---help---
->>  	  This driver supports TI's CPSW Ethernet Switch.
->>diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
->>index 87a600aeee4a..274e6b64ea9e 100644
->>--- a/drivers/net/ethernet/ti/cpsw.c
->>+++ b/drivers/net/ethernet/ti/cpsw.c
->>@@ -31,6 +31,10 @@
->>  #include <linux/if_vlan.h>
->>  #include <linux/kmemleak.h>
->>  #include <linux/sys_soc.h>
->>+#include <net/page_pool.h>
->>+#include <linux/bpf.h>
->>+#include <linux/bpf_trace.h>
->>+#include <linux/filter.h>
->>  #include <linux/pinctrl/consumer.h>
->>  #include <net/pkt_cls.h>
->>@@ -60,6 +64,10 @@ static int descs_pool_size = CPSW_CPDMA_DESCS_POOL_SIZE_DEFAULT;
->>  module_param(descs_pool_size, int, 0444);
->>  MODULE_PARM_DESC(descs_pool_size, "Number of CPDMA CPPI descriptors in pool");
->>+/* The buf includes headroom compatible with both skb and xdpf */
->>+#define CPSW_HEADROOM_NA (max(XDP_PACKET_HEADROOM, NET_SKB_PAD) + NET_IP_ALIGN)
->>+#define CPSW_HEADROOM  ALIGN(CPSW_HEADROOM_NA, sizeof(long))
->>+
->>  #define for_each_slave(priv, func, arg...)				\
->>  	do {								\
->>  		struct cpsw_slave *slave;				\
->>@@ -74,6 +82,8 @@ MODULE_PARM_DESC(descs_pool_size, "Number of CPDMA CPPI descriptors in pool");
->>  				(func)(slave++, ##arg);			\
->>  	} while (0)
->>+#define CPSW_XMETA_OFFSET	ALIGN(sizeof(struct xdp_frame), sizeof(long))
->>+
->>  static int cpsw_ndo_vlan_rx_add_vid(struct net_device *ndev,
->>  				    __be16 proto, u16 vid);
->>@@ -337,24 +347,58 @@ void cpsw_intr_disable(struct cpsw_common *cpsw)
->>  	return;
->>  }
+> From: Christian Hewitt <christianshewitt@gmail.com>
 >
->[..]
+> Fix DTC warnings:
 >
->>+static int cpsw_xdp_tx_frame_mapped(struct cpsw_priv *priv,
->>+				    struct xdp_frame *xdpf, struct page *page)
->>+{
->>+	struct cpsw_common *cpsw = priv->cpsw;
->>+	struct cpsw_meta_xdp *xmeta;
->>+	struct netdev_queue *txq;
->>+	struct cpdma_chan *txch;
->>+	dma_addr_t dma;
->>+	int ret;
->>+
->>+	xmeta = (void *)xdpf + CPSW_XMETA_OFFSET;
->>+	xmeta->ch = 0;
->>+
->>+	txch = cpsw->txv[0].ch;
->>+	dma = (xdpf->data - (void *)xdpf) + page->dma_addr;
->>+	ret = cpdma_chan_submit_mapped(txch, cpsw_xdpf_to_handle(xdpf), dma,
->>+				       xdpf->len,
->>+				       priv->emac_port + cpsw->data.dual_emac);
->>+	if (ret) {
->>+		xdp_return_frame_rx_napi(xdpf);
->>+		goto stop;
->>+	}
->>+
->>+	/* no tx desc - stop sending us tx frames */
->>+	if (unlikely(!cpdma_check_free_tx_desc(txch)))
->>+		goto stop;
->>+
->>+	return ret;
->>+stop:
->>+	txq = netdev_get_tx_queue(priv->ndev, 0);
->>+	netif_tx_stop_queue(txq);
->>+
->>+	/* Barrier, so that stop_queue visible to other cpus */
->>+	smp_mb__after_atomic();
->>+
->>+	if (cpdma_check_free_tx_desc(txch))
->>+		netif_tx_wake_queue(txq);
->>+
->>+	return ret;
->>+}
->>+
->>+static int cpsw_xdp_tx_frame(struct cpsw_priv *priv, struct xdp_frame *xdpf)
->>+{
->>+	struct cpsw_common *cpsw = priv->cpsw;
->>+	struct cpsw_meta_xdp *xmeta;
->>+	struct netdev_queue *txq;
->>+	struct cpdma_chan *txch;
->>+	int ret;
->>+
->>+	xmeta = (void *)xdpf + CPSW_XMETA_OFFSET;
->>+	if (sizeof(*xmeta) > xdpf->headroom)
->>+		return -EINVAL;
->>+
->>+	xmeta->ndev = priv->ndev;
->>+	xmeta->ch = 0;
->>+
->>+	txch = cpsw->txv[0].ch;
->>+	ret = cpdma_chan_submit(txch, cpsw_xdpf_to_handle(xdpf), xdpf->data,
->>+				xdpf->len,
->>+				priv->emac_port + cpsw->data.dual_emac);
->>+	if (ret) {
->>+		xdp_return_frame_rx_napi(xdpf);
->>+		goto stop;
->>+	}
->>+
->>+	/* no tx desc - stop sending us tx frames */
->>+	if (unlikely(!cpdma_check_free_tx_desc(txch)))
->>+		goto stop;
->>+
->>+	return ret;
->>+stop:
->>+	txq = netdev_get_tx_queue(priv->ndev, 0);
->>+	netif_tx_stop_queue(txq);
->>+
->>+	/* Barrier, so that stop_queue visible to other cpus */
->>+	smp_mb__after_atomic();
->>+
->>+	if (cpdma_check_free_tx_desc(txch))
->>+		netif_tx_wake_queue(txq);
->>+
->>+	return ret;
->>+}
+> meson-gxm-khadas-vim2.dtb: Warning (avoid_unnecessary_addr_size):
+>    /gpio-keys-polled: unnecessary #address-cells/#size-cells
+>         without "ranges" or child "reg" property
 >
->Above 2 functions are mostly identical - could you do smth. with it?
-... I know it should be, but i hadn't found better way for combining them ....
+> Fixes: b8b74dda3908 ("ARM64: dts: meson-gxm: Add support for Khadas VIM2")
+> Suggested-by: Christian Hewitt <christianshewitt@gmail.com>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+as well as:
+Tested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
->
->>+
->>+static int cpsw_run_xdp(struct cpsw_priv *priv, struct cpsw_vector *rxv,
->>+			struct xdp_buff *xdp, struct page *page)
->>+{
->>+	struct net_device *ndev = priv->ndev;
->>+	struct xdp_frame *xdpf;
->>+	struct bpf_prog *prog;
->>+	int ret = 1;
->>+	u32 act;
->>+
->>+	rcu_read_lock();
->>+
->>+	prog = READ_ONCE(priv->xdp_prog);
->>+	if (!prog) {
->>+		ret = 0;
->>+		goto out;
->>+	}
->>+
->>+	act = bpf_prog_run_xdp(prog, xdp);
->>+	switch (act) {
->>+	case XDP_PASS:
->>+		ret = 0;
->>+		break;
->>+	case XDP_TX:
->>+		xdpf = convert_to_xdp_frame(xdp);
->>+		if (unlikely(!xdpf))
->>+			xdp_return_buff(xdp);
->>+		else
->>+			cpsw_xdp_tx_frame_mapped(priv, xdpf, page);
->>+		break;
->>+	case XDP_REDIRECT:
->>+		if (xdp_do_redirect(ndev, xdp, prog))
->>+			xdp_return_buff(xdp);
->>+		else
->>+			ret = 2;
->
->could we avoid using consts as return values?
->may be some informative defines/enum?
-Ok, for all "const" cases.
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts | 4 +---
+there are more boards with the same "problem" out there
+we should clean these up at some point as well
 
--- 
-Regards,
-Ivan Khoronzhuk
+
+Martin
