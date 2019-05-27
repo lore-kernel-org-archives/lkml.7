@@ -2,192 +2,106 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0A9C28CBF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E22C282E5
 	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 00:57:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9D8521707
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 00:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11BBC2075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 00:57:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="hEev7QfZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z3+uRtfp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726125AbfE0AxI (ORCPT
+        id S1726129AbfE0A5g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 20:53:08 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:39897 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbfE0AxI (ORCPT
+        Sun, 26 May 2019 20:57:36 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42338 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725981AbfE0A5g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 20:53:08 -0400
-Received: by mail-ua1-f65.google.com with SMTP id 79so5848155uav.6
-        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2019 17:53:07 -0700 (PDT)
+        Sun, 26 May 2019 20:57:36 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 33so5129415pgv.9;
+        Sun, 26 May 2019 17:57:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=tetwU88W86xd3qxoZ4slgsmGudl9PUA8gEHz0OF4TME=;
-        b=hEev7QfZZUGXyw3NxaWZVFf+1xoSorD06IO4vPTOSC/rSxUDfzzO6z77wfFN5b2XF3
-         RBckklc56POGWQds3IczXrU8xX/E5T4kUWWJbUY+TowRc7TvxokVLsNOBlA/iipFBnj8
-         IyowAIPdvWQD4XJews4Jey7Dtzkm5lXp0ulrGfqhYPL5aablLe/3LlXypHct6OUSbdqB
-         oyPZDoVVXuijnDRoAbm+yINbFRXqWUtIjzQYzK5G1CSZB5Ogw8PnqWYM9o1KX/ZxhXYl
-         Yk21G7sUFFIWCnKrAvDwnCzefM/R509T1XX9+iksPzh0C3Lu4XgnG2Tf7ZOpT/NIuED5
-         lacQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=BdjqEMSeAFloAhLZoevUhTsAoKWad+eEnvBrlK9h5Ls=;
+        b=Z3+uRtfpG79M7BNLIRnXyfJ9sPDoZrhkSCxOgvoFc9SEyNIX2smauSYR+5ZY3OLoe0
+         UZChnQV1zzNhZrbp/xrh9u26hkGf8dUSGIBdoNVwci9UKzRHSrKOaCkru8Lluk2UE4/D
+         bmLzhEnYbWZXEw/3ywuMnG4N9Zxzpkve9Rftj4M6o6ixVFRKcB+7QZnfEnIklbbWAret
+         faFm7mAtkrGKATtivbzexGyhYujoiW//bfBGlZoQuYtCW7odICmr5TLt32KzrW+EOdmg
+         U2VVdTyZ6ymi4MnJ9oUpFBvLouEDvK1yC7tNdLZ02mL9oJ9K+l2LEouEYzD+IwFRYtgn
+         z0NA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=tetwU88W86xd3qxoZ4slgsmGudl9PUA8gEHz0OF4TME=;
-        b=VgcPZBNZnQO7vaXF3V8PN5Ux8+0Jxo0CgOGoILrER96FpX90PGrOdOzXn92DHPWwIQ
-         MmN3GstK5/TKDROJD0UB2rMTmMEaiedXSFU13+bDKr4qVqIp/mwCAvyaETEC76b8lh4p
-         7O2dYkytu4FagI24haQqChuJhPcxQVX3v4CUJC246IgxBdXcd6ys4OTsQVAsV1bdubiN
-         Gww7xfnpg62tJPV2pTagzlAXVhOtiSfZEWxQtZmzfjdleeUeZAT5auJB2Jv7kTK354xh
-         raw6C3mTSXij1BHr62Q+UYx0K14FUZjS7IA0NiIWkbLezbPXdPILnUL8rVflKpTw/6ir
-         k1pQ==
-X-Gm-Message-State: APjAAAXf4dRm/blWL7hYHByzpSZJuSc2M7OKKYyUmVUqBC4Lit6ZCicw
-        EWtKNrXCI+IjiHelW1hwrnXNiA==
-X-Google-Smtp-Source: APXvYqxS1nDjxxH4SjdNP4Y+hJboWueG45AfdStI+kR1/71Wchq20yTMS9ARprHKlh1d5kmoIHGaiA==
-X-Received: by 2002:a9f:2246:: with SMTP id 64mr17320085uad.47.1558918387214;
-        Sun, 26 May 2019 17:53:07 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id k13sm3345233uae.8.2019.05.26.17.53.05
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=BdjqEMSeAFloAhLZoevUhTsAoKWad+eEnvBrlK9h5Ls=;
+        b=lgKJuLSfvo/LvK0JmVwdXgX34K+0+15hukgFztvIqzSraUPshALQbYNBm+9+J45CJe
+         EgO02HaglqWEGzsTaPkHN6Yac+j2i895pFg97aixOAduy7CyKPk1NH/8x+PfCkUUtrJX
+         sZQBPvgbHYYjmIlldRcnMjeVidpjt3wFc81mLwhBklQdWZ1tONKaatBGxDGlIIsqb3K+
+         mapGwGYn4zTWos2bHUJr/r0iTqQ4htSWhUsw0ujqRb955Iwy+qfKFNvu/IG+Pk7NJF3N
+         SgekBT4g7ubifL2H3M6vdkKF9CZFctK4DKsDmOy22PcM/kyB3Y8iQPDlTN3t8Y0PD+jp
+         eI1Q==
+X-Gm-Message-State: APjAAAVmVW6uLZ2sHLEnTX0D54ufVNo7X7y10BL8BT0uogLrmI/t4aEL
+        qqvQ/1XYy24DcJAAKInPnrY=
+X-Google-Smtp-Source: APXvYqzy0BSN74KBEcCSKAmYIkrOIxBJWNt1E4+MRrkVmkqFsW4+GF+XXP/1yV6kW5FKUr5oW2NP2w==
+X-Received: by 2002:aa7:8a11:: with SMTP id m17mr110690092pfa.122.1558918655871;
+        Sun, 26 May 2019 17:57:35 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([66.42.35.75])
+        by smtp.gmail.com with ESMTPSA id e123sm8962355pgc.29.2019.05.26.17.57.26
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 26 May 2019 17:53:06 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH] sched/fair: fix variable "done" set but not used
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <0dd5f59e-bd7e-69d8-e3e8-dbc73820b110@arm.com>
-Date:   Sun, 26 May 2019 20:53:05 -0400
-Cc:     peterz@infradead.org, mingo@kernel.org, vincent.guittot@linaro.org,
+        Sun, 26 May 2019 17:57:35 -0700 (PDT)
+Date:   Mon, 27 May 2019 08:57:16 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     sathya.prakash@broadcom.com, chaitra.basappa@broadcom.com,
+        suganath-prabu.subramani@broadcom.com, jejb@linux.ibm.com,
+        martin.petersen@oracle.com
+Cc:     MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <090C3AE4-55E4-45F3-AEAB-3E7F26FB7D6D@lca.pw>
-References: <20190525161821.1025-1-cai@lca.pw>
- <0dd5f59e-bd7e-69d8-e3e8-dbc73820b110@arm.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+Subject: [PATCH] mpt3sas_ctl: fix double-fetch bug in _ctl_ioctl_main()
+Message-ID: <20190527005716.GA17015@zhanggen-UX430UQ>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In _ctl_ioctl_main(), 'ioctl_header' is fetched the first time from 
+userspace. 'ioctl_header.ioc_number' is then checked. The legal result 
+is saved to 'ioc'. Then, in condition MPT3COMMAND, the whole struct is
+fetched again from the userspace. Then _ctl_do_mpt_command() is called,
+'ioc' and 'karg' as inputs.
 
+However, a malicious user can change the 'ioc_number' between the two 
+fetches, which will cause a potential security issues.  Moreover, a 
+malicious user can provide a valid 'ioc_number' to pass the check in 
+first fetch, and then modify it in the second fetch.
 
-> On May 26, 2019, at 7:56 PM, Valentin Schneider =
-<valentin.schneider@arm.com> wrote:
->=20
-> Hi,
->=20
-> On 25/05/2019 17:18, Qian Cai wrote:
->> The commit f643ea220701 ("sched/nohz: Stop NOHZ stats when decayed")
->> introduced a compilation warning if CONFIG_NO_HZ_COMMON=3Dn,
->>=20
->> kernel/sched/fair.c: In function 'update_blocked_averages':
->> kernel/sched/fair.c:7750:7: warning: variable 'done' set but not used
->> [-Wunused-but-set-variable]
->>=20
->=20
-> For some reason I can't get this warning to fire on my end (arm64 =
-defconfig
-> + all the NO_HZ stuff set to nope + GCC 8.1). However I do think there =
-are
-> things we could improve here.
+To fix this, we need to recheck the 'ioc_number' in the second fetch.
 
-I like your approach more if it works. The warning can be reproduced by =
-compiling with W=3D1.
-
-> cfs_rq_has_blocked() is only used here and in a CONFIG_NO_HZ_COMMON =
-block
-> within the !CONFIG_FAIR_GROUP_SCHED update_blocked_averages(). Same =
-goes for
-> others_have_blocked(), so maybe these two should only be defined for
-> CONFIG_NO_HZ_COMMON, so we get an obvious splat when they end up in
-> !CONFIG_NO_HZ_COMMON paths.=20
->=20
-> Otherwise we can have them defined as straight up false, in which case =
-we
-> may be able to save ourselves some inline ifdeffery with something =
-like the
-> following. It's barely compile-tested, but the objdump seems okay.
->=20
-> ----->8-----
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index f35930f5e528..d3d6a36316f9 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -7695,6 +7695,7 @@ static void attach_tasks(struct lb_env *env)
-> 	rq_unlock(env->dst_rq, &rf);
-> }
->=20
-> +#ifdef CONFIG_NO_HZ_COMMON
-> static inline bool cfs_rq_has_blocked(struct cfs_rq *cfs_rq)
-> {
-> 	if (cfs_rq->avg.load_avg)
-> @@ -7705,7 +7706,11 @@ static inline bool cfs_rq_has_blocked(struct =
-cfs_rq *cfs_rq)
->=20
-> 	return false;
-> }
-> +#else
-> +static inline bool cfs_rq_has_blocked(struct cfs_rq *cfs_rq) { return =
-false; }
-> +#endif
->=20
-> +#ifdef CONFIG_NO_HZ_COMMON
-> static inline bool others_have_blocked(struct rq *rq)
-> {
-> 	if (READ_ONCE(rq->avg_rt.util_avg))
-> @@ -7721,6 +7726,9 @@ static inline bool others_have_blocked(struct rq =
-*rq)
->=20
-> 	return false;
-> }
-> +#else
-> +static inline bool others_have_blocked(struct rq *rq) { return false; =
-}
-> +#endif
->=20
-> #ifdef CONFIG_FAIR_GROUP_SCHED
->=20
-> @@ -7741,6 +7749,18 @@ static inline bool cfs_rq_is_decayed(struct =
-cfs_rq *cfs_rq)
-> 	return true;
-> }
->=20
-> +#ifdef CONFIG_NO_HZ_COMMON
-> +static inline void update_blocked_load_status(struct rq *rq, bool =
-has_blocked)
-> +{
-> +	rq->last_blocked_load_update_tick =3D jiffies;
-> +
-> +	if (!has_blocked)
-> +		rq->has_blocked_load =3D 0;
-> +}
-> +#else
-> +static inline void update_blocked_load_status(struct rq *rq, bool =
-has_blocked) {}
-> +#endif
-> +
-> static void update_blocked_averages(int cpu)
-> {
-> 	struct rq *rq =3D cpu_rq(cpu);
-> @@ -7787,11 +7807,7 @@ static void update_blocked_averages(int cpu)
-> 	if (others_have_blocked(rq))
-> 		done =3D false;
->=20
-> -#ifdef CONFIG_NO_HZ_COMMON
-> -	rq->last_blocked_load_update_tick =3D jiffies;
-> -	if (done)
-> -		rq->has_blocked_load =3D 0;
-> -#endif
-> +	update_blocked_load_status(rq, !done);
-> 	rq_unlock_irqrestore(rq, &rf);
-> }
->=20
-> -----8<-----
-> [...]
-
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+---
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_ctl.c b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+index b2bb47c..5181c03 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_ctl.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+@@ -2319,6 +2319,10 @@ _ctl_ioctl_main(struct file *file, unsigned int cmd, void __user *arg,
+ 			break;
+ 		}
+ 
++		if (karg.hdr.ioc_number != ioctl_header.ioc_number) {
++			ret = -EINVAL;
++			break;
++		}
+ 		if (_IOC_SIZE(cmd) == sizeof(struct mpt3_ioctl_command)) {
+ 			uarg = arg;
+ 			ret = _ctl_do_mpt_command(ioc, karg, &uarg->mf);
