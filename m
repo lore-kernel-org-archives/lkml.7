@@ -2,98 +2,86 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D424EC07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 06:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A58C07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 06:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B768E2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 06:23:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD27A2070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 06:27:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbfE0GXH (ORCPT
+        id S1726160AbfE0G1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 02:23:07 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51511 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbfE0GXF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 02:23:05 -0400
-Received: by mail-wm1-f68.google.com with SMTP id f10so7413527wmb.1
-        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2019 23:23:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2EwAn8/owM0ZpqAm1O3Pr+v/VNdJwGPW1zcKtSbo++g=;
-        b=EN35T/dVwzVXzxIYmK5dIHX69jOP/XzAE652qVv12jBXhcg7Mjw3f8Qq82pozMU55d
-         Qve0LQ/cUopUmbrPY5MteXLe4HZWA4OGv/rWRB4xRQielhiW1m3STbflWJORWlOhFwAp
-         NyXXhOILs4aaIIEMZwkyOlPbRS8co8yL8CiVozsFUC3VEZWRhB4VDVMluXTVbBalN3aW
-         DHJqV62VU8Otf0FQ3SI3q4KycfGK1dEmsGG/CmGFNWLKB0BfWvr5mhrpqmgwJ3nziqzI
-         NH3Fc4jTQZWvkc/UJVeBkDYY50NqGvA+vMKrnsiqTwDG0nU8L3/71Dlc2nkZlfxFC4hw
-         hj1w==
-X-Gm-Message-State: APjAAAVVeZA2HR3t/urGcbvjApKwiha1ECLMKl/RYjuGnjzfeZfYJT7p
-        h2XTcpZ28BL+2mL+67cii8S+aKwXKyg=
-X-Google-Smtp-Source: APXvYqz7gk3SDkHxJ/F20M/kqu5igSHw1TtFY0GExTPcnsN/PG/SpiaxSaw9crWuaaFmjl8FHfUATw==
-X-Received: by 2002:a1c:e183:: with SMTP id y125mr328512wmg.152.1558938183765;
-        Sun, 26 May 2019 23:23:03 -0700 (PDT)
-Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id g16sm9541735wrm.96.2019.05.26.23.23.02
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 26 May 2019 23:23:02 -0700 (PDT)
-Date:   Mon, 27 May 2019 08:23:01 +0200
-From:   Oleksandr Natalenko <oleksandr@redhat.com>
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Justin Piszcz <jpiszcz@lucidpixels.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: 5.1 and 5.1.1: BUG: unable to handle kernel paging request at
- ffffea0002030000
-Message-ID: <20190527062301.rk32mhnk2qy2ives@butterfly.localdomain>
-References: <CAO9zADzXTQpv5cGp61BzsVPvWQz5xbSJv_N71jBa3zopr7CB=Q@mail.gmail.com>
- <20190520115608.GK18914@techsingularity.net>
- <CAO9zADzz9QJ9Rp_Acy5GRggfYZzDwYYNWhCvPc9XHd+G=gS5zw@mail.gmail.com>
- <20190521124310.GM18914@techsingularity.net>
- <20190524114329.hujd3qvtusz6uyfk@butterfly.localdomain>
- <20190524123146.GP18914@techsingularity.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190524123146.GP18914@techsingularity.net>
-User-Agent: NeoMutt/20180716
+        Mon, 27 May 2019 02:27:01 -0400
+Received: from mga07.intel.com ([134.134.136.100]:4773 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725973AbfE0G1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 02:27:00 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 May 2019 23:27:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,518,1549958400"; 
+   d="scan'208";a="178751968"
+Received: from hao-dev.bj.intel.com ([10.238.157.65])
+  by fmsmga002.fm.intel.com with ESMTP; 26 May 2019 23:26:56 -0700
+From:   Wu Hao <hao.wu@intel.com>
+To:     atull@kernel.org, mdf@kernel.org, jdelvare@suse.com,
+        linux@roeck-us.net, linux-fpga@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     linux-api@vger.kernel.org, Wu Hao <hao.wu@intel.com>
+Subject: [PATCH v3 0/3] add thermal/power management features for FPGA DFL drivers
+Date:   Mon, 27 May 2019 14:06:53 +0800
+Message-Id: <1558937216-12742-1-git-send-email-hao.wu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 01:31:46PM +0100, Mel Gorman wrote:
-> On Fri, May 24, 2019 at 01:43:29PM +0200, Oleksandr Natalenko wrote:
-> > > Please use the offset 0xb9
-> > > 
-> > > addr2line -i -e /usr/src/linux/vmlinux `printf "0x%lX" $((0x$ADDR+0xb9))
-> > > 
-> > > -- 
-> > > Mel Gorman
-> > > SUSE Labs
-> > 
-> > Cc'ing myself since i observe such a behaviour sometimes right after KVM
-> > VM is launched. No luck with reproducing it on demand so far, though.
-> > 
-> 
-> It's worth testing the patch at https://lore.kernel.org/lkml/1558689619-16891-1-git-send-email-suzuki.poulose@arm.com/T/#u
+This patchset adds thermal and power management features for FPGA DFL
+drivers. Both patches are using hwmon as userspace interfaces.
+Actually this patchset is splitted from patchset [1].
 
-It is reported [1] that this fixes the issue.
+Main changes from v2:
+ - switch to standard hwmon APIs for thermal hwmon:
+     temp1_alarm        --> temp1_max
+     temp1_alarm_status --> temp1_max_alarm
+     temp1_crit_status  --> temp1_crit_alarm
+     temp1_alarm_policy --> temp1_max_policy
+ - switch to standard hwmon APIs for power hwmon:
+     power1_cap         --> power1_max
+     power1_cap_status  --> power1_max_alarm
+     power1_crit_status --> power1_crit_alarm
 
-Thanks.
+v2 version patch could be found here [2] - thermal, [3] - power.
 
-[1] https://github.com/NixOS/nixpkgs/issues/61909
+Please note that this patchset needs to be applied on top of patchset [4].
 
-> 
-> -- 
-> Mel Gorman
-> SUSE Labs
+Thanks!
+
+[1] https://lkml.org/lkml/2019/4/29/227
+[2] https://lkml.org/lkml/2019/4/29/211
+[3] https://lkml.org/lkml/2019/4/29/213
+[4] https://lkml.org/lkml/2019/5/27/11
+
+Wu Hao (2):
+  fpga: dfl: fme: add thermal management support
+  fpga: dfl: fme: add power management support
+
+Xu Yilun (1):
+  Documentation: fpga: dfl: add descriptions for thermal/power
+    management interfaces
+
+ Documentation/ABI/testing/sysfs-platform-dfl-fme | 131 +++++++
+ Documentation/fpga/dfl.txt                       |   9 +
+ drivers/fpga/Kconfig                             |   2 +-
+ drivers/fpga/dfl-fme-main.c                      | 426 +++++++++++++++++++++++
+ 4 files changed, 567 insertions(+), 1 deletion(-)
 
 -- 
-  Best regards,
-    Oleksandr Natalenko (post-factum)
-    Senior Software Maintenance Engineer
+1.8.3.1
+
