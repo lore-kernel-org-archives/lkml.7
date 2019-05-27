@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F9B0C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 20:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29158C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 20:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D244520859
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 20:56:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F20B420859
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 20:56:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GauBSKsf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pC54YjrC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727428AbfE0U4A (ORCPT
+        id S1727443AbfE0U4C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 16:56:00 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33923 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727347AbfE0Uzw (ORCPT
+        Mon, 27 May 2019 16:56:02 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35834 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727377AbfE0Uzx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 16:55:52 -0400
-Received: by mail-wr1-f68.google.com with SMTP id f8so17983466wrt.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 13:55:50 -0700 (PDT)
+        Mon, 27 May 2019 16:55:53 -0400
+Received: by mail-wr1-f66.google.com with SMTP id m3so17972481wrv.2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 13:55:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=MjZ/pyBZBO4EDEwBpRQ6u4NGJabjhPzRMD0kf65cmv4=;
-        b=GauBSKsfWkUC1ndbG21MewLXH8aQTbFfRtmwE0QfKWksuLdU2V1AKi/7bMLplJEzFB
-         iY9xU9FbZht/hZvDRZy9xMUArd2o68734zpvMaqgR7NMp2JdO64lYu9Dgrq1PhGr5NdZ
-         SvU8RmB3ilA1vCA4eVEZMCX//zKV/Y1DCLC8DKrbDPDgwCUgqnX/soDbKfneUKT4PEtI
-         l1wCyjU9aTn5gyWosMH8wB7Uvmk4wZW9qDnGZXHe0+uoNyjs8vsdW2O/WrzgQxWLcQCV
-         j9YBuE/dtDIavmPTLvz+k8rSg3IP+4fzrhfXKl3wvLnuURZQkb1Kr9IyEcHOxg9oCXVY
-         jTzg==
+        bh=dfUdgBJPtbCYc/uhDOpMaPmMlc4FCxxcnSQ96C7YgX8=;
+        b=pC54YjrChaPbEwjQzWzOtVgI4Qfy3JE7gSPnbvirKitnpg3zXdThxMKqBnbW0zLitf
+         jWYAtQll0nL4ZAuDMmHjmhAkzIf3BJu+eYMOe4FF/9oDdQtnjBlKRfwj12q83g+pP6Nf
+         N0TYoOM1d12w6pdxrm/ChgZ11uOOiGKs4fWblPpQis91t42RBRyKETFU1v9rtKpEOTW+
+         oYKjOELW3eM9GpBHBb+kTK/vpnn197yu+CoKaQigoLQI+JJiaNSMjekcIJERuCiwG9CW
+         kbtLh+PZXbaiooedeV2h00nqAD6L/4YJIcUHbNw+0UbWpP67iVJoMuF9MSPvHbGsPTJh
+         u1VQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=MjZ/pyBZBO4EDEwBpRQ6u4NGJabjhPzRMD0kf65cmv4=;
-        b=sMNTeibdCNOzEz73FVw7Zj2YkMuKiTckCK8R0rkGN7xb+G8Mr/qXPvV7F7IQdembcb
-         aD69ObwQh9m4MkDeD11HRd0F8JMcRFufJH+TIJgRwKwqV5eEm3JzFbla0p6Yl6OoZ/qK
-         fy+uuQVe67vS90RmlkY1sgeJHlgAddUYhH39h4aZGRNRcotYp4rEXAiej8hx6ZCE1Bse
-         bzC2cmCztPZavrI95odnNxk7ukgARdCzo+sLevPIaiIA2ykLIaGxlaT2G81Z4vXNQEQs
-         xDYBNv4yko3J7xH5QF8f0bVZzU7dnr8givTTQFt034DmNC0VHq4V6i9oC/3iUPHqCMjK
-         vsjw==
-X-Gm-Message-State: APjAAAXIW9QznEVK8Y0/a/98wb+LWkU8PFktNkwd9sZQ4qS5I3Mt681d
-        N7X09SBmtC700MW45HsOEJ9JLg==
-X-Google-Smtp-Source: APXvYqywTuls5XsmHkJIY93E4xOaE2/n5U+HJAgU5hpIGFdxVhyXRlEiqJhYEzNeMqVUJ7o516jbNg==
-X-Received: by 2002:a5d:504f:: with SMTP id h15mr307455wrt.208.1558990549613;
-        Mon, 27 May 2019 13:55:49 -0700 (PDT)
+        bh=dfUdgBJPtbCYc/uhDOpMaPmMlc4FCxxcnSQ96C7YgX8=;
+        b=fvctPqJ/fmwPbyWCEHJxrwgtye9gae44Te4NIDBS6h7v/v6R9Xh3IAQnPTDedDuHtI
+         U4l5AnMTVpOBmNCN/yp6fnOMj1tl/koQUU3aIE/ct0glGuEXZ7FRnBvMg8uNUzpHp/jw
+         JUdLKKKrVU761YewUO3hwL1LbnjO9tehlTvogEyagG69/QfjlfhhEWLe6+3R3KjWflmY
+         ip7jYC8jpBIYt4U98vWtA1Q7lNPH6kqErfSTTEvxDybLiuvgKIZYE7Um/LYNU0f/MqBz
+         iTSaRciSTrGC1+TuQgZpK4dV7sicTI5Tk7H3lurQAPDRXRdC/PWFn1o39qL2ZSPZIg4S
+         1gkQ==
+X-Gm-Message-State: APjAAAVWVghIr7U8k3ImBKw9e+j80bUVZH54wvbFET5aXUtiodYmK23Q
+        BNhoWdTB5nwFnjlGJYUvvDfDpQ==
+X-Google-Smtp-Source: APXvYqw9AWq7l/BVAos9otlLSQgDWYcyVUH+7bEP3nfgEk9gLPxJcG2TGcPln+j7HUcfkX9AF2n9QA==
+X-Received: by 2002:a5d:694a:: with SMTP id r10mr7803842wrw.345.1558990551007;
+        Mon, 27 May 2019 13:55:51 -0700 (PDT)
 Received: from clegane.local (30.94.129.77.rev.sfr.net. [77.129.94.30])
-        by smtp.gmail.com with ESMTPSA id a1sm388565wmj.23.2019.05.27.13.55.48
+        by smtp.gmail.com with ESMTPSA id a1sm388565wmj.23.2019.05.27.13.55.49
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 May 2019 13:55:48 -0700 (PDT)
+        Mon, 27 May 2019 13:55:50 -0700 (PDT)
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 To:     tglx@linutronix.de
 Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@linux.intel.com
-Subject: [PATCH V3 7/8] genirq/timings: Add selftest for irqs circular buffer
-Date:   Mon, 27 May 2019 22:55:20 +0200
-Message-Id: <20190527205521.12091-8-daniel.lezcano@linaro.org>
+Subject: [PATCH V3 8/8] genirq/timings: Add selftest for next event computation
+Date:   Mon, 27 May 2019 22:55:21 +0200
+Message-Id: <20190527205521.12091-9-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190527205521.12091-1-daniel.lezcano@linaro.org>
 References: <20190527205521.12091-1-daniel.lezcano@linaro.org>
@@ -69,152 +69,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After testing the per cpu interrupt circular event, we want to make
-sure the per interrupt circular buffer usage is correct.
+The circular buffers are now validated at this point with the two
+previous patches. The next interrupt index algorithm which is the
+hardest part to validate can be validated with the tests provided with
+this patch.
 
-Add tests to validate the interrupt circular buffer.
+It uses the intervals stored in the arrays and insert all the values
+except the last one. The next event computation must return the same
+value as the last element we did not inserted.
+
+Add tests for the next event index computation.
 
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- kernel/irq/timings.c | 139 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 139 insertions(+)
+ kernel/irq/timings.c | 66 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 66 insertions(+)
 
 diff --git a/kernel/irq/timings.c b/kernel/irq/timings.c
-index 95b63bdea156..5b13c2231d4f 100644
+index 5b13c2231d4f..e960d7ce7bcc 100644
 --- a/kernel/irq/timings.c
 +++ b/kernel/irq/timings.c
-@@ -629,6 +629,141 @@ int irq_timings_alloc(int irq)
- }
+@@ -704,6 +704,68 @@ static struct timings_intervals tis[] __initdata = {
+ 	{ intervals4, ARRAY_SIZE(intervals4) },
+ };
  
- #ifdef CONFIG_TEST_IRQ_TIMINGS
-+struct timings_intervals {
-+	u64 *intervals;
-+	size_t count;
-+};
-+
-+/*
-+ * Intervals are given in nanosecond base
-+ */
-+static u64 intervals0[] __initdata = {
-+	10000, 50000, 200000, 500000,
-+	10000, 50000, 200000, 500000,
-+	10000, 50000, 200000, 500000,
-+	10000, 50000, 200000, 500000,
-+	10000, 50000, 200000, 500000,
-+	10000, 50000, 200000, 500000,
-+	10000, 50000, 200000, 500000,
-+	10000, 50000, 200000, 500000,
-+	10000, 50000, 200000,
-+};
-+
-+static u64 intervals1[] __initdata = {
-+	223947000, 1240000, 1384000, 1386000, 1386000,
-+	217416000, 1236000, 1384000, 1386000, 1387000,
-+	214719000, 1241000, 1386000, 1387000, 1384000,
-+	213696000, 1234000, 1384000, 1386000, 1388000,
-+	219904000, 1240000, 1385000, 1389000, 1385000,
-+	212240000, 1240000, 1386000, 1386000, 1386000,
-+	214415000, 1236000, 1384000, 1386000, 1387000,
-+	214276000, 1234000,
-+};
-+
-+static u64 intervals2[] __initdata = {
-+	4000, 3000, 5000, 100000,
-+	3000, 3000, 5000, 117000,
-+	4000, 4000, 5000, 112000,
-+	4000, 3000, 4000, 110000,
-+	3000, 5000, 3000, 117000,
-+	4000, 4000, 5000, 112000,
-+	4000, 3000, 4000, 110000,
-+	3000, 4000, 5000, 112000,
-+	4000,
-+};
-+
-+static u64 intervals3[] __initdata = {
-+	1385000, 212240000, 1240000,
-+	1386000, 214415000, 1236000,
-+	1384000, 214276000, 1234000,
-+	1386000, 214415000, 1236000,
-+	1385000, 212240000, 1240000,
-+	1386000, 214415000, 1236000,
-+	1384000, 214276000, 1234000,
-+	1386000, 214415000, 1236000,
-+	1385000, 212240000, 1240000,
-+};
-+
-+static u64 intervals4[] __initdata = {
-+	10000, 50000, 10000, 50000,
-+	10000, 50000, 10000, 50000,
-+	10000, 50000, 10000, 50000,
-+	10000, 50000, 10000, 50000,
-+	10000, 50000, 10000, 50000,
-+	10000, 50000, 10000, 50000,
-+	10000, 50000, 10000, 50000,
-+	10000, 50000, 10000, 50000,
-+	10000,
-+};
-+
-+static struct timings_intervals tis[] __initdata = {
-+	{ intervals0, ARRAY_SIZE(intervals0) },
-+	{ intervals1, ARRAY_SIZE(intervals1) },
-+	{ intervals2, ARRAY_SIZE(intervals2) },
-+	{ intervals3, ARRAY_SIZE(intervals3) },
-+	{ intervals4, ARRAY_SIZE(intervals4) },
-+};
-+
-+static int __init irq_timings_test_irqs(struct timings_intervals *ti)
++static int __init irq_timings_test_next_index(struct timings_intervals *ti)
 +{
-+	struct irqt_stat __percpu *s;
-+	struct irqt_stat *irqs;
-+	int i, index, ret, irq = 0xACE5;
++	int _buffer[IRQ_TIMINGS_SIZE];
++	int buffer[IRQ_TIMINGS_SIZE];
++	int index, start, i, count, period_max;
 +
-+	ret = irq_timings_alloc(irq);
-+	if (ret) {
-+		pr_err("Failed to allocate irq timings\n");
-+		return ret;
-+	}
++	count = ti->count - 1;
 +
-+	s = idr_find(&irqt_stats, irq);
-+	if (!s) {
-+		ret = -EIDRM;
-+		goto out;
-+	}
++	period_max = count > (3 * PREDICTION_PERIOD_MAX) ?
++		PREDICTION_PERIOD_MAX : count / 3;
 +
-+	irqs = this_cpu_ptr(s);
++	/*
++	 * Inject all values except the last one which will be used
++	 * to compare with the next index result.
++	 */
++	pr_debug("index suite: ");
 +
-+	for (i = 0; i < ti->count; i++) {
-+
++	for (i = 0; i < count; i++) {
 +		index = irq_timings_interval_index(ti->intervals[i]);
-+		pr_debug("%d: interval=%llu ema_index=%d\n",
-+			 i, ti->intervals[i], index);
-+
-+		__irq_timings_store(irq, irqs, ti->intervals[i]);
-+		if (irqs->circ_timings[i & IRQ_TIMINGS_MASK] != index) {
-+			pr_err("Failed to store in the circular buffer\n");
-+			goto out;
-+		}
++		_buffer[i & IRQ_TIMINGS_MASK] = index;
++		pr_cont("%d ", index);
 +	}
 +
-+	if (irqs->count != ti->count) {
-+		pr_err("Count differs\n");
-+		goto out;
++	start = count < IRQ_TIMINGS_SIZE ? 0 :
++		count & IRQ_TIMINGS_MASK;
++
++	count = min_t(int, count, IRQ_TIMINGS_SIZE);
++
++	for (i = 0; i < count; i++) {
++		int index = (start + i) & IRQ_TIMINGS_MASK;
++		buffer[i] = _buffer[index];
 +	}
 +
-+	ret = 0;
-+out:
-+	irq_timings_free(irq);
++	index = irq_timings_next_event_index(buffer, count, period_max);
++	i = irq_timings_interval_index(ti->intervals[ti->count - 1]);
 +
-+	return ret;
++	if (index != i) {
++		pr_err("Expected (%d) and computed (%d) next indexes differ\n",
++		       i, index);
++		return -EINVAL;
++	}
++
++	return 0;
 +}
 +
-+static int __init irq_timings_irqs_selftest(void)
++static int __init irq_timings_next_index_selftest(void)
 +{
 +	int i, ret;
 +
 +	for (i = 0; i < ARRAY_SIZE(tis); i++) {
++
 +		pr_info("---> Injecting intervals number #%d (count=%zd)\n",
 +			i, tis[i].count);
-+		ret = irq_timings_test_irqs(&tis[i]);
++
++		ret = irq_timings_test_next_index(&tis[i]);
 +		if (ret)
 +			break;
 +	}
@@ -222,21 +155,20 @@ index 95b63bdea156..5b13c2231d4f 100644
 +	return ret;
 +}
 +
- static int __init irq_timings_test_irqts(struct irq_timings *irqts,
- 					 unsigned count)
+ static int __init irq_timings_test_irqs(struct timings_intervals *ti)
  {
-@@ -736,7 +871,11 @@ static int __init irq_timings_selftest(void)
- 	}
+ 	struct irqt_stat __percpu *s;
+@@ -875,6 +937,10 @@ static int __init irq_timings_selftest(void)
+ 		goto out;
  
- 	ret = irq_timings_irqts_selftest();
+ 	ret = irq_timings_irqs_selftest();
 +	if (ret)
 +		goto out;
- 
-+	ret = irq_timings_irqs_selftest();
-+out:
++
++	ret = irq_timings_next_index_selftest();
+ out:
  	pr_info("---------- selftest end with %s -----------\n",
  		ret ? "failure" : "success");
- 
 -- 
 2.17.1
 
