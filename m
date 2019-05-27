@@ -2,114 +2,98 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3B1C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B7A9C072B1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C304D20859
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:10:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2342520859
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:14:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sfGuFxve"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I3oyGoSL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbfE0KKU (ORCPT
+        id S1726591AbfE0KOJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 06:10:20 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:38330 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725943AbfE0KKU (ORCPT
+        Mon, 27 May 2019 06:14:09 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35870 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbfE0KOJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 06:10:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Rjtcv9CLgR1FWWJCRzKxKTtmNHAMOYpWEqbUfZqa7mM=; b=sfGuFxve3XnCMblp+HqaTLANP
-        5i85Ryt/ah4/IReURE2GGmwau0ilfhwb64ZhwKcMeFcIOwlVjqAyZmA8b3HOvWcGb1p7QfXPtSswA
-        SvV+mZJeL4qwmPv+zHPSbFJAsTp3X3TOaHi5akujKPz69FOmsjdMTst2Hf4aqrC5vt4gZslie2eiw
-        VAe9zChiZ5UOJ6v/cyl9ot4ubXB8O1DUbCnLYLAP61vsN4Fs9d41nMrABQFmongUMXB0Az8UnX1N0
-        zyYAiRfYYKwqIsuXdkXw6GROOWe4BKw7xDoWas4d2ZNbDa+O88Oll5mSxKaegVY7VrtlABEyEgzME
-        wAGb8vhhQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hVCZz-0002Bq-9P; Mon, 27 May 2019 10:10:07 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7BD55202BF402; Mon, 27 May 2019 12:10:04 +0200 (CEST)
-Date:   Mon, 27 May 2019 12:10:04 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "Frank Ch. Eigler" <fche@redhat.com>
-Subject: Re: [RFC][PATCH 03/14 v2] function_graph: Allow multiple users to
- attach to function graph
-Message-ID: <20190527101004.GW2623@hirez.programming.kicks-ass.net>
-References: <20190520142001.270067280@goodmis.org>
- <20190520142156.992391836@goodmis.org>
- <20190524112608.GJ2589@hirez.programming.kicks-ass.net>
- <20190524081219.25de03f6@gandalf.local.home>
- <20190524122724.GO2623@hirez.programming.kicks-ass.net>
- <20190524085744.71557f32@gandalf.local.home>
+        Mon, 27 May 2019 06:14:09 -0400
+Received: by mail-wr1-f66.google.com with SMTP id s17so16376255wru.3;
+        Mon, 27 May 2019 03:14:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UmYyXClEyhCB/k7IkxkZpBXMb+GcpwSLAb7EW1GLi88=;
+        b=I3oyGoSLMpNOl0adhWiJdseBKUmXiEfkBQCy4WrjmAF8wMRV8ogrVD1gUZxw5x7ZZh
+         c7ar2ecnLchcZ8xzZC9cjgwqc2P8UrtWOZnqWiS/NQXm4kg/hZ5yqOP69lekentAl2pH
+         RBHssHXASRuE8WtSC4T+xPhS3s3bUBr+DbrZmJyy/qa75w7qQVVav15nXBg0nf/qlDR3
+         gIHI/Os6RlqPkA5zJQdxZNsSajM0gajnaXvkgmcXW/p5tq9Qod4In8XZL8fuMcIpWkFw
+         BunJV+wn9yzgAicFX2NA7X8eKKpVpfU8WnC3WzH2guGuKTkR0wlzYhFtU1A5ro/8l6Pk
+         +HJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UmYyXClEyhCB/k7IkxkZpBXMb+GcpwSLAb7EW1GLi88=;
+        b=og5dkJ3EEgNYUhFWKcJHIc9NeAp/cZ0CBHnVEI+hSv7/ikFfTrQqB/8NayJ8q78rsR
+         8oJCDIiOqmzl4nqjwrPlFguPcGR4igrrd5JkfEHOfIrYKcVvzKNbvun7ucX9jJYqjTdy
+         CZ8eB/Ea8g4z16IGmDrzN6M5IVNiSJFjb1bZVpr6Lv+QeNQiciJQhUZ86jOqAFusTber
+         ZI6YYvaFZ8Sov/z+pbxtyIL5IICro0dQ9OYJPHhHL6sER8BB1SsEXKF3uzms8LsvyTxL
+         PnAWeXXRT4ZI185MqAcnFA+TD3hyu1tu99Y96j/Cq5NOh3UTgtIHFeVBy1Z2uo9twXYt
+         HkKw==
+X-Gm-Message-State: APjAAAXE48IF+S9FwI9xFRDe/38LqwaaVvk109RQXVVOeIXIUilUY/Hs
+        8t11qVvJA8J0WkbbQPR0hd8=
+X-Google-Smtp-Source: APXvYqxhPOJCwQVz46MEKCJymC6evZIIV7z7pSiVare5OCVTssJlh1PTBDczLKmzHQL3arHbuREiqw==
+X-Received: by 2002:a5d:4f0d:: with SMTP id c13mr6408503wru.117.1558952046820;
+        Mon, 27 May 2019 03:14:06 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id s9sm3443171wmc.1.2019.05.27.03.14.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 27 May 2019 03:14:06 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Kartik Kartik <kkartik@nvidia.com>, linux-rtc@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] rtc: tegra: Dust off and deferred probe support
+Date:   Mon, 27 May 2019 12:13:56 +0200
+Message-Id: <20190527101359.5898-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190524085744.71557f32@gandalf.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 08:57:44AM -0400, Steven Rostedt wrote:
-> On Fri, 24 May 2019 14:27:24 +0200
-> Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > > Believe me, I rather not have that array, but I couldn't come up with a
-> > > better solution to handle freeing of fgraph_ops.  
-> > 
-> > The trivial answer would be to refcount the thing, but can't we make
-> > rcu_tasks do this?
-> 
-> But wouldn't refcounts require atomic operations, something that would
-> be excruciatingly slow for something that runs on all functions.
+From: Thierry Reding <treding@nvidia.com>
 
-Obviously, which is why I suggested something else :-)
+The NVIDIA Tegra RTC driver has accumulated a bit of dust over the
+years. Make a pass over it, addressing checkpatch warnings and fixing
+some inconsistencies in comments and kernel messages as well as in
+variable types and names.
 
-> rcu_tasks doesn't cross voluntary sleeps, which this does.
+Once cleaned up, also turn the driver into a regular driver in order
+to support deferred probe which is needed to avoid a future regression
+on Tegra186 and later.
 
-Sure, but we can 'fix' that, surely. Alternatively we use SRCU, or
-something else, a blend between SRCU and percpu-rwsem for example, SRCU
-has that annoying smp_mb() on the read side, where percpu-rwsem doesn't
-have that.
+Thierry
 
-> > And delay the unreg until all active users are gone -- who gives a crap
-> > that can take a while.
-> 
-> It could literally be forever (well, until the machine reboots). And
-> something that could appear to be a memory leak, although a very slow
-> one. But probably be hard to have more than the number of tasks on the
-> system.
+Thierry Reding (3):
+  rtc: tegra: checkpatch and miscellaneous cleanups
+  rtc: tegra: Use consistent variable names and types
+  rtc: tegra: Turn into regular driver
 
-Again, who cares.. ? How often do you have return trace functions that
-dissapear, afaict that only happens with modules, and neither
-function_graph_trace nor kprobes are modules.
+ drivers/rtc/rtc-tegra.c | 254 ++++++++++++++++++++--------------------
+ 1 file changed, 128 insertions(+), 126 deletions(-)
 
-It'll just mean the module unload will be stuck, possibly forever.
-That's not something I care about. Also, if we _really_ care, we can
-mandate that module users use some sort of ugly trampoline that covers
-their asses at the cost of some performance.
+-- 
+2.21.0
 
-Getting rid of that array makes this code far saner (and I suspect
-faster too).
