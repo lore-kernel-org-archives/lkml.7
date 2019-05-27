@@ -2,105 +2,69 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A669C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 22:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A37C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 22:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2C952081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 22:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CCA22081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 22:43:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="RidCRn50"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="lMEKz0zD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727663AbfE0WlE (ORCPT
+        id S1727423AbfE0WnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 18:41:04 -0400
-Received: from mail.kmu-office.ch ([178.209.48.109]:35282 "EHLO
-        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727392AbfE0WlC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 18:41:02 -0400
-Received: from zyt.lan (unknown [IPv6:2a02:169:3c0a::564])
-        by mail.kmu-office.ch (Postfix) with ESMTPSA id 200D45C06AE;
-        Tue, 28 May 2019 00:41:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
-        t=1558996860;
+        Mon, 27 May 2019 18:43:23 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:42374 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726931AbfE0WnW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 18:43:22 -0400
+Received: from cz.tnic (ip65-44-65-130.z65-44-65.customer.algx.net [65.44.65.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 074BE1EC0235;
+        Tue, 28 May 2019 00:43:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1558997001;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=WzRZ17pXEWQFjEk7pZRLwxgBHo2KMHTOBMHbwpIRG3E=;
-        b=RidCRn50AciEbPsSMD+H0KVF3q+be+6DWATz87OjTTscmAmzpb6ygKYk/0ILdffLF4i07w
-        oPHnIOmiOFA20BE9aBe38UKpcspn3QEr+M7QwFM6cIDLbqU+jwWrJYpy+ebKr9oGJDB9C7
-        nZ4KWh/gFDnP+LxUnGlhFY3CVfjdLKg=
-From:   Stefan Agner <stefan@agner.ch>
-To:     arm@kernel.org, olof@lixom.net
-Cc:     linux@armlinux.org.uk, arnd@arndb.de, ard.biesheuvel@linaro.org,
-        robin.murphy@arm.com, nico@fluxnic.net, f.fainelli@gmail.com,
-        rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, kgene@kernel.org,
-        krzk@kernel.org, robh@kernel.org, ssantosh@kernel.org,
-        jason@lakedaemon.net, andrew@lunn.ch, gregory.clement@bootlin.com,
-        sebastian.hesselbarth@gmail.com, tony@atomide.com,
-        marc.w.gonzalez@free.fr, mans@mansr.com, ndesaulniers@google.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v4 2/2] ARM: OMAP2: drop explicit assembler architecture
-Date:   Tue, 28 May 2019 00:40:51 +0200
-Message-Id: <5ead0fe96f7e5729e4a82f432022b16cb84458a6.1558996564.git.stefan@agner.ch>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <c0ca465daa7c7663c19b0bcb848c70e8da22baff.1558996564.git.stefan@agner.ch>
-References: <c0ca465daa7c7663c19b0bcb848c70e8da22baff.1558996564.git.stefan@agner.ch>
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=A3lxvIsrPSbg0ZQOpn4IF3bUM+OBWu1SGzd8ZU1ihFQ=;
+        b=lMEKz0zD5CRezR3l0MBGTmLSk+azH65NAI7l/ARNpaJDGyc2H1VbmyF8nRFw9Yg6kM3XZ0
+        FL7nee6YoTQ+qJvB0dVpewEPz6jNZYHb9jkuhzq3XYDBXDbt2yJGllaDTKW+gzv0E3Lz/o
+        UKWVQF7bSa6EuAWCZsqfKVPrtC6RAuY=
+Date:   Tue, 28 May 2019 00:43:16 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Zhao, Yakui" <yakui.zhao@intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de,
+        Jason Chen CJ <jason.cj.chen@intel.com>
+Subject: Re: [PATCH v6 3/4] x86/acrn: Use HYPERVISOR_CALLBACK_VECTOR for ACRN
+ guest upcall vector
+Message-ID: <20190527224316.GA8209@cz.tnic>
+References: <1556595926-17910-1-git-send-email-yakui.zhao@intel.com>
+ <1556595926-17910-4-git-send-email-yakui.zhao@intel.com>
+ <20190515172356.GL24212@zn.tnic>
+ <27c20325-61b7-994f-2781-f4bc41badc6f@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <27c20325-61b7-994f-2781-f4bc41badc6f@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-OMAP2 depends on ARCH_MULTI_V6, which makes sure that the kernel is
-compiled with -march=armv6. The compiler frontend will pass the
-architecture to the assembler. There is no explicit architecture
-specification necessary.
+On Mon, May 27, 2019 at 10:21:20AM +0800, Zhao, Yakui wrote:
+> Very sorry that this issue is not triggered as the used .config in my test
+> doesn't enable the check of "-Werror=implict-function-declaration".
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
-Acked-by: Tony Lindgren <tony@atomide.com>
----
-Changes since v2:
-- New patch
+It is more like, you're not building this particular .config.
 
-Changes since v3:
-- Rebase on top of v5.2-rc2
-
- arch/arm/mach-omap2/Makefile | 5 -----
- 1 file changed, 5 deletions(-)
-
-diff --git a/arch/arm/mach-omap2/Makefile b/arch/arm/mach-omap2/Makefile
-index f1d283995b31..600650551621 100644
---- a/arch/arm/mach-omap2/Makefile
-+++ b/arch/arm/mach-omap2/Makefile
-@@ -45,9 +45,6 @@ obj-$(CONFIG_SOC_DRA7XX)		+= $(omap-4-5-common) $(smp-y) sleep44xx.o
- obj-$(CONFIG_SOC_OMAP2420)		+= sram242x.o
- obj-$(CONFIG_SOC_OMAP2430)		+= sram243x.o
- 
--AFLAGS_sram242x.o			:=-Wa,-march=armv6
--AFLAGS_sram243x.o			:=-Wa,-march=armv6
--
- # Restart code (OMAP4/5 currently in omap4-common.c)
- obj-$(CONFIG_SOC_OMAP2420)		+= omap2-restart.o
- obj-$(CONFIG_SOC_OMAP2430)		+= omap2-restart.o
-@@ -89,8 +86,6 @@ obj-$(CONFIG_PM_DEBUG)			+= pm-debug.o
- obj-$(CONFIG_POWER_AVS_OMAP)		+= sr_device.o
- obj-$(CONFIG_POWER_AVS_OMAP_CLASS3)    += smartreflex-class3.o
- 
--AFLAGS_sleep24xx.o			:=-Wa,-march=armv6
--
- endif
- 
- ifeq ($(CONFIG_CPU_IDLE),y)
 -- 
-2.21.0
+Regards/Gruss,
+    Boris.
 
+ECO tip #101: Trim your mails when you reply. Srsly.
