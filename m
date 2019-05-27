@@ -2,302 +2,118 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05216C282E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 03:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B49FC282E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 03:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7FB32075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 03:10:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1C632075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 03:13:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="udCNPVOs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbfE0DKl (ORCPT
+        id S1726165AbfE0DNF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 23:10:41 -0400
-Received: from mga02.intel.com ([134.134.136.20]:7279 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725923AbfE0DKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 23:10:40 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 May 2019 20:10:39 -0700
-X-ExtLoop1: 1
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 26 May 2019 20:10:38 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1hV621-0001sI-SE; Mon, 27 May 2019 11:10:37 +0800
-Date:   Mon, 27 May 2019 11:09:53 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Renzo Davoli <renzo@cs.unibo.it>
-Cc:     kbuild-all@01.org, Alexander Viro <viro@zeniv.linux.org.uk>,
-        Davide Libenzi <davidel@xmailserver.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH 1/1] eventfd new tag EFD_VPOLL: generate epoll events
-Message-ID: <201905271138.mTyXQ9sH%lkp@intel.com>
-References: <20190526142521.GA21842@cs.unibo.it>
+        Sun, 26 May 2019 23:13:05 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34627 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725923AbfE0DNE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 May 2019 23:13:04 -0400
+Received: by mail-pf1-f194.google.com with SMTP id n19so8728343pfa.1
+        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2019 20:13:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NCsV2gW6t5UqNhN3D3I7oSjbY9N12iBiE5UdaIK+ekw=;
+        b=udCNPVOsqpgvTYuvkglh33m6JGunj9X5HQc3NtWDtttnXH79jCATY2AJaMvg7+QmxD
+         bPPq3+aR5Iz2aUdQvCjT7lH/B0eoczJ5jLjiZAFbm8FcDT8alTTuk67DW6s4+lZuy/4+
+         Q+iBHczTW2sIX0lYYnAGxf749r5gr81pbv+TPHH4l1As3aE2PMs2yQJ690IR271g1Zte
+         AQztp1Tk7FoBVFP8oiyZjLot1+qJ+MH+guyl8tXe9UgZy3QmVhNzaHatfdtpy8VFQQoK
+         ezlSfl277NQZ02/DeRavC3I5LNq4ttK0xTto1ygGUg1JPRu6BuDxFLSSGxplcOZXPjnJ
+         j2Fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NCsV2gW6t5UqNhN3D3I7oSjbY9N12iBiE5UdaIK+ekw=;
+        b=pXgAKgQu/CG6eUmvjTz92xqHshKLgjwb4peVYjotbuLEcfSp587QIwo1I71NwVITgC
+         FIWT04Iqdmmxdd0BxqBT9FDYa9aP3FF5PU6Cdc0Eff6VQd9lfmPLB78+W5npEso8QI3M
+         J9RVd37Q5EeYzul4L9kWX/WbZQJxSlwbBwj6eFd5WDxNb3+wgPPjIUOCxUhjxe5FtR8d
+         LFa0ZczfJqzOFJ0WU/fex/WVoekshf3lOcVPK/h9niojgSaXHINBPOjTBNKdSn6FD2tu
+         /oU9aMIne6qtEBVIq48VGr4B5kHpWoPfpny8m7o3YA8+MYMoVnr6wuzQuJu4v0fF7H/5
+         +o0A==
+X-Gm-Message-State: APjAAAWTV4m3q5JFJWkAMWRFZhNmN66LAG9mLXvipIa7U4AfwiN1k0TD
+        RBNK3ZdyyF1LoNOeeMcsnP0=
+X-Google-Smtp-Source: APXvYqxwYZFVlVs73XW/twQdc6Ve/zbUt354slZJ5kqHsRCMBtJ5rQNOLjRS33wXPrrDMLUrrR/iAQ==
+X-Received: by 2002:a65:614d:: with SMTP id o13mr37543080pgv.309.1558926783964;
+        Sun, 26 May 2019 20:13:03 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([66.42.35.75])
+        by smtp.gmail.com with ESMTPSA id l13sm8495613pjq.20.2019.05.26.20.12.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 26 May 2019 20:13:03 -0700 (PDT)
+Date:   Mon, 27 May 2019 11:12:51 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     Mike Snitzer <snitzer@redhat.com>
+Cc:     agk@redhat.com, dm-devel@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: dm-region-hash: fix a missing-check bug in __rh_alloc()
+Message-ID: <20190527031251.GA18979@zhanggen-UX430UQ>
+References: <20190527005034.GA16907@zhanggen-UX430UQ>
+ <20190527014913.GA10098@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190526142521.GA21842@cs.unibo.it>
-X-Patchwork-Hint: ignore
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190527014913.GA10098@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Renzo,
+On Sun, May 26, 2019 at 09:49:14PM -0400, Mike Snitzer wrote:
+> On Sun, May 26 2019 at  8:50pm -0400,
+> Gen Zhang <blackgod016574@gmail.com> wrote:
+> 
+> > In function __rh_alloc(), the pointer nreg is allocated a memory space
+> > via kmalloc(). And it is used in the following codes. However, when 
+> > there is a memory allocation error, kmalloc() fails. Thus null pointer
+> > dereference may happen. And it will cause the kernel to crash. Therefore,
+> > we should check the return value and handle the error.
+> > Further, in __rh_find(), we should also check the return value and
+> > handle the error.
+> > 
+> > Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+> > ---
+> > diff --git a/drivers/md/dm-region-hash.c b/drivers/md/dm-region-hash.c
+> > index 1f76045..2fa1641 100644
+> > --- a/drivers/md/dm-region-hash.c
+> > +++ b/drivers/md/dm-region-hash.c
+> > @@ -290,8 +290,11 @@ static struct dm_region *__rh_alloc(struct dm_region_hash *rh, region_t region)
+> >  	struct dm_region *reg, *nreg;
+> >  
+> >  	nreg = mempool_alloc(&rh->region_pool, GFP_ATOMIC);
+> > -	if (unlikely(!nreg))
+> > +	if (unlikely(!nreg)) {
+> >  		nreg = kmalloc(sizeof(*nreg), GFP_NOIO | __GFP_NOFAIL);
+> > +		if (!nreg)
+> > +			return NULL;
+> > +	}
+> >  
+> >  	nreg->state = rh->log->type->in_sync(rh->log, region, 1) ?
+> >  		      DM_RH_CLEAN : DM_RH_NOSYNC;
+> 
+> This patch isn't needed.  __GFP_NOFAIL means the allocation won't fail.
+> 
+> And there are many other users of __GFP_NOFAIL that don't check for
+> failure.  
+> 
+> Mike
+Appreciate your reply, Mike.
 
-Thank you for the patch! Perhaps something to improve:
-
-[auto build test WARNING on linus/master]
-[also build test WARNING on v5.2-rc2 next-20190524]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-
-url:    https://github.com/0day-ci/linux/commits/Renzo-Davoli/eventfd-new-tag-EFD_VPOLL-generate-epoll-events/20190527-023620
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-rc1-7-g2b96cd8-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-
-
-sparse warnings: (new ones prefixed by >>)
-
->> fs/eventfd.c:321:27: sparse: sparse: restricted __poll_t degrades to integer
->> fs/eventfd.c:321:16: sparse: sparse: incorrect type in assignment (different base types) @@    expected restricted __poll_t [usertype] events @@    got poll_t [usertype] events @@
->> fs/eventfd.c:321:16: sparse:    expected restricted __poll_t [usertype] events
->> fs/eventfd.c:321:16: sparse:    got unsigned long long
-   fs/eventfd.c:357:25: sparse: sparse: restricted __poll_t degrades to integer
->> fs/eventfd.c:359:27: sparse: sparse: cast from restricted __poll_t
-   fs/eventfd.c:367:44: sparse: sparse: restricted __poll_t degrades to integer
->> fs/eventfd.c:375:17: sparse: sparse: cast to restricted __poll_t
->> fs/eventfd.c:512:28: sparse: sparse: invalid assignment: &=
->> fs/eventfd.c:512:28: sparse:    left side has type unsigned long long
->> fs/eventfd.c:512:28: sparse:    right side has type restricted __poll_t
-
-vim +321 fs/eventfd.c
-
-   310	
-   311	static __poll_t eventfd_vpoll_poll(struct file *file, poll_table *wait)
-   312	{
-   313		struct eventfd_ctx *ctx = file->private_data;
-   314		__poll_t events = 0;
-   315		u64 count;
-   316	
-   317		poll_wait(file, &ctx->wqh, wait);
-   318	
-   319		count = READ_ONCE(ctx->count);
-   320	
- > 321		events = (count & EPOLLALLMASK);
-   322	
-   323		return events;
-   324	}
-   325	
-   326	static ssize_t eventfd_vpoll_read(struct file *file, char __user *buf,
-   327			size_t count, loff_t *ppos)
-   328	{
-   329		struct eventfd_ctx *ctx = file->private_data;
-   330		ssize_t res;
-   331		__u64 ucnt = 0;
-   332	
-   333		if (count < sizeof(ucnt))
-   334			return -EINVAL;
-   335		res = sizeof(ucnt);
-   336		ucnt = READ_ONCE(ctx->count);
-   337		if (put_user(ucnt, (__u64 __user *)buf))
-   338			return -EFAULT;
-   339	
-   340		return res;
-   341	}
-   342	
-   343	static ssize_t eventfd_vpoll_write(struct file *file, const char __user *buf,
-   344			size_t count, loff_t *ppos)
-   345	{
-   346		struct eventfd_ctx *ctx = file->private_data;
-   347		ssize_t res;
-   348		__u64 ucnt;
-   349		__u32 events;
-   350	
-   351		if (count < sizeof(ucnt))
-   352			return -EINVAL;
-   353		if (copy_from_user(&ucnt, buf, sizeof(ucnt)))
-   354			return -EFAULT;
-   355		spin_lock_irq(&ctx->wqh.lock);
-   356	
-   357		events = ucnt & EPOLLALLMASK;
-   358		res = sizeof(ucnt);
- > 359		switch (ucnt & ~((__u64)EPOLLALLMASK)) {
-   360		case EFD_VPOLL_ADDEVENTS:
-   361			ctx->count |= events;
-   362			break;
-   363		case EFD_VPOLL_DELEVENTS:
-   364			ctx->count &= ~(events);
-   365			break;
-   366		case EFD_VPOLL_MODEVENTS:
-   367			ctx->count = (ctx->count & ~EPOLLALLMASK) | events;
-   368			break;
-   369		default:
-   370			res = -EINVAL;
-   371		}
-   372	
-   373		/* wake up waiting threads */
-   374		if (res >= 0 && waitqueue_active(&ctx->wqh))
- > 375			wake_up_locked_poll(&ctx->wqh, res);
-   376	
-   377		spin_unlock_irq(&ctx->wqh.lock);
-   378	
-   379		return res;
-   380	
-   381	}
-   382	
-   383	#ifdef CONFIG_PROC_FS
-   384	static void eventfd_show_fdinfo(struct seq_file *m, struct file *f)
-   385	{
-   386		struct eventfd_ctx *ctx = f->private_data;
-   387	
-   388		spin_lock_irq(&ctx->wqh.lock);
-   389		seq_printf(m, "eventfd-count: %16llx\n",
-   390			   (unsigned long long)ctx->count);
-   391		spin_unlock_irq(&ctx->wqh.lock);
-   392		seq_printf(m, "eventfd-id: %d\n", ctx->id);
-   393	}
-   394	#endif
-   395	
-   396	static const struct file_operations eventfd_fops = {
-   397	#ifdef CONFIG_PROC_FS
-   398		.show_fdinfo	= eventfd_show_fdinfo,
-   399	#endif
-   400		.release	= eventfd_release,
-   401		.poll		= eventfd_poll,
-   402		.read		= eventfd_read,
-   403		.write		= eventfd_write,
-   404		.llseek		= noop_llseek,
-   405	};
-   406	
-   407	static const struct file_operations eventfd_vpoll_fops = {
-   408	#ifdef CONFIG_PROC_FS
-   409		.show_fdinfo	= eventfd_show_fdinfo,
-   410	#endif
-   411		.release	= eventfd_release,
-   412		.poll		= eventfd_vpoll_poll,
-   413		.read		= eventfd_vpoll_read,
-   414		.write		= eventfd_vpoll_write,
-   415		.llseek		= noop_llseek,
-   416	};
-   417	
-   418	/**
-   419	 * eventfd_fget - Acquire a reference of an eventfd file descriptor.
-   420	 * @fd: [in] Eventfd file descriptor.
-   421	 *
-   422	 * Returns a pointer to the eventfd file structure in case of success, or the
-   423	 * following error pointer:
-   424	 *
-   425	 * -EBADF    : Invalid @fd file descriptor.
-   426	 * -EINVAL   : The @fd file descriptor is not an eventfd file.
-   427	 */
-   428	struct file *eventfd_fget(int fd)
-   429	{
-   430		struct file *file;
-   431	
-   432		file = fget(fd);
-   433		if (!file)
-   434			return ERR_PTR(-EBADF);
-   435		if (file->f_op != &eventfd_fops) {
-   436			fput(file);
-   437			return ERR_PTR(-EINVAL);
-   438		}
-   439	
-   440		return file;
-   441	}
-   442	EXPORT_SYMBOL_GPL(eventfd_fget);
-   443	
-   444	/**
-   445	 * eventfd_ctx_fdget - Acquires a reference to the internal eventfd context.
-   446	 * @fd: [in] Eventfd file descriptor.
-   447	 *
-   448	 * Returns a pointer to the internal eventfd context, otherwise the error
-   449	 * pointers returned by the following functions:
-   450	 *
-   451	 * eventfd_fget
-   452	 */
-   453	struct eventfd_ctx *eventfd_ctx_fdget(int fd)
-   454	{
-   455		struct eventfd_ctx *ctx;
-   456		struct fd f = fdget(fd);
-   457		if (!f.file)
-   458			return ERR_PTR(-EBADF);
-   459		ctx = eventfd_ctx_fileget(f.file);
-   460		fdput(f);
-   461		return ctx;
-   462	}
-   463	EXPORT_SYMBOL_GPL(eventfd_ctx_fdget);
-   464	
-   465	/**
-   466	 * eventfd_ctx_fileget - Acquires a reference to the internal eventfd context.
-   467	 * @file: [in] Eventfd file pointer.
-   468	 *
-   469	 * Returns a pointer to the internal eventfd context, otherwise the error
-   470	 * pointer:
-   471	 *
-   472	 * -EINVAL   : The @fd file descriptor is not an eventfd file.
-   473	 */
-   474	struct eventfd_ctx *eventfd_ctx_fileget(struct file *file)
-   475	{
-   476		struct eventfd_ctx *ctx;
-   477	
-   478		if (file->f_op != &eventfd_fops)
-   479			return ERR_PTR(-EINVAL);
-   480	
-   481		ctx = file->private_data;
-   482		kref_get(&ctx->kref);
-   483		return ctx;
-   484	}
-   485	EXPORT_SYMBOL_GPL(eventfd_ctx_fileget);
-   486	
-   487	static int do_eventfd(unsigned int count, int flags)
-   488	{
-   489		struct eventfd_ctx *ctx;
-   490		const struct file_operations *fops = &eventfd_fops;
-   491		int fd;
-   492	
-   493		/* Check the EFD_* constants for consistency.  */
-   494		BUILD_BUG_ON(EFD_CLOEXEC != O_CLOEXEC);
-   495		BUILD_BUG_ON(EFD_NONBLOCK != O_NONBLOCK);
-   496	
-   497		if (flags & ~EFD_FLAGS_SET)
-   498			return -EINVAL;
-   499	
-   500		ctx = kmalloc(sizeof(*ctx), GFP_KERNEL);
-   501		if (!ctx)
-   502			return -ENOMEM;
-   503	
-   504		kref_init(&ctx->kref);
-   505		init_waitqueue_head(&ctx->wqh);
-   506		ctx->count = count;
-   507		ctx->flags = flags;
-   508		ctx->id = ida_simple_get(&eventfd_ida, 0, 0, GFP_KERNEL);
-   509	
-   510		if (flags & EFD_VPOLL) {
-   511			fops = &eventfd_vpoll_fops;
- > 512			ctx->count &= EPOLLALLMASK;
-   513		}
-   514		fd = anon_inode_getfd("[eventfd]", fops, ctx,
-   515				      O_RDWR | (flags & EFD_SHARED_FCNTL_FLAGS));
-   516		if (fd < 0)
-   517			eventfd_free_ctx(ctx);
-   518	
-   519		return fd;
-   520	}
-   521	
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+Thanks
+Gen
