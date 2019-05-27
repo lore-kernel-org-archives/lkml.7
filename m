@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 160A8C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 22:39:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31848C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 22:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE07020859
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 22:39:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09050214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 22:39:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558996745;
-	bh=zLq6bJSmCVJ1WQbWmj8tvKFVEkMasnQ1Z/airc273yk=;
+	s=default; t=1558996749;
+	bh=Fh9AJAz2SjZYGlSEjxBbRYHGTyOnLZSXohp7ZXuOLZo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OrEcTQOnKmnfqsm3GienMCx0/6O+zXA1lIsO3qAD104ZuE8EuuJ4UDWmly6wIv/1K
-	 +TEMYnR8XAoXKXT8WuvUUrx2xRxH7ueAGSMx7GkFQT38ksOPWiDLMYUersRxlVtsHr
-	 yAVmK4RJ/nkftWkRHqCM6EgNJCOg0gd4ComyQECM=
+	b=tlEfWH6pOmhEHU8ov3qLRjNnq6ZolvTcympxgiZeQse+Hf9TruzRf5HNcwldN0Vth
+	 J4pQfEOzRdme4ffsAZv4m0ZN1IlBXXrbx4HIs/TRsxfuJWAEh5Vqwr31ngIi1TZj4n
+	 Ih7r5vkq/0y4qkA5y6R2LgVNojyHuIGwKHh8vXQQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727788AbfE0WjF (ORCPT
+        id S1727803AbfE0WjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 18:39:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44846 "EHLO mail.kernel.org"
+        Mon, 27 May 2019 18:39:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727721AbfE0WjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 18:39:03 -0400
+        id S1726931AbfE0WjH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 18:39:07 -0400
 Received: from quaco.ghostprotocols.net (179-240-171-7.3g.claro.net.br [179.240.171.7])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7A0521670;
-        Mon, 27 May 2019 22:38:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85F43216FD;
+        Mon, 27 May 2019 22:39:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558996742;
-        bh=zLq6bJSmCVJ1WQbWmj8tvKFVEkMasnQ1Z/airc273yk=;
+        s=default; t=1558996746;
+        bh=Fh9AJAz2SjZYGlSEjxBbRYHGTyOnLZSXohp7ZXuOLZo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eELS65Pd8dQmJNeH59iPXiN25/4/CwcEd+eZM4yFBySWHCAo22LXrJHe6jiZRWPO2
-         +wwzUFo0XfunyyYRC/fHLwswyrNyJ/pgxqaMGEeHKffyCamdIBLb8l3FQjwcBE0hUS
-         mBHj/iZho2EudncT1F/lgAhizhDYanqSGbu4H7Gk=
+        b=VMc/9gb1QIEf8ad3Hauu1oPyyVn8HEdztct4sOlWw2zCN7f3buM13Y8NaoPr7cK9X
+         XWGDE1etpNS5RO6jprW6S2e5f/In9Rj2khk2nQbk09UNrh5qyDzjiERaN64r8Uo52v
+         SUt9zcdMEnUbxYSGFR4gkMvsjRL+HimpHU86hBa4=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,13 +47,13 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
         Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Christian Brauner <christian@brauner.io>,
         =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
         <lclaudio@redhat.com>
-Subject: [PATCH 18/44] tools arch x86: Sync asm/cpufeatures.h with the with the kernel
-Date:   Mon, 27 May 2019 19:37:04 -0300
-Message-Id: <20190527223730.11474-19-acme@kernel.org>
+Subject: [PATCH 19/44] tools headers UAPI: Sync linux/sched.h with the kernel
+Date:   Mon, 27 May 2019 19:37:05 -0300
+Message-Id: <20190527223730.11474-20-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190527223730.11474-1-acme@kernel.org>
 References: <20190527223730.11474-1-acme@kernel.org>
@@ -67,51 +67,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-To pick up the changes in:
+To pick up the change in:
 
-  ed5194c2732c ("x86/speculation/mds: Add basic bug infrastructure for MDS")
-  e261f209c366 ("x86/speculation/mds: Add BUG_MSBDS_ONLY")
+  b3e583825266 ("clone: add CLONE_PIDFD")
 
-That don't affect anything in tools/.
+This requires changes in the 'perf trace' beautification routines for
+the 'clone' syscall args, which is done in a followup patch.
 
-This silences this perf build warning:
+This silences the following perf build warning:
 
-  Warning: Kernel ABI header at 'tools/arch/x86/include/asm/cpufeatures.h' differs from latest version at 'arch/x86/include/asm/cpufeatures.h'
-  diff -u tools/arch/x86/include/asm/cpufeatures.h arch/x86/include/asm/cpufeatures.h
+  Warning: Kernel ABI header at 'tools/include/uapi/linux/sched.h' differs from latest version at 'include/uapi/linux/sched.h'
+  diff -u tools/include/uapi/linux/sched.h include/uapi/linux/sched.h
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
+Cc: Christian Brauner <christian@brauner.io>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/n/tip-jp1afecx3ql1jkuirpgkqfad@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-lenja6gmy26dkt0ybk747qgq@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/arch/x86/include/asm/cpufeatures.h | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/include/uapi/linux/sched.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/arch/x86/include/asm/cpufeatures.h b/tools/arch/x86/include/asm/cpufeatures.h
-index 981ff9479648..75f27ee2c263 100644
---- a/tools/arch/x86/include/asm/cpufeatures.h
-+++ b/tools/arch/x86/include/asm/cpufeatures.h
-@@ -344,6 +344,7 @@
- /* Intel-defined CPU features, CPUID level 0x00000007:0 (EDX), word 18 */
- #define X86_FEATURE_AVX512_4VNNIW	(18*32+ 2) /* AVX-512 Neural Network Instructions */
- #define X86_FEATURE_AVX512_4FMAPS	(18*32+ 3) /* AVX-512 Multiply Accumulation Single precision */
-+#define X86_FEATURE_MD_CLEAR		(18*32+10) /* VERW clears CPU buffers */
- #define X86_FEATURE_TSX_FORCE_ABORT	(18*32+13) /* "" TSX_FORCE_ABORT */
- #define X86_FEATURE_PCONFIG		(18*32+18) /* Intel PCONFIG */
- #define X86_FEATURE_SPEC_CTRL		(18*32+26) /* "" Speculation Control (IBRS + IBPB) */
-@@ -382,5 +383,7 @@
- #define X86_BUG_SPECTRE_V2		X86_BUG(16) /* CPU is affected by Spectre variant 2 attack with indirect branches */
- #define X86_BUG_SPEC_STORE_BYPASS	X86_BUG(17) /* CPU is affected by speculative store bypass attack */
- #define X86_BUG_L1TF			X86_BUG(18) /* CPU is affected by L1 Terminal Fault */
-+#define X86_BUG_MDS			X86_BUG(19) /* CPU is affected by Microarchitectural data sampling */
-+#define X86_BUG_MSBDS_ONLY		X86_BUG(20) /* CPU is only affected by the  MSDBS variant of BUG_MDS */
- 
- #endif /* _ASM_X86_CPUFEATURES_H */
+diff --git a/tools/include/uapi/linux/sched.h b/tools/include/uapi/linux/sched.h
+index 22627f80063e..ed4ee170bee2 100644
+--- a/tools/include/uapi/linux/sched.h
++++ b/tools/include/uapi/linux/sched.h
+@@ -10,6 +10,7 @@
+ #define CLONE_FS	0x00000200	/* set if fs info shared between processes */
+ #define CLONE_FILES	0x00000400	/* set if open files shared between processes */
+ #define CLONE_SIGHAND	0x00000800	/* set if signal handlers and blocked signals shared */
++#define CLONE_PIDFD	0x00001000	/* set if a pidfd should be placed in parent */
+ #define CLONE_PTRACE	0x00002000	/* set if we want to let tracing continue on the child too */
+ #define CLONE_VFORK	0x00004000	/* set if the parent wants the child to wake it up on mm_release */
+ #define CLONE_PARENT	0x00008000	/* set if we want to have the same parent as the cloner */
 -- 
 2.20.1
 
