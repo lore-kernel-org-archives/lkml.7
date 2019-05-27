@@ -2,85 +2,55 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12EDBC04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53FFEC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5F2F2147A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33110208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:03:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbfE0KCz (ORCPT
+        id S1726807AbfE0KDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 06:02:55 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:42050 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725991AbfE0KCz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 06:02:55 -0400
-Received: by mail-qk1-f196.google.com with SMTP id b18so11021540qkc.9;
-        Mon, 27 May 2019 03:02:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FVRVMHeKQqu97EmqZ0O2CzVit3QZ4+rp2cPhTqKUleU=;
-        b=Ah2Nl7I0XrO1BF0129m1q114xMAxhM1EIFdCsOrvDEPGtCWRfuugXcv/MlUWvqaRQ8
-         +QKmCupFf+W46GUUABMC5MFVCAQAa8fVg1/xjI8RuYwZ1dszywcPWVXd1kg2+9KeGNW3
-         ++fOxiPql8P8oPUP1YCvLy5KKwK19mJgjFF6rIcBq4IDX1wBIo5wMbgrVkJRrjlFXf3u
-         nzRU5DrcQi+4iArfoXZDEOZQwD+unPIj+cQ66407EQ7MWOjmwpyHSNFFUyQbpdrfW0Df
-         B96uLx6cV5Q3rNK1tkPcGGY63RevXMncscrfTvL9dUexLl6cyZdyGHzfyOLQ1v4B0tIF
-         Hkaw==
-X-Gm-Message-State: APjAAAXh82AtaNPEJI+4wAM3akeUgwb0t3kLx9VP/StV9kBTVjhr5A1f
-        Fr8VqIUR2uSzUex9FMQJv/K3VCEUPLChk8+FI6c=
-X-Google-Smtp-Source: APXvYqxKXE2KyVGw2FI19RnWnVk2RakcSWcDalFy1vamE3kyUqX41ltgZh+7vXtFVvCj+VsaY9djVyudGKIBnjILpNc=
-X-Received: by 2002:a0c:9e0f:: with SMTP id p15mr7530789qve.176.1558951373831;
- Mon, 27 May 2019 03:02:53 -0700 (PDT)
+        Mon, 27 May 2019 06:03:30 -0400
+Received: from 8bytes.org ([81.169.241.247]:40236 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726114AbfE0KDa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 06:03:30 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id B37C72E2; Mon, 27 May 2019 12:03:28 +0200 (CEST)
+Date:   Mon, 27 May 2019 12:03:27 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Colin King <colin.king@canonical.com>
+Cc:     iommu@lists.linux-foundation.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iommu/amd: remove redundant assignment to variable npages
+Message-ID: <20190527100327.GC8420@8bytes.org>
+References: <20190511124135.3635-1-colin.king@canonical.com>
 MIME-Version: 1.0
-References: <20190526102612.6970-1-christian@brauner.io> <20190526102612.6970-2-christian@brauner.io>
-In-Reply-To: <20190526102612.6970-2-christian@brauner.io>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 27 May 2019 12:02:37 +0200
-Message-ID: <CAK8P3a1Ltsna_rtKxhMU7X0t=UOXDA75tKpph6s=OZ4itJe7VQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] arch: wire-up clone6() syscall on x86
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jann Horn <jannh@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190511124135.3635-1-colin.king@canonical.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 26, 2019 at 12:27 PM Christian Brauner <christian@brauner.io> wrote:
->
-> Wire up the clone6() call on x86.
->
-> This patch only wires up clone6() on x86. Some of the arches look like they
-> need special assembly massaging and it is probably smarter if the
-> appropriate arch maintainers would do the actual wiring.
+On Sat, May 11, 2019 at 01:41:35PM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The variable npages is being initialized however this is never read and
+> later it is being reassigned to a new value. The initialization is
+> redundant and hence can be removed.
+> 
+> Addresses-Coverity: ("Unused Value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/iommu/amd_iommu.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Why do some architectures need special cases here? I'd prefer to have
-new system calls always get defined in a way that avoids this, and
-have a common entry point for everyone.
+Applied, thanks.
 
-Looking at the m68k sys_clone comment in
-arch/m68k/kernel/process.c, it seems that this was done as an
-optimization to deal with an inferior ABI. Similar code is present
-in h8300, ia64, nios2, and sparc. If all of them just do this to
-shave off a few cycles from the system call entry, I really
-couldn't care less.
-
-       Arnd
