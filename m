@@ -2,107 +2,187 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6712C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE4EC07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95BBA208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:08:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34B0220883
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:10:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="B5k+uzx3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbfE0LI2 (ORCPT
+        id S1726760AbfE0LKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 07:08:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55352 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725814AbfE0LI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 07:08:28 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97D5120883;
-        Mon, 27 May 2019 11:08:26 +0000 (UTC)
-Date:   Mon, 27 May 2019 07:08:25 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "Frank Ch. Eigler" <fche@redhat.com>
-Subject: Re: [RFC][PATCH 03/14 v2] function_graph: Allow multiple users to
- attach to function graph
-Message-ID: <20190527070825.0aa31964@gandalf.local.home>
-In-Reply-To: <20190527101004.GW2623@hirez.programming.kicks-ass.net>
-References: <20190520142001.270067280@goodmis.org>
-        <20190520142156.992391836@goodmis.org>
-        <20190524112608.GJ2589@hirez.programming.kicks-ass.net>
-        <20190524081219.25de03f6@gandalf.local.home>
-        <20190524122724.GO2623@hirez.programming.kicks-ass.net>
-        <20190524085744.71557f32@gandalf.local.home>
-        <20190527101004.GW2623@hirez.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 27 May 2019 07:10:06 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:7959 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725814AbfE0LKG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 07:10:06 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cebc58c0000>; Mon, 27 May 2019 04:10:04 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 27 May 2019 04:10:04 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 27 May 2019 04:10:04 -0700
+Received: from [10.24.45.112] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 27 May
+ 2019 11:10:00 +0000
+Subject: Re: [PATCH V4 1/2] PCI: dwc: Add API support to de-initialize host
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <bhelgaas@google.com>, <Jisheng.Zhang@synaptics.com>,
+        <thierry.reding@gmail.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20190502170426.28688-1-vidyas@nvidia.com>
+ <20190503112338.GA25649@e121166-lin.cambridge.arm.com>
+ <dec5ecb2-863e-a1db-10c9-2d91f860a2c6@nvidia.com>
+ <37697830-5a94-0f8e-a5cf-3347bc4850cb@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <b560f3c3-b69e-d9b5-2dae-1ede52af0ea6@nvidia.com>
+Date:   Mon, 27 May 2019 16:39:58 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <37697830-5a94-0f8e-a5cf-3347bc4850cb@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1558955404; bh=nU2dra4R89mw+x+E2Tv1OoaiE1ccD4BKlZtlo7GdJ5Q=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=B5k+uzx3cwW6LzYoHxheWLsDgIX3MuJKvphicodmkeiMsE4FMPWlX/xjNQ8ZC0w7d
+         U/ZPBDYS5UWMLXY6jhGXhRiCsTWWZNkYaGgTaaWzRrQ1TIj6i4KP8MZ5RBVNUUcBlB
+         9w9MRrClVg5r0jvJFEHQY059Q9OKT4r+vqcUP96XZeqJabpzFjBsBhowk99mZ63Jys
+         02b1eAmceDVuPmMJbJXAgZw+9v1fn+eAgQn81k2Ob1PT893HZC1566LDp81Zt5qez3
+         RJjpP+oyszsSlatgDteNwhpZuajKLug+CJwj/0fbK/qsLOhcsqGfMWAfj2/g4SI3bu
+         5pjG22OZPXOmg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 May 2019 12:10:04 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+On 5/7/2019 12:25 PM, Vidya Sagar wrote:
+> On 5/7/2019 11:19 AM, Vidya Sagar wrote:
+>> On 5/3/2019 4:53 PM, Lorenzo Pieralisi wrote:
+>>> On Thu, May 02, 2019 at 10:34:25PM +0530, Vidya Sagar wrote:
+>>>> Add an API to group all the tasks to be done to de-initialize host whi=
+ch
+>>>> can then be called by any DesignWare core based driver implementations
+>>>> while adding .remove() support in their respective drivers.
+>>>>
+>>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>>>> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>>>> ---
+>>>> Changes from v3:
+>>>> * Added check if (pci_msi_enabled() && !pp->ops->msi_host_init) before=
+ calling
+>>>> =C2=A0=C2=A0 dw_pcie_free_msi() API to mimic init path
+>>>>
+>>>> Changes from v2:
+>>>> * Rebased on top of linux-next top of the tree branch
+>>>>
+>>>> Changes from v1:
+>>>> * s/Designware/DesignWare
+>>>>
+>>>> =C2=A0 drivers/pci/controller/dwc/pcie-designware-host.c | 8 ++++++++
+>>>> =C2=A0 drivers/pci/controller/dwc/pcie-designware.h=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 | 5 +++++
+>>>> =C2=A0 2 files changed, 13 insertions(+)
+>>>
+>>> Series doesn't apply to v5.1-rc1, what's based on ? I suspect
+>>> there is a dependency on pci/keystone, given the tight timeline
+>>> for the merge window, would you mind postponing it to v5.3 ?
+>>>
+>>> I do not think it is urgent, I am happy to create a branch
+>>> for it as soon as v5.2-rc1 is released.
+>> I rebased my changes on top of linux-next. I see that they have conflict=
+s
+>> on top of v5.1-rc1. Do you want me to rebase them on top of v5.1-rc1 ins=
+tead
+>> of linux-next?
+>> I'm fine with v5.2-rc1 as well.I forgot to mention that these changes ar=
+e made on top of Jisheng's patches
+> FWIW, Jisheng's patches are approved and applied to pci/dwc for v5.2
+> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1968324.html
 
+Hi Lorenzo,
+Now that v5.2-rc2 is also available, could you please pick up this series?
 
-> > rcu_tasks doesn't cross voluntary sleeps, which this does.  
-> 
-> Sure, but we can 'fix' that, surely.
+Thanks,
+Vidya Sagar
 
-Well, that's the point of the rcu_tasks. To let us know when a task has
-voluntarily slept. I don't think we want to "fix" that.
+>=20
+>>
+>>>
+>>> Thanks,
+>>> Lorenzo
+>>>
+>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drive=
+rs/pci/controller/dwc/pcie-designware-host.c
+>>>> index 77db32529319..d069e4290180 100644
+>>>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+>>>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+>>>> @@ -496,6 +496,14 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
+>>>> =C2=A0 }
+>>>> +void dw_pcie_host_deinit(struct pcie_port *pp)
+>>>> +{
+>>>> +=C2=A0=C2=A0=C2=A0 pci_stop_root_bus(pp->root_bus);
+>>>> +=C2=A0=C2=A0=C2=A0 pci_remove_root_bus(pp->root_bus);
+>>>> +=C2=A0=C2=A0=C2=A0 if (pci_msi_enabled() && !pp->ops->msi_host_init)
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dw_pcie_free_msi(pp);
+>>>> +}
+>>>> +
+>>>> =C2=A0 static int dw_pcie_access_other_conf(struct pcie_port *pp, stru=
+ct pci_bus *bus,
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 devfn, =
+int where, int size, u32 *val,
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool write)
+>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pc=
+i/controller/dwc/pcie-designware.h
+>>>> index deab426affd3..4f48ec78c7b9 100644
+>>>> --- a/drivers/pci/controller/dwc/pcie-designware.h
+>>>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+>>>> @@ -348,6 +348,7 @@ void dw_pcie_msi_init(struct pcie_port *pp);
+>>>> =C2=A0 void dw_pcie_free_msi(struct pcie_port *pp);
+>>>> =C2=A0 void dw_pcie_setup_rc(struct pcie_port *pp);
+>>>> =C2=A0 int dw_pcie_host_init(struct pcie_port *pp);
+>>>> +void dw_pcie_host_deinit(struct pcie_port *pp);
+>>>> =C2=A0 int dw_pcie_allocate_domains(struct pcie_port *pp);
+>>>> =C2=A0 #else
+>>>> =C2=A0 static inline irqreturn_t dw_handle_msi_irq(struct pcie_port *p=
+p)
+>>>> @@ -372,6 +373,10 @@ static inline int dw_pcie_host_init(struct pcie_p=
+ort *pp)
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
+>>>> =C2=A0 }
+>>>> +static inline void dw_pcie_host_deinit(struct pcie_port *pp)
+>>>> +{
+>>>> +}
+>>>> +
+>>>> =C2=A0 static inline int dw_pcie_allocate_domains(struct pcie_port *pp=
+)
+>>>> =C2=A0 {
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
+>>>> --=20
+>>>> 2.17.1
+>>>>
+>>
+>=20
 
-> Alternatively we use SRCU, or
-> something else, a blend between SRCU and percpu-rwsem for example, SRCU
-> has that annoying smp_mb() on the read side, where percpu-rwsem doesn't
-> have that.
-> 
-> > > And delay the unreg until all active users are gone -- who gives a crap
-> > > that can take a while.  
-> > 
-> > It could literally be forever (well, until the machine reboots). And
-> > something that could appear to be a memory leak, although a very slow
-> > one. But probably be hard to have more than the number of tasks on the
-> > system.  
-> 
-> Again, who cares.. ? How often do you have return trace functions that
-> dissapear, afaict that only happens with modules, and neither
-> function_graph_trace nor kprobes are modules.
-> 
-> It'll just mean the module unload will be stuck, possibly forever.
-> That's not something I care about. Also, if we _really_ care, we can
-> mandate that module users use some sort of ugly trampoline that covers
-> their asses at the cost of some performance.
-> 
-> Getting rid of that array makes this code far saner (and I suspect
-> faster too).
-
-The array is not the complex part of this. It was probably the easiest
-part of this patch series. It just shows up a lot in the beginning
-because I needed it to work before doing anything else. The more
-difficult parts came with the passing of data from entry to exit.
-
-I plan on keeping the array for now, as it is just an internal
-implementation detail, that gives us only a limitation of the array
-size that is noticed outside of the function graph code. If we find
-some kind of RCU alternative, then we can switch to that in the
-future and remove the array limitation.
-
--- Steve
