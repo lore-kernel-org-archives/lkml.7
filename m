@@ -2,81 +2,52 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD02C28CC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7EE3C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36EAA21721
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B61BD21721
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:31:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbfE0ObZ (ORCPT
+        id S1726748AbfE0Obb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 10:31:25 -0400
-Received: from mga12.intel.com ([192.55.52.136]:49805 "EHLO mga12.intel.com"
+        Mon, 27 May 2019 10:31:31 -0400
+Received: from 8bytes.org ([81.169.241.247]:40332 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726191AbfE0ObY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 10:31:24 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 May 2019 07:31:24 -0700
-X-ExtLoop1: 1
-Received: from pgomulkx-mobl.ger.corp.intel.com (HELO localhost) ([10.251.94.230])
-  by orsmga002.jf.intel.com with ESMTP; 27 May 2019 07:31:18 -0700
-Date:   Mon, 27 May 2019 17:31:03 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     James Morris <jmorris@namei.org>
-Cc:     Matthew Garrett <matthewgarrett@google.com>,
-        linux-integrity@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca,
-        roberto.sassu@huawei.com, linux-efi@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tweek@google.com, bsz@semihalf.com,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH V7 0/4] Add support for crypto agile logs
-Message-ID: <20190527143103.GA20497@linux.intel.com>
-References: <20190520205501.177637-1-matthewgarrett@google.com>
- <20190523121449.GA9997@linux.intel.com>
- <20190523122610.GA12327@linux.intel.com>
- <alpine.LRH.2.21.1905240252440.31508@namei.org>
- <20190524103846.GA11695@linux.intel.com>
- <alpine.LRH.2.21.1905250506320.7233@namei.org>
+        id S1726191AbfE0Oba (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 10:31:30 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 6B0022AF; Mon, 27 May 2019 16:31:29 +0200 (CEST)
+Date:   Mon, 27 May 2019 16:31:24 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] iommu: Use right function to get group for device
+Message-ID: <20190527143123.GA12745@8bytes.org>
+References: <20190521072735.27401-1-baolu.lu@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.LRH.2.21.1905250506320.7233@namei.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20190521072735.27401-1-baolu.lu@linux.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 25, 2019 at 05:22:34AM +1000, James Morris wrote:
-> On Fri, 24 May 2019, Jarkko Sakkinen wrote:
+On Tue, May 21, 2019 at 03:27:35PM +0800, Lu Baolu wrote:
+> The iommu_group_get_for_dev() will allocate a group for a
+> device if it isn't in any group. This isn't the use case
+> in iommu_request_dm_for_dev(). Let's use iommu_group_get()
+> instead.
 > 
-> > I'm referring to these:
-> > 
-> > https://lore.kernel.org/linux-integrity/20190329115544.GA27351@linux.intel.com/
-> > 
-> > I got response from you that those were applied and there is another
-> > response in that thread that they are being sent to Linus. That is why I
-> > haven't done anything since. Most of them are critical fixes to v5.1
-> > changes.
-> 
-> These are in Linus' tree.  
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=a556810d8e06aa2da8bbe22da3d105eb5a0d0c7d
-> 
-> I initially queued them in the next-tpm branch, but forgot to drop them 
-> from there after sending them to Linus as a v5.1 fix. Linus was not happy 
-> to see them again in the v5.2 merge window.
-> 
-> Apologies for the confusion.
+> Fixes: d290f1e70d85a ("iommu: Introduce iommu_request_dm_for_dev()")
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> ---
+>  drivers/iommu/iommu.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 
-OK, just to confirm, my next PR will go straight to Linus?
-
-/Jarkko
+Applied, thanks.
