@@ -2,99 +2,96 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7974FC072B1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21AC3C07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:08:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51B3020883
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:08:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558955289;
-	bh=FcIEge0zk+jjeAe3jF8drHA93MwW2ubxP9ptYQVAVIM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uD+yIHD5FwEcABUQ2yB2i5NxH6YuWajoaiqkNlK6yz3inWhl0jPNhdYk1ceIWkaF0
-	 /ozoROCmMEUS71qyKqUA2upw364SDfJ4Ui2BGAkkKwj4pWlDWY4ik3IcHiVRzUmtXs
-	 wjSCd4/LNoJd0E6XJDpkgA2oLc678WlAGpkd69bA=
+	by mail.kernel.org (Postfix) with ESMTP id ED7B620883
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:08:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbfE0LHs (ORCPT
+        id S1726977AbfE0LIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 07:07:48 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57836 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726395AbfE0LHs (ORCPT
+        Mon, 27 May 2019 07:08:20 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:33778 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbfE0LIT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 07:07:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=uQCGkdMpLup5seR2eOGZrEj83EK7R6BAf5CrYNPT128=; b=kkDbAtbig016mmWPk8Q0ECOcNj
-        6i2x6TRRxm4pHg7q3zywdNvrVs9WWeNsxq3w9Gd7v2tarbn1H3xpSsDlPWX4gLPezG0bpho94/h+v
-        62+mv5ya/1QC+iZREHYViN0Dlla+oOJoWs5/EbGNRiG+nBYqEKi8yHgq3TSh9VFXiOuJM5qzE2Ngx
-        mTu3xOeYoV8vPuLOibnNBdUf52Og/A36QXmcSz4gTKNEr/una58qXtqftt7QUkCtXXyVvKBnsAB59
-        rJMf9IlCyYwUrmOv9mqhkbESd+Pr/FAL+pRLbR62WC5iOd/HXgjQqJdz+ysoCimzGWsxfZPSvD9XZ
-        3W7lZGWw==;
-Received: from [177.159.249.4] (helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hVDTn-00061v-O8; Mon, 27 May 2019 11:07:47 +0000
-Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
-        (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hVDTi-0002cq-Qa; Mon, 27 May 2019 08:07:42 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 4/5] docs: by default, build docs a lot faster with Sphinx >= 1.7
-Date:   Mon, 27 May 2019 08:07:40 -0300
-Message-Id: <baf19095789f2b2ed0c7a940703037a00cd77850.1558955082.git.mchehab+samsung@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1558955082.git.mchehab+samsung@kernel.org>
-References: <cover.1558955082.git.mchehab+samsung@kernel.org>
+        Mon, 27 May 2019 07:08:19 -0400
+Received: by mail-lf1-f68.google.com with SMTP id y17so3899079lfe.0;
+        Mon, 27 May 2019 04:08:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Amea0yxkLSVnpaE1taY7uaOdM5gfTzcYzLxuO6OKCas=;
+        b=BKs52VrGHojs+UDliJtM01DfUgVVHdsVVD5nzpm0ePBH9WsHF4xQhIyZCjdFlX9kvs
+         FD9qyFI7iZBjboRFl5Bl8uFNTTibGtV6bbBqF+L8/nqI4KWZla1bXFeB/JXayox5Fo7F
+         HrYumraLrj9FN3OK1AwuMZsFEgw84cK6wvRTBNtuY5OMvNd8biBtGqpCugtISBAe3nj/
+         mlgNFp+R8J4ve/Vc4uj8InYRrH16hg+GIl7O1yXTNBLaz7xPkr8txyRfYFogwU2mrb5w
+         A3wUlTFkWLsewA5h4zEvJTE6gnaFEkUmhmjpzV50zF13PcSKB+gi0Jpzf6ftC3eAYh+O
+         ax1g==
+X-Gm-Message-State: APjAAAUeXTNDE0xSOAiSALUTpYYSXqsrLsXQHulUthnOCkmduoYzQHP5
+        dnQsBa28ly4aemdAFlucVLeDx5iMi8hytC46y97JlYqS
+X-Google-Smtp-Source: APXvYqwcDy3XDaO0BzfXYp7vMfly1veQPO3ujWmlKLecl2HkSq5qfBAdcdVmkJpkAvRKefsRCQFJTTLWQ/j2c66om+Y=
+X-Received: by 2002:ac2:546a:: with SMTP id e10mr3644980lfn.75.1558955298038;
+ Mon, 27 May 2019 04:08:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190525120155.108948-1-wangkefeng.wang@huawei.com>
+In-Reply-To: <20190525120155.108948-1-wangkefeng.wang@huawei.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 27 May 2019 13:08:05 +0200
+Message-ID: <CAMuHMdX=o+gT6fbpZcj8jQbHi9LJci9CX72DG5j+DKYxuSkYvQ@mail.gmail.com>
+Subject: Re: [PATCH] drivers: base: power: Use of_clk_get_parent_count()
+To:     Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since Sphinx version 1.7, it is possible to use "-jauto" in
-order to speedup documentation builds. On older versions,
-while -j was already supported, one would need to set the
-number of threads manually.
+Hi Kefeng,
 
-So, if SPHINXOPTS is not provided, add -jauto, in order to
-speed up the build. That makes it *a lot* times faster than
-without -j.
+On Sat, May 25, 2019 at 1:54 PM Kefeng Wang <wangkefeng.wang@huawei.com> wrote:
+> Use of_clk_get_parent_count() instead of open coding.
+>
+> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
 
-If one really wants to slow things down, it can just use:
+Thanks for your patch!
 
-	make SPHINXOPTS=-j1 htmldocs
+> --- a/drivers/base/power/clock_ops.c
+> +++ b/drivers/base/power/clock_ops.c
+> @@ -195,8 +195,7 @@ int of_pm_clk_add_clks(struct device *dev)
+>         if (!dev || !dev->of_node)
+>                 return -EINVAL;
+>
+> -       count = of_count_phandle_with_args(dev->of_node, "clocks",
+> -                                          "#clock-cells");
+> +       count = of_clk_get_parent_count(dev->of_node);
+>         if (count <= 0)
+>                 return -ENODEV;
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
----
- Documentation/Makefile | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/Makefile b/Documentation/Makefile
-index 380e24053d6f..794233d05789 100644
---- a/Documentation/Makefile
-+++ b/Documentation/Makefile
-@@ -28,6 +28,8 @@ ifeq ($(HAVE_SPHINX),0)
- 
- else # HAVE_SPHINX
- 
-+SPHINXOPTS = $(shell perl -e 'open IN,"sphinx-build --version |"; while (<IN>) { if (m/([\d\.]+)/) { print "-jauto" if ($$1 >= "1.7") } ;} close IN')
-+
- # User-friendly check for pdflatex and latexmk
- HAVE_PDFLATEX := $(shell if which $(PDFLATEX) >/dev/null 2>&1; then echo 1; else echo 0; fi)
- HAVE_LATEXMK := $(shell if which latexmk >/dev/null 2>&1; then echo 1; else echo 0; fi)
+Given of_clk_get_parent_count() is provided by <linux/of_clk.h>, I think
+you should add an include for that.
+
+With the above fixed:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.21.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
