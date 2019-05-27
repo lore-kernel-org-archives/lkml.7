@@ -2,132 +2,114 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5007EC07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 09:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BAD4C07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 09:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C4AE21734
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 09:08:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EC7F21734
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 09:09:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbfE0JIY (ORCPT
+        id S1726786AbfE0JI7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 05:08:24 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:45455 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726063AbfE0JIX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 05:08:23 -0400
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <sha@pengutronix.de>)
-        id 1hVBc7-0004fQ-KN; Mon, 27 May 2019 11:08:15 +0200
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <sha@pengutronix.de>)
-        id 1hVBc6-0001ZE-VS; Mon, 27 May 2019 11:08:14 +0200
-Date:   Mon, 27 May 2019 11:08:14 +0200
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     yibin.gong@nxp.com
-Cc:     robh@kernel.org, shawnguo@kernel.org, festevam@gmail.com,
-        mark.rutland@arm.com, vkoul@kernel.org, dan.j.williams@intel.com,
-        linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH v2 4/7] dmaengine: fsl-edma-common: version check for v2
- instead
-Message-ID: <20190527090814.qfjiksqi24x2jrs3@pengutronix.de>
-References: <20190527085118.40423-1-yibin.gong@nxp.com>
- <20190527085118.40423-5-yibin.gong@nxp.com>
+        Mon, 27 May 2019 05:08:59 -0400
+Received: from mga01.intel.com ([192.55.52.88]:58675 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726653AbfE0JI7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 05:08:59 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 May 2019 02:08:58 -0700
+X-ExtLoop1: 1
+Received: from zhen-hp.sh.intel.com (HELO zhen-hp) ([10.239.13.116])
+  by orsmga004.jf.intel.com with ESMTP; 27 May 2019 02:08:55 -0700
+Date:   Mon, 27 May 2019 17:07:41 +0800
+From:   Zhenyu Wang <zhenyuw@linux.intel.com>
+To:     Tina Zhang <tina.zhang@intel.com>
+Cc:     intel-gvt-dev@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kraxel@redhat.com,
+        zhenyuw@linux.intel.com, alex.williamson@redhat.com,
+        hang.yuan@intel.com, zhiyuan.lv@intel.com
+Subject: Re: [PATCH 1/2] vfio: ABI for setting mdev display flip eventfd
+Message-ID: <20190527090741.GE29553@zhen-hp.sh.intel.com>
+Reply-To: Zhenyu Wang <zhenyuw@linux.intel.com>
+References: <20190527084312.8872-1-tina.zhang@intel.com>
+ <20190527084312.8872-2-tina.zhang@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="hOcCNbCCxyk/YU74"
 Content-Disposition: inline
-In-Reply-To: <20190527085118.40423-5-yibin.gong@nxp.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 11:07:14 up 9 days, 15:25, 72 users,  load average: 0.12, 0.20, 0.16
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20190527084312.8872-2-tina.zhang@intel.com>
+User-Agent: Mutt/1.10.0 (2018-05-17)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 27, 2019 at 04:51:15PM +0800, yibin.gong@nxp.com wrote:
-> From: Robin Gong <yibin.gong@nxp.com>
-> 
-> The next v3 i.mx7ulp edma is based on v1, so change version
-> check logic for v2 instead.
-> 
-> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+
+--hOcCNbCCxyk/YU74
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On 2019.05.27 16:43:11 +0800, Tina Zhang wrote:
+> Add VFIO_DEVICE_SET_GFX_FLIP_EVENTFD ioctl command to set eventfd
+> based signaling mechanism to deliver vGPU framebuffer page flip
+> event to userspace.
+>
+
+Should we add probe to see if driver can support gfx flip event?
+
+> Signed-off-by: Tina Zhang <tina.zhang@intel.com>
 > ---
->  drivers/dma/fsl-edma-common.c | 40 ++++++++++++++++++++--------------------
->  1 file changed, 20 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
-> index bb24251..45d70d3 100644
-> --- a/drivers/dma/fsl-edma-common.c
-> +++ b/drivers/dma/fsl-edma-common.c
-> @@ -657,26 +657,26 @@ void fsl_edma_setup_regs(struct fsl_edma_engine *edma)
->  	edma->regs.erql = edma->membase + EDMA_ERQ;
->  	edma->regs.eeil = edma->membase + EDMA_EEI;
->  
-> -	edma->regs.serq = edma->membase + ((edma->version == v1) ?
-> -			EDMA_SERQ : EDMA64_SERQ);
-> -	edma->regs.cerq = edma->membase + ((edma->version == v1) ?
-> -			EDMA_CERQ : EDMA64_CERQ);
-> -	edma->regs.seei = edma->membase + ((edma->version == v1) ?
-> -			EDMA_SEEI : EDMA64_SEEI);
-> -	edma->regs.ceei = edma->membase + ((edma->version == v1) ?
-> -			EDMA_CEEI : EDMA64_CEEI);
-> -	edma->regs.cint = edma->membase + ((edma->version == v1) ?
-> -			EDMA_CINT : EDMA64_CINT);
-> -	edma->regs.cerr = edma->membase + ((edma->version == v1) ?
-> -			EDMA_CERR : EDMA64_CERR);
-> -	edma->regs.ssrt = edma->membase + ((edma->version == v1) ?
-> -			EDMA_SSRT : EDMA64_SSRT);
-> -	edma->regs.cdne = edma->membase + ((edma->version == v1) ?
-> -			EDMA_CDNE : EDMA64_CDNE);
-> -	edma->regs.intl = edma->membase + ((edma->version == v1) ?
-> -			EDMA_INTR : EDMA64_INTL);
-> -	edma->regs.errl = edma->membase + ((edma->version == v1) ?
-> -			EDMA_ERR : EDMA64_ERRL);
-> +	edma->regs.serq = edma->membase + ((edma->version == v2) ?
-> +			EDMA64_SERQ : EDMA_SERQ);
-> +	edma->regs.cerq = edma->membase + ((edma->version == v2) ?
-> +			EDMA64_CERQ : EDMA_CERQ);
-> +	edma->regs.seei = edma->membase + ((edma->version == v2) ?
-> +			EDMA64_SEEI : EDMA_SEEI);
-> +	edma->regs.ceei = edma->membase + ((edma->version == v2) ?
-> +			EDMA64_CEEI : EDMA_CEEI);
-> +	edma->regs.cint = edma->membase + ((edma->version == v2) ?
-> +			EDMA64_CINT : EDMA_CINT);
-> +	edma->regs.cerr = edma->membase + ((edma->version == v2) ?
-> +			EDMA64_CERR : EDMA_CERR);
-> +	edma->regs.ssrt = edma->membase + ((edma->version == v2) ?
-> +			EDMA64_SSRT : EDMA_SSRT);
-> +	edma->regs.cdne = edma->membase + ((edma->version == v2) ?
-> +			EDMA64_CDNE : EDMA_CDNE);
-> +	edma->regs.intl = edma->membase + ((edma->version == v2) ?
-> +			EDMA64_INTL : EDMA_INTR);
-> +	edma->regs.errl = edma->membase + ((edma->version == v2) ?
-> +			EDMA64_ERRL : EDMA_ERR);
+>  include/uapi/linux/vfio.h | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>=20
+> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> index 02bb7ad6e986..27300597717f 100644
+> --- a/include/uapi/linux/vfio.h
+> +++ b/include/uapi/linux/vfio.h
+> @@ -696,6 +696,18 @@ struct vfio_device_ioeventfd {
+> =20
+>  #define VFIO_DEVICE_IOEVENTFD		_IO(VFIO_TYPE, VFIO_BASE + 16)
+> =20
+> +/**
+> + * VFIO_DEVICE_SET_GFX_FLIP_EVENTFD - _IOW(VFIO_TYPE, VFIO_BASE + 17, __=
+s32)
+> + *
+> + * Set eventfd based signaling mechanism to deliver vGPU framebuffer page
+> + * flip event to userspace. A value of -1 is used to stop the page flip
+> + * delivering.
+> + *
+> + * Return: 0 on success, -errno on failure.
+> + */
+> +
+> +#define VFIO_DEVICE_SET_GFX_FLIP_EVENTFD _IO(VFIO_TYPE, VFIO_BASE + 17)
+> +
+>  /* -------- API for Type1 VFIO IOMMU -------- */
+> =20
+>  /**
+> --=20
+> 2.17.1
+>=20
 
-Following to what I have said to 6/7 you can put the register offsets
-into that new struct aswell.
+--=20
+Open Source Technology Center, Intel ltd.
 
-Sascha
+$gpg --keyserver wwwkeys.pgp.net --recv-keys 4D781827
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--hOcCNbCCxyk/YU74
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQTXuabgHDW6LPt9CICxBBozTXgYJwUCXOuo3QAKCRCxBBozTXgY
+J7/dAJ9QLbQBdhMMbxjTKO1yebnD51NVUACcDHl7pOknebyQxRlI1LrDOuZu7Kw=
+=g5+1
+-----END PGP SIGNATURE-----
+
+--hOcCNbCCxyk/YU74--
