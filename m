@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB37C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 15:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A84C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 15:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED99321848
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 15:19:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61A402184C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 15:19:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sp5TtVt0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bfSRoqQv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbfE0PTG (ORCPT
+        id S1726813AbfE0PTF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 11:19:06 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:44197 "EHLO
+        Mon, 27 May 2019 11:19:05 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:42806 "EHLO
         mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbfE0PTC (ORCPT
+        with ESMTP id S1726209AbfE0PS7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 11:19:02 -0400
-Received: by mail-lj1-f196.google.com with SMTP id e13so14961640ljl.11
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 08:19:01 -0700 (PDT)
+        Mon, 27 May 2019 11:18:59 -0400
+Received: by mail-lj1-f196.google.com with SMTP id 188so14986036ljf.9
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 08:18:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=v/69OPvwjOinzl+9ALg7GpdBlRB0Izx4CLNV/SO6CVY=;
-        b=sp5TtVt0QWossyePsI0pwfUwbXk0kwuyZ3Q6WK9mDv5RwWtoQH2e93S6VPSdJf2Pd7
-         ueQNA2nVax3EAVEuU8+zB9l+e6ZKexa0Sala5JZsZhaJkmkJcpYsiX2BtKsY6VLpRuaT
-         vz5fnHdqqbVuD1f6oHE4OTdmhb8AF9lGaT6wYx1HAS2P8EG6G7W2XULg76DyX3veqI56
-         aND2VwK69f/iqhtVR9U2YgL0Oui6eD75hK3Ld9JxCrOVIw5jKVlZDCRI5hdghprkXpe/
-         QazwvMFfeiMeEiR6SiWw/C3Rz70yvm0JA1FsRynowlMMKSyJTiry5opRgWMYWqNAP/H6
-         LYQg==
+        bh=MSM6WbF67OdKB/w9seZTGzSuynUfhCF7zBIV2w+Az9Q=;
+        b=bfSRoqQvdM4sTzNjojGwue5FzJlZoDMK55pnpPF/cOUXgMSSUzgX+oVG2bRQd9DS4q
+         N3JJfQMNMdQ8xSekufRp7/WeOMTkM17k/+u8nFjZG9KjlIB/EHJZU7ZHEjOBjRKe9Yy/
+         cEVA/45ITXTGIFVnBQAD7tC4Pidy43L7CCEfhg9c8vklVFyp2mOuTW8mk44FIrGhUjZV
+         SAWx/sAhKDH6Es4467sgKNL/dkP15QkU2S+eZngzOlsbXr73/nN/3LEj+rqZ6ovCd532
+         Zpnvx1hVp9PXrhoQv6z94z565Pms9Kn9FTTcDXYTOhsRupT0JZQsPvgeY9tTjjbuNMJU
+         R+Gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=v/69OPvwjOinzl+9ALg7GpdBlRB0Izx4CLNV/SO6CVY=;
-        b=savOqdfgc2K9zNyAHWxKmNxslHyYhI1xZUAlD1nQeL98Lql+Lk06SxZ21beB3pOUvT
-         2fgSe8Pl87BQ8TKyKGcc9XHdCappq5NCfGR1+So6HcbEdxGwhxqaG6ko74yO/eHYDgBi
-         jAXgma+mxIbv40GvPxAktEgstQLUBaudJPbMe2/ZeP8YH6CfYY5TYV8nWzvF5xW1A1Uj
-         sRPeHEl2Mufo/bX0Dm5Ym/n1fn/+66IAPzDYaMj3g5MqdpWscObpdB22kT0Yo6IOFaQL
-         a++nucrZ3H2QXPVF/eeyjgK/AerCRVjAC1rLpg7UOPHfe1K3qH/gSYZ6xuIth2W68Bv2
-         AhbA==
-X-Gm-Message-State: APjAAAWAqejK5avoGMFtCDcorAGxZ1Apj9BUCB6uI6/1TtvT/MnzxET5
-        ryy0kgpR44T78qOrYE6dWCc=
-X-Google-Smtp-Source: APXvYqwCoutspyS+zZrN5ZysSrHKllwv2mgh3TpyyOJ5FW6lX7OaWsa0f9YLi2ui4UlgnpRQBjECXg==
-X-Received: by 2002:a2e:8796:: with SMTP id n22mr3489968lji.75.1558970340582;
-        Mon, 27 May 2019 08:19:00 -0700 (PDT)
+        bh=MSM6WbF67OdKB/w9seZTGzSuynUfhCF7zBIV2w+Az9Q=;
+        b=Ynj0XfsxQzltqYcxrC2ZnTDe4P4EnOXKN3zWdjmVB0VK4xBOfeV5sE3FVxQnjg/qt1
+         PU4y4Du3dzxelmB/LmVLjMYjuHYpMiuWUxFx8nzS5zR6xB2aBpjl0XvyRY59O80kLK21
+         50KVOn0wb8NEr9XpMtEX6Ls0KL/zdVc+m4AbIV62p4KSWexE+cx/Y0Y4dtg9BASx8hep
+         obq5yCh3tsUoUdjH68Z9+trJ3aj3rZ45/0ZT9W2qiedEx72vsMEARx80bnc4NFdlehQX
+         EjH/l3REdq2pHVqnxoQJsBa7ynauJTHgbrKXUyEmg8DBTBULRig32LTFZaCpUklfItUf
+         WMaQ==
+X-Gm-Message-State: APjAAAUpFAEmGAc+OPWWFaistvgmQXR15JFF0Z22jhqtysz/XqT+9cQz
+        mRbTqNMf5tCetfpxu0MzlII=
+X-Google-Smtp-Source: APXvYqwcjDd7zgKi++glHLj+RM/99G19P83k7qZ5BeJwNZRPcDXHcJeMZReOkx9Hw9J4zkct+fKI1A==
+X-Received: by 2002:a2e:9a94:: with SMTP id p20mr17141512lji.2.1558970337822;
+        Mon, 27 May 2019 08:18:57 -0700 (PDT)
 Received: from pc636.semobile.internal ([37.139.158.167])
-        by smtp.gmail.com with ESMTPSA id h25sm2308701ljb.80.2019.05.27.08.18.59
+        by smtp.gmail.com with ESMTPSA id h25sm2308701ljb.80.2019.05.27.08.18.56
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 May 2019 08:18:59 -0700 (PDT)
+        Mon, 27 May 2019 08:18:57 -0700 (PDT)
 From:   "Uladzislau Rezki (Sony)" <urezki@gmail.com>
 To:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
 Cc:     Roman Gushchin <guro@fb.com>, Uladzislau Rezki <urezki@gmail.com>,
@@ -69,9 +69,9 @@ Cc:     Roman Gushchin <guro@fb.com>, Uladzislau Rezki <urezki@gmail.com>,
         Joel Fernandes <joelaf@google.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@elte.hu>, Tejun Heo <tj@kernel.org>
-Subject: [PATCH v4 4/4] mm/vmap: switch to WARN_ON() and move it under unlink_va()
-Date:   Mon, 27 May 2019 17:18:43 +0200
-Message-Id: <20190527151843.27416-5-urezki@gmail.com>
+Subject: [PATCH v4 2/4] mm/vmap: preload a CPU with one object for split purpose
+Date:   Mon, 27 May 2019 17:18:41 +0200
+Message-Id: <20190527151843.27416-3-urezki@gmail.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190527151843.27416-1-urezki@gmail.com>
 References: <20190527151843.27416-1-urezki@gmail.com>
@@ -80,42 +80,149 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Trigger a warning if an object that is about to be freed is
-detached. We used to have a BUG_ON(), but even though it is
-considered as faulty behaviour that is not a good reason to
-break a system.
+Refactor the NE_FIT_TYPE split case when it comes to an
+allocation of one extra object. We need it in order to
+build a remaining space.
+
+Introduce ne_fit_preload()/ne_fit_preload_end() functions
+for preloading one extra vmap_area object to ensure that
+we have it available when fit type is NE_FIT_TYPE.
+
+The preload is done per CPU in non-atomic context thus with
+GFP_KERNEL allocation masks. More permissive parameters can
+be beneficial for systems which are suffer from high memory
+pressure or low memory condition.
 
 Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
 ---
- mm/vmalloc.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ mm/vmalloc.c | 79 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 76 insertions(+), 3 deletions(-)
 
 diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 371aba9a4bf1..1dd459d0220a 100644
+index ea1b65fac599..b553047aa05b 100644
 --- a/mm/vmalloc.c
 +++ b/mm/vmalloc.c
-@@ -533,11 +533,7 @@ link_va(struct vmap_area *va, struct rb_root *root,
- static __always_inline void
- unlink_va(struct vmap_area *va, struct rb_root *root)
- {
--	/*
--	 * During merging a VA node can be empty, therefore
--	 * not linked with the tree nor list. Just check it.
--	 */
--	if (!RB_EMPTY_NODE(&va->rb_node)) {
-+	if (!WARN_ON(RB_EMPTY_NODE(&va->rb_node))) {
- 		if (root == &free_vmap_area_root)
- 			rb_erase_augmented(&va->rb_node,
- 				root, &free_vmap_area_rb_augment_cb);
-@@ -1187,8 +1183,6 @@ EXPORT_SYMBOL_GPL(unregister_vmap_purge_notifier);
+@@ -364,6 +364,13 @@ static LIST_HEAD(free_vmap_area_list);
+  */
+ static struct rb_root free_vmap_area_root = RB_ROOT;
  
- static void __free_vmap_area(struct vmap_area *va)
++/*
++ * Preload a CPU with one object for "no edge" split case. The
++ * aim is to get rid of allocations from the atomic context, thus
++ * to use more permissive allocation masks.
++ */
++static DEFINE_PER_CPU(struct vmap_area *, ne_fit_preload_node);
++
+ static __always_inline unsigned long
+ va_size(struct vmap_area *va)
  {
--	BUG_ON(RB_EMPTY_NODE(&va->rb_node));
--
+@@ -950,9 +957,24 @@ adjust_va_to_fit_type(struct vmap_area *va,
+ 		 *   L V  NVA  V R
+ 		 * |---|-------|---|
+ 		 */
+-		lva = kmem_cache_alloc(vmap_area_cachep, GFP_NOWAIT);
+-		if (unlikely(!lva))
+-			return -1;
++		lva = __this_cpu_xchg(ne_fit_preload_node, NULL);
++		if (unlikely(!lva)) {
++			/*
++			 * For percpu allocator we do not do any pre-allocation
++			 * and leave it as it is. The reason is it most likely
++			 * never ends up with NE_FIT_TYPE splitting. In case of
++			 * percpu allocations offsets and sizes are aligned to
++			 * fixed align request, i.e. RE_FIT_TYPE and FL_FIT_TYPE
++			 * are its main fitting cases.
++			 *
++			 * There are a few exceptions though, as an example it is
++			 * a first allocation (early boot up) when we have "one"
++			 * big free space that has to be split.
++			 */
++			lva = kmem_cache_alloc(vmap_area_cachep, GFP_NOWAIT);
++			if (!lva)
++				return -1;
++		}
+ 
+ 		/*
+ 		 * Build the remainder.
+@@ -1023,6 +1045,48 @@ __alloc_vmap_area(unsigned long size, unsigned long align,
+ }
+ 
+ /*
++ * Preload this CPU with one extra vmap_area object to ensure
++ * that we have it available when fit type of free area is
++ * NE_FIT_TYPE.
++ *
++ * The preload is done in non-atomic context, thus it allows us
++ * to use more permissive allocation masks to be more stable under
++ * low memory condition and high memory pressure.
++ *
++ * If success it returns 1 with preemption disabled. In case
++ * of error 0 is returned with preemption not disabled. Note it
++ * has to be paired with ne_fit_preload_end().
++ */
++static int
++ne_fit_preload(int nid)
++{
++	preempt_disable();
++
++	if (!__this_cpu_read(ne_fit_preload_node)) {
++		struct vmap_area *node;
++
++		preempt_enable();
++		node = kmem_cache_alloc_node(vmap_area_cachep, GFP_KERNEL, nid);
++		if (node == NULL)
++			return 0;
++
++		preempt_disable();
++
++		if (__this_cpu_cmpxchg(ne_fit_preload_node, NULL, node))
++			kmem_cache_free(vmap_area_cachep, node);
++	}
++
++	return 1;
++}
++
++static void
++ne_fit_preload_end(int preloaded)
++{
++	if (preloaded)
++		preempt_enable();
++}
++
++/*
+  * Allocate a region of KVA of the specified size and alignment, within the
+  * vstart and vend.
+  */
+@@ -1034,6 +1098,7 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
+ 	struct vmap_area *va;
+ 	unsigned long addr;
+ 	int purged = 0;
++	int preloaded;
+ 
+ 	BUG_ON(!size);
+ 	BUG_ON(offset_in_page(size));
+@@ -1056,6 +1121,12 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
+ 	kmemleak_scan_area(&va->rb_node, SIZE_MAX, gfp_mask & GFP_RECLAIM_MASK);
+ 
+ retry:
++	/*
++	 * Even if it fails we do not really care about that.
++	 * Just proceed as it is. "overflow" path will refill
++	 * the cache we allocate from.
++	 */
++	preloaded = ne_fit_preload(node);
+ 	spin_lock(&vmap_area_lock);
+ 
  	/*
- 	 * Remove from the busy tree/list.
+@@ -1063,6 +1134,8 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
+ 	 * returned. Therefore trigger the overflow path.
  	 */
+ 	addr = __alloc_vmap_area(size, align, vstart, vend);
++	ne_fit_preload_end(preloaded);
++
+ 	if (unlikely(addr == vend))
+ 		goto overflow;
+ 
 -- 
 2.11.0
 
