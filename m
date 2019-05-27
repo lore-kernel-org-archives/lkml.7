@@ -2,109 +2,238 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8937EC04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 17:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7916C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 17:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FB03208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 17:46:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5F1C208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 17:47:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="sr5PZkAr"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JwAG/FOC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbfE0Rqz (ORCPT
+        id S1726971AbfE0RrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 13:46:55 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:40675 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbfE0Rqz (ORCPT
+        Mon, 27 May 2019 13:47:11 -0400
+Received: from mail-vk1-f202.google.com ([209.85.221.202]:49124 "EHLO
+        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726346AbfE0RrL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 13:46:55 -0400
-Received: by mail-oi1-f195.google.com with SMTP id r136so12400593oie.7;
-        Mon, 27 May 2019 10:46:54 -0700 (PDT)
+        Mon, 27 May 2019 13:47:11 -0400
+Received: by mail-vk1-f202.google.com with SMTP id 129so5337435vkh.15
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 10:47:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RvWmgSpOjlIMaMZlqMhXFOz9qSbgkNwvRngL97A0kDQ=;
-        b=sr5PZkAr/7xMIJI1iE3rnlUf2W//7xEl0rEv8uMQxjtApmCeIfuxKSdL2GConU+qlx
-         P9vCZsz/G7nRW6fh6wnGHfcswe1ykoaXPZpMAXM4lJmzGKnyA6dHHJ15yy41O2Q8EXK1
-         G+q+o9iv6qd6cYrH8i06p+Fg7y+4luf4xPg26eTOT1gSFEWOBF6Wjaf92UcGcuxHr6eL
-         dg7JyncH0+v4PWErlFOWs4YwVy609jJvfk7DjwLW12TL9qjU0xy5wSQcqA/UlzLuX/ai
-         ECfO4NlD85myKsx73AYmyq/4B4G8vl0wKKPVxaRGc0nrhWkVWEP4RxerxdRskW36zJLW
-         yaXw==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=WabwXVWKHDF9Gj73vwc0I/pwrF46pP20FoOfyIilig8=;
+        b=JwAG/FOCufiHwOPhwR/U8FpRywH60cnD+4+jDfx6S4A///ABXalQdR96p/DGNSiINt
+         taQAVzi4ZWYDlppGDunCnKCNi5U8BJB8Ytw4L2DJRBZO1g1Re6PWcNpn6UDYZSUkQWkB
+         IepdDzZx5Kgi7HIlAX8OeDAag68w+Znn93OZRx0meQF2zD2u7gKnDQxpsQZT9fK2gIWa
+         mIY6D3mPHsyHG7SVQhl75Ss/FIBUzprB9kA/K4Wr7eWTYv+q+JrprJphWF2gcAp5fyg+
+         mE+PUeHZzG74iVppBlJ7SW1XU4rhwK1VvZYszfeEqkhWJwngLRqmQhx8OrIDksadQBnd
+         aZRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RvWmgSpOjlIMaMZlqMhXFOz9qSbgkNwvRngL97A0kDQ=;
-        b=USCUnHILWJTHnj13t2bM6g1RSMvuYp8RQ36gEIKU3yM3/AHhFm2c2pjeaEvTwZQAEa
-         fzpWYZAqHXEMeHyElIKdMsaDfd96sfKh1XNzdCNiubrcA2w/BnTvWEy9TxAYUrp/hc3c
-         uh7Vd66elvacepKRB6eh4ab1nkwTzInVW96bgblex/gp3QCR2a/W1bnNsE1L77bSiNRa
-         g4aqsRIZUO2PtVC7Ny2dzCP7uuETIwFX1h4PRlzaiS1COw9i3wFsaYG8e/+3CEVcCqKE
-         cVVbI/AgZPx4n+KuqK/Rs2Z3++GMcyTb5mpoNYNXFNLvOpz9DEbphkJdL7FBiFmIGmII
-         K83g==
-X-Gm-Message-State: APjAAAVap+KXBQG0A0iRc3pTT4rYIGvEOVDIpbPxiKO+54U4iQ5Slbv7
-        rnkbJ415/8o14n9TXyahyZi/5nxbVkf7itpjWfQ=
-X-Google-Smtp-Source: APXvYqzOlHtTysG/NJMjTORoX4YkIoqs/i6VO44tMBIFa71EQ6WOH2ZGotkbC3hvW9Rj4y8Ks7VrpPwwNZd83dEYYlI=
-X-Received: by 2002:aca:ed0a:: with SMTP id l10mr93471oih.39.1558979214200;
- Mon, 27 May 2019 10:46:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190525181133.4875-1-martin.blumenstingl@googlemail.com>
- <20190525181133.4875-5-martin.blumenstingl@googlemail.com> <3b61897a-267b-fd6e-181b-a8c7e47918fb@baylibre.com>
-In-Reply-To: <3b61897a-267b-fd6e-181b-a8c7e47918fb@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Mon, 27 May 2019 19:46:43 +0200
-Message-ID: <CAFBinCDXNy4=6U2gsh6vK6WEtJKAdfDGPMrpPJthbp5Rru1hbg@mail.gmail.com>
-Subject: Re: [PATCH 04/14] pwm: meson: change MISC_CLK_SEL_WIDTH to MISC_CLK_SEL_MASK
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
-        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=WabwXVWKHDF9Gj73vwc0I/pwrF46pP20FoOfyIilig8=;
+        b=iAm1GTqnd99zied4r7fTbMkAAFscJEmPSXCmihKWxJsk3UGuONagUyd5OCdk5B5YvJ
+         S4iluD9VugkrNIMSVa33bkXZ0cCpdg0LPHF0KIduCO3dWlXN5u1xAbu6JYgFsPYSfV/M
+         JO5SioUGCP1H9DeZhvWOG4P5zZgvy9GONXUtJH6LX5s9RKfmVFzfmajXPT5EbMmC48ul
+         XyBWcHSo0y+k6n75yadq+LzXl49iPHnkYLO2e5tWmpFgdKn8Ee+3ExxC1H5riQlIvfaj
+         GXnvKIOBmVL+t831K7LIvBgODkCJ8IfGkQOQELChAEsYy6ifN6KqWDwNVHecbBjOoTxd
+         Vlvw==
+X-Gm-Message-State: APjAAAVBe1+guXcMgwIIrqrK0QF8YmxJHV+KZaB3lGXKsuK7U/CDxlmO
+        lnRdC2qOrAw8Ux0kKAiZmz7FMmR4IjkBTQ==
+X-Google-Smtp-Source: APXvYqxRk9l2Xm/VuGGKrKk6z1pZngrkZJw9tB+kHYOSMI90hyZqW/59RtYGljuqxAiUAnNldNNH4TeiKvMH4g==
+X-Received: by 2002:ab0:28c9:: with SMTP id g9mr46031261uaq.73.1558979229956;
+ Mon, 27 May 2019 10:47:09 -0700 (PDT)
+Date:   Mon, 27 May 2019 10:46:43 -0700
+Message-Id: <20190527174643.209172-1-shakeelb@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.22.0.rc1.257.g3120a18244-goog
+Subject: [PATCH v3] mm, memcg: introduce memory.events.local
+From:   Shakeel Butt <shakeelb@google.com>
+To:     Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, Chris Down <chris@chrisdown.name>
+Cc:     linux-mm@kvack.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Shakeel Butt <shakeelb@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
+The memory controller in cgroup v2 exposes memory.events file for each
+memcg which shows the number of times events like low, high, max, oom
+and oom_kill have happened for the whole tree rooted at that memcg.
+Users can also poll or register notification to monitor the changes in
+that file. Any event at any level of the tree rooted at memcg will
+notify all the listeners along the path till root_mem_cgroup. There are
+existing users which depend on this behavior.
 
-On Mon, May 27, 2019 at 2:26 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> On 25/05/2019 20:11, Martin Blumenstingl wrote:
-> > MISC_CLK_SEL_WIDTH is only used in one place where it's converted into
-> > a bit-mask. Rename and change the macro to be a bit-mask so that
-> > conversion is not needed anymore. No functional changes intended.
-> >
-> > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> > ---
-> >  drivers/pwm/pwm-meson.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-> > index c62a3ac924d0..84b28ba0f903 100644
-> > --- a/drivers/pwm/pwm-meson.c
-> > +++ b/drivers/pwm/pwm-meson.c
-> > @@ -33,7 +33,7 @@
-> >  #define MISC_A_CLK_DIV_SHIFT 8
-> >  #define MISC_B_CLK_SEL_SHIFT 6
-> >  #define MISC_A_CLK_SEL_SHIFT 4
-> > -#define MISC_CLK_SEL_WIDTH   2
-> > +#define MISC_CLK_SEL_MASK    0x3
->
-> NIT I would have used GENMASK here
-that was my initial idea but I decided against it.
-the variant I came up with was: #define MISC_CLK_SEL_MASK    GENMASK(1, 0)
+However there are users which are only interested in the events
+happening at a specific level of the memcg tree and not in the events in
+the underlying tree rooted at that memcg. One such use-case is a
+centralized resource monitor which can dynamically adjust the limits of
+the jobs running on a system. The jobs can create their sub-hierarchy
+for their own sub-tasks. The centralized monitor is only interested in
+the events at the top level memcgs of the jobs as it can then act and
+adjust the limits of the jobs. Using the current memory.events for such
+centralized monitor is very inconvenient. The monitor will keep
+receiving events which it is not interested and to find if the received
+event is interesting, it has to read memory.event files of the next
+level and compare it with the top level one. So, let's introduce
+memory.events.local to the memcg which shows and notify for the events
+at the memcg level.
 
-however, the actual offset is either 4 or 6 (depending on the PWM channel)
-and I felt that duplicating the macro would just make it more complicated
-so instead I chose to be consistent with MISC_CLK_DIV_MASK
+Now, does memory.stat and memory.pressure need their local versions.
+IMHO no due to the no internal process contraint of the cgroup v2. The
+memory.stat file of the top level memcg of a job shows the stats and
+vmevents of the whole tree. The local stats or vmevents of the top level
+memcg will only change if there is a process running in that memcg but
+v2 does not allow that. Similarly for memory.pressure there will not be
+any process in the internal nodes and thus no chance of local pressure.
 
-Let me know if you would like me to change it (then I prefer to update
-MISC_CLK_DIV_MASK as well).
+Signed-off-by: Shakeel Butt <shakeelb@google.com>
+Reviewed-by: Roman Gushchin <guro@fb.com>
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+---
+Changelog since v2:
+- Added documentation.
 
+Changelog since v1:
+- refactor memory_events_show to share between events and events.local
 
-Martin
+ Documentation/admin-guide/cgroup-v2.rst | 10 ++++++++
+ include/linux/memcontrol.h              |  7 ++++-
+ mm/memcontrol.c                         | 34 +++++++++++++++++--------
+ 3 files changed, 40 insertions(+), 11 deletions(-)
+
+diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+index 19c4e78666ff..0e961fc90cd9 100644
+--- a/Documentation/admin-guide/cgroup-v2.rst
++++ b/Documentation/admin-guide/cgroup-v2.rst
+@@ -1119,6 +1119,11 @@ PAGE_SIZE multiple when read back.
+ 	otherwise, a value change in this file generates a file
+ 	modified event.
+ 
++	Note that all fields in this file are hierarchical and the
++	file modified event can be generated due to an event down the
++	hierarchy. For for the local events at the cgroup level see
++	memory.events.local.
++
+ 	  low
+ 		The number of times the cgroup is reclaimed due to
+ 		high memory pressure even though its usage is under
+@@ -1158,6 +1163,11 @@ PAGE_SIZE multiple when read back.
+ 		The number of processes belonging to this cgroup
+ 		killed by any kind of OOM killer.
+ 
++  memory.events.local
++	Similar to memory.events but the fields in the file are local
++	to the cgroup i.e. not hierarchical. The file modified event
++	generated on this file reflects only the local events.
++
+   memory.stat
+ 	A read-only flat-keyed file which exists on non-root cgroups.
+ 
+diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+index 36bdfe8e5965..de77405eec46 100644
+--- a/include/linux/memcontrol.h
++++ b/include/linux/memcontrol.h
+@@ -239,8 +239,9 @@ struct mem_cgroup {
+ 	/* OOM-Killer disable */
+ 	int		oom_kill_disable;
+ 
+-	/* memory.events */
++	/* memory.events and memory.events.local */
+ 	struct cgroup_file events_file;
++	struct cgroup_file events_local_file;
+ 
+ 	/* handle for "memory.swap.events" */
+ 	struct cgroup_file swap_events_file;
+@@ -286,6 +287,7 @@ struct mem_cgroup {
+ 	atomic_long_t		vmevents_local[NR_VM_EVENT_ITEMS];
+ 
+ 	atomic_long_t		memory_events[MEMCG_NR_MEMORY_EVENTS];
++	atomic_long_t		memory_events_local[MEMCG_NR_MEMORY_EVENTS];
+ 
+ 	unsigned long		socket_pressure;
+ 
+@@ -761,6 +763,9 @@ static inline void count_memcg_event_mm(struct mm_struct *mm,
+ static inline void memcg_memory_event(struct mem_cgroup *memcg,
+ 				      enum memcg_memory_event event)
+ {
++	atomic_long_inc(&memcg->memory_events_local[event]);
++	cgroup_file_notify(&memcg->events_local_file);
++
+ 	do {
+ 		atomic_long_inc(&memcg->memory_events[event]);
+ 		cgroup_file_notify(&memcg->events_file);
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 2713b45ec3f0..a57dfcc4c4a4 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -5630,21 +5630,29 @@ static ssize_t memory_max_write(struct kernfs_open_file *of,
+ 	return nbytes;
+ }
+ 
++static void __memory_events_show(struct seq_file *m, atomic_long_t *events)
++{
++	seq_printf(m, "low %lu\n", atomic_long_read(&events[MEMCG_LOW]));
++	seq_printf(m, "high %lu\n", atomic_long_read(&events[MEMCG_HIGH]));
++	seq_printf(m, "max %lu\n", atomic_long_read(&events[MEMCG_MAX]));
++	seq_printf(m, "oom %lu\n", atomic_long_read(&events[MEMCG_OOM]));
++	seq_printf(m, "oom_kill %lu\n",
++		   atomic_long_read(&events[MEMCG_OOM_KILL]));
++}
++
+ static int memory_events_show(struct seq_file *m, void *v)
+ {
+ 	struct mem_cgroup *memcg = mem_cgroup_from_seq(m);
+ 
+-	seq_printf(m, "low %lu\n",
+-		   atomic_long_read(&memcg->memory_events[MEMCG_LOW]));
+-	seq_printf(m, "high %lu\n",
+-		   atomic_long_read(&memcg->memory_events[MEMCG_HIGH]));
+-	seq_printf(m, "max %lu\n",
+-		   atomic_long_read(&memcg->memory_events[MEMCG_MAX]));
+-	seq_printf(m, "oom %lu\n",
+-		   atomic_long_read(&memcg->memory_events[MEMCG_OOM]));
+-	seq_printf(m, "oom_kill %lu\n",
+-		   atomic_long_read(&memcg->memory_events[MEMCG_OOM_KILL]));
++	__memory_events_show(m, memcg->memory_events);
++	return 0;
++}
++
++static int memory_events_local_show(struct seq_file *m, void *v)
++{
++	struct mem_cgroup *memcg = mem_cgroup_from_seq(m);
+ 
++	__memory_events_show(m, memcg->memory_events_local);
+ 	return 0;
+ }
+ 
+@@ -5806,6 +5814,12 @@ static struct cftype memory_files[] = {
+ 		.file_offset = offsetof(struct mem_cgroup, events_file),
+ 		.seq_show = memory_events_show,
+ 	},
++	{
++		.name = "events.local",
++		.flags = CFTYPE_NOT_ON_ROOT,
++		.file_offset = offsetof(struct mem_cgroup, events_local_file),
++		.seq_show = memory_events_local_show,
++	},
+ 	{
+ 		.name = "stat",
+ 		.flags = CFTYPE_NOT_ON_ROOT,
+-- 
+2.22.0.rc1.257.g3120a18244-goog
+
