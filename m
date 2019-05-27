@@ -2,147 +2,138 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DF0C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35918C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49C0D20883
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:17:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="ErWdXyGs"
+	by mail.kernel.org (Postfix) with ESMTP id 1390D20883
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:18:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbfE0LRj (ORCPT
+        id S1726880AbfE0LSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 07:17:39 -0400
-Received: from mail-eopbgr710060.outbound.protection.outlook.com ([40.107.71.60]:48973
-        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725814AbfE0LRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 07:17:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector1-Synaptics-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gG629QXx8FdyEOPr9ywHpRzo7CmvFkkUA0RLj7yTFGo=;
- b=ErWdXyGsZI8rrf/LELXu4VLzktWyg1B7suCT6KHUyRq9y5c6NBWCtL27tOEKmRHB7ILp1iZFZv5eZhV9TZ6+nxCBzMLIVxIWrWaD3YqXcWxYRumXfejaY+erY6quCY2mH6XnzB3zPBzN9lGpxQXKjSqXBlSStRSQ6ME6JozvNJ4=
-Received: from BYAPR03MB4773.namprd03.prod.outlook.com (20.179.92.152) by
- BYAPR03MB4758.namprd03.prod.outlook.com (20.179.92.92) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.18; Mon, 27 May 2019 11:17:34 +0000
-Received: from BYAPR03MB4773.namprd03.prod.outlook.com
- ([fe80::e484:f15c:c415:5ff9]) by BYAPR03MB4773.namprd03.prod.outlook.com
- ([fe80::e484:f15c:c415:5ff9%7]) with mapi id 15.20.1922.021; Mon, 27 May 2019
- 11:17:34 +0000
-From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next] net: stmmac: Switch to devm_alloc_etherdev_mqs
-Thread-Topic: [PATCH net-next] net: stmmac: Switch to devm_alloc_etherdev_mqs
-Thread-Index: AQHVFH3IrxvNh8wfqUaLjPCBqcAB3A==
-Date:   Mon, 27 May 2019 11:17:34 +0000
-Message-ID: <20190527190833.5955c851@xhacker.debian>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [124.74.246.114]
-x-clientproxiedby: TYAPR03CA0017.apcprd03.prod.outlook.com
- (2603:1096:404:14::29) To BYAPR03MB4773.namprd03.prod.outlook.com
- (2603:10b6:a03:134::24)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Jisheng.Zhang@synaptics.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 15017929-6127-4655-ec1c-08d6e294ea97
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR03MB4758;
-x-ms-traffictypediagnostic: BYAPR03MB4758:
-x-microsoft-antispam-prvs: <BYAPR03MB475863B39DD3E1C0923BF2B3ED1D0@BYAPR03MB4758.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:457;
-x-forefront-prvs: 0050CEFE70
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(346002)(366004)(136003)(39860400002)(189003)(199004)(99286004)(476003)(68736007)(486006)(86362001)(71200400001)(1076003)(6486002)(71190400001)(305945005)(5660300002)(14454004)(102836004)(7736002)(6436002)(316002)(256004)(14444005)(186003)(26005)(66476007)(4326008)(73956011)(2906002)(386003)(6506007)(66556008)(64756008)(66946007)(110136005)(66446008)(54906003)(25786009)(478600001)(8676002)(6116002)(81166006)(81156014)(50226002)(72206003)(8936002)(52116002)(3846002)(66066001)(6512007)(53936002)(9686003)(39210200001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB4758;H:BYAPR03MB4773.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: synaptics.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: YqpdWlhULodD0JEhUASUU2DASiZ3Q9iLNtkVS8LlgyHRzlkZr25pubPjLKlb3AV5KPJL5xqUJzBr9Yib5jG690rYw1VreCt1TWFqtYdu0ebGt6z7UvD44ip8eMfBb4mLz8eHv/3up6Md8xbkP0kCJD38IvnR9XArvtojmw4L/LvUhXUPayGBGDi+bn47aBLgD1pY/wL/upUEgRnLzRT5zC4Vzrsaf7q236w/1IkLF0FdXlfQlsU6vQAjJssu5DHACzZ8PGNtzmmNbfLXdD+OA75C7C+dtuZ+0oq0whiEej5xu+znMgpq0AmMgGyvBfyGVa62ab72DvndYl3KycstL6uXTWsyd0cizYtIqntBEmLrdjQRiQGEcaeD33cYVNSatbBYDzgcWNcvwrJgAJ3aRxZRc9ot2fKV+IxjfaR/CbE=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <97DBF27A6D764C4EB47AE73D4219A661@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 27 May 2019 07:18:20 -0400
+Received: from mx2.mailbox.org ([80.241.60.215]:18768 "EHLO mx2.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726418AbfE0LSU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 07:18:20 -0400
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx2.mailbox.org (Postfix) with ESMTPS id 0C4B9A1054;
+        Mon, 27 May 2019 13:18:18 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
+        with ESMTP id 4ZAFuh7M_7kM; Mon, 27 May 2019 13:18:06 +0200 (CEST)
+From:   Stefan Roese <sr@denx.de>
+To:     linux-serial@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Yegor Yefremov <yegorslists@googlemail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Giulio Benetti <giulio.benetti@micronovasrl.com>
+Subject: [PATCH 1/2 v3] serial: mctrl_gpio: Check if GPIO property exisits before requesting it
+Date:   Mon, 27 May 2019 13:18:04 +0200
+Message-Id: <20190527111805.876-1-sr@denx.de>
 MIME-Version: 1.0
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 15017929-6127-4655-ec1c-08d6e294ea97
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 May 2019 11:17:34.2143
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jiszha@synaptics.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB4758
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make use of devm_alloc_etherdev_mqs() to simplify the code.
+This patch adds a check for the GPIOs property existence, before the
+GPIO is requested. This fixes an issue seen when the 8250 mctrl_gpio
+support is added (2nd patch in this patch series) on x86 platforms using
+ACPI.
 
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Here Mika's comments from 2016-08-09:
+
+"
+I noticed that with v4.8-rc1 serial console of some of our Broxton
+systems does not work properly anymore. I'm able to see output but input
+does not work.
+
+I bisected it down to commit 4ef03d328769eddbfeca1f1c958fdb181a69c341
+("tty/serial/8250: use mctrl_gpio helpers").
+
+The reason why it fails is that in ACPI we do not have names for GPIOs
+(except when _DSD is used) so we use the "idx" to index into _CRS GPIO
+resources. Now mctrl_gpio_init_noauto() goes through a list of GPIOs
+calling devm_gpiod_get_index_optional() passing "idx" of 0 for each. The
+UART device in Broxton has following (simplified) ACPI description:
+
+    Device (URT4)
+    {
+        ...
+        Name (_CRS, ResourceTemplate () {
+            GpioIo (Exclusive, PullDefault, 0x0000, 0x0000, IoRestrictionOutputOnly,
+                    "\\_SB.GPO0", 0x00, ResourceConsumer)
+            {
+                0x003A
+            }
+            GpioIo (Exclusive, PullDefault, 0x0000, 0x0000, IoRestrictionOutputOnly,
+                    "\\_SB.GPO0", 0x00, ResourceConsumer)
+            {
+                0x003D
+            }
+        })
+
+In this case it finds the first GPIO (0x003A which happens to be RX pin
+for that UART), turns it into GPIO which then breaks input for the UART
+device. This also breaks systems with bluetooth connected to UART (those
+typically have some GPIOs in their _CRS).
+
+Any ideas how to fix this?
+
+We cannot just drop the _CRS index lookup fallback because that would
+break many existing machines out there so maybe we can limit this to
+only DT enabled machines. Or alternatively probe if the property first
+exists before trying to acquire the GPIOs (using
+device_property_present()).
+"
+
+This patch implements the fix suggested by Mika in his statement above.
+
+Signed-off-by: Stefan Roese <sr@denx.de>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Yegor Yefremov <yegorslists@googlemail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Giulio Benetti <giulio.benetti@micronovasrl.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+v3:
+- No change
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/ne=
-t/ethernet/stmicro/stmmac/stmmac_main.c
-index a87ec70b19f1..08022fbcb67a 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -4243,9 +4243,9 @@ int stmmac_dvr_probe(struct device *device,
- 	u32 queue, maxq;
- 	int ret =3D 0;
-=20
--	ndev =3D alloc_etherdev_mqs(sizeof(struct stmmac_priv),
--				  MTL_MAX_TX_QUEUES,
--				  MTL_MAX_RX_QUEUES);
-+	ndev =3D devm_alloc_etherdev_mqs(sizeof(struct stmmac_priv),
-+				       MTL_MAX_TX_QUEUES,
-+				       MTL_MAX_RX_QUEUES);
- 	if (!ndev)
- 		return -ENOMEM;
-=20
-@@ -4277,8 +4277,7 @@ int stmmac_dvr_probe(struct device *device,
- 	priv->wq =3D create_singlethread_workqueue("stmmac_wq");
- 	if (!priv->wq) {
- 		dev_err(priv->device, "failed to create workqueue\n");
--		ret =3D -ENOMEM;
--		goto error_wq;
-+		return -ENOMEM;
- 	}
-=20
- 	INIT_WORK(&priv->service_task, stmmac_service_task);
-@@ -4434,8 +4433,6 @@ int stmmac_dvr_probe(struct device *device,
- 	}
- error_hw_init:
- 	destroy_workqueue(priv->wq);
--error_wq:
--	free_netdev(ndev);
-=20
- 	return ret;
- }
-@@ -4472,7 +4469,6 @@ int stmmac_dvr_remove(struct device *dev)
- 		stmmac_mdio_unregister(ndev);
- 	destroy_workqueue(priv->wq);
- 	mutex_destroy(&priv->lock);
--	free_netdev(ndev);
-=20
- 	return 0;
- }
---=20
-2.20.1
+v2:
+- Include the problem description and analysis from Mika into the commit
+  text, as suggested by Greg.
+
+ drivers/tty/serial/serial_mctrl_gpio.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/tty/serial/serial_mctrl_gpio.c b/drivers/tty/serial/serial_mctrl_gpio.c
+index 39ed56214cd3..cac50b20a119 100644
+--- a/drivers/tty/serial/serial_mctrl_gpio.c
++++ b/drivers/tty/serial/serial_mctrl_gpio.c
+@@ -116,6 +116,13 @@ struct mctrl_gpios *mctrl_gpio_init_noauto(struct device *dev, unsigned int idx)
+ 
+ 	for (i = 0; i < UART_GPIO_MAX; i++) {
+ 		enum gpiod_flags flags;
++		char *gpio_str;
++
++		/* Check if GPIO property exists and continue if not */
++		gpio_str = kasprintf(GFP_KERNEL, "%s-gpios",
++				     mctrl_gpios_desc[i].name);
++		if (!device_property_present(dev, gpio_str))
++			continue;
+ 
+ 		if (mctrl_gpios_desc[i].dir_out)
+ 			flags = GPIOD_OUT_LOW;
+-- 
+2.21.0
 
