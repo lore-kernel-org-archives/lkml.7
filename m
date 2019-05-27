@@ -2,115 +2,105 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0139DC07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 09:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5622C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF3362175B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 09:59:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C096217F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:00:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JFrH+ub8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbfE0J7K (ORCPT
+        id S1726824AbfE0KAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 05:59:10 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:40667 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726072AbfE0J7K (ORCPT
+        Mon, 27 May 2019 06:00:06 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47836 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726072AbfE0KAG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 05:59:10 -0400
-Received: from localhost (aaubervilliers-681-1-27-134.w90-88.abo.wanadoo.fr [90.88.147.134])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id AE932200014;
-        Mon, 27 May 2019 09:59:07 +0000 (UTC)
-Date:   Mon, 27 May 2019 11:59:07 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>, linux-media@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Subject: Re: [PATCH v2 02/10] media: rc: sunxi: Add A31 compatible
-Message-ID: <20190527095907.s2ubq3xos5hqef5p@flea>
-References: <20190526222536.10917-1-peron.clem@gmail.com>
- <20190526222536.10917-3-peron.clem@gmail.com>
- <20190527074700.rvhqua44ixudt52z@flea>
- <CAJiuCcfknVV5V4sMrfizz_K92BeTQsRYekmQQpWFP_-jhPPaQA@mail.gmail.com>
+        Mon, 27 May 2019 06:00:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=pxkp8tq0sMiTLO95g3xOPswyqXvnhhBUINaDYGjGqIk=; b=JFrH+ub8189YFBJQ++CwXXpXD
+        bjLXxf4yQ8tNefpx70/8kC2rlsGT4or1N0FoJfttEIPuxQT11/007WKSJQVV6DpbbqOksGrXHxxJD
+        UtM6zzj7EhTYvgX3MaxvXdar1Db7jttKUyjk4QM9o5ttDJEbXe5hhXzRrPlMR+NW73qLZ8LFlXOOu
+        8MeVXH0XkX0ZpUwisM5yrg3Pza1y12xbRZMs6AC+lfn7dYGOMTodSMP7Ime5fuKKHHL2TfJLbEGm1
+        jrTXbhWeJFp739IS3+JgXyE9BiQgCZ290lvPgRvRO6WdqAAOecqwMhj+AAD0R/P/Nv9wFZ2EGFO1p
+        oXVOGtgvw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hVCQC-0003kQ-RS; Mon, 27 May 2019 10:00:01 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1E4AF202BF403; Mon, 27 May 2019 11:59:59 +0200 (CEST)
+Date:   Mon, 27 May 2019 11:59:59 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Nadav Amit <namit@vmware.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
+        jgross@suse.com, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, sashal@kernel.org
+Subject: Re: [RFC PATCH 0/6] x86/mm: Flush remote and local TLBs concurrently
+Message-ID: <20190527095959.GV2623@hirez.programming.kicks-ass.net>
+References: <20190525082203.6531-1-namit@vmware.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="m4jzlbt2jcbegnyb"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJiuCcfknVV5V4sMrfizz_K92BeTQsRYekmQQpWFP_-jhPPaQA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190525082203.6531-1-namit@vmware.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, May 25, 2019 at 01:21:57AM -0700, Nadav Amit wrote:
+> Currently, local and remote TLB flushes are not performed concurrently,
+> which introduces unnecessary overhead - each INVLPG can take 100s of
+> cycles. This patch-set allows TLB flushes to be run concurrently: first
+> request the remote CPUs to initiate the flush, then run it locally, and
+> finally wait for the remote CPUs to finish their work.
+> 
+> The proposed changes should also improve the performance of other
+> invocations of on_each_cpu(). Hopefully, no one has relied on the
+> behavior of on_each_cpu() that functions were first executed remotely
+> and only then locally.
+> 
+> On my Haswell machine (bare-metal), running a TLB flush microbenchmark
+> (MADV_DONTNEED/touch for a single page on one thread), takes the
+> following time (ns):
+> 
+> 	n_threads	before		after
+> 	---------	------		-----
+> 	1		661		663
+> 	2		1436		1225 (-14%)
+> 	4		1571		1421 (-10%)
+> 
+> Note that since the benchmark also causes page-faults, the actual
+> speedup of TLB shootdowns is actually greater. Also note the higher
+> improvement in performance with 2 thread (a single remote TLB flush
+> target). This seems to be a side-effect of holding synchronization
+> data-structures (csd) off the stack, unlike the way it is currently done
+> (in smp_call_function_single()).
+> 
+> Patches 1-2 do small cleanup. Patches 3-5 actually implement the
+> concurrent execution of TLB flushes. Patch 6 restores local TLB flushes
+> performance, which was hurt by the optimization, to be as good as it was
+> before these changes by introducing a fast-pass for this specific case.
 
---m4jzlbt2jcbegnyb
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I like; ideally we'll get Hyper-V and Xen sorted before the final
+version and avoid having to introduce more PV crud and static keys for
+that.
 
-On Mon, May 27, 2019 at 10:20:05AM +0200, Cl=E9ment P=E9ron wrote:
-> Hi Maxime,
->
-> On Mon, 27 May 2019 at 09:47, Maxime Ripard <maxime.ripard@bootlin.com> w=
-rote:
-> >
-> > Hi,
-> >
-> > On Mon, May 27, 2019 at 12:25:28AM +0200, Cl=E9ment P=E9ron wrote:
-> > > Allwiner A31 has a different memory mapping so add the compatible
-> > > we will need it later.
-> > >
-> > > Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
-> > > ---
-> > >  drivers/media/rc/sunxi-cir.c | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/drivers/media/rc/sunxi-cir.c b/drivers/media/rc/sunxi-ci=
-r.c
-> > > index 307e44714ea0..29ac33b68596 100644
-> > > --- a/drivers/media/rc/sunxi-cir.c
-> > > +++ b/drivers/media/rc/sunxi-cir.c
-> > > @@ -319,6 +319,7 @@ static int sunxi_ir_remove(struct platform_device=
- *pdev)
-> > >  static const struct of_device_id sunxi_ir_match[] =3D {
-> > >       { .compatible =3D "allwinner,sun4i-a10-ir", },
-> > >       { .compatible =3D "allwinner,sun5i-a13-ir", },
-> > > +     { .compatible =3D "allwinner,sun6i-a31-ir", },
-> >
-> > We should also move from reset_get_optional to the non optional
-> > variant for the A31, and ignore it otherwise.
->
-> Should this be done in this series ?
+The Hyper-V implementation in particular is horrifically ugly, the Xen
+one also doesn't win any prices, esp. that on-stack CPU mask needs to
+go.
 
-Yep, please
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---m4jzlbt2jcbegnyb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOu06wAKCRDj7w1vZxhR
-xT6eAP9HYOS4/YL7nDIyH8X1cRrNbqpJMWDjdFnOep5zfx8jjwD/Qcw/3E8rl/S+
-gHsm5kr92Rx4StTFdWA00FbyFkAjMQU=
-=xrzq
------END PGP SIGNATURE-----
-
---m4jzlbt2jcbegnyb--
+Looking at them, I'm not sure they can actually win anything from using
+the new interface, but at least we can avoid making our PV crud uglier
+than it has to be.
