@@ -2,84 +2,106 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_LOTTO,LOTS_OF_MONEY,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C420DC07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 09:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F75C07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 09:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9118121734
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 09:14:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunch4employee.eu header.i=@lunch4employee.eu header.b="RqO68lwH"
+	by mail.kernel.org (Postfix) with ESMTP id C214821734
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 09:14:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbfE0JOF (ORCPT
+        id S1726711AbfE0JOs convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 05:14:05 -0400
-Received: from mail.lunch4employee.eu ([80.211.219.151]:57460 "EHLO
-        mail.lunch4employee.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbfE0JOD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 05:14:03 -0400
-Received: by mail.lunch4employee.eu (Postfix, from userid 1001)
-        id 92943879FE; Mon, 27 May 2019 11:06:27 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lunch4employee.eu;
-        s=mail; t=1558947988;
-        bh=ONuCP8WSrotnQIIUXuF9Z25xGEoxfqhSKmedy3wfW2M=;
-        h=Date:From:To:Subject:From;
-        b=RqO68lwHKRBvSdC8jUetQynjjuDhCBOIoeeJaqxQpN3IOOQoJ+LRxx7zLYWwDibpF
-         Q+bXwacunnIdWCgpOdkY+Te+R4zvWtApZfXAmMu7pL1SGrKNdjjYIJfZGLCZFTu3oh
-         bO3QLfB/rLP+G7eBr2IaNWlIa6usir6mKIF/BENI=
-Received: by mail.lunch4employee.eu for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 09:06:27 GMT
-Message-ID: <20190527084500-0.1.m.tzr.0.bcfjdzfuh3@lunch4employee.eu>
-Date:   Mon, 27 May 2019 09:06:27 GMT
-From:   "Radoslav Dobrev" <radoslav.dobrev@lunch4employee.eu>
-To:     <linux-kernel@vger.kernel.org>
-Subject: =?UTF-8?Q?=D0=9F=D1=80=D0=B8=D0=B4=D0=BE=D0=B1=D0=B8=D0=B2=D0=BA=D0=B8_=D0=B7=D0=B0_=D0=BF=D0=B5=D1=80=D1=81=D0=BE=D0=BD=D0=B0=D0=BB=D0=B0?=
-X-Mailer: mail.lunch4employee.eu
+        Mon, 27 May 2019 05:14:48 -0400
+Received: from eros.hdm.de ([193.158.21.211]:21520 "EHLO eros.hdm.de"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726063AbfE0JOs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 05:14:48 -0400
+X-Greylist: delayed 424 seconds by postgrey-1.27 at vger.kernel.org; Mon, 27 May 2019 05:14:46 EDT
+Received: from [37.49.225.207] ([37.49.225.207]) by eros.hdm.de with Microsoft SMTPSVC(6.0.3790.4675);
+         Mon, 27 May 2019 11:10:48 +0200
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: Samsung Win..Final Notification
+To:     linux-kernel@vger.kernel.org
+From:   "Samsung Europe" <europe.prize@samsung.com>
+Date:   Mon, 27 May 2019 02:07:39 -0700
+Reply-To: samsung.prize@europe.com
+Message-ID: <EROSX9F6JttDok40sAM0001bb87@eros.hdm.de>
+X-OriginalArrivalTime: 27 May 2019 09:10:48.0305 (UTC) FILETIME=[12E0E610:01D5146C]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=D0=97=D0=B4=D1=80=D0=B0=D0=B2=D0=B5=D0=B9=D1=82=D0=B5,
-
-=D0=97=D0=B0=D0=BF=D0=BE=D0=B7=D0=BD=D0=B0=D1=82=D0=B8 =D0=BB=D0=B8 =D1=81=
-=D1=82=D0=B5 =D1=81 =D0=BD=D0=B0=D0=B9-=D0=BD=D0=BE=D0=B2=D0=B0=D1=82=D0=B0=
- =D1=81=D0=BE=D1=86=D0=B8=D0=B0=D0=BB=D0=BD=D0=B0 =D0=BF=D1=80=D0=B8=D0=B4=
-=D0=BE=D0=B1=D0=B8=D0=B2=D0=BA=D0=B0 =E2=80=93 =D0=B2=D0=B0=D1=83=D1=87=D0=
-=B5=D1=80=D0=B8 =D0=B7=D0=B0 =D1=85=D1=80=D0=B0=D0=BD=D0=B0? =D0=90 =D0=BE=
-=D0=B1=D0=BC=D0=B8=D1=81=D0=BB=D1=8F=D0=BB=D0=B8 =D0=BB=D0=B8 =D1=81=D1=82=
-=D0=B5 =D0=B8=D0=B7=D0=BF=D0=BE=D0=BB=D0=B7=D0=B2=D0=B0=D0=BD=D0=B5=D1=82=
-=D0=BE =D0=BD=D0=B0 =D1=82=D0=B0=D0=BA=D0=B8=D0=B2=D0=B0 =D0=B2=D0=B0=D1=83=
-=D1=87=D0=B5=D1=80=D0=B8, =D1=81 =D0=BF=D0=BE=D0=BC=D0=BE=D1=89=D1=82=D0=B0=
- =D0=BD=D0=B0 =D0=BA=D0=BE=D0=B8=D1=82=D0=BE =D0=92=D0=B0=D1=88=D0=B8=D1=8F=
-=D1=82 =D0=BF=D0=B5=D1=80=D1=81=D0=BE=D0=BD=D0=B0=D0=BB =D0=BC=D0=BE=D0=B6=
-=D0=B5 =D0=B4=D0=B0 =D0=BF=D0=B0=D0=B7=D0=B0=D1=80=D1=83=D0=B2=D0=B0 =D0=B2=
- =D1=80=D0=B0=D0=B7=D0=BB=D0=B8=D1=87=D0=BD=D0=B8 =D0=B2=D0=B5=D1=80=D0=B8=
-=D0=B3=D0=B8 =D1=85=D1=80=D0=B0=D0=BD=D0=B8=D1=82=D0=B5=D0=BB=D0=BD=D0=B8=
- =D0=BC=D0=B0=D0=B3=D0=B0=D0=B7=D0=B8=D0=BD=D0=B8 =D0=B8 =D0=B7=D0=B0=D0=B2=
-=D0=B5=D0=B4=D0=B5=D0=BD=D0=B8=D1=8F?
-
-=D0=91=D0=B8=D1=85 =D0=BC=D0=BE=D0=B3=D1=8A=D0=BB =D0=B4=D0=B0 =D0=92=D0=B8=
- =D1=81=D0=B5 =D0=BE=D0=B1=D0=B0=D0=B4=D1=8F =D0=BF=D0=BE =D1=82=D0=B5=D0=
-=BB=D0=B5=D1=84=D0=BE=D0=BD=D0=B0 =D0=B8 =D0=B4=D0=B0 =D0=92=D0=B8 =D0=BF=
-=D1=80=D0=B5=D0=B4=D1=81=D1=82=D0=B0=D0=B2=D1=8F =D0=B2=D1=8A=D0=B7=D0=BC=
-=D0=BE=D0=B6=D0=BD=D0=BE=D1=81=D1=82=D0=B8=D1=82=D0=B5 =D0=BD=D0=B0 =D1=82=
-=D0=B5=D0=B7=D0=B8 =D0=B2=D0=B0=D1=83=D1=87=D0=B5=D1=80=D0=B8 =E2=80=93 =D0=
-=BC=D0=BE=D0=BB=D1=8F =D0=BF=D0=BE=D1=81=D0=BE=D1=87=D0=B5=D1=82=D0=B5 =D0=
-=BA=D0=BE=D0=B3=D0=B0 =D1=89=D0=B5 =D0=92=D0=B8 =D0=B1=D1=8A=D0=B4=D0=B5 =
-=D1=83=D0=B4=D0=BE=D0=B1=D0=BD=D0=BE =D0=B4=D0=B0 =D1=80=D0=B0=D0=B7=D0=B3=
-=D0=BE=D0=B2=D0=B0=D1=80=D1=8F=D0=BC=D0=B5.
-
-=D0=9F=D1=80=D0=B8=D1=8F=D1=82=D0=B5=D0=BD =D0=B4=D0=B5=D0=BD!
+**************************DO NOT DELETE THIS MESSAGE****************************
 
 
-=D0=A0=D0=B0=D0=B4=D0=BE=D1=81=D0=BB=D0=B0=D0=B2 =D0=94=D0=BE=D0=B1=D1=80=
-=D0=B5=D0=B2
-Head of HR Benefit Team
-www.lunch4employee.eu
+Samsung Europe
+Prize Office
+Evert van de Beekstraat 310
+1118 CX Schiphol-Holland
+www.samsung.com/europe
+
+
+
+
+OFFICIAL WIN NOTIFICATION.
+
+Email Prize Ticket Number: GLX/9627835/EU/PRIZE2ND.
+
+Dear Email User: 
+
+Are you the owner of this email?
+
+Congratulations! Samsung Europe wishes to congratulate you for being one of the lucky
+winners in the Samsung Prize Ballot. Your email have been officially 
+selected as a winner and you are hereby awarded with your email in the 
+2nd category winning prize of Seven Hundred and Fifty Thousand Euros and a Samsung Galaxy S10+.
+
+With the introduction of new types of games, with the ushering in of online technology 
+and with the permit issued under EU laws to compete for concession to
+run games and give away prizes on the internet, we are launching our 1st international promotion.
+
+
+All contestants were selected through a computer ballot system
+drawn from email addresses from all over the world and your email address 
+have been selected as one of the lucky winners.
+
+Contact Notaris: Igo Jansen.
+Notarization Officer/Agent
+Tel: 0031 61 654 5088
+Email: samsung.notarization@europe.com
+
+For claims and notarisation you must be above 18yrs to fill the below form and 
+send to notaris contact:
+
+***************************************************************************************************************************
+First Name:
+Last Name:
+Occupation:
+Address:
+Country:
+Telephone:
+Win Email:
+EPTN: GLX/9627835/EU/PRIZE2ND
+****************************************************************************************************************************
+Claim expiry date is 29th May 2019, after this date all winning prizes will be filed as unclaimed.
+
+
+Keep this email confidential & away from public notice to prevent double 
+claim or impersonation with your EPTN.
+
+
+
+Best Regards,
+Cristian Bensila
+(Prize Co-ordinator)
+Samsung Europe.
+
+
+© 2019 Samsung Europe. All rights reserved .(Privacy Statement)
