@@ -1,233 +1,129 @@
 Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF9DC28CBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1B7C07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:43:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0891D2081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E552E2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:43:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558942989;
+	bh=X7ynL72ha7k9eEdiHV/r0CfG2ObyEzpo6DNq8OOpo4M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ny0Iv7Kpy5aDKE3oLkDTfQqZLrSo8uDWHHjWK62oBEm+DLlImt4UmRIz0FoCGPJFi
+	 nc9pSrYBP2ju0GZkReSpf3H7AvyM9XUWg3dDiVprgtHcpiOKg46Ah4RKg7HMvUjrZR
+	 CNQFPJfKmx25H0v8XhOPFDgLoWfwgNNojz0VgUfo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726333AbfE0HlA (ORCPT
+        id S1726297AbfE0HnH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 03:41:00 -0400
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:57537 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725908AbfE0HlA (ORCPT
+        Mon, 27 May 2019 03:43:07 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38928 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbfE0HnH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 03:41:00 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R261e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TSnAlea_1558942853;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TSnAlea_1558942853)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 27 May 2019 15:40:54 +0800
-Subject: Re: [v6 PATCH 2/2] mm: vmscan: correct some vmscan counters for THP
- swapout
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     hannes@cmpxchg.org, mhocko@suse.com, mgorman@techsingularity.net,
-        kirill.shutemov@linux.intel.com, josef@toxicpanda.com,
-        hughd@google.com, shakeelb@google.com, hdanton@sina.com,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <1558929166-3363-1-git-send-email-yang.shi@linux.alibaba.com>
- <1558929166-3363-2-git-send-email-yang.shi@linux.alibaba.com>
- <87ef4k8jgs.fsf@yhuang-dev.intel.com>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <aa145948-ac14-c89b-d847-ffca81d8dbdf@linux.alibaba.com>
-Date:   Mon, 27 May 2019 15:40:52 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Mon, 27 May 2019 03:43:07 -0400
+Received: by mail-pl1-f196.google.com with SMTP id g9so6710030plm.6
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 00:43:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lXwtkUKjJRctNYznRKr06c91Cgy9C63icBzCRvy/T1w=;
+        b=QR6jJPItZ8Rz7z74p4b9j9wtPd8xgqz3msBmmSz49q9GIZ+wNyU8WoH5wmAG5ujTT4
+         ZG0ewEzX+SWlNilKu39R1gD2jcTu+0RDpAaENMrl5z4G7OIVnc95SUtK/MnRY8rzIp14
+         p9mBhlnuxGq6cWe8nUwhBHVobbuRMb0BG0NiorPdgDrRxwgHtY90D5esPw/xjQ2TEnek
+         i5hHksIVCegyo3by8HhykHa7MJAsx+fZhtnMaN4J4+MoX8GoE3O3iM8tBuoKAGGWE2q4
+         /kLZLsJEa+mn7ouhwLI9sQnMxIgt50b5cIJ4RtU7MBMfeifeDJAM22at8IK5rxJ37+gC
+         jQ3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lXwtkUKjJRctNYznRKr06c91Cgy9C63icBzCRvy/T1w=;
+        b=nx/1FMX+N1IXoQQpPCKFmRfx1yPNGSHeBH8fCmpBnOU0ulqFYznWkmOkIe1gwQOfix
+         mAO7lwhQTRDbudaY2rasi541W2N9LVtxGmwibPVies3HJk5DoeHUWa8C0csmLppUOI7l
+         ZEL3BptdBKAAm19qanKO0Nbtxy3sZUD6yeekIDLhpmJvDE1i5PDVU5HAT8+EGeWZQEhh
+         9PEg8M7uyA4sOIBuznJ0ERwqvwVDwjJy9iWHNvaEd6ya0gkR6oHOmhnaIUG1Btut7o2o
+         mGtPUM7fsZxwcE5+U0KSm48OzBANfCG/xZmsvxOfUGKAB6dSSbDIdm/oYdsoy0IWPsh7
+         2hOw==
+X-Gm-Message-State: APjAAAUk6zxYwoy+8urQCspKa6rnhiLVjzdyDeK7dBntq0SAfkdQNWEP
+        Grt48E4Tt+umWd/dKUjBCz/vCbNg
+X-Google-Smtp-Source: APXvYqxa35u12pQHum/AcABmpbDr09kLk3WP9Gem47sfN0k5HrNMA7iKabi/mN8AIWOV57ysYuVnkw==
+X-Received: by 2002:a17:902:ac8b:: with SMTP id h11mr13047842plr.31.1558942986856;
+        Mon, 27 May 2019 00:43:06 -0700 (PDT)
+Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
+        by smtp.gmail.com with ESMTPSA id z7sm12464953pfr.23.2019.05.27.00.43.02
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 27 May 2019 00:43:05 -0700 (PDT)
+Date:   Mon, 27 May 2019 16:43:00 +0900
+From:   Minchan Kim <minchan@kernel.org>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>
+Subject: Re: [RFC 5/7] mm: introduce external memory hinting API
+Message-ID: <20190527074300.GA6879@google.com>
+References: <20190520035254.57579-1-minchan@kernel.org>
+ <20190520035254.57579-6-minchan@kernel.org>
+ <20190521153113.GA2235@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <87ef4k8jgs.fsf@yhuang-dev.intel.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190521153113.GA2235@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Sorry for the late response. I miseed your comment. :(
 
+On Tue, May 21, 2019 at 05:31:13PM +0200, Oleg Nesterov wrote:
+> On 05/20, Minchan Kim wrote:
+> >
+> > +	rcu_read_lock();
+> > +	tsk = pid_task(pid, PIDTYPE_PID);
+> > +	if (!tsk) {
+> > +		rcu_read_unlock();
+> > +		goto err;
+> > +	}
+> > +	get_task_struct(tsk);
+> > +	rcu_read_unlock();
+> > +	mm = mm_access(tsk, PTRACE_MODE_ATTACH_REALCREDS);
+> > +	if (!mm || IS_ERR(mm)) {
+> > +		ret = IS_ERR(mm) ? PTR_ERR(mm) : -ESRCH;
+> > +		if (ret == -EACCES)
+> > +			ret = -EPERM;
+> > +		goto err;
+> > +	}
+> > +	ret = madvise_core(tsk, start, len_in, behavior);
+> 
+> IIUC, madvise_core(tsk) plays with tsk->mm->mmap_sem. But this tsk can exit and
+> nullify its ->mm right after mm_access() succeeds.
 
-On 5/27/19 3:06 PM, Huang, Ying wrote:
-> Yang Shi <yang.shi@linux.alibaba.com> writes:
->
->> Since commit bd4c82c22c36 ("mm, THP, swap: delay splitting THP after
->> swapped out"), THP can be swapped out in a whole.  But, nr_reclaimed
->> and some other vm counters still get inc'ed by one even though a whole
->> THP (512 pages) gets swapped out.
->>
->> This doesn't make too much sense to memory reclaim.  For example, direct
->> reclaim may just need reclaim SWAP_CLUSTER_MAX pages, reclaiming one THP
->> could fulfill it.  But, if nr_reclaimed is not increased correctly,
->> direct reclaim may just waste time to reclaim more pages,
->> SWAP_CLUSTER_MAX * 512 pages in worst case.
->>
->> And, it may cause pgsteal_{kswapd|direct} is greater than
->> pgscan_{kswapd|direct}, like the below:
->>
->> pgsteal_kswapd 122933
->> pgsteal_direct 26600225
->> pgscan_kswapd 174153
->> pgscan_direct 14678312
->>
->> nr_reclaimed and nr_scanned must be fixed in parallel otherwise it would
->> break some page reclaim logic, e.g.
->>
->> vmpressure: this looks at the scanned/reclaimed ratio so it won't
->> change semantics as long as scanned & reclaimed are fixed in parallel.
->>
->> compaction/reclaim: compaction wants a certain number of physical pages
->> freed up before going back to compacting.
->>
->> kswapd priority raising: kswapd raises priority if we scan fewer pages
->> than the reclaim target (which itself is obviously expressed in order-0
->> pages). As a result, kswapd can falsely raise its aggressiveness even
->> when it's making great progress.
->>
->> Other than nr_scanned and nr_reclaimed, some other counters, e.g.
->> pgactivate, nr_skipped, nr_ref_keep and nr_unmap_fail need to be fixed
->> too since they are user visible via cgroup, /proc/vmstat or trace
->> points, otherwise they would be underreported.
->>
->> When isolating pages from LRUs, nr_taken has been accounted in base
->> page, but nr_scanned and nr_skipped are still accounted in THP.  It
->> doesn't make too much sense too since this may cause trace point
->> underreport the numbers as well.
->>
->> So accounting those counters in base page instead of accounting THP as
->> one page.
->>
->> nr_dirty, nr_unqueued_dirty, nr_congested and nr_writeback are used by
->> file cache, so they are not impacted by THP swap.
->>
->> This change may result in lower steal/scan ratio in some cases since
->> THP may get split during page reclaim, then a part of tail pages get
->> reclaimed instead of the whole 512 pages, but nr_scanned is accounted
->> by 512, particularly for direct reclaim.  But, this should be not a
->> significant issue.
->>
->> Cc: "Huang, Ying" <ying.huang@intel.com>
->> Cc: Johannes Weiner <hannes@cmpxchg.org>
->> Cc: Michal Hocko <mhocko@suse.com>
->> Cc: Mel Gorman <mgorman@techsingularity.net>
->> Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
->> Cc: Hugh Dickins <hughd@google.com>
->> Cc: Shakeel Butt <shakeelb@google.com>
->> Cc: Hillf Danton <hdanton@sina.com>
->> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
->> ---
->> v6: Fixed the other double account issue introduced by v5 per Huang Ying
->> v5: Fixed sc->nr_scanned double accounting per Huang Ying
->>      Added some comments to address the concern about premature OOM per Hillf Danton
->> v4: Fixed the comments from Johannes and Huang Ying
->> v3: Removed Shakeel's Reviewed-by since the patch has been changed significantly
->>      Switched back to use compound_order per Matthew
->>      Fixed more counters per Johannes
->> v2: Added Shakeel's Reviewed-by
->>      Use hpage_nr_pages instead of compound_order per Huang Ying and William Kucharski
->>
->>   mm/vmscan.c | 47 +++++++++++++++++++++++++++++++++++------------
->>   1 file changed, 35 insertions(+), 12 deletions(-)
->>
->> diff --git a/mm/vmscan.c b/mm/vmscan.c
->> index b65bc50..378edff 100644
->> --- a/mm/vmscan.c
->> +++ b/mm/vmscan.c
->> @@ -1118,6 +1118,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
->>   		int may_enter_fs;
->>   		enum page_references references = PAGEREF_RECLAIM_CLEAN;
->>   		bool dirty, writeback;
->> +		unsigned int nr_pages;
->>   
->>   		cond_resched();
->>   
->> @@ -1129,7 +1130,10 @@ static unsigned long shrink_page_list(struct list_head *page_list,
->>   
->>   		VM_BUG_ON_PAGE(PageActive(page), page);
->>   
->> -		sc->nr_scanned++;
->> +		nr_pages = 1 << compound_order(page);
->> +
->> +		/* Account the number of base pages even though THP */
->> +		sc->nr_scanned += nr_pages;
->>   
->>   		if (unlikely(!page_evictable(page)))
->>   			goto activate_locked;
->> @@ -1250,7 +1254,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
->>   		case PAGEREF_ACTIVATE:
->>   			goto activate_locked;
->>   		case PAGEREF_KEEP:
->> -			stat->nr_ref_keep++;
->> +			stat->nr_ref_keep += nr_pages;
->>   			goto keep_locked;
->>   		case PAGEREF_RECLAIM:
->>   		case PAGEREF_RECLAIM_CLEAN:
->> @@ -1306,6 +1310,15 @@ static unsigned long shrink_page_list(struct list_head *page_list,
->>   		}
->>   
->>   		/*
->> +		 * THP may get split above, need minus tail pages and update
->> +		 * nr_pages to avoid accounting tail pages twice.
->> +		 */
->> +		if ((nr_pages > 1) && !PageTransHuge(page)) {
->> +			sc->nr_scanned -= (nr_pages - 1);
->> +			nr_pages = 1;
->> +		}
-> After checking the code again, it appears there's another hole in the
-> code.  In the following code snippet.
->
-> 				if (!add_to_swap(page)) {
-> 					if (!PageTransHuge(page))
-> 						goto activate_locked;
-> 					/* Fallback to swap normal pages */
-> 					if (split_huge_page_to_list(page,
-> 								    page_list))
-> 						goto activate_locked;
-> #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> 					count_vm_event(THP_SWPOUT_FALLBACK);
-> #endif
-> 					if (!add_to_swap(page))
-> 						goto activate_locked;
-> 				}
->
->
-> If the THP is split, but the first or the second add_to_swap() fails, we
-> still need to deal with sc->nr_scanned and nr_pages.
->
-> How about add a new label before "activate_locked" to deal with that?
+You're absolutely right. I will fix it via passing mm_struct instead of
+task_struct.
 
-It sounds not correct. If swapout fails it jumps to activate_locked too, 
-it has to be handled in if (!add_to_swap(page)). The below fix should be 
-good enough since only THP can reach here:
+Thanks!
 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 378edff..fff3937 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -1294,8 +1294,15 @@ static unsigned long shrink_page_list(struct 
-list_head *page_list,
-  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-count_vm_event(THP_SWPOUT_FALLBACK);
-  #endif
--                                       if (!add_to_swap(page))
-+                                       if (!add_to_swap(page)) {
-+                                               /*
-+                                                * Minus tail pages and 
-reset
-+                                                * nr_pages.
-+                                                */
-+                                               sc->nr_scanned -= 
-(nr_pages - 1);
-+                                               nr_pages = 1;
-                                                 goto activate_locked;
-+                                       }
-                                 }
+> 
+> another problem is that pid_task(pid) can return a zombie leader, in this case
+> mm_access() will fail while it shouldn't.
 
->
-> Best Regards,
-> Huang, Ying
-
+I'm sorry. I didn't notice that. However, I couldn't understand your point. 
+Why do you think mm_access shouldn't fail even though pid_task returns
+a zombie leader? I thought it's okay since the target process is exiting
+so hinting operation would be meaniness for the process.
