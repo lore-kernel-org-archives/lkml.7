@@ -1,62 +1,103 @@
 Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: **
-X-Spam-Status: No, score=2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-4.7 required=3.0 tests=DATE_IN_PAST_12_24,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B901C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C186AC072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FB84208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:33:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=tastiess.eu header.i=@tastiess.eu header.b="HHwtPNDC"
+	by mail.kernel.org (Postfix) with ESMTP id A4E38208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:34:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbfE1IdL (ORCPT
+        id S1726725AbfE1Ieb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 04:33:11 -0400
-Received: from mail.tastiess.eu ([194.182.86.235]:58437 "EHLO mail.tastiess.eu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725943AbfE1IdK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 04:33:10 -0400
-Received: by mail.tastiess.eu (Postfix, from userid 1001)
-        id C4ACF8A8AB; Tue, 28 May 2019 10:31:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tastiess.eu; s=mail;
-        t=1559032388; bh=I9Ue03WK1DGltuFRFxeBc6SZHKWkq/f13b7q3CFLQVk=;
-        h=Date:From:To:Subject:From;
-        b=HHwtPNDCt0VmbgIfSSGP3NBeK7RdwQOgtUX+9dvYrhojkDy5xHtiUEgv+fWOS5w8f
-         QuGqA/PxnfRafTxroAZbDb4v6gzp1+SiYJWKOwqY91KVydpuyh+Fbf5CcCP3c62F1H
-         V0Blw3/SNWG49/JZnWsJ5rdotAXpK1NPc3wb2H3A=
-Received: by mail.tastiess.eu for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 08:31:34 GMT
-Message-ID: <20190528103018-0.1.13.h1z.0.hg1oqhk49p@tastiess.eu>
-Date:   Tue, 28 May 2019 08:31:34 GMT
-From:   =?UTF-8?Q? "Kapolcs_M=C3=A1ty=C3=A1s" ?= 
-        <kapolcs.matyas@tastiess.eu>
-To:     <linux-kernel@vger.kernel.org>
-Subject: =?UTF-8?Q?Dolgoz=C3=B3i_juttat=C3=A1sok?=
-X-Mailer: mail.tastiess.eu
+        Tue, 28 May 2019 04:34:31 -0400
+Received: from m9784.mail.qiye.163.com ([220.181.97.84]:51996 "EHLO
+        m9784.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726557AbfE1Iea (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 04:34:30 -0400
+Received: from localhost (unknown [120.132.1.243])
+        by m9784.mail.qiye.163.com (Hmail) with ESMTPA id A3EFD419FD;
+        Tue, 28 May 2019 16:34:22 +0800 (CST)
+Date:   Tue, 28 May 2019 02:07:43 +0800
+From:   Yao Liu <yotta.liu@ucloud.cn>
+To:     Josef Bacik <josef@toxicpanda.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        nbd <nbd@other.debian.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: Re: [PATCH 1/3] nbd: fix connection timed out error after
+ reconnecting to server
+Message-ID: <20190527180743.GA20702@192-168-150-246.7~>
+References: <1558691036-16281-1-git-send-email-yotta.liu@ucloud.cn>
+ <20190524130740.zfypc2j3q5e3gryr@MacBook-Pro-91.local.dhcp.thefacebook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190524130740.zfypc2j3q5e3gryr@MacBook-Pro-91.local.dhcp.thefacebook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-HM-Spam-Status: e1kIGBQJHllBWUtVTkhJQkJCQ0pITk5NTUxKWVdZKFlBSUI3V1ktWUFJV1
+        kJDhceCFlBWTU0KTY6NyQpLjc#WQY+
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NjY6Kzo5DjgwNiNJIS4dCDoN
+        P01PCjpVSlVKTk5CS0hJT01JQ0JOVTMWGhIXVQIUDw8aVRcSDjsOGBcUDh9VGBVFWVdZEgtZQVlK
+        SUtVSkhJVUpVSU9IWVdZCAFZQU9KTk43Bg++
+X-HM-Tid: 0a6afd937d9b2086kuqya3efd419fd
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C3=9Cdv=C3=B6zl=C3=B6m!
+On Fri, May 24, 2019 at 09:07:42AM -0400, Josef Bacik wrote:
+> On Fri, May 24, 2019 at 05:43:54PM +0800, Yao Liu wrote:
+> > Some I/O requests that have been sent succussfully but have not yet been
+> > replied won't be resubmitted after reconnecting because of server restart,
+> > so we add a list to track them.
+> > 
+> > Signed-off-by: Yao Liu <yotta.liu@ucloud.cn>
+> 
+> Nack, this is what the timeout stuff is supposed to handle.  The commands will
+> timeout and we'll resubmit them if we have alive sockets.  Thanks,
+> 
+> Josef
+> 
 
-2019 janu=C3=A1rj=C3=A1t=C3=B3l megsz=C5=B1nt az Erzs=C3=A9bet utalv=C3=A1=
-nyok =C3=A9s k=C3=A1rty=C3=A1k forgalmaz=C3=A1sa.
-
-Ismerje meg juttat=C3=A1si k=C3=A1rty=C3=A1inkat =C3=A9s utalv=C3=A1nyain=
-kat, melyekkel egyszer=C5=B1en helyettes=C3=ADtheti a kor=C3=A1bbi Erzs=C3=
-=A9betes juttat=C3=A1sokat.
-
-Amennyiben =C3=96n is a legegyszer=C5=B1bb =C3=A1t=C3=A1ll=C3=A1st szeret=
-n=C3=A9, sz=C3=ADvesen bemutatom =C3=96nnek megold=C3=A1sainkat!
-
-
-Kapolcs M=C3=A1ty=C3=A1s
-Hungary Team Leader =20
+On the one hand, if num_connections == 1 and the only sock has dead,
+then we do nbd_genl_reconfigure to reconnect within dead_conn_timeout,
+nbd_xmit_timeout will not resubmit commands that have been sent
+succussfully but have not yet been replied. The log is as follows:
+ 
+[270551.108746] block nbd0: Receive control failed (result -104)
+[270551.108747] block nbd0: Send control failed (result -32)
+[270551.108750] block nbd0: Request send failed, requeueing
+[270551.116207] block nbd0: Attempted send on invalid socket
+[270556.119584] block nbd0: reconnected socket
+[270581.161751] block nbd0: Connection timed out
+[270581.165038] block nbd0: shutting down sockets
+[270581.165041] print_req_error: I/O error, dev nbd0, sector 5123224 flags 8801
+[270581.165149] print_req_error: I/O error, dev nbd0, sector 5123232 flags 8801
+[270581.165580] block nbd0: Connection timed out
+[270581.165587] print_req_error: I/O error, dev nbd0, sector 844680 flags 8801
+[270581.166184] print_req_error: I/O error, dev nbd0, sector 5123240 flags 8801
+[270581.166554] block nbd0: Connection timed out
+[270581.166576] print_req_error: I/O error, dev nbd0, sector 844688 flags 8801
+[270581.167124] print_req_error: I/O error, dev nbd0, sector 5123248 flags 8801
+[270581.167590] block nbd0: Connection timed out
+[270581.167597] print_req_error: I/O error, dev nbd0, sector 844696 flags 8801
+[270581.168021] print_req_error: I/O error, dev nbd0, sector 5123256 flags 8801
+[270581.168487] block nbd0: Connection timed out
+[270581.168493] print_req_error: I/O error, dev nbd0, sector 844704 flags 8801
+[270581.170183] print_req_error: I/O error, dev nbd0, sector 5123264 flags 8801
+[270581.170540] block nbd0: Connection timed out
+[270581.173333] block nbd0: Connection timed out
+[270581.173728] block nbd0: Connection timed out
+[270581.174135] block nbd0: Connection timed out
+ 
+On the other hand, if we wait nbd_xmit_timeout to handle resubmission,
+the I/O requests will have a big delay. For example, if timeout time is 30s,
+and from sock dead to nbd_genl_reconfigure returned OK we only spend
+2s, the I/O requests will still be handled by nbd_xmit_timeout after 30s.
