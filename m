@@ -2,100 +2,121 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FEFBC04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28AFCC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:29:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D0592166E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:28:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07D8121530
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:29:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbfE0M2w (ORCPT
+        id S1727176AbfE0M3F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 08:28:52 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:38194 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbfE0M2w (ORCPT
+        Mon, 27 May 2019 08:29:05 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:55307 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726071AbfE0M3F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 08:28:52 -0400
-Received: by mail-qk1-f194.google.com with SMTP id p26so15030824qkj.5;
-        Mon, 27 May 2019 05:28:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rWDn1EpP4eQShj/YiW/gOE7EWLo5vc51PVu6vXx1TPc=;
-        b=dTdZumPTQDMy8kRLgl5y65WYKSGTfxmb7nK9QG+YSivB9pokJwTSAG3gpY8gGaypbR
-         g6XI/ibbHYOQlJIANMKxoeXJ9lZ3TzwDyB1BevpZ5OBJ5OqdKfZ7NkkRE2Ma1HwWcfho
-         qYL+egpp8p1JJNl08uyh2CUlxkxCbtkO30RKFVw7BGPY4BlrcIbTSV4hPqE9Gk3zlGgQ
-         OZg4phP73gkOfupRhN7G6e75BdOAK8UfTi4ZGyThc0NoeurbnbrBppmNC3uXWyxQ6nMY
-         27ru1EouWZq7VI6HnQDCnVz7gavfwabqpqcnSWgmyRObRDNxhHzybWpMKEd7jS9MHAuB
-         Ucog==
-X-Gm-Message-State: APjAAAX0A4fU3YEbQRJ0CsmUjiwDvDgh4w4WfTgEUkxUWcnwvAyDXpCL
-        sHdWXxWp95mH7KSLuWLP5vGWmVqrDwnXvmr3Phs=
-X-Google-Smtp-Source: APXvYqzmhkKKNeuD0vGRNhhIhorDuDat7mVtalrNQBW+JjQtUosQodaoEkFjKAEBvNqlGn38dggu+nHZuNACipDUHhQ=
-X-Received: by 2002:a0c:b78a:: with SMTP id l10mr70934055qve.62.1558960130995;
- Mon, 27 May 2019 05:28:50 -0700 (PDT)
+        Mon, 27 May 2019 08:29:05 -0400
+X-Originating-IP: 90.88.147.134
+Received: from localhost (aaubervilliers-681-1-27-134.w90-88.abo.wanadoo.fr [90.88.147.134])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id B5136C0003;
+        Mon, 27 May 2019 12:28:57 +0000 (UTC)
+Date:   Mon, 27 May 2019 14:28:57 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 3/7] ASoC: sun4i-spdif: Add TX fifo bit flush quirks
+Message-ID: <20190527122857.lphlgr7dc5z4f5o3@flea>
+References: <20190525162323.20216-1-peron.clem@gmail.com>
+ <20190525162323.20216-4-peron.clem@gmail.com>
+ <20190526182410.soqb6bne6w66d5j6@flea>
+ <CAJiuCce8UNbA+Ljkbw92ZJu3Ni6N9ciFKGsLtBYJ0_J8E1Gi2g@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190526102612.6970-1-christian@brauner.io> <20190526102612.6970-2-christian@brauner.io>
- <CAK8P3a1Ltsna_rtKxhMU7X0t=UOXDA75tKpph6s=OZ4itJe7VQ@mail.gmail.com> <20190527104528.cao7wamuj4vduh3u@brauner.io>
-In-Reply-To: <20190527104528.cao7wamuj4vduh3u@brauner.io>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 27 May 2019 14:28:33 +0200
-Message-ID: <CAK8P3a3q=5Ca0xoMp+kyCvOqNDRzDTgu28f+U8J-buMVcZcVaw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] arch: wire-up clone6() syscall on x86
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jann Horn <jannh@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="5fgdhizk55u3fsr6"
+Content-Disposition: inline
+In-Reply-To: <CAJiuCce8UNbA+Ljkbw92ZJu3Ni6N9ciFKGsLtBYJ0_J8E1Gi2g@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 27, 2019 at 12:45 PM Christian Brauner <christian@brauner.io> wrote:
-> On Mon, May 27, 2019 at 12:02:37PM +0200, Arnd Bergmann wrote:
-> > On Sun, May 26, 2019 at 12:27 PM Christian Brauner <christian@brauner.io> wrote:
-> > >
-> > > Wire up the clone6() call on x86.
-> > >
-> > > This patch only wires up clone6() on x86. Some of the arches look like they
-> > > need special assembly massaging and it is probably smarter if the
-> > > appropriate arch maintainers would do the actual wiring.
-> >
-> > Why do some architectures need special cases here? I'd prefer to have
-> > new system calls always get defined in a way that avoids this, and
-> > have a common entry point for everyone.
-> >
-> > Looking at the m68k sys_clone comment in
-> > arch/m68k/kernel/process.c, it seems that this was done as an
-> > optimization to deal with an inferior ABI. Similar code is present
-> > in h8300, ia64, nios2, and sparc. If all of them just do this to
-> > shave off a few cycles from the system call entry, I really
-> > couldn't care less.
+
+--5fgdhizk55u3fsr6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sun, May 26, 2019 at 09:00:30PM +0200, Cl=E9ment P=E9ron wrote:
+> Hi Maxime,
 >
-> I'm happy to wire all arches up at the same time in the next revision. I
-> just wasn't sure why some of them were assemblying the living hell out
-> of clone; especially ia64. I really didn't want to bother touching all
-> of this just for an initial RFC.
+> On Sun, 26 May 2019 at 20:24, Maxime Ripard <maxime.ripard@bootlin.com> w=
+rote:
+> >
+> > On Sat, May 25, 2019 at 06:23:19PM +0200, Cl=E9ment P=E9ron wrote:
+> > > Allwinner H6 has a different bit to flush the TX FIFO.
+> > >
+> > > Add a quirks to prepare introduction of H6 SoC.
+> > >
+> > > Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
+> > > ---
+> > >  sound/soc/sunxi/sun4i-spdif.c | 11 ++++++++++-
+> > >  1 file changed, 10 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/sound/soc/sunxi/sun4i-spdif.c b/sound/soc/sunxi/sun4i-sp=
+dif.c
+> > > index b6c66a62e915..8317bbee0712 100644
+> > > --- a/sound/soc/sunxi/sun4i-spdif.c
+> > > +++ b/sound/soc/sunxi/sun4i-spdif.c
+> > > @@ -166,10 +166,12 @@
+> > >   *
+> > >   * @reg_dac_tx_data: TX FIFO offset for DMA config.
+> > >   * @has_reset: SoC needs reset deasserted.
+> > > + * @reg_fctl_ftx: TX FIFO flush bitmask.
+> >
+> > It's a bit weird to use the same prefix for a register offset
+> > (reg_dac_tx_data) and a value (reg_fctl_ftx).
+>
+> I just look at sun4i-codec and they use a regmap, But I think it's a
+> bit overkill no?
 
-Don't worry about doing all architectures for the RFC, I mainly want this
-to be done consistently by the time it gets into linux-next.
+For a single value, yeah
 
-One thing to figure out though is whether we need the stack_size argument
-that a couple of architectures pass. It's usually hardwired to zero,
-but not all the time, and I don't know the history of this.
+> What do you think about val_fctl_ftx ?
 
-       Arnd
+Looks good, thanks!
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--5fgdhizk55u3fsr6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOvYCQAKCRDj7w1vZxhR
+xWpYAQDonSAGR8IIIJfCwN6P7pyQ5D2rskJl7lfFfD4Mo5WZ8QD/aAaog6/za5ta
+r3GfRL559CHukEIi7he29P416ycIjw0=
+=3d9d
+-----END PGP SIGNATURE-----
+
+--5fgdhizk55u3fsr6--
