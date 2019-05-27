@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D81AC04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 22:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 679DAC072B1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 22:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2A76208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 22:38:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EAAD208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 22:38:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558996681;
-	bh=uZwNlhBK32PUMxr2O23ngaSNno2a+GCU1RyguvKiISY=;
+	s=default; t=1558996683;
+	bh=prJoLJpZvpsZ7UJpa2S3f+0ldYisIx7ao2Qz6rGLRPY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A5Qu2c3CW4t3im0jf6ch0lT6tTEP6C8BRVjwNeeZtJZ3v90savuD30nCSjxfaDuSF
-	 olFjRuRHtsUv20jJCv14DC0eUfF0ZKao++G0ydQeXANbBFlFO21iW4Q017at3x19fI
-	 OQfVSWhSItMjfYdvOlOEvpXOp3betl8ZOgNV7SAQ=
+	b=etAu9QmhqaeP5eu++5G+qQdtBp/B5SrSk54aK0JXpM84skUA8ycEqRmW02cYC6jM3
+	 Qtk0mlybzmh0tRPkbtSxbz2kVS4Y/34Mo2bBiI4TepbzrcVsDuQd1lOTmPUb920x6I
+	 KUK2o7pMzHoHO4LmCswC2xxKJdSsyI/m4u8cAxKA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbfE0Whz (ORCPT
+        id S1727541AbfE0WiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 18:37:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43624 "EHLO mail.kernel.org"
+        Mon, 27 May 2019 18:38:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726905AbfE0Why (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 18:37:54 -0400
+        id S1726905AbfE0Wh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 18:37:58 -0400
 Received: from quaco.ghostprotocols.net (179-240-171-7.3g.claro.net.br [179.240.171.7])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 637E520859;
-        Mon, 27 May 2019 22:37:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E8302081C;
+        Mon, 27 May 2019 22:37:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558996674;
-        bh=uZwNlhBK32PUMxr2O23ngaSNno2a+GCU1RyguvKiISY=;
+        s=default; t=1558996677;
+        bh=prJoLJpZvpsZ7UJpa2S3f+0ldYisIx7ao2Qz6rGLRPY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w++ILzXEqQRYEvJtAlS6GZjWu3sFtI8RuJA1f+YGK1AZ3XyrQ5zFIHFS314Uq6God
-         QL5ZR6eDHl4bXwZ3cWo26/xAVe7+HiN8T+TLpbhHpOJnZ6LiMDA2btaXc7Xuh/ZCqW
-         50CBufLtEIz6Mgjn1LOCshxk60f/7K1ayNdVBzTc=
+        b=erkoh2AmuokRSfXO3rbITFZB1/OrNXFlJ9XFCucTmKBLBT9Rs6xBDBLLLs2STdw1O
+         tUeWRz2aOI3TpEb7ftLkX4yCkkJRFXvYo5hdSO2PbcKT8TToTSgdlkmCXmfyrrhPj7
+         i0RaLIGGhR72ufweAm7w6TKuns0AA7RMDZhqSlvU=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -46,11 +46,11 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>, stable@vger.kernel.org
-Subject: [PATCH 03/44] perf auxtrace: Fix itrace defaults for perf script
-Date:   Mon, 27 May 2019 19:36:49 -0300
-Message-Id: <20190527223730.11474-4-acme@kernel.org>
+        Jiri Olsa <jolsa@redhat.com>, stable@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 04/44] perf intel-pt: Fix itrace defaults for perf script intel-pt documentation
+Date:   Mon, 27 May 2019 19:36:50 -0300
+Message-Id: <20190527223730.11474-5-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190527223730.11474-1-acme@kernel.org>
 References: <20190527223730.11474-1-acme@kernel.org>
@@ -63,51 +63,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-Commit 4eb068157121 ("perf script: Make itrace script default to all
-calls") does not work for the case when '--itrace' only is used, because
-default_no_sample is not being passed.
-
-Example:
-
- Before:
-
-  $ perf record -e intel_pt/cyc/u ls
-  $ perf script --itrace > cmp1.txt
-  $ perf script --itrace=cepwx > cmp2.txt
-  $ diff -sq cmp1.txt cmp2.txt
-  Files cmp1.txt and cmp2.txt differ
-
- After:
-
-  $ perf script --itrace > cmp1.txt
-  $ perf script --itrace=cepwx > cmp2.txt
-  $ diff -sq cmp1.txt cmp2.txt
-  Files cmp1.txt and cmp2.txt are identical
+Fix intel-pt documentation to reflect the change of itrace defaults for
+perf script.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: stable@vger.kernel.org
 Fixes: 4eb068157121 ("perf script: Make itrace script default to all calls")
-Link: http://lkml.kernel.org/r/20190520113728.14389-3-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/20190520113728.14389-4-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/auxtrace.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/Documentation/intel-pt.txt | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index fb76b6b232d4..5dd9d1893b89 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -1010,7 +1010,8 @@ int itrace_parse_synth_opts(const struct option *opt, const char *str,
- 	}
+diff --git a/tools/perf/Documentation/intel-pt.txt b/tools/perf/Documentation/intel-pt.txt
+index 115eaacc455f..60d99e5e7921 100644
+--- a/tools/perf/Documentation/intel-pt.txt
++++ b/tools/perf/Documentation/intel-pt.txt
+@@ -88,16 +88,16 @@ smaller.
  
- 	if (!str) {
--		itrace_synth_opts__set_default(synth_opts, false);
-+		itrace_synth_opts__set_default(synth_opts,
-+					       synth_opts->default_no_sample);
- 		return 0;
- 	}
+ To represent software control flow, "branches" samples are produced.  By default
+ a branch sample is synthesized for every single branch.  To get an idea what
+-data is available you can use the 'perf script' tool with no parameters, which
+-will list all the samples.
++data is available you can use the 'perf script' tool with all itrace sampling
++options, which will list all the samples.
+ 
+ 	perf record -e intel_pt//u ls
+-	perf script
++	perf script --itrace=ibxwpe
+ 
+ An interesting field that is not printed by default is 'flags' which can be
+ displayed as follows:
+ 
+-	perf script -Fcomm,tid,pid,time,cpu,event,trace,ip,sym,dso,addr,symoff,flags
++	perf script --itrace=ibxwpe -F+flags
+ 
+ The flags are "bcrosyiABEx" which stand for branch, call, return, conditional,
+ system, asynchronous, interrupt, transaction abort, trace begin, trace end, and
+@@ -713,7 +713,7 @@ Having no option is the same as
+ 
+ which, in turn, is the same as
+ 
+-	--itrace=ibxwpe
++	--itrace=cepwx
+ 
+ The letters are:
  
 -- 
 2.20.1
