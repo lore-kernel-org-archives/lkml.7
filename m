@@ -2,98 +2,67 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F394C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A31C07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5726A20883
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:51:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tigu461t"
+	by mail.kernel.org (Postfix) with ESMTP id A6B6520883
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:51:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726304AbfE0Kv3 (ORCPT
+        id S1726494AbfE0Kvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 06:51:29 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:46270 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725814AbfE0Kv3 (ORCPT
+        Mon, 27 May 2019 06:51:35 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:61860 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725814AbfE0Kvf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 06:51:29 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4RAp5e6003020;
-        Mon, 27 May 2019 05:51:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1558954265;
-        bh=JrfdFuLps/wHBCl3PPKJylhuDG/GtLNZB8BGn4i9Njw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=tigu461trGyiuT0TlRN5C1lHPqzrrZKwO1Tq3bJjFQ1mt/4Eon/wHG+6dGlIwHUsf
-         d9tgY3aDjo/X82zi2jn2u4dWgeLIujSPHJueBjAK3yYBVDODRLcc+g6o/VgADzZNlo
-         WZE7Z3JUqxs9STSd02lydCJC50MgI7J07cIIOi9M=
-Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4RAp5Q1037617
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 27 May 2019 05:51:05 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 27
- May 2019 05:51:04 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 27 May 2019 05:51:04 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4RAp2gC087418;
-        Mon, 27 May 2019 05:51:02 -0500
-Subject: Re: [PATCHv6 0/4] omapdrm: DSI command mode panel support
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-CC:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        <dri-devel@lists.freedesktop.org>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel@collabora.com>
-References: <20190523200756.25314-1-sebastian.reichel@collabora.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <60c45d23-de2f-d94a-c3d7-146a2bee538f@ti.com>
-Date:   Mon, 27 May 2019 13:51:02 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 27 May 2019 06:51:35 -0400
+Received: from 79.184.255.36.ipv4.supernova.orange.pl (79.184.255.36) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
+ id 36bc135fddf03d66; Mon, 27 May 2019 12:51:33 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Markus Mayer <mmayer@broadcom.com>,
+        "maintainer:BROADCOM STB AVS CPUFREQ DRIVER" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Gregory Fong <gregory.0xf0@gmail.com>,
+        "open list:BROADCOM STB AVS CPUFREQ DRIVER" 
+        <linux-pm@vger.kernel.org>,
+        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 0/2] cpufreq: brcmstb-avs-cpufreq: Couple fixes
+Date:   Mon, 27 May 2019 12:51:32 +0200
+Message-ID: <3734641.73qX0VsHyn@kreacher>
+In-Reply-To: <20190522184547.31791-1-f.fainelli@gmail.com>
+References: <20190522184547.31791-1-f.fainelli@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190523200756.25314-1-sebastian.reichel@collabora.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 23/05/2019 23:07, Sebastian Reichel wrote:
-> Hi,
+On Wednesday, May 22, 2019 8:45:45 PM CEST Florian Fainelli wrote:
+> Hi Rafael, Viresh,
 > 
-> Here is another round of the DSI command mode panel patchset
-> integrating the feedback from PATCHv5. The patches are based
-> on v5.2-rc1 tag. It does not contain the patches required for
-> OMAP3 support (it needs a workaround for a hardware bug) and
-> for automatic display rotation. They should get their own series,
-> once after everything has been moved to DRM panel API. I think
-> DRM panel conversion should happen _after_ this series, since
-> otherwise there is a high risk of bricking DSI support completely.
-> I already started a WIP branch for converting DSI to the DRM panel
-> API on top of this patchset.
+> These patch series contains two minor fixes for the brcmstb-avs-cpufreq
+> driver.
+> 
+> Florian Fainelli (2):
+>   cpufreq: brcmstb-avs-cpufreq: Fix initial command check
+>   cpufreq: brcmstb-avs-cpufreq: Fix types for voltage/frequency
+> 
+>  drivers/cpufreq/brcmstb-avs-cpufreq.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
 
-Looks good to me. For some reason I can't boot 5.2-rc2 (on x15) so I 
-haven't been able to test yet. I'll pick the series up in any case, and 
-I'll test it when I get the kernel booting.
+These look straightforward enough to me, but it would be good to get an ACK from the
+driver maintainer for them.
 
-  Tomi
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
