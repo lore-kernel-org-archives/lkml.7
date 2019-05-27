@@ -2,158 +2,300 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF123C07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 09:52:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6562EC28CBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 09:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9124621734
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 09:52:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="JczShen6"
+	by mail.kernel.org (Postfix) with ESMTP id 3CF8E21734
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 09:55:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726555AbfE0JwM (ORCPT
+        id S1726491AbfE0JzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 05:52:12 -0400
-Received: from mail-eopbgr00063.outbound.protection.outlook.com ([40.107.0.63]:11390
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726071AbfE0JwM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 05:52:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6OGIIfmXsagVWjmvSCqS72MOJGmfNyZzP798K74zETY=;
- b=JczShen6eQyE75fYY57vxSJN7x7nDtviKc+MpUc0SmaJpXEuESEwD4081wV2rTUxRnefEzfkEuhnxpkDLHjpKcokyP15vgu7pbl4LHQcNGxDWqC4AOFW8xvuFW+dzKwRKMdL6C3WF1buPwYOBePyCdu4S1RyjUfpX1T7aGtOecE=
-Received: from VI1PR04MB4543.eurprd04.prod.outlook.com (20.177.55.90) by
- VI1PR04MB6335.eurprd04.prod.outlook.com (20.179.28.150) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.16; Mon, 27 May 2019 09:52:06 +0000
-Received: from VI1PR04MB4543.eurprd04.prod.outlook.com
- ([fe80::5062:df97:a70b:93f8]) by VI1PR04MB4543.eurprd04.prod.outlook.com
- ([fe80::5062:df97:a70b:93f8%7]) with mapi id 15.20.1922.021; Mon, 27 May 2019
- 09:52:06 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-CC:     dl-linux-imx <linux-imx@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: Re: [PATCH v2 4/7] dmaengine: fsl-edma-common: version check for v2
- instead
-Thread-Topic: [PATCH v2 4/7] dmaengine: fsl-edma-common: version check for v2
- instead
-Thread-Index: AQHVFGkvbrL+XeLGHEGi7v50pYf8g6Z+rpsAgACTcAA=
-Date:   Mon, 27 May 2019 09:52:06 +0000
-Message-ID: <1558979756.19282.9.camel@nxp.com>
-References: <20190527085118.40423-1-yibin.gong@nxp.com>
-         <20190527085118.40423-5-yibin.gong@nxp.com>
-         <20190527090814.qfjiksqi24x2jrs3@pengutronix.de>
-In-Reply-To: <20190527090814.qfjiksqi24x2jrs3@pengutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yibin.gong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0113eac8-db02-4676-e1ec-08d6e288fa87
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB6335;
-x-ms-traffictypediagnostic: VI1PR04MB6335:
-x-microsoft-antispam-prvs: <VI1PR04MB6335ECF2ACD5D4E52D2645EB891D0@VI1PR04MB6335.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0050CEFE70
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(376002)(346002)(39860400002)(136003)(199004)(189003)(103116003)(26005)(7416002)(186003)(316002)(68736007)(476003)(2616005)(11346002)(446003)(99286004)(25786009)(76176011)(6506007)(53546011)(102836004)(91956017)(66476007)(66556008)(64756008)(66446008)(73956011)(66946007)(5660300002)(76116006)(229853002)(486006)(256004)(6486002)(7736002)(14454004)(3846002)(6116002)(2351001)(81166006)(81156014)(8676002)(8936002)(50226002)(2906002)(53936002)(478600001)(4326008)(305945005)(54906003)(6246003)(2501003)(66066001)(6512007)(6916009)(6436002)(86362001)(36756003)(5640700003)(71200400001)(71190400001)(99106002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB6335;H:VI1PR04MB4543.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: admD4f86YppPxwK1CK+eGiVlDmrDIQyInwsBjEXFh1MF8yNmyVkZN3XOkoT6aUs2+oUiwyKbVFYESwdFcCRt7zSioSM2GU6JW8CeLN+hBL9ImPkkwtskt+9eHpelPKhFrPtCa4VK3wcZkjb8o3yzLl3DLD2ti4AmBEg8xDVPf2OWpAbOXbXsR3cWbryOst2/LAUZejVWxVXxRQCQd9srNFHNzWycahdHhVFetMq5dDKiQtX8TDXhtsYoT0nocD9oq4v3A+G9XSrCehmALQ3heFZ/Tik3frcrFvZqIXfir1Kz4AX/x6piVPgekYJ/Ase/aKtCmJQvYlFVb1GRqL4BUHQTtTrmihlHhvfXE41dkbcLPOarNq1GsHiXjCODNuJRMQRAM5mmUAnXaO/TuRP1Dx9LGkPsJ9fzfST/2HLhJ6Y=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A4FADF9346F4F349B96573D2BEC85CF3@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0113eac8-db02-4676-e1ec-08d6e288fa87
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 May 2019 09:52:06.4873
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yibin.gong@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6335
+        Mon, 27 May 2019 05:55:17 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:35440 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725991AbfE0JzQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 05:55:16 -0400
+Received: from laptop-1.home (unknown [IPv6:2a01:cb19:8ad6:900:42dd:dd1c:19ee:7c60])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: aragua)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 634CD260CB2;
+        Mon, 27 May 2019 10:55:14 +0100 (BST)
+Message-ID: <3af7925c5dad281774b6d12826770cbefb32ea09.camel@collabora.com>
+Subject: Re: [PATCH v2 2/3] iio: common: cros_ec_sensors: add sysfs
+ attribute for frequencies
+From:   Fabien Lahoudere <fabien.lahoudere@collabora.com>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     kernel@collabora.com, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 27 May 2019 11:55:11 +0200
+In-Reply-To: <20190526184507.45c54053@archlinux>
+References: <cover.1558601329.git.fabien.lahoudere@collabora.com>
+         <f1891f9da2e9362a4efebf0ebce487b9584d4f5a.1558601329.git.fabien.lahoudere@collabora.com>
+         <20190526184507.45c54053@archlinux>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.2 (3.30.2-2.fc29) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0wNS0yNyBhdCAwOTowOCArMDAwMCwgU2FzY2hhIEhhdWVyIHdyb3RlOg0KPiBPbiBN
-b24sIE1heSAyNywgMjAxOSBhdCAwNDo1MToxNVBNICswODAwLCB5aWJpbi5nb25nQG54cC5jb20g
-d3JvdGU6DQo+ID4gDQo+ID4gRnJvbTogUm9iaW4gR29uZyA8eWliaW4uZ29uZ0BueHAuY29tPg0K
-PiA+IA0KPiA+IFRoZSBuZXh0IHYzIGkubXg3dWxwIGVkbWEgaXMgYmFzZWQgb24gdjEsIHNvIGNo
-YW5nZSB2ZXJzaW9uDQo+ID4gY2hlY2sgbG9naWMgZm9yIHYyIGluc3RlYWQuDQo+ID4gDQo+ID4g
-U2lnbmVkLW9mZi1ieTogUm9iaW4gR29uZyA8eWliaW4uZ29uZ0BueHAuY29tPg0KPiA+IC0tLQ0K
-PiA+IMKgZHJpdmVycy9kbWEvZnNsLWVkbWEtY29tbW9uLmMgfCA0MCArKysrKysrKysrKysrKysr
-KysrKy0tLS0tLS0tLS0tDQo+ID4gLS0tLS0tLS0tDQo+ID4gwqAxIGZpbGUgY2hhbmdlZCwgMjAg
-aW5zZXJ0aW9ucygrKSwgMjAgZGVsZXRpb25zKC0pDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvZG1hL2ZzbC1lZG1hLWNvbW1vbi5jIGIvZHJpdmVycy9kbWEvZnNsLWVkbWEtDQo+ID4g
-Y29tbW9uLmMNCj4gPiBpbmRleCBiYjI0MjUxLi40NWQ3MGQzIDEwMDY0NA0KPiA+IC0tLSBhL2Ry
-aXZlcnMvZG1hL2ZzbC1lZG1hLWNvbW1vbi5jDQo+ID4gKysrIGIvZHJpdmVycy9kbWEvZnNsLWVk
-bWEtY29tbW9uLmMNCj4gPiBAQCAtNjU3LDI2ICs2NTcsMjYgQEAgdm9pZCBmc2xfZWRtYV9zZXR1
-cF9yZWdzKHN0cnVjdA0KPiA+IGZzbF9lZG1hX2VuZ2luZSAqZWRtYSkNCj4gPiDCoAllZG1hLT5y
-ZWdzLmVycWwgPSBlZG1hLT5tZW1iYXNlICsgRURNQV9FUlE7DQo+ID4gwqAJZWRtYS0+cmVncy5l
-ZWlsID0gZWRtYS0+bWVtYmFzZSArIEVETUFfRUVJOw0KPiA+IMKgDQo+ID4gLQllZG1hLT5yZWdz
-LnNlcnEgPSBlZG1hLT5tZW1iYXNlICsgKChlZG1hLT52ZXJzaW9uID09IHYxKSA/DQo+ID4gLQkJ
-CUVETUFfU0VSUSA6IEVETUE2NF9TRVJRKTsNCj4gPiAtCWVkbWEtPnJlZ3MuY2VycSA9IGVkbWEt
-Pm1lbWJhc2UgKyAoKGVkbWEtPnZlcnNpb24gPT0gdjEpID8NCj4gPiAtCQkJRURNQV9DRVJRIDog
-RURNQTY0X0NFUlEpOw0KPiA+IC0JZWRtYS0+cmVncy5zZWVpID0gZWRtYS0+bWVtYmFzZSArICgo
-ZWRtYS0+dmVyc2lvbiA9PSB2MSkgPw0KPiA+IC0JCQlFRE1BX1NFRUkgOiBFRE1BNjRfU0VFSSk7
-DQo+ID4gLQllZG1hLT5yZWdzLmNlZWkgPSBlZG1hLT5tZW1iYXNlICsgKChlZG1hLT52ZXJzaW9u
-ID09IHYxKSA/DQo+ID4gLQkJCUVETUFfQ0VFSSA6IEVETUE2NF9DRUVJKTsNCj4gPiAtCWVkbWEt
-PnJlZ3MuY2ludCA9IGVkbWEtPm1lbWJhc2UgKyAoKGVkbWEtPnZlcnNpb24gPT0gdjEpID8NCj4g
-PiAtCQkJRURNQV9DSU5UIDogRURNQTY0X0NJTlQpOw0KPiA+IC0JZWRtYS0+cmVncy5jZXJyID0g
-ZWRtYS0+bWVtYmFzZSArICgoZWRtYS0+dmVyc2lvbiA9PSB2MSkgPw0KPiA+IC0JCQlFRE1BX0NF
-UlIgOiBFRE1BNjRfQ0VSUik7DQo+ID4gLQllZG1hLT5yZWdzLnNzcnQgPSBlZG1hLT5tZW1iYXNl
-ICsgKChlZG1hLT52ZXJzaW9uID09IHYxKSA/DQo+ID4gLQkJCUVETUFfU1NSVCA6IEVETUE2NF9T
-U1JUKTsNCj4gPiAtCWVkbWEtPnJlZ3MuY2RuZSA9IGVkbWEtPm1lbWJhc2UgKyAoKGVkbWEtPnZl
-cnNpb24gPT0gdjEpID8NCj4gPiAtCQkJRURNQV9DRE5FIDogRURNQTY0X0NETkUpOw0KPiA+IC0J
-ZWRtYS0+cmVncy5pbnRsID0gZWRtYS0+bWVtYmFzZSArICgoZWRtYS0+dmVyc2lvbiA9PSB2MSkg
-Pw0KPiA+IC0JCQlFRE1BX0lOVFIgOiBFRE1BNjRfSU5UTCk7DQo+ID4gLQllZG1hLT5yZWdzLmVy
-cmwgPSBlZG1hLT5tZW1iYXNlICsgKChlZG1hLT52ZXJzaW9uID09IHYxKSA/DQo+ID4gLQkJCUVE
-TUFfRVJSIDogRURNQTY0X0VSUkwpOw0KPiA+ICsJZWRtYS0+cmVncy5zZXJxID0gZWRtYS0+bWVt
-YmFzZSArICgoZWRtYS0+dmVyc2lvbiA9PSB2MikgPw0KPiA+ICsJCQlFRE1BNjRfU0VSUSA6IEVE
-TUFfU0VSUSk7DQo+ID4gKwllZG1hLT5yZWdzLmNlcnEgPSBlZG1hLT5tZW1iYXNlICsgKChlZG1h
-LT52ZXJzaW9uID09IHYyKSA/DQo+ID4gKwkJCUVETUE2NF9DRVJRIDogRURNQV9DRVJRKTsNCj4g
-PiArCWVkbWEtPnJlZ3Muc2VlaSA9IGVkbWEtPm1lbWJhc2UgKyAoKGVkbWEtPnZlcnNpb24gPT0g
-djIpID8NCj4gPiArCQkJRURNQTY0X1NFRUkgOiBFRE1BX1NFRUkpOw0KPiA+ICsJZWRtYS0+cmVn
-cy5jZWVpID0gZWRtYS0+bWVtYmFzZSArICgoZWRtYS0+dmVyc2lvbiA9PSB2MikgPw0KPiA+ICsJ
-CQlFRE1BNjRfQ0VFSSA6IEVETUFfQ0VFSSk7DQo+ID4gKwllZG1hLT5yZWdzLmNpbnQgPSBlZG1h
-LT5tZW1iYXNlICsgKChlZG1hLT52ZXJzaW9uID09IHYyKSA/DQo+ID4gKwkJCUVETUE2NF9DSU5U
-IDogRURNQV9DSU5UKTsNCj4gPiArCWVkbWEtPnJlZ3MuY2VyciA9IGVkbWEtPm1lbWJhc2UgKyAo
-KGVkbWEtPnZlcnNpb24gPT0gdjIpID8NCj4gPiArCQkJRURNQTY0X0NFUlIgOiBFRE1BX0NFUlIp
-Ow0KPiA+ICsJZWRtYS0+cmVncy5zc3J0ID0gZWRtYS0+bWVtYmFzZSArICgoZWRtYS0+dmVyc2lv
-biA9PSB2MikgPw0KPiA+ICsJCQlFRE1BNjRfU1NSVCA6IEVETUFfU1NSVCk7DQo+ID4gKwllZG1h
-LT5yZWdzLmNkbmUgPSBlZG1hLT5tZW1iYXNlICsgKChlZG1hLT52ZXJzaW9uID09IHYyKSA/DQo+
-ID4gKwkJCUVETUE2NF9DRE5FIDogRURNQV9DRE5FKTsNCj4gPiArCWVkbWEtPnJlZ3MuaW50bCA9
-IGVkbWEtPm1lbWJhc2UgKyAoKGVkbWEtPnZlcnNpb24gPT0gdjIpID8NCj4gPiArCQkJRURNQTY0
-X0lOVEwgOiBFRE1BX0lOVFIpOw0KPiA+ICsJZWRtYS0+cmVncy5lcnJsID0gZWRtYS0+bWVtYmFz
-ZSArICgoZWRtYS0+dmVyc2lvbiA9PSB2MikgPw0KPiA+ICsJCQlFRE1BNjRfRVJSTCA6IEVETUFf
-RVJSKTsNCj4gRm9sbG93aW5nIHRvIHdoYXQgSSBoYXZlIHNhaWQgdG8gNi83IHlvdSBjYW4gcHV0
-IHRoZSByZWdpc3RlciBvZmZzZXRzDQo+IGludG8gdGhhdCBuZXcgc3RydWN0IGFzd2VsbC4NCj4g
-DQo+IFNhc2NoYQ0KVW5kZXJzdG9vZCB5b3VyIHBvaW50LCBidXQgdGhlIGxvZ2ljIG9mIGZzbC1l
-ZG1hLWNvbW1vbi5jIGlzIHRoZSBjb21tb24NCmZ1bmN0aW9ucyBhcnJheSBwcm92aWRlZCB0byBi
-ZSBjYWxsZWQgaW4gZnNsLWVkbWEuYyBvciBtY2YtZWRtYS5jLCBub3QNCmRpZmZlcmVudCBzcGVj
-aWZpYyBmdW5jdGlvbnMgaW4gZnNsLWVkbWEuYyBvciBtY2YtZWRtYS5jLiDCoMKgDQo+IA==
+Le dimanche 26 mai 2019 à 18:45 +0100, Jonathan Cameron a écrit :
+> On Thu, 23 May 2019 11:07:36 +0200
+> Fabien Lahoudere <fabien.lahoudere@collabora.com> wrote:
+> 
+> > In order to provide minimum and maximum frequencies for each
+> > sensors,
+> > we use a standard API (sampling_frequency_available) to provide
+> > them
+> > to userland.
+> > As cros_ec_sensors_core_init do not manage default attrs, we change
+> > the signature to let all kind of sensors to provide "struct
+> > iio_info"
+> > with their callback. This change impact drivers using that
+> > function.
+> > 
+> > Then cros_ec_* sensors provides frequencies range in sysfs like
+> > this:
+> > [min step max]
+> > 
+> > Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
+> When I was pointing at the _available syntax I was meaning that
+> the ideal is to implement this using the associated callbacks rather
+> than as a custom sysfs attribute.
+> 
+
+Sorry, I misunderstood. Let me retry with that callback implemented.
+
+> > ---
+> >  .../common/cros_ec_sensors/cros_ec_sensors.c  |  6 +--
+> >  .../cros_ec_sensors/cros_ec_sensors_core.c    | 38
+> > +++++++++++++++++++
+> >  drivers/iio/light/cros_ec_light_prox.c        |  6 +--
+> >  drivers/iio/pressure/cros_ec_baro.c           |  6 +--
+> >  .../linux/iio/common/cros_ec_sensors_core.h   |  4 +-
+> >  5 files changed, 50 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+> > b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+> > index 17af4e0fd5f8..a0ecee15a6c8 100644
+> > --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+> > +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+> > @@ -172,7 +172,7 @@ static int cros_ec_sensors_write(struct iio_dev
+> > *indio_dev,
+> >  	return ret;
+> >  }
+> >  
+> > -static const struct iio_info ec_sensors_info = {
+> > +static struct iio_info ec_sensors_info = {
+> >  	.read_raw = &cros_ec_sensors_read,
+> >  	.write_raw = &cros_ec_sensors_write,
+> >  };
+> > @@ -195,11 +195,11 @@ static int cros_ec_sensors_probe(struct
+> > platform_device *pdev)
+> >  	if (!indio_dev)
+> >  		return -ENOMEM;
+> >  
+> > -	ret = cros_ec_sensors_core_init(pdev, indio_dev, true);
+> > +	ret = cros_ec_sensors_core_init(pdev, indio_dev,
+> > &ec_sensors_info,
+> > +					true);
+> >  	if (ret)
+> >  		return ret;
+> >  
+> > -	indio_dev->info = &ec_sensors_info;
+> >  	state = iio_priv(indio_dev);
+> >  	for (channel = state->channels, i = CROS_EC_SENSOR_X;
+> >  	     i < CROS_EC_SENSOR_MAX_AXIS; i++, channel++) {
+> > diff --git
+> > a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > index ac53ea32c1b1..08fb5d3dc7b5 100644
+> > --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > @@ -10,6 +10,7 @@
+> >  #include <linux/iio/buffer.h>
+> >  #include <linux/iio/common/cros_ec_sensors_core.h>
+> >  #include <linux/iio/iio.h>
+> > +#include <linux/iio/sysfs.h>
+> >  #include <linux/iio/kfifo_buf.h>
+> >  #include <linux/iio/trigger_consumer.h>
+> >  #include <linux/kernel.h>
+> > @@ -86,8 +87,42 @@ static int
+> > cros_ec_get_host_cmd_version_mask(struct cros_ec_device *ec_dev,
+> >  	return ret;
+> >  }
+> >  
+> > +/**
+> > + * cros_ec_sensors_read_freq() - sysfs function to get available
+> > frequencies
+> > + * @dev: Device structure for this device.
+> > + * @attr: Description of the attribute.
+> > + * @buf: Incoming string
+> > + *
+> > + * The later modes are only relevant to the ring buffer - and
+> > depend on current
+> > + * mode. Note that data sheet gives rather wide tolerances for
+> > these so integer
+> > + * division will give good enough answer and not all chips have
+> > them specified
+> > + * at all.
+> > + **/
+> > +static ssize_t cros_ec_sensors_read_freq(struct device *dev,
+> > +					 struct device_attribute *attr,
+> > +					 char *buf)
+> > +{
+> > +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+> > +	struct cros_ec_sensors_core_state *state = iio_priv(indio_dev);
+> > +
+> > +	return snprintf(buf, PAGE_SIZE, "[%d 1 %d]\n", state->min_freq,
+> > +			state->max_freq);
+> Whilst it is a bit more fiddly I would much prefer if this was done
+> with
+> the info_mask_shared_by_all_available bit mask in the iio_dev and
+> providing
+> the read_avail callback.
+> 
+> The original reason to introduce this form was as part of trying to
+> (far too slowly) kill off as much hand defined ABI as possible. 
+> Ultimate aim is to make the IIO interface optional for cases where
+> the channels are mostly being used by other consumer drivers rather
+> than
+> being directly consumed by userspace.  To do that we need all of
+> these elements to be easily accessible from the consumer hooks.
+> 
+> 
+> 
+> > +}
+> > +
+> > +static IIO_DEV_ATTR_SAMP_FREQ_AVAIL(cros_ec_sensors_read_freq);
+> > +
+> > +static struct attribute *cros_ec_sensors_attributes[] = {
+> > +	&iio_dev_attr_sampling_frequency_available.dev_attr.attr,
+> > +	NULL,
+> > +};
+> > +
+> > +static const struct attribute_group
+> > cros_ec_sensors_attribute_group = {
+> > +	.attrs = cros_ec_sensors_attributes,
+> > +};
+> > +
+> >  int cros_ec_sensors_core_init(struct platform_device *pdev,
+> >  			      struct iio_dev *indio_dev,
+> > +			      struct iio_info *info,
+> >  			      bool physical_device)
+> >  {
+> >  	struct device *dev = &pdev->dev;
+> > @@ -149,6 +184,9 @@ int cros_ec_sensors_core_init(struct
+> > platform_device *pdev,
+> >  		}
+> >  	}
+> >  
+> > +	info->attrs = &cros_ec_sensors_attribute_group;
+> > +	indio_dev->info = info;
+> > +
+> >  	return 0;
+> >  }
+> >  EXPORT_SYMBOL_GPL(cros_ec_sensors_core_init);
+> > diff --git a/drivers/iio/light/cros_ec_light_prox.c
+> > b/drivers/iio/light/cros_ec_light_prox.c
+> > index 308ee6ff2e22..1772e339cf14 100644
+> > --- a/drivers/iio/light/cros_ec_light_prox.c
+> > +++ b/drivers/iio/light/cros_ec_light_prox.c
+> > @@ -161,7 +161,7 @@ static int cros_ec_light_prox_write(struct
+> > iio_dev *indio_dev,
+> >  	return ret;
+> >  }
+> >  
+> > -static const struct iio_info cros_ec_light_prox_info = {
+> > +static struct iio_info cros_ec_light_prox_info = {
+> >  	.read_raw = &cros_ec_light_prox_read,
+> >  	.write_raw = &cros_ec_light_prox_write,
+> >  };
+> > @@ -184,11 +184,11 @@ static int cros_ec_light_prox_probe(struct
+> > platform_device *pdev)
+> >  	if (!indio_dev)
+> >  		return -ENOMEM;
+> >  
+> > -	ret = cros_ec_sensors_core_init(pdev, indio_dev, true);
+> > +	ret = cros_ec_sensors_core_init(pdev, indio_dev,
+> > +					&cros_ec_light_prox_info,
+> > true);
+> >  	if (ret)
+> >  		return ret;
+> >  
+> > -	indio_dev->info = &cros_ec_light_prox_info;
+> >  	state = iio_priv(indio_dev);
+> >  	state->core.type = state->core.resp->info.type;
+> >  	state->core.loc = state->core.resp->info.location;
+> > diff --git a/drivers/iio/pressure/cros_ec_baro.c
+> > b/drivers/iio/pressure/cros_ec_baro.c
+> > index 034ce98d6e97..cd3be0f16226 100644
+> > --- a/drivers/iio/pressure/cros_ec_baro.c
+> > +++ b/drivers/iio/pressure/cros_ec_baro.c
+> > @@ -107,7 +107,7 @@ static int cros_ec_baro_write(struct iio_dev
+> > *indio_dev,
+> >  	return ret;
+> >  }
+> >  
+> > -static const struct iio_info cros_ec_baro_info = {
+> > +static struct iio_info cros_ec_baro_info = {
+> >  	.read_raw = &cros_ec_baro_read,
+> >  	.write_raw = &cros_ec_baro_write,
+> >  };
+> > @@ -130,11 +130,11 @@ static int cros_ec_baro_probe(struct
+> > platform_device *pdev)
+> >  	if (!indio_dev)
+> >  		return -ENOMEM;
+> >  
+> > -	ret = cros_ec_sensors_core_init(pdev, indio_dev, true);
+> > +	ret = cros_ec_sensors_core_init(pdev, indio_dev,
+> > &cros_ec_baro_info,
+> > +					true);
+> >  	if (ret)
+> >  		return ret;
+> >  
+> > -	indio_dev->info = &cros_ec_baro_info;
+> >  	state = iio_priv(indio_dev);
+> >  	state->core.type = state->core.resp->info.type;
+> >  	state->core.loc = state->core.resp->info.location;
+> > diff --git a/include/linux/iio/common/cros_ec_sensors_core.h
+> > b/include/linux/iio/common/cros_ec_sensors_core.h
+> > index 32fd08bbcf52..f170a72ac08d 100644
+> > --- a/include/linux/iio/common/cros_ec_sensors_core.h
+> > +++ b/include/linux/iio/common/cros_ec_sensors_core.h
+> > @@ -114,12 +114,14 @@ struct platform_device;
+> >   * cros_ec_sensors_core_init() - basic initialization of the core
+> > structure
+> >   * @pdev:		platform device created for the sensors
+> >   * @indio_dev:		iio device structure of the device
+> > + * @info:		iio info structure with read and write callback
+> >   * @physical_device:	true if the device refers to a physical
+> > device
+> >   *
+> >   * Return: 0 on success, -errno on failure.
+> >   */
+> >  int cros_ec_sensors_core_init(struct platform_device *pdev,
+> > -			      struct iio_dev *indio_dev, bool
+> > physical_device);
+> > +			      struct iio_dev *indio_dev, struct
+> > iio_info *info,
+> > +			      bool physical_device);
+> >  
+> >  /**
+> >   * cros_ec_sensors_capture() - the trigger handler function
+
