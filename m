@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 305C6C04AB3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1562C07542
 	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2E1320859
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:21:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79EC220859
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:21:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726302AbfE0KVl (ORCPT
+        id S1726627AbfE0KVn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 06:21:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53634 "EHLO mx1.redhat.com"
+        Mon, 27 May 2019 06:21:43 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59866 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725814AbfE0KVl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 06:21:41 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        id S1725858AbfE0KVm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 06:21:42 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B950D30832F4;
-        Mon, 27 May 2019 10:21:37 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 20FE9307D869;
+        Mon, 27 May 2019 10:21:36 +0000 (UTC)
 Received: from [10.36.117.89] (ovpn-117-89.ams2.redhat.com [10.36.117.89])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A771D19C58;
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 89C595D9CA;
         Mon, 27 May 2019 10:21:24 +0000 (UTC)
 Subject: Re: [PATCH V4 4/4] arm64/mm: Enable memory hot remove
 To:     Anshuman Khandual <anshuman.khandual@arm.com>,
@@ -87,7 +87,7 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  +8Umfre0Xt4713VxMygW0PnQt5aSQdMD58jHFxTk092mU+yIHj5LeYgvwSgZN4airXk5yRXl
  SE+xAvmumFBY
 Organization: Red Hat GmbH
-Message-ID: <f122457b-b87d-7717-d983-b1a734ee037e@redhat.com>
+Message-ID: <88b9d9ec-36c0-b9f3-0b9d-e3d100dc5333@redhat.com>
 Date:   Mon, 27 May 2019 12:21:23 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
@@ -96,8 +96,8 @@ In-Reply-To: <b226746e-fed1-ea18-f100-0a2c6c561d1f@arm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Mon, 27 May 2019 10:21:41 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 27 May 2019 10:21:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
