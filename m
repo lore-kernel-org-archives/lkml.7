@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE223C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 22:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23055C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 22:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B17B42133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 22:39:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA0CB2081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 22:39:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558996788;
-	bh=DsYg7AzSvHFuFdz1+CG0RxTB+NMpLarMplA0DbFOavM=;
+	s=default; t=1558996794;
+	bh=ua6I4CLzAefT55wVsbJQWhe6NsT3WuAgTj2A2upB0No=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LQ50zgAAJqgw5QS8eKXAHJeal3ya0ewlrLK2maGzXjTKdYGqLARYeJZB03yS8IAnI
-	 uhjU460LvCHC9jo+KxI3iogoUjKYfFRqJu3WlyYD5zkDJxBgrPEVPNfWkOcer96FDE
-	 CIa2RaERm45hiaiypQ0EmTGIDDr5bBok2lBxUwys=
+	b=0Kngq9+n3h8Wcb7JNndXJB/GruQy4p/3C4n+UQLKz8UfEXM01Qg9ssBNj7p8ODu4q
+	 z66Vjk5ZdwwdWgVgsT8tXGLjV1k4ZZwAWq/HcSq9iirogFaBXrHFgqjRVya8SgAQdn
+	 va26J06PP/wtzITTSSmZTWLhQ9zhsklkVjCZykQ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727917AbfE0Wjr (ORCPT
+        id S1727934AbfE0Wjx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 18:39:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45582 "EHLO mail.kernel.org"
+        Mon, 27 May 2019 18:39:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727841AbfE0Wjq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 18:39:46 -0400
+        id S1727841AbfE0Wjv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 18:39:51 -0400
 Received: from quaco.ghostprotocols.net (179-240-171-7.3g.claro.net.br [179.240.171.7])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C23482081C;
-        Mon, 27 May 2019 22:39:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A71420859;
+        Mon, 27 May 2019 22:39:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558996786;
-        bh=DsYg7AzSvHFuFdz1+CG0RxTB+NMpLarMplA0DbFOavM=;
+        s=default; t=1558996790;
+        bh=ua6I4CLzAefT55wVsbJQWhe6NsT3WuAgTj2A2upB0No=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YfKrts1/Aur6f3rwUt0FTAX19jSOnYBhEG0y3xA2FahI6qI2bDE94rTmP+QdICtPl
-         zRqlwbY8sKmxgmP3fdm0bKHZo9lIMhYPhhA1X+c7B5UwdBBKsWu8GRu3Lc3bA2qzyD
-         wZFGCCmNs9rz8QW8NF563HmfkGEY/DwHCJAM7MzA=
+        b=pr3C0E88d7EpsjFaXwQUHY6dpELFbBM42/ACMZrjgHXYmifwpkxZe6dwYd/ImHrPz
+         AP+wGB3e3NrM4ZH/PpGQf0YmrmDibxquNF2gTkj1gSb+VrV66zk+qts78jk6vFArOk
+         OsXq/2gV5X2ug4ft5tI/1gYWp9oB52d0ISy70I2M=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -49,9 +49,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Jiri Olsa <jolsa@redhat.com>,
         Krister Johansen <kjlx@templeofstupid.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 26/44] perf namespace: Protect reading thread's namespace
-Date:   Mon, 27 May 2019 19:37:12 -0300
-Message-Id: <20190527223730.11474-27-acme@kernel.org>
+Subject: [PATCH 27/44] perf session: Add missing swap ops for namespace events
+Date:   Mon, 27 May 2019 19:37:13 -0300
+Message-Id: <20190527223730.11474-28-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190527223730.11474-1-acme@kernel.org>
 References: <20190527223730.11474-1-acme@kernel.org>
@@ -64,55 +64,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Namhyung Kim <namhyung@kernel.org>
 
-It seems that the current code lacks holding the namespace lock in
-thread__namespaces().  Otherwise it can see inconsistent results.
+In case it's recorded in a different arch.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Cc: Hari Bathini <hbathini@linux.vnet.ibm.com>
+Cc: Hari Bathini <hbathini@linux.vnet.ibm.com> <hbathini@linux.vnet.ibm.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Krister Johansen <kjlx@templeofstupid.com>
-Link: http://lkml.kernel.org/r/20190522053250.207156-2-namhyung@kernel.org
+Fixes: f3b3614a284d ("perf tools: Add PERF_RECORD_NAMESPACES to include namespaces related info")
+Link: http://lkml.kernel.org/r/20190522053250.207156-3-namhyung@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/thread.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ tools/perf/util/session.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
-index 403045a2bbea..b413ba5b9835 100644
---- a/tools/perf/util/thread.c
-+++ b/tools/perf/util/thread.c
-@@ -133,7 +133,7 @@ void thread__put(struct thread *thread)
- 	}
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 2310a1752983..54cf163347f7 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -647,6 +647,26 @@ static void perf_event__throttle_swap(union perf_event *event,
+ 		swap_sample_id_all(event, &event->throttle + 1);
  }
  
--struct namespaces *thread__namespaces(const struct thread *thread)
-+static struct namespaces *__thread__namespaces(const struct thread *thread)
- {
- 	if (list_empty(&thread->namespaces_list))
- 		return NULL;
-@@ -141,10 +141,21 @@ struct namespaces *thread__namespaces(const struct thread *thread)
- 	return list_first_entry(&thread->namespaces_list, struct namespaces, list);
- }
- 
-+struct namespaces *thread__namespaces(const struct thread *thread)
++static void perf_event__namespaces_swap(union perf_event *event,
++					bool sample_id_all)
 +{
-+	struct namespaces *ns;
++	u64 i;
 +
-+	down_read((struct rw_semaphore *)&thread->namespaces_lock);
-+	ns = __thread__namespaces(thread);
-+	up_read((struct rw_semaphore *)&thread->namespaces_lock);
++	event->namespaces.pid		= bswap_32(event->namespaces.pid);
++	event->namespaces.tid		= bswap_32(event->namespaces.tid);
++	event->namespaces.nr_namespaces	= bswap_64(event->namespaces.nr_namespaces);
 +
-+	return ns;
++	for (i = 0; i < event->namespaces.nr_namespaces; i++) {
++		struct perf_ns_link_info *ns = &event->namespaces.link_info[i];
++
++		ns->dev = bswap_64(ns->dev);
++		ns->ino = bswap_64(ns->ino);
++	}
++
++	if (sample_id_all)
++		swap_sample_id_all(event, &event->namespaces.link_info[i]);
 +}
 +
- static int __thread__set_namespaces(struct thread *thread, u64 timestamp,
- 				    struct namespaces_event *event)
+ static u8 revbyte(u8 b)
  {
--	struct namespaces *new, *curr = thread__namespaces(thread);
-+	struct namespaces *new, *curr = __thread__namespaces(thread);
- 
- 	new = namespaces__new(event);
- 	if (!new)
+ 	int rev = (b >> 4) | ((b & 0xf) << 4);
+@@ -887,6 +907,7 @@ static perf_event__swap_op perf_event__swap_ops[] = {
+ 	[PERF_RECORD_LOST_SAMPLES]	  = perf_event__all64_swap,
+ 	[PERF_RECORD_SWITCH]		  = perf_event__switch_swap,
+ 	[PERF_RECORD_SWITCH_CPU_WIDE]	  = perf_event__switch_swap,
++	[PERF_RECORD_NAMESPACES]	  = perf_event__namespaces_swap,
+ 	[PERF_RECORD_HEADER_ATTR]	  = perf_event__hdr_attr_swap,
+ 	[PERF_RECORD_HEADER_EVENT_TYPE]	  = perf_event__event_type_swap,
+ 	[PERF_RECORD_HEADER_TRACING_DATA] = perf_event__tracing_data_swap,
 -- 
 2.20.1
 
