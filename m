@@ -2,127 +2,156 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96DBCC04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 271A2C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 784F32133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E90A820859
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:54:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dR84Z3nu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbfE0Kxr (ORCPT
+        id S1726652AbfE0Kyi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 06:53:47 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:63322 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726476AbfE0Kxo (ORCPT
+        Mon, 27 May 2019 06:54:38 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:42432 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725858AbfE0Kyh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 06:53:44 -0400
-Received: from 79.184.255.36.ipv4.supernova.orange.pl (79.184.255.36) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
- id 3e9dcd1393346651; Mon, 27 May 2019 12:53:42 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Mathieu Malaterre <malat@debian.org>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2] powerpc/power: Expose pfn_is_nosave prototype
-Date:   Mon, 27 May 2019 12:53:41 +0200
-Message-ID: <1929721.iDiXxTFbjN@kreacher>
-In-Reply-To: <20190524104418.17194-1-malat@debian.org>
-References: <20190523114736.30268-1-malat@debian.org> <20190524104418.17194-1-malat@debian.org>
+        Mon, 27 May 2019 06:54:37 -0400
+Received: by mail-lf1-f65.google.com with SMTP id y13so11706354lfh.9
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 03:54:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=T2n4gBNEt3oKhgRBGoBZWnyBBkiJxP3xEBbVU5SxBlY=;
+        b=dR84Z3nuv3s5YOrQqiLB6Ix9wMQyT82iqcq3wrUTRa/kZxr+uBwRmuVxh7hx4Lj3FM
+         KEhFHkxTmGv6Kam6nBU+3HqKorCFNvjw9OKzYn2VNr6iYG7Vd9fuyzf40YRt32xz2mSg
+         bOlKoojrSHXP5UsyZ7jQAqUTsUqLpKSgzi5DR4/VRyJe0G/djkI1+RjUawiyvAvHZEv3
+         3XP1nkgpkAxPkHG7+BRQVTg9/MdbHsZdjvMS8pi4eVrG7fJTgAEcOXKiSiV6YDPNq6jw
+         6xUNJqhwJr+anTyRiB+gdR3lBXp1Y/etJgAXzlqqmzfgEdAxjIYaFfuQhg6wQqVmQwf3
+         vXaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=T2n4gBNEt3oKhgRBGoBZWnyBBkiJxP3xEBbVU5SxBlY=;
+        b=gnAkhaXxUbFbmYFSXjLqTXc01TffCzh331d2HSTtVn6d21W7tZFUb9TEOZwHxQEuU3
+         RzQWaI4bCoIWWgkTK4xVfoqi0WlDjvGcrI667h/9pWaqNjzFJ0BaxUAN0Tmp/OPSyFMF
+         8ksEuDobjD+gTx2hof1K8gq9+GfKkvtyZjHk5QzOlbNIrfqInEAe5/HjnNIavAxW6Kdy
+         iL62QDy7TRzp1o0KZwweO2qSVG7ywCy2mIzMt3P7/1+ZTgD/gGRk29icZFjr+/JN20bI
+         IT/uqPZDWiMJO1bNzW5A6BG6Bgwp2D5lEPMvRGMn0QLqetb318rIaOh0L/dbIMf/WaTT
+         4RLQ==
+X-Gm-Message-State: APjAAAV/oNEeutnI7acJBWNIgziL8+1G97ngpDalg9bYpSh9SwZqCDRk
+        WpslEPMdFcB+5i6PX3soEYcZzbsyBDb7kdZ0HEY=
+X-Google-Smtp-Source: APXvYqxlu5SnIBVa0aUlRiEJtdFyNmXZap0vDJRssM/5GGdUmvTYcWWazIPXEdPkaGYaXb7kqt5b4zLGBxOPmONRBqE=
+X-Received: by 2002:a19:9e46:: with SMTP id h67mr8374590lfe.120.1558954475111;
+ Mon, 27 May 2019 03:54:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20190524174918.71074b358001bdbf1c23cd77@gmail.com> <20190525150948.e1ff1a2a894ca8110abc8183@linux-foundation.org>
+In-Reply-To: <20190525150948.e1ff1a2a894ca8110abc8183@linux-foundation.org>
+From:   Vitaly Wool <vitalywool@gmail.com>
+Date:   Mon, 27 May 2019 12:54:23 +0200
+Message-ID: <CAMJBoFNXVc3BBdEOsKTSHO51reHL93GPQNO4Tjkx+OaDcpb22g@mail.gmail.com>
+Subject: Re: [PATCH] z3fold: add inter-page compaction
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux-MM <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        Dan Streetman <ddstreet@ieee.org>,
+        Oleksiy.Avramchenko@sony.com,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Uladzislau Rezki <urezki@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday, May 24, 2019 12:44:18 PM CEST Mathieu Malaterre wrote:
-> The declaration for pfn_is_nosave is only available in
-> kernel/power/power.h. Since this function can be override in arch,
-> expose it globally. Having a prototype will make sure to avoid warning
-> (sometime treated as error with W=1) such as:
-> 
->   arch/powerpc/kernel/suspend.c:18:5: error: no previous prototype for 'pfn_is_nosave' [-Werror=missing-prototypes]
-> 
-> This moves the declaration into a globally visible header file and add
-> missing include to avoid a warning on powerpc. Also remove the
-> duplicated prototypes since not required anymore.
-> 
-> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-> Signed-off-by: Mathieu Malaterre <malat@debian.org>
-> ---
-> v2: As suggestion by christophe remove duplicates prototypes
-> 
->  arch/powerpc/kernel/suspend.c | 1 +
->  arch/s390/kernel/entry.h      | 1 -
->  include/linux/suspend.h       | 1 +
->  kernel/power/power.h          | 2 --
->  4 files changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/powerpc/kernel/suspend.c b/arch/powerpc/kernel/suspend.c
-> index a531154cc0f3..9e1b6b894245 100644
-> --- a/arch/powerpc/kernel/suspend.c
-> +++ b/arch/powerpc/kernel/suspend.c
-> @@ -8,6 +8,7 @@
->   */
->  
->  #include <linux/mm.h>
-> +#include <linux/suspend.h>
->  #include <asm/page.h>
->  #include <asm/sections.h>
->  
-> diff --git a/arch/s390/kernel/entry.h b/arch/s390/kernel/entry.h
-> index 20420c2b8a14..b2956d49b6ad 100644
-> --- a/arch/s390/kernel/entry.h
-> +++ b/arch/s390/kernel/entry.h
-> @@ -63,7 +63,6 @@ void __init startup_init(void);
->  void die(struct pt_regs *regs, const char *str);
->  int setup_profiling_timer(unsigned int multiplier);
->  void __init time_init(void);
-> -int pfn_is_nosave(unsigned long);
->  void s390_early_resume(void);
->  unsigned long prepare_ftrace_return(unsigned long parent, unsigned long sp, unsigned long ip);
->  
-> diff --git a/include/linux/suspend.h b/include/linux/suspend.h
-> index 6b3ea9ea6a9e..e8b8a7bede90 100644
-> --- a/include/linux/suspend.h
-> +++ b/include/linux/suspend.h
-> @@ -395,6 +395,7 @@ extern bool system_entering_hibernation(void);
->  extern bool hibernation_available(void);
->  asmlinkage int swsusp_save(void);
->  extern struct pbe *restore_pblist;
-> +int pfn_is_nosave(unsigned long pfn);
->  #else /* CONFIG_HIBERNATION */
->  static inline void register_nosave_region(unsigned long b, unsigned long e) {}
->  static inline void register_nosave_region_late(unsigned long b, unsigned long e) {}
-> diff --git a/kernel/power/power.h b/kernel/power/power.h
-> index 9e58bdc8a562..44bee462ff57 100644
-> --- a/kernel/power/power.h
-> +++ b/kernel/power/power.h
-> @@ -75,8 +75,6 @@ static inline void hibernate_reserved_size_init(void) {}
->  static inline void hibernate_image_size_init(void) {}
->  #endif /* !CONFIG_HIBERNATION */
->  
-> -extern int pfn_is_nosave(unsigned long);
-> -
->  #define power_attr(_name) \
->  static struct kobj_attribute _name##_attr = {	\
->  	.attr	= {				\
-> 
+On Sun, May 26, 2019 at 12:09 AM Andrew Morton
+<akpm@linux-foundation.org> wrote:
 
-With an ACK from the powerpc maintainers, I could apply this one.
+<snip>
+> Forward-declaring inline functions is peculiar, but it does appear to work.
+>
+> z3fold is quite inline-happy.  Fortunately the compiler will ignore the
+> inline hint if it seems a bad idea.  Even then, the below shrinks
+> z3fold.o text from 30k to 27k.  Which might even make it faster....
 
+It is faster with inlines, I'll try to find a better balance between
+size and performance in the next version of the patch though.
 
+<snip>
+> >
+> > ...
+> >
+> > +static inline struct z3fold_header *__get_z3fold_header(unsigned long handle,
+> > +                                                     bool lock)
+> > +{
+> > +     struct z3fold_buddy_slots *slots;
+> > +     struct z3fold_header *zhdr;
+> > +     unsigned int seq;
+> > +     bool is_valid;
+> > +
+> > +     if (!(handle & (1 << PAGE_HEADLESS))) {
+> > +             slots = handle_to_slots(handle);
+> > +             do {
+> > +                     unsigned long addr;
+> > +
+> > +                     seq = read_seqbegin(&slots->seqlock);
+> > +                     addr = *(unsigned long *)handle;
+> > +                     zhdr = (struct z3fold_header *)(addr & PAGE_MASK);
+> > +                     preempt_disable();
+>
+> Why is this done?
+>
+> > +                     is_valid = !read_seqretry(&slots->seqlock, seq);
+> > +                     if (!is_valid) {
+> > +                             preempt_enable();
+> > +                             continue;
+> > +                     }
+> > +                     /*
+> > +                      * if we are here, zhdr is a pointer to a valid z3fold
+> > +                      * header. Lock it! And then re-check if someone has
+> > +                      * changed which z3fold page this handle points to
+> > +                      */
+> > +                     if (lock)
+> > +                             z3fold_page_lock(zhdr);
+> > +                     preempt_enable();
+> > +                     /*
+> > +                      * we use is_valid as a "cached" value: if it's false,
+> > +                      * no other checks needed, have to go one more round
+> > +                      */
+> > +             } while (!is_valid || (read_seqretry(&slots->seqlock, seq) &&
+> > +                     (lock ? ({ z3fold_page_unlock(zhdr); 1; }) : 1)));
+> > +     } else {
+> > +             zhdr = (struct z3fold_header *)(handle & PAGE_MASK);
+> > +     }
+> > +
+> > +     return zhdr;
+> > +}
+> >
+> > ...
+> >
+> >  static unsigned short handle_to_chunks(unsigned long handle)
+> >  {
+> > -     unsigned long addr = *(unsigned long *)handle;
+> > +     unsigned long addr;
+> > +     struct z3fold_buddy_slots *slots = handle_to_slots(handle);
+> > +     unsigned int seq;
+> > +
+> > +     do {
+> > +             seq = read_seqbegin(&slots->seqlock);
+> > +             addr = *(unsigned long *)handle;
+> > +     } while (read_seqretry(&slots->seqlock, seq));
+>
+> It isn't done here (I think).
 
+handle_to_chunks() is always called with z3fold header locked which
+makes it a lot easier in this case. I'll add some comments in V2.
 
+Thanks,
+   Vitaly
