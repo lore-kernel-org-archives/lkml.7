@@ -2,93 +2,95 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D099BC072B1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:39:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36AA2C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:39:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C0362070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:39:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="2sJXweNI"
+	by mail.kernel.org (Postfix) with ESMTP id 0BAB62070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:39:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558967970;
+	bh=eYJdt5LysmIpGUjUTTtLrtvdTqnmBzuCdvKM5LSX56Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=f9lazBRmwzFCEX4IgcfbxlWMggoEjHg++2/z3xsHpx9a0lBvMSAospG6K3Rwr+cLN
+	 C9zH94/wtxO/ToTWv2w5nJ64Bh8Thcwzlf4dPD65pADkKHGWeKoxQWs49s4/YzCnCE
+	 2js2TzND8NV9l1RQ6XV8wtCT9GuahFJuOKTEryys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbfE0OjV (ORCPT
+        id S1726937AbfE0Oj3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 10:39:21 -0400
-Received: from conuserg-07.nifty.com ([210.131.2.74]:43269 "EHLO
-        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbfE0OjT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 10:39:19 -0400
-Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id x4REc8hq015915;
-        Mon, 27 May 2019 23:38:11 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x4REc8hq015915
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1558967892;
-        bh=6bglQw1o0+227H4JjdFxK5L+4gQ5kdmgdzv31/MURZU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2sJXweNIRR4f+KtxL9FuNZntt+7ccU2SYjSqdqCWNjiJ/CR18XNsC/u/6N68rxHxc
-         K2jblZO8e7Je5mD7l0TmxOjxw/wIu1T36uHB1M7KYo7nx9+v4aWMAn9/zI2Lv46HR0
-         09ciS8LqbnKZQD6uvb8X40Wu/wNUAjPKcXqjIn6Kwg/Fi3p5yrxZnvZRkY14WQClXA
-         J1nhXY1BxTiraxxYY/bIm1hR1/kBHxXMG6u5DFXJV2ujZRjBFQuQ6D5zZtMPf7qAro
-         dR1OJt6q3eXF7ztQKVgYrTVnmZSTlUtMRwHip5z6442nGXIscIgG/nGmL3QUWNtYzT
-         bDfUWDDJKX25Q==
-X-Nifty-SrcIP: [126.125.154.139]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Guenter Roeck <groeck@chromium.org>,
-        linux-kernel@vger.kernel.org, Guan Xuetao <gxt@pku.edu.cn>,
-        Paul Burton <paul.burton@mips.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [PATCH 5/5] unicore32: rename unicore32_defconfig to defconfig
-Date:   Mon, 27 May 2019 23:37:25 +0900
-Message-Id: <20190527143725.12542-5-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190527143725.12542-1-yamada.masahiro@socionext.com>
-References: <20190527143725.12542-1-yamada.masahiro@socionext.com>
+        Mon, 27 May 2019 10:39:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43862 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726302AbfE0Oj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 10:39:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 68FD0AEFD;
+        Mon, 27 May 2019 14:39:27 +0000 (UTC)
+Date:   Mon, 27 May 2019 16:39:26 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Roman Gushchin <guro@fb.com>, linux-api@vger.kernel.org
+Subject: Re: [PATCH RFC] mm/madvise: implement MADV_STOCKPILE (kswapd from
+ user space)
+Message-ID: <20190527143926.GF1658@dhcp22.suse.cz>
+References: <155895155861.2824.318013775811596173.stgit@buzz>
+ <20190527141223.GD1658@dhcp22.suse.cz>
+ <20190527142156.GE1658@dhcp22.suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190527142156.GE1658@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the initial support of unicore32, it has always had a single
-defconfig. Rename it to 'defconfig', which is now the standard name
-when arch has just a single defconfig file.
+On Mon 27-05-19 16:21:56, Michal Hocko wrote:
+> On Mon 27-05-19 16:12:23, Michal Hocko wrote:
+> > [Cc linux-api. Please always cc this list when proposing a new user
+> >  visible api. Keeping the rest of the email intact for reference]
+> > 
+> > On Mon 27-05-19 13:05:58, Konstantin Khlebnikov wrote:
+> [...]
+> > > This implements manual kswapd-style memory reclaim initiated by userspace.
+> > > It reclaims both physical memory and cgroup pages. It works in context of
+> > > task who calls syscall madvise thus cpu time is accounted correctly.
+> 
+> I do not follow. Does this mean that the madvise always reclaims from
+> the memcg the process is member of?
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+OK, I've had a quick look at the implementation (the semantic should be
+clear from the patch descrition btw.) and it goes all the way up the
+hierarchy and finally try to impose the same limit to the global state.
+This doesn't really make much sense to me. For few reasons.
 
- arch/unicore32/Makefile                                   | 3 +--
- arch/unicore32/configs/{unicore32_defconfig => defconfig} | 0
- 2 files changed, 1 insertion(+), 2 deletions(-)
- rename arch/unicore32/configs/{unicore32_defconfig => defconfig} (100%)
+First of all it breaks isolation where one subgroup can influence a
+different hierarchy via parent reclaim.
 
-diff --git a/arch/unicore32/Makefile b/arch/unicore32/Makefile
-index 98a5ca43ae87..390819947c37 100644
---- a/arch/unicore32/Makefile
-+++ b/arch/unicore32/Makefile
-@@ -41,8 +41,7 @@ libs-y			+= arch/unicore32/lib/
- 
- boot			:= arch/unicore32/boot
- 
--# Default defconfig and target when executing plain make
--KBUILD_DEFCONFIG	:= $(ARCH)_defconfig
-+# Default target when executing plain make
- KBUILD_IMAGE		:= $(boot)/zImage
- 
- all:	zImage
-diff --git a/arch/unicore32/configs/unicore32_defconfig b/arch/unicore32/configs/defconfig
-similarity index 100%
-rename from arch/unicore32/configs/unicore32_defconfig
-rename to arch/unicore32/configs/defconfig
+I also have a problem with conflating the global and memcg states. Does
+it really make any sense to have the same target to the global state
+as per-memcg? How are you supposed to use this interface to shrink a
+particular memcg or for the global situation with a proportional
+distribution to all memcgs?
+
+There also doens't seem to be anything about security model for this
+operation. There is no capability check from a quick look. Is it really
+safe to expose such a functionality for a common user?
+
+Last but not least, I am not really convinced that madvise is a proper
+interface. It stretches the API which is address range based and it has
+per-process implications.
 -- 
-2.17.1
-
+Michal Hocko
+SUSE Labs
