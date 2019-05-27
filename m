@@ -2,105 +2,85 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5622C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12EDBC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C096217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:00:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JFrH+ub8"
+	by mail.kernel.org (Postfix) with ESMTP id D5F2F2147A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:02:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbfE0KAG (ORCPT
+        id S1726728AbfE0KCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 06:00:06 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47836 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726072AbfE0KAG (ORCPT
+        Mon, 27 May 2019 06:02:55 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:42050 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725991AbfE0KCz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 06:00:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=pxkp8tq0sMiTLO95g3xOPswyqXvnhhBUINaDYGjGqIk=; b=JFrH+ub8189YFBJQ++CwXXpXD
-        bjLXxf4yQ8tNefpx70/8kC2rlsGT4or1N0FoJfttEIPuxQT11/007WKSJQVV6DpbbqOksGrXHxxJD
-        UtM6zzj7EhTYvgX3MaxvXdar1Db7jttKUyjk4QM9o5ttDJEbXe5hhXzRrPlMR+NW73qLZ8LFlXOOu
-        8MeVXH0XkX0ZpUwisM5yrg3Pza1y12xbRZMs6AC+lfn7dYGOMTodSMP7Ime5fuKKHHL2TfJLbEGm1
-        jrTXbhWeJFp739IS3+JgXyE9BiQgCZ290lvPgRvRO6WdqAAOecqwMhj+AAD0R/P/Nv9wFZ2EGFO1p
-        oXVOGtgvw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hVCQC-0003kQ-RS; Mon, 27 May 2019 10:00:01 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1E4AF202BF403; Mon, 27 May 2019 11:59:59 +0200 (CEST)
-Date:   Mon, 27 May 2019 11:59:59 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Nadav Amit <namit@vmware.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
-        jgross@suse.com, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, sashal@kernel.org
-Subject: Re: [RFC PATCH 0/6] x86/mm: Flush remote and local TLBs concurrently
-Message-ID: <20190527095959.GV2623@hirez.programming.kicks-ass.net>
-References: <20190525082203.6531-1-namit@vmware.com>
+        Mon, 27 May 2019 06:02:55 -0400
+Received: by mail-qk1-f196.google.com with SMTP id b18so11021540qkc.9;
+        Mon, 27 May 2019 03:02:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FVRVMHeKQqu97EmqZ0O2CzVit3QZ4+rp2cPhTqKUleU=;
+        b=Ah2Nl7I0XrO1BF0129m1q114xMAxhM1EIFdCsOrvDEPGtCWRfuugXcv/MlUWvqaRQ8
+         +QKmCupFf+W46GUUABMC5MFVCAQAa8fVg1/xjI8RuYwZ1dszywcPWVXd1kg2+9KeGNW3
+         ++fOxiPql8P8oPUP1YCvLy5KKwK19mJgjFF6rIcBq4IDX1wBIo5wMbgrVkJRrjlFXf3u
+         nzRU5DrcQi+4iArfoXZDEOZQwD+unPIj+cQ66407EQ7MWOjmwpyHSNFFUyQbpdrfW0Df
+         B96uLx6cV5Q3rNK1tkPcGGY63RevXMncscrfTvL9dUexLl6cyZdyGHzfyOLQ1v4B0tIF
+         Hkaw==
+X-Gm-Message-State: APjAAAXh82AtaNPEJI+4wAM3akeUgwb0t3kLx9VP/StV9kBTVjhr5A1f
+        Fr8VqIUR2uSzUex9FMQJv/K3VCEUPLChk8+FI6c=
+X-Google-Smtp-Source: APXvYqxKXE2KyVGw2FI19RnWnVk2RakcSWcDalFy1vamE3kyUqX41ltgZh+7vXtFVvCj+VsaY9djVyudGKIBnjILpNc=
+X-Received: by 2002:a0c:9e0f:: with SMTP id p15mr7530789qve.176.1558951373831;
+ Mon, 27 May 2019 03:02:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190525082203.6531-1-namit@vmware.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190526102612.6970-1-christian@brauner.io> <20190526102612.6970-2-christian@brauner.io>
+In-Reply-To: <20190526102612.6970-2-christian@brauner.io>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 27 May 2019 12:02:37 +0200
+Message-ID: <CAK8P3a1Ltsna_rtKxhMU7X0t=UOXDA75tKpph6s=OZ4itJe7VQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] arch: wire-up clone6() syscall on x86
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jann Horn <jannh@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 25, 2019 at 01:21:57AM -0700, Nadav Amit wrote:
-> Currently, local and remote TLB flushes are not performed concurrently,
-> which introduces unnecessary overhead - each INVLPG can take 100s of
-> cycles. This patch-set allows TLB flushes to be run concurrently: first
-> request the remote CPUs to initiate the flush, then run it locally, and
-> finally wait for the remote CPUs to finish their work.
-> 
-> The proposed changes should also improve the performance of other
-> invocations of on_each_cpu(). Hopefully, no one has relied on the
-> behavior of on_each_cpu() that functions were first executed remotely
-> and only then locally.
-> 
-> On my Haswell machine (bare-metal), running a TLB flush microbenchmark
-> (MADV_DONTNEED/touch for a single page on one thread), takes the
-> following time (ns):
-> 
-> 	n_threads	before		after
-> 	---------	------		-----
-> 	1		661		663
-> 	2		1436		1225 (-14%)
-> 	4		1571		1421 (-10%)
-> 
-> Note that since the benchmark also causes page-faults, the actual
-> speedup of TLB shootdowns is actually greater. Also note the higher
-> improvement in performance with 2 thread (a single remote TLB flush
-> target). This seems to be a side-effect of holding synchronization
-> data-structures (csd) off the stack, unlike the way it is currently done
-> (in smp_call_function_single()).
-> 
-> Patches 1-2 do small cleanup. Patches 3-5 actually implement the
-> concurrent execution of TLB flushes. Patch 6 restores local TLB flushes
-> performance, which was hurt by the optimization, to be as good as it was
-> before these changes by introducing a fast-pass for this specific case.
+On Sun, May 26, 2019 at 12:27 PM Christian Brauner <christian@brauner.io> wrote:
+>
+> Wire up the clone6() call on x86.
+>
+> This patch only wires up clone6() on x86. Some of the arches look like they
+> need special assembly massaging and it is probably smarter if the
+> appropriate arch maintainers would do the actual wiring.
 
-I like; ideally we'll get Hyper-V and Xen sorted before the final
-version and avoid having to introduce more PV crud and static keys for
-that.
+Why do some architectures need special cases here? I'd prefer to have
+new system calls always get defined in a way that avoids this, and
+have a common entry point for everyone.
 
-The Hyper-V implementation in particular is horrifically ugly, the Xen
-one also doesn't win any prices, esp. that on-stack CPU mask needs to
-go.
+Looking at the m68k sys_clone comment in
+arch/m68k/kernel/process.c, it seems that this was done as an
+optimization to deal with an inferior ABI. Similar code is present
+in h8300, ia64, nios2, and sparc. If all of them just do this to
+shave off a few cycles from the system call entry, I really
+couldn't care less.
 
-Looking at them, I'm not sure they can actually win anything from using
-the new interface, but at least we can avoid making our PV crud uglier
-than it has to be.
+       Arnd
