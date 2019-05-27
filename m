@@ -2,88 +2,80 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D5DC04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 18:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CED9BC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 19:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 978762166E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 18:59:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gKOUUUql"
+	by mail.kernel.org (Postfix) with ESMTP id B0B4B2147A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 19:00:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbfE0S7K (ORCPT
+        id S1727361AbfE0TAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 14:59:10 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41744 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726484AbfE0S7K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 14:59:10 -0400
-Received: by mail-oi1-f193.google.com with SMTP id y10so12518485oia.8
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 11:59:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pNRoKcCuhIS9xIyaBQiqtrKyyTh6R7Fw5zl+s0X/dUo=;
-        b=gKOUUUqljOmFKZwwkNiJMssB7zEQx/HIPvONJgqrTqcgqm3CbWTTjUyxD+onvjwDUr
-         wYx5jDVtdmhtx35/EcLcmouG5N/2imBpmZ5HbEbJl6LcNxo5YDy9g8KNhePS2nybkb+h
-         3r06cFVLvtbG1m9IhNeMjm5Dw4FTmXaQ7iJk/7TKMvNvCiJh6Zslc1F3IdJuK7ZetiAK
-         ug8KDxoAcmvoUwZr3zYqPFhSsRArzrztTVnUNRxzdMZE+wQOfZ0PTrrJzrqbI71XAVrW
-         ZkhTSn6/lYF53MIJ16yvQ+V7XgtIFZxzjhh9PFt72VHVJF82n8gi1LR6nsKS+KjPHzex
-         aFJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pNRoKcCuhIS9xIyaBQiqtrKyyTh6R7Fw5zl+s0X/dUo=;
-        b=HknVI0gY8PdXZv7kVQPNbJIJwjqNCXvlXvxLP/7QgpGGxY/y1A8zrtZwtof6e7N/T+
-         ETFNokTaXweXP/xalqZFoFpNGut7rBCQy/mMyFKCHC1OdaIc44jwUY7KKW+8bnweazXO
-         +goQi+rEfXIjBEJWqKKwwCOahomePtA3XDaPxqF+9pCUOGST2vMlTKdQEEk2nUaL50UX
-         iWu9FiYCZL65xF+IdQfUuzsWakmyosYneowoyP4SeLuGgzl1HGm1LxhdmZkGgDziay13
-         a1QUtF+pcGpBHBpgZV1vi5q9bRzV2ZQQhPGzP1exLTqzGvgBUee6e6aTNnQ3k8C3XP+9
-         vr0w==
-X-Gm-Message-State: APjAAAU/ktBv1LmM8PM1hXToNQNZu4nLwqmitLIqDjOjSDGJ4JHJYTM8
-        BxxKZzHIrZayADZy4bg+BJTAAlWnKTu5UuoRr6s21g==
-X-Google-Smtp-Source: APXvYqyzJK4hUa2yxcAoRiPaUD9iZ3DRriWHQF2zFxo5NNhy614LaZ0av+lp+kKrLz3zxvzQ4SL4+LlLAoamnY5sKzA=
-X-Received: by 2002:aca:4e42:: with SMTP id c63mr277691oib.170.1558983549317;
- Mon, 27 May 2019 11:59:09 -0700 (PDT)
+        Mon, 27 May 2019 15:00:01 -0400
+Received: from sauhun.de ([88.99.104.3]:35882 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726484AbfE0TAA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 15:00:00 -0400
+Received: from localhost (p5486CF59.dip0.t-ipconnect.de [84.134.207.89])
+        by pokefinder.org (Postfix) with ESMTPSA id A09DE2C04C2;
+        Mon, 27 May 2019 20:59:58 +0200 (CEST)
+Date:   Mon, 27 May 2019 20:59:58 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Yingjoe Chen <yingjoe.chen@mediatek.com>
+Cc:     Jean Delvare <khali@linux-fr.org>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
+Subject: Re: [PATCH] i2c: dev: fix potential memory leak in i2cdev_ioctl_rdwr
+Message-ID: <20190527185958.GB8808@kunai>
+References: <1557238832-10723-1-git-send-email-yingjoe.chen@mediatek.com>
 MIME-Version: 1.0
-References: <20190520190533.GA28160@Red> <20190521232323.GD3621@darkstar.musicnaut.iki.fi>
- <20190522093341.GA32154@Red> <20190522181904.GE3621@darkstar.musicnaut.iki.fi>
- <8977e2bb-8d9e-f4fd-4c44-b4f67e0e7314@redhat.com> <c2972889-fe60-7614-fb6e-e57ddf780a54@redhat.com>
- <20190527063250.GI5447@atomide.com> <5dbec436-4356-415e-eb1c-0f506af89744@roeck-us.net>
-In-Reply-To: <5dbec436-4356-415e-eb1c-0f506af89744@roeck-us.net>
-From:   Peter Maydell <peter.maydell@linaro.org>
-Date:   Mon, 27 May 2019 19:58:58 +0100
-Message-ID: <CAFEAcA-n8-LV2=hQwQOvRDT+pro7iBQD8i-QBszWHuW56VQsvg@mail.gmail.com>
-Subject: Re: [Qemu-devel] Running linux on qemu omap
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <philmd@redhat.com>,
-        Thomas Huth <thuth@redhat.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Corentin Labbe <clabbe.montjoie@gmail.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>,
-        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="TRYliJ5NKNqkz5bu"
+Content-Disposition: inline
+In-Reply-To: <1557238832-10723-1-git-send-email-yingjoe.chen@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 May 2019 at 16:56, Guenter Roeck <linux@roeck-us.net> wrote:
-> I'd be happy to use a different (supported) branch, but the Linaro branch
-> was the only one I could find that supports those boards. Unfortunately,
-> qemu changed so much since 2.3 that it is all but impossible to merge
-> the code into mainline qemu without spending a lot of effort on it.
 
-Even back at 2.3 it wasn't possible to merge the code into mainline
-without spending a lot of effort -- that's why it was not merged :-)
+--TRYliJ5NKNqkz5bu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-thanks
--- PMM
+On Tue, May 07, 2019 at 10:20:32PM +0800, Yingjoe Chen wrote:
+> If I2C_M_RECV_LEN check failed, msgs[i].buf allocated by memdup_user
+> will not be freed. Pump index up so it will be freed.
+>=20
+> Fixes: 838bfa6049fb ("i2c-dev: Add support for I2C_M_RECV_LEN")
+> Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+
+Nice catch. Applied to for-current, thanks!
+
+
+--TRYliJ5NKNqkz5bu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlzsM60ACgkQFA3kzBSg
+KbbrPg//afgtgokT56fLVAUimGKtp43xzDIQTphV9hSrj6qPYR0k56cR1pHzIusn
+2CI1BMettrTAASHv6klyeQcSJzoNDEJLwc3zWgPnMEARpTOaqc7IeptQfS0qNMkJ
+a83IE5Wvhl/w8dDINSxGqXOiMOIsYQ1fVHXYxB+9iaWM2ptxsCidWl5G+6hXUTn1
+wW3icZKaPALroV+TlvlyFIp1D+WhkrgWf/Dt2t5xe4kvnO4Z7dAvdBKvzMh9ns61
+zR/F9g0j8044RWSPzIm/uw7yvoamv+haq2f6P6k8aEvlt/R4HnsWSB440uZinZvy
+JGjn+XskfNUny0rQsWn7L8b7Avigx5bJSS5DCNeL8TUSIu4qCaBv3GSJAMd/IId4
+u8Hfs2efh3xVY8szRzl3Cw2UT92Alhg5Y0+IQK2iSeEovnKiH9asyQU7FPbDLEeO
+L10vkNMEKz1WsAOmDr+MTf7qjER6sYoECehEnn2doOE9Cvsy2K8OmrLXZ5lnQ4zl
+w30FOYcZWdohFjMBYFOtZbL785pReQ/5dAPJlNUNPdbWU3FMfNhtylcbhCc4KJVV
+Yu0NvSTfN0fKHtfEpdB6VTsecRw7tjZogVXUvoecos8SKRd+J6n18j0QXBeR2BRx
+kUdKKAQWKwTi9U/bFlwHsXGW0yJRJL8w8Z6utUXJ/xPmNXnQsRI=
+=VNJn
+-----END PGP SIGNATURE-----
+
+--TRYliJ5NKNqkz5bu--
