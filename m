@@ -2,167 +2,82 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E606C072B1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 18:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B5DC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 18:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2816220859
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 18:21:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD04320859
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 18:22:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I08TnzUs"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="EXy5Jch2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727206AbfE0SVW (ORCPT
+        id S1727230AbfE0SWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 14:21:22 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:34196 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726971AbfE0SVV (ORCPT
+        Mon, 27 May 2019 14:22:01 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:44579 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbfE0SWB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 14:21:21 -0400
-Received: by mail-lf1-f65.google.com with SMTP id v18so12708765lfi.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 11:21:19 -0700 (PDT)
+        Mon, 27 May 2019 14:22:01 -0400
+Received: by mail-oi1-f193.google.com with SMTP id z65so12439904oia.11
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 11:22:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cIQmYr9qDMcXw/frZVuWSs4Z6gJsQGJv00LJLaCloGU=;
-        b=I08TnzUsf6VHmv0MXTkDHbfoBRdecoRH0TuiyGZxWw8T/dKfvmFxurJh24q+r49R1I
-         uuBsAjEvsYuQVzOoOb3D/N7u7nOScU/WuvpJOoKOonbzLXeyUjVDwST+keiuS7+9Ep+c
-         9q3wN8GM8AMakM+zDHACUii5tQCDFhYO/FT9ju/fCN7i2H2AXkr/xmaXk4OsfwRXGrx9
-         SMfN0Yl8/YCWP4xc2fnnlx3W1HgrN9Etv+qHvLuC+kjaskSvPZkoZ+JxuICxIvBb8k8o
-         s8FkfDAJ9B0HfHyZKf90/w/4Gk6FSEjX1O+4luIDGxWIbdEi5/l2iakNB0XR0tj79Qs2
-         50dg==
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=P+FiXAOea0Da36+0fuzZTMwOJ1pKxmssdqT24E7Ljks=;
+        b=EXy5Jch2r8lQ3wOHylrAfl7aymelwxSm5mLv4h/iH5tNR53XBcL5lLzx9umgiSt9jr
+         x+edbQ/1lz+Ng26bcE1uw+teKoot6ROIIFb/85pZhhunR1RVKiAUevyFHYz7RO96Nrb8
+         bKB5Kp8E4KRko2n/NMEnx/+Yb0Qb1idYbLIEMsb1w4vy5G1wJvC3azYd067ucdcDBTCW
+         9s/lxR8Xgri+cLcUwhES1GChPO3L84gYbXFOHGYHLMHgXYtq8VrmHYTQUMl36nPj+VV+
+         PuaOm+d3Tw2r/30Chj68qN2MUI4hhxVmofs8auot6ag7PtUQKEyPZCI6il86U/XEjlHf
+         3chQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=cIQmYr9qDMcXw/frZVuWSs4Z6gJsQGJv00LJLaCloGU=;
-        b=cBVBjkfSXesU0xyeIZyLQ0IS1ojnYDKDakTB1XZOM5oOnkhEpFO+msfo63zxmtSFm3
-         6T+/fRMvbOhUESbHzylBmJ3KFKX4oDYw2EHO4vHQnt07Ml796NYitLHFSqNicX4Q7OQD
-         PwHDZ1t5kEiEJI9v61HP0NRTYy4HirMYh555vqWm9iOW4k6PLjLKFEONuJLV943tKK+y
-         Bg8i7qwsqvrzXSRrBS4yVlfemGLLKB4pCZlpkarTdgEHX1VBEZFCqTm+6ekfSbpBRreZ
-         +JgYli3w50Y/MAVw+0YkaPK7F7f6dQA2Shxj5rh6Jw/MBM365PwkpI6z7XW7IT7t6xSi
-         vWlQ==
-X-Gm-Message-State: APjAAAXbFUW6OTpwiHlQU2gCtfNd4w7c5GeMfENc+riyh0W6shsZZCAC
-        8vCTDsXIp+PHzVFYCUwwvNASqg==
-X-Google-Smtp-Source: APXvYqxdLRxNn6fN/7LXcm+ASzyV4brjzSwTtHmi8VWTNZ8pZTlZxyv2h5jnYIU7M47O202GgHej3Q==
-X-Received: by 2002:ac2:5595:: with SMTP id v21mr6577390lfg.54.1558981278784;
-        Mon, 27 May 2019 11:21:18 -0700 (PDT)
-Received: from khorivan (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
-        by smtp.gmail.com with ESMTPSA id w20sm2451515ljd.39.2019.05.27.11.21.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 27 May 2019 11:21:17 -0700 (PDT)
-Date:   Mon, 27 May 2019 21:21:15 +0300
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Cc:     grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net,
-        ast@kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        netdev@vger.kernel.org, daniel@iogearbox.net,
-        jakub.kicinski@netronome.com, john.fastabend@gmail.com
-Subject: Re: [PATCH net-next 3/3] net: ethernet: ti: cpsw: add XDP support
-Message-ID: <20190527182114.GB4246@khorivan>
-Mail-Followup-To: Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net,
-        ast@kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        netdev@vger.kernel.org, daniel@iogearbox.net,
-        jakub.kicinski@netronome.com, john.fastabend@gmail.com
-References: <20190523182035.9283-1-ivan.khoronzhuk@linaro.org>
- <20190523182035.9283-4-ivan.khoronzhuk@linaro.org>
- <20190524110511.GA27885@apalos>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=P+FiXAOea0Da36+0fuzZTMwOJ1pKxmssdqT24E7Ljks=;
+        b=W4XWGBIV1TIQK9qrWTv7o9Q9kSLmJuYN6+oUW0JENvOll4I6TGWIb8nS06ULsoZiHw
+         HbEbKiHOEyitLLIGAj75hpOssU/WaFIhUf//M6Ka4OWV13A7Ma/qgjPCviuCfGfQoYIo
+         5LkCnNNezEuuIeqOLYJTZ41navoTl2cPYNF8+AsnSxVp8vo9QHfvucpbAFnLK8ZJTAwb
+         3M7rwwmBCC7jCAB4tO9vg29ucStmzEvxs1t9NBFGPWzVMT47XboH0Yw18rYxW7xRY/RB
+         RoncAwz6+wfqHxk80jm6gy6gnEZTnBeXaT91H/UJtcRrPqycl3VBo5FXoQsZletqJbhf
+         1l6g==
+X-Gm-Message-State: APjAAAWBPopx/g8w2T+itTJX2ARq01B/dOVUZuBDSy+PVslpnbr9w6av
+        Qi0GPItdhqjaJaYV/M5TwRud1kj4SCg9WmH9i4Y=
+X-Google-Smtp-Source: APXvYqxFnHFi0FhTyZznpUbIgThLVqlOOxZ5b60t+J3xjXTJRBUFohr7MpkWLfXXloofSw0ZHtPTxVALCpnakESKsDQ=
+X-Received: by 2002:aca:ed0a:: with SMTP id l10mr188186oih.39.1558981320657;
+ Mon, 27 May 2019 11:22:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190524110511.GA27885@apalos>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190527132200.17377-1-narmstrong@baylibre.com> <20190527132200.17377-6-narmstrong@baylibre.com>
+In-Reply-To: <20190527132200.17377-6-narmstrong@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Mon, 27 May 2019 20:21:49 +0200
+Message-ID: <CAFBinCCO3gx1d4pjOaHK0VPoYp0z4cPx3_YsTOpzFtmJSYQZYg@mail.gmail.com>
+Subject: Re: [PATCH 05/10] arm64: dts: meson-gxbb-vega-s95: fix regulators
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
+        christianshewitt@gmail.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 02:05:11PM +0300, Ilias Apalodimas wrote:
->On Thu, May 23, 2019 at 09:20:35PM +0300, Ivan Khoronzhuk wrote:
->> Add XDP support based on rx page_pool allocator, one frame per page.
->> Page pool allocator is used with assumption that only one rx_handler
->> is running simultaneously. DMA map/unmap is reused from page pool
->> despite there is no need to map whole page.
->>
->> Due to specific of cpsw, the same TX/RX handler can be used by 2
->> network devices, so special fields in buffer are added to identify
->> an interface the frame is destined to. Thus XDP works for both
->> interfaces, that allows to test xdp redirect between two interfaces
->> easily.
->>
->> XDP prog is common for all channels till appropriate changes are added
->> in XDP infrastructure.
->>
->> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
->> ---
->>  drivers/net/ethernet/ti/Kconfig        |   1 +
->>  drivers/net/ethernet/ti/cpsw.c         | 555 ++++++++++++++++++++++---
->>  drivers/net/ethernet/ti/cpsw_ethtool.c |  53 +++
->>  drivers/net/ethernet/ti/cpsw_priv.h    |   7 +
->>  4 files changed, 554 insertions(+), 62 deletions(-)
->>
->> diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
->> index bd05a977ee7e..3cb8c5214835 100644
->> --- a/drivers/net/ethernet/ti/Kconfig
->> +++ b/drivers/net/ethernet/ti/Kconfig
->> @@ -50,6 +50,7 @@ config TI_CPSW
->>  	depends on ARCH_DAVINCI || ARCH_OMAP2PLUS || COMPILE_TEST
->>  	select TI_DAVINCI_MDIO
->>  	select MFD_SYSCON
->> +	select PAGE_POOL
->>  	select REGMAP
->>  	---help---
->>  	  This driver supports TI's CPSW Ethernet Switch.
->> diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
->> index 87a600aeee4a..274e6b64ea9e 100644
->> --- a/drivers/net/ethernet/ti/cpsw.c
->> +++ b/drivers/net/ethernet/ti/cpsw.c
->> @@ -31,6 +31,10 @@
->>  #include <linux/if_vlan.h>
->>  #include <linux/kmemleak.h>
->>  #include <linux/sys_soc.h>
->> +#include <net/page_pool.h>
->> +#include <linux/bpf.h>
->> +#include <linux/bpf_trace.h>
->> +#include <linux/filter.h>
->>
->>  #include <linux/pinctrl/consumer.h>
-
-[...]
-
->> +			start_free = 1;
->> +			continue;
->> +		}
->> +
->> +		/* if refcnt > 1, page has been holding by netstack, it's pity,
->> +		 * so put it to the ring to be consumed later when fast cash is
->s/cash/cache
+On Mon, May 27, 2019 at 3:23 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
 >
->> +		 * empty. If ring is full then free page by recycling as above.
->> +		 */
->> +		ret = ptr_ring_produce(&pool->ring, page);
->> +		if (ret) {
->> +			page_pool_recycle_direct(pool, page);
->> +			continue;
->> +		}
->Although this should be fine since this part won't be called during the driver
->init, i think i'd prefer unmapping the buffer and let the network stack free it,
->instead of pushing it for recycling. The occurence should be pretty low, so
->allocating a buffer every once in a while shouldn't have a noticeable
->performance impact
->
+> Align the regulator names with other GXBB SoCS for upcoming
+> SARADC support and SDIO/SDCard fixes.
+> Also fix how regulators are passed to MMC controllers & USB.
+if I understand this last sentence correctly then the usb_pwr
+regulator should be moved to &usb1 and passed as vbus-supply there
 
-Ok, I will leave previous version from RFC.
-
--- 
-Regards,
-Ivan Khoronzhuk
+> Suggested-by: Christian Hewitt <christianshewitt@gmail.com>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+apart from that:
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
