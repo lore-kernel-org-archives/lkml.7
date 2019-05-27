@@ -6,22 +6,22 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB34AC04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED35C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B1622183F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:14:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CF1E2184E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:14:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727206AbfE0MO3 (ORCPT
+        id S1727225AbfE0MOa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 08:14:29 -0400
-Received: from muru.com ([72.249.23.125]:51210 "EHLO muru.com"
+        Mon, 27 May 2019 08:14:30 -0400
+Received: from muru.com ([72.249.23.125]:51218 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727179AbfE0MO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 08:14:26 -0400
+        id S1727201AbfE0MO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 08:14:28 -0400
 Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id 53DB980F3;
-        Mon, 27 May 2019 12:14:44 +0000 (UTC)
+        by muru.com (Postfix) with ESMTP id C03578123;
+        Mon, 27 May 2019 12:14:46 +0000 (UTC)
 From:   Tony Lindgren <tony@atomide.com>
 To:     linux-omap@vger.kernel.org
 Cc:     Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>,
@@ -32,9 +32,9 @@ Cc:     Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>,
         Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH 08/12] bus: ti-sysc: Add support for disabling module without legacy mode
-Date:   Mon, 27 May 2019 05:13:44 -0700
-Message-Id: <20190527121348.45251-9-tony@atomide.com>
+Subject: [PATCH 09/12] bus: ti-sysc: Do rstctrl reset handling in two phases
+Date:   Mon, 27 May 2019 05:13:45 -0700
+Message-Id: <20190527121348.45251-10-tony@atomide.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190527121348.45251-1-tony@atomide.com>
 References: <20190527121348.45251-1-tony@atomide.com>
@@ -45,88 +45,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We must not assert reset for modules with no child device drivers
-until in runtime_suspend. Otherwise register access will fail without
-legacy mode helping us.
+We need to deassert rstctrl resets before enabling clocks to avoid clock
+"failed to enable" errors. For asserting rstctrl reset, the clocks need
+to be enabled.
 
-Let's add a flag for disable_on_idle and move the reset driver
-handling to runtime suspend and resume. We can then also use the
-disable_on_idle flag to reconfigure sysconfig register for PM
-modes requesting it.
+As the reset controller status is not available for arrays, let's use
+devm_reset_control_get_optional() so we can get the status after reset.
 
-Let's also make the other flags use bitfield while at it instead of
-bool.
+Note that depends on a proper PRM rstctrl driver, so far I've only
+tested this with earlier reset-simple patches.
 
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
- drivers/bus/ti-sysc.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+ drivers/bus/ti-sysc.c | 25 +++++++++++++++++--------
+ 1 file changed, 17 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
 --- a/drivers/bus/ti-sysc.c
 +++ b/drivers/bus/ti-sysc.c
-@@ -89,9 +89,10 @@ struct sysc {
- 	struct ti_sysc_cookie cookie;
- 	const char *name;
- 	u32 revision;
--	bool enabled;
--	bool needs_resume;
--	bool child_needs_resume;
-+	unsigned int enabled:1;
-+	unsigned int needs_resume:1;
-+	unsigned int child_needs_resume:1;
-+	unsigned int disable_on_idle:1;
- 	struct delayed_work idle_work;
- };
+@@ -483,7 +483,7 @@ static void sysc_clkdm_allow_idle(struct sysc *ddata)
+ static int sysc_init_resets(struct sysc *ddata)
+ {
+ 	ddata->rsts =
+-		devm_reset_control_array_get_optional_exclusive(ddata->dev);
++		devm_reset_control_get_optional(ddata->dev, "rstctrl");
+ 	if (IS_ERR(ddata->rsts))
+ 		return PTR_ERR(ddata->rsts);
  
-@@ -1007,6 +1008,9 @@ static int __maybe_unused sysc_runtime_suspend_legacy(struct device *dev,
- 		dev_err(dev, "%s: could not idle: %i\n",
- 			__func__, error);
+@@ -1407,7 +1407,7 @@ static int sysc_legacy_init(struct sysc *ddata)
+  */
+ static int sysc_rstctrl_reset_deassert(struct sysc *ddata, bool reset)
+ {
+-	int error;
++	int error, val;
  
-+	if (ddata->disable_on_idle)
-+		reset_control_assert(ddata->rsts);
-+
- 	return 0;
- }
- 
-@@ -1016,6 +1020,9 @@ static int __maybe_unused sysc_runtime_resume_legacy(struct device *dev,
- 	struct ti_sysc_platform_data *pdata;
- 	int error;
- 
-+	if (ddata->disable_on_idle)
-+		reset_control_deassert(ddata->rsts);
-+
- 	pdata = dev_get_platdata(ddata->dev);
- 	if (!pdata)
+ 	if (!ddata->rsts)
  		return 0;
-@@ -1063,6 +1070,9 @@ static int __maybe_unused sysc_runtime_suspend(struct device *dev)
- err_allow_idle:
- 	sysc_clkdm_allow_idle(ddata);
- 
-+	if (ddata->disable_on_idle)
-+		reset_control_assert(ddata->rsts);
-+
- 	return error;
- }
- 
-@@ -1076,6 +1086,9 @@ static int __maybe_unused sysc_runtime_resume(struct device *dev)
- 	if (ddata->enabled)
- 		return 0;
- 
-+	if (ddata->disable_on_idle)
-+		reset_control_deassert(ddata->rsts);
-+
- 	sysc_clkdm_deny_idle(ddata);
- 
- 	if (sysc_opt_clks_needed(ddata)) {
-@@ -2293,7 +2306,7 @@ static int sysc_probe(struct platform_device *pdev)
+@@ -1418,7 +1418,14 @@ static int sysc_rstctrl_reset_deassert(struct sysc *ddata, bool reset)
+ 			return error;
  	}
  
- 	if (!of_get_available_child_count(ddata->dev->of_node))
--		reset_control_assert(ddata->rsts);
-+		ddata->disable_on_idle = true;
+-	return reset_control_deassert(ddata->rsts);
++	error = reset_control_deassert(ddata->rsts);
++	if (error == -EEXIST)
++		return 0;
++
++	error = readx_poll_timeout(reset_control_status, ddata->rsts, val,
++				   val == 0, 100, MAX_MODULE_SOFTRESET_WAIT);
++
++	return error;
+ }
  
- 	return 0;
+ /*
+@@ -1476,12 +1483,8 @@ static int sysc_init_module(struct sysc *ddata)
+ {
+ 	int error = 0;
+ 	bool manage_clocks = true;
+-	bool reset = true;
+ 
+-	if (ddata->cfg.quirks & SYSC_QUIRK_NO_RESET_ON_INIT)
+-		reset = false;
+-
+-	error = sysc_rstctrl_reset_deassert(ddata, reset);
++	error = sysc_rstctrl_reset_deassert(ddata, false);
+ 	if (error)
+ 		return error;
+ 
+@@ -1505,6 +1508,12 @@ static int sysc_init_module(struct sysc *ddata)
+ 			goto err_opt_clocks;
+ 	}
+ 
++	if (!(ddata->cfg.quirks & SYSC_QUIRK_NO_RESET_ON_INIT)) {
++		error = sysc_rstctrl_reset_deassert(ddata, true);
++		if (error)
++			goto err_main_clocks;
++	}
++
+ 	ddata->revision = sysc_read_revision(ddata);
+ 	sysc_init_revision_quirks(ddata);
  
 -- 
 2.21.0
