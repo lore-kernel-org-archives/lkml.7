@@ -2,193 +2,245 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3102AC07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80778C07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F19C12070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:55:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="mk7OYxTY";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PcjSgTSM"
+	by mail.kernel.org (Postfix) with ESMTP id 49BB72070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:55:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726213AbfE0Hz0 (ORCPT
+        id S1726335AbfE0Hzq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 03:55:26 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:38894 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725943AbfE0Hz0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 03:55:26 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 06C3F60A00; Mon, 27 May 2019 07:55:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558943725;
-        bh=TLgwZBRAFLM5rcutPPk68tE3qitbgmeVGUN16gHE3Cs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mk7OYxTYrzuAlHczolCGNOP0ozkYjB4Lndk2r9uSDfuBsgeDr+2wpsxn4uCsctyX7
-         EJpWL+vAnEzfFDR2P9373hVhVdYUu8XfJOO1qGlpNG/BswI2osGv8xUt2oWAB08SUd
-         Ep8qYXptz08qXSI9C0p0EJJiZyjDKUmUYGOInrto=
-Received: from codeaurora.org (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: stummala@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3B58B6086B;
-        Mon, 27 May 2019 07:55:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558943724;
-        bh=TLgwZBRAFLM5rcutPPk68tE3qitbgmeVGUN16gHE3Cs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PcjSgTSMk6k0NRJHID31m2lCvEYJp4utLdfT/RB2lkk+4R8xyEppv9Ykv3wd4Lz72
-         S11iKnrKuQWXlDXA6yd8KLsBZf3Z+v/53AXt/awuinTgFTCb5phAN64zBOPsAqdwzC
-         XfMXAVYWqVssBxgLAMyUXI7En8MKyBNY3ayQiHcw=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3B58B6086B
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
-Date:   Mon, 27 May 2019 13:25:18 +0530
-From:   Sahitya Tummala <stummala@codeaurora.org>
-To:     Chao Yu <chao@kernel.org>, Yunlei He <heyunlei@huawei.com>
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [f2fs-dev] [PATCH] f2fs: add errors=panic mount option
-Message-ID: <20190527075518.GD10043@codeaurora.org>
-References: <1558694631-12481-1-git-send-email-stummala@codeaurora.org>
- <6a4ce8cb-d9ec-1923-8304-6b8956283e85@kernel.org>
+        Mon, 27 May 2019 03:55:46 -0400
+Received: from mga07.intel.com ([134.134.136.100]:9880 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725943AbfE0Hzp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 03:55:45 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 May 2019 00:55:45 -0700
+X-ExtLoop1: 1
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.29])
+  by orsmga008.jf.intel.com with ESMTP; 27 May 2019 00:55:42 -0700
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     <hannes@cmpxchg.org>, <mhocko@suse.com>,
+        <mgorman@techsingularity.net>, <kirill.shutemov@linux.intel.com>,
+        <josef@toxicpanda.com>, <hughd@google.com>, <shakeelb@google.com>,
+        <hdanton@sina.com>, <akpm@linux-foundation.org>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [v6 PATCH 2/2] mm: vmscan: correct some vmscan counters for THP swapout
+References: <1558929166-3363-1-git-send-email-yang.shi@linux.alibaba.com>
+        <1558929166-3363-2-git-send-email-yang.shi@linux.alibaba.com>
+        <87ef4k8jgs.fsf@yhuang-dev.intel.com>
+        <aa145948-ac14-c89b-d847-ffca81d8dbdf@linux.alibaba.com>
+Date:   Mon, 27 May 2019 15:55:41 +0800
+In-Reply-To: <aa145948-ac14-c89b-d847-ffca81d8dbdf@linux.alibaba.com> (Yang
+        Shi's message of "Mon, 27 May 2019 15:40:52 +0800")
+Message-ID: <87a7f88h6q.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6a4ce8cb-d9ec-1923-8304-6b8956283e85@kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 08:13:50PM +0800, Chao Yu wrote:
-> On 2019-5-24 18:43, Sahitya Tummala wrote:
-> > Add errors=panic mount option for debugging purpose. It can be
-> > set dynamically when the config option CONFIG_F2FS_CHECK_FS
-> > is not enabled.
-> 
-> Sahitya,
-> 
-> I remember Yunlei has a similar patch for this, could you rebase your code on
-> that patch, if Yunlei agrees, we can add Signed-off of him.
-> 
+Yang Shi <yang.shi@linux.alibaba.com> writes:
 
-Hi Chao,
+> On 5/27/19 3:06 PM, Huang, Ying wrote:
+>> Yang Shi <yang.shi@linux.alibaba.com> writes:
+>>
+>>> Since commit bd4c82c22c36 ("mm, THP, swap: delay splitting THP after
+>>> swapped out"), THP can be swapped out in a whole.  But, nr_reclaimed
+>>> and some other vm counters still get inc'ed by one even though a whole
+>>> THP (512 pages) gets swapped out.
+>>>
+>>> This doesn't make too much sense to memory reclaim.  For example, direct
+>>> reclaim may just need reclaim SWAP_CLUSTER_MAX pages, reclaiming one THP
+>>> could fulfill it.  But, if nr_reclaimed is not increased correctly,
+>>> direct reclaim may just waste time to reclaim more pages,
+>>> SWAP_CLUSTER_MAX * 512 pages in worst case.
+>>>
+>>> And, it may cause pgsteal_{kswapd|direct} is greater than
+>>> pgscan_{kswapd|direct}, like the below:
+>>>
+>>> pgsteal_kswapd 122933
+>>> pgsteal_direct 26600225
+>>> pgscan_kswapd 174153
+>>> pgscan_direct 14678312
+>>>
+>>> nr_reclaimed and nr_scanned must be fixed in parallel otherwise it would
+>>> break some page reclaim logic, e.g.
+>>>
+>>> vmpressure: this looks at the scanned/reclaimed ratio so it won't
+>>> change semantics as long as scanned & reclaimed are fixed in parallel.
+>>>
+>>> compaction/reclaim: compaction wants a certain number of physical pages
+>>> freed up before going back to compacting.
+>>>
+>>> kswapd priority raising: kswapd raises priority if we scan fewer pages
+>>> than the reclaim target (which itself is obviously expressed in order-0
+>>> pages). As a result, kswapd can falsely raise its aggressiveness even
+>>> when it's making great progress.
+>>>
+>>> Other than nr_scanned and nr_reclaimed, some other counters, e.g.
+>>> pgactivate, nr_skipped, nr_ref_keep and nr_unmap_fail need to be fixed
+>>> too since they are user visible via cgroup, /proc/vmstat or trace
+>>> points, otherwise they would be underreported.
+>>>
+>>> When isolating pages from LRUs, nr_taken has been accounted in base
+>>> page, but nr_scanned and nr_skipped are still accounted in THP.  It
+>>> doesn't make too much sense too since this may cause trace point
+>>> underreport the numbers as well.
+>>>
+>>> So accounting those counters in base page instead of accounting THP as
+>>> one page.
+>>>
+>>> nr_dirty, nr_unqueued_dirty, nr_congested and nr_writeback are used by
+>>> file cache, so they are not impacted by THP swap.
+>>>
+>>> This change may result in lower steal/scan ratio in some cases since
+>>> THP may get split during page reclaim, then a part of tail pages get
+>>> reclaimed instead of the whole 512 pages, but nr_scanned is accounted
+>>> by 512, particularly for direct reclaim.  But, this should be not a
+>>> significant issue.
+>>>
+>>> Cc: "Huang, Ying" <ying.huang@intel.com>
+>>> Cc: Johannes Weiner <hannes@cmpxchg.org>
+>>> Cc: Michal Hocko <mhocko@suse.com>
+>>> Cc: Mel Gorman <mgorman@techsingularity.net>
+>>> Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+>>> Cc: Hugh Dickins <hughd@google.com>
+>>> Cc: Shakeel Butt <shakeelb@google.com>
+>>> Cc: Hillf Danton <hdanton@sina.com>
+>>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+>>> ---
+>>> v6: Fixed the other double account issue introduced by v5 per Huang Ying
+>>> v5: Fixed sc->nr_scanned double accounting per Huang Ying
+>>>      Added some comments to address the concern about premature OOM per Hillf Danton
+>>> v4: Fixed the comments from Johannes and Huang Ying
+>>> v3: Removed Shakeel's Reviewed-by since the patch has been changed significantly
+>>>      Switched back to use compound_order per Matthew
+>>>      Fixed more counters per Johannes
+>>> v2: Added Shakeel's Reviewed-by
+>>>      Use hpage_nr_pages instead of compound_order per Huang Ying and William Kucharski
+>>>
+>>>   mm/vmscan.c | 47 +++++++++++++++++++++++++++++++++++------------
+>>>   1 file changed, 35 insertions(+), 12 deletions(-)
+>>>
+>>> diff --git a/mm/vmscan.c b/mm/vmscan.c
+>>> index b65bc50..378edff 100644
+>>> --- a/mm/vmscan.c
+>>> +++ b/mm/vmscan.c
+>>> @@ -1118,6 +1118,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+>>>   		int may_enter_fs;
+>>>   		enum page_references references = PAGEREF_RECLAIM_CLEAN;
+>>>   		bool dirty, writeback;
+>>> +		unsigned int nr_pages;
+>>>     		cond_resched();
+>>>   @@ -1129,7 +1130,10 @@ static unsigned long
+>>> shrink_page_list(struct list_head *page_list,
+>>>     		VM_BUG_ON_PAGE(PageActive(page), page);
+>>>   -		sc->nr_scanned++;
+>>> +		nr_pages = 1 << compound_order(page);
+>>> +
+>>> +		/* Account the number of base pages even though THP */
+>>> +		sc->nr_scanned += nr_pages;
+>>>     		if (unlikely(!page_evictable(page)))
+>>>   			goto activate_locked;
+>>> @@ -1250,7 +1254,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+>>>   		case PAGEREF_ACTIVATE:
+>>>   			goto activate_locked;
+>>>   		case PAGEREF_KEEP:
+>>> -			stat->nr_ref_keep++;
+>>> +			stat->nr_ref_keep += nr_pages;
+>>>   			goto keep_locked;
+>>>   		case PAGEREF_RECLAIM:
+>>>   		case PAGEREF_RECLAIM_CLEAN:
+>>> @@ -1306,6 +1310,15 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+>>>   		}
+>>>     		/*
+>>> +		 * THP may get split above, need minus tail pages and update
+>>> +		 * nr_pages to avoid accounting tail pages twice.
+>>> +		 */
+>>> +		if ((nr_pages > 1) && !PageTransHuge(page)) {
+>>> +			sc->nr_scanned -= (nr_pages - 1);
+>>> +			nr_pages = 1;
+>>> +		}
+>> After checking the code again, it appears there's another hole in the
+>> code.  In the following code snippet.
+>>
+>> 				if (!add_to_swap(page)) {
+>> 					if (!PageTransHuge(page))
+>> 						goto activate_locked;
+>> 					/* Fallback to swap normal pages */
+>> 					if (split_huge_page_to_list(page,
+>> 								    page_list))
+>> 						goto activate_locked;
+>> #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>> 					count_vm_event(THP_SWPOUT_FALLBACK);
+>> #endif
+>> 					if (!add_to_swap(page))
+>> 						goto activate_locked;
+>> 				}
+>>
+>>
+>> If the THP is split, but the first or the second add_to_swap() fails, we
+>> still need to deal with sc->nr_scanned and nr_pages.
+>>
+>> How about add a new label before "activate_locked" to deal with that?
+>
+> It sounds not correct. If swapout fails it jumps to activate_locked
+> too, it has to be handled in if (!add_to_swap(page)). The below fix
+> should be good enough since only THP can reach here:
+>
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index 378edff..fff3937 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -1294,8 +1294,15 @@ static unsigned long shrink_page_list(struct
+> list_head *page_list,
+>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> count_vm_event(THP_SWPOUT_FALLBACK);
+>  #endif
+> -                                       if (!add_to_swap(page))
+> +                                       if (!add_to_swap(page)) {
+> +                                               /*
+> +                                                * Minus tail pages
+> and reset
+> +                                                * nr_pages.
+> +                                                */
+> +                                               sc->nr_scanned -= 
+> (nr_pages - 1);
+> +                                               nr_pages = 1;
+>                                                 goto activate_locked;
+> +                                       }
+>                                 }
 
-Sure, I can combine both the patches as they are providing different functionalities
-with the same mount option.
+I think you need to add similar logic for the first add_to_swap() in the
+original code snippet.
 
-Hi Yunlei,
+>> 				if (!add_to_swap(page)) {
+>> 					if (!PageTransHuge(page))
 
-Are you okay with this merging? Please confirm.
-If yes, then I will make it into one patch and add your signed-off.
+To reduce code duplication, I suggest to add another label to deal with
+it.
 
-Thanks,
+activate_locked_split:
+        if (nr_pages > 1) {
+                sc->nr_scanned -= nr_pages - 1;
+                nr_pages = 1;
+        }
 
-> FYI
-> 
-> https://sourceforge.net/p/linux-f2fs/mailman/linux-f2fs-devel/thread/f6a0b1c3-4057-8b64-a419-4b2914d48394%40kernel.org/#msg36376331
-> 
-> Thanks,
-> 
-> > 
-> > Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-> > ---
-> >  fs/f2fs/f2fs.h  |  9 +++++++--
-> >  fs/f2fs/super.c | 21 +++++++++++++++++++++
-> >  2 files changed, 28 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> > index 9b3d997..95adedb 100644
-> > --- a/fs/f2fs/f2fs.h
-> > +++ b/fs/f2fs/f2fs.h
-> > @@ -32,8 +32,12 @@
-> >  #define f2fs_bug_on(sbi, condition)					\
-> >  	do {								\
-> >  		if (unlikely(condition)) {				\
-> > -			WARN_ON(1);					\
-> > -			set_sbi_flag(sbi, SBI_NEED_FSCK);		\
-> > +			if (test_opt(sbi, ERRORS_PANIC)) {		\
-> > +				BUG_ON(condition);			\
-> > +			} else {					\
-> > +				WARN_ON(1);				\
-> > +				set_sbi_flag(sbi, SBI_NEED_FSCK);	\
-> > +			}						\
-> >  		}							\
-> >  	} while (0)
-> >  #endif
-> > @@ -99,6 +103,7 @@ struct f2fs_fault_info {
-> >  #define F2FS_MOUNT_INLINE_XATTR_SIZE	0x00800000
-> >  #define F2FS_MOUNT_RESERVE_ROOT		0x01000000
-> >  #define F2FS_MOUNT_DISABLE_CHECKPOINT	0x02000000
-> > +#define F2FS_MOUNT_ERRORS_PANIC		0x04000000
-> >  
-> >  #define F2FS_OPTION(sbi)	((sbi)->mount_opt)
-> >  #define clear_opt(sbi, option)	(F2FS_OPTION(sbi).opt &= ~F2FS_MOUNT_##option)
-> > diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-> > index 912e261..7d6d96a 100644
-> > --- a/fs/f2fs/super.c
-> > +++ b/fs/f2fs/super.c
-> > @@ -137,6 +137,7 @@ enum {
-> >  	Opt_fsync,
-> >  	Opt_test_dummy_encryption,
-> >  	Opt_checkpoint,
-> > +	Opt_errors,
-> >  	Opt_err,
-> >  };
-> >  
-> > @@ -196,6 +197,7 @@ enum {
-> >  	{Opt_fsync, "fsync_mode=%s"},
-> >  	{Opt_test_dummy_encryption, "test_dummy_encryption"},
-> >  	{Opt_checkpoint, "checkpoint=%s"},
-> > +	{Opt_errors, "errors=%s"},
-> >  	{Opt_err, NULL},
-> >  };
-> >  
-> > @@ -788,6 +790,23 @@ static int parse_options(struct super_block *sb, char *options)
-> >  			}
-> >  			kvfree(name);
-> >  			break;
-> > +		case Opt_errors:
-> > +#ifndef CONFIG_F2FS_CHECK_FS
-> > +			name = match_strdup(&args[0]);
-> > +			if (!name)
-> > +				return -ENOMEM;
-> > +
-> > +			if (strlen(name) == 5 && !strncmp(name, "panic", 5)) {
-> > +				set_opt(sbi, ERRORS_PANIC);
-> > +			} else {
-> > +				kvfree(name);
-> > +				return -EINVAL;
-> > +			}
-> > +			kvfree(name);
-> > +			f2fs_msg(sb, KERN_INFO,
-> > +				"debug mode errors=panic enabled\n");
-> > +#endif
-> > +			break;
-> >  		default:
-> >  			f2fs_msg(sb, KERN_ERR,
-> >  				"Unrecognized mount option \"%s\" or missing value",
-> > @@ -1417,6 +1436,8 @@ static int f2fs_show_options(struct seq_file *seq, struct dentry *root)
-> >  		seq_printf(seq, ",fsync_mode=%s", "strict");
-> >  	else if (F2FS_OPTION(sbi).fsync_mode == FSYNC_MODE_NOBARRIER)
-> >  		seq_printf(seq, ",fsync_mode=%s", "nobarrier");
-> > +	if (test_opt(sbi, ERRORS_PANIC))
-> > +		seq_printf(seq, ",errors=%s", "panic");
-> >  	return 0;
-> >  }
-> >  
-> > 
+activate_locked:
 
--- 
---
-Sent by a consultant of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+And use "goto active_locked_split" if add_to_swap() failed.
+
+Best Regards,
+Huang, Ying
