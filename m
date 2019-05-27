@@ -2,159 +2,196 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 510AEC07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BEF5C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:20:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E4B9208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:19:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 035A520815
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:20:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726457AbfE0NTr (ORCPT
+        id S1726494AbfE0NUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 09:19:47 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59256 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726063AbfE0NTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 09:19:47 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1952DAE78;
-        Mon, 27 May 2019 13:19:45 +0000 (UTC)
-Subject: Re: [PATCH v2] mm: mlockall error for flag MCL_ONFAULT
-To:     "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Mon, 27 May 2019 09:20:05 -0400
+Received: from mga11.intel.com ([192.55.52.93]:6320 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726063AbfE0NUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 09:20:05 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 May 2019 06:20:04 -0700
+X-ExtLoop1: 1
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by FMSMGA003.fm.intel.com with SMTP; 27 May 2019 06:20:00 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Mon, 27 May 2019 16:19:59 +0300
+Date:   Mon, 27 May 2019 16:19:59 +0300
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+Cc:     Brian Starkey <Brian.Starkey@arm.com>, nd <nd@arm.com>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Jordan, Tobias" <Tobias.Jordan@elektrobit.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
-References: <20190527070415.GA1658@dhcp22.suse.cz>
- <20190527075333.GA6339@er01809n.ebgroup.elektrobit.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Openpgp: preference=signencrypt
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <7d5b948d-0253-e73e-980f-f6db5f92b461@suse.cz>
-Date:   Mon, 27 May 2019 15:19:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>,
+        "thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "sean@poorly.run" <sean@poorly.run>
+Subject: Re: [PATCH] drm/komeda: Added AFBC support for komeda driver
+Message-ID: <20190527131959.GH5942@intel.com>
+References: <20190404110552.15778-1-james.qian.wang@arm.com>
+ <20190516135748.GC1372@arm.com>
+ <20190521084552.GA20625@james-ThinkStation-P300>
+ <20190524111009.beddu67vvx66wvmk@DESKTOP-E1NTVVP.localdomain>
+ <20190524121226.GD5942@intel.com>
+ <20190527065110.GA29041@james-ThinkStation-P300>
 MIME-Version: 1.0
-In-Reply-To: <20190527075333.GA6339@er01809n.ebgroup.elektrobit.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190527065110.GA29041@james-ThinkStation-P300>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/27/19 9:53 AM, Potyra, Stefan wrote:
-> If mlockall() is called with only MCL_ONFAULT as flag,
-> it removes any previously applied lockings and does
-> nothing else.
+On Mon, May 27, 2019 at 06:51:18AM +0000, james qian wang (Arm Technology China) wrote:
+> On Fri, May 24, 2019 at 03:12:26PM +0300, Ville Syrjälä wrote:
+> > On Fri, May 24, 2019 at 11:10:09AM +0000, Brian Starkey wrote:
+> > > Hi,
+> > > 
+> > > On Tue, May 21, 2019 at 09:45:58AM +0100, james qian wang (Arm Technology China) wrote:
+> > > > On Thu, May 16, 2019 at 09:57:49PM +0800, Ayan Halder wrote:
+> > > > > On Thu, Apr 04, 2019 at 12:06:14PM +0100, james qian wang (Arm Technology China) wrote:
+> > > > > >  
+> > > > > > +static int
+> > > > > > +komeda_fb_afbc_size_check(struct komeda_fb *kfb, struct drm_file *file,
+> > > > > > +			  const struct drm_mode_fb_cmd2 *mode_cmd)
+> > > > > > +{
+> > > > > > +	struct drm_framebuffer *fb = &kfb->base;
+> > > > > > +	const struct drm_format_info *info = fb->format;
+> > > > > > +	struct drm_gem_object *obj;
+> > > > > > +	u32 alignment_w = 0, alignment_h = 0, alignment_header;
+> > > > > > +	u32 n_blocks = 0, min_size = 0;
+> > > > > > +
+> > > > > > +	obj = drm_gem_object_lookup(file, mode_cmd->handles[0]);
+> > > > > > +	if (!obj) {
+> > > > > > +		DRM_DEBUG_KMS("Failed to lookup GEM object\n");
+> > > > > > +		return -ENOENT;
+> > > > > > +	}
+> > > > > > +
+> > > > > > +	switch (fb->modifier & AFBC_FORMAT_MOD_BLOCK_SIZE_MASK) {
+> > > > > > +	case AFBC_FORMAT_MOD_BLOCK_SIZE_32x8:
+> > > > > > +		alignment_w = 32;
+> > > > > > +		alignment_h = 8;
+> > > > > > +		break;
+> > > > > > +	case AFBC_FORMAT_MOD_BLOCK_SIZE_16x16:
+> > > > > > +		alignment_w = 16;
+> > > > > > +		alignment_h = 16;
+> > > > > > +		break;
+> > > > > > +	default:
+> > > > > Can we have something like a warn here ?
+> > > > 
+> > > > will add a WARN here.
+> > > > 
+> > > 
+> > > I think it's better not to. fb->modifier comes from
+> > > userspace, so a malicious app could spam us with WARNs, effectively
+> > > dos-ing the system. -EINVAL should be sufficient.
+> > 
+> > Should probably check that the entire modifier+format is
+> > actually valid. Otherwise you risk passing on a bogus
+> > modifier deeper into the driver which may trigger
+> > interesting bugs.
+> > 
+> > Also theoretically (however unlikely) some broken userspace
+> > might start to depend on the ability to create framebuffers
+> > with crap modifiers, which could later break if you change
+> > the way you handle the modifiers. Then you're stuck between
+> > the rock and hard place because you can't break existing
+> > userspace but you still want to change the way modifiers
+> > are handled in the kernel.
+> > 
+> > Best not give userspace too much rope IMO. Two ways to go about
+> > that:
+> > 1) drm_any_plane_has_format() (assumes your .format_mod_supported()
+> >    does its job properly)
+> > 2) roll your own 
+> > 
+> > -- 
+> > Ville Syrjälä
+> > Intel
 > 
-> This behavior is counter-intuitive and doesn't match the
-> Linux man page.
+> Hi Brian & Ville:
 > 
->   For mlockall():
+> komed has a format+modifier check before the fb size check.
+> and for komeda_fb_create, the first step is do the format+modifier
+> check, the size check is the furthur check after the such format
+> valid check. and the detailed fb_create is like:
 > 
->   EINVAL Unknown  flags were specified or MCL_ONFAULT was specified withâ€
->          out either MCL_FUTURE or MCL_CURRENT.
+> struct drm_framebuffer *
+> komeda_fb_create(struct drm_device *dev, struct drm_file *file,
+> 		 const struct drm_mode_fb_cmd2 *mode_cmd)
+> {
+>         ...
+>         /* Step 1: format+modifier valid check, if it can not be support,
+>          * get_format_caps will return a NULL ptr.
+>          */
+> 	kfb->format_caps = komeda_get_format_caps(&mdev->fmt_tbl,
+> 						  mode_cmd->pixel_format,
+> 						  mode_cmd->modifier[0]);
+> 	if (!kfb->format_caps) {
+> 		DRM_DEBUG_KMS("FMT %x is not supported.\n",
+> 			      mode_cmd->pixel_format);
+> 		kfree(kfb);
+> 		return ERR_PTR(-EINVAL);
+> 	}
 > 
-> Consequently, return the error EINVAL, if only MCL_ONFAULT
-> is passed. That way, applications will at least detect that
-> they are calling mlockall() incorrectly.
+> 	drm_helper_mode_fill_fb_struct(dev, &kfb->base, mode_cmd);
 > 
-> Fixes: b0f205c2a308 ("mm: mlock: add mlock flags to enable VM_LOCKONFAULT usage")
-> Signed-off-by: Stefan Potyra <Stefan.Potyra@elektrobit.com>
-> Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-> Acked-by: Michal Hocko <mhocko@suse.com>
+>         /* step 2, do the size check */
+> 	if (kfb->base.modifier)
+> 		ret = komeda_fb_afbc_size_check(kfb, file, mode_cmd);
+> 	else
+> 		ret = komeda_fb_none_afbc_size_check(mdev, kfb, file, mode_cmd);
+> 	if (ret < 0)
+> 		goto err_cleanup;
+> 
+>         ...
+> }
+> 
+> So theoretically, the WARN in step2 is redundant if get_format_caps
+> function has no problem. :). the WARN here is only for reporting
+> the kernel BUG or code inconsitent with format caps check and the
+> fb size check. And I agree, basically it will not happene.
+> @Brian, I'm Ok to remove it. :)
+> 
+> @Ville:
+> Basically komeda follow the way-1, but a little improvement for
+> matching komeda's requirement. for komeda which will do two level's
+> format+modifier check.
+> 1). In fb_create, A roughly check to see if the format+modifier can be
+>     supported by current HW.
 
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Yeah, looks like it shouldn't allow any unspecfied modifiers to
+sneak through. So should be good.
 
-Thanks, shame we didn't catch it during review. Hope nobody will report
-a regression.
-
-> ---
->  mm/mlock.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> 2). In plane_atomic_check: to see if the format+modifier can be
+>     supported for a specific layer and with a specific configuration (ROT)
 > 
-> diff --git a/mm/mlock.c b/mm/mlock.c
-> index e492a155c51a..03f39cbdd4c4 100644
-> --- a/mm/mlock.c
-> +++ b/mm/mlock.c
-> @@ -797,7 +797,8 @@ SYSCALL_DEFINE1(mlockall, int, flags)
->  	unsigned long lock_limit;
->  	int ret;
->  
-> -	if (!flags || (flags & ~(MCL_CURRENT | MCL_FUTURE | MCL_ONFAULT)))
-> +	if (!flags || (flags & ~(MCL_CURRENT | MCL_FUTURE | MCL_ONFAULT)) ||
-> +	    flags == MCL_ONFAULT)
->  		return -EINVAL;
->  
->  	if (!can_do_mlock())
+> This is a format valid check example for plane_check.
+> https://patchwork.freedesktop.org/patch/301140/?series=59747&rev=2
 > 
+> James
 
+-- 
+Ville Syrjälä
+Intel
