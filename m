@@ -5,54 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85CB6C07542
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D5AC28CBF
 	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 04:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F1A221707
+	by mail.kernel.org (Postfix) with ESMTP id 8A4D421707
 	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 04:34:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eNJuvDVN"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="j+IVUH4G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726127AbfE0Eea (ORCPT
+        id S1726160AbfE0Eem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 00:34:30 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41026 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbfE0Eea (ORCPT
+        Mon, 27 May 2019 00:34:42 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:41859 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726129AbfE0Eel (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 00:34:30 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q17so3969772pfq.8
-        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2019 21:34:30 -0700 (PDT)
+        Mon, 27 May 2019 00:34:41 -0400
+Received: by mail-pl1-f194.google.com with SMTP id d14so994802pls.8
+        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2019 21:34:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=HVbr8yPZVgrbjdDwY4oDGzG2x6LajTHk+u9YRL60Obc=;
-        b=eNJuvDVNY0xCYnOoRFQPfq1KCk5IYm3S+jBuGBUvHHg8kTyIIJl38TFvpNXP/SkaOB
-         TTeuYIMA7uK8ZTOOGX/phsARK9XUCj1WTYlfDQleA4JDu96H9l407xOgGgtYPOtQne/p
-         AHd+zhN4N1HMICiYBF54QEtO92ry5XbAKy7JE=
+        bh=ck+F9ON2fnwh5hsuCM2qk61O5ay8betZRUcLdrsV0zI=;
+        b=j+IVUH4GD9iVi5AQ0tl+V0V07fGHYVGHoxVefzWndaQjrffPAm/mM+Y1a4MoHG/U89
+         p4QW6JgFkcgCvXvu44W+yz5LXEyov6GrVrVr2UVCx0STuRuG3ubwLcBI05O8KwYQQfLS
+         qLZSfJ4qa29snAGa1sfVHjphAC1pcvgYZ2mSU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=HVbr8yPZVgrbjdDwY4oDGzG2x6LajTHk+u9YRL60Obc=;
-        b=ByyIbpvISR54EbU9ClNjJwPFAeo5KgXZSjGsIJuYehnFarDV2NuxykF6JGmND2cn6J
-         CZp+NkiBvlPpViJp9NSXRNMuEeKPdyFzU5bO2pgixMXdQ1vhSSXucnmQzpgUN0/uqpxX
-         r4fVgTv78zIR6GsGEHy5OxJpIc2hNzcvtkYPTc7lL4D52Z1ClAj46eCIiZgwx5h+flL5
-         FNlnqBgkZ4Hvl6qafJAyn/YZtGU5AV4tmgz79uqVeEg+wfu6bO/GkkPAvE4E2OvPpQuV
-         tpmsp/751u7cPVMY+FZwqDwV3ZiUM7iVvwfYJBeGxdXJvyKDakacOYG/oPRlxYO9eEWY
-         Z6rw==
-X-Gm-Message-State: APjAAAVsfTQUJEeIaeBujDHaZYFMLhIR0KxPjObGa+Ukcg82PXKF5MmF
-        cNoU1VzErhDva02fO1/jXziytw==
-X-Google-Smtp-Source: APXvYqw1TUPqLXbXV7nXMmmJo/a19DnZPKiDk3xHcy+XoSwyNQrhr4A/Z7BVajQoeX3y3yvo0B52dQ==
-X-Received: by 2002:a63:4d0f:: with SMTP id a15mr22151895pgb.59.1558931669720;
-        Sun, 26 May 2019 21:34:29 -0700 (PDT)
+        bh=ck+F9ON2fnwh5hsuCM2qk61O5ay8betZRUcLdrsV0zI=;
+        b=DNs1Z2ROKh2zflcpr7rMAbEoOQyVYUNLPEe5R+k5Wdd7j98cf0cV7cAaTXDpys/Ahi
+         r2DS8gze0l08i6jIw4jKgpi6ZzpN9iN4uQE1zeHxHA1KObm0NCodNM3JpVhMOo0dD1nh
+         72cd39NSHOBLdHy3rFgiaFk+6YRyHHHSINXPYUNP+E1IhlMpW6uaGBWJtXeua05BXCN9
+         Jwe8TWdAtmX04J5/Aytw6QtvvBVjC4xscVoUDESJeZEUFdlgpPrc6FF7V/TVUu7a/gPV
+         ZIGZo6KEKnZgX9FYNN2/G736BXGj+PH5lSFLP1DbVmNYl+10uzq7pgKb3cI21XK02hLY
+         Maww==
+X-Gm-Message-State: APjAAAVeK3kQSJbIQ6oRmZq4M/jzf/tww7tSh3bXSxgOJ8jPyHHOluq6
+        nlgHCIM+3fUmRmp6+3iIDxm+pQ==
+X-Google-Smtp-Source: APXvYqyFrdw0mUt2bWg6+Evu1JeLd/Bd0yblbKAiu9bKbdKsHxgMYuF4cWcEbZG6DgbrO2oVmrykTQ==
+X-Received: by 2002:a17:902:42d:: with SMTP id 42mr3916281ple.228.1558931681051;
+        Sun, 26 May 2019 21:34:41 -0700 (PDT)
 Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
-        by smtp.gmail.com with ESMTPSA id g9sm8236061pgs.78.2019.05.26.21.34.26
+        by smtp.gmail.com with ESMTPSA id g9sm8236061pgs.78.2019.05.26.21.34.37
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 26 May 2019 21:34:29 -0700 (PDT)
+        Sun, 26 May 2019 21:34:40 -0700 (PDT)
 From:   Hsin-Yi Wang <hsinyi@chromium.org>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
@@ -74,9 +74,9 @@ Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         Stephen Boyd <swboyd@chromium.org>,
         Kees Cook <keescook@chromium.org>,
         Nicolas Boichat <drinkcat@chromium.org>
-Subject: [PATCH v5 2/3] fdt: add support for rng-seed
-Date:   Mon, 27 May 2019 12:33:35 +0800
-Message-Id: <20190527043336.112854-2-hsinyi@chromium.org>
+Subject: [PATCH v5 3/3] arm64: kexec_file: add rng-seed support
+Date:   Mon, 27 May 2019 12:33:36 +0800
+Message-Id: <20190527043336.112854-3-hsinyi@chromium.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190527043336.112854-1-hsinyi@chromium.org>
 References: <20190527043336.112854-1-hsinyi@chromium.org>
@@ -87,81 +87,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introducing a chosen node, rng-seed, which is an entropy that can be
-passed to kernel called very early to increase initial device
-randomness. Bootloader should provide this entropy and the value is
-read from /chosen/rng-seed in DT.
+Adding "rng-seed" to dtb. It's fine to add this property if original
+fdt doesn't contain it. Since original seed will be wiped after
+read, so use a default size 128 bytes here.
 
 Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
 ---
-change log v4->v5:
-* use fdt_nop_property() since property might not be wiped entirely if
-following entries are smaller than property length. 
----
- Documentation/devicetree/bindings/chosen.txt | 14 ++++++++++++++
- drivers/of/fdt.c                             | 10 ++++++++++
- 2 files changed, 24 insertions(+)
+ arch/arm64/kernel/machine_kexec_file.c | 22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-index 45e79172a646..678e81bc4383 100644
---- a/Documentation/devicetree/bindings/chosen.txt
-+++ b/Documentation/devicetree/bindings/chosen.txt
-@@ -28,6 +28,20 @@ mode) when EFI_RNG_PROTOCOL is supported, it will be overwritten by
- the Linux EFI stub (which will populate the property itself, using
- EFI_RNG_PROTOCOL).
+diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+index 58871333737a..d40fde72a023 100644
+--- a/arch/arm64/kernel/machine_kexec_file.c
++++ b/arch/arm64/kernel/machine_kexec_file.c
+@@ -27,6 +27,8 @@
+ #define FDT_PROP_INITRD_END	"linux,initrd-end"
+ #define FDT_PROP_BOOTARGS	"bootargs"
+ #define FDT_PROP_KASLR_SEED	"kaslr-seed"
++#define FDT_PROP_RNG_SEED	"rng-seed"
++#define RNG_SEED_SIZE		128
  
-+rng-seed
-+-----------
+ const struct kexec_file_ops * const kexec_file_loaders[] = {
+ 	&kexec_image_ops,
+@@ -102,6 +104,23 @@ static int setup_dtb(struct kimage *image,
+ 				FDT_PROP_KASLR_SEED);
+ 	}
+ 
++	/* add rng-seed */
++	if (rng_is_initialized()) {
++		void *rng_seed = kmalloc(RNG_SEED_SIZE, GFP_ATOMIC);
++		get_random_bytes(rng_seed, RNG_SEED_SIZE);
 +
-+This property serves as an entropy to add device randomness. It is parsed
-+as a byte array, e.g.
++		ret = fdt_setprop(dtb, off, FDT_PROP_RNG_SEED, rng_seed,
++				RNG_SEED_SIZE);
++		kfree(rng_seed);
 +
-+/ {
-+	chosen {
-+		rng-seed = <0x31 0x95 0x1b 0x3c 0xc9 0xfa 0xb3 ...>;
-+	};
-+};
++		if (ret)
++			goto out;
 +
-+This random value should be provided by bootloader.
-+
- stdout-path
- -----------
- 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index de893c9616a1..9d63330582bb 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -24,6 +24,7 @@
- #include <linux/debugfs.h>
- #include <linux/serial_core.h>
- #include <linux/sysfs.h>
-+#include <linux/random.h>
- 
- #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
- #include <asm/page.h>
-@@ -1079,6 +1080,7 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
- {
- 	int l;
- 	const char *p;
-+	const void *rng_seed;
- 
- 	pr_debug("search \"chosen\", depth: %d, uname: %s\n", depth, uname);
- 
-@@ -1113,6 +1115,14 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
- 
- 	pr_debug("Command line is: %s\n", (char*)data);
- 
-+	rng_seed = of_get_flat_dt_prop(node, "rng-seed", &l);
-+	if (rng_seed && l > 0) {
-+		add_device_randomness(rng_seed, l);
-+
-+		/* try to clear seed so it won't be found. */
-+		fdt_nop_property(initial_boot_params, node, "rng-seed");
++	} else {
++		pr_notice("RNG is not initialised: omitting \"%s\" property\n",
++				FDT_PROP_RNG_SEED);
 +	}
 +
- 	/* break now */
- 	return 1;
+ out:
+ 	if (ret)
+ 		return (ret == -FDT_ERR_NOSPACE) ? -ENOMEM : -EINVAL;
+@@ -110,7 +129,8 @@ static int setup_dtb(struct kimage *image,
  }
+ 
+ /*
+- * More space needed so that we can add initrd, bootargs and kaslr-seed.
++ * More space needed so that we can add initrd, bootargs, kaslr-seed, and
++ * rng-seed.
+  */
+ #define DTB_EXTRA_SPACE 0x1000
+ 
 -- 
 2.20.1
 
