@@ -2,134 +2,97 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB5DC04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 18:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BE8C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 18:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3890220883
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 18:10:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ukaGmu7n"
+	by mail.kernel.org (Postfix) with ESMTP id A6EB020859
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 18:10:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727139AbfE0SKv (ORCPT
+        id S1727189AbfE0SKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 14:10:51 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34837 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726346AbfE0SKu (ORCPT
+        Mon, 27 May 2019 14:10:55 -0400
+Received: from gateway30.websitewelcome.com ([192.185.152.11]:47418 "EHLO
+        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726346AbfE0SKx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 14:10:50 -0400
-Received: by mail-lf1-f68.google.com with SMTP id a25so2809622lfg.2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 11:10:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OPxJbzxj8XRuMP1HaHwQ8HvvmExLWsTd5Jne2FrvM2s=;
-        b=ukaGmu7nRGCEMmSYCwuppXI41vUKroOyV3rNIbjLFxOrrlI04GeRpz3vt0TXj9V74r
-         NyReSdiC79Bv2WZRleICXZBo7O73fqXldrUjyv/IsqTvpngs+4vnc3AAJzw2IHE+NNih
-         Bbd9zNJhxOZX5bNRILoh/FHs+mIHyXpl7iaBAMq3sZIREjkXfOxWaDaRTkjQvj5n/+WV
-         3BUZB1PrqP91qroqJIFTk3jTDCBNJ4WjJWs+qlZ95ljylT7z5Znvgv4zks0k1FFJE6c3
-         cm6C01KxRr3GcZ8PODwWByX5GLvDvwA25ANlbWXqP4un7p5+BSrvhOr6GMMT1RzuMs4F
-         2Q/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=OPxJbzxj8XRuMP1HaHwQ8HvvmExLWsTd5Jne2FrvM2s=;
-        b=eQc0cGSd6Gnyvjvrs2k52NCww7DZu2ZQuJjHXXlXCcYu3DoQ1CS640hsF9UWdQPh5j
-         u97JnPOChmpwVeHKXHrx2Ec0NmsRdPqWEwrJu0oitzgNQ0PVftSv09Q4oF+WQydHleuK
-         XFT0dso8ByQQIR/tPk0tp5QxNVZ5sJ1NDkeBfGI13sQDmKT9pWqfV6GETWzOv9CmVL1l
-         XS5uMFxcI9n9rr6LKHhNFh6oBdDyTkMyDhDuBgTJGJUtOK0vQGIRbgj6bKNs/6rVlrWq
-         4yP6eiUdcMlNqfNb9GiLMV0Mls79ydX1QAm/y8269guiVkegrAT90gHlbyS3SCeeVjoD
-         vncQ==
-X-Gm-Message-State: APjAAAVsBB1aE0VrN5asRads0FdrpRu5k+RkRuMBcye/8AKO3BLJsqzQ
-        gbXn4tXm+bHEe22b5vb6V2ONaA==
-X-Google-Smtp-Source: APXvYqywGJl2Jp2yjPTg63st1m9dDHZIJnOXy42Wj4rMaR29DgHDpduAOQ8x/hDJDfH9zdIKUOs3Ag==
-X-Received: by 2002:a05:6512:144:: with SMTP id m4mr1975972lfo.114.1558980648865;
-        Mon, 27 May 2019 11:10:48 -0700 (PDT)
-Received: from khorivan (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
-        by smtp.gmail.com with ESMTPSA id d18sm2432493lfl.95.2019.05.27.11.10.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 27 May 2019 11:10:48 -0700 (PDT)
-Date:   Mon, 27 May 2019 21:10:46 +0300
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     Jesper Dangaard Brouer <brouer@redhat.com>
-Cc:     grygorii.strashko@ti.com, davem@davemloft.net, ast@kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        xdp-newbies@vger.kernel.org, ilias.apalodimas@linaro.org,
-        netdev@vger.kernel.org, daniel@iogearbox.net,
-        jakub.kicinski@netronome.com, john.fastabend@gmail.com,
-        Tariq Toukan <tariqt@mellanox.com>
-Subject: Re: [PATCH net-next 3/3] net: ethernet: ti: cpsw: add XDP support
-Message-ID: <20190527181043.GA4246@khorivan>
-Mail-Followup-To: Jesper Dangaard Brouer <brouer@redhat.com>,
-        grygorii.strashko@ti.com, davem@davemloft.net, ast@kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        xdp-newbies@vger.kernel.org, ilias.apalodimas@linaro.org,
-        netdev@vger.kernel.org, daniel@iogearbox.net,
-        jakub.kicinski@netronome.com, john.fastabend@gmail.com,
-        Tariq Toukan <tariqt@mellanox.com>
-References: <20190523182035.9283-1-ivan.khoronzhuk@linaro.org>
- <20190523182035.9283-4-ivan.khoronzhuk@linaro.org>
- <20190524135418.5408591e@carbon>
+        Mon, 27 May 2019 14:10:53 -0400
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway30.websitewelcome.com (Postfix) with ESMTP id 30ED6412E
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 13:10:52 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id VK5EhEpSW4FKpVK5EhaPln; Mon, 27 May 2019 13:10:52 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.47.159] (port=37322 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hVK5D-002uvT-9J; Mon, 27 May 2019 13:10:51 -0500
+Date:   Mon, 27 May 2019 13:10:50 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ajay Gupta <ajayg@nvidia.com>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] usb: typec: ucsi: ccg: fix memory leak in do_flash
+Message-ID: <20190527181050.GA31496@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190524135418.5408591e@carbon>
 User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.47.159
+X-Source-L: No
+X-Exim-ID: 1hVK5D-002uvT-9J
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.47.159]:37322
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 5
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 01:54:18PM +0200, Jesper Dangaard Brouer wrote:
->On Thu, 23 May 2019 21:20:35 +0300
->Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
->
->> Add XDP support based on rx page_pool allocator, one frame per page.
->> Page pool allocator is used with assumption that only one rx_handler
->> is running simultaneously. DMA map/unmap is reused from page pool
->> despite there is no need to map whole page.
->
->When using page_pool for DMA-mapping, your XDP-memory model must use
->1-page per packet, which you state you do.  This is because
->__page_pool_put_page() fallback mode does a __page_pool_clean_page()
->unmapping the DMA.  Ilias and I are looking at options for removing this
->restriction as Mlx5 would need it (when we extend the SKB to return
->pages to page_pool).
-Thank for what you do, it can simplify a lot...
+In case memory resources for *fw* were successfully allocated,
+release them before return.
 
->
->Unfortunately, I've found another blocker for drivers using the DMA
->mapping feature of page_pool.  We don't properly handle the case, where
->a remote TX-driver have xdp_frame's in-flight, and simultaneously the
->sending driver is unloaded and take down the page_pool.  Nothing crash,
->but we end-up calling put_page() on a page that is still DMA-mapped.
+Addresses-Coverity-ID: 1445499 ("Resource leak")
+Fixes: 5c9ae5a87573 ("usb: typec: ucsi: ccg: add firmware flashing support")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/usb/typec/ucsi/ucsi_ccg.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Seems so, ... for generic solution, but looks like in case of cpsw there
-is no issue due to "like direct" dma map by adding offset, so whether page_pool
-dma map or dma map/unmap per rx/xmit, shouldn't be big difference.  Not sure
-about all SoCs thought...
-
-Despite of it, for cpsw I keep page_pool while down/up that I'm going to change
-in v2.
-
->
->I'm working on different solutions for fixing this, see here:
-> https://github.com/xdp-project/xdp-project/blob/master/areas/mem/page_pool03_shutdown_inflight.org
-Hope there will be no changes in page_pool API.
-
->-- Best regards,
->  Jesper Dangaard Brouer
->  MSc.CS, Principal Kernel Engineer at Red Hat
->  LinkedIn: http://www.linkedin.com/in/brouer
-
+diff --git a/drivers/usb/typec/ucsi/ucsi_ccg.c b/drivers/usb/typec/ucsi/ucsi_ccg.c
+index 9d46aa9e4e35..bf63074675fc 100644
+--- a/drivers/usb/typec/ucsi/ucsi_ccg.c
++++ b/drivers/usb/typec/ucsi/ucsi_ccg.c
+@@ -862,8 +862,10 @@ static int do_flash(struct ucsi_ccg *uc, enum enum_flash_mode mode)
+ 
+ not_signed_fw:
+ 	wr_buf = kzalloc(CCG4_ROW_SIZE + 4, GFP_KERNEL);
+-	if (!wr_buf)
+-		return -ENOMEM;
++	if (!wr_buf) {
++		err = -ENOMEM;
++		goto release_fw;
++	}
+ 
+ 	err = ccg_cmd_enter_flashing(uc);
+ 	if (err)
 -- 
-Regards,
-Ivan Khoronzhuk
+2.21.0
+
