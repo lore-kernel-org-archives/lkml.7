@@ -2,134 +2,209 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ADA3C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D215C46460
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E992F20859
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:55:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3098920859
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:56:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="nHYSdG55"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="BDUgfMbn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbfE0MzH (ORCPT
+        id S1726262AbfE0M4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 08:55:07 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:53710 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725991AbfE0MzH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 08:55:07 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4RCkREG004574;
-        Mon, 27 May 2019 14:54:40 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
- date : message-id : references : in-reply-to : content-type : content-id :
- content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=sKrW0CioPqMIKO8cNXujdrTmMUPJlLJ5MTbTFhfNccQ=;
- b=nHYSdG55hwRAIl0JS0bL8PAPbQlQThN0XOM5pQzfYk61TA8xNH/voyoRIvkd9xhtwD/v
- /S1fAn93tpkCliT9se5ZYdLZafa9ckLQVpPIHaV02W5odIx8CY0CBCLe4tedvZzVFlwu
- lD64NAU0spMB4lwQaJilTyZ8hBlHAjxlcw+qAqZZJrTG1jJcViEQM6zeTwji7gQ3yikZ
- yqB8+Ab2UMWzBKPokDCOG+C8Pb69+iE8pp8vobsnR1lTqYZmUQO+JKBQH5uQQhzGAJFM
- 9/tgJBnBYd7R+LMsRwiq3qpZUciYdbstWWkzs5UbFdKFiUnxBnbHau7VBp4qRtt5VdhV dw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2spvkgtv5m-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 27 May 2019 14:54:40 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 88A6238;
-        Mon, 27 May 2019 12:54:37 +0000 (GMT)
-Received: from Webmail-eu.st.com (gpxdag6node4.st.com [10.75.127.80])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 65A092ADC;
-        Mon, 27 May 2019 12:54:37 +0000 (GMT)
-Received: from GPXDAG6NODE6.st.com (10.75.127.82) by GPXDAG6NODE4.st.com
- (10.75.127.80) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 27 May
- 2019 14:54:37 +0200
-Received: from GPXDAG6NODE6.st.com ([fe80::57f:5f53:243f:cb11]) by
- GPXDAG6NODE6.st.com ([fe80::57f:5f53:243f:cb11%19]) with mapi id
- 15.00.1473.003; Mon, 27 May 2019 14:54:37 +0200
-From:   Philippe CORNU <philippe.cornu@st.com>
-To:     Yannick FERTRE <yannick.fertre@st.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "Heiko Stuebner" <heiko@sntech.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Nickey Yang <nickey.yang@rock-chips.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Vincent ABRIOU <vincent.abriou@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 2/2] drm/stm: dsi: add power on/off phy ops
-Thread-Topic: [PATCH v1 2/2] drm/stm: dsi: add power on/off phy ops
-Thread-Index: AQHVFHX+VSs7HxnBmUmbgwP5oNYjkKZ+zDkA
-Date:   Mon, 27 May 2019 12:54:37 +0000
-Message-ID: <24c1ee24-af80-8605-d042-76a43c985068@st.com>
-References: <1558952499-15418-1-git-send-email-yannick.fertre@st.com>
- <1558952499-15418-3-git-send-email-yannick.fertre@st.com>
-In-Reply-To: <1558952499-15418-3-git-send-email-yannick.fertre@st.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.44]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <738E4C142AF00C40B55910A8F5EDC6C4@st.com>
-Content-Transfer-Encoding: base64
+        Mon, 27 May 2019 08:56:37 -0400
+Received: from mail-eopbgr690085.outbound.protection.outlook.com ([40.107.69.85]:18415
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725991AbfE0M4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 08:56:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector1-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1UIne8oV6ctAJDfGI3Gf8dcmfomCDrrAEN7ww+V4D9g=;
+ b=BDUgfMbnj83i3V393eH5f36JPGTLJu1I7HU7OgVzeNt38WKRi4qrmvqNkxsZpBU259xr0yty7XmExZW2TUti9tO0pOC/PHhwGrQabal+jE6bhPeh+De6/B6AUMZ5iXIpb0NcIxr8HYsrO91vvNvkpvagYIBA+CBXHKTQ5eotq44=
+Received: from MWHPR03CA0020.namprd03.prod.outlook.com (2603:10b6:300:117::30)
+ by BY2PR03MB555.namprd03.prod.outlook.com (2a01:111:e400:2c37::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1922.20; Mon, 27 May
+ 2019 12:56:33 +0000
+Received: from SN1NAM02FT026.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::204) by MWHPR03CA0020.outlook.office365.com
+ (2603:10b6:300:117::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1922.18 via Frontend
+ Transport; Mon, 27 May 2019 12:56:32 +0000
+Authentication-Results: spf=pass (sender IP is 137.71.25.57)
+ smtp.mailfrom=analog.com; gmx.de; dkim=none (message not signed)
+ header.d=none;gmx.de; dmarc=bestguesspass action=none header.from=analog.com;
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
+Received: from nwd2mta2.analog.com (137.71.25.57) by
+ SN1NAM02FT026.mail.protection.outlook.com (10.152.72.97) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1922.16
+ via Frontend Transport; Mon, 27 May 2019 12:56:32 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x4RCuVgo022618
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Mon, 27 May 2019 05:56:31 -0700
+Received: from ben-Latitude-E6540.analog.com (10.50.1.100) by
+ NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
+ 14.3.408.0; Mon, 27 May 2019 08:56:30 -0400
+From:   Beniamin Bia <beniamin.bia@analog.com>
+To:     <jic23@kernel.org>
+CC:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
+        <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
+        <gregkh@linuxfoundation.org>, <linux-iio@vger.kernel.org>,
+        <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>,
+        <mark.rutland@arm.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <biabeniamin@outlook.com>,
+        Beniamin Bia <beniamin.bia@analog.com>
+Subject: [PATCH v2 2/4] iio: adc: ad7606: Add software configuration
+Date:   Mon, 27 May 2019 15:56:48 +0300
+Message-ID: <20190527125650.2405-2-beniamin.bia@analog.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190527125650.2405-1-beniamin.bia@analog.com>
+References: <20190527125650.2405-1-beniamin.bia@analog.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-27_07:,,
- signatures=0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(346002)(136003)(376002)(396003)(39860400002)(2980300002)(199004)(189003)(36756003)(4326008)(316002)(7636002)(7696005)(77096007)(50466002)(23676004)(246002)(14444005)(54906003)(76176011)(186003)(7416002)(5660300002)(26005)(486006)(6916009)(5820100001)(126002)(107886003)(44832011)(1076003)(2870700001)(6666004)(356004)(478600001)(72206003)(106002)(336012)(476003)(305945005)(86362001)(53416004)(47776003)(11346002)(446003)(2616005)(2906002)(50226002)(426003)(2351001)(70206006)(70586007)(8676002)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:BY2PR03MB555;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 9b3e6ea8-edfd-4cf1-fc1c-08d6e2a2be6f
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(4709054)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328);SRVR:BY2PR03MB555;
+X-MS-TrafficTypeDiagnostic: BY2PR03MB555:
+X-Microsoft-Antispam-PRVS: <BY2PR03MB555FB485D4D8033B0EF66E2F01D0@BY2PR03MB555.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 0050CEFE70
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: HCOTY/YSEQy5WZUOrtWhmVk0FXIlc4r5DQca5sUMOxoih6z2uTCx3Kw6M0E8Hv8QhR85R1sV5npGbUuvnGKNSz2JIwJD0MZH+pMXdOLEy8zdn/YfVr3GWcCvZEDxP4OVMNmjaikMeF70RrdVbMoq2Tx6chiMYr8qH0A/oaEeyL/3VL0pzSDIXBPNrz/aqK2PKwz8Cj0WRCaKU0Uw2jE+nvkBRokS1WJCv2Qt8Uwovxfkpt/9giuTEAF5/ExA4ST2x/sU3rmtTsYB/TvXW93AEXdmZoTt4a/NxNoh16V6kdjH3wGPYWp+6nqEnSPKbHF51fX+/i/jACkcA1VRVZPJHbJUwqQKauKJRQ5zOgQwVz60EUcTkcYNTYrxx1OpYYWNzKfNwevNsWuNMMjIRUvJuOzjBKpAq7lyuQBajaf7eq8=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2019 12:56:32.2219
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9b3e6ea8-edfd-4cf1-fc1c-08d6e2a2be6f
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY2PR03MB555
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgWWFubmljaywNCmFuZCB0aGFuayB5b3UgZm9yIHlvdXIgcGF0Y2guDQoNClRlc3RlZCBzdWNj
-ZXNzZnVsbHkgb24gc3RtMzJmIHRvby4NCg0KQWNrZWQtYnk6IFBoaWxpcHBlIENvcm51IDxwaGls
-aXBwZS5jb3JudUBzdC5jb20+DQpUZXN0ZWQtYnk6IFBoaWxpcHBlIENvcm51IDxwaGlsaXBwZS5j
-b3JudUBzdC5jb20+DQoNClBoaWxpcHBlIDotKQ0KDQpPbiA1LzI3LzE5IDEyOjIxIFBNLCBZYW5u
-aWNrIEZlcnRyw6kgd3JvdGU6DQo+IFRoZXNlIG5ldyBwaHlzaWNhbCBvcGVyYXRpb25zIGFyZSBo
-ZWxwZnVsIHRvIHBvd2VyX29uL29mZiB0aGUgZHNpDQo+IHdyYXBwZXIuIElmIHRoZSBkc2kgd3Jh
-cHBlciBpcyBwb3dlcmVkIGluIHZpZGVvIG1vZGUsIHRoZSBkaXNwbGF5DQo+IGNvbnRyb2xsZXIg
-KGx0ZGMpIHJlZ2lzdGVyIGFjY2VzcyB3aWxsIGhhbmcgd2hlbiBEU0kgZmlmb3MgYXJlIGZ1bGwu
-DQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBZYW5uaWNrIEZlcnRyw6kgPHlhbm5pY2suZmVydHJlQHN0
-LmNvbT4NCj4gLS0tDQo+ICAgZHJpdmVycy9ncHUvZHJtL3N0bS9kd19taXBpX2RzaS1zdG0uYyB8
-IDIxICsrKysrKysrKysrKysrKysrKysrLQ0KPiAgIDEgZmlsZSBjaGFuZ2VkLCAyMCBpbnNlcnRp
-b25zKCspLCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJt
-L3N0bS9kd19taXBpX2RzaS1zdG0uYyBiL2RyaXZlcnMvZ3B1L2RybS9zdG0vZHdfbWlwaV9kc2kt
-c3RtLmMNCj4gaW5kZXggMDFkYjAyMC4uMGFiMzJmZSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9n
-cHUvZHJtL3N0bS9kd19taXBpX2RzaS1zdG0uYw0KPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vc3Rt
-L2R3X21pcGlfZHNpLXN0bS5jDQo+IEBAIC0yMTAsMTAgKzIxMCwyNyBAQCBzdGF0aWMgaW50IGR3
-X21pcGlfZHNpX3BoeV9pbml0KHZvaWQgKnByaXZfZGF0YSkNCj4gICAJaWYgKHJldCkNCj4gICAJ
-CURSTV9ERUJVR19EUklWRVIoIiFUSU1FT1VUISB3YWl0aW5nIFBMTCwgbGV0J3MgY29udGludWVc
-biIpOw0KPiAgIA0KPiArCXJldHVybiAwOw0KPiArfQ0KPiArDQo+ICtzdGF0aWMgdm9pZCBkd19t
-aXBpX2RzaV9waHlfcG93ZXJfb24odm9pZCAqcHJpdl9kYXRhKQ0KPiArew0KPiArCXN0cnVjdCBk
-d19taXBpX2RzaV9zdG0gKmRzaSA9IHByaXZfZGF0YTsNCj4gKw0KPiArCURSTV9ERUJVR19EUklW
-RVIoIlxuIik7DQo+ICsNCj4gICAJLyogRW5hYmxlIHRoZSBEU0kgd3JhcHBlciAqLw0KPiAgIAlk
-c2lfc2V0KGRzaSwgRFNJX1dDUiwgV0NSX0RTSUVOKTsNCj4gK30NCj4gICANCj4gLQlyZXR1cm4g
-MDsNCj4gK3N0YXRpYyB2b2lkIGR3X21pcGlfZHNpX3BoeV9wb3dlcl9vZmYodm9pZCAqcHJpdl9k
-YXRhKQ0KPiArew0KPiArCXN0cnVjdCBkd19taXBpX2RzaV9zdG0gKmRzaSA9IHByaXZfZGF0YTsN
-Cj4gKw0KPiArCURSTV9ERUJVR19EUklWRVIoIlxuIik7DQo+ICsNCj4gKwkvKiBEaXNhYmxlIHRo
-ZSBEU0kgd3JhcHBlciAqLw0KPiArCWRzaV9jbGVhcihkc2ksIERTSV9XQ1IsIFdDUl9EU0lFTik7
-DQo+ICAgfQ0KPiAgIA0KPiAgIHN0YXRpYyBpbnQNCj4gQEAgLTI4Nyw2ICszMDQsOCBAQCBkd19t
-aXBpX2RzaV9nZXRfbGFuZV9tYnBzKHZvaWQgKnByaXZfZGF0YSwgY29uc3Qgc3RydWN0IGRybV9k
-aXNwbGF5X21vZGUgKm1vZGUsDQo+ICAgDQo+ICAgc3RhdGljIGNvbnN0IHN0cnVjdCBkd19taXBp
-X2RzaV9waHlfb3BzIGR3X21pcGlfZHNpX3N0bV9waHlfb3BzID0gew0KPiAgIAkuaW5pdCA9IGR3
-X21pcGlfZHNpX3BoeV9pbml0LA0KPiArCS5wb3dlcl9vbiA9IGR3X21pcGlfZHNpX3BoeV9wb3dl
-cl9vbiwNCj4gKwkucG93ZXJfb2ZmID0gZHdfbWlwaV9kc2lfcGh5X3Bvd2VyX29mZiwNCj4gICAJ
-LmdldF9sYW5lX21icHMgPSBkd19taXBpX2RzaV9nZXRfbGFuZV9tYnBzLA0KPiAgIH07DQo+ICAg
-DQo+IA==
+Because this driver will support multiple configurations for software,
+the software configuration was made generic.
+
+Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+Acked-by: Jonathan Cameron <jic23@kernel.org>
+---
+Changes in v2:
+-nothing changed
+
+ drivers/iio/adc/ad7606.c | 40 +++++++++++++++++++++++++++++++++++++---
+ drivers/iio/adc/ad7606.h |  2 ++
+ 2 files changed, 39 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
+index c66ff22f32d2..aba0fd123a51 100644
+--- a/drivers/iio/adc/ad7606.c
++++ b/drivers/iio/adc/ad7606.c
+@@ -140,7 +140,7 @@ static int ad7606_read_raw(struct iio_dev *indio_dev,
+ 			   int *val2,
+ 			   long m)
+ {
+-	int ret;
++	int ret, ch = 0;
+ 	struct ad7606_state *st = iio_priv(indio_dev);
+ 
+ 	switch (m) {
+@@ -157,8 +157,10 @@ static int ad7606_read_raw(struct iio_dev *indio_dev,
+ 		*val = (short)ret;
+ 		return IIO_VAL_INT;
+ 	case IIO_CHAN_INFO_SCALE:
++		if (st->sw_mode_en)
++			ch = chan->address;
+ 		*val = 0;
+-		*val2 = st->scale_avail[st->range[0]];
++		*val2 = st->scale_avail[st->range[ch]];
+ 		return IIO_VAL_INT_PLUS_MICRO;
+ 	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
+ 		*val = st->oversampling;
+@@ -233,7 +235,9 @@ static int ad7606_write_raw(struct iio_dev *indio_dev,
+ 	case IIO_CHAN_INFO_SCALE:
+ 		mutex_lock(&st->lock);
+ 		i = find_closest(val2, st->scale_avail, st->num_scales);
+-		ret = st->write_scale(indio_dev, chan->address, i);
++		if (st->sw_mode_en)
++			ch = chan->address;
++		ret = st->write_scale(indio_dev, ch, i);
+ 		if (ret < 0) {
+ 			mutex_unlock(&st->lock);
+ 			return ret;
+@@ -616,6 +620,36 @@ int ad7606_probe(struct device *dev, int irq, void __iomem *base_address,
+ 	st->write_scale = ad7606_write_scale_hw;
+ 	st->write_os = ad7606_write_os_hw;
+ 
++	if (st->chip_info->sw_mode_config)
++		st->sw_mode_en = device_property_present(st->dev,
++							 "adi,sw-mode");
++
++	if (st->sw_mode_en) {
++		/* After reset, in software mode, ±10 V is set by default */
++		memset32(st->range, 2, ARRAY_SIZE(st->range));
++		indio_dev->info = &ad7606_info_os_and_range;
++
++		/*
++		 * In software mode, the range gpio has no longer its function.
++		 * Instead, the scale can be configured individually for each
++		 * channel from the range registers.
++		 */
++		if (st->chip_info->write_scale_sw)
++			st->write_scale = st->chip_info->write_scale_sw;
++
++		/*
++		 * In software mode, the oversampling is no longer configured
++		 * with GPIO pins. Instead, the oversampling can be configured
++		 * in configuratiion register.
++		 */
++		if (st->chip_info->write_os_sw)
++			st->write_os = st->chip_info->write_os_sw;
++
++		ret = st->chip_info->sw_mode_config(indio_dev);
++		if (ret < 0)
++			return ret;
++	}
++
+ 	st->trig = devm_iio_trigger_alloc(dev, "%s-dev%d",
+ 					  indio_dev->name, indio_dev->id);
+ 	if (!st->trig)
+diff --git a/drivers/iio/adc/ad7606.h b/drivers/iio/adc/ad7606.h
+index 143c30163df9..d8a509c2c428 100644
+--- a/drivers/iio/adc/ad7606.h
++++ b/drivers/iio/adc/ad7606.h
+@@ -43,6 +43,7 @@ struct ad7606_chip_info {
+  * @range		voltage range selection, selects which scale to apply
+  * @oversampling	oversampling selection
+  * @base_address	address from where to read data in parallel operation
++ * @sw_mode_en		software mode enabled
+  * @scale_avail		pointer to the array which stores the available scales
+  * @num_scales		number of elements stored in the scale_avail array
+  * @oversampling_avail	pointer to the array which stores the available
+@@ -71,6 +72,7 @@ struct ad7606_state {
+ 	unsigned int			range[16];
+ 	unsigned int			oversampling;
+ 	void __iomem			*base_address;
++	bool				sw_mode_en;
+ 	const unsigned int		*scale_avail;
+ 	unsigned int			num_scales;
+ 	const unsigned int		*oversampling_avail;
+-- 
+2.17.1
+
