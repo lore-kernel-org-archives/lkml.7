@@ -2,106 +2,127 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 431A4C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96DBCC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:53:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17F482133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:53:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jwdSKNwo"
+	by mail.kernel.org (Postfix) with ESMTP id 784F32133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:53:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbfE0Kxo (ORCPT
+        id S1726792AbfE0Kxr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 06:53:44 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:54634 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725814AbfE0Kxo (ORCPT
+        Mon, 27 May 2019 06:53:47 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:63322 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbfE0Kxo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 27 May 2019 06:53:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=uVfy/lu/NyhO7gs/yTDr0U1v9NIKN7O4ba0GqTFT89s=; b=jwdSKNwofdLW9xZVXVF9A/LpJx
-        Cd9/MtEOfxbNkI6fzdegmk8U9nHgsG+d6S6ih5nbwKH+MG1fjh71PotDcsHqQkoidfkCgRrT5pEW5
-        /KGV1YUPF429Of951i4tfXEtjFLe2BU4xID55x3rHJQizvIr9niyegrWwONhoPkhBtjf83u8I0csT
-        v0rW+aUAnqbCcetKsmcsPzoU8t8ZO+z6+DMKQeXMtCBhrNNMKffIcrLEJ+zbmnq8xMhSK4uXENnfi
-        7v20O2+9lTaD3TCEYP5jzkkIXlR16YhUa0EL3uokVutdcczCvG63D+NZwfkG15nuve7GSLBgBGDHc
-        5hvi0x0A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hVDG8-0000jz-Pr; Mon, 27 May 2019 10:53:40 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4ED722027F766; Mon, 27 May 2019 12:53:39 +0200 (CEST)
-Date:   Mon, 27 May 2019 12:53:39 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Rik van Riel <riel@surriel.com>
-Cc:     Andrew Murray <andrew.murray@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] smp,cpumask: Don't call functions on offline CPUs
-Message-ID: <20190527105339.GZ2623@hirez.programming.kicks-ass.net>
-References: <20190522111537.27815-1-andrew.murray@arm.com>
- <20190522140921.GD16275@worktop.programming.kicks-ass.net>
- <20190522143711.GC8268@e119886-lin.cambridge.arm.com>
- <20190522144918.GH16275@worktop.programming.kicks-ass.net>
- <d8ec196590237c047bbe6805b933ec9dd2ec42c4.camel@surriel.com>
+Received: from 79.184.255.36.ipv4.supernova.orange.pl (79.184.255.36) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
+ id 3e9dcd1393346651; Mon, 27 May 2019 12:53:42 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Mathieu Malaterre <malat@debian.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2] powerpc/power: Expose pfn_is_nosave prototype
+Date:   Mon, 27 May 2019 12:53:41 +0200
+Message-ID: <1929721.iDiXxTFbjN@kreacher>
+In-Reply-To: <20190524104418.17194-1-malat@debian.org>
+References: <20190523114736.30268-1-malat@debian.org> <20190524104418.17194-1-malat@debian.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <d8ec196590237c047bbe6805b933ec9dd2ec42c4.camel@surriel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 02:23:47PM -0400, Rik van Riel wrote:
-> On Wed, 2019-05-22 at 16:49 +0200, Peter Zijlstra wrote:
-> > On Wed, May 22, 2019 at 03:37:11PM +0100, Andrew Murray wrote:
-> > > > Is perhaps the problem that on_each_cpu_cond() uses
-> > > > cpu_onlne_mask
-> > > > without protection?
-> > >=20
-> > > Does this prevent racing with a CPU going offline? I guess this
-> > > prevents
-> > > the warning at the expense of a lock - but is only beneficial in
-> > > the
-> > > unlikely path. (In the likely path this prevents new CPUs going
-> > > offline
-> > > but we don't care because we don't WARN if they aren't they when we
-> > > attempt to call functions).
-> > >=20
-> > > At least this is my limited understanding.
-> >=20
-> > Hmm.. I don't think it could matter, we only use the mask when
-> > preempt_disable(), which would already block offline, due to it using
-> > stop_machine().
-> >=20
-> > So the patch is a no-op.
-> >=20
-> > What's the WARN you see? TLB invalidation should pass mm_cpumask(),
-> > which similarly should not contain offline CPUs I'm thinking.
->=20
-> Does the TLB invalidation code have anything in it
-> to prevent from racing with the CPU offline code?
->=20
-> In other words, could we end up with the TLB
-> invalidation code building its bitmask, getting
-> interrupted (eg. hypervisor preemption, NMI),
-> and not sending out the IPI to that bitmask of
-> CPUs until after one of the CPUs in the bitmap
-> has gotten offlined?
+On Friday, May 24, 2019 12:44:18 PM CEST Mathieu Malaterre wrote:
+> The declaration for pfn_is_nosave is only available in
+> kernel/power/power.h. Since this function can be override in arch,
+> expose it globally. Having a prototype will make sure to avoid warning
+> (sometime treated as error with W=1) such as:
+> 
+>   arch/powerpc/kernel/suspend.c:18:5: error: no previous prototype for 'pfn_is_nosave' [-Werror=missing-prototypes]
+> 
+> This moves the declaration into a globally visible header file and add
+> missing include to avoid a warning on powerpc. Also remove the
+> duplicated prototypes since not required anymore.
+> 
+> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+> ---
+> v2: As suggestion by christophe remove duplicates prototypes
+> 
+>  arch/powerpc/kernel/suspend.c | 1 +
+>  arch/s390/kernel/entry.h      | 1 -
+>  include/linux/suspend.h       | 1 +
+>  kernel/power/power.h          | 2 --
+>  4 files changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/powerpc/kernel/suspend.c b/arch/powerpc/kernel/suspend.c
+> index a531154cc0f3..9e1b6b894245 100644
+> --- a/arch/powerpc/kernel/suspend.c
+> +++ b/arch/powerpc/kernel/suspend.c
+> @@ -8,6 +8,7 @@
+>   */
+>  
+>  #include <linux/mm.h>
+> +#include <linux/suspend.h>
+>  #include <asm/page.h>
+>  #include <asm/sections.h>
+>  
+> diff --git a/arch/s390/kernel/entry.h b/arch/s390/kernel/entry.h
+> index 20420c2b8a14..b2956d49b6ad 100644
+> --- a/arch/s390/kernel/entry.h
+> +++ b/arch/s390/kernel/entry.h
+> @@ -63,7 +63,6 @@ void __init startup_init(void);
+>  void die(struct pt_regs *regs, const char *str);
+>  int setup_profiling_timer(unsigned int multiplier);
+>  void __init time_init(void);
+> -int pfn_is_nosave(unsigned long);
+>  void s390_early_resume(void);
+>  unsigned long prepare_ftrace_return(unsigned long parent, unsigned long sp, unsigned long ip);
+>  
+> diff --git a/include/linux/suspend.h b/include/linux/suspend.h
+> index 6b3ea9ea6a9e..e8b8a7bede90 100644
+> --- a/include/linux/suspend.h
+> +++ b/include/linux/suspend.h
+> @@ -395,6 +395,7 @@ extern bool system_entering_hibernation(void);
+>  extern bool hibernation_available(void);
+>  asmlinkage int swsusp_save(void);
+>  extern struct pbe *restore_pblist;
+> +int pfn_is_nosave(unsigned long pfn);
+>  #else /* CONFIG_HIBERNATION */
+>  static inline void register_nosave_region(unsigned long b, unsigned long e) {}
+>  static inline void register_nosave_region_late(unsigned long b, unsigned long e) {}
+> diff --git a/kernel/power/power.h b/kernel/power/power.h
+> index 9e58bdc8a562..44bee462ff57 100644
+> --- a/kernel/power/power.h
+> +++ b/kernel/power/power.h
+> @@ -75,8 +75,6 @@ static inline void hibernate_reserved_size_init(void) {}
+>  static inline void hibernate_image_size_init(void) {}
+>  #endif /* !CONFIG_HIBERNATION */
+>  
+> -extern int pfn_is_nosave(unsigned long);
+> -
+>  #define power_attr(_name) \
+>  static struct kobj_attribute _name##_attr = {	\
+>  	.attr	= {				\
+> 
 
-One possible thing would be if cpu-offline didn't remove the bit from
-mm_cpumask() because it entered lazy state earlier or something.
+With an ACK from the powerpc maintainers, I could apply this one.
 
-Then, mm_cpumask() would contain an offline CPU and the WARN could
-trigger, but I don't _think_ we do that, but I didn't check.
+
+
+
