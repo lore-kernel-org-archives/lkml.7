@@ -2,68 +2,73 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD12C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6CBEC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F96D20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C18F20815
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:43:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="F0OuPbca"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="RbixjwZf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbfE0MnN (ORCPT
+        id S1726945AbfE0MnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 08:43:13 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54935 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbfE0MnM (ORCPT
+        Mon, 27 May 2019 08:43:17 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38315 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726579AbfE0MnN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 08:43:12 -0400
-Received: by mail-wm1-f66.google.com with SMTP id i3so16016197wml.4
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 05:43:11 -0700 (PDT)
+        Mon, 27 May 2019 08:43:13 -0400
+Received: by mail-wr1-f65.google.com with SMTP id d18so16808917wrs.5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 05:43:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NKi6i530JJNrkfWp8zdTE/DlNf+AJ6vpEuNiHI586GM=;
-        b=F0OuPbcaU47Vw5cIofDI7N8sCg5q5HjGbe75cSt5fxbmgeL/gwFfe0z2Wex7Xk06+v
-         KyG3eIWcX65wfRkP5yFfwX2MTmFf4YvIPSZ1sfR1vF1vL5KWjLpfqFxNLMzGW92WyTZ0
-         xQHBioJ2CSnMfPDUutyRdQFF8edHOg7JnkFzKVpAXmvHIL4ES9prSLURjwD+JEwbDGxK
-         ixEefmZ8lZXsS+0UWbqOEroGQcLF9GJipI2ge/K4pAZ7ZxZs8O4K2GqhChbwBA2HoQIf
-         KPQrFoIVhCSob5K6Aky/XPD+3Qw/jM0QmRhk1va3R4IzLIYlAEQiAuh2kDeG0+YVUM8H
-         IzPA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=wfKAsx1k3aZxm1g3WHRqV/EWJCTGjV5kvipkF29KWgY=;
+        b=RbixjwZfkqTf7IjnopTanq0l4LQmRfQrKZvuDGX7vGcEw57/aoOmAB7MvWEgbsFEEQ
+         FnNubmDp9BOqpEMqt7ceQvKzMftLMFAlYy8DH6ClC2u3tTNNQyTt4j07CKKUSop2lyKK
+         O6BY8X+QzDpCyZneUK62VsxMklgpvmSbEBloeNMS8blv125hNBND2y7hPxGdRXhUasVA
+         2BKmUMDZse3jc8EwYgQfNqwVUguTsaERfTcXWFAeT/UUpTVqivGAIncepVhKdgPlYTfK
+         WttPp0FRlWnvcMT8iOT+SL2Yyn1PINPI2xPOErptKrxeTxaG1FcfI2gSKDI+Gzarc7QB
+         N8LA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NKi6i530JJNrkfWp8zdTE/DlNf+AJ6vpEuNiHI586GM=;
-        b=bJhBNQSnS7X4ssFq7hDShCJ5rqmePTCAZWKhcMvTymBC2gMZee3qcG0TEuXNiKPAZE
-         8+2wcFpI+5wRo9SUtQ9ykgAHAU3NURYV05qvFgy6JH8KnQ6Jmipkum7UF3GNbT7nuOO2
-         l9kdInnsQ4MXtUP0OFg5+u3lSm1GCEDBQ/gXu/9b114JLaY62ZsDz2e/TGIE1TJXmJzZ
-         STf/CITkb1prHg+X40hMvc8OQM8SUBVTofrJ5b7L4V6nHcZrbK/SY28Z+Az/zATsy960
-         pjtvhVcSNWWrqbs/7gJYXJHyI33933/4Vbapq2BDB6p84TSfrSlYexOir5qbcl/wsjPh
-         ZcWA==
-X-Gm-Message-State: APjAAAXiVRcjXA88g1glGHFdA/+cRzxaUSlDbe+tzRbOEF2O3bjhjM/x
-        +kPdk/IMFJc2CT3KmpVH+1GiIg==
-X-Google-Smtp-Source: APXvYqwLlj5CMrnZHpa7NOKgj27nP4BBbZEUNpyia+Gjsf8jHnw5YAJDwN7ERYC5zPTVIVnhO1qS3g==
-X-Received: by 2002:a1c:c706:: with SMTP id x6mr9242682wmf.35.1558960990603;
-        Mon, 27 May 2019 05:43:10 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=wfKAsx1k3aZxm1g3WHRqV/EWJCTGjV5kvipkF29KWgY=;
+        b=OEdukgv/E9OvWltQGW1UhkN1h/OpHZ1DHrxUdXoucYiKx/6ieXAXkrdspM45t1VQv3
+         jhBCKz8ZNR0tf7V5ag+UZxHqD2eP4bRIldZ0c0pwpwr/mHLEGUn43ZjZWGW/iqO47668
+         4YVbna1t8OFzrOvURY6z9fbeUMTZdzn6NkyYOKFvjlmNbRFIm/RXu6Oher6mikFhBsfB
+         +3MrY6adRUw5eH0CcGvVtRi01T2ddYnGrmUuXy5RaLC3xAx/GRGkJ+qdkGggVi9pilzr
+         5hEddt3HBCPIHIR1ecMkl/zIQBokmIaC+Z4jdyg/Blczi1NUII2xkUc1JfgTBRbFGf3j
+         nK1A==
+X-Gm-Message-State: APjAAAVliC+l/O2rZFeBg/IBAFuVwcwibKTTe76UNNiEeKRMKxLstwMa
+        0gCBBvAGHaNnswYLfTylF1kkDQ==
+X-Google-Smtp-Source: APXvYqxnfjIHIRa4qi07Fsf6jQxGYjFAlyaqW/pJH4kjCXSboDIWvjhSeowBftxypf9mHpHl5S6bwQ==
+X-Received: by 2002:adf:db89:: with SMTP id u9mr36557444wri.294.1558960991581;
+        Mon, 27 May 2019 05:43:11 -0700 (PDT)
 Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id c14sm11494930wrt.45.2019.05.27.05.43.09
+        by smtp.gmail.com with ESMTPSA id c14sm11494930wrt.45.2019.05.27.05.43.10
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
         Mon, 27 May 2019 05:43:10 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     ulf.hansson@linaro.org, khilman@baylibre.com
+To:     ulf.hansson@linaro.org, khilman@baylibre.com,
+        devicetree@vger.kernel.org
 Cc:     Neil Armstrong <narmstrong@baylibre.com>,
         linux-mmc@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/3] mmc: meson-gx: add dram-access-quirk support
-Date:   Mon, 27 May 2019 14:43:04 +0200
-Message-Id: <20190527124307.32075-1-narmstrong@baylibre.com>
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 1/3] dt-bindings: mmc: meson-gx: add dram-access-quirk property
+Date:   Mon, 27 May 2019 14:43:05 +0200
+Message-Id: <20190527124307.32075-2-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190527124307.32075-1-narmstrong@baylibre.com>
+References: <20190527124307.32075-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -71,41 +76,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On the Amlogic G12A SoC family, (only) the SDIO controller fails to access
-the data from DRAM, leading to a broken controller.
+On the Amlogic G12A SoC family, (only) the SDIO controller has a bug which
+makes any DRAM access from the MMC controller fail.
 
-Add the amlogic,ddr-access-quirk property so signal this particular
+Add the amlogic,dram-access-quirk property so signal this particular
 controller has this bug and needs a quirk to work properly.
 
-But each MMC controller has 1,5KiB of SRAM after the registers, that can
-be used as bounce buffer to avoid direct DDR access from the integrated
-DMAs (this SRAM may be used by the boot ROM when DRAM is not yet initialized).
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-The quirk is to disable the chained descriptor for this controller, and
-use this SRAM memory zone as buffer for the bounce buffer fallback mode.
-
-The performance hit hasn't been evaluated, but the fix has been tested
-using a WiFi AP6398S SDIO module, and the iperf3 Bandwidth measurement gave
-55.2 Mbits/sec over a 63 Hours long test, with the SDIO ios set as High-Speed
-at 50MHz clock. It gave around 170 Mbits/sec as SDR104 and 200MHz clock.
-
-Changes since v1:
-* use DRAM instead of DDR, added details in bindings on internal DMA controller
-* fix probe() to not try to unallocate bounce buffer on error
-* replace DT patch adding SDIO property to patch adding SDIO controller
-
-Jerome Brunet (1):
-  arm64: dts: meson: g12a: add SDIO controller
-
-Neil Armstrong (2):
-  dt-bindings: mmc: meson-gx: add dram-access-quirk property
-  mmc: meson-gx: add dram-access-quirk
-
- .../bindings/mmc/amlogic,meson-gx.txt         |  4 ++
- arch/arm64/boot/dts/amlogic/meson-g12a.dtsi   | 37 ++++++++++
- drivers/mmc/host/meson-gx-mmc.c               | 70 +++++++++++++++----
- 3 files changed, 96 insertions(+), 15 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt b/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
+index 13e70409e8ac..ccc5358db131 100644
+--- a/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
++++ b/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
+@@ -22,6 +22,10 @@ Required properties:
+   clock rate requested by the MMC core.
+ - resets     : phandle of the internal reset line
+ 
++Optional properties:
++- amlogic,dram-access-quirk: set when controller's internal DMA engine cannot access the
++  DRAM memory, like on the G12A dedicated SDIO controller.
++
+ Example:
+ 
+ 	sd_emmc_a: mmc@70000 {
 -- 
 2.21.0
 
