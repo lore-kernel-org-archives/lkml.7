@@ -2,126 +2,86 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D68C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 18:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C30C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 18:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8CE920883
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 18:17:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF56920883
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 18:19:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dS4IbOdh"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="gbV3rcSa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727189AbfE0SRn (ORCPT
+        id S1727128AbfE0STp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 14:17:43 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:34626 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbfE0SRn (ORCPT
+        Mon, 27 May 2019 14:19:45 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:33543 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbfE0STp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 14:17:43 -0400
-Received: by mail-vs1-f65.google.com with SMTP id q64so11120345vsd.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 11:17:42 -0700 (PDT)
+        Mon, 27 May 2019 14:19:45 -0400
+Received: by mail-oi1-f194.google.com with SMTP id q186so12467235oia.0
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 11:19:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Wk2hdUXANFYl1/k0tGnBJuWme842kQgEugYRrAdMJgU=;
-        b=dS4IbOdhgZVSQqWE7W9HLkrZGQvhZ5abk5sQyiNlaHVjv85/1nWeAywC/QDyez/NL5
-         z5AsU7MavE++ZEHOw8BPtuFl6Sl4UofmOw2JMe8ShMocnqtby87XNUKx/Ynr/IiV5k4S
-         orzYRSZzC7PdIRMNlk5aBCIXPnUpTfvSyJn5JPRMiFhwEko33ECMK7cuh70/+y6un1gJ
-         rrPyBdC2KSR4FFZ/fXnMog2IOWRqmbwXXzgLgWBhbyphDpZn+xro+tYx+/W4yNXgHXah
-         3/mzTz1Ffet/YgR4K1+Noi+2C8Qr5Gf16oP/oHeUde/Cw3BPJYfSTbmqpKYSPiHHrZ9H
-         ELeA==
+        bh=REA5zbty0xHe7KtmiN42aAu+VNT3yUAx9IRSmGEhNfk=;
+        b=gbV3rcSaNWdBb7ut8i8munG9MXAOo1fy/pLLtM3+3QVqU5C1gi2Z1GBTBAgzs8hgPf
+         8cptcKIa9Io9RbzWpXy5PMaVA7P8xJwtzv4ARVL/60OtrdBRKOglUTb3ZgcbrCY0NH/1
+         6zDVtmlqq6MRXVJvYKO57yaEGQThkUOsq7us9n35ODeZFrsL147+GXbEO2qZMCvp1fDu
+         3EcCdn997nuGb+LJbAaHSESI41byavV3pUN5qol4IX9CQ4H5Xk0D2w957Qu6Ssl7yhHR
+         EYw5ll+x1heXuUotikVRRDhJ5Mntrh73wusDulQvKzIeer0WrL6mBbR19gbHS6giiYwf
+         wASw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Wk2hdUXANFYl1/k0tGnBJuWme842kQgEugYRrAdMJgU=;
-        b=pDrjWzgTPc/5hK8MubZ1CwTCymsKsMRZ0qoQWuykVRwEXJPBjVFn/3HtODwXI0lrx3
-         dhuRQxFQGGcY21k1UZ6GLmIRwQJjwJSutsnY4Uf73C7hqIfL3BaPUSFWyKZUo2Wo4mBT
-         rkf9New5+FOODCNblrNMg6K8DB415XOt7fB5z0iz9fcSOUgkd3yC8ceUOL0NH1UGHmnu
-         T3tvWaSTZG34Tm5n4HcNhkHd9yZZT66meGYBkF0Tv2/gmc1WaHTJkP7vadYGEMkeaAsU
-         3oc8IJlC77IV9JrJ/ipkYJEaNT9btcLrNNe/95Wx5vZMDUrlMUmHoXWpoqCOOriVwPQH
-         ewYg==
-X-Gm-Message-State: APjAAAViuXrdMx/oYnwj6tuGvweriI3d474MuVMRyiQfnQg6p51fdjmD
-        sgcvw/muf2tZFEGdk8h3jaeMehq1tLUTspHM0bAFmg==
-X-Google-Smtp-Source: APXvYqzuKcW/79QkdRTF5rt129CfhCTBkDjwdQNIeah8lsnBs26cDYoRW6a2C+MEJfPi6wzVzRHznUMCZcNZHRlI5d8=
-X-Received: by 2002:a67:3046:: with SMTP id w67mr51182171vsw.165.1558981062356;
- Mon, 27 May 2019 11:17:42 -0700 (PDT)
+        bh=REA5zbty0xHe7KtmiN42aAu+VNT3yUAx9IRSmGEhNfk=;
+        b=m+i9XiWeQbzRiQPSa3SWtKCCDEvZ/AqZ0NIrKCqmBV5YJ7zkstLnwyZgO3el9yJu7j
+         aEslBoiXByOco39Id8cOeBc6zMTENZ7obUFPNCHVFStJnJLe+Bwd9nZy/CKdfRh64qJn
+         Nq+gOMPPIhO+ZPMJs7YRV1lNZGhIndI9Nfx9eNmITqFlxiKvZ3cJaNK0RscMTjb8n15v
+         wh96qvDfHEOlcNdtxepnv2/q8jVrzdAeb0H9HaNS+0PcSuo3eQYbTUuStI81b3UHd13G
+         BLrqeOmYzBkiB5dC4Ckl8hOLbkGlKHn5VXZMga0/3YMxfdwaQlql8sg772S2+YF0RdCk
+         Rh/Q==
+X-Gm-Message-State: APjAAAV2c5ncrm4bEID7deU27rdxRL4Zl/4WvtawSHD4DnlT3YFG6k51
+        n/9IdRqW7CJvUUlzOHiA1UwmAt8PUfcI7N4pqmNedW/82JQ=
+X-Google-Smtp-Source: APXvYqzTi4qquj7OmlvYOg2myEZ6aId7IpEInhvdySDJtzKXSiQr5zVib3yXSGtTUawov380F+pHCxVj892XOBAGFtY=
+X-Received: by 2002:aca:3545:: with SMTP id c66mr167035oia.129.1558981184670;
+ Mon, 27 May 2019 11:19:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <1556264798-18540-1-git-send-email-ludovic.Barre@st.com> <1556264798-18540-4-git-send-email-ludovic.Barre@st.com>
-In-Reply-To: <1556264798-18540-4-git-send-email-ludovic.Barre@st.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 27 May 2019 20:17:05 +0200
-Message-ID: <CAPDyKFrxp3Y3AudNvkkSRaph2Fe-A-F6Cs0jfy9RUja76GYeiA@mail.gmail.com>
-Subject: Re: [PATCH V2 3/5] mmc: mmci: fix clear of busy detect status
-To:     Ludovic Barre <ludovic.Barre@st.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com
+References: <20190527132200.17377-1-narmstrong@baylibre.com> <20190527132200.17377-5-narmstrong@baylibre.com>
+In-Reply-To: <20190527132200.17377-5-narmstrong@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Mon, 27 May 2019 20:19:33 +0200
+Message-ID: <CAFBinCDRASWwVoh=vuyqyn5HTHcfa9cXXnMWfpHSbxUAeTAFgg@mail.gmail.com>
+Subject: Re: [PATCH 04/10] arm64: dts: meson-gxbb-wetek: enable bluetooth
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
+        Christian Hewitt <christianshewitt@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Apr 2019 at 09:46, Ludovic Barre <ludovic.Barre@st.com> wrote:
+On Mon, May 27, 2019 at 3:23 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
 >
-> From: Ludovic Barre <ludovic.barre@st.com>
+> From: Christian Hewitt <christianshewitt@gmail.com>
 >
-> The "busy_detect_flag" is used to read/clear busy value of
-> mmci status. The "busy_detect_mask" is used to manage busy irq of
-> mmci mask.
-> For sdmmc variant, the 2 properties have not the same offset.
-> To clear the busyd0 status bit, we must add busy detect flag,
-> the mmci mask is not enough.
+> This enables Bluetooth support for the following models:
 >
-> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-
-Ludovic, again, apologies for the delay.
-
-> ---
->  drivers/mmc/host/mmci.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> AP6335 in the WeTek Hub rev1 - BCM4335C0.hcd
+> AP6255 in the WeTek Hub rev2 - BCM4345C0.hcd
+> AP6330 in the WeTek Play 2 - BCM4330B1.hcd
 >
-> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-> index a040f54..3cd52e8 100644
-> --- a/drivers/mmc/host/mmci.c
-> +++ b/drivers/mmc/host/mmci.c
-> @@ -1517,7 +1517,8 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
->                  * to make sure that both start and end interrupts are always
->                  * cleared one after the other.
->                  */
-> -               status &= readl(host->base + MMCIMASK0);
-> +               status &= readl(host->base + MMCIMASK0) |
-> +                       host->variant->busy_detect_flag;
-
-I think this is not entirely correct, because it would mean we check
-for busy even if we haven't unmasked the busy IRQ via the
-variant->busy_detect_mask.
-
-I suggest to store a new bool in the host (call it
-"busy_detect_unmasked" or whatever makes sense to you), to track
-whether we have unmasked the busy IRQ or not. Then take this flag into
-account, before ORing the value of host->variant->busy_detect_flag,
-according to above.
-
->                 if (host->variant->busy_detect)
->                         writel(status & ~host->variant->busy_detect_mask,
->                                host->base + MMCICLEAR);
-> --
-> 2.7.4
->
-
-Kind regards
-Uffe
+> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+I don't have any of these boards nor the schematics but the
+shutdown-gpio matches with the reference board Bluetooth GPIO and the
+rest looks fine, so:
+Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
