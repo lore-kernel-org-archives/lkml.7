@@ -6,39 +6,39 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EADBCC28CC1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFFDC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:04:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE4DB20883
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:04:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0AAE2166E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:04:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbfE0MER (ORCPT
+        id S1727064AbfE0MET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 08:04:17 -0400
-Received: from xavier.telenet-ops.be ([195.130.132.52]:54324 "EHLO
-        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726657AbfE0MEQ (ORCPT
+        Mon, 27 May 2019 08:04:19 -0400
+Received: from michel.telenet-ops.be ([195.130.137.88]:38188 "EHLO
+        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726592AbfE0MEP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 08:04:16 -0400
+        Mon, 27 May 2019 08:04:15 -0400
 Received: from ramsan ([84.194.111.163])
-        by xavier.telenet-ops.be with bizsmtp
-        id HQ4D2000N3XaVaC01Q4DqR; Mon, 27 May 2019 14:04:13 +0200
+        by michel.telenet-ops.be with bizsmtp
+        id HQ4D2000U3XaVaC06Q4Dmw; Mon, 27 May 2019 14:04:13 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hVEMP-0001PX-GN; Mon, 27 May 2019 14:04:13 +0200
+        id 1hVEMP-0001Pj-Jy; Mon, 27 May 2019 14:04:13 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hVEMP-00015W-Ef; Mon, 27 May 2019 14:04:13 +0200
+        id 1hVEMP-00015i-Ik; Mon, 27 May 2019 14:04:13 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
         Marc Zyngier <marc.zyngier@arm.com>
 Cc:     linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 1/5] irqchip/renesas-irqc: Remove unneeded inclusion of <linux/spinlock.h>
-Date:   Mon, 27 May 2019 14:04:08 +0200
-Message-Id: <20190527120412.4071-2-geert+renesas@glider.be>
+Subject: [PATCH v2 4/5] irqchip/renesas-irqc: Replace irqc_priv.pdev by irqc_priv.dev
+Date:   Mon, 27 May 2019 14:04:11 +0200
+Message-Id: <20190527120412.4071-5-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190527120412.4071-1-geert+renesas@glider.be>
 References: <20190527120412.4071-1-geert+renesas@glider.be>
@@ -47,8 +47,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver never used spinlocks, and thus does not need to include
-<linux/spinlock.h>.
+Nothing really uses irqc_priv.pdev, all users need irqc_priv.pdev->dev.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
@@ -56,21 +55,41 @@ Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 v2:
   - Add Reviewed-by.
 ---
- drivers/irqchip/irq-renesas-irqc.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/irqchip/irq-renesas-irqc.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/irqchip/irq-renesas-irqc.c b/drivers/irqchip/irq-renesas-irqc.c
-index a449a7c839b3ec08..438a063c76156d98 100644
+index 3cc428ba495c3793..af03ee31a87bb11d 100644
 --- a/drivers/irqchip/irq-renesas-irqc.c
 +++ b/drivers/irqchip/irq-renesas-irqc.c
-@@ -7,7 +7,6 @@
+@@ -47,7 +47,7 @@ struct irqc_priv {
+ 	void __iomem *cpu_int_base;
+ 	struct irqc_irq irq[IRQC_IRQ_MAX];
+ 	unsigned int number_of_irqs;
+-	struct platform_device *pdev;
++	struct device *dev;
+ 	struct irq_chip_generic *gc;
+ 	struct irq_domain *irq_domain;
+ 	atomic_t wakeup_path;
+@@ -60,8 +60,7 @@ static struct irqc_priv *irq_data_to_priv(struct irq_data *data)
  
- #include <linux/init.h>
- #include <linux/platform_device.h>
--#include <linux/spinlock.h>
- #include <linux/interrupt.h>
- #include <linux/ioport.h>
- #include <linux/io.h>
+ static void irqc_dbg(struct irqc_irq *i, char *str)
+ {
+-	dev_dbg(&i->p->pdev->dev, "%s (%d:%d)\n",
+-		str, i->requested_irq, i->hw_irq);
++	dev_dbg(i->p->dev, "%s (%d:%d)\n", str, i->requested_irq, i->hw_irq);
+ }
+ 
+ static unsigned char irqc_sense[IRQ_TYPE_SENSE_MASK + 1] = {
+@@ -138,7 +137,7 @@ static int irqc_probe(struct platform_device *pdev)
+ 		goto err0;
+ 	}
+ 
+-	p->pdev = pdev;
++	p->dev = dev;
+ 	platform_set_drvdata(pdev, p);
+ 
+ 	pm_runtime_enable(dev);
 -- 
 2.17.1
 
