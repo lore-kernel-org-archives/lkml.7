@@ -2,108 +2,280 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92487C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9EC6C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:26:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 764E12147A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:24:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97E0E20883
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:26:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="U2YsqyHk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfE0QYM (ORCPT
+        id S1726776AbfE0Q0o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 12:24:12 -0400
-Received: from shelob.surriel.com ([96.67.55.147]:52766 "EHLO
-        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726202AbfE0QYM (ORCPT
+        Mon, 27 May 2019 12:26:44 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34093 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726482AbfE0Q0n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 12:24:12 -0400
-Received: from imladris.surriel.com ([96.67.55.152])
-        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.91)
-        (envelope-from <riel@shelob.surriel.com>)
-        id 1hVIPw-0002KK-32; Mon, 27 May 2019 12:24:08 -0400
-Message-ID: <686351aab73911569a7c22a7e104d1b9f0d579b9.camel@surriel.com>
-Subject: Re: [PATCH 7/7] sched/fair: Rename weighted_cpuload() to cpu_load()
-From:   Rik van Riel <riel@surriel.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 27 May 2019 12:24:07 -0400
-In-Reply-To: <20190527062116.11512-8-dietmar.eggemann@arm.com>
-References: <20190527062116.11512-1-dietmar.eggemann@arm.com>
-         <20190527062116.11512-8-dietmar.eggemann@arm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-1BIZliyhtxK7tTR1Ish4"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Mon, 27 May 2019 12:26:43 -0400
+Received: by mail-pg1-f196.google.com with SMTP id h2so6295785pgg.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 09:26:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GCuK3p21FWh8C1jBpeKRVhZCNmJ3Duy5wpqV3XNIhVs=;
+        b=U2YsqyHk2DfBKBpH9uI2gnxYK3Gs1/2299Hnfr7zbQcDMHv/AREw5ncX/9pCt6v6uP
+         8Inkaplt43pYazSA4lq28wo9pjZK7yyTsJdg+fhjEe9l8f57qDm0PLAbe8q+JWpj//IE
+         WESawLPI3p5Ge0awjWek1a3u9u+WfZkEd8IaU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GCuK3p21FWh8C1jBpeKRVhZCNmJ3Duy5wpqV3XNIhVs=;
+        b=rFG4tS7LTOQBgBo8Qexwd1FGaGj5PGzgLvl3Y/zbTOgBSZKtJOen+4YtNcDE9xUkH9
+         ii8F55p5K80xl9kraxHQFu9rWnEN8sgcibcX3V3YpxY8Pw7KSEswufbEP/o6W+ztN8bn
+         cu+QNUyvdzgUgPWG7GK+Zg5XIQco4Jeosl0lMu+uUZ+qe4wgvTBP7/uYks3zBIElZogv
+         5XvLgn4c9Jb06gchsIw2hHQV+FLXFDorhuTj0Ev5qS9ooZKCxS4gZEKCFs6JW97m9kK5
+         VvcIAMaAnAJOKr5K7EIeNlo+hON4s8Q0fzzp8uoKMBhDNzUjyBxm/eCiawJl4B1lkS3O
+         90ug==
+X-Gm-Message-State: APjAAAVD4BQ73FUMylwKtX8iCa7FjkXvwAb9WGbyNsFuON+SST6/Gaxv
+        LLRh5YSRt6BJcyHvtpOkSSmiXQ==
+X-Google-Smtp-Source: APXvYqwwfVCYWGhx+DD80Zs0gpD98qN9kd89HRShl17IHi2nfdS1mx1UrunJ69FFyvDwConZzQ91Pw==
+X-Received: by 2002:aa7:8f16:: with SMTP id x22mr67499207pfr.202.1558974402435;
+        Mon, 27 May 2019 09:26:42 -0700 (PDT)
+Received: from [10.136.8.252] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id h14sm9859513pgj.8.2019.05.27.09.26.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 27 May 2019 09:26:41 -0700 (PDT)
+Subject: Re: [PATCH 1/1] i2c: iproc: Add multi byte read-write support for
+ slave mode
+To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-i2c@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Michael Cheng <ccheng@broadcom.com>,
+        Srinath Mannam <srinath.mannam@broadcom.com>
+References: <1557375708-14830-1-git-send-email-rayagonda.kokatanur@broadcom.com>
+From:   Ray Jui <ray.jui@broadcom.com>
+Message-ID: <7e073311-fff6-736a-5ae2-a29ceac25f3b@broadcom.com>
+Date:   Mon, 27 May 2019 09:26:38 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <1557375708-14830-1-git-send-email-rayagonda.kokatanur@broadcom.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Rayagonda,
 
---=-1BIZliyhtxK7tTR1Ish4
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 5/8/2019 9:21 PM, Rayagonda Kokatanur wrote:
+> Add multiple byte read-write support for slave mode.
+> 
+> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+> ---
+>  drivers/i2c/busses/i2c-bcm-iproc.c | 117 +++++++++++++++++--------------------
+>  1 file changed, 53 insertions(+), 64 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c b/drivers/i2c/busses/i2c-bcm-iproc.c
+> index a845b8d..2c7f145 100644
+> --- a/drivers/i2c/busses/i2c-bcm-iproc.c
+> +++ b/drivers/i2c/busses/i2c-bcm-iproc.c
+> @@ -165,12 +165,6 @@ enum i2c_slave_read_status {
+>  	I2C_SLAVE_RX_END,
+>  };
+>  
+> -enum i2c_slave_xfer_dir {
+> -	I2C_SLAVE_DIR_READ = 0,
+> -	I2C_SLAVE_DIR_WRITE,
+> -	I2C_SLAVE_DIR_NONE,
+> -};
+> -
+>  enum bus_speed_index {
+>  	I2C_SPD_100K = 0,
+>  	I2C_SPD_400K,
+> @@ -203,7 +197,6 @@ struct bcm_iproc_i2c_dev {
+>  	struct i2c_msg *msg;
+>  
+>  	struct i2c_client *slave;
+> -	enum i2c_slave_xfer_dir xfer_dir;
+>  
+>  	/* bytes that have been transferred */
+>  	unsigned int tx_bytes;
+> @@ -219,7 +212,8 @@ struct bcm_iproc_i2c_dev {
+>  		| BIT(IS_M_RX_THLD_SHIFT))
+>  
+>  #define ISR_MASK_SLAVE (BIT(IS_S_START_BUSY_SHIFT)\
+> -		| BIT(IS_S_RX_EVENT_SHIFT) | BIT(IS_S_RD_EVENT_SHIFT))
+> +		| BIT(IS_S_RX_EVENT_SHIFT) | BIT(IS_S_RD_EVENT_SHIFT)\
+> +		| BIT(IS_S_TX_UNDERRUN_SHIFT))
+>  
+>  static int bcm_iproc_i2c_reg_slave(struct i2c_client *slave);
+>  static int bcm_iproc_i2c_unreg_slave(struct i2c_client *slave);
+> @@ -297,15 +291,11 @@ static void bcm_iproc_i2c_slave_init(
+>  	/* clear all pending slave interrupts */
+>  	iproc_i2c_wr_reg(iproc_i2c, IS_OFFSET, ISR_MASK_SLAVE);
+>  
+> -	/* Enable interrupt register for any READ event */
+> -	val = BIT(IE_S_RD_EVENT_SHIFT);
+>  	/* Enable interrupt register to indicate a valid byte in receive fifo */
+> -	val |= BIT(IE_S_RX_EVENT_SHIFT);
+> +	val = BIT(IE_S_RX_EVENT_SHIFT);
+>  	/* Enable interrupt register for the Slave BUSY command */
+>  	val |= BIT(IE_S_START_BUSY_SHIFT);
+>  	iproc_i2c_wr_reg(iproc_i2c, IE_OFFSET, val);
+> -
+> -	iproc_i2c->xfer_dir = I2C_SLAVE_DIR_NONE;
+>  }
+>  
+>  static void bcm_iproc_i2c_check_slave_status(
+> @@ -314,8 +304,11 @@ static void bcm_iproc_i2c_check_slave_status(
+>  	u32 val;
+>  
+>  	val = iproc_i2c_rd_reg(iproc_i2c, S_CMD_OFFSET);
+> -	val = (val >> S_CMD_STATUS_SHIFT) & S_CMD_STATUS_MASK;
+> +	/* status is valid only when START_BUSY is cleared after it was set */
+> +	if (val & BIT(S_CMD_START_BUSY_SHIFT))
+> +		return;
+>  
+> +	val = (val >> S_CMD_STATUS_SHIFT) & S_CMD_STATUS_MASK;
+>  	if (val == S_CMD_STATUS_TIMEOUT) {
+>  		dev_err(iproc_i2c->device, "slave random stretch time timeout\n");
+>  
+> @@ -327,70 +320,66 @@ static void bcm_iproc_i2c_check_slave_status(
+>  }
+>  
+>  static bool bcm_iproc_i2c_slave_isr(struct bcm_iproc_i2c_dev *iproc_i2c,
+> -				u32 status)
+> +				    u32 status)
+>  {
+> -	u8 value;
+>  	u32 val;
+> -	u32 rd_status;
+> -	u32 tmp;
+> +	u8 value, rx_status;
+>  
+> -	/* Start of transaction. check address and populate the direction */
+> -	if (iproc_i2c->xfer_dir == I2C_SLAVE_DIR_NONE) {
+> -		tmp = iproc_i2c_rd_reg(iproc_i2c, S_RX_OFFSET);
+> -		rd_status = (tmp >> S_RX_STATUS_SHIFT) & S_RX_STATUS_MASK;
+> -		/* This condition checks whether the request is a new request */
+> -		if (((rd_status == I2C_SLAVE_RX_START) &&
+> -			(status & BIT(IS_S_RX_EVENT_SHIFT))) ||
+> -			((rd_status == I2C_SLAVE_RX_END) &&
+> -			(status & BIT(IS_S_RD_EVENT_SHIFT)))) {
+> -
+> -			/* Last bit is W/R bit.
+> -			 * If 1 then its a read request(by master).
+> -			 */
+> -			iproc_i2c->xfer_dir = tmp & SLAVE_READ_WRITE_BIT_MASK;
+> -			if (iproc_i2c->xfer_dir == I2C_SLAVE_DIR_WRITE)
+> -				i2c_slave_event(iproc_i2c->slave,
+> -					I2C_SLAVE_READ_REQUESTED, &value);
+> -			else
+> -				i2c_slave_event(iproc_i2c->slave,
+> +	/* Slave RX byte receive */
+> +	if (status & BIT(IS_S_RX_EVENT_SHIFT)) {
+> +		val = iproc_i2c_rd_reg(iproc_i2c, S_RX_OFFSET);
+> +		rx_status = (val >> S_RX_STATUS_SHIFT) & S_RX_STATUS_MASK;
+> +		if (rx_status == I2C_SLAVE_RX_START) {
+> +			/* Start of SMBUS for Master write */
+> +			i2c_slave_event(iproc_i2c->slave,
+>  					I2C_SLAVE_WRITE_REQUESTED, &value);
+> -		}
+> -	}
+>  
+> -	/* read request from master */
+> -	if ((status & BIT(IS_S_RD_EVENT_SHIFT)) &&
+> -		(iproc_i2c->xfer_dir == I2C_SLAVE_DIR_WRITE)) {
+> -		i2c_slave_event(iproc_i2c->slave,
+> -			I2C_SLAVE_READ_PROCESSED, &value);
+> -		iproc_i2c_wr_reg(iproc_i2c, S_TX_OFFSET, value);
+> +			val = iproc_i2c_rd_reg(iproc_i2c, S_RX_OFFSET);
+> +			value = (u8)((val >> S_RX_DATA_SHIFT) & S_RX_DATA_MASK);
+> +			i2c_slave_event(iproc_i2c->slave,
+> +					I2C_SLAVE_WRITE_RECEIVED, &value);
+> +		} else if (status & BIT(IS_S_RD_EVENT_SHIFT)) {
+> +			/* Start of SMBUS for Master Read */
+> +			i2c_slave_event(iproc_i2c->slave,
+> +					I2C_SLAVE_READ_REQUESTED, &value);
+> +			iproc_i2c_wr_reg(iproc_i2c, S_TX_OFFSET, value);
+>  
+> -		val = BIT(S_CMD_START_BUSY_SHIFT);
+> -		iproc_i2c_wr_reg(iproc_i2c, S_CMD_OFFSET, val);
+> -	}
+> +			val = BIT(S_CMD_START_BUSY_SHIFT);
+> +			iproc_i2c_wr_reg(iproc_i2c, S_CMD_OFFSET, val);
+>  
+> -	/* write request from master */
+> -	if ((status & BIT(IS_S_RX_EVENT_SHIFT)) &&
+> -		(iproc_i2c->xfer_dir == I2C_SLAVE_DIR_READ)) {
+> -		val = iproc_i2c_rd_reg(iproc_i2c, S_RX_OFFSET);
+> -		/* Its a write request by Master to Slave.
+> -		 * We read data present in receive FIFO
+> -		 */
+> -		value = (u8)((val >> S_RX_DATA_SHIFT) & S_RX_DATA_MASK);
+> +			/*
+> +			 * Enable interrupt for TX FIFO becomes empty and
+> +			 * less than PKT_LENGTH bytes were output on the SMBUS
+> +			 */
+> +			val = iproc_i2c_rd_reg(iproc_i2c, IE_OFFSET);
+> +			val |= BIT(IE_S_TX_UNDERRUN_SHIFT);
+> +			iproc_i2c_wr_reg(iproc_i2c, IE_OFFSET, val);
+> +		} else {
+> +			/* Master write other than start */
+> +			value = (u8)((val >> S_RX_DATA_SHIFT) & S_RX_DATA_MASK);
+> +			i2c_slave_event(iproc_i2c->slave,
+> +					I2C_SLAVE_WRITE_RECEIVED, &value);
+> +		}
+> +	} else if (status & BIT(IS_S_TX_UNDERRUN_SHIFT)) {
+> +		/* Master read other than start */
+>  		i2c_slave_event(iproc_i2c->slave,
+> -			I2C_SLAVE_WRITE_RECEIVED, &value);
+> -
+> -		/* check the status for the last byte of the transaction */
+> -		rd_status = (val >> S_RX_STATUS_SHIFT) & S_RX_STATUS_MASK;
+> -		if (rd_status == I2C_SLAVE_RX_END)
+> -			iproc_i2c->xfer_dir = I2C_SLAVE_DIR_NONE;
+> +				I2C_SLAVE_READ_PROCESSED, &value);
+>  
+> -		dev_dbg(iproc_i2c->device, "\nread value = 0x%x\n", value);
+> +		iproc_i2c_wr_reg(iproc_i2c, S_TX_OFFSET, value);
+> +		val = BIT(S_CMD_START_BUSY_SHIFT);
+> +		iproc_i2c_wr_reg(iproc_i2c, S_CMD_OFFSET, val);
+>  	}
+>  
+>  	/* Stop */
+>  	if (status & BIT(IS_S_START_BUSY_SHIFT)) {
+>  		i2c_slave_event(iproc_i2c->slave, I2C_SLAVE_STOP, &value);
+> -		iproc_i2c->xfer_dir = I2C_SLAVE_DIR_NONE;
+> +		/*
+> +		 * Enable interrupt for TX FIFO becomes empty and
+> +		 * less than PKT_LENGTH bytes were output on the SMBUS
+> +		 */
+> +		val = iproc_i2c_rd_reg(iproc_i2c, IE_OFFSET);
+> +		val &= ~BIT(IE_S_TX_UNDERRUN_SHIFT);
+> +		iproc_i2c_wr_reg(iproc_i2c, IE_OFFSET, val);
+>  	}
+>  
+>  	/* clear interrupt status */
+> 
 
-On Mon, 2019-05-27 at 07:21 +0100, Dietmar Eggemann wrote:
-> This is done to align the per cpu (i.e. per rq) load with the util
-> counterpart (cpu_util(int cpu)). The term 'weighted' is not needed
-> since there is no 'unweighted' load to distinguish it from.
+This was already reviewed internally. I just reviewed it again and it
+looks fine to me. Thanks.
 
-I can see why you want to make cpu_util() and cpu_load()
-have the same parameter, but ...
-
-> @@ -7931,7 +7928,7 @@ static inline void update_sg_lb_stats(struct
-> lb_env *env,
->  		if ((env->flags & LBF_NOHZ_STATS) &&
-> update_nohz_stats(rq, false))
->  			env->flags |=3D LBF_NOHZ_AGAIN;
-> =20
-> -		sgs->group_load +=3D weighted_cpuload(rq);
-> +		sgs->group_load +=3D cpu_load(i);
->  		sgs->group_util +=3D cpu_util(i);
->  		sgs->sum_nr_running +=3D rq->cfs.h_nr_running;
-
-... now we end up dereferencing cpu_rq(cpu) 3 times.
-
-I guess per-cpu variables are so cheap that we should
-never notice, but I thought I'd ask anyway while looking
-over these patches :)
-
-Thank you for removing a bunch of code that slowed down
-my understanding of fair.c
-
---=20
-All Rights Reversed.
-
---=-1BIZliyhtxK7tTR1Ish4
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAlzsDycACgkQznnekoTE
-3oPOgAgAo1RMB85AKGO4kRE5mqnTAEqZ4XsVpWt82sdgqnEcRfcIBT65E2hnuNqL
-I0bYLuK6CRgrVP2gM9aScBzjznLoTvuxnss0zN3N/MCeOzkn4Ab58om5ojLD61aq
-WMW21wl0Hulm9Svwn/ZpN+KRPbdZrFpttcb7SdSIFVUvXz4g0YAe2kBlZ+8kfLp9
-7oXe6JGAOLtQDx+Z2LNZhZHfQVP+VgCLmtCFbE95bS8bvz86dnCJ1Dl5ULphULN3
-hMgeqGedAFgYX/CJgZoXhKWlox14pCA4ozeyKRiKhos5Uai/McBZkYr76W4FCtwY
-5GfOV8IzhoqIsfoKPXf0bBWKBAR/1A==
-=+DUJ
------END PGP SIGNATURE-----
-
---=-1BIZliyhtxK7tTR1Ish4--
-
+Reviewed-by: Ray Jui <ray.jui@broadcom.com>
