@@ -2,186 +2,113 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A60C07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 08:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71475C07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 08:50:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AC542173B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 08:50:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="eXFCI9Im"
+	by mail.kernel.org (Postfix) with ESMTP id 51B192173C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 08:50:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbfE0IuY (ORCPT
+        id S1726797AbfE0Iud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 04:50:24 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36100 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726757AbfE0IuW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 04:50:22 -0400
-Received: by mail-wm1-f66.google.com with SMTP id v22so7734908wml.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 01:50:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=JSYe47ktmWDVImdRMdjKYkUfFXl23hlJNQIL3W+hEjY=;
-        b=eXFCI9ImDvCZKjk0jgbcXG/WbIcHIk+7MQNwJdKDwJNbEzr9PvGux3wik26Mz5q/tx
-         H2Ibzxqwhdwns143brs5zym7VWKd5/QQ2XIFU3HnPs1F09NqKgQzR3TZIqfpSabiDjKg
-         e2h4YOZwHNXtEVNoUyr2IuvyeaKI5tGdXv98g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=JSYe47ktmWDVImdRMdjKYkUfFXl23hlJNQIL3W+hEjY=;
-        b=FC7wLUIUGsdFHH77qK8R7fvBp3hg0VQJGmSYgZz+I0fqaXf0NOlE5c5Lrg7oOSLGky
-         Znz+WezhP8ejHcDsfiItfcpfw5DSD6K3AvcuJ5uzGFu/WBOldEP6uYi3mEJGhdK/7Boq
-         H4sE+IQh+FonmRYFPAsTwXWj6YxGSgyyoA/f8EBIyf2ywvvRhPeFfbHPFCBnkhB0Clzn
-         CdD/32nCsk6eaG5vOQ4dmONso53jDoqYv7wbSB41A60j0nkrlgbeA0W1p6Ab0QbPrKzU
-         V30h5X13Z4+din9R/2ATPfTVMFo6CWXxuvIxTIrJcvUPEUKPk6o2Iug1itnJOzWziFfu
-         9O2Q==
-X-Gm-Message-State: APjAAAXSxops5awQyyDRuLNNEhPHJquL0PnIZpAflEC/oZnR2KlQXApr
-        OToPKEK3CiHPcEFyRxNCbn6gJ7ZANEruUg==
-X-Google-Smtp-Source: APXvYqyCt7v/FXUTPMZGhsTlodF+U+d/X6SYkTSx9P2iis4pvWer/HfaVOOWbV7b5JQTHHKxXjxT0g==
-X-Received: by 2002:a7b:c943:: with SMTP id i3mr8400604wml.128.1558947019989;
-        Mon, 27 May 2019 01:50:19 -0700 (PDT)
-Received: from localhost.localdomain (86.100.broadband17.iol.cz. [109.80.100.86])
-        by smtp.gmail.com with ESMTPSA id f197sm10308637wme.39.2019.05.27.01.50.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 27 May 2019 01:50:19 -0700 (PDT)
-From:   Andrea Parri <andrea.parri@amarulasolutions.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH v2] rcu: Don't return a value from rcu_assign_pointer()
-Date:   Mon, 27 May 2019 10:49:57 +0200
-Message-Id: <1558946997-25559-1-git-send-email-andrea.parri@amarulasolutions.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 27 May 2019 04:50:33 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:53394 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726654AbfE0IuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 04:50:07 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D28BD200079;
+        Mon, 27 May 2019 10:50:05 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2A179200AF0;
+        Mon, 27 May 2019 10:50:00 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B2FD7402FB;
+        Mon, 27 May 2019 16:49:52 +0800 (SGT)
+From:   yibin.gong@nxp.com
+To:     robh@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        festevam@gmail.com, mark.rutland@arm.com, vkoul@kernel.org,
+        dan.j.williams@intel.com
+Cc:     linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, kernel@pengutronix.de
+Subject: [PATCH v2 4/7] dmaengine: fsl-edma-common: version check for v2 instead
+Date:   Mon, 27 May 2019 16:51:15 +0800
+Message-Id: <20190527085118.40423-5-yibin.gong@nxp.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190527085118.40423-1-yibin.gong@nxp.com>
+References: <20190527085118.40423-1-yibin.gong@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Paul [1]:
+From: Robin Gong <yibin.gong@nxp.com>
 
-  "Given that a quick (and perhaps error-prone) search of the uses
-   of rcu_assign_pointer() in v5.1 didn't find a single use of the
-   return value, let's please instead change the documentation and
-   implementation to eliminate the return value."
+The next v3 i.mx7ulp edma is based on v1, so change version
+check logic for v2 instead.
 
-[1] https://lkml.kernel.org/r/20190523135013.GL28207@linux.ibm.com
-
-Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc: Josh Triplett <josh@joshtriplett.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Lai Jiangshan <jiangshanlai@gmail.com>
-Cc: Joel Fernandes <joel@joelfernandes.org>
-Cc: rcu@vger.kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Robin Gong <yibin.gong@nxp.com>
 ---
-Changes in v2:
-  - Fix documentation and style (Paul E. McKenney)
-  - Improve subject line (Mark Rutland) 
----
- Documentation/RCU/whatisRCU.txt           | 8 ++++----
- include/linux/rcupdate.h                  | 5 ++---
- tools/include/linux/rcu.h                 | 4 ++--
- tools/testing/radix-tree/linux/rcupdate.h | 2 +-
- 4 files changed, 9 insertions(+), 10 deletions(-)
+ drivers/dma/fsl-edma-common.c | 40 ++++++++++++++++++++--------------------
+ 1 file changed, 20 insertions(+), 20 deletions(-)
 
-diff --git a/Documentation/RCU/whatisRCU.txt b/Documentation/RCU/whatisRCU.txt
-index 981651a8b65d2..7e1a8721637ab 100644
---- a/Documentation/RCU/whatisRCU.txt
-+++ b/Documentation/RCU/whatisRCU.txt
-@@ -212,7 +212,7 @@ synchronize_rcu()
+diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
+index bb24251..45d70d3 100644
+--- a/drivers/dma/fsl-edma-common.c
++++ b/drivers/dma/fsl-edma-common.c
+@@ -657,26 +657,26 @@ void fsl_edma_setup_regs(struct fsl_edma_engine *edma)
+ 	edma->regs.erql = edma->membase + EDMA_ERQ;
+ 	edma->regs.eeil = edma->membase + EDMA_EEI;
  
- rcu_assign_pointer()
+-	edma->regs.serq = edma->membase + ((edma->version == v1) ?
+-			EDMA_SERQ : EDMA64_SERQ);
+-	edma->regs.cerq = edma->membase + ((edma->version == v1) ?
+-			EDMA_CERQ : EDMA64_CERQ);
+-	edma->regs.seei = edma->membase + ((edma->version == v1) ?
+-			EDMA_SEEI : EDMA64_SEEI);
+-	edma->regs.ceei = edma->membase + ((edma->version == v1) ?
+-			EDMA_CEEI : EDMA64_CEEI);
+-	edma->regs.cint = edma->membase + ((edma->version == v1) ?
+-			EDMA_CINT : EDMA64_CINT);
+-	edma->regs.cerr = edma->membase + ((edma->version == v1) ?
+-			EDMA_CERR : EDMA64_CERR);
+-	edma->regs.ssrt = edma->membase + ((edma->version == v1) ?
+-			EDMA_SSRT : EDMA64_SSRT);
+-	edma->regs.cdne = edma->membase + ((edma->version == v1) ?
+-			EDMA_CDNE : EDMA64_CDNE);
+-	edma->regs.intl = edma->membase + ((edma->version == v1) ?
+-			EDMA_INTR : EDMA64_INTL);
+-	edma->regs.errl = edma->membase + ((edma->version == v1) ?
+-			EDMA_ERR : EDMA64_ERRL);
++	edma->regs.serq = edma->membase + ((edma->version == v2) ?
++			EDMA64_SERQ : EDMA_SERQ);
++	edma->regs.cerq = edma->membase + ((edma->version == v2) ?
++			EDMA64_CERQ : EDMA_CERQ);
++	edma->regs.seei = edma->membase + ((edma->version == v2) ?
++			EDMA64_SEEI : EDMA_SEEI);
++	edma->regs.ceei = edma->membase + ((edma->version == v2) ?
++			EDMA64_CEEI : EDMA_CEEI);
++	edma->regs.cint = edma->membase + ((edma->version == v2) ?
++			EDMA64_CINT : EDMA_CINT);
++	edma->regs.cerr = edma->membase + ((edma->version == v2) ?
++			EDMA64_CERR : EDMA_CERR);
++	edma->regs.ssrt = edma->membase + ((edma->version == v2) ?
++			EDMA64_SSRT : EDMA_SSRT);
++	edma->regs.cdne = edma->membase + ((edma->version == v2) ?
++			EDMA64_CDNE : EDMA_CDNE);
++	edma->regs.intl = edma->membase + ((edma->version == v2) ?
++			EDMA64_INTL : EDMA_INTR);
++	edma->regs.errl = edma->membase + ((edma->version == v2) ?
++			EDMA64_ERRL : EDMA_ERR);
  
--	typeof(p) rcu_assign_pointer(p, typeof(p) v);
-+	void rcu_assign_pointer(p, typeof(p) v);
- 
- 	Yes, rcu_assign_pointer() -is- implemented as a macro, though it
- 	would be cool to be able to declare a function in this manner.
-@@ -220,9 +220,9 @@ rcu_assign_pointer()
- 
- 	The updater uses this function to assign a new value to an
- 	RCU-protected pointer, in order to safely communicate the change
--	in value from the updater to the reader.  This function returns
--	the new value, and also executes any memory-barrier instructions
--	required for a given CPU architecture.
-+	in value from the updater to the reader.  This macro does not
-+	evaluate to an rvalue, but it does execute any memory-barrier
-+	instructions required for a given CPU architecture.
- 
- 	Perhaps just as important, it serves to document (1) which
- 	pointers are protected by RCU and (2) the point at which a
-diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-index a8ed624da5556..0c9b92799abc7 100644
---- a/include/linux/rcupdate.h
-+++ b/include/linux/rcupdate.h
-@@ -367,7 +367,7 @@ static inline void rcu_preempt_sleep_check(void) { }
-  * other macros that it invokes.
-  */
- #define rcu_assign_pointer(p, v)					      \
--({									      \
-+do {									      \
- 	uintptr_t _r_a_p__v = (uintptr_t)(v);				      \
- 	rcu_check_sparse(p, __rcu);					      \
- 									      \
-@@ -375,8 +375,7 @@ static inline void rcu_preempt_sleep_check(void) { }
- 		WRITE_ONCE((p), (typeof(p))(_r_a_p__v));		      \
- 	else								      \
- 		smp_store_release(&p, RCU_INITIALIZER((typeof(p))_r_a_p__v)); \
--	_r_a_p__v;							      \
--})
-+} while (0)
- 
- /**
-  * rcu_swap_protected() - swap an RCU and a regular pointer
-diff --git a/tools/include/linux/rcu.h b/tools/include/linux/rcu.h
-index 7d02527e5bcea..9554d3fa54f33 100644
---- a/tools/include/linux/rcu.h
-+++ b/tools/include/linux/rcu.h
-@@ -19,7 +19,7 @@ static inline bool rcu_is_watching(void)
- 	return false;
- }
- 
--#define rcu_assign_pointer(p, v) ((p) = (v))
--#define RCU_INIT_POINTER(p, v) p=(v)
-+#define rcu_assign_pointer(p, v)	do { (p) = (v); } while (0)
-+#define RCU_INIT_POINTER(p, v)	do { (p) = (v); } while (0)
- 
- #endif
-diff --git a/tools/testing/radix-tree/linux/rcupdate.h b/tools/testing/radix-tree/linux/rcupdate.h
-index fd280b070fdb1..fed468fb0c78d 100644
---- a/tools/testing/radix-tree/linux/rcupdate.h
-+++ b/tools/testing/radix-tree/linux/rcupdate.h
-@@ -7,6 +7,6 @@
- #define rcu_dereference_raw(p) rcu_dereference(p)
- #define rcu_dereference_protected(p, cond) rcu_dereference(p)
- #define rcu_dereference_check(p, cond) rcu_dereference(p)
--#define RCU_INIT_POINTER(p, v)	(p) = (v)
-+#define RCU_INIT_POINTER(p, v)	do { (p) = (v); } while (0)
- 
- #endif
+ 	if (edma->version == v2) {
+ 		edma->regs.erqh = edma->membase + EDMA64_ERQH;
 -- 
 2.7.4
 
