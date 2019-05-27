@@ -1,126 +1,133 @@
 Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F67C28CBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C8A8C07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9F3D2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:48:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0C0A2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:49:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558943388;
+	bh=kzZ3JJz52gzt90z6nzB4UKSzD6tYZoPUp2yHc6WBkCg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ddkOU+7i2vcpnYrdnwJXHiFhi6dxH1E4qahYNGzJ/WIEQGxJNQ3mzCW1arBNjxc6N
+	 mzf0y6gjJExz3Bq1h/n7tQRIB1oJMMPTjPI7vyLmz7wPw8QusAd5CpgXz0KIjD88nE
+	 TjPTu1UeS/mgxow4SmSNH3BngrJoCQ6RemoQQp6o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726274AbfE0Hso (ORCPT
+        id S1726326AbfE0Hts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 03:48:44 -0400
-Received: from mga11.intel.com ([192.55.52.93]:53221 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725869AbfE0Hsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 03:48:43 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 May 2019 00:48:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,518,1549958400"; 
-   d="scan'208";a="178782694"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.198]) ([10.237.72.198])
-  by fmsmga002.fm.intel.com with ESMTP; 27 May 2019 00:48:39 -0700
-Subject: Re: Issue with Broadcom wireless in 5.2rc1 (was Re: [PATCH] mmc:
- sdhci: queue work after sdhci_defer_done())
-To:     Brian Masney <masneyb@onstation.org>,
-        Arend Van Spriel <arend.vanspriel@broadcom.com>
-Cc:     Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>, ulf.hansson@linaro.org,
-        faiz_abbas@ti.com, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Kalle Valo <kvalo@codeaurora.org>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
-References: <20190524111053.12228-1-masneyb@onstation.org>
- <70782901-a9ac-5647-1abe-89c86a44a01b@intel.com>
- <20190524154958.GB16322@basecamp> <20190526122136.GA26456@basecamp>
- <e8c049ce-07e1-8b34-678d-41b3d6d41983@broadcom.com>
- <20190526195819.GA29665@basecamp>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <e7818bf9-a1d1-24b8-360d-62d7493afa91@intel.com>
-Date:   Mon, 27 May 2019 10:48:24 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 27 May 2019 03:49:48 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:37674 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725991AbfE0Htr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 03:49:47 -0400
+Received: by mail-pl1-f196.google.com with SMTP id p15so6739127pll.4;
+        Mon, 27 May 2019 00:49:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UAaLUDeqiG1NP6oRWwwXznCvAzla34GzLiXiS6KmTYY=;
+        b=dcaj37bCGUBkTgKtlwvXFPEIuX2F6UmuMUU5vrFtZ3MCfY5mEozm2J0Kxt0xiWbjBx
+         p5j/krk+oCCMX1wl7lfkOqs2PJiP+4y2Z+jHyS0+VH4lZyT8b+FbwGyjtxfgsgGgiw2n
+         bqMXvJcr5CFZM6QbRYbqqY/0oHmhio8Ky1QfKX7vrgL8O/9ZqYFYACTfyFVYnnsrZQXz
+         TnVe+KKgKAUnZERuRC4nlyRiVrVCrror364HWIUX+r5ew7kKXg/j+cepsCNa/GZpqq2r
+         hpVaPnIJdna7Ev8sKDaKYlw9eZsUkuUvf8AeN+KaKWaDR4v4cvYgJZP4OkNhyBsv0E2T
+         eo3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UAaLUDeqiG1NP6oRWwwXznCvAzla34GzLiXiS6KmTYY=;
+        b=XUYaIYpvb3EJFaoy2T9C9nu1mrDgJHZ7SsOfaGvj9xfgs7fbqKOnE/je7952m4g8J5
+         HkSXHd5rx9XFvkTVDSnXxJTGMG+CYRbyxCrk9jyg6wnHXbeWyy0O1f1KapHTb3UCEy6X
+         Dk8ToiQkMlRIIti9XmDd5vP+cP3s/YZpKRuvwoxoO04piOKK9SLdjyiN0sQ10BjreLJL
+         YPYCy0zvz9PJQEJA9b6t9FXtmKiChtvQWYOUkORZaindsONGDj3QNymMCIDMS20VVK0e
+         XJljQP8j8KEKH1zABCLZOxD9JANt0QcB9972kr8wDCV9JClKdaPA1R5TO0fYlUaouK+q
+         NnRA==
+X-Gm-Message-State: APjAAAX6VPsJFIn0SUyAYGwLsLr068dzlT42/DDohq/3a4t4qRyd3nsG
+        3Pa+uzdQEdBmiyYoB/G8adk=
+X-Google-Smtp-Source: APXvYqysI7IOkBNmcR/djcrJ/5JIth+TrYyPAhn/ojlSa+KZOHOuhmEpThUW7Eam0JapW4Wf5PUOuw==
+X-Received: by 2002:a17:902:2e81:: with SMTP id r1mr110527179plb.0.1558943386837;
+        Mon, 27 May 2019 00:49:46 -0700 (PDT)
+Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
+        by smtp.gmail.com with ESMTPSA id k190sm146239pgk.28.2019.05.27.00.49.42
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 27 May 2019 00:49:45 -0700 (PDT)
+Date:   Mon, 27 May 2019 16:49:40 +0900
+From:   Minchan Kim <minchan@kernel.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>, linux-api@vger.kernel.org
+Subject: Re: [RFC 6/7] mm: extend process_madvise syscall to support vector
+ arrary
+Message-ID: <20190527074940.GB6879@google.com>
+References: <20190520035254.57579-1-minchan@kernel.org>
+ <20190520035254.57579-7-minchan@kernel.org>
+ <20190520092258.GZ6836@dhcp22.suse.cz>
+ <20190521024820.GG10039@google.com>
+ <20190521062421.GD32329@dhcp22.suse.cz>
+ <20190521102613.GC219653@google.com>
+ <20190521103726.GM32329@dhcp22.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20190526195819.GA29665@basecamp>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190521103726.GM32329@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/05/19 10:58 PM, Brian Masney wrote:
-> On Sun, May 26, 2019 at 08:42:21PM +0200, Arend Van Spriel wrote:
->> On 5/26/2019 2:21 PM, Brian Masney wrote:
->>> + Broadcom wireless maintainers
->>>
->>> On Fri, May 24, 2019 at 11:49:58AM -0400, Brian Masney wrote:
->>>> On Fri, May 24, 2019 at 03:17:13PM +0300, Adrian Hunter wrote:
->>>>> On 24/05/19 2:10 PM, Brian Masney wrote:
->>>>>> WiFi stopped working on the LG Nexus 5 phone and the issue was bisected
->>>>>> to the commit c07a48c26519 ("mmc: sdhci: Remove finish_tasklet") that
->>>>>> moved from using a tasklet to a work queue. That patch also changed
->>>>>> sdhci_irq() to return IRQ_WAKE_THREAD instead of finishing the work when
->>>>>> sdhci_defer_done() is true. Change it to queue work to the complete work
->>>>>> queue if sdhci_defer_done() is true so that the functionality is
->>>>>> equilivent to what was there when the finish_tasklet was present. This
->>>>>> corrects the WiFi breakage on the Nexus 5 phone.
->>>>>>
->>>>>> Signed-off-by: Brian Masney <masneyb@onstation.org>
->>>>>> Fixes: c07a48c26519 ("mmc: sdhci: Remove finish_tasklet")
->>>>>> ---
->>>>>> [ ... ]
->>>>>>
->>>>>>   drivers/mmc/host/sdhci.c | 2 +-
->>>>>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
->>>>>> index 97158344b862..3563c3bc57c9 100644
->>>>>> --- a/drivers/mmc/host/sdhci.c
->>>>>> +++ b/drivers/mmc/host/sdhci.c
->>>>>> @@ -3115,7 +3115,7 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
->>>>>>   			continue;
->>>>>>   		if (sdhci_defer_done(host, mrq)) {
->>>>>> -			result = IRQ_WAKE_THREAD;
->>>>>> +			queue_work(host->complete_wq, &host->complete_work);
->>>>>
->>>>> The IRQ thread has a lot less latency than the work queue, which is why it
->>>>> is done that way.
->>>>>
->>>>> I am not sure why you say this change is equivalent to what was there
->>>>> before, nor why it fixes your problem.
->>>>>
->>>>> Can you explain some more?
->>>>
->>>> [ ... ]
->>>>
->>>> drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c calls
->>>> sdio_claim_host() and it appears to never return.
+On Tue, May 21, 2019 at 12:37:26PM +0200, Michal Hocko wrote:
+> On Tue 21-05-19 19:26:13, Minchan Kim wrote:
+> > On Tue, May 21, 2019 at 08:24:21AM +0200, Michal Hocko wrote:
+> > > On Tue 21-05-19 11:48:20, Minchan Kim wrote:
+> > > > On Mon, May 20, 2019 at 11:22:58AM +0200, Michal Hocko wrote:
+> > > > > [Cc linux-api]
+> > > > > 
+> > > > > On Mon 20-05-19 12:52:53, Minchan Kim wrote:
+> > > > > > Currently, process_madvise syscall works for only one address range
+> > > > > > so user should call the syscall several times to give hints to
+> > > > > > multiple address range.
+> > > > > 
+> > > > > Is that a problem? How big of a problem? Any numbers?
+> > > > 
+> > > > We easily have 2000+ vma so it's not trivial overhead. I will come up
+> > > > with number in the description at respin.
+> > > 
+> > > Does this really have to be a fast operation? I would expect the monitor
+> > > is by no means a fast path. The system call overhead is not what it used
+> > > to be, sigh, but still for something that is not a hot path it should be
+> > > tolerable, especially when the whole operation is quite expensive on its
+> > > own (wrt. the syscall entry/exit).
+> > 
+> > What's different with process_vm_[readv|writev] and vmsplice?
+> > If the range needed to be covered is a lot, vector operation makes senese
+> > to me.
+> 
+> I am not saying that the vector API is wrong. All I am trying to say is
+> that the benefit is not really clear so far. If you want to push it
+> through then you should better get some supporting data.
 
-This is because SDHCI is using the IRQ thread to process the SDIO card
-interrupt (sdio_run_irqs()).  When the card driver tries to use the card, it
-causes interrupts which deadlocks since c07a48c26519 ("mmc: sdhci: Remove
-finish_tasklet") has moved the tasklet processing to the IRQ thread.
+I measured 1000 madvise syscall vs. a vector range syscall with 1000
+ranges on ARM64 mordern device. Even though I saw 15% improvement but
+absoluate gain is just 1ms so I don't think it's worth to support.
+I will drop vector support at next revision.
 
-I would expect to be able to use the IRQ thread to complete requests, and it
-is desirable to do so because it is lower latency.
-
-Probably, SDHCI should use sdio_signal_irq() which queues a work item, and
-is what other drivers are doing.
-
-I will investigate some more and send a patch.
+Thanks for the review, Michal!
