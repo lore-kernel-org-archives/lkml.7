@@ -2,151 +2,115 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C445C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DAC1C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDCE120859
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 716152147A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:17:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fioESLal"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="syGD5pLw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726800AbfE0QQt (ORCPT
+        id S1726817AbfE0QRg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 12:16:49 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:33156 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726432AbfE0QQt (ORCPT
+        Mon, 27 May 2019 12:17:36 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:10662 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726207AbfE0QRg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 12:16:49 -0400
-Received: by mail-it1-f193.google.com with SMTP id j17so368631itk.0;
-        Mon, 27 May 2019 09:16:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=9xDAwoI14/9ZYf/NXEzFCRhJD2vdXKzdCYZgn3dwG9c=;
-        b=fioESLalSZte/6pGVrPhmwkcedTyJNAh21o0VvUXg/NCVTVLWZrDZVHqiqCmo41BjF
-         zujazUnpEbpaS+2DaHH3r6u/SxOunOMFdB3ObQZQODVDBMw7iKSHDPWwOS3DFfhlxcxW
-         xjfx/l5kEBTdYobSUKh5VTUr5a2+558Aeyr6lKGOH7iTRpKP6Y85Mq2YZdKJ/o1CGrwc
-         eRBZer0e6cjWPs5cPpA87TXf7uoYCUhzv/4ABrXwcSIVhwNlLxu33Ty4WhtnbLKT6j84
-         MfdD+wLYUGNs7n84Q248bReDfjvuKlByQQ5HMhslGu1XIk/jN+ZIuHymMy2Hi2XYLflz
-         hz5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=9xDAwoI14/9ZYf/NXEzFCRhJD2vdXKzdCYZgn3dwG9c=;
-        b=q3NnNmTWJ9aYFPYSV4IPVmtFoKd7dJJ3j59GqA8U2ot6j41k8OtZs7pxkPA1ghBf3V
-         an0EY0XoO1XKRCn2pcwwGgV9pbrvoU5TXuw62mCHOPK3gYviAhhBEFxGd7XUzdS7kFJR
-         qxBxhqzkFBfcE8Efe29TUDiLSAb8pdlVg9DQVzKjJtiOK7nl4NQ8eazKVAklW2cNUq2s
-         fsDcQ7oPywd5cjD/aSBRXciY57eD2RqyG4w7wom8cX2RwsDU9Q+ymS605tX0v4YCLONb
-         wshgUrMVyjvYrZEQqjGKCNlcLWX/DbdlcESXEUtQghPkkPqBP1BYjfO/8m6huWXewWoR
-         YIwA==
-X-Gm-Message-State: APjAAAVAm29vlh+jcOBwWBEq66tSlNYivF1Yw0tvlEJddULYtEoixitJ
-        YRBUPQhnAsOZvopgo8MeFSPbF+euH6Q5s1H3o5co8bOfrWw=
-X-Google-Smtp-Source: APXvYqzRXf38xNC+au+U1m814eLrxKw2rddbi7IL09Ns5wR82DpB0x50xtGD7bLMglfxOckXxjtoDpxOqRUZL4EsfZg=
-X-Received: by 2002:a02:bb05:: with SMTP id y5mr5651010jan.93.1558973807970;
- Mon, 27 May 2019 09:16:47 -0700 (PDT)
+        Mon, 27 May 2019 12:17:36 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4RGGj9F003553;
+        Mon, 27 May 2019 18:17:22 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=8ub46LPrPqf6PivEatMxnOo+wOKNgOZwMhOATPEAYDc=;
+ b=syGD5pLwRFIXk0Tl+AIThayna8PwIFezSNCwIIZOt0mX9lodsFkGdt+orN5H+UZVnOSk
+ qe/pkZrdWPB0m3JmrfOZ0cZ4/WmXpU29D0Xx3AVIy3ECUCR6CB1dXazEh7rq269VvKTQ
+ PggH4NMGxYxUfGN3IwLSatIuGh1y3Gc8hb9ZgpwjaKmziaFV+q0KlsSD2KypkeodSsh5
+ S6qqftIpJfpzRd2APAvp7H+/QmP+B6l0AfMacZkanppKGnmrReV9ihQSvjFySiBcZ9zj
+ JtzbcdbzljWxPw3nhEFVBmfp45rzjj+1+lwEnCnOPvdBbQgqpoNt4WYrwPF+U5Aqzxj4 /A== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2sptu9m574-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 27 May 2019 18:17:22 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id AF83534;
+        Mon, 27 May 2019 16:17:21 +0000 (GMT)
+Received: from Webmail-eu.st.com (gpxdag3node5.st.com [10.75.127.72])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8E8334F30;
+        Mon, 27 May 2019 16:17:21 +0000 (GMT)
+Received: from [10.48.0.204] (10.75.127.50) by GPXDAG3NODE5.st.com
+ (10.75.127.72) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 27 May
+ 2019 18:17:20 +0200
+Subject: Re: [PATCH 0/2] pinctrl: stm32: add suspend/resume management
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+CC:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <1557474150-19618-1-git-send-email-alexandre.torgue@st.com>
+ <CACRpkdYgTbTa6RmM3y-myk31ZxLGZ+8KvLof1XHkockrX4tofA@mail.gmail.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <7c83e2e1-d5bc-0190-4795-a324a000a5c3@st.com>
+Date:   Mon, 27 May 2019 18:17:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <CABXGCsNPMSQgBjnFarYaxuQEGpA1G=U4U9OHqT0E53pNL2BK8g@mail.gmail.com>
- <CABXGCsNV6EQq0EG=iO8mWCCv9da__9iyLmwyzS3nGtjjvhShfg@mail.gmail.com>
-In-Reply-To: <CABXGCsNV6EQq0EG=iO8mWCCv9da__9iyLmwyzS3nGtjjvhShfg@mail.gmail.com>
-From:   Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date:   Mon, 27 May 2019 21:16:36 +0500
-Message-ID: <CABXGCsNvYVL6SMO_0PXxiZwWJyBi3rD-jjxnmnY3KL0M7haJbA@mail.gmail.com>
-Subject: Re: [bugreport] kernel 5.2 pblk bad header/extent: invalid extent entries
-To:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-ext4@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CACRpkdYgTbTa6RmM3y-myk31ZxLGZ+8KvLof1XHkockrX4tofA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.50]
+X-ClientProxiedBy: SFHDAG1NODE2.st.com (10.75.127.2) To GPXDAG3NODE5.st.com
+ (10.75.127.72)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-27_08:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 18 May 2019 at 16:07, Mikhail Gavrilov
-<mikhail.v.gavrilov@gmail.com> wrote:
->
-> It happens today again.
->
-> [18018.969636] EXT4-fs error (device nvme0n1p2): ext4_find_extent:908:
-> inode #8: comm jbd2/nvme0n1p2-: pblk 23101439 bad header/extent:
-> invalid extent entries - magic f30a, entries 8, max 340(340), depth
-> 0(0)
-> [18018.970071] jbd2_journal_bmap: journal block not found at offset
-> 4799 on nvme0n1p2-8
-> [18018.970076] Aborting journal on device nvme0n1p2-8.
-> [18018.970269] EXT4-fs error (device nvme0n1p2):
-> ext4_journal_check_start:61: Detected aborted journal
-> [18018.970316] EXT4-fs (nvme0n1p2): Remounting filesystem read-only
->
+Hi Linus
 
-I am bisected issue. I hope it help understand what is happened on my computer.
+On 5/24/19 1:24 PM, Linus Walleij wrote:
+> On Fri, May 10, 2019 at 9:42 AM Alexandre Torgue
+> <alexandre.torgue@st.com> wrote:
+> 
+>> During power sequence, GPIO hardware registers could be lost if the power
+>> supply is switched off. Each device using pinctrl API is in charge of
+>> managing pins during suspend/resume sequences. But for pins used as gpio or
+>> irq stm32 pinctrl driver has to save the hardware configuration.
+>> Each register will be saved at runtime and restored during resume sequence.
+> 
+> Both patches applied.
+> 
+> On the same pinctrl devel branch is also Benjamin's patches to support
+> the "link_consumers" property on the pin controller descriptor to
+> enable links from pin control consumers back to their pin controller
+> suppliers, especially important for STMFX.
+> 
+> Would you please check if it work fine if you turn on this feature
+> for the SoC STM32 pin controller?
 
-$ git bisect log
-git bisect start
-# good: [e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd] Linux 5.1
-git bisect good e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd
-# bad: [7e9890a3500d95c01511a4c45b7e7192dfa47ae2] Merge tag
-'ovl-update-5.2' of
-git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/vfs
-git bisect bad 7e9890a3500d95c01511a4c45b7e7192dfa47ae2
-# good: [80f232121b69cc69a31ccb2b38c1665d770b0710] Merge
-git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next
-git bisect good 80f232121b69cc69a31ccb2b38c1665d770b0710
-# good: [a2d635decbfa9c1e4ae15cb05b68b2559f7f827c] Merge tag
-'drm-next-2019-05-09' of git://anongit.freedesktop.org/drm/drm
-git bisect good a2d635decbfa9c1e4ae15cb05b68b2559f7f827c
-# good: [ea5aee6d97fd2d4499b1eebc233861c1def70f06] Merge tag
-'clk-for-linus' of
-git://git.kernel.org/pub/scm/linux/kernel/git/clk/linux
-git bisect good ea5aee6d97fd2d4499b1eebc233861c1def70f06
-# good: [47782361aca21a32ad4198f1b72f1655a7c9f7e5] Merge tag
-'tag-chrome-platform-for-v5.2' of
-ssh://gitolite.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux
-git bisect good 47782361aca21a32ad4198f1b72f1655a7c9f7e5
-# bad: [55472bae5331f33582d9f0e8919fed8bebcda0da] Merge tag
-'linux-watchdog-5.2-rc1' of
-git://www.linux-watchdog.org/linux-watchdog
-git bisect bad 55472bae5331f33582d9f0e8919fed8bebcda0da
-# good: [4dbf09fea60d158e60a30c419e0cfa1ea138dd57] Merge tag
-'mtd/for-5.2' of
-ssh://gitolite.kernel.org/pub/scm/linux/kernel/git/mtd/linux
-git bisect good 4dbf09fea60d158e60a30c419e0cfa1ea138dd57
-# good: [44affc086e6d5ea868c1184cdc5e1159e90ffb71] watchdog:
-ts4800_wdt: Convert to use device managed functions and other
-improvements
-git bisect good 44affc086e6d5ea868c1184cdc5e1159e90ffb71
-# good: [5c09980d9f9de2dc6b255f4f0229aeff0eb2c723] watchdog:
-imx_sc_wdt: drop warning after calling watchdog_init_timeout
-git bisect good 5c09980d9f9de2dc6b255f4f0229aeff0eb2c723
-# good: [345f16251063bcef5828f17fe90aa7f7a5019aab] watchdog: Improve
-Kconfig entry ordering and dependencies
-git bisect good 345f16251063bcef5828f17fe90aa7f7a5019aab
-# good: [988bec41318f3fa897e2f8af271bd456936d6caf] ubifs: orphan:
-Handle xattrs like files
-git bisect good 988bec41318f3fa897e2f8af271bd456936d6caf
-# good: [a65d10f3ce657aa4542b5de78933053f6d1a9e97] ubifs: Drop
-unnecessary setting of zbr->znode
-git bisect good a65d10f3ce657aa4542b5de78933053f6d1a9e97
-# good: [a9f0bda567e32a2b44165b067adfc4a4f56d1815] watchdog: Enforce
-that at least one pretimeout governor is enabled
-git bisect good a9f0bda567e32a2b44165b067adfc4a4f56d1815
-# bad: [d7a02fa0a8f9ec1b81d57628ca9834563208ef33] Merge tag
-'upstream-5.2-rc1' of
-ssh://gitolite.kernel.org/pub/scm/linux/kernel/git/rw/ubifs
-git bisect bad d7a02fa0a8f9ec1b81d57628ca9834563208ef33
-# good: [04d37e5a8b1fad2d625727af3d738c6fd9491720] ubi: wl: Fix
-uninitialized variable
-git bisect good 04d37e5a8b1fad2d625727af3d738c6fd9491720
-# first bad commit: [d7a02fa0a8f9ec1b81d57628ca9834563208ef33] Merge
-tag 'upstream-5.2-rc1' of
-ssh://gitolite.kernel.org/pub/scm/linux/kernel/git/rw/ubifs
+I just tested with Benjamin's patches and set "link_consumers" property 
+for STM32 pinctrl. No changes on boot (except extra logs for each probe) 
+and no changes on power tests too.
 
+regards
+alex
 
---
-Best Regards,
-Mike Gavrilov.
+> 
+> I am working a bit on refining the patches, so I want to enable testing
+> with some SoC pin controllers as well and possibly make the
+> behavior default.
+> 
+> Yours,
+> Linus Walleij
+> 
