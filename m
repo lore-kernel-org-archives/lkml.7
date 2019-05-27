@@ -2,166 +2,142 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DECBC04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 20:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CB1C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 20:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AFC320883
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 20:00:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jKp6Tj6G"
+	by mail.kernel.org (Postfix) with ESMTP id 63479208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 20:05:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbfE0UAt (ORCPT
+        id S1727056AbfE0UFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 16:00:49 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52556 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726801AbfE0UAs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 16:00:48 -0400
-Received: by mail-wm1-f67.google.com with SMTP id y3so511343wmm.2;
-        Mon, 27 May 2019 13:00:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qs0hduG7r9ZuCuorXfKiLxTX7AgEzf0fkdnIQ/+Us5w=;
-        b=jKp6Tj6GYHwtJkdSEmERhGmELlQG2xE1zCTdm+gWm+2McCGc1YmqNpVm2267/kbzuW
-         aWASqvy/KZMFsUCuBfchpe1yePkV4rp523HBnDvumPq+iojYq9eEteeTkjCA+AV96l8D
-         M//QMSC2goAgc9eI2Dd9ckCuzyIUe9pVvsKjioyp9tWmogB4Pjb6Ea1ifo0e6sflOvJm
-         AbyLOwRV1wcngpJfSXYKu0NpHTWJZ6cx+Odz4iDqCYzKob5JlaMmDBfYUJ0Iui3Cp2/D
-         54iJbnjZP3nRdJRvbPLUKvuitGKwQaoOUv5dwiKmTtvo1uJnR7PaLXjOn7HeDZnxR7mS
-         9M1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qs0hduG7r9ZuCuorXfKiLxTX7AgEzf0fkdnIQ/+Us5w=;
-        b=VRvEwuA4094KnoIyJIWXp/b5T92+aSiNScBIb8Mz+yFYOK2f5Zk/fYnT0NiYS0Lr5U
-         A9Hp8ezDZwYCYsUvygW+vR8hEH9SWamcFeLUENyLMz0RJPFFN/4zM3BEXjuTFOb5cwwR
-         4ycShLp4a8e7V6KzOlgNZxE8gLr64Lb0UxBRw2JpthO9DXXTkD54/8dvgayW5REImtQf
-         hchev6t/pI9mD1e2QobvJjW2SuG+5xVVi5rjlEJSCrz2nE1tAYHiCUyMWDi3p0ffLqWc
-         VxxaHERBE+cKVqIUO2ZngGOkiusiVqaBrNIvi+zxVaZk+cBL/YHMEAYfcp+DSw4nTZ2k
-         7YUg==
-X-Gm-Message-State: APjAAAUGdn8Zr8Jp4FQgiyDPon1FRgq9KitDWmSXSob/UGziaFD0Mtny
-        t5FiZmdmrN5wQfwq1Mp9CTohdBeM
-X-Google-Smtp-Source: APXvYqwdr28CqJsor9aafRQ5eOruKDuW6LisxlprBS+CBeHT/FESW9Rvn4qI8ioQhs8rwwgYlqEoNA==
-X-Received: by 2002:a1c:c00b:: with SMTP id q11mr456498wmf.4.1558987245546;
-        Mon, 27 May 2019 13:00:45 -0700 (PDT)
-Received: from [192.168.1.17] (bkn17.neoplus.adsl.tpnet.pl. [83.28.181.17])
-        by smtp.gmail.com with ESMTPSA id l190sm636252wml.25.2019.05.27.13.00.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 May 2019 13:00:44 -0700 (PDT)
-Subject: Re: [PATCH v3 1/9] leds: multicolor: Add sysfs interface definition
-To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz, robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190523190820.29375-1-dmurphy@ti.com>
- <20190523190820.29375-2-dmurphy@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <f01ac400-efda-80a8-4d63-1e2add5e054a@gmail.com>
-Date:   Mon, 27 May 2019 22:00:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190523190820.29375-2-dmurphy@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Mon, 27 May 2019 16:05:16 -0400
+Received: from mga02.intel.com ([134.134.136.20]:12646 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726346AbfE0UFP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 16:05:15 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 May 2019 13:05:14 -0700
+X-ExtLoop1: 1
+Received: from orsmsx104.amr.corp.intel.com ([10.22.225.131])
+  by fmsmga004.fm.intel.com with ESMTP; 27 May 2019 13:05:14 -0700
+Received: from orsmsx159.amr.corp.intel.com (10.22.240.24) by
+ ORSMSX104.amr.corp.intel.com (10.22.225.131) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Mon, 27 May 2019 13:05:13 -0700
+Received: from orsmsx112.amr.corp.intel.com ([169.254.3.79]) by
+ ORSMSX159.amr.corp.intel.com ([169.254.11.57]) with mapi id 14.03.0415.000;
+ Mon, 27 May 2019 13:05:13 -0700
+From:   "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+To:     "peterz@infradead.org" <peterz@infradead.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "mroos@linux.ee" <mroos@linux.ee>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "namit@vmware.com" <namit@vmware.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>
+Subject: Re: [PATCH v4 1/2] vmalloc: Fix calculation of direct map addr range
+Thread-Topic: [PATCH v4 1/2] vmalloc: Fix calculation of direct map addr
+ range
+Thread-Index: AQHVEBc70xeDpvMdbkm+DpMWjEkdYqZ/YkYAgACB4AA=
+Date:   Mon, 27 May 2019 20:05:13 +0000
+Message-ID: <dbf5f298d51183589c92cbd94da3b1e078457f4d.camel@intel.com>
+References: <20190521205137.22029-1-rick.p.edgecombe@intel.com>
+         <20190521205137.22029-2-rick.p.edgecombe@intel.com>
+         <20190527122022.GP2606@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190527122022.GP2606@hirez.programming.kicks-ass.net>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.30.1 (3.30.1-1.fc29) 
+x-originating-ip: [10.251.0.167]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F500BEE106FE694D98FD28E43C08884B@intel.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dan,
-
-Thank you for the update.
-
-One thing is missing here - we need to document how legacy brightness
-levels map to the sub-LED color levels, i.e. what you do in
-multicolor_set_brightness().
-
-Best regards,
-Jacek Anaszewski
-
-On 5/23/19 9:08 PM, Dan Murphy wrote:
-> Add a documentation of LED Multicolor LED class specific
-> sysfs attributes.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->   .../ABI/testing/sysfs-class-led-multicolor    | 57 +++++++++++++++++++
->   1 file changed, 57 insertions(+)
->   create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-class-led-multicolor b/Documentation/ABI/testing/sysfs-class-led-multicolor
-> new file mode 100644
-> index 000000000000..2f102ede258b
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-class-led-multicolor
-> @@ -0,0 +1,57 @@
-> +What:		/sys/class/leds/<led>/colors/sync_enable
-> +Date:		April 2019
-> +KernelVersion:	5.2
-> +Contact:	Dan Murphy <dmurphy@ti.com>
-> +Description:	read/write
-> +		Writing a 1 to this file will enable the synchronization of all
-> +		the defined color LEDs within the LED node.  Brightness values
-> +		for each LED will be stored and written when sync is set to 1.
-> +		Writing a 0 to this file will disable syncing and allow
-> +		individual control of the LEDs brightness settings.
-> +
-> +What:		/sys/class/leds/<led>/colors/sync
-> +Date:		April 2019
-> +KernelVersion:	5.2
-> +Contact:	Dan Murphy <dmurphy@ti.com>
-> +Description:	write only
-> +		Writing a 1 to this file while sync_enable is set to 1 will
-> +		write the current brightness values to all defined LEDs within
-> +		the LED node.  All LEDs defined will be configured based
-> +		on the brightness that has been requested.
-> +
-> +		If sync_enable is set to 0 then writing a 1 to sync has no
-> +		affect on the LEDs.
-> +
-> +What:		/sys/class/leds/<led>/colors/<led_color>/brightness
-> +Date:		April 2019
-> +KernelVersion:	5.2
-> +Contact:	Dan Murphy <dmurphy@ti.com>
-> +Description:	read/write
-> +		The led_color directory is dynamically created based on the
-> +		colors defined by the registrar of the class.
-> +		The led_color can be but not limited to red, green, blue,
-> +		white, amber, yellow and violet.  Drivers can also declare a
-> +		LED color for presentation.  There is one directory per color
-> +		presented.  The brightness file is created under each
-> +		led_color directory and controls the individual LED color
-> +		setting.
-> +
-> +		If sync is enabled then	writing the brightness value of the LED
-> +		is deferred until a 1 is written to
-> +		/sys/class/leds/<led>/color/sync.  If syncing is
-> +		disabled then the LED brightness value will be written
-> +		immediately to the LED driver.
-> +
-> +		The value of the color is from 0 to
-> +		/sys/class/leds/<led>/colors/<led_color>/max_brightness.
-> +
-> +What:		/sys/class/leds/<led>/colors/<led_color>/max_brightness
-> +Date:		April 2019
-> +KernelVersion:	5.2
-> +Contact:	Dan Murphy <dmurphy@ti.com>
-> +Description:	read only
-> +		Maximum brightness level for the LED color, default is
-> +		255 (LED_FULL).
-> +
-> +		If the LED does not support different brightness levels, this
-> +		should be 1.
-> 
-
-
+T24gTW9uLCAyMDE5LTA1LTI3IGF0IDE0OjIwICswMjAwLCBQZXRlciBaaWpsc3RyYSB3cm90ZToN
+Cj4gT24gVHVlLCBNYXkgMjEsIDIwMTkgYXQgMDE6NTE6MzZQTSAtMDcwMCwgUmljayBFZGdlY29t
+YmUgd3JvdGU6DQo+ID4gVGhlIGNhbGN1bGF0aW9uIG9mIHRoZSBkaXJlY3QgbWFwIGFkZHJlc3Mg
+cmFuZ2UgdG8gZmx1c2ggd2FzIHdyb25nLg0KPiA+IFRoaXMgY291bGQgY2F1c2UgcHJvYmxlbXMg
+b24geDg2IGlmIGEgUk8gZGlyZWN0IG1hcCBhbGlhcyBldmVyIGdvdA0KPiA+IGxvYWRlZA0KPiA+
+IGludG8gdGhlIFRMQi4gVGhpcyBzaG91bGRuJ3Qgbm9ybWFsbHkgaGFwcGVuLCBidXQgaXQgY291
+bGQgY2F1c2UNCj4gPiB0aGUNCj4gPiBwZXJtaXNzaW9ucyB0byByZW1haW4gUk8gb24gdGhlIGRp
+cmVjdCBtYXAgYWxpYXMsIGFuZCB0aGVuIHRoZSBwYWdlDQo+ID4gd291bGQgcmV0dXJuIGZyb20g
+dGhlIHBhZ2UgYWxsb2NhdG9yIHRvIHNvbWUgb3RoZXIgY29tcG9uZW50IGFzIFJPDQo+ID4gYW5k
+DQo+ID4gY2F1c2UgYSBjcmFzaC4NCj4gPiANCj4gPiBTbyBmaXggZml4IHRoZSBhZGRyZXNzIHJh
+bmdlIGNhbGN1bGF0aW9uIHNvIHRoZSBmbHVzaCB3aWxsIGluY2x1ZGUNCj4gPiB0aGUNCj4gPiBk
+aXJlY3QgbWFwIHJhbmdlLg0KPiA+IA0KPiA+IEZpeGVzOiA4NjhiMTA0ZDczNzkgKCJtbS92bWFs
+bG9jOiBBZGQgZmxhZyBmb3IgZnJlZWluZyBvZiBzcGVjaWFsDQo+ID4gcGVybXNpc3Npb25zIikN
+Cj4gPiBDYzogTWVlbGlzIFJvb3MgPG1yb29zQGxpbnV4LmVlPg0KPiA+IENjOiBQZXRlciBaaWps
+c3RyYSA8cGV0ZXJ6QGluZnJhZGVhZC5vcmc+DQo+ID4gQ2M6ICJEYXZpZCBTLiBNaWxsZXIiIDxk
+YXZlbUBkYXZlbWxvZnQubmV0Pg0KPiA+IENjOiBEYXZlIEhhbnNlbiA8ZGF2ZS5oYW5zZW5AaW50
+ZWwuY29tPg0KPiA+IENjOiBCb3Jpc2xhdiBQZXRrb3YgPGJwQGFsaWVuOC5kZT4NCj4gPiBDYzog
+QW5keSBMdXRvbWlyc2tpIDxsdXRvQGtlcm5lbC5vcmc+DQo+ID4gQ2M6IEluZ28gTW9sbmFyIDxt
+aW5nb0ByZWRoYXQuY29tPg0KPiA+IENjOiBOYWRhdiBBbWl0IDxuYW1pdEB2bXdhcmUuY29tPg0K
+PiA+IFNpZ25lZC1vZmYtYnk6IFJpY2sgRWRnZWNvbWJlIDxyaWNrLnAuZWRnZWNvbWJlQGludGVs
+LmNvbT4NCj4gPiAtLS0NCj4gPiAgbW0vdm1hbGxvYy5jIHwgNSArKystLQ0KPiA+ICAxIGZpbGUg
+Y2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KPiA+IA0KPiA+IGRpZmYg
+LS1naXQgYS9tbS92bWFsbG9jLmMgYi9tbS92bWFsbG9jLmMNCj4gPiBpbmRleCBjNDI4NzJlZDgy
+YWMuLjgzNjg4OGFlMDFmNiAxMDA2NDQNCj4gPiAtLS0gYS9tbS92bWFsbG9jLmMNCj4gPiArKysg
+Yi9tbS92bWFsbG9jLmMNCj4gPiBAQCAtMjE1OSw5ICsyMTU5LDEwIEBAIHN0YXRpYyB2b2lkIHZt
+X3JlbW92ZV9tYXBwaW5ncyhzdHJ1Y3QNCj4gPiB2bV9zdHJ1Y3QgKmFyZWEsIGludCBkZWFsbG9j
+YXRlX3BhZ2VzKQ0KPiA+ICAJICogdGhlIHZtX3VubWFwX2FsaWFzZXMoKSBmbHVzaCBpbmNsdWRl
+cyB0aGUgZGlyZWN0IG1hcC4NCj4gPiAgCSAqLw0KPiA+ICAJZm9yIChpID0gMDsgaSA8IGFyZWEt
+Pm5yX3BhZ2VzOyBpKyspIHsNCj4gPiAtCQlpZiAocGFnZV9hZGRyZXNzKGFyZWEtPnBhZ2VzW2ld
+KSkgew0KPiA+ICsJCWFkZHIgPSAodW5zaWduZWQgbG9uZylwYWdlX2FkZHJlc3MoYXJlYS0+cGFn
+ZXNbaV0pOw0KPiA+ICsJCWlmIChhZGRyKSB7DQo+ID4gIAkJCXN0YXJ0ID0gbWluKGFkZHIsIHN0
+YXJ0KTsNCj4gPiAtCQkJZW5kID0gbWF4KGFkZHIsIGVuZCk7DQo+ID4gKwkJCWVuZCA9IG1heChh
+ZGRyICsgUEFHRV9TSVpFLCBlbmQpOw0KPiA+ICAJCX0NCj4gPiAgCX0NCj4gPiAgDQo+IA0KPiBJ
+bmRlZWQ7IGhvd2V2ciBJJ20gdGhpbmtpbmcgdGhpcyBidWcgd2FzIGNhdXNlZCB0byBleGlzdCBi
+eSB0aGUgZHVhbA0KPiB1c2UNCj4gb2YgQGFkZHIgaW4gdGhpcyBmdW5jdGlvbiwgc28gc2hvdWxk
+IHdlIG5vdCwgcGVyaGFwcywgZG8gc29tZXRoaW5nDQo+IGxpa2UNCj4gdGhlIGJlbG93IGluc3Rl
+YWQ/DQo+IA0KPiBBbHNvOyBoYXZpbmcgbG9va2VkIGF0IHRoaXMsIGl0IG1ha2VzIG1lIHF1ZXN0
+aW9uIHRoZSB1c2Ugb2YNCj4gZmx1c2hfdGxiX2tlcm5lbF9yYW5nZSgpIGluIF92bV91bm1hcF9h
+bGlhc2VzKCkgYW5kDQo+IF9fcHVyZ2Vfdm1hcF9hcmVhX2xhenkoKSwgaXQncyBwb3RlbnRpYWxs
+eSBjb21iaW5pbmcgbXVsdGlwbGUgcmFuZ2VzLA0KPiB3aGljaCBuZXZlciByZWFsbHkgd29ya3Mg
+d2VsbC4NCj4gDQo+IEFyZ3VhYmx5LCB3ZSBzaG91bGQganVzdCBkbyBmbHVzaF90bGJfYWxsKCkg
+aGVyZSwgYnV0IHRoYXQncyBmb3INCj4gYW5vdGhlcg0KPiBwYXRjaCBJJ20gdGhpbmtpbmcuDQoN
+ClRoYW5rcy4gSXQgbW9zdGx5IGdvdCBicm9rZW4gaW1wbGVtZW50aW5nIGEgc3R5bGUgc3VnZ2Vz
+dGlvbiBsYXRlIGluDQp0aGUgc2VyaWVzLiBJJ2xsIGNoYW5nZSB0aGUgYWRkciB2YXJpYWJsZSBh
+cm91bmQgbGlrZSB5b3Ugc3VnZ2VzdCB0bw0KbWFrZSBpdCBtb3JlIHJlc2lzdGFudC4NCg0KVGhl
+IGZsdXNoX3RsYl9hbGwoKSBzdWdnZXN0aW9uIG1ha2VzIHNlbnNlIHRvIG1lLCBidXQgSSdsbCBs
+ZWF2ZSBpdCBmb3INCm5vdy4NCg0KPiAtLS0NCj4gLS0tIGEvbW0vdm1hbGxvYy5jDQo+ICsrKyBi
+L21tL3ZtYWxsb2MuYw0KPiBAQCAtMjEyMyw3ICsyMTIzLDYgQEAgc3RhdGljIGlubGluZSB2b2lk
+IHNldF9hcmVhX2RpcmVjdF9tYXAoYw0KPiAgLyogSGFuZGxlIHJlbW92aW5nIGFuZCByZXNldHRp
+bmcgdm0gbWFwcGluZ3MgcmVsYXRlZCB0byB0aGUNCj4gdm1fc3RydWN0LiAqLw0KPiAgc3RhdGlj
+IHZvaWQgdm1fcmVtb3ZlX21hcHBpbmdzKHN0cnVjdCB2bV9zdHJ1Y3QgKmFyZWEsIGludA0KPiBk
+ZWFsbG9jYXRlX3BhZ2VzKQ0KPiAgew0KPiAtCXVuc2lnbmVkIGxvbmcgYWRkciA9ICh1bnNpZ25l
+ZCBsb25nKWFyZWEtPmFkZHI7DQo+ICAJdW5zaWduZWQgbG9uZyBzdGFydCA9IFVMT05HX01BWCwg
+ZW5kID0gMDsNCj4gIAlpbnQgZmx1c2hfcmVzZXQgPSBhcmVhLT5mbGFncyAmIFZNX0ZMVVNIX1JF
+U0VUX1BFUk1TOw0KPiAgCWludCBpOw0KPiBAQCAtMjEzNSw4ICsyMTM0LDggQEAgc3RhdGljIHZv
+aWQgdm1fcmVtb3ZlX21hcHBpbmdzKHN0cnVjdCB2bQ0KPiAgCSAqIGV4ZWN1dGUgcGVybWlzc2lv
+bnMsIHdpdGhvdXQgbGVhdmluZyBhIFJXK1ggd2luZG93Lg0KPiAgCSAqLw0KPiAgCWlmIChmbHVz
+aF9yZXNldCAmJiAhSVNfRU5BQkxFRChDT05GSUdfQVJDSF9IQVNfU0VUX0RJUkVDVF9NQVApKQ0K
+PiB7DQo+IC0JCXNldF9tZW1vcnlfbngoYWRkciwgYXJlYS0+bnJfcGFnZXMpOw0KPiAtCQlzZXRf
+bWVtb3J5X3J3KGFkZHIsIGFyZWEtPm5yX3BhZ2VzKTsNCj4gKwkJc2V0X21lbW9yeV9ueCgodW5z
+aWduZWQgbG9uZylhcmVhLT5hZGRyLCBhcmVhLQ0KPiA+bnJfcGFnZXMpOw0KPiArCQlzZXRfbWVt
+b3J5X3J3KCh1bnNpZ25lZCBsb25nKWFyZWEtPmFkZHIsIGFyZWEtDQo+ID5ucl9wYWdlcyk7DQo+
+ICAJfQ0KPiAgDQo+ICAJcmVtb3ZlX3ZtX2FyZWEoYXJlYS0+YWRkcik7DQo+IEBAIC0yMTYwLDkg
+KzIxNTksMTAgQEAgc3RhdGljIHZvaWQgdm1fcmVtb3ZlX21hcHBpbmdzKHN0cnVjdCB2bQ0KPiAg
+CSAqIHRoZSB2bV91bm1hcF9hbGlhc2VzKCkgZmx1c2ggaW5jbHVkZXMgdGhlIGRpcmVjdCBtYXAu
+DQo+ICAJICovDQo+ICAJZm9yIChpID0gMDsgaSA8IGFyZWEtPm5yX3BhZ2VzOyBpKyspIHsNCj4g
+LQkJaWYgKHBhZ2VfYWRkcmVzcyhhcmVhLT5wYWdlc1tpXSkpIHsNCj4gKwkJdW5zaWduZWQgbG9u
+ZyBhZGRyID0gKHVuc2lnbmVkIGxvbmcpcGFnZV9hZGRyZXNzKGFyZWEtDQo+ID5wYWdlc1tpXSk7
+DQo+ICsJCWlmIChhZGRyKSB7DQo+ICAJCQlzdGFydCA9IG1pbihhZGRyLCBzdGFydCk7DQo+IC0J
+CQllbmQgPSBtYXgoYWRkciwgZW5kKTsNCj4gKwkJCWVuZCA9IG1heChhZGRyICsgUEFHRV9TSVpF
+LCBlbmQpOw0KPiAgCQl9DQo+ICAJfQ0KPiAgDQo=
