@@ -2,57 +2,127 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F379C07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 08:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 843C2C07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 08:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E21792173C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 08:52:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57B1921721
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 08:55:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbfE0IwU (ORCPT
+        id S1726408AbfE0Izy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 04:52:20 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:47951 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725940AbfE0IwT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 04:52:19 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id CE559802CB; Mon, 27 May 2019 10:52:07 +0200 (CEST)
-Date:   Mon, 27 May 2019 10:51:55 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     kernel list <linux-kernel@vger.kernel.org>, tglx@linuxtronix.de,
-        bp@suse.de, hpa@zytor.com, mingo@redhat.com, x86@kernel.org
-Subject: Thinkpad X60 fails to boot while "hot"
-Message-ID: <20190527085155.GA11421@xo-6d-61-c0.localdomain>
+        Mon, 27 May 2019 04:55:54 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49370 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725869AbfE0Izx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 04:55:53 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 779D730832E9;
+        Mon, 27 May 2019 08:55:53 +0000 (UTC)
+Received: from laptop.redhat.com (ovpn-116-67.ams2.redhat.com [10.36.116.67])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AE7835D978;
+        Mon, 27 May 2019 08:55:44 +0000 (UTC)
+From:   Eric Auger <eric.auger@redhat.com>
+To:     eric.auger.pro@gmail.com, eric.auger@redhat.com, joro@8bytes.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        dwmw2@infradead.org, lorenzo.pieralisi@arm.com,
+        robin.murphy@arm.com, will.deacon@arm.com, hanjun.guo@linaro.org,
+        sudeep.holla@arm.com
+Cc:     alex.williamson@redhat.com, shameerali.kolothum.thodi@huawei.com
+Subject: [PATCH v4 0/8] RMRR related fixes and enhancements
+Date:   Mon, 27 May 2019 10:55:33 +0200
+Message-Id: <20190527085541.5294-1-eric.auger@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Mon, 27 May 2019 08:55:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+Currently the Intel reserved region is attached to the
+RMRR unit and when building the list of RMRR seen by a device
+we link this unique reserved region without taking care of
+potential multiple usage of this reserved region by several devices.
 
-So if you compile a kernel, then reboot, boot will hang after "Freeing SMP
-alternatives memory" (and then wastes power, making thermal situation even worse).
+Also while reading the vtd spec it is unclear to me whether
+the RMRR device scope referenced by an RMRR ACPI struct could
+be a PCI-PCI bridge, in which case I think we also need to
+check the device belongs to the PCI sub-hierarchy of the device
+referenced in the scope. This would be true for device_has_rmrr()
+and intel_iommu_get_resv_regions().
 
-Unfortunately, threshold for non-booting system is quite low, fan does _not_
-go full speed after reboot. Annoying for kernel development :-(. Force power off,
-wait for a while, power on, and it works again.
+Last, the VFIO subsystem would need to compute the usable IOVA range
+by querying the iommu_get_group_resv_regions() API. This would allow,
+for instance, to report potential conflicts between the guest physical
+address space and host reserved regions.
 
-The bug is there for a long long time... probably 4.0 is affected, probably even
-older.
+However iommu_get_group_resv_regions() currently fails to differentiate
+RMRRs that are known safe for device assignment and RMRRs that must be
+enforced. So we introduce a new reserved memory region type (relaxable),
+reported when associated to an USB or GFX device. The last 2 patches aim
+at unblocking [1] which is stuck since 4.18.
 
-Any ideas? Has someone seen something similar?
+[1-6] are fixes
+[7-8] are enhancements
+
+The two parts can be considered separately if needed.
+
+References:
+[1] [PATCH v6 0/7] vfio/type1: Add support for valid iova list management
+    https://patchwork.kernel.org/patch/10425309/
+
+Branch: This series is available at:
+https://github.com/eauger/linux/tree/v5.2-rc2-rmrr-v4
+
+History:
+
+v3 -> v4:
+- added "iommu: Fix a leak in iommu_insert_resv_region"
+- introduced device_rmrr_is_relaxable and fixed to_pci_dev call
+  without checking dev_is_pci
+- Despite Robin suggested to hide direct relaxable behind direct
+  ones, I think this would lead to a very complex implementation
+  of iommu_insert_resv_region while in general the relaxable
+  regions are going to be ignored by the caller. By the way I
+  found a leak in this function, hence the new first patch
+
+v2 -> v3:
+s/||/&& in iommu_group_create_direct_mappings
+
+v1 -> v2:
+- introduce is_downstream_to_pci_bridge() in a separate patch, change param
+  names and add kerneldoc comment
+- add 6,7
 
 
-									Pavel
+Eric Auger (8):
+  iommu: Fix a leak in iommu_insert_resv_region
+  iommu: Pass a GFP flag parameter to iommu_alloc_resv_region()
+  iommu/vt-d: Duplicate iommu_resv_region objects per device list
+  iommu/vt-d: Introduce is_downstream_to_pci_bridge helper
+  iommu/vt-d: Handle RMRR with PCI bridge device scopes
+  iommu/vt-d: Handle PCI bridge RMRR device scopes in
+    intel_iommu_get_resv_regions
+  iommu: Introduce IOMMU_RESV_DIRECT_RELAXABLE reserved memory regions
+  iommu/vt-d: Differentiate relaxable and non relaxable RMRRs
+
+ .../ABI/testing/sysfs-kernel-iommu_groups     |   9 ++
+ drivers/acpi/arm64/iort.c                     |   3 +-
+ drivers/iommu/amd_iommu.c                     |   7 +-
+ drivers/iommu/arm-smmu-v3.c                   |   2 +-
+ drivers/iommu/arm-smmu.c                      |   2 +-
+ drivers/iommu/intel-iommu.c                   | 127 ++++++++++++------
+ drivers/iommu/iommu.c                         |  27 ++--
+ include/linux/iommu.h                         |   8 +-
+ 8 files changed, 128 insertions(+), 57 deletions(-)
+
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+2.20.1
+
