@@ -2,186 +2,177 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C7D6C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 931D2C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D1EC21726
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:14:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57FDB21726
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:16:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MAGRxWs5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbfE0OOX (ORCPT
+        id S1726776AbfE0OP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 10:14:23 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:57165 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726108AbfE0OOW (ORCPT
+        Mon, 27 May 2019 10:15:59 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:37030 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726108AbfE0OP7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 10:14:22 -0400
-Received: from fsav105.sakura.ne.jp (fsav105.sakura.ne.jp [27.133.134.232])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x4RECPOj004246;
-        Mon, 27 May 2019 23:12:25 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav105.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav105.sakura.ne.jp);
- Mon, 27 May 2019 23:12:25 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav105.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126012062002.bbtec.net [126.12.62.2])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x4RECNAa004233
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Mon, 27 May 2019 23:12:24 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH] kernel/hung_task.c: Monitor killed tasks.
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Petr Mladek <pmladek@suse.com>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Liu Chuansheng <chuansheng.liu@intel.com>,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        linux-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <1557745331-10367-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
- <20190515105540.vyzh6n62rqi5imqv@pathway.suse.cz>
- <ee7501c6-d996-1684-1652-f0f838ba69c3@i-love.sakura.ne.jp>
- <20190516115758.6v7oitg3vbkfhh5j@pathway.suse.cz>
- <a3d9de97-46e8-aa43-1743-ebf66b434830@i-love.sakura.ne.jp>
-Message-ID: <60d1d7f6-b201-3dcb-a51b-76a31bcfa919@i-love.sakura.ne.jp>
-Date:   Mon, 27 May 2019 23:12:20 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 27 May 2019 10:15:59 -0400
+Received: by mail-qk1-f195.google.com with SMTP id d10so18084978qko.4
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 07:15:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NsEihgLJMtxJwZkIIejHsogXtFVx03Q01juvEBgvS90=;
+        b=MAGRxWs5+qeYxj5HDfE72VdgWIIf9+pq0yxcZn9Fh0gM8/hGpZIu3ua5rmIbHk2iuZ
+         jPZJDKB0EsGG+1I7oRkLMRBqMKtq6DpeSCjX2zdNPJ77z2zFOh/3siHc3CbfRfCfcTSy
+         7Q8RDyVfZjvh+6ctul++EEXcsxb16CCxpfxSpX9v1yZS86RTdpVp9INqVkXk93nbdIw4
+         O463fRS8gXyOlnbya8Fy6DY5oF5dk89kIfSigUduJTjrxOsaR8rYF5PBhgrhN550Fwwo
+         oYuae0DNWlvwm9xD7jMPIgWxfTM98ky7R+t7faHkhHBDvqh70V6SHSuzQgRjJIcKZYbl
+         6APw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NsEihgLJMtxJwZkIIejHsogXtFVx03Q01juvEBgvS90=;
+        b=Hdt2X0xQ+aCSa3OKEMN6O8VUd4Ro7Dl+WukvCV6eYm2znF6ogsdngn/ZZgkmUIBZY0
+         WYeg7pu5k1zNbJC3H6VrhQXY7mIWxGvMnwtGBNLeLYeRD55OuUhOz7K2fttEyX260TKE
+         +WjldqlDhTw+pPXdDjbRHHZs8N6Jinc0/j4BuNBCcv/gehBPyCwDIwMoIccp+dmBUEme
+         hfWCQD8wj3zNScgQZv3uKH7ymN12sIUy6daMpoZppftcFwWSzbnouFov0Cnq3WoNsbiC
+         gcOqCOj9a4ED/vMY3A3qdmMQL9qvDbU+8orhL447oFi3SmoY4E1IB5HLrfVKajIXae86
+         TKJQ==
+X-Gm-Message-State: APjAAAUx1jCQdVYmyMorAVQarT4Rzt5GL8Xgmsn0cgvoUePrWk3JINFz
+        PoNKw+Pjhypb/jf8x83Uqdg=
+X-Google-Smtp-Source: APXvYqxTePV+1rgUBbO5BO1nne+FgkElwQ/JiXt44HpVz/camwYPdN1eN8g7PHIQcs5OrSLn8Cwwxg==
+X-Received: by 2002:a37:502:: with SMTP id 2mr2127568qkf.93.1558966557587;
+        Mon, 27 May 2019 07:15:57 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.11])
+        by smtp.gmail.com with ESMTPSA id b12sm3024429qto.12.2019.05.27.07.15.56
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 27 May 2019 07:15:56 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 39F8B41149; Mon, 27 May 2019 11:15:41 -0300 (-03)
+Date:   Mon, 27 May 2019 11:15:41 -0300
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Jiri Olsa <jolsa@redhat.com>,
+        Krister Johansen <kjlx@templeofstupid.com>,
+        Hari Bathini <hbathini@linux.vnet.ibm.com>
+Subject: Re: [PATCH 4/3] perf tools: Remove const from thread read accessors
+Message-ID: <20190527141541.GA6417@kernel.org>
+References: <20190523023636.GA196218@google.com>
+ <20190527061149.168640-1-namhyung@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <a3d9de97-46e8-aa43-1743-ebf66b434830@i-love.sakura.ne.jp>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190527061149.168640-1-namhyung@kernel.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew, I updated description part. Please carry this patch.
-----------
-[PATCH] kernel/hung_task.c: Monitor killed tasks.
+Em Mon, May 27, 2019 at 03:11:49PM +0900, Namhyung Kim escreveu:
+> The namespaces and comm fields of a thread are protected by rwsem and
+> require write access for it.  So it ended up using a cast to remove
+> the const qualifier.  Let's get rid of the const then.
 
-syzbot's current top report is "no output from test machine" where the
-userspace process failed to spawn a new test process for 300 seconds
-for some reason. One of reasons which can result in this report is that
-an already spawned test process was unable to terminate (e.g. trapped at
-an unkillable retry loop due to some bug) after SIGKILL was sent to that
-process. Therefore, reporting when a thread is failing to terminate
-despite a fatal signal is pending would give us more useful information.
+Thanks, applied 1/3 and 4/3.
 
-In the context of syzbot's testing where there are only 2 CPUs in the
-target VM (which means that only small number of threads and not so much
-memory) and threads get SIGKILL after 5 seconds from fork(), being unable
-to reach do_exit() within 10 seconds is likely a sign of something went
-wrong. Therefore, I would like to try this patch in linux-next.git for
-feasibility testing whether this patch helps finding more bugs and
-reproducers for such bugs, by bringing "unable to terminate threads"
-reports out of "no output from test machine" reports.
-
-Potential bad effect of this patch will be that kernel code becomes
-killable without addressing the root cause of being unable to terminate,
-for use of killable wait will bypass both TASK_UNINTERRUPTIBLE stall test
-and SIGKILL after 5 seconds behavior, which will result in failing to
-detect in real systems where SIGKILL won't be sent after 5 seconds when
-something went wrong.
-
-This version shares existing sysctl settings (e.g. check interval,
-timeout, whether to panic) used for detecting TASK_UNINTERRUPTIBLE
-threads. We will likely want to use different sysctl settings for
-monitoring killed threads. But let's start as linux-next.git patch
-without introducing new sysctl settings. We can add sysctl settings
-before sending to linux.git.
-
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc: Dmitry Vyukov <dvyukov@google.com>
----
-
- include/linux/sched.h |  1 +
- kernel/hung_task.c    | 44 ++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 45 insertions(+)
-
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index a2cd1585..d42bdd7 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -850,6 +850,7 @@ struct task_struct {
- #ifdef CONFIG_DETECT_HUNG_TASK
- 	unsigned long			last_switch_count;
- 	unsigned long			last_switch_time;
-+	unsigned long			killed_time;
- #endif
- 	/* Filesystem information: */
- 	struct fs_struct		*fs;
-diff --git a/kernel/hung_task.c b/kernel/hung_task.c
-index f108a95..34e7b84 100644
---- a/kernel/hung_task.c
-+++ b/kernel/hung_task.c
-@@ -141,6 +141,47 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
- 	touch_nmi_watchdog();
- }
+- Arnaldo
  
-+static void check_killed_task(struct task_struct *t, unsigned long timeout)
-+{
-+	unsigned long stamp = t->killed_time;
-+
-+	/*
-+	 * Ensure the task is not frozen.
-+	 * Also, skip vfork and any other user process that freezer should skip.
-+	 */
-+	if (unlikely(t->flags & (PF_FROZEN | PF_FREEZER_SKIP)))
-+		return;
-+	/*
-+	 * Skip threads which are already inside do_exit(), for exit_mm() etc.
-+	 * might take many seconds.
-+	 */
-+	if (t->flags & PF_EXITING)
-+		return;
-+	if (!stamp) {
-+		stamp = jiffies;
-+		if (!stamp)
-+			stamp++;
-+		t->killed_time = stamp;
-+		return;
-+	}
-+	if (time_is_after_jiffies(stamp + timeout * HZ))
-+		return;
-+	trace_sched_process_hang(t);
-+	if (sysctl_hung_task_panic) {
-+		console_verbose();
-+		hung_task_call_panic = true;
-+	}
-+	/*
-+	 * This thread failed to terminate for more than
-+	 * sysctl_hung_task_timeout_secs seconds, complain:
-+	 */
-+	pr_err("INFO: task %s:%d can't die for more than %ld seconds.\n",
-+	       t->comm, t->pid, (jiffies - stamp) / HZ);
-+	sched_show_task(t);
-+	hung_task_show_lock = true;
-+	touch_nmi_watchdog();
-+}
-+
- /*
-  * To avoid extending the RCU grace period for an unbounded amount of time,
-  * periodically exit the critical section and enter a new one.
-@@ -192,6 +233,9 @@ static void check_hung_uninterruptible_tasks(unsigned long timeout)
- 				goto unlock;
- 			last_break = jiffies;
- 		}
-+		/* Check threads which are about to terminate. */
-+		if (unlikely(fatal_signal_pending(t)))
-+			check_killed_task(t, timeout);
- 		/* use "==" to skip the TASK_KILLABLE tasks waiting on NFS */
- 		if (t->state == TASK_UNINTERRUPTIBLE)
- 			check_hung_task(t, timeout);
--- 
-1.8.3.1
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/hist.c   |  2 +-
+>  tools/perf/util/thread.c | 12 ++++++------
+>  tools/perf/util/thread.h |  4 ++--
+>  3 files changed, 9 insertions(+), 9 deletions(-)
+> 
+> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+> index 7ace7a10054d..fb3271fd420c 100644
+> --- a/tools/perf/util/hist.c
+> +++ b/tools/perf/util/hist.c
+> @@ -2561,7 +2561,7 @@ int __hists__scnprintf_title(struct hists *hists, char *bf, size_t size, bool sh
+>  	char unit;
+>  	int printed;
+>  	const struct dso *dso = hists->dso_filter;
+> -	const struct thread *thread = hists->thread_filter;
+> +	struct thread *thread = hists->thread_filter;
+>  	int socket_id = hists->socket_filter;
+>  	unsigned long nr_samples = hists->stats.nr_events[PERF_RECORD_SAMPLE];
+>  	u64 nr_events = hists->stats.total_period;
+> diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+> index b413ba5b9835..aab7807d445f 100644
+> --- a/tools/perf/util/thread.c
+> +++ b/tools/perf/util/thread.c
+> @@ -141,13 +141,13 @@ static struct namespaces *__thread__namespaces(const struct thread *thread)
+>  	return list_first_entry(&thread->namespaces_list, struct namespaces, list);
+>  }
+>  
+> -struct namespaces *thread__namespaces(const struct thread *thread)
+> +struct namespaces *thread__namespaces(struct thread *thread)
+>  {
+>  	struct namespaces *ns;
+>  
+> -	down_read((struct rw_semaphore *)&thread->namespaces_lock);
+> +	down_read(&thread->namespaces_lock);
+>  	ns = __thread__namespaces(thread);
+> -	up_read((struct rw_semaphore *)&thread->namespaces_lock);
+> +	up_read(&thread->namespaces_lock);
+>  
+>  	return ns;
+>  }
+> @@ -271,13 +271,13 @@ static const char *__thread__comm_str(const struct thread *thread)
+>  	return comm__str(comm);
+>  }
+>  
+> -const char *thread__comm_str(const struct thread *thread)
+> +const char *thread__comm_str(struct thread *thread)
+>  {
+>  	const char *str;
+>  
+> -	down_read((struct rw_semaphore *)&thread->comm_lock);
+> +	down_read(&thread->comm_lock);
+>  	str = __thread__comm_str(thread);
+> -	up_read((struct rw_semaphore *)&thread->comm_lock);
+> +	up_read(&thread->comm_lock);
+>  
+>  	return str;
+>  }
+> diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
+> index cf8375c017a0..e97ef6977eb9 100644
+> --- a/tools/perf/util/thread.h
+> +++ b/tools/perf/util/thread.h
+> @@ -76,7 +76,7 @@ static inline void thread__exited(struct thread *thread)
+>  	thread->dead = true;
+>  }
+>  
+> -struct namespaces *thread__namespaces(const struct thread *thread);
+> +struct namespaces *thread__namespaces(struct thread *thread);
+>  int thread__set_namespaces(struct thread *thread, u64 timestamp,
+>  			   struct namespaces_event *event);
+>  
+> @@ -93,7 +93,7 @@ int thread__set_comm_from_proc(struct thread *thread);
+>  int thread__comm_len(struct thread *thread);
+>  struct comm *thread__comm(const struct thread *thread);
+>  struct comm *thread__exec_comm(const struct thread *thread);
+> -const char *thread__comm_str(const struct thread *thread);
+> +const char *thread__comm_str(struct thread *thread);
+>  int thread__insert_map(struct thread *thread, struct map *map);
+>  int thread__fork(struct thread *thread, struct thread *parent, u64 timestamp, bool do_maps_clone);
+>  size_t thread__fprintf(struct thread *thread, FILE *fp);
+> -- 
+> 2.22.0.rc1.257.g3120a18244-goog
 
+-- 
+
+- Arnaldo
