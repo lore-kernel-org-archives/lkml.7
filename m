@@ -2,94 +2,160 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA5DFC04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB92C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F9A820883
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:07:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC6C12075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:08:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727086AbfE0MHB (ORCPT
+        id S1727030AbfE0MI1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 08:07:01 -0400
-Received: from app1.whu.edu.cn ([202.114.64.88]:42472 "EHLO whu.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725943AbfE0MGy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 08:06:54 -0400
-Received: from localhost (unknown [111.202.192.3])
-        by email1 (Coremail) with SMTP id AQBjCgAniKXW0utcGsnjAA--.59650S2;
-        Mon, 27 May 2019 20:06:50 +0800 (CST)
-From:   Peng Wang <rocking@whu.edu.cn>
-To:     axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peng Wang <rocking@whu.edu.cn>
-Subject: [PATCH] block: use KMEM_CACHE macro
-Date:   Mon, 27 May 2019 20:05:18 +0800
-Message-Id: <20190527120518.3703-1-rocking@whu.edu.cn>
-X-Mailer: git-send-email 2.19.1
+        Mon, 27 May 2019 08:08:27 -0400
+Received: from mga14.intel.com ([192.55.52.115]:54736 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726338AbfE0MI0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 08:08:26 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 May 2019 05:08:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,519,1549958400"; 
+   d="scan'208";a="178857715"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.198]) ([10.237.72.198])
+  by fmsmga002.fm.intel.com with ESMTP; 27 May 2019 05:08:22 -0700
+Subject: Re: Issue with Broadcom wireless in 5.2rc1 (was Re: [PATCH] mmc:
+ sdhci: queue work after sdhci_defer_done())
+To:     Brian Masney <masneyb@onstation.org>,
+        Arend Van Spriel <arend.vanspriel@broadcom.com>
+Cc:     Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>, ulf.hansson@linaro.org,
+        faiz_abbas@ti.com, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Kalle Valo <kvalo@codeaurora.org>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+References: <20190524111053.12228-1-masneyb@onstation.org>
+ <70782901-a9ac-5647-1abe-89c86a44a01b@intel.com>
+ <20190524154958.GB16322@basecamp> <20190526122136.GA26456@basecamp>
+ <e8c049ce-07e1-8b34-678d-41b3d6d41983@broadcom.com>
+ <20190526195819.GA29665@basecamp> <20190527093711.GA853@basecamp>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <ead7f268-b730-3541-31f7-4499556efec0@intel.com>
+Date:   Mon, 27 May 2019 15:08:07 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQBjCgAniKXW0utcGsnjAA--.59650S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7urWfGFy7Cw4rKFWrWr4kZwb_yoW8JF4kpF
-        Z3GFn8Cr1jga1xuFWkAayxZry3Cw4vgF1xWa1Yv34Ykr9rCws2vF1vyr1UZrWxurWfCrW5
-        Xr48tryrXr1jkFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkm14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-        JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-        2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6ryU
-        MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr
-        0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0E
-        wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
-        W8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
-        IxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfU0CJPDUUUU
-X-CM-SenderInfo: qsqrijaqrviiqqxyq4lkxovvfxof0/
+In-Reply-To: <20190527093711.GA853@basecamp>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the preferred KMEM_CACHE helper for brevity.
+On 27/05/19 12:37 PM, Brian Masney wrote:
+> On Sun, May 26, 2019 at 03:58:19PM -0400, Brian Masney wrote:
+>> I attached a patch that shows how I was able to determine what had
+>> already claimed the host.
+> On Mon, May 27, 2019 at 10:48:24AM +0300, Adrian Hunter wrote:
+>> This is because SDHCI is using the IRQ thread to process the SDIO card
+>> interrupt (sdio_run_irqs()).  When the card driver tries to use the card, it
+>> causes interrupts which deadlocks since c07a48c26519 ("mmc: sdhci: Remove
+>> finish_tasklet") has moved the tasklet processing to the IRQ thread.
+>>
+>> I would expect to be able to use the IRQ thread to complete requests, and it
+>> is desirable to do so because it is lower latency.
+>>
+>> Probably, SDHCI should use sdio_signal_irq() which queues a work item, and
+>> is what other drivers are doing.
+>>
+>> I will investigate some more and send a patch.
 
-Signed-off-by: Peng Wang <rocking@whu.edu.cn>
+Please try the patch below:
+
+From: Adrian Hunter <adrian.hunter@intel.com>
+Date: Mon, 27 May 2019 14:45:55 +0300
+Subject: [PATCH] mmc: sdhci: Fix SDIO IRQ thread deadlock
+
+Since commit c07a48c26519 ("mmc: sdhci: Remove finish_tasklet"), the IRQ
+thread might be used to complete requests, but the IRQ thread is also used
+to process SDIO card interrupts. This can cause a deadlock when the SDIO
+processing tries to access the card since that would also require the IRQ
+thread. Change SDHCI to use sdio_signal_irq() to schedule a work item
+instead. That also requires implementing the ->ack_sdio_irq() mmc host op.
+
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Fixes: c07a48c26519 ("mmc: sdhci: Remove finish_tasklet")
 ---
- block/blk-core.c | 3 +--
- block/blk-ioc.c  | 3 +--
- 2 files changed, 2 insertions(+), 4 deletions(-)
+ drivers/mmc/host/sdhci.c | 24 +++++++++++++-----------
+ 1 file changed, 13 insertions(+), 11 deletions(-)
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 1bf83a0df0f6..841bf0b12755 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -1789,8 +1789,7 @@ int __init blk_dev_init(void)
- 	if (!kblockd_workqueue)
- 		panic("Failed to create kblockd\n");
- 
--	blk_requestq_cachep = kmem_cache_create("request_queue",
--			sizeof(struct request_queue), 0, SLAB_PANIC, NULL);
-+	blk_requestq_cachep = KMEM_CACHE(request_queue, SLAB_PANIC);
- 
- #ifdef CONFIG_DEBUG_FS
- 	blk_debugfs_root = debugfs_create_dir("block", NULL);
-diff --git a/block/blk-ioc.c b/block/blk-ioc.c
-index 5ed59ac6ae58..58c79aeca955 100644
---- a/block/blk-ioc.c
-+++ b/block/blk-ioc.c
-@@ -408,8 +408,7 @@ struct io_cq *ioc_create_icq(struct io_context *ioc, struct request_queue *q,
- 
- static int __init blk_ioc_init(void)
- {
--	iocontext_cachep = kmem_cache_create("blkdev_ioc",
--			sizeof(struct io_context), 0, SLAB_PANIC, NULL);
-+	iocontext_cachep = KMEM_CACHE(io_context, SLAB_PANIC);
- 	return 0;
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index 97158344b862..0cd5f2ce98df 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -2137,6 +2137,17 @@ void sdhci_enable_sdio_irq(struct mmc_host *mmc, int enable)
  }
- subsys_initcall(blk_ioc_init);
+ EXPORT_SYMBOL_GPL(sdhci_enable_sdio_irq);
+ 
++static void sdhci_ack_sdio_irq(struct mmc_host *mmc)
++{
++	struct sdhci_host *host = mmc_priv(mmc);
++	unsigned long flags;
++
++	spin_lock_irqsave(&host->lock, flags);
++	if (host->flags & SDHCI_SDIO_IRQ_ENABLED)
++		sdhci_enable_sdio_irq_nolock(host, true);
++	spin_unlock_irqrestore(&host->lock, flags);
++}
++
+ int sdhci_start_signal_voltage_switch(struct mmc_host *mmc,
+ 				      struct mmc_ios *ios)
+ {
+@@ -2585,6 +2596,7 @@ static const struct mmc_host_ops sdhci_ops = {
+ 	.get_ro		= sdhci_get_ro,
+ 	.hw_reset	= sdhci_hw_reset,
+ 	.enable_sdio_irq = sdhci_enable_sdio_irq,
++	.ack_sdio_irq    = sdhci_ack_sdio_irq,
+ 	.start_signal_voltage_switch	= sdhci_start_signal_voltage_switch,
+ 	.prepare_hs400_tuning		= sdhci_prepare_hs400_tuning,
+ 	.execute_tuning			= sdhci_execute_tuning,
+@@ -3087,8 +3099,7 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
+ 		if ((intmask & SDHCI_INT_CARD_INT) &&
+ 		    (host->ier & SDHCI_INT_CARD_INT)) {
+ 			sdhci_enable_sdio_irq_nolock(host, false);
+-			host->thread_isr |= SDHCI_INT_CARD_INT;
+-			result = IRQ_WAKE_THREAD;
++			sdio_signal_irq(host->mmc);
+ 		}
+ 
+ 		intmask &= ~(SDHCI_INT_CARD_INSERT | SDHCI_INT_CARD_REMOVE |
+@@ -3160,15 +3171,6 @@ static irqreturn_t sdhci_thread_irq(int irq, void *dev_id)
+ 		mmc_detect_change(mmc, msecs_to_jiffies(200));
+ 	}
+ 
+-	if (isr & SDHCI_INT_CARD_INT) {
+-		sdio_run_irqs(host->mmc);
+-
+-		spin_lock_irqsave(&host->lock, flags);
+-		if (host->flags & SDHCI_SDIO_IRQ_ENABLED)
+-			sdhci_enable_sdio_irq_nolock(host, true);
+-		spin_unlock_irqrestore(&host->lock, flags);
+-	}
+-
+ 	return IRQ_HANDLED;
+ }
+ 
 -- 
-2.19.1
-
+2.17.1
