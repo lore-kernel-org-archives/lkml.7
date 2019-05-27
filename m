@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B6CC04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 936D7C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAAA0217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:39:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DE5920859
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:39:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="GwZ+2pxM"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Tb1Q6CIg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbfE0Njh (ORCPT
+        id S1727026AbfE0Njl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 09:39:37 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52475 "EHLO
+        Mon, 27 May 2019 09:39:41 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:34742 "EHLO
         mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726819AbfE0NjK (ORCPT
+        with ESMTP id S1726784AbfE0NjH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 09:39:10 -0400
-Received: by mail-wm1-f65.google.com with SMTP id y3so16230681wmm.2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 06:39:09 -0700 (PDT)
+        Mon, 27 May 2019 09:39:07 -0400
+Received: by mail-wm1-f65.google.com with SMTP id e19so24453wme.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 06:39:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=eOChpaEsOQLFv07SwDRnVxGpJlOXkRDlPY4sW9iIPa4=;
-        b=GwZ+2pxMpQAjtt4cyGo2vJZxYSkmzjAIdxdbIgWq6MaN7THXApB04YGh6YYdtM8lpT
-         nz6KJ1vSKqTmpDTANKwaDCleIek7Inve3a6rWWK4pRgDBIKd5kzSjkTvsRv6CWC1FcbU
-         C51QePs+QvBrGKedh+bfmJJcIz/TlCD+G3/nBgRFEwT+cm+Fkbd9Kfr+x5MiuCTlsL1v
-         I5na993FUbms1newegA2uqph28MPNOIlJ5gBgS7CgwJ2UPAwb7Ox+tV2sF+nf9GkglaK
-         0HsFwfNxx67/eljpGuW4uqoMTqZNhUxcXXEj454QBji8dW0/zhqdt8fmWv/gpUdn9+P+
-         OiGg==
+        bh=vhuA4Qk1JM8R8+GoGVu3NgHcPc2TyFNVbue48QXSQ8c=;
+        b=Tb1Q6CIg0cSyouTKUCRztqV5MfCVmxXuQT2HbZyTy2ZIhBON0ajN5KVXdRdukyAXyO
+         L8f3sALq/EGCmUZw0l6l9l+eoKD5U8z1RiKluT7wEk/idNtSSjVGDSBF7gT/wknTRzHA
+         5TwzynO+ikYlbMNw1nJyQ+EwjUxFuF7yPEy9YmvWOME0SzUBfJZPfToFFn4b+MejGmbX
+         eisCrvPJpA2d/L358T1juFVLWhbsG7mIOEyZ8p/FWhPCHtbk37T7s1mwy5FC5RnDKdrv
+         0RO9WI6zlw1PBgKeHgp4PvLIvZUekHebn4ZZW2KdpcdETOl+SxzywowJt+CHZE+zMKhy
+         IvDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=eOChpaEsOQLFv07SwDRnVxGpJlOXkRDlPY4sW9iIPa4=;
-        b=gTgjRlN8FBm9EF03r6h6X8oGaUO3HetB5YjrDtcplENyJMDelXap8DpCVV/fJfjXXT
-         Us7qPbi07HUrGoiz77vtfWpHND400ItNVeH40JDMg+hC3cvqSOyQ7X8vJcT+3qQ/rypM
-         92GEfWkQy6Jly8jIGLzwm7aLhKBlI0/14PKSL/4S0vg0ACJTozHU3qg3NSSeB40dzJ27
-         cM54sVIXrdFX0C7kTsMFJVLV3l3pfZfTA0hMfy6cvv7c3wnj5QOKF3qOAcIcoZHKgUSb
-         o7qLK5B7mFd2q9911wz8XbOSlYlCmJ8AvXyWRDQsou9OlSc1VnO7p6Z2b/JfDu1Oy4ai
-         488Q==
-X-Gm-Message-State: APjAAAWtGuPirs7We5Qq91W2jiVfBGPe8PQXGRHxeqZR1bce8r6uFqOS
-        cOCFBkOGvl277X/IAP6mDVP3UA==
-X-Google-Smtp-Source: APXvYqwi7sfSCd/vbnNO821w/TDC+t8BUGE4AWiH/oHHU4qt6i264xDT0IXdeP1lZo+hczzh2if5iA==
-X-Received: by 2002:a1c:ed16:: with SMTP id l22mr10304860wmh.96.1558964348240;
-        Mon, 27 May 2019 06:39:08 -0700 (PDT)
+        bh=vhuA4Qk1JM8R8+GoGVu3NgHcPc2TyFNVbue48QXSQ8c=;
+        b=YUOGNKIMD6VnugMYN+e2u++f3NokqW7/P6OV4Vjudl7uTxb5bP0qHcuo8YlitsPewn
+         LipA56lTQ04zOXFpUSAoZnafvBkQ4f+m6NVDi4RCabd5GPLRA9zAOZWqy3Vq4oXpSE5t
+         5H8bddqkK8iALYDUAxgnsaP3YPPEXqfoZhO16xQTJjmMeQlmneBqpl+Gwd1BkBHaPySi
+         ozmLLlumbQBrioJYV1fMIYs7+v/RBcylLr7HZsvlzSeCe7QpEU0lesVI5oRf174B/W/3
+         CWyQ9KTtGoOGvWus3MCqzhcEofvC1I4u5VdMSkWrOdeN25/O84iU/0bONRXjz21DkQhm
+         z7nQ==
+X-Gm-Message-State: APjAAAV6C2SN/DHohaAASuP/naRHSVRHe83V+96aZHfzAQe178PToozn
+        4z0iDOaUTwrLr8BBsDaK/qaQaw==
+X-Google-Smtp-Source: APXvYqyuX3cAW8Rw/FCEAHARS5eCeagM1dgihff84N2r7WboJAcdNwqrffgecij8XfggSeVk3z2jVw==
+X-Received: by 2002:a7b:cb84:: with SMTP id m4mr14629675wmi.50.1558964346013;
+        Mon, 27 May 2019 06:39:06 -0700 (PDT)
 Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id a124sm7838335wmh.3.2019.05.27.06.39.07
+        by smtp.gmail.com with ESMTPSA id a124sm7838335wmh.3.2019.05.27.06.39.04
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 27 May 2019 06:39:07 -0700 (PDT)
+        Mon, 27 May 2019 06:39:04 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     khilman@baylibre.com
 Cc:     linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2 07/10] ARM: dts: meson8b-odroidc1: update with SPDX Licence identifier
-Date:   Mon, 27 May 2019 15:38:54 +0200
-Message-Id: <20190527133857.30108-8-narmstrong@baylibre.com>
+Subject: [PATCH v2 05/10] ARM: dts: meson8: update with SPDX Licence identifier
+Date:   Mon, 27 May 2019 15:38:52 +0200
+Message-Id: <20190527133857.30108-6-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190527133857.30108-1-narmstrong@baylibre.com>
 References: <20190527133857.30108-1-narmstrong@baylibre.com>
@@ -81,18 +81,17 @@ license text matches the MIT license as specified at [0]
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm/boot/dts/meson8b-odroidc1.dts | 42 +-------------------------
+ arch/arm/boot/dts/meson8.dtsi | 42 +----------------------------------
  1 file changed, 1 insertion(+), 41 deletions(-)
 
-diff --git a/arch/arm/boot/dts/meson8b-odroidc1.dts b/arch/arm/boot/dts/meson8b-odroidc1.dts
-index f3ad9397f670..018695b2b83a 100644
---- a/arch/arm/boot/dts/meson8b-odroidc1.dts
-+++ b/arch/arm/boot/dts/meson8b-odroidc1.dts
-@@ -1,47 +1,7 @@
+diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
+index 7ef442462ea4..3dfc62da669e 100644
+--- a/arch/arm/boot/dts/meson8.dtsi
++++ b/arch/arm/boot/dts/meson8.dtsi
+@@ -1,46 +1,6 @@
 +// SPDX-License-Identifier: GPL-2.0 OR MIT
  /*
-  * Copyright 2015 Endless Mobile, Inc.
-  * Author: Carlo Caione <carlo@endlessm.com>
+  * Copyright 2014 Carlo Caione <carlo@caione.org>
 - *
 - * This file is dual-licensed: you can use it either under the terms
 - * of the GPL or the X11 license, at your option. Note that this dual
@@ -136,7 +135,7 @@ index f3ad9397f670..018695b2b83a 100644
 - *     OTHER DEALINGS IN THE SOFTWARE.
   */
  
- /dts-v1/;
+ #include <dt-bindings/clock/meson8b-clkc.h>
 -- 
 2.21.0
 
