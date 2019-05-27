@@ -2,255 +2,167 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE2AC07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 06:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 007BDC07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 06:11:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AA0A2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 06:10:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Z+eTylDr"
+	by mail.kernel.org (Postfix) with ESMTP id BC1AB2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 06:11:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558937517;
+	bh=3J0DBenHUO8LbPMu9lGf7/VrginphsbeuJReHL9q620=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=R2VXtcdW5FKRWEITP9fJVzRGAEZYjVN0B2ezttlcd7avPVhTmmyLLWFgE4sTO4rIG
+	 E0hRb8rxFUg98Yhhd47ecMQBa9YGnQqlmTED57Avf47Orn4YmUWWSpaAYRzBT3hJQf
+	 41CgBNvFCy5i8GD8Sro/hEVDSObbmWvC+VHkfN+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726183AbfE0GKs (ORCPT
+        id S1726207AbfE0GL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 02:10:48 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:40356 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbfE0GKs (ORCPT
+        Mon, 27 May 2019 02:11:56 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37272 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbfE0GL4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 02:10:48 -0400
-Received: by mail-ed1-f68.google.com with SMTP id j12so24983639eds.7
-        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2019 23:10:46 -0700 (PDT)
+        Mon, 27 May 2019 02:11:56 -0400
+Received: by mail-pg1-f195.google.com with SMTP id n27so8488320pgm.4
+        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2019 23:11:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aHQcZA86QadOz+hqte+kGa5A/aXSBOF9jgEN8JYF4HM=;
-        b=Z+eTylDr8v0NnqgdFOxT1FsB+Gv/PP4fKMnQokTae0Nh6mADuZnJH5r9rleXV/+6NP
-         CHmTMRs3RV7wt5U1LiOWfNYHss2hDXFFuXDLBEQSqOKgpzz0sQvchRSC8h/GQJsRIagy
-         JdmFva87UC/Rh7hBX51Sp2WcMN/L9yZQ9fA6M=
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=vQ2+MktllV/PJmp9XgPImtaLas1ZY14NynJ10f9PsQw=;
+        b=hNaGevuAhMrA6TsN5vI8WMZFOUXHtaiy6Nn3+CCvZN4WYT1GCqIWz1kNkvdn+0NCL3
+         5HiiYHGGvDtRKItqANL7F+6bE6WrkYqi2utza91lTXlB0lbmeXMD9R7GA+g6n1rkQ5C9
+         FuOkuGD1l5UkoXOIGBmRUX7jMS1pxK4qqAsP/OgK/tDZIKQ3Y1IjFeg0/vV1dGrMJI1z
+         pRGBqD5bWDBUo02gcTwjCjHqpi/h8XcONr/K1BKw6ikHRqzVxGkn0G/YxqUtR2fjc5wM
+         kEM2RIgDDT0U8b3tGmy1GA4bME/dL/RbZL+y8P4KlCz6v9M8+s8vi85S8kAXXG7aBY/H
+         A1Hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=aHQcZA86QadOz+hqte+kGa5A/aXSBOF9jgEN8JYF4HM=;
-        b=EpZezh7MuZfuFlK8EE2wTkYXvoAJfgHVVXE5Dqt/zoEJqGth9aG8pZMv8PiW2i6DQm
-         HHYHFgOILGKgylnnAYskx4xN2m6FHFzakR/G8AS1OH4jz+LJfOcvCDerP+woIyCAddTk
-         2adOrB9+/TJM9GW92/6B7ouBwO5o5f0tuFZ+P9cKP98ZoVBVgY4NF5vacFRiKGha1jPZ
-         hONgXR/kVQalYJpzp64NQ6ukkZUx5bjxE+8Qw4yu/9AEE77sIWIHeijbBxbFCINxmtb2
-         mWiMiuel/ADhCVtgE7U4esU4D26R6rL+JJNwmNI5cPMmuEU/nr/SfWy3EWeChox2b2Ft
-         SS3Q==
-X-Gm-Message-State: APjAAAV97ZH02dY58Z9Gi+TcFvu5qUOk3dEgsMNSV/1dxAHarw7M0jDe
-        BAulxXxqtbXeWz3ts1fMoLExVQ==
-X-Google-Smtp-Source: APXvYqw5DeaRhyIeIlB5ezWdqfd/I3KorqeJKmhUNN+wTqwQrdBepsfLJvMmK2DS7vWCzfiPR73EWg==
-X-Received: by 2002:a17:906:5e16:: with SMTP id n22mr53158605eju.28.1558937446036;
-        Sun, 26 May 2019 23:10:46 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id h8sm1570633ejf.73.2019.05.26.23.10.44
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 26 May 2019 23:10:45 -0700 (PDT)
-Date:   Mon, 27 May 2019 08:10:42 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Prarit Bhargava <prarit@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Yisheng Xie <ysxie@foxmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Konstantin Khorenko <khorenko@virtuozzo.com>
-Subject: Re: [PATCH 09/33] fbcon: Remove fbcon_has_exited
-Message-ID: <20190527061042.GF21222@phenom.ffwll.local>
-Mail-Followup-To: Sam Ravnborg <sam@ravnborg.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Prarit Bhargava <prarit@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Yisheng Xie <ysxie@foxmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Konstantin Khorenko <khorenko@virtuozzo.com>
-References: <20190524085354.27411-1-daniel.vetter@ffwll.ch>
- <20190524085354.27411-10-daniel.vetter@ffwll.ch>
- <20190525153826.GA8661@ravnborg.org>
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=vQ2+MktllV/PJmp9XgPImtaLas1ZY14NynJ10f9PsQw=;
+        b=rnXeTH4OTDBwftWWqQXGLbuNyhKJFOTVYibQUUNg9VG4/6p5DASjqyZQohk4IaKyDy
+         /XEMJ7QhhKrvSmKlTT+sffmWZcF4qcagWGlsRVQcCvBEnzqorcpfviyjl4u4oJHPn1ft
+         789iilnsH2Mvy3mKS0gxEy7YsNuQlWgwqx9kQR8IAYartiHi3WxsQeE/zcAAWYWIxm6D
+         BxgwxLypl5hV9YCrRW8rha3Cr7E9oEGekWdTRz8Fnr8JybusFt1BNcMKC2MMycL+fyGU
+         YquEIEvAD4IHL2IoYoHSDuHLEiMLmcxERim5620fDn4sds1RvTw9LDtvn//4tZcLg3yo
+         r3zQ==
+X-Gm-Message-State: APjAAAWfltPg95IRmzmnBcbOtyHE4bxXmhX7fNzpxT/+tTTey9znfWtA
+        OW68mFQjTl96iTMr9mdBRHA=
+X-Google-Smtp-Source: APXvYqw26954QicuKEyjfm/ff7WOHKQs538wrmzsN/dCfZREo4duQ8+qCHCFVboRDCo/vEncgz4zgA==
+X-Received: by 2002:a63:d615:: with SMTP id q21mr120562006pgg.401.1558937515418;
+        Sun, 26 May 2019 23:11:55 -0700 (PDT)
+Received: from namhyung.seo.corp.google.com ([2401:fa00:d:10:75ad:a5d:715f:f6d8])
+        by smtp.gmail.com with ESMTPSA id a64sm8112933pgc.53.2019.05.26.23.11.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 26 May 2019 23:11:54 -0700 (PDT)
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Jiri Olsa <jolsa@redhat.com>,
+        Krister Johansen <kjlx@templeofstupid.com>,
+        Hari Bathini <hbathini@linux.vnet.ibm.com>
+Subject: [PATCH 4/3] perf tools: Remove const from thread read accessors
+Date:   Mon, 27 May 2019 15:11:49 +0900
+Message-Id: <20190527061149.168640-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.22.0.rc1.257.g3120a18244-goog
+In-Reply-To: <20190523023636.GA196218@google.com>
+References: <20190523023636.GA196218@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190525153826.GA8661@ravnborg.org>
-X-Operating-System: Linux phenom 4.14.0-3-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 25, 2019 at 05:38:26PM +0200, Sam Ravnborg wrote:
-> Hi Daniel.
-> 
-> One detail I noticed while brosing the changes.
-> 
-> >  
-> > @@ -1064,9 +1062,13 @@ static void fbcon_init(struct vc_data *vc, int init)
-> >  	int logo = 1, new_rows, new_cols, rows, cols, charcnt = 256;
-> >  	int cap, ret;
-> >  
-> > -	if (info_idx == -1 || info == NULL)
-> > +	if (WARN_ON(info_idx == -1))
-> >  	    return;
-> >  
-> > +	if (con2fb_map[vc->vc_num] == -1)
-> > +		con2fb_map[vc->vc_num] = info_idx;
-> > +
-> > +	info = registered_fb[con2fb_map[vc->vc_num]];
-> >  	cap = info->flags;
-> 
-> When info is defined it is also assigned:
-> struct fb_info *info = registered_fb[con2fb_map[vc->vc_num]];
-> 
-> As the test for info is gone this assignment is no longer
-> requrired and can be deleted.
+The namespaces and comm fields of a thread are protected by rwsem and
+require write access for it.  So it ended up using a cast to remove
+the const qualifier.  Let's get rid of the const then.
 
-We use it later on, so we definitely still need info. But I indeed forgot
-to delete the initial assignment of info at the function start. Is that
-what you mean here?
->
-> The code now assumes that there is always an fb_info if con2fb_map[]
-> is not set to -1. I could not determine if this is OK, but this
-> likely boils down to your locking concern of registered_fb.
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/hist.c   |  2 +-
+ tools/perf/util/thread.c | 12 ++++++------
+ tools/perf/util/thread.h |  4 ++--
+ 3 files changed, 9 insertions(+), 9 deletions(-)
 
-Yup, see how fb_registered/unregistered manage this. I think that part
-actually all works out correctly (as long as everyone is holding
-console_lock). But it's a bit unpretty that fbcon digs around in the raw
-registered_fb array instead of going through the refcounted helpers, and
-having a full refcounted pointer. Much easier to convince yourself of that
-than chasing indices assigments all over imo.
--Daniel
-
-> 
-> 	Sam
-> 
-> >  
-> >  	if (logo_shown < 0 && console_loglevel <= CONSOLE_LOGLEVEL_QUIET)
-> > @@ -3336,14 +3338,6 @@ static int fbcon_event_notify(struct notifier_block *self,
-> >  	struct fb_blit_caps *caps;
-> >  	int idx, ret = 0;
-> >  
-> > -	/*
-> > -	 * ignore all events except driver registration and deregistration
-> > -	 * if fbcon is not active
-> > -	 */
-> > -	if (fbcon_has_exited && !(action == FB_EVENT_FB_REGISTERED ||
-> > -				  action == FB_EVENT_FB_UNREGISTERED))
-> > -		goto done;
-> > -
-> >  	switch(action) {
-> >  	case FB_EVENT_SUSPEND:
-> >  		fbcon_suspended(info);
-> > @@ -3396,7 +3390,6 @@ static int fbcon_event_notify(struct notifier_block *self,
-> >  		fbcon_remap_all(idx);
-> >  		break;
-> >  	}
-> > -done:
-> >  	return ret;
-> >  }
-> >  
-> > @@ -3443,9 +3436,6 @@ static ssize_t store_rotate(struct device *device,
-> >  	int rotate, idx;
-> >  	char **last = NULL;
-> >  
-> > -	if (fbcon_has_exited)
-> > -		return count;
-> > -
-> >  	console_lock();
-> >  	idx = con2fb_map[fg_console];
-> >  
-> > @@ -3468,9 +3458,6 @@ static ssize_t store_rotate_all(struct device *device,
-> >  	int rotate, idx;
-> >  	char **last = NULL;
-> >  
-> > -	if (fbcon_has_exited)
-> > -		return count;
-> > -
-> >  	console_lock();
-> >  	idx = con2fb_map[fg_console];
-> >  
-> > @@ -3491,9 +3478,6 @@ static ssize_t show_rotate(struct device *device,
-> >  	struct fb_info *info;
-> >  	int rotate = 0, idx;
-> >  
-> > -	if (fbcon_has_exited)
-> > -		return 0;
-> > -
-> >  	console_lock();
-> >  	idx = con2fb_map[fg_console];
-> >  
-> > @@ -3514,9 +3498,6 @@ static ssize_t show_cursor_blink(struct device *device,
-> >  	struct fbcon_ops *ops;
-> >  	int idx, blink = -1;
-> >  
-> > -	if (fbcon_has_exited)
-> > -		return 0;
-> > -
-> >  	console_lock();
-> >  	idx = con2fb_map[fg_console];
-> >  
-> > @@ -3543,9 +3524,6 @@ static ssize_t store_cursor_blink(struct device *device,
-> >  	int blink, idx;
-> >  	char **last = NULL;
-> >  
-> > -	if (fbcon_has_exited)
-> > -		return count;
-> > -
-> >  	console_lock();
-> >  	idx = con2fb_map[fg_console];
-> >  
-> > @@ -3668,9 +3646,6 @@ static void fbcon_exit(void)
-> >  	struct fb_info *info;
-> >  	int i, j, mapped;
-> >  
-> > -	if (fbcon_has_exited)
-> > -		return;
-> > -
-> >  #ifdef CONFIG_FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER
-> >  	if (deferred_takeover) {
-> >  		dummycon_unregister_output_notifier(&fbcon_output_nb);
-> > @@ -3695,7 +3670,7 @@ static void fbcon_exit(void)
-> >  		for (j = first_fb_vc; j <= last_fb_vc; j++) {
-> >  			if (con2fb_map[j] == i) {
-> >  				mapped = 1;
-> > -				break;
-> > +				con2fb_map[j] = -1;
-> >  			}
-> >  		}
-> >  
-> > @@ -3718,8 +3693,6 @@ static void fbcon_exit(void)
-> >  				info->queue.func = NULL;
-> >  		}
-> >  	}
-> > -
-> > -	fbcon_has_exited = 1;
-> >  }
-> >  
-> >  void __init fb_console_init(void)
-> > -- 
-> > 2.20.1
-> > 
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index 7ace7a10054d..fb3271fd420c 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -2561,7 +2561,7 @@ int __hists__scnprintf_title(struct hists *hists, char *bf, size_t size, bool sh
+ 	char unit;
+ 	int printed;
+ 	const struct dso *dso = hists->dso_filter;
+-	const struct thread *thread = hists->thread_filter;
++	struct thread *thread = hists->thread_filter;
+ 	int socket_id = hists->socket_filter;
+ 	unsigned long nr_samples = hists->stats.nr_events[PERF_RECORD_SAMPLE];
+ 	u64 nr_events = hists->stats.total_period;
+diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+index b413ba5b9835..aab7807d445f 100644
+--- a/tools/perf/util/thread.c
++++ b/tools/perf/util/thread.c
+@@ -141,13 +141,13 @@ static struct namespaces *__thread__namespaces(const struct thread *thread)
+ 	return list_first_entry(&thread->namespaces_list, struct namespaces, list);
+ }
+ 
+-struct namespaces *thread__namespaces(const struct thread *thread)
++struct namespaces *thread__namespaces(struct thread *thread)
+ {
+ 	struct namespaces *ns;
+ 
+-	down_read((struct rw_semaphore *)&thread->namespaces_lock);
++	down_read(&thread->namespaces_lock);
+ 	ns = __thread__namespaces(thread);
+-	up_read((struct rw_semaphore *)&thread->namespaces_lock);
++	up_read(&thread->namespaces_lock);
+ 
+ 	return ns;
+ }
+@@ -271,13 +271,13 @@ static const char *__thread__comm_str(const struct thread *thread)
+ 	return comm__str(comm);
+ }
+ 
+-const char *thread__comm_str(const struct thread *thread)
++const char *thread__comm_str(struct thread *thread)
+ {
+ 	const char *str;
+ 
+-	down_read((struct rw_semaphore *)&thread->comm_lock);
++	down_read(&thread->comm_lock);
+ 	str = __thread__comm_str(thread);
+-	up_read((struct rw_semaphore *)&thread->comm_lock);
++	up_read(&thread->comm_lock);
+ 
+ 	return str;
+ }
+diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
+index cf8375c017a0..e97ef6977eb9 100644
+--- a/tools/perf/util/thread.h
++++ b/tools/perf/util/thread.h
+@@ -76,7 +76,7 @@ static inline void thread__exited(struct thread *thread)
+ 	thread->dead = true;
+ }
+ 
+-struct namespaces *thread__namespaces(const struct thread *thread);
++struct namespaces *thread__namespaces(struct thread *thread);
+ int thread__set_namespaces(struct thread *thread, u64 timestamp,
+ 			   struct namespaces_event *event);
+ 
+@@ -93,7 +93,7 @@ int thread__set_comm_from_proc(struct thread *thread);
+ int thread__comm_len(struct thread *thread);
+ struct comm *thread__comm(const struct thread *thread);
+ struct comm *thread__exec_comm(const struct thread *thread);
+-const char *thread__comm_str(const struct thread *thread);
++const char *thread__comm_str(struct thread *thread);
+ int thread__insert_map(struct thread *thread, struct map *map);
+ int thread__fork(struct thread *thread, struct thread *parent, u64 timestamp, bool do_maps_clone);
+ size_t thread__fprintf(struct thread *thread, FILE *fp);
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+2.22.0.rc1.257.g3120a18244-goog
+
