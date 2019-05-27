@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6DEC04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7974FC072B1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94C8820883
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:08:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51B3020883
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:08:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558955285;
-	bh=zIVSxzLcFYCEKabhSfmjGO4t+Y92qDrk87H7DC7vaVo=;
+	s=default; t=1558955289;
+	bh=FcIEge0zk+jjeAe3jF8drHA93MwW2ubxP9ptYQVAVIM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=et+CCv18C+578CIYDDfRUOTGHr3smNo46R7egkKPW5Z9N4oPs3B4IconV5KN46CgB
-	 4HxUjjqHqoL+aVPOUkunl2rFvh6vqT7wMVfwSPDTqeXskk4m7FbPkShGuEVRQsdSNa
-	 fiYV+XGYxvTF06MLLfEI7be1smz5asPM47s4CWRc=
+	b=uD+yIHD5FwEcABUQ2yB2i5NxH6YuWajoaiqkNlK6yz3inWhl0jPNhdYk1ceIWkaF0
+	 /ozoROCmMEUS71qyKqUA2upw364SDfJ4Ui2BGAkkKwj4pWlDWY4ik3IcHiVRzUmtXs
+	 wjSCd4/LNoJd0E6XJDpkgA2oLc678WlAGpkd69bA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbfE0LHt (ORCPT
+        id S1726652AbfE0LHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 07:07:49 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57824 "EHLO
+        Mon, 27 May 2019 07:07:48 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:57836 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbfE0LHs (ORCPT
+        with ESMTP id S1726395AbfE0LHs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 27 May 2019 07:07:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,26 +34,26 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=8g48329FQhEsiuSKYHuqBZrE6fufei6sAnLid9P5pyM=; b=acc1/u1a6AefoquRE3b/srYkDW
-        XFNwIsPb2hVl+wyGlUv0yE8gtd+3c5dY3pYC48jKQLZlg696R5KeUbkVK7N1BCwPktTpph73Qda7M
-        gebfcPXNW8NRZ1MkJDVzzvYiqaqHXeoGwy18OVVPwE4C6lP3Zx3BROsaSOYIBEDacbg0Xizp0x34n
-        +Mmt89ZcuII1EDTTdI71QmqRWgGawoZlxnLP5GXZ0LEIRZa3+lkBNhD5yaGqXO3pMLce7yDuZLYD1
-        fdEpw4fNOAPSlf1QjSGsrFWbH9Ob5Pjr8Tm+d/fUryoDiLwU1SfJ1Ls7AptEb24qdh82HUOi7udMY
-        WfwjDecw==;
+        bh=uQCGkdMpLup5seR2eOGZrEj83EK7R6BAf5CrYNPT128=; b=kkDbAtbig016mmWPk8Q0ECOcNj
+        6i2x6TRRxm4pHg7q3zywdNvrVs9WWeNsxq3w9Gd7v2tarbn1H3xpSsDlPWX4gLPezG0bpho94/h+v
+        62+mv5ya/1QC+iZREHYViN0Dlla+oOJoWs5/EbGNRiG+nBYqEKi8yHgq3TSh9VFXiOuJM5qzE2Ngx
+        mTu3xOeYoV8vPuLOibnNBdUf52Og/A36QXmcSz4gTKNEr/una58qXtqftt7QUkCtXXyVvKBnsAB59
+        rJMf9IlCyYwUrmOv9mqhkbESd+Pr/FAL+pRLbR62WC5iOd/HXgjQqJdz+ysoCimzGWsxfZPSvD9XZ
+        3W7lZGWw==;
 Received: from [177.159.249.4] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hVDTn-00061s-Ma; Mon, 27 May 2019 11:07:47 +0000
+        id 1hVDTn-00061v-O8; Mon, 27 May 2019 11:07:47 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hVDTi-0002ci-P4; Mon, 27 May 2019 08:07:42 -0300
+        id 1hVDTi-0002cq-Qa; Mon, 27 May 2019 08:07:42 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 2/5] scripts/sphinx-pre-install: get rid of RHEL7 explicity check
-Date:   Mon, 27 May 2019 08:07:38 -0300
-Message-Id: <d01851ff7721606d2033fef2d6a09321f8e9702d.1558955082.git.mchehab+samsung@kernel.org>
+Subject: [PATCH 4/5] docs: by default, build docs a lot faster with Sphinx >= 1.7
+Date:   Mon, 27 May 2019 08:07:40 -0300
+Message-Id: <baf19095789f2b2ed0c7a940703037a00cd77850.1558955082.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1558955082.git.mchehab+samsung@kernel.org>
 References: <cover.1558955082.git.mchehab+samsung@kernel.org>
@@ -64,40 +64,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RHEL8 was already launched. This test won't get it, and will
-do the wrong thing. Ok, we could fix it, but now we check
-Sphinx version to ensure that it matches the minimal (1.3),
-so there's no need for an explicit check there.
+Since Sphinx version 1.7, it is possible to use "-jauto" in
+order to speedup documentation builds. On older versions,
+while -j was already supported, one would need to set the
+number of threads manually.
+
+So, if SPHINXOPTS is not provided, add -jauto, in order to
+speed up the build. That makes it *a lot* times faster than
+without -j.
+
+If one really wants to slow things down, it can just use:
+
+	make SPHINXOPTS=-j1 htmldocs
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- scripts/sphinx-pre-install | 13 -------------
- 1 file changed, 13 deletions(-)
+ Documentation/Makefile | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
-index 11239eb29695..ded3e2ef3f8d 100755
---- a/scripts/sphinx-pre-install
-+++ b/scripts/sphinx-pre-install
-@@ -581,19 +581,6 @@ sub check_needs()
- 		print "Unknown OS\n";
- 	}
+diff --git a/Documentation/Makefile b/Documentation/Makefile
+index 380e24053d6f..794233d05789 100644
+--- a/Documentation/Makefile
++++ b/Documentation/Makefile
+@@ -28,6 +28,8 @@ ifeq ($(HAVE_SPHINX),0)
  
--	# RHEL 7.x and clones have Sphinx version 1.1.x and incomplete texlive
--	if (($system_release =~ /Red Hat Enterprise Linux/) ||
--	    ($system_release =~ /CentOS/) ||
--	    ($system_release =~ /Scientific Linux/) ||
--	    ($system_release =~ /Oracle Linux Server/)) {
--		$virtualenv = 1;
--		$pdf = 0;
--
--		printf("NOTE: On this distro, Sphinx and TexLive shipped versions are incompatible\n");
--		printf("with doc build. So, use Sphinx via a Python virtual environment.\n\n");
--		printf("This script can't install a TexLive version that would provide PDF.\n");
--	}
--
- 	# Check for needed programs/tools
- 	check_sphinx();
- 	check_perl_module("Pod::Usage", 0);
+ else # HAVE_SPHINX
+ 
++SPHINXOPTS = $(shell perl -e 'open IN,"sphinx-build --version |"; while (<IN>) { if (m/([\d\.]+)/) { print "-jauto" if ($$1 >= "1.7") } ;} close IN')
++
+ # User-friendly check for pdflatex and latexmk
+ HAVE_PDFLATEX := $(shell if which $(PDFLATEX) >/dev/null 2>&1; then echo 1; else echo 0; fi)
+ HAVE_LATEXMK := $(shell if which latexmk >/dev/null 2>&1; then echo 1; else echo 0; fi)
 -- 
 2.21.0
 
