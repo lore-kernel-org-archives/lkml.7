@@ -2,116 +2,107 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A7E8C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 21:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26721C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 21:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B3EA20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 21:11:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D24C820815
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 21:20:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="NPKhxVwW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727368AbfE0VLh (ORCPT
+        id S1727196AbfE0VUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 17:11:37 -0400
-Received: from mga04.intel.com ([192.55.52.120]:23653 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726839AbfE0VLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 17:11:25 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 May 2019 14:11:24 -0700
-X-ExtLoop1: 1
-Received: from rpedgeco-mobl.amr.corp.intel.com (HELO localhost.intel.com) ([10.251.0.167])
-  by orsmga008.jf.intel.com with ESMTP; 27 May 2019 14:11:24 -0700
-From:   Rick Edgecombe <rick.p.edgecombe@intel.com>
-To:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        sparclinux@vger.kernel.org, linux-mm@kvack.org,
-        netdev@vger.kernel.org, luto@kernel.org
-Cc:     dave.hansen@intel.com, namit@vmware.com,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Meelis Roos <mroos@linux.ee>,
-        "David S. Miller" <davem@davemloft.net>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>
-Subject: [PATCH v5 1/2] vmalloc: Fix calculation of direct map addr range
-Date:   Mon, 27 May 2019 14:10:57 -0700
-Message-Id: <20190527211058.2729-2-rick.p.edgecombe@intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190527211058.2729-1-rick.p.edgecombe@intel.com>
-References: <20190527211058.2729-1-rick.p.edgecombe@intel.com>
+        Mon, 27 May 2019 17:20:30 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:37819 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726346AbfE0VU3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 17:20:29 -0400
+Received: by mail-pl1-f194.google.com with SMTP id p15so7441026pll.4
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 14:20:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=40aJElXopBegwzQ8ePRCnoFLtpNJc5rE4Ki98H/K1kU=;
+        b=NPKhxVwWIJx1LBNcBDtLUSddXV3ry9beJwFVJ2YMKrSq1tDX95FVXmKdbkjTxdZI65
+         k/Ig9dYusogLBmCK5MHijRT3qmVmtwUjOLaOAtjQXrfFUIw06exZ4/dTMKIB5zh8iiFW
+         gHunJ6toz742yaS/xOYA/pM+4+/bKfwphM5YufcAwCrF/0ra9kH8RzsRQZVk3Q8FZi7D
+         ThtbNC/duHrziFlzWz8WqCIvla8AZItOYDe8aq/9rZMCQvUzEpr6BZ5sXr3U0NwwoozQ
+         zEsdyNIatSoyweoCvhD5VCgaMa2xssIKzv92fZeqix3IpSV7gF/b92VGQMKdo9eLReQp
+         o+7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=40aJElXopBegwzQ8ePRCnoFLtpNJc5rE4Ki98H/K1kU=;
+        b=UFhb9Lnn1591FEUQj4pSgwaltSa6Vh6s6grFm1T6lJxqF/VwJtjzOZs9BcXL/6pDQT
+         ymTHmmElsxF/zYpFAHANUR2Hk7gW/p4VxJAjSLlMUgi/Wz2P21zrMP2b2QMOATQT6UEK
+         8T+vRj54PtXX3PnmTU1pGc2+i+tvdRH0yx7W1M252g+dVp7hisxY1FfVTwb3EwWQdSfl
+         oZ+GrwKG55e1cGL9EkFjdBoQeqyJL1zQV/yv4vRQe2r2Fgd1ofb03OzrvGM9L48iWtw9
+         TnywjTkPKtMwGe/GSRcHMmr4xz1YdE+NzONcQCzr8CYmIxlvIlW3JbOA+TdPgaGYkcVH
+         YtKA==
+X-Gm-Message-State: APjAAAUC3KD1DGOEEZ66TKBqjSdhYaWMZM8DiSzNYEV7K4V4w/OSHNuP
+        kn1T5UvKnYsUlfJYZLjp+vKpfQ==
+X-Google-Smtp-Source: APXvYqxjDmo6wDOGUSnTI0w7VelrYirVcIj/BheUlfjtmSE5nkCUUQJ1ZacRrKocZr/TJmNDzlc3cQ==
+X-Received: by 2002:a17:902:324:: with SMTP id 33mr131102396pld.284.1558992028676;
+        Mon, 27 May 2019 14:20:28 -0700 (PDT)
+Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id t24sm10900074pfq.63.2019.05.27.14.20.28
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 27 May 2019 14:20:28 -0700 (PDT)
+Date:   Mon, 27 May 2019 14:20:26 -0700
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] macvlan: Replace strncpy() by strscpy()
+Message-ID: <20190527142026.3a07831f@hermes.lan>
+In-Reply-To: <20190527183855.GA32553@embeddedor>
+References: <20190527183855.GA32553@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The calculation of the direct map address range to flush was wrong.
-This could cause the RO direct map alias to not get flushed. Today
-this shouldn't be a problem because this flush is only needed on x86
-right now and the spurious fault handler will fix cached RO->RW
-translations. In the future though, it could cause the permissions
-to remain RO in the TLB for the direct map alias, and then the page
-would return from the page allocator to some other component as RO
-and cause a crash.
+On Mon, 27 May 2019 13:38:55 -0500
+"Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
 
-So fix fix the address range calculation so the flush will include the
-direct map range.
+> The strncpy() function is being deprecated. Replace it by the safer
+> strscpy() and fix the following Coverity warning:
+> 
+> "Calling strncpy with a maximum size argument of 16 bytes on destination
+> array ifrr.ifr_ifrn.ifrn_name of size 16 bytes might leave the destination
+> string unterminated."
+> 
+> Notice that, unlike strncpy(), strscpy() always null-terminates the
+> destination string.
+> 
+> Addresses-Coverity-ID: 1445537 ("Buffer not null terminated")
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+>  drivers/net/macvlan.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/macvlan.c b/drivers/net/macvlan.c
+> index 61550122b563..0ccabde8e9c9 100644
+> --- a/drivers/net/macvlan.c
+> +++ b/drivers/net/macvlan.c
+> @@ -831,7 +831,7 @@ static int macvlan_do_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
+>  	struct ifreq ifrr;
+>  	int err = -EOPNOTSUPP;
+>  
+> -	strncpy(ifrr.ifr_name, real_dev->name, IFNAMSIZ);
+> +	strscpy(ifrr.ifr_name, real_dev->name, IFNAMSIZ);
+>  	ifrr.ifr_ifru = ifr->ifr_ifru;
+>  
+>  	switch (cmd) {
 
-Fixes: 868b104d7379 ("mm/vmalloc: Add flag for freeing of special permsissions")
-Cc: Meelis Roos <mroos@linux.ee>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Nadav Amit <namit@vmware.com>
-Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
----
- mm/vmalloc.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
-
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 233af6936c93..3ede9c064477 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -2123,7 +2123,6 @@ static inline void set_area_direct_map(const struct vm_struct *area,
- /* Handle removing and resetting vm mappings related to the vm_struct. */
- static void vm_remove_mappings(struct vm_struct *area, int deallocate_pages)
- {
--	unsigned long addr = (unsigned long)area->addr;
- 	unsigned long start = ULONG_MAX, end = 0;
- 	int flush_reset = area->flags & VM_FLUSH_RESET_PERMS;
- 	int i;
-@@ -2135,8 +2134,8 @@ static void vm_remove_mappings(struct vm_struct *area, int deallocate_pages)
- 	 * execute permissions, without leaving a RW+X window.
- 	 */
- 	if (flush_reset && !IS_ENABLED(CONFIG_ARCH_HAS_SET_DIRECT_MAP)) {
--		set_memory_nx(addr, area->nr_pages);
--		set_memory_rw(addr, area->nr_pages);
-+		set_memory_nx((unsigned long)area->addr, area->nr_pages);
-+		set_memory_rw((unsigned long)area->addr, area->nr_pages);
- 	}
- 
- 	remove_vm_area(area->addr);
-@@ -2160,9 +2159,11 @@ static void vm_remove_mappings(struct vm_struct *area, int deallocate_pages)
- 	 * the vm_unmap_aliases() flush includes the direct map.
- 	 */
- 	for (i = 0; i < area->nr_pages; i++) {
--		if (page_address(area->pages[i])) {
-+		unsigned long addr =
-+				(unsigned long)page_address(area->pages[i]);
-+		if (addr) {
- 			start = min(addr, start);
--			end = max(addr, end);
-+			end = max(addr + PAGE_SIZE, end);
- 		}
- 	}
- 
--- 
-2.20.1
-
+Why not use strlcpy like all the other places IFNAMSIZ is copied?
