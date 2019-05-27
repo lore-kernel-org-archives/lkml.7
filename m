@@ -2,108 +2,80 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57AE0C07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 06:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3055C07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 06:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C2592054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 06:38:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="Z3+ujjmX"
+	by mail.kernel.org (Postfix) with ESMTP id 8E87C2070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 06:40:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558939233;
+	bh=BHfKzP74YWA7kcBQ/qwfq+fqK1Y003G+3r317SLetK8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uOKiHBtyuOrNnapqkwnW2ZpcgLqnHJyyknD7Tfi13otFqDeBHAs1FoC05JRrC0TLE
+	 gja6/e7Ziu4Wj70OFG/jdbX9wOiy05/V5NB9b1JskN7BqN48FfQD9PaVRF7h9o9ocy
+	 9lyt3pBHQo4qlALEp1hkvY+gm/ed846NKB3h+Gd4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbfE0Giw (ORCPT
+        id S1726253AbfE0Gkc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 02:38:52 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:37580 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725996AbfE0Giv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 02:38:51 -0400
-Received: by mail-qk1-f194.google.com with SMTP id d10so16270146qko.4
-        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2019 23:38:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HHxpS8GHNFczohBNmU/4hGO+nucs8Ap0lRCjYNwMm+U=;
-        b=Z3+ujjmXN4PtI+z7DMZcCXWOgT9fcIZii2m6C0wngPB6ltt55kx7UFgpm7+ldQrDdb
-         M9HmuXhYGolCOseNPBd7ucxDAawtYlZBROSShy6h8NougfZbYckdRpBmYVJikkNi923L
-         Smw/6I1tZquqKSkMC+GlaX/KudPYUh5KQEz/iNSNqjqzZuSG90izIFke6A38g4dj7F0b
-         0dZXj7k8AypGiyssOh4MtMsjYYcsKqdryGoMoqJMFP/l9wb9Bhy4yqM3LhnI/YHx29OA
-         RIbQ3C7biSTc9TSPG2buxIE1BI0vC2Dz1yapS9vuzSJssE1e/f0hNVWOwMJ9Potc0teC
-         fq5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HHxpS8GHNFczohBNmU/4hGO+nucs8Ap0lRCjYNwMm+U=;
-        b=TomVCvdp6FSYnqBsNEqJvrIozyHjOz68g8T35ICT5jaaDKNz34c+xy5XtssF92lFti
-         OZkdhX5AIe6sQE8UpkJtdF+BSS7htN/so2u8g2r2X3ZTJeDocgAk8VCyDA3KaBKcLW0D
-         Mm2sxcbt1Lc8xIqTkV4j7Od0f4jei3c3soPOyRLV0cOfGmSRQNIc7nsM/msSYccp3ktz
-         HD1Ci+Z/+K7cmCmCY09HvQyM3Y7+wWwoajLiWJTDThEUmDe+qRRfE+5QTbBbjTy4Osvm
-         DLUYlgwUawf/79EJDD5HDfuBsmgIHraO+HtTEJwgLUNy3ZykKDdmjGKzk+ml5QWVv4RV
-         acmw==
-X-Gm-Message-State: APjAAAW94L77I4bi7yHA2+DAx0zQEXg7Bazoaa01Mb6bWLoldEvlbbPj
-        kz6V0o5FklgtfmYudg3Bjx9r6pIMiw2GfcxZ4+ZywA==
-X-Google-Smtp-Source: APXvYqwXmCCSkefGNRFAEBLGtLWO8/FD3BjQ6UIoj//q1bJvMH9lNtKnGCPeUFP7BXWy7Q9aAj3RnvVKFLZBU3RFjug=
-X-Received: by 2002:a05:620a:1ee:: with SMTP id x14mr650094qkn.70.1558939130658;
- Sun, 26 May 2019 23:38:50 -0700 (PDT)
+        Mon, 27 May 2019 02:40:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34164 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725940AbfE0Gkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 02:40:32 -0400
+Received: from localhost (unknown [171.61.91.186])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1584E2054F;
+        Mon, 27 May 2019 06:40:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558939232;
+        bh=BHfKzP74YWA7kcBQ/qwfq+fqK1Y003G+3r317SLetK8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FSaudunkYFzawMqo1bzztysqx2NNsUUvjh1TBGur6O9QjaRii8o8ti25T/Q2JX1Is
+         mXG+tG1y/ASmhHkD4rE37rzWOfrT9wpOWmNIa2fFc5+x7cij7S+r7CUwJsR/CcQnXq
+         jKUNd0SzyCA9X6F5yfStF6RmE+Q/ri5MzjQR+fsI=
+Date:   Mon, 27 May 2019 12:10:28 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Long Cheng <long.cheng@mediatek.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Sean Wang <sean.wang@mediatek.com>, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-serial@vger.kernel.org, srv_heupstream@mediatek.com,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        YT Shen <yt.shen@mediatek.com>,
+        Zhenbao Liu <zhenbao.liu@mediatek.com>
+Subject: Re: [PATCH 2/2] serial: 8250-mtk: modify uart DMA rx
+Message-ID: <20190527064028.GF15118@vkoul-mobl>
+References: <1558596909-14084-1-git-send-email-long.cheng@mediatek.com>
+ <1558596909-14084-3-git-send-email-long.cheng@mediatek.com>
 MIME-Version: 1.0
-References: <20190503072146.49999-1-chiu@endlessm.com> <20190503072146.49999-3-chiu@endlessm.com>
- <CAD8Lp47_-6d2wCAs5QbuR6Mw2w91TyJ9W3kFiJHH4F_6dXqnHg@mail.gmail.com>
- <CAB4CAweQXz=wQGA5t7BwWYdwbRrHCji+BWc0G52SUcZFGc8Pnw@mail.gmail.com>
- <CAD8Lp46hcx0ZHFMUdXdR6unbeMQJsfyuEQ7hUFpHY2jU9R7Gcw@mail.gmail.com>
- <CAB4CAwf26pdCY7FJA5H7d1aEY2xpjSto4JxARwczmVJ==41yng@mail.gmail.com> <CAD8Lp47K0Jn2wotANdQV3kT9yPP7bLnVd0eYhWui-vNDOEXBTA@mail.gmail.com>
-In-Reply-To: <CAD8Lp47K0Jn2wotANdQV3kT9yPP7bLnVd0eYhWui-vNDOEXBTA@mail.gmail.com>
-From:   Chris Chiu <chiu@endlessm.com>
-Date:   Mon, 27 May 2019 14:38:38 +0800
-Message-ID: <CAB4CAwf7O9tyUwc+gPSZrBES+Bt7iTjhE1fbbVxYKqzjtmZBxw@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/2] rtl8xxxu: Add watchdog to update rate mask by
- signal strength
-To:     Daniel Drake <drake@endlessm.com>
-Cc:     Jes Sorensen <jes.sorensen@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        David Miller <davem@davemloft.net>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1558596909-14084-3-git-send-email-long.cheng@mediatek.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 2:38 AM Daniel Drake <drake@endlessm.com> wrote:
->
-> On Fri, May 10, 2019 at 2:37 AM Chris Chiu <chiu@endlessm.com> wrote:
-> > I've verified that multiple virtual interface can not work simultaneously in
-> > STA mode. I assigned different mac address for different vifs, I can only
-> > bring only one interface up. If I want to bring the second vif up, it always
-> > complains "SIOCSIFFLAGS: Device or resource busy".
->
-> Interesting. Can you go deeper into that so that we can be more
-> confident of this limitation?
->
-> ieee80211_open() is the starting point.
-> ieee80211_check_concurrent_iface() is one candidate to generate -EBUSY
-> but from inspection, I don't think that's happening in this case,
-> perhaps you can keep following through in order to figure out which
-> part of the code is not allowing the 2nd STA interface to come up.
->
-> Daniel
+On 23-05-19, 15:35, Long Cheng wrote:
+> Modify uart rx and complete for DMA
 
-The -EBUSY is returned by the ieee80211_check_combinations() in the
-ieee80211_check_concurrent_iface() function which is invoked each time
-doing ieee80211_open().
-The ieee80211_check_combinations() returns the -EBUSY because of
-cfg80211_check_combinations() will iterate all interfaces of different types
-then checks the combination is valid or not, which in this case the number
-of interface combination accumulated by cfg80211_iter_sum_ifcombos is 0
-when I'm trying to bring up the second station interface.
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
 
-Chris
+-- 
+~Vinod
