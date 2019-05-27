@@ -2,280 +2,117 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9EC6C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0184DC46460
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:30:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97E0E20883
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:26:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF53F20883
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:30:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="U2YsqyHk"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="kmawYSKq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbfE0Q0o (ORCPT
+        id S1726667AbfE0Qa1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 12:26:44 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34093 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbfE0Q0n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 12:26:43 -0400
-Received: by mail-pg1-f196.google.com with SMTP id h2so6295785pgg.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 09:26:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GCuK3p21FWh8C1jBpeKRVhZCNmJ3Duy5wpqV3XNIhVs=;
-        b=U2YsqyHk2DfBKBpH9uI2gnxYK3Gs1/2299Hnfr7zbQcDMHv/AREw5ncX/9pCt6v6uP
-         8Inkaplt43pYazSA4lq28wo9pjZK7yyTsJdg+fhjEe9l8f57qDm0PLAbe8q+JWpj//IE
-         WESawLPI3p5Ge0awjWek1a3u9u+WfZkEd8IaU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GCuK3p21FWh8C1jBpeKRVhZCNmJ3Duy5wpqV3XNIhVs=;
-        b=rFG4tS7LTOQBgBo8Qexwd1FGaGj5PGzgLvl3Y/zbTOgBSZKtJOen+4YtNcDE9xUkH9
-         ii8F55p5K80xl9kraxHQFu9rWnEN8sgcibcX3V3YpxY8Pw7KSEswufbEP/o6W+ztN8bn
-         cu+QNUyvdzgUgPWG7GK+Zg5XIQco4Jeosl0lMu+uUZ+qe4wgvTBP7/uYks3zBIElZogv
-         5XvLgn4c9Jb06gchsIw2hHQV+FLXFDorhuTj0Ev5qS9ooZKCxS4gZEKCFs6JW97m9kK5
-         VvcIAMaAnAJOKr5K7EIeNlo+hON4s8Q0fzzp8uoKMBhDNzUjyBxm/eCiawJl4B1lkS3O
-         90ug==
-X-Gm-Message-State: APjAAAVD4BQ73FUMylwKtX8iCa7FjkXvwAb9WGbyNsFuON+SST6/Gaxv
-        LLRh5YSRt6BJcyHvtpOkSSmiXQ==
-X-Google-Smtp-Source: APXvYqwwfVCYWGhx+DD80Zs0gpD98qN9kd89HRShl17IHi2nfdS1mx1UrunJ69FFyvDwConZzQ91Pw==
-X-Received: by 2002:aa7:8f16:: with SMTP id x22mr67499207pfr.202.1558974402435;
-        Mon, 27 May 2019 09:26:42 -0700 (PDT)
-Received: from [10.136.8.252] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id h14sm9859513pgj.8.2019.05.27.09.26.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 May 2019 09:26:41 -0700 (PDT)
-Subject: Re: [PATCH 1/1] i2c: iproc: Add multi byte read-write support for
- slave mode
-To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-i2c@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Michael Cheng <ccheng@broadcom.com>,
-        Srinath Mannam <srinath.mannam@broadcom.com>
-References: <1557375708-14830-1-git-send-email-rayagonda.kokatanur@broadcom.com>
-From:   Ray Jui <ray.jui@broadcom.com>
-Message-ID: <7e073311-fff6-736a-5ae2-a29ceac25f3b@broadcom.com>
-Date:   Mon, 27 May 2019 09:26:38 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <1557375708-14830-1-git-send-email-rayagonda.kokatanur@broadcom.com>
-Content-Type: text/plain; charset=utf-8
+        Mon, 27 May 2019 12:30:27 -0400
+Received: from mail-eopbgr140070.outbound.protection.outlook.com ([40.107.14.70]:56153
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726202AbfE0Qa0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 12:30:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/IpUbrVPJFSCBKW80LlGo9HKXNMiYICi7OMPtUZ/cLY=;
+ b=kmawYSKqS0QM1vSPCP98hqDRozfWvvlJ7Ijg5xfx5tPOp99UolkQpMeCEUffI+Zn/2XTQ35h92S6mcRU8q9h9ixKGoEfIgl4lE8pdgqDMp/tJg/Ijpo3yV7cCwFLPTLlyhxglmgGxUsJbgMKcp9kupf8HeKxnSkm9DWwExQIu58=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB3758.eurprd04.prod.outlook.com (52.134.15.152) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.18; Mon, 27 May 2019 16:30:22 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::ccaf:f4a1:704a:e745]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::ccaf:f4a1:704a:e745%4]) with mapi id 15.20.1922.021; Mon, 27 May 2019
+ 16:30:22 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH v4] crypto: caam - strip input without changing crypto
+ request
+Thread-Topic: [PATCH v4] crypto: caam - strip input without changing crypto
+ request
+Thread-Index: AQHVEj+TCpX7zm1be0iJB21tAPCJpA==
+Date:   Mon, 27 May 2019 16:30:22 +0000
+Message-ID: <VI1PR0402MB34859949EAD2EF75B5888FBE981D0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <1558709189-7237-1-git-send-email-iuliana.prodan@nxp.com>
+ <1558709189-7237-2-git-send-email-iuliana.prodan@nxp.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f9b22d44-2937-4198-7af7-08d6e2c09db8
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3758;
+x-ms-traffictypediagnostic: VI1PR0402MB3758:
+x-microsoft-antispam-prvs: <VI1PR0402MB37583A1977D2FB759FA55C3F981D0@VI1PR0402MB3758.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:923;
+x-forefront-prvs: 0050CEFE70
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(39860400002)(366004)(376002)(346002)(136003)(189003)(199004)(66476007)(66556008)(25786009)(64756008)(14444005)(66446008)(66946007)(256004)(76116006)(73956011)(2906002)(8936002)(7696005)(99286004)(305945005)(8676002)(7736002)(33656002)(86362001)(102836004)(54906003)(110136005)(6506007)(53546011)(76176011)(81166006)(81156014)(44832011)(26005)(6436002)(446003)(4326008)(6246003)(6116002)(3846002)(74316002)(6636002)(316002)(14454004)(478600001)(186003)(9686003)(66066001)(229853002)(71190400001)(71200400001)(486006)(68736007)(5660300002)(476003)(53936002)(55016002)(52536014)(4744005)(473944003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3758;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 68aY5EARcwUTWvbJjLXa/qWHT4eZnZ4JhZpWheGdFwaOrXFX/dMaZEx2IIXmtoxENdf1fRQuR+Mcmw+NZr0WtASaIEh3Aun+H37b7Zc5FFvLpUejRxW2hnsNSUU+phczIs/GlVwskqp9VBDYMulpfkO/m5b36hpWcHxQHfXCGlt2odXyOFihrNU9ibQhK4aAKHAGxxABjDrHkXYTn7Zt1mVpVS2jlvhAiR+mSuOQwj5veyr5KvLlS9mK5OILmkF4lBwQxZbI3XCJZKO3FddS7WsvVLAj1iPAu8An4/BCaW5Q6Yqmems7chUZKSrc4RBTu8OzEKzUn7JtX8FaQBaseKWENr4rnDEUhA8jeUUVMhH8oulEhYFqceg/Bs/3AqaEjaA32r4Kkuzm5695hmXo283c8qsxenIeEiODZFSRcOc=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f9b22d44-2937-4198-7af7-08d6e2c09db8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 May 2019 16:30:22.6405
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: horia.geanta@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3758
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rayagonda,
-
-On 5/8/2019 9:21 PM, Rayagonda Kokatanur wrote:
-> Add multiple byte read-write support for slave mode.
-> 
-> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-> ---
->  drivers/i2c/busses/i2c-bcm-iproc.c | 117 +++++++++++++++++--------------------
->  1 file changed, 53 insertions(+), 64 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c b/drivers/i2c/busses/i2c-bcm-iproc.c
-> index a845b8d..2c7f145 100644
-> --- a/drivers/i2c/busses/i2c-bcm-iproc.c
-> +++ b/drivers/i2c/busses/i2c-bcm-iproc.c
-> @@ -165,12 +165,6 @@ enum i2c_slave_read_status {
->  	I2C_SLAVE_RX_END,
->  };
->  
-> -enum i2c_slave_xfer_dir {
-> -	I2C_SLAVE_DIR_READ = 0,
-> -	I2C_SLAVE_DIR_WRITE,
-> -	I2C_SLAVE_DIR_NONE,
-> -};
-> -
->  enum bus_speed_index {
->  	I2C_SPD_100K = 0,
->  	I2C_SPD_400K,
-> @@ -203,7 +197,6 @@ struct bcm_iproc_i2c_dev {
->  	struct i2c_msg *msg;
->  
->  	struct i2c_client *slave;
-> -	enum i2c_slave_xfer_dir xfer_dir;
->  
->  	/* bytes that have been transferred */
->  	unsigned int tx_bytes;
-> @@ -219,7 +212,8 @@ struct bcm_iproc_i2c_dev {
->  		| BIT(IS_M_RX_THLD_SHIFT))
->  
->  #define ISR_MASK_SLAVE (BIT(IS_S_START_BUSY_SHIFT)\
-> -		| BIT(IS_S_RX_EVENT_SHIFT) | BIT(IS_S_RD_EVENT_SHIFT))
-> +		| BIT(IS_S_RX_EVENT_SHIFT) | BIT(IS_S_RD_EVENT_SHIFT)\
-> +		| BIT(IS_S_TX_UNDERRUN_SHIFT))
->  
->  static int bcm_iproc_i2c_reg_slave(struct i2c_client *slave);
->  static int bcm_iproc_i2c_unreg_slave(struct i2c_client *slave);
-> @@ -297,15 +291,11 @@ static void bcm_iproc_i2c_slave_init(
->  	/* clear all pending slave interrupts */
->  	iproc_i2c_wr_reg(iproc_i2c, IS_OFFSET, ISR_MASK_SLAVE);
->  
-> -	/* Enable interrupt register for any READ event */
-> -	val = BIT(IE_S_RD_EVENT_SHIFT);
->  	/* Enable interrupt register to indicate a valid byte in receive fifo */
-> -	val |= BIT(IE_S_RX_EVENT_SHIFT);
-> +	val = BIT(IE_S_RX_EVENT_SHIFT);
->  	/* Enable interrupt register for the Slave BUSY command */
->  	val |= BIT(IE_S_START_BUSY_SHIFT);
->  	iproc_i2c_wr_reg(iproc_i2c, IE_OFFSET, val);
-> -
-> -	iproc_i2c->xfer_dir = I2C_SLAVE_DIR_NONE;
->  }
->  
->  static void bcm_iproc_i2c_check_slave_status(
-> @@ -314,8 +304,11 @@ static void bcm_iproc_i2c_check_slave_status(
->  	u32 val;
->  
->  	val = iproc_i2c_rd_reg(iproc_i2c, S_CMD_OFFSET);
-> -	val = (val >> S_CMD_STATUS_SHIFT) & S_CMD_STATUS_MASK;
-> +	/* status is valid only when START_BUSY is cleared after it was set */
-> +	if (val & BIT(S_CMD_START_BUSY_SHIFT))
-> +		return;
->  
-> +	val = (val >> S_CMD_STATUS_SHIFT) & S_CMD_STATUS_MASK;
->  	if (val == S_CMD_STATUS_TIMEOUT) {
->  		dev_err(iproc_i2c->device, "slave random stretch time timeout\n");
->  
-> @@ -327,70 +320,66 @@ static void bcm_iproc_i2c_check_slave_status(
->  }
->  
->  static bool bcm_iproc_i2c_slave_isr(struct bcm_iproc_i2c_dev *iproc_i2c,
-> -				u32 status)
-> +				    u32 status)
->  {
-> -	u8 value;
->  	u32 val;
-> -	u32 rd_status;
-> -	u32 tmp;
-> +	u8 value, rx_status;
->  
-> -	/* Start of transaction. check address and populate the direction */
-> -	if (iproc_i2c->xfer_dir == I2C_SLAVE_DIR_NONE) {
-> -		tmp = iproc_i2c_rd_reg(iproc_i2c, S_RX_OFFSET);
-> -		rd_status = (tmp >> S_RX_STATUS_SHIFT) & S_RX_STATUS_MASK;
-> -		/* This condition checks whether the request is a new request */
-> -		if (((rd_status == I2C_SLAVE_RX_START) &&
-> -			(status & BIT(IS_S_RX_EVENT_SHIFT))) ||
-> -			((rd_status == I2C_SLAVE_RX_END) &&
-> -			(status & BIT(IS_S_RD_EVENT_SHIFT)))) {
-> -
-> -			/* Last bit is W/R bit.
-> -			 * If 1 then its a read request(by master).
-> -			 */
-> -			iproc_i2c->xfer_dir = tmp & SLAVE_READ_WRITE_BIT_MASK;
-> -			if (iproc_i2c->xfer_dir == I2C_SLAVE_DIR_WRITE)
-> -				i2c_slave_event(iproc_i2c->slave,
-> -					I2C_SLAVE_READ_REQUESTED, &value);
-> -			else
-> -				i2c_slave_event(iproc_i2c->slave,
-> +	/* Slave RX byte receive */
-> +	if (status & BIT(IS_S_RX_EVENT_SHIFT)) {
-> +		val = iproc_i2c_rd_reg(iproc_i2c, S_RX_OFFSET);
-> +		rx_status = (val >> S_RX_STATUS_SHIFT) & S_RX_STATUS_MASK;
-> +		if (rx_status == I2C_SLAVE_RX_START) {
-> +			/* Start of SMBUS for Master write */
-> +			i2c_slave_event(iproc_i2c->slave,
->  					I2C_SLAVE_WRITE_REQUESTED, &value);
-> -		}
-> -	}
->  
-> -	/* read request from master */
-> -	if ((status & BIT(IS_S_RD_EVENT_SHIFT)) &&
-> -		(iproc_i2c->xfer_dir == I2C_SLAVE_DIR_WRITE)) {
-> -		i2c_slave_event(iproc_i2c->slave,
-> -			I2C_SLAVE_READ_PROCESSED, &value);
-> -		iproc_i2c_wr_reg(iproc_i2c, S_TX_OFFSET, value);
-> +			val = iproc_i2c_rd_reg(iproc_i2c, S_RX_OFFSET);
-> +			value = (u8)((val >> S_RX_DATA_SHIFT) & S_RX_DATA_MASK);
-> +			i2c_slave_event(iproc_i2c->slave,
-> +					I2C_SLAVE_WRITE_RECEIVED, &value);
-> +		} else if (status & BIT(IS_S_RD_EVENT_SHIFT)) {
-> +			/* Start of SMBUS for Master Read */
-> +			i2c_slave_event(iproc_i2c->slave,
-> +					I2C_SLAVE_READ_REQUESTED, &value);
-> +			iproc_i2c_wr_reg(iproc_i2c, S_TX_OFFSET, value);
->  
-> -		val = BIT(S_CMD_START_BUSY_SHIFT);
-> -		iproc_i2c_wr_reg(iproc_i2c, S_CMD_OFFSET, val);
-> -	}
-> +			val = BIT(S_CMD_START_BUSY_SHIFT);
-> +			iproc_i2c_wr_reg(iproc_i2c, S_CMD_OFFSET, val);
->  
-> -	/* write request from master */
-> -	if ((status & BIT(IS_S_RX_EVENT_SHIFT)) &&
-> -		(iproc_i2c->xfer_dir == I2C_SLAVE_DIR_READ)) {
-> -		val = iproc_i2c_rd_reg(iproc_i2c, S_RX_OFFSET);
-> -		/* Its a write request by Master to Slave.
-> -		 * We read data present in receive FIFO
-> -		 */
-> -		value = (u8)((val >> S_RX_DATA_SHIFT) & S_RX_DATA_MASK);
-> +			/*
-> +			 * Enable interrupt for TX FIFO becomes empty and
-> +			 * less than PKT_LENGTH bytes were output on the SMBUS
-> +			 */
-> +			val = iproc_i2c_rd_reg(iproc_i2c, IE_OFFSET);
-> +			val |= BIT(IE_S_TX_UNDERRUN_SHIFT);
-> +			iproc_i2c_wr_reg(iproc_i2c, IE_OFFSET, val);
-> +		} else {
-> +			/* Master write other than start */
-> +			value = (u8)((val >> S_RX_DATA_SHIFT) & S_RX_DATA_MASK);
-> +			i2c_slave_event(iproc_i2c->slave,
-> +					I2C_SLAVE_WRITE_RECEIVED, &value);
-> +		}
-> +	} else if (status & BIT(IS_S_TX_UNDERRUN_SHIFT)) {
-> +		/* Master read other than start */
->  		i2c_slave_event(iproc_i2c->slave,
-> -			I2C_SLAVE_WRITE_RECEIVED, &value);
-> -
-> -		/* check the status for the last byte of the transaction */
-> -		rd_status = (val >> S_RX_STATUS_SHIFT) & S_RX_STATUS_MASK;
-> -		if (rd_status == I2C_SLAVE_RX_END)
-> -			iproc_i2c->xfer_dir = I2C_SLAVE_DIR_NONE;
-> +				I2C_SLAVE_READ_PROCESSED, &value);
->  
-> -		dev_dbg(iproc_i2c->device, "\nread value = 0x%x\n", value);
-> +		iproc_i2c_wr_reg(iproc_i2c, S_TX_OFFSET, value);
-> +		val = BIT(S_CMD_START_BUSY_SHIFT);
-> +		iproc_i2c_wr_reg(iproc_i2c, S_CMD_OFFSET, val);
->  	}
->  
->  	/* Stop */
->  	if (status & BIT(IS_S_START_BUSY_SHIFT)) {
->  		i2c_slave_event(iproc_i2c->slave, I2C_SLAVE_STOP, &value);
-> -		iproc_i2c->xfer_dir = I2C_SLAVE_DIR_NONE;
-> +		/*
-> +		 * Enable interrupt for TX FIFO becomes empty and
-> +		 * less than PKT_LENGTH bytes were output on the SMBUS
-> +		 */
-> +		val = iproc_i2c_rd_reg(iproc_i2c, IE_OFFSET);
-> +		val &= ~BIT(IE_S_TX_UNDERRUN_SHIFT);
-> +		iproc_i2c_wr_reg(iproc_i2c, IE_OFFSET, val);
->  	}
->  
->  	/* clear interrupt status */
-> 
-
-This was already reviewed internally. I just reviewed it again and it
-looks fine to me. Thanks.
-
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+On 5/24/2019 5:47 PM, Iuliana Prodan wrote:=0A=
+> For rsa and pkcs1pad, CAAM expects an input of modulus size.=0A=
+> For this we strip the leading zeros in case the size is more than modulus=
+.=0A=
+> This commit avoids modifying the crypto request while stripping zeros fro=
+m=0A=
+> input, to comply with the crypto API requirement. This is done by adding=
+=0A=
+> a fixup input pointer and length.=0A=
+> =0A=
+> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
+> ---=0A=
+> Changes since V3:=0A=
+> 	- no changes.=0A=
+Since there were no changes, you should have kept the Reviewed-by tag I pro=
+vided=0A=
+for v3.=0A=
+=0A=
+Another thing: don't send a patch set with=0A=
+[PATCH v3 1/2]=0A=
+[PATCH v4]=0A=
+=0A=
+It's confusing:=0A=
+-patches belonging to a patch set should have the same version / prefix=0A=
+-makes one think patches are missing (where is 2/2?)=0A=
+=0A=
+Thanks,=0A=
+Horia=0A=
