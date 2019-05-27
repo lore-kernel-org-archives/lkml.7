@@ -2,117 +2,99 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 147C9C28CBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 05:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4ECC07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 05:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5B8021726
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 05:46:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88A2C2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 05:47:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726072AbfE0FqM (ORCPT
+        id S1726144AbfE0FrQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 01:46:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45724 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725774AbfE0FqL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 01:46:11 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 22F1330820C9;
-        Mon, 27 May 2019 05:46:11 +0000 (UTC)
-Received: from rhel3.localdomain (ovpn-12-147.pek2.redhat.com [10.72.12.147])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 30B5560C9B;
-        Mon, 27 May 2019 05:46:07 +0000 (UTC)
-From:   xiubli@redhat.com
-To:     josef@toxicpanda.com, axboe@kernel.dk, nbd@other.debian.org
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        atumball@redhat.com, Xiubo Li <xiubli@redhat.com>
-Subject: [PATCH] nbd: fix crash when the blksize is zero
-Date:   Mon, 27 May 2019 13:44:38 +0800
-Message-Id: <20190527054438.13548-1-xiubli@redhat.com>
+        Mon, 27 May 2019 01:47:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33628 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725996AbfE0FrP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 01:47:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 354B8AC84;
+        Mon, 27 May 2019 05:47:14 +0000 (UTC)
+Subject: Re: [PATCH v7 11/12] x86/paravirt: Adapt assembly for PIE support
+To:     Thomas Garnier <thgarnie@chromium.org>,
+        kernel-hardening@lists.openwall.com
+Cc:     kristen@linux.intel.com, Thomas Garnier <thgarnie@google.com>,
+        Alok Kataria <akataria@vmware.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+References: <20190520231948.49693-1-thgarnie@chromium.org>
+ <20190520231948.49693-12-thgarnie@chromium.org>
+From:   Juergen Gross <jgross@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jgross@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <1b53b8eb-5dd3-fb57-d8db-06eedd0ce49f@suse.com>
+Date:   Mon, 27 May 2019 07:47:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Mon, 27 May 2019 05:46:11 +0000 (UTC)
+In-Reply-To: <20190520231948.49693-12-thgarnie@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiubo Li <xiubli@redhat.com>
+On 21/05/2019 01:19, Thomas Garnier wrote:
+> From: Thomas Garnier <thgarnie@google.com>
+> 
+> if PIE is enabled, switch the paravirt assembly constraints to be
+> compatible. The %c/i constrains generate smaller code so is kept by
+> default.
+> 
+> Position Independent Executable (PIE) support will allow to extend the
+> KASLR randomization range below 0xffffffff80000000.
+> 
+> Signed-off-by: Thomas Garnier <thgarnie@google.com>
 
-This will allow the blksize to be set zero and then use 1024 as
-default.
+Acked-by: Juergen Gross <jgross@suse.com>
 
-Signed-off-by: Xiubo Li <xiubli@redhat.com>
----
- drivers/block/nbd.c | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 053958a..4c1de1c 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -135,6 +135,8 @@ struct nbd_cmd {
- 
- #define NBD_MAGIC 0x68797548
- 
-+#define NBD_DEF_BLKSIZE 1024
-+
- static unsigned int nbds_max = 16;
- static int max_part = 16;
- static struct workqueue_struct *recv_workqueue;
-@@ -1237,6 +1239,14 @@ static void nbd_clear_sock_ioctl(struct nbd_device *nbd,
- 		nbd_config_put(nbd);
- }
- 
-+static bool nbd_is_valid_blksize(unsigned long blksize)
-+{
-+	if (!blksize || !is_power_of_2(blksize) || blksize < 512 ||
-+		blksize > PAGE_SIZE)
-+		return false;
-+	return true;
-+}
-+
- /* Must be called with config_lock held */
- static int __nbd_ioctl(struct block_device *bdev, struct nbd_device *nbd,
- 		       unsigned int cmd, unsigned long arg)
-@@ -1252,8 +1262,9 @@ static int __nbd_ioctl(struct block_device *bdev, struct nbd_device *nbd,
- 	case NBD_SET_SOCK:
- 		return nbd_add_socket(nbd, arg, false);
- 	case NBD_SET_BLKSIZE:
--		if (!arg || !is_power_of_2(arg) || arg < 512 ||
--		    arg > PAGE_SIZE)
-+		if (!arg)
-+			arg = NBD_DEF_BLKSIZE;
-+		if (!nbd_is_valid_blksize(arg))
- 			return -EINVAL;
- 		nbd_size_set(nbd, arg,
- 			     div_s64(config->bytesize, arg));
-@@ -1333,7 +1344,7 @@ static struct nbd_config *nbd_alloc_config(void)
- 	atomic_set(&config->recv_threads, 0);
- 	init_waitqueue_head(&config->recv_wq);
- 	init_waitqueue_head(&config->conn_wait);
--	config->blksize = 1024;
-+	config->blksize = NBD_DEF_BLKSIZE;
- 	atomic_set(&config->live_connections, 0);
- 	try_module_get(THIS_MODULE);
- 	return config;
-@@ -1769,6 +1780,10 @@ static int nbd_genl_connect(struct sk_buff *skb, struct genl_info *info)
- 	if (info->attrs[NBD_ATTR_BLOCK_SIZE_BYTES]) {
- 		u64 bsize =
- 			nla_get_u64(info->attrs[NBD_ATTR_BLOCK_SIZE_BYTES]);
-+		if (!bsize)
-+			bsize = NBD_DEF_BLKSIZE;
-+		if (!nbd_is_valid_blksize(bsize))
-+			return -EINVAL;
- 		nbd_size_set(nbd, bsize, div64_u64(config->bytesize, bsize));
- 	}
- 	if (info->attrs[NBD_ATTR_TIMEOUT]) {
--- 
-1.8.3.1
-
+Juergen
