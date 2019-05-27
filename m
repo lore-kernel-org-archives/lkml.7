@@ -2,199 +2,182 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E3DC07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50715C07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:09:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32CFD2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:06:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A7E62075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:09:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="bz5lv9GX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbfE0HGb (ORCPT
+        id S1726302AbfE0HJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 03:06:31 -0400
-Received: from mga17.intel.com ([192.55.52.151]:18791 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725908AbfE0HGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 03:06:31 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 May 2019 00:06:30 -0700
-X-ExtLoop1: 1
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.29])
-  by orsmga005.jf.intel.com with ESMTP; 27 May 2019 00:06:28 -0700
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     <hannes@cmpxchg.org>, <mhocko@suse.com>,
-        <mgorman@techsingularity.net>, <kirill.shutemov@linux.intel.com>,
-        <josef@toxicpanda.com>, <hughd@google.com>, <shakeelb@google.com>,
-        <hdanton@sina.com>, <akpm@linux-foundation.org>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [v6 PATCH 2/2] mm: vmscan: correct some vmscan counters for THP swapout
-References: <1558929166-3363-1-git-send-email-yang.shi@linux.alibaba.com>
-        <1558929166-3363-2-git-send-email-yang.shi@linux.alibaba.com>
-Date:   Mon, 27 May 2019 15:06:27 +0800
-In-Reply-To: <1558929166-3363-2-git-send-email-yang.shi@linux.alibaba.com>
-        (Yang Shi's message of "Mon, 27 May 2019 11:52:46 +0800")
-Message-ID: <87ef4k8jgs.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 27 May 2019 03:09:05 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:40165 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbfE0HJE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 03:09:04 -0400
+Received: by mail-ed1-f65.google.com with SMTP id j12so25200105eds.7
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 00:09:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2OVAiP3AbT5S3JQwppK7lDiLikNBY/Eh8otDHbqTt1I=;
+        b=bz5lv9GXu67K0UZ5ZBo/zLJMbksiMirzuNpLtXHrSjqKldsPiZYCokHawAUTG7XBhk
+         vvh32N/8ZE45r/Bh1+kGhRqt0zER9ouCxR5hYy0VG6lDRpdevZAhvhV+GIQTt1nDkSH0
+         CqwMtAvHoZ9NHUsp4QbJix5wjmUrCs2L90K+4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=2OVAiP3AbT5S3JQwppK7lDiLikNBY/Eh8otDHbqTt1I=;
+        b=nvByowMVnocj+vclbTg6Csb2Wuv9yMSmc10K8IoPzGSuJ2KVu4ZHWVeO4/VH6wnhWF
+         Nuzf+lvaePA9WcEuItDmcZqRWmhk77W124ohgBB8H0I2ziKV37yMO113KzBchk4AR7BF
+         VYCpn8Mon3mSVBYnUpJPQWURZih7P1ZssX9w9gZGZlf0IzRregGjLsvjpnsfMxfBw2k0
+         Wuh9xg7uha5veEOd4N1yGI+xKGwa9oHWEtm3OtUI95OnBuTy0z2whVzeRz7hjcG7R4nk
+         Jm0WsVrnJJMRcZaKPQVnDrdOm4KQmw3YOz74dIi1qa0S9f09UYxLiG9F/3WOrozwqpb1
+         kC/A==
+X-Gm-Message-State: APjAAAWYYtRn5iIk051qA+yyJW+l5KeZptrNmiDxSeQp3bhUzvhGaVr1
+        GKa/60sZjxZ9y2IIFf1XxpzqzBmxbD8=
+X-Google-Smtp-Source: APXvYqyfQKMMUcyTT9MY21mZncZ3r4leh9GCF7kd6VRE2wcGOWT+jU8bj311fhTZFjgSifdSy6nCAg==
+X-Received: by 2002:a17:906:9145:: with SMTP id y5mr51770439ejw.206.1558940942348;
+        Mon, 27 May 2019 00:09:02 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id w10sm2984595eds.88.2019.05.27.00.09.00
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 27 May 2019 00:09:01 -0700 (PDT)
+Date:   Mon, 27 May 2019 09:08:58 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Pitre <nicolas.pitre@linaro.org>,
+        Martin Hostettler <textshell@uchuujin.de>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Mikulas Patocka <mpatocka@redhat.com>
+Subject: Re: [PATCH 04/33] vt: More locking checks
+Message-ID: <20190527070858.GJ21222@phenom.ffwll.local>
+Mail-Followup-To: LKML <linux-kernel@vger.kernel.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Pitre <nicolas.pitre@linaro.org>,
+        Martin Hostettler <textshell@uchuujin.de>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Mikulas Patocka <mpatocka@redhat.com>
+References: <20190524085354.27411-1-daniel.vetter@ffwll.ch>
+ <20190524085354.27411-5-daniel.vetter@ffwll.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190524085354.27411-5-daniel.vetter@ffwll.ch>
+X-Operating-System: Linux phenom 4.14.0-3-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yang Shi <yang.shi@linux.alibaba.com> writes:
+On Fri, May 24, 2019 at 10:53:25AM +0200, Daniel Vetter wrote:
+> I honestly have no idea what the subtle differences between
+> con_is_visible, con_is_fg (internal to vt.c) and con_is_bound are. But
+> it looks like both vc->vc_display_fg and con_driver_map are protected
+> by the console_lock, so probably better if we hold that when checking
+> this.
+> 
+> To do that I had to deinline the con_is_visible function.
+> 
+> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Nicolas Pitre <nicolas.pitre@linaro.org>
+> Cc: Martin Hostettler <textshell@uchuujin.de>
+> Cc: Adam Borowski <kilobyte@angband.pl>
+> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+> Cc: Mikulas Patocka <mpatocka@redhat.com>
 
-> Since commit bd4c82c22c36 ("mm, THP, swap: delay splitting THP after
-> swapped out"), THP can be swapped out in a whole.  But, nr_reclaimed
-> and some other vm counters still get inc'ed by one even though a whole
-> THP (512 pages) gets swapped out.
->
-> This doesn't make too much sense to memory reclaim.  For example, direct
-> reclaim may just need reclaim SWAP_CLUSTER_MAX pages, reclaiming one THP
-> could fulfill it.  But, if nr_reclaimed is not increased correctly,
-> direct reclaim may just waste time to reclaim more pages,
-> SWAP_CLUSTER_MAX * 512 pages in worst case.
->
-> And, it may cause pgsteal_{kswapd|direct} is greater than
-> pgscan_{kswapd|direct}, like the below:
->
-> pgsteal_kswapd 122933
-> pgsteal_direct 26600225
-> pgscan_kswapd 174153
-> pgscan_direct 14678312
->
-> nr_reclaimed and nr_scanned must be fixed in parallel otherwise it would
-> break some page reclaim logic, e.g.
->
-> vmpressure: this looks at the scanned/reclaimed ratio so it won't
-> change semantics as long as scanned & reclaimed are fixed in parallel.
->
-> compaction/reclaim: compaction wants a certain number of physical pages
-> freed up before going back to compacting.
->
-> kswapd priority raising: kswapd raises priority if we scan fewer pages
-> than the reclaim target (which itself is obviously expressed in order-0
-> pages). As a result, kswapd can falsely raise its aggressiveness even
-> when it's making great progress.
->
-> Other than nr_scanned and nr_reclaimed, some other counters, e.g.
-> pgactivate, nr_skipped, nr_ref_keep and nr_unmap_fail need to be fixed
-> too since they are user visible via cgroup, /proc/vmstat or trace
-> points, otherwise they would be underreported.
->
-> When isolating pages from LRUs, nr_taken has been accounted in base
-> page, but nr_scanned and nr_skipped are still accounted in THP.  It
-> doesn't make too much sense too since this may cause trace point
-> underreport the numbers as well.
->
-> So accounting those counters in base page instead of accounting THP as
-> one page.
->
-> nr_dirty, nr_unqueued_dirty, nr_congested and nr_writeback are used by
-> file cache, so they are not impacted by THP swap.
->
-> This change may result in lower steal/scan ratio in some cases since
-> THP may get split during page reclaim, then a part of tail pages get
-> reclaimed instead of the whole 512 pages, but nr_scanned is accounted
-> by 512, particularly for direct reclaim.  But, this should be not a
-> significant issue.
->
-> Cc: "Huang, Ying" <ying.huang@intel.com>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Mel Gorman <mgorman@techsingularity.net>
-> Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-> Cc: Hugh Dickins <hughd@google.com>
-> Cc: Shakeel Butt <shakeelb@google.com>
-> Cc: Hillf Danton <hdanton@sina.com>
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+Hi Greg,
+
+Do you want to merge this through your console tree or ack for merging
+through drm/fbdev? It's part of a bigger series, and I'd like to have more
+testing with this in our trees, but also ok to merge stand-alone if you
+prefer that. It's just locking checks and some docs.
+
+Same for the preceeding patch in this series here.
+
+Thanks, Daniel
+
+
 > ---
-> v6: Fixed the other double account issue introduced by v5 per Huang Ying
-> v5: Fixed sc->nr_scanned double accounting per Huang Ying
->     Added some comments to address the concern about premature OOM per Hillf Danton 
-> v4: Fixed the comments from Johannes and Huang Ying
-> v3: Removed Shakeel's Reviewed-by since the patch has been changed significantly
->     Switched back to use compound_order per Matthew
->     Fixed more counters per Johannes
-> v2: Added Shakeel's Reviewed-by
->     Use hpage_nr_pages instead of compound_order per Huang Ying and William Kucharski
->
->  mm/vmscan.c | 47 +++++++++++++++++++++++++++++++++++------------
->  1 file changed, 35 insertions(+), 12 deletions(-)
->
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index b65bc50..378edff 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -1118,6 +1118,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
->  		int may_enter_fs;
->  		enum page_references references = PAGEREF_RECLAIM_CLEAN;
->  		bool dirty, writeback;
-> +		unsigned int nr_pages;
+>  drivers/tty/vt/vt.c            | 16 ++++++++++++++++
+>  include/linux/console_struct.h |  5 +----
+>  2 files changed, 17 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+> index bc9813b14c58..a8988a085138 100644
+> --- a/drivers/tty/vt/vt.c
+> +++ b/drivers/tty/vt/vt.c
+> @@ -3815,6 +3815,8 @@ int con_is_bound(const struct consw *csw)
+>  {
+>  	int i, bound = 0;
 >  
->  		cond_resched();
->  
-> @@ -1129,7 +1130,10 @@ static unsigned long shrink_page_list(struct list_head *page_list,
->  
->  		VM_BUG_ON_PAGE(PageActive(page), page);
->  
-> -		sc->nr_scanned++;
-> +		nr_pages = 1 << compound_order(page);
+> +	WARN_CONSOLE_UNLOCKED();
 > +
-> +		/* Account the number of base pages even though THP */
-> +		sc->nr_scanned += nr_pages;
+>  	for (i = 0; i < MAX_NR_CONSOLES; i++) {
+>  		if (con_driver_map[i] == csw) {
+>  			bound = 1;
+> @@ -3826,6 +3828,20 @@ int con_is_bound(const struct consw *csw)
+>  }
+>  EXPORT_SYMBOL(con_is_bound);
 >  
->  		if (unlikely(!page_evictable(page)))
->  			goto activate_locked;
-> @@ -1250,7 +1254,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
->  		case PAGEREF_ACTIVATE:
->  			goto activate_locked;
->  		case PAGEREF_KEEP:
-> -			stat->nr_ref_keep++;
-> +			stat->nr_ref_keep += nr_pages;
->  			goto keep_locked;
->  		case PAGEREF_RECLAIM:
->  		case PAGEREF_RECLAIM_CLEAN:
-> @@ -1306,6 +1310,15 @@ static unsigned long shrink_page_list(struct list_head *page_list,
->  		}
+> +/**
+> + * con_is_visible - checks whether the current console is visible
+> + * @vc: virtual console
+> + *
+> + * RETURNS: zero if not visible, nonzero if visible
+> + */
+> +bool con_is_visible(const struct vc_data *vc)
+> +{
+> +	WARN_CONSOLE_UNLOCKED();
+> +
+> +	return *vc->vc_display_fg == vc;
+> +}
+> +EXPORT_SYMBOL(con_is_visible);
+> +
+>  /**
+>   * con_debug_enter - prepare the console for the kernel debugger
+>   * @sw: console driver
+> diff --git a/include/linux/console_struct.h b/include/linux/console_struct.h
+> index ed798e114663..24d4c16e3ae0 100644
+> --- a/include/linux/console_struct.h
+> +++ b/include/linux/console_struct.h
+> @@ -168,9 +168,6 @@ extern void vc_SAK(struct work_struct *work);
 >  
->  		/*
-> +		 * THP may get split above, need minus tail pages and update
-> +		 * nr_pages to avoid accounting tail pages twice.
-> +		 */
-> +		if ((nr_pages > 1) && !PageTransHuge(page)) {
-> +			sc->nr_scanned -= (nr_pages - 1);
-> +			nr_pages = 1;
-> +		}
+>  #define CUR_DEFAULT CUR_UNDERLINE
+>  
+> -static inline bool con_is_visible(const struct vc_data *vc)
+> -{
+> -	return *vc->vc_display_fg == vc;
+> -}
+> +bool con_is_visible(const struct vc_data *vc);
+>  
+>  #endif /* _LINUX_CONSOLE_STRUCT_H */
+> -- 
+> 2.20.1
+> 
 
-After checking the code again, it appears there's another hole in the
-code.  In the following code snippet.
-
-				if (!add_to_swap(page)) {
-					if (!PageTransHuge(page))
-						goto activate_locked;
-					/* Fallback to swap normal pages */
-					if (split_huge_page_to_list(page,
-								    page_list))
-						goto activate_locked;
-#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-					count_vm_event(THP_SWPOUT_FALLBACK);
-#endif
-					if (!add_to_swap(page))
-						goto activate_locked;
-				}
-
-
-If the THP is split, but the first or the second add_to_swap() fails, we
-still need to deal with sc->nr_scanned and nr_pages.
-
-How about add a new label before "activate_locked" to deal with that?
-
-Best Regards,
-Huang, Ying
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
