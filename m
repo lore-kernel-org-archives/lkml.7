@@ -2,135 +2,157 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDCA2C072B1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 17:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97094C072B1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 17:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A438B208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 17:49:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66902208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 17:49:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="Chdi20eW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbfE0RtF (ORCPT
+        id S1727047AbfE0RtK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 13:49:05 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46348 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726484AbfE0RtF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 13:49:05 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4RHgdaq005624
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 13:49:03 -0400
-Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2srkep2pnc-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 13:49:03 -0400
-Received: from localhost
-        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Mon, 27 May 2019 18:49:02 +0100
-Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
-        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 27 May 2019 18:48:58 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4RHmvtU34078884
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 May 2019 17:48:57 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C37B5B2066;
-        Mon, 27 May 2019 17:48:57 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A2480B205F;
-        Mon, 27 May 2019 17:48:57 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.80.199.73])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 27 May 2019 17:48:57 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id B664216C0E7C; Mon, 27 May 2019 10:49:01 -0700 (PDT)
-Date:   Mon, 27 May 2019 10:49:01 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
-        linux-kernel@vger.kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sasha Levin <sashal@kernel.org>, apw@canonical.com
-Subject: Re: [PATCH v2] rcu: Don't return a value from rcu_assign_pointer()
-Reply-To: paulmck@linux.ibm.com
-References: <1558946997-25559-1-git-send-email-andrea.parri@amarulasolutions.com>
- <20190527161050.GK28207@linux.ibm.com>
- <810a0dae47c90c39015903c413303fcee89ab5eb.camel@perches.com>
+        Mon, 27 May 2019 13:49:10 -0400
+Received: from mail-eopbgr720046.outbound.protection.outlook.com ([40.107.72.46]:59808
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726346AbfE0RtJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 13:49:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=84Agb6YxRcTQolVN89GeO41cT9eczLaKMoggrxBFaDo=;
+ b=Chdi20eWe81DiAvpKogBQxu+0/kuUjWinUOicy3ohl0xg/FoB8Ftvqcm9N9ttGCtXQzozPLYiTABU6zfLM6yt6cCT4Ih17iAr62UerRIlojsmfik6ELwGlKoyvQzKi1ldVuHZ4rUmuu29ByRYy0dFQ7qPDIS19XySFreAnafGhc=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB5126.namprd05.prod.outlook.com (20.177.231.20) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.15; Mon, 27 May 2019 17:49:03 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::2cb6:a3d1:f675:ced8]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::2cb6:a3d1:f675:ced8%3]) with mapi id 15.20.1943.007; Mon, 27 May 2019
+ 17:49:03 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     Juergen Gross <jgross@suse.com>, Ingo Molnar <mingo@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
+Subject: Re: [RFC PATCH 5/6] x86/mm/tlb: Flush remote and local TLBs
+ concurrently
+Thread-Topic: [RFC PATCH 5/6] x86/mm/tlb: Flush remote and local TLBs
+ concurrently
+Thread-Index: AQHVEtL3brMxLnyQKEm7V/vFcW9jOKZ7iV8AgAMzSQCAAIaiAA==
+Date:   Mon, 27 May 2019 17:49:03 +0000
+Message-ID: <AA36DE0F-04DB-47E1-B5D8-2E4522E9D6B3@vmware.com>
+References: <20190525082203.6531-1-namit@vmware.com>
+ <20190525082203.6531-6-namit@vmware.com>
+ <08b21fb5-2226-7924-30e3-31e4adcfc0a3@suse.com>
+ <20190527094710.GU2623@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190527094710.GU2623@hirez.programming.kicks-ass.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [66.170.99.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b9b31594-5baf-436d-2703-08d6e2cb9b9b
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB5126;
+x-ms-traffictypediagnostic: BYAPR05MB5126:
+x-microsoft-antispam-prvs: <BYAPR05MB512671C8B694A1DB98E15C14D01D0@BYAPR05MB5126.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:913;
+x-forefront-prvs: 0050CEFE70
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(39860400002)(136003)(346002)(396003)(189003)(199004)(7736002)(6506007)(6486002)(53546011)(305945005)(76176011)(6436002)(476003)(446003)(2616005)(66946007)(66476007)(66556008)(64756008)(66446008)(76116006)(53936002)(11346002)(73956011)(486006)(33656002)(8676002)(66066001)(82746002)(26005)(6512007)(186003)(102836004)(36756003)(81156014)(81166006)(5660300002)(8936002)(478600001)(25786009)(316002)(83716004)(54906003)(6916009)(71200400001)(256004)(71190400001)(7416002)(86362001)(14454004)(99286004)(2906002)(68736007)(3846002)(229853002)(6116002)(6246003)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB5126;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: zBAId/Uz7q/Lk3k7ZY9fjNmTdC/c8lTbh1ATc32M5GHGD5n1WupgFXIz0GgW97yNw/1RlFZuJZP9v3WSPUGsH4eNl+MAW/IpaB/VeTFG+suY5+qCaDm1+uz1exPlNnkWMpHrsZOn32b15G0pS8kJ+4eaa+DRdv2UFKLddNKOYqQa4n+LBqC5UuxvuvIz2H8Lp93ylTVgiSTTldQTdDvifigxylHVuHijX3nPbO24ERZrnSZ1tfbeLCDZTGzR9PuOB/AHXkHUYMgGMJox7wSvxFaVlWo93l7rXnnhDJE2Z1b+FX1plFfINBCaDDNYEtt84C2CHY8tuVixMq3rbG+cQRdBFAvzLdsQt6x+KFM5AURE61hGtomqv0L5l0hZiqqbAuBj5KxWn0LJKRTg+Q3iUj+qQzyDXVZv8fE1NTEvkQ0=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A4055DEB35687B479CB0588C414C980D@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <810a0dae47c90c39015903c413303fcee89ab5eb.camel@perches.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19052717-2213-0000-0000-000003967C92
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011172; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01209412; UDB=6.00635328; IPR=6.00990438;
- MB=3.00027075; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-27 17:49:02
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052717-2214-0000-0000-00005E9A550E
-Message-Id: <20190527174901.GL28207@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-27_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905270125
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b9b31594-5baf-436d-2703-08d6e2cb9b9b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 May 2019 17:49:03.4330
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB5126
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 27, 2019 at 10:21:22AM -0700, Joe Perches wrote:
-> On Mon, 2019-05-27 at 09:10 -0700, Paul E. McKenney wrote:
-> > On Mon, May 27, 2019 at 10:49:57AM +0200, Andrea Parri wrote:
-> > > Quoting Paul [1]:
-> > > 
-> > >   "Given that a quick (and perhaps error-prone) search of the uses
-> > >    of rcu_assign_pointer() in v5.1 didn't find a single use of the
-> > >    return value, let's please instead change the documentation and
-> > >    implementation to eliminate the return value."
-> > > 
-> > > [1] https://lkml.kernel.org/r/20190523135013.GL28207@linux.ibm.com
-> > 
-> > Queued, thank you!
-> > 
-> > Adding the checkpatch maintainers on CC as well.  The "do { } while
-> > (0)" prevents the return value from being used, by design.  Given the
-> > checkpatch complaint, is there some better way to achieve this?
-> 
-> Not sure what the checkpatch complaint is here.
-
-Checkpatch seems to want at least two statements in each
-"do { } while (0)" macro definition:
-
-WARNING: Single statement macros should not use a do {} while (0) loop
-
-> Reading the link above, there seems to be a compiler warning.
-
-The compiler warning is a theoretical issue that is being fixed by this
-patch, and the patch is giving the checkpatch warning.
-
-> Perhaps a statement expression macro with no return value?
-> 
-> #define rcu_assign_pointer(p, v)	({ (p) = (v); ; })
-
-This is at best an acquired taste for me...
-
-							Thanx, Paul
-
+PiBPbiBNYXkgMjcsIDIwMTksIGF0IDI6NDcgQU0sIFBldGVyIFppamxzdHJhIDxwZXRlcnpAaW5m
+cmFkZWFkLm9yZz4gd3JvdGU6DQo+IA0KPiBPbiBTYXQsIE1heSAyNSwgMjAxOSBhdCAxMDo1NDo1
+MEFNICswMjAwLCBKdWVyZ2VuIEdyb3NzIHdyb3RlOg0KPj4gT24gMjUvMDUvMjAxOSAxMDoyMiwg
+TmFkYXYgQW1pdCB3cm90ZToNCj4gDQo+Pj4gZGlmZiAtLWdpdCBhL2FyY2gveDg2L2luY2x1ZGUv
+YXNtL3BhcmF2aXJ0X3R5cGVzLmggYi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9wYXJhdmlydF90eXBl
+cy5oDQo+Pj4gaW5kZXggOTQ2ZjhmMWYxZWZjLi4zYTE1NmU2M2M1N2QgMTAwNjQ0DQo+Pj4gLS0t
+IGEvYXJjaC94ODYvaW5jbHVkZS9hc20vcGFyYXZpcnRfdHlwZXMuaA0KPj4+ICsrKyBiL2FyY2gv
+eDg2L2luY2x1ZGUvYXNtL3BhcmF2aXJ0X3R5cGVzLmgNCj4+PiBAQCAtMjExLDYgKzIxMSwxMiBA
+QCBzdHJ1Y3QgcHZfbW11X29wcyB7DQo+Pj4gCXZvaWQgKCpmbHVzaF90bGJfdXNlcikodm9pZCk7
+DQo+Pj4gCXZvaWQgKCpmbHVzaF90bGJfa2VybmVsKSh2b2lkKTsNCj4+PiAJdm9pZCAoKmZsdXNo
+X3RsYl9vbmVfdXNlcikodW5zaWduZWQgbG9uZyBhZGRyKTsNCj4+PiArCS8qDQo+Pj4gKwkgKiBm
+bHVzaF90bGJfbXVsdGkoKSBpcyB0aGUgcHJlZmVycmVkIGludGVyZmFjZS4gV2hlbiBpdCBpcyB1
+c2VkLA0KPj4+ICsJICogZmx1c2hfdGxiX290aGVycygpIHNob3VsZCByZXR1cm4gZmFsc2UuDQo+
+PiANCj4+IFRoaXMgY29tbWVudCBkb2VzIG5vdCBtYWtlIHNlbnNlLiBmbHVzaF90bGJfb3RoZXJz
+KCkgcmV0dXJuIHR5cGUgaXMNCj4+IHZvaWQuDQo+IA0KPiBJIHN1c3BlY3QgdGhhdCBpcyBhbiBh
+cnRpZmFjdCBmcm9tIGJlZm9yZSB0aGUgc3RhdGljX2tleTsgYW4gYXR0ZW1wdCB0bw0KPiBtYWtl
+IHRoZSBwdiBpbnRlcmZhY2UgbGVzcyBhd2t3YXJkLg0KDQpZZXMsIHJlbWFpbmRlcnMgdGhhdCBz
+aG91bGQgaGF2ZSBiZWVuIHJlbW92ZWQgLSBJIHdpbGwgcmVtb3ZlIHRoZW0gZm9yIHRoZQ0KbmV4
+dCB2ZXJzaW9uLg0KDQo+IFNvbWV0aGluZyBsaWtlIHRoZSBiZWxvdyB3b3VsZCB3b3JrIGZvciBL
+Vk0gSSBzdXNwZWN0LCB0aGUgb3RoZXJzDQo+IChIeXBlci1WIGFuZCBYZW4gYXJlIG1vcmUgJ2lu
+dGVyZXN0aW5nJykuDQo+IA0KPiAtLS0NCj4gLS0tIGEvYXJjaC94ODYva2VybmVsL2t2bS5jDQo+
+ICsrKyBiL2FyY2gveDg2L2tlcm5lbC9rdm0uYw0KPiBAQCAtNTgwLDcgKzU4MCw3IEBAIHN0YXRp
+YyB2b2lkIF9faW5pdCBrdm1fYXBmX3RyYXBfaW5pdCh2b2kNCj4gDQo+IHN0YXRpYyBERUZJTkVf
+UEVSX0NQVShjcHVtYXNrX3Zhcl90LCBfX3B2X3RsYl9tYXNrKTsNCj4gDQo+IC1zdGF0aWMgdm9p
+ZCBrdm1fZmx1c2hfdGxiX290aGVycyhjb25zdCBzdHJ1Y3QgY3B1bWFzayAqY3B1bWFzaywNCj4g
+K3N0YXRpYyB2b2lkIGt2bV9mbHVzaF90bGJfbXVsdGkoY29uc3Qgc3RydWN0IGNwdW1hc2sgKmNw
+dW1hc2ssDQo+IAkJCWNvbnN0IHN0cnVjdCBmbHVzaF90bGJfaW5mbyAqaW5mbykNCj4gew0KPiAJ
+dTggc3RhdGU7DQo+IEBAIC01OTQsNiArNTk0LDkgQEAgc3RhdGljIHZvaWQga3ZtX2ZsdXNoX3Rs
+Yl9vdGhlcnMoY29uc3Qgcw0KPiAJICogcXVldWUgZmx1c2hfb25fZW50ZXIgZm9yIHByZS1lbXB0
+ZWQgdkNQVXMNCj4gCSAqLw0KPiAJZm9yX2VhY2hfY3B1KGNwdSwgZmx1c2htYXNrKSB7DQo+ICsJ
+CWlmIChjcHUgPT0gc21wX3Byb2Nlc3Nvcl9pZCgpKQ0KPiArCQkJY29udGludWU7DQo+ICsNCj4g
+CQlzcmMgPSAmcGVyX2NwdShzdGVhbF90aW1lLCBjcHUpOw0KPiAJCXN0YXRlID0gUkVBRF9PTkNF
+KHNyYy0+cHJlZW1wdGVkKTsNCj4gCQlpZiAoKHN0YXRlICYgS1ZNX1ZDUFVfUFJFRU1QVEVEKSkg
+ew0KPiBAQCAtNjAzLDcgKzYwNiw3IEBAIHN0YXRpYyB2b2lkIGt2bV9mbHVzaF90bGJfb3RoZXJz
+KGNvbnN0IHMNCj4gCQl9DQo+IAl9DQo+IA0KPiAtCW5hdGl2ZV9mbHVzaF90bGJfb3RoZXJzKGZs
+dXNobWFzaywgaW5mbyk7DQo+ICsJbmF0aXZlX2ZsdXNoX3RsYl9tdWx0aShmbHVzaG1hc2ssIGlu
+Zm8pOw0KPiB9DQo+IA0KPiBzdGF0aWMgdm9pZCBfX2luaXQga3ZtX2d1ZXN0X2luaXQodm9pZCkN
+Cj4gQEAgLTYyOCw5ICs2MzEsOCBAQCBzdGF0aWMgdm9pZCBfX2luaXQga3ZtX2d1ZXN0X2luaXQo
+dm9pZCkNCj4gCWlmIChrdm1fcGFyYV9oYXNfZmVhdHVyZShLVk1fRkVBVFVSRV9QVl9UTEJfRkxV
+U0gpICYmDQo+IAkgICAgIWt2bV9wYXJhX2hhc19oaW50KEtWTV9ISU5UU19SRUFMVElNRSkgJiYN
+Cj4gCSAgICBrdm1fcGFyYV9oYXNfZmVhdHVyZShLVk1fRkVBVFVSRV9TVEVBTF9USU1FKSkgew0K
+PiAtCQlwdl9vcHMubW11LmZsdXNoX3RsYl9vdGhlcnMgPSBrdm1fZmx1c2hfdGxiX290aGVyczsN
+Cj4gKwkJcHZfb3BzLm1tdS5mbHVzaF90bGJfbXVsdGkgPSBrdm1fZmx1c2hfdGxiX211bHRpOw0K
+PiAJCXB2X29wcy5tbXUudGxiX3JlbW92ZV90YWJsZSA9IHRsYl9yZW1vdmVfdGFibGU7DQo+IC0J
+CXN0YXRpY19rZXlfZGlzYWJsZSgmZmx1c2hfdGxiX211bHRpX2VuYWJsZWQua2V5KTsNCj4gCX0N
+Cj4gDQo+IAlpZiAoa3ZtX3BhcmFfaGFzX2ZlYXR1cmUoS1ZNX0ZFQVRVUkVfUFZfRU9JKSkNCg0K
+VGhhdOKAmXMgd2hhdCBJIGhhdmUgYXMgd2VsbCA7LSkuDQoNCkFzIHlvdSBtZW50aW9uZWQgKGlu
+IGFub3RoZXIgZW1haWwpLCBzcGVjaWZpY2FsbHkgaHlwZXItdiBjb2RlIHNlZW1zDQpjb252b2x1
+dGVkIHRvIG1lLiBJbiBnZW5lcmFsLCBJIHByZWZlciBub3QgdG8gdG91Y2ggS1ZNL1hlbi9oeXBl
+ci12LCBidXQgeW91DQp0d2lzdCBteSBhcm0sIEkgd2lsbCBzZW5kIGEgY29tcGlsZS10ZXN0ZWQg
+dmVyc2lvbiBmb3IgWGVuIGFuZCBoeXBlci12Lg0KDQo=
