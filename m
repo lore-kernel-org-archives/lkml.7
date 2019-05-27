@@ -2,177 +2,138 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 129B3C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34BA5C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8CBC20859
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:09:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XREMWUw6"
+	by mail.kernel.org (Postfix) with ESMTP id 0C61320883
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:10:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558951813;
+	bh=NnmgDy5FptWpQILTDsZ4Xve8h2sTF+iS5fFSlh0fjz4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=T5eNRrNS/DGCqAn9UlosJ77Xw1Xd4bGzROxUhL1BVGGK3FtiXcLnD8kqlp/7uK2GE
+	 ZVJYUExoUFYqT6iB8VFA+3luvelORFSFU6f4siubIHmpVZ1DJr4fZV+iUek7JdVi4C
+	 gL4XCb1F9PSkZLTnxmfODkLitnBAoGXiLkcB2+nY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726732AbfE0KJT (ORCPT
+        id S1726836AbfE0KKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 06:09:19 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52199 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725943AbfE0KJS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 06:09:18 -0400
-Received: by mail-wm1-f66.google.com with SMTP id f10so8133313wmb.1;
-        Mon, 27 May 2019 03:09:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=tuHCdOdb5t1SszRKnD5OprWjKcOYFqQtf31SduQvheI=;
-        b=XREMWUw6mPqN28YAXSUmUTn/z14vKm7hmJdzn9yYlnC+36W5k+OBeuLcH22aRRC2Ds
-         Mhan+303KUgrM0qzUonkd437pNxzW4Y6RpkmCDl9yyP39F1Nm1yQie5YK/TD1mGDuXg/
-         YMRKCc7y+QRErCdR2ijJhP1/f1xQshrRl5qL16x2S91SD9Ud5PTQj65EKhaVq+E+fgpb
-         c1l1soEvKIF51dUvhVGWOfN456D3aLDLfDXY69VA/HnR5F8dYPunMs/sf7UVKlAsPaFU
-         a5sX/v5RqYYiVPPr6MRs7h08guqX7o5aQAR4mT8GsTfPwA5t58Yz2ymHB+IE+LM9TSns
-         7kKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=tuHCdOdb5t1SszRKnD5OprWjKcOYFqQtf31SduQvheI=;
-        b=WNCbMfLB5WiVboqi4+wHINN6rpVTvBsFKn9p486zawssbtySUXygf8BBbUFGYkdLt+
-         7Hym3AVXnZeG27qwOfMl6cSbuHRfS2C52v3x2u5pdfgAyDrYVpCNiVKylvynkeM67bxr
-         sAGllvzky4dC0OpVkJAr/X8iAaQL6UV7TRW3RUZs+uzim9y1jfTvva/jvdDxR7J9VUbE
-         rlbCGbUyfsWYoDK5NYF1wqySCe2hY1Uv7fPnOa1gazUqbTdHFvKlq2wgWeY+ympZQ2td
-         y65ionynZgOu4p6ezlgy2QNLrdSEaf1Apo8BBCznVAPvvHN2NoXuG9HFu4n88BoiNiT9
-         YClg==
-X-Gm-Message-State: APjAAAXBYfc5vPaWlgtTxlugFJ7eXonKvWlChmFyt/kf+qWosn1P2fyj
-        N9fsWJPVPrT4vxSklj8IEb8=
-X-Google-Smtp-Source: APXvYqxOToQKy/smyD8FAPz5mgyY2fkBWUZZzM2uxWDhliyEIokCqlCLCXW35hp/zbG9/X1OnmaTlQ==
-X-Received: by 2002:a1c:ef05:: with SMTP id n5mr9523462wmh.149.1558951756303;
-        Mon, 27 May 2019 03:09:16 -0700 (PDT)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id o12sm3944287wmh.12.2019.05.27.03.09.14
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 27 May 2019 03:09:15 -0700 (PDT)
-Date:   Mon, 27 May 2019 12:09:13 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     XiaoXiao Liu <sliuuxiaonxiao@gmail.com>
-Cc:     dmitry.torokhov@gmail.com, peter.hutterer@who-t.net,
-        hui.wang@canonical.com, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, xiaojian.cao@cn.alps.com,
-        zhangfp1@lenovo.com, xiaoxiao.liu-1@cn.alps.com
-Subject: Re: [PATCH] input: alps-fix the issue alps cs19 trackstick do not
- work.
-Message-ID: <20190527100913.sgxrjrmphsjfmcdb@pali>
-References: <20190527094422.7558-1-sliuuxiaonxiao@gmail.com>
+        Mon, 27 May 2019 06:10:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56636 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725943AbfE0KKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 06:10:10 -0400
+Received: from localhost (unknown [171.61.91.186])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C5A720859;
+        Mon, 27 May 2019 10:10:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558951809;
+        bh=NnmgDy5FptWpQILTDsZ4Xve8h2sTF+iS5fFSlh0fjz4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=snA0dl2mB3eN9j8L1PY7p2ImPCLljwBsCVF8fJeqljCDdbesF3LbLdyOe75n8a2z8
+         f32m7VKpFBVs7jddUxx3JqgKvQZZ/buVB4YACB+a1aQTmg9JppJEtRwBHD6Dfy/0jN
+         lcLjftgbaX+k6lMoi03cdD+5IzaPbD/ICHlimVMc=
+Date:   Mon, 27 May 2019 15:40:03 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     yibin.gong@nxp.com, robh@kernel.org, shawnguo@kernel.org,
+        festevam@gmail.com, mark.rutland@arm.com, dan.j.williams@intel.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com, kernel@pengutronix.de,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 6/7] dmaengine: fsl-edma: add i.mx7ulp edma2 version
+ support
+Message-ID: <20190527101003.GI15118@vkoul-mobl>
+References: <20190527085118.40423-1-yibin.gong@nxp.com>
+ <20190527085118.40423-7-yibin.gong@nxp.com>
+ <20190527090553.lek7tm3lyst3bhrd@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190527094422.7558-1-sliuuxiaonxiao@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190527090553.lek7tm3lyst3bhrd@pengutronix.de>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
-
-On Monday 27 May 2019 05:44:22 XiaoXiao Liu wrote:
-> The alps devices which detected to use the ALPS_PROTO_V8 procotol contains
-> ALPS touchpad and ALPS trackstick.The ALPS_PROTO_V8 procotol do not
-> support the trackstick device process by default.
-
-Normally PS/2 device handled by alps.c is touchpad and in some cases
-touchpad sends also trackstick data in that one PS/2 channel.
-
-Does it mean that your device (reported to kernel) sends only trackstick
-packets and not touchpad?
-
-> When the trackstick was detected to use ALPS_PROTO_V8 procotol,
-> the v8 process_packet method alps_process_packet_ss4_v2 will reject to
-> report the data when the device using ALPS_PROTO_V8 procotol is not set
-> the ALPS_DUALPOINT flag.
+On 27-05-19, 11:05, Sascha Hauer wrote:
+> On Mon, May 27, 2019 at 04:51:17PM +0800, yibin.gong@nxp.com wrote:
+> > From: Robin Gong <yibin.gong@nxp.com>
+> > 
+> > +static const struct of_device_id fsl_edma_dt_ids[] = {
+> > +	{ .compatible = "fsl,vf610-edma", .data = (void *)v1 },
+> > +	{ .compatible = "fsl,imx7ulp-edma", .data = (void *)v3 },
+> > +	{ /* sentinel */ }
 > 
-> The alps cs19 trackstick is detected to use the ALPS_PROTO_V8 procotol
-> but without ALPS_DUALPOINT flag, the alps driver will not report the
-> input data. so the trackstick will not work.
+> Please put a struct type behind the .data pointer so that you can
+> configure...
+
+Yeah that was the idea behind the suggestion in previous version.
+
+Something like 
+
+struct fsl_edma_driver_data {
+        unsigned int channels;
+        ...
+};
+
+and then you have
+
+const struct fsl_edma_driver_data v1_data {
+        .channels = 1;
+        ...
+};
+
 > 
-> solution: when the alps cs19 device detected, set the device
-> ALPS_DUALPOINT flag,then the input data will be processed.
+> > +};
+> > +MODULE_DEVICE_TABLE(of, fsl_edma_dt_ids);
+> > +
+> > @@ -218,6 +272,22 @@ static int fsl_edma_probe(struct platform_device *pdev)
+> >  	fsl_edma_setup_regs(fsl_edma);
+> >  	regs = &fsl_edma->regs;
+> >  
+> > +	if (fsl_edma->version == v3) {
+> > +		fsl_edma->dmamux_nr = 1;
+
+You can store the struct in driver context or store the values, so here
+it becomes
+
+        driver->data->channel;
+
+and so on for other data, you can also point function pointers (hint
+edma/2_irq_init)
+
 > 
-> Signed-off-by: XiaoXiao Liu <sliuuxiaonxiao@gmail.com>
-> ---
->  drivers/input/mouse/alps.c | 25 +++++++++++++++++++++++--
->  1 file changed, 23 insertions(+), 2 deletions(-)
+> ...things like this...
 > 
-> diff --git a/drivers/input/mouse/alps.c b/drivers/input/mouse/alps.c
-> index 0a6f7ca883e7..a54677cf7474 100644
-> --- a/drivers/input/mouse/alps.c
-> +++ b/drivers/input/mouse/alps.c
-> @@ -24,7 +24,7 @@
->  
->  #include "psmouse.h"
->  #include "alps.h"
-> -
-> +#include "trackpoint.h"
->  /*
->   * Definitions for ALPS version 3 and 4 command mode protocol
->   */
-> @@ -220,6 +220,23 @@ static bool alps_is_valid_first_byte(struct alps_data *priv,
->  	return (data & priv->mask0) == priv->byte0;
->  }
->  
-> +static int alps_check_cs19_trackstick(struct psmouse *psmouse)
-> +{
-> +	u8 param[2] = { 0 };
-> +	int error;
-> +
-> +	error = ps2_command(&psmouse->ps2dev,
-> +			    param, MAKE_PS2_CMD(0, 2, TP_READ_ID));
-> +	if (error)
-> +		return error;
-> +
-> +	if (param[0] == TP_VARIANT_ALPS && param[1] & 0x20) {
-
-I guess that you want parenthesis around (param[1] & 0x20). And also
-describe what that 0x20 constant means.
-
-> +		psmouse_warn(psmouse, "It is alps cs19 trackstick");
-
-It is not a warning.
-
-> +		return 0;
-> +	}
-> +	return -1;
-> +}
-> +
->  static void alps_report_buttons(struct input_dev *dev1, struct input_dev *dev2,
->  				int left, int right, int middle)
->  {
-> @@ -2568,8 +2585,12 @@ static int alps_update_dual_info_ss4_v2(unsigned char otp[][4],
->  			alps_exit_command_mode(psmouse);
->  			ps2_command(ps2dev, NULL, PSMOUSE_CMD_ENABLE);
->  
-> -			if (reg_val == 0x0C || reg_val == 0x1D)
-> +			if (reg_val == 0x0C || reg_val == 0x1D) {
-
-Hm... why your device does not match these constants?
-
-> +				is_dual = true;
-> +			} else if (alps_check_cs19_trackstick(psmouse) == 0) {
-> +				//For support Thinkpad CS19 TrackStick
->  				is_dual = true;
-> +			}
->  		}
->  	}
->  
+> > @@ -264,7 +334,11 @@ static int fsl_edma_probe(struct platform_device *pdev)
+> >  	}
+> >  
+> >  	edma_writel(fsl_edma, ~0, regs->intl);
+> > -	ret = fsl_edma_irq_init(pdev, fsl_edma);
+> > +
+> > +	if (fsl_edma->version == v3)
+> > +		ret = fsl_edma2_irq_init(pdev, fsl_edma);
+> > +	else
+> > +		ret = fsl_edma_irq_init(pdev, fsl_edma);
+> 
+> ...and this one in that struct rather than littering the code more and
+> more with such version tests.
+> 
+> Sascha
+> 
+> -- 
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
 -- 
-Pali Rohár
-pali.rohar@gmail.com
+~Vinod
