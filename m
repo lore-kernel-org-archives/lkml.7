@@ -2,85 +2,129 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 728EAC04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 583A3C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C4862146F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:47:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26A8720859
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:48:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="edC5Jqk9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbfE0NrD (ORCPT
+        id S1726650AbfE0NsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 09:47:03 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:59116 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726452AbfE0NrD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 09:47:03 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 6849A2532AFB42FAC215;
-        Mon, 27 May 2019 21:46:53 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 27 May 2019 21:46:44 +0800
-From:   Kefeng Wang <wangkefeng.wang@huawei.com>
-To:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH v2] pwm: rockchip: Use of_clk_get_parent_count()
-Date:   Mon, 27 May 2019 21:55:09 +0800
-Message-ID: <20190527135509.184544-1-wangkefeng.wang@huawei.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190525115941.108309-1-wangkefeng.wang@huawei.com>
-References: <20190525115941.108309-1-wangkefeng.wang@huawei.com>
+        Mon, 27 May 2019 09:48:09 -0400
+Received: from vps.xff.cz ([195.181.215.36]:50564 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726191AbfE0NsI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 09:48:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1558964885; bh=ustEk4EO9XCG6FHJLRsAPk5OCbRSi/9z1v7hcR+OOgc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=edC5Jqk9FcWLFnpa3bcokUCDAFQwsb+TpIDCCYGdhgfUh1W7oU5Bn2z9Q0GL+F8Kt
+         42vTLM8E5qQffspMvcPk6PzjMvdtXIcbSRfGRYIdLtoGA+RizEVkzZa4TRt/L3mxxf
+         AJPIdPH7zJyf/4FtMpBuLG2nnV9lRFhnELYl4BC8=
+Date:   Mon, 27 May 2019 15:48:05 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Subject: Re: [PATCH v2 00/10] Allwinner A64/H6 IR support
+Message-ID: <20190527134805.j7t4ffstrnhdml47@core.my.home>
+Mail-Followup-To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+References: <20190526222536.10917-1-peron.clem@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190526222536.10917-1-peron.clem@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use of_clk_get_parent_count() instead of open coding.
+Hi Clément,
 
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
----
-v2:
-- add include <linux/of_clk.h>
- drivers/pwm/pwm-rockchip.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+On Mon, May 27, 2019 at 12:25:26AM +0200, Clément Péron wrote:
+> Hi,
+> 
+> A64 IR support series[1] pointed out that an A31 bindings should be
+> introduced.
+> 
+> This series introduce the A31 compatible bindings, then switch it on
+> the already existing board.
+> 
+> Finally introduce A64 and H6 support.
 
-diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
-index 4d99d468df09..d8f23daca290 100644
---- a/drivers/pwm/pwm-rockchip.c
-+++ b/drivers/pwm/pwm-rockchip.c
-@@ -13,6 +13,7 @@
- #include <linux/io.h>
- #include <linux/module.h>
- #include <linux/of.h>
-+#include <linux/of_clk.h>
- #include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/pwm.h>
-@@ -329,8 +330,8 @@ static int rockchip_pwm_probe(struct platform_device *pdev)
- 		}
- 	}
- 
--	count = of_count_phandle_with_args(pdev->dev.of_node,
--					   "clocks", "#clock-cells");
-+	count = of_clk_get_parent_count(pdev->dev.of_node);
-+
- 	if (count == 2)
- 		pc->pclk = devm_clk_get(&pdev->dev, "pclk");
- 	else
--- 
-2.20.1
+Does H6 support actually work? I don't see any driver changes and last time
+I tried with the exact same bindings, I got RCU stalls shortly after boot.
 
+Enabling/disabling ir node was enough to trigger/stop the RCU stalls on H6.
+
+regards,
+	o.
+
+> Regards,
+> Clément
+> 
+> [1] https://lore.kernel.org/patchwork/patch/1031390/#1221464
+> 
+> Changes since v1:
+>  - Document reset lines as required since A31
+>  - Explain the memory mapping difference in commit log
+>  - Fix misspelling "Allwiner" to "Allwinner"
+> 
+> Clément Péron (8):
+>   dt-bindings: media: sunxi-ir: add A31 compatible
+>   media: rc: sunxi: Add A31 compatible
+>   ARM: dts: sunxi: prefer A31 instead of A13 for ir
+>   dt-bindings: media: sunxi-ir: Add A64 compatible
+>   dt-bindings: media: sunxi-ir: Add H6 compatible
+>   arm64: dts: allwinner: h6: Add IR receiver node
+>   arm64: dts: allwinner: h6: Enable IR on H6 boards
+>   arm64: defconfig: enable IR SUNXI option
+> 
+> Igors Makejevs (1):
+>   arm64: dts: allwinner: a64: Add IR node
+> 
+> Jernej Skrabec (1):
+>   arm64: dts: allwinner: a64: Enable IR on Orange Pi Win
+> 
+>  .../devicetree/bindings/media/sunxi-ir.txt    | 11 +++++++++--
+>  arch/arm/boot/dts/sun6i-a31.dtsi              |  2 +-
+>  arch/arm/boot/dts/sun8i-a83t.dtsi             |  2 +-
+>  arch/arm/boot/dts/sun9i-a80.dtsi              |  2 +-
+>  arch/arm/boot/dts/sunxi-h3-h5.dtsi            |  2 +-
+>  .../dts/allwinner/sun50i-a64-orangepi-win.dts |  4 ++++
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 18 ++++++++++++++++++
+>  .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  4 ++++
+>  .../dts/allwinner/sun50i-h6-orangepi.dtsi     |  4 ++++
+>  .../boot/dts/allwinner/sun50i-h6-pine-h64.dts |  4 ++++
+>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 19 +++++++++++++++++++
+>  arch/arm64/configs/defconfig                  |  1 +
+>  drivers/media/rc/sunxi-cir.c                  |  1 +
+>  13 files changed, 68 insertions(+), 6 deletions(-)
+> 
+> -- 
+> 2.20.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
