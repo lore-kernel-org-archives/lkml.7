@@ -2,106 +2,115 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5375C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF45FC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAB7C20859
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:41:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="JoXnXy8/"
+	by mail.kernel.org (Postfix) with ESMTP id C5820208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:54:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbfE0QlC (ORCPT
+        id S1726693AbfE0QyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 12:41:02 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:45735 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726397AbfE0QlB (ORCPT
+        Mon, 27 May 2019 12:54:16 -0400
+Received: from gateway23.websitewelcome.com ([192.185.50.107]:41161 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726353AbfE0QyQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 12:41:01 -0400
-Received: by mail-qk1-f194.google.com with SMTP id j1so18647948qkk.12
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 09:41:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rKyCzranttTm8XPWZ088AThg9Hdd7C67ToC8/YpFmsA=;
-        b=JoXnXy8/tEruwLfqT68I0PkNoD1cUd9CL7ad86oPqCK6rLiNf/xJoYDiTBVLpt8Q8p
-         Ma/XA/aqqIjPXD6wbPe2lDxoHnYHNhIpWNayaGl6UIGn8LP9CdRo2OO7bm0TyVFTKjlD
-         PPm6skU32u13lfbHtntWF+heqdnsbsqiwIYaky0bYnzL/shrCN0Lz1Qt7m6TMthO2csj
-         lynCL1SekUKP+mmafPD/TMcqSwtNL5hak7H+zimAeb/j3BlJ7HZoRWHqJgpG1vCKDT4f
-         iwk/yVgfBK5hbk3aZy6NcHWDY648CG+ErIfzahLfiKcjB5qWGItSLVTy6gSCNIqdGALP
-         0PQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rKyCzranttTm8XPWZ088AThg9Hdd7C67ToC8/YpFmsA=;
-        b=CzGrwVbmuCMH7L3Lr1b5Ew6wS9e6T0m4E+QB5sT53m9vNOF1u3esRzkfFOJPr9uixi
-         Pf7nzPD3TkfbYj/m6/xDpV6iTHKOv5Ny+J/RaEPDN58DkESMOpyRaNL2u4Lg+YcoqTHG
-         RwNb9eq+BnTeKg3YfZYBAlD6+Xs8AkWHPjk5z2BEMKfQGXZyCWYe1EF9rzf9MBr1pP+U
-         eaKBQ9oxpaGNy8phCcEnCnbZMh/cHezMHuNkNtDCShKk6tWIdcfP1bgvQq3Ht7McsKA/
-         QC7vjBD7gl40D2Xuap6B1rJKOkjhTtI/KXYRVz7MtiCQJu5dP3WJuqQtaYx/ldRW/9L2
-         5bEA==
-X-Gm-Message-State: APjAAAVGurdkC4FU/pEizDx+JJ88g8g2HkYIoqjspwyahI+PJMrodX9K
-        mL1OzJlAnTSSJXq7GB0Ah15vKR5j9zzm2P0Y4MH16w==
-X-Google-Smtp-Source: APXvYqxc8D6jRbqbUSRP+V6pb8JUYTalLP9nTD3wOFqlk7MMqBhgZQfadeI/9Z8WTKHyXATgVQUcB/fnlMdVFoDYbwA=
-X-Received: by 2002:ac8:8b2:: with SMTP id v47mr60717451qth.80.1558975260447;
- Mon, 27 May 2019 09:41:00 -0700 (PDT)
+        Mon, 27 May 2019 12:54:16 -0400
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id 7A564137DA
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 11:54:15 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id VIt5h7IzR2PzOVIt5hU6vL; Mon, 27 May 2019 11:54:15 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.47.159] (port=34508 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hVIt4-002E4y-E6; Mon, 27 May 2019 11:54:14 -0500
+Date:   Mon, 27 May 2019 11:54:13 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     David Howells <dhowells@redhat.com>
+Cc:     linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] afs: Fix logically dead code in afs_update_cell
+Message-ID: <20190527165413.GA26714@embeddedor>
 MIME-Version: 1.0
-References: <20190503072146.49999-1-chiu@endlessm.com> <20190503072146.49999-3-chiu@endlessm.com>
- <CAD8Lp47_-6d2wCAs5QbuR6Mw2w91TyJ9W3kFiJHH4F_6dXqnHg@mail.gmail.com>
- <CAB4CAweQXz=wQGA5t7BwWYdwbRrHCji+BWc0G52SUcZFGc8Pnw@mail.gmail.com>
- <CAD8Lp46hcx0ZHFMUdXdR6unbeMQJsfyuEQ7hUFpHY2jU9R7Gcw@mail.gmail.com>
- <CAB4CAwf26pdCY7FJA5H7d1aEY2xpjSto4JxARwczmVJ==41yng@mail.gmail.com>
- <CAD8Lp47K0Jn2wotANdQV3kT9yPP7bLnVd0eYhWui-vNDOEXBTA@mail.gmail.com> <CAB4CAwf7O9tyUwc+gPSZrBES+Bt7iTjhE1fbbVxYKqzjtmZBxw@mail.gmail.com>
-In-Reply-To: <CAB4CAwf7O9tyUwc+gPSZrBES+Bt7iTjhE1fbbVxYKqzjtmZBxw@mail.gmail.com>
-From:   Daniel Drake <drake@endlessm.com>
-Date:   Mon, 27 May 2019 10:40:49 -0600
-Message-ID: <CAD8Lp45OtJG2V1F9Ybwav7RUs572Q88d2VF4YX1xjy=n5wsvEA@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/2] rtl8xxxu: Add watchdog to update rate mask by
- signal strength
-To:     Chris Chiu <chiu@endlessm.com>
-Cc:     Jes Sorensen <jes.sorensen@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        David Miller <davem@davemloft.net>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.47.159
+X-Source-L: No
+X-Exim-ID: 1hVIt4-002E4y-E6
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.47.159]:34508
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 12
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 27, 2019 at 12:38 AM Chris Chiu <chiu@endlessm.com> wrote:
-> The -EBUSY is returned by the ieee80211_check_combinations() in the
-> ieee80211_check_concurrent_iface() function which is invoked each time
-> doing ieee80211_open().
-> The ieee80211_check_combinations() returns the -EBUSY because of
-> cfg80211_check_combinations() will iterate all interfaces of different types
-> then checks the combination is valid or not, which in this case the number
-> of interface combination accumulated by cfg80211_iter_sum_ifcombos is 0
-> when I'm trying to bring up the second station interface.
+Fix logically dead code in switch statement.
 
-Thanks for clarifying. I see, rtl8xxxu does not provide any
-iface_combinations so the default is to reject parallel interfaces.
+Notice that *ret* is updated with -ENOMEM before the switch statement
+at 395:
 
-Given that we can now confidently say that multiple interfaces are not
-supported, I think that inside rtl8xxxu_add_interface() you could
-store a pointer to the vif inside the rtl8xxxu_priv structure (and
-clear it in rtl8xxxu_remove_interface). Plus for clarity, add a
-comment pointing out that only a single interface is supported, and
-make rtl8xxxu_add_interface() acually fail if we already had a
-non-NULL pointer stored in the priv structure.
+395                 switch (ret) {
+396                 case -ENODATA:
+397                 case -EDESTADDRREQ:
+398                         vllist->status = DNS_LOOKUP_GOT_NOT_FOUND;
+399                         break;
+400                 case -EAGAIN:
+401                 case -ECONNREFUSED:
+402                         vllist->status = DNS_LOOKUP_GOT_TEMP_FAILURE;
+403                         break;
+404                 default:
+405                         vllist->status = DNS_LOOKUP_GOT_LOCAL_FAILURE;
+406                         break;
+407                 }
 
-Then you can simplify the patch to remove the ugly storing of vif
-inside rtl8xxxu_watchdog. You can store the delayed_work in the main
-priv struct too, dropping rtl8xxxu_watchdog altogether.
+hence, the code in the switch (except for the default case) makes
+no sense and is logically dead.
 
-Daniel
+Fix this by removing the *ret* assignment at 390:
+
+390	ret = -ENOMEM;
+
+which is apparently wrong.
+
+Addresses-Coverity-ID: 1445439 ("Logically dead code")
+Fixes: d5c32c89b208 ("afs: Fix cell DNS lookup")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ fs/afs/cell.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/fs/afs/cell.c b/fs/afs/cell.c
+index 9c3b07ba2222..980de60bf060 100644
+--- a/fs/afs/cell.c
++++ b/fs/afs/cell.c
+@@ -387,7 +387,6 @@ static int afs_update_cell(struct afs_cell *cell)
+ 		if (ret == -ENOMEM)
+ 			goto out_wake;
+ 
+-		ret = -ENOMEM;
+ 		vllist = afs_alloc_vlserver_list(0);
+ 		if (!vllist)
+ 			goto out_wake;
+-- 
+2.21.0
+
