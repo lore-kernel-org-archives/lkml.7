@@ -2,105 +2,92 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B805EC072B1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B32EC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 922EC205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:02:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CJ2irMJK"
+	by mail.kernel.org (Postfix) with ESMTP id 1C555205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:04:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbfE0OCv (ORCPT
+        id S1726614AbfE0OEF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 10:02:51 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:33901 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726580AbfE0OCu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 10:02:50 -0400
-Received: by mail-lj1-f196.google.com with SMTP id j24so14807381ljg.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 07:02:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nCMqcLWyCA+4Q/MEIIgUaDC50B6QNtxtBMlc97ZOozY=;
-        b=CJ2irMJKh684KUcwCc9e3mRWyJ3si0NiJuPS8075E4MvXvGMVcYFMOXShhgQ6jQ65m
-         5ZT8nQuRaOztT3vV1jR1mOBIKUw3uFP111pf95gc1AWajJpwzTjYYE3a8pNrNFx8YM3G
-         qF+VgZDKakhfXS6vsoAA15xxhlI70teCFJXoQOhdt+aB+nwDh+M1AUnaMOaH2u4iowZF
-         M9RDJ51+OJf4FjpByIo02Fg5yIq6EfeQVZk5SdkqFnA4eQFbHfJ3XquqOWlYbMC024Gc
-         vgdX3QYfA4UtbUxk8wiLe15FW8s3SdFjoTNbTQfmI/ASsEOrqluE4QTc3bmQiVdMTCm3
-         diYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nCMqcLWyCA+4Q/MEIIgUaDC50B6QNtxtBMlc97ZOozY=;
-        b=bpH0tE5BSzWdw1tBM4NgdGFmHAhNnyUjF/zAQZ+hfyHzzIsFI6d0KAtZLGYeKHnNlp
-         No6URwB4L4gHEkah5OmPMPzEyNfdhuN5/uPAaspKkJjVi6hpjxpKXrAha2ttnYZRZk/8
-         sUkeTLXyW5dNCKe33KezVJdQbKdS7zBJclMEeCE+LJ4sp4wZGbmB62OQfff4jaq9ox9x
-         mw+M1mhKUtf4VL1Y3/RKv2KFj145dfR7qbaXqqFX9c+1I2VNmgcRxJ/Gr1NRSPmvWjQl
-         r4QlaESJ4CDDYzXd14Zzg9jW5nbImXZij2O7at+ZBcqKYv+QKUchvek/w64yKAinOvxP
-         2mLg==
-X-Gm-Message-State: APjAAAX3somZB3VMRqLJ2R38lE+GdBNv4Wkd+YIZehvCuLtYBKDU4fk/
-        lVALLZVcDh8QmLIkUYjPySA=
-X-Google-Smtp-Source: APXvYqzXY+tlQxq7QCiBnJ+JYYpe6XAxMrsHVoWpLgb9r76XvPQ1r14R5z8LOJLwEgnfZ3qF0GJRWg==
-X-Received: by 2002:a2e:81d9:: with SMTP id s25mr21926270ljg.139.1558965768729;
-        Mon, 27 May 2019 07:02:48 -0700 (PDT)
-Received: from pc636 ([37.139.158.167])
-        by smtp.gmail.com with ESMTPSA id r62sm2335963lja.48.2019.05.27.07.02.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 27 May 2019 07:02:47 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Mon, 27 May 2019 16:02:40 +0200
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        Roman Gushchin <guro@fb.com>, Hillf Danton <hdanton@sina.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Garnier <thgarnie@google.com>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v3 4/4] mm/vmap: move BUG_ON() check to the unlink_va()
-Message-ID: <20190527140240.6lzhunbc4py573yl@pc636>
-References: <20190527093842.10701-1-urezki@gmail.com>
- <20190527093842.10701-5-urezki@gmail.com>
- <20190527085927.19152502@gandalf.local.home>
+        Mon, 27 May 2019 10:04:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38206 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726184AbfE0OEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 10:04:05 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B88047EBC1;
+        Mon, 27 May 2019 14:04:04 +0000 (UTC)
+Received: from gondolin (ovpn-204-109.brq.redhat.com [10.40.204.109])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E18BF7854F;
+        Mon, 27 May 2019 14:03:58 +0000 (UTC)
+Date:   Mon, 27 May 2019 16:03:55 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     "Thomas Meyer" <thomas@m3y3r.de>
+Cc:     alex.williamson@redhat.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: your patch
+Message-ID: <20190527160355.1cd446c4.cohuck@redhat.com>
+In-Reply-To: <E1hUrZM-0007qA-Q8@sslproxy01.your-server.de>
+References: <E1hUrZM-0007qA-Q8@sslproxy01.your-server.de>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190527085927.19152502@gandalf.local.home>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Mon, 27 May 2019 14:04:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > Move the BUG_ON()/RB_EMPTY_NODE() check under unlink_va()
-> > function, it means if an empty node gets freed it is a BUG
-> > thus is considered as faulty behaviour.
-> 
-> Can we switch it to a WARN_ON(). We are trying to remove all BUG_ON()s.
-> If a user wants to crash on warning, there's a sysctl for that. But
-> crashing the system can make it hard to debug. Especially if it is hit
-> by someone without a serial console, and the machine just hangs in X.
-> That is very annoying.
-> 
-> With a WARN_ON, you at least get a chance to see the crash dump.
-Yes we can. Even though it is considered as faulty behavior it is not
-a good reason to trigger a BUG. I will fix that.
+On Sun, 26 May 2019 13:44:04 +0200
+"Thomas Meyer" <thomas@m3y3r.de> wrote:
 
-Thank you!
+> From thomas@m3y3r.de Sun May 26 00:13:26 2019
+> Subject: [PATCH] vfio-pci/nvlink2: Use vma_pages function instead of explicit
+>  computation
+> To: alex.williamson@redhat.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+> Content-Type: text/plain; charset="UTF-8"
+> Mime-Version: 1.0
+> Content-Transfer-Encoding: 8bit
+> X-Patch: Cocci
+> X-Mailer: DiffSplit
+> Message-ID: <1558822461341-1674464153-1-diffsplit-thomas@m3y3r.de>
+> References: <1558822461331-726613767-0-diffsplit-thomas@m3y3r.de>
+> In-Reply-To: <1558822461331-726613767-0-diffsplit-thomas@m3y3r.de>
+> X-Serial-No: 1
 
---
-Vlad Rezki 
+Hi,
+
+some kind of accident seems to have happened to your patch... maybe the
+missing colon after the 'From'?
+
+> 
+> Use vma_pages function on vma object instead of explicit computation.
+> 
+> Signed-off-by: Thomas Meyer <thomas@m3y3r.de>
+> ---
+> 
+> diff -u -p a/drivers/vfio/pci/vfio_pci_nvlink2.c b/drivers/vfio/pci/vfio_pci_nvlink2.c
+> --- a/drivers/vfio/pci/vfio_pci_nvlink2.c
+> +++ b/drivers/vfio/pci/vfio_pci_nvlink2.c
+> @@ -161,7 +161,7 @@ static int vfio_pci_nvgpu_mmap(struct vf
+>  
+>  	atomic_inc(&data->mm->mm_count);
+>  	ret = (int) mm_iommu_newdev(data->mm, data->useraddr,
+> -			(vma->vm_end - vma->vm_start) >> PAGE_SHIFT,
+> +			vma_pages(vma),
+>  			data->gpu_hpa, &data->mem);
+>  
+>  	trace_vfio_pci_nvgpu_mmap(vdev->pdev, data->gpu_hpa, data->useraddr,
+
+The change looks good to me.
+
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
