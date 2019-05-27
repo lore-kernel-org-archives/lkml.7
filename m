@@ -2,118 +2,186 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 349E1C07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:38:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBBCFC46460
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF3F121734
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:38:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GY8m0hOW"
+	by mail.kernel.org (Postfix) with ESMTP id CD7BC2173C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 07:39:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726256AbfE0Hi4 (ORCPT
+        id S1726321AbfE0Hjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 03:38:56 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:35762 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725869AbfE0Hi4 (ORCPT
+        Mon, 27 May 2019 03:39:45 -0400
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:54193 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725869AbfE0Hjp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 03:38:56 -0400
-Received: by mail-lf1-f67.google.com with SMTP id a25so1447468lfg.2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 00:38:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=OnF5vlOhiefqGSZXh+n1mosDCaj568K6lYr/Rle7pp0=;
-        b=GY8m0hOWCVjaWJ4jZGrE65epBF6vNIz4YhB5bd4s3r+B4jyY19FANWvYo9UIujm4yq
-         MOazijALm+pSFEPx/J7OliL/UFKNSPr04M9jkl0+Umm88Nu0/0XM/uct7nHQn9hq1Nhw
-         TJCDnDRXA0Zk4BlEL495LXd42iBuv07b/cSeX7AsDCpmkaXEjpi08LsChMFLHG3oQdp3
-         ApF3eRsNOlNfEtiOnHSyDP8GsvbLJR/0Uq1rmYGuvEx9yvj1BIf5Va3RgCq0tIEA9FnW
-         VuePvLlFUpJ46LH0aCkqyD7x1wJ4eorHOgr3T+vTaAFgszCDvWlv2BI9GBfgIngG8D5q
-         AXyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=OnF5vlOhiefqGSZXh+n1mosDCaj568K6lYr/Rle7pp0=;
-        b=i7GBrf5IFWgxWyT2hogWvkeuzirV6/lbx73cix0NY5X9ZcVvNpHkFoZRTK1sd9dhm5
-         cKj+6NU2xU91t8Twt/Dxh8199jwBAsGPMKyQdY7eKrfxDn1CREntQFTLuyRmeAS5CPaL
-         UE4WXI2guc5EOyn3BbZ6R3ZwRplWQhUD6uQuBmRIIrGQpQk5AGQRuHDyt7UEiWzN4G3L
-         6oowImQSk/AI+YuhljyyEkwfwBEXmcnb8fIli49JCivLQ0d7nBKpymoopYBUifr3ZjfK
-         9zo4rFw/Dyqlz59EJJx9Pt5uZ3saRCcUYdn/paIuy7xXH70wt7ZdaR+QAlGu/eJRmYsF
-         p7iQ==
-X-Gm-Message-State: APjAAAUIEioVLSRQquV+dM2ZYBS1c4h2+dgH9sBdfA/2wxDDW6WgkquY
-        Qi/InnTW5ZVIbmr2bNwQBvzqHxFy
-X-Google-Smtp-Source: APXvYqyMW2+EDpvsHIQUPglafaUBwvOQtbxsCYfwSQ5na2dQ+Z+kmwvr2mLc1HxxvTFnCo+YbGLL2Q==
-X-Received: by 2002:ac2:5a10:: with SMTP id q16mr369343lfn.49.1558942734140;
-        Mon, 27 May 2019 00:38:54 -0700 (PDT)
-Received: from uranus.localdomain ([5.18.103.226])
-        by smtp.gmail.com with ESMTPSA id h23sm2127908ljf.28.2019.05.27.00.38.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 27 May 2019 00:38:53 -0700 (PDT)
-Received: by uranus.localdomain (Postfix, from userid 1000)
-        id C4586460C2C; Mon, 27 May 2019 10:38:52 +0300 (MSK)
-Date:   Mon, 27 May 2019 10:38:52 +0300
-From:   Cyrill Gorcunov <gorcunov@gmail.com>
-To:     Dianzhang Chen <dianzhangchen0@gmail.com>
-Cc:     akpm@linux-foundation.org, kristina.martsenko@arm.com,
-        ebiederm@xmission.com, j.neuschaefer@gmx.net, jannh@google.com,
-        mortonm@chromium.org, yang.shi@linux.alibaba.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kernel/sys.c: fix possible spectre-v1 in do_prlimit()
-Message-ID: <20190527073852.GK11013@uranus>
-References: <1558941788-969-1-git-send-email-dianzhangchen0@gmail.com>
+        Mon, 27 May 2019 03:39:45 -0400
+Received: from [IPv6:2001:983:e9a7:1:f4bd:6355:63eb:2e52] ([IPv6:2001:983:e9a7:1:f4bd:6355:63eb:2e52])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id VAEOhZ8u3sDWyVAEPhXnKi; Mon, 27 May 2019 09:39:42 +0200
+Subject: Re: [PATCH 10/10] venus: dec: make decoder compliant with stateful
+ codec API
+To:     Tomasz Figa <tfiga@chromium.org>
+Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Vikash Garodia <vgarodia@codeaurora.org>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Malathi Gottam <mgottam@codeaurora.org>
+References: <20190117162008.25217-1-stanimir.varbanov@linaro.org>
+ <20190117162008.25217-11-stanimir.varbanov@linaro.org>
+ <60b3efff-31c1-bc04-8af9-deebb8bc013a@xs4all.nl>
+ <fe51ae1e-6d2e-36bd-485a-d85520ad2386@linaro.org>
+ <CAAFQd5Co3G1J4+HOcjtCb7p3rhLcm+1E=mPr2d=AtdOSuF_eKg@mail.gmail.com>
+ <c56930e0-be6f-2ade-fcea-8ee0ff6247ec@linaro.org>
+ <CAAFQd5CNGsnqjpLsWSTf=8r+hSfyOgD8SU-tn5EbHCCuuSgH6A@mail.gmail.com>
+ <01b6683f-9378-e6f2-501f-e2213e6c690d@xs4all.nl>
+ <CAAFQd5Dw-1A2gXuC54Z7808L6Vm9mjPpE7Kbj-TZC18_k_FgVA@mail.gmail.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <a9b11ba0-adca-f974-67a5-a0fe54689bba@xs4all.nl>
+Date:   Mon, 27 May 2019 09:39:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <CAAFQd5Dw-1A2gXuC54Z7808L6Vm9mjPpE7Kbj-TZC18_k_FgVA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1558941788-969-1-git-send-email-dianzhangchen0@gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfP/KlNMUpI8R5BYs77TLAQQpb7XPrT/Q7FQW/9jjzWxU0gK9jSERXE2vWgoHtc8gKV48bA83Qt+62pLbBCyHlf2cvHrjyp5CqYS4fFJGLXiLBwq/jI9c
+ hDq9Idy8JzJI+TCm9X9vX8wxHPMEL6lKNgy+iy0TLmkFwWX/0jDE6KvfDJvi+5bhUPQdA7VjcJzONb7wRB+Pi62MCK/GiCKLLtJW1QuVyIXXQh0Yz3ayCMM3
+ /9G4xg2jLk6kZMq25trnWTnSUZiLoGr6Ln25TSWe4qZLw/iHQ/mpxfPHWHIkIQw5IWkJcOJ/WRkjcscZxz7AD3WCSA1wgkRvkf6oZLBzDl9DZf82qdO94+K0
+ nVx9GiUbhAFS+oVCSink8KPdAY2wkqDQ2csnvHoaiJc0a1fzNRPo/psWIzxGj+7fgnV2bw6WWx5I/dbNoremu6MqgDyKIqD18Vbn/NX7pwBZBdmvfDxfIi2b
+ ZTDdE8WOzge1lP4qDPRR/GHpUmUnMi0dJ5VgLdTbJ+9EcaLCuuM0X/rWuT7pGzfUXyFrfentz+yHsfwlumZV5Vpak5oFPIwyhzgKog==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 27, 2019 at 03:23:08PM +0800, Dianzhang Chen wrote:
-> The `resource` in do_prlimit() is controlled by userspace via syscall: setrlimit(defined in kernel/sys.c), hence leading to a potential exploitation of the Spectre variant 1 vulnerability.
-> The relevant code in do_prlimit() is as below：
+On 5/27/19 5:51 AM, Tomasz Figa wrote:
+> On Tue, May 21, 2019 at 9:27 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
+>>
+>> On 5/21/19 11:09 AM, Tomasz Figa wrote:
+>>> Hi Stan,
+>>>
+>>> On Mon, May 20, 2019 at 11:47 PM Stanimir Varbanov
+>>> <stanimir.varbanov@linaro.org> wrote:
+>>>>
+>>>> Hi Tomasz,
+>>>>
+>>>> On 4/24/19 3:39 PM, Tomasz Figa wrote:
+>>>>> On Wed, Apr 24, 2019 at 9:15 PM Stanimir Varbanov
+>>>>> <stanimir.varbanov@linaro.org> wrote:
+>>>>>>
+>>>>>> Hi Hans,
+>>>>>>
+>>>>>> On 2/15/19 3:44 PM, Hans Verkuil wrote:
+>>>>>>> Hi Stanimir,
+>>>>>>>
+>>>>>>> I never paid much attention to this patch series since others were busy
+>>>>>>> discussing it and I had a lot of other things on my plate, but then I heard
+>>>>>>> that this patch made G_FMT blocking.
+>>>>>>
+>>>>>> OK, another option could be to block REQBUF(CAPTURE) until event from hw
+>>>>>> is received that the stream is parsed and the resolution is correctly
+>>>>>> set by application. Just to note that I'd think to this like a temporal
+>>>>>> solution until gstreamer implements v4l events.
+>>>>>>
+>>>>>> Is that looks good to you?
+>>>>>
+>>>>> Hmm, I thought we concluded that gstreamer sets the width and height
+>>>>> in OUTPUT queue before querying the CAPTURE queue and so making the
+>>>>> driver calculate the CAPTURE format based on what's set on OUTPUT
+>>>>> would work fine. Did I miss something?
+>>>>
+>>>> Nobody is miss something.
+>>>>
+>>>> First some background about how Venus implements stateful codec API.
+>>>>
+>>>> The Venus firmware can generate two events "sufficient" and
+>>>> "insufficient" buffer requirements (this includes decoder output buffer
+>>>> size and internal/scratch buffer sizes). Presently I always set minimum
+>>>> possible decoder resolution no matter what the user said, and by that
+>>>> way I'm sure that "insufficient" event will always be triggered by the
+>>>> firmware (the other reason to take this path is because this is the
+>>>> least-common-divider for all supported Venus hw/fw versions thus common
+>>>> code in the driver). The reconfiguration (during codec Initialization
+>>>> sequence) is made from STREAMON(CAPTURE) context. Now, to make that
+>>>> re-configuration happen I need to wait for "insufficient" event from
+>>>> firmware in order to know the real coded resolution.
+>>>>
+>>>> In the case of gstreamer where v4l2_events support is missing I have to
+>>>> block (wait for firmware event) REQBUF(CAPTURE) (vb2::queue_setup) or
+>>>> STREAMON(CAPTURE) (vb2::start_streaming).
+>>>>
+>>>> I tried to set the coded resolution to the firmware as-is it set by
+>>>> gstreamer but then I cannot receive the "sufficient" event for VP8 and
+>>>> VP9 codecs. So I return back to the solution with minimum resolution above.
+>>>>
+>>>> I'm open for suggestions.
+>>>
+>>> I think you could still keep setting the minimum size and wait for the
+>>> "insufficient" event. At the same time, you could speculatively
+>>> advertise the expected "sufficient" size on the CAPTURE queue before
+>>> the hardware signals those. Even if you mispredict them, you'll get
+>>> the event, update the CAPTURE resolution and send the source change
+>>> event to the application, which would then give you the correct
+>>> buffers. Would that work for you?
+>>
+>> As I understand it this still would require event support, which gstreamer
+>> doesn't have.
 > 
-> if (resource >= RLIM_NLIMITS)
->         return -EINVAL;
-> ...
-> rlim = tsk->signal->rlim + resource;    // use resource as index
-> ...
->             *old_rlim = *rlim;
+> I don't think it matches what I remember from the earlier discussion.
+> As long as Gstreamer sets the visible resolution (from the container
+> AFAIR) on OUTPUT, the driver would adjust it to something that is
+> expected to be the right framebuffer resolution and so Gstreamer would
+> be able to continue. Of course if the expected value doesn't match, it
+> wouldn't work, but it's the same as currently for Coda AFAICT.
 > 
-> Fix this by sanitizing resource before using it to index tsk->signal->rlim.
+>>
+>> I think it is OK to have REQBUFS sleep in this case. However, I would only
 > 
-> Signed-off-by: Dianzhang Chen <dianzhangchen0@gmail.com>
-> ---
->  kernel/sys.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/kernel/sys.c b/kernel/sys.c
-> index bdbfe8d..7eba1ca 100644
-> --- a/kernel/sys.c
-> +++ b/kernel/sys.c
-> @@ -1532,6 +1532,8 @@ int do_prlimit(struct task_struct *tsk, unsigned int resource,
->  
->  	if (resource >= RLIM_NLIMITS)
->  		return -EINVAL;
-> +
-> +	resource = array_index_nospec(resource, RLIM_NLIMITS);
->  	if (new_rlim) {
->  		if (new_rlim->rlim_cur > new_rlim->rlim_max)
->  			return -EINVAL;
+> Why REQBUFS? While that could possibly allow us to allocate the right
+> buffers, Gstreamer wouldn't be able to know the right format, because
+> it would query it before REQBUFS, wouldn't it?
 
-Could you please explain in details how array_index_nospec is different
-from resource >= RLIM_NLIMITS? Since I don't get how it is related to
-spectre issue.
+Oops, you are right. It's got to be in G_FMT(CAPTURE), but *only* if
+nobody subscribed to the SOURCE_CHANGE event.
+
+> 
+> For this reason, s5p-mfc makes G_FMT(CAPTURE) blocking and if we
+> decide to forcefully keep the compatibility, even with in drivers, we
+> should probably do the same here.
+> 
+>> enable this behavior if the application didn't subscribe to the SOURCE_CHANGE
+>> event. That's easy enough to check in the driver. And that means that if the
+>> application is well written, then the driver will behave in a completely
+>> standard way that the compliance test can check.
+> 
+> I guess one could have some helpers for this. They would listen to the
+> source change events internally and block / wake-up appropriate ioctls
+> whenever necessary.
+
+I really do not want this for new drivers. gstreamer should be fixed.
+A blocking G_FMT is just plain bad. Only those drivers that do this, can
+still block if nobody subscribed to EVENT_SOURCE_CHANGE.
+
+> Another question: If we intend this to be implemented in new drivers
+> too, should it be documented in the spec?
+
+We most certainly do NOT want to implement this in new drivers.
+
+Regards,
+
+	Hans
+
+> 
+> Best regards,
+> Tomasz
+> 
+
