@@ -2,62 +2,65 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F8FC04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C37C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FD952146F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:07:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2916D208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:07:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558955275;
-	bh=eww0buI6rgd1Vfi83GhSWVYPeowLifVe1b2LiZj7JGs=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Ezm4B6Dc6RR5P88H/+kXYaOOSfn/dW6EQZCxhuphgu98XDWYU60qdZrRS0VfwZNHy
-	 +8Sa1mXTi88tspJ1BNO+/1u4Ea1a8X+pfGlUDx3/wafYccMHxFBKDbO4YKnYlZMfbd
-	 fQPS10yIH9+zhcd4S1W8/jmpCt1ppIue3l5w7Q6w=
+	s=default; t=1558955278;
+	bh=7l2rsi0cMU3FHzhTcOF6vtMJCeAfJrK0JdiHqTonA3I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Z7tL0gi5+n9hhL2o/0F2IZsVgDPssNrGSbOAPVTxKCWEe/ECskL2eHlbwSWLec0tw
+	 gaFqUVYFZUkJ6aubZ5EEnTKC4h0T566JXUhwASDwxK8B5qXcffnVc4oSKt13533rqv
+	 eBKN2vZlN4Zn5e3fVWNTucLdqhR3oFb0dDRo35Jk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbfE0LHy (ORCPT
+        id S1726937AbfE0LHx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 07:07:54 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57864 "EHLO
+        Mon, 27 May 2019 07:07:53 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:57840 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726887AbfE0LHv (ORCPT
+        with ESMTP id S1726418AbfE0LHs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 07:07:51 -0400
+        Mon, 27 May 2019 07:07:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=6XzHVCeWV5GGMtIuZ7rGtzSJEpSJMgHeuPmsEScvE9M=; b=ADsHua2m6BxeKzAKZh2L7vhgY
-        /T2yU2PCzT2t9fGMPSHNjtQAmqHgp6ByjIYLPx2Zp4FyEimHSVDk+bUHwMZuMEpXnTtoXAQZJtGP7
-        mRPdI0oOROlaN1WnpNRTJkMadv2wmtIBuxUSwujnK6nt0aY4ESn5mK+Z6mXMH0QLuC/9+3DTcs7dA
-        uALv/+U4qH5BUVt9TlYdyP7U/bOd2YLoGDUXU29jId7Kt9H9cLox7yVl5p3aE92H5AciGV8aSu3/j
-        aUl4wAVT1D9aau4QZCPvA0Ao/PFt268QNQExWhUUJVuePlFPDiCoeHabplO6AoLmraCt67hB7OShy
-        gmJQM8nUQ==;
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=tS6RAB6sVg+kJ3U+MKfWQpKGE8UFNU5HfgzkbdPGAmk=; b=G3MGG0KGi1GEDMk45x5Cqe45DL
+        i0C3iJCVGoqUnvkxkTg7LuUsAHIlhf/q6tnzqV7OQk6yQzEucjIkE7ebtEduJ3hfkN8ANGDgpEng/
+        tgGvJkxZigUcLf0dxqgruti/mlKNiQCSiVCVbERcp5JIIzCUibSd+YVBkJ4LCdniaM+TCd/OTKIzY
+        TQpV8LO9hP1s9q+/vVg+pKKCT1Ijm/5C1QDMv4q0hAt4y2cCgkIMyiD1YEgNziBpQWkzHe4tUGlb3
+        IYWljMTTkycEty5eFrlGN8vTqajO19PD+3P66TtSUxgj1Wi7OX4ayOm6LM3wHqC7RiPDxMbG0CLdT
+        0dWtbTfw==;
 Received: from [177.159.249.4] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hVDTn-00061w-NP; Mon, 27 May 2019 11:07:47 +0000
+        id 1hVDTn-00061x-OS; Mon, 27 May 2019 11:07:47 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hVDTi-0002cb-N2; Mon, 27 May 2019 08:07:42 -0300
+        id 1hVDTi-0002cu-RM; Mon, 27 May 2019 08:07:42 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Joel Nider <joeln@il.ibm.com>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         Federico Vaga <federico.vaga@vaga.pv.it>,
+        Mike Rapoport <rppt@linux.ibm.com>,
         Matthew Wilcox <willy@infradead.org>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH 0/5] Improvements to the documentation build system
-Date:   Mon, 27 May 2019 08:07:36 -0300
-Message-Id: <cover.1558955082.git.mchehab+samsung@kernel.org>
+        Joel Nider <joeln@il.ibm.com>
+Subject: [PATCH 5/5] docs: requirements.txt: recommend Sphinx 1.7.9
+Date:   Mon, 27 May 2019 08:07:41 -0300
+Message-Id: <2020d45c8f7ed71d5f66ba5d925ecdd81e044a9d.1558955082.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <cover.1558955082.git.mchehab+samsung@kernel.org>
+References: <cover.1558955082.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -65,32 +68,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The first three patches here address some issues with the script which
-detects the requirements for running Sphinx, making it a smarter and
-running it all the times, in order to allow recommending version
-updates.
+As discussed at the linux-doc ML, while we'll still support
+version 1.3, it is time to recommend a more modern version.
 
-The 4th patch adds "-jauto" by default, if Sphinx version supports it
-(e. g. version 1.7 or upper).
+So, let's switch the minimal requirements to Sphinx 1.7.9,
+as it has the "-jauto" flag, with makes a lot faster when
+building documentation.
 
-The final patch changes the recommendation to use at least Sphinx
-version 1.7.9, as discussed at linux-doc ML.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ Documentation/doc-guide/sphinx.rst    | 17 ++++++++---------
+ Documentation/sphinx/requirements.txt |  4 ++--
+ 2 files changed, 10 insertions(+), 11 deletions(-)
 
-Mauro Carvalho Chehab (5):
-  scripts/sphinx-pre-install: make activate hint smarter
-  scripts/sphinx-pre-install: get rid of RHEL7 explicity check
-  scripts/sphinx-pre-install: always check if version is compatible with
-    build
-  docs: by default, build docs a lot faster with Sphinx >= 1.7
-  docs: requirements.txt: recommend Sphinx 1.7.9
-
- Documentation/Makefile                |  7 +++
- Documentation/doc-guide/sphinx.rst    | 17 +++---
- Documentation/sphinx/requirements.txt |  4 +-
- scripts/sphinx-pre-install            | 75 +++++++++++++++------------
- 4 files changed, 58 insertions(+), 45 deletions(-)
-
+diff --git a/Documentation/doc-guide/sphinx.rst b/Documentation/doc-guide/sphinx.rst
+index c039224b404e..4ba081f43e98 100644
+--- a/Documentation/doc-guide/sphinx.rst
++++ b/Documentation/doc-guide/sphinx.rst
+@@ -27,8 +27,7 @@ Sphinx Install
+ ==============
+ 
+ The ReST markups currently used by the Documentation/ files are meant to be
+-built with ``Sphinx`` version 1.3 or higher. If you desire to build
+-PDF output, it is recommended to use version 1.4.6 or higher.
++built with ``Sphinx`` version 1.3 or higher.
+ 
+ There's a script that checks for the Sphinx requirements. Please see
+ :ref:`sphinx-pre-install` for further details.
+@@ -56,13 +55,13 @@ or ``virtualenv``, depending on how your distribution packaged Python 3.
+       those expressions are written using LaTeX notation. It needs texlive
+       installed with amdfonts and amsmath in order to evaluate them.
+ 
+-In summary, if you want to install Sphinx version 1.4.9, you should do::
++In summary, if you want to install Sphinx version 1.7.9, you should do::
+ 
+-       $ virtualenv sphinx_1.4
+-       $ . sphinx_1.4/bin/activate
+-       (sphinx_1.4) $ pip install -r Documentation/sphinx/requirements.txt
++       $ virtualenv sphinx_1.7.9
++       $ . sphinx_1.7.9/bin/activate
++       (sphinx_1.7.9) $ pip install -r Documentation/sphinx/requirements.txt
+ 
+-After running ``. sphinx_1.4/bin/activate``, the prompt will change,
++After running ``. sphinx_1.7.9/bin/activate``, the prompt will change,
+ in order to indicate that you're using the new environment. If you
+ open a new shell, you need to rerun this command to enter again at
+ the virtual environment before building the documentation.
+@@ -105,8 +104,8 @@ command line options for your distro::
+ 	You should run:
+ 
+ 		sudo dnf install -y texlive-luatex85
+-		/usr/bin/virtualenv sphinx_1.4
+-		. sphinx_1.4/bin/activate
++		/usr/bin/virtualenv sphinx_1.7.9
++		. sphinx_1.7.9/bin/activate
+ 		pip install -r Documentation/sphinx/requirements.txt
+ 
+ 	Can't build as 1 mandatory dependency is missing at ./scripts/sphinx-pre-install line 468.
+diff --git a/Documentation/sphinx/requirements.txt b/Documentation/sphinx/requirements.txt
+index 742be3e12619..14e29a0ae480 100644
+--- a/Documentation/sphinx/requirements.txt
++++ b/Documentation/sphinx/requirements.txt
+@@ -1,3 +1,3 @@
+-docutils==0.12
+-Sphinx==1.4.9
++docutils
++Sphinx==1.7.9
+ sphinx_rtd_theme
 -- 
 2.21.0
-
 
