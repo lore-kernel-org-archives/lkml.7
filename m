@@ -2,187 +2,673 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE4EC07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E8ACC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34B0220883
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 455B821530
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:12:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="B5k+uzx3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qc+8u3bQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbfE0LKG (ORCPT
+        id S1726511AbfE0LMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 07:10:06 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:7959 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725814AbfE0LKG (ORCPT
+        Mon, 27 May 2019 07:12:07 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40698 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725996AbfE0LMH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 07:10:06 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cebc58c0000>; Mon, 27 May 2019 04:10:04 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 27 May 2019 04:10:04 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 27 May 2019 04:10:04 -0700
-Received: from [10.24.45.112] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 27 May
- 2019 11:10:00 +0000
-Subject: Re: [PATCH V4 1/2] PCI: dwc: Add API support to de-initialize host
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <bhelgaas@google.com>, <Jisheng.Zhang@synaptics.com>,
-        <thierry.reding@gmail.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190502170426.28688-1-vidyas@nvidia.com>
- <20190503112338.GA25649@e121166-lin.cambridge.arm.com>
- <dec5ecb2-863e-a1db-10c9-2d91f860a2c6@nvidia.com>
- <37697830-5a94-0f8e-a5cf-3347bc4850cb@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <b560f3c3-b69e-d9b5-2dae-1ede52af0ea6@nvidia.com>
-Date:   Mon, 27 May 2019 16:39:58 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 27 May 2019 07:12:07 -0400
+Received: by mail-wr1-f65.google.com with SMTP id t4so8254805wrx.7;
+        Mon, 27 May 2019 04:12:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=f+25IZfFSYxZxgaCWl9p9Q+lE12LOFoqp9l4bTaMH4g=;
+        b=Qc+8u3bQbojGETr2T5Ke42z2V1ZoC7wl0+odYmoS8NICB2sbmCMvXzBQfZ0+sfkabM
+         7Xex2p5GDKt1Fp1uCP+0jHkzo3ICPOz5H7J0ZvfHnQwgs7wf/Mfkdg9/r//Shvg288wc
+         rYDJcve+fpDSgywMcmv/7TUuqjCtI5i+akb9HCqz6GUpLx7T3/KZvu7HIeT/675VbhPz
+         /dvGtrHJ1wLUZgXVnTVkV1VL7TINgARk6TZIGs8urt/b5LixTuKapmdykofpN2j70Yaj
+         zplRBFKx77B3yYvZd0vp5glx7XA+JyL0fFKVBUlm/UjvtBH2gQzK6kPArrXY5xYMCdKf
+         F05g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=f+25IZfFSYxZxgaCWl9p9Q+lE12LOFoqp9l4bTaMH4g=;
+        b=NRcKroB7ND1BCRyYmujW7/qSPBFXjINDxhTSA4xEKNxtkO9wmg07MT8tYqpK1tCgcD
+         +6rhbPq3dXY0PoDR7H4he1EA2iWCYMjPmBJJCDZeeo078xXl1q4EeZuv/JkIECMaMi3Q
+         EDQYAIJw4IrQPcYeTl2GiEGlrvYR7ESzRZMugia50h69WQzgZqfno9Ze26d9zhD5w/uK
+         6VxqaqO4M/pn6lLpyvgQSCWCe3qi6k/lpPqfwH4lK2s3nkWk6yfeyMSiyFOgtsrozuzn
+         uOsi8u2BHlh2c/rPV7S9DyKJs3S5Z64oSWoqPTcfG1fnNi+l+7MtoUcp9oOPD0a2a5IK
+         K4IA==
+X-Gm-Message-State: APjAAAVto43/9aN631MImcR+OTYG6DGEPTII7NraXNd1+nhOTyDux6j6
+        n1ahOmuG4Fd1QIHAIsesqqY=
+X-Google-Smtp-Source: APXvYqyvJvaTcyjxfF5URhNktk3VYsIZ/+8R7ySPecUC5+bPS5mpAPmplUDvqT2B1quXqVCT4nuOsA==
+X-Received: by 2002:adf:ee8b:: with SMTP id b11mr7075172wro.181.1558955524351;
+        Mon, 27 May 2019 04:12:04 -0700 (PDT)
+Received: from localhost.localdomain (131.ip-164-132-48.eu. [164.132.48.131])
+        by smtp.googlemail.com with ESMTPSA id z14sm5693873wrh.86.2019.05.27.04.12.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 27 May 2019 04:12:03 -0700 (PDT)
+From:   Tomasz Maciej Nowak <tmn505@gmail.com>
+To:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Konstantin Porotchkin <kostap@marvell.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: marvell: add ESPRESSObin variants
+Date:   Mon, 27 May 2019 13:11:56 +0200
+Message-Id: <20190527111156.3539-1-tmn505@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <37697830-5a94-0f8e-a5cf-3347bc4850cb@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1558955404; bh=nU2dra4R89mw+x+E2Tv1OoaiE1ccD4BKlZtlo7GdJ5Q=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=B5k+uzx3cwW6LzYoHxheWLsDgIX3MuJKvphicodmkeiMsE4FMPWlX/xjNQ8ZC0w7d
-         U/ZPBDYS5UWMLXY6jhGXhRiCsTWWZNkYaGgTaaWzRrQ1TIj6i4KP8MZ5RBVNUUcBlB
-         9w9MRrClVg5r0jvJFEHQY059Q9OKT4r+vqcUP96XZeqJabpzFjBsBhowk99mZ63Jys
-         02b1eAmceDVuPmMJbJXAgZw+9v1fn+eAgQn81k2Ob1PT893HZC1566LDp81Zt5qez3
-         RJjpP+oyszsSlatgDteNwhpZuajKLug+CJwj/0fbK/qsLOhcsqGfMWAfj2/g4SI3bu
-         5pjG22OZPXOmg==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/7/2019 12:25 PM, Vidya Sagar wrote:
-> On 5/7/2019 11:19 AM, Vidya Sagar wrote:
->> On 5/3/2019 4:53 PM, Lorenzo Pieralisi wrote:
->>> On Thu, May 02, 2019 at 10:34:25PM +0530, Vidya Sagar wrote:
->>>> Add an API to group all the tasks to be done to de-initialize host whi=
-ch
->>>> can then be called by any DesignWare core based driver implementations
->>>> while adding .remove() support in their respective drivers.
->>>>
->>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->>>> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
->>>> ---
->>>> Changes from v3:
->>>> * Added check if (pci_msi_enabled() && !pp->ops->msi_host_init) before=
- calling
->>>> =C2=A0=C2=A0 dw_pcie_free_msi() API to mimic init path
->>>>
->>>> Changes from v2:
->>>> * Rebased on top of linux-next top of the tree branch
->>>>
->>>> Changes from v1:
->>>> * s/Designware/DesignWare
->>>>
->>>> =C2=A0 drivers/pci/controller/dwc/pcie-designware-host.c | 8 ++++++++
->>>> =C2=A0 drivers/pci/controller/dwc/pcie-designware.h=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 | 5 +++++
->>>> =C2=A0 2 files changed, 13 insertions(+)
->>>
->>> Series doesn't apply to v5.1-rc1, what's based on ? I suspect
->>> there is a dependency on pci/keystone, given the tight timeline
->>> for the merge window, would you mind postponing it to v5.3 ?
->>>
->>> I do not think it is urgent, I am happy to create a branch
->>> for it as soon as v5.2-rc1 is released.
->> I rebased my changes on top of linux-next. I see that they have conflict=
-s
->> on top of v5.1-rc1. Do you want me to rebase them on top of v5.1-rc1 ins=
-tead
->> of linux-next?
->> I'm fine with v5.2-rc1 as well.I forgot to mention that these changes ar=
-e made on top of Jisheng's patches
-> FWIW, Jisheng's patches are approved and applied to pci/dwc for v5.2
-> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1968324.html
+This commit adds dts for different variants of ESPRESSObin board:
 
-Hi Lorenzo,
-Now that v5.2-rc2 is also available, could you please pick up this series?
+ESPRESSObin with soldered eMMC,
 
-Thanks,
-Vidya Sagar
+ESPRESSObin V7, compared to prior versions some passive elements changed
+and ethernet ports labels positions have been reversed,
 
->=20
->>
->>>
->>> Thanks,
->>> Lorenzo
->>>
->>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drive=
-rs/pci/controller/dwc/pcie-designware-host.c
->>>> index 77db32529319..d069e4290180 100644
->>>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
->>>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
->>>> @@ -496,6 +496,14 @@ int dw_pcie_host_init(struct pcie_port *pp)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>> =C2=A0 }
->>>> +void dw_pcie_host_deinit(struct pcie_port *pp)
->>>> +{
->>>> +=C2=A0=C2=A0=C2=A0 pci_stop_root_bus(pp->root_bus);
->>>> +=C2=A0=C2=A0=C2=A0 pci_remove_root_bus(pp->root_bus);
->>>> +=C2=A0=C2=A0=C2=A0 if (pci_msi_enabled() && !pp->ops->msi_host_init)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dw_pcie_free_msi(pp);
->>>> +}
->>>> +
->>>> =C2=A0 static int dw_pcie_access_other_conf(struct pcie_port *pp, stru=
-ct pci_bus *bus,
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 devfn, =
-int where, int size, u32 *val,
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool write)
->>>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pc=
-i/controller/dwc/pcie-designware.h
->>>> index deab426affd3..4f48ec78c7b9 100644
->>>> --- a/drivers/pci/controller/dwc/pcie-designware.h
->>>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
->>>> @@ -348,6 +348,7 @@ void dw_pcie_msi_init(struct pcie_port *pp);
->>>> =C2=A0 void dw_pcie_free_msi(struct pcie_port *pp);
->>>> =C2=A0 void dw_pcie_setup_rc(struct pcie_port *pp);
->>>> =C2=A0 int dw_pcie_host_init(struct pcie_port *pp);
->>>> +void dw_pcie_host_deinit(struct pcie_port *pp);
->>>> =C2=A0 int dw_pcie_allocate_domains(struct pcie_port *pp);
->>>> =C2=A0 #else
->>>> =C2=A0 static inline irqreturn_t dw_handle_msi_irq(struct pcie_port *p=
-p)
->>>> @@ -372,6 +373,10 @@ static inline int dw_pcie_host_init(struct pcie_p=
-ort *pp)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->>>> =C2=A0 }
->>>> +static inline void dw_pcie_host_deinit(struct pcie_port *pp)
->>>> +{
->>>> +}
->>>> +
->>>> =C2=A0 static inline int dw_pcie_allocate_domains(struct pcie_port *pp=
-)
->>>> =C2=A0 {
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->>>> --=20
->>>> 2.17.1
->>>>
->>
->=20
+ESPRESSObin V7 with soldered eMMC.
+
+Since most of elements are the same, one common dtsi is created and
+referenced in each dts of particular variant.
+
+Signed-off-by: Tomasz Maciej Nowak <tmn505@gmail.com>
+---
+ .../marvell/armada-3720-espressobin-emmc.dts  |  42 ++++
+ .../armada-3720-espressobin-v7-emmc.dts       |  59 ++++++
+ .../marvell/armada-3720-espressobin-v7.dts    |  36 ++++
+ .../dts/marvell/armada-3720-espressobin.dts   | 200 +-----------------
+ .../dts/marvell/armada-3720-espressobin.dtsi  | 193 +++++++++++++++++
+ 5 files changed, 331 insertions(+), 199 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/marvell/armada-3720-espressobin-emmc.dts
+ create mode 100644 arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dts
+ create mode 100644 arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7.dts
+ create mode 100644 arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
+
+diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin-emmc.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-emmc.dts
+new file mode 100644
+index 000000000000..bd9ed9dc9c3e
+--- /dev/null
++++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-emmc.dts
+@@ -0,0 +1,42 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Device Tree file for Globalscale Marvell ESPRESSOBin Board with eMMC
++ * Copyright (C) 2018 Marvell
++ *
++ * Romain Perier <romain.perier@free-electrons.com>
++ * Konstantin Porotchkin <kostap@marvell.com>
++ *
++ */
++/*
++ * Schematic available at http://espressobin.net/wp-content/uploads/2017/08/ESPRESSObin_V5_Schematics.pdf
++ */
++
++#include "armada-3720-espressobin.dtsi"
++
++/ {
++	model = "Globalscale Marvell ESPRESSOBin Board (eMMC)";
++	compatible = "globalscale,espressobin-emmc", "globalscale,espressobin",
++		     "marvell,armada3720", "marvell,armada3710";
++};
++
++/* U11 */
++&sdhci0 {
++	non-removable;
++	bus-width = <8>;
++	mmc-ddr-1_8v;
++	mmc-hs400-1_8v;
++	marvell,xenon-emmc;
++	marvell,xenon-tun-count = <9>;
++	marvell,pad-type = "fixed-1-8v";
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc_pins>;
++	status = "okay";
++
++	#address-cells = <1>;
++	#size-cells = <0>;
++	mmccard: mmccard@0 {
++		compatible = "mmc-card";
++		reg = <0>;
++	};
++};
+diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dts
+new file mode 100644
+index 000000000000..6e876a6d9532
+--- /dev/null
++++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dts
+@@ -0,0 +1,59 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Device Tree file for Globalscale Marvell ESPRESSOBin Board V7 with eMMC
++ * Copyright (C) 2018 Marvell
++ *
++ * Romain Perier <romain.perier@free-electrons.com>
++ * Konstantin Porotchkin <kostap@marvell.com>
++ *
++ */
++/*
++ * Schematic available at http://wiki.espressobin.net/tiki-download_file.php?fileId=200
++ */
++
++#include "armada-3720-espressobin.dtsi"
++
++/ {
++	model = "Globalscale Marvell ESPRESSOBin Board V7 (eMMC)";
++	compatible = "globalscale,espressobin-v7-emmc", "globalscale,espressobin-v7",
++		     "globalscale,espressobin", "marvell,armada3720",
++		     "marvell,armada3710";
++};
++
++&switch0 {
++	ports {
++		port@1 {
++			reg = <1>;
++			label = "lan1";
++			phy-handle = <&switch0phy0>;
++		};
++
++		port@3 {
++			reg = <3>;
++			label = "wan";
++			phy-handle = <&switch0phy2>;
++		};
++	};
++};
++
++/* U11 */
++&sdhci0 {
++	non-removable;
++	bus-width = <8>;
++	mmc-ddr-1_8v;
++	mmc-hs400-1_8v;
++	marvell,xenon-emmc;
++	marvell,xenon-tun-count = <9>;
++	marvell,pad-type = "fixed-1-8v";
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc_pins>;
++	status = "okay";
++
++	#address-cells = <1>;
++	#size-cells = <0>;
++	mmccard: mmccard@0 {
++		compatible = "mmc-card";
++		reg = <0>;
++	};
++};
+diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7.dts
+new file mode 100644
+index 000000000000..0f8405d085fd
+--- /dev/null
++++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7.dts
+@@ -0,0 +1,36 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Device Tree file for Globalscale Marvell ESPRESSOBin Board V7
++ * Copyright (C) 2018 Marvell
++ *
++ * Romain Perier <romain.perier@free-electrons.com>
++ * Konstantin Porotchkin <kostap@marvell.com>
++ *
++ */
++/*
++ * Schematic available at http://wiki.espressobin.net/tiki-download_file.php?fileId=200
++ */
++
++#include "armada-3720-espressobin.dtsi"
++
++/ {
++	model = "Globalscale Marvell ESPRESSOBin Board V7";
++	compatible = "globalscale,espressobin-v7", "globalscale,espressobin",
++		     "marvell,armada3720", "marvell,armada3710";
++};
++
++&switch0 {
++	ports {
++		port@1 {
++			reg = <1>;
++			label = "lan1";
++			phy-handle = <&switch0phy0>;
++		};
++
++		port@3 {
++			reg = <3>;
++			label = "wan";
++			phy-handle = <&switch0phy2>;
++		};
++	};
++};
+diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
+index 6be019e1888e..1542d836c090 100644
+--- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
++++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
+@@ -12,207 +12,9 @@
+ 
+ /dts-v1/;
+ 
+-#include <dt-bindings/gpio/gpio.h>
+-#include "armada-372x.dtsi"
++#include "armada-3720-espressobin.dtsi"
+ 
+ / {
+ 	model = "Globalscale Marvell ESPRESSOBin Board";
+ 	compatible = "globalscale,espressobin", "marvell,armada3720", "marvell,armada3710";
+-
+-	chosen {
+-		stdout-path = "serial0:115200n8";
+-	};
+-
+-	memory@0 {
+-		device_type = "memory";
+-		reg = <0x00000000 0x00000000 0x00000000 0x20000000>;
+-	};
+-
+-	vcc_sd_reg1: regulator {
+-		compatible = "regulator-gpio";
+-		regulator-name = "vcc_sd1";
+-		regulator-min-microvolt = <1800000>;
+-		regulator-max-microvolt = <3300000>;
+-		regulator-boot-on;
+-
+-		gpios = <&gpionb 4 GPIO_ACTIVE_HIGH>;
+-		gpios-states = <0>;
+-		states = <1800000 0x1
+-			  3300000 0x0>;
+-		enable-active-high;
+-	};
+-};
+-
+-/* J9 */
+-&pcie0 {
+-	status = "okay";
+-	phys = <&comphy1 0>;
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pcie_reset_pins &pcie_clkreq_pins>;
+-};
+-
+-/* J6 */
+-&sata {
+-	status = "okay";
+-	phys = <&comphy2 0>;
+-	phy-names = "sata-phy";
+-};
+-
+-/* J1 */
+-&sdhci1 {
+-	wp-inverted;
+-	bus-width = <4>;
+-	cd-gpios = <&gpionb 3 GPIO_ACTIVE_LOW>;
+-	marvell,pad-type = "sd";
+-	vqmmc-supply = <&vcc_sd_reg1>;
+-
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&sdio_pins>;
+-	status = "okay";
+-};
+-
+-/* U11 */
+-&sdhci0 {
+-	non-removable;
+-	bus-width = <8>;
+-	mmc-ddr-1_8v;
+-	mmc-hs400-1_8v;
+-	marvell,xenon-emmc;
+-	marvell,xenon-tun-count = <9>;
+-	marvell,pad-type = "fixed-1-8v";
+-
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&mmc_pins>;
+-/*
+- * This eMMC is not populated on all boards, so disable it by
+- * default and let the bootloader enable it, if it is present
+- */
+-	status = "disabled";
+-};
+-
+-&spi0 {
+-	status = "okay";
+-
+-	flash@0 {
+-		reg = <0>;
+-		compatible = "winbond,w25q32dw", "jedec,spi-flash";
+-		spi-max-frequency = <104000000>;
+-		m25p,fast-read;
+-
+-		partitions {
+-			compatible = "fixed-partitions";
+-			#address-cells = <1>;
+-			#size-cells = <1>;
+-
+-			partition@0 {
+-				label = "uboot";
+-				reg = <0 0x180000>;
+-			};
+-
+-			partition@180000 {
+-				label = "ubootenv";
+-				reg = <0x180000 0x10000>;
+-			};
+-		};
+-	};
+-};
+-
+-/* Exported on the micro USB connector J5 through an FTDI */
+-&uart0 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&uart1_pins>;
+-	status = "okay";
+-};
+-
+-/*
+- * Connector J17 and J18 expose a number of different features. Some pins are
+- * multiplexed. This is the case for instance for the following features:
+- * - UART1 (pin 24 = RX, pin 26 = TX). See armada-3720-db.dts for an example of
+- *   how to enable it. Beware that the signals are 1.8V TTL.
+- * - I2C
+- * - SPI
+- * - MMC
+- */
+-
+-/* J7 */
+-&usb3 {
+-	status = "okay";
+-};
+-
+-/* J8 */
+-&usb2 {
+-	status = "okay";
+-};
+-
+-&mdio {
+-	switch0: switch0@1 {
+-		compatible = "marvell,mv88e6085";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-		reg = <1>;
+-
+-		dsa,member = <0 0>;
+-
+-		ports {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-
+-			port@0 {
+-				reg = <0>;
+-				label = "cpu";
+-				ethernet = <&eth0>;
+-				phy-mode = "rgmii-id";
+-				fixed-link {
+-					speed = <1000>;
+-					full-duplex;
+-				};
+-			};
+-
+-			port@1 {
+-				reg = <1>;
+-				label = "wan";
+-				phy-handle = <&switch0phy0>;
+-			};
+-
+-			port@2 {
+-				reg = <2>;
+-				label = "lan0";
+-				phy-handle = <&switch0phy1>;
+-			};
+-
+-			port@3 {
+-				reg = <3>;
+-				label = "lan1";
+-				phy-handle = <&switch0phy2>;
+-			};
+-
+-		};
+-
+-		mdio {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-
+-			switch0phy0: switch0phy0@11 {
+-				reg = <0x11>;
+-			};
+-			switch0phy1: switch0phy1@12 {
+-				reg = <0x12>;
+-			};
+-			switch0phy2: switch0phy2@13 {
+-				reg = <0x13>;
+-			};
+-		};
+-	};
+-};
+-
+-&eth0 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&rgmii_pins>, <&smi_pins>;
+-	phy-mode = "rgmii-id";
+-	status = "okay";
+-
+-	fixed-link {
+-		speed = <1000>;
+-		full-duplex;
+-	};
+ };
+diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
+new file mode 100644
+index 000000000000..4a114db76bf9
+--- /dev/null
++++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
+@@ -0,0 +1,193 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Device Tree file for Globalscale Marvell ESPRESSOBin Board
++ * Copyright (C) 2016 Marvell
++ *
++ * Romain Perier <romain.perier@free-electrons.com>
++ *
++ */
++
++/dts-v1/;
++
++#include <dt-bindings/gpio/gpio.h>
++#include "armada-372x.dtsi"
++
++/ {
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory@0 {
++		device_type = "memory";
++		reg = <0x00000000 0x00000000 0x00000000 0x20000000>;
++	};
++
++	vcc_sd_reg1: regulator {
++		compatible = "regulator-gpio";
++		regulator-name = "vcc_sd1";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-boot-on;
++
++		gpios = <&gpionb 4 GPIO_ACTIVE_HIGH>;
++		gpios-states = <0>;
++		states = <1800000 0x1
++			  3300000 0x0>;
++		enable-active-high;
++	};
++};
++
++/* J9 */
++&pcie0 {
++	status = "okay";
++	phys = <&comphy1 0>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie_reset_pins &pcie_clkreq_pins>;
++};
++
++/* J6 */
++&sata {
++	status = "okay";
++	phys = <&comphy2 0>;
++	phy-names = "sata-phy";
++};
++
++/* J1 */
++&sdhci1 {
++	wp-inverted;
++	bus-width = <4>;
++	cd-gpios = <&gpionb 3 GPIO_ACTIVE_LOW>;
++	marvell,pad-type = "sd";
++	vqmmc-supply = <&vcc_sd_reg1>;
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdio_pins>;
++	status = "okay";
++};
++
++&spi0 {
++	status = "okay";
++
++	flash@0 {
++		reg = <0>;
++		compatible = "winbond,w25q32dw", "jedec,spi-flash";
++		spi-max-frequency = <104000000>;
++		m25p,fast-read;
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			partition@0 {
++				label = "uboot";
++				reg = <0 0x180000>;
++			};
++
++			partition@180000 {
++				label = "ubootenv";
++				reg = <0x180000 0x10000>;
++			};
++		};
++	};
++};
++
++/* Exported on the micro USB connector J5 through an FTDI */
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart1_pins>;
++	status = "okay";
++};
++
++/*
++ * Connector J17 and J18 expose a number of different features. Some pins are
++ * multiplexed. This is the case for instance for the following features:
++ * - UART1 (pin 24 = RX, pin 26 = TX). See armada-3720-db.dts for an example of
++ *   how to enable it. Beware that the signals are 1.8V TTL.
++ * - I2C
++ * - SPI
++ * - MMC
++ */
++
++/* J7 */
++&usb3 {
++	status = "okay";
++};
++
++/* J8 */
++&usb2 {
++	status = "okay";
++};
++
++&mdio {
++	switch0: switch0@1 {
++		compatible = "marvell,mv88e6085";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <1>;
++
++		dsa,member = <0 0>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				label = "cpu";
++				ethernet = <&eth0>;
++				phy-mode = "rgmii-id";
++				fixed-link {
++					speed = <1000>;
++					full-duplex;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++				label = "wan";
++				phy-handle = <&switch0phy0>;
++			};
++
++			port@2 {
++				reg = <2>;
++				label = "lan0";
++				phy-handle = <&switch0phy1>;
++			};
++
++			port@3 {
++				reg = <3>;
++				label = "lan1";
++				phy-handle = <&switch0phy2>;
++			};
++
++		};
++
++		mdio {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			switch0phy0: switch0phy0@11 {
++				reg = <0x11>;
++			};
++			switch0phy1: switch0phy1@12 {
++				reg = <0x12>;
++			};
++			switch0phy2: switch0phy2@13 {
++				reg = <0x13>;
++			};
++		};
++	};
++};
++
++&eth0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&rgmii_pins>, <&smi_pins>;
++	phy-mode = "rgmii-id";
++	status = "okay";
++
++	fixed-link {
++		speed = <1000>;
++		full-duplex;
++	};
++};
+-- 
+2.21.0
 
