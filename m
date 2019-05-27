@@ -2,82 +2,157 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BBD2C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A67C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ABB22146F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80F3B2146F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:04:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbfE0MET (ORCPT
+        id S1727185AbfE0MEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 08:04:19 -0400
-Received: from xavier.telenet-ops.be ([195.130.132.52]:54326 "EHLO
-        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726687AbfE0MEQ (ORCPT
+        Mon, 27 May 2019 08:04:49 -0400
+Received: from baptiste.telenet-ops.be ([195.130.132.51]:41512 "EHLO
+        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726716AbfE0MEQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 27 May 2019 08:04:16 -0400
 Received: from ramsan ([84.194.111.163])
-        by xavier.telenet-ops.be with bizsmtp
-        id HQ4D2000M3XaVaC01Q4DqQ; Mon, 27 May 2019 14:04:13 +0200
+        by baptiste.telenet-ops.be with bizsmtp
+        id HQ4D2000Q3XaVaC01Q4DLC; Mon, 27 May 2019 14:04:14 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hVEMP-0001PW-Fq; Mon, 27 May 2019 14:04:13 +0200
+        id 1hVEMP-0001Pg-J1; Mon, 27 May 2019 14:04:13 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hVEMP-00015U-DQ; Mon, 27 May 2019 14:04:13 +0200
+        id 1hVEMP-00015d-Hn; Mon, 27 May 2019 14:04:13 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
         Marc Zyngier <marc.zyngier@arm.com>
 Cc:     linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 0/5] irqchip/renesas-irqc: Miscellaneous cleanups and improvements
-Date:   Mon, 27 May 2019 14:04:07 +0200
-Message-Id: <20190527120412.4071-1-geert+renesas@glider.be>
+Subject: [PATCH v2 3/5] irqchip/renesas-irqc: Add helper variable dev = &pdev->dev
+Date:   Mon, 27 May 2019 14:04:10 +0200
+Message-Id: <20190527120412.4071-4-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190527120412.4071-1-geert+renesas@glider.be>
+References: <20190527120412.4071-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-	Hi Thomas, Jason, Marc,
+The probe function uses "&pdev->dev" a lot, hence add a shorthand for
+that.
 
-This is a set of miscellaneous cleanups and improvements for the Renesas
-R-Mobile APE6 and R-Car interrupt controller for external interrupts
-(IRQC/INTC-EX) driver.
-
-Changes compared to v1:
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+---
+v2:
   - Add Reviewed-by,
-  - s/devm_kzalloc/kzalloc/ in patch description, reword.
+---
+ drivers/irqchip/irq-renesas-irqc.c | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-Thanks!
-
-Geert Uytterhoeven (5):
-  irqchip/renesas-irqc: Remove unneeded inclusion of <linux/spinlock.h>
-  irqchip/renesas-irqc: Remove error messages on out-of-memory
-    conditions
-  irqchip/renesas-irqc: Add helper variable dev = &pdev->dev
-  irqchip/renesas-irqc: Replace irqc_priv.pdev by irqc_priv.dev
-  irqchip/renesas-irqc: Convert to managed initializations
-
- drivers/irqchip/irq-renesas-irqc.c | 88 ++++++++++--------------------
- 1 file changed, 30 insertions(+), 58 deletions(-)
-
+diff --git a/drivers/irqchip/irq-renesas-irqc.c b/drivers/irqchip/irq-renesas-irqc.c
+index 0955ffe12b32eb36..3cc428ba495c3793 100644
+--- a/drivers/irqchip/irq-renesas-irqc.c
++++ b/drivers/irqchip/irq-renesas-irqc.c
+@@ -124,10 +124,11 @@ static irqreturn_t irqc_irq_handler(int irq, void *dev_id)
+ 
+ static int irqc_probe(struct platform_device *pdev)
+ {
++	struct device *dev = &pdev->dev;
++	const char *name = dev_name(dev);
+ 	struct irqc_priv *p;
+ 	struct resource *io;
+ 	struct resource *irq;
+-	const char *name = dev_name(&pdev->dev);
+ 	int ret;
+ 	int k;
+ 
+@@ -140,13 +141,13 @@ static int irqc_probe(struct platform_device *pdev)
+ 	p->pdev = pdev;
+ 	platform_set_drvdata(pdev, p);
+ 
+-	pm_runtime_enable(&pdev->dev);
+-	pm_runtime_get_sync(&pdev->dev);
++	pm_runtime_enable(dev);
++	pm_runtime_get_sync(dev);
+ 
+ 	/* get hold of manadatory IOMEM */
+ 	io = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	if (!io) {
+-		dev_err(&pdev->dev, "not enough IOMEM resources\n");
++		dev_err(dev, "not enough IOMEM resources\n");
+ 		ret = -EINVAL;
+ 		goto err1;
+ 	}
+@@ -164,7 +165,7 @@ static int irqc_probe(struct platform_device *pdev)
+ 
+ 	p->number_of_irqs = k;
+ 	if (p->number_of_irqs < 1) {
+-		dev_err(&pdev->dev, "not enough IRQ resources\n");
++		dev_err(dev, "not enough IRQ resources\n");
+ 		ret = -EINVAL;
+ 		goto err1;
+ 	}
+@@ -178,12 +179,11 @@ static int irqc_probe(struct platform_device *pdev)
+ 
+ 	p->cpu_int_base = p->iomem + IRQC_INT_CPU_BASE(0); /* SYS-SPI */
+ 
+-	p->irq_domain = irq_domain_add_linear(pdev->dev.of_node,
+-					      p->number_of_irqs,
++	p->irq_domain = irq_domain_add_linear(dev->of_node, p->number_of_irqs,
+ 					      &irq_generic_chip_ops, p);
+ 	if (!p->irq_domain) {
+ 		ret = -ENXIO;
+-		dev_err(&pdev->dev, "cannot initialize irq domain\n");
++		dev_err(dev, "cannot initialize irq domain\n");
+ 		goto err2;
+ 	}
+ 
+@@ -191,7 +191,7 @@ static int irqc_probe(struct platform_device *pdev)
+ 					     1, name, handle_level_irq,
+ 					     0, 0, IRQ_GC_INIT_NESTED_LOCK);
+ 	if (ret) {
+-		dev_err(&pdev->dev, "cannot allocate generic chip\n");
++		dev_err(dev, "cannot allocate generic chip\n");
+ 		goto err3;
+ 	}
+ 
+@@ -209,13 +209,13 @@ static int irqc_probe(struct platform_device *pdev)
+ 	for (k = 0; k < p->number_of_irqs; k++) {
+ 		if (request_irq(p->irq[k].requested_irq, irqc_irq_handler,
+ 				0, name, &p->irq[k])) {
+-			dev_err(&pdev->dev, "failed to request IRQ\n");
++			dev_err(dev, "failed to request IRQ\n");
+ 			ret = -ENOENT;
+ 			goto err4;
+ 		}
+ 	}
+ 
+-	dev_info(&pdev->dev, "driving %d irqs\n", p->number_of_irqs);
++	dev_info(dev, "driving %d irqs\n", p->number_of_irqs);
+ 
+ 	return 0;
+ err4:
+@@ -227,8 +227,8 @@ static int irqc_probe(struct platform_device *pdev)
+ err2:
+ 	iounmap(p->iomem);
+ err1:
+-	pm_runtime_put(&pdev->dev);
+-	pm_runtime_disable(&pdev->dev);
++	pm_runtime_put(dev);
++	pm_runtime_disable(dev);
+ 	kfree(p);
+ err0:
+ 	return ret;
 -- 
 2.17.1
 
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
