@@ -2,187 +2,204 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE6C6C07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 04:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D7FC28CBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 04:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C089206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 04:13:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4C0921707
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 04:34:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dFM4dLDt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726063AbfE0ENo (ORCPT
+        id S1726082AbfE0EeE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 00:13:44 -0400
-Received: from mga05.intel.com ([192.55.52.43]:2278 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725847AbfE0ENo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 00:13:44 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 May 2019 21:13:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,517,1549958400"; 
-   d="scan'208";a="178711127"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga002.fm.intel.com with ESMTP; 26 May 2019 21:13:42 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1hV713-000ANz-PE; Mon, 27 May 2019 12:13:41 +0800
-Date:   Mon, 27 May 2019 12:13:39 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     kbuild-all@01.org, linux-fbdev@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] video: fbdev: pvr2fb: add COMPILE_TEST support
-Message-ID: <201905271244.WaVc5BQS%lkp@intel.com>
-References: <2d2b283e-a5c5-3c94-423c-8cb085492921@samsung.com>
+        Mon, 27 May 2019 00:34:04 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44023 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725774AbfE0EeD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 00:34:03 -0400
+Received: by mail-pg1-f196.google.com with SMTP id f25so8347387pgv.10
+        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2019 21:34:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HgOEOSf35gkBk8EP9rLhqUCfFEYRMzxK+VuxcWeDrSY=;
+        b=dFM4dLDtn5ocdeppZAxVs/zkJh3N7HOVKku+ErKsgU5Nlp75hkx0lHaGFT3nIoMjBP
+         bL0rHaJsk9pEt8rSL9E+ZE13cAVdMtJxdYKUxv2XQbA5VTIK35Em4xtA5c/dOd0irhQK
+         PmW/VHeeukn3WW75C0KOPY/IOa3clLTLppW2A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HgOEOSf35gkBk8EP9rLhqUCfFEYRMzxK+VuxcWeDrSY=;
+        b=Dv0SLR2Fduzl/nUIp06BHwFGkXcH7A9HiBdrmz6V/OSf255Vjh6e+4h5m0OqTsZ/RB
+         ttGJzKPbntB7hw43Nqtn0irs6kS3RcrACgioE55zHFXiohBC2XTuQuzg6JO4I1NPQmns
+         d84fu/d2B8y3l1QT8CaGyARDWgXRHVuNkaleUoBvhhj639EMJGQ24SzlsJ9Ue77jVopr
+         d6mCMsoZ/z4wS3s7ezan7wHtdvR66D4AnlB21NkkX8Y9JJSJfqrWm9OqtHLzXYI3Af2/
+         e1y1ustZgRyF/W8zgwGZ+cmBDiNJZgg28jeZetu3+T2tveWloFg2hBKMO6D5+IZPQNtv
+         Et5g==
+X-Gm-Message-State: APjAAAV6O/qXUotNSl6TedsLEl8euGITt32t8p7wB3oW759F2jZoIvN/
+        MLUHVpBfiIktZnN9JY2aGRcTWw==
+X-Google-Smtp-Source: APXvYqyOXt01Sx0OLykiEM+3ADVsJKHA+92ieraXNCiw5h2HTCPkJ20jn+kAbauIhVNs2AjJ5gqrSA==
+X-Received: by 2002:a63:ce57:: with SMTP id r23mr2854429pgi.367.1558931642361;
+        Sun, 26 May 2019 21:34:02 -0700 (PDT)
+Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
+        by smtp.gmail.com with ESMTPSA id g9sm8236061pgs.78.2019.05.26.21.33.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 26 May 2019 21:34:01 -0700 (PDT)
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Frank Rowand <frowand.list@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Miles Chen <miles.chen@mediatek.com>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        James Morse <james.morse@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nicolas Boichat <drinkcat@chromium.org>
+Subject: [PATCH v5 1/3] arm64: map FDT as RW for early_init_dt_scan()
+Date:   Mon, 27 May 2019 12:33:34 +0800
+Message-Id: <20190527043336.112854-1-hsinyi@chromium.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2d2b283e-a5c5-3c94-423c-8cb085492921@samsung.com>
-X-Patchwork-Hint: ignore
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bartlomiej,
+Currently in arm64, FDT is mapped to RO before it's passed to
+early_init_dt_scan(). However, there might be some codes
+(eg. commit "fdt: add support for rng-seed") that need to modify FDT
+during init. Map FDT to RO after early fixups are done.
 
-I love your patch! Perhaps something to improve:
-
-[auto build test WARNING on linus/master]
-[also build test WARNING on v5.2-rc2 next-20190524]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-
-url:    https://github.com/0day-ci/linux/commits/Bartlomiej-Zolnierkiewicz/video-fbdev-pvr2fb-remove-function-prototypes/20190524-145925
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-
-smatch warnings:
-drivers/video/fbdev/pvr2fb.c:467 pvr2fb_check_var() warn: unsigned 'var->xoffset' is never less than zero.
-drivers/video/fbdev/pvr2fb.c:467 pvr2fb_check_var() warn: unsigned 'var->yoffset' is never less than zero.
-
-vim +467 drivers/video/fbdev/pvr2fb.c
-
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  430  
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  431  static int pvr2fb_check_var(struct fb_var_screeninfo *var, struct fb_info *info)
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  432  {
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  433  	struct pvr2fb_par *par = (struct pvr2fb_par *)info->par;
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  434  	unsigned int vtotal, hsync_total;
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  435  	unsigned long line_length;
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  436  
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  437  	if (var->pixclock != TV_CLK && var->pixclock != VGA_CLK) {
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  438  		pr_debug("Invalid pixclock value %d\n", var->pixclock);
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  439  		return -EINVAL;
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  440  	}
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  441  
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  442  	if (var->xres < 320)
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  443  		var->xres = 320;
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  444  	if (var->yres < 240)
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  445  		var->yres = 240;
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  446  	if (var->xres_virtual < var->xres)
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  447  		var->xres_virtual = var->xres;
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  448  	if (var->yres_virtual < var->yres)
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  449  		var->yres_virtual = var->yres;
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  450  
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  451  	if (var->bits_per_pixel <= 16)
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  452  		var->bits_per_pixel = 16;
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  453  	else if (var->bits_per_pixel <= 24)
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  454  		var->bits_per_pixel = 24;
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  455  	else if (var->bits_per_pixel <= 32)
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  456  		var->bits_per_pixel = 32;
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  457  
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  458  	set_color_bitfields(var);
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  459  
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  460  	if (var->vmode & FB_VMODE_YWRAP) {
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  461  		if (var->xoffset || var->yoffset < 0 ||
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  462  		    var->yoffset >= var->yres_virtual) {
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  463  			var->xoffset = var->yoffset = 0;
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  464  		} else {
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  465  			if (var->xoffset > var->xres_virtual - var->xres ||
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  466  			    var->yoffset > var->yres_virtual - var->yres ||
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16 @467  			    var->xoffset < 0 || var->yoffset < 0)
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  468  				var->xoffset = var->yoffset = 0;
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  469  		}
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  470  	} else {
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  471  		var->xoffset = var->yoffset = 0;
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  472  	}
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  473  
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  474  	/*
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  475  	 * XXX: Need to be more creative with this (i.e. allow doublecan for
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  476  	 * PAL/NTSC output).
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  477  	 */
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  478  	if (var->yres < 480 && video_output == VO_VGA)
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  479  		var->vmode |= FB_VMODE_DOUBLE;
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  480  
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  481  	if (video_output != VO_VGA) {
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  482  		var->sync |= FB_SYNC_BROADCAST;
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  483  		var->vmode |= FB_VMODE_INTERLACED;
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  484  	} else {
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  485  		var->sync &= ~FB_SYNC_BROADCAST;
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  486  		var->vmode &= ~FB_VMODE_INTERLACED;
-fcb1fec7 drivers/video/pvr2fb.c Paul Mundt     2008-03-06  487  		var->vmode |= FB_VMODE_NONINTERLACED;
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  488  	}
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  489  
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  490  	if ((var->activate & FB_ACTIVATE_MASK) != FB_ACTIVATE_TEST) {
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  491  		var->right_margin = par->borderstop_h -
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  492  				   (par->diwstart_h + var->xres);
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  493  		var->left_margin  = par->diwstart_h - par->borderstart_h;
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  494  		var->hsync_len    = par->borderstart_h +
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  495  		                   (par->hsync_total - par->borderstop_h);
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  496  
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  497  		var->upper_margin = par->diwstart_v - par->borderstart_v;
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  498  		var->lower_margin = par->borderstop_v -
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  499  				   (par->diwstart_v + var->yres);
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  500  		var->vsync_len    = par->borderstop_v +
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  501  				   (par->vsync_total - par->borderstop_v);
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  502  	}
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  503  
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  504  	hsync_total = var->left_margin + var->xres + var->right_margin +
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  505  		      var->hsync_len;
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  506  	vtotal = var->upper_margin + var->yres + var->lower_margin +
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  507  		 var->vsync_len;
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  508  
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  509  	if (var->sync & FB_SYNC_BROADCAST) {
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  510  		if (var->vmode & FB_VMODE_INTERLACED)
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  511  			vtotal /= 2;
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  512  		if (vtotal > (PAL_VTOTAL + NTSC_VTOTAL)/2) {
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  513  			/* PAL video output */
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  514  			/* XXX: Should be using a range here ... ? */
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  515  			if (hsync_total != PAL_HTOTAL) {
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  516  				pr_debug("invalid hsync total for PAL\n");
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  517  				return -EINVAL;
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  518  			}
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  519  		} else {
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  520  			/* NTSC video output */
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  521  			if (hsync_total != NTSC_HTOTAL) {
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  522  				pr_debug("invalid hsync total for NTSC\n");
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  523  				return -EINVAL;
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  524  			}
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  525  		}
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  526  	}
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  527  
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  528  	/* Check memory sizes */
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  529  	line_length = get_line_length(var->xres_virtual, var->bits_per_pixel);
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  530  	if (line_length * var->yres_virtual > info->fix.smem_len)
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  531  		return -ENOMEM;
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  532  
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  533  	return 0;
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  534  }
-^1da177e drivers/video/pvr2fb.c Linus Torvalds 2005-04-16  535  
-
-:::::: The code at line 467 was first introduced by commit
-:::::: 1da177e4c3f41524e886b7f1b8a0c1fc7321cac2 Linux-2.6.12-rc2
-
-:::::: TO: Linus Torvalds <torvalds@ppc970.osdl.org>
-:::::: CC: Linus Torvalds <torvalds@ppc970.osdl.org>
-
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
 ---
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+change log v4->v5:
+* move memblock_reserve() out from fixmap_remap_fdt()
+* fix subject and commit message
+---
+ arch/arm64/include/asm/mmu.h |  2 +-
+ arch/arm64/kernel/kaslr.c    |  5 +----
+ arch/arm64/kernel/setup.c    |  9 ++++++++-
+ arch/arm64/mm/mmu.c          | 15 +--------------
+ 4 files changed, 11 insertions(+), 20 deletions(-)
+
+diff --git a/arch/arm64/include/asm/mmu.h b/arch/arm64/include/asm/mmu.h
+index 67ef25d037ea..27f6f17aae36 100644
+--- a/arch/arm64/include/asm/mmu.h
++++ b/arch/arm64/include/asm/mmu.h
+@@ -137,7 +137,7 @@ extern void init_mem_pgprot(void);
+ extern void create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
+ 			       unsigned long virt, phys_addr_t size,
+ 			       pgprot_t prot, bool page_mappings_only);
+-extern void *fixmap_remap_fdt(phys_addr_t dt_phys);
++extern void *fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot);
+ extern void mark_linear_text_alias_ro(void);
+ 
+ #define INIT_MM_CONTEXT(name)	\
+diff --git a/arch/arm64/kernel/kaslr.c b/arch/arm64/kernel/kaslr.c
+index 06941c1fe418..92bb53460401 100644
+--- a/arch/arm64/kernel/kaslr.c
++++ b/arch/arm64/kernel/kaslr.c
+@@ -65,9 +65,6 @@ static __init const u8 *kaslr_get_cmdline(void *fdt)
+ 	return default_cmdline;
+ }
+ 
+-extern void *__init __fixmap_remap_fdt(phys_addr_t dt_phys, int *size,
+-				       pgprot_t prot);
+-
+ /*
+  * This routine will be executed with the kernel mapped at its default virtual
+  * address, and if it returns successfully, the kernel will be remapped, and
+@@ -96,7 +93,7 @@ u64 __init kaslr_early_init(u64 dt_phys)
+ 	 * attempt at mapping the FDT in setup_machine()
+ 	 */
+ 	early_fixmap_init();
+-	fdt = __fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL);
++	fdt = fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL);
+ 	if (!fdt)
+ 		return 0;
+ 
+diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+index 413d566405d1..6a7050319b5b 100644
+--- a/arch/arm64/kernel/setup.c
++++ b/arch/arm64/kernel/setup.c
+@@ -181,9 +181,13 @@ static void __init smp_build_mpidr_hash(void)
+ 
+ static void __init setup_machine_fdt(phys_addr_t dt_phys)
+ {
+-	void *dt_virt = fixmap_remap_fdt(dt_phys);
++	int size;
++	void *dt_virt = fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL);
+ 	const char *name;
+ 
++	if (dt_virt)
++		memblock_reserve(dt_phys, size);
++
+ 	if (!dt_virt || !early_init_dt_scan(dt_virt)) {
+ 		pr_crit("\n"
+ 			"Error: invalid device tree blob at physical address %pa (virtual address 0x%p)\n"
+@@ -195,6 +199,9 @@ static void __init setup_machine_fdt(phys_addr_t dt_phys)
+ 			cpu_relax();
+ 	}
+ 
++	/* Early fixups are done, map the FDT as read-only now */
++	fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL_RO);
++
+ 	name = of_flat_dt_get_machine_name();
+ 	if (!name)
+ 		return;
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index a1bfc4413982..be835c379b7e 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -887,7 +887,7 @@ void __set_fixmap(enum fixed_addresses idx,
+ 	}
+ }
+ 
+-void *__init __fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot)
++void *__init fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot)
+ {
+ 	const u64 dt_virt_base = __fix_to_virt(FIX_FDT);
+ 	int offset;
+@@ -940,19 +940,6 @@ void *__init __fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot)
+ 	return dt_virt;
+ }
+ 
+-void *__init fixmap_remap_fdt(phys_addr_t dt_phys)
+-{
+-	void *dt_virt;
+-	int size;
+-
+-	dt_virt = __fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL_RO);
+-	if (!dt_virt)
+-		return NULL;
+-
+-	memblock_reserve(dt_phys, size);
+-	return dt_virt;
+-}
+-
+ int __init arch_ioremap_pud_supported(void)
+ {
+ 	/*
+-- 
+2.20.1
+
