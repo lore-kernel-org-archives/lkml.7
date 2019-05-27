@@ -2,500 +2,105 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79299C072B1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:02:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B805EC072B1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:02:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4037B20883
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:02:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 922EC205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:02:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="egBztoqA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CJ2irMJK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbfE0OCU (ORCPT
+        id S1726752AbfE0OCv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 10:02:20 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43513 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726627AbfE0OCQ (ORCPT
+        Mon, 27 May 2019 10:02:51 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33901 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726580AbfE0OCu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 10:02:16 -0400
-Received: by mail-wr1-f68.google.com with SMTP id l17so8656478wrm.10
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 07:02:14 -0700 (PDT)
+        Mon, 27 May 2019 10:02:50 -0400
+Received: by mail-lj1-f196.google.com with SMTP id j24so14807381ljg.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 07:02:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=kJe+Yl5qLvOdiDIljClB5NLydP1fgcPL0yNYauTJQkc=;
-        b=egBztoqAgCdOrYqpwZHTgk+SjqGoNoozBhs7HFsfQculUVPPO4TycarmclqY9toGeb
-         OKIh/j7N2a+QW6Mrfddq2ACoqgmARD3O3Zd1t3M9vdnJQb3s4JA7YKP5+3T5yjGDCDCs
-         j45ouK82KMNGw0Jo4V/yiK1oiKZ0B/zEvJG5lU/dolJsObNvvH0NX5GJfxNDJcRPGIz9
-         UWrgWB385lRACCKgRjjcy6DoRW49oBRVmK6yOaf83C1ntEyqWFkAhfqOL0UJXJrlUKJI
-         QRAZOlxnLZ6eg+S8Of6YowM0ED09B0n+SJIaC0mQN5aEAIEkr9EJSciIc1FULOjX932w
-         dcOA==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nCMqcLWyCA+4Q/MEIIgUaDC50B6QNtxtBMlc97ZOozY=;
+        b=CJ2irMJKh684KUcwCc9e3mRWyJ3si0NiJuPS8075E4MvXvGMVcYFMOXShhgQ6jQ65m
+         5ZT8nQuRaOztT3vV1jR1mOBIKUw3uFP111pf95gc1AWajJpwzTjYYE3a8pNrNFx8YM3G
+         qF+VgZDKakhfXS6vsoAA15xxhlI70teCFJXoQOhdt+aB+nwDh+M1AUnaMOaH2u4iowZF
+         M9RDJ51+OJf4FjpByIo02Fg5yIq6EfeQVZk5SdkqFnA4eQFbHfJ3XquqOWlYbMC024Gc
+         vgdX3QYfA4UtbUxk8wiLe15FW8s3SdFjoTNbTQfmI/ASsEOrqluE4QTc3bmQiVdMTCm3
+         diYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=kJe+Yl5qLvOdiDIljClB5NLydP1fgcPL0yNYauTJQkc=;
-        b=RZ2OivzQAITHZMwfQcRP4mLbVXKk837d+6bQ/wo+vkzAXAyUn+FuubFxC6nZgXezCM
-         AHRDMFvTdCmoXEOthEcg9BMZiOidWAwvb9Fa4t73ruhXVo2snDboXQ1K54Ev7S6cXEIW
-         2R19+j1VEfU9X2x9+90M60ILEwKUvN1Til1JpDmyJAGA1e3O/SQ1EH4IlG6vmywb0BXV
-         +Cw8pgzwW1/41HCzc+UFBBmyxNCIGMI0KVVsxqJ3fuRPSw8jrgpVvXVnnNdelfuqaEvb
-         RqyNxxwgtJ+QH6KvVQqYV+nOq7eW80dJ2SCp0PN0Ng+2GD8R6geeGiz6HNuq+5da15LH
-         Hicg==
-X-Gm-Message-State: APjAAAVP1V9O7/MKQQRgChvmC4hRJOSbUqnpmswn15V0N7imawh2/EzA
-        wLydfPvKL4yNEdLGV33h/dTVgg==
-X-Google-Smtp-Source: APXvYqwTudxJAVWhCK/M0xCFTpEAMci3uj1Gfe4gh//xahAQSNnmvZIOBOx75U7D6jGQufBGcu0SXg==
-X-Received: by 2002:adf:e481:: with SMTP id i1mr4223749wrm.113.1558965734076;
-        Mon, 27 May 2019 07:02:14 -0700 (PDT)
-Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id s17sm8231628wmj.15.2019.05.27.07.02.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 27 May 2019 07:02:12 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     khilman@baylibre.com
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 3/3] arm64: dts: meson: Add minimal support for Odroid-N2
-Date:   Mon, 27 May 2019 16:02:06 +0200
-Message-Id: <20190527140206.30392-4-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190527140206.30392-1-narmstrong@baylibre.com>
-References: <20190527140206.30392-1-narmstrong@baylibre.com>
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nCMqcLWyCA+4Q/MEIIgUaDC50B6QNtxtBMlc97ZOozY=;
+        b=bpH0tE5BSzWdw1tBM4NgdGFmHAhNnyUjF/zAQZ+hfyHzzIsFI6d0KAtZLGYeKHnNlp
+         No6URwB4L4gHEkah5OmPMPzEyNfdhuN5/uPAaspKkJjVi6hpjxpKXrAha2ttnYZRZk/8
+         sUkeTLXyW5dNCKe33KezVJdQbKdS7zBJclMEeCE+LJ4sp4wZGbmB62OQfff4jaq9ox9x
+         mw+M1mhKUtf4VL1Y3/RKv2KFj145dfR7qbaXqqFX9c+1I2VNmgcRxJ/Gr1NRSPmvWjQl
+         r4QlaESJ4CDDYzXd14Zzg9jW5nbImXZij2O7at+ZBcqKYv+QKUchvek/w64yKAinOvxP
+         2mLg==
+X-Gm-Message-State: APjAAAX3somZB3VMRqLJ2R38lE+GdBNv4Wkd+YIZehvCuLtYBKDU4fk/
+        lVALLZVcDh8QmLIkUYjPySA=
+X-Google-Smtp-Source: APXvYqzXY+tlQxq7QCiBnJ+JYYpe6XAxMrsHVoWpLgb9r76XvPQ1r14R5z8LOJLwEgnfZ3qF0GJRWg==
+X-Received: by 2002:a2e:81d9:: with SMTP id s25mr21926270ljg.139.1558965768729;
+        Mon, 27 May 2019 07:02:48 -0700 (PDT)
+Received: from pc636 ([37.139.158.167])
+        by smtp.gmail.com with ESMTPSA id r62sm2335963lja.48.2019.05.27.07.02.47
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 27 May 2019 07:02:47 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Mon, 27 May 2019 16:02:40 +0200
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        Roman Gushchin <guro@fb.com>, Hillf Danton <hdanton@sina.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Garnier <thgarnie@google.com>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v3 4/4] mm/vmap: move BUG_ON() check to the unlink_va()
+Message-ID: <20190527140240.6lzhunbc4py573yl@pc636>
+References: <20190527093842.10701-1-urezki@gmail.com>
+ <20190527093842.10701-5-urezki@gmail.com>
+ <20190527085927.19152502@gandalf.local.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190527085927.19152502@gandalf.local.home>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds basic support for :
-- Amlogic G12B, which is very similar to G12A
-- The HardKernel Odroid-N2 based on the S922X SoC
+> > Move the BUG_ON()/RB_EMPTY_NODE() check under unlink_va()
+> > function, it means if an empty node gets freed it is a BUG
+> > thus is considered as faulty behaviour.
+> 
+> Can we switch it to a WARN_ON(). We are trying to remove all BUG_ON()s.
+> If a user wants to crash on warning, there's a sysctl for that. But
+> crashing the system can make it hard to debug. Especially if it is hit
+> by someone without a serial console, and the machine just hangs in X.
+> That is very annoying.
+> 
+> With a WARN_ON, you at least get a chance to see the crash dump.
+Yes we can. Even though it is considered as faulty behavior it is not
+a good reason to trigger a BUG. I will fix that.
 
-The Amlogic G12B SoC is very similar with the G12A SoC, sharing
-most of the features and architecture, but with these differences :
-- The first CPU cluster only has 2xCortex-A53 instead of 4
-- G12B has a second cluster of 4xCortex-A73
-- Both cluster can achieve 2GHz instead of 1,8GHz for G12A
-- CPU Clock architecture is difference, thus needing a different
-  compatible to handle this slight difference
-- Supports a MIPI CSI input
-- Embeds a Mali-G52 instead of a Mali-G31, but integration is the same
+Thank you!
 
-Actual support is done in the same way as for the GXM support, including
-the G12A dtsi and redefining the CPU clusters.
-Unlike GXM, the first cluster is different, thus needing to remove
-the last 2 cpu nodes of the first cluster.
-
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/Makefile          |   1 +
- .../boot/dts/amlogic/meson-g12b-odroid-n2.dts | 288 ++++++++++++++++++
- arch/arm64/boot/dts/amlogic/meson-g12b.dtsi   |  82 +++++
- 3 files changed, 371 insertions(+)
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b.dtsi
-
-diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-index e129c03ced14..07b861fe5fa5 100644
---- a/arch/arm64/boot/dts/amlogic/Makefile
-+++ b/arch/arm64/boot/dts/amlogic/Makefile
-@@ -3,6 +3,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-axg-s400.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-g12a-sei510.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-g12a-u200.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-g12a-x96-max.dtb
-+dtb-$(CONFIG_ARCH_MESON) += meson-g12b-odroid-n2.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nanopi-k2.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nexbox-a95x.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-odroidc2.dtb
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-new file mode 100644
-index 000000000000..48783ead8dfb
---- /dev/null
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-@@ -0,0 +1,288 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 BayLibre, SAS
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "meson-g12b.dtsi"
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/gpio/meson-g12a-gpio.h>
-+
-+/ {
-+	compatible = "hardkernel,odroid-n2", "amlogic,g12b";
-+	model = "Hardkernel ODROID-N2";
-+
-+	aliases {
-+		serial0 = &uart_AO;
-+		ethernet0 = &ethmac;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x0 0x0 0x40000000>;
-+	};
-+
-+	emmc_pwrseq: emmc-pwrseq {
-+		compatible = "mmc-pwrseq-emmc";
-+		reset-gpios = <&gpio BOOT_12 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		blue {
-+			label = "n2:blue";
-+			gpios = <&gpio_ao GPIOAO_11 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+	};
-+
-+	tflash_vdd: regulator-tflash_vdd {
-+		compatible = "regulator-fixed";
-+
-+		regulator-name = "TFLASH_VDD";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+
-+		gpio = <&gpio_ao GPIOAO_8 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	tf_io: gpio-regulator-tf_io {
-+		compatible = "regulator-gpio";
-+
-+		regulator-name = "TF_IO";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3300000>;
-+
-+		gpios = <&gpio_ao GPIOAO_9 GPIO_ACTIVE_HIGH>;
-+		gpios-states = <0>;
-+
-+		states = <3300000 0
-+			  1800000 1>;
-+	};
-+
-+	flash_1v8: regulator-flash_1v8 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "FLASH_1V8";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		vin-supply = <&vcc_3v3>;
-+		regulator-always-on;
-+	};
-+
-+	main_12v: regulator-main_12v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "12V";
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+		regulator-always-on;
-+	};
-+
-+	vcc_5v: regulator-vcc_5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "5V";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+	};
-+
-+	vcc_1v8: regulator-vcc_1v8 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC_1V8";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		vin-supply = <&vcc_3v3>;
-+		regulator-always-on;
-+	};
-+
-+	vcc_3v3: regulator-vcc_3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC_3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&vddao_3v3>;
-+		regulator-always-on;
-+		/* FIXME: actually controlled by VDDCPU_B_EN */
-+	};
-+
-+	hub_5v: regulator-hub_5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "HUB_5V";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&vcc_5v>;
-+
-+		/* Connected to the Hub CHIPENABLE, LOW sets low power state */
-+		gpio = <&gpio GPIOH_5 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	usb_pwr_en: regulator-usb_pwr_en {
-+		compatible = "regulator-fixed";
-+		regulator-name = "USB_PWR_EN";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&hub_5v>;
-+
-+		/* Connected to the microUSB port power enable */
-+		gpio = <&gpio GPIOH_6 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	vddao_1v8: regulator-vddao_1v8 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDAO_1V8";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		vin-supply = <&vddao_3v3>;
-+		regulator-always-on;
-+	};
-+
-+	vddao_3v3: regulator-vddao_3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDAO_3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&main_12v>;
-+		regulator-always-on;
-+	};
-+
-+	hdmi-connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_connector_in: endpoint {
-+				remote-endpoint = <&hdmi_tx_tmds_out>;
-+			};
-+		};
-+	};
-+};
-+
-+&cec_AO {
-+	pinctrl-0 = <&cec_ao_a_h_pins>;
-+	pinctrl-names = "default";
-+	status = "disabled";
-+	hdmi-phandle = <&hdmi_tx>;
-+};
-+
-+&cecb_AO {
-+	pinctrl-0 = <&cec_ao_b_h_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+	hdmi-phandle = <&hdmi_tx>;
-+};
-+
-+&ext_mdio {
-+	external_phy: ethernet-phy@0 {
-+		/* Realtek RTL8211F (0x001cc916) */	
-+		reg = <0>;
-+		max-speed = <1000>;
-+	};
-+};
-+
-+&ethmac {
-+	pinctrl-0 = <&eth_pins>, <&eth_rgmii_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+	phy-mode = "rgmii";
-+	phy-handle = <&external_phy>;
-+	amlogic,tx-delay-ns = <2>;
-+};
-+
-+&gpio {
-+	/*
-+	 * WARNING: The USB Hub on the Odroid-N2 needs a reset signal
-+	 * to be turned high in order to be detected by the USB Controller
-+	 * This signal should be handled by a USB specific power sequence
-+	 * in order to reset the Hub when USB bus is powered down.
-+	 */
-+	usb-hub {
-+		gpio-hog;
-+		gpios = <GPIOH_4 GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "usb-hub-reset";
-+	};
-+};
-+
-+&hdmi_tx {
-+	status = "okay";
-+	pinctrl-0 = <&hdmitx_hpd_pins>, <&hdmitx_ddc_pins>;
-+	pinctrl-names = "default";
-+	hdmi-supply = <&vcc_5v>;
-+};
-+
-+&hdmi_tx_tmds_port {
-+	hdmi_tx_tmds_out: endpoint {
-+		remote-endpoint = <&hdmi_connector_in>;
-+	};
-+};
-+
-+&ir {
-+	status = "okay";
-+	pinctrl-0 = <&remote_input_ao_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+/* SD card */
-+&sd_emmc_b {
-+	status = "okay";
-+	pinctrl-0 = <&sdcard_c_pins>;
-+	pinctrl-1 = <&sdcard_clk_gate_c_pins>;
-+	pinctrl-names = "default", "clk-gate";
-+
-+	bus-width = <4>;
-+	cap-sd-highspeed;
-+	max-frequency = <50000000>;
-+	disable-wp;
-+
-+	cd-gpios = <&gpio GPIOC_6 GPIO_ACTIVE_LOW>;
-+	vmmc-supply = <&tflash_vdd>;
-+	vqmmc-supply = <&tf_io>;
-+
-+};
-+
-+/* eMMC */
-+&sd_emmc_c {
-+	status = "okay";
-+	pinctrl-0 = <&emmc_pins>, <&emmc_ds_pins>;
-+	pinctrl-1 = <&emmc_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
-+
-+	bus-width = <8>;
-+	cap-mmc-highspeed;
-+	mmc-ddr-1_8v;
-+	mmc-hs200-1_8v;
-+	max-frequency = <200000000>;
-+	disable-wp;
-+
-+	mmc-pwrseq = <&emmc_pwrseq>;
-+	vmmc-supply = <&vcc_3v3>;
-+	vqmmc-supply = <&flash_1v8>;
-+};
-+
-+&uart_AO {
-+	status = "okay";
-+	pinctrl-0 = <&uart_ao_a_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&usb {
-+	status = "okay";
-+	vbus-supply = <&usb_pwr_en>;
-+};
-+
-+&usb2_phy0 {
-+	phy-supply = <&vcc_5v>;
-+};
-+
-+&usb2_phy1 {
-+	phy-supply = <&vcc_5v>;
-+};
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi
-new file mode 100644
-index 000000000000..9e88e513b22d
---- /dev/null
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi
-@@ -0,0 +1,82 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 BayLibre, SAS
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ */
-+
-+#include "meson-g12a.dtsi"
-+
-+/ {
-+	compatible = "amlogic,g12b";
-+
-+	cpus {
-+		cpu-map {
-+			cluster0 {
-+				core0 {
-+					cpu = <&cpu0>;
-+				};
-+
-+				core1 {
-+					cpu = <&cpu1>;
-+				};
-+			};
-+
-+			cluster1 {
-+				core0 {
-+					cpu = <&cpu100>;
-+				};
-+
-+				core1 {
-+					cpu = <&cpu101>;
-+				};
-+
-+				core2 {
-+					cpu = <&cpu102>;
-+				};
-+
-+				core3 {
-+					cpu = <&cpu103>;
-+				};
-+			};
-+		};
-+
-+		/delete-node/ cpu@2;
-+		/delete-node/ cpu@3;
-+
-+		cpu100: cpu@100 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a73";
-+			reg = <0x0 0x100>;
-+			enable-method = "psci";
-+			next-level-cache = <&l2>;
-+		};
-+
-+		cpu101: cpu@101 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a73";
-+			reg = <0x0 0x101>;
-+			enable-method = "psci";
-+			next-level-cache = <&l2>;
-+		};
-+
-+		cpu102: cpu@102 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a73";
-+			reg = <0x0 0x102>;
-+			enable-method = "psci";
-+			next-level-cache = <&l2>;
-+		};
-+
-+		cpu103: cpu@103 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a73";
-+			reg = <0x0 0x103>;
-+			enable-method = "psci";
-+			next-level-cache = <&l2>;
-+		};
-+	};
-+};
-+
-+&clkc {
-+	compatible = "amlogic,g12b-clkc";
-+};
--- 
-2.21.0
-
+--
+Vlad Rezki 
