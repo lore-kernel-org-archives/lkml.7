@@ -2,92 +2,155 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D3DDC04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 18:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE984C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 18:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E11120859
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 18:12:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A071D20859
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 18:15:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="TCX5m6h3"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="R35p3owa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbfE0SMp (ORCPT
+        id S1727145AbfE0SPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 14:12:45 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:37231 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726657AbfE0SMp (ORCPT
+        Mon, 27 May 2019 14:15:36 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:34622 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726839AbfE0SPg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 14:12:45 -0400
-Received: by mail-oi1-f194.google.com with SMTP id f4so12434712oib.4
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 11:12:44 -0700 (PDT)
+        Mon, 27 May 2019 14:15:36 -0400
+Received: by mail-ua1-f66.google.com with SMTP id 7so6804913uah.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 11:15:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fdEdzKwrwwR+hZrRuekbTm4BMx8O7NzP4YL8a4f6Xyw=;
-        b=TCX5m6h3kSNswGNfH9xVf7MNEte1kWLAUZV2H9MaftkLrqoChQpWF9viqrvYi6oyn6
-         tMkNsoSpUVfYD/CCZosnrlppsI84qiMpucB5XKAzOQplFzM2KPYLEDMwfKyXFaG5RbO1
-         LjeZRTQ8cjEpmhm1Sy8uCqpD+io3/Cm0qwA84eSxw6osWF7EkPE/L2BoZPLI2SGA7aO3
-         NDcaBI3XhU0VFHOXVHwWcRXnr6l1uoOT6AIbk/0g1XMUq30s8F24O3na6AC+dtrGROBE
-         vqmZzoO6VI9MfrcgmrmHYS6/pPyFeezktzDMd7Bt7FZa2WF/szO/NCiryKq/lKy0KOeV
-         ErkA==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8hNxMGBAGDDkJj992yk9VOgjaUK9vfpRQoQGfXOovpE=;
+        b=R35p3owaTNtpz8MKhE3eb7p90Rmi3WA5z/IJLfYWxVZBpq3sSmZbyPaLZ+g95OFPLj
+         9nln1OdB5Rvf8gwb4rQbRYIsNLusvEJXx7zGVj5EYwA83fEJtc5HaF1UNeCxOy5omeDa
+         GAyE56QpwHgC0CT68m18jw6FEeT/1n2spYPfWdSBhQgdW6IKW3e90iju4iJHMzcjoEr8
+         zyTxg1uWCQHDh7WZaUCrOJIKk18+S8uCyT77OMo4QJ0+v9wCEPzhPZEmgYXkMXXMm8VG
+         MtX0tokKVf2ITpLZZPa0p/ErpJtrljHSYPhMSlFxTmruq7ArzrEqc5QUvzfeuyQkWFG2
+         epXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fdEdzKwrwwR+hZrRuekbTm4BMx8O7NzP4YL8a4f6Xyw=;
-        b=lJ7NQ9FXlVT5K+l4vptkMXwWbN56pNcj/KEXdbOPxQQ+mqfSiHD+c0If/NiCRBtgBm
-         so+DJr4efZo35cfN+reJx9rqrIaI+EjyzOZqttijEeG++hu0+4aJYE1v3KqYRepa0FuX
-         CC1W95W4KKOKKl9X7KkCcZpaFOQzX0DgEnqO39U7r4ppkq08eibPS6SiR24I9dItk6i6
-         23YqekguiOrpznv1Q5LTnC35l964B4mICbc1AXFdPxSOOGAq0k9oz/qpaJT4S1dabTNC
-         tQkmFotUdoLEcEFcn542bSi0J/moOHQDO3mZXBGfZdF12sQ9YI+o1IadRpXGdi43mADY
-         d/JA==
-X-Gm-Message-State: APjAAAVieZx/riXiAzYEuc8OZiPp5Vz6DS9jSviBFEnECQtM642PyMc+
-        UuCCN4z5KHvTT4HgzV9KIbPblOpI2ym6U6ZeqxvozKGavok=
-X-Google-Smtp-Source: APXvYqwmz7MYBR3RPfckjQ+bn80jPUguVMJFtd+LUXLXHyBI+ktAg+X8jo5YLRokDHP1QncBkXrVu3K0ewCBCk+mFp0=
-X-Received: by 2002:aca:4341:: with SMTP id q62mr175063oia.140.1558980764213;
- Mon, 27 May 2019 11:12:44 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8hNxMGBAGDDkJj992yk9VOgjaUK9vfpRQoQGfXOovpE=;
+        b=Ii20353rWwc/Cy5FwPR6hbXUo772gxePoVQFOLH0ZE+qVFB01pEXuQbkH0waDcWeqa
+         6JgLTVg1qcMTyciaEr+Uc0zcDe6TSNVJlgHBfOPsIsVxEGmt5ofoz5fxeCllkZkeW6zb
+         AShfy8klRLl8mLVsSc8e/ge/Jl2yMwWfQ/hQvPA2knBbBk4A2x/T61EDJ90GWNdjyTfF
+         EPxG4NRLa6ktLFKIxykiRPisvMYWjJoDb0NzMr1G97HDHqY6+iQBv2kGApFixeiuITEX
+         GY46XuIKV8u4+Liz8csdGWsI4Mj3X+6lcz3vD6YXdIVEBNe8PlOCtP1SXUbEjDtHQ4UV
+         LT3Q==
+X-Gm-Message-State: APjAAAX86rOdjxL7U62aw6LYLlTtrkNjgqWTiw4NZ4q8hyU8sFpuIsXO
+        POTT097CV7hYryqotaZw0/Aydg==
+X-Google-Smtp-Source: APXvYqwv7ANsIWSla6GVRQobbng/bEadzUM3um96jeSPyG6hwcnv7WioNf8L1mG+BSjhPwpAO5GK0w==
+X-Received: by 2002:ab0:4a97:: with SMTP id s23mr22342607uae.19.1558980935337;
+        Mon, 27 May 2019 11:15:35 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id b78sm4160999vkb.10.2019.05.27.11.15.34
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 27 May 2019 11:15:34 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hVK9m-0002cU-92; Mon, 27 May 2019 15:15:34 -0300
+Date:   Mon, 27 May 2019 15:15:34 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Ariel Levkovich <lariel@mellanox.com>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mlx5: avoid 64-bit division
+Message-ID: <20190527181534.GA10029@ziepe.ca>
+References: <20190520111902.7104DE0184@unicorn.suse.cz>
 MIME-Version: 1.0
-References: <20190527140206.30392-1-narmstrong@baylibre.com> <20190527140206.30392-4-narmstrong@baylibre.com>
-In-Reply-To: <20190527140206.30392-4-narmstrong@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Mon, 27 May 2019 20:12:33 +0200
-Message-ID: <CAFBinCC+QrMhEErnt28ACe7x_VM65_envvOw7kFWAir53B=_nQ@mail.gmail.com>
-Subject: Re: [PATCH v4 3/3] arm64: dts: meson: Add minimal support for Odroid-N2
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190520111902.7104DE0184@unicorn.suse.cz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 27, 2019 at 4:03 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> This patch adds basic support for :
-> - Amlogic G12B, which is very similar to G12A
-> - The HardKernel Odroid-N2 based on the S922X SoC
->
-> The Amlogic G12B SoC is very similar with the G12A SoC, sharing
-> most of the features and architecture, but with these differences :
-> - The first CPU cluster only has 2xCortex-A53 instead of 4
-> - G12B has a second cluster of 4xCortex-A73
-> - Both cluster can achieve 2GHz instead of 1,8GHz for G12A
-> - CPU Clock architecture is difference, thus needing a different
->   compatible to handle this slight difference
-> - Supports a MIPI CSI input
-> - Embeds a Mali-G52 instead of a Mali-G31, but integration is the same
->
-> Actual support is done in the same way as for the GXM support, including
-> the G12A dtsi and redefining the CPU clusters.
-> Unlike GXM, the first cluster is different, thus needing to remove
-> the last 2 cpu nodes of the first cluster.
->
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+On Mon, May 20, 2019 at 01:19:02PM +0200, Michal Kubecek wrote:
+> Commit 25c13324d03d ("IB/mlx5: Add steering SW ICM device memory type")
+> breaks i386 build by introducing three 64-bit divisions. As the divisor
+> is MLX5_SW_ICM_BLOCK_SIZE() which is always a power of 2, we can replace
+> the division with bit operations.
+> 
+> Fixes: 25c13324d03d ("IB/mlx5: Add steering SW ICM device memory type")
+> Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
+>  drivers/infiniband/hw/mlx5/cmd.c  | 9 +++++++--
+>  drivers/infiniband/hw/mlx5/main.c | 2 +-
+>  2 files changed, 8 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/infiniband/hw/mlx5/cmd.c b/drivers/infiniband/hw/mlx5/cmd.c
+> index e3ec79b8f7f5..6c8645033102 100644
+> +++ b/drivers/infiniband/hw/mlx5/cmd.c
+> @@ -190,12 +190,12 @@ int mlx5_cmd_alloc_sw_icm(struct mlx5_dm *dm, int type, u64 length,
+>  			  u16 uid, phys_addr_t *addr, u32 *obj_id)
+>  {
+>  	struct mlx5_core_dev *dev = dm->dev;
+> -	u32 num_blocks = DIV_ROUND_UP(length, MLX5_SW_ICM_BLOCK_SIZE(dev));
+>  	u32 out[MLX5_ST_SZ_DW(general_obj_out_cmd_hdr)] = {};
+>  	u32 in[MLX5_ST_SZ_DW(create_sw_icm_in)] = {};
+>  	unsigned long *block_map;
+>  	u64 icm_start_addr;
+>  	u32 log_icm_size;
+> +	u32 num_blocks;
+>  	u32 max_blocks;
+>  	u64 block_idx;
+>  	void *sw_icm;
+> @@ -224,6 +224,8 @@ int mlx5_cmd_alloc_sw_icm(struct mlx5_dm *dm, int type, u64 length,
+>  		return -EINVAL;
+>  	}
+>  
+> +	num_blocks = (length + MLX5_SW_ICM_BLOCK_SIZE(dev) - 1) >>
+> +		     MLX5_LOG_SW_ICM_BLOCK_SIZE(dev);
+>  	max_blocks = BIT(log_icm_size - MLX5_LOG_SW_ICM_BLOCK_SIZE(dev));
+>  	spin_lock(&dm->lock);
+>  	block_idx = bitmap_find_next_zero_area(block_map,
+> @@ -266,13 +268,16 @@ int mlx5_cmd_dealloc_sw_icm(struct mlx5_dm *dm, int type, u64 length,
+>  			    u16 uid, phys_addr_t addr, u32 obj_id)
+>  {
+>  	struct mlx5_core_dev *dev = dm->dev;
+> -	u32 num_blocks = DIV_ROUND_UP(length, MLX5_SW_ICM_BLOCK_SIZE(dev));
+>  	u32 out[MLX5_ST_SZ_DW(general_obj_out_cmd_hdr)] = {};
+>  	u32 in[MLX5_ST_SZ_DW(general_obj_in_cmd_hdr)] = {};
+>  	unsigned long *block_map;
+> +	u32 num_blocks;
+>  	u64 start_idx;
+>  	int err;
+>  
+> +	num_blocks = (length + MLX5_SW_ICM_BLOCK_SIZE(dev) - 1) >>
+> +		     MLX5_LOG_SW_ICM_BLOCK_SIZE(dev);
+> +
+>  	switch (type) {
+>  	case MLX5_IB_UAPI_DM_TYPE_STEERING_SW_ICM:
+>  		start_idx =
+> diff --git a/drivers/infiniband/hw/mlx5/main.c b/drivers/infiniband/hw/mlx5/main.c
+> index abac70ad5c7c..340290b883fe 100644
+> +++ b/drivers/infiniband/hw/mlx5/main.c
+> @@ -2344,7 +2344,7 @@ static int handle_alloc_dm_sw_icm(struct ib_ucontext *ctx,
+>  	/* Allocation size must a multiple of the basic block size
+>  	 * and a power of 2.
+>  	 */
+> -	act_size = roundup(attr->length, MLX5_SW_ICM_BLOCK_SIZE(dm_db->dev));
+> +	act_size = round_up(attr->length, MLX5_SW_ICM_BLOCK_SIZE(dm_db->dev));
+>  	act_size = roundup_pow_of_two(act_size);
+
+It is kind of weird that we have round_up and the bitshift
+version.. None of this is performance critical so why not just use
+round_up everywhere?
+
+Ariel, it is true MLX5_SW_ICM_BLOCK_SIZE will always be a power of
+two?
+
+Jason
