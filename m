@@ -2,70 +2,103 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0263C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09940C28CC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A63BA206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:32:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D659E20859
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:32:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="c4TDFTpH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbfE0Mc1 (ORCPT
+        id S1727320AbfE0Mc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 08:32:27 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:56968 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726867AbfE0McR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 08:32:17 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5C41F1A0BA4;
-        Mon, 27 May 2019 14:32:15 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4FBB91A01DA;
-        Mon, 27 May 2019 14:32:15 +0200 (CEST)
-Received: from fsr-fed2164-101.ea.freescale.net (fsr-fed2164-101.ea.freescale.net [10.171.82.91])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 0D1E82061C;
-        Mon, 27 May 2019 14:32:15 +0200 (CEST)
-From:   Madalin Bucur <madalin.bucur@nxp.com>
-To:     davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Madalin Bucur <madalin.bucur@nxp.com>
-Subject: [PATCH net-next] fsl/fman: include IPSEC SPI in the Keygen extraction
-Date:   Mon, 27 May 2019 15:32:12 +0300
-Message-Id: <1558960332-12450-1-git-send-email-madalin.bucur@nxp.com>
-X-Mailer: git-send-email 2.1.0
-Reply-to: madalin.bucur@nxp.com
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 27 May 2019 08:32:58 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:39992 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726106AbfE0Mc5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 08:32:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Bb4riJdUbAvU2dFDq22LE6R9qG/UUI43/Y/+y4V6Qvs=; b=c4TDFTpHK0CYd1vWu7R1zqW+/
+        2vf2CkvycdZ1TOZgh6586+6hBSUOonS4izJJJLlU/laLZdtRg9vo/tFqP67DP/DrVq5GNeyOXkp8N
+        ExSQgN5WmAiXgiz9FXGhkb7sqDhbv1+1n9qPgIj2TuqbkRY8ULdb/xs9kniGA0ESzx0t8DJo/mrAl
+        uLK3C6fLgcCbWbFpO9EhXKZtWIcTmu+x6Co60LQwrkDHUOi8//21mfSvFniFvyuP82yQFaVkGwBIf
+        aK/OeehLVOOzYZiUm+0l62ODKjdgrXRftiZCRVCOymL15JzQ7yEwGoiNpC9TkUxMutHPzfpYZgiur
+        Nuu3rPt0w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hVEnP-0003D7-9F; Mon, 27 May 2019 12:32:07 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 10A95202BF3E2; Mon, 27 May 2019 14:32:06 +0200 (CEST)
+Date:   Mon, 27 May 2019 14:32:06 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Juergen Gross <jgross@suse.com>, Nadav Amit <namit@vmware.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        xen-devel@lists.xenproject.org
+Subject: Re: [RFC PATCH 5/6] x86/mm/tlb: Flush remote and local TLBs
+ concurrently
+Message-ID: <20190527123206.GC2623@hirez.programming.kicks-ass.net>
+References: <20190525082203.6531-1-namit@vmware.com>
+ <20190525082203.6531-6-namit@vmware.com>
+ <08b21fb5-2226-7924-30e3-31e4adcfc0a3@suse.com>
+ <20190527094710.GU2623@hirez.programming.kicks-ass.net>
+ <e9c0dc1f-799a-b6e3-8d41-58f0a6b693cd@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e9c0dc1f-799a-b6e3-8d41-58f0a6b693cd@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The keygen extracted fields are used as input for the hash that
-determines the incoming frames distribution. Adding IPSEC SPI so
-different IPSEC flows can be distributed to different CPUs.
+On Mon, May 27, 2019 at 12:21:59PM +0200, Paolo Bonzini wrote:
+> On 27/05/19 11:47, Peter Zijlstra wrote:
 
-Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
----
- drivers/net/ethernet/freescale/fman/fman_keygen.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> > --- a/arch/x86/kernel/kvm.c
+> > +++ b/arch/x86/kernel/kvm.c
+> > @@ -580,7 +580,7 @@ static void __init kvm_apf_trap_init(voi
+> >  
+> >  static DEFINE_PER_CPU(cpumask_var_t, __pv_tlb_mask);
+> >  
+> > -static void kvm_flush_tlb_others(const struct cpumask *cpumask,
+> > +static void kvm_flush_tlb_multi(const struct cpumask *cpumask,
+> >  			const struct flush_tlb_info *info)
+> >  {
+> >  	u8 state;
+> > @@ -594,6 +594,9 @@ static void kvm_flush_tlb_others(const s
+> >  	 * queue flush_on_enter for pre-empted vCPUs
+> >  	 */
+> >  	for_each_cpu(cpu, flushmask) {
+> > +		if (cpu == smp_processor_id())
+> > +			continue;
+> > +
+> 
+> Even this would be just an optimization; the vCPU you're running on
+> cannot be preempted.  You can just change others to multi.
 
-diff --git a/drivers/net/ethernet/freescale/fman/fman_keygen.c b/drivers/net/ethernet/freescale/fman/fman_keygen.c
-index f54da3c684d0..e1bdfed16134 100644
---- a/drivers/net/ethernet/freescale/fman/fman_keygen.c
-+++ b/drivers/net/ethernet/freescale/fman/fman_keygen.c
-@@ -144,7 +144,8 @@
- /* Hash Key extraction fields: */
- #define DEFAULT_HASH_KEY_EXTRACT_FIELDS		\
- 	(KG_SCH_KN_IPSRC1 | KG_SCH_KN_IPDST1 | \
--	    KG_SCH_KN_L4PSRC | KG_SCH_KN_L4PDST)
-+	 KG_SCH_KN_L4PSRC | KG_SCH_KN_L4PDST | \
-+	 KG_SCH_KN_IPSEC_SPI)
- 
- /* Default values to be used as hash key in case IPv4 or L4 (TCP, UDP)
-  * don't exist in the frame
--- 
-2.1.0
+Yeah, I know, but it felt weird so I added the explicit skip. No strong
+feelings though.
 
