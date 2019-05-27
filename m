@@ -2,52 +2,75 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B86D9C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 15:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31BC8C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 15:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9858A20665
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 15:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15CE220665
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 15:39:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbfE0Pix (ORCPT
+        id S1726693AbfE0PjG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 11:38:53 -0400
-Received: from verein.lst.de ([213.95.11.211]:41057 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726115AbfE0Pix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 11:38:53 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 79D5C68AA6; Mon, 27 May 2019 17:38:29 +0200 (CEST)
-Date:   Mon, 27 May 2019 17:38:29 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Tom Murphy <tmurphy@arista.com>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: implement generic dma_map_ops for IOMMUs v5
-Message-ID: <20190527153829.GA31620@lst.de>
-References: <20190520072948.11412-1-hch@lst.de> <20190527153751.GF12745@8bytes.org>
+        Mon, 27 May 2019 11:39:06 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:48784 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726115AbfE0PjF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 11:39:05 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 0255BD75021223B635F8;
+        Mon, 27 May 2019 23:38:56 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Mon, 27 May 2019
+ 23:38:49 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <hao.wu@intel.com>, <atull@kernel.org>, <mdf@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-fpga@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] fpga: dfl: afu: Remove set but not used variable 'afu'
+Date:   Mon, 27 May 2019 23:37:55 +0800
+Message-ID: <20190527153755.7332-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190527153751.GF12745@8bytes.org>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 27, 2019 at 05:37:51PM +0200, Joerg Roedel wrote:
-> I applied this series to a new generic-dma-ops branch in the iommu
-> tree and plan to send it upstream in the next merge window.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Thanks!  Can you push the branch out ASAP, as I'll need to pull it
-into the dma-mapping tree to avoid creating nasty conflicts for the
-pending rework of the DMA CMA and contigous allocators?
+drivers/fpga/dfl-afu-main.c: In function afu_dev_destroy:
+drivers/fpga/dfl-afu-main.c:529:18: warning: variable afu set but not used [-Wunused-but-set-variable]
+
+It is never used since introduction in commit
+857a26222ff7 ("fpga: dfl: afu: add afu sub feature support")
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/fpga/dfl-afu-main.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
+index 02baa6a227c0..5e166b81d14a 100644
+--- a/drivers/fpga/dfl-afu-main.c
++++ b/drivers/fpga/dfl-afu-main.c
+@@ -526,10 +526,8 @@ static int afu_dev_init(struct platform_device *pdev)
+ static int afu_dev_destroy(struct platform_device *pdev)
+ {
+ 	struct dfl_feature_platform_data *pdata = dev_get_platdata(&pdev->dev);
+-	struct dfl_afu *afu;
+ 
+ 	mutex_lock(&pdata->lock);
+-	afu = dfl_fpga_pdata_get_private(pdata);
+ 	afu_mmio_region_destroy(pdata);
+ 	afu_dma_region_destroy(pdata);
+ 	dfl_fpga_pdata_set_private(pdata, NULL);
+-- 
+2.17.1
+
+
