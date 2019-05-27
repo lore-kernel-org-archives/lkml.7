@@ -2,76 +2,181 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F03C0C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 589EFC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEE312147A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:21:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FCC520859
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:26:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tomeuvizoso-net.20150623.gappssmtp.com header.i=@tomeuvizoso-net.20150623.gappssmtp.com header.b="kifWJ4/+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbfE0LV0 (ORCPT
+        id S1726569AbfE0L0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 07:21:26 -0400
-Received: from muru.com ([72.249.23.125]:51104 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725814AbfE0LV0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 07:21:26 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id E292C80F3;
-        Mon, 27 May 2019 11:21:44 +0000 (UTC)
-Date:   Mon, 27 May 2019 04:21:22 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com
-Subject: Re: [PATCHv6 0/4] omapdrm: DSI command mode panel support
-Message-ID: <20190527112122.GJ5447@atomide.com>
-References: <20190523200756.25314-1-sebastian.reichel@collabora.com>
- <60c45d23-de2f-d94a-c3d7-146a2bee538f@ti.com>
+        Mon, 27 May 2019 07:26:23 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:36422 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726371AbfE0L0W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 07:26:22 -0400
+Received: by mail-it1-f193.google.com with SMTP id e184so23648970ite.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 04:26:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tomeuvizoso-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YVFEAxn6QDUK2Q7FjsZ+cPDp6Vvn72el2LW5H6kkAPk=;
+        b=kifWJ4/+v4gg0CSUL7cfMAfOFnkVyxOXCJvUADl2wh6FLYOfY28hSFeB3XW0HrAUI+
+         +83Rhdr7qVmfV1TgRFXW5FYFYSl3KXzojbr6VaCRAILLyf79JQJQxVVQ/oW7h39F7+Y4
+         NXv9DLVOAke8BtRnIAKCZExLOzA+8SOgCHe3YINU2w8EBVKdeS9UbndFofRYM9GNwyNC
+         aIkoq5Q/K31sviUYQ2HbKce48pTqVY6+GwZsmbg4Wp6ryNVBvOlMpQRL3xDHMlbPAJgb
+         Pc2wzHmWgcJQOkHNoSPopjD50DtF57Lg9djilDsx3pEKUtRueRliNi1CpUDlBsAkpti/
+         RCZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YVFEAxn6QDUK2Q7FjsZ+cPDp6Vvn72el2LW5H6kkAPk=;
+        b=a957tMSXg8h+Rnl0xcfd45ZwzNQhQ8ZTNyV1wsZ3mIaC0duMJjJUUg085XObV5IA9h
+         WiptXnQyWQ5dH1zZNfXs+r26QPRlUoNhT9fAwSbeMH/uGwiKzar64OM210i7ANz5YVWs
+         isSQA4Yt8aZJgIx1T6t0PS2m+qt0ykOKFDbxPWbCfyiO5pykvMQrtYFndzji+bSuqS/E
+         NxBp4NUgeYDjw24g5/On4tJUV/vGh+QzaQLaFhXeJH+Bp9ESqIrzxgv176xjR+7fz8Pe
+         iWhezsEUg36gcYTwJ/mECITvCaSogj8XBGEVrdyuYFA/fudtrMQahJs2tOVFDYm51RJY
+         2tSg==
+X-Gm-Message-State: APjAAAVGw2uXdSt0011LIPNT3Jqm51x4pi551tPH28cNBAFY8CwRejd5
+        U0U7ETrnMiEBZ1xWyHqgXCAR4AYNjwQ=
+X-Google-Smtp-Source: APXvYqz+Hr6WlhzDmdRVoHgp3K8TDvFEypUU6s0bJ4nTrg2c9AQx9qtIbA5dPhPqhttwSPY2YlsWYg==
+X-Received: by 2002:a05:660c:64f:: with SMTP id y15mr29494582itk.180.1558956381758;
+        Mon, 27 May 2019 04:26:21 -0700 (PDT)
+Received: from mail-it1-f175.google.com (mail-it1-f175.google.com. [209.85.166.175])
+        by smtp.gmail.com with ESMTPSA id w139sm5107494ita.43.2019.05.27.04.26.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 27 May 2019 04:26:21 -0700 (PDT)
+Received: by mail-it1-f175.google.com with SMTP id t184so9003375itf.2;
+        Mon, 27 May 2019 04:26:21 -0700 (PDT)
+X-Received: by 2002:a05:660c:64f:: with SMTP id y15mr29494546itk.180.1558956380784;
+ Mon, 27 May 2019 04:26:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <60c45d23-de2f-d94a-c3d7-146a2bee538f@ti.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190516044313.GA17751@localhost.localdomain> <CAAObsKD0_+cJQW0YtF9AkWn8XYP9wSYHTi_UhRiba7tH5EWTdw@mail.gmail.com>
+ <20190524024047.GE1936@localhost.localdomain> <CAAObsKB_CsPk5uFCCsQs+UD3EYzAwEAWZCiH1_L4t2rXmymjTQ@mail.gmail.com>
+ <20190524135358.GA2750@localhost.localdomain>
+In-Reply-To: <20190524135358.GA2750@localhost.localdomain>
+From:   Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Date:   Mon, 27 May 2019 13:26:08 +0200
+X-Gmail-Original-Message-ID: <CAAObsKC_wJJ7C-swhVoVJC0WOTyxOAdMSM6vjpCSPUwdttRxKQ@mail.gmail.com>
+Message-ID: <CAAObsKC_wJJ7C-swhVoVJC0WOTyxOAdMSM6vjpCSPUwdttRxKQ@mail.gmail.com>
+Subject: Re: [GIT PULL] Thermal-SoC management changes for v5.2-rc1
+To:     Eduardo Valentin <edubezval@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Rui Zhang <rui.zhang@intel.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Tomi Valkeinen <tomi.valkeinen@ti.com> [190527 10:51]:
-> Hi,
-> 
-> On 23/05/2019 23:07, Sebastian Reichel wrote:
-> > Hi,
-> > 
-> > Here is another round of the DSI command mode panel patchset
-> > integrating the feedback from PATCHv5. The patches are based
-> > on v5.2-rc1 tag. It does not contain the patches required for
-> > OMAP3 support (it needs a workaround for a hardware bug) and
-> > for automatic display rotation. They should get their own series,
-> > once after everything has been moved to DRM panel API. I think
-> > DRM panel conversion should happen _after_ this series, since
-> > otherwise there is a high risk of bricking DSI support completely.
-> > I already started a WIP branch for converting DSI to the DRM panel
-> > API on top of this patchset.
-> 
-> Looks good to me. For some reason I can't boot 5.2-rc2 (on x15) so I haven't
-> been able to test yet. I'll pick the series up in any case, and I'll test it
-> when I get the kernel booting.
+On Fri, 24 May 2019 at 15:54, Eduardo Valentin <edubezval@gmail.com> wrote:
+>
+> Hello,
+>
+> On Fri, May 24, 2019 at 10:23:09AM +0200, Tomeu Vizoso wrote:
+> > On Fri, 24 May 2019 at 04:40, Eduardo Valentin <edubezval@gmail.com> wrote:
+> > >
+> > > On Thu, May 23, 2019 at 11:46:47AM +0200, Tomeu Vizoso wrote:
+> > > > Hi Eduardo,
+> > > >
+> > > > I saw that for 5.1 [0] you included a kernelci boot report for your
+> > > > tree, but not for 5.2. Have you found anything that should be improved
+> > > > in KernelCI for it to be more useful to maintainers like you?
+> > >
+> > > Honestly, I take a couple of automated testing as input before sending
+> > > my pulls to Linux: (a) my local test, (b) kernel-ci, and (c) 0-day.
+> > >
+> > > There was really no reason specifically for me to not add the report
+> > > from kernelci, except..
+> > > >
+> > > > [0] https://lore.kernel.org/lkml/20190306161207.GA7365@localhost.localdomain/
+> > > >
+> > > > I found about this when trying to understand why the boot on the
+> > > > veyron-jaq board has been broken in 5.2-rc1.
+> > > >
+> > >
+> > > I remember a report saying this failed, but from what I could tell from
+> > > the boot log, the board booted and hit terminal. But apparently, after
+> > > all reports from developers, the veyron-jaq boards were in a hang state.
+> > >
+> > > That was hard for me to tell from your logs, as they looked like
+> > > a regular boot that hits terminal.
+> > >
+> > > Maybe I should have looked for a specific output of a command you guys
+> > > run, saying "successful boot" somewhere?
+> >
+> > I think what is easiest and clearest is to consider the bisection
+> > reports as a very strong indication that something is quite wrong in
+> > the branch.
+>
+> OK. I hear you.
+>
+> >
+> > Because if a board stopped booting and the bisection found a
+> > suspicious patch, and reverting it gets the board booting again, then
+> > chances are very high that the patch in question broke that boot.
+> >
+>
+>
+> Yeah, for sure If I had understood the report properly I could have
+> nacked the patch.
+>
+> > Do you think the wording could be improved to make it clearer? Or
+> > maybe some other changes to make all this more useful to maintainers
+> > like you?
+> >
+>
+> Well, from my perspective, I need to judge if the failure on your report
+> is really related to my changes. Many times, specially on build errors,
+> we get failures that are unrelated. Build errors are more straight
+> forward do judge. Similarly, we need to find out if a boot issue is
+> caused by a change on the branch or something existing. On boot issues
+> from kernelci reports, I think the false negatives I have been seeing
+> is lab/boards failing to boot. Those can also be easy to spot as the
+> in most cases the kernel wont even load.
+>
+> For this particular case, as I described before, the kernel would
+> load and hit the shell command line, but in fact it was in hang state
+> IIRC. That is probably why it has not straight forward to understand
+> from the log. Maybe a successful boot message somewhere would have
+> helped to spot the problem (or the opposite of it, something
+> saying, I was expecting to execute a command and board was
+> unresponsive).
 
-Great good to have these merged finally :)
+Ah, I think I see now what you meant. In the boot log linked below,
+near the end we have:
 
-Hmm I wonder if some x15 models are affected by the SoC variant
-changes queued in my fixes branch?
+22:14:41.981401  ShellCommand command timed out.: Sending # in case of
+corruption. Connection timeout 00:04:25, retry in 00:02:12
+22:14:42.083594  #
 
-Regards,
+The # character is sent by the LAVA machine that the DUT is connected
+to, in the hope that a userspace shell would reply with something.
 
-Tony
+But the kernel failed to boot to userspace, so we have this at the end:
+
+22:16:54.558087  depthcharge-retry failed: 1 of 1 attempts.
+'auto-login-action timed out after 285 seconds'
+22:16:54.560479  depthcharge-action failed: 1 of 1 attempts.
+'auto-login-action timed out after 285 seconds'
+22:16:54.855023  JobError: Your job cannot terminate cleanly.
+
+https://storage.kernelci.org/evalenti/for-kernelci/v5.1-rc6-58-gbe827ffd38ea/arm/multi_v7_defconfig/gcc-8/lab-collabora/boot-rk3288-veyron-jaq.html
+
+Do you think that's the source of the confusion?
+
+Thanks,
+
+Tomeu
