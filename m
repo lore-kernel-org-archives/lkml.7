@@ -2,142 +2,132 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CB1C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 20:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0232C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 20:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63479208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 20:05:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DC1A208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 20:10:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GZKzgwTs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbfE0UFQ (ORCPT
+        id S1727113AbfE0UKO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 16:05:16 -0400
-Received: from mga02.intel.com ([134.134.136.20]:12646 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726346AbfE0UFP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 16:05:15 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 May 2019 13:05:14 -0700
-X-ExtLoop1: 1
-Received: from orsmsx104.amr.corp.intel.com ([10.22.225.131])
-  by fmsmga004.fm.intel.com with ESMTP; 27 May 2019 13:05:14 -0700
-Received: from orsmsx159.amr.corp.intel.com (10.22.240.24) by
- ORSMSX104.amr.corp.intel.com (10.22.225.131) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Mon, 27 May 2019 13:05:13 -0700
-Received: from orsmsx112.amr.corp.intel.com ([169.254.3.79]) by
- ORSMSX159.amr.corp.intel.com ([169.254.11.57]) with mapi id 14.03.0415.000;
- Mon, 27 May 2019 13:05:13 -0700
-From:   "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-To:     "peterz@infradead.org" <peterz@infradead.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "mroos@linux.ee" <mroos@linux.ee>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "namit@vmware.com" <namit@vmware.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>
-Subject: Re: [PATCH v4 1/2] vmalloc: Fix calculation of direct map addr range
-Thread-Topic: [PATCH v4 1/2] vmalloc: Fix calculation of direct map addr
- range
-Thread-Index: AQHVEBc70xeDpvMdbkm+DpMWjEkdYqZ/YkYAgACB4AA=
-Date:   Mon, 27 May 2019 20:05:13 +0000
-Message-ID: <dbf5f298d51183589c92cbd94da3b1e078457f4d.camel@intel.com>
-References: <20190521205137.22029-1-rick.p.edgecombe@intel.com>
-         <20190521205137.22029-2-rick.p.edgecombe@intel.com>
-         <20190527122022.GP2606@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190527122022.GP2606@hirez.programming.kicks-ass.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.30.1 (3.30.1-1.fc29) 
-x-originating-ip: [10.251.0.167]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F500BEE106FE694D98FD28E43C08884B@intel.com>
-Content-Transfer-Encoding: base64
+        Mon, 27 May 2019 16:10:14 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43827 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726346AbfE0UKO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 16:10:14 -0400
+Received: by mail-wr1-f66.google.com with SMTP id l17so9470663wrm.10;
+        Mon, 27 May 2019 13:10:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IDHZvbW5fijbJYqS49AHo5wrH49+8LRhFk5frtH+czs=;
+        b=GZKzgwTsjl8oDnFeiCt7vuI5aKIZrQGAleaeM2RbFDLBcE9pCZz3wszFrErQsWBnev
+         xSbVzEZkH2YIhlzU20dYu8H/77rmwr3ucbJ/J1cuUJlE5C0VAX9rBpt20D39GCFY75wf
+         lYEKs/3NJdkjm+UP7hWIbHgH3wOipDJei5ZPnkCCbmVcVCYIekcFrMo+w26484791vB+
+         7KFRFV3gUpScnOmLUqx2fD8JRCpt3zN9HWJLpQ9sauIyM17VnROccWPEBmyao3iCoWDd
+         sGOip2GMuXO9TSwCmuU+AHhg4P4He2itS162rxpyd9g6ZhUghIQmqJcRDcocS3sgVhqY
+         sA8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IDHZvbW5fijbJYqS49AHo5wrH49+8LRhFk5frtH+czs=;
+        b=Qr+zelGo6kHXOBtV/ZkdrxqDUj2BJ6LXUdJPn8EkpX4pch+8CSt5u5Uvj+S60EC8Sk
+         P7HqCnW0tMrFPleJP3cFlYWO29ZDS3OyblYnmYbgZ97pDztfXC0tRAvmHFk/9wA7uId5
+         q9yZ14t67ImPo8zf4czL3ucKINu258Hdh6leOrxslOLwgxx8OfGlKdmhbR5HIvdVKrDE
+         DBCn8sixPxL4xxoPUrjFU2Uje8039Z8OL1ebPQ6y0hJbwGdEK0c1EaFBX+WaQtTGEnBr
+         1IKqwsb3Edc6ncwvFtm+4H0cyxK69rn33/+JJgu6Ynq3CwWd/4MMIQ4o19CwWsm8cNhn
+         3gcA==
+X-Gm-Message-State: APjAAAW1RbSf3PTntIlm8u/v+/bSTTkh/92FGAlDqjxzhdrgF1gEiQmh
+        XjjeCmSczXuJQ5XzJXZeQcGwu9N3Ak3BEw==
+X-Google-Smtp-Source: APXvYqyqpFAqUTi8dpMrKnZvZz7bKtAJFVOE03EyjPbv+ISOjv5Cl5nD4sOql4lDIlCwc/mR9Ktrjg==
+X-Received: by 2002:adf:ff88:: with SMTP id j8mr1844331wrr.317.1558987812061;
+        Mon, 27 May 2019 13:10:12 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
+        by smtp.gmail.com with ESMTPSA id s127sm308523wmf.48.2019.05.27.13.10.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 27 May 2019 13:10:11 -0700 (PDT)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jagan Teki <jagan@amarulasolutions.com>
+Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v4 0/7] Allwinner H6 SPDIF support
+Date:   Mon, 27 May 2019 22:06:20 +0200
+Message-Id: <20190527200627.8635-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTA1LTI3IGF0IDE0OjIwICswMjAwLCBQZXRlciBaaWpsc3RyYSB3cm90ZToN
-Cj4gT24gVHVlLCBNYXkgMjEsIDIwMTkgYXQgMDE6NTE6MzZQTSAtMDcwMCwgUmljayBFZGdlY29t
-YmUgd3JvdGU6DQo+ID4gVGhlIGNhbGN1bGF0aW9uIG9mIHRoZSBkaXJlY3QgbWFwIGFkZHJlc3Mg
-cmFuZ2UgdG8gZmx1c2ggd2FzIHdyb25nLg0KPiA+IFRoaXMgY291bGQgY2F1c2UgcHJvYmxlbXMg
-b24geDg2IGlmIGEgUk8gZGlyZWN0IG1hcCBhbGlhcyBldmVyIGdvdA0KPiA+IGxvYWRlZA0KPiA+
-IGludG8gdGhlIFRMQi4gVGhpcyBzaG91bGRuJ3Qgbm9ybWFsbHkgaGFwcGVuLCBidXQgaXQgY291
-bGQgY2F1c2UNCj4gPiB0aGUNCj4gPiBwZXJtaXNzaW9ucyB0byByZW1haW4gUk8gb24gdGhlIGRp
-cmVjdCBtYXAgYWxpYXMsIGFuZCB0aGVuIHRoZSBwYWdlDQo+ID4gd291bGQgcmV0dXJuIGZyb20g
-dGhlIHBhZ2UgYWxsb2NhdG9yIHRvIHNvbWUgb3RoZXIgY29tcG9uZW50IGFzIFJPDQo+ID4gYW5k
-DQo+ID4gY2F1c2UgYSBjcmFzaC4NCj4gPiANCj4gPiBTbyBmaXggZml4IHRoZSBhZGRyZXNzIHJh
-bmdlIGNhbGN1bGF0aW9uIHNvIHRoZSBmbHVzaCB3aWxsIGluY2x1ZGUNCj4gPiB0aGUNCj4gPiBk
-aXJlY3QgbWFwIHJhbmdlLg0KPiA+IA0KPiA+IEZpeGVzOiA4NjhiMTA0ZDczNzkgKCJtbS92bWFs
-bG9jOiBBZGQgZmxhZyBmb3IgZnJlZWluZyBvZiBzcGVjaWFsDQo+ID4gcGVybXNpc3Npb25zIikN
-Cj4gPiBDYzogTWVlbGlzIFJvb3MgPG1yb29zQGxpbnV4LmVlPg0KPiA+IENjOiBQZXRlciBaaWps
-c3RyYSA8cGV0ZXJ6QGluZnJhZGVhZC5vcmc+DQo+ID4gQ2M6ICJEYXZpZCBTLiBNaWxsZXIiIDxk
-YXZlbUBkYXZlbWxvZnQubmV0Pg0KPiA+IENjOiBEYXZlIEhhbnNlbiA8ZGF2ZS5oYW5zZW5AaW50
-ZWwuY29tPg0KPiA+IENjOiBCb3Jpc2xhdiBQZXRrb3YgPGJwQGFsaWVuOC5kZT4NCj4gPiBDYzog
-QW5keSBMdXRvbWlyc2tpIDxsdXRvQGtlcm5lbC5vcmc+DQo+ID4gQ2M6IEluZ28gTW9sbmFyIDxt
-aW5nb0ByZWRoYXQuY29tPg0KPiA+IENjOiBOYWRhdiBBbWl0IDxuYW1pdEB2bXdhcmUuY29tPg0K
-PiA+IFNpZ25lZC1vZmYtYnk6IFJpY2sgRWRnZWNvbWJlIDxyaWNrLnAuZWRnZWNvbWJlQGludGVs
-LmNvbT4NCj4gPiAtLS0NCj4gPiAgbW0vdm1hbGxvYy5jIHwgNSArKystLQ0KPiA+ICAxIGZpbGUg
-Y2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KPiA+IA0KPiA+IGRpZmYg
-LS1naXQgYS9tbS92bWFsbG9jLmMgYi9tbS92bWFsbG9jLmMNCj4gPiBpbmRleCBjNDI4NzJlZDgy
-YWMuLjgzNjg4OGFlMDFmNiAxMDA2NDQNCj4gPiAtLS0gYS9tbS92bWFsbG9jLmMNCj4gPiArKysg
-Yi9tbS92bWFsbG9jLmMNCj4gPiBAQCAtMjE1OSw5ICsyMTU5LDEwIEBAIHN0YXRpYyB2b2lkIHZt
-X3JlbW92ZV9tYXBwaW5ncyhzdHJ1Y3QNCj4gPiB2bV9zdHJ1Y3QgKmFyZWEsIGludCBkZWFsbG9j
-YXRlX3BhZ2VzKQ0KPiA+ICAJICogdGhlIHZtX3VubWFwX2FsaWFzZXMoKSBmbHVzaCBpbmNsdWRl
-cyB0aGUgZGlyZWN0IG1hcC4NCj4gPiAgCSAqLw0KPiA+ICAJZm9yIChpID0gMDsgaSA8IGFyZWEt
-Pm5yX3BhZ2VzOyBpKyspIHsNCj4gPiAtCQlpZiAocGFnZV9hZGRyZXNzKGFyZWEtPnBhZ2VzW2ld
-KSkgew0KPiA+ICsJCWFkZHIgPSAodW5zaWduZWQgbG9uZylwYWdlX2FkZHJlc3MoYXJlYS0+cGFn
-ZXNbaV0pOw0KPiA+ICsJCWlmIChhZGRyKSB7DQo+ID4gIAkJCXN0YXJ0ID0gbWluKGFkZHIsIHN0
-YXJ0KTsNCj4gPiAtCQkJZW5kID0gbWF4KGFkZHIsIGVuZCk7DQo+ID4gKwkJCWVuZCA9IG1heChh
-ZGRyICsgUEFHRV9TSVpFLCBlbmQpOw0KPiA+ICAJCX0NCj4gPiAgCX0NCj4gPiAgDQo+IA0KPiBJ
-bmRlZWQ7IGhvd2V2ciBJJ20gdGhpbmtpbmcgdGhpcyBidWcgd2FzIGNhdXNlZCB0byBleGlzdCBi
-eSB0aGUgZHVhbA0KPiB1c2UNCj4gb2YgQGFkZHIgaW4gdGhpcyBmdW5jdGlvbiwgc28gc2hvdWxk
-IHdlIG5vdCwgcGVyaGFwcywgZG8gc29tZXRoaW5nDQo+IGxpa2UNCj4gdGhlIGJlbG93IGluc3Rl
-YWQ/DQo+IA0KPiBBbHNvOyBoYXZpbmcgbG9va2VkIGF0IHRoaXMsIGl0IG1ha2VzIG1lIHF1ZXN0
-aW9uIHRoZSB1c2Ugb2YNCj4gZmx1c2hfdGxiX2tlcm5lbF9yYW5nZSgpIGluIF92bV91bm1hcF9h
-bGlhc2VzKCkgYW5kDQo+IF9fcHVyZ2Vfdm1hcF9hcmVhX2xhenkoKSwgaXQncyBwb3RlbnRpYWxs
-eSBjb21iaW5pbmcgbXVsdGlwbGUgcmFuZ2VzLA0KPiB3aGljaCBuZXZlciByZWFsbHkgd29ya3Mg
-d2VsbC4NCj4gDQo+IEFyZ3VhYmx5LCB3ZSBzaG91bGQganVzdCBkbyBmbHVzaF90bGJfYWxsKCkg
-aGVyZSwgYnV0IHRoYXQncyBmb3INCj4gYW5vdGhlcg0KPiBwYXRjaCBJJ20gdGhpbmtpbmcuDQoN
-ClRoYW5rcy4gSXQgbW9zdGx5IGdvdCBicm9rZW4gaW1wbGVtZW50aW5nIGEgc3R5bGUgc3VnZ2Vz
-dGlvbiBsYXRlIGluDQp0aGUgc2VyaWVzLiBJJ2xsIGNoYW5nZSB0aGUgYWRkciB2YXJpYWJsZSBh
-cm91bmQgbGlrZSB5b3Ugc3VnZ2VzdCB0bw0KbWFrZSBpdCBtb3JlIHJlc2lzdGFudC4NCg0KVGhl
-IGZsdXNoX3RsYl9hbGwoKSBzdWdnZXN0aW9uIG1ha2VzIHNlbnNlIHRvIG1lLCBidXQgSSdsbCBs
-ZWF2ZSBpdCBmb3INCm5vdy4NCg0KPiAtLS0NCj4gLS0tIGEvbW0vdm1hbGxvYy5jDQo+ICsrKyBi
-L21tL3ZtYWxsb2MuYw0KPiBAQCAtMjEyMyw3ICsyMTIzLDYgQEAgc3RhdGljIGlubGluZSB2b2lk
-IHNldF9hcmVhX2RpcmVjdF9tYXAoYw0KPiAgLyogSGFuZGxlIHJlbW92aW5nIGFuZCByZXNldHRp
-bmcgdm0gbWFwcGluZ3MgcmVsYXRlZCB0byB0aGUNCj4gdm1fc3RydWN0LiAqLw0KPiAgc3RhdGlj
-IHZvaWQgdm1fcmVtb3ZlX21hcHBpbmdzKHN0cnVjdCB2bV9zdHJ1Y3QgKmFyZWEsIGludA0KPiBk
-ZWFsbG9jYXRlX3BhZ2VzKQ0KPiAgew0KPiAtCXVuc2lnbmVkIGxvbmcgYWRkciA9ICh1bnNpZ25l
-ZCBsb25nKWFyZWEtPmFkZHI7DQo+ICAJdW5zaWduZWQgbG9uZyBzdGFydCA9IFVMT05HX01BWCwg
-ZW5kID0gMDsNCj4gIAlpbnQgZmx1c2hfcmVzZXQgPSBhcmVhLT5mbGFncyAmIFZNX0ZMVVNIX1JF
-U0VUX1BFUk1TOw0KPiAgCWludCBpOw0KPiBAQCAtMjEzNSw4ICsyMTM0LDggQEAgc3RhdGljIHZv
-aWQgdm1fcmVtb3ZlX21hcHBpbmdzKHN0cnVjdCB2bQ0KPiAgCSAqIGV4ZWN1dGUgcGVybWlzc2lv
-bnMsIHdpdGhvdXQgbGVhdmluZyBhIFJXK1ggd2luZG93Lg0KPiAgCSAqLw0KPiAgCWlmIChmbHVz
-aF9yZXNldCAmJiAhSVNfRU5BQkxFRChDT05GSUdfQVJDSF9IQVNfU0VUX0RJUkVDVF9NQVApKQ0K
-PiB7DQo+IC0JCXNldF9tZW1vcnlfbngoYWRkciwgYXJlYS0+bnJfcGFnZXMpOw0KPiAtCQlzZXRf
-bWVtb3J5X3J3KGFkZHIsIGFyZWEtPm5yX3BhZ2VzKTsNCj4gKwkJc2V0X21lbW9yeV9ueCgodW5z
-aWduZWQgbG9uZylhcmVhLT5hZGRyLCBhcmVhLQ0KPiA+bnJfcGFnZXMpOw0KPiArCQlzZXRfbWVt
-b3J5X3J3KCh1bnNpZ25lZCBsb25nKWFyZWEtPmFkZHIsIGFyZWEtDQo+ID5ucl9wYWdlcyk7DQo+
-ICAJfQ0KPiAgDQo+ICAJcmVtb3ZlX3ZtX2FyZWEoYXJlYS0+YWRkcik7DQo+IEBAIC0yMTYwLDkg
-KzIxNTksMTAgQEAgc3RhdGljIHZvaWQgdm1fcmVtb3ZlX21hcHBpbmdzKHN0cnVjdCB2bQ0KPiAg
-CSAqIHRoZSB2bV91bm1hcF9hbGlhc2VzKCkgZmx1c2ggaW5jbHVkZXMgdGhlIGRpcmVjdCBtYXAu
-DQo+ICAJICovDQo+ICAJZm9yIChpID0gMDsgaSA8IGFyZWEtPm5yX3BhZ2VzOyBpKyspIHsNCj4g
-LQkJaWYgKHBhZ2VfYWRkcmVzcyhhcmVhLT5wYWdlc1tpXSkpIHsNCj4gKwkJdW5zaWduZWQgbG9u
-ZyBhZGRyID0gKHVuc2lnbmVkIGxvbmcpcGFnZV9hZGRyZXNzKGFyZWEtDQo+ID5wYWdlc1tpXSk7
-DQo+ICsJCWlmIChhZGRyKSB7DQo+ICAJCQlzdGFydCA9IG1pbihhZGRyLCBzdGFydCk7DQo+IC0J
-CQllbmQgPSBtYXgoYWRkciwgZW5kKTsNCj4gKwkJCWVuZCA9IG1heChhZGRyICsgUEFHRV9TSVpF
-LCBlbmQpOw0KPiAgCQl9DQo+ICAJfQ0KPiAgDQo=
+*H6 DMA support IS REQUIRED*
+
+Allwinner H6 SoC has a SPDIF controller called One Wire Audio (OWA) which
+is different from the previous H3 generation and not compatible.
+
+Difference are an increase of fifo sizes, some memory mapping are different
+and there is now the possibility to output the master clock on a pin.
+
+Actually all these features are unused and only a bit for flushing the TX
+fifo is required.
+
+Also this series requires the DMA working on H6, a first version has been
+submitted by Jernej Škrabec[1] but has not been accepted yet.
+
+[1] https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=89011
+
+Changes since v3:
+ - rename reg_fctl_ftx to val_fctl_ftx
+ - rebase this series on sound-next
+ - fix dt-bindings due to change in sound-next
+ - change node name sound_spdif to sound-spdif
+
+Changes since v2:
+ - Split quirks and H6 support patch
+ - Add specific section for quirks comment
+
+Changes since v1:
+ - Remove H3 compatible
+ - Add TX fifo bit flush quirks
+ - Add H6 bindings in SPDIF driver
+
+Clément Péron (7):
+  dt-bindings: sound: sun4i-spdif: Add Allwinner H6 compatible
+  ASoC: sun4i-spdif: Move quirks to the top
+  ASoC: sun4i-spdif: Add TX fifo bit flush quirks
+  ASoC: sun4i-spdif: Add support for H6 SoC
+  arm64: dts: allwinner: Add SPDIF node for Allwinner H6
+  arm64: dts: allwinner: h6: Enable SPDIF for Beelink GS1
+  arm64: defconfig: Enable Sun4i SPDIF module
+
+ .../sound/allwinner,sun4i-a10-spdif.yaml      |  1 +
+ .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  4 ++
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 38 ++++++++++++++
+ arch/arm64/configs/defconfig                  |  1 +
+ sound/soc/sunxi/sun4i-spdif.c                 | 49 ++++++++++++++++---
+ 5 files changed, 87 insertions(+), 6 deletions(-)
+
+-- 
+2.20.1
+
