@@ -4,67 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 570F9C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3473C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D6602075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CF5F2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 13:22:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="0taidlTm"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="MiJuoVo4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbfE0NWP (ORCPT
+        id S1726693AbfE0NWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 09:22:15 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53472 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726601AbfE0NWK (ORCPT
+        Mon, 27 May 2019 09:22:18 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39311 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726628AbfE0NWM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 09:22:10 -0400
-Received: by mail-wm1-f66.google.com with SMTP id d17so2981852wmb.3
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 06:22:08 -0700 (PDT)
+        Mon, 27 May 2019 09:22:12 -0400
+Received: by mail-wr1-f68.google.com with SMTP id e2so8162263wrv.6
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 06:22:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=DdDiX896+ezCVjE2omOCRKNF6RoJ/lx1xAP+K6/8hcI=;
-        b=0taidlTmPCtCcB4JDbNmutRrOjR5sU3c+dVwtPaU9IRCQ0DyzKTGsFCl93SVFTE3Ro
-         ccsPpDhPzt285NJdzFErdPt9OneOuVKy1/L1PDEl9dCYLm0T9UaLXGlEYyjhQtPCWriL
-         zrhOYbgtmK1Ugz4k915t5pngUL2+4rnS2a7HqWAhcQ6+FaanvxOO4NFuH7GQon8VnL++
-         Fhq50kZs28TwNur3YEFFbaU5B86p8vVGc7WGCryF0W1/ADPopbOehNDwlihgMmIZgIUc
-         nGNegBj2pyTbz+GlzpmImgUv2alNedlx60dzK54mdtA4lBTFjNv4T0Y9NU68Lit/I6n1
-         PaMw==
+        bh=1P5QlVaHw/qutd0fn2pg3sEjq4K4xykyak/BNOBt7EY=;
+        b=MiJuoVo4XE9EvwCi1lJ/KTjNn5vkTGuOAboQ1357fR8CCKNsFMkHx7jbSvFLyf8nAK
+         lT0K3rrLl7Udusvz9kAPZ2Am/rHTN8UJMd2sjIQeV0EUo007PCehoOLFxmjZNm5VZY4r
+         DFPwp91uwX2GfPpY1/vvPH0Penf8j3IsYBnOJu3yTpXNEVMdNLFnyVeTf7xRpkTODG32
+         hRFdP+VZyIPkWJaHaiWHkrWfTleo4gO1n1ozF1DlcemA7hAzh1FDoyJgGNELfPPNkog1
+         pD9D6pirVHuUyUozIsY0z7VhmmegqBdW7iVCknjA9PIhemNQwpp0NhCCQwSQvOKlTabG
+         +CqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=DdDiX896+ezCVjE2omOCRKNF6RoJ/lx1xAP+K6/8hcI=;
-        b=s+BKhHV3LgP3QTZOaUFsiUtnEiUyHUyX+T3+dp9kArbBm5e1UCoz3ly6hKDPbia6PK
-         uy5JUC7jwEpufssRtUAyaCORwbXJ97A0hrEPmpo3hvqq+8dDgFxDlKQv/ghKemwPwt/u
-         Zrh3yDNawMWYXqZN09X4vW43i7DD7eecERVgNU3HpL3/u0quLNZ9/2m8z7lppel2qeqh
-         MvqRxsKTKNecsrnxKTQtTM55ejFfUk+TpDTJBM8HR5LgfCUFQCBMQxObOneObviDUUxo
-         ks5R7YOONzxUi0ppz2td/nxgQtiRrhgi4fpUqCbYHlIqwMJPpYhOBHVjDkgqrxqB2X1F
-         TeyQ==
-X-Gm-Message-State: APjAAAVIFXksgaPWheV1XpU6v05cTZX6gyKGDzY8R4Co9IITWm3n3+t+
-        u7Z5lRaC7ICfrL+GmyGPYSbzAfm+K5hHvQ==
-X-Google-Smtp-Source: APXvYqx9B1l8Wqo70PYjwXfiLcOmhOwoS7q8t+cSLTwJ7RDvTS2xOIFZIkC/7C8I34i8CtpyFtMlkg==
-X-Received: by 2002:a1c:7a0d:: with SMTP id v13mr9696782wmc.44.1558963328167;
-        Mon, 27 May 2019 06:22:08 -0700 (PDT)
+        bh=1P5QlVaHw/qutd0fn2pg3sEjq4K4xykyak/BNOBt7EY=;
+        b=niQl9zB+YslURf6XeQWy7Uuffsz0bUzmNNmwVoKBCDoippdjF7FCTBLfscUXwpqMQN
+         3oZsgsoLAejGPGWuZ7o+SM8h1ATAJarj38ZtZsN35n5HAI5F9wkDJ43R/DTzFy+ic5+f
+         0+6LWZlZHkevcITmnoRH0C1teYFD/jN4JILYs3wIWzZ4LXh2z+aczUSV/6yBkvukGF47
+         +UgqwWUw0NbMT+BraeCszJ9wPlHcZaM0n1+tfG3vj1HNzEq63INgT0tegPLgvw0ADhTe
+         7t6SmXiurfE6AZQSmBKMaREOCePRZTid4WSOwNTk15eJzt++gVniTUDQ5JELQ9b+CLeb
+         Dk/w==
+X-Gm-Message-State: APjAAAW42cxZKBI30NxI7wI7UhfJBeZXsp7HTtDuoFbb9IiXW3AtD6Yt
+        d5xDywm4IIq8jZRRL2qjOJibqQ==
+X-Google-Smtp-Source: APXvYqyWlquctEhMRszF7odvCHXFI0pvNktDwIVJZOgmAvW/p89BNtQ/h0utKRsS3NvmSJeu3FKaGQ==
+X-Received: by 2002:a5d:680f:: with SMTP id w15mr7705835wru.349.1558963331213;
+        Mon, 27 May 2019 06:22:11 -0700 (PDT)
 Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id l12sm7019836wmj.22.2019.05.27.06.22.07
+        by smtp.gmail.com with ESMTPSA id l12sm7019836wmj.22.2019.05.27.06.22.10
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 27 May 2019 06:22:07 -0700 (PDT)
+        Mon, 27 May 2019 06:22:10 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     khilman@baylibre.com
 Cc:     Neil Armstrong <narmstrong@baylibre.com>,
         linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         christianshewitt@gmail.com
-Subject: [PATCH 07/10] arm64: dts: meson-gxbb-vega-s95: enable CEC
-Date:   Mon, 27 May 2019 15:21:57 +0200
-Message-Id: <20190527132200.17377-8-narmstrong@baylibre.com>
+Subject: [PATCH 10/10] arm64: dts: meson-gxbb-vega-s95: add ethernet PHY interrupt
+Date:   Mon, 27 May 2019 15:22:00 +0200
+Message-Id: <20190527132200.17377-11-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190527132200.17377-1-narmstrong@baylibre.com>
 References: <20190527132200.17377-1-narmstrong@baylibre.com>
@@ -75,32 +75,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add CEC nodes to support CEC communication on Vega S95
+Add the external ethernet PHY interrupt on the Vega S95 board.
 
 Suggested-by: Christian Hewitt <christianshewitt@gmail.com>
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-index 6738b2aac9a0..be8799653ad7 100644
+index 9b52f3dcdd49..18856f28fd60 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
 +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-@@ -93,6 +93,13 @@
+@@ -128,6 +128,9 @@
+ 		eth_phy0: ethernet-phy@0 {
+ 			/* Realtek RTL8211F (0x001cc916) */
+ 			reg = <0>;
++			interrupt-parent = <&gpio_intc>;
++			/* MAC_INTR on GPIOZ_15 */
++			interrupts = <29 IRQ_TYPE_LEVEL_LOW>;
+ 		};
  	};
  };
- 
-+&cec_AO {
-+	status = "okay";
-+	pinctrl-0 = <&ao_cec_pins>;
-+	pinctrl-names = "default";
-+	hdmi-phandle = <&hdmi_tx>;
-+};
-+
- &ethmac {
- 	status = "okay";
- 	pinctrl-0 = <&eth_rgmii_pins>;
 -- 
 2.21.0
 
