@@ -2,118 +2,464 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2774C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B45FC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:29:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FF1120859
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:28:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13A6C20859
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:29:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AOtDd45j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbfE0L2w (ORCPT
+        id S1726836AbfE0L3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 07:28:52 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36310 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726063AbfE0L2w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 07:28:52 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C3A54ACFA;
-        Mon, 27 May 2019 11:28:50 +0000 (UTC)
-Message-ID: <e2dd83c5dbba1bb9bd300285285ab07135dc6166.camel@suse.de>
-Subject: Re: [PATCH] xhci: clear port_remote_wakeup after resume failure
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Mathias Nyman <mathias.nyman@intel.com>
-Cc:     oneukum@suse.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 27 May 2019 13:28:48 +0200
-In-Reply-To: <eb5d9252-1283-be73-96d6-c24a0fdf1eab@linux.intel.com>
-References: <20190524145231.6605-1-nsaenzjulienne@suse.de>
-         <eb5d9252-1283-be73-96d6-c24a0fdf1eab@linux.intel.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-f7bqoOZL4zNS+o7sGeVu"
-User-Agent: Evolution 3.32.2 
+        Mon, 27 May 2019 07:29:19 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:35097 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbfE0L3S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 07:29:18 -0400
+Received: by mail-it1-f196.google.com with SMTP id u186so23653829ith.0;
+        Mon, 27 May 2019 04:29:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=1S9wlO+riiROxV1miLqHqZzYxZINbc58EU3D7kJJ1Ko=;
+        b=AOtDd45jlVOrunUSB/l0MWmJCPy/T7Izg5Dvh5iPHshYvagNQ8WCd0sFnf6lF2QfB8
+         SEsPM0MtUJo+4apj7PD4YUOPJbLJxg42mtxiqqb8ayRE74uZ9hlVeKTO6GDdk6k6DTIn
+         VTKzc3NZvZ3GiXevx6gs4TnivLBZmmuJjKdEE6J91G8ivV+0QsnOycMLo3eVxCCYT7oE
+         5exzJq+PxI4pwFaA6F3MpdOT+zoLZi0QG88cW8x+Qs7U3WXSEvGk6pB2nWieOpGGy5Uf
+         A3wlHT4VNkkhcna11dYMnutrcgeWA64OzQx4S4seFnqLCJCwR9VqPG7u18L4J7oDUcqn
+         4vzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1S9wlO+riiROxV1miLqHqZzYxZINbc58EU3D7kJJ1Ko=;
+        b=jEuAysnhJyU7lFNXTct6FUmacZu7Vpe/FoLFwHNmUtHjkugWbx00smyz0VeGiywcyH
+         LsnJ4ZgxXiVdVz8sY20Zca8ZI6bpdbU0XJcG8kNW8G/xmrJ4SA9VYPuE9IVrzFu4g2AG
+         iNZE25BCleFXjR1cAKfXcaMvoY0Kko9qLDi/SV0RPKGWPiEmb7RSu/nC2ccZdcNtE6br
+         d2KTyLMQJOtjTbJxGV+Qnqzn0LXHuIjOiumtqcO28O2pFRez8gCVdYjnpxsJD4yRaoRN
+         vIypeTnwgxWesrlWjkMGEYRHjEd8HZCV4opyOAgXL/IEBuurLuZZvMrxmpIp0vk3OI7F
+         Q9qg==
+X-Gm-Message-State: APjAAAVxET2FhkZheYxqpdYGOc/cnQgaLf99vEFZy445jT2h4sS/bmdI
+        o3e9TzWZ4o+cGCs1NR8fAr2d05PK
+X-Google-Smtp-Source: APXvYqzBI2kXKC652vLnr52HfGBsgVlNr98KsLpzDr/GD3REWAwhY4ASv9+SLGO5bXs/kSgYHsXl8g==
+X-Received: by 2002:a24:1711:: with SMTP id 17mr30677160ith.70.1558956557235;
+        Mon, 27 May 2019 04:29:17 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.35.141])
+        by smtp.googlemail.com with ESMTPSA id y13sm3472788iol.68.2019.05.27.04.29.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 27 May 2019 04:29:16 -0700 (PDT)
+Subject: Re: [PATCH 1/3] rtc: tegra: checkpatch and miscellaneous cleanups
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Kartik Kartik <kkartik@nvidia.com>, linux-rtc@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190527101359.5898-1-thierry.reding@gmail.com>
+ <20190527101359.5898-2-thierry.reding@gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <536bb821-8be1-9cbf-a92a-d0aefc52c191@gmail.com>
+Date:   Mon, 27 May 2019 14:28:14 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190527101359.5898-2-thierry.reding@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+27.05.2019 13:13, Thierry Reding пишет:
+> From: Thierry Reding <treding@nvidia.com>
+> 
+> This set of changes fixes some checkpatch warnings as well as a number
+> of punctuation and padding inconsistencies.
+> 
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+>  drivers/rtc/rtc-tegra.c | 154 +++++++++++++++++++++-------------------
+>  1 file changed, 79 insertions(+), 75 deletions(-)
+> 
+> diff --git a/drivers/rtc/rtc-tegra.c b/drivers/rtc/rtc-tegra.c
+> index f0ce76865434..a67c9d8be4f6 100644
+> --- a/drivers/rtc/rtc-tegra.c
+> +++ b/drivers/rtc/rtc-tegra.c
+> @@ -18,10 +18,10 @@
+>  #include <linux/rtc.h>
+>  #include <linux/slab.h>
+>  
+> -/* set to 1 = busy every eight 32kHz clocks during copy of sec+msec to AHB */
+> +/* Set to 1 = busy every eight 32 kHz clocks during copy of sec+msec to AHB. */
+>  #define TEGRA_RTC_REG_BUSY			0x004
+>  #define TEGRA_RTC_REG_SECONDS			0x008
+> -/* when msec is read, the seconds are buffered into shadow seconds. */
+> +/* When msec is read, the seconds are buffered into shadow seconds. */
+>  #define TEGRA_RTC_REG_SHADOW_SECONDS		0x00c
+>  #define TEGRA_RTC_REG_MILLI_SECONDS		0x010
+>  #define TEGRA_RTC_REG_SECONDS_ALARM0		0x014
+> @@ -46,44 +46,48 @@
+>  #define TEGRA_RTC_INTR_STATUS_SEC_ALARM0	(1<<0)
+>  
+>  struct tegra_rtc_info {
+> -	struct platform_device	*pdev;
+> -	struct rtc_device	*rtc_dev;
+> -	void __iomem		*rtc_base; /* NULL if not initialized. */
+> -	struct clk		*clk;
+> -	int			tegra_rtc_irq; /* alarm and periodic irq */
+> -	spinlock_t		tegra_rtc_lock;
+> +	struct platform_device *pdev;
+> +	struct rtc_device *rtc_dev;
+> +	void __iomem *rtc_base; /* NULL if not initialized */
+> +	struct clk *clk;
+> +	int tegra_rtc_irq; /* alarm and periodic IRQ */
+> +	spinlock_t tegra_rtc_lock;
+>  };
+>  
+> -/* RTC hardware is busy when it is updating its values over AHB once
+> - * every eight 32kHz clocks (~250uS).
+> - * outside of these updates the CPU is free to write.
+> - * CPU is always free to read.
+> +/*
+> + * RTC hardware is busy when it is updating its values over AHB once every
+> + * eight 32 kHz clocks (~250 us). Outside of these updates the CPU is free to
+> + * write. CPU is always free to read.
+>   */
+>  static inline u32 tegra_rtc_check_busy(struct tegra_rtc_info *info)
+>  {
+>  	return readl(info->rtc_base + TEGRA_RTC_REG_BUSY) & 1;
+>  }
+>  
+> -/* Wait for hardware to be ready for writing.
+> - * This function tries to maximize the amount of time before the next update.
+> - * It does this by waiting for the RTC to become busy with its periodic update,
+> - * then returning once the RTC first becomes not busy.
+> +/*
+> + * Wait for hardware to be ready for writing. This function tries to maximize
+> + * the amount of time before the next update. It does this by waiting for the
+> + * RTC to become busy with its periodic update, then returning once the RTC
+> + * first becomes not busy.
+> + *
+>   * This periodic update (where the seconds and milliseconds are copied to the
+> - * AHB side) occurs every eight 32kHz clocks (~250uS).
+> - * The behavior of this function allows us to make some assumptions without
+> - * introducing a race, because 250uS is plenty of time to read/write a value.
+> + * AHB side) occurs every eight 32 kHz clocks (~250 us). The behavior of this
+> + * function allows us to make some assumptions without introducing a race,
+> + * because 250 us is plenty of time to read/write a value.
+>   */
+>  static int tegra_rtc_wait_while_busy(struct device *dev)
+>  {
+>  	struct tegra_rtc_info *info = dev_get_drvdata(dev);
+> +	int retries = 500; /* ~490 us is the worst case, ~250 us is best */
+>  
+> -	int retries = 500; /* ~490 us is the worst case, ~250 us is best. */
+> -
+> -	/* first wait for the RTC to become busy. this is when it
+> -	 * posts its updated seconds+msec registers to AHB side. */
+> +	/*
+> +	 * First wait for the RTC to become busy. This is when it posts its
+> +	 * updated seconds+msec registers to AHB side.
+> +	 */
+>  	while (tegra_rtc_check_busy(info)) {
+>  		if (!retries--)
+>  			goto retry_failed;
+> +
+>  		udelay(1);
+>  	}
+>  
+> @@ -91,7 +95,7 @@ static int tegra_rtc_wait_while_busy(struct device *dev)
+>  	return 0;
+>  
+>  retry_failed:
+> -	dev_err(dev, "write failed:retry count exceeded.\n");
+> +	dev_err(dev, "write failed: retry count exceeded\n");
+>  	return -ETIMEDOUT;
+>  }
+>  
+> @@ -101,8 +105,10 @@ static int tegra_rtc_read_time(struct device *dev, struct rtc_time *tm)
+>  	unsigned long sec, msec;
+>  	unsigned long sl_irq_flags;
+>  
+> -	/* RTC hardware copies seconds to shadow seconds when a read
+> -	 * of milliseconds occurs. use a lock to keep other threads out. */
+> +	/*
+> +	 * RTC hardware copies seconds to shadow seconds when a read of
+> +	 * milliseconds occurs. use a lock to keep other threads out.
+> +	 */
+>  	spin_lock_irqsave(&info->tegra_rtc_lock, sl_irq_flags);
+>  
+>  	msec = readl(info->rtc_base + TEGRA_RTC_REG_MILLI_SECONDS);
+> @@ -112,7 +118,7 @@ static int tegra_rtc_read_time(struct device *dev, struct rtc_time *tm)
+>  
+>  	rtc_time64_to_tm(sec, tm);
+>  
+> -	dev_vdbg(dev, "time read as %lu. %ptR\n", sec, tm);
+> +	dev_vdbg(dev, "time read as %u, %ptR\n", sec, tm);
+>  
+>  	return 0;
+>  }
+> @@ -123,18 +129,18 @@ static int tegra_rtc_set_time(struct device *dev, struct rtc_time *tm)
+>  	unsigned long sec;
+>  	int ret;
+>  
+> -	/* convert tm to seconds. */
+> +	/* convert tm to seconds */
+>  	sec = rtc_tm_to_time64(tm);
+>  
+> -	dev_vdbg(dev, "time set to %lu. %ptR\n", sec, tm);
+> +	dev_vdbg(dev, "time set to %u, %ptR\n", sec, tm);
+>  
+> -	/* seconds only written if wait succeeded. */
+> +	/* seconds only written if wait succeeded */
+>  	ret = tegra_rtc_wait_while_busy(dev);
+>  	if (!ret)
+>  		writel(sec, info->rtc_base + TEGRA_RTC_REG_SECONDS);
+>  
+>  	dev_vdbg(dev, "time read back as %d\n",
+> -		readl(info->rtc_base + TEGRA_RTC_REG_SECONDS));
+> +		 readl(info->rtc_base + TEGRA_RTC_REG_SECONDS));
+>  
+>  	return ret;
+>  }
+> @@ -143,15 +149,15 @@ static int tegra_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alarm)
+>  {
+>  	struct tegra_rtc_info *info = dev_get_drvdata(dev);
+>  	unsigned long sec;
+> -	unsigned tmp;
+> +	unsigned int tmp;
+>  
+>  	sec = readl(info->rtc_base + TEGRA_RTC_REG_SECONDS_ALARM0);
+>  
+>  	if (sec == 0) {
+> -		/* alarm is disabled. */
+> +		/* alarm is disabled */
+>  		alarm->enabled = 0;
+>  	} else {
+> -		/* alarm is enabled. */
+> +		/* alarm is enabled */
+>  		alarm->enabled = 1;
+>  		rtc_time64_to_tm(sec, &alarm->time);
+>  	}
+> @@ -165,13 +171,13 @@ static int tegra_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alarm)
+>  static int tegra_rtc_alarm_irq_enable(struct device *dev, unsigned int enabled)
+>  {
+>  	struct tegra_rtc_info *info = dev_get_drvdata(dev);
+> -	unsigned status;
+>  	unsigned long sl_irq_flags;
+> +	unsigned int status;
+>  
+>  	tegra_rtc_wait_while_busy(dev);
+>  	spin_lock_irqsave(&info->tegra_rtc_lock, sl_irq_flags);
+>  
+> -	/* read the original value, and OR in the flag. */
+> +	/* read the original value, and OR in the flag */
+>  	status = readl(info->rtc_base + TEGRA_RTC_REG_INTR_MASK);
+>  	if (enabled)
+>  		status |= TEGRA_RTC_INTR_MASK_SEC_ALARM0; /* set it */
+> @@ -198,14 +204,14 @@ static int tegra_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alarm)
+>  	tegra_rtc_wait_while_busy(dev);
+>  	writel(sec, info->rtc_base + TEGRA_RTC_REG_SECONDS_ALARM0);
+>  	dev_vdbg(dev, "alarm read back as %d\n",
+> -		readl(info->rtc_base + TEGRA_RTC_REG_SECONDS_ALARM0));
+> +		 readl(info->rtc_base + TEGRA_RTC_REG_SECONDS_ALARM0));
+>  
+>  	/* if successfully written and alarm is enabled ... */
+>  	if (sec) {
+>  		tegra_rtc_alarm_irq_enable(dev, 1);
+> -		dev_vdbg(dev, "alarm set as %lu. %ptR\n", sec, &alarm->time);
+> +		dev_vdbg(dev, "alarm set as %u, %ptR\n", sec, &alarm->time);
+>  	} else {
+> -		/* disable alarm if 0 or write error. */
+> +		/* disable alarm if 0 or write error */
+>  		dev_vdbg(dev, "alarm disabled\n");
+>  		tegra_rtc_alarm_irq_enable(dev, 0);
+>  	}
+> @@ -228,25 +234,26 @@ static irqreturn_t tegra_rtc_irq_handler(int irq, void *data)
+>  	struct device *dev = data;
+>  	struct tegra_rtc_info *info = dev_get_drvdata(dev);
+>  	unsigned long events = 0;
+> -	unsigned status;
+>  	unsigned long sl_irq_flags;
+> +	unsigned int status;
+>  
+>  	status = readl(info->rtc_base + TEGRA_RTC_REG_INTR_STATUS);
+>  	if (status) {
+> -		/* clear the interrupt masks and status on any irq. */
+> +		/* clear the interrupt masks and status on any IRQ */
+>  		tegra_rtc_wait_while_busy(dev);
+> +
+>  		spin_lock_irqsave(&info->tegra_rtc_lock, sl_irq_flags);
+>  		writel(0, info->rtc_base + TEGRA_RTC_REG_INTR_MASK);
+>  		writel(status, info->rtc_base + TEGRA_RTC_REG_INTR_STATUS);
+>  		spin_unlock_irqrestore(&info->tegra_rtc_lock, sl_irq_flags);
+>  	}
+>  
+> -	/* check if Alarm */
+> -	if ((status & TEGRA_RTC_INTR_STATUS_SEC_ALARM0))
+> +	/* check if alarm */
+> +	if (status & TEGRA_RTC_INTR_STATUS_SEC_ALARM0)
+>  		events |= RTC_IRQF | RTC_AF;
+>  
+> -	/* check if Periodic */
+> -	if ((status & TEGRA_RTC_INTR_STATUS_SEC_CDN_ALARM))
+> +	/* check if periodic */
+> +	if (status & TEGRA_RTC_INTR_STATUS_SEC_CDN_ALARM)
+>  		events |= RTC_IRQF | RTC_PF;
+>  
+>  	rtc_update_irq(info->rtc_dev, 1, events);
+> @@ -255,11 +262,11 @@ static irqreturn_t tegra_rtc_irq_handler(int irq, void *data)
+>  }
+>  
+>  static const struct rtc_class_ops tegra_rtc_ops = {
+> -	.read_time	= tegra_rtc_read_time,
+> -	.set_time	= tegra_rtc_set_time,
+> -	.read_alarm	= tegra_rtc_read_alarm,
+> -	.set_alarm	= tegra_rtc_set_alarm,
+> -	.proc		= tegra_rtc_proc,
+> +	.read_time = tegra_rtc_read_time,
+> +	.set_time = tegra_rtc_set_time,
+> +	.read_alarm = tegra_rtc_read_alarm,
+> +	.set_alarm = tegra_rtc_set_alarm,
+> +	.proc = tegra_rtc_proc,
+>  	.alarm_irq_enable = tegra_rtc_alarm_irq_enable,
+>  };
+>  
+> @@ -275,8 +282,7 @@ static int __init tegra_rtc_probe(struct platform_device *pdev)
+>  	struct resource *res;
+>  	int ret;
+>  
+> -	info = devm_kzalloc(&pdev->dev, sizeof(struct tegra_rtc_info),
+> -		GFP_KERNEL);
+> +	info = devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
+>  	if (!info)
+>  		return -ENOMEM;
+>  
+> @@ -308,13 +314,13 @@ static int __init tegra_rtc_probe(struct platform_device *pdev)
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	/* set context info. */
+> +	/* set context info */
+>  	info->pdev = pdev;
+>  	spin_lock_init(&info->tegra_rtc_lock);
+>  
+>  	platform_set_drvdata(pdev, info);
+>  
+> -	/* clear out the hardware. */
+> +	/* clear out the hardware */
+>  	writel(0, info->rtc_base + TEGRA_RTC_REG_SECONDS_ALARM0);
+>  	writel(0xffffffff, info->rtc_base + TEGRA_RTC_REG_INTR_STATUS);
+>  	writel(0, info->rtc_base + TEGRA_RTC_REG_INTR_MASK);
+> @@ -322,19 +328,16 @@ static int __init tegra_rtc_probe(struct platform_device *pdev)
+>  	device_init_wakeup(&pdev->dev, 1);
+>  
+>  	ret = devm_request_irq(&pdev->dev, info->tegra_rtc_irq,
+> -			tegra_rtc_irq_handler, IRQF_TRIGGER_HIGH,
+> -			dev_name(&pdev->dev), &pdev->dev);
+> +			       tegra_rtc_irq_handler, IRQF_TRIGGER_HIGH,
+> +			       dev_name(&pdev->dev), &pdev->dev);
+>  	if (ret) {
+> -		dev_err(&pdev->dev,
+> -			"Unable to request interrupt for device (err=%d).\n",
+> -			ret);
+> +		dev_err(&pdev->dev, "failed to request interrupt: %d\n", ret);
+>  		goto disable_clk;
+>  	}
+>  
+>  	ret = rtc_register_device(info->rtc_dev);
+>  	if (ret) {
+> -		dev_err(&pdev->dev, "Unable to register device (err=%d).\n",
+> -			ret);
+> +		dev_err(&pdev->dev, "failed to register device: %d\n", ret);
+>  		goto disable_clk;
+>  	}
+>  
+> @@ -363,18 +366,18 @@ static int tegra_rtc_suspend(struct device *dev)
+>  
+>  	tegra_rtc_wait_while_busy(dev);
+>  
+> -	/* only use ALARM0 as a wake source. */
+> +	/* only use ALARM0 as a wake source */
+>  	writel(0xffffffff, info->rtc_base + TEGRA_RTC_REG_INTR_STATUS);
+>  	writel(TEGRA_RTC_INTR_STATUS_SEC_ALARM0,
+>  		info->rtc_base + TEGRA_RTC_REG_INTR_MASK);
+>  
+>  	dev_vdbg(dev, "alarm sec = %d\n",
+> -		readl(info->rtc_base + TEGRA_RTC_REG_SECONDS_ALARM0));
+> +		 readl(info->rtc_base + TEGRA_RTC_REG_SECONDS_ALARM0));
+>  
+> -	dev_vdbg(dev, "Suspend (device_may_wakeup=%d) irq:%d\n",
+> -		device_may_wakeup(dev), info->tegra_rtc_irq);
+> +	dev_vdbg(dev, "Suspend (device_may_wakeup=%d) IRQ:%d\n",
+> +		 device_may_wakeup(dev), info->tegra_rtc_irq);
+>  
+> -	/* leave the alarms on as a wake source. */
+> +	/* leave the alarms on as a wake source */
+>  	if (device_may_wakeup(dev))
+>  		enable_irq_wake(info->tegra_rtc_irq);
+>  
+> @@ -386,8 +389,9 @@ static int tegra_rtc_resume(struct device *dev)
+>  	struct tegra_rtc_info *info = dev_get_drvdata(dev);
+>  
+>  	dev_vdbg(dev, "Resume (device_may_wakeup=%d)\n",
+> -		device_may_wakeup(dev));
+> -	/* alarms were left on as a wake source, turn them off. */
+> +		 device_may_wakeup(dev));
+> +
+> +	/* alarms were left on as a wake source, turn them off */
+>  	if (device_may_wakeup(dev))
+>  		disable_irq_wake(info->tegra_rtc_irq);
+>  
+> @@ -399,18 +403,17 @@ static SIMPLE_DEV_PM_OPS(tegra_rtc_pm_ops, tegra_rtc_suspend, tegra_rtc_resume);
+>  
+>  static void tegra_rtc_shutdown(struct platform_device *pdev)
+>  {
+> -	dev_vdbg(&pdev->dev, "disabling interrupts.\n");
+> +	dev_vdbg(&pdev->dev, "disabling interrupts\n");
+>  	tegra_rtc_alarm_irq_enable(&pdev->dev, 0);
+>  }
+>  
+> -MODULE_ALIAS("platform:tegra_rtc");
+>  static struct platform_driver tegra_rtc_driver = {
+> -	.remove		= tegra_rtc_remove,
+> -	.shutdown	= tegra_rtc_shutdown,
+> -	.driver		= {
+> -		.name	= "tegra_rtc",
+> +	.remove = tegra_rtc_remove,
+> +	.shutdown = tegra_rtc_shutdown,
+> +	.driver = {
+> +		.name = "tegra_rtc",
+>  		.of_match_table = tegra_rtc_dt_match,
+> -		.pm	= &tegra_rtc_pm_ops,
+> +		.pm = &tegra_rtc_pm_ops,
+>  	},
+>  };
+>  
+> @@ -418,4 +421,5 @@ module_platform_driver_probe(tegra_rtc_driver, tegra_rtc_probe);
+>  
+>  MODULE_AUTHOR("Jon Mayo <jmayo@nvidia.com>");
+>  MODULE_DESCRIPTION("driver for Tegra internal RTC");
+> +MODULE_ALIAS("platform:tegra_rtc");
+>  MODULE_LICENSE("GPL");
+> 
 
---=-f7bqoOZL4zNS+o7sGeVu
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+You could drop MODULE_ALIAS entirely since this is an OF-driver and
+hence the modalias is overridden anyway by MODULE_DEVICE_TABLE.
 
-Hi Matthias,
-thanks for the review.
+# cat /sys/devices/soc0/7000e000.rtc/modalias
+of:NrtcT(null)Cnvidia,tegra20-rtc
 
-On Mon, 2019-05-27 at 14:16 +0300, Mathias Nyman wrote:
-> On 24.5.2019 17.52, Nicolas Saenz Julienne wrote:
-> > This was seen on a Dell Precision 5520 using it's WD15 dock. The dock's
-> > Ethernet device interfaces with the laptop through one of it's USB3
-> > ports. While idle, the Ethernet device and HCD are suspended by runtime
-> > PM, being the only device connected on the bus. Then, both are resumed =
-on
-> > behalf of the Ethernet device, which has remote wake-up capabilities.
-> >=20
-> > The Ethernet device was observed to randomly disconnect from the USB
-> > port shortly after submitting it's remote wake-up request. Probably a
-> > weird timing issue yet to be investigated. This causes runtime PM to
-> > busyloop causing some tangible CPU load. The reason is the port gets
-> > stuck in the middle of a remote wake-up operation, waiting for the
-> > device to switch to U0. This never happens, leaving "port_remote_wakeup=
-"
-> > enabled, and automatically triggering a failure on any further suspend
-> > operation.
-> >=20
-> > This patch clears "port_remote_wakeup" upon detecting a device with a
-> > wrong resuming port state (see Table 4-9 in 4.15.2.3). Making sure the
-> > above mentioned situation doesn't trigger a PM busyloop.
-> >=20
->=20
-> There was a similar case where the USB3 link had transitioned to a
-> lower power U1 or U2 state after resume, before driver read the state,
-> leaving port_remote_wakeup flag uncleared.
->=20
-> This was fixed in 5.1 kernel by commit:
->=20
-> 6cbcf59 xhci: Fix port resume done detection for SS ports with LPM enable
->=20
-> Can you check if you have it?
-> It should be in recent stable releases as well.
-
-I was aware of that patch, unfortunately it doesn't address the same issue.=
- In
-my case I never get a second port status event (so no PLC =3D=3D 1 or any s=
-tate
-change seen in PLS). The device simply disconnects from the bus.
-
-I did test both the issue and fix on top of last week's master branch.
-
-Regards,
-Nicolas
-
-
---=-f7bqoOZL4zNS+o7sGeVu
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAlzryfAACgkQlfZmHno8
-x/7FdQf/U6VLTEYpri+b7l4Jk/VsmleJAOXb709TIDyiCJPapRA7jo0DVWUtwIm9
-dPfI8mJlVXCnIvL04p/tzfv8zxH6TDa6rV7//+71CqiRpg3KsYHoZWxS2X9X/W5i
-Vuj6hJAa7ziaZI1M5UEhjWXAX+8WF9bABcy2Wyrk2U5V+neadU70Fod5ap3fkZRT
-qELPOLsHRTorYIl9/Kj5M7vHEpJehaBJ8DZTjfGCunvDdeSNfA2nROBMZ3s1k/gq
-be8/lAoh3xX7Iv3KInny9QihssiHsMBHNjCb1aPnkw3oMM5CxNJLoCGGIO5pkExV
-UfACpCWZb0bIrZjUbsaYpIDDerlbHg==
-=d8YU
------END PGP SIGNATURE-----
-
---=-f7bqoOZL4zNS+o7sGeVu--
-
+-- 
+Dmitry
