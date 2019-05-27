@@ -2,175 +2,160 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84393C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD714C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53CD420859
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:34:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 905EA2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 12:34:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="cD/KMYcY"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="OyerzEpW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727228AbfE0Md7 (ORCPT
+        id S1727344AbfE0MeV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 08:33:59 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42091 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726601AbfE0Md4 (ORCPT
+        Mon, 27 May 2019 08:34:21 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36356 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726837AbfE0MeU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 08:33:56 -0400
-Received: by mail-wr1-f67.google.com with SMTP id l2so16773583wrb.9
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 05:33:54 -0700 (PDT)
+        Mon, 27 May 2019 08:34:20 -0400
+Received: by mail-wr1-f66.google.com with SMTP id s17so16800875wru.3
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 05:34:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=+cVOiVFCJq/gjwV+btY3+Tpn5Lp/RZnsuWYYB3guIMU=;
-        b=cD/KMYcYKdCaRofRRaoCOCqlDeF88o6vA7EX1SknRosohJiylXLjWoPhAYXjxyvAHu
-         w7j+zVTZn5os5e8lM+/A9Jh1N+WWjfJYLtEZe5s2IYp4Ujcxl+W318MjSW87viEOi/AJ
-         dWFZFQE4kOeaonFjW0iOT9dXyhGbxHRb4Ph4VtYNoNJ+m6ez4JTDTEttmJnKflKaLgrT
-         dChTnYUUvsSnkJk2A4tldQH/ZW2dfcixuGe1lmttykhsk9x9H8yVoZmhw7IrqAGZefpD
-         gS62iTL0hTR6Vi2hUekCwvODxPthOCvl8VYFn9sFT6AU2cSB+9c2gwF0dsCc1CCbly49
-         um7w==
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vqu/vuzdkEYXoKFeag0Gx7i/C6AwfCJXqtUJbGQjm2g=;
+        b=OyerzEpWHETbFpy0c+A9OY8Lt73C0idp+PGHMM5Hk+LLRx9wwPHZQozpo8l5Eb9Ku2
+         BLL+C1+bX579kmC98+XU2vwo/p2jktBSuDST+iVX7syTwLwbwx/6JX64Ub9OuDZusIdp
+         kKDJjsTRUzHPtW0urZeRIYOMxMDrYawpqD1NAjav0wkLUtufk55DmMuotx1mhFELtMN4
+         Q60vEqDPAiRagFtyMVs2GMDqFy7ESvJPNzV96xt/3RBuo6MVwbffzkmsBK2QQuquT8WB
+         BK7IAAbiz5k5ehEhuF37CxBmtc7DPqcYWzk5hOTDEz1nr5FgutMoVyt1M6U6NprWQjVX
+         RLjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=+cVOiVFCJq/gjwV+btY3+Tpn5Lp/RZnsuWYYB3guIMU=;
-        b=pldAvFQREG62HBBOczeh1IkRBsaTvDig4ayiEUTwYGDVwnhx1pSHem+20e1BwhxIoS
-         wTLFtcqKzBsWDsGajau2wmHHIN6DjXwJXSIb6kOZJE54jyx3SW5Z8i0iFxh6r+CGOesC
-         LPUGif4c4G8JRW4XX5IbwbIMSHXoHtQaU8GGU0G3VaibvL1dVxu8HDCpxvITBoHqrzGo
-         oq3Je6WdTGh1DzeS+VhkycRH4OlKL/Fb7QkGAJ74TTCAut7U96LlQxuyTKCDWiM5PFOM
-         SMW4g74Fq/aOqMsn7DRQBuaZXsP+arikVfTnras7NrGwRNiae5CuZvEndnOn3x2ILqG3
-         FpKQ==
-X-Gm-Message-State: APjAAAXFiFpQpJ9/MSrMdi4DRdFixgka0TEu2U2BZdN/gOU2sgIB7KNc
-        bSPiQW4LnbR6dkG4h00PovaPwx+v2h2iPQ==
-X-Google-Smtp-Source: APXvYqwnPwjtuEjQwUJWuvt7XAdXU/uj6r0mgRRLit94T91pyyxyMOmC5kVUPbZEQb8acNTD4G1m+w==
-X-Received: by 2002:adf:e344:: with SMTP id n4mr21535770wrj.192.1558960434048;
-        Mon, 27 May 2019 05:33:54 -0700 (PDT)
-Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id y132sm15173687wmd.35.2019.05.27.05.33.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 May 2019 05:33:53 -0700 (PDT)
-Subject: Re: [PATCH 14/14] pwm: meson: add documentation to the driver
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
-        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20190525181133.4875-1-martin.blumenstingl@googlemail.com>
- <20190525181133.4875-15-martin.blumenstingl@googlemail.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <afc7da5b-dda2-84e0-a6c8-0ab3c41f7e0e@baylibre.com>
-Date:   Mon, 27 May 2019 14:33:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vqu/vuzdkEYXoKFeag0Gx7i/C6AwfCJXqtUJbGQjm2g=;
+        b=nkxJNi2PfMzX7MJVo05UuieE9HIRue2FDiFxTIwEH0A4Z6ybOnOYnkMeSS1LcKDM9S
+         7Qmj/60GfngBoZa9RQSq48W1iw2gBbduy9y+lPU9ZN2Q/Iuego1xH4sl3gaEwN9XxVJk
+         mE0KLu59t3cRl2ROi/IPTwNz6acFt3HF8sPoVYe2GQ4XPUYtpthILdJoT2Z8cnwfwRnE
+         ZOTBJA3x5zaKlE7CVZkgS5cB8C6vm7U50MZLjDzGMg5MBMyByGcMg714t/urf4iRvnyF
+         lRjvv7nVeJaWR6fI4PG0PEblOC9huifggJn9lzfSKALEsK3B8CGzuXy0Xqo7YbgGX82M
+         K+ig==
+X-Gm-Message-State: APjAAAX0DS4JJu5y5tDjzrgaXebK90MkKKOQ7HdkNoHyxINFPTLXbGHL
+        JrsFmq8vTmMZxojfD0YJeDxYchvaJMBkxg==
+X-Google-Smtp-Source: APXvYqxwrvDMfYdjYL3oXDcnUR6fu2NOHf3e/9SAIT1sxwsepQqVIryqUvD3CwCzUoQ/rcFzeIspgQ==
+X-Received: by 2002:adf:e2c7:: with SMTP id d7mr37257590wrj.272.1558960457999;
+        Mon, 27 May 2019 05:34:17 -0700 (PDT)
+Received: from brauner.io (p5097b50e.dip0.t-ipconnect.de. [80.151.181.14])
+        by smtp.gmail.com with ESMTPSA id r4sm8102395wrv.34.2019.05.27.05.34.16
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 27 May 2019 05:34:17 -0700 (PDT)
+Date:   Mon, 27 May 2019 14:34:15 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Arnd Bergmann <arnd@arndb.de>, linux-ia64@vger.kernel.org
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jann Horn <jannh@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: [PATCH 2/2] arch: wire-up clone6() syscall on x86
+Message-ID: <20190527123414.rv2r6g6de6y3ay6w@brauner.io>
+References: <20190526102612.6970-1-christian@brauner.io>
+ <20190526102612.6970-2-christian@brauner.io>
+ <CAK8P3a1Ltsna_rtKxhMU7X0t=UOXDA75tKpph6s=OZ4itJe7VQ@mail.gmail.com>
+ <20190527104528.cao7wamuj4vduh3u@brauner.io>
+ <CAK8P3a3q=5Ca0xoMp+kyCvOqNDRzDTgu28f+U8J-buMVcZcVaw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190525181133.4875-15-martin.blumenstingl@googlemail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a3q=5Ca0xoMp+kyCvOqNDRzDTgu28f+U8J-buMVcZcVaw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/05/2019 20:11, Martin Blumenstingl wrote:
-> Add a link to the datasheet and a short summary how the hardware works.
-> The goal is to make it easier for other developers to understand why the
-> pwm-meson driver is implemented the way it is.
+On Mon, May 27, 2019 at 02:28:33PM +0200, Arnd Bergmann wrote:
+> On Mon, May 27, 2019 at 12:45 PM Christian Brauner <christian@brauner.io> wrote:
+> > On Mon, May 27, 2019 at 12:02:37PM +0200, Arnd Bergmann wrote:
+> > > On Sun, May 26, 2019 at 12:27 PM Christian Brauner <christian@brauner.io> wrote:
+> > > >
+> > > > Wire up the clone6() call on x86.
+> > > >
+> > > > This patch only wires up clone6() on x86. Some of the arches look like they
+> > > > need special assembly massaging and it is probably smarter if the
+> > > > appropriate arch maintainers would do the actual wiring.
+> > >
+> > > Why do some architectures need special cases here? I'd prefer to have
+> > > new system calls always get defined in a way that avoids this, and
+> > > have a common entry point for everyone.
+> > >
+> > > Looking at the m68k sys_clone comment in
+> > > arch/m68k/kernel/process.c, it seems that this was done as an
+> > > optimization to deal with an inferior ABI. Similar code is present
+> > > in h8300, ia64, nios2, and sparc. If all of them just do this to
+> > > shave off a few cycles from the system call entry, I really
+> > > couldn't care less.
+> >
+> > I'm happy to wire all arches up at the same time in the next revision. I
+> > just wasn't sure why some of them were assemblying the living hell out
+> > of clone; especially ia64. I really didn't want to bother touching all
+> > of this just for an initial RFC.
 > 
-> Suggested-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> Co-authored-by: Neil Armstrong <narmstrong@baylibre.com>
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> ---
->  drivers/pwm/pwm-meson.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
+> Don't worry about doing all architectures for the RFC, I mainly want this
+> to be done consistently by the time it gets into linux-next.
 > 
-> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-> index bb48ba85f756..6a978caba483 100644
-> --- a/drivers/pwm/pwm-meson.c
-> +++ b/drivers/pwm/pwm-meson.c
-> @@ -1,5 +1,23 @@
->  // SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
->  /*
-> + * PWM controller driver for Amlogic Meson SoCs.
-> + *
-> + * This PWM is only a set of Gates, Dividers and Counters:
-> + * PWM output is achieved by calculating a clock that permits calculating
-> + * two periods (low and high). The counter then has to be set to switch after
-> + * N cycles for the first half period.
-> + * The hardware has no "polarity" setting. This driver reverses the period
-> + * cycles (the low length is inverted with the high length) for
-> + * PWM_POLARITY_INVERSED. This means that .get_state cannot read the polarity
-> + * from the hardware.
-> + * Setting the duty cycle will disable and re-enable the PWM output.
-> + * Disabling the PWM stops the output immediately (without waiting for the
-> + * current period to complete first).
-> + *
-> + * The public S922X datasheet contains some documentation for this PWM
-> + * controller starting on page 1084:
-> + * https://dl.khadas.com/Hardware/VIM2/Datasheet/S912_Datasheet_V0.220170314publicversion-Wesion.pdf
-> + *
->   * Copyright (c) 2016 BayLibre, SAS.
->   * Author: Neil Armstrong <narmstrong@baylibre.com>
->   * Copyright (C) 2014 Amlogic, Inc.
-> 
+> One thing to figure out though is whether we need the stack_size argument
+> that a couple of architectures pass. It's usually hardwired to zero,
+> but not all the time, and I don't know the history of this.
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Afaict, stack_size is *only* used on ia64:
+
+/*
+ * sys_clone2(u64 flags, u64 ustack_base, u64 ustack_size, u64 parent_tidptr, u64 child_tidptr,
+ *	      u64 tls)
+ */
+GLOBAL_ENTRY(sys_clone2)
+	/*
+	 * Allocate 8 input registers since ptrace() may clobber them
+	 */
+	.prologue ASM_UNW_PRLG_RP|ASM_UNW_PRLG_PFS, ASM_UNW_PRLG_GRSAVE(8)
+	alloc r16=ar.pfs,8,2,6,0
+	DO_SAVE_SWITCH_STACK
+	adds r2=PT(R16)+IA64_SWITCH_STACK_SIZE+16,sp
+	mov loc0=rp
+	mov loc1=r16				// save ar.pfs across do_fork
+	.body
+	mov out1=in1
+	mov out2=in2
+	tbit.nz p6,p0=in0,CLONE_SETTLS_BIT
+	mov out3=in3	// parent_tidptr: valid only w/CLONE_PARENT_SETTID
+	;;
+(p6)	st8 [r2]=in5				// store TLS in r16 for copy_thread()
+	mov out4=in4	// child_tidptr:  valid only w/CLONE_CHILD_SETTID or CLONE_CHILD_CLEARTID
+	mov out0=in0				// out0 = clone_flags
+	br.call.sptk.many rp=do_fork
+.ret1:	.restore sp
+	adds sp=IA64_SWITCH_STACK_SIZE,sp	// pop the switch stack
+	mov ar.pfs=loc1
+	mov rp=loc0
+	br.ret.sptk.many rp
+END(sys_clone2)
+
+I'm not sure if this needs to be because of architectural constraints or
+if it just is a historic artifact.
+(Ccing ia64 now to see what they have to say.)
+
+Christian
