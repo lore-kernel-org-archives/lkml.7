@@ -2,332 +2,141 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B0FAC28CBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 06:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA139C07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 06:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54F492173B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 06:29:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="AjZJd2Qz"
+	by mail.kernel.org (Postfix) with ESMTP id 9E78F2070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 06:30:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbfE0G3S (ORCPT
+        id S1726183AbfE0Gal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 02:29:18 -0400
-Received: from mail-eopbgr730084.outbound.protection.outlook.com ([40.107.73.84]:52175
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726492AbfE0G3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 02:29:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector1-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+wY0WrsI615sEZcihf/3X8BbpJgThopGPIRtwmBnNwM=;
- b=AjZJd2QzuCrnB/7BLGT0iwJAqR8NyuaE5yvrcG2ZhSQBQQMbV9NjlgJrrrICAYCsyy6h0c2yDF+FESUZifwVKzZA0GmWjsAvOWhpzDDgcl9C4b1Eh9gyWJbAWW2aQfGtV5p/i+wl4nSkxn1t2B6sofNh8E+bL87ifnEDY8LkrZo=
-Received: from BN3PR0301MB0897.namprd03.prod.outlook.com (10.160.156.14) by
- BN3PR0301MB0882.namprd03.prod.outlook.com (10.160.155.144) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.23; Mon, 27 May 2019 06:29:12 +0000
-Received: from BN3PR0301MB0897.namprd03.prod.outlook.com
- ([fe80::15cb:dfcc:c2a0:b950]) by BN3PR0301MB0897.namprd03.prod.outlook.com
- ([fe80::15cb:dfcc:c2a0:b950%4]) with mapi id 15.20.1922.021; Mon, 27 May 2019
- 06:29:12 +0000
-From:   "Hennerich, Michael" <Michael.Hennerich@analog.com>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Renato Lui Geh <renatogeh@gmail.com>
-CC:     "lars@metafoo.de" <lars@metafoo.de>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
-        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel-usp@googlegroups.com" <kernel-usp@googlegroups.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH v2 1/2] dt-bindings: iio: adc: add adi,ad7780.yaml binding
-Thread-Topic: [PATCH v2 1/2] dt-bindings: iio: adc: add adi,ad7780.yaml
- binding
-Thread-Index: AQHVEpjqxVu70i5+Hk68EKl5wZYIFKZ9neWAgADnlsA=
-Date:   Mon, 27 May 2019 06:29:12 +0000
-Message-ID: <BN3PR0301MB0897E42E948C8067DABFF9858E1D0@BN3PR0301MB0897.namprd03.prod.outlook.com>
-References: <cover.1558746978.git.renatogeh@gmail.com>
-        <2426649b2d8224ae72e7706bcb8c4f2c44c581d2.1558746978.git.renatogeh@gmail.com>
- <20190526173911.57ae3d11@archlinux>
-In-Reply-To: <20190526173911.57ae3d11@archlinux>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Michael.Hennerich@analog.com; 
-x-originating-ip: [137.71.226.54]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a7158220-6c05-49e6-3fcb-08d6e26ca268
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BN3PR0301MB0882;
-x-ms-traffictypediagnostic: BN3PR0301MB0882:
-x-ms-exchange-purlcount: 6
-x-ld-processed: eaa689b4-8f87-40e0-9c6f-7228de4d754a,ExtAddr
-x-microsoft-antispam-prvs: <BN3PR0301MB088249B58679A19231E988F68E1D0@BN3PR0301MB0882.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0050CEFE70
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(376002)(136003)(346002)(366004)(396003)(13464003)(189003)(199004)(316002)(14454004)(86362001)(74316002)(305945005)(6436002)(6246003)(55016002)(33656002)(6306002)(52536014)(186003)(5660300002)(53936002)(7736002)(2906002)(110136005)(14444005)(256004)(26005)(53376002)(54906003)(6506007)(53546011)(9686003)(4326008)(25786009)(966005)(8936002)(486006)(3846002)(229853002)(76176011)(478600001)(76116006)(66946007)(66476007)(73956011)(81166006)(71190400001)(71200400001)(8676002)(68736007)(66556008)(66066001)(99286004)(72206003)(81156014)(476003)(102836004)(11346002)(6116002)(446003)(7696005)(66446008)(64756008)(7416002)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:BN3PR0301MB0882;H:BN3PR0301MB0897.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: analog.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: fi9aga58FwNAGVKu//toj5btl11VLQljKYxTXbWnzIrr+GbxFQ4A/y9KiWG3Tpycg3qYXI+gZnAaS8C0JXlyTkrLWs3Kr9Vew9jKZbhcZ8S6IDxi0T5scHX8KPBxW0gf/XvlXrXLxSraBESopo2LUyaQG8ganeK5U93RR7H+/1ClRRzz+WL3lJ1j2+GIMyKi28BdqXsj7ARfemiLqb2TpUpsrRk7o0DPlhLKzeZsMKmPbqhlq0/ES9bOfjIwJiyR/jNlGo0iBMzPHgJhH0bGyQMHw099ZMkTfiALCeNaOUvu06eHvQ2QKbIki8GymuGVAjFrunYgqdCz/H7UOCOUgkQtJ3efi43XjoqA9X5Lptli/+T0yl9jA9w8NX9quzhV94DjNDS2u6U+nYPawlqlYlWNlIg4GnCxL2rtxwEqyng=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 27 May 2019 02:30:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60756 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725940AbfE0Gal (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 02:30:41 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id EC79E3092647;
+        Mon, 27 May 2019 06:30:40 +0000 (UTC)
+Received: from thuth.remote.csb (ovpn-116-235.ams2.redhat.com [10.36.116.235])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 47AEB1001DC2;
+        Mon, 27 May 2019 06:30:35 +0000 (UTC)
+Subject: Re: [Qemu-devel] Running linux on qemu omap
+To:     Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Peter Maydell <peter.maydell@linaro.org>
+Cc:     =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <philmd@redhat.com>,
+        Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>,
+        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190520190533.GA28160@Red>
+ <20190521232323.GD3621@darkstar.musicnaut.iki.fi>
+ <20190522093341.GA32154@Red>
+ <20190522181904.GE3621@darkstar.musicnaut.iki.fi>
+ <8977e2bb-8d9e-f4fd-4c44-b4f67e0e7314@redhat.com>
+ <c2972889-fe60-7614-fb6e-e57ddf780a54@redhat.com>
+ <20190523183623.GB5234@darkstar.musicnaut.iki.fi>
+ <CAFEAcA8C0WN5FwaW2kfWiRm1T8wML_fWXDKqRXP-Lv_P7ysy8A@mail.gmail.com>
+ <20190524150018.GA3156@t60.musicnaut.iki.fi>
+ <20190524185922.GA4597@t60.musicnaut.iki.fi>
+From:   Thomas Huth <thuth@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=thuth@redhat.com; keydata=
+ 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
+Organization: Red Hat
+Message-ID: <05bd307b-c8c5-4b12-be45-2d7933876aac@redhat.com>
+Date:   Mon, 27 May 2019 08:30:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a7158220-6c05-49e6-3fcb-08d6e26ca268
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 May 2019 06:29:12.6448
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Michael.Hennerich@analog.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN3PR0301MB0882
+In-Reply-To: <20190524185922.GA4597@t60.musicnaut.iki.fi>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Mon, 27 May 2019 06:30:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 24/05/2019 20.59, Aaro Koskinen wrote:
+> Hi,
+> 
+> On Fri, May 24, 2019 at 06:00:18PM +0300, Aaro Koskinen wrote:
+>> Please don't delete OMAP boards quite yet :) In the mainline kernel
+>> they are not orphaned, they frequently get tested using actual hardware,
+>> and QEMU would help in additional testing. I'll try to get N8x0 boot to
+>> work with the minimal kernel I use on real HW.
+> 
+> So it was only a matter of attaching the serial console at the QEMU side
+> (a hackish patch at the end of the mail).
+
+Does not look too much hackish to me. Could you please send it as a
+proper patch to the list (with patch description and Signed-off-by line)?
+
+ Thomas
 
 
-> -----Original Message-----
-> From: Jonathan Cameron [mailto:jic23@kernel.org]
-> Sent: Sonntag, 26. Mai 2019 18:39
-> To: Renato Lui Geh <renatogeh@gmail.com>
-> Cc: lars@metafoo.de; Hennerich, Michael <Michael.Hennerich@analog.com>; k=
-naack.h@gmx.de; pmeerw@pmeerw.net;
-> gregkh@linuxfoundation.org; Popa, Stefan Serban <StefanSerban.Popa@analog=
-.com>; Ardelean, Alexandru
-> <alexandru.Ardelean@analog.com>; robh+dt@kernel.org; mark.rutland@arm.com=
-; linux-iio@vger.kernel.org;
-> devel@driverdev.osuosl.org; linux-kernel@vger.kernel.org; kernel-usp@goog=
-legroups.com; devicetree@vger.kernel.org
-> Subject: Re: [PATCH v2 1/2] dt-bindings: iio: adc: add adi,ad7780.yaml bi=
-nding
->=20
-> On Fri, 24 May 2019 22:26:30 -0300
-> Renato Lui Geh <renatogeh@gmail.com> wrote:
->=20
-> > This patch adds a YAML binding for the Analog Devices AD7780/1 and
-> > AD7170/1 analog-to-digital converters.
-> >
-> > Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
-> Looks good to me, but I'm still finding my feet with these so will
-> leave it for a few days for others to have time to comment.
->=20
-> Michael, looking for a quick reply from you to say if you are happy
-> being explicitly listed as maintainer for this one, or if you'd
-> rather land it on someone else.  Same applies for patch 2.
-
-Hi Jonathan,
-
-Listing me as an maintainer is ok.
-
-Acked-by: Michael Hennerich <michael.hennerich@analog.com>
-
-
->=20
-> Renato, if I seem to have forgotten this in a week or so, feel
-> free to give me a poke. I've been known to loose patches entirely!
->=20
-> Thanks,
->=20
-> Jonathan
-> > ---
-> > Changes in v2:
-> >  - vref-supply to avdd-supply
-> >  - remove avdd-supply from required list
-> >  - include adc block in an spi block
-> >
-> >  .../bindings/iio/adc/adi,ad7780.txt           | 48 ----------
-> >  .../bindings/iio/adc/adi,ad7780.yaml          | 87 +++++++++++++++++++
-> >  2 files changed, 87 insertions(+), 48 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad778=
-0.txt
-> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad778=
-0.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt b=
-/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
-> > deleted file mode 100644
-> > index 440e52555349..000000000000
-> > --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
-> > +++ /dev/null
-> > @@ -1,48 +0,0 @@
-> > -* Analog Devices AD7170/AD7171/AD7780/AD7781
-> > -
-> > -Data sheets:
-> > -
-> > -- AD7170:
-> > -     * https://www.analog.com/media/en/technical-documentation/data-sh=
-eets/AD7170.pdf
-> > -- AD7171:
-> > -     * https://www.analog.com/media/en/technical-documentation/data-sh=
-eets/AD7171.pdf
-> > -- AD7780:
-> > -     * https://www.analog.com/media/en/technical-documentation/data-sh=
-eets/ad7780.pdf
-> > -- AD7781:
-> > -     * https://www.analog.com/media/en/technical-documentation/data-sh=
-eets/AD7781.pdf
-> > -
-> > -Required properties:
-> > -
-> > -- compatible: should be one of
-> > -     * "adi,ad7170"
-> > -     * "adi,ad7171"
-> > -     * "adi,ad7780"
-> > -     * "adi,ad7781"
-> > -- reg: spi chip select number for the device
-> > -- vref-supply: the regulator supply for the ADC reference voltage
-> > -
-> > -Optional properties:
-> > -
-> > -- powerdown-gpios:  must be the device tree identifier of the PDRST pi=
-n. If
-> > -                 specified, it will be asserted during driver probe. A=
-s the
-> > -                 line is active high, it should be marked GPIO_ACTIVE_=
-HIGH.
-> > -- adi,gain-gpios:   must be the device tree identifier of the GAIN pin=
-. Only for
-> > -                 the ad778x chips. If specified, it will be asserted d=
-uring
-> > -                 driver probe. As the line is active low, it should be=
- marked
-> > -                 GPIO_ACTIVE_LOW.
-> > -- adi,filter-gpios: must be the device tree identifier of the FILTER p=
-in. Only
-> > -                 for the ad778x chips. If specified, it will be assert=
-ed
-> > -                 during driver probe. As the line is active low, it sh=
-ould be
-> > -                 marked GPIO_ACTIVE_LOW.
-> > -
-> > -Example:
-> > -
-> > -adc@0 {
-> > -     compatible =3D  "adi,ad7780";
-> > -     reg =3D         <0>;
-> > -     vref-supply =3D <&vdd_supply>
-> > -
-> > -     powerdown-gpios  =3D <&gpio 12 GPIO_ACTIVE_HIGH>;
-> > -     adi,gain-gpios   =3D <&gpio  5 GPIO_ACTIVE_LOW>;
-> > -     adi,filter-gpios =3D <&gpio 15 GPIO_ACTIVE_LOW>;
-> > -};
-> > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml =
-b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
-> > new file mode 100644
-> > index 000000000000..d1109416963c
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
-> > @@ -0,0 +1,87 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/iio/adc/adi,ad7780.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Analog Devices AD7170/AD7171/AD7780/AD7781 analog to digital co=
-nverters
-> > +
-> > +maintainers:
-> > +  - Michael Hennerich <michael.hennerich@analog.com>
-> > +
-> > +description: |
-> > +  The ad7780 is a sigma-delta analog to digital converter. This driver=
- provides
-> > +  reading voltage values and status bits from both the ad778x and ad71=
-7x series.
-> > +  Its interface also allows writing on the FILTER and GAIN GPIO pins o=
-n the
-> > +  ad778x.
-> > +
-> > +  Specifications on the converters can be found at:
-> > +    AD7170:
-> > +      https://www.analog.com/media/en/technical-documentation/data-she=
-ets/AD7170.pdf
-> > +    AD7171:
-> > +      https://www.analog.com/media/en/technical-documentation/data-she=
-ets/AD7171.pdf
-> > +    AD7780:
-> > +      https://www.analog.com/media/en/technical-documentation/data-she=
-ets/ad7780.pdf
-> > +    AD7781:
-> > +      https://www.analog.com/media/en/technical-documentation/data-she=
-ets/AD7781.pdf
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - adi,ad7170
-> > +      - adi,ad7171
-> > +      - adi,ad7780
-> > +      - adi,ad7781
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  avdd-supply:
-> > +    description:
-> > +      The regulator supply for the ADC reference voltage.
-> > +    maxItems: 1
-> > +
-> > +  powerdown-gpios:
-> > +    description:
-> > +      Must be the device tree identifier of the PDRST pin. If
-> > +      specified, it will be asserted during driver probe. As the
-> > +      line is active high, it should be marked GPIO_ACTIVE_HIGH.
-> > +    maxItems: 1
-> > +
-> > +  adi,gain-gpios:
-> > +    description:
-> > +      Must be the device tree identifier of the GAIN pin. Only for
-> > +      the ad778x chips. If specified, it will be asserted during
-> > +      driver probe. As the line is active low, it should be marked
-> > +      GPIO_ACTIVE_LOW.
-> > +    maxItems: 1
-> > +
-> > +  adi,filter-gpios:
-> > +    description:
-> > +      Must be the device tree identifier of the FILTER pin. Only
-> > +      for the ad778x chips. If specified, it will be asserted
-> > +      during driver probe. As the line is active low, it should be
-> > +      marked GPIO_ACTIVE_LOW.
-> > +    maxItems: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/gpio/gpio.h>
-> > +    spi0 {
-> > +        #address-cells =3D <1>;
-> > +        #size-cells =3D <0>;
-> > +
-> > +        adc@0 {
-> > +            compatible =3D "adi,ad7780";
-> > +            reg =3D <0>;
-> > +
-> > +            avdd-supply      =3D <&vdd_supply>;
-> > +            powerdown-gpios  =3D <&gpio0 12 GPIO_ACTIVE_HIGH>;
-> > +            adi,gain-gpios   =3D <&gpio1  5 GPIO_ACTIVE_LOW>;
-> > +            adi,filter-gpios =3D <&gpio2 15 GPIO_ACTIVE_LOW>;
-> > +        };
-> > +    };
+> 
+> diff --git a/hw/arm/nseries.c b/hw/arm/nseries.c
+> index 906b7ca22d43..52ff83ec5147 100644
+> --- a/hw/arm/nseries.c
+> +++ b/hw/arm/nseries.c
+> @@ -792,6 +792,7 @@ static void n8x0_uart_setup(struct n800_s *s)
+>      qdev_connect_gpio_out(s->mpu->gpio, N8X0_BT_WKUP_GPIO,
+>                      csrhci_pins_get(radio)[csrhci_pin_wakeup]);
+>  
+> +    omap_uart_attach(s->mpu->uart[2], serial_hd(0));
+>      omap_uart_attach(s->mpu->uart[BT_UART], radio);
+>  }
+>  
+> 
 
