@@ -2,103 +2,166 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A30AC04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 19:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DECBC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 20:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37FC420883
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 19:56:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AFC320883
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 20:00:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jKp6Tj6G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbfE0T4q (ORCPT
+        id S1727085AbfE0UAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 15:56:46 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:46823 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbfE0T4q (ORCPT
+        Mon, 27 May 2019 16:00:49 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52556 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726801AbfE0UAs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 15:56:46 -0400
-Received: from [192.168.1.110] ([95.115.42.131]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1N18MG-1gUDUG0dsw-012Y0Z; Mon, 27 May 2019 21:56:34 +0200
-Subject: Re: [PATCH 2/2] serial: 8250: Add support for 8250/16550 as MFD
- function
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Esben Haabendal <esben@haabendal.dk>
-Cc:     Lee Jones <lee.jones@linaro.org>, linux-serial@vger.kernel.org,
-        Jiri Slaby <jslaby@suse.com>, Nishanth Menon <nm@ti.com>,
-        Vignesh R <vigneshr@ti.com>, Tony Lindgren <tony@atomide.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        Mon, 27 May 2019 16:00:48 -0400
+Received: by mail-wm1-f67.google.com with SMTP id y3so511343wmm.2;
+        Mon, 27 May 2019 13:00:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=qs0hduG7r9ZuCuorXfKiLxTX7AgEzf0fkdnIQ/+Us5w=;
+        b=jKp6Tj6GYHwtJkdSEmERhGmELlQG2xE1zCTdm+gWm+2McCGc1YmqNpVm2267/kbzuW
+         aWASqvy/KZMFsUCuBfchpe1yePkV4rp523HBnDvumPq+iojYq9eEteeTkjCA+AV96l8D
+         M//QMSC2goAgc9eI2Dd9ckCuzyIUe9pVvsKjioyp9tWmogB4Pjb6Ea1ifo0e6sflOvJm
+         AbyLOwRV1wcngpJfSXYKu0NpHTWJZ6cx+Odz4iDqCYzKob5JlaMmDBfYUJ0Iui3Cp2/D
+         54iJbnjZP3nRdJRvbPLUKvuitGKwQaoOUv5dwiKmTtvo1uJnR7PaLXjOn7HeDZnxR7mS
+         9M1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qs0hduG7r9ZuCuorXfKiLxTX7AgEzf0fkdnIQ/+Us5w=;
+        b=VRvEwuA4094KnoIyJIWXp/b5T92+aSiNScBIb8Mz+yFYOK2f5Zk/fYnT0NiYS0Lr5U
+         A9Hp8ezDZwYCYsUvygW+vR8hEH9SWamcFeLUENyLMz0RJPFFN/4zM3BEXjuTFOb5cwwR
+         4ycShLp4a8e7V6KzOlgNZxE8gLr64Lb0UxBRw2JpthO9DXXTkD54/8dvgayW5REImtQf
+         hchev6t/pI9mD1e2QobvJjW2SuG+5xVVi5rjlEJSCrz2nE1tAYHiCUyMWDi3p0ffLqWc
+         VxxaHERBE+cKVqIUO2ZngGOkiusiVqaBrNIvi+zxVaZk+cBL/YHMEAYfcp+DSw4nTZ2k
+         7YUg==
+X-Gm-Message-State: APjAAAUGdn8Zr8Jp4FQgiyDPon1FRgq9KitDWmSXSob/UGziaFD0Mtny
+        t5FiZmdmrN5wQfwq1Mp9CTohdBeM
+X-Google-Smtp-Source: APXvYqwdr28CqJsor9aafRQ5eOruKDuW6LisxlprBS+CBeHT/FESW9Rvn4qI8ioQhs8rwwgYlqEoNA==
+X-Received: by 2002:a1c:c00b:: with SMTP id q11mr456498wmf.4.1558987245546;
+        Mon, 27 May 2019 13:00:45 -0700 (PDT)
+Received: from [192.168.1.17] (bkn17.neoplus.adsl.tpnet.pl. [83.28.181.17])
+        by smtp.gmail.com with ESMTPSA id l190sm636252wml.25.2019.05.27.13.00.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 27 May 2019 13:00:44 -0700 (PDT)
+Subject: Re: [PATCH v3 1/9] leds: multicolor: Add sysfs interface definition
+To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz, robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <87bm05mpmx.fsf@haabendal.dk> <20190514104741.GO4319@dell>
- <20190514122618.GA18859@kroah.com> <87imudky2o.fsf@haabendal.dk>
- <20190521100904.GA13612@kroah.com> <87pnocm59v.fsf@haabendal.dk>
- <20190521111817.GA24911@kroah.com> <87lfz0m3ge.fsf@haabendal.dk>
- <20190521125651.GA6264@kroah.com> <87h89nnajr.fsf@haabendal.dk>
- <20190521144319.GA28747@kroah.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <5c7e21b6-3701-a685-02c6-a584996aa811@metux.net>
-Date:   Mon, 27 May 2019 21:56:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+References: <20190523190820.29375-1-dmurphy@ti.com>
+ <20190523190820.29375-2-dmurphy@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <f01ac400-efda-80a8-4d63-1e2add5e054a@gmail.com>
+Date:   Mon, 27 May 2019 22:00:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190521144319.GA28747@kroah.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190523190820.29375-2-dmurphy@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:K7GEJZtbQJhy4IMLkG1/HregCwPnj0S7Td/78D9wZMC4RrPz3mE
- GngyVqIgDk5XwhKx8Mo/hYcIWUOFY/dJ8MTC6Ij+sQy482FsKAkmBVlzF9lNFGYQo8x1w2X
- cSEG7qHzysKTdoc80JyGfW4nP/hO4l3V69FjSw6r7gETAIdIVDVOH34KvV0TOBoTr2WlFsL
- SptcrrBq/5Jui1CUM0mOQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:NeHRnzJkYP0=:6c4Z10cEv6QAFoYDO7mHfR
- xjhz30RJUU3aPxaw91gITyNo8DOJrsTtC5aGRiv8b9YFsv+DP47FGFdoVDnNogQtN/KAPEtkj
- aeG6phlUVUFcr7ShwFtE8CEdEJ3fJaJ0kxy4Gy6YjA63hSo1X0b0H0LSQ69t6xqMl1obJToRU
- EoDY5zl+qtxLUQseyNAgYYfO2ZVkMoi/Izr/f6mFeDLotiUxLmnrpN2UNTFNVFFJ7K+P2x9fU
- O/9Bf0sS64+EYNJF4giRdjMcUMHIqW/O8bYrm3mOQ6Qs6HSDO1IOEZea1O54A+Q4UwP2JD+7+
- j8crVwZKiOdFNCa9UpwKYiQlOapdumXu3lc9TvHbdPey2Uv5knlFRC67JS2OY3Xcju+His2nU
- ohImuPlKrU2ioAznUW9Rxa7RqL0ujF/zr/kNGRfSh/D/vWzZdf/9YIqulpVAz0k/QJJI5YPsS
- cAUvc+BLHUCF/YKQQB0loDB1tvxMgCkamiqf+yiCyZ3429V94ppyOALzZ/xFvZjsOwQH9Flz4
- vvQIPiIzoAMb8seO8BIsXS83YRlu8Tk8cUiUZYrFUnvujoBaQaL5HI/Dgv4txMjOIlnRAUdaS
- oDuRQMQVOfaZZmnz8ZMOQ71+8aAjQgqZkWnzPf/8Kwq+jSSltEsS1z7PI25IwJKi+A+Ok44T+
- IVni29vYsozZM5tFo7NQBo+eyaTDi5xx0pD0xp6ufMDwTBtHQqmiUK38oo5L657wWU3RiYMbT
- 4+YT3yHPoQtw4uQ7w/pDR0GGVfwdy7bCJPRhFKUGB9LmBlb8LREbNyhTk5o=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21.05.19 16:43, Greg Kroah-Hartman wrote:
+Hi Dan,
 
-Hi,
+Thank you for the update.
 
-> Sometimes you need to go tell the hardware/firmware people not to do
-> foolish things.  You can not always fix their problems in software.
-> Please push back on this.
+One thing is missing here - we need to document how legacy brightness
+levels map to the sub-LED color levels, i.e. what you do in
+multicolor_set_brightness().
 
-I've often been in the same situation. It's hopeless with those folks.
-Even worse: you give'em a clear spec on how the register interface
-shall look like, and they make something really weird out of it
-(shuffled byte orders, multiplexing irqs over a single gpio line and
-leave the other's empty instead of just one gpio per irq, ...)
+Best regards,
+Jacek Anaszewski
 
-The kernel is full of buggy hardware, because hw folks seem not really
-capable of doing their homework :(
+On 5/23/19 9:08 PM, Dan Murphy wrote:
+> Add a documentation of LED Multicolor LED class specific
+> sysfs attributes.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>   .../ABI/testing/sysfs-class-led-multicolor    | 57 +++++++++++++++++++
+>   1 file changed, 57 insertions(+)
+>   create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-class-led-multicolor b/Documentation/ABI/testing/sysfs-class-led-multicolor
+> new file mode 100644
+> index 000000000000..2f102ede258b
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-class-led-multicolor
+> @@ -0,0 +1,57 @@
+> +What:		/sys/class/leds/<led>/colors/sync_enable
+> +Date:		April 2019
+> +KernelVersion:	5.2
+> +Contact:	Dan Murphy <dmurphy@ti.com>
+> +Description:	read/write
+> +		Writing a 1 to this file will enable the synchronization of all
+> +		the defined color LEDs within the LED node.  Brightness values
+> +		for each LED will be stored and written when sync is set to 1.
+> +		Writing a 0 to this file will disable syncing and allow
+> +		individual control of the LEDs brightness settings.
+> +
+> +What:		/sys/class/leds/<led>/colors/sync
+> +Date:		April 2019
+> +KernelVersion:	5.2
+> +Contact:	Dan Murphy <dmurphy@ti.com>
+> +Description:	write only
+> +		Writing a 1 to this file while sync_enable is set to 1 will
+> +		write the current brightness values to all defined LEDs within
+> +		the LED node.  All LEDs defined will be configured based
+> +		on the brightness that has been requested.
+> +
+> +		If sync_enable is set to 0 then writing a 1 to sync has no
+> +		affect on the LEDs.
+> +
+> +What:		/sys/class/leds/<led>/colors/<led_color>/brightness
+> +Date:		April 2019
+> +KernelVersion:	5.2
+> +Contact:	Dan Murphy <dmurphy@ti.com>
+> +Description:	read/write
+> +		The led_color directory is dynamically created based on the
+> +		colors defined by the registrar of the class.
+> +		The led_color can be but not limited to red, green, blue,
+> +		white, amber, yellow and violet.  Drivers can also declare a
+> +		LED color for presentation.  There is one directory per color
+> +		presented.  The brightness file is created under each
+> +		led_color directory and controls the individual LED color
+> +		setting.
+> +
+> +		If sync is enabled then	writing the brightness value of the LED
+> +		is deferred until a 1 is written to
+> +		/sys/class/leds/<led>/color/sync.  If syncing is
+> +		disabled then the LED brightness value will be written
+> +		immediately to the LED driver.
+> +
+> +		The value of the color is from 0 to
+> +		/sys/class/leds/<led>/colors/<led_color>/max_brightness.
+> +
+> +What:		/sys/class/leds/<led>/colors/<led_color>/max_brightness
+> +Date:		April 2019
+> +KernelVersion:	5.2
+> +Contact:	Dan Murphy <dmurphy@ti.com>
+> +Description:	read only
+> +		Maximum brightness level for the LED color, default is
+> +		255 (LED_FULL).
+> +
+> +		If the LED does not support different brightness levels, this
+> +		should be 1.
+> 
 
-Actually, the whole existance of these hundreds of different uart
-devices, IMHO, is a clear sing of hw folks not doing the homework.
 
-
-By the way: I've somewhat lost track of what the patch was actually
-about ... :o
-
-
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
