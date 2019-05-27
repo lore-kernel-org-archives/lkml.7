@@ -2,132 +2,136 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC617C072B1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B482AC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D523620815
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:02:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A43120815
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 11:04:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="RwSkS4T6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbfE0LCy (ORCPT
+        id S1726652AbfE0LEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 07:02:54 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:63556 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725991AbfE0LCx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 07:02:53 -0400
-Received: from 79.184.255.36.ipv4.supernova.orange.pl (79.184.255.36) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
- id cfb2f764cd3f14d9; Mon, 27 May 2019 13:02:50 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Keith Busch <kbusch@kernel.org>
-Subject: Re: [PATCH] PCI: PM: Avoid possible suspend-to-idle issue
-Date:   Mon, 27 May 2019 13:02:49 +0200
-Message-ID: <10983642.dUqMSvAAlD@kreacher>
-In-Reply-To: <2315917.ZGeXE6pBFC@kreacher>
-References: <2315917.ZGeXE6pBFC@kreacher>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
+        Mon, 27 May 2019 07:04:22 -0400
+Received: from mail-eopbgr790049.outbound.protection.outlook.com ([40.107.79.49]:58656
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725996AbfE0LEW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 07:04:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Synaptics.onmicrosoft.com; s=selector1-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=A2Ahkms7ZskReuoeIx+XGDQwQZeJJz5Qjsrs7EltXC4=;
+ b=RwSkS4T6tE+K2amx5z2Hw8+KV3w+exmIjRSJdrj7WKO6LFdoGtqEGvLFTUoDFe0vo22THORIjRtj9lY9LnV3sHXojJ3NJY9QXPHKU0WaIARrkRFGHPe4XDktDsfRxWATWvZZBvW2EYTuHg2o5Xt+VrapHh3G/qElaEYlBEQ/2o0=
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com (20.179.92.152) by
+ BYAPR03MB4101.namprd03.prod.outlook.com (20.177.184.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.21; Mon, 27 May 2019 11:04:17 +0000
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::e484:f15c:c415:5ff9]) by BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::e484:f15c:c415:5ff9%7]) with mapi id 15.20.1922.021; Mon, 27 May 2019
+ 11:04:17 +0000
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        "David S. Miller" <davem@davemloft.net>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH] net: mvneta: Fix err code path of probe
+Thread-Topic: [PATCH] net: mvneta: Fix err code path of probe
+Thread-Index: AQHVFHvt/gI8V9X5mUCJIK/fkWRQcQ==
+Date:   Mon, 27 May 2019 11:04:17 +0000
+Message-ID: <20190527185513.04aca133@xhacker.debian>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [124.74.246.114]
+x-clientproxiedby: HK2PR02CA0147.apcprd02.prod.outlook.com
+ (2603:1096:202:16::31) To BYAPR03MB4773.namprd03.prod.outlook.com
+ (2603:10b6:a03:134::24)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Jisheng.Zhang@synaptics.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d47ef688-cd24-47b6-df05-08d6e2930fa3
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR03MB4101;
+x-ms-traffictypediagnostic: BYAPR03MB4101:
+x-microsoft-antispam-prvs: <BYAPR03MB410100915C96E45D64622AF5ED1D0@BYAPR03MB4101.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2512;
+x-forefront-prvs: 0050CEFE70
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(136003)(366004)(39850400004)(396003)(199004)(189003)(6512007)(3846002)(6116002)(9686003)(26005)(2906002)(68736007)(25786009)(6506007)(386003)(8676002)(81156014)(8936002)(305945005)(66446008)(64756008)(66556008)(66476007)(66946007)(52116002)(71190400001)(186003)(71200400001)(5660300002)(86362001)(478600001)(4326008)(7736002)(6436002)(73956011)(6486002)(66066001)(316002)(14454004)(72206003)(486006)(476003)(53936002)(102836004)(110136005)(54906003)(99286004)(81166006)(1076003)(256004)(50226002)(39210200001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB4101;H:BYAPR03MB4773.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: synaptics.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: bH2TyxCwHS+dl4/26amAb2qnEzbkU6AQH5SnBK+DQw2dedoM6m2sTH2bnmX+KkfC5pXNQN4trnmf6/Y77j5kOgnXTokI2ZfFb4c+h+e4iEOHieJBmgB5NmkI3kYKIaWfiAFAw9BXnZiXjccOMYtKDlyMpLNcFPssxcelE5bfgWBH/y9BczB+HgPoYNw3v1FGfWbf8UNiJO9hWJhEpO8qryAVee5uHSisopoxc2E28bdcPuFeM8XqoPiKR0D75MNMKC1HXfVqFlJh/pBVvL8QdoY7xDwRcM5BkaitKjsy+0GCo7/nOkJw8mYkAwNcvJ4X1C1HcCHlQeCzO1UwUFHIwo+q92/4vPep7t0t5nxIaVc2GW0eT/ny2tzrq3HYde97NwWlbdy5N4IwSi0BJdfx7nNhlUH5N7H1BtcgLjqfxBk=
 Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1C643B66700BAC4280B4784088475B1C@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d47ef688-cd24-47b6-df05-08d6e2930fa3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 May 2019 11:04:17.5078
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jiszha@synaptics.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB4101
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday, May 17, 2019 11:08:50 AM CEST Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> If a PCI driver leaves the device handled by it in D0 and calls
-> pci_save_state() on the device in its ->suspend() or ->suspend_late()
-> callback, it can expect the device to stay in D0 over the whole
-> s2idle cycle.  However, that may not be the case if there is a
-> spurious wakeup while the system is suspended, because in that case
-> pci_pm_suspend_noirq() will run again after pci_pm_resume_noirq()
-> which calls pci_restore_state(), via pci_pm_default_resume_early(),
-> so state_saved is cleared and the second iteration of
-> pci_pm_suspend_noirq() will invoke pci_prepare_to_sleep() which
-> may change the power state of the device.
-> 
-> To avoid that, add a new internal flag, skip_bus_pm, that will be set
-> by pci_pm_suspend_noirq() when it runs for the first time during the
-> given system suspend-resume cycle if the state of the device has
-> been saved already and the device is still in D0.  Setting that flag
-> will cause the next iterations of pci_pm_suspend_noirq() to set
-> state_saved for pci_pm_resume_noirq(), so that it always restores the
-> device state from the originally saved data, and avoid calling
-> pci_prepare_to_sleep() for the device.
-> 
-> Fixes: 33e4f80ee69b ("ACPI / PM: Ignore spurious SCI wakeups from suspend-to-idle")
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
->  drivers/pci/pci-driver.c |   17 ++++++++++++++++-
->  include/linux/pci.h      |    1 +
->  2 files changed, 17 insertions(+), 1 deletion(-)
-> 
-> Index: linux-pm/drivers/pci/pci-driver.c
-> ===================================================================
-> --- linux-pm.orig/drivers/pci/pci-driver.c
-> +++ linux-pm/drivers/pci/pci-driver.c
-> @@ -734,6 +734,8 @@ static int pci_pm_suspend(struct device
->  	struct pci_dev *pci_dev = to_pci_dev(dev);
->  	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
->  
-> +	pci_dev->skip_bus_pm = false;
-> +
->  	if (pci_has_legacy_pm_support(pci_dev))
->  		return pci_legacy_suspend(dev, PMSG_SUSPEND);
->  
-> @@ -827,7 +829,20 @@ static int pci_pm_suspend_noirq(struct d
->  		}
->  	}
->  
-> -	if (!pci_dev->state_saved) {
-> +	if (pci_dev->skip_bus_pm) {
-> +		/*
-> +		 * The function is running for the second time in a row without
-> +		 * going through full resume, which is possible only during
-> +		 * suspend-to-idle in a spurious wakeup case.  Moreover, the
-> +		 * device was originally left in D0, so its power state should
-> +		 * not be changed here and the device register values saved
-> +		 * originally should be restored on resume again.
-> +		 */
-> +		pci_dev->state_saved = true;
-> +	} else if (pci_dev->state_saved) {
-> +		if (pci_dev->current_state == PCI_D0)
-> +			pci_dev->skip_bus_pm = true;
-> +	} else {
->  		pci_save_state(pci_dev);
->  		if (pci_power_manageable(pci_dev))
->  			pci_prepare_to_sleep(pci_dev);
-> Index: linux-pm/include/linux/pci.h
-> ===================================================================
-> --- linux-pm.orig/include/linux/pci.h
-> +++ linux-pm/include/linux/pci.h
-> @@ -344,6 +344,7 @@ struct pci_dev {
->  						   D3cold, not set for devices
->  						   powered on/off by the
->  						   corresponding bridge */
-> +	unsigned int	skip_bus_pm:1;	/* Internal: Skip bus-level PM */
->  	unsigned int	ignore_hotplug:1;	/* Ignore hotplug events */
->  	unsigned int	hotplug_user_indicators:1; /* SlotCtl indicators
->  						      controlled exclusively by
-> 
+Fix below issues in err code path of probe:
+1. we don't need to unregister_netdev() because the netdev isn't
+registered.
+2. when register_netdev() fails, we also need to destroy bm pool for
+HWBM case.
 
-Bjorn, I've assumed no concerns or objections from you regarding this one and
-queued it up.
+Fixes: dc35a10f68d3 ("net: mvneta: bm: add support for hardware buffer mana=
+gement")
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+---
+ drivers/net/ethernet/marvell/mvneta.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-If that assumption is incorrect, please let me know.
-
-
+diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/m=
+arvell/mvneta.c
+index e758650b2c26..269bd73be1a0 100644
+--- a/drivers/net/ethernet/marvell/mvneta.c
++++ b/drivers/net/ethernet/marvell/mvneta.c
+@@ -4674,7 +4674,7 @@ static int mvneta_probe(struct platform_device *pdev)
+ 	err =3D register_netdev(dev);
+ 	if (err < 0) {
+ 		dev_err(&pdev->dev, "failed to register\n");
+-		goto err_free_stats;
++		goto err_netdev;
+ 	}
+=20
+ 	netdev_info(dev, "Using %s mac address %pM\n", mac_from,
+@@ -4685,14 +4685,12 @@ static int mvneta_probe(struct platform_device *pde=
+v)
+ 	return 0;
+=20
+ err_netdev:
+-	unregister_netdev(dev);
+ 	if (pp->bm_priv) {
+ 		mvneta_bm_pool_destroy(pp->bm_priv, pp->pool_long, 1 << pp->id);
+ 		mvneta_bm_pool_destroy(pp->bm_priv, pp->pool_short,
+ 				       1 << pp->id);
+ 		mvneta_bm_put(pp->bm_priv);
+ 	}
+-err_free_stats:
+ 	free_percpu(pp->stats);
+ err_free_ports:
+ 	free_percpu(pp->ports);
+--=20
+2.20.1
 
