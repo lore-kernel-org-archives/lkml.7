@@ -2,115 +2,135 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4437AC04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 20:14:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E62A8C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 20:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2288C2133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 20:14:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8D6C20859
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 20:15:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="owUyFwlX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727274AbfE0UOv (ORCPT
+        id S1727349AbfE0UPH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 16:14:51 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48500 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726839AbfE0UOv (ORCPT
+        Mon, 27 May 2019 16:15:07 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:41797 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726839AbfE0UPH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 16:14:51 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4RKBr8T036884
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 16:14:49 -0400
-Received: from e33.co.us.ibm.com (e33.co.us.ibm.com [32.97.110.151])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2srkvx64ua-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 16:14:49 -0400
-Received: from localhost
-        by e33.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
-        Mon, 27 May 2019 21:14:48 +0100
-Received: from b03cxnp08026.gho.boulder.ibm.com (9.17.130.18)
-        by e33.co.us.ibm.com (192.168.1.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 27 May 2019 21:14:46 +0100
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4RKEj7P22806886
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 May 2019 20:14:45 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8620F78067;
-        Mon, 27 May 2019 20:14:45 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 16EE87805E;
-        Mon, 27 May 2019 20:14:33 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.80.238.201])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Mon, 27 May 2019 20:14:28 +0000 (GMT)
-References: <20190522220158.18479-1-bauerman@linux.ibm.com> <459lBd53mCz9sBr@ozlabs.org>
-User-agent: mu4e 1.0; emacs 26.2
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>,
-        AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH] powerpc: Fix loading of kernel + initramfs with kexec_file_load()
-In-reply-to: <459lBd53mCz9sBr@ozlabs.org>
-Date:   Mon, 27 May 2019 17:14:17 -0300
+        Mon, 27 May 2019 16:15:07 -0400
+Received: by mail-wr1-f65.google.com with SMTP id c2so2681321wrm.8;
+        Mon, 27 May 2019 13:15:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RXahGaBrkqUKt9hjO+RHzxhaODt54utR6Qk5vi9eCaQ=;
+        b=owUyFwlXphbnCdPceA7pSRSRDBr3F1cc+EYPPm79e3Mf5qHXv14oDJt46X6NAUyIRR
+         G8rIbeApWCEHEMmhlRx3sXskvz5BaS8egS4Oe3eTA7Ys+yuNij75fEoMQUizaMmwhxBD
+         t8vJk+fQL+MCUNgL065d067WNqHgghWlYg2ur8Q/sOYgpDjMMkPOTouS7+pZphyN091F
+         AEsIEBlrTAAuj60d8VMJv1XBSDROb2vq/4aMIo8KqsQ1aVp92V7++kk+PL/L39FQJifY
+         hgTsxXS33KvZVSk33Hw64di1otY89d/aw5+eSOpGEVTZFs4aQbB2d+qHXBUr9wnla9jo
+         sP5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RXahGaBrkqUKt9hjO+RHzxhaODt54utR6Qk5vi9eCaQ=;
+        b=rHbJRNzilttVTAwCdxzQvoE1BTcBFascxyrKJUdTofPyn0HC/QZqY3v7Df34HNAmQv
+         pZlvePpFHgJ3/NBofq7GBeumMAUnrNOUGpfYoikqlM6yuEJZ6LHmg3OdoBUx621hcImg
+         Uqk4a0uKoJ+SOcieDDIaEqOARV3wJRkRTijkQTGE+zNHikaRksQosuCiMfcai2yJM3VY
+         2qRzA0rC3njxSJxIoaKdGJkpStG2vhjJdKMpPZ/m/ceVk9ybsTgv4MqL7PXG1HXratYU
+         kgFJg3L4+f0fZDzlUDcTuWKLgKl/vIR8AQQZUiizzjnDFtGtsx0hyESdOLPbtMEIviii
+         wyvw==
+X-Gm-Message-State: APjAAAWeKWXwvVGr/22l6PcR8sz75OWGiC86zRiq16GMtvI4UUXbQhD7
+        r9zepb5aeCEoWKa0/yhq+f8=
+X-Google-Smtp-Source: APXvYqxEJpHEqBC0rATeo4Jp5k5kbxhG9dMgCDzdVg4d/5zHBKkoNf1NUwOJp8BMU3gPMRXlDfRdQg==
+X-Received: by 2002:a5d:5701:: with SMTP id a1mr75764699wrv.52.1558988105323;
+        Mon, 27 May 2019 13:15:05 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
+        by smtp.gmail.com with ESMTPSA id i27sm347146wmb.16.2019.05.27.13.15.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 27 May 2019 13:15:04 -0700 (PDT)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v3 0/7] Allwinner H6 DMA support
+Date:   Mon, 27 May 2019 22:14:52 +0200
+Message-Id: <20190527201459.20130-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-x-cbid: 19052720-0036-0000-0000-00000AC37FD2
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011173; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01209460; UDB=6.00635357; IPR=6.00990487;
- MB=3.00027077; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-27 20:14:48
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052720-0037-0000-0000-00004BF7F30A
-Message-Id: <87pno3psdi.fsf@morokweng.localdomain>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-27_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905270142
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-Michael Ellerman <patch-notifications@ellerman.id.au> writes:
+This series has been first proposed by Jernej Skrabec[1].
+As this series is mandatory for SPDIF/I2S support and because he is
+busy on Cedrus stuff. I asked him to make the minor change requested
+and repost it.
+Authorship remains to him.
 
-> On Wed, 2019-05-22 at 22:01:58 UTC, Thiago Jung Bauermann wrote:
->> Commit b6664ba42f14 ("s390, kexec_file: drop arch_kexec_mem_walk()")
->> changed kexec_add_buffer() to skip searching for a memory location if
->> kexec_buf.mem is already set, and use the address that is there.
->> 
->> In powerpc code we reuse a kexec_buf variable for loading both the kernel
->> and the initramfs by resetting some of the fields between those uses, but
->> not mem. This causes kexec_add_buffer() to try to load the kernel at the
->> same address where initramfs will be loaded, which is naturally rejected:
->> 
->>   # kexec -s -l --initrd initramfs vmlinuz
->>   kexec_file_load failed: Invalid argument
->> 
->> Setting the mem field before every call to kexec_add_buffer() fixes this
->> regression.
->> 
->> Fixes: b6664ba42f14 ("s390, kexec_file: drop arch_kexec_mem_walk()")
->> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
->> Reviewed-by: Dave Young <dyoung@redhat.com>
->
-> Applied to powerpc fixes, thanks.
->
-> https://git.kernel.org/powerpc/c/8b909e3548706cbebc0a676067b81aad
+I have tested this series with SPDIF driver and added a patch to enable
+DMA_SUN6I_CONFIG for arm64.
 
-Thanks!!
+Original Post:
+"
+DMA engine engine on H6 almost the same as on older SoCs. The biggest
+difference is that it has slightly rearranged bits in registers and
+it needs additional clock, probably due to iommu.
+
+These patches were tested with I2S connected to HDMI. I2S needs
+additional patches which will be sent later.
+
+Please take a look.
+
+Best regards,
+Jernej
+"
+
+Thanks,
+Clément
+
+Changes since v2:
+ - Drop the change of "dma-request" default value
+
+Changes since v1:
+ - Enable DMA_SUN6I in arm64 defconfig
+ - Change mbus_clk to has_mbus_clk
+ - Collect Rob H. reviewed-by
+
+Clément Péron (1):
+  arm64: defconfig: enable Allwinner DMA drivers
+
+Jernej Skrabec (6):
+  dt-bindings: arm64: allwinner: h6: Add binding for DMA controller
+  dmaengine: sun6i: Add a quirk for additional mbus clock
+  dmaengine: sun6i: Add a quirk for setting DRQ fields
+  dmaengine: sun6i: Add a quirk for setting mode fields
+  dmaengine: sun6i: Add support for H6 DMA
+  arm64: dts: allwinner: h6: Add DMA node
+
+ .../devicetree/bindings/dma/sun6i-dma.txt     |   9 +-
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  12 ++
+ arch/arm64/configs/defconfig                  |   1 +
+ drivers/dma/sun6i-dma.c                       | 147 +++++++++++++-----
+ 4 files changed, 132 insertions(+), 37 deletions(-)
 
 -- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
+2.20.1
 
