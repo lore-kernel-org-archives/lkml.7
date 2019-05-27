@@ -2,138 +2,114 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34BA5C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3B1C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C61320883
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:10:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558951813;
-	bh=NnmgDy5FptWpQILTDsZ4Xve8h2sTF+iS5fFSlh0fjz4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=T5eNRrNS/DGCqAn9UlosJ77Xw1Xd4bGzROxUhL1BVGGK3FtiXcLnD8kqlp/7uK2GE
-	 ZVJYUExoUFYqT6iB8VFA+3luvelORFSFU6f4siubIHmpVZ1DJr4fZV+iUek7JdVi4C
-	 gL4XCb1F9PSkZLTnxmfODkLitnBAoGXiLkcB2+nY=
+	by mail.kernel.org (Postfix) with ESMTP id C304D20859
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 10:10:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sfGuFxve"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbfE0KKL (ORCPT
+        id S1726875AbfE0KKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 06:10:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56636 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725943AbfE0KKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 06:10:10 -0400
-Received: from localhost (unknown [171.61.91.186])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C5A720859;
-        Mon, 27 May 2019 10:10:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558951809;
-        bh=NnmgDy5FptWpQILTDsZ4Xve8h2sTF+iS5fFSlh0fjz4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=snA0dl2mB3eN9j8L1PY7p2ImPCLljwBsCVF8fJeqljCDdbesF3LbLdyOe75n8a2z8
-         f32m7VKpFBVs7jddUxx3JqgKvQZZ/buVB4YACB+a1aQTmg9JppJEtRwBHD6Dfy/0jN
-         lcLjftgbaX+k6lMoi03cdD+5IzaPbD/ICHlimVMc=
-Date:   Mon, 27 May 2019 15:40:03 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     yibin.gong@nxp.com, robh@kernel.org, shawnguo@kernel.org,
-        festevam@gmail.com, mark.rutland@arm.com, dan.j.williams@intel.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx@nxp.com, kernel@pengutronix.de,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 6/7] dmaengine: fsl-edma: add i.mx7ulp edma2 version
- support
-Message-ID: <20190527101003.GI15118@vkoul-mobl>
-References: <20190527085118.40423-1-yibin.gong@nxp.com>
- <20190527085118.40423-7-yibin.gong@nxp.com>
- <20190527090553.lek7tm3lyst3bhrd@pengutronix.de>
+        Mon, 27 May 2019 06:10:20 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:38330 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbfE0KKU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 06:10:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Rjtcv9CLgR1FWWJCRzKxKTtmNHAMOYpWEqbUfZqa7mM=; b=sfGuFxve3XnCMblp+HqaTLANP
+        5i85Ryt/ah4/IReURE2GGmwau0ilfhwb64ZhwKcMeFcIOwlVjqAyZmA8b3HOvWcGb1p7QfXPtSswA
+        SvV+mZJeL4qwmPv+zHPSbFJAsTp3X3TOaHi5akujKPz69FOmsjdMTst2Hf4aqrC5vt4gZslie2eiw
+        VAe9zChiZ5UOJ6v/cyl9ot4ubXB8O1DUbCnLYLAP61vsN4Fs9d41nMrABQFmongUMXB0Az8UnX1N0
+        zyYAiRfYYKwqIsuXdkXw6GROOWe4BKw7xDoWas4d2ZNbDa+O88Oll5mSxKaegVY7VrtlABEyEgzME
+        wAGb8vhhQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hVCZz-0002Bq-9P; Mon, 27 May 2019 10:10:07 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7BD55202BF402; Mon, 27 May 2019 12:10:04 +0200 (CEST)
+Date:   Mon, 27 May 2019 12:10:04 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        "Frank Ch. Eigler" <fche@redhat.com>
+Subject: Re: [RFC][PATCH 03/14 v2] function_graph: Allow multiple users to
+ attach to function graph
+Message-ID: <20190527101004.GW2623@hirez.programming.kicks-ass.net>
+References: <20190520142001.270067280@goodmis.org>
+ <20190520142156.992391836@goodmis.org>
+ <20190524112608.GJ2589@hirez.programming.kicks-ass.net>
+ <20190524081219.25de03f6@gandalf.local.home>
+ <20190524122724.GO2623@hirez.programming.kicks-ass.net>
+ <20190524085744.71557f32@gandalf.local.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190527090553.lek7tm3lyst3bhrd@pengutronix.de>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190524085744.71557f32@gandalf.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27-05-19, 11:05, Sascha Hauer wrote:
-> On Mon, May 27, 2019 at 04:51:17PM +0800, yibin.gong@nxp.com wrote:
-> > From: Robin Gong <yibin.gong@nxp.com>
+On Fri, May 24, 2019 at 08:57:44AM -0400, Steven Rostedt wrote:
+> On Fri, 24 May 2019 14:27:24 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
+> 
+> > > Believe me, I rather not have that array, but I couldn't come up with a
+> > > better solution to handle freeing of fgraph_ops.  
 > > 
-> > +static const struct of_device_id fsl_edma_dt_ids[] = {
-> > +	{ .compatible = "fsl,vf610-edma", .data = (void *)v1 },
-> > +	{ .compatible = "fsl,imx7ulp-edma", .data = (void *)v3 },
-> > +	{ /* sentinel */ }
+> > The trivial answer would be to refcount the thing, but can't we make
+> > rcu_tasks do this?
 > 
-> Please put a struct type behind the .data pointer so that you can
-> configure...
+> But wouldn't refcounts require atomic operations, something that would
+> be excruciatingly slow for something that runs on all functions.
 
-Yeah that was the idea behind the suggestion in previous version.
+Obviously, which is why I suggested something else :-)
 
-Something like 
+> rcu_tasks doesn't cross voluntary sleeps, which this does.
 
-struct fsl_edma_driver_data {
-        unsigned int channels;
-        ...
-};
+Sure, but we can 'fix' that, surely. Alternatively we use SRCU, or
+something else, a blend between SRCU and percpu-rwsem for example, SRCU
+has that annoying smp_mb() on the read side, where percpu-rwsem doesn't
+have that.
 
-and then you have
-
-const struct fsl_edma_driver_data v1_data {
-        .channels = 1;
-        ...
-};
-
+> > And delay the unreg until all active users are gone -- who gives a crap
+> > that can take a while.
 > 
-> > +};
-> > +MODULE_DEVICE_TABLE(of, fsl_edma_dt_ids);
-> > +
-> > @@ -218,6 +272,22 @@ static int fsl_edma_probe(struct platform_device *pdev)
-> >  	fsl_edma_setup_regs(fsl_edma);
-> >  	regs = &fsl_edma->regs;
-> >  
-> > +	if (fsl_edma->version == v3) {
-> > +		fsl_edma->dmamux_nr = 1;
+> It could literally be forever (well, until the machine reboots). And
+> something that could appear to be a memory leak, although a very slow
+> one. But probably be hard to have more than the number of tasks on the
+> system.
 
-You can store the struct in driver context or store the values, so here
-it becomes
+Again, who cares.. ? How often do you have return trace functions that
+dissapear, afaict that only happens with modules, and neither
+function_graph_trace nor kprobes are modules.
 
-        driver->data->channel;
+It'll just mean the module unload will be stuck, possibly forever.
+That's not something I care about. Also, if we _really_ care, we can
+mandate that module users use some sort of ugly trampoline that covers
+their asses at the cost of some performance.
 
-and so on for other data, you can also point function pointers (hint
-edma/2_irq_init)
-
-> 
-> ...things like this...
-> 
-> > @@ -264,7 +334,11 @@ static int fsl_edma_probe(struct platform_device *pdev)
-> >  	}
-> >  
-> >  	edma_writel(fsl_edma, ~0, regs->intl);
-> > -	ret = fsl_edma_irq_init(pdev, fsl_edma);
-> > +
-> > +	if (fsl_edma->version == v3)
-> > +		ret = fsl_edma2_irq_init(pdev, fsl_edma);
-> > +	else
-> > +		ret = fsl_edma_irq_init(pdev, fsl_edma);
-> 
-> ...and this one in that struct rather than littering the code more and
-> more with such version tests.
-> 
-> Sascha
-> 
-> -- 
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
--- 
-~Vinod
+Getting rid of that array makes this code far saner (and I suspect
+faster too).
