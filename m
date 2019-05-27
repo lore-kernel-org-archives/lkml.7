@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 282A8C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B286C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2B472147A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4423A20883
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 16:23:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="ocV3vRyh"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="EYsVsboe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbfE0QWs (ORCPT
+        id S1727148AbfE0QXD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 12:22:48 -0400
-Received: from vps.xff.cz ([195.181.215.36]:52634 "EHLO vps.xff.cz"
+        Mon, 27 May 2019 12:23:03 -0400
+Received: from vps.xff.cz ([195.181.215.36]:52542 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726881AbfE0QWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 12:22:43 -0400
+        id S1726741AbfE0QWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 12:22:42 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1558974161; bh=P6oNZcE8gnEVr+Noa52McnHoAnRWnYpUxI4CnwnbrFY=;
+        t=1558974160; bh=lmN/vA2/QcSdUuzR1xKNkZ8E+T7fPttQ3k8QpH5igsQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ocV3vRyhBQf437hemhd//ZsvcC9auXu2Dy2crS0ozbCVW3sZkzThqY7HaJ4qPlDa3
-         uRaHmdxNgb6DRf9FWPp1tMIdlHrYWFaYcunDB/b0NirutiULxbLFdbW595sQYgcna3
-         QcGXIVqY4W57EldweRz3JgvlGSq98yx7a0XH+F90=
+        b=EYsVsboervze6upedsAPLR+GOaPKFvlKo3JG/PI/hqI84VUAnvT9ybln/p3V+NFZS
+         81fDswQzxTJ/I0DWHSCXPIMeUnyd7TZsin/ihijloxLSEWH25lKb/NGNNRNCyBY9yb
+         2hxLz66YbfKgV7woPcPgnQTukC3lcMATrwlec8xQ=
 From:   megous@megous.com
 To:     linux-sunxi@googlegroups.com,
         Maxime Ripard <maxime.ripard@bootlin.com>,
         Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>
-Cc:     Ondrej Jirman <megous@megous.com>, David Airlie <airlied@linux.ie>,
+Cc:     Icenowy Zheng <icenowy@aosc.io>, David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
         Mark Rutland <mark.rutland@arm.com>,
         Giuseppe Cavallaro <peppe.cavallaro@st.com>,
@@ -42,10 +42,11 @@ Cc:     Ondrej Jirman <megous@megous.com>, David Airlie <airlied@linux.ie>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH v6 6/6] arm64: dts: allwinner: orange-pi-3: Enable HDMI output
-Date:   Mon, 27 May 2019 18:22:37 +0200
-Message-Id: <20190527162237.18495-7-megous@megous.com>
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        Ondrej Jirman <megous@megous.com>
+Subject: [PATCH v6 2/6] net: stmmac: sun8i: force select external PHY when no internal one
+Date:   Mon, 27 May 2019 18:22:33 +0200
+Message-Id: <20190527162237.18495-3-megous@megous.com>
 In-Reply-To: <20190527162237.18495-1-megous@megous.com>
 References: <20190527162237.18495-1-megous@megous.com>
 MIME-Version: 1.0
@@ -55,68 +56,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
+From: Icenowy Zheng <icenowy@aosc.io>
 
-Orange Pi 3 has a DDC_CEC_EN signal connected to PH2, that enables the DDC
-I2C bus voltage shifter. Before EDID can be read, we need to pull PH2 high.
-This is realized by the ddc-en-gpios property.
+The PHY selection bit also exists on SoCs without an internal PHY; if it's
+set to 1 (internal PHY, default value) then the MAC will not make use of
+any PHY such SoCs.
 
+This problem appears when adapting for H6, which has no real internal PHY
+(the "internal PHY" on H6 is not on-die, but on a co-packaged AC200 chip,
+connected via RMII interface at GPIO bank A).
+
+Force the PHY selection bit to 0 when the SOC doesn't have an internal PHY,
+to address the problem of a wrong default value.
+
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
- .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-index 2c6807b74ff6..01bb1bafe284 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-@@ -22,6 +22,18 @@
- 		stdout-path = "serial0:115200n8";
- 	};
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+index 3258dec84d55..0484c289f328 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+@@ -907,6 +907,11 @@ static int sun8i_dwmac_set_syscon(struct stmmac_priv *priv)
+ 		 * address. No need to mask it again.
+ 		 */
+ 		reg |= 1 << H3_EPHY_ADDR_SHIFT;
++	} else {
++		/* For SoCs without internal PHY the PHY selection bit should be
++		 * set to 0 (external PHY).
++		 */
++		reg &= ~H3_EPHY_SELECT;
+ 	}
  
-+	connector {
-+		compatible = "hdmi-connector";
-+		ddc-en-gpios = <&pio 7 2 GPIO_ACTIVE_HIGH>; /* PH2 */
-+		type = "a";
-+
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&hdmi_out_con>;
-+			};
-+		};
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 
-@@ -72,6 +84,10 @@
- 	cpu-supply = <&reg_dcdca>;
- };
- 
-+&de {
-+	status = "okay";
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -91,6 +107,16 @@
- 	status = "okay";
- };
- 
-+&hdmi {
-+	status = "okay";
-+};
-+
-+&hdmi_out {
-+	hdmi_out_con: endpoint {
-+		remote-endpoint = <&hdmi_con_in>;
-+	};
-+};
-+
- &mdio {
- 	ext_rgmii_phy: ethernet-phy@1 {
- 		compatible = "ethernet-phy-ieee802.3-c22";
+ 	if (!of_property_read_u32(node, "allwinner,tx-delay-ps", &val)) {
 -- 
 2.21.0
 
