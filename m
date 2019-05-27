@@ -2,69 +2,108 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E30EC07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 06:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57AE0C07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 06:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0755C2070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 06:38:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C2592054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 06:38:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="Z3+ujjmX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726393AbfE0Gia (ORCPT
+        id S1726451AbfE0Giw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 02:38:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41140 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725943AbfE0Gi3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 02:38:29 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id ACB3AAE07;
-        Mon, 27 May 2019 06:38:28 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id 3F883E00A9; Mon, 27 May 2019 08:38:28 +0200 (CEST)
-From:   Michal Kubecek <mkubecek@suse.cz>
-Subject: [PATCH] kvm: memunmap() also needs HAS_IOMEM
-To:     kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        "Radim Krcmar" <rkrcmar@redhat.com>,
-        KarimAllah Ahmed <karahmed@amazon.de>,
-        linux-kernel@vger.kernel.org
-Message-Id: <20190527063828.3F883E00A9@unicorn.suse.cz>
-Date:   Mon, 27 May 2019 08:38:28 +0200 (CEST)
+        Mon, 27 May 2019 02:38:52 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:37580 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725996AbfE0Giv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 02:38:51 -0400
+Received: by mail-qk1-f194.google.com with SMTP id d10so16270146qko.4
+        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2019 23:38:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HHxpS8GHNFczohBNmU/4hGO+nucs8Ap0lRCjYNwMm+U=;
+        b=Z3+ujjmXN4PtI+z7DMZcCXWOgT9fcIZii2m6C0wngPB6ltt55kx7UFgpm7+ldQrDdb
+         M9HmuXhYGolCOseNPBd7ucxDAawtYlZBROSShy6h8NougfZbYckdRpBmYVJikkNi923L
+         Smw/6I1tZquqKSkMC+GlaX/KudPYUh5KQEz/iNSNqjqzZuSG90izIFke6A38g4dj7F0b
+         0dZXj7k8AypGiyssOh4MtMsjYYcsKqdryGoMoqJMFP/l9wb9Bhy4yqM3LhnI/YHx29OA
+         RIbQ3C7biSTc9TSPG2buxIE1BI0vC2Dz1yapS9vuzSJssE1e/f0hNVWOwMJ9Potc0teC
+         fq5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HHxpS8GHNFczohBNmU/4hGO+nucs8Ap0lRCjYNwMm+U=;
+        b=TomVCvdp6FSYnqBsNEqJvrIozyHjOz68g8T35ICT5jaaDKNz34c+xy5XtssF92lFti
+         OZkdhX5AIe6sQE8UpkJtdF+BSS7htN/so2u8g2r2X3ZTJeDocgAk8VCyDA3KaBKcLW0D
+         Mm2sxcbt1Lc8xIqTkV4j7Od0f4jei3c3soPOyRLV0cOfGmSRQNIc7nsM/msSYccp3ktz
+         HD1Ci+Z/+K7cmCmCY09HvQyM3Y7+wWwoajLiWJTDThEUmDe+qRRfE+5QTbBbjTy4Osvm
+         DLUYlgwUawf/79EJDD5HDfuBsmgIHraO+HtTEJwgLUNy3ZykKDdmjGKzk+ml5QWVv4RV
+         acmw==
+X-Gm-Message-State: APjAAAW94L77I4bi7yHA2+DAx0zQEXg7Bazoaa01Mb6bWLoldEvlbbPj
+        kz6V0o5FklgtfmYudg3Bjx9r6pIMiw2GfcxZ4+ZywA==
+X-Google-Smtp-Source: APXvYqwXmCCSkefGNRFAEBLGtLWO8/FD3BjQ6UIoj//q1bJvMH9lNtKnGCPeUFP7BXWy7Q9aAj3RnvVKFLZBU3RFjug=
+X-Received: by 2002:a05:620a:1ee:: with SMTP id x14mr650094qkn.70.1558939130658;
+ Sun, 26 May 2019 23:38:50 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190503072146.49999-1-chiu@endlessm.com> <20190503072146.49999-3-chiu@endlessm.com>
+ <CAD8Lp47_-6d2wCAs5QbuR6Mw2w91TyJ9W3kFiJHH4F_6dXqnHg@mail.gmail.com>
+ <CAB4CAweQXz=wQGA5t7BwWYdwbRrHCji+BWc0G52SUcZFGc8Pnw@mail.gmail.com>
+ <CAD8Lp46hcx0ZHFMUdXdR6unbeMQJsfyuEQ7hUFpHY2jU9R7Gcw@mail.gmail.com>
+ <CAB4CAwf26pdCY7FJA5H7d1aEY2xpjSto4JxARwczmVJ==41yng@mail.gmail.com> <CAD8Lp47K0Jn2wotANdQV3kT9yPP7bLnVd0eYhWui-vNDOEXBTA@mail.gmail.com>
+In-Reply-To: <CAD8Lp47K0Jn2wotANdQV3kT9yPP7bLnVd0eYhWui-vNDOEXBTA@mail.gmail.com>
+From:   Chris Chiu <chiu@endlessm.com>
+Date:   Mon, 27 May 2019 14:38:38 +0800
+Message-ID: <CAB4CAwf7O9tyUwc+gPSZrBES+Bt7iTjhE1fbbVxYKqzjtmZBxw@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/2] rtl8xxxu: Add watchdog to update rate mask by
+ signal strength
+To:     Daniel Drake <drake@endlessm.com>
+Cc:     Jes Sorensen <jes.sorensen@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        David Miller <davem@davemloft.net>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit d30b214d1d0a ("kvm: fix compilation on s390") addresses link error
-(undefined reference to memremap) without HAS_IOMEM but memunmap() is also
-only available with HAS_IOMEM enabled so that we need similar fix in
-kvm_vcpu_unmap().
+On Wed, May 22, 2019 at 2:38 AM Daniel Drake <drake@endlessm.com> wrote:
+>
+> On Fri, May 10, 2019 at 2:37 AM Chris Chiu <chiu@endlessm.com> wrote:
+> > I've verified that multiple virtual interface can not work simultaneously in
+> > STA mode. I assigned different mac address for different vifs, I can only
+> > bring only one interface up. If I want to bring the second vif up, it always
+> > complains "SIOCSIFFLAGS: Device or resource busy".
+>
+> Interesting. Can you go deeper into that so that we can be more
+> confident of this limitation?
+>
+> ieee80211_open() is the starting point.
+> ieee80211_check_concurrent_iface() is one candidate to generate -EBUSY
+> but from inspection, I don't think that's happening in this case,
+> perhaps you can keep following through in order to figure out which
+> part of the code is not allowing the 2nd STA interface to come up.
+>
+> Daniel
 
-Fixes: e45adf665a53 ("KVM: Introduce a new guest mapping API")
-Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
----
- virt/kvm/kvm_main.c | 2 ++
- 1 file changed, 2 insertions(+)
+The -EBUSY is returned by the ieee80211_check_combinations() in the
+ieee80211_check_concurrent_iface() function which is invoked each time
+doing ieee80211_open().
+The ieee80211_check_combinations() returns the -EBUSY because of
+cfg80211_check_combinations() will iterate all interfaces of different types
+then checks the combination is valid or not, which in this case the number
+of interface combination accumulated by cfg80211_iter_sum_ifcombos is 0
+when I'm trying to bring up the second station interface.
 
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 134ec0283a8a..301089a462c4 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -1795,8 +1795,10 @@ void kvm_vcpu_unmap(struct kvm_vcpu *vcpu, struct kvm_host_map *map,
- 
- 	if (map->page)
- 		kunmap(map->page);
-+#ifdef CONFIG_HAS_IOMEM
- 	else
- 		memunmap(map->hva);
-+#endif
- 
- 	if (dirty) {
- 		kvm_vcpu_mark_page_dirty(vcpu, map->gfn);
--- 
-2.21.0
-
+Chris
