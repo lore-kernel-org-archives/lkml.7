@@ -2,125 +2,370 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39ACEC04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CE9C46460
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D55321734
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:12:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F78721871
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 14:12:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558966328;
-	bh=fTHkQRJ38AqJgzTACavRlmA4ocBOHeh2S0Fu0FlaIgQ=;
+	s=default; t=1558966349;
+	bh=pOOG/9ISmlYoI6iq9taT9JLho6J770aMV5+LZw/2IvM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ad0ZgpSs8QT54jn9CQ6RwrcnQT1sjVvRNxnUR62YDBTpMRj5+M/b2tWaT2nF7RGU9
-	 rO59g8cLsPUP2mZ8n7HJ2FEm1ObAyvD1XP5lRVB75MPpOXRaFyFqrBZfgxFaTLyFEZ
-	 sv5S6Sp9veQUifFbUFHBDTCNooJH592X4oKeZGtg=
+	b=T1acA6KzecE6c1b/JVCDJTdXGOVNK/Fg8LaE/r4TDnnHnRoqvOfqYikj5J+enBmYe
+	 o1jzHiJs938Z8vX5vuH7A/c59ZZGjEIORDHTQqxUxXZ1FoY/zVA4g43GHk5Mhl4nMt
+	 3zqJNJDrPRKyja4c31oKm+TlioAi5xvimbcA/gYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfE0OMG (ORCPT
+        id S1726876AbfE0OM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 10:12:06 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39474 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726802AbfE0OMG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 10:12:06 -0400
-Received: by mail-wm1-f68.google.com with SMTP id z23so11925789wma.4
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 07:12:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=IH+CgbtwcPpUTo0IcL6te1tyJLliTl08cVkJbHiaKHs=;
-        b=KXRgIFFHOPGgWF0ReWctzCnop7Jh68+tRFUVYOR11ha0wZfzuCMuVZtedeD8LgLQx2
-         yfVAVEkavWN1rF18o9XhRetkVEOc5rCG7TOiMHj6wRsRF/sybfvqSzpFkSSlNNNzYrij
-         dGFELUI19vP4sjxwgt5D9F0m4stdGhsdAVO5O5flg73UijLjrFlPPgvVjH97fCWZPniA
-         pn1/sLXNUdCNJsWC4qpS4eaLJ3aOxpz34mguLt68babqKOliBAPODF51Va+Mk1qApdcj
-         0hA0G/F4c4FWqL3P38IRP6U1WQOcfYO7JlFT6Cak3pMojBL2pynEHawVLM/lQb+wG1ZR
-         rkSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IH+CgbtwcPpUTo0IcL6te1tyJLliTl08cVkJbHiaKHs=;
-        b=YkaTvW0QfEmeTvCxtprb9cjcofWDS3CdGAV75rRKnl8u0IRSPrVEfsyuIRxLAa/QRG
-         6J/HUYaJlbgBpj37P2JE/g7u+qN+99Si5rIn73MKnvBU33LFbnotnwiYI3ZtAZGG5/nZ
-         Y9+ApiG/vEeQkQ1JoUghUzM18r3/8n3B5MRmZBzwrYBKPfDomGEmE6gNnfWYzkiYsfPk
-         OWo+RsPz/vSlN9HbrlaUXnKVCUgBC6WSv+BecbSBWuWGaMj8rNx6+VNs6Jj29ILZuYQY
-         w7hrpbijfkWrzQv/HeNUA6W9Aqg/qTvAZtYa5QK383EDBucit1o7WKrn8fYjI+B0itRO
-         MawA==
-X-Gm-Message-State: APjAAAXWikwKyRClUwmcWAkl2rS82S+GtSmbpFHjn9ZBspSQXSI1kjmv
-        CE4tyH2pCCtc8R7CVWxUd7o=
-X-Google-Smtp-Source: APXvYqyBTqvmxE0Lqy2I5YtyWJmUJ3je0sIR/f1aXkVjew21CfhtFU+Mh+PhIXDcoriOK4z/jWZDZA==
-X-Received: by 2002:a1c:ed0b:: with SMTP id l11mr4844538wmh.103.1558966324113;
-        Mon, 27 May 2019 07:12:04 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id p16sm22968262wrg.49.2019.05.27.07.12.02
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 27 May 2019 07:12:03 -0700 (PDT)
-Date:   Mon, 27 May 2019 16:12:01 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Kosina <trivial@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] [trivial] perf: Spelling s/EACCESS/EACCES/
-Message-ID: <20190527141201.GA1537@gmail.com>
-References: <20190527122309.5840-1-geert+renesas@glider.be>
+        Mon, 27 May 2019 10:12:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39880 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726843AbfE0OM1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 10:12:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 1A564AC3F;
+        Mon, 27 May 2019 14:12:25 +0000 (UTC)
+Date:   Mon, 27 May 2019 16:12:23 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Roman Gushchin <guro@fb.com>, linux-api@vger.kernel.org
+Subject: Re: [PATCH RFC] mm/madvise: implement MADV_STOCKPILE (kswapd from
+ user space)
+Message-ID: <20190527141223.GD1658@dhcp22.suse.cz>
+References: <155895155861.2824.318013775811596173.stgit@buzz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190527122309.5840-1-geert+renesas@glider.be>
+In-Reply-To: <155895155861.2824.318013775811596173.stgit@buzz>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+[Cc linux-api. Please always cc this list when proposing a new user
+ visible api. Keeping the rest of the email intact for reference]
 
-* Geert Uytterhoeven <geert+renesas@glider.be> wrote:
-
-> The correct spelling is EACCES:
+On Mon 27-05-19 13:05:58, Konstantin Khlebnikov wrote:
+> Memory cgroup has no background memory reclaimer. Reclaiming after passing
+> high-limit blocks task because works synchronously in task-work.
 > 
-> include/uapi/asm-generic/errno-base.h:#define EACCES 13 /* Permission denied */
+> This implements manual kswapd-style memory reclaim initiated by userspace.
+> It reclaims both physical memory and cgroup pages. It works in context of
+> task who calls syscall madvise thus cpu time is accounted correctly.
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Interface:
+> 
+> ret = madvise(ptr, size, MADV_STOCKPILE)
+> 
+> Returns:
+>   0         - ok, free memory >= size
+>   -EINVAL   - not supported
+>   -ENOMEM   - not enough memory/cgroup limit
+>   -EINTR    - interrupted by pending signal
+>   -EAGAIN   - cannot reclaim enough memory
+> 
+> Argument 'size' is interpreted size of required free memory.
+> Implementation triggers direct reclaim until amount of free memory is
+> lower than that size. Argument 'ptr' could points to vma for specifying
+> numa allocation policy, right now should be NULL.
+> 
+> Usage scenario: independent thread or standalone daemon estimates rate of
+> allocations and calls MADV_STOCKPILE in loop to prepare free pages.
+> Thus fast path avoids allocation latency induced by direct reclaim.
+> 
+> We are using this embedded into memory allocator based on MADV_FREE.
+> 
+> 
+> Demonstration in memory cgroup with limit 1G:
+> 
+> touch zero
+> truncate -s 5G zero
+> 
+> Without stockpile:
+> 
+> perf stat -e vmscan:* md5sum zero
+> 
+>  Performance counter stats for 'md5sum zero':
+> 
+>                  0      vmscan:mm_vmscan_kswapd_sleep
+>                  0      vmscan:mm_vmscan_kswapd_wake
+>                  0      vmscan:mm_vmscan_wakeup_kswapd
+>                  0      vmscan:mm_vmscan_direct_reclaim_begin
+>              10147      vmscan:mm_vmscan_memcg_reclaim_begin
+>                  0      vmscan:mm_vmscan_memcg_softlimit_reclaim_begin
+>                  0      vmscan:mm_vmscan_direct_reclaim_end
+>              10147      vmscan:mm_vmscan_memcg_reclaim_end
+>                  0      vmscan:mm_vmscan_memcg_softlimit_reclaim_end
+>              99910      vmscan:mm_shrink_slab_start
+>              99910      vmscan:mm_shrink_slab_end
+>              39654      vmscan:mm_vmscan_lru_isolate
+>                  0      vmscan:mm_vmscan_writepage
+>              39652      vmscan:mm_vmscan_lru_shrink_inactive
+>                  2      vmscan:mm_vmscan_lru_shrink_active
+>              19982      vmscan:mm_vmscan_inactive_list_is_low
+> 
+>       10.886832585 seconds time elapsed
+> 
+>        8.928366000 seconds user
+>        1.935212000 seconds sys
+> 
+> With stockpile:
+> 
+> stockpile 100 10 &   # up to 100M every 10ms
+> perf stat -e vmscan:* md5sum zero
+> 
+>  Performance counter stats for 'md5sum zero':
+> 
+>                  0      vmscan:mm_vmscan_kswapd_sleep
+>                  0      vmscan:mm_vmscan_kswapd_wake
+>                  0      vmscan:mm_vmscan_wakeup_kswapd
+>                  0      vmscan:mm_vmscan_direct_reclaim_begin
+>                  0      vmscan:mm_vmscan_memcg_reclaim_begin
+>                  0      vmscan:mm_vmscan_memcg_softlimit_reclaim_begin
+>                  0      vmscan:mm_vmscan_direct_reclaim_end
+>                  0      vmscan:mm_vmscan_memcg_reclaim_end
+>                  0      vmscan:mm_vmscan_memcg_softlimit_reclaim_end
+>                  0      vmscan:mm_shrink_slab_start
+>                  0      vmscan:mm_shrink_slab_end
+>                  0      vmscan:mm_vmscan_lru_isolate
+>                  0      vmscan:mm_vmscan_writepage
+>                  0      vmscan:mm_vmscan_lru_shrink_inactive
+>                  0      vmscan:mm_vmscan_lru_shrink_active
+>                  0      vmscan:mm_vmscan_inactive_list_is_low
+> 
+>       10.469776675 seconds time elapsed
+> 
+>        8.976261000 seconds user
+>        1.491378000 seconds sys
+> 
+> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 > ---
->  include/linux/perf_event.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  include/linux/memcontrol.h             |    6 +++++
+>  include/uapi/asm-generic/mman-common.h |    2 ++
+>  mm/madvise.c                           |   39 ++++++++++++++++++++++++++++++
+>  mm/memcontrol.c                        |   41 ++++++++++++++++++++++++++++++++
+>  tools/vm/Makefile                      |    2 +-
+>  tools/vm/stockpile.c                   |   30 +++++++++++++++++++++++
+>  6 files changed, 119 insertions(+), 1 deletion(-)
+>  create mode 100644 tools/vm/stockpile.c
 > 
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index 0ab99c7b652d41b1..10569e25b5a9b656 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -289,7 +289,7 @@ struct pmu {
->  	 *  -EBUSY	-- @event is for this PMU but PMU temporarily unavailable
->  	 *  -EINVAL	-- @event is for this PMU but @event is not valid
->  	 *  -EOPNOTSUPP -- @event is for this PMU, @event is valid, but not supported
-> -	 *  -EACCESS	-- @event is for this PMU, @event is valid, but no privilidges
-> +	 *  -EACCES	-- @event is for this PMU, @event is valid, but no privilidges
->  	 *
->  	 *  0		-- @event is for this PMU and valid
->  	 *
+> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+> index bc74d6a4407c..25325f18ad55 100644
+> --- a/include/linux/memcontrol.h
+> +++ b/include/linux/memcontrol.h
+> @@ -517,6 +517,7 @@ unsigned long mem_cgroup_get_zone_lru_size(struct lruvec *lruvec,
+>  }
+>  
+>  void mem_cgroup_handle_over_high(void);
+> +int mem_cgroup_stockpile(unsigned long goal_pages);
+>  
+>  unsigned long mem_cgroup_get_max(struct mem_cgroup *memcg);
+>  
+> @@ -968,6 +969,11 @@ static inline void mem_cgroup_handle_over_high(void)
+>  {
+>  }
+>  
+> +static inline int mem_cgroup_stockpile(unsigned long goal_page)
+> +{
+> +	return 0;
+> +}
+> +
+>  static inline void mem_cgroup_enter_user_fault(void)
+>  {
+>  }
+> diff --git a/include/uapi/asm-generic/mman-common.h b/include/uapi/asm-generic/mman-common.h
+> index abd238d0f7a4..675145864fee 100644
+> --- a/include/uapi/asm-generic/mman-common.h
+> +++ b/include/uapi/asm-generic/mman-common.h
+> @@ -64,6 +64,8 @@
+>  #define MADV_WIPEONFORK 18		/* Zero memory on fork, child only */
+>  #define MADV_KEEPONFORK 19		/* Undo MADV_WIPEONFORK */
+>  
+> +#define MADV_STOCKPILE	20		/* stockpile free pages */
+> +
+>  /* compatibility flags */
+>  #define MAP_FILE	0
+>  
+> diff --git a/mm/madvise.c b/mm/madvise.c
+> index 628022e674a7..f908b08ecc9f 100644
+> --- a/mm/madvise.c
+> +++ b/mm/madvise.c
+> @@ -686,6 +686,41 @@ static int madvise_inject_error(int behavior,
+>  }
+>  #endif
+>  
+> +static long madvise_stockpile(unsigned long start, size_t len)
+> +{
+> +	unsigned long goal_pages, progress;
+> +	struct zonelist *zonelist;
+> +	int ret;
+> +
+> +	if (start)
+> +		return -EINVAL;
+> +
+> +	goal_pages = len >> PAGE_SHIFT;
+> +
+> +	if (goal_pages > totalram_pages() - totalreserve_pages)
+> +		return -ENOMEM;
+> +
+> +	ret = mem_cgroup_stockpile(goal_pages);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* TODO: use vma mempolicy */
+> +	zonelist = node_zonelist(numa_node_id(), GFP_HIGHUSER);
+> +
+> +	while (global_zone_page_state(NR_FREE_PAGES) <
+> +			goal_pages + totalreserve_pages) {
+> +
+> +		if (signal_pending(current))
+> +			return -EINTR;
+> +
+> +		progress = try_to_free_pages(zonelist, 0, GFP_HIGHUSER, NULL);
+> +		if (!progress)
+> +			return -EAGAIN;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static long
+>  madvise_vma(struct vm_area_struct *vma, struct vm_area_struct **prev,
+>  		unsigned long start, unsigned long end, int behavior)
+> @@ -728,6 +763,7 @@ madvise_behavior_valid(int behavior)
+>  	case MADV_DODUMP:
+>  	case MADV_WIPEONFORK:
+>  	case MADV_KEEPONFORK:
+> +	case MADV_STOCKPILE:
+>  #ifdef CONFIG_MEMORY_FAILURE
+>  	case MADV_SOFT_OFFLINE:
+>  	case MADV_HWPOISON:
+> @@ -834,6 +870,9 @@ SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
+>  		return madvise_inject_error(behavior, start, start + len_in);
+>  #endif
+>  
+> +	if (behavior == MADV_STOCKPILE)
+> +		return madvise_stockpile(start, len);
+> +
+>  	write = madvise_need_mmap_write(behavior);
+>  	if (write) {
+>  		if (down_write_killable(&current->mm->mmap_sem))
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index e50a2db5b4ff..dc23dc6bbeb3 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -2276,6 +2276,47 @@ void mem_cgroup_handle_over_high(void)
+>  	current->memcg_nr_pages_over_high = 0;
+>  }
+>  
+> +int mem_cgroup_stockpile(unsigned long goal_pages)
+> +{
+> +	int nr_retries = MEM_CGROUP_RECLAIM_RETRIES;
+> +	unsigned long limit, nr_free, progress;
+> +	struct mem_cgroup *memcg, *pos;
+> +	int ret = 0;
+> +
+> +	pos = memcg = get_mem_cgroup_from_mm(current->mm);
+> +
+> +retry:
+> +	if (signal_pending(current)) {
+> +		ret = -EINTR;
+> +		goto out;
+> +	}
+> +
+> +	limit = min(pos->memory.max, pos->high);
+> +	if (goal_pages > limit) {
+> +		ret = -ENOMEM;
+> +		goto out;
+> +	}
+> +
+> +	nr_free = limit - page_counter_read(&pos->memory);
+> +	if ((long)nr_free < (long)goal_pages) {
+> +		progress = try_to_free_mem_cgroup_pages(pos,
+> +				goal_pages - nr_free, GFP_HIGHUSER, true);
+> +		if (progress || nr_retries--)
+> +			goto retry;
+> +		ret = -EAGAIN;
+> +		goto out;
+> +	}
+> +
+> +	nr_retries = MEM_CGROUP_RECLAIM_RETRIES;
+> +	pos = parent_mem_cgroup(pos);
+> +	if (pos)
+> +		goto retry;
+> +
+> +out:
+> +	css_put(&memcg->css);
+> +	return ret;
+> +}
+> +
+>  static int try_charge(struct mem_cgroup *memcg, gfp_t gfp_mask,
+>  		      unsigned int nr_pages)
+>  {
+> diff --git a/tools/vm/Makefile b/tools/vm/Makefile
+> index 20f6cf04377f..e5b5bc0d9421 100644
+> --- a/tools/vm/Makefile
+> +++ b/tools/vm/Makefile
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  # Makefile for vm tools
+>  #
+> -TARGETS=page-types slabinfo page_owner_sort
+> +TARGETS=page-types slabinfo page_owner_sort stockpile
+>  
+>  LIB_DIR = ../lib/api
+>  LIBS = $(LIB_DIR)/libapi.a
+> diff --git a/tools/vm/stockpile.c b/tools/vm/stockpile.c
+> new file mode 100644
+> index 000000000000..245e24f293ec
+> --- /dev/null
+> +++ b/tools/vm/stockpile.c
+> @@ -0,0 +1,30 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <sys/mman.h>
+> +#include <stdlib.h>
+> +#include <unistd.h>
+> +#include <err.h>
+> +#include <errno.h>
+> +
+> +#ifndef MADV_STOCKPILE
+> +# define MADV_STOCKPILE	20
+> +#endif
+> +
+> +int main(int argc, char **argv)
+> +{
+> +	int interval;
+> +	size_t size;
+> +	int ret;
+> +
+> +	if (argc != 3)
+> +		errx(1, "usage: %s <size_mb> <interval_ms>", argv[0]);
+> +
+> +	size = atol(argv[1]) << 20;
+> +	interval = atoi(argv[2]) * 1000;
+> +
+> +	while (1) {
+> +		ret = madvise(NULL, size, MADV_STOCKPILE);
+> +		if (ret && errno != EAGAIN)
+> +			err(2, "madvise(NULL, %zu, MADV_STOCKPILE)", size);
+> +		usleep(interval);
+> +	}
+> +}
+> 
 
-
-Actually, -EACCES got typoed itself and survived due to historic reasons. 
-I think we can tolerate the 'typo' fixed in documentation, can we?
-
-Also, the *far* bigger typo is, in the same line:
-
-s/privilidges
- /privileges
-
-:-)
-
-Thanks,
-
-	Ingo
+-- 
+Michal Hocko
+SUSE Labs
