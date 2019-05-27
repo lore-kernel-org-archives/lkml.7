@@ -2,64 +2,70 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 875E6C07542
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 06:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B7CC07542
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 06:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66D2E2070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 06:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D68AA2070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 06:32:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726351AbfE0Gax (ORCPT
+        id S1726191AbfE0Gcy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 02:30:53 -0400
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:41793 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725940AbfE0Gax (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 02:30:53 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TSmsaCE_1558938633;
-Received: from Alexs-MacBook-Pro.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TSmsaCE_1558938633)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 27 May 2019 14:30:34 +0800
-Subject: Re: [PATCH v2 1/3] kselftest/cgroup: fix unexpected testing failure
- on test_memcontrol
-To:     shuah <shuah@kernel.org>, Tejun Heo <tj@kernel.org>
-Cc:     cgroups@vger.kernel.org, Roman Gushchin <guro@fb.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jay Kamat <jgkamat@fb.com>, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190520030140.203605-1-alex.shi@linux.alibaba.com>
- <20190520030140.203605-2-alex.shi@linux.alibaba.com>
- <20190524214035.GG374014@devbig004.ftw2.facebook.com>
- <0c6b76b8-e20c-33f0-21da-64a5d5da30a9@kernel.org>
- <ea5514c1-80a1-3c41-de1c-43582b6f1a49@kernel.org>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <3db110a3-0662-24ae-ef0a-cde3deee99ea@linux.alibaba.com>
-Date:   Mon, 27 May 2019 14:30:33 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        Mon, 27 May 2019 02:32:54 -0400
+Received: from muru.com ([72.249.23.125]:51060 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725907AbfE0Gcy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 02:32:54 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 70E5880F3;
+        Mon, 27 May 2019 06:33:13 +0000 (UTC)
+Date:   Sun, 26 May 2019 23:32:50 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <philmd@redhat.com>
+Cc:     Thomas Huth <thuth@redhat.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Corentin Labbe <clabbe.montjoie@gmail.com>,
+        linux-omap@vger.kernel.org, qemu-devel@nongnu.org,
+        linux-kernel@vger.kernel.org,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [Qemu-devel] Running linux on qemu omap
+Message-ID: <20190527063250.GI5447@atomide.com>
+References: <20190520190533.GA28160@Red>
+ <20190521232323.GD3621@darkstar.musicnaut.iki.fi>
+ <20190522093341.GA32154@Red>
+ <20190522181904.GE3621@darkstar.musicnaut.iki.fi>
+ <8977e2bb-8d9e-f4fd-4c44-b4f67e0e7314@redhat.com>
+ <c2972889-fe60-7614-fb6e-e57ddf780a54@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <ea5514c1-80a1-3c41-de1c-43582b6f1a49@kernel.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <c2972889-fe60-7614-fb6e-e57ddf780a54@redhat.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
+
+* Philippe Mathieu-Daudé <philmd@redhat.com> [190523 12:01]:
+> What I use as reference for testing ARM boards [*] is the work of
+> Guenter Roeck:
+> https://github.com/groeck/linux-build-test/blob/master/rootfs/arm/run-qemu-arm.sh
+
+I think Guenter also has v2.3.50-local-linaro branch in his
+github repo that has support for few extra boards like Beagleboard.
+Not sure what's the current branch to use though.
+
+Regards,
+
+Tony
 
 
-On 2019/5/25 8:06 上午, shuah wrote:
-> Alex,
-> 
-> patches 1/3 and 2/3 failed checkpatch. Could you please the warns
-> and send v3. Go ahead and send all v3 for all 3 patches
 
-fixed and rent. 
 
-Thanks a lot! 
-Alex 
