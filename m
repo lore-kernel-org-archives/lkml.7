@@ -2,295 +2,302 @@ Return-Path: <SRS0=8QAT=T3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A329C282E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 03:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05216C282E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 03:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B10721707
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 03:08:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7FB32075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 May 2019 03:10:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726256AbfE0DIp (ORCPT
+        id S1726184AbfE0DKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 May 2019 23:08:45 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:25117 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725923AbfE0DIp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 May 2019 23:08:45 -0400
-X-UUID: 2fe144548fe644e0b5a1723aa2584b31-20190527
-X-UUID: 2fe144548fe644e0b5a1723aa2584b31-20190527
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 639884790; Mon, 27 May 2019 11:08:38 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N1.mediatek.inc
- (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 27 May
- 2019 11:08:36 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 27 May 2019 11:08:35 +0800
-Message-ID: <1558926515.10179.439.camel@mhfsdcap03>
-Subject: Re: [PATCH v5 4/6] usb: roles: add API to get usb_role_switch by
- node
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Biju Das <biju.das@bp.renesas.com>
-CC:     Biju Das <biju.das@bp.renesas.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Adam Thomson" <Adam.Thomson.Opensource@diasemi.com>,
-        Li Jun <jun.li@nxp.com>,
-        Badhri Jagan Sridharan <badhri@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Min Guo <min.guo@mediatek.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 27 May 2019 11:08:35 +0800
-In-Reply-To: <20190524124445.GP1887@kuha.fi.intel.com>
-References: <20190520080359.GC1887@kuha.fi.intel.com>
-         <OSBPR01MB2103385D996762FA54F8E437B8060@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-         <20190520083601.GE1887@kuha.fi.intel.com>
-         <OSBPR01MB2103C4C8920C40E42BC1B2A9B8060@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-         <20190521095839.GI1887@kuha.fi.intel.com>
-         <OSBPR01MB21032206146152983C8F4E8EB8000@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-         <1558517436.10179.388.camel@mhfsdcap03>
-         <OSBPR01MB21038F2B99EF74831A22727BB8000@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-         <20190522142640.GN1887@kuha.fi.intel.com>
-         <OSBPR01MB2103B669C24E9E261B4AFA73B8000@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-         <20190524124445.GP1887@kuha.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Sun, 26 May 2019 23:10:41 -0400
+Received: from mga02.intel.com ([134.134.136.20]:7279 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725923AbfE0DKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 May 2019 23:10:40 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 May 2019 20:10:39 -0700
+X-ExtLoop1: 1
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 26 May 2019 20:10:38 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1hV621-0001sI-SE; Mon, 27 May 2019 11:10:37 +0800
+Date:   Mon, 27 May 2019 11:09:53 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Renzo Davoli <renzo@cs.unibo.it>
+Cc:     kbuild-all@01.org, Alexander Viro <viro@zeniv.linux.org.uk>,
+        Davide Libenzi <davidel@xmailserver.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH 1/1] eventfd new tag EFD_VPOLL: generate epoll events
+Message-ID: <201905271138.mTyXQ9sH%lkp@intel.com>
+References: <20190526142521.GA21842@cs.unibo.it>
 MIME-Version: 1.0
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190526142521.GA21842@cs.unibo.it>
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Heikki & Biju,
-On Fri, 2019-05-24 at 15:44 +0300, Heikki Krogerus wrote:
-> On Wed, May 22, 2019 at 02:57:33PM +0000, Biju Das wrote:
-> > Hi Heikki,
-> > 
-> > Thanks for the patch
-> > 
-> > > Subject: Re: [PATCH v5 4/6] usb: roles: add API to get usb_role_switch by
-> > > node
-> > > 
-> > > On Wed, May 22, 2019 at 10:55:17AM +0000, Biju Das wrote:
-> > > > Hi Chunfeng Yun,
-> > > >
-> > > > Thanks for the feedback.
-> > > >
-> > > > > Subject: RE: [PATCH v5 4/6] usb: roles: add API to get
-> > > > > usb_role_switch by node
-> > > > >
-> > > > > Hi Biju,
-> > > > > On Wed, 2019-05-22 at 08:05 +0000, Biju Das wrote:
-> > > > > > Hi Heikki,
-> > > > > >
-> > > > > > Thanks for the feedback.
-> > > > > >
-> > > > > > > Subject: Re: [PATCH v5 4/6] usb: roles: add API to get
-> > > > > > > usb_role_switch by node
-> > > > > > >
-> > > > > > > On Mon, May 20, 2019 at 09:45:46AM +0000, Biju Das wrote:
-> > > > > > > >
-> > > > > > > >
-> > > > > > > > Hi Heikki,
-> > > > > > > >
-> > > > > > > > Thanks for the feedback.
-> > > > > > > >
-> > > > > > > > > Subject: Re: [PATCH v5 4/6] usb: roles: add API to get
-> > > > > > > > > usb_role_switch by node
-> > > > > > > > >
-> > > > > > > > > On Mon, May 20, 2019 at 08:06:41AM +0000, Biju Das wrote:
-> > > > > > > > > > Hi Heikki,
-> > > > > > > > > >
-> > > > > > > > > > > Subject: Re: [PATCH v5 4/6] usb: roles: add API to get
-> > > > > > > > > > > usb_role_switch by node
-> > > > > > > > > > >
-> > > > > > > > > > > On Mon, May 20, 2019 at 10:39:11AM +0800, Chunfeng Yun
-> > > wrote:
-> > > > > > > > > > > > Hi,
-> > > > > > > > > > > > On Fri, 2019-05-17 at 16:05 +0300, Heikki Krogerus wrote:
-> > > > > > > > > > > > > Hi,
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > On Fri, May 17, 2019 at 01:37:36PM +0300, Heikki
-> > > > > > > > > > > > > Krogerus
-> > > > > wrote:
-> > > > > > > > > > > > > > On Tue, May 14, 2019 at 04:47:21PM +0800, Chunfeng
-> > > > > > > > > > > > > > Yun
-> > > > > > > wrote:
-> > > > > > > > > > > > > > > Add fwnode_usb_role_switch_get() to make easier
-> > > > > > > > > > > > > > > to get usb_role_switch by fwnode which register it.
-> > > > > > > > > > > > > > > It's useful when there is not device_connection
-> > > > > > > > > > > > > > > registered between two drivers and only knows
-> > > > > > > > > > > > > > > the fwnode which register usb_role_switch.
-> > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > Signed-off-by: Chunfeng Yun
-> > > > > > > > > > > > > > > <chunfeng.yun@mediatek.com>
-> > > > > > > > > > > > > > > Tested-by: Biju Das <biju.das@bp.renesas.com>
-> > > > > > > > > > > > > >
-> > > > > > > > > > > > > > Acked-by: Heikki Krogerus
-> > > > > > > > > > > > > > <heikki.krogerus@linux.intel.com>
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > Hold on. I just noticed Rob's comment on patch 2/6,
-> > > > > > > > > > > > > where he points out that you don't need to use
-> > > > > > > > > > > > > device graph since the controller is the parent of
-> > > > > > > > > > > > > the connector. Doesn't that mean you don't really need
-> > > this API?
-> > > > > > > > > > > > No, I still need it.
-> > > > > > > > > > > > The change is about the way how to get fwnode; when
-> > > > > > > > > > > > use device graph, get fwnode by
-> > > > > > > > > > > > of_graph_get_remote_node(); but now will get fwnode by
-> > > > > > > > > > > > of_get_parent();
-> > > > > > > > > > >
-> > > > > > > > > > > OK, I get that, but I'm still not convinced about if
-> > > > > > > > > > > something like this function is needed at all. I also
-> > > > > > > > > > > have concerns regarding how you are using the function.
-> > > > > > > > > > > I'll explain in comment to the patch 5/6 in this
-> > > > > > > > > series...
-> > > > > > > > > >
-> > > > > > > > > > FYI, Currently  I am also using this api in my patch series.
-> > > > > > > > > > https://patchwork.kernel.org/patch/10944637/
-> > > > > > > > >
-> > > > > > > > > Yes, and I have the same question for you I jusb asked in
-> > > > > > > > > comment I added to the patch 5/6 of this series. Why isn't
-> > > > > > > > > usb_role_switch_get()
-> > > > > > > enough?
-> > > > > > > >
-> > > > > > > > Currently no issue. It will work with this api as well, since
-> > > > > > > > the port node is
-> > > > > > > part of controller node.
-> > > > > > > > For eg:-
-> > > > > > > > https://patchwork.kernel.org/patch/10944627/
-> > > > > > > >
-> > > > > > > > However if any one adds port node inside the connector node,
-> > > > > > > > then this
-> > > > > > > api may won't work as expected.
-> > > > > > > > Currently I get below error
-> > > > > > > >
-> > > > > > > > [    2.299703] OF: graph: no port node found in
-> > > > > > > /soc/i2c@e6500000/hd3ss3220@47
-> > > > > > >
-> > > > > > > We need to understand why is that happening?
-> > > > > > >
-> > > > > >
-> > > > > > Form the stack trace  the parent node is
-> > > > > > "parent_node=hd3ss3220@47" ,
-> > > > > instead of the "connector" node.
-> > > > > > That is the reason for the above error.
-> > > > > >
-> > > > > > [    2.442429]  of_graph_get_next_endpoint.part.0+0x28/0x168
-> > > > > > [    2.447889]  of_fwnode_graph_get_next_endpoint+0x5c/0xb0
-> > > > > > [    2.453267]  fwnode_graph_get_next_endpoint+0x20/0x30
-> > > > > > [    2.458374]  device_connection_find_match+0x74/0x1a0
-> > > > > > [    2.463399]  usb_role_switch_get+0x20/0x28
-> > > > > > [    2.467542]  hd3ss3220_probe+0xc4/0x218
-> > > > > >
-> > > > > > The use case is
-> > > > > >
-> > > > > > &i2c0 {
-> > > > > > 	hd3ss3220@47 {
-> > > > > >                  	compatible = "ti,hd3ss3220";
-> > > > > >
-> > > > > >                  	usb_con: connector {
-> > > > > >                           		compatible = "usb-c-connector";
-> > > > > >                          		port {
-> > > > > >                                 		 hd3ss3220_ep: endpoint {
-> > > > > >                                         			remote-endpoint =
-> > > > > <&usb3_role_switch>;
-> > > > > >                                 		};
-> > > > > >                          		};
-> > > > > >                 	 };
-> > > > > > 	 };
-> > > > > > };
-> > > > > >
-> > > > > > &usb3_peri0 {
-> > > > > >          companion = <&xhci0>;
-> > > > > >          usb-role-switch;
-> > > > > >
-> > > > > >          port {
-> > > > > >                 usb3_role_switch: endpoint {
-> > > > > >                         remote-endpoint = <&hd3ss3220_ep>;
-> > > > > >                  };
-> > > > > >          };
-> > > > > > };
-> > > > > >
-> > > > > > Q1) How do we modify the usb_role_switch_get() function to search
-> > > > > > Child(connector) and child's endpoint?
-> > > > > How about firstly finding connector node in
-> > > > > fwnode_graph_devcon_match(), then search each endpoint?
-> > > >
-> > > >  I have done a quick prototyping with the changes you suggested and it
-> > > works.
-> > > >
-> > > > -       struct fwnode_handle *ep;
-> > > > +       struct fwnode_handle *ep,*child,*tmp = fwnode;
-> > > >
-> > > > -       fwnode_graph_for_each_endpoint(fwnode, ep) {
-> > > > +       child = fwnode_get_named_child_node(fwnode, "connector");
-> > > > +       if (child)
-> > > > +               tmp = child;
-> > > > +
-> > > > +       fwnode_graph_for_each_endpoint(tmp, ep) {
-> > > >
-> > > > Form the stack trace  the parent node is "parent_node= connector" .
-> > > >
-> > > > [    2.440922]  of_graph_get_next_endpoint.part.0+0x28/0x168
-> > > > [    2.446381]  of_fwnode_graph_get_next_endpoint+0x5c/0xb0
-> > > > [    2.451758]  fwnode_graph_get_next_endpoint+0x20/0x30
-> > > > [    2.456866]  device_connection_find_match+0x84/0x1c0
-> > > > [    2.461888]  usb_role_switch_get+0x20/0x28
-> > > >
-> > > > Heikki,
-> > > > Are you ok  with the above changes?
-> > > 
-> > > Doesn't that mean that if we made fwnode_usb_role_switch_get() the way I
-> > > proposed, there is no problem? You just find the "connector" child node in
-> > > your driver, and pass that to fwnode_usb_role_switch_get():
-> > 
-> > Yes, That is correct.
-> > 
-> > >         struct fwnode_handle *connector;
-> > >         ...
-> > >         connector = device_get_named_child_node(&client->dev, "connector");
-> > >         if (IS_ERR(connector))
-> > >                 <do something>
-> > > 
-> > >         hd3ss3220->role_sw = fwnode_usb_role_switch_get(connector);
-> > >         ...
-> > > 
-> > > The difference is that instead of just converting a device node of an usb role
-> > > switch to the usb role switch, it works just like usb_role_switch_get(), just
-> > > taking fwnode instead of device entry as parameter.
-> > > 
-> > > I prepared the patches implementing fwnode_usb_role_switch_get() the
-> > > way I though it needs to work for my own tests. Please find the patches
-> > > attached.
-> > 
-> > I have tested  this patches and conform it works. 
-> > Do you plan to post this patches to ML? 
-> 
-> Could make them part of this series?
-I'll do it, thanks
-> 
-> 
-> thanks,
-> 
+Hi Renzo,
+
+Thank you for the patch! Perhaps something to improve:
+
+[auto build test WARNING on linus/master]
+[also build test WARNING on v5.2-rc2 next-20190524]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+url:    https://github.com/0day-ci/linux/commits/Renzo-Davoli/eventfd-new-tag-EFD_VPOLL-generate-epoll-events/20190527-023620
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-rc1-7-g2b96cd8-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
 
 
+sparse warnings: (new ones prefixed by >>)
+
+>> fs/eventfd.c:321:27: sparse: sparse: restricted __poll_t degrades to integer
+>> fs/eventfd.c:321:16: sparse: sparse: incorrect type in assignment (different base types) @@    expected restricted __poll_t [usertype] events @@    got poll_t [usertype] events @@
+>> fs/eventfd.c:321:16: sparse:    expected restricted __poll_t [usertype] events
+>> fs/eventfd.c:321:16: sparse:    got unsigned long long
+   fs/eventfd.c:357:25: sparse: sparse: restricted __poll_t degrades to integer
+>> fs/eventfd.c:359:27: sparse: sparse: cast from restricted __poll_t
+   fs/eventfd.c:367:44: sparse: sparse: restricted __poll_t degrades to integer
+>> fs/eventfd.c:375:17: sparse: sparse: cast to restricted __poll_t
+>> fs/eventfd.c:512:28: sparse: sparse: invalid assignment: &=
+>> fs/eventfd.c:512:28: sparse:    left side has type unsigned long long
+>> fs/eventfd.c:512:28: sparse:    right side has type restricted __poll_t
+
+vim +321 fs/eventfd.c
+
+   310	
+   311	static __poll_t eventfd_vpoll_poll(struct file *file, poll_table *wait)
+   312	{
+   313		struct eventfd_ctx *ctx = file->private_data;
+   314		__poll_t events = 0;
+   315		u64 count;
+   316	
+   317		poll_wait(file, &ctx->wqh, wait);
+   318	
+   319		count = READ_ONCE(ctx->count);
+   320	
+ > 321		events = (count & EPOLLALLMASK);
+   322	
+   323		return events;
+   324	}
+   325	
+   326	static ssize_t eventfd_vpoll_read(struct file *file, char __user *buf,
+   327			size_t count, loff_t *ppos)
+   328	{
+   329		struct eventfd_ctx *ctx = file->private_data;
+   330		ssize_t res;
+   331		__u64 ucnt = 0;
+   332	
+   333		if (count < sizeof(ucnt))
+   334			return -EINVAL;
+   335		res = sizeof(ucnt);
+   336		ucnt = READ_ONCE(ctx->count);
+   337		if (put_user(ucnt, (__u64 __user *)buf))
+   338			return -EFAULT;
+   339	
+   340		return res;
+   341	}
+   342	
+   343	static ssize_t eventfd_vpoll_write(struct file *file, const char __user *buf,
+   344			size_t count, loff_t *ppos)
+   345	{
+   346		struct eventfd_ctx *ctx = file->private_data;
+   347		ssize_t res;
+   348		__u64 ucnt;
+   349		__u32 events;
+   350	
+   351		if (count < sizeof(ucnt))
+   352			return -EINVAL;
+   353		if (copy_from_user(&ucnt, buf, sizeof(ucnt)))
+   354			return -EFAULT;
+   355		spin_lock_irq(&ctx->wqh.lock);
+   356	
+   357		events = ucnt & EPOLLALLMASK;
+   358		res = sizeof(ucnt);
+ > 359		switch (ucnt & ~((__u64)EPOLLALLMASK)) {
+   360		case EFD_VPOLL_ADDEVENTS:
+   361			ctx->count |= events;
+   362			break;
+   363		case EFD_VPOLL_DELEVENTS:
+   364			ctx->count &= ~(events);
+   365			break;
+   366		case EFD_VPOLL_MODEVENTS:
+   367			ctx->count = (ctx->count & ~EPOLLALLMASK) | events;
+   368			break;
+   369		default:
+   370			res = -EINVAL;
+   371		}
+   372	
+   373		/* wake up waiting threads */
+   374		if (res >= 0 && waitqueue_active(&ctx->wqh))
+ > 375			wake_up_locked_poll(&ctx->wqh, res);
+   376	
+   377		spin_unlock_irq(&ctx->wqh.lock);
+   378	
+   379		return res;
+   380	
+   381	}
+   382	
+   383	#ifdef CONFIG_PROC_FS
+   384	static void eventfd_show_fdinfo(struct seq_file *m, struct file *f)
+   385	{
+   386		struct eventfd_ctx *ctx = f->private_data;
+   387	
+   388		spin_lock_irq(&ctx->wqh.lock);
+   389		seq_printf(m, "eventfd-count: %16llx\n",
+   390			   (unsigned long long)ctx->count);
+   391		spin_unlock_irq(&ctx->wqh.lock);
+   392		seq_printf(m, "eventfd-id: %d\n", ctx->id);
+   393	}
+   394	#endif
+   395	
+   396	static const struct file_operations eventfd_fops = {
+   397	#ifdef CONFIG_PROC_FS
+   398		.show_fdinfo	= eventfd_show_fdinfo,
+   399	#endif
+   400		.release	= eventfd_release,
+   401		.poll		= eventfd_poll,
+   402		.read		= eventfd_read,
+   403		.write		= eventfd_write,
+   404		.llseek		= noop_llseek,
+   405	};
+   406	
+   407	static const struct file_operations eventfd_vpoll_fops = {
+   408	#ifdef CONFIG_PROC_FS
+   409		.show_fdinfo	= eventfd_show_fdinfo,
+   410	#endif
+   411		.release	= eventfd_release,
+   412		.poll		= eventfd_vpoll_poll,
+   413		.read		= eventfd_vpoll_read,
+   414		.write		= eventfd_vpoll_write,
+   415		.llseek		= noop_llseek,
+   416	};
+   417	
+   418	/**
+   419	 * eventfd_fget - Acquire a reference of an eventfd file descriptor.
+   420	 * @fd: [in] Eventfd file descriptor.
+   421	 *
+   422	 * Returns a pointer to the eventfd file structure in case of success, or the
+   423	 * following error pointer:
+   424	 *
+   425	 * -EBADF    : Invalid @fd file descriptor.
+   426	 * -EINVAL   : The @fd file descriptor is not an eventfd file.
+   427	 */
+   428	struct file *eventfd_fget(int fd)
+   429	{
+   430		struct file *file;
+   431	
+   432		file = fget(fd);
+   433		if (!file)
+   434			return ERR_PTR(-EBADF);
+   435		if (file->f_op != &eventfd_fops) {
+   436			fput(file);
+   437			return ERR_PTR(-EINVAL);
+   438		}
+   439	
+   440		return file;
+   441	}
+   442	EXPORT_SYMBOL_GPL(eventfd_fget);
+   443	
+   444	/**
+   445	 * eventfd_ctx_fdget - Acquires a reference to the internal eventfd context.
+   446	 * @fd: [in] Eventfd file descriptor.
+   447	 *
+   448	 * Returns a pointer to the internal eventfd context, otherwise the error
+   449	 * pointers returned by the following functions:
+   450	 *
+   451	 * eventfd_fget
+   452	 */
+   453	struct eventfd_ctx *eventfd_ctx_fdget(int fd)
+   454	{
+   455		struct eventfd_ctx *ctx;
+   456		struct fd f = fdget(fd);
+   457		if (!f.file)
+   458			return ERR_PTR(-EBADF);
+   459		ctx = eventfd_ctx_fileget(f.file);
+   460		fdput(f);
+   461		return ctx;
+   462	}
+   463	EXPORT_SYMBOL_GPL(eventfd_ctx_fdget);
+   464	
+   465	/**
+   466	 * eventfd_ctx_fileget - Acquires a reference to the internal eventfd context.
+   467	 * @file: [in] Eventfd file pointer.
+   468	 *
+   469	 * Returns a pointer to the internal eventfd context, otherwise the error
+   470	 * pointer:
+   471	 *
+   472	 * -EINVAL   : The @fd file descriptor is not an eventfd file.
+   473	 */
+   474	struct eventfd_ctx *eventfd_ctx_fileget(struct file *file)
+   475	{
+   476		struct eventfd_ctx *ctx;
+   477	
+   478		if (file->f_op != &eventfd_fops)
+   479			return ERR_PTR(-EINVAL);
+   480	
+   481		ctx = file->private_data;
+   482		kref_get(&ctx->kref);
+   483		return ctx;
+   484	}
+   485	EXPORT_SYMBOL_GPL(eventfd_ctx_fileget);
+   486	
+   487	static int do_eventfd(unsigned int count, int flags)
+   488	{
+   489		struct eventfd_ctx *ctx;
+   490		const struct file_operations *fops = &eventfd_fops;
+   491		int fd;
+   492	
+   493		/* Check the EFD_* constants for consistency.  */
+   494		BUILD_BUG_ON(EFD_CLOEXEC != O_CLOEXEC);
+   495		BUILD_BUG_ON(EFD_NONBLOCK != O_NONBLOCK);
+   496	
+   497		if (flags & ~EFD_FLAGS_SET)
+   498			return -EINVAL;
+   499	
+   500		ctx = kmalloc(sizeof(*ctx), GFP_KERNEL);
+   501		if (!ctx)
+   502			return -ENOMEM;
+   503	
+   504		kref_init(&ctx->kref);
+   505		init_waitqueue_head(&ctx->wqh);
+   506		ctx->count = count;
+   507		ctx->flags = flags;
+   508		ctx->id = ida_simple_get(&eventfd_ida, 0, 0, GFP_KERNEL);
+   509	
+   510		if (flags & EFD_VPOLL) {
+   511			fops = &eventfd_vpoll_fops;
+ > 512			ctx->count &= EPOLLALLMASK;
+   513		}
+   514		fd = anon_inode_getfd("[eventfd]", fops, ctx,
+   515				      O_RDWR | (flags & EFD_SHARED_FCNTL_FLAGS));
+   516		if (fd < 0)
+   517			eventfd_free_ctx(ctx);
+   518	
+   519		return fd;
+   520	}
+   521	
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
