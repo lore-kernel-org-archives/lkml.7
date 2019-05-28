@@ -2,85 +2,120 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB154C072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C89B1C04E84
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE35D208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1056208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:57:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pUUFYFdh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727752AbfE1UwG (ORCPT
+        id S1727665AbfE1U55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 16:52:06 -0400
-Received: from namei.org ([65.99.196.166]:34918 "EHLO namei.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726654AbfE1UwG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 16:52:06 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by namei.org (8.14.4/8.14.4) with ESMTP id x4SKpvrj005725;
-        Tue, 28 May 2019 20:51:57 GMT
-Date:   Wed, 29 May 2019 06:51:57 +1000 (AEST)
-From:   James Morris <jmorris@namei.org>
-To:     David Howells <dhowells@redhat.com>
-cc:     keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/7] keys: Add a keyctl to move a key between keyrings
-In-Reply-To: <155856412507.10428.15987388402707639951.stgit@warthog.procyon.org.uk>
-Message-ID: <alpine.LRH.2.21.1905290646010.31297@namei.org>
-References: <155856408314.10428.17035328117829912815.stgit@warthog.procyon.org.uk> <155856412507.10428.15987388402707639951.stgit@warthog.procyon.org.uk>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Tue, 28 May 2019 16:57:57 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:36210 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726654AbfE1U54 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 16:57:56 -0400
+Received: by mail-qt1-f196.google.com with SMTP id u12so27061qth.3;
+        Tue, 28 May 2019 13:57:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=o1ydLImzsmpkS5F7PlvU5sVhBXF/PklEQqQZqMpZmxE=;
+        b=pUUFYFdhSOjFKlE4+4l7DO7lFTfWN1aoCbBGKyUVb1zddz/d94F+w8Swz99yR7Z+yi
+         JMuV5TFhMLdvWJuUEBwYbuKUJTLJiQBweh9i1EOl3KSECbPvROcAD92Nzu8+lk+4Wj1H
+         Veg8w/g/mxEO9ooewq3DrgMWdw1+Vr35vdmu3em+cXEpVTUNhk7O82mGNdigmcgJZ6xY
+         DTOA1uWJRMCxYnoS7J/BuACvvS81cDojuRxFtxwWjzvUX0+IX7TNR+/C4RdSRQ3xJr6r
+         Hykh8DQekErFOps4eAllmh+qoou+mRcNzmo99/e49QV53zWeNCkSlIchshLsny5H1/NG
+         MpsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=o1ydLImzsmpkS5F7PlvU5sVhBXF/PklEQqQZqMpZmxE=;
+        b=V1q2fKJ1tDgYDCATvHUtyniHmgOM9Z8OnGZxnXk9lRCFOpnS/9nzmKN/PeTGA8SulB
+         cDHGX4Fhf3RmE2OWfYWYcXaFr5rAqb2Eans8GX/FkolfnnGBGNyUJrL8XHXsKXCIpkYC
+         sOPK1rhkA80nZJjMGKwhAECDP8mDwVn9VYgLjnZm6Qwjgr3OnDdIOFPFOSQqri79NDMP
+         jnrQ/FeNDekTBqNdE2vhNhhvNBlZZLksxcHzihn4ML3xgXV7Drf4B7ljzt2vSVhowA9k
+         4J8X3+6MmfEtMTMIsBEZNeLZ7zajWDWGhuBKZF/a0QNUQv8zPRKI716ZD9EbEAWbAKJ3
+         192w==
+X-Gm-Message-State: APjAAAUydww0kRlInx5cKAeflE6pBv/sA2ax0yZ8TXwvJPONL7AlYClY
+        RejlbgbLs73uDGjlBE9hrZwfgh9QuRkWn2MJGzg=
+X-Google-Smtp-Source: APXvYqyVyzhSWxFPxx1Q7S/1xkEQOPxvA+Ddzkuz4KVntMBUsTlXhD9T29/yxzB2jQa3duROW2pyJYlgJS46nAlO7dk=
+X-Received: by 2002:a0c:d4ee:: with SMTP id y43mr95878708qvh.26.1559077075184;
+ Tue, 28 May 2019 13:57:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20190528190218.GA6950@ip-172-31-44-144.us-west-2.compute.internal>
+In-Reply-To: <20190528190218.GA6950@ip-172-31-44-144.us-west-2.compute.internal>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Tue, 28 May 2019 13:57:44 -0700
+Message-ID: <CAPhsuW5uVgqVEfpJsCNmQKYgmAksJ+jVTkU7QG2Fz8ofg6Puxg@mail.gmail.com>
+Subject: Re: [PATCH bpf v2] selftests: bpf: fix compiler warning
+To:     Alakesh Haloi <alakesh.haloi@gmail.com>
+Cc:     linux-kselftest@vger.kernel.org,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Stanislav Fomichev <sdf@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 May 2019, David Howells wrote:
+On Tue, May 28, 2019 at 12:35 PM Alakesh Haloi <alakesh.haloi@gmail.com> wr=
+ote:
+>
+> Add missing header file following compiler warning
+>
+> prog_tests/flow_dissector.c: In function =E2=80=98tx_tap=E2=80=99:
+> prog_tests/flow_dissector.c:175:9: warning: implicit declaration of funct=
+ion =E2=80=98writev=E2=80=99; did you mean =E2=80=98write=E2=80=99? [-Wimpl=
+icit-function-declaration]
+>   return writev(fd, iov, ARRAY_SIZE(iov));
+>          ^~~~~~
+>          write
+>
+> Fixes: 0905beec9f52 ("selftests/bpf: run flow dissector tests in skb-less=
+ mode")
+> Signed-off-by: Alakesh Haloi <alakesh.haloi@gmail.com>
 
-> +
-> +	if (flags & ~KEYCTL_MOVE_EXCL)
-> +		return -EINVAL;
-> +
-> +	key_ref = lookup_user_key(id, KEY_LOOKUP_CREATE, KEY_NEED_LINK);
-> +	if (IS_ERR(key_ref)) {
-> +		ret = PTR_ERR(key_ref);
-> +		goto error;
-> +	}
+Acked-by: Song Liu <songliubraving@fb.com>
 
-This could probably be a simple return, as there is no cleanup.
+Thanks for the fix!
 
-> +
-> +	from_ref = lookup_user_key(from_ringid, 0, KEY_NEED_WRITE);
-> +	if (IS_ERR(from_ref)) {
-> +		ret = PTR_ERR(from_ref);
-> +		goto error2;
-> +	}
-> +
-> +	to_ref = lookup_user_key(to_ringid, KEY_LOOKUP_CREATE, KEY_NEED_WRITE);
-> +	if (IS_ERR(to_ref)) {
-> +		ret = PTR_ERR(to_ref);
-> +		goto error3;
-> +	}
-> +
-> +	ret = key_move(key_ref_to_ptr(key_ref), key_ref_to_ptr(from_ref),
-> +		       key_ref_to_ptr(to_ref), flags);
-> +
-> +	key_ref_put(to_ref);
-> +error3:
-> +	key_ref_put(from_ref);
-> +error2:
-> +	key_ref_put(key_ref);
-> +error:
-> +	return ret;
-> +}
-> +
-
-
--- 
-James Morris
-<jmorris@namei.org>
-
+> ---
+>  tools/testing/selftests/bpf/prog_tests/flow_dissector.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/tools/testing/selftests/bpf/prog_tests/flow_dissector.c b/to=
+ols/testing/selftests/bpf/prog_tests/flow_dissector.c
+> index fbd1d88a6095..c938283ac232 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/flow_dissector.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/flow_dissector.c
+> @@ -3,6 +3,7 @@
+>  #include <error.h>
+>  #include <linux/if.h>
+>  #include <linux/if_tun.h>
+> +#include <sys/uio.h>
+>
+>  #define CHECK_FLOW_KEYS(desc, got, expected)                           \
+>         CHECK_ATTR(memcmp(&got, &expected, sizeof(got)) !=3D 0,          =
+ \
+> --
+> 2.17.1
+>
