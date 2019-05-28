@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB79C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC67C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DBD92075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:27:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAAF02075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:28:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="OJ4KXkdU"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="NbUdK7q2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727882AbfE1V1r (ORCPT
+        id S1727961AbfE1V21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 17:27:47 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:35781 "EHLO
+        Tue, 28 May 2019 17:28:27 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:37041 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726722AbfE1V1r (ORCPT
+        with ESMTP id S1726492AbfE1V21 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 17:27:47 -0400
+        Tue, 28 May 2019 17:28:27 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4SLRbo12240590
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4SLSJIe2240637
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 28 May 2019 14:27:37 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4SLRbo12240590
+        Tue, 28 May 2019 14:28:19 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4SLSJIe2240637
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559078858;
-        bh=eB6S3JZsatiKfk2iegX2c11Iq0DU+iBJPXyPdC2IlsA=;
+        s=2019051801; t=1559078899;
+        bh=Bt5J+EsvFH3qvx1qAg47/7/iv3RMbgLKff9eXUtcgJs=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=OJ4KXkdUwK3dwiTY2DHtwvWWANRoFR89rYzSQMny0HXrSPacoYLUvAYKc7Rhj1mPg
-         GnIQir5DkkVhzYtGZM1ACzLcfQArWthxi1mlU1EtwgAvOyoASNBK0EAtyodcuOgIh2
-         j1SguRgu0u8Jegq1ZNrViakHk6PBdxlOCRT0AcRCWCdNhLK50No4jPMEx2Ci5ivMxF
-         iC4PVNYomVlNJVwzGUq6FC5xSmh3WZwuhwqif/MCcCrcL5ou9ANe9Xc0Ut1T05k8Yf
-         kYlEY98kFNvMhfPcKAZJp2nJRdX+zUXQzFYaa9H86YTI9YX3xiMvaXDgjU3XrxgKxR
-         inxLr/Sd1Q7VA==
+        b=NbUdK7q2/pcKZzJRu3cumvienVbzu60/RzjjvzuFP5zq6LiO3sKCbIoyADjfnuzuu
+         jwxIKKKMhfZJ+SomTZ29dHhPrFYQq39SAenJuo9Vpfj9aSVy3PjgvqdvZCYda1foHt
+         QkQ0dTKNEEEwoLpiIOIlJc4rLgKSKlyzfSKdRLU4HhyhByiPoj9ZG6FFgfAYtMDj7Q
+         fPurcbrd1z0HvE/TXTUcHD/AZc7RhK1Qq4VWZVyiAlu02HTdPWG9hxfaSD0winR+uI
+         cfRjRtMo+G7nA+nYYHMlgZM1MSXQddNOFc8r5SZOz9gVyPVfk/iCzw33+20wfMiABp
+         xc9831IrHj+yw==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4SLRbNv2240587;
-        Tue, 28 May 2019 14:27:37 -0700
-Date:   Tue, 28 May 2019 14:27:37 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4SLSJ5w2240634;
+        Tue, 28 May 2019 14:28:19 -0700
+Date:   Tue, 28 May 2019 14:28:19 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Namhyung Kim <tipbot@zytor.com>
-Message-ID: <tip-6584140ba9e6762dd7ec73795243289b914f31f9@git.kernel.org>
-Cc:     hbathini@linux.vnet.ibm.com, mingo@kernel.org, namhyung@kernel.org,
-        acme@redhat.com, linux-kernel@vger.kernel.org,
-        kjlx@templeofstupid.com, jolsa@redhat.com, tglx@linutronix.de,
-        hpa@zytor.com
-Reply-To: hbathini@linux.vnet.ibm.com, mingo@kernel.org,
-          namhyung@kernel.org, acme@redhat.com,
-          linux-kernel@vger.kernel.org, kjlx@templeofstupid.com,
-          jolsa@redhat.com, tglx@linutronix.de, hpa@zytor.com
-In-Reply-To: <20190522053250.207156-2-namhyung@kernel.org>
-References: <20190522053250.207156-2-namhyung@kernel.org>
+Message-ID: <tip-acd244b84b80d53fa2cee98659b55d3f09b4f5a7@git.kernel.org>
+Cc:     jolsa@redhat.com, tglx@linutronix.de, acme@redhat.com,
+        linux-kernel@vger.kernel.org, hpa@zytor.com,
+        hbathini@linux.vnet.ibm.com, kjlx@templeofstupid.com,
+        mingo@kernel.org, namhyung@kernel.org
+Reply-To: jolsa@redhat.com, tglx@linutronix.de, acme@redhat.com,
+          linux-kernel@vger.kernel.org, hpa@zytor.com,
+          kjlx@templeofstupid.com, hbathini@linux.vnet.ibm.com,
+          namhyung@kernel.org, mingo@kernel.org
+In-Reply-To: <20190522053250.207156-3-namhyung@kernel.org>
+References: <20190522053250.207156-3-namhyung@kernel.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf namespace: Protect reading thread's
- namespace
-Git-Commit-ID: 6584140ba9e6762dd7ec73795243289b914f31f9
+Subject: [tip:perf/urgent] perf session: Add missing swap ops for namespace
+ events
+Git-Commit-ID: acd244b84b80d53fa2cee98659b55d3f09b4f5a7
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -72,61 +72,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  6584140ba9e6762dd7ec73795243289b914f31f9
-Gitweb:     https://git.kernel.org/tip/6584140ba9e6762dd7ec73795243289b914f31f9
+Commit-ID:  acd244b84b80d53fa2cee98659b55d3f09b4f5a7
+Gitweb:     https://git.kernel.org/tip/acd244b84b80d53fa2cee98659b55d3f09b4f5a7
 Author:     Namhyung Kim <namhyung@kernel.org>
-AuthorDate: Wed, 22 May 2019 14:32:48 +0900
+AuthorDate: Wed, 22 May 2019 14:32:49 +0900
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Tue, 28 May 2019 09:52:23 -0300
 
-perf namespace: Protect reading thread's namespace
+perf session: Add missing swap ops for namespace events
 
-It seems that the current code lacks holding the namespace lock in
-thread__namespaces().  Otherwise it can see inconsistent results.
+In case it's recorded in a different arch.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Cc: Hari Bathini <hbathini@linux.vnet.ibm.com>
+Cc: Hari Bathini <hbathini@linux.vnet.ibm.com> <hbathini@linux.vnet.ibm.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Krister Johansen <kjlx@templeofstupid.com>
-Link: http://lkml.kernel.org/r/20190522053250.207156-2-namhyung@kernel.org
+Fixes: f3b3614a284d ("perf tools: Add PERF_RECORD_NAMESPACES to include namespaces related info")
+Link: http://lkml.kernel.org/r/20190522053250.207156-3-namhyung@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/thread.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ tools/perf/util/session.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
-index 403045a2bbea..b413ba5b9835 100644
---- a/tools/perf/util/thread.c
-+++ b/tools/perf/util/thread.c
-@@ -133,7 +133,7 @@ void thread__put(struct thread *thread)
- 	}
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 2310a1752983..54cf163347f7 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -647,6 +647,26 @@ static void perf_event__throttle_swap(union perf_event *event,
+ 		swap_sample_id_all(event, &event->throttle + 1);
  }
  
--struct namespaces *thread__namespaces(const struct thread *thread)
-+static struct namespaces *__thread__namespaces(const struct thread *thread)
- {
- 	if (list_empty(&thread->namespaces_list))
- 		return NULL;
-@@ -141,10 +141,21 @@ struct namespaces *thread__namespaces(const struct thread *thread)
- 	return list_first_entry(&thread->namespaces_list, struct namespaces, list);
- }
- 
-+struct namespaces *thread__namespaces(const struct thread *thread)
++static void perf_event__namespaces_swap(union perf_event *event,
++					bool sample_id_all)
 +{
-+	struct namespaces *ns;
++	u64 i;
 +
-+	down_read((struct rw_semaphore *)&thread->namespaces_lock);
-+	ns = __thread__namespaces(thread);
-+	up_read((struct rw_semaphore *)&thread->namespaces_lock);
++	event->namespaces.pid		= bswap_32(event->namespaces.pid);
++	event->namespaces.tid		= bswap_32(event->namespaces.tid);
++	event->namespaces.nr_namespaces	= bswap_64(event->namespaces.nr_namespaces);
 +
-+	return ns;
++	for (i = 0; i < event->namespaces.nr_namespaces; i++) {
++		struct perf_ns_link_info *ns = &event->namespaces.link_info[i];
++
++		ns->dev = bswap_64(ns->dev);
++		ns->ino = bswap_64(ns->ino);
++	}
++
++	if (sample_id_all)
++		swap_sample_id_all(event, &event->namespaces.link_info[i]);
 +}
 +
- static int __thread__set_namespaces(struct thread *thread, u64 timestamp,
- 				    struct namespaces_event *event)
+ static u8 revbyte(u8 b)
  {
--	struct namespaces *new, *curr = thread__namespaces(thread);
-+	struct namespaces *new, *curr = __thread__namespaces(thread);
- 
- 	new = namespaces__new(event);
- 	if (!new)
+ 	int rev = (b >> 4) | ((b & 0xf) << 4);
+@@ -887,6 +907,7 @@ static perf_event__swap_op perf_event__swap_ops[] = {
+ 	[PERF_RECORD_LOST_SAMPLES]	  = perf_event__all64_swap,
+ 	[PERF_RECORD_SWITCH]		  = perf_event__switch_swap,
+ 	[PERF_RECORD_SWITCH_CPU_WIDE]	  = perf_event__switch_swap,
++	[PERF_RECORD_NAMESPACES]	  = perf_event__namespaces_swap,
+ 	[PERF_RECORD_HEADER_ATTR]	  = perf_event__hdr_attr_swap,
+ 	[PERF_RECORD_HEADER_EVENT_TYPE]	  = perf_event__event_type_swap,
+ 	[PERF_RECORD_HEADER_TRACING_DATA] = perf_event__tracing_data_swap,
