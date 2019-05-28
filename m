@@ -2,139 +2,171 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECE8C04AB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF49C04AB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0558A2081C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:36:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DEF020717
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:37:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rqRqXS8B"
+	dkim=pass (1024-bit key) header.d=alpsgroup.onmicrosoft.com header.i=@alpsgroup.onmicrosoft.com header.b="Jb5sqGzx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727758AbfE1BgG (ORCPT
+        id S1727815AbfE1BhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 21:36:06 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:42086 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727018AbfE1BgF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 21:36:05 -0400
-Received: by mail-qk1-f196.google.com with SMTP id b18so14192294qkc.9;
-        Mon, 27 May 2019 18:36:05 -0700 (PDT)
+        Mon, 27 May 2019 21:37:20 -0400
+Received: from mail-eopbgr1400070.outbound.protection.outlook.com ([40.107.140.70]:30563
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727566AbfE1BhT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 21:37:19 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Kj9t4JQJcagW18k4dyge90dwQtqjHOh2tQ9v2UatVwU=;
-        b=rqRqXS8Bn7OA5NpsTq5QVD508b05RK7UY+YSHcgXWsACj98Tb0U+EKfBtcfzlnMa1u
-         mAFSzEv1P6Xlv9oiZ+0R53Irqz5PJwJhpdcOCJjvDn/gI13z+DUj6ovjo5auUZC4EQI9
-         uHmHwLty13Z4+osxXDd10BmEZagAl/wqYDmW42J3PWErpdAv7N+t/baZJFOeUkMzJVEP
-         d+/AAWB2SKfZrv1NbpDJRt+yttmYw1yfwsvqBr5D2XRB3OnFF7UMKomc3u2Xq9zV9TXr
-         lAtnjNRuGm4b+LOPjeCmz+gE0YFDBvMKz98VwKbkH2I69JsGqoISlA3iVBmg3B7+NoDe
-         uyuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Kj9t4JQJcagW18k4dyge90dwQtqjHOh2tQ9v2UatVwU=;
-        b=taEP7jIFrnoKTcgdT6GVFXRkTJ+Ie3OoPC7zBXB0izEAyq1HArf9foa5WB5Q7sksgI
-         T/03pkYvZoMUe2Uw0iNGqhPWTdxh21lDG0OqirCi4NSl15+YRAwQKtkY8KY+PwBViHRq
-         idfXobKAGs7biQ4g0OOkX73UCnXjI8tbOfXN0y3oAjHJYePSpoi5eJCL0NvetESTV4Wd
-         gk7AuZPR8Whh6a6dOfYOxZ9f9Toat7DyZSBGF9Y2WAOieEjv0f1xS4lNFL5LiYp1OPQq
-         onTAYrGSrRJB/ifdQHW+AHRuIwjkjhs0pbSdj2W9GHYJk71sLQqbNozXCc86Ml2JMCbh
-         9vTQ==
-X-Gm-Message-State: APjAAAVf0ZiFI0GqWIWrnJVD+QgX3gJdRaSkVfdwPCKkR5YFxSRvtExw
-        Q7SJzsJHMSy/8hGqauucVk8=
-X-Google-Smtp-Source: APXvYqw0xhgF3f6NkXqVMXN7RG6560O8XISc1F2wIzZjOMx/WjP6gmPNJBaJNH1HyJB27l4Gg5FR3w==
-X-Received: by 2002:ac8:270b:: with SMTP id g11mr65112037qtg.363.1559007364479;
-        Mon, 27 May 2019 18:36:04 -0700 (PDT)
-Received: from localhost.localdomain ([2001:1284:f013:4abe:239a:2941:e90:181d])
-        by smtp.gmail.com with ESMTPSA id j62sm4482875qte.89.2019.05.27.18.36.02
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 27 May 2019 18:36:03 -0700 (PDT)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id 34358C0A7A; Mon, 27 May 2019 22:36:00 -0300 (-03)
-Date:   Mon, 27 May 2019 22:36:00 -0300
-From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-To:     syzbot <syzbot+f7e9153b037eac9b1df8@syzkaller.appspotmail.com>
-Cc:     davem@davemloft.net, linux-kernel@vger.kernel.org,
-        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
-        nhorman@tuxdriver.com, syzkaller-bugs@googlegroups.com,
-        vyasevich@gmail.com
-Subject: Re: memory leak in sctp_process_init
-Message-ID: <20190528013600.GM5506@localhost.localdomain>
-References: <00000000000097abb90589e804fd@google.com>
+ d=alpsgroup.onmicrosoft.com; s=selector2-alpsgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iXKt+OupvFYDpBYxyX3dNmU+QX8Dbljyh6UvpvS74t0=;
+ b=Jb5sqGzxudqf9Kx1ARai1LEINdwGgTvDOtNj6ER6pF5h4V/EOER4tLyAI90bxn6X/aqHum2DneGNA6+HoE/eGn9P8sORbleY8u4IT13kL6KDnL7RmAcFFcK8yc00PRX1Uu2ShrROKZ7knxK0yQQiol5s8QnQL3CBvo9NDamuRkg=
+Received: from OSBPR01MB4855.jpnprd01.prod.outlook.com (20.179.180.211) by
+ OSBPR01MB2392.jpnprd01.prod.outlook.com (52.134.255.9) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.17; Tue, 28 May 2019 01:37:14 +0000
+Received: from OSBPR01MB4855.jpnprd01.prod.outlook.com
+ ([fe80::b583:e4e6:93db:38cb]) by OSBPR01MB4855.jpnprd01.prod.outlook.com
+ ([fe80::b583:e4e6:93db:38cb%4]) with mapi id 15.20.1922.021; Tue, 28 May 2019
+ 01:37:14 +0000
+From:   Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>
+To:     =?utf-8?B?UGFsaSBSb2jDoXI=?= <pali.rohar@gmail.com>,
+        XiaoXiao Liu <sliuuxiaonxiao@gmail.com>
+CC:     "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+        "peter.hutterer@who-t.net" <peter.hutterer@who-t.net>,
+        "hui.wang@canonical.com" <hui.wang@canonical.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Xiaojian Cao <xiaojian.cao@cn.alps.com>,
+        "zhangfp1@lenovo.com" <zhangfp1@lenovo.com>,
+        Naoki Saito <naoki.saito@alpsalpine.com>
+Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0hdIGlucHV0OiBhbHBzLWZpeCB0aGUgaXNzdWUgYWxw?=
+ =?utf-8?Q?s_cs19_trackstick_do_not_work.?=
+Thread-Topic: [PATCH] input: alps-fix the issue alps cs19 trackstick do not
+ work.
+Thread-Index: AQHVFHDIBpbm29Y830SbHnb/dbnRc6Z+v5aAgAD+tvA=
+Date:   Tue, 28 May 2019 01:37:14 +0000
+Message-ID: <OSBPR01MB4855F61AE28B883CDD87F781DA1E0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+References: <20190527094422.7558-1-sliuuxiaonxiao@gmail.com>
+ <20190527100913.sgxrjrmphsjfmcdb@pali>
+In-Reply-To: <20190527100913.sgxrjrmphsjfmcdb@pali>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=xiaoxiao.liu-1@cn.alps.com; 
+x-originating-ip: [58.247.0.86]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 454cd30a-ee2e-4f20-14de-08d6e30d0311
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:OSBPR01MB2392;
+x-ms-traffictypediagnostic: OSBPR01MB2392:
+x-microsoft-antispam-prvs: <OSBPR01MB239255CA702657A3D97649F5DA1E0@OSBPR01MB2392.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 00514A2FE6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(39860400002)(396003)(136003)(346002)(366004)(199004)(189003)(316002)(68736007)(224303003)(478600001)(54906003)(53936002)(7696005)(71190400001)(71200400001)(256004)(74316002)(102836004)(110136005)(14444005)(25786009)(107886003)(6506007)(4326008)(99286004)(81156014)(81166006)(305945005)(33656002)(76176011)(8936002)(7736002)(66066001)(476003)(446003)(486006)(11346002)(86362001)(26005)(5660300002)(52536014)(186003)(3846002)(55016002)(6116002)(76116006)(2906002)(73956011)(85182001)(66446008)(64756008)(66556008)(66476007)(14454004)(6436002)(66946007)(66574012)(9686003);DIR:OUT;SFP:1101;SCL:1;SRVR:OSBPR01MB2392;H:OSBPR01MB4855.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: cn.alps.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: gFBRKF8r6tiYwnhgdtqIYyASzpxd/H9hBn1qV231vUrKhERQwzso0qq/8lT1D26q6G/2OdDXYfccsYgZcrtmMLEfUMzF/7YE8YAk0Ts+gpoZArk9o/9eFMXb3FmIoR3XVTdeAMAUXXMjJQNB9e3qgU37B7MeJb66F3ZDJ7SEDjLk0qgaYrAZaej9wklDY7pT88k/BfLCWaZP5bvs8rhZj9Z+8CoKUFxXFKrVUCI6K3et2BbQYNUU4T2mstL2LaAiPiNa8DAUZoMdKSit4xquqUXaXHesn+66SdUtboHdL2sLDUA/l4RF0+U6pfYo0/rR2cnCmSTNSf2IjWcHUejN9CG3eA6S9NjQwYJp4rdwQe8losITbHUDKzz6QQfqoWp61y+PsDrrZXwx5dZIymOeUHs6IfjljvFyHyrTMfsnSno=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00000000000097abb90589e804fd@google.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-OriginatorOrg: cn.alps.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 454cd30a-ee2e-4f20-14de-08d6e30d0311
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2019 01:37:14.3126
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 57e76998-77bd-4b82-a424-198f46eb2254
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: CHT1HTSH3197@gl.alps.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB2392
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 27, 2019 at 05:48:06PM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    9c7db500 Merge tag 'selinux-pr-20190521' of git://git.kern..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=10388530a00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=61dd9e15a761691d
-> dashboard link: https://syzkaller.appspot.com/bug?extid=f7e9153b037eac9b1df8
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10e32f8ca00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=177fa530a00000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+f7e9153b037eac9b1df8@syzkaller.appspotmail.com
-> 
->  0 to HW filter on device batadv0
-> executing program
-> executing program
-> executing program
-> BUG: memory leak
-> unreferenced object 0xffff88810ef68400 (size 1024):
->   comm "syz-executor273", pid 7046, jiffies 4294945598 (age 28.770s)
->   hex dump (first 32 bytes):
->     1d de 28 8d de 0b 1b e3 b5 c2 f9 68 fd 1a 97 25  ..(........h...%
->     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->   backtrace:
->     [<00000000a02cebbd>] kmemleak_alloc_recursive
-> include/linux/kmemleak.h:55 [inline]
->     [<00000000a02cebbd>] slab_post_alloc_hook mm/slab.h:439 [inline]
->     [<00000000a02cebbd>] slab_alloc mm/slab.c:3326 [inline]
->     [<00000000a02cebbd>] __do_kmalloc mm/slab.c:3658 [inline]
->     [<00000000a02cebbd>] __kmalloc_track_caller+0x15d/0x2c0 mm/slab.c:3675
->     [<000000009e6245e6>] kmemdup+0x27/0x60 mm/util.c:119
->     [<00000000dfdc5d2d>] kmemdup include/linux/string.h:432 [inline]
->     [<00000000dfdc5d2d>] sctp_process_init+0xa7e/0xc20
-> net/sctp/sm_make_chunk.c:2437
->     [<00000000b58b62f8>] sctp_cmd_process_init net/sctp/sm_sideeffect.c:682
-> [inline]
->     [<00000000b58b62f8>] sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1384
-> [inline]
->     [<00000000b58b62f8>] sctp_side_effects net/sctp/sm_sideeffect.c:1194
-> [inline]
->     [<00000000b58b62f8>] sctp_do_sm+0xbdc/0x1d60
-> net/sctp/sm_sideeffect.c:1165
-
-Note that this is on the client side. It was handling the INIT_ACK
-chunk, from sctp_sf_do_5_1C_ack().
-
-I'm not seeing anything else other than sctp_association_free()
-releasing this memory. This means 2 things:
-- Every time the cookie is retransmitted, it leaks. As shown by the
-  repetitive leaks here.
-- The cookie remains allocated throughout the association, which is
-  also not good as that's a 1k that we could have released back to the
-  system right after the handshake.
-
-  Marcelo
+QWRkIFNhaXRvLXNhbi4NCg0KSGkgSHVpLA0KRG9lcyBpdCBtZWFuIHRoYXQgeW91ciBkZXZpY2Ug
+KHJlcG9ydGVkIHRvIGtlcm5lbCkgc2VuZHMgb25seSB0cmFja3N0aWNrIHBhY2tldHMgYW5kIG5v
+dCB0b3VjaHBhZD8NCiAgIAktPiBZZXMuDQpJIGd1ZXNzIHRoYXQgeW91IHdhbnQgcGFyZW50aGVz
+aXMgYXJvdW5kIChwYXJhbVsxXSAmIDB4MjApLiBBbmQgYWxzbyBkZXNjcmliZSB3aGF0IHRoYXQg
+MHgyMCBjb25zdGFudCBtZWFucy4NCkl0IGlzIG5vdCBhIHdhcm5pbmcuDQoJLT4gWWVzLCBpdCBz
+aG91bGQgYmUgKHBhcmFtWzFdICYgMHgyMCkuIA0KCS0+IDB4MjAgaXMgdXNlZCBmb3IgZGV0ZWN0
+IHdoaWNoIHR5cGUgZGV2aWNlIGlzLiBJIHdpbGwgY29ycmVjdCBpdC4NCg0KSG0uLi4gd2h5IHlv
+dXIgZGV2aWNlIGRvZXMgbm90IG1hdGNoIHRoZXNlIGNvbnN0YW50cz8NCgktPkkgYW0gbm90IGNs
+ZWFyIHdoYXQgdGhlIGFscHNfY29tbWFuZF9tb2RlX3JlYWRfcmVnKHBzbW91c2UsIDB4RDcpIHVz
+ZWQgZm9yLg0KICAgICAgICAgICAgICAtPiBCdXQgSSBrbm93IG91ciBkZXZpY2UgZGlkIG5vdCBt
+ZWV0IHRoZSBjb25kaXRpb24gaWYgKHJlZ192YWwgPT0gMHgwQyB8fCByZWdfdmFsID09IDB4MUQp
+IGZyb20gdGhlICAgICAgICAgICAgICAgIHJ1bm5pbmcgcmVzdWx0Lg0KDQpYaWFveGlhbyBMaXUN
+CnhpYW94aWFvLmxpdS0xQGNuLmFscHMuY29tDQpzbGl1dXhpYW9ueGlhb0BnbWFpbC5jb20NCi0t
+LS0t6YKu5Lu25Y6f5Lu2LS0tLS0NCuWPkeS7tuS6ujogUGFsaSBSb2jDoXIgPHBhbGkucm9oYXJA
+Z21haWwuY29tPiANCuWPkemAgeaXtumXtDogTW9uZGF5LCBNYXkgMjcsIDIwMTkgNjowOSBQTQ0K
+5pS25Lu25Lq6OiBYaWFvWGlhbyBMaXUgPHNsaXV1eGlhb254aWFvQGdtYWlsLmNvbT4NCuaKhOmA
+gTogZG1pdHJ5LnRvcm9raG92QGdtYWlsLmNvbTsgcGV0ZXIuaHV0dGVyZXJAd2hvLXQubmV0OyBo
+dWkud2FuZ0BjYW5vbmljYWwuY29tOyBsaW51eC1pbnB1dEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4
+LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IOabuSDmm4nlu7ogWGlhb2ppYW4gQ2FvIDx4aWFvamlh
+bi5jYW9AY24uYWxwcy5jb20+OyB6aGFuZ2ZwMUBsZW5vdm8uY29tOyDliokg5puJ5puJIFhpYW94
+aWFvIExpdSA8eGlhb3hpYW8ubGl1LTFAY24uYWxwcy5jb20+DQrkuLvpopg6IFJlOiBbUEFUQ0hd
+IGlucHV0OiBhbHBzLWZpeCB0aGUgaXNzdWUgYWxwcyBjczE5IHRyYWNrc3RpY2sgZG8gbm90IHdv
+cmsuDQoNCkhpIQ0KDQpPbiBNb25kYXkgMjcgTWF5IDIwMTkgMDU6NDQ6MjIgWGlhb1hpYW8gTGl1
+IHdyb3RlOg0KPiBUaGUgYWxwcyBkZXZpY2VzIHdoaWNoIGRldGVjdGVkIHRvIHVzZSB0aGUgQUxQ
+U19QUk9UT19WOCBwcm9jb3RvbCANCj4gY29udGFpbnMgQUxQUyB0b3VjaHBhZCBhbmQgQUxQUyB0
+cmFja3N0aWNrLlRoZSBBTFBTX1BST1RPX1Y4IHByb2NvdG9sIA0KPiBkbyBub3Qgc3VwcG9ydCB0
+aGUgdHJhY2tzdGljayBkZXZpY2UgcHJvY2VzcyBieSBkZWZhdWx0Lg0KDQpOb3JtYWxseSBQUy8y
+IGRldmljZSBoYW5kbGVkIGJ5IGFscHMuYyBpcyB0b3VjaHBhZCBhbmQgaW4gc29tZSBjYXNlcyB0
+b3VjaHBhZCBzZW5kcyBhbHNvIHRyYWNrc3RpY2sgZGF0YSBpbiB0aGF0IG9uZSBQUy8yIGNoYW5u
+ZWwuDQoNCkRvZXMgaXQgbWVhbiB0aGF0IHlvdXIgZGV2aWNlIChyZXBvcnRlZCB0byBrZXJuZWwp
+IHNlbmRzIG9ubHkgdHJhY2tzdGljayBwYWNrZXRzIGFuZCBub3QgdG91Y2hwYWQ/DQoNCj4gV2hl
+biB0aGUgdHJhY2tzdGljayB3YXMgZGV0ZWN0ZWQgdG8gdXNlIEFMUFNfUFJPVE9fVjggcHJvY290
+b2wsIHRoZSB2OCANCj4gcHJvY2Vzc19wYWNrZXQgbWV0aG9kIGFscHNfcHJvY2Vzc19wYWNrZXRf
+c3M0X3YyIHdpbGwgcmVqZWN0IHRvIHJlcG9ydCANCj4gdGhlIGRhdGEgd2hlbiB0aGUgZGV2aWNl
+IHVzaW5nIEFMUFNfUFJPVE9fVjggcHJvY290b2wgaXMgbm90IHNldCB0aGUgDQo+IEFMUFNfRFVB
+TFBPSU5UIGZsYWcuDQo+IA0KPiBUaGUgYWxwcyBjczE5IHRyYWNrc3RpY2sgaXMgZGV0ZWN0ZWQg
+dG8gdXNlIHRoZSBBTFBTX1BST1RPX1Y4IHByb2NvdG9sIA0KPiBidXQgd2l0aG91dCBBTFBTX0RV
+QUxQT0lOVCBmbGFnLCB0aGUgYWxwcyBkcml2ZXIgd2lsbCBub3QgcmVwb3J0IHRoZSANCj4gaW5w
+dXQgZGF0YS4gc28gdGhlIHRyYWNrc3RpY2sgd2lsbCBub3Qgd29yay4NCj4gDQo+IHNvbHV0aW9u
+OiB3aGVuIHRoZSBhbHBzIGNzMTkgZGV2aWNlIGRldGVjdGVkLCBzZXQgdGhlIGRldmljZSANCj4g
+QUxQU19EVUFMUE9JTlQgZmxhZyx0aGVuIHRoZSBpbnB1dCBkYXRhIHdpbGwgYmUgcHJvY2Vzc2Vk
+Lg0KPiANCj4gU2lnbmVkLW9mZi1ieTogWGlhb1hpYW8gTGl1IDxzbGl1dXhpYW9ueGlhb0BnbWFp
+bC5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9pbnB1dC9tb3VzZS9hbHBzLmMgfCAyNSArKysrKysr
+KysrKysrKysrKysrKysrKy0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMjMgaW5zZXJ0aW9ucygrKSwg
+MiBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lucHV0L21vdXNlL2Fs
+cHMuYyBiL2RyaXZlcnMvaW5wdXQvbW91c2UvYWxwcy5jIA0KPiBpbmRleCAwYTZmN2NhODgzZTcu
+LmE1NDY3N2NmNzQ3NCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9pbnB1dC9tb3VzZS9hbHBzLmMN
+Cj4gKysrIGIvZHJpdmVycy9pbnB1dC9tb3VzZS9hbHBzLmMNCj4gQEAgLTI0LDcgKzI0LDcgQEAN
+Cj4gIA0KPiAgI2luY2x1ZGUgInBzbW91c2UuaCINCj4gICNpbmNsdWRlICJhbHBzLmgiDQo+IC0N
+Cj4gKyNpbmNsdWRlICJ0cmFja3BvaW50LmgiDQo+ICAvKg0KPiAgICogRGVmaW5pdGlvbnMgZm9y
+IEFMUFMgdmVyc2lvbiAzIGFuZCA0IGNvbW1hbmQgbW9kZSBwcm90b2NvbA0KPiAgICovDQo+IEBA
+IC0yMjAsNiArMjIwLDIzIEBAIHN0YXRpYyBib29sIGFscHNfaXNfdmFsaWRfZmlyc3RfYnl0ZShz
+dHJ1Y3QgYWxwc19kYXRhICpwcml2LA0KPiAgCXJldHVybiAoZGF0YSAmIHByaXYtPm1hc2swKSA9
+PSBwcml2LT5ieXRlMDsgIH0NCj4gIA0KPiArc3RhdGljIGludCBhbHBzX2NoZWNrX2NzMTlfdHJh
+Y2tzdGljayhzdHJ1Y3QgcHNtb3VzZSAqcHNtb3VzZSkgew0KPiArCXU4IHBhcmFtWzJdID0geyAw
+IH07DQo+ICsJaW50IGVycm9yOw0KPiArDQo+ICsJZXJyb3IgPSBwczJfY29tbWFuZCgmcHNtb3Vz
+ZS0+cHMyZGV2LA0KPiArCQkJICAgIHBhcmFtLCBNQUtFX1BTMl9DTUQoMCwgMiwgVFBfUkVBRF9J
+RCkpOw0KPiArCWlmIChlcnJvcikNCj4gKwkJcmV0dXJuIGVycm9yOw0KPiArDQo+ICsJaWYgKHBh
+cmFtWzBdID09IFRQX1ZBUklBTlRfQUxQUyAmJiBwYXJhbVsxXSAmIDB4MjApIHsNCg0KSSBndWVz
+cyB0aGF0IHlvdSB3YW50IHBhcmVudGhlc2lzIGFyb3VuZCAocGFyYW1bMV0gJiAweDIwKS4gQW5k
+IGFsc28gZGVzY3JpYmUgd2hhdCB0aGF0IDB4MjAgY29uc3RhbnQgbWVhbnMuDQoNCj4gKwkJcHNt
+b3VzZV93YXJuKHBzbW91c2UsICJJdCBpcyBhbHBzIGNzMTkgdHJhY2tzdGljayIpOw0KDQpJdCBp
+cyBub3QgYSB3YXJuaW5nLg0KDQo+ICsJCXJldHVybiAwOw0KPiArCX0NCj4gKwlyZXR1cm4gLTE7
+DQo+ICt9DQo+ICsNCj4gIHN0YXRpYyB2b2lkIGFscHNfcmVwb3J0X2J1dHRvbnMoc3RydWN0IGlu
+cHV0X2RldiAqZGV2MSwgc3RydWN0IGlucHV0X2RldiAqZGV2MiwNCj4gIAkJCQlpbnQgbGVmdCwg
+aW50IHJpZ2h0LCBpbnQgbWlkZGxlKQ0KPiAgew0KPiBAQCAtMjU2OCw4ICsyNTg1LDEyIEBAIHN0
+YXRpYyBpbnQgYWxwc191cGRhdGVfZHVhbF9pbmZvX3NzNF92Mih1bnNpZ25lZCBjaGFyIG90cFtd
+WzRdLA0KPiAgCQkJYWxwc19leGl0X2NvbW1hbmRfbW9kZShwc21vdXNlKTsNCj4gIAkJCXBzMl9j
+b21tYW5kKHBzMmRldiwgTlVMTCwgUFNNT1VTRV9DTURfRU5BQkxFKTsNCj4gIA0KPiAtCQkJaWYg
+KHJlZ192YWwgPT0gMHgwQyB8fCByZWdfdmFsID09IDB4MUQpDQo+ICsJCQlpZiAocmVnX3ZhbCA9
+PSAweDBDIHx8IHJlZ192YWwgPT0gMHgxRCkgew0KDQpIbS4uLiB3aHkgeW91ciBkZXZpY2UgZG9l
+cyBub3QgbWF0Y2ggdGhlc2UgY29uc3RhbnRzPw0KDQo+ICsJCQkJaXNfZHVhbCA9IHRydWU7DQo+
+ICsJCQl9IGVsc2UgaWYgKGFscHNfY2hlY2tfY3MxOV90cmFja3N0aWNrKHBzbW91c2UpID09IDAp
+IHsNCj4gKwkJCQkvL0ZvciBzdXBwb3J0IFRoaW5rcGFkIENTMTkgVHJhY2tTdGljaw0KPiAgCQkJ
+CWlzX2R1YWwgPSB0cnVlOw0KPiArCQkJfQ0KPiAgCQl9DQo+ICAJfQ0KPiAgDQoNCi0tDQpQYWxp
+IFJvaMOhcg0KcGFsaS5yb2hhckBnbWFpbC5jb20NCg==
