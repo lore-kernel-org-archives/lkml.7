@@ -2,183 +2,83 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19444C072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E114C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 002E8216FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63E12216FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:32:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VYeNvbuD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbfE1RaZ convert rfc822-to-8bit (ORCPT
+        id S1727141AbfE1RcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 13:30:25 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:9937 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726515AbfE1RaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 13:30:24 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DFB9D99CFE;
-        Tue, 28 May 2019 17:30:23 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 01BBC60BDF;
-        Tue, 28 May 2019 17:30:20 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20190528162603.GA24097@kroah.com>
-References: <20190528162603.GA24097@kroah.com> <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk> <155905931502.7587.11705449537368497489.stgit@warthog.procyon.org.uk>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk, raven@themaw.net,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/7] General notification queue with user mmap()'able ring buffer
+        Tue, 28 May 2019 13:32:05 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:47029 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726602AbfE1RcF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 13:32:05 -0400
+Received: by mail-oi1-f196.google.com with SMTP id 203so14898814oid.13
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 10:32:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=69Lkov6l/YB/g8drnt7LyM8Q4caLCPlGFpwyFiDm+Fo=;
+        b=VYeNvbuDqk8y3j69S5xOU3CpUaGT4a0Z6qnHUepKh733tlWbbDhfymXdNShIk149Lw
+         rRlczBX52L6p2zhDLux8TM+hsLjA4wc7XacC0mjdPvsGN6DmCCqPDG44VTfXvrXiuP+D
+         Pgq8ci5GHN7n/OwXsNcD+RxTofVdtGqPGrurJ9Idyrt+rDVriKAc0shCOVgPKBL8WxnC
+         zlEA/FLewbomDR3+r4OxAk7YZn88Ph3/vOau5KwUqxtCULuvbNue33gSpqvPzLiEu5Jm
+         J4jKkjVh7K1DWni1JjPf1YITzZTTv/FJ/dIfFOQIofs+Wl+CyXAEmAkqi6FGWKjhGWii
+         bJ5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=69Lkov6l/YB/g8drnt7LyM8Q4caLCPlGFpwyFiDm+Fo=;
+        b=EXSnTxCRaZx7fUxF0/wRXWe1/JEs7drzGKyz9R6gi9cX6dwIAJisOZlAiiSdNCX3WW
+         PwAnLkP1deNsMv4dEfYda3IhEktHk3/Fj5xJp9h+vFJGZDX3PaOJiq6fpKDwcFX8jhOZ
+         zQJ+tVKnb+86nDdZ61FUZUjyOqGCV+eZygW0Oly3Xj1NhTKutjr6mgZml8UwqiIyvV78
+         1m7zXd3stJ01E5/WX6ybtMZ86iJ3iDKHtDK4dgvOlzpIrgQqaCUk7AqooIZwagEx9+IV
+         SEvQjmm/CG+LqmpOppGTbWXCtxLu+31+8fSrP6adj3R+U6JPVaErU9pUJkW7QPBfgIgL
+         fdwQ==
+X-Gm-Message-State: APjAAAWCXi2DOZVZsskFRW95Kau4p4Bca6OwJBr5be3QNsbFn0sPY1tR
+        f6ezqT7lYZxDqj5AETu4yERC6tHsbIrMILTwgBxU9w==
+X-Google-Smtp-Source: APXvYqxn+HNU/x1cDWahCiYdLUAroXji3RhlAzBTq6bh/v0lg1ZTn6o1Cg3i0g6ncRZ1i0tVs9UbPO9+4sAfRzBn7SU=
+X-Received: by 2002:aca:580b:: with SMTP id m11mr3252148oib.169.1559064724380;
+ Tue, 28 May 2019 10:32:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <4030.1559064620.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: 8BIT
-Date:   Tue, 28 May 2019 18:30:20 +0100
-Message-ID: <4031.1559064620@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Tue, 28 May 2019 17:30:24 +0000 (UTC)
+References: <CAGngYiU=uFjJFEoiHFUr+ab73sJksaTBkfxvQwL1X6WJnhchqw@mail.gmail.com>
+ <20190528142912.13224-1-yuehaibing@huawei.com> <CAGngYiW_hCDPRWao+389BfUH_2sP4S6pL+gteim=kDrnb9UDzQ@mail.gmail.com>
+ <3f4c1d4c-656b-8266-38c4-3f7c36a2bd7e@huawei.com> <20190528155956.GA21964@kroah.com>
+In-Reply-To: <20190528155956.GA21964@kroah.com>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Tue, 28 May 2019 13:31:53 -0400
+Message-ID: <CAGngYiW8Y3jt9ikb5e9LtfSkquZquLgB5iSRVXyka9fUXLrqYQ@mail.gmail.com>
+Subject: Re: [PATCH v2 -next] staging: fieldbus: Fix build error without CONFIG_REGMAP_MMIO
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, devel@driverdev.osuosl.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Greg KH <gregkh@linuxfoundation.org> wrote:
+On Tue, May 28, 2019 at 12:00 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> You all need a better email client, mutt handles this just fine, it's
+> not a problem on my system with my workflow at all :)
 
-> > Implement a misc device that implements a general notification queue as a
-> > ring buffer that can be mmap()'d from userspace.
-> 
-> "general" but just for filesystems, right?  :(
+Argh, my bad. I use Google Mail -> Download Message, which does
+appear to mess up the endings. Luckily, dos2unix fixes it up just fine.
 
-Whatever gave you that idea?  You can watch keyrings events, for example -
-they're not exactly filesystems.  I've added the ability to watch for mount
-topology changes and superblock events because those are something I've been
-asked to do.  I've added something for block events because I've recently had
-a problem with trying to recover data from a dodgy disk in that every time the
-disk goes offline, the ddrecover goes "wheeeee!" as it just sees a lot of
-EIO/ENODATA at a great rate of knots because it doesn't know the driver is now
-ignoring the disk.
+For the v2 patch:
+Reviewed-by: Sven Van Asbroeck <TheSven73@gmail.com>
 
-I don't know what else people might want to watch, but I've tried to make it
-as generic as possible so as not to exclude it if possible.
-
-> This doesn't match the structure definition in the documentation, so
-> something is out of sync.
-
-Ah, yes - I need to update that doc, thanks.
-
-> I'm all for a "generic" event system for the kernel (heck, Solaris has
-> had one for decades), but it keeps getting shot down every time it comes
-> up.  What is different about this one?
-
-Without studying all the other ones, I can't say - however, I need to add
-something for keyrings and I would prefer to make something generic.
-
-> > +#define DEBUG_WITH_WRITE /* Allow use of write() to record notifications */
-> 
-> debugging code left in?
-
-I'll switch it to #undef.  I want to leave the code in there for testing
-purposes.  Possibly I should make it a Kconfig option.
-
-> > +	refcount_t		usage;
-> 
-> Usage of what, this structure?  Or something else?
-
-This is the number of usages of this struct (references to if you prefer).  I
-can add a comment to this effect.
-
-> > +EXPORT_SYMBOL(__post_watch_notification);
-> 
-> _GPL for new apis?  (I have to ask...)
-
-No.
-
-> > +		return -EOPNOTSUPP;
-> 
-> -ENOTTY is the correct "not a valid ioctl" error value, right?
-
-fs/ioctl.c does both, but I can switch it if it makes you happier.
-
-> > +void put_watch_queue(struct watch_queue *wqueue)
-> > +{
-> > +	if (refcount_dec_and_test(&wqueue->usage))
-> > +		kfree_rcu(wqueue, rcu);
-> 
-> Why not just use a kref?
-
-Why use a kref?  It seems like an effort to be a C++ base class, but without
-the C++ inheritance bit.  Using kref doesn't seem to gain anything.  It's just
-a wrapper around refcount_t - so why not just use a refcount_t?
-
-kref_put() could potentially add an unnecessary extra stack frame and would
-seem to be best avoided, though an optimising compiler ought to be able to
-inline if it can.
-
-Are you now on the convert all refcounts to krefs path?
-
-> > +EXPORT_SYMBOL(add_watch_to_object);
-> 
-> Naming nit, shouldn't the "prefix" all be the same for these new
-> functions?
-> 
-> watch_queue_add_object()?  watch_queue_put()?  And so on?
-
-Naming is fun.  watch_queue_add_object - that suggests something different to
-what the function actually does.  I'll think about adjusting the names.
-
-> > +module_exit(watch_queue_exit);
-> 
-> module_misc_device()?
-
-	warthog>git grep module_misc_device -- Documentation/
-	warthog1>
-
-> > +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> 
-> Yeah!!!
-
-Blech.
-
-> > +		struct {
-> > +			struct watch_notification watch; /* WATCH_TYPE_SKIP */
-> > +			volatile __u32	head;		/* Ring head index */
-> > +			volatile __u32	tail;		/* Ring tail index */
-> 
-> A uapi structure that has volatile in it?  Are you _SURE_ this is
-> correct?
-> 
-> That feels wrong to me...  This is not a backing-hardware register, it's
-> "just memory" and slapping volatile on it shouldn't be the correct
-> solution for telling the compiler to not to optimize away reads/flushes,
-> right?  You need a proper memory access type primitive for that to work
-> correctly everywhere I thought.
-> 
-> We only have 2 users of volatile in include/uapi, one for WMI structures
-> that are backed by firmware (seems correct), and one for DRM which I
-> have no idea how it works as it claims to be a lock.  Why is this new
-> addition the correct way to do this that no other ring-buffer that was
-> mmapped has needed to?
-
-Yeah, I understand your concern with this.
-
-The reason I put the volatiles in is that the kernel may be modifying the head
-pointer on one CPU simultaneously with userspace modifying the tail pointer on
-another CPU.
-
-Note that userspace does not need to enter the kernel to find out if there's
-anything in the buffer or to read stuff out of the buffer.  Userspace only
-needs to enter the kernel, using poll() or similar, to wait for something to
-appear in the buffer.
-
-David
+Thank you YueHaibing.
