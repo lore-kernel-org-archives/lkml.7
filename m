@@ -2,211 +2,155 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC7EC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 22:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACEA8C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 22:29:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C25D0208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 22:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7639F208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 22:29:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="bJeQPDz5";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="W5H/OB32"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727327AbfE1W2j convert rfc822-to-8bit (ORCPT
+        id S1727484AbfE1W3I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 18:28:39 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33678 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726497AbfE1W2i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 18:28:38 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 54E98307D925;
-        Tue, 28 May 2019 22:28:38 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3FCBD100203C;
-        Tue, 28 May 2019 22:28:36 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAG48ez3L5KzKyKMxUTaaB=r1E1ZXh=m6e9+CwYcXfRnUSjDvWA@mail.gmail.com>
-References: <CAG48ez3L5KzKyKMxUTaaB=r1E1ZXh=m6e9+CwYcXfRnUSjDvWA@mail.gmail.com> <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk> <155905931502.7587.11705449537368497489.stgit@warthog.procyon.org.uk>
-To:     Jann Horn <jannh@google.com>
-Cc:     dhowells@redhat.com, Al Viro <viro@zeniv.linux.org.uk>,
-        raven@themaw.net, linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/7] General notification queue with user mmap()'able ring buffer
-MIME-Version: 1.0
+        Tue, 28 May 2019 18:29:08 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:59622 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726515AbfE1W3I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 18:29:08 -0400
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4SMKhgB027019;
+        Tue, 28 May 2019 15:28:55 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=BqXrZYH8sAaIkc8wS42rAiXcrgzZJ8PEYyOJZew7260=;
+ b=bJeQPDz5+RldEeWucq7npQkgDLVkDJHnjE1C7txLMO0hEbjmBTLTLhbJcMYMsyAp2nuD
+ 7cDoEBk6m8RMx26tbta3gIFD/ih/A0KRm8h5TFVdR+WnHs2PSPnblWKchdFXl5ZziRZ5
+ BLw80p7bespEMYEQ4oXLd/64GyGYflKMo3g= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2ssac0gt7b-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 28 May 2019 15:28:55 -0700
+Received: from ash-exhub102.TheFacebook.com (2620:10d:c0a8:82::f) by
+ ash-exhub203.TheFacebook.com (2620:10d:c0a8:83::5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 28 May 2019 15:28:54 -0700
+Received: from NAM04-SN1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.172) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Tue, 28 May 2019 15:28:54 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BqXrZYH8sAaIkc8wS42rAiXcrgzZJ8PEYyOJZew7260=;
+ b=W5H/OB32nlYnyCx1cX+yqAc+BMQLLLnII/4CTmGvxwMg/BcQM2NqiYDfwc3dgAigFO7KHR5exNJEC7P4a72HNMkFW2i1EA6lhzxkSCnXeiH3HIwFp15LUvGesIRMMFYmTqPZo9R2ERe05ydABJxjraBtpY9CuDD1hKF5rZTEOxY=
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
+ BYAPR15MB2872.namprd15.prod.outlook.com (20.178.206.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.15; Tue, 28 May 2019 22:28:51 +0000
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::d4f6:b485:69ee:fd9a]) by BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::d4f6:b485:69ee:fd9a%7]) with mapi id 15.20.1922.021; Tue, 28 May 2019
+ 22:28:51 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "Michal Hocko" <mhocko@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Christoph Lameter <cl@linux.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v5 5/7] mm: rework non-root kmem_cache lifecycle
+ management
+Thread-Topic: [PATCH v5 5/7] mm: rework non-root kmem_cache lifecycle
+ management
+Thread-Index: AQHVFaFKV+dsG3FY9UWPVf9hOznuvqaBHi0A
+Date:   Tue, 28 May 2019 22:28:51 +0000
+Message-ID: <20190528222847.GE27847@tower.DHCP.thefacebook.com>
+References: <20190521200735.2603003-1-guro@fb.com>
+ <20190521200735.2603003-6-guro@fb.com> <20190528220353.GC26614@cmpxchg.org>
+In-Reply-To: <20190528220353.GC26614@cmpxchg.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BY5PR16CA0016.namprd16.prod.outlook.com
+ (2603:10b6:a03:1a0::29) To BYAPR15MB2631.namprd15.prod.outlook.com
+ (2603:10b6:a03:152::24)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::3:3dca]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 48e6e9a2-e879-43d9-1155-08d6e3bbdc0b
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BYAPR15MB2872;
+x-ms-traffictypediagnostic: BYAPR15MB2872:
+x-microsoft-antispam-prvs: <BYAPR15MB2872E3577F8B254BC37341A6BE1E0@BYAPR15MB2872.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 00514A2FE6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(396003)(136003)(376002)(346002)(39860400002)(199004)(189003)(478600001)(6512007)(9686003)(305945005)(186003)(14454004)(229853002)(7736002)(316002)(6486002)(2906002)(6116002)(8676002)(81156014)(81166006)(8936002)(86362001)(486006)(6436002)(68736007)(99286004)(446003)(11346002)(46003)(476003)(25786009)(14444005)(256004)(53936002)(76176011)(33656002)(4744005)(54906003)(102836004)(71200400001)(71190400001)(386003)(6506007)(1076003)(52116002)(6246003)(66556008)(73956011)(5660300002)(7416002)(64756008)(66446008)(66476007)(66946007)(4326008)(6916009);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2872;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: IfTB7nWGC3FiiEXQoIBT9huFAt0/xU6lma0aTS/1MgLw6JXZb6buwTZU4uWvqasPq6dpMiEFe3zNy9Abjj4/NVoPehOdiYxE8+UjNY/dW8T6sSeB2xWW4ee8NE5TeV1R5RB+ZRR3vW1DqGS+mqm2JDH7B1YiJd9Dxl/K9zqcxqnLo/yB+oxbsks+F4Hutr27+e2Jmv/DH79lNVqal/msG2NWrx5CWu/2ksUAJNAIOLrToD43wogPG8yJofvnhLP93yvJElhtqDJ9DZBzl7LJ10/wPN2ffMWWaOYZZBLhyBOFuv+Ost7hnEyUvgzCiwOkH9NWb7FE+PohMjwZesyzUxg0CtcpMcg+C1eS28sWQe1rSZ/6OW8mrSsPGdWeShWxoH76NEB9teJSPF3pgpMKWOCiK+22lKIWSJ1p9Alj8CY=
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <11465.1559082515.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: 8BIT
-Date:   Tue, 28 May 2019 23:28:35 +0100
-Message-ID: <11466.1559082515@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Tue, 28 May 2019 22:28:38 +0000 (UTC)
+Content-ID: <CA0D957DFE75114BB468938EE4F4C758@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 48e6e9a2-e879-43d9-1155-08d6e3bbdc0b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2019 22:28:51.2424
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: guro@fb.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2872
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-28_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=611 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905280140
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jann Horn <jannh@google.com> wrote:
-
-> I don't see you setting any special properties on the VMA that would
-> prevent userspace from extending its size via mremap() - no
-> VM_DONTEXPAND or VM_PFNMAP. So I think you might get an out-of-bounds
-> access here?
-
-Should I just set VM_DONTEXPAND in watch_queue_mmap()?  Like so:
-
-	vma->vm_flags |= VM_DONTEXPAND;
-
-> > +static void watch_queue_map_pages(struct vm_fault *vmf,
-> > +                                 pgoff_t start_pgoff, pgoff_t end_pgoff)
-> ...
-> 
-> Same as above.
-
-Same solution as above?  Or do I need ot check start/end_pgoff too?
-
-> > +static int watch_queue_mmap(struct file *file, struct vm_area_struct *vma)
-> > +{
-> > +       struct watch_queue *wqueue = file->private_data;
+On Tue, May 28, 2019 at 06:03:53PM -0400, Johannes Weiner wrote:
+> On Tue, May 21, 2019 at 01:07:33PM -0700, Roman Gushchin wrote:
+> > +	arr =3D rcu_dereference(cachep->memcg_params.memcg_caches);
 > > +
-> > +       if (vma->vm_pgoff != 0 ||
-> > +           vma->vm_end - vma->vm_start > wqueue->nr_pages * PAGE_SIZE ||
-> > +           !(pgprot_val(vma->vm_page_prot) & pgprot_val(PAGE_SHARED)))
-> > +               return -EINVAL;
-> 
-> This thing should probably have locking against concurrent
-> watch_queue_set_size()?
+> > +	/*
+> > +	 * Make sure we will access the up-to-date value. The code updating
+> > +	 * memcg_caches issues a write barrier to match this (see
+> > +	 * memcg_create_kmem_cache()).
+> > +	 */
+> > +	memcg_cachep =3D READ_ONCE(arr->entries[kmemcg_id]);
+>=20
+> READ_ONCE() isn't an SMP barrier, it just prevents compiler
+> muckery. This needs an explicit smp_rmb() to pair with the smp_wmb()
+> on the other side.
 
-Yeah.
+I believe rcu_dereference()/rcu_assign_pointer()/... are better replacement=
+s.
 
-	static int watch_queue_mmap(struct file *file,
-				    struct vm_area_struct *vma)
-	{
-		struct watch_queue *wqueue = file->private_data;
-		struct inode *inode = file_inode(file);
-		u8 nr_pages;
+>=20
+> I realize you're only moving this code, but it would be good to fix
+> that up while you're there.
 
-		inode_lock(inode);
-		nr_pages = wqueue->nr_pages;
-		inode_unlock(inode);
+Right. I'll try to fix it with new-ish rcu API in a separate patch
+preceding this one.
 
-		if (nr_pages == 0 ||
-		...
-			return -EINVAL;
-
-> > +       smp_store_release(&buf->meta.head, len);
-> 
-> Why is this an smp_store_release()? The entire buffer should not be visible to
-> userspace before this setup is complete, right?
-
-Yes - if I put the above locking in the mmap handler.  OTOH, it's a one-off
-barrier...
-
-> > +               if (wqueue->buffer)
-> > +                       return -EBUSY;
-> 
-> The preceding check occurs without any locks held and therefore has no
-> reliable effect. It should probably be moved below the
-> inode_lock(...).
-
-Yeah, it can race.  I'll move it into watch_queue_set_size().
-
-> > +static void free_watch(struct rcu_head *rcu)
-> > +{
-> > +       struct watch *watch = container_of(rcu, struct watch, rcu);
-> > +
-> > +       put_watch_queue(rcu_access_pointer(watch->queue));
-> 
-> This should be rcu_dereference_protected(..., 1).
-
-That shouldn't be necessary.  rcu_access_pointer()'s description says:
-
- * It is also permissible to use rcu_access_pointer() when read-side
- * access to the pointer was removed at least one grace period ago, as
- * is the case in the context of the RCU callback that is freeing up
- * the data, ...
-
-It's in an rcu callback function, so accessing the __rcu pointers in the RCU'd
-struct should be fine with rcu_access_pointer().
-
-> > +       /* We don't need the watch list lock for the next bit as RCU is
-> > +        * protecting everything from being deallocated.
-> 
-> Does "everything" mean "the wqueue" or more than that?
-
-Actually, just 'wqueue' and its buffer.  'watch' is held by us once we've
-dequeued it as we now own the ref 'wlist' had on it.  'wlist' and 'wq' must be
-pinned by the caller.
-
-> > +                       if (release) {
-> > +                               if (wlist->release_watch) {
-> > +                                       rcu_read_unlock();
-> > +                                       /* This might need to call dput(), so
-> > +                                        * we have to drop all the locks.
-> > +                                        */
-> > +                                       wlist->release_watch(wlist, watch);
-> 
-> How are you holding a reference to `wlist` here? You got the reference through
-> rcu_dereference(), you've dropped the RCU read lock, and I don't see anything
-> that stabilizes the reference.
-
-The watch record must hold a ref on the watched object if the watch_list has a
-->release_watch() method.  In the code snippet above, the watch record now
-belongs to us because we unlinked it under the wlist->lock some lines prior.
-
-However, you raise a good point, and I think the thing to do is to cache
-->release_watch from it and not pass wlist into (*release_watch)().  We don't
-need to concern ourselves with cleaning up *wlist as it will be cleaned up
-when the target object is removed.
-
-Keyrings don't have a ->release_watch method and neither does the block-layer
-notification stuff.
-
-> > +       if (wqueue->pages && wqueue->pages[0])
-> > +               WARN_ON(page_ref_count(wqueue->pages[0]) != 1);
-> 
-> Is there a reason why there couldn't still be references to the pages
-> from get_user_pages()/get_user_pages_fast()?
-
-I'm not sure.  I'm not sure what to do if there are.  What do you suggest?
-
-> > +       n->info &= (WATCH_INFO_LENGTH | WATCH_INFO_TYPE_FLAGS | WATCH_INFO_ID);
-> 
-> Should the non-atomic modification of n->info
-
-n's an unpublished copy of some userspace data that's local to the function
-instance.  There shouldn't be any way to race with it at this point.
-
-> (and perhaps also the
-> following uses of ->debug) be protected by some lock?
-> 
-> > +       if (post_one_notification(wqueue, n, file->f_cred))
-> > +               wqueue->debug = 0;
-> > +       else
-> > +               wqueue->debug++;
-> > +       ret = len;
-> > +       if (wqueue->debug > 20)
-> > +               ret = -EIO;
-
-It's for debugging purposes, so the non-atomiticity doesn't matter.  I'll
-#undef the symbol to disable the code.
-
-> > +#define IOC_WATCH_QUEUE_SET_SIZE       _IO('s', 0x01)  /* Set the size in pages */
-> > +#define IOC_WATCH_QUEUE_SET_FILTER     _IO('s', 0x02)  /* Set the filter */
-> 
-> Should these ioctl numbers be registered in
-> Documentation/ioctl/ioctl-number.txt?
-
-Quite possibly.  I'm not sure where's best to actually allocate it.  I picked
-'s' out of the air.
-
-David
+Thank you for looking into the series!
