@@ -2,92 +2,92 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 591F6C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D76C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2552D208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C63BA20883
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:37:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d0tohVoW"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="T+IIbrds";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JQ4nJhoz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727310AbfE1MhF (ORCPT
+        id S1727322AbfE1Mha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 08:37:05 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35654 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726824AbfE1MhF (ORCPT
+        Tue, 28 May 2019 08:37:30 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:48140 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726824AbfE1Mh3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 08:37:05 -0400
-Received: by mail-pg1-f194.google.com with SMTP id t1so10929106pgc.2;
-        Tue, 28 May 2019 05:37:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=T0rvoruj4EouBF2s9WLw8GruoH2nVQyED2DEWY5fc+4=;
-        b=d0tohVoWy6jU64ypaoIOEg7BvHTwDuk6YaqYBG2SN1QxyYJIi8WcfUCImE28FbggbF
-         2/LphM5WK9iBFK46QOmuI8woDuIoosCg2ziCSrZaKeiqElcrsyl0J1oR4MnBILpOZ4bO
-         v+cm/3pvgGv5fMmZo+jXBwcc5mQntxZgWziP7OrAgwF6lkAoS7Pk9Kmaorb28q9WsCoJ
-         Ifk0Tn279WzhcQNoWKozVuneA6WANSBwilph59yJiARLTUnB1yuyru1lJ1COW/6WTtlf
-         klXQM83NNl6hmoCkCm2cfXZPUI4AsHc3nGAG/sZYjQIbD/jz7S5ut5pJiKNZIUPng1Xs
-         nPDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=T0rvoruj4EouBF2s9WLw8GruoH2nVQyED2DEWY5fc+4=;
-        b=Ggm3Vjg+V+8yu47A6+hfCIxq2jIIALIz1SEvkhVhwMvjOwq9R/5LZZT/zkz32CIjzN
-         881VMumvCKr12N3Ee+erHnRc9y4s6yjmauYizB8OcYOHU/9FyiUsv1l6FpMWWnDgwTeQ
-         GZuA2vQAtqG7vgWOTVZGLYn1FGvM7mM5dIrCnTOd//+hRhbMSfSEKAwgWDY5YTK/nm+c
-         Ao0x8idHAZiM9pCgAJ+vvxOSbbw80OkXvkkLjrRGQ9nPTPj84ACbVv9Zp4wMHU/chORs
-         WId+R0Akt3nCFdWa1AcwLdaQCAtWX5G9vafKKMg2pw0T4Wz3YYpTqB2a6YC4MnpZSuiI
-         yFeA==
-X-Gm-Message-State: APjAAAUIwgz7fgpCKZ7+pmqRXlbGSwCDt1DYBfYkvUR7i18LPFA8ATdw
-        XFzF1VvoxbJ6sq+Zs59zK2Q=
-X-Google-Smtp-Source: APXvYqxSouUWWJPCb6xj5BYUok7eIdvfja0nsQs3U+G601kQp1uLBVV0wPGeasTrI3bdLB/yQl8DaQ==
-X-Received: by 2002:a62:65c1:: with SMTP id z184mr125482542pfb.130.1559047024583;
-        Tue, 28 May 2019 05:37:04 -0700 (PDT)
-Received: from xy-data.openstacklocal (ecs-159-138-22-150.compute.hwclouds-dns.com. [159.138.22.150])
-        by smtp.gmail.com with ESMTPSA id o7sm18796067pfp.168.2019.05.28.05.37.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 28 May 2019 05:37:04 -0700 (PDT)
-From:   Young Xiao <92siuyang@gmail.com>
-To:     mchehab@kernel.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Young Xiao <92siuyang@gmail.com>
-Subject: [PATCH] cx231xx-dvb: fix memory leak in dvb_fini()
-Date:   Tue, 28 May 2019 20:38:13 +0800
-Message-Id: <1559047093-24235-1-git-send-email-92siuyang@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 28 May 2019 08:37:29 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 1708B606FC; Tue, 28 May 2019 12:37:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559047049;
+        bh=GjdZgF383TFHDYhYNOQSAnFBkS9jHN+K2M3uXmBh/5A=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=T+IIbrdsjC4arqVbuzO4fyc0HkxHlinCNSnc5SzZYOOapasYqNRJWDR5s07Q8/lPV
+         7YRmWV8ckdbEYG7hx4e+1245IoBeezlqf7nPDMmlpp98K4vrp5OvAwFFvT5yfpB1ws
+         87udwbaxkCSMfs0nUx4Bf7cEaBz7fj8G2g8sOsN4=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DC2766034D;
+        Tue, 28 May 2019 12:37:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559047048;
+        bh=GjdZgF383TFHDYhYNOQSAnFBkS9jHN+K2M3uXmBh/5A=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=JQ4nJhozQRUORTMmtOJja8shJ0vRZnXO4/M60qEBHMVATMHEpHBmPT9znaeZc4tND
+         /oMH/PzZNcISfX2XMmPayIaf69VOrUPOH+h6DhPRSykNrPL6IJkLgEByJlhvxqDWZs
+         2hrULve39PAXGdXF96TKfIh2aVeqzOxIERJHV98Y=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DC2766034D
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] rtlwifi: rtl8821ae: Remove set but not used variables
+ 'cur_txokcnt' and 'b_last_is_cur_rdl_state'
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190525144332.17268-1-yuehaibing@huawei.com>
+References: <20190525144332.17268-1-yuehaibing@huawei.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     <pkshih@realtek.com>, <davem@davemloft.net>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-wireless@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190528123729.1708B606FC@smtp.codeaurora.org>
+Date:   Tue, 28 May 2019 12:37:29 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In dvb_init(), dev->dvb is allocated by kzalloc.
-Therefore, it must be freed being set to NULL.
+YueHaibing <yuehaibing@huawei.com> wrote:
 
-Signed-off-by: Young Xiao <92siuyang@gmail.com>
----
- drivers/media/usb/cx231xx/cx231xx-dvb.c | 1 +
- 1 file changed, 1 insertion(+)
+> Fixes gcc '-Wunused-but-set-variable' warning:
+> 
+> drivers/net/wireless/realtek/rtlwifi/rtl8821ae/dm.c: In function rtl8821ae_dm_check_rssi_monitor:
+> drivers/net/wireless/realtek/rtlwifi/rtl8821ae/dm.c:658:6: warning: variable cur_txokcnt set but not used [-Wunused-but-set-variable]
+> drivers/net/wireless/realtek/rtlwifi/rtl8821ae/dm.c: In function rtl8821ae_dm_check_edca_turbo:
+> drivers/net/wireless/realtek/rtlwifi/rtl8821ae/dm.c:2657:7: warning: variable b_last_is_cur_rdl_state set but not used [-Wunused-but-set-variable]
+> 
+> They are never used so can be removed.
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-diff --git a/drivers/media/usb/cx231xx/cx231xx-dvb.c b/drivers/media/usb/cx231xx/cx231xx-dvb.c
-index 89357cb..89839c7 100644
---- a/drivers/media/usb/cx231xx/cx231xx-dvb.c
-+++ b/drivers/media/usb/cx231xx/cx231xx-dvb.c
-@@ -1159,6 +1159,7 @@ static int dvb_fini(struct cx231xx *dev)
- 
- 	if (dev->dvb) {
- 		unregister_dvb(dev->dvb);
-+		kfree(dev->dvb);
- 		dev->dvb = NULL;
- 	}
- 
+Patch applied to wireless-drivers-next.git, thanks.
+
+3e42a66dfd15 rtlwifi: rtl8821ae: Remove set but not used variables 'cur_txokcnt' and 'b_last_is_cur_rdl_state'
+
 -- 
-2.7.4
+https://patchwork.kernel.org/patch/10960841/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
