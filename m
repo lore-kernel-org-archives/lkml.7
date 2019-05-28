@@ -2,115 +2,132 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59011C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2662C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38EB421670
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:31:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FB9D21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:32:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="jALHoOYb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727441AbfE1UbH convert rfc822-to-8bit (ORCPT
+        id S1727515AbfE1UcV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 16:31:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36012 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727268AbfE1UbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 16:31:07 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D593320B7C;
-        Tue, 28 May 2019 20:31:05 +0000 (UTC)
-Date:   Tue, 28 May 2019 16:31:04 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Tomas Bortoli <tomasbortoli@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com
-Subject: Re: [PATCH] trace: Avoid memory leak in predicate_parse()
-Message-ID: <20190528163104.67763762@gandalf.local.home>
-In-Reply-To: <20190528154338.29976-1-tomasbortoli@gmail.com>
-References: <20190528104400.388e4c3f@gandalf.local.home>
-        <20190528154338.29976-1-tomasbortoli@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 28 May 2019 16:32:21 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41743 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726812AbfE1UcV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 16:32:21 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q17so6157pfq.8
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 13:32:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6BVjplRJjVAtzerMfL/A1WtErQukGLzsV7QIdL5tHLg=;
+        b=jALHoOYbd78sWqXXZgYaR8eLxuPF63IYkarb8Baf2n7TaE6XnnepYOIMqCLibAQqG/
+         0ZJcwCe35su/Un1bvTKr+H9yfbCkChIWYtLnHoLbFPQ+U51SOhGPOu4PDiNGWKDyuQHL
+         0/Bh3Wz253mmN/utA/8DiIGX5r6qBJPfGgk2oct7Uvpyn5Aq64Mj1G8+uxa7XdNfHW+L
+         8fhCvz7JKJm3Xx8NvpGLGFD4eU7BVn/g6ehW/Z+dcsnVXOV+p0CbvsIyL5hTi4cc4/M+
+         4pbItZvCXZDDcetGaQGkGh6Bfg4tzcbzzSbFPSqysI8fYYPgfmUXhZy7tlj2NzsFGGpx
+         tXyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6BVjplRJjVAtzerMfL/A1WtErQukGLzsV7QIdL5tHLg=;
+        b=lqlNkLMBuNLBsaNgwUS7c1MC03+foKxyUZKpt8NJt7gkvnK+uaYxGBDQCMjrDSd4R2
+         d8B9QEnEI7xupQcyW6Itsk2rIaO04oQgltMv0YVXLrk4/xvyD7OS4u62Pp3Ty+lOBVul
+         skPX+VofjKWAkqf+qzMqngrBsMY6DvGH1XwWKT7zFFOs+KK+ppas7Pt/dInqf5XovY/V
+         8dcC05gR5RVRWMCHT51vdQFcUz1Jn0hSE5Lf6P0TqitQZJExd4fvj6jlceC2utkHVRbf
+         Y1O5x6FOVFqYXvT4p4aezL6tRAQVPQ8oZTIV9birVFL4l58FqpDpF0hHy7QAZgboFWho
+         a7Xg==
+X-Gm-Message-State: APjAAAXalpEGWFWVDPc7ROZLjjDrkHUUAt/7SIXsQlWm521mCPn5LVC2
+        PNXml/pDAqE5t7sFKEmrxbim0Q==
+X-Google-Smtp-Source: APXvYqw0vMIiMqx3gefPlogq+TldEzNcR68Fc/ANu9jAbQ2F1nOLyVOiuJNwa6AgdrcS475hYpQKwQ==
+X-Received: by 2002:a63:4f07:: with SMTP id d7mr83629540pgb.77.1559075540928;
+        Tue, 28 May 2019 13:32:20 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::1:6316])
+        by smtp.gmail.com with ESMTPSA id c15sm15664515pfi.172.2019.05.28.13.32.19
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 May 2019 13:32:20 -0700 (PDT)
+Date:   Tue, 28 May 2019 16:32:18 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Shakeel Butt <shakeelb@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        kernel test robot <rong.a.chen@intel.com>, LKP <lkp@01.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Cgroups <cgroups@vger.kernel.org>
+Subject: Re: [PATCH] mm: memcontrol: don't batch updates of local VM stats
+ and events
+Message-ID: <20190528203218.GA20452@cmpxchg.org>
+References: <20190520063534.GB19312@shao2-debian>
+ <20190520215328.GA1186@cmpxchg.org>
+ <20190521134646.GE19312@shao2-debian>
+ <20190521151647.GB2870@cmpxchg.org>
+ <CALvZod5KFJvfBfTZKWiDo_ux_OkLKK-b6sWtnYeFCY2ARiiKwQ@mail.gmail.com>
+ <CAHk-=wgaLQjZ8AZj76_cwvk_wLPJjr+Dc=Qvac_vHY2RruuBww@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgaLQjZ8AZj76_cwvk_wLPJjr+Dc=Qvac_vHY2RruuBww@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 May 2019 17:43:38 +0200
-Tomas Bortoli <tomasbortoli@gmail.com> wrote:
+On Tue, May 28, 2019 at 10:37:15AM -0700, Linus Torvalds wrote:
+> On Tue, May 28, 2019 at 9:00 AM Shakeel Butt <shakeelb@google.com> wrote:
+> >
+> > I was suspecting the following for-loop+atomic-add for the regression.
+> 
+> If I read the kernel test robot reports correctly, Johannes' fix patch
+> does fix the regression (well - mostly. The original reported
+> regression was 26%, and with Johannes' fix patch it was 3% - so still
+> a slight performance regression, but not nearly as bad).
+> 
+> > Why the above atomic-add is the culprit?
+> 
+> I think the problem with that one is that it's cross-cpu statistics,
+> so you end up with lots of cacheline bounces on the local counts when
+> you have lots of load.
 
-> @@ -578,6 +578,8 @@ predicate_parse(const char *str, int nr_parens, int nr_preds,
->  out_free:
->  	kfree(op_stack);
->  	kfree(inverts);
-> +	for (i = 0; prog_stack[i].pred; i++)
-> +		kfree(prog_stack[i].pred);
->  	kfree(prog_stack);
->  	return ERR_PTR(ret);
->  }
+In this case, that's true for both of them. The workload runs at the
+root cgroup level, so per definition the local and the recursive
+counters at that level are identical and written to at the same
+rate. Adding the new counter obviously caused the regression, but
+they're contributing equally to the cost, and we could
+remove/per-cpuify either of them for the fix.
 
-I should have caught this, but thanks to the zero day bot, it found it
-first:
+So why did I unshare the old counter instead of the new one? Well, the
+old counter *used* to be unshared for the longest time, and was only
+made into a shared one to make recursive aggregation cheaper - before
+there was a dedicated recursive counter. But now that we have that
+recursive counter, there isn't much reason to keep the local counter
+shared and bounce it around on updates.
 
- kernel/trace/trace_events_filter.c:582:27-31: ERROR: prog_stack is NULL but dereferenced.
+Essentially, this fix-up is a revert of a983b5ebee57 ("mm: memcontrol:
+fix excessive complexity in memory.stat reporting") since the problem
+described in that patch is now solved from the other end.
 
-I changed the patch with the following:
+> But yes, the recursive updates still do show a small regression,
+> probably because there's still some overhead from the looping up in
+> the hierarchy. You still get *those* cacheline bounces, but now they
+> are limited to the upper hierarchies that only get updated at batch
+> time.
 
-From dfb4a6f2191a80c8b790117d0ff592fd712d3296 Mon Sep 17 00:00:00 2001
-From: Tomas Bortoli <tomasbortoli@gmail.com>
-Date: Tue, 28 May 2019 17:43:38 +0200
-Subject: [PATCH] tracing: Avoid memory leak in predicate_parse()
+Right, I reduce the *shared* data back to how it was before the patch,
+but it still adds a second (per-cpu) counter that needs to get bumped,
+and the loop adds a branch as well.
 
-In case of errors, predicate_parse() goes to the out_free label
-to free memory and to return an error code.
-
-However, predicate_parse() does not free the predicates of the
-temporary prog_stack array, thence leaking them.
-
-Link: http://lkml.kernel.org/r/20190528154338.29976-1-tomasbortoli@gmail.com
-
-Cc: stable@vger.kernel.org
-Fixes: 80765597bc587 ("tracing: Rewrite filter logic to be simpler and faster")
-Reported-by: syzbot+6b8e0fb820e570c59e19@syzkaller.appspotmail.com
-Signed-off-by: Tomas Bortoli <tomasbortoli@gmail.com>
-[ Added protection around freeing prog_stack[i].pred ]
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- kernel/trace/trace_events_filter.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index d3e59312ef40..5079d1db3754 100644
---- a/kernel/trace/trace_events_filter.c
-+++ b/kernel/trace/trace_events_filter.c
-@@ -428,7 +428,7 @@ predicate_parse(const char *str, int nr_parens, int nr_preds,
- 	op_stack = kmalloc_array(nr_parens, sizeof(*op_stack), GFP_KERNEL);
- 	if (!op_stack)
- 		return ERR_PTR(-ENOMEM);
--	prog_stack = kmalloc_array(nr_preds, sizeof(*prog_stack), GFP_KERNEL);
-+	prog_stack = kcalloc(nr_preds, sizeof(*prog_stack), GFP_KERNEL);
- 	if (!prog_stack) {
- 		parse_error(pe, -ENOMEM, 0);
- 		goto out_free;
-@@ -579,7 +579,11 @@ predicate_parse(const char *str, int nr_parens, int nr_preds,
- out_free:
- 	kfree(op_stack);
- 	kfree(inverts);
--	kfree(prog_stack);
-+	if (prog_stack) {
-+		for (i = 0; prog_stack[i].pred; i++)
-+			kfree(prog_stack[i].pred);
-+		kfree(prog_stack);
-+	}
- 	return ERR_PTR(ret);
- }
- 
--- 
-2.20.1
-
+But while I would expect that to show up in a case like will-it-scale,
+I'd be surprised if the remaining difference would be noticeable for
+real workloads that actually work with the memory they allocate.
