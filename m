@@ -2,120 +2,71 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34BD8C04E84
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD742C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B272216FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:48:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BDz6LEiP"
+	by mail.kernel.org (Postfix) with ESMTP id B33C721734
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:50:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559062217;
+	bh=yryTIORFujiT7sUdeULow+fh1QkMuOSIn4FJCcW+f+4=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=Ce3w4ajEk9l7t+yR6USqZ3lt9bmbju5hyca0A9sW7nhbUJeOID5YMSVGd/jnJJSR8
+	 J4Iv0v/YKug46ZtMzdofZe75uo8c2enW+IjHYURRKJsX96r1HJR1AA7of60NfgdeHX
+	 UZnwsMtd/GFBiw25ocDXj7HHiOZqXhbK4YthvsYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727342AbfE1Qsi (ORCPT
+        id S1727139AbfE1QuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 12:48:38 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35589 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726830AbfE1Qsh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 12:48:37 -0400
-Received: by mail-pg1-f193.google.com with SMTP id t1so11339035pgc.2;
-        Tue, 28 May 2019 09:48:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=VyKAAyyKF/StTl6Cc7Bhi0hP4Fbpr1Wnyb227vQxupA=;
-        b=BDz6LEiPv3DbWPxz2q4nGxrvuf/nyreOKnjeVboH01uYK4LNfyhggoZp6K2ruiObxv
-         YAuAXBsTfVJ0boZKnKIkC6UU6d+mWpLDwme//1KEmGzD9lBi4erPBlC0RLWowqzMaBDQ
-         bBh1w+idklGCiKs3Nshy8rmsEEciIFwavafIlX+ImMRbJUusmGGA2j3ShrQ2Yyv8vbBO
-         zSEs8ZE61BbEAHHkxNOMxS1iZ5J2QHK/XBmmBJGUF9yPqiCrLEuG7rDaLS9VM1AXYQqD
-         wBUEWG4L2XxIQHIQCgkt2JlO3jZke23eqatR1WPnLhfwekflViSOgopPAinxrdo8rBQs
-         FCRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=VyKAAyyKF/StTl6Cc7Bhi0hP4Fbpr1Wnyb227vQxupA=;
-        b=MH9RdEIX7phwnSlJlc39I9+buo2YFLuM/vwl4aEaN6uJ/EZmc8mikIFSLPHNFPMDl4
-         1TAUH7uo8zyRLS3v3Q4K7FJ3TmEvZCGzDDXK//vbgofo7QJEP2BSQ5W1uVMVrqNRwHbd
-         r1vgWPFTypzZ4y3C5E6zEKv89RqBdEVRvkfKhFdgP0GZ2OL4YeX1A9OXikrXRNQJ5JqM
-         NeGkt17lcj4qQmgKDM3OZ0x6V90ujsdkh/lCNC+riDcidOa5lGfu5ouXxCgbkWWaX1PP
-         balyg2g3+G5CZe+0al/REd+v0YelmACHVvTX4BwkDigiXrNkt+905Ub5bmdB36Pa3vBs
-         2UzQ==
-X-Gm-Message-State: APjAAAVl6Bg+NgVifN9/ZoIPEJIht9+OGkVEdpgI5jhIMrova7feHbwQ
-        GWiX8gK0zRrtOMimycOTRxI=
-X-Google-Smtp-Source: APXvYqyHME0FjSisF3IqfNkzb5R68J3a7YnPvgHLro3k6kdMV1VTMJnenNrsas0+2U+az3DIIcmv+A==
-X-Received: by 2002:a63:2248:: with SMTP id t8mr90644297pgm.358.1559062116816;
-        Tue, 28 May 2019 09:48:36 -0700 (PDT)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id a30sm8916533pje.4.2019.05.28.09.48.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 May 2019 09:48:36 -0700 (PDT)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-To:     agross@kernel.org, david.brown@linaro.org,
-        bjorn.andersson@linaro.org
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, marc.w.gonzalez@free.fr,
-        jcrouse@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH 3/3] arm64: dts: qcom: msm8998: Add gpucc node
-Date:   Tue, 28 May 2019 09:48:34 -0700
-Message-Id: <20190528164834.38691-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190528164616.38517-1-jeffrey.l.hugo@gmail.com>
-References: <20190528164616.38517-1-jeffrey.l.hugo@gmail.com>
+        Tue, 28 May 2019 12:50:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46562 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726515AbfE1QuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 12:50:16 -0400
+Subject: Re: [GIT PULL] pin control fixes for v5.2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559062215;
+        bh=yryTIORFujiT7sUdeULow+fh1QkMuOSIn4FJCcW+f+4=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=EKyUNjZenWur8Q2i34rbCenoDn76B5lWYh93enek/THQsKCdIPqIoelv2Yf7Cc2dp
+         NAh5gVuAA6JpHG/0EuvLxoRRj2Z/i5El8EFlDG2fbTZNLq1xaLM7B+YWoZ2BqZjkcH
+         p0/+8MuEwajigkpEM5dbP/R22nYzkAdi9AvdhxwY=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CACRpkdYFqcu=gz57H-+h5C3g_rvD-+XoRTw_A86PKDVA3=rfJg@mail.gmail.com>
+References: <CACRpkdYFqcu=gz57H-+h5C3g_rvD-+XoRTw_A86PKDVA3=rfJg@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CACRpkdYFqcu=gz57H-+h5C3g_rvD-+XoRTw_A86PKDVA3=rfJg@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+ tags/pinctrl-v5.2-2
+X-PR-Tracked-Commit-Id: b1fa7d8592c730d1b44536b5cacadeb318d369fd
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 9fb67d643f6f1892a08ee3a04ea54022d1060bb0
+Message-Id: <155906221546.16286.17261469406240264372.pr-tracker-bot@kernel.org>
+Date:   Tue, 28 May 2019 16:50:15 +0000
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Amelie Delaunay <amelie.delaunay@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add MSM8998 GPU Clock Controller DT node.
+The pull request you sent on Tue, 28 May 2019 10:43:53 +0200:
 
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
----
- arch/arm64/boot/dts/qcom/msm8998.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v5.2-2
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index 574be78a936e..cf00bfeec6b3 100644
---- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -3,6 +3,7 @@
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/qcom,gcc-msm8998.h>
-+#include <dt-bindings/clock/qcom,gpucc-msm8998.h>
- #include <dt-bindings/clock/qcom,rpmcc.h>
- #include <dt-bindings/gpio/gpio.h>
- 
-@@ -763,6 +764,20 @@
- 			reg = <0x1f40000 0x20000>;
- 		};
- 
-+		gpucc: clock-controller@5065000 {
-+			compatible = "qcom,gpucc-msm8998";
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+			#power-domain-cells = <1>;
-+			reg = <0x05065000 0x9000>;
-+
-+			clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>,
-+				 <&gcc GPLL0_OUT_MAIN>;
-+			clock-names = "xo",
-+				      "gpll0";
-+		};
-+
-+
- 		apcs_glb: mailbox@9820000 {
- 			compatible = "qcom,msm8998-apcs-hmss-global";
- 			reg = <0x17911000 0x1000>;
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/9fb67d643f6f1892a08ee3a04ea54022d1060bb0
+
+Thank you!
+
 -- 
-2.17.1
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
