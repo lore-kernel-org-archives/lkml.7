@@ -5,54 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF03C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 05:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53EAEC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 05:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D72120679
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 05:58:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CB182133F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 05:58:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Dmsl4bz4"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KSia6Ef3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbfE1F6B (ORCPT
+        id S1727645AbfE1F5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 01:58:01 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37632 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727678AbfE1F5e (ORCPT
+        Tue, 28 May 2019 01:57:31 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37615 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727565AbfE1F5Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 01:57:34 -0400
-Received: by mail-pf1-f196.google.com with SMTP id a23so10788739pff.4
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 22:57:33 -0700 (PDT)
+        Tue, 28 May 2019 01:57:25 -0400
+Received: by mail-pf1-f193.google.com with SMTP id a23so10788485pff.4
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 22:57:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=lti+2/h5oQs9wmieCmorz3lj6t+nun9ZQW66/w6iOxE=;
-        b=Dmsl4bz4A30Jz25Wmi/t/uxhrl6anfzRz5BBkZKO7xxoxGUJO7lZbVCfos99SHvK7Y
-         1uwDrUuq71TijYz8TBiE1qAGXw2m0u1/K4a/qUI5qHyAK3DWQxIRM3iwY/2LcK/F/Xr7
-         tOQ35FQ3o/hAJnX8Pl6iS2P5KblnbKoIOtbps=
+        bh=bEBsXwaX/neCPcXyx6wXDJfeu95Gwu3oPLMhy1Vt32c=;
+        b=KSia6Ef358U7BfYZSB6heqJSuEOr86MTrC0gjINF+9RrZoyStLIrUEdaDPSawKcGlX
+         +XcIUuR923pbxBBZZCjm6hazvE2eNvf1GSQJ9STFZ6nKhpldVKbWoBu0EhYicPxCYcly
+         ngauHTDZ9EfGJLTSaOwN536YforCY5ucQjSTc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=lti+2/h5oQs9wmieCmorz3lj6t+nun9ZQW66/w6iOxE=;
-        b=EtM1GErHQmE4kB5/LbFkW/WnsXblHxLDcbWfrGcvKWO4nbjO1QUwrQpdIIY1RS8VHw
-         Egcw7RAg9PR1Bcj6GMWsKfnP2G0aZIiPNe4KRaP2vDA/uzI9lMVDS1xxXJnebdyh28Wv
-         DEWdCCHejc4fBVt0CsGXquCv5ehj21XfAgeCMX2IANYhQrOpb0Da9pqHs+d+cZQRkNfV
-         fkKCnc7MjuEdwzP/HNB6opmmFWwxJymITpSHBJwiV3LrzekJm0ufUDgC0wGEieSA7nG8
-         vy9Au8qmfFKcS60oQjvEpUXFZTxZPgHUjQvAKo8JWAE8TcrogV1fEHK2MQVNslMEPBAS
-         PSvw==
-X-Gm-Message-State: APjAAAWSCVG8gT5Gun3sFk+95f7/lZceBKd1HeClKPzZxyhYdUxue+MC
-        1FugqV7aAzi7nAKYRo+bF923Ow==
-X-Google-Smtp-Source: APXvYqwZrPlFjUqoNa15pMVg7ZfHRg64XPEc4z/LnHORJF6GzR+04+efSzer4BcC8YQ3P1aLRGU5Kw==
-X-Received: by 2002:a62:1885:: with SMTP id 127mr82943648pfy.48.1559023053399;
-        Mon, 27 May 2019 22:57:33 -0700 (PDT)
+        bh=bEBsXwaX/neCPcXyx6wXDJfeu95Gwu3oPLMhy1Vt32c=;
+        b=DOUQiehfukq53pwlNPtI/pQDhdJZTSvv7O1devA5DLjzf4npZXIp6mMBK7VF1gXqcj
+         e02yDU4zL3GHnLFDrhcO8zq0up9nU8PTWY0U92x5/U9DY9kyvNURvmQVbKfNaUyqYi9W
+         Fl17yA3TM8f5KlbO1btvG+AGejVYCYr+DwYsshNm769UTN+xWn9lON1/uaa+IxdyeFmi
+         PRHmtBWGOiclqZHeCXs1bl3kRwMF1ljoAYSJwgmUu6w/u3d110+jptDMGYN4G4j6KuGv
+         tjVZ+GVKYb56BM3c4se72u/CXLuonTloh/CBHpyxtfDQ4XIxCk3E08XvNgM+caYUhiGM
+         51yw==
+X-Gm-Message-State: APjAAAXkS+75GmpJVjzn8werZWOcvRq22EkUU5F/CCuUCI/JbUdr76hv
+        9i/D8dwEEZaciy/9uZPsxwLqug==
+X-Google-Smtp-Source: APXvYqytIqRF1dRFeewd0cIzKJxfcElwxHzRYE0XELvCK83wU5bqMoTXjVexePilluGJgoFTC1GvIg==
+X-Received: by 2002:a17:90a:4814:: with SMTP id a20mr3417520pjh.62.1559023044800;
+        Mon, 27 May 2019 22:57:24 -0700 (PDT)
 Received: from acourbot.tok.corp.google.com ([2401:fa00:4:4:9712:8cf1:d0f:7d33])
-        by smtp.gmail.com with ESMTPSA id w1sm13950551pfg.51.2019.05.27.22.57.30
+        by smtp.gmail.com with ESMTPSA id w1sm13950551pfg.51.2019.05.27.22.57.22
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 May 2019 22:57:32 -0700 (PDT)
+        Mon, 27 May 2019 22:57:24 -0700 (PDT)
 From:   Alexandre Courbot <acourbot@chromium.org>
 To:     Yunfei Dong <yunfei.dong@mediatek.com>,
         Tiffany Lin <tiffany.lin@mediatek.com>,
@@ -62,9 +62,9 @@ To:     Yunfei Dong <yunfei.dong@mediatek.com>,
 Cc:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
         linux-kernel@vger.kernel.org,
         Alexandre Courbot <acourbot@chromium.org>
-Subject: [RFCv1 08/12] media: mtk-vcodec: add SCP firmware ops
-Date:   Tue, 28 May 2019 14:56:31 +0900
-Message-Id: <20190528055635.12109-9-acourbot@chromium.org>
+Subject: [RFCv1 05/12] media: mtk-vcodec: support single-buffer frames
+Date:   Tue, 28 May 2019 14:56:28 +0900
+Message-Id: <20190528055635.12109-6-acourbot@chromium.org>
 X-Mailer: git-send-email 2.22.0.rc1.257.g3120a18244-goog
 In-Reply-To: <20190528055635.12109-1-acourbot@chromium.org>
 References: <20190528055635.12109-1-acourbot@chromium.org>
@@ -77,135 +77,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yunfei Dong <yunfei.dong@mediatek.com>
 
-Add support for communicating with the SCP firmware, which will be used
-by MT8183.
+MT8183 will use a multi-planar format backed by a single buffer. Adapt
+the existing code to be able to handle such frames instead of assuming
+each frame is backed by two buffers.
 
 Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
 Co-developed-by: Alexandre Courbot <acourbot@chromium.org>
 Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
 [acourbot: refactor, cleanup and split]
 ---
- .../platform/mtk-vcodec/mtk_vcodec_dec_drv.c  |  3 ++
- .../platform/mtk-vcodec/mtk_vcodec_enc_drv.c  |  3 ++
- .../media/platform/mtk-vcodec/mtk_vcodec_fw.c | 51 +++++++++++++++++++
- .../media/platform/mtk-vcodec/mtk_vcodec_fw.h |  2 +
- 4 files changed, 59 insertions(+)
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
-index 2328bb9580be..ffa6f3d0869d 100644
---- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
-+++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
-@@ -234,6 +234,9 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
- 	if (!of_property_read_u32(pdev->dev.of_node, "mediatek,vpu",
- 				  &rproc_phandle)) {
- 		fw_type = VPU;
-+	} else if (!of_property_read_u32(pdev->dev.of_node, "mediatek,scp",
-+					 &rproc_phandle)) {
-+		fw_type = SCP;
- 	} else {
- 		mtk_v4l2_err("Could not get vdec IPI device");
- 		return -ENODEV;
-diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
-index 598d4bb86e35..da680087b655 100644
---- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
-+++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
-@@ -242,6 +242,9 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
- 	if (!of_property_read_u32(pdev->dev.of_node, "mediatek,vpu",
- 				  &rproc_phandle)) {
- 		fw_type = VPU;
-+	} else if (!of_property_read_u32(pdev->dev.of_node, "mediatek,scp",
-+					 &rproc_phandle)) {
-+		fw_type = SCP;
- 	} else {
- 		mtk_v4l2_err("Could not get vdec IPI device");
- 		return -ENODEV;
-diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.c
-index 49dbd623b448..97282b35bcc2 100644
---- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.c
-+++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.c
-@@ -63,6 +63,48 @@ static const struct mtk_vcodec_fw_ops mtk_vcodec_vpu_msg = {
- 	.ipi_send = mtk_vcodec_vpu_ipi_send,
- };
+diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
+index 2175883e22d4..2fdf23ce8ac4 100644
+--- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
++++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
+@@ -130,8 +130,9 @@ static struct vb2_buffer *get_display_buffer(struct mtk_vcodec_ctx *ctx)
+ 	if (dstbuf->used) {
+ 		vb2_set_plane_payload(&dstbuf->vb.vb2_buf, 0,
+ 					ctx->picinfo.fb_sz[0]);
+-		vb2_set_plane_payload(&dstbuf->vb.vb2_buf, 1,
+-					ctx->picinfo.fb_sz[1]);
++		if (ctx->q_data[MTK_Q_DATA_DST].fmt->num_planes == 2)
++			vb2_set_plane_payload(&dstbuf->vb.vb2_buf, 1,
++						ctx->picinfo.fb_sz[1]);
  
-+static int mtk_vcodec_scp_load_firmware(struct mtk_vcodec_fw *fw)
-+{
-+	return rproc_boot(fw->rproc);
-+}
-+
-+static unsigned int mtk_vcodec_scp_get_vdec_capa(struct mtk_vcodec_fw *fw)
-+{
-+	return scp_get_vdec_hw_capa(fw->pdev);
-+}
-+
-+static unsigned int mtk_vcodec_scp_get_venc_capa(struct mtk_vcodec_fw *fw)
-+{
-+	return scp_get_venc_hw_capa(fw->pdev);
-+}
-+
-+static void *mtk_vcodec_vpu_scp_dm_addr(struct mtk_vcodec_fw *fw,
-+					u32 dtcm_dmem_addr)
-+{
-+	return scp_mapping_dm_addr(fw->pdev, dtcm_dmem_addr);
-+}
-+
-+static int mtk_vcodec_scp_set_ipi_register(struct mtk_vcodec_fw *fw, int id,
-+		mtk_vcodec_ipi_handler handler, const char *name, void *priv)
-+{
-+	return scp_ipi_register(fw->pdev, id, handler, priv);
-+}
-+
-+static int mtk_vcodec_scp_ipi_send(struct mtk_vcodec_fw *fw, int id, void *buf,
-+		unsigned int len, unsigned int wait)
-+{
-+	return scp_ipi_send(fw->pdev, id, buf, len, wait);
-+}
-+
-+static const struct mtk_vcodec_fw_ops mtk_vcodec_rproc_msg = {
-+	.load_firmware = mtk_vcodec_scp_load_firmware,
-+	.get_vdec_capa = mtk_vcodec_scp_get_vdec_capa,
-+	.get_venc_capa = mtk_vcodec_scp_get_venc_capa,
-+	.map_dm_addr = mtk_vcodec_vpu_scp_dm_addr,
-+	.ipi_register = mtk_vcodec_scp_set_ipi_register,
-+	.ipi_send = mtk_vcodec_scp_ipi_send,
-+};
-+
- static void mtk_vcodec_reset_handler(void *priv)
- {
- 	struct mtk_vcodec_dev *dev = priv;
-@@ -96,6 +138,15 @@ struct mtk_vcodec_fw *mtk_vcodec_fw_select(struct mtk_vcodec_dev *dev,
- 		vpu_wdt_reg_handler(fw_pdev, mtk_vcodec_reset_handler,
- 				    dev, rst_id);
- 		break;
-+	case SCP:
-+		ops = &mtk_vcodec_rproc_msg;
-+		fw_pdev = scp_get_pdev(dev->plat_dev);
-+		rproc = rproc_get_by_phandle(rproc_phandle);
-+		if (!rproc) {
-+			mtk_v4l2_err("could not get vdec rproc handle");
-+			return ERR_PTR(-EPROBE_DEFER);
-+		}
-+		break;
- 	default:
- 		mtk_v4l2_err("invalid vcodec fw type");
- 		return ERR_PTR(-EINVAL);
-diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.h b/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.h
-index a6edb3858e6e..c2c22c7ce05f 100644
---- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.h
-+++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.h
-@@ -6,11 +6,13 @@
- #include <linux/remoteproc.h>
+ 		mtk_v4l2_debug(2,
+ 				"[%d]status=%x queue id=%d to done_list %d",
+@@ -402,7 +403,8 @@ static void mtk_vdec_worker(struct work_struct *work)
+ 		vdec_if_decode(ctx, NULL, NULL, &res_chg);
+ 		clean_display_buffer(ctx);
+ 		vb2_set_plane_payload(&dst_buf_info->vb.vb2_buf, 0, 0);
+-		vb2_set_plane_payload(&dst_buf_info->vb.vb2_buf, 1, 0);
++		if (ctx->q_data[MTK_Q_DATA_DST].fmt->num_planes == 2)
++			vb2_set_plane_payload(&dst_buf_info->vb.vb2_buf, 1, 0);
+ 		dst_buf->flags |= V4L2_BUF_FLAG_LAST;
+ 		v4l2_m2m_buf_done(&dst_buf_info->vb, VB2_BUF_STATE_DONE);
+ 		clean_free_buffer(ctx);
+@@ -1333,7 +1335,8 @@ static void vb2ops_vdec_stop_streaming(struct vb2_queue *q)
  
- #include "../mtk-vpu/mtk_vpu.h"
-+#include <linux/platform_data/mtk_scp.h>
+ 	while ((dst_buf = v4l2_m2m_dst_buf_remove(ctx->m2m_ctx))) {
+ 		vb2_set_plane_payload(&dst_buf->vb2_buf, 0, 0);
+-		vb2_set_plane_payload(&dst_buf->vb2_buf, 1, 0);
++		if (ctx->q_data[MTK_Q_DATA_DST].fmt->num_planes == 2)
++			vb2_set_plane_payload(&dst_buf->vb2_buf, 1, 0);
+ 		v4l2_m2m_buf_done(dst_buf, VB2_BUF_STATE_ERROR);
+ 	}
  
- struct mtk_vcodec_dev;
- 
- enum mtk_vcodec_fw_type {
- 	VPU,
-+	SCP,
- };
- 
- struct mtk_vcodec_fw;
 -- 
 2.22.0.rc1.257.g3120a18244-goog
 
