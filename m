@@ -2,193 +2,159 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE79C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 240A1C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:23:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D860A21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:22:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0EE921019
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:23:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="2SH/1M2u"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="BLc30wDw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbfE1VWi (ORCPT
+        id S1727870AbfE1VXS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 17:22:38 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45900 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726706AbfE1VWi (ORCPT
+        Tue, 28 May 2019 17:23:18 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:36963 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726706AbfE1VXR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 17:22:38 -0400
-Received: by mail-pf1-f196.google.com with SMTP id s11so70993pfm.12
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 14:22:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=50/Xsj2LKY8CwAMNgsVgvv5+QnRXiqhLmyb8OWBrLu4=;
-        b=2SH/1M2uQW6uvZeCyQu8fC6BcYQ3yqdZ8EgQBBcyrkw4bTuCBW3zOJCtu3LjIfGuG9
-         AfMl60xPrtJoep6zX9v1XBa2OzPki8CqmG6azhB7pX3EK6UfVDE+YhC/ux+FEnGquNXv
-         SxZFZlB5lZEh0a/sfmfmR7qds9ll/OR8u3yaBiWCSQOL9JTUc5rCpyyzPSqOnvF0HR8C
-         Q7WSiXFExN2gfjRJ69RtgE58rLDC+HHboKvRpqcXYquCp+D14H39ro5bA4s0A0yRxH/+
-         EprtNEnP4wK2n/4woptN5mdCkjgAOGhrtZPcHkOZRZULWEkT1gQA7WEI8Wyh84/FtTgn
-         o98w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=50/Xsj2LKY8CwAMNgsVgvv5+QnRXiqhLmyb8OWBrLu4=;
-        b=TLqtseIZtm2YpuPBzuB2OYPZxwb7ttpviAJ8VuDNEjyh0PvoHcHxkFgw+kupStmCAP
-         a1zkbaFI+GmatbNtR/75rniCaDlCEkIrJzNveajTrJ6BIlA3UNcUd/lH7A5yhlyFDHNC
-         0CoHicwYPEGidEJfeuBfcWzNjbGxH+EvvmUfWm9N6n83d4bCgi24hPHURpHbSsmHZ38S
-         a1v8HhGvAD5yvNkZVd7rM29Kyt1zrpF8ejE+FI0w9c2Lex3PzZVgv41Aip2GRlHGNeL8
-         FMyyxqhOHN1IkHgtSOhqtfVo0yk+XK5rfkhn0m0tDF2tZoFpO7EKZviVeL3bzhpTTsdr
-         Thcg==
-X-Gm-Message-State: APjAAAWWfaxnbMypOd3wvTkknF22XtQ+UAkIg+o4sa1NHNovaC2Omsto
-        nHgtvVyBtvkfb79PAtx8EoKdeQxcTfF8uhNwf9/0GQ==
-X-Google-Smtp-Source: APXvYqwb6MZNmqK0KRTAYP5e9AcJC0N/JrtcrMOV7A3hOzZrACc13edLiwyHZ6IduYWq704otoqMs1isqThGvgPPCdo=
-X-Received: by 2002:a63:6884:: with SMTP id d126mr135366636pgc.154.1559078557010;
- Tue, 28 May 2019 14:22:37 -0700 (PDT)
+        Tue, 28 May 2019 17:23:17 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4SLMgfI2238034
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 28 May 2019 14:22:42 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4SLMgfI2238034
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019051801; t=1559078563;
+        bh=5kIVYq0t2CD5KdWGvolWWxDmy8CX0bGgpVx+8sYQbck=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=BLc30wDwUdrHtl64TEJWmOZfZPSQdij44/gxiqEy/B1TvZb2rtUMmgwRzCa6X4AfX
+         CR1uejlIhkAkmbZDy6tOAAnWCQRUlJF3ZmKbc9eu9Pt6Ye79m4tpwyoqiGgmbbVhks
+         0jSV4jA3UIbvaOWP9eg1KfvwqwP3EgW0b1evxSOqZZxRDVzYNBUhdeV9rIHOHfRi0m
+         WP+3L7yAL3t30zR78u46xKvJIRxsipSM7BasbSz/2YrMkEFkaN7bo9XacV3/Q9nXyL
+         vYyFr750CiZg++TaejN9941yKRNGnzwIMpyrcY2B4AdYLY8FczDBg7xKVb2vEt+AOe
+         WbeimgTtDie+Q==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4SLMftb2238031;
+        Tue, 28 May 2019 14:22:41 -0700
+Date:   Tue, 28 May 2019 14:22:41 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Vitaly Chikunov <tipbot@zytor.com>
+Message-ID: <tip-f95d050cdc5d34f9a4417e06c392ccbf146037bb@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, hpa@zytor.com, kim.phillips@arm.com,
+        tglx@linutronix.de, mpetlan@redhat.com, peterz@infradead.org,
+        acme@redhat.com, jolsa@redhat.com, namhyung@kernel.org,
+        alexander.shishkin@linux.intel.com,
+        ravi.bangoria@linux.vnet.ibm.com, brueckner@linux.ibm.com,
+        mingo@kernel.org, vt@altlinux.org
+Reply-To: brueckner@linux.ibm.com, ravi.bangoria@linux.vnet.ibm.com,
+          alexander.shishkin@linux.intel.com, mingo@kernel.org,
+          vt@altlinux.org, mpetlan@redhat.com, kim.phillips@arm.com,
+          tglx@linutronix.de, hpa@zytor.com, linux-kernel@vger.kernel.org,
+          namhyung@kernel.org, jolsa@redhat.com, acme@redhat.com,
+          peterz@infradead.org
+In-Reply-To: <20190521030203.1447-1-vt@altlinux.org>
+References: <20190521030203.1447-1-vt@altlinux.org>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/urgent] perf arm64: Fix mksyscalltbl when system kernel
+ headers are ahead of the kernel
+Git-Commit-ID: f95d050cdc5d34f9a4417e06c392ccbf146037bb
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-References: <20190521062837.3887-1-hdegoede@redhat.com>
-In-Reply-To: <20190521062837.3887-1-hdegoede@redhat.com>
-From:   =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
-Date:   Tue, 28 May 2019 14:22:24 -0700
-Message-ID: <CAOcMMifdq8PcnwANKxGtAmB+5nNOv-aEW3aFJyfPNngXeYCK5A@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: asus-wmi: Only Tell EC the OS will handle
- display hotkeys from asus_nb_wmi
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        acpi4asus-user@lists.sourceforge.net,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 11:28 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Commit 78f3ac76d9e5 ("platform/x86: asus-wmi: Tell the EC the OS will
-> handle the display off hotkey") causes the backlight to be permanently of=
-f
-> on various EeePC laptop models using the eeepc-wmi driver (Asus EeePC
-> 1015BX, Asus EeePC 1025C).
->
-> The asus_wmi_set_devstate(ASUS_WMI_DEVID_BACKLIGHT, 2, NULL) call added
-> by that commit is made conditional in this commit and only enabled in
-> the quirk_entry structs in the asus-nb-wmi driver fixing the broken
-> display / backlight on various EeePC laptop models.
->
-> Cc: Jo=C3=A3o Paulo Rechi Vita <jprvita@endlessm.com>
-> Fixes: 78f3ac76d9e5 ("platform/x86: asus-wmi: Tell the EC the OS will han=
-dle the display off hotkey")
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/platform/x86/asus-nb-wmi.c | 8 ++++++++
->  drivers/platform/x86/asus-wmi.c    | 2 +-
->  drivers/platform/x86/asus-wmi.h    | 1 +
->  3 files changed, 10 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/as=
-us-nb-wmi.c
-> index b6f2ff95c3ed..59f3a37a44d7 100644
-> --- a/drivers/platform/x86/asus-nb-wmi.c
-> +++ b/drivers/platform/x86/asus-nb-wmi.c
-> @@ -78,10 +78,12 @@ static bool asus_q500a_i8042_filter(unsigned char dat=
-a, unsigned char str,
->
->  static struct quirk_entry quirk_asus_unknown =3D {
->         .wapf =3D 0,
-> +       .wmi_backlight_set_devstate =3D true,
->  };
->
->  static struct quirk_entry quirk_asus_q500a =3D {
->         .i8042_filter =3D asus_q500a_i8042_filter,
-> +       .wmi_backlight_set_devstate =3D true,
->  };
->
->  /*
-> @@ -92,26 +94,32 @@ static struct quirk_entry quirk_asus_q500a =3D {
->  static struct quirk_entry quirk_asus_x55u =3D {
->         .wapf =3D 4,
->         .wmi_backlight_power =3D true,
-> +       .wmi_backlight_set_devstate =3D true,
->         .no_display_toggle =3D true,
->  };
->
->  static struct quirk_entry quirk_asus_wapf4 =3D {
->         .wapf =3D 4,
-> +       .wmi_backlight_set_devstate =3D true,
->  };
->
->  static struct quirk_entry quirk_asus_x200ca =3D {
->         .wapf =3D 2,
-> +       .wmi_backlight_set_devstate =3D true,
->  };
->
->  static struct quirk_entry quirk_asus_ux303ub =3D {
->         .wmi_backlight_native =3D true,
-> +       .wmi_backlight_set_devstate =3D true,
->  };
->
->  static struct quirk_entry quirk_asus_x550lb =3D {
-> +       .wmi_backlight_set_devstate =3D true,
->         .xusb2pr =3D 0x01D9,
->  };
->
->  static struct quirk_entry quirk_asus_forceals =3D {
-> +       .wmi_backlight_set_devstate =3D true,
->         .wmi_force_als_set =3D true,
->  };
->
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-=
-wmi.c
-> index ee1fa93708ec..a66e99500c12 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -2131,7 +2131,7 @@ static int asus_wmi_add(struct platform_device *pde=
-v)
->                 err =3D asus_wmi_backlight_init(asus);
->                 if (err && err !=3D -ENODEV)
->                         goto fail_backlight;
-> -       } else
-> +       } else if (asus->driver->quirks->wmi_backlight_set_devstate)
->                 err =3D asus_wmi_set_devstate(ASUS_WMI_DEVID_BACKLIGHT, 2=
-, NULL);
->
->         status =3D wmi_install_notify_handler(asus->driver->event_guid,
-> diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-=
-wmi.h
-> index 6c1311f4b04d..57a79bddb286 100644
-> --- a/drivers/platform/x86/asus-wmi.h
-> +++ b/drivers/platform/x86/asus-wmi.h
-> @@ -44,6 +44,7 @@ struct quirk_entry {
->         bool store_backlight_power;
->         bool wmi_backlight_power;
->         bool wmi_backlight_native;
-> +       bool wmi_backlight_set_devstate;
+Commit-ID:  f95d050cdc5d34f9a4417e06c392ccbf146037bb
+Gitweb:     https://git.kernel.org/tip/f95d050cdc5d34f9a4417e06c392ccbf146037bb
+Author:     Vitaly Chikunov <vt@altlinux.org>
+AuthorDate: Tue, 21 May 2019 06:02:03 +0300
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Tue, 28 May 2019 09:49:03 -0300
 
-Wouldn't it be better to add this field to struct asus_wmi_driver
-instead, and set it in asus_nb_wmi_driver only? This way we wouldn't
-need to make sure it is present in all quirk entries from this driver,
-current and future.
+perf arm64: Fix mksyscalltbl when system kernel headers are ahead of the kernel
 
-I've tested both the original patch and my suggestion above and in
-both cases the "turn off backlight" hotkey continued to work fine on a
-machine where asus-nb-wmi is used (I don't have access to any machine
-using the eeepc driver).
+When a host system has kernel headers that are newer than a compiling
+kernel, mksyscalltbl fails with errors such as:
 
->         bool wmi_force_als_set;
->         int wapf;
->         /*
-> --
-> 2.21.0
->
+  <stdin>: In function 'main':
+  <stdin>:271:44: error: '__NR_kexec_file_load' undeclared (first use in this function)
+  <stdin>:271:44: note: each undeclared identifier is reported only once for each function it appears in
+  <stdin>:272:46: error: '__NR_pidfd_send_signal' undeclared (first use in this function)
+  <stdin>:273:43: error: '__NR_io_uring_setup' undeclared (first use in this function)
+  <stdin>:274:43: error: '__NR_io_uring_enter' undeclared (first use in this function)
+  <stdin>:275:46: error: '__NR_io_uring_register' undeclared (first use in this function)
+  tools/perf/arch/arm64/entry/syscalls//mksyscalltbl: line 48: /tmp/create-table-xvUQdD: Permission denied
+
+mksyscalltbl is compiled with default host includes, but run with
+compiling kernel tree includes, causing some syscall numbers to being
+undeclared.
+
+Committer testing:
+
+Before this patch, in my cross build environment, no build problems, but
+these new syscalls were not in the syscalls.c generated from the
+unistd.h file, which is a bug, this patch fixes it:
+
+perfbuilder@6e20056ed532:/git/perf$ tail /tmp/build/perf/arch/arm64/include/generated/asm/syscalls.c
+	[292] = "io_pgetevents",
+	[293] = "rseq",
+	[294] = "kexec_file_load",
+	[424] = "pidfd_send_signal",
+	[425] = "io_uring_setup",
+	[426] = "io_uring_enter",
+	[427] = "io_uring_register",
+	[428] = "syscalls",
+};
+perfbuilder@6e20056ed532:/git/perf$ strings /tmp/build/perf/perf | egrep '^(io_uring_|pidfd_|kexec_file)'
+kexec_file_load
+pidfd_send_signal
+io_uring_setup
+io_uring_enter
+io_uring_register
+perfbuilder@6e20056ed532:/git/perf$
+$
+
+Well, there is that last "syscalls" thing, but that looks like some
+other bug.
+
+Signed-off-by: Vitaly Chikunov <vt@altlinux.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Tested-by: Michael Petlan <mpetlan@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Hendrik Brueckner <brueckner@linux.ibm.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Kim Phillips <kim.phillips@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+Link: http://lkml.kernel.org/r/20190521030203.1447-1-vt@altlinux.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/arch/arm64/entry/syscalls/mksyscalltbl | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
+index c88fd32563eb..459469b7222c 100755
+--- a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
++++ b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
+@@ -56,7 +56,7 @@ create_table()
+ 	echo "};"
+ }
+ 
+-$gcc -E -dM -x c  $input	       \
++$gcc -E -dM -x c -I $incpath/include/uapi $input \
+ 	|sed -ne 's/^#define __NR_//p' \
+ 	|sort -t' ' -k2 -nu	       \
+ 	|create_table
