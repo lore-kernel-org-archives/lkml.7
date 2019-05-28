@@ -2,102 +2,120 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F57FC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D43C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 057FA2133F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:44:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Tx3xaGlN"
+	by mail.kernel.org (Postfix) with ESMTP id 1A49C2133F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:47:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559054829;
+	bh=vSyJqkwYTRKiEH0VlhA88IIdg2wVZfMrGoZmJeJjoWw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=knNsL5tPd5W/hHunu4qOpXBtl58nCa7vfiRt8FOabUHO3Vqn8cSCjxLP/BWhYUgil
+	 wgNltCSasP5AA8IuoE9kb82SXd0ERE6utGhiucyg/030rX4oMwV9e7zszEJkZmqA/v
+	 ao4mKp3NyBrGxjoGqx25M3WEjlfev8VJh/k0w6YA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727219AbfE1OoO (ORCPT
+        id S1726604AbfE1OrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 10:44:14 -0400
-Received: from mail-eopbgr130041.outbound.protection.outlook.com ([40.107.13.41]:30977
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726345AbfE1OoN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 10:44:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RJ2Q0i4JMUJ7XkWcP6hNysujfas+cgUKHLxEae+Chls=;
- b=Tx3xaGlN6nWvMBpH0oegELivHVih83HaTzvfxgKWR0/G2nJ94XgwLYfT5Sv5QrEY/DNe6/QhkyMx5tSyAXe8tgMmsFuri+3FO8bDuUmFU8aj2MlcfIfLgpZJCA6UfWi9VKAelsgx5gNDXkhxan4OGwsihe0U+k6dewbRC+bNes4=
-Received: from AM4PR05MB3313.eurprd05.prod.outlook.com (10.171.189.29) by
- AM4PR05MB3363.eurprd05.prod.outlook.com (10.170.126.23) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.20; Tue, 28 May 2019 14:44:09 +0000
-Received: from AM4PR05MB3313.eurprd05.prod.outlook.com
- ([fe80::55c3:8aaf:20f6:5899]) by AM4PR05MB3313.eurprd05.prod.outlook.com
- ([fe80::55c3:8aaf:20f6:5899%5]) with mapi id 15.20.1922.021; Tue, 28 May 2019
- 14:44:09 +0000
-From:   Ariel Levkovich <lariel@mellanox.com>
-To:     Leon Romanovsky <leon@kernel.org>,
-        Michal Kubecek <mkubecek@suse.cz>
-CC:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mlx5: avoid 64-bit division
-Thread-Topic: [PATCH] mlx5: avoid 64-bit division
-Thread-Index: AQHVDv3WwOrE0ucLYUeqHtLWyvJnYqZz4FaAgAy9coD//8jKAA==
-Date:   Tue, 28 May 2019 14:44:09 +0000
-Message-ID: <849F6C89-EB21-4EAA-A1C0-1E4941B4812E@mellanox.com>
-References: <20190520111902.7104DE0184@unicorn.suse.cz>
- <20190520112835.GF4573@mtr-leonro.mtl.com>
- <20190528140145.GO4633@mtr-leonro.mtl.com>
-In-Reply-To: <20190528140145.GO4633@mtr-leonro.mtl.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=lariel@mellanox.com; 
-x-originating-ip: [96.90.253.194]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 816cbad7-771e-41ee-bec1-08d6e37af13a
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:AM4PR05MB3363;
-x-ms-traffictypediagnostic: AM4PR05MB3363:
-x-microsoft-antispam-prvs: <AM4PR05MB3363F860989F0D79C0CC65E9BA1E0@AM4PR05MB3363.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 00514A2FE6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(136003)(376002)(346002)(366004)(396003)(199004)(189003)(33656002)(76176011)(8936002)(2906002)(2616005)(64756008)(25786009)(11346002)(54906003)(36756003)(82746002)(6506007)(91956017)(66446008)(110136005)(7736002)(6246003)(8676002)(73956011)(76116006)(305945005)(66476007)(66946007)(66556008)(476003)(81156014)(81166006)(6486002)(486006)(99286004)(446003)(6436002)(102836004)(71200400001)(229853002)(83716004)(6512007)(86362001)(14454004)(26005)(4326008)(256004)(3846002)(53936002)(6116002)(4744005)(68736007)(478600001)(5660300002)(186003)(66066001)(316002)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM4PR05MB3363;H:AM4PR05MB3313.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: jDzduUSiZJVhszRpZTZRU1ANBojk6DaFHqJq6mM1vcdjfgOdYJO7TatGRhYzMHZYxVDQWuGhJDBdHiuFrNvCfs3SAxVzvnc5HgfjNvOxqsTXQRfBoKAKYc0XAB+y2nyFrjP2PEn1fGR+zXw622aLesbIURBA2/EFDMtLlpg/oSBhHtYHAWbQ0LKvk+QgUboA9evoABphZYcIuzpDfpATBVtJxjHFBL37IPimRF6g0m71dtyI3YtB0+GbYDWqrIQFsqYFrijS0pIikkeQLhQDogJsv7epCB/i0kJIoSA1j8M3vFsZXU8hUEImIi7LOXMe0oT5bxD/rlbR23+k647KrjAJXnRTwMkV/uAtn6Z2u1PhYz+JvebJJiXd0ibQtjJq9xhaVqNdeiy4Zl92p2Iwsq/J+lvv3bq3Pyiul2M1kn0=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <8D2E75104A3334448B4F36227A58C61E@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 28 May 2019 10:47:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39648 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726463AbfE1OrH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 10:47:07 -0400
+Received: from linux-8ccs (nat.nue.novell.com [195.135.221.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2DCC20679;
+        Tue, 28 May 2019 14:47:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559054826;
+        bh=vSyJqkwYTRKiEH0VlhA88IIdg2wVZfMrGoZmJeJjoWw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IVm8rsqPESoCyUlxGj7NPlEu91jfMqIp1E94FykZjnsPEbwo4/CxtpMXg/k6D0/rr
+         7tHn6UwbqvnicCYZFB9oS1t0h7hjKtGtQV2oxV575GIqaIm3Sw4AxvJHbnoXoOB1Az
+         LBT05XRlncjF+eqExz3g5NI6hXmj9xb4Ewv9IS8o=
+Date:   Tue, 28 May 2019 16:47:02 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Prarit Bhargava <prarit@redhat.com>
+Cc:     Barret Rhoden <brho@google.com>, linux-kernel@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        David Arcari <darcari@redhat.com>
+Subject: Re: [PATCH] modules: fix livelock in add_unformed_module()
+Message-ID: <20190528144702.GA3459@linux-8ccs>
+References: <be47ac01-a5ac-7be1-d387-5c841007b45f@google.com>
+ <20190510184204.225451-1-brho@google.com>
+ <dd48a3a4-9046-3917-55ba-d9eb391052b3@redhat.com>
+ <d968a588-c43b-cfe1-6358-6c5d99f916a3@google.com>
+ <ba46f7c1-caee-4237-b6c5-7edec0eaaac3@redhat.com>
+ <e5f7f37b-5c99-f9de-61ce-5b3394caf0d2@redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 816cbad7-771e-41ee-bec1-08d6e37af13a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2019 14:44:09.1048
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: lariel@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR05MB3363
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <e5f7f37b-5c99-f9de-61ce-5b3394caf0d2@redhat.com>
+X-OS:   Linux linux-8ccs 5.1.0-rc1-lp150.12.28-default+ x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQogICBPbiBNb24sIE1heSAyMCwgMjAxOSBhdCAwMjoyODozNVBNICswMzAwLCBMZW9uIFJvbWFu
-b3Zza3kgd3JvdGU6DQogICAgPiA+IE9uIE1vbiwgTWF5IDIwLCAyMDE5IGF0IDAxOjE5OjAyUE0g
-KzAyMDAsIE1pY2hhbCBLdWJlY2VrIHdyb3RlOg0KICAgID4gPiA+IENvbW1pdCAyNWMxMzMyNGQw
-M2QgKCJJQi9tbHg1OiBBZGQgc3RlZXJpbmcgU1cgSUNNIGRldmljZSBtZW1vcnkgdHlwZSIpDQog
-ICAgPiA+ID4gYnJlYWtzIGkzODYgYnVpbGQgYnkgaW50cm9kdWNpbmcgdGhyZWUgNjQtYml0IGRp
-dmlzaW9ucy4gQXMgdGhlIGRpdmlzb3INCiAgICA+ID4gPiBpcyBNTFg1X1NXX0lDTV9CTE9DS19T
-SVpFKCkgd2hpY2ggaXMgYWx3YXlzIGEgcG93ZXIgb2YgMiwgd2UgY2FuIHJlcGxhY2UNCiAgICA+
-ID4gPiB0aGUgZGl2aXNpb24gd2l0aCBiaXQgb3BlcmF0aW9ucy4NCiAgICA+ID4NCiAgICA+ID4g
-SW50ZXJlc3RpbmcsIHdlIHRyaWVkIHRvIHNvbHZlIGl0IGRpZmZlcmVudGx5Lg0KICAgID4gPiBJ
-IGFkZGVkIGl0IHRvIG91ciByZWdyZXNzaW9uIHRvIGJlIG9uIHRoZSBzYW1lIHNpZGUuDQogICAg
-DQogICAgPiBUaGlzIHBhdGNoIHdvcmtzIGZvciB1cy4NCiAgICANCiAgIFllcywgdGhpcyB2YWx1
-ZSBpcyBndWFyYW50ZWVkIHRvIGJlIGEgcG93ZXIgb2YgMi4gIFdlIHNhZmVseSB1c2Ugcm91bmRf
-dXAoKSBpbnN0ZWFkIGFzIHN1Z2dlc3RlZCBpbiB0aGUgcGF0Y2guDQoNCg==
++++ Prarit Bhargava [28/05/19 10:30 -0400]:
+>
+>
+>On 5/22/19 1:08 PM, Prarit Bhargava wrote:
+>>
+>>
+>> On 5/13/19 10:37 AM, Barret Rhoden wrote:
+>>> Hi -
+>>>
+>>
+>> Hey Barret, my apologies for not getting back to you earlier.  I got caught up
+>> in something that took me away from this issue.
+>>
+>>> On 5/13/19 7:23 AM, Prarit Bhargava wrote:
+>>> [snip]
+>>>> A module is loaded once for each cpu.
+>>>
+>>> Does one CPU succeed in loading the module, and the others fail with EEXIST?
+>>>
+>>>> My follow-up patch changes from wait_event_interruptible() to
+>>>> wait_event_interruptible_timeout() so the CPUs are no longer sleeping and can
+>>>> make progress on other tasks, which changes the return values from
+>>>> wait_event_interruptible().
+>>>>
+>>>> https://marc.info/?l=linux-kernel&m=155724085927589&w=2
+>>>>
+>>>> I believe this also takes your concern into account?
+>>>
+>>> That patch might work for me, but I think it papers over the bug where the check
+>>> on old->state that you make before sleeping (was COMING || UNFORMED, now !LIVE)
+>>> doesn't match the check to wake up in finished_loading().
+>>>
+>>> The reason the issue might not show up in practice is that your patch basically
+>>> polls, so the condition checks in finished_loading() are only a quicker exit.
+>>>
+>>> If you squash my patch into yours, I think it will cover that case. Though if
+>>> polling is the right answer here, it also raises the question of whether or not
+>>> we even need finished_loading().
+>>>
+>>
+>> The more I look at this I think you're right.  Let me do some additional testing
+>> with your patch + my original patch.
+>>
+>
+>I have done testing on arm64, s390x, ppc64le, ppc64, and x86 and have not seen
+>any issues.
+>
+>Jessica, how would you like me to proceed?  Would you like an updated patch with
+>Signed-off's from both Barret & myself?
+
+Hi Prarit,
+
+A freshly sent patch with the squashed changes and Signed-off's would
+be great. Thank you both for testing and looking into this!
+
+Jessica
