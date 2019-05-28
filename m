@@ -2,104 +2,70 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B138C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97008C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F24820883
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:06:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75DBA2070D
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:06:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbfE1LGc convert rfc822-to-8bit (ORCPT
+        id S1726867AbfE1LGy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 07:06:32 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:47686 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726313AbfE1LGc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 07:06:32 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-51-I9st8qMRPWGW6eWon_ML-A-1; Tue, 28 May 2019 12:06:27 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 28 May 2019 12:06:26 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 28 May 2019 12:06:26 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Tony Lindgren' <tony@atomide.com>,
-        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
-CC:     Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        "Roger Quadros" <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH 01/12] bus: ti-sysc: Support 16-bit writes too
-Thread-Topic: [PATCH 01/12] bus: ti-sysc: Support 16-bit writes too
-Thread-Index: AQHVFIXZIpY/mCelSky05+1Jud+wtaaAYYxw
-Date:   Tue, 28 May 2019 11:06:26 +0000
-Message-ID: <5e9a31dfdfd843469c51106fce9ea353@AcuMS.aculab.com>
-References: <20190527121348.45251-1-tony@atomide.com>
- <20190527121348.45251-2-tony@atomide.com>
-In-Reply-To: <20190527121348.45251-2-tony@atomide.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 28 May 2019 07:06:54 -0400
+Received: from shell.v3.sk ([90.176.6.54]:37277 "EHLO shell.v3.sk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726313AbfE1LGx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 07:06:53 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id EBEB51048B5;
+        Tue, 28 May 2019 13:06:50 +0200 (CEST)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id z-URobh3VGwZ; Tue, 28 May 2019 13:06:48 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id AEC921048B7;
+        Tue, 28 May 2019 13:06:47 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id jospB53Cg9Z6; Tue, 28 May 2019 13:06:46 +0200 (CEST)
+Received: from belphegor (nat-pool-brq-t.redhat.com [213.175.37.10])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id A6D941048B5;
+        Tue, 28 May 2019 13:06:46 +0200 (CEST)
+Message-ID: <6db9830f1240fafb01dde94281d53f0c5ccd6230.camel@v3.sk>
+Subject: Re: [PATCH -next 0/2] Platform: OLPC: Fix two randbuild error
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     YueHaibing <yuehaibing@huawei.com>, dvhart@infradead.org,
+        andy@infradead.org
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Date:   Tue, 28 May 2019 13:06:45 +0200
+In-Reply-To: <20190528092806.20080-1-yuehaibing@huawei.com>
+References: <20190528092806.20080-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
 MIME-Version: 1.0
-X-MC-Unique: I9st8qMRPWGW6eWon_ML-A-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren
-> Sent: 27 May 2019 13:14
-> We need to also support 16-bit writes for i2c in addition to the reads
-> when we start configuring the sysconfig register for reset and idle modes.
+On Tue, 2019-05-28 at 17:28 +0800, YueHaibing wrote:
+> Fix two randbuild error:
+> 1) Fix build error with CONFIG_SPI is not set
+> 2) Fix build error with CONFIG_INPUT is set to m
 > 
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
->  drivers/bus/ti-sysc.c | 7 +++++++
->  1 file changed, 7 insertions(+)
+> YueHaibing (2):
+>   Platform: OLPC: Fix build error without CONFIG_SPI
+>   Platform: OLPC: Add INPUT dependencies
 > 
-> diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
-> --- a/drivers/bus/ti-sysc.c
-> +++ b/drivers/bus/ti-sysc.c
-> @@ -100,6 +100,13 @@ static void sysc_parse_dts_quirks(struct sysc *ddata, struct device_node *np,
-> 
->  static void sysc_write(struct sysc *ddata, int offset, u32 value)
->  {
-> +	if (ddata->cfg.quirks & SYSC_QUIRK_16BIT) {
-> +		writew_relaxed(value & 0xffff, ddata->module_va + offset);
-> +		writew_relaxed(value >> 16, ddata->module_va + offset + 4);
+>  drivers/platform/olpc/Kconfig | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
-Should that be + 2 ???
+Thanks. Both patches:
 
-> +
-> +		return;
-> +	}
-> +
->  	writel_relaxed(value, ddata->module_va + offset);
->  }
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+Reviewed-by: Lubomir Rintel <lkundrak@v3.sk>
 
