@@ -2,191 +2,78 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44696C072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D5EFC07542
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 123C42075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:14:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="rbpdmez2"
+	by mail.kernel.org (Postfix) with ESMTP id 567D72075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:16:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727719AbfE1BON (ORCPT
+        id S1727734AbfE1BQE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 21:14:13 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:46257 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727090AbfE1BOM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 21:14:12 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20190528011408epoutp048b0efef7e8af71d021e019a80e1b5e77~is73V-oiO1043910439epoutp04b
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 01:14:08 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20190528011408epoutp048b0efef7e8af71d021e019a80e1b5e77~is73V-oiO1043910439epoutp04b
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1559006048;
-        bh=oWneqg4jlZBOYOGd3mf8narmqF9wbcpkm6d6dV4nfH4=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=rbpdmez2UjR0NSQmIejAATrZV3zTvSIhSIcRMxWbSbgc+lObk0jUZ0hecotydGniE
-         lhmRF/OYBewzR6rjYBZKvRMiRwnzgmPY2P7EZXYYoESmVinxuBnKXeXJw2hdphuNEK
-         yjHoMoQ+yRIvb+ojCO6XucRw4jEpq4b6eaB3+eto=
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.158]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20190528011405epcas1p4ee675088f2a4473cdc3f62cb0c6840d5~is70B5V6t3137531375epcas1p4P;
-        Tue, 28 May 2019 01:14:05 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        ED.1E.04108.D5B8CEC5; Tue, 28 May 2019 10:14:05 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190528011404epcas1p20009f79616dc90ee0f5f5d89fe3b3975~is7zpoX1l1702317023epcas1p2u;
-        Tue, 28 May 2019 01:14:04 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190528011404epsmtrp180a6729253dd5e730bc4e299ec08cea2~is7zo2hX82546525465epsmtrp1C;
-        Tue, 28 May 2019 01:14:04 +0000 (GMT)
-X-AuditID: b6c32a39-8b7ff7000000100c-cb-5cec8b5dc0ab
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        F2.FD.03662.C5B8CEC5; Tue, 28 May 2019 10:14:04 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190528011404epsmtip1b13f6cfa2097680b37af83cb721389c6~is7zhB7hr0551005510epsmtip13;
-        Tue, 28 May 2019 01:14:04 +0000 (GMT)
-Subject: Re: [RESEND PATCH] PM / devfreq: Fix static checker warning in
- try_then_request_governor
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-kernel@vger.kernel.org,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Cc:     kernel@collabora.com, Dan Carpenter <dan.carpenter@oracle.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        linux-pm@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <4535a997-e583-da83-0cdd-0433dd798f50@samsung.com>
-Date:   Tue, 28 May 2019 10:15:59 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+        Mon, 27 May 2019 21:16:04 -0400
+Received: from ozlabs.org ([203.11.71.1]:41341 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727090AbfE1BQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 21:16:04 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45CbWg518wz9s3Z;
+        Tue, 28 May 2019 11:15:59 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Mathieu Malaterre <malat@debian.org>
+Cc:     Mathieu Malaterre <malat@debian.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2] powerpc/power: Expose pfn_is_nosave prototype
+In-Reply-To: <20190524104418.17194-1-malat@debian.org>
+References: <20190523114736.30268-1-malat@debian.org> <20190524104418.17194-1-malat@debian.org>
+Date:   Tue, 28 May 2019 11:15:56 +1000
+Message-ID: <878surqsz7.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <20190313122253.24355-1-enric.balletbo@collabora.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRju2zk7Hq3Z18x6syg91g8FbUdbHSulO0IFglEhi3XajhfczsbO
-        VpkRWWRltloG0lo3SijLLjrLipBMNKMkzMqU7kXeUEpWWlFtO0X+e573e5739r00oa6goug8
-        0S7YRN7EUGHk9XtxmoQNB/p1mu/3I7m+X+Ukd6mrAXE1raVK7tGu/hDuyS0PxQ0dbERcV9F5
-        ijt97R1aRKfXvTyH0j9/7CTTnd5KlD5UPT2DzMpfmCvwRsEWLYgGizFPzEllVmbql+q1czVs
-        ApvCzWOiRd4spDLLVmUkrMgz+dtgojfzJoc/lMFLEjM7baHN4rAL0bkWyZ7KCFajyZpiTZR4
-        s+QQcxINFvN8VqNJ0vqFG/Nz+y94SOtJ9dbunz3Knag9vATRNOA5UNSmKkFhtBrXIah2Vipl
-        8gXB7arykBIU6idfEfhajP8Md7+tkzV3EAx21BAyGUTQ6zxIBgwR2ADuT95gponYiaDP06oI
-        EAJ7EVR98wTTUjge6rs7qAAej2Pg6fB7FMAqnAZlvt5gnMSzoK3nDBHAkXg9vG66qpQ1E6Dl
-        2IdgtVC8BDyukaCGwJOh88MphYxnwO7a48H2AA9R8OrOSDAp4GVwuGaAlHEE9DZ7Q2QcBT2H
-        iv/iQrjQ0kjJ5n0IvPWPlfJDMtRXlCkCyyBwHFy5NVsOx8DNHyeQXDgcBnylSnlfKthXrJYl
-        sfDkzUuFjKfA2b37qcOIcY8axz1qBPeoEdz/i51GZCWaJFglc44gsVbt6N+uRsETjU+pQ02t
-        qxoQphEzTsU96NOplfxmqcDcgIAmmIkqrbdXp1YZ+YJtgs2itzlMgtSAtP5tu4ioSIPFf/Ci
-        Xc9qk5KTk7k57FwtyzKTVfqxL3RqnMPbhXxBsAq2fz4FHRq1Ezl2GKTClOz9LZsyb5/w9C0e
-        eO5NG7Pk4sPsF7rl4tF1uw0+YmpX9p5tdrEgtrN7y1qXvuhG0vu8wdWv384a77ph3nSdi8hy
-        7qi6+ay4/UH4yBma+X1p3OW2mV21Bbblhu1xXMWasPwx3ysXZHYeuTutmS/D9aqY7tgVEZN8
-        A6Xlwy6GlHJ5Np6wSfwfO+8SRLgDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprIIsWRmVeSWpSXmKPExsWy7bCSnG5M95sYg5PTLC1e/5vOYrHm9iFG
-        i83nelgtzja9Ybe4vGsOm8Xn3iOMFrcbV7BZLNj4iNGBw2PH3SWMHh+f3mLx6NuyitHj8ya5
-        AJYoLpuU1JzMstQifbsErow3K+ewFMwTqnjx5yVrA+MVvi5GDg4JAROJg9/Duxi5OIQEdjNK
-        7JkxlbWLkRMoLikx7eJRZogaYYnDh4shat4yStw4fo4dpEZYIFli1vMtrCAJEYE+Ronru9eB
-        OcwCWxglZt1/ywbRMpVR4k/DXEaQFjYBLYn9L26wgdj8AooSV388BovzCthJTP76CizOIqAq
-        cenlQmYQW1QgQuLM+xUsEDWCEidnPgGzOQWcJOZM/AlWwyygLvFn3iUoW1zi1pP5TBC2vETz
-        1tnMExiFZyFpn4WkZRaSlllIWhYwsqxilEwtKM5Nzy02LDDKSy3XK07MLS7NS9dLzs/dxAiO
-        KC2tHYwnTsQfYhTgYFTi4bU49TpGiDWxrLgy9xCjBAezkgiv6ZZXMUK8KYmVValF+fFFpTmp
-        xYcYpTlYlMR55fOPRQoJpCeWpGanphakFsFkmTg4pRoYmWby8Ir9XcW6+G93ic6CmvdJtSfj
-        +gu1l/pe+hab2XugeItMrGSp2hXPD2WZds+EN84xbc6s0jWSlP0sPelJipCka7Hqn8CmdZ/n
-        ca2Ozr92a0HtlLTrVp+tL87YbvSkMeqlaoPkpwzfkG1xOjHhbMs62cQrJ7E6zT38UuM2t9bL
-        l9+uMX9QYinOSDTUYi4qTgQA0Dt/1aQCAAA=
-X-CMS-MailID: 20190528011404epcas1p20009f79616dc90ee0f5f5d89fe3b3975
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190313122310epcas4p4152c2c30d7a2971e44ddc7c5b64b7744
-References: <CGME20190313122310epcas4p4152c2c30d7a2971e44ddc7c5b64b7744@epcas4p4.samsung.com>
-        <20190313122253.24355-1-enric.balletbo@collabora.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cc: stable@vger.kernel.org
-
-Dear all,
-
-It missed to send this patch to 'stable@vger.kernel.org'.
-So, I add it to mailing list.
-
-Regards,
-Chanwoo Choi
-
-
-On 19. 3. 13. 오후 9:22, Enric Balletbo i Serra wrote:
-> The patch 23c7b54ca1cd: "PM / devfreq: Fix devfreq_add_device() when
-> drivers are built as modules." leads to the following static checker
-> warning:
-> 
->     drivers/devfreq/devfreq.c:1043 governor_store()
->     warn: 'governor' can also be NULL
-> 
-> The reason is that the try_then_request_governor() function returns both
-> error pointers and NULL. It should just return error pointers, so fix
-> this by returning a ERR_PTR to the error intead of returning NULL.
-> 
-> Fixes: 23c7b54ca1cd ("PM / devfreq: Fix devfreq_add_device() when drivers are built as modules.")
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Mathieu Malaterre <malat@debian.org> writes:
+> The declaration for pfn_is_nosave is only available in
+> kernel/power/power.h. Since this function can be override in arch,
+> expose it globally. Having a prototype will make sure to avoid warning
+> (sometime treated as error with W=1) such as:
+>
+>   arch/powerpc/kernel/suspend.c:18:5: error: no previous prototype for 'pfn_is_nosave' [-Werror=missing-prototypes]
+>
+> This moves the declaration into a globally visible header file and add
+> missing include to avoid a warning on powerpc. Also remove the
+> duplicated prototypes since not required anymore.
+>
+> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+> Signed-off-by: Mathieu Malaterre <malat@debian.org>
 > ---
-> Hi,
-> 
-> This is a resend of [1] as seems that got lost at some point and I just
-> noticed that was never merged.
-> 
-> Thanks,
->  Enric
-> 
-> [1] https://lkml.org/lkml/2018/10/16/744
-> 
-> 
->  drivers/devfreq/devfreq.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-> index 0ae3de76833b..839621b044f4 100644
-> --- a/drivers/devfreq/devfreq.c
-> +++ b/drivers/devfreq/devfreq.c
-> @@ -228,7 +228,7 @@ static struct devfreq_governor *find_devfreq_governor(const char *name)
->   * if is not found. This can happen when both drivers (the governor driver
->   * and the driver that call devfreq_add_device) are built as modules.
->   * devfreq_list_lock should be held by the caller. Returns the matched
-> - * governor's pointer.
-> + * governor's pointer or an error pointer.
->   */
->  static struct devfreq_governor *try_then_request_governor(const char *name)
->  {
-> @@ -254,7 +254,7 @@ static struct devfreq_governor *try_then_request_governor(const char *name)
->  		/* Restore previous state before return */
->  		mutex_lock(&devfreq_list_lock);
->  		if (err)
-> -			return NULL;
-> +			return ERR_PTR(err);
->  
->  		governor = find_devfreq_governor(name);
->  	}
-> 
+> v2: As suggestion by christophe remove duplicates prototypes
+>
+>  arch/powerpc/kernel/suspend.c | 1 +
+>  arch/s390/kernel/entry.h      | 1 -
+>  include/linux/suspend.h       | 1 +
+>  kernel/power/power.h          | 2 --
+>  4 files changed, 2 insertions(+), 3 deletions(-)
 
+Looks fine to me.
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
+
+cheers
