@@ -2,109 +2,94 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49950C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D2A5C072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:04:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 286612075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:03:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1864E2075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:04:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727139AbfE1RDp convert rfc822-to-8bit (ORCPT
+        id S1727278AbfE1RD7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 13:03:45 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:31366 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727023AbfE1RDp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 13:03:45 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 45D0YB2pz3z9tyRn;
-        Tue, 28 May 2019 19:03:42 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id zifMpZ7Ll3nN; Tue, 28 May 2019 19:03:42 +0200 (CEST)
-Received: from vm-hermes.si.c-s.fr (vm-hermes.si.c-s.fr [192.168.25.253])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 45D0YB21rQz9tyRm;
-        Tue, 28 May 2019 19:03:42 +0200 (CEST)
-Received: by vm-hermes.si.c-s.fr (Postfix, from userid 33)
-        id 0690589D; Tue, 28 May 2019 19:03:41 +0200 (CEST)
-Received: from 37-170-84-163.coucou-networks.fr
- (37-170-84-163.coucou-networks.fr [37.170.84.163]) by messagerie.si.c-s.fr
- (Horde Framework) with HTTP; Tue, 28 May 2019 19:03:41 +0200
-Date:   Tue, 28 May 2019 19:03:41 +0200
-Message-ID: <20190528190341.Horde.nTXOule-IO2ReXFiNIqNbg8@messagerie.si.c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, Paul Mackerras <paulus@ozlabs.org>
-Subject: Re: [PATCH v3 14/16] powerpc/32: implement fast entry for syscalls
- on BOOKE
-References: <cover.1556627571.git.christophe.leroy@c-s.fr>
- <3e254178a157e7eaeef48f983880f71f97d1f296.1556627571.git.christophe.leroy@c-s.fr>
- <20190523061427.GA19655@blackberry>
- <98bf5745-88ae-7f17-fcb9-7d06ba5b9e49@c-s.fr>
- <58f0e70f-ed9d-965e-e8d2-cc5d13a4c9eb@c-s.fr>
- <87r28jp2b0.fsf@concordia.ellerman.id.au>
-In-Reply-To: <87r28jp2b0.fsf@concordia.ellerman.id.au>
-User-Agent: Internet Messaging Program (IMP) H5 (6.2.3)
-Content-Type: text/plain; charset=UTF-8; format=flowed; DelSp=Yes
+        Tue, 28 May 2019 13:03:59 -0400
+Received: from mailoutvs53.siol.net ([185.57.226.244]:39936 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727222AbfE1RD7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 13:03:59 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 9EE2F52258D;
+        Tue, 28 May 2019 19:03:55 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id wq2yfM6iCzA8; Tue, 28 May 2019 19:03:55 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id 5042F523805;
+        Tue, 28 May 2019 19:03:55 +0200 (CEST)
+Received: from jernej-laptop.localnet (cpe-86-58-52-202.static.triera.net [86.58.52.202])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id CE07C52258D;
+        Tue, 28 May 2019 19:03:52 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     Jonas Karlman <jonas@kwiboo.se>
+Cc:     "a.hajda@samsung.com" <a.hajda@samsung.com>,
+        "Laurent.pinchart@ideasonboard.com" 
+        <Laurent.pinchart@ideasonboard.com>,
+        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
+        "khilman@baylibre.com" <khilman@baylibre.com>,
+        "zhengyang@rock-chips.com" <zhengyang@rock-chips.com>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        "wens@csie.org" <wens@csie.org>,
+        "hjc@rock-chips.com" <hjc@rock-chips.com>,
+        "heiko@sntech.de" <heiko@sntech.de>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/4] drm/bridge: dw-hdmi: Add support for HDR metadata
+Date:   Tue, 28 May 2019 19:03:52 +0200
+Message-ID: <2731176.DZk0TneY9u@jernej-laptop>
+In-Reply-To: <VI1PR03MB420621617DDEAB3596700DE0AC1C0@VI1PR03MB4206.eurprd03.prod.outlook.com>
+References: <VI1PR03MB420621617DDEAB3596700DE0AC1C0@VI1PR03MB4206.eurprd03.prod.outlook.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michael Ellerman <mpe@ellerman.id.au> a écrit :
+Hi!
 
-> Christophe Leroy <christophe.leroy@c-s.fr> writes:
->> Le 23/05/2019 à 09:00, Christophe Leroy a écrit :
->>
->> [...]
->>
->>>> arch/powerpc/kernel/head_fsl_booke.o: In function `SystemCall':
->>>> arch/powerpc/kernel/head_fsl_booke.S:416: undefined reference to
->>>> `kvmppc_handler_BOOKE_INTERRUPT_SYSCALL_SPRN_SRR1'
->>>> Makefile:1052: recipe for target 'vmlinux' failed
->>>>
->>>>> +.macro SYSCALL_ENTRY trapno intno
->>>>> +    mfspr    r10, SPRN_SPRG_THREAD
->>>>> +#ifdef CONFIG_KVM_BOOKE_HV
->>>>> +BEGIN_FTR_SECTION
->>>>> +    mtspr    SPRN_SPRG_WSCRATCH0, r10
->>>>> +    stw    r11, THREAD_NORMSAVE(0)(r10)
->>>>> +    stw    r13, THREAD_NORMSAVE(2)(r10)
->>>>> +    mfcr    r13            /* save CR in r13 for now       */
->>>>> +    mfspr    r11, SPRN_SRR1
->>>>> +    mtocrf    0x80, r11    /* check MSR[GS] without clobbering reg */
->>>>> +    bf    3, 1975f
->>>>> +    b    kvmppc_handler_BOOKE_INTERRUPT_\intno\()_SPRN_SRR1
->>>>
->>>> It seems to me that the "_SPRN_SRR1" on the end of this line
->>>> isn't meant to be there...  However, it still fails to link with that
->>>> removed.
->>
->> It looks like I missed the macro expansion.
->>
->> The called function should be kvmppc_handler_8_0x01B
->>
->> Seems like kisskb doesn't build any config like this.
->
-> I thought we did, ie:
->
-> http://kisskb.ellerman.id.au/kisskb/buildresult/13817941/
+Dne nedelja, 26. maj 2019 ob 23:18:46 CEST je Jonas Karlman napisal(a):
+> Add support for HDR metadata using the hdr_output_metadata connector
+> property,  configure Dynamic Range and Mastering InfoFrame accordingly.
+> 
+> A drm_infoframe flag is added to dw_hdmi_plat_data that platform drivers
+> can use to signal when Dynamic Range and Mastering infoframes is supported.
+> This flag is needed because Amlogic GXBB and GXL report same DW-HDMI
+> version, and only GXL support DRM InfoFrame.
+> 
+> The first patch add functionality to configure DRM InfoFrame based on the
+> hdr_output_metadata connector property.
+> 
+> The remaining patches sets the drm_infoframe flag on some SoCs supporting
+> Dynamic Range and Mastering InfoFrame.
+> 
+> Note that this was based on top of drm-misc-next and Neil Armstrong's
+> "drm/meson: Add support for HDMI2.0 YUV420 4k60" series at [1]
+> 
+> [1] https://patchwork.freedesktop.org/series/58725/#rev2
 
-That's a ppc64 config it seems. The problem was on booke32.
+For Allwinner H6:
+Tested-by: Jernej Skrabec <jernej.skrabec@siol.net>
 
-Christophe
+Thanks for working on this!
 
->
-> But clearly something is missing to trigger the bug.
->
-> cheers
+Best regards,
+Jernej
+
 
 
