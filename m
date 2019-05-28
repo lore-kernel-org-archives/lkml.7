@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79495C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B758DC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4900021019
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:24:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CA4521019
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:25:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="hBiuUKcx"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="daml5CCo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbfE1VYR (ORCPT
+        id S1727907AbfE1VZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 17:24:17 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:58849 "EHLO
+        Tue, 28 May 2019 17:25:04 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:56851 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbfE1VYQ (ORCPT
+        with ESMTP id S1726452AbfE1VZE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 17:24:16 -0400
+        Tue, 28 May 2019 17:25:04 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4SLO6EM2239960
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4SLOnI92240051
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 28 May 2019 14:24:06 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4SLO6EM2239960
+        Tue, 28 May 2019 14:24:49 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4SLOnI92240051
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559078647;
-        bh=65jeStFY+/VN0605HKheOaSupMyY/pJAmSJskHTqky8=;
+        s=2019051801; t=1559078690;
+        bh=wd+1Q2iEBloh7OhyhelN1hT7unVWc1UJhsdZzNauNys=;
         h=Date:From:Cc:Reply-To:To:Subject:From;
-        b=hBiuUKcxhGGEsZVRJrdEHIIT/HTsPDsTeRPwbubvbMcJODRR3RfdDMkp2EbhDVe/u
-         55WPdzJd0+aC6ie3YpWAY9UAZ1xQnlbJVnzoadxBQbzAoTX8jno2gm8c7Y+hL87zZu
-         HV2uhxf6XujdWyVxoci+pDw05h5j13cmalwtS26dSaYRGmFRiIoFCHpIK0w6wu3iPx
-         J26PUcjlvmqmTDs26BXAQVpAQ8tk1kU1ybUIv2JxJGJdz6wXuGideO0YSsCd3XB6W6
-         eqWz0QlrjbfKUyCYAS+hVqOvKmFDOnpDwFV18HtZS/4RMCJ3tvNUlH4pwF3/j77HDt
-         V69ZyhMTJfkxg==
+        b=daml5CCo++JssjCaIvjoZfByeIiuFOpwUmGqXOBc2kAgbC0eNnBV1G8dxwDqjHHKp
+         o7kbAacqYx7tUIbfZzqWjjOQmfPzPaCK2hxp3tdjq2feV7dykdmnTQF+N+FawH2GtK
+         GOzBfu772yEEk2QOYFKaxRMCNezJpDE7Sz9tWWjx3ALCZeFMbYMbxSxNlXZtmp0bXd
+         NYbKiSfHqi4fpHOjhupZj6HfS91EqJYi3CG7VgWgUOqu4x64/tWhhu5LmR1dJ7r6En
+         E2UmG36WDFlJN7h0ayYPGMBsJ/9bHAiSl3HgsBN7yOYuxhJdYkpvDwOG99tsrUH/Ng
+         7bB0VYLD+4rMg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4SLO6nf2239811;
-        Tue, 28 May 2019 14:24:06 -0700
-Date:   Tue, 28 May 2019 14:24:06 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4SLOmLZ2240048;
+        Tue, 28 May 2019 14:24:48 -0700
+Date:   Tue, 28 May 2019 14:24:48 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-jp1afecx3ql1jkuirpgkqfad@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, namhyung@kernel.org, acme@redhat.com,
-        lclaudio@redhat.com, hpa@zytor.com, brendan.d.gregg@gmail.com,
-        adrian.hunter@intel.com, ak@linux.intel.com, jolsa@kernel.org,
-        tglx@linutronix.de, mingo@kernel.org
-Reply-To: adrian.hunter@intel.com, mingo@kernel.org, tglx@linutronix.de,
-          namhyung@kernel.org, acme@redhat.com, hpa@zytor.com,
-          brendan.d.gregg@gmail.com, jolsa@kernel.org, ak@linux.intel.com,
-          linux-kernel@vger.kernel.org, lclaudio@redhat.com
+Message-ID: <tip-lenja6gmy26dkt0ybk747qgq@git.kernel.org>
+Cc:     brendan.d.gregg@gmail.com, jolsa@kernel.org, tglx@linutronix.de,
+        namhyung@kernel.org, hpa@zytor.com, adrian.hunter@intel.com,
+        christian@brauner.io, acme@redhat.com,
+        linux-kernel@vger.kernel.org, lclaudio@redhat.com, mingo@kernel.org
+Reply-To: namhyung@kernel.org, brendan.d.gregg@gmail.com,
+          linux-kernel@vger.kernel.org, hpa@zytor.com, tglx@linutronix.de,
+          jolsa@kernel.org, lclaudio@redhat.com, mingo@kernel.org,
+          christian@brauner.io, adrian.hunter@intel.com, acme@redhat.com
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] tools arch x86: Sync asm/cpufeatures.h with the
- with the kernel
-Git-Commit-ID: b979540a7522617e190636621e7c5ffae469f8f0
+Subject: [tip:perf/urgent] tools headers UAPI: Sync linux/sched.h with the
+ kernel
+Git-Commit-ID: c27de2b8911db7624be9bde1b5d58067dd58371d
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -70,57 +70,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  b979540a7522617e190636621e7c5ffae469f8f0
-Gitweb:     https://git.kernel.org/tip/b979540a7522617e190636621e7c5ffae469f8f0
+Commit-ID:  c27de2b8911db7624be9bde1b5d58067dd58371d
+Gitweb:     https://git.kernel.org/tip/c27de2b8911db7624be9bde1b5d58067dd58371d
 Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Tue, 21 May 2019 16:39:42 -0300
+AuthorDate: Tue, 21 May 2019 16:43:32 -0300
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Tue, 28 May 2019 09:49:03 -0300
 
-tools arch x86: Sync asm/cpufeatures.h with the with the kernel
+tools headers UAPI: Sync linux/sched.h with the kernel
 
-To pick up the changes in:
+To pick up the change in:
 
-  ed5194c2732c ("x86/speculation/mds: Add basic bug infrastructure for MDS")
-  e261f209c366 ("x86/speculation/mds: Add BUG_MSBDS_ONLY")
+  b3e583825266 ("clone: add CLONE_PIDFD")
 
-That don't affect anything in tools/.
+This requires changes in the 'perf trace' beautification routines for
+the 'clone' syscall args, which is done in a followup patch.
 
-This silences this perf build warning:
+This silences the following perf build warning:
 
-  Warning: Kernel ABI header at 'tools/arch/x86/include/asm/cpufeatures.h' differs from latest version at 'arch/x86/include/asm/cpufeatures.h'
-  diff -u tools/arch/x86/include/asm/cpufeatures.h arch/x86/include/asm/cpufeatures.h
+  Warning: Kernel ABI header at 'tools/include/uapi/linux/sched.h' differs from latest version at 'include/uapi/linux/sched.h'
+  diff -u tools/include/uapi/linux/sched.h include/uapi/linux/sched.h
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
+Cc: Christian Brauner <christian@brauner.io>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/n/tip-jp1afecx3ql1jkuirpgkqfad@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-lenja6gmy26dkt0ybk747qgq@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/arch/x86/include/asm/cpufeatures.h | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/include/uapi/linux/sched.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/arch/x86/include/asm/cpufeatures.h b/tools/arch/x86/include/asm/cpufeatures.h
-index 981ff9479648..75f27ee2c263 100644
---- a/tools/arch/x86/include/asm/cpufeatures.h
-+++ b/tools/arch/x86/include/asm/cpufeatures.h
-@@ -344,6 +344,7 @@
- /* Intel-defined CPU features, CPUID level 0x00000007:0 (EDX), word 18 */
- #define X86_FEATURE_AVX512_4VNNIW	(18*32+ 2) /* AVX-512 Neural Network Instructions */
- #define X86_FEATURE_AVX512_4FMAPS	(18*32+ 3) /* AVX-512 Multiply Accumulation Single precision */
-+#define X86_FEATURE_MD_CLEAR		(18*32+10) /* VERW clears CPU buffers */
- #define X86_FEATURE_TSX_FORCE_ABORT	(18*32+13) /* "" TSX_FORCE_ABORT */
- #define X86_FEATURE_PCONFIG		(18*32+18) /* Intel PCONFIG */
- #define X86_FEATURE_SPEC_CTRL		(18*32+26) /* "" Speculation Control (IBRS + IBPB) */
-@@ -382,5 +383,7 @@
- #define X86_BUG_SPECTRE_V2		X86_BUG(16) /* CPU is affected by Spectre variant 2 attack with indirect branches */
- #define X86_BUG_SPEC_STORE_BYPASS	X86_BUG(17) /* CPU is affected by speculative store bypass attack */
- #define X86_BUG_L1TF			X86_BUG(18) /* CPU is affected by L1 Terminal Fault */
-+#define X86_BUG_MDS			X86_BUG(19) /* CPU is affected by Microarchitectural data sampling */
-+#define X86_BUG_MSBDS_ONLY		X86_BUG(20) /* CPU is only affected by the  MSDBS variant of BUG_MDS */
- 
- #endif /* _ASM_X86_CPUFEATURES_H */
+diff --git a/tools/include/uapi/linux/sched.h b/tools/include/uapi/linux/sched.h
+index 22627f80063e..ed4ee170bee2 100644
+--- a/tools/include/uapi/linux/sched.h
++++ b/tools/include/uapi/linux/sched.h
+@@ -10,6 +10,7 @@
+ #define CLONE_FS	0x00000200	/* set if fs info shared between processes */
+ #define CLONE_FILES	0x00000400	/* set if open files shared between processes */
+ #define CLONE_SIGHAND	0x00000800	/* set if signal handlers and blocked signals shared */
++#define CLONE_PIDFD	0x00001000	/* set if a pidfd should be placed in parent */
+ #define CLONE_PTRACE	0x00002000	/* set if we want to let tracing continue on the child too */
+ #define CLONE_VFORK	0x00004000	/* set if the parent wants the child to wake it up on mm_release */
+ #define CLONE_PARENT	0x00008000	/* set if we want to have the same parent as the cloner */
