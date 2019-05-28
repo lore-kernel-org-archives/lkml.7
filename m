@@ -2,133 +2,144 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97695C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF7AC04E84
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AE9820717
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:30:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xof57xMe"
+	by mail.kernel.org (Postfix) with ESMTP id 1374420717
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:34:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727681AbfE1Hal (ORCPT
+        id S1727441AbfE1Hen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 03:30:41 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:44687 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727644AbfE1Hak (ORCPT
+        Tue, 28 May 2019 03:34:43 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38305 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726203AbfE1Hem (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 03:30:40 -0400
-Received: by mail-qk1-f194.google.com with SMTP id w187so10775581qkb.11
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 00:30:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=liX278HTgn3dzodp7H0O3yv5Xch4o5IxEkhO3Idcuvw=;
-        b=Xof57xMef9rhMVvwdzWqgl8c8PWB/Qq5WaAyj1db7xil+fDCj2i2m2YnoW8pKwTFyW
-         2fV5WVtAWhMVaj64Iuj3Xg8EqCSIHF9C1lbxhu3ktohEZLkh788n0+WGOtLwsRx5rSSB
-         idqXNx8jf21nLRjVkPZziJlecnNAnwLPmW96STeBbUTLipuKTqsP7RhQL0Ob3lS65mkx
-         UfHomb1WgXBlgs+mcjx1y7MMHVGLMi62Y+rgLWH1eZYzKN7d8r65fCXeTVeX7ZVuzXCK
-         RD9+LjBiqfsMx6BBjE4DmFkIMgoU4pUkbXkfAC55Nl4lss1Qn+wXSgeO8/o6OXFjcjzP
-         qjew==
+        Tue, 28 May 2019 03:34:42 -0400
+Received: by mail-lj1-f193.google.com with SMTP id 14so16695311ljj.5;
+        Tue, 28 May 2019 00:34:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=liX278HTgn3dzodp7H0O3yv5Xch4o5IxEkhO3Idcuvw=;
-        b=j2sTHYpUkxjWgCFnfdZuT4vrp3SgqHkpw/Csh6SvTrGTA8WC5bD+XQhbktQky8VVS9
-         lbe/0Ih8HiwBQ4y2i1ht6zfSmMR8I3+dhYXOoMYOVWxuaps9sNmk8wPGFl3Zy8JUk+d3
-         JNI312o7l6D9vrOjz9hDioTH5BlQw9CPH+gclca6o9UzNALvlH9h6KP87h2pe2OopiLr
-         6VM5Gb3SXNZ3iOQ2qyx0hyWP6mbFcjPp3I2aR0STE401hBnToOyQvyLC7/LOJnyh1JRE
-         mDH4zDm2ijnxMvs/g01iisyl5wIeAzck8tLg06kByqFpBn0BdlU+b8HxDyYOOpbWLLbU
-         AcAw==
-X-Gm-Message-State: APjAAAVdQLafXTbfcZuXPyLoBa4qsLJQvlKziB+Wh2BwYaCbCsrA8ZBV
-        oxa2j3oN2EhASjbOSfhQa9uAAY/AGnhDIatTj+ctGA==
-X-Google-Smtp-Source: APXvYqw/o9g3j0+8QuWo1gdBVqYhqsgNj/cyEh5sq/3CNJ6H80Oh+b9UbNvS2HHUMZy5yppiywgVa8gezanxUHTOGjg=
-X-Received: by 2002:a37:502:: with SMTP id 2mr3621845qkf.93.1559028639303;
- Tue, 28 May 2019 00:30:39 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=trapB6GCH6DrFYhLqm2TbydlBbFBOqjrTPKFBvYve8U=;
+        b=UL/Alc6+GYMD9p6SduN+9qtTmrRUYk5N+x4HcCJti7iMA/2gV42kZoU2D6H2sBaPej
+         4hReoi49Nny0v7Of7JQDRX6zxgXIltUS6Aup5b2MMdA1xYEas1kEGiDJlEHAZN+OGBRV
+         9wo+U6SZD860sJ/4eR625xPKnxtijIVkHoyJzkzmZOoK/hoNpcMuYy/o/cxwqrSmB+ja
+         tsLXG4c2D4lx1LUNvjEseuYR5wgjDbSa5kGFxP59muP7hLt5qJq3SrC62r3OEYlI3mUq
+         TNAzwxHai6PqBaFyMaQt0s7E27NZ6GXoLPKV0a4EfIzDJa3o89cfYSL/P/z9uh9pdOmo
+         d94A==
+X-Gm-Message-State: APjAAAWriTG2h8h7NICWKtd02a4zF/IQQvEqWZeiXXSmqhQDqliLBteg
+        yGzn1VDs4BLRM+4/odPFFMIWBBbmOxPhr2rYAss=
+X-Google-Smtp-Source: APXvYqy2qQI+pzVbL0x7gFnfPgU8bYHNW5+5eXWGv1zv7eVDWBC5pYEB/0mszyVJkiZmsuOWedYDfj78KMwjiypaGvY=
+X-Received: by 2002:a2e:249:: with SMTP id 70mr60692698ljc.178.1559028880499;
+ Tue, 28 May 2019 00:34:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190527115830.15836-1-benjamin.gaignard@st.com> <1e4c4cbf-869e-8b6a-a1d6-cc7dccb2515a@st.com>
-In-Reply-To: <1e4c4cbf-869e-8b6a-a1d6-cc7dccb2515a@st.com>
-From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Date:   Tue, 28 May 2019 09:30:28 +0200
-Message-ID: <CA+M3ks5UxZ0iugtR_zJPshtC=HAjoAzTPmu6oxt7BQWTuj203Q@mail.gmail.com>
-Subject: Re: [PATCH] drm/stm: ltdc: restore calls to clk_{enable/disable}
-To:     Philippe CORNU <philippe.cornu@st.com>
-Cc:     Benjamin GAIGNARD <benjamin.gaignard@st.com>,
-        Yannick FERTRE <yannick.fertre@st.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1558711904-27278-1-git-send-email-gareth.williams.jx@renesas.com> <1558711904-27278-3-git-send-email-gareth.williams.jx@renesas.com>
+In-Reply-To: <1558711904-27278-3-git-send-email-gareth.williams.jx@renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 28 May 2019 09:34:29 +0200
+Message-ID: <CAMuHMdU_+U0iW+35OVZ-ExquE1s0bUtjM5e63zaOU9WFy8j_UA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] clk: renesas: r9a06g032: Add clock domain support
+To:     Gareth Williams <gareth.williams.jx@renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le lun. 27 mai 2019 =C3=A0 14:28, Philippe CORNU <philippe.cornu@st.com> a =
-=C3=A9crit :
->
-> Hi Benjamin,
->
-> Many thanks for this fix (and more generally for pushing STM patches on
-> misc :-)
->
-> Acked-by: Philippe Cornu <philippe.cornu@st.com>
+Hi Gareth,
 
-Applied on drm-misc-next,
-sorry for the mistake.
+On Fri, May 24, 2019 at 5:32 PM Gareth Williams
+<gareth.williams.jx@renesas.com> wrote:
+> There are several clocks on the r9ag032 which are currently not enabled
+> in their drivers that can be delegated to clock domain system for power
+> management. Therefore add support for clock domain functionality to the
+> r9a06g032 clock driver.
+>
+> Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
 
-Benjamin
+Thanks for the update!
+
+> --- a/drivers/clk/renesas/r9a06g032-clocks.c
+> +++ b/drivers/clk/renesas/r9a06g032-clocks.c
+
+> @@ -344,6 +351,86 @@ struct r9a06g032_clk_gate {
 >
-> Philippe :-)
+>  #define to_r9a06g032_gate(_hw) container_of(_hw, struct r9a06g032_clk_gate, hw)
 >
-> On 5/27/19 1:58 PM, Benjamin Gaignard wrote:
-> > From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-> >
-> > Restore calls to clk_{enable/disable} deleted after applying the wrong
-> > version of the patch
-> >
-> > Fixes: fd6905fca4f0 ("drm/stm: ltdc: remove clk_round_rate comment")
-> >
-> > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-> > ---
-> >   drivers/gpu/drm/stm/ltdc.c | 2 ++
-> >   1 file changed, 2 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
-> > index ae2aaf2a62ee..ac29890edeb6 100644
-> > --- a/drivers/gpu/drm/stm/ltdc.c
-> > +++ b/drivers/gpu/drm/stm/ltdc.c
-> > @@ -507,10 +507,12 @@ static bool ltdc_crtc_mode_fixup(struct drm_crtc =
-*crtc,
-> >       struct ltdc_device *ldev =3D crtc_to_ltdc(crtc);
-> >       int rate =3D mode->clock * 1000;
-> >
-> > +     clk_disable(ldev->pixel_clk);
-> >       if (clk_set_rate(ldev->pixel_clk, rate) < 0) {
-> >               DRM_ERROR("Cannot set rate (%dHz) for pixel clk\n", rate)=
-;
-> >               return false;
-> >       }
-> > +     clk_enable(ldev->pixel_clk);
-> >
-> >       adjusted_mode->clock =3D clk_get_rate(ldev->pixel_clk) / 1000;
-> >
-> >
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> +static int create_add_module_clock(struct of_phandle_args *clkspec,
+> +                                  struct device *dev)
+> +{
+> +       struct clk *clk;
+> +       int error = 0;
+
+No need to initialize to 0.
+
+> +
+> +       clk = of_clk_get_from_provider(clkspec);
+> +       if (IS_ERR(clk))
+> +               return PTR_ERR(clk);
+> +
+> +       error = pm_clk_create(dev);
+
+> +static int r9a06g032_attach_dev(struct generic_pm_domain *pd,
+> +                               struct device *dev)
+> +{
+> +       struct device_node *np = dev->of_node;
+> +       struct of_phandle_args clkspec;
+> +       int i = 0;
+> +       int error;
+> +
+> +       while (!of_parse_phandle_with_args(np, "clocks", "#clock-cells", i,
+> +                                          &clkspec)) {
+> +               int index;
+
+scripts/checkpatch.pl says a blank line is missing.
+Alternatively, you can move the declaration of index to the top of the
+function, together with error and i.
+
+> +               if (clkspec.np != pd->dev.of_node)
+> +                       continue;
+> +
+> +               index = clkspec.args[0];
+> +
+> +               if (index < R9A06G032_CLOCK_COUNT &&
+> +                   r9a06g032_clocks[index].managed) {
+> +                       of_node_put(clkspec.np);
+
+As the call below uses clkspec.np, the call to of_node_put() should be
+after it, just before the error check.
+
+> +
+> +                       error = create_add_module_clock(&clkspec, dev);
+> +                       if (error)
+> +                               return error;
+> +               }
+> +               i++;
+> +       }
+> +
+> +       return 0;
+> +}
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
