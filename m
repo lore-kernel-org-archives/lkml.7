@@ -2,137 +2,109 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E3CC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C09C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E20E6208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:34:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="RQkJJHu0";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="PQsAEkEJ"
+	by mail.kernel.org (Postfix) with ESMTP id 29856208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:35:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbfE1Ief (ORCPT
+        id S1726844AbfE1IfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 04:34:35 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:59488 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726557AbfE1Iee (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 04:34:34 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4S8WjYr016093;
-        Tue, 28 May 2019 01:34:30 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pfpt0818;
- bh=IuklDDH21MYIVeuL01ZQnCZb5D6D3+lgcMFYhAzktGU=;
- b=RQkJJHu0RUNltlRbq01PXim+lWQ5jXleq1FaMlamvxMflKLzJqBBxegg51OoVUmiM+hl
- HMbuZ7cGD+ynTIWayj3XTqsN0cXui9FDfz6D8fjxNaKBzuoAkU2x9eCqPeaBk1GmoGci
- CA1pTnJjSBDswXQLkUvJWK48fyq4Eanm9CQssQF0f6EcISOh5yBRxKCrlu9D9WeO9RjV
- 7ekA0r6szWSRYV6EwaANYZB+fXZ0uerY/yUwdwnXlkMYzUC4X2FTf8UfuBJPeEBHXP/m
- 6Dsj9LU+lfjZhmy3a06I54CWHOlkS19f71Obg2SKGJuScQDW8LrXtQxbMEbVIVF+ZvGk qw== 
-Received: from sc-exch04.marvell.com ([199.233.58.184])
-        by mx0b-0016f401.pphosted.com with ESMTP id 2sr7e4dg3r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 28 May 2019 01:34:30 -0700
-Received: from SC-EXCH03.marvell.com (10.93.176.83) by SC-EXCH04.marvell.com
- (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Tue, 28 May
- 2019 01:34:29 -0700
-Received: from NAM05-BY2-obe.outbound.protection.outlook.com (104.47.50.56) by
- SC-EXCH03.marvell.com (10.93.176.83) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Tue, 28 May 2019 01:34:29 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IuklDDH21MYIVeuL01ZQnCZb5D6D3+lgcMFYhAzktGU=;
- b=PQsAEkEJ+qsthEVy32wjb9RSuW3wNl/yyDrSisRfGFDO1CwaBa8Zl8tWsrRvquwxN9LLSJ1LMVbO3FVz1IZjRIEm4OGwljfS3Hk1565mzHLPU4TaWNX6ocr1huix1arw7K2ZBicqMPmW92jLlazR80vKRj5MFj3DIoVRPf+M5WI=
-Received: from MN2PR18MB3182.namprd18.prod.outlook.com (10.255.236.143) by
- MN2PR18MB2672.namprd18.prod.outlook.com (20.179.84.74) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.15; Tue, 28 May 2019 08:34:23 +0000
-Received: from MN2PR18MB3182.namprd18.prod.outlook.com
- ([fe80::9880:2b8b:52e5:b413]) by MN2PR18MB3182.namprd18.prod.outlook.com
- ([fe80::9880:2b8b:52e5:b413%3]) with mapi id 15.20.1922.021; Tue, 28 May 2019
- 08:34:23 +0000
-From:   Michal Kalderon <mkalderon@marvell.com>
-To:     Colin King <colin.king@canonical.com>,
-        Ariel Elior <aelior@marvell.com>,
-        GR-everest-linux-l2 <GR-everest-linux-l2@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [EXT] [PATCH][next] qed: fix spelling mistake "inculde" ->
- "include"
-Thread-Topic: [EXT] [PATCH][next] qed: fix spelling mistake "inculde" ->
- "include"
-Thread-Index: AQHVFSHr8lMSvwYvE06Dm65I9JgLzaaANeoQ
-Date:   Tue, 28 May 2019 08:34:23 +0000
-Message-ID: <MN2PR18MB3182F2B217A519FA20F3427AA11E0@MN2PR18MB3182.namprd18.prod.outlook.com>
-References: <20190528065217.7311-1-colin.king@canonical.com>
-In-Reply-To: <20190528065217.7311-1-colin.king@canonical.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [212.199.69.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9ee0233e-78de-48d5-d5df-08d6e34749c7
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB2672;
-x-ms-traffictypediagnostic: MN2PR18MB2672:
-x-microsoft-antispam-prvs: <MN2PR18MB2672AB82C128A3803B627620A11E0@MN2PR18MB2672.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 00514A2FE6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(136003)(39850400004)(366004)(396003)(376002)(199004)(189003)(74316002)(7696005)(73956011)(81166006)(14454004)(2501003)(229853002)(6506007)(305945005)(186003)(26005)(14444005)(256004)(81156014)(25786009)(66066001)(53936002)(8936002)(76116006)(11346002)(102836004)(2906002)(7736002)(76176011)(478600001)(3846002)(99286004)(6116002)(5660300002)(71190400001)(6246003)(66476007)(486006)(6436002)(8676002)(71200400001)(9686003)(33656002)(4326008)(52536014)(66556008)(66446008)(64756008)(55016002)(446003)(66946007)(110136005)(86362001)(476003)(68736007)(54906003)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2672;H:MN2PR18MB3182.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: GJ1SR5m/XZuS+I7l7qtd1XVnDAoe4P7hg4QHdHLxJ/zXDETULp6HZRJBWO7AMbq8wHou5csJ1/qkdu8GRBBJwA9Z/46X/v55FhkFXMmfHsAGZUnwhPVlSJvt/mCqa/VM8soEJfHp1eW23ZlFtflwRB/pW2fvm27H7vkqRsKw3tuVARMuhfN15ERxSkYawaON4F1XNmuRRuUJqQg71E7N7bckvsO/OynE5f0FcbvQBtlQ0Yrrx9AxxMX4CUIx+hCVzuHz49CJDRdwH8vy/lDPFNQ4aSEZjOTXw1CNes9rJaiFeSGSyh54ztMbxDpCm0o41VqJijyS3qJdekKsW181awUdCkwLszXy2W1CMLz6qDxAhZCOxh+PLlOmdVEGdUBla9MQL25JqwAtXFvju5NDz6iE3UZhKwxv44JEAueQpM8=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 28 May 2019 04:35:06 -0400
+Received: from relay.sw.ru ([185.231.240.75]:44080 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726631AbfE1IfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 04:35:05 -0400
+Received: from [172.16.25.169]
+        by relay.sw.ru with esmtp (Exim 4.91)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1hVXZU-000124-DK; Tue, 28 May 2019 11:35:00 +0300
+Subject: Re: [PATCH] list_lru: fix memory leak in __memcg_init_list_lru_node
+To:     Shakeel Butt <shakeelb@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        syzbot+f90a420dfe2b1b03cb2c@syzkaller.appspotmail.com
+References: <20190528043202.99980-1-shakeelb@google.com>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <6ed45785-4b5b-83f9-6487-6c4142fe22ac@virtuozzo.com>
+Date:   Tue, 28 May 2019 11:34:59 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9ee0233e-78de-48d5-d5df-08d6e34749c7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2019 08:34:23.8390
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mkalderon@marvell.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2672
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-28_04:,,
- signatures=0
+In-Reply-To: <20190528043202.99980-1-shakeelb@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBDb2xpbiBLaW5nIDxjb2xpbi5raW5nQGNhbm9uaWNhbC5jb20+DQo+IFNlbnQ6IFR1
-ZXNkYXksIE1heSAyOCwgMjAxOSA5OjUyIEFNDQo+IA0KPiBFeHRlcm5hbCBFbWFpbA0KPiANCj4g
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLQ0KPiBGcm9tOiBDb2xpbiBJYW4gS2luZyA8Y29saW4ua2luZ0BjYW5vbmlj
-YWwuY29tPg0KPiANCj4gVGhlcmUgaXMgYSBzcGVsbGluZyBtaXN0YWtlIGluIGEgRFBfSU5GTyBt
-ZXNzYWdlLiBGaXggaXQuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBDb2xpbiBJYW4gS2luZyA8Y29s
-aW4ua2luZ0BjYW5vbmljYWwuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvbmV0L2V0aGVybmV0L3Fs
-b2dpYy9xZWQvcWVkX2Rldi5jIHwgMiArLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9u
-KCspLCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvZXRoZXJu
-ZXQvcWxvZ2ljL3FlZC9xZWRfZGV2LmMNCj4gYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9xbG9naWMv
-cWVkL3FlZF9kZXYuYw0KPiBpbmRleCA2MWNhNDlhOTY3ZGYuLmE5NzE0MTg3NTVlOSAxMDA2NDQN
-Cj4gLS0tIGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvcWxvZ2ljL3FlZC9xZWRfZGV2LmMNCj4gKysr
-IGIvZHJpdmVycy9uZXQvZXRoZXJuZXQvcWxvZ2ljL3FlZC9xZWRfZGV2LmMNCj4gQEAgLTM4MzYs
-NyArMzgzNiw3IEBAIHN0YXRpYyBpbnQgcWVkX2h3X2dldF9wcGZpZF9iaXRtYXAoc3RydWN0DQo+
-IHFlZF9od2ZuICpwX2h3Zm4sDQo+IA0KPiAgCWlmICghKGNkZXYtPnBwZmlkX2JpdG1hcCAmICgw
-eDEgPDwgbmF0aXZlX3BwZmlkX2lkeCkpKSB7DQo+ICAJCURQX0lORk8ocF9od2ZuLA0KPiAtCQkJ
-IkZpeCB0aGUgUFBGSUQgYml0bWFwIHRvIGluY3VsZGUgdGhlIG5hdGl2ZSBQUEZJRA0KPiBbbmF0
-aXZlX3BwZmlkX2lkeCAlaGhkLCBvcmlnX2JpdG1hcCAweCVoaHhdXG4iLA0KPiArCQkJIkZpeCB0
-aGUgUFBGSUQgYml0bWFwIHRvIGluY2x1ZGUgdGhlIG5hdGl2ZSBQUEZJRA0KPiBbbmF0aXZlX3Bw
-ZmlkX2lkeCAlaGhkLCBvcmlnX2JpdG1hcCAweCVoaHhdXG4iLA0KPiAgCQkJbmF0aXZlX3BwZmlk
-X2lkeCwgY2Rldi0+cHBmaWRfYml0bWFwKTsNCj4gIAkJY2Rldi0+cHBmaWRfYml0bWFwID0gMHgx
-IDw8IG5hdGl2ZV9wcGZpZF9pZHg7DQo+ICAJfQ0KPiAtLQ0KPiAyLjIwLjENCg0KVGhhbmtzLMKg
-DQoNCkFja2VkLWJ5OiBNaWNoYWwgS2FsZGVyb27CoDxtaWNoYWwua2FsZGVyb25AbWFydmVsbC5j
-b20+DQoNCg0K
+On 28.05.2019 07:32, Shakeel Butt wrote:
+> Syzbot reported following memory leak:
+> 
+> ffffffffda RBX: 0000000000000003 RCX: 0000000000441f79
+> BUG: memory leak
+> unreferenced object 0xffff888114f26040 (size 32):
+>   comm "syz-executor626", pid 7056, jiffies 4294948701 (age 39.410s)
+>   hex dump (first 32 bytes):
+>     40 60 f2 14 81 88 ff ff 40 60 f2 14 81 88 ff ff  @`......@`......
+>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>   backtrace:
+>     [<0000000018f36b56>] kmemleak_alloc_recursive include/linux/kmemleak.h:55 [inline]
+>     [<0000000018f36b56>] slab_post_alloc_hook mm/slab.h:439 [inline]
+>     [<0000000018f36b56>] slab_alloc mm/slab.c:3326 [inline]
+>     [<0000000018f36b56>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
+>     [<0000000055b9a1a5>] kmalloc include/linux/slab.h:547 [inline]
+>     [<0000000055b9a1a5>] __memcg_init_list_lru_node+0x58/0xf0 mm/list_lru.c:352
+>     [<000000001356631d>] memcg_init_list_lru_node mm/list_lru.c:375 [inline]
+>     [<000000001356631d>] memcg_init_list_lru mm/list_lru.c:459 [inline]
+>     [<000000001356631d>] __list_lru_init+0x193/0x2a0 mm/list_lru.c:626
+>     [<00000000ce062da3>] alloc_super+0x2e0/0x310 fs/super.c:269
+>     [<000000009023adcf>] sget_userns+0x94/0x2a0 fs/super.c:609
+>     [<0000000052182cd8>] sget+0x8d/0xb0 fs/super.c:660
+>     [<0000000006c24238>] mount_nodev+0x31/0xb0 fs/super.c:1387
+>     [<0000000006016a76>] fuse_mount+0x2d/0x40 fs/fuse/inode.c:1236
+>     [<000000009a61ec1d>] legacy_get_tree+0x27/0x80 fs/fs_context.c:661
+>     [<0000000096cd9ef8>] vfs_get_tree+0x2e/0x120 fs/super.c:1476
+>     [<000000005b8f472d>] do_new_mount fs/namespace.c:2790 [inline]
+>     [<000000005b8f472d>] do_mount+0x932/0xc50 fs/namespace.c:3110
+>     [<00000000afb009b4>] ksys_mount+0xab/0x120 fs/namespace.c:3319
+>     [<0000000018f8c8ee>] __do_sys_mount fs/namespace.c:3333 [inline]
+>     [<0000000018f8c8ee>] __se_sys_mount fs/namespace.c:3330 [inline]
+>     [<0000000018f8c8ee>] __x64_sys_mount+0x26/0x30 fs/namespace.c:3330
+>     [<00000000f42066da>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:301
+>     [<0000000043d74ca0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> This is a simple off by one bug on the error path.
+> 
+> Reported-by: syzbot+f90a420dfe2b1b03cb2c@syzkaller.appspotmail.com
+> Signed-off-by: Shakeel Butt <shakeelb@google.com>
+
+Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+
+> ---
+>  mm/list_lru.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/mm/list_lru.c b/mm/list_lru.c
+> index 0bdf3152735e..92870be4a322 100644
+> --- a/mm/list_lru.c
+> +++ b/mm/list_lru.c
+> @@ -358,7 +358,7 @@ static int __memcg_init_list_lru_node(struct list_lru_memcg *memcg_lrus,
+>  	}
+>  	return 0;
+>  fail:
+> -	__memcg_destroy_list_lru_node(memcg_lrus, begin, i - 1);
+> +	__memcg_destroy_list_lru_node(memcg_lrus, begin, i);
+>  	return -ENOMEM;
+>  }
+>  
+> 
+
