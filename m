@@ -2,150 +2,196 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA162C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4BA5C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C80C020B7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:54:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B932E20B7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:56:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BXFLwGPC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbfE1Vya (ORCPT
+        id S1728024AbfE1V4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 17:54:30 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40725 "EHLO mx1.redhat.com"
+        Tue, 28 May 2019 17:56:21 -0400
+Received: from ozlabs.org ([203.11.71.1]:45347 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726526AbfE1Vya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 17:54:30 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726526AbfE1V4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 17:56:20 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A34A2883D7;
-        Tue, 28 May 2019 21:54:29 +0000 (UTC)
-Received: from x1.home (ovpn-116-22.phx2.redhat.com [10.3.116.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9BCAF60BF1;
-        Tue, 28 May 2019 21:54:28 +0000 (UTC)
-Date:   Tue, 28 May 2019 15:54:28 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Pierre Morel <pmorel@linux.ibm.com>, sebott@linux.vnet.ibm.com,
-        gerald.schaefer@de.ibm.com, pasic@linux.vnet.ibm.com,
-        borntraeger@de.ibm.com, walling@linux.ibm.com,
-        linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org,
-        joro@8bytes.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        robin.murphy@arm.com
-Subject: Re: [PATCH v3 2/3] vfio: zpci: defining the VFIO headers
-Message-ID: <20190528155428.0f149994@x1.home>
-In-Reply-To: <20190523182433.567b8408.cohuck@redhat.com>
-References: <1558614326-24711-1-git-send-email-pmorel@linux.ibm.com>
-        <1558614326-24711-3-git-send-email-pmorel@linux.ibm.com>
-        <20190523182433.567b8408.cohuck@redhat.com>
-Organization: Red Hat
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45D72m3p7Vz9s5c;
+        Wed, 29 May 2019 07:56:16 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1559080577;
+        bh=LrX/cyFpcdg2iUnZm9VFg2gXW9OqU4FqAiPt8bY6SyQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=BXFLwGPCnmVxcvOSSmPm4LvmTFmMwJzOYcPocUJuuL76FCW0i/P2OPW1/auY9yG+S
+         EZSbb9PTy9td9qyGXvRzdBPwf0Jllj58O6ln1LOcFO0c/W3Jmr3e5mBqVlgYLcA/FD
+         gfUxdF+5B100Zs0B3LYj9DS3xIpp4TRMw9KNxk6bMiB4WhoWWdMrHh6lic1yFGZhqH
+         D1nNy9Z//ecS2o6074Vq8gQAUTAlGXMnK0w55fgRwy/jIzAj3AsEFRy2+oTkrboClS
+         edBWPX+/Asx10TQ8m8KjY5oHEwFY2vdoDdlTghKDmm09cIvxlsXojKihv7OhaS+A8L
+         +fpiVNjSblLyg==
+Date:   Wed, 29 May 2019 07:56:14 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Zhu Yingjiang <yingjiang.zhu@linux.intel.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Keyon Jie <yang.jie@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Libin Yang <libin.yang@intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Subject: linux-next: Fixes tags need some work in the sound-asoc tree
+Message-ID: <20190529075614.150b1877@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Tue, 28 May 2019 21:54:29 +0000 (UTC)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/eDmfDfBWBHbIHswnSV_47HK"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 May 2019 18:24:33 +0200
-Cornelia Huck <cohuck@redhat.com> wrote:
+--Sig_/eDmfDfBWBHbIHswnSV_47HK
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> On Thu, 23 May 2019 14:25:25 +0200
-> Pierre Morel <pmorel@linux.ibm.com> wrote:
-> 
-> > We define a new device region in vfio.h to be able to
-> > get the ZPCI CLP information by reading this region from
-> > userland.
-> > 
-> > We create a new file, vfio_zdev.h to define the structure
-> > of the new region we defined in vfio.h
-> > 
-> > Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> > ---
-> >  include/uapi/linux/vfio.h      |  4 ++++
-> >  include/uapi/linux/vfio_zdev.h | 34 ++++++++++++++++++++++++++++++++++
-> >  2 files changed, 38 insertions(+)
-> >  create mode 100644 include/uapi/linux/vfio_zdev.h
-> > 
-> > diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> > index 8f10748..56595b8 100644
-> > --- a/include/uapi/linux/vfio.h
-> > +++ b/include/uapi/linux/vfio.h
-> > @@ -306,6 +306,10 @@ struct vfio_region_info_cap_type {
-> >  #define VFIO_REGION_TYPE_GFX                    (1)
-> >  #define VFIO_REGION_SUBTYPE_GFX_EDID            (1)
-> >  
-> > +/* IBM Subtypes */
-> > +#define VFIO_REGION_TYPE_IBM_ZDEV		(1)
-> > +#define VFIO_REGION_SUBTYPE_ZDEV_CLP		(1)  
-> 
-> I'm afraid that confuses me a bit. You want to add the region to every
-> vfio-pci device when we're running under s390, right? So this does not
-> depend on the device type of the actual device (which may or may not be
-> from IBM), but only on the architecture?
+Hi all,
 
-FWIW, I don't really have a strong opinion here but I welcome the
-discussion.  It seems fair to me that a PCI vendor type could be used
-for either a device with that vendor ID or by the vendor of the
-platform.  We've got a lot of address space if want to use
-VFIO_REGION_TYPE_IBM_ZDEV rather than a PCI vendor type (so long as
-it's updated not to conflict with the GFX type).  Thanks,
+In commit
 
-Alex
- 
-> (Generally speaking, I think using regions for this makes sense,
-> though.)
-> 
-> > +
-> >  /**
-> >   * struct vfio_region_gfx_edid - EDID region layout.
-> >   *
-> > diff --git a/include/uapi/linux/vfio_zdev.h
-> > b/include/uapi/linux/vfio_zdev.h new file mode 100644
-> > index 0000000..84b1a82
-> > --- /dev/null
-> > +++ b/include/uapi/linux/vfio_zdev.h
-> > @@ -0,0 +1,34 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> > +/*
-> > + * Region definition for ZPCI devices
-> > + *
-> > + * Copyright IBM Corp. 2019
-> > + *
-> > + * Author(s): Pierre Morel <pmorel@linux.ibm.com>
-> > + */
-> > +
-> > +#ifndef _VFIO_ZDEV_H_
-> > +#define _VFIO_ZDEV_H_
-> > +
-> > +#include <linux/types.h>
-> > +
-> > +/**
-> > + * struct vfio_region_zpci_info - ZPCI information.
-> > + *
-> > + */
-> > +struct vfio_region_zpci_info {
-> > +	__u64 dasm;
-> > +	__u64 start_dma;
-> > +	__u64 end_dma;
-> > +	__u64 msi_addr;
-> > +	__u64 flags;
-> > +	__u16 pchid;
-> > +	__u16 mui;
-> > +	__u16 noi;
-> > +	__u8 gid;
-> > +	__u8 version;
-> > +#define VFIO_PCI_ZDEV_FLAGS_REFRESH 1
-> > +	__u8 util_str[CLP_UTIL_STR_LEN];
-> > +} __packed;
-> > +
-> > +#endif  
-> 
+  be1b577d0178 ("ASoC: SOF: Intel: hda: fix the hda init chip")
 
+Fixes tag
+
+  Fixes: 8a300c8fb17 ("ASoC: SOF: Intel: Add HDA controller for Intel DSP")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+
+In commit
+
+  1183e9a634db ("ASoC: SOF: ipc: fix a race, leading to IPC timeouts")
+
+Fixes tag
+
+  Fixes: 53e0c72d98b ("ASoC: SOF: Add support for IPC IO between DSP and Ho=
+st")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+
+In commit
+
+  5661ad9490ee ("ASoC: SOF: control: correct the copy size for bytes kcontr=
+ol put")
+
+Fixes tag
+
+  Fixes: c3078f53970 ("ASoC: SOF: Add Sound Open Firmware KControl support")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+
+In commit
+
+  fab4edf42d2d ("ASoC: SOF: pcm: remove warning - initialize workqueue on o=
+pen")
+
+Fixes tag
+
+  Fixes: e2803e610ae ("ASoC: SOF: PCM: add period_elapsed work to fix
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+  - Subject has leading but no trailing parentheses
+  - Subject has leading but no trailing quotes
+Please do not split Fixes tags over more than one line.
+
+In commit
+
+  04ea642ff62a ("ASoC: SOF: pcm: clear hw_params_upon_resume flag correctly=
+")
+
+Fixes tag
+
+  Fixes: 868bd00f495 ("ASoC: SOF: Add PCM operations support")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+
+In commit
+
+  0bce512e784d ("ASoC: SOF: core: fix error handling with the probe workque=
+ue")
+
+Fixes tag
+
+  Fixes: c16211d6226 ("ASoC: SOF: Add Sound Open Firmware driver core")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+
+In commit
+
+  13931ae31b67 ("ASoC: SOF: core: remove snd_soc_unregister_component in ca=
+se of error")
+
+Fixes tag
+
+  Fixes: c16211d6226 ("ASoC: SOF: Add Sound Open Firmware driver core")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+
+In commit
+
+  b85459aafae6 ("ASoC: SOF: core: remove DSP after unregistering machine dr=
+iver")
+
+Fixes tag
+
+  Fixes: c16211d6226 ("ASoC: SOF: Add Sound Open Firmware driver core")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+
+Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+or later) just making sure it is not set (or set to "auto").
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/eDmfDfBWBHbIHswnSV_47HK
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlztrn4ACgkQAVBC80lX
+0GxqHgf/Yq/rkW3q0vgeiMRe4oU0VQiOar6RSlvfA2ZXM8x0CrTHxnO2PrBPMmR2
+uy0wkIM8cxaVf+C9wvDT1kobn4JNL0TBd8cEIAV0yL1NiCFGU4trhQBd1h7OIF21
+HA52u2PmXJ69PCjfHcHHbGMQ/eJZou3n+zXKmhJDSRTJtNvHoYJhfOELrtO50U4l
+06eciKHtzLKA30aq082YV8JEkJljh+i6TvgzpXok6+M8PQlj5vMgJZ4u97XneDij
+H2kleKZb7j8jB4h1EnskiOLuACvjHe/59lCF0XiYRmjGRWjtrJj2W2So3+BUHTXR
+SKdzCRBVDjszafrCE+ZnixVADs97bA==
+=tdQC
+-----END PGP SIGNATURE-----
+
+--Sig_/eDmfDfBWBHbIHswnSV_47HK--
