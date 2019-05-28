@@ -2,108 +2,92 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70BE2C072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99379C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4970521726
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:11:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F90E21726
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:12:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tbj82VcO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="elCiHPbe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727318AbfE1RLc (ORCPT
+        id S1727356AbfE1RMD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 13:11:32 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:44018 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbfE1RLb (ORCPT
+        Tue, 28 May 2019 13:12:03 -0400
+Received: from mail-ed1-f47.google.com ([209.85.208.47]:45417 "EHLO
+        mail-ed1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbfE1RMD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 13:11:31 -0400
-Received: by mail-lf1-f68.google.com with SMTP id u27so15198342lfg.10;
-        Tue, 28 May 2019 10:11:30 -0700 (PDT)
+        Tue, 28 May 2019 13:12:03 -0400
+Received: by mail-ed1-f47.google.com with SMTP id g57so18002494edc.12;
+        Tue, 28 May 2019 10:12:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=A8QVP2Qf5aJcHIy8l49WfRPomDE8uUrBG/3Am/yYNlU=;
-        b=tbj82VcOGB/BLqdwN+zId/aL1F3LbvsduOAs5GjftF3C0NFgGGQfU7vrCi+8ZFR4Ew
-         uMeDuC9cIWItsZjEU/EYdPtcQbKmV0dwqkHg9AKjbOptmKOd7+DPQ5dAVm05PXKt+oqr
-         Td+xYmJbU2LeazwHzmVCPZVcSIPUATTVRVMsqa/4LHzrIbZLk9+XKgatIB2qZQOx+2ZA
-         HWq/fedWq82lYNQt9lABwgmMYVhppMEEmA50HzdtSJIgMvQoAuTqzJ3bJoQ5o3mjftyT
-         3JTeLVmb57ufyHL1txvLiGXT8sTJqMyPMloJLNcl+S/m1XAOixYz0YB+OWBWw35SNfR1
-         S1Yw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lYImdE1K3cUe2xPFfKctCk0xbs1kFjS1GtFoys4OKEc=;
+        b=elCiHPbeF+3BBhnD/fPMTklieZ6tyszuUka6t0KBE7hW2jdKkIboHAtr25j9U95Ikf
+         SR3t7R2wiTTMWcxf6u57nFDB1rYVtF62i57wVAJy1V+qT3ODXA7vw+48/1p9QfEAw9vY
+         DJl0xtovDV+V4awLz00+qFO1WJDc8lLT7dkPYd6XqRr70FHdTOUG/5hF9qC4mmAkntHu
+         bcyEqiiMQXF9pVYSYJrJI3prNpAgmZBe15Z9fNX+yf9F644uNPXzhU1sSOshy8aDUp/W
+         feiD9ySMIUcHhvNQ6Kb7ctoHYRqqebGN6QPFHqzlxm6aBLO3Y6Wx0OygowJJiPaIpyaQ
+         +aAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=A8QVP2Qf5aJcHIy8l49WfRPomDE8uUrBG/3Am/yYNlU=;
-        b=YhNFAwgmYB6Uaj7F5WZV4dbf8W39BEFOTNyrERDVhxN1d0KuFcK41XtUHgC5E+qQ1g
-         f12Fc5ZOmoHVFnnUXh6x+zAQyxs9cmg3ALRQhWISr533wgTRvTw+DHdZooVxyt9E5iup
-         3tFJlwv7Jc6DZi8c2febJYYLkAsa70AsV8C/sab1v/u9diTa69LzxnGupT63x8Nl6LHN
-         dmBWgLQp6ubHY1xZ/XYqaVAwOT3yxNkgqMEqzBcOW3LHd6JUsxvCsy879yPw5MGjFKh1
-         s9oCv77QQb2V5RByJmYYFDVaN6HZR/8CljaSApSoTRVqBTdzoNy2ryI2psJV9pS9gp2f
-         J+/g==
-X-Gm-Message-State: APjAAAWwcnXwKOISIa21LjbqP9rU+kV5ZQSsOxHhOvL805cfNK4LHBXH
-        1DozqopimoUBxNt/ZaHoFBM=
-X-Google-Smtp-Source: APXvYqwQOyDJDkoWZFLu1XnDsguS/WvRfLzgNCnt9179uP3/qtkWME3gOICVuCXUEZgQ3/k83zfTpg==
-X-Received: by 2002:a05:6512:6c:: with SMTP id i12mr45456509lfo.130.1559063489378;
-        Tue, 28 May 2019 10:11:29 -0700 (PDT)
-Received: from esperanza ([176.120.239.149])
-        by smtp.gmail.com with ESMTPSA id h22sm3057578ljk.86.2019.05.28.10.11.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 May 2019 10:11:28 -0700 (PDT)
-Date:   Tue, 28 May 2019 20:11:26 +0300
-From:   Vladimir Davydov <vdavydov.dev@gmail.com>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Christoph Lameter <cl@linux.com>, cgroups@vger.kernel.org,
-        Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v5 2/7] mm: generalize postponed non-root kmem_cache
- deactivation
-Message-ID: <20190528171126.oaneakkydwyzied6@esperanza>
-References: <20190521200735.2603003-1-guro@fb.com>
- <20190521200735.2603003-3-guro@fb.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lYImdE1K3cUe2xPFfKctCk0xbs1kFjS1GtFoys4OKEc=;
+        b=gkjukjqnUTTW2RRr6sLqd7HEDChRs8F98gW7M4X9Q3p93CzPU9Vio4U9aEeP4j3mpN
+         2WKiLbyMPdNKnO/6VFgLZbP6TA6XyQ7bC5/9235SgJcG1GD5ZK8kiJAcn9TMeJAAI3N2
+         rrIQ83g0WBx7JErCFY0JATzSvqqqwQktboSjZSE/J86urFE7C9jQ19TKIXZgSQpinqSl
+         yqj8P3seFh5mzGnJkDs/JoRG9FiI5wADeBHJIjywPmrXvqmL1MFxY1EYrcNlxz4UwH3s
+         AuFUlsdXN9j5KG11T3ZbbbGHhSpQ10Pqm0W2eFGshSaDFSD1IIrjbb3rpaAiiDPWsRNQ
+         llpg==
+X-Gm-Message-State: APjAAAXl7Ynb9TsUtGqrCzBHaWN+Tp+3Mx53A12D/VcQ1rRJ/IlWtk2Z
+        ntkVoLRLVwXZzbugpSwbXQgWIf0ja37i1cyKBZA=
+X-Google-Smtp-Source: APXvYqyAvOfbFAAK6aMyy93n7UREJlpiHInet91UkneecigYVrJX7593QPls/vDRXj8AibJ87Uas7h5rWHEPU6WqUys=
+X-Received: by 2002:a17:906:76c8:: with SMTP id q8mr70324783ejn.229.1559063521332;
+ Tue, 28 May 2019 10:12:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190521200735.2603003-3-guro@fb.com>
+References: <20190523210651.80902-1-fklassen@appneta.com> <20190523210651.80902-5-fklassen@appneta.com>
+ <CAF=yD-KBNLr5KY-YQ1KMmZGCpYNefSJKaJkZNOwd8nRiedpQtA@mail.gmail.com>
+ <879E5DA6-3A4F-4CE1-9DA5-480EE30109DE@appneta.com> <CAF=yD-LQT7=4vvMwMa96_SFuUd5GywMoae7hGi9n6rQeuhhxuQ@mail.gmail.com>
+ <5BB184F2-6C20-416B-B2AF-A678400CFE3E@appneta.com> <CAF=yD-+6CRyqL6Fq5y2zpw5nnDitYC7G1c2JAVHZTjyw68DYJg@mail.gmail.com>
+ <903DEC70-845B-4C4B-911D-2F203C191C27@appneta.com> <CAF=yD-Le0XKCfyDBvHmBRVqkwn1D6ZoG=12gss5T62VcN5+1_w@mail.gmail.com>
+ <9811659B-6D5A-4C4F-9CF8-735E9CA6DE4E@appneta.com> <CAF=yD-KcX-zCgZFVVVMU7JFy+gJwRpUoViA_mWdM4QtHNr685g@mail.gmail.com>
+In-Reply-To: <CAF=yD-KcX-zCgZFVVVMU7JFy+gJwRpUoViA_mWdM4QtHNr685g@mail.gmail.com>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Tue, 28 May 2019 13:11:24 -0400
+Message-ID: <CAF=yD-J2eNn4xNu37ekXfDGMtzQjOPVrWJ+EaLqdJmFcrnk8pA@mail.gmail.com>
+Subject: Re: [PATCH net 4/4] net/udpgso_bench_tx: audit error queue
+To:     Fred Klassen <fklassen@appneta.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        Willem de Bruijn <willemb@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 01:07:30PM -0700, Roman Gushchin wrote:
-> diff --git a/mm/slab_common.c b/mm/slab_common.c
-> index 6e00bdf8618d..4e5b4292a763 100644
-> --- a/mm/slab_common.c
-> +++ b/mm/slab_common.c
-> @@ -866,11 +859,12 @@ static void flush_memcg_workqueue(struct kmem_cache *s)
->  	mutex_unlock(&slab_mutex);
->  
->  	/*
-> -	 * SLUB deactivates the kmem_caches through call_rcu. Make
-> +	 * SLAB and SLUB deactivate the kmem_caches through call_rcu. Make
->  	 * sure all registered rcu callbacks have been invoked.
->  	 */
-> -	if (IS_ENABLED(CONFIG_SLUB))
-> -		rcu_barrier();
-> +#ifndef CONFIG_SLOB
-> +	rcu_barrier();
-> +#endif
+ > Now that I know the issue is only in TCP, I can speculate that all bytes are
+> > being reported, but done with fewer messages. It may warrant some
+> > investigation in case there is some kind of bug.
+>
+> This would definitely still be a bug and should not happen. We have
+> quite a bit of experience with TCP zerocopy and I have not run into
+> this in practice, so I do think that it is somehow a test artifact.
 
-Nit: you don't need to check CONFIG_SLOB here as this code is under
-CONFIG_MEMCG_KMEM which depends on !SLOB.
-
-Other than that, the patch looks good to me, provided using rcu for slab
-deactivation proves to be really necessary, although I'd split it in two
-patches - one doing renaming another refactoring - easier to review that
-way.
+To be clear, I'm not saying that it is an artifact of your extensions.
+It's quite likely that the zerocopy benchmark was a bit flaky in that
+regard all along. No need to spend further time on that for this
+patchset.
