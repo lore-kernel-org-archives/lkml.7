@@ -2,121 +2,125 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E5BC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 06:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2C6C072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 06:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B134520B7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 06:50:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="qjkM5jMx"
+	by mail.kernel.org (Postfix) with ESMTP id A4D3D214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 06:51:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559026319;
+	bh=nrf5N19nwXqWT+MWe5qBQ2CehqdDLnDQaUFIVn9qPNM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qvbAeEk9LJFdySkdzwZOub+oIO75RLjyVqVIl4Wjt0gEFrtrAQfAnshaTb/XZF01v
+	 2FZrVSTTman1cjpRDPOrlkBFIpqNqN9wj8JE+DROvTKcAM7CDIDGr7meDi9Wxl8oMu
+	 ylSDKElwKvGe/fHqTtUFzBSEF3UgFudQFr4o01CM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbfE1Guo (ORCPT
+        id S1727459AbfE1Gv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 02:50:44 -0400
-Received: from mail-eopbgr30071.outbound.protection.outlook.com ([40.107.3.71]:37024
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        Tue, 28 May 2019 02:51:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49086 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727240AbfE1Gum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 02:50:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XS5icHrVv/qGYgpDLm4H+9mtPX0kSqaAKfEM+M5Ym0c=;
- b=qjkM5jMxCoB1PO07w/gkZV/rYqbPgtwp+TmsFiOHy9Nh2clIOxfAZTTnIUhnYQIBneX1VUeyEDtjADW3Ysqi5/kyM7jwu15/S8em+RBvH86bKDcaNssu7Of76AH4R5L/MsZNauPQ6wcXyMKo2AUKRl2fsDvwYjVxQAR1iV6nq/Q=
-Received: from AM6PR04MB5781.eurprd04.prod.outlook.com (20.179.3.19) by
- AM6PR04MB5495.eurprd04.prod.outlook.com (20.178.93.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.15; Tue, 28 May 2019 06:50:39 +0000
-Received: from AM6PR04MB5781.eurprd04.prod.outlook.com
- ([fe80::6491:59e7:6b25:2993]) by AM6PR04MB5781.eurprd04.prod.outlook.com
- ([fe80::6491:59e7:6b25:2993%7]) with mapi id 15.20.1922.021; Tue, 28 May 2019
- 06:50:39 +0000
-From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
-To:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>
-CC:     Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: [PATCHv6 6/6] arm64: defconfig: Enable CONFIG_PCIE_LAYERSCAPE_GEN4
-Thread-Topic: [PATCHv6 6/6] arm64: defconfig: Enable
- CONFIG_PCIE_LAYERSCAPE_GEN4
-Thread-Index: AQHVFSGp2QR6dzWWkESm0e713eBNIw==
-Date:   Tue, 28 May 2019 06:50:39 +0000
-Message-ID: <20190528065129.8769-7-Zhiqiang.Hou@nxp.com>
-References: <20190528065129.8769-1-Zhiqiang.Hou@nxp.com>
-In-Reply-To: <20190528065129.8769-1-Zhiqiang.Hou@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HK2PR02CA0128.apcprd02.prod.outlook.com
- (2603:1096:202:16::12) To AM6PR04MB5781.eurprd04.prod.outlook.com
- (2603:10a6:20b:ad::19)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=zhiqiang.hou@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e829d709-5a04-4b82-0206-08d6e338cb78
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:AM6PR04MB5495;
-x-ms-traffictypediagnostic: AM6PR04MB5495:
-x-microsoft-antispam-prvs: <AM6PR04MB549532C638A2BF77B395A454841E0@AM6PR04MB5495.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
-x-forefront-prvs: 00514A2FE6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(396003)(376002)(366004)(136003)(346002)(199004)(189003)(2501003)(6486002)(86362001)(6116002)(6436002)(66066001)(6512007)(2201001)(386003)(2906002)(53936002)(25786009)(3846002)(7416002)(4326008)(71200400001)(71190400001)(66476007)(54906003)(11346002)(81156014)(73956011)(64756008)(66556008)(50226002)(8676002)(316002)(5660300002)(81166006)(8936002)(110136005)(305945005)(76176011)(102836004)(52116002)(186003)(26005)(36756003)(68736007)(6506007)(7736002)(256004)(446003)(478600001)(486006)(1076003)(99286004)(66946007)(4744005)(66446008)(2616005)(476003)(14454004)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB5495;H:AM6PR04MB5781.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: XYWZvjG8dHgiNqZXqyzB4S+TVSC3jAHBRixq4Dgd1wyofo2aXwZUZzEK5BriKyVYAAfW9YwwtAukMdvStnfhm/VbYTb8XJwV1DGhgiTZieBnGD9Z2hJQWF4qssFiTo8ESC/dTZMXj4+YT/fX5L4H035ANxbYaPJt0UPtFLJFO3WkaJ15+iIJc5ekSpjBF25EM26j02M5BtxEeN6EVhbFmw8Oq1BfOcV98RxwwmriVo/pNiCQkRoCp5rw82x1wYUnKEk6ZDiXEqD0auqeOjDBnL24x6zaIutaTLLN9ZnGSavZuFb6BRXHCRngNI/BqmRdpDJcHMo8mnA4XSG6y10qmNcNoHKbQWc+c0VD+dvOSd1c7NQkFN/qOGUpbj4hncbXWpJy+aDuE3zAVj+saQq3F3+EF7CLW3NLR6FAnWAAFzU=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1726305AbfE1Gv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 02:51:58 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 88336AD2B;
+        Tue, 28 May 2019 06:51:56 +0000 (UTC)
+Date:   Tue, 28 May 2019 08:51:53 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Roman Gushchin <guro@fb.com>, linux-api@vger.kernel.org
+Subject: Re: [PATCH RFC] mm/madvise: implement MADV_STOCKPILE (kswapd from
+ user space)
+Message-ID: <20190528065153.GB1803@dhcp22.suse.cz>
+References: <155895155861.2824.318013775811596173.stgit@buzz>
+ <20190527141223.GD1658@dhcp22.suse.cz>
+ <20190527142156.GE1658@dhcp22.suse.cz>
+ <20190527143926.GF1658@dhcp22.suse.cz>
+ <9c55a343-2a91-46c6-166d-41b94bf5e9c8@yandex-team.ru>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e829d709-5a04-4b82-0206-08d6e338cb78
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2019 06:50:39.6354
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zhiqiang.hou@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5495
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9c55a343-2a91-46c6-166d-41b94bf5e9c8@yandex-team.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCg0KRW5hYmxlIHRoZSBQ
-Q0llIEdlbjQgY29udHJvbGxlciBkcml2ZXIgZm9yIExheWVyc2NhcGUgU29Dcy4NCg0KU2lnbmVk
-LW9mZi1ieTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NClJldmlld2VkLWJ5
-OiBNaW5naHVhbiBMaWFuIDxNaW5naHVhbi5MaWFuQG54cC5jb20+DQotLS0NClY2Og0KIC0gQ2hh
-bmdlIHRoZSBtYWNybyBuYW1lIHRvIENPTkZJR19QQ0lFX0xBWUVSU0NBUEVfR0VONC4NCg0KIGFy
-Y2gvYXJtNjQvY29uZmlncy9kZWZjb25maWcgfCAxICsNCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNl
-cnRpb24oKykNCg0KZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvY29uZmlncy9kZWZjb25maWcgYi9h
-cmNoL2FybTY0L2NvbmZpZ3MvZGVmY29uZmlnDQppbmRleCBlMWE4NGRiMmJkN2IuLjY4MjE0NTJh
-MTVmOSAxMDA2NDQNCi0tLSBhL2FyY2gvYXJtNjQvY29uZmlncy9kZWZjb25maWcNCisrKyBiL2Fy
-Y2gvYXJtNjQvY29uZmlncy9kZWZjb25maWcNCkBAIC0xOTEsNiArMTkxLDcgQEAgQ09ORklHX1BD
-SV9IT1NUX1RIVU5ERVJfUEVNPXkNCiBDT05GSUdfUENJX0hPU1RfVEhVTkRFUl9FQ0FNPXkNCiBD
-T05GSUdfUENJRV9ST0NLQ0hJUF9IT1NUPW0NCiBDT05GSUdfUENJX0xBWUVSU0NBUEU9eQ0KK0NP
-TkZJR19QQ0lFX0xBWUVSU0NBUEVfR0VOND15DQogQ09ORklHX1BDSV9ISVNJPXkNCiBDT05GSUdf
-UENJRV9RQ09NPXkNCiBDT05GSUdfUENJRV9BUk1BREFfOEs9eQ0KLS0gDQoyLjE3LjENCg0K
+On Tue 28-05-19 09:25:13, Konstantin Khlebnikov wrote:
+> On 27.05.2019 17:39, Michal Hocko wrote:
+> > On Mon 27-05-19 16:21:56, Michal Hocko wrote:
+> > > On Mon 27-05-19 16:12:23, Michal Hocko wrote:
+> > > > [Cc linux-api. Please always cc this list when proposing a new user
+> > > >   visible api. Keeping the rest of the email intact for reference]
+> > > > 
+> > > > On Mon 27-05-19 13:05:58, Konstantin Khlebnikov wrote:
+> > > [...]
+> > > > > This implements manual kswapd-style memory reclaim initiated by userspace.
+> > > > > It reclaims both physical memory and cgroup pages. It works in context of
+> > > > > task who calls syscall madvise thus cpu time is accounted correctly.
+> > > 
+> > > I do not follow. Does this mean that the madvise always reclaims from
+> > > the memcg the process is member of?
+> > 
+> > OK, I've had a quick look at the implementation (the semantic should be
+> > clear from the patch descrition btw.) and it goes all the way up the
+> > hierarchy and finally try to impose the same limit to the global state.
+> > This doesn't really make much sense to me. For few reasons.
+> > 
+> > First of all it breaks isolation where one subgroup can influence a
+> > different hierarchy via parent reclaim.
+> 
+> madvise(NULL, size, MADV_STOCKPILE) is the same as memory allocation and
+> freeing immediately, but without pinning memory and provoking oom.
+>
+> So, there is shouldn't be any isolation or security issues.
+> 
+> At least probably it should be limited with portion of limit (like half)
+> instead of whole limit as it does now.
+
+I do not think so. If a process is running inside a memcg then it is
+a subject of a limit and that implies an isolation. What you are
+proposing here is to allow escaping that restriction unless I am missing
+something. Just consider the following setup
+
+		root (total memory = 2G)
+		 / \
+           (1G) A   B (1G)
+                   / \
+           (500M) C   D (500M)
+
+all of them used up close to the limit and a process inside D requests
+shrinking to 250M. Unless I am misunderstanding this implementation
+will shrink D, B root to 250M (which means reclaiming C and A as well)
+and then globally if that was not sufficient. So you have allowed D to
+"allocate" 1,75G of memory effectively, right?
+ 
+> > 
+> > I also have a problem with conflating the global and memcg states. Does
+> > it really make any sense to have the same target to the global state
+> > as per-memcg? How are you supposed to use this interface to shrink a
+> > particular memcg or for the global situation with a proportional
+> > distribution to all memcgs?
+> 
+> For now this is out of my use cease. This could be done in userspace
+> with multiple daemons in different contexts and connection between them.
+> In this case each daemon should apply pressure only its own level.
+
+Do you expect all daemons to agree on their shrinking target? Could you
+elaborate? I simply do not see how this can work with memcgs lower in
+the hierarchy having a smaller limit than their parents.
+-- 
+Michal Hocko
+SUSE Labs
