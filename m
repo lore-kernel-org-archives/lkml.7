@@ -3,106 +3,106 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE1AC04AB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DED6C04AB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C042220823
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:48:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B1542075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:53:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727844AbfE1Bse (ORCPT
+        id S1727861AbfE1BxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 21:48:34 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:17583 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727271AbfE1Bse (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 21:48:34 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 560C66BA30B9C8FF9BBD;
-        Tue, 28 May 2019 09:48:32 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Tue, 28 May 2019
- 09:48:22 +0800
-Subject: Re: [PATCH net-next] net: link_watch: prevent starvation when
- processing linkwatch wq
-To:     Stephen Hemminger <stephen@networkplumber.org>
-CC:     <davem@davemloft.net>, <hkallweit1@gmail.com>,
-        <f.fainelli@gmail.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
-References: <1558921674-158349-1-git-send-email-linyunsheng@huawei.com>
- <20190527075838.5a65abf9@hermes.lan>
- <a0fe690b-2bfa-7d1a-40c5-5fb95cf57d0b@huawei.com>
- <20190527181744.289c4b2f@hermes.lan>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <bb880dab-16dc-0d4b-fa42-809c40cac43b@huawei.com>
-Date:   Tue, 28 May 2019 09:48:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
-MIME-Version: 1.0
-In-Reply-To: <20190527181744.289c4b2f@hermes.lan>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+        Mon, 27 May 2019 21:53:02 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:2188 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727651AbfE1BxC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 21:53:02 -0400
+X-UUID: fd636dd8cdae44f3a0da8defedf6958d-20190528
+X-UUID: fd636dd8cdae44f3a0da8defedf6958d-20190528
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <biao.huang@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 97317882; Tue, 28 May 2019 09:52:51 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N1.mediatek.inc
+ (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 28 May
+ 2019 09:52:50 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 28 May 2019 09:52:49 +0800
+Message-ID: <1559008369.24897.66.camel@mhfsdcap03>
+Subject: Re: [v3, PATCH] net: stmmac: add support for hash table size
+ 128/256 in dwmac4
+From:   biao huang <biao.huang@mediatek.com>
+To:     David Miller <davem@davemloft.net>
+CC:     <joabreu@synopsys.com>, <peppe.cavallaro@st.com>,
+        <alexandre.torgue@st.com>, <mcoquelin.stm32@gmail.com>,
+        <matthias.bgg@gmail.com>, <netdev@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <yt.shen@mediatek.com>,
+        <jianguo.zhang@mediatek.com>, <boon.leong.ong@intel.com>
+Date:   Tue, 28 May 2019 09:52:49 +0800
+In-Reply-To: <20190527.100800.1719164073038257292.davem@davemloft.net>
+References: <1558926867-16472-1-git-send-email-biao.huang@mediatek.com>
+         <1558926867-16472-2-git-send-email-biao.huang@mediatek.com>
+         <20190527.100800.1719164073038257292.davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+MIME-Version: 1.0
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/5/28 9:17, Stephen Hemminger wrote:
-> On Tue, 28 May 2019 09:04:18 +0800
-> Yunsheng Lin <linyunsheng@huawei.com> wrote:
-> 
->> On 2019/5/27 22:58, Stephen Hemminger wrote:
->>> On Mon, 27 May 2019 09:47:54 +0800
->>> Yunsheng Lin <linyunsheng@huawei.com> wrote:
->>>   
->>>> When user has configured a large number of virtual netdev, such
->>>> as 4K vlans, the carrier on/off operation of the real netdev
->>>> will also cause it's virtual netdev's link state to be processed
->>>> in linkwatch. Currently, the processing is done in a work queue,
->>>> which may cause worker starvation problem for other work queue.
->>>>
->>>> This patch releases the cpu when link watch worker has processed
->>>> a fixed number of netdev' link watch event, and schedule the
->>>> work queue again when there is still link watch event remaining.
->>>>
->>>> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>  
->>>
->>> Why not put link watch in its own workqueue so it is scheduled
->>> separately from the system workqueue?  
->>
->> From testing and debuging, the workqueue runs on the cpu where the
->> workqueue is schedule when using normal workqueue, even using its
->> own workqueue instead of system workqueue. So if the cpu is busy
->> processing the linkwatch event, it is not able to process other
->> workqueue' work when the workqueue is scheduled on the same cpu.
->>
->> Using unbound workqueue may solve the cpu starvation problem.
->> But the __linkwatch_run_queue is called with rtnl_lock, so if it
->> takes a lot time to process, other need to take the rtnl_lock may
->> not be able to move forward.
-> 
-> Agree with the starvation issue. My cocern is that large number of
-> events that end up being delayed would impact things that are actually
-> watching for link events (like routing daemons).
+Dear David,
 
-Agreed. I am not familiar with above use cases, it would be very helpful
-if someone can help testing the impact of above use case.
+On Mon, 2019-05-27 at 10:08 -0700, David Miller wrote:
+> From: Biao Huang <biao.huang@mediatek.com>
+> Date: Mon, 27 May 2019 11:14:27 +0800
+> 
+> > diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+> > index 5e98da4..029a3db 100644
+> > --- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+> > +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+> > @@ -403,41 +403,50 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
+> >  			      struct net_device *dev)
+> >  {
+> >  	void __iomem *ioaddr = (void __iomem *)dev->base_addr;
+> > -	unsigned int value = 0;
+> > +	unsigned int value;
+> > +	int numhashregs = (hw->multicast_filter_bins >> 5);
+> > +	int mcbitslog2 = hw->mcast_bits_log2;
+> > +	int i;
+> 
+> Please retain the reverse christmas tree ordering here.
+I'm a little confused about the reverse xmas tree ordering.
 
-> 
-> It probably would be not accepted to do rtnl_unlock/sched_yield/rtnl_lock
-> in the loop, but that is another alternative.
+should I reorder them only according to the total length like this:
 
-Yes. But seems not very efficient to do rtnl_unlock/sched_yield/rtnl_lock
-for very linkwatch_do_dev.
+	void __iomem *ioaddr = (void __iomem *)dev->base_addr;
+	int numhashregs = (hw->multicast_filter_bins >> 5);
+	int mcbitslog2 = hw->mcast_bits_log2;
+	unsigned int value;
+	int i;
 
+or should I gather the same type together, and order types as reverse
+xmas tree, then order the same type definitions as reverse xmas tree,
+like this:
+
+	void __iomem *ioaddr = (void __iomem *)dev->base_addr;
+	unsigned int value;
+	int numhashregs = (hw->multicast_filter_bins >> 5);
+	int mcbitslog2 = hw->mcast_bits_log2;
+	int i;
+
+Thank you.
 > 
-> 
-> 
-> .
-> 
+> Thank you.
+
 
