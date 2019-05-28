@@ -3,111 +3,159 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BAF2C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16BAEC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:19:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D5E720883
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:19:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uJg88Y68"
+	by mail.kernel.org (Postfix) with ESMTP id D831720B7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:19:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559038791;
+	bh=/Z71lIdbA1iPMW4yhci+/fst7eiRfIGrEAKen5cASvw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=yxMmxRRaDgqIY17qfe9YO2V8sMp6ApT1i1lcOj/prVa/xC9PRt476ZnxHnsc7b7S3
+	 2JBEd+vgg91YjQFtYahidKdkxk3x/vf9qU1n4iV/lu9wEFmpE+gTUVFj5hbzZ+eEcC
+	 CYEtwF0uTltsMLa4Avidql71gvUmJD5qmogGmleQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbfE1KT1 (ORCPT
+        id S1726749AbfE1KTv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 06:19:27 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:33256 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbfE1KT1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 06:19:27 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4SAJ5Ak021461;
-        Tue, 28 May 2019 05:19:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559038745;
-        bh=zQamKnGEmQhWoSzRt42BHFoPsQGnR1ArVAvOV1yOmwI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=uJg88Y68pZASvJpleiZ4FWK9XAkk599Oue1bBGBOwU6vKG6K6M30HzSptXIHpcEJD
-         WfX0Fvhat7IZpYk1ATIpBzYJqihfJWV1cdWsf1qovDLyCyw327yKwnLE7riLJ1sJKM
-         X77XxVmYmameXBoWtskWxMg3kCLYGtMTCuAoBHls=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4SAJ5JQ048867
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 28 May 2019 05:19:05 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 28
- May 2019 05:19:04 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 28 May 2019 05:19:04 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4SAJ24o016075;
-        Tue, 28 May 2019 05:19:02 -0500
-Subject: Re: [PATCHv6 3/4] drm/omap: add framedone interrupt support
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-CC:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        <dri-devel@lists.freedesktop.org>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel@collabora.com>
-References: <20190523200756.25314-1-sebastian.reichel@collabora.com>
- <20190523200756.25314-4-sebastian.reichel@collabora.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <9eb23a5d-438e-7b25-e7cb-8b734a150e43@ti.com>
-Date:   Tue, 28 May 2019 13:19:01 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 28 May 2019 06:19:51 -0400
+Received: from mga17.intel.com ([192.55.52.151]:9291 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726203AbfE1KTu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 06:19:50 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 May 2019 03:19:49 -0700
+X-ExtLoop1: 1
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by fmsmga001.fm.intel.com with ESMTP; 28 May 2019 03:19:48 -0700
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Ran Wang <ran.wang_1@nxp.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list\:DESIGNWARE USB3 DRD IP DRIVER" 
+        <linux-usb@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "devicetree\@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [PATCH] usb: dwc3: Enable the USB snooping
+In-Reply-To: <AM5PR0402MB28654EBE2D431CC2F8061CF8F11E0@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+References: <20171115060459.45375-1-ran.wang_1@nxp.com> <87ineb9b5v.fsf@linux.intel.com> <VI1PR04MB1504776EF3D4D8C374F0C069F1290@VI1PR04MB1504.eurprd04.prod.outlook.com> <87shdfet90.fsf@linux.intel.com> <AM5PR0402MB28654EBE2D431CC2F8061CF8F11E0@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+Date:   Tue, 28 May 2019 13:19:47 +0300
+Message-ID: <87k1eaanjw.fsf@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190523200756.25314-4-sebastian.reichel@collabora.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sebastian,
 
-On 23/05/2019 23:07, Sebastian Reichel wrote:
+Hi,
 
-> @@ -302,6 +328,30 @@ void omap_crtc_vblank_irq(struct drm_crtc *crtc)
->   	DBG("%s: apply done", omap_crtc->name);
->   }
->   
-> +void omap_crtc_framedone_irq(struct drm_crtc *crtc, uint32_t irqstatus)
-> +{
-> +	struct omap_crtc *omap_crtc = to_omap_crtc(crtc);
-> +
-> +	if (!omap_crtc->framedone_handler) {
-> +		dev_warn(omap_crtc->base.dev->dev, "no framedone handler?");
-> +		return;
-> +	}
+Ran Wang <ran.wang_1@nxp.com> writes:
 
-This triggers on normal displays.
+> Hi Felipe,
+>
+>     Sorry for the late reply:
+>
+> On Wednesday, November 15, 2017 18:23, Felipe Balbi wrote:
 
-FRAMEDONE is an interrupt we get when DISPC's output videoport is being 
-turned off. It's raised after the last frame has been finished (i.e. the 
-DISPC is truly done with that videoport).
+that's 1.5 year ago. I really don't remember the details of this conversation
 
-We get it for both conventional displays (when the display is turned 
-off) and for DSI command mode (when a single frame has been sent), as in 
-both cases the videoport is disabled after the operation. For 
-conventional displays, you can think FRAMEDONE as the last vsync.
+>> Ran Wang <ran.wang_1@nxp.com> writes:
+>> >> Ran Wang <ran.wang_1@nxp.com> writes:
+>> >> > Add support for USB3 snooping by asserting bits in register
+>> >> > DWC3_GSBUSCFG0 for data and descriptor.
+>> >>
+>> >> we know *how* to enable a feature :-) It's always the same, you
+>> >> fiddle with some registers and it works. What you failed to tell us is:
+>> >>
+>> >> a) WHY do you need this?
+>> >> b) WHY do we need another DT property for this?
+>> >> c) WHAT does this mean for PCI devices?
+>> >
+>> > So far I cannot have the answer for you, will get you back after some
+>> > discussion with my colleagues.
+>> 
+>> IOW, you have no idea why you need this, right? We're not patching things for
+>> the sake of patching things. We need to understand what these changes mean
+>> to the HW before we send out a patch publicly.
+>> 
+>> Remember that the moment a patch like this is accepted, it has the potential of
+>> changing behavior for *ALL* users.
+>> 
+>> >> > +	}
+>> >> > +
+>> >> > +	dwc3_writel(dwc->regs, DWC3_GSBUSCFG0, cfg);
+>> >>
+>> >> this will *always* read and write GSBUSCFG0 even for those platforms
+>> >> which don't need to change anything on this register. You should just
+>> >> bail out early if !dwc->dma_coherent
+>> >>
+>> >> Also, I think dma_coherent is likely not the best name for this property.
+>> >>
+>> >> Another question is: Why wasn't this setup properly during
+>> >> coreConsultant instantiation of the RTL? Do you have devices on the
+>> >> market already that need this or is this some early FPGA model or test-only
+>> ASIC?
+>> >
+>> > Yes, you are right. Actually I thought that all dwc3 IP  will have
+>> > this register, and it can be controlled by DTS property.
+>> 
+>> they all *have* the register, however, it's sort of expected that RTL engineer will
+>> setup good defaults when instantiating the RTL using SNPS'
+>> coreConsultant tool.
+>> 
+>> Does your platform work without this patch?
+>
+> On Layerscape SoC (such as LS1088A, LS1046A, LS1043A) When I add 'dma-coherent'
+> to USB nodes without this patch, dwc3 will fail on device enumeration as below:
+> [    3.610620] xhci-hcd xhci-hcd.2.auto: WARNING: Host System Error
+> [    3.630609] usb usb2-port1: couldn't allocate usb_device
 
-We also have special handling for FRAMEDONE in omap_crtc_set_enabled(), 
-which is used to get the drm driver to wait for FRAMEDONE when disabling 
-the display. I wonder if this separate framedone handling might somehow 
-conflict with that code. And/or should these be somehow combined.
+Right, and same as before: are these devices in the market or are you
+dealing with pre-silicon prototypes?
 
-  Tomi
+>> >> >  /* Global Debug Queue/FIFO Space Available Register */
+>> >> >  #define DWC3_GDBGFIFOSPACE_NUM(n)	((n) & 0x1f)
+>> >> >  #define DWC3_GDBGFIFOSPACE_TYPE(n)	(((n) << 5) & 0x1e0)
+>> >> > @@ -859,6 +867,7 @@ struct dwc3_scratchpad_array {
+>> >> >   * 	3	- Reserved
+>> >> >   * @imod_interval: set the interrupt moderation interval in 250ns
+>> >> >   *                 increments or 0 to disable.
+>> >> > + * @dma_coherent: set if enable dma-coherent.
+>> >>
+>> >> you're not enabling dma coherency, you're enabling cache snooping.
+>> >> And this property should describe that. Also, keep in mind that
+>> >> different devices may want different cache types for each of those
+>> >> fields, so your property would have to be a lot more complex. Something like:
+>> >>
+>> >> 	snps,cache-type = <foobar "cacheable">, <baz "cacheable">, ...
+>> >>
+>> >> Then driver would have to parse this properly to setup GSBUSCFG0.
+>
+> According to the DesignWare Cores SuperSpeed USB 3.0 Controller Databook (v2.60a),
+> it has described Type Bit Assignments for all supported master bus type:
+> AHB, AXI3, AXI4 and Native. I found the bit definition are different among them.
+> So, for the example you gave above, feel a little bit confused. 
+> Did you mean:
+>     snps,cache-type = <DATA_RD  "write allocate">, <DESC_RD "cacheable">, <DATA_WR  "bufferable">, <DESC_WR  "read allocate">
+
+yeah, something like that.
+
+>> > Got it, learn a lot, need more time to digest and test, thanks for
+>> > your patiently explanation.
+>> 
+>> no problem, please figure out the answers to my previous questions, without
+>> which I can't accept your patch.
+
+^^^
+
+I still don't have all the answers
 
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+balbi
