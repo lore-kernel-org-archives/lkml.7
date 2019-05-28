@@ -2,140 +2,133 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFC5C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97695C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78B0D208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:30:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AE9820717
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:30:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xof57xMe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727636AbfE1Hah (ORCPT
+        id S1727681AbfE1Hal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 03:30:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58298 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726203AbfE1Hah (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 03:30:37 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0A82E3087939;
-        Tue, 28 May 2019 07:30:37 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-12-83.pek2.redhat.com [10.72.12.83])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0D3855D71C;
-        Tue, 28 May 2019 07:30:25 +0000 (UTC)
-Subject: Re: [PATCH 0/3 v11] add reserved e820 ranges to the kdump kernel e820
- table
-From:   lijiang <lijiang@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     kexec@lists.infradead.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, akpm@linux-foundation.org,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        x86@kernel.org, hpa@zytor.com, dyoung@redhat.com, bhe@redhat.com,
-        Thomas.Lendacky@amd.com
-References: <20190423013007.17838-1-lijiang@redhat.com>
-Message-ID: <12847a03-3226-0b29-97b5-04d404410147@redhat.com>
-Date:   Tue, 28 May 2019 15:30:21 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 28 May 2019 03:30:41 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:44687 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727644AbfE1Hak (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 03:30:40 -0400
+Received: by mail-qk1-f194.google.com with SMTP id w187so10775581qkb.11
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 00:30:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=liX278HTgn3dzodp7H0O3yv5Xch4o5IxEkhO3Idcuvw=;
+        b=Xof57xMef9rhMVvwdzWqgl8c8PWB/Qq5WaAyj1db7xil+fDCj2i2m2YnoW8pKwTFyW
+         2fV5WVtAWhMVaj64Iuj3Xg8EqCSIHF9C1lbxhu3ktohEZLkh788n0+WGOtLwsRx5rSSB
+         idqXNx8jf21nLRjVkPZziJlecnNAnwLPmW96STeBbUTLipuKTqsP7RhQL0Ob3lS65mkx
+         UfHomb1WgXBlgs+mcjx1y7MMHVGLMi62Y+rgLWH1eZYzKN7d8r65fCXeTVeX7ZVuzXCK
+         RD9+LjBiqfsMx6BBjE4DmFkIMgoU4pUkbXkfAC55Nl4lss1Qn+wXSgeO8/o6OXFjcjzP
+         qjew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=liX278HTgn3dzodp7H0O3yv5Xch4o5IxEkhO3Idcuvw=;
+        b=j2sTHYpUkxjWgCFnfdZuT4vrp3SgqHkpw/Csh6SvTrGTA8WC5bD+XQhbktQky8VVS9
+         lbe/0Ih8HiwBQ4y2i1ht6zfSmMR8I3+dhYXOoMYOVWxuaps9sNmk8wPGFl3Zy8JUk+d3
+         JNI312o7l6D9vrOjz9hDioTH5BlQw9CPH+gclca6o9UzNALvlH9h6KP87h2pe2OopiLr
+         6VM5Gb3SXNZ3iOQ2qyx0hyWP6mbFcjPp3I2aR0STE401hBnToOyQvyLC7/LOJnyh1JRE
+         mDH4zDm2ijnxMvs/g01iisyl5wIeAzck8tLg06kByqFpBn0BdlU+b8HxDyYOOpbWLLbU
+         AcAw==
+X-Gm-Message-State: APjAAAVdQLafXTbfcZuXPyLoBa4qsLJQvlKziB+Wh2BwYaCbCsrA8ZBV
+        oxa2j3oN2EhASjbOSfhQa9uAAY/AGnhDIatTj+ctGA==
+X-Google-Smtp-Source: APXvYqw/o9g3j0+8QuWo1gdBVqYhqsgNj/cyEh5sq/3CNJ6H80Oh+b9UbNvS2HHUMZy5yppiywgVa8gezanxUHTOGjg=
+X-Received: by 2002:a37:502:: with SMTP id 2mr3621845qkf.93.1559028639303;
+ Tue, 28 May 2019 00:30:39 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190423013007.17838-1-lijiang@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 28 May 2019 07:30:37 +0000 (UTC)
+References: <20190527115830.15836-1-benjamin.gaignard@st.com> <1e4c4cbf-869e-8b6a-a1d6-cc7dccb2515a@st.com>
+In-Reply-To: <1e4c4cbf-869e-8b6a-a1d6-cc7dccb2515a@st.com>
+From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Date:   Tue, 28 May 2019 09:30:28 +0200
+Message-ID: <CA+M3ks5UxZ0iugtR_zJPshtC=HAjoAzTPmu6oxt7BQWTuj203Q@mail.gmail.com>
+Subject: Re: [PATCH] drm/stm: ltdc: restore calls to clk_{enable/disable}
+To:     Philippe CORNU <philippe.cornu@st.com>
+Cc:     Benjamin GAIGNARD <benjamin.gaignard@st.com>,
+        Yannick FERTRE <yannick.fertre@st.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Boris and Thomas
+Le lun. 27 mai 2019 =C3=A0 14:28, Philippe CORNU <philippe.cornu@st.com> a =
+=C3=A9crit :
+>
+> Hi Benjamin,
+>
+> Many thanks for this fix (and more generally for pushing STM patches on
+> misc :-)
+>
+> Acked-by: Philippe Cornu <philippe.cornu@st.com>
 
-Could you give me any suggestions about this patch series? Other reviewers?
+Applied on drm-misc-next,
+sorry for the mistake.
 
-Thanks.
-Lianbo
-
-在 2019年04月23日 09:30, Lianbo Jiang 写道:
-> This patchset did three things:
-> 
-> a). x86/e820, resource: add a new I/O resource descriptor 'IORES_DESC_
->     RESERVED'
-> 
-> b). x86/mm: change the check condition in SEV because a new descriptor is
->     introduced
-> 
-> c). x86/kexec_file: add reserved e820 ranges to kdump kernel e820 table
-> 
-> Changes since v1:
-> 1. Modified the value of flags to "0", when walking through the whole
-> tree for e820 reserved ranges.
-> 
-> Changes since v2:
-> 1. Modified the value of flags to "0", when walking through the whole
-> tree for e820 reserved ranges.
-> 2. Modified the invalid SOB chain issue.
-> 
-> Changes since v3:
-> 1. Dropped [PATCH 1/3 v3] resource: fix an error which walks through iomem
->    resources. Please refer to this commit <010a93bf97c7> "resource: Fix
->    find_next_iomem_res() iteration issue"
-> 
-> Changes since v4:
-> 1. Improve the patch log, and add kernel log.
-> 
-> Changes since v5:
-> 1. Rewrite these patches log.
-> 
-> Changes since v6:
-> 1. Modify the [PATCH 1/2], and add the new I/O resource descriptor
->    'IORES_DESC_RESERVED' for the iomem resources search interfaces,
->    and also updates these codes relates to 'IORES_DESC_NONE'.
-> 2. Modify the [PATCH 2/2], and walk through io resource based on the
->    new descriptor 'IORES_DESC_RESERVED'.
-> 3. Update patch log.
-> 
-> Changes since v7:
-> 1. Improve patch log.
-> 2. Improve this function __ioremap_check_desc_other().
-> 3. Modify code comment in the __ioremap_check_desc_other()
-> 
-> Changes since v8:
-> 1. Get rid of all changes about ia64.(Borislav's suggestion)
-> 2. Change the examination condition to the 'IORES_DESC_ACPI_*'.
-> 3. Modify the signature. This patch(add the new I/O resource
->    descriptor 'IORES_DESC_RESERVED') was suggested by Boris.
-> 
-> Changes since v9:
-> 1. Improve patch log.
-> 2. No need to modify the kernel/resource.c, so correct them.
-> 3. Change the name of the __ioremap_check_desc_other() to
->    __ioremap_check_desc_none_and_reserved(), and modify the
->    check condition, add comment above it.
-> 
-> Changes since v10:
-> 1. Split them into three patches, the second patch is currently added.
-> 2. Change struct ioremap_mem_flags to struct ioremap_desc and redefine
-> it.
-> 3. Change the name of the __ioremap_check_desc_other() to
-> __ioremap_check_desc().
-> 4. Change the check condition in SEV and also improve them.
-> 5. Modify the return value for some functions.
-> 
-> Lianbo Jiang (3):
->   x86/e820, resource: add a new I/O resource descriptor
->     'IORES_DESC_RESERVED'
->   x86/mm: change the check condition in SEV because a new descriptor is
->     introduced
->   x86/kexec_file: add reserved e820 ranges to kdump kernel e820 table
-> 
->  arch/x86/kernel/crash.c |  6 +++++
->  arch/x86/kernel/e820.c  |  2 +-
->  arch/x86/mm/ioremap.c   | 59 ++++++++++++++++++++++++++---------------
->  include/linux/ioport.h  | 10 +++++++
->  4 files changed, 54 insertions(+), 23 deletions(-)
-> 
+Benjamin
+>
+> Philippe :-)
+>
+> On 5/27/19 1:58 PM, Benjamin Gaignard wrote:
+> > From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+> >
+> > Restore calls to clk_{enable/disable} deleted after applying the wrong
+> > version of the patch
+> >
+> > Fixes: fd6905fca4f0 ("drm/stm: ltdc: remove clk_round_rate comment")
+> >
+> > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+> > ---
+> >   drivers/gpu/drm/stm/ltdc.c | 2 ++
+> >   1 file changed, 2 insertions(+)
+> >
+> > diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
+> > index ae2aaf2a62ee..ac29890edeb6 100644
+> > --- a/drivers/gpu/drm/stm/ltdc.c
+> > +++ b/drivers/gpu/drm/stm/ltdc.c
+> > @@ -507,10 +507,12 @@ static bool ltdc_crtc_mode_fixup(struct drm_crtc =
+*crtc,
+> >       struct ltdc_device *ldev =3D crtc_to_ltdc(crtc);
+> >       int rate =3D mode->clock * 1000;
+> >
+> > +     clk_disable(ldev->pixel_clk);
+> >       if (clk_set_rate(ldev->pixel_clk, rate) < 0) {
+> >               DRM_ERROR("Cannot set rate (%dHz) for pixel clk\n", rate)=
+;
+> >               return false;
+> >       }
+> > +     clk_enable(ldev->pixel_clk);
+> >
+> >       adjusted_mode->clock =3D clk_get_rate(ldev->pixel_clk) / 1000;
+> >
+> >
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
