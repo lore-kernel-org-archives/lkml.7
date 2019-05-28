@@ -2,175 +2,130 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C9AC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC5DC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1109A208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:32:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559046732;
-	bh=4CH6wsV4zRFCqzqowLGeF3WwiWYsRogr0Um09KEIcWI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FMEDqEZuJK/UK0sUapUeeyN2lcEfy0Qjfms+5jBjHRwFiVj+HPMi4GZs54zY6nWYF
-	 ueszhOUi9x5jq/TagUrjOM0IpykMQfZocVlsLiqOxsaBwjomPazSs/ZZkp7OZvMeNW
-	 hztgH5OckslSzKSLG18zfnvKaH852e6quAge2abc=
+	by mail.kernel.org (Postfix) with ESMTP id 3C7E2208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:33:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="bPR5FFdH";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Jg1QSY+A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727225AbfE1McL (ORCPT
+        id S1727230AbfE1MdP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 08:32:11 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35846 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726592AbfE1McL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 08:32:11 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 30483B016;
-        Tue, 28 May 2019 12:32:09 +0000 (UTC)
-Date:   Tue, 28 May 2019 14:32:08 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Linux API <linux-api@vger.kernel.org>
-Subject: Re: [RFC 7/7] mm: madvise support MADV_ANONYMOUS_FILTER and
- MADV_FILE_FILTER
-Message-ID: <20190528123208.GC1658@dhcp22.suse.cz>
-References: <20190528062947.GL1658@dhcp22.suse.cz>
- <20190528081351.GA159710@google.com>
- <CAKOZuesnS6kBFX-PKJ3gvpkv8i-ysDOT2HE2Z12=vnnHQv0FDA@mail.gmail.com>
- <20190528084927.GB159710@google.com>
- <20190528090821.GU1658@dhcp22.suse.cz>
- <CAKOZueux3T4_dMOUK6R=ZHhCFaSSstOCPh_KSwSMCW_yp=jdSg@mail.gmail.com>
- <20190528103312.GV1658@dhcp22.suse.cz>
- <CAKOZueuRAtps+YZ1g2SOevBrDwE6tWsTuONJu1NLgvW7cpA-ug@mail.gmail.com>
- <20190528114923.GZ1658@dhcp22.suse.cz>
- <CAKOZueuerHTCPbQqowSxi-_sRsqxYQQqgyi1UOh7EkZcS3DCnA@mail.gmail.com>
+        Tue, 28 May 2019 08:33:15 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:44100 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726592AbfE1MdO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 08:33:14 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 6718A606FC; Tue, 28 May 2019 12:33:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559046793;
+        bh=bCv8mmjaGHjRz1CnWoZ7MkvsZKR9B/r/zM9ICGN2FzI=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=bPR5FFdHt8arbTjleQmE0qcAT4rZbty8w6d9x6eTol6R5pLoiGXxRgCCRHOrTC++X
+         hgU6GQuWBo5eUIajk9MPoevVLYleDCaMTXTZjDSNzY4Qbw5RKBB5pn11sCv98+YqHV
+         uJamfztJ+a1qJ0/zVgS6LNzy504yPILGrCMNTR/Y=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9710D602FA;
+        Tue, 28 May 2019 12:33:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559046792;
+        bh=bCv8mmjaGHjRz1CnWoZ7MkvsZKR9B/r/zM9ICGN2FzI=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=Jg1QSY+ATUDIpm6kBbkH5TMWFsrffh5idO6s9lLv/b5ls6mTh3I6ezyveDLaft+JS
+         BLdKrCLxmCEIvyhsaDjjEwYol9wC0UQZpxsOP2+b+/iHLpBmNm3tFsDFSBB+l8ZvFn
+         MenAf/9rpCqoNCj9b171qNhpFXsJTUUGCqOWc4dg=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9710D602FA
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Gen Zhang <blackgod016574@gmail.com>
+Cc:     davem@davemloft.net, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] wlcore: spi: Fix a memory leaking bug in wl1271_probe()
+References: <20190524030117.GA6024@zhanggen-UX430UQ>
+        <20190528113922.E2B1060312@smtp.codeaurora.org>
+        <20190528121452.GA23464@zhanggen-UX430UQ>
+Date:   Tue, 28 May 2019 15:33:09 +0300
+In-Reply-To: <20190528121452.GA23464@zhanggen-UX430UQ> (Gen Zhang's message of
+        "Tue, 28 May 2019 20:14:52 +0800")
+Message-ID: <87tvde4v3u.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKOZueuerHTCPbQqowSxi-_sRsqxYQQqgyi1UOh7EkZcS3DCnA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 28-05-19 05:11:16, Daniel Colascione wrote:
-> On Tue, May 28, 2019 at 4:49 AM Michal Hocko <mhocko@kernel.org> wrote:
-[...]
-> > > We have various system calls that provide hints for open files, but
-> > > the memory operations are distinct. Modeling anonymous memory as a
-> > > kind of file-backed memory for purposes of VMA manipulation would also
-> > > be a departure from existing practice. Can you help me understand why
-> > > you seem to favor the FD-per-VMA approach so heavily? I don't see any
-> > > arguments *for* an FD-per-VMA model for remove memory manipulation and
-> > > I see a lot of arguments against it. Is there some compelling
-> > > advantage I'm missing?
-> >
-> > First and foremost it provides an easy cookie to the userspace to
-> > guarantee time-to-check-time-to-use consistency.
-> 
-> But only for one VMA at a time.
+Gen Zhang <blackgod016574@gmail.com> writes:
 
-Which is the unit we operate on, right?
+> On Tue, May 28, 2019 at 11:39:22AM +0000, Kalle Valo wrote:
+>> Gen Zhang <blackgod016574@gmail.com> wrote:
+>> 
+>> > In wl1271_probe(), 'glue->core' is allocated by platform_device_alloc(),
+>> > when this allocation fails, ENOMEM is returned. However, 'pdev_data'
+>> > and 'glue' are allocated by devm_kzalloc() before 'glue->core'. When
+>> > platform_device_alloc() returns NULL, we should also free 'pdev_data'
+>> > and 'glue' before wl1271_probe() ends to prevent leaking memory.
+>> > 
+>> > Similarly, we shoulf free 'pdev_data' when 'glue' is NULL. And we should
+>> > free 'pdev_data' and 'glue' when 'glue->reg' is error and when 'ret' is
+>> > error.
+>> > 
+>> > Further, we should free 'glue->core', 'pdev_data' and 'glue' when this 
+>> > function normally ends to prevent leaking memory.
+>> > 
+>> > Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+>> 
+>> Same questions as with similar SDIO patch:
+>> 
+>> https://patchwork.kernel.org/patch/10959049/
+>> 
+>> Patch set to Changes Requested.
+>> 
+>> -- 
+>> https://patchwork.kernel.org/patch/10959053/
+>> 
+>> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+>> 
+> Thanks for your reply, Kalle. I had debate with Jon about this patch. 
+> You could kindly refer to lkml: https://lkml.org/lkml/2019/5/23/1547. 
+> And I don't think a practical conclusion is made there.
 
-> > It also naturally
-> > extend an existing fadvise interface that achieves madvise semantic on
-> > files.
-> 
-> There are lots of things that madvise can do that fadvise can't and
-> that don't even really make sense for fadvise, e.g., MADV_FREE. It
-> seems odd to me to duplicate much of the madvise interface into
-> fadvise so that we can use file APIs to give madvise hints. It seems
-> simpler to me to just provide a mechanism to put the madvise hints
-> where they're needed.
+Yeah, I don't see how that thread proves that these patches are correct.
 
-I do not see why we would duplicate. I confess I haven't tried to
-implement this so I might be overlooking something but it seems to me
-that we could simply reuse the same functionality from both APIs.
+> Further, I e-mailed Greg K-H about when should we use devm_kmalloc().
+>
+> On Tue, May 28, 2019 at 08:32:57AM +0800, Gen Zhang wrote:
+>> devm_kmalloc() is used to allocate memory for a driver dev. Comments
+>> above the definition and doc 
+>> (https://www.kernel.org/doc/Documentation/driver-model/devres.txt) all
+>> imply that allocated the memory is automatically freed on driver attach,
+>> no matter allocation fail or not. However, I examined the code, and
+>> there are many sites that devm_kfree() is used to free devm_kmalloc().
+>> e.g. hisi_sas_debugfs_init() in drivers/scsi/hisi_sas/hisi_sas_main.c.
+>> So I am totally confused about this issue. Can anybody give me some
+>> guidance? When should we use devm_kfree()?
+> He replied: If you "know" you need to free the memory now, 
+> call devm_kfree(). If you want to wait for it to be cleaned up latter, 
+> like normal, then do not call it.
+>
+> So could please look in to this issue?
 
-> > I am not really pushing hard for this particular API but I really
-> > do care about a programming model that would be sane.
-> 
-> You've used "sane" twice so far in this message. Can you specify more
-> precisely what you mean by that word?
-
-Well, I would consider a model which would prevent from unintended side
-effects (e.g. working on a completely different object) without a tricky
-synchronization sane.
-
-> I agree that there needs to be
-> some defense against TOCTOU races when doing remote memory management,
-> but I don't think providing this robustness via a file descriptor is
-> any more sane than alternative approaches. A file descriptor comes
-> with a lot of other features --- e.g., SCM_RIGHTS, fstat, and a
-> concept of owning a resource --- that aren't needed to achieve
-> robustness.
-> 
-> Normally, a file descriptor refers to some resource that the kernel
-> holds as long as the file descriptor (well, the open file description
-> or struct file) lives -- things like graphics buffers, files, and
-> sockets. If we're using an FD *just* as a cookie and not a resource,
-> I'd rather just expose the cookie directly.
-
-You are absolutely right. But doesn't that apply to any other
-revalidation method that would be tracking VMA status as well. As I've
-said I am not married to this approach as long as there are better
-alternatives. So far we are in a discussion what should be the actual
-semantic of the operation and how much do we want to tolerate races. And
-it seems that we are diving into implementation details rather than
-landing with a firm decision that the current proposed API is suitable
-or not.
-
-> > If we have a
-> > different means to achieve the same then all fine by me but so far I
-> > haven't heard any sound arguments to invent something completely new
-> > when we have established APIs to use.
-> 
-> Doesn't the next sentence describe something profoundly new? :-)
-> 
-> > Exporting anonymous mappings via
-> > proc the same way we do for file mappings doesn't seem to be stepping
-> > outside of the current practice way too much.
-> 
-> It seems like a radical departure from existing practice to provide
-> filesystem interfaces to anonymous memory regions, e.g., anon_vma.
-> You've never been able to refer to those memory regions with file
-> descriptors.
-> 
-> All I'm suggesting is that we take the existing madvise mechanism,
-> make it work cross-process, and make it robust against TOCTOU
-> problems, all one step at a time. Maybe my sense of API "size" is
-> miscalibrated, but adding a new type of FD to refer to anonymous VMA
-> regions feels like a bigger departure and so requires stronger
-> justification, especially if the result of the FD approach is probably
-> something less efficient than a cookie-based one.
-
-Feel free to propose the way to achieve that in the respective email
-thread.
- 
-> > and we should focus on discussing whether this is a
-> > sane model. And I think it would be much better to discuss that under
-> > the respective patch which introduces that API rather than here.
-> 
-> I think it's important to discuss what that API should look like. :-)
-
-It will be fun to follow this discussion and make some sense of
-different parallel threads.
+Sorry, no time to investigate this in detail. If you think the patches
+are correct you can resend them and get someone familiar with the driver
+to provide Reviewed-by, then I will apply them.
 
 -- 
-Michal Hocko
-SUSE Labs
+Kalle Valo
