@@ -2,80 +2,71 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9AE7C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE10C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE8402166E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:44:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559061876;
-	bh=EyitICxyF3g19gm/UesIm0IkuAaG1QB7Af0EuJpPk5s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=hWYlUPbi5sOudCq8+4GpTQwxxSuRIXDEcZcSGJLoVfw3MpRxSZGZfH4b9XQO8sU+N
-	 FHRnqeC90QN5KzWyxU9+JDOsb/LhvQQFA880BT5YUKA98VVYu4ALYzyKGFVoM8mZ1C
-	 yPjooMKOHmsfIHE2nlzs7oUIb8M/q6WE2xztzgH0=
+	by mail.kernel.org (Postfix) with ESMTP id AE97A216FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:45:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="anrNjBRs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbfE1Qog (ORCPT
+        id S1727175AbfE1Qp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 12:44:36 -0400
-Received: from mail-lf1-f43.google.com ([209.85.167.43]:38942 "EHLO
-        mail-lf1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbfE1Qof (ORCPT
+        Tue, 28 May 2019 12:45:26 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:44519 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726371AbfE1Qp0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 12:44:35 -0400
-Received: by mail-lf1-f43.google.com with SMTP id f1so15117069lfl.6
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 09:44:34 -0700 (PDT)
+        Tue, 28 May 2019 12:45:26 -0400
+Received: by mail-qk1-f196.google.com with SMTP id w187so13375278qkb.11;
+        Tue, 28 May 2019 09:45:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=mZlg4sc7q9rQDVHOh6wEBx/xKO/kmSkGgITfjko1qow=;
-        b=HFnOxRV2ppzDsKKS8afYxgqriBArjzf7Aw4Gfpuee5lbPOSqcaOO4sesORT10MysFm
-         u2/g6xsqlph3uXVFfQuy7b9VwEBn26e6SL43DOnYsO5FGXfUm925LNM3QeMGC1zEQXsZ
-         vkhPrxQreTKYpzfv7CG7huxATqWwt7sQFmQlc=
+        bh=PFmaYpz+7586n8fgFzVofvO6konpWOrSa5dCBt2QReQ=;
+        b=anrNjBRsknHzWPik+xWHWpC52AhNn4Rm17SGUku1No9v1MdLTVVQff/jGHtbgyaFcZ
+         podY2XyhqOCFaXvyIYt3b9GidZFmCrUWmr9z2iT82xm/riYk4C9Lsn7cOw6C7MLcc354
+         /Qou5L1D8DfnkaxFOPD84RioSEwIVubPgBerMzl7MWT8fMYGAjtPA0HoSo6znBDp1U47
+         CkqxVrMob3azCegSEjZo5HjErJXQslG7YY/GvYs64/lAks8pKiupHqFYUAVOXA+NQmge
+         g+8FFc6Eu0MS7B9DkClx73FNHQvCy6Afv9WPQN1EckuEi9WLX9gs9WtTFcjXKZi65eeM
+         UZTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=mZlg4sc7q9rQDVHOh6wEBx/xKO/kmSkGgITfjko1qow=;
-        b=lw8AQpHvXvTXDUP0tyPNhdU2pHWD+vR6/BD8YKoo560SCVnddeYH6YEyzhAeYMnr9s
-         ulBJMwih9cIZ4/e1Xzcba7BL/o33tr6qm/oRkYOq//aE58aVo3YTbGREi5OXhRAHATKF
-         JCakJIXg92lAyhmncPbddMkJ9roWDUWWRXKWTd8bv7IhL1c3+24sHbMfZ0vaLSq85b+8
-         FAjRllSumcbU5CBz7/JAvowbXMTVxD1Rl7gioQdTCUVepo1E09BSy6e62yQgUWWvlvtz
-         iLtyq4c3TV3gMG10QNk+6xZ8ddxI/VGxgqhbYuCGyUAIxH/7QZDVKc8yCIoB1bJVFMRt
-         ECdg==
-X-Gm-Message-State: APjAAAVevqxm797faSwRRiEomHluF+z6USOR0MS1tUgyuF80o9Kfv2v6
-        2X0jHZy5iPWVqfjImzUmur/IN2F5jpo=
-X-Google-Smtp-Source: APXvYqxjJu5rwiK6wi+D6aflfmW1F8lnYbuGS913jWrIl1T4bM+ClWo+mR8gdpNB0VKPfh4aivKY2Q==
-X-Received: by 2002:a19:95d1:: with SMTP id x200mr1416719lfd.166.1559061873487;
-        Tue, 28 May 2019 09:44:33 -0700 (PDT)
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
-        by smtp.gmail.com with ESMTPSA id 62sm150748lje.53.2019.05.28.09.44.32
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 May 2019 09:44:32 -0700 (PDT)
-Received: by mail-lf1-f42.google.com with SMTP id h13so15134870lfc.7
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 09:44:32 -0700 (PDT)
-X-Received: by 2002:a19:f60f:: with SMTP id x15mr12198921lfe.61.1559061872401;
- Tue, 28 May 2019 09:44:32 -0700 (PDT)
+        bh=PFmaYpz+7586n8fgFzVofvO6konpWOrSa5dCBt2QReQ=;
+        b=mEmcCUAnQrndJYj9gucHbhjPDMaTyD43pQ+CUTh3vkLv26s0sc9Q6p7EiTDkYBzxPB
+         udqIibC7qtEFumNSeNOYydX4VFqGAnBafB9oxsJY46ll8npCL+BVRLXnFhV9H4eDtrgH
+         lCv/zpLyLlD+AdaVmfTOnubglqGO0DKcnwl4vjqgQYPm6Z/btl14ZK8hRvS5gkPDkRLy
+         wtNH/O4zsg/oxd6ynszRBGYS1ic8hVpPYsu754sP55F3WOWO564QYDlUZLqN09LxsDB8
+         gZRwWUBKSobf2bH6zlbm/Ir7T2zaaPYotTM8qSiB5bj0cdPl00GfRFg2tjoe6MH/dCD1
+         IYDA==
+X-Gm-Message-State: APjAAAVQG6Fon+70dRiEQeQmF4yaH5etpfm1hleX8CmLB9FEiTqvJBM3
+        9/lkHD1hTmrcwqYqhSX9Ln/6GvurzqKGtrOBAOw=
+X-Google-Smtp-Source: APXvYqwxnAJXnfzy3oJ7sLlXZqQixsfQ+YZO+6KnyeoazRF9rZ1t5e8A0gFtHjIbg3A1bXf4IjD1rHcMcfCt89SykjQ=
+X-Received: by 2002:ae9:ee0b:: with SMTP id i11mr12264495qkg.96.1559061925163;
+ Tue, 28 May 2019 09:45:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <CACRpkdYFqcu=gz57H-+h5C3g_rvD-+XoRTw_A86PKDVA3=rfJg@mail.gmail.com>
-In-Reply-To: <CACRpkdYFqcu=gz57H-+h5C3g_rvD-+XoRTw_A86PKDVA3=rfJg@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 28 May 2019 09:44:16 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgZBfGwnyRGjziYvPMssSf7XO+7L_FTGfkR9Gz031VAzw@mail.gmail.com>
-Message-ID: <CAHk-=wgZBfGwnyRGjziYvPMssSf7XO+7L_FTGfkR9Gz031VAzw@mail.gmail.com>
-Subject: Re: [GIT PULL] pin control fixes for v5.2
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Amelie Delaunay <amelie.delaunay@st.com>
+References: <20190524003038.GA69487@ip-172-31-44-144.us-west-2.compute.internal>
+In-Reply-To: <20190524003038.GA69487@ip-172-31-44-144.us-west-2.compute.internal>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Tue, 28 May 2019 09:45:14 -0700
+Message-ID: <CAPhsuW7H=w_UMyu5Q5p5+MGogkQ7+7X7sS=vJTiR=+JJy0KuTg@mail.gmail.com>
+Subject: Re: [PATCH] selftests: bpf: fix compiler warning
+To:     Alakesh Haloi <alakesh.haloi@gmail.com>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        linux-kselftest@vger.kernel.org,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -83,15 +74,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 1:44 AM Linus Walleij <linus.walleij@linaro.org> wr=
-ote:
+On Thu, May 23, 2019 at 5:31 PM Alakesh Haloi <alakesh.haloi@gmail.com> wro=
+te:
 >
-> The outstanding commits are the Intel fixes [..]
+> Add missing header file following compiler warning
+>
+> prog_tests/flow_dissector.c: In function =E2=80=98tx_tap=E2=80=99:
+> prog_tests/flow_dissector.c:175:9: warning: implicit declaration of funct=
+ion =E2=80=98writev=E2=80=99; did you mean =E2=80=98write=E2=80=99? [-Wimpl=
+icit-function-declaration]
+>   return writev(fd, iov, ARRAY_SIZE(iov));
+>          ^~~~~~
+>          write
+>
+> Signed-off-by: Alakesh Haloi <alakesh.haloi@gmail.com>
 
-Heh. Swedism? "Outstanding" in English means "exceptionally good". I
-suspect you meant commits that "st=C3=A5r ut", which translates to "stands
-out".
+The patch looks good. Please add a "Fixes" tag, so the fix
+can be back ported properly.
 
-Or maybe the commits really are _that_ good?
+Also, please specify which tree the patch should be applied
+with [PATCH bpf] or [PATCH bpf-next].
 
-                 Linus
+Thanks,
+Song
+
+
+
+
+> ---
+>  tools/testing/selftests/bpf/prog_tests/flow_dissector.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/tools/testing/selftests/bpf/prog_tests/flow_dissector.c b/to=
+ols/testing/selftests/bpf/prog_tests/flow_dissector.c
+> index fbd1d88a6095..c938283ac232 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/flow_dissector.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/flow_dissector.c
+> @@ -3,6 +3,7 @@
+>  #include <error.h>
+>  #include <linux/if.h>
+>  #include <linux/if_tun.h>
+> +#include <sys/uio.h>
+>
+>  #define CHECK_FLOW_KEYS(desc, got, expected)                           \
+>         CHECK_ATTR(memcmp(&got, &expected, sizeof(got)) !=3D 0,          =
+ \
+> --
+> 2.17.1
+>
