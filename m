@@ -4,29 +4,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C6AC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97337C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6CDF20B7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 757462070D
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:56:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbfE1K4k (ORCPT
+        id S1726945AbfE1K4s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 06:56:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60092 "EHLO mx1.redhat.com"
+        Tue, 28 May 2019 06:56:48 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53250 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726282AbfE1K4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 06:56:39 -0400
+        id S1726859AbfE1K4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 06:56:45 -0400
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E2B8B3079B8F;
-        Tue, 28 May 2019 10:56:38 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 350F5300502A;
+        Tue, 28 May 2019 10:56:45 +0000 (UTC)
 Received: from steredhat.redhat.com (ovpn-117-13.ams2.redhat.com [10.36.117.13])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2E37560BE2;
-        Tue, 28 May 2019 10:56:36 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1F2B67D59A;
+        Tue, 28 May 2019 10:56:42 +0000 (UTC)
 From:   Stefano Garzarella <sgarzare@redhat.com>
 To:     netdev@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
@@ -34,93 +34,85 @@ Cc:     linux-kernel@vger.kernel.org,
         Stefan Hajnoczi <stefanha@redhat.com>,
         "David S. Miller" <davem@davemloft.net>,
         "Michael S . Tsirkin" <mst@redhat.com>
-Subject: [PATCH 1/4] vsock/virtio: fix locking around 'the_virtio_vsock'
-Date:   Tue, 28 May 2019 12:56:20 +0200
-Message-Id: <20190528105623.27983-2-sgarzare@redhat.com>
+Subject: [PATCH 3/4] vsock/virtio: fix flush of works during the .remove()
+Date:   Tue, 28 May 2019 12:56:22 +0200
+Message-Id: <20190528105623.27983-4-sgarzare@redhat.com>
 In-Reply-To: <20190528105623.27983-1-sgarzare@redhat.com>
 References: <20190528105623.27983-1-sgarzare@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Tue, 28 May 2019 10:56:39 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Tue, 28 May 2019 10:56:45 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch protects the reading of 'the_virtio_vsock' taking the
-mutex used when it is set.
-We also move the 'the_virtio_vsock' assignment at the end of the
-.probe(), when we finished all the initialization, and at the
-beginning of .remove(), before to release resources, taking the
-lock until the end of the function.
+We flush all pending works before to call vdev->config->reset(vdev),
+but other works can be queued before the vdev->config->del_vqs(vdev),
+so we add another flush after it, to avoid use after free.
 
+Suggested-by: Michael S. Tsirkin <mst@redhat.com>
 Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
 ---
- net/vmw_vsock/virtio_transport.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+ net/vmw_vsock/virtio_transport.c | 23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
 
 diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
-index 96ab344f17bb..d3ba7747aa73 100644
+index e694df10ab61..ad093ce96693 100644
 --- a/net/vmw_vsock/virtio_transport.c
 +++ b/net/vmw_vsock/virtio_transport.c
-@@ -68,7 +68,13 @@ struct virtio_vsock {
- 
- static struct virtio_vsock *virtio_vsock_get(void)
- {
--	return the_virtio_vsock;
-+	struct virtio_vsock *vsock;
-+
-+	mutex_lock(&the_virtio_vsock_mutex);
-+	vsock = the_virtio_vsock;
-+	mutex_unlock(&the_virtio_vsock_mutex);
-+
-+	return vsock;
+@@ -660,6 +660,15 @@ static int virtio_vsock_probe(struct virtio_device *vdev)
+ 	return ret;
  }
  
- static u32 virtio_transport_get_local_cid(void)
-@@ -592,7 +598,6 @@ static int virtio_vsock_probe(struct virtio_device *vdev)
- 	atomic_set(&vsock->queued_replies, 0);
++static void virtio_vsock_flush_works(struct virtio_vsock *vsock)
++{
++	flush_work(&vsock->loopback_work);
++	flush_work(&vsock->rx_work);
++	flush_work(&vsock->tx_work);
++	flush_work(&vsock->event_work);
++	flush_work(&vsock->send_pkt_work);
++}
++
+ static void virtio_vsock_remove(struct virtio_device *vdev)
+ {
+ 	struct virtio_vsock *vsock = vdev->priv;
+@@ -668,12 +677,6 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
+ 	mutex_lock(&the_virtio_vsock_mutex);
+ 	the_virtio_vsock = NULL;
  
- 	vdev->priv = vsock;
--	the_virtio_vsock = vsock;
- 	mutex_init(&vsock->tx_lock);
- 	mutex_init(&vsock->rx_lock);
- 	mutex_init(&vsock->event_lock);
-@@ -614,6 +619,8 @@ static int virtio_vsock_probe(struct virtio_device *vdev)
- 	virtio_vsock_event_fill(vsock);
+-	flush_work(&vsock->loopback_work);
+-	flush_work(&vsock->rx_work);
+-	flush_work(&vsock->tx_work);
+-	flush_work(&vsock->event_work);
+-	flush_work(&vsock->send_pkt_work);
+-
+ 	/* Reset all connected sockets when the device disappear */
+ 	vsock_for_each_connected_socket(virtio_vsock_reset_sock);
+ 
+@@ -690,6 +693,9 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
+ 	vsock->event_run = false;
  	mutex_unlock(&vsock->event_lock);
  
-+	the_virtio_vsock = vsock;
++	/* Flush all pending works */
++	virtio_vsock_flush_works(vsock);
 +
- 	mutex_unlock(&the_virtio_vsock_mutex);
- 	return 0;
- 
-@@ -628,6 +635,9 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
- 	struct virtio_vsock *vsock = vdev->priv;
- 	struct virtio_vsock_pkt *pkt;
- 
-+	mutex_lock(&the_virtio_vsock_mutex);
-+	the_virtio_vsock = NULL;
-+
- 	flush_work(&vsock->loopback_work);
- 	flush_work(&vsock->rx_work);
- 	flush_work(&vsock->tx_work);
-@@ -667,13 +677,10 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
- 	}
- 	spin_unlock_bh(&vsock->loopback_list_lock);
- 
--	mutex_lock(&the_virtio_vsock_mutex);
--	the_virtio_vsock = NULL;
--	mutex_unlock(&the_virtio_vsock_mutex);
--
+ 	/* Flush all device writes and interrupts, device will not use any
+ 	 * more buffers.
+ 	 */
+@@ -726,6 +732,11 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
+ 	/* Delete virtqueues and flush outstanding callbacks if any */
  	vdev->config->del_vqs(vdev);
  
++	/* Other works can be queued before 'config->del_vqs()', so we flush
++	 * all works before to free the vsock object to avoid use after free.
++	 */
++	virtio_vsock_flush_works(vsock);
++
  	kfree(vsock);
-+	mutex_unlock(&the_virtio_vsock_mutex);
+ 	mutex_unlock(&the_virtio_vsock_mutex);
  }
- 
- static struct virtio_device_id id_table[] = {
 -- 
 2.20.1
 
