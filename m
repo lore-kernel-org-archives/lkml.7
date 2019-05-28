@@ -2,110 +2,71 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC28C04E84
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77FB7C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3059821019
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:37:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ax71s3QJ"
+	by mail.kernel.org (Postfix) with ESMTP id 4E56420B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:40:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbfE1Xh0 (ORCPT
+        id S1727011AbfE1XkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 19:37:26 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:54904 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbfE1Xh0 (ORCPT
+        Tue, 28 May 2019 19:40:11 -0400
+Received: from smtprelay0052.hostedemail.com ([216.40.44.52]:49715 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726511AbfE1XkL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 19:37:26 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4SNSoGF128001;
-        Tue, 28 May 2019 23:37:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2018-07-02;
- bh=H1b3CmpfTkZgxRfO0YlFFrBaQVtQ3uJKq53BkVtB23s=;
- b=ax71s3QJrcnGCWO4hozKCTSzGgWZowVWZ8V2DBjtoAFxl/i8EaA6pSU86r0JUC6T7gGz
- NDGFcFNw9sqRG/WYn5KGzBXtFQInfK2uAMG6aC9yF7JxvFvvGAknblfM2Vs7EPlRG3Oh
- Ho79Bo+GwKrPiPswmbjF1UNOf8xB2DhR2HMpVmrs0bmpl0QoCz2gxeOhl1fU/IWOzuaH
- Bi5wg2MD5dksntcTLgs2idTeGP1rNq/TYdZ7kAfczWg8zZ2mjKcJBwEflsJQDVkR2t7m
- ihAzQ7cFelZMefB/m8Hwafp9VQXj35fHUqMb8w63zf64P+IKoQOTrTSoQk0omzJsB0Y6 MA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2130.oracle.com with ESMTP id 2spu7dem5a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 May 2019 23:37:09 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4SNZKLk077525;
-        Tue, 28 May 2019 23:37:09 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2ss1fn54bh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 May 2019 23:37:08 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4SNb7WF022616;
-        Tue, 28 May 2019 23:37:07 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 28 May 2019 16:37:06 -0700
-Date:   Tue, 28 May 2019 19:37:07 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     steffen.klassert@secunet.com
-Cc:     peterz@infradead.org, akpm@linux-foundation.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Question about padata's callback cpu
-Message-ID: <20190528233707.gc4xomnlcuiszqht@ca-dmjordan1.us.oracle.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20180323-268-5a959c
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9271 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905280148
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9271 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1031
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905280148
+        Tue, 28 May 2019 19:40:11 -0400
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
+        by smtpgrave03.hostedemail.com (Postfix) with ESMTP id 06BE01802F4BE
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 23:40:10 +0000 (UTC)
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 29600837F24C;
+        Tue, 28 May 2019 23:40:09 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: wind74_7597841c10f1a
+X-Filterd-Recvd-Size: 1440
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf01.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 28 May 2019 23:40:07 +0000 (UTC)
+Message-ID: <7cf0e30a7309008a81cc65e692511a1e8e6b544f.camel@perches.com>
+Subject: Re: [PATCH] lib: test_overflow: Avoid taining the kernel and fix
+ wrap size
+From:   Joe Perches <joe@perches.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 28 May 2019 16:40:06 -0700
+In-Reply-To: <201905281550.4E3CB258F@keescook>
+References: <201905281550.4E3CB258F@keescook>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.1-1build1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steffen,
+On Tue, 2019-05-28 at 15:51 -0700, Kees Cook wrote:
+> This adds __GFP_NOWARN to the kmalloc()-portions of the overflow test to
+> avoid tainting the kernel. Additionally fixes up the math on wrap size
+> to be architecture and page size agnostic.
+[]
+> diff --git a/lib/test_overflow.c b/lib/test_overflow.c
+[]
+> @@ -486,16 +486,17 @@ static int __init test_overflow_shift(void)
+[]
+> +#define alloc_GFP		 (GFP_KERNEL | __GFP_NOWARN)
+[]
+> +#define alloc110(alloc, arg, sz) alloc(arg, sz, alloc_GFP | __GFP_NOWARN)
 
-I'm working on some padata patches and stumbled across this thread about the
-purpose of the callback CPU in padata_do_parallel.
+seems redundant.
 
-    https://lore.kernel.org/lkml/20100402112326.GA19502@secunet.com/
 
-The relevant part is,
-
-  andrew> - Why would I want to specify which CPU the parallel completion
-  andrew>   callback is to be executed on?
-  
-    steffen> Well, for IPsec for example it is quite interesting to separate the
-    steffen> different flows to different cpus. pcrypt does this by choosing different
-    steffen> callback cpus for the requests belonging to different transforms.
-    steffen> Others might want to see the object on the same cpu as it was before
-    steffen> the parallel codepath.
-
-Not too familiar with IPsec, but I'm guessing it's interesting to separate the
-flows for performance reasons.  Is the goal to keep multiple flows from
-interfering with each other (ensuring they run on different CPUs), or maybe to
-get better locality (ensuring each always runs on the same CPU)?  It'd be
-helpful if you could expand on this.
-
-By the way, the padata patches extend the code to parallelize more places
-around the kernel, as Peter suggested.
-
-    https://lore.kernel.org/lkml/20181106203411.pdce6tgs7dncwflh@ca-dmjordan1.us.oracle.com/
-
-Thanks,
-Daniel
