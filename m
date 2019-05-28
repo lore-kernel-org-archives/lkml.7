@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9F3C072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 03:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C58BAC072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 03:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3489820717
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 03:20:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A550B20717
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 03:20:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727974AbfE1DUc (ORCPT
+        id S1728004AbfE1DUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 23:20:32 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:60692 "EHLO huawei.com"
+        Mon, 27 May 2019 23:20:37 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:17171 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727342AbfE1DUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 23:20:31 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B5E2EF06512F3E944D5E;
-        Tue, 28 May 2019 11:20:29 +0800 (CST)
+        id S1727342AbfE1DUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 23:20:37 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id CD19AA2EA6348A357050;
+        Tue, 28 May 2019 11:20:34 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.209) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 28 May
- 2019 11:20:23 +0800
+ 2019 11:20:24 +0800
 From:   Gao Xiang <gaoxiang25@huawei.com>
 To:     Chao Yu <yuchao0@huawei.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -34,12 +34,13 @@ CC:     LKML <linux-kernel@vger.kernel.org>,
         Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
         Fang Wei <fangwei1@huawei.com>,
         Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v3 1/2] staging: erofs: support statx
-Date:   Tue, 28 May 2019 11:19:42 +0800
-Message-ID: <20190528031943.239665-1-gaoxiang25@huawei.com>
+Subject: [PATCH v3 2/2] staging: erofs: fix i_blocks calculation
+Date:   Tue, 28 May 2019 11:19:43 +0800
+Message-ID: <20190528031943.239665-2-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190528023147.94117-2-gaoxiang25@huawei.com>
+In-Reply-To: <20190528031943.239665-1-gaoxiang25@huawei.com>
 References: <20190528023147.94117-2-gaoxiang25@huawei.com>
+ <20190528031943.239665-1-gaoxiang25@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.140.130.215]
@@ -49,96 +50,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-statx() has already been supported in commit a528d35e8bfc
-("statx: Add a system call to make enhanced file info available"),
-user programs can get more useful attributes.
+For compressed files, i_blocks should not be calculated
+by using i_size. use i_u.compressed_blocks instead.
+
+In addition, i_blocks was miscalculated for non-compressed
+files previously, fix it as well.
 
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
 change log v3:
- - update attributes_mask to indicate bits which erofs support
-   as Chao pointed out;
- - already tested with samples/vfs/test-statx.c;
+ - wrap i.u.compressed_blocks with le32_to_cpu() as Chao pointed out;
+
+change log v2:
+ - fix description in commit message;
+ - fix to 'inode->i_blocks = nblks << LOG_SECTORS_PER_BLOCK'.
 
 Thanks,
 Gao Xiang
 
- drivers/staging/erofs/inode.c    | 20 ++++++++++++++++++++
- drivers/staging/erofs/internal.h |  2 ++
- drivers/staging/erofs/namei.c    |  1 +
- 3 files changed, 23 insertions(+)
+ drivers/staging/erofs/inode.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/erofs/inode.c
-index c7d3b815a798..1c220900e1a0 100644
+index 1c220900e1a0..9520419f746c 100644
 --- a/drivers/staging/erofs/inode.c
 +++ b/drivers/staging/erofs/inode.c
-@@ -285,7 +285,25 @@ struct inode *erofs_iget(struct super_block *sb,
- 	return inode;
+@@ -20,6 +20,7 @@ static int read_inode(struct inode *inode, void *data)
+ 	struct erofs_vnode *vi = EROFS_V(inode);
+ 	struct erofs_inode_v1 *v1 = data;
+ 	const unsigned int advise = le16_to_cpu(v1->i_advise);
++	erofs_blk_t nblks = 0;
+ 
+ 	vi->data_mapping_mode = __inode_data_mapping(advise);
+ 
+@@ -60,6 +61,10 @@ static int read_inode(struct inode *inode, void *data)
+ 			le32_to_cpu(v2->i_ctime_nsec);
+ 
+ 		inode->i_size = le64_to_cpu(v2->i_size);
++
++		/* total blocks for compressed files */
++		if (vi->data_mapping_mode == EROFS_INODE_LAYOUT_COMPRESSION)
++			nblks = le32_to_cpu(v2->i_u.compressed_blocks);
+ 	} else if (__inode_version(advise) == EROFS_INODE_LAYOUT_V1) {
+ 		struct erofs_sb_info *sbi = EROFS_SB(inode->i_sb);
+ 
+@@ -90,6 +95,8 @@ static int read_inode(struct inode *inode, void *data)
+ 			sbi->build_time_nsec;
+ 
+ 		inode->i_size = le32_to_cpu(v1->i_size);
++		if (vi->data_mapping_mode == EROFS_INODE_LAYOUT_COMPRESSION)
++			nblks = le32_to_cpu(v1->i_u.compressed_blocks);
+ 	} else {
+ 		errln("unsupported on-disk inode version %u of nid %llu",
+ 		      __inode_version(advise), vi->nid);
+@@ -97,8 +104,11 @@ static int read_inode(struct inode *inode, void *data)
+ 		return -EIO;
+ 	}
+ 
+-	/* measure inode.i_blocks as the generic filesystem */
+-	inode->i_blocks = ((inode->i_size - 1) >> 9) + 1;
++	if (!nblks)
++		/* measure inode.i_blocks as generic filesystems */
++		inode->i_blocks = roundup(inode->i_size, EROFS_BLKSIZ) >> 9;
++	else
++		inode->i_blocks = nblks << LOG_SECTORS_PER_BLOCK;
+ 	return 0;
  }
  
-+int erofs_getattr(const struct path *path, struct kstat *stat,
-+		  u32 request_mask, unsigned int query_flags)
-+{
-+	struct inode *const inode = d_inode(path->dentry);
-+	struct erofs_vnode *const vi = EROFS_V(inode);
-+
-+	if (vi->data_mapping_mode == EROFS_INODE_LAYOUT_COMPRESSION)
-+		stat->attributes |= STATX_ATTR_COMPRESSED;
-+
-+	stat->attributes |= STATX_ATTR_IMMUTABLE;
-+	stat->attributes_mask |= (STATX_ATTR_COMPRESSED |
-+				  STATX_ATTR_IMMUTABLE);
-+
-+	generic_fillattr(inode, stat);
-+	return 0;
-+}
-+
- const struct inode_operations erofs_generic_iops = {
-+	.getattr = erofs_getattr,
- #ifdef CONFIG_EROFS_FS_XATTR
- 	.listxattr = erofs_listxattr,
- #endif
-@@ -294,6 +312,7 @@ const struct inode_operations erofs_generic_iops = {
- 
- const struct inode_operations erofs_symlink_iops = {
- 	.get_link = page_get_link,
-+	.getattr = erofs_getattr,
- #ifdef CONFIG_EROFS_FS_XATTR
- 	.listxattr = erofs_listxattr,
- #endif
-@@ -302,6 +321,7 @@ const struct inode_operations erofs_symlink_iops = {
- 
- const struct inode_operations erofs_fast_symlink_iops = {
- 	.get_link = simple_get_link,
-+	.getattr = erofs_getattr,
- #ifdef CONFIG_EROFS_FS_XATTR
- 	.listxattr = erofs_listxattr,
- #endif
-diff --git a/drivers/staging/erofs/internal.h b/drivers/staging/erofs/internal.h
-index c47778b3fabd..911333cdeef4 100644
---- a/drivers/staging/erofs/internal.h
-+++ b/drivers/staging/erofs/internal.h
-@@ -556,6 +556,8 @@ static inline bool is_inode_fast_symlink(struct inode *inode)
- }
- 
- struct inode *erofs_iget(struct super_block *sb, erofs_nid_t nid, bool dir);
-+int erofs_getattr(const struct path *path, struct kstat *stat,
-+		  u32 request_mask, unsigned int query_flags);
- 
- /* namei.c */
- extern const struct inode_operations erofs_dir_iops;
-diff --git a/drivers/staging/erofs/namei.c b/drivers/staging/erofs/namei.c
-index d8d9dc9dab43..fd3ae78d0ba5 100644
---- a/drivers/staging/erofs/namei.c
-+++ b/drivers/staging/erofs/namei.c
-@@ -247,6 +247,7 @@ static struct dentry *erofs_lookup(struct inode *dir,
- 
- const struct inode_operations erofs_dir_iops = {
- 	.lookup = erofs_lookup,
-+	.getattr = erofs_getattr,
- #ifdef CONFIG_EROFS_FS_XATTR
- 	.listxattr = erofs_listxattr,
- #endif
 -- 
 2.17.1
 
