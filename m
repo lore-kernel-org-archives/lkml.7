@@ -2,79 +2,155 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53254C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A248BC072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AC10208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:18:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 851AC208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:19:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726649AbfE1JSd (ORCPT
+        id S1726940AbfE1JTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 05:18:33 -0400
-Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:55403 "EHLO
-        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725943AbfE1JSc (ORCPT
+        Tue, 28 May 2019 05:19:19 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:34767 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbfE1JTS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 05:18:32 -0400
-Received: from [IPv6:2001:983:e9a7:1:10b2:2e62:e4b1:bd13] ([IPv6:2001:983:e9a7:1:10b2:2e62:e4b1:bd13])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id VYFZhh8VhsDWyVYFahcRZ2; Tue, 28 May 2019 11:18:30 +0200
-Subject: Re: [RFCv1 00/12] media: mtk-vcodec: support for MT8183 decoder
-To:     Alexandre Courbot <acourbot@chromium.org>,
-        Yunfei Dong <yunfei.dong@mediatek.com>,
-        Tiffany Lin <tiffany.lin@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20190528055635.12109-1-acourbot@chromium.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <f143b2e2-45ab-9d59-a607-f2032206e4e0@xs4all.nl>
-Date:   Tue, 28 May 2019 11:18:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 28 May 2019 05:19:18 -0400
+Received: by mail-lf1-f66.google.com with SMTP id v18so14002976lfi.1;
+        Tue, 28 May 2019 02:19:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Dt6xkTlYLLzspF5sWEy/VH41bbc6zw6jc+Wa8i9f9a4=;
+        b=JaHn5ULYYfT8Za5dRYDWXNqjhmoeUxR2S4wNB4JIggoZam3mijAcjcqKPBoFkmBXVM
+         01jgpp+sbmzRFLmLm/Mkss71m29AheffTJEHLZ1p62AOy2HFsj3ju4swltIFzqTOx/V+
+         CcLQDIHBRcYwZJyA07xR19AJP6pj5N4irv5MPkrioWc/ifYO+7RwiG0IKx4PpShsY6BV
+         sRGIRL7uuT2zm+moZFP2diiIAO+la8savTi9eZjoKC83xHM6hq4SdPnt608cg22abRrP
+         IkdgeAZj8pW6Xh/iHaCic12COGPzBOaAkL9ti+BP9qPIgaRnk8u6rDdJv5C4WwgQTNfM
+         cjlw==
+X-Gm-Message-State: APjAAAXnJYdUafOOT/Tq/L3N8l59HlL9aquILCOhUPzZJ3iKua2RHmNW
+        2TJspp5+83pe6d8LWKGOzIGSUu/Eq2c/SyvP3VlB42oa
+X-Google-Smtp-Source: APXvYqxdS7TZcdfg35HdLOUa9xz527T4tZBXNDpzCsjV01tnhK+R7oNl2pgZnAKQNyFTnkQYZpn9wkC/dbA14taDQss=
+X-Received: by 2002:ac2:546a:: with SMTP id e10mr6776442lfn.75.1559035156588;
+ Tue, 28 May 2019 02:19:16 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190528055635.12109-1-acourbot@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfMM8dvHjwzwUAfKnKoP8luEtEGaVf32kshxDabImXd9jy0WyZNQu0oWcDuCA15v9nj/65NQVATJO4tPv31EblnvNkBcLyM0GlUCHRM2mkscgsxSaiswR
- z+uWhE+HAnoTjmtUpDFDsRwqLldLpm10GCvThGRZS9AwpB6rYzpOoJACHAi+y7ayANPTsKM8eXP10lvHUMh3XG3vFDJmZyk+ZKi4hili3Ha6LsQVHdZ1Kq3v
- vKz7PBFkC289Svxv/UAK1HyqfzxsmMyvf3hgblMRlP6QCjItw2KzTaQuDPaDKe25huRnygLIgRxG5gND9j3oXY1Z1GJ8dz7N4yXj4S9m59bZfu7ZZABtfHe3
- xnEJWDQZmDvZFYRZWNECTI8f1mrue7Twz7xEv+XgXHHNARAg5dowSUiLwU3VaLo7hq3660hThRLml4Z47FJzmQHHI23PFddGlMShAwD4IcU9WP0Gm3pZagt5
- uj3w07yiQs3Z5ISYUg9Ic/KY+HpW5qmmXcqyIeQwT3ro8nPkQ5zdw8Ifphm4h2EKGIXgHZae/WMch5Sz9rDGyVUtTyRv4tUkPXalEvIEwlgMP4zknzhckwVy
- kYI=
+References: <20190411124102.22442-1-spapageorgiou@de.adit-jv.com>
+In-Reply-To: <20190411124102.22442-1-spapageorgiou@de.adit-jv.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 28 May 2019 11:19:04 +0200
+Message-ID: <CAMuHMdVfDd_1gHnX=WvkHnF33fG2sWy7F5bTh-DghoKSt-vLCA@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: ulcb-kf: Add support for TI WL1837
+To:     Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>
+Cc:     Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Tobias Franzen <tfranzen@de.adit-jv.com>,
+        Biju Das <biju.das@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/28/19 7:56 AM, Alexandre Courbot wrote:
-> This series is a refactoring/split of the initial patch for MT8183 codec support
-> that was posted for Chrome OS [1] in order to make it upstreamable.
-> 
-> The line count has been significantly reduced compared to the initial patch,
-> although support for the MT8183 encoder is not here yet to limit the amount of
-> code to review.
-> 
-> Although the series applies on top of today's media tree, it will not compile
-> until support for the SCP is merged, hence the RFC status. Note also that the
-> H.264 structures used and implementation of the stateless codec API may not be
-> completely up-to-date. So the goal of this publication is to review the general
-> idea (especially split unto stateful and stateless ops), and maybe merge the
-> first 5 patches.
-> 
-> Patches 1-5 are cleanup/small fixes that came while working on this series. They
-> should be harmless and can be merged.
+Hi Spyridon,
 
-Merging these makes sense. I should be able to do that when v2 is posted with the
-SPDX conversion.
+On Thu, Apr 11, 2019 at 2:42 PM Spyridon Papageorgiou
+<spapageorgiou@de.adit-jv.com> wrote:
+> This patch adds description of TI WL1837 and links interfaces
+> to communicate with the IC, namely the SDIO interface to WLAN.
+>
+> Signed-off-by: Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>
 
-Regards,
+Thanks for your patch!
 
-	Hans
+> --- a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+> @@ -38,6 +38,18 @@
+>                 regulator-min-microvolt = <5000000>;
+>                 regulator-max-microvolt = <5000000>;
+>         };
+> +
+> +       wlan_en: regulator-wlan_en {
+> +               compatible = "regulator-fixed";
+> +               regulator-name = "wlan-en-regulator";
+> +
+> +               regulator-min-microvolt = <3300000>;
+> +               regulator-max-microvolt = <3300000>;
+
+So this is a 3.3V regulator...
+
+> +
+> +               gpio = <&gpio_exp_74 4 GPIO_ACTIVE_HIGH>;
+> +               startup-delay-us = <70000>;
+> +               enable-active-high;
+> +       };
+>  };
+>
+>  &can0 {
+
+> @@ -273,6 +298,30 @@
+>         status = "okay";
+>  };
+>
+> +&sdhi3 {
+> +       pinctrl-0 = <&sdhi3_pins>;
+> +       pinctrl-names = "default";
+> +
+> +       vmmc-supply = <&wlan_en>;
+> +       vqmmc-supply = <&wlan_en>;
+
+... used for both card and I/O line power...
+
+> +       bus-width = <4>;
+> +       no-1-8-v;
+
+... hence no 1.8V I/O.
+
+However, VIO of WL1837 is provided by W1.8V of regulator U55,
+which is 1.8V?
+
+> +       non-removable;
+> +       cap-power-off-card;
+> +       keep-power-in-suspend;
+> +       max-frequency = <26000000>;
+> +       status = "okay";
+> +
+> +       #address-cells = <1>;
+> +       #size-cells = <0>;
+> +       wlcore: wlcore@2 {
+> +               compatible = "ti,wl1837";
+> +               reg = <2>;
+> +               interrupt-parent = <&gpio1>;
+> +               interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
+
+I'm also a bit puzzled by the interrupt type.
+On Cat 874, it's IRQ_TYPE_LEVEL_HIGH, cfr.
+https://lore.kernel.org/linux-renesas-soc/1557997166-63351-2-git-send-email-biju.das@bp.renesas.com/
+
+On Kingfisher, the IRQ signal is inverted by U104, so I'd expect
+IRQ_TYPE_LEVEL_LOW instead of IRQ_TYPE_EDGE_FALLING?
+
+Apart from the above two comments:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
