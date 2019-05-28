@@ -2,97 +2,104 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F53AC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4EC8C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 113B421734
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2AE2217F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:44:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qMqdOG52"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727498AbfE1Rll (ORCPT
+        id S1727202AbfE1Rou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 13:41:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51366 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727246AbfE1Rll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 13:41:41 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6F89730833AF;
-        Tue, 28 May 2019 17:41:38 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-85.bos.redhat.com [10.18.17.85])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 45C4B1019607;
-        Tue, 28 May 2019 17:41:35 +0000 (UTC)
-Subject: Re: [PATCH v5 5/7] mm: rework non-root kmem_cache lifecycle
- management
-To:     Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc:     Roman Gushchin <guro@fb.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Christoph Lameter <cl@linux.com>, cgroups@vger.kernel.org
-References: <20190521200735.2603003-1-guro@fb.com>
- <20190521200735.2603003-6-guro@fb.com>
- <20190528170828.zrkvcdsj3d3jzzzo@esperanza>
- <96b8a923-49e4-f13e-b1e3-3df4598d849e@redhat.com>
- <20190528173959.h4hq55b3ajlfpjrk@esperanza>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <518419c5-ee74-d9a1-c01c-f1a3306d2d34@redhat.com>
-Date:   Tue, 28 May 2019 13:41:34 -0400
+        Tue, 28 May 2019 13:44:50 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:43451 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbfE1Rot (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 13:44:49 -0400
+Received: by mail-lj1-f193.google.com with SMTP id z5so18530930lji.10;
+        Tue, 28 May 2019 10:44:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=vTNP3WJ8o78sxVeNIgMEXhpfs7BXqTtYopTEC44B8ak=;
+        b=qMqdOG52OQW+ngYpp0JOZVGR966Sd/+p/f8O2IZ05WDqnd3XDow1WCmv2t7pAjvDKI
+         XtN36OY1eBI9L1wimg4doI+H3E+K0ibYmitTPZPDcQi0DEZgiRqFcNK98J1PjL6NuaYb
+         xxxNrYGfJT865QE43eomKy9dZvTaii/tJEtRFfgMEZCC7IYDb0c8otUvl24NAworuXrq
+         S1JdoMWVn8NorzuFeZnjDUuLcVY17pp+PiupstGgdSofUZ1G5hIxrSJRcPtV+Pwbbo/+
+         6epxwSYKUOwV8QOG+DtFaqA6sU+A98OCnAVXg9cBilg03z0bVHF2cl8+huXfdNZOmS/S
+         Gc0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vTNP3WJ8o78sxVeNIgMEXhpfs7BXqTtYopTEC44B8ak=;
+        b=b5paq/g3HwH9ftCdJWzWvQkxvEc7vFE1HiOhG2W8vr0S1tr+Lajq8NFAZFZ6U09A6Y
+         6rK9Jt6ykCoZf1ZmljqiuE9P7JEPP6Ius3h9ezEO1KbDIzBSQ68tZ/sPVHFDztUVVPaQ
+         vNcPtYpX1Xs/rZ8wnJFyVBeEN3f1tdEZtkKpQmOemz+CAh+9YVG0DA1Hrt0pE331fMpF
+         NKSkXLQUnEL69AefEDOgELMCEhLNdaaLsJDDqiPxPF4VF32rkd6rBpVh6O2vIXsTFCS8
+         XN9z7I3tVIjjCIbir3IlYvbjEH6DyQ9ekATvXWmbGzWKkpHxv5cRby9c9//2ksDYqTd8
+         8qaw==
+X-Gm-Message-State: APjAAAX/QWGK6t5jm9cARi0c5VGbufhfN+ceLHStShNdE4vMf4SnxnfV
+        /PnbFpfHqXkThRVCncx3ccwnEo3z
+X-Google-Smtp-Source: APXvYqxQtQp0L0utIZAfGgofQxKTXH23puQ73wGwN4T/GGH4c4IHkzlgFe/BhnD3T9B62z9pFtD/ZQ==
+X-Received: by 2002:a2e:6817:: with SMTP id c23mr43378392lja.145.1559065487084;
+        Tue, 28 May 2019 10:44:47 -0700 (PDT)
+Received: from [192.168.1.17] (cis152.neoplus.adsl.tpnet.pl. [83.31.42.152])
+        by smtp.gmail.com with ESMTPSA id 20sm3032506ljw.7.2019.05.28.10.44.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 May 2019 10:44:46 -0700 (PDT)
+Subject: Re: [PATCH v3 1/9] leds: multicolor: Add sysfs interface definition
+To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz, robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190523190820.29375-1-dmurphy@ti.com>
+ <20190523190820.29375-2-dmurphy@ti.com>
+ <f01ac400-efda-80a8-4d63-1e2add5e054a@gmail.com>
+ <185abdd6-100c-0a71-2da9-8f556d8ea701@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <333167d0-4615-2fbe-e933-cbca623998ef@gmail.com>
+Date:   Tue, 28 May 2019 19:44:43 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190528173959.h4hq55b3ajlfpjrk@esperanza>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <185abdd6-100c-0a71-2da9-8f556d8ea701@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 28 May 2019 17:41:40 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/28/19 1:39 PM, Vladimir Davydov wrote:
-> On Tue, May 28, 2019 at 01:37:50PM -0400, Waiman Long wrote:
->> On 5/28/19 1:08 PM, Vladimir Davydov wrote:
->>>>  static void flush_memcg_workqueue(struct kmem_cache *s)
->>>>  {
->>>> +	/*
->>>> +	 * memcg_params.dying is synchronized using slab_mutex AND
->>>> +	 * memcg_kmem_wq_lock spinlock, because it's not always
->>>> +	 * possible to grab slab_mutex.
->>>> +	 */
->>>>  	mutex_lock(&slab_mutex);
->>>> +	spin_lock(&memcg_kmem_wq_lock);
->>>>  	s->memcg_params.dying = true;
->>>> +	spin_unlock(&memcg_kmem_wq_lock);
->>> I would completely switch from the mutex to the new spin lock -
->>> acquiring them both looks weird.
->>>
->>>>  	mutex_unlock(&slab_mutex);
->>>>  
->>>>  	/*
->> There are places where the slab_mutex is held and sleeping functions
->> like kvzalloc() are called. I understand that taking both mutex and
->> spinlocks look ugly, but converting all the slab_mutex critical sections
->> to spinlock critical sections will be a major undertaking by itself. So
->> I would suggest leaving that for now.
-> I didn't mean that. I meant taking spin_lock wherever we need to access
-> the 'dying' flag, even if slab_mutex is held. So that we don't need to
-> take mutex_lock in flush_memcg_workqueue, where it's used solely for
-> 'dying' synchronization.
+Dan,
 
-OK, that makes sense. Thanks for the clarification.
+On 5/28/19 7:32 PM, Dan Murphy wrote:
+> Jacek
+> 
+> On 5/27/19 3:00 PM, Jacek Anaszewski wrote:
+>> Hi Dan,
+>>
+>> Thank you for the update.
+>>
+>> One thing is missing here - we need to document how legacy brightness
+>> levels map to the sub-LED color levels, i.e. what you do in
+>> multicolor_set_brightness().
+> 
+> 
+> Ok so i will need to document the algorithm that is used to determine 
+> the color LED brightness.
 
-Cheers,
-Longman
+Right, and please send just an update of that single patch.
 
+-- 
+Best regards,
+Jacek Anaszewski
