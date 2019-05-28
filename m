@@ -4,36 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E07C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D063C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9E8C2075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:05:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA59C2075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:05:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727589AbfE1JFD (ORCPT
+        id S1727498AbfE1JEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 05:05:03 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:17615 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727488AbfE1JEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 May 2019 05:04:41 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:57236 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727418AbfE1JEf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 05:04:35 -0400
 Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 61BEE4B246610A3D1FE3;
-        Tue, 28 May 2019 17:04:36 +0800 (CST)
+        by Forcepoint Email with ESMTP id A1990200D987D55876F3;
+        Tue, 28 May 2019 17:04:31 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 28 May 2019 17:04:28 +0800
+ 14.3.439.0; Tue, 28 May 2019 17:04:25 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Huazhong Tan <tanhuazhong@huawei.com>,
-        Peng Li <lipeng321@huawei.com>
-Subject: [PATCH net-next 09/12] net: hns3: add handshake with hardware while doing reset
-Date:   Tue, 28 May 2019 17:02:59 +0800
-Message-ID: <1559034182-24737-10-git-send-email-tanhuazhong@huawei.com>
+        <linuxarm@huawei.com>, Jian Shen <shenjian15@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH net-next 01/12] net: hns3: fix compile warning without CONFIG_RFS_ACCEL
+Date:   Tue, 28 May 2019 17:02:51 +0800
+Message-ID: <1559034182-24737-2-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1559034182-24737-1-git-send-email-tanhuazhong@huawei.com>
 References: <1559034182-24737-1-git-send-email-tanhuazhong@huawei.com>
@@ -46,136 +47,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When reset happens, the hardware reset should begin after the
-driver has finished its preparatory work, otherwise it may cause
-some hardware error.
+From: Jian Shen <shenjian15@huawei.com>
 
-Before Hardware's reset, it will wait for the driver to write
-bit HCLGE_NIC_CMQ_ENABLE of register HCLGE_NIC_CSQ_DEPTH_REG
-to 1, while the driver finishes its preparatory work will do that.
-BTW, since some cases this register will be cleared, so it needs
-some sync time before driver's writing.
+The ifdef condition of function hclge_add_fd_entry_by_arfs() is
+unnecessary. It may cause compile warning when CONFIG_RFS_ACCEL
+is not chosen. This patch fixes it by removing the ifdef condition.
 
+Fixes: d93ed94fbeaf ("net: hns3: add aRFS support for PF")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Jian Shen <shenjian15@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c    |  6 ++----
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c   | 10 ++++++++--
- drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c  |  2 --
- drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c |  7 ++++++-
- 4 files changed, 16 insertions(+), 9 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
-index fbd904e..e532905 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
-@@ -110,8 +110,7 @@ static void hclge_cmd_config_regs(struct hclge_cmq_ring *ring)
- 		hclge_write_dev(hw, HCLGE_NIC_CSQ_BASEADDR_H_REG,
- 				upper_32_bits(dma));
- 		hclge_write_dev(hw, HCLGE_NIC_CSQ_DEPTH_REG,
--				(ring->desc_num >> HCLGE_NIC_CMQ_DESC_NUM_S) |
--				HCLGE_NIC_CMQ_ENABLE);
-+				ring->desc_num >> HCLGE_NIC_CMQ_DESC_NUM_S);
- 		hclge_write_dev(hw, HCLGE_NIC_CSQ_HEAD_REG, 0);
- 		hclge_write_dev(hw, HCLGE_NIC_CSQ_TAIL_REG, 0);
- 	} else {
-@@ -120,8 +119,7 @@ static void hclge_cmd_config_regs(struct hclge_cmq_ring *ring)
- 		hclge_write_dev(hw, HCLGE_NIC_CRQ_BASEADDR_H_REG,
- 				upper_32_bits(dma));
- 		hclge_write_dev(hw, HCLGE_NIC_CRQ_DEPTH_REG,
--				(ring->desc_num >> HCLGE_NIC_CMQ_DESC_NUM_S) |
--				HCLGE_NIC_CMQ_ENABLE);
-+				ring->desc_num >> HCLGE_NIC_CMQ_DESC_NUM_S);
- 		hclge_write_dev(hw, HCLGE_NIC_CRQ_HEAD_REG, 0);
- 		hclge_write_dev(hw, HCLGE_NIC_CRQ_TAIL_REG, 0);
- 	}
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index b7106a5..a563815 100644
+index a3fba7b..fb0dc18 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
 +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -3197,6 +3197,8 @@ static int hclge_reset_prepare_down(struct hclge_dev *hdev)
- 
- static int hclge_reset_prepare_wait(struct hclge_dev *hdev)
+@@ -5682,7 +5682,6 @@ static void hclge_fd_build_arfs_rule(const struct hclge_fd_rule_tuples *tuples,
+ static int hclge_add_fd_entry_by_arfs(struct hnae3_handle *handle, u16 queue_id,
+ 				      u16 flow_id, struct flow_keys *fkeys)
  {
-+#define HCLGE_RESET_SYNC_TIME 100
-+
- 	u32 reg_val;
- 	int ret = 0;
- 
-@@ -3205,7 +3207,7 @@ static int hclge_reset_prepare_wait(struct hclge_dev *hdev)
- 		/* There is no mechanism for PF to know if VF has stopped IO
- 		 * for now, just wait 100 ms for VF to stop IO
- 		 */
--		msleep(100);
-+		msleep(HCLGE_RESET_SYNC_TIME);
- 		ret = hclge_func_reset_cmd(hdev, 0);
- 		if (ret) {
- 			dev_err(&hdev->pdev->dev,
-@@ -3225,7 +3227,7 @@ static int hclge_reset_prepare_wait(struct hclge_dev *hdev)
- 		/* There is no mechanism for PF to know if VF has stopped IO
- 		 * for now, just wait 100 ms for VF to stop IO
- 		 */
--		msleep(100);
-+		msleep(HCLGE_RESET_SYNC_TIME);
- 		set_bit(HCLGE_STATE_CMD_DISABLE, &hdev->state);
- 		set_bit(HNAE3_FLR_DOWN, &hdev->flr_state);
- 		hdev->rst_stats.flr_rst_cnt++;
-@@ -3239,6 +3241,10 @@ static int hclge_reset_prepare_wait(struct hclge_dev *hdev)
- 		break;
+-#ifdef CONFIG_RFS_ACCEL
+ 	struct hclge_vport *vport = hclge_get_vport(handle);
+ 	struct hclge_fd_rule_tuples new_tuples;
+ 	struct hclge_dev *hdev = vport->back;
+@@ -5758,7 +5757,6 @@ static int hclge_add_fd_entry_by_arfs(struct hnae3_handle *handle, u16 queue_id,
  	}
  
-+	/* inform hardware that preparatory work is done */
-+	msleep(HCLGE_RESET_SYNC_TIME);
-+	hclge_write_dev(&hdev->hw, HCLGE_NIC_CSQ_DEPTH_REG,
-+			HCLGE_NIC_CMQ_ENABLE);
- 	dev_info(&hdev->pdev->dev, "prepare wait ok\n");
+ 	return rule->location;
+-#endif
+ }
  
- 	return ret;
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
-index 71f356f..e1588c0 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
-@@ -98,7 +98,6 @@ static void hclgevf_cmd_config_regs(struct hclgevf_cmq_ring *ring)
- 		hclgevf_write_dev(hw, HCLGEVF_NIC_CSQ_BASEADDR_H_REG, reg_val);
- 
- 		reg_val = (ring->desc_num >> HCLGEVF_NIC_CMQ_DESC_NUM_S);
--		reg_val |= HCLGEVF_NIC_CMQ_ENABLE;
- 		hclgevf_write_dev(hw, HCLGEVF_NIC_CSQ_DEPTH_REG, reg_val);
- 
- 		hclgevf_write_dev(hw, HCLGEVF_NIC_CSQ_HEAD_REG, 0);
-@@ -110,7 +109,6 @@ static void hclgevf_cmd_config_regs(struct hclgevf_cmq_ring *ring)
- 		hclgevf_write_dev(hw, HCLGEVF_NIC_CRQ_BASEADDR_H_REG, reg_val);
- 
- 		reg_val = (ring->desc_num >> HCLGEVF_NIC_CMQ_DESC_NUM_S);
--		reg_val |= HCLGEVF_NIC_CMQ_ENABLE;
- 		hclgevf_write_dev(hw, HCLGEVF_NIC_CRQ_DEPTH_REG, reg_val);
- 
- 		hclgevf_write_dev(hw, HCLGEVF_NIC_CRQ_HEAD_REG, 0);
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-index 9d5a4f8..ee1eeca 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-@@ -1414,6 +1414,8 @@ static int hclgevf_reset_stack(struct hclgevf_dev *hdev)
- 
- static int hclgevf_reset_prepare_wait(struct hclgevf_dev *hdev)
- {
-+#define HCLGEVF_RESET_SYNC_TIME 100
-+
- 	int ret = 0;
- 
- 	switch (hdev->reset_type) {
-@@ -1431,7 +1433,10 @@ static int hclgevf_reset_prepare_wait(struct hclgevf_dev *hdev)
- 	}
- 
- 	set_bit(HCLGEVF_STATE_CMD_DISABLE, &hdev->state);
--
-+	/* inform hardware that preparatory work is done */
-+	msleep(HCLGEVF_RESET_SYNC_TIME);
-+	hclgevf_write_dev(&hdev->hw, HCLGEVF_NIC_CSQ_DEPTH_REG,
-+			  HCLGEVF_NIC_CMQ_ENABLE);
- 	dev_info(&hdev->pdev->dev, "prepare reset(%d) wait done, ret:%d\n",
- 		 hdev->reset_type, ret);
- 
+ static void hclge_rfs_filter_expire(struct hclge_dev *hdev)
 -- 
 2.7.4
 
