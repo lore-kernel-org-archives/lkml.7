@@ -2,120 +2,143 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1646C072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB6CC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A3E9208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:48:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="N5gqwYZk"
+	by mail.kernel.org (Postfix) with ESMTP id D98E12081C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:49:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbfE1KsN (ORCPT
+        id S1726736AbfE1KtE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 06:48:13 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47004 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726547AbfE1KsL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 06:48:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=RkNAaQnFGQavYiriTPKlPs3zV7ehPx3Q5wBuIkfcSyQ=; b=N5gqwYZkhKw5xd3HaXD+oKNxk
-        7cRQ/oGaV9aX3rkUf1/5FQZvH0tG0X10+CakLOYduKuyAweNgLDRjVZLuAfR5zF78tlCFV5cG12O0
-        Kax9nSIj/coHdRxD34yq9onu0e9K1Mr44je4DrL6JDwx+4oh3fcA5VVZ2wGvbCMPvYbc1Z4XwoHiq
-        r0zY0HFL8GBkP5HgiyfQeWSWB4sXQF1YADcr9jy16IyVumfhGZf9hEbfNJ5B2KMXjC06XUQ0WBf4S
-        vqzvEOhRbrWwZPUwjlviUQEOuppvCpbmPhtc1XdKrYnD7mPn7Pf6/Oko6DmCTy8yR5tZDMyTjyQKe
-        ygubRKysA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hVZda-00033A-HC; Tue, 28 May 2019 10:47:22 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 0AB552072908C; Tue, 28 May 2019 12:47:20 +0200 (CEST)
-Date:   Tue, 28 May 2019 12:47:19 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andrea Parri <andrea.parri@amarulasolutions.com>
-Cc:     Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu, arnd@arndb.de,
-        bp@alien8.de, catalin.marinas@arm.com, davem@davemloft.net,
-        fenghua.yu@intel.com, heiko.carstens@de.ibm.com,
-        herbert@gondor.apana.org.au, ink@jurassic.park.msu.ru,
-        jhogan@kernel.org, linux@armlinux.org.uk, mattst88@gmail.com,
-        mingo@kernel.org, mpe@ellerman.id.au, palmer@sifive.com,
-        paul.burton@mips.com, paulus@samba.org, ralf@linux-mips.org,
-        rth@twiddle.net, stable@vger.kernel.org, tglx@linutronix.de,
-        tony.luck@intel.com, vgupta@synopsys.com,
-        gregkh@linuxfoundation.org, jhansen@vmware.com, vdasa@vmware.com,
-        aditr@vmware.com, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH 00/18] locking/atomic: atomic64 type cleanup
-Message-ID: <20190528104719.GN2623@hirez.programming.kicks-ass.net>
-References: <20190522132250.26499-1-mark.rutland@arm.com>
- <20190523083013.GA4616@andrea>
- <20190523101926.GA3370@lakrids.cambridge.arm.com>
- <20190524103731.GN2606@hirez.programming.kicks-ass.net>
- <20190524111807.GS2650@hirez.programming.kicks-ass.net>
- <20190524114220.GA4260@fuggles.cambridge.arm.com>
- <20190524115231.GN2623@hirez.programming.kicks-ass.net>
- <20190524224340.GA3792@andrea>
+        Tue, 28 May 2019 06:49:04 -0400
+Received: from foss.arm.com ([217.140.101.70]:54900 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726282AbfE1KtD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 06:49:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 25BF3341;
+        Tue, 28 May 2019 03:49:03 -0700 (PDT)
+Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7C4173F59C;
+        Tue, 28 May 2019 03:49:01 -0700 (PDT)
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, linux-sh@vger.kernel.org,
+        linux-riscv@lists.infradead.org,
+        uclinux-h8-devel@lists.sourceforge.jp,
+        linux-m68k@lists.linux-m68k.org
+Subject: [PATCH RESEND 0/7] entry: preempt_schedule_irq() callers scrub
+Date:   Tue, 28 May 2019 11:48:41 +0100
+Message-Id: <20190528104848.13160-1-valentin.schneider@arm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190524224340.GA3792@andrea>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 25, 2019 at 12:43:40AM +0200, Andrea Parri wrote:
-> > ---
-> > Subject: Documentation/atomic_t.txt: Clarify pure non-rmw usage
-> > 
-> > Clarify that pure non-RMW usage of atomic_t is pointless, there is
-> > nothing 'magical' about atomic_set() / atomic_read().
-> > 
-> > This is something that seems to confuse people, because I happen upon it
-> > semi-regularly.
-> > 
-> > Acked-by: Will Deacon <will.deacon@arm.com>
-> > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > ---
-> >  Documentation/atomic_t.txt | 6 ++++--
-> >  1 file changed, 4 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/Documentation/atomic_t.txt b/Documentation/atomic_t.txt
-> > index dca3fb0554db..89eae7f6b360 100644
-> > --- a/Documentation/atomic_t.txt
-> > +++ b/Documentation/atomic_t.txt
-> > @@ -81,9 +81,11 @@ SEMANTICS
-> >  
-> >  The non-RMW ops are (typically) regular LOADs and STOREs and are canonically
-> >  implemented using READ_ONCE(), WRITE_ONCE(), smp_load_acquire() and
-> > -smp_store_release() respectively.
-> > +smp_store_release() respectively. Therefore, if you find yourself only using
-> > +the Non-RMW operations of atomic_t, you do not in fact need atomic_t at all
-> > +and are doing it wrong.
-> 
-> The counterargument (not so theoretic, just look around in the kernel!) is:
-> we all 'forget' to use READ_ONCE() and WRITE_ONCE(), it should be difficult
-> or more difficult to forget to use atomic_read() and atomic_set()...   IAC,
-> I wouldn't call any of them 'wrong'.
+Hi,
 
-I'm thinking you mean that the type system isn't helping us with
-READ/WRITE_ONCE() like it does with atomic_t ? And while I agree that
-there is room for improvement there, that doesn't mean we should start
-using atomic*_t all over the place for that.
+This is the (RESEND of the) continuation of [1] where I'm hunting down
+preempt_schedule_irq() callers because of [2].
 
-Part of the problem with READ/WRITE_ONCE() is that it serves a dual
-purpose; we've tried to untangle that at some point, but Linus wasn't
-having it.
+I told myself the best way to get this moving forward wouldn't be to write
+doc about it, but to go write some fixes and get some discussions going,
+which is what this patch-set is about.
+
+I've looked at users of preempt_schedule_irq(), and made sure they didn't
+have one of those useless loops. The list of offenders is:
+
+$ grep -r -I "preempt_schedule_irq" arch/ | cut -d/ -f2 | sort | uniq
+
+  arc
+  arm
+  arm64
+  c6x
+  csky
+  h8300
+  ia64
+  m68k
+  microblaze
+  mips
+  nds32
+  nios2
+  parisc
+  powerpc
+  riscv
+  s390
+  sh
+  sparc
+  x86
+  xtensa
+
+Regarding that loop, archs seem to fall in 3 categories:
+A) Those that don't have the loop
+B) Those that have a small need_resched() loop around the
+   preempt_schedule_irq() callsite
+C) Those that branch to some more generic code further up the entry code
+   and eventually branch back to preempt_schedule_irq()
+
+arc, m68k, nios2 fall in A)
+sparc, ia64, s390 fall in C)
+all the others fall in B)
+
+I've written patches for B). As of 5.2-rc2 mainline contains those for:
+- arm64
+- mips
+- x86
+- powerpc
+- nds32
+
+I've also got acks for:
+- c6x
+- xtensa
+
+The remaining ones for which I haven't had a reply yet (hence the RESEND) are:
+- csky
+- h8300
+- microblaze
+- riscv
+- sh
+- sh64
+
+
+Build-tested on:
+- h8300
+- c6x
+- microblaze
+
+Thanks,
+Valentin
+
+[1]: https://lore.kernel.org/lkml/20190131182339.9835-1-valentin.schneider@arm.com/
+[2]: https://lore.kernel.org/lkml/cc989920-a13b-d53b-db83-1584a7f53edc@arm.com/
+
+Valentin Schneider (7):
+  sched/core: Fix preempt_schedule() interrupt return comment
+  csky: entry: Remove unneeded need_resched() loop
+  h8300: entry: Remove unneeded need_resched() loop
+  microblaze: entry: Remove unneeded need_resched() loop
+  RISC-V: entry: Remove unneeded need_resched() loop
+  sh: entry: Remove unneeded need_resched() loop
+  sh64: entry: Remove unneeded need_resched() loop
+
+ arch/csky/kernel/entry.S       | 4 ----
+ arch/h8300/kernel/entry.S      | 3 +--
+ arch/microblaze/kernel/entry.S | 5 -----
+ arch/riscv/kernel/entry.S      | 3 +--
+ arch/sh/kernel/cpu/sh5/entry.S | 5 +----
+ arch/sh/kernel/entry-common.S  | 4 +---
+ kernel/sched/core.c            | 7 +++----
+ 7 files changed, 7 insertions(+), 24 deletions(-)
+
+--
+2.20.1
+
