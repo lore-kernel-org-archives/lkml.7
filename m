@@ -2,130 +2,88 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0070C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 268B5C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7E9C2081C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:15:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFD76208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:15:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DtG4PbHG"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WM/F/57G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbfE1MPN (ORCPT
+        id S1727028AbfE1MPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 08:15:13 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34952 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726620AbfE1MPN (ORCPT
+        Tue, 28 May 2019 08:15:21 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:49258 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbfE1MPU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 08:15:13 -0400
-Received: by mail-pf1-f193.google.com with SMTP id d126so9180339pfd.2;
-        Tue, 28 May 2019 05:15:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+y1LhgybZDo6e2IXKdhcfe/V5jck1KpiR5cRJrvtKo0=;
-        b=DtG4PbHGQBnUfiyVAviztUOKIfL3saDBQQh4xyvVOneHT/0sHTcjWx/hEFk4bLHuuK
-         +bsflLMhkuKL3slI+lwqPv0YyT3OtPuh2lX55HWFFP+CubEFu0J5NyetX7RVyw7ewdNW
-         x+lE8SXILt4aBOxfC7P2BbqcNCh8RSpjNpXjzilESmBTiUXZDg3Q3lqEqF3OYDb9YAqS
-         /0G6rkU4PW4v2YLRyjbcyOEl93BIzVuY5W8++vexLQIAP8+r1PxBq4eHMGubYvhI9pdD
-         IYbscUr4LZcLue6ltYha9S9TP1uw6F2lgqoPxMtScUpoM/xekz9sxvOaoc2uhAXbe98h
-         pEeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+y1LhgybZDo6e2IXKdhcfe/V5jck1KpiR5cRJrvtKo0=;
-        b=pKLOu0UhBwgsf5oVNundHVq7HrcPld8XARyjRdawhUTkkobVaCYh9ju+rWWqY3aIYt
-         dIN5bdTe8z3tDR0G/+04/vh/I9WCAJoKKt13EZGr4BTuAPOPre71q2kdh1tsBxgpQZ0F
-         pxs1v34yPlezhGaczcDWc7pN7NYmOuLWWNVX1CbaEwOmvl4c5+CKGIvrd18UWc11ZERi
-         wETgbu1F+sUHx2DFQnQ9HWB6RpVUE/dgdEh+xtI5QAi3Lj07SkTU3LUbFFJC9RKZQAcS
-         qnAfIFAdlGf6zHBzvSDUNMd09NgMuBBbgr6RbovlmGY4YH4vdeYcdoY4I2J8OVcsnfE/
-         V96A==
-X-Gm-Message-State: APjAAAUxm55l/WNdkA7+I4khElE3ie0MTF2Coi78I7RkIqAiwViFOPVZ
-        sJbuxvpPooJmWmaoEmqqy6o=
-X-Google-Smtp-Source: APXvYqzlp65Uhv+naJGFhpgDeNVCpy6jOHSU7kH7ySVU4j/n6EghxRRxGpwpx2qhbUKg7Ps9yasuuQ==
-X-Received: by 2002:a62:6507:: with SMTP id z7mr26181575pfb.225.1559045712230;
-        Tue, 28 May 2019 05:15:12 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([66.42.35.75])
-        by smtp.gmail.com with ESMTPSA id i16sm13798983pfd.100.2019.05.28.05.15.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 May 2019 05:15:10 -0700 (PDT)
-Date:   Tue, 28 May 2019 20:14:52 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     davem@davemloft.net, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] wlcore: spi: Fix a memory leaking bug in wl1271_probe()
-Message-ID: <20190528121452.GA23464@zhanggen-UX430UQ>
-References: <20190524030117.GA6024@zhanggen-UX430UQ>
- <20190528113922.E2B1060312@smtp.codeaurora.org>
+        Tue, 28 May 2019 08:15:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=+HvcFPeFbKd6HnzjD8fUyll8hXzECqj7VfG2vR2xVrM=; b=WM/F/57Ga/kXxbein/MdI6yKX
+        6A2t7eakLbMnDLAKI1avJ5CmPRNwX7xe/rBimACOMDcAZrEDnyRXhs51RkZIkiK8pvEhPFWDIihZ+
+        /xgyy8siB1ve0pBEnYlvkCddxcuIZ2LiUb29hViRj4FY8LdVHUUb8r5vkvwiP/dBTI3qD8cTerRuk
+        JExTQNw1i7a+g4W0k8QDlzjZNOsIARTphjAjagN9GoFtmONy5IGrRiPQaZ8NmZ5Q7e1RSTIttGAqA
+        8H15e0ayQAThAu2RiS3wdEoGhag617o3G7zIG3p5joMlW3IY4uo/eM1HFTybmEhu53u+N2gmRNHov
+        QoslpJ87g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hVb0e-0003IW-1J; Tue, 28 May 2019 12:15:16 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7128D2074C650; Tue, 28 May 2019 14:15:08 +0200 (CEST)
+Date:   Tue, 28 May 2019 14:15:08 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     kan.liang@linux.intel.com
+Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com
+Subject: Re: [PATCH 2/9] perf/x86/intel: Basic support for metrics counters
+Message-ID: <20190528121508.GS2606@hirez.programming.kicks-ass.net>
+References: <20190521214055.31060-1-kan.liang@linux.intel.com>
+ <20190521214055.31060-3-kan.liang@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190528113922.E2B1060312@smtp.codeaurora.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190521214055.31060-3-kan.liang@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 11:39:22AM +0000, Kalle Valo wrote:
-> Gen Zhang <blackgod016574@gmail.com> wrote:
-> 
-> > In wl1271_probe(), 'glue->core' is allocated by platform_device_alloc(),
-> > when this allocation fails, ENOMEM is returned. However, 'pdev_data'
-> > and 'glue' are allocated by devm_kzalloc() before 'glue->core'. When
-> > platform_device_alloc() returns NULL, we should also free 'pdev_data'
-> > and 'glue' before wl1271_probe() ends to prevent leaking memory.
-> > 
-> > Similarly, we shoulf free 'pdev_data' when 'glue' is NULL. And we should
-> > free 'pdev_data' and 'glue' when 'glue->reg' is error and when 'ret' is
-> > error.
-> > 
-> > Further, we should free 'glue->core', 'pdev_data' and 'glue' when this 
-> > function normally ends to prevent leaking memory.
-> > 
-> > Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-> 
-> Same questions as with similar SDIO patch:
-> 
-> https://patchwork.kernel.org/patch/10959049/
-> 
-> Patch set to Changes Requested.
-> 
-> -- 
-> https://patchwork.kernel.org/patch/10959053/
-> 
-> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-> 
-Thanks for your reply, Kalle. I had debate with Jon about this patch. 
-You could kindly refer to lkml: https://lkml.org/lkml/2019/5/23/1547. 
-And I don't think a practical conclusion is made there.
+On Tue, May 21, 2019 at 02:40:48PM -0700, kan.liang@linux.intel.com wrote:
+> +/*
+> + * We model PERF_METRICS as more magic fixed-mode PMCs, one for each metric
+> + * and another for the whole slots counter
+> + *
+> + * Internally they all map to Fixed Ctr 3 (SLOTS), and allocate PERF_METRICS
+> + * as an extra_reg. PERF_METRICS has no own configuration, but we fill in
+> + * the configuration of FxCtr3 to enforce that all the shared users of SLOTS
+> + * have the same configuration.
+> + */
+> +#define INTEL_PMC_IDX_FIXED_METRIC_BASE		(INTEL_PMC_IDX_FIXED + 17)
+> +#define INTEL_PMC_IDX_TD_RETIRING		(INTEL_PMC_IDX_FIXED_METRIC_BASE + 0)
+> +#define INTEL_PMC_IDX_TD_BAD_SPEC		(INTEL_PMC_IDX_FIXED_METRIC_BASE + 1)
+> +#define INTEL_PMC_IDX_TD_FE_BOUND		(INTEL_PMC_IDX_FIXED_METRIC_BASE + 2)
+> +#define INTEL_PMC_IDX_TD_BE_BOUND		(INTEL_PMC_IDX_FIXED_METRIC_BASE + 3)
+> +#define INTEL_PMC_MSK_ANY_SLOTS			((0xfull << INTEL_PMC_IDX_FIXED_METRIC_BASE) | \
+> +						 INTEL_PMC_MSK_FIXED_SLOTS)
+> +static inline bool is_metric_idx(int idx)
+> +{
+> +	return idx >= INTEL_PMC_IDX_FIXED_METRIC_BASE && idx <= INTEL_PMC_IDX_TD_BE_BOUND;
+> +}
 
-Further, I e-mailed Greg K-H about when should we use devm_kmalloc().
+Something like:
 
-On Tue, May 28, 2019 at 08:32:57AM +0800, Gen Zhang wrote:
-> devm_kmalloc() is used to allocate memory for a driver dev. Comments
-> above the definition and doc 
-> (https://www.kernel.org/doc/Documentation/driver-model/devres.txt) all
-> imply that allocated the memory is automatically freed on driver attach,
-> no matter allocation fail or not. However, I examined the code, and
-> there are many sites that devm_kfree() is used to free devm_kmalloc().
-> e.g. hisi_sas_debugfs_init() in drivers/scsi/hisi_sas/hisi_sas_main.c.
-> So I am totally confused about this issue. Can anybody give me some
-> guidance? When should we use devm_kfree()?
-He replied: If you "know" you need to free the memory now, 
-call devm_kfree(). If you want to wait for it to be cleaned up latter, 
-like normal, then do not call it.
+	return (idx >> INTEL_PMC_IDX_FIXED_METRIC_BASE) & 0xf;
 
-So could please look in to this issue?
-
-Thanks
-Gen
+might be faster code... (if it wasn't for 64bit literals being a pain,
+it could be a simple test instruction).
