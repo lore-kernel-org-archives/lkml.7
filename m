@@ -2,98 +2,84 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 299ADC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89EC9C072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2CE92053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:42:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559032967;
-	bh=3PjxW+bASs8Jvrm2oC/bfjraX8PQtHDF+F5mgAKOWjY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rJr65/R9iV9oFMgwPfEan0yUs/CKsNgfP693d6RctJk3z0yMBG9mO3VDwNIIknJVi
-	 ecSOaJ6noYNQ6SOG7hlFHwse32LUnUoHExhDl1cumNAbLDlG5vXXnDK7IRacgZzMZD
-	 qc4Do7lFEc9+KoUH2DLn7aIlZav3m12FU+iOXoI8=
+	by mail.kernel.org (Postfix) with ESMTP id 612D42075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:43:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbfE1Imq (ORCPT
+        id S1726694AbfE1InV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 04:42:46 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41086 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725943AbfE1Imp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 04:42:45 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 83E45ADD4;
-        Tue, 28 May 2019 08:42:44 +0000 (UTC)
-Date:   Tue, 28 May 2019 10:42:43 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Roman Gushchin <guro@fb.com>, linux-api@vger.kernel.org
-Subject: Re: [PATCH RFC] mm/madvise: implement MADV_STOCKPILE (kswapd from
- user space)
-Message-ID: <20190528084243.GT1658@dhcp22.suse.cz>
-References: <155895155861.2824.318013775811596173.stgit@buzz>
- <20190527141223.GD1658@dhcp22.suse.cz>
- <20190527142156.GE1658@dhcp22.suse.cz>
- <20190527143926.GF1658@dhcp22.suse.cz>
- <9c55a343-2a91-46c6-166d-41b94bf5e9c8@yandex-team.ru>
- <20190528065153.GB1803@dhcp22.suse.cz>
- <a4e5eeb8-3560-d4b4-08a0-8a22c677c0f7@yandex-team.ru>
- <20190528073835.GP1658@dhcp22.suse.cz>
- <5af1ba69-61d1-1472-4aa3-20beb4ae44ae@yandex-team.ru>
+        Tue, 28 May 2019 04:43:21 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:59964 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725943AbfE1InV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 04:43:21 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 3BE4020D88;
+        Tue, 28 May 2019 10:43:20 +0200 (CEST)
+Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id 23ADB20C11;
+        Tue, 28 May 2019 10:43:20 +0200 (CEST)
+Subject: Re: [PATCH 1/1] drm/panel: truly: Add additional delay after pulling
+ down reset gpio
+To:     Vivek Gautam <vivek.gautam@codeaurora.org>, airlied@linux.ie,
+        thierry.reding@gmail.com, daniel@ffwll.ch
+Cc:     Rob Clark <robdclark@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190527102616.28315-1-vivek.gautam@codeaurora.org>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Message-ID: <7dfcf294-6ab1-c1ce-352d-dfdeec4347af@free.fr>
+Date:   Tue, 28 May 2019 10:43:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5af1ba69-61d1-1472-4aa3-20beb4ae44ae@yandex-team.ru>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190527102616.28315-1-vivek.gautam@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Tue May 28 10:43:20 2019 +0200 (CEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 28-05-19 11:04:46, Konstantin Khlebnikov wrote:
-> On 28.05.2019 10:38, Michal Hocko wrote:
-[...]
-> > Could you define the exact semantic? Ideally something for the manual
-> > page please?
-> > 
+On 27/05/2019 12:26, Vivek Gautam wrote:
+
+> MTP SDM845 panel seems to need additional delay to bring panel
+> to a workable state. Running modetest without this change displays
+> blurry artifacts.
 > 
-> Like kswapd which works with thresholds of free memory this one reclaims
-> until 'free' (i.e. memory which could be allocated without invoking
-> direct recliam of any kind) is lower than passed 'size' argument.
-
-s@lower@higher@ I guess
-
-> Thus right after madvise(NULL, size, MADV_STOCKPILE) 'size' bytes
-> could be allocated in this memory cgroup without extra latency from
-> reclaimer if there is no other memory consumers.
+> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> ---
+>  drivers/gpu/drm/panel/panel-truly-nt35597.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> Reclaimed memory is simply put into free lists in common buddy allocator,
-> there is no reserves for particular task or cgroup.
-> 
-> If overall memory allocation rate is smooth without rough spikes then
-> calling MADV_STOCKPILE in loop periodically provides enough room for
-> allocations and eliminates direct reclaim from all other tasks.
-> As a result this eliminates unpredictable delays caused by
-> direct reclaim in random places.
+> diff --git a/drivers/gpu/drm/panel/panel-truly-nt35597.c b/drivers/gpu/drm/panel/panel-truly-nt35597.c
+> index fc2a66c53db4..aa7153fd3be4 100644
+> --- a/drivers/gpu/drm/panel/panel-truly-nt35597.c
+> +++ b/drivers/gpu/drm/panel/panel-truly-nt35597.c
+> @@ -280,6 +280,7 @@ static int truly_35597_power_on(struct truly_nt35597 *ctx)
+>  	gpiod_set_value(ctx->reset_gpio, 1);
+>  	usleep_range(10000, 20000);
+>  	gpiod_set_value(ctx->reset_gpio, 0);
+> +	usleep_range(10000, 20000);
 
-OK, this makes it more clear to me. Thanks for the clarification!
-I have clearly misunderstood and misinterpreted target as the reclaim
-target rather than free memory target.  Sorry about the confusion.
-I sill think that this looks like an abuse of the madvise but if there
-is a wider consensus this is acceptable I will not stand in the way.
+I'm not sure usleep_range() makes sense with these values.
 
--- 
-Michal Hocko
-SUSE Labs
+AFAIU, usleep_range() is typically used for sub-jiffy sleeps, and is based
+on HRT to generate an interrupt.
+
+Once we get into jiffy granularity, it seems to me msleep() is good enough.
+IIUC, it would piggy-back on the jiffy timer interrupt.
+
+In short, why not just use msleep(10); ?
+
+Regards.
