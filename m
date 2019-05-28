@@ -2,223 +2,154 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29417C072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 04:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EAD3C46470
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 04:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 021BC2070D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 04:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4423F208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 04:52:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="PxXIJk6R"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Num6bmFJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbfE1Ery (ORCPT
+        id S1727409AbfE1Ews (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 00:47:54 -0400
-Received: from mail-eopbgr70048.outbound.protection.outlook.com ([40.107.7.48]:18259
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725904AbfE1Erx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 00:47:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k/SiUj4Q6MbgIm3HnwLW9H2MANCl+qo4AxTw06wQENo=;
- b=PxXIJk6Rr3MY8aDsKT4fhB7eQAyqcJNPmcx1LgjjAmEPYEh1tYl1UBaa7osf8xb4YuolKxJefRDkEjG/j10bVmYWKfcbekZec5TFTokWAebzEoUJ10tSOnelAnIMD3RWt+HtuS3pJoO/9gLc47EaK1Y2kEdJ0+Lq6VWGqZ0LIiE=
-Received: from VI1PR04MB4431.eurprd04.prod.outlook.com (20.177.55.159) by
- VI1PR04MB4493.eurprd04.prod.outlook.com (20.177.54.83) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.18; Tue, 28 May 2019 04:47:47 +0000
-Received: from VI1PR04MB4431.eurprd04.prod.outlook.com
- ([fe80::54b1:3c46:7345:1c71]) by VI1PR04MB4431.eurprd04.prod.outlook.com
- ([fe80::54b1:3c46:7345:1c71%5]) with mapi id 15.20.1922.021; Tue, 28 May 2019
- 04:47:47 +0000
-From:   Peng Ma <peng.ma@nxp.com>
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        Leo Li <leoyang.li@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-Subject: RE: [EXT] Re: [V3 1/2] dmaengine: fsl-dpaa2-qdma: Add the DPDMAI(Data
- Path DMA Interface) support
-Thread-Topic: [EXT] Re: [V3 1/2] dmaengine: fsl-dpaa2-qdma: Add the
- DPDMAI(Data Path DMA Interface) support
-Thread-Index: AQHU7qXrQE+ChtXpc0GfkN7fbJd35KZOfqgAgDGsnlA=
-Date:   Tue, 28 May 2019 04:47:47 +0000
-Message-ID: <VI1PR04MB44314E4B35FA0C7E850CD512ED1E0@VI1PR04MB4431.eurprd04.prod.outlook.com>
-References: <20190409072212.15860-1-peng.ma@nxp.com>
- <20190426124550.GE28103@vkoul-mobl>
-In-Reply-To: <20190426124550.GE28103@vkoul-mobl>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.ma@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 18434446-0bf7-4102-c73e-08d6e327a19d
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR04MB4493;
-x-ms-traffictypediagnostic: VI1PR04MB4493:
-x-microsoft-antispam-prvs: <VI1PR04MB4493DF0C425BC8167C649ECBED1E0@VI1PR04MB4493.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 00514A2FE6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(136003)(396003)(346002)(366004)(376002)(13464003)(199004)(189003)(99286004)(186003)(6116002)(316002)(3846002)(68736007)(6916009)(66556008)(305945005)(53936002)(8936002)(5660300002)(64756008)(81166006)(81156014)(8676002)(66946007)(55016002)(73956011)(76176011)(66446008)(66476007)(6436002)(26005)(7736002)(76116006)(6246003)(11346002)(2906002)(256004)(14444005)(25786009)(52536014)(476003)(102836004)(74316002)(486006)(66066001)(33656002)(71200400001)(71190400001)(54906003)(9686003)(4326008)(6506007)(229853002)(44832011)(7696005)(86362001)(14454004)(478600001)(446003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4493;H:VI1PR04MB4431.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: aoLakcNtaeiOOyYUdppmMlF25Vf0s5zL3eIwKt4KmO3YWJmVEgQcN1rwLIcFuUL28yvszgdvOszeK22zQ57L8GI96z0X2JY7RVQ0vVfh/fNTJlOnTMyez90EJ6UwSFwZvtodQ5v+hsJVpxoAfk7F3FSoji03xeQXuG78qStzTRLHpYFoP7RvRFGnhxpr1Ajg7oBbr8OFU6ebnGPOwU06VWhDkavCO+u1SFRpPPDZn5yEz/19zoyqk45Sqvbnre8YxEinf6Q65axOMVkQH8S5KTxuSFVfoewd3P3u7V4djobKvddWiJ6/bdsS6bTrz48PHjBls7O5BP/mdTzRnJFAhVZhQQ02CwBEaCsM0dOOV21qjeUZD+bmwWpZalkfK3uFvi/SNR4bCsBXyCkEh+sU++bUJ8fkyzF0vxO2DBK3TNU=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Tue, 28 May 2019 00:52:48 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:50257 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726721AbfE1Ews (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 00:52:48 -0400
+Received: by mail-it1-f195.google.com with SMTP id a186so2199733itg.0;
+        Mon, 27 May 2019 21:52:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wx8LK+FLca8yAW2nEFxWKA0g/8vW4SdgqbZC24puim4=;
+        b=Num6bmFJNBol+Kw9ZWhsOFk3l1a6j5lmv9mdFK/gp1Q+kuAErZkGs6tqYGoAjiYdZA
+         6MYKsXRWCItoQI/4bW5JoSCuqVREty/c1E5yE5Hagq2y6VX9t/EwxuXHVATT2SFb1c8l
+         LvHVuuZindy/bG3VCwtjN9kTQyE8kVpYXEDKbZseeM+8M4MvPhEZJS9RACjMMtBeOJ2/
+         NgCzY5BrWv1Uwm33KeWad5xUrwTg/D8+q49095U/M68UNY327ufVLmBSjKw3SWeFRbZL
+         HimVw8yhPOVWio6YuUOnj/duE0HnWe3w0kCAKu4oP5BXAoRoFKhJ/1gaywlz7wtmf8b+
+         iVTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wx8LK+FLca8yAW2nEFxWKA0g/8vW4SdgqbZC24puim4=;
+        b=su5ulRT0clRmCZeozsKwz+G2NnOM9rnQWmvroTML0VwFwlSfIsocsqHq9Kgzd1O3g2
+         6bKFW0DD55+a8ipUhO17Ahh5jSf1e7D+HESeCQMGUGs/eNgRDFfpfQqPfFq8XykuOiTA
+         llj6CrQeZkympEJwJyzwKw0mKjQS+15LCNUclmjHagqp2q3+8xMkmO9vHFSjbjP0NLaZ
+         TvP46HyJDJ/JtaRgVRzIyAxOFKRA27dsY/BhaLDjQUZQFBkB5520JIUBiX7RfxdIQeyo
+         6WHHL36iYnLbIu1N9t3AE0+uXROH+72v+OUQbwAwCFE4jzweNkQkfoZsdX52JO7xM7RT
+         yxOQ==
+X-Gm-Message-State: APjAAAU9q+BXX3FwAKAfMze2yGijI1i+V+429HHvjJnTEPkKLjkt+rXk
+        Ruak/m84GhZkIqkLm3j+lW1gJ/FMH0eFKiHdr+I=
+X-Google-Smtp-Source: APXvYqyxyjnf3N3ZuvxwWhdhVBd1O4QLo5brN6e/Y+/Q3kvimE1dHdiSAECEYrRRH1DbQs8Xyg0nj2Nwt2AP+nSbWOg=
+X-Received: by 2002:a24:d145:: with SMTP id w66mr1686745itg.71.1559019167176;
+ Mon, 27 May 2019 21:52:47 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 18434446-0bf7-4102-c73e-08d6e327a19d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2019 04:47:47.3066
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: peng.ma@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4493
+References: <20190527225521.5884-1-shawn@anastas.io> <CAOSf1CFFyz0YNqdpd5r44MaBV449yoK3WOMBZ1mpgZ=judNfDQ@mail.gmail.com>
+ <476555b7-b462-d844-57ea-7ca1c6113d9b@anastas.io>
+In-Reply-To: <476555b7-b462-d844-57ea-7ca1c6113d9b@anastas.io>
+From:   Oliver <oohall@gmail.com>
+Date:   Tue, 28 May 2019 14:52:35 +1000
+Message-ID: <CAOSf1CG9LcxPy9cOk0FeNq=pvMCPKVKYU7=tdrMSO+RiqTWr5A@mail.gmail.com>
+Subject: Re: [RESEND PATCH 0/3] Allow custom PCI resource alignment on pseries
+To:     Shawn Anastasio <shawn@anastas.io>
+Cc:     linux-pci@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sam Bobroff <sbobroff@linux.ibm.com>,
+        xyjxie@linux.vnet.ibm.com, rppt@linux.ibm.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgVmlub2QNCg0KU29ycnkgdG8gcmVwbGF5IHNvIGxhdGUuDQpUaGUgZHBhYTIgcWRtYSBkcml2
-ZXIgaXMgYmFzZWQgb24gRlNMX01DX0JVUyBhbmQgRlNMX01DX0RQSU8sIHNvIEl0IHdpbGwgdXNl
-ZCB0aG9zZSB0d28gZHJpdmVycw0KRnVuY3Rpb25zIG9yIHN0cnVjdHMuIFRoaXMgcGF0Y2ggcHJv
-dmlkZXMgc29tZSBuZWNlc3NhcnkgZnVuY3Rpb25zIGFuZCBzdHJ1Y3RzIGZvciBxZG1hIGRyaXZl
-cihuZXh0IHBhdGNoOiBkcGFhMi1xZG1hLmMpDQpUaGUgZHBhYTIgZHJpdmVyIGlzIG5vdCBvbmx5
-IHRvIHdyaXRlIHNvbWUgcmVnaXN0ZXIgb24gZHJpdmVyIHNpZGUgYnV0IGFsc28gbmVlZCBlbmFi
-bGUgRlNMX01DX0JVUyBhbmQgRlNMX01DX0RQSU8gdG8NCmNhbGwgc29tZSBmdW5jdGlvbnMgcHJv
-dmlkZWQgYnkgdGhlbS4gU3VjaCBhczogbWNfZW5jb2RlX2NtZF9oZWFkZXIsIG1jX3NlbmRfY29t
-bWFuZCBldGMuIEkgd2lsbCBjbGVhciB1cCB0aGlzIGRyaXZlcg0KYWdhaW4uIEFuZCBzZW5kIFY0
-IHRvIHJldmlldywgdGhhbmtzIGZvciB5b3VyIHJldmlldy4NCg0KQmVzdCBSZWdhcmRzLA0KUGVu
-Zw0KPi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogVmlub2QgS291bCA8dmtvdWxA
-a2VybmVsLm9yZz4NCj5TZW50OiAyMDE5xOo01MIyNsjVIDIwOjQ2DQo+VG86IFBlbmcgTWEgPHBl
-bmcubWFAbnhwLmNvbT4NCj5DYzogZGFuLmoud2lsbGlhbXNAaW50ZWwuY29tOyBMZW8gTGkgPGxl
-b3lhbmcubGlAbnhwLmNvbT47DQo+bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgZG1hZW5n
-aW5lQHZnZXIua2VybmVsLm9yZw0KPlN1YmplY3Q6IFtFWFRdIFJlOiBbVjMgMS8yXSBkbWFlbmdp
-bmU6IGZzbC1kcGFhMi1xZG1hOiBBZGQgdGhlIERQRE1BSShEYXRhDQo+UGF0aCBETUEgSW50ZXJm
-YWNlKSBzdXBwb3J0DQo+DQo+Q2F1dGlvbjogRVhUIEVtYWlsDQo+DQo+T24gMDktMDQtMTksIDE1
-OjIyLCBQZW5nIE1hIHdyb3RlOg0KPg0KPlN1YmplY3QgbWlzc2VkIFBBVENIIHRhZyENCj4NCj4+
-IFRoZSBNQyBleHBvcnRzIHRoZSBEUERNQUkgb2JqZWN0IGFzIGFuIGludGVyZmFjZSB0byBvcGVy
-YXRlIHRoZSBEUEFBMg0KPj4gUURNQQ0KPg0KPndoYXRzIE1DLCBEUERNQUksIERQQUEyDQo+DQpb
-UGVuZyBNYV0gTUM6IE1hbmFnZW1lbnQgQ29tcGxleA0KRFBETUFJOiBEYXRhIFBhdGggRE1BIElu
-dGVyZmFjZQ0KRFBBQTI6IERhdGEgUGF0aCBBY2NlbGVyYXRpb24gQXJjaGl0ZWN0dXJlLCBTZWNv
-bmQgR2VuZXJhdGlvbg0KSSB3aWxsIGV4cGxhaW4gdGhlbSBvbiBuZXh0IHZlcnNpb24uDQo+PiBF
-bmdpbmUuIFRoZSBEUERNQUkgZW5hYmxlcyBzZW5kaW5nIGZyYW1lLWJhc2VkIHJlcXVlc3RzIHRv
-IFFETUEgYW5kDQo+PiByZWNlaXZpbmcgYmFjayBjb25maXJtYXRpb24gcmVzcG9uc2Ugb24gdHJh
-bnNhY3Rpb24gY29tcGxldGlvbiwNCj4+IHV0aWxpemluZyB0aGUgRFBBQTIgUUJNYW4gaW5mcmFz
-dHJ1Y3R1cmUuIERQRE1BSSBvYmplY3QgcHJvdmlkZXMgdXAgdG8NCj4+IHR3byBwcmlvcml0aWVz
-IGZvciBwcm9jZXNzaW5nIFFETUEgcmVxdWVzdHMuDQo+DQo+PiAraW50IGRwZG1haV9vcGVuKHN0
-cnVjdCBmc2xfbWNfaW8gKm1jX2lvLA0KPj4gKyAgICAgICAgICAgICB1MzIgY21kX2ZsYWdzLA0K
-Pj4gKyAgICAgICAgICAgICBpbnQgZHBkbWFpX2lkLA0KPj4gKyAgICAgICAgICAgICB1MTYgKnRv
-a2VuKQ0KPg0KPmNvdWxkIGJlIHdyaXR0ZW4gYXM6DQo+DQo+aW50IGRwZG1haV9vcGVuKHN0cnVj
-dCBmc2xfbWNfaW8gKm1jX2lvLCB1MzIgY21kX2ZsYWdzLA0KPiAgICAgICAgICAgICAgICBpbnQg
-ZHBkbWFpX2lkLCB1MTYgKnRva2VuKQ0KPg0KPkxvb2tzIG5lYXRlciwgcmlnaHQ/IEl0IHdvdWxk
-IGJlIHRvIHJlcmVhZCBjb2RpbmcgZ3VpZGVsaW5lcyBhbmQgcnVuIGNoZWNrcGF0Y2gNCj53aXRo
-IC0tc3RyaWN0IG9uIHRoaXMNCj4NCltQZW5nIE1hXSBPaywgZ290IGl0Lg0KPg0KPj4gK3sNCj4+
-ICsgICAgIHN0cnVjdCBmc2xfbWNfY29tbWFuZCBjbWQgPSB7IDAgfTsNCj4NCj53aGVyZSBpcyB0
-aGlzIGRlZmluZWQ/DQpbUGVuZyBNYV0gaW5jbHVkZS9saW51eC9mc2wvbWMuaA0KPg0KPj4gKyAg
-ICAgc3RydWN0IGRwZG1haV9jbWRfb3BlbiAqY21kX3BhcmFtczsNCj4+ICsgICAgIGludCBlcnI7
-DQo+PiArDQo+PiArICAgICAvKiBwcmVwYXJlIGNvbW1hbmQgKi8NCj4+ICsgICAgIGNtZC5oZWFk
-ZXIgPSBtY19lbmNvZGVfY21kX2hlYWRlcihEUERNQUlfQ01ESURfT1BFTiwNCj4+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbWRfZmxhZ3MsDQo+PiArICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMCk7DQo+PiArDQo+PiArICAgICBjbWRfcGFy
-YW1zID0gKHN0cnVjdCBkcGRtYWlfY21kX29wZW4gKiljbWQucGFyYW1zOw0KPg0KPkkgZG9udCBs
-aWtlIGNhc3RzLCBjYW4geW91IGV4cGxhaW4NCltQZW5nIE1hXSBJZiBJIGRpZG4ndCB1c2UgdGhl
-IGNhc3RzLCBUaGVyZSBhcmUgdHdvIGNhc2U6DQoxOiBzdHJ1Y3QgZnNsX21jX2NvbW1hbmQgY21k
-X29yZyA9IHsgMCB9Ow0KICBTdHJ1Y3QgZnNsX21jX2NvbW1hbmQgKmNtZCA9ICZjbWRfb3JnOw0K
-ICBJbiB0aGlzIGNhc2UsIHdlIHdpbGwgZGVmaW5lIG9uZSBtb3JlIHRlbXBvcmFyeSB2YXJpYWJs
-ZSBpbiB0aGUgc3RhY2suDQoyOiBTdHJ1Y3QgZnNsX21jX2NvbW1hbmQgKmNtZCA9IGttYWxsb2Mo
-KTsNCiAgSW4gdGhpcyBjYXNlLCB3ZSB3aWxsIGFsbG9jIHNvbWUgbWVtb3J5LCBJdCBtYXkgYmUg
-cHJvZHVjZSBtZW1vcnkNCkZyYWdtZW50YXRpb24uIFRob3NlIGZ1bmN0aW9ucyB3aWxsIGJlIGNh
-bGxlZCBvbiBkcml2ZXIgaW5pdCBJdCBpcyBub3QgbmVjZXNzYXJ5IA0KdXNlIHRoaXMgY2FzZSB0
-byB0aG9zZSBmdW5jdGlvbi4NCj4NCj4+ICsgICAgIGNtZF9wYXJhbXMtPmRwZG1haV9pZCA9IGNw
-dV90b19sZTMyKGRwZG1haV9pZCk7DQo+PiArDQo+PiArICAgICAvKiBzZW5kIGNvbW1hbmQgdG8g
-bWMqLw0KPj4gKyAgICAgZXJyID0gbWNfc2VuZF9jb21tYW5kKG1jX2lvLCAmY21kKTsNCj4+ICsg
-ICAgIGlmIChlcnIpDQo+PiArICAgICAgICAgICAgIHJldHVybiBlcnI7DQo+PiArDQo+PiArICAg
-ICAvKiByZXRyaWV2ZSByZXNwb25zZSBwYXJhbWV0ZXJzICovDQo+PiArICAgICAqdG9rZW4gPSBt
-Y19jbWRfaGRyX3JlYWRfdG9rZW4oJmNtZCk7DQo+PiArICAgICByZXR1cm4gMDsNCj4+ICt9DQo+
-DQo+d2hvIHdpbGwgY2FsbCB0aGlzIEFQST8NCj4NCltQZW5nIE1hXSBUaGlzIGZpbGUgaXMgbm90
-IGEgZHJpdmVyLCBzb21lIG9mIGZ1bmN0aW9ucyBkZWZpbmUgaW4gdGhpcyBmaWxlLCB0aGUgZG1h
-IGRyaXZlcihkcGFhMi1xZG1hLmMpIHdpbGwgY2FsbCBzb21lIG9mIHRob3NlIEFQSSBhbmQgSSB3
-aWxsDQpkZWxldGUgdW51c2VsZXNzIEFQSSBpbiB0aGUgZnV0dXJlLg0KPj4gK2ludCBkcGRtYWlf
-Y3JlYXRlKHN0cnVjdCBmc2xfbWNfaW8gKm1jX2lvLA0KPj4gKyAgICAgICAgICAgICAgIHUzMiBj
-bWRfZmxhZ3MsDQo+PiArICAgICAgICAgICAgICAgY29uc3Qgc3RydWN0IGRwZG1haV9jZmcgKmNm
-ZywNCj4+ICsgICAgICAgICAgICAgICB1MTYgKnRva2VuKQ0KPj4gK3sNCj4+ICsgICAgIHN0cnVj
-dCBmc2xfbWNfY29tbWFuZCBjbWQgPSB7IDAgfTsNCj4+ICsgICAgIGludCBlcnI7DQo+PiArDQo+
-PiArICAgICAvKiBwcmVwYXJlIGNvbW1hbmQgKi8NCj4+ICsgICAgIGNtZC5oZWFkZXIgPSBtY19l
-bmNvZGVfY21kX2hlYWRlcihEUERNQUlfQ01ESURfQ1JFQVRFLA0KPj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIGNtZF9mbGFncywNCj4+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAwKTsNCj4NCj53aHkgd2FzdGUgYSBsaW5lLCBsYXN0IGFy
-ZyBjYW4gYmUgaW4gcHJldmlvdXMgbGluZSENCj4NCltQZW5nIE1hXSBzb3JyeSwgSSB3aWxsIHJl
-bW92ZSBpdC4NCj4+ICtpbnQgZHBkbWFpX2dldF90eF9xdWV1ZShzdHJ1Y3QgZnNsX21jX2lvICpt
-Y19pbywNCj4+ICsgICAgICAgICAgICAgICAgICAgICB1MzIgY21kX2ZsYWdzLA0KPj4gKyAgICAg
-ICAgICAgICAgICAgICAgIHUxNiB0b2tlbiwNCj4+ICsgICAgICAgICAgICAgICAgICAgICB1OCBw
-cmlvcml0eSwNCj4+ICsgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgZHBkbWFpX3R4X3F1ZXVl
-X2F0dHIgKmF0dHIpIHsNCj4+ICsgICAgIHN0cnVjdCBmc2xfbWNfY29tbWFuZCBjbWQgPSB7IDAg
-fTsNCj4+ICsgICAgIHN0cnVjdCBkcGRtYWlfY21kX3F1ZXVlICpjbWRfcGFyYW1zOw0KPj4gKyAg
-ICAgc3RydWN0IGRwZG1haV9yc3BfZ2V0X3R4X3F1ZXVlICpyc3BfcGFyYW1zOw0KPj4gKyAgICAg
-aW50IGVycjsNCj4+ICsNCj4+ICsgICAgIC8qIHByZXBhcmUgY29tbWFuZCAqLw0KPj4gKyAgICAg
-Y21kLmhlYWRlciA9DQo+bWNfZW5jb2RlX2NtZF9oZWFkZXIoRFBETUFJX0NNRElEX0dFVF9UWF9R
-VUVVRSwNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbWRfZmxh
-Z3MsDQo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdG9rZW4pOw0K
-Pj4gKw0KPj4gKyAgICAgY21kX3BhcmFtcyA9IChzdHJ1Y3QgZHBkbWFpX2NtZF9xdWV1ZSAqKWNt
-ZC5wYXJhbXM7DQo+PiArICAgICBjbWRfcGFyYW1zLT5xdWV1ZSA9IHByaW9yaXR5Ow0KPj4gKw0K
-Pj4gKyAgICAgLyogc2VuZCBjb21tYW5kIHRvIG1jKi8NCj4+ICsgICAgIGVyciA9IG1jX3NlbmRf
-Y29tbWFuZChtY19pbywgJmNtZCk7DQo+PiArICAgICBpZiAoZXJyKQ0KPj4gKyAgICAgICAgICAg
-ICByZXR1cm4gZXJyOw0KPj4gKw0KPj4gKyAgICAgLyogcmV0cmlldmUgcmVzcG9uc2UgcGFyYW1l
-dGVycyAqLw0KPj4gKw0KPj4gKyAgICAgcnNwX3BhcmFtcyA9IChzdHJ1Y3QgZHBkbWFpX3JzcF9n
-ZXRfdHhfcXVldWUgKiljbWQucGFyYW1zOw0KPj4gKyAgICAgYXR0ci0+ZnFpZCA9IGxlMzJfdG9f
-Y3B1KHJzcF9wYXJhbXMtPmZxaWQpOw0KPj4gKw0KPj4gKyAgICAgcmV0dXJuIDA7DQo+PiArfQ0K
-Pg0KPk9rYXkgdGhpcyBmaWxlIGRvZXMgbm90IHVzZSBhbnkgb2YgZG1hZW5naW5lIGFwaXMsIGlz
-IHRoaXMgYSBkbWFlbmdpbmUgZHJpdmVyPw0KW1BlbmcgTWFdIHBsZWFzZSB0aGUgcHJldmlvdXMg
-Y29tbWVudC4NCj4NCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2RtYS9mc2wtZHBhYTItcWRtYS9k
-cGRtYWkuaA0KPj4gYi9kcml2ZXJzL2RtYS9mc2wtZHBhYTItcWRtYS9kcGRtYWkuaA0KPj4gbmV3
-IGZpbGUgbW9kZSAxMDA2NDQNCj4+IGluZGV4IDAwMDAwMDAuLmM4YTdiN2YNCj4+IC0tLSAvZGV2
-L251bGwNCj4+ICsrKyBiL2RyaXZlcnMvZG1hL2ZzbC1kcGFhMi1xZG1hL2RwZG1haS5oDQo+PiBA
-QCAtMCwwICsxLDUyNCBAQA0KPj4gKy8qIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4w
-ICovDQo+PiArLyogQ29weXJpZ2h0IDIwMTQtMjAxOCBOWFAgKi8NCj4+ICsNCj4+ICsvKg0KPj4g
-KyAqIFJlZGlzdHJpYnV0aW9uIGFuZCB1c2UgaW4gc291cmNlIGFuZCBiaW5hcnkgZm9ybXMsIHdp
-dGggb3Igd2l0aG91dA0KPj4gKyAqIG1vZGlmaWNhdGlvbiwgYXJlIHBlcm1pdHRlZCBwcm92aWRl
-ZCB0aGF0IHRoZSBmb2xsb3dpbmcgY29uZGl0aW9ucyBhcmUNCj5tZXQ6DQo+PiArICogKiBSZWRp
-c3RyaWJ1dGlvbnMgb2Ygc291cmNlIGNvZGUgbXVzdCByZXRhaW4gdGhlIGFib3ZlIGNvcHlyaWdo
-dA0KPj4gKyAqIG5vdGljZSwgdGhpcyBsaXN0IG9mIGNvbmRpdGlvbnMgYW5kIHRoZSBmb2xsb3dp
-bmcgZGlzY2xhaW1lci4NCj4+ICsgKiAqIFJlZGlzdHJpYnV0aW9ucyBpbiBiaW5hcnkgZm9ybSBt
-dXN0IHJlcHJvZHVjZSB0aGUgYWJvdmUNCj4+ICtjb3B5cmlnaHQNCj4+ICsgKiBub3RpY2UsIHRo
-aXMgbGlzdCBvZiBjb25kaXRpb25zIGFuZCB0aGUgZm9sbG93aW5nIGRpc2NsYWltZXIgaW4NCj4+
-ICt0aGUNCj4+ICsgKiBkb2N1bWVudGF0aW9uIGFuZC9vciBvdGhlciBtYXRlcmlhbHMgcHJvdmlk
-ZWQgd2l0aCB0aGUgZGlzdHJpYnV0aW9uLg0KPj4gKyAqICogTmVpdGhlciB0aGUgbmFtZSBvZiB0
-aGUgYWJvdmUtbGlzdGVkIGNvcHlyaWdodCBob2xkZXJzIG5vciB0aGUNCj4+ICsgKiBuYW1lcyBv
-ZiBhbnkgY29udHJpYnV0b3JzIG1heSBiZSB1c2VkIHRvIGVuZG9yc2Ugb3IgcHJvbW90ZQ0KPj4g
-K3Byb2R1Y3RzDQo+PiArICogZGVyaXZlZCBmcm9tIHRoaXMgc29mdHdhcmUgd2l0aG91dCBzcGVj
-aWZpYyBwcmlvciB3cml0dGVuIHBlcm1pc3Npb24uDQo+PiArICoNCj4+ICsgKg0KPj4gKyAqIEFM
-VEVSTkFUSVZFTFksIHRoaXMgc29mdHdhcmUgbWF5IGJlIGRpc3RyaWJ1dGVkIHVuZGVyIHRoZSB0
-ZXJtcyBvZg0KPj4gK3RoZQ0KPj4gKyAqIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlICgiR1BM
-IikgYXMgcHVibGlzaGVkIGJ5IHRoZSBGcmVlDQo+PiArU29mdHdhcmUNCj4+ICsgKiBGb3VuZGF0
-aW9uLCBlaXRoZXIgdmVyc2lvbiAyIG9mIHRoYXQgTGljZW5zZSBvciAoYXQgeW91ciBvcHRpb24p
-DQo+PiArYW55DQo+PiArICogbGF0ZXIgdmVyc2lvbi4NCj4+ICsgKg0KPj4gKyAqIFRISVMgU09G
-VFdBUkUgSVMgUFJPVklERUQgQlkgVEhFIENPUFlSSUdIVCBIT0xERVJTIEFORA0KPkNPTlRSSUJV
-VE9SUyAiQVMgSVMiDQo+PiArICogQU5EIEFOWSBFWFBSRVNTIE9SIElNUExJRUQgV0FSUkFOVElF
-UywgSU5DTFVESU5HLCBCVVQgTk9UDQo+TElNSVRFRA0KPj4gK1RPLCBUSEUNCj4+ICsgKiBJTVBM
-SUVEIFdBUlJBTlRJRVMgT0YgTUVSQ0hBTlRBQklMSVRZIEFORCBGSVRORVNTIEZPUiBBDQo+UEFS
-VElDVUxBUg0KPj4gK1BVUlBPU0UNCj4+ICsgKiBBUkUgRElTQ0xBSU1FRC4gSU4gTk8gRVZFTlQg
-U0hBTEwgVEhFIENPUFlSSUdIVCBIT0xERVJTIE9SDQo+PiArQ09OVFJJQlVUT1JTIEJFDQo+PiAr
-ICogTElBQkxFIEZPUiBBTlkgRElSRUNULCBJTkRJUkVDVCwgSU5DSURFTlRBTCwgU1BFQ0lBTCwg
-RVhFTVBMQVJZLA0KPj4gK09SDQo+PiArICogQ09OU0VRVUVOVElBTCBEQU1BR0VTIChJTkNMVURJ
-TkcsIEJVVCBOT1QgTElNSVRFRCBUTywNCj5QUk9DVVJFTUVOVA0KPj4gK09GDQo+PiArICogU1VC
-U1RJVFVURSBHT09EUyBPUiBTRVJWSUNFUzsgTE9TUyBPRiBVU0UsIERBVEEsIE9SIFBST0ZJVFM7
-IE9SDQo+PiArQlVTSU5FU1MNCj4+ICsgKiBJTlRFUlJVUFRJT04pIEhPV0VWRVIgQ0FVU0VEIEFO
-RCBPTiBBTlkgVEhFT1JZIE9GIExJQUJJTElUWSwNCj4+ICtXSEVUSEVSIElODQo+PiArICogQ09O
-VFJBQ1QsIFNUUklDVCBMSUFCSUxJVFksIE9SIFRPUlQgKElOQ0xVRElORyBORUdMSUdFTkNFIE9S
-DQo+PiArT1RIRVJXSVNFKQ0KPj4gKyAqIEFSSVNJTkcgSU4gQU5ZIFdBWSBPVVQgT0YgVEhFIFVT
-RSBPRiBUSElTIFNPRlRXQVJFLCBFVkVOIElGDQo+PiArQURWSVNFRCBPRiBUSEUNCj4+ICsgKiBQ
-T1NTSUJJTElUWSBPRiBTVUNIIERBTUFHRS4NCj4+ICsgKi8NCj4NCj53ZSBoYXZlIFNpUERYIHRh
-Zywgd2h5IGRvIHlvdSBuZWVkIHRocyBoZXJlIQ0KPg0KW1BlbmcgTWFdIEl0IGlzIG15IG1pc3Rh
-a2UuIEkgd2lsbCBmaXhlIGl0Lg0KPi0tDQo+flZpbm9kDQo=
+On Tue, May 28, 2019 at 2:09 PM Shawn Anastasio <shawn@anastas.io> wrote:
+>
+>
+>
+> On 5/27/19 11:01 PM, Oliver wrote:
+> > On Tue, May 28, 2019 at 8:56 AM Shawn Anastasio <shawn@anastas.io> wrote:
+> >>
+> >> Hello all,
+> >>
+> >> This patch set implements support for user-specified PCI resource
+> >> alignment on the pseries platform for hotplugged PCI devices.
+> >> Currently on pseries, PCI resource alignments specified with the
+> >> pci=resource_alignment commandline argument are ignored, since
+> >> the firmware is in charge of managing the PCI resources. In the
+> >> case of hotplugged devices, though, the kernel is in charge of
+> >> configuring the resources and should obey alignment requirements.
+> >
+> > Are you using hotplug to work around SLOF (the OF we use under qemu)
+> > not aligning BARs to 64K? It looks like there is a commit in SLOF to
+> > fix that (https://git.qemu.org/?p=SLOF.git;a=commit;f=board-qemu/slof/pci-phb.fs;h=1903174472f8800caf50c959b304501b4c01153c).
+> >
+>
+> No, my application actually requires PCI hotplug at run-time.
+>
+> >> The current behavior of ignoring the alignment for hotplugged devices
+> >> results in sub-page BARs landing between page boundaries and
+> >> becoming un-mappable from userspace via the VFIO framework.
+> >> This issue was observed on a pseries KVM guest with hotplugged
+> >> ivshmem devices.
+> >
+> >> With these changes, users can specify an appropriate
+> >> pci=resource_alignment argument on boot for devices they wish to use
+> >> with VFIO.
+> >>
+> >> In the future, this could be extended to provide page-aligned
+> >> resources by default for hotplugged devices, similar to what is done
+> >> on powernv by commit 382746376993 ("powerpc/powernv: Override
+> >> pcibios_default_alignment() to force PCI devices to be page aligned").
+> >
+> > Can we make aligning the BARs to PAGE_SIZE the default behaviour? The
+> > BAR assignment process is complex enough as-is so I'd rather we didn't
+> > add another platform hack into the mix.
+>
+> Absolutely. This will still require the existing changes so that the
+> custom alignment isn't flat-out ignored on pseries, but I can set
+> it to default to PAGE_SIZE as well, similar to how it's done on PowerNV.
+> I've just pushed a v3 to fix a typo and I'll incorporate this change
+> in v4.
+
+I was thinking we could get rid of the ppcmd callback and do it in
+kernel/pci-common.c. PowerNV is the only platform that implements the
+callback and the pseries implementation is going to be identical so I
+don't think there's much of point in keeping the callback.
+
+> >> Feedback is appreciated.
+> >>
+> >> Thanks,
+> >> Shawn
+> >>
+> >> Shawn Anastasio (3):
+> >>    PCI: Introduce pcibios_ignore_alignment_request
+> >>    powerpc/64: Enable pcibios_after_init hook on ppc64
+> >>    powerpc/pseries: Allow user-specified PCI resource alignment after
+> >>      init
+> >>
+> >>   arch/powerpc/include/asm/machdep.h     |  6 ++++--
+> >>   arch/powerpc/kernel/pci-common.c       |  9 +++++++++
+> >>   arch/powerpc/kernel/pci_64.c           |  4 ++++
+> >>   arch/powerpc/platforms/pseries/setup.c | 22 ++++++++++++++++++++++
+> >>   drivers/pci/pci.c                      |  9 +++++++--
+> >>   5 files changed, 46 insertions(+), 4 deletions(-)
+> >>
+> >> --
+> >> 2.20.1
+> >>
