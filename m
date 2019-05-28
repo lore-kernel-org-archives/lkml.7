@@ -2,101 +2,67 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D8AC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 22:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 948F0C072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 22:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFE5F217F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 22:05:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="G3Jezmv4"
+	by mail.kernel.org (Postfix) with ESMTP id 763B520717
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 22:05:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbfE1WFB (ORCPT
+        id S1728105AbfE1WFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 18:05:01 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:57083 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726576AbfE1WFB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 18:05:01 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45D7Dm0s2wz9sBb;
-        Wed, 29 May 2019 08:04:56 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1559081096;
-        bh=latartSpAexslz84ppDW3m6VjQvcega24simC5z4y2A=;
-        h=Date:From:To:Cc:Subject:From;
-        b=G3Jezmv4sMoCRolnG8T+dT5mw4caYYJSx9zGELDnclxHYb5ZeQ4GyXSrsrVvYmo42
-         0gfhSqMeRqhG0lV+o5I1PR/NRjn34CDjYCW4XL/b8f1UDLYHPHfvMkZiiuKgsyx7di
-         SPkrG6nzObzVwo7A4ZzG8ak0maaKl7Osqrokpg4pIc+7ByUPZ0Vl7pKuRcn+NXz4qg
-         TC9lruBBY6EKmS8/PwHXHcm2S4+CCeUzvGFdB2yIU5Q4+hChXIRvup0MTtMhqC9/LR
-         w61d35JwF5U9vJqnPw8ze3qBvIoDhxv5VjQBxZuA82pDheAic+wlM27TeeNUL2OMUO
-         crqUok1mEBXhA==
-Date:   Wed, 29 May 2019 08:04:54 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Niklas =?UTF-8?B?U8O2ZGVybHVuZA==?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Subject: linux-next: Fixes tag needs some work in the v4l-dvb tree
-Message-ID: <20190529080454.6d62a7fd@canb.auug.org.au>
+        Tue, 28 May 2019 18:05:25 -0400
+Received: from ja.ssi.bg ([178.16.129.10]:55672 "EHLO ja.ssi.bg"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726576AbfE1WFZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 18:05:25 -0400
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+        by ja.ssi.bg (8.15.2/8.15.2) with ESMTP id x4SM4E6G010937;
+        Wed, 29 May 2019 01:04:14 +0300
+Date:   Wed, 29 May 2019 01:04:14 +0300 (EEST)
+From:   Julian Anastasov <ja@ssi.bg>
+To:     Jacky Hu <hengqing.hu@gmail.com>
+cc:     jacky.hu@walmart.com, jason.niesz@walmart.com,
+        Wensong Zhang <wensong@linux-vs.org>,
+        Simon Horman <horms@verge.net.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Florian Westphal <fw@strlen.de>, netdev@vger.kernel.org,
+        lvs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org
+Subject: Re: [PATCH v2] ipvs: add checksum support for gue encapsulation
+In-Reply-To: <20190526064819.16420-1-hengqing.hu@gmail.com>
+Message-ID: <alpine.LFD.2.21.1905290059380.4284@ja.home.ssi.bg>
+References: <20190526064819.16420-1-hengqing.hu@gmail.com>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/.d=BWJoTy6lPfZL4/CmtHiY"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/.d=BWJoTy6lPfZL4/CmtHiY
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi Mauro,
+	Hello,
 
-In commit
+On Sun, 26 May 2019, Jacky Hu wrote:
 
-  0c310868826e ("media: rcar-csi2: Fix coccinelle warning for PTR_ERR_OR_ZE=
-RO()")
+> +/* Tunnel encapsulation flags */
+> +#define IP_VS_TUNNEL_ENCAP_FLAG_NOCSUM		(0)
+> +#define IP_VS_TUNNEL_ENCAP_FLAG_CSUM		(1<<0)
+> +#define IP_VS_TUNNEL_ENCAP_FLAG_REMCSUM		(1<<1)
 
-Fixes tag
+	scripts/checkpatch.pl --strict file.patch
+reports for some issues you should resolve for v3.
+Otherwise, the patch looks good to me.
 
-  Fixes: 3ae854cafd76 ("rcar-csi2: Use standby mode instead of resetting")
+Regards
 
-has these problem(s):
-
-  - Target SHA1 does not exist
-
-Did you mean
-
-Fixes: d245a940d97b ("media: rcar-csi2: Use standby mode instead of resetti=
-ng")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/.d=BWJoTy6lPfZL4/CmtHiY
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlztsIYACgkQAVBC80lX
-0Gz+/gf/T31KoLazyjEW89krmzM2wgc40Sab/m3NnCGPtDAzT4itrTJbP7xHwKts
-R+MpjXiHQ5CtUdZnaBT9o4jsHQYR0gZNiqCxAC2gTok1tZkZHRzsU18LzRHcwLCE
-bV4QzTxH4JJJwNZCeG90AsZsG2NLvE3M/DRneZ48TcstMk1rOqrp+C/8SX5Af6Qx
-vovVBPfg5KokPSd76NnTZSJT+r8GV67CmoYXfVLsEiCOnAhFPkDAPLe7rhXjl8bg
-lwDJuxDk/lSzfZqr9Q+zeeU1qucx5SLx1jMYB1CMMl3c/8+lamlnn/w8iPNar+Y6
-MGnT8yyWWd5tAESGkM7wD9agYrJfBQ==
-=Y/Qv
------END PGP SIGNATURE-----
-
---Sig_/.d=BWJoTy6lPfZL4/CmtHiY--
+--
+Julian Anastasov <ja@ssi.bg>
