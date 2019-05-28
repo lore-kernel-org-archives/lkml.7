@@ -2,205 +2,256 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1285C04AB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:16:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3908C07542
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:16:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCBFF2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:16:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B246020823
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:16:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XxXjaSO5"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="imEoJ5Uo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbfE1BQJ (ORCPT
+        id S1727794AbfE1BQS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 21:16:09 -0400
-Received: from mail-ed1-f42.google.com ([209.85.208.42]:37713 "EHLO
-        mail-ed1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727090AbfE1BQJ (ORCPT
+        Mon, 27 May 2019 21:16:18 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:27527 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727776AbfE1BQR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 21:16:09 -0400
-Received: by mail-ed1-f42.google.com with SMTP id w37so29080553edw.4;
-        Mon, 27 May 2019 18:16:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=JSsEhEqaRLOeUyOv3kqRTkpJB2sycYE1Xy7YiI46B4g=;
-        b=XxXjaSO5IfAGKTWEuhQhjfuV3NO5yQNPutTuNwsYUrKu2U7MUyGQ4RjZ4mw90B8sDM
-         nUR3anPhdOh2w0oBe4OZpREpIBA7LLdVD+5nYfaY/fbQIGa+kf0emnA02aTbnp8UM7MG
-         Y27zatuNbLdWIk8q+JycBs96eK/iJ4ohIY+ufvEfoNrGhNdZ6LZYgSSIfei0fN8SG3s1
-         7NQ3xsuauz2Kk9Nb0mKRDD+pUxp15ub8zk8onSDsOjIEtjRHUD0VPgkvgQ+tICSsFxYU
-         ppaZUh38/tMfF3s6niExtoqxmi4Xlx0exeT4tifbW1jNVKtJ7Dz3Q8ngSc5mDbn/3gxn
-         KNhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=JSsEhEqaRLOeUyOv3kqRTkpJB2sycYE1Xy7YiI46B4g=;
-        b=YIemQ7CPHXwF8U+IN4e9STQr7mr/u0lpBDtGuK3Sd/5UofBTldDGeMmPzwJKWmJ8H5
-         UjW0iBA7Oco16XIsAgQf/jkVmFmhKRD0jJpPA5JcO2ZoWzvm49B5ftdoKztwNKmY2nc+
-         SR77tpyor4mq3FAuJjM2pw8WzXdegAdFEP3oj2ENfjWkbRg4nuy5E6CoYdkqz1laZEI7
-         /RTUUoqhviAcZB5oX6BJrNiZIcuxCj0DspEN2WmnZJ277ZzXdwBQEUXSgp0JPXu/D3EY
-         cIKtaejeq1OPhrIVQ8+oCiBfnkf+6s88ZvHxcP25enuGxoX0KGkHbMtOmn8TrqpvnkeN
-         kUdg==
-X-Gm-Message-State: APjAAAUWSs6W7zcazKa00V+mzoUEHEybe+ZOF+4UPh9ZVeevphuc4L8l
-        wSvnYyCLnZqfWExQoRnHHVc1Z6mqccm1DyjXPekR1yJo
-X-Google-Smtp-Source: APXvYqwtY4FgvCGJBe9IunZA08b7xGiFfu2vqXOEPH+PNa4KPE+PeVo+O7yUs5kSmsvhIJydfsd7EjpZUv0M+psZAmY=
-X-Received: by 2002:a17:906:aacb:: with SMTP id kt11mr85777535ejb.246.1559006166287;
- Mon, 27 May 2019 18:16:06 -0700 (PDT)
+        Mon, 27 May 2019 21:16:17 -0400
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190528011614epoutp03b66837266efe5e0b9f1a0529033ca51d~is9srxx5n3006830068epoutp03_
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 01:16:14 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190528011614epoutp03b66837266efe5e0b9f1a0529033ca51d~is9srxx5n3006830068epoutp03_
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1559006174;
+        bh=0vYxNaN0DjAJ27p8LoaH8nU/xLDm2uIusYx8OTjPnRA=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=imEoJ5UoRtq1t+29AiddUXiW1c/gxL+zpnS7j6UFadseVReNbSA2k7XcGMx97+/FI
+         DonOKCwKnBmQ9fBK/IXZiGJ0yI9ofcyROORUdzUEog/sJp49dQnQzVSwm1xI5mEUWg
+         StJjs+0Jx9EmdYlxGJBUxSOmixq0DXkkAmEcmvcw=
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.152]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190528011612epcas1p17d6e23d0e004e4c60644686cd5d57e1a~is9p-VmL21279612796epcas1p1D;
+        Tue, 28 May 2019 01:16:12 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        6D.32.04257.BDB8CEC5; Tue, 28 May 2019 10:16:11 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190528011611epcas1p1364c6a80db0e526c689950c4a66f53ea~is9pZADRb1280812808epcas1p1n;
+        Tue, 28 May 2019 01:16:11 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190528011611epsmtrp21e70426903cb4f0878cb07d5483b0a64~is9pYNceQ1136211362epsmtrp2X;
+        Tue, 28 May 2019 01:16:11 +0000 (GMT)
+X-AuditID: b6c32a38-a3dc09c0000010a1-f4-5cec8bdbfd1d
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        8C.C2.03692.BDB8CEC5; Tue, 28 May 2019 10:16:11 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190528011611epsmtip28557f32efc5ece3feae685ba1e24084a~is9pMKrQR1103611036epsmtip2V;
+        Tue, 28 May 2019 01:16:11 +0000 (GMT)
+Subject: Re: [PATCH] PM / devfreq: try_then_request_governor should not
+ return NULL
+To:     Rob Clark <robdclark@chromium.org>
+Cc:     Rob Clark <robdclark@gmail.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        linux-pm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <e1232f97-c80d-2bf2-639a-7f7b9195d1f0@samsung.com>
+Date:   Tue, 28 May 2019 10:18:06 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190523210651.80902-1-fklassen@appneta.com> <20190523210651.80902-5-fklassen@appneta.com>
- <CAF=yD-KBNLr5KY-YQ1KMmZGCpYNefSJKaJkZNOwd8nRiedpQtA@mail.gmail.com>
- <879E5DA6-3A4F-4CE1-9DA5-480EE30109DE@appneta.com> <CAF=yD-LQT7=4vvMwMa96_SFuUd5GywMoae7hGi9n6rQeuhhxuQ@mail.gmail.com>
- <5BB184F2-6C20-416B-B2AF-A678400CFE3E@appneta.com>
-In-Reply-To: <5BB184F2-6C20-416B-B2AF-A678400CFE3E@appneta.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Mon, 27 May 2019 21:15:30 -0400
-Message-ID: <CAF=yD-+6CRyqL6Fq5y2zpw5nnDitYC7G1c2JAVHZTjyw68DYJg@mail.gmail.com>
-Subject: Re: [PATCH net 4/4] net/udpgso_bench_tx: audit error queue
-To:     Fred Klassen <fklassen@appneta.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        Willem de Bruijn <willemb@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAJs_Fx4hw3nrUAksQxTrVrJubQAxADE5FmBrSs+EOmE3jwL9bg@mail.gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrAJsWRmVeSWpSXmKPExsWy7bCmnu7t7jcxBh3nNSzONr1ht5i4/yy7
+        xeVdc9gsPvceYbS43biCzeLaz8fMFs8X/mB2YPeY3XCRxWPnrLvsHn1bVjF6fN4kF8ASlW2T
+        kZqYklqkkJqXnJ+SmZduq+QdHO8cb2pmYKhraGlhrqSQl5ibaqvk4hOg65aZA3SBkkJZYk4p
+        UCggsbhYSd/Opii/tCRVISO/uMRWKbUgJafAskCvODG3uDQvXS85P9fK0MDAyBSoMCE7Y/qa
+        o4wFD1Uqdnf1sjUwPpfpYuTkkBAwkej6+IC5i5GLQ0hgB6PE6uNNTBDOJ0aJSVu/s0A43xgl
+        Nu1aygzTcrURJrGXUWJB61qolveMEtcPHGPtYuTgEBYIlbg7QR6kQURATWJrzxWwBmaB14wS
+        966uZwNJsAloSex/cQPM5hdQlLj64zEjiM0rYCfxavFXFhCbRUBVYm/fPDBbVCBC4v6xDawQ
+        NYISJ2c+AYtzCgRKLNs0BayXWUBc4taT+UwQtrxE89bZUFc/Z5N4uSwDwnaRmNO5jQXCFpZ4
+        dXwLO4QtJfH53V42CLtaYuXJI2wgR0sIdDBKbNl/gRUiYSyxf+lkJpAnmQU0Jdbv0ocIK0rs
+        /D0X6gY+iXdfe8DhICHAK9HRJgRRoixx+cFdJghbUmJxeyfbBEalWUi+mYXkg1lIPpiFsGwB
+        I8sqRrHUguLc9NRiwwIT5NjexAhOnVoWOxj3nPM5xCjAwajEw2tx6nWMEGtiWXFl7iFGCQ5m
+        JRFe0y2vYoR4UxIrq1KL8uOLSnNSiw8xmgIDeyKzlGhyPjCt55XEG5oaGRsbW5gYmpkaGiqJ
+        88Zz34wREkhPLEnNTk0tSC2C6WPi4JRqYMzj07u3zzqXf7LimhNpb9P02X9pusl92+R6dKPz
+        zFYfBvc1dscfOkVdsOT1Mn61a1HIhw73Tv7bZwT6LLYsWFMb/ONzyP7iGb+09b+s2vagSCJM
+        4LOamc8FPvae9G+TQjymTpednZ6pe6VqqVYev5fT3KOHlC2jbeKCVuiH+zzMkv9RlCw9R4ml
+        OCPRUIu5qDgRAIgaCjezAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuphkeLIzCtJLcpLzFFi42LZdlhJXvd295sYg1e3BC3ONr1ht5i4/yy7
+        xeVdc9gsPvceYbS43biCzeLaz8fMFs8X/mB2YPeY3XCRxWPnrLvsHn1bVjF6fN4kF8ASxWWT
+        kpqTWZZapG+XwJUxfc1RxoKHKhW7u3rZGhify3QxcnJICJhIXG38ztLFyMUhJLCbUWLTifUs
+        EAlJiWkXjzJ3MXIA2cIShw8XQ9S8ZZQ48fwlE0iNsECoxJRlvYwgtoiAmsTWnitgg5hBit5v
+        PMYI0dHBJHFwxmJmkCo2AS2J/S9usIHY/AKKEld/PAbr5hWwk3i1+CvYZhYBVYm9ffPAbFGB
+        CIkz71ewQNQISpyc+QTM5hQIlFi2aQpYL7OAusSfeZeYIWxxiVtP5jNB2PISzVtnM09gFJ6F
+        pH0WkpZZSFpmIWlZwMiyilEytaA4Nz232LDAMC+1XK84Mbe4NC9dLzk/dxMjOI60NHcwXl4S
+        f4hRgINRiYfX4tTrGCHWxLLiytxDjBIczEoivKZbXsUI8aYkVlalFuXHF5XmpBYfYpTmYFES
+        532adyxSSCA9sSQ1OzW1ILUIJsvEwSnVwMjwa1+65uGtYeJxBdozgzNev5/benfywQ4poRVv
+        fQ62iZaUNXM/t/7IXvFOLe5ZesKmz6rz1524aMC1QTWG7YC3l7qNB8/naOmzL0JXZvjkbHtk
+        9kgnPWytFp/Ei5pnwXGzovWrkqtLf0coT5u6WqDlvHDFmdPNZ29c3avalLGg8vnpackNd5RY
+        ijMSDbWYi4oTAYSr59efAgAA
+X-CMS-MailID: 20190528011611epcas1p1364c6a80db0e526c689950c4a66f53ea
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190523215902epcas5p40e3aca0efb342c8d778529fef416c3fd
+References: <CGME20190523215902epcas5p40e3aca0efb342c8d778529fef416c3fd@epcas5p4.samsung.com>
+        <20190523215853.16622-1-robdclark@gmail.com>
+        <9c63ac15-9917-7adc-3ef8-3e44060797bd@samsung.com>
+        <CAJs_Fx4hw3nrUAksQxTrVrJubQAxADE5FmBrSs+EOmE3jwL9bg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 27, 2019 at 6:56 PM Fred Klassen <fklassen@appneta.com> wrote:
->
->
->
-> > On May 27, 2019, at 2:46 PM, Willem de Bruijn <willemdebruijn.kernel@gm=
-ail.com> wrote:
-> >> Also, I my v2 fix in net is still up for debate. In its current state,=
- it
-> >> meets my application=E2=80=99s requirements, but may not meet all of y=
-ours.
->
-> > I gave more specific feedback on issues with it (referencing zerocopy
-> > and IP_TOS, say).
-> >
->
-> Unfortunately I don=E2=80=99t have a very good email setup, and I found a
-> bunch of your comments in my junk folder. That was on Saturday,
-> and on Sunday I spent some time implementing your suggestions.
-> I have not pushed the changes up yet.
->
-> I wanted to discuss whether or not to attach a buffer to the
-> recvmsg(fd, &msg, MSG_ERRQUEUE). Without it, I have
-> MSG_TRUNC errors in my msg_flags. Either I have to add
-> a buffer, or ignore that error flag.
+Hi Rob,
 
-Either sounds reasonable. It is an expected and well understood
-message if underprovisioning the receive data buffer.
+You're right. It have to be posted to stable@vger.kernel.org.
+As you recommended, I send it[1] to stable@vger.kernel.org for fixup.
+[1]https://lkml.org/lkml/2019/5/27/547
 
-> > Also, it is safer to update only the relevant timestamp bits in
-> > tx_flags, rather that blanket overwrite, given that some bits are
-> > already set in skb_segment. I have not checked whether this is
-> > absolutely necessary.
-> >
->  I agree. See tcp_fragment_tstamp().
->
-> I think this should work.
->
-> skb_shinfo(seg)->tx_flags |=3D
->                         (skb_shinfo(gso_skb)->tx_flags & SKBTX_ANY_TSTAMP=
-);
+Best Regards,
+Chanwoo Choi
 
-Agreed. It is more obviously correct. Only drawback is that the RMW is
-more expensive than a straight assignment.
+On 19. 5. 24. 오후 10:15, Rob Clark wrote:
+> Ahh, thanks, I've not moved to the latest -rc yet..
+> 
+> That commit would be a good candidate for 5.1.y stable branch
+> 
+> BR,
+> -R
+> 
+> On Fri, May 24, 2019 at 12:13 AM Chanwoo Choi <cw00.choi@samsung.com> wrote:
+>>
+>> Hi,
+>>
+>> This issue[1] is already fixed on latest linux.git
+>> You can check it. Thanks.
+>>
+>> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=b53b0128052ffd687797d5f4deeb76327e7b5711
+>>
+>> Regards,
+>> Chanwoo Choi
+>>
+>>
+>> On 19. 5. 24. 오전 6:58, Rob Clark wrote:
+>>> From: Rob Clark <robdclark@chromium.org>
+>>>
+>>> The two spots it is called expect either an IS_ERR() or a valid pointer,
+>>> but not NULL.
+>>>
+>>> Fixes this crash that I came across:
+>>>
+>>>    Unable to handle kernel NULL pointer dereference at virtual address 0000000000000030
+>>>    Mem abort info:
+>>>      ESR = 0x96000005
+>>>      Exception class = DABT (current EL), IL = 32 bits
+>>>      SET = 0, FnV = 0
+>>>      EA = 0, S1PTW = 0
+>>>    Data abort info:
+>>>      ISV = 0, ISS = 0x00000005
+>>>      CM = 0, WnR = 0
+>>>    [0000000000000030] user address but active_mm is swapper
+>>>    Internal error: Oops: 96000005 [#1] PREEMPT SMP
+>>>    Modules linked in:
+>>>    Process kworker/2:1 (pid: 212, stack limit = 0x(____ptrval____))
+>>>    CPU: 2 PID: 212 Comm: kworker/2:1 Not tainted 5.1.0-43338-g460e6984675c-dirty #54
+>>>    Hardware name: Google Cheza (rev3+) (DT)
+>>>    Workqueue: events deferred_probe_work_func
+>>>    pstate: 00c00009 (nzcv daif +PAN +UAO)
+>>>    pc : devfreq_add_device+0x2e4/0x410
+>>>    lr : devfreq_add_device+0x2d4/0x410
+>>>    sp : ffffff8013d93740
+>>>    x29: ffffff8013d93790 x28: ffffffc0f54f8670
+>>>    x27: 0000000000000001 x26: 0000000000000007
+>>>    x25: ffffff80124abfd8 x24: 0000000000000000
+>>>    x23: ffffffc0fabc4048 x22: ffffffc0fabc4388
+>>>    x21: ffffffc0fabc4010 x20: ffffffc0fa243010
+>>>    x19: ffffffc0fabc4000 x18: 0000000091c3d373
+>>>    x17: 0000000000000400 x16: 000000000000001a
+>>>    x15: 000000019e06d400 x14: 0000000000000001
+>>>    x13: 0000000000000000 x12: 00000000000006b6
+>>>    x11: 0000000000000000 x10: 0000000000000000
+>>>    x9 : ffffffc0fa18ba00 x8 : 0000000000000000
+>>>    x7 : 0000000000000000 x6 : ffffff80127a3d9a
+>>>    x5 : ffffff8013d93550 x4 : 0000000000000000
+>>>    x3 : 0000000000000000 x2 : 0000000000000000
+>>>    x1 : 00000000000000fe x0 : 0000000000000000
+>>>    Call trace:
+>>>     devfreq_add_device+0x2e4/0x410
+>>>     devm_devfreq_add_device+0x64/0xac
+>>>     msm_gpu_init+0x320/0x5c0
+>>>     adreno_gpu_init+0x21c/0x274
+>>>     a6xx_gpu_init+0x68/0xf4
+>>>     adreno_bind+0x158/0x284
+>>>     component_bind_all+0x110/0x204
+>>>     msm_drm_bind+0x118/0x5b8
+>>>     try_to_bring_up_master+0x15c/0x19c
+>>>     component_master_add_with_match+0xb4/0xec
+>>>     msm_pdev_probe+0x1f0/0x27c
+>>>     platform_drv_probe+0x90/0xb0
+>>>     really_probe+0x120/0x298
+>>>     driver_probe_device+0x64/0xfc
+>>>     __device_attach_driver+0x8c/0xa4
+>>>     bus_for_each_drv+0x88/0xd0
+>>>     __device_attach+0xac/0x134
+>>>     device_initial_probe+0x20/0x2c
+>>>     bus_probe_device+0x34/0x90
+>>>     deferred_probe_work_func+0x74/0xac
+>>>     process_one_work+0x210/0x428
+>>>     worker_thread+0x278/0x3e4
+>>>     kthread+0x120/0x130
+>>>     ret_from_fork+0x10/0x18
+>>>    Code: aa0003f8 b13ffc1f 54000762 f901c278 (f9401b08)
+>>>    ---[ end trace a6ecc18ce5894375 ]---
+>>>    Kernel panic - not syncing: Fatal exception
+>>>
+>>> Signed-off-by: Rob Clark <robdclark@chromium.org>
+>>> ---
+>>>  drivers/devfreq/devfreq.c | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+>>> index 0ae3de76833b..d29f66f0e52a 100644
+>>> --- a/drivers/devfreq/devfreq.c
+>>> +++ b/drivers/devfreq/devfreq.c
+>>> @@ -254,7 +254,7 @@ static struct devfreq_governor *try_then_request_governor(const char *name)
+>>>               /* Restore previous state before return */
+>>>               mutex_lock(&devfreq_list_lock);
+>>>               if (err)
+>>> -                     return NULL;
+>>> +                     return ERR_PTR(err);
+>>>
+>>>               governor = find_devfreq_governor(name);
+>>>       }
+>>>
+>>
+>>
+>> --
+>> Best Regards,
+>> Chanwoo Choi
+>> Samsung Electronics
+> 
+> 
 
-> >> I am still open to suggestions, but so far I don=E2=80=99t have an alt=
-ernate
-> >> solution that doesn=E2=80=99t break what I need working.
-> >
-> > Did you see my response yesterday? I can live with the first segment.
-> > Even if I don't think that it buys much in practice given xmit_more
-> > (and it does cost something, e.g., during requeueing).
-> >
->
-> I=E2=80=99m sorry, I didn=E2=80=99t receive a response. Once again, I am =
-struggling
-> with crappy email setup. Hopefully as of today my junk mail filters are
-> set up properly.
->
-> I=E2=80=99d like to see that comment.
 
-The netdev list is archived and available through various websites,
-like lore.kernel.org/netdev . As well as the patches with comments at
-patchwork.ozlabs.org/project/netdev/list
-
-> I have been wondering about xmit_more
-> myself. I don=E2=80=99t think it changes anything for software timestamps=
-,
-> but it may with hardware timestamps.
-
-It arguably makes the software timestamp too early if taken on the
-first segment, as the NIC is only informed of all the new descriptors
-when the last segment is written and the doorbell is rung.
-
-> > Can you elaborate on this suspected memory leak?
->
-> A user program cannot free a zerocopy buffer until it is reported as free=
-.
-> If zerocopy events are not reported, that could be a memory leak.
->
-> I may have a fix. I have added a -P option when I am running an audit.
-> It doesn=E2=80=99t appear to affect performance, and since implementing i=
-t I have
-> received all error messages expected for both timestamp and zerocopy.
->
-> I am still testing.
-
-I see, a userspace leak from lack of completion notification.
-
-If the issue is a few missing notifications at the end of the run,
-then perhaps cfg_waittime_ms is too short.
-
-> > On a related note, tests run as part of continuous testing should run
-> > as briefly as possible. Perhaps we need to reduce the time per run to
-> > accommodate for the new variants you are adding.
-> >
->
-> I could reduce testing from 4 to 2 seconds. Anything below that and I
-> miss some reports. When I found flakey results, I found I could reproduce
-> them in as little as 1 second.
-> >> Summary over 4.000 seconds...
-> >> sum tcp tx:   6921 MB/s     458580 calls (114645/s)     458580 msgs (1=
-14645/s)
-> >> ./udpgso_bench_tx: Unexpected number of Zerocopy completions:    45858=
-0 expected    458578 received
-> >
-> > Is this the issue you're referring to? Good catch. Clearly this is a
-> > good test to have :) That is likely due to some timing issue in the
-> > test, e.g., no waiting long enough to harvest all completions. That is
-> > something I can look into after the code is merged.
->
-> Thanks.
->
-> Should the test have failed at this point? I did return an error(), but
-> the script kept running.
-
-This should normally be cause for test failure, I think yes. Though
-it's fine to send the code for review and possibly even merge, so that
-I can take a look.
-
-> As stated, I don=E2=80=99t want to push up until I have tested more fully=
-, and
-> the fix is accepted (which requires a v3). If you want to review what
-> I have, I can push it up now with the understanding that I may still
-> fine tune things.
-
-Sounds good, thanks.
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
