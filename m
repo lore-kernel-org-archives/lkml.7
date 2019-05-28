@@ -2,93 +2,86 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E182EC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 986FEC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9A052070D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:58:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qAj37Eg+"
+	by mail.kernel.org (Postfix) with ESMTP id 771B12070D
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:58:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbfE1K6E (ORCPT
+        id S1726748AbfE1K6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 06:58:04 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:36814 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726313AbfE1K6E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 06:58:04 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4SAvsI3030112;
-        Tue, 28 May 2019 05:57:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559041074;
-        bh=5nPt/cxqBGAOTV5zZu0P7LbT0gravsharvQbZ8UG4tU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=qAj37Eg+W8vGlkzxCtgXm0Igin9JVmdRgnbhbTWE9iYDCeehWTggWVDmdsrwJgnY1
-         Vsk3dVEy178kDDTOnrMptzb9ewZwUB8as0lDqhmCjOdMysuc55wuYpdCDlDpwsA1u1
-         Is55Lry01g4GNyKoAKgjjX7wQmT8lXooXoADYvA4=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4SAvs2E057534
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 28 May 2019 05:57:54 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 28
- May 2019 05:57:53 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 28 May 2019 05:57:53 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4SAvq0P065502;
-        Tue, 28 May 2019 05:57:52 -0500
-Subject: Re: [PATCH next 06/25] drm/omap: Use dev_get_drvdata()
-To:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        <linux-kernel@vger.kernel.org>
-CC:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        <dri-devel@lists.freedesktop.org>
-References: <20190423075020.173734-1-wangkefeng.wang@huawei.com>
- <20190423075020.173734-7-wangkefeng.wang@huawei.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <9010b5b2-8a7c-5cf8-2a1d-2fbeb9f5b55b@ti.com>
-Date:   Tue, 28 May 2019 13:57:51 +0300
+        Tue, 28 May 2019 06:58:09 -0400
+Received: from foss.arm.com ([217.140.101.70]:55144 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726313AbfE1K6I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 06:58:08 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 617C2341;
+        Tue, 28 May 2019 03:58:08 -0700 (PDT)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9662E3F59C;
+        Tue, 28 May 2019 03:58:07 -0700 (PDT)
+Subject: Re: [PATCH RESEND 1/7] sched/core: Fix preempt_schedule() interrupt
+ return comment
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     linux-kernel@vger.kernel.org
+References: <20190528104848.13160-1-valentin.schneider@arm.com>
+ <20190528104848.13160-2-valentin.schneider@arm.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Message-ID: <73f842f0-b07f-9a6b-cd23-ca3eafad7245@arm.com>
+Date:   Tue, 28 May 2019 11:58:06 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190423075020.173734-7-wangkefeng.wang@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20190528104848.13160-2-valentin.schneider@arm.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/04/2019 10:50, Kefeng Wang wrote:
-> Using dev_get_drvdata directly.
+Duh, forgot to cc the relevant folks on this one...
+
+On 28/05/2019 11:48, Valentin Schneider wrote:
+> preempt_schedule_irq() is the one that should be called on return from
+> interrupt, clean up the comment to avoid any ambiguity.
 > 
-> Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: dri-devel@lists.freedesktop.org
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
 > ---
->   .../gpu/drm/omapdrm/displays/panel-dsi-cm.c    | 18 ++++++------------
->   1 file changed, 6 insertions(+), 12 deletions(-)
-
-Thanks! I have picked this up.
-
-  Tomi
-
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>  kernel/sched/core.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+> 
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 874c427742a9..55ebc2cfb08c 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -3600,9 +3600,8 @@ static void __sched notrace preempt_schedule_common(void)
+>  
+>  #ifdef CONFIG_PREEMPT
+>  /*
+> - * this is the entry point to schedule() from in-kernel preemption
+> - * off of preempt_enable. Kernel preemptions off return from interrupt
+> - * occur there and call schedule directly.
+> + * This is the entry point to schedule() from in-kernel preemption
+> + * off of preempt_enable.
+>   */
+>  asmlinkage __visible void __sched notrace preempt_schedule(void)
+>  {
+> @@ -3673,7 +3672,7 @@ EXPORT_SYMBOL_GPL(preempt_schedule_notrace);
+>  #endif /* CONFIG_PREEMPT */
+>  
+>  /*
+> - * this is the entry point to schedule() from kernel preemption
+> + * This is the entry point to schedule() from kernel preemption
+>   * off of irq context.
+>   * Note, that this is called and return with irqs disabled. This will
+>   * protect us against recursive calling from irq.
+> 
