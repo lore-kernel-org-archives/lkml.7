@@ -1,111 +1,149 @@
 Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 649D2C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:12:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 604C6C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 369D920883
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:12:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VPQcS2VM"
+	by mail.kernel.org (Postfix) with ESMTP id 2A02720989
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:12:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559041937;
+	bh=fkPXlmo2tMUHV6wCswPd6uRNneYq3knd8MxUECPUh9k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HH5BGHtdHTP176/Nhb/VGx23TyqFVH2EOuflNNfBMQ9Cikvg185kaBKQEntX9PF69
+	 ytI3NpQEy1lL/4NoQkfFPUILnANm5XI0laOhdBZybQXvQXHZ8ku9o3lFH7LgKAuej8
+	 whRYGwUCMFlewegug38vJuPG46FbeXmF6P7SXx0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbfE1LMG (ORCPT
+        id S1726650AbfE1LMQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 07:12:06 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:53486 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726313AbfE1LMG (ORCPT
+        Tue, 28 May 2019 07:12:16 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39760 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726313AbfE1LMQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 07:12:06 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4SBBrF8071878;
-        Tue, 28 May 2019 06:11:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559041913;
-        bh=XbgikyC9otiR4YuTt/uxocCuXVecKc1fGa0PD78NL7o=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=VPQcS2VMgEKOda7JpQv+0emh77HzV9Whuj3flfgsA+DAQrZa01jON9U3tCmf2khOg
-         fuw5K1DoHnhNWdOzur4PZNOJX0q0cdLT/bK5zsw6KnctJ5aFcCtwqMPk6Qb1AC39zI
-         lI9LCTS6Hi/6C3uZNTUIZsvumuuOlaTDghM/tqgQ=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4SBBr2P112080
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 28 May 2019 06:11:53 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 28
- May 2019 06:11:52 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 28 May 2019 06:11:52 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4SBBoLo088964;
-        Tue, 28 May 2019 06:11:50 -0500
-Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to
- dts
-To:     Adam Ford <aford173@gmail.com>, <linux-omap@vger.kernel.org>
-CC:     <adam.ford@logicpd.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190510194229.20628-1-aford173@gmail.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <af325707-3e42-493d-e858-77878ef06138@ti.com>
-Date:   Tue, 28 May 2019 14:11:49 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 28 May 2019 07:12:16 -0400
+Received: by mail-pf1-f195.google.com with SMTP id z26so11282085pfg.6;
+        Tue, 28 May 2019 04:12:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=yjDDJ/2zUpUMynGNYx1IGW1H0lSoDeccz7vZj839ckk=;
+        b=BAMyLVStI/JfGQ5nZP1Aq6dmfML42NpXtmeu9rpv5EXDkgpwcdBMCj5BoUHY9SnjOr
+         yXxPTGVcm1Hx0gzDRbOROR6xHoNkDjn+8YH4KGdIS5yqGcjJ8cvw63QBO+FYInAAUo4o
+         0KURztiHWmmscsTig7NfQWSmzr3GNbCUKlczYANC0/1T5VGmOQ8Qg4G7aSkj3aFyLYsQ
+         zZpqol/Gx09xwV9+VHJCNn0Sz6/inKLr1Szw9JTeIx3fNDBJbilrdXcSAmKL/pXV54WA
+         RgyON09Us9klUuI1rvB0RNRW2Y1gYFDUh3tFWPkmUrUKehaLpn3Z2tI4BxK1tpq2Owne
+         yOeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yjDDJ/2zUpUMynGNYx1IGW1H0lSoDeccz7vZj839ckk=;
+        b=SM9G96JSW+cuqjPo7Gr9DOLsi0/mNTUJxGOe4ZP2DLum0P2AXpofEC0u/cNl2fVIIT
+         oPxGNn4Ft43w9sTzOmCqoAPrO1kzSocGmibbYwd5Q0I07dcnkFD85fHNi41ttGD0FsE0
+         xciGQ9MLl13a1JvUvvyu8pme/OncnKcY8Uac+IvCmgvmVcSZmatDMuEw4/RfmNYvWBRA
+         YW0exttmC8UcO9q2n8zB6E2oKyCbtoyEN8huCA2hAHD2htUD8WMkCGZOM8+KwWiA4l4I
+         bcV4RKMElnsCgNy0P53rkgSlOENohYytR2B6X4lLASyJFBQ6JqwD70GP23g+wolJHXpl
+         sn+A==
+X-Gm-Message-State: APjAAAWDqoLFrDLLO81hhd/5N/cdXaL6Fqs7TvsLFMYErXYvJR7dne2Z
+        wTfy2cJZr6diJBrNv4Z2Hgs=
+X-Google-Smtp-Source: APXvYqxNxlP/WY14NSuqDMVHVvQZEWNgz/oPlh3HFqtK2YOKKCKnz4314RbUCguqjl5JrhkAUkvk6g==
+X-Received: by 2002:a05:6a00:43:: with SMTP id i3mr64202949pfk.113.1559041935394;
+        Tue, 28 May 2019 04:12:15 -0700 (PDT)
+Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
+        by smtp.gmail.com with ESMTPSA id f16sm6699086pja.18.2019.05.28.04.12.11
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 28 May 2019 04:12:14 -0700 (PDT)
+Date:   Tue, 28 May 2019 20:12:08 +0900
+From:   Minchan Kim <minchan@kernel.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Daniel Colascione <dancol@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: [RFC 7/7] mm: madvise support MADV_ANONYMOUS_FILTER and
+ MADV_FILE_FILTER
+Message-ID: <20190528111208.GA30365@google.com>
+References: <20190527075811.GC6879@google.com>
+ <20190527124411.GC1658@dhcp22.suse.cz>
+ <20190528032632.GF6879@google.com>
+ <20190528062947.GL1658@dhcp22.suse.cz>
+ <20190528081351.GA159710@google.com>
+ <CAKOZuesnS6kBFX-PKJ3gvpkv8i-ysDOT2HE2Z12=vnnHQv0FDA@mail.gmail.com>
+ <20190528084927.GB159710@google.com>
+ <20190528090821.GU1658@dhcp22.suse.cz>
+ <20190528103256.GA9199@google.com>
+ <20190528104117.GW1658@dhcp22.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20190510194229.20628-1-aford173@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190528104117.GW1658@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 10/05/2019 22:42, Adam Ford wrote:
-> Currently the source code is compiled using hard-coded values
-> from CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK.  This patch allows this
-> clock divider value to be moved to the device tree and be changed
-> without having to recompile the kernel.
+On Tue, May 28, 2019 at 12:41:17PM +0200, Michal Hocko wrote:
+> On Tue 28-05-19 19:32:56, Minchan Kim wrote:
+> > On Tue, May 28, 2019 at 11:08:21AM +0200, Michal Hocko wrote:
+> > > On Tue 28-05-19 17:49:27, Minchan Kim wrote:
+> > > > On Tue, May 28, 2019 at 01:31:13AM -0700, Daniel Colascione wrote:
+> > > > > On Tue, May 28, 2019 at 1:14 AM Minchan Kim <minchan@kernel.org> wrote:
+> > > > > > if we went with the per vma fd approach then you would get this
+> > > > > > > feature automatically because map_files would refer to file backed
+> > > > > > > mappings while map_anon could refer only to anonymous mappings.
+> > > > > >
+> > > > > > The reason to add such filter option is to avoid the parsing overhead
+> > > > > > so map_anon wouldn't be helpful.
+> > > > > 
+> > > > > Without chiming on whether the filter option is a good idea, I'd like
+> > > > > to suggest that providing an efficient binary interfaces for pulling
+> > > > > memory map information out of processes.  Some single-system-call
+> > > > > method for retrieving a binary snapshot of a process's address space
+> > > > > complete with attributes (selectable, like statx?) for each VMA would
+> > > > > reduce complexity and increase performance in a variety of areas,
+> > > > > e.g., Android memory map debugging commands.
+> > > > 
+> > > > I agree it's the best we can get *generally*.
+> > > > Michal, any opinion?
+> > > 
+> > > I am not really sure this is directly related. I think the primary
+> > > question that we have to sort out first is whether we want to have
+> > > the remote madvise call process or vma fd based. This is an important
+> > > distinction wrt. usability. I have only seen pid vs. pidfd discussions
+> > > so far unfortunately.
+> > 
+> > With current usecase, it's per-process API with distinguishable anon/file
+> > but thought it could be easily extended later for each address range
+> > operation as userspace getting smarter with more information.
 > 
-> Signed-off-by: Adam Ford <aford173@gmail.com>
+> Never design user API based on a single usecase, please. The "easily
+> extended" part is by far not clear to me TBH. As I've already mentioned
+> several times, the synchronization model has to be thought through
+> carefuly before a remote process address range operation can be
+> implemented.
 
-I understand why you want to do this, but I'm not sure it's a good idea. 
-It's really something the driver should figure out, and if we add it to 
-the DT, it effectively becomes an ABI.
+I agree with you that we shouldn't design API on single usecase but what
+you are concerning is actually not our usecase because we are resilient
+with the race since MADV_COLD|PAGEOUT is not destruptive.
+Actually, many hints are already racy in that the upcoming pattern would
+be different with the behavior you thought at the moment.
 
-That said... I'm not sure how good of a job the driver could ever do, as 
-it can't know the future scaling needs of the userspace at the time it 
-is configuring the clock. And so, I'm not nacking this patch, but I 
-don't feel very good about this patch...
-
-The setting also affects all outputs (exluding venc), which may not be 
-what the user wants. Then again, I think this setting is really only 
-needed on OMAP2 & 3, which have only a single output. But that's the 
-same with the current kconfig option, of course.
-
-So, the current CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK is an ugly hack, in my 
-opinion, and moving it to DT makes it a worse hack =). But I don't have 
-any good suggestions either.
-
-  Tomi
-
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+If you are still concerning of address range synchronization, how about
+moving such hints to per-process level like prctl?
+Does it make sense to you?
