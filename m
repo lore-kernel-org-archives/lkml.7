@@ -2,88 +2,146 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76FDDC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B54CC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FDFE2166E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:51:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23A10208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:52:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="MbCgM+uu"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JQnCETd2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbfE1Pvh (ORCPT
+        id S1726878AbfE1PwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 11:51:37 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38269 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbfE1Pvh (ORCPT
+        Tue, 28 May 2019 11:52:11 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:36279 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbfE1PwK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 11:51:37 -0400
-Received: by mail-pl1-f194.google.com with SMTP id f97so8521270plb.5
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 08:51:37 -0700 (PDT)
+        Tue, 28 May 2019 11:52:10 -0400
+Received: by mail-ua1-f66.google.com with SMTP id 94so8124873uam.3
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 08:52:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dsL/8BpLj54WzcwU9lA3tyWUUF9Wxnm/30yw4mZ1tyw=;
-        b=MbCgM+uuboSRTMuXJWeTUpgN2WFc5/X4Dc4fFWWLthvlCgFt+H/q0c7MBnqyRO7Z73
-         w7T0dnWfCYPRON17hleGt5B//BaJJ6P+/svHaSMANSgZFw4vDArgF7z9xMnQXaa6t1dO
-         04htcAMNkhBSLk8WJByTHg5qLbgRJIRtYzPiCo4TYXjLU44z5ybaQ8J6GQu4WgKUV3d2
-         jshy7wZUxxJDCiA37j8Ddy/fCvVbsApXG4DSLEjIEyQ85zf041ZF18M69u9hcckGBRkm
-         1ryDB+ODoSp4BBE1iTWsrO4LN+YTnvwGe8/vzwMvAwNjIL6/Zh9sRGlzcvWo0U8K+hf4
-         oghw==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wS8hoqDHHdUU+aVRiUjUMRbeoVex4X+b9To5bYeyjZ8=;
+        b=JQnCETd2IGwTVEqh1W9deTB9fYhcQJX6SMUGhSDGjkZYZLhB0pKmx6lNWyqBBg4T3k
+         YnYqFvYU1x9cmheUMM9BwRitTXwwaV9CqogdqQxH/UUbtvQx/7yZoICE1RcfqiQFYjjc
+         SM3QyVkgaOPA7sDG30y2oiu2Ruha/g0sxwzKs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dsL/8BpLj54WzcwU9lA3tyWUUF9Wxnm/30yw4mZ1tyw=;
-        b=hHK29vJ28WaAfbw2+q5B1Idutu/4TIYt+4gm/ZSLTHIaQUDadX6/vKSCRFqRZzBwku
-         Xvr6HTLGhconrKG4HYQ2YN34Nq2GJSbXnqcD/U8W0WCfjjICt/10kSJhxxSMb3nSBqwF
-         7e5eWsfsc467Cv5KzD19+JPJydU8I1WsnKzZ1FcPZ5jTb3fwppCfQ+dWJ04PGcX4sy/1
-         xGLwyCVDWa0x1acPtugTiZydkR5AwJN80pK474pheAUPy+mvl6N9mM14vcW0t8mzB3Dj
-         +1wTBVwfavODsgFSa3Lp+DwLicPMeSIcbZHC25l9NTV7onNWw5QgpJA0KqWFvDEnIit8
-         NTzA==
-X-Gm-Message-State: APjAAAX3B1W182ONewSQwdM4WvhcuBp4n6Zr40WmPPEhnyuwPP8UO7GP
-        ZR/lfvkDvWTLeoKZ657+Hx11Yw==
-X-Google-Smtp-Source: APXvYqyCPuhVHIxRFHyQfClQ2dTMU+08Qh2WIkGk1uZKDPtC7EX9dh0rLthtc16TUF6CW08MeVEZeQ==
-X-Received: by 2002:a17:902:b615:: with SMTP id b21mr72986281pls.12.1559058696744;
-        Tue, 28 May 2019 08:51:36 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::1234])
-        by smtp.gmail.com with ESMTPSA id k2sm2903202pjl.23.2019.05.28.08.51.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 May 2019 08:51:35 -0700 (PDT)
-Date:   Tue, 28 May 2019 11:51:34 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc:     akpm@linux-foundation.org, daniel.m.jordan@oracle.com,
-        mhocko@suse.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH REBASED 1/4] mm: Move recent_rotated pages calculation to
- shrink_inactive_list()
-Message-ID: <20190528155134.GA14663@cmpxchg.org>
-References: <155290113594.31489.16711525148390601318.stgit@localhost.localdomain>
- <155290127956.31489.3393586616054413298.stgit@localhost.localdomain>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wS8hoqDHHdUU+aVRiUjUMRbeoVex4X+b9To5bYeyjZ8=;
+        b=ZgUJLc4jaZlWdp1Orj+orjQzEp0WAaSsEP5gs7/98BtaElgvcL1Fv4Z+nVZUMGCC/Z
+         Cx3FdAJz1+EvGW+scGzzt5sA43rxZIfLr4EqMfjfBslLE08dmwhUr01prbMoOCrhER7w
+         OyznPWdp2/4Ppq6h6NIF2uNCoY35XcFStz8+KmFtfkhKghu6wxyttsij/VRbfUjxNk5Y
+         8Da94cXsDtEmRkx4FAN62fUOySiDIfCyuS15QkIFxiWANw0H/VrbK2RFX2YKFIEBcntb
+         2QoYXQhdYKoDmecopMGouUCbYITiIC8VMSf95qmdddqnrnvRu6QWlJZTGM/3wifQwooI
+         JecA==
+X-Gm-Message-State: APjAAAWbWdJUe3qYCwpuCh69kQJpflZRHdI6l3HM2O7mqMcuUdf9PlIG
+        +yTDDM5awk11qae3Bw8xF2xGWoUNyxc=
+X-Google-Smtp-Source: APXvYqwK6vbr07wUO4ZFmPeLWsyKpBIvCEdA4m5RSLJ1LNAyEYtxpFMdhggZrPnpxtFDF8S7z+R0gw==
+X-Received: by 2002:a9f:37c8:: with SMTP id q66mr836643uaq.119.1559058729894;
+        Tue, 28 May 2019 08:52:09 -0700 (PDT)
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com. [209.85.217.52])
+        by smtp.gmail.com with ESMTPSA id s78sm6513302vke.1.2019.05.28.08.52.05
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 May 2019 08:52:08 -0700 (PDT)
+Received: by mail-vs1-f52.google.com with SMTP id c24so464297vsp.7
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 08:52:05 -0700 (PDT)
+X-Received: by 2002:a67:ebd6:: with SMTP id y22mr57926194vso.87.1559058725303;
+ Tue, 28 May 2019 08:52:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <155290127956.31489.3393586616054413298.stgit@localhost.localdomain>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190517225420.176893-2-dianders@chromium.org> <20190528121833.7D3A460A00@smtp.codeaurora.org>
+In-Reply-To: <20190528121833.7D3A460A00@smtp.codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 28 May 2019 08:51:53 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VtxdEeFQsdF=U7-_7R+TXfVmA2_JMB_-WYidGHTLDgLw@mail.gmail.com>
+Message-ID: <CAD=FV=VtxdEeFQsdF=U7-_7R+TXfVmA2_JMB_-WYidGHTLDgLw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] brcmfmac: re-enable command decode in sdio_aos for
+ BRCM 4354
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>
+Cc:     Madhan Mohan R <MadhanMohan.R@cypress.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Brian Norris <briannorris@chromium.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        brcm80211-dev-list.pdl@broadcom.com,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Naveen Gupta <naveen.gupta@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        brcm80211-dev-list@cypress.com, Double Lo <double.lo@cypress.com>,
+        Franky Lin <franky.lin@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 12:27:59PM +0300, Kirill Tkhai wrote:
-> @@ -1945,6 +1942,8 @@ shrink_inactive_list(unsigned long nr_to_scan, struct lruvec *lruvec,
->  		count_memcg_events(lruvec_memcg(lruvec), PGSTEAL_DIRECT,
->  				   nr_reclaimed);
->  	}
-> +	reclaim_stat->recent_rotated[0] = stat.nr_activate[0];
-> +	reclaim_stat->recent_rotated[1] = stat.nr_activate[1];
+Hi,
 
-Surely this should be +=, right?
+On Tue, May 28, 2019 at 5:18 AM Kalle Valo <kvalo@codeaurora.org> wrote:
+>
+> Douglas Anderson <dianders@chromium.org> wrote:
+>
+> > In commit 29f6589140a1 ("brcmfmac: disable command decode in
+> > sdio_aos") we disabled something called "command decode in sdio_aos"
+> > for a whole bunch of Broadcom SDIO WiFi parts.
+> >
+> > After that patch landed I find that my kernel log on
+> > rk3288-veyron-minnie and rk3288-veyron-speedy is filled with:
+> >   brcmfmac: brcmf_sdio_bus_sleep: error while changing bus sleep state -110
+> >
+> > This seems to happen every time the Broadcom WiFi transitions out of
+> > sleep mode.  Reverting the part of the commit that affects the WiFi on
+> > my boards fixes the problem for me, so that's what this patch does.
+> >
+> > Note that, in general, the justification in the original commit seemed
+> > a little weak.  It looked like someone was testing on a SD card
+> > controller that would sometimes die if there were CRC errors on the
+> > bus.  This used to happen back in early days of dw_mmc (the controller
+> > on my boards), but we fixed it.  Disabling a feature on all boards
+> > just because one SD card controller is broken seems bad.  ...so
+> > instead of just this patch possibly the right thing to do is to fully
+> > revert the original commit.
+> >
+> > Fixes: 29f6589140a1 ("brcmfmac: disable command decode in sdio_aos")
+> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+>
+> I don't see patch 2 in patchwork and I assume discussion continues.
 
-Otherwise we maintain essentially no history of page rotations and
-that wreaks havoc on the page cache vs. swapping reclaim balance.
+Apologies.  I made sure to CC you individually on all the patches but
+didn't think about the fact that you use patchwork to manage and so
+didn't ensure all patches made it to all lists (by default each patch
+gets recipients individually from get_maintainer).  I'll make sure to
+fix for patch set #2.  If you want to see all the patches, you can at
+least find them on lore.kernel.org linked from the cover:
+
+https://lore.kernel.org/patchwork/cover/1075373/
+
+
+> Please resend if/when I need to apply something.
+>
+> 2 patches set to Changes Requested.
+>
+> 10948785 [1/3] brcmfmac: re-enable command decode in sdio_aos for BRCM 4354
+
+As per Arend I'll change patch #1 to a full revert instead of a
+partial revert.  Arend: please yell if you want otherwise.
+
+-Doug
