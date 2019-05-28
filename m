@@ -2,143 +2,232 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E679C072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1279FC04E84
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E134F21473
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:18:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="24qdmumj"
+	by mail.kernel.org (Postfix) with ESMTP id D1AD521726
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:18:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559027930;
+	bh=IIH5HfnTU2KMOVS4WNZEyGOx/soINfPjYZL8tHgMgBU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yAechnm6w3rOADMxphFOuReboiL3ZL1SdL8sWqB+tztsVNKoIN4N8CnqXF+NU8rFG
+	 x0yz82BPLqMZo3KByitRhnT2oTLuDWTLOayGCMovHmHATDlkyu4/G0zIgVRxj/KON8
+	 N0UQdwiYauw8xk1A6KhApyn9lHY8WguaZ27HbInw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727532AbfE1HSi (ORCPT
+        id S1727578AbfE1HSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 03:18:38 -0400
-Received: from mail-eopbgr790072.outbound.protection.outlook.com ([40.107.79.72]:56224
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        Tue, 28 May 2019 03:18:50 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53052 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726203AbfE1HSh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 03:18:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector1-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3AB8b/qCSu2cMr7WoZ85wYjtkuzF3KKNeUprokIhRYw=;
- b=24qdmumjHolRET8Jz1Z4qfbTPgc/xmtmGldAolv2o3+11pKEIRdNvxVYVSiDLwlz88PErVoRSCKLxXyqPNC/VCoS7Tx7IZCUqShEK30m9vii9+YMVkZf97gJfUSEtO/DWQKv92vrsvfEBjbYger/26FMyX4n7GXpZqs5mIjvG34=
-Received: from BN8PR03CA0005.namprd03.prod.outlook.com (2603:10b6:408:94::18)
- by BY2PR03MB555.namprd03.prod.outlook.com (2a01:111:e400:2c37::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1922.20; Tue, 28 May
- 2019 07:18:33 +0000
-Received: from CY1NAM02FT026.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::205) by BN8PR03CA0005.outlook.office365.com
- (2603:10b6:408:94::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1922.16 via Frontend
- Transport; Tue, 28 May 2019 07:18:33 +0000
-Authentication-Results: spf=pass (sender IP is 137.71.25.55)
- smtp.mailfrom=analog.com; metafoo.de; dkim=none (message not signed)
- header.d=none;metafoo.de; dmarc=bestguesspass action=none
- header.from=analog.com;
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
-Received: from nwd2mta1.analog.com (137.71.25.55) by
- CY1NAM02FT026.mail.protection.outlook.com (10.152.75.157) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1922.16
- via Frontend Transport; Tue, 28 May 2019 07:18:31 +0000
-Received: from NWD2HUBCAS9.ad.analog.com (nwd2hubcas9.ad.analog.com [10.64.69.109])
-        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x4S7IU4o017954
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Tue, 28 May 2019 00:18:30 -0700
-Received: from NWD2MBX7.ad.analog.com ([fe80::190e:f9c1:9a22:9663]) by
- NWD2HUBCAS9.ad.analog.com ([fe80::44a2:871b:49ab:ea47%12]) with mapi id
- 14.03.0415.000; Tue, 28 May 2019 03:18:30 -0400
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
-CC:     "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "lars@metafoo.de" <lars@metafoo.de>
-Subject: Re: [PATCH 1/3][V3] lib: fix __sysfs_match_string() helper when n
- != -1
-Thread-Topic: [PATCH 1/3][V3] lib: fix __sysfs_match_string() helper when n
- != -1
-Thread-Index: AQHVBY/wzk7diA7bF0G14nWBti7v/6aAgwaA
-Date:   Tue, 28 May 2019 07:18:29 +0000
-Message-ID: <42488b7ffb951ecd43f9c889eec1664cf2f57a8b.camel@analog.com>
-References: <20190508111913.7276-1-alexandru.ardelean@analog.com>
-In-Reply-To: <20190508111913.7276-1-alexandru.ardelean@analog.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.50.1.244]
-x-adiroutedonprem: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7CDC7867EBCD204A89B22A6F63CBA720@analog.com>
-Content-Transfer-Encoding: base64
+        id S1726203AbfE1HSt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 03:18:49 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C2D67AE4D;
+        Tue, 28 May 2019 07:18:46 +0000 (UTC)
+Date:   Tue, 28 May 2019 09:18:45 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Chris Down <chris@chrisdown.name>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] mm, memcg: introduce memory.events.local
+Message-ID: <20190528071845.GN1658@dhcp22.suse.cz>
+References: <20190527174643.209172-1-shakeelb@google.com>
 MIME-Version: 1.0
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(136003)(346002)(396003)(39860400002)(2980300002)(54534003)(189003)(199004)(305945005)(86362001)(2906002)(446003)(47776003)(2616005)(476003)(7636002)(11346002)(356004)(336012)(106002)(478600001)(7736002)(8676002)(14454004)(6116002)(8936002)(118296001)(3846002)(436003)(426003)(70586007)(102836004)(70206006)(14444005)(7696005)(50466002)(76176011)(54906003)(246002)(2486003)(23676004)(229853002)(6246003)(110136005)(36756003)(316002)(4326008)(2501003)(486006)(126002)(2201001)(5660300002)(186003)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:BY2PR03MB555;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ab321dbf-34de-4440-9661-08d6e33cb0e6
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(4709054)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BY2PR03MB555;
-X-MS-TrafficTypeDiagnostic: BY2PR03MB555:
-X-Microsoft-Antispam-PRVS: <BY2PR03MB5553AA8A5799E3A067A74E4F91E0@BY2PR03MB555.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 00514A2FE6
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: CHnpVGzREMVkFh0+yngaq5SarEbnsHyg8m3PvYsSiGX6lS23VvZYxaLWAzN65oT2JaMHNkSmx6Pa97BnEHeepyp8xu4To85PzFvlxCLnAGiJKtd0FRQ//uq9fHald/TxDu1OO4Wnh8agxxN3ngag2KRIVxySnTQxJlGGTO6zZ9hC1axM+c+/p+/LJNhw4xmP82TjT8hy700vM3jphpkltyGXewQWio5mYtAzOrufPUpPzzHKiUY5Q/eLjHSEQqvu9arrUi5pgkUjuwgvCDbOy3hYbfxMCTSKz0lUuY3Q9kjI/Fx84kNBl1jv4i/HMKN1GHwGa9LjdDAytfqY0LyWfB9xlBwkoAxThz0+UdZwD/q1jlW0X1XSnAvhlWYS6KyxyDy7k+yPSDn7MPN+3ct4hKFbEwd4z6xGoLooG+TZ+Qk=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2019 07:18:31.9914
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ab321dbf-34de-4440-9661-08d6e33cb0e6
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY2PR03MB555
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190527174643.209172-1-shakeelb@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTA1LTA4IGF0IDE0OjE5ICswMzAwLCBBbGV4YW5kcnUgQXJkZWxlYW4gd3Jv
-dGU6DQo+IFRoZSBkb2N1bWVudGF0aW9uIHRoZSBgX19zeXNmc19tYXRjaF9zdHJpbmcoKWAgaGVs
-cGVyIG1lbnRpb25zIHRoYXQgYG5gDQo+ICh0aGUgc2l6ZSBvZiB0aGUgZ2l2ZW4gYXJyYXkpIHNo
-b3VsZCBiZToNCj4gICogQG46IG51bWJlciBvZiBzdHJpbmdzIGluIHRoZSBhcnJheSBvciAtMSBm
-b3IgTlVMTCB0ZXJtaW5hdGVkIGFycmF5cw0KPiANCj4gVGhlIGJlaGF2aW9yIG9mIHRoZSBmdW5j
-dGlvbiBpcyBkaWZmZXJlbnQsIGluIHRoZSBzZW5zZSB0aGF0IGl0IGV4aXRzIG9uDQo+IHRoZSBm
-aXJzdCBOVUxMIGVsZW1lbnQgaW4gdGhlIGFycmF5Lg0KPiANCj4gVGhpcyBwYXRjaCBjaGFuZ2Vz
-IHRoZSBiZWhhdmlvciwgdG8gZXhpdCB0aGUgbG9vcCB3aGVuIGEgTlVMTCBlbGVtZW50IGlzDQo+
-IGZvdW5kLCBhbmQgdGhlIHNpemUgb2YgdGhlIGFycmF5IGlzIHByb3ZpZGVkIGFzIC0xLg0KPiAN
-Cj4gQWxsIGN1cnJlbnQgdXNlcnMgb2YgX19zeXNmc19tYXRjaF9zdHJpbmcoKSAmIHN5c2ZzX21h
-dGNoX3N0cmluZygpIHByb3ZpZGUNCj4gY29udGlndW91cyBhcnJheXMgb2Ygc3RyaW5ncywgc28g
-dGhpcyBiZWhhdmlvciBjaGFuZ2UgZG9lc24ndCBpbmZsdWVuY2UNCj4gYW55dGhpbmcgKGF0IHRo
-aXMgcG9pbnQgaW4gdGltZSkuDQo+IA0KPiBUaGlzIGJlaGF2aW9yIGNoYW5nZSBhbGxvd3MgZm9y
-IGFuIGFycmF5IG9mIHN0cmluZ3MgdG8gaGF2ZSBOVUxMIGVsZW1lbnRzDQo+IHdpdGhpbiB0aGUg
-YXJyYXksIHdoaWNoIHdpbGwgYmUgaWdub3JlZC4gVGhpcyBpcyBwYXJ0aWN1bGFybHkgdXNlZnVs
-IHdoZW4NCj4gY3JlYXRpbmcgbWFwcGluZyBvZiBzdHJpbmdzIGFuZCBpbnRlZ2VycyAoYXMgYml0
-ZmllbGRzIG9yIG90aGVyIEhXDQo+IGRlc2NyaXB0aW9uKS4NCj4gDQoNCkhleSwNCg0KSSBkaWQg
-bm90IHNlZSBhbnkgcmVhY3Rpb24gb24gdGhpcy4NCkRvIEkgbmVlZCB0byBkbyBzb21ldGhpbmcg
-b24gdGhpcyAocmUtc3BpbiwgYWRkIG90aGVyIHBlb3BsZSwgcmUtc2VuZCBhcyBzdGFuZGFsb25l
-IHBhdGNoLCBldGMpID8NCg0KVGhhbmtzDQpBbGV4DQoNCg0KPiBTaWduZWQtb2ZmLWJ5OiBBbGV4
-YW5kcnUgQXJkZWxlYW4gPGFsZXhhbmRydS5hcmRlbGVhbkBhbmFsb2cuY29tPg0KPiAtLS0NCj4g
-DQo+IENoYW5nZWxvZyB2MiAtPiB2MzoNCj4gKiBmaXggX19zeXNmc19tYXRjaF9zdHJpbmcoKSB2
-cyBhZGRpbmcgYSBuZXcNCj4gICBfX3N5c2ZzX21hdGNoX3N0cmluZ193aXRoX2dhcHMoKSBoZWxw
-ZXINCj4gDQo+ICBsaWIvc3RyaW5nLmMgfCA1ICsrKystDQo+ICAxIGZpbGUgY2hhbmdlZCwgNCBp
-bnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvbGliL3N0cmlu
-Zy5jIGIvbGliL3N0cmluZy5jDQo+IGluZGV4IDNhYjg2MWMxYTg1Ny4uNWJlYTNmOTg0NzhhIDEw
-MDY0NA0KPiAtLS0gYS9saWIvc3RyaW5nLmMNCj4gKysrIGIvbGliL3N0cmluZy5jDQo+IEBAIC02
-NzQsOCArNjc0LDExIEBAIGludCBfX3N5c2ZzX21hdGNoX3N0cmluZyhjb25zdCBjaGFyICogY29u
-c3QgKmFycmF5LCBzaXplX3QgbiwgY29uc3QgY2hhciAqc3RyKQ0KPiAgDQo+ICAJZm9yIChpbmRl
-eCA9IDA7IGluZGV4IDwgbjsgaW5kZXgrKykgew0KPiAgCQlpdGVtID0gYXJyYXlbaW5kZXhdOw0K
-PiAtCQlpZiAoIWl0ZW0pDQo+ICsJCWlmICghaXRlbSkgew0KPiArCQkJaWYgKG4gIT0gKHNpemVf
-dCktMSkNCj4gKwkJCQljb250aW51ZTsNCj4gIAkJCWJyZWFrOw0KPiArCQl9DQo+ICAJCWlmIChz
-eXNmc19zdHJlcShpdGVtLCBzdHIpKQ0KPiAgCQkJcmV0dXJuIGluZGV4Ow0KPiAgCX0NCg==
+On Mon 27-05-19 10:46:43, Shakeel Butt wrote:
+> The memory controller in cgroup v2 exposes memory.events file for each
+> memcg which shows the number of times events like low, high, max, oom
+> and oom_kill have happened for the whole tree rooted at that memcg.
+> Users can also poll or register notification to monitor the changes in
+> that file. Any event at any level of the tree rooted at memcg will
+> notify all the listeners along the path till root_mem_cgroup. There are
+> existing users which depend on this behavior.
+> 
+> However there are users which are only interested in the events
+> happening at a specific level of the memcg tree and not in the events in
+> the underlying tree rooted at that memcg. One such use-case is a
+> centralized resource monitor which can dynamically adjust the limits of
+> the jobs running on a system. The jobs can create their sub-hierarchy
+> for their own sub-tasks. The centralized monitor is only interested in
+> the events at the top level memcgs of the jobs as it can then act and
+> adjust the limits of the jobs. Using the current memory.events for such
+> centralized monitor is very inconvenient. The monitor will keep
+> receiving events which it is not interested and to find if the received
+> event is interesting, it has to read memory.event files of the next
+> level and compare it with the top level one. So, let's introduce
+> memory.events.local to the memcg which shows and notify for the events
+> at the memcg level.
+> 
+> Now, does memory.stat and memory.pressure need their local versions.
+> IMHO no due to the no internal process contraint of the cgroup v2. The
+> memory.stat file of the top level memcg of a job shows the stats and
+> vmevents of the whole tree. The local stats or vmevents of the top level
+> memcg will only change if there is a process running in that memcg but
+> v2 does not allow that. Similarly for memory.pressure there will not be
+> any process in the internal nodes and thus no chance of local pressure.
+> 
+> Signed-off-by: Shakeel Butt <shakeelb@google.com>
+> Reviewed-by: Roman Gushchin <guro@fb.com>
+> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+
+As there seems to be a larger agreement that the default behavior of
+memory.events is going to be hierarchical then this addition makes a lot
+of sense.
+
+Acked-by: Michal Hocko <mhocko@suse.com>
+
+> ---
+> Changelog since v2:
+> - Added documentation.
+> 
+> Changelog since v1:
+> - refactor memory_events_show to share between events and events.local
+> 
+>  Documentation/admin-guide/cgroup-v2.rst | 10 ++++++++
+>  include/linux/memcontrol.h              |  7 ++++-
+>  mm/memcontrol.c                         | 34 +++++++++++++++++--------
+>  3 files changed, 40 insertions(+), 11 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+> index 19c4e78666ff..0e961fc90cd9 100644
+> --- a/Documentation/admin-guide/cgroup-v2.rst
+> +++ b/Documentation/admin-guide/cgroup-v2.rst
+> @@ -1119,6 +1119,11 @@ PAGE_SIZE multiple when read back.
+>  	otherwise, a value change in this file generates a file
+>  	modified event.
+>  
+> +	Note that all fields in this file are hierarchical and the
+> +	file modified event can be generated due to an event down the
+> +	hierarchy. For for the local events at the cgroup level see
+> +	memory.events.local.
+> +
+>  	  low
+>  		The number of times the cgroup is reclaimed due to
+>  		high memory pressure even though its usage is under
+> @@ -1158,6 +1163,11 @@ PAGE_SIZE multiple when read back.
+>  		The number of processes belonging to this cgroup
+>  		killed by any kind of OOM killer.
+>  
+> +  memory.events.local
+> +	Similar to memory.events but the fields in the file are local
+> +	to the cgroup i.e. not hierarchical. The file modified event
+> +	generated on this file reflects only the local events.
+> +
+>    memory.stat
+>  	A read-only flat-keyed file which exists on non-root cgroups.
+>  
+> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+> index 36bdfe8e5965..de77405eec46 100644
+> --- a/include/linux/memcontrol.h
+> +++ b/include/linux/memcontrol.h
+> @@ -239,8 +239,9 @@ struct mem_cgroup {
+>  	/* OOM-Killer disable */
+>  	int		oom_kill_disable;
+>  
+> -	/* memory.events */
+> +	/* memory.events and memory.events.local */
+>  	struct cgroup_file events_file;
+> +	struct cgroup_file events_local_file;
+>  
+>  	/* handle for "memory.swap.events" */
+>  	struct cgroup_file swap_events_file;
+> @@ -286,6 +287,7 @@ struct mem_cgroup {
+>  	atomic_long_t		vmevents_local[NR_VM_EVENT_ITEMS];
+>  
+>  	atomic_long_t		memory_events[MEMCG_NR_MEMORY_EVENTS];
+> +	atomic_long_t		memory_events_local[MEMCG_NR_MEMORY_EVENTS];
+>  
+>  	unsigned long		socket_pressure;
+>  
+> @@ -761,6 +763,9 @@ static inline void count_memcg_event_mm(struct mm_struct *mm,
+>  static inline void memcg_memory_event(struct mem_cgroup *memcg,
+>  				      enum memcg_memory_event event)
+>  {
+> +	atomic_long_inc(&memcg->memory_events_local[event]);
+> +	cgroup_file_notify(&memcg->events_local_file);
+> +
+>  	do {
+>  		atomic_long_inc(&memcg->memory_events[event]);
+>  		cgroup_file_notify(&memcg->events_file);
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 2713b45ec3f0..a57dfcc4c4a4 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -5630,21 +5630,29 @@ static ssize_t memory_max_write(struct kernfs_open_file *of,
+>  	return nbytes;
+>  }
+>  
+> +static void __memory_events_show(struct seq_file *m, atomic_long_t *events)
+> +{
+> +	seq_printf(m, "low %lu\n", atomic_long_read(&events[MEMCG_LOW]));
+> +	seq_printf(m, "high %lu\n", atomic_long_read(&events[MEMCG_HIGH]));
+> +	seq_printf(m, "max %lu\n", atomic_long_read(&events[MEMCG_MAX]));
+> +	seq_printf(m, "oom %lu\n", atomic_long_read(&events[MEMCG_OOM]));
+> +	seq_printf(m, "oom_kill %lu\n",
+> +		   atomic_long_read(&events[MEMCG_OOM_KILL]));
+> +}
+> +
+>  static int memory_events_show(struct seq_file *m, void *v)
+>  {
+>  	struct mem_cgroup *memcg = mem_cgroup_from_seq(m);
+>  
+> -	seq_printf(m, "low %lu\n",
+> -		   atomic_long_read(&memcg->memory_events[MEMCG_LOW]));
+> -	seq_printf(m, "high %lu\n",
+> -		   atomic_long_read(&memcg->memory_events[MEMCG_HIGH]));
+> -	seq_printf(m, "max %lu\n",
+> -		   atomic_long_read(&memcg->memory_events[MEMCG_MAX]));
+> -	seq_printf(m, "oom %lu\n",
+> -		   atomic_long_read(&memcg->memory_events[MEMCG_OOM]));
+> -	seq_printf(m, "oom_kill %lu\n",
+> -		   atomic_long_read(&memcg->memory_events[MEMCG_OOM_KILL]));
+> +	__memory_events_show(m, memcg->memory_events);
+> +	return 0;
+> +}
+> +
+> +static int memory_events_local_show(struct seq_file *m, void *v)
+> +{
+> +	struct mem_cgroup *memcg = mem_cgroup_from_seq(m);
+>  
+> +	__memory_events_show(m, memcg->memory_events_local);
+>  	return 0;
+>  }
+>  
+> @@ -5806,6 +5814,12 @@ static struct cftype memory_files[] = {
+>  		.file_offset = offsetof(struct mem_cgroup, events_file),
+>  		.seq_show = memory_events_show,
+>  	},
+> +	{
+> +		.name = "events.local",
+> +		.flags = CFTYPE_NOT_ON_ROOT,
+> +		.file_offset = offsetof(struct mem_cgroup, events_local_file),
+> +		.seq_show = memory_events_local_show,
+> +	},
+>  	{
+>  		.name = "stat",
+>  		.flags = CFTYPE_NOT_ON_ROOT,
+> -- 
+> 2.22.0.rc1.257.g3120a18244-goog
+
+-- 
+Michal Hocko
+SUSE Labs
