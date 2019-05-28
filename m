@@ -2,151 +2,89 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78748C04AB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 02:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B684FC04AB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 02:50:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 572E920675
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 02:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 963AC20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 02:50:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727763AbfE1Ctl (ORCPT
+        id S1727829AbfE1CuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 22:49:41 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:56464 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727525AbfE1Ctl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 22:49:41 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 5BBB52D4EEDAEF075B80;
-        Tue, 28 May 2019 10:49:39 +0800 (CST)
-Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
- (10.3.19.212) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 28 May
- 2019 10:49:33 +0800
-Subject: Re: [PATCH 1/2] staging: erofs: support statx
-To:     Chao Yu <yuchao0@huawei.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <devel@driverdev.osuosl.org>, LKML <linux-kernel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>, Chao Yu <chao@kernel.org>,
-        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>
-References: <20190528023147.94117-1-gaoxiang25@huawei.com>
- <2f6e75f8-ff82-7472-54ff-8c0648e8f075@huawei.com>
-From:   Gao Xiang <gaoxiang25@huawei.com>
-Message-ID: <86c2307e-f09b-12f8-3ed4-71e8ed6f2299@huawei.com>
-Date:   Tue, 28 May 2019 10:49:14 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        Mon, 27 May 2019 22:50:06 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:54902 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727525AbfE1CuG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 22:50:06 -0400
+Received: by mail-it1-f196.google.com with SMTP id h20so1882155itk.4
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 19:50:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=h8xDYjwWtMzw7kKK4/8CQKmcJnsMDJUuPxql44H0bgI=;
+        b=AMXZYOPd3K0uo+rn8fd/kPI/GoQtv3GxiX5Cy3es2o5H/C3XCrAhooA6oXPMpzAf2L
+         O3mnoesEE0Sh02OEwB9I3wXb3SERssI4VQpS9XFQDlHMrnBrVSZvgHRxy9AFc9WmVwq4
+         mGQTXfpRIutPOxNX+NyM2ayMhrKzLOcauG5MBVIDDyXRF2kA7PF/p1zBBY55gE/KefYX
+         hbBazLXIbkhqmGwD5fBlQZ/0tW/AAR6DNogUuGVKJZke5+8o6Sm9+2k+B639qxxrfuVC
+         r4E8XK3k2JRYUFAUB6ZqU/kKXHdHnRZWeODEWc5j2PCLpTzKLJQDRfRkIGshvFAr3WHD
+         vzwQ==
+X-Gm-Message-State: APjAAAWb7ekqC5tBJs0W2wqcJvikrnb5B5pkugigiD1J9OGVP3aSjiLE
+        k+9Ts2ghGbxO/TNlkQrHqXNuj5kQ5WMR2+n0+Jb1KA==
+X-Google-Smtp-Source: APXvYqzcrvMD1G/2IfSPGE8fRNddmu61fH78L5xrp4cLcuFruI7q7nk+hb/HK8TTn9wN2yqynY6wWowySagIjUB7tvM=
+X-Received: by 2002:a24:6cd5:: with SMTP id w204mr1486520itb.12.1559011805500;
+ Mon, 27 May 2019 19:50:05 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <2f6e75f8-ff82-7472-54ff-8c0648e8f075@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.151.23.176]
-X-CFilter-Loop: Reflected
+References: <20190429135536.GC2324@zn.tnic> <20190513014248.GA16774@MiWiFi-R3L-srv>
+ <20190513070725.GA20105@zn.tnic> <20190513073254.GB16774@MiWiFi-R3L-srv>
+ <20190513075006.GB20105@zn.tnic> <20190513080210.GC16774@MiWiFi-R3L-srv>
+ <20190515051717.GA13703@jeru.linux.bs1.fc.nec.co.jp> <20190515065843.GA24212@zn.tnic>
+ <20190515070942.GA17154@jeru.linux.bs1.fc.nec.co.jp> <CACPcB9cyiPc8JYmt1QhYNipSsJ5z3wTOJ90LS5LTx4YqwaG8rA@mail.gmail.com>
+ <20190521180855.GA7793@cz.tnic>
+In-Reply-To: <20190521180855.GA7793@cz.tnic>
+From:   Kairui Song <kasong@redhat.com>
+Date:   Tue, 28 May 2019 10:49:54 +0800
+Message-ID: <CACPcB9fg5RGXcBbESNnn9rV0DSoh4jYkVWZrdcRWay5KKAjLww@mail.gmail.com>
+Subject: Re: [PATCH v6 1/2] x86/kexec: Build identity mapping for EFI systab
+ and ACPI tables
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Junichi Nomura <j-nomura@ce.jp.nec.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Baoquan He <bhe@redhat.com>,
+        "dyoung@redhat.com" <dyoung@redhat.com>,
+        "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chao,
+On Wed, May 22, 2019 at 2:09 AM Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Tue, May 21, 2019 at 05:02:59PM +0800, Kairui Song wrote:
+> > Hi Boris, would you prefer to just fold Junichi update patch into the
+> > previous one or I should send an updated patch?
+>
+> Please send a patch ontop after Ingo queues your old one, which should
+> happen soon. This way it would also document the fact that there are
+> machines with NVS regions only.
+>
+> Thx.
+>
 
-On 2019/5/28 10:44, Chao Yu wrote:
-> On 2019/5/28 10:31, Gao Xiang wrote:
->> statx() has already been supported in commit a528d35e8bfc
->> ("statx: Add a system call to make enhanced file info available"),
->> user programs can get more useful attributes.
->>
->> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
->> ---
->>  drivers/staging/erofs/inode.c    | 18 ++++++++++++++++++
->>  drivers/staging/erofs/internal.h |  2 ++
->>  drivers/staging/erofs/namei.c    |  1 +
->>  3 files changed, 21 insertions(+)
->>
->> diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/erofs/inode.c
->> index c7d3b815a798..8da144943ed6 100644
->> --- a/drivers/staging/erofs/inode.c
->> +++ b/drivers/staging/erofs/inode.c
->> @@ -285,7 +285,23 @@ struct inode *erofs_iget(struct super_block *sb,
->>  	return inode;
->>  }
->>  
->> +int erofs_getattr(const struct path *path, struct kstat *stat,
->> +		  u32 request_mask, unsigned int query_flags)
->> +{
->> +	struct inode *const inode = d_inode(path->dentry);
->> +	struct erofs_vnode *const vi = EROFS_V(inode);
->> +
->> +	if (vi->data_mapping_mode == EROFS_INODE_LAYOUT_COMPRESSION)
->> +		stat->attributes |= STATX_ATTR_COMPRESSED;
->> +
->> +	stat->attributes |= STATX_ATTR_IMMUTABLE;
-> 
-> Xiang,
-> 
-> Should update stat->attributes_mask as well to indicate all erofs supported
-> attributes bits.
+Hi, by now, I still didn't see any tip branch pick up this patch yet,
+any update?
 
-opps, my fault... I just verified these patches stability.
-Will do in the next version.
-
-Thanks,
-Gao Xiang
-
-> 
-> Thanks,
-> 
->> +
->> +	generic_fillattr(inode, stat);
->> +	return 0;
->> +}
->> +
->>  const struct inode_operations erofs_generic_iops = {
->> +	.getattr = erofs_getattr,
->>  #ifdef CONFIG_EROFS_FS_XATTR
->>  	.listxattr = erofs_listxattr,
->>  #endif
->> @@ -294,6 +310,7 @@ const struct inode_operations erofs_generic_iops = {
->>  
->>  const struct inode_operations erofs_symlink_iops = {
->>  	.get_link = page_get_link,
->> +	.getattr = erofs_getattr,
->>  #ifdef CONFIG_EROFS_FS_XATTR
->>  	.listxattr = erofs_listxattr,
->>  #endif
->> @@ -302,6 +319,7 @@ const struct inode_operations erofs_symlink_iops = {
->>  
->>  const struct inode_operations erofs_fast_symlink_iops = {
->>  	.get_link = simple_get_link,
->> +	.getattr = erofs_getattr,
->>  #ifdef CONFIG_EROFS_FS_XATTR
->>  	.listxattr = erofs_listxattr,
->>  #endif
->> diff --git a/drivers/staging/erofs/internal.h b/drivers/staging/erofs/internal.h
->> index c47778b3fabd..911333cdeef4 100644
->> --- a/drivers/staging/erofs/internal.h
->> +++ b/drivers/staging/erofs/internal.h
->> @@ -556,6 +556,8 @@ static inline bool is_inode_fast_symlink(struct inode *inode)
->>  }
->>  
->>  struct inode *erofs_iget(struct super_block *sb, erofs_nid_t nid, bool dir);
->> +int erofs_getattr(const struct path *path, struct kstat *stat,
->> +		  u32 request_mask, unsigned int query_flags);
->>  
->>  /* namei.c */
->>  extern const struct inode_operations erofs_dir_iops;
->> diff --git a/drivers/staging/erofs/namei.c b/drivers/staging/erofs/namei.c
->> index d8d9dc9dab43..fd3ae78d0ba5 100644
->> --- a/drivers/staging/erofs/namei.c
->> +++ b/drivers/staging/erofs/namei.c
->> @@ -247,6 +247,7 @@ static struct dentry *erofs_lookup(struct inode *dir,
->>  
->>  const struct inode_operations erofs_dir_iops = {
->>  	.lookup = erofs_lookup,
->> +	.getattr = erofs_getattr,
->>  #ifdef CONFIG_EROFS_FS_XATTR
->>  	.listxattr = erofs_listxattr,
->>  #endif
->>
+--
+Best Regards,
+Kairui Song
