@@ -2,134 +2,138 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD3EC04E84
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE38C072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 597D02075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:07:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559056051;
-	bh=SjDfk4b6ZIyq5mO98uC2sB8lDk4Lqdbl+ieY+/ZnpAs=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=GF/rxG9MtgB3WJ9WmW/yRSxwjc95uT1hhUUZLlDqrsr8MOGYuhwuQcPLs2/I7UBWR
-	 bthMm5dTQoWV7lw3DUJ33neOOcmkQmMrl7HwZdnyCGEqCE2ccvyzXm1doBWl0pmGDo
-	 MAwgMyGOX1oeqj2vmhvtMvaY/5QgNZZmcnOeuli0=
+	by mail.kernel.org (Postfix) with ESMTP id 460F5206C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:08:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R1oqg2H/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727345AbfE1PHa (ORCPT
+        id S1727350AbfE1PIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 11:07:30 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:43550 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727296AbfE1PH3 (ORCPT
+        Tue, 28 May 2019 11:08:24 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:45976 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726557AbfE1PIY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 11:07:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=LoZEWGcak24f+2R8BSnDVZaJoSe5u7tIU54xxb61pjk=; b=lVMVifvy8qRU
-        HQ36W9DZRRRfMc6MRaTrRKwZKo++pYkdrUF7BX8C01jv7YIVGLalDRUwvpG7qnRNv9AuDDbRLbeHQ
-        iTUyVEbHQAQPXM48oOmiyLp8bBI/NYZJAck+xkpSofr45TfxAVjpLQS5SWTn3EUo9i1aWjmus4eVR
-        5UTxM=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hVdhE-0002qV-3i; Tue, 28 May 2019 15:07:24 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 46DD7440046; Tue, 28 May 2019 16:07:23 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-sh@vger.kernel.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>
-Subject: Applied "spi: sh-msiof: Reduce delays in sh_msiof_modify_ctr_wait()" to the spi tree
-In-Reply-To: <20190527121935.5370-1-geert+renesas@glider.be>
-X-Patchwork-Hint: ignore
-Message-Id: <20190528150723.46DD7440046@finisterre.sirena.org.uk>
-Date:   Tue, 28 May 2019 16:07:23 +0100 (BST)
+        Tue, 28 May 2019 11:08:24 -0400
+Received: by mail-pl1-f196.google.com with SMTP id a5so8451342pls.12;
+        Tue, 28 May 2019 08:08:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cVQZn5lz3Q0vs7h+4/FnhMNYBgv4Mcb2jY7H9Fnu5BY=;
+        b=R1oqg2H/IFKhwqITMjbZ0xsM7Lrc1zRBej67W3Bd5+aiVUrFvQrxurlpzWPfYjWMlw
+         Ua/8h4tCSu/n5qHHq0TOHtjLxuR5O8eSE6FvuMuExF+YUsxhn27I+AD9Fq8UZzC08IuU
+         0euDcGFe/js5tpey1yoDCZOD2ds0ocvC4N+d/Gxes4b60MsQxhflY1YYRaIWMrawUxwo
+         5PoZNQmsoelYbJ1q7gzyqUDMtjkiGXsGMAvZ27cS6qQkfkQQkpMGyUFVfpb6yKBuOell
+         v0IdwBpO7GeEdTjNuib1wKNUX4mu+b7Eb6ZhRx5sqS77LlgjfGhqtzrmfNcnx9yCIh+l
+         wzFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cVQZn5lz3Q0vs7h+4/FnhMNYBgv4Mcb2jY7H9Fnu5BY=;
+        b=pphjOTa3gPJovu7oU2/F/JqsYkWo7o0zygWgKW/Sn8vIwfAIYZh3wUexi5urw8nZ9Z
+         kCpCatrrNbJGrXVRySw/DEVjQq/vyx1s1oBKs9Zy1DpptlAH9PkDzhJUiM6ykUmavLss
+         3os46AV8XjvnyH2aI+AlhaOoxwLvXgDhHhLqIg53Cj+ZjbDolsDFs5G4F3t/ye7vudo+
+         sAA0tYFPVnRrb4pKpOiyPRjpwG7l2lXCrbnixf0QhYRViQEG81Jw6AAu7EpWqo7rGCIO
+         HdGotIjyW3x9Q48pJj7JqGTf5NXvjvd5rI12xbkYCC1f7snSDVbYr3mQdMQqd7574wlw
+         WqmQ==
+X-Gm-Message-State: APjAAAU44mySOcAsk3WoE6Wcw9ACCn0HXR8AQSLi3y5qRnZqB4H7IYy3
+        z+uysSx73QMNfay1HbuvZTTJSsrL
+X-Google-Smtp-Source: APXvYqxosQULHSJqsIKUCgxAVAdKBtywjSteeCZXeX7U+E0iv/a+Ioa6cRUqtq3rcsvRJPXsz39H5A==
+X-Received: by 2002:a17:902:1347:: with SMTP id r7mr91812677ple.45.1559056103539;
+        Tue, 28 May 2019 08:08:23 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id e66sm17724593pfe.50.2019.05.28.08.08.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 May 2019 08:08:22 -0700 (PDT)
+Date:   Tue, 28 May 2019 08:08:21 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Eduardo Valentin <eduval@amazon.com>
+Cc:     Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] hwmon: core: add thermal sensors only if
+ dev->of_node is present
+Message-ID: <20190528150821.GB5516@roeck-us.net>
+References: <20190517231337.27859-1-eduval@amazon.com>
+ <20190517231337.27859-2-eduval@amazon.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190517231337.27859-2-eduval@amazon.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+Hi Eduardo,
 
-   spi: sh-msiof: Reduce delays in sh_msiof_modify_ctr_wait()
-
-has been applied to the spi tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.3
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+On Fri, May 17, 2019 at 04:13:36PM -0700, Eduardo Valentin wrote:
+> Drivers may register to hwmon and request for also registering
+> with the thermal subsystem (HWMON_C_REGISTER_TZ). However,
+> some of these driver, e.g. marvell phy, may be probed from
+> Device Tree or being dynamically allocated, and in the later
+> case, it will not have a dev->of_node entry.
+> 
+> Registering with hwmon without the dev->of_node may result in
+> different outcomes depending on the device tree, which may
+> be a bit misleading. If the device tree blob has no 'thermal-zones'
+> node, the *hwmon_device_register*() family functions are going
+> to gracefully succeed, because of-thermal,
+> *thermal_zone_of_sensor_register() return -ENODEV in this case,
+> and the hwmon error path handles this error code as success to
+> cover for the case where CONFIG_THERMAL_OF is not set.
+> However, if the device tree blob has the 'thermal-zones'
+> entry, the *hwmon_device_register*() will always fail on callers
+> with no dev->of_node, propagating -EINVAL.
+> 
+> If dev->of_node is not present, calling of-thermal does not
+> make sense. For this reason, this patch checks first if the
+> device has a of_node before going over the process of registering
+> with the thermal subsystem of-thermal interface. And in this case,
+> when a caller of *hwmon_device_register*() with HWMON_C_REGISTER_TZ
+> and no dev->of_node will still register with hwmon, but not with
+> the thermal subsystem. If all the hwmon part bits are in place,
+> the registration will succeed.
+> 
+Makes sense. I'd apply it as-is, but it would be better if you resend
+it to the list to give others a chance to comment.
 
 Thanks,
-Mark
+Guenter
 
-From 635bdb7a3e1fe1531573ff87b92c2506adafe7f7 Mon Sep 17 00:00:00 2001
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Date: Mon, 27 May 2019 14:19:35 +0200
-Subject: [PATCH] spi: sh-msiof: Reduce delays in sh_msiof_modify_ctr_wait()
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-While the Hardware User Manual does not document the maximum time needed
-for modifying bits in the MSIOF Control Register, experiments on R-Car
-Gen2/Gen3 and SH-Mobile AG5 revealed the following typical modification
-times for the various bits:
-  - CTR.TXE and CTR.RXE: no delay,
-  - CTR.TSCKE: less than 10 ns,
-  - CTR.TFSE: up to a few hundred ns (depending on SPI transfer clock,
-    i.e. less for faster transfers).
-There are no reasons to believe these figures are different for
-SH-MobileR2 SoCs (SH7723/SH7724).
-
-Hence the minimum busy-looping delay of 10 µs is excessive.
-Reduce the delay per loop iteration from 10 to 1 us, and the maximum
-delay from 1000 to 100 µs.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-sh-msiof.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/spi/spi-sh-msiof.c b/drivers/spi/spi-sh-msiof.c
-index 6aab7b2136db..b50bdbc27e58 100644
---- a/drivers/spi/spi-sh-msiof.c
-+++ b/drivers/spi/spi-sh-msiof.c
-@@ -229,7 +229,7 @@ static int sh_msiof_modify_ctr_wait(struct sh_msiof_spi_priv *p,
- 	sh_msiof_write(p, CTR, data);
- 
- 	return readl_poll_timeout_atomic(p->mapbase + CTR, data,
--					 (data & mask) == set, 10, 1000);
-+					 (data & mask) == set, 1, 100);
- }
- 
- static irqreturn_t sh_msiof_spi_irq(int irq, void *data)
--- 
-2.20.1
-
+> Cc: Jean Delvare <jdelvare@suse.com>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: linux-hwmon@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Eduardo Valentin <eduval@amazon.com>
+> ---
+>  drivers/hwmon/hwmon.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hwmon/hwmon.c b/drivers/hwmon/hwmon.c
+> index fcdbac4a56e3..6b3559f58b67 100644
+> --- a/drivers/hwmon/hwmon.c
+> +++ b/drivers/hwmon/hwmon.c
+> @@ -619,7 +619,7 @@ __hwmon_device_register(struct device *dev, const char *name, void *drvdata,
+>  	if (err)
+>  		goto free_hwmon;
+>  
+> -	if (dev && chip && chip->ops->read &&
+> +	if (dev && dev->of_node && chip && chip->ops->read &&
+>  	    chip->info[0]->type == hwmon_chip &&
+>  	    (chip->info[0]->config[0] & HWMON_C_REGISTER_TZ)) {
+>  		const struct hwmon_channel_info **info = chip->info;
+> -- 
+> 2.21.0
+> 
