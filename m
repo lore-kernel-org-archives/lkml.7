@@ -5,39 +5,42 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,UNWANTED_LANGUAGE_BODY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B2FAC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 324E2C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1114E21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:09:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F41DA20989
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:09:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ASdLbqj9"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="LHvM/bKI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728043AbfE1XJj (ORCPT
+        id S1728102AbfE1XJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 19:09:39 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:11179 "EHLO
+        Tue, 28 May 2019 19:09:51 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:11159 "EHLO
         hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727369AbfE1XJD (ORCPT
+        with ESMTP id S1726994AbfE1XJC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 19:09:03 -0400
+        Tue, 28 May 2019 19:09:02 -0400
 Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cedbf840001>; Tue, 28 May 2019 16:08:53 -0700
+        id <B5cedbf830000>; Tue, 28 May 2019 16:08:51 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 28 May 2019 16:09:01 -0700
+  Tue, 28 May 2019 16:09:00 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 28 May 2019 16:09:01 -0700
-Received: from HQMAIL106.nvidia.com (172.18.146.12) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 May
- 2019 23:09:00 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL106.nvidia.com
- (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 28 May 2019 23:09:00 +0000
+        by hqpgpgate101.nvidia.com on Tue, 28 May 2019 16:09:00 -0700
+Received: from HQMAIL112.nvidia.com (172.18.146.18) by HQMAIL108.nvidia.com
+ (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 May
+ 2019 23:08:59 +0000
+Received: from HQMAIL104.nvidia.com (172.18.146.11) by HQMAIL112.nvidia.com
+ (172.18.146.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 May
+ 2019 23:08:59 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL104.nvidia.com
+ (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 28 May 2019 23:08:59 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.110.103.86]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5cedbf8c0010>; Tue, 28 May 2019 16:09:00 -0700
+        id <B5cedbf8b0000>; Tue, 28 May 2019 16:08:59 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
         <tglx@linutronix.de>, <jason@lakedaemon.net>,
@@ -50,9 +53,9 @@ CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
         <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
         <devicetree@vger.kernel.org>
-Subject: [PATCH V2 09/12] soc/tegra: pmc: add pmc wake support for tegra210
-Date:   Tue, 28 May 2019 16:08:53 -0700
-Message-ID: <1559084936-4610-10-git-send-email-skomatineni@nvidia.com>
+Subject: [PATCH V2 02/12] pinctrl: tegra: add suspend and resume support
+Date:   Tue, 28 May 2019 16:08:46 -0700
+Message-ID: <1559084936-4610-3-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
 References: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
@@ -60,206 +63,245 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559084933; bh=JndXRTXLz9twJOUQu0KI1wkSVnCVn45ycqGV26hT2vk=;
+        t=1559084931; bh=1xQTTbYTuPrto0ISx2uIjIGBvlAvxtvkm/nwrFZurio=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=ASdLbqj9EmbMxTuexMJRhH+1oJTFpC+7rBKY1xd6ef0ofZhxflPrq8Uv5nNAG7s4n
-         l3z14QgHEjhhQt0doAxuxrxgpkbF++hc/R3eCrEna1FDn0jdHiFq+7fE2VX4w9t2jw
-         iKoFVd7uWqEkUHWUpaWibnBPBMdLu5ll78ahnU+ru3LgBBUy390kIdYOdZuppps3Wo
-         iMoGju3nfHR14aLcfkN3/4PnPic18/+6K3IK8hDhrtEo+ydVnj3tX3sbytHwntSDgk
-         /WlQUI21h/4sbcN9/4w4FnrxToUC2+b/8ykpANsq4D/aRwOfZMXE8C1UYfZaC/S5Zp
-         WmH6eKuxpS+Xg==
+        b=LHvM/bKICmb2hxEW1u9Kc+QyqJJU6E0ERAosA74SzGlhdRns6rQ3sFqjIZXFC8jAZ
+         +PPepx9H+ckB7accx6fv1W35O9fh5KiRliDTah+OOagzTkHU4tkfuEdsckYjA+ZwCD
+         u/5oghWBziGJUjJnLfHPHy7Mb+MisNehiRF38+zQ97sBlnqDw+bqteJ9uqTtWrGlql
+         1TNjdiCN5W/Gdw3Ra4qNg+SeA9ggtS4b7cSFdol1egRKbjMlg7BL+Gfz50k6XxMflU
+         /iuMUzYqZ8WW3JY4Pno5MenEAS1MrJIo/A29ZZdZGRcRCiR5cRzG5oGHbCjM+KAUuV
+         +gGDx7VNhFFew==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch implements PMC wakeup sequence for Tegra210 and defines
-common used wake events of RTC alarm and power key.
+This patch adds suspend and resume support for Tegra pinctrl driver
+and registers them to syscore so the pinmux settings are restored
+before the devices resume.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/soc/tegra/pmc.c | 113 ++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 113 insertions(+)
+ drivers/pinctrl/tegra/pinctrl-tegra.c    | 68 +++++++++++++++++++++++++++++++-
+ drivers/pinctrl/tegra/pinctrl-tegra.h    |  3 ++
+ drivers/pinctrl/tegra/pinctrl-tegra114.c |  1 +
+ drivers/pinctrl/tegra/pinctrl-tegra124.c |  1 +
+ drivers/pinctrl/tegra/pinctrl-tegra20.c  |  1 +
+ drivers/pinctrl/tegra/pinctrl-tegra210.c |  1 +
+ drivers/pinctrl/tegra/pinctrl-tegra30.c  |  1 +
+ 7 files changed, 75 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-index 974b4c9f6ada..54dc8409e353 100644
---- a/drivers/soc/tegra/pmc.c
-+++ b/drivers/soc/tegra/pmc.c
-@@ -57,6 +57,7 @@
- #include <dt-bindings/pinctrl/pinctrl-tegra-io-pad.h>
- #include <dt-bindings/gpio/tegra186-gpio.h>
- #include <dt-bindings/gpio/tegra194-gpio.h>
-+#include <dt-bindings/gpio/tegra-gpio.h>
+diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
+index a5008c066bac..bdc47e62c457 100644
+--- a/drivers/pinctrl/tegra/pinctrl-tegra.c
++++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+@@ -28,11 +28,18 @@
+ #include <linux/pinctrl/pinmux.h>
+ #include <linux/pinctrl/pinconf.h>
+ #include <linux/slab.h>
++#include <linux/syscore_ops.h>
  
- #define PMC_CNTRL			0x0
- #define  PMC_CNTRL_INTR_POLARITY	BIT(17) /* inverts INTR polarity */
-@@ -66,6 +67,12 @@
- #define  PMC_CNTRL_SYSCLK_OE		BIT(11) /* system clock enable */
- #define  PMC_CNTRL_SYSCLK_POLARITY	BIT(10) /* sys clk polarity */
- #define  PMC_CNTRL_MAIN_RST		BIT(4)
-+#define  PMC_CNTRL_LATCH_WAKEUPS	BIT(5)
-+
-+#define PMC_WAKE_MASK			0x0c
-+#define PMC_WAKE_LEVEL			0x10
-+#define PMC_WAKE_STATUS			0x14
-+#define PMC_SW_WAKE_STATUS		0x18
+ #include "../core.h"
+ #include "../pinctrl-utils.h"
+ #include "pinctrl-tegra.h"
  
- #define DPD_SAMPLE			0x020
- #define  DPD_SAMPLE_ENABLE		BIT(0)
-@@ -96,6 +103,11 @@
- 
- #define PMC_SCRATCH41			0x140
- 
-+#define PMC_WAKE2_MASK			0x160
-+#define PMC_WAKE2_LEVEL			0x164
-+#define PMC_WAKE2_STATUS		0x168
-+#define PMC_SW_WAKE2_STATUS		0x16c
++#define EMMC2_PAD_CFGPADCTRL_0			0x1c8
++#define EMMC4_PAD_CFGPADCTRL_0			0x1e0
++#define EMMC_DPD_PARKING			(0x1fff << 14)
 +
- #define PMC_SENSOR_CTRL			0x1b0
- #define  PMC_SENSOR_CTRL_SCRATCH_WRITE	BIT(2)
- #define  PMC_SENSOR_CTRL_ENABLE_RST	BIT(1)
-@@ -245,6 +257,7 @@ struct tegra_pmc_soc {
- 
- 	const struct tegra_wake_event *wake_events;
- 	unsigned int num_wake_events;
-+	unsigned int max_supported_wake_events;
- };
- 
- static const char * const tegra186_reset_sources[] = {
-@@ -1917,6 +1930,54 @@ static const struct irq_domain_ops tegra_pmc_irq_domain_ops = {
- 	.alloc = tegra_pmc_irq_alloc,
- };
- 
-+static int tegra210_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
-+{
-+	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
-+	unsigned int offset, bit;
-+	u32 value;
++static struct tegra_pmx *pmx;
 +
-+	if (data->hwirq == ULONG_MAX)
-+		return 0;
-+
-+	offset = data->hwirq / 32;
-+	bit = data->hwirq % 32;
-+
-+	/*
-+	 * latch wakeups to SW_WAKE_STATUS register to capture events
-+	 * that would not make it into wakeup event register during LP0 exit.
-+	 */
-+	value = tegra_pmc_readl(pmc, PMC_CNTRL);
-+	value |= PMC_CNTRL_LATCH_WAKEUPS;
-+	tegra_pmc_writel(pmc, value, PMC_CNTRL);
-+	usleep_range(110, 120);
-+
-+	value &= ~PMC_CNTRL_LATCH_WAKEUPS;
-+	tegra_pmc_writel(pmc, value, PMC_CNTRL);
-+	usleep_range(110, 120);
-+
-+	tegra_pmc_writel(pmc, 0, PMC_SW_WAKE_STATUS);
-+	if (pmc->soc->max_supported_wake_events > 32)
-+		tegra_pmc_writel(pmc, 0, PMC_SW_WAKE2_STATUS);
-+
-+	tegra_pmc_writel(pmc, 0, PMC_WAKE_STATUS);
-+	if (pmc->soc->max_supported_wake_events > 32)
-+		tegra_pmc_writel(pmc, 0, PMC_WAKE2_STATUS);
-+
-+	/* enable PMC wake */
-+	if (data->hwirq >= 32)
-+		offset = PMC_WAKE2_MASK;
-+	else
-+		offset = PMC_WAKE_MASK;
-+	value = tegra_pmc_readl(pmc, offset);
-+	if (on)
-+		value |= 1 << bit;
-+	else
-+		value &= ~(1 << bit);
-+	tegra_pmc_writel(pmc, value, offset);
-+
-+	return 0;
-+}
-+
- static int tegra186_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
+ static inline u32 pmx_readl(struct tegra_pmx *pmx, u32 bank, u32 reg)
  {
- 	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
-@@ -1948,6 +2009,48 @@ static int tegra186_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
- 	return 0;
+ 	return readl(pmx->regs[bank] + reg);
+@@ -629,6 +636,50 @@ static void tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
+ 	}
  }
  
-+static int tegra210_pmc_irq_set_type(struct irq_data *data, unsigned int type)
++static int __maybe_unused tegra_pinctrl_suspend(void)
 +{
-+	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
-+	unsigned int offset, bit;
-+	u32 value;
++	u32 *backup_regs = pmx->backup_regs;
++	u32 *regs;
++	int i, j;
 +
-+	if (data->hwirq == ULONG_MAX)
-+		return 0;
-+
-+	offset = data->hwirq / 32;
-+	bit = data->hwirq % 32;
-+
-+	if (data->hwirq >= 32)
-+		offset = PMC_WAKE2_LEVEL;
-+	else
-+		offset = PMC_WAKE_LEVEL;
-+	value = tegra_pmc_readl(pmc, offset);
-+
-+	switch (type) {
-+	case IRQ_TYPE_EDGE_RISING:
-+	case IRQ_TYPE_LEVEL_HIGH:
-+		value |= 1 << bit;
-+		break;
-+
-+	case IRQ_TYPE_EDGE_FALLING:
-+	case IRQ_TYPE_LEVEL_LOW:
-+		value &= ~(1 << bit);
-+		break;
-+
-+	case IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING:
-+		value ^= 1 << bit;
-+		break;
-+
-+	default:
-+		return -EINVAL;
++	for (i = 0; i < pmx->nbanks; i++) {
++		regs = pmx->regs[i];
++		for (j = 0; j < pmx->reg_bank_size[i] / 4; j++)
++			*backup_regs++ = readl(regs++);
 +	}
 +
-+	tegra_pmc_writel(pmc, value, offset);
-+
-+	return 0;
++	return pinctrl_force_sleep(pmx->pctl);
 +}
 +
- static int tegra186_pmc_irq_set_type(struct irq_data *data, unsigned int type)
- {
- 	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
-@@ -2535,6 +2638,11 @@ static const struct pinctrl_pin_desc tegra210_pin_descs[] = {
- 	TEGRA210_IO_PAD_TABLE(TEGRA_IO_PIN_DESC)
- };
- 
-+static const struct tegra_wake_event tegra210_wake_events[] = {
-+	TEGRA_WAKE_GPIO("power", 24, 0, 189),
-+	TEGRA_WAKE_IRQ("rtc", 16, 2),
++static void __maybe_unused tegra_pinctrl_resume(void)
++{
++	u32 *backup_regs = pmx->backup_regs;
++	u32 *regs;
++	u32 val;
++	int i, j;
++
++	for (i = 0; i < pmx->nbanks; i++) {
++		regs = pmx->regs[i];
++		for (j = 0; j < pmx->reg_bank_size[i] / 4; j++)
++			writel(*backup_regs++, regs++);
++	}
++
++	if (pmx->soc->has_park_padcfg) {
++		val = pmx_readl(pmx, 0, EMMC2_PAD_CFGPADCTRL_0);
++		val &= ~EMMC_DPD_PARKING;
++		pmx_writel(pmx, val, 0, EMMC2_PAD_CFGPADCTRL_0);
++
++		val = pmx_readl(pmx, 0, EMMC4_PAD_CFGPADCTRL_0);
++		val &= ~EMMC_DPD_PARKING;
++		pmx_writel(pmx, val, 0, EMMC4_PAD_CFGPADCTRL_0);
++	}
++}
++
++static struct syscore_ops pinctrl_syscore_ops = {
++	.suspend = tegra_pinctrl_suspend,
++	.resume = tegra_pinctrl_resume,
 +};
 +
- static const struct tegra_pmc_soc tegra210_pmc_soc = {
- 	.num_powergates = ARRAY_SIZE(tegra210_powergates),
- 	.powergates = tegra210_powergates,
-@@ -2552,10 +2660,15 @@ static const struct tegra_pmc_soc tegra210_pmc_soc = {
- 	.regs = &tegra20_pmc_regs,
- 	.init = tegra20_pmc_init,
- 	.setup_irq_polarity = tegra20_pmc_setup_irq_polarity,
-+	.irq_set_wake = tegra210_pmc_irq_set_wake,
-+	.irq_set_type = tegra210_pmc_irq_set_type,
- 	.reset_sources = tegra210_reset_sources,
- 	.num_reset_sources = ARRAY_SIZE(tegra210_reset_sources),
- 	.reset_levels = NULL,
- 	.num_reset_levels = 0,
-+	.num_wake_events = ARRAY_SIZE(tegra210_wake_events),
-+	.wake_events = tegra210_wake_events,
-+	.max_supported_wake_events = 64,
+ static bool gpio_node_has_range(const char *compatible)
+ {
+ 	struct device_node *np;
+@@ -648,11 +699,11 @@ static bool gpio_node_has_range(const char *compatible)
+ int tegra_pinctrl_probe(struct platform_device *pdev,
+ 			const struct tegra_pinctrl_soc_data *soc_data)
+ {
+-	struct tegra_pmx *pmx;
+ 	struct resource *res;
+ 	int i;
+ 	const char **group_pins;
+ 	int fn, gn, gfn;
++	unsigned long backup_regs_size = 0;
+ 
+ 	pmx = devm_kzalloc(&pdev->dev, sizeof(*pmx), GFP_KERNEL);
+ 	if (!pmx)
+@@ -705,6 +756,7 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
+ 		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
+ 		if (!res)
+ 			break;
++		backup_regs_size += resource_size(res);
+ 	}
+ 	pmx->nbanks = i;
+ 
+@@ -713,11 +765,24 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
+ 	if (!pmx->regs)
+ 		return -ENOMEM;
+ 
++	pmx->reg_bank_size = devm_kcalloc(&pdev->dev, pmx->nbanks,
++					  sizeof(*pmx->reg_bank_size),
++					  GFP_KERNEL);
++	if (!pmx->reg_bank_size)
++		return -ENOMEM;
++
++	pmx->backup_regs = devm_kzalloc(&pdev->dev, backup_regs_size,
++					GFP_KERNEL);
++	if (!pmx->backup_regs)
++		return -ENOMEM;
++
+ 	for (i = 0; i < pmx->nbanks; i++) {
+ 		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
+ 		pmx->regs[i] = devm_ioremap_resource(&pdev->dev, res);
+ 		if (IS_ERR(pmx->regs[i]))
+ 			return PTR_ERR(pmx->regs[i]);
++
++		pmx->reg_bank_size[i] = resource_size(res);
+ 	}
+ 
+ 	pmx->pctl = devm_pinctrl_register(&pdev->dev, &tegra_pinctrl_desc, pmx);
+@@ -732,6 +797,7 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
+ 		pinctrl_add_gpio_range(pmx->pctl, &tegra_pinctrl_gpio_range);
+ 
+ 	platform_set_drvdata(pdev, pmx);
++	register_syscore_ops(&pinctrl_syscore_ops);
+ 
+ 	dev_dbg(&pdev->dev, "Probed Tegra pinctrl driver\n");
+ 
+diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.h b/drivers/pinctrl/tegra/pinctrl-tegra.h
+index 44c71941b5f8..b405df6fd390 100644
+--- a/drivers/pinctrl/tegra/pinctrl-tegra.h
++++ b/drivers/pinctrl/tegra/pinctrl-tegra.h
+@@ -25,6 +25,8 @@ struct tegra_pmx {
+ 
+ 	int nbanks;
+ 	void __iomem **regs;
++	size_t *reg_bank_size;
++	u32 *backup_regs;
  };
  
- #define TEGRA186_IO_PAD_TABLE(_pad)					     \
+ enum tegra_pinconf_param {
+@@ -199,6 +201,7 @@ struct tegra_pinctrl_soc_data {
+ 	bool hsm_in_mux;
+ 	bool schmitt_in_mux;
+ 	bool drvtype_in_mux;
++	bool has_park_padcfg;
+ };
+ 
+ int tegra_pinctrl_probe(struct platform_device *pdev,
+diff --git a/drivers/pinctrl/tegra/pinctrl-tegra114.c b/drivers/pinctrl/tegra/pinctrl-tegra114.c
+index d43c209e9c30..4ac44f34dccf 100644
+--- a/drivers/pinctrl/tegra/pinctrl-tegra114.c
++++ b/drivers/pinctrl/tegra/pinctrl-tegra114.c
+@@ -1849,6 +1849,7 @@ static const struct tegra_pinctrl_soc_data tegra114_pinctrl = {
+ 	.hsm_in_mux = false,
+ 	.schmitt_in_mux = false,
+ 	.drvtype_in_mux = false,
++	.has_park_padcfg = false,
+ };
+ 
+ static int tegra114_pinctrl_probe(struct platform_device *pdev)
+diff --git a/drivers/pinctrl/tegra/pinctrl-tegra124.c b/drivers/pinctrl/tegra/pinctrl-tegra124.c
+index 5b07a5834d15..1dac7648b41f 100644
+--- a/drivers/pinctrl/tegra/pinctrl-tegra124.c
++++ b/drivers/pinctrl/tegra/pinctrl-tegra124.c
+@@ -2061,6 +2061,7 @@ static const struct tegra_pinctrl_soc_data tegra124_pinctrl = {
+ 	.hsm_in_mux = false,
+ 	.schmitt_in_mux = false,
+ 	.drvtype_in_mux = false,
++	.has_park_padcfg = false,
+ };
+ 
+ static int tegra124_pinctrl_probe(struct platform_device *pdev)
+diff --git a/drivers/pinctrl/tegra/pinctrl-tegra20.c b/drivers/pinctrl/tegra/pinctrl-tegra20.c
+index 1fc82a9576e0..9d2b25200f32 100644
+--- a/drivers/pinctrl/tegra/pinctrl-tegra20.c
++++ b/drivers/pinctrl/tegra/pinctrl-tegra20.c
+@@ -2231,6 +2231,7 @@ static const struct tegra_pinctrl_soc_data tegra20_pinctrl = {
+ 	.hsm_in_mux = false,
+ 	.schmitt_in_mux = false,
+ 	.drvtype_in_mux = false,
++	.has_park_padcfg = false,
+ };
+ 
+ static const char *cdev1_parents[] = {
+diff --git a/drivers/pinctrl/tegra/pinctrl-tegra210.c b/drivers/pinctrl/tegra/pinctrl-tegra210.c
+index 3e77f5474dd8..dc06c36e698a 100644
+--- a/drivers/pinctrl/tegra/pinctrl-tegra210.c
++++ b/drivers/pinctrl/tegra/pinctrl-tegra210.c
+@@ -1563,6 +1563,7 @@ static const struct tegra_pinctrl_soc_data tegra210_pinctrl = {
+ 	.hsm_in_mux = true,
+ 	.schmitt_in_mux = true,
+ 	.drvtype_in_mux = true,
++	.has_park_padcfg = true,
+ };
+ 
+ static int tegra210_pinctrl_probe(struct platform_device *pdev)
+diff --git a/drivers/pinctrl/tegra/pinctrl-tegra30.c b/drivers/pinctrl/tegra/pinctrl-tegra30.c
+index 10e617003e9c..42182d714950 100644
+--- a/drivers/pinctrl/tegra/pinctrl-tegra30.c
++++ b/drivers/pinctrl/tegra/pinctrl-tegra30.c
+@@ -2484,6 +2484,7 @@ static const struct tegra_pinctrl_soc_data tegra30_pinctrl = {
+ 	.hsm_in_mux = false,
+ 	.schmitt_in_mux = false,
+ 	.drvtype_in_mux = false,
++	.has_park_padcfg = false,
+ };
+ 
+ static int tegra30_pinctrl_probe(struct platform_device *pdev)
 -- 
 2.7.4
 
