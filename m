@@ -2,122 +2,115 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F43C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E670DC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFAEC206C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:20:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FTK7Qq63"
+	by mail.kernel.org (Postfix) with ESMTP id C510320665
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:20:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727734AbfE1PUp (ORCPT
+        id S1727756AbfE1PU4 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 11:20:45 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:37790 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727157AbfE1PUo (ORCPT
+        Tue, 28 May 2019 11:20:56 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:35232 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726698AbfE1PUz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 11:20:44 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4SFIwUs106082;
-        Tue, 28 May 2019 15:20:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2018-07-02; bh=BraWV+myHX0oYeZ82rQTj5/p9jWbV8UVzgAblODYn0k=;
- b=FTK7Qq63tc6cG2Rz/0P6mHUausYK+89T2+BkneNc45MDacXTfIuBg7hzn/N5m3SNEh8N
- thj1me47t11r4snz4mcSrT0i3pkRvUqyqBHW0aEzzsO5CyPpKNBiy6b6M7nvHDPNaZsJ
- Vs1gKcGjP33o7uodGUlnBmtF5cjHWxj8WVwhyprjOiF9/ovrLPXt2p7Y1CnA1gd0Hcb5
- 45vLkyYROIWaERoDq5+LeeP4S6prRPWGNZlwgUuDnFLLsYh8VXU9uadVjZ5c989OYNYX
- LtpR5BVgUKm4sg/LhJrCT/9S5hofAYJRHI+j/QYZahcSQOLcdGHceR2C9RvRoAjDAXY5 aQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2spxbq3u5h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 May 2019 15:20:00 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4SFJwR1143353;
-        Tue, 28 May 2019 15:20:00 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2sr31uqjay-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 May 2019 15:20:00 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4SFJtt2012670;
-        Tue, 28 May 2019 15:19:55 GMT
-Received: from anon-dhcp-171.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 28 May 2019 08:19:55 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH -next] lockd: Make two symbols static
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20190528151331.GA29554@fieldses.org>
-Date:   Tue, 28 May 2019 11:19:53 -0400
-Cc:     Benjamin Coddington <bcodding@redhat.com>,
-        YueHaibing <yuehaibing@huawei.com>, jlayton@kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: 7bit
-Message-Id: <534DECA5-DFC5-497C-8023-6D7F859F8148@oracle.com>
-References: <20190528090652.13288-1-yuehaibing@huawei.com>
- <97D052EC-1F07-4210-81CC-7E0085C095BD@redhat.com>
- <20190528151331.GA29554@fieldses.org>
-To:     Bruce Fields <bfields@fieldses.org>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9270 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=960
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905280099
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9270 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=994 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905280099
+        Tue, 28 May 2019 11:20:55 -0400
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/zvwDCv+Ds="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 44.18 DYNA|AUTH)
+        with ESMTPSA id j04dc1v4SFKPrJe
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Tue, 28 May 2019 17:20:25 +0200 (CEST)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to dts
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <CAHCN7xLzoCNW6q5yDCsqMHeNvdNegkGhd0N+q9+Gd8JUGbG=_g@mail.gmail.com>
+Date:   Tue, 28 May 2019 17:20:25 +0200
+Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Adam Ford <adam.ford@logicpd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        dri-devel@lists.freedesktop.org,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <BA6E7BE4-E87A-4B0A-A027-BEA7A9ACA670@goldelico.com>
+References: <20190510194229.20628-1-aford173@gmail.com> <af325707-3e42-493d-e858-77878ef06138@ti.com> <CAHCN7xLzoCNW6q5yDCsqMHeNvdNegkGhd0N+q9+Gd8JUGbG=_g@mail.gmail.com>
+To:     Adam Ford <aford173@gmail.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-
-> On May 28, 2019, at 11:13 AM, J. Bruce Fields <bfields@fieldses.org> wrote:
+> Am 28.05.2019 um 17:09 schrieb Adam Ford <aford173@gmail.com>:
 > 
-> On Tue, May 28, 2019 at 06:49:13AM -0400, Benjamin Coddington wrote:
->> Maintainers, what's the best thing to do here: fold these into
->> another patch version and post it (add attribution)?  Add it as
->> another patch at the end of the series?
+> On Tue, May 28, 2019 at 4:11 AM Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+>> 
+>> Hi,
+>> 
+>> On 10/05/2019 22:42, Adam Ford wrote:
+>>> Currently the source code is compiled using hard-coded values
+>>> from CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK.  This patch allows this
+>>> clock divider value to be moved to the device tree and be changed
+>>> without having to recompile the kernel.
+>>> 
+>>> Signed-off-by: Adam Ford <aford173@gmail.com>
+>> 
+>> I understand why you want to do this, but I'm not sure it's a good idea.
+>> It's really something the driver should figure out, and if we add it to
+>> the DT, it effectively becomes an ABI.
+>> 
+>> That said... I'm not sure how good of a job the driver could ever do, as
+>> it can't know the future scaling needs of the userspace at the time it
+>> is configuring the clock. And so, I'm not nacking this patch, but I
+>> don't feel very good about this patch...
+>> 
+>> The setting also affects all outputs (exluding venc), which may not be
+>> what the user wants. Then again, I think this setting is really only
+>> needed on OMAP2 & 3, which have only a single output. But that's the
+>> same with the current kconfig option, of course.
+>> 
+>> So, the current CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK is an ugly hack, in my
+>> opinion, and moving it to DT makes it a worse hack =). But I don't have
+>> any good suggestions either.
 > 
-> Either would be fine.  Yeah, if it was folded in then we'd add a line
-> like
-> 
-> 	[hulkci@huawei.com: make symbols static to fix sparse warnings]
-> 
-> But I'll probably just add it on to the end for now.  No need for you to
-> do anything.
-> 
->> I have learned my lesson: add sparse to my workflow.
-> 
-> I dunno, I wonder if we're better off just leaving it to this CI bot.
-> It seems like a more efficient use of time overall than making every
-> contributor run it.
+> As it stands the Logic PD OMAP35 and AM37/DM37 boards (SOM-LV and
+> Torpedo) require this to be hard coded to 4 or it hangs during start.
+> This is the case for all versions 4.2+.  I haven't tested it with
+> older stuff.  Tony has a DM3730 Torpedo kit and reported the hanging
+> issue to me. I told him to set that value to 4 to make it not hang.
+> He asked that I move it to the DT to avoid custom kernels.  I agree
+> it's a hack, but if it's create a customized defconfig file for 4
+> boards or modify the device tree, it seems like the device tree
+> approach is less intrusive.
 
-Occasionally sparse can catch a real problem that breaks bisectability.
-Better to do this kind of checking early, and ensure that you test those
-sparse-fixed bits.
+Well, if this boards needs a factor 4 to be defined, it is IMHO
+100 % correct to describe this in the DTS and nowhere else. Like
+minimum and maximum voltage of a regulator which is also very board
+specific.
 
+Unless it can be figured out automatically. If it turns out later
+that it can, I would assume the drivers can simply ignore the hint
+in the DTS?
 
---
-Chuck Lever
+Just my 2cts without knowing details and having tested anything
+on our DM37 boards.
 
-
+BR,
+Nikolaus
 
