@@ -2,171 +2,141 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F9AC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C77F3C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C16362075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:30:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87E582075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:31:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="yqFzMuaP"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Y4ConJGH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728004AbfE1Vag (ORCPT
+        id S1728021AbfE1VbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 17:30:36 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:50499 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727144AbfE1Vaf (ORCPT
+        Tue, 28 May 2019 17:31:03 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:44051 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727144AbfE1VbD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 17:30:35 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4SLUQSV2241056
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 28 May 2019 14:30:26 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4SLUQSV2241056
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559079026;
-        bh=WMY9e1Hmdj3BEHeJW4NnRb/RYti1H2T4KQ1xQJTxRNU=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=yqFzMuaPum2/RnatIpymLHwLJi/hec75esQQt6qulrFpX7MUcENMU1boz+uZ32QXr
-         A+0FaFVCShLPXjWU5Rd4uoOEt0vUWNDYRyvKpHQBs0ulDsAM4B/11+YVkOMKnhx6yP
-         O/Ja/x7h5/XTAouEGWjoIfX9krhC+iga0q+sz7veGhxqzeysph3E3JmBMJzxOcC8yA
-         cF3OuhNCCQm37CaISlxkXlxwBvidHrBTwh/1hl4LReaVJthz6Bmj5qQRWszQL4mTOC
-         jF58g0MGBSDiG8sdmOFidP3LuB1bA8AG5dYTn680WdJYr39PSEUMe/SKyePGUA7qMY
-         VB7U0J627t7dw==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4SLUPtA2241053;
-        Tue, 28 May 2019 14:30:25 -0700
-Date:   Tue, 28 May 2019 14:30:25 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Thomas Richter <tipbot@zytor.com>
-Message-ID: <tip-6738028dd57df064b969d8392c943ef3b3ae705d@git.kernel.org>
-Cc:     tglx@linutronix.de, mingo@kernel.org, brueckner@linux.ibm.com,
-        tmricht@linux.ibm.com, linux-kernel@vger.kernel.org,
-        heiko.carstens@de.ibm.com, acme@redhat.com, hpa@zytor.com
-Reply-To: mingo@kernel.org, tglx@linutronix.de, brueckner@linux.ibm.com,
-          heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org,
-          tmricht@linux.ibm.com, acme@redhat.com, hpa@zytor.com
-In-Reply-To: <20190522144601.50763-4-tmricht@linux.ibm.com>
-References: <20190522144601.50763-4-tmricht@linux.ibm.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf record: Fix s390 missing module symbol and
- warning for non-root users
-Git-Commit-ID: 6738028dd57df064b969d8392c943ef3b3ae705d
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+        Tue, 28 May 2019 17:31:03 -0400
+Received: by mail-qk1-f193.google.com with SMTP id w187so61886qkb.11
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 14:31:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=WaEhEdCDX7uVq9EdlB8MxNmxyl6leWtk/aFuLl2SSoI=;
+        b=Y4ConJGHbioYv9N8Mp37Mj8nKajpa5ftjec2jpdjMUbE27zB3Tu7iMV1rU3diBPTtJ
+         M8VPPdZZogxpMM7rutYD3+rpwFECxAYTGVoAjXcIUtqaQjdlLUbzSRbbRh+Z7t0xlDd6
+         EcxoA1KiFZKpjVfAas/YfbwO0+IpPbLqlbnhGL7UlP5cJdXcmF98E7M7ScQPtCpj02qh
+         4u+A45QoHERFkt1mES+PfsKkbzkFct8oYodaFXg4b6H6rTC9cNjE1rodn7BxT+HAH1fW
+         PA9Mgm+QPz8NRecEbMvD9qIJT/RI7ToVft4fSarxQ9hDovoTYpnkNFco6/p3jlyh3kYh
+         l/EQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=WaEhEdCDX7uVq9EdlB8MxNmxyl6leWtk/aFuLl2SSoI=;
+        b=adEzX/myYzCqUJLywZMdCtcAaV05tZ9YbxGCMRjrLjts32cFB/J206VgwhjT8t2n+D
+         poyHif0cVU0/9kigVHwHOUCixH1XCqtAR+GAyDkUGhBmxLREYt1koD3ZdFcPizbJVYnq
+         80V06/YZKYZfCoAFLbhovaDJLs07SVThj/T2eetImmjtn7sseimPkkxpGTulA4BKh4Ru
+         RuGnBSqY08l9sQxzCCK6NMlje1jRb1TcEBCvu6NcRwkvLJcZK5U5WxkubHaNVLpAxusG
+         BS5r3oWUi9k2YpZYaRx0SDqq0kJdS5QI/4e0VkT0Dc5XlCFTlTTNK0VJbpKfg1jJI3TI
+         Qb7Q==
+X-Gm-Message-State: APjAAAXI+CUONm7B+D5CYmQkWbndwFj2FAy7Rl1kMxP1I0HIwdt7a5tg
+        /SkkVSbvHX/XRb7suUFzoEemhEser5E=
+X-Google-Smtp-Source: APXvYqxV1hnwlMudTqV/qXWNvA3YNO35Xwlomr1L0uUD4+Itqbe5e4yQQHoskQMtRgPPNjLXahIUOQ==
+X-Received: by 2002:a37:a854:: with SMTP id r81mr12066985qke.53.1559079062257;
+        Tue, 28 May 2019 14:31:02 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id 6sm4669423qtt.72.2019.05.28.14.31.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 May 2019 14:31:01 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     jroedel@suse.de
+Cc:     akpm@linux-foundation.org, hch@lst.de, m.szyprowski@samsung.com,
+        robin.murphy@arm.com, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH] dma: replace single-char identifiers in macros
+Date:   Tue, 28 May 2019 17:30:41 -0400
+Message-Id: <1559079041-525-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  6738028dd57df064b969d8392c943ef3b3ae705d
-Gitweb:     https://git.kernel.org/tip/6738028dd57df064b969d8392c943ef3b3ae705d
-Author:     Thomas Richter <tmricht@linux.ibm.com>
-AuthorDate: Wed, 22 May 2019 16:46:01 +0200
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Tue, 28 May 2019 09:52:23 -0300
+There are a few macros in DMA have single-char identifiers make the code
+hard to read. Replace them with meaningful names.
 
-perf record: Fix s390 missing module symbol and warning for non-root users
-
-Command 'perf record' and 'perf report' on a system without kernel
-debuginfo packages uses /proc/kallsyms and /proc/modules to find
-addresses for kernel and module symbols. On x86 this works for root and
-non-root users.
-
-On s390, when invoked as non-root user, many of the following warnings
-are shown and module symbols are missing:
-
-    proc/{kallsyms,modules} inconsistency while looking for
-        "[sha1_s390]" module!
-
-Command 'perf record' creates a list of module start addresses by
-parsing the output of /proc/modules and creates a PERF_RECORD_MMAP
-record for the kernel and each module. The following function call
-sequence is executed:
-
-  machine__create_kernel_maps
-    machine__create_module
-      modules__parse
-        machine__create_module --> for each line in /proc/modules
-          arch__fix_module_text_start
-
-Function arch__fix_module_text_start() is s390 specific. It opens
-file /sys/module/<name>/sections/.text to extract the module's .text
-section start address. On s390 the module loader prepends a header
-before the first section, whereas on x86 the module's text section
-address is identical the the module's load address.
-
-However module section files are root readable only. For non-root the
-read operation fails and machine__create_module() returns an error.
-Command perf record does not generate any PERF_RECORD_MMAP record
-for loaded modules. Later command perf report complains about missing
-module maps.
-
-To fix this function arch__fix_module_text_start() always returns
-success. For root users there is no change, for non-root users
-the module's load address is used as module's text start address
-(the prepended header then counts as part of the text section).
-
-This enable non-root users to use module symbols and avoid the
-warning when perf report is executed.
-
-Output before:
-
-  [tmricht@m83lp54 perf]$ ./perf report -D | fgrep MMAP
-  0 0x168 [0x50]: PERF_RECORD_MMAP ... x [kernel.kallsyms]_text
-
-Output after:
-
-  [tmricht@m83lp54 perf]$ ./perf report -D | fgrep MMAP
-  0 0x168 [0x50]: PERF_RECORD_MMAP ... x [kernel.kallsyms]_text
-  0 0x1b8 [0x98]: PERF_RECORD_MMAP ... x /lib/modules/.../autofs4.ko.xz
-  0 0x250 [0xa8]: PERF_RECORD_MMAP ... x /lib/modules/.../sha_common.ko.xz
-  0 0x2f8 [0x98]: PERF_RECORD_MMAP ... x /lib/modules/.../des_generic.ko.xz
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Link: http://lkml.kernel.org/r/20190522144601.50763-4-tmricht@linux.ibm.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Qian Cai <cai@lca.pw>
 ---
- tools/perf/arch/s390/util/machine.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ include/linux/dma-mapping.h | 24 ++++++++++++++++--------
+ include/linux/dmar.h        | 14 ++++++++------
+ 2 files changed, 24 insertions(+), 14 deletions(-)
 
-diff --git a/tools/perf/arch/s390/util/machine.c b/tools/perf/arch/s390/util/machine.c
-index 0b2054007314..a19690a17291 100644
---- a/tools/perf/arch/s390/util/machine.c
-+++ b/tools/perf/arch/s390/util/machine.c
-@@ -5,16 +5,19 @@
- #include "util.h"
- #include "machine.h"
- #include "api/fs/fs.h"
-+#include "debug.h"
- 
- int arch__fix_module_text_start(u64 *start, const char *name)
- {
-+	u64 m_start = *start;
- 	char path[PATH_MAX];
- 
- 	snprintf(path, PATH_MAX, "module/%.*s/sections/.text",
- 				(int)strlen(name) - 2, name + 1);
--
--	if (sysfs__read_ull(path, (unsigned long long *)start) < 0)
--		return -1;
-+	if (sysfs__read_ull(path, (unsigned long long *)start) < 0) {
-+		pr_debug2("Using module %s start:%#lx\n", path, m_start);
-+		*start = m_start;
-+	}
- 
- 	return 0;
+diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+index 6309a721394b..2f0151dcfa4e 100644
+--- a/include/linux/dma-mapping.h
++++ b/include/linux/dma-mapping.h
+@@ -602,14 +602,22 @@ static inline void dma_sync_single_range_for_device(struct device *dev,
+ 	return dma_sync_single_for_device(dev, addr + offset, size, dir);
  }
+ 
+-#define dma_map_single(d, a, s, r) dma_map_single_attrs(d, a, s, r, 0)
+-#define dma_unmap_single(d, a, s, r) dma_unmap_single_attrs(d, a, s, r, 0)
+-#define dma_map_sg(d, s, n, r) dma_map_sg_attrs(d, s, n, r, 0)
+-#define dma_unmap_sg(d, s, n, r) dma_unmap_sg_attrs(d, s, n, r, 0)
+-#define dma_map_page(d, p, o, s, r) dma_map_page_attrs(d, p, o, s, r, 0)
+-#define dma_unmap_page(d, a, s, r) dma_unmap_page_attrs(d, a, s, r, 0)
+-#define dma_get_sgtable(d, t, v, h, s) dma_get_sgtable_attrs(d, t, v, h, s, 0)
+-#define dma_mmap_coherent(d, v, c, h, s) dma_mmap_attrs(d, v, c, h, s, 0)
++#define dma_map_single(dev, ptr, size, direction)			\
++	dma_map_single_attrs(dev, ptr, size, direction, 0)
++#define dma_unmap_single(dev, addr, size, direction)			\
++	dma_unmap_single_attrs(dev, addr, size, direction, 0)
++#define dma_map_sg(dev, sg, mapped_ents, direction)			\
++	dma_map_sg_attrs(dev, sg, mapped_ents, direction, 0)
++#define dma_unmap_sg(dev, sg, mapped_ents, direction)			\
++	dma_unmap_sg_attrs(dev, sg, mapped_ents, direction, 0)
++#define dma_map_page(dev, page, offset, size, direction)		\
++	dma_map_page_attrs(dev, page, offset, size, direction, 0)
++#define dma_unmap_page(dev, addr, size, direction)			\
++	dma_unmap_page_attrs(dev, addr, size, direction, 0)
++#define dma_get_sgtable(dev, sgt, cpu_addr, dma_addr, size)		\
++	dma_get_sgtable_attrs(dev, sgt, cpu_addr, dma_addr, size, 0)
++#define dma_mmap_coherent(dev, vma, cpu_addr, dma_addr, size)		\
++	dma_mmap_attrs(dev, vma, cpu_addr, dma_addr, size, 0)
+ 
+ extern int dma_common_mmap(struct device *dev, struct vm_area_struct *vma,
+ 		void *cpu_addr, dma_addr_t dma_addr, size_t size,
+diff --git a/include/linux/dmar.h b/include/linux/dmar.h
+index f8af1d770520..eb634912f475 100644
+--- a/include/linux/dmar.h
++++ b/include/linux/dmar.h
+@@ -104,12 +104,14 @@ static inline bool dmar_rcu_check(void)
+ 
+ #define	dmar_rcu_dereference(p)	rcu_dereference_check((p), dmar_rcu_check())
+ 
+-#define	for_each_dev_scope(a, c, p, d)	\
+-	for ((p) = 0; ((d) = (p) < (c) ? dmar_rcu_dereference((a)[(p)].dev) : \
+-			NULL, (p) < (c)); (p)++)
+-
+-#define	for_each_active_dev_scope(a, c, p, d)	\
+-	for_each_dev_scope((a), (c), (p), (d))	if (!(d)) { continue; } else
++#define for_each_dev_scope(devs, cnt, i, tmp)				\
++	for ((i) = 0; ((tmp) = (i) < (cnt) ?				\
++	    dmar_rcu_dereference((devs)[(i)].dev) : NULL, (i) < (cnt)); \
++	    (i)++)
++
++#define for_each_active_dev_scope(devs, cnt, i, tmp)			\
++	for_each_dev_scope((devs), (cnt), (i), (tmp))			\
++		if (!(tmp)) { continue; } else
+ 
+ extern int dmar_table_init(void);
+ extern int dmar_dev_scope_init(void);
+-- 
+1.8.3.1
+
