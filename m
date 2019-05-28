@@ -2,75 +2,79 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3724C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53254C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 784F9208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:18:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AC10208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:18:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbfE1JS2 (ORCPT
+        id S1726649AbfE1JSd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 05:18:28 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:17597 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725943AbfE1JS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 05:18:28 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 7534E5D4545AA8DA46A7;
-        Tue, 28 May 2019 17:18:26 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Tue, 28 May 2019
- 17:18:20 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <linus.walleij@linaro.org>, <rafal@milecki.pl>,
-        <gregkh@linuxfoundation.org>, <opendmb@gmail.com>,
-        <eric@anholt.net>, <tglx@linutronix.de>, <matheus@castello.eng.br>
-CC:     <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] pinctrl: bcm2835: Fix build error without CONFIG_OF
-Date:   Tue, 28 May 2019 17:13:04 +0800
-Message-ID: <20190528091304.9932-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 28 May 2019 05:18:33 -0400
+Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:55403 "EHLO
+        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725943AbfE1JSc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 05:18:32 -0400
+Received: from [IPv6:2001:983:e9a7:1:10b2:2e62:e4b1:bd13] ([IPv6:2001:983:e9a7:1:10b2:2e62:e4b1:bd13])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id VYFZhh8VhsDWyVYFahcRZ2; Tue, 28 May 2019 11:18:30 +0200
+Subject: Re: [RFCv1 00/12] media: mtk-vcodec: support for MT8183 decoder
+To:     Alexandre Courbot <acourbot@chromium.org>,
+        Yunfei Dong <yunfei.dong@mediatek.com>,
+        Tiffany Lin <tiffany.lin@mediatek.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20190528055635.12109-1-acourbot@chromium.org>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <f143b2e2-45ab-9d59-a607-f2032206e4e0@xs4all.nl>
+Date:   Tue, 28 May 2019 11:18:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190528055635.12109-1-acourbot@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfMM8dvHjwzwUAfKnKoP8luEtEGaVf32kshxDabImXd9jy0WyZNQu0oWcDuCA15v9nj/65NQVATJO4tPv31EblnvNkBcLyM0GlUCHRM2mkscgsxSaiswR
+ z+uWhE+HAnoTjmtUpDFDsRwqLldLpm10GCvThGRZS9AwpB6rYzpOoJACHAi+y7ayANPTsKM8eXP10lvHUMh3XG3vFDJmZyk+ZKi4hili3Ha6LsQVHdZ1Kq3v
+ vKz7PBFkC289Svxv/UAK1HyqfzxsmMyvf3hgblMRlP6QCjItw2KzTaQuDPaDKe25huRnygLIgRxG5gND9j3oXY1Z1GJ8dz7N4yXj4S9m59bZfu7ZZABtfHe3
+ xnEJWDQZmDvZFYRZWNECTI8f1mrue7Twz7xEv+XgXHHNARAg5dowSUiLwU3VaLo7hq3660hThRLml4Z47FJzmQHHI23PFddGlMShAwD4IcU9WP0Gm3pZagt5
+ uj3w07yiQs3Z5ISYUg9Ic/KY+HpW5qmmXcqyIeQwT3ro8nPkQ5zdw8Ifphm4h2EKGIXgHZae/WMch5Sz9rDGyVUtTyRv4tUkPXalEvIEwlgMP4zknzhckwVy
+ kYI=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/pinctrl/bcm/pinctrl-bcm2835.c: In function bcm2835_pctl_dt_node_to_map:
-drivers/pinctrl/bcm/pinctrl-bcm2835.c:720:8: error: implicit declaration of function pinconf_generic_dt_node_to_map_all;
-drivers/pinctrl/bcm/pinctrl-bcm2835.c: In function bcm2835_pinctrl_probe:
-drivers/pinctrl/bcm/pinctrl-bcm2835.c:1022:15: error: struct gpio_chip has no member named of_node
-  pc->gpio_chip.of_node = np;
+On 5/28/19 7:56 AM, Alexandre Courbot wrote:
+> This series is a refactoring/split of the initial patch for MT8183 codec support
+> that was posted for Chrome OS [1] in order to make it upstreamable.
+> 
+> The line count has been significantly reduced compared to the initial patch,
+> although support for the MT8183 encoder is not here yet to limit the amount of
+> code to review.
+> 
+> Although the series applies on top of today's media tree, it will not compile
+> until support for the SCP is merged, hence the RFC status. Note also that the
+> H.264 structures used and implementation of the stateless codec API may not be
+> completely up-to-date. So the goal of this publication is to review the general
+> idea (especially split unto stateful and stateless ops), and maybe merge the
+> first 5 patches.
+> 
+> Patches 1-5 are cleanup/small fixes that came while working on this series. They
+> should be harmless and can be merged.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 0de704955ee4 ("pinctrl: bcm2835: Add support for generic pinctrl binding")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/pinctrl/bcm/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Merging these makes sense. I should be able to do that when v2 is posted with the
+SPDX conversion.
 
-diff --git a/drivers/pinctrl/bcm/Kconfig b/drivers/pinctrl/bcm/Kconfig
-index 4b5842c..dcf7df7 100644
---- a/drivers/pinctrl/bcm/Kconfig
-+++ b/drivers/pinctrl/bcm/Kconfig
-@@ -19,7 +19,7 @@ config PINCTRL_BCM281XX
- 
- config PINCTRL_BCM2835
- 	bool "Broadcom BCM2835 GPIO (with PINCONF) driver"
--	depends on ARCH_BCM2835 || ARCH_BRCMSTB || COMPILE_TEST
-+	depends on OF && (ARCH_BCM2835 || ARCH_BRCMSTB || COMPILE_TEST)
- 	select PINMUX
- 	select PINCONF
- 	select GENERIC_PINCONF
--- 
-2.7.4
+Regards,
 
-
+	Hans
