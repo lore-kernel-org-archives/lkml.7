@@ -2,136 +2,70 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E65C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 319EAC072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBB252075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:01:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A59221721
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:02:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cSFw7XtB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AUfFmnK9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727524AbfE1IBj (ORCPT
+        id S1727725AbfE1ICB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 04:01:39 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:50796 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbfE1IBi (ORCPT
+        Tue, 28 May 2019 04:02:01 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:46892 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726203AbfE1ICA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 04:01:38 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4S81Qie048278;
-        Tue, 28 May 2019 03:01:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559030486;
-        bh=aitQvQ8mJN5/QEKKXw77CNQIyj8FxmH4Q6Rk0NNv7Y0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=cSFw7XtBGEtL7PubqwFuThoJD1pxhWO19jSTEg7a8aikMaG5zxJwgbCNJ351rms2h
-         13odvuFWuNgCoBrZ49ocJ5UUUaKwFtc8+EQamjTaqlbR/oTpoe+yVKKK46/oVAOmqf
-         /zfT6w9lOokUVlBX3absWSJpPcDQfngjozOQdDcg=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4S81Q76068834
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 28 May 2019 03:01:26 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 28
- May 2019 03:01:25 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 28 May 2019 03:01:25 -0500
-Received: from [172.24.191.45] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4S81Lh6085829;
-        Tue, 28 May 2019 03:01:22 -0500
-Subject: Re: [PATCHv2 00/13] ti-sysc driver changes to drop custom hwmods
- property
-To:     Tony Lindgren <tony@atomide.com>, <linux-omap@vger.kernel.org>
-CC:     Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nishanth Menon <nm@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh@kernel.org>, <devicetree@vger.kernel.org>
-References: <20190528062414.27192-1-tony@atomide.com>
-From:   Keerthy <j-keerthy@ti.com>
-Message-ID: <0ba540b0-ad04-ee56-5874-69921eb4f374@ti.com>
-Date:   Tue, 28 May 2019 13:32:00 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 28 May 2019 04:02:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=5Anq1qwGKoGsIX6kb9ZWLK4o9JgSaVCCm8wVkC+oVCE=; b=AUfFmnK9XzeNtgYFLAw32vYpg
+        uHV8PlXfVQ8TVUhu+7QmSiTGyVi9+JtQqh6ES2ANR77xHCPHIea/pNle1cd/kpxZs7jF/S0QPtYlh
+        4H+WGxCtJ588MjkDyGPi25GnNQuQ6g0qkn/2A4IAemeQAWpii2+4Vq1yDIzJBNuVQ17tCMsnWghwR
+        HgA0EieTjD/ELwj3HL9UR3qjzAUkM6i47p4SCrEPQGdRwT0hS8OUEDiwEWiZQwRde+rmtEoPmOP46
+        GWKL83J16ZVG0bJYENsh+lIg5TwAG7fYcaMCjxdAUejy5dczD2i1PVruv7VulObHGR+3Rk7oDE+uS
+        eG/JZb/bQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hVX3Q-0001oC-40; Tue, 28 May 2019 08:01:52 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8CAA52073CF8D; Tue, 28 May 2019 10:01:49 +0200 (CEST)
+Date:   Tue, 28 May 2019 10:01:49 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Rick Edgecombe <rick.p.edgecombe@intel.com>
+Cc:     linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-mm@kvack.org, netdev@vger.kernel.org, luto@kernel.org,
+        dave.hansen@intel.com, namit@vmware.com
+Subject: Re: [PATCH v5 0/2] Fix issues with vmalloc flush flag
+Message-ID: <20190528080149.GJ2623@hirez.programming.kicks-ass.net>
+References: <20190527211058.2729-1-rick.p.edgecombe@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190528062414.27192-1-tony@atomide.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190527211058.2729-1-rick.p.edgecombe@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, May 27, 2019 at 02:10:56PM -0700, Rick Edgecombe wrote:
+> These two patches address issues with the recently added
+> VM_FLUSH_RESET_PERMS vmalloc flag.
+> 
+> Patch 1 addresses an issue that could cause a crash after other
+> architectures besides x86 rely on this path.
+> 
+> Patch 2 addresses an issue where in a rare case strange arguments
+> could be provided to flush_tlb_kernel_range(). 
 
-
-On 28/05/19 11:54 AM, Tony Lindgren wrote:
-> Hi all,
-> 
-> Here are changes to improve ti-sysc driver to the point where we can
-> finally drop the custom hwmods property for most cases. This series
-> drops hwmods property only for omap4 UART and MMC as those can be
-> tested with core retention idle.
-> 
-> I'll be posting more patches for dropping hwmods properties as they
-> get tested.
-
-
-Added missing dra71/76 patches on linux-next which get them to boot.
-
-Tested for boot on dra71/76.
-Tested for DS0 on AM43/33.
-Tested for RTC+DDR mode on am43.
-
-For the series:
-
-Tested-by: Keerthy <j-keerthy@ti.com>
-
-> 
-> Regards,
-> 
-> Tony
-> 
-> Changes since v1:
-> 
-> - Repost the series against v5.2-rc1 as the first patch in the series
->    got accidentally left out for patch "bus: ti-sysc: Add support for
->    missing clockdomain handling"
-> 
-> 
-> Tony Lindgren (13):
->    bus: ti-sysc: Add support for missing clockdomain handling
->    bus: ti-sysc: Support 16-bit writes too
->    bus: ti-sysc: Make OCP reset work for sysstatus and sysconfig reset
->      bits
->    bus: ti-sysc: Allow QUIRK_LEGACY_IDLE even if legacy_mode is not set
->    bus: ti-sysc: Enable interconnect target module autoidle bit on enable
->    bus: ti-sysc: Handle clockactivity for enable and disable
->    bus: ti-sysc: Handle swsup idle mode quirks
->    bus: ti-sysc: Set ENAWAKEUP if available
->    bus: ti-sysc: Add support for disabling module without legacy mode
->    bus: ti-sysc: Do rstctrl reset handling in two phases
->    bus: ti-sysc: Detect uarts also on omap34xx
->    ARM: dts: Drop legacy custom hwmods property for omap4 uart
->    ARM: dts: Drop legacy custom hwmods property for omap4 mmc
-> 
->   arch/arm/boot/dts/omap4-l4.dtsi       |   9 -
->   arch/arm/mach-omap2/omap_hwmod.c      |  39 +---
->   arch/arm/mach-omap2/pdata-quirks.c    |  60 +++++
->   drivers/bus/ti-sysc.c                 | 309 ++++++++++++++++++++------
->   include/linux/platform_data/ti-sysc.h |   9 +
->   5 files changed, 314 insertions(+), 112 deletions(-)
-> 
+Thanks!
