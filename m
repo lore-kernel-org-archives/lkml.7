@@ -7,55 +7,56 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D10E3C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93451C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:23:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 972B0208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:23:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 691B721670
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:23:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="r55AwMo4"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="B6FDdLEt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727508AbfE1UXN (ORCPT
+        id S1727646AbfE1UXh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 16:23:13 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:39141 "EHLO
+        Tue, 28 May 2019 16:23:37 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:49233 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726425AbfE1UXN (ORCPT
+        with ESMTP id S1726425AbfE1UXh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 16:23:13 -0400
+        Tue, 28 May 2019 16:23:37 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4SKMXbN2218182
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4SKNFUo2218253
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 28 May 2019 13:22:33 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4SKMXbN2218182
+        Tue, 28 May 2019 13:23:15 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4SKNFUo2218253
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559074954;
-        bh=QwhIhPchHY4JDzdo/Kdl6T8Xb9DK0fGxJgtnfhiwEbo=;
+        s=2019051801; t=1559074995;
+        bh=dbKBuz+yvTlisXWUqNvZXnegXSorIEnr5uNUAaWn2zA=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=r55AwMo4Cf8fnyw3IIPjcHb0CEbcoMlw8EsayvDizfct49AZ49Type1a2jtDGjPGD
-         zFcQ1rA5wNSCE8+0dep6n5e0Yq/ChtDIwkhbj8xNyuekWAY/ehl4jnhRtwuWIE21tm
-         ZeIpREUc474/tWDMp8X/Hq8OLfQmt/hXJhhOOC2KD92cRuzyYVOhpjKGWzqvFW81UM
-         Y4ZSPgpzHzkOxuNX7cF7IzqmjA7Lyi2ahoPUzd3d0hPrb+Jadua7ACZWAEDch683z/
-         0U7QeKy8GR2P20H1WmAOQ7Tag2+0b1Z8WxysT9DxfRJkYsLSwWShwb31bquuGBk3Ib
-         8SPlQAr3XleTg==
+        b=B6FDdLEtiJ0huLjpyftYEi1iNDKb52YXlYmYLYwtLTIHlod7qZp7Pc/WcFX7NM80n
+         XxG3P/1xZGu7C3lkeOil0QV2D84qeje21yrx2BYBKM9yFiiA8PZyzE+Jv9X1u+obuW
+         QYFdQuRiTDfwshxIZeACQfhYSk69pXHVk2v+PtxYj2KVn/hanBMEH/0ulLASvJWc0R
+         HU8qQNyNNlgttMdEPKaKqjsvXELbRTzY1gwiRuKnIkrs3kUgmZ7VvZQpwC8DlT9Dkt
+         8I6Mo1xjoq5CCbS5Z1kfJ6MdC0Kramn5+6zcAacNxEiaKFGJCfQw3NJRBPtJxQ9DMy
+         zq9oxoMgYlerg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4SKMXJZ2218179;
-        Tue, 28 May 2019 13:22:33 -0700
-Date:   Tue, 28 May 2019 13:22:33 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4SKNFmH2218245;
+        Tue, 28 May 2019 13:23:15 -0700
+Date:   Tue, 28 May 2019 13:23:15 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Waiman Long <tipbot@zytor.com>
-Message-ID: <tip-5ca584d935c32906d114924dc0e1dbfcbb13fdb2@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org, hpa@zytor.com,
-        tglx@linutronix.de, mingo@kernel.org, dvhart@infradead.org,
-        longman@redhat.com, dave@stgolabs.net
-Reply-To: dave@stgolabs.net, longman@redhat.com, dvhart@infradead.org,
-          mingo@kernel.org, tglx@linutronix.de, hpa@zytor.com,
-          peterz@infradead.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20190528160345.24017-1-longman@redhat.com>
-References: <20190528160345.24017-1-longman@redhat.com>
+From:   tip-bot for Jiri Kosina <tipbot@zytor.com>
+Message-ID: <tip-f560201102035ba9def2fc21827dd34690dd126e@git.kernel.org>
+Cc:     hpa@zytor.com, peterz@infradead.org, mingo@kernel.org,
+        jpoimboe@redhat.com, jkosina@suse.cz, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de
+Reply-To: mingo@kernel.org, tglx@linutronix.de,
+          linux-kernel@vger.kernel.org, hpa@zytor.com, jpoimboe@redhat.com,
+          peterz@infradead.org, jkosina@suse.cz
+In-Reply-To: <nycvar.YFH.7.76.1905282128100.1962@cbobk.fhfr.pm>
+References: <nycvar.YFH.7.76.1905282128100.1962@cbobk.fhfr.pm>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:locking/core] futex: Consolidate duplicated timer setup code
-Git-Commit-ID: 5ca584d935c32906d114924dc0e1dbfcbb13fdb2
+Subject: [tip:smp/hotplug] cpu/hotplug: Fix notify_cpu_starting() reference
+ in bringup_wait_for_ap()
+Git-Commit-ID: f560201102035ba9def2fc21827dd34690dd126e
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -69,148 +70,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  5ca584d935c32906d114924dc0e1dbfcbb13fdb2
-Gitweb:     https://git.kernel.org/tip/5ca584d935c32906d114924dc0e1dbfcbb13fdb2
-Author:     Waiman Long <longman@redhat.com>
-AuthorDate: Tue, 28 May 2019 12:03:45 -0400
+Commit-ID:  f560201102035ba9def2fc21827dd34690dd126e
+Gitweb:     https://git.kernel.org/tip/f560201102035ba9def2fc21827dd34690dd126e
+Author:     Jiri Kosina <jkosina@suse.cz>
+AuthorDate: Tue, 28 May 2019 21:31:49 +0200
 Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Tue, 28 May 2019 11:12:00 -0700
+CommitDate: Tue, 28 May 2019 12:59:03 -0700
 
-futex: Consolidate duplicated timer setup code
+cpu/hotplug: Fix notify_cpu_starting() reference in bringup_wait_for_ap()
 
-Add a new futex_setup_timer() helper function to consolidate all the
-hrtimer_sleeper setup code.
+bringup_wait_for_ap() comment references cpu_notify_starting(), but the 
+function is actually called notify_cpu_starting(). Fix that.
 
-Signed-off-by: Waiman Long <longman@redhat.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Darren Hart <dvhart@infradead.org>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Link: https://lkml.kernel.org/r/20190528160345.24017-1-longman@redhat.com
+Link: https://lkml.kernel.org/r/nycvar.YFH.7.76.1905282128100.1962@cbobk.fhfr.pm
 
 ---
- kernel/futex.c | 69 +++++++++++++++++++++++++++++++++-------------------------
- 1 file changed, 39 insertions(+), 30 deletions(-)
+ kernel/cpu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/futex.c b/kernel/futex.c
-index 2268b97d5439..49bf20a8c512 100644
---- a/kernel/futex.c
-+++ b/kernel/futex.c
-@@ -483,6 +483,37 @@ enum futex_access {
- 	FUTEX_WRITE
- };
- 
-+/**
-+ * futex_setup_timer - set up the sleeping hrtimer.
-+ * @time:	ptr to the given timeout value
-+ * @timeout:	the hrtimer_sleeper structure to be set up
-+ * @flags:	futex flags
-+ * @range_ns:	optional range in ns
-+ *
-+ * Return: Initialized hrtimer_sleeper structure or NULL if no timeout
-+ *	   value given
-+ */
-+static inline struct hrtimer_sleeper *
-+futex_setup_timer(ktime_t *time, struct hrtimer_sleeper *timeout,
-+		  int flags, u64 range_ns)
-+{
-+	if (!time)
-+		return NULL;
-+
-+	hrtimer_init_on_stack(&timeout->timer, (flags & FLAGS_CLOCKRT) ?
-+			      CLOCK_REALTIME : CLOCK_MONOTONIC,
-+			      HRTIMER_MODE_ABS);
-+	hrtimer_init_sleeper(timeout, current);
-+
-+	/*
-+	 * If range_ns is 0, calling hrtimer_set_expires_range_ns() is
-+	 * effectively the same as calling hrtimer_set_expires().
-+	 */
-+	hrtimer_set_expires_range_ns(&timeout->timer, *time, range_ns);
-+
-+	return timeout;
-+}
-+
- /**
-  * get_futex_key() - Get parameters which are the keys for a futex
-  * @uaddr:	virtual address of the futex
-@@ -2692,7 +2723,7 @@ out:
- static int futex_wait(u32 __user *uaddr, unsigned int flags, u32 val,
- 		      ktime_t *abs_time, u32 bitset)
- {
--	struct hrtimer_sleeper timeout, *to = NULL;
-+	struct hrtimer_sleeper timeout, *to;
- 	struct restart_block *restart;
- 	struct futex_hash_bucket *hb;
- 	struct futex_q q = futex_q_init;
-@@ -2702,17 +2733,8 @@ static int futex_wait(u32 __user *uaddr, unsigned int flags, u32 val,
- 		return -EINVAL;
- 	q.bitset = bitset;
- 
--	if (abs_time) {
--		to = &timeout;
--
--		hrtimer_init_on_stack(&to->timer, (flags & FLAGS_CLOCKRT) ?
--				      CLOCK_REALTIME : CLOCK_MONOTONIC,
--				      HRTIMER_MODE_ABS);
--		hrtimer_init_sleeper(to, current);
--		hrtimer_set_expires_range_ns(&to->timer, *abs_time,
--					     current->timer_slack_ns);
--	}
--
-+	to = futex_setup_timer(abs_time, &timeout, flags,
-+			       current->timer_slack_ns);
- retry:
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index f2ef10460698..be82cbc11a8a 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -522,7 +522,7 @@ static int bringup_wait_for_ap(unsigned int cpu)
  	/*
- 	 * Prepare to wait on uaddr. On success, holds hb lock and increments
-@@ -2792,7 +2814,7 @@ static long futex_wait_restart(struct restart_block *restart)
- static int futex_lock_pi(u32 __user *uaddr, unsigned int flags,
- 			 ktime_t *time, int trylock)
- {
--	struct hrtimer_sleeper timeout, *to = NULL;
-+	struct hrtimer_sleeper timeout, *to;
- 	struct futex_pi_state *pi_state = NULL;
- 	struct rt_mutex_waiter rt_waiter;
- 	struct futex_hash_bucket *hb;
-@@ -2805,13 +2827,7 @@ static int futex_lock_pi(u32 __user *uaddr, unsigned int flags,
- 	if (refill_pi_state_cache())
- 		return -ENOMEM;
- 
--	if (time) {
--		to = &timeout;
--		hrtimer_init_on_stack(&to->timer, CLOCK_REALTIME,
--				      HRTIMER_MODE_ABS);
--		hrtimer_init_sleeper(to, current);
--		hrtimer_set_expires(&to->timer, *time);
--	}
-+	to = futex_setup_timer(time, &timeout, FLAGS_CLOCKRT, 0);
- 
- retry:
- 	ret = get_futex_key(uaddr, flags & FLAGS_SHARED, &q.key, FUTEX_WRITE);
-@@ -3208,7 +3224,7 @@ static int futex_wait_requeue_pi(u32 __user *uaddr, unsigned int flags,
- 				 u32 val, ktime_t *abs_time, u32 bitset,
- 				 u32 __user *uaddr2)
- {
--	struct hrtimer_sleeper timeout, *to = NULL;
-+	struct hrtimer_sleeper timeout, *to;
- 	struct futex_pi_state *pi_state = NULL;
- 	struct rt_mutex_waiter rt_waiter;
- 	struct futex_hash_bucket *hb;
-@@ -3225,15 +3241,8 @@ static int futex_wait_requeue_pi(u32 __user *uaddr, unsigned int flags,
- 	if (!bitset)
- 		return -EINVAL;
- 
--	if (abs_time) {
--		to = &timeout;
--		hrtimer_init_on_stack(&to->timer, (flags & FLAGS_CLOCKRT) ?
--				      CLOCK_REALTIME : CLOCK_MONOTONIC,
--				      HRTIMER_MODE_ABS);
--		hrtimer_init_sleeper(to, current);
--		hrtimer_set_expires_range_ns(&to->timer, *abs_time,
--					     current->timer_slack_ns);
--	}
-+	to = futex_setup_timer(abs_time, &timeout, flags,
-+			       current->timer_slack_ns);
- 
- 	/*
- 	 * The waiter is allocated on our stack, manipulated by the requeue
+ 	 * SMT soft disabling on X86 requires to bring the CPU out of the
+ 	 * BIOS 'wait for SIPI' state in order to set the CR4.MCE bit.  The
+-	 * CPU marked itself as booted_once in cpu_notify_starting() so the
++	 * CPU marked itself as booted_once in notify_cpu_starting() so the
+ 	 * cpu_smt_allowed() check will now return false if this is not the
+ 	 * primary sibling.
+ 	 */
