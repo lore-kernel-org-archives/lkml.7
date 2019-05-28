@@ -2,97 +2,231 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6580C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA090C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:52:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AE44208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:50:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0E9520883
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:52:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jKZXaT5v"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="PBOH6uzi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbfE1Kud (ORCPT
+        id S1726602AbfE1KwK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 06:50:33 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:42586 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbfE1Kud (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 06:50:33 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4SAo9M5071145;
-        Tue, 28 May 2019 05:50:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559040609;
-        bh=3KI4TZCi5svmvrs/+WfaxacZZlvuTjo1DGtT0rt3dWA=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=jKZXaT5vjwf3nk0m/96lzgkrJiflhp3wRwspDaqU2XvZVmj+06hjp/D/7qSOxA4fh
-         Sr/q/h5y1kp62fONWkVhpP0HakggdKA5c7ztnHyAg9UV1BJ4opX9qMvGya2Xtv1Nt3
-         1O38sDyVizyeYv7Q5gxjnv+cYJic/w/03BzKfr4w=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4SAo9XG043109
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 28 May 2019 05:50:09 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 28
- May 2019 05:50:09 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 28 May 2019 05:50:09 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4SAo5Pl127389;
-        Tue, 28 May 2019 05:50:06 -0500
-Subject: Re: [PATCH] drm/omap: Make sure device_id tables are NULL terminated
-To:     Thomas Meyer <thomas@m3y3r.de>, <airlied@linux.ie>,
-        <daniel@ffwll.ch>, <dri-devel@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1558989631144-20791398-0-diffsplit-thomas@m3y3r.de>
- <1558989631162-1860150863-1-diffsplit-thomas@m3y3r.de>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <7bb26068-36fe-33d2-b374-079cdedab76d@ti.com>
-Date:   Tue, 28 May 2019 13:50:05 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <1558989631162-1860150863-1-diffsplit-thomas@m3y3r.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+        Tue, 28 May 2019 06:52:10 -0400
+Received: from mail-eopbgr70084.outbound.protection.outlook.com ([40.107.7.84]:37758
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726282AbfE1KwK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 06:52:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ioNb+DIgHp9f15M7SnfsfijndD+CIBzIcltPbgrUeQY=;
+ b=PBOH6uzikhT93q9shvtXaMuHsbJYdJCK6gON0naoRQQXNI8sRTKqIbh71fvdhWiYLsIFLse+MBr0SmjLfmNOA0OlZH0M2CN+MsbZfE/QTu6dPPrBSqWz+yqSd0b0tjVWVyho6XM+7S/nFfXwekmFYWeg8894PGtB+jAV3AhzaCU=
+Received: from VE1PR08MB4847.eurprd08.prod.outlook.com (10.255.113.87) by
+ VE1PR08MB4927.eurprd08.prod.outlook.com (10.255.114.23) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.18; Tue, 28 May 2019 10:52:03 +0000
+Received: from VE1PR08MB4847.eurprd08.prod.outlook.com
+ ([fe80::d17e:fe55:9860:fcb8]) by VE1PR08MB4847.eurprd08.prod.outlook.com
+ ([fe80::d17e:fe55:9860:fcb8%7]) with mapi id 15.20.1922.021; Tue, 28 May 2019
+ 10:52:03 +0000
+From:   Dave P Martin <Dave.Martin@arm.com>
+To:     Mark Rutland <Mark.Rutland@arm.com>
+CC:     "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "H.J. Lu" <hjl.tools@gmail.com>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Paul Elliott <Paul.Elliott@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Will Deacon <Will.Deacon@arm.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Kristina Martsenko <Kristina.Martsenko@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <Catalin.Marinas@arm.com>,
+        Sudakshina Das <Sudi.Das@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 4/8] arm64: Basic Branch Target Identification support
+Thread-Topic: [PATCH 4/8] arm64: Basic Branch Target Identification support
+Thread-Index: AQHVEjD8get/p3f1rUKBROdJSa3g/aZ6bSsA///8AQCAABo5gIAAAdIAgAXdJwA=
+Date:   Tue, 28 May 2019 10:52:03 +0000
+Message-ID: <20190528105200.GU2019@e103592.cambridge.arm.com>
+References: <1558693533-13465-1-git-send-email-Dave.Martin@arm.com>
+ <1558693533-13465-5-git-send-email-Dave.Martin@arm.com>
+ <20190524130217.GA15566@lakrids.cambridge.arm.com>
+ <20190524145306.GZ28398@e103592.cambridge.arm.com>
+ <20190524153847.GE15566@lakrids.cambridge.arm.com>
+ <20190524161239.GA28398@e103592.cambridge.arm.com>
+ <20190524171908.GA18057@lakrids.cambridge.arm.com>
+In-Reply-To: <20190524171908.GA18057@lakrids.cambridge.arm.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mutt/1.5.23 (2014-03-12)
+x-originating-ip: [217.140.106.49]
+x-clientproxiedby: LO2P265CA0171.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:a::15) To VE1PR08MB4847.eurprd08.prod.outlook.com
+ (2603:10a6:802:a6::23)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Dave.Martin@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 88bc6115-5708-45cc-c6b0-08d6e35a84a1
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR08MB4927;
+x-ms-traffictypediagnostic: VE1PR08MB4927:
+x-microsoft-antispam-prvs: <VE1PR08MB49274C885B8B2F1C7917619DFE1E0@VE1PR08MB4927.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 00514A2FE6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(346002)(39860400002)(396003)(136003)(51444003)(189003)(199004)(40434004)(486006)(68736007)(476003)(4326008)(186003)(446003)(1076003)(53936002)(6512007)(6246003)(66066001)(5660300002)(11346002)(316002)(76176011)(478600001)(26005)(66946007)(73956011)(25786009)(6862004)(66446008)(66476007)(66556008)(64756008)(14454004)(2906002)(99286004)(8676002)(81156014)(6506007)(14444005)(256004)(81166006)(6116002)(3846002)(54906003)(33656002)(6486002)(71200400001)(386003)(6436002)(52116002)(71190400001)(305945005)(7736002)(102836004)(58126008)(86362001)(8936002)(72206003)(229853002)(5024004)(6636002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB4927;H:VE1PR08MB4847.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: EikR+iM1RWkcD6zUulT8fO1ww+j7AgtjpE8JpiXMOW9wAoQTsBsSW/lv+sZ+xsB/S1vQnyYJafed5VXo9q0YvJ2M3UlQrZ5fTCLZ4tfBbfS9QserlP2JvfU8lCyvtbmUHQS/VnugJKigKqfVYXbamYOqm1aKISDekqsxJVMj/P4yPk1LjoSu9XhF2WvKmxL1lfInvqvww5qbhQlxdcmEVQtub6ryKaahjBMWTGA4pM0D0YZT6ckiFG+5JEwVOYcuXv+ZW6TLVbgaMfZDfWihzWZ2QetYLKoQD/6+iw8UZTlCgwfIrqeUH+6Hx7lrdT/zoXNxdQPGBm/6cX+aOjNrdEPmgxd6NCzQAf4JV5qyTij3YWjPZlhStpMQ+csVUf62UPVf6eoAESjPva6is6UZ4baEVp4JvwOOcYUwQB4K5Is=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <314CAC5F10663F40B9736AA1E0A855E3@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 88bc6115-5708-45cc-c6b0-08d6e35a84a1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2019 10:52:03.3718
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Dave.Martin@arm.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB4927
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/05/2019 23:41, Thomas Meyer wrote:
-> Make sure (of/i2c/platform)_device_id tables are NULL terminated.
-> 
-> Signed-off-by: Thomas Meyer <thomas@m3y3r.de>
-> ---
-> 
-> diff -u -p a/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c b/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
-> --- a/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
-> +++ b/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
-> @@ -198,6 +198,7 @@ static const struct of_device_id omapdss
->   	{ .compatible = "toppoly,td028ttec1" },
->   	{ .compatible = "tpo,td028ttec1" },
->   	{ .compatible = "tpo,td043mtea1" },
-> +	{},
->   };
->   
->   static int __init omapdss_boot_init(void)
-> 
+On Fri, May 24, 2019 at 06:19:10PM +0100, Mark Rutland wrote:
+> On Fri, May 24, 2019 at 05:12:40PM +0100, Dave Martin wrote:
+> > On Fri, May 24, 2019 at 04:38:48PM +0100, Mark Rutland wrote:
+> > > On Fri, May 24, 2019 at 03:53:06PM +0100, Dave Martin wrote:
+> > > > On Fri, May 24, 2019 at 02:02:17PM +0100, Mark Rutland wrote:
+> > > > > On Fri, May 24, 2019 at 11:25:29AM +0100, Dave Martin wrote:
 
-Thanks! I've picked this up.
+[...]
 
-  Tomi
+> > > > > > diff --git a/arch/arm64/kernel/syscall.c b/arch/arm64/kernel/sy=
+scall.c
+> > > > > > index 5610ac0..85b456b 100644
+> > > > > > --- a/arch/arm64/kernel/syscall.c
+> > > > > > +++ b/arch/arm64/kernel/syscall.c
+> > > > > > @@ -66,6 +66,7 @@ static void el0_svc_common(struct pt_regs *re=
+gs, int scno, int sc_nr,
+> > > > > >  unsigned long flags =3D current_thread_info()->flags;
+> > > > > >
+> > > > > >  regs->orig_x0 =3D regs->regs[0];
+> > > > > > +regs->pstate &=3D ~(regs->pstate & PSR_BTYPE_MASK);
+> > > > >
+> > > > > Likewise:
+> > > > >
+> > > > > regs->pstate &=3D ~PSR_BTYPE_MASK;
+> > > > >
+> > > > > ... though I don't understand why that would matter to syscalls, =
+nor how
+> > > > > those bits could ever be set given we had to execute an SVC to ge=
+t here.
+> > > > >
+> > > > > What am I missing?
+> > > >
+> > > > The behaviour is counterintuivite here.  The architecture guarantee=
+s to
+> > > > preserve BTYPE for traps, faults and asynchronous exceptions, but f=
+or a
+> > > > synchronous execption from normal architectural execution of an
+> > > > exception-generating instruction (SVC/HVC/SMC) the architecture lea=
+ves
+> > > > it IMP DEF whether BTYPE is preserved or zeroed in SPSR.
+> > >
+> > > I'm still missing something here. IIUC were BTYPE was non-zero, we
+> > > should take the BTI trap before executing the SVC/HVC/SMC, right?
+> > >
+> > > Otherwise, it would be possible to erroneously branch to an SVC/HVC/S=
+MC,
+> > > which would logically violate the BTI protection.
+> >
+> > Only if the SVC (etc.) is in a BTI guarded page.  Otherwise, we could
+> > have legitimately branched to the SVC insn directly and BTYPE would
+> > be nonzero, but no trap would occur.
+>
+> I agree that would be the case immediately before we execute the SVC,
+> but I think there's a subtlety here w.r.t. what exactly happens as an
+> SVC is executed.
+>
+> My understanding was that even for unguarded pages, the execution of any
+> (non branch/eret) instruction would zero PSTATE.BTYPE.
+>
+> For SVC it's not clear to me whether generating the SVC exception is
+> considered to be an effect of completing the execution of an SVC,
+> whether it's considered as preempting the execution of the SVC, or
+> whether that's IMPLEMENTATION DEFINED.
+>
+> Consequently it's not clear to me whether or not executing an SVC clears
+> PSTATE.BTYPE before the act of taking the exception samples PSTATE. I
+> would hope that it does, as this would be in keeping with the way the
+> ELR is updated.
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+OTOH, the wording calls this case out quite explicitly.  It seems odd to
+do that if the more general wording applies.
+
+I'll take another look and request clarficiation.
+
+> I think that we should try to clarify that before we commit ourselves to
+> the most painful interpretation here. Especially as similar would apply
+> to HVC and SMC, and I strongly suspect firmware in general is unlikely
+> to fix up the PSTATE.BTYPE of a caller.
+>
+> > We should still logically zero BTYPE across SVC in that case, because
+> > the SVC may itself branch:  a signal could be delivered on return and
+> > we want the prevailing BTYPE then to be 0 for capture in the signal
+> > frame.  Doing this zeroing in signal delivery because if the signal
+> > is not delivered in SVE then a nonzero BTYPE might be live, and we
+> > must then restore it properly on sigreturn.
+>
+> I'm not sure I follow this.
+>
+> If we deliver a signal, the kernel generates a pristine PSTATE for the
+> signal handler, and the interrupted context doesn't matter.
+>
+> Saving/restoring the state of the interrupted context is identical to
+> returning without delivering the signal, and we'd have a problem
+> regardless.
+
+My test looks garbled... since the point I was making was tangential, I
+don't elaborate it for now.
+
+> > As you observe, this scenario should be impossible if the SVC insn
+> > is in a guarded page, unless userspace does something foolhardy like
+> > catching the SIGILL and fudging BTYPE or the return address.
+>
+> I think userspace gets to pick up the pieces in this case. Much like
+> signal delivery, it would need to generate a sensible PSTATE itself.
+
+Agreed, there is no way to hide this kind of thing from userspace code
+that messes with the signal frame -- so we shouldn't try.
+
+> [...]
+>
+> > (Now I come to think of it I also need to look at rseq etc., which is
+> > another magic kernel-mediated branch mechanism.)
+
+Meh.
+
+Cheers
+---Dave
+IMPORTANT NOTICE: The contents of this email and any attachments are confid=
+ential and may also be privileged. If you are not the intended recipient, p=
+lease notify the sender immediately and do not disclose the contents to any=
+ other person, use it for any purpose, or store or copy the information in =
+any medium. Thank you.
