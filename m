@@ -2,60 +2,103 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E606DC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:19:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98BEDC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9D8520989
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:19:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A72A20989
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:19:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wyn34Lvv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbfE1STN (ORCPT
+        id S1727958AbfE1STT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 14:19:13 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:51565 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727470AbfE1STM (ORCPT
+        Tue, 28 May 2019 14:19:19 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:48044 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727811AbfE1STS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 14:19:12 -0400
-Received: from 50-233-100-202-static.hfc.comcastbusiness.net ([50.233.100.202] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hVggb-0004zU-Ih; Tue, 28 May 2019 20:18:58 +0200
-Date:   Tue, 28 May 2019 11:18:48 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-cc:     linux-kernel@vger.kernel.org,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, linux-arch@vger.kernel.org
-Subject: Re: [REVIEW][PATCH 11/26] signal/x86: Remove task parameter from
- send_sigtrap
-In-Reply-To: <20190523003916.20726-12-ebiederm@xmission.com>
-Message-ID: <alpine.DEB.2.21.1905281118290.1859@nanos.tec.linutronix.de>
-References: <20190523003916.20726-1-ebiederm@xmission.com> <20190523003916.20726-12-ebiederm@xmission.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 28 May 2019 14:19:18 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4SIJDN0049819;
+        Tue, 28 May 2019 13:19:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1559067553;
+        bh=FHBxN25oKeInyBYHIzdz2Mbx2pen9sGOw8A9sYUQEPA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=wyn34Lvv7tRksgPniyeCYM+lRAS6+HPlciStbaJeE2fr7kY1DAYG8FB8csBn/+8Y5
+         QEHRg9bhze1xLHslEfD38Nmp/ZFc7jqFPlW1ICByn7SUJUzncmFos3YhZNp13Hoppk
+         QuwjX1JyFQB+hsfeUVPClUkwcFr7VcUaxW4bZ69k=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4SIJDus038031
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 28 May 2019 13:19:13 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 28
+ May 2019 13:19:12 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 28 May 2019 13:19:12 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4SIJCbT074115;
+        Tue, 28 May 2019 13:19:12 -0500
+Subject: Re: [PATCH v3 1/9] leds: multicolor: Add sysfs interface definition
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
+        <robh+dt@kernel.org>
+CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190523190820.29375-1-dmurphy@ti.com>
+ <20190523190820.29375-2-dmurphy@ti.com>
+ <f01ac400-efda-80a8-4d63-1e2add5e054a@gmail.com>
+ <185abdd6-100c-0a71-2da9-8f556d8ea701@ti.com>
+ <333167d0-4615-2fbe-e933-cbca623998ef@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <e54d9d29-5daa-fd3a-a5a9-ebd2450882ee@ti.com>
+Date:   Tue, 28 May 2019 13:19:12 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <333167d0-4615-2fbe-e933-cbca623998ef@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 May 2019, Eric W. Biederman wrote:
+Jacek
 
-> The send_sigtrap function is always called with task == current.  Make
-> that explicit by removing the task parameter.
-> 
-> This also makes it clear that the x86 send_sigtrap passes current
-> into force_sig_fault.
-> 
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+On 5/28/19 12:44 PM, Jacek Anaszewski wrote:
+> Dan,
+>
+> On 5/28/19 7:32 PM, Dan Murphy wrote:
+>> Jacek
+>>
+>> On 5/27/19 3:00 PM, Jacek Anaszewski wrote:
+>>> Hi Dan,
+>>>
+>>> Thank you for the update.
+>>>
+>>> One thing is missing here - we need to document how legacy brightness
+>>> levels map to the sub-LED color levels, i.e. what you do in
+>>> multicolor_set_brightness().
+>>
+>>
+>> Ok so i will need to document the algorithm that is used to determine 
+>> the color LED brightness.
+>
+> Right, and please send just an update of that single patch.
+>
 
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+So you are asking for v4 with only this patch updated.
+
+
+Dan
 
