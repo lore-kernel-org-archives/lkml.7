@@ -2,121 +2,98 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E99C46470
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 299ADC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2FDF208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:42:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2CE92053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:42:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559032967;
+	bh=3PjxW+bASs8Jvrm2oC/bfjraX8PQtHDF+F5mgAKOWjY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rJr65/R9iV9oFMgwPfEan0yUs/CKsNgfP693d6RctJk3z0yMBG9mO3VDwNIIknJVi
+	 ecSOaJ6noYNQ6SOG7hlFHwse32LUnUoHExhDl1cumNAbLDlG5vXXnDK7IRacgZzMZD
+	 qc4Do7lFEc9+KoUH2DLn7aIlZav3m12FU+iOXoI8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbfE1ImD (ORCPT
+        id S1726682AbfE1Imq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 04:42:03 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:43152 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725943AbfE1ImC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 04:42:02 -0400
-Received: by mail-lj1-f196.google.com with SMTP id z5so16854211lji.10;
-        Tue, 28 May 2019 01:42:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ygkFSrOUs2wAQrj519Ns5GvdxA1S7D4YiKeP8FBGjUc=;
-        b=io1OvXIkx7t+fFIgPEQR1LWZpcHU//FxMoIA1CHkmrvMyfCuy+Dd8qNCTP6K6VQsbq
-         Xnegy97eNHvCjNEoN5fa3JWkdKUODIhUVnKB8JDr1V4bo+e9c57B7kGi2wJ5gRuzO4Hl
-         8dl3reJTRBm81ahfZNlJxkqi6xe3uhKwpEyjPonwx8SizWtZxeptMX1G9jeXq8j+wDxM
-         KlkFzD2YAKUldahDdilc9W2cauTFJyM1cSX4d3IPRLuCYjFcnyhenHDsW9KT+FHS12S0
-         nBTx2qeSnsu2YlRLxD1k03OQ67xtOubPudB3g7CQZNSjQdA5RNh63XWVC8UOu1jMuD54
-         Bd/A==
-X-Gm-Message-State: APjAAAVJQ/+bjo6yRObS1AHTop4Ia82G3DIVmR2JXv9dtkKdmk16y/eR
-        MoKxN+V193ChPb04ydkGbZYn50CKk2hvrjhpqR4=
-X-Google-Smtp-Source: APXvYqzZOuoB7xeUwboMimv2YSMlSWfGHoyt2S/rx8pW4inWIs7Uyh9nphOHLevt3f4ts4P2YOKp0CLg7C99oF1gcQ4=
-X-Received: by 2002:a05:651c:150:: with SMTP id c16mr64013182ljd.65.1559032920568;
- Tue, 28 May 2019 01:42:00 -0700 (PDT)
+        Tue, 28 May 2019 04:42:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41086 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725943AbfE1Imp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 04:42:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 83E45ADD4;
+        Tue, 28 May 2019 08:42:44 +0000 (UTC)
+Date:   Tue, 28 May 2019 10:42:43 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Roman Gushchin <guro@fb.com>, linux-api@vger.kernel.org
+Subject: Re: [PATCH RFC] mm/madvise: implement MADV_STOCKPILE (kswapd from
+ user space)
+Message-ID: <20190528084243.GT1658@dhcp22.suse.cz>
+References: <155895155861.2824.318013775811596173.stgit@buzz>
+ <20190527141223.GD1658@dhcp22.suse.cz>
+ <20190527142156.GE1658@dhcp22.suse.cz>
+ <20190527143926.GF1658@dhcp22.suse.cz>
+ <9c55a343-2a91-46c6-166d-41b94bf5e9c8@yandex-team.ru>
+ <20190528065153.GB1803@dhcp22.suse.cz>
+ <a4e5eeb8-3560-d4b4-08a0-8a22c677c0f7@yandex-team.ru>
+ <20190528073835.GP1658@dhcp22.suse.cz>
+ <5af1ba69-61d1-1472-4aa3-20beb4ae44ae@yandex-team.ru>
 MIME-Version: 1.0
-References: <5cec74e8.1c69fb81.37335.9d7b@mx.google.com> <0edab48f-06e5-9ed8-09be-7c9976ae1afb@collabora.com>
- <CAMuHMdUF1Csi1ZMccOj=kurijMLcA6G+TP_spsE+fnMvZR71Vw@mail.gmail.com> <de92e3bd-70e8-fcba-3c88-c04170704e7b@collabora.com>
-In-Reply-To: <de92e3bd-70e8-fcba-3c88-c04170704e7b@collabora.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 28 May 2019 10:41:48 +0200
-Message-ID: <CAMuHMdW9Rz=ZQ=wWg=vGJAzzM85+UnN1otKfJzVvbkTkPQ2g2g@mail.gmail.com>
-Subject: Re: linusw/for-next boot bisection: v5.2-rc1-8-g73a790c68d7e on rk3288-veyron-jaq
-To:     Guillaume Tucker <guillaume.tucker@collabora.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Elaine Zhang <zhangqing@rock-chips.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Mark Brown <broonie@kernel.org>,
-        Matt Hart <matthew.hart@linaro.org>, mgalka@collabora.com,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5af1ba69-61d1-1472-4aa3-20beb4ae44ae@yandex-team.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guillaume,
+On Tue 28-05-19 11:04:46, Konstantin Khlebnikov wrote:
+> On 28.05.2019 10:38, Michal Hocko wrote:
+[...]
+> > Could you define the exact semantic? Ideally something for the manual
+> > page please?
+> > 
+> 
+> Like kswapd which works with thresholds of free memory this one reclaims
+> until 'free' (i.e. memory which could be allocated without invoking
+> direct recliam of any kind) is lower than passed 'size' argument.
 
-On Tue, May 28, 2019 at 10:36 AM Guillaume Tucker
-<guillaume.tucker@collabora.com> wrote:
-> On 28/05/2019 08:45, Geert Uytterhoeven wrote:
-> > On Tue, May 28, 2019 at 9:13 AM Guillaume Tucker
-> > <guillaume.tucker@collabora.com> wrote:
-> >> This commit has now been reverted in mainline.  Would it be OK
-> >> for you to rebase your for-next branch on v5.2-rc2 or cherry-pick
-> >> the revert to avoid recurring bisections?
-> >>
-> >> Ideally this should have been fixed or reverted in mainline
-> >> before v5.2-rc1 was released, or even earlier when this was first
-> >> found in -next on 13th May.  Unfortunately it was overlooked and
-> >> then spread to other branches like yours.
-> >
-> > I'm afraid it's gonna spread to even more for-next branches, as most
-> > subsystem maintainers base their for-next branch on the previous rc1
-> > release.  Typically maintainers do not rebase their for-next branches,
-> > and do not cherry-pick fixes, unless they are critical for their
-> > subsystem.  So you can expect this to show up in e.g. the m68k for-next
-> > branch soon...
->
-> That is what I feared, thanks for confirming.
->
-> > Can't you mark this as a known issue, to prevent spending cycles on the
-> > same bisection, and sending out more bisection reports for the same
-> > issue?
->
-> Not really, so I've disabled bisections in the linux-gpio tree
-> and a few other maintainers' trees for now.  I'll see if we can
-> come up with a more systematic way of suppressing bisections in
-> similar cases (i.e. the issue has been fixed in mainline later
-> than the base commit for the branch being tested).
+s@lower@higher@ I guess
 
-Having a systematic way would be good, else you will have to disable
-most other maintainers' trees soon, severely limiting test coverage,
-or fall back to linux-next testing only, as linux-next will always include\
-latest mainline.
+> Thus right after madvise(NULL, size, MADV_STOCKPILE) 'size' bytes
+> could be allocated in this memory cgroup without extra latency from
+> reclaimer if there is no other memory consumers.
+> 
+> Reclaimed memory is simply put into free lists in common buddy allocator,
+> there is no reserves for particular task or cgroup.
+> 
+> If overall memory allocation rate is smooth without rough spikes then
+> calling MADV_STOCKPILE in loop periodically provides enough room for
+> allocations and eliminates direct reclaim from all other tasks.
+> As a result this eliminates unpredictable delays caused by
+> direct reclaim in random places.
 
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
+OK, this makes it more clear to me. Thanks for the clarification!
+I have clearly misunderstood and misinterpreted target as the reclaim
+target rather than free memory target.  Sorry about the confusion.
+I sill think that this looks like an abuse of the madvise but if there
+is a wider consensus this is acceptable I will not stand in the way.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Michal Hocko
+SUSE Labs
