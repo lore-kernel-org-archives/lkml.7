@@ -2,107 +2,80 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35462C04AB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBEBC04AB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 042E1208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:54:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=anastas.io header.i=@anastas.io header.b="Z6HTxRma"
+	by mail.kernel.org (Postfix) with ESMTP id 930F22075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:56:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbfE1By2 (ORCPT
+        id S1727915AbfE1B4I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 21:54:28 -0400
-Received: from alpha.anastas.io ([104.248.188.109]:56217 "EHLO
-        alpha.anastas.io" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727879AbfE1ByU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 21:54:20 -0400
-Received: from authenticated-user (alpha.anastas.io [104.248.188.109])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by alpha.anastas.io (Postfix) with ESMTPSA id 3DD407F8F8;
-        Mon, 27 May 2019 20:54:18 -0500 (CDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=anastas.io; s=mail;
-        t=1559008459; bh=EGTrKlRnXu1zsiLLv/Fv7FG8sil5S0AhH+klcU6GwLU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z6HTxRma9ugS+kSTEteLkii8KAfQxaSkokf6vGN9VTX0TdJQuIq9VmVCC6fOt9Epx
-         ix+mt1WTiYhgE5dY7HDD5WJht8hnOdwmsOZ0ig2EXt7P/5XrVfqmc+l7d6opoUlpR/
-         vZqZQB++8IUtoaIgyIn/GlFbzuaw1IFYl8rTMdAbecQjW8Ila8tLy0tiQKaiz0lTy9
-         aBnQjc9ccXekz6uqoHigBzgc3U1DsHa07ku8mSUtpsbESfxgKwfDvScxE17P4zrO7c
-         UAag/X4BIOsm1m+Bixc2360zMzWEsBK5DTOS86uGD1LXG7N1ctA9axFj+sSnUO0ffI
-         RZ0J49C6M5oUw==
-From:   Shawn Anastasio <shawn@anastas.io>
-To:     linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc:     bhelgaas@google.com, benh@kernel.crashing.org, paulus@samba.org,
-        mpe@ellerman.id.au, sbobroff@linux.ibm.com,
-        xyjxie@linux.vnet.ibm.com, rppt@linux.ibm.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/3] powerpc/64: Enable pcibios_after_init hook on ppc64
-Date:   Mon, 27 May 2019 20:54:11 -0500
-Message-Id: <20190528015412.30521-3-shawn@anastas.io>
-In-Reply-To: <20190528015412.30521-1-shawn@anastas.io>
-References: <20190528015412.30521-1-shawn@anastas.io>
+        Mon, 27 May 2019 21:56:08 -0400
+Received: from mga09.intel.com ([134.134.136.24]:1564 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727654AbfE1B4I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 21:56:08 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 May 2019 18:56:07 -0700
+X-ExtLoop1: 1
+Received: from unknown (HELO [10.239.13.7]) ([10.239.13.7])
+  by orsmga002.jf.intel.com with ESMTP; 27 May 2019 18:56:06 -0700
+Message-ID: <5CEC9667.30100@intel.com>
+Date:   Tue, 28 May 2019 10:01:11 +0800
+From:   Wei Wang <wei.w.wang@intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Thunderbird/31.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+To:     Eric Hankland <ehankland@google.com>, pbonzini@redhat.com,
+        rkrcmar@redhat.com
+CC:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v1] KVM: x86: PMU Whitelist
+References: <CAOyeoRWfPNmaWY6Lifdkdj3KPPM654vzDO+s3oduEMCJP+Asow@mail.gmail.com>
+In-Reply-To: <CAOyeoRWfPNmaWY6Lifdkdj3KPPM654vzDO+s3oduEMCJP+Asow@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable the pcibios_after_init hook on all powerpc platforms.
-This hook is executed at the end of pcibios_init and was previously
-only available on CONFIG_PPC32.
+On 05/23/2019 06:23 AM, Eric Hankland wrote:
+> - Add a VCPU ioctl that can control which events the guest can monitor.
+>
+> Signed-off-by: ehankland <ehankland@google.com>
+> ---
+> Some events can provide a guest with information about other guests or the
+> host (e.g. L3 cache stats); providing the capability to restrict access
+> to a "safe" set of events would limit the potential for the PMU to be used
+> in any side channel attacks. This change introduces a new vcpu ioctl that
+> sets an event whitelist. If the guest attempts to program a counter for
+> any unwhitelisted event, the kernel counter won't be created, so any
+> RDPMC/RDMSR will show 0 instances of that event.
 
-Since it is useful and not inherently limited to 32-bit mode,
-remove the limitation and allow it on all powerpc platforms.
+The general idea sounds good to me :)
 
-Signed-off-by: Shawn Anastasio <shawn@anastas.io>
----
- arch/powerpc/include/asm/machdep.h | 3 +--
- arch/powerpc/kernel/pci_64.c       | 4 ++++
- 2 files changed, 5 insertions(+), 2 deletions(-)
+For the implementation, I would have the following suggestions:
 
-diff --git a/arch/powerpc/include/asm/machdep.h b/arch/powerpc/include/asm/machdep.h
-index 2f0ca6560e47..2fbfaa9176ed 100644
---- a/arch/powerpc/include/asm/machdep.h
-+++ b/arch/powerpc/include/asm/machdep.h
-@@ -150,6 +150,7 @@ struct machdep_calls {
- 	void		(*init)(void);
- 
- 	void		(*kgdb_map_scc)(void);
-+#endif /* CONFIG_PPC32 */
- 
- 	/*
- 	 * optional PCI "hooks"
-@@ -157,8 +158,6 @@ struct machdep_calls {
- 	/* Called at then very end of pcibios_init() */
- 	void (*pcibios_after_init)(void);
- 
--#endif /* CONFIG_PPC32 */
--
- 	/* Called in indirect_* to avoid touching devices */
- 	int (*pci_exclude_device)(struct pci_controller *, unsigned char, unsigned char);
- 
-diff --git a/arch/powerpc/kernel/pci_64.c b/arch/powerpc/kernel/pci_64.c
-index 9d8c10d55407..fba7fe6e4a50 100644
---- a/arch/powerpc/kernel/pci_64.c
-+++ b/arch/powerpc/kernel/pci_64.c
-@@ -68,6 +68,10 @@ static int __init pcibios_init(void)
- 
- 	printk(KERN_DEBUG "PCI: Probing PCI hardware done\n");
- 
-+	/* Call machine dependent post-init code */
-+	if (ppc_md.pcibios_after_init)
-+		ppc_md.pcibios_after_init();
-+
- 	return 0;
- }
- 
--- 
-2.20.1
+1) Instead of using a whitelist, it would be better to use a blacklist to
+forbid the guest from counting any core level information. So by default,
+kvm maintains a list of those core level events, which are not supported to
+the guest.
 
+The userspace ioctl removes the related events from the blacklist to
+make them usable by the guest.
+
+2) Use vm ioctl, instead of vcpu ioctl. The blacklist-ed events can be 
+VM wide
+(unnecessary to make each CPU to maintain the same copy).
+Accordingly, put the pmu event blacklist into kvm->arch.
+
+3) Returning 1 when the guest tries to set the evetlsel msr to count an
+event which is on the blacklist.
+
+Best,
+Wei
