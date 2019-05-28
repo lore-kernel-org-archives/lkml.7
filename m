@@ -2,74 +2,71 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E216C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01783C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E00B720645
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:50:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C10AE20645
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:50:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="u2HDHExs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727585AbfE1NuA (ORCPT
+        id S1727606AbfE1NuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 09:50:00 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56176 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727400AbfE1NuA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 09:50:00 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 658C0B01F;
-        Tue, 28 May 2019 13:49:59 +0000 (UTC)
-Date:   Tue, 28 May 2019 15:49:58 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Togyrvalds <torvalds@linux-foundation.org>
-Subject: Re: [RFC] printk/sysrq: Don't play with console_loglevel
-Message-ID: <20190528134958.kpo5voy2jzmw57dw@pathway.suse.cz>
-References: <20190528002412.1625-1-dima@arista.com>
- <4a9c1b20-777d-079a-33f5-ddf0a39ff788@i-love.sakura.ne.jp>
- <20190528042208.GD26865@jagdpanzerIV>
- <90a22327-922d-6415-538a-6a3fcbe9f3e1@i-love.sakura.ne.jp>
- <20190528084825.GA9676@jagdpanzerIV>
- <966f1a8d-68ab-a808-9140-4ecf1453421d@i-love.sakura.ne.jp>
+        Tue, 28 May 2019 09:50:18 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:50460 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727331AbfE1NuR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 09:50:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=qtQb8M3DecPJ3xcklIW2jU9ZnoT8Z8rF5wOjW6hOtCc=; b=u2HDHExsvE0lZKiXzQ+XlMV7r
+        sdvB4EzINb/tqDItvQY4QgTiMJ71AdNBwkTxpNtc/2nEdEzcCPweayRU7AJCnPbYLmSGD4ULus+xk
+        IMESyWGZY/CtUl5ZsQ0LhzasfGddh0I127Cyb2+LnkZrCurb1mT8Uq1VC007Id1A0mHGdFcUHfEgP
+        /8A6UaMJw2qZLQIHgP86QVnBBzDnaKCGfQY8BR9v2f9pZCkUXal2JEC87WF1wScGBBU/hzG3vDH12
+        06niyRRdnDZvi91Hu67JuK+DhjQoQrlWhvp/Z5krAaI6gghzxGvUCBsNA8Rl8srLMxjNJAlOKNyfp
+        m/cemSdnQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hVcUX-0004Lf-HC; Tue, 28 May 2019 13:50:13 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 3452220756A00; Tue, 28 May 2019 15:50:12 +0200 (CEST)
+Date:   Tue, 28 May 2019 15:50:12 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     kan.liang@linux.intel.com
+Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com
+Subject: Re: [PATCH 5/9] perf/x86/intel: Set correct weight for TopDown
+ metrics events
+Message-ID: <20190528135012.GR2623@hirez.programming.kicks-ass.net>
+References: <20190521214055.31060-1-kan.liang@linux.intel.com>
+ <20190521214055.31060-6-kan.liang@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <966f1a8d-68ab-a808-9140-4ecf1453421d@i-love.sakura.ne.jp>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <20190521214055.31060-6-kan.liang@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 2019-05-28 19:15:43, Tetsuo Handa wrote:
-> On 2019/05/28 17:51, Sergey Senozhatsky wrote:
-> >> You are trying to omit passing KERN_UNSUPPRESSED by utilizing implicit printk
-> >> context information. But doesn't such attempt resemble find_printk_buffer() ?
-> > 
-> > Adding KERN_UNSUPPRESSED to all printks down the op_p->handler()
-> > line is hardly possible. At the same time I'd really prefer not
-> > to have buffering for sysrq.
+On Tue, May 21, 2019 at 02:40:51PM -0700, kan.liang@linux.intel.com wrote:
+> From: Andi Kleen <ak@linux.intel.com>
 > 
-> I don't think it is hardly possible. And I really prefer having
-> deferred printing for SysRq.
+> The topdown metrics and slots events are mapped to a fixed counter,
+> but should have the normal weight for the scheduler.
 
-This thread is about problems with manipulating console_loglevel.
+You forgot the 'why/because' part of that sentence.
 
-"Deferred printk" is another very complicated and controversial
-problem. Please, discuss it in a separate thread.
+> So special case this.
 
-Thanks in advance.
-
-Best Regards,
-Petr Mladek
