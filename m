@@ -2,103 +2,77 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0675CC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6285C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB94420883
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:52:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A9BB2081C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:53:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d3G6MP5s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbfE1MwC (ORCPT
+        id S1727045AbfE1Mxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 08:52:02 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:58045 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726924AbfE1MwB (ORCPT
+        Tue, 28 May 2019 08:53:36 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33888 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbfE1Mxg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 08:52:01 -0400
-Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1hVbZz-0003P1-Qv; Tue, 28 May 2019 14:51:47 +0200
-Message-ID: <1559047905.4039.15.camel@pengutronix.de>
-Subject: Re: [PATCH] arm64: dts: fsl: imx8mq: enable the svns power key
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     "Angus Ainslie (Purism)" <angus@akkea.ca>, angus.ainslie@puri.sm
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Carlo Caione <ccaione@baylibre.com>,
-        Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 28 May 2019 14:51:45 +0200
-In-Reply-To: <20190528124406.29730-1-angus@akkea.ca>
-References: <20190528124406.29730-1-angus@akkea.ca>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Tue, 28 May 2019 08:53:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=AXx+SzZ6K/ciPLwW8Q9L3pq12ZrCV5cYZu0brp2oNvM=; b=d3G6MP5s/bqNkzZZKI6qQor18
+        8IbUPbqkG/57v/Vr6MI4frRhYqJLSkvJkdTvdAMH9LDuFmDgttQdLHEAGyoduw62U5gkDC0s+YPi7
+        NUZjQeduZyMN3+GSuIMOBskK9zjfY3w6GyJRusLzlCNZg5T1w7IPTDCeC2XR44+o/LQSahzZuZE5E
+        Pe7RdzHoi9gLswkF7UEiEyGCD1DXtOFK3cW9TDz0AQEIEu4KTMreuI8Xvm2ClkTPV0AfdUFAvZRGb
+        v1I5mO/ccaHY/WkQOB1R28CEMrNTcwwqjorvFMoqRZOY2U3mnkEIt8vbu6suuPhg1zivAKIoEDt0R
+        zpB1xwXRg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hVbbg-00046h-Jl; Tue, 28 May 2019 12:53:32 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E9B022072908B; Tue, 28 May 2019 14:53:30 +0200 (CEST)
+Date:   Tue, 28 May 2019 14:53:30 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     kan.liang@linux.intel.com
+Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com
+Subject: Re: [PATCH 4/9] perf/x86/intel: Support hardware TopDown metrics
+Message-ID: <20190528125330.GV2606@hirez.programming.kicks-ass.net>
+References: <20190521214055.31060-1-kan.liang@linux.intel.com>
+ <20190521214055.31060-5-kan.liang@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190521214055.31060-5-kan.liang@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Angus,
+On Tue, May 21, 2019 at 02:40:50PM -0700, kan.liang@linux.intel.com wrote:
+> +		x86_pmu.has_metric = x86_pmu.intel_cap.perf_metrics;
 
-Am Dienstag, den 28.05.2019, 05:44 -0700 schrieb Angus Ainslie (Purism):
-> Add the snvs power key.
-> 
-> > Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-> ---
->  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> index 45d10d8efd14..5f93fd9662ae 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> @@ -8,6 +8,7 @@
->  #include <dt-bindings/power/imx8mq-power.h>
->  #include <dt-bindings/reset/imx8mq-reset.h>
->  #include <dt-bindings/gpio/gpio.h>
-> +#include "dt-bindings/input/input.h"
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/thermal/thermal.h>
->  #include "imx8mq-pinfunc.h"
-> @@ -463,6 +464,14 @@
-> >  					interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
-> >  						<GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
-> >  				};
+It makes sense to duplicate that state because?
+
+> @@ -717,6 +729,8 @@ struct x86_pmu {
+>  	struct extra_reg *extra_regs;
+>  	unsigned int flags;
+>  
+> +	bool has_metric;
 > +
-> > +				snvs_pwrkey: snvs-powerkey {
-> > +					compatible = "fsl,sec-v4.0-pwrkey";
-> > +					regmap = <&snvs>;
-> > +					interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-> > +					linux,keycode = <KEY_POWER>;
-> +					wakeup-source;
+>  	/*
+>  	 * Intel host/guest support (KVM)
+>  	 */
 
-Not all i.MX8MQ systems will have this functionality wired up at the
-board level, so this node needs to be disabled by default. The existing
- i.MX6 and i.MX7 DTs seem to get this wrong.
+You forgot how I feel about _Bool in composite types _again_ ?
 
-Regards,
-Lucas
-
-> +				};
-> >  			};
->  
-> > >  			clk: clock-controller@30380000 {
