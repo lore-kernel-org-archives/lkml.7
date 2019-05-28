@@ -2,152 +2,200 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E994C46460
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 812BBC072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB5B1208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:00:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50F25208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:01:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Oq5iytl2";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="c60zn3rB"
+	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="dqQsV3tg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727718AbfE1VAG (ORCPT
+        id S1727753AbfE1VB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 17:00:06 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:64327 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbfE1VAF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 17:00:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1559077205; x=1590613205;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=qqs5S/uCAJ5SLX/ginb6cCSsKBE7yRelez5JwY70LMc=;
-  b=Oq5iytl2EMZ1kXLFEPVF40bXwExmjuGwgBiAz4l+Boi97L47MMhD0mqb
-   TDRvFQZJeyXHKnOl6kneimJdVTS7OSA1M4JpsiVaXQsur0f9I2dYmTjQK
-   XhTzxULKbCn1tVP9SnoPVkDJiwNmxu/oHrgVhrfEIk1MY9OKfOXCYnydL
-   59YAda03xI5+1t8oTnHeLYrAEy7jsMM5hgSb0lLCUVy2pAOYl4zFG6NJx
-   IvSTWk0MDSg6GXXaORQg7uAgPiLinr+biirFwtlxXFYMYm8NM2Qdx+8Yq
-   Kab4jAE0NMKcDCB3AxQ6gt2cg7SQuqYQrHuAlnmDsss6/WnK4rxJSj1Bb
-   w==;
-X-IronPort-AV: E=Sophos;i="5.60,524,1549900800"; 
-   d="scan'208";a="110505122"
-Received: from mail-co1nam05lp2055.outbound.protection.outlook.com (HELO NAM05-CO1-obe.outbound.protection.outlook.com) ([104.47.48.55])
-  by ob1.hgst.iphmx.com with ESMTP; 29 May 2019 05:00:05 +0800
+        Tue, 28 May 2019 17:01:56 -0400
+Received: from mail-eopbgr760138.outbound.protection.outlook.com ([40.107.76.138]:9138
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726683AbfE1VB4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 17:01:56 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ d=wavesemi.onmicrosoft.com; s=selector1-wavesemi-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Bee0Rx3wSpDbmjp/tqNUpRWcYAyuS/1+huGg6thH3o8=;
- b=c60zn3rBR8HaHqlD0+VpJm/K62fdkjOswP2Q05nT4Fi1JxUGEnIWiqfQkXTjespW9hOP0mXPWrc+Xr62UkWgL7Qi+AARVpxUizMPIaBuBcKq1cfiubpGajRnb9tnQV/3oLnMyL7gyfgg52+7R4kpy+CjD06RktzC8kdCPlwy9r4=
-Received: from BYAPR04MB5749.namprd04.prod.outlook.com (20.179.58.26) by
- BYAPR04MB4119.namprd04.prod.outlook.com (20.176.250.20) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.17; Tue, 28 May 2019 21:00:03 +0000
-Received: from BYAPR04MB5749.namprd04.prod.outlook.com
- ([fe80::ad42:af4b:a53b:80f5]) by BYAPR04MB5749.namprd04.prod.outlook.com
- ([fe80::ad42:af4b:a53b:80f5%4]) with mapi id 15.20.1922.021; Tue, 28 May 2019
- 21:00:03 +0000
-From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-To:     Peng Wang <wangpeng15@xiaomi.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>
-CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+ bh=3tH+y2b9lipU3SuRJXgZwb3QsKuinj1Fiqka767HxIw=;
+ b=dqQsV3tgTaSPcvyri8+UTt57foMzVxVIfMS001J+Cht4f1cLywed0p2ACe1SHSZKidRbNXIQ47RZsxT2LoGuz/RxynCQ7G9ovQEpmuWwzdzGjBDir3OtfDePZcEM6KFZOMQm6vbxNlLsJH+9F0yLToOpsJGNVE6Ykn0hyoA72o4=
+Received: from BN6PR2201MB1266.namprd22.prod.outlook.com (10.174.80.14) by
+ BN6PR2201MB1715.namprd22.prod.outlook.com (10.161.158.155) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.15; Tue, 28 May 2019 21:01:12 +0000
+Received: from BN6PR2201MB1266.namprd22.prod.outlook.com
+ ([fe80::201e:2693:29da:37de]) by BN6PR2201MB1266.namprd22.prod.outlook.com
+ ([fe80::201e:2693:29da:37de%3]) with mapi id 15.20.1922.021; Tue, 28 May 2019
+ 21:01:12 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+CC:     "ralf@linux-mips.org" <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Peng Wang <rocking@whu.edu.cn>
-Subject: Re: [PATCH] block: use KMEM_CACHE macro
-Thread-Topic: [PATCH] block: use KMEM_CACHE macro
-Thread-Index: AQHVFIJkAGb2oburn0mgfBrMi38GRA==
-Date:   Tue, 28 May 2019 21:00:03 +0000
-Message-ID: <BYAPR04MB5749FB02197DC584BC613ECF861E0@BYAPR04MB5749.namprd04.prod.outlook.com>
-References: <20190527114835.2071-1-wangpeng15@xiaomi.com>
+        Hamish Martin <Hamish.Martin@alliedtelesis.co.nz>
+Subject: Re: MIPS r4k cache operations with SMP enabled
+Thread-Topic: MIPS r4k cache operations with SMP enabled
+Thread-Index: AQHVFQB0Z16/xM5TvUKYi9+2ojSGN6aBBvGA
+Date:   Tue, 28 May 2019 21:01:11 +0000
+Message-ID: <20190528210109.npyv64vdcfvy5owk@pburton-laptop>
+References: <d87063da1d104af8a040f5f25a588638@svr-chch-ex1.atlnz.lc>
+ <1109cb84e36e483fb22c30a60ab4a6ff@svr-chch-ex1.atlnz.lc>
+In-Reply-To: <1109cb84e36e483fb22c30a60ab4a6ff@svr-chch-ex1.atlnz.lc>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR04CA0022.namprd04.prod.outlook.com
+ (2603:10b6:a03:40::35) To BN6PR2201MB1266.namprd22.prod.outlook.com
+ (2603:10b6:405:20::14)
+user-agent: NeoMutt/20180716
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Chaitanya.Kulkarni@wdc.com; 
-x-originating-ip: [199.255.45.63]
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [12.94.197.246]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4807c7f2-a52f-478e-5d53-08d6e3af74cc
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BYAPR04MB4119;
-x-ms-traffictypediagnostic: BYAPR04MB4119:
-wdcipoutbound: EOP-TRUE
-x-microsoft-antispam-prvs: <BYAPR04MB4119653C9DC7E9D03BB88333861E0@BYAPR04MB4119.namprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1923;
+x-ms-office365-filtering-correlation-id: df567ec6-a08b-4031-3dff-08d6e3af9d2a
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BN6PR2201MB1715;
+x-ms-traffictypediagnostic: BN6PR2201MB1715:
+x-microsoft-antispam-prvs: <BN6PR2201MB17156F4AB433A7CB9FC8E395C11E0@BN6PR2201MB1715.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
 x-forefront-prvs: 00514A2FE6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(39860400002)(396003)(366004)(376002)(346002)(189003)(199004)(14454004)(53546011)(52536014)(5660300002)(4326008)(6506007)(53936002)(6436002)(64756008)(486006)(76176011)(7696005)(55016002)(9686003)(73956011)(102836004)(66446008)(66946007)(68736007)(66476007)(66556008)(316002)(72206003)(74316002)(86362001)(476003)(76116006)(2501003)(66066001)(81156014)(3846002)(8676002)(81166006)(25786009)(229853002)(6116002)(305945005)(14444005)(256004)(446003)(8936002)(33656002)(2906002)(6246003)(186003)(26005)(54906003)(478600001)(99286004)(7736002)(71190400001)(71200400001)(110136005);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB4119;H:BYAPR04MB5749.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(136003)(346002)(396003)(376002)(39850400004)(366004)(189003)(199004)(66066001)(42882007)(81156014)(76176011)(1076003)(6512007)(9686003)(4326008)(3846002)(446003)(44832011)(52116002)(33716001)(53546011)(6916009)(25786009)(99286004)(11346002)(486006)(476003)(6506007)(386003)(6486002)(102836004)(6116002)(186003)(14454004)(8676002)(256004)(14444005)(305945005)(316002)(66476007)(71200400001)(2906002)(53936002)(66946007)(6436002)(81166006)(8936002)(58126008)(229853002)(54906003)(7736002)(478600001)(26005)(6246003)(5660300002)(68736007)(73956011)(71190400001)(66556008)(66446008)(64756008)(42413003);DIR:OUT;SFP:1102;SCL:1;SRVR:BN6PR2201MB1715;H:BN6PR2201MB1266.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: G+d2qfwH1tiNfseng0l+7dMc1f1lETd/bnElNJgrZBH7k1Pz2fdYfH9LOlFVYSEhCO48vdWYtNnwIFYZSTyg3nNiihZc8YIuY6EqbsToTp0YITQX4yFeXl2xokuU6joBS9M493h7g3VtpDp04xJJi0GVTElgx83xWxLBFDWbg66tXf7nt9Pt517Rw9i5Sg8xWNbQH9uE/ZskjYZuEW7fZe+AOfETBpkSkJ43jyJyxDCBm0gp3z8B/jvWUGS6VTsaYDcPF2c90/IKt8YYcGwerkMtyBEK7Cg62Y8Aa/YHNvE08xNICWme1oP2pL+u/vDjBrQuz3w0zdHCaG6m1/piIITeqcnTXOnQcDA+nZ49WO7KQvA4nHBFQBNeRXdN7vZqZSCtQs6NjDZNFvfpzr7/U1BdhOnegri770uzPxnZ9Hw=
+x-microsoft-antispam-message-info: 9Atuci/D2Vz758nlcq0PUiiDUYGrjqsKt9nB+kZ0fPuSTCSHaWA3ehfQWm0jWjMnxMJPCKfSV689ux/WTgfmoK6pYgc8HMGXBKbfNEZgGaPE6vVDx8T2VSAfG41SObYEb+EDuHtAKxc5z7SZg+e9ZSW5HL9+0MwFni9ZuacC1/8YH/vuzpIFmXDsrZViSadnZhuge+KI3t/XC/LNVwbapZy0y3uS4ZpWpNXKapGgTseCNmw4e0QpeiRisFBtqIZh+dPO9Biww02BMrtiOFdFRk4NlaleS3UyRM43pTWnDKwCbIyv2i1slSrflSqWvQMKnkeDpHwkOmfV2mdFNctmjvX/LBhNlRdGCce2fV9Id5shYrt+4av4tOhGQEcLLU8AQ5nnktiI+CyPo0EOx9GCalv4BWsZeyK2KQE8rokYG18=
 Content-Type: text/plain; charset="us-ascii"
+Content-ID: <136F037EF694454F975F8B46F4631764@namprd22.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4807c7f2-a52f-478e-5d53-08d6e3af74cc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2019 21:00:03.6636
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: df567ec6-a08b-4031-3dff-08d6e3af9d2a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2019 21:01:11.9140
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Chaitanya.Kulkarni@wdc.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB4119
+X-MS-Exchange-CrossTenant-userprincipalname: pburton@wavecomp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR2201MB1715
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for your patch.=0A=
-=0A=
-It also makes the cache name consistent with the structure name.=0A=
-Looks good.=0A=
-=0A=
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>=0A=
-=0A=
-On 05/27/2019 04:50 AM, Peng Wang wrote:=0A=
-> From: Peng Wang <rocking@whu.edu.cn>=0A=
->=0A=
-> Use the preferred KMEM_CACHE helper for brevity.=0A=
->=0A=
-> Signed-off-by: Peng Wang <rocking@whu.edu.cn>=0A=
-> ---=0A=
->   block/blk-core.c | 3 +--=0A=
->   block/blk-ioc.c  | 3 +--=0A=
->   2 files changed, 2 insertions(+), 4 deletions(-)=0A=
->=0A=
-> diff --git a/block/blk-core.c b/block/blk-core.c=0A=
-> index 1bf83a0df0f6..841bf0b12755 100644=0A=
-> --- a/block/blk-core.c=0A=
-> +++ b/block/blk-core.c=0A=
-> @@ -1789,8 +1789,7 @@ int __init blk_dev_init(void)=0A=
->   	if (!kblockd_workqueue)=0A=
->   		panic("Failed to create kblockd\n");=0A=
->=0A=
-> -	blk_requestq_cachep =3D kmem_cache_create("request_queue",=0A=
-> -			sizeof(struct request_queue), 0, SLAB_PANIC, NULL);=0A=
-> +	blk_requestq_cachep =3D KMEM_CACHE(request_queue, SLAB_PANIC);=0A=
->=0A=
->   #ifdef CONFIG_DEBUG_FS=0A=
->   	blk_debugfs_root =3D debugfs_create_dir("block", NULL);=0A=
-> diff --git a/block/blk-ioc.c b/block/blk-ioc.c=0A=
-> index 5ed59ac6ae58..58c79aeca955 100644=0A=
-> --- a/block/blk-ioc.c=0A=
-> +++ b/block/blk-ioc.c=0A=
-> @@ -408,8 +408,7 @@ struct io_cq *ioc_create_icq(struct io_context *ioc, =
-struct request_queue *q,=0A=
->=0A=
->   static int __init blk_ioc_init(void)=0A=
->   {=0A=
-> -	iocontext_cachep =3D kmem_cache_create("blkdev_ioc",=0A=
-> -			sizeof(struct io_context), 0, SLAB_PANIC, NULL);=0A=
-> +	iocontext_cachep =3D KMEM_CACHE(io_context, SLAB_PANIC);=0A=
->   	return 0;=0A=
->   }=0A=
->   subsys_initcall(blk_ioc_init);=0A=
->=0A=
-=0A=
+Hi Chris,
+
+On Tue, May 28, 2019 at 05:19:37AM +0000, Chris Packham wrote:
+> On 28/05/19 2:52 PM, Chris Packham wrote:
+> > Hi,
+> >=20
+> > I'm trying to port a fairly old Broadcom integrated chip (BCM6818) to
+> > the latest Linux kernel using the mips/bmips support.
+> >=20
+> > The chip has a BMIPS4355 core. This has two "thread processors" (cpu
+> > cores) with separate I-caches but a shared D-cache.
+> >=20
+> > I've got things booting but I encounter the following BUG()
+> >=20
+> > BUG: using smp_processor_id() in preemptible [00000000] code: swapper/0=
+/1
+> > caller is blast_dcache16+0x24/0x154
+> > CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.1.0-at1 #5
+> > Stack : 00000036 8008d0d0 806a0000 807c0000 80754e10 0000000b 80754684
+> > 8f831c8c
+> >           80900000 8f828424 807986e7 8071348c 00000000 10008f00 8f831c3=
+0
+> > 7fb69e2a
+> >           00000000 00000000 80920000 00000056 00002335 00000000 807a000=
+0
+> > 00000000
+> >           6d6d3a20 00000000 00000056 73776170 00000000 ffffffff 10008f0=
+1
+> > 807c0000
+> >           80790000 00002cc2 ffffffff 80900000 00000010 8f83198c 0000000=
+0
+> > 80900000
+> >           ...
+> > Call Trace:
+> > [<8001c208>] show_stack+0x30/0x100
+> > [<8063282c>] dump_stack+0x9c/0xd0
+> > [<802f1cec>] debug_smp_processor_id+0xfc/0x110
+> > [<8002e274>] blast_dcache16+0x24/0x154
+> > [<80122978>] map_vm_area+0x58/0x70
+> > [<80123888>] __vmalloc_node_range+0x1fc/0x2b4
+> > [<80123b54>] vmalloc+0x44/0x50
+> > [<807d15d0>] jffs2_zlib_init+0x24/0x94
+> > [<807d1354>] jffs2_compressors_init+0x10/0x30
+> > [<807d151c>] init_jffs2_fs+0x68/0xf8
+> > [<8001016c>] do_one_initcall+0x7c/0x1f0
+> > [<807bee30>] kernel_init_freeable+0x17c/0x258
+> > [<80650d1c>] kernel_init+0x10/0xf8
+> > [<80015e6c>] ret_from_kernel_thread+0x14/0x1c
+> >=20
+> > In blast_dcache16 current_cpu_data is used which invokes
+> > smp_processor_id() triggering the BUG(). I can fix this by sprinkling
+> > preempt_disable/preempt_enable through arch/mips/mm/c-r4k.c but that
+> > seems kind of wrong. Does anyone have any suggestion as to the right wa=
+y
+> > to avoid this BUG()?
+
+Ah, cache aliasing, will it ever cease to provide suprises? :)
+
+> I think the following might do the trick
+>=20
+> ---- 8< ----
+> diff --git a/arch/mips/mm/c-r4k.c b/arch/mips/mm/c-r4k.c
+> index 5166e38cd1c6..1fa7f093b59c 100644
+> --- a/arch/mips/mm/c-r4k.c
+> +++ b/arch/mips/mm/c-r4k.c
+> @@ -559,14 +559,19 @@ static inline int has_valid_asid(const struct=20
+> mm_struct *mm, unsigned int type)
+>          return 0;
+>   }
+>=20
+> -static void r4k__flush_cache_vmap(void)
+> +static inline void local_r4k_flush_cache(void *args)
+>   {
+>          r4k_blast_dcache();
+>   }
+>=20
+> +void r4k__flush_cache_vmap(void)
+> +{
+> +       r4k_on_each_cpu(R4K_INDEX, local_r4k_flush_cache, NULL);
+> +}
+> +
+>   static void r4k__flush_cache_vunmap(void)
+>   {
+> -       r4k_blast_dcache();
+> +       r4k_on_each_cpu(R4K_INDEX, local_r4k_flush_cache, NULL);
+>   }
+>=20
+>   /*
+> @@ -1758,6 +1763,43 @@ static int __init cca_setup(char *str)
+>          return 0;
+>   }
+> ---- 8< ----
+>=20
+> The rest of the call sites for r4k_blast_dcache() already run with=20
+> preemption disabled.
+
+That looks reasonable, but I'm wondering why these are separate to our
+implementation of flush_kernel_vmap_range(). The latter already handles
+SMP & avoids flushing the whole dcache(s) when the area to flush is
+smaller than the cache.
+
+Would it work to just redefine flush_cache_vmap() & flush_cache_vunmap()
+as calls to flush_kernel_vmap_range?
+
+Thanks,
+    Paul
