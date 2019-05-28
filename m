@@ -2,107 +2,116 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33AA1C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E11C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1743820883
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:01:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDA6B20883
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:03:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="COeg1GNY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbfE1SBx (ORCPT
+        id S1727801AbfE1SDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 14:01:53 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:51527 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726576AbfE1SBw (ORCPT
+        Tue, 28 May 2019 14:03:06 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:39155 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726576AbfE1SDG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 14:01:52 -0400
-Received: from 50-233-100-202-static.hfc.comcastbusiness.net ([50.233.100.202] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hVgQ0-0004i9-OO; Tue, 28 May 2019 20:01:49 +0200
-Date:   Tue, 28 May 2019 11:01:38 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     "Sverdlin, Alexander (Nokia - DE/Ulm)" <alexander.sverdlin@nokia.com>
-cc:     "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Jason Vas Dias <jason.vas.dias@gmail.com>
-Subject: Re: [PATCH] x86/vdso: implement clock_gettime(CLOCK_MONOTONIC_RAW,
- ...)
-In-Reply-To: <20190528080034.31259-1-alexander.sverdlin@nokia.com>
-Message-ID: <alpine.DEB.2.21.1905281055240.1859@nanos.tec.linutronix.de>
-References: <20190528080034.31259-1-alexander.sverdlin@nokia.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 28 May 2019 14:03:06 -0400
+Received: by mail-lf1-f65.google.com with SMTP id f1so15305865lfl.6;
+        Tue, 28 May 2019 11:03:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wfGXrN4EQ5suIjo/YRXyzyfXioxjZfnHxqzJZSsYcQ0=;
+        b=COeg1GNYb9LEdxwJHJOB0zvMn0apyp+YCV73tVNcFrSnuolMa4SG59OVTMLBH0eucI
+         sHjlc9MUF7rT5yXo6iIl1tqMdGxrokqMlfuXpifi7kz+bfgJMiwp+XnFDzaw1wBfktOM
+         6udam2tBLuW7M9KGHhBy7+5tPwhpW3W7D6CG8CGk5vS7gG3ymvlB7ZKTuMgh6TOdsYAD
+         2S7yimcjQYIFNkRpJJFThZ0xz7zXX19/n5IrlHSCYrHaJGmOI8HftK4TSd6Gonv7kLBI
+         MrJLGAjB8Ic2t8xDfgAt7xG3/3ABgsR4kdwqwGexDfj6nN+wi1suOLAzlWnhBmSncC22
+         HMyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wfGXrN4EQ5suIjo/YRXyzyfXioxjZfnHxqzJZSsYcQ0=;
+        b=by4roPtIhAPWptmme7hP9sFKqWlKgS/podYFFPC9SwW73sPrwhvRZseX1kpOksk6Cc
+         yPtPz9TnuXMW/K8V1unXlA/3Uu47nIrFpXOOzbNlhje1sdsBJz1Cm3f59dSXpyULvVH9
+         TQi1l9lmycU5Yn2weLqIYD/8KEQMmLKs6yBdt7lpCDLEPy6XgSQSt+vB1kJWFS4SCeTl
+         IsE/3lrHSMVfA00wZSnDMisCdoQh4igFQw4J4Ad2dNa8A519aI0hTVL2Mh01Hv3ftJsX
+         7Pf4NFXoOXnax8GNVA71yhCxTmj3x4Tmf+GHnKj5PpMK0kYP9W7UzyBD4BXCUScCBvPS
+         JTAg==
+X-Gm-Message-State: APjAAAU/qmd+WSyXx3rcNLZQadU2xlrCPyaG6r99oiJ9BsovZg62Mh7g
+        cFnsseFUoA/x6J4tqYWOOAE=
+X-Google-Smtp-Source: APXvYqwdhl+n24uT5uwqOJG8J15RrNkuRRWcfucy3b/03fihY7juOf7oWPnTKlykra5mOVZHyfTOrA==
+X-Received: by 2002:ac2:528f:: with SMTP id q15mr45362716lfm.37.1559066584506;
+        Tue, 28 May 2019 11:03:04 -0700 (PDT)
+Received: from pc636 ([37.139.158.167])
+        by smtp.gmail.com with ESMTPSA id f20sm3108341ljj.96.2019.05.28.11.03.02
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 May 2019 11:03:03 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Tue, 28 May 2019 20:02:56 +0200
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     linux-kselftest@vger.kernel.org, urezki@gmail.com,
+        shuah@kernel.org, keescook@chromium.org, willy@infradead.org,
+        mhocko@suse.com, oleksiy.avramchenko@sonymobile.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] selftests: vm: install test_vmalloc.sh for run_vmtests
+Message-ID: <20190528180256.vwp23xoz7fow6huu@pc636>
+References: <20190528121809.29389-1-naresh.kamboju@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190528121809.29389-1-naresh.kamboju@linaro.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alexander,
-
-On Tue, 28 May 2019, Sverdlin, Alexander (Nokia - DE/Ulm) wrote:
-> Add CLOCK_MONOTONIC_RAW to the existing clock_gettime() vDSO
-> implementation. This is based on the ideas of Jason Vas Dias and comments
-> of Thomas Gleixner.
-
-Well to some extent, but
-
-> The results from the above test program:
+On Tue, May 28, 2019 at 01:18:09PM +0100, Naresh Kamboju wrote:
+> Add test_vmalloc.sh to TEST_FILES to make sure it gets installed for
+> run_vmtests.
 > 
-> Clock			Before		After		Diff
-> -----			------		-----		----
-> CLOCK_MONOTONIC		355531720	338039373	-5%
-> CLOCK_MONOTONIC_RAW	44831738	336064912	+650%
-> CLOCK_REALTIME		347665133	338102907	-3%
-
-the preformance regressions for CLOCK_MONOTONIC and CLOCK_REALTIME are just
-not acceptable.
-
-> diff --git a/arch/x86/entry/vdso/vclock_gettime.c b/arch/x86/entry/vdso/vclock_gettime.c
-> index 98c7d12..7c9db26 100644
-> --- a/arch/x86/entry/vdso/vclock_gettime.c
-> +++ b/arch/x86/entry/vdso/vclock_gettime.c
-> @@ -144,6 +144,13 @@ notrace static int do_hres(clockid_t clk, struct timespec *ts)
->  	struct vgtod_ts *base = &gtod->basetime[clk];
->  	u64 cycles, last, sec, ns;
->  	unsigned int seq;
-> +	u32 mult = gtod->mult;
-> +	u32 shift = gtod->shift;
-> +
-> +	if (clk == CLOCK_MONOTONIC_RAW) {
-> +		mult = gtod->raw_mult;
-> +		shift = gtod->raw_shift;
-> +	}
-
-They stem from this extra conditional.
-
+> Fixed below error:
+> ./run_vmtests: line 217: ./test_vmalloc.sh: No such file or directory
+> 
+> Tested with: make TARGETS=vm install INSTALL_PATH=$PWD/x
+> 
+> Signed-off-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+> ---
+>  tools/testing/selftests/vm/Makefile | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/vm/Makefile b/tools/testing/selftests/vm/Makefile
+> index e13eb6cc8901..05306c58ff9f 100644
+> --- a/tools/testing/selftests/vm/Makefile
+> +++ b/tools/testing/selftests/vm/Makefile
+> @@ -25,6 +25,8 @@ TEST_GEN_FILES += virtual_address_range
 >  
->  	do {
->  		seq = gtod_read_begin(gtod);
-> @@ -153,8 +160,8 @@ notrace static int do_hres(clockid_t clk, struct timespec *ts)
->  		if (unlikely((s64)cycles < 0))
->  			return vdso_fallback_gettime(clk, ts);
->  		if (cycles > last)
-> -			ns += (cycles - last) * gtod->mult;
-> -		ns >>= gtod->shift;
-> +			ns += (cycles - last) * mult;
+>  TEST_PROGS := run_vmtests
+>  
+> +TEST_FILES := test_vmalloc.sh
+> +
+>  KSFT_KHDR_INSTALL := 1
+>  include ../lib.mk
+>  
+> -- 
+> 2.17.1
+> 
+I missed that point during integrating with selftests.
+Anyway the patch looks good to me.
 
-And this is completely broken because you read the mult/shift values
-outside of the sequence count protected region, so a concurrent update of
-the timekeeping values will lead to inconsistent state.
+Thank you for fixing it!
 
-Thanks,
-
-	tglx
+--
+Vlad Rezki
