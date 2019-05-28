@@ -2,205 +2,203 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB83C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 279FCC072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF68D20989
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:10:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="aZrcrlN+"
+	by mail.kernel.org (Postfix) with ESMTP id F3AF021734
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:12:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559085141;
+	bh=pjNLO6HMwgocH5xSjKQLwUlCjFQJob9BKQ9cLgKRqF8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=a0lJ1GSvBjd/7mx1K2NBCnajq+7c0TgBdIjnlC2Ut/8h7OqUe8djImrtGrDYjLCjh
+	 yLMUdQ+vo+pU2lXO/QPNP+1/LLnbflWQfLPiA6WCG9/4zgdFYdkJysWoQNwEcJB76w
+	 0pcurpy6G7xHK2C0pgc7mPj8Ur03jUIgjAyZTY8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728116AbfE1XKB (ORCPT
+        id S1727185AbfE1XMU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 19:10:01 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:16496 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727147AbfE1XJB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 19:09:01 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cedbf8c0001>; Tue, 28 May 2019 16:09:00 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 28 May 2019 16:09:00 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 28 May 2019 16:09:00 -0700
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL103.nvidia.com
- (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 May
- 2019 23:08:59 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 28 May 2019 23:08:59 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.110.103.86]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5cedbf8b0003>; Tue, 28 May 2019 16:08:59 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <tglx@linutronix.de>, <jason@lakedaemon.net>,
-        <marc.zyngier@arm.com>, <linus.walleij@linaro.org>,
-        <stefan@agner.ch>, <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
-        <josephl@nvidia.com>, <talho@nvidia.com>, <skomatineni@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>
-Subject: [PATCH V2 04/12] clk: tegra: add support for peripheral clock suspend and resume
-Date:   Tue, 28 May 2019 16:08:48 -0700
-Message-ID: <1559084936-4610-5-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
-References: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        Tue, 28 May 2019 19:12:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56888 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726463AbfE1XMT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 19:12:19 -0400
+Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C41D120989;
+        Tue, 28 May 2019 23:12:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559085138;
+        bh=pjNLO6HMwgocH5xSjKQLwUlCjFQJob9BKQ9cLgKRqF8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=U9wru9EeqNqxQ55HDbDaFy1X8r1iIQV6cCTiFnwqXnq1MYgDZWuLbJ8T8bH8wnEDf
+         hnqb8niEU+eO64TFOy0wj0d9mqg86UsLOf0rL1Jb8SruzFJ0x5BkMQpM6iPgEyASpZ
+         figR5E9sjI8OVijQ/jGmWm//lV6T8I+y2m39lP7w=
+Date:   Tue, 28 May 2019 16:12:18 -0700
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     viro@zeniv.linux.org.uk, raven@themaw.net,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/7] General notification queue with user mmap()'able
+ ring buffer
+Message-ID: <20190528231218.GA28384@kroah.com>
+References: <20190528162603.GA24097@kroah.com>
+ <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk>
+ <155905931502.7587.11705449537368497489.stgit@warthog.procyon.org.uk>
+ <4031.1559064620@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559084940; bh=xFOmjeaoCNKZGSYsRBa0HN3DzU4TBaJQr2OcS9aU+yo=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=aZrcrlN+dCGQehBr2IcQ67Mf1RMkZXisnfCh06ISK0M4+16+MRCACtn9mUX47zRAp
-         CmHdnHWCbB4BXerkBFhbUWjpeJFX/fW8YzxB4GBo12iDTuk4L/kGZe9iVA5nb5OpFm
-         oibUJrKPUVGy+ZDLE0MJ1PUpBpUqQgr3FNLLuoYVjg4EfN1UjpxcAlU1GZdC9T4OT4
-         V4E8l4TfR9DxWayZn1Jx5N6LZoDVKIhi5Ph0vwniu/FRHvNGhfvU9GZ33CiiCui8Yp
-         Y9yk8v9ZRnoltl/Mpc7SLI/Hot4tJXzh+P+4vnifp750SIk7Q4nL9FL5F3Jocah/yy
-         Lg9ggsrzx4OWQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4031.1559064620@warthog.procyon.org.uk>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch implements peripheral clock context save and restore
-to support system suspend and resume operation.
+On Tue, May 28, 2019 at 06:30:20PM +0100, David Howells wrote:
+> Greg KH <gregkh@linuxfoundation.org> wrote:
+> 
+> > > Implement a misc device that implements a general notification queue as a
+> > > ring buffer that can be mmap()'d from userspace.
+> > 
+> > "general" but just for filesystems, right?  :(
+> 
+> Whatever gave you that idea?  You can watch keyrings events, for example -
+> they're not exactly filesystems.  I've added the ability to watch for mount
+> topology changes and superblock events because those are something I've been
+> asked to do.  I've added something for block events because I've recently had
+> a problem with trying to recover data from a dodgy disk in that every time the
+> disk goes offline, the ddrecover goes "wheeeee!" as it just sees a lot of
+> EIO/ENODATA at a great rate of knots because it doesn't know the driver is now
+> ignoring the disk.
+> 
+> I don't know what else people might want to watch, but I've tried to make it
+> as generic as possible so as not to exclude it if possible.
 
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- drivers/clk/tegra/clk.c | 74 ++++++++++++++++++++++++++++++++++++++++++++++++-
- drivers/clk/tegra/clk.h |  3 ++
- 2 files changed, 76 insertions(+), 1 deletion(-)
+Ok, let me try to dig up some older proposals to see if this fits into
+the same model to work with them as well.
 
-diff --git a/drivers/clk/tegra/clk.c b/drivers/clk/tegra/clk.c
-index 6f2862eddad7..08b788766564 100644
---- a/drivers/clk/tegra/clk.c
-+++ b/drivers/clk/tegra/clk.c
-@@ -81,6 +81,10 @@ static struct clk **clks;
- static int clk_num;
- static struct clk_onecell_data clk_data;
- 
-+#ifdef CONFIG_PM_SLEEP
-+static u32 *periph_ctx;
-+#endif
-+
- /* Handlers for SoC-specific reset lines */
- static int (*special_reset_assert)(unsigned long);
- static int (*special_reset_deassert)(unsigned long);
-@@ -210,6 +214,65 @@ const struct tegra_clk_periph_regs *get_reg_bank(int clkid)
- 	}
- }
- 
-+#ifdef CONFIG_PM_SLEEP
-+void tegra_clk_periph_suspend(void __iomem *clk_base)
-+{
-+	int i, idx;
-+
-+	idx = 0;
-+	for (i = 0; i < periph_banks; i++, idx++)
-+		periph_ctx[idx] =
-+			readl_relaxed(clk_base + periph_regs[i].rst_reg);
-+
-+	for (i = 0; i < periph_banks; i++, idx++)
-+		periph_ctx[idx] =
-+			readl_relaxed(clk_base + periph_regs[i].enb_reg);
-+}
-+
-+void tegra_clk_periph_force_on(u32 *clks_on, int count, void __iomem *clk_base)
-+{
-+	int i;
-+
-+	WARN_ON(count != periph_banks);
-+
-+	for (i = 0; i < count; i++)
-+		writel_relaxed(clks_on[i], clk_base + periph_regs[i].enb_reg);
-+}
-+
-+void tegra_clk_periph_resume(void __iomem *clk_base)
-+{
-+	int i, idx;
-+
-+	idx = 0;
-+	for (i = 0; i < periph_banks; i++, idx++)
-+		writel_relaxed(periph_ctx[idx],
-+			       clk_base + periph_regs[i].rst_reg);
-+
-+	/* ensure all resets have propagated */
-+	fence_udelay(2, clk_base);
-+	tegra_read_chipid();
-+
-+	for (i = 0; i < periph_banks; i++, idx++)
-+		writel_relaxed(periph_ctx[idx],
-+			       clk_base + periph_regs[i].enb_reg);
-+
-+	/* ensure all enables have propagated */
-+	fence_udelay(2, clk_base);
-+	tegra_read_chipid();
-+}
-+
-+static int tegra_clk_suspend_ctx_init(int banks)
-+{
-+	int err = 0;
-+
-+	periph_ctx = kzalloc(2 * banks * sizeof(*periph_ctx), GFP_KERNEL);
-+	if (!periph_ctx)
-+		err = -ENOMEM;
-+
-+	return err;
-+}
-+#endif
-+
- struct clk ** __init tegra_clk_init(void __iomem *regs, int num, int banks)
- {
- 	clk_base = regs;
-@@ -226,11 +289,20 @@ struct clk ** __init tegra_clk_init(void __iomem *regs, int num, int banks)
- 	periph_banks = banks;
- 
- 	clks = kcalloc(num, sizeof(struct clk *), GFP_KERNEL);
--	if (!clks)
-+	if (!clks) {
- 		kfree(periph_clk_enb_refcnt);
-+		return NULL;
-+	}
- 
- 	clk_num = num;
- 
-+#ifdef CONFIG_PM_SLEEP
-+	if (tegra_clk_suspend_ctx_init(banks)) {
-+		kfree(periph_clk_enb_refcnt);
-+		kfree(clks);
-+		return NULL;
-+	}
-+#endif
- 	return clks;
- }
- 
-diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
-index e4d124cc5657..ab238b2c3125 100644
---- a/drivers/clk/tegra/clk.h
-+++ b/drivers/clk/tegra/clk.h
-@@ -848,6 +848,9 @@ void tegra_clk_pll_out_resume(struct clk *clk, unsigned long rate);
- void tegra_clk_plle_tegra210_resume(struct clk *c);
- void tegra_clk_sync_state_pll(struct clk *c);
- void tegra_clk_sync_state_pll_out(struct clk *clk);
-+void tegra_clk_periph_suspend(void __iomem *clk_base);
-+void tegra_clk_periph_resume(void __iomem *clk_base);
-+void tegra_clk_periph_force_on(u32 *clks_on, int count, void __iomem *clk_base);
- #endif
- 
- 
--- 
-2.7.4
+> > > +	refcount_t		usage;
+> > 
+> > Usage of what, this structure?  Or something else?
+> 
+> This is the number of usages of this struct (references to if you prefer).  I
+> can add a comment to this effect.
 
+I think you answer this later on with the kref comment :)
+
+> > > +		return -EOPNOTSUPP;
+> > 
+> > -ENOTTY is the correct "not a valid ioctl" error value, right?
+> 
+> fs/ioctl.c does both, but I can switch it if it makes you happier.
+
+It does.
+
+> > > +void put_watch_queue(struct watch_queue *wqueue)
+> > > +{
+> > > +	if (refcount_dec_and_test(&wqueue->usage))
+> > > +		kfree_rcu(wqueue, rcu);
+> > 
+> > Why not just use a kref?
+> 
+> Why use a kref?  It seems like an effort to be a C++ base class, but without
+> the C++ inheritance bit.  Using kref doesn't seem to gain anything.  It's just
+> a wrapper around refcount_t - so why not just use a refcount_t?
+> 
+> kref_put() could potentially add an unnecessary extra stack frame and would
+> seem to be best avoided, though an optimising compiler ought to be able to
+> inline if it can.
+
+If kref_put() is on your fast path, you have worse problems (kfree isn't
+fast, right?)
+
+Anyway, it's an inline function, how can it add an extra stack frame?
+Don't try to optimize something that isn't needed yet.
+
+> Are you now on the convert all refcounts to krefs path?
+
+"now"?  Remember, I wrote kref all those years ago, everyone should use
+it.  It saves us having to audit the same pattern over and over again.
+And, even nicer, it uses a refcount now, and as you are trying to
+reference count an object, it is exactly what this was written for.
+
+So yes, I do think it should be used here, unless it is deemed to not
+fit the pattern/usage model.
+
+> > > +EXPORT_SYMBOL(add_watch_to_object);
+> > 
+> > Naming nit, shouldn't the "prefix" all be the same for these new
+> > functions?
+> > 
+> > watch_queue_add_object()?  watch_queue_put()?  And so on?
+> 
+> Naming is fun.  watch_queue_add_object - that suggests something different to
+> what the function actually does.  I'll think about adjusting the names.
+
+Ok, just had to say something.  It's your call, and yes, naming is hard.
+
+> > > +module_exit(watch_queue_exit);
+> > 
+> > module_misc_device()?
+> 
+> 	warthog>git grep module_misc_device -- Documentation/
+> 	warthog1>
+
+Do I have to document all helper macros?  Anyway, it saves you
+boilerplate code, but if built in, it's at the module init level, not
+the fs init level, like you are asking for here.  So that might not
+work, it's your call.
+
+> > > +		struct {
+> > > +			struct watch_notification watch; /* WATCH_TYPE_SKIP */
+> > > +			volatile __u32	head;		/* Ring head index */
+> > > +			volatile __u32	tail;		/* Ring tail index */
+> > 
+> > A uapi structure that has volatile in it?  Are you _SURE_ this is
+> > correct?
+> > 
+> > That feels wrong to me...  This is not a backing-hardware register, it's
+> > "just memory" and slapping volatile on it shouldn't be the correct
+> > solution for telling the compiler to not to optimize away reads/flushes,
+> > right?  You need a proper memory access type primitive for that to work
+> > correctly everywhere I thought.
+> > 
+> > We only have 2 users of volatile in include/uapi, one for WMI structures
+> > that are backed by firmware (seems correct), and one for DRM which I
+> > have no idea how it works as it claims to be a lock.  Why is this new
+> > addition the correct way to do this that no other ring-buffer that was
+> > mmapped has needed to?
+> 
+> Yeah, I understand your concern with this.
+> 
+> The reason I put the volatiles in is that the kernel may be modifying the head
+> pointer on one CPU simultaneously with userspace modifying the tail pointer on
+> another CPU.
+> 
+> Note that userspace does not need to enter the kernel to find out if there's
+> anything in the buffer or to read stuff out of the buffer.  Userspace only
+> needs to enter the kernel, using poll() or similar, to wait for something to
+> appear in the buffer.
+
+And how does the tracing and perf ring buffers do this without needing
+volatile?  Why not use the same type of interface they provide, as it's
+always good to share code that has already had all of the nasty corner
+cases worked out.
+
+Anyway, I don't want you to think I don't like this code/idea overall, I
+do.  I just want to see it be something that everyone can use, and use
+easily, as it has been something lots of people have been asking for for
+a long time.
+
+thanks,
+
+greg k-h
