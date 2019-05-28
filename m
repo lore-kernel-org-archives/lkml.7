@@ -2,98 +2,92 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA124C072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09372C072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93B032166E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:34:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IE8ur7ag"
+	by mail.kernel.org (Postfix) with ESMTP id D3F8A2166E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:36:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbfE1Qez (ORCPT
+        id S1726819AbfE1Qga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 12:34:55 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34326 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726820AbfE1Qey (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 12:34:54 -0400
-Received: by mail-lf1-f68.google.com with SMTP id v18so15127094lfi.1;
-        Tue, 28 May 2019 09:34:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1myZtded1RLBPOtfFMrOo9NJSxPtLPt4RXZAdQZ1vIU=;
-        b=IE8ur7agfZBBCR5CIL7GjM8g8jWr7z/JqzqNUZX8/3off9XT23B7JKi8BKXausnRk+
-         cBiSFCJ8giUiLxAIa49C6Oq/qSpeGkDcfxu1UR+WBzJNB6H0VrzKWOoYYp23yYJ/zG4l
-         jNcHQ9LEj3lsRFnee3CIDa1fVW/lNtZi2uscScbiiVc7YuMLP/kQUuI6sNlH0NtHm2n9
-         SyWAiHdIJxrmiQH3Ah7BImRFa7W1PSevo5kCSBwOfsLn3gHe2jgUISC3nudQBlILdKJY
-         0v9lNBL9wgGo5UmCv7BOm2Dxev70vRHMEOIGZ2A41KLMAJWI/Vvapuz04EdXc66hQsis
-         /PYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1myZtded1RLBPOtfFMrOo9NJSxPtLPt4RXZAdQZ1vIU=;
-        b=DRZ8EKrw7JxuNmUKmACwrqJyqVnaZG/izC/W9fknoheMpRMDXvL0ZfQWF2YPlrncLG
-         UIpB7H1A68sf7iwA0cX4HwCSmXJLLNMLF1dgbhE10097qs7/iRV4kbna4bkZQTlXIccs
-         jrptisNba03l+WrdExVxDU/VEuwxRtr6bzvQSPCAQOGUmdprcCog/RHk/sIuII6aVKpv
-         KmKGcgZrscfReqobumUgcl+DxenIPYiWg5sZPC6q4oBUEI2GXNF6G1fPcMC9bBh/URz4
-         QJM0P31JhRp4G0u6qkhEhn8wUsAhVZzFXU1JpWnQkmP9rUQGpai33Y5kSWkn354JHGpc
-         f3Ug==
-X-Gm-Message-State: APjAAAVeNN8WGX3/2V73dGaBrJiG3vrgM3CIIk56e147haDUxorewkGG
-        75UnWPfCbw5/9r9gIMjk7Dwawf3SFTxHSYnPxp4=
-X-Google-Smtp-Source: APXvYqwgypbdahAcVJbJiaN2+ExTZHRmO5VZL7WOt6lerC+6PmktCeYjhQJxChF0TBELsaSmv3piePXZcOMTSAOs1Pg=
-X-Received: by 2002:a19:d612:: with SMTP id n18mr50173592lfg.162.1559061291994;
- Tue, 28 May 2019 09:34:51 -0700 (PDT)
+        Tue, 28 May 2019 12:36:30 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56190 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726362AbfE1Qg3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 12:36:29 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9D27630C1328;
+        Tue, 28 May 2019 16:36:24 +0000 (UTC)
+Received: from [10.10.126.56] (ovpn-126-56.rdu2.redhat.com [10.10.126.56])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 549375D6A9;
+        Tue, 28 May 2019 16:36:22 +0000 (UTC)
+Subject: Re: [PATCH 2/3] nbd: notify userland even if nbd has already
+ disconnected
+To:     Yao Liu <yotta.liu@ucloud.cn>, Josef Bacik <josef@toxicpanda.com>
+References: <1558691036-16281-1-git-send-email-yotta.liu@ucloud.cn>
+ <1558691036-16281-2-git-send-email-yotta.liu@ucloud.cn>
+ <20190524130856.zod5agp7hk74pcnr@MacBook-Pro-91.local.dhcp.thefacebook.com>
+ <20190527182323.GB20702@192-168-150-246.7~>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        nbd@other.debian.org, linux-kernel@vger.kernel.org
+From:   Mike Christie <mchristi@redhat.com>
+Message-ID: <5CED6385.3000802@redhat.com>
+Date:   Tue, 28 May 2019 11:36:21 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.6.0
 MIME-Version: 1.0
-References: <20190525163742.2616471-1-guro@fb.com>
-In-Reply-To: <20190525163742.2616471-1-guro@fb.com>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Tue, 28 May 2019 09:34:40 -0700
-Message-ID: <CAADnVQJ7DpjeyAu28qtYymXxcWBa5SGxvW-JOTWyY-gJ6gmX9A@mail.gmail.com>
-Subject: Re: [PATCH v5 bpf-next 0/4] cgroup bpf auto-detachment
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Network Development <netdev@vger.kernel.org>,
-        Tejun Heo <tj@kernel.org>, Kernel Team <kernel-team@fb.com>,
-        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
-        Stanislav Fomichev <sdf@fomichev.me>,
-        Yonghong Song <yhs@fb.com>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190527182323.GB20702@192-168-150-246.7~>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 28 May 2019 16:36:29 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 25, 2019 at 9:37 AM Roman Gushchin <guro@fb.com> wrote:
->
-> This patchset implements a cgroup bpf auto-detachment functionality:
-> bpf programs are detached as soon as possible after removal of the
-> cgroup, without waiting for the release of all associated resources.
->
-> Patches 2 and 3 are required to implement a corresponding kselftest
-> in patch 4.
->
-> v5:
->   1) rebase
->
-> v4:
->   1) release cgroup bpf data using a workqueue
->   2) add test_cgroup_attach to .gitignore
->
-> v3:
->   1) some minor changes and typo fixes
->
-> v2:
->   1) removed a bogus check in patch 4
->   2) moved buf[len] = 0 in patch 2
+On 05/27/2019 01:23 PM, Yao Liu wrote:
+> On Fri, May 24, 2019 at 09:08:58AM -0400, Josef Bacik wrote:
+>> On Fri, May 24, 2019 at 05:43:55PM +0800, Yao Liu wrote:
+>>> Some nbd client implementations have a userland's daemon, so we should
+>>> inform client daemon to clean up and exit.
+>>>
+>>> Signed-off-by: Yao Liu <yotta.liu@ucloud.cn>
+>>
+>> Except the nbd_disconnected() check is for the case that the client told us
+>> specifically to disconnect, so we don't want to send the notification to
+>> re-connect because we've already been told we want to tear everything down.
+>> Nack to this as well.  Thanks,
+>>
+>> Josef
+>>
+> 
+> But in userland, client daemon process and process which send disconnect
+> command are not same process, so they are not clear to each other, so
+> client daemon expect driver inform it to exit.
+> In addition, client daemon will get nbd status with nbd_genl_status interface
+> after it get notified and it should not re-connect if status connected == 0
+> 
 
-Applied. Thanks!
+When using the netlink interface you get the NBD_CMD_LINK_DEAD first
+then the configs_refs goes to zero right?
+
+nbd_disconnect_and_put -> sock_shutdown -> nbd_mark_nsock_dead
+
+then later we do the final nbd_config_put?
+
+Maybe it would be best to add a new netlink event to signal what has
+happened, because the above nl and stat algorithm seems like a pain. The
+NBD_CMD_LINK_DEAD will be sent, then userspace has to possibly poll the
+status to check if this was caused due to nbd_genl_disconnect instead of
+a downed link due to something like a command timeout, because the
+refcount may not be down when userspace gets the NL event.
+
+Or, I guess the admin/tool process could just send a msg to the daemon
+process to tell it to do the netlink disconnect request.
