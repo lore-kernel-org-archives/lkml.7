@@ -2,78 +2,105 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89609C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83879C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61DD6208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:12:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5901621721
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:13:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727311AbfE1QMA (ORCPT
+        id S1727135AbfE1QNA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 12:12:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34318 "EHLO mx1.redhat.com"
+        Tue, 28 May 2019 12:13:00 -0400
+Received: from foss.arm.com ([217.140.101.70]:60330 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726515AbfE1QMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 12:12:00 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 30A6F3D95D;
-        Tue, 28 May 2019 16:12:00 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 270FF2F28D;
-        Tue, 28 May 2019 16:11:58 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAB9dFdtT0p+Sg5=qt=Te9FEkASXcH=ZQZRHyN1UQ3nYkDLHMpQ@mail.gmail.com>
-References: <CAB9dFdtT0p+Sg5=qt=Te9FEkASXcH=ZQZRHyN1UQ3nYkDLHMpQ@mail.gmail.com> <20190527165413.GA26714@embeddedor>
-To:     Marc Dionne <marc.c.dionne@gmail.com>
-Cc:     dhowells@redhat.com,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-afs@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] afs: Fix logically dead code in afs_update_cell
+        id S1726546AbfE1QNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 12:13:00 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 63936341;
+        Tue, 28 May 2019 09:12:59 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2B63A3F59C;
+        Tue, 28 May 2019 09:12:57 -0700 (PDT)
+Date:   Tue, 28 May 2019 17:12:54 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Young Xiao <92siuyang@gmail.com>, linux@armlinux.org.uk,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        kan.liang@linux.intel.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, ravi.bangoria@linux.vnet.ibm.com,
+        mpe@ellerman.id.au
+Subject: Re: [PATCH] perf: Fix oops when kthread execs user process
+Message-ID: <20190528161254.GA28492@lakrids.cambridge.arm.com>
+References: <1559046689-24091-1-git-send-email-92siuyang@gmail.com>
+ <20190528140103.GT2623@hirez.programming.kicks-ass.net>
+ <20190528153224.GE20758@fuggles.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <8580.1559059917.1@warthog.procyon.org.uk>
-Date:   Tue, 28 May 2019 17:11:57 +0100
-Message-ID: <8581.1559059917@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Tue, 28 May 2019 16:12:00 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190528153224.GE20758@fuggles.cambridge.arm.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Marc Dionne <marc.c.dionne@gmail.com> wrote:
-
-> > diff --git a/fs/afs/cell.c b/fs/afs/cell.c
-> > index 9c3b07ba2222..980de60bf060 100644
-> > --- a/fs/afs/cell.c
-> > +++ b/fs/afs/cell.c
-> > @@ -387,7 +387,6 @@ static int afs_update_cell(struct afs_cell *cell)
-> >                 if (ret == -ENOMEM)
-> >                         goto out_wake;
-> >
-> > -               ret = -ENOMEM;
-> >                 vllist = afs_alloc_vlserver_list(0);
-> >                 if (!vllist)
-> >                         goto out_wake;
+On Tue, May 28, 2019 at 04:32:24PM +0100, Will Deacon wrote:
+> On Tue, May 28, 2019 at 04:01:03PM +0200, Peter Zijlstra wrote:
+> > On Tue, May 28, 2019 at 08:31:29PM +0800, Young Xiao wrote:
+> > > When a kthread calls call_usermodehelper() the steps are:
+> > >   1. allocate current->mm
+> > >   2. load_elf_binary()
+> > >   3. populate current->thread.regs
+> > > 
+> > > While doing this, interrupts are not disabled. If there is a perf
+> > > interrupt in the middle of this process (i.e. step 1 has completed
+> > > but not yet reached to step 3) and if perf tries to read userspace
+> > > regs, kernel oops.
 > 
-> Looks like the intention here was to return -ENOMEM when
-> afs_alloc_vlserver_list fails, which would mean that the fix should
-> move the assignment within if (!vllist), rather than just removing it.
-> Although it might be fine to just return the error that came from
-> afs_dns_query instead, as you do in this patch.
+> This seems to be because pt_regs(current) gives NULL for kthreads on Power.
 
-I think I'd rather return the original error as this patch effects.  I'm
-having a ponder on it.
+I think you mean task_pt_regs(current) here.
 
-David
+> > > Fix it by setting abi to PERF_SAMPLE_REGS_ABI_NONE when userspace
+> > > pt_regs are not set.
+> > > 
+> > > See commit bf05fc25f268 ("powerpc/perf: Fix oops when kthread execs
+> > > user process") for details.
+> > 
+> > Why the hell do we set current->mm before it is complete? Note that
+> > normally exec() builds the new mm before attaching it, see exec_mmap()
+> > in flush_old_exec().
+> 
+> From the initial report [1], it doesn't look like the mm isn't initialised,
+> but rather than we're dereferencing a NULL pt_regs pointer somehow for the
+> current task (see previous comment). I don't see how that can happen on
+> arm64, given that we put the pt_regs on the kernel stack which is allocated
+> during fork.
+> 
+> Will
+> 
+> [1] https://git.kernel.org/linus/bf05fc25f268
+
+One caveat is that for the idle threads, the initial SP overlaps the
+task_pt_regs() area:
+
+* __primary_switched starts SP at init_thread_union + THREAD_SIZE.
+
+* __cpu_up() starts SP at task_stack_page(idle) + THREAD_SIZE.
+
+... and in either case, sampling that would be bad.
+
+For both arm, I believe similar holds true. AFAICT x86 seems to reserve
+the regs area in its head_{64,32}.S, but I can't see what it does for
+other threads.
+
+Regardless, for arm, arm64, and x86, task_pt_regs(current) cannot be
+NULL.
+
+Thanks,
+Mark.
