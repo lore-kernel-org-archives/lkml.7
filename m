@@ -3,34 +3,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB655C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64033C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0091208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:23:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48DE3208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:24:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728009AbfE1SXM (ORCPT
+        id S1728050AbfE1SYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 14:23:12 -0400
-Received: from mga09.intel.com ([134.134.136.24]:18639 "EHLO mga09.intel.com"
+        Tue, 28 May 2019 14:24:17 -0400
+Received: from mga03.intel.com ([134.134.136.65]:41723 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727928AbfE1SXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 14:23:12 -0400
+        id S1726576AbfE1SYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 14:24:17 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 May 2019 11:23:11 -0700
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 May 2019 11:24:16 -0700
 X-ExtLoop1: 1
 Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP; 28 May 2019 11:23:11 -0700
+  by orsmga004.jf.intel.com with ESMTP; 28 May 2019 11:24:16 -0700
 Received: from [10.254.95.162] (kliang2-mobl.ccr.corp.intel.com [10.254.95.162])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 79E9C5802C9;
-        Tue, 28 May 2019 11:23:10 -0700 (PDT)
+        by linux.intel.com (Postfix) with ESMTPS id D6318580372;
+        Tue, 28 May 2019 11:24:15 -0700 (PDT)
 From:   "Liang, Kan" <kan.liang@linux.intel.com>
 Subject: Re: [PATCH 4/9] perf/x86/intel: Support hardware TopDown metrics
 To:     Peter Zijlstra <peterz@infradead.org>
@@ -39,13 +39,13 @@ Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
         alexander.shishkin@linux.intel.com, ak@linux.intel.com
 References: <20190521214055.31060-1-kan.liang@linux.intel.com>
  <20190521214055.31060-5-kan.liang@linux.intel.com>
- <20190528124349.GU2606@hirez.programming.kicks-ass.net>
-Message-ID: <287c2c84-25cf-fdce-a3c3-49a6ee93ae4c@linux.intel.com>
-Date:   Tue, 28 May 2019 14:23:09 -0400
+ <20190528133022.GX2606@hirez.programming.kicks-ass.net>
+Message-ID: <a3722bae-9506-21f0-7e6e-a85217313bf8@linux.intel.com>
+Date:   Tue, 28 May 2019 14:24:14 -0400
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190528124349.GU2606@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190528133022.GX2606@hirez.programming.kicks-ass.net>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -56,66 +56,117 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 5/28/2019 8:43 AM, Peter Zijlstra wrote:
+On 5/28/2019 9:30 AM, Peter Zijlstra wrote:
 > On Tue, May 21, 2019 at 02:40:50PM -0700, kan.liang@linux.intel.com wrote:
->> The 8bit metrics ratio values lose precision when the measurement period
->> gets longer.
->>
->> To avoid this we always reset the metric value when reading, as we
->> already accumulate the count in the perf count value.
->>
->> For a long period read, low precision is acceptable.
->> For a short period read, the register will be reset often enough that it
->> is not a problem.
+>> +static u64 icl_metric_update_event(struct perf_event *event, u64 val)
+>> +{
+>> +	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+>> +	struct hw_perf_event *hwc = &event->hw;
+>> +	u64 newval, metric, slots_val = 0, new, last;
+>> +	bool nmi = in_nmi();
+>> +	int txn_flags = nmi ? 0 : cpuc->txn_flags;
+>> +
+>> +	/*
+>> +	 * Use cached value for transaction.
+>> +	 */
+>> +	newval = 0;
+>> +	if (txn_flags) {
+>> +		newval = cpuc->txn_metric;
+>> +		slots_val = cpuc->txn_slots;
+>> +	} else if (nmi) {
+>> +		newval = cpuc->nmi_metric;
+>> +		slots_val = cpuc->nmi_slots;
+>> +	}
+>> +
+>> +	if (!newval) {
+>> +		slots_val = val;
+>> +
+>> +		rdpmcl((1<<29), newval);
+>> +		if (txn_flags) {
+>> +			cpuc->txn_metric = newval;
+>> +			cpuc->txn_slots = slots_val;
+>> +		} else if (nmi) {
+>> +			cpuc->nmi_metric = newval;
+>> +			cpuc->nmi_slots = slots_val;
+>> +		}
+>> +
+>> +		if (!(txn_flags & PERF_PMU_TXN_REMOVE)) {
+>> +			/* Reset the metric value when reading
+>> +			 * The SLOTS register must be reset when PERF_METRICS reset,
+>> +			 * otherwise PERF_METRICS may has wrong output.
+>> +			 */
 > 
->> The PERF_METRICS may report wrong value if its delta was less than 1/255
->> of SLOTS (Fixed counter 3).
->>
->> To avoid this, the PERF_METRICS and SLOTS registers have to be reset
->> simultaneously. The slots value has to be cached as well.
-> 
-> That doesn't sound like it is NMI-safe.
->  >
-> 
->> RDPMC
->> =========
->> The TopDown can be collected per thread/process. To use TopDown
->> through RDPMC in applications on Icelake, the metrics and slots values
->> have to be saved/restored during context switching.
->>
->> Add specific set_period() to specially handle the slots and metrics
->> event. Because,
->>   - The initial value must be 0.
->>   - Only need to restore the value in context switch. For other cases,
->>     the counters have been cleared after read.
-> 
-> So the above claims to explain RDPMC, but doesn't mention that magic
-> value below at all. In fact, I don't see how the above relates to RDPMC
-> at all.
+> broken comment style.. (and grammer)
 
-Current perf only support per-core Topdown RDPMC. On Icelake, it can be 
-extended to per-thread Topdown RDPMC.
-It tries to explain the extra work for per-thread topdown RDPMC, e.g. 
-save/restore slots and metrics value in context switch.
+Missed a full stop.
+Should be "Reset the metric value for each read."
+> 
+>> +			wrmsrl(MSR_PERF_METRICS, 0);
+>> +			wrmsrl(MSR_CORE_PERF_FIXED_CTR3, 0);
+> 
+> I don't get this, overflow happens on when we flip sign, so why is
+> programming 0 a sane thing to do?
+
+Reset the counters (programming 0) don't trigger overflow.
+We have to reset both registers for each read to avoid the known 
+PERF_METRICS issue.
 
 
 > 
->> @@ -2141,7 +2157,9 @@ static int x86_pmu_event_idx(struct perf_event *event)
->>   	if (!(event->hw.flags & PERF_X86_EVENT_RDPMC_ALLOWED))
->>   		return 0;
->>   
->> -	if (x86_pmu.num_counters_fixed && idx >= INTEL_PMC_IDX_FIXED) {
->> +	if (is_metric_idx(idx))
->> +		idx = 1 << 29;
+>> +			hwc->saved_metric = 0;
+>> +			hwc->saved_slots = 0;
+>> +		} else {
+>> +			/* saved metric and slots for context switch */
+>> +			hwc->saved_metric = newval;
+>> +			hwc->saved_slots = val;
+>> +
+>> +		}
+>> +		/* cache the last metric and slots */
+>> +		cpuc->last_metric = hwc->last_metric;
+>> +		cpuc->last_slots = hwc->last_slots;
+>> +		hwc->last_metric = 0;
+>> +		hwc->last_slots = 0;
+>> +	}
+>> +
+>> +	/* The METRICS and SLOTS have been reset when reading */
+>> +	if (!(txn_flags & PERF_PMU_TXN_REMOVE))
+>> +		local64_set(&hwc->prev_count, 0);
+>> +
+>> +	if (is_slots_event(event))
+>> +		return (slots_val - cpuc->last_slots);
+>> +
+>> +	/*
+>> +	 * The metric is reported as an 8bit integer percentage
+>> +	 * suming up to 0xff. As the counter is less than 64bits
+>> +	 * we can use the not used bits to get the needed precision.
+>> +	 * Use 16bit fixed point arithmetic for
+>> +	 * slots-in-metric = (MetricPct / 0xff) * val
+>> +	 * This works fine for upto 48bit counters, but will
+>> +	 * lose precision above that.
+>> +	 */
+>> +
+>> +	metric = (cpuc->last_metric >> ((hwc->idx - INTEL_PMC_IDX_FIXED_METRIC_BASE)*8)) & 0xff;
+>> +	last = (((metric * 0xffff) >> 8) * cpuc->last_slots) >> 16;
 > 
-> I can't find this in the SDM RDPMC description. What does it return?
+> How is that cpuc->last_* crap not broken for NMIs ?
 
-It will return the value of PERF_METRICS. I will add it in the changelog.
+There should be no NMI for slots or metric events at the moment, because 
+the MSR_PERF_METRICS and MSR_CORE_PERF_FIXED_CTR3 are reset in first read.
+Other NMIs will not touch the codes here.
 
 Thanks,
 Kan
+
 > 
->> +	else if (x86_pmu.num_counters_fixed && idx >= INTEL_PMC_IDX_FIXED) {
->>   		idx -= INTEL_PMC_IDX_FIXED;
->>   		idx |= 1 << 30;
->>   	}
+>> +
+>> +	metric = (newval >> ((hwc->idx - INTEL_PMC_IDX_FIXED_METRIC_BASE)*8)) & 0xff;
+>> +	new = (((metric * 0xffff) >> 8) * slots_val) >> 16;
+>> +
+>> +	return (new - last);
+>> +}
+> 
+> 
+> This is diguisting.. and unreadable.
+> 
+> mul_u64_u32_shr() is actually really fast, use it.
+> 
