@@ -2,112 +2,162 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80970C072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A69C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55FFD206C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35E37206C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:13:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbfE1PNc (ORCPT
+        id S1727887AbfE1PNg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 11:13:32 -0400
-Received: from fieldses.org ([173.255.197.46]:38270 "EHLO fieldses.org"
+        Tue, 28 May 2019 11:13:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50126 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726826AbfE1PNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 11:13:32 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 465721C21; Tue, 28 May 2019 11:13:31 -0400 (EDT)
-Date:   Tue, 28 May 2019 11:13:31 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Benjamin Coddington <bcodding@redhat.com>
-Cc:     YueHaibing <yuehaibing@huawei.com>, jlayton@kernel.org,
-        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH -next] lockd: Make two symbols static
-Message-ID: <20190528151331.GA29554@fieldses.org>
-References: <20190528090652.13288-1-yuehaibing@huawei.com>
- <97D052EC-1F07-4210-81CC-7E0085C095BD@redhat.com>
+        id S1726826AbfE1PNf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 11:13:35 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AD78330C319A;
+        Tue, 28 May 2019 15:13:34 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-125-65.rdu2.redhat.com [10.10.125.65])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 334277FD20;
+        Tue, 28 May 2019 15:13:32 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+ Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+ Kingdom.
+ Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH 17/25] fsinfo: autofs - add sb operation fsinfo() [ver #13]
+From:   David Howells <dhowells@redhat.com>
+To:     viro@zeniv.linux.org.uk
+Cc:     dhowells@redhat.com, raven@themaw.net, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mszeredi@redhat.com
+Date:   Tue, 28 May 2019 16:13:31 +0100
+Message-ID: <155905641144.1662.13767023676855295385.stgit@warthog.procyon.org.uk>
+In-Reply-To: <155905626142.1662.18430571708534506785.stgit@warthog.procyon.org.uk>
+References: <155905626142.1662.18430571708534506785.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <97D052EC-1F07-4210-81CC-7E0085C095BD@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 28 May 2019 15:13:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 06:49:13AM -0400, Benjamin Coddington wrote:
-> Maintainers, what's the best thing to do here: fold these into
-> another patch version and post it (add attribution)?  Add it as
-> another patch at the end of the series?
+From: Ian Kent <raven@themaw.net>
 
-Either would be fine.  Yeah, if it was folded in then we'd add a line
-like
+The new fsinfo() system call adds a new super block operation
+->fsinfo() which is used by file systems to provide file
+system specific information for fsinfo() requests.
 
-	[hulkci@huawei.com: make symbols static to fix sparse warnings]
+The fsinfo() request FSINFO_ATTR_PARAMETERS provides the same
+function as sb operation ->show_options() so it needs to be
+implemented by any file system that provides ->show_options()
+as a minimum.
 
-But I'll probably just add it on to the end for now.  No need for you to
-do anything.
+Also add a simple FSINFO_ATTR_CAPABILITIES implementation.
 
-> I have learned my lesson: add sparse to my workflow.
+Signed-off-by: Ian Kent <raven@themaw.net>
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
 
-I dunno, I wonder if we're better off just leaving it to this CI bot.
-It seems like a more efficient use of time overall than making every
-contributor run it.
+ fs/autofs/inode.c |   63 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
 
---b.
+diff --git a/fs/autofs/inode.c b/fs/autofs/inode.c
+index 58457ec0ab27..bd9126d8c541 100644
+--- a/fs/autofs/inode.c
++++ b/fs/autofs/inode.c
+@@ -11,6 +11,7 @@
+ #include <linux/pagemap.h>
+ #include <linux/fs_context.h>
+ #include <linux/fs_parser.h>
++#include <linux/fsinfo.h>
+ 
+ #include "autofs_i.h"
+ 
+@@ -101,6 +102,65 @@ static int autofs_show_options(struct seq_file *m, struct dentry *root)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_FSINFO
++/*
++ * Get filesystem information.
++ */
++static int autofs_fsinfo(struct path *path, struct fsinfo_kparams *params)
++{
++	struct autofs_sb_info *sbi = autofs_sbi(path->dentry->d_sb);
++	struct inode *inode = d_inode(path->dentry->d_sb->s_root);
++	struct fsinfo_capabilities *caps;
++
++	switch (params->request) {
++	case FSINFO_ATTR_CAPABILITIES:
++		caps = params->buffer;
++		fsinfo_set_cap(caps, FSINFO_CAP_IS_AUTOMOUNTER_FS);
++		fsinfo_set_cap(caps, FSINFO_CAP_AUTOMOUNTS);
++		fsinfo_set_cap(caps, FSINFO_CAP_NOT_PERSISTENT);
++		return sizeof(*caps);
++
++	case FSINFO_ATTR_PARAMETERS:
++		fsinfo_note_paramf(params, "fd", "%d", sbi->pipefd);
++		if (!uid_eq(inode->i_uid, GLOBAL_ROOT_UID))
++			fsinfo_note_paramf(params, "uid", "%u",
++				from_kuid_munged(&init_user_ns, inode->i_uid));
++		if (!gid_eq(inode->i_gid, GLOBAL_ROOT_GID))
++			fsinfo_note_paramf(params, "gid", "%u",
++				from_kgid_munged(&init_user_ns, inode->i_gid));
++		fsinfo_note_paramf(params, "pgrp", "%d",
++				   pid_vnr(sbi->oz_pgrp));
++		fsinfo_note_paramf(params, "timeout", "%lu",
++				   sbi->exp_timeout/HZ);
++		fsinfo_note_paramf(params, "minproto", "%d",
++				   sbi->min_proto);
++		fsinfo_note_paramf(params, "maxproto", "%d",
++				   sbi->max_proto);
++		if (autofs_type_offset(sbi->type))
++			fsinfo_note_param(params, "offset", NULL);
++		else if (autofs_type_direct(sbi->type))
++			fsinfo_note_param(params, "direct", NULL);
++		else
++			fsinfo_note_param(params, "indirect", NULL);
++		if (sbi->flags & AUTOFS_SBI_STRICTEXPIRE)
++			fsinfo_note_param(params, "strictexpire", NULL);
++		if (sbi->flags & AUTOFS_SBI_IGNORE)
++			fsinfo_note_param(params, "ignore", NULL);
++#ifdef CONFIG_CHECKPOINT_RESTORE
++		if (sbi->pipe)
++			fsinfo_note_paramf(params, "pipe_ino",
++					  "%ld", file_inode(sbi->pipe)->i_ino);
++		else
++			fsinfo_note_param(params, "pipe_ino", "-1");
++#endif
++		return params->usage;
++
++	default:
++		return generic_fsinfo(path, params);
++	}
++}
++#endif /* CONFIG_FSINFO */
++
+ static void autofs_evict_inode(struct inode *inode)
+ {
+ 	clear_inode(inode);
+@@ -111,6 +171,9 @@ static const struct super_operations autofs_sops = {
+ 	.statfs		= simple_statfs,
+ 	.show_options	= autofs_show_options,
+ 	.evict_inode	= autofs_evict_inode,
++#ifdef CONFIG_FSINFO
++	.fsinfo		= autofs_fsinfo,
++#endif
+ };
+ 
+ struct autofs_fs_context {
 
-> Ben
-> 
-> On 28 May 2019, at 5:06, YueHaibing wrote:
-> 
-> >Fix sparse warnings:
-> >
-> >fs/lockd/clntproc.c:57:6: warning: symbol 'nlmclnt_put_lockowner'
-> >was not declared. Should it be static?
-> >fs/lockd/svclock.c:409:35: warning: symbol 'nlmsvc_lock_ops' was
-> >not declared. Should it be static?
-> >
-> >Reported-by: Hulk Robot <hulkci@huawei.com>
-> >Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> >---
-> > fs/lockd/clntproc.c | 2 +-
-> > fs/lockd/svclock.c  | 2 +-
-> > 2 files changed, 2 insertions(+), 2 deletions(-)
-> >
-> >diff --git a/fs/lockd/clntproc.c b/fs/lockd/clntproc.c
-> >index 0ff8ad4..b11f2af 100644
-> >--- a/fs/lockd/clntproc.c
-> >+++ b/fs/lockd/clntproc.c
-> >@@ -54,7 +54,7 @@ nlmclnt_get_lockowner(struct nlm_lockowner
-> >*lockowner)
-> > 	return lockowner;
-> > }
-> >
-> >-void nlmclnt_put_lockowner(struct nlm_lockowner *lockowner)
-> >+static void nlmclnt_put_lockowner(struct nlm_lockowner *lockowner)
-> > {
-> > 	if (!refcount_dec_and_lock(&lockowner->count,
-> >&lockowner->host->h_lock))
-> > 		return;
-> >diff --git a/fs/lockd/svclock.c b/fs/lockd/svclock.c
-> >index 5f9f19b..61d3cc2 100644
-> >--- a/fs/lockd/svclock.c
-> >+++ b/fs/lockd/svclock.c
-> >@@ -406,7 +406,7 @@ static void
-> >nlmsvc_locks_release_private(struct file_lock *fl)
-> > 	nlmsvc_put_lockowner((struct nlm_lockowner *)fl->fl_owner);
-> > }
-> >
-> >-const struct file_lock_operations nlmsvc_lock_ops = {
-> >+static const struct file_lock_operations nlmsvc_lock_ops = {
-> > 	.fl_copy_lock = nlmsvc_locks_copy_lock,
-> > 	.fl_release_private = nlmsvc_locks_release_private,
-> > };
-> >-- 
-> >2.7.4
