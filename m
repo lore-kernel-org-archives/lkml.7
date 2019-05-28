@@ -2,181 +2,142 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A04C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C2FC04E84
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77EE92070D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:57:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E07CB21734
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:58:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=appneta.com header.i=@appneta.com header.b="UUNfmVG+"
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="wyDZHKhr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727377AbfE1Q5i (ORCPT
+        id S1727410AbfE1Q6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 12:57:38 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34382 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727090AbfE1Q5i (ORCPT
+        Tue, 28 May 2019 12:58:03 -0400
+Received: from mail-vk1-f194.google.com ([209.85.221.194]:43138 "EHLO
+        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727021AbfE1Q6C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 12:57:38 -0400
-Received: by mail-pg1-f196.google.com with SMTP id h2so8281405pgg.1
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 09:57:37 -0700 (PDT)
+        Tue, 28 May 2019 12:58:02 -0400
+Received: by mail-vk1-f194.google.com with SMTP id h72so4860126vkh.10
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 09:58:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=appneta.com; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=lFicemnrxZJjOmAogTHnQIM2MtSG5wRpTZojge/oE6s=;
-        b=UUNfmVG+dl4dsV8GCJXdvUnq74HpLPc5cl3YuUVk4GPLntZVTxPBjZfWYIkjiOzwvi
-         zs5qeIrC1fIXH1W7PYyqTjICOngvh34WOuANDVsZgYdU9IuYMoqzEeoEEKXYIVMaV5Ui
-         f99nhgBOAcoT4Pge69hhdYt4kivvKfZ78Qnoo=
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WD86kLDybsdQfA1DtayTKwNMqVa0rLyy2f7nqyQw8qg=;
+        b=wyDZHKhr+yVm9KgPE6tQTdgA4iwGqTCmFL3YfnKUlBYX+v412GOR3Icm138K9DM5IT
+         lrs1WADr98GngDUa6SfbkIi5Liqqdw/2YUmApufncRkJE1U1WavhpViIXri52MGyzhZa
+         ojrqbwXHuUfcn5tjm/RZFEOOM+/iOM4qhIBY/qTcZJv+nyYjUv6l/us1HHQcX42+d8yl
+         EAAbDs+dSrkRTVippz8RiF/K/NiCjclAmkIVpgc6iK2kwUczFAsUGOaWbv6lYGvnatr+
+         DjHkDZ8+sGH3kl+5QVV8IhkYbazSmKBS73iq9xW20Dn7pKWtlrQFjklnF8+BApRMnxWe
+         NuXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=lFicemnrxZJjOmAogTHnQIM2MtSG5wRpTZojge/oE6s=;
-        b=D5RFT/CoAdm2f6MwwyF4H3LR7F1ni3cjP7IDPqEPlkGERC7ddQIg2+IsiRdEp6BOHq
-         IvQKnglNLguqMAwcFJShiHVLG6Fr04WFsHpM3TKyQWNQLep3h87I2BbjpZcjDW8CxwW8
-         wcEjVgpzzNK4tOBJ3aIa6Cb25M723/Unv6hT8pjt2xz5GlcJi8lMCGH2H2nBQNNUE/pt
-         4btD8RcPDPg/fD4ZXl6WDhuFyvVw5kA1uMPDRolUE5V9TWRupc5eDH2MWpE5/w7RiUxK
-         Ehh59fDrLk3sLGwUnaSvVBymk5EbcUVrlFlr9Hc/hjob+3TLek5wkt/LtLsw3QFvURQa
-         /syg==
-X-Gm-Message-State: APjAAAXZg38iLvnjoPvWpYTSBZgufnisOouaRU+bN8fV0+tELWRA8Wa1
-        6KaYvs0l5iKoq2erzYUpT/StYA==
-X-Google-Smtp-Source: APXvYqx5jjVcgp8A0NWp+9txe3Qup8abnAwaoeeODau1vlVKM4m9vzUFxHigDyzUk6yBCJxrG4Y9mA==
-X-Received: by 2002:a62:4dc5:: with SMTP id a188mr93983392pfb.8.1559062657044;
-        Tue, 28 May 2019 09:57:37 -0700 (PDT)
-Received: from jltm109.jaalam.net (vancouver-a.appneta.com. [209.139.228.33])
-        by smtp.gmail.com with ESMTPSA id t5sm10996695pgh.46.2019.05.28.09.57.35
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WD86kLDybsdQfA1DtayTKwNMqVa0rLyy2f7nqyQw8qg=;
+        b=L261N1tc3d43f1vGQEJ8xqAWFm+lrIAVQh02ibqzLMjW/pg426K6s/gnkCY2GWe+z1
+         7MCkrFO3iIKGqb3riJaJKf1wSNbwlnRJ9xiL2h5EgObBUlhIzcwpcAHlbTRM96NZFMHW
+         cCLn5jI3SxOMD/ZHyAohs8zx8fura6tIVtIbsoTFGs/DzIUnogtJ2oiaJAVPzHEwXGHp
+         cM5T2fUkNCMZZ1C7R415ufKtm1qAriuokW9nSUavZHf++FeVUHd4H2hAZvYOkz0vTuBp
+         j4K/FVBN/rR9dmI1Z8b76v7Y88zVmC8vPpZzPhxqWHw4Cg471q9azxA++23WKezMlfzM
+         iBNA==
+X-Gm-Message-State: APjAAAWlIYiYaxYKBf/H6S+63ilevrtYgaEc/shaGoCLWAa+2YkCC6KF
+        /oSvio/gdeQ/PkR+CECNwJZDr/gamrnS3Q==
+X-Google-Smtp-Source: APXvYqxGHJzU2EIExSGCni1Bo00y0u7bjA2lt0NXX3c7EB/S+zgm2olMG6Lm1XLAplqz0qJCaQCkAg==
+X-Received: by 2002:a1f:9746:: with SMTP id z67mr20863502vkd.19.1559062681555;
+        Tue, 28 May 2019 09:58:01 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::6684])
+        by smtp.gmail.com with ESMTPSA id d7sm6182567uae.6.2019.05.28.09.58.00
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 May 2019 09:57:36 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH net 4/4] net/udpgso_bench_tx: audit error queue
-From:   Fred Klassen <fklassen@appneta.com>
-In-Reply-To: <CAF=yD-Le0XKCfyDBvHmBRVqkwn1D6ZoG=12gss5T62VcN5+1_w@mail.gmail.com>
-Date:   Tue, 28 May 2019 09:57:35 -0700
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        Willem de Bruijn <willemb@google.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <9811659B-6D5A-4C4F-9CF8-735E9CA6DE4E@appneta.com>
-References: <20190523210651.80902-1-fklassen@appneta.com>
- <20190523210651.80902-5-fklassen@appneta.com>
- <CAF=yD-KBNLr5KY-YQ1KMmZGCpYNefSJKaJkZNOwd8nRiedpQtA@mail.gmail.com>
- <879E5DA6-3A4F-4CE1-9DA5-480EE30109DE@appneta.com>
- <CAF=yD-LQT7=4vvMwMa96_SFuUd5GywMoae7hGi9n6rQeuhhxuQ@mail.gmail.com>
- <5BB184F2-6C20-416B-B2AF-A678400CFE3E@appneta.com>
- <CAF=yD-+6CRyqL6Fq5y2zpw5nnDitYC7G1c2JAVHZTjyw68DYJg@mail.gmail.com>
- <903DEC70-845B-4C4B-911D-2F203C191C27@appneta.com>
- <CAF=yD-Le0XKCfyDBvHmBRVqkwn1D6ZoG=12gss5T62VcN5+1_w@mail.gmail.com>
-To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Tue, 28 May 2019 09:58:00 -0700 (PDT)
+Date:   Tue, 28 May 2019 12:57:59 -0400
+From:   Josef Bacik <josef@toxicpanda.com>
+To:     Yao Liu <yotta.liu@ucloud.cn>
+Cc:     Josef Bacik <josef@toxicpanda.com>, Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        nbd <nbd@other.debian.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/3] nbd: fix connection timed out error after
+ reconnecting to server
+Message-ID: <20190528165758.zxfrv6fum4vwcv4e@MacBook-Pro-91.local>
+References: <1558691036-16281-1-git-send-email-yotta.liu@ucloud.cn>
+ <20190524130740.zfypc2j3q5e3gryr@MacBook-Pro-91.local.dhcp.thefacebook.com>
+ <20190527180743.GA20702@192-168-150-246.7~>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190527180743.GA20702@192-168-150-246.7~>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 28, 2019 at 02:07:43AM +0800, Yao Liu wrote:
+> On Fri, May 24, 2019 at 09:07:42AM -0400, Josef Bacik wrote:
+> > On Fri, May 24, 2019 at 05:43:54PM +0800, Yao Liu wrote:
+> > > Some I/O requests that have been sent succussfully but have not yet been
+> > > replied won't be resubmitted after reconnecting because of server restart,
+> > > so we add a list to track them.
+> > > 
+> > > Signed-off-by: Yao Liu <yotta.liu@ucloud.cn>
+> > 
+> > Nack, this is what the timeout stuff is supposed to handle.  The commands will
+> > timeout and we'll resubmit them if we have alive sockets.  Thanks,
+> > 
+> > Josef
+> > 
+> 
+> On the one hand, if num_connections == 1 and the only sock has dead,
+> then we do nbd_genl_reconfigure to reconnect within dead_conn_timeout,
+> nbd_xmit_timeout will not resubmit commands that have been sent
+> succussfully but have not yet been replied. The log is as follows:
+>  
+> [270551.108746] block nbd0: Receive control failed (result -104)
+> [270551.108747] block nbd0: Send control failed (result -32)
+> [270551.108750] block nbd0: Request send failed, requeueing
+> [270551.116207] block nbd0: Attempted send on invalid socket
+> [270556.119584] block nbd0: reconnected socket
+> [270581.161751] block nbd0: Connection timed out
+> [270581.165038] block nbd0: shutting down sockets
+> [270581.165041] print_req_error: I/O error, dev nbd0, sector 5123224 flags 8801
+> [270581.165149] print_req_error: I/O error, dev nbd0, sector 5123232 flags 8801
+> [270581.165580] block nbd0: Connection timed out
+> [270581.165587] print_req_error: I/O error, dev nbd0, sector 844680 flags 8801
+> [270581.166184] print_req_error: I/O error, dev nbd0, sector 5123240 flags 8801
+> [270581.166554] block nbd0: Connection timed out
+> [270581.166576] print_req_error: I/O error, dev nbd0, sector 844688 flags 8801
+> [270581.167124] print_req_error: I/O error, dev nbd0, sector 5123248 flags 8801
+> [270581.167590] block nbd0: Connection timed out
+> [270581.167597] print_req_error: I/O error, dev nbd0, sector 844696 flags 8801
+> [270581.168021] print_req_error: I/O error, dev nbd0, sector 5123256 flags 8801
+> [270581.168487] block nbd0: Connection timed out
+> [270581.168493] print_req_error: I/O error, dev nbd0, sector 844704 flags 8801
+> [270581.170183] print_req_error: I/O error, dev nbd0, sector 5123264 flags 8801
+> [270581.170540] block nbd0: Connection timed out
+> [270581.173333] block nbd0: Connection timed out
+> [270581.173728] block nbd0: Connection timed out
+> [270581.174135] block nbd0: Connection timed out
+>  
+> On the other hand, if we wait nbd_xmit_timeout to handle resubmission,
+> the I/O requests will have a big delay. For example, if timeout time is 30s,
+> and from sock dead to nbd_genl_reconfigure returned OK we only spend
+> 2s, the I/O requests will still be handled by nbd_xmit_timeout after 30s.
 
+We have to wait for the full timeout anyway to know that the socket went down,
+so it'll be re-submitted right away and then we'll wait on the new connection.
 
-> On May 28, 2019, at 8:08 AM, Willem de Bruijn =
-<willemdebruijn.kernel@gmail.com> wrote:
->=20
+Now we could definitely have requests that were submitted well after the first
+thing that failed, so their timeout would be longer than simply retrying them,
+but we have no idea of knowing which ones timed out and which ones didn't.  This
+way lies pain, because we have to matchup tags with handles.  This is why we
+rely on the generic timeout infrastructure, so everything is handled correctly
+without ending up with duplicate submissions/replies.  Thanks,
 
-I will push up latest patches soon.
-
-I did some testing and discovered that only TCP audit tests failed. They
-failed much less often when enabling poll.  Once in about 20 runs
-still failed. Therefore I commented out the TCP audit tests.
-
-As for the other tests, this is what I got with poll() disabled=E2=80=A6
-
-udp gso zerocopy timestamp audit
-udp rx:   1611 MB/s  1148129 calls/s
-udp tx:   1659 MB/s    28146 calls/s  28146 msg/s
-udp rx:   1686 MB/s  1201494 calls/s
-udp tx:   1685 MB/s    28579 calls/s  28579 msg/s
-udp rx:   1685 MB/s  1200402 calls/s
-udp tx:   1683 MB/s    28552 calls/s  28552 msg/s
-Summary over 3.000 seconds...
-sum udp tx:   1716 MB/s      85277 calls (28425/s)      85277 msgs =
-(28425/s)
-Tx Timestamps:               85277 received                 0 errors
-Zerocopy acks:               85277 received                 0 errors
-
-Here you see that with poll() enabled, it is a bit slower, so I don=E2=80=99=
-t have it
-enabled in udpgso_bench.sh =E2=80=A6
-
-udp gso zerocopy timestamp audit
-udp rx:   1591 MB/s  1133945 calls/s
-udp tx:   1613 MB/s    27358 calls/s  27358 msg/s
-udp rx:   1644 MB/s  1171674 calls/s
-udp tx:   1643 MB/s    27869 calls/s  27869 msg/s
-udp rx:   1643 MB/s  1170666 calls/s
-udp tx:   1641 MB/s    27845 calls/s  27845 msg/s
-Summary over 3.000 seconds...
-sum udp tx:   1671 MB/s      83072 calls (27690/s)      83072 msgs =
-(27690/s)
-Tx Timestamps:               83072 received                 0 errors
-Zerocopy acks:               83072 received                 0 errors
-
-
-You may be interested that I reduced test lengths from 4 to 3 seconds,
-but I am still getting 3 reports per test. I picked up the extra report =
-by
-changing 'if (tnow > treport)=E2=80=99 to 'if (tnow >=3D treport)=E2=80=99=
-
-
-> The only issue specific to GSO is that xmit_more can forego this
-> doorbell until the last segment. We want to complicate this logic with
-> a special case based on tx_flags. A process that cares should either
-> not use GSO, or the timestamp should be associated with the last
-> segment as I've been arguing so far.
-
-This is the area I was thinking of looking into. I=E2=80=99m not sure it =
-will work
-or that it will be too messy. It may be worth a little bit of digging to
-see if there is anything there. That will be down the road a bu
-
->>=20
->> I=E2=80=99ll get back to you when I have tested this more thoroughly. =
-Early results
->> suggest that adding the -P poll() option has fixed it without any =
-appreciable
->> performance hit. I=E2=80=99ll share raw results with you, and we can =
-make a final
->> decision together.
->=20
-> In the main loop? It still is peculiar that notifications appear to go
-> missing unless the process blocks waiting for them. Nothing in
-> sock_zerocopy_callback or the queueing onto the error queue should
-> cause drops, as far as I know.
->=20
-
-Now that I know the issue is only in TCP, I can speculate that all bytes =
-are
-being reported, but done with fewer messages. It may warrant some
-investigation in case there is some kind of bug.
-
-> Indeed. Ideally even run all tests, but return error if any failed,
-> like this recent patch
->=20
->  selftests/bpf: fail test_tunnel.sh if subtests fail
->  https://patchwork.ozlabs.org/patch/1105221/
->=20
-> but that may be a lot of code churn and better left to a separate =
-patch.
-
-I like it. I have it coded up, and it seems to work well. I=E2=80=99ll =
-make a
-separate commit in the patch set so we can yank it out if you feel
-it is too much=
+Josef
