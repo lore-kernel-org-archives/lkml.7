@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E61FC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED26C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67FC9206C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:07:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5BC8206C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:07:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559056029;
-	bh=p/ymJSmaoHBlUrGCp6Co76k+07UimWncnI4MTPYJGY0=;
+	s=default; t=1559056031;
+	bh=ou8JsaICJ3QygIcsB/rlV+LYgWx2MufRMb6XVhCdwfE=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=vu1rGI6gj5bQqewn19luOygiwhM7GhCYbOmcsTpdquVs93YJOTtGf7zkKWTcRjYKW
-	 +xyuc8ogsUz9KKZtaOCRKrid6IcxGsBV3GXC/u42MyeC83I50BFBYNx/fJlWUFCJ2e
-	 9zNoKqbjyJ624yQxDmydpH0JIaJz1MK6JWrHr4nk=
+	b=e1KWHlGh74bpw46Pu/GV6+0cZvqT+kn/o8VIXHjqDtlGiT3/OsGcEOuDvyLHyHqZB
+	 aDe2lL+K2hhaZuj57rqcwecaLcOU2nQF7hcjzK+iz/v4bh5kKUNhxozJMz63ysV/Zm
+	 TTo+kkx94nL+2oeem9UAYao2JW5WfL+UkI+UPVTY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbfE1PHI (ORCPT
+        id S1727264AbfE1PHK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 11:07:08 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:42796 "EHLO
+        Tue, 28 May 2019 11:07:10 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:42856 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726963AbfE1PHG (ORCPT
+        with ESMTP id S1726984AbfE1PHI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 11:07:06 -0400
+        Tue, 28 May 2019 11:07:08 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=PUvnzbZrTZ31zd48XHGvEZHvYsigwu0xnoy3Ezetm/0=; b=gnZ1JzN8Sj4F
-        uwv4A+rAOJ5Gn9rPnW4+ArTSB2btmpcVIgGZIirNzUf73F6ED69MrAu/ycA+bi+4JphzFPii50s1k
-        Fm3hPCOTXPOn2tnTKWyW3r/+53g0rNXPqj+ilwZSkiH04E7eG1mgbi4NiFAbgeHEMDZ5kIEa9aO+U
-        Kq9/k=;
+        List-Archive; bh=DRrmUfZErlU0wblgTemga0P+08sSa7slNopRc/Wl/bM=; b=vXgRzWpF6smn
+        +rDhJ9B6evMagY+iFx+xzZkbVqYI//DRzVwbBoH4u+RPwj1dX+cQ7frf09DbtFsVHsACbGreiwQzB
+        3xXoi5GZnHXJNuM5KlAJHsvWEBkXxsnfC7RUoJujjMsBpHcsPUGWu/aWaK1vP94V95aHPa9+r8qOP
+        BwUeE=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hVdgm-0002nf-3V; Tue, 28 May 2019 15:06:56 +0000
+        id 1hVdgr-0002oR-BF; Tue, 28 May 2019 15:07:01 +0000
 Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 5341D440049; Tue, 28 May 2019 16:06:55 +0100 (BST)
+        id A5290440046; Tue, 28 May 2019 16:07:00 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Colin Ian King <colin.king@canonical.com>
 Cc:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
@@ -52,11 +52,11 @@ Cc:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
         Liam Girdwood <lgirdwood@gmail.com>,
         linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
         Simon Ho <simon.ho@conexant.com>, Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: cx2072x: fix integer overflow on unsigned int multiply" to the asoc tree
-In-Reply-To: <20190524222551.26573-1-colin.king@canonical.com>
+Subject: Applied "ASoC: cx2072x: remove redundant assignment to pulse_len" to the asoc tree
+In-Reply-To: <20190524214419.25075-1-colin.king@canonical.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190528150655.5341D440049@finisterre.sirena.org.uk>
-Date:   Tue, 28 May 2019 16:06:55 +0100 (BST)
+Message-Id: <20190528150700.A5290440046@finisterre.sirena.org.uk>
+Date:   Tue, 28 May 2019 16:07:00 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -64,7 +64,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: cx2072x: fix integer overflow on unsigned int multiply
+   ASoC: cx2072x: remove redundant assignment to pulse_len
 
 has been applied to the asoc tree at
 
@@ -89,19 +89,16 @@ to this mail.
 Thanks,
 Mark
 
-From be0461048b60066eaba9046178fb96e78579af21 Mon Sep 17 00:00:00 2001
+From 9b33d2e526c53b0339ddba8b875bb8b8b3a11207 Mon Sep 17 00:00:00 2001
 From: Colin Ian King <colin.king@canonical.com>
-Date: Fri, 24 May 2019 23:25:51 +0100
-Subject: [PATCH] ASoC: cx2072x: fix integer overflow on unsigned int multiply
+Date: Fri, 24 May 2019 22:44:19 +0100
+Subject: [PATCH] ASoC: cx2072x: remove redundant assignment to pulse_len
 
-In the case where frac_div larger than 96 the result of an unsigned
-multiplication overflows an unsigned int.  For example, this can
-happen when the sample_rate is 192000 and pll_input is 122.  Fix
-this by casing the first term of the mutiply to a u64. Also remove
-the extraneous parentheses around the expression.
+Variable pulse_len is being initialized to 1 however this value is
+never read and pulse_len is being re-assigned later in a switch
+statement.  Clean up the code by removing the redundant initialization.
 
-Addresses-Coverity: ("Unintentional integer overflow")
-Fixes: a497a4363706 ("ASoC: Add support for Conexant CX2072X CODEC")
+Addresses-Coverity: ("Unused value")
 Signed-off-by: Colin Ian King <colin.king@canonical.com>
 Reviewed-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Mark Brown <broonie@kernel.org>
@@ -110,18 +107,18 @@ Signed-off-by: Mark Brown <broonie@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/sound/soc/codecs/cx2072x.c b/sound/soc/codecs/cx2072x.c
-index c11a585bbf70..ed762546eaee 100644
+index 23d2b25fe04c..c11a585bbf70 100644
 --- a/sound/soc/codecs/cx2072x.c
 +++ b/sound/soc/codecs/cx2072x.c
-@@ -627,7 +627,7 @@ static int cx2072x_config_pll(struct cx2072x_priv *cx2072x)
- 	if (frac_div) {
- 		frac_div *= 1000;
- 		frac_div /= pll_input;
--		frac_num = ((4000 + frac_div) * ((1 << 20) - 4));
-+		frac_num = (u64)(4000 + frac_div) * ((1 << 20) - 4);
- 		do_div(frac_num, 7);
- 		frac = ((u32)frac_num + 499) / 1000;
- 	}
+@@ -679,7 +679,7 @@ static int cx2072x_config_i2spcm(struct cx2072x_priv *cx2072x)
+ 	int is_right_j = 0;
+ 	int is_frame_inv = 0;
+ 	int is_bclk_inv = 0;
+-	int pulse_len = 1;
++	int pulse_len;
+ 	int frame_len = cx2072x->frame_size;
+ 	int sample_size = cx2072x->sample_size;
+ 	int i2s_right_slot;
 -- 
 2.20.1
 
