@@ -2,116 +2,216 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 551A0C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DCE8C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28A8021726
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:43:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CA4220679
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:43:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="irftUQki"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbfE1Oni (ORCPT
+        id S1727068AbfE1Onr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 10:43:38 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57674 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726504AbfE1Onh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 10:43:37 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6432130833AF;
-        Tue, 28 May 2019 14:43:37 +0000 (UTC)
-Received: from treble (ovpn-122-72.rdu2.redhat.com [10.10.122.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 488B37C550;
-        Tue, 28 May 2019 14:43:34 +0000 (UTC)
-Date:   Tue, 28 May 2019 09:43:28 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Matt Helsley <mhelsley@vmware.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC][PATCH 00/13] Cleanup recordmcount and begin objtool
- conversion
-Message-ID: <20190528144328.6wygc2ofk5oaggaf@treble>
-References: <cover.1558569448.git.mhelsley@vmware.com>
+        Tue, 28 May 2019 10:43:47 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:33165 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbfE1Onr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 10:43:47 -0400
+Received: by mail-vs1-f66.google.com with SMTP id y6so299544vsb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 07:43:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xoaLrOaVKIM8ESM/O0FPRf0nY0zEO7GufQin910pcKk=;
+        b=irftUQkii/33TKs92nEGhu6oEm/EW/DyqkbJsM8saeMvXwkfZS4WGQ/dEu6pFb6gGg
+         0d1zWvIPJGBgIBmCeReqSQgMzYAPsgVxJF2pBEkSYRpOkTQBLERmkeYhgvUWbzeITOcZ
+         DQFrs7MUbN0sMHD30cVrw4wDXvPXgNm24GlwI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xoaLrOaVKIM8ESM/O0FPRf0nY0zEO7GufQin910pcKk=;
+        b=lVnkNTxzw2AvwOViMmitpht7V2Pw9ybuCuacJkLwH+AMWDclhFA02JXCSvFVuDIBCc
+         OTPvjNivZtEzl8EIFw7I7UedwDx3LWSOw8UAFv9OMeDo2inYhUKz/XYOn/pnKwzGaxyg
+         7UEWMn1DhYN5y0gku97ZP5DJ5yNaCVpc6AtDoJkHyYh5yJsKTckta6EqeEL2DG/cf09L
+         THmpnjGpNq2T4PYkL4R31P4z3YlPi1rSLA48LkueGkyRx6DTX/Kf+VG08Fvd3aEcNKWJ
+         2fyqD04jViKoRg8pjXIQ0b+DsaT4f5pwINvSp9sxiqiSRiIJMM3jmfIt3MmrmraSGdG7
+         iM/g==
+X-Gm-Message-State: APjAAAVKhnQ1b9Gwb3ES/tshGKyD0PK9D+SQxFAXvCdCS0oQUq+fmH68
+        A4mNEk4J607LLH5niUCaXanR84AGeIQ=
+X-Google-Smtp-Source: APXvYqxC9XXEyG0BMFTXi41T7LcTEj9rRTtkrHbTJox+QKhBYEL3ofHUPIoXgzUeH4LHnegX3CBRFQ==
+X-Received: by 2002:a67:8b44:: with SMTP id n65mr54936928vsd.99.1559054625281;
+        Tue, 28 May 2019 07:43:45 -0700 (PDT)
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
+        by smtp.gmail.com with ESMTPSA id l132sm1438635vkd.39.2019.05.28.07.43.44
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 May 2019 07:43:45 -0700 (PDT)
+Received: by mail-ua1-f45.google.com with SMTP id r19so7979204uap.5
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 07:43:44 -0700 (PDT)
+X-Received: by 2002:ab0:4a97:: with SMTP id s23mr27884679uae.19.1559054305839;
+ Tue, 28 May 2019 07:38:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <cover.1558569448.git.mhelsley@vmware.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 28 May 2019 14:43:37 +0000 (UTC)
+References: <20190429204040.18725-1-dianders@chromium.org> <CAD=FV=WEDkufoEUYv9U+c+Y_bm8MYEWS25n63vUeNG0LLCFnuw@mail.gmail.com>
+ <CAPDyKFoKN2zUNvDkgciO6r_ohdh2Vaj5qQaAPwMq21y02XAK8A@mail.gmail.com>
+In-Reply-To: <CAPDyKFoKN2zUNvDkgciO6r_ohdh2Vaj5qQaAPwMq21y02XAK8A@mail.gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 28 May 2019 07:38:14 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VqqDK6SLC_1_cFUjjEdTNUU09GJi4ZEMNwt_mgjnVRdg@mail.gmail.com>
+Message-ID: <CAD=FV=VqqDK6SLC_1_cFUjjEdTNUU09GJi4ZEMNwt_mgjnVRdg@mail.gmail.com>
+Subject: Re: [PATCH v2] mmc: dw_mmc: Disable SDIO interrupts while suspended
+ to fix suspend/resume
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Sonny Rao <sonnyrao@chromium.org>,
+        Emil Renner Berthing <emil.renner.berthing@gmail.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Ryan Case <ryandcase@chromium.org>,
+        "# 4.0+" <stable@vger.kernel.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jaehoon Chung <jh80.chung@samsung.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 05:03:23PM -0700, Matt Helsley wrote:
-> This series cleans up recordmcount and then makes it into
-> an objtool subcommand.
-> 
-> The series starts with 8 cleanup patches which make recordmcount
-> easier to review and integrate with objtool. The final 5 patches
-> show the beginning steps of converting recordmcount to use objtool's
-> ELF code rather than its own open-coded methods of accessing ELF
-> files.
+Hi,
 
-Hi Matt,
+On Tue, May 28, 2019 at 6:12 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> On Mon, 20 May 2019 at 20:41, Doug Anderson <dianders@chromium.org> wrote:
+> >
+> > Hi,
+> >
+> > On Mon, Apr 29, 2019 at 1:41 PM Douglas Anderson <dianders@chromium.org> wrote:
+> > >
+> > > Processing SDIO interrupts while dw_mmc is suspended (or partly
+> > > suspended) seems like a bad idea.  We really don't want to be
+> > > processing them until we've gotten ourselves fully powered up.
+> > >
+> > > You might be wondering how it's even possible to become suspended when
+> > > an SDIO interrupt is active.  As can be seen in
+> > > dw_mci_enable_sdio_irq(), we explicitly keep dw_mmc out of runtime
+> > > suspend when the SDIO interrupt is enabled.  ...but even though we
+> > > stop normal runtime suspend transitions when SDIO interrupts are
+> > > enabled, the dw_mci_runtime_suspend() can still get called for a full
+> > > system suspend.
+> > >
+> > > Let's handle all this by explicitly masking SDIO interrupts in the
+> > > suspend call and unmasking them later in the resume call.  To do this
+> > > cleanly I'll keep track of whether the client requested that SDIO
+> > > interrupts be enabled so that we can reliably restore them regardless
+> > > of whether we're masking them for one reason or another.
+> > >
+> > > It should be noted that if dw_mci_enable_sdio_irq() is never called
+> > > (for instance, if we don't have an SDIO card plugged in) that
+> > > "client_sdio_enb" will always be false.  In those cases this patch
+> > > adds a tiny bit of overhead to suspend/resume (a spinlock and a
+> > > read/write of INTMASK) but other than that is a no-op.  The
+> > > SDMMC_INT_SDIO bit should always be clear and clearing it again won't
+> > > hurt.
+> > >
+> > > Without this fix it can be seen that rk3288-veyron Chromebooks with
+> > > Marvell WiFi would sometimes fail to resume WiFi even after picking my
+> > > recent mwifiex patch [1].  Specifically you'd see messages like this:
+> > >   mwifiex_sdio mmc1:0001:1: Firmware wakeup failed
+> > >   mwifiex_sdio mmc1:0001:1: PREP_CMD: FW in reset state
+> > >
+> > > ...and tracing through the resume code in the failing cases showed
+> > > that we were processing a SDIO interrupt really early in the resume
+> > > call.
+> > >
+> > > NOTE: downstream in Chrome OS 3.14 and 3.18 kernels (both of which
+> > > support the Marvell SDIO WiFi card) we had a patch ("CHROMIUM: sdio:
+> > > Defer SDIO interrupt handling until after resume") [2].  Presumably
+> > > this is the same problem that was solved by that patch.
+> > >
+> > > [1] https://lkml.kernel.org/r/20190404040106.40519-1-dianders@chromium.org
+> > > [2] https://crrev.com/c/230765
+> > >
+> > > Cc: <stable@vger.kernel.org> # 4.14.x
+> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > > ---
+> > > I didn't put any "Fixes" tag here, but presumably this could be
+> > > backported to whichever kernels folks found it useful for.  I have at
+> > > least confirmed that kernels v4.14 and v4.19 (as well as v5.1-rc2)
+> > > show the problem.  It is very easy to pick this to v4.19 and it
+> > > definitely fixes the problem there.
+> > >
+> > > I haven't spent the time to pick this to 4.14 myself, but presumably
+> > > it wouldn't be too hard to backport this as far as v4.13 since that
+> > > contains commit 32dba73772f8 ("mmc: dw_mmc: Convert to use
+> > > MMC_CAP2_SDIO_IRQ_NOTHREAD for SDIO IRQs").  Prior to that it might
+> > > make sense for anyone experiencing this problem to just pick the old
+> > > CHROMIUM patch to fix them.
+> > >
+> > > Changes in v2:
+> > > - Suggested 4.14+ in the stable tag (Sasha-bot)
+> > > - Extra note that this is a noop on non-SDIO (Shawn / Emil)
+> > > - Make boolean logic cleaner as per https://crrev.com/c/1586207/1
+> > > - Hopefully clear comments as per https://crrev.com/c/1586207/1
+> > >
+> > >  drivers/mmc/host/dw_mmc.c | 27 +++++++++++++++++++++++----
+> > >  drivers/mmc/host/dw_mmc.h |  3 +++
+> > >  2 files changed, 26 insertions(+), 4 deletions(-)
+> >
+> > Ulf: are you the right person to land this?  With 5.2-rc1 out it might
+> > be a good time for it?  To refresh your memory about this patch:
+> >
+> > * Patch v1 was posted back on April 10th [1] so we're at about 1.5
+> > months of time for people to comment about it now.  Should be more
+> > than enough.
+>
+> Apologize for the delay, not sure why this has slipped through my
+> filters. Anyway, let me have a look at it now.
 
-Thanks for the patches.  This looks like a good step in the right
-direction.
+No worries.  If there's something better I can do in the future to
+avoid problems, please let me know.
 
-What's the performance difference between the old recordmcount and the
-new version which relies on elf_open()?  It would be useful to compare
-kernel build times, before and after.
 
-Would it be feasible to eventually combine subcommands so that objtool
-could do both ORC and mcount generation in a single invocation?  I
-wonder what what the interface would look like.
+> > * Shawn Lin saw it and didn't hate it.  He had some confusion about
+> > how it worked and I've hopefully alleviated via extra comments / text.
+> >
+> > * Emil Renner Berthing thought it caused a regression for him but then
+> > tested further and was convinced that it didn't.  This is extra
+> > confirmation that someone other than me did try the patch and found it
+> > to not break things.  ;-)
+> >
+> > * It has been reviewed by Guenter Roeck (in v2)
+>
+> One question, I am guessing you are considering
+> https://lkml.org/lkml/2019/5/17/761 as the long term solution, and
+> thus $subject patch should go as fix+stable? No?
 
-> Matt Helsley (13):
->   recordmcount: Remove redundant strcmp
->   recordmcount: Remove uread()
->   recordmcount: Remove unused fd from uwrite() and ulseek()
->   recordmcount: Rewrite error/success handling
->   recordmcount: Kernel style function signature formatting
->   recordmcount: Kernel style formatting
->   recordmcount: Remove redundant cleanup() calls
->   recordmcount: Clarify what cleanup() does
->   objtool: Prepare to merge recordmcount
->   objtool: Make recordmcount into an objtool subcmd
->   objtool: recordmcount: Start using objtool's elf wrapper
->   objtool: recordmcount: Search for __mcount_loc before walking the
->     sections
->   objtool: recordmcount: Convert do_func() relhdrs
-> 
->  scripts/.gitignore                         |   1 -
->  scripts/Makefile                           |   1 -
->  scripts/Makefile.build                     |  22 +-
->  tools/objtool/.gitignore                   |   1 +
->  tools/objtool/Build                        |   1 +
->  tools/objtool/Makefile                     |   7 +-
->  tools/objtool/builtin-mcount.c             |  72 +++++
->  tools/objtool/builtin-mcount.h             |  23 ++
->  tools/objtool/builtin.h                    |   6 +
->  tools/objtool/objtool.c                    |   6 +
->  {scripts => tools/objtool}/recordmcount.c  | 350 ++++++++++-----------
->  {scripts => tools/objtool}/recordmcount.h  | 197 +++++++-----
->  {scripts => tools/objtool}/recordmcount.pl |   0
->  13 files changed, 420 insertions(+), 267 deletions(-)
->  create mode 100644 tools/objtool/builtin-mcount.c
->  create mode 100644 tools/objtool/builtin-mcount.h
->  rename {scripts => tools/objtool}/recordmcount.c (78%)
->  rename {scripts => tools/objtool}/recordmcount.h (78%)
->  rename {scripts => tools/objtool}/recordmcount.pl (100%)
-> 
-> -- 
-> 2.20.1
-> 
+No, the two problems are completely separate.  ${SUBJECT} patch deals
+with full system suspend/resume.  I originally reproduced the problems
+on a device with Marvell WiFi, though it could possibly affect
+Broadcom parts on dw_mmc too.  ${SUBJECT} patch is ready to land on
+mainline Linux at your leisure.  Also: in case you didn't notice
+(since it didn't thread properly for me), Shawn Lin gave it a reviewed
+by [1].
 
--- 
-Josh
+The patch you refer to [2] is related to something akin to an idle
+state (more like Runtime PM) and only affects Broadcom parts.  Also
+the Broadcom issue ought to happen across all host controllers (AKA
+not just dw_mmc).
+
+[1] https://lkml.kernel.org/r/982ffba1-c599-e73d-e5e0-b1be5668851c@rock-chips.com
+[2] https://lkml.org/lkml/2019/5/17/761
+
+-Doug
