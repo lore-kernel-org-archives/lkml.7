@@ -2,100 +2,77 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D7CC072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB5EC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBC4E2075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:14:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X2EOagEp"
+	by mail.kernel.org (Postfix) with ESMTP id 0020321726
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:14:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559063688;
+	bh=eq+BlEZ0qAIb4yf8KsxFga7Y9a2W40b/aqxSio8a4Fs=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ekGGheXY+bI3HhLzLDyN/wsdZ46bNYEHq9ZnookzmmuPJOjEDsThE1oUWBOkqsS+I
+	 CSM0GkjublSqmSwXjBOfz4dVXNCOYe074IS5yZ2aJvEvLRIuFlZ/nQ1tO9zbWa6Qdm
+	 di57ex4HFCeNPlJUU/Iz3s1SAYr6fQPFY/IwVq70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbfE1ROW (ORCPT
+        id S1727222AbfE1ROr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 13:14:22 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:43193 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726236AbfE1ROV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 13:14:21 -0400
-Received: by mail-lf1-f67.google.com with SMTP id u27so15205368lfg.10;
-        Tue, 28 May 2019 10:14:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=WjL1kPJpFZ+/6P/J2gFeO1EXLoFczY/0XpAxesm/SAI=;
-        b=X2EOagEpclu4ci+J5hELZN56hZWa/YKEEJMK9pne6v5cmFWQgQ58z6hcuN4SKQZLrs
-         2LYlVt5tiD/iE7WqzRZ8jHNm0MmyqhWQEq2iiBv+DbERpI0KtlpIuMTL9yxGXn0AATbh
-         8S0dlssbwt0wAe9eMcKuq2YGU1jgdpZYeMbvwqLprQpHN3qxVNgQDU8vri2A537s8p//
-         4WiaEtaZRVBk3HrrAySnKiZf7QfTCHiQPbl3Qy0m6tUmkxDUBAoSxoVUsBGbuUEW8WH2
-         XoXsVF5Uid2iHAY8wQtjZ5v4ARPAKJRygdV96eXj2QnQS68LlFvJivE/aqEn0j6N9eNR
-         yrbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=WjL1kPJpFZ+/6P/J2gFeO1EXLoFczY/0XpAxesm/SAI=;
-        b=J/+7FImhPXpE/ND2s+qd+RP1ihScvDVAGRddoQ0S0eGuhqIdhQIZluUqUzknK6EBSQ
-         MK0x7CWQX/eus1Nhwo8eXDfghA9+PdZxzJSpdgTY96z+6UgFsACXDRciBz53sv39AHrE
-         2UT1eF5CwbZ0iBT2nEb2dnodkDNs6hoUrJJTON7n+fsbQhExlqJJKO5/FigrUq9vjtnX
-         Ao5PKjvhBzw8Nl1ZySYlbMrlXGdml7ZKRwdiGXTsGPPzSXjoDQsY60UDtZHXgFnasw9r
-         ng100DKtKR+nJJVrElU8tCqiaKFs1x53B0h9i6VUdj8h50ARdshE6kd63bdEl3hah8Za
-         +AAw==
-X-Gm-Message-State: APjAAAUR9MCm74hDzr8fsxowI5/adyTi/oKSRmFngW+TlRWXcCCalAHE
-        wcGj9Jo0z5F376rCyVCgK3QHFQ4042M=
-X-Google-Smtp-Source: APXvYqzDZrteCE2LfMAWo8TQW16K+fLRlpq3FoRftMOd27u43NAPU34bi0T2PD4lughRbHjwkIeHpA==
-X-Received: by 2002:ac2:510b:: with SMTP id q11mr4381015lfb.11.1559063659938;
-        Tue, 28 May 2019 10:14:19 -0700 (PDT)
-Received: from esperanza ([176.120.239.149])
-        by smtp.gmail.com with ESMTPSA id d68sm3014105lfg.23.2019.05.28.10.14.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 May 2019 10:14:19 -0700 (PDT)
-Date:   Tue, 28 May 2019 20:14:16 +0300
-From:   Vladimir Davydov <vdavydov.dev@gmail.com>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Christoph Lameter <cl@linux.com>, cgroups@vger.kernel.org,
-        Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v5 1/7] mm: postpone kmem_cache memcg pointer
- initialization to memcg_link_cache()
-Message-ID: <20190528171416.ujwr5rhbo7g4wfd5@esperanza>
-References: <20190521200735.2603003-1-guro@fb.com>
- <20190521200735.2603003-2-guro@fb.com>
+        Tue, 28 May 2019 13:14:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33880 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726236AbfE1ROr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 13:14:47 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 785482075B;
+        Tue, 28 May 2019 17:14:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559063686;
+        bh=eq+BlEZ0qAIb4yf8KsxFga7Y9a2W40b/aqxSio8a4Fs=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=aL9dLgtwSPrbtObX+svakqDt3yIvQc7zJhPGU82RtS4niBDSjAu7HFBToHFGyKqE0
+         zKyIO8HF00i21ozO0JtKWF6o3cDEchz+6dJC4O6T+8hg6hksH/kb+P2euwwf+8QDV6
+         erqu8NAb8UAXsw0GoEUMnTd+ZtfBibSm9pcVX91g=
+Date:   Tue, 28 May 2019 19:14:43 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Dave Hansen <dave.hansen@intel.com>
+cc:     Hans de Goede <hdegoede@redhat.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: hid-related 5.2-rc1 boot hang
+In-Reply-To: <2c1684f6-9def-93dc-54ab-888142fd5e71@intel.com>
+Message-ID: <nycvar.YFH.7.76.1905281913140.1962@cbobk.fhfr.pm>
+References: <2c1684f6-9def-93dc-54ab-888142fd5e71@intel.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190521200735.2603003-2-guro@fb.com>
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 01:07:29PM -0700, Roman Gushchin wrote:
-> Initialize kmem_cache->memcg_params.memcg pointer in
-> memcg_link_cache() rather than in init_memcg_params().
-> 
-> Once kmem_cache will hold a reference to the memory cgroup,
-> it will simplify the refcounting.
-> 
-> For non-root kmem_caches memcg_link_cache() is always called
-> before the kmem_cache becomes visible to a user, so it's safe.
-> 
-> Signed-off-by: Roman Gushchin <guro@fb.com>
-> Reviewed-by: Shakeel Butt <shakeelb@google.com>
+On Tue, 28 May 2019, Dave Hansen wrote:
 
-This one is a no-brainer.
+> I have a system that works fine on 5.1.  When updating to 5.2-rc1, it
+> hangs at boot waiting on an instance of systemd-udevd.  The kernel
+> backtrace (https://photos.app.goo.gl/EV8rf7FofWouvdeE8) looks like it's
+> doing an finit_module() that dives into the hid code and is waiting on a
+> request_module().
 
-Acked-by: Vladimir Davydov <vdavydov.dev@gmail.com>
+Dave,
 
-Provided it's necessary for the rest of the series.
+thanks for the report.
+
+Just to confirm -- I guess reverting 4ceabaf79 and a025a18fe would work 
+this around, right?
+
+-- 
+Jiri Kosina
+SUSE Labs
+
