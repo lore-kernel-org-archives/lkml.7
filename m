@@ -2,75 +2,120 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A698C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:14:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A03BC072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F45F2133F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:14:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2885C2133F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:15:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559049337;
+	bh=nLKhjIzeaR1h6w2OEHXI4ENMxnKMi53HIQ3eeuO/2yQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xk0MTxrWSZQgG3LVgo7u3ApB2v22yPHzDIXPLDwCzsK86Sy8rAl2p7nkq+Ny8diWb
+	 MhcQmFP+7q+2Ko5Yl6Z7XSRe7aZSz6FUbz6+cEW4xRpolGONwdagq0KQMh+UqEt2bW
+	 0TnFdS7kf6rrvAQ9TUqAZC5NxXrLEqKaOcOHG3eY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727387AbfE1NOx (ORCPT
+        id S1727521AbfE1NPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 09:14:53 -0400
-Received: from mailgate2.uni-hannover.de ([130.75.2.114]:56978 "EHLO
-        mailgate2.uni-hannover.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726887AbfE1NOx (ORCPT
+        Tue, 28 May 2019 09:15:36 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53090 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbfE1NPg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 09:14:53 -0400
-X-Greylist: delayed 983 seconds by postgrey-1.27 at vger.kernel.org; Tue, 28 May 2019 09:14:51 EDT
-Received: from kolab.sra.uni-hannover.de (kolab.sra.uni-hannover.de [130.75.33.6])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mailgate2.uni-hannover.de (Postfix) with ESMTPS id 2DB8D2206;
-        Tue, 28 May 2019 14:58:27 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at sra.uni-hannover.de
-Received: from lab.sra.uni-hannover.de (aerobus.sra.uni-hannover.de
- [130.75.33.87])
- by kolab.sra.uni-hannover.de (Postfix) with SMTP id DD1F43E0622;
- Tue, 28 May 2019 14:57:59 +0200 (CEST)
-Received: (nullmailer pid 2217 invoked by uid 20018);
- Tue, 28 May 2019 12:58:26 -0000
-From:   Lennart Glauer <mail@lennart-glauer.de>
-To:     ard.biesheuvel@linaro.org, dvhart@infradead.org,
-        andy@infradead.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com
-Cc:     x86@kernel.org, linux-efi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lennart Glauer <mail@lennart-glauer.de>
-Subject: [PATCH] x86/efi: Free efi_pgd with free_pages()
-Date:   Tue, 28 May 2019 14:58:05 +0200
-Message-Id: <20190528125805.2166-1-mail@lennart-glauer.de>
-X-Mailer: git-send-email 2.17.1
+        Tue, 28 May 2019 09:15:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=BblpOpFREi2nfI7PrhAnSrsLHFooqML/drjwmo5tWZw=; b=ccqw3W6F00V3/DVzf6rsqL1qw
+        unZI8FfF9dGo5mfzG31+24CCFTPT/z8Jv2dEJx7l9maiaMOoW3VDlw55OB++aE7jsLHZ1FrsYbjcl
+        Uuyvx6Qrz/vomXuypGN9VLvd7LpNThJ/gfXFMZ66Q7dLNfGUVV8eo3XI1zpECkHO7XjUI=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hVbwY-0002T8-2f; Tue, 28 May 2019 13:15:06 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id 9E733440046; Tue, 28 May 2019 14:15:04 +0100 (BST)
+Date:   Tue, 28 May 2019 14:15:04 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Guillaume Tucker <guillaume.tucker@collabora.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Elaine Zhang <zhangqing@rock-chips.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Matt Hart <matthew.hart@linaro.org>, mgalka@collabora.com,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: linusw/for-next boot bisection: v5.2-rc1-8-g73a790c68d7e on
+ rk3288-veyron-jaq
+Message-ID: <20190528131504.GI2456@sirena.org.uk>
+References: <5cec74e8.1c69fb81.37335.9d7b@mx.google.com>
+ <0edab48f-06e5-9ed8-09be-7c9976ae1afb@collabora.com>
+ <CAMuHMdUF1Csi1ZMccOj=kurijMLcA6G+TP_spsE+fnMvZR71Vw@mail.gmail.com>
+ <de92e3bd-70e8-fcba-3c88-c04170704e7b@collabora.com>
+ <CACRpkdb-Dv614V7STLRMpiLkmb_7NVyKnh2oUi=7Rx366tmZ-A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="G3juXO9GfR42w+sw"
+Content-Disposition: inline
+In-Reply-To: <CACRpkdb-Dv614V7STLRMpiLkmb_7NVyKnh2oUi=7Rx366tmZ-A@mail.gmail.com>
+X-Cookie: The other line moves faster.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes another occurrence of free_page() that was missed
-in 06ace26.
-The efi_pgd is allocated as PGD_ALLOCATION_ORDER pages and therefore must
-also be freed as PGD_ALLOCATION_ORDER pages with free_pages().
 
-Signed-off-by: Lennart Glauer <mail@lennart-glauer.de>
----
- arch/x86/platform/efi/efi_64.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--G3juXO9GfR42w+sw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
-index 08ce8177c3af..acad22a44774 100644
---- a/arch/x86/platform/efi/efi_64.c
-+++ b/arch/x86/platform/efi/efi_64.c
-@@ -222,7 +222,7 @@ int __init efi_alloc_page_tables(void)
- 	pgd = efi_pgd + pgd_index(EFI_VA_END);
- 	p4d = p4d_alloc(&init_mm, pgd, EFI_VA_END);
- 	if (!p4d) {
--		free_page((unsigned long)efi_pgd);
-+		free_pages((unsigned long)efi_pgd, PGD_ALLOCATION_ORDER);
- 		return -ENOMEM;
- 	}
- 
--- 
-2.17.1
+On Tue, May 28, 2019 at 10:45:13AM +0200, Linus Walleij wrote:
+> On Tue, May 28, 2019 at 10:36 AM Guillaume Tucker
+
+> > Not really, so I've disabled bisections in the linux-gpio tree
+> > and a few other maintainers' trees for now.  I'll see if we can
+> > come up with a more systematic way of suppressing bisections in
+> > similar cases (i.e. the issue has been fixed in mainline later
+> > than the base commit for the branch being tested).
+
+> I think this is what the zeroday autobuilder does because
+> they never seem to show this problem. Thanks for looking
+> into it!
+
+I've got a feeling they do this by deduping after doing the bisection;
+they also used to have a system where they'd merge a bunch of trees
+together and do the bisect on that to save repeating bisects.
+
+--G3juXO9GfR42w+sw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlztNFQACgkQJNaLcl1U
+h9CnRwf/ee3CvNVsnpAeOOZn7++IRM1ltd0gFGJR8JS1aeptgeYX4Iy+LiyjV8CO
+ocs2H9W1CPO8oNd45rV709U1T5MzUpy8dPN306+3dPtB+etG8MXvBGSfoSx3oX0t
+wCZJaDgS/eakIS3nyhwsm4kYrFbOmG8hEjN22pcXugB6++1JPKXDQEC6bVxdJUVo
+meiYp9AR6PrYDDALwLSw+Hr5PJxOchP/x0azRWqDQ8xqICHaNkhYo2kV1uTF2nBg
+Y83I4nrNv4JOj+BSH+52Bys+uA8lT2daypGmuX3LVB/mILWA22w9R4uogPNk5uEg
+hcNuHlAgis5PMVLlC8S8D6U3j4wUIw==
+=/CjW
+-----END PGP SIGNATURE-----
+
+--G3juXO9GfR42w+sw--
