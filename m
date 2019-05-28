@@ -2,451 +2,247 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD54C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22796C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ADC620717
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:06:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF8C520883
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:08:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=openedev.com header.i=@openedev.com header.b="PJiGVMZg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727623AbfE1TGT (ORCPT
+        id S1727696AbfE1TIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 15:06:19 -0400
-Received: from mga12.intel.com ([192.55.52.136]:40678 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726452AbfE1TGT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 15:06:19 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 May 2019 12:06:18 -0700
-X-ExtLoop1: 1
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga001.fm.intel.com with ESMTP; 28 May 2019 12:06:18 -0700
-Received: from [10.254.95.162] (kliang2-mobl.ccr.corp.intel.com [10.254.95.162])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 8D1095802C9;
-        Tue, 28 May 2019 12:06:17 -0700 (PDT)
-Subject: Re: [PATCH 1/3] perf header: Add die information in CPU topology
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org, peterz@infradead.org,
-        ak@linux.intel.com
-References: <1558644081-17738-1-git-send-email-kan.liang@linux.intel.com>
- <20190528090001.GD27906@krava>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <03a95846-5ccd-bbfa-ec95-b2cb8a83607d@linux.intel.com>
-Date:   Tue, 28 May 2019 15:06:16 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190528090001.GD27906@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 28 May 2019 15:08:41 -0400
+Received: from se14p.web-hosting.com ([198.54.122.234]:58230 "EHLO
+        se14p.web-hosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbfE1TIk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 15:08:40 -0400
+X-Greylist: delayed 1250 seconds by postgrey-1.27 at vger.kernel.org; Tue, 28 May 2019 15:08:40 EDT
+Received: from [68.65.123.203] (helo=server153.web-hosting.com)
+        by se14.registrar-servers.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <akash@openedev.com>)
+        id 1hVh8N-0009x3-QN; Tue, 28 May 2019 11:47:44 -0700
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=openedev.com; s=default; h=Message-Id:Date:Subject:Cc:To:From:Sender:
+        Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=HFvG/LahunJTKLXZcRrXptt2DckpdKXTkifmZXFipgQ=; b=PJiGVMZgVGjIgbDCNwmZ/BYqnX
+        fXKKx7yfLlCHwNukhMHUcNOocKv77y7xf8izZNV6Ppo791w9CKK+Sr1CgT3z0SC1jwKeH60STKItJ
+        kQg+sYfjzMZ5NwY5yCxUQ9UWwcp1g82nQCV3P1YGiBs3JalER9nYivypJdri+6mFX3zPJJ5YEcZ0w
+        PHluyjCLBSBRUuWnh/xep34EGeusUaiX14k/257ZXAdMFBxG7bg2IdlduvFpYXz9fvrGazsiq2tph
+        /L3ZKh3KEhc5nX2oM2RlkEwOYcqXfkI7nhBQfHoAdPB7Yn20dHN6mqxgafZg+N+/ZGFa0+9KHizZa
+        ZWxG4BXg==;
+Received: from [49.36.134.52] (port=58630 helo=localhost.localdomain)
+        by server153.web-hosting.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <akash@openedev.com>)
+        id 1hVh8B-000LWm-RB; Tue, 28 May 2019 14:47:32 -0400
+From:   Akash Gajjar <akash@openedev.com>
+To:     heiko@sntech.de
+Cc:     Akash Gajjar <akash@openedev.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Vicente Bergas <vicencb@gmail.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Klaus Goger <klaus.goger@theobroma-systems.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: rockchip: add WiFi+BT support on ROCK Pi4 board
+Date:   Wed, 29 May 2019 00:16:58 +0530
+Message-Id: <20190528184705.5240-1-akash@openedev.com>
+X-Mailer: git-send-email 2.17.1
+X-OutGoing-Spam-Status: No, score=-1.0
+X-Originating-IP: 68.65.123.203
+X-SpamExperts-Domain: nctest.net
+X-SpamExperts-Username: whmcalls3
+Authentication-Results: registrar-servers.com; auth=pass (login) smtp.auth=whmcalls3@nctest.net
+X-SpamExperts-Outgoing-Class: ham
+X-SpamExperts-Outgoing-Evidence: Combined (0.02)
+X-Recommended-Action: accept
+X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0fHWENUdqj+4JDN3TQDP3eCpSDasLI4SayDByyq9LIhVZoh+GYOxeKhX
+ 0rYQmz6690TNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3Kk502M/hntTzIKfCMISdhHXTA
+ YTyyIfs1cqM+JexaJLwYntLwFjolRFhTnXQDnB9P2e84PReenR5LSk2iUS2Af528AOBrEuOevXI0
+ ebdgRKCIKg/aUy1+rC+nt9YJr0O6xUx7ZqtwsMDZ69b8b7zqxI+lL5NhqHMWktMqMo9GxlRpzx17
+ fEWeVBQjTCzPj3JfZsHc9iz9sphsbcEfYLbbA/Vq7f6BdqHymHnsz2U1vrjjPk6p1XF7W+y4zutd
+ yrLieQwtaT8LS8s2UvPGuarJq5V04g3+jzRT0rWpGx2J7RisI4GNUZN9o6JCIHO0bcEXRyryw85/
+ rAZb27+VZ3biGpeRn+vXyl2rp3c+WLIsa2xTYi2bf0F0JzgUQ/o6tR7CyoeT9VtB9syzdRQvkcqf
+ 34ZQDkS0DHehuOHWuM7Vjf4BoMdMi3MTHLPLkhmyzwKCoSgrSPwK7H7GiJo2l1dsJpcM7kMJvj0O
+ sEsYG6FZSA0KvSDgkCQq49Bwhmr0QiXBtIgA7rb5Xakftk+kQbpsGMceNxO+7BxamuC10Aq7F6rO
+ /YET258p5gS3Y/tQ+7wViH3SZTmW3KAG173wuvejUvo9EUE9MbHVS3r/mgHJnIRYw1BzDqNFGZrh
+ +TVo3LXlhgkjL4M2T1qqsnPjyphw8gjQbS46n+oec+xQytaJegt1cLqOJqfuEFfuEby07ONb4LOp
+ SgtUXs0lCO/QMtPNbzkjHv8L1XCo8f/lClCdnQGCmomWoKHQTtA/vxRp3BmjRFUZkz7XBxuphczf
+ K2a9sHP9vI3sVqNiY7IcsXSdRq0BIkUL/j1Y48GvmeURQjjE+CVHssiRKJOGVnhkTYtSIth1Taei
+ g8OGCxX9BeyO5Yx635mhoDTZ7tQJkImekwqesW0Fhika04lb89teM7jCHuolsEZDZij6HLxcjD4A
+ kjrzujHpSlY2Fr2WwzhRAoSw64oN2HxlNw5KgUUaTYIpDCz9FipvlGvdczGojXbA7Kmf/z2jyiGR
+ IooMdE2solbjhZES3yaCYnD0cFyGWzVHlRxwEiTVJqDh0qKoKsXx5lloGmtNVzr+QC4y+mGx45d+
+ 3Lqf0a+sK979BKHqhPATJSQCCJdpTZ0kmYMGtdFn1fl+TqEWOdbpokqh9QirvZzP9FuHbI/2PO15
+ wkM9AzOwAoKm7RdD7DhCg+2QoWbS5It/atGmSN6m4V7Gg3S4FvW6J98p+AxeVIeDFBo6QTq+8ulz
+ /zXcOmPBLTmIxb/wPGs8LFudSgPI2QH+nhyrWSrH
+X-Report-Abuse-To: spam@se16.registrar-servers.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Rock Pi 4 has a on board AP6256 WiFi/BT Module. enable wifi and bluetooth
+support on Rock Pi 4 board.
 
+Signed-off-by: Akash Gajjar <akash@openedev.com>
+---
+ .../boot/dts/rockchip/rk3399-rock-pi-4.dts    | 97 +++++++++++++++++++
+ 1 file changed, 97 insertions(+)
 
-On 5/28/2019 5:00 AM, Jiri Olsa wrote:
-> On Thu, May 23, 2019 at 01:41:19PM -0700, kan.liang@linux.intel.com wrote:
-> 
-> SNIP
-> 
->> diff --git a/tools/perf/util/cputopo.c b/tools/perf/util/cputopo.c
->> index ece0710..f6e7db7 100644
->> --- a/tools/perf/util/cputopo.c
->> +++ b/tools/perf/util/cputopo.c
->> @@ -1,5 +1,6 @@
->>   // SPDX-License-Identifier: GPL-2.0
->>   #include <sys/param.h>
->> +#include <sys/utsname.h>
->>   #include <inttypes.h>
->>   #include <api/fs/fs.h>
->>   
->> @@ -8,9 +9,10 @@
->>   #include "util.h"
->>   #include "env.h"
->>   
->> -
->>   #define CORE_SIB_FMT \
->>   	"%s/devices/system/cpu/cpu%d/topology/core_siblings_list"
->> +#define DIE_SIB_FMT \
->> +	"%s/devices/system/cpu/cpu%d/topology/die_cpus_list"
->>   #define THRD_SIB_FMT \
->>   	"%s/devices/system/cpu/cpu%d/topology/thread_siblings_list"
->>   #define NODE_ONLINE_FMT \
->> @@ -20,7 +22,26 @@
->>   #define NODE_CPULIST_FMT \
->>   	"%s/devices/system/node/node%d/cpulist"
->>   
->> -static int build_cpu_topology(struct cpu_topology *tp, int cpu)
->> +bool check_x86_die_exists(void)
->> +{
->> +	char filename[MAXPATHLEN];
->> +	struct utsname uts;
->> +
->> +	if (uname(&uts) < 0)
->> +		return false;
->> +
->> +	if (strncmp(uts.machine, "x86_64", 6))
->> +		return false;
->> +
->> +	scnprintf(filename, MAXPATHLEN, DIE_SIB_FMT,
->> +		  sysfs__mountpoint(), 0);
->> +	if (access(filename, F_OK) == -1)
->> +		return false;
->> +
->> +	return true;
->> +}
-> 
-> we could rename this to:
-> 
-> static bool has_die(void)
-> {
-> 	static bool has_die;
-> 
-> 	if (initialized)
-> 		return has_die;
-> 
-> 	has_die = ...
-> 	initialized = true;
-> }
-> 
-> and got rid of all those 'has_die' arguments below
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
+index e030627159c6..55e74f4d5cd0 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
+@@ -25,6 +25,15 @@
+ 		#clock-cells = <0>;
+ 	};
+ 
++	sdio_pwrseq: sdio-pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		clocks = <&rk808 1>;
++		clock-names = "ext_clock";
++		pinctrl-names = "default";
++		pinctrl-0 = <&wifi_enable_h>;
++		reset-gpios = <&gpio0 RK_PB2 GPIO_ACTIVE_LOW>;
++	};
++
+ 	vcc12v_dcin: dc-12v {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vcc12v_dcin";
+@@ -451,12 +460,46 @@
+ };
+ 
+ &pinctrl {
++	bt {
++		bt_enable_h: bt-enable-h {
++			rockchip,pins = <0 RK_PB1 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++
++		bt_host_wake_l: bt-host-wake-l {
++			rockchip,pins = <0 RK_PA4 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++
++		bt_wake_l: bt-wake-l {
++			rockchip,pins = <2 RK_PD3 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
+ 	pcie {
+ 		pcie_pwr_en: pcie-pwr-en {
+ 			rockchip,pins = <2 RK_PD2 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 	};
+ 
++	sdio0 {
++		sdio0_bus4: sdio0-bus4 {
++			rockchip,pins =
++				<2 20 RK_FUNC_1 &pcfg_pull_up_20ma>,
++				<2 21 RK_FUNC_1 &pcfg_pull_up_20ma>,
++				<2 22 RK_FUNC_1 &pcfg_pull_up_20ma>,
++				<2 23 RK_FUNC_1 &pcfg_pull_up_20ma>;
++		};
++
++		sdio0_cmd: sdio0-cmd {
++			rockchip,pins =
++				<2 24 RK_FUNC_1 &pcfg_pull_up_20ma>;
++		};
++
++		sdio0_clk: sdio0-clk {
++			rockchip,pins =
++				<2 25 RK_FUNC_1 &pcfg_pull_none_20ma>;
++		};
++	};
++
+ 	pmic {
+ 		pmic_int_l: pmic-int-l {
+ 			rockchip,pins = <1 RK_PC5 RK_FUNC_GPIO &pcfg_pull_up>;
+@@ -482,6 +525,17 @@
+ 			rockchip,pins = <4 RK_PD1 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 	};
++
++	wifi {
++		wifi_enable_h: wifi-enable-h {
++			rockchip,pins =
++				<0 RK_PB2 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++
++		wifi_host_wake_l: wifi-host-wake-l {
++			rockchip,pins = <0 RK_PA3 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
+ };
+ 
+ &pwm2 {
+@@ -494,6 +548,32 @@
+ 	vref-supply = <&vcc_1v8>;
+ };
+ 
++&sdio0 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	bus-width = <4>;
++	clock-frequency = <50000000>;
++	cap-sdio-irq;
++	cap-sd-highspeed;
++	keep-power-in-suspend;
++	mmc-pwrseq = <&sdio_pwrseq>;
++	non-removable;
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdio0_bus4 &sdio0_cmd &sdio0_clk>;
++	sd-uhs-sdr104;
++	status = "okay";
++
++	brcmf: wifi@1 {
++		compatible = "brcm,bcm4329-fmac";
++		reg = <1>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <RK_PA3 GPIO_ACTIVE_HIGH>;
++		interrupt-names = "host-wake";
++		pinctrl-names = "default";
++		pinctrl-0 = <&wifi_host_wake_l>;
++	};
++};
++
+ &sdmmc {
+ 	bus-width = <4>;
+ 	cap-mmc-highspeed;
+@@ -557,6 +637,23 @@
+ 	};
+ };
+ 
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
++	status = "okay";
++
++	bluetooth {
++		compatible = "brcm,bcm43438-bt";
++		clocks = <&rk808 1>;
++		clock-names = "ext_clock";
++		device-wakeup-gpios = <&gpio2 RK_PD3 GPIO_ACTIVE_HIGH>;
++		host-wakeup-gpios = <&gpio0 RK_PA4 GPIO_ACTIVE_HIGH>;
++		shutdown-gpios = <&gpio0 RK_PB1 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&bt_host_wake_l &bt_wake_l &bt_enable_h>;
++	};
++};
++
+ &uart2 {
+ 	status = "okay";
+ };
+-- 
+2.17.1
 
-Yes, we can rename the function to has_die(). It looks like all the 
-'has_die' arguments can be replaced either.
-
-But why we want a "initialized" here? to cache the value? It looks like 
-we only need to call has_die() once.
-
-Thanks,
-Kan
-
-> 
->> +
->> +static int build_cpu_topology(struct cpu_topology *tp, int cpu, bool has_die)
->>   {
->>   	FILE *fp;
->>   	char filename[MAXPATHLEN];
->> @@ -34,12 +55,12 @@ static int build_cpu_topology(struct cpu_topology *tp, int cpu)
->>   		  sysfs__mountpoint(), cpu);
->>   	fp = fopen(filename, "r");
->>   	if (!fp)
->> -		goto try_threads;
->> +		goto try_dies;
->>   
->>   	sret = getline(&buf, &len, fp);
->>   	fclose(fp);
->>   	if (sret <= 0)
->> -		goto try_threads;
->> +		goto try_dies;
->>   
->>   	p = strchr(buf, '\n');
->>   	if (p)
->> @@ -57,6 +78,35 @@ static int build_cpu_topology(struct cpu_topology *tp, int cpu)
->>   	}
->>   	ret = 0;
->>   
->> +try_dies:
->> +	if (has_die) {
->> +		scnprintf(filename, MAXPATHLEN, DIE_SIB_FMT,
->> +			  sysfs__mountpoint(), cpu);
->> +		fp = fopen(filename, "r");
->> +		if (!fp)
->> +			goto try_threads;
->> +
->> +		sret = getline(&buf, &len, fp);
->> +		fclose(fp);
->> +		if (sret <= 0)
->> +			goto try_threads;
->> +
->> +		p = strchr(buf, '\n');
->> +		if (p)
->> +			*p = '\0';
->> +
->> +		for (i = 0; i < tp->die_sib; i++) {
->> +			if (!strcmp(buf, tp->die_siblings[i]))
->> +				break;
->> +		}
->> +		if (i == tp->die_sib) {
->> +			tp->die_siblings[i] = buf;
->> +			tp->die_sib++;
->> +			buf = NULL;
->> +			len = 0;
->> +		}
->> +		ret = 0;
->> +	}
->>   try_threads:
->>   	scnprintf(filename, MAXPATHLEN, THRD_SIB_FMT,
->>   		  sysfs__mountpoint(), cpu);
->> @@ -88,7 +138,7 @@ static int build_cpu_topology(struct cpu_topology *tp, int cpu)
->>   	return ret;
->>   }
->>   
->> -void cpu_topology__delete(struct cpu_topology *tp)
->> +void cpu_topology__delete(struct cpu_topology *tp, bool has_die)
->>   {
->>   	u32 i;
->>   
->> @@ -98,17 +148,22 @@ void cpu_topology__delete(struct cpu_topology *tp)
->>   	for (i = 0 ; i < tp->core_sib; i++)
->>   		zfree(&tp->core_siblings[i]);
->>   
->> +	if (has_die) {
->> +		for (i = 0 ; i < tp->die_sib; i++)
->> +			zfree(&tp->die_siblings[i]);
->> +	}
->> +
->>   	for (i = 0 ; i < tp->thread_sib; i++)
->>   		zfree(&tp->thread_siblings[i]);
->>   
->>   	free(tp);
->>   }
->>   
->> -struct cpu_topology *cpu_topology__new(void)
->> +struct cpu_topology *cpu_topology__new(bool has_die)
->>   {
->>   	struct cpu_topology *tp = NULL;
->>   	void *addr;
->> -	u32 nr, i;
->> +	u32 nr, i, nr_addr;
->>   	size_t sz;
->>   	long ncpus;
->>   	int ret = -1;
->> @@ -126,7 +181,11 @@ struct cpu_topology *cpu_topology__new(void)
->>   	nr = (u32)(ncpus & UINT_MAX);
->>   
->>   	sz = nr * sizeof(char *);
->> -	addr = calloc(1, sizeof(*tp) + 2 * sz);
->> +	if (has_die)
->> +		nr_addr = 3;
->> +	else
->> +		nr_addr = 2;
->> +	addr = calloc(1, sizeof(*tp) + nr_addr * sz);
->>   	if (!addr)
->>   		goto out_free;
->>   
->> @@ -134,13 +193,17 @@ struct cpu_topology *cpu_topology__new(void)
->>   	addr += sizeof(*tp);
->>   	tp->core_siblings = addr;
->>   	addr += sz;
->> +	if (has_die) {
->> +		tp->die_siblings = addr;
->> +		addr += sz;
->> +	}
->>   	tp->thread_siblings = addr;
->>   
->>   	for (i = 0; i < nr; i++) {
->>   		if (!cpu_map__has(map, i))
->>   			continue;
->>   
->> -		ret = build_cpu_topology(tp, i);
->> +		ret = build_cpu_topology(tp, i, has_die);
->>   		if (ret < 0)
->>   			break;
->>   	}
->> @@ -148,7 +211,7 @@ struct cpu_topology *cpu_topology__new(void)
->>   out_free:
->>   	cpu_map__put(map);
->>   	if (ret) {
->> -		cpu_topology__delete(tp);
->> +		cpu_topology__delete(tp, has_die);
->>   		tp = NULL;
->>   	}
->>   	return tp;
->> diff --git a/tools/perf/util/cputopo.h b/tools/perf/util/cputopo.h
->> index 47a97e7..cb4e6fe 100644
->> --- a/tools/perf/util/cputopo.h
->> +++ b/tools/perf/util/cputopo.h
->> @@ -7,8 +7,10 @@
->>   
->>   struct cpu_topology {
->>   	u32	  core_sib;
->> +	u32	  die_sib;
->>   	u32	  thread_sib;
->>   	char	**core_siblings;
->> +	char	**die_siblings;
->>   	char	**thread_siblings;
->>   };
->>   
->> @@ -24,8 +26,9 @@ struct numa_topology {
->>   	struct numa_topology_node	nodes[0];
->>   };
->>   
->> -struct cpu_topology *cpu_topology__new(void);
->> -void cpu_topology__delete(struct cpu_topology *tp);
->> +bool check_x86_die_exists(void);
->> +struct cpu_topology *cpu_topology__new(bool has_die);
->> +void cpu_topology__delete(struct cpu_topology *tp, bool has_die);
->>   
->>   struct numa_topology *numa_topology__new(void);
->>   void numa_topology__delete(struct numa_topology *tp);
->> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
->> index 6a3eaf7..1cc7a18 100644
->> --- a/tools/perf/util/env.c
->> +++ b/tools/perf/util/env.c
->> @@ -246,6 +246,7 @@ int perf_env__read_cpu_topology_map(struct perf_env *env)
->>   	for (cpu = 0; cpu < nr_cpus; ++cpu) {
->>   		env->cpu[cpu].core_id	= cpu_map__get_core_id(cpu);
->>   		env->cpu[cpu].socket_id	= cpu_map__get_socket_id(cpu);
->> +		env->cpu[cpu].die_id	= cpu_map__get_die_id(cpu);
->>   	}
->>   
->>   	env->nr_cpus_avail = nr_cpus;
->> diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
->> index 271a90b..d5d9865 100644
->> --- a/tools/perf/util/env.h
->> +++ b/tools/perf/util/env.h
->> @@ -9,6 +9,7 @@
->>   
->>   struct cpu_topology_map {
->>   	int	socket_id;
->> +	int	die_id;
->>   	int	core_id;
->>   };
->>   
->> @@ -49,6 +50,7 @@ struct perf_env {
->>   
->>   	int			nr_cmdline;
->>   	int			nr_sibling_cores;
->> +	int			nr_sibling_dies;
->>   	int			nr_sibling_threads;
->>   	int			nr_numa_nodes;
->>   	int			nr_memory_nodes;
->> @@ -57,6 +59,7 @@ struct perf_env {
->>   	char			*cmdline;
->>   	const char		**cmdline_argv;
->>   	char			*sibling_cores;
->> +	char			*sibling_dies;
->>   	char			*sibling_threads;
->>   	char			*pmu_mappings;
->>   	struct cpu_topology_map	*cpu;
->> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
->> index 847ae51..faa1e38 100644
->> --- a/tools/perf/util/header.c
->> +++ b/tools/perf/util/header.c
->> @@ -561,8 +561,11 @@ static int write_cpu_topology(struct feat_fd *ff,
->>   	struct cpu_topology *tp;
->>   	u32 i;
->>   	int ret, j;
->> +	bool has_die;
->>   
->> -	tp = cpu_topology__new();
->> +	has_die = check_x86_die_exists();
->> +
->> +	tp = cpu_topology__new(has_die);
->>   	if (!tp)
->>   		return -1;
->>   
->> @@ -599,8 +602,29 @@ static int write_cpu_topology(struct feat_fd *ff,
->>   		if (ret < 0)
->>   			return ret;
->>   	}
->> +
->> +	if (!has_die)
->> +		goto done;
-> 
-> also the has_die() could stay static in util/cputopo.c,
-> we can get the 'has_die state' from tp->die_sib != 0
-> 
->> +
->> +	ret = do_write(ff, &tp->die_sib, sizeof(tp->die_sib));
->> +	if (ret < 0)
->> +		goto done;
->> +
->> +	for (i = 0; i < tp->die_sib; i++) {
->> +		ret = do_write_string(ff, tp->die_siblings[i]);
->> +		if (ret < 0)
->> +			goto done;
->> +	}
->> +
->> +	for (j = 0; j < perf_env.nr_cpus_avail; j++) {
->> +		ret = do_write(ff, &perf_env.cpu[j].die_id,
->> +			       sizeof(perf_env.cpu[j].die_id));
->> +		if (ret < 0)
->> +			return ret;
->> +	}
->> +
->>   done:
->> -	cpu_topology__delete(tp);
->> +	cpu_topology__delete(tp, has_die);
->>   	return ret;
->>   }
->>   
->> @@ -1428,6 +1452,8 @@ static void print_cmdline(struct feat_fd *ff, FILE *fp)
->>   	fputc('\n', fp);
->>   }
->>   
->> +static bool has_die;
-> 
-> same here.. you can use env->nr_sibling_dies instead of static bool
-> 
->> +
->>   static void print_cpu_topology(struct feat_fd *ff, FILE *fp)
->>   {
->>   	struct perf_header *ph = ff->ph;
->> @@ -1443,6 +1469,16 @@ static void print_cpu_topology(struct feat_fd *ff, FILE *fp)
->>   		str += strlen(str) + 1;
->>   	}
->>   
->> +	if (has_die) {
->> +		nr = ph->env.nr_sibling_dies;
->> +		str = ph->env.sibling_dies;
->> +
->> +		for (i = 0; i < nr; i++) {
->> +			fprintf(fp, "# sibling dies    : %s\n", str);
->> +			str += strlen(str) + 1;
->> +		}
->> +	}
->> +
->>   	nr = ph->env.nr_sibling_threads;
->>   	str = ph->env.sibling_threads;
->>   
->> @@ -1451,12 +1487,28 @@ static void print_cpu_topology(struct feat_fd *ff, FILE *fp)
->>   		str += strlen(str) + 1;
->>   	}
->>   
->> -	if (ph->env.cpu != NULL) {
->> -		for (i = 0; i < cpu_nr; i++)
->> -			fprintf(fp, "# CPU %d: Core ID %d, Socket ID %d\n", i,
->> -				ph->env.cpu[i].core_id, ph->env.cpu[i].socket_id);
->> -	} else
->> -		fprintf(fp, "# Core ID and Socket ID information is not available\n");
->> +	if (has_die) {
->> +		if (ph->env.cpu != NULL) {
->> +			for (i = 0; i < cpu_nr; i++)
->> +				fprintf(fp, "# CPU %d: Core ID %d, "
->> +					    "Die ID %d, Socket ID %d\n",
->> +					    i, ph->env.cpu[i].core_id,
->> +					    ph->env.cpu[i].die_id,
->> +					    ph->env.cpu[i].socket_id);
->> +		} else
->> +			fprintf(fp, "# Core ID, Die ID and Socket ID "
->> +				    "information is not available\n");
->> +	} else {
->> +		if (ph->env.cpu != NULL) {
->> +			for (i = 0; i < cpu_nr; i++)
->> +				fprintf(fp, "# CPU %d: Core ID %d, "
->> +					    "Socket ID %d\n",
->> +					    i, ph->env.cpu[i].core_id,
->> +					    ph->env.cpu[i].socket_id);
->> +		} else
->> +			fprintf(fp, "# Core ID and Socket ID "
->> +				    "information is not available\n");
->> +	}
->>   }
-> 
-> SNIP
-> 
-> thanks,
-> jirka
-> 
