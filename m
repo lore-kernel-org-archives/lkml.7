@@ -7,56 +7,58 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B758DC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1F6C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CA4521019
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4072021019
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:25:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="daml5CCo"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ItWNDl/L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbfE1VZE (ORCPT
+        id S1727928AbfE1VZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 17:25:04 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:56851 "EHLO
+        Tue, 28 May 2019 17:25:48 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:57859 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbfE1VZE (ORCPT
+        with ESMTP id S1726824AbfE1VZr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 17:25:04 -0400
+        Tue, 28 May 2019 17:25:47 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4SLOnI92240051
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4SLPU2j2240168
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 28 May 2019 14:24:49 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4SLOnI92240051
+        Tue, 28 May 2019 14:25:30 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4SLPU2j2240168
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559078690;
-        bh=wd+1Q2iEBloh7OhyhelN1hT7unVWc1UJhsdZzNauNys=;
+        s=2019051801; t=1559078730;
+        bh=BHFswm328hwysMDs/6CuLlvN4IAwBP17ftSZCSSjkBs=;
         h=Date:From:Cc:Reply-To:To:Subject:From;
-        b=daml5CCo++JssjCaIvjoZfByeIiuFOpwUmGqXOBc2kAgbC0eNnBV1G8dxwDqjHHKp
-         o7kbAacqYx7tUIbfZzqWjjOQmfPzPaCK2hxp3tdjq2feV7dykdmnTQF+N+FawH2GtK
-         GOzBfu772yEEk2QOYFKaxRMCNezJpDE7Sz9tWWjx3ALCZeFMbYMbxSxNlXZtmp0bXd
-         NYbKiSfHqi4fpHOjhupZj6HfS91EqJYi3CG7VgWgUOqu4x64/tWhhu5LmR1dJ7r6En
-         E2UmG36WDFlJN7h0ayYPGMBsJ/9bHAiSl3HgsBN7yOYuxhJdYkpvDwOG99tsrUH/Ng
-         7bB0VYLD+4rMg==
+        b=ItWNDl/LyMbrKwYJtbi4BobHPsFWyBXUQPP+pWtgkN6Sveollhg4yCOw2LN5tmbyy
+         Qm5FD7A9BaWYkGik1Y9tFdCgiY0dZkzqwnPaiMHQkJ4lY3mMYbZqBLWEYCPb28iPGo
+         ro4j5HHiwRTIH4WRDGFDJLG3LpLuOxgPg03hABntRhdG8kRZ1RR5Qsm6uCG86DV8LW
+         +v2yR+BAhVvCk9K8nSrV/t/jhu97LVlq9IYEUBShfuOd7yg+LtvXjGEtQefz2M9uH5
+         NfWB2UnGRd/vJlb+/LJXPJDselS7lmLKTnHM0ODrIAXl07VxrsEdQfUhqEdWldTfRh
+         QxcpG7K5jRrUg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4SLOmLZ2240048;
-        Tue, 28 May 2019 14:24:48 -0700
-Date:   Tue, 28 May 2019 14:24:48 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4SLPUnE2240165;
+        Tue, 28 May 2019 14:25:30 -0700
+Date:   Tue, 28 May 2019 14:25:30 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-lenja6gmy26dkt0ybk747qgq@git.kernel.org>
-Cc:     brendan.d.gregg@gmail.com, jolsa@kernel.org, tglx@linutronix.de,
-        namhyung@kernel.org, hpa@zytor.com, adrian.hunter@intel.com,
-        christian@brauner.io, acme@redhat.com,
-        linux-kernel@vger.kernel.org, lclaudio@redhat.com, mingo@kernel.org
-Reply-To: namhyung@kernel.org, brendan.d.gregg@gmail.com,
-          linux-kernel@vger.kernel.org, hpa@zytor.com, tglx@linutronix.de,
-          jolsa@kernel.org, lclaudio@redhat.com, mingo@kernel.org,
-          christian@brauner.io, adrian.hunter@intel.com, acme@redhat.com
+Message-ID: <tip-at3uoqcvmqdkwaysmvbj1wpv@git.kernel.org>
+Cc:     namhyung@kernel.org, acme@redhat.com, lclaudio@redhat.com,
+        jolsa@kernel.org, brendan.d.gregg@gmail.com,
+        torvalds@linux-foundation.org, amir73il@gmail.com,
+        tglx@linutronix.de, adrian.hunter@intel.com, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, mingo@kernel.org
+Reply-To: namhyung@kernel.org, acme@redhat.com, lclaudio@redhat.com,
+          jolsa@kernel.org, brendan.d.gregg@gmail.com, tglx@linutronix.de,
+          torvalds@linux-foundation.org, amir73il@gmail.com,
+          adrian.hunter@intel.com, hpa@zytor.com,
+          linux-kernel@vger.kernel.org, mingo@kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] tools headers UAPI: Sync linux/sched.h with the
+Subject: [tip:perf/urgent] tools headers UAPI: Sync linux/fs.h with the
  kernel
-Git-Commit-ID: c27de2b8911db7624be9bde1b5d58067dd58371d
+Git-Commit-ID: b5b999dca673bd7b2d4c267faf3478dca7baff7f
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -70,48 +72,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  c27de2b8911db7624be9bde1b5d58067dd58371d
-Gitweb:     https://git.kernel.org/tip/c27de2b8911db7624be9bde1b5d58067dd58371d
+Commit-ID:  b5b999dca673bd7b2d4c267faf3478dca7baff7f
+Gitweb:     https://git.kernel.org/tip/b5b999dca673bd7b2d4c267faf3478dca7baff7f
 Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Tue, 21 May 2019 16:43:32 -0300
+AuthorDate: Tue, 21 May 2019 17:07:20 -0300
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Tue, 28 May 2019 09:49:03 -0300
 
-tools headers UAPI: Sync linux/sched.h with the kernel
+tools headers UAPI: Sync linux/fs.h with the kernel
 
-To pick up the change in:
+To pick up the changes in:
 
-  b3e583825266 ("clone: add CLONE_PIDFD")
+  c553ea4fdf27 ("fs/sync.c: sync_file_range(2) may use WB_SYNC_ALL writeback")
 
-This requires changes in the 'perf trace' beautification routines for
-the 'clone' syscall args, which is done in a followup patch.
+That should be used to beautify the 'sync_file_range' syscall 'flags'
+arg.
 
-This silences the following perf build warning:
+This silences this perf build warning:
 
-  Warning: Kernel ABI header at 'tools/include/uapi/linux/sched.h' differs from latest version at 'include/uapi/linux/sched.h'
-  diff -u tools/include/uapi/linux/sched.h include/uapi/linux/sched.h
+  Warning: Kernel ABI header at 'tools/include/uapi/linux/fs.h' differs from latest version at 'include/uapi/linux/fs.h'
+  diff -u tools/include/uapi/linux/fs.h include/uapi/linux/fs.h
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Amir Goldstein <amir73il@gmail.com>
 Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
-Cc: Christian Brauner <christian@brauner.io>
 Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-lenja6gmy26dkt0ybk747qgq@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-at3uoqcvmqdkwaysmvbj1wpv@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/linux/sched.h | 1 +
- 1 file changed, 1 insertion(+)
+ tools/include/uapi/linux/fs.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/include/uapi/linux/sched.h b/tools/include/uapi/linux/sched.h
-index 22627f80063e..ed4ee170bee2 100644
---- a/tools/include/uapi/linux/sched.h
-+++ b/tools/include/uapi/linux/sched.h
-@@ -10,6 +10,7 @@
- #define CLONE_FS	0x00000200	/* set if fs info shared between processes */
- #define CLONE_FILES	0x00000400	/* set if open files shared between processes */
- #define CLONE_SIGHAND	0x00000800	/* set if signal handlers and blocked signals shared */
-+#define CLONE_PIDFD	0x00001000	/* set if a pidfd should be placed in parent */
- #define CLONE_PTRACE	0x00002000	/* set if we want to let tracing continue on the child too */
- #define CLONE_VFORK	0x00004000	/* set if the parent wants the child to wake it up on mm_release */
- #define CLONE_PARENT	0x00008000	/* set if we want to have the same parent as the cloner */
+diff --git a/tools/include/uapi/linux/fs.h b/tools/include/uapi/linux/fs.h
+index 121e82ce296b..59c71fa8c553 100644
+--- a/tools/include/uapi/linux/fs.h
++++ b/tools/include/uapi/linux/fs.h
+@@ -320,6 +320,9 @@ struct fscrypt_key {
+ #define SYNC_FILE_RANGE_WAIT_BEFORE	1
+ #define SYNC_FILE_RANGE_WRITE		2
+ #define SYNC_FILE_RANGE_WAIT_AFTER	4
++#define SYNC_FILE_RANGE_WRITE_AND_WAIT	(SYNC_FILE_RANGE_WRITE | \
++					 SYNC_FILE_RANGE_WAIT_BEFORE | \
++					 SYNC_FILE_RANGE_WAIT_AFTER)
+ 
+ /*
+  * Flags for preadv2/pwritev2:
