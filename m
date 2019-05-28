@@ -2,190 +2,87 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 000F4C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1265C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCA74208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:24:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C501208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:25:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AVgCSGUs";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="P1pv4LSa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727162AbfE1MYw (ORCPT
+        id S1727048AbfE1MZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 08:24:52 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54218 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726853AbfE1MYw (ORCPT
+        Tue, 28 May 2019 08:25:24 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:33284 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726808AbfE1MZY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 08:24:52 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4SCM8AR117113
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 08:24:50 -0400
-Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ss30ew108-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 08:24:50 -0400
-Received: from localhost
-        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Tue, 28 May 2019 13:24:49 +0100
-Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
-        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 28 May 2019 13:24:43 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4SCOgvP29491484
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 May 2019 12:24:43 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C2B1FB206E;
-        Tue, 28 May 2019 12:24:42 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 994BFB2065;
-        Tue, 28 May 2019 12:24:42 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 28 May 2019 12:24:42 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id C799516C35C0; Tue, 28 May 2019 05:24:47 -0700 (PDT)
-Date:   Tue, 28 May 2019 05:24:47 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>, kvm-ppc@vger.kernel.org,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Paul Mackerras <paulus@ozlabs.org>, rcu@vger.kernel.org
-Subject: Re: [PATCH RFC 0/5] Remove some notrace RCU APIs
-Reply-To: paulmck@linux.ibm.com
-References: <20190524234933.5133-1-joel@joelfernandes.org>
- <20190524232458.4bcf4eb4@gandalf.local.home>
- <20190525081444.GC197789@google.com>
- <20190525070826.16f76ee7@gandalf.local.home>
- <20190525141954.GA176647@google.com>
- <20190525155035.GE28207@linux.ibm.com>
- <20190525181407.GA220326@google.com>
+        Tue, 28 May 2019 08:25:24 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id DF3AF601D4; Tue, 28 May 2019 12:25:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559046323;
+        bh=AI20FMSNCMoT+7BIugoyP/HWgsbE34P8Gvcfdx+kBm8=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=AVgCSGUsuZtpSO5eqj6pCwcNAjF4ueGf8qXUgJVduZZHHW3ZDWRs/jVYDVa16hAfo
+         aq2Lms1V8hnQRyDGDpjb5UnXYTDXbkL1HUlW2rVG0BBc/gCFT/GD+CoIdyMhzXqwSl
+         KTMV5Cq69VkFUA0UTZ9ZIVYFi6ujnxCOKEe4MW7Q=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7AC39601D4;
+        Tue, 28 May 2019 12:25:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559046323;
+        bh=AI20FMSNCMoT+7BIugoyP/HWgsbE34P8Gvcfdx+kBm8=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=P1pv4LSaJNbCFuRRT7xH+xrkJlJHNz9JT5LVnHBYSJmJ5+ChNtfulkgT5jp/W7rvO
+         bCI+oRHyK/gzJEQsxUUvGcvjCedtTacbsiej+zBKLvah3n+0eU7ZFiUAuev1QzUDbP
+         n6wtT0VuEKTn4LbKOTG33GiiLEQ2Zpy146H6/Ufo=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7AC39601D4
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190525181407.GA220326@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19052812-0072-0000-0000-00000434284E
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011175; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01209781; UDB=6.00635551; IPR=6.00990810;
- MB=3.00027084; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-28 12:24:48
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052812-0073-0000-0000-00004C6504FA
-Message-Id: <20190528122447.GS28207@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-28_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905280081
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2] brcmfmac: fix typos in code comments
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190520122825.981-1-houweitaoo@gmail.com>
+References: <20190520122825.981-1-houweitaoo@gmail.com>
+To:     Weitao Hou <houweitaoo@gmail.com>
+Cc:     arend.vanspriel@broadcom.com, franky.lin@broadcom.com,
+        hante.meuleman@broadcom.com, chi-hsien.lin@cypress.com,
+        wright.feng@cypress.com, davem@davemloft.net, houweitaoo@gmail.com,
+        rafal@milecki.pl, linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190528122523.DF3AF601D4@smtp.codeaurora.org>
+Date:   Tue, 28 May 2019 12:25:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 25, 2019 at 02:14:07PM -0400, Joel Fernandes wrote:
-> On Sat, May 25, 2019 at 08:50:35AM -0700, Paul E. McKenney wrote:
-> > On Sat, May 25, 2019 at 10:19:54AM -0400, Joel Fernandes wrote:
-> > > On Sat, May 25, 2019 at 07:08:26AM -0400, Steven Rostedt wrote:
-> > > > On Sat, 25 May 2019 04:14:44 -0400
-> > > > Joel Fernandes <joel@joelfernandes.org> wrote:
-> > > > 
-> > > > > > I guess the difference between the _raw_notrace and just _raw variants
-> > > > > > is that _notrace ones do a rcu_check_sparse(). Don't we want to keep
-> > > > > > that check?  
-> > > > > 
-> > > > > This is true.
-> > > > > 
-> > > > > Since the users of _raw_notrace are very few, is it worth keeping this API
-> > > > > just for sparse checking? The API naming is also confusing. I was expecting
-> > > > > _raw_notrace to do fewer checks than _raw, instead of more. Honestly, I just
-> > > > > want to nuke _raw_notrace as done in this series and later we can introduce a
-> > > > > sparse checking version of _raw if need-be. The other option could be to
-> > > > > always do sparse checking for _raw however that used to be the case and got
-> > > > > changed in http://lists.infradead.org/pipermail/linux-afs/2016-July/001016.html
-> > > > 
-> > > > What if we just rename _raw to _raw_nocheck, and _raw_notrace to _raw ?
-> > > 
-> > > That would also mean changing 160 usages of _raw to _raw_nocheck in the
-> > > kernel :-/.
-> > > 
-> > > The tracing usage of _raw_notrace is only like 2 or 3 users. Can we just call
-> > > rcu_check_sparse directly in the calling code for those and eliminate the APIs?
-> > > 
-> > > I wonder what Paul thinks about the matter as well.
-> > 
-> > My thought is that it is likely that a goodly number of the current uses
-> > of _raw should really be some form of _check, with lockdep expressions
-> > spelled out.  Not that working out what exactly those lockdep expressions
-> > should be is necessarily a trivial undertaking.  ;-)
-> 
-> Yes, currently where I am a bit stuck is the rcu_dereference_raw()
-> cannot possibly know what SRCU domain it is under, so lockdep cannot check if
-> an SRCU lock is held without the user also passing along the SRCU domain. I
-> am trying to change lockdep to see if it can check if *any* srcu domain lock
-> is held (regardless of which one) and complain if none are. This is at least
-> better than no check at all.
-> 
-> However, I think it gets tricky for mutexes. If you have something like:
-> mutex_lock(some_mutex);
-> p = rcu_dereference_raw(gp);
-> mutex_unlock(some_mutex);
-> 
-> This might be a perfectly valid invocation of _raw, however my checks (patch
-> is still cooking) trigger a lockdep warning becase _raw cannot know that this
-> is Ok. lockdep thinks it is not in a reader section. This then gets into the
-> territory of a new rcu_derference_raw_protected(gp, assert_held(some_mutex))
-> which sucks because its yet another API. To circumvent this issue, can we
-> just have callers of rcu_dereference_raw ensure that they call
-> rcu_read_lock() if they are protecting dereferences by a mutex? That would
-> make things a lot easier and also may be Ok since rcu_read_lock is quite
-> cheap.
+Weitao Hou <houweitaoo@gmail.com> wrote:
 
-Why not just rcu_dereference_protected(lockdep_is_held(some_mutex))?
-The API is already there, and no need for spurious readers.
-
-> > That aside, if we are going to change the name of an API that is
-> > used 160 places throughout the tree, we would need to have a pretty
-> > good justification.  Without such a justification, it will just look
-> > like pointless churn to the various developers and maintainers on the
-> > receiving end of the patches.
+> fix lengh to length
 > 
-> Actually, the API name change is not something I want to do, it is Steven
-> suggestion. My suggestion is let us just delete _raw_notrace and just use the
-> _raw API for tracing, since _raw doesn't do any tracing anyway. Steve pointed
-> that _raw_notrace does sparse checking unlike _raw, but I think that isn't an
-> issue since _raw doesn't do such checking at the moment anyway.. (if possible
-> check my cover letter again for details/motivation of this series).
+> Signed-off-by: Weitao Hou <houweitaoo@gmail.com>
 
-Understood, but regardless of who suggested it, if we are to go through
-with it, good justification will be required.  ;-)
+Patch applied to wireless-drivers-next.git, thanks.
 
-							Thanx, Paul
+b07e1ae2ce53 brcmfmac: fix typos in code comments
 
-> thanks!
-> 
->  - Joel
-> 
-> > 							Thanx, Paul
-> > 
-> > > thanks, Steven!
-> > > 
-> > 
-> 
+-- 
+https://patchwork.kernel.org/patch/10950995/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
