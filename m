@@ -6,53 +6,73 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE841C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB96CC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AD252054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:37:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE96F2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:38:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727612AbfE1Nhp (ORCPT
+        id S1727597AbfE1Nij (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 09:37:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52868 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726867AbfE1Nhp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 09:37:45 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 285ADACD4;
-        Tue, 28 May 2019 13:37:44 +0000 (UTC)
-Date:   Tue, 28 May 2019 15:37:42 +0200
-From:   "jroedel@suse.de" <jroedel@suse.de>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Gary R Hook <ghook@amd.com>, "Hook, Gary" <Gary.Hook@amd.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] iommu/amd: print out "tag" in INVALID_PPR_REQUEST
-Message-ID: <20190528133742.GA8151@suse.de>
-References: <20190506041106.29167-1-cai@lca.pw>
- <ea379dc8-dd6b-f204-0abc-7b6fe87a851b@amd.com>
- <1557845746.6132.27.camel@lca.pw>
+        Tue, 28 May 2019 09:38:39 -0400
+Received: from foss.arm.com ([217.140.101.70]:57836 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726867AbfE1Nii (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 09:38:38 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 51FF380D;
+        Tue, 28 May 2019 06:38:38 -0700 (PDT)
+Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9D3263F5AF;
+        Tue, 28 May 2019 06:38:36 -0700 (PDT)
+Date:   Tue, 28 May 2019 14:38:34 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Amit Daniel Kachhap <amit.kachhap@arm.com>
+Cc:     Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
+        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
+Subject: Re: [kvmtool PATCH v10 5/5] KVM: arm/arm64: Add a vcpu feature for
+ pointer authentication
+Message-ID: <20190528133833.GC28398@e103592.cambridge.arm.com>
+References: <1555994558-26349-1-git-send-email-amit.kachhap@arm.com>
+ <1555994558-26349-6-git-send-email-amit.kachhap@arm.com>
+ <20190423154625.GP3567@e103592.cambridge.arm.com>
+ <3b7bafc9-5d6a-7845-ef1f-577ea59000e2@arm.com>
+ <20190424134120.GW3567@e103592.cambridge.arm.com>
+ <20190528101128.GB28398@e103592.cambridge.arm.com>
+ <53ecc253-e9e0-a6ca-2540-fa85bd26bfc1@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1557845746.6132.27.camel@lca.pw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <53ecc253-e9e0-a6ca-2540-fa85bd26bfc1@arm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 10:55:46AM -0400, Qian Cai wrote:
-> Jroedel, I am wondering what the plan for 41e59a41fc5d1 (iommu tree) or this
-> patch to be pushed to the linux-next or mainline...
+On Tue, May 28, 2019 at 06:18:16PM +0530, Amit Daniel Kachhap wrote:
+> Hi Dave,
 
-Looks like I applied that patch directly to the master branch, which is
-not what goes upstream. I cherry-picked it to x86/amd, so it will go
-upstream for v5.3.
+[...]
 
+> >Were you planning to repost this?
+> >
+> >Alternatively, I can fix up the diagnostic messages discussed here and
+> >post it together with the SVE support.  I'll do that locally for now,
+> >but let me know what you plan to do.  I'd like to get the SVE support
+> >posted soon so that people can test it.
+> 
+> I will clean up the print messages as you suggested and repost it shortly.
 
-Regards,
+OK, thanks.
 
-	Joerg
+In the meantime I'll rework the SVE config option stuff on what we
+discussed.
+
+Cheers
+---Dave
