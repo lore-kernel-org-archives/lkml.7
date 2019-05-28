@@ -6,70 +6,73 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC48C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB9EEC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 843C62075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:25:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B13462075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:25:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbfE1KY7 (ORCPT
+        id S1726780AbfE1KZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 06:24:59 -0400
-Received: from foss.arm.com ([217.140.101.70]:54328 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726203AbfE1KY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 06:24:59 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A2CC341;
-        Tue, 28 May 2019 03:24:59 -0700 (PDT)
-Received: from [0.0.0.0] (e107985-lin.cambridge.arm.com [10.1.194.38])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6EFAE3F59C;
-        Tue, 28 May 2019 03:24:55 -0700 (PDT)
-Subject: Re: [PATCH 2/7] sched/fair: Replace source_load() & target_load() w/
- weighted_cpuload()
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Rik van Riel <riel@surriel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        linux-kernel@vger.kernel.org
-References: <20190527062116.11512-1-dietmar.eggemann@arm.com>
- <20190527062116.11512-3-dietmar.eggemann@arm.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <63ee8775-f159-e172-15f4-2ddf941870ee@arm.com>
-Date:   Tue, 28 May 2019 12:24:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 28 May 2019 06:25:15 -0400
+Received: from mail-out.m-online.net ([212.18.0.10]:60057 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726203AbfE1KZO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 06:25:14 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 45CqjM1bQhz1rZ07;
+        Tue, 28 May 2019 12:25:11 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 45CqjL64ZDz1qqkH;
+        Tue, 28 May 2019 12:25:10 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id ipmAkLzaT_pN; Tue, 28 May 2019 12:25:09 +0200 (CEST)
+X-Auth-Info: 2hslSmEGTPLoyKNKYOOmViG/Dyfm+220WIVpGrKlHlvIBaw9uFUuecR4QmL82tBJ
+Received: from hawking (charybdis-ext.suse.de [195.135.221.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Tue, 28 May 2019 12:25:09 +0200 (CEST)
+From:   Andreas Schwab <schwab@linux-m68k.org>
+To:     Cyril Hrubis <chrubis@suse.cz>
+Cc:     lkml <linux-kernel@vger.kernel.org>, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, Michal Simek <monstr@monstr.eu>,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, linux-fsdevel@vger.kernel.org,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH] [RFC] Remove bdflush syscall stub
+References: <20190528101012.11402-1-chrubis@suse.cz>
+X-Yow:  I'm working under the direct orders of WAYNE NEWTON to deport
+ consenting adults!
+Date:   Tue, 28 May 2019 12:25:09 +0200
+In-Reply-To: <20190528101012.11402-1-chrubis@suse.cz> (Cyril Hrubis's message
+        of "Tue, 28 May 2019 12:10:12 +0200")
+Message-ID: <mvmr28idgfu.fsf@linux-m68k.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20190527062116.11512-3-dietmar.eggemann@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/28/19 6:42 AM, Hillf Danton wrote:
-> 
-> On Mon, 27 May 2019 07:21:11 +0100 Dietmar Eggemann wrote:
+On Mai 28 2019, Cyril Hrubis <chrubis@suse.cz> wrote:
 
-[...]
+> I've tested the patch on i386. Before the patch calling bdflush() with
+> attempt to tune a variable returned 0 and after the patch the syscall
+> fails with EINVAL.
 
->> @@ -5500,7 +5464,7 @@ wake_affine_weight(struct sched_domain *sd, struct task_struct *p,
->>   		this_eff_load *= 100;
->>   	this_eff_load *= capacity_of(prev_cpu);
->>   
->> -	prev_eff_load = source_load(prev_cpu, sd->wake_idx);
->> +	prev_eff_load = weighted_cpuload(cpu_rq(this_cpu));
-> 					 cpu_rq(prev_cpu)
-> 
-> Seems we have no need to see this cpu's load more than once.
+Should be ENOSYS, doesn't it?
 
-Thanks for catching this! Will fix it in v2.
+Andreas.
+
+-- 
+Andreas Schwab, schwab@linux-m68k.org
+GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
+"And now for something completely different."
