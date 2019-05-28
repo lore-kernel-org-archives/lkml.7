@@ -2,107 +2,103 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DED6C04AB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3155C46460
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B1542075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:53:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91D632075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:54:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=anastas.io header.i=@anastas.io header.b="fq9dYa7k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727861AbfE1BxC (ORCPT
+        id S1727878AbfE1ByR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 21:53:02 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:2188 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727651AbfE1BxC (ORCPT
+        Mon, 27 May 2019 21:54:17 -0400
+Received: from alpha.anastas.io ([104.248.188.109]:59707 "EHLO
+        alpha.anastas.io" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727589AbfE1ByR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 21:53:02 -0400
-X-UUID: fd636dd8cdae44f3a0da8defedf6958d-20190528
-X-UUID: fd636dd8cdae44f3a0da8defedf6958d-20190528
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <biao.huang@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 97317882; Tue, 28 May 2019 09:52:51 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N1.mediatek.inc
- (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 28 May
- 2019 09:52:50 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 28 May 2019 09:52:49 +0800
-Message-ID: <1559008369.24897.66.camel@mhfsdcap03>
-Subject: Re: [v3, PATCH] net: stmmac: add support for hash table size
- 128/256 in dwmac4
-From:   biao huang <biao.huang@mediatek.com>
-To:     David Miller <davem@davemloft.net>
-CC:     <joabreu@synopsys.com>, <peppe.cavallaro@st.com>,
-        <alexandre.torgue@st.com>, <mcoquelin.stm32@gmail.com>,
-        <matthias.bgg@gmail.com>, <netdev@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <yt.shen@mediatek.com>,
-        <jianguo.zhang@mediatek.com>, <boon.leong.ong@intel.com>
-Date:   Tue, 28 May 2019 09:52:49 +0800
-In-Reply-To: <20190527.100800.1719164073038257292.davem@davemloft.net>
-References: <1558926867-16472-1-git-send-email-biao.huang@mediatek.com>
-         <1558926867-16472-2-git-send-email-biao.huang@mediatek.com>
-         <20190527.100800.1719164073038257292.davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Mon, 27 May 2019 21:54:17 -0400
+Received: from authenticated-user (alpha.anastas.io [104.248.188.109])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by alpha.anastas.io (Postfix) with ESMTPSA id 3463D7F8BF;
+        Mon, 27 May 2019 20:54:16 -0500 (CDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=anastas.io; s=mail;
+        t=1559008457; bh=tpEsBHAskNTnW0j20OuJzsmsrKEuGoeRDaQ9ZdKXp/w=;
+        h=From:To:Cc:Subject:Date:From;
+        b=fq9dYa7k3w1qHhjjNrXEPO8ZdlXOywirbS07vJHK1h62LmGCzS6ixZdpGfH3eNp1E
+         ggYjWoJKhajFsLBGLNc35lFBGVyulfwQEXNmNddElEY+ZBzae+eAlJZ4atku5H2smB
+         QvhZ5EGwQ21IyGssQGMcviHcJ/SGc0vl4Z7ynhEhAhB1pyH0vSC9+UoJF3Z4X/kwOu
+         hIjKwZFDPUj++VAgfpjhXvRqknfAfuefv5eV1bD74WaeqGRgikxvyWkR+nMCRJeY6c
+         jMP8KSFpYNUVcTvG66I4xPgRQOuQ1sXeYjgwbt8eKBM6PAOF6ZP5P9bxHn8xsEUmMd
+         imioSVa6mUW9g==
+From:   Shawn Anastasio <shawn@anastas.io>
+To:     linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc:     bhelgaas@google.com, benh@kernel.crashing.org, paulus@samba.org,
+        mpe@ellerman.id.au, sbobroff@linux.ibm.com,
+        xyjxie@linux.vnet.ibm.com, rppt@linux.ibm.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] Allow custom PCI resource alignment on pseries
+Date:   Mon, 27 May 2019 20:54:09 -0500
+Message-Id: <20190528015412.30521-1-shawn@anastas.io>
 MIME-Version: 1.0
-X-MTK:  N
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear David,
+Changes from v1 to v2:
+  - Fix function declaration warnings caught by sparse
 
-On Mon, 2019-05-27 at 10:08 -0700, David Miller wrote:
-> From: Biao Huang <biao.huang@mediatek.com>
-> Date: Mon, 27 May 2019 11:14:27 +0800
-> 
-> > diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-> > index 5e98da4..029a3db 100644
-> > --- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-> > +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-> > @@ -403,41 +403,50 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
-> >  			      struct net_device *dev)
-> >  {
-> >  	void __iomem *ioaddr = (void __iomem *)dev->base_addr;
-> > -	unsigned int value = 0;
-> > +	unsigned int value;
-> > +	int numhashregs = (hw->multicast_filter_bins >> 5);
-> > +	int mcbitslog2 = hw->mcast_bits_log2;
-> > +	int i;
-> 
-> Please retain the reverse christmas tree ordering here.
-I'm a little confused about the reverse xmas tree ordering.
+Hello all,
 
-should I reorder them only according to the total length like this:
+This patch set implements support for user-specified PCI resource
+alignment on the pseries platform for hotplugged PCI devices.
+Currently on pseries, PCI resource alignments specified with the
+pci=resource_alignment commandline argument are ignored, since
+the firmware is in charge of managing the PCI resources. In the
+case of hotplugged devices, though, the kernel is in charge of 
+configuring the resources and should obey alignment requirements.
 
-	void __iomem *ioaddr = (void __iomem *)dev->base_addr;
-	int numhashregs = (hw->multicast_filter_bins >> 5);
-	int mcbitslog2 = hw->mcast_bits_log2;
-	unsigned int value;
-	int i;
+The current behavior of ignoring the alignment for hotplugged devices
+results in sub-page BARs landing between page boundaries and
+becoming un-mappable from userspace via the VFIO framework.
+This issue was observed on a pseries KVM guest with hotplugged
+ivshmem devices.
+ 
+With these changes, users can specify an appropriate
+pci=resource_alignment argument on boot for devices they wish to use 
+with VFIO.
 
-or should I gather the same type together, and order types as reverse
-xmas tree, then order the same type definitions as reverse xmas tree,
-like this:
+In the future, this could be extended to provide page-aligned
+resources by default for hotplugged devices, similar to what is done
+on powernv by commit 382746376993 ("powerpc/powernv: Override
+pcibios_default_alignment() to force PCI devices to be page aligned").
 
-	void __iomem *ioaddr = (void __iomem *)dev->base_addr;
-	unsigned int value;
-	int numhashregs = (hw->multicast_filter_bins >> 5);
-	int mcbitslog2 = hw->mcast_bits_log2;
-	int i;
+Feedback is appreciated.
 
-Thank you.
-> 
-> Thank you.
+Thanks,
+Shawn
 
+Shawn Anastasio (3):
+  PCI: Introduce pcibios_ignore_alignment_request
+  powerpc/64: Enable pcibios_after_init hook on ppc64
+  powerpc/pseries: Allow user-specified PCI resource alignment after
+    init
+
+ arch/powerpc/include/asm/machdep.h     |  6 ++++--
+ arch/powerpc/kernel/pci-common.c       |  9 +++++++++
+ arch/powerpc/kernel/pci_64.c           |  4 ++++
+ arch/powerpc/platforms/pseries/setup.c | 22 ++++++++++++++++++++++
+ drivers/pci/pci.c                      |  9 +++++++--
+ include/linux/pci.h                    |  1 +
+ 6 files changed, 47 insertions(+), 4 deletions(-)
+
+-- 
+2.20.1
 
