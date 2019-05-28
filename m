@@ -2,143 +2,92 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F07C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A7DC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A542206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:19:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FCB3206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:21:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727192AbfE1OT4 (ORCPT
+        id S1727606AbfE1OVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 10:19:56 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39098 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726532AbfE1OT4 (ORCPT
+        Tue, 28 May 2019 10:21:24 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:58540 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726532AbfE1OVX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 10:19:56 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4SEIfCE098398
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 10:19:54 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ss5m2kfqq-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 10:19:53 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Tue, 28 May 2019 15:09:39 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 28 May 2019 15:09:34 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4SE9XAf34406474
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 May 2019 14:09:33 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 606A0AE053;
-        Tue, 28 May 2019 14:09:33 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4FED4AE051;
-        Tue, 28 May 2019 14:09:31 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.109.224])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 28 May 2019 14:09:31 +0000 (GMT)
-Subject: Re: [PATCH v10 12/12] ima: Store the measurement again when
- appraising a modsig
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        linux-integrity@vger.kernel.org
-Cc:     linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        David Howells <dhowells@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "AKASHI, Takahiro" <takahiro.akashi@linaro.org>
-Date:   Tue, 28 May 2019 10:09:20 -0400
-In-Reply-To: <20190418035120.2354-13-bauerman@linux.ibm.com>
-References: <20190418035120.2354-1-bauerman@linux.ibm.com>
-         <20190418035120.2354-13-bauerman@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19052814-4275-0000-0000-0000033962A2
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052814-4276-0000-0000-000038490AD0
-Message-Id: <1559052560.4090.14.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-28_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905280093
+        Tue, 28 May 2019 10:21:23 -0400
+Received: from fsav103.sakura.ne.jp (fsav103.sakura.ne.jp [27.133.134.230])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x4SELMwP009072;
+        Tue, 28 May 2019 23:21:22 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav103.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav103.sakura.ne.jp);
+ Tue, 28 May 2019 23:21:22 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav103.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126012062002.bbtec.net [126.12.62.2])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x4SELKgN009063
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Tue, 28 May 2019 23:21:21 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [RFC] printk/sysrq: Don't play with console_loglevel
+To:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+References: <20190528002412.1625-1-dima@arista.com>
+ <20190528041500.GB26865@jagdpanzerIV> <20190528044619.GA3429@jagdpanzerIV>
+ <20190528134227.xyb3622gjwu52q4r@pathway.suse.cz>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <e564ee00-6a93-defd-4eab-e306bbfe8b01@i-love.sakura.ne.jp>
+Date:   Tue, 28 May 2019 23:21:17 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <20190528134227.xyb3622gjwu52q4r@pathway.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thiago,
-
-On Thu, 2019-04-18 at 00:51 -0300, Thiago Jung Bauermann wrote:
-> If the IMA template contains the "modsig" or "d-modsig" field, then the
-> modsig should be added to the measurement list when the file is appraised.
+On 2019/05/28 22:42, Petr Mladek wrote:
+>> Ahh.. OK, now I sort of remember why I gave up on this idea (see [1]
+>> at the bottom, when it comes to uv_nmi_dump_state()) - printk_NMI and
+>> printk-safe redirections.
+>>
+>> 	NMI
+>> 		loglevel = NEW
+>> 		printk -> printk_safe_nmi
+>> 		loglevel = OLD
+>>
+>> 	iret
+>>
+>> 	IRQ
+>> 		flush printk_safe_nmi -> printk
+>> 		// At this point we don't remember about
+>> 		// loglevel manipulation anymore
+>> 	iret
 > 
-> And that is what normally happens, but if a measurement rule caused a file
-> containing a modsig to be measured before a different rule causes it to be
-> appraised, the resulting measurement entry will not contain the modsig
-> because it is only fetched during appraisal. When the appraisal rule
-> triggers, it won't store a new measurement containing the modsig because
-> the file was already measured.
-> 
-> We need to detect that situation and store an additional measurement with
-> the modsig. This is done by adding an IMA_MEASURE action flag if we read a
-> modsig and the IMA template contains a modsig field.
+> printk_safe buffer preserves KERN_* headers. It should be
+> possible to insert KERN_UNSUPPRESSED there.
 
-With the new per policy rule "template" support being added, this
-patch needs to be modified so that the per policy "template" format is
-checked.  ima_template_has_modsig() should be called with the
-template_desc being used.
+But is context dependent buffer large enough to hold SysRq-t output?
+I think that only main logbuf can become large enough to hold SysRq-t output.
 
-thanks,
-
-Mimi
-
-
-> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-> index 8e6475854351..f91ed4189f98 100644
-> --- a/security/integrity/ima/ima_main.c
-> +++ b/security/integrity/ima/ima_main.c
-> @@ -282,9 +282,17 @@ static int process_measurement(struct file *file, const struct cred *cred,
->  		/* read 'security.ima' */
->  		xattr_len = ima_read_xattr(file_dentry(file), &xattr_value);
->  
-> -		/* Read the appended modsig if allowed by the policy. */
-> -		if (iint->flags & IMA_MODSIG_ALLOWED)
-> -			ima_read_modsig(func, buf, size, &modsig);
-> +		/*
-> +		 * Read the appended modsig, if allowed by the policy, and allow
-> +		 * an additional measurement list entry, if needed, based on the
-> +		 * template format.
-> +		 */
-> +		if (iint->flags & IMA_MODSIG_ALLOWED) {
-> +			rc = ima_read_modsig(func, buf, size, &modsig);
-> +
-> +			if (!rc && ima_template_has_modsig())
-> +				action |= IMA_MEASURE;
-> +		}
-> 
+We can add KERN_UNSUPPRESSED to SysRq's header line. But I don't think
+that we can automatically add KERN_UNSUPPRESSED to SysRq's body lines
+based on some context information. If we want to avoid manipulating
+console_loglevel, we need to think about how to make sure that
+KERN_UNSUPPRESSED is added to all lines from such context without
+overflowing capacity of that buffer.
 
