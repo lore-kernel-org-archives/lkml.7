@@ -2,109 +2,84 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21AF5C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B827C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F34F92075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:27:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 080F22075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:29:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q29t0knw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbfE1J1u (ORCPT
+        id S1726827AbfE1J3B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 05:27:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49702 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726728AbfE1J1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 05:27:50 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 77336AE44;
-        Tue, 28 May 2019 09:27:49 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 056F51E3F53; Tue, 28 May 2019 11:27:49 +0200 (CEST)
-Date:   Tue, 28 May 2019 11:27:48 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc:     akpm@linux-foundation.org, jack@suse.cz, mpe@ellerman.id.au,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v2] mm: Move MAP_SYNC to asm-generic/mman-common.h
-Message-ID: <20190528092748.GE9607@quack2.suse.cz>
-References: <20190528091120.13322-1-aneesh.kumar@linux.ibm.com>
+        Tue, 28 May 2019 05:29:01 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:50379 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726438AbfE1J3A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 05:29:00 -0400
+Received: by mail-it1-f194.google.com with SMTP id a186so3177551itg.0;
+        Tue, 28 May 2019 02:29:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oJcJ3bcJJJancxCaIciCXQM9EeEtO5kiGdHevOdHysw=;
+        b=q29t0knwEtXdZIuvXWO8mODf3nXDlFvFOOi7wPJlxL1L0GZKz+t6FwWfTP/d2o7/Kz
+         wSR6AQW4prEG2mI4kCm8ySGz8K+tm9YBzjfVgWkotCXO0hooGyONuflue0l/clzVaHjl
+         x5vEm52AjT0uaRD5gY0SfRLremoh894JJGyiDCGYrFKUYsol1W761bgGiHeR7fV0gXoJ
+         QCzLpPzm2aet1C3gQE3jS6jcXHyjvbSXf26kCCQ1rSqKkYW0qOoaNhpIkUAthO59+YuM
+         8sVxjvumEh9IvmUhMdaA7BDALaYyEx5N6HnzMigIc9jr1n+WovrfPYrcyOfNrrpIxvvV
+         BH9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oJcJ3bcJJJancxCaIciCXQM9EeEtO5kiGdHevOdHysw=;
+        b=mLDm1lwea53oNVU+Wl/QbbtVGieibdqwz4jtjZuDt3gvgH0PInR4yssdgVbfE314Ph
+         WMQG9UHUoXv2dE3r7HtSRjw5QBXrRyVPGqfNs/RDIbsT/m75CeOrd01vChHT0CkMM4DS
+         KOm6d/98vYrjkjYbcS++tcy6fTwB4WypG0PY0GCYhfcSh3C5uxCdMYDDU23Iq5pxuOQj
+         lQB/2VfKMDjyqXUdXfdBQMmFMqQEpjENMHE2ThweJfh+XZaFqZTOSMREbI1btCnPFmIu
+         txef3s66sR3sfXhn9GQ6VOaG6ip9MTteGqNhNRaPNPzJwWdKRWwgYkBKznUHI8VKIZBc
+         xaEA==
+X-Gm-Message-State: APjAAAX05BPhA61cnAgeyyUJiZMLs5BDAVqHQxcQzFOc5QpQwWhuQBAn
+        fjfep8XdcY52oubaIa2HRfNW1UqcctPZuEZ8LwM=
+X-Google-Smtp-Source: APXvYqxiyJhSNPM1yTGodhZAq8RwC7AYbe0WcqaUUUFY10m80qgHdKsHfu9wJnEyfpBRb4w3TdU4qcbgqUB/+TMLEsM=
+X-Received: by 2002:a05:660c:712:: with SMTP id l18mr2421360itk.169.1559035739818;
+ Tue, 28 May 2019 02:28:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190528091120.13322-1-aneesh.kumar@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1558574922-16531-1-git-send-email-skomatineni@nvidia.com> <0418cbdb-1bb6-23c3-f13d-e0a70f899f3c@nvidia.com>
+In-Reply-To: <0418cbdb-1bb6-23c3-f13d-e0a70f899f3c@nvidia.com>
+From:   Billy Laws <blaws05@gmail.com>
+Date:   Tue, 28 May 2019 10:28:48 +0100
+Message-ID: <CAFUUQHP5e=oQZC29foYD+uA96r5-M4wCxKYVL_LodrWRG5kp1Q@mail.gmail.com>
+Subject: Re: [PATCH V1 00/12] LP0 entry and exit support for Tegra210
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
+        Laxman Dewangan <ldewangan@nvidia.com>, broonie@kernel.org,
+        natechancellor@gmail.com, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 28-05-19 14:41:20, Aneesh Kumar K.V wrote:
-> This enables support for synchronous DAX fault on powerpc
-> 
-> The generic changes are added as part of
-> commit b6fb293f2497 ("mm: Define MAP_SYNC and VM_SYNC flags")
-> 
-> Without this, mmap returns EOPNOTSUPP for MAP_SYNC with MAP_SHARED_VALIDATE
-> 
-> Instead of adding MAP_SYNC with same value to
-> arch/powerpc/include/uapi/asm/mman.h, I am moving the #define to
-> asm-generic/mman-common.h. Two architectures using mman-common.h directly are
-> sparc and powerpc. We should be able to consloidate more #defines to
-> mman-common.h. That can be done as a separate patch.
-> 
-> Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-
-Looks good to me FWIW (I don't have much experience with mmap flags and
-their peculirarities). So feel free to add:
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-								Honza
-
-> ---
-> Changes from V1:
-> * Move #define to mman-common.h instead of powerpc specific mman.h change
-> 
-> 
->  include/uapi/asm-generic/mman-common.h | 3 ++-
->  include/uapi/asm-generic/mman.h        | 1 -
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/uapi/asm-generic/mman-common.h b/include/uapi/asm-generic/mman-common.h
-> index abd238d0f7a4..bea0278f65ab 100644
-> --- a/include/uapi/asm-generic/mman-common.h
-> +++ b/include/uapi/asm-generic/mman-common.h
-> @@ -25,7 +25,8 @@
->  # define MAP_UNINITIALIZED 0x0		/* Don't support this flag */
->  #endif
->  
-> -/* 0x0100 - 0x80000 flags are defined in asm-generic/mman.h */
-> +/* 0x0100 - 0x40000 flags are defined in asm-generic/mman.h */
-> +#define MAP_SYNC		0x080000 /* perform synchronous page faults for the mapping */
->  #define MAP_FIXED_NOREPLACE	0x100000	/* MAP_FIXED which doesn't unmap underlying mapping */
->  
->  /*
-> diff --git a/include/uapi/asm-generic/mman.h b/include/uapi/asm-generic/mman.h
-> index 653687d9771b..2dffcbf705b3 100644
-> --- a/include/uapi/asm-generic/mman.h
-> +++ b/include/uapi/asm-generic/mman.h
-> @@ -13,7 +13,6 @@
->  #define MAP_NONBLOCK	0x10000		/* do not block on IO */
->  #define MAP_STACK	0x20000		/* give out an address that is best suited for process/thread stacks */
->  #define MAP_HUGETLB	0x40000		/* create a huge page mapping */
-> -#define MAP_SYNC	0x80000		/* perform synchronous page faults for the mapping */
->  
->  /* Bits [26:31] are reserved, see mman-common.h for MAP_HUGETLB usage */
->  
-> -- 
-> 2.21.0
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Hi,
+By the looks of this you configure wake events but the pmc driver
+still only configures lp1, which is the same as linux 4 tegra 4.4+
+which also doesn't support lp0, if its selected in dts it'll just
+change it to LP1/SC7 (both have same code path and neither set any lp0
+stuff trm says). What confuses me further is that l4t and this
+ptachset both configure wake events, which I think should only work in
+LP0 and not LP1 and yet neither have lp0 entry code for t210. I also
+looked at ATF, whis sets the flags to wake the cpu on interrupts,
+which would suggest that it only supports lp1 (in deep sleep I dont
+think them flags would work). Am I missing some important detail here?
+Two other things, will you be adding full lp0 in later patchets and
+will they use the bpmp or not?
