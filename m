@@ -2,116 +2,110 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A3AC072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BAFC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D10CE20B7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:17:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p8fD8Vwv"
+	by mail.kernel.org (Postfix) with ESMTP id 2ACF420989
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:18:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbfE1KRE (ORCPT
+        id S1726667AbfE1KSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 06:17:04 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:41739 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726451AbfE1KRD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 06:17:03 -0400
-Received: by mail-lf1-f67.google.com with SMTP id 136so3978048lfa.8
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 03:17:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=omzYkgWz22q89sKu1iLsbZyCOdqyQheSz4RqyHrLMFc=;
-        b=p8fD8VwvSW3OdflENE16cTmUBmEcFgPsh+D3UCs5vCYq4VWrIb7YSj5zvjX70YB63z
-         F7WK4jzwaVXumiHF4vdKsku46bYkSHEbhtCPipyHpVAsXj9M/SNffG5e8WZy/F7lO5r5
-         DE+3zlpeD71/E4OQjpuCppHJrm7uuD8AZQxJQIm+jjJRUetWfFkUkEjKlS4dTYV+OkNp
-         sKEuQUt3C4SG/DDcI5N9QNSPh1ApgZEdXNqulHv6XhRUmAZ2U2qRrZDPZm/9/qj6IDl6
-         IrRqfnlIb2Rb6rGts7d7kZPd6tn003l5L2qeIXdoxr3OZJYCrq2a6yEOC6tFjKuUGUXY
-         hF7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=omzYkgWz22q89sKu1iLsbZyCOdqyQheSz4RqyHrLMFc=;
-        b=UEWKRTn57BB0MbxWCHVHPB25DD+4ZehIkVqfjRJ5fKtkJYAJgd5Nt3Zi+66pIR/71/
-         AHWXGiG+5wHDFCfl3eTrabRv5FxNYoB9sQyq0QK69s3MuQ5Mhq0URmodaXg9bCj3FpDe
-         3GVJqHq0N1zlRz6nt7LVGEfFTrx+9dSDdmH2RXVGNk9wMyYaBYoRxRqKRamWwdaOxddy
-         BRfMiin6/tVPB2i//wXfsMdWXObAC9RBlQ7g97naMkpntz/YdSuZKIykIhXx5pg8+I+k
-         zbvABzgClngk/uvMY+JbHceVipNxkG8yePUKXd3QtPxlYdk1fSr4Ub9Ohc7uF0GknoXC
-         M1ew==
-X-Gm-Message-State: APjAAAU0wA28IkUcxqFAi13T4dGCnJV6Fwu58Mc3/ID4IuWAeJnd5hf5
-        wE32esrgJRJOKmfK6LDO/3jvV3V9R9EHlnn1XRif/w==
-X-Google-Smtp-Source: APXvYqzamdaZXpeZl61uUP6hfueaTlLGJ89yX6kdCpWeIWmbcsT+OGn6sLsetdzaTpiI1Xod4K0QX7oKadskvsU6DaA=
-X-Received: by 2002:a19:488e:: with SMTP id v136mr3600054lfa.192.1559038620930;
- Tue, 28 May 2019 03:17:00 -0700 (PDT)
+        Tue, 28 May 2019 06:18:52 -0400
+Received: from muru.com ([72.249.23.125]:51544 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726236AbfE1KSw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 06:18:52 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id AA3D080F3;
+        Tue, 28 May 2019 10:19:10 +0000 (UTC)
+Date:   Tue, 28 May 2019 03:18:47 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@collabora.com,
+        Keerthy <j-keerthy@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCHv6 0/4] omapdrm: DSI command mode panel support
+Message-ID: <20190528101847.GN5447@atomide.com>
+References: <20190523200756.25314-1-sebastian.reichel@collabora.com>
+ <60c45d23-de2f-d94a-c3d7-146a2bee538f@ti.com>
+ <20190527112122.GJ5447@atomide.com>
+ <e507c415-38de-86fe-9265-4b0aed0d7224@ti.com>
+ <20190528093952.GM5447@atomide.com>
+ <14c6c702-844b-756d-2d97-44e8f5a169df@ti.com>
 MIME-Version: 1.0
-References: <CA+G9fYuC8dgKs04HmyCaKeQ_xwqKBxnh=zsOFjQK+3Fq7AZRyw@mail.gmail.com>
- <5de0df37-f0d0-f54c-2eef-a7533cbe7a25@xs4all.nl> <CA+G9fYtbb82EPY9gG63+U2FTVswt7f3FjHdaHMA2kibxgVvZcw@mail.gmail.com>
-In-Reply-To: <CA+G9fYtbb82EPY9gG63+U2FTVswt7f3FjHdaHMA2kibxgVvZcw@mail.gmail.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 28 May 2019 15:46:49 +0530
-Message-ID: <CA+G9fYu-guJaWDrEp5=KeJsje6Teo-V=_AhFStf0gnLk-QNfzA@mail.gmail.com>
-Subject: Re: test VIDIOC_G/S_PARM: FAIL on stable 4.14, 4.9 and 4.4
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     linux-media@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        paul.kocialkowski@bootlin.com, ezequiel@collabora.com,
-        treding@nvidia.com, niklas.soderlund+renesas@ragnatech.se,
-        sakari.ailus@linux.intel.com,
-        Hans Verkuil <hans.verkuil@cisco.com>, mchehab@kernel.org,
-        lkft-triage@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <14c6c702-844b-756d-2d97-44e8f5a169df@ti.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hans,
+* Tomi Valkeinen <tomi.valkeinen@ti.com> [190528 10:05]:
+> On 28/05/2019 12:39, Tony Lindgren wrote:
+> > Hi,
+> > 
+> > * Tomi Valkeinen <tomi.valkeinen@ti.com> [190528 09:19]:
+> > > On 27/05/2019 14:21, Tony Lindgren wrote:
+> > > 
+> > > > > Looks good to me. For some reason I can't boot 5.2-rc2 (on x15) so I haven't
+> > > > > been able to test yet. I'll pick the series up in any case, and I'll test it
+> > > > > when I get the kernel booting.
+> > > > 
+> > > > Great good to have these merged finally :)
+> > > > 
+> > > > Hmm I wonder if some x15 models are affected by the SoC variant
+> > > > changes queued in my fixes branch?
+> > > 
+> > > This is what I see with earlycon, on linux-omap fixes branch. I think this looks
+> > > similar to what I saw with dra76 _without_ the fixes.
+> > 
+> > OK sounds like we need to use some different SoC specific .dtsi file,
+> > is this maybe x15 rev c?
+> > 
+> > You can detect which modules fail based on the module base address
+> > for revision register seen with the following debug patch. Then
+> > those need to be tagged with status = "disabled" at the module
+> > level in the SoC specific dtsi file.
+> 
+> [    1.370609] ti-sysc 4ae20000.target-module: probing device
+> 
+> This change lets me boot. I don't know that's the correct place, though:
+> 
+> diff --git a/arch/arm/boot/dts/am5728.dtsi b/arch/arm/boot/dts/am5728.dtsi
+> index 82e5427ef6a9..c778f9a86b3a 100644
+> --- a/arch/arm/boot/dts/am5728.dtsi
+> +++ b/arch/arm/boot/dts/am5728.dtsi
+> @@ -31,3 +31,7 @@
+> &atl_tm {
+>        status = "disabled";
+> };
+> +
+> +&timer12 {
+> +       status = "disabled";
+> +};
 
-On Mon, 20 May 2019 at 19:26, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->
-> Hi Hans,
->
-> On Mon, 13 May 2019 at 19:08, Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
-> >
-> > On 5/13/19 3:32 PM, Naresh Kamboju wrote:
-> > > Do you see test VIDIOC_G/S_PARM: FAIL on stable 4.14, 4.9 and 4.4
-> > > kernel branches ?
-> >
-> > Probably related to commit 8a7c5594c0202 (media: v4l2-ioctl: clear fields in s_parm).
->
-> I have cherry-picked on stable rc 4.9 branch and tested and test got
-> PASS on x86_64.
+OK we should disable it at the target-module level though. Interesting
+that reading the revision register works with the above, or maybe you
+still get some warning?
 
-I have cherry-picked for stable -rc 4.14 and 4.9 and test got PASS.
+> My board is x15 rev A3, attached to AM5 EVM. I've also attached my kernel
+> config.
 
-do you want to queue this for stable rc 4.14 and 4.9 ?
+Strange that this is not affecting other x15? I think timer12 would
+be blocked on HS devices though?
 
-I have tested for 4.4 with patch applied but failed with below error.
+Regards,
 
-test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
- warn: ../../../v4l-utils-1.16.0/utils/v4l2-compliance/v4l2-test-formats.cpp(1237):
-S_PARM is supported but doesn't report V4L2_CAP_TIMEPERFRAME
- fail: ../../../v4l-utils-1.16.0/utils/v4l2-compliance/v4l2-test-formats.cpp(1139):
-node->has_frmintervals && !cap->capability
-test VIDIOC_G/S_PARM: FAIL
-
-4.4 - failed log
-https://lkft.validation.linaro.org/scheduler/job/746548#L1678
-
-ref:
-4.14 pass log,
-https://lkft.validation.linaro.org/scheduler/job/739126#L1843
-
-4.9 pass log,
-https://lkft.validation.linaro.org/scheduler/job/736243#L1744
-
-- Naresh
+Tony
