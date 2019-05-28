@@ -2,132 +2,101 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8695C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 22:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70412C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 22:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1270208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 22:24:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B34B20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 22:25:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559082309;
+	bh=Eib3HSk01dW5l0nHav6C98yfNqkElQM63OIgSVsyDYc=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=BacMoQeO9+nCxy3oUGZWSMpZpqmsk/qoTxnYzgz8qDHwX4qs8oNi2JXypV0BGhhia
+	 uBc6lE4MaL35zw1xWIoRwt8Sz+YHfJwMSzjWSoEVElR0ckC/7SCMmLII0eya5GVbMt
+	 P0I01mb6sgZYcuOsgngcYOQNK79X0stMVm2GS/Ts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbfE1WYV (ORCPT
+        id S1727297AbfE1WZI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 18:24:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47302 "EHLO mx1.redhat.com"
+        Tue, 28 May 2019 18:25:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726492AbfE1WYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 18:24:20 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726576AbfE1WZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 18:25:08 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 63661A4540;
-        Tue, 28 May 2019 22:24:20 +0000 (UTC)
-Received: from treble (ovpn-122-72.rdu2.redhat.com [10.10.122.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 27A1F610FE;
-        Tue, 28 May 2019 22:24:18 +0000 (UTC)
-Date:   Tue, 28 May 2019 17:24:15 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Raphael Gault <Raphael.Gault@arm.com>
-Cc:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        Catalin Marinas <Catalin.Marinas@arm.com>,
-        Will Deacon <Will.Deacon@arm.com>,
-        Julien Thierry <Julien.Thierry@arm.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-Subject: Re: [RFC V2 00/16] objtool: Add support for Arm64
-Message-ID: <20190528222415.x63qw55ujm33dozb@treble>
-References: <20190516103655.5509-1-raphael.gault@arm.com>
- <20190516142917.nuhh6dmfiufxqzls@treble>
- <26692833-0e5b-cfe0-0ffd-c2c2f0815935@arm.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 39E8D208CB;
+        Tue, 28 May 2019 22:25:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559082307;
+        bh=Eib3HSk01dW5l0nHav6C98yfNqkElQM63OIgSVsyDYc=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=c/QHmgslhOjg1F4akUy/FwjSWVsmaBUFZ/BfEA97p3nHOO5Cf71sOBa491w4H8FRq
+         P7rRxYDlzh8WZ4BeUqevnaD3FrHoVes4emX0d9KMgdbJ8EwHaYDaMtHpJ+aNQBS0w+
+         a4c7x5kBmZa/bRW+BXBKoELGtwcJSIqUUPG5kQCI=
+Date:   Wed, 29 May 2019 00:25:04 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jpoimboe@redhat.com, pmladek@suse.com, tglx@linutronix.de
+Subject: Re: [PATCH] stacktrace: fix CONFIG_ARCH_STACKWALK stack_trace_save_tsk_reliable
+ return
+In-Reply-To: <20190517185117.24642-1-joe.lawrence@redhat.com>
+Message-ID: <nycvar.YFH.7.76.1905290023400.1962@cbobk.fhfr.pm>
+References: <20190517185117.24642-1-joe.lawrence@redhat.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <26692833-0e5b-cfe0-0ffd-c2c2f0815935@arm.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Tue, 28 May 2019 22:24:20 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 12:50:57PM +0000, Raphael Gault wrote:
-> Hi Josh,
-> 
-> Thanks for offering your help and sorry for the late answer.
-> 
-> My understanding is that a table of offsets is built by GCC, those
-> offsets being scaled by 4 before adding them to the base label.
-> I believe the offsets are stored in the .rodata section. To find the
-> size of that table, it is needed to find a comparison, which can be
-> optimized out apprently. In that case the end of the array can be found
-> by locating labels pointing to data behind it (which is not 100% safe).
-> 
-> On 5/16/19 3:29 PM, Josh Poimboeuf wrote:
-> > On Thu, May 16, 2019 at 11:36:39AM +0100, Raphael Gault wrote:
-> >> Noteworthy points:
-> >> * I still haven't figured out how to detect switch-tables on arm64. I
-> >> have a better understanding of them but still haven't implemented checks
-> >> as it doesn't look trivial at all.
-> >
-> > Switch tables were tricky to get right on x86.  If you share an example
-> > (or even just a .o file) I can take a look.  Hopefully they're somewhat
-> > similar to x86 switch tables.  Otherwise we may want to consider a
-> > different approach (for example maybe a GCC plugin could help annotate
-> > them).
-> >
-> 
-> The case which made me realize the issue is the one of
-> arch/arm64/kernel/module.o:apply_relocate_add:
-> 
-> ```
-> What seems to happen in the case of module.o is:
->   334:   90000015        adrp    x21, 0 <do_reloc>
-> which retrieves the location of an offset in the rodata section, and a
-> bit later we do some extra computation with it in order to compute the
-> jump destination:
->   3e0:   78625aa0        ldrh    w0, [x21, w2, uxtw #1]
->   3e4:   10000061        adr     x1, 3f0 <apply_relocate_add+0xf8>
->   3e8:   8b20a820        add     x0, x1, w0, sxth #2
->   3ec:   d61f0000        br      x0
-> ```
-> 
-> Please keep in mind that the actual offsets might vary.
-> 
-> I'm happy to provide more details about what I have identified if you
-> want me to.
+On Fri, 17 May 2019, Joe Lawrence wrote:
 
-I get the feeling this is going to be trickier than x86 switch tables
-(which have already been tricky enough).
+> Miroslav reported that the livepatch self-tests were failing,
+> specifically a case in which the consistency model ensures that we do
+> not patch a current executing function, "TEST: busy target module".
+> 
+> Recent renovations to stack_trace_save_tsk_reliable() left it returning
+> only an -ERRNO success indication in some configuration combinations:
+> 
+>   klp_check_stack()
+>     ret = stack_trace_save_tsk_reliable()
+>       #ifdef CONFIG_ARCH_STACKWALK && CONFIG_HAVE_RELIABLE_STACKTRACE
+>         stack_trace_save_tsk_reliable()
+>           ret = arch_stack_walk_reliable()
+>             return 0
+>             return -EINVAL
+>           ...
+>           return ret;
+>     ...
+>     if (ret < 0)
+>       /* stack_trace_save_tsk_reliable error */
+>     nr_entries = ret;                               << 0
+> 
+> Previously (and currently for !CONFIG_ARCH_STACKWALK &&
+> CONFIG_HAVE_RELIABLE_STACKTRACE) stack_trace_save_tsk_reliable()
+> returned the number of entries that it consumed in the passed storage
+> array.
+> 
+> In the case of the above config and trace, be sure to return the
+> stacktrace_cookie.len on stack_trace_save_tsk_reliable() success.
+> 
+> Fixes: 25e39e32b0a3f ("livepatch: Simplify stack trace retrieval")
+> Reported-by: Miroslav Benes <mbenes@suse.cz>
+> Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
 
-On x86, there's a .rela.rodata section which applies relocations to
-.rodata.  The presence of those relocations makes it relatively easy to
-differentiate switch tables from other read-only data.  For example, we
-can tell that a switch table ends when either a) there's not a text
-relocation or b) another switch table begins.
+Tested-by: Jiri Kosina <jkosina@suse.cz>
+Reviewed-by: Jiri Kosina <jkosina@suse.cz>
 
-But with arm64 I don't see a deterministic way to do that, because the
-table offsets are hard-coded in .rodata, with no relocations.
-
-From talking with Kamalesh I got the impression that we might have a
-similar issue for powerpc.
-
-So I'm beginning to think we'll need compiler help.  Like a GCC plugin
-that annotates at least the following switch table metadata:
-
-- Branch instruction address
-- Switch table address
-- Switch table entry size
-- Switch table size
-
-The GCC plugin could write all the above metadata into a special section
-which gets discarded at link time.  I can look at implementing it,
-though I'll be traveling for two out of the next three weeks so it may
-be a while before I can get to it.
+IMHO this should go in ASAP. Sorry for the delay,
 
 -- 
-Josh
+Jiri Kosina
+SUSE Labs
+
