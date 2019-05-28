@@ -2,143 +2,122 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AD2C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F43C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:20:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 357D420665
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:19:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFAEC206C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:20:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FTK7Qq63"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727702AbfE1PTw (ORCPT
+        id S1727734AbfE1PUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 11:19:52 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34302 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726698AbfE1PTv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 11:19:51 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 15D143002513;
-        Tue, 28 May 2019 15:19:51 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-125-65.rdu2.redhat.com [10.10.125.65])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6EC2D78579;
-        Tue, 28 May 2019 15:12:35 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 11/25] hugetlbfs: Add support for fsinfo() [ver #13]
-From:   David Howells <dhowells@redhat.com>
-To:     viro@zeniv.linux.org.uk
-Cc:     dhowells@redhat.com, raven@themaw.net, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mszeredi@redhat.com
-Date:   Tue, 28 May 2019 16:12:33 +0100
-Message-ID: <155905635365.1662.16642890243994690650.stgit@warthog.procyon.org.uk>
-In-Reply-To: <155905626142.1662.18430571708534506785.stgit@warthog.procyon.org.uk>
-References: <155905626142.1662.18430571708534506785.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+        Tue, 28 May 2019 11:20:45 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:37790 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727157AbfE1PUo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 11:20:44 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4SFIwUs106082;
+        Tue, 28 May 2019 15:20:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=BraWV+myHX0oYeZ82rQTj5/p9jWbV8UVzgAblODYn0k=;
+ b=FTK7Qq63tc6cG2Rz/0P6mHUausYK+89T2+BkneNc45MDacXTfIuBg7hzn/N5m3SNEh8N
+ thj1me47t11r4snz4mcSrT0i3pkRvUqyqBHW0aEzzsO5CyPpKNBiy6b6M7nvHDPNaZsJ
+ Vs1gKcGjP33o7uodGUlnBmtF5cjHWxj8WVwhyprjOiF9/ovrLPXt2p7Y1CnA1gd0Hcb5
+ 45vLkyYROIWaERoDq5+LeeP4S6prRPWGNZlwgUuDnFLLsYh8VXU9uadVjZ5c989OYNYX
+ LtpR5BVgUKm4sg/LhJrCT/9S5hofAYJRHI+j/QYZahcSQOLcdGHceR2C9RvRoAjDAXY5 aQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2spxbq3u5h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 May 2019 15:20:00 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4SFJwR1143353;
+        Tue, 28 May 2019 15:20:00 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2sr31uqjay-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 May 2019 15:20:00 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4SFJtt2012670;
+        Tue, 28 May 2019 15:19:55 GMT
+Received: from anon-dhcp-171.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 28 May 2019 08:19:55 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH -next] lockd: Make two symbols static
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <20190528151331.GA29554@fieldses.org>
+Date:   Tue, 28 May 2019 11:19:53 -0400
+Cc:     Benjamin Coddington <bcodding@redhat.com>,
+        YueHaibing <yuehaibing@huawei.com>, jlayton@kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 28 May 2019 15:19:51 +0000 (UTC)
+Message-Id: <534DECA5-DFC5-497C-8023-6D7F859F8148@oracle.com>
+References: <20190528090652.13288-1-yuehaibing@huawei.com>
+ <97D052EC-1F07-4210-81CC-7E0085C095BD@redhat.com>
+ <20190528151331.GA29554@fieldses.org>
+To:     Bruce Fields <bfields@fieldses.org>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9270 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=960
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905280099
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9270 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=994 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905280099
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for fsinfo().
 
-Signed-off-by: David Howells <dhowells@redhat.com>
----
 
- fs/hugetlbfs/inode.c |   56 ++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
+> On May 28, 2019, at 11:13 AM, J. Bruce Fields <bfields@fieldses.org> wrote:
+> 
+> On Tue, May 28, 2019 at 06:49:13AM -0400, Benjamin Coddington wrote:
+>> Maintainers, what's the best thing to do here: fold these into
+>> another patch version and post it (add attribution)?  Add it as
+>> another patch at the end of the series?
+> 
+> Either would be fine.  Yeah, if it was folded in then we'd add a line
+> like
+> 
+> 	[hulkci@huawei.com: make symbols static to fix sparse warnings]
+> 
+> But I'll probably just add it on to the end for now.  No need for you to
+> do anything.
+> 
+>> I have learned my lesson: add sparse to my workflow.
+> 
+> I dunno, I wonder if we're better off just leaving it to this CI bot.
+> It seems like a more efficient use of time overall than making every
+> contributor run it.
 
-diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
-index 1dcc57189382..e6ecebd9ebc2 100644
---- a/fs/hugetlbfs/inode.c
-+++ b/fs/hugetlbfs/inode.c
-@@ -28,6 +28,7 @@
- #include <linux/hugetlb.h>
- #include <linux/pagevec.h>
- #include <linux/fs_parser.h>
-+#include <linux/fsinfo.h>
- #include <linux/mman.h>
- #include <linux/slab.h>
- #include <linux/dnotify.h>
-@@ -958,6 +959,58 @@ static int hugetlbfs_show_options(struct seq_file *m, struct dentry *root)
- 	return 0;
- }
- 
-+#ifdef CONFIG_FSINFO
-+static int hugetlbfs_fsinfo(struct path *path, struct fsinfo_kparams *params)
-+{
-+	struct dentry *dentry = path->dentry;
-+	struct hugetlbfs_sb_info *sbinfo = HUGETLBFS_SB(dentry->d_sb);
-+	struct hugepage_subpool *spool = sbinfo->spool;
-+	unsigned long hpage_size = huge_page_size(sbinfo->hstate);
-+	unsigned hpage_shift = huge_page_shift(sbinfo->hstate);
-+	char mod;
-+
-+	switch (params->request) {
-+	case FSINFO_ATTR_PARAMETERS:
-+		if (!uid_eq(sbinfo->uid, GLOBAL_ROOT_UID))
-+			fsinfo_note_paramf(params, "uid", "%u",
-+					   from_kuid_munged(&init_user_ns,
-+							    sbinfo->uid));
-+
-+		if (!gid_eq(sbinfo->gid, GLOBAL_ROOT_GID))
-+			fsinfo_note_paramf(params, "gid", "%u",
-+					   from_kgid_munged(&init_user_ns,
-+							    sbinfo->gid));
-+
-+		if (spool && spool->max_hpages != -1)
-+			fsinfo_note_paramf(params, "size", "%llu",
-+					   (unsigned long long)spool->max_hpages << hpage_shift);
-+
-+		if (spool && spool->min_hpages != -1)
-+			fsinfo_note_paramf(params, "min_size", "%llu",
-+					   (unsigned long long)spool->min_hpages << hpage_shift);
-+
-+		hpage_size /= 1024;
-+		mod = 'K';
-+		if (hpage_size >= 1024) {
-+			hpage_size /= 1024;
-+			mod = 'M';
-+		}
-+		fsinfo_note_paramf(params, "pagesize", "%lu%c", hpage_size, mod);
-+
-+		if (sbinfo->mode != 0755)
-+			fsinfo_note_paramf(params, "mode", "%o", sbinfo->mode);
-+
-+		if (sbinfo->max_inodes != -1)
-+			fsinfo_note_paramf(params, "nr_inodes", "%lu",
-+					   sbinfo->max_inodes);
-+		return params->usage;
-+
-+	default:
-+		return generic_fsinfo(path, params);
-+	}
-+}
-+#endif /* CONFIG_FSINFO */
-+
- static int hugetlbfs_statfs(struct dentry *dentry, struct kstatfs *buf)
- {
- 	struct hugetlbfs_sb_info *sbinfo = HUGETLBFS_SB(dentry->d_sb);
-@@ -1116,6 +1169,9 @@ static const struct super_operations hugetlbfs_ops = {
- 	.statfs		= hugetlbfs_statfs,
- 	.put_super	= hugetlbfs_put_super,
- 	.show_options	= hugetlbfs_show_options,
-+#ifdef CONFIG_FSINFO
-+	.fsinfo		= hugetlbfs_fsinfo,
-+#endif
- };
- 
- /*
+Occasionally sparse can catch a real problem that breaks bisectability.
+Better to do this kind of checking early, and ensure that you test those
+sparse-fixed bits.
+
+
+--
+Chuck Lever
+
+
 
