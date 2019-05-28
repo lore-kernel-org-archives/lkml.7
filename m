@@ -2,105 +2,142 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83879C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41637C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5901621721
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12B692173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:14:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dpSBRvHt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727135AbfE1QNA (ORCPT
+        id S1727035AbfE1QO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 12:13:00 -0400
-Received: from foss.arm.com ([217.140.101.70]:60330 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726546AbfE1QNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 12:13:00 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 63936341;
-        Tue, 28 May 2019 09:12:59 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2B63A3F59C;
-        Tue, 28 May 2019 09:12:57 -0700 (PDT)
-Date:   Tue, 28 May 2019 17:12:54 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Will Deacon <will.deacon@arm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Young Xiao <92siuyang@gmail.com>, linux@armlinux.org.uk,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        kan.liang@linux.intel.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, ravi.bangoria@linux.vnet.ibm.com,
-        mpe@ellerman.id.au
-Subject: Re: [PATCH] perf: Fix oops when kthread execs user process
-Message-ID: <20190528161254.GA28492@lakrids.cambridge.arm.com>
-References: <1559046689-24091-1-git-send-email-92siuyang@gmail.com>
- <20190528140103.GT2623@hirez.programming.kicks-ass.net>
- <20190528153224.GE20758@fuggles.cambridge.arm.com>
+        Tue, 28 May 2019 12:14:57 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35573 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726371AbfE1QO5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 12:14:57 -0400
+Received: by mail-wr1-f66.google.com with SMTP id m3so20903454wrv.2;
+        Tue, 28 May 2019 09:14:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=t4fNuHNyNd5YWtEhF5ffcGp/LQDSV+yF804x4uNxMPE=;
+        b=dpSBRvHt0/ewBa230CkxQ60kS10EXTbLJLifOiTz4RZTmmVQM2vRxd8unWYqDmUSp1
+         EWsPKepGFokj30p8xyfx9N5JbPdIdmzXmtwJ5yCZzrVMUzKYIAwT/jiF01HS8hw4eLWr
+         d0NGjVfDfY4kil+Qc6Fdv1HRNLbyoU3Pq6Pi9O1CbkrNKQnOdbhOmnP5dkgmvqh/nsQV
+         /JnIjF9xrxK7zJogasjEBQQLi/HcVDwlhtzjYOKAL3boLxE9eQHAtEKwMZboHXbe9ceT
+         J2KmGaSgXRZDu6/jnLSjhSkwUmHBOYmKcAkK/mj9QzazUi0O6ts7tYwxfYK6ge5prHq5
+         dlnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=t4fNuHNyNd5YWtEhF5ffcGp/LQDSV+yF804x4uNxMPE=;
+        b=VDLuMsxVMaFoLDMDphgNBTE5CNfIF1A6aj5IYkKrNMtS4EEYuS2E36kgSCC56PlK4i
+         XvUWgwYbdxx3pxbPzNM4RjSlraV/a87dTH/XvKmjULc5kO7sJYgK7xO9XsOxDTRAwBmH
+         ewWUdWRNTldLgrHCe9k0cQfZFRHRH1W/gx3VvdHfKe7wv5a52BDxwBZf/jl6aL3vu+I5
+         rASPvL5tUgVIfK/6fojYcEO+/GuEP+5SSE9gmgFGLYz8K2ZgVDpKC7lXJ4trC6ZYfmeS
+         q3ug7gvjrU7PPwXXPVuB+MQCt4dlUwFxkzpEALWxyOA/1klM9WojmhC02vL9Rs5/2KE4
+         tBVQ==
+X-Gm-Message-State: APjAAAU853ghIiHAdIQhEa+bNAu0snXpR/n7vobLvKuyA5aD472C3SYa
+        2/qk8/CSbQs4S/FqiKsWcMQ=
+X-Google-Smtp-Source: APXvYqwz2aW7Eu9zLK7jrGuM0szO6rQV52q6NbuzpwC4zNuAynJd1LRd/HFIVRILdoCmMC8bYpqUyA==
+X-Received: by 2002:a05:6000:1285:: with SMTP id f5mr9066145wrx.112.1559060094876;
+        Tue, 28 May 2019 09:14:54 -0700 (PDT)
+Received: from localhost.localdomain (18.189-60-37.rdns.acropolistelecom.net. [37.60.189.18])
+        by smtp.gmail.com with ESMTPSA id l14sm13678787wrt.57.2019.05.28.09.14.53
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 28 May 2019 09:14:54 -0700 (PDT)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v3 00/12] Allwinner A64/H6 IR support
+Date:   Tue, 28 May 2019 18:14:28 +0200
+Message-Id: <20190528161440.27172-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190528153224.GE20758@fuggles.cambridge.arm.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 04:32:24PM +0100, Will Deacon wrote:
-> On Tue, May 28, 2019 at 04:01:03PM +0200, Peter Zijlstra wrote:
-> > On Tue, May 28, 2019 at 08:31:29PM +0800, Young Xiao wrote:
-> > > When a kthread calls call_usermodehelper() the steps are:
-> > >   1. allocate current->mm
-> > >   2. load_elf_binary()
-> > >   3. populate current->thread.regs
-> > > 
-> > > While doing this, interrupts are not disabled. If there is a perf
-> > > interrupt in the middle of this process (i.e. step 1 has completed
-> > > but not yet reached to step 3) and if perf tries to read userspace
-> > > regs, kernel oops.
-> 
-> This seems to be because pt_regs(current) gives NULL for kthreads on Power.
+Hi,
 
-I think you mean task_pt_regs(current) here.
+A64 IR support series[1] pointed out that an A31 bindings should be
+introduced.
 
-> > > Fix it by setting abi to PERF_SAMPLE_REGS_ABI_NONE when userspace
-> > > pt_regs are not set.
-> > > 
-> > > See commit bf05fc25f268 ("powerpc/perf: Fix oops when kthread execs
-> > > user process") for details.
-> > 
-> > Why the hell do we set current->mm before it is complete? Note that
-> > normally exec() builds the new mm before attaching it, see exec_mmap()
-> > in flush_old_exec().
-> 
-> From the initial report [1], it doesn't look like the mm isn't initialised,
-> but rather than we're dereferencing a NULL pt_regs pointer somehow for the
-> current task (see previous comment). I don't see how that can happen on
-> arm64, given that we put the pt_regs on the kernel stack which is allocated
-> during fork.
-> 
-> Will
-> 
-> [1] https://git.kernel.org/linus/bf05fc25f268
+This series introduce the A31 compatible bindings, then switch it on
+the already existing board.
 
-One caveat is that for the idle threads, the initial SP overlaps the
-task_pt_regs() area:
+Finally introduce A64 and H6 support.
 
-* __primary_switched starts SP at init_thread_union + THREAD_SIZE.
+I didn't enable the IR on other H6 boards as Ondrej reported an issue
+on his board[2].
 
-* __cpu_up() starts SP at task_stack_page(idle) + THREAD_SIZE.
+Regards,
+Clément
 
-... and in either case, sampling that would be bad.
+[1] https://lore.kernel.org/patchwork/patch/1031390/#1221464
+[2] https://lkml.org/lkml/2019/5/27/321
 
-For both arm, I believe similar holds true. AFAICT x86 seems to reserve
-the regs area in its head_{64,32}.S, but I can't see what it does for
-other threads.
+Changes since v2:
+ - Disable IR for other H6 boards
+ - Split DTS patch for H3/H5
+ - Introduce IR quirks
 
-Regardless, for arm, arm64, and x86, task_pt_regs(current) cannot be
-NULL.
+Changes since v1:
+ - Document reset lines as required since A31
+ - Explain the memory mapping difference in commit log
+ - Fix misspelling "Allwiner" to "Allwinner"
 
-Thanks,
-Mark.
+Clément Péron (10):
+  dt-bindings: media: sunxi-ir: add A31 compatible
+  media: rc: Introduce sunxi_ir_quirks
+  media: rc: sunxi: Add A31 compatible
+  ARM: dts: sunxi: Prefer A31 bindings for IR
+  ARM: dts: sunxi: Prefer A31 bindings for IR
+  dt-bindings: media: sunxi-ir: Add A64 compatible
+  dt-bindings: media: sunxi-ir: Add H6 compatible
+  arm64: dts: allwinner: h6: Add IR receiver node
+  arm64: dts: allwinner: h6: Enable IR on Beelink GS1
+  arm64: defconfig: enable IR SUNXI option
+
+Igors Makejevs (1):
+  arm64: dts: allwinner: a64: Add IR node
+
+Jernej Skrabec (1):
+  arm64: dts: allwinner: a64: Enable IR on Orange Pi Win
+
+ .../devicetree/bindings/media/sunxi-ir.txt    | 11 ++-
+ arch/arm/boot/dts/sun6i-a31.dtsi              |  2 +-
+ arch/arm/boot/dts/sun8i-a83t.dtsi             |  2 +-
+ arch/arm/boot/dts/sun9i-a80.dtsi              |  2 +-
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi            |  2 +-
+ .../dts/allwinner/sun50i-a64-orangepi-win.dts |  4 ++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 18 +++++
+ .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  4 ++
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 19 +++++
+ arch/arm64/configs/defconfig                  |  1 +
+ drivers/media/rc/sunxi-cir.c                  | 70 +++++++++++++++----
+ 11 files changed, 115 insertions(+), 20 deletions(-)
+
+-- 
+2.20.1
+
