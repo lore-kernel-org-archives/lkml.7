@@ -2,147 +2,109 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C402BC04E84
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49950C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:03:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A40FB2075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 286612075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:03:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbfE1RCz (ORCPT
+        id S1727139AbfE1RDp convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 13:02:55 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:33122 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726236AbfE1RCy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 13:02:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A5FEB341;
-        Tue, 28 May 2019 10:02:53 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C71E83F59C;
-        Tue, 28 May 2019 10:02:47 -0700 (PDT)
-Date:   Tue, 28 May 2019 18:02:45 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     enh <enh@google.com>, Evgenii Stepanov <eugenis@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
-Message-ID: <20190528170244.GF32006@arrakis.emea.arm.com>
-References: <20190521182932.sm4vxweuwo5ermyd@mbp>
- <201905211633.6C0BF0C2@keescook>
- <20190522101110.m2stmpaj7seezveq@mbp>
- <CAJgzZoosKBwqXRyA6fb8QQSZXFqfHqe9qO9je5TogHhzuoGXJQ@mail.gmail.com>
- <20190522163527.rnnc6t4tll7tk5zw@mbp>
- <201905221316.865581CF@keescook>
- <20190523144449.waam2mkyzhjpqpur@mbp>
- <201905230917.DEE7A75EF0@keescook>
- <20190523174345.6sv3kcipkvlwfmox@mbp>
- <201905231327.77CA8D0A36@keescook>
+        Tue, 28 May 2019 13:03:45 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:31366 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727023AbfE1RDp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 13:03:45 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 45D0YB2pz3z9tyRn;
+        Tue, 28 May 2019 19:03:42 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id zifMpZ7Ll3nN; Tue, 28 May 2019 19:03:42 +0200 (CEST)
+Received: from vm-hermes.si.c-s.fr (vm-hermes.si.c-s.fr [192.168.25.253])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45D0YB21rQz9tyRm;
+        Tue, 28 May 2019 19:03:42 +0200 (CEST)
+Received: by vm-hermes.si.c-s.fr (Postfix, from userid 33)
+        id 0690589D; Tue, 28 May 2019 19:03:41 +0200 (CEST)
+Received: from 37-170-84-163.coucou-networks.fr
+ (37-170-84-163.coucou-networks.fr [37.170.84.163]) by messagerie.si.c-s.fr
+ (Horde Framework) with HTTP; Tue, 28 May 2019 19:03:41 +0200
+Date:   Tue, 28 May 2019 19:03:41 +0200
+Message-ID: <20190528190341.Horde.nTXOule-IO2ReXFiNIqNbg8@messagerie.si.c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, Paul Mackerras <paulus@ozlabs.org>
+Subject: Re: [PATCH v3 14/16] powerpc/32: implement fast entry for syscalls
+ on BOOKE
+References: <cover.1556627571.git.christophe.leroy@c-s.fr>
+ <3e254178a157e7eaeef48f983880f71f97d1f296.1556627571.git.christophe.leroy@c-s.fr>
+ <20190523061427.GA19655@blackberry>
+ <98bf5745-88ae-7f17-fcb9-7d06ba5b9e49@c-s.fr>
+ <58f0e70f-ed9d-965e-e8d2-cc5d13a4c9eb@c-s.fr>
+ <87r28jp2b0.fsf@concordia.ellerman.id.au>
+In-Reply-To: <87r28jp2b0.fsf@concordia.ellerman.id.au>
+User-Agent: Internet Messaging Program (IMP) H5 (6.2.3)
+Content-Type: text/plain; charset=UTF-8; format=flowed; DelSp=Yes
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <201905231327.77CA8D0A36@keescook>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 02:31:16PM -0700, Kees Cook wrote:
-> syzkaller already attempts to randomly inject non-canonical and
-> 0xFFFF....FFFF addresses for user pointers in syscalls in an effort to
-> find bugs like CVE-2017-5123 where waitid() via unchecked put_user() was
-> able to write directly to kernel memory[1].
-> 
-> It seems that using TBI by default and not allowing a switch back to
-> "normal" ABI without a reboot actually means that userspace cannot inject
-> kernel pointers into syscalls any more, since they'll get universally
-> stripped now. Is my understanding correct, here? i.e. exploiting
-> CVE-2017-5123 would be impossible under TBI?
-> 
-> If so, then I think we should commit to the TBI ABI and have a boot
-> flag to disable it, but NOT have a process flag, as that would allow
-> attackers to bypass the masking. The only flag should be "TBI or MTE".
-> 
-> If so, can I get top byte masking for other architectures too? Like,
-> just to strip high bits off userspace addresses? ;)
+Michael Ellerman <mpe@ellerman.id.au> a écrit :
 
-Just for fun, hack/attempt at your idea which should not interfere with
-TBI. Only briefly tested on arm64 (and the s390 __TYPE_IS_PTR macro is
-pretty weird ;)):
+> Christophe Leroy <christophe.leroy@c-s.fr> writes:
+>> Le 23/05/2019 à 09:00, Christophe Leroy a écrit :
+>>
+>> [...]
+>>
+>>>> arch/powerpc/kernel/head_fsl_booke.o: In function `SystemCall':
+>>>> arch/powerpc/kernel/head_fsl_booke.S:416: undefined reference to
+>>>> `kvmppc_handler_BOOKE_INTERRUPT_SYSCALL_SPRN_SRR1'
+>>>> Makefile:1052: recipe for target 'vmlinux' failed
+>>>>
+>>>>> +.macro SYSCALL_ENTRY trapno intno
+>>>>> +    mfspr    r10, SPRN_SPRG_THREAD
+>>>>> +#ifdef CONFIG_KVM_BOOKE_HV
+>>>>> +BEGIN_FTR_SECTION
+>>>>> +    mtspr    SPRN_SPRG_WSCRATCH0, r10
+>>>>> +    stw    r11, THREAD_NORMSAVE(0)(r10)
+>>>>> +    stw    r13, THREAD_NORMSAVE(2)(r10)
+>>>>> +    mfcr    r13            /* save CR in r13 for now       */
+>>>>> +    mfspr    r11, SPRN_SRR1
+>>>>> +    mtocrf    0x80, r11    /* check MSR[GS] without clobbering reg */
+>>>>> +    bf    3, 1975f
+>>>>> +    b    kvmppc_handler_BOOKE_INTERRUPT_\intno\()_SPRN_SRR1
+>>>>
+>>>> It seems to me that the "_SPRN_SRR1" on the end of this line
+>>>> isn't meant to be there...  However, it still fails to link with that
+>>>> removed.
+>>
+>> It looks like I missed the macro expansion.
+>>
+>> The called function should be kvmppc_handler_8_0x01B
+>>
+>> Seems like kisskb doesn't build any config like this.
+>
+> I thought we did, ie:
+>
+> http://kisskb.ellerman.id.au/kisskb/buildresult/13817941/
 
---------------------------8<---------------------------------
-diff --git a/arch/s390/include/asm/compat.h b/arch/s390/include/asm/compat.h
-index 63b46e30b2c3..338455a74eff 100644
---- a/arch/s390/include/asm/compat.h
-+++ b/arch/s390/include/asm/compat.h
-@@ -11,9 +11,6 @@
- 
- #include <asm-generic/compat.h>
- 
--#define __TYPE_IS_PTR(t) (!__builtin_types_compatible_p( \
--				typeof(0?(__force t)0:0ULL), u64))
--
- #define __SC_DELOUSE(t,v) ({ \
- 	BUILD_BUG_ON(sizeof(t) > 4 && !__TYPE_IS_PTR(t)); \
- 	(__force t)(__TYPE_IS_PTR(t) ? ((v) & 0x7fffffff) : (v)); \
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index e2870fe1be5b..b1b9fe8502da 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -119,8 +119,15 @@ struct io_uring_params;
- #define __TYPE_IS_L(t)	(__TYPE_AS(t, 0L))
- #define __TYPE_IS_UL(t)	(__TYPE_AS(t, 0UL))
- #define __TYPE_IS_LL(t) (__TYPE_AS(t, 0LL) || __TYPE_AS(t, 0ULL))
-+#define __TYPE_IS_PTR(t) (!__builtin_types_compatible_p(typeof(0 ? (__force t)0 : 0ULL), u64))
- #define __SC_LONG(t, a) __typeof(__builtin_choose_expr(__TYPE_IS_LL(t), 0LL, 0L)) a
-+#ifdef CONFIG_64BIT
-+#define __SC_CAST(t, a)	(__TYPE_IS_PTR(t) \
-+				? (__force t) ((__u64)a & ~(1UL << 55)) \
-+				: (__force t) a)
-+#else
- #define __SC_CAST(t, a)	(__force t) a
-+#endif
- #define __SC_ARGS(t, a)	a
- #define __SC_TEST(t, a) (void)BUILD_BUG_ON_ZERO(!__TYPE_IS_LL(t) && sizeof(t) > sizeof(long))
- 
+That's a ppc64 config it seems. The problem was on booke32.
 
--- 
-Catalin
+Christophe
+
+>
+> But clearly something is missing to trigger the bug.
+>
+> cheers
+
+
