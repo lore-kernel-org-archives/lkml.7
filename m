@@ -2,109 +2,218 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C360DC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 874C6C072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94DD32075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:07:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54CB6217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:08:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="cF9thtS+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CxnItHns"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727413AbfE1RHt (ORCPT
+        id S1727160AbfE1RIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 13:07:49 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:40346 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726526AbfE1RHs (ORCPT
+        Tue, 28 May 2019 13:08:35 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:34737 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726523AbfE1RIf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 13:07:48 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id C6C22C1F2D;
-        Tue, 28 May 2019 17:07:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1559063251; bh=HQFlB6wWsoHascRl7I0I8D3IbjU6HHZtxO2cUHqrjb4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To:From;
-        b=cF9thtS+7ZquOKmx/BBfIcayztI8/ddIooebD8jB6jdxxy8Y0N8Kp/HW/ERp5lSCz
-         eMe2cRdEci+4EAzVWe7sCf33yUFMx/NA5qGQBbc5UzXJF6B1hLro6PQFxi6lDvFdSh
-         EQycywZZu9yigqbs7TSSuxEEdRtM3c3yL+bYLIabVRFqhuyIftE2JcJnmf7VuduyGL
-         SYBip0IlAvjScAKvyaF+Fpk4amE0Vb7dEYRgtR9t0YZfYEGZaHOiE2u/g49FBEwVqQ
-         +FL18p+c+DGN5ylvO7ZdpINJOjgJNqbVEjBzmULX3KzNhjsRy4cjKop5fJhluySGRs
-         u0Hnx69VB55rQ==
-Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id E61CFA005D;
-        Tue, 28 May 2019 17:07:46 +0000 (UTC)
-Received: from IN01WEHTCB.internal.synopsys.com (10.144.199.106) by
- US01WEHTC2.internal.synopsys.com (10.12.239.237) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 28 May 2019 10:07:46 -0700
-Received: from IN01WEHTCA.internal.synopsys.com (10.144.199.103) by
- IN01WEHTCB.internal.synopsys.com (10.144.199.105) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 28 May 2019 22:37:43 +0530
-Received: from [10.13.182.230] (10.13.182.230) by
- IN01WEHTCA.internal.synopsys.com (10.144.199.243) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 28 May 2019 22:37:55 +0530
-Subject: Re: [PATCH] ARC: [plat-hsdk]: enable creg-gpio controller
-To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        <linux-snps-arc@lists.infradead.org>
-CC:     Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        <linux-kernel@vger.kernel.org>
-Newsgroups: gmane.linux.kernel.arc,gmane.linux.kernel
-References: <20190528094052.2393-1-Eugeniy.Paltsev@synopsys.com>
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=vgupta@synopsys.com; keydata=
- mQINBFEffBMBEADIXSn0fEQcM8GPYFZyvBrY8456hGplRnLLFimPi/BBGFA24IR+B/Vh/EFk
- B5LAyKuPEEbR3WSVB1x7TovwEErPWKmhHFbyugdCKDv7qWVj7pOB+vqycTG3i16eixB69row
- lDkZ2RQyy1i/wOtHt8Kr69V9aMOIVIlBNjx5vNOjxfOLux3C0SRl1veA8sdkoSACY3McOqJ8
- zR8q1mZDRHCfz+aNxgmVIVFN2JY29zBNOeCzNL1b6ndjU73whH/1hd9YMx2Sp149T8MBpkuQ
- cFYUPYm8Mn0dQ5PHAide+D3iKCHMupX0ux1Y6g7Ym9jhVtxq3OdUI5I5vsED7NgV9c8++baM
- 7j7ext5v0l8UeulHfj4LglTaJIvwbUrCGgtyS9haKlUHbmey/af1j0sTrGxZs1ky1cTX7yeF
- nSYs12GRiVZkh/Pf3nRLkjV+kH++ZtR1GZLqwamiYZhAHjo1Vzyl50JT9EuX07/XTyq/Bx6E
- dcJWr79ZphJ+mR2HrMdvZo3VSpXEgjROpYlD4GKUApFxW6RrZkvMzuR2bqi48FThXKhFXJBd
- JiTfiO8tpXaHg/yh/V9vNQqdu7KmZIuZ0EdeZHoXe+8lxoNyQPcPSj7LcmE6gONJR8ZqAzyk
- F5voeRIy005ZmJJ3VOH3Gw6Gz49LVy7Kz72yo1IPHZJNpSV5xwARAQABtCpWaW5lZXQgR3Vw
- dGEgKGFsaWFzKSA8dmd1cHRhQHN5bm9wc3lzLmNvbT6JAj4EEwECACgCGwMGCwkIBwMCBhUI
- AgkKCwQWAgMBAh4BAheABQJbBYpwBQkLx0HcAAoJEGnX8d3iisJeChAQAMR2UVbJyydOv3aV
- jmqP47gVFq4Qml1weP5z6czl1I8n37bIhdW0/lV2Zll+yU1YGpMgdDTHiDqnGWi4pJeu4+c5
- xsI/VqkH6WWXpfruhDsbJ3IJQ46//jb79ogjm6VVeGlOOYxx/G/RUUXZ12+CMPQo7Bv+Jb+t
- NJnYXYMND2Dlr2TiRahFeeQo8uFbeEdJGDsSIbkOV0jzrYUAPeBwdN8N0eOB19KUgPqPAC4W
- HCg2LJ/o6/BImN7bhEFDFu7gTT0nqFVZNXlOw4UcGGpM3dq/qu8ZgRE0turY9SsjKsJYKvg4
- djAaOh7H9NJK72JOjUhXY/sMBwW5vnNwFyXCB5t4ZcNxStoxrMtyf35synJVinFy6wCzH3eJ
- XYNfFsv4gjF3l9VYmGEJeI8JG/ljYQVjsQxcrU1lf8lfARuNkleUL8Y3rtxn6eZVtAlJE8q2
- hBgu/RUj79BKnWEPFmxfKsaj8of+5wubTkP0I5tXh0akKZlVwQ3lbDdHxznejcVCwyjXBSny
- d0+qKIXX1eMh0/5sDYM06/B34rQyq9HZVVPRHdvsfwCU0s3G+5Fai02mK68okr8TECOzqZtG
- cuQmkAeegdY70Bpzfbwxo45WWQq8dSRURA7KDeY5LutMphQPIP2syqgIaiEatHgwetyVCOt6
- tf3ClCidHNaGky9KcNSQ
-Message-ID: <af7a920d-341b-7361-ba4d-17e0ec88fa09@synopsys.com>
-Date:   Tue, 28 May 2019 10:07:34 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 28 May 2019 13:08:35 -0400
+Received: by mail-lf1-f65.google.com with SMTP id v18so15212510lfi.1;
+        Tue, 28 May 2019 10:08:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=eSIxYkcdixCKshTAAgauoFvEH6o7/CVdQzS8JHWoXBo=;
+        b=CxnItHnsesXuxSeLCbxyq9Qzebn6SCvY7q8rl4VSmEDy6OgJ33k/LviCwobWrOuX31
+         8h3CjYytq2Qx3nRTG89frfKemk4goXBw00VmBONWrQm4RT9R44DJeELSUtXUNVUQI3Pi
+         2h+Th+gatt1NdMJg2oX2E5N6sG2jpK7/koWX3EImvxbOcuDaGa2EUDwtGAhn6D64yBdi
+         G06hZlGysibO+bGEz4LUuV0RdSzVDDDOBq8hKFKQbuF30D7KJNpyDfc3gXNtdFAZkWnT
+         foF0Icqh0P0qkvbJiWMumfU8C+MFlL2P54vZ7Z2y3GUbEJiJ/8imYCJkKIAWN0Ic0y4G
+         cojg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=eSIxYkcdixCKshTAAgauoFvEH6o7/CVdQzS8JHWoXBo=;
+        b=gyhL12Hjfsehhbvof9a1/YstScdMNjn3JrquMMzdCNpieHN3b7Wi9S33/179CTDTRb
+         9twFq4Br/MY5sMU5qlnY6KhB2Y6qlcYeMPzSqlLqe9EpZxjfV3pTFhOXYnvR/InaY7eE
+         32HRfSjn5TROgm788vj1WSL3zPbcS8nLAqYdZuoJn0bWBKtk8iULd9pyUhw32OIls/6J
+         UqQ3Wq/K4/Cia8R9lFkySmgRvTt2dm29VUIT34FgaxMLjcxtoxSlmEzQQeimYAevWAYB
+         TSDX+3gwRVIc5513bTMEjQjZGWxQqFMhkgOeCa3aAz24zUoDEBmqitNsPnL2/POqzaK8
+         UPPA==
+X-Gm-Message-State: APjAAAWvGWsPtDJ1I8jTijhnr7gUPi+BKn7+FWSdwFBKDszdbRtClt6x
+        kYtpCDUzkT9ceYQAu6j8Un8=
+X-Google-Smtp-Source: APXvYqxpK6td1ccwuMiO7YgOHGdtIpb6u4hgHImxnQciGQnJ7u/EDJK4CjzzG/JnER3qRDJ8G+UnEw==
+X-Received: by 2002:ac2:46ef:: with SMTP id q15mr6098737lfo.63.1559063312356;
+        Tue, 28 May 2019 10:08:32 -0700 (PDT)
+Received: from esperanza ([176.120.239.149])
+        by smtp.gmail.com with ESMTPSA id t13sm3006255lji.47.2019.05.28.10.08.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 May 2019 10:08:31 -0700 (PDT)
+Date:   Tue, 28 May 2019 20:08:28 +0300
+From:   Vladimir Davydov <vdavydov.dev@gmail.com>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Christoph Lameter <cl@linux.com>, cgroups@vger.kernel.org,
+        Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v5 5/7] mm: rework non-root kmem_cache lifecycle
+ management
+Message-ID: <20190528170828.zrkvcdsj3d3jzzzo@esperanza>
+References: <20190521200735.2603003-1-guro@fb.com>
+ <20190521200735.2603003-6-guro@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <20190528094052.2393-1-Eugeniy.Paltsev@synopsys.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.13.182.230]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190521200735.2603003-6-guro@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/28/19 2:40 AM, Eugeniy Paltsev wrote:
-> HSDK SOC has CREG GPIO controller which can be used to control
-> SPI chip select lines.
-> Enable it in preparation of enabling SPI peripherals.
+Hello Roman,
+
+On Tue, May 21, 2019 at 01:07:33PM -0700, Roman Gushchin wrote:
+> This commit makes several important changes in the lifecycle
+> of a non-root kmem_cache, which also affect the lifecycle
+> of a memory cgroup.
 > 
-> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+> Currently each charged slab page has a page->mem_cgroup pointer
+> to the memory cgroup and holds a reference to it.
+> Kmem_caches are held by the memcg and are released with it.
+> It means that none of kmem_caches are released unless at least one
+> reference to the memcg exists, which is not optimal.
+> 
+> So the current scheme can be illustrated as:
+> page->mem_cgroup->kmem_cache.
+> 
+> To implement the slab memory reparenting we need to invert the scheme
+> into: page->kmem_cache->mem_cgroup.
+> 
+> Let's make every page to hold a reference to the kmem_cache (we
+> already have a stable pointer), and make kmem_caches to hold a single
+> reference to the memory cgroup.
 
-Added to for-curr
+Is there any reason why we can't reference both mem cgroup and kmem
+cache per each charged kmem page? I mean,
 
-Thx,
--Vineet
+  page->mem_cgroup references mem_cgroup
+  page->kmem_cache references kmem_cache
+  mem_cgroup references kmem_cache while it's online
+
+TBO it seems to me that not taking a reference to mem cgroup per charged
+kmem page makes the code look less straightforward, e.g. as you
+mentioned in the commit log, we have to use mod_lruvec_state() for memcg
+pages and mod_lruvec_page_state() for root pages.
+
+> 
+> To make this possible we need to introduce a new percpu refcounter
+> for non-root kmem_caches. The counter is initialized to the percpu
+> mode, and is switched to atomic mode after deactivation, so we never
+> shutdown an active cache. The counter is bumped for every charged page
+> and also for every running allocation. So the kmem_cache can't
+> be released unless all allocations complete.
+> 
+> To shutdown non-active empty kmem_caches, let's reuse the
+> infrastructure of the RCU-delayed work queue, used previously for
+> the deactivation. After the generalization, it's perfectly suited
+> for our needs.
+> 
+> Since now we can release a kmem_cache at any moment after the
+> deactivation, let's call sysfs_slab_remove() only from the shutdown
+> path. It makes deactivation path simpler.
+
+But a cache can be dangling for quite a while after cgroup was taken
+down, even after this patch, because there still can be pages charged to
+it. The reason why we call sysfs_slab_remove() is to delete associated
+files from sysfs ASAP. I'd try to preserve the current behavior if
+possible.
+
+> 
+> Because we don't set the page->mem_cgroup pointer, we need to change
+> the way how memcg-level stats is working for slab pages. We can't use
+> mod_lruvec_page_state() helpers anymore, so switch over to
+> mod_lruvec_state().
+
+> diff --git a/mm/slab_common.c b/mm/slab_common.c
+> index 4e5b4292a763..8d68de4a2341 100644
+> --- a/mm/slab_common.c
+> +++ b/mm/slab_common.c
+> @@ -727,9 +737,31 @@ static void kmemcg_schedule_work_after_rcu(struct rcu_head *head)
+>  	queue_work(memcg_kmem_cache_wq, &s->memcg_params.work);
+>  }
+>  
+> +static void kmemcg_cache_shutdown_after_rcu(struct kmem_cache *s)
+> +{
+> +	WARN_ON(shutdown_cache(s));
+> +}
+> +
+> +static void kmemcg_queue_cache_shutdown(struct percpu_ref *percpu_ref)
+> +{
+> +	struct kmem_cache *s = container_of(percpu_ref, struct kmem_cache,
+> +					    memcg_params.refcnt);
+> +
+> +	spin_lock(&memcg_kmem_wq_lock);
+
+This code may be called from irq context AFAIU so you should use
+irq-safe primitive.
+
+> +	if (s->memcg_params.root_cache->memcg_params.dying)
+> +		goto unlock;
+> +
+> +	WARN_ON(s->memcg_params.work_fn);
+> +	s->memcg_params.work_fn = kmemcg_cache_shutdown_after_rcu;
+> +	call_rcu(&s->memcg_params.rcu_head, kmemcg_schedule_work_after_rcu);
+
+I may be totally wrong here, but I have a suspicion we don't really need
+rcu here.
+
+As I see it, you add this code so as to prevent memcg_kmem_get_cache
+from dereferencing a destroyed kmem cache. Can't we continue using
+css_tryget_online for that? I mean, take rcu_read_lock() and try to get
+css reference. If you succeed, then the cgroup must be online, and
+css_offline won't be called until you unlock rcu, right? This means that
+the cache is guaranteed to be alive until then, because the cgroup holds
+a reference to all its kmem caches until it's taken offline.
+
+> +unlock:
+> +	spin_unlock(&memcg_kmem_wq_lock);
+> +}
+> +
+>  static void kmemcg_cache_deactivate_after_rcu(struct kmem_cache *s)
+>  {
+>  	__kmemcg_cache_deactivate_after_rcu(s);
+> +	percpu_ref_kill(&s->memcg_params.refcnt);
+>  }
+>  
+>  static void kmemcg_cache_deactivate(struct kmem_cache *s)
+> @@ -854,8 +861,15 @@ static int shutdown_memcg_caches(struct kmem_cache *s)
+>  
+>  static void flush_memcg_workqueue(struct kmem_cache *s)
+>  {
+> +	/*
+> +	 * memcg_params.dying is synchronized using slab_mutex AND
+> +	 * memcg_kmem_wq_lock spinlock, because it's not always
+> +	 * possible to grab slab_mutex.
+> +	 */
+>  	mutex_lock(&slab_mutex);
+> +	spin_lock(&memcg_kmem_wq_lock);
+>  	s->memcg_params.dying = true;
+> +	spin_unlock(&memcg_kmem_wq_lock);
+
+I would completely switch from the mutex to the new spin lock -
+acquiring them both looks weird.
+
+>  	mutex_unlock(&slab_mutex);
+>  
+>  	/*
