@@ -2,111 +2,99 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF62C46460
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17901C072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09AEB217F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:37:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559065057;
-	bh=1FcoIili3XrG5oy39D/QZoBeC/2tlCrTlbMxM5nbyhU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=2s6fXmdIwqpTJIiKi7+pcB1EJPgy08If6GYjqaC1z1C46cnY6C6IxjTKfix31XTbp
-	 aXF62X6CejakvzgarUdPX2DGD9LwKPnDEunQ6v66ZA9IJgFerVKOUZraFprJDaFtX8
-	 ytc/KPdbx3O+8x4jez3rqAlhG+zUdvFghIlIKbF8=
+	by mail.kernel.org (Postfix) with ESMTP id E9547217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:38:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JT4C1GZ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727174AbfE1Rhg (ORCPT
+        id S1727280AbfE1RiV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 13:37:36 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:42739 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726515AbfE1Rhf (ORCPT
+        Tue, 28 May 2019 13:38:21 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:41595 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726515AbfE1RiU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 13:37:35 -0400
-Received: by mail-lj1-f194.google.com with SMTP id 188so18507539ljf.9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 10:37:34 -0700 (PDT)
+        Tue, 28 May 2019 13:38:20 -0400
+Received: by mail-lf1-f67.google.com with SMTP id 136so5123407lfa.8;
+        Tue, 28 May 2019 10:38:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=F2jMeMvfMZ6+f8aMiqek9ZN+qjHWyjCaTe5iI/rDq+E=;
-        b=F1ETGdXeFfCBHmdWbLBHd8vZ7taVOvI6ORkmxBqkgmnSIzcWwbuL7Fhv0S2FLp97AT
-         XCPInppgu1tkfwt4dcLiPmzEju6ML58hvTfKMWoxMW2Wuusd11zPUwBSNYNdyPwqwnst
-         6LPs3DuCLXNIyE4Zp2se+L+KeAMs1gw7ROLd4=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=r8PmQcft5RJ51eoZR31WNho/xyilsVu7uCLR1yi4QeM=;
+        b=JT4C1GZ5u716MuG38oMA8m4kjqZNa8qKH9ij5bmN31mD37QnGs2q/DkpLNNQT54Zah
+         rUr1i5yoLx+yn8qZ9Z6/k+NXbn69dEk4UXskpJRCo4dqFVYZi1Gp9O+oNSmX7wtFtmTW
+         i41ZJ+O6WEW+B/XteUFnOgI6Ny+omV83U8+9UxpLp7+YOX51rxGfMYlVkqNg9scqKNfI
+         WJIUBk6E9hEM4Vz1E/YKBi102DMg1BYgG9OCd3G59CHXnh2xpEjE3S386PD07hkNTX/E
+         2OeALMR2jlduzQUdutJqLwqHpL4y34Re7iAU4oyso+lxa2BJz+GZ5rAHJg7MSOyUyYXg
+         XYOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=F2jMeMvfMZ6+f8aMiqek9ZN+qjHWyjCaTe5iI/rDq+E=;
-        b=W4AObqTIiFN6Utsw5GAULitQz9FlEzzDHrLkTlGewtHsRhfKXxYHDmjEjKSsCa3q7Y
-         umhUc/qBlCJavTcbpuIepP7VoztLPd3NvljdWfeCA2FUDn3RY99aH7nW1k+e2eJNs7Zo
-         +fyIEAZv2sLfPF4iV+vA+zoQSnwB9qh2GYwh4FlEwgumfwMTtEu15Zc0MKDDQjLtDKOM
-         dVthiafSaGrPJ2z5axBReDsvJqrYNN9pvxfWK/W6cfDmYMdXmpdUUk6msXbyRdrDk6xl
-         1fLdWGWYOZpxZ/xUwpABtj5dMCKMGAGh0Yp/SY4ldniM4Pvo8+XtJL2y8ZuC+amsXvGL
-         TafQ==
-X-Gm-Message-State: APjAAAVKiyieIX6xDbZ95O0H/ug6RLhFjQ0f/wnRlrhGUt9AbqhTv8XA
-        GNtNke6B4BdvHcCnCTjEYfaEUTj80go=
-X-Google-Smtp-Source: APXvYqzO1EYRG7Bllt5G2Wu9S0cYZIOj+5slPhbMpzxoeqb4N/mZfDECw8plyvHM3oSRRohR9yJNCw==
-X-Received: by 2002:a05:651c:150:: with SMTP id c16mr65590233ljd.65.1559065052784;
-        Tue, 28 May 2019 10:37:32 -0700 (PDT)
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
-        by smtp.gmail.com with ESMTPSA id v16sm3063623lji.88.2019.05.28.10.37.31
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 May 2019 10:37:31 -0700 (PDT)
-Received: by mail-lj1-f177.google.com with SMTP id a10so7754697ljf.6
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 10:37:31 -0700 (PDT)
-X-Received: by 2002:a2e:85d1:: with SMTP id h17mr49489655ljj.1.1559065051361;
- Tue, 28 May 2019 10:37:31 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=r8PmQcft5RJ51eoZR31WNho/xyilsVu7uCLR1yi4QeM=;
+        b=Iw8YZnEhuHQD2GIAJ7a5oi2IArKq4+4SaDkv74T8fNo60TTZ6ur11/lRRktSpAcoqo
+         B0tIWPt03OYaypvtFxDl8+qwhSbaYhAq6yJgey6/k7oB4sHCIVpn+M1X61RGBR7YBjLe
+         luBPlLC/rdHxthbASplrN0pkncOTTxMN9lIDatdQDXtqtsUYRmos+J7jbS4dtxqJ3gxp
+         N4LDhejlCRivX9DeXwKOctfDbOXuwWy8Pf17wt5kXv0ASYKKmWu23KBoeO/vNQ/MD84W
+         lq8cKwEQHfH0gGmgdQI1XBkhZg2Pl8ZvKvs9MzfhqAaHAV4rQ0miP2qPTECUGRgnevbs
+         NUpA==
+X-Gm-Message-State: APjAAAXtRIR9HKS3hp/FKHbbH6peosqLpbPqHhkXAUTV1L4LONBcodX/
+        dsPhPijB7SepIthZiMMnPqs=
+X-Google-Smtp-Source: APXvYqwduzggJa3CuKgzzvG/ZBPz7SyrVxU3HSrA2hFtyUmdW0XFIf6xWdZSBNqyarXqgVcEOsgxzQ==
+X-Received: by 2002:a19:2981:: with SMTP id p123mr11785310lfp.190.1559065098989;
+        Tue, 28 May 2019 10:38:18 -0700 (PDT)
+Received: from esperanza ([176.120.239.149])
+        by smtp.gmail.com with ESMTPSA id q124sm3003230ljq.75.2019.05.28.10.38.18
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 May 2019 10:38:18 -0700 (PDT)
+Date:   Tue, 28 May 2019 20:38:16 +0300
+From:   Vladimir Davydov <vdavydov.dev@gmail.com>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Christoph Lameter <cl@linux.com>, cgroups@vger.kernel.org,
+        Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v5 7/7] mm: fix /proc/kpagecgroup interface for slab pages
+Message-ID: <20190528173815.2km65nchedfumslt@esperanza>
+References: <20190521200735.2603003-1-guro@fb.com>
+ <20190521200735.2603003-8-guro@fb.com>
 MIME-Version: 1.0
-References: <20190520063534.GB19312@shao2-debian> <20190520215328.GA1186@cmpxchg.org>
- <20190521134646.GE19312@shao2-debian> <20190521151647.GB2870@cmpxchg.org> <CALvZod5KFJvfBfTZKWiDo_ux_OkLKK-b6sWtnYeFCY2ARiiKwQ@mail.gmail.com>
-In-Reply-To: <CALvZod5KFJvfBfTZKWiDo_ux_OkLKK-b6sWtnYeFCY2ARiiKwQ@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 28 May 2019 10:37:15 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgaLQjZ8AZj76_cwvk_wLPJjr+Dc=Qvac_vHY2RruuBww@mail.gmail.com>
-Message-ID: <CAHk-=wgaLQjZ8AZj76_cwvk_wLPJjr+Dc=Qvac_vHY2RruuBww@mail.gmail.com>
-Subject: Re: [PATCH] mm: memcontrol: don't batch updates of local VM stats and events
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        kernel test robot <rong.a.chen@intel.com>, LKP <lkp@01.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>,
-        Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190521200735.2603003-8-guro@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 9:00 AM Shakeel Butt <shakeelb@google.com> wrote:
->
-> I was suspecting the following for-loop+atomic-add for the regression.
+On Tue, May 21, 2019 at 01:07:35PM -0700, Roman Gushchin wrote:
+> Switching to an indirect scheme of getting mem_cgroup pointer for
+> !root slab pages broke /proc/kpagecgroup interface for them.
+> 
+> Let's fix it by learning page_cgroup_ino() how to get memcg
+> pointer for slab pages.
+> 
+> Reported-by: Shakeel Butt <shakeelb@google.com>
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+> Reviewed-by: Shakeel Butt <shakeelb@google.com>
+> ---
+>  mm/memcontrol.c  |  5 ++++-
+>  mm/slab.h        | 25 +++++++++++++++++++++++++
+>  mm/slab_common.c |  1 +
+>  3 files changed, 30 insertions(+), 1 deletion(-)
 
-If I read the kernel test robot reports correctly, Johannes' fix patch
-does fix the regression (well - mostly. The original reported
-regression was 26%, and with Johannes' fix patch it was 3% - so still
-a slight performance regression, but not nearly as bad).
-
-> Why the above atomic-add is the culprit?
-
-I think the problem with that one is that it's cross-cpu statistics,
-so you end up with lots of cacheline bounces on the local counts when
-you have lots of load.
-
-But yes, the recursive updates still do show a small regression,
-probably because there's still some overhead from the looping up in
-the hierarchy. You still get *those* cacheline bounces, but now they
-are limited to the upper hierarchies that only get updated at batch
-time.
-
-Johannes? Am I reading this right?
-
-                   Linus
+What about mem_cgroup_from_kmem, see mm/list_lru.c?
+Shouldn't we fix it, too?
