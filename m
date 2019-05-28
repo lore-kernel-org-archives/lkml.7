@@ -2,94 +2,91 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E29C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C7A0C072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D1C420B7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:16:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="ko5bLkd/"
+	by mail.kernel.org (Postfix) with ESMTP id EBAEB20B7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:18:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727331AbfE1UQK (ORCPT
+        id S1727582AbfE1USy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 16:16:10 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:47005 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbfE1UQK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 16:16:10 -0400
-Received: by mail-ua1-f67.google.com with SMTP id a95so8539584uaa.13
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 13:16:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=2PbUTDuXiAxR50haxEpsxltfONNocyGAYpvkm6Pt77c=;
-        b=ko5bLkd/y0RUxLPfQLyJORMqZAJZ0nVfF3nCqs0In1f2QhZLPWX2amL/jAibl3e+om
-         BKfY2EVCPBKAgbqF0xzsmG3zFZSODPaVgkcJvPPJS6P8c09Ynx5nItSJcyyyeaP2nefj
-         CuP4vKDfBze7YiB/IpCx+JdxGf0Jtst4YpN2xBl+Xa5Prij4hddFW32YgRkGpdYv1fwa
-         D9okItb0t5RHxS2Ud3wks5da82bFdQ4RuEjuQW+OBYGSHdgFk+HB+UwFJZcTxFzD1l7L
-         e+JP8BYNU8JOi/yTfL8cFdYJHujER2/IFT3zbnXOzSVLtovwT2XyS4cAwYN7Sz2AAbHO
-         QhQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=2PbUTDuXiAxR50haxEpsxltfONNocyGAYpvkm6Pt77c=;
-        b=HYj3AwNgO6CZgRM/q1r/UGYQeyYr9NDgAYozVGlB7lXoin05OVxRbLurY4R5y0BD4v
-         K4BjYBU1F+1JS2Gu99gVsJt7q1zIrRGzjekLNJ2z6P6bkYECehKJoqByMPcHWvj2XjXo
-         etUrzJB85hhJuG1caOLSKcBlO2P8aCcDEyyECipVS6CCcaVp3ePtKxhgErEfxuaIB2Yf
-         i1ApZ3piUPnmr4l8sYG5zKecS0Nm4T3shVYYt4I0IScDBOeibDhblkfq8XkCY2y1z1JC
-         Iu6jjs0A6m4DKxEja4s9gBsiT+9rZqMpj94MatJet0YFND13ju84940BtVhediOSLh6n
-         CvuA==
-X-Gm-Message-State: APjAAAVDzrVa8esZl63D9Cy49yffaKhZ3arIws34PsmcHvLiD0DYQP9A
-        yOcaCqG7XfqnlnrjdsOjwco9FmLAeUa7sCThDV94CQ==
-X-Google-Smtp-Source: APXvYqyQ0hLU7UwIkXoY/QKHPtDLXWNKslpvQscksQMWS+akarx5ZiaNucaVpZ6BllxPV6E6PXcqbQMtRLQ2JTb++yo=
-X-Received: by 2002:ab0:24d:: with SMTP id 71mr80022849uas.31.1559074564237;
- Tue, 28 May 2019 13:16:04 -0700 (PDT)
-MIME-Version: 1.0
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-Date:   Tue, 28 May 2019 13:15:53 -0700
-Message-ID: <CAJpBn1zrkKMteogJt__6zx6gE+=pO2P5Opv0fSNhZNm9GLGWDQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v3 1/1] net: mscc: ocelot: Implement port
- policers via tc command
-To:     Joergen Andreasen <joergen.andreasen@microchip.com>
-Cc:     Linux Netdev List <netdev@vger.kernel.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        Tue, 28 May 2019 16:18:54 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40827 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727075AbfE1USx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 16:18:53 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3A0ED9FFC5;
+        Tue, 28 May 2019 20:18:53 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C803D60C47;
+        Tue, 28 May 2019 20:18:50 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <6e061326-5feb-5471-c0c0-a364af5e82c3@schaufler-ca.com>
+References: <6e061326-5feb-5471-c0c0-a364af5e82c3@schaufler-ca.com> <6889f4f9-4ae0-8a92-a2fc-04151ad8ed9f@schaufler-ca.com> <10710.1559070135@warthog.procyon.org.uk>
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     dhowells@redhat.com, James Morris <jmorris@namei.org>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
         LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PULL] Smack: Restore the smackfsdef mount option
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <15804.1559074726.1@warthog.procyon.org.uk>
+Date:   Tue, 28 May 2019 21:18:46 +0100
+Message-ID: <15805.1559074726@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Tue, 28 May 2019 20:18:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 May 2019 14:49:17 +0200, Joergen Andreasen wrote:
-> Hardware offload of matchall classifier and police action are now
-> supported via the tc command.
-> Supported police parameters are: rate and burst.
->
-> Example:
->
-> Add:
-> tc qdisc add dev eth3 handle ffff: ingress
-> tc filter add dev eth3 parent ffff: prio 1 handle 2   \
->       matchall skip_sw                                \
->       action police rate 100Mbit burst 10000
->
-> Show:
-> tc -s -d qdisc show dev eth3
-> tc -s -d filter show dev eth3 ingress
->
-> Delete:
-> tc filter del dev eth3 parent ffff: prio 1
-> tc qdisc del dev eth3 handle ffff: ingress
->
-> Signed-off-by: Joergen Andreasen <joergen.andreasen@microchip.com>
+Casey Schaufler <casey@schaufler-ca.com> wrote:
 
-Looks reasonable :)
+> > 	 static const struct fs_parameter_spec smack_param_specs[] = {
+> > 	+	fsparam_string("fsdef",		Opt_fsdefault),
+> > 		fsparam_string("fsdefault",	Opt_fsdefault),
+> > 		fsparam_string("fsfloor",	Opt_fsfloor),
+> > 		fsparam_string("fshat",		Opt_fshat),
+> >
+> > but that all the option names in that table *do* need prefixing with
+> > "smack".
 
-Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Actually, you're right, we do need to add that *and* prefix it with "smack".
+
+> I'm not sure I follow the logic, because "mount -o smackfsdefault=Pop"
+> does what I would expect it to.
+
+Yes, I'm sure it does - for the cases you're testing - but it's filesystem and
+syscall dependent.  None of the filesystems currently ported to the mount API
+upstream override ->parse_monolithic(), but that changes with nfs, shmem and
+coda and will change with cifs too.
+
+It also changes if you use fsconfig() to supply the options because that goes
+through a different LSM hook (it uses fs_context_parse_param rather than
+sb_eat_lsm_opts).
+
+> > The way you enter the LSM is going to depend on whether
+> > generic_parse_monolithic() is called.  You're only going to enter this way
+> > if mount(2) is the syscall of entry and the filesystem doesn't override
+> > the ->parse_monolithic() option (none in the upstream kernel).
+> 
+> So you're saying that the code works for the mount(2) case,
+> but won't work for some other case? Are you planning a fix?
+> Will that fix include restoration of smackfsdef?
+
+I can do a fix, but testing it is a pain.
+
+David
