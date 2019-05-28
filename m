@@ -4,122 +4,115 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93996C04AB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 02:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3C8C04AB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 02:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5169E20823
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 02:34:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8E1F20823
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 02:36:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbfE1Ceq (ORCPT
+        id S1727792AbfE1Cgz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 22:34:46 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:38578 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727468AbfE1Cep (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 22:34:45 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5A3C41A020D;
-        Tue, 28 May 2019 04:34:43 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 99C641A021C;
-        Tue, 28 May 2019 04:34:39 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 1366C402CB;
-        Tue, 28 May 2019 10:34:35 +0800 (SGT)
-From:   Yuantian Tang <andy.tang@nxp.com>
-To:     shawnguo@kernel.org
-Cc:     leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Yuantian Tang <andy.tang@nxp.com>
-Subject: [PATCH v2] arm64: dts: ls1028a: Add temperature sensor node
-Date:   Tue, 28 May 2019 10:26:33 +0800
-Message-Id: <20190528022633.40124-1-andy.tang@nxp.com>
-X-Mailer: git-send-email 2.14.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 27 May 2019 22:36:55 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:17586 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727342AbfE1Cgz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 22:36:55 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 7F76DD1DE4B16BE386D3;
+        Tue, 28 May 2019 10:36:53 +0800 (CST)
+Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 28 May
+ 2019 10:36:46 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Chao Yu <yuchao0@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <devel@driverdev.osuosl.org>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, "Chao Yu" <chao@kernel.org>,
+        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH v2 2/2] staging: erofs: fix i_blocks calculation
+Date:   Tue, 28 May 2019 10:36:02 +0800
+Message-ID: <20190528023602.178923-1-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190528023147.94117-2-gaoxiang25@huawei.com>
+References: <20190528023147.94117-2-gaoxiang25@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.140.130.215]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add nxp sa56004 chip node for temperature monitor.
+For compressed files, i_blocks should not be calculated
+by using i_size. i_u.compressed_blocks is used instead.
 
-Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+In addition, i_blocks was miscalculated for non-compressed
+files previously, fix it as well.
+
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
-v2:
-	- change the node name and add vcc-supply
+change log v2:
+ - fix description in commit message
+ - fix to 'inode->i_blocks = nblks << LOG_SECTORS_PER_BLOCK'
 
- arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts | 15 +++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts | 15 +++++++++++++++
- 2 files changed, 30 insertions(+)
+Thanks,
+Gao Xiang
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-index 6571d0483c7a..f12e4f510d6e 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-@@ -47,6 +47,15 @@
- 		regulator-always-on;
- 	};
+ drivers/staging/erofs/inode.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/erofs/inode.c
+index 8da144943ed6..6e67e018784e 100644
+--- a/drivers/staging/erofs/inode.c
++++ b/drivers/staging/erofs/inode.c
+@@ -20,6 +20,7 @@ static int read_inode(struct inode *inode, void *data)
+ 	struct erofs_vnode *vi = EROFS_V(inode);
+ 	struct erofs_inode_v1 *v1 = data;
+ 	const unsigned int advise = le16_to_cpu(v1->i_advise);
++	erofs_blk_t nblks = 0;
  
-+	sb_3v3: regulator-sb3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3v3_vbus";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
- 	sound {
- 		compatible = "simple-audio-card";
- 		simple-audio-card,format = "i2s";
-@@ -147,6 +156,12 @@
- 				compatible = "atmel,24c512";
- 				reg = <0x57>;
- 			};
-+
-+			temperature-sensor@4c {
-+				compatible = "nxp,sa56004";
-+				reg = <0x4c>;
-+				vcc-supply = <&sb_3v3>;
-+			};
- 		};
+ 	vi->data_mapping_mode = __inode_data_mapping(advise);
  
- 		i2c@5 {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-index 235ca3a83dc3..e64c28983ec9 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-@@ -43,6 +43,15 @@
- 		regulator-always-on;
- 	};
+@@ -60,6 +61,10 @@ static int read_inode(struct inode *inode, void *data)
+ 			le32_to_cpu(v2->i_ctime_nsec);
  
-+	sb_3v3: regulator-sb3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3v3_vbus";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
+ 		inode->i_size = le64_to_cpu(v2->i_size);
 +
- 	sound {
- 		compatible = "simple-audio-card";
- 		simple-audio-card,format = "i2s";
-@@ -132,6 +141,12 @@
- 				compatible = "nxp,pcf2129";
- 				reg = <0x51>;
- 			};
-+
-+			temperature-sensor@4c {
-+				compatible = "nxp,sa56004";
-+				reg = <0x4c>;
-+				vcc-supply = <&sb_3v3>;
-+			};
- 		};
- 	};
- };
++		/* total blocks for compressed files */
++		if (vi->data_mapping_mode == EROFS_INODE_LAYOUT_COMPRESSION)
++			nblks = v2->i_u.compressed_blocks;
+ 	} else if (__inode_version(advise) == EROFS_INODE_LAYOUT_V1) {
+ 		struct erofs_sb_info *sbi = EROFS_SB(inode->i_sb);
+ 
+@@ -90,6 +95,8 @@ static int read_inode(struct inode *inode, void *data)
+ 			sbi->build_time_nsec;
+ 
+ 		inode->i_size = le32_to_cpu(v1->i_size);
++		if (vi->data_mapping_mode == EROFS_INODE_LAYOUT_COMPRESSION)
++			nblks = v1->i_u.compressed_blocks;
+ 	} else {
+ 		errln("unsupported on-disk inode version %u of nid %llu",
+ 		      __inode_version(advise), vi->nid);
+@@ -97,8 +104,11 @@ static int read_inode(struct inode *inode, void *data)
+ 		return -EIO;
+ 	}
+ 
+-	/* measure inode.i_blocks as the generic filesystem */
+-	inode->i_blocks = ((inode->i_size - 1) >> 9) + 1;
++	if (!nblks)
++		/* measure inode.i_blocks as generic filesystems */
++		inode->i_blocks = roundup(inode->i_size, EROFS_BLKSIZ) >> 9;
++	else
++		inode->i_blocks = nblks << LOG_SECTORS_PER_BLOCK;
+ 	return 0;
+ }
+ 
 -- 
 2.17.1
 
