@@ -2,166 +2,101 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD15C04AB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 02:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DCA7C04AB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 02:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BACA22075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 02:06:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JH/nrTU/"
+	by mail.kernel.org (Postfix) with ESMTP id 698A82081C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 02:09:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727929AbfE1CGt (ORCPT
+        id S1727952AbfE1CJs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 22:06:49 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37540 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727651AbfE1CGt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 22:06:49 -0400
-Received: by mail-pf1-f193.google.com with SMTP id a23so10466109pff.4;
-        Mon, 27 May 2019 19:06:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=qxW1II/TWa1kHc6PXECSj8J6z+9c391dAdBReksgqeU=;
-        b=JH/nrTU/wyfYzKCgVuNaFHqM3IGPWwG7PQJHf/Sw13nsJmsJe5pOZDmfStYntS+RXq
-         Hdhx1SOWgNUxK552+6tlgx+FXzHTYLNDrYVtA/h1DiDhAYkaDoldmafOf6B1rdq39AxD
-         KXbh+s+Pd7K4uem1LxurZg/KSP9pPTVMAJWjXSss4etWsm2ubatXrmDcXIWndaxZqGFu
-         fBB9PO5SF2hsPLZIQJSzqcDTd5FX21jaxO9B8ZXDFj10yAW7/TZWFqfqGe7cqNW27sa3
-         pv/BLW2VoeU96EpwxpVJdZE3fe6gRmz1hUfjn2O3pb7Mc+jX/HJbtjx11cSFtDZy0yth
-         o4dA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=qxW1II/TWa1kHc6PXECSj8J6z+9c391dAdBReksgqeU=;
-        b=Y5bVNtUc1JZaAHgdlo2ZPAelzFHNCoVjDdJVywBduSvq7Lkc4RpVBsVtPSTZPe8aGQ
-         hmRJkjBn3cihynNl3GHsAEDFk/MNNNfZa9/4cUK76kivPLZYUq3bHA91Mm81xNl4vjYp
-         HsKgX1jbDfe1eBGJ2FgIsQGKgdEgYbqCnbcLExI0qOlXw5snDXO0XgSYR6dqcqmzGnhI
-         jQ9dGBhDPJ7HeJIJJc0HDtYS9d7J7zkWmd1aIpa9WcNQFOkHU5Gf7XaYaq2h/V27AfI5
-         TQqeXZqTIr74L19KxluMsxfwCxtJFzf0HUv8DIPGyMydGW/Hf2ThqK0n+PIe5MIDaNO7
-         IF/A==
-X-Gm-Message-State: APjAAAWJvRuQyXcw0rlblP+gfhVy1KeGM+4FOG96cyzOzKZ7DSn8ODqi
-        BykG58ZmlCKmE93RVB6xuINBU4My
-X-Google-Smtp-Source: APXvYqxAYs7s/9irQiNKqkW/hl4q1JbHGJ/MTYwkmLSgNGAZ4Fu6OweBiY6zzqXQrSwoaI2LpyZalA==
-X-Received: by 2002:a62:e310:: with SMTP id g16mr45003473pfh.36.1559009208001;
-        Mon, 27 May 2019 19:06:48 -0700 (PDT)
-Received: from localhost.localdomain (ip68-101-123-102.oc.oc.cox.net. [68.101.123.102])
-        by smtp.gmail.com with ESMTPSA id t2sm12725808pfh.166.2019.05.27.19.06.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 May 2019 19:06:47 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     ioana.ciornei@nxp.com, olteanv@gmail.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net] Documentation: net-sysfs: Remove duplicate PHY device documentation
-Date:   Mon, 27 May 2019 19:06:38 -0700
-Message-Id: <20190528020643.646-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 27 May 2019 22:09:48 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:17169 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727858AbfE1CJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 22:09:48 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 7FD15975CEE8A2494546;
+        Tue, 28 May 2019 10:09:45 +0800 (CST)
+Received: from [127.0.0.1] (10.177.96.96) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Tue, 28 May 2019
+ 10:09:42 +0800
+Subject: =?UTF-8?Q?Re:_[PATCH_-next_v2]_staging:_kpc2000:_Remove_set_but_not?=
+ =?UTF-8?B?IHVzZWQgdmFyaWFibGUg4oCYc3RhdHVz4oCZ?=
+To:     <gregkh@linuxfoundation.org>, <jeremy@azazel.net>
+References: <20190525042642.78482-1-maowenan@huawei.com>
+ <20190525081321.121294-1-maowenan@huawei.com>
+CC:     <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>,
+        Sven Van Asbroeck <thesven73@gmail.com>
+From:   maowenan <maowenan@huawei.com>
+Message-ID: <69398d9c-68e1-e4c5-35f9-4bf09627e48a@huawei.com>
+Date:   Tue, 28 May 2019 10:09:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
+MIME-Version: 1.0
+In-Reply-To: <20190525081321.121294-1-maowenan@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.177.96.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Both sysfs-bus-mdio and sysfs-class-net-phydev contain the same
-duplication information. There is not currently any MDIO bus specific
-attribute, but there are PHY device (struct phy_device) specific
-attributes. Use the more precise description from sysfs-bus-mdio and
-carry that over to sysfs-class-net-phydev.
+please ignore v2 version.
+I will send v3 later according to Sven Van Asbroeck 's comments.
 
-Fixes: 86f22d04dfb5 ("net: sysfs: Document PHY device sysfs attributes")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- Documentation/ABI/testing/sysfs-bus-mdio      | 29 -------------------
- .../ABI/testing/sysfs-class-net-phydev        | 19 ++++++++----
- 2 files changed, 13 insertions(+), 35 deletions(-)
- delete mode 100644 Documentation/ABI/testing/sysfs-bus-mdio
-
-diff --git a/Documentation/ABI/testing/sysfs-bus-mdio b/Documentation/ABI/testing/sysfs-bus-mdio
-deleted file mode 100644
-index 491baaf4285f..000000000000
---- a/Documentation/ABI/testing/sysfs-bus-mdio
-+++ /dev/null
-@@ -1,29 +0,0 @@
--What:		/sys/bus/mdio_bus/devices/.../phy_id
--Date:		November 2012
--KernelVersion:	3.8
--Contact:	netdev@vger.kernel.org
--Description:
--		This attribute contains the 32-bit PHY Identifier as reported
--		by the device during bus enumeration, encoded in hexadecimal.
--		This ID is used to match the device with the appropriate
--		driver.
--
--What:		/sys/bus/mdio_bus/devices/.../phy_interface
--Date:		February 2014
--KernelVersion:	3.15
--Contact:	netdev@vger.kernel.org
--Description:
--		This attribute contains the PHY interface as configured by the
--		Ethernet driver during bus enumeration, encoded in string.
--		This interface mode is used to configure the Ethernet MAC with the
--		appropriate mode for its data lines to the PHY hardware.
--
--What:		/sys/bus/mdio_bus/devices/.../phy_has_fixups
--Date:		February 2014
--KernelVersion:	3.15
--Contact:	netdev@vger.kernel.org
--Description:
--		This attribute contains the boolean value whether a given PHY
--		device has had any "fixup" workaround running on it, encoded as
--		a boolean. This information is provided to help troubleshooting
--		PHY configurations.
-diff --git a/Documentation/ABI/testing/sysfs-class-net-phydev b/Documentation/ABI/testing/sysfs-class-net-phydev
-index 6ebabfb27912..2a5723343aba 100644
---- a/Documentation/ABI/testing/sysfs-class-net-phydev
-+++ b/Documentation/ABI/testing/sysfs-class-net-phydev
-@@ -11,24 +11,31 @@ Date:		February 2014
- KernelVersion:	3.15
- Contact:	netdev@vger.kernel.org
- Description:
--		Boolean value indicating whether the PHY device has
--		any fixups registered against it (phy_register_fixup)
-+		This attribute contains the boolean value whether a given PHY
-+		device has had any "fixup" workaround running on it, encoded as
-+		a boolean. This information is provided to help troubleshooting
-+		PHY configurations.
- 
- What:		/sys/class/mdio_bus/<bus>/<device>/phy_id
- Date:		November 2012
- KernelVersion:	3.8
- Contact:	netdev@vger.kernel.org
- Description:
--		32-bit hexadecimal value corresponding to the PHY device's OUI,
--		model and revision number.
-+		This attribute contains the 32-bit PHY Identifier as reported
-+		by the device during bus enumeration, encoded in hexadecimal.
-+		This ID is used to match the device with the appropriate
-+		driver.
- 
- What:		/sys/class/mdio_bus/<bus>/<device>/phy_interface
- Date:		February 2014
- KernelVersion:	3.15
- Contact:	netdev@vger.kernel.org
- Description:
--		String value indicating the PHY interface, possible
--		values are:.
-+		This attribute contains the PHY interface as configured by the
-+		Ethernet driver during bus enumeration, encoded in string.
-+		This interface mode is used to configure the Ethernet MAC with the
-+		appropriate mode for its data lines to the PHY hardware.
-+		Possible values are:
- 		<empty> (not available), mii, gmii, sgmii, tbi, rev-mii,
- 		rmii, rgmii, rgmii-id, rgmii-rxid, rgmii-txid, rtbi, smii
- 		xgmii, moca, qsgmii, trgmii, 1000base-x, 2500base-x, rxaui,
--- 
-2.17.1
+On 2019/5/25 16:13, Mao Wenan wrote:
+> Fixes gcc '-Wunused-but-set-variable' warning:
+> 
+> drivers/staging/kpc2000/kpc_spi/spi_driver.c: In function
+> ‘kp_spi_transfer_one_message’:
+> drivers/staging/kpc2000/kpc_spi/spi_driver.c:282:9: warning: variable
+> ‘status’ set but not used [-Wunused-but-set-variable]
+>      int status = 0;
+>          ^~~~~~
+> The variable 'status' is not used any more, remve it.
+> 
+> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+> ---
+>  v2: change the subject of the patch.
+> ---
+>  drivers/staging/kpc2000/kpc_spi/spi_driver.c | 3 ---
+>  1 file changed, 3 deletions(-)
+> 
+> diff --git a/drivers/staging/kpc2000/kpc_spi/spi_driver.c b/drivers/staging/kpc2000/kpc_spi/spi_driver.c
+> index 86df16547a92..16f9518f8d63 100644
+> --- a/drivers/staging/kpc2000/kpc_spi/spi_driver.c
+> +++ b/drivers/staging/kpc2000/kpc_spi/spi_driver.c
+> @@ -279,7 +279,6 @@ kp_spi_transfer_one_message(struct spi_master *master, struct spi_message *m)
+>      struct kp_spi       *kpspi;
+>      struct spi_transfer *transfer;
+>      union kp_spi_config sc;
+> -    int status = 0;
+>      
+>      spidev = m->spi;
+>      kpspi = spi_master_get_devdata(master);
+> @@ -332,7 +331,6 @@ kp_spi_transfer_one_message(struct spi_master *master, struct spi_message *m)
+>      /* do the transfers for this message */
+>      list_for_each_entry(transfer, &m->transfers, transfer_list) {
+>          if (transfer->tx_buf == NULL && transfer->rx_buf == NULL && transfer->len) {
+> -            status = -EINVAL;
+>              break;
+>          }
+>          
+> @@ -370,7 +368,6 @@ kp_spi_transfer_one_message(struct spi_master *master, struct spi_message *m)
+>              m->actual_length += count;
+>              
+>              if (count != transfer->len) {
+> -                status = -EIO;
+>                  break;
+>              }
+>          }
+> 
 
