@@ -2,97 +2,132 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07720C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C971AC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE3F52133F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:04:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8ABC2133F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:04:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbfE1PDy (ORCPT
+        id S1727243AbfE1PEK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 11:03:54 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45366 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726693AbfE1PDt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 11:03:49 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E1B5AACC4;
-        Tue, 28 May 2019 15:03:47 +0000 (UTC)
-Date:   Tue, 28 May 2019 17:03:45 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC] printk/sysrq: Don't play with console_loglevel
-Message-ID: <20190528150345.di2knfzmqfbwro3y@pathway.suse.cz>
-References: <20190528002412.1625-1-dima@arista.com>
- <20190528041500.GB26865@jagdpanzerIV>
- <20190528044619.GA3429@jagdpanzerIV>
- <20190528134227.xyb3622gjwu52q4r@pathway.suse.cz>
- <e564ee00-6a93-defd-4eab-e306bbfe8b01@i-love.sakura.ne.jp>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e564ee00-6a93-defd-4eab-e306bbfe8b01@i-love.sakura.ne.jp>
-User-Agent: NeoMutt/20170912 (1.9.0)
+        Tue, 28 May 2019 11:04:10 -0400
+Received: from foss.arm.com ([217.140.101.70]:58900 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726744AbfE1PDw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 11:03:52 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E14321684;
+        Tue, 28 May 2019 08:03:51 -0700 (PDT)
+Received: from e121650-lin.cambridge.arm.com (e121650-lin.cambridge.arm.com [10.1.196.108])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 428173F5AF;
+        Tue, 28 May 2019 08:03:50 -0700 (PDT)
+From:   Raphael Gault <raphael.gault@arm.com>
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     mingo@redhat.com, peterz@infradead.org, catalin.marinas@arm.com,
+        will.deacon@arm.com, acme@kernel.org, mark.rutland@arm.com,
+        Raphael Gault <raphael.gault@arm.com>
+Subject: [RFC 4/7] arm64: pmu: Add function implementation to update event index in userpage.
+Date:   Tue, 28 May 2019 16:03:17 +0100
+Message-Id: <20190528150320.25953-5-raphael.gault@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190528150320.25953-1-raphael.gault@arm.com>
+References: <20190528150320.25953-1-raphael.gault@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 2019-05-28 23:21:17, Tetsuo Handa wrote:
-> On 2019/05/28 22:42, Petr Mladek wrote:
-> >> Ahh.. OK, now I sort of remember why I gave up on this idea (see [1]
-> >> at the bottom, when it comes to uv_nmi_dump_state()) - printk_NMI and
-> >> printk-safe redirections.
-> >>
-> >> 	NMI
-> >> 		loglevel = NEW
-> >> 		printk -> printk_safe_nmi
-> >> 		loglevel = OLD
-> >>
-> >> 	iret
-> >>
-> >> 	IRQ
-> >> 		flush printk_safe_nmi -> printk
-> >> 		// At this point we don't remember about
-> >> 		// loglevel manipulation anymore
-> >> 	iret
-> > 
-> > printk_safe buffer preserves KERN_* headers. It should be
-> > possible to insert KERN_UNSUPPRESSED there.
-> 
-> But is context dependent buffer large enough to hold SysRq-t output?
-> I think that only main logbuf can become large enough to hold SysRq-t output.
+In order to be able to access the counter directly for userspace,
+we need to provide the index of the counter using the userpage.
+We thus need to override the event_idx function to retrieve and
+convert the perf_event index to armv8 hardware index.
 
-SysRq messages are stored directly into the main log buffer.
+Since the arm_pmu driver can be used by any implementation, even
+if not armv8, two components play a role into making sure the
+behaviour is correct and consistent with the PMU capabilities:
 
-The limited per-CPU buffers are needed only in printk_safe
-and NMI context. We discussed it here because KERN_UNSUPPRESSED
-allows to pass the information even from this context.
+* the ARMPMU_EL0_RD_CNTR flag which denotes the capability to access
+counter from userspace.
+* the event_idx call back, which is implemented and initialized by
+the PMU implementation: if no callback is provided, the default
+behaviour applies, returning 0 as index value.
 
-> We can add KERN_UNSUPPRESSED to SysRq's header line. But I don't think
-> that we can automatically add KERN_UNSUPPRESSED to SysRq's body lines
-> based on some context information. If we want to avoid manipulating
-> console_loglevel, we need to think about how to make sure that
-> KERN_UNSUPPRESSED is added to all lines from such context without
-> overflowing capacity of that buffer.
+Signed-off-by: Raphael Gault <raphael.gault@arm.com>
+---
+ arch/arm64/kernel/perf_event.c | 21 +++++++++++++++++++++
+ include/linux/perf/arm_pmu.h   |  2 ++
+ 2 files changed, 23 insertions(+)
 
-We could set this context in printk_context per-CPU variable.
+diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
+index 6164d389eed6..3dc1265540df 100644
+--- a/arch/arm64/kernel/perf_event.c
++++ b/arch/arm64/kernel/perf_event.c
+@@ -809,6 +809,22 @@ static void armv8pmu_clear_event_idx(struct pmu_hw_events *cpuc,
+ 		clear_bit(idx - 1, cpuc->used_mask);
+ }
+ 
++static int armv8pmu_access_event_idx(struct perf_event *event)
++{
++	if (!(event->hw.flags & ARMPMU_EL0_RD_CNTR))
++		return 0;
++
++	/*
++	 * We remap the cycle counter index to 32 to
++	 * match the offset applied to the rest of
++	 * the counter indeces.
++	 */
++	if (event->hw.idx == ARMV8_IDX_CYCLE_COUNTER)
++		return 32;
++
++	return event->hw.idx;
++}
++
+ /*
+  * Add an event filter to a given event.
+  */
+@@ -890,6 +906,8 @@ static int __armv8_pmuv3_map_event(struct perf_event *event,
+ 	if (armv8pmu_event_is_64bit(event))
+ 		event->hw.flags |= ARMPMU_EVT_64BIT;
+ 
++	event->hw.flags |= ARMPMU_EL0_RD_CNTR;
++
+ 	/* Only expose micro/arch events supported by this PMU */
+ 	if ((hw_event_id > 0) && (hw_event_id < ARMV8_PMUV3_MAX_COMMON_EVENTS)
+ 	    && test_bit(hw_event_id, armpmu->pmceid_bitmap)) {
+@@ -1010,6 +1028,8 @@ static int armv8_pmu_init(struct arm_pmu *cpu_pmu)
+ 	cpu_pmu->set_event_filter	= armv8pmu_set_event_filter;
+ 	cpu_pmu->filter_match		= armv8pmu_filter_match;
+ 
++	cpu_pmu->pmu.event_idx		= armv8pmu_access_event_idx;
++
+ 	return 0;
+ }
+ 
+@@ -1188,6 +1208,7 @@ void arch_perf_update_userpage(struct perf_event *event,
+ 	 */
+ 	freq = arch_timer_get_rate();
+ 	userpg->cap_user_time = 1;
++	userpg->cap_user_rdpmc = !!(event->hw.flags & ARMPMU_EL0_RD_CNTR);
+ 
+ 	clocks_calc_mult_shift(&userpg->time_mult, &shift, freq,
+ 			NSEC_PER_SEC, 0);
+diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
+index 4641e850b204..3bef390c1069 100644
+--- a/include/linux/perf/arm_pmu.h
++++ b/include/linux/perf/arm_pmu.h
+@@ -30,6 +30,8 @@
+  */
+ /* Event uses a 64bit counter */
+ #define ARMPMU_EVT_64BIT		1
++/* Allow access to hardware counter from userspace */
++#define ARMPMU_EL0_RD_CNTR		2
+ 
+ #define HW_OP_UNSUPPORTED		0xFFFF
+ #define C(_x)				PERF_COUNT_HW_CACHE_##_x
+-- 
+2.17.1
 
-Then we could easily add the set per-message flag in
-vprintk_store() for the normal/atomic context. And we
-could store an extra KERN_UNSUPPRESSED in printk_safe_log_store()
-for printk_safe and NMI context.
-
-Best Regards,
-Petr
