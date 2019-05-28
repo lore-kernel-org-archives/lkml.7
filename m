@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC01C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85ABBC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2B8E208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59938208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:06:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Q2Q/sGFS"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="XbjOcs4d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727340AbfE1JGI (ORCPT
+        id S1727115AbfE1JDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 05:06:08 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:47074 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727139AbfE1JDk (ORCPT
+        Tue, 28 May 2019 05:03:39 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:44981 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727038AbfE1JDe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 05:03:40 -0400
-Received: by mail-ed1-f68.google.com with SMTP id f37so30562767edb.13
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 02:03:39 -0700 (PDT)
+        Tue, 28 May 2019 05:03:34 -0400
+Received: by mail-ed1-f65.google.com with SMTP id b8so4731560edm.11
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 02:03:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ffwll.ch; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=jemw2QjWxU+UFHjYLKdEyQ9knTBj8Nqm3v5Mrc95+O8=;
-        b=Q2Q/sGFS+3ztGuIG6HjyW4WqtF83a09htVuw4GKSsgH3cHm7dGKzhjvGuCPzzPDkgL
-         E1/NRgZTaeTYcHOps+FhdcT1PbSFGvlgKFkIBRaH+zrG9UMsmLLURLcCTjDwxR0xLIN3
-         KwwuXSGHz0AEiTSHK9LXqpPeWcu8jfLUGcaEQ=
+        bh=OKOX602Fa7Fbm+vbgel7a44WqYHTJVV0M2SnTAYkwyc=;
+        b=XbjOcs4dHqJnV+UpCk3n+c1kQCjrOCXQqy+ipr/hlU/6I1NQ5nHAEzGop2tsgNjl1i
+         9Tu7wqCFwvpTcMG3rcRbnAtrjxRmaWQIlJSWJSG9NdgCSC8R+iKOe/dLKn7BQPvCbHiy
+         Us7KBVkIhKGzrJgZJY2qZbATBvZ7UMCUA5Jrc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=jemw2QjWxU+UFHjYLKdEyQ9knTBj8Nqm3v5Mrc95+O8=;
-        b=rgeU529eemuJ9TYcRgP8Lx++LMZ3UcXe9qCzoK3SVQ5z3fwtAaahVvEsuZAsEWOppE
-         vT6YMYDLN7k6RQq74LLkTDYtefjjoGcxHhttfxP4SoTq3vaPfEvZdQccSReTHD2EjVPV
-         8w5DKZlpXxyImzV8fCHhVovjRxV6r0L9Pq/sRklJBwZoWi5LLgbMW0Oq1J6LKh4rtHQt
-         UFrkuymJqDgqyXtgdN/lfItYu1F9zPA0mZF/XoxjH+pEbUi2uUYHpMlmTiAcr+ZqZ+gF
-         mIR6NwBAEtkoRZIKSORB+/W47oGNXjFdWAIVmaCdp5/oJE1FWuYx8nVbpCWlTD1rKU5A
-         AX3A==
-X-Gm-Message-State: APjAAAXv1dOMYX2gAPSocIqWT/WJcaypExMViJ3XmIQAU9sV9Dr/JDYo
-        5zUqZqrZi4HSwNt4gJSbKSQCM2ZbFVQ=
-X-Google-Smtp-Source: APXvYqzRmMQx8hio/CkC+ykYBbXTDds6GiLnz4oTtSmCC0xHsSsFWfJG1JCAR/ZOcV6FU9c5NjgHVQ==
-X-Received: by 2002:a50:ad2b:: with SMTP id y40mr126347451edc.237.1559034218893;
-        Tue, 28 May 2019 02:03:38 -0700 (PDT)
+        bh=OKOX602Fa7Fbm+vbgel7a44WqYHTJVV0M2SnTAYkwyc=;
+        b=jBnl0szb5f1IWa4AtY30IfAFhVP3HV3oVTS7wextPtm1B3uyr8D7F2NSll7huIPefy
+         1reWx5wMDMDkXt+fUJLA3/hlQ29oMzRuXnaJntzLE+nEA0T1Lj6jSH4HxsTceFGmgnen
+         VaAxiTHuFkF5il8fwIlVznYdYSpAXH4cQJnVqOlID4cW/3oxkOe2dvW4HGan2wLH/FTq
+         PEpLbrSFgAZNP1kL+DU8tpfMMiyZNFssnwL6DdCj57O0mWhWREqbwfCS/eJztobIsINv
+         rgWq15YPUI5+FYJ6Q+wqI8RjtbhHweAt3iP9+BkCIaZoANozgkRw57EOrtJR4Mi1m1HY
+         Xqag==
+X-Gm-Message-State: APjAAAXczUO/SHTo0Pzxas6oquKxYp5BXhiD4v6GuWBWl7ZpaLC6BY0E
+        3UNLyEN4AU1W8nUuLCWTLaA6EPQDa14=
+X-Google-Smtp-Source: APXvYqyL24FlvYKpJYYc56lCsYATWOVbIhcR8IC7LZtm5HN5vQe4w00rjmH/HxYYsyvnxUX6o2yynw==
+X-Received: by 2002:aa7:db0c:: with SMTP id t12mr128412092eds.170.1559034212171;
+        Tue, 28 May 2019 02:03:32 -0700 (PDT)
 Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id x49sm4072656edm.25.2019.05.28.02.03.37
+        by smtp.gmail.com with ESMTPSA id x49sm4072656edm.25.2019.05.28.02.03.30
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 May 2019 02:03:38 -0700 (PDT)
+        Tue, 28 May 2019 02:03:31 -0700 (PDT)
 From:   Daniel Vetter <daniel.vetter@ffwll.ch>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
@@ -61,119 +61,58 @@ Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
         Daniel Thompson <daniel.thompson@linaro.org>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Daniel Vetter <daniel.vetter@intel.com>,
         Sam Ravnborg <sam@ravnborg.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Peter Rosin <peda@axentia.se>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mikulas Patocka <mpatocka@redhat.com>
-Subject: [PATCH 19/33] fbdev: unify unlink_framebuffer paths
-Date:   Tue, 28 May 2019 11:02:50 +0200
-Message-Id: <20190528090304.9388-20-daniel.vetter@ffwll.ch>
+        Jens Frederich <jfrederich@gmail.com>,
+        Daniel Drake <dsd@laptop.org>,
+        Jon Nettleton <jon.nettleton@gmail.com>
+Subject: [PATCH 14/33] staging/olpc: lock_fb_info can't fail
+Date:   Tue, 28 May 2019 11:02:45 +0200
+Message-Id: <20190528090304.9388-15-daniel.vetter@ffwll.ch>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190528090304.9388-1-daniel.vetter@ffwll.ch>
 References: <20190528090304.9388-1-daniel.vetter@ffwll.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For some reasons the pm_vt_switch_unregister call was missing from the
-direct unregister_framebuffer path. Fix this.
+Simply because olpc never unregisters the damn thing. It also
+registers the framebuffer directly by poking around in fbdev
+core internals, so it's all around rather broken.
 
-v2: fbinfo->dev is used to decided whether unlink_framebuffer has been
-called already. I botched that in v1. Make this all clearer by
-inlining __unlink_framebuffer.
-
-v3: Fix typoe in subject (Maarten).
-
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Reviewed-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: "Michał Mirosław" <mirq-linux@rere.qmqm.pl>
-Cc: Peter Rosin <peda@axentia.se>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Mikulas Patocka <mpatocka@redhat.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jens Frederich <jfrederich@gmail.com>
+Cc: Daniel Drake <dsd@laptop.org>
+Cc: Jon Nettleton <jon.nettleton@gmail.com>
 ---
- drivers/video/fbdev/core/fbmem.c | 47 ++++++++++++++------------------
- 1 file changed, 20 insertions(+), 27 deletions(-)
+ drivers/staging/olpc_dcon/olpc_dcon.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
-index f3bcad30d3ba..bee45e9405b8 100644
---- a/drivers/video/fbdev/core/fbmem.c
-+++ b/drivers/video/fbdev/core/fbmem.c
-@@ -1722,15 +1722,30 @@ static void unbind_console(struct fb_info *fb_info)
- 	console_unlock();
- }
+diff --git a/drivers/staging/olpc_dcon/olpc_dcon.c b/drivers/staging/olpc_dcon/olpc_dcon.c
+index 6b714f740ac3..a254238be181 100644
+--- a/drivers/staging/olpc_dcon/olpc_dcon.c
++++ b/drivers/staging/olpc_dcon/olpc_dcon.c
+@@ -250,11 +250,7 @@ static bool dcon_blank_fb(struct dcon_priv *dcon, bool blank)
+ 	int err;
  
--static void __unlink_framebuffer(struct fb_info *fb_info);
--
--static void do_unregister_framebuffer(struct fb_info *fb_info)
-+void unlink_framebuffer(struct fb_info *fb_info)
- {
--	unbind_console(fb_info);
-+	int i;
-+
-+	i = fb_info->node;
-+	if (WARN_ON(i < 0 || i >= FB_MAX || registered_fb[i] != fb_info))
-+		return;
-+
-+	if (!fb_info->dev)
-+		return;
-+
-+	device_destroy(fb_class, MKDEV(FB_MAJOR, i));
- 
- 	pm_vt_switch_unregister(fb_info->dev);
- 
--	__unlink_framebuffer(fb_info);
-+	unbind_console(fb_info);
-+
-+	fb_info->dev = NULL;
-+}
-+EXPORT_SYMBOL(unlink_framebuffer);
-+
-+static void do_unregister_framebuffer(struct fb_info *fb_info)
-+{
-+	unlink_framebuffer(fb_info);
- 	if (fb_info->pixmap.addr &&
- 	    (fb_info->pixmap.flags & FB_PIXMAP_DEFAULT))
- 		kfree(fb_info->pixmap.addr);
-@@ -1753,28 +1768,6 @@ static void do_unregister_framebuffer(struct fb_info *fb_info)
- 	put_fb_info(fb_info);
- }
- 
--static void __unlink_framebuffer(struct fb_info *fb_info)
--{
--	int i;
--
--	i = fb_info->node;
--	if (WARN_ON(i < 0 || i >= FB_MAX || registered_fb[i] != fb_info))
--		return;
--
--	if (fb_info->dev) {
--		device_destroy(fb_class, MKDEV(FB_MAJOR, i));
--		fb_info->dev = NULL;
+ 	console_lock();
+-	if (!lock_fb_info(dcon->fbinfo)) {
+-		console_unlock();
+-		dev_err(&dcon->client->dev, "unable to lock framebuffer\n");
+-		return false;
 -	}
--}
--
--void unlink_framebuffer(struct fb_info *fb_info)
--{
--	__unlink_framebuffer(fb_info);
--
--	unbind_console(fb_info);
--}
--EXPORT_SYMBOL(unlink_framebuffer);
--
- /**
-  * remove_conflicting_framebuffers - remove firmware-configured framebuffers
-  * @a: memory range, users of which are to be removed
++	lock_fb_info(dcon->fbinfo);
+ 
+ 	dcon->ignore_fb_events = true;
+ 	err = fb_blank(dcon->fbinfo,
 -- 
 2.20.1
 
