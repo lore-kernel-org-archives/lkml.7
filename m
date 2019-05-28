@@ -4,24 +4,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77437C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 06:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33AC6C04E84
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 06:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 598772133F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 06:25:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DF6221871
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 06:25:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727763AbfE1GYo (ORCPT
+        id S1727939AbfE1GZS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 02:24:44 -0400
-Received: from muru.com ([72.249.23.125]:51442 "EHLO muru.com"
+        Tue, 28 May 2019 02:25:18 -0400
+Received: from muru.com ([72.249.23.125]:51416 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727609AbfE1GYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 02:24:43 -0400
+        id S1727569AbfE1GYg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 02:24:36 -0400
 Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id 5460580F3;
-        Tue, 28 May 2019 06:25:01 +0000 (UTC)
+        by muru.com (Postfix) with ESMTP id BBFBB8179;
+        Tue, 28 May 2019 06:24:54 +0000 (UTC)
 From:   Tony Lindgren <tony@atomide.com>
 To:     linux-omap@vger.kernel.org
 Cc:     Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>,
@@ -32,9 +32,9 @@ Cc:     Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>,
         Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH 10/13] bus: ti-sysc: Do rstctrl reset handling in two phases
-Date:   Mon, 27 May 2019 23:24:11 -0700
-Message-Id: <20190528062414.27192-11-tony@atomide.com>
+Subject: [PATCH 07/13] bus: ti-sysc: Handle swsup idle mode quirks
+Date:   Mon, 27 May 2019 23:24:08 -0700
+Message-Id: <20190528062414.27192-8-tony@atomide.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190528062414.27192-1-tony@atomide.com>
 References: <20190528062414.27192-1-tony@atomide.com>
@@ -45,15 +45,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need to deassert rstctrl resets before enabling clocks to avoid clock
-"failed to enable" errors. For asserting rstctrl reset, the clocks need
-to be enabled.
-
-As the reset controller status is not available for arrays, let's use
-devm_reset_control_get_optional() so we can get the status after reset.
-
-Note that depends on a proper PRM rstctrl driver, so far I've only
-tested this with earlier reset-simple patches.
+Some modules have idlemodes wired, but not completely functional. We have
+quirks for SWSUP_SIDLE and SWSUP_SIDLE_ACT to manage interconnect target
+modules without hardware support, but we've been only using them so far
+in legacy mode. Let's add support for SWSUP quirks in non-legacy mode too.
 
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
@@ -63,66 +58,44 @@ Signed-off-by: Tony Lindgren <tony@atomide.com>
 diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
 --- a/drivers/bus/ti-sysc.c
 +++ b/drivers/bus/ti-sysc.c
-@@ -483,7 +483,7 @@ static void sysc_clkdm_allow_idle(struct sysc *ddata)
- static int sysc_init_resets(struct sysc *ddata)
- {
- 	ddata->rsts =
--		devm_reset_control_array_get_optional_exclusive(ddata->dev);
-+		devm_reset_control_get_optional(ddata->dev, "rstctrl");
- 	if (IS_ERR(ddata->rsts))
- 		return PTR_ERR(ddata->rsts);
+@@ -872,10 +872,15 @@ static int sysc_enable_module(struct device *dev)
+ 	if (!idlemodes || regbits->sidle_shift < 0)
+ 		goto set_midle;
  
-@@ -1407,7 +1407,7 @@ static int sysc_legacy_init(struct sysc *ddata)
-  */
- static int sysc_rstctrl_reset_deassert(struct sysc *ddata, bool reset)
- {
--	int error;
-+	int error, val;
+-	best_mode = fls(ddata->cfg.sidlemodes) - 1;
+-	if (best_mode > SYSC_IDLE_MASK) {
+-		dev_err(dev, "%s: invalid sidlemode\n", __func__);
+-		return -EINVAL;
++	if (ddata->cfg.quirks & (SYSC_QUIRK_SWSUP_SIDLE |
++				 SYSC_QUIRK_SWSUP_SIDLE_ACT)) {
++		best_mode = SYSC_IDLE_NO;
++	} else {
++		best_mode = fls(ddata->cfg.sidlemodes) - 1;
++		if (best_mode > SYSC_IDLE_MASK) {
++			dev_err(dev, "%s: invalid sidlemode\n", __func__);
++			return -EINVAL;
++		}
+ 	}
  
- 	if (!ddata->rsts)
+ 	reg &= ~(SYSC_IDLE_MASK << regbits->sidle_shift);
+@@ -959,10 +964,14 @@ static int sysc_disable_module(struct device *dev)
+ 	if (!idlemodes || regbits->sidle_shift < 0)
  		return 0;
-@@ -1418,7 +1418,14 @@ static int sysc_rstctrl_reset_deassert(struct sysc *ddata, bool reset)
- 			return error;
+ 
+-	ret = sysc_best_idle_mode(idlemodes, &best_mode);
+-	if (ret) {
+-		dev_err(dev, "%s: invalid sidlemode\n", __func__);
+-		return ret;
++	if (ddata->cfg.quirks & SYSC_QUIRK_SWSUP_SIDLE) {
++		best_mode = SYSC_IDLE_FORCE;
++	} else {
++		ret = sysc_best_idle_mode(idlemodes, &best_mode);
++		if (ret) {
++			dev_err(dev, "%s: invalid sidlemode\n", __func__);
++			return ret;
++		}
  	}
  
--	return reset_control_deassert(ddata->rsts);
-+	error = reset_control_deassert(ddata->rsts);
-+	if (error == -EEXIST)
-+		return 0;
-+
-+	error = readx_poll_timeout(reset_control_status, ddata->rsts, val,
-+				   val == 0, 100, MAX_MODULE_SOFTRESET_WAIT);
-+
-+	return error;
- }
- 
- /*
-@@ -1476,12 +1483,8 @@ static int sysc_init_module(struct sysc *ddata)
- {
- 	int error = 0;
- 	bool manage_clocks = true;
--	bool reset = true;
- 
--	if (ddata->cfg.quirks & SYSC_QUIRK_NO_RESET_ON_INIT)
--		reset = false;
--
--	error = sysc_rstctrl_reset_deassert(ddata, reset);
-+	error = sysc_rstctrl_reset_deassert(ddata, false);
- 	if (error)
- 		return error;
- 
-@@ -1505,6 +1508,12 @@ static int sysc_init_module(struct sysc *ddata)
- 			goto err_opt_clocks;
- 	}
- 
-+	if (!(ddata->cfg.quirks & SYSC_QUIRK_NO_RESET_ON_INIT)) {
-+		error = sysc_rstctrl_reset_deassert(ddata, true);
-+		if (error)
-+			goto err_main_clocks;
-+	}
-+
- 	ddata->revision = sysc_read_revision(ddata);
- 	sysc_init_revision_quirks(ddata);
- 
+ 	reg &= ~(SYSC_IDLE_MASK << regbits->sidle_shift);
 -- 
 2.21.0
