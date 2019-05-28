@@ -2,102 +2,132 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C27DC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 22:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC683C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 22:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CDAE20B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 22:25:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DE63208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 22:27:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=indeed.com header.i=@indeed.com header.b="oZO5Y0/D"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="n+HTPMYY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727448AbfE1WZt (ORCPT
+        id S1727269AbfE1W1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 18:25:49 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:37129 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726693AbfE1WZt (ORCPT
+        Tue, 28 May 2019 18:27:01 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:39317 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726614AbfE1W1A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 18:25:49 -0400
-Received: by mail-it1-f194.google.com with SMTP id s16so417376ita.2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 15:25:48 -0700 (PDT)
+        Tue, 28 May 2019 18:27:00 -0400
+Received: by mail-lj1-f194.google.com with SMTP id a10so447699ljf.6
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 15:26:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=indeed.com; s=google;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=M9EQwLvAO9oXFChsQAamKMxe068zBhP/svdhcV040aU=;
-        b=oZO5Y0/DQnUWbpFkchPEk+KHgUZmbFsV53HDF5Y2snBl8sfk23OBpMHuYhiQnjogbn
-         Pypla7gFHvnyePY6+WprzNqKLk3FagutRMWa9TFsABvcrJGecUYKfDQk8MBHawwtWdLt
-         nT+OHEv2XEM1YDavmsCLBLsIK2pCcvpfcsM94=
+        bh=ktt9gYykDzHpqn8jF4Qn7x/F6J4TOsbrfkkqyFVpV5w=;
+        b=n+HTPMYY03EsfqfMQMiANp2md/hDS/jlVuamukt0nOAU7xPknfYtDemk0kZgZuFTHv
+         bRRyBB/UYNm0BKOmBOfzzowydINpzWcs+zehMLezF9i+fjo7UBomNhnCVNZY0EjYJ+5y
+         LmKd1wAWg/jiTQEzLus3rLiA0eqqVE5BX5YSZA2T3ue0t+KGYzatINIK83DcRmdhPCJD
+         VYpI6oVq4rK33VxUzojZ7YDWOJpYL64PE5qMqe7J+W/bnibjK9Pf7iJOmD0adHosNm20
+         IPQPZcunlCxBbtuQ16uU5TccmfLXarLNDZojREYCYpTIyI/q+PK5X7zIKyD4V82AbhxR
+         4d5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=M9EQwLvAO9oXFChsQAamKMxe068zBhP/svdhcV040aU=;
-        b=OahAtWE63PTwz/RXlUwmSv71pCdqOFXzvgoYzQ9eKdpW+IUK4Rk6Qj6wEROBy0qOX9
-         XUIyX6TRjkzhkubWtqcAFt9jWJR2BgFo5EVeva7Wj6/MlJB4T2yJYds6lNF+z1LclTKn
-         LLH67z635Qp+xfD7G7RDuS/hz9cGotYiM2yLVCScIbmlqkoF+aBzIwsTfx/ajuCFC4J9
-         spdhRWAX2gCcuZQPIuKVO7dWD4K4fki5Jgxjqr2eNlz9TBQgdVsL1zz1QYHXtR/ruR6F
-         M5GKJB3Bw7yp8/RwSaD3jNoCOZ0SPn3UYImqwAtOFO+4xkpFvfAC8vv1e8KX+afnWjZ4
-         TFzA==
-X-Gm-Message-State: APjAAAVEotD1kh+1lrUcQfHYnPKYt6jCbRdJTJKrGyBv11Ypax237oxo
-        K8djqbFDApCYB+Qzr7b3Hr2NE4xMtnKGma8H4zZShw==
-X-Google-Smtp-Source: APXvYqwjrxpOFdzc5YSwWMqBJZhisJgsSpvWXZgotkxIyikt6pPN38HtmxmJRw/90O11/yml8aEQ+U4Iies2fr6ATd8=
-X-Received: by 2002:a24:680c:: with SMTP id v12mr4820680itb.67.1559082348194;
- Tue, 28 May 2019 15:25:48 -0700 (PDT)
+        bh=ktt9gYykDzHpqn8jF4Qn7x/F6J4TOsbrfkkqyFVpV5w=;
+        b=GWH2QqAtJzb2Kb02nP9zxiVzuQlvadEhkn9rnm8bIuR9Ta8yOfXr6CsxDJCkNg7ZA2
+         TGK5mt27aGtADj4U6s9oU5+jmn3Md/blUPdPdsEicPOCyxudFYkiJToWrL83TROD7Y1a
+         Be8OYc4y15WPIXFzwzQS/w2q8FA6jb5UqsFipyCjbUvdKHQPXeByrSDbjaSgomLlS/uL
+         bGXVTVja5HBBCA0ToCZy5w17S1Idmv7MT+cx8jG1wQewRj7LQQREr9HRbuv2ZSpqopaR
+         7SRxqazl1yvBe2SOg5CS9WlBaO5XgRTQVmjx12pNUxPdGahxKMoOPsRnwyVR27LDmH1K
+         fsUA==
+X-Gm-Message-State: APjAAAVB9qZwGtPGFbso8Q2+kXG9Tyzy5cIwM6m27R5Yz23baNBsxRtK
+        8AbzE6NUeN/m4Drwraw1sDgxbLSIk8fTphhv/PNv
+X-Google-Smtp-Source: APXvYqxDbW1InkCBbmSLm8KlqXmvlXu3oe3jcdB9CqBRbawDuAW8nu9Cieu8BrGQMf+AwTidy9xNra96kS1tITFYFCY=
+X-Received: by 2002:a2e:9106:: with SMTP id m6mr425785ljg.164.1559082418552;
+ Tue, 28 May 2019 15:26:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <1558121424-2914-1-git-send-email-chiluk+linux@indeed.com>
- <1558637087-20283-1-git-send-email-chiluk+linux@indeed.com>
- <1558637087-20283-2-git-send-email-chiluk+linux@indeed.com>
- <CAFTs51W0KdK4nw6wydn2HjNYvFRC8DYMmVeKX9FAe+4YUGEAZg@mail.gmail.com>
- <20190524143204.GB4684@lorien.usersys.redhat.com> <CAC=E7cXxsyMLw1PR+8QchTH8FYL7WX6_8LBVdqueR1yjW+VVkQ@mail.gmail.com>
- <CAFTs51Vm258CkDXi_Jj_cGOMotTvhdYR_VW8aUwAUvgistZOFQ@mail.gmail.com>
- <CAC=E7cXVrGRKMNkJPhd4fJi7wgdYk=YcXPV7B8GVNL5M69BarQ@mail.gmail.com> <CAFTs51VhpDk9iW5UT62CkPCN3SjgUHHO1nVqhe+ssHMYqou6Bg@mail.gmail.com>
-In-Reply-To: <CAFTs51VhpDk9iW5UT62CkPCN3SjgUHHO1nVqhe+ssHMYqou6Bg@mail.gmail.com>
-From:   Dave Chiluk <chiluk+linux@indeed.com>
-Date:   Tue, 28 May 2019 17:25:22 -0500
-Message-ID: <CAC=E7cVrLFDOm3uNQ_45DzmMVJ_i9bNvjsi7yRPaPe0HcaykUg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] sched/fair: Fix low cpu usage with high throttling
- by removing expiration of cpu-local slices
-To:     Peter Oskolkov <posk@posk.io>
-Cc:     Phil Auld <pauld@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, cgroups@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Brendan Gregg <bgregg@netflix.com>,
-        Kyle Anderson <kwa@yelp.com>,
-        Gabriel Munos <gmunoz@netflix.com>,
-        John Hammond <jhammond@indeed.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        Ben Segall <bsegall@google.com>
+References: <cover.1554732921.git.rgb@redhat.com> <20190422113810.GA27747@hmswarspite.think-freely.org>
+ <CAHC9VhQYPF2ma_W+hySbQtfTztf=K1LTFnxnyVK0y9VYxj-K=w@mail.gmail.com> <509ea6b0-1ac8-b809-98c2-37c34dd98ca3@redhat.com>
+In-Reply-To: <509ea6b0-1ac8-b809-98c2-37c34dd98ca3@redhat.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Tue, 28 May 2019 18:26:47 -0400
+Message-ID: <CAHC9VhRW9f6GbhvvfifbOzd9p=PgdB2gq1E7tACcaqvfb85Y8A@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V6 00/10] audit: implement container identifier
+To:     Dan Walsh <dwalsh@redhat.com>
+Cc:     Neil Horman <nhorman@tuxdriver.com>,
+        Richard Guy Briggs <rgb@redhat.com>,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
+        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
+        Mrunal Patel <mpatel@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 5:07 PM Peter Oskolkov <posk@posk.io> wrote:
-> Linux CPU scheduling tail latency is a well-known issue and a major
-> pain point in some workloads:
-> https://www.google.com/search?q=linux+cpu+scheduling+tail+latency
+On Tue, May 28, 2019 at 5:54 PM Daniel Walsh <dwalsh@redhat.com> wrote:
 >
-> Even assuming that nobody noticed this particular cause
-> of CPU scheduling latencies, it does not mean the problem should be waved
-> away. At least it should be documented, if at this point it decided that
-> it is difficult to address it in a meaningful way. And, preferably, a way
-> to address the issue later on should be discussed and hopefully agreed to.
+> On 4/22/19 9:49 AM, Paul Moore wrote:
+> > On Mon, Apr 22, 2019 at 7:38 AM Neil Horman <nhorman@tuxdriver.com> wrote:
+> >> On Mon, Apr 08, 2019 at 11:39:07PM -0400, Richard Guy Briggs wrote:
+> >>> Implement kernel audit container identifier.
+> >> I'm sorry, I've lost track of this, where have we landed on it? Are we good for
+> >> inclusion?
+> > I haven't finished going through this latest revision, but unless
+> > Richard made any significant changes outside of the feedback from the
+> > v5 patchset I'm guessing we are "close".
+> >
+> > Based on discussions Richard and I had some time ago, I have always
+> > envisioned the plan as being get the kernel patchset, tests, docs
+> > ready (which Richard has been doing) and then run the actual
+> > implemented API by the userland container folks, e.g. cri-o/lxc/etc.,
+> > to make sure the actual implementation is sane from their perspective.
+> > They've already seen the design, so I'm not expecting any real
+> > surprises here, but sometimes opinions change when they have actual
+> > code in front of them to play with and review.
+> >
+> > Beyond that, while the cri-o/lxc/etc. folks are looking it over,
+> > whatever additional testing we can do would be a big win.  I'm
+> > thinking I'll pull it into a separate branch in the audit tree
+> > (audit/working-container ?) and include that in my secnext kernels
+> > that I build/test on a regular basis; this is also a handy way to keep
+> > it based against the current audit/next branch.  If any changes are
+> > needed Richard can either chose to base those changes on audit/next or
+> > the separate audit container ID branch; that's up to him.  I've done
+> > this with other big changes in other trees, e.g. SELinux, and it has
+> > worked well to get some extra testing in and keep the patchset "merge
+> > ready" while others outside the subsystem look things over.
+> >
+> Mrunal Patel (maintainer of CRI-O) and I have reviewed the API, and
+> believe this is something we can work on in the container runtimes team
+> to implement the container auditing code in CRI-O and Podman.
 
-Pursuing reducing tail latencies for our web application is the
-precise reason I created this patch set.  Those applications that
-previously were responding in 20ms 95% where now taking 220ms.  Those
-were correctly sized applications prior to 512ac999. After which, they
-started seeing massive increases in their latencies  due to hitting
-throttling with lower than quota amounts of cpu usage.
+Thanks Dan.  If I pulled this into a branch and built you some test
+kernels to play with, any idea how long it might take to get a proof
+of concept working on the cri-o side?
 
-I'll see if I can rework the documentation.  Any specific
-suggestions for how that can be worded would be appreciated.
+FWIW, I've also reached out to some of the LXC folks I know to get
+their take on the API.  I think if we can get two different container
+runtimes to give the API a thumbs-up then I think we are in good shape
+with respect to the userspace interface.
+
+I just finished looking over the last of the pending audit kernel
+patches that were queued waiting for the merge window to open so this
+is next on my list to look at.  I plan to start doing that
+tonight/tomorrow, and as long as the changes between v5/v6 are not
+that big, it shouldn't take too long.
+
+-- 
+paul moore
+www.paul-moore.com
