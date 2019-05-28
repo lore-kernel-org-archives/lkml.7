@@ -3,71 +3,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4692DC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:40:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F53AC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3B3D2173B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:40:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 113B421734
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:41:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727340AbfE1Rkb (ORCPT
+        id S1727498AbfE1Rll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 13:40:31 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:33706 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726492AbfE1Rkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 13:40:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C9AE780D;
-        Tue, 28 May 2019 10:40:30 -0700 (PDT)
-Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0C1B53F59C;
-        Tue, 28 May 2019 10:40:29 -0700 (PDT)
-Subject: Re: [PATCH v4 00/30] coresight: Support for ACPI bindings
-To:     mathieu.poirier@linaro.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        coresight@lists.linaro.org
-References: <1558521304-27469-1-git-send-email-suzuki.poulose@arm.com>
- <CANLsYkzRXXB1EFpWHn6JN_6pfOm-1TvVgiJY2MKExhifiBakBQ@mail.gmail.com>
- <CANLsYkzK7N9Bt6E6f187LaDydeC5afMp=LjMuvhFYKbij_SyjA@mail.gmail.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <24558133-c66a-018d-3ef6-1cd963302109@arm.com>
-Date:   Tue, 28 May 2019 18:40:28 +0100
+        Tue, 28 May 2019 13:41:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51366 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727246AbfE1Rll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 13:41:41 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6F89730833AF;
+        Tue, 28 May 2019 17:41:38 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-85.bos.redhat.com [10.18.17.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 45C4B1019607;
+        Tue, 28 May 2019 17:41:35 +0000 (UTC)
+Subject: Re: [PATCH v5 5/7] mm: rework non-root kmem_cache lifecycle
+ management
+To:     Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc:     Roman Gushchin <guro@fb.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Christoph Lameter <cl@linux.com>, cgroups@vger.kernel.org
+References: <20190521200735.2603003-1-guro@fb.com>
+ <20190521200735.2603003-6-guro@fb.com>
+ <20190528170828.zrkvcdsj3d3jzzzo@esperanza>
+ <96b8a923-49e4-f13e-b1e3-3df4598d849e@redhat.com>
+ <20190528173959.h4hq55b3ajlfpjrk@esperanza>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <518419c5-ee74-d9a1-c01c-f1a3306d2d34@redhat.com>
+Date:   Tue, 28 May 2019 13:41:34 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <CANLsYkzK7N9Bt6E6f187LaDydeC5afMp=LjMuvhFYKbij_SyjA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <20190528173959.h4hq55b3ajlfpjrk@esperanza>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 28 May 2019 17:41:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mathieu,
+On 5/28/19 1:39 PM, Vladimir Davydov wrote:
+> On Tue, May 28, 2019 at 01:37:50PM -0400, Waiman Long wrote:
+>> On 5/28/19 1:08 PM, Vladimir Davydov wrote:
+>>>>  static void flush_memcg_workqueue(struct kmem_cache *s)
+>>>>  {
+>>>> +	/*
+>>>> +	 * memcg_params.dying is synchronized using slab_mutex AND
+>>>> +	 * memcg_kmem_wq_lock spinlock, because it's not always
+>>>> +	 * possible to grab slab_mutex.
+>>>> +	 */
+>>>>  	mutex_lock(&slab_mutex);
+>>>> +	spin_lock(&memcg_kmem_wq_lock);
+>>>>  	s->memcg_params.dying = true;
+>>>> +	spin_unlock(&memcg_kmem_wq_lock);
+>>> I would completely switch from the mutex to the new spin lock -
+>>> acquiring them both looks weird.
+>>>
+>>>>  	mutex_unlock(&slab_mutex);
+>>>>  
+>>>>  	/*
+>> There are places where the slab_mutex is held and sleeping functions
+>> like kvzalloc() are called. I understand that taking both mutex and
+>> spinlocks look ugly, but converting all the slab_mutex critical sections
+>> to spinlock critical sections will be a major undertaking by itself. So
+>> I would suggest leaving that for now.
+> I didn't mean that. I meant taking spin_lock wherever we need to access
+> the 'dying' flag, even if slab_mutex is held. So that we don't need to
+> take mutex_lock in flush_memcg_workqueue, where it's used solely for
+> 'dying' synchronization.
 
-On 28/05/2019 18:36, Mathieu Poirier wrote:
-> On Tue, 28 May 2019 at 11:32, Mathieu Poirier
-> <mathieu.poirier@linaro.org> wrote:
->>
+OK, that makes sense. Thanks for the clarification.
 
-...
-
->>
->> I have applied this set.
-
-Thanks.
-
-> 
-> As Leo pointed out it would be interesting to update the documentation
-> in "Documentation/trace/coresight.txt".
-
-I am on it, will send it out soon.
-
-Cheers
-Suzuki
-
+Cheers,
+Longman
 
