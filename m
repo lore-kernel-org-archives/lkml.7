@@ -2,72 +2,143 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C678C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F07C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FB5C205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:17:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A542206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:19:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbfE1ORV (ORCPT
+        id S1727192AbfE1OT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 10:17:21 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:38288 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1727526AbfE1ORV (ORCPT
+        Tue, 28 May 2019 10:19:56 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39098 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726532AbfE1OT4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 10:17:21 -0400
-Received: (qmail 1747 invoked by uid 2102); 28 May 2019 10:17:19 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 28 May 2019 10:17:19 -0400
-Date:   Tue, 28 May 2019 10:17:19 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Kalle Valo <kvalo@codeaurora.org>
-cc:     Christian Lamparter <chunkeey@gmail.com>,
-        syzbot <syzbot+200d4bb11b23d929335f@syzkaller.appspotmail.com>,
-        <davem@davemloft.net>, <andreyknvl@google.com>,
-        <syzkaller-bugs@googlegroups.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>
-Subject: Re: [PATCH] network: wireless: p54u: Fix race between disconnect
- and firmware loading
-In-Reply-To: <8736kyvkw9.fsf@purkki.adurom.net>
-Message-ID: <Pine.LNX.4.44L0.1905281014340.1564-100000@iolanthe.rowland.org>
-MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+        Tue, 28 May 2019 10:19:56 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4SEIfCE098398
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 10:19:54 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ss5m2kfqq-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 10:19:53 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Tue, 28 May 2019 15:09:39 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 28 May 2019 15:09:34 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4SE9XAf34406474
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 May 2019 14:09:33 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 606A0AE053;
+        Tue, 28 May 2019 14:09:33 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4FED4AE051;
+        Tue, 28 May 2019 14:09:31 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.109.224])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 28 May 2019 14:09:31 +0000 (GMT)
+Subject: Re: [PATCH v10 12/12] ima: Store the measurement again when
+ appraising a modsig
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        linux-integrity@vger.kernel.org
+Cc:     linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        David Howells <dhowells@redhat.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "AKASHI, Takahiro" <takahiro.akashi@linaro.org>
+Date:   Tue, 28 May 2019 10:09:20 -0400
+In-Reply-To: <20190418035120.2354-13-bauerman@linux.ibm.com>
+References: <20190418035120.2354-1-bauerman@linux.ibm.com>
+         <20190418035120.2354-13-bauerman@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19052814-4275-0000-0000-0000033962A2
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052814-4276-0000-0000-000038490AD0
+Message-Id: <1559052560.4090.14.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-28_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905280093
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 May 2019, Kalle Valo wrote:
+Hi Thiago,
 
-> The correct prefix is "p54:", but I can fix that during commit.
-
-Oh, okay, thanks.
-
-> > Index: usb-devel/drivers/net/wireless/intersil/p54/p54usb.c
-> > ===================================================================
-> > --- usb-devel.orig/drivers/net/wireless/intersil/p54/p54usb.c
-> > +++ usb-devel/drivers/net/wireless/intersil/p54/p54usb.c
-> > @@ -33,6 +33,8 @@ MODULE_ALIAS("prism54usb");
-> >  MODULE_FIRMWARE("isl3886usb");
-> >  MODULE_FIRMWARE("isl3887usb");
-> >  
-> > +static struct usb_driver p54u_driver;
+On Thu, 2019-04-18 at 00:51 -0300, Thiago Jung Bauermann wrote:
+> If the IMA template contains the "modsig" or "d-modsig" field, then the
+> modsig should be added to the measurement list when the file is appraised.
 > 
-> How is it safe to use static variables from a wireless driver? For
-> example, what if there are two p54 usb devices on the host? How do we
-> avoid a race in that case?
+> And that is what normally happens, but if a measurement rule caused a file
+> containing a modsig to be measured before a different rule causes it to be
+> appraised, the resulting measurement entry will not contain the modsig
+> because it is only fetched during appraisal. When the appraisal rule
+> triggers, it won't store a new measurement containing the modsig because
+> the file was already measured.
+> 
+> We need to detect that situation and store an additional measurement with
+> the modsig. This is done by adding an IMA_MEASURE action flag if we read a
+> modsig and the IMA template contains a modsig field.
 
-There is no race.  This structure is not per-device; it refers only to
-the driver.  In fact, the line above is only a forward declaration --
-the actual definition of p54u_driver was already in the source file.
+With the new per policy rule "template" support being added, this
+patch needs to be modified so that the per policy "template" format is
+checked.  ima_template_has_modsig() should be called with the
+template_desc being used.
 
-Alan Stern
+thanks,
+
+Mimi
+
+
+> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+> index 8e6475854351..f91ed4189f98 100644
+> --- a/security/integrity/ima/ima_main.c
+> +++ b/security/integrity/ima/ima_main.c
+> @@ -282,9 +282,17 @@ static int process_measurement(struct file *file, const struct cred *cred,
+>  		/* read 'security.ima' */
+>  		xattr_len = ima_read_xattr(file_dentry(file), &xattr_value);
+>  
+> -		/* Read the appended modsig if allowed by the policy. */
+> -		if (iint->flags & IMA_MODSIG_ALLOWED)
+> -			ima_read_modsig(func, buf, size, &modsig);
+> +		/*
+> +		 * Read the appended modsig, if allowed by the policy, and allow
+> +		 * an additional measurement list entry, if needed, based on the
+> +		 * template format.
+> +		 */
+> +		if (iint->flags & IMA_MODSIG_ALLOWED) {
+> +			rc = ima_read_modsig(func, buf, size, &modsig);
+> +
+> +			if (!rc && ima_template_has_modsig())
+> +				action |= IMA_MEASURE;
+> +		}
+> 
 
