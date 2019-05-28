@@ -6,22 +6,22 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1809EC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 06:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2085EC04E84
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 06:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F12792133F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 06:24:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03E612133F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 06:24:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727679AbfE1GYk (ORCPT
+        id S1726921AbfE1GYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 02:24:40 -0400
-Received: from muru.com ([72.249.23.125]:51402 "EHLO muru.com"
+        Tue, 28 May 2019 02:24:41 -0400
+Received: from muru.com ([72.249.23.125]:51424 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727521AbfE1GYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 02:24:34 -0400
+        id S1727609AbfE1GYi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 02:24:38 -0400
 Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id A9F2B8123;
-        Tue, 28 May 2019 06:24:52 +0000 (UTC)
+        by muru.com (Postfix) with ESMTP id F149A812F;
+        Tue, 28 May 2019 06:24:56 +0000 (UTC)
 From:   Tony Lindgren <tony@atomide.com>
 To:     linux-omap@vger.kernel.org
 Cc:     Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>,
@@ -32,9 +32,9 @@ Cc:     Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>,
         Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH 06/13] bus: ti-sysc: Handle clockactivity for enable and disable
-Date:   Mon, 27 May 2019 23:24:07 -0700
-Message-Id: <20190528062414.27192-7-tony@atomide.com>
+Subject: [PATCH 08/13] bus: ti-sysc: Set ENAWAKEUP if available
+Date:   Mon, 27 May 2019 23:24:09 -0700
+Message-Id: <20190528062414.27192-9-tony@atomide.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190528062414.27192-1-tony@atomide.com>
 References: <20190528062414.27192-1-tony@atomide.com>
@@ -45,36 +45,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Modules with clockactivity need it configured during enable.
+Some modules have ENAWAKEUP bit that we need to configure when not
+relying on platform data callbacks.
 
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
- drivers/bus/ti-sysc.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/bus/ti-sysc.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
 --- a/drivers/bus/ti-sysc.c
 +++ b/drivers/bus/ti-sysc.c
-@@ -845,6 +845,7 @@ static void sysc_show_registers(struct sysc *ddata)
- }
- 
- #define SYSC_IDLE_MASK	(SYSC_NR_IDLEMODES - 1)
-+#define SYSC_CLOCACT_ICK	2
- 
- /* Caller needs to manage sysc_clkdm_deny_idle() and sysc_clkdm_allow_idle() */
- static int sysc_enable_module(struct device *dev)
-@@ -860,6 +861,12 @@ static int sysc_enable_module(struct device *dev)
- 	regbits = ddata->cap->regbits;
- 	reg = sysc_read(ddata, ddata->offsets[SYSC_SYSCONFIG]);
- 
-+	/* Set CLOCKACTIVITY, we only use it for ick */
-+	if (regbits->clkact_shift >= 0 &&
-+	    (ddata->cfg.quirks & SYSC_QUIRK_USE_CLOCKACT ||
-+	     ddata->cfg.sysc_val & BIT(regbits->clkact_shift)))
-+		reg |= SYSC_CLOCACT_ICK << regbits->clkact_shift;
+@@ -881,6 +881,11 @@ static int sysc_enable_module(struct device *dev)
+ 			dev_err(dev, "%s: invalid sidlemode\n", __func__);
+ 			return -EINVAL;
+ 		}
 +
- 	/* Set SIDLE mode */
- 	idlemodes = ddata->cfg.sidlemodes;
- 	if (!idlemodes || regbits->sidle_shift < 0)
++		/* Set WAKEUP */
++		if (regbits->enwkup_shift >= 0 &&
++		    ddata->cfg.sysc_val & BIT(regbits->enwkup_shift))
++			reg |= BIT(regbits->enwkup_shift);
+ 	}
+ 
+ 	reg &= ~(SYSC_IDLE_MASK << regbits->sidle_shift);
 -- 
 2.21.0
