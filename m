@@ -2,99 +2,110 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7247C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC4E0C072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D2DF2070D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:56:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C01AE2070D
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:57:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbfE1K4y (ORCPT
+        id S1726889AbfE1K4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 06:56:54 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55006 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726912AbfE1K4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 06:56:47 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 70E1CF74CF;
-        Tue, 28 May 2019 10:56:47 +0000 (UTC)
-Received: from steredhat.redhat.com (ovpn-117-13.ams2.redhat.com [10.36.117.13])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8F19260BE2;
-        Tue, 28 May 2019 10:56:45 +0000 (UTC)
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Michael S . Tsirkin" <mst@redhat.com>
-Subject: [PATCH 4/4] vsock/virtio: free used buffers during the .remove()
-Date:   Tue, 28 May 2019 12:56:23 +0200
-Message-Id: <20190528105623.27983-5-sgarzare@redhat.com>
-In-Reply-To: <20190528105623.27983-1-sgarzare@redhat.com>
-References: <20190528105623.27983-1-sgarzare@redhat.com>
+        Tue, 28 May 2019 06:56:46 -0400
+Received: from icp-osb-irony-out6.external.iinet.net.au ([203.59.1.106]:59449
+        "EHLO icp-osb-irony-out6.external.iinet.net.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726282AbfE1K4o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 06:56:44 -0400
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2AsAACTEu1c//aqqnwNWBkBAQEBAQE?=
+ =?us-ascii?q?BAQEBAQEHAQEBAQEBgWWEJoQTk1kBAQEBAQEGgTWJT4lwhj4DVAkBAQEBAQE?=
+ =?us-ascii?q?BAQE3AQEBhD8CgwE4EwEDAQEBBAEBAQEDAYZgAQEBAyMVQRALGAICJgICVwY?=
+ =?us-ascii?q?BDAYCAQGDHoF3pz1xgS+FR4McgUaBDCiLaniBB4E4gjY1PodOglgEjVuGApQ?=
+ =?us-ascii?q?dWQgBgg+OZYQqIYIfimaJRC2MQZgGV4EhMxoIKAiDJ4IYGo4yYI8WAQE?=
+X-IPAS-Result: =?us-ascii?q?A2AsAACTEu1c//aqqnwNWBkBAQEBAQEBAQEBAQEHAQEBA?=
+ =?us-ascii?q?QEBgWWEJoQTk1kBAQEBAQEGgTWJT4lwhj4DVAkBAQEBAQEBAQE3AQEBhD8Cg?=
+ =?us-ascii?q?wE4EwEDAQEBBAEBAQEDAYZgAQEBAyMVQRALGAICJgICVwYBDAYCAQGDHoF3p?=
+ =?us-ascii?q?z1xgS+FR4McgUaBDCiLaniBB4E4gjY1PodOglgEjVuGApQdWQgBgg+OZYQqI?=
+ =?us-ascii?q?YIfimaJRC2MQZgGV4EhMxoIKAiDJ4IYGo4yYI8WAQE?=
+X-IronPort-AV: E=Sophos;i="5.60,521,1549900800"; 
+   d="scan'208";a="163258800"
+Received: from 124-170-170-246.dyn.iinet.net.au (HELO [192.168.0.106]) ([124.170.170.246])
+  by icp-osb-irony-out6.iinet.net.au with ESMTP; 28 May 2019 18:56:39 +0800
+Subject: Re: [PATCH] binfmt_flat: make load_flat_shared_library() work
+To:     Jann Horn <jannh@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nicolas Pitre <nicolas.pitre@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-m68k@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org
+References: <20190524201817.16509-1-jannh@google.com>
+ <20190525144304.e2b9475a18a1f78a964c5640@linux-foundation.org>
+ <CAG48ez36xJ9UA8gWef3+1rHQwob5nb8WP3RqnbT8GEOV9Z38jA@mail.gmail.com>
+From:   Greg Ungerer <gerg@linux-m68k.org>
+Message-ID: <6956cfe5-90d4-aad4-48e3-66b0ece91fed@linux-m68k.org>
+Date:   Tue, 28 May 2019 20:56:37 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Tue, 28 May 2019 10:56:47 +0000 (UTC)
+In-Reply-To: <CAG48ez36xJ9UA8gWef3+1rHQwob5nb8WP3RqnbT8GEOV9Z38jA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Before this patch, we only freed unused buffers, but there may
-still be used buffers to be freed.
 
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
----
- net/vmw_vsock/virtio_transport.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+On 27/5/19 11:38 pm, Jann Horn wrote:
+> On Sat, May 25, 2019 at 11:43 PM Andrew Morton
+> <akpm@linux-foundation.org> wrote:
+>> On Fri, 24 May 2019 22:18:17 +0200 Jann Horn <jannh@google.com> wrote:
+>>> load_flat_shared_library() is broken: It only calls load_flat_file() if
+>>> prepare_binprm() returns zero, but prepare_binprm() returns the number of
+>>> bytes read - so this only happens if the file is empty.
+>>
+>> ouch.
+>>
+>>> Instead, call into load_flat_file() if the number of bytes read is
+>>> non-negative. (Even if the number of bytes is zero - in that case,
+>>> load_flat_file() will see nullbytes and return a nice -ENOEXEC.)
+>>>
+>>> In addition, remove the code related to bprm creds and stop using
+>>> prepare_binprm() - this code is loading a library, not a main executable,
+>>> and it only actually uses the members "buf", "file" and "filename" of the
+>>> linux_binprm struct. Instead, call kernel_read() directly.
+>>>
+>>> Cc: stable@vger.kernel.org
+>>> Fixes: 287980e49ffc ("remove lots of IS_ERR_VALUE abuses")
+>>> Signed-off-by: Jann Horn <jannh@google.com>
+>>> ---
+>>> I only found the bug by looking at the code, I have not verified its
+>>> existence at runtime.
+>>> Also, this patch is compile-tested only.
+>>> It would be nice if someone who works with nommu Linux could have a
+>>> look at this patch.
+>>
+>> 287980e49ffc was three years ago!  Has it really been broken for all
+>> that time?  If so, it seems a good source of freed disk space...
+> 
+> Maybe... but I didn't want to rip it out without having one of the
+> maintainers confirm that this really isn't likely to be used anymore.
 
-diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
-index ad093ce96693..6a2afb989562 100644
---- a/net/vmw_vsock/virtio_transport.c
-+++ b/net/vmw_vsock/virtio_transport.c
-@@ -669,6 +669,18 @@ static void virtio_vsock_flush_works(struct virtio_vsock *vsock)
- 	flush_work(&vsock->send_pkt_work);
- }
- 
-+static void virtio_vsock_free_buf(struct virtqueue *vq)
-+{
-+	struct virtio_vsock_pkt *pkt;
-+	unsigned int len;
-+
-+	while ((pkt = virtqueue_detach_unused_buf(vq)))
-+		virtio_transport_free_pkt(pkt);
-+
-+	while ((pkt = virtqueue_get_buf(vq, &len)))
-+		virtio_transport_free_pkt(pkt);
-+}
-+
- static void virtio_vsock_remove(struct virtio_device *vdev)
- {
- 	struct virtio_vsock *vsock = vdev->priv;
-@@ -702,13 +714,11 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
- 	vdev->config->reset(vdev);
- 
- 	mutex_lock(&vsock->rx_lock);
--	while ((pkt = virtqueue_detach_unused_buf(vsock->vqs[VSOCK_VQ_RX])))
--		virtio_transport_free_pkt(pkt);
-+	virtio_vsock_free_buf(vsock->vqs[VSOCK_VQ_RX]);
- 	mutex_unlock(&vsock->rx_lock);
- 
- 	mutex_lock(&vsock->tx_lock);
--	while ((pkt = virtqueue_detach_unused_buf(vsock->vqs[VSOCK_VQ_TX])))
--		virtio_transport_free_pkt(pkt);
-+	virtio_vsock_free_buf(vsock->vqs[VSOCK_VQ_TX]);
- 	mutex_unlock(&vsock->tx_lock);
- 
- 	spin_lock_bh(&vsock->send_pkt_list_lock);
--- 
-2.20.1
+I have not used shared libraries on m68k non-mmu setups for
+a very long time. At least 10 years I would think.
+
+Regards
+Greg
+
+
 
