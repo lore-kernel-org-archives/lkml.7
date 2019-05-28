@@ -1,79 +1,190 @@
 Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB49FC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D427FC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB141208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D77B21473
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:11:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559045460;
+	bh=vfQnV67M4qRA0I69fyNosIJ3n3WnC2AtL7uvdyXSOPQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=l9NPp2uz78wjydjOfW1FtrPvmRjAIZdgd759gUsV7w+l6uDjOHln7qjKzhWN3q7Lf
+	 HFoko2I39eK44qinvHCK48AxN1H0+2Ig95H1w3mVpLvXUdG2Fm1Vthx1ZvHQ68rRgB
+	 bmHo2j0WJ970qGRz2Sr0+xSJGK3Vyf530gSB6pjM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbfE1MKj (ORCPT
+        id S1726990AbfE1MK7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 08:10:39 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58162 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726620AbfE1MKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 08:10:39 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 70416AEF9;
-        Tue, 28 May 2019 12:10:38 +0000 (UTC)
-Date:   Tue, 28 May 2019 14:10:37 +0200
-From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-To:     Joel Savitz <jsavitz@redhat.com>
-Cc:     Li Zefan <lizefan@huawei.com>, Tejun Heo <tj@kernel.org>,
-        Waiman Long <longman@redhat.com>, Phil Auld <pauld@redhat.com>,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] cpuset: restore sanity to
- cpuset_cpus_allowed_fallback()
-Message-ID: <20190528121036.GC31588@blackbody.suse.cz>
-References: <20190409204003.6428-1-jsavitz@redhat.com>
- <20190521143414.GJ5307@blackbody.suse.cz>
- <CAL1p7m6nfPkWoEEAjO+Gxq-ZiRY7+1jU_7dVcw2-hjC22xz-4A@mail.gmail.com>
+        Tue, 28 May 2019 08:10:59 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33682 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbfE1MK7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 08:10:59 -0400
+Received: by mail-pf1-f195.google.com with SMTP id z28so11371223pfk.0;
+        Tue, 28 May 2019 05:10:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=bLLPV7eUO2o74o8LrbA0JPtEr1nRmqodWfzOijaU7Mk=;
+        b=otVKalXOYK/nl0zCxrG447epNj1oX5gR3f9V+FgwtTx23N8nFnQz5rEfq0ftxjYHVv
+         7yhZLGKJphQ9eZGVV5INryPO/1cGHk8qRUu4I4W6okNsPJMeYQPQCQyIGdsATqyfWgj+
+         IyfIvtcwVGkIU9V0SzJcZCI3tdGx90XfN0C0l6QQguyy6FsIs5zGJ3GwjOQ71QbaAR4h
+         IZMO+Vzh2OSfElP2QnOCEsgHGiq0ht6fcuUk+23bwdpUMQYO5VW60f63cTXbmNna7X9i
+         qnVeQkvm6g2+ZSsxMXWHTUnmNuYMWtfeYpTDz2zk212eHa0pevdsLlnDFCFE/s5m93mo
+         VU7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bLLPV7eUO2o74o8LrbA0JPtEr1nRmqodWfzOijaU7Mk=;
+        b=rVwenooX581L7VGg4ggMh2Vf9MFLvz37yZ/Xas0+oDWKVYemBIbadYkmfSvZZB/A4L
+         GFOCy2XVj/NKUQXkc+o3cLuZEs0SMYeqhqd7iaDAlL7YAfpYW4nR/fme6ixma3Gv33+g
+         tH5KeqlF3xsIJrK/CqGjLUm+KkWXx4YSS/s/odC+FpJ3xI251Vk0ri/xo6j2dT8m6vh+
+         rx/S3KUeBQDG7vAVfEBSVacJVpmMeMtvQ297EW/2SfLlgXgvE1J6oyrlKuXhfkobqamx
+         FP/yh3nelAVYRYKf9C+It2d7vVctnygd8YixUjE7v4MxbKFjxIUPI/NI3eXn9NugZBBu
+         yiQA==
+X-Gm-Message-State: APjAAAUcX4cH1J1wJoOUwmeXtjPdEdXwy4rWk1IiV2SsO1cWIaEzW+es
+        rjduDFFUjJTSYpYycw/j6fE=
+X-Google-Smtp-Source: APXvYqzZu2DckSAfm6b7/skht70dageJqYdxnd3tnitDqNQYstXd5I6Z9o69tRtnlF0c9Z9C+Sqe0g==
+X-Received: by 2002:a63:4104:: with SMTP id o4mr13313731pga.345.1559045458612;
+        Tue, 28 May 2019 05:10:58 -0700 (PDT)
+Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
+        by smtp.gmail.com with ESMTPSA id b18sm23588605pfp.32.2019.05.28.05.10.54
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 28 May 2019 05:10:57 -0700 (PDT)
+Date:   Tue, 28 May 2019 21:10:51 +0900
+From:   Minchan Kim <minchan@kernel.org>
+To:     Daniel Colascione <dancol@google.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: [RFC 7/7] mm: madvise support MADV_ANONYMOUS_FILTER and
+ MADV_FILE_FILTER
+Message-ID: <20190528121051.GC30365@google.com>
+References: <20190528062947.GL1658@dhcp22.suse.cz>
+ <20190528081351.GA159710@google.com>
+ <CAKOZuesnS6kBFX-PKJ3gvpkv8i-ysDOT2HE2Z12=vnnHQv0FDA@mail.gmail.com>
+ <20190528084927.GB159710@google.com>
+ <20190528090821.GU1658@dhcp22.suse.cz>
+ <20190528103256.GA9199@google.com>
+ <20190528104117.GW1658@dhcp22.suse.cz>
+ <20190528111208.GA30365@google.com>
+ <20190528112840.GY1658@dhcp22.suse.cz>
+ <CAKOZuesCSrE0esqDDbo8x5u5rM-Uv_81jjBt1QRXFKNOUJu0aw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAL1p7m6nfPkWoEEAjO+Gxq-ZiRY7+1jU_7dVcw2-hjC22xz-4A@mail.gmail.com>
+In-Reply-To: <CAKOZuesCSrE0esqDDbo8x5u5rM-Uv_81jjBt1QRXFKNOUJu0aw@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for digging through this.
+On Tue, May 28, 2019 at 04:42:47AM -0700, Daniel Colascione wrote:
+> On Tue, May 28, 2019 at 4:28 AM Michal Hocko <mhocko@kernel.org> wrote:
+> >
+> > On Tue 28-05-19 20:12:08, Minchan Kim wrote:
+> > > On Tue, May 28, 2019 at 12:41:17PM +0200, Michal Hocko wrote:
+> > > > On Tue 28-05-19 19:32:56, Minchan Kim wrote:
+> > > > > On Tue, May 28, 2019 at 11:08:21AM +0200, Michal Hocko wrote:
+> > > > > > On Tue 28-05-19 17:49:27, Minchan Kim wrote:
+> > > > > > > On Tue, May 28, 2019 at 01:31:13AM -0700, Daniel Colascione wrote:
+> > > > > > > > On Tue, May 28, 2019 at 1:14 AM Minchan Kim <minchan@kernel.org> wrote:
+> > > > > > > > > if we went with the per vma fd approach then you would get this
+> > > > > > > > > > feature automatically because map_files would refer to file backed
+> > > > > > > > > > mappings while map_anon could refer only to anonymous mappings.
+> > > > > > > > >
+> > > > > > > > > The reason to add such filter option is to avoid the parsing overhead
+> > > > > > > > > so map_anon wouldn't be helpful.
+> > > > > > > >
+> > > > > > > > Without chiming on whether the filter option is a good idea, I'd like
+> > > > > > > > to suggest that providing an efficient binary interfaces for pulling
+> > > > > > > > memory map information out of processes.  Some single-system-call
+> > > > > > > > method for retrieving a binary snapshot of a process's address space
+> > > > > > > > complete with attributes (selectable, like statx?) for each VMA would
+> > > > > > > > reduce complexity and increase performance in a variety of areas,
+> > > > > > > > e.g., Android memory map debugging commands.
+> > > > > > >
+> > > > > > > I agree it's the best we can get *generally*.
+> > > > > > > Michal, any opinion?
+> > > > > >
+> > > > > > I am not really sure this is directly related. I think the primary
+> > > > > > question that we have to sort out first is whether we want to have
+> > > > > > the remote madvise call process or vma fd based. This is an important
+> > > > > > distinction wrt. usability. I have only seen pid vs. pidfd discussions
+> > > > > > so far unfortunately.
+> > > > >
+> > > > > With current usecase, it's per-process API with distinguishable anon/file
+> > > > > but thought it could be easily extended later for each address range
+> > > > > operation as userspace getting smarter with more information.
+> > > >
+> > > > Never design user API based on a single usecase, please. The "easily
+> > > > extended" part is by far not clear to me TBH. As I've already mentioned
+> > > > several times, the synchronization model has to be thought through
+> > > > carefuly before a remote process address range operation can be
+> > > > implemented.
+> > >
+> > > I agree with you that we shouldn't design API on single usecase but what
+> > > you are concerning is actually not our usecase because we are resilient
+> > > with the race since MADV_COLD|PAGEOUT is not destruptive.
+> > > Actually, many hints are already racy in that the upcoming pattern would
+> > > be different with the behavior you thought at the moment.
+> >
+> > How come they are racy wrt address ranges? You would have to be in
+> > multithreaded environment and then the onus of synchronization is on
+> > threads. That model is quite clear. But we are talking about separate
+> > processes and some of them might be even not aware of an external entity
+> > tweaking their address space.
+> 
+> I don't think the difference between a thread and a process matters in
+> this context. Threads race on address space operations all the time
+> --- in the sense that multiple threads modify a process's address
+> space without synchronization. The main reasons that these races
+> hasn't been a problem are: 1) threads mostly "mind their own business"
+> and modify different parts of the address space or use locks to ensure
+> that they don't stop on each other (e.g., the malloc heap lock), and
+> 2) POSIX mmap atomic-replacement semantics make certain classes of
+> operation (like "magic ring buffer" setup) safe even in the presence
+> of other threads stomping over an address space.
+> 
+> The thing that's new in this discussion from a synchronization point
+> of view isn't that the VM operation we're talking about is coming from
+> outside the process, but that we want to do a read-decide-modify-ish
+> thing. We want to affect (using various hints) classes of pages like
+> "all file pages" or "all anonymous pages" or "some pages referring to
+> graphics buffers up to 100MB" (to pick an example off the top of my
+> head of a policy that might make sense). From a synchronization point
+> of view, it doesn't really matter whether it's a thread within the
+> target process or a thread outside the target process that does the
+> address space manipulation. What's new is the inspection of the
+> address space before performing an operation.
+> 
+> Minchan started this thread by proposing some flags that would
+> implement a few of the filtering policies I used as examples above.
+> Personally, instead of providing a few pre-built policies as flags,
+> I'd rather push the page manipulation policy to userspace as much as
+> possible and just have the kernel provide a mechanism that *in
+> general* makes these read-decide-modify operations efficient and
+> robust. I still think there's way to achieve this goal very
+> inexpensively without compromising on flexibility.
 
-On Fri, May 24, 2019 at 11:33:55AM -0400, Joel Savitz <jsavitz@redhat.com> wrote:
-> It is a bit ambiguous, but I performed no action on the task's cpuset
-> nor did I offline any cpus at point (a).
-So did you do any operation that left you with
-    cpu_active_mask & 0xf0 == 0
-?
+I'm looking forward to seeing the way. ;-)
 
-(If so, I think the demo code should be made without it to avoid the
-confusion.)
-
-Regardless, the demo code should also specify in what cpuset it happens
-(for the v2 case).
-
-> I think the /proc/$$/status value is intended to simply reflect the
-> user-specified policy stating which cpus the task is allowed to run on
-> without consideration for hardware state, whereas the taskset value is
-> representative of the cpus that the task can actually be run on given
-> the restriction policy specified by the user via the cpuset mechanism.
-Yes, it seems to me to be somewhat analogous to effective_cpus vs
-cpus_allowed in the v2 cpuset.
-
-
-> By the way, I posted a v2 of this patch that correctly handles cgroup
-> v2 behavior.
-I see the original version made the state = cpuset in select_fallback_rq
-mostly redundant. The split on v2 (hierarchy) in v2 (patch) makes some
-sense. Although, on v1 we will lose the "no longer affine to..." message
-(which is what happens in your demo IIUC).
-
-Michal
