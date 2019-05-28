@@ -2,70 +2,98 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97008C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B7CDC04E84
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75DBA2070D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:06:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DE0320883
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:10:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbfE1LGy (ORCPT
+        id S1726569AbfE1LKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 07:06:54 -0400
-Received: from shell.v3.sk ([90.176.6.54]:37277 "EHLO shell.v3.sk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726313AbfE1LGx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 07:06:53 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id EBEB51048B5;
-        Tue, 28 May 2019 13:06:50 +0200 (CEST)
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id z-URobh3VGwZ; Tue, 28 May 2019 13:06:48 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id AEC921048B7;
-        Tue, 28 May 2019 13:06:47 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at zimbra.v3.sk
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id jospB53Cg9Z6; Tue, 28 May 2019 13:06:46 +0200 (CEST)
-Received: from belphegor (nat-pool-brq-t.redhat.com [213.175.37.10])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id A6D941048B5;
-        Tue, 28 May 2019 13:06:46 +0200 (CEST)
-Message-ID: <6db9830f1240fafb01dde94281d53f0c5ccd6230.camel@v3.sk>
-Subject: Re: [PATCH -next 0/2] Platform: OLPC: Fix two randbuild error
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     YueHaibing <yuehaibing@huawei.com>, dvhart@infradead.org,
-        andy@infradead.org
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Date:   Tue, 28 May 2019 13:06:45 +0200
-In-Reply-To: <20190528092806.20080-1-yuehaibing@huawei.com>
-References: <20190528092806.20080-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+        Tue, 28 May 2019 07:10:31 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:36235 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726313AbfE1LKb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 07:10:31 -0400
+X-Originating-IP: 90.89.68.76
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id E67F8E0004;
+        Tue, 28 May 2019 11:10:24 +0000 (UTC)
+Date:   Tue, 28 May 2019 13:10:24 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/7] Allwinner H6 DMA support
+Message-ID: <20190528111024.gj25jh5vstizze74@flea>
+References: <20190527201459.20130-1-peron.clem@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="z7ek7mx2fjvua3lu"
+Content-Disposition: inline
+In-Reply-To: <20190527201459.20130-1-peron.clem@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-05-28 at 17:28 +0800, YueHaibing wrote:
-> Fix two randbuild error:
-> 1) Fix build error with CONFIG_SPI is not set
-> 2) Fix build error with CONFIG_INPUT is set to m
-> 
-> YueHaibing (2):
->   Platform: OLPC: Fix build error without CONFIG_SPI
->   Platform: OLPC: Add INPUT dependencies
-> 
->  drivers/platform/olpc/Kconfig | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
 
-Thanks. Both patches:
+--z7ek7mx2fjvua3lu
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Lubomir Rintel <lkundrak@v3.sk>
+On Mon, May 27, 2019 at 10:14:52PM +0200, Cl=E9ment P=E9ron wrote:
+> Hi,
+>
+> This series has been first proposed by Jernej Skrabec[1].
+> As this series is mandatory for SPDIF/I2S support and because he is
+> busy on Cedrus stuff. I asked him to make the minor change requested
+> and repost it.
+> Authorship remains to him.
+>
+> I have tested this series with SPDIF driver and added a patch to enable
+> DMA_SUN6I_CONFIG for arm64.
+>
+> Original Post:
+> "
+> DMA engine engine on H6 almost the same as on older SoCs. The biggest
+> difference is that it has slightly rearranged bits in registers and
+> it needs additional clock, probably due to iommu.
+>
+> These patches were tested with I2S connected to HDMI. I2S needs
+> additional patches which will be sent later.
 
+For the whole series,
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--z7ek7mx2fjvua3lu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXO0XIAAKCRDj7w1vZxhR
+xVR3AP9YbutRsxD9Y3rwfBC3bguX4JoBWqgLPRSKHszeGDW36QEA+LVEhKb99jvN
+catOGhDyeFdJdmT6r7eRLjjtMuPzCg8=
+=pe/c
+-----END PGP SIGNATURE-----
+
+--z7ek7mx2fjvua3lu--
