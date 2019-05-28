@@ -2,247 +2,193 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22796C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5526AC072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF8C520883
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:08:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=openedev.com header.i=@openedev.com header.b="PJiGVMZg"
+	by mail.kernel.org (Postfix) with ESMTP id 3BD1720883
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:10:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727696AbfE1TIl (ORCPT
+        id S1727721AbfE1TKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 15:08:41 -0400
-Received: from se14p.web-hosting.com ([198.54.122.234]:58230 "EHLO
-        se14p.web-hosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbfE1TIk (ORCPT
+        Tue, 28 May 2019 15:10:12 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60750 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726673AbfE1TKM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 15:08:40 -0400
-X-Greylist: delayed 1250 seconds by postgrey-1.27 at vger.kernel.org; Tue, 28 May 2019 15:08:40 EDT
-Received: from [68.65.123.203] (helo=server153.web-hosting.com)
-        by se14.registrar-servers.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <akash@openedev.com>)
-        id 1hVh8N-0009x3-QN; Tue, 28 May 2019 11:47:44 -0700
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=openedev.com; s=default; h=Message-Id:Date:Subject:Cc:To:From:Sender:
-        Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=HFvG/LahunJTKLXZcRrXptt2DckpdKXTkifmZXFipgQ=; b=PJiGVMZgVGjIgbDCNwmZ/BYqnX
-        fXKKx7yfLlCHwNukhMHUcNOocKv77y7xf8izZNV6Ppo791w9CKK+Sr1CgT3z0SC1jwKeH60STKItJ
-        kQg+sYfjzMZ5NwY5yCxUQ9UWwcp1g82nQCV3P1YGiBs3JalER9nYivypJdri+6mFX3zPJJ5YEcZ0w
-        PHluyjCLBSBRUuWnh/xep34EGeusUaiX14k/257ZXAdMFBxG7bg2IdlduvFpYXz9fvrGazsiq2tph
-        /L3ZKh3KEhc5nX2oM2RlkEwOYcqXfkI7nhBQfHoAdPB7Yn20dHN6mqxgafZg+N+/ZGFa0+9KHizZa
-        ZWxG4BXg==;
-Received: from [49.36.134.52] (port=58630 helo=localhost.localdomain)
-        by server153.web-hosting.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <akash@openedev.com>)
-        id 1hVh8B-000LWm-RB; Tue, 28 May 2019 14:47:32 -0400
-From:   Akash Gajjar <akash@openedev.com>
-To:     heiko@sntech.de
-Cc:     Akash Gajjar <akash@openedev.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Vicente Bergas <vicencb@gmail.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: rockchip: add WiFi+BT support on ROCK Pi4 board
-Date:   Wed, 29 May 2019 00:16:58 +0530
-Message-Id: <20190528184705.5240-1-akash@openedev.com>
-X-Mailer: git-send-email 2.17.1
-X-OutGoing-Spam-Status: No, score=-1.0
-X-Originating-IP: 68.65.123.203
-X-SpamExperts-Domain: nctest.net
-X-SpamExperts-Username: whmcalls3
-Authentication-Results: registrar-servers.com; auth=pass (login) smtp.auth=whmcalls3@nctest.net
-X-SpamExperts-Outgoing-Class: ham
-X-SpamExperts-Outgoing-Evidence: Combined (0.02)
-X-Recommended-Action: accept
-X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0fHWENUdqj+4JDN3TQDP3eCpSDasLI4SayDByyq9LIhVZoh+GYOxeKhX
- 0rYQmz6690TNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3Kk502M/hntTzIKfCMISdhHXTA
- YTyyIfs1cqM+JexaJLwYntLwFjolRFhTnXQDnB9P2e84PReenR5LSk2iUS2Af528AOBrEuOevXI0
- ebdgRKCIKg/aUy1+rC+nt9YJr0O6xUx7ZqtwsMDZ69b8b7zqxI+lL5NhqHMWktMqMo9GxlRpzx17
- fEWeVBQjTCzPj3JfZsHc9iz9sphsbcEfYLbbA/Vq7f6BdqHymHnsz2U1vrjjPk6p1XF7W+y4zutd
- yrLieQwtaT8LS8s2UvPGuarJq5V04g3+jzRT0rWpGx2J7RisI4GNUZN9o6JCIHO0bcEXRyryw85/
- rAZb27+VZ3biGpeRn+vXyl2rp3c+WLIsa2xTYi2bf0F0JzgUQ/o6tR7CyoeT9VtB9syzdRQvkcqf
- 34ZQDkS0DHehuOHWuM7Vjf4BoMdMi3MTHLPLkhmyzwKCoSgrSPwK7H7GiJo2l1dsJpcM7kMJvj0O
- sEsYG6FZSA0KvSDgkCQq49Bwhmr0QiXBtIgA7rb5Xakftk+kQbpsGMceNxO+7BxamuC10Aq7F6rO
- /YET258p5gS3Y/tQ+7wViH3SZTmW3KAG173wuvejUvo9EUE9MbHVS3r/mgHJnIRYw1BzDqNFGZrh
- +TVo3LXlhgkjL4M2T1qqsnPjyphw8gjQbS46n+oec+xQytaJegt1cLqOJqfuEFfuEby07ONb4LOp
- SgtUXs0lCO/QMtPNbzkjHv8L1XCo8f/lClCdnQGCmomWoKHQTtA/vxRp3BmjRFUZkz7XBxuphczf
- K2a9sHP9vI3sVqNiY7IcsXSdRq0BIkUL/j1Y48GvmeURQjjE+CVHssiRKJOGVnhkTYtSIth1Taei
- g8OGCxX9BeyO5Yx635mhoDTZ7tQJkImekwqesW0Fhika04lb89teM7jCHuolsEZDZij6HLxcjD4A
- kjrzujHpSlY2Fr2WwzhRAoSw64oN2HxlNw5KgUUaTYIpDCz9FipvlGvdczGojXbA7Kmf/z2jyiGR
- IooMdE2solbjhZES3yaCYnD0cFyGWzVHlRxwEiTVJqDh0qKoKsXx5lloGmtNVzr+QC4y+mGx45d+
- 3Lqf0a+sK979BKHqhPATJSQCCJdpTZ0kmYMGtdFn1fl+TqEWOdbpokqh9QirvZzP9FuHbI/2PO15
- wkM9AzOwAoKm7RdD7DhCg+2QoWbS5It/atGmSN6m4V7Gg3S4FvW6J98p+AxeVIeDFBo6QTq+8ulz
- /zXcOmPBLTmIxb/wPGs8LFudSgPI2QH+nhyrWSrH
-X-Report-Abuse-To: spam@se16.registrar-servers.com
+        Tue, 28 May 2019 15:10:12 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4SJ3fgq048320
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 15:10:11 -0400
+Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ss8x057de-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 15:10:11 -0400
+Received: from localhost
+        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
+        Tue, 28 May 2019 20:10:10 +0100
+Received: from b01cxnp22033.gho.pok.ibm.com (9.57.198.23)
+        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 28 May 2019 20:10:04 +0100
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4SJA3k624248362
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 May 2019 19:10:03 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 78A84AE062;
+        Tue, 28 May 2019 19:10:03 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CB8DCAE05F;
+        Tue, 28 May 2019 19:09:59 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.85.218.160])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Tue, 28 May 2019 19:09:59 +0000 (GMT)
+References: <20190418035120.2354-1-bauerman@linux.ibm.com> <20190418035120.2354-12-bauerman@linux.ibm.com> <1557442889.10635.88.camel@linux.ibm.com>
+User-agent: mu4e 1.0; emacs 26.2
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        David Howells <dhowells@redhat.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "AKASHI\, Takahiro" <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v10 11/12] ima: Define ima-modsig template
+In-reply-to: <1557442889.10635.88.camel@linux.ibm.com>
+Date:   Tue, 28 May 2019 16:09:55 -0300
+MIME-Version: 1.0
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+x-cbid: 19052819-0060-0000-0000-00000348F56D
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011176; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01209916; UDB=6.00635632; IPR=6.00990945;
+ MB=3.00027089; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-28 19:10:08
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052819-0061-0000-0000-0000498886CE
+Message-Id: <874l5e75vg.fsf@morokweng.localdomain>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-28_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905280119
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rock Pi 4 has a on board AP6256 WiFi/BT Module. enable wifi and bluetooth
-support on Rock Pi 4 board.
 
-Signed-off-by: Akash Gajjar <akash@openedev.com>
----
- .../boot/dts/rockchip/rk3399-rock-pi-4.dts    | 97 +++++++++++++++++++
- 1 file changed, 97 insertions(+)
+Mimi Zohar <zohar@linux.ibm.com> writes:
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
-index e030627159c6..55e74f4d5cd0 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
-@@ -25,6 +25,15 @@
- 		#clock-cells = <0>;
- 	};
- 
-+	sdio_pwrseq: sdio-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		clocks = <&rk808 1>;
-+		clock-names = "ext_clock";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&wifi_enable_h>;
-+		reset-gpios = <&gpio0 RK_PB2 GPIO_ACTIVE_LOW>;
-+	};
-+
- 	vcc12v_dcin: dc-12v {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vcc12v_dcin";
-@@ -451,12 +460,46 @@
- };
- 
- &pinctrl {
-+	bt {
-+		bt_enable_h: bt-enable-h {
-+			rockchip,pins = <0 RK_PB1 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+		bt_host_wake_l: bt-host-wake-l {
-+			rockchip,pins = <0 RK_PA4 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+		bt_wake_l: bt-wake-l {
-+			rockchip,pins = <2 RK_PD3 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
- 	pcie {
- 		pcie_pwr_en: pcie-pwr-en {
- 			rockchip,pins = <2 RK_PD2 RK_FUNC_GPIO &pcfg_pull_none>;
- 		};
- 	};
- 
-+	sdio0 {
-+		sdio0_bus4: sdio0-bus4 {
-+			rockchip,pins =
-+				<2 20 RK_FUNC_1 &pcfg_pull_up_20ma>,
-+				<2 21 RK_FUNC_1 &pcfg_pull_up_20ma>,
-+				<2 22 RK_FUNC_1 &pcfg_pull_up_20ma>,
-+				<2 23 RK_FUNC_1 &pcfg_pull_up_20ma>;
-+		};
-+
-+		sdio0_cmd: sdio0-cmd {
-+			rockchip,pins =
-+				<2 24 RK_FUNC_1 &pcfg_pull_up_20ma>;
-+		};
-+
-+		sdio0_clk: sdio0-clk {
-+			rockchip,pins =
-+				<2 25 RK_FUNC_1 &pcfg_pull_none_20ma>;
-+		};
-+	};
-+
- 	pmic {
- 		pmic_int_l: pmic-int-l {
- 			rockchip,pins = <1 RK_PC5 RK_FUNC_GPIO &pcfg_pull_up>;
-@@ -482,6 +525,17 @@
- 			rockchip,pins = <4 RK_PD1 RK_FUNC_GPIO &pcfg_pull_none>;
- 		};
- 	};
-+
-+	wifi {
-+		wifi_enable_h: wifi-enable-h {
-+			rockchip,pins =
-+				<0 RK_PB2 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+		wifi_host_wake_l: wifi-host-wake-l {
-+			rockchip,pins = <0 RK_PA3 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
- };
- 
- &pwm2 {
-@@ -494,6 +548,32 @@
- 	vref-supply = <&vcc_1v8>;
- };
- 
-+&sdio0 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	bus-width = <4>;
-+	clock-frequency = <50000000>;
-+	cap-sdio-irq;
-+	cap-sd-highspeed;
-+	keep-power-in-suspend;
-+	mmc-pwrseq = <&sdio_pwrseq>;
-+	non-removable;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdio0_bus4 &sdio0_cmd &sdio0_clk>;
-+	sd-uhs-sdr104;
-+	status = "okay";
-+
-+	brcmf: wifi@1 {
-+		compatible = "brcm,bcm4329-fmac";
-+		reg = <1>;
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <RK_PA3 GPIO_ACTIVE_HIGH>;
-+		interrupt-names = "host-wake";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&wifi_host_wake_l>;
-+	};
-+};
-+
- &sdmmc {
- 	bus-width = <4>;
- 	cap-mmc-highspeed;
-@@ -557,6 +637,23 @@
- 	};
- };
- 
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "brcm,bcm43438-bt";
-+		clocks = <&rk808 1>;
-+		clock-names = "ext_clock";
-+		device-wakeup-gpios = <&gpio2 RK_PD3 GPIO_ACTIVE_HIGH>;
-+		host-wakeup-gpios = <&gpio0 RK_PA4 GPIO_ACTIVE_HIGH>;
-+		shutdown-gpios = <&gpio0 RK_PB1 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&bt_host_wake_l &bt_wake_l &bt_enable_h>;
-+	};
-+};
-+
- &uart2 {
- 	status = "okay";
- };
--- 
-2.17.1
+> On Thu, 2019-04-18 at 00:51 -0300, Thiago Jung Bauermann wrote:
+>> Define new "d-modsig" template field which holds the digest that is
+>> expected to match the one contained in the modsig, and also new "modsig"
+>> template field which holds the appended file signature.
+>>
+>> Add a new "ima-modsig" defined template descriptor with the new fields as
+>> well as the ones from the "ima-sig" descriptor.
+>>
+>> Change ima_store_measurement() to accept a struct modsig * argument so that
+>> it can be passed along to the templates via struct ima_event_data.
+>>
+>> Suggested-by: Mimi Zohar <zohar@linux.ibm.com>
+>> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+>
+> Thanks, Roberto. Just some thoughts inline below.
+>
+> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+
+Thanks!
+
+>> +/*
+>> + * Validating the appended signature included in the measurement list requires
+>> + * the file hash calculated without the appended signature (i.e., the 'd-modsig'
+>> + * field). Therefore, notify the user if they have the 'modsig' field but not
+>> + * the 'd-modsig' field in the template.
+>> + */
+>> +static void check_current_template_modsig(void)
+>> +{
+>> +#define MSG "template with 'modsig' field also needs 'd-modsig' field\n"
+>> +	struct ima_template_desc *template;
+>> +	bool has_modsig, has_dmodsig;
+>> +	static bool checked;
+>> +	int i;
+>> +
+>> +	/* We only need to notify the user once. */
+>> +	if (checked)
+>> +		return;
+>> +
+>> +	has_modsig = has_dmodsig = false;
+>> +	template = ima_template_desc_current();
+>> +	for (i = 0; i < template->num_fields; i++) {
+>> +		if (!strcmp(template->fields[i]->field_id, "modsig"))
+>> +			has_modsig = true;
+>> +		else if (!strcmp(template->fields[i]->field_id, "d-modsig"))
+>> +			has_dmodsig = true;
+>> +	}
+>> +
+>> +	if (has_modsig && !has_dmodsig)
+>> +		pr_notice(MSG);
+>> +
+>> +	checked = true;
+>> +#undef MSG
+>> +}
+>> +
+>
+> There was some recent discussion about supporting per IMA policy rule
+> template formats. This feature will allow just the kexec kernel image
+> to require ima-modsig. When per policy rule template formats support
+> is upstreamed, this function will need to be updated.
+
+Indeed. Thanks for the clarification. For the next iteration I rebased
+on top of Matthew Garret's "IMA: Allow profiles to define the desired
+IMA template" patch. I'm currently adapting this check accordingly.
+
+>> @@ -389,3 +425,25 @@ int ima_eventsig_init(struct ima_event_data *event_data,
+>>  	return ima_write_template_field_data(xattr_value, event_data->xattr_len,
+>>  					     DATA_FMT_HEX, field_data);
+>>  }
+>> +
+>> +int ima_eventmodsig_init(struct ima_event_data *event_data,
+>> +			 struct ima_field_data *field_data)
+>> +{
+>> +	const void *data;
+>> +	u32 data_len;
+>> +	int rc;
+>> +
+>> +	if (!event_data->modsig)
+>> +		return 0;
+>> +
+>> +	/*
+>> +	 * The xattr_value for IMA_MODSIG is a runtime structure containing
+>> +	 * pointers. Get its raw data instead.
+>> +	 */
+>
+> "xattr_value"? The comment needs some clarification.
+
+Oops, forgot to update this comment. This is the new version:
+
+	/*
+	 * modsig is a runtime structure containing pointers. Get its raw data
+	 * instead.
+	 */
+
+--
+Thiago Jung Bauermann
+IBM Linux Technology Center
 
