@@ -2,114 +2,88 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96BA0C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D7D6C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7636E208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D8D221473
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:13:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbfE1JM4 (ORCPT
+        id S1726959AbfE1JNF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 05:12:56 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:40653 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726515AbfE1JMz (ORCPT
+        Tue, 28 May 2019 05:13:05 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:37709 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726515AbfE1JNF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 05:12:55 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-161-gTnKQjRxNjino90nSZuzuA-1; Tue, 28 May 2019 10:12:52 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 28 May 2019 10:12:51 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 28 May 2019 10:12:51 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Deepa Dinamani' <deepa.kernel@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>
-CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Arnd Bergmann" <arnd@arndb.de>, "dbueso@suse.de" <dbueso@suse.de>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        Davidlohr Bueso <dave@stgolabs.net>, Eric Wong <e@80x24.org>,
-        Jason Baron <jbaron@akamai.com>,
-        "Linux FS-devel Mailing List" <linux-fsdevel@vger.kernel.org>,
-        linux-aio <linux-aio@kvack.org>,
-        Omar Kilani <omar.kilani@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH v2] signal: Adjust error codes according to
- restore_user_sigmask()
-Thread-Topic: [PATCH v2] signal: Adjust error codes according to
- restore_user_sigmask()
-Thread-Index: AQHVELwtsgR+BAQFXk2JV68Wk/7LjKZ4aINAgABVkoCAAB2x0P///TgAgAARdkCAAZjWloAFw/iw
-Date:   Tue, 28 May 2019 09:12:51 +0000
-Message-ID: <ea7a1808990a4c319faa38d5d08d8f19@AcuMS.aculab.com>
-References: <20190522161407.GB4915@redhat.com>
- <CABeXuvpjrW5Gt95JC-_rYkOA=6RCD5OtkEQdwZVVqGCE3GkQOQ@mail.gmail.com>
- <4f7b6dbeab1d424baaebd7a5df116349@AcuMS.aculab.com>
- <20190523145944.GB23070@redhat.com>
- <345cfba5edde470f9a68d913f44fa342@AcuMS.aculab.com>
- <20190523163604.GE23070@redhat.com>
- <f0eced5677c144debfc5a69d0d327bc1@AcuMS.aculab.com>
- <CABeXuvo-wey+NHWb4gi=FSRrjJOKkVcLPQ-J+dchJeHEbhGQ6g@mail.gmail.com>
- <20190524141054.GB2655@redhat.com>
- <CABeXuvqSzy+v=3Y5NnMmfob7bvuNkafmdDqoex8BVENN3atqZA@mail.gmail.com>
- <20190524163310.GG2655@redhat.com>
- <CABeXuvrUKZnECj+NgLdpe5uhKBEmSynrakD-3q9XHqk8Aef5UQ@mail.gmail.com>
-In-Reply-To: <CABeXuvrUKZnECj+NgLdpe5uhKBEmSynrakD-3q9XHqk8Aef5UQ@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 28 May 2019 05:13:05 -0400
+X-Originating-IP: 90.89.68.76
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 75A91FF808;
+        Tue, 28 May 2019 09:13:00 +0000 (UTC)
+Date:   Tue, 28 May 2019 11:12:59 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v4 3/7] ASoC: sun4i-spdif: Add TX fifo bit flush quirks
+Message-ID: <20190528091259.qrzegazyilviuy2n@flea>
+References: <20190527200627.8635-1-peron.clem@gmail.com>
+ <20190527200627.8635-4-peron.clem@gmail.com>
 MIME-Version: 1.0
-X-MC-Unique: gTnKQjRxNjino90nSZuzuA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zi3crwvz5dqqoqhp"
+Content-Disposition: inline
+In-Reply-To: <20190527200627.8635-4-peron.clem@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogRGVlcGEgRGluYW1hbmkNCj4gU2VudDogMjQgTWF5IDIwMTkgMTg6MDINCi4uLg0KPiBM
-b29rIGF0IHRoZSBjb2RlIGJlZm9yZSA4NTRhNmVkNTY4MzlhOg0KPiANCj4gICAvKg0KPiAgICAg
-ICAgICogSWYgd2UgY2hhbmdlZCB0aGUgc2lnbmFsIG1hc2ssIHdlIG5lZWQgdG8gcmVzdG9yZSB0
-aGUgb3JpZ2luYWwgb25lLg0KPiAgICAgICAgICogSW4gY2FzZSB3ZSd2ZSBnb3QgYSBzaWduYWwg
-d2hpbGUgd2FpdGluZywgd2UgZG8gbm90IHJlc3RvcmUgdGhlDQo+ICAgICAgICAgKiBzaWduYWwg
-bWFzayB5ZXQsIGFuZCB3ZSBhbGxvdyBkb19zaWduYWwoKSB0byBkZWxpdmVyIHRoZSBzaWduYWwg
-b24NCj4gICAgICAgICAqIHRoZSB3YXkgYmFjayB0byB1c2Vyc3BhY2UsIGJlZm9yZSB0aGUgc2ln
-bmFsIG1hc2sgaXMgcmVzdG9yZWQuDQo+ICAgICAgICAgKi8NCj4gICAgICAgIGlmIChzaWdtYXNr
-KSB7DQo+ICAgICAgICAgICAgICAgIyMjIyMjIyBUaGlzIGVyciBoYXMgbm90IGJlZW4gY2hhbmdl
-ZCBzaW5jZSBlcF9wb2xsKCkNCj4gICAgICAgICAgICAgICAjIyMjIyMjIFNvIGlmIHRoZXJlIGlz
-IGEgc2lnbmFsIGJlZm9yZSB0aGlzIHBvaW50LCBidXQNCj4gZXJyID0gMCwgdGhlbiB3ZSBnb3Rv
-IGVsc2UuDQo+ICAgICAgICAgICAgICAgIGlmIChlcnIgPT0gLUVJTlRSKSB7DQo+ICAgICAgICAg
-ICAgICAgICAgICAgICAgbWVtY3B5KCZjdXJyZW50LT5zYXZlZF9zaWdtYXNrLCAmc2lnc2F2ZWQs
-DQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNpemVvZihzaWdzYXZlZCkpOw0KPiAg
-ICAgICAgICAgICAgICAgICAgICAgIHNldF9yZXN0b3JlX3NpZ21hc2soKTsNCj4gICAgICAgICAg
-ICAgICAgfSBlbHNlDQo+ICAgICAgICAgICAgICAgICAgICAgICMjIyMjIyMjIyMjIyBUaGlzIGlz
-IGEgcHJvYmxlbSBpZiB0aGVyZSBpcyBzaWduYWwNCj4gcGVuZGluZyB0aGF0IGlzIHNpZ21hc2sg
-c2hvdWxkIGJsb2NrLg0KPiAgICAgICAgICAgICAgICAgICAgICAjIyMjIyMjIyMjIyBUaGlzIGlz
-IHRoZSB3aG9sZSByZWFzb24gd2UgaGF2ZQ0KPiBjdXJyZW50LT5zYXZlZF9zaWdtYXNrPw0KPiAg
-ICAgICAgICAgICAgICAgICAgICAgIHNldF9jdXJyZW50X2Jsb2NrZWQoJnNpZ3NhdmVkKTsNCj4g
-ICAgICAgIH0NCg0KV2hhdCBoYXBwZW5zIGlmIGFsbCB0aGF0IGNyYXAgaXMganVzdCBkZWxldGVk
-IChJIHByZXN1bWUgZnJvbSB0aGUNCmJvdHRvbSBvZiBlcF93YWl0KCkpID8NCg0KSSdtIGd1ZXNz
-aW5nIHRoYXQgb24gdGhlIHdheSBiYWNrIHRvIHVzZXJzcGFjZSBzaWduYWwgaGFuZGxlcnMgZm9y
-DQpzaWduYWxzIGVuYWJsZWQgaW4gdGhlIHByb2Nlc3MncyBjdXJyZW50IG1hc2sgKHRoZSBvbmUg
-c3BlY2lmaWVkDQp0byBlcG9sbF9wd2FpdCkgZ2V0IGNhbGxlZC4NClRoZW4gdGhlIHNpZ25hbCBt
-YXNrIGlzIGxvYWRlZCBmcm9tIGN1cnJlbnQtPnNhdmVkX3NpZ21hc2sgYW5kDQphbmQgZW5hYmxl
-ZCBzaWduYWwgaGFuZGxlcnMgYXJlIGNhbGxlZCBhZ2Fpbi4NCk5vIHNwZWNpYWwgY29kZSB0aGVy
-ZSB0aGF0IGRlcGVuZHMgb24gdGhlIHN5c2NhbGwgcmVzdWx0LCBlcnJubw0Kb2YgdGhlIHN5c2Nh
-bGwgbnVtYmVyLg0KDQpUaGF0IHNlZW1zIGV4YWN0bHkgY29ycmVjdCENCg0KCURhdmlkDQoNCi0N
-ClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBN
-aWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxl
-cykNCg==
 
+--zi3crwvz5dqqoqhp
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, May 27, 2019 at 10:06:23PM +0200, Cl=E9ment P=E9ron wrote:
+> Allwinner H6 has a different bit to flush the TX FIFO.
+>
+> Add a quirks to prepare introduction of H6 SoC.
+>
+> Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
+
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--zi3crwvz5dqqoqhp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOz7mwAKCRDj7w1vZxhR
+xYHnAQCF0T/LyvPDLxyjIVgapteJRIIteH2cyprro9XfsXCZKAEA/Jy3TK1gXH37
+KQ0w0ZON8xPR32fd/FxWTsrhVYDGswU=
+=xOqB
+-----END PGP SIGNATURE-----
+
+--zi3crwvz5dqqoqhp--
