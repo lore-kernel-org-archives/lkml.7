@@ -2,93 +2,111 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47896C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B49A5C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A1D620883
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:43:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DD0420883
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:44:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LUcrB9Ex";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="UYmTy8Uh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d0ZmRbMZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727524AbfE1Mn5 (ORCPT
+        id S1727508AbfE1Mn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 08:43:57 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:53366 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727182AbfE1Mn4 (ORCPT
+        Tue, 28 May 2019 08:43:56 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:49718 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727239AbfE1Mn4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 May 2019 08:43:56 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 5D9D960F38; Tue, 28 May 2019 12:43:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559047435;
-        bh=w9bX69ME/NHLXTgt9b0N8rt7z+QC2MaVUpAM+dM7Ouw=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=LUcrB9ExAFl/5ON0ivYboIdJ7k3xs/M5eFubgMsmdDSWg95T8w9HrJz7wrIw33rvX
-         +2bbxr3NmUZ4500+t3phxt4muXTip54tKHqO4zSBHnV0DEzqGvPIWLycxhjSfwdJSQ
-         bDU0iJN9Obuq+ul1DFUBFAbMTPCGPV/CCHiZw3DY=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 629DD6087F;
-        Tue, 28 May 2019 12:43:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559047433;
-        bh=w9bX69ME/NHLXTgt9b0N8rt7z+QC2MaVUpAM+dM7Ouw=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=UYmTy8UhwZkN7O99jfdWUYBHNErNjiu/uGhzGUI+X7HnvCH2DrEZsCb9iNlWLkYcW
-         GEBkqN0yCRNk+ox4yLNTkqhnwtIdCIJzydFf+e8EjEe3EEqKeBx9+4o5gh9zGI1s/b
-         D37PYu0TLm/S+hFazSqPbFk38YNSGdn9+CRay3ME=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 629DD6087F
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=d1+i8FlqvZy+DZCyf6x+0+OU5pzU76eA12cyixRHZMw=; b=d0ZmRbMZ2FxnVIyiCx1WmtxZb
+        ykmUwzb2v1f/D9dWvWix6OWElCYB7UAhbTgbY/f248GD00SyMm1UeaSVCp2BefOoIxbVXcjYOhpPb
+        kGzdl2M0lT2Cgs012Ca1LCopXW//8EyG1tfwImOSAdmmw19G6OZH/YFR0rcu6BhehnnesYo/H7BvD
+        tCzMzkOIyVaiMNiV7D6F1MwGC1h5uXD9RrddhosnRiWiglrS+X+IjOO5REaBOOk+yb/y92Nqw22rn
+        a3SRPTqFAoXuZkvwBaeHJPcoBTmNfmZSKaMRmstp5dZy/usXi0jyzX2/n0+Xl09mbLonNqRGyWYEc
+        gzzxJg96w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hVbSI-0003Zr-Lp; Tue, 28 May 2019 12:43:50 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 663E4200A0444; Tue, 28 May 2019 14:43:49 +0200 (CEST)
+Date:   Tue, 28 May 2019 14:43:49 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     kan.liang@linux.intel.com
+Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com
+Subject: Re: [PATCH 4/9] perf/x86/intel: Support hardware TopDown metrics
+Message-ID: <20190528124349.GU2606@hirez.programming.kicks-ass.net>
+References: <20190521214055.31060-1-kan.liang@linux.intel.com>
+ <20190521214055.31060-5-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] b43: Avoid possible double calls to b43_one_core_detach()
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20190504091000.18665-1-baijiaju1990@gmail.com>
-References: <20190504091000.18665-1-baijiaju1990@gmail.com>
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>
-Cc:     davem@davemloft.net, colin.king@canonical.com,
-        yuehaibing@huawei.com, linux-wireless@vger.kernel.org,
-        b43-dev@lists.infradead.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190528124355.5D9D960F38@smtp.codeaurora.org>
-Date:   Tue, 28 May 2019 12:43:55 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190521214055.31060-5-kan.liang@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jia-Ju Bai <baijiaju1990@gmail.com> wrote:
-
-> In b43_request_firmware(), when ieee80211_register_hw() fails,
-> b43_one_core_detach() is called. In b43_bcma_remove() and
-> b43_ssb_remove(), b43_one_core_detach() is called again. In this case, 
-> null-pointer dereferences and double-free problems can occur when 
-> the driver is removed.
+On Tue, May 21, 2019 at 02:40:50PM -0700, kan.liang@linux.intel.com wrote:
+> The 8bit metrics ratio values lose precision when the measurement period
+> gets longer.
 > 
-> To fix this bug, the call to b43_one_core_detach() in
-> b43_request_firmware() is deleted.
+> To avoid this we always reset the metric value when reading, as we
+> already accumulate the count in the perf count value.
 > 
-> This bug is found by a runtime fuzzing tool named FIZZER written by us.
+> For a long period read, low precision is acceptable.
+> For a short period read, the register will be reset often enough that it
+> is not a problem.
+
+> The PERF_METRICS may report wrong value if its delta was less than 1/255
+> of SLOTS (Fixed counter 3).
 > 
-> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+> To avoid this, the PERF_METRICS and SLOTS registers have to be reset
+> simultaneously. The slots value has to be cached as well.
 
-Patch applied to wireless-drivers-next.git, thanks.
+That doesn't sound like it is NMI-safe.
 
-ec2e93cf1910 b43: Avoid possible double calls to b43_one_core_detach()
 
--- 
-https://patchwork.kernel.org/patch/10929623/
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+> RDPMC
+> =========
+> The TopDown can be collected per thread/process. To use TopDown
+> through RDPMC in applications on Icelake, the metrics and slots values
+> have to be saved/restored during context switching.
+> 
+> Add specific set_period() to specially handle the slots and metrics
+> event. Because,
+>  - The initial value must be 0.
+>  - Only need to restore the value in context switch. For other cases,
+>    the counters have been cleared after read.
 
+So the above claims to explain RDPMC, but doesn't mention that magic
+value below at all. In fact, I don't see how the above relates to RDPMC
+at all.
+
+> @@ -2141,7 +2157,9 @@ static int x86_pmu_event_idx(struct perf_event *event)
+>  	if (!(event->hw.flags & PERF_X86_EVENT_RDPMC_ALLOWED))
+>  		return 0;
+>  
+> -	if (x86_pmu.num_counters_fixed && idx >= INTEL_PMC_IDX_FIXED) {
+> +	if (is_metric_idx(idx))
+> +		idx = 1 << 29;
+
+I can't find this in the SDM RDPMC description. What does it return?
+
+> +	else if (x86_pmu.num_counters_fixed && idx >= INTEL_PMC_IDX_FIXED) {
+>  		idx -= INTEL_PMC_IDX_FIXED;
+>  		idx |= 1 << 30;
+>  	}
