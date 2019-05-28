@@ -2,103 +2,182 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DATE_IN_PAST_12_24,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 097A2C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 11:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D52CC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 11:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D330520B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 11:34:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U3liTC6Z"
+	by mail.kernel.org (Postfix) with ESMTP id E47C921019
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 11:37:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726870AbfE2Le3 (ORCPT
+        id S1726806AbfE2Lhl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 07:34:29 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35766 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725936AbfE2Le2 (ORCPT
+        Wed, 29 May 2019 07:37:41 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35532 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725894AbfE2Lhk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 07:34:28 -0400
-Received: by mail-wm1-f65.google.com with SMTP id w9so1368003wmi.0;
-        Wed, 29 May 2019 04:34:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lv+811UxRTiA1eeuITfBrlSYFc5i58j28rlvkjD03rM=;
-        b=U3liTC6ZJCIAPgF5ohxRWUtSnwmEiVfVxH123hEmKBAPGu1Y5oKRc8WphyyDe/PIM7
-         gGvxiCoFK+cdsXt9S2AV+ajjs3bFZeHbHZqG/y9gcDj/XxFQKm6bmDbmhjhcbqkBqyZW
-         EjAPYDtVXjDf2B2lWTE2T/vmI53a4MF2JoxInqrV2Z0zkV6fRqDxpQQvEmPwneoYFGB0
-         GzfZOG7hrw/pQQSMolG5O/ycikS1Vttz3N+wH0zjpJ+6dGd9kAFx+HZPlhoVFXovljBZ
-         Eb8VLEwZ1pVb5/V+NOOh5UcdlFxRePuLcNDv6BEB1zAKFbPPUqAYUhxa0v3PYs9yx1TE
-         xORQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=lv+811UxRTiA1eeuITfBrlSYFc5i58j28rlvkjD03rM=;
-        b=PktOTs23TbjR8NCGwjVMt+F18vuWN1994TpJAoE0pVoPY9Cw/2oYEfauSs0l9jUCZF
-         CZtdAC+M7dDpI8N5ksYisqbRGvI07+4gXS/d6S4010K9vHP6wZI4izeREY3WdInx9uGn
-         SjawFBh9wM2270PNaf69lu/sE+dATszeS10xE0aP455tgP1kmj9vaQZ/cbKWyp7VdJZ9
-         XNRphED9hAGeu6PWbT8x2HslJRXd+7AbG93pj9QIs2xNwRCcLMoXhxSSjqpvEj3V0Ikt
-         269IYFZeI9rKkvfKdjwA+FYJqh5l8KPHkvTpLcaeFMaXUxzXSvXvUyyXXKGQkTjPJU0R
-         lj4A==
-X-Gm-Message-State: APjAAAW/dpglNOoXMUtBOvij6Yt7fmKRem54i1UHQv8MbVvc1/+JT3/2
-        1F+jafLmYsa000k//jzRjpE=
-X-Google-Smtp-Source: APXvYqxnCd912qjQWgtXe92WAl/vOIzwax4AWMMD54q443N3LcvMovQ4/4Lre+VsMfb/2oFNQMFFXA==
-X-Received: by 2002:a1c:487:: with SMTP id 129mr5896823wme.143.1559129666196;
-        Wed, 29 May 2019 04:34:26 -0700 (PDT)
-Received: from macbookpro.malat.net ([2a01:e34:ee1e:860:6f23:82e6:aa2d:bbd1])
-        by smtp.gmail.com with ESMTPSA id d9sm15219388wro.26.2019.05.29.04.34.25
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 May 2019 04:34:25 -0700 (PDT)
-Received: by macbookpro.malat.net (Postfix, from userid 1000)
-        id 6A99211415A8; Wed, 29 May 2019 13:34:19 +0200 (CEST)
-From:   Mathieu Malaterre <malat@debian.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Mathieu Malaterre <malat@debian.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] hfsplus: Replace strncpy with memcpy
-Date:   Wed, 29 May 2019 13:33:41 +0200
-Message-Id: <20190529113341.11972-1-malat@debian.org>
-X-Mailer: git-send-email 2.20.1
+        Wed, 29 May 2019 07:37:40 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4TBWvFF056930
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 07:37:39 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ssr7ftvdy-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 07:37:38 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <fiuczy@linux.ibm.com>;
+        Wed, 29 May 2019 12:37:36 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 29 May 2019 12:37:27 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4TBbPjW36307154
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 29 May 2019 11:37:25 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8D45AA4040;
+        Wed, 29 May 2019 11:37:25 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 840C1A4055;
+        Wed, 29 May 2019 11:37:24 +0000 (GMT)
+Received: from [10.0.2.15] (unknown [9.152.222.40])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 29 May 2019 11:37:24 +0000 (GMT)
+Subject: Re: [libvirt] [PATCH v2 1/2] vfio/mdev: add version attribute for
+ mdev device
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     "cjia@nvidia.com" <cjia@nvidia.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "aik@ozlabs.ru" <aik@ozlabs.ru>,
+        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
+        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
+        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eauger@redhat.com" <eauger@redhat.com>, Tony@pps.reinject,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "eskultet@redhat.com" <eskultet@redhat.com>,
+        "Yang, Ziye" <ziye.yang@intel.com>,
+        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        "libvir-list@redhat.com" <libvir-list@redhat.com>,
+        "arei.gonglei@huawei.com" <arei.gonglei@huawei.com>,
+        "felipe@nutanix.com" <felipe@nutanix.com>,
+        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Yan Zhao <yan.y.zhao@intel.com>,
+        "dgilbert@redhat.com" <dgilbert@redhat.com>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "Liu, Changpeng" <changpeng.liu@intel.com>,
+        Krowiak <akrowiak@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "dinechin@redhat.com" <dinechin@redhat.com>,
+        "He, Shaopeng" <shaopeng.he@intel.com>
+References: <20190506014514.3555-1-yan.y.zhao@intel.com>
+ <20190506014904.3621-1-yan.y.zhao@intel.com>
+ <20190507151826.502be009@x1.home> <20190508112740.GA24397@joy-OptiPlex-7040>
+ <20190508152242.4b54a5e7@x1.home>
+ <5eac912c-e753-b5f6-83a4-b646f991d858@linux.ibm.com>
+ <20190514093140.68cc6f7a@x1.home>
+From:   Boris Fiuczynski <fiuczy@linux.ibm.com>
+Date:   Tue, 28 May 2019 22:57:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190514093140.68cc6f7a@x1.home>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19052911-0016-0000-0000-000002809C8F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052911-0017-0000-0000-000032DDACFC
+Message-Id: <0c1f5f03-1895-b9a2-999f-f611dd295732@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-29_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905290078
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Function strncpy was used to copy a fixed size buffer. Since
-NUL-terminating string is not required here, prefer a memcpy function.
-The generated code (ppc32) remains the same.
+On 5/14/19 5:31 PM, Alex Williamson wrote:
+> On Wed, 8 May 2019 17:27:47 +0200
+> Boris Fiuczynski <fiuczy@linux.ibm.com> wrote:
+> 
+>> On 5/8/19 11:22 PM, Alex Williamson wrote:
+>>>>> I thought there was a request to make this more specific to migration
+>>>>> by renaming it to something like migration_version.  Also, as an
+>>>>>      
+>>>> so this attribute may not only include a mdev device's parent device info and
+>>>> mdev type, but also include numeric software version of vendor specific
+>>>> migration code, right?
+>>> It's a vendor defined string, it should be considered opaque to the
+>>> user, the vendor can include whatever they feel is relevant.
+>>>    
+>> Would a vendor also be allowed to provide a string expressing required
+>> features as well as containing backend resource requirements which need
+>> to be compatible for a successful migration? Somehow a bit like a cpu
+>> model... maybe even as json or xml...
+>> I am asking this with vfio-ap in mind. In that context checking
+>> compatibility of two vfio-ap mdev devices is not as simple as checking
+>> if version A is smaller or equal to version B.
+> 
+> Two pieces to this, the first is that the string is opaque exactly so
+> that the vendor driver can express whatever they need in it.  The user
+> should never infer that two devices are compatible.  The second is that
+I agree.
 
-Silence the following warning triggered using W=1:
+> this is not a resource availability or reservation interface.  The fact
+I also agree. The migration_version (version in this case is not really 
+a good fit) is a summary of requirements the source mdev has which a 
+target mdev needs to be able to fulfill in order to allow migration.
+The target mdev already exists and was already configured by other means 
+not involved in the migration check process.
+Using the migrations_version as some kind of configuration transport 
+and/or reservation mechanism wasn't my intention and IMHO would both be 
+wrong.
 
-  fs/hfsplus/xattr.c:410:3: warning: 'strncpy' output truncated before terminating nul copying 4 bytes from a string of the same length [-Wstringop-truncation]
+> that a target device would be compatible for migration should not take
+> into account whether the target has the resources to actually create
+> such a device.  Doing so would imply some sort of resource reservation
+> support that does not exist.  Matrix devices are clearly a bit
+> complicated here since maybe the source is expressing a component of
+> the device that doesn't exist on the target.  In such a "resource not
+> available at all" case, it might be fair to nak the compatibility test,
+> but a "ok, but resource not currently available" case should pass,
+> imo.  Thanks,
+> 
+> Alex
+> 
+> --
+> libvir-list mailing list
+> libvir-list@redhat.com
+> https://www.redhat.com/mailman/listinfo/libvir-list
+> 
 
-Signed-off-by: Mathieu Malaterre <malat@debian.org>
----
- fs/hfsplus/xattr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/hfsplus/xattr.c b/fs/hfsplus/xattr.c
-index d5403b4004c9..bb0b27d88e50 100644
---- a/fs/hfsplus/xattr.c
-+++ b/fs/hfsplus/xattr.c
-@@ -407,7 +407,7 @@ static int copy_name(char *buffer, const char *xattr_name, int name_len)
- 	int offset = 0;
- 
- 	if (!is_known_namespace(xattr_name)) {
--		strncpy(buffer, XATTR_MAC_OSX_PREFIX, XATTR_MAC_OSX_PREFIX_LEN);
-+		memcpy(buffer, XATTR_MAC_OSX_PREFIX, XATTR_MAC_OSX_PREFIX_LEN);
- 		offset += XATTR_MAC_OSX_PREFIX_LEN;
- 		len += XATTR_MAC_OSX_PREFIX_LEN;
- 	}
 -- 
-2.20.1
+Mit freundlichen Grüßen/Kind regards
+    Boris Fiuczynski
+
+IBM Deutschland Research & Development GmbH
+Vorsitzender des Aufsichtsrats: Matthias Hartmann
+Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen
+Registergericht: Amtsgericht Stuttgart, HRB 243294
 
