@@ -2,267 +2,135 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C00C072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A8DC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6458206C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:06:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mj3P8erc"
+	by mail.kernel.org (Postfix) with ESMTP id 8832620989
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:07:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727489AbfE1UGw (ORCPT
+        id S1727615AbfE1UHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 16:06:52 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:46094 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727226AbfE1UGv (ORCPT
+        Tue, 28 May 2019 16:07:44 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:51858 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726812AbfE1UHo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 16:06:51 -0400
-Received: by mail-ot1-f66.google.com with SMTP id j49so18951628otc.13
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 13:06:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sAY+X/6OjvH2/kHzEFaQYM5a3NfoJCjKak4WUy8WxOg=;
-        b=mj3P8erc0d0J3qLuw81fmgBFRlYrDPpRlBWngBWwxfTjQLcEOuHasUrkeJiKgfTjg5
-         2ihuUJHu/IhG+P2YZXmBHnC9MnJXCVgKQ9BAu8qMhaUQSP4yCiMELuVtZ5X+gznhfuM4
-         v+iIvpHEHXha38/WuIY4cNU+nuFxW5oe8bpP4SRzjJ0E0+nz+L9s1upgsalq6lolvGK6
-         Lc02/3qWhL+arRMo1/y0figgjb27vsMUr7Z7RIRU6pCpcWGW1dTN31k4aZ1rN3eI0HOx
-         r+6bdabT+52797NZz8WLndOLD0Z4GFB/qVhoS465X1dHMaYCleB6Pby3H+oDG58E9Vvh
-         24Sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sAY+X/6OjvH2/kHzEFaQYM5a3NfoJCjKak4WUy8WxOg=;
-        b=AV1DL+EWCa9tmhbjXp4NikpbW3v+fXyNqyGmaXojsOsEhobT8uL/QFXiubvJB2vegJ
-         eB/KLgebBGT2oHPMU7kGooCBUSIDE3gfqiP3dFczrY0B2QMwK3OpLkEyYmDIUChUCuOF
-         12QXL6JBhW5a7JsGlJ63to0SAHL7INamn5nZ64CNHaQ4vz0V1W2dWHS5wQ2zwEt4rsZG
-         1yAEp3Rw+zcxFJybOW1XwJXz92J9Jv6g1+AUpdxYBeenwaH4lGluPxgqQlaWKXEMNKCL
-         KVpAVkCVtttmjOuyiVu6GQ9PmvQQRugH+jnGLDHuPbOeENEb0EK1R/S3dDUy4Z3hZYHZ
-         lSbA==
-X-Gm-Message-State: APjAAAXO1wyV2nmdEYarIWAi6tTHjAG03Lj3ZIQGuNr189Z2KHr27hMY
-        HzXc1U6mRT65UbQS1oVlyPOlj8XkF9jEYqUcmaSTbw==
-X-Google-Smtp-Source: APXvYqw396edgjyJozSsCzajednRbbmIaB7gUQWyUQC+jR8mr25BB7Za7gjwtsrkkqmu/81ioRnRS6do1sBdvZD+Mmo=
-X-Received: by 2002:a9d:7347:: with SMTP id l7mr46665645otk.183.1559074010231;
- Tue, 28 May 2019 13:06:50 -0700 (PDT)
+        Tue, 28 May 2019 16:07:44 -0400
+Received: from 50-233-100-202-static.hfc.comcastbusiness.net ([50.233.100.202] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hViNn-00076L-PK; Tue, 28 May 2019 22:07:40 +0200
+Date:   Tue, 28 May 2019 13:07:29 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+cc:     fweisbec@gmail.com, mingo@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] time/tick-broadcast: Fix tick_broadcast_offline() lockdep
+ complaint
+In-Reply-To: <20190527143932.GA10527@linux.ibm.com>
+Message-ID: <alpine.DEB.2.21.1905281300340.1859@nanos.tec.linutronix.de>
+References: <20190527143932.GA10527@linux.ibm.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk>
- <155905933492.7587.6968545866041839538.stgit@warthog.procyon.org.uk>
-In-Reply-To: <155905933492.7587.6968545866041839538.stgit@warthog.procyon.org.uk>
-From:   Jann Horn <jannh@google.com>
-Date:   Tue, 28 May 2019 22:06:23 +0200
-Message-ID: <CAG48ez2rRh2_Kq_EGJs5k-ZBNffGs_Q=vkQdinorBgo58tbGpg@mail.gmail.com>
-Subject: Re: [PATCH 3/7] vfs: Add a mount-notification facility
-To:     David Howells <dhowells@redhat.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 6:05 PM David Howells <dhowells@redhat.com> wrote:
-> Add a mount notification facility whereby notifications about changes in
-> mount topology and configuration can be received.  Note that this only
-> covers vfsmount topology changes and not superblock events.  A separate
-> facility will be added for that.
-[...]
-> @@ -172,4 +167,18 @@ static inline void notify_mount(struct mount *changed,
->                                 u32 info_flags)
->  {
->         atomic_inc(&changed->mnt_notify_counter);
-> +
-> +#ifdef CONFIG_MOUNT_NOTIFICATIONS
-> +       {
-> +               struct mount_notification n = {
-> +                       .watch.type     = WATCH_TYPE_MOUNT_NOTIFY,
-> +                       .watch.subtype  = subtype,
-> +                       .watch.info     = info_flags | sizeof(n),
-> +                       .triggered_on   = changed->mnt_id,
-> +                       .changed_mount  = aux ? aux->mnt_id : 0,
-> +               };
-> +
-> +               post_mount_notification(changed, &n);
-> +       }
-> +#endif
->  }
-[...]
-> +void post_mount_notification(struct mount *changed,
-> +                            struct mount_notification *notify)
-> +{
-> +       const struct cred *cred = current_cred();
+On Mon, 27 May 2019, Paul E. McKenney wrote:
 
-This current_cred() looks bogus to me. Can't mount topology changes
-come from all sorts of places? For example, umount_mnt() from
-umount_tree() from dissolve_on_fput() from __fput(), which could
-happen pretty much anywhere depending on where the last reference gets
-dropped?
+> The TASKS03 and TREE04 rcutorture scenarios produce the following
+> lockdep complaint:
+> 
+> ================================
+> WARNING: inconsistent lock state
+> 5.2.0-rc1+ #513 Not tainted
+> --------------------------------
+> inconsistent {IN-HARDIRQ-W} -> {HARDIRQ-ON-W} usage.
+> migration/1/14 [HC0[0]:SC0[0]:HE1:SE1] takes:
+> (____ptrval____) (tick_broadcast_lock){?...}, at: tick_broadcast_offline+0xf/0x70
+> {IN-HARDIRQ-W} state was registered at:
+>   lock_acquire+0xb0/0x1c0
+>   _raw_spin_lock_irqsave+0x3c/0x50
+>   tick_broadcast_switch_to_oneshot+0xd/0x40
+>   tick_switch_to_oneshot+0x4f/0xd0
+>   hrtimer_run_queues+0xf3/0x130
+>   run_local_timers+0x1c/0x50
+>   update_process_times+0x1c/0x50
+>   tick_periodic+0x26/0xc0
+>   tick_handle_periodic+0x1a/0x60
+>   smp_apic_timer_interrupt+0x80/0x2a0
+>   apic_timer_interrupt+0xf/0x20
+>   _raw_spin_unlock_irqrestore+0x4e/0x60
+>   rcu_nocb_gp_kthread+0x15d/0x590
+>   kthread+0xf3/0x130
+>   ret_from_fork+0x3a/0x50
+> irq event stamp: 171
+> hardirqs last  enabled at (171): [<ffffffff8a201a37>] trace_hardirqs_on_thunk+0x1a/0x1c
+> hardirqs last disabled at (170): [<ffffffff8a201a53>] trace_hardirqs_off_thunk+0x1a/0x1c
+> softirqs last  enabled at (0): [<ffffffff8a264ee0>] copy_process.part.56+0x650/0x1cb0
+> softirqs last disabled at (0): [<0000000000000000>] 0x0
+> 
+> other info that might help us debug this:
+>  Possible unsafe locking scenario:
+> 
+>        CPU0
+>        ----
+>   lock(tick_broadcast_lock);
+>   <Interrupt>
+>     lock(tick_broadcast_lock);
+> 
+>  *** DEADLOCK ***
+> 
+> 1 lock held by migration/1/14:
+>  #0: (____ptrval____) (clockevents_lock){+.+.}, at: tick_offline_cpu+0xf/0x30
+> 
+> stack backtrace:
+> CPU: 1 PID: 14 Comm: migration/1 Not tainted 5.2.0-rc1+ #513
+> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS Bochs 01/01/2011
+> Call Trace:
+>  dump_stack+0x5e/0x8b
+>  print_usage_bug+0x1fc/0x216
+>  ? print_shortest_lock_dependencies+0x1b0/0x1b0
+>  mark_lock+0x1f2/0x280
+>  __lock_acquire+0x1e0/0x18f0
+>  ? __lock_acquire+0x21b/0x18f0
+>  ? _raw_spin_unlock_irqrestore+0x4e/0x60
+>  lock_acquire+0xb0/0x1c0
+>  ? tick_broadcast_offline+0xf/0x70
+>  _raw_spin_lock+0x33/0x40
+>  ? tick_broadcast_offline+0xf/0x70
+>  tick_broadcast_offline+0xf/0x70
+>  tick_offline_cpu+0x16/0x30
+>  take_cpu_down+0x7d/0xa0
+>  multi_cpu_stop+0xa2/0xe0
+>  ? cpu_stop_queue_work+0xc0/0xc0
+>  cpu_stopper_thread+0x6d/0x100
+>  smpboot_thread_fn+0x169/0x240
+>  kthread+0xf3/0x130
+>  ? sort_range+0x20/0x20
+>  ? kthread_cancel_delayed_work_sync+0x10/0x10
+>  ret_from_fork+0x3a/0x50
+> 
+> It turns out that tick_broadcast_offline() can be invoked with interrupts
+> enabled, so this commit fixes this issue by replacing the raw_spin_lock()
+> with raw_spin_lock_irqsave().
 
-> +       struct path cursor;
-> +       struct mount *mnt;
-> +       unsigned seq;
-> +
-> +       seq = 0;
-> +       rcu_read_lock();
-> +restart:
-> +       cursor.mnt = &changed->mnt;
-> +       cursor.dentry = changed->mnt.mnt_root;
-> +       mnt = real_mount(cursor.mnt);
-> +       notify->watch.info &= ~WATCH_INFO_IN_SUBTREE;
-> +
-> +       read_seqbegin_or_lock(&rename_lock, &seq);
-> +       for (;;) {
-> +               if (mnt->mnt_watchers &&
-> +                   !hlist_empty(&mnt->mnt_watchers->watchers)) {
-> +                       if (cursor.dentry->d_flags & DCACHE_MOUNT_WATCH)
-> +                               post_watch_notification(mnt->mnt_watchers,
-> +                                                       &notify->watch, cred,
-> +                                                       (unsigned long)cursor.dentry);
-> +               } else {
-> +                       cursor.dentry = mnt->mnt.mnt_root;
-> +               }
-> +               notify->watch.info |= WATCH_INFO_IN_SUBTREE;
-> +
-> +               if (cursor.dentry == cursor.mnt->mnt_root ||
-> +                   IS_ROOT(cursor.dentry)) {
-> +                       struct mount *parent = READ_ONCE(mnt->mnt_parent);
-> +
-> +                       /* Escaped? */
-> +                       if (cursor.dentry != cursor.mnt->mnt_root)
-> +                               break;
-> +
-> +                       /* Global root? */
-> +                       if (mnt != parent) {
-> +                               cursor.dentry = READ_ONCE(mnt->mnt_mountpoint);
-> +                               mnt = parent;
-> +                               cursor.mnt = &mnt->mnt;
-> +                               continue;
-> +                       }
-> +                       break;
+What?
 
-(nit: this would look clearer if you inverted the condition and wrote
-it as "if (mnt == parent) break;", then you also wouldn't need that
-"continue" or the braces)
+take_cpu_down() is called from multi_cpu_stop() with interrupts disabled.
 
-> +               }
-> +
-> +               cursor.dentry = cursor.dentry->d_parent;
-> +       }
-> +
-> +       if (need_seqretry(&rename_lock, seq)) {
-> +               seq = 1;
-> +               goto restart;
-> +       }
-> +
-> +       done_seqretry(&rename_lock, seq);
-> +       rcu_read_unlock();
-> +}
-[...]
-> +SYSCALL_DEFINE5(mount_notify,
-> +               int, dfd,
-> +               const char __user *, filename,
-> +               unsigned int, at_flags,
-> +               int, watch_fd,
-> +               int, watch_id)
-> +{
-> +       struct watch_queue *wqueue;
-> +       struct watch_list *wlist = NULL;
-> +       struct watch *watch;
-> +       struct mount *m;
-> +       struct path path;
-> +       int ret;
-> +
-> +       if (watch_id < -1 || watch_id > 0xff)
-> +               return -EINVAL;
-> +
-> +       ret = user_path_at(dfd, filename, at_flags, &path);
+So this is just papering over the fact that something called from
+take_cpu_down() enabled interrupts. That needs to be found and fixed.
 
-The third argument of user_path_at() contains kernel-private lookup
-flags, I'm pretty sure userspace isn't supposed to be able to control
-these directly.
+Thanks,
 
-> +       if (ret)
-> +               return ret;
-> +
-> +       wqueue = get_watch_queue(watch_fd);
-> +       if (IS_ERR(wqueue))
-> +               goto err_path;
-> +
-> +       m = real_mount(path.mnt);
-> +
-> +       if (watch_id >= 0) {
-> +               if (!m->mnt_watchers) {
-> +                       wlist = kzalloc(sizeof(*wlist), GFP_KERNEL);
-> +                       if (!wlist)
-> +                               goto err_wqueue;
-> +                       INIT_HLIST_HEAD(&wlist->watchers);
-> +                       spin_lock_init(&wlist->lock);
-> +                       wlist->release_watch = release_mount_watch;
-> +               }
-> +
-> +               watch = kzalloc(sizeof(*watch), GFP_KERNEL);
-> +               if (!watch)
-> +                       goto err_wlist;
-> +
-> +               init_watch(watch, wqueue);
-> +               watch->id               = (unsigned long)path.dentry;
-> +               watch->private          = path.mnt;
-> +               watch->info_id          = (u32)watch_id << 24;
-> +
-> +               down_write(&m->mnt.mnt_sb->s_umount);
-> +               if (!m->mnt_watchers) {
-> +                       m->mnt_watchers = wlist;
-> +                       wlist = NULL;
-> +               }
-> +
-> +               ret = add_watch_to_object(watch, m->mnt_watchers);
-> +               if (ret == 0) {
-> +                       spin_lock(&path.dentry->d_lock);
-> +                       path.dentry->d_flags |= DCACHE_MOUNT_WATCH;
-> +                       spin_unlock(&path.dentry->d_lock);
-> +                       path_get(&path);
-
-So... the watches on a mountpoint create references back to the
-mountpoint? Is your plan that umount_tree() breaks the loop by getting
-rid of the watches?
-
-If so: Is there anything that prevents installing new watches after
-umount_tree()? Because I don't see anything.
-
-It might make sense to redesign this stuff so that watches don't hold
-references on the object being watched.
-
-> +               }
-> +               up_write(&m->mnt.mnt_sb->s_umount);
-> +               if (ret < 0)
-> +                       kfree(watch);
-> +       } else if (m->mnt_watchers) {
-> +               down_write(&m->mnt.mnt_sb->s_umount);
-> +               ret = remove_watch_from_object(m->mnt_watchers, wqueue,
-> +                                              (unsigned long)path.dentry,
-> +                                              false);
-> +               up_write(&m->mnt.mnt_sb->s_umount);
-> +       } else {
-> +               ret = -EBADSLT;
-> +       }
-> +
-> +err_wlist:
-> +       kfree(wlist);
-> +err_wqueue:
-> +       put_watch_queue(wqueue);
-> +err_path:
-> +       path_put(&path);
-> +       return ret;
-> +}
+	tglx
