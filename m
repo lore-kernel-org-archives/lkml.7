@@ -2,146 +2,144 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55499C072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0546FC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E96F20717
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:27:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CoUGc1ri"
+	by mail.kernel.org (Postfix) with ESMTP id DC95B20717
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:27:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbfE1T1F (ORCPT
+        id S1727856AbfE1T1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 15:27:05 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35247 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726453AbfE1T1F (ORCPT
+        Tue, 28 May 2019 15:27:35 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38414 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726453AbfE1T1f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 15:27:05 -0400
-Received: by mail-pg1-f193.google.com with SMTP id t1so11581106pgc.2;
-        Tue, 28 May 2019 12:27:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Xe88rAERhIcClUtIYYLdUcTXLi7UODZokIaGblwAr7s=;
-        b=CoUGc1riuI5y7RU6MLiZ4kGMYmyME4qYlStwlZfualUUcgGd6Vmrm0jvToE9vzKTke
-         ej8UwnRgUxxbsw2Vj3bbYkrIzfeP1PbgJmUvqIldgsPusgD5gQfOf+mVLU/4fqWueDcw
-         RqhteZ6ZzWuLJw0mYLV4Cr2gAxKkhCy4OKx/ay9v9eb0Mh3FZuz12501mgQnInOTSQGo
-         4tpr2/MK6B4d2cjwgZ5JlwO0iIwsVf2RasJHHVDndAvVPA+ftH9rBjCezfWg+i59J7Tn
-         V5o/i3Ec6I2OvpegKRc1jDPwSncc9KMvv+nRvYci/5Lctl9FEQNB02M6C1hDZb4caYNR
-         ePDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Xe88rAERhIcClUtIYYLdUcTXLi7UODZokIaGblwAr7s=;
-        b=LavCMdxinMh60CmaNMxjBM+x3RYnGyfglO6lVSzLlFSQN9Rfwe5Ykpm0u3E5jIM7+X
-         5q5Nrypmt+oMJ0r+hUjrEsu0IqAu263HlF2CIK7r9LtRzdoEXMzuMgvO3qR/1hVxdSbv
-         JGJwA9fRC6aG9ye9qxsX0btErpanuXRtuIxKT3Usj3bQHxCsin4VTlXHN5zKzKh+9p/E
-         RBLa4QomzGV2SzO9GvfNqXUCv/EhqpjyjVjE9B5bXdQoWYquGM3uItA5u2FOgLupbE7M
-         NO1RJZUnXHzMJOe26LMOp5/qRiAMCgpCEV/lWUadPQuj0ZYIlcqS4tdzbpwiTDEfa64O
-         wMZg==
-X-Gm-Message-State: APjAAAXO7lkrLtimxiz9xoUNimJNn/+qk7LovhZm/b3R2eV6VQ0WtAV+
-        Mn92DCKPxCt043cRG2IeWdBC/0tT
-X-Google-Smtp-Source: APXvYqx8tCWj7JEqV7YpDaDKH+lUnilfA4UH8oEOmJynC2Hy4jABa6MkhlAIj4La3KLQqQGw8XEL8g==
-X-Received: by 2002:a62:386:: with SMTP id 128mr121183450pfd.10.1559071624383;
-        Tue, 28 May 2019 12:27:04 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id l1sm16345613pgi.91.2019.05.28.12.27.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 May 2019 12:27:03 -0700 (PDT)
-Date:   Tue, 28 May 2019 12:27:02 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>, od@zcrc.me,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] watchdog: jz4740: Avoid starting watchdog in
- set_timeout
-Message-ID: <20190528192702.GB24853@roeck-us.net>
-References: <20190521155313.19326-1-paul@crapouillou.net>
- <20190521155313.19326-2-paul@crapouillou.net>
+        Tue, 28 May 2019 15:27:35 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4SJO63w028935
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 15:27:34 -0400
+Received: from e32.co.us.ibm.com (e32.co.us.ibm.com [32.97.110.150])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ssa6rtjc3-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 15:27:34 -0400
+Received: from localhost
+        by e32.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
+        Tue, 28 May 2019 20:27:33 +0100
+Received: from b03cxnp08025.gho.boulder.ibm.com (9.17.130.17)
+        by e32.co.us.ibm.com (192.168.1.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 28 May 2019 20:27:28 +0100
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4SJRRNP22282730
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 May 2019 19:27:27 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0C0A6BE053;
+        Tue, 28 May 2019 19:27:27 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D76FDBE058;
+        Tue, 28 May 2019 19:27:22 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.85.218.160])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Tue, 28 May 2019 19:27:22 +0000 (GMT)
+References: <20190418035120.2354-1-bauerman@linux.ibm.com> <20190418035120.2354-10-bauerman@linux.ibm.com> <1557835765.4139.9.camel@linux.ibm.com>
+User-agent: mu4e 1.0; emacs 26.2
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        David Howells <dhowells@redhat.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "AKASHI\, Takahiro" <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v10 09/12] ima: Implement support for module-style appended signatures
+In-reply-to: <1557835765.4139.9.camel@linux.ibm.com>
+Date:   Tue, 28 May 2019 16:27:17 -0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190521155313.19326-2-paul@crapouillou.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+x-cbid: 19052819-0004-0000-0000-000015154B13
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011176; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01209921; UDB=6.00635635; IPR=6.00990951;
+ MB=3.00027089; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-28 19:27:32
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052819-0005-0000-0000-00008BD76A03
+Message-Id: <87y32q5qi2.fsf@morokweng.localdomain>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-28_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905280121
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 05:53:11PM +0200, Paul Cercueil wrote:
-> Previously the jz4740_wdt_set_timeout() function was starting the timer
-> unconditionally, even if it was stopped when that function was entered.
-> 
-> Now, the timer will be restarted only if it was already running before
-> this function is called.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 
-Comment inline, but not worth a respin (and I don't have a good idea how to
-improve it).
+Mimi Zohar <zohar@linux.ibm.com> writes:
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> Hi Thiago,
+>
+> On Thu, 2019-04-18 at 00:51 -0300, Thiago Jung Bauermann wrote:
+>> 
+>> @@ -326,6 +356,10 @@ int ima_appraise_measurement(enum ima_hooks func,
+>> case INTEGRITY_UNKNOWN:
+>> break;
+>> case INTEGRITY_NOXATTRS:/* No EVM protected xattrs. */
+>> +/* It's fine not to have xattrs when using a modsig. */
+>> +if (try_modsig)
+>> +break;
+>> +/* fall through */
+>> case INTEGRITY_NOLABEL:/* No security.evm xattr. */
+>> cause = "missing-HMAC";
+>> goto out;
+>> @@ -340,6 +374,14 @@ int ima_appraise_measurement(enum ima_hooks func,
+>> rc = xattr_verify(func, iint, xattr_value, xattr_len, &status,
+>>  &cause);
+>> 
+>> +/*
+>> + * If we have a modsig and either no imasig or the imasig's key isn't
+>> + * known, then try verifying the modsig.
+>> + */
+>> +if (status != INTEGRITY_PASS && try_modsig &&
+>> + (!xattr_value || rc == -ENOKEY))
+>> +rc = modsig_verify(func, modsig, &status, &cause);
+>
+> EVM protects other security xattrs, not just security.ima, if they
+> exist. As a result, evm_verifyxattr() could pass based on the other
+> security xattrs.
 
-> ---
->  drivers/watchdog/jz4740_wdt.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/watchdog/jz4740_wdt.c b/drivers/watchdog/jz4740_wdt.c
-> index 51be321c775a..f970a7a53084 100644
-> --- a/drivers/watchdog/jz4740_wdt.c
-> +++ b/drivers/watchdog/jz4740_wdt.c
-> @@ -77,6 +77,7 @@ static int jz4740_wdt_set_timeout(struct watchdog_device *wdt_dev,
->  	unsigned int rtc_clk_rate;
->  	unsigned int timeout_value;
->  	unsigned short clock_div = JZ_WDT_CLOCK_DIV_1;
-> +	u8 tcer;
->  
->  	rtc_clk_rate = clk_get_rate(drvdata->rtc_clk);
->  
-> @@ -92,6 +93,7 @@ static int jz4740_wdt_set_timeout(struct watchdog_device *wdt_dev,
->  		clock_div += (1 << TCU_TCSR_PRESCALE_LSB);
->  	}
->  
-> +	tcer = readb(drvdata->base + TCU_REG_WDT_TCER);
->  	writeb(0x0, drvdata->base + TCU_REG_WDT_TCER);
->  	writew(clock_div, drvdata->base + TCU_REG_WDT_TCSR);
->  
-> @@ -99,7 +101,7 @@ static int jz4740_wdt_set_timeout(struct watchdog_device *wdt_dev,
->  	writew(0x0, drvdata->base + TCU_REG_WDT_TCNT);
->  	writew(clock_div | JZ_WDT_CLOCK_RTC, drvdata->base + TCU_REG_WDT_TCSR);
->  
-> -	writeb(0x1, drvdata->base + TCU_REG_WDT_TCER);
-> +	writeb(tcer & TCU_WDT_TCER_TCEN, drvdata->base + TCU_REG_WDT_TCER);
+Indeed! It doesn't make sense to test for status != INTEGRITY_PASS here.
+Not sure what I was thinking. Thanks for spotting it. With your other
+comments about this if clause, this code now reads:
 
-This unnecessarily writes 0 if the timer is not running.
+	/*
+	 * If we have a modsig and either no imasig or the imasig's key isn't
+	 * known, then try verifying the modsig.
+	 */
+	if (try_modsig &&
+	    (!xattr_value || xattr_value->type == IMA_XATTR_DIGEST_NG ||
+	     rc == -ENOKEY))
+		rc = modsig_verify(func, modsig, &status, &cause);
 
->  
->  	wdt_dev->timeout = new_timeout;
->  	return 0;
-> @@ -107,8 +109,11 @@ static int jz4740_wdt_set_timeout(struct watchdog_device *wdt_dev,
->  
->  static int jz4740_wdt_start(struct watchdog_device *wdt_dev)
->  {
-> +	struct jz4740_wdt_drvdata *drvdata = watchdog_get_drvdata(wdt_dev);
-> +
->  	jz4740_timer_enable_watchdog();
->  	jz4740_wdt_set_timeout(wdt_dev, wdt_dev->timeout);
-> +	writeb(TCU_WDT_TCER_TCEN, drvdata->base + TCU_REG_WDT_TCER);
+-- 
+Thiago Jung Bauermann
+IBM Linux Technology Center
 
-This unnecessarily enables the timer even if it is already enabled (that should not
-happen, but does if the watchdog is already running at boot).
-
->  
->  	return 0;
->  }
-> -- 
-> 2.21.0.593.g511ec345e18
-> 
