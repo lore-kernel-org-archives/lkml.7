@@ -2,146 +2,114 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=unavailable
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE7BCC46470
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B8F0C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:03:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 871CF214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:56:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Dd/Xr8jA"
+	by mail.kernel.org (Postfix) with ESMTP id EFD82206C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:03:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbfE1O4N (ORCPT
+        id S1726576AbfE1PDp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 10:56:13 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:41016 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726371AbfE1O4N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 10:56:13 -0400
-Received: by mail-yw1-f68.google.com with SMTP id t140so5366603ywe.8
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 07:56:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jTlIgeBI8R5oN3O3HQ99I++T6jlNEV+UFbvjja9ZAd4=;
-        b=Dd/Xr8jAObDU6D9ZyHopPb9p2XU0aQy+5Dp2qCVlY5+K+u8uFPGUTNWtUA4uZvV1rC
-         16K+8dmbWHg7ykKlo9+yfIW53zK9R59RzBfnjrrMrCAeaTsu713KYjTk26zl/L6/IFmO
-         i2+Enq9iPO+4cZgVEPtNB1nLDfJHsnmfvUL4X2Ln3s03Mg2VuVxTixykG3PrRLA8VW/k
-         QO996765hLFUmCg7+/LeKPJfMaUWpbaA+ZORbgDbpJevZEoYtO/cCP1ihhFOaidAU+LY
-         F5iWtIC5dwHah+OTNRTs7i3EU+loD5SpSbSsBYl5Vr5rRpNnoh06+ecieHQO7YBc7rtA
-         zZNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jTlIgeBI8R5oN3O3HQ99I++T6jlNEV+UFbvjja9ZAd4=;
-        b=OiTg9cAXXPQas81qWzMtH6NkG8EZwTBLkNZj54vqE/RAWOTPGwUbtLaeMUtRegL9hV
-         uE+fbp49whokvSHWr7whR0cY4AXPQyDr7MbH83QEhbWV6lak3fprBZc/jjH82QRTFGQv
-         EbbZf4C+SWlgHegJzg84KOfQFRzCw7cRStn1bvklytRrpphRpybhVevBNU0UHvsGJ4dk
-         +WD7ZG1Sr2LBkEpU+dr4/4lRh2mxO20UOkgacaQJ2EyLfxIip9lEJ9IJjaDjd3K21/pm
-         8gR9qf/BK5PDrd/7xw48SdUb1v0aXrXeKBPwsr7FQsp23BoG1Psk+TRSuMbB7WWKdlee
-         K2Tg==
-X-Gm-Message-State: APjAAAUdkYBI6f0veMo95B72h3DUM0Sc/B0CZQclvRRCnhvJWwiOSvSb
-        Boe5GT+bYv+M+adCyB/bKOnEmOKjsMOI/6rg8mkqAg==
-X-Google-Smtp-Source: APXvYqw3Axo/+z3owEKgLL2LzIbxvY7WvXKmqyzQBHebVf3TKOElb4jbYm35ijLdq40mUgqSmfZZvLmPzTWeBVUYSJ4=
-X-Received: by 2002:a81:5ec3:: with SMTP id s186mr61920764ywb.308.1559055372056;
- Tue, 28 May 2019 07:56:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <155895155861.2824.318013775811596173.stgit@buzz>
- <20190527141223.GD1658@dhcp22.suse.cz> <20190527142156.GE1658@dhcp22.suse.cz>
- <20190527143926.GF1658@dhcp22.suse.cz> <9c55a343-2a91-46c6-166d-41b94bf5e9c8@yandex-team.ru>
- <20190528065153.GB1803@dhcp22.suse.cz> <a4e5eeb8-3560-d4b4-08a0-8a22c677c0f7@yandex-team.ru>
- <20190528073835.GP1658@dhcp22.suse.cz> <5af1ba69-61d1-1472-4aa3-20beb4ae44ae@yandex-team.ru>
- <20190528084243.GT1658@dhcp22.suse.cz>
-In-Reply-To: <20190528084243.GT1658@dhcp22.suse.cz>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Tue, 28 May 2019 07:56:00 -0700
-Message-ID: <CALvZod4fZeQiARaMrw8eaw=9Tynb4x4quZx13nen22EwoC5epQ@mail.gmail.com>
-Subject: Re: [PATCH RFC] mm/madvise: implement MADV_STOCKPILE (kswapd from
- user space)
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Roman Gushchin <guro@fb.com>, linux-api@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 28 May 2019 11:03:45 -0400
+Received: from foss.arm.com ([217.140.101.70]:58850 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726371AbfE1PDo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 11:03:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0997880D;
+        Tue, 28 May 2019 08:03:44 -0700 (PDT)
+Received: from e121650-lin.cambridge.arm.com (e121650-lin.cambridge.arm.com [10.1.196.108])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5631F3F5AF;
+        Tue, 28 May 2019 08:03:42 -0700 (PDT)
+From:   Raphael Gault <raphael.gault@arm.com>
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     mingo@redhat.com, peterz@infradead.org, catalin.marinas@arm.com,
+        will.deacon@arm.com, acme@kernel.org, mark.rutland@arm.com,
+        Raphael Gault <raphael.gault@arm.com>
+Subject: [RFC V2 0/7] arm64: Enable access to pmu registers by user-space
+Date:   Tue, 28 May 2019 16:03:13 +0100
+Message-Id: <20190528150320.25953-1-raphael.gault@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 1:42 AM Michal Hocko <mhocko@kernel.org> wrote:
->
-> On Tue 28-05-19 11:04:46, Konstantin Khlebnikov wrote:
-> > On 28.05.2019 10:38, Michal Hocko wrote:
-> [...]
-> > > Could you define the exact semantic? Ideally something for the manual
-> > > page please?
-> > >
-> >
-> > Like kswapd which works with thresholds of free memory this one reclaims
-> > until 'free' (i.e. memory which could be allocated without invoking
-> > direct recliam of any kind) is lower than passed 'size' argument.
->
-> s@lower@higher@ I guess
->
-> > Thus right after madvise(NULL, size, MADV_STOCKPILE) 'size' bytes
-> > could be allocated in this memory cgroup without extra latency from
-> > reclaimer if there is no other memory consumers.
-> >
-> > Reclaimed memory is simply put into free lists in common buddy allocator,
-> > there is no reserves for particular task or cgroup.
-> >
-> > If overall memory allocation rate is smooth without rough spikes then
-> > calling MADV_STOCKPILE in loop periodically provides enough room for
-> > allocations and eliminates direct reclaim from all other tasks.
-> > As a result this eliminates unpredictable delays caused by
-> > direct reclaim in random places.
->
-> OK, this makes it more clear to me. Thanks for the clarification!
-> I have clearly misunderstood and misinterpreted target as the reclaim
-> target rather than free memory target.  Sorry about the confusion.
-> I sill think that this looks like an abuse of the madvise but if there
-> is a wider consensus this is acceptable I will not stand in the way.
->
->
+The perf user-space tool relies on the PMU to monitor events. It offers an
+abstraction layer over the hardware counters since the underlying
+implementation is cpu-dependent. We want to allow userspace tools to have
+access to the registers storing the hardware counters' values directly.
+This targets specifically self-monitoring tasks in order to reduce the
+overhead by directly accessing the registers without having to go
+through the kernel.
+In order to do this we need to setup the pmu so that it exposes its registers
+to userspace access.
 
-I agree with Michal that madvise does not seem like a right API for
-this use-case, a 'proactive reclaim'.
+The first patch enables the tests for arm64 architecture in the perf
+tool to be compiled systematically.
 
-This is conflating memcg and global proactive reclaim. There are
-use-cases which would prefer to have centralized control on the system
-wide proactive reclaim because system level memory overcommit is
-controlled by the admin. Decoupling global and per-memcg proactive
-reclaim will allow mechanism to implement both use-cases (yours and
-this one).
+The second patch add a test to the perf tool so that we can test that the
+access to the registers works correctly from userspace.
 
-The madvise() is requiring that the proactive reclaim process should
-be in the target memcg.  I think a memcg interface instead of madvise
-is better as it will allow the job owner to control cpu resources of
-the proactive reclaim. With madvise, the proactive reclaim has to
-share cpu with the target sub-task of the job (or do some tricks with
-the hierarchy).
+The third patch adds another test similar to the first one but this time
+using rseq as mechanism to make sure of the data correctness.
 
-The current implementation is polling-based. I think a reactive
-approach based on some watermarks would be better. Polling may be fine
-for servers but for power restricted devices, reactive approach is
-preferable.
+The fourth patch focuses on the armv8 pmuv3 PMU support and makes sure that
+the access to the pmu registers is enable and that the userspace have
+access to the relevent information in order to use them.
 
-The current implementation is bypassing PSI for global reclaim.
-However I am not sure how should PSI interact with proactive reclaim
-in general.
+The fifth patch adds a hook to handle faulting access to the pmu
+registers. This is necessary in order to have a coherent behaviour
+on big.LITTLE environment.
 
-thanks,
-Shakeel
+The sixth patch put in place callbacks to enable access to the hardware
+counters from userspace when a compatible event is opened using the perf
+API.
+
+RFC: In my opinion there is no need to save pmselr_el0 when context
+switching like we do for pmuserenr_el0 since whether it's the seqlock
+mechanism or the restartable sequences, the user should notice right
+away that the value held in pmxevcntr_el0 is incorrect when the task has
+been rescheduled. However, I still wanted to discuss this point on the
+list to see if that's indeed not necessary to save it.
+
+Changes since V1: Add a test using rseq
+
+Raphael Gault (7):
+  perf: arm64: Compile tests unconditionally
+  perf: arm64: Add test to check userspace access to hardware counters.
+  perf: arm64: Use rseq to test userspace access to pmu counters
+  arm64: pmu: Add function implementation to update event index in
+    userpage.
+  arm64: pmu: Add hook to handle pmu-related undefined instructions
+  arm64: perf: Enable pmu counter direct access for perf event on armv8
+  Documentation: arm64: Document PMU counters access from userspace
+
+ .../arm64/pmu_counter_user_access.txt         |  42 +++
+ arch/arm64/include/asm/mmu.h                  |   6 +
+ arch/arm64/include/asm/mmu_context.h          |   2 +
+ arch/arm64/include/asm/perf_event.h           |  14 +
+ arch/arm64/kernel/cpufeature.c                |   4 +-
+ arch/arm64/kernel/perf_event.c                |  62 +++++
+ drivers/perf/arm_pmu.c                        |  38 +++
+ include/linux/perf/arm_pmu.h                  |   2 +
+ tools/perf/arch/arm64/Build                   |   2 +-
+ tools/perf/arch/arm64/include/arch-tests.h    |   9 +
+ tools/perf/arch/arm64/include/rseq-arm64.h    | 220 +++++++++++++++
+ tools/perf/arch/arm64/tests/Build             |   4 +-
+ tools/perf/arch/arm64/tests/arch-tests.c      |  10 +
+ tools/perf/arch/arm64/tests/rseq-pmu-events.c | 219 +++++++++++++++
+ tools/perf/arch/arm64/tests/user-events.c     | 255 ++++++++++++++++++
+ 15 files changed, 885 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/arm64/pmu_counter_user_access.txt
+ create mode 100644 tools/perf/arch/arm64/include/rseq-arm64.h
+ create mode 100644 tools/perf/arch/arm64/tests/rseq-pmu-events.c
+ create mode 100644 tools/perf/arch/arm64/tests/user-events.c
+
+-- 
+2.17.1
+
