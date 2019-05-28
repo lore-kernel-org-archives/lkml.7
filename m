@@ -3,140 +3,245 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 912A1C072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76923C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 746EF2070D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:00:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4659320989
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:00:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726688AbfE1LAF (ORCPT
+        id S1726773AbfE1LAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 07:00:05 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:5043 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726305AbfE1LAE (ORCPT
+        Tue, 28 May 2019 07:00:41 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52794 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726305AbfE1LAk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 07:00:04 -0400
-X-UUID: 37ca587f27c944d28c789b064b80d225-20190528
-X-UUID: 37ca587f27c944d28c789b064b80d225-20190528
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <chun-hung.wu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1074950528; Tue, 28 May 2019 18:59:58 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 28 May 2019 18:59:56 +0800
-Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 28 May 2019 18:59:56 +0800
-Message-ID: <1559041196.12867.3.camel@mtkswgap22>
-Subject: Re: [PATCH 3/4] iio: adc: mediatek: SET_LATE_SYSTEM_SLEEP_PM_OPS
- support
-From:   Chun-Hung Wu <chun-hung.wu@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Jonathan Cameron <jic23@kernel.org>
-CC:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
-        <peter.wang@mediatek.com>, <kuohong.wang@mediatek.com>,
-        <jg_poxu@mediatek.com>, <stanley.chu@mediatek.com>
-Date:   Tue, 28 May 2019 18:59:56 +0800
-In-Reply-To: <7838dcae-8a69-0297-718b-a061b14a456d@gmail.com>
-References: <1557994247-16739-1-git-send-email-chun-hung.wu@mediatek.com>
-         <1557994247-16739-4-git-send-email-chun-hung.wu@mediatek.com>
-         <20190518113527.5210b0bf@archlinux> <1558332205.11080.6.camel@mtkswgap22>
-         <7838dcae-8a69-0297-718b-a061b14a456d@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Tue, 28 May 2019 07:00:40 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4SAwvCW034767
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 07:00:40 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ss3q301ba-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 07:00:39 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Tue, 28 May 2019 12:00:37 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 28 May 2019 12:00:32 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4SB0V5m29032464
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 May 2019 11:00:31 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 641254203F;
+        Tue, 28 May 2019 11:00:31 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 00BF742041;
+        Tue, 28 May 2019 11:00:31 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.152.224.177])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 28 May 2019 11:00:30 +0000 (GMT)
+To:     Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Cc:     Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org,
+        Shuah Khan <shuah@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Andrew Jones <drjones@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-s390@vger.kernel.org
+References: <20190523164309.13345-1-thuth@redhat.com>
+ <20190523164309.13345-9-thuth@redhat.com>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ syiRa+UVlsKmx1hsEg==
+Date:   Tue, 28 May 2019 13:00:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-MTK:  N
+In-Reply-To: <20190523164309.13345-9-thuth@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19052811-0016-0000-0000-000002803A51
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052811-0017-0000-0000-000032DD4404
+Message-Id: <1deb73ac-9589-89cb-9a9b-f9957584733e@de.ibm.com>
+Subject: Re:  [PATCH 8/9] KVM: s390: Do not report unusabled IDs via
+ KVM_CAP_MAX_VCPU_ID
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-28_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905280072
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthias:
+Paolo, Radim,
 
-  Thanks for your suggestion, I think device_links is a good way to
-make dependency of module's suspend/resume order.
+would you consider this patch (or the full series) as 5.2 material or 5.3 material?
 
-Hi Jonathan:
 
-  Is it ok to keep using late_suspend and early_resume, or do you think
-it's better to use device_links?
-
-Thanks,
-Chun-Hung
-On Wed, 2019-05-22 at 18:28 +0200, Matthias Brugger wrote:
+On 23.05.19 18:43, Thomas Huth wrote:
+> KVM_CAP_MAX_VCPU_ID is currently always reporting KVM_MAX_VCPU_ID on all
+> architectures. However, on s390x, the amount of usable CPUs is determined
+> during runtime - it is depending on the features of the machine the code
+> is running on. Since we are using the vcpu_id as an index into the SCA
+> structures that are defined by the hardware (see e.g. the sca_add_vcpu()
+> function), it is not only the amount of CPUs that is limited by the hard-
+> ware, but also the range of IDs that we can use.
+> Thus KVM_CAP_MAX_VCPU_ID must be determined during runtime on s390x, too.
+> So the handling of KVM_CAP_MAX_VCPU_ID has to be moved from the common
+> code into the architecture specific code, and on s390x we have to return
+> the same value here as for KVM_CAP_MAX_VCPUS.
+> This problem has been discovered with the kvm_create_max_vcpus selftest.
+> With this change applied, the selftest now passes on s390x, too.
 > 
-> On 20/05/2019 08:03, Chun-Hung Wu wrote:
-> > Hi Jonathan:
-> > 
-> >   Thanks for the prompt reply,
-> > 
-> > On Sat, 2019-05-18 at 11:35 +0100, Jonathan Cameron wrote:
-> >> On Thu, 16 May 2019 16:10:46 +0800
-> >> Chun-Hung Wu <chun-hung.wu@mediatek.com> wrote:
-> >>
-> >>>   Move suspend/resume to late_suspend and
-> >>> early_resume to gurantee users can use auxadc
-> >> guarantee
-> >>
-> > will fix it in next version.
-> >>> driver at suspend/resume stage.
-> >> No problem with the patch content, but we need a reason why they may
-> >> want to do so?
-> > Our thermal drivers uses auxadc at suspend/resume stage.
-> > In order to avoid auxadc suspended prior to thermal driver,
-> > we move auxadc to late_suspend and early_resume.
-> > 
+> Signed-off-by: Thomas Huth <thuth@redhat.com>
+> ---
+>  arch/mips/kvm/mips.c       | 3 +++
+>  arch/powerpc/kvm/powerpc.c | 3 +++
+>  arch/s390/kvm/kvm-s390.c   | 1 +
+>  arch/x86/kvm/x86.c         | 3 +++
+>  virt/kvm/arm/arm.c         | 3 +++
+>  virt/kvm/kvm_main.c        | 2 --
+>  6 files changed, 13 insertions(+), 2 deletions(-)
 > 
-> That sounds like a user of device_links [1] to me.
+> diff --git a/arch/mips/kvm/mips.c b/arch/mips/kvm/mips.c
+> index 6d0517ac18e5..0369f26ab96d 100644
+> --- a/arch/mips/kvm/mips.c
+> +++ b/arch/mips/kvm/mips.c
+> @@ -1122,6 +1122,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+>  	case KVM_CAP_MAX_VCPUS:
+>  		r = KVM_MAX_VCPUS;
+>  		break;
+> +	case KVM_CAP_MAX_VCPU_ID:
+> +		r = KVM_MAX_VCPU_ID;
+> +		break;
+>  	case KVM_CAP_MIPS_FPU:
+>  		/* We don't handle systems with inconsistent cpu_has_fpu */
+>  		r = !!raw_cpu_has_fpu;
+> diff --git a/arch/powerpc/kvm/powerpc.c b/arch/powerpc/kvm/powerpc.c
+> index 3393b166817a..aa3a678711be 100644
+> --- a/arch/powerpc/kvm/powerpc.c
+> +++ b/arch/powerpc/kvm/powerpc.c
+> @@ -657,6 +657,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+>  	case KVM_CAP_MAX_VCPUS:
+>  		r = KVM_MAX_VCPUS;
+>  		break;
+> +	case KVM_CAP_MAX_VCPU_ID:
+> +		r = KVM_MAX_VCPU_ID;
+> +		break;
+>  #ifdef CONFIG_PPC_BOOK3S_64
+>  	case KVM_CAP_PPC_GET_SMMU_INFO:
+>  		r = 1;
+> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+> index 8d6d75db8de6..871d2e99b156 100644
+> --- a/arch/s390/kvm/kvm-s390.c
+> +++ b/arch/s390/kvm/kvm-s390.c
+> @@ -539,6 +539,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+>  		break;
+>  	case KVM_CAP_NR_VCPUS:
+>  	case KVM_CAP_MAX_VCPUS:
+> +	case KVM_CAP_MAX_VCPU_ID:
+>  		r = KVM_S390_BSCA_CPU_SLOTS;
+>  		if (!kvm_s390_use_sca_entries())
+>  			r = KVM_MAX_VCPUS;
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 536b78c4af6e..09a07d6a154e 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -3122,6 +3122,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+>  	case KVM_CAP_MAX_VCPUS:
+>  		r = KVM_MAX_VCPUS;
+>  		break;
+> +	case KVM_CAP_MAX_VCPU_ID:
+> +		r = KVM_MAX_VCPU_ID;
+> +		break;
+>  	case KVM_CAP_PV_MMU:	/* obsolete */
+>  		r = 0;
+>  		break;
+> diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
+> index 90cedebaeb94..7eeebe5e9da2 100644
+> --- a/virt/kvm/arm/arm.c
+> +++ b/virt/kvm/arm/arm.c
+> @@ -224,6 +224,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+>  	case KVM_CAP_MAX_VCPUS:
+>  		r = KVM_MAX_VCPUS;
+>  		break;
+> +	case KVM_CAP_MAX_VCPU_ID:
+> +		r = KVM_MAX_VCPU_ID;
+> +		break;
+>  	case KVM_CAP_MSI_DEVID:
+>  		if (!kvm)
+>  			r = -EINVAL;
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index f0d13d9d125d..c09259dd6286 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -3146,8 +3146,6 @@ static long kvm_vm_ioctl_check_extension_generic(struct kvm *kvm, long arg)
+>  	case KVM_CAP_MULTI_ADDRESS_SPACE:
+>  		return KVM_ADDRESS_SPACE_NUM;
+>  #endif
+> -	case KVM_CAP_MAX_VCPU_ID:
+> -		return KVM_MAX_VCPU_ID;
+>  	case KVM_CAP_NR_MEMSLOTS:
+>  		return KVM_USER_MEM_SLOTS;
+>  	default:
 > 
-> [1] https://www.kernel.org/doc/html/latest/driver-api/device_link.html
-> 
-> > Thanks,
-> > Chun-Hung
-> >>
-> >> Thanks,
-> >>
-> >> Jonathan
-> >>>
-> >>> Signed-off-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
-> >>> ---
-> >>>  drivers/iio/adc/mt6577_auxadc.c | 7 ++++---
-> >>>  1 file changed, 4 insertions(+), 3 deletions(-)
-> >>>
-> >>> diff --git a/drivers/iio/adc/mt6577_auxadc.c b/drivers/iio/adc/mt6577_auxadc.c
-> >>> index e1bdcc0..58d7cb2 100644
-> >>> --- a/drivers/iio/adc/mt6577_auxadc.c
-> >>> +++ b/drivers/iio/adc/mt6577_auxadc.c
-> >>> @@ -326,9 +326,10 @@ static int mt6577_auxadc_remove(struct platform_device *pdev)
-> >>>  	return 0;
-> >>>  }
-> >>>  
-> >>> -static SIMPLE_DEV_PM_OPS(mt6577_auxadc_pm_ops,
-> >>> -			 mt6577_auxadc_suspend,
-> >>> -			 mt6577_auxadc_resume);
-> >>> +static const struct dev_pm_ops mt6577_auxadc_pm_ops = {
-> >>> +	SET_LATE_SYSTEM_SLEEP_PM_OPS(mt6577_auxadc_suspend,
-> >>> +				     mt6577_auxadc_resume)
-> >>> +};
-> >>>  
-> >>>  static const struct of_device_id mt6577_auxadc_of_match[] = {
-> >>>  	{ .compatible = "mediatek,mt2701-auxadc", .data = &mt8173_compat},
-> >>
-> > 
-> > 
-
 
