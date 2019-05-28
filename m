@@ -2,142 +2,114 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57840C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC20C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34FF820883
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:48:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4371120883
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:49:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbfE1MsX (ORCPT
+        id S1727559AbfE1Mtq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 08:48:23 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:56858 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726973AbfE1MsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 08:48:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2FDF580D;
-        Tue, 28 May 2019 05:48:22 -0700 (PDT)
-Received: from [10.162.0.144] (a075553-lin.blr.arm.com [10.162.0.144])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A42393F5AF;
-        Tue, 28 May 2019 05:48:19 -0700 (PDT)
-Subject: Re: [kvmtool PATCH v10 5/5] KVM: arm/arm64: Add a vcpu feature for
- pointer authentication
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
-References: <1555994558-26349-1-git-send-email-amit.kachhap@arm.com>
- <1555994558-26349-6-git-send-email-amit.kachhap@arm.com>
- <20190423154625.GP3567@e103592.cambridge.arm.com>
- <3b7bafc9-5d6a-7845-ef1f-577ea59000e2@arm.com>
- <20190424134120.GW3567@e103592.cambridge.arm.com>
- <20190528101128.GB28398@e103592.cambridge.arm.com>
-From:   Amit Daniel Kachhap <amit.kachhap@arm.com>
-Message-ID: <53ecc253-e9e0-a6ca-2540-fa85bd26bfc1@arm.com>
-Date:   Tue, 28 May 2019 18:18:16 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Tue, 28 May 2019 08:49:46 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:18836 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726973AbfE1Mtp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 08:49:45 -0400
+Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
+  Joergen.Andreasen@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Joergen.Andreasen@microchip.com";
+  x-sender="Joergen.Andreasen@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa2.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Joergen.Andreasen@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa2.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Joergen.Andreasen@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+X-IronPort-AV: E=Sophos;i="5.60,523,1549954800"; 
+   d="scan'208";a="34882554"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 28 May 2019 05:49:43 -0700
+Received: from localhost (10.10.85.251) by mx.microchip.com (10.10.85.143)
+ with Microsoft SMTP Server id 15.1.1713.5; Tue, 28 May 2019 05:49:37 -0700
+From:   Joergen Andreasen <joergen.andreasen@microchip.com>
+To:     <netdev@vger.kernel.org>
+CC:     Joergen Andreasen <joergen.andreasen@microchip.com>,
+        "Microchip Linux Driver Support" <UNGLinuxDriver@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next v3 0/1] Add hw offload of TC police on MSCC ocelot
+Date:   Tue, 28 May 2019 14:49:16 +0200
+Message-ID: <20190528124917.22034-1-joergen.andreasen@microchip.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190502094029.22526-1-joergen.andreasen@microchip.com>
+References: <20190502094029.22526-1-joergen.andreasen@microchip.com>
 MIME-Version: 1.0
-In-Reply-To: <20190528101128.GB28398@e103592.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dave,
+This patch series enables hardware offload of ingress port policing
+on the MSCC ocelot board.
 
-On 5/28/19 3:41 PM, Dave Martin wrote:
-> On Wed, Apr 24, 2019 at 02:41:21PM +0100, Dave Martin wrote:
->> On Wed, Apr 24, 2019 at 12:32:22PM +0530, Amit Daniel Kachhap wrote:
->>> Hi,
->>>
->>> On 4/23/19 9:16 PM, Dave Martin wrote:
-> 
-> [...]
-> 
->>>>> diff --git a/arm/kvm-cpu.c b/arm/kvm-cpu.c
->>>>> index 7780251..acd1d5f 100644
->>>>> --- a/arm/kvm-cpu.c
->>>>> +++ b/arm/kvm-cpu.c
->>>>> @@ -68,6 +68,18 @@ struct kvm_cpu *kvm_cpu__arch_init(struct kvm *kvm, unsigned long cpu_id)
->>>>>   		vcpu_init.features[0] |= (1UL << KVM_ARM_VCPU_PSCI_0_2);
->>>>>   	}
->>>>> +	/* Check Pointer Authentication command line arguments. */
->>>>> +	if (kvm->cfg.arch.enable_ptrauth && kvm->cfg.arch.disable_ptrauth)
->>>>> +		die("Both enable-ptrauth and disable-ptrauth option cannot be present");
->>>>
->>>> Preferably, print the leading dashes, the same as the user would see
->>>> on the command line (e.g., --enable-ptrauth, --disable-ptrauth).
->>>>
->>>> For brevity, we could write something like:
->>>>
->>>> 		die("--enable-ptrauth conflicts with --disable-ptrauth");
-> 
-> [...]
-> 
->>>>> @@ -106,8 +118,12 @@ struct kvm_cpu *kvm_cpu__arch_init(struct kvm *kvm, unsigned long cpu_id)
->>>>>   			die("Unable to find matching target");
->>>>>   	}
->>>>> -	if (err || target->init(vcpu))
->>>>> -		die("Unable to initialise vcpu");
->>>>> +	if (err || target->init(vcpu)) {
->>>>> +		if (kvm->cfg.arch.enable_ptrauth)
->>>>> +			die("Unable to initialise vcpu with pointer authentication feature");
->>>>
->>>> We don't special-case this error message for any other feature yet:
->>>> there are a variety of reasons why we might have failed, so suggesting
->>>> that the failure is something to do with ptrauth may be misleading to
->>>> the user.
->>>>
->>>> If we want to be more informative, we could do something like the
->>>> following:
->>>>
->>>> 	bool supported;
->>>>
->>>> 	supported = kvm__supports_extension(kvm, KVM_CAP_ARM_PTRAUTH_ADDRESS) &&
->>>> 		    kvm__supports_extension(kvm, KVM_CAP_ARM_PTRAUTH_GENERIC);
->>>>
->>>> 	if (kvm->cfg.arch.enable_ptrauth && !supported)
->>>> 		die("--enable-ptrauth not supported on this host");
->>>>
->>>> 	if (supported && !kvm->cfg.arch.disable_ptrauth)
->>>> 		vcpu_init.features[0] |= ARM_VCPU_PTRAUTH_FEATURE;
->>>>
->>>> 	/* ... */
->>>>
->>>> 	if (err || target->init(vcpu))
->>>> 		die("Unable to initialise vcpu");
->>>>
->>>> We don't do this for any other feature today, but since it helps the
->>>> user to understand what went wrong it's probably a good idea.
->>> Yes this is more clear. As Mark has picked the core guest ptrauth patches. I
->>> will post this changes as standalone.
->>
->> Sounds good.  (I also need to do that separately for SVE...)
-> 
-> Were you planning to repost this?
-> 
-> Alternatively, I can fix up the diagnostic messages discussed here and
-> post it together with the SVE support.  I'll do that locally for now,
-> but let me know what you plan to do.  I'd like to get the SVE support
-> posted soon so that people can test it.
-I will clean up the print messages as you suggested and repost it shortly.
+Changes v2 -> v3:
 
-Thanks,
-Amit Daniel
-> 
-> Cheers
-> ---Dave
-> 
+v3 now incorporates the following changes suggested by Jakub Kicinski:
+
+ - Add a check in ndo_set_features() in order to prevent users to clear the
+   NETIF_F_HW_TC flag while offload is active.
+
+ - Reject the offload if the block is shared.
+
+Changes v1 -> v2:
+
+v2 now consists of only one patch: "[PATCH net-next v2 1/1] net: mscc:
+ocelot: Implement port policers via tc command".
+
+The patch, "[PATCH net-next 00/13] net: act_police offload support", from
+Jakub Kicinski, removed the need for this patch:
+"[PATCH net-next 1/3] net/sched: act_police: move police parameters".
+
+Alexandre Belloni asked me to remove patch,
+"[PATCH net-next 3/3] MIPS: generic: Add police related options to
+ocelot_defconfig", from the series and instead send it through the MIPS
+tree and I will do that.
+
+The remaining patch is now the only patch in this series and all suggested
+changes have been incorporated.
+
+Joergen Andreasen (1):
+  net: mscc: ocelot: Implement port policers via tc command
+
+ drivers/net/ethernet/mscc/Makefile        |   2 +-
+ drivers/net/ethernet/mscc/ocelot.c        |  13 +-
+ drivers/net/ethernet/mscc/ocelot.h        |   3 +
+ drivers/net/ethernet/mscc/ocelot_police.c | 227 ++++++++++++++++++++++
+ drivers/net/ethernet/mscc/ocelot_police.h |  22 +++
+ drivers/net/ethernet/mscc/ocelot_tc.c     | 174 +++++++++++++++++
+ drivers/net/ethernet/mscc/ocelot_tc.h     |  22 +++
+ 7 files changed, 460 insertions(+), 3 deletions(-)
+ create mode 100644 drivers/net/ethernet/mscc/ocelot_police.c
+ create mode 100644 drivers/net/ethernet/mscc/ocelot_police.h
+ create mode 100644 drivers/net/ethernet/mscc/ocelot_tc.c
+ create mode 100644 drivers/net/ethernet/mscc/ocelot_tc.h
+
+-- 
+2.17.1
+
