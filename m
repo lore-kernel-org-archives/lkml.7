@@ -2,82 +2,119 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42CC2C072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D035C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D7F8208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:07:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559048836;
-	bh=VzsVEvAq8tygdfW60cYWIE/ki7uCW1+/apdqUOSuWQU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jlyiWW9c8o0Y7P+MhAHKWnsBD1FUMatbAP1km1E7gxecJlHiixyj9jJ7CVtOtmN2b
-	 E8Yiu/iMSZ2EqhdcqEZZrOz5xFTLpslh7FDhvS22ZoO2EJ5feYnGyX+mjy+uK8J6o4
-	 p3dMLvk9VwDesU5PEBV48HW3P9gWgaYy7uv1sVJw=
+	by mail.kernel.org (Postfix) with ESMTP id 02464208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:09:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FzVjXmWJ";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FzVjXmWJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727427AbfE1NHP (ORCPT
+        id S1727528AbfE1NJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 09:07:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38452 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726897AbfE1NHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 09:07:15 -0400
-Received: from localhost (unknown [8.46.75.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 28 May 2019 09:09:50 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:43982 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727010AbfE1NJt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 09:09:49 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id BAAE46087F; Tue, 28 May 2019 13:09:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559048988;
+        bh=LwktVprX+okLjofcVDA3KhlIJIxmhxsXuCyjGZ1pF8Y=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=FzVjXmWJ0ItkDT6ygp9ShWa3YpFC0xSFTAxG15f6ot1HIA3kj1hJMrB7WR4w7HDBZ
+         oEUVKgtj2CxzWfO8xeO50VJpj7CFqL9KjjhSU7rfd6a7Nd3EUvWoAhx2TTD9K0PYQe
+         qyvHaVfipHEmIURuwtnZPuPCVpUTLvRoaZSfXjRA=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45A8B20B7C;
-        Tue, 28 May 2019 13:07:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559048834;
-        bh=VzsVEvAq8tygdfW60cYWIE/ki7uCW1+/apdqUOSuWQU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wpfMQIYFGZrdyT3fQtUyVjvw6NFoIuXtKC17QpRelWavVqviih0DqBkDVq4fXJeyd
-         19DVu/6It2VvRlpGjP9F+e3M8cOq2bkUIa/6necEESWkNG5NJGtp1ZuSOP7NdV4fPN
-         b5hB30Bt4cPtV+avmZkyQA7UincopzDe7XQGH83U=
-Date:   Tue, 28 May 2019 15:07:03 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-kernel@vger.kernel.org,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        kernel@collabora.com, Dan Carpenter <dan.carpenter@oracle.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        linux-pm@vger.kernel.org
-Subject: Re: [RESEND PATCH] PM / devfreq: Fix static checker warning in
- try_then_request_governor
-Message-ID: <20190528130703.GD6104@kroah.com>
-References: <CGME20190313122310epcas4p4152c2c30d7a2971e44ddc7c5b64b7744@epcas4p4.samsung.com>
- <20190313122253.24355-1-enric.balletbo@collabora.com>
- <4535a997-e583-da83-0cdd-0433dd798f50@samsung.com>
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4724060271;
+        Tue, 28 May 2019 13:09:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559048988;
+        bh=LwktVprX+okLjofcVDA3KhlIJIxmhxsXuCyjGZ1pF8Y=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=FzVjXmWJ0ItkDT6ygp9ShWa3YpFC0xSFTAxG15f6ot1HIA3kj1hJMrB7WR4w7HDBZ
+         oEUVKgtj2CxzWfO8xeO50VJpj7CFqL9KjjhSU7rfd6a7Nd3EUvWoAhx2TTD9K0PYQe
+         qyvHaVfipHEmIURuwtnZPuPCVpUTLvRoaZSfXjRA=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4724060271
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Larry Finger <Larry.Finger@lwfinger.net>
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>, pkshih@realtek.com,
+        davem@davemloft.net, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rtlwifi: Fix null-pointer dereferences in error handling code of rtl_pci_probe()
+References: <20190514123439.10524-1-baijiaju1990@gmail.com>
+        <20190528115555.301E760F3C@smtp.codeaurora.org>
+        <2658b691-b992-b773-c6cf-85801adc479f@lwfinger.net>
+Date:   Tue, 28 May 2019 16:09:44 +0300
+In-Reply-To: <2658b691-b992-b773-c6cf-85801adc479f@lwfinger.net> (Larry
+        Finger's message of "Tue, 28 May 2019 08:00:24 -0500")
+Message-ID: <87pno24tev.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4535a997-e583-da83-0cdd-0433dd798f50@samsung.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 10:15:59AM +0900, Chanwoo Choi wrote:
-> Cc: stable@vger.kernel.org
-> 
-> Dear all,
-> 
-> It missed to send this patch to 'stable@vger.kernel.org'.
-> So, I add it to mailing list.
+Larry Finger <Larry.Finger@lwfinger.net> writes:
 
-<formletter>
+> On 5/28/19 6:55 AM, Kalle Valo wrote:
+>> Jia-Ju Bai <baijiaju1990@gmail.com> wrote:
+>>
+>>> *BUG 1:
+>>> In rtl_pci_probe(), when rtlpriv->cfg->ops->init_sw_vars() fails,
+>>> rtl_deinit_core() in the error handling code is executed.
+>>> rtl_deinit_core() calls rtl_free_entries_from_scan_list(), which uses
+>>> rtlpriv->scan_list.list in list_for_each_entry_safe(), but it has been
+>>> initialized. Thus a null-pointer dereference occurs.
+>>> The reason is that rtlpriv->scan_list.list is initialized by
+>>> INIT_LIST_HEAD() in rtl_init_core(), which has not been called.
+>>>
+>>> To fix this bug, rtl_deinit_core() should not be called when
+>>> rtlpriv->cfg->ops->init_sw_vars() fails.
+>>>
+>>> *BUG 2:
+>>> In rtl_pci_probe(), rtl_init_core() can fail when rtl_regd_init() in
+>>> this function fails, and rtlpriv->scan_list.list has not been
+>>> initialized by INIT_LIST_HEAD(). Then, rtl_deinit_core() in the error
+>>> handling code of rtl_pci_probe() is executed. Finally, a null-pointer
+>>> dereference occurs due to the same reason of the above bug.
+>>>
+>>> To fix this bug, the initialization of lists in rtl_init_core() are
+>>> performed before the call to rtl_regd_init().
+>>>
+>>> These bugs are found by a runtime fuzzing tool named FIZZER written by
+>>> us.
+>>>
+>>> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+>>
+>> Ping & Larry, is this ok to take?
+>>
+>
+> Kalle,
+>
+> Not at the moment. In reviewing the code, I was unable to see how this
+> situation could develop, and his backtrace did not mention any rtlwifi
+> code. For that reason, I asked him to add printk stat4ements to show
+> the last part of rtl_pci that executed correctly. In
+> https://marc.info/?l=linux-wireless&m=155788322631134&w=2, he promised
+> to do that, but I have not seen the result.
 
-This is not the correct way to submit patches for inclusion in the
-stable kernel tree.  Please read:
-    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-for how to do this properly.
+Ok, thanks. I'll then drop this, please resubmit once everything is
+understood and the patch is ready to be applied.
 
-</formletter>
+-- 
+Kalle Valo
