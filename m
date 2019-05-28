@@ -2,128 +2,126 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44288C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2367C04E84
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 265ED206C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:14:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BB9F2075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:14:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559056453;
+	bh=Z91UY8dK/AnpjJiSkEhTPKP46FR+/a3ykZKWhTbLDK8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=N3s4o39UuzcQBWyMSa3Rg4vXrWz5wFCye+dFCEZO7HCdvnQPSX3DqgHM7qVjHmL6s
+	 TU+PqkRpS1gH1Do06r3PA3Rkzv1MAaMpSnWkpaW47avTZzAjtcwB8THq/SMpS844ey
+	 9RFCJab/C/WvduyN38bCFx/bHlsxjwtbDmHPSMsg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727968AbfE1POH (ORCPT
+        id S1727979AbfE1PON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 11:14:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35143 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727921AbfE1POG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 11:14:06 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7F468301988B;
-        Tue, 28 May 2019 15:14:06 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-125-65.rdu2.redhat.com [10.10.125.65])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 29E44C087F;
-        Tue, 28 May 2019 15:14:05 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 21/25] fsinfo: pstore - add sb operation fsinfo() [ver #13]
-From:   David Howells <dhowells@redhat.com>
-To:     viro@zeniv.linux.org.uk
-Cc:     dhowells@redhat.com, raven@themaw.net, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mszeredi@redhat.com
-Date:   Tue, 28 May 2019 16:14:04 +0100
-Message-ID: <155905644440.1662.3745883327641806605.stgit@warthog.procyon.org.uk>
-In-Reply-To: <155905626142.1662.18430571708534506785.stgit@warthog.procyon.org.uk>
-References: <155905626142.1662.18430571708534506785.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        Tue, 28 May 2019 11:14:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48110 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726969AbfE1POL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 11:14:11 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0FE26ACE8;
+        Tue, 28 May 2019 15:14:09 +0000 (UTC)
+Date:   Tue, 28 May 2019 17:14:07 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, stable@kernel.org,
+        Wu Fangsuo <fangsuowu@asrmicro.com>,
+        Pankaj Suryawanshi <pankaj.suryawanshi@einfochips.com>
+Subject: Re: [PATCH] mm: fix trying to reclaim unevicable LRU page
+Message-ID: <20190528151407.GE1658@dhcp22.suse.cz>
+References: <20190524071114.74202-1-minchan@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Tue, 28 May 2019 15:14:06 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190524071114.74202-1-minchan@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Kent <raven@themaw.net>
+[Cc Pankaj Suryawanshi who has reported a similar problem
+http://lkml.kernel.org/r/SG2PR02MB309806967AE91179CAFEC34BE84B0@SG2PR02MB3098.apcprd02.prod.outlook.com]
 
-The new fsinfo() system call adds a new super block operation
-->fsinfo() which is used by file systems to provide file
-system specific information for fsinfo() requests.
+On Fri 24-05-19 16:11:14, Minchan Kim wrote:
+> There was below bugreport from Wu Fangsuo.
+> 
+> 7200 [  680.491097] c4 7125 (syz-executor) page:ffffffbf02f33b40 count:86 mapcount:84 mapping:ffffffc08fa7a810 index:0x24
+> 7201 [  680.531186] c4 7125 (syz-executor) flags: 0x19040c(referenced|uptodate|arch_1|mappedtodisk|unevictable|mlocked)
+> 7202 [  680.544987] c0 7125 (syz-executor) raw: 000000000019040c ffffffc08fa7a810 0000000000000024 0000005600000053
+> 7203 [  680.556162] c0 7125 (syz-executor) raw: ffffffc009b05b20 ffffffc009b05b20 0000000000000000 ffffffc09bf3ee80
+> 7204 [  680.566860] c0 7125 (syz-executor) page dumped because: VM_BUG_ON_PAGE(PageLRU(page) || PageUnevictable(page))
+> 7205 [  680.578038] c0 7125 (syz-executor) page->mem_cgroup:ffffffc09bf3ee80
+> 7206 [  680.585467] c0 7125 (syz-executor) ------------[ cut here ]------------
+> 7207 [  680.592466] c0 7125 (syz-executor) kernel BUG at /home/build/farmland/adroid9.0/kernel/linux/mm/vmscan.c:1350!
+> 7223 [  680.603663] c0 7125 (syz-executor) Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
+> 7224 [  680.611436] c0 7125 (syz-executor) Modules linked in:
+> 7225 [  680.616769] c0 7125 (syz-executor) CPU: 0 PID: 7125 Comm: syz-executor Tainted: G S              4.14.81 #3
+> 7226 [  680.626826] c0 7125 (syz-executor) Hardware name: ASR AQUILAC EVB (DT)
+> 7227 [  680.633623] c0 7125 (syz-executor) task: ffffffc00a54cd00 task.stack: ffffffc009b00000
+> 7228 [  680.641917] c0 7125 (syz-executor) PC is at shrink_page_list+0x1998/0x3240
+> 7229 [  680.649144] c0 7125 (syz-executor) LR is at shrink_page_list+0x1998/0x3240
+> 7230 [  680.656303] c0 7125 (syz-executor) pc : [<ffffff90083a2158>] lr : [<ffffff90083a2158>] pstate: 60400045
+> 7231 [  680.666086] c0 7125 (syz-executor) sp : ffffffc009b05940
+> ..
+> 7342 [  681.671308] c0 7125 (syz-executor) [<ffffff90083a2158>] shrink_page_list+0x1998/0x3240
+> 7343 [  681.679567] c0 7125 (syz-executor) [<ffffff90083a3dc0>] reclaim_clean_pages_from_list+0x3c0/0x4f0
+> 7344 [  681.688793] c0 7125 (syz-executor) [<ffffff900837ed64>] alloc_contig_range+0x3bc/0x650
+> 7347 [  681.717421] c0 7125 (syz-executor) [<ffffff90084925cc>] cma_alloc+0x214/0x668
+> 7348 [  681.724892] c0 7125 (syz-executor) [<ffffff90091e4d78>] ion_cma_allocate+0x98/0x1d8
+> 7349 [  681.732872] c0 7125 (syz-executor) [<ffffff90091e0b20>] ion_alloc+0x200/0x7e0
+> 7350 [  681.740302] c0 7125 (syz-executor) [<ffffff90091e154c>] ion_ioctl+0x18c/0x378
+> 7351 [  681.747738] c0 7125 (syz-executor) [<ffffff90084c6824>] do_vfs_ioctl+0x17c/0x1780
+> 7352 [  681.755514] c0 7125 (syz-executor) [<ffffff90084c7ed4>] SyS_ioctl+0xac/0xc0
+> 
+> Wu found it's due to [1]. Before that, unevictable page goes to cull_mlocked
+> routine so that it couldn't reach the VM_BUG_ON_PAGE line.
+> 
+> To fix the issue, this patch filter out unevictable LRU pages
+> from the reclaim_clean_pages_from_list in CMA.
 
-The fsinfo() request FSINFO_ATTR_PARAMETERS provides the same
-function as sb operation ->show_options() so it needs to be
-implemented by any file system that provides ->show_options()
-as a minimum.
+The changelog is rather modest on details and I have to confess I have
+little bit hard time to understand it. E.g. why do not we need to handle
+the regular reclaim path?
 
-Signed-off-by: Ian Kent <raven@themaw.net>
-Signed-off-by: David Howells <dhowells@redhat.com>
----
+> [1] ad6b67041a45, mm: remove SWAP_MLOCK in ttu
+> 
+> Cc: <stable@kernel.org>	[4.12+]
+> Reported-debugged-by: Wu Fangsuo <fangsuowu@asrmicro.com>
+> Signed-off-by: Minchan Kim <minchan@kernel.org>
+> ---
+>  mm/vmscan.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index d9c3e873eca6..7350afae5c3c 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -1505,7 +1505,7 @@ unsigned long reclaim_clean_pages_from_list(struct zone *zone,
+>  
+>  	list_for_each_entry_safe(page, next, page_list, lru) {
+>  		if (page_is_file_cache(page) && !PageDirty(page) &&
+> -		    !__PageMovable(page)) {
+> +		    !__PageMovable(page) && !PageUnevictable(page)) {
+>  			ClearPageActive(page);
+>  			list_move(&page->lru, &clean_pages);
+>  		}
+> -- 
+> 2.22.0.rc1.257.g3120a18244-goog
+> 
 
- fs/pstore/inode.c |   31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
-
-diff --git a/fs/pstore/inode.c b/fs/pstore/inode.c
-index 4640debf8755..44f4ffc4436e 100644
---- a/fs/pstore/inode.c
-+++ b/fs/pstore/inode.c
-@@ -36,6 +36,7 @@
- #include <linux/slab.h>
- #include <linux/spinlock.h>
- #include <linux/uaccess.h>
-+#include <linux/fsinfo.h>
- 
- #include "internal.h"
- 
-@@ -281,6 +282,33 @@ static int pstore_show_options(struct seq_file *m, struct dentry *root)
- 	return 0;
- }
- 
-+#ifdef CONFIG_FSINFO
-+/*
-+ * Get filesystem information.
-+ */
-+static int pstore_fsinfo(struct path *path, struct fsinfo_kparams *params)
-+{
-+	struct fsinfo_capabilities *caps;
-+
-+	switch (params->request) {
-+	case FSINFO_ATTR_CAPABILITIES:
-+		caps = params->buffer;
-+		fsinfo_set_cap(caps, FSINFO_CAP_IS_FLASH_FS);
-+		fsinfo_set_cap(caps, FSINFO_CAP_HAS_CTIME);
-+		fsinfo_set_cap(caps, FSINFO_CAP_HAS_MTIME);
-+		return sizeof(*caps);
-+
-+	case FSINFO_ATTR_PARAMETERS:
-+		if (kmsg_bytes != PSTORE_DEFAULT_KMSG_BYTES)
-+			fsinfo_note_paramf(params, "kmsg_bytes", "%lu", kmsg_bytes);
-+		return params->usage;
-+
-+	default:
-+		return generic_fsinfo(path, params);
-+	}
-+}
-+#endif /* CONFIG_FSINFO */
-+
- static int pstore_reconfigure(struct fs_context *fc)
- {
- 	sync_filesystem(fc->root->d_sb);
-@@ -293,6 +321,9 @@ static const struct super_operations pstore_ops = {
- 	.drop_inode	= generic_delete_inode,
- 	.evict_inode	= pstore_evict_inode,
- 	.show_options	= pstore_show_options,
-+#ifdef CONFIG_FSINFO
-+	.fsinfo		= pstore_fsinfo,
-+#endif
- };
- 
- static struct super_block *pstore_sb;
-
+-- 
+Michal Hocko
+SUSE Labs
