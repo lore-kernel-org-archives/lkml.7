@@ -2,150 +2,239 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA69C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6827C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2777216FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:34:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EE82216FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:36:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VT9e/3yi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbfE1Reg (ORCPT
+        id S1727135AbfE1RgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 13:34:36 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:56572 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726492AbfE1Ref (ORCPT
+        Tue, 28 May 2019 13:36:19 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:47083 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbfE1RgT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 13:34:35 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hVfzd-0006to-PJ; Tue, 28 May 2019 11:34:33 -0600
-Received: from ip72-206-97-68.om.om.cox.net ([72.206.97.68] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hVfzc-0005WW-Pi; Tue, 28 May 2019 11:34:33 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     arnd@arndb.de, christian@brauner.io, deepa.kernel@gmail.com,
-        glider@google.com, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        Oleg Nesterov <oleg@redhat.com>,
-        syzbot <syzbot+0d602a1b0d8c95bdf299@syzkaller.appspotmail.com>
-References: <000000000000410d500588adf637@google.com>
-Date:   Tue, 28 May 2019 12:34:28 -0500
-In-Reply-To: <000000000000410d500588adf637@google.com> (syzbot's message of
-        "Sun, 12 May 2019 03:07:05 -0700")
-Message-ID: <87woia5vq3.fsf@xmission.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
+        Tue, 28 May 2019 13:36:19 -0400
+Received: by mail-io1-f68.google.com with SMTP id u25so898066iot.13
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 10:36:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aV83MWqVrs73/rZto20+uCA1itr43gbkk2Ocg5RD+lI=;
+        b=VT9e/3yiMIFCZcvTwZ8i/MsJVhw154QE77tmlINEA88m7HhsJ1LaG04AUorwUZ3Z11
+         Fk9maKkm6OobTPlJzcy4b2P7a8ImmRtEP5I8aPjkfkm1Mu7KNRiV2iJzCKOhSG+J/Lfu
+         YLuSdrEHRAm87PlAKt5Gk7e1we4HaTzB21JcVXjJWZCrCcr34uJp3QOQQVJYev/0JHQd
+         Hfle0iheN4Ufyskh2BYvW+8a9Z2S20TqeMijuFUQPIlJ6uz9a4mUW9lvT+7oCK2MBTGK
+         OxxMWiJkHc+4de/xVYNTq4hFg81Mdm0C1IpMLumEMaI55/65A4oAy12obDs9jGroLWNp
+         SBUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aV83MWqVrs73/rZto20+uCA1itr43gbkk2Ocg5RD+lI=;
+        b=iUpmg3jl3E9nx9wEx6aGRKS6o+dyuUCfpdw1mpVcsKdhQKKw63cMGy6K5VcamyoRbq
+         7LhwOHsfTMJx3MWzl7LLo2mPoHuneytYnQf7vOLciXFeEDea2ab4fmL92D0k+aF7QopO
+         76W0+giAj4JjqR+EndJRj/HYUm2UziMb+5GeMgX2qhooqtZGEqOHAC8PY9kAHwiXsY2N
+         7HN7S2r3wAITApU8UCMcbvfxufUTqZgFX/76xln2Rq/qDtCfGzpL3fK0DKghTywjlhap
+         QmB2KtlxzCAHszwNW0mz4qFnThv6fg44dZI7ivO6LIeUYDrCIWCMVNCZW/SS8UHuFTWk
+         /7Jg==
+X-Gm-Message-State: APjAAAXdGpreaxwDmZVpX8Pu6GuDo5DijIJirnOFQP4kIKPibMe2SeX6
+        L7SxFf4GukxlUnvhn+mwDh/1wMA+w82zYIaT3v4aeCzhs0c=
+X-Google-Smtp-Source: APXvYqzw4aa78ydNOscrUl5J1XO+DyDVCpzUub7yBc9JUhk30qWcmvo4lbzK2HGEjG2AWNX62qfyCbiG7lyTcRC3Shc=
+X-Received: by 2002:a6b:780b:: with SMTP id j11mr408220iom.57.1559064978510;
+ Tue, 28 May 2019 10:36:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1hVfzc-0005WW-Pi;;;mid=<87woia5vq3.fsf@xmission.com>;;;hst=in01.mta.xmission.com;;;ip=72.206.97.68;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+FvoIQYQPMYGzOzxLcqpXiLwLlcEocec4=
-X-SA-Exim-Connect-IP: 72.206.97.68
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: KMSAN: kernel-infoleak in copy_siginfo_to_user (2)
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+References: <1558521304-27469-1-git-send-email-suzuki.poulose@arm.com> <CANLsYkzRXXB1EFpWHn6JN_6pfOm-1TvVgiJY2MKExhifiBakBQ@mail.gmail.com>
+In-Reply-To: <CANLsYkzRXXB1EFpWHn6JN_6pfOm-1TvVgiJY2MKExhifiBakBQ@mail.gmail.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Tue, 28 May 2019 11:36:07 -0600
+Message-ID: <CANLsYkzK7N9Bt6E6f187LaDydeC5afMp=LjMuvhFYKbij_SyjA@mail.gmail.com>
+Subject: Re: [PATCH v4 00/30] coresight: Support for ACPI bindings
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Coresight ML <coresight@lists.linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 28 May 2019 at 11:32, Mathieu Poirier
+<mathieu.poirier@linaro.org> wrote:
+>
+> On Wed, 22 May 2019 at 04:35, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+> >
+> > This series adds the support for CoreSight devices on ACPI based
+> > platforms. The device connections are encoded as _DSD graph property[0],
+> > with CoreSight specific extensions to indicate the direction of data
+> > flow as described in [1]. Components attached to CPUs are listed
+> > as child devices of the corresponding CPU, removing explicit links
+> > to the CPU like we do in the DT.
+> >
+> > The majority of the series cleans up the driver and prepares the subsystem
+> > for platform agnostic firwmare probing, naming scheme, searching etc.
+> >
+> > We introduce platform independent helpers to parse the platform supplied
+> > information. Thus we rename the platform handling code from:
+> >         of_coresight.c  => coresight-platform.c
+> >
+> > The CoreSight driver creates shadow devices that appear on the Coresight
+> > bus, in addition to the real devices (e.g, AMBA bus devices). The name
+> > of these devices match the real device. This makes the device name
+> > a bit cryptic for ACPI platform. So this series also introduces a generic
+> > platform agnostic device naming scheme for the shadow Coresight devices.
+> > Towards this we also make changes to the way we lookup devices to resolve
+> > the connections, as we can't use the names to identify the devices. So,
+> > we use the "fwnode_handle" of the real device for the device lookups.
+> > Towards that we clean up the drivers to keep track of the "CoreSight"
+> > device rather than the "real" device. However, all real operations,
+> > like DMA allocation, Power management etc. must be performed on
+> > the real device which is the parent of the shadow device.
+> >
+> > Finally we add the support for parsing the ACPI platform data. The power
+> > management support is missing in the ACPI (and this is not specific to
+> > CoreSight). The firmware must ensure that the respective power domains
+> > are turned on.
+> >
+> > Applies on v5.2-rc1
+> >
+> > Tested on a Juno-r0 board with ACPI bindings patch (Patch 31/30) added on
+> > top of [2]. You would need to make sure that the debug power domain is
+> > turned on before the Linux kernel boots. (e.g, connect the DS-5 to the
+> > Juno board while at UEFI). arm32 code is only compile tested.
+> >
+> > [0] ACPI Device Graphs using _DSD (Not available online yet, approved but
+> >     awaiting publish and eventually should be linked at).
+> >     https://uefi.org/sites/default/files/resources/_DSD-implementation-guide-toplevel-1_1.htm
+> > [1] https://developer.arm.com/docs/den0067/latest/acpi-for-coresighttm-10-platform-design-document
+> > [2] https://github.com/tianocore/edk2-platforms.git
+> >
+> > Changes since v3:
+> >  - Add tags from Mathieu
+> >
+> > Changes since v2:
+> >  - Fix the symlink name for ETM devices under cs_etm PMU (Patch by Mathieu)
+> >  - Drop patches merged already in the tree.
+> >  - Add the tags from Mathieu
+> >  - More documentation with examples of ACPI graph in ACPI bindings support.
+> >  - Fix ETM4 error return path (Mathieu)
+> >  - Drop the patches exposing device links via sysfs, to be posted as separate
+> >    series.
+> >  - Drop the generic helper for device search by fwnode for a better cleanup
+> >    later.
+> >  - Split the ACPI bindings support patch for AMBA and platform devices.
+> >  - Return integer error for <platform>_get_platform_data() helpers.
+> >  - Fix comment about the return code for acpi_get_coresight_cpu().
+> >  - Ensure we don't have devices part of multiple graphs (Mathieu).
+> >
+> > Changes since v1:
+> >
+> >  [ http://lists.infradead.org/pipermail/linux-arm-kernel/2019-March/639963.html ]
+> >
+> >   - Dropped the replicator driver merge changes as they were pulled already.
+> >   - Cleanups for Power management in the drivers.
+> >   - Reuse platform description for connection information. Also introduce
+> >     routines to clean up the platform description to make sure we drop
+> >     the references (fwnode_handle).
+> >   - Add RFC patches for exposing the device-links via sysfs.
+> >   - Drop tracking the device in favour of coresight_device.
+> >   - Name etb10 as "etb"
+> >   - Fix other comments in v1.
+> >   - Use a generic helper for searching with fwnode_handle rather than adding
+> >     one for CoreSight.
+> >
+> >
+> > Mathieu Poirier (1):
+> >   coresight: Use coresight device names for sinks in PMU attribute
+> >
+> > Suzuki K Poulose (29):
+> >   coresight: funnel: Clean up device book keeping
+> >   coresight: replicator: Cleanup device tracking
+> >   coresight: tmc: Clean up device specific data
+> >   coresight: catu: Cleanup device specific data
+> >   coresight: tpiu: Clean up device specific data
+> >   coresight: stm: Cleanup device specific data
+> >   coresight: etm: Clean up device specific data
+> >   coresight: etb10: Clean up device specific data
+> >   coresight: Rename of_coresight to coresight-platform
+> >   coresight: etm3x: Rearrange cp14 access detection
+> >   coresight: stm: Rearrange probing the stimulus area
+> >   coresight: tmc-etr: Rearrange probing default buffer size
+> >   coresight: platform: Make memory allocation helper generic
+> >   coresight: Make sure device uses DT for obsolete compatible check
+> >   coresight: Introduce generic platform data helper
+> >   coresight: Make device to CPU mapping generic
+> >   coresight: Remove cpu field from platform data
+> >   coresight: Remove name from platform description
+> >   coresight: Cleanup coresight_remove_conns
+> >   coresight: Reuse platform data structure for connection tracking
+> >   coresight: Rearrange platform data probing
+> >   coresight: Add support for releasing platform specific data
+> >   coresight: platform: Use fwnode handle for device search
+> >   coresight: Use fwnode handle instead of device names
+> >   coresight: Use platform agnostic names
+> >   coresight: stm: ACPI support for parsing stimulus base
+> >   coresight: Support for ACPI bindings
+> >   coresight: acpi: Support for AMBA components
+> >   coresight: acpi: Support for platform devices
+> >
+> >  drivers/acpi/acpi_amba.c                           |   9 +
+> >  drivers/hwtracing/coresight/Makefile               |   3 +-
+> >  drivers/hwtracing/coresight/coresight-catu.c       |  40 +-
+> >  drivers/hwtracing/coresight/coresight-catu.h       |   1 -
+> >  drivers/hwtracing/coresight/coresight-cpu-debug.c  |   3 +-
+> >  drivers/hwtracing/coresight/coresight-etb10.c      |  51 +-
+> >  drivers/hwtracing/coresight/coresight-etm-perf.c   |   8 +-
+> >  drivers/hwtracing/coresight/coresight-etm.h        |   6 +-
+> >  .../hwtracing/coresight/coresight-etm3x-sysfs.c    |  12 +-
+> >  drivers/hwtracing/coresight/coresight-etm3x.c      |  45 +-
+> >  drivers/hwtracing/coresight/coresight-etm4x.c      |  37 +-
+> >  drivers/hwtracing/coresight/coresight-etm4x.h      |   2 -
+> >  drivers/hwtracing/coresight/coresight-funnel.c     |  35 +-
+> >  drivers/hwtracing/coresight/coresight-platform.c   | 810 +++++++++++++++++++++
+> >  drivers/hwtracing/coresight/coresight-priv.h       |   4 +
+> >  drivers/hwtracing/coresight/coresight-replicator.c |  42 +-
+> >  drivers/hwtracing/coresight/coresight-stm.c        | 118 ++-
+> >  drivers/hwtracing/coresight/coresight-tmc-etf.c    |   9 +-
+> >  drivers/hwtracing/coresight/coresight-tmc-etr.c    |  44 +-
+> >  drivers/hwtracing/coresight/coresight-tmc.c        |  96 +--
+> >  drivers/hwtracing/coresight/coresight-tmc.h        |   2 -
+> >  drivers/hwtracing/coresight/coresight-tpiu.c       |  24 +-
+> >  drivers/hwtracing/coresight/coresight.c            | 164 ++++-
+> >  drivers/hwtracing/coresight/of_coresight.c         | 297 --------
+> >  include/linux/coresight.h                          |  61 +-
+> >  25 files changed, 1332 insertions(+), 591 deletions(-)
+> >  create mode 100644 drivers/hwtracing/coresight/coresight-platform.c
+> >  delete mode 100644 drivers/hwtracing/coresight/of_coresight.c
+>
+> I have applied this set.
 
-Andrew,
+As Leo pointed out it would be interesting to update the documentation
+in "Documentation/trace/coresight.txt".
 
-Didn't someone already provide a fix for this one?
-
-I thought  I saw that hit your tree a while ago.  I am looking in
-ptrace.c and I don't see anything that would have fixed this issue.
-
-If there isn't a fix in the queue I will take a stab at it.
-
-Thank you
-Eric
-
-syzbot <syzbot+0d602a1b0d8c95bdf299@syzkaller.appspotmail.com> writes:
-
-> Hello,
 >
-> syzbot found the following crash on:
+> Thanks,
+> Mathieu
 >
-> HEAD commit:    d062d017 usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       kmsan
-> console output: https://syzkaller.appspot.com/x/log.txt?x=137348b4a00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=67ebf8b3cce62ce7
-> dashboard link: https://syzkaller.appspot.com/bug?extid=0d602a1b0d8c95bdf299
-> compiler:       clang version 9.0.0 (/home/glider/llvm/clang
-> 06d00afa61eef8f7f501ebdb4e8612ea43ec2d78)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=175d65e0a00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14ae05c0a00000
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+0d602a1b0d8c95bdf299@syzkaller.appspotmail.com
->
-> ptrace attach of "./syz-executor353086472"[10278] was attempted by
-> "./syz-executor353086472"[10279]
-> ptrace attach of "./syz-executor353086472"[10280] was attempted by
-> "./syz-executor353086472"[10281]
-> ptrace attach of "./syz-executor353086472"[10282] was attempted by
-> "./syz-executor353086472"[10283]
-> ==================================================================
-> BUG: KMSAN: kernel-infoleak in _copy_to_user+0x16b/0x1f0 lib/usercopy.c:32
-> CPU: 1 PID: 10284 Comm: syz-executor353 Not tainted 5.1.0-rc7+ #5
-> Hardware name: Google Google Compute Engine/Google Compute Engine,
-> BIOS Google 01/01/2011
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
->  kmsan_report+0x130/0x2a0 mm/kmsan/kmsan.c:619
->  kmsan_internal_check_memory+0x974/0xa80 mm/kmsan/kmsan.c:713
->  kmsan_copy_to_user+0xa9/0xb0 mm/kmsan/kmsan_hooks.c:492
->  _copy_to_user+0x16b/0x1f0 lib/usercopy.c:32
->  copy_to_user include/linux/uaccess.h:174 [inline]
->  copy_siginfo_to_user+0x80/0x160 kernel/signal.c:3059
->  ptrace_peek_siginfo kernel/ptrace.c:742 [inline]
->  ptrace_request+0x24bd/0x2950 kernel/ptrace.c:913
->  arch_ptrace+0x9fa/0x1090 arch/x86/kernel/ptrace.c:868
->  __do_sys_ptrace kernel/ptrace.c:1155 [inline]
->  __se_sys_ptrace+0x2b9/0x7b0 kernel/ptrace.c:1120
->  __x64_sys_ptrace+0x56/0x70 kernel/ptrace.c:1120
->  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
->  entry_SYSCALL_64_after_hwframe+0x63/0xe7
-> RIP: 0033:0x441cc9
-> Code: e8 bc e6 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48
-> 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d
-> 01 f0 ff ff 0f 83 1b 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00000000007efdd8 EFLAGS: 00000246 ORIG_RAX: 0000000000000065
-> RAX: ffffffffffffffda RBX: 0000000000000063 RCX: 0000000000441cc9
-> RDX: 00000000200000c0 RSI: 0000000000000007 RDI: 0000000000004209
-> RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000716000 R11: 0000000000000246 R12: 0000000000000002
-> R13: 0000000000402a00 R14: 0000000000000000 R15: 0000000000000000
->
-> Local variable description: ----info.i@ptrace_request
-> Variable was created at:
->  ptrace_peek_siginfo kernel/ptrace.c:714 [inline]
->  ptrace_request+0x2161/0x2950 kernel/ptrace.c:913
->  arch_ptrace+0x9fa/0x1090 arch/x86/kernel/ptrace.c:868
->
-> Bytes 0-47 of 48 are uninitialized
-> Memory access of size 48 starts at ffff8880a902fd70
-> Data copied to user address 0000000000716000
-> ==================================================================
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
+> >
+> > ACPI bindings for Juno-r0 (applies on [2] above)
+> >
+> > Suzuki K Poulose (1):
+> >   edk2-platform: juno: Update ACPI CoreSight Bindings
+> >
+> >  Platform/ARM/JunoPkg/AcpiTables/Dsdt.asl | 241 +++++++++++++++++++++++++++++++
+> >  1 file changed, 241 insertions(+)
+> >
+> > --
+> > 2.7.4
+> >
