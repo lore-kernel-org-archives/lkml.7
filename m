@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DED26C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFC4C04E84
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5BC8206C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:07:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 642D3216FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:07:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559056031;
-	bh=ou8JsaICJ3QygIcsB/rlV+LYgWx2MufRMb6XVhCdwfE=;
+	s=default; t=1559056034;
+	bh=GfFatpahUBA498OgzwsKBay4t9YyyDWIsNLB8w7o+Nw=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=e1KWHlGh74bpw46Pu/GV6+0cZvqT+kn/o8VIXHjqDtlGiT3/OsGcEOuDvyLHyHqZB
-	 aDe2lL+K2hhaZuj57rqcwecaLcOU2nQF7hcjzK+iz/v4bh5kKUNhxozJMz63ysV/Zm
-	 TTo+kkx94nL+2oeem9UAYao2JW5WfL+UkI+UPVTY=
+	b=1b+xak1KXYyzwAEVvfY+x4Es5TZ+tyy4Y/gASboc9kY9pTq6+eiDBS78hjLYqBL/O
+	 p6mTlKTtmyNfUjehtFUuAVHdEeLVTRqPRJBxLsiLMmhQDw0QoEBrOzikkOjnBa3gCg
+	 RYgK99ZSC0SkM3ez6aFeTiudSi5MEPZcQz0NObXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727264AbfE1PHK (ORCPT
+        id S1727160AbfE1PHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 11:07:10 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:42856 "EHLO
+        Tue, 28 May 2019 11:07:09 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:42758 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726984AbfE1PHI (ORCPT
+        with ESMTP id S1726439AbfE1PHF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 11:07:08 -0400
+        Tue, 28 May 2019 11:07:05 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=DRrmUfZErlU0wblgTemga0P+08sSa7slNopRc/Wl/bM=; b=vXgRzWpF6smn
-        +rDhJ9B6evMagY+iFx+xzZkbVqYI//DRzVwbBoH4u+RPwj1dX+cQ7frf09DbtFsVHsACbGreiwQzB
-        3xXoi5GZnHXJNuM5KlAJHsvWEBkXxsnfC7RUoJujjMsBpHcsPUGWu/aWaK1vP94V95aHPa9+r8qOP
-        BwUeE=;
+        List-Archive; bh=fVgcuqF7q19syIEOumZgng3f1f8DLd588A3MOka13os=; b=x1Mm+kz2fvrr
+        s2jvA/MfeLVJ/A6vI7LN1JF9Q2WxT5/NP0KM4niu4d8o36srAbLODy1CQL4KlKOePovMfKsl2zVTx
+        UU2Xb4aw7XoU0vAQfE/WdpZ0P+v872PfwYeN/rl0yMI2BTaPkRbJj+vcXVwFnPJE2f1j01e/60x9R
+        eui5I=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hVdgr-0002oR-BF; Tue, 28 May 2019 15:07:01 +0000
+        id 1hVdgl-0002ne-Gh; Tue, 28 May 2019 15:06:55 +0000
 Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id A5290440046; Tue, 28 May 2019 16:07:00 +0100 (BST)
+        id CCB04440046; Tue, 28 May 2019 16:06:54 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Colin Ian King <colin.king@canonical.com>
 Cc:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
         kernel-janitors@vger.kernel.org,
         Liam Girdwood <lgirdwood@gmail.com>,
         linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Simon Ho <simon.ho@conexant.com>, Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: cx2072x: remove redundant assignment to pulse_len" to the asoc tree
-In-Reply-To: <20190524214419.25075-1-colin.king@canonical.com>
+        Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: cx2072x: fix spelling mistake "configued" -> "configured"" to the asoc tree
+In-Reply-To: <20190525203244.7829-1-colin.king@canonical.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190528150700.A5290440046@finisterre.sirena.org.uk>
-Date:   Tue, 28 May 2019 16:07:00 +0100 (BST)
+Message-Id: <20190528150654.CCB04440046@finisterre.sirena.org.uk>
+Date:   Tue, 28 May 2019 16:06:54 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -64,7 +64,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: cx2072x: remove redundant assignment to pulse_len
+   ASoC: cx2072x: fix spelling mistake "configued" -> "configured"
 
 has been applied to the asoc tree at
 
@@ -89,16 +89,14 @@ to this mail.
 Thanks,
 Mark
 
-From 9b33d2e526c53b0339ddba8b875bb8b8b3a11207 Mon Sep 17 00:00:00 2001
+From 9aa37874d1930da139a08f4db1eff5d305f2ddc8 Mon Sep 17 00:00:00 2001
 From: Colin Ian King <colin.king@canonical.com>
-Date: Fri, 24 May 2019 22:44:19 +0100
-Subject: [PATCH] ASoC: cx2072x: remove redundant assignment to pulse_len
+Date: Sat, 25 May 2019 21:32:44 +0100
+Subject: [PATCH] ASoC: cx2072x: fix spelling mistake "configued" ->
+ "configured"
 
-Variable pulse_len is being initialized to 1 however this value is
-never read and pulse_len is being re-assigned later in a switch
-statement.  Clean up the code by removing the redundant initialization.
+There is a spelling mistake in a dev_err error message. Fit it.
 
-Addresses-Coverity: ("Unused value")
 Signed-off-by: Colin Ian King <colin.king@canonical.com>
 Reviewed-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Mark Brown <broonie@kernel.org>
@@ -107,18 +105,18 @@ Signed-off-by: Mark Brown <broonie@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/sound/soc/codecs/cx2072x.c b/sound/soc/codecs/cx2072x.c
-index 23d2b25fe04c..c11a585bbf70 100644
+index ed762546eaee..8b0830854bb3 100644
 --- a/sound/soc/codecs/cx2072x.c
 +++ b/sound/soc/codecs/cx2072x.c
-@@ -679,7 +679,7 @@ static int cx2072x_config_i2spcm(struct cx2072x_priv *cx2072x)
- 	int is_right_j = 0;
- 	int is_frame_inv = 0;
- 	int is_bclk_inv = 0;
--	int pulse_len = 1;
-+	int pulse_len;
- 	int frame_len = cx2072x->frame_size;
- 	int sample_size = cx2072x->sample_size;
- 	int i2s_right_slot;
+@@ -933,7 +933,7 @@ static int cx2072x_hw_params(struct snd_pcm_substream *substream,
+ 		return frame_size;
+ 
+ 	if (cx2072x->mclk_rate == 0) {
+-		dev_err(dev, "Master clock rate is not configued\n");
++		dev_err(dev, "Master clock rate is not configured\n");
+ 		return -EINVAL;
+ 	}
+ 
 -- 
 2.20.1
 
