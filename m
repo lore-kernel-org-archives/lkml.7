@@ -2,121 +2,166 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F0BBC07542
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 02:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD15C04AB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 02:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13E272075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 02:03:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BACA22075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 02:06:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=babayev.com header.i=@babayev.com header.b="UoloAsRr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JH/nrTU/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbfE1CDq (ORCPT
+        id S1727929AbfE1CGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 22:03:46 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42490 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727763AbfE1CDq (ORCPT
+        Mon, 27 May 2019 22:06:49 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37540 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727651AbfE1CGt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 22:03:46 -0400
-Received: by mail-pf1-f195.google.com with SMTP id r22so7566921pfh.9
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 19:03:45 -0700 (PDT)
+        Mon, 27 May 2019 22:06:49 -0400
+Received: by mail-pf1-f193.google.com with SMTP id a23so10466109pff.4;
+        Mon, 27 May 2019 19:06:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=babayev.com; s=google;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=JaRPKvxw8+L+l1OScOFu7hcSbVbLQEUBHgcFnYYHmu4=;
-        b=UoloAsRruBW1XQDpfAyHrpJiDnUusRnJGYAd3/CPmhR9+d00govfBjxS7ZRMtQs0DT
-         pkp3tpflZlxImlkyMcfYcKdblDGWPHVZJLZOpaioebFMoPJsWLyVyOMalaIxVh1s3GV6
-         IxFv2mFwubmVUqaI2Ubqa3MFjUyaEgK/Ehidg=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=qxW1II/TWa1kHc6PXECSj8J6z+9c391dAdBReksgqeU=;
+        b=JH/nrTU/wyfYzKCgVuNaFHqM3IGPWwG7PQJHf/Sw13nsJmsJe5pOZDmfStYntS+RXq
+         Hdhx1SOWgNUxK552+6tlgx+FXzHTYLNDrYVtA/h1DiDhAYkaDoldmafOf6B1rdq39AxD
+         KXbh+s+Pd7K4uem1LxurZg/KSP9pPTVMAJWjXSss4etWsm2ubatXrmDcXIWndaxZqGFu
+         fBB9PO5SF2hsPLZIQJSzqcDTd5FX21jaxO9B8ZXDFj10yAW7/TZWFqfqGe7cqNW27sa3
+         pv/BLW2VoeU96EpwxpVJdZE3fe6gRmz1hUfjn2O3pb7Mc+jX/HJbtjx11cSFtDZy0yth
+         o4dA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version:content-transfer-encoding;
-        bh=JaRPKvxw8+L+l1OScOFu7hcSbVbLQEUBHgcFnYYHmu4=;
-        b=l+1WjhY37fyD/uX84CZqI4WpBTYslFg0na8Xfh4o4HkSK4AdCDLPzO/SSBohvvDVA0
-         5tbxhUBkdrdhoNJT7ladHbGwOynLrdjrJecvjbMEl6cyWsws3T6AzOS3OMfUUNNqXeo0
-         hRq2oHkax8kkFp5v7Lwgnskv7l17qbRM6e8gfdBNdpbXd7lewMW53rD6HGA4f5uoveZO
-         3W6i7WXXlUN6j/vfAy4aGgvsSLsFcxK3PidT7J+8Povu46hdYpwNYRWKCIqdDNc7LiFM
-         ulzZCUHenAY4GLE4IVN8cMaZR4Rdqo3ZxGzWbGAWnGpNSQ5QegEs9pyHSD9AEpXOy3lZ
-         Lj5w==
-X-Gm-Message-State: APjAAAXNQ55Ee6FLyEBiAzEcGVzzhYMGJB09Fek3iHYZunWuAux8VfLn
-        y6QSS6xWN4mEKINAKmZMCZk1PgrF5smqfQ==
-X-Google-Smtp-Source: APXvYqw2SNP/oW+Z1HqXmWCh/MRHPfCU1W0Ako0J9SiTpph/+j3M6XiUeGDrvUXSkpmF5PVfGG+p2w==
-X-Received: by 2002:a17:90a:2042:: with SMTP id n60mr2230768pjc.8.1559009025213;
-        Mon, 27 May 2019 19:03:45 -0700 (PDT)
-Received: from localhost ([128.107.241.177])
-        by smtp.gmail.com with ESMTPSA id u6sm6899535pgm.22.2019.05.27.19.03.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 27 May 2019 19:03:44 -0700 (PDT)
-References: <20190505193435.3248-1-ruslan@babayev.com> <20190525005302.27164-1-ruslan@babayev.com> <20190527184743.GA8808@kunai>
-User-agent: mu4e 1.0; emacs 26.1
-From:   Ruslan Babayev <ruslan@babayev.com>
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Ruslan Babayev <ruslan@babayev.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        xe-linux-external@cisco.com, linux-i2c@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2 1/2] i2c: acpi: export i2c_acpi_find_adapter_by_handle
-In-reply-to: <20190527184743.GA8808@kunai>
-Date:   Mon, 27 May 2019 19:03:44 -0700
-Message-ID: <874l5f9vy7.fsf@babayev.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=qxW1II/TWa1kHc6PXECSj8J6z+9c391dAdBReksgqeU=;
+        b=Y5bVNtUc1JZaAHgdlo2ZPAelzFHNCoVjDdJVywBduSvq7Lkc4RpVBsVtPSTZPe8aGQ
+         hmRJkjBn3cihynNl3GHsAEDFk/MNNNfZa9/4cUK76kivPLZYUq3bHA91Mm81xNl4vjYp
+         HsKgX1jbDfe1eBGJ2FgIsQGKgdEgYbqCnbcLExI0qOlXw5snDXO0XgSYR6dqcqmzGnhI
+         jQ9dGBhDPJ7HeJIJJc0HDtYS9d7J7zkWmd1aIpa9WcNQFOkHU5Gf7XaYaq2h/V27AfI5
+         TQqeXZqTIr74L19KxluMsxfwCxtJFzf0HUv8DIPGyMydGW/Hf2ThqK0n+PIe5MIDaNO7
+         IF/A==
+X-Gm-Message-State: APjAAAWJvRuQyXcw0rlblP+gfhVy1KeGM+4FOG96cyzOzKZ7DSn8ODqi
+        BykG58ZmlCKmE93RVB6xuINBU4My
+X-Google-Smtp-Source: APXvYqxAYs7s/9irQiNKqkW/hl4q1JbHGJ/MTYwkmLSgNGAZ4Fu6OweBiY6zzqXQrSwoaI2LpyZalA==
+X-Received: by 2002:a62:e310:: with SMTP id g16mr45003473pfh.36.1559009208001;
+        Mon, 27 May 2019 19:06:48 -0700 (PDT)
+Received: from localhost.localdomain (ip68-101-123-102.oc.oc.cox.net. [68.101.123.102])
+        by smtp.gmail.com with ESMTPSA id t2sm12725808pfh.166.2019.05.27.19.06.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 27 May 2019 19:06:47 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     ioana.ciornei@nxp.com, olteanv@gmail.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net] Documentation: net-sysfs: Remove duplicate PHY device documentation
+Date:   Mon, 27 May 2019 19:06:38 -0700
+Message-Id: <20190528020643.646-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Both sysfs-bus-mdio and sysfs-class-net-phydev contain the same
+duplication information. There is not currently any MDIO bus specific
+attribute, but there are PHY device (struct phy_device) specific
+attributes. Use the more precise description from sysfs-bus-mdio and
+carry that over to sysfs-class-net-phydev.
 
-Wolfram Sang writes:
+Fixes: 86f22d04dfb5 ("net: sysfs: Document PHY device sysfs attributes")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ Documentation/ABI/testing/sysfs-bus-mdio      | 29 -------------------
+ .../ABI/testing/sysfs-class-net-phydev        | 19 ++++++++----
+ 2 files changed, 13 insertions(+), 35 deletions(-)
+ delete mode 100644 Documentation/ABI/testing/sysfs-bus-mdio
 
-> On Fri, May 24, 2019 at 05:53:01PM -0700, Ruslan Babayev wrote:
->> This allows drivers to lookup i2c adapters on ACPI based systems similar=
- to
->> of_get_i2c_adapter_by_node() with DT based systems.
->>=20
->> Signed-off-by: Ruslan Babayev <ruslan@babayev.com>
->> Cc: xe-linux-external@cisco.com
->
-> Please have a look how your patches look in my inbox:
->
-> May 05 Ruslan Babayev  ( 129) [PATCH] net: phy: sfp: enable i2c-bus detec=
-tion on ACPI based systems
-> May 05 Ruslan Babayev  (  65) =E2=94=9C=E2=94=80>[PATCH 1/2] i2c: acpi: e=
-xport i2c_acpi_find_adapter_by_handle
-> May 24 Ruslan Babayev  (  65) =E2=94=94=E2=94=80>[PATCH net-next v2 1/2] =
-i2c: acpi: export i2c_acpi_find_adapter_by_handle
-> May 05 Ruslan Babayev  (  65) [PATCH net-next 1/2] i2c: acpi: export i2c_=
-acpi_find_adapter_by_handle
-> May 06 Ruslan Babayev  (   3) =E2=94=9C=E2=94=80>[PATCH RFC v2 net-next] =
-Enable SFP support on ACPI
-> May 06 Ruslan Babayev  (  65) =E2=94=9C=E2=94=80>[PATCH RFC v2 net-next 1=
-/2] i2c: acpi: export i2c_acpi_find_adapter_by_handle
-> May 06 Ruslan Babayev  ( 120) =E2=94=94=E2=94=80>[PATCH RFC v2 net-next 2=
-/2] net: phy: sfp: enable i2c-bus detection on ACPI based systems
-> May 07 Ruslan Babayev  ( 154)   =E2=94=94=E2=94=80&=E2=94=80>
-> May 07 Ruslan Babayev  (  10)     =E2=94=94=E2=94=80>
-> May 22 Ruslan Babayev  (  29)       =E2=94=94=E2=94=80>
-> May 05 Ruslan Babayev  (  93) [PATCH net-next 2/2] net: phy: sfp: enable =
-i2c-bus detection on ACPI based systems
-> May 06 Ruslan Babayev  (  25) =E2=94=9C=E2=94=80&=E2=94=80>
-> May 06 Ruslan Babayev  (  99) =E2=94=94=E2=94=80&=E2=94=80>
->
-> This is highly confusing, and super hard to find out which patches belong
-> together. v2 2/2 seems even missing. Please resend this as a new series w=
-ithout
-> any in-reply-to, and a fresh cover-letter, so I know which one to apply t=
-o my
-> tree.
->
-> Thanks,
->
->    Wolfram
+diff --git a/Documentation/ABI/testing/sysfs-bus-mdio b/Documentation/ABI/testing/sysfs-bus-mdio
+deleted file mode 100644
+index 491baaf4285f..000000000000
+--- a/Documentation/ABI/testing/sysfs-bus-mdio
++++ /dev/null
+@@ -1,29 +0,0 @@
+-What:		/sys/bus/mdio_bus/devices/.../phy_id
+-Date:		November 2012
+-KernelVersion:	3.8
+-Contact:	netdev@vger.kernel.org
+-Description:
+-		This attribute contains the 32-bit PHY Identifier as reported
+-		by the device during bus enumeration, encoded in hexadecimal.
+-		This ID is used to match the device with the appropriate
+-		driver.
+-
+-What:		/sys/bus/mdio_bus/devices/.../phy_interface
+-Date:		February 2014
+-KernelVersion:	3.15
+-Contact:	netdev@vger.kernel.org
+-Description:
+-		This attribute contains the PHY interface as configured by the
+-		Ethernet driver during bus enumeration, encoded in string.
+-		This interface mode is used to configure the Ethernet MAC with the
+-		appropriate mode for its data lines to the PHY hardware.
+-
+-What:		/sys/bus/mdio_bus/devices/.../phy_has_fixups
+-Date:		February 2014
+-KernelVersion:	3.15
+-Contact:	netdev@vger.kernel.org
+-Description:
+-		This attribute contains the boolean value whether a given PHY
+-		device has had any "fixup" workaround running on it, encoded as
+-		a boolean. This information is provided to help troubleshooting
+-		PHY configurations.
+diff --git a/Documentation/ABI/testing/sysfs-class-net-phydev b/Documentation/ABI/testing/sysfs-class-net-phydev
+index 6ebabfb27912..2a5723343aba 100644
+--- a/Documentation/ABI/testing/sysfs-class-net-phydev
++++ b/Documentation/ABI/testing/sysfs-class-net-phydev
+@@ -11,24 +11,31 @@ Date:		February 2014
+ KernelVersion:	3.15
+ Contact:	netdev@vger.kernel.org
+ Description:
+-		Boolean value indicating whether the PHY device has
+-		any fixups registered against it (phy_register_fixup)
++		This attribute contains the boolean value whether a given PHY
++		device has had any "fixup" workaround running on it, encoded as
++		a boolean. This information is provided to help troubleshooting
++		PHY configurations.
+ 
+ What:		/sys/class/mdio_bus/<bus>/<device>/phy_id
+ Date:		November 2012
+ KernelVersion:	3.8
+ Contact:	netdev@vger.kernel.org
+ Description:
+-		32-bit hexadecimal value corresponding to the PHY device's OUI,
+-		model and revision number.
++		This attribute contains the 32-bit PHY Identifier as reported
++		by the device during bus enumeration, encoded in hexadecimal.
++		This ID is used to match the device with the appropriate
++		driver.
+ 
+ What:		/sys/class/mdio_bus/<bus>/<device>/phy_interface
+ Date:		February 2014
+ KernelVersion:	3.15
+ Contact:	netdev@vger.kernel.org
+ Description:
+-		String value indicating the PHY interface, possible
+-		values are:.
++		This attribute contains the PHY interface as configured by the
++		Ethernet driver during bus enumeration, encoded in string.
++		This interface mode is used to configure the Ethernet MAC with the
++		appropriate mode for its data lines to the PHY hardware.
++		Possible values are:
+ 		<empty> (not available), mii, gmii, sgmii, tbi, rev-mii,
+ 		rmii, rgmii, rgmii-id, rgmii-rxid, rgmii-txid, rtbi, smii
+ 		xgmii, moca, qsgmii, trgmii, 1000base-x, 2500base-x, rxaui,
+-- 
+2.17.1
 
-Will do, sorry about that.
