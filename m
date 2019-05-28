@@ -2,85 +2,90 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5398C04AB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB284C04AB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8264B20717
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:04:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9AA72075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:11:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727650AbfE1BE2 (ORCPT
+        id S1727644AbfE1BLz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 21:04:28 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:51944 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727257AbfE1BE2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 21:04:28 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id A2211C3242096969BE59;
-        Tue, 28 May 2019 09:04:25 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Tue, 28 May 2019
- 09:04:19 +0800
-Subject: Re: [PATCH net-next] net: link_watch: prevent starvation when
- processing linkwatch wq
-To:     Stephen Hemminger <stephen@networkplumber.org>
-CC:     <davem@davemloft.net>, <hkallweit1@gmail.com>,
-        <f.fainelli@gmail.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
-References: <1558921674-158349-1-git-send-email-linyunsheng@huawei.com>
- <20190527075838.5a65abf9@hermes.lan>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <a0fe690b-2bfa-7d1a-40c5-5fb95cf57d0b@huawei.com>
-Date:   Tue, 28 May 2019 09:04:18 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+        Mon, 27 May 2019 21:11:55 -0400
+Received: from mga02.intel.com ([134.134.136.20]:27325 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727018AbfE1BLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 21:11:55 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 May 2019 18:11:54 -0700
+X-ExtLoop1: 1
+Received: from genxtest-ykzhao.sh.intel.com (HELO [10.239.143.71]) ([10.239.143.71])
+  by fmsmga001.fm.intel.com with ESMTP; 27 May 2019 18:11:53 -0700
+Subject: Re: [PATCH v6 4/4] x86/acrn: Add hypercall for ACRN guest
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de,
+        Jason Chen CJ <jason.cj.chen@intel.com>
+References: <1556595926-17910-1-git-send-email-yakui.zhao@intel.com>
+ <1556595926-17910-5-git-send-email-yakui.zhao@intel.com>
+ <20190515073715.GC24212@zn.tnic>
+ <b8210e0e-bdf2-3e17-ce9a-d7a3ca0e6672@intel.com>
+ <20190527224618.GB8209@cz.tnic>
+From:   "Zhao, Yakui" <yakui.zhao@intel.com>
+Message-ID: <0e0cd383-da3a-aa9c-d35e-5321f718e42e@intel.com>
+Date:   Tue, 28 May 2019 09:08:09 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.6.0
 MIME-Version: 1.0
-In-Reply-To: <20190527075838.5a65abf9@hermes.lan>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190527224618.GB8209@cz.tnic>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/5/27 22:58, Stephen Hemminger wrote:
-> On Mon, 27 May 2019 09:47:54 +0800
-> Yunsheng Lin <linyunsheng@huawei.com> wrote:
+
+
+On 2019年05月28日 06:46, Borislav Petkov wrote:
+> On Mon, May 27, 2019 at 10:57:09AM +0800, Zhao, Yakui wrote:
+>> I refer to the Xen/KVM hypercall to add the ACRN hypercall in one separate
+>> header.
 > 
->> When user has configured a large number of virtual netdev, such
->> as 4K vlans, the carrier on/off operation of the real netdev
->> will also cause it's virtual netdev's link state to be processed
->> in linkwatch. Currently, the processing is done in a work queue,
->> which may cause worker starvation problem for other work queue.
->>
->> This patch releases the cpu when link watch worker has processed
->> a fixed number of netdev' link watch event, and schedule the
->> work queue again when there is still link watch event remaining.
->>
->> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+> And?
 > 
-> Why not put link watch in its own workqueue so it is scheduled
-> separately from the system workqueue?
+>> The ACRN hypercall is defined in one separate acrn_hypercall.h and can be
+>> included explicitly by the *.c that needs the hypercall.
+> 
+> Sure but what else will need the hypercall definition except stuff which
+> already needs acrn.h? I.e., why is the separate header needed?
 
-From testing and debuging, the workqueue runs on the cpu where the
-workqueue is schedule when using normal workqueue, even using its
-own workqueue instead of system workqueue. So if the cpu is busy
-processing the linkwatch event, it is not able to process other
-workqueue' work when the workqueue is scheduled on the same cpu.
+In fact there is no much difference that it is defined in acrn.h or one 
+separate header file.
+When it is sent with the driver stuff, I will add the hypercall into 
+acrn.h. If the further extension is needed, we can then consider whether 
+it is necessary to be moved into the separate header file.
 
-Using unbound workqueue may solve the cpu starvation problem.
-But the __linkwatch_run_queue is called with rtnl_lock, so if it
-takes a lot time to process, other need to take the rtnl_lock may
-not be able to move forward.
-
+My initial thought is that the acrn.h/acrn_hypercall.h defines the 
+different contents.  Then the each source file in ACRN driver part can 
+include "acrn.h" or "acrn_hypercall.h" based on its requirement.
+Of course it is also ok that they are added in one header file. Then it 
+is always included.
 
 > 
+>> The hypercall will be used in driver part. Before the driver part is added,
+>> it seems that the defined ACRN hypercall functions are not used.
+>> Do I need to add these functions together with driver part?
 > 
+> Yes, send functions together with the stuff which uses them pls.
 
+Sure.
+
+> 
+> Thx.
+> 
