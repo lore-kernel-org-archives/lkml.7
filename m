@@ -2,236 +2,116 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80110C072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC61C46470
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:47:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 581F0208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:45:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Nfb0dssQ";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BWPjb2F/"
+	by mail.kernel.org (Postfix) with ESMTP id E4C6121670
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:47:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727514AbfE1UpK (ORCPT
+        id S1727350AbfE1Urn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 16:45:10 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:41622 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726481AbfE1UpK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 16:45:10 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 4F12160A44; Tue, 28 May 2019 20:45:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559076309;
-        bh=xy0yK0mB2mR3u7Em/TAoPhcbRGgKrHSpJwnhiB1HQtE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Nfb0dssQYVz+JOrAFF2gNsysXaGCuT8+YYYHmKnpSoV7Bu0JcPGi1ys+1aUk6EuDG
-         tTs55riA0jrPmmbNXunWJJA5yCexh6unLbpvaDId8LYueg8JxKUy8hEgwkSvYXK4ix
-         5MKQZxngDPOJ2cAPxOeQvLlXsXhZu8j/XBdLXdGE=
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 28 May 2019 16:47:43 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50142 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726481AbfE1Urm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 16:47:42 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: jcrouse@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1971E6077A;
-        Tue, 28 May 2019 20:45:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559076308;
-        bh=xy0yK0mB2mR3u7Em/TAoPhcbRGgKrHSpJwnhiB1HQtE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BWPjb2F/TeRbumXUgIQWFz7xErshdlOUbnS9/5JYLryMNZJY+1V7aznmPMvAK3LEC
-         S8gzgQpQRheeGpw1oBJ8qskyA4v7xDu8hrzi3zd+X/u+70o0VZFKva5GcIzlaCarbr
-         Et+9KR7Ig6TFZZOC38HKok3SvvLFhih/CuVwRAAo=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1971E6077A
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Tue, 28 May 2019 14:45:05 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     robdclark@gmail.com, sean@poorly.run, airlied@linux.ie,
-        daniel@ffwll.ch, marc.w.gonzalez@free.fr,
-        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/msm/adreno: Add A540 support
-Message-ID: <20190528204505.GC23227@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        robdclark@gmail.com, sean@poorly.run, airlied@linux.ie,
-        daniel@ffwll.ch, marc.w.gonzalez@free.fr,
-        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-References: <20190528170612.39003-1-jeffrey.l.hugo@gmail.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 8C8317FDCA;
+        Tue, 28 May 2019 20:47:42 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 57DB3600C1;
+        Tue, 28 May 2019 20:47:41 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+ Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+ Kingdom.
+ Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH] Smack: Restore the smackfsdef mount option and add missing
+ prefixes
+From:   David Howells <dhowells@redhat.com>
+To:     casey@schaufler-ca.com
+Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk, jmorris@namei.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 28 May 2019 21:47:40 +0100
+Message-ID: <155907646050.25083.16573974978890009010.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190528170612.39003-1-jeffrey.l.hugo@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 28 May 2019 20:47:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 10:06:12AM -0700, Jeffrey Hugo wrote:
-> The A540 is a derivative of the A530, and is found in the MSM8998 SoC.
-> 
-> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> ---
->  drivers/gpu/drm/msm/adreno/a5xx_gpu.c      | 22 +++++++
->  drivers/gpu/drm/msm/adreno/a5xx_power.c    | 76 +++++++++++++++++++++-
->  drivers/gpu/drm/msm/adreno/adreno_device.c | 18 +++++
->  drivers/gpu/drm/msm/adreno/adreno_gpu.h    |  6 ++
->  4 files changed, 119 insertions(+), 3 deletions(-)
+From: Casey Schaufler <casey@schaufler-ca.com>
 
-This is awesome.  I'm glad we can finally check this off the list.
+The 5.1 mount system rework changed the smackfsdef mount option
+to smackfsdefault. This fixes the regression by making smackfsdef
+treated the same way as smackfsdefault.
 
-> diff --git a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-> index e5fcefa49f19..7ca8fde22fd8 100644
-> --- a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-> @@ -318,12 +318,19 @@ static const struct {
->  
->  void a5xx_set_hwcg(struct msm_gpu *gpu, bool state)
->  {
-> +	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
->  	unsigned int i;
->  
->  	for (i = 0; i < ARRAY_SIZE(a5xx_hwcg); i++)
->  		gpu_write(gpu, a5xx_hwcg[i].offset,
->  			state ? a5xx_hwcg[i].value : 0);
->  
-> +	if (adreno_is_a540(adreno_gpu)) {
-> +		gpu_write(gpu, REG_A5XX_RBBM_CLOCK_HYST_GPMU, 0x00000222);
+Also fix the smack_param_specs[] to have "smack" prefixes on all the names.
+This isn't visible to a user unless they either:
 
-I don't think this one is needed - we can just go with the one two lines below.
+ (a) Try to mount a filesystem that's converted to the internal mount API
+     and that implements the ->parse_monolithic() context operation - and
+     only then if they call security_fs_context_parse_param() rather than
+     security_sb_eat_lsm_opts().
 
-> +		gpu_write(gpu, REG_A5XX_RBBM_CLOCK_DELAY_GPMU, 0x00000770);
-> +		gpu_write(gpu, REG_A5XX_RBBM_CLOCK_HYST_GPMU, 0x00000004);
+     There are no examples of this upstream yet, but nfs will probably want
+     to do this for nfs2 or nfs3.
 
-Both of these need the state ? <value> : 0x0 hack to turn off HWCG if requested
+ (b) Use fsconfig() to configure the filesystem - in which case
+     security_fs_context_parse_param() will be called.
 
-> +	}
-> +
->  	gpu_write(gpu, REG_A5XX_RBBM_CLOCK_CNTL, state ? 0xAAA8AA00 : 0);
->  	gpu_write(gpu, REG_A5XX_RBBM_ISDB_CNT, state ? 0x182 : 0x180);
->  }
-> @@ -507,6 +514,9 @@ static int a5xx_hw_init(struct msm_gpu *gpu)
->  
->  	gpu_write(gpu, REG_A5XX_VBIF_ROUND_ROBIN_QOS_ARB, 0x00000003);
->  
-> +	if (adreno_is_a540(adreno_gpu))
-> +		gpu_write(gpu, REG_A5XX_VBIF_GATE_OFF_WRREQ_EN, 0x00000009);
-> +
->  	/* Make all blocks contribute to the GPU BUSY perf counter */
->  	gpu_write(gpu, REG_A5XX_RBBM_PERFCTR_GPU_BUSY_MASKED, 0xFFFFFFFF);
->  
-> @@ -592,6 +602,8 @@ static int a5xx_hw_init(struct msm_gpu *gpu)
->  	/* Set the highest bank bit */
->  	gpu_write(gpu, REG_A5XX_TPL1_MODE_CNTL, 2 << 7);
->  	gpu_write(gpu, REG_A5XX_RB_MODE_CNTL, 2 << 1);
-> +	if (adreno_is_a540(adreno_gpu))
-> +		gpu_write(gpu, REG_A5XX_UCHE_DBG_ECO_CNTL_2, 2);
->  
->  	/* Protect registers from the CP */
->  	gpu_write(gpu, REG_A5XX_CP_PROTECT_CNTL, 0x00000007);
-> @@ -642,6 +654,16 @@ static int a5xx_hw_init(struct msm_gpu *gpu)
->  		REG_A5XX_RBBM_SECVID_TSB_TRUSTED_BASE_HI, 0x00000000);
->  	gpu_write(gpu, REG_A5XX_RBBM_SECVID_TSB_TRUSTED_SIZE, 0x00000000);
->  
-> +	/*
-> +	 * VPC corner case with local memory load kill leads to corrupt
-> +	 * internal state. Normal Disable does not work for all a5x chips.
-> +	 * So do the following setting to disable it.
-> +	 */
-> +	if (adreno_gpu->info->quirks & ADRENO_QUIRK_LMLOADKILL_DISABLE) {
+This issue is that smack_sb_eat_lsm_opts() checks for the "smack" prefix on
+the options, but smack_fs_context_parse_param() does not.
 
-This is a5xx only quirk but it applies to multiple 5xx targets so I think its
-reasonable to identify it as a quirk and use it as such to make it easier on
-future code porters.
+Fixes: c3300aaf95fb ("smack: get rid of match_token()")
+Fixes: 2febd254adc4 ("smack: Implement filesystem context security hooks")
+Cc: stable@vger.kernel.org
+Reported-by: Jose Bollo <jose.bollo@iot.bzh>
+Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
 
-> +		gpu_rmw(gpu, REG_A5XX_VPC_DBG_ECO_CNTL, 0, BIT(23));
-> +		gpu_rmw(gpu, 0xE04, BIT(18), 0); /*REG_A5XX_HLSQ_DBG_ECO_CNTL*/
+ security/smack/smack_lsm.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-You should define and use REG_A5XX_HLSQ_DBG_ECO_CNTL symbolically. We can help
-you do the envytools dance if you need.
+diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
+index 0de725f88bed..d99450b4f511 100644
+--- a/security/smack/smack_lsm.c
++++ b/security/smack/smack_lsm.c
+@@ -68,6 +68,7 @@ static struct {
+ 	int len;
+ 	int opt;
+ } smk_mount_opts[] = {
++	{"smackfsdef", sizeof("smackfsdef") - 1, Opt_fsdefault},
+ 	A(fsdefault), A(fsfloor), A(fshat), A(fsroot), A(fstransmute)
+ };
+ #undef A
+@@ -682,11 +683,12 @@ static int smack_fs_context_dup(struct fs_context *fc,
+ }
+ 
+ static const struct fs_parameter_spec smack_param_specs[] = {
+-	fsparam_string("fsdefault",	Opt_fsdefault),
+-	fsparam_string("fsfloor",	Opt_fsfloor),
+-	fsparam_string("fshat",		Opt_fshat),
+-	fsparam_string("fsroot",	Opt_fsroot),
+-	fsparam_string("fstransmute",	Opt_fstransmute),
++	fsparam_string("smackfsdef",		Opt_fsdefault),
++	fsparam_string("smackfsdefault",	Opt_fsdefault),
++	fsparam_string("smackfsfloor",		Opt_fsfloor),
++	fsparam_string("smackfshat",		Opt_fshat),
++	fsparam_string("smackfsroot",		Opt_fsroot),
++	fsparam_string("smackfstransmute",	Opt_fstransmute),
+ 	{}
+ };
+ 
 
-> +	}
-> +
->  	ret = adreno_hw_init(gpu);
->  	if (ret)
->  		return ret;
-> diff --git a/drivers/gpu/drm/msm/adreno/a5xx_power.c b/drivers/gpu/drm/msm/adreno/a5xx_power.c
-> index 70e65c94e525..5cb325c6eb8f 100644
-> --- a/drivers/gpu/drm/msm/adreno/a5xx_power.c
-> +++ b/drivers/gpu/drm/msm/adreno/a5xx_power.c
-> @@ -32,6 +32,18 @@
->  #define AGC_POWER_CONFIG_PRODUCTION_ID 1
->  #define AGC_INIT_MSG_VALUE 0xBABEFACE
->  
-> +/* AGC_LM_CONFIG (A540+) */
-> +#define AGC_LM_CONFIG (136/4)
-> +#define AGC_LM_CONFIG_GPU_VERSION_SHIFT 17
-> +#define AGC_LM_CONFIG_ENABLE_GPMU_ADAPTIVE 1
-> +#define AGC_LM_CONFIG_THROTTLE_DISABLE (2 << 8)
-> +#define AGC_LM_CONFIG_ISENSE_ENABLE (1 << 4)
-> +#define AGC_LM_CONFIG_ENABLE_ERROR (3 << 4)
-> +#define AGC_LM_CONFIG_LLM_ENABLED (1 << 16)
-> +#define AGC_LM_CONFIG_BCL_DISABLED (1 << 24)
-> +
-> +#define AGC_LEVEL_CONFIG (140/4)
-> +
->  static struct {
->  	uint32_t reg;
->  	uint32_t value;
-> @@ -116,7 +128,7 @@ static inline uint32_t _get_mvolts(struct msm_gpu *gpu, uint32_t freq)
->  }
->  
->  /* Setup thermal limit management */
-> -static void a5xx_lm_setup(struct msm_gpu *gpu)
-> +static void a530_lm_setup(struct msm_gpu *gpu)
->  {
->  	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
->  	struct a5xx_gpu *a5xx_gpu = to_a5xx_gpu(adreno_gpu);
-> @@ -165,6 +177,45 @@ static void a5xx_lm_setup(struct msm_gpu *gpu)
->  	gpu_write(gpu, AGC_INIT_MSG_MAGIC, AGC_INIT_MSG_VALUE);
->  }
->  
-> +#define PAYLOAD_SIZE(_size) ((_size) * sizeof(u32))
-> +#define LM_DCVS_LIMIT 1
-> +#define LEVEL_CONFIG ~(0x303)
-> +
-> +static void a540_lm_setup(struct msm_gpu *gpu)
-> +{
-> +	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
-> +	u32 config;
-> +
-> +	/* The battery current limiter isn't enabled for A540 */
-> +	config = AGC_LM_CONFIG_BCL_DISABLED;
-> +	config |= adreno_gpu->rev.patchid << AGC_LM_CONFIG_GPU_VERSION_SHIFT;
-> +
-> +	/* For now disable GPMU side throttling */
-> +	config |= AGC_LM_CONFIG_THROTTLE_DISABLE;
-> +
-> +	/* Until we get clock scaling 0 is always the active power level */
-> +	gpu_write(gpu, REG_A5XX_GPMU_GPMU_VOLTAGE, 0x80000000 | 0);
-> +
-> +	/* Fixed at 6000 for now */
-> +	gpu_write(gpu, REG_A5XX_GPMU_GPMU_PWR_THRESHOLD, 0x80000000 | 6000);
-> +
-> +	gpu_write(gpu, AGC_MSG_STATE, 0x80000001);
-> +	gpu_write(gpu, AGC_MSG_COMMAND, AGC_POWER_CONFIG_PRODUCTION_ID);
-> +
-> +	gpu_write(gpu, AGC_MSG_PAYLOAD(0), 5448); //magic number?
-
-They are all magic numbers but especially this number.  530 has the same.
-
-<snip>
-
-Jordan
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
