@@ -8,169 +8,118 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59DE5C04AB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 487BCC04AB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C27E2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:21:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18F172075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:22:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nT+DvN/0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JPfj5asY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbfE1BVG (ORCPT
+        id S1727795AbfE1BWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 21:21:06 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:33189 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727654AbfE1BVF (ORCPT
+        Mon, 27 May 2019 21:22:00 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38452 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727090AbfE1BV7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 21:21:05 -0400
-Received: by mail-io1-f65.google.com with SMTP id u13so5724756iop.0;
-        Mon, 27 May 2019 18:21:05 -0700 (PDT)
+        Mon, 27 May 2019 21:21:59 -0400
+Received: by mail-pf1-f194.google.com with SMTP id b76so10393782pfb.5;
+        Mon, 27 May 2019 18:21:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
+        h=date:from:to:subject:message-id:mime-version:content-disposition
          :user-agent;
-        bh=27QYXSJfDgkMs3NQuGOEzR0yDkUyXNJXs5ev5CL6ZEM=;
-        b=nT+DvN/0OIhvaSUXXRi5THTkbcE3b3seQVvcDpS6RIqPYPDK2bXU+Lv+KY5xzabLnJ
-         XKB0wSctU7XyXcVV5Q7xlEiMSlSqg2Sb5jzWyLcMJLZXvW6Pe7xifZxmUm3uvNu/2hn3
-         iT98EwMvK2QevvafoL4fKbYnhOsoSbgKjfycPyFAYmlEyo7MyHXjPCFm1RLMmu28XpDD
-         4L8jqentZMSvKCvYwRIV8fMV6UBqYHSue8GhUz7zLi4wMtRjnBv2FpnmfHwLn81utCVu
-         C/IcMbMRHO90ZctMT9qU/UkqcgtPQgkNCYgX7n9u61esW/ObbAbMJ5IUbcpRuBBcJmM+
-         LIwQ==
+        bh=WyrVEd7Z066n8x3W3p36ZvDVCldsmbGvGU0q2zkOUWY=;
+        b=JPfj5asYw7HCuZpjdcUxtFWyEFHcmHBfYWpcQ4cmCmn01QcNRXP91gGo5EDqXK0ebD
+         yGi03pUH40J20cuiByrNO5+e2WHsEB1cGlo+knxIfa3kdjvc5aSFrbfY38H09Y9MD/XE
+         fDpB+LX6OBDNmaFUxzMNfQaxGSJeTuLYKuaQ/ihD1gRzlWNDwA1g/GKXwk6q7q4PuWGH
+         IZSRIHQV+dD2le7wFYYByLBYCm11oAeO5vEAM6i1GN0ndtqDz4qnifhYOMYizJ6iuJDk
+         nRDuDJ+0zMOWpVOtpNL4NfZ+FTwbGGSld7XcgS5vRk1TkzoL7CEf3Jxz3aNdPmhCoVAS
+         zV+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=27QYXSJfDgkMs3NQuGOEzR0yDkUyXNJXs5ev5CL6ZEM=;
-        b=knVZdfhW5loWAwiO25WPi3GJvdDcovdJIUJxTtfhvGlO4AGHL1JU63LapYqpUQCCnP
-         4dErlB6B/wtslSPzw/I0wF/JxzSmWxnNiXyuhe1PYQ4sOYrh5PCTcYI6J0ynoyV9bwo4
-         FrM798v1iqAM0Lsh5Use9ZurWTk/3fSmu7wgSEUO0k1pdAFBBC4Da/RBZI1kwF/VNz6G
-         zKHZzT1t31tq9PuHTy1bv/hFRplGM2bzVCMsl0hx7WS4KqALfMAn2PZuJzDLW1t2OlGQ
-         0SULGErw14+RkYy4Tt81Mu5R/+TT/nGV/PA352MmMXpk0ufoD63GWA8ScVWpjo4FbW19
-         HTLg==
-X-Gm-Message-State: APjAAAU6WmtkQeRUvs/MW4qnxe0NJMYR1oTrMlUDpRn5lpv8Q+0v9usC
-        hlGObDXJ2KMFtiOWV+sQWtE=
-X-Google-Smtp-Source: APXvYqwxXyAmZLivswwyp3sPGnfA8UGWOu4zULOfo6zFppR956+KKb5kvtHuXgAEGDCi18UdIvkGaQ==
-X-Received: by 2002:a6b:e615:: with SMTP id g21mr7223419ioh.178.1559006464224;
-        Mon, 27 May 2019 18:21:04 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id a15sm2393824ioc.27.2019.05.27.18.21.02
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 27 May 2019 18:21:03 -0700 (PDT)
-Date:   Mon, 27 May 2019 18:21:01 -0700
-From:   'Dmitry Torokhov' <dmitry.torokhov@gmail.com>
-To:     =?utf-8?B?5buW5bSH5qau?= <kt.liao@emc.com.tw>
-Cc:     'Benjamin Tissoires' <benjamin.tissoires@redhat.com>,
-        'Rob Herring' <robh+dt@kernel.org>,
-        'Aaron Ma' <aaron.ma@canonical.com>,
-        'Hans de Goede' <hdegoede@redhat.com>,
-        "'open list:HID CORE LAYER'" <linux-input@vger.kernel.org>,
-        'lkml' <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, Harry Cutts <hcutts@chromium.org>
-Subject: Re: [PATCH v2 08/10] Input: elan_i2c - export true width/height
-Message-ID: <20190528012101.GA193221@dtor-ws>
-References: <20190521132712.2818-1-benjamin.tissoires@redhat.com>
- <20190521132712.2818-9-benjamin.tissoires@redhat.com>
- <CAO-hwJJXGTZq7zRVhcFNwh-kOo0rUhZOsNtFX1yA93Km=L+ynA@mail.gmail.com>
- <00f901d5143f$f5ea8420$e1bf8c60$@emc.com.tw>
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=WyrVEd7Z066n8x3W3p36ZvDVCldsmbGvGU0q2zkOUWY=;
+        b=foZCkTpH9/ignb7hIeNbTVrINpBRNWUkLuSrzPAZwxUFv3aJip0Y/uzSlqnWpfrxvN
+         Np27XY6lMkIOuAMMXMKmOkmXR62XibVgchSjrsf/5TlOW/GfVbm0so1zqKv8oW5eRIuW
+         Qxsoj+XP6apVZTIH70+P44IE+AEM13fVVcegcvWlNxdFQCgRIxe5mdDPikW8ViGXa9yc
+         A1V2v5HrDZuaOdAgONmnV47fcCYtxrGSDVtin2YhG6SNBjyIiNHKGjJSoS9anKFXuB3L
+         TSFWJ26e2tALidB4umt4VsS4LVqXmS1egp8ZYyp6UdihdWI3Bx/AgM+iEsFJwDEnEwxF
+         +POQ==
+X-Gm-Message-State: APjAAAWNsJZGizINknDxOMEtPA1wFdSUIuomkPvR9eLlB+K4RuzI/s/N
+        qOMMHbNMdQ/G5haI6bxVFFM=
+X-Google-Smtp-Source: APXvYqyW68YD00mOZxccK/5Hfm2Oq2XQwQPqlkvlJYDNTAxHBRx4vFXkEwopqCBFuWDslX1lqw7MXQ==
+X-Received: by 2002:a63:ed09:: with SMTP id d9mr12668611pgi.419.1559006518896;
+        Mon, 27 May 2019 18:21:58 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.89.153])
+        by smtp.gmail.com with ESMTPSA id z125sm15537156pfb.75.2019.05.27.18.21.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 27 May 2019 18:21:57 -0700 (PDT)
+Date:   Tue, 28 May 2019 06:51:52 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     ddiss@suse.de, "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [Patch v2] target/iscsi: fix possible condition with no effect (if
+ == else)
+Message-ID: <20190528012151.GA4845@hari-Inspiron-1545>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <00f901d5143f$f5ea8420$e1bf8c60$@emc.com.tw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Benjamin, KT,
+fix below warning reported by coccicheck
 
-On Mon, May 27, 2019 at 11:55:01AM +0800, 廖崇榮 wrote:
-> Hi
-> 
-> -----Original Message-----
-> From: Benjamin Tissoires [mailto:benjamin.tissoires@redhat.com] 
-> Sent: Friday, May 24, 2019 5:37 PM
-> To: Dmitry Torokhov; KT Liao; Rob Herring; Aaron Ma; Hans de Goede
-> Cc: open list:HID CORE LAYER; lkml; devicetree@vger.kernel.org
-> Subject: Re: [PATCH v2 08/10] Input: elan_i2c - export true width/height
-> 
-> On Tue, May 21, 2019 at 3:28 PM Benjamin Tissoires <benjamin.tissoires@redhat.com> wrote:
-> >
-> > The width/height is actually in the same unit than X and Y. So we 
-> > should not tamper the data, but just set the proper resolution, so 
-> > that userspace can correctly detect which touch is a palm or a finger.
-> >
-> > Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> >
-> > --
-> >
-> > new in v2
-> > ---
-> >  drivers/input/mouse/elan_i2c_core.c | 11 ++++-------
-> >  1 file changed, 4 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/drivers/input/mouse/elan_i2c_core.c 
-> > b/drivers/input/mouse/elan_i2c_core.c
-> > index 7ff044c6cd11..6f4feedb7765 100644
-> > --- a/drivers/input/mouse/elan_i2c_core.c
-> > +++ b/drivers/input/mouse/elan_i2c_core.c
-> > @@ -45,7 +45,6 @@
-> >  #define DRIVER_NAME            "elan_i2c"
-> >  #define ELAN_VENDOR_ID         0x04f3
-> >  #define ETP_MAX_PRESSURE       255
-> > -#define ETP_FWIDTH_REDUCE      90
-> >  #define ETP_FINGER_WIDTH       15
-> >  #define ETP_RETRY_COUNT                3
-> >
-> > @@ -915,12 +914,8 @@ static void elan_report_contact(struct elan_tp_data *data,
-> >                         return;
-> >                 }
-> >
-> > -               /*
-> > -                * To avoid treating large finger as palm, let's reduce the
-> > -                * width x and y per trace.
-> > -                */
-> > -               area_x = mk_x * (data->width_x - ETP_FWIDTH_REDUCE);
-> > -               area_y = mk_y * (data->width_y - ETP_FWIDTH_REDUCE);
-> > +               area_x = mk_x * data->width_x;
-> > +               area_y = mk_y * data->width_y;
-> >
-> >                 major = max(area_x, area_y);
-> >                 minor = min(area_x, area_y); @@ -1123,8 +1118,10 @@ 
-> > static int elan_setup_input_device(struct elan_tp_data *data)
-> >                              ETP_MAX_PRESSURE, 0, 0);
-> >         input_set_abs_params(input, ABS_MT_TOUCH_MAJOR, 0,
-> >                              ETP_FINGER_WIDTH * max_width, 0, 0);
-> > +       input_abs_set_res(input, ABS_MT_TOUCH_MAJOR, data->x_res);
-> >         input_set_abs_params(input, ABS_MT_TOUCH_MINOR, 0,
-> >                              ETP_FINGER_WIDTH * min_width, 0, 0);
-> > +       input_abs_set_res(input, ABS_MT_TOUCH_MINOR, data->y_res);
-> 
-> I had a chat with Peter on Wednesday, and he mentioned that this is dangerous as Major/Minor are max/min of the width and height. And given that we might have 2 different resolutions, we would need to do some computation in the kernel to ensure the data is correct with respect to the resolution.
-> 
-> TL;DR: I don't think we should export the resolution there :(
-> 
-> KT, should I drop the patch entirely, or is there a strong argument for keeping the ETP_FWIDTH_REDUCE around?
-> I suggest you apply the patch, I have no idea why ETP_FWIDTH_REDUCE existed. 
-> Our FW team know nothing about ETP_FWIDTH_REDUCE ether.
-> 
-> The only side effect will happen on Chromebook because such computation have stayed in ChromeOS' kernel for four years.
-> Chrome's finger/palm threshold may be different from other Linux distribution.
-> We will discuss it with Google once the patch picked by chrome and cause something wrong.
+drivers/target/iscsi/iscsi_target_nego.c:175:6-8: WARNING: possible
+condition with no effect (if == else)
 
-Chrome has logic that contact with maximum major/minor is treated as a
-palm, so here the driver (which originally came from Chrome OS)
-artificially reduces the contact size to ensure that palm rejection
-logic does not trigger.
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+Changes in v2: treat SRP as unsupported authtype.
+               Remove unnecessary else
+               return 2 in all unsupported cases
 
-I'm adding Harry to confirm whether we are still using this logic and to
-see if we can adjust it to be something else.
+---
+---
+ drivers/target/iscsi/iscsi_target_nego.c | 15 ++-------------
+ 1 file changed, 2 insertions(+), 13 deletions(-)
 
-Thanks.
-
+diff --git a/drivers/target/iscsi/iscsi_target_nego.c b/drivers/target/iscsi/iscsi_target_nego.c
+index 8a5e8d1..92ce2fd 100644
+--- a/drivers/target/iscsi/iscsi_target_nego.c
++++ b/drivers/target/iscsi/iscsi_target_nego.c
+@@ -160,22 +160,11 @@ static u32 iscsi_handle_authentication(
+ 
+ 	if (strstr("None", authtype))
+ 		return 1;
+-#ifdef CANSRP
+-	else if (strstr("SRP", authtype))
+-		return srp_main_loop(conn, auth, in_buf, out_buf,
+-				&in_length, out_length);
+-#endif
+ 	else if (strstr("CHAP", authtype))
+ 		return chap_main_loop(conn, auth, in_buf, out_buf,
+ 				&in_length, out_length);
+-	else if (strstr("SPKM1", authtype))
+-		return 2;
+-	else if (strstr("SPKM2", authtype))
+-		return 2;
+-	else if (strstr("KRB5", authtype))
+-		return 2;
+-	else
+-		return 2;
++	/* SRP, SPKM1, SPKM2 and KRB5 are unsupported */
++	return 2;
+ }
+ 
+ static void iscsi_remove_failed_auth_entry(struct iscsi_conn *conn)
 -- 
-Dmitry
+2.7.4
+
