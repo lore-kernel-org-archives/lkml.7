@@ -2,181 +2,120 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F35A6C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B38C072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:38:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE5CA208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A6FA20989
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:38:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559029120;
+	bh=Rz8gTFAUBx05valy07c89aDhA1wcUWODVajJbyAQ8t0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MX1BAG1vM4Qb9F5b9/MKSpSEtgeGQbEVWw3XBYbcos3xTwPjQloaiWQDBzWgixbC3
+	 DyOttC6hCf2MFn867Ioemd9Sx41OcuOdMDeJvhE5zFYS6UprRYvBISrmuJr1CAhNvM
+	 mR1/BzuhYKpkZKrLUEWyDmgIbXLozidVbGSmc65o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727339AbfE1HiC (ORCPT
+        id S1727524AbfE1Hik (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 03:38:02 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:17592 "EHLO huawei.com"
+        Tue, 28 May 2019 03:38:40 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56076 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726203AbfE1HiB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 03:38:01 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id BEA046161C8517D6CD08;
-        Tue, 28 May 2019 15:37:58 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.209) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 28 May
- 2019 15:37:48 +0800
-Subject: Re: [f2fs-dev] [PATCH v2] f2fs: ratelimit recovery messages
-To:     Gao Xiang <gaoxiang25@huawei.com>,
-        Sahitya Tummala <stummala@codeaurora.org>
-CC:     Jaegeuk Kim <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <1558962655-25994-1-git-send-email-stummala@codeaurora.org>
- <94025a6d-f485-3811-5521-ed5c9b4d1d77@huawei.com>
- <20190528030509.GE10043@codeaurora.org>
- <2575bd54-d67c-6b26-ebf7-d6adb2e193a7@huawei.com>
- <b5665201-d13d-5fcb-100d-21630960e5f1@huawei.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <0341eb2c-6788-1c85-2036-ed57b7f99dab@huawei.com>
-Date:   Tue, 28 May 2019 15:37:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1727373AbfE1Hij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 03:38:39 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 33E0EAE2E;
+        Tue, 28 May 2019 07:38:37 +0000 (UTC)
+Date:   Tue, 28 May 2019 09:38:35 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Roman Gushchin <guro@fb.com>, linux-api@vger.kernel.org
+Subject: Re: [PATCH RFC] mm/madvise: implement MADV_STOCKPILE (kswapd from
+ user space)
+Message-ID: <20190528073835.GP1658@dhcp22.suse.cz>
+References: <155895155861.2824.318013775811596173.stgit@buzz>
+ <20190527141223.GD1658@dhcp22.suse.cz>
+ <20190527142156.GE1658@dhcp22.suse.cz>
+ <20190527143926.GF1658@dhcp22.suse.cz>
+ <9c55a343-2a91-46c6-166d-41b94bf5e9c8@yandex-team.ru>
+ <20190528065153.GB1803@dhcp22.suse.cz>
+ <a4e5eeb8-3560-d4b4-08a0-8a22c677c0f7@yandex-team.ru>
 MIME-Version: 1.0
-In-Reply-To: <b5665201-d13d-5fcb-100d-21630960e5f1@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a4e5eeb8-3560-d4b4-08a0-8a22c677c0f7@yandex-team.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/5/28 11:30, Gao Xiang wrote:
-> Hi Sahitya,
+On Tue 28-05-19 10:30:12, Konstantin Khlebnikov wrote:
+> On 28.05.2019 9:51, Michal Hocko wrote:
+> > On Tue 28-05-19 09:25:13, Konstantin Khlebnikov wrote:
+> > > On 27.05.2019 17:39, Michal Hocko wrote:
+> > > > On Mon 27-05-19 16:21:56, Michal Hocko wrote:
+> > > > > On Mon 27-05-19 16:12:23, Michal Hocko wrote:
+> > > > > > [Cc linux-api. Please always cc this list when proposing a new user
+> > > > > >    visible api. Keeping the rest of the email intact for reference]
+> > > > > > 
+> > > > > > On Mon 27-05-19 13:05:58, Konstantin Khlebnikov wrote:
+> > > > > [...]
+> > > > > > > This implements manual kswapd-style memory reclaim initiated by userspace.
+> > > > > > > It reclaims both physical memory and cgroup pages. It works in context of
+> > > > > > > task who calls syscall madvise thus cpu time is accounted correctly.
+> > > > > 
+> > > > > I do not follow. Does this mean that the madvise always reclaims from
+> > > > > the memcg the process is member of?
+> > > > 
+> > > > OK, I've had a quick look at the implementation (the semantic should be
+> > > > clear from the patch descrition btw.) and it goes all the way up the
+> > > > hierarchy and finally try to impose the same limit to the global state.
+> > > > This doesn't really make much sense to me. For few reasons.
+> > > > 
+> > > > First of all it breaks isolation where one subgroup can influence a
+> > > > different hierarchy via parent reclaim.
+> > > 
+> > > madvise(NULL, size, MADV_STOCKPILE) is the same as memory allocation and
+> > > freeing immediately, but without pinning memory and provoking oom.
+> > > 
+> > > So, there is shouldn't be any isolation or security issues.
+> > > 
+> > > At least probably it should be limited with portion of limit (like half)
+> > > instead of whole limit as it does now.
+> > 
+> > I do not think so. If a process is running inside a memcg then it is
+> > a subject of a limit and that implies an isolation. What you are
+> > proposing here is to allow escaping that restriction unless I am missing
+> > something. Just consider the following setup
+> > 
+> > 		root (total memory = 2G)
+> > 		 / \
+> >             (1G) A   B (1G)
+> >                     / \
+> >             (500M) C   D (500M)
+> > 
+> > all of them used up close to the limit and a process inside D requests
+> > shrinking to 250M. Unless I am misunderstanding this implementation
+> > will shrink D, B root to 250M (which means reclaiming C and A as well)
+> > and then globally if that was not sufficient. So you have allowed D to
+> > "allocate" 1,75G of memory effectively, right?
 > 
-> On 2019/5/28 11:17, Chao Yu wrote:
->> Hi Sahitya,
->>
->> On 2019/5/28 11:05, Sahitya Tummala wrote:
->>> Hi Chao,
->>>
->>> On Tue, May 28, 2019 at 09:23:15AM +0800, Chao Yu wrote:
->>>> Hi Sahitya,
->>>>
->>>> On 2019/5/27 21:10, Sahitya Tummala wrote:
->>>>> Ratelimit the recovery logs, which are expected in case
->>>>> of sudden power down and which could result into too
->>>>> many prints.
->>>>
->>>> FYI
->>>>
->>>> https://lore.kernel.org/patchwork/patch/973837/
->>>>
->>>> IMO, we need those logs to provide evidence during trouble-shooting of file data
->>>> corruption or file missing problem...
->>>>
->>> In one of the logs, I have noticed there were ~400 recovery prints in the
->>
->> I think its order of magnitudes is not such bad, if there is redundant logs such
->> as the one in do_recover_data(), we can improve it.
->>
->>> kernel bootup. I noticed your patch above and with that now we can always get
->>> the error returned by f2fs_recover_fsync_data(), which should be good enough
->>> for knowing the status of recovered files I thought. Do you think we need
->>> individually each file status as well?
->>
->> Yes, I think so, we need them for the detailed info. :)
-> 
-> I personally agree with Chao's suggestion as well.
-> 
-> Sometimes huawei got stuck into rare potential f2fs stability issues,
-> which is hard to say whether it is a clearly hardware or software issues.
-> 
-> These messages is used as some evidences for us to guess what happened.
-> it'd better to handle carefully...
+> It shrinks not 'size' memory - only while usage + size > limit.
+> So, after reclaiming 250M in D all other levels will have 250M free.
 
-Correct, thanks for the detailed explanation. :)
-
-Thanks,
-
-> 
-> Thanks,
-> Gao Xiang
-> 
->>
->> Thanks,
->>
->>>
->>> Thanks,
->>>
->>>> So I suggest we can keep log as it is in recover_dentry/recover_inode, and for
->>>> the log in do_recover_data, we can record recovery info [isize_kept,
->>>> recovered_count, err ...] into struct fsync_inode_entry, and print them in
->>>> batch, how do you think?
->>>>
->>>> Thanks,
->>>>
->>>>>
->>>>> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
->>>>> ---
->>>>> v2:
->>>>>  - fix minor formatting and add new line for printk
->>>>>
->>>>>  fs/f2fs/recovery.c | 18 +++++++++---------
->>>>>  1 file changed, 9 insertions(+), 9 deletions(-)
->>>>>
->>>>> diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
->>>>> index e04f82b..60d7652 100644
->>>>> --- a/fs/f2fs/recovery.c
->>>>> +++ b/fs/f2fs/recovery.c
->>>>> @@ -188,8 +188,8 @@ static int recover_dentry(struct inode *inode, struct page *ipage,
->>>>>  		name = "<encrypted>";
->>>>>  	else
->>>>>  		name = raw_inode->i_name;
->>>>> -	f2fs_msg(inode->i_sb, KERN_NOTICE,
->>>>> -			"%s: ino = %x, name = %s, dir = %lx, err = %d",
->>>>> +	printk_ratelimited(KERN_NOTICE
->>>>> +			"%s: ino = %x, name = %s, dir = %lx, err = %d\n",
->>>>>  			__func__, ino_of_node(ipage), name,
->>>>>  			IS_ERR(dir) ? 0 : dir->i_ino, err);
->>>>>  	return err;
->>>>> @@ -292,8 +292,8 @@ static int recover_inode(struct inode *inode, struct page *page)
->>>>>  	else
->>>>>  		name = F2FS_INODE(page)->i_name;
->>>>>  
->>>>> -	f2fs_msg(inode->i_sb, KERN_NOTICE,
->>>>> -		"recover_inode: ino = %x, name = %s, inline = %x",
->>>>> +	printk_ratelimited(KERN_NOTICE
->>>>> +			"recover_inode: ino = %x, name = %s, inline = %x\n",
->>>>>  			ino_of_node(page), name, raw->i_inline);
->>>>>  	return 0;
->>>>>  }
->>>>> @@ -642,11 +642,11 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
->>>>>  err:
->>>>>  	f2fs_put_dnode(&dn);
->>>>>  out:
->>>>> -	f2fs_msg(sbi->sb, KERN_NOTICE,
->>>>> -		"recover_data: ino = %lx (i_size: %s) recovered = %d, err = %d",
->>>>> -		inode->i_ino,
->>>>> -		file_keep_isize(inode) ? "keep" : "recover",
->>>>> -		recovered, err);
->>>>> +	printk_ratelimited(KERN_NOTICE
->>>>> +			"recover_data: ino = %lx (i_size: %s) recovered = %d, err = %d\n",
->>>>> +			inode->i_ino,
->>>>> +			file_keep_isize(inode) ? "keep" : "recover",
->>>>> +			recovered, err);
->>>>>  	return err;
->>>>>  }
->>>>>  
->>>>>
->>>
->>
->>
->> _______________________________________________
->> Linux-f2fs-devel mailing list
->> Linux-f2fs-devel@lists.sourceforge.net
->> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
->>
-> .
-> 
+Could you define the exact semantic? Ideally something for the manual
+page please?
+-- 
+Michal Hocko
+SUSE Labs
