@@ -2,159 +2,108 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE25C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B451BC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B68FA206C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:08:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 800E4206C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:09:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xgt390RJ"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="UFZoz3sj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727373AbfE1PIx (ORCPT
+        id S1727381AbfE1PJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 11:08:53 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:33216 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726425AbfE1PIx (ORCPT
+        Tue, 28 May 2019 11:09:47 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35916 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726425AbfE1PJr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 11:08:53 -0400
-Received: by mail-ed1-f68.google.com with SMTP id n17so32324372edb.0;
-        Tue, 28 May 2019 08:08:51 -0700 (PDT)
+        Tue, 28 May 2019 11:09:47 -0400
+Received: by mail-wr1-f65.google.com with SMTP id s17so20650965wru.3
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 08:09:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=jDdJ/NRaP92Ox58Zhjk692io8dr+523CgmX10VYba/k=;
-        b=Xgt390RJIOeuEaZWZ83yyVSoRjvEf6KsiWFb7JM45ddWl4FaH0PRjOgU301TB5fP7C
-         nTE3jo11iY7vTD3zObE0aYnYmtMYreFA/gRsnsgcreOlLwmPTOj6NBP+JnkjWmYxVGOX
-         BA8ifI5+muF5efo5PZvz6WrRu4kPCBn/3H4XeMZVP7ftAW7Hd1zGCceVIEGOTnCsUZK7
-         GzRLutJYy12o9jRUiSvmJ+zWNYJg36m8/r1yVJrV4O+Soi3rO3e1jQM4JoB4UJqQhnVF
-         5/1wa/N+6P/zTgBQCQnrhOc8mtnE1dbaGXgCtV0tW9LTTOtNlt5kyWZnBGk95ane/660
-         G1Ug==
+        d=android.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=75ZL3pIfL3dGmPPRYb+LTkSC/IF0uVMpALzsYtJ/Ivw=;
+        b=UFZoz3sjTsHrA2xQmESKW39Nxo5Fa9hoR5CkiAVdhUyGaT9djQIWGKLIy24BjWoMhn
+         K3tpd7Fp7oIFh0VEzwLfFyHBUuQ6LGfJd73M5r1Rr3jwjKiAdQU1CEOJsss1MAnnB1WD
+         p/Hv3sD3DqPJM2PF/Hum9DRlyzCbe5fpESfOnaTJg7ysuviNM+G9YVPL1IjIKanYNTk5
+         inVGV4JeKSP4/LdWrkX/IfQdyUnF7loVHf1FdpHrRWUZhBSgFl91I9mFmG+LqJy8w2fv
+         TEh0B4LVW93Nd3eA0+pjd9IFJPkSxweCWKY0jL6QM67aioIN5k5WDe1CXforWh/aiaTS
+         5ftw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=jDdJ/NRaP92Ox58Zhjk692io8dr+523CgmX10VYba/k=;
-        b=s30NscFIcOce4bwqi3fUS4HsN8t6Ngw83RWM5zUVbpm13t6/fLdFKLyeRfNgVqXLGJ
-         iE5U86O/qUBCMUXd5sagAo4HYwy2Js9pHHA19gVf4Z0D9TXHc5Pyf1eTj4SDedsbX32N
-         z/Ax4RVTG6V4dh8KbdLddhaufBtpHueP9zpDk/o2+WDD6KdGbd3SoxuPyctbP7y2iFO+
-         ej7zrNqNXPr1hGOhwVmvyhwwvl61mXz2E/1dyCWc2kLYExM6d8+FtSLNLORM/t1uRAIS
-         vxk5p6DPZhyMzDD38i+bKrrR0Gb/4ShOIPAbDb7mwNwfwGgPIy80Q+LmV93otH3/HosT
-         SoLw==
-X-Gm-Message-State: APjAAAUs+aaHuLwhy7Z459icTVboHt758rIIei1z8d3YC/rJvrw3bU2S
-        iSE70oJJu1HA5NCzKMle4KdVhuy0GC8CcgarT60=
-X-Google-Smtp-Source: APXvYqweIelL6MQ2Wpx7+71MEU3iT4OcAg/Sc+V/fWOxiY0eNihtdLD4XF79A4cpdSkjbJ0Xr1Baeuj6EDmbqjcyMKE=
-X-Received: by 2002:a17:906:2acf:: with SMTP id m15mr86421981eje.31.1559056131034;
- Tue, 28 May 2019 08:08:51 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=75ZL3pIfL3dGmPPRYb+LTkSC/IF0uVMpALzsYtJ/Ivw=;
+        b=Q+rJWYHdfntfKEGaZQ44p6NY297JK5CTwpNpRlnZGMnBm2TTVwTsGFbX0QM27qtj8W
+         YScdxumYwsp7WuqZ6MrpIqDQGl4RsqbPb+4s5Py9kOMBfbb4RR9YFuF6SIdmBwQU66xX
+         N9A6VVw2TiZKKcf/HqVYUJlmOYvsdHdp6BdxuVobDOadVn0EUcvQryGVHzRGwLYHodHi
+         j/qPNyHLGAq/0r6UkIJ+9hVv5roCulVOiqxxVH8fJgXfbzRCEJuOpvM5iGEiKMA+dzYY
+         5eC+qcM6mVdCn/Yl8MqZaXiiD6T6vyoFDM4ebrchfE3O+dmTdfcuaeShI7cZAODBl73U
+         nB+Q==
+X-Gm-Message-State: APjAAAX8/ZPKs8y7smXyxA0AERzwcSCksL4YTKYIAwuBeyQCSpYnVkOJ
+        OklhV/aIAUxYPfPx5DtunftvdRZiv3Q=
+X-Google-Smtp-Source: APXvYqz7XvXIaJHz2/ebZiHNj271t0NW9547U92SYQlC6lRwF512nztTw3ES99AKxnDI5IpihSkt6g==
+X-Received: by 2002:adf:c506:: with SMTP id q6mr17196082wrf.219.1559056185144;
+        Tue, 28 May 2019 08:09:45 -0700 (PDT)
+Received: from balsini.lon.corp.google.com ([2a00:79e0:d:203:fc05:dec:5003:37b1])
+        by smtp.gmail.com with ESMTPSA id o8sm12457966wrx.50.2019.05.28.08.09.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 May 2019 08:09:44 -0700 (PDT)
+From:   Alessio Balsini <balsini@android.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     kernel-team@android.com, Alessio Balsini <balsini@android.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH] sched/deadline: Minor typos in dl_entity_overflow comment
+Date:   Tue, 28 May 2019 16:08:40 +0100
+Message-Id: <20190528150840.65581-1-balsini@android.com>
+X-Mailer: git-send-email 2.22.0.rc1.257.g3120a18244-goog
 MIME-Version: 1.0
-References: <20190523210651.80902-1-fklassen@appneta.com> <20190523210651.80902-5-fklassen@appneta.com>
- <CAF=yD-KBNLr5KY-YQ1KMmZGCpYNefSJKaJkZNOwd8nRiedpQtA@mail.gmail.com>
- <879E5DA6-3A4F-4CE1-9DA5-480EE30109DE@appneta.com> <CAF=yD-LQT7=4vvMwMa96_SFuUd5GywMoae7hGi9n6rQeuhhxuQ@mail.gmail.com>
- <5BB184F2-6C20-416B-B2AF-A678400CFE3E@appneta.com> <CAF=yD-+6CRyqL6Fq5y2zpw5nnDitYC7G1c2JAVHZTjyw68DYJg@mail.gmail.com>
- <903DEC70-845B-4C4B-911D-2F203C191C27@appneta.com>
-In-Reply-To: <903DEC70-845B-4C4B-911D-2F203C191C27@appneta.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Tue, 28 May 2019 11:08:14 -0400
-Message-ID: <CAF=yD-Le0XKCfyDBvHmBRVqkwn1D6ZoG=12gss5T62VcN5+1_w@mail.gmail.com>
-Subject: Re: [PATCH net 4/4] net/udpgso_bench_tx: audit error queue
-To:     Fred Klassen <fklassen@appneta.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        Willem de Bruijn <willemb@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> >> I have been wondering about xmit_more
-> >> myself. I don=E2=80=99t think it changes anything for software timesta=
-mps,
-> >> but it may with hardware timestamps.
-> >
-> > It arguably makes the software timestamp too early if taken on the
-> > first segment, as the NIC is only informed of all the new descriptors
-> > when the last segment is written and the doorbell is rung.
-> >
->
-> Totally makes sense. Possibly this can be improved software TX
-> timestamps by delaying until just before ring buffer is advanced.
-> It would have to be updated in each driver. I may have a look at
-> this once I am complete this patch. Hopefully that one will be a bit
-> smoother.
+Fix two non-critical typos in the documentation of the dl_entity_overflow
+function:
+- "rather then" --> "rather than";
+- "in such way that" --> "in such a way that".
 
-How do you see that? The skb_tstamp_tx call currently is already the
-last action before ringing the doorbell, after setting up the
-descriptor. It cannot be set later.
+Signed-off-by: Alessio Balsini <balsini@android.com>
+---
+ kernel/sched/deadline.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-The only issue specific to GSO is that xmit_more can forego this
-doorbell until the last segment. We want to complicate this logic with
-a special case based on tx_flags. A process that cares should either
-not use GSO, or the timestamp should be associated with the last
-segment as I've been arguing so far.
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index 43901fa3f2693..9b3987b74ca64 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -769,7 +769,7 @@ static bool dl_entity_overflow(struct sched_dl_entity *dl_se,
+ }
+ 
+ /*
+- * Revised wakeup rule [1]: For self-suspending tasks, rather then
++ * Revised wakeup rule [1]: For self-suspending tasks, rather than
+  * re-initializing task's runtime and deadline, the revised wakeup
+  * rule adjusts the task's runtime to avoid the task to overrun its
+  * density.
+@@ -780,7 +780,7 @@ static bool dl_entity_overflow(struct sched_dl_entity *dl_se,
+  * Therefore, runtime can be adjusted to:
+  *     runtime = (dl_runtime / dl_deadline) * (deadline - t)
+  *
+- * In such way that runtime will be equal to the maximum density
++ * In such a way that runtime will be equal to the maximum density
+  * the task can use without breaking any rule.
+  *
+  * [1] Luca Abeni, Giuseppe Lipari, and Juri Lelli. 2015. Constant
+-- 
+2.22.0.rc1.257.g3120a18244-goog
 
-> >>> Can you elaborate on this suspected memory leak?
-> >>
-> >> A user program cannot free a zerocopy buffer until it is reported as f=
-ree.
-> >> If zerocopy events are not reported, that could be a memory leak.
-> >>
-> >> I may have a fix. I have added a -P option when I am running an audit.
-> >> It doesn=E2=80=99t appear to affect performance, and since implementin=
-g it I have
-> >> received all error messages expected for both timestamp and zerocopy.
-> >>
-> >> I am still testing.
-> >
-> > I see, a userspace leak from lack of completion notification.
-> >
-> > If the issue is a few missing notifications at the end of the run,
-> > then perhaps cfg_waittime_ms is too short.
-> >
->
-> I=E2=80=99ll get back to you when I have tested this more thoroughly. Ear=
-ly results
-> suggest that adding the -P poll() option has fixed it without any appreci=
-able
-> performance hit. I=E2=80=99ll share raw results with you, and we can make=
- a final
-> decision together.
-
-In the main loop? It still is peculiar that notifications appear to go
-missing unless the process blocks waiting for them. Nothing in
-sock_zerocopy_callback or the queueing onto the error queue should
-cause drops, as far as I know.
-
->
-> >> Should the test have failed at this point? I did return an error(), bu=
-t
-> >> the script kept running.
-> >
-> > This should normally be cause for test failure, I think yes. Though
-> > it's fine to send the code for review and possibly even merge, so that
-> > I can take a look.
-> >
->
-> Sounds like udpgso_bench.sh needs a =E2=80=99set -e=E2=80=99 to ensure it=
- stops on
-> first error.
-
-Indeed. Ideally even run all tests, but return error if any failed,
-like this recent patch
-
-  selftests/bpf: fail test_tunnel.sh if subtests fail
-  https://patchwork.ozlabs.org/patch/1105221/
-
-but that may be a lot of code churn and better left to a separate patch.
