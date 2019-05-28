@@ -2,120 +2,112 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A03BC072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00719C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2885C2133F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:15:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559049337;
-	bh=nLKhjIzeaR1h6w2OEHXI4ENMxnKMi53HIQ3eeuO/2yQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xk0MTxrWSZQgG3LVgo7u3ApB2v22yPHzDIXPLDwCzsK86Sy8rAl2p7nkq+Ny8diWb
-	 MhcQmFP+7q+2Ko5Yl6Z7XSRe7aZSz6FUbz6+cEW4xRpolGONwdagq0KQMh+UqEt2bW
-	 0TnFdS7kf6rrvAQ9TUqAZC5NxXrLEqKaOcOHG3eY=
+	by mail.kernel.org (Postfix) with ESMTP id BD0EF2133F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:17:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=prevas.se header.i=@prevas.se header.b="rjLhNF41"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727521AbfE1NPg (ORCPT
+        id S1727556AbfE1NRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 09:15:36 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53090 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726620AbfE1NPg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 09:15:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=BblpOpFREi2nfI7PrhAnSrsLHFooqML/drjwmo5tWZw=; b=ccqw3W6F00V3/DVzf6rsqL1qw
-        unZI8FfF9dGo5mfzG31+24CCFTPT/z8Jv2dEJx7l9maiaMOoW3VDlw55OB++aE7jsLHZ1FrsYbjcl
-        Uuyvx6Qrz/vomXuypGN9VLvd7LpNThJ/gfXFMZ66Q7dLNfGUVV8eo3XI1zpECkHO7XjUI=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hVbwY-0002T8-2f; Tue, 28 May 2019 13:15:06 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 9E733440046; Tue, 28 May 2019 14:15:04 +0100 (BST)
-Date:   Tue, 28 May 2019 14:15:04 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Guillaume Tucker <guillaume.tucker@collabora.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Elaine Zhang <zhangqing@rock-chips.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Matt Hart <matthew.hart@linaro.org>, mgalka@collabora.com,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: linusw/for-next boot bisection: v5.2-rc1-8-g73a790c68d7e on
- rk3288-veyron-jaq
-Message-ID: <20190528131504.GI2456@sirena.org.uk>
-References: <5cec74e8.1c69fb81.37335.9d7b@mx.google.com>
- <0edab48f-06e5-9ed8-09be-7c9976ae1afb@collabora.com>
- <CAMuHMdUF1Csi1ZMccOj=kurijMLcA6G+TP_spsE+fnMvZR71Vw@mail.gmail.com>
- <de92e3bd-70e8-fcba-3c88-c04170704e7b@collabora.com>
- <CACRpkdb-Dv614V7STLRMpiLkmb_7NVyKnh2oUi=7Rx366tmZ-A@mail.gmail.com>
+        Tue, 28 May 2019 09:17:16 -0400
+Received: from mail-eopbgr60136.outbound.protection.outlook.com ([40.107.6.136]:43908
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726925AbfE1NRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 09:17:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.se;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SHaZaOGYis4KUJX+dj+xYfH+RUarnUbgfcxFKteJuDk=;
+ b=rjLhNF413AXMyNfpdMMe/53pMOTxEB1wTf+Tr/TGMJvqIOYW/bvuVHmDlEHFVxh1mTczbOZY0uFF0bgmldtfbcIB6cBm37DarzO3MSVkqHiY/1ue9nGs/oAw49pC6BnkmQltTw3HdcdwGfWtjoBFq/3IV2pdWqNukZvHWFJ1w30=
+Received: from VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM (20.178.126.80) by
+ VI1PR10MB2368.EURPRD10.PROD.OUTLOOK.COM (20.177.62.96) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.16; Tue, 28 May 2019 13:17:11 +0000
+Received: from VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::8844:426d:816b:f5d5]) by VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::8844:426d:816b:f5d5%6]) with mapi id 15.20.1922.021; Tue, 28 May 2019
+ 13:17:11 +0000
+From:   Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+CC:     Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH] net: dsa: mv88e6xxx: fix handling of upper half of
+ STATS_TYPE_PORT
+Thread-Topic: [PATCH] net: dsa: mv88e6xxx: fix handling of upper half of
+ STATS_TYPE_PORT
+Thread-Index: AQHVFVeoJSehSdMxnEmrURHzmpsI7Q==
+Date:   Tue, 28 May 2019 13:17:10 +0000
+Message-ID: <20190528131701.23912-1-rasmus.villemoes@prevas.dk>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR02CA0113.eurprd02.prod.outlook.com
+ (2603:10a6:7:29::42) To VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:803:e1::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Rasmus.Villemoes@prevas.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.20.1
+x-originating-ip: [81.216.59.226]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f6391135-acc7-4100-e3b3-08d6e36eca7f
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR10MB2368;
+x-ms-traffictypediagnostic: VI1PR10MB2368:
+x-microsoft-antispam-prvs: <VI1PR10MB23689EF0439B2785C157D0C88A1E0@VI1PR10MB2368.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 00514A2FE6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(376002)(346002)(39850400004)(396003)(189003)(199004)(102836004)(3846002)(6116002)(386003)(6506007)(256004)(66446008)(64756008)(66556008)(66476007)(73956011)(71190400001)(71200400001)(8936002)(8976002)(7736002)(14444005)(26005)(81166006)(81156014)(8676002)(6436002)(305945005)(6486002)(186003)(52116002)(2906002)(4744005)(5660300002)(50226002)(99286004)(25786009)(1076003)(72206003)(44832011)(14454004)(74482002)(66946007)(53936002)(316002)(478600001)(4326008)(68736007)(6512007)(486006)(2616005)(110136005)(54906003)(66066001)(36756003)(42882007)(476003);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR10MB2368;H:VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: prevas.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: XxG8nOCQO1Xo7HREx+GDdWuZYiiPYMBnDGxJOXjD9llatR0N8lB8kzgSpUgmm+nDuBFh7AYQhOdprzdqs+JxQBj5HiE/y2yo6/nc8YFqmk9XeJ9hDb2we8TNMKHmdH9Y74aG8PismEfxaOlF1BA9AKGik0nu+R42/AxXmKuIoSk4YjD0Tj9a/nDsicDECQS3nfckfkp/SWEHDnphl/7+3gWzjk2k5A7dY1YIi26wlmtjyaZ9Gk3oemLM6E/7PhfKnf61rcj3mzGPrLJNPiQDA28o9OtyV6Mgo6m7aUv5/Se7blSK6LIwhqZxmC4wv0ZJE5tlfNVXDqT4uKZ0QQo3UxIi/UFVhjjA2xgm73kYxMc+DSRBctU3HrexwnHPcYJxxXBoGQefasVRdaSNlDMtBZvLEpi7su1DlZs8wmiONTQ=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="G3juXO9GfR42w+sw"
-Content-Disposition: inline
-In-Reply-To: <CACRpkdb-Dv614V7STLRMpiLkmb_7NVyKnh2oUi=7Rx366tmZ-A@mail.gmail.com>
-X-Cookie: The other line moves faster.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: prevas.dk
+X-MS-Exchange-CrossTenant-Network-Message-Id: f6391135-acc7-4100-e3b3-08d6e36eca7f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2019 13:17:10.9566
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d350cf71-778d-4780-88f5-071a4cb1ed61
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Rasmus.Villemoes@prevas.dk
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB2368
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---G3juXO9GfR42w+sw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, May 28, 2019 at 10:45:13AM +0200, Linus Walleij wrote:
-> On Tue, May 28, 2019 at 10:36 AM Guillaume Tucker
-
-> > Not really, so I've disabled bisections in the linux-gpio tree
-> > and a few other maintainers' trees for now.  I'll see if we can
-> > come up with a more systematic way of suppressing bisections in
-> > similar cases (i.e. the issue has been fixed in mainline later
-> > than the base commit for the branch being tested).
-
-> I think this is what the zeroday autobuilder does because
-> they never seem to show this problem. Thanks for looking
-> into it!
-
-I've got a feeling they do this by deduping after doing the bisection;
-they also used to have a system where they'd merge a bunch of trees
-together and do the bisect on that to save repeating bisects.
-
---G3juXO9GfR42w+sw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlztNFQACgkQJNaLcl1U
-h9CnRwf/ee3CvNVsnpAeOOZn7++IRM1ltd0gFGJR8JS1aeptgeYX4Iy+LiyjV8CO
-ocs2H9W1CPO8oNd45rV709U1T5MzUpy8dPN306+3dPtB+etG8MXvBGSfoSx3oX0t
-wCZJaDgS/eakIS3nyhwsm4kYrFbOmG8hEjN22pcXugB6++1JPKXDQEC6bVxdJUVo
-meiYp9AR6PrYDDALwLSw+Hr5PJxOchP/x0azRWqDQ8xqICHaNkhYo2kV1uTF2nBg
-Y83I4nrNv4JOj+BSH+52Bys+uA8lT2daypGmuX3LVB/mILWA22w9R4uogPNk5uEg
-hcNuHlAgis5PMVLlC8S8D6U3j4wUIw==
-=/CjW
------END PGP SIGNATURE-----
-
---G3juXO9GfR42w+sw--
+Q3VycmVudGx5LCB0aGUgdXBwZXIgaGFsZiBvZiBhIDQtYnl0ZSBTVEFUU19UWVBFX1BPUlQgc3Rh
+dGlzdGljIGVuZHMNCnVwIGluIGJpdHMgNDc6MzIgb2YgdGhlIHJldHVybiB2YWx1ZSwgaW5zdGVh
+ZCBvZiBiaXRzIDMxOjE2IGFzIHRoZXkNCnNob3VsZC4NCg0KU2lnbmVkLW9mZi1ieTogUmFzbXVz
+IFZpbGxlbW9lcyA8cmFzbXVzLnZpbGxlbW9lc0BwcmV2YXMuZGs+DQotLS0NCkkgYWxzbyBub3Rp
+Y2VkIHRoYXQgaXQncyBhIGJpdCBpbmNvbnNpc3RlbnQgdGhhdCB3ZSByZXR1cm4gVTY0X01BWCBp
+Zg0KdGhlcmUncyBhIHJlYWQgZXJyb3IgaW4gU1RBVFNfVFlQRV9QT1JULCB3aGlsZQ0KbXY4OGU2
+eHh4X2cxX3N0YXRzX3JlYWQoKSByZXR1cm5zIDAgaW4gY2FzZSBvZiBhIHJlYWQgZXJyb3IuIElu
+DQpwcmFjdGljZSwgcmVnaXN0ZXIgcmVhZHMgcHJvYmFibHkgbmV2ZXIgZmFpbCBzbyBpdCBkb2Vz
+bid0IG1hdHRlci4NCg0KIGRyaXZlcnMvbmV0L2RzYS9tdjg4ZTZ4eHgvY2hpcC5jIHwgMiArLQ0K
+IDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KDQpkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9uZXQvZHNhL212ODhlNnh4eC9jaGlwLmMgYi9kcml2ZXJzL25ldC9kc2Ev
+bXY4OGU2eHh4L2NoaXAuYw0KaW5kZXggMzcwNDM0YmRiZGFiLi4zMTc1NTNkMmNiMjEgMTAwNjQ0
+DQotLS0gYS9kcml2ZXJzL25ldC9kc2EvbXY4OGU2eHh4L2NoaXAuYw0KKysrIGIvZHJpdmVycy9u
+ZXQvZHNhL212ODhlNnh4eC9jaGlwLmMNCkBAIC03ODUsNyArNzg1LDcgQEAgc3RhdGljIHVpbnQ2
+NF90IF9tdjg4ZTZ4eHhfZ2V0X2V0aHRvb2xfc3RhdChzdHJ1Y3QgbXY4OGU2eHh4X2NoaXAgKmNo
+aXAsDQogCQkJZXJyID0gbXY4OGU2eHh4X3BvcnRfcmVhZChjaGlwLCBwb3J0LCBzLT5yZWcgKyAx
+LCAmcmVnKTsNCiAJCQlpZiAoZXJyKQ0KIAkJCQlyZXR1cm4gVTY0X01BWDsNCi0JCQloaWdoID0g
+cmVnOw0KKwkJCWxvdyB8PSAoKHUzMilyZWcpIDw8IDE2Ow0KIAkJfQ0KIAkJYnJlYWs7DQogCWNh
+c2UgU1RBVFNfVFlQRV9CQU5LMToNCi0tIA0KMi4yMC4xDQoNCg==
