@@ -2,143 +2,152 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D93C9C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8787DC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8E7921670
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:43:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52B05208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:44:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d9exG2Ya"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbfE1Vnp (ORCPT
+        id S1728115AbfE1Voj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 17:43:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48056 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726526AbfE1Vno (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 17:43:44 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E4695300194A;
-        Tue, 28 May 2019 21:43:43 +0000 (UTC)
-Received: from x1.home (ovpn-116-22.phx2.redhat.com [10.3.116.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0DD485C241;
-        Tue, 28 May 2019 21:43:43 +0000 (UTC)
-Date:   Tue, 28 May 2019 15:43:42 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     sebott@linux.vnet.ibm.com, gerald.schaefer@de.ibm.com,
-        pasic@linux.vnet.ibm.com, borntraeger@de.ibm.com,
-        walling@linux.ibm.com, linux-s390@vger.kernel.org,
-        iommu@lists.linux-foundation.org, joro@8bytes.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        robin.murphy@arm.com
-Subject: Re: [PATCH v3 2/3] vfio: zpci: defining the VFIO headers
-Message-ID: <20190528154342.7b0f3946@x1.home>
-In-Reply-To: <1558614326-24711-3-git-send-email-pmorel@linux.ibm.com>
-References: <1558614326-24711-1-git-send-email-pmorel@linux.ibm.com>
-        <1558614326-24711-3-git-send-email-pmorel@linux.ibm.com>
-Organization: Red Hat
+        Tue, 28 May 2019 17:44:39 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:41514 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbfE1Voj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 17:44:39 -0400
+Received: by mail-ed1-f68.google.com with SMTP id m4so183115edd.8;
+        Tue, 28 May 2019 14:44:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3ccx/2mDpV9eWWMwVg+SGrf807l1VCHY5j13bUz46vU=;
+        b=d9exG2Ya6ZrZQxB9PlYWUG19JVleB2q8xKQ7kXz6yJWz3mAgfpTwDyhKR4aCoNcA0a
+         Qem34JLBY8BWw/tJFm5v2NBuu7aIoIq3w/VU8IWcKyszzyi/9X+gSB25Y/QwiLjLS8PP
+         qFvOLitYsArkNVE7+HxSsVvrUhti3A7WMo2zyOOfiSTdlqidZJKTMx/dBh35XjU7atBb
+         qUiaUtYxQT/jD/VybRL1dGocMBxHFA1uMYVOpepWQKNSdyEm9ukJja13eczY27cDDmtC
+         R6tf9TSsfjAtlHzW8+GcSXhqbeSoZfq/zgUb/tZP6CMs8/eiwGMPOTqCD4/xgLggT45Y
+         kElA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3ccx/2mDpV9eWWMwVg+SGrf807l1VCHY5j13bUz46vU=;
+        b=Dh1bg5qnYklMp0+6z3+Fga1rWt+zCGV3MnID6Hg2i+mSVIJ4JEHi0cOixGbCSM+HV3
+         CAaMUPVgG424Ddl9imIfSRfTIiWdheZ1IZlh3H1zJsl96E2Fp6iENcACwaSjx6JUr60g
+         2g8l9qbTXdKMJZRwuDwfAoUHJJtKvX6i+4sXw64NIzEwaUHwAjmjcTOvMF1kI46O1S/+
+         ESXi+gJRph4L2NtYJ1O9rydmitzRb3Cel8njmuz3fZ0obG4Qs6npPuqy74xUIpWR6LAx
+         XV0JIK5wNhWo/6GHQX87DPx7IJagJ1KpFPKuDXVtGrXelhhXzO5DksF3cx2iuoOEW6/g
+         n36w==
+X-Gm-Message-State: APjAAAUenWmxVOrKqyQpHCFLSATBcWvQMEs1RbZtUbHRhIAUaAOfl68N
+        sRKJN0/0a5j5brW66edgvOXWc/pYRZSBzFYRtCSh6g==
+X-Google-Smtp-Source: APXvYqw1C0np1xDokVrH9pm/kPaWV5KeN9jgbuOF77Axq5+iwy+Lr5C1JFIpvGp7WIkD9DfzWrJiaNVJKsKSp3yR15k=
+X-Received: by 2002:a17:906:aacb:: with SMTP id kt11mr90590173ejb.246.1559079877279;
+ Tue, 28 May 2019 14:44:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 28 May 2019 21:43:44 +0000 (UTC)
+References: <20190528184415.16020-1-fklassen@appneta.com> <20190528184415.16020-2-fklassen@appneta.com>
+In-Reply-To: <20190528184415.16020-2-fklassen@appneta.com>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Tue, 28 May 2019 17:44:01 -0400
+Message-ID: <CAF=yD-JvNFdWCBJ6w1_XWSHu1CDiG_QimrUT8ZCxw=U+OVvBMA@mail.gmail.com>
+Subject: Re: [PATCH net-next v3 1/1] net/udp_gso: Allow TX timestamp with UDP GSO
+To:     Fred Klassen <fklassen@appneta.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        Willem de Bruijn <willemb@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 May 2019 14:25:25 +0200
-Pierre Morel <pmorel@linux.ibm.com> wrote:
+On Tue, May 28, 2019 at 3:10 PM Fred Klassen <fklassen@appneta.com> wrote:
+>
+> Fixes an issue where TX Timestamps are not arriving on the error queue
+> when UDP_SEGMENT CMSG type is combined with CMSG type SO_TIMESTAMPING.
+> This can be illustrated with an updated updgso_bench_tx program which
+> includes the '-T' option to test for this condition.
+>
+>     ./udpgso_bench_tx -4ucTPv -S 1472 -l2 -D 172.16.120.18
+>     poll timeout
+>     udp tx:      0 MB/s        1 calls/s      1 msg/s
+>
+> The "poll timeout" message above indicates that TX timestamp never
+> arrived.
+>
+> It also appears that other TX CMSG types cause similar issues, for
+> example trying to set SOL_IP/IP_TOS.
 
-> We define a new device region in vfio.h to be able to
-> get the ZPCI CLP information by reading this region from
-> userland.
-> 
-> We create a new file, vfio_zdev.h to define the structure
-> of the new region we defined in vfio.h
-> 
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+See previous comment in v2
+
+http://patchwork.ozlabs.org/patch/1105564/
+
+>
+>     ./udpgso_bench_tx -4ucPv -S 1472 -q 182 -l2 -D 172.16.120.18
+>     poll timeout
+>     udp tx:      0 MB/s        1 calls/s      1 msg/s
+>
+> This patch preserves tx_flags for the first UDP GSO segment.
+>
+> v2: Remove tests as noted by Willem de Bruijn <willemb@google.com>
+>     Moving tests from net to net-next
+>
+> v3: Update only relevant tx_flag bits as per
+>     Willem de Bruijn <willemb@google.com>
+>
+> Fixes: ee80d1ebe5ba ("udp: add udp gso")
+> Signed-off-by: Fred Klassen <fklassen@appneta.com>
+
+FYI, no need for a cover letter for a single patch. Also, I think the
+cc list can be more concise. Mainly netdev.
+
 > ---
->  include/uapi/linux/vfio.h      |  4 ++++
->  include/uapi/linux/vfio_zdev.h | 34 ++++++++++++++++++++++++++++++++++
->  2 files changed, 38 insertions(+)
->  create mode 100644 include/uapi/linux/vfio_zdev.h
-> 
-> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> index 8f10748..56595b8 100644
-> --- a/include/uapi/linux/vfio.h
-> +++ b/include/uapi/linux/vfio.h
-> @@ -306,6 +306,10 @@ struct vfio_region_info_cap_type {
->  #define VFIO_REGION_TYPE_GFX                    (1)
->  #define VFIO_REGION_SUBTYPE_GFX_EDID            (1)
->  
-> +/* IBM Subtypes */
-> +#define VFIO_REGION_TYPE_IBM_ZDEV		(1)
+>  net/ipv4/udp_offload.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/net/ipv4/udp_offload.c b/net/ipv4/udp_offload.c
+> index 065334b41d57..de8ecba42d55 100644
+> --- a/net/ipv4/udp_offload.c
+> +++ b/net/ipv4/udp_offload.c
+> @@ -228,6 +228,11 @@ struct sk_buff *__udp_gso_segment(struct sk_buff *gso_skb,
+>         seg = segs;
+>         uh = udp_hdr(seg);
+>
+> +       /* preserve TX timestamp and zero-copy info for first segment */
 
-This one defines (but never uses) a conflicting region type to GFX
-above.
+Same as above. This is not about zerocopy.
 
-> +#define VFIO_REGION_SUBTYPE_ZDEV_CLP		(1)
+> +       skb_shinfo(seg)->tskey = skb_shinfo(gso_skb)->tskey;
+> +       skb_shinfo(seg)->tx_flags |=
+> +                       (skb_shinfo(gso_skb)->tx_flags & SKBTX_ANY_TSTAMP);
 
-If we're using a PCI vendor type, which the next patch indicates we
-are, this is the one you need.  But please also specify it as a PCI
-vendor sub-type with the hex PCI vendor ID, and perhaps group it with
-the Intel vendor sub-types.
+Asked elsewhere, but best answered here: given that xmit_more delays
+delivery to the NIC until the last segment in a train, is the first
+segment in your opinion still the best to attach the timestamp request
+to?
+
+To reiterate, we do not want to need a follow-up patch to disable
+xmit_more when timestamps are requested.
+
 
 > +
->  /**
->   * struct vfio_region_gfx_edid - EDID region layout.
->   *
-> diff --git a/include/uapi/linux/vfio_zdev.h b/include/uapi/linux/vfio_zdev.h
-> new file mode 100644
-> index 0000000..84b1a82
-> --- /dev/null
-> +++ b/include/uapi/linux/vfio_zdev.h
-> @@ -0,0 +1,34 @@
-> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> +/*
-> + * Region definition for ZPCI devices
-> + *
-> + * Copyright IBM Corp. 2019
-> + *
-> + * Author(s): Pierre Morel <pmorel@linux.ibm.com>
-> + */
-> +
-> +#ifndef _VFIO_ZDEV_H_
-> +#define _VFIO_ZDEV_H_
-> +
-> +#include <linux/types.h>
-> +
-> +/**
-> + * struct vfio_region_zpci_info - ZPCI information.
-> + *
-> + */
-> +struct vfio_region_zpci_info {
-> +	__u64 dasm;
-> +	__u64 start_dma;
-> +	__u64 end_dma;
-> +	__u64 msi_addr;
-> +	__u64 flags;
-> +	__u16 pchid;
-> +	__u16 mui;
-> +	__u16 noi;
-> +	__u8 gid;
-> +	__u8 version;
-> +#define VFIO_PCI_ZDEV_FLAGS_REFRESH 1
-> +	__u8 util_str[CLP_UTIL_STR_LEN];
-
-I don't see where CLP_UTIL_STR_LEN is defined in a uapi consumable
-header.  Should this simply be [] where the string length is implied by
-the remaining region size?  QEMU hard codes it, that doesn't validate
-the vfio uapi.
-
-> +} __packed;
-> +
-> +#endif
-
+>         /* compute checksum adjustment based on old length versus new */
+>         newlen = htons(sizeof(*uh) + mss);
+>         check = csum16_add(csum16_sub(uh->check, uh->len), newlen);
+> --
+> 2.11.0
+>
