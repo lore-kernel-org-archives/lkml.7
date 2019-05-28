@@ -2,34 +2,34 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAEA9C04E84
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F4DCC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:24:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B48B220645
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EA132133F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:24:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727648AbfE1OYn (ORCPT
+        id S1727673AbfE1OYp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 10:24:43 -0400
-Received: from laurent.telenet-ops.be ([195.130.137.89]:60146 "EHLO
-        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727164AbfE1OYn (ORCPT
+        Tue, 28 May 2019 10:24:45 -0400
+Received: from xavier.telenet-ops.be ([195.130.132.52]:37096 "EHLO
+        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727618AbfE1OYn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 May 2019 10:24:43 -0400
 Received: from ramsan ([84.194.111.163])
-        by laurent.telenet-ops.be with bizsmtp
-        id HqQS200073XaVaC01qQSAk; Tue, 28 May 2019 16:24:41 +0200
+        by xavier.telenet-ops.be with bizsmtp
+        id HqQS2000K3XaVaC01qQSyc; Tue, 28 May 2019 16:24:42 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hVd1e-00058G-2v; Tue, 28 May 2019 16:24:26 +0200
+        id 1hVd1e-00058F-2p; Tue, 28 May 2019 16:24:26 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hVd1e-00057O-1L; Tue, 28 May 2019 16:24:26 +0200
+        id 1hVd1e-00057M-0A; Tue, 28 May 2019 16:24:26 +0200
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
 To:     Igor Konopko <igor.j.konopko@intel.com>,
         David Howells <dhowells@redhat.com>,
@@ -50,12 +50,10 @@ Cc:     linux-block@vger.kernel.org, netdev@vger.kernel.org,
         linux-afs@lists.infradead.org, alsa-devel@alsa-project.org,
         linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH 1/5] lightnvm: Fix uninitialized pointer in nvm_remove_tgt()
-Date:   Tue, 28 May 2019 16:24:20 +0200
-Message-Id: <20190528142424.19626-2-geert@linux-m68k.org>
+Subject: [PATCH 0/5] Assorted fixes discovered with gcc 4.1
+Date:   Tue, 28 May 2019 16:24:19 +0200
+Message-Id: <20190528142424.19626-1-geert@linux-m68k.org>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190528142424.19626-1-geert@linux-m68k.org>
-References: <20190528142424.19626-1-geert@linux-m68k.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -64,37 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With gcc 4.1:
+	Hi all,
 
-    drivers/lightnvm/core.c: In function ‘nvm_remove_tgt’:
-    drivers/lightnvm/core.c:510: warning: ‘t’ is used uninitialized in this function
+Ever since commit cafa0010cd51fb71 ("Raise the minimum required gcc
+version to 4.6"), I felt bored when looking at my test build logs, as I
+was no longer discovering many real issues.  Hence I started wondering
+if the modern gcc versions are really catching these classes of bugs
+caught before with gcc 4.1, or if they just go undetected.
 
-Indeed, if no NVM devices have been registered, t will be an
-uninitialized pointer, and may be dereferenced later.  A call to
-nvm_remove_tgt() can be triggered from userspace by issuing the
-NVM_DEV_REMOVE ioctl on the lightnvm control device.
+I reverted some changes and applied some fixes, which allowed me to
+compile most of the kernel with gcc 4.1 again.  I built an
+m68k/allmodconfig kernel, looked at all new warnings, and fixed the ones
+that are not false positives.  The result is a patch series of 5
+patches, of which one or two fix real bugs.
 
-Fix this by preinitializing t to NULL.
+Thanks for your comments, and for applying where appropriate!
 
-Fixes: 843f2edbdde085b4 ("lightnvm: do not remove instance under global lock")
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
----
- drivers/lightnvm/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Geert Uytterhoeven (5):
+  lightnvm: Fix uninitialized pointer in nvm_remove_tgt()
+  rxrpc: Fix uninitialized error code in rxrpc_send_data_packet()
+  net: sched: pie: Use ULL suffix for 64-bit constant
+  ALSA: fireface: Use ULL suffixes for 64-bit constants
+  [RFC] devlink: Fix uninitialized error code in
+    devlink_fmsg_prepare_skb()
 
-diff --git a/drivers/lightnvm/core.c b/drivers/lightnvm/core.c
-index 0df7454832efe082..aa017f48eb8c588c 100644
---- a/drivers/lightnvm/core.c
-+++ b/drivers/lightnvm/core.c
-@@ -492,7 +492,7 @@ static void __nvm_remove_target(struct nvm_target *t, bool graceful)
-  */
- static int nvm_remove_tgt(struct nvm_ioctl_remove *remove)
- {
--	struct nvm_target *t;
-+	struct nvm_target *t = NULL;
- 	struct nvm_dev *dev;
- 
- 	down_read(&nvm_lock);
+ drivers/lightnvm/core.c                      |  2 +-
+ net/core/devlink.c                           |  2 +-
+ net/rxrpc/output.c                           |  4 +++-
+ net/sched/sch_pie.c                          |  2 +-
+ sound/firewire/fireface/ff-protocol-latter.c | 10 +++++-----
+ 5 files changed, 11 insertions(+), 9 deletions(-)
+
 -- 
 2.17.1
 
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
