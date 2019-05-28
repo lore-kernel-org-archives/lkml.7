@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE0BC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DA2C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:04:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E6782133F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:03:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26E6D214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:04:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727038AbfE1PD4 (ORCPT
+        id S1727117AbfE1PD7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 11:03:56 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:58912 "EHLO
+        Tue, 28 May 2019 11:03:59 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:58926 "EHLO
         foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726874AbfE1PDy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 11:03:54 -0400
+        id S1727023AbfE1PD4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 11:03:56 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CC0801688;
-        Tue, 28 May 2019 08:03:53 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6A99168F;
+        Tue, 28 May 2019 08:03:55 -0700 (PDT)
 Received: from e121650-lin.cambridge.arm.com (e121650-lin.cambridge.arm.com [10.1.196.108])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2BD563F5AF;
-        Tue, 28 May 2019 08:03:52 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 15CF33F5AF;
+        Tue, 28 May 2019 08:03:53 -0700 (PDT)
 From:   Raphael Gault <raphael.gault@arm.com>
 To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     mingo@redhat.com, peterz@infradead.org, catalin.marinas@arm.com,
         will.deacon@arm.com, acme@kernel.org, mark.rutland@arm.com,
         Raphael Gault <raphael.gault@arm.com>
-Subject: [RFC 5/7] arm64: pmu: Add hook to handle pmu-related undefined instructions
-Date:   Tue, 28 May 2019 16:03:18 +0100
-Message-Id: <20190528150320.25953-6-raphael.gault@arm.com>
+Subject: [RFC 6/7] arm64: perf: Enable pmu counter direct access for perf event on armv8
+Date:   Tue, 28 May 2019 16:03:19 +0100
+Message-Id: <20190528150320.25953-7-raphael.gault@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190528150320.25953-1-raphael.gault@arm.com>
 References: <20190528150320.25953-1-raphael.gault@arm.com>
@@ -41,107 +41,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to prevent the userspace processes which are trying to access
-the registers from the pmu registers on a big.LITTLE environment we
-introduce a hook to handle undefined instructions.
+Keep track of event opened with direct access to the hardware counters
+and modify permissions while they are open.
 
-The goal here is to prevent the process to be interrupted by a signal
-when the error is caused by the task being scheduled while accessing
-a counter, causing the counter access to be invalid. As we are not able
-to know efficiently the number of counters available physically on both
-pmu in that context we consider that any faulting access to a counter
-which is architecturally correct should not cause a SIGILL signal if
-the permissions are set accordingly.
-
-This commit also modifies the mask of the mrs_hook declared in
-arch/arm64/kernel/cpufeatures.c which emulates only feature register
-access. This is necessary because this hook's mask was too large and
-thus masking any mrs instruction, even if not related to the emulated
-registers which made the pmu emulation inefficient.
+The strategy used here is the same which x86 uses: everytime an event
+is mapped, the permissions are set if required. The atomic field added
+in the mm_context helps keep track of the different event opened and
+de-activate the permissions when all are unmapped.
+We also need to update the permissions in the context switch code so
+that tasks keep the right permissions.
 
 Signed-off-by: Raphael Gault <raphael.gault@arm.com>
 ---
- arch/arm64/kernel/cpufeature.c |  4 ++--
- arch/arm64/kernel/perf_event.c | 41 ++++++++++++++++++++++++++++++++++
- 2 files changed, 43 insertions(+), 2 deletions(-)
+ arch/arm64/include/asm/mmu.h         |  6 +++++
+ arch/arm64/include/asm/mmu_context.h |  2 ++
+ arch/arm64/include/asm/perf_event.h  | 14 ++++++++++
+ drivers/perf/arm_pmu.c               | 38 ++++++++++++++++++++++++++++
+ 4 files changed, 60 insertions(+)
 
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index 2b807f129e60..daa7b31f2c73 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -2166,8 +2166,8 @@ static int emulate_mrs(struct pt_regs *regs, u32 insn)
- }
+diff --git a/arch/arm64/include/asm/mmu.h b/arch/arm64/include/asm/mmu.h
+index 67ef25d037ea..9de4cf0b17c7 100644
+--- a/arch/arm64/include/asm/mmu.h
++++ b/arch/arm64/include/asm/mmu.h
+@@ -29,6 +29,12 @@
  
- static struct undef_hook mrs_hook = {
--	.instr_mask = 0xfff00000,
--	.instr_val  = 0xd5300000,
-+	.instr_mask = 0xffff0000,
-+	.instr_val  = 0xd5380000,
- 	.pstate_mask = PSR_AA32_MODE_MASK,
- 	.pstate_val = PSR_MODE_EL0t,
- 	.fn = emulate_mrs,
-diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
-index 3dc1265540df..1687f6d1fa27 100644
---- a/arch/arm64/kernel/perf_event.c
-+++ b/arch/arm64/kernel/perf_event.c
-@@ -19,9 +19,11 @@
-  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  */
- 
-+#include <asm/cpu.h>
- #include <asm/irq_regs.h>
- #include <asm/perf_event.h>
+ typedef struct {
+ 	atomic64_t	id;
++
++	/*
++	 * non-zero if userspace have access to hardware
++	 * counters directly.
++	 */
++	atomic_t	pmu_direct_access;
+ 	void		*vdso;
+ 	unsigned long	flags;
+ } mm_context_t;
+diff --git a/arch/arm64/include/asm/mmu_context.h b/arch/arm64/include/asm/mmu_context.h
+index 2da3e478fd8f..33494af613d8 100644
+--- a/arch/arm64/include/asm/mmu_context.h
++++ b/arch/arm64/include/asm/mmu_context.h
+@@ -32,6 +32,7 @@
+ #include <asm-generic/mm_hooks.h>
+ #include <asm/cputype.h>
+ #include <asm/pgtable.h>
++#include <asm/perf_event.h>
  #include <asm/sysreg.h>
-+#include <asm/traps.h>
- #include <asm/virt.h>
+ #include <asm/tlbflush.h>
  
- #include <linux/acpi.h>
-@@ -1009,6 +1011,45 @@ static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
- 	return probe.present ? 0 : -ENODEV;
+@@ -235,6 +236,7 @@ static inline void __switch_mm(struct mm_struct *next)
+ 	}
+ 
+ 	check_and_switch_context(next, cpu);
++	perf_switch_user_access(next);
  }
  
-+static int emulate_pmu(struct pt_regs *regs, u32 insn)
+ static inline void
+diff --git a/arch/arm64/include/asm/perf_event.h b/arch/arm64/include/asm/perf_event.h
+index c593761ba61c..32a6d604bb3b 100644
+--- a/arch/arm64/include/asm/perf_event.h
++++ b/arch/arm64/include/asm/perf_event.h
+@@ -19,6 +19,7 @@
+ 
+ #include <asm/stack_pointer.h>
+ #include <asm/ptrace.h>
++#include <linux/mm_types.h>
+ 
+ #define	ARMV8_PMU_MAX_COUNTERS	32
+ #define	ARMV8_PMU_COUNTER_MASK	(ARMV8_PMU_MAX_COUNTERS - 1)
+@@ -234,4 +235,17 @@ extern unsigned long perf_misc_flags(struct pt_regs *regs);
+ 	(regs)->pstate = PSR_MODE_EL1h;	\
+ }
+ 
++static inline void perf_switch_user_access(struct mm_struct *mm)
 +{
-+	u32 sys_reg, rt;
-+	u32 pmuserenr;
++	if (!IS_ENABLED(CONFIG_PERF_EVENTS))
++		return;
 +
-+	sys_reg = (u32)aarch64_insn_decode_immediate(AARCH64_INSN_IMM_16, insn) << 5;
-+	rt = aarch64_insn_decode_register(AARCH64_INSN_REGTYPE_RT, insn);
-+	pmuserenr = read_sysreg(pmuserenr_el0);
-+
-+	if ((pmuserenr & (ARMV8_PMU_USERENR_ER|ARMV8_PMU_USERENR_CR)) !=
-+	    (ARMV8_PMU_USERENR_ER|ARMV8_PMU_USERENR_CR))
-+		return -EINVAL;
-+
-+	pt_regs_write_reg(regs, rt, 0);
-+
-+	arm64_skip_faulting_instruction(regs, 4);
-+	return 0;
++	if (atomic_read(&mm->context.pmu_direct_access)) {
++		write_sysreg(ARMV8_PMU_USERENR_ER|ARMV8_PMU_USERENR_CR,
++			     pmuserenr_el0);
++	} else {
++		write_sysreg(0, pmuserenr_el0);
++	}
 +}
 +
-+/*
-+ * This hook will only be triggered by mrs
-+ * instructions on PMU registers. This is mandatory
-+ * in order to have a consistent behaviour even on
-+ * big.LITTLE systems.
-+ */
-+static struct undef_hook pmu_hook = {
-+	.instr_mask = 0xffff8800,
-+	.instr_val  = 0xd53b8800,
-+	.fn = emulate_pmu,
-+};
-+
-+static int __init enable_pmu_emulation(void)
+ #endif
+diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+index eec75b97e7ea..0e5588cd2f39 100644
+--- a/drivers/perf/arm_pmu.c
++++ b/drivers/perf/arm_pmu.c
+@@ -24,6 +24,7 @@
+ #include <linux/irqdesc.h>
+ 
+ #include <asm/irq_regs.h>
++#include <asm/mmu_context.h>
+ 
+ static DEFINE_PER_CPU(struct arm_pmu *, cpu_armpmu);
+ static DEFINE_PER_CPU(int, cpu_irq);
+@@ -777,6 +778,41 @@ static void cpu_pmu_destroy(struct arm_pmu *cpu_pmu)
+ 					    &cpu_pmu->node);
+ }
+ 
++static void refresh_pmuserenr(void *mm)
 +{
-+	register_undef_hook(&pmu_hook);
-+	return 0;
++	perf_switch_user_access(mm);
 +}
 +
-+core_initcall(enable_pmu_emulation);
++static void armpmu_event_mapped(struct perf_event *event, struct mm_struct *mm)
++{
++	if (!(event->hw.flags & ARMPMU_EL0_RD_CNTR))
++		return;
 +
- static int armv8_pmu_init(struct arm_pmu *cpu_pmu)
++	/*
++	 * This function relies on not being called concurrently in two
++	 * tasks in the same mm.  Otherwise one task could observe
++	 * pmu_direct_access > 1 and return all the way back to
++	 * userspace with user access disabled while another task is still
++	 * doing on_each_cpu_mask() to enable user access.
++	 *
++	 * For now, this can't happen because all callers hold mmap_sem
++	 * for write.  If this changes, we'll need a different solution.
++	 */
++	lockdep_assert_held_exclusive(&mm->mmap_sem);
++
++	if (atomic_inc_return(&mm->context.pmu_direct_access) == 1)
++		on_each_cpu(refresh_pmuserenr, mm, 1);
++}
++
++static void armpmu_event_unmapped(struct perf_event *event, struct mm_struct *mm)
++{
++	if (!(event->hw.flags & ARMPMU_EL0_RD_CNTR))
++		return;
++
++	if (atomic_dec_and_test(&mm->context.pmu_direct_access))
++		on_each_cpu_mask(mm_cpumask(mm), refresh_pmuserenr, NULL, 1);
++}
++
+ static struct arm_pmu *__armpmu_alloc(gfp_t flags)
  {
- 	int ret = armv8pmu_probe_pmu(cpu_pmu);
+ 	struct arm_pmu *pmu;
+@@ -798,6 +834,8 @@ static struct arm_pmu *__armpmu_alloc(gfp_t flags)
+ 		.pmu_enable	= armpmu_enable,
+ 		.pmu_disable	= armpmu_disable,
+ 		.event_init	= armpmu_event_init,
++		.event_mapped	= armpmu_event_mapped,
++		.event_unmapped	= armpmu_event_unmapped,
+ 		.add		= armpmu_add,
+ 		.del		= armpmu_del,
+ 		.start		= armpmu_start,
 -- 
 2.17.1
 
