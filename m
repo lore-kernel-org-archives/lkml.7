@@ -2,540 +2,310 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27121C46470
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD91C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02E6E208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:15:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7F5420883
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:22:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RsZvKg2B"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Gx+5MLP2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbfE1TPU (ORCPT
+        id S1727386AbfE1TWF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 15:15:20 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:38051 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727765AbfE1TPT (ORCPT
+        Tue, 28 May 2019 15:22:05 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:46512 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726795AbfE1TWE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 15:15:19 -0400
-Received: by mail-oi1-f195.google.com with SMTP id u199so15171743oie.5
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 12:15:19 -0700 (PDT)
+        Tue, 28 May 2019 15:22:04 -0400
+Received: by mail-ua1-f67.google.com with SMTP id a95so8444502uaa.13
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 12:22:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=cdE1JOyTYhysukiuCnGUGYuuaD5ETKfTBYPUcMycJEM=;
-        b=RsZvKg2Bk/aNdZqNrNoMb1SH0F+eGIIjX61s7QIrzq8sujmgLx305XGW1Uc30bnVbV
-         URwNVqDVFfw4O60nWxWylhalQkIQYaCcXlH9Ht6/sNkKG8dwjW7BR5q3aarbKPEBf9T/
-         2Glj8K+Fut8RAWEbVyP5Kh1JveV4PXYgZH5G/F0ZZNEamkQytWoicg+Ez0/tfiKpBBu0
-         w6U5VfIjFIjOEho4K/uEktiYgYqwB8eA+XP40xh5wIgo9/MUBxRp9NQ4CZkIZDNTS+jU
-         yCb56lny234SSQh388nJoyuNAMeO/EpiXLJoz4vV3A4bLW11J2ZoATycSh6gDa2a2oHa
-         Ljlw==
+        bh=o51SeYBfVRyasaL8DkaZePzzAuT4juHYF4hX6xOnKiM=;
+        b=Gx+5MLP2FDWOPXWy6czETvegxYXSZwbIucUqOc1Qf8P2FO3umVCVFVhoqkZSx7MT3o
+         3ZTGMaIsnzBfkyIVjkiDXwAvuS0DGzp/lIz/e0mfQjdtXUCwCjnRRerWoOPdNC2F9lru
+         VeAMhWhHympLCCUHsNWHw8z5EB/X9l93i9mElATUKTrib+XZvaGvGGSW3GqN7GjVUJpa
+         SgX5Uwsc8SCY4dBErVxgV6V2v0lg0LFZ8R88NBC61ilOYoaEL/ZccrAoYt/yGjHgjTO3
+         8CBZAu3GE3m1Yt93tZWfOTH+kXNTnaXu/nJdgzih09h9ovzcBfr9XPRXLIhwW/SwGVl8
+         eGFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=cdE1JOyTYhysukiuCnGUGYuuaD5ETKfTBYPUcMycJEM=;
-        b=BoQbRpwEXm8oBFQQHyQ8O07jyjzzskucHYubnNEgsHRyjGAfCnzAvEBDxKhXkDXg/c
-         CniGQ0UCgniKuSlUvmkiJGJwFuCaN8JH/S0xwVeVxl6qXjojJr9z0xad8QfrhFB/pOSL
-         Xegwxd7W6NaHiVAM4jcCwlUqfeZJd5XLGL7j37HL91ZISTwqTxJK4dbCX2zOVVgcISpP
-         ZDuzUi7ModJxesI2+fecnI85sISnIlEePSvF4H5Lqa49t2gBUEvTXEjFyQFCJmh9OCy7
-         J5qbZSA90XQZQvuveGJdDqXOKU9i2+b1iXkz5jBMnA1mK5JDzxPO7f5KUDfV6pRTAVNB
-         fBhw==
-X-Gm-Message-State: APjAAAV5hT+Y/SuG5TJHqlKlLMOXyh4kVIiWwtnV3+Rh5O5Y+iDDZ3cv
-        WNhu2RsQrrF3QyLEQb150aHweAV1/KPByEuqgAXnNg==
-X-Google-Smtp-Source: APXvYqwnQQq7IwEatqn8HvjLe9SnaXObPKJJAqI6T69lY2rEByHcuA8nGa7Pp75ILwuyWTZvAujAFBpbGEvbnIBS1EA=
-X-Received: by 2002:aca:5943:: with SMTP id n64mr3803813oib.175.1559070918274;
- Tue, 28 May 2019 12:15:18 -0700 (PDT)
+        bh=o51SeYBfVRyasaL8DkaZePzzAuT4juHYF4hX6xOnKiM=;
+        b=KUxbAMr/BXYtLs4S0nNzxhOoiHSCyIrmgqDnQruV5fRTCBuCucB59YgEM7bwBpSm+3
+         OQyiDA38LsBwrasd9EpD8gUPTIeSzJJwHP+Ex9SB/3PkC5PfxmAB2/rDzyQcF6gq5CDt
+         0ndh6+YujUPmBtqXWJ+yothIjMCyfLlRzfMtURzyLzDMIcJH9VAcUxBR2UdiIVGI3vWO
+         j3kBCDdPtIUYyU7SQEWHN4zb/ARSQ3wekhjXtzhTo7sPCtFOIk0pp1uFXuZT0BBGxiud
+         2PT5Q/kveQgBt9De7TjZ5rqm9X2Cig1cwK+edwK1cWAkwG6ccN7BhGe8+qwVnylz9aGe
+         EnSg==
+X-Gm-Message-State: APjAAAWjWY6rXL1X1BSp4ep3ZDEdjGflwrzqjnW5LKHxbimaZXQwcNqr
+        IlxqHMQ0p8um04IoKbvXF7QWtAVWVQh0ydBhZ+XfYg==
+X-Google-Smtp-Source: APXvYqxq83kXFEOLbADw2n/1zs0kcaN0zXUr1gStJ+CzcAafZwaxBuMfO06ZSd63b61fxvj11okHHU6DG92954qEiBw=
+X-Received: by 2002:a9f:2103:: with SMTP id 3mr57230678uab.100.1559071323390;
+ Tue, 28 May 2019 12:22:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk>
- <155905931502.7587.11705449537368497489.stgit@warthog.procyon.org.uk>
-In-Reply-To: <155905931502.7587.11705449537368497489.stgit@warthog.procyon.org.uk>
-From:   Jann Horn <jannh@google.com>
-Date:   Tue, 28 May 2019 21:14:51 +0200
-Message-ID: <CAG48ez3L5KzKyKMxUTaaB=r1E1ZXh=m6e9+CwYcXfRnUSjDvWA@mail.gmail.com>
-Subject: Re: [PATCH 1/7] General notification queue with user mmap()'able ring buffer
-To:     David Howells <dhowells@redhat.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>
+References: <20190429204040.18725-1-dianders@chromium.org>
+In-Reply-To: <20190429204040.18725-1-dianders@chromium.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 28 May 2019 21:21:25 +0200
+Message-ID: <CAPDyKFp0fQ+3CS-DadE9rO-9Npzve-nztY9hRaMdX7Pw9sUZMw@mail.gmail.com>
+Subject: Re: [PATCH v2] mmc: dw_mmc: Disable SDIO interrupts while suspended
+ to fix suspend/resume
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Jaehoon Chung <jh80.chung@samsung.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Sonny Rao <sonnyrao@chromium.org>,
+        Emil Renner Berthing <emil.renner.berthing@gmail.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Ryan Case <ryandcase@chromium.org>,
+        "# 4.0+" <stable@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 6:03 PM David Howells <dhowells@redhat.com> wrote:
-> Implement a misc device that implements a general notification queue as a
-> ring buffer that can be mmap()'d from userspace.
-[...]
-> +receive notifications from the kernel.  This is can be used in conjunction
+On Mon, 29 Apr 2019 at 22:41, Douglas Anderson <dianders@chromium.org> wrote:
+>
+> Processing SDIO interrupts while dw_mmc is suspended (or partly
+> suspended) seems like a bad idea.  We really don't want to be
+> processing them until we've gotten ourselves fully powered up.
 
-typo: s/is can/can/
+I fully agree.
 
-[...]
-> +Overview
-> +========
-> +
-> +This facility appears as a misc device file that is opened and then mapped and
-> +polled.  Each time it is opened, it creates a new buffer specific to the
-> +returned file descriptor.  Then, when the opening process sets watches, it
-> +indicates that particular buffer it wants notifications from that watch to be
-> +written into. Note that there are no read() and write() methods (except for
+Although, this is important not only from the host driver/controller
+perspective, but also from the SDIO card (managed by mmc core) point
+of view.
 
-s/that particular buffer/the particular buffer/
+In $subject patch you mange the driver/controller issue, but only for
+one specific host driver (dw_mmc). I am thinking that this problem may
+be a rather common problem, so perhaps we should try to address this
+from the core in a way that it affects all host drivers. Did you
+consider that?
 
-> +debugging).  The user is expected to access the ring directly and to use poll
-> +to wait for new data.
-[...]
-> +/**
-> + * __post_watch_notification - Post an event notification
-> + * @wlist: The watch list to post the event to.
-> + * @n: The notification record to post.
-> + * @cred: The creds of the process that triggered the notification.
-> + * @id: The ID to match on the watch.
-> + *
-> + * Post a notification of an event into a set of watch queues and let the users
-> + * know.
-> + *
-> + * If @n is NULL then WATCH_INFO_LENGTH will be set on the next event posted.
-> + *
-> + * The size of the notification should be set in n->info & WATCH_INFO_LENGTH and
-> + * should be in units of sizeof(*n).
-> + */
-> +void __post_watch_notification(struct watch_list *wlist,
-> +                              struct watch_notification *n,
-> +                              const struct cred *cred,
-> +                              u64 id)
-> +{
-> +       const struct watch_filter *wf;
-> +       struct watch_queue *wqueue;
-> +       struct watch *watch;
-> +
-> +       rcu_read_lock();
-> +
-> +       hlist_for_each_entry_rcu(watch, &wlist->watchers, list_node) {
-> +               if (watch->id != id)
-> +                       continue;
-> +               n->info &= ~(WATCH_INFO_ID | WATCH_INFO_OVERRUN);
-> +               n->info |= watch->info_id;
-> +
-> +               wqueue = rcu_dereference(watch->queue);
-> +               wf = rcu_dereference(wqueue->filter);
-> +               if (wf && !filter_watch_notification(wf, n))
-> +                       continue;
-> +
-> +               post_one_notification(wqueue, n, cred);
-> +       }
-> +
-> +       rcu_read_unlock();
-> +}
-> +EXPORT_SYMBOL(__post_watch_notification);
-[...]
-> +static vm_fault_t watch_queue_fault(struct vm_fault *vmf)
-> +{
-> +       struct watch_queue *wqueue = vmf->vma->vm_file->private_data;
-> +       struct page *page;
-> +
-> +       page = wqueue->pages[vmf->pgoff];
+The other problem I refer to, is in principle a way to prevent
+sdio_run_irqs() from being executed before the SDIO card has been
+resumed, via mmc_sdio_resume(). It's a separate problem, but certainly
+related. This may need some more thinking to address properly, let's
+just keep this in mind and discuss this in a separate thread.
 
-I don't see you setting any special properties on the VMA that would
-prevent userspace from extending its size via mremap() - no
-VM_DONTEXPAND or VM_PFNMAP. So I think you might get an out-of-bounds
-access here?
+>
+> You might be wondering how it's even possible to become suspended when
+> an SDIO interrupt is active.  As can be seen in
+> dw_mci_enable_sdio_irq(), we explicitly keep dw_mmc out of runtime
+> suspend when the SDIO interrupt is enabled.  ...but even though we
+> stop normal runtime suspend transitions when SDIO interrupts are
+> enabled, the dw_mci_runtime_suspend() can still get called for a full
+> system suspend.
+>
+> Let's handle all this by explicitly masking SDIO interrupts in the
+> suspend call and unmasking them later in the resume call.  To do this
+> cleanly I'll keep track of whether the client requested that SDIO
+> interrupts be enabled so that we can reliably restore them regardless
+> of whether we're masking them for one reason or another.
+>
+> It should be noted that if dw_mci_enable_sdio_irq() is never called
+> (for instance, if we don't have an SDIO card plugged in) that
+> "client_sdio_enb" will always be false.  In those cases this patch
+> adds a tiny bit of overhead to suspend/resume (a spinlock and a
+> read/write of INTMASK) but other than that is a no-op.  The
+> SDMMC_INT_SDIO bit should always be clear and clearing it again won't
+> hurt.
 
-> +       get_page(page);
-> +       if (!lock_page_or_retry(page, vmf->vma->vm_mm, vmf->flags)) {
-> +               put_page(page);
-> +               return VM_FAULT_RETRY;
-> +       }
-> +       vmf->page = page;
-> +       return VM_FAULT_LOCKED;
-> +}
-> +
-> +static void watch_queue_map_pages(struct vm_fault *vmf,
-> +                                 pgoff_t start_pgoff, pgoff_t end_pgoff)
-> +{
-> +       struct watch_queue *wqueue = vmf->vma->vm_file->private_data;
-> +       struct page *page;
-> +
-> +       rcu_read_lock();
-> +
-> +       do {
-> +               page = wqueue->pages[start_pgoff];
+Thanks for the detailed problem description. In general your approach
+sounds okay to me, but I have a few questions.
 
-Same as above.
+1) As kind of stated above, did you consider a solution where the core
+simply disables the SDIO IRQ in case it isn't enabled for system
+wakeup? In this way all host drivers would benefit.
 
-> +               if (trylock_page(page)) {
-> +                       vm_fault_t ret;
-> +                       get_page(page);
-> +                       ret = alloc_set_pte(vmf, NULL, page);
-> +                       if (ret != 0)
-> +                               put_page(page);
-> +
-> +                       unlock_page(page);
-> +               }
-> +       } while (++start_pgoff < end_pgoff);
-> +
-> +       rcu_read_unlock();
-> +}
-[...]
-> +static int watch_queue_mmap(struct file *file, struct vm_area_struct *vma)
-> +{
-> +       struct watch_queue *wqueue = file->private_data;
-> +
-> +       if (vma->vm_pgoff != 0 ||
-> +           vma->vm_end - vma->vm_start > wqueue->nr_pages * PAGE_SIZE ||
-> +           !(pgprot_val(vma->vm_page_prot) & pgprot_val(PAGE_SHARED)))
-> +               return -EINVAL;
+2) dw_mmc isn't calling device_init_wakeup() during ->probe(), hence I
+assume it doesn't support the SDIO IRQ being configured as system
+wakeup. Correct? I understand this is platform specific, but still it
+would be good to know your view.
 
-This thing should probably have locking against concurrent
-watch_queue_set_size()?
+3) Because of 2) The below code in dw_mci_runtime_suspend(), puzzles me:
+"if (host->slot->mmc->pm_flags & MMC_PM_KEEP_POWER)"
+       dw_mci_set_ios(host->slot->mmc, &host->slot->mmc->ios);
 
-> +       vma->vm_ops = &watch_queue_vm_ops;
-> +
-> +       vma_interval_tree_insert(vma, &wqueue->mapping.i_mmap);
-> +       return 0;
-> +}
-> +
-> +/*
-> + * Allocate the required number of pages.
-> + */
-> +static long watch_queue_set_size(struct watch_queue *wqueue, unsigned long nr_pages)
-> +{
-> +       struct watch_queue_buffer *buf;
-> +       u32 len;
-> +       int i;
-> +
-> +       if (nr_pages == 0 ||
-> +           nr_pages > 16 || /* TODO: choose a better hard limit */
-> +           !is_power_of_2(nr_pages))
-> +               return -EINVAL;
-> +
-> +       wqueue->pages = kcalloc(nr_pages, sizeof(struct page *), GFP_KERNEL);
-> +       if (!wqueue->pages)
-> +               goto err;
-> +
-> +       for (i = 0; i < nr_pages; i++) {
-> +               wqueue->pages[i] = alloc_page(GFP_KERNEL | __GFP_ZERO);
-> +               if (!wqueue->pages[i])
-> +                       goto err_some_pages;
-> +               wqueue->pages[i]->mapping = &wqueue->mapping;
-> +               SetPageUptodate(wqueue->pages[i]);
-> +       }
-> +
-> +       buf = vmap(wqueue->pages, nr_pages, VM_MAP, PAGE_SHARED);
-> +       if (!buf)
-> +               goto err_some_pages;
-> +
-> +       wqueue->buffer = buf;
-> +       wqueue->nr_pages = nr_pages;
-> +       wqueue->size = ((nr_pages * PAGE_SIZE) / sizeof(struct watch_notification));
-> +
-> +       /* The first four slots in the buffer contain metadata about the ring,
-> +        * including the head and tail indices and mask.
+Why is 3) needed at all in case system wakeup isn't supported?
+
+A note; the current support in the mmc core for the SDIO IRQ being
+used as system wakeup, really needs some re-work. For example, we
+should convert to use common wakeup interfaces, as to allow the PM
+core to behave correctly during system suspend/resume. These are
+changes that have been scheduled on my TODO list since long time ago,
+I hope I can get some time to look into them soon.
+
+>
+> Without this fix it can be seen that rk3288-veyron Chromebooks with
+> Marvell WiFi would sometimes fail to resume WiFi even after picking my
+> recent mwifiex patch [1].  Specifically you'd see messages like this:
+>   mwifiex_sdio mmc1:0001:1: Firmware wakeup failed
+>   mwifiex_sdio mmc1:0001:1: PREP_CMD: FW in reset state
+>
+> ...and tracing through the resume code in the failing cases showed
+> that we were processing a SDIO interrupt really early in the resume
+> call.
+>
+> NOTE: downstream in Chrome OS 3.14 and 3.18 kernels (both of which
+> support the Marvell SDIO WiFi card) we had a patch ("CHROMIUM: sdio:
+> Defer SDIO interrupt handling until after resume") [2].  Presumably
+> this is the same problem that was solved by that patch.
+
+Seems reasonable.
+
+>
+> [1] https://lkml.kernel.org/r/20190404040106.40519-1-dianders@chromium.org
+> [2] https://crrev.com/c/230765
+>
+> Cc: <stable@vger.kernel.org> # 4.14.x
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> I didn't put any "Fixes" tag here, but presumably this could be
+> backported to whichever kernels folks found it useful for.  I have at
+> least confirmed that kernels v4.14 and v4.19 (as well as v5.1-rc2)
+> show the problem.  It is very easy to pick this to v4.19 and it
+> definitely fixes the problem there.
+>
+> I haven't spent the time to pick this to 4.14 myself, but presumably
+> it wouldn't be too hard to backport this as far as v4.13 since that
+> contains commit 32dba73772f8 ("mmc: dw_mmc: Convert to use
+> MMC_CAP2_SDIO_IRQ_NOTHREAD for SDIO IRQs").  Prior to that it might
+> make sense for anyone experiencing this problem to just pick the old
+> CHROMIUM patch to fix them.
+>
+> Changes in v2:
+> - Suggested 4.14+ in the stable tag (Sasha-bot)
+> - Extra note that this is a noop on non-SDIO (Shawn / Emil)
+> - Make boolean logic cleaner as per https://crrev.com/c/1586207/1
+> - Hopefully clear comments as per https://crrev.com/c/1586207/1
+>
+>  drivers/mmc/host/dw_mmc.c | 27 +++++++++++++++++++++++----
+>  drivers/mmc/host/dw_mmc.h |  3 +++
+>  2 files changed, 26 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+> index 80dc2fd6576c..480067b87a94 100644
+> --- a/drivers/mmc/host/dw_mmc.c
+> +++ b/drivers/mmc/host/dw_mmc.c
+> @@ -1664,7 +1664,8 @@ static void dw_mci_init_card(struct mmc_host *mmc, struct mmc_card *card)
+>         }
+>  }
+>
+> -static void __dw_mci_enable_sdio_irq(struct dw_mci_slot *slot, int enb)
+> +static void __dw_mci_enable_sdio_irq(struct dw_mci_slot *slot, bool enb,
+> +                                    bool client_requested)
+>  {
+>         struct dw_mci *host = slot->host;
+>         unsigned long irqflags;
+> @@ -1672,6 +1673,20 @@ static void __dw_mci_enable_sdio_irq(struct dw_mci_slot *slot, int enb)
+>
+>         spin_lock_irqsave(&host->irq_lock, irqflags);
+>
+> +       /*
+> +        * If we're being called directly from dw_mci_enable_sdio_irq()
+> +        * (which means that the client driver actually wants to enable or
+> +        * disable interrupts) then save the request.  Otherwise this
+> +        * wasn't directly requested by the client and we should logically
+> +        * AND it with the client request since we want to disable if
+> +        * _either_ the client disabled OR we have some other reason to
+> +        * disable temporarily.
 > +        */
-> +       len = sizeof(buf->meta) / sizeof(buf->slots[0]);
-> +       buf->meta.watch.info    = len << WATCH_LENGTH_SHIFT;
-> +       buf->meta.watch.type    = WATCH_TYPE_META;
-> +       buf->meta.watch.subtype = WATCH_META_SKIP_NOTIFICATION;
-> +       buf->meta.tail          = len;
-> +       buf->meta.mask          = wqueue->size - 1;
-> +       smp_store_release(&buf->meta.head, len);
-
-Why is this an smp_store_release()? The entire buffer should not be visible to
-userspace before this setup is complete, right?
-
-> +       return 0;
-> +
-> +err_some_pages:
-> +       for (i--; i >= 0; i--) {
-> +               ClearPageUptodate(wqueue->pages[i]);
-> +               wqueue->pages[i]->mapping = NULL;
-> +               put_page(wqueue->pages[i]);
-> +       }
-> +
-> +       kfree(wqueue->pages);
-> +       wqueue->pages = NULL;
-> +err:
-> +       return -ENOMEM;
-> +}
-[...]
-> +
-> +/*
-> + * Set parameters.
-> + */
-> +static long watch_queue_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-> +{
-> +       struct watch_queue *wqueue = file->private_data;
-> +       struct inode *inode = file_inode(file);
-> +       long ret;
-> +
-> +       switch (cmd) {
-> +       case IOC_WATCH_QUEUE_SET_SIZE:
-> +               if (wqueue->buffer)
-> +                       return -EBUSY;
-
-The preceding check occurs without any locks held and therefore has no
-reliable effect. It should probably be moved below the
-inode_lock(...).
-
-> +               inode_lock(inode);
-> +               ret = watch_queue_set_size(wqueue, arg);
-> +               inode_unlock(inode);
-> +               return ret;
-> +
-> +       case IOC_WATCH_QUEUE_SET_FILTER:
-> +               inode_lock(inode);
-> +               ret = watch_queue_set_filter(
-> +                       inode, wqueue,
-> +                       (struct watch_notification_filter __user *)arg);
-> +               inode_unlock(inode);
-> +               return ret;
-> +
-> +       default:
-> +               return -EOPNOTSUPP;
-> +       }
-> +}
-[...]
-> +static void free_watch(struct rcu_head *rcu)
-> +{
-> +       struct watch *watch = container_of(rcu, struct watch, rcu);
-> +
-> +       put_watch_queue(rcu_access_pointer(watch->queue));
-
-This should be rcu_dereference_protected(..., 1).
-
-> +/**
-> + * remove_watch_from_object - Remove a watch or all watches from an object.
-> + * @wlist: The watch list to remove from
-> + * @wq: The watch queue of interest (ignored if @all is true)
-> + * @id: The ID of the watch to remove (ignored if @all is true)
-> + * @all: True to remove all objects
-> + *
-> + * Remove a specific watch or all watches from an object.  A notification is
-> + * sent to the watcher to tell them that this happened.
-> + */
-> +int remove_watch_from_object(struct watch_list *wlist, struct watch_queue *wq,
-> +                            u64 id, bool all)
-> +{
-> +       struct watch_notification n;
-> +       struct watch_queue *wqueue;
-> +       struct watch *watch;
-> +       int ret = -EBADSLT;
-> +
-> +       rcu_read_lock();
-> +
-> +again:
-> +       spin_lock(&wlist->lock);
-> +       hlist_for_each_entry(watch, &wlist->watchers, list_node) {
-> +               if (all ||
-> +                   (watch->id == id && rcu_access_pointer(watch->queue) == wq))
-> +                       goto found;
-> +       }
-> +       spin_unlock(&wlist->lock);
-> +       goto out;
-> +
-> +found:
-> +       ret = 0;
-> +       hlist_del_init_rcu(&watch->list_node);
-> +       rcu_assign_pointer(watch->watch_list, NULL);
-> +       spin_unlock(&wlist->lock);
-> +
-> +       n.type = WATCH_TYPE_META;
-> +       n.subtype = WATCH_META_REMOVAL_NOTIFICATION;
-> +       n.info = watch->info_id | sizeof(n);
-> +
-> +       wqueue = rcu_dereference(watch->queue);
-> +       post_one_notification(wqueue, &n, wq ? wq->cred : NULL);
-> +
-> +       /* We don't need the watch list lock for the next bit as RCU is
-> +        * protecting everything from being deallocated.
-
-Does "everything" mean "the wqueue" or more than that?
-
-> +        */
-> +       if (wqueue) {
-> +               spin_lock_bh(&wqueue->lock);
-> +
-> +               if (!hlist_unhashed(&watch->queue_node)) {
-> +                       hlist_del_init_rcu(&watch->queue_node);
-> +                       put_watch(watch);
-> +               }
-> +
-> +               spin_unlock_bh(&wqueue->lock);
-> +       }
-> +
-> +       if (wlist->release_watch) {
-> +               rcu_read_unlock();
-> +               wlist->release_watch(wlist, watch);
-> +               rcu_read_lock();
-> +       }
-> +       put_watch(watch);
-> +
-> +       if (all && !hlist_empty(&wlist->watchers))
-> +               goto again;
-> +out:
-> +       rcu_read_unlock();
-> +       return ret;
-> +}
-> +EXPORT_SYMBOL(remove_watch_from_object);
-> +
-> +/*
-> + * Remove all the watches that are contributory to a queue.  This will
-> + * potentially race with removal of the watches by the destruction of the
-> + * objects being watched or the distribution of notifications.
-> + */
-> +static void watch_queue_clear(struct watch_queue *wqueue)
-> +{
-> +       struct watch_list *wlist;
-> +       struct watch *watch;
-> +       bool release;
-> +
-> +       rcu_read_lock();
-> +       spin_lock_bh(&wqueue->lock);
-> +
-> +       /* Prevent new additions and prevent notifications from happening */
-> +       wqueue->defunct = true;
-> +
-> +       while (!hlist_empty(&wqueue->watches)) {
-> +               watch = hlist_entry(wqueue->watches.first, struct watch, queue_node);
-> +               hlist_del_init_rcu(&watch->queue_node);
-> +               spin_unlock_bh(&wqueue->lock);
-> +
-> +               /* We can't do the next bit under the queue lock as we need to
-> +                * get the list lock - which would cause a deadlock if someone
-> +                * was removing from the opposite direction at the same time or
-> +                * posting a notification.
-> +                */
-> +               wlist = rcu_dereference(watch->watch_list);
-> +               if (wlist) {
-> +                       spin_lock(&wlist->lock);
-> +
-> +                       release = !hlist_unhashed(&watch->list_node);
-> +                       if (release) {
-> +                               hlist_del_init_rcu(&watch->list_node);
-> +                               rcu_assign_pointer(watch->watch_list, NULL);
-> +                       }
-> +
-> +                       spin_unlock(&wlist->lock);
-> +
-> +                       if (release) {
-> +                               if (wlist->release_watch) {
-> +                                       rcu_read_unlock();
-> +                                       /* This might need to call dput(), so
-> +                                        * we have to drop all the locks.
-> +                                        */
-> +                                       wlist->release_watch(wlist, watch);
-
-How are you holding a reference to `wlist` here? You got the reference through
-rcu_dereference(), you've dropped the RCU read lock, and I don't see anything
-that stabilizes the reference.
-
-> +                                       rcu_read_lock();
-> +                               }
-> +                               put_watch(watch);
-> +                       }
-> +               }
-> +
-> +               put_watch(watch);
-> +               spin_lock_bh(&wqueue->lock);
-> +       }
-> +
-> +       spin_unlock_bh(&wqueue->lock);
-> +       rcu_read_unlock();
-> +}
-> +
-> +/*
-> + * Release the file.
-> + */
-> +static int watch_queue_release(struct inode *inode, struct file *file)
-> +{
-> +       struct watch_filter *wfilter;
-> +       struct watch_queue *wqueue = file->private_data;
-> +       int i, pgref;
-> +
-> +       watch_queue_clear(wqueue);
-> +
-> +       if (wqueue->pages && wqueue->pages[0])
-> +               WARN_ON(page_ref_count(wqueue->pages[0]) != 1);
-
-Is there a reason why there couldn't still be references to the pages
-from get_user_pages()/get_user_pages_fast()?
-
-> +       if (wqueue->buffer)
-> +               vfree(wqueue->buffer);
-> +       for (i = 0; i < wqueue->nr_pages; i++) {
-> +               ClearPageUptodate(wqueue->pages[i]);
-> +               wqueue->pages[i]->mapping = NULL;
-> +               pgref = page_ref_count(wqueue->pages[i]);
-> +               WARN(pgref != 1,
-> +                    "FREE PAGE[%d] refcount %d\n", i, page_ref_count(wqueue->pages[i]));
-> +               __free_page(wqueue->pages[i]);
-> +       }
-> +
-> +       wfilter = rcu_access_pointer(wqueue->filter);
-
-Again, rcu_dereference_protected(..., 1).
-
-> +       if (wfilter)
-> +               kfree_rcu(wfilter, rcu);
-> +       kfree(wqueue->pages);
-> +       put_cred(wqueue->cred);
-> +       put_watch_queue(wqueue);
-> +       return 0;
-> +}
-> +
-> +#ifdef DEBUG_WITH_WRITE
-> +static ssize_t watch_queue_write(struct file *file,
-> +                                const char __user *_buf, size_t len, loff_t *pos)
-> +{
-> +       struct watch_notification *n;
-> +       struct watch_queue *wqueue = file->private_data;
-> +       ssize_t ret;
-> +
-> +       if (!wqueue->buffer)
-> +               return -ENOBUFS;
-> +
-> +       if (len & ~WATCH_INFO_LENGTH || len == 0 || !_buf)
-> +               return -EINVAL;
-> +
-> +       n = memdup_user(_buf, len);
-> +       if (IS_ERR(n))
-> +               return PTR_ERR(n);
-> +
-> +       ret = -EINVAL;
-> +       if ((n->info & WATCH_INFO_LENGTH) != len)
-> +               goto error;
-> +       n->info &= (WATCH_INFO_LENGTH | WATCH_INFO_TYPE_FLAGS | WATCH_INFO_ID);
-
-Should the non-atomic modification of n->info (and perhaps also the
-following uses of ->debug) be protected by some lock?
-
-> +       if (post_one_notification(wqueue, n, file->f_cred))
-> +               wqueue->debug = 0;
+> +       if (client_requested)
+> +               host->client_sdio_enb = enb;
 > +       else
-> +               wqueue->debug++;
-> +       ret = len;
-> +       if (wqueue->debug > 20)
-> +               ret = -EIO;
+> +               enb &= host->client_sdio_enb;
 > +
-> +error:
-> +       kfree(n);
-> +       return ret;
-> +}
-> +#endif
-[...]
-> +#define IOC_WATCH_QUEUE_SET_SIZE       _IO('s', 0x01)  /* Set the size in pages */
-> +#define IOC_WATCH_QUEUE_SET_FILTER     _IO('s', 0x02)  /* Set the filter */
+>         /* Enable/disable Slot Specific SDIO interrupt */
+>         int_mask = mci_readl(host, INTMASK);
+>         if (enb)
+> @@ -1688,7 +1703,7 @@ static void dw_mci_enable_sdio_irq(struct mmc_host *mmc, int enb)
+>         struct dw_mci_slot *slot = mmc_priv(mmc);
+>         struct dw_mci *host = slot->host;
+>
+> -       __dw_mci_enable_sdio_irq(slot, enb);
+> +       __dw_mci_enable_sdio_irq(slot, enb, true);
+>
+>         /* Avoid runtime suspending the device when SDIO IRQ is enabled */
+>         if (enb)
+> @@ -1701,7 +1716,7 @@ static void dw_mci_ack_sdio_irq(struct mmc_host *mmc)
+>  {
+>         struct dw_mci_slot *slot = mmc_priv(mmc);
+>
+> -       __dw_mci_enable_sdio_irq(slot, 1);
+> +       __dw_mci_enable_sdio_irq(slot, true, false);
+>  }
+>
+>  static int dw_mci_execute_tuning(struct mmc_host *mmc, u32 opcode)
+> @@ -2734,7 +2749,7 @@ static irqreturn_t dw_mci_interrupt(int irq, void *dev_id)
+>                 if (pending & SDMMC_INT_SDIO(slot->sdio_id)) {
+>                         mci_writel(host, RINTSTS,
+>                                    SDMMC_INT_SDIO(slot->sdio_id));
+> -                       __dw_mci_enable_sdio_irq(slot, 0);
+> +                       __dw_mci_enable_sdio_irq(slot, false, false);
+>                         sdio_signal_irq(slot->mmc);
+>                 }
+>
+> @@ -3424,6 +3439,8 @@ int dw_mci_runtime_suspend(struct device *dev)
+>  {
+>         struct dw_mci *host = dev_get_drvdata(dev);
+>
+> +       __dw_mci_enable_sdio_irq(host->slot, false, false);
+> +
+>         if (host->use_dma && host->dma_ops->exit)
+>                 host->dma_ops->exit(host);
+>
+> @@ -3490,6 +3507,8 @@ int dw_mci_runtime_resume(struct device *dev)
+>         /* Now that slots are all setup, we can enable card detect */
+>         dw_mci_enable_cd(host);
+>
+> +       __dw_mci_enable_sdio_irq(host->slot, true, false);
+> +
+>         return 0;
+>
+>  err:
+> diff --git a/drivers/mmc/host/dw_mmc.h b/drivers/mmc/host/dw_mmc.h
+> index 46e9f8ec5398..dfbace0f5043 100644
+> --- a/drivers/mmc/host/dw_mmc.h
+> +++ b/drivers/mmc/host/dw_mmc.h
+> @@ -127,6 +127,7 @@ struct dw_mci_dma_slave {
+>   * @cmd11_timer: Timer for SD3.0 voltage switch over scheme.
+>   * @cto_timer: Timer for broken command transfer over scheme.
+>   * @dto_timer: Timer for broken data transfer over scheme.
+> + * @client_sdio_enb: The value last passed to enable_sdio_irq.
+>   *
+>   * Locking
+>   * =======
+> @@ -234,6 +235,8 @@ struct dw_mci {
+>         struct timer_list       cmd11_timer;
+>         struct timer_list       cto_timer;
+>         struct timer_list       dto_timer;
+> +
+> +       bool                    client_sdio_enb;
+>  };
+>
+>  /* DMA ops for Internal/External DMAC interface */
+> --
+> 2.21.0.593.g511ec345e18-goog
+>
 
-Should these ioctl numbers be registered in
-Documentation/ioctl/ioctl-number.txt?
+Kind regards
+Uffe
