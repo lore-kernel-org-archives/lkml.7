@@ -2,253 +2,259 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C172C072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B48C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBB9921670
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAA98208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:41:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727967AbfE1VlJ (ORCPT
+        id S1728054AbfE1Vl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 17:41:09 -0400
-Received: from mga03.intel.com ([134.134.136.65]:54923 "EHLO mga03.intel.com"
+        Tue, 28 May 2019 17:41:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51324 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726492AbfE1VlJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 17:41:09 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 May 2019 14:41:08 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by orsmga003.jf.intel.com with ESMTP; 28 May 2019 14:41:07 -0700
-Date:   Tue, 28 May 2019 14:41:07 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     "Xing, Cedric" <cedric.xing@intel.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-Message-ID: <20190528214107.GD13158@linux.intel.com>
-References: <CALCETrUw5sEr-MHPMU4CzEzkrejDs-JOThHB9Buhoxo5-rdpRw@mail.gmail.com>
- <20190524200333.GF365@linux.intel.com>
- <CALCETrUyAAhnQ+RUeN1L41TKj-vcD2CNt-FJ9siO=Zo6gvH1Aw@mail.gmail.com>
- <20190524224107.GJ365@linux.intel.com>
- <683B5E3D-AFB6-4B45-8D39-B00847312209@amacapital.net>
- <960B34DE67B9E140824F1DCDEC400C0F654E965F@ORSMSX116.amr.corp.intel.com>
- <CALCETrXXVMutX8eZk6nnkOAeS+Tj0sQd0FkW+wk6Rx8hQxCe6w@mail.gmail.com>
- <960B34DE67B9E140824F1DCDEC400C0F654E9824@ORSMSX116.amr.corp.intel.com>
- <20190528202407.GB13158@linux.intel.com>
- <CALCETrWTXCb1jru1G5G3sOp5AV8iYUtrffiSxE-5gotXtrZD-g@mail.gmail.com>
+        id S1726492AbfE1Vl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 17:41:56 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2C35563162;
+        Tue, 28 May 2019 21:41:55 +0000 (UTC)
+Received: from x1.home (ovpn-116-22.phx2.redhat.com [10.3.116.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2E66860C4C;
+        Tue, 28 May 2019 21:41:54 +0000 (UTC)
+Date:   Tue, 28 May 2019 15:41:53 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     sebott@linux.vnet.ibm.com, gerald.schaefer@de.ibm.com,
+        pasic@linux.vnet.ibm.com, borntraeger@de.ibm.com,
+        walling@linux.ibm.com, linux-s390@vger.kernel.org,
+        iommu@lists.linux-foundation.org, joro@8bytes.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        robin.murphy@arm.com
+Subject: Re: [PATCH v3 3/3] vfio: pci: Using a device region to retrieve
+ zPCI information
+Message-ID: <20190528154153.590f9ad9@x1.home>
+In-Reply-To: <1558614326-24711-4-git-send-email-pmorel@linux.ibm.com>
+References: <1558614326-24711-1-git-send-email-pmorel@linux.ibm.com>
+        <1558614326-24711-4-git-send-email-pmorel@linux.ibm.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrWTXCb1jru1G5G3sOp5AV8iYUtrffiSxE-5gotXtrZD-g@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Tue, 28 May 2019 21:41:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 01:48:02PM -0700, Andy Lutomirski wrote:
-> On Tue, May 28, 2019 at 1:24 PM Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
-> >
-> > Actually, I think we do have everything we need from an LSM perspective.
-> > LSMs just need to understand that sgx_enclave_load() with a NULL vma
-> > implies a transition from RW.  For example, SELinux would interpret
-> > sgx_enclave_load(NULL, RX) as requiring FILE__EXECMOD.
+On Thu, 23 May 2019 14:25:26 +0200
+Pierre Morel <pmorel@linux.ibm.com> wrote:
+
+> We define a new configuration entry for VFIO/PCI, VFIO_PCI_ZDEV
 > 
-> You lost me here.  What operation triggers this callback?  And
-> wouldn't sgx_enclave_load(NULL, RX) sometimes be a transition from RO
-> or just some fresh executable zero bytes?
-
-An explicit ioctl() after EACCEPTCOPY to update the allowed permissions.
-For all intents and purposes, the EAUG'd page must start RW.  Maybe a
-better way to phrase it is that at some point the page must be writable
-to have any value whatsover.  EACCEPTCOPY explicitly requires the page to
-be at least RW.  EACCEPT technically doesn't require RW, but a RO or RX
-zero page is useless.  Userspace could still EACCEPT with RO or RX, but
-SGX would assume a minimum of RW for the purposes of the LSM check.
-
-> > As Cedric mentioned earlier, the host process doesn't necessarily know
-> > which pages will end up RW vs RX, i.e. sgx_enclave_load(NULL, RX)
-> > already has to be invoked at runtime, and when that happens, the kernel
-> > can take the opportunity to change the VMAs from MAY_RW to MAY_RX.
-> >
-> > For simplicity in the kernel and clarity in userspace, it makes sense to
-> > require an explicit ioctl() to add the to-be-EAUG'd range.  That just
-> > leaves us wanting an ioctl() to set the post-EACCEPT{COPY} permissions.
-> >
-> > E.g.:
-> >
-> >     ioctl(<prefix>_ADD_REGION, { NULL }) /* NULL == EAUG, MAY_RW */
-> >
-> >     mprotect(addr, size, RW);
-> >     ...
-> >
-> >     EACCEPTCOPY -> EAUG /* page fault handler */
-> >
-> >     ioctl(<prefix>_ACTIVATE_REGION, { addr, size, RX}) /* MAY_RX */
-> >
-> >     mprotect(addr, size, RX);
+> When the VFIO_PCI_ZDEV feature is configured we initialize
+> a new device region, VFIO_REGION_SUBTYPE_ZDEV_CLP, to hold
+> the information from the ZPCI device the userland needs to
+> give to a guest driving the zPCI function.
 > 
-> In the maxperm model, this mprotect() will fail unless MAXPERM
-> contains RX, which could only happen if MAXPERM=RWX.  So, regardless
-> of how it's actually mapped to SELinux policy, MAXPERM=RWX is
-> functionally like EXECMOD and actual RWX PTEs are functionally like
-> EXECMEM.
-
-Yep, same idea, except in the proposed flow ACTIVATE_REGION.
-
-> >     ...
-> >
-> > And making ACTIVATE_REGION a single-shot per page eliminates the need for
-> > the MAXPERMS concept (see below).
-> >
-> > > If we keep only one MAXPERM, wouldn't this be the current behavior of
-> > > mmap()/mprotect()?
-> > >
-> > > To be a bit more clear, system admin sets MAXPERM upper bound in the form of
-> > > FILE__{READ|WRITE|EXECUTE|EXECMOD} of /dev/sgx/enclave. Then for a
-> > > process/enclave, if what it requires falls below what's allowed on
-> > > /dev/sgx/enclave, then everything will just work. Otherwise, it fails in the
-> > > form of -EPERM returned from mmap()/mprotect(). Please note that MAXPERM here
-> > > applies to "runtime" permissions, while "initial" permissions are taken care
-> > > of by security_enclave_{load|init}. "initial" permissions could be more
-> > > permissive than "runtime" permissions, e.g., RX is still required for initial
-> > > code pages even though system admins could disable dynamically loaded code
-> > > pages by *not* giving FILE__{EXECUTE|EXECMOD}. Therefore, the "initial"
-> > > mapping would still have to be done by the driver (to bypass LSM), either via
-> > > a new ioctl or as part of IOC_EINIT.
-> >
-> > Aha!
-> >
-> > Starting with Cedric's assertion that initial permissions can be taken
-> > directly from SECINFO:
-> >
-> >   - Initial permissions for *EADD* pages are explicitly handled via
-> >     sgx_enclave_load() with the exact SECINFO permissions.
-> >
-> >   - Initial permissions for *EAUG* are unconditionally RW.  EACCEPTCOPY
-> >     requires the target EPC page to be RW, and EACCEPT with RO is useless.
-> >
-> >   - Runtime permissions break down as follows:
-> >       R   - N/A, subset of RW (EAUG)
-> >       W   - N/A, subset of RW (EAUG) and x86 paging can't do W
-> >       X   - N/A, subset of RX (x86 paging can't do XO)
+> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> ---
+>  drivers/vfio/pci/Kconfig            |  7 ++++
+>  drivers/vfio/pci/Makefile           |  1 +
+>  drivers/vfio/pci/vfio_pci.c         |  9 ++++
+>  drivers/vfio/pci/vfio_pci_private.h | 10 +++++
+>  drivers/vfio/pci/vfio_pci_zdev.c    | 83 +++++++++++++++++++++++++++++++++++++
+>  5 files changed, 110 insertions(+)
+>  create mode 100644 drivers/vfio/pci/vfio_pci_zdev.c
 > 
-> Sure it can!  You just have a hypervisor that maps a PA bit to EPT
-> no-read.  Then you can use that PA bit to suppress read.  Also, Linux
-> already abuses PKRU to simulate XO, although that won't work for
-> enclaves.
+> diff --git a/drivers/vfio/pci/Kconfig b/drivers/vfio/pci/Kconfig
+> index d0f8e4f..9c1181c 100644
+> --- a/drivers/vfio/pci/Kconfig
+> +++ b/drivers/vfio/pci/Kconfig
+> @@ -44,3 +44,10 @@ config VFIO_PCI_NVLINK2
+>  	depends on VFIO_PCI && PPC_POWERNV
+>  	help
+>  	  VFIO PCI support for P9 Witherspoon machine with NVIDIA V100 GPUs
+> +
+> +config VFIO_PCI_ZDEV
+> +	tristate "VFIO PCI Generic for ZPCI devices"
 
-Heh, I intentionally said "x86 paging" to rule out EPT :-)  I'm pretty
-sure it's a moot point though, I have a hard time believing an LSM will
-allow RW->X and not RW->RX.
+Shouldn't this be 'bool'?
 
-> >       RW  - Handled by EAUG LSM hook (uses RW unconditionally)
-> >       WX  - N/A, subset of RWX (x86 paging can't do WX)
-> >       RX  - Handled by ACTIVATE_REGION
-> >       RWX - Handled by ACTIVATE_REGION
-> >
-> > In other words, if we define the SGX -> LSM calls as follows (minus the
-> > file pointer and other params for brevity):
-> >
-> >   - <prefix>_ACTIVATE_REGION(vma, perms) -> sgx_enclave_load(NULL, perms)
-> >
-> >   - <prefix>_ADD_REGION(vma) -> sgx_enclave_load(vma, SECINFO.perms)
-> >
-> >   - <prefix>_ADD_REGION(NULL) -> sgx_enclave_load(NULL, RW)
-> >
-> > then SGX and LSMs have all the information and hooks needed.  The catch
-> > is that the LSM semantics of sgx_enclave_load(..., RW) would need to be
-> > different than normal shared memory, e.g. FILE__WRITE should *not* be
-> > required, but that's ok since it's an SGX specific hook.  And if for some
-> > reason an LSM wanted to gate access to EAUG *without* FILE__EXECMOD, it'd
-> > have the necessary information to do so.
-> >
-> > The userspace changes are fairly minimal:
-> >
-> >   - For SGX1, use PROT_NONE for the initial mmap() and refactor ADD_PAGE
-> >     to ADD_REGION.
-> >
-> >   - For SGX2, do an explicit ADD_REGION on the ranges to be EAUG'd, and an
-> >     ACTIVATE_REGION to make a region RX or R (no extra ioctl() required to
-> >     keep RW permissions).
-> >
-> > Because ACTIVATE_REGION can only be done once per page, to do *abitrary*
-> > mprotect() transitions, userspace would need to set the added/activated
-> > permissions to be a superset of the transitions, e.g. RW -> RX would
-> > require RWX, but that's a non-issue.
-> >
-> 
-> I may be misunderstanding or just be biased to my own proposal, but
-> this seems potentially more complicated and less flexible than the
-> MAXPERM model.  One of the main things that made me come up with
-> MAXPERM is that I wanted to avoid any complicated PTE/VMA modification
-> or runtime changes.  So, with MAXPERM, we still need to track the
-> MAXPERM bits per page, but we don't ever need to *change* them or to
-> worry about what is or is not mapped anywhere at any given time.  With
-> ACTIVATE_REGION, don't we need to make sure that we don't have a
-> second VMA pointing at the same pages?  Or am I just confused?
+> +	depends on VFIO_PCI && S390
+> +	default y
+> +	help
+> +	  VFIO PCI support for S390 Z-PCI devices
+> diff --git a/drivers/vfio/pci/Makefile b/drivers/vfio/pci/Makefile
+> index 9662c06..fd53819 100644
+> --- a/drivers/vfio/pci/Makefile
+> +++ b/drivers/vfio/pci/Makefile
+> @@ -2,5 +2,6 @@
+>  vfio-pci-y := vfio_pci.o vfio_pci_intrs.o vfio_pci_rdwr.o vfio_pci_config.o
+>  vfio-pci-$(CONFIG_VFIO_PCI_IGD) += vfio_pci_igd.o
+>  vfio-pci-$(CONFIG_VFIO_PCI_NVLINK2) += vfio_pci_nvlink2.o
+> +vfio-pci-$(CONFIG_VFIO_PCI_ZDEV) += vfio_pci_zdev.o
+>  
+>  obj-$(CONFIG_VFIO_PCI) += vfio-pci.o
+> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+> index 3fa20e9..b6087d6 100644
+> --- a/drivers/vfio/pci/vfio_pci.c
+> +++ b/drivers/vfio/pci/vfio_pci.c
+> @@ -362,6 +362,15 @@ static int vfio_pci_enable(struct vfio_pci_device *vdev)
+>  		}
+>  	}
+>  
+> +	if (IS_ENABLED(CONFIG_VFIO_PCI_ZDEV)) {
+> +		ret = vfio_pci_zdev_init(vdev);
+> +		if (ret) {
+> +			dev_warn(&vdev->pdev->dev,
+> +				 "Failed to setup ZDEV regions\n");
+> +			goto disable_exit;
+> +		}
+> +	}
+> +
+>  	vfio_pci_probe_mmaps(vdev);
+>  
+>  	return 0;
+> diff --git a/drivers/vfio/pci/vfio_pci_private.h b/drivers/vfio/pci/vfio_pci_private.h
+> index 1812cf2..db73cdf 100644
+> --- a/drivers/vfio/pci/vfio_pci_private.h
+> +++ b/drivers/vfio/pci/vfio_pci_private.h
+> @@ -189,4 +189,14 @@ static inline int vfio_pci_ibm_npu2_init(struct vfio_pci_device *vdev)
+>  	return -ENODEV;
+>  }
+>  #endif
+> +
+> +#ifdef(IS_ENABLED_VFIO_PCI_ZDEV)
 
-In theory, it's still your MAXPERM model, but with the unnecessary states
-removed and the others enforced/handled by the natural SGX transitions
-instead of explictly in ioctls.  Underneath the hood the SGX driver would
-still need to track the MAXPERM.
+I thought this might be some clever new macro, but is it just a typo?
+Seems it should just be
 
-With SGX1, SECINFO == MAXPERM.  With SGX2, ACTIVATE_REGION == MAXPERM,
-with the implication that the previous state is always RW.
+#ifdef CONFIG_VFIO_PCI_ZDEV
 
-> >   - For SGX1 it's a nop since it's impossible to change the EPCM
-> >     permissions, i.e. the page would need to be RWX regardless.
-> 
-> I may still be missing something, but, for SGX1, it's possible at
-> least in principle for the enclave to request, via ocall or similar,
-> that the untrusted runtime do mprotect().  It's not even such a bad
-> idea.  Honestly, enclaves *shouldn't* have anything actually writable
-> and executable at once because the enclaves don't want to be easily
-> exploited.
+> +extern int vfio_pci_zdev_init(struct vfio_pci_device *vdev);
+> +#else
+> +static inline int vfio_pci_zdev_init(struct vfio_pci_device *vdev)
+> +{
+> +	return -ENODEV;
+> +}
+> +#endif
+> +
+>  #endif /* VFIO_PCI_PRIVATE_H */
+> diff --git a/drivers/vfio/pci/vfio_pci_zdev.c b/drivers/vfio/pci/vfio_pci_zdev.c
+> new file mode 100644
+> index 0000000..230a4e4
+> --- /dev/null
+> +++ b/drivers/vfio/pci/vfio_pci_zdev.c
+> @@ -0,0 +1,83 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * VFIO ZPCI devices support
+> + *
+> + * Copyright (C) IBM Corp. 2019.  All rights reserved.
+> + *	Author: Pierre Morel <pmorel@linux.ibm.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + */
+> +#include <linux/io.h>
+> +#include <linux/pci.h>
+> +#include <linux/uaccess.h>
+> +#include <linux/vfio.h>
+> +#include <linux/vfio_zdev.h>
+> +
+> +#include "vfio_pci_private.h"
+> +
+> +static size_t vfio_pci_zdev_rw(struct vfio_pci_device *vdev,
+> +			       char __user *buf, size_t count, loff_t *ppos,
+> +			       bool iswrite)
+> +{
+> +	struct vfio_region_zpci_info *region;
+> +	struct zpci_dev *zdev;
+> +	unsigned int index = VFIO_PCI_OFFSET_TO_INDEX(*ppos);
+> +
+> +	if (!vdev->pdev->bus)
+> +		return -ENODEV;
+> +
+> +	zdev = vdev->pdev->bus->sysdata;
+> +	if (!zdev)
+> +		return -ENODEV;
+> +
+> +	if ((*ppos & VFIO_PCI_OFFSET_MASK) || (count != sizeof(*region)))
+> +		return -EINVAL;
 
-Yes, but the *EPCM* permissions are immutable.  So if an enclave wants
-to do RW->RX it has to intialize its pages to RWX.  And because the
-untrusted runtime is, ahem, untrusted, the enclave cannot rely on
-userspace to never map its pages RWX.  In other words, from a enclave
-security perspective, an SGX1 enclave+runtime that uses RW->RX is no
-different than an enclave that uses RWX.  Using your earlier terminology,
-an SGX1 enclave *should* get a dirty looks if maps a page RWX in the EPCM,
-even if it only intends RW->RX behavior.
+Why?  This sort of restriction would need to be documented in the ABI.
 
-> >   - For SGX2, userspace can suck it up and request RWX to do completely
-> >     arbitrary transitions (working as intended), or the kernel can support
-> >     trimming (removing) pages from an enclave, which would allow userspace
-> >     to do "arbitrary" transitions by first removing the page.
+> +
+> +	region = vdev->region[index - VFIO_PCI_NUM_REGIONS].data;
+> +	region->dasm = zdev->dma_mask;
+> +	region->start_dma = zdev->start_dma;
+> +	region->end_dma = zdev->end_dma;
+> +	region->msi_addr = zdev->msi_addr;
+> +	region->flags = VFIO_PCI_ZDEV_FLAGS_REFRESH;
+> +	region->gid = zdev->pfgid;
+> +	region->mui = zdev->fmb_update;
+> +	region->noi = zdev->max_msi;
+> +	memcpy(region->util_str, zdev->util_str, CLP_UTIL_STR_LEN);
+
+Does anything here change?  Why not do this in the init function?
+
+> +	if (copy_to_user(buf, region, count))
+> +		return -EFAULT;
+
+It's really not that difficult to make this support arbitrary reads.
+
+> +
+> +	return count;
+> +}
+> +
+> +static void vfio_pci_zdev_release(struct vfio_pci_device *vdev,
+> +				  struct vfio_pci_region *region)
+> +{
+> +	kfree(region->data);
+> +}
+> +
+> +static const struct vfio_pci_regops vfio_pci_zdev_regops = {
+> +	.rw		= vfio_pci_zdev_rw,
+> +	.release	= vfio_pci_zdev_release,
+> +};
+> +
+> +int vfio_pci_zdev_init(struct vfio_pci_device *vdev)
+> +{
+> +	struct vfio_region_zpci_info *region;
+> +	int ret;
+> +
+> +	region = kmalloc(sizeof(*region), GFP_KERNEL);
+> +	if (!region)
+> +		return -ENOMEM;
+> +
+> +	ret = vfio_pci_register_dev_region(vdev,
+> +		PCI_VENDOR_ID_IBM | VFIO_REGION_TYPE_PCI_VENDOR_TYPE,
+
+The uapi should specify 0x1014 as the vendor ID to eliminate any
+confusion.
+
+> +		VFIO_REGION_SUBTYPE_ZDEV_CLP,
+> +		&vfio_pci_zdev_regops, sizeof(*region),
+
+'sizeof(*region) + CLP_UTIL_STR_LEN' if suggestion in previous patch is
+used.
+
+> +		VFIO_REGION_INFO_FLAG_READ, region);
+
+This FLAG_READ only tells the user what is supported, it's up to your
+.rw callback to reject iswrite.
+
+> +
+> +	return ret;
+> +}
+
