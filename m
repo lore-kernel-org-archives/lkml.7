@@ -2,83 +2,109 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A1F4C072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F41FC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43D3921473
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:42:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10957208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:43:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726732AbfE1KmN (ORCPT
+        id S1726683AbfE1KnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 06:42:13 -0400
-Received: from mga14.intel.com ([192.55.52.115]:52031 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726305AbfE1KmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 06:42:13 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 May 2019 03:42:12 -0700
-X-ExtLoop1: 1
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 28 May 2019 03:42:09 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 28 May 2019 13:42:08 +0300
-Date:   Tue, 28 May 2019 13:42:08 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Ruslan Babayev <ruslan@babayev.com>
-Cc:     wsa@the-dreams.de, linux@armlinux.org.uk, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-acpi@vger.kernel.org,
-        xe-linux-external@cisco.com
-Subject: Re: [net-next,v3 2/2] net: phy: sfp: enable i2c-bus detection on
- ACPI based systems
-Message-ID: <20190528104208.GE2781@lahna.fi.intel.com>
-References: <20190528032213.19839-1-ruslan@babayev.com>
- <20190528032213.19839-3-ruslan@babayev.com>
+        Tue, 28 May 2019 06:43:16 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:54796 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726334AbfE1KnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 06:43:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 18D7A341;
+        Tue, 28 May 2019 03:43:15 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 652ED3F59C;
+        Tue, 28 May 2019 03:43:13 -0700 (PDT)
+Subject: Re: [PATCH] arm64: mm: make CONFIG_ZONE_DMA32 configurable
+To:     Miles Chen <miles.chen@mediatek.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>
+Cc:     linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, wsd_upstream@mediatek.com
+References: <1558973315-19655-1-git-send-email-miles.chen@mediatek.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <814b9bd0-38de-4b8d-92b3-d663931d90bf@arm.com>
+Date:   Tue, 28 May 2019 11:43:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190528032213.19839-3-ruslan@babayev.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <1558973315-19655-1-git-send-email-miles.chen@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 27, 2019 at 08:22:13PM -0700, Ruslan Babayev wrote:
-> +	} else if (ACPI_COMPANION(&pdev->dev)) {
+On 27/05/2019 17:08, Miles Chen wrote:
+> This change makes CONFIG_ZONE_DMA32 defuly y and allows users
+> to overwrite it.
+> 
+> For the SoCs that do not need CONFIG_ZONE_DMA32, this is the
+> first step to manage all available memory by a single
+> zone(normal zone) to reduce the overhead of multiple zones.
+> 
+> The change also fixes a build error when CONFIG_NUMA=y and
+> CONFIG_ZONE_DMA32=n.
+> 
+> arch/arm64/mm/init.c:195:17: error: use of undeclared identifier 'ZONE_DMA32'
+>                  max_zone_pfns[ZONE_DMA32] = PFN_DOWN(max_zone_dma_phys());
+> 
+> Signed-off-by: Miles Chen <miles.chen@mediatek.com>
+> ---
+>   arch/arm64/Kconfig   | 3 ++-
+>   arch/arm64/mm/init.c | 2 ++
+>   2 files changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 76f6e4765f49..9d20a736d1d1 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -260,7 +260,8 @@ config GENERIC_CALIBRATE_DELAY
+>   	def_bool y
+>   
+>   config ZONE_DMA32
+> -	def_bool y
+> +	bool "Support DMA32 zone"
 
-You can also use has_acpi_companion() here.
+This probably warrants an "if EMBEDDED" or "if EXPERT", since turning it 
+off produces a kernel which won't work at all on certain systems (I've 
+played around with this before...)
 
-> +		struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
-> +		struct fwnode_handle *fw = acpi_fwnode_handle(adev);
-> +		struct fwnode_reference_args args;
-> +		struct acpi_handle *acpi_handle;
-> +		int ret;
-> +
-> +		ret = acpi_node_get_property_reference(fw, "i2c-bus", 0, &args);
-> +		if (ACPI_FAILURE(ret) || !is_acpi_device_node(args.fwnode)) {
-> +			dev_err(&pdev->dev, "missing 'i2c-bus' property\n");
-> +			return -ENODEV;
->  		}
-> +
-> +		acpi_handle = ACPI_HANDLE_FWNODE(args.fwnode);
-> +		i2c = i2c_acpi_find_adapter_by_handle(acpi_handle);
-> +	}
-> +
-> +	if (!i2c)
-> +		return -EPROBE_DEFER;
-> +
-> +	err = sfp_i2c_configure(sfp, i2c);
-> +	if (err < 0) {
-> +		i2c_put_adapter(i2c);
-> +		return err;
+> +	default y
+>   
+>   config HAVE_GENERIC_GUP
+>   	def_bool y
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index d2adffb81b5d..96829ce21f99 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -191,8 +191,10 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max)
+>   {
+>   	unsigned long max_zone_pfns[MAX_NR_ZONES]  = {0};
+>   
+> +#ifdef CONFIG_ZONE_DMA32
+>   	if (IS_ENABLED(CONFIG_ZONE_DMA32))
 
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+There's no point keeping the IS_ENABLED() check when it's entirely 
+redundant with the #ifdefs.
+
+Robin.
+
+>   		max_zone_pfns[ZONE_DMA32] = PFN_DOWN(max_zone_dma_phys());
+> +#endif
+>   	max_zone_pfns[ZONE_NORMAL] = max;
+>   
+>   	free_area_init_nodes(max_zone_pfns);
+> 
