@@ -2,137 +2,166 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7BAC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 05:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D01C282E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 05:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD2D12075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 05:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB1D820989
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 05:19:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ALnyFScM"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="CIbPu/nn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727321AbfE1FTc (ORCPT
+        id S1727395AbfE1FTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 01:19:32 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:40506 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfE1FTc (ORCPT
+        Tue, 28 May 2019 01:19:44 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:46173 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726305AbfE1FTl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 01:19:32 -0400
-Received: by mail-qk1-f196.google.com with SMTP id c70so6507199qkg.7
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 22:19:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=d9vAkjT4zw1XDm8fsnSZlNEkjl4Nf7vHSlfSiY9KNso=;
-        b=ALnyFScMHMtERUW5uD1FraHSomTN3wSkzcc4PKpGg+PWHBFD84hbVQEZQWoagJ5Xhb
-         Mv1aFVz+PDS7WTLRjjzI3/r4f3n/zx7N3TJBC3qPz/FgPJY6s+MobfxiX3TxfZ4FQITm
-         UtogIZKfFDygLEtHVL0jzihfUraD7hhrSKZ5jVQ9B64yED3R1Hs+HbvBE7hRMCNY5+5Y
-         B/Yt2q4HmPgHIjcXO60h+/KlR+T943toFQ9IFKyU0WPZ2uNthhcK1PVqEO5iew+mGhU0
-         U497rM9uHMfnVPHfaU8O3uc/81MIvFhI+gAfEoN0yIRlpSvXJViZoXlf2cC9Gn22QzPW
-         yUZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=d9vAkjT4zw1XDm8fsnSZlNEkjl4Nf7vHSlfSiY9KNso=;
-        b=p7fhQxVYDlkLy74HGy6IaP010EjPBC+qFup3WNxDNzntTw57rOVpB79a73PjB2BLRh
-         zthSZ+e3K8dPxYY5V0rJhdQdZQnEF951NQa4dfSW+12exRXa7JHYHLak5XygO1aab58j
-         mrhVwggwcq7/n/984090exOYkWv2oIYI7Js4sCzPl74CPmFI6OMYgRAR+V1rcf7DSNdr
-         ATrY8yaLLrorgsTtEPm6UgGfP4xB3budDap3mtZxPyv5yrvwLI46m6lDZ4Ch88Gwereh
-         aILdKQrNoLpNFToDv9Wmgnp/6STQSjGh2rAGyZz6uLO09q6CQsP22YB4rdQ35L2t3CVq
-         qXiQ==
-X-Gm-Message-State: APjAAAXpX603/xb5e9Ug/LfP1KXbrwm8zvPzBeIrzmpPuj/O3wHRBoW0
-        BSGG+pWExoO6LJX1uba+/QqxNQ==
-X-Google-Smtp-Source: APXvYqxy8NJKLvh/0D73f9xSTX35TDleS3jm+lfG9xUeZFBhjVdzfEIXiW9z84VlnU9ZXc5GOVMmrw==
-X-Received: by 2002:a37:a247:: with SMTP id l68mr540762qke.89.1559020771336;
-        Mon, 27 May 2019 22:19:31 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s (li483-211.members.linode.com. [50.116.44.211])
-        by smtp.gmail.com with ESMTPSA id w189sm1054949qkc.38.2019.05.27.22.19.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 27 May 2019 22:19:30 -0700 (PDT)
-Date:   Tue, 28 May 2019 13:19:24 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 00/30] coresight: Support for ACPI bindings
-Message-ID: <20190528051924.GA19112@leoy-ThinkPad-X240s>
-References: <1558521304-27469-1-git-send-email-suzuki.poulose@arm.com>
+        Tue, 28 May 2019 01:19:41 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 3CC198365B;
+        Tue, 28 May 2019 17:19:39 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1559020779;
+        bh=Md+kfHQvYU4R2pwLTQr8PVHqDby+lPOcFeVVqE3Sp7g=;
+        h=From:To:CC:Subject:Date:References;
+        b=CIbPu/nnuB65zWU1C/OyKhTyAy4nvn6bdu1zfgSV1TAYc1rO0/YswtGvSpqAGbx60
+         OIz2qwl2RNm4eS7RifmOfPUYsIkJNxdLRA6J/OOX1J4wYZIqAcJ1fS4D3fTrLIMND0
+         ld3MP28ggRjNAX3AvO7EYg3j4Ac39ZJF2BjcKHvStw1SzkRwSH1+BCIbAHGZPVeMio
+         M+wQn5ZKVQqluYwb5Hyja/rpNohBt750AAPB7z9WReIj6HbcsJnpn4UNBOGbQFg5ru
+         ZvIxuotAna5H7Dlxoh4THo6FwT1KqzecoNiE+2u7R+EDpSf3BC3aBHSvyG665J5Xt+
+         wgF6Qk6kBt+HQ==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5cecc4eb0001>; Tue, 28 May 2019 17:19:39 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
+ svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
+ (TLS) id 15.0.1156.6; Tue, 28 May 2019 17:19:38 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1156.000; Tue, 28 May 2019 17:19:38 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "ralf@linux-mips.org" <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>
+CC:     "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hamish Martin <Hamish.Martin@alliedtelesis.co.nz>
+Subject: Re: MIPS r4k cache operations with SMP enabled
+Thread-Topic: MIPS r4k cache operations with SMP enabled
+Thread-Index: AQHVFQB0Z16/xM5TvUKYi9+2ojSGNw==
+Date:   Tue, 28 May 2019 05:19:37 +0000
+Message-ID: <1109cb84e36e483fb22c30a60ab4a6ff@svr-chch-ex1.atlnz.lc>
+References: <d87063da1d104af8a040f5f25a588638@svr-chch-ex1.atlnz.lc>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1558521304-27469-1-git-send-email-suzuki.poulose@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suzuki,
-
-On Wed, May 22, 2019 at 11:34:33AM +0100, Suzuki K Poulose wrote:
-> This series adds the support for CoreSight devices on ACPI based
-> platforms. The device connections are encoded as _DSD graph property[0],
-> with CoreSight specific extensions to indicate the direction of data
-> flow as described in [1]. Components attached to CPUs are listed
-> as child devices of the corresponding CPU, removing explicit links
-> to the CPU like we do in the DT.
-> 
-> The majority of the series cleans up the driver and prepares the subsystem
-> for platform agnostic firwmare probing, naming scheme, searching etc.
-> 
-> We introduce platform independent helpers to parse the platform supplied
-> information. Thus we rename the platform handling code from:
-> 	of_coresight.c  => coresight-platform.c
-> 
-> The CoreSight driver creates shadow devices that appear on the Coresight
-> bus, in addition to the real devices (e.g, AMBA bus devices). The name
-> of these devices match the real device. This makes the device name
-> a bit cryptic for ACPI platform. So this series also introduces a generic
-> platform agnostic device naming scheme for the shadow Coresight devices.
-> Towards this we also make changes to the way we lookup devices to resolve
-> the connections, as we can't use the names to identify the devices. So,
-> we use the "fwnode_handle" of the real device for the device lookups.
-> Towards that we clean up the drivers to keep track of the "CoreSight"
-> device rather than the "real" device. However, all real operations,
-> like DMA allocation, Power management etc. must be performed on
-> the real device which is the parent of the shadow device.
-> 
-> Finally we add the support for parsing the ACPI platform data. The power
-> management support is missing in the ACPI (and this is not specific to
-> CoreSight). The firmware must ensure that the respective power domains
-> are turned on.
-> 
-> Applies on v5.2-rc1
-> 
-> Tested on a Juno-r0 board with ACPI bindings patch (Patch 31/30) added on
-> top of [2]. You would need to make sure that the debug power domain is
-> turned on before the Linux kernel boots. (e.g, connect the DS-5 to the
-> Juno board while at UEFI). arm32 code is only compile tested.
-
-After I applied this patch set, I found all device names under
-'/sys/bus/event_source/devices/cs_etm/sinks/' have been changed as
-below on my DB410c board:
-# ls /sys/bus/event_source/devices/cs_etm/sinks/
-tmc_etf0  tmc_etr0  tpiu0
-
-This leads to below command failure when open PMU device:
-# perf record -e cs_etm/@826000.etr/ --per-thread uname
-failed to set sink "826000.etr" on event cs_etm/@826000.etr/ with 2 (No such file or directory)
-
-I must use below command so that perf can match string with the
-device name under '/sys/bus/event_source/devices/cs_etm/sinks/':
-# perf record -e cs_etm/@tmc_etr0/ --per-thread uname
-
-Seems to me, this is an unexpected change and when I worked on the
-patch set v2, IIRC that version still can use '826000.etr' to open PMU
-device.
-
-Please help confirm for this.  Thanks!
-
-Leo.
+On 28/05/19 2:52 PM, Chris Packham wrote:=0A=
+> Hi,=0A=
+> =0A=
+> I'm trying to port a fairly old Broadcom integrated chip (BCM6818) to=0A=
+> the latest Linux kernel using the mips/bmips support.=0A=
+> =0A=
+> The chip has a BMIPS4355 core. This has two "thread processors" (cpu=0A=
+> cores) with separate I-caches but a shared D-cache.=0A=
+> =0A=
+> I've got things booting but I encounter the following BUG()=0A=
+> =0A=
+> BUG: using smp_processor_id() in preemptible [00000000] code: swapper/0/1=
+=0A=
+> caller is blast_dcache16+0x24/0x154=0A=
+> CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.1.0-at1 #5=0A=
+> Stack : 00000036 8008d0d0 806a0000 807c0000 80754e10 0000000b 80754684=0A=
+> 8f831c8c=0A=
+>           80900000 8f828424 807986e7 8071348c 00000000 10008f00 8f831c30=
+=0A=
+> 7fb69e2a=0A=
+>           00000000 00000000 80920000 00000056 00002335 00000000 807a0000=
+=0A=
+> 00000000=0A=
+>           6d6d3a20 00000000 00000056 73776170 00000000 ffffffff 10008f01=
+=0A=
+> 807c0000=0A=
+>           80790000 00002cc2 ffffffff 80900000 00000010 8f83198c 00000000=
+=0A=
+> 80900000=0A=
+>           ...=0A=
+> Call Trace:=0A=
+> [<8001c208>] show_stack+0x30/0x100=0A=
+> [<8063282c>] dump_stack+0x9c/0xd0=0A=
+> [<802f1cec>] debug_smp_processor_id+0xfc/0x110=0A=
+> [<8002e274>] blast_dcache16+0x24/0x154=0A=
+> [<80122978>] map_vm_area+0x58/0x70=0A=
+> [<80123888>] __vmalloc_node_range+0x1fc/0x2b4=0A=
+> [<80123b54>] vmalloc+0x44/0x50=0A=
+> [<807d15d0>] jffs2_zlib_init+0x24/0x94=0A=
+> [<807d1354>] jffs2_compressors_init+0x10/0x30=0A=
+> [<807d151c>] init_jffs2_fs+0x68/0xf8=0A=
+> [<8001016c>] do_one_initcall+0x7c/0x1f0=0A=
+> [<807bee30>] kernel_init_freeable+0x17c/0x258=0A=
+> [<80650d1c>] kernel_init+0x10/0xf8=0A=
+> [<80015e6c>] ret_from_kernel_thread+0x14/0x1c=0A=
+> =0A=
+> In blast_dcache16 current_cpu_data is used which invokes=0A=
+> smp_processor_id() triggering the BUG(). I can fix this by sprinkling=0A=
+> preempt_disable/preempt_enable through arch/mips/mm/c-r4k.c but that=0A=
+> seems kind of wrong. Does anyone have any suggestion as to the right way=
+=0A=
+> to avoid this BUG()?=0A=
+> =0A=
+> Thanks,=0A=
+> Chris=0A=
+=0A=
+I think the following might do the trick=0A=
+=0A=
+---- 8< ----=0A=
+diff --git a/arch/mips/mm/c-r4k.c b/arch/mips/mm/c-r4k.c=0A=
+index 5166e38cd1c6..1fa7f093b59c 100644=0A=
+--- a/arch/mips/mm/c-r4k.c=0A=
++++ b/arch/mips/mm/c-r4k.c=0A=
+@@ -559,14 +559,19 @@ static inline int has_valid_asid(const struct =0A=
+mm_struct *mm, unsigned int type)=0A=
+         return 0;=0A=
+  }=0A=
+=0A=
+-static void r4k__flush_cache_vmap(void)=0A=
++static inline void local_r4k_flush_cache(void *args)=0A=
+  {=0A=
+         r4k_blast_dcache();=0A=
+  }=0A=
+=0A=
++void r4k__flush_cache_vmap(void)=0A=
++{=0A=
++       r4k_on_each_cpu(R4K_INDEX, local_r4k_flush_cache, NULL);=0A=
++}=0A=
++=0A=
+  static void r4k__flush_cache_vunmap(void)=0A=
+  {=0A=
+-       r4k_blast_dcache();=0A=
++       r4k_on_each_cpu(R4K_INDEX, local_r4k_flush_cache, NULL);=0A=
+  }=0A=
+=0A=
+  /*=0A=
+@@ -1758,6 +1763,43 @@ static int __init cca_setup(char *str)=0A=
+         return 0;=0A=
+  }=0A=
+---- 8< ----=0A=
+=0A=
+The rest of the call sites for r4k_blast_dcache() already run with =0A=
+preemption disabled.=0A=
