@@ -2,106 +2,107 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD440C072B1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F18C04AB6
 	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A04120883
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 504F5208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:10:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mvV7ZF8u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bgFwNm7+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727383AbfE1HK4 (ORCPT
+        id S1727455AbfE1HK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 03:10:56 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:44028 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbfE1HK4 (ORCPT
+        Tue, 28 May 2019 03:10:58 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:37469 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726986AbfE1HK4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 May 2019 03:10:56 -0400
-Received: by mail-ed1-f68.google.com with SMTP id w33so26812066edb.10;
-        Tue, 28 May 2019 00:10:55 -0700 (PDT)
+Received: by mail-lf1-f67.google.com with SMTP id m15so13077460lfh.4
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 00:10:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sh90EuYxrh193Q7HMx34uXLBv/PVyFJE/lBow6rEA4k=;
-        b=mvV7ZF8uWhYgBjffMM77I5Ql0OvSQtEllUykBqYO1LqPUptUBQ4Clj555ljFp5HxVB
-         tBckbCbOVOLWEI507jR5cxLEYPcv/ryx77EQ82dXt2UJgPSyJ4DIYHQxIe2n5IfLP4F1
-         zwXLmW47ZFSuqV5IbKxsIGoUh95Y4ol8HmxTUegtt+E0uYC4T9yp8jWlpqgfLBY8hc6M
-         W7mDI5P+EBlppPHhvwyAF71G1KPnEW8JSczuerHrAPmaGNxqSQPQVVs6tEN+O3J6nZMG
-         MJ9hP6X7ANVuNFMa4njp86xSk5DWoatQd5Hi86TEx/W2JcB3nUMBy9qb+IIujHqVuZzg
-         26BA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=ynfWVZAT+alkdWSrFWfQ62Goqe/tGGfT3VrMNKjpjqY=;
+        b=bgFwNm7+1pgd6JqolEUxQRByPRGN1vZxI8M//me9z3DiO93l9obuCt9o9GNZt7fv/f
+         KZZBISaE1EYLUBbY17g0G44R1JSWxKalm6wc/iT92mPbAEv9hMuuCp5+JCzzV/5o+jOo
+         WkZsn4T3jrdXkz63dXltEv7Q4Xrou1+FWZ9r10qPAhZoDa2DAuoK/aR87PWRn9Fyqwui
+         2ZzSBuGhMxKw3KPHAmwlcMa2Oqfyd9H3ihUgFZl3m9kevk7eSgul1tteN4tQRoY5+NH3
+         eEIbMS1zZM2uJGm+YpVp17dXI3zMv2TpEwoSoMGwad74anaGMznDM7GyiZVXI/BxqMaG
+         A8tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sh90EuYxrh193Q7HMx34uXLBv/PVyFJE/lBow6rEA4k=;
-        b=ll9cupvjDuIrPArMzApTcZzpAYvXOA0z35fTNP6t8osXcP5CPPAwDqqgD89U7BFB7t
-         aBTuyKPPPwB/ktOOgnge8BJT2FL2yftArrWq2KOuvwo0rk/r/n+rBo4ZJvAQ+cAT8Yyf
-         vGelISF1Bvmri8yZ4rW8TIJXy6mvBNEqIpc60YlCbSG5HKSQOfuU/dBf0PGGzBIVewHq
-         6CAYUCvRtZXn/Puchl0qNbk4mrrFFPsLnnT6659hTPDsnGaUT4QzmM2bH5q3JRo3QTS9
-         LVwQmgfoIuiGXrmAO8mf/xVLH20mfJy2w5nkX17av8VTzjimz3z8HSKUoQPvtU4AS9Tm
-         ETDA==
-X-Gm-Message-State: APjAAAUrZH2qkyLlDgGjlULpOP5CBL33eEQnlt1auDpErfqmKqN56Twa
-        4vYjTDc/EAB2XYqYisHnLedvOM5Uq8kZsnKPW+4=
-X-Google-Smtp-Source: APXvYqxNBlLhlVAOzGwcr+/jjrcH1xjzXnuJsY4nwozQ6IgG1ptIELlUIhMGBLO4K8gY4sqaP7ZTZpxsWKMvSqs+/sg=
-X-Received: by 2002:a50:ba5c:: with SMTP id 28mr48087986eds.238.1559027454465;
- Tue, 28 May 2019 00:10:54 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=ynfWVZAT+alkdWSrFWfQ62Goqe/tGGfT3VrMNKjpjqY=;
+        b=VaPJJIgTtdROtanXbID2myrBIFX1jk6Ht3k8niuroHAWvKQ0t44TUfqA0ZVY9hng8H
+         DivszlwJm4cynjyLOC3DPmBCSSAltkQoVSfpB63vBqQesCX1Unkfe/vSCm3x7McJuIhl
+         1MOHXniK1seyaxwgW/HsTB0WE7888mcoxNmmLRCfrmv6YNMfZBz6BGhRCqYefUPOhaZa
+         hwJJ1zYPoUP2NpbbRTaDKrN2ETY4w2Z95rBa//3XGKIiqzEYoTV6ksmYa9fE2TVn66F6
+         cMYOK8GubazhU0PhZ8tQIADf8CIGxrZ/TcU50DHvasVAIGzOD5G8HG/j4hOdoseVJbO5
+         4Ttw==
+X-Gm-Message-State: APjAAAXUjPFYxScBYJhAiuXDsau1NHXIfAzi0ssKEozxeIlLqC+WWdCI
+        nFIZOQXQlIQAm0FVu253Nvk9TL1teqg=
+X-Google-Smtp-Source: APXvYqwIUjaetPcnQQPDn1Uq4N5rBWMVjAQhEJAxhYN9Tz/SMKkEI6VcqT0euSVA8ouuKKzM/LiPUQ==
+X-Received: by 2002:ac2:42c8:: with SMTP id n8mr14725619lfl.28.1559027454638;
+        Tue, 28 May 2019 00:10:54 -0700 (PDT)
+Received: from uranus.localdomain ([5.18.103.226])
+        by smtp.gmail.com with ESMTPSA id z6sm2718712ljh.61.2019.05.28.00.10.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 May 2019 00:10:53 -0700 (PDT)
+Received: by uranus.localdomain (Postfix, from userid 1000)
+        id 3D45946010A; Tue, 28 May 2019 10:10:53 +0300 (MSK)
+Date:   Tue, 28 May 2019 10:10:53 +0300
+From:   Cyrill Gorcunov <gorcunov@gmail.com>
+To:     Dianzhang Chen <dianzhangchen0@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] kernel/sys.c: fix possible spectre-v1 in do_prlimit()
+Message-ID: <20190528071053.GL11013@uranus>
+References: <CAFbcbMATqCCpCR596FTaSdUV50nQSxDgXMd1ASgXu1CE+DJqTw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190515144210.25596-1-daniel.baluta@nxp.com> <20190515144210.25596-3-daniel.baluta@nxp.com>
- <CAOMZO5A6Gv5k3up0AtKrhQPyMLMe_8SXift68KEP2J+j8D_cJg@mail.gmail.com> <CAOMZO5BTqwnun6d7G1vcHUu_Rs+xfvgxTzamWnBPy76W7eeF_A@mail.gmail.com>
-In-Reply-To: <CAOMZO5BTqwnun6d7G1vcHUu_Rs+xfvgxTzamWnBPy76W7eeF_A@mail.gmail.com>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Tue, 28 May 2019 10:10:43 +0300
-Message-ID: <CAEnQRZD98TKduVLshGrBANRB6NT7Se6CXD0cgd5XRYa6grAo4Q@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] arm64: dts: imx8mm-evk: Enable audio codec wm8524
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "m.felsch@pengutronix.de" <m.felsch@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAFbcbMATqCCpCR596FTaSdUV50nQSxDgXMd1ASgXu1CE+DJqTw@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 10:33 PM Fabio Estevam <festevam@gmail.com> wrote:
->
-> On Thu, May 16, 2019 at 3:35 PM Fabio Estevam <festevam@gmail.com> wrote:
-> >
-> > On Wed, May 15, 2019 at 11:42 AM Daniel Baluta <daniel.baluta@nxp.com> wrote:
-> >
-> > > +               simple-audio-card,codec {
-> > > +                       sound-dai = <&wm8524>;
-> > > +                       clocks = <&clk IMX8MM_CLK_SAI3_ROOT>;
-> >
-> > IMX8MM_CLK_SAI3_ROOT is the internal clock that drives the SAI3
-> > interface, not an external clock that feeds the codec.
-> >
-> > It seems you should remove this 'clocks' entry.
->
-> Just checked the schematics and the SAI3_MCLK pin clocks the codec, so
-> the representation is correct:
->
-> Reviewed-by: Fabio Estevam <festevam@gmail.com>
+On Tue, May 28, 2019 at 10:37:10AM +0800, Dianzhang Chen wrote:
+> Hi,
+> Because when i reply your email，i always get 'Message rejected' from
+> gmail(get this rejection from all the recipients). I still don't know
+> how to deal with it, so i reply your email here:
 
-Shawn,
+Hi! This is weird. Next time simply reply to LKML (I CC'ed it back).
 
-Can you have a look?
+> Because of speculative execution, the attacker can bypass the bound
+> check `if (resource >= RLIM_NLIMITS)`.
+
+And then misprediction get detected and execution is dropped. So I
+still don't see a problem here, since we don't leak info even in
+such case.
+
+That said I don't mind for this patch but rather in a sake of
+code clarity, not because of spectre issue since it has
+nothing to do here.
+
+> as for array_index_nospec(index, size), it will clamp the index within
+> the range of [0, size), and attacker can't exploit speculative
+> execution to make the index out of range [0, size).
+> 
+> 
+> For more detail, please check the link below:
+> 
+> https://github.com/torvalds/linux/commit/f3804203306e098dae9ca51540fcd5eb700d7f40
