@@ -2,142 +2,164 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C2FC04E84
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA64C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E07CB21734
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 418F62075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:59:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="wyDZHKhr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PlczyWHL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727410AbfE1Q6D (ORCPT
+        id S1727221AbfE1Q7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 12:58:03 -0400
-Received: from mail-vk1-f194.google.com ([209.85.221.194]:43138 "EHLO
-        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727021AbfE1Q6C (ORCPT
+        Tue, 28 May 2019 12:59:23 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:33262 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726512AbfE1Q7X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 12:58:02 -0400
-Received: by mail-vk1-f194.google.com with SMTP id h72so4860126vkh.10
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 09:58:02 -0700 (PDT)
+        Tue, 28 May 2019 12:59:23 -0400
+Received: by mail-ua1-f65.google.com with SMTP id 49so8233514uas.0;
+        Tue, 28 May 2019 09:59:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WD86kLDybsdQfA1DtayTKwNMqVa0rLyy2f7nqyQw8qg=;
-        b=wyDZHKhr+yVm9KgPE6tQTdgA4iwGqTCmFL3YfnKUlBYX+v412GOR3Icm138K9DM5IT
-         lrs1WADr98GngDUa6SfbkIi5Liqqdw/2YUmApufncRkJE1U1WavhpViIXri52MGyzhZa
-         ojrqbwXHuUfcn5tjm/RZFEOOM+/iOM4qhIBY/qTcZJv+nyYjUv6l/us1HHQcX42+d8yl
-         EAAbDs+dSrkRTVippz8RiF/K/NiCjclAmkIVpgc6iK2kwUczFAsUGOaWbv6lYGvnatr+
-         DjHkDZ8+sGH3kl+5QVV8IhkYbazSmKBS73iq9xW20Dn7pKWtlrQFjklnF8+BApRMnxWe
-         NuXA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=198KawDApgqJEA2xsNuH8RyjeYS5CPMI9y1k6aRNrNA=;
+        b=PlczyWHL/PGe6hA97rtFdVMXuyHUPCzUQkMLPS0Y6Fu1GDNJWqHkOv7KgVdLEKHsLU
+         xMdtbufUbg8/oRsZlnoGz/ZPi+b9Ltgl2SpRtORZ2/27PluL+B8Bt+gK7omgnJguAhxx
+         WewI0Cqp1X1rDFsXWPAHZsc7wJGggzQ0g7jwYlsP0tmj/Ecp45TVZPybomuyZZZyVXAa
+         4kfLSzTnVL1hrz1bti6hsXyfIPcCFzLV/wbYIgfprgoGzqOwV9bCRGSp5vSX4+k2N7m2
+         qFgzAEzObNrI7m35YUqqp+ZMLNC7qqT1TNe6P5RB8XddDP2lkDgi+wTJ95/wu9rzEb3S
+         YvlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WD86kLDybsdQfA1DtayTKwNMqVa0rLyy2f7nqyQw8qg=;
-        b=L261N1tc3d43f1vGQEJ8xqAWFm+lrIAVQh02ibqzLMjW/pg426K6s/gnkCY2GWe+z1
-         7MCkrFO3iIKGqb3riJaJKf1wSNbwlnRJ9xiL2h5EgObBUlhIzcwpcAHlbTRM96NZFMHW
-         cCLn5jI3SxOMD/ZHyAohs8zx8fura6tIVtIbsoTFGs/DzIUnogtJ2oiaJAVPzHEwXGHp
-         cM5T2fUkNCMZZ1C7R415ufKtm1qAriuokW9nSUavZHf++FeVUHd4H2hAZvYOkz0vTuBp
-         j4K/FVBN/rR9dmI1Z8b76v7Y88zVmC8vPpZzPhxqWHw4Cg471q9azxA++23WKezMlfzM
-         iBNA==
-X-Gm-Message-State: APjAAAWlIYiYaxYKBf/H6S+63ilevrtYgaEc/shaGoCLWAa+2YkCC6KF
-        /oSvio/gdeQ/PkR+CECNwJZDr/gamrnS3Q==
-X-Google-Smtp-Source: APXvYqxGHJzU2EIExSGCni1Bo00y0u7bjA2lt0NXX3c7EB/S+zgm2olMG6Lm1XLAplqz0qJCaQCkAg==
-X-Received: by 2002:a1f:9746:: with SMTP id z67mr20863502vkd.19.1559062681555;
-        Tue, 28 May 2019 09:58:01 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::6684])
-        by smtp.gmail.com with ESMTPSA id d7sm6182567uae.6.2019.05.28.09.58.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 May 2019 09:58:00 -0700 (PDT)
-Date:   Tue, 28 May 2019 12:57:59 -0400
-From:   Josef Bacik <josef@toxicpanda.com>
-To:     Yao Liu <yotta.liu@ucloud.cn>
-Cc:     Josef Bacik <josef@toxicpanda.com>, Jens Axboe <axboe@kernel.dk>,
-        linux-block <linux-block@vger.kernel.org>,
-        nbd <nbd@other.debian.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] nbd: fix connection timed out error after
- reconnecting to server
-Message-ID: <20190528165758.zxfrv6fum4vwcv4e@MacBook-Pro-91.local>
-References: <1558691036-16281-1-git-send-email-yotta.liu@ucloud.cn>
- <20190524130740.zfypc2j3q5e3gryr@MacBook-Pro-91.local.dhcp.thefacebook.com>
- <20190527180743.GA20702@192-168-150-246.7~>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=198KawDApgqJEA2xsNuH8RyjeYS5CPMI9y1k6aRNrNA=;
+        b=pfgFv8fbHO9y83gmDTHJQPd7aKUM4yHdS4ZBUUKRLJmF4Wv+jXbLYdhaIh+uz582zy
+         QNl6YD1xCLaQQqZle9YwgzsN0fGp1Mc1NGZBOKmhDQ67yX26xj8Ix9n7Y37gE4sBtBY6
+         bFSMFwmuOGpEEfgznZmpz40c+sU6cHsY7u6bxpB1SmLBW9ZBsvhPK43V4+G/JePKZVXm
+         QzhFO6/+J4XC8Of94bSexepkxF8L9fowi9LCilQ33Yq4C5fsQIPFkgLFUuBMdcHqCm4F
+         KqLQUmYbEoag1bN+2P8csvEv2NNGNJh1CB08blfz77UtbupaqWbt/GlpnZ7YMM3wshDi
+         rVDg==
+X-Gm-Message-State: APjAAAX94Q2GyrrvzRN5ObtouzCZI8q6XP90nMh1+w9SoavNLc1tuHjT
+        NEVGyDcQ9JYn8APcTXlS6tUjPxeD66ZKygc1Qpg=
+X-Google-Smtp-Source: APXvYqxUgPOlrtk3XQ/paCUlBiOOfbrYGdSSNPBoRx5lmEaSTCQKLqgYV+ObQIJpZwChQHhQRj9elqbRwE7TLYNFfaY=
+X-Received: by 2002:ab0:1529:: with SMTP id o38mr33614868uae.30.1559062761934;
+ Tue, 28 May 2019 09:59:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190527180743.GA20702@192-168-150-246.7~>
-User-Agent: NeoMutt/20180716
+References: <20190527223730.11474-1-acme@kernel.org> <20190527223730.11474-6-acme@kernel.org>
+ <CA+49okqviNfP087Z34-P4mJuMYc8_PiNJgTPz0xSAxqtp4iM0A@mail.gmail.com> <20190528130421.GB13830@kernel.org>
+In-Reply-To: <20190528130421.GB13830@kernel.org>
+From:   Shawn Landden <slandden@gmail.com>
+Date:   Tue, 28 May 2019 11:59:10 -0500
+Message-ID: <CA+49okqAuPrs679GWQhxjyMn4mMhVSH_71Ww6rBbUjsrm2g-dg@mail.gmail.com>
+Subject: Re: [PATCH 05/44] perf data: Fix 'strncat may truncate' build failure
+ with recent gcc
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>, Wang Nan <wangnan0@huawei.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 02:07:43AM +0800, Yao Liu wrote:
-> On Fri, May 24, 2019 at 09:07:42AM -0400, Josef Bacik wrote:
-> > On Fri, May 24, 2019 at 05:43:54PM +0800, Yao Liu wrote:
-> > > Some I/O requests that have been sent succussfully but have not yet been
-> > > replied won't be resubmitted after reconnecting because of server restart,
-> > > so we add a list to track them.
-> > > 
-> > > Signed-off-by: Yao Liu <yotta.liu@ucloud.cn>
-> > 
-> > Nack, this is what the timeout stuff is supposed to handle.  The commands will
-> > timeout and we'll resubmit them if we have alive sockets.  Thanks,
-> > 
-> > Josef
-> > 
-> 
-> On the one hand, if num_connections == 1 and the only sock has dead,
-> then we do nbd_genl_reconfigure to reconnect within dead_conn_timeout,
-> nbd_xmit_timeout will not resubmit commands that have been sent
-> succussfully but have not yet been replied. The log is as follows:
->  
-> [270551.108746] block nbd0: Receive control failed (result -104)
-> [270551.108747] block nbd0: Send control failed (result -32)
-> [270551.108750] block nbd0: Request send failed, requeueing
-> [270551.116207] block nbd0: Attempted send on invalid socket
-> [270556.119584] block nbd0: reconnected socket
-> [270581.161751] block nbd0: Connection timed out
-> [270581.165038] block nbd0: shutting down sockets
-> [270581.165041] print_req_error: I/O error, dev nbd0, sector 5123224 flags 8801
-> [270581.165149] print_req_error: I/O error, dev nbd0, sector 5123232 flags 8801
-> [270581.165580] block nbd0: Connection timed out
-> [270581.165587] print_req_error: I/O error, dev nbd0, sector 844680 flags 8801
-> [270581.166184] print_req_error: I/O error, dev nbd0, sector 5123240 flags 8801
-> [270581.166554] block nbd0: Connection timed out
-> [270581.166576] print_req_error: I/O error, dev nbd0, sector 844688 flags 8801
-> [270581.167124] print_req_error: I/O error, dev nbd0, sector 5123248 flags 8801
-> [270581.167590] block nbd0: Connection timed out
-> [270581.167597] print_req_error: I/O error, dev nbd0, sector 844696 flags 8801
-> [270581.168021] print_req_error: I/O error, dev nbd0, sector 5123256 flags 8801
-> [270581.168487] block nbd0: Connection timed out
-> [270581.168493] print_req_error: I/O error, dev nbd0, sector 844704 flags 8801
-> [270581.170183] print_req_error: I/O error, dev nbd0, sector 5123264 flags 8801
-> [270581.170540] block nbd0: Connection timed out
-> [270581.173333] block nbd0: Connection timed out
-> [270581.173728] block nbd0: Connection timed out
-> [270581.174135] block nbd0: Connection timed out
->  
-> On the other hand, if we wait nbd_xmit_timeout to handle resubmission,
-> the I/O requests will have a big delay. For example, if timeout time is 30s,
-> and from sock dead to nbd_genl_reconfigure returned OK we only spend
-> 2s, the I/O requests will still be handled by nbd_xmit_timeout after 30s.
+On Tue, May 28, 2019 at 8:04 AM Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
+>
+> Em Mon, May 27, 2019 at 05:46:26PM -0500, Shawn Landden escreveu:
+> > On Mon, May 27, 2019 at 5:38 PM Arnaldo Carvalho de Melo
+> > <acme@kernel.org> wrote:
+> > >
+> > > From: Shawn Landden <shawn@git.icu>
+> > >
+> > > This strncat() is safe because the buffer was allocated with zalloc()=
+,
+> > > however gcc doesn't know that. Since the string always has 4 non-null
+> > > bytes, just use memcpy() here.
+> > >
+> > >     CC       /home/shawn/linux/tools/perf/util/data-convert-bt.o
+> > >   In file included from /usr/include/string.h:494,
+> > >                    from /home/shawn/linux/tools/lib/traceevent/event-=
+parse.h:27,
+> > >                    from util/data-convert-bt.c:22:
+> > >   In function =E2=80=98strncat=E2=80=99,
+> > >       inlined from =E2=80=98string_set_value=E2=80=99 at util/data-co=
+nvert-bt.c:274:4:
+> > >   /usr/include/powerpc64le-linux-gnu/bits/string_fortified.h:136:10: =
+error: =E2=80=98__builtin_strncat=E2=80=99 output may be truncated copying =
+4 bytes from a string of length 4 [-Werror=3Dstringop-truncation]
+> > >     136 |   return __builtin___strncat_chk (__dest, __src, __len, __b=
+os (__dest));
+> > >         |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
+~~~~~~~~~~~~
+> > >
+> > > Signed-off-by: Shawn Landden <shawn@git.icu>
+> > > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > > Cc: Jiri Olsa <jolsa@redhat.com>
+> > > Cc: Namhyung Kim <namhyung@kernel.org>
+> > > Cc: Wang Nan <wangnan0@huawei.com>
+> > > LPU-Reference: 20190518183238.10954-1-shawn@git.icu
+> > > Link: https://lkml.kernel.org/n/tip-289f1jice17ta7tr3tstm9jm@git.kern=
+el.org
+> > > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > > ---
+> > >  tools/perf/util/data-convert-bt.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data=
+-convert-bt.c
+> > > index e0311c9750ad..9097543a818b 100644
+> > > --- a/tools/perf/util/data-convert-bt.c
+> > > +++ b/tools/perf/util/data-convert-bt.c
+> > > @@ -271,7 +271,7 @@ static int string_set_value(struct bt_ctf_field *=
+field, const char *string)
+> > >                                 if (i > 0)
+> > >                                         strncpy(buffer, string, i);
+> > >                         }
+> > > -                       strncat(buffer + p, numstr, 4);
+> > > +                       memcpy(buffer + p, numstr, 4);
+> > I took care to have enough context in my patch that you could see what
+> > was going on. I wonder if there is a way to make that care
+> > propate when people add Signed-off-by: lines.
+>
+> I just checked and the patch is the same, the description I only changed
+> the subject line, so that when one uses:
+Functionally, yes. However look at how my version has enough context
+that you can immediately know that the patch is correct (instead of
+the default of 5 lines):
+https://www.spinics.net/lists/linux-perf-users/msg08563.html
 
-We have to wait for the full timeout anyway to know that the socket went down,
-so it'll be re-submitted right away and then we'll wait on the new connection.
-
-Now we could definitely have requests that were submitted well after the first
-thing that failed, so their timeout would be longer than simply retrying them,
-but we have no idea of knowing which ones timed out and which ones didn't.  This
-way lies pain, because we have to matchup tags with handles.  This is why we
-rely on the generic timeout infrastructure, so everything is handled correctly
-without ending up with duplicate submissions/replies.  Thanks,
-
-Josef
+>
+>    git log --oneline
+>
+> we can know what is the component and what kind of build failure was
+> that.
+>
+> - Arnaldo
+>
+> > >                         p +=3D 3;
+> > >                 }
+> > >         }
+> > > --
+> > > 2.20.1
+> > >
+>
+> --
+>
+> - Arnaldo
