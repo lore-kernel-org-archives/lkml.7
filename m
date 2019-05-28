@@ -2,119 +2,103 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD7DC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 05:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B553C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 05:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 988DF2070D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 05:34:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E578E2070D
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 05:35:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727295AbfE1FeG (ORCPT
+        id S1727357AbfE1Ff0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 01:34:06 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39822 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726693AbfE1FeF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 01:34:05 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4S5Rcsn017019
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 01:34:04 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2srxuy0cdr-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 01:34:04 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Tue, 28 May 2019 06:34:02 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 28 May 2019 06:33:59 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4S5Xwa963176916
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 May 2019 05:33:58 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 150A511C070;
-        Tue, 28 May 2019 05:33:58 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7345F11C077;
-        Tue, 28 May 2019 05:33:57 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.8.53])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 28 May 2019 05:33:57 +0000 (GMT)
-Date:   Tue, 28 May 2019 08:33:55 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Alakesh Haloi <alakesh.haloi@gmail.com>
-Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Xu <peterx@redhat.com>,
+        Tue, 28 May 2019 01:35:26 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:48830 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726269AbfE1Ff0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 01:35:26 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DB1C8A78;
+        Mon, 27 May 2019 22:35:25 -0700 (PDT)
+Received: from [10.162.40.141] (p8cg001049571a15.blr.arm.com [10.162.40.141])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 004CB3F690;
+        Mon, 27 May 2019 22:35:21 -0700 (PDT)
+Subject: Re: [PATCH 1/4] arm64: module: create module allocations without exec
+ permissions
+To:     Ard Biesheuvel <ard.biesheuvel@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     mark.rutland@arm.com, marc.zyngier@arm.com,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nadav Amit <namit@vmware.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        James Morse <james.morse@arm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Shuah Khan <shuah@kernel.org>
-Subject: Re: [PATCH] userfaultfd: selftest: fix compiler warning
-References: <20190527151859.GA3217@ip-172-31-44-144.us-west-2.compute.internal>
+        Rick Edgecombe <rick.p.edgecombe@intel.com>
+References: <20190523102256.29168-1-ard.biesheuvel@arm.com>
+ <20190523102256.29168-2-ard.biesheuvel@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <d82eb4fe-8113-3f8e-f465-26679ebae2df@arm.com>
+Date:   Tue, 28 May 2019 11:05:33 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
+In-Reply-To: <20190523102256.29168-2-ard.biesheuvel@arm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190527151859.GA3217@ip-172-31-44-144.us-west-2.compute.internal>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19052805-0008-0000-0000-000002EB13DF
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052805-0009-0000-0000-00002257DEF8
-Message-Id: <20190528053355.GB5055@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-28_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905280038
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 27, 2019 at 03:18:59PM +0000, Alakesh Haloi wrote:
-> Fixes following compiler warning
-> 
-> userfaultfd.c: In function ‘usage’:
-> userfaultfd.c:126:2: warning: format not a string literal and no format
-> 	arguments [-Wformat-security]
->   fprintf(stderr, examples);
-> 
-> Signed-off-by: Alakesh Haloi <alakesh.haloi@gmail.com>
 
-Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
 
+On 05/23/2019 03:52 PM, Ard Biesheuvel wrote:
+> Now that the core code manages the executable permissions of code
+> regions of modules explicitly, it is no longer necessary to create
+
+I guess the permission transition for various module sections happen
+through module_enable_[ro|nx]() after allocating via module_alloc().
+
+> the module vmalloc regions with RWX permissions, and we can create
+> them with RW- permissions instead, which is preferred from a
+> security perspective.
+
+Makes sense. Will this be followed in all architectures now ?
+
+> 
+> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@arm.com>
 > ---
->  tools/testing/selftests/vm/userfaultfd.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  arch/arm64/kernel/module.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/tools/testing/selftests/vm/userfaultfd.c b/tools/testing/selftests/vm/userfaultfd.c
-> index 5d1db824f73a..b3e6497b080c 100644
-> --- a/tools/testing/selftests/vm/userfaultfd.c
-> +++ b/tools/testing/selftests/vm/userfaultfd.c
-> @@ -123,7 +123,7 @@ static void usage(void)
->  	fprintf(stderr, "Supported <test type>: anon, hugetlb, "
->  		"hugetlb_shared, shmem\n\n");
->  	fprintf(stderr, "Examples:\n\n");
-> -	fprintf(stderr, examples);
-> +	fprintf(stderr, "%s", examples);
->  	exit(1);
->  }
-> 
-> -- 
-> 2.17.1
+> diff --git a/arch/arm64/kernel/module.c b/arch/arm64/kernel/module.c
+> index 2e4e3915b4d0..88f0ed31d9aa 100644
+> --- a/arch/arm64/kernel/module.c
+> +++ b/arch/arm64/kernel/module.c
+> @@ -41,7 +41,7 @@ void *module_alloc(unsigned long size)
+>  
+>  	p = __vmalloc_node_range(size, MODULE_ALIGN, module_alloc_base,
+>  				module_alloc_base + MODULES_VSIZE,
+> -				gfp_mask, PAGE_KERNEL_EXEC, 0,
+> +				gfp_mask, PAGE_KERNEL, 0,
+>  				NUMA_NO_NODE, __builtin_return_address(0));
+>  
+>  	if (!p && IS_ENABLED(CONFIG_ARM64_MODULE_PLTS) &&
+> @@ -57,7 +57,7 @@ void *module_alloc(unsigned long size)
+>  		 */
+>  		p = __vmalloc_node_range(size, MODULE_ALIGN, module_alloc_base,
+>  				module_alloc_base + SZ_4G, GFP_KERNEL,
+> -				PAGE_KERNEL_EXEC, 0, NUMA_NO_NODE,
+> +				PAGE_KERNEL, 0, NUMA_NO_NODE,
+>  				__builtin_return_address(0));
+>  
+>  	if (p && (kasan_module_alloc(p, size) < 0)) {
 > 
 
--- 
-Sincerely yours,
-Mike.
-
+Which just makes sure that PTE_PXN never gets dropped while creating
+these mappings.
