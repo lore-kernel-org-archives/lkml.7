@@ -2,130 +2,190 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C729C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 000F4C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1ADC208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:23:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="agS45cUe"
+	by mail.kernel.org (Postfix) with ESMTP id CCA74208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:24:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbfE1MX4 (ORCPT
+        id S1727162AbfE1MYw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 08:23:56 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:34855 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726853AbfE1MXz (ORCPT
+        Tue, 28 May 2019 08:24:52 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54218 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726853AbfE1MYw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 08:23:55 -0400
-Received: by mail-yw1-f65.google.com with SMTP id k128so7817718ywf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 05:23:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ho63X/oK4cACFoOG/qxpAshfZBqM2QPX+6fVvcv9ihw=;
-        b=agS45cUeZCvr1i9MlBes4VkX+m6c9gZS+PscFCoOEvsHVnOEan8JoTPkq8S+W3/mB7
-         hukgtdcCw5aaOQvs15XB5pE0A4m0DQbeAQ9p0eKMRf6/DAVhuflQF9KJy6I4UqkUnY88
-         6MsvzH8wMD0DW/IwzHvrdfIhS9jlauRsLIObyWI5j4HTimfEeWoypiW9d3I6mHOLIwdz
-         4BkzOFO/A5pnfGWHiZq+a2NxbOPrbiY9F5g/4DpKajBLoeqOy7NpsHjgrMLGUxEYD4n6
-         O18r6qMWQmAqbgcBRGQoEyJfrJIG4beUlSK1e0N8qX4oTadQhhiIz9swyyjwUrHwTKMK
-         j/7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ho63X/oK4cACFoOG/qxpAshfZBqM2QPX+6fVvcv9ihw=;
-        b=m5BTNKWWTG/UQlHK8RycDGM8QtSbt6XUL3ZZpNuuotOGQCG8JiWEkuNuvjy/rYAmbu
-         ENuY4MdXRvDRJbgyEhm6L6IVxZP8RqK1ufUsqDgkLB0Ims2pzlNSA7wy4nSI3/KvKixt
-         eaILCUDL/D30HgJaazAgZJseoukqQ5iaXBKgRCPoJWTypFJIFgCeG27SlUSXDD4UUiLS
-         Ej1AUo1jnjf8haYuO2uuTOexCpfqI2siSwbmkC640zKLOlwoUZvLnUmPKR3wss37z32J
-         PeaTL+Z31xRJR2EOz8ofHVNQAIbdkIh/7bTMrBHKiEV73TCFfYDHNyTjZklXeGC/ZAE+
-         vMZg==
-X-Gm-Message-State: APjAAAVTZUuENMl1NnXZtH0LWTjNaIJ7LxPOVBGdctNBPxCZXWBAskS1
-        0m2R/QCIR4pXKKh6+t70E0k8FMzj6DG1EnquPp7jCDr+4D0wpw==
-X-Google-Smtp-Source: APXvYqwduV3IQwIaAUuhgLCx3ag2nDNLD1N4v+jP3NKxsqHNn/DI7yLI6o3ddZu1/cbPyxR/LHvKSRm6GVDKjHivIeM=
-X-Received: by 2002:a81:4ecc:: with SMTP id c195mr58339348ywb.31.1559046234749;
- Tue, 28 May 2019 05:23:54 -0700 (PDT)
+        Tue, 28 May 2019 08:24:52 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4SCM8AR117113
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 08:24:50 -0400
+Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ss30ew108-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 08:24:50 -0400
+Received: from localhost
+        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Tue, 28 May 2019 13:24:49 +0100
+Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
+        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 28 May 2019 13:24:43 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4SCOgvP29491484
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 May 2019 12:24:43 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C2B1FB206E;
+        Tue, 28 May 2019 12:24:42 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 994BFB2065;
+        Tue, 28 May 2019 12:24:42 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 28 May 2019 12:24:42 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id C799516C35C0; Tue, 28 May 2019 05:24:47 -0700 (PDT)
+Date:   Tue, 28 May 2019 05:24:47 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>, kvm-ppc@vger.kernel.org,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Paul Mackerras <paulus@ozlabs.org>, rcu@vger.kernel.org
+Subject: Re: [PATCH RFC 0/5] Remove some notrace RCU APIs
+Reply-To: paulmck@linux.ibm.com
+References: <20190524234933.5133-1-joel@joelfernandes.org>
+ <20190524232458.4bcf4eb4@gandalf.local.home>
+ <20190525081444.GC197789@google.com>
+ <20190525070826.16f76ee7@gandalf.local.home>
+ <20190525141954.GA176647@google.com>
+ <20190525155035.GE28207@linux.ibm.com>
+ <20190525181407.GA220326@google.com>
 MIME-Version: 1.0
-References: <155851393823.15728.9489409117921369593.stgit@devnote2> <155851395498.15728.830529496248543583.stgit@devnote2>
-In-Reply-To: <155851395498.15728.830529496248543583.stgit@devnote2>
-From:   Anders Roxell <anders.roxell@linaro.org>
-Date:   Tue, 28 May 2019 14:23:43 +0200
-Message-ID: <CADYN=9KHQPQTgy==TYZ5iD_zViPbHq4hgOUwuX69aQWV6vZOQg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] tracing/kprobe: Add kprobe_event= boot parameter
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-doc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190525181407.GA220326@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19052812-0072-0000-0000-00000434284E
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011175; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01209781; UDB=6.00635551; IPR=6.00990810;
+ MB=3.00027084; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-28 12:24:48
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052812-0073-0000-0000-00004C6504FA
+Message-Id: <20190528122447.GS28207@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-28_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905280081
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 May 2019 at 10:32, Masami Hiramatsu <mhiramat@kernel.org> wrote:
->
-> Add kprobe_event= boot parameter to define kprobe events
-> at boot time.
-> The definition syntax is similar to tracefs/kprobe_events
-> interface, but use ',' and ';' instead of ' ' and '\n'
-> respectively. e.g.
->
->   kprobe_event=p,vfs_read,$arg1,$arg2
->
-> This puts a probe on vfs_read with argument1 and 2, and
-> enable the new event.
->
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+On Sat, May 25, 2019 at 02:14:07PM -0400, Joel Fernandes wrote:
+> On Sat, May 25, 2019 at 08:50:35AM -0700, Paul E. McKenney wrote:
+> > On Sat, May 25, 2019 at 10:19:54AM -0400, Joel Fernandes wrote:
+> > > On Sat, May 25, 2019 at 07:08:26AM -0400, Steven Rostedt wrote:
+> > > > On Sat, 25 May 2019 04:14:44 -0400
+> > > > Joel Fernandes <joel@joelfernandes.org> wrote:
+> > > > 
+> > > > > > I guess the difference between the _raw_notrace and just _raw variants
+> > > > > > is that _notrace ones do a rcu_check_sparse(). Don't we want to keep
+> > > > > > that check?  
+> > > > > 
+> > > > > This is true.
+> > > > > 
+> > > > > Since the users of _raw_notrace are very few, is it worth keeping this API
+> > > > > just for sparse checking? The API naming is also confusing. I was expecting
+> > > > > _raw_notrace to do fewer checks than _raw, instead of more. Honestly, I just
+> > > > > want to nuke _raw_notrace as done in this series and later we can introduce a
+> > > > > sparse checking version of _raw if need-be. The other option could be to
+> > > > > always do sparse checking for _raw however that used to be the case and got
+> > > > > changed in http://lists.infradead.org/pipermail/linux-afs/2016-July/001016.html
+> > > > 
+> > > > What if we just rename _raw to _raw_nocheck, and _raw_notrace to _raw ?
+> > > 
+> > > That would also mean changing 160 usages of _raw to _raw_nocheck in the
+> > > kernel :-/.
+> > > 
+> > > The tracing usage of _raw_notrace is only like 2 or 3 users. Can we just call
+> > > rcu_check_sparse directly in the calling code for those and eliminate the APIs?
+> > > 
+> > > I wonder what Paul thinks about the matter as well.
+> > 
+> > My thought is that it is likely that a goodly number of the current uses
+> > of _raw should really be some form of _check, with lockdep expressions
+> > spelled out.  Not that working out what exactly those lockdep expressions
+> > should be is necessarily a trivial undertaking.  ;-)
+> 
+> Yes, currently where I am a bit stuck is the rcu_dereference_raw()
+> cannot possibly know what SRCU domain it is under, so lockdep cannot check if
+> an SRCU lock is held without the user also passing along the SRCU domain. I
+> am trying to change lockdep to see if it can check if *any* srcu domain lock
+> is held (regardless of which one) and complain if none are. This is at least
+> better than no check at all.
+> 
+> However, I think it gets tricky for mutexes. If you have something like:
+> mutex_lock(some_mutex);
+> p = rcu_dereference_raw(gp);
+> mutex_unlock(some_mutex);
+> 
+> This might be a perfectly valid invocation of _raw, however my checks (patch
+> is still cooking) trigger a lockdep warning becase _raw cannot know that this
+> is Ok. lockdep thinks it is not in a reader section. This then gets into the
+> territory of a new rcu_derference_raw_protected(gp, assert_held(some_mutex))
+> which sucks because its yet another API. To circumvent this issue, can we
+> just have callers of rcu_dereference_raw ensure that they call
+> rcu_read_lock() if they are protecting dereferences by a mutex? That would
+> make things a lot easier and also may be Ok since rcu_read_lock is quite
+> cheap.
 
-I built an arm64 kernel from todays linux-next tag next-20190528 and
-ran in to this issue when I booted it up in qemu:
+Why not just rcu_dereference_protected(lockdep_is_held(some_mutex))?
+The API is already there, and no need for spurious readers.
 
-[    9.068772][    T1] CPU: 0 PID: 1 Comm: swapper/0 Not tainted
-5.2.0-rc2-next-20190528-00019-g9a6008710716 #8
-[    9.072893][    T1] Hardware name: linux,dummy-virt (DT)
-[    9.075143][    T1] pstate: 80400005 (Nzcv daif +PAN -UAO)
-[    9.077528][    T1] pc : kprobe_target+0x0/0x30
-[    9.079479][    T1] lr : init_test_probes+0x134/0x540
-[    9.081611][    T1] sp : ffff80003f51fbe0
-[    9.083331][    T1] x29: ffff80003f51fbe0 x28: ffff200013c17820
-[    9.085906][    T1] x27: ffff200015d3ab40 x26: ffff2000122bb120
-[    9.088491][    T1] x25: 0000000000000000 x24: ffff200013c08ae0
-[    9.091068][    T1] x23: ffff200015d39000 x22: ffff200013a15ac8
-[    9.093667][    T1] x21: 1ffff00007ea3f86 x20: ffff200015d39420
-[    9.096214][    T1] x19: ffff2000122bad20 x18: 0000000000001400
-[    9.098831][    T1] x17: 0000000000000000 x16: ffff80003f510040
-[    9.101410][    T1] x15: 0000000000001480 x14: 1ffff00007ea3ea2
-[    9.103963][    T1] x13: 00000000f1f1f1f1 x12: ffff040002782e0d
-[    9.106549][    T1] x11: 1fffe40002782e0c x10: ffff040002782e0c
-[    9.109120][    T1] x9 : 1fffe40002782e0c x8 : dfff200000000000
-[    9.111676][    T1] x7 : ffff040002782e0d x6 : ffff200013c17067
-[    9.114234][    T1] x5 : ffff80003f510040 x4 : 0000000000000000
-[    9.116843][    T1] x3 : ffff200010427508 x2 : 0000000000000000
-[    9.119409][    T1] x1 : ffff200010426e10 x0 : 0000000000a6326b
-[    9.121980][    T1] Call trace:
-[    9.123380][    T1]  kprobe_target+0x0/0x30
-[    9.125205][    T1]  init_kprobes+0x2b8/0x300
-[    9.127074][    T1]  do_one_initcall+0x4c0/0xa68
-[    9.129076][    T1]  kernel_init_freeable+0x3c4/0x4e4
-[    9.131234][    T1]  kernel_init+0x14/0x1fc
-[    9.133032][    T1]  ret_from_fork+0x10/0x18
-[    9.134908][    T1] Code: a9446bf9 f9402bfb a8d87bfd d65f03c0 (d4200080)
-[    9.137845][    T1] ---[ end trace 49243ee03446b072 ]---
-[    9.140114][    T1] Kernel panic - not syncing: Fatal exception
-[    9.142684][    T1] ---[ end Kernel panic - not syncing: Fatal exception ]---
+> > That aside, if we are going to change the name of an API that is
+> > used 160 places throughout the tree, we would need to have a pretty
+> > good justification.  Without such a justification, it will just look
+> > like pointless churn to the various developers and maintainers on the
+> > receiving end of the patches.
+> 
+> Actually, the API name change is not something I want to do, it is Steven
+> suggestion. My suggestion is let us just delete _raw_notrace and just use the
+> _raw API for tracing, since _raw doesn't do any tracing anyway. Steve pointed
+> that _raw_notrace does sparse checking unlike _raw, but I think that isn't an
+> issue since _raw doesn't do such checking at the moment anyway.. (if possible
+> check my cover letter again for details/motivation of this series).
 
-I bisected down to this commit as the one that introduces this issue.
-I'm unsure why this causes the call trace though, any ideas?
+Understood, but regardless of who suggested it, if we are to go through
+with it, good justification will be required.  ;-)
 
-Cheers,
-Anders
+							Thanx, Paul
+
+> thanks!
+> 
+>  - Joel
+> 
+> > 							Thanx, Paul
+> > 
+> > > thanks, Steven!
+> > > 
+> > 
+> 
+
