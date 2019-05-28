@@ -2,98 +2,101 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0662C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4600C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DAD9216FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:32:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98849216FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:32:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BjzA/Baj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tp4Euh6r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727251AbfE1Rc2 (ORCPT
+        id S1727279AbfE1Rcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 13:32:28 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:52630 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726602AbfE1Rc1 (ORCPT
+        Tue, 28 May 2019 13:32:50 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:53008 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726819AbfE1Rcu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 13:32:27 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4SHWLEc125462;
-        Tue, 28 May 2019 12:32:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559064741;
-        bh=+XAh1rn1DmZmFVkCu8Os6B8Nn8qFNsfps9mYhSpW/OU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=BjzA/Baj5LeyaDfxIOsk6yuJaPFhKP7auVMPihrW5GVeZrTjtI4OdylSyEMgWgGlx
-         ayb6HtHqmiM/zUqTd66v/ZihbcRlP6/UiUU4YBkwW0lt/cuK/THxHKKLKsKyPpjSZU
-         KZuS0j9dpa7RJ5OFzFeYIrt3MHaTdJPLuPPOo+Js=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4SHWLeG073786
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 28 May 2019 12:32:21 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 28
- May 2019 12:32:21 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 28 May 2019 12:32:21 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4SHWLho064319;
-        Tue, 28 May 2019 12:32:21 -0500
-Subject: Re: [PATCH v3 1/9] leds: multicolor: Add sysfs interface definition
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
-        <robh+dt@kernel.org>
-CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190523190820.29375-1-dmurphy@ti.com>
- <20190523190820.29375-2-dmurphy@ti.com>
- <f01ac400-efda-80a8-4d63-1e2add5e054a@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <185abdd6-100c-0a71-2da9-8f556d8ea701@ti.com>
-Date:   Tue, 28 May 2019 12:32:21 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 28 May 2019 13:32:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=8hqQ/4mY+bEfn2TTxujxDR99aFDvZhBW5ujyUYsewrA=; b=tp4Euh6rEs5ztJp2Jat+Uqdvn
+        czVGXFImP9LykLjKyzlEaOFjzQ3IOl3Wf5G+k4+2dOgAHWCVtnv2kfAmkGLpCsy8ME63e0c377YWM
+        EVAFoj16561WdTQutv/JVyOrCiTLlx894bbHEKW6OqY9c2ye0o6JzPNHaMbRKqpA33k1dI1sweW9i
+        zk/xyhyncKacrc3WhfmGr9ggCUj/k4eya7Dgn9Yzjhds9Orb3tG36g2tGNshyXNPwbfvXYykEiATq
+        pgnj0pfe9QLsrOC6J8sJi7CJbpPjbIM+QjJOyGn55704x2tWs0HstV8esLSUR3Im/7QQmtIPQfpJk
+        H7ru2Veig==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hVfxd-0005ts-TE; Tue, 28 May 2019 17:32:30 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A8A25200E9AEF; Tue, 28 May 2019 19:32:28 +0200 (CEST)
+Date:   Tue, 28 May 2019 19:32:28 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     Young Xiao <92siuyang@gmail.com>, linux@armlinux.org.uk,
+        mark.rutland@arm.com, mingo@redhat.com, bp@alien8.de,
+        hpa@zytor.com, x86@kernel.org, kan.liang@linux.intel.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        ravi.bangoria@linux.vnet.ibm.com, mpe@ellerman.id.au
+Subject: Re: [PATCH] perf: Fix oops when kthread execs user process
+Message-ID: <20190528173228.GW2623@hirez.programming.kicks-ass.net>
+References: <1559046689-24091-1-git-send-email-92siuyang@gmail.com>
+ <20190528140103.GT2623@hirez.programming.kicks-ass.net>
+ <20190528153224.GE20758@fuggles.cambridge.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <f01ac400-efda-80a8-4d63-1e2add5e054a@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190528153224.GE20758@fuggles.cambridge.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacek
+On Tue, May 28, 2019 at 04:32:24PM +0100, Will Deacon wrote:
+> On Tue, May 28, 2019 at 04:01:03PM +0200, Peter Zijlstra wrote:
+> > On Tue, May 28, 2019 at 08:31:29PM +0800, Young Xiao wrote:
+> > > When a kthread calls call_usermodehelper() the steps are:
+> > >   1. allocate current->mm
+> > >   2. load_elf_binary()
+> > >   3. populate current->thread.regs
+> > > 
+> > > While doing this, interrupts are not disabled. If there is a perf
+> > > interrupt in the middle of this process (i.e. step 1 has completed
+> > > but not yet reached to step 3) and if perf tries to read userspace
+> > > regs, kernel oops.
+> 
+> This seems to be because pt_regs(current) gives NULL for kthreads on Power.
 
-On 5/27/19 3:00 PM, Jacek Anaszewski wrote:
-> Hi Dan,
->
-> Thank you for the update.
->
-> One thing is missing here - we need to document how legacy brightness
-> levels map to the sub-LED color levels, i.e. what you do in
-> multicolor_set_brightness().
+'funny' thing that, perf_sample_regs_user() seems to assume that
+anything with current->mm is in fact a user task, and that assumption is
+just plain wrong, consider use_mm().
 
+So I'm thinking the right thing to do here is something like the below;
+umh should get PF_KTHREAD cleared when it passes exec(). And this should
+also fix the power splat I'm thinking.
 
-Ok so i will need to document the algorithm that is used to determine 
-the color LED brightness.
+---
 
-
-Dan
-
->
-> Best regards,
-> Jacek Anaszewski
->
-
-<snip>
-
->
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index abbd4b3b96c2..9929404b6eb9 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -5923,7 +5923,7 @@ static void perf_sample_regs_user(struct perf_regs *regs_user,
+ 	if (user_mode(regs)) {
+ 		regs_user->abi = perf_reg_abi(current);
+ 		regs_user->regs = regs;
+-	} else if (current->mm) {
++	} else if (!(current->flags & PF_KTHREAD) && current->mm) {
+ 		perf_get_regs_user(regs_user, regs, regs_user_copy);
+ 	} else {
+ 		regs_user->abi = PERF_SAMPLE_REGS_ABI_NONE;
