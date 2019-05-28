@@ -2,312 +2,116 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38402C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 551A0C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 122EF20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28A8021726
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:43:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbfE1Omf (ORCPT
+        id S1726925AbfE1Oni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 10:42:35 -0400
-Received: from relay.sw.ru ([185.231.240.75]:34512 "EHLO relay.sw.ru"
+        Tue, 28 May 2019 10:43:38 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57674 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726719AbfE1Omd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 10:42:33 -0400
-Received: from [172.16.25.169]
-        by relay.sw.ru with esmtp (Exim 4.91)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1hVdJ4-000562-M9; Tue, 28 May 2019 17:42:26 +0300
-Subject: Re: [PATCH 1/3] mm: thp: make deferred split shrinker memcg aware
-To:     Yang Shi <yang.shi@linux.alibaba.com>, hannes@cmpxchg.org,
-        mhocko@suse.com, kirill.shutemov@linux.intel.com, hughd@google.com,
-        shakeelb@google.com, akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <1559047464-59838-1-git-send-email-yang.shi@linux.alibaba.com>
- <1559047464-59838-2-git-send-email-yang.shi@linux.alibaba.com>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <487665fe-c792-5078-292a-481f33d31d30@virtuozzo.com>
-Date:   Tue, 28 May 2019 17:42:25 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1726504AbfE1Onh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 10:43:37 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6432130833AF;
+        Tue, 28 May 2019 14:43:37 +0000 (UTC)
+Received: from treble (ovpn-122-72.rdu2.redhat.com [10.10.122.72])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 488B37C550;
+        Tue, 28 May 2019 14:43:34 +0000 (UTC)
+Date:   Tue, 28 May 2019 09:43:28 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Matt Helsley <mhelsley@vmware.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RFC][PATCH 00/13] Cleanup recordmcount and begin objtool
+ conversion
+Message-ID: <20190528144328.6wygc2ofk5oaggaf@treble>
+References: <cover.1558569448.git.mhelsley@vmware.com>
 MIME-Version: 1.0
-In-Reply-To: <1559047464-59838-2-git-send-email-yang.shi@linux.alibaba.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <cover.1558569448.git.mhelsley@vmware.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 28 May 2019 14:43:37 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Yang,
-
-On 28.05.2019 15:44, Yang Shi wrote:
-> Currently THP deferred split shrinker is not memcg aware, this may cause
-> premature OOM with some configuration. For example the below test would
-> run into premature OOM easily:
+On Wed, May 22, 2019 at 05:03:23PM -0700, Matt Helsley wrote:
+> This series cleans up recordmcount and then makes it into
+> an objtool subcommand.
 > 
-> $ cgcreate -g memory:thp
-> $ echo 4G > /sys/fs/cgroup/memory/thp/memory/limit_in_bytes
-> $ cgexec -g memory:thp transhuge-stress 4000
+> The series starts with 8 cleanup patches which make recordmcount
+> easier to review and integrate with objtool. The final 5 patches
+> show the beginning steps of converting recordmcount to use objtool's
+> ELF code rather than its own open-coded methods of accessing ELF
+> files.
+
+Hi Matt,
+
+Thanks for the patches.  This looks like a good step in the right
+direction.
+
+What's the performance difference between the old recordmcount and the
+new version which relies on elf_open()?  It would be useful to compare
+kernel build times, before and after.
+
+Would it be feasible to eventually combine subcommands so that objtool
+could do both ORC and mcount generation in a single invocation?  I
+wonder what what the interface would look like.
+
+> Matt Helsley (13):
+>   recordmcount: Remove redundant strcmp
+>   recordmcount: Remove uread()
+>   recordmcount: Remove unused fd from uwrite() and ulseek()
+>   recordmcount: Rewrite error/success handling
+>   recordmcount: Kernel style function signature formatting
+>   recordmcount: Kernel style formatting
+>   recordmcount: Remove redundant cleanup() calls
+>   recordmcount: Clarify what cleanup() does
+>   objtool: Prepare to merge recordmcount
+>   objtool: Make recordmcount into an objtool subcmd
+>   objtool: recordmcount: Start using objtool's elf wrapper
+>   objtool: recordmcount: Search for __mcount_loc before walking the
+>     sections
+>   objtool: recordmcount: Convert do_func() relhdrs
 > 
-> transhuge-stress comes from kernel selftest.
+>  scripts/.gitignore                         |   1 -
+>  scripts/Makefile                           |   1 -
+>  scripts/Makefile.build                     |  22 +-
+>  tools/objtool/.gitignore                   |   1 +
+>  tools/objtool/Build                        |   1 +
+>  tools/objtool/Makefile                     |   7 +-
+>  tools/objtool/builtin-mcount.c             |  72 +++++
+>  tools/objtool/builtin-mcount.h             |  23 ++
+>  tools/objtool/builtin.h                    |   6 +
+>  tools/objtool/objtool.c                    |   6 +
+>  {scripts => tools/objtool}/recordmcount.c  | 350 ++++++++++-----------
+>  {scripts => tools/objtool}/recordmcount.h  | 197 +++++++-----
+>  {scripts => tools/objtool}/recordmcount.pl |   0
+>  13 files changed, 420 insertions(+), 267 deletions(-)
+>  create mode 100644 tools/objtool/builtin-mcount.c
+>  create mode 100644 tools/objtool/builtin-mcount.h
+>  rename {scripts => tools/objtool}/recordmcount.c (78%)
+>  rename {scripts => tools/objtool}/recordmcount.h (78%)
+>  rename {scripts => tools/objtool}/recordmcount.pl (100%)
 > 
-> It is easy to hit OOM, but there are still a lot THP on the deferred
-> split queue, memcg direct reclaim can't touch them since the deferred
-> split shrinker is not memcg aware.
+> -- 
+> 2.20.1
 > 
-> Convert deferred split shrinker memcg aware by introducing per memcg
-> deferred split queue.  The THP should be on either per node or per memcg
-> deferred split queue if it belongs to a memcg.  When the page is
-> immigrated to the other memcg, it will be immigrated to the target
-> memcg's deferred split queue too.
-> 
-> And, move deleting THP from deferred split queue in page free before
-> memcg uncharge so that the page's memcg information is available.
-> 
-> Reuse the second tail page's deferred_list for per memcg list since the
-> same THP can't be on multiple deferred split queues.
-> 
-> Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-> Cc: Hugh Dickins <hughd@google.com>
-> Cc: Shakeel Butt <shakeelb@google.com>
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-> ---
->  include/linux/huge_mm.h    |  24 ++++++
->  include/linux/memcontrol.h |   6 ++
->  include/linux/mm_types.h   |   7 +-
->  mm/huge_memory.c           | 182 +++++++++++++++++++++++++++++++++------------
->  mm/memcontrol.c            |  20 +++++
->  mm/swap.c                  |   4 +
->  6 files changed, 194 insertions(+), 49 deletions(-)
-> 
-> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-> index 7cd5c15..f6d1cde 100644
-> --- a/include/linux/huge_mm.h
-> +++ b/include/linux/huge_mm.h
-> @@ -250,6 +250,26 @@ static inline bool thp_migration_supported(void)
->  	return IS_ENABLED(CONFIG_ARCH_ENABLE_THP_MIGRATION);
->  }
->  
-> +static inline struct list_head *page_deferred_list(struct page *page)
-> +{
-> +	/*
-> +	 * Global deferred list in the second tail pages is occupied by
-> +	 * compound_head.
-> +	 */
-> +	return &page[2].deferred_list;
-> +}
-> +
-> +static inline struct list_head *page_memcg_deferred_list(struct page *page)
-> +{
-> +	/*
-> +	 * Memcg deferred list in the second tail pages is occupied by
-> +	 * compound_head.
-> +	 */
-> +	return &page[2].memcg_deferred_list;
-> +}
-> +
-> +extern void del_thp_from_deferred_split_queue(struct page *);
-> +
->  #else /* CONFIG_TRANSPARENT_HUGEPAGE */
->  #define HPAGE_PMD_SHIFT ({ BUILD_BUG(); 0; })
->  #define HPAGE_PMD_MASK ({ BUILD_BUG(); 0; })
-> @@ -368,6 +388,10 @@ static inline bool thp_migration_supported(void)
->  {
->  	return false;
->  }
-> +
-> +static inline void del_thp_from_deferred_split_queue(struct page *page)
-> +{
-> +}
->  #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
->  
->  #endif /* _LINUX_HUGE_MM_H */
-> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-> index bc74d6a..9ff5fab 100644
-> --- a/include/linux/memcontrol.h
-> +++ b/include/linux/memcontrol.h
-> @@ -316,6 +316,12 @@ struct mem_cgroup {
->  	struct list_head event_list;
->  	spinlock_t event_list_lock;
->  
-> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> +	struct list_head split_queue;
-> +	unsigned long split_queue_len;
-> +	spinlock_t split_queue_lock;
-> +#endif
-> +
->  	struct mem_cgroup_per_node *nodeinfo[0];
->  	/* WARNING: nodeinfo must be the last member here */
->  };
-> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-> index 8ec38b1..405f5e6 100644
-> --- a/include/linux/mm_types.h
-> +++ b/include/linux/mm_types.h
-> @@ -139,7 +139,12 @@ struct page {
->  		struct {	/* Second tail page of compound page */
->  			unsigned long _compound_pad_1;	/* compound_head */
->  			unsigned long _compound_pad_2;
-> -			struct list_head deferred_list;
-> +			union {
-> +				/* Global THP deferred split list */
-> +				struct list_head deferred_list;
-> +				/* Memcg THP deferred split list */
-> +				struct list_head memcg_deferred_list;
 
-Why we need two namesakes for this list entry?
-
-For me it looks redundantly: it does not give additional information,
-but it leads to duplication (and we have two helpers page_deferred_list()
-and page_memcg_deferred_list() instead of one).
-
-> +			};
->  		};
->  		struct {	/* Page table pages */
->  			unsigned long _pt_pad_1;	/* compound_head */
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index 9f8bce9..0b9cfe1 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -492,12 +492,6 @@ pmd_t maybe_pmd_mkwrite(pmd_t pmd, struct vm_area_struct *vma)
->  	return pmd;
->  }
->  
-> -static inline struct list_head *page_deferred_list(struct page *page)
-> -{
-> -	/* ->lru in the tail pages is occupied by compound_head. */
-> -	return &page[2].deferred_list;
-> -}
-> -
->  void prep_transhuge_page(struct page *page)
->  {
->  	/*
-> @@ -505,7 +499,10 @@ void prep_transhuge_page(struct page *page)
->  	 * as list_head: assuming THP order >= 2
->  	 */
->  
-> -	INIT_LIST_HEAD(page_deferred_list(page));
-> +	if (mem_cgroup_disabled())
-> +		INIT_LIST_HEAD(page_deferred_list(page));
-> +	else
-> +		INIT_LIST_HEAD(page_memcg_deferred_list(page));
->  	set_compound_page_dtor(page, TRANSHUGE_PAGE_DTOR);
->  }
->  
-> @@ -2664,6 +2661,7 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
->  	bool mlocked;
->  	unsigned long flags;
->  	pgoff_t end;
-> +	struct mem_cgroup *memcg = head->mem_cgroup;
->  
->  	VM_BUG_ON_PAGE(is_huge_zero_page(page), page);
->  	VM_BUG_ON_PAGE(!PageLocked(page), page);
-> @@ -2744,17 +2742,30 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
->  	}
->  
->  	/* Prevent deferred_split_scan() touching ->_refcount */
-> -	spin_lock(&pgdata->split_queue_lock);
-> +	if (!memcg)
-> +		spin_lock(&pgdata->split_queue_lock);
-> +	else
-> +		spin_lock(&memcg->split_queue_lock);
->  	count = page_count(head);
->  	mapcount = total_mapcount(head);
->  	if (!mapcount && page_ref_freeze(head, 1 + extra_pins)) {
-> -		if (!list_empty(page_deferred_list(head))) {
-> -			pgdata->split_queue_len--;
-> -			list_del(page_deferred_list(head));
-> +		if (!memcg) {
-> +			if (!list_empty(page_deferred_list(head))) {
-> +				pgdata->split_queue_len--;
-> +				list_del(page_deferred_list(head));
-> +			}
-> +		} else {
-> +			if (!list_empty(page_memcg_deferred_list(head))) {
-> +				memcg->split_queue_len--;
-> +				list_del(page_memcg_deferred_list(head));
-> +			}
->  		}
->  		if (mapping)
->  			__dec_node_page_state(page, NR_SHMEM_THPS);
-> -		spin_unlock(&pgdata->split_queue_lock);
-> +		if (!memcg)
-> +			spin_unlock(&pgdata->split_queue_lock);
-> +		else
-> +			spin_unlock(&memcg->split_queue_lock);
->  		__split_huge_page(page, list, end, flags);
->  		if (PageSwapCache(head)) {
->  			swp_entry_t entry = { .val = page_private(head) };
-> @@ -2771,7 +2782,10 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
->  			dump_page(page, "total_mapcount(head) > 0");
->  			BUG();
->  		}
-> -		spin_unlock(&pgdata->split_queue_lock);
-> +		if (!memcg)
-> +			spin_unlock(&pgdata->split_queue_lock);
-> +		else
-> +			spin_unlock(&memcg->split_queue_lock);
->  fail:		if (mapping)
->  			xa_unlock(&mapping->i_pages);
->  		spin_unlock_irqrestore(&pgdata->lru_lock, flags);
-> @@ -2791,17 +2805,40 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
->  	return ret;
->  }
->  
-> -void free_transhuge_page(struct page *page)
-> +void del_thp_from_deferred_split_queue(struct page *page)
->  {
->  	struct pglist_data *pgdata = NODE_DATA(page_to_nid(page));
->  	unsigned long flags;
-> +	struct mem_cgroup *memcg = compound_head(page)->mem_cgroup;
->  
-> -	spin_lock_irqsave(&pgdata->split_queue_lock, flags);
-> -	if (!list_empty(page_deferred_list(page))) {
-> -		pgdata->split_queue_len--;
-> -		list_del(page_deferred_list(page));
-> +	/*
-> +	 * The THP may be not on LRU at this point, e.g. the old page of
-> +	 * NUMA migration.  And PageTransHuge is not enough to distinguish
-> +	 * with other compound page, e.g. skb, THP destructor is not used
-> +	 * anymore and will be removed, so the compound order sounds like
-> +	 * the only choice here.
-> +	 */
-> +	if (PageTransHuge(page) && compound_order(page) == HPAGE_PMD_ORDER) {
-> +		if (!memcg) {
-> +			spin_lock_irqsave(&pgdata->split_queue_lock, flags);
-> +			if (!list_empty(page_deferred_list(page))) {
-> +				pgdata->split_queue_len--;
-> +				list_del(page_deferred_list(page));
-> +			}
-> +			spin_unlock_irqrestore(&pgdata->split_queue_lock, flags);
-> +		} else {
-> +			spin_lock_irqsave(&memcg->split_queue_lock, flags);
-> +			if (!list_empty(page_memcg_deferred_list(page))) {
-> +				memcg->split_queue_len--;
-> +				list_del(page_memcg_deferred_list(page));
-> +			}
-> +			spin_unlock_irqrestore(&memcg->split_queue_lock, flags);
-
-Such the patterns look like a duplication of functionality, we already have
-in list_lru: it handles both root_mem_cgroup and all children memcg.
-
-Should we try to reuse that code, and to switch huge pages shrinker
-into generic code?
-
-(Yeah, currently we allocate memcg_cache_ida IDS only for kmem, but we may
- consider to allocate them for any cases, since now we have new memcg shrinkers
- like you introduce).
-
-[...]
-
-Thanks,
-Kirill
+-- 
+Josh
