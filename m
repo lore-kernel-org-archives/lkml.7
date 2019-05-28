@@ -2,145 +2,103 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 319E2C04E84
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A63BC072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 090AB206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:58:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7091E206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:58:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="klV+0RK4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727626AbfE1X6t (ORCPT
+        id S1727701AbfE1X6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 19:58:49 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53600 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727036AbfE1X6s (ORCPT
+        Tue, 28 May 2019 19:58:55 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40409 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727397AbfE1X6f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 19:58:48 -0400
-Received: by mail-wm1-f66.google.com with SMTP id d17so294269wmb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 16:58:47 -0700 (PDT)
+        Tue, 28 May 2019 19:58:35 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 15so276974wmg.5;
+        Tue, 28 May 2019 16:58:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=GZyffYfMPKchEX6Qggp4RmN0jCDvBMdBfEYe+t4NqOI=;
+        b=klV+0RK4nucqfGR5SkClN8gc6IeW37MGz7hTGRPx+FjPQuxx+A04zkL7YhCEEKk0aq
+         9ODqW+VYhuW+J2e0zDQ1cldPWagbdG8s0l5Qt4fclEN8TNS4hbt2T+WE2kfPRqBNIxsH
+         X9Gq/BpOM52B4kjtuhph8L5iwk/VVY4sM0N51MISCReUgkeN8x4ADGwYeXORUcDd2c34
+         pC4URtjRcV+sucBMA+3WDdkYWY37EX4nh304bSJZHkVGU/YQjrwIllV87U3NgX2K/wq8
+         e7g2Fu90gR2+lqJLe1eolgRpGogvLOjispZXqYp8Ev7HAoJR9TYLZyLzVCZGHs2JxWn+
+         qUcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xi6hRmlV/rkYRZXwRwO7EpD99nzQCtGBu1E4jVd0OG0=;
-        b=Ab2zrIKXDuM3wH/3vleTi9v18qOFqdElCjs6oFhjb0djlC1D9ABTLkHJK3UUsZgwsn
-         jkWx9AIzJuBInwij1Athq5uxujlQ8llomV1NukkmT+HEajHepYwsPCG7hOzYGSp4CVwB
-         /xnLRtkwb+vs1A9OpiQgHt4Ic1Wb3TwQxOgrbXA/mdbVY6Bu/bilMA6EE62L9Sc2/ZIY
-         8MoeGrKF2udYBK6Ddqb9dfCYOzSu7by1RizrxXIdaEnKCjJbcE4sL57OGwAToYqUrr2M
-         rnlSp5Fvic8JvHEOwPAidOhkq7QukxXwY8lYCjk05Eh49qFcWUjiRyyMUk/DOm5wStfT
-         s2tw==
-X-Gm-Message-State: APjAAAXKSjAcuirMZ8qRiHnlGJrCjSi3h2U7AK7p6Ip+7eRei5ESowew
-        nVEN7gPAmdz/aVWxK17qdOXXrofjOcQ=
-X-Google-Smtp-Source: APXvYqxfl6xm2qcJA8awYqlEkYvzsKyFY1ok6e7KAzVB9YFi3gVE4bn35EcLiejKxDcMlJOYMcHy+Q==
-X-Received: by 2002:a05:600c:1109:: with SMTP id b9mr4658543wma.107.1559087926470;
-        Tue, 28 May 2019 16:58:46 -0700 (PDT)
-Received: from raver.teknoraver.net (net-93-144-152-91.cust.vodafonedsl.it. [93.144.152.91])
-        by smtp.gmail.com with ESMTPSA id a10sm17826941wrm.94.2019.05.28.16.58.45
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 28 May 2019 16:58:45 -0700 (PDT)
-From:   Matteo Croce <mcroce@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH net-next] net: avoid indirect calls in L4 checksum calculation
-Date:   Wed, 29 May 2019 01:58:44 +0200
-Message-Id: <20190528235844.19360-1-mcroce@redhat.com>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=GZyffYfMPKchEX6Qggp4RmN0jCDvBMdBfEYe+t4NqOI=;
+        b=i3B40czSDWSz/Tsxz9oZ+xQoaW3NYMyfAnA4EwiaspJEp5mXL6xUThMvLFDw1DTVZF
+         ffkmoLNCXsYKQNJILgWo0gL6Gw6XVvCP8FiufDAvLccL/YfYwIlR9aACdVmTVFA2mHyO
+         bnY2AGidHgTGDJtrGKy/maWLHxUPWxiPOaGlr54UY+xFfU1QLVse8Lzl/hQ4CIB3RMjx
+         YsPWCSQ55WIk3auU1pHm1Z8tHLGydBwtMhI6/yOZsNLP38OTVE00PQV7ThCrqa+qK836
+         cNDJO/VNKRG6NvKqyjCzuTCA4BMBHWoDZBI2xqGGG3jKLwjR5VGR8kFxthgB6ceJqej4
+         IPlg==
+X-Gm-Message-State: APjAAAVZhd1BhszRuUi7kvLlRiju2Pz6odSOV/MBZHxJsR9vTeOyQLJ0
+        ZxeAfkeXym5vzYkuDBfKvK4=
+X-Google-Smtp-Source: APXvYqx3YdxtxXesAGbrLO/pWGatsVocFLEqcvKamxWqcYKnHWWlO1ncmg76clzk4SnfvTlOQ5tlxw==
+X-Received: by 2002:a05:600c:2187:: with SMTP id e7mr4723813wme.16.1559087913612;
+        Tue, 28 May 2019 16:58:33 -0700 (PDT)
+Received: from localhost.localdomain ([86.121.27.188])
+        by smtp.gmail.com with ESMTPSA id f3sm1207505wre.93.2019.05.28.16.58.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 May 2019 16:58:33 -0700 (PDT)
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch,
+        davem@davemloft.net, richardcochran@gmail.com,
+        john.stultz@linaro.org, tglx@linutronix.de, sboyd@kernel.org
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Vladimir Oltean <olteanv@gmail.com>
+Subject: [PATCH net-next 5/5] net: dsa: sja1105: Increase priority of CPU-trapped frames
+Date:   Wed, 29 May 2019 02:56:27 +0300
+Message-Id: <20190528235627.1315-6-olteanv@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190528235627.1315-1-olteanv@gmail.com>
+References: <20190528235627.1315-1-olteanv@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 283c16a2dfd3 ("indirect call wrappers: helpers to speed-up
-indirect calls of builtin") introduces some macros to avoid doing
-indirect calls.
+Without noticing any particular issue, this patch ensures that
+management traffic is treated with the maximum priority on RX by the
+switch.  This is generally desirable, as the driver keeps a state
+machine that waits for metadata follow-up frames as soon as a management
+frame is received.  Increasing the priority helps expedite the reception
+(and further reconstruction) of the RX timestamp to the driver after the
+MAC has generated it.
 
-Use these helpers to remove two indirect calls in the L4 checksum
-calculation for devices which don't have hardware support for it.
-
-As a test I generate packets with pktgen out to a dummy interface
-with HW checksumming disabled, to have the checksum calculated in
-every sent packet.
-The packet rate measured with an i7-6700K CPU and a single pktgen
-thread raised from 6143 to 6608 Kpps, an increase by 7.5%
-
-Suggested-by: Davide Caratti <dcaratti@redhat.com>
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
+Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
 ---
- net/core/skbuff.c | 22 ++++++++++++++++++----
- 1 file changed, 18 insertions(+), 4 deletions(-)
+ drivers/net/dsa/sja1105/sja1105_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index e89be6282693..a24a7ef55ce9 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -69,6 +69,7 @@
- #include <net/sock.h>
- #include <net/checksum.h>
- #include <net/ip6_checksum.h>
-+#include <net/sctp/checksum.h>
- #include <net/xfrm.h>
- 
- #include <linux/uaccess.h>
-@@ -76,9 +77,22 @@
- #include <linux/highmem.h>
- #include <linux/capability.h>
- #include <linux/user_namespace.h>
-+#include <linux/indirect_call_wrapper.h>
- 
- #include "datagram.h"
- 
-+#if IS_ENABLED(CONFIG_IP_SCTP)
-+#define CSUM_UPDATE(f, ...) \
-+	INDIRECT_CALL_2(f, csum_partial_ext, sctp_csum_update, __VA_ARGS__)
-+#define CSUM_COMBINE(f, ...) \
-+	INDIRECT_CALL_2(f, csum_block_add_ext, sctp_csum_combine, __VA_ARGS__)
-+#else
-+#define CSUM_UPDATE(f, ...) \
-+	INDIRECT_CALL_1(f, csum_partial_ext, __VA_ARGS__)
-+#define CSUM_COMBINE(f, ...) \
-+	INDIRECT_CALL_1(f, csum_block_add_ext, __VA_ARGS__)
-+#endif
-+
- struct kmem_cache *skbuff_head_cache __ro_after_init;
- static struct kmem_cache *skbuff_fclone_cache __ro_after_init;
- #ifdef CONFIG_SKB_EXTENSIONS
-@@ -2507,7 +2521,7 @@ __wsum __skb_checksum(const struct sk_buff *skb, int offset, int len,
- 	if (copy > 0) {
- 		if (copy > len)
- 			copy = len;
--		csum = ops->update(skb->data + offset, copy, csum);
-+		csum = CSUM_UPDATE(ops->update, skb->data + offset, copy, csum);
- 		if ((len -= copy) == 0)
- 			return csum;
- 		offset += copy;
-@@ -2534,9 +2548,9 @@ __wsum __skb_checksum(const struct sk_buff *skb, int offset, int len,
- 					      frag->page_offset + offset - start,
- 					      copy, p, p_off, p_len, copied) {
- 				vaddr = kmap_atomic(p);
--				csum2 = ops->update(vaddr + p_off, p_len, 0);
-+				csum2 = CSUM_UPDATE(ops->update, vaddr + p_off, p_len, 0);
- 				kunmap_atomic(vaddr);
--				csum = ops->combine(csum, csum2, pos, p_len);
-+				csum = CSUM_COMBINE(ops->combine, csum, csum2, pos, p_len);
- 				pos += p_len;
- 			}
- 
-@@ -2559,7 +2573,7 @@ __wsum __skb_checksum(const struct sk_buff *skb, int offset, int len,
- 				copy = len;
- 			csum2 = __skb_checksum(frag_iter, offset - start,
- 					       copy, 0, ops);
--			csum = ops->combine(csum, csum2, pos, copy);
-+			csum = CSUM_COMBINE(ops->combine, csum, csum2, pos, copy);
- 			if ((len -= copy) == 0)
- 				return csum;
- 			offset += copy;
+diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
+index ce516615536d..3bd250e4e070 100644
+--- a/drivers/net/dsa/sja1105/sja1105_main.c
++++ b/drivers/net/dsa/sja1105/sja1105_main.c
+@@ -380,7 +380,7 @@ static int sja1105_init_general_params(struct sja1105_private *priv)
+ 		.mirr_ptacu = 0,
+ 		.switchid = priv->ds->index,
+ 		/* Priority queue for link-local frames trapped to CPU */
+-		.hostprio = 0,
++		.hostprio = 7,
+ 		.mac_fltres1 = SJA1105_LINKLOCAL_FILTER_A,
+ 		.mac_flt1    = SJA1105_LINKLOCAL_FILTER_A_MASK,
+ 		.incl_srcpt1 = true,
 -- 
-2.21.0
+2.17.1
 
