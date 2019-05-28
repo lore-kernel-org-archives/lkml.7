@@ -2,187 +2,240 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2819DC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 812C0C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7ED720B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:59:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="WmXfvDLJ";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="mz3MGrm9"
+	by mail.kernel.org (Postfix) with ESMTP id 5D11320B7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:00:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727191AbfE1T71 (ORCPT
+        id S1727337AbfE1UAR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 15:59:27 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:43886 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726452AbfE1T70 (ORCPT
+        Tue, 28 May 2019 16:00:17 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38466 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726994AbfE1UAR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 15:59:26 -0400
-Received: from pps.filterd (m0044008.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4SJwv4R008757;
-        Tue, 28 May 2019 12:59:13 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=LkSxTZxdxqWXHs6bcjODkfy5ThgF4ZzKI+BFcFNhJwc=;
- b=WmXfvDLJbX5jj5IFNgc0Wbxcie3JyXKz9Bk3P4JXDoblWYirieoymNy8a43A8rPtyjlv
- a+7676R4Xe6PtyLU232Wz1VTz8k7FgXegFLYnOf7eGQXu/N1kUZHgqPegNxC3nYcd3kV
- AgXMKWUaCJDzC89vCHMFvtIL0uK1O7kHVQo= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2ss90cgn9c-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 28 May 2019 12:59:13 -0700
-Received: from prn-mbx07.TheFacebook.com (2620:10d:c081:6::21) by
- prn-hub03.TheFacebook.com (2620:10d:c081:35::127) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Tue, 28 May 2019 12:58:21 -0700
-Received: from prn-hub01.TheFacebook.com (2620:10d:c081:35::125) by
- prn-mbx07.TheFacebook.com (2620:10d:c081:6::21) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Tue, 28 May 2019 12:58:21 -0700
-Received: from NAM04-SN1-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Tue, 28 May 2019 12:58:21 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LkSxTZxdxqWXHs6bcjODkfy5ThgF4ZzKI+BFcFNhJwc=;
- b=mz3MGrm9QwsvbTIAx5Q3kP7X2sKuVY/oejW6MoPS8f8Y0CrH7SlH9GlLZxfSGbpJ8Qw/lJH/ptvSFpYKxqWL6sB097D1QFMuAbwF6dIlXVGxK0gJLzzEJtPhN8LpHfPG9WwwjMrBqiYlfrMKJTNCyu05IHUz3bnYGjU6QebJxW4=
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
- BYAPR15MB2487.namprd15.prod.outlook.com (52.135.198.160) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.20; Tue, 28 May 2019 19:58:18 +0000
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::d4f6:b485:69ee:fd9a]) by BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::d4f6:b485:69ee:fd9a%7]) with mapi id 15.20.1922.021; Tue, 28 May 2019
- 19:58:18 +0000
-From:   Roman Gushchin <guro@fb.com>
-To:     Vladimir Davydov <vdavydov.dev@gmail.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "Johannes Weiner" <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        "Waiman Long" <longman@redhat.com>
-Subject: Re: [PATCH v5 6/7] mm: reparent slab memory on cgroup removal
-Thread-Topic: [PATCH v5 6/7] mm: reparent slab memory on cgroup removal
-Thread-Index: AQHVEBPW5GLT+zCswEKkIpLsH/n20qaA52gAgAAXzAA=
-Date:   Tue, 28 May 2019 19:58:17 +0000
-Message-ID: <20190528195808.GA27847@tower.DHCP.thefacebook.com>
-References: <20190521200735.2603003-1-guro@fb.com>
- <20190521200735.2603003-7-guro@fb.com>
- <20190528183302.zv75bsxxblc6v4dt@esperanza>
-In-Reply-To: <20190528183302.zv75bsxxblc6v4dt@esperanza>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: CO2PR04CA0105.namprd04.prod.outlook.com
- (2603:10b6:104:6::31) To BYAPR15MB2631.namprd15.prod.outlook.com
- (2603:10b6:a03:152::24)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::3:3dca]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d059af63-d800-4bfc-0653-08d6e3a6d30b
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR15MB2487;
-x-ms-traffictypediagnostic: BYAPR15MB2487:
-x-microsoft-antispam-prvs: <BYAPR15MB248790949526E0D694A8A4EBBE1E0@BYAPR15MB2487.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 00514A2FE6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(346002)(39860400002)(396003)(376002)(366004)(199004)(189003)(99286004)(4326008)(7736002)(71200400001)(71190400001)(66476007)(52116002)(66446008)(66946007)(64756008)(54906003)(7416002)(33656002)(386003)(8936002)(102836004)(53936002)(6916009)(305945005)(1076003)(76176011)(73956011)(6246003)(6506007)(229853002)(186003)(316002)(478600001)(6436002)(6486002)(256004)(86362001)(6116002)(5660300002)(6512007)(14444005)(9686003)(486006)(2906002)(25786009)(8676002)(66556008)(68736007)(81156014)(81166006)(14454004)(46003)(446003)(11346002)(476003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2487;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: PaCwO8r1jCJ0jLYhVjjURG5ajZfOsFcB3KOO4rrSPsg6QydzTe7hD/zEG+RZuz0b62EfU2kZgk/CdQRkz+QJcF//4y5vuQdO5r/zswk+Fx/305MkU8m8eQCh/lY7O0FWhQumn4xnGYGPo3T1IonprqGqcGA2nMeDGacbLVI1vCQ4nOksTlhwBuKhmHWPS8UWi5m9aGzXty+yfnQO9L5YAkXCPTmjQBUke1Yl8k5QQ/6kOYYL4qGCTi8C7T7GnyC3xdf1Lzhjd1OgGHxS3wMw4rTE0F7WAJ1qfX+W5SpUVMABZGCmX68Ji4c+App3XEsDZFoeyjamSabt4Ln5OOBqgGUxU+dafO1217w/WHCJ3jL8YFMtHkxZPMAwYIYU4WDJZnKBf/KwyF4uPnem9pSsRdFWqzs/Yw2tmYfZ+1eFpgc=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <0850A1DD02DABC429A7DDA28E4AFE9A8@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 28 May 2019 16:00:17 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4SJslFZ031242
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 16:00:15 -0400
+Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ss8x06x11-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 16:00:15 -0400
+Received: from localhost
+        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Tue, 28 May 2019 21:00:13 +0100
+Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
+        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 28 May 2019 21:00:09 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4SK082Z37290332
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 May 2019 20:00:08 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 98419B2065;
+        Tue, 28 May 2019 20:00:08 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7370BB206A;
+        Tue, 28 May 2019 20:00:08 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 28 May 2019 20:00:08 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 22C5716C2983; Tue, 28 May 2019 13:00:14 -0700 (PDT)
+Date:   Tue, 28 May 2019 13:00:14 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>, kvm-ppc@vger.kernel.org,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Paul Mackerras <paulus@ozlabs.org>, rcu@vger.kernel.org
+Subject: Re: [PATCH RFC 0/5] Remove some notrace RCU APIs
+Reply-To: paulmck@linux.ibm.com
+References: <20190524234933.5133-1-joel@joelfernandes.org>
+ <20190524232458.4bcf4eb4@gandalf.local.home>
+ <20190525081444.GC197789@google.com>
+ <20190525070826.16f76ee7@gandalf.local.home>
+ <20190525141954.GA176647@google.com>
+ <20190525155035.GE28207@linux.ibm.com>
+ <20190525181407.GA220326@google.com>
+ <20190528122447.GS28207@linux.ibm.com>
+ <20190528190007.GC252809@google.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: d059af63-d800-4bfc-0653-08d6e3a6d30b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2019 19:58:18.4683
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: guro@fb.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2487
-X-OriginatorOrg: fb.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190528190007.GC252809@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19052820-0072-0000-0000-0000043450AF
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011176; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01209932; UDB=6.00635641; IPR=6.00990962;
+ MB=3.00027090; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-28 20:00:13
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052820-0073-0000-0000-00004C660678
+Message-Id: <20190528200014.GV28207@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-28_09:,,
  signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905280125
-X-FB-Internal: deliver
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905280124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 09:33:02PM +0300, Vladimir Davydov wrote:
-> On Tue, May 21, 2019 at 01:07:34PM -0700, Roman Gushchin wrote:
-> > Let's reparent memcg slab memory on memcg offlining. This allows us
-> > to release the memory cgroup without waiting for the last outstanding
-> > kernel object (e.g. dentry used by another application).
-> >=20
-> > So instead of reparenting all accounted slab pages, let's do reparent
-> > a relatively small amount of kmem_caches. Reparenting is performed as
-> > a part of the deactivation process.
-> >=20
-> > Since the parent cgroup is already charged, everything we need to do
-> > is to splice the list of kmem_caches to the parent's kmem_caches list,
-> > swap the memcg pointer and drop the css refcounter for each kmem_cache
-> > and adjust the parent's css refcounter. Quite simple.
-> >=20
-> > Please, note that kmem_cache->memcg_params.memcg isn't a stable
-> > pointer anymore. It's safe to read it under rcu_read_lock() or
-> > with slab_mutex held.
-> >=20
-> > We can race with the slab allocation and deallocation paths. It's not
-> > a big problem: parent's charge and slab global stats are always
-> > correct, and we don't care anymore about the child usage and global
-> > stats. The child cgroup is already offline, so we don't use or show it
-> > anywhere.
-> >=20
-> > Local slab stats (NR_SLAB_RECLAIMABLE and NR_SLAB_UNRECLAIMABLE)
-> > aren't used anywhere except count_shadow_nodes(). But even there it
-> > won't break anything: after reparenting "nodes" will be 0 on child
-> > level (because we're already reparenting shrinker lists), and on
-> > parent level page stats always were 0, and this patch won't change
-> > anything.
-> >=20
-> > Signed-off-by: Roman Gushchin <guro@fb.com>
-> > Reviewed-by: Shakeel Butt <shakeelb@google.com>
->=20
-> This one looks good to me. I can't see why anything could possibly go
-> wrong after this change.
+On Tue, May 28, 2019 at 03:00:07PM -0400, Joel Fernandes wrote:
+> On Tue, May 28, 2019 at 05:24:47AM -0700, Paul E. McKenney wrote:
+> > On Sat, May 25, 2019 at 02:14:07PM -0400, Joel Fernandes wrote:
+> > > On Sat, May 25, 2019 at 08:50:35AM -0700, Paul E. McKenney wrote:
+> > > > On Sat, May 25, 2019 at 10:19:54AM -0400, Joel Fernandes wrote:
+> > > > > On Sat, May 25, 2019 at 07:08:26AM -0400, Steven Rostedt wrote:
+> > > > > > On Sat, 25 May 2019 04:14:44 -0400
+> > > > > > Joel Fernandes <joel@joelfernandes.org> wrote:
+> > > > > > 
+> > > > > > > > I guess the difference between the _raw_notrace and just _raw variants
+> > > > > > > > is that _notrace ones do a rcu_check_sparse(). Don't we want to keep
+> > > > > > > > that check?  
+> > > > > > > 
+> > > > > > > This is true.
+> > > > > > > 
+> > > > > > > Since the users of _raw_notrace are very few, is it worth keeping this API
+> > > > > > > just for sparse checking? The API naming is also confusing. I was expecting
+> > > > > > > _raw_notrace to do fewer checks than _raw, instead of more. Honestly, I just
+> > > > > > > want to nuke _raw_notrace as done in this series and later we can introduce a
+> > > > > > > sparse checking version of _raw if need-be. The other option could be to
+> > > > > > > always do sparse checking for _raw however that used to be the case and got
+> > > > > > > changed in http://lists.infradead.org/pipermail/linux-afs/2016-July/001016.html
+> > > > > > 
+> > > > > > What if we just rename _raw to _raw_nocheck, and _raw_notrace to _raw ?
+> > > > > 
+> > > > > That would also mean changing 160 usages of _raw to _raw_nocheck in the
+> > > > > kernel :-/.
+> > > > > 
+> > > > > The tracing usage of _raw_notrace is only like 2 or 3 users. Can we just call
+> > > > > rcu_check_sparse directly in the calling code for those and eliminate the APIs?
+> > > > > 
+> > > > > I wonder what Paul thinks about the matter as well.
+> > > > 
+> > > > My thought is that it is likely that a goodly number of the current uses
+> > > > of _raw should really be some form of _check, with lockdep expressions
+> > > > spelled out.  Not that working out what exactly those lockdep expressions
+> > > > should be is necessarily a trivial undertaking.  ;-)
+> > > 
+> > > Yes, currently where I am a bit stuck is the rcu_dereference_raw()
+> > > cannot possibly know what SRCU domain it is under, so lockdep cannot check if
+> > > an SRCU lock is held without the user also passing along the SRCU domain. I
+> > > am trying to change lockdep to see if it can check if *any* srcu domain lock
+> > > is held (regardless of which one) and complain if none are. This is at least
+> > > better than no check at all.
+> > > 
+> > > However, I think it gets tricky for mutexes. If you have something like:
+> > > mutex_lock(some_mutex);
+> > > p = rcu_dereference_raw(gp);
+> > > mutex_unlock(some_mutex);
+> > > 
+> > > This might be a perfectly valid invocation of _raw, however my checks (patch
+> > > is still cooking) trigger a lockdep warning becase _raw cannot know that this
+> > > is Ok. lockdep thinks it is not in a reader section. This then gets into the
+> > > territory of a new rcu_derference_raw_protected(gp, assert_held(some_mutex))
+> > > which sucks because its yet another API. To circumvent this issue, can we
+> > > just have callers of rcu_dereference_raw ensure that they call
+> > > rcu_read_lock() if they are protecting dereferences by a mutex? That would
+> > > make things a lot easier and also may be Ok since rcu_read_lock is quite
+> > > cheap.
+> > 
+> > Why not just rcu_dereference_protected(lockdep_is_held(some_mutex))?
+> > The API is already there, and no need for spurious readers.
+> 
+> Hmm, so I gave a bad example, here is a better example:
+> 
+> fib_get_table calls hlist_for_each_entry_rcu()
+> hlist_for_each_entry_rcu calls rcu_dereference_raw().
+> 
+> This is perfectly Ok to be called under rtnl_mutex. However rcu_dererence_raw
+> in hlist_for_each_entry_rcu has no way of knowing that the rtnl_mutex held is
+> sufficient for the protection since it is not directly called by the caller.
 
-Hi Vladimir!
+Agreed, and this just happens to be one of the use cases that led to
+rcu_dereference_raw().  The calling code (in this case, FIB) simply has
+no idea what the synchronization strategy might be.
 
-Thank you for looking into the series. Really appreciate it!
+> I am almost sure I saw other examples of rcu_dereference_raw being called
+> this way as well.
 
-It looks like outstanding questions are:
-1) synchronization around the dying flag
-2) removing CONFIG_SLOB in 2/7
-3) early sysfs_slab_remove()
-4) mem_cgroup_from_kmem in 7/7
+And I am OK with this sort of use case.  The ones I am less happy with
+are the ones where there really is a lockdep expression that could be
+constructed.
 
-Please, let me know if I missed anything.
+> I was trying to make an "automatic" lockdep check for all this, but it is
+> quite hard to do so without passing down lockdep experessions down a call
+> chain thus complicating all such callchains.
 
-I'm waiting now for Johanness's review, so I'll address these issues
-in background and post the next (and hopefully) final version.
+Understood!  Not an easy task.
 
-Thanks!
+> Further I don't think code can trivially be converted from
+> rcu_dereference_raw to rcu_dereference_protected even if the protection being
+> offered is known, since the former does not do sparse checking and the latter
+> might trigger false sparse checks in case the pointer in concern is protected
+> both by RCU and non-RCU methods. I believe this is why you removed sparse
+> checking from rcu_dereference_raw as well:
+> 
+> http://lists.infradead.org/pipermail/linux-afs/2016-July/001016.html
+
+Good point!
+
+> > > > That aside, if we are going to change the name of an API that is
+> > > > used 160 places throughout the tree, we would need to have a pretty
+> > > > good justification.  Without such a justification, it will just look
+> > > > like pointless churn to the various developers and maintainers on the
+> > > > receiving end of the patches.
+> > > 
+> > > Actually, the API name change is not something I want to do, it is Steven
+> > > suggestion. My suggestion is let us just delete _raw_notrace and just use the
+> > > _raw API for tracing, since _raw doesn't do any tracing anyway. Steve pointed
+> > > that _raw_notrace does sparse checking unlike _raw, but I think that isn't an
+> > > issue since _raw doesn't do such checking at the moment anyway.. (if possible
+> > > check my cover letter again for details/motivation of this series).
+> > 
+> > Understood, but regardless of who suggested it, if we are to go through
+> > with it, good justification will be required.  ;-)
+> 
+> Ok ;-). About the names of the APIs, I thought of leaving rcu_dereference_raw
+> and its callers intact, and just rename:
+> 
+>  * hlist_for_each_entry_rcu_notrace
+>  * rcu_dereference_raw_notrace
+> 
+> to:
+>  * hlist_for_each_entry_rcu_sparse
+>  * rcu_dereference_raw_sparse
+> 
+> The _sparse would stand for "sparse checking". However I am open to better
+> names..
+> 
+> Such renaming would avoid confusion and keep the fact about sparse checking
+> less ambiguous.
+
+Let's give people a few days to propose different names, and if nothing
+compelling, those names look good.  There are not very many of them, so
+the penalty for having to rename is quite low.
+
+							Thanx, Paul
+
