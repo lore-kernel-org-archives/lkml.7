@@ -2,310 +2,95 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD91C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5904EC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7F5420883
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:22:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Gx+5MLP2"
+	by mail.kernel.org (Postfix) with ESMTP id 3076F208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:22:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559071355;
+	bh=NNBPdal1/mPJSYY/vCIJCUtKr1A1D9YM+1nS3i59aSE=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Q6/xhuD2MaG/IqxwIPdSCTveKcqFd/NgrV5qd6b88wF4zcsx4SItIDTVj/A0FZHia
+	 lE+Qi5YldFnlsygpQNOO8TDiG3p9gbh8+cphMpFGKXmAupGmaNvR1X5hesZ+NELU/R
+	 PAX/PKbYojnBX4PHeKBbtFMD8PbcPKcZSBYq1Who=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727386AbfE1TWF (ORCPT
+        id S1727655AbfE1TWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 15:22:05 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:46512 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726795AbfE1TWE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 15:22:04 -0400
-Received: by mail-ua1-f67.google.com with SMTP id a95so8444502uaa.13
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 12:22:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=o51SeYBfVRyasaL8DkaZePzzAuT4juHYF4hX6xOnKiM=;
-        b=Gx+5MLP2FDWOPXWy6czETvegxYXSZwbIucUqOc1Qf8P2FO3umVCVFVhoqkZSx7MT3o
-         3ZTGMaIsnzBfkyIVjkiDXwAvuS0DGzp/lIz/e0mfQjdtXUCwCjnRRerWoOPdNC2F9lru
-         VeAMhWhHympLCCUHsNWHw8z5EB/X9l93i9mElATUKTrib+XZvaGvGGSW3GqN7GjVUJpa
-         SgX5Uwsc8SCY4dBErVxgV6V2v0lg0LFZ8R88NBC61ilOYoaEL/ZccrAoYt/yGjHgjTO3
-         8CBZAu3GE3m1Yt93tZWfOTH+kXNTnaXu/nJdgzih09h9ovzcBfr9XPRXLIhwW/SwGVl8
-         eGFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o51SeYBfVRyasaL8DkaZePzzAuT4juHYF4hX6xOnKiM=;
-        b=KUxbAMr/BXYtLs4S0nNzxhOoiHSCyIrmgqDnQruV5fRTCBuCucB59YgEM7bwBpSm+3
-         OQyiDA38LsBwrasd9EpD8gUPTIeSzJJwHP+Ex9SB/3PkC5PfxmAB2/rDzyQcF6gq5CDt
-         0ndh6+YujUPmBtqXWJ+yothIjMCyfLlRzfMtURzyLzDMIcJH9VAcUxBR2UdiIVGI3vWO
-         j3kBCDdPtIUYyU7SQEWHN4zb/ARSQ3wekhjXtzhTo7sPCtFOIk0pp1uFXuZT0BBGxiud
-         2PT5Q/kveQgBt9De7TjZ5rqm9X2Cig1cwK+edwK1cWAkwG6ccN7BhGe8+qwVnylz9aGe
-         EnSg==
-X-Gm-Message-State: APjAAAWjWY6rXL1X1BSp4ep3ZDEdjGflwrzqjnW5LKHxbimaZXQwcNqr
-        IlxqHMQ0p8um04IoKbvXF7QWtAVWVQh0ydBhZ+XfYg==
-X-Google-Smtp-Source: APXvYqxq83kXFEOLbADw2n/1zs0kcaN0zXUr1gStJ+CzcAafZwaxBuMfO06ZSd63b61fxvj11okHHU6DG92954qEiBw=
-X-Received: by 2002:a9f:2103:: with SMTP id 3mr57230678uab.100.1559071323390;
- Tue, 28 May 2019 12:22:03 -0700 (PDT)
+        Tue, 28 May 2019 15:22:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33020 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726876AbfE1TWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 15:22:20 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 486F420717;
+        Tue, 28 May 2019 19:22:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559071339;
+        bh=NNBPdal1/mPJSYY/vCIJCUtKr1A1D9YM+1nS3i59aSE=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=e1nbRXCK4zkM43bwpA5IrqL1jWKct4Vq1WA8Ly1whHC4PevDXtD8UwtxpDcbwlBcX
+         u/Iy2IByYwwRF19Qp4GyUTYlrxIALyEi6wSSyzRpxuAIegbR20IpBovAr6moj9KZWm
+         p33c+UH3muKLCd+niSSyVHKnZqH4ONYuiwzaoRzE=
+Date:   Tue, 28 May 2019 21:22:14 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Dongli Zhang <dongli.zhang@oracle.com>
+cc:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org,
+        Keith Busch <keith.busch@intel.com>,
+        Hannes Reinecke <hare@suse.de>, Christoph Hellwig <hch@lst.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: "nosmt" breaks resuming from hibernation (was Re: [5.2-rc1
+ regression]: nvme vs. hibernation)
+In-Reply-To: <nycvar.YFH.7.76.1905281709130.1962@cbobk.fhfr.pm>
+Message-ID: <nycvar.YFH.7.76.1905282118070.1962@cbobk.fhfr.pm>
+References: <nycvar.YFH.7.76.1905241706280.1962@cbobk.fhfr.pm> <20190524154429.GE15192@localhost.localdomain> <nycvar.YFH.7.76.1905250023380.1962@cbobk.fhfr.pm> <92a15981-dfdc-0ac9-72ee-920555a3c1a4@oracle.com> <nycvar.YFH.7.76.1905271126480.1962@cbobk.fhfr.pm>
+ <nycvar.YFH.7.76.1905281709130.1962@cbobk.fhfr.pm>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190429204040.18725-1-dianders@chromium.org>
-In-Reply-To: <20190429204040.18725-1-dianders@chromium.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 28 May 2019 21:21:25 +0200
-Message-ID: <CAPDyKFp0fQ+3CS-DadE9rO-9Npzve-nztY9hRaMdX7Pw9sUZMw@mail.gmail.com>
-Subject: Re: [PATCH v2] mmc: dw_mmc: Disable SDIO interrupts while suspended
- to fix suspend/resume
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Jaehoon Chung <jh80.chung@samsung.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Sonny Rao <sonnyrao@chromium.org>,
-        Emil Renner Berthing <emil.renner.berthing@gmail.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Ryan Case <ryandcase@chromium.org>,
-        "# 4.0+" <stable@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Apr 2019 at 22:41, Douglas Anderson <dianders@chromium.org> wrote:
->
-> Processing SDIO interrupts while dw_mmc is suspended (or partly
-> suspended) seems like a bad idea.  We really don't want to be
-> processing them until we've gotten ourselves fully powered up.
+On Tue, 28 May 2019, Jiri Kosina wrote:
 
-I fully agree.
+> [ some x86/PM folks added ]
+> 
+> I isolated this to 'nosmt' being present in the "outer" (resuming) kernel, 
+> and am still not sure whether this is x86 issue or nvme/PCI/blk-mq issue.
+> 
+> For the newcomers to this thread: on my thinkpad x270, 'nosmt' reliably 
+> breaks resume from hibernation; after the image is read out from disk and 
+> attempt is made to jump to the old kernel, machine reboots.
 
-Although, this is important not only from the host driver/controller
-perspective, but also from the SDIO card (managed by mmc core) point
-of view.
+Thomas figured it out (and this should be really more widespread than just 
+my machine :) ).
 
-In $subject patch you mange the driver/controller issue, but only for
-one specific host driver (dw_mmc). I am thinking that this problem may
-be a rather common problem, so perhaps we should try to address this
-from the core in a way that it affects all host drivers. Did you
-consider that?
+nosmt forces HT siblings to mwait, but that explodes after %cr3 change 
+during resume, as the mwait target address is all of a sudden not valid 
+anymore for neither of the hyperthreads.
 
-The other problem I refer to, is in principle a way to prevent
-sdio_run_irqs() from being executed before the SDIO card has been
-resumed, via mmc_sdio_resume(). It's a separate problem, but certainly
-related. This may need some more thinking to address properly, let's
-just keep this in mind and discuss this in a separate thread.
+That also explains why I apparently didn't see it that regularly with 
+kaslr disabled.
 
->
-> You might be wondering how it's even possible to become suspended when
-> an SDIO interrupt is active.  As can be seen in
-> dw_mci_enable_sdio_irq(), we explicitly keep dw_mmc out of runtime
-> suspend when the SDIO interrupt is enabled.  ...but even though we
-> stop normal runtime suspend transitions when SDIO interrupts are
-> enabled, the dw_mci_runtime_suspend() can still get called for a full
-> system suspend.
->
-> Let's handle all this by explicitly masking SDIO interrupts in the
-> suspend call and unmasking them later in the resume call.  To do this
-> cleanly I'll keep track of whether the client requested that SDIO
-> interrupts be enabled so that we can reliably restore them regardless
-> of whether we're masking them for one reason or another.
->
-> It should be noted that if dw_mci_enable_sdio_irq() is never called
-> (for instance, if we don't have an SDIO card plugged in) that
-> "client_sdio_enb" will always be false.  In those cases this patch
-> adds a tiny bit of overhead to suspend/resume (a spinlock and a
-> read/write of INTMASK) but other than that is a no-op.  The
-> SDMMC_INT_SDIO bit should always be clear and clearing it again won't
-> hurt.
+Nothing to do with nvme, so let's not continue coming up with proper fix 
+in this thread.
 
-Thanks for the detailed problem description. In general your approach
-sounds okay to me, but I have a few questions.
+Thanks,
 
-1) As kind of stated above, did you consider a solution where the core
-simply disables the SDIO IRQ in case it isn't enabled for system
-wakeup? In this way all host drivers would benefit.
+-- 
+Jiri Kosina
+SUSE Labs
 
-2) dw_mmc isn't calling device_init_wakeup() during ->probe(), hence I
-assume it doesn't support the SDIO IRQ being configured as system
-wakeup. Correct? I understand this is platform specific, but still it
-would be good to know your view.
-
-3) Because of 2) The below code in dw_mci_runtime_suspend(), puzzles me:
-"if (host->slot->mmc->pm_flags & MMC_PM_KEEP_POWER)"
-       dw_mci_set_ios(host->slot->mmc, &host->slot->mmc->ios);
-
-Why is 3) needed at all in case system wakeup isn't supported?
-
-A note; the current support in the mmc core for the SDIO IRQ being
-used as system wakeup, really needs some re-work. For example, we
-should convert to use common wakeup interfaces, as to allow the PM
-core to behave correctly during system suspend/resume. These are
-changes that have been scheduled on my TODO list since long time ago,
-I hope I can get some time to look into them soon.
-
->
-> Without this fix it can be seen that rk3288-veyron Chromebooks with
-> Marvell WiFi would sometimes fail to resume WiFi even after picking my
-> recent mwifiex patch [1].  Specifically you'd see messages like this:
->   mwifiex_sdio mmc1:0001:1: Firmware wakeup failed
->   mwifiex_sdio mmc1:0001:1: PREP_CMD: FW in reset state
->
-> ...and tracing through the resume code in the failing cases showed
-> that we were processing a SDIO interrupt really early in the resume
-> call.
->
-> NOTE: downstream in Chrome OS 3.14 and 3.18 kernels (both of which
-> support the Marvell SDIO WiFi card) we had a patch ("CHROMIUM: sdio:
-> Defer SDIO interrupt handling until after resume") [2].  Presumably
-> this is the same problem that was solved by that patch.
-
-Seems reasonable.
-
->
-> [1] https://lkml.kernel.org/r/20190404040106.40519-1-dianders@chromium.org
-> [2] https://crrev.com/c/230765
->
-> Cc: <stable@vger.kernel.org> # 4.14.x
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> I didn't put any "Fixes" tag here, but presumably this could be
-> backported to whichever kernels folks found it useful for.  I have at
-> least confirmed that kernels v4.14 and v4.19 (as well as v5.1-rc2)
-> show the problem.  It is very easy to pick this to v4.19 and it
-> definitely fixes the problem there.
->
-> I haven't spent the time to pick this to 4.14 myself, but presumably
-> it wouldn't be too hard to backport this as far as v4.13 since that
-> contains commit 32dba73772f8 ("mmc: dw_mmc: Convert to use
-> MMC_CAP2_SDIO_IRQ_NOTHREAD for SDIO IRQs").  Prior to that it might
-> make sense for anyone experiencing this problem to just pick the old
-> CHROMIUM patch to fix them.
->
-> Changes in v2:
-> - Suggested 4.14+ in the stable tag (Sasha-bot)
-> - Extra note that this is a noop on non-SDIO (Shawn / Emil)
-> - Make boolean logic cleaner as per https://crrev.com/c/1586207/1
-> - Hopefully clear comments as per https://crrev.com/c/1586207/1
->
->  drivers/mmc/host/dw_mmc.c | 27 +++++++++++++++++++++++----
->  drivers/mmc/host/dw_mmc.h |  3 +++
->  2 files changed, 26 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-> index 80dc2fd6576c..480067b87a94 100644
-> --- a/drivers/mmc/host/dw_mmc.c
-> +++ b/drivers/mmc/host/dw_mmc.c
-> @@ -1664,7 +1664,8 @@ static void dw_mci_init_card(struct mmc_host *mmc, struct mmc_card *card)
->         }
->  }
->
-> -static void __dw_mci_enable_sdio_irq(struct dw_mci_slot *slot, int enb)
-> +static void __dw_mci_enable_sdio_irq(struct dw_mci_slot *slot, bool enb,
-> +                                    bool client_requested)
->  {
->         struct dw_mci *host = slot->host;
->         unsigned long irqflags;
-> @@ -1672,6 +1673,20 @@ static void __dw_mci_enable_sdio_irq(struct dw_mci_slot *slot, int enb)
->
->         spin_lock_irqsave(&host->irq_lock, irqflags);
->
-> +       /*
-> +        * If we're being called directly from dw_mci_enable_sdio_irq()
-> +        * (which means that the client driver actually wants to enable or
-> +        * disable interrupts) then save the request.  Otherwise this
-> +        * wasn't directly requested by the client and we should logically
-> +        * AND it with the client request since we want to disable if
-> +        * _either_ the client disabled OR we have some other reason to
-> +        * disable temporarily.
-> +        */
-> +       if (client_requested)
-> +               host->client_sdio_enb = enb;
-> +       else
-> +               enb &= host->client_sdio_enb;
-> +
->         /* Enable/disable Slot Specific SDIO interrupt */
->         int_mask = mci_readl(host, INTMASK);
->         if (enb)
-> @@ -1688,7 +1703,7 @@ static void dw_mci_enable_sdio_irq(struct mmc_host *mmc, int enb)
->         struct dw_mci_slot *slot = mmc_priv(mmc);
->         struct dw_mci *host = slot->host;
->
-> -       __dw_mci_enable_sdio_irq(slot, enb);
-> +       __dw_mci_enable_sdio_irq(slot, enb, true);
->
->         /* Avoid runtime suspending the device when SDIO IRQ is enabled */
->         if (enb)
-> @@ -1701,7 +1716,7 @@ static void dw_mci_ack_sdio_irq(struct mmc_host *mmc)
->  {
->         struct dw_mci_slot *slot = mmc_priv(mmc);
->
-> -       __dw_mci_enable_sdio_irq(slot, 1);
-> +       __dw_mci_enable_sdio_irq(slot, true, false);
->  }
->
->  static int dw_mci_execute_tuning(struct mmc_host *mmc, u32 opcode)
-> @@ -2734,7 +2749,7 @@ static irqreturn_t dw_mci_interrupt(int irq, void *dev_id)
->                 if (pending & SDMMC_INT_SDIO(slot->sdio_id)) {
->                         mci_writel(host, RINTSTS,
->                                    SDMMC_INT_SDIO(slot->sdio_id));
-> -                       __dw_mci_enable_sdio_irq(slot, 0);
-> +                       __dw_mci_enable_sdio_irq(slot, false, false);
->                         sdio_signal_irq(slot->mmc);
->                 }
->
-> @@ -3424,6 +3439,8 @@ int dw_mci_runtime_suspend(struct device *dev)
->  {
->         struct dw_mci *host = dev_get_drvdata(dev);
->
-> +       __dw_mci_enable_sdio_irq(host->slot, false, false);
-> +
->         if (host->use_dma && host->dma_ops->exit)
->                 host->dma_ops->exit(host);
->
-> @@ -3490,6 +3507,8 @@ int dw_mci_runtime_resume(struct device *dev)
->         /* Now that slots are all setup, we can enable card detect */
->         dw_mci_enable_cd(host);
->
-> +       __dw_mci_enable_sdio_irq(host->slot, true, false);
-> +
->         return 0;
->
->  err:
-> diff --git a/drivers/mmc/host/dw_mmc.h b/drivers/mmc/host/dw_mmc.h
-> index 46e9f8ec5398..dfbace0f5043 100644
-> --- a/drivers/mmc/host/dw_mmc.h
-> +++ b/drivers/mmc/host/dw_mmc.h
-> @@ -127,6 +127,7 @@ struct dw_mci_dma_slave {
->   * @cmd11_timer: Timer for SD3.0 voltage switch over scheme.
->   * @cto_timer: Timer for broken command transfer over scheme.
->   * @dto_timer: Timer for broken data transfer over scheme.
-> + * @client_sdio_enb: The value last passed to enable_sdio_irq.
->   *
->   * Locking
->   * =======
-> @@ -234,6 +235,8 @@ struct dw_mci {
->         struct timer_list       cmd11_timer;
->         struct timer_list       cto_timer;
->         struct timer_list       dto_timer;
-> +
-> +       bool                    client_sdio_enb;
->  };
->
->  /* DMA ops for Internal/External DMAC interface */
-> --
-> 2.21.0.593.g511ec345e18-goog
->
-
-Kind regards
-Uffe
