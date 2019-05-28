@@ -2,145 +2,97 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F3AAC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 04:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44932C46470
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 04:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AC3B2075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 04:18:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DD2D20989
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 04:22:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jndXadi6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727240AbfE1ESf (ORCPT
+        id S1727111AbfE1EWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 00:18:35 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40358 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725817AbfE1ESe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 00:18:34 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 533EBC049E23;
-        Tue, 28 May 2019 04:18:34 +0000 (UTC)
-Received: from x1.home (ovpn-116-22.phx2.redhat.com [10.3.116.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7A0A31001DD7;
-        Tue, 28 May 2019 04:18:31 +0000 (UTC)
-Date:   Mon, 27 May 2019 22:18:31 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Zhang, Tina" <tina.zhang@intel.com>
-Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "Yuan, Hang" <hang.yuan@intel.com>,
-        "kraxel@redhat.com" <kraxel@redhat.com>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "Lv, Zhiyuan" <zhiyuan.lv@intel.com>
-Subject: Re: [PATCH 1/2] vfio: ABI for setting mdev display flip eventfd
-Message-ID: <20190527221831.71bddcc5@x1.home>
-In-Reply-To: <237F54289DF84E4997F34151298ABEBC87620FF2@SHSMSX101.ccr.corp.intel.com>
-References: <20190527084312.8872-1-tina.zhang@intel.com>
-        <20190527084312.8872-2-tina.zhang@intel.com>
-        <20190527080430.28f40888@x1.home>
-        <237F54289DF84E4997F34151298ABEBC87620FF2@SHSMSX101.ccr.corp.intel.com>
-Organization: Red Hat
+        Tue, 28 May 2019 00:22:14 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43014 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbfE1EWN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 00:22:13 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c6so10626741pfa.10
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 21:22:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DeVRVtvo+X+I5ImBe9C0dDj60lKHwgi7pzEoydA8Ywo=;
+        b=jndXadi6lbC6yEcMoPo7/WKVH5GT3Lyf8QI2tyNA91LFhgb1IeHDGL8AqMDpz7QsfB
+         u+xslzdn68hnaPo1Lkx6MSeX2znNX2/loejw+b/rV+ggVgXwfTVHgeh0tpEyqsdNtpoB
+         DnaGhNd0cLZnVmgu/tpQq6vIyKXP2LyqL2IPyWhnoOSvphn7Ay0skojq2+zqXm7uZChG
+         W1LpgOsIqlfnDehjbi5u/CjvENhcthO43JgcaoU7uN+hXbarJ7gm61tcRyPkLw4gcHDI
+         PwYY5afu9oqQGMQ4BuSM056EQ7vnVQTf0Otfxhe4iogzkRNVIKtc0pwddga9KBTIH4JO
+         URsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DeVRVtvo+X+I5ImBe9C0dDj60lKHwgi7pzEoydA8Ywo=;
+        b=LfTLVg6sz7vh1OXchwreYaF3fYV8QQnCy7w8ehsis8HlefSqVU42z7SBvrQAiQLVyw
+         KoRI4WPCghBRWKBi1Y7Oe90CKq6QAYsSpXkFSKs056Fk0hLNCvaLyYB7SB6M08tp7F7c
+         OnyVLqCdDOyQ5fFZgygJd2GPuhxzsWS0EfKRKzY4AjfW3t8q9VaCwY9438ctjeRhE5F+
+         NKBhNkUixoMv4ROhZYX6c35SolYSKIB5O+mR7CoJZcYDdRZXyLh9TY+f9VvxTDYJGURo
+         zDRzqAyooOp3EZbva80VFWFlmLNgjAAlp+LWNf5E2D2HcyGdsO/qefy1AqT1U6RJmTw6
+         nTOw==
+X-Gm-Message-State: APjAAAW/ZScQ0ln96/mtAg97mmcvr9h/cXaIbfkQq/XXB0fpHvlGqRDQ
+        lb1SIfSeexG6CwP1kEmhVEU=
+X-Google-Smtp-Source: APXvYqyph2kqOR+gIGTJcCfaIpzZiAm3HxP8jb+36XA5eaesu5+21KNsO8z7E/qX5xRPC/5Y98JuDg==
+X-Received: by 2002:aa7:8c10:: with SMTP id c16mr93515095pfd.89.1559017333050;
+        Mon, 27 May 2019 21:22:13 -0700 (PDT)
+Received: from localhost ([175.223.45.124])
+        by smtp.gmail.com with ESMTPSA id z9sm11584620pgc.82.2019.05.27.21.22.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 27 May 2019 21:22:12 -0700 (PDT)
+Date:   Tue, 28 May 2019 13:22:08 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RFC] printk/sysrq: Don't play with console_loglevel
+Message-ID: <20190528042208.GD26865@jagdpanzerIV>
+References: <20190528002412.1625-1-dima@arista.com>
+ <4a9c1b20-777d-079a-33f5-ddf0a39ff788@i-love.sakura.ne.jp>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Tue, 28 May 2019 04:18:34 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4a9c1b20-777d-079a-33f5-ddf0a39ff788@i-love.sakura.ne.jp>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 May 2019 01:42:57 +0000
-"Zhang, Tina" <tina.zhang@intel.com> wrote:
+On (05/28/19 12:21), Tetsuo Handa wrote:
+[..]
+> What I suggested in my proposal ("printk: Introduce "store now but print later" prefix." at
+> https://lore.kernel.org/lkml/1550896930-12324-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp/T/#u )
+> is "whether the caller wants to defer printing to consoles regarding
+> this printk() call". And your suggestion is "whether the caller wants
+> to apply ignore_loglevel regarding this printk() call".
 
-> > -----Original Message-----
-> > From: intel-gvt-dev [mailto:intel-gvt-dev-bounces@lists.freedesktop.org] On
-> > Behalf Of Alex Williamson
-> > Sent: Monday, May 27, 2019 10:05 PM
-> > To: Zhang, Tina <tina.zhang@intel.com>
-> > Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > zhenyuw@linux.intel.com; Yuan, Hang <hang.yuan@intel.com>;
-> > kraxel@redhat.com; intel-gvt-dev@lists.freedesktop.org; Lv, Zhiyuan
-> > <zhiyuan.lv@intel.com>
-> > Subject: Re: [PATCH 1/2] vfio: ABI for setting mdev display flip eventfd
-> > 
-> > On Mon, 27 May 2019 16:43:11 +0800
-> > Tina Zhang <tina.zhang@intel.com> wrote:
-> >   
-> > > Add VFIO_DEVICE_SET_GFX_FLIP_EVENTFD ioctl command to set eventfd
-> > > based signaling mechanism to deliver vGPU framebuffer page flip event
-> > > to userspace.
-> > >
-> > > Signed-off-by: Tina Zhang <tina.zhang@intel.com>
-> > > ---
-> > >  include/uapi/linux/vfio.h | 12 ++++++++++++
-> > >  1 file changed, 12 insertions(+)
-> > >
-> > > diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> > > index 02bb7ad6e986..27300597717f 100644
-> > > --- a/include/uapi/linux/vfio.h
-> > > +++ b/include/uapi/linux/vfio.h
-> > > @@ -696,6 +696,18 @@ struct vfio_device_ioeventfd {
-> > >
-> > >  #define VFIO_DEVICE_IOEVENTFD		_IO(VFIO_TYPE, VFIO_BASE +  
-> > 16)  
-> > >
-> > > +/**
-> > > + * VFIO_DEVICE_SET_GFX_FLIP_EVENTFD - _IOW(VFIO_TYPE, VFIO_BASE  
-> > + 17,  
-> > > +__s32)
-> > > + *
-> > > + * Set eventfd based signaling mechanism to deliver vGPU framebuffer
-> > > +page
-> > > + * flip event to userspace. A value of -1 is used to stop the page
-> > > +flip
-> > > + * delivering.
-> > > + *
-> > > + * Return: 0 on success, -errno on failure.
-> > > + */
-> > > +
-> > > +#define VFIO_DEVICE_SET_GFX_FLIP_EVENTFD _IO(VFIO_TYPE,  
-> > VFIO_BASE +  
-> > > +17)
-> > > +
-> > >  /* -------- API for Type1 VFIO IOMMU -------- */
-> > >
-> > >  /**  
-> > 
-> > Why can't we use VFIO_DEVICE_SET_IRQS for this?  We can add a capability
-> > to vfio_irq_info in the same way that we did for regions to describe device
-> > specific IRQ support.  Thanks,  
-> Add a new kind of index, like this?
-> enum {
->         VFIO_PCI_INTX_IRQ_INDEX,
->         VFIO_PCI_MSI_IRQ_INDEX,
->         VFIO_PCI_MSIX_IRQ_INDEX,
->         VFIO_PCI_ERR_IRQ_INDEX,
->         VFIO_PCI_REQ_IRQ_INDEX,
-> +      VFIO_PCI_GFX_FLIP_EVENT_INDEX,
->         VFIO_PCI_NUM_IRQS
-> };
-> Perhaps this is what we don't want. This
-> VFIO_PCI_GFX_FLIP_EVENT_INDEX is specific to graphics card and it's
-> actually an event which is reported by INTX/MSI/ MSIX IRQ. Thanks.
+I'm not sure about "store now but print later" here. What Dmitry is
+talking about:
 
-Right, that is not what I'm suggesting.  What I'm looking for is a
-similar conversion to what we did for regions, where we extended the
-data returned in GET_REGION_INFO to include capabilities
-(c84982adb23b), capped the number of regions we define with fixed
-indexes (c7bb4cb40f89), and added device specific regions, such as IGD
-OpRegion (5846ff54e87d) and IGD host and LPC bridges (f572a960a15e).
-The same thing should happen here, the current value of
-VFIO_PCI_NUM_IRQS becomes fixed and part of the vfio-pci ABI,
-vfio_irq_info is extended with capability support following the same
-mechanism, headers, and helpers we use for regions, then the mdev device
-simply exposes the extended (and backwards compatible) API without
-requiring a device specific ioctl.  Thanks,
+     bump console_loglevel on *this* particular CPU only,
+     not system-wide.
+     /* Which is implemented in a form of - all messages from this-CPU
+      * only should be printed regardless the loglevel, the rest should
+      * pass the usual suppress_message_printing() check. */
 
-Alex
+	-ss
