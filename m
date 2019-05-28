@@ -2,81 +2,230 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=AC_FROM_MANY_DOTS,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB24AC04E84
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 05:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BECC1C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 05:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA0A52075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 05:08:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DB872053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 05:12:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbfE1FIy (ORCPT
+        id S1727164AbfE1FMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 01:08:54 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:8150 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725927AbfE1FIx (ORCPT
+        Tue, 28 May 2019 01:12:45 -0400
+Received: from master.debian.org ([82.195.75.110]:58744 "EHLO
+        master.debian.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726269AbfE1FMp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 01:08:53 -0400
-X-IronPort-AV: E=Sophos;i="5.60,520,1549897200"; 
-   d="scan'208";a="16943942"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 28 May 2019 14:08:51 +0900
-Received: from localhost.localdomain (unknown [10.166.17.210])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id E0B2841DEF01;
-        Tue, 28 May 2019 14:08:51 +0900 (JST)
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     kishon@ti.com
-Cc:     linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v2] phy: renesas: rcar-gen2: Fix memory leak at error paths
-Date:   Tue, 28 May 2019 14:04:02 +0900
-Message-Id: <1559019842-8874-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 28 May 2019 01:12:45 -0400
+Received: from pabs by master.debian.org with local (Exim 4.89)
+        (envelope-from <pabs@master.debian.org>)
+        id 1hVUPJ-0004Ec-MW; Tue, 28 May 2019 05:12:17 +0000
+From:   Paul Wise <pabs3@bonedaddy.net>
+To:     Neil Horman <nhorman@tuxdriver.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Paul Wise <pabs3@bonedaddy.net>, Jakub Wilk <jwilk@jwilk.net>
+Subject: [PATCH v3] coredump: Split pipe command whitespace before expanding template
+Date:   Tue, 28 May 2019 13:11:42 +0800
+Message-Id: <20190528051142.24939-1-pabs3@bonedaddy.net>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190521003756.5236-1-pabs3@bonedaddy.net>
+References: <20190521003756.5236-1-pabs3@bonedaddy.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes memory leak at error paths of the probe function.
-In for_each_child_of_node, if the loop returns, the driver should
-call of_put_node() before returns.
+Save the offsets of the start of each argument to avoid having to
+update pointers to each argument after every corename krealloc and
+to avoid having to duplicate the memory for the dump command.
 
-Reported-by: Julia Lawall <julia.lawall@lip6.fr>
-Fixes: 1233f59f745 ("phy: Renesas R-Car Gen2 PHY driver")
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Executable names containing spaces were previously being expanded from
+%e or %E and then split in the middle of the filename. This is incorrect
+behaviour since an argument list can represent arguments with spaces.
+
+The splitting could lead to extra arguments being passed to the core dump
+handler that it might have interpreted as options or ignored completely.
+
+Core dump handlers that are not aware of this Linux kernel issue will be
+using %e or %E without considering that it may be split and so they will
+be vulnerable to processes with spaces in their names breaking their
+argument list. If their internals are otherwise well written, such as
+if they are written in shell but quote arguments, they will work better
+after this change than before. If they are not well written, then there
+is a slight chance of breakage depending on the details of the code but
+they will already be fairly broken by the split filenames.
+
+Core dump handlers that are aware of this Linux kernel issue will be
+placing %e or %E as the last item in their core_pattern and then
+aggregating all of the remaining arguments into one, separated by
+spaces. Alternatively they will be obtaining the filename via other
+methods. Both of these will be compatible with the new arrangement.
+
+A side effect from this change is that unknown template types
+(for example %z) result in an empty argument to the dump handler
+instead of the argument being dropped. This is a desired change as:
+
+It is easier for dump handlers to process empty arguments than dropped
+ones, especially if they are written in shell or don't pass each template
+item with a preceding command-line option in order to differentiate
+between individual template types. Most core_patterns in the wild do not
+use options so they can confuse different template types (especially
+numeric ones) if an earlier one gets dropped in old kernels. If the
+kernel introduces a new template type and a core_pattern uses it, the
+core dump handler might not expect that the argument can be dropped in
+old kernels.
+
+For example, this can result in security issues when %d is dropped in old
+kernels. This happened with the corekeeper package in Debian and resulted
+in the interface between corekeeper and Linux having to be rewritten to
+use command-line options to differentiate between template types.
+
+The core_pattern for most core dump handlers is written by the handler
+author who would generally not insert unknown template types so this
+change should be compatible with all the core dump handlers that exist.
+
+Fixes: 74aadce98605
+Reported-by: Jakub Wilk <jwilk@jwilk.net>
+Reported-in: https://bugs.debian.org/924398
+Reported-by: Paul Wise <pabs3@bonedaddy.net>
+Reported-in: https://lore.kernel.org/linux-fsdevel/c8b7ecb8508895bf4adb62a748e2ea2c71854597.camel@bonedaddy.net/
+Suggested-by: Jakub Wilk <jwilk@jwilk.net>
+Signed-off-by: Paul Wise <pabs3@bonedaddy.net>
 ---
- Changes from v1 (https://patchwork.kernel.org/patch/10831295/):
- - Rebase on renesas-drivers.git / renesas-drivers-2019-05-21-v5.2-rc1 tag.
- - Add Geert-san's Reviewed-by tag.
+ fs/coredump.c | 44 +++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 39 insertions(+), 5 deletions(-)
 
- drivers/phy/renesas/phy-rcar-gen2.c | 2 ++
- 1 file changed, 2 insertions(+)
+Changelog:
+v3 Adjust footer fields, drop obvious comment
+v2 Fix build failure due to typo after variable renaming
 
-diff --git a/drivers/phy/renesas/phy-rcar-gen2.c b/drivers/phy/renesas/phy-rcar-gen2.c
-index 8dc5710..2926e49 100644
---- a/drivers/phy/renesas/phy-rcar-gen2.c
-+++ b/drivers/phy/renesas/phy-rcar-gen2.c
-@@ -391,6 +391,7 @@ static int rcar_gen2_phy_probe(struct platform_device *pdev)
- 		error = of_property_read_u32(np, "reg", &channel_num);
- 		if (error || channel_num > 2) {
- 			dev_err(dev, "Invalid \"reg\" property\n");
-+			of_node_put(np);
- 			return error;
+diff --git a/fs/coredump.c b/fs/coredump.c
+index e42e17e55bfd..b1ea7dfbd149 100644
+--- a/fs/coredump.c
++++ b/fs/coredump.c
+@@ -7,6 +7,7 @@
+ #include <linux/stat.h>
+ #include <linux/fcntl.h>
+ #include <linux/swap.h>
++#include <linux/ctype.h>
+ #include <linux/string.h>
+ #include <linux/init.h>
+ #include <linux/pagemap.h>
+@@ -187,11 +188,13 @@ static int cn_print_exe_file(struct core_name *cn)
+  * name into corename, which must have space for at least
+  * CORENAME_MAX_SIZE bytes plus one byte for the zero terminator.
+  */
+-static int format_corename(struct core_name *cn, struct coredump_params *cprm)
++static int format_corename(struct core_name *cn, struct coredump_params *cprm,
++			   size_t **argv, int *argc)
+ {
+ 	const struct cred *cred = current_cred();
+ 	const char *pat_ptr = core_pattern;
+ 	int ispipe = (*pat_ptr == '|');
++	bool was_space = false;
+ 	int pid_in_pattern = 0;
+ 	int err = 0;
+ 
+@@ -201,12 +204,35 @@ static int format_corename(struct core_name *cn, struct coredump_params *cprm)
+ 		return -ENOMEM;
+ 	cn->corename[0] = '\0';
+ 
+-	if (ispipe)
++	if (ispipe) {
++		int argvs = sizeof(core_pattern) / 2;
++		(*argv) = kmalloc_array(argvs, sizeof(**argv), GFP_KERNEL);
++		if (!(*argv))
++			return -ENOMEM;
++		(*argv)[(*argc)++] = 0;
+ 		++pat_ptr;
++	}
+ 
+ 	/* Repeat as long as we have more pattern to process and more output
+ 	   space */
+ 	while (*pat_ptr) {
++		/*
++		 * Split on spaces before doing template expansion so that
++		 * %e and %E don't get split if they have spaces in them
++		 */
++		if (ispipe) {
++			if (isspace(*pat_ptr)) {
++				was_space = true;
++				pat_ptr++;
++				continue;
++			} else if (was_space) {
++				was_space = false;
++				err = cn_printf(cn, "%c", '\0');
++				if (err)
++					return err;
++				(*argv)[(*argc)++] = cn->used;
++			}
++		}
+ 		if (*pat_ptr != '%') {
+ 			err = cn_printf(cn, "%c", *pat_ptr++);
+ 		} else {
+@@ -546,6 +572,8 @@ void do_coredump(const kernel_siginfo_t *siginfo)
+ 	struct cred *cred;
+ 	int retval = 0;
+ 	int ispipe;
++	size_t *argv = NULL;
++	int argc = 0;
+ 	struct files_struct *displaced;
+ 	/* require nonrelative corefile path and be extra careful */
+ 	bool need_suid_safe = false;
+@@ -592,9 +620,10 @@ void do_coredump(const kernel_siginfo_t *siginfo)
+ 
+ 	old_cred = override_creds(cred);
+ 
+-	ispipe = format_corename(&cn, &cprm);
++	ispipe = format_corename(&cn, &cprm, &argv, &argc);
+ 
+ 	if (ispipe) {
++		int argi;
+ 		int dump_count;
+ 		char **helper_argv;
+ 		struct subprocess_info *sub_info;
+@@ -637,12 +666,16 @@ void do_coredump(const kernel_siginfo_t *siginfo)
+ 			goto fail_dropcount;
  		}
- 		channel->select_mask = select_mask[channel_num];
-@@ -406,6 +407,7 @@ static int rcar_gen2_phy_probe(struct platform_device *pdev)
- 						   data->gen2_phy_ops);
- 			if (IS_ERR(phy->phy)) {
- 				dev_err(dev, "Failed to create PHY\n");
-+				of_node_put(np);
- 				return PTR_ERR(phy->phy);
- 			}
- 			phy_set_drvdata(phy->phy, phy);
+ 
+-		helper_argv = argv_split(GFP_KERNEL, cn.corename, NULL);
++		helper_argv = kmalloc_array(argc + 1, sizeof(*helper_argv),
++					    GFP_KERNEL);
+ 		if (!helper_argv) {
+ 			printk(KERN_WARNING "%s failed to allocate memory\n",
+ 			       __func__);
+ 			goto fail_dropcount;
+ 		}
++		for (argi = 0; argi < argc; argi++)
++			helper_argv[argi] = cn.corename + argv[argi];
++		helper_argv[argi] = NULL;
+ 
+ 		retval = -ENOMEM;
+ 		sub_info = call_usermodehelper_setup(helper_argv[0],
+@@ -652,7 +685,7 @@ void do_coredump(const kernel_siginfo_t *siginfo)
+ 			retval = call_usermodehelper_exec(sub_info,
+ 							  UMH_WAIT_EXEC);
+ 
+-		argv_free(helper_argv);
++		kfree(helper_argv);
+ 		if (retval) {
+ 			printk(KERN_INFO "Core dump to |%s pipe failed\n",
+ 			       cn.corename);
+@@ -766,6 +799,7 @@ void do_coredump(const kernel_siginfo_t *siginfo)
+ 	if (ispipe)
+ 		atomic_dec(&core_dump_count);
+ fail_unlock:
++	kfree(argv);
+ 	kfree(cn.corename);
+ 	coredump_finish(mm, core_dumped);
+ 	revert_creds(old_cred);
 -- 
-2.7.4
+2.20.1
 
