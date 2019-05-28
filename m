@@ -2,88 +2,229 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E32C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28BD4C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5B082070D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:53:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E77DF20989
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:53:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YKs28hvJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="rX/5Do4C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbfE1Kxb (ORCPT
+        id S1726682AbfE1Kxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 06:53:31 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:48434 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbfE1Kxb (ORCPT
+        Tue, 28 May 2019 06:53:36 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:36610 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726282AbfE1Kxf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 06:53:31 -0400
+        Tue, 28 May 2019 06:53:35 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=rB9rrnpARXQkc5fberxbJPE/xh3fmIg0x0UG52AxXP4=; b=YKs28hvJyv3gyvK+hty98NGNe
-        DLsDNV2SrXOuYnF7ikO7js1hf/TfhoJDY9O0M9vTPDKV/P5kiFJHpFrAH6x/03EqfRAWj2WLjMJ3a
-        IXbmLzLxax6uhWFHfbnpnkXcE8+nmbR1CpGyfo0q62ykbdaNU0EB5kewaCoi/I/u6eLD4RoJEB25P
-        UREoDW0DSkVmXN5N31KVAACqSDG8WJcn+1abTe8Q0ZtQxULiIaStytVTE8N2PqnDW93hYFBO1cMeO
-        EKFOgdvKK9PF63LxxZ1IQN8kWsRtfTFkxEDNTh4Hwd6dXGsifcJv97mPxDhyifAxqXVGHbbs8Aykm
-        pTZPmZppQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hVZjF-0002nO-Nv; Tue, 28 May 2019 10:53:13 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 376EE2074C65D; Tue, 28 May 2019 12:53:12 +0200 (CEST)
-Date:   Tue, 28 May 2019 12:53:12 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Hillf Danton <hdanton@sina.com>, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Rik van Riel <riel@surriel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/7] sched/fair: Replace source_load() & target_load() w/
- weighted_cpuload()
-Message-ID: <20190528105312.GO2623@hirez.programming.kicks-ass.net>
-References: <20190527062116.11512-1-dietmar.eggemann@arm.com>
- <20190527062116.11512-3-dietmar.eggemann@arm.com>
- <63ee8775-f159-e172-15f4-2ddf941870ee@arm.com>
+         bh=s7Qw7kQV3M0frNbNWezoUvaapeqqE6aYTrGr7FdZM5c=; b=rX/5Do4CZpbXbTJOC7kJolbxR
+        4IgEzkBAK8yyKiy3C5V2bt7VoYIzRKFHNPCDqeIcwRKvhgtHkS1b7QCE3qz6R9kQW0q798ze192DZ
+        n0wHeYCmiTD5pYfKoPY3MQ2gPXu9SnE4nCuYPUbUgZn434qeHqCrAMTKYpN0/CTN/q3MbCUCAPt/5
+        XpJJgkCgcMkNR9H6kMxdqFCURTBkPKqtcxjlQ8yKfXcPWM8Jm0c4KkCZ/kRgBj6nT5pD9cuu1ee8z
+        uE9ejfd+XN17eqsrVPLs5vG8mWfO5iRgekI993vaE3llOCPqlh9m3ORvotmh+teH6sRpWhZptLfJ3
+        fsBonmyvQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:52672)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1hVZjT-0005FX-O9; Tue, 28 May 2019 11:53:27 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1hVZjP-0003Yf-J9; Tue, 28 May 2019 11:53:23 +0100
+Date:   Tue, 28 May 2019 11:53:23 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Ruslan Babayev <ruslan@babayev.com>
+Cc:     mika.westerberg@linux.intel.com, wsa@the-dreams.de, andrew@lunn.ch,
+        f.fainelli@gmail.com, hkallweit1@gmail.com, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-acpi@vger.kernel.org,
+        xe-linux-external@cisco.com
+Subject: Re: [net-next,v3 2/2] net: phy: sfp: enable i2c-bus detection on
+ ACPI based systems
+Message-ID: <20190528105323.ty6pxxvsh6ccz2l6@shell.armlinux.org.uk>
+References: <20190528032213.19839-1-ruslan@babayev.com>
+ <20190528032213.19839-3-ruslan@babayev.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <63ee8775-f159-e172-15f4-2ddf941870ee@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190528032213.19839-3-ruslan@babayev.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 12:24:52PM +0200, Dietmar Eggemann wrote:
-> On 5/28/19 6:42 AM, Hillf Danton wrote:
-> > 
-> > On Mon, 27 May 2019 07:21:11 +0100 Dietmar Eggemann wrote:
+On Mon, May 27, 2019 at 08:22:13PM -0700, Ruslan Babayev wrote:
+> Lookup I2C adapter using the "i2c-bus" device property on ACPI based
+> systems similar to how it's done with DT.
 > 
-> [...]
+> An example DSD describing an SFP on an ACPI based system:
 > 
-> > > @@ -5500,7 +5464,7 @@ wake_affine_weight(struct sched_domain *sd, struct task_struct *p,
-> > >   		this_eff_load *= 100;
-> > >   	this_eff_load *= capacity_of(prev_cpu);
-> > > -	prev_eff_load = source_load(prev_cpu, sd->wake_idx);
-> > > +	prev_eff_load = weighted_cpuload(cpu_rq(this_cpu));
-> > 					 cpu_rq(prev_cpu)
-> > 
-> > Seems we have no need to see this cpu's load more than once.
+> Device (SFP0)
+> {
+>     Name (_HID, "PRP0001")
+>     Name (_CRS, ResourceTemplate()
+>     {
+>         GpioIo(Exclusive, PullDefault, 0, 0, IoRestrictionNone,
+>                "\\_SB.PCI0.RP01.GPIO", 0, ResourceConsumer)
+>             { 0, 1, 2, 3, 4 }
+>     })
+>     Name (_DSD, Package ()
+>     {
+>         ToUUID ("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+>         Package () {
+>             Package () { "compatible", "sff,sfp" },
+>             Package () { "i2c-bus", \_SB.PCI0.RP01.I2C.MUX.CH0 },
+>             Package () { "maximum-power-milliwatt", 1000 },
+>             Package () { "tx-disable-gpios", Package () { ^SFP0, 0, 0, 1} },
+>             Package () { "reset-gpio",       Package () { ^SFP0, 0, 1, 1} },
+>             Package () { "mod-def0-gpios",   Package () { ^SFP0, 0, 2, 1} },
+>             Package () { "tx-fault-gpios",   Package () { ^SFP0, 0, 3, 0} },
+>             Package () { "los-gpios",        Package () { ^SFP0, 0, 4, 1} },
+>         },
+>     })
+> }
 > 
-> Thanks for catching this! Will fix it in v2.
+> Device (PHY0)
+> {
+>     Name (_HID, "PRP0001")
+>     Name (_DSD, Package ()
+>     {
+>         ToUUID ("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+>         Package () {
+>             Package () { "compatible", "ethernet-phy-ieee802.3-c45" },
+>             Package () { "sfp", \_SB.PCI0.RP01.SFP0 },
+>             Package () { "managed", "in-band-status" },
+>             Package () { "phy-mode", "sgmii" },
+>         },
+>     })
+> }
+> 
+> Signed-off-by: Ruslan Babayev <ruslan@babayev.com>
+> Cc: xe-linux-external@cisco.com
 
-Fixed :-)
+Looks mostly fine to me, thanks.  A few comments below, mostly minor.
+The way we handle the non-DT and non-ACPI case needs addressing though.
+
+> ---
+>  drivers/net/phy/sfp.c | 33 +++++++++++++++++++++++++--------
+>  1 file changed, 25 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/net/phy/sfp.c b/drivers/net/phy/sfp.c
+> index d4635c2178d1..7a6c8df8899b 100644
+> --- a/drivers/net/phy/sfp.c
+> +++ b/drivers/net/phy/sfp.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+>  #include <linux/of.h>
+> +#include <linux/acpi.h>
+>  #include <linux/phy.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/rtnetlink.h>
+
+These includes are arranged in alphabetical order, is there a reason
+why we need acpi.h out of order here?
+
+> @@ -1783,6 +1784,7 @@ static int sfp_probe(struct platform_device *pdev)
+>  {
+>  	const struct sff_data *sff;
+>  	struct sfp *sfp;
+> +	struct i2c_adapter *i2c = NULL;
+
+Please move this one line above, I think that will be neater.
+
+I'm also debating whether we should have it initialised to null - see
+below.
+
+>  	bool poll = false;
+>  	int irq, err, i;
+>  
+> @@ -1801,7 +1803,6 @@ static int sfp_probe(struct platform_device *pdev)
+>  	if (pdev->dev.of_node) {
+>  		struct device_node *node = pdev->dev.of_node;
+>  		const struct of_device_id *id;
+> -		struct i2c_adapter *i2c;
+>  		struct device_node *np;
+>  
+>  		id = of_match_node(sfp_of_match, node);
+> @@ -1818,14 +1819,30 @@ static int sfp_probe(struct platform_device *pdev)
+>  
+>  		i2c = of_find_i2c_adapter_by_node(np);
+>  		of_node_put(np);
+> -		if (!i2c)
+> -			return -EPROBE_DEFER;
+> -
+> -		err = sfp_i2c_configure(sfp, i2c);
+> -		if (err < 0) {
+> -			i2c_put_adapter(i2c);
+> -			return err;
+> +	} else if (ACPI_COMPANION(&pdev->dev)) {
+> +		struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
+> +		struct fwnode_handle *fw = acpi_fwnode_handle(adev);
+> +		struct fwnode_reference_args args;
+> +		struct acpi_handle *acpi_handle;
+> +		int ret;
+> +
+> +		ret = acpi_node_get_property_reference(fw, "i2c-bus", 0, &args);
+> +		if (ACPI_FAILURE(ret) || !is_acpi_device_node(args.fwnode)) {
+> +			dev_err(&pdev->dev, "missing 'i2c-bus' property\n");
+> +			return -ENODEV;
+>  		}
+> +
+> +		acpi_handle = ACPI_HANDLE_FWNODE(args.fwnode);
+> +		i2c = i2c_acpi_find_adapter_by_handle(acpi_handle);
+> +	}
+
+If we don't have DT, and we don't have ACPI, there isn't a way that
+we can find the I2C adapter, so I think we probably ought to fail the
+probe here, rather than...
+
+> +
+> +	if (!i2c)
+> +		return -EPROBE_DEFER;
+
+deferring in that case.  So, basically:
+
+	struct i2c_adapter *i2c;
+
+	if (pdev->dev.of_node) {
+		...
+	} else if (ACPI_COMPANION(&pdev->dev)) {
+		...
+	} else {
+		return -EINVAL;
+	}
+
+	if (!i2c)
+		return -EPROBE_DEFER;
+
+> +
+> +	err = sfp_i2c_configure(sfp, i2c);
+> +	if (err < 0) {
+> +		i2c_put_adapter(i2c);
+> +		return err;
+>  	}
+>  
+>  	for (i = 0; i < GPIO_MAX; i++)
+> -- 
+> 2.19.2
+> 
+> 
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
