@@ -2,140 +2,100 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF15BC072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9773FC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1D0A208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:36:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 683A5208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:38:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbfE1IgJ (ORCPT
+        id S1726792AbfE1IiJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 04:36:09 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:42574 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725943AbfE1IgI (ORCPT
+        Tue, 28 May 2019 04:38:09 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:34852 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726557AbfE1IiI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 04:36:08 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: gtucker)
-        with ESMTPSA id 603D727FF5B
-Subject: Re: linusw/for-next boot bisection: v5.2-rc1-8-g73a790c68d7e on
- rk3288-veyron-jaq
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Elaine Zhang <zhangqing@rock-chips.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Mark Brown <broonie@kernel.org>,
-        Matt Hart <matthew.hart@linaro.org>, mgalka@collabora.com,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-References: <5cec74e8.1c69fb81.37335.9d7b@mx.google.com>
- <0edab48f-06e5-9ed8-09be-7c9976ae1afb@collabora.com>
- <CAMuHMdUF1Csi1ZMccOj=kurijMLcA6G+TP_spsE+fnMvZR71Vw@mail.gmail.com>
-From:   Guillaume Tucker <guillaume.tucker@collabora.com>
-Message-ID: <de92e3bd-70e8-fcba-3c88-c04170704e7b@collabora.com>
-Date:   Tue, 28 May 2019 09:36:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 28 May 2019 04:38:08 -0400
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4S8Ypex005799;
+        Tue, 28 May 2019 03:38:01 -0500
+Authentication-Results: ppops.net;
+        spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from mail1.cirrus.com (mail1.cirrus.com [141.131.3.20])
+        by mx0b-001ae601.pphosted.com with ESMTP id 2sq24q31hw-1;
+        Tue, 28 May 2019 03:38:01 -0500
+Received: from EDIEX02.ad.cirrus.com (unknown [198.61.84.81])
+        by mail1.cirrus.com (Postfix) with ESMTP id 995EB611C8B3;
+        Tue, 28 May 2019 03:38:00 -0500 (CDT)
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 28 May
+ 2019 09:38:00 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Tue, 28 May 2019 09:38:00 +0100
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id EE3A22A1;
+        Tue, 28 May 2019 09:37:59 +0100 (BST)
+Date:   Tue, 28 May 2019 09:37:59 +0100
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     <wsa@the-dreams.de>, <mika.westerberg@linux.intel.com>
+CC:     <jarkko.nikula@linux.intel.com>,
+        <andriy.shevchenko@linux.intel.com>, <linux-i2c@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <benjamin.tissoires@redhat.com>, <jbroadus@gmail.com>,
+        <patches@opensource.cirrus.com>
+Subject: Re: [PATCH v2 3/6] i2c: acpi: Factor out getting the IRQ from ACPI
+Message-ID: <20190528083759.GE28362@ediswmail.ad.cirrus.com>
+References: <20190527151932.14310-1-ckeepax@opensource.cirrus.com>
+ <20190527151932.14310-3-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdUF1Csi1ZMccOj=kurijMLcA6G+TP_spsE+fnMvZR71Vw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190527151932.14310-3-ckeepax@opensource.cirrus.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=815 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905280058
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
-
-On 28/05/2019 08:45, Geert Uytterhoeven wrote:
-> Hi Guillaume,
+On Mon, May 27, 2019 at 04:19:29PM +0100, Charles Keepax wrote:
+> In preparation for future refactoring factor out the fetch of the IRQ
+> into its own helper function.
 > 
-> On Tue, May 28, 2019 at 9:13 AM Guillaume Tucker
-> <guillaume.tucker@collabora.com> wrote:
->> On 28/05/2019 00:38, kernelci.org bot wrote:
->>> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
->>> * This automated bisection report was sent to you on the basis  *
->>> * that you may be involved with the breaking commit it has      *
->>> * found.  No manual investigation has been done to verify it,   *
->>> * and the root cause of the problem may be somewhere else.      *
->>> * Hope this helps!                                              *
->>> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
->>>
->>> linusw/for-next boot bisection: v5.2-rc1-8-g73a790c68d7e on rk3288-veyron-jaq
->>>
->>> Summary:
->>>   Start:      73a790c68d7e Merge branch 'devel' into for-next
->>>   Details:    https://kernelci.org/boot/id/5cebf03d59b514dd627a3629
->>>   Plain log:  https://storage.kernelci.org//linusw/for-next/v5.2-rc1-8-g73a790c68d7e/arm/multi_v7_defconfig/gcc-8/lab-collabora/boot-rk3288-veyron-jaq.txt
->>>   HTML log:   https://storage.kernelci.org//linusw/for-next/v5.2-rc1-8-g73a790c68d7e/arm/multi_v7_defconfig/gcc-8/lab-collabora/boot-rk3288-veyron-jaq.html
->>>   Result:     28694e009e51 thermal: rockchip: fix up the tsadc pinctrl setting error
->>>
->>> Checks:
->>>   revert:     PASS
->>>   verify:     PASS
->>>
->>> Parameters:
->>>   Tree:       linusw
->>>   URL:        https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/
->>>   Branch:     for-next
->>>   Target:     rk3288-veyron-jaq
->>>   CPU arch:   arm
->>>   Lab:        lab-collabora
->>>   Compiler:   gcc-8
->>>   Config:     multi_v7_defconfig
->>>   Test suite: boot
->>>
->>> Breaking commit found:
->>>
->>> -------------------------------------------------------------------------------
->>> commit 28694e009e512451ead5519dd801f9869acb1f60
->>> Author: Elaine Zhang <zhangqing@rock-chips.com>
->>> Date:   Tue Apr 30 18:09:44 2019 +0800
->>>
->>>     thermal: rockchip: fix up the tsadc pinctrl setting error
->>
->> This commit has now been reverted in mainline.  Would it be OK
->> for you to rebase your for-next branch on v5.2-rc2 or cherry-pick
->> the revert to avoid recurring bisections?
->>
->> Ideally this should have been fixed or reverted in mainline
->> before v5.2-rc1 was released, or even earlier when this was first
->> found in -next on 13th May.  Unfortunately it was overlooked and
->> then spread to other branches like yours.
-> 
-> I'm afraid it's gonna spread to even more for-next branches, as most
-> subsystem maintainers base their for-next branch on the previous rc1
-> release.  Typically maintainers do not rebase their for-next branches,
-> and do not cherry-pick fixes, unless they are critical for their
-> subsystem.  So you can expect this to show up in e.g. the m68k for-next
-> branch soon...
+> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> ---
+>  
+> +static int i2c_acpi_get_irq(struct acpi_device *adev)
+> +{
+> +	struct list_head resource_list;
+> +	int irq = -ENOENT;
+> +	int ret;
+> +
+> +	INIT_LIST_HEAD(&resource_list);
+> +
+> +	ret = acpi_dev_get_resources(adev, &resource_list,
+> +				     i2c_acpi_add_resource, &irq);
+> +	if (ret < 0)
+> +		return -EINVAL;
+> +
+> +	acpi_dev_free_resource_list(&resource_list);
+> +
+> +	return irq;
+> +}
+> +
 
-That is what I feared, thanks for confirming.
-
-> Can't you mark this as a known issue, to prevent spending cycles on the
-> same bisection, and sending out more bisection reports for the same
-> issue?
-
-Not really, so I've disabled bisections in the linux-gpio tree
-and a few other maintainers' trees for now.  I'll see if we can
-come up with a more systematic way of suppressing bisections in
-similar cases (i.e. the issue has been fixed in mainline later
-than the base commit for the branch being tested).
+Sorry just noticed I forgot to add the kernel doc. Will fix that
+up in the next spin, or do an incremental patch.
 
 Thanks,
-Guillaume
+Charles
