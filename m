@@ -2,119 +2,84 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D44BEC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC25C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B70C3208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:16:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EF2520883
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:17:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726732AbfE1LQe (ORCPT
+        id S1726759AbfE1LRA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 07:16:34 -0400
-Received: from charlotte.tuxdriver.com ([70.61.120.58]:36292 "EHLO
-        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726652AbfE1LQd (ORCPT
+        Tue, 28 May 2019 07:17:00 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:34155 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbfE1LRA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 07:16:33 -0400
-Received: from cpe-2606-a000-111b-405a-0-0-0-162e.dyn6.twc.com ([2606:a000:111b:405a::162e] helo=localhost)
-        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
-        (Exim 4.63)
-        (envelope-from <nhorman@tuxdriver.com>)
-        id 1hVa5a-0003j5-P3; Tue, 28 May 2019 07:16:26 -0400
-Date:   Tue, 28 May 2019 07:15:50 -0400
-From:   Neil Horman <nhorman@tuxdriver.com>
-To:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Cc:     syzbot <syzbot+f7e9153b037eac9b1df8@syzkaller.appspotmail.com>,
-        davem@davemloft.net, linux-kernel@vger.kernel.org,
-        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, vyasevich@gmail.com
-Subject: Re: memory leak in sctp_process_init
-Message-ID: <20190528111550.GA4658@hmswarspite.think-freely.org>
-References: <00000000000097abb90589e804fd@google.com>
- <20190528013600.GM5506@localhost.localdomain>
+        Tue, 28 May 2019 07:17:00 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 696BC803CA; Tue, 28 May 2019 13:16:48 +0200 (CEST)
+Date:   Tue, 28 May 2019 13:16:58 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     pavel@ucw.cz
+Cc:     linux-kernel@vger.kernel.org, Kirill Smelkov <kirr@nexedi.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: Re: [PATCH 4.19 082/114] fuse: Add FOPEN_STREAM to use stream_open()
+Message-ID: <20190528111657.GA23674@amd>
+References: <20190523181731.372074275@linuxfoundation.org>
+ <20190523181739.135794147@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="ikeVEW9yuYc//A+q"
 Content-Disposition: inline
-In-Reply-To: <20190528013600.GM5506@localhost.localdomain>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190523181739.135794147@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 27, 2019 at 10:36:00PM -0300, Marcelo Ricardo Leitner wrote:
-> On Mon, May 27, 2019 at 05:48:06PM -0700, syzbot wrote:
-> > Hello,
-> > 
-> > syzbot found the following crash on:
-> > 
-> > HEAD commit:    9c7db500 Merge tag 'selinux-pr-20190521' of git://git.kern..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=10388530a00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=61dd9e15a761691d
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=f7e9153b037eac9b1df8
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10e32f8ca00000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=177fa530a00000
-> > 
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+f7e9153b037eac9b1df8@syzkaller.appspotmail.com
-> > 
-> >  0 to HW filter on device batadv0
-> > executing program
-> > executing program
-> > executing program
-> > BUG: memory leak
-> > unreferenced object 0xffff88810ef68400 (size 1024):
-> >   comm "syz-executor273", pid 7046, jiffies 4294945598 (age 28.770s)
-> >   hex dump (first 32 bytes):
-> >     1d de 28 8d de 0b 1b e3 b5 c2 f9 68 fd 1a 97 25  ..(........h...%
-> >     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> >   backtrace:
-> >     [<00000000a02cebbd>] kmemleak_alloc_recursive
-> > include/linux/kmemleak.h:55 [inline]
-> >     [<00000000a02cebbd>] slab_post_alloc_hook mm/slab.h:439 [inline]
-> >     [<00000000a02cebbd>] slab_alloc mm/slab.c:3326 [inline]
-> >     [<00000000a02cebbd>] __do_kmalloc mm/slab.c:3658 [inline]
-> >     [<00000000a02cebbd>] __kmalloc_track_caller+0x15d/0x2c0 mm/slab.c:3675
-> >     [<000000009e6245e6>] kmemdup+0x27/0x60 mm/util.c:119
-> >     [<00000000dfdc5d2d>] kmemdup include/linux/string.h:432 [inline]
-> >     [<00000000dfdc5d2d>] sctp_process_init+0xa7e/0xc20
-> > net/sctp/sm_make_chunk.c:2437
-> >     [<00000000b58b62f8>] sctp_cmd_process_init net/sctp/sm_sideeffect.c:682
-> > [inline]
-> >     [<00000000b58b62f8>] sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1384
-> > [inline]
-> >     [<00000000b58b62f8>] sctp_side_effects net/sctp/sm_sideeffect.c:1194
-> > [inline]
-> >     [<00000000b58b62f8>] sctp_do_sm+0xbdc/0x1d60
-> > net/sctp/sm_sideeffect.c:1165
-> 
-> Note that this is on the client side. It was handling the INIT_ACK
-> chunk, from sctp_sf_do_5_1C_ack().
-> 
-> I'm not seeing anything else other than sctp_association_free()
-> releasing this memory. This means 2 things:
-> - Every time the cookie is retransmitted, it leaks. As shown by the
->   repetitive leaks here.
-> - The cookie remains allocated throughout the association, which is
->   also not good as that's a 1k that we could have released back to the
->   system right after the handshake.
-> 
->   Marcelo
-> 
-If we have an INIT chunk bundled with a COOKIE_ECHO chunk in the same packet,
-this might occur.  Processing for each chunk (via sctp_cmd_process_init and
-sctp_sf_do_5_1D_ce both call sctp_process_init, which would cause a second write
-to asoc->peer.cookie, leaving the first write (set via kmemdup), to be orphaned
-and leak.  Seems like we should set a flag to determine if we've already cloned
-the cookie, and free the old one if its set.  If we wanted to do that on the
-cheap, we might be able to get away with checking asoc->stream->[in|out]cnt for
-being non-zero as an indicator if we've already cloned the cookie
 
-Neil
+--ikeVEW9yuYc//A+q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hi!
+
+> +++ b/include/uapi/linux/fuse.h
+> @@ -219,10 +219,12 @@ struct fuse_file_lock {
+>   * FOPEN_DIRECT_IO: bypass page cache for this open file
+>   * FOPEN_KEEP_CACHE: don't invalidate the data cache on open
+>   * FOPEN_NONSEEKABLE: the file is not seekable
+> + * FOPEN_STREAM: the file is stream-like (no file position at all)
+>   */
+>  #define FOPEN_DIRECT_IO		(1 << 0)
+>  #define FOPEN_KEEP_CACHE	(1 << 1)
+>  #define FOPEN_NONSEEKABLE	(1 << 2)
+> +#define FOPEN_STREAM		(1 << 4)
+
+Interesting choice of constants. It is too late to change it now, but
+was (1 << 3) meant here?
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--ikeVEW9yuYc//A+q
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlztGKkACgkQMOfwapXb+vLX3ACdGqLX+DFoYE64Oxz33y2VQL2O
++RcAoLwY/oFFXTwZOBVTJdr0oqoXPDTR
+=KbD4
+-----END PGP SIGNATURE-----
+
+--ikeVEW9yuYc//A+q--
