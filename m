@@ -2,190 +2,118 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 962A8C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E93FC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:14:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6277E20B7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:13:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC9A420B7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:14:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VodMu0yh"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T3/gJAXz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727923AbfE1SNp (ORCPT
+        id S1727937AbfE1SO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 14:13:45 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:36204 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727729AbfE1SNo (ORCPT
+        Tue, 28 May 2019 14:14:26 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:40081 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727844AbfE1SOZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 14:13:44 -0400
-Received: by mail-yb1-f195.google.com with SMTP id y2so5431349ybo.3
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 11:13:43 -0700 (PDT)
+        Tue, 28 May 2019 14:14:25 -0400
+Received: by mail-ed1-f68.google.com with SMTP id s19so4968018edq.7
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 11:14:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=OqpexmVIKfsSkeW7hmtnhVKKfuuGya/sOg3ZfntORRU=;
-        b=VodMu0yhrGnCVbNkgm5tlDgPMsXnAXDomdWv8QS4b9vlsNi7ToWufDvlLlPJz2v8xj
-         IQ/WNbRlith2/cUER8VYTKT9r1p+4sjc1hRNb6bifRXi6jo/AX6guQdLXHVgJhVFtjiH
-         qQYe3EUxB9+WSPSxWEhHN6+jamT0NYHcHUeHA=
+         :cc;
+        bh=NrgcPgHYGkaYgv7K/Tp1YWUKuygAmk8ZPyKQdnHtMXo=;
+        b=T3/gJAXzSCD9ylg1zjwPF62H6wUuPSS2GpBRyhduNWz1LC2jLHVRN93Q4ebs4CfPIM
+         ASMkGU8jM3dbdxifPr+cEGlU1N7KgjE8NkNvFIoCq2lviEfWs6ZeYrxrFVLerX7VhKV2
+         ChqB6Gr39Cyw+nxO0labgQACSdXhjmnJ36Kw96T2G107InanNTWZMZ78McjRmPgQ9oYJ
+         5Nzut0vDWIdfph0sYGa+YGahu/xk88dxzDtSJ+FCGHtWfZKDydFeJOYNxwEHCvbkgfm0
+         myOtABdWdGbXHLoksGcwCqDETiW26zmkHEEPkWo+M+k5y7Rph/Azitux+7x5zMrDcVg9
+         QXhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=OqpexmVIKfsSkeW7hmtnhVKKfuuGya/sOg3ZfntORRU=;
-        b=j1ESRfIrOYmBomiGzKSt4/YOHpW0PnKcVprmcU6Egq3anMal4vpW8euXABSLi2W2Es
-         El7Z+MpYb5ToBERjf4A70kqjH3OrAzlkce45B7LUpRqEJz/vXqqAQbSnRD+HDTNr4sRu
-         u1IXulH0REMY6ZVOvbi+tDFVyZGuVS5G1FggFgCcb8lZ21QcznuqVfKWwsCn6U9R0d2L
-         zU/oxk2U2CiFtR05kJB23aDjUd87MaFcZAB20Y8HgGNbPXbBwPaqV6Qd5lLBr7o2zOUk
-         qx74IyevOqHCQlgVliAA29wvjh0mFLGyfbhctXJ60V3xRlqgumdASCkTz5IAByxZMPBi
-         K0MQ==
-X-Gm-Message-State: APjAAAVUaGETa5cyUSag19pTV8lGuP0Ffz6TC4i9rhCB/Wuf+nURc7jF
-        9HNrhW3R8qJKTW9NBxr6XtivANVzoio=
-X-Google-Smtp-Source: APXvYqyGv2ZC7u6m4FF19CgU9lwQXCiTzCSwDO5WGg8GtkCpa/bgQO4MsJ+1Qtqw0cl3h9p0aTI97w==
-X-Received: by 2002:a25:b95:: with SMTP id 143mr8420121ybl.28.1559067223119;
-        Tue, 28 May 2019 11:13:43 -0700 (PDT)
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com. [209.85.222.178])
-        by smtp.gmail.com with ESMTPSA id v128sm3804131ywf.14.2019.05.28.11.13.41
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 May 2019 11:13:42 -0700 (PDT)
-Received: by mail-qk1-f178.google.com with SMTP id p18so24056441qkk.0
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 11:13:41 -0700 (PDT)
-X-Received: by 2002:a05:620a:12d9:: with SMTP id e25mr15891334qkl.279.1559067221416;
- Tue, 28 May 2019 11:13:41 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=NrgcPgHYGkaYgv7K/Tp1YWUKuygAmk8ZPyKQdnHtMXo=;
+        b=tMREKtvkTHSZDGMC2nZ0H6jX+fGmMSVr4OFinIa8JcvIRCJ5aE94Uca62TluA2314e
+         LJeu5jfPOCTz68OMcn+YnK+SCi3hLsJVl8hP+SlhrHja5NUlk8Jt4Z0E0fi63r7FH8Wz
+         1nVVXm3Dx0rtSt7Q1r/ZhZQ/2Ay6PqlpAC54SS3c+vZEvB3XN4xwGH0DybOLgfSO1XCg
+         JJ+CQtSn3qVj0hMpatUAgVLqEq+AaxFizAxRJU4qYJ2pqlMRqEqZb8ipdHAERPT68GXY
+         a7jedBVlfVpOcxDkuVkOJh68q6e3JLWMVtstq2e292vYIH57Uf7xR614DWaDHFdqUHct
+         budQ==
+X-Gm-Message-State: APjAAAVlCAYZypWT8aM6CwyW2+G3RykDuERZ0vvywGBnoLKnMZ97MWxB
+        GEwOkxfkOzmisU+BgWYftB24w7W+dcfzuiIz/Xq8Ww==
+X-Google-Smtp-Source: APXvYqzFgO874P6bYJZYu69xKIPKaNaCUI+QjzjRTExNmXTK3TI/bPou4lz2KNrfLNk12Bh1gl7jLRuPGMvixxUR+mk=
+X-Received: by 2002:aa7:c391:: with SMTP id k17mr131122962edq.166.1559067263524;
+ Tue, 28 May 2019 11:14:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190521132712.2818-1-benjamin.tissoires@redhat.com>
- <20190521132712.2818-9-benjamin.tissoires@redhat.com> <CAO-hwJJXGTZq7zRVhcFNwh-kOo0rUhZOsNtFX1yA93Km=L+ynA@mail.gmail.com>
- <00f901d5143f$f5ea8420$e1bf8c60$@emc.com.tw> <20190528012101.GA193221@dtor-ws>
-In-Reply-To: <20190528012101.GA193221@dtor-ws>
-From:   Harry Cutts <hcutts@chromium.org>
-Date:   Tue, 28 May 2019 11:13:30 -0700
-X-Gmail-Original-Message-ID: <CA+jURcsWe=fZ-catnCaH=A85vAhrv1w1E5nSwpJvBAwgCTNYfw@mail.gmail.com>
-Message-ID: <CA+jURcsWe=fZ-catnCaH=A85vAhrv1w1E5nSwpJvBAwgCTNYfw@mail.gmail.com>
-Subject: Re: [PATCH v2 08/10] Input: elan_i2c - export true width/height
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     =?UTF-8?B?5buW5bSH5qau?= <kt.liao@emc.com.tw>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Aaron Ma <aaron.ma@canonical.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
-        seobrien@chromium.org
+References: <CAOyeoRWfPNmaWY6Lifdkdj3KPPM654vzDO+s3oduEMCJP+Asow@mail.gmail.com>
+ <5CEC9667.30100@intel.com>
+In-Reply-To: <5CEC9667.30100@intel.com>
+From:   Eric Hankland <ehankland@google.com>
+Date:   Tue, 28 May 2019 11:14:12 -0700
+Message-ID: <CAOyeoRWhfyuuYdguE6Wrzd7GOdow9qRE4MZ4OKkMc5cdhDT53g@mail.gmail.com>
+Subject: Re: [PATCH v1] KVM: x86: PMU Whitelist
+To:     Wei Wang <wei.w.wang@intel.com>
+Cc:     pbonzini@redhat.com, rkrcmar@redhat.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 May 2019 at 18:21, Dmitry Torokhov <dmitry.torokhov@gmail.com> w=
-rote:
+On Mon, May 27, 2019 at 6:56 PM Wei Wang <wei.w.wang@intel.com> wrote:
 >
-> Hi Benjamin, KT,
+> On 05/23/2019 06:23 AM, Eric Hankland wrote:
+> > - Add a VCPU ioctl that can control which events the guest can monitor.
+> >
+> > Signed-off-by: ehankland <ehankland@google.com>
+> > ---
+> > Some events can provide a guest with information about other guests or the
+> > host (e.g. L3 cache stats); providing the capability to restrict access
+> > to a "safe" set of events would limit the potential for the PMU to be used
+> > in any side channel attacks. This change introduces a new vcpu ioctl that
+> > sets an event whitelist. If the guest attempts to program a counter for
+> > any unwhitelisted event, the kernel counter won't be created, so any
+> > RDPMC/RDMSR will show 0 instances of that event.
 >
-> On Mon, May 27, 2019 at 11:55:01AM +0800, =E5=BB=96=E5=B4=87=E6=A6=AE wro=
-te:
-> > Hi
-> >
-> > -----Original Message-----
-> > From: Benjamin Tissoires [mailto:benjamin.tissoires@redhat.com]
-> > Sent: Friday, May 24, 2019 5:37 PM
-> > To: Dmitry Torokhov; KT Liao; Rob Herring; Aaron Ma; Hans de Goede
-> > Cc: open list:HID CORE LAYER; lkml; devicetree@vger.kernel.org
-> > Subject: Re: [PATCH v2 08/10] Input: elan_i2c - export true width/heigh=
-t
-> >
-> > On Tue, May 21, 2019 at 3:28 PM Benjamin Tissoires <benjamin.tissoires@=
-redhat.com> wrote:
-> > >
-> > > The width/height is actually in the same unit than X and Y. So we
-> > > should not tamper the data, but just set the proper resolution, so
-> > > that userspace can correctly detect which touch is a palm or a finger=
-.
-> > >
-> > > Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> > >
-> > > --
-> > >
-> > > new in v2
-> > > ---
-> > >  drivers/input/mouse/elan_i2c_core.c | 11 ++++-------
-> > >  1 file changed, 4 insertions(+), 7 deletions(-)
-> > >
-> > > diff --git a/drivers/input/mouse/elan_i2c_core.c
-> > > b/drivers/input/mouse/elan_i2c_core.c
-> > > index 7ff044c6cd11..6f4feedb7765 100644
-> > > --- a/drivers/input/mouse/elan_i2c_core.c
-> > > +++ b/drivers/input/mouse/elan_i2c_core.c
-> > > @@ -45,7 +45,6 @@
-> > >  #define DRIVER_NAME            "elan_i2c"
-> > >  #define ELAN_VENDOR_ID         0x04f3
-> > >  #define ETP_MAX_PRESSURE       255
-> > > -#define ETP_FWIDTH_REDUCE      90
-> > >  #define ETP_FINGER_WIDTH       15
-> > >  #define ETP_RETRY_COUNT                3
-> > >
-> > > @@ -915,12 +914,8 @@ static void elan_report_contact(struct elan_tp_d=
-ata *data,
-> > >                         return;
-> > >                 }
-> > >
-> > > -               /*
-> > > -                * To avoid treating large finger as palm, let's redu=
-ce the
-> > > -                * width x and y per trace.
-> > > -                */
-> > > -               area_x =3D mk_x * (data->width_x - ETP_FWIDTH_REDUCE)=
-;
-> > > -               area_y =3D mk_y * (data->width_y - ETP_FWIDTH_REDUCE)=
-;
-> > > +               area_x =3D mk_x * data->width_x;
-> > > +               area_y =3D mk_y * data->width_y;
-> > >
-> > >                 major =3D max(area_x, area_y);
-> > >                 minor =3D min(area_x, area_y); @@ -1123,8 +1118,10 @@
-> > > static int elan_setup_input_device(struct elan_tp_data *data)
-> > >                              ETP_MAX_PRESSURE, 0, 0);
-> > >         input_set_abs_params(input, ABS_MT_TOUCH_MAJOR, 0,
-> > >                              ETP_FINGER_WIDTH * max_width, 0, 0);
-> > > +       input_abs_set_res(input, ABS_MT_TOUCH_MAJOR, data->x_res);
-> > >         input_set_abs_params(input, ABS_MT_TOUCH_MINOR, 0,
-> > >                              ETP_FINGER_WIDTH * min_width, 0, 0);
-> > > +       input_abs_set_res(input, ABS_MT_TOUCH_MINOR, data->y_res);
-> >
-> > I had a chat with Peter on Wednesday, and he mentioned that this is dan=
-gerous as Major/Minor are max/min of the width and height. And given that w=
-e might have 2 different resolutions, we would need to do some computation =
-in the kernel to ensure the data is correct with respect to the resolution.
-> >
-> > TL;DR: I don't think we should export the resolution there :(
-> >
-> > KT, should I drop the patch entirely, or is there a strong argument for=
- keeping the ETP_FWIDTH_REDUCE around?
-> > I suggest you apply the patch, I have no idea why ETP_FWIDTH_REDUCE exi=
-sted.
-> > Our FW team know nothing about ETP_FWIDTH_REDUCE ether.
-> >
-> > The only side effect will happen on Chromebook because such computation=
- have stayed in ChromeOS' kernel for four years.
-> > Chrome's finger/palm threshold may be different from other Linux distri=
-bution.
-> > We will discuss it with Google once the patch picked by chrome and caus=
-e something wrong.
+> The general idea sounds good to me :)
 >
-> Chrome has logic that contact with maximum major/minor is treated as a
-> palm, so here the driver (which originally came from Chrome OS)
-> artificially reduces the contact size to ensure that palm rejection
-> logic does not trigger.
+> For the implementation, I would have the following suggestions:
 >
-> I'm adding Harry to confirm whether we are still using this logic and to
-> see if we can adjust it to be something else.
+> 1) Instead of using a whitelist, it would be better to use a blacklist to
+> forbid the guest from counting any core level information. So by default,
+> kvm maintains a list of those core level events, which are not supported to
+> the guest.
+>
+> The userspace ioctl removes the related events from the blacklist to
+> make them usable by the guest.
+>
+> 2) Use vm ioctl, instead of vcpu ioctl. The blacklist-ed events can be
+> VM wide
+> (unnecessary to make each CPU to maintain the same copy).
+> Accordingly, put the pmu event blacklist into kvm->arch.
+>
+> 3) Returning 1 when the guest tries to set the evetlsel msr to count an
+> event which is on the blacklist.
+>
+> Best,
+> Wei
 
-I'm not very familiar with our touchpad code, so adding Sean O'Brien, who i=
-s.
+Thanks for the feedback. I have a couple concerns with a KVM
+maintained blacklist. First, I'm worried it will be difficult to keep
+such a list up to date and accurate (both coming up with the initial
+list since there are so many events, and updating it whenever any new
+events are published or vulnerabilities are discovered). Second, users
+may want to differentiate between whole-socket and sub-socket VMs
+(some events may be fine for the whole-socket case) - keeping a single
+blacklist wouldn't allow for this. Let me know what you think. I'll
+try implementing the other suggestions.
+-Eric
