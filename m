@@ -2,119 +2,123 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D035C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A26C4C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02464208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:09:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BB17214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:09:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FzVjXmWJ";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FzVjXmWJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aQnbN08k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727528AbfE1NJu (ORCPT
+        id S1727552AbfE1NJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 09:09:50 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:43982 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727010AbfE1NJt (ORCPT
+        Tue, 28 May 2019 09:09:54 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38176 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727530AbfE1NJv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 09:09:49 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id BAAE46087F; Tue, 28 May 2019 13:09:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559048988;
-        bh=LwktVprX+okLjofcVDA3KhlIJIxmhxsXuCyjGZ1pF8Y=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=FzVjXmWJ0ItkDT6ygp9ShWa3YpFC0xSFTAxG15f6ot1HIA3kj1hJMrB7WR4w7HDBZ
-         oEUVKgtj2CxzWfO8xeO50VJpj7CFqL9KjjhSU7rfd6a7Nd3EUvWoAhx2TTD9K0PYQe
-         qyvHaVfipHEmIURuwtnZPuPCVpUTLvRoaZSfXjRA=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4724060271;
-        Tue, 28 May 2019 13:09:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559048988;
-        bh=LwktVprX+okLjofcVDA3KhlIJIxmhxsXuCyjGZ1pF8Y=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=FzVjXmWJ0ItkDT6ygp9ShWa3YpFC0xSFTAxG15f6ot1HIA3kj1hJMrB7WR4w7HDBZ
-         oEUVKgtj2CxzWfO8xeO50VJpj7CFqL9KjjhSU7rfd6a7Nd3EUvWoAhx2TTD9K0PYQe
-         qyvHaVfipHEmIURuwtnZPuPCVpUTLvRoaZSfXjRA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4724060271
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Larry Finger <Larry.Finger@lwfinger.net>
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>, pkshih@realtek.com,
-        davem@davemloft.net, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rtlwifi: Fix null-pointer dereferences in error handling code of rtl_pci_probe()
-References: <20190514123439.10524-1-baijiaju1990@gmail.com>
-        <20190528115555.301E760F3C@smtp.codeaurora.org>
-        <2658b691-b992-b773-c6cf-85801adc479f@lwfinger.net>
-Date:   Tue, 28 May 2019 16:09:44 +0300
-In-Reply-To: <2658b691-b992-b773-c6cf-85801adc479f@lwfinger.net> (Larry
-        Finger's message of "Tue, 28 May 2019 08:00:24 -0500")
-Message-ID: <87pno24tev.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Tue, 28 May 2019 09:09:51 -0400
+Received: by mail-io1-f68.google.com with SMTP id x24so15656213ion.5
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 06:09:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3gMjgQF6nVEpAjnECu8ew++wo5leqfpmshMTC4gXxYo=;
+        b=aQnbN08kY+fZnKaZkc6Jz47og1ZVNUJYTwBk+2rjH4tB794JCbcokx4ppHBUIfhYsh
+         x//fmeBbsj76sAFoOntCBGhgDq0lg0eCxQjhB5H+wAklR3N252PW8ZUyDBrKeoaimS9t
+         /Ox2+TFsUhYllJXGgVC6JyJ+DaEMHC0Kg+jPaUJYGudA3FULPTDB6fPZNZ8xDXa8ZzMU
+         y7Z9PgOPmwhkHPsK9a48ubymnrRL4WFX1exKVXnTYk61mmswNcr85RK0bIFxXIuVGhKj
+         VqVFNMYES/D/pvAA8wVV1XuSBNoC2B0rM3LB6koVQ9iBrfeFgHGsfWUHlTKRLDIftMEH
+         hmDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3gMjgQF6nVEpAjnECu8ew++wo5leqfpmshMTC4gXxYo=;
+        b=tJT8NUlbo55ftrbb23B63k6DU/VqlTFF+nPjRi6FayTiNxPKQlVFV326u1MGbnG2ie
+         uz/QexiYUvy69nRjh7wPXamLJUjzD0VkC6Q4F7Ghgv0gYKGRuawnTrGQmVBWxAKjlQip
+         dhDoE2nS4zcsh/rR80URJJvzW527jqxbganvBCj3pCPT3RxP5K6ZxGHsCaeZVhxqLUNQ
+         pyu+1Jow8ThYNnSB5JpAfAxqVdBz/Nr2MXeSNqzZIcmcH02lcKU1VcghwhBj4G0/p/tZ
+         Hz0uwsdPbo38uG5o9usAztV7bCdqkifgeER/fu2zUH9jkFqKfpxV+qAincZVb3X5RnVr
+         HP0A==
+X-Gm-Message-State: APjAAAUxnlPAWiUvADtK2Toj3HDAkSmJTp4CFIhiftaWGNfIukeGXeCm
+        kiaG5hPvHeZLF4mgg+dlbPVDBQhscIJ1g7e0IUazbQ==
+X-Google-Smtp-Source: APXvYqz2NSY8Eub8B3tcZ0h/NOiXNc3gT/E67sal88UPCko5gQx0ik+z614GKA+mx2KpIkYqi6sIXUQFqE9LG/ygZX0=
+X-Received: by 2002:a5d:968e:: with SMTP id m14mr38913390ion.49.1559048990760;
+ Tue, 28 May 2019 06:09:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190528125805.2166-1-mail@lennart-glauer.de>
+In-Reply-To: <20190528125805.2166-1-mail@lennart-glauer.de>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Tue, 28 May 2019 15:09:38 +0200
+Message-ID: <CAKv+Gu8hXOLHLrBMJLYnDyW8xYhSHTAsNk6i034KA7gThjSpJQ@mail.gmail.com>
+Subject: Re: [PATCH] x86/efi: Free efi_pgd with free_pages()
+To:     Lennart Glauer <mail@lennart-glauer.de>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Larry Finger <Larry.Finger@lwfinger.net> writes:
+Hi Lennart,
 
-> On 5/28/19 6:55 AM, Kalle Valo wrote:
->> Jia-Ju Bai <baijiaju1990@gmail.com> wrote:
->>
->>> *BUG 1:
->>> In rtl_pci_probe(), when rtlpriv->cfg->ops->init_sw_vars() fails,
->>> rtl_deinit_core() in the error handling code is executed.
->>> rtl_deinit_core() calls rtl_free_entries_from_scan_list(), which uses
->>> rtlpriv->scan_list.list in list_for_each_entry_safe(), but it has been
->>> initialized. Thus a null-pointer dereference occurs.
->>> The reason is that rtlpriv->scan_list.list is initialized by
->>> INIT_LIST_HEAD() in rtl_init_core(), which has not been called.
->>>
->>> To fix this bug, rtl_deinit_core() should not be called when
->>> rtlpriv->cfg->ops->init_sw_vars() fails.
->>>
->>> *BUG 2:
->>> In rtl_pci_probe(), rtl_init_core() can fail when rtl_regd_init() in
->>> this function fails, and rtlpriv->scan_list.list has not been
->>> initialized by INIT_LIST_HEAD(). Then, rtl_deinit_core() in the error
->>> handling code of rtl_pci_probe() is executed. Finally, a null-pointer
->>> dereference occurs due to the same reason of the above bug.
->>>
->>> To fix this bug, the initialization of lists in rtl_init_core() are
->>> performed before the call to rtl_regd_init().
->>>
->>> These bugs are found by a runtime fuzzing tool named FIZZER written by
->>> us.
->>>
->>> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
->>
->> Ping & Larry, is this ok to take?
->>
+Thanks for the patch.
+
+On Tue, 28 May 2019 at 14:58, Lennart Glauer <mail@lennart-glauer.de> wrote:
 >
-> Kalle,
+> This patch fixes another occurrence of free_page() that was missed
+> in 06ace26.
+
+Please don't trim commit IDs like that. I think 12 digits is our
+current minimum?
+
+error: short SHA1 06ace26 is ambiguous
+hint: The candidates are:
+hint:   06ace26edc14 commit 2016-02-12 - staging: lustre: fix all NULL
+comparisons in LNet layer
+hint:   06ace26f4e6f commit 2018-03-22 - x86/efi: Free efi_pgd with free_pages()
+
+> The efi_pgd is allocated as PGD_ALLOCATION_ORDER pages and therefore must
+> also be freed as PGD_ALLOCATION_ORDER pages with free_pages().
 >
-> Not at the moment. In reviewing the code, I was unable to see how this
-> situation could develop, and his backtrace did not mention any rtlwifi
-> code. For that reason, I asked him to add printk stat4ements to show
-> the last part of rtl_pci that executed correctly. In
-> https://marc.info/?l=linux-wireless&m=155788322631134&w=2, he promised
-> to do that, but I have not seen the result.
+> Signed-off-by: Lennart Glauer <mail@lennart-glauer.de>
 
-Ok, thanks. I'll then drop this, please resubmit once everything is
-understood and the patch is ready to be applied.
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
--- 
-Kalle Valo
+Ingo, can you take this directly? I can't really test this anyway.
+
+
+> ---
+>  arch/x86/platform/efi/efi_64.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+> index 08ce8177c3af..acad22a44774 100644
+> --- a/arch/x86/platform/efi/efi_64.c
+> +++ b/arch/x86/platform/efi/efi_64.c
+> @@ -222,7 +222,7 @@ int __init efi_alloc_page_tables(void)
+>         pgd = efi_pgd + pgd_index(EFI_VA_END);
+>         p4d = p4d_alloc(&init_mm, pgd, EFI_VA_END);
+>         if (!p4d) {
+> -               free_page((unsigned long)efi_pgd);
+> +               free_pages((unsigned long)efi_pgd, PGD_ALLOCATION_ORDER);
+>                 return -ENOMEM;
+>         }
+>
+> --
+> 2.17.1
