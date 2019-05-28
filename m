@@ -2,100 +2,93 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A818C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47896C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC02720883
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:43:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A1D620883
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:43:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LUcrB9Ex";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="UYmTy8Uh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727489AbfE1MnW (ORCPT
+        id S1727524AbfE1Mn5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 08:43:22 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:40078 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727219AbfE1MnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 08:43:21 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8132B200E6C;
-        Tue, 28 May 2019 14:43:19 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C001B200E6A;
-        Tue, 28 May 2019 14:43:15 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id CC687402C9;
-        Tue, 28 May 2019 20:43:10 +0800 (SGT)
-From:   Chuanhua Han <chuanhua.han@nxp.com>
-To:     shawnguo@kernel.org, leoyang.li@nxp.com, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chuanhua Han <chuanhua.han@nxp.com>
-Subject: [PATCH v2] arm64: dts: ls1028a: fix watchdog device node
-Date:   Tue, 28 May 2019 20:45:06 +0800
-Message-Id: <20190528124506.9339-1-chuanhua.han@nxp.com>
-X-Mailer: git-send-email 2.17.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 28 May 2019 08:43:57 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:53366 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727182AbfE1Mn4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 08:43:56 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 5D9D960F38; Tue, 28 May 2019 12:43:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559047435;
+        bh=w9bX69ME/NHLXTgt9b0N8rt7z+QC2MaVUpAM+dM7Ouw=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=LUcrB9ExAFl/5ON0ivYboIdJ7k3xs/M5eFubgMsmdDSWg95T8w9HrJz7wrIw33rvX
+         +2bbxr3NmUZ4500+t3phxt4muXTip54tKHqO4zSBHnV0DEzqGvPIWLycxhjSfwdJSQ
+         bDU0iJN9Obuq+ul1DFUBFAbMTPCGPV/CCHiZw3DY=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 629DD6087F;
+        Tue, 28 May 2019 12:43:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559047433;
+        bh=w9bX69ME/NHLXTgt9b0N8rt7z+QC2MaVUpAM+dM7Ouw=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=UYmTy8UhwZkN7O99jfdWUYBHNErNjiu/uGhzGUI+X7HnvCH2DrEZsCb9iNlWLkYcW
+         GEBkqN0yCRNk+ox4yLNTkqhnwtIdCIJzydFf+e8EjEe3EEqKeBx9+4o5gh9zGI1s/b
+         D37PYu0TLm/S+hFazSqPbFk38YNSGdn9+CRay3ME=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 629DD6087F
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] b43: Avoid possible double calls to b43_one_core_detach()
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190504091000.18665-1-baijiaju1990@gmail.com>
+References: <20190504091000.18665-1-baijiaju1990@gmail.com>
+To:     Jia-Ju Bai <baijiaju1990@gmail.com>
+Cc:     davem@davemloft.net, colin.king@canonical.com,
+        yuehaibing@huawei.com, linux-wireless@vger.kernel.org,
+        b43-dev@lists.infradead.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190528124355.5D9D960F38@smtp.codeaurora.org>
+Date:   Tue, 28 May 2019 12:43:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ls1028a platform uses sp805 watchdog, and use 1/16 platform clock as
-timer clock, this patch fix device tree node.
+Jia-Ju Bai <baijiaju1990@gmail.com> wrote:
 
-Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
----
-Changes in v2: 
-	- Replace 'wdt' with 'watchdog' as the node name.
-	- Keep nodes sort in unit-address.
+> In b43_request_firmware(), when ieee80211_register_hw() fails,
+> b43_one_core_detach() is called. In b43_bcma_remove() and
+> b43_ssb_remove(), b43_one_core_detach() is called again. In this case, 
+> null-pointer dereferences and double-free problems can occur when 
+> the driver is removed.
+> 
+> To fix this bug, the call to b43_one_core_detach() in
+> b43_request_firmware() is deleted.
+> 
+> This bug is found by a runtime fuzzing tool named FIZZER written by us.
+> 
+> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
 
- .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 23 +++++++++++--------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+Patch applied to wireless-drivers-next.git, thanks.
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index ceb608d0e622..bb386dd1d1b1 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -306,15 +306,6 @@
- 			#interrupt-cells = <2>;
- 		};
- 
--		wdog0: watchdog@23c0000 {
--			compatible = "fsl,ls1028a-wdt", "fsl,imx21-wdt";
--			reg = <0x0 0x23c0000 0x0 0x10000>;
--			interrupts = <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&clockgen 4 1>;
--			big-endian;
--			status = "disabled";
--		};
--
- 		usb0: usb@3100000 {
- 			compatible = "fsl,ls1028a-dwc3", "snps,dwc3";
- 			reg = <0x0 0x3100000 0x0 0x10000>;
-@@ -397,6 +388,20 @@
- 				     <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
-+		cluster1_core0_watchdog: watchdog@c000000 {
-+			compatible = "arm,sp805", "arm,primecell";
-+			reg = <0x0 0xc000000 0x0 0x1000>;
-+			clocks = <&clockgen 4 15>, <&clockgen 4 15>;
-+			clock-names = "apb_pclk", "wdog_clk";
-+		};
-+
-+		cluster1_core1_watchdog: watchdog@c010000 {
-+			compatible = "arm,sp805", "arm,primecell";
-+			reg = <0x0 0xc010000 0x0 0x1000>;
-+			clocks = <&clockgen 4 15>, <&clockgen 4 15>;
-+			clock-names = "apb_pclk", "wdog_clk";
-+		};
-+
- 		sai1: audio-controller@f100000 {
- 			#sound-dai-cells = <0>;
- 			compatible = "fsl,vf610-sai";
+ec2e93cf1910 b43: Avoid possible double calls to b43_one_core_detach()
+
 -- 
-2.17.1
+https://patchwork.kernel.org/patch/10929623/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
