@@ -2,102 +2,77 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5826C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:30:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90DC3C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AFBE2075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:30:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ZkwvxI+h";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DQP6RINU"
+	by mail.kernel.org (Postfix) with ESMTP id 5F9DF2075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:31:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727342AbfE1OaI (ORCPT
+        id S1726602AbfE1Obt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 10:30:08 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:48874 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726313AbfE1OaH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 10:30:07 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 9B23760A4E; Tue, 28 May 2019 14:30:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559053806;
-        bh=x73gs11UqeyquhhHifaz+Y5m6QpD+Y2yC03QFMfrKZI=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=ZkwvxI+hhmBeuzoh8EWA5ubIbQ2KPmdcR7iFPdi+DstAkeRPW8P7bXdAx11tqREMV
-         FZlTAknEcwAOz8wYvh+LXGgv9ufBKwkbNSqN8mFhALUl2056CNhX4PeOxuzqsrJTFP
-         4fIkMJeaY/fbGzPmcwqWUHyu5xA8R6xCnqbMBwJ0=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 723BE60769;
-        Tue, 28 May 2019 14:30:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559053803;
-        bh=x73gs11UqeyquhhHifaz+Y5m6QpD+Y2yC03QFMfrKZI=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=DQP6RINU4XD0144grtyT/iVZOuRtbn5Oqo702k+QHJl6VtKdZjABNRmcw+ZnB/LFC
-         w7r9NJPwi+CHZ1J6ZcEYk58YdoKYpfmGv5g0UYVX9mk7tzP7L9IkUpV7F2CZmXh4Zb
-         +FJ8SnbljklUB0FbcXS3q8ZXDrKv99t21OgdkL9c=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 723BE60769
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Christian Lamparter <chunkeey@gmail.com>,
-        syzbot <syzbot+200d4bb11b23d929335f@syzkaller.appspotmail.com>,
-        <davem@davemloft.net>, <andreyknvl@google.com>,
-        <syzkaller-bugs@googlegroups.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>
-Subject: Re: [PATCH] network: wireless: p54u: Fix race between disconnect and firmware loading
-References: <Pine.LNX.4.44L0.1905281014340.1564-100000@iolanthe.rowland.org>
-Date:   Tue, 28 May 2019 17:29:59 +0300
-In-Reply-To: <Pine.LNX.4.44L0.1905281014340.1564-100000@iolanthe.rowland.org>
-        (Alan Stern's message of "Tue, 28 May 2019 10:17:19 -0400 (EDT)")
-Message-ID: <875zpu4pp4.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Tue, 28 May 2019 10:31:49 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:60124 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726313AbfE1Obt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 10:31:49 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 09013B321758B27C89EF;
+        Tue, 28 May 2019 22:31:39 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Tue, 28 May 2019
+ 22:31:30 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <TheSven73@gmail.com>, <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH v2 -next] staging: fieldbus: Fix build error without CONFIG_REGMAP_MMIO
+Date:   Tue, 28 May 2019 22:29:12 +0800
+Message-ID: <20190528142912.13224-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <CAGngYiU=uFjJFEoiHFUr+ab73sJksaTBkfxvQwL1X6WJnhchqw@mail.gmail.com>
+References: <CAGngYiU=uFjJFEoiHFUr+ab73sJksaTBkfxvQwL1X6WJnhchqw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alan Stern <stern@rowland.harvard.edu> writes:
+Fix gcc build error while CONFIG_REGMAP_MMIO is not set
 
-> On Tue, 28 May 2019, Kalle Valo wrote:
->
->> The correct prefix is "p54:", but I can fix that during commit.
->
-> Oh, okay, thanks.
->
->> > Index: usb-devel/drivers/net/wireless/intersil/p54/p54usb.c
->> > ===================================================================
->> > --- usb-devel.orig/drivers/net/wireless/intersil/p54/p54usb.c
->> > +++ usb-devel/drivers/net/wireless/intersil/p54/p54usb.c
->> > @@ -33,6 +33,8 @@ MODULE_ALIAS("prism54usb");
->> >  MODULE_FIRMWARE("isl3886usb");
->> >  MODULE_FIRMWARE("isl3887usb");
->> >  
->> > +static struct usb_driver p54u_driver;
->> 
->> How is it safe to use static variables from a wireless driver? For
->> example, what if there are two p54 usb devices on the host? How do we
->> avoid a race in that case?
->
-> There is no race.  This structure is not per-device; it refers only to
-> the driver.  In fact, the line above is only a forward declaration --
-> the actual definition of p54u_driver was already in the source file.
+drivers/staging/fieldbus/anybuss/arcx-anybus.o: In function `controller_probe':
+arcx-anybus.c: undefined reference to `__devm_regmap_init_mmio_clk'
 
-Ah, I missed that. Thanks!
+Select REGMAP_MMIO to fix it.
 
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 2411a336c8ce ("staging: fieldbus: arcx-anybus: change custom -> mmio regmap")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+v2: fix patch style warning
+---
+ drivers/staging/fieldbus/anybuss/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/staging/fieldbus/anybuss/Kconfig b/drivers/staging/fieldbus/anybuss/Kconfig
+index 8bc3d9a..635a0a7 100644
+--- a/drivers/staging/fieldbus/anybuss/Kconfig
++++ b/drivers/staging/fieldbus/anybuss/Kconfig
+@@ -14,6 +14,7 @@ if HMS_ANYBUSS_BUS
+ config ARCX_ANYBUS_CONTROLLER
+ 	tristate "Arcx Anybus-S Controller"
+ 	depends on OF && GPIOLIB && HAS_IOMEM && REGULATOR
++	select REGMAP_MMIO
+ 	help
+ 	  Select this to get support for the Arcx Anybus controller.
+ 	  It connects to the SoC via a parallel memory bus, and
 -- 
-Kalle Valo
+2.7.4
+
+
