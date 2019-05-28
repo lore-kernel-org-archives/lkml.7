@@ -2,107 +2,67 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E524C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF08C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6702B20883
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:53:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PaDGUarq"
+	by mail.kernel.org (Postfix) with ESMTP id 6938C20883
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:54:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727693AbfE1Hxh (ORCPT
+        id S1727777AbfE1HyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 03:53:37 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:52881 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727039AbfE1Hxf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 03:53:35 -0400
-Received: by mail-it1-f193.google.com with SMTP id t184so2767560itf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 00:53:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PwpZM8H7YLCCXst1uTeA0ehiQjYxPanrQx8rycjOA8Q=;
-        b=PaDGUarqrwpn2WcZZXubIFwn/6XV9UCbOFvCg6kTbDsTzqCLbHOOZ7QtA06c8hxWTV
-         vP8X9KiDQuqkX+tx7S57VyKMl/UK4cHRxZMJWdx33DW2ImQsx2YVeFYbnbEMODSZfaZW
-         cYTIhj5G5/ydQa71BrGhnw5rQHltAXiD3tX1ZDbrHd6eFJn+oDnwZ+ranKYrTHKbhAcz
-         w/x8Cc4gS2RkQh+i2xStLMXPa9FyrgscAalR1ecTPhTwm1kUMAETKylg0DPBDWLIq376
-         0M7m/jtHooSIK41pslNmsCzUETVmsCXJ8kEn5GTx1DhynYTeIKSdSj5E/UjUEnurRoZe
-         geqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PwpZM8H7YLCCXst1uTeA0ehiQjYxPanrQx8rycjOA8Q=;
-        b=flejNce1f+hpDGZDTzag/TmNKt+ZK3FxawTg71bJX0zDCAry9JeYu5ocmdSVwc5/Fz
-         K1wppN671nQgH5o3LSW9ctNDPs/mPw0Rsar+motjbf/f5lExaIRjlY9ZiA1v9vQ6dUTz
-         u4FPWnuuSn+Fw8vYpS99PnVc3tuc4G52PC4tvU7kx3t6euc8qLZ7rPQOwd/FWda5Mlwm
-         jjFM3+Q/gMM/M3BJQQ6lsTkycnaqKEfmApr1Kb0/IgOeKRSzq96GbRIl/wSGAtypJvJh
-         o93dtdCYjTiUcLjaDHerE0ulbMhv+wEKM93cBPGdlzz4tgixhLC1cyH1weuTvA7sk6dP
-         5lcA==
-X-Gm-Message-State: APjAAAWmL3+zjw7fqI8n4xB7dQSUFFlFbsCGvX7iHSJQTMMe4kFqQDJX
-        Bs6fmqwR1rCGEr/IYRh8Ac8zGYTmOlZq9zZyufrOXw==
-X-Google-Smtp-Source: APXvYqx4v3128ddJmwxIcyynhnVz7bSpXbvNiRgGqgnx1+rCJVGoTIJ3VybznY4MnF7+otMs/Z93UfFghNBLkkLjS4c=
-X-Received: by 2002:a24:3cb:: with SMTP id e194mr1991692ite.132.1559030014542;
- Tue, 28 May 2019 00:53:34 -0700 (PDT)
+        Tue, 28 May 2019 03:54:04 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:17594 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726203AbfE1HyD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 03:54:03 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 18DB99DC278E877CA54E;
+        Tue, 28 May 2019 15:54:01 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 28 May 2019 15:53:51 +0800
+From:   Mao Wenan <maowenan@huawei.com>
+To:     <gregkh@linuxfoundation.org>, <jeremy@azazel.net>
+CC:     <thesven73@gmail.com>, <devel@driverdev.osuosl.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        <matt.sickler@daktronics.com>, Mao Wenan <maowenan@huawei.com>
+Subject: [PATCH -next v3 0/2] cleanup for kpc2000_spi.c
+Date:   Tue, 28 May 2019 16:02:12 +0800
+Message-ID: <20190528080214.18382-1-maowenan@huawei.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190525081321.121294-1-maowenan@huawei.com>
+References: <20190525081321.121294-1-maowenan@huawei.com>
 MIME-Version: 1.0
-References: <20190521105203.154043-1-darekm@google.com> <16889839-b4e9-9984-2e36-5f07ceb7d7f2@xs4all.nl>
-In-Reply-To: <16889839-b4e9-9984-2e36-5f07ceb7d7f2@xs4all.nl>
-From:   Dariusz Marcinkiewicz <darekm@google.com>
-Date:   Tue, 28 May 2019 09:53:23 +0200
-Message-ID: <CALFZZQH7-mzRZbji1w-UwRLdw6c8+CThn0e96oG8E2Eq1ivANQ@mail.gmail.com>
-Subject: Re: [PATCH v7 1/3] media: cec: expose HDMI connector to CEC dev mapping
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     linux-media@vger.kernel.org, hans.verkuil@cisco.com,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 11:21 AM Hans Verkuil <hverkuil@xs4all.nl> wrote:
->
-> Hi Dariusz,
->
-> I did some more testing with the Khadas VIM2 and found another problem,
-> something that will, unfortunately, require some redesign.
->
-...
->
-> The other problem is in the CEC driver: it creates the CEC device as
-> soon as the HDMI device is found (cec_notifier_parse_hdmi_phandle).
->
-> But that doesn't mean that the HDMI device also had registered itself
-> as a CEC notifier.
->
-> Until now that never mattered: as long as the HDMI device was found
-> the CEC adapter would function fine, it would just have no physical
-> address until so notified by the HDMI device once it registered its
-> CEC notifier.
->
-> But if we want to have valid connector info during the lifetime of
-> the CEC adapter, then this no longer works.
->
-> I'm not entirely sure how to handle this.
->
-> Another issue here is that when the HDMI driver removes the notifier,
-> then it should also zero the connector info. Remember that both the
-> HDMI and the CEC drivers can be loaded and unloaded independently from
-> one another.
->
-Given all of the above, what do you think about coming back to the v1
-of the patch, where a connector info could be set on an adapter at any
-time and an event was used to notify userland when that happened? That
-approach seems to cover all the scenarios mentioned above.
+The error status should resotre to m->status in kp_spi_transfer_one_message(),
+and many white spaces in kpc2000_spi.c. patch 1 is to fix the error path, and
+patch 2 is to cleanup kpc2000_spi.c.
 
-Thank you for testing the patches!
+v1: remove set but not used variable 'status'.
 
-Best regards.
+v2: fix the subject tile.
+
+v3: add another patch to fix the error condition path and do some clean work for kpc2000_spi.c.
+
+Mao Wenan (2):
+  staging: kpc2000: report error status to spi core
+  staging: kpc2000: replace white spaces with tabs for kpc2000_spi.c
+
+ drivers/staging/kpc2000/kpc2000_spi.c | 718 +++++++++++++-------------
+ 1 file changed, 361 insertions(+), 357 deletions(-)
+
+-- 
+2.20.1
+
