@@ -2,88 +2,120 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D02BDC072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34BD8C04E84
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAC2B21734
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:48:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B272216FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:48:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BDz6LEiP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727280AbfE1QsO convert rfc822-to-8bit (ORCPT
+        id S1727342AbfE1Qsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 12:48:14 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:56506 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726371AbfE1QsN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 12:48:13 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 45D0CG3N1Kz9tyRP;
-        Tue, 28 May 2019 18:48:10 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 667rjOW_1YQx; Tue, 28 May 2019 18:48:10 +0200 (CEST)
-Received: from vm-hermes.si.c-s.fr (vm-hermes.si.c-s.fr [192.168.25.253])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 45D0CG2Q0Zz9tyRN;
-        Tue, 28 May 2019 18:48:10 +0200 (CEST)
-Received: by vm-hermes.si.c-s.fr (Postfix, from userid 33)
-        id 1E81174B; Tue, 28 May 2019 18:48:10 +0200 (CEST)
-Received: from 37-170-84-163.coucou-networks.fr
- (37-170-84-163.coucou-networks.fr [37.170.84.163]) by messagerie.si.c-s.fr
- (Horde Framework) with HTTP; Tue, 28 May 2019 18:48:10 +0200
-Date:   Tue, 28 May 2019 18:48:10 +0200
-Message-ID: <20190528184810.Horde.kzboSxOzA1nukNNnhCIE7g1@messagerie.si.c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-To:     Horia Geanta <horia.geanta@nxp.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH v1 00/15] Fixing selftests failure on Talitos driver
-References: <cover.1558445259.git.christophe.leroy@c-s.fr>
- <VI1PR0402MB34850975FDD8F5F1CE366A9C981E0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR0402MB34850975FDD8F5F1CE366A9C981E0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-User-Agent: Internet Messaging Program (IMP) H5 (6.2.3)
-Content-Type: text/plain; charset=UTF-8; format=flowed; DelSp=Yes
-MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
+        Tue, 28 May 2019 12:48:38 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35589 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726830AbfE1Qsh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 12:48:37 -0400
+Received: by mail-pg1-f193.google.com with SMTP id t1so11339035pgc.2;
+        Tue, 28 May 2019 09:48:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=VyKAAyyKF/StTl6Cc7Bhi0hP4Fbpr1Wnyb227vQxupA=;
+        b=BDz6LEiPv3DbWPxz2q4nGxrvuf/nyreOKnjeVboH01uYK4LNfyhggoZp6K2ruiObxv
+         YAuAXBsTfVJ0boZKnKIkC6UU6d+mWpLDwme//1KEmGzD9lBi4erPBlC0RLWowqzMaBDQ
+         bBh1w+idklGCiKs3Nshy8rmsEEciIFwavafIlX+ImMRbJUusmGGA2j3ShrQ2Yyv8vbBO
+         zSEs8ZE61BbEAHHkxNOMxS1iZ5J2QHK/XBmmBJGUF9yPqiCrLEuG7rDaLS9VM1AXYQqD
+         wBUEWG4L2XxIQHIQCgkt2JlO3jZke23eqatR1WPnLhfwekflViSOgopPAinxrdo8rBQs
+         FCRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=VyKAAyyKF/StTl6Cc7Bhi0hP4Fbpr1Wnyb227vQxupA=;
+        b=MH9RdEIX7phwnSlJlc39I9+buo2YFLuM/vwl4aEaN6uJ/EZmc8mikIFSLPHNFPMDl4
+         1TAUH7uo8zyRLS3v3Q4K7FJ3TmEvZCGzDDXK//vbgofo7QJEP2BSQ5W1uVMVrqNRwHbd
+         r1vgWPFTypzZ4y3C5E6zEKv89RqBdEVRvkfKhFdgP0GZ2OL4YeX1A9OXikrXRNQJ5JqM
+         NeGkt17lcj4qQmgKDM3OZ0x6V90ujsdkh/lCNC+riDcidOa5lGfu5ouXxCgbkWWaX1PP
+         balyg2g3+G5CZe+0al/REd+v0YelmACHVvTX4BwkDigiXrNkt+905Ub5bmdB36Pa3vBs
+         2UzQ==
+X-Gm-Message-State: APjAAAVl6Bg+NgVifN9/ZoIPEJIht9+OGkVEdpgI5jhIMrova7feHbwQ
+        GWiX8gK0zRrtOMimycOTRxI=
+X-Google-Smtp-Source: APXvYqyHME0FjSisF3IqfNkzb5R68J3a7YnPvgHLro3k6kdMV1VTMJnenNrsas0+2U+az3DIIcmv+A==
+X-Received: by 2002:a63:2248:: with SMTP id t8mr90644297pgm.358.1559062116816;
+        Tue, 28 May 2019 09:48:36 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id a30sm8916533pje.4.2019.05.28.09.48.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 May 2019 09:48:36 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     agross@kernel.org, david.brown@linaro.org,
+        bjorn.andersson@linaro.org
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, marc.w.gonzalez@free.fr,
+        jcrouse@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH 3/3] arm64: dts: qcom: msm8998: Add gpucc node
+Date:   Tue, 28 May 2019 09:48:34 -0700
+Message-Id: <20190528164834.38691-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190528164616.38517-1-jeffrey.l.hugo@gmail.com>
+References: <20190528164616.38517-1-jeffrey.l.hugo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Horia Geanta <horia.geanta@nxp.com> a écrit :
+Add MSM8998 GPU Clock Controller DT node.
 
-> On 5/21/2019 4:34 PM, Christophe Leroy wrote:
->> Several test failures have popped up following recent changes to crypto
->> selftests.
->>
->> This series fixes (most of) them.
->>
->> The last three patches are trivial cleanups.
->>
-> Thanks Christophe.
->
-> For the series:
-> Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
->
-> Have you validated the changes also on SEC 2.x+?
-> Asking since IIRC you mentioned having only HW with SEC 1 and  
-> changes in patch
-> "crypto: talitos - fix AEAD processing." look quite complex.
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
+ arch/arm64/boot/dts/qcom/msm8998.dtsi | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-When I ported the driver to SEC1 some years ago I only had a SEC 1.2  
-(mpc885) but I now have also a board with a mpc8321E which embeds a  
-SEC 2.2 so I also tested the changes on it.
-
-Christophe
-
->
-> Thanks,
-> Horia
-
+diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+index 574be78a936e..cf00bfeec6b3 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+@@ -3,6 +3,7 @@
+ 
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/qcom,gcc-msm8998.h>
++#include <dt-bindings/clock/qcom,gpucc-msm8998.h>
+ #include <dt-bindings/clock/qcom,rpmcc.h>
+ #include <dt-bindings/gpio/gpio.h>
+ 
+@@ -763,6 +764,20 @@
+ 			reg = <0x1f40000 0x20000>;
+ 		};
+ 
++		gpucc: clock-controller@5065000 {
++			compatible = "qcom,gpucc-msm8998";
++			#clock-cells = <1>;
++			#reset-cells = <1>;
++			#power-domain-cells = <1>;
++			reg = <0x05065000 0x9000>;
++
++			clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>,
++				 <&gcc GPLL0_OUT_MAIN>;
++			clock-names = "xo",
++				      "gpll0";
++		};
++
++
+ 		apcs_glb: mailbox@9820000 {
+ 			compatible = "qcom,msm8998-apcs-hmss-global";
+ 			reg = <0x17911000 0x1000>;
+-- 
+2.17.1
 
