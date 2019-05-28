@@ -2,102 +2,155 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8064CC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 614C4C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AE5F20883
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:28:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559050081;
-	bh=P4lui+xiNwVV1Z7TDo9Tlsuu/c7MHjXNDwR14n4l2F0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qQ1egTCYiHYoVQS9tMYAlbqL75x2xmcZBVCQV5968Is7Lrg31pF5YBhlv8DT8P7Go
-	 c6fw/EEnQS3XQdYDB/l5VqwU+UKT+JGijZr5p+EPvhfaC3j7xmUAKL6OTbYuQJJTtM
-	 KA7x48WgOEGSdwqhKyvZeUHieMbHDV0gOHRY0J0M=
+	by mail.kernel.org (Postfix) with ESMTP id 2D36A20883
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:30:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PQPfddBf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727532AbfE1N2A (ORCPT
+        id S1727491AbfE1Nac (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 09:28:00 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45710 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbfE1N2A (ORCPT
+        Tue, 28 May 2019 09:30:32 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:50218 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbfE1Nab (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 09:28:00 -0400
+        Tue, 28 May 2019 09:30:31 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=P4lui+xiNwVV1Z7TDo9Tlsuu/c7MHjXNDwR14n4l2F0=; b=Nb0cI38Eue22o1hau9CwnWbep
-        Q7Yi85f0Vq6E0YQV9J1Eqxr0Bwu/y3oC6PZrCxjaLCewoA5iB7hLHMahis8ptNB36uJfK3xP9GRgy
-        3t/9XMyDnnef2ait4JTxLdWb+Jqa49eyKmKRt+ZoE3aHHtmQinY18wRRVCVQY+lFGDgVs=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hVc8x-0002Vb-S8; Tue, 28 May 2019 13:27:55 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 20D03440046; Tue, 28 May 2019 14:27:55 +0100 (BST)
-Date:   Tue, 28 May 2019 14:27:55 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Keerthy <j-keerthy@ti.com>
-Cc:     lee.jones@linaro.org, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-omap@vger.kernel.org, t-kristo@ti.com
-Subject: Re: [PATCH v2 3/3] regulator: lp87565: Add 4-phase lp87561 regulator
- support
-Message-ID: <20190528132755.GK2456@sirena.org.uk>
-References: <20190516043218.8222-1-j-keerthy@ti.com>
- <20190516043218.8222-4-j-keerthy@ti.com>
- <20190522153528.GG8582@sirena.org.uk>
- <1712197d-7d43-38a8-efde-11b99537eae9@ti.com>
+         bh=m8QDuIo40K2ON6yKsiYwzYOeap3jWGAqFsvplXDMLl8=; b=PQPfddBfbyEXuXddfKHI/aoGX
+        c0pJ30nGCQ7FnvYJ2hqkbrGNKMPKRtaiec/+silMCly1SxmenARrs+9KyIPeeTfc8W00EW5Gfb2s1
+        JV34qq5RHSAD3xSikRAT5KdjWHRlXbS/lvjhXOhP4xyc4rCk4adNuK6zLwcE4Szknhcm5y0Ny2ZIR
+        iGnlSGOUpQ8N+qArI+ZbXxGYToPuBLZ5a+8FxtKMf4/gGIWEaq3RE+q+I3VZWVl0OmpJSvprWIRHn
+        5isW24F/FP8fUM2t26R1DHpCG+Tfw5QWeRJ3VMd9PU1w8fkfvoPGQi2FhqSNSks9kkjalWx5qLF6R
+        BnSxBvNcQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hVcBN-0004DY-3p; Tue, 28 May 2019 13:30:25 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 999502072908B; Tue, 28 May 2019 15:30:22 +0200 (CEST)
+Date:   Tue, 28 May 2019 15:30:22 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     kan.liang@linux.intel.com
+Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com
+Subject: Re: [PATCH 4/9] perf/x86/intel: Support hardware TopDown metrics
+Message-ID: <20190528133022.GX2606@hirez.programming.kicks-ass.net>
+References: <20190521214055.31060-1-kan.liang@linux.intel.com>
+ <20190521214055.31060-5-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Qo8f1a4rgWw9S/zY"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1712197d-7d43-38a8-efde-11b99537eae9@ti.com>
-X-Cookie: The other line moves faster.
+In-Reply-To: <20190521214055.31060-5-kan.liang@linux.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 21, 2019 at 02:40:50PM -0700, kan.liang@linux.intel.com wrote:
+> +static u64 icl_metric_update_event(struct perf_event *event, u64 val)
+> +{
+> +	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+> +	struct hw_perf_event *hwc = &event->hw;
+> +	u64 newval, metric, slots_val = 0, new, last;
+> +	bool nmi = in_nmi();
+> +	int txn_flags = nmi ? 0 : cpuc->txn_flags;
+> +
+> +	/*
+> +	 * Use cached value for transaction.
+> +	 */
+> +	newval = 0;
+> +	if (txn_flags) {
+> +		newval = cpuc->txn_metric;
+> +		slots_val = cpuc->txn_slots;
+> +	} else if (nmi) {
+> +		newval = cpuc->nmi_metric;
+> +		slots_val = cpuc->nmi_slots;
+> +	}
+> +
+> +	if (!newval) {
+> +		slots_val = val;
+> +
+> +		rdpmcl((1<<29), newval);
+> +		if (txn_flags) {
+> +			cpuc->txn_metric = newval;
+> +			cpuc->txn_slots = slots_val;
+> +		} else if (nmi) {
+> +			cpuc->nmi_metric = newval;
+> +			cpuc->nmi_slots = slots_val;
+> +		}
+> +
+> +		if (!(txn_flags & PERF_PMU_TXN_REMOVE)) {
+> +			/* Reset the metric value when reading
+> +			 * The SLOTS register must be reset when PERF_METRICS reset,
+> +			 * otherwise PERF_METRICS may has wrong output.
+> +			 */
 
---Qo8f1a4rgWw9S/zY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+broken comment style.. (and grammer)
 
-On Tue, May 28, 2019 at 03:23:41PM +0530, Keerthy wrote:
-> On 22/05/19 9:05 PM, Mark Brown wrote:
-> > On Thu, May 16, 2019 at 10:02:18AM +0530, Keerthy wrote:
+> +			wrmsrl(MSR_PERF_METRICS, 0);
+> +			wrmsrl(MSR_CORE_PERF_FIXED_CTR3, 0);
 
-> > Acked-by: Mark Brown <broonie@kernel.org>
+I don't get this, overflow happens on when we flip sign, so why is
+programming 0 a sane thing to do?
 
-> This patch will come via the mfd branch?
+> +			hwc->saved_metric = 0;
+> +			hwc->saved_slots = 0;
+> +		} else {
+> +			/* saved metric and slots for context switch */
+> +			hwc->saved_metric = newval;
+> +			hwc->saved_slots = val;
+> +
+> +		}
+> +		/* cache the last metric and slots */
+> +		cpuc->last_metric = hwc->last_metric;
+> +		cpuc->last_slots = hwc->last_slots;
+> +		hwc->last_metric = 0;
+> +		hwc->last_slots = 0;
+> +	}
+> +
+> +	/* The METRICS and SLOTS have been reset when reading */
+> +	if (!(txn_flags & PERF_PMU_TXN_REMOVE))
+> +		local64_set(&hwc->prev_count, 0);
+> +
+> +	if (is_slots_event(event))
+> +		return (slots_val - cpuc->last_slots);
+> +
+> +	/*
+> +	 * The metric is reported as an 8bit integer percentage
+> +	 * suming up to 0xff. As the counter is less than 64bits
+> +	 * we can use the not used bits to get the needed precision.
+> +	 * Use 16bit fixed point arithmetic for
+> +	 * slots-in-metric = (MetricPct / 0xff) * val
+> +	 * This works fine for upto 48bit counters, but will
+> +	 * lose precision above that.
+> +	 */
+> +
+> +	metric = (cpuc->last_metric >> ((hwc->idx - INTEL_PMC_IDX_FIXED_METRIC_BASE)*8)) & 0xff;
+> +	last = (((metric * 0xffff) >> 8) * cpuc->last_slots) >> 16;
 
-I'd expect so, IIRC it had a build dependency on the earlier patches in
-the series so if that doesn't happen I'll need to merge the relevant MFD
-commits.
+How is that cpuc->last_* crap not broken for NMIs ?
 
---Qo8f1a4rgWw9S/zY
-Content-Type: application/pgp-signature; name="signature.asc"
+> +
+> +	metric = (newval >> ((hwc->idx - INTEL_PMC_IDX_FIXED_METRIC_BASE)*8)) & 0xff;
+> +	new = (((metric * 0xffff) >> 8) * slots_val) >> 16;
+> +
+> +	return (new - last);
+> +}
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlztN1oACgkQJNaLcl1U
-h9C2aQf+K2lJtpmwLAD/ngSjYbhqPveAgOfRyzbKExRgY1UGxOjnCEmz0RopEc9H
-MDAIkTPSzZm1UHJfNWw4VogZMCSBFipIb3uqrCdpFWWe8E7b1CYgMNUHM55OWOl8
-iVdMV0mC5bCMDTfBOBfvh5TTJLVwMECyA7uKJnoSfhTLj72NXSdw9D7fIbBg6f79
-fCflkIu16x4HNljMdLfgP5InnoVtONnd++RakYnE9npierZTvrkXfUCEX8Bo91Dd
-we7V9kel0jIcyW+Br90IB/g5Brvi+CMhPhff5enXfj+i09vm1GiBHYsvHnE/YmCA
-rCGqDaSqWVPPAQ2cxojb8TYnJhpzPQ==
-=i2ZR
------END PGP SIGNATURE-----
+This is diguisting.. and unreadable.
 
---Qo8f1a4rgWw9S/zY--
+mul_u64_u32_shr() is actually really fast, use it.
