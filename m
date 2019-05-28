@@ -6,35 +6,34 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD002C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0CD9C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1FAD2075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 835E92075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:04:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727521AbfE1JEn (ORCPT
+        id S1727536AbfE1JEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 05:04:43 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:17175 "EHLO huawei.com"
+        Tue, 28 May 2019 05:04:46 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:17174 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727459AbfE1JEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 05:04:39 -0400
+        id S1727457AbfE1JEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 05:04:38 -0400
 Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 4BBDEBBDC9C5E5778912;
+        by Forcepoint Email with ESMTP id 7320177CBAF3EBD60590;
         Tue, 28 May 2019 17:04:36 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 28 May 2019 17:04:26 +0800
+ 14.3.439.0; Tue, 28 May 2019 17:04:25 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Zhongzhu Liu <liuzhongzhu@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
+        <linuxarm@huawei.com>, Yunsheng Lin <linyunsheng@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 03/12] net: hns3: add support for dump firmware statistics by debugfs
-Date:   Tue, 28 May 2019 17:02:53 +0800
-Message-ID: <1559034182-24737-4-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 02/12] net: hns3: fix for HNS3_RXD_GRO_SIZE_M macro
+Date:   Tue, 28 May 2019 17:02:52 +0800
+Message-ID: <1559034182-24737-3-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1559034182-24737-1-git-send-email-tanhuazhong@huawei.com>
 References: <1559034182-24737-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,142 +46,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhongzhu Liu <liuzhongzhu@huawei.com>
+From: Yunsheng Lin <linyunsheng@huawei.com>
 
-This patch prints firmware statistics information.
+According to hardware user menual, the GRO_SIZE is 14 bits width,
+the HNS3_RXD_GRO_SIZE_M is 10 bits width now, which may cause
+hardware GRO received packet error problem.
 
-debugfs command:
-echo dump m7 info > cmd
-
-estuary:/dbg/hns3/0000:7d:00.0$ echo dump m7 info > cmd
-[  172.577240] hns3 0000:7d:00.0: 0x00000000  0x00000000  0x00000000
-[  172.583471] hns3 0000:7d:00.0: 0x00000000  0x00000000  0x00000000
-[  172.589552] hns3 0000:7d:00.0: 0x00000030  0x00000000  0x00000000
-[  172.595632] hns3 0000:7d:00.0: 0x00000000  0x00000000  0x00000000
-estuary:/dbg/hns3/0000:7d:00.0$
-
-Signed-off-by: Zhongzhu Liu <liuzhongzhu@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
+Fixes: a6d53b97a2e7 ("net: hns3: Adds GRO params to SKB for the stack")
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c |  1 +
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h |  8 +++
- .../ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c | 57 ++++++++++++++++++++++
- 3 files changed, 66 insertions(+)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c
-index fc4917a..30354fa 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c
-@@ -252,6 +252,7 @@ static void hns3_dbg_help(struct hnae3_handle *h)
- 	dev_info(&h->pdev->dev, "dump qos buf cfg\n");
- 	dev_info(&h->pdev->dev, "dump mng tbl\n");
- 	dev_info(&h->pdev->dev, "dump reset info\n");
-+	dev_info(&h->pdev->dev, "dump m7 info\n");
- 	dev_info(&h->pdev->dev, "dump ncl_config <offset> <length>(in hex)\n");
- 	dev_info(&h->pdev->dev, "dump mac tnl status\n");
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
+index c14480f..408efd5 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
+@@ -145,7 +145,7 @@ enum hns3_nic_state {
+ #define HNS3_RXD_TSIND_M			(0x7 << HNS3_RXD_TSIND_S)
+ #define HNS3_RXD_LKBK_B				15
+ #define HNS3_RXD_GRO_SIZE_S			16
+-#define HNS3_RXD_GRO_SIZE_M			(0x3ff << HNS3_RXD_GRO_SIZE_S)
++#define HNS3_RXD_GRO_SIZE_M			(0x3fff << HNS3_RXD_GRO_SIZE_S)
  
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-index d79a209..61cb10d 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-@@ -243,6 +243,9 @@ enum hclge_opcode_type {
- 
- 	/* NCL config command */
- 	HCLGE_OPC_QUERY_NCL_CONFIG	= 0x7011,
-+	/* M7 stats command */
-+	HCLGE_OPC_M7_STATS_BD		= 0x7012,
-+	HCLGE_OPC_M7_STATS_INFO		= 0x7013,
- 
- 	/* SFP command */
- 	HCLGE_OPC_GET_SFP_INFO		= 0x7104,
-@@ -970,6 +973,11 @@ struct hclge_fd_ad_config_cmd {
- 	u8 rsv2[8];
- };
- 
-+struct hclge_get_m7_bd_cmd {
-+	__le32 bd_num;
-+	u8 rsv[20];
-+};
-+
- int hclge_cmd_init(struct hclge_dev *hdev);
- static inline void hclge_write_reg(void __iomem *base, u32 reg, u32 value)
- {
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-index a9ffb57..ed1f533 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-@@ -921,6 +921,61 @@ static void hclge_dbg_dump_rst_info(struct hclge_dev *hdev)
- 		 hdev->rst_stats.reset_cnt);
- }
- 
-+void hclge_dbg_get_m7_stats_info(struct hclge_dev *hdev)
-+{
-+	struct hclge_desc *desc_src, *desc_tmp;
-+	struct hclge_get_m7_bd_cmd *req;
-+	struct hclge_desc desc;
-+	u32 bd_num, buf_len;
-+	int ret, i;
-+
-+	hclge_cmd_setup_basic_desc(&desc, HCLGE_OPC_M7_STATS_BD, true);
-+
-+	req = (struct hclge_get_m7_bd_cmd *)desc.data;
-+	ret = hclge_cmd_send(&hdev->hw, &desc, 1);
-+	if (ret) {
-+		dev_err(&hdev->pdev->dev,
-+			"get firmware statistics bd number failed, ret=%d\n",
-+			ret);
-+		return;
-+	}
-+
-+	bd_num = le32_to_cpu(req->bd_num);
-+
-+	buf_len	 = sizeof(struct hclge_desc) * bd_num;
-+	desc_src = kzalloc(buf_len, GFP_KERNEL);
-+	if (!desc_src) {
-+		dev_err(&hdev->pdev->dev,
-+			"allocate desc for get_m7_stats failed\n");
-+		return;
-+	}
-+
-+	desc_tmp = desc_src;
-+	ret  = hclge_dbg_cmd_send(hdev, desc_tmp, 0, bd_num,
-+				  HCLGE_OPC_M7_STATS_INFO);
-+	if (ret) {
-+		kfree(desc_src);
-+		dev_err(&hdev->pdev->dev,
-+			"get firmware statistics failed, ret=%d\n", ret);
-+		return;
-+	}
-+
-+	for (i = 0; i < bd_num; i++) {
-+		dev_info(&hdev->pdev->dev, "0x%08x  0x%08x  0x%08x\n",
-+			 le32_to_cpu(desc_tmp->data[0]),
-+			 le32_to_cpu(desc_tmp->data[1]),
-+			 le32_to_cpu(desc_tmp->data[2]));
-+		dev_info(&hdev->pdev->dev, "0x%08x  0x%08x  0x%08x\n",
-+			 le32_to_cpu(desc_tmp->data[3]),
-+			 le32_to_cpu(desc_tmp->data[4]),
-+			 le32_to_cpu(desc_tmp->data[5]));
-+
-+		desc_tmp++;
-+	}
-+
-+	kfree(desc_src);
-+}
-+
- /* hclge_dbg_dump_ncl_config: print specified range of NCL_CONFIG file
-  * @hdev: pointer to struct hclge_dev
-  * @cmd_buf: string that contains offset and length
-@@ -1029,6 +1084,8 @@ int hclge_dbg_run_cmd(struct hnae3_handle *handle, char *cmd_buf)
- 		hclge_dbg_dump_reg_cmd(hdev, cmd_buf);
- 	} else if (strncmp(cmd_buf, "dump reset info", 15) == 0) {
- 		hclge_dbg_dump_rst_info(hdev);
-+	} else if (strncmp(cmd_buf, "dump m7 info", 12) == 0) {
-+		hclge_dbg_get_m7_stats_info(hdev);
- 	} else if (strncmp(cmd_buf, "dump ncl_config", 15) == 0) {
- 		hclge_dbg_dump_ncl_config(hdev,
- 					  &cmd_buf[sizeof("dump ncl_config")]);
+ #define HNS3_TXD_L3T_S				0
+ #define HNS3_TXD_L3T_M				(0x3 << HNS3_TXD_L3T_S)
 -- 
 2.7.4
 
