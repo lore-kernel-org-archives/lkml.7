@@ -2,164 +2,181 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F8FC072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A04C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 754D021721
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:56:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77EE92070D
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:57:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="ZUgj5eww"
+	dkim=pass (1024-bit key) header.d=appneta.com header.i=@appneta.com header.b="UUNfmVG+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727310AbfE1Q4t (ORCPT
+        id S1727377AbfE1Q5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 12:56:49 -0400
-Received: from mail-eopbgr750118.outbound.protection.outlook.com ([40.107.75.118]:62977
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726512AbfE1Q4t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 12:56:49 -0400
+        Tue, 28 May 2019 12:57:38 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34382 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727090AbfE1Q5i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 12:57:38 -0400
+Received: by mail-pg1-f196.google.com with SMTP id h2so8281405pgg.1
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 09:57:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=wavesemi.onmicrosoft.com; s=selector1-wavesemi-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=U2hiJeg71rAVO/C28b0VW05V5OVjr2MQ+o6501cDk28=;
- b=ZUgj5ewwIQpj+riKaWh6/V9sHRCyASh5B1Wy4zHmi6BmosCeTsugzXhPN9xd27kneU8zJGD+C2jtl3BLlYfStETef9GQTU6n2GnKxpvRH0amwmPB5wd1ZgvRmYeA4IRuRjZP98ZUCtR6mRCZRXKc+Q/26t3dxNBP+Udx9U8xLMQ=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.174.162.17) by
- MWHPR2201MB1568.namprd22.prod.outlook.com (10.172.63.22) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.16; Tue, 28 May 2019 16:56:42 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::90ff:8d19:8459:834b]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::90ff:8d19:8459:834b%7]) with mapi id 15.20.1922.021; Tue, 28 May 2019
- 16:56:42 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-CC:     Paul Burton <pburton@wavecomp.com>, Archer Yan <ayan@wavecomp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: [PATCH] irqchip/mips-gic: Use the correct local interrupt map
- registers
-Thread-Topic: [PATCH] irqchip/mips-gic: Use the correct local interrupt map
- registers
-Thread-Index: AQHVFXZSM9UrjGFoZkKtgNi33S6f+Q==
-Date:   Tue, 28 May 2019 16:56:41 +0000
-Message-ID: <20190528165630.32016-1-paul.burton@mips.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR01CA0016.prod.exchangelabs.com (2603:10b6:a02:80::29)
- To MWHPR2201MB1277.namprd22.prod.outlook.com (2603:10b6:301:24::17)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.21.0
-x-originating-ip: [12.94.197.246]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5b77b9cd-799d-458d-aa96-08d6e38d7509
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR2201MB1568;
-x-ms-traffictypediagnostic: MWHPR2201MB1568:
-x-microsoft-antispam-prvs: <MWHPR2201MB156865EEA41FDCD910958FFEC11E0@MWHPR2201MB1568.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 00514A2FE6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39840400004)(136003)(376002)(396003)(346002)(366004)(199004)(189003)(2906002)(81156014)(316002)(3846002)(81166006)(36756003)(386003)(42882007)(44832011)(486006)(102836004)(52116002)(50226002)(6116002)(6506007)(476003)(186003)(305945005)(66066001)(8676002)(2616005)(26005)(99286004)(66476007)(53936002)(5660300002)(54906003)(110136005)(2501003)(14444005)(256004)(478600001)(66946007)(73956011)(6486002)(6436002)(14454004)(71200400001)(25786009)(1076003)(8936002)(7736002)(68736007)(4326008)(6512007)(66446008)(71190400001)(64756008)(66556008);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1568;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: XqqjY1uysbROGyimiHxb++OQpQx2uI236Xmr20aE3ZqeeNoudGylPeCPOZ+aZN5se2ZK9aOLnRBCDzTVc+n6cnlugxwLUFdRFEOx+WUWJoWkwmmOQLkgkufI+Ag+E6TffBURxY6TWj/3rN0DmhZY6gC8aJViGWbsNDDYoWrrd2Z9A9JuQRD1RKVd2jEl29gZIdB1beiocjbGtz+jeg3Q3Z0ynqFJV1r+r7G1Q7Qnf2KRYvULV7n2H7V7rcceRiZOY44XJ9FvzGYaFRfYGHomkyjcuuZORmiN6AVebHIKlSEfb+bFvs+vzvvFPy68fB8PGCkqX8ITe+Wug0gsOKbtNdrg1PzwGUDSwNTe10mYBLEkbtpP4g1qWFKmED9Tfx9RTeOTWreUGhp3CoS5yi8xjvF2nHUHiI/IToCsPUZyOIY=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5b77b9cd-799d-458d-aa96-08d6e38d7509
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2019 16:56:41.8930
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pburton@wavecomp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1568
+        d=appneta.com; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=lFicemnrxZJjOmAogTHnQIM2MtSG5wRpTZojge/oE6s=;
+        b=UUNfmVG+dl4dsV8GCJXdvUnq74HpLPc5cl3YuUVk4GPLntZVTxPBjZfWYIkjiOzwvi
+         zs5qeIrC1fIXH1W7PYyqTjICOngvh34WOuANDVsZgYdU9IuYMoqzEeoEEKXYIVMaV5Ui
+         f99nhgBOAcoT4Pge69hhdYt4kivvKfZ78Qnoo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=lFicemnrxZJjOmAogTHnQIM2MtSG5wRpTZojge/oE6s=;
+        b=D5RFT/CoAdm2f6MwwyF4H3LR7F1ni3cjP7IDPqEPlkGERC7ddQIg2+IsiRdEp6BOHq
+         IvQKnglNLguqMAwcFJShiHVLG6Fr04WFsHpM3TKyQWNQLep3h87I2BbjpZcjDW8CxwW8
+         wcEjVgpzzNK4tOBJ3aIa6Cb25M723/Unv6hT8pjt2xz5GlcJi8lMCGH2H2nBQNNUE/pt
+         4btD8RcPDPg/fD4ZXl6WDhuFyvVw5kA1uMPDRolUE5V9TWRupc5eDH2MWpE5/w7RiUxK
+         Ehh59fDrLk3sLGwUnaSvVBymk5EbcUVrlFlr9Hc/hjob+3TLek5wkt/LtLsw3QFvURQa
+         /syg==
+X-Gm-Message-State: APjAAAXZg38iLvnjoPvWpYTSBZgufnisOouaRU+bN8fV0+tELWRA8Wa1
+        6KaYvs0l5iKoq2erzYUpT/StYA==
+X-Google-Smtp-Source: APXvYqx5jjVcgp8A0NWp+9txe3Qup8abnAwaoeeODau1vlVKM4m9vzUFxHigDyzUk6yBCJxrG4Y9mA==
+X-Received: by 2002:a62:4dc5:: with SMTP id a188mr93983392pfb.8.1559062657044;
+        Tue, 28 May 2019 09:57:37 -0700 (PDT)
+Received: from jltm109.jaalam.net (vancouver-a.appneta.com. [209.139.228.33])
+        by smtp.gmail.com with ESMTPSA id t5sm10996695pgh.46.2019.05.28.09.57.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 May 2019 09:57:36 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH net 4/4] net/udpgso_bench_tx: audit error queue
+From:   Fred Klassen <fklassen@appneta.com>
+In-Reply-To: <CAF=yD-Le0XKCfyDBvHmBRVqkwn1D6ZoG=12gss5T62VcN5+1_w@mail.gmail.com>
+Date:   Tue, 28 May 2019 09:57:35 -0700
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        Willem de Bruijn <willemb@google.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <9811659B-6D5A-4C4F-9CF8-735E9CA6DE4E@appneta.com>
+References: <20190523210651.80902-1-fklassen@appneta.com>
+ <20190523210651.80902-5-fklassen@appneta.com>
+ <CAF=yD-KBNLr5KY-YQ1KMmZGCpYNefSJKaJkZNOwd8nRiedpQtA@mail.gmail.com>
+ <879E5DA6-3A4F-4CE1-9DA5-480EE30109DE@appneta.com>
+ <CAF=yD-LQT7=4vvMwMa96_SFuUd5GywMoae7hGi9n6rQeuhhxuQ@mail.gmail.com>
+ <5BB184F2-6C20-416B-B2AF-A678400CFE3E@appneta.com>
+ <CAF=yD-+6CRyqL6Fq5y2zpw5nnDitYC7G1c2JAVHZTjyw68DYJg@mail.gmail.com>
+ <903DEC70-845B-4C4B-911D-2F203C191C27@appneta.com>
+ <CAF=yD-Le0XKCfyDBvHmBRVqkwn1D6ZoG=12gss5T62VcN5+1_w@mail.gmail.com>
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhlIE1JUFMgR0lDIGNvbnRhaW5zIGEgYmxvY2sgb2YgcmVnaXN0ZXJzIHVzZWQgdG8gbWFwIGxv
-Y2FsIGludGVycnVwdHMNCnRvIGEgcGFydGljdWxhciBDUFUgaW50ZXJydXB0IHBpbi4gU2luY2Ug
-dGhlc2UgcmVnaXN0ZXJzIGFyZSBmb3VuZCBhdCBhDQpjb25zZWN1dGl2ZSByYW5nZSBvZiBhZGRy
-ZXNzZXMgd2UgYWNjZXNzIHRoZW0gdXNpbmcgYW4gaW5kZXgsIHZpYSB0aGUNCihyZWFkfHdyaXRl
-KV9naWNfdltsb11fbWFwIGFjY2Vzc29yIGZ1bmN0aW9ucy4gV2UgY3VycmVudGx5IHVzZSB2YWx1
-ZXMNCmZyb20gZW51bSBtaXBzX2dpY19sb2NhbF9pbnRlcnJ1cHQgYXMgdGhvc2UgaW5kaWNlcy4N
-Cg0KVW5mb3J0dW5hdGVseSB3aGlsc3QgZW51bSBtaXBzX2dpY19sb2NhbF9pbnRlcnJ1cHQgcHJv
-dmlkZXMgdGhlIGNvcnJlY3QNCm9mZnNldHMgZm9yIGJpdHMgaW4gdGhlIHBlbmRpbmcgJiBtYXNr
-IHJlZ2lzdGVycywgdGhlIG9yZGVyaW5nIG9mIHRoZQ0KbWFwIHJlZ2lzdGVycyBpcyBzdWJ0bHkg
-ZGlmZmVyZW50Li4uIENvbXBhcmVkIHdpdGggdGhlIG9yZGVyaW5nIG9mDQpwZW5kaW5nICYgbWFz
-ayBiaXRzLCB0aGUgbWFwIHJlZ2lzdGVycyBtb3ZlIHRoZSBGREMgZnJvbSB0aGUgZW5kIG9mIHRo
-ZQ0KbGlzdCB0byBpbmRleCAzIGFmdGVyIHRoZSB0aW1lciBpbnRlcnJ1cHQuIEFzIGEgcmVzdWx0
-IHRoZSBwZXJmb3JtYW5jZQ0KY291bnRlciAmIHNvZnR3YXJlIGludGVycnVwdHMgYXJlIHRoZXJl
-Zm9yZSBhdCBpbmRpY2VzIDQtNiByYXRoZXIgdGhhbg0KaW5kaWNlcyAzLTUuDQoNCk5vdGFibHkg
-dGhpcyBjYXVzZXMgcHJvYmxlbXMgd2l0aCBwZXJmb3JtYW5jZSBjb3VudGVyIGludGVycnVwdHMg
-YmVpbmcNCmluY29ycmVjdGx5IG1hcHBlZCBvbiBzb21lIHN5c3RlbXMsIGFuZCBwcmVzdW1hYmx5
-IHdpbGwgYWxzbyBjYXVzZQ0KcHJvYmxlbXMgZm9yIEZEQyBpbnRlcnJ1cHRzLg0KDQpJbnRyb2R1
-Y2UgYSBmdW5jdGlvbiB0byBtYXAgZnJvbSBlbnVtIG1pcHNfZ2ljX2xvY2FsX2ludGVycnVwdCB0
-byB0aGUNCmluZGV4IG9mIHRoZSBjb3JyZXNwb25kaW5nIG1hcCByZWdpc3RlciwgYW5kIHVzZSBp
-dCB0byBlbnN1cmUgd2UgYWNjZXNzDQp0aGUgbWFwIHJlZ2lzdGVycyBmb3IgdGhlIGNvcnJlY3Qg
-aW50ZXJydXB0cy4NCg0KU2lnbmVkLW9mZi1ieTogUGF1bCBCdXJ0b24gPHBhdWwuYnVydG9uQG1p
-cHMuY29tPg0KRml4ZXM6IGEwZGM1Y2I1ZTMxYiAoImlycWNoaXA6IG1pcHMtZ2ljOiBTaW1wbGlm
-eSBnaWNfbG9jYWxfaXJxX2RvbWFpbl9tYXAoKSIpDQpGaXhlczogZGE2MWZjZjlkNjJhICgiaXJx
-Y2hpcDogbWlwcy1naWM6IFVzZSBpcnFfY3B1X29ubGluZSB0byAodW4pbWFzayBhbGwtVlAoRSkg
-SVJRcyIpDQpSZXBvcnRlZC1hbmQtdGVzdGVkLWJ5OiBBcmNoZXIgWWFuIDxheWFuQHdhdmVjb21w
-LmNvbT4NCkNjOiBUaG9tYXMgR2xlaXhuZXIgPHRnbHhAbGludXRyb25peC5kZT4NCkNjOiBKYXNv
-biBDb29wZXIgPGphc29uQGxha2VkYWVtb24ubmV0Pg0KQ2M6IE1hcmMgWnluZ2llciA8bWFyYy56
-eW5naWVyQGFybS5jb20+DQpDYzogc3RhYmxlQHZnZXIua2VybmVsLm9yZyAjIHY0LjE0Kw0KLS0t
-DQogYXJjaC9taXBzL2luY2x1ZGUvYXNtL21pcHMtZ2ljLmggfCAzMCArKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysNCiBkcml2ZXJzL2lycWNoaXAvaXJxLW1pcHMtZ2ljLmMgICB8ICA0ICsr
-LS0NCiAyIGZpbGVzIGNoYW5nZWQsIDMyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQoN
-CmRpZmYgLS1naXQgYS9hcmNoL21pcHMvaW5jbHVkZS9hc20vbWlwcy1naWMuaCBiL2FyY2gvbWlw
-cy9pbmNsdWRlL2FzbS9taXBzLWdpYy5oDQppbmRleCA1NTgwNTlhOGYyMTguLjAyNzdiNTYxNTdh
-ZiAxMDA2NDQNCi0tLSBhL2FyY2gvbWlwcy9pbmNsdWRlL2FzbS9taXBzLWdpYy5oDQorKysgYi9h
-cmNoL21pcHMvaW5jbHVkZS9hc20vbWlwcy1naWMuaA0KQEAgLTMxNCw2ICszMTQsMzYgQEAgc3Rh
-dGljIGlubGluZSBib29sIG1pcHNfZ2ljX3ByZXNlbnQodm9pZCkNCiAJcmV0dXJuIElTX0VOQUJM
-RUQoQ09ORklHX01JUFNfR0lDKSAmJiBtaXBzX2dpY19iYXNlOw0KIH0NCiANCisvKioNCisgKiBt
-aXBzX2dpY192eF9tYXBfcmVnKCkgLSBSZXR1cm4gR0lDX1Z4XzxpbnRyPl9NQVAgcmVnaXN0ZXIg
-b2Zmc2V0DQorICogQGludHI6IEEgR0lDIGxvY2FsIGludGVycnVwdA0KKyAqDQorICogRGV0ZXJt
-aW5lIHRoZSBpbmRleCBvZiB0aGUgR0lDX1ZMXzxpbnRyPl9NQVAgb3IgR0lDX1ZPXzxpbnRyPl9N
-QVAgcmVnaXN0ZXINCisgKiB3aXRoaW4gdGhlIGJsb2NrIG9mIEdJQyBtYXAgcmVnaXN0ZXJzLiBU
-aGlzIGlzIGFsbW9zdCB0aGUgc2FtZSBhcyB0aGUgb3JkZXINCisgKiBvZiBpbnRlcnJ1cHRzIGlu
-IHRoZSBwZW5kaW5nICYgbWFzayByZWdpc3RlcnMsIGFzIHVzZWQgYnkgZW51bQ0KKyAqIG1pcHNf
-Z2ljX2xvY2FsX2ludGVycnVwdCwgYnV0IG1vdmVzIHRoZSBGREMgaW50ZXJydXB0ICYgdGh1cyBv
-ZmZzZXRzIHRoZQ0KKyAqIGludGVycnVwdHMgYWZ0ZXIgaXQuLi4NCisgKg0KKyAqIFJldHVybjog
-VGhlIG1hcCByZWdpc3RlciBpbmRleCBjb3JyZXNwb25kaW5nIHRvIEBpbnRyLg0KKyAqDQorICog
-VGhlIHJldHVybiB2YWx1ZSBpcyBzdWl0YWJsZSBmb3IgdXNlIHdpdGggdGhlIChyZWFkfHdyaXRl
-KV9naWNfdltsb11fbWFwDQorICogYWNjZXNzb3IgZnVuY3Rpb25zLg0KKyAqLw0KK3N0YXRpYyBp
-bmxpbmUgdW5zaWduZWQgaW50DQorbWlwc19naWNfdnhfbWFwX3JlZyhlbnVtIG1pcHNfZ2ljX2xv
-Y2FsX2ludGVycnVwdCBpbnRyKQ0KK3sNCisJLyogV0QsIENvbXBhcmUgJiBUaW1lciBhcmUgMTox
-ICovDQorCWlmIChpbnRyIDw9IEdJQ19MT0NBTF9JTlRfVElNRVIpDQorCQlyZXR1cm4gaW50cjsN
-CisNCisJLyogRkRDIG1vdmVzIHRvIGFmdGVyIFRpbWVyLi4uICovDQorCWlmIChpbnRyID09IEdJ
-Q19MT0NBTF9JTlRfRkRDKQ0KKwkJcmV0dXJuIEdJQ19MT0NBTF9JTlRfVElNRVIgKyAxOw0KKw0K
-KwkvKiBBcyBhIHJlc3VsdCBldmVyeXRoaW5nIGVsc2UgaXMgb2Zmc2V0IGJ5IDEgKi8NCisJcmV0
-dXJuIGludHIgKyAxOw0KK30NCisNCiAvKioNCiAgKiBnaWNfZ2V0X2MwX2NvbXBhcmVfaW50KCkg
-LSBSZXR1cm4gY3AwIGNvdW50L2NvbXBhcmUgaW50ZXJydXB0IHZpcnENCiAgKg0KZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvaXJxY2hpcC9pcnEtbWlwcy1naWMuYyBiL2RyaXZlcnMvaXJxY2hpcC9pcnEt
-bWlwcy1naWMuYw0KaW5kZXggZDMyMjY4Y2MxMTc0Li5mMzk4NTQ2OWMyMjEgMTAwNjQ0DQotLS0g
-YS9kcml2ZXJzL2lycWNoaXAvaXJxLW1pcHMtZ2ljLmMNCisrKyBiL2RyaXZlcnMvaXJxY2hpcC9p
-cnEtbWlwcy1naWMuYw0KQEAgLTM4OCw3ICszODgsNyBAQCBzdGF0aWMgdm9pZCBnaWNfYWxsX3Zw
-ZXNfaXJxX2NwdV9vbmxpbmUoc3RydWN0IGlycV9kYXRhICpkKQ0KIAlpbnRyID0gR0lDX0hXSVJR
-X1RPX0xPQ0FMKGQtPmh3aXJxKTsNCiAJY2QgPSBpcnFfZGF0YV9nZXRfaXJxX2NoaXBfZGF0YShk
-KTsNCiANCi0Jd3JpdGVfZ2ljX3ZsX21hcChpbnRyLCBjZC0+bWFwKTsNCisJd3JpdGVfZ2ljX3Zs
-X21hcChtaXBzX2dpY192eF9tYXBfcmVnKGludHIpLCBjZC0+bWFwKTsNCiAJaWYgKGNkLT5tYXNr
-KQ0KIAkJd3JpdGVfZ2ljX3ZsX3NtYXNrKEJJVChpbnRyKSk7DQogfQ0KQEAgLTUxNyw3ICs1MTcs
-NyBAQCBzdGF0aWMgaW50IGdpY19pcnFfZG9tYWluX21hcChzdHJ1Y3QgaXJxX2RvbWFpbiAqZCwg
-dW5zaWduZWQgaW50IHZpcnEsDQogCXNwaW5fbG9ja19pcnFzYXZlKCZnaWNfbG9jaywgZmxhZ3Mp
-Ow0KIAlmb3JfZWFjaF9vbmxpbmVfY3B1KGNwdSkgew0KIAkJd3JpdGVfZ2ljX3ZsX290aGVyKG1p
-cHNfY21fdnBfaWQoY3B1KSk7DQotCQl3cml0ZV9naWNfdm9fbWFwKGludHIsIG1hcCk7DQorCQl3
-cml0ZV9naWNfdm9fbWFwKG1pcHNfZ2ljX3Z4X21hcF9yZWcoaW50ciksIG1hcCk7DQogCX0NCiAJ
-c3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmZ2ljX2xvY2ssIGZsYWdzKTsNCiANCi0tIA0KMi4yMS4w
-DQoNCg==
+
+
+> On May 28, 2019, at 8:08 AM, Willem de Bruijn =
+<willemdebruijn.kernel@gmail.com> wrote:
+>=20
+
+I will push up latest patches soon.
+
+I did some testing and discovered that only TCP audit tests failed. They
+failed much less often when enabling poll.  Once in about 20 runs
+still failed. Therefore I commented out the TCP audit tests.
+
+As for the other tests, this is what I got with poll() disabled=E2=80=A6
+
+udp gso zerocopy timestamp audit
+udp rx:   1611 MB/s  1148129 calls/s
+udp tx:   1659 MB/s    28146 calls/s  28146 msg/s
+udp rx:   1686 MB/s  1201494 calls/s
+udp tx:   1685 MB/s    28579 calls/s  28579 msg/s
+udp rx:   1685 MB/s  1200402 calls/s
+udp tx:   1683 MB/s    28552 calls/s  28552 msg/s
+Summary over 3.000 seconds...
+sum udp tx:   1716 MB/s      85277 calls (28425/s)      85277 msgs =
+(28425/s)
+Tx Timestamps:               85277 received                 0 errors
+Zerocopy acks:               85277 received                 0 errors
+
+Here you see that with poll() enabled, it is a bit slower, so I don=E2=80=99=
+t have it
+enabled in udpgso_bench.sh =E2=80=A6
+
+udp gso zerocopy timestamp audit
+udp rx:   1591 MB/s  1133945 calls/s
+udp tx:   1613 MB/s    27358 calls/s  27358 msg/s
+udp rx:   1644 MB/s  1171674 calls/s
+udp tx:   1643 MB/s    27869 calls/s  27869 msg/s
+udp rx:   1643 MB/s  1170666 calls/s
+udp tx:   1641 MB/s    27845 calls/s  27845 msg/s
+Summary over 3.000 seconds...
+sum udp tx:   1671 MB/s      83072 calls (27690/s)      83072 msgs =
+(27690/s)
+Tx Timestamps:               83072 received                 0 errors
+Zerocopy acks:               83072 received                 0 errors
+
+
+You may be interested that I reduced test lengths from 4 to 3 seconds,
+but I am still getting 3 reports per test. I picked up the extra report =
+by
+changing 'if (tnow > treport)=E2=80=99 to 'if (tnow >=3D treport)=E2=80=99=
+
+
+> The only issue specific to GSO is that xmit_more can forego this
+> doorbell until the last segment. We want to complicate this logic with
+> a special case based on tx_flags. A process that cares should either
+> not use GSO, or the timestamp should be associated with the last
+> segment as I've been arguing so far.
+
+This is the area I was thinking of looking into. I=E2=80=99m not sure it =
+will work
+or that it will be too messy. It may be worth a little bit of digging to
+see if there is anything there. That will be down the road a bu
+
+>>=20
+>> I=E2=80=99ll get back to you when I have tested this more thoroughly. =
+Early results
+>> suggest that adding the -P poll() option has fixed it without any =
+appreciable
+>> performance hit. I=E2=80=99ll share raw results with you, and we can =
+make a final
+>> decision together.
+>=20
+> In the main loop? It still is peculiar that notifications appear to go
+> missing unless the process blocks waiting for them. Nothing in
+> sock_zerocopy_callback or the queueing onto the error queue should
+> cause drops, as far as I know.
+>=20
+
+Now that I know the issue is only in TCP, I can speculate that all bytes =
+are
+being reported, but done with fewer messages. It may warrant some
+investigation in case there is some kind of bug.
+
+> Indeed. Ideally even run all tests, but return error if any failed,
+> like this recent patch
+>=20
+>  selftests/bpf: fail test_tunnel.sh if subtests fail
+>  https://patchwork.ozlabs.org/patch/1105221/
+>=20
+> but that may be a lot of code churn and better left to a separate =
+patch.
+
+I like it. I have it coded up, and it seems to work well. I=E2=80=99ll =
+make a
+separate commit in the patch set so we can yank it out if you feel
+it is too much=
