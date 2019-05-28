@@ -2,231 +2,88 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA090C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E32C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0E9520883
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:52:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5B082070D
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:53:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="PBOH6uzi"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YKs28hvJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbfE1KwK (ORCPT
+        id S1726608AbfE1Kxb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 06:52:10 -0400
-Received: from mail-eopbgr70084.outbound.protection.outlook.com ([40.107.7.84]:37758
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726282AbfE1KwK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 06:52:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ioNb+DIgHp9f15M7SnfsfijndD+CIBzIcltPbgrUeQY=;
- b=PBOH6uzikhT93q9shvtXaMuHsbJYdJCK6gON0naoRQQXNI8sRTKqIbh71fvdhWiYLsIFLse+MBr0SmjLfmNOA0OlZH0M2CN+MsbZfE/QTu6dPPrBSqWz+yqSd0b0tjVWVyho6XM+7S/nFfXwekmFYWeg8894PGtB+jAV3AhzaCU=
-Received: from VE1PR08MB4847.eurprd08.prod.outlook.com (10.255.113.87) by
- VE1PR08MB4927.eurprd08.prod.outlook.com (10.255.114.23) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.18; Tue, 28 May 2019 10:52:03 +0000
-Received: from VE1PR08MB4847.eurprd08.prod.outlook.com
- ([fe80::d17e:fe55:9860:fcb8]) by VE1PR08MB4847.eurprd08.prod.outlook.com
- ([fe80::d17e:fe55:9860:fcb8%7]) with mapi id 15.20.1922.021; Tue, 28 May 2019
- 10:52:03 +0000
-From:   Dave P Martin <Dave.Martin@arm.com>
-To:     Mark Rutland <Mark.Rutland@arm.com>
-CC:     "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "H.J. Lu" <hjl.tools@gmail.com>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Paul Elliott <Paul.Elliott@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Will Deacon <Will.Deacon@arm.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Kristina Martsenko <Kristina.Martsenko@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <Catalin.Marinas@arm.com>,
-        Sudakshina Das <Sudi.Das@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 4/8] arm64: Basic Branch Target Identification support
-Thread-Topic: [PATCH 4/8] arm64: Basic Branch Target Identification support
-Thread-Index: AQHVEjD8get/p3f1rUKBROdJSa3g/aZ6bSsA///8AQCAABo5gIAAAdIAgAXdJwA=
-Date:   Tue, 28 May 2019 10:52:03 +0000
-Message-ID: <20190528105200.GU2019@e103592.cambridge.arm.com>
-References: <1558693533-13465-1-git-send-email-Dave.Martin@arm.com>
- <1558693533-13465-5-git-send-email-Dave.Martin@arm.com>
- <20190524130217.GA15566@lakrids.cambridge.arm.com>
- <20190524145306.GZ28398@e103592.cambridge.arm.com>
- <20190524153847.GE15566@lakrids.cambridge.arm.com>
- <20190524161239.GA28398@e103592.cambridge.arm.com>
- <20190524171908.GA18057@lakrids.cambridge.arm.com>
-In-Reply-To: <20190524171908.GA18057@lakrids.cambridge.arm.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mutt/1.5.23 (2014-03-12)
-x-originating-ip: [217.140.106.49]
-x-clientproxiedby: LO2P265CA0171.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:a::15) To VE1PR08MB4847.eurprd08.prod.outlook.com
- (2603:10a6:802:a6::23)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Dave.Martin@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 88bc6115-5708-45cc-c6b0-08d6e35a84a1
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR08MB4927;
-x-ms-traffictypediagnostic: VE1PR08MB4927:
-x-microsoft-antispam-prvs: <VE1PR08MB49274C885B8B2F1C7917619DFE1E0@VE1PR08MB4927.eurprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 00514A2FE6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(346002)(39860400002)(396003)(136003)(51444003)(189003)(199004)(40434004)(486006)(68736007)(476003)(4326008)(186003)(446003)(1076003)(53936002)(6512007)(6246003)(66066001)(5660300002)(11346002)(316002)(76176011)(478600001)(26005)(66946007)(73956011)(25786009)(6862004)(66446008)(66476007)(66556008)(64756008)(14454004)(2906002)(99286004)(8676002)(81156014)(6506007)(14444005)(256004)(81166006)(6116002)(3846002)(54906003)(33656002)(6486002)(71200400001)(386003)(6436002)(52116002)(71190400001)(305945005)(7736002)(102836004)(58126008)(86362001)(8936002)(72206003)(229853002)(5024004)(6636002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB4927;H:VE1PR08MB4847.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: EikR+iM1RWkcD6zUulT8fO1ww+j7AgtjpE8JpiXMOW9wAoQTsBsSW/lv+sZ+xsB/S1vQnyYJafed5VXo9q0YvJ2M3UlQrZ5fTCLZ4tfBbfS9QserlP2JvfU8lCyvtbmUHQS/VnugJKigKqfVYXbamYOqm1aKISDekqsxJVMj/P4yPk1LjoSu9XhF2WvKmxL1lfInvqvww5qbhQlxdcmEVQtub6ryKaahjBMWTGA4pM0D0YZT6ckiFG+5JEwVOYcuXv+ZW6TLVbgaMfZDfWihzWZ2QetYLKoQD/6+iw8UZTlCgwfIrqeUH+6Hx7lrdT/zoXNxdQPGBm/6cX+aOjNrdEPmgxd6NCzQAf4JV5qyTij3YWjPZlhStpMQ+csVUf62UPVf6eoAESjPva6is6UZ4baEVp4JvwOOcYUwQB4K5Is=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <314CAC5F10663F40B9736AA1E0A855E3@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 28 May 2019 06:53:31 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:48434 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726282AbfE1Kxb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 06:53:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=rB9rrnpARXQkc5fberxbJPE/xh3fmIg0x0UG52AxXP4=; b=YKs28hvJyv3gyvK+hty98NGNe
+        DLsDNV2SrXOuYnF7ikO7js1hf/TfhoJDY9O0M9vTPDKV/P5kiFJHpFrAH6x/03EqfRAWj2WLjMJ3a
+        IXbmLzLxax6uhWFHfbnpnkXcE8+nmbR1CpGyfo0q62ykbdaNU0EB5kewaCoi/I/u6eLD4RoJEB25P
+        UREoDW0DSkVmXN5N31KVAACqSDG8WJcn+1abTe8Q0ZtQxULiIaStytVTE8N2PqnDW93hYFBO1cMeO
+        EKFOgdvKK9PF63LxxZ1IQN8kWsRtfTFkxEDNTh4Hwd6dXGsifcJv97mPxDhyifAxqXVGHbbs8Aykm
+        pTZPmZppQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hVZjF-0002nO-Nv; Tue, 28 May 2019 10:53:13 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 376EE2074C65D; Tue, 28 May 2019 12:53:12 +0200 (CEST)
+Date:   Tue, 28 May 2019 12:53:12 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Hillf Danton <hdanton@sina.com>, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Rik van Riel <riel@surriel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/7] sched/fair: Replace source_load() & target_load() w/
+ weighted_cpuload()
+Message-ID: <20190528105312.GO2623@hirez.programming.kicks-ass.net>
+References: <20190527062116.11512-1-dietmar.eggemann@arm.com>
+ <20190527062116.11512-3-dietmar.eggemann@arm.com>
+ <63ee8775-f159-e172-15f4-2ddf941870ee@arm.com>
 MIME-Version: 1.0
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 88bc6115-5708-45cc-c6b0-08d6e35a84a1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2019 10:52:03.3718
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Dave.Martin@arm.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB4927
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <63ee8775-f159-e172-15f4-2ddf941870ee@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 06:19:10PM +0100, Mark Rutland wrote:
-> On Fri, May 24, 2019 at 05:12:40PM +0100, Dave Martin wrote:
-> > On Fri, May 24, 2019 at 04:38:48PM +0100, Mark Rutland wrote:
-> > > On Fri, May 24, 2019 at 03:53:06PM +0100, Dave Martin wrote:
-> > > > On Fri, May 24, 2019 at 02:02:17PM +0100, Mark Rutland wrote:
-> > > > > On Fri, May 24, 2019 at 11:25:29AM +0100, Dave Martin wrote:
-
-[...]
-
-> > > > > > diff --git a/arch/arm64/kernel/syscall.c b/arch/arm64/kernel/sy=
-scall.c
-> > > > > > index 5610ac0..85b456b 100644
-> > > > > > --- a/arch/arm64/kernel/syscall.c
-> > > > > > +++ b/arch/arm64/kernel/syscall.c
-> > > > > > @@ -66,6 +66,7 @@ static void el0_svc_common(struct pt_regs *re=
-gs, int scno, int sc_nr,
-> > > > > >  unsigned long flags =3D current_thread_info()->flags;
-> > > > > >
-> > > > > >  regs->orig_x0 =3D regs->regs[0];
-> > > > > > +regs->pstate &=3D ~(regs->pstate & PSR_BTYPE_MASK);
-> > > > >
-> > > > > Likewise:
-> > > > >
-> > > > > regs->pstate &=3D ~PSR_BTYPE_MASK;
-> > > > >
-> > > > > ... though I don't understand why that would matter to syscalls, =
-nor how
-> > > > > those bits could ever be set given we had to execute an SVC to ge=
-t here.
-> > > > >
-> > > > > What am I missing?
-> > > >
-> > > > The behaviour is counterintuivite here.  The architecture guarantee=
-s to
-> > > > preserve BTYPE for traps, faults and asynchronous exceptions, but f=
-or a
-> > > > synchronous execption from normal architectural execution of an
-> > > > exception-generating instruction (SVC/HVC/SMC) the architecture lea=
-ves
-> > > > it IMP DEF whether BTYPE is preserved or zeroed in SPSR.
-> > >
-> > > I'm still missing something here. IIUC were BTYPE was non-zero, we
-> > > should take the BTI trap before executing the SVC/HVC/SMC, right?
-> > >
-> > > Otherwise, it would be possible to erroneously branch to an SVC/HVC/S=
-MC,
-> > > which would logically violate the BTI protection.
-> >
-> > Only if the SVC (etc.) is in a BTI guarded page.  Otherwise, we could
-> > have legitimately branched to the SVC insn directly and BTYPE would
-> > be nonzero, but no trap would occur.
->
-> I agree that would be the case immediately before we execute the SVC,
-> but I think there's a subtlety here w.r.t. what exactly happens as an
-> SVC is executed.
->
-> My understanding was that even for unguarded pages, the execution of any
-> (non branch/eret) instruction would zero PSTATE.BTYPE.
->
-> For SVC it's not clear to me whether generating the SVC exception is
-> considered to be an effect of completing the execution of an SVC,
-> whether it's considered as preempting the execution of the SVC, or
-> whether that's IMPLEMENTATION DEFINED.
->
-> Consequently it's not clear to me whether or not executing an SVC clears
-> PSTATE.BTYPE before the act of taking the exception samples PSTATE. I
-> would hope that it does, as this would be in keeping with the way the
-> ELR is updated.
-
-OTOH, the wording calls this case out quite explicitly.  It seems odd to
-do that if the more general wording applies.
-
-I'll take another look and request clarficiation.
-
-> I think that we should try to clarify that before we commit ourselves to
-> the most painful interpretation here. Especially as similar would apply
-> to HVC and SMC, and I strongly suspect firmware in general is unlikely
-> to fix up the PSTATE.BTYPE of a caller.
->
-> > We should still logically zero BTYPE across SVC in that case, because
-> > the SVC may itself branch:  a signal could be delivered on return and
-> > we want the prevailing BTYPE then to be 0 for capture in the signal
-> > frame.  Doing this zeroing in signal delivery because if the signal
-> > is not delivered in SVE then a nonzero BTYPE might be live, and we
-> > must then restore it properly on sigreturn.
->
-> I'm not sure I follow this.
->
-> If we deliver a signal, the kernel generates a pristine PSTATE for the
-> signal handler, and the interrupted context doesn't matter.
->
-> Saving/restoring the state of the interrupted context is identical to
-> returning without delivering the signal, and we'd have a problem
-> regardless.
-
-My test looks garbled... since the point I was making was tangential, I
-don't elaborate it for now.
-
-> > As you observe, this scenario should be impossible if the SVC insn
-> > is in a guarded page, unless userspace does something foolhardy like
-> > catching the SIGILL and fudging BTYPE or the return address.
->
-> I think userspace gets to pick up the pieces in this case. Much like
-> signal delivery, it would need to generate a sensible PSTATE itself.
-
-Agreed, there is no way to hide this kind of thing from userspace code
-that messes with the signal frame -- so we shouldn't try.
-
+On Tue, May 28, 2019 at 12:24:52PM +0200, Dietmar Eggemann wrote:
+> On 5/28/19 6:42 AM, Hillf Danton wrote:
+> > 
+> > On Mon, 27 May 2019 07:21:11 +0100 Dietmar Eggemann wrote:
+> 
 > [...]
->
-> > (Now I come to think of it I also need to look at rseq etc., which is
-> > another magic kernel-mediated branch mechanism.)
+> 
+> > > @@ -5500,7 +5464,7 @@ wake_affine_weight(struct sched_domain *sd, struct task_struct *p,
+> > >   		this_eff_load *= 100;
+> > >   	this_eff_load *= capacity_of(prev_cpu);
+> > > -	prev_eff_load = source_load(prev_cpu, sd->wake_idx);
+> > > +	prev_eff_load = weighted_cpuload(cpu_rq(this_cpu));
+> > 					 cpu_rq(prev_cpu)
+> > 
+> > Seems we have no need to see this cpu's load more than once.
+> 
+> Thanks for catching this! Will fix it in v2.
 
-Meh.
-
-Cheers
----Dave
-IMPORTANT NOTICE: The contents of this email and any attachments are confid=
-ential and may also be privileged. If you are not the intended recipient, p=
-lease notify the sender immediately and do not disclose the contents to any=
- other person, use it for any purpose, or store or copy the information in =
-any medium. Thank you.
+Fixed :-)
