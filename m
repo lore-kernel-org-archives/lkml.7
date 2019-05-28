@@ -2,105 +2,90 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,RCVD_ILLEGAL_IP,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E98C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6560CC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 656CF21473
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:21:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20CA920717
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:23:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559028228;
+	bh=Pz7mMJLhEW7Zp0fSOykIhfE4492MoQ1wmZVAGawqZJY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2VZgQx/PU04Q20QRh982rUAsylWmoOsv2qg+EuhzaW1xHgVKZC+XclDEx8vYUzhCC
+	 GSNI9fWdSmNkRlyKm8hajLzwmGs3rWxFqziycmpj7JoNWCoh7QGaJWuogv/7K3eB55
+	 HAo8DhqWlfZ9jThd/f62P7N8/HY2iO66LlL2VuNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727455AbfE1HVw (ORCPT
+        id S1727509AbfE1HXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 03:21:52 -0400
-Received: from mga02.intel.com ([134.134.136.20]:57195 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726879AbfE1HVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 03:21:52 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 May 2019 00:21:51 -0700
-X-ExtLoop1: 1
-Received: from shzintpr03.sh.intel.com (HELO [0.0.0.0]) ([10.239.4.100])
-  by orsmga001.jf.intel.com with ESMTP; 28 May 2019 00:21:48 -0700
-Subject: Re: [PATCH v2 1/3] KVM: x86: add support for user wait instructions
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        kvm <kvm@vger.kernel.org>, linux-doc@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, jingqi.liu@intel.com
-References: <20190524075637.29496-1-tao3.xu@intel.com>
- <20190524075637.29496-2-tao3.xu@intel.com>
- <20190527103003.GX2623@hirez.programming.kicks-ass.net>
- <43e2a62a-e992-2138-f038-1e4b2fb79ad1@intel.com>
- <CANRm+CwnJoj0EwWoFC44SXVUTLdE+iFGovaMr4Yf=OzbaW36sA@mail.gmail.com>
-From:   Tao Xu <tao3.xu@intel.com>
-Message-ID: <072dd34e-0361-5a06-4d0b-d04e8150a3bb@intel.com>
-Date:   Tue, 28 May 2019 15:19:30 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 28 May 2019 03:23:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53604 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726305AbfE1HXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 03:23:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B7A0CADC1;
+        Tue, 28 May 2019 07:23:45 +0000 (UTC)
+Date:   Tue, 28 May 2019 09:23:44 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Oleg Nesterov <oleg@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>
+Subject: Re: [RFC 5/7] mm: introduce external memory hinting API
+Message-ID: <20190528072344.GO1658@dhcp22.suse.cz>
+References: <20190520035254.57579-1-minchan@kernel.org>
+ <20190520035254.57579-6-minchan@kernel.org>
+ <20190521153113.GA2235@redhat.com>
+ <20190527074300.GA6879@google.com>
+ <20190527151201.GB8961@redhat.com>
+ <20190527233306.GE6879@google.com>
 MIME-Version: 1.0
-In-Reply-To: <CANRm+CwnJoj0EwWoFC44SXVUTLdE+iFGovaMr4Yf=OzbaW36sA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190527233306.GE6879@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 28/05/2019 14:11, Wanpeng Li wrote:
-> On Tue, 28 May 2019 at 13:16, Tao Xu <tao3.xu@intel.com> wrote:
->>
->>
->> On 27/05/2019 18:30, Peter Zijlstra wrote:
->>> On Fri, May 24, 2019 at 03:56:35PM +0800, Tao Xu wrote:
->>>> This patch adds support for UMONITOR, UMWAIT and TPAUSE instructions
->>>> in kvm, and by default dont't expose it to kvm and provide a capability
->>>> to enable it.
->>>
->>> I'm thinking this should be conditional on the guest being a 1:1 guest,
->>> and I also seem to remember we have bits for that already -- they were
->>> used to disable paravirt spinlocks for example.
->>>
->>
->> Hi Peter,
->>
->> I am wondering if "1:1 guest" means different guests in the same host
->> should have different settings on user wait instructions?
->>
->> User wait instructions(UMONITOR, UMWAIT and TPAUSE) can use in guest
->> only when the VMCS Secondary Processor-Based VM-Execution Control bit 26
->> is 1, otherwise any execution of TPAUSE, UMONITOR, or UMWAIT causes a #UD.
->>
->> So with a capability to enable it, we use qemu kvm_vm_ioctl_enable_cap()
->> to enable it. The qemu link is blew:
->> https://lists.gnu.org/archive/html/qemu-devel/2019-05/msg05810.html
->>
->> By using different QEMU parameters, different guests in the same host
->> would have different features with or without user wait instructions.
->>
->> About "disable paravirt spinlocks" case, I am wondering if it uses
+On Tue 28-05-19 08:33:06, Minchan Kim wrote:
+> On Mon, May 27, 2019 at 05:12:02PM +0200, Oleg Nesterov wrote:
+> > On 05/27, Minchan Kim wrote:
+> > >
+> > > > another problem is that pid_task(pid) can return a zombie leader, in this case
+> > > > mm_access() will fail while it shouldn't.
+> > >
+> > > I'm sorry. I didn't notice that. However, I couldn't understand your point.
+> > > Why do you think mm_access shouldn't fail even though pid_task returns
+> > > a zombie leader?
+> > 
+> > The leader can exit (call sys_exit(), not sys_exit_group()), this won't affect
+> > other threads. In this case the process is still alive even if the leader thread
+> > is zombie. That is why we have find_lock_task_mm().
 > 
-> Please refer to a4429e53c9 (KVM: Introduce paravirtualization hints
-> and KVM_HINTS_DEDICATED) and b2798ba0b87 (KVM: X86: Choose qspinlock
-> when dedicated physical CPUs are available)
-Hi Wanpeng,
+> Thanks for clarification, Oleg. Then, Let me have a further question.
+> 
+> It means process_vm_readv, move_pages have same problem too because find_task_by_vpid
+> can return a zomebie leader and next line checks for mm_struct validation makes a
+> failure. My understand is correct? If so, we need to fix all places.
 
-Thank you! This information really helped me. After I read the code in 
-KVM/QEMU, I was wondering that with qemu command-line "-cpu 
-host,+kvm-hint-dedicated", then in KVM, 
-"kvm_hint_has_feature(KVM_HINTS_DEDICATED)" will be true, am I right?
-
-Tao
+Isn't that a problem of most callers of get_task_mm? Shouldn't we fix it
+turning it into find_lock_task_mm?
+-- 
+Michal Hocko
+SUSE Labs
