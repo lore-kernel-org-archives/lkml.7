@@ -2,74 +2,137 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FFD5C072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 03:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D917AC072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 03:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D700120675
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 03:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B71B22075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 03:24:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728127AbfE1DXG (ORCPT
+        id S1728083AbfE1DYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 23:23:06 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:52677 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727775AbfE1DXF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 23:23:05 -0400
-Received: from fsav106.sakura.ne.jp (fsav106.sakura.ne.jp [27.133.134.233])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x4S3LsiP018860;
-        Tue, 28 May 2019 12:21:54 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav106.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav106.sakura.ne.jp);
- Tue, 28 May 2019 12:21:54 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav106.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126012062002.bbtec.net [126.12.62.2])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x4S3Lo5X018841
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Tue, 28 May 2019 12:21:54 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [RFC] printk/sysrq: Don't play with console_loglevel
-To:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-References: <20190528002412.1625-1-dima@arista.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <4a9c1b20-777d-079a-33f5-ddf0a39ff788@i-love.sakura.ne.jp>
-Date:   Tue, 28 May 2019 12:21:47 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 27 May 2019 23:24:17 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:35874 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727342AbfE1DYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 23:24:16 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id BE56EAED612EB36A8095;
+        Tue, 28 May 2019 11:24:14 +0800 (CST)
+Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 28 May
+ 2019 11:24:06 +0800
+Subject: Re: [PATCH v2 2/2] staging: erofs: fix i_blocks calculation
+To:     Chao Yu <yuchao0@huawei.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <devel@driverdev.osuosl.org>, LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, Chao Yu <chao@kernel.org>,
+        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+References: <20190528023147.94117-2-gaoxiang25@huawei.com>
+ <20190528023602.178923-1-gaoxiang25@huawei.com>
+ <fe0ff7bb-b576-f949-d57a-2892d116b22f@huawei.com>
+From:   Gao Xiang <gaoxiang25@huawei.com>
+Message-ID: <c29b3979-03ea-22d7-642c-f54a680b349b@huawei.com>
+Date:   Tue, 28 May 2019 11:23:43 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-In-Reply-To: <20190528002412.1625-1-dima@arista.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <fe0ff7bb-b576-f949-d57a-2892d116b22f@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.151.23.176]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/05/28 9:24, Dmitry Safonov wrote:
-> Provide KERN_UNSUPPRESSED printk() annotation for such legacy places.
-> Make sysrq print the headers unsuppressed instead of changing
-> console_loglevel.
 
-I think that kdb also wants to use KERN_UNSUPPRESSED for making sure
-that messages are printed. But that user calls dump function which is
-indirectly calling printk() many times. Thus, I think that we need a
-way to explicitly pass "how the message should be treated" as a
-function argument.
 
-What I suggested in my proposal ("printk: Introduce "store now but print later" prefix." at
-https://lore.kernel.org/lkml/1550896930-12324-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp/T/#u )
-is "whether the caller wants to defer printing to consoles regarding
-this printk() call". And your suggestion is "whether the caller wants
-to apply ignore_loglevel regarding this printk() call".
+On 2019/5/28 11:02, Chao Yu wrote:
+> On 2019/5/28 10:36, Gao Xiang wrote:
+>> For compressed files, i_blocks should not be calculated
+>> by using i_size. i_u.compressed_blocks is used instead.
+>>
+>> In addition, i_blocks was miscalculated for non-compressed
+>> files previously, fix it as well.
+>>
+>> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+>> ---
+>> change log v2:
+>>  - fix description in commit message
+>>  - fix to 'inode->i_blocks = nblks << LOG_SECTORS_PER_BLOCK'
+>>
+>> Thanks,
+>> Gao Xiang
+>>
+>>  drivers/staging/erofs/inode.c | 14 ++++++++++++--
+>>  1 file changed, 12 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/erofs/inode.c
+>> index 8da144943ed6..6e67e018784e 100644
+>> --- a/drivers/staging/erofs/inode.c
+>> +++ b/drivers/staging/erofs/inode.c
+>> @@ -20,6 +20,7 @@ static int read_inode(struct inode *inode, void *data)
+>>  	struct erofs_vnode *vi = EROFS_V(inode);
+>>  	struct erofs_inode_v1 *v1 = data;
+>>  	const unsigned int advise = le16_to_cpu(v1->i_advise);
+>> +	erofs_blk_t nblks = 0;
+>>  
+>>  	vi->data_mapping_mode = __inode_data_mapping(advise);
+>>  
+>> @@ -60,6 +61,10 @@ static int read_inode(struct inode *inode, void *data)
+>>  			le32_to_cpu(v2->i_ctime_nsec);
+>>  
+>>  		inode->i_size = le64_to_cpu(v2->i_size);
+>> +
+>> +		/* total blocks for compressed files */
+>> +		if (vi->data_mapping_mode == EROFS_INODE_LAYOUT_COMPRESSION)
+>> +			nblks = v2->i_u.compressed_blocks;
+> 
+> Xiang,
+> 
+> It needs to use le32_to_cpu(). ;)
 
+Already fixed in v3... Sorry about that...
+
+Thanks,
+Gao Xiang
+
+> 
+>>  	} else if (__inode_version(advise) == EROFS_INODE_LAYOUT_V1) {
+>>  		struct erofs_sb_info *sbi = EROFS_SB(inode->i_sb);
+>>  
+>> @@ -90,6 +95,8 @@ static int read_inode(struct inode *inode, void *data)
+>>  			sbi->build_time_nsec;
+>>  
+>>  		inode->i_size = le32_to_cpu(v1->i_size);
+>> +		if (vi->data_mapping_mode == EROFS_INODE_LAYOUT_COMPRESSION)
+>> +			nblks = v1->i_u.compressed_blocks;
+> 
+> Ditto.
+> 
+> Thanks,
+> 
+>>  	} else {
+>>  		errln("unsupported on-disk inode version %u of nid %llu",
+>>  		      __inode_version(advise), vi->nid);
+>> @@ -97,8 +104,11 @@ static int read_inode(struct inode *inode, void *data)
+>>  		return -EIO;
+>>  	}
+>>  
+>> -	/* measure inode.i_blocks as the generic filesystem */
+>> -	inode->i_blocks = ((inode->i_size - 1) >> 9) + 1;
+>> +	if (!nblks)
+>> +		/* measure inode.i_blocks as generic filesystems */
+>> +		inode->i_blocks = roundup(inode->i_size, EROFS_BLKSIZ) >> 9;
+>> +	else
+>> +		inode->i_blocks = nblks << LOG_SECTORS_PER_BLOCK;
+>>  	return 0;
+>>  }
+>>  
+>>
