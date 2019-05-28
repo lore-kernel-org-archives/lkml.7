@@ -2,178 +2,178 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2839BC072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC01C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0680F208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:05:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2B8E208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:06:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Q2Q/sGFS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727485AbfE1JFl (ORCPT
+        id S1727340AbfE1JGI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 05:05:41 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:17612 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727461AbfE1JEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 05:04:38 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 50CE98CBB0DF2193D2C2;
-        Tue, 28 May 2019 17:04:36 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.132) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 28 May 2019 17:04:27 +0800
-From:   Huazhong Tan <tanhuazhong@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Huazhong Tan <tanhuazhong@huawei.com>,
-        Peng Li <lipeng321@huawei.com>
-Subject: [PATCH net-next 07/12] net: hns3: modify hclge_init_client_instance()
-Date:   Tue, 28 May 2019 17:02:57 +0800
-Message-ID: <1559034182-24737-8-git-send-email-tanhuazhong@huawei.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1559034182-24737-1-git-send-email-tanhuazhong@huawei.com>
-References: <1559034182-24737-1-git-send-email-tanhuazhong@huawei.com>
+        Tue, 28 May 2019 05:06:08 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:47074 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727139AbfE1JDk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 05:03:40 -0400
+Received: by mail-ed1-f68.google.com with SMTP id f37so30562767edb.13
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 02:03:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=jemw2QjWxU+UFHjYLKdEyQ9knTBj8Nqm3v5Mrc95+O8=;
+        b=Q2Q/sGFS+3ztGuIG6HjyW4WqtF83a09htVuw4GKSsgH3cHm7dGKzhjvGuCPzzPDkgL
+         E1/NRgZTaeTYcHOps+FhdcT1PbSFGvlgKFkIBRaH+zrG9UMsmLLURLcCTjDwxR0xLIN3
+         KwwuXSGHz0AEiTSHK9LXqpPeWcu8jfLUGcaEQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=jemw2QjWxU+UFHjYLKdEyQ9knTBj8Nqm3v5Mrc95+O8=;
+        b=rgeU529eemuJ9TYcRgP8Lx++LMZ3UcXe9qCzoK3SVQ5z3fwtAaahVvEsuZAsEWOppE
+         vT6YMYDLN7k6RQq74LLkTDYtefjjoGcxHhttfxP4SoTq3vaPfEvZdQccSReTHD2EjVPV
+         8w5DKZlpXxyImzV8fCHhVovjRxV6r0L9Pq/sRklJBwZoWi5LLgbMW0Oq1J6LKh4rtHQt
+         UFrkuymJqDgqyXtgdN/lfItYu1F9zPA0mZF/XoxjH+pEbUi2uUYHpMlmTiAcr+ZqZ+gF
+         mIR6NwBAEtkoRZIKSORB+/W47oGNXjFdWAIVmaCdp5/oJE1FWuYx8nVbpCWlTD1rKU5A
+         AX3A==
+X-Gm-Message-State: APjAAAXv1dOMYX2gAPSocIqWT/WJcaypExMViJ3XmIQAU9sV9Dr/JDYo
+        5zUqZqrZi4HSwNt4gJSbKSQCM2ZbFVQ=
+X-Google-Smtp-Source: APXvYqzRmMQx8hio/CkC+ykYBbXTDds6GiLnz4oTtSmCC0xHsSsFWfJG1JCAR/ZOcV6FU9c5NjgHVQ==
+X-Received: by 2002:a50:ad2b:: with SMTP id y40mr126347451edc.237.1559034218893;
+        Tue, 28 May 2019 02:03:38 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id x49sm4072656edm.25.2019.05.28.02.03.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 May 2019 02:03:38 -0700 (PDT)
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        linux-fbdev@vger.kernel.org,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Peter Rosin <peda@axentia.se>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mikulas Patocka <mpatocka@redhat.com>
+Subject: [PATCH 19/33] fbdev: unify unlink_framebuffer paths
+Date:   Tue, 28 May 2019 11:02:50 +0200
+Message-Id: <20190528090304.9388-20-daniel.vetter@ffwll.ch>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190528090304.9388-1-daniel.vetter@ffwll.ch>
+References: <20190528090304.9388-1-daniel.vetter@ffwll.ch>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.132]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hclge_init_client_instance() is a little bloated and there is
-some duplicated code. This patch adds some cleanup for it.
+For some reasons the pm_vt_switch_unregister call was missing from the
+direct unregister_framebuffer path. Fix this.
 
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
+v2: fbinfo->dev is used to decided whether unlink_framebuffer has been
+called already. I botched that in v1. Make this all clearer by
+inlining __unlink_framebuffer.
+
+v3: Fix typoe in subject (Maarten).
+
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+Reviewed-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: "Michał Mirosław" <mirq-linux@rere.qmqm.pl>
+Cc: Peter Rosin <peda@axentia.se>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Mikulas Patocka <mpatocka@redhat.com>
 ---
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 90 +++++++++++++---------
- 1 file changed, 53 insertions(+), 37 deletions(-)
+ drivers/video/fbdev/core/fbmem.c | 47 ++++++++++++++------------------
+ 1 file changed, 20 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 02a0698..b7106a5 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -8169,6 +8169,52 @@ static void hclge_info_show(struct hclge_dev *hdev)
- 	dev_info(dev, "PF info end.\n");
+diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
+index f3bcad30d3ba..bee45e9405b8 100644
+--- a/drivers/video/fbdev/core/fbmem.c
++++ b/drivers/video/fbdev/core/fbmem.c
+@@ -1722,15 +1722,30 @@ static void unbind_console(struct fb_info *fb_info)
+ 	console_unlock();
  }
  
-+static int hclge_init_nic_client_instance(struct hnae3_ae_dev *ae_dev,
-+					  struct hclge_vport *vport)
-+{
-+	struct hnae3_client *client = vport->nic.client;
-+	struct hclge_dev *hdev = ae_dev->priv;
-+	int ret;
-+
-+	ret = client->ops->init_instance(&vport->nic);
-+	if (ret)
-+		return ret;
-+
-+	set_bit(HCLGE_STATE_NIC_REGISTERED, &hdev->state);
-+	hnae3_set_client_init_flag(client, ae_dev, 1);
-+
-+	if (netif_msg_drv(&hdev->vport->nic))
-+		hclge_info_show(hdev);
-+
-+	return 0;
-+}
-+
-+static int hclge_init_roce_client_instance(struct hnae3_ae_dev *ae_dev,
-+					   struct hclge_vport *vport)
-+{
-+	struct hnae3_client *client = vport->roce.client;
-+	struct hclge_dev *hdev = ae_dev->priv;
-+	int ret;
-+
-+	if (!hnae3_dev_roce_supported(hdev) || !hdev->roce_client ||
-+	    !hdev->nic_client)
-+		return 0;
-+
-+	client = hdev->roce_client;
-+	ret = hclge_init_roce_base_info(vport);
-+	if (ret)
-+		return ret;
-+
-+	ret = client->ops->init_instance(&vport->roce);
-+	if (ret)
-+		return ret;
-+
-+	set_bit(HCLGE_STATE_ROCE_REGISTERED, &hdev->state);
-+	hnae3_set_client_init_flag(client, ae_dev, 1);
-+
-+	return 0;
-+}
-+
- static int hclge_init_client_instance(struct hnae3_client *client,
- 				      struct hnae3_ae_dev *ae_dev)
+-static void __unlink_framebuffer(struct fb_info *fb_info);
+-
+-static void do_unregister_framebuffer(struct fb_info *fb_info)
++void unlink_framebuffer(struct fb_info *fb_info)
  {
-@@ -8184,33 +8230,13 @@ static int hclge_init_client_instance(struct hnae3_client *client,
+-	unbind_console(fb_info);
++	int i;
++
++	i = fb_info->node;
++	if (WARN_ON(i < 0 || i >= FB_MAX || registered_fb[i] != fb_info))
++		return;
++
++	if (!fb_info->dev)
++		return;
++
++	device_destroy(fb_class, MKDEV(FB_MAJOR, i));
  
- 			hdev->nic_client = client;
- 			vport->nic.client = client;
--			ret = client->ops->init_instance(&vport->nic);
-+			ret = hclge_init_nic_client_instance(ae_dev, vport);
- 			if (ret)
- 				goto clear_nic;
+ 	pm_vt_switch_unregister(fb_info->dev);
  
--			hnae3_set_client_init_flag(client, ae_dev, 1);
--			set_bit(HCLGE_STATE_NIC_REGISTERED, &hdev->state);
--
--			if (netif_msg_drv(&hdev->vport->nic))
--				hclge_info_show(hdev);
--
--			if (hdev->roce_client &&
--			    hnae3_dev_roce_supported(hdev)) {
--				struct hnae3_client *rc = hdev->roce_client;
--
--				ret = hclge_init_roce_base_info(vport);
--				if (ret)
--					goto clear_roce;
--
--				ret = rc->ops->init_instance(&vport->roce);
--				if (ret)
--					goto clear_roce;
--
--				set_bit(HCLGE_STATE_ROCE_REGISTERED,
--					&hdev->state);
--				hnae3_set_client_init_flag(hdev->roce_client,
--							   ae_dev, 1);
--			}
-+			ret = hclge_init_roce_client_instance(ae_dev, vport);
-+			if (ret)
-+				goto clear_roce;
+-	__unlink_framebuffer(fb_info);
++	unbind_console(fb_info);
++
++	fb_info->dev = NULL;
++}
++EXPORT_SYMBOL(unlink_framebuffer);
++
++static void do_unregister_framebuffer(struct fb_info *fb_info)
++{
++	unlink_framebuffer(fb_info);
+ 	if (fb_info->pixmap.addr &&
+ 	    (fb_info->pixmap.flags & FB_PIXMAP_DEFAULT))
+ 		kfree(fb_info->pixmap.addr);
+@@ -1753,28 +1768,6 @@ static void do_unregister_framebuffer(struct fb_info *fb_info)
+ 	put_fb_info(fb_info);
+ }
  
- 			break;
- 		case HNAE3_CLIENT_UNIC:
-@@ -8230,19 +8256,9 @@ static int hclge_init_client_instance(struct hnae3_client *client,
- 				vport->roce.client = client;
- 			}
- 
--			if (hdev->roce_client && hdev->nic_client) {
--				ret = hclge_init_roce_base_info(vport);
--				if (ret)
--					goto clear_roce;
+-static void __unlink_framebuffer(struct fb_info *fb_info)
+-{
+-	int i;
 -
--				ret = client->ops->init_instance(&vport->roce);
--				if (ret)
--					goto clear_roce;
+-	i = fb_info->node;
+-	if (WARN_ON(i < 0 || i >= FB_MAX || registered_fb[i] != fb_info))
+-		return;
 -
--				set_bit(HCLGE_STATE_ROCE_REGISTERED,
--					&hdev->state);
--				hnae3_set_client_init_flag(client, ae_dev, 1);
--			}
-+			ret = hclge_init_roce_client_instance(ae_dev, vport);
-+			if (ret)
-+				goto clear_roce;
- 
- 			break;
- 		default:
+-	if (fb_info->dev) {
+-		device_destroy(fb_class, MKDEV(FB_MAJOR, i));
+-		fb_info->dev = NULL;
+-	}
+-}
+-
+-void unlink_framebuffer(struct fb_info *fb_info)
+-{
+-	__unlink_framebuffer(fb_info);
+-
+-	unbind_console(fb_info);
+-}
+-EXPORT_SYMBOL(unlink_framebuffer);
+-
+ /**
+  * remove_conflicting_framebuffers - remove firmware-configured framebuffers
+  * @a: memory range, users of which are to be removed
 -- 
-2.7.4
+2.20.1
 
