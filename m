@@ -2,108 +2,199 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F5B2C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CEFC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52A5320717
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:09:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sWqbqkCc"
+	by mail.kernel.org (Postfix) with ESMTP id 895CD20717
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:10:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbfE1IJG (ORCPT
+        id S1726497AbfE1IKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 04:09:06 -0400
-Received: from mail-qk1-f173.google.com ([209.85.222.173]:44730 "EHLO
-        mail-qk1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbfE1IJF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 04:09:05 -0400
-Received: by mail-qk1-f173.google.com with SMTP id w187so10915301qkb.11
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 01:09:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xDOcfUm0hx1+moO7XUT4Qyuo28lq60TTV8oVJkJSDf8=;
-        b=sWqbqkCcghXKhwjI3+Xh42gDOmLmikpVTRsgukr3jx+YA5eCGhQcPo2m93RTOPkLHB
-         8fDzk0VoiU/nu0XtdRzDzm1BcyM5HaHfOEK8B6n4ScId52EtujnwrJtfsa3SZQFzt97H
-         U3fwH09XvO7mt4qR588300BgcxUiO5wI+2dWpO2YYhIUiAPev1fe11v6d31JGQV9oJyW
-         9mVCTrrOysEPJx7qWQisEpks+LiURbb/tVwuawJtM6YkK6N7W+zHJuVDcealqD8XzFlj
-         0+94ZgNIRc+kTPajYrWDhPUxMEyVUv5sTA2qi9aZAG/OYnhA4VcohWEqjMSRjm+YyL9k
-         MJ6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xDOcfUm0hx1+moO7XUT4Qyuo28lq60TTV8oVJkJSDf8=;
-        b=RrB2y/VYSXXYByvw+yB57h77tJYDNUYsKrmA0H0Oq+w+LHV9pisXrNeSvWm3XL+jaV
-         dNqEY2xNx9vUY0LgEy5xDh5ykT/hR9CB+tmao/s8KdEEiDcvg2gIr5sdOaOBxTlXi6c2
-         UYlEmZx4txuNqIwyOOtDbv6gE8QWqZA5Ca95ZInRrXUHOO/zF9cv7VFz/X4BGrt5zDHj
-         UPQKbsNHp4sJe/tWVM5577CvYEkCiKn9BPGscqkZpHJYqajkabk0O3zIz7MsdORD3S3T
-         lGC/XXJEB8gvs7nNmOTakmDgS5f5EPXfO0jUU6uajQXeJ7mS+YBMPtdVrLGjw1J9t5gd
-         hsEQ==
-X-Gm-Message-State: APjAAAVxYKHd7PponcxuY1iuSKOHvnEy19Dvf6BAXJoSgukXK0lNFGgT
-        xGOw71m7iaMIY9Ttp/289qORgw==
-X-Google-Smtp-Source: APXvYqzfmlI/oHiU+Uq4sz7SDPAZyh1TsYqXiHyhgextGozcdW+UWA5iJ+nmKdMmrLAMcPrhVYv2GA==
-X-Received: by 2002:ac8:1bec:: with SMTP id m41mr98723878qtk.272.1559030944933;
-        Tue, 28 May 2019 01:09:04 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s (li483-211.members.linode.com. [50.116.44.211])
-        by smtp.gmail.com with ESMTPSA id f67sm5267299qtb.68.2019.05.28.01.08.58
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 May 2019 01:09:03 -0700 (PDT)
-Date:   Tue, 28 May 2019 16:08:53 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 00/30] coresight: Support for ACPI bindings
-Message-ID: <20190528080853.GB5753@leoy-ThinkPad-X240s>
-References: <1558521304-27469-1-git-send-email-suzuki.poulose@arm.com>
- <20190528051924.GA19112@leoy-ThinkPad-X240s>
+        Tue, 28 May 2019 04:10:10 -0400
+Received: from foss.arm.com ([217.140.101.70]:51552 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725943AbfE1IKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 04:10:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9A0FE341;
+        Tue, 28 May 2019 01:10:09 -0700 (PDT)
+Received: from [10.162.40.141] (p8cg001049571a15.blr.arm.com [10.162.40.141])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1111E3F5AF;
+        Tue, 28 May 2019 01:10:04 -0700 (PDT)
+Subject: Re: [PATCH 2/4] arm64/mm: wire up CONFIG_ARCH_HAS_SET_DIRECT_MAP
+To:     Ard Biesheuvel <ard.biesheuvel@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     mark.rutland@arm.com, marc.zyngier@arm.com,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nadav Amit <namit@vmware.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>
+References: <20190523102256.29168-1-ard.biesheuvel@arm.com>
+ <20190523102256.29168-3-ard.biesheuvel@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <e63e7367-3a37-9ebc-d17c-e1cef2948c6e@arm.com>
+Date:   Tue, 28 May 2019 13:40:16 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190528051924.GA19112@leoy-ThinkPad-X240s>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190523102256.29168-3-ard.biesheuvel@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suzuki, Mathieu,
 
-On Tue, May 28, 2019 at 01:19:24PM +0800, Leo Yan wrote:
 
-[...]
+On 05/23/2019 03:52 PM, Ard Biesheuvel wrote:
+> Wire up the special helper functions to manipulate aliases of vmalloc
+> regions in the linear map.
 
-> After I applied this patch set, I found all device names under
-> '/sys/bus/event_source/devices/cs_etm/sinks/' have been changed as
-> below on my DB410c board:
-> # ls /sys/bus/event_source/devices/cs_etm/sinks/
-> tmc_etf0  tmc_etr0  tpiu0
+IMHO the commit message here could be bit more descriptive because of the
+amount of changes this patch brings in.
+
 > 
-> This leads to below command failure when open PMU device:
-> # perf record -e cs_etm/@826000.etr/ --per-thread uname
-> failed to set sink "826000.etr" on event cs_etm/@826000.etr/ with 2 (No such file or directory)
+> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@arm.com>
+> ---
+>  arch/arm64/Kconfig                  |  1 +
+>  arch/arm64/include/asm/cacheflush.h |  3 ++
+>  arch/arm64/mm/pageattr.c            | 48 ++++++++++++++++----
+>  mm/vmalloc.c                        | 11 -----
+>  4 files changed, 44 insertions(+), 19 deletions(-)
 > 
-> I must use below command so that perf can match string with the
-> device name under '/sys/bus/event_source/devices/cs_etm/sinks/':
-> # perf record -e cs_etm/@tmc_etr0/ --per-thread uname
-> 
-> Seems to me, this is an unexpected change and when I worked on the
-> patch set v2, IIRC that version still can use '826000.etr' to open PMU
-> device.
-> 
-> Please help confirm for this.  Thanks!
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index ca9c175fb949..4ab32180eabd 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -26,6 +26,7 @@ config ARM64
+>  	select ARCH_HAS_MEMBARRIER_SYNC_CORE
+>  	select ARCH_HAS_PTE_SPECIAL
+>  	select ARCH_HAS_SETUP_DMA_OPS
+> +	select ARCH_HAS_SET_DIRECT_MAP
+>  	select ARCH_HAS_SET_MEMORY
+>  	select ARCH_HAS_STRICT_KERNEL_RWX
+>  	select ARCH_HAS_STRICT_MODULE_RWX
+> diff --git a/arch/arm64/include/asm/cacheflush.h b/arch/arm64/include/asm/cacheflush.h
+> index 19844211a4e6..b9ee5510067f 100644
+> --- a/arch/arm64/include/asm/cacheflush.h
+> +++ b/arch/arm64/include/asm/cacheflush.h
+> @@ -187,4 +187,7 @@ static inline void flush_cache_vunmap(unsigned long start, unsigned long end)
+>  
+>  int set_memory_valid(unsigned long addr, int numpages, int enable);
+>  
+> +int set_direct_map_invalid_noflush(struct page *page);
+> +int set_direct_map_default_noflush(struct page *page);
+> +
+>  #endif
+> diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
+> index 6cd645edcf35..9c6b9039ec8f 100644
+> --- a/arch/arm64/mm/pageattr.c
+> +++ b/arch/arm64/mm/pageattr.c
+> @@ -159,17 +159,48 @@ int set_memory_valid(unsigned long addr, int numpages, int enable)
+>  					__pgprot(PTE_VALID));
+>  }
+>  
+> -#ifdef CONFIG_DEBUG_PAGEALLOC
+> +int set_direct_map_invalid_noflush(struct page *page)
+> +{
+> +	struct page_change_data data = {
+> +		.set_mask = __pgprot(0),
+> +		.clear_mask = __pgprot(PTE_VALID),
+> +	};
+> +
+> +	if (!rodata_full)
+> +		return 0;
 
-Finally, this is narrowed down to the patch 09/30 'coresight: Use
-coresight device names for sinks in PMU attribute', so this is
-delibrately to change to use new name format for perf command;
-if so, maybe also update the documentation to reflect this change?
+Why rodata_full needs to be probed here ? Should not we still require the following
+transition even if rodata_full is not enabled. Just wondering whether we can use
+VM_FLUSH_RESET_PERMS feature without these required transitions.
 
-Thanks,
-Leo Yan
+        /*
+         * Set direct map to something invalid so that it won't be cached if
+         * there are any accesses after the TLB flush, then flush the TLB and
+         * reset the direct map permissions to the default.
+         */
+        set_area_direct_map(area, set_direct_map_invalid_noflush);
+        _vm_unmap_aliases(start, end, 1);
+        set_area_direct_map(area, set_direct_map_default_noflush);
+
+ > +
+> +	return apply_to_page_range(&init_mm,
+> +				   (unsigned long)page_address(page),
+> +				   PAGE_SIZE, change_page_range, &data);
+> +}
+> +
+> +int set_direct_map_default_noflush(struct page *page)
+> +{
+> +	struct page_change_data data = {
+> +		.set_mask = __pgprot(PTE_VALID | PTE_WRITE),
+> +		.clear_mask = __pgprot(PTE_RDONLY),
+
+Replace __pgprot(PTE_VALID | PTE_WRITE) with PAGE_KERNEL instead !
+
+> +	};
+> +
+> +	if (!rodata_full)
+> +		return 0;
+> +
+> +	return apply_to_page_range(&init_mm,
+> +				   (unsigned long)page_address(page),
+> +				   PAGE_SIZE, change_page_range, &data);
+> +}
+> +
+
+IIUC set_direct_map_invalid_noflush() and set_direct_map_default_noflush()
+should set *appropriate* permissions as seen fit from platform perspective
+to implement this transition.
+
+In here set_direct_map_invalid_noflush() makes the entry invalid preventing
+further MMU walks (hence new TLB entries). set_direct_map_default_noflush()
+makes it a valid write entry. Though it looks similar to PAGE_KERNEL which
+is the default permission for linear mapping on arm64 via __map_memblock().
+Should not PAGE_KERNEL be used explicitly as suggested above.
+
+>  void __kernel_map_pages(struct page *page, int numpages, int enable)
+>  {
+> +	if (!debug_pagealloc_enabled() && !rodata_full)
+> +		return;
+> +
+
+I guess this is not related to CONFIG_ARCH_HAS_SET_DIRECT_MAP here and should
+be a fix or an enhancement to CONFIG_DEBUG_PAGEALLOC implementation. Just
+curious, !rodata_full check here to ensure that linear mapping does not have
+block or contig mappings and should be backed by regular pages only ?
+
+>  	set_memory_valid((unsigned long)page_address(page), numpages, enable);
+>  }
+> -#ifdef CONFIG_HIBERNATION
+> +
+>  /*
+> - * When built with CONFIG_DEBUG_PAGEALLOC and CONFIG_HIBERNATION, this function
+> - * is used to determine if a linear map page has been marked as not-valid by
+> - * CONFIG_DEBUG_PAGEALLOC. Walk the page table and check the PTE_VALID bit.
+> - * This is based on kern_addr_valid(), which almost does what we need.
+> + * This function is used to determine if a linear map page has been marked as
+> + * not-valid. Walk the page table and check the PTE_VALID bit. This is based
+> + * on kern_addr_valid(), which almost does what we need.
+>   *
+>   * Because this is only called on the kernel linear map,  p?d_sect() implies
+>   * p?d_present(). When debug_pagealloc is enabled, sections mappings are
+> @@ -183,6 +214,9 @@ bool kernel_page_present(struct page *page)
+>  	pte_t *ptep;
+>  	unsigned long addr = (unsigned long)page_address(page);
+>  
+> +	if (!debug_pagealloc_enabled() && !rodata_full)
+> +		return true;
+> +
+
+Ditto, not related to CONFIG_ARCH_HAS_SET_DIRECT_MAP.
