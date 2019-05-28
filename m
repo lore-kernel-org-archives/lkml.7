@@ -2,90 +2,182 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6560CC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:23:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF6C3C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20CA920717
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:23:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559028228;
-	bh=Pz7mMJLhEW7Zp0fSOykIhfE4492MoQ1wmZVAGawqZJY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2VZgQx/PU04Q20QRh982rUAsylWmoOsv2qg+EuhzaW1xHgVKZC+XclDEx8vYUzhCC
-	 GSNI9fWdSmNkRlyKm8hajLzwmGs3rWxFqziycmpj7JoNWCoh7QGaJWuogv/7K3eB55
-	 HAo8DhqWlfZ9jThd/f62P7N8/HY2iO66LlL2VuNc=
+	by mail.kernel.org (Postfix) with ESMTP id 9D74520717
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:24:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727509AbfE1HXr (ORCPT
+        id S1727564AbfE1HYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 03:23:47 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53604 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726305AbfE1HXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 03:23:47 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B7A0CADC1;
-        Tue, 28 May 2019 07:23:45 +0000 (UTC)
-Date:   Tue, 28 May 2019 09:23:44 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>
-Subject: Re: [RFC 5/7] mm: introduce external memory hinting API
-Message-ID: <20190528072344.GO1658@dhcp22.suse.cz>
-References: <20190520035254.57579-1-minchan@kernel.org>
- <20190520035254.57579-6-minchan@kernel.org>
- <20190521153113.GA2235@redhat.com>
- <20190527074300.GA6879@google.com>
- <20190527151201.GB8961@redhat.com>
- <20190527233306.GE6879@google.com>
+        Tue, 28 May 2019 03:24:31 -0400
+Received: from mga17.intel.com ([192.55.52.151]:57853 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726305AbfE1HYb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 03:24:31 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 May 2019 00:24:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,521,1549958400"; 
+   d="scan'208";a="179114371"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 28 May 2019 00:24:29 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1hVWTE-0003sH-LM; Tue, 28 May 2019 15:24:28 +0800
+Date:   Tue, 28 May 2019 15:23:29 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Subject: Re: [PATCH RESEND v2] KVM: X86: Implement PV sched yield hypercall
+Message-ID: <201905281519.27MAOvb9%lkp@intel.com>
+References: <1559009752-8536-1-git-send-email-wanpengli@tencent.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190527233306.GE6879@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1559009752-8536-1-git-send-email-wanpengli@tencent.com>
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 28-05-19 08:33:06, Minchan Kim wrote:
-> On Mon, May 27, 2019 at 05:12:02PM +0200, Oleg Nesterov wrote:
-> > On 05/27, Minchan Kim wrote:
-> > >
-> > > > another problem is that pid_task(pid) can return a zombie leader, in this case
-> > > > mm_access() will fail while it shouldn't.
-> > >
-> > > I'm sorry. I didn't notice that. However, I couldn't understand your point.
-> > > Why do you think mm_access shouldn't fail even though pid_task returns
-> > > a zombie leader?
-> > 
-> > The leader can exit (call sys_exit(), not sys_exit_group()), this won't affect
-> > other threads. In this case the process is still alive even if the leader thread
-> > is zombie. That is why we have find_lock_task_mm().
-> 
-> Thanks for clarification, Oleg. Then, Let me have a further question.
-> 
-> It means process_vm_readv, move_pages have same problem too because find_task_by_vpid
-> can return a zomebie leader and next line checks for mm_struct validation makes a
-> failure. My understand is correct? If so, we need to fix all places.
+Hi Wanpeng,
 
-Isn't that a problem of most callers of get_task_mm? Shouldn't we fix it
-turning it into find_lock_task_mm?
--- 
-Michal Hocko
-SUSE Labs
+Thank you for the patch! Perhaps something to improve:
+
+[auto build test WARNING on kvm/linux-next]
+[also build test WARNING on v5.2-rc2 next-20190524]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+url:    https://github.com/0day-ci/linux/commits/Wanpeng-Li/KVM-X86-Implement-PV-sched-yield-hypercall/20190528-132021
+base:   https://git.kernel.org/pub/scm/virt/kvm/kvm.git linux-next
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-rc1-7-g2b96cd8-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+
+sparse warnings: (new ones prefixed by >>)
+
+   arch/x86/kvm/x86.c:2379:38: sparse: sparse: incorrect type in argument 1 (different address spaces) @@    expected void const [noderef] <asn:1> * @@    got  const [noderef] <asn:1> * @@
+   arch/x86/kvm/x86.c:2379:38: sparse:    expected void const [noderef] <asn:1> *
+   arch/x86/kvm/x86.c:2379:38: sparse:    got unsigned char [usertype] *
+   arch/x86/kvm/x86.c:7181:15: sparse: sparse: incompatible types in comparison expression (different address spaces):
+   arch/x86/kvm/x86.c:7181:15: sparse:    struct kvm_apic_map [noderef] <asn:4> *
+   arch/x86/kvm/x86.c:7181:15: sparse:    struct kvm_apic_map *
+   arch/x86/kvm/x86.c:7243:14: sparse: sparse: undefined identifier 'KVM_HC_SCHED_YIELD'
+>> arch/x86/kvm/x86.c:7243:14: sparse: sparse: incompatible types for 'case' statement
+   arch/x86/kvm/x86.c:9408:16: sparse: sparse: incompatible types in comparison expression (different address spaces):
+   arch/x86/kvm/x86.c:9408:16: sparse:    struct kvm_apic_map [noderef] <asn:4> *
+   arch/x86/kvm/x86.c:9408:16: sparse:    struct kvm_apic_map *
+>> arch/x86/kvm/x86.c:7193:9: sparse: sparse: context imbalance in 'kvm_sched_yield' - wrong count at exit
+   arch/x86/kvm/x86.c:7243:14: sparse: sparse: Expected constant expression in case statement
+
+vim +/case +7243 arch/x86/kvm/x86.c
+
+  7174	
+  7175	void kvm_sched_yield(struct kvm *kvm, u64 dest_id)
+  7176	{
+  7177		struct kvm_vcpu *target;
+  7178		struct kvm_apic_map *map;
+  7179	
+  7180		rcu_read_lock();
+  7181		map = rcu_dereference(kvm->arch.apic_map);
+  7182	
+  7183		if (unlikely(!map))
+  7184			goto out;
+  7185	
+  7186		if (map->phys_map[dest_id]->vcpu) {
+  7187			target = map->phys_map[dest_id]->vcpu;
+  7188			rcu_read_unlock();
+  7189			kvm_vcpu_yield_to(target);
+  7190		}
+  7191	
+  7192	out:
+> 7193		if (!target)
+  7194			rcu_read_unlock();
+  7195	}
+  7196	
+  7197	int kvm_emulate_hypercall(struct kvm_vcpu *vcpu)
+  7198	{
+  7199		unsigned long nr, a0, a1, a2, a3, ret;
+  7200		int op_64_bit;
+  7201	
+  7202		if (kvm_hv_hypercall_enabled(vcpu->kvm))
+  7203			return kvm_hv_hypercall(vcpu);
+  7204	
+  7205		nr = kvm_rax_read(vcpu);
+  7206		a0 = kvm_rbx_read(vcpu);
+  7207		a1 = kvm_rcx_read(vcpu);
+  7208		a2 = kvm_rdx_read(vcpu);
+  7209		a3 = kvm_rsi_read(vcpu);
+  7210	
+  7211		trace_kvm_hypercall(nr, a0, a1, a2, a3);
+  7212	
+  7213		op_64_bit = is_64_bit_mode(vcpu);
+  7214		if (!op_64_bit) {
+  7215			nr &= 0xFFFFFFFF;
+  7216			a0 &= 0xFFFFFFFF;
+  7217			a1 &= 0xFFFFFFFF;
+  7218			a2 &= 0xFFFFFFFF;
+  7219			a3 &= 0xFFFFFFFF;
+  7220		}
+  7221	
+  7222		if (kvm_x86_ops->get_cpl(vcpu) != 0) {
+  7223			ret = -KVM_EPERM;
+  7224			goto out;
+  7225		}
+  7226	
+  7227		switch (nr) {
+  7228		case KVM_HC_VAPIC_POLL_IRQ:
+  7229			ret = 0;
+  7230			break;
+  7231		case KVM_HC_KICK_CPU:
+  7232			kvm_pv_kick_cpu_op(vcpu->kvm, a0, a1);
+  7233			ret = 0;
+  7234			break;
+  7235	#ifdef CONFIG_X86_64
+  7236		case KVM_HC_CLOCK_PAIRING:
+  7237			ret = kvm_pv_clock_pairing(vcpu, a0, a1);
+  7238			break;
+  7239	#endif
+  7240		case KVM_HC_SEND_IPI:
+  7241			ret = kvm_pv_send_ipi(vcpu->kvm, a0, a1, a2, a3, op_64_bit);
+  7242			break;
+> 7243		case KVM_HC_SCHED_YIELD:
+  7244			kvm_sched_yield(vcpu->kvm, a0);
+  7245			ret = 0;
+  7246			break;
+  7247		default:
+  7248			ret = -KVM_ENOSYS;
+  7249			break;
+  7250		}
+  7251	out:
+  7252		if (!op_64_bit)
+  7253			ret = (u32)ret;
+  7254		kvm_rax_write(vcpu, ret);
+  7255	
+  7256		++vcpu->stat.hypercalls;
+  7257		return kvm_skip_emulated_instruction(vcpu);
+  7258	}
+  7259	EXPORT_SYMBOL_GPL(kvm_emulate_hypercall);
+  7260	
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
