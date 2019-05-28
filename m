@@ -2,123 +2,107 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 375CBC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33AA1C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EF5D20883
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:00:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K5mTZO29"
+	by mail.kernel.org (Postfix) with ESMTP id 1743820883
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:01:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727793AbfE1SAb (ORCPT
+        id S1727829AbfE1SBx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 14:00:31 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:35488 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726576AbfE1SAb (ORCPT
+        Tue, 28 May 2019 14:01:53 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:51527 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726576AbfE1SBw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 14:00:31 -0400
-Received: by mail-lf1-f66.google.com with SMTP id a25so5453985lfg.2;
-        Tue, 28 May 2019 11:00:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=gzRimgoeRu7R/UsHOkPXtR9NqQokG6oQDoPTeeW4GsA=;
-        b=K5mTZO29tbBaLBfmC9xktb9UyEHFJm7cNGH2ho7TmDNYxAatoyUag706Zd7cjqjf28
-         KkeBW1GaNsqZpGtuXpPL2jgCnJM5DuHaiEWuudtfGOhqTqHMJOGDCHv8YAGmcWlXiSLK
-         tvB79wzMLr5Um6QS7j3cKNsAv1752T6NIpZ/9dqKNuDh+uFqgoopmTVuvev/Ic1UEPV9
-         POninSj+/FBXrDQrPHxHzYlplgfdBdt11aQdVLcmU7bI3aGISf73jtSTKnsqq7hOE1Hl
-         V+x+dWvcxXzA/c6PZ2CFDN+iGZBodzbs4Zs7PsfeskXJix3j7cStbEXLgSLKM7CJ7KPj
-         kKnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gzRimgoeRu7R/UsHOkPXtR9NqQokG6oQDoPTeeW4GsA=;
-        b=h85yshqRCD1LEnsQ0HX2/pgBCBkP1RKjMmh5fipdgyWJItrphhxCJbp4GCOlrKs6Vy
-         B4bIXJCnVoN1Q9EGPWKgBVADYVaQjCh+LojtYSoTgnPPlHgzzacPZWOLlt0WAxyP7uRy
-         0lDrlScMMsybeXaKDkJGCYd9hHK9AzfRHjXGdBA+eeT6p1rffPtCXX0pJkk3D6X0NMnl
-         uI0gJHtHEB5YGE+Z0Mli/6vSW+z3R34npZvB8Uuy3YzEZigoGTOTE2/Se6IHYl6fOU85
-         EjsUeF7bKoEQnJUybK8a4YKlEpn9YIsH+tzF1Ir1vWy5hs2PgfjdN/nMKCgn9HrQ500s
-         rcnw==
-X-Gm-Message-State: APjAAAXyRQ+tb9sLWe9BMyDyqq90xkuJ3J7J9wspxOr5J+EGTlH09dX+
-        Ga9zKhNpPaQEAtjaEiJi0FI=
-X-Google-Smtp-Source: APXvYqza2BE+UrIAhAKBPOR5jKGph27QtzFQbF50zdcH09u6RqUIDrc1Df0ox4XY650tVc7LO0usqA==
-X-Received: by 2002:ac2:5285:: with SMTP id q5mr8975099lfm.146.1559066429696;
-        Tue, 28 May 2019 11:00:29 -0700 (PDT)
-Received: from esperanza ([176.120.239.149])
-        by smtp.gmail.com with ESMTPSA id e19sm3048133ljj.62.2019.05.28.11.00.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 May 2019 11:00:29 -0700 (PDT)
-Date:   Tue, 28 May 2019 21:00:26 +0300
-From:   Vladimir Davydov <vdavydov.dev@gmail.com>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Christoph Lameter <cl@linux.com>, cgroups@vger.kernel.org,
-        Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v5 5/7] mm: rework non-root kmem_cache lifecycle
- management
-Message-ID: <20190528180026.zb6yaxdeapwx5r3v@esperanza>
-References: <20190521200735.2603003-1-guro@fb.com>
- <20190521200735.2603003-6-guro@fb.com>
- <20190528170828.zrkvcdsj3d3jzzzo@esperanza>
+        Tue, 28 May 2019 14:01:52 -0400
+Received: from 50-233-100-202-static.hfc.comcastbusiness.net ([50.233.100.202] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hVgQ0-0004i9-OO; Tue, 28 May 2019 20:01:49 +0200
+Date:   Tue, 28 May 2019 11:01:38 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Sverdlin, Alexander (Nokia - DE/Ulm)" <alexander.sverdlin@nokia.com>
+cc:     "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Jason Vas Dias <jason.vas.dias@gmail.com>
+Subject: Re: [PATCH] x86/vdso: implement clock_gettime(CLOCK_MONOTONIC_RAW,
+ ...)
+In-Reply-To: <20190528080034.31259-1-alexander.sverdlin@nokia.com>
+Message-ID: <alpine.DEB.2.21.1905281055240.1859@nanos.tec.linutronix.de>
+References: <20190528080034.31259-1-alexander.sverdlin@nokia.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190528170828.zrkvcdsj3d3jzzzo@esperanza>
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 08:08:28PM +0300, Vladimir Davydov wrote:
-> Hello Roman,
-> 
-> On Tue, May 21, 2019 at 01:07:33PM -0700, Roman Gushchin wrote:
-> > This commit makes several important changes in the lifecycle
-> > of a non-root kmem_cache, which also affect the lifecycle
-> > of a memory cgroup.
-> > 
-> > Currently each charged slab page has a page->mem_cgroup pointer
-> > to the memory cgroup and holds a reference to it.
-> > Kmem_caches are held by the memcg and are released with it.
-> > It means that none of kmem_caches are released unless at least one
-> > reference to the memcg exists, which is not optimal.
-> > 
-> > So the current scheme can be illustrated as:
-> > page->mem_cgroup->kmem_cache.
-> > 
-> > To implement the slab memory reparenting we need to invert the scheme
-> > into: page->kmem_cache->mem_cgroup.
-> > 
-> > Let's make every page to hold a reference to the kmem_cache (we
-> > already have a stable pointer), and make kmem_caches to hold a single
-> > reference to the memory cgroup.
-> 
-> Is there any reason why we can't reference both mem cgroup and kmem
-> cache per each charged kmem page? I mean,
-> 
->   page->mem_cgroup references mem_cgroup
->   page->kmem_cache references kmem_cache
->   mem_cgroup references kmem_cache while it's online
-> 
-> TBO it seems to me that not taking a reference to mem cgroup per charged
-> kmem page makes the code look less straightforward, e.g. as you
-> mentioned in the commit log, we have to use mod_lruvec_state() for memcg
-> pages and mod_lruvec_page_state() for root pages.
+Alexander,
 
-I think I completely missed the point here. In the following patch you
-move kmem caches from a child to the parent cgroup on offline (aka
-reparent them). That's why you can't maintain page->mem_cgroup. Sorry
-for misunderstanding.
+On Tue, 28 May 2019, Sverdlin, Alexander (Nokia - DE/Ulm) wrote:
+> Add CLOCK_MONOTONIC_RAW to the existing clock_gettime() vDSO
+> implementation. This is based on the ideas of Jason Vas Dias and comments
+> of Thomas Gleixner.
+
+Well to some extent, but
+
+> The results from the above test program:
+> 
+> Clock			Before		After		Diff
+> -----			------		-----		----
+> CLOCK_MONOTONIC		355531720	338039373	-5%
+> CLOCK_MONOTONIC_RAW	44831738	336064912	+650%
+> CLOCK_REALTIME		347665133	338102907	-3%
+
+the preformance regressions for CLOCK_MONOTONIC and CLOCK_REALTIME are just
+not acceptable.
+
+> diff --git a/arch/x86/entry/vdso/vclock_gettime.c b/arch/x86/entry/vdso/vclock_gettime.c
+> index 98c7d12..7c9db26 100644
+> --- a/arch/x86/entry/vdso/vclock_gettime.c
+> +++ b/arch/x86/entry/vdso/vclock_gettime.c
+> @@ -144,6 +144,13 @@ notrace static int do_hres(clockid_t clk, struct timespec *ts)
+>  	struct vgtod_ts *base = &gtod->basetime[clk];
+>  	u64 cycles, last, sec, ns;
+>  	unsigned int seq;
+> +	u32 mult = gtod->mult;
+> +	u32 shift = gtod->shift;
+> +
+> +	if (clk == CLOCK_MONOTONIC_RAW) {
+> +		mult = gtod->raw_mult;
+> +		shift = gtod->raw_shift;
+> +	}
+
+They stem from this extra conditional.
+
+>  
+>  	do {
+>  		seq = gtod_read_begin(gtod);
+> @@ -153,8 +160,8 @@ notrace static int do_hres(clockid_t clk, struct timespec *ts)
+>  		if (unlikely((s64)cycles < 0))
+>  			return vdso_fallback_gettime(clk, ts);
+>  		if (cycles > last)
+> -			ns += (cycles - last) * gtod->mult;
+> -		ns >>= gtod->shift;
+> +			ns += (cycles - last) * mult;
+
+And this is completely broken because you read the mult/shift values
+outside of the sequence count protected region, so a concurrent update of
+the timekeeping values will lead to inconsistent state.
+
+Thanks,
+
+	tglx
