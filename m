@@ -2,111 +2,83 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CDEC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A1F4C072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06FE22081C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:41:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559040081;
-	bh=LGafzQ9FpsxScocufsydacEFOCrRaZmMjdc9PzAXkAI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QHEXQeMvyCLbQcRjTzhaK+VRC6RELDkPkUFyMseJjd03V/PNwd1YvOlu0s+KTz0yN
-	 I2BvfhCaXbejVYPox8cOaI+lNxD7vPxO8H8P2Ius0JBDylyB4AEA08uTXL5IZIHFYm
-	 DI9sPh+YvI/zOgyOelLaGoVJvPfM/gxcS+UvadDM=
+	by mail.kernel.org (Postfix) with ESMTP id 43D3921473
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:42:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbfE1KlU (ORCPT
+        id S1726732AbfE1KmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 06:41:20 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40384 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726334AbfE1KlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 06:41:20 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E7A0CAEC8;
-        Tue, 28 May 2019 10:41:18 +0000 (UTC)
-Date:   Tue, 28 May 2019 12:41:17 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Daniel Colascione <dancol@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Linux API <linux-api@vger.kernel.org>
-Subject: Re: [RFC 7/7] mm: madvise support MADV_ANONYMOUS_FILTER and
- MADV_FILE_FILTER
-Message-ID: <20190528104117.GW1658@dhcp22.suse.cz>
-References: <20190521062628.GE32329@dhcp22.suse.cz>
- <20190527075811.GC6879@google.com>
- <20190527124411.GC1658@dhcp22.suse.cz>
- <20190528032632.GF6879@google.com>
- <20190528062947.GL1658@dhcp22.suse.cz>
- <20190528081351.GA159710@google.com>
- <CAKOZuesnS6kBFX-PKJ3gvpkv8i-ysDOT2HE2Z12=vnnHQv0FDA@mail.gmail.com>
- <20190528084927.GB159710@google.com>
- <20190528090821.GU1658@dhcp22.suse.cz>
- <20190528103256.GA9199@google.com>
+        Tue, 28 May 2019 06:42:13 -0400
+Received: from mga14.intel.com ([192.55.52.115]:52031 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726305AbfE1KmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 06:42:13 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 May 2019 03:42:12 -0700
+X-ExtLoop1: 1
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 28 May 2019 03:42:09 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 28 May 2019 13:42:08 +0300
+Date:   Tue, 28 May 2019 13:42:08 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Ruslan Babayev <ruslan@babayev.com>
+Cc:     wsa@the-dreams.de, linux@armlinux.org.uk, andrew@lunn.ch,
+        f.fainelli@gmail.com, hkallweit1@gmail.com, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-acpi@vger.kernel.org,
+        xe-linux-external@cisco.com
+Subject: Re: [net-next,v3 2/2] net: phy: sfp: enable i2c-bus detection on
+ ACPI based systems
+Message-ID: <20190528104208.GE2781@lahna.fi.intel.com>
+References: <20190528032213.19839-1-ruslan@babayev.com>
+ <20190528032213.19839-3-ruslan@babayev.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190528103256.GA9199@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190528032213.19839-3-ruslan@babayev.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 28-05-19 19:32:56, Minchan Kim wrote:
-> On Tue, May 28, 2019 at 11:08:21AM +0200, Michal Hocko wrote:
-> > On Tue 28-05-19 17:49:27, Minchan Kim wrote:
-> > > On Tue, May 28, 2019 at 01:31:13AM -0700, Daniel Colascione wrote:
-> > > > On Tue, May 28, 2019 at 1:14 AM Minchan Kim <minchan@kernel.org> wrote:
-> > > > > if we went with the per vma fd approach then you would get this
-> > > > > > feature automatically because map_files would refer to file backed
-> > > > > > mappings while map_anon could refer only to anonymous mappings.
-> > > > >
-> > > > > The reason to add such filter option is to avoid the parsing overhead
-> > > > > so map_anon wouldn't be helpful.
-> > > > 
-> > > > Without chiming on whether the filter option is a good idea, I'd like
-> > > > to suggest that providing an efficient binary interfaces for pulling
-> > > > memory map information out of processes.  Some single-system-call
-> > > > method for retrieving a binary snapshot of a process's address space
-> > > > complete with attributes (selectable, like statx?) for each VMA would
-> > > > reduce complexity and increase performance in a variety of areas,
-> > > > e.g., Android memory map debugging commands.
-> > > 
-> > > I agree it's the best we can get *generally*.
-> > > Michal, any opinion?
-> > 
-> > I am not really sure this is directly related. I think the primary
-> > question that we have to sort out first is whether we want to have
-> > the remote madvise call process or vma fd based. This is an important
-> > distinction wrt. usability. I have only seen pid vs. pidfd discussions
-> > so far unfortunately.
-> 
-> With current usecase, it's per-process API with distinguishable anon/file
-> but thought it could be easily extended later for each address range
-> operation as userspace getting smarter with more information.
+On Mon, May 27, 2019 at 08:22:13PM -0700, Ruslan Babayev wrote:
+> +	} else if (ACPI_COMPANION(&pdev->dev)) {
 
-Never design user API based on a single usecase, please. The "easily
-extended" part is by far not clear to me TBH. As I've already mentioned
-several times, the synchronization model has to be thought through
-carefuly before a remote process address range operation can be
-implemented.
+You can also use has_acpi_companion() here.
 
--- 
-Michal Hocko
-SUSE Labs
+> +		struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
+> +		struct fwnode_handle *fw = acpi_fwnode_handle(adev);
+> +		struct fwnode_reference_args args;
+> +		struct acpi_handle *acpi_handle;
+> +		int ret;
+> +
+> +		ret = acpi_node_get_property_reference(fw, "i2c-bus", 0, &args);
+> +		if (ACPI_FAILURE(ret) || !is_acpi_device_node(args.fwnode)) {
+> +			dev_err(&pdev->dev, "missing 'i2c-bus' property\n");
+> +			return -ENODEV;
+>  		}
+> +
+> +		acpi_handle = ACPI_HANDLE_FWNODE(args.fwnode);
+> +		i2c = i2c_acpi_find_adapter_by_handle(acpi_handle);
+> +	}
+> +
+> +	if (!i2c)
+> +		return -EPROBE_DEFER;
+> +
+> +	err = sfp_i2c_configure(sfp, i2c);
+> +	if (err < 0) {
+> +		i2c_put_adapter(i2c);
+> +		return err;
+
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
