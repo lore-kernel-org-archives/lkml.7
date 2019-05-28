@@ -2,98 +2,113 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A3EC07542
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 02:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DEF9C04AB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 02:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA31D208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 02:26:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0986A20823
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 02:32:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=babayev.com header.i=@babayev.com header.b="VTiNwQT9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rH68e9QO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727615AbfE1C0z (ORCPT
+        id S1727589AbfE1CcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 22:26:55 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38058 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727525AbfE1C0y (ORCPT
+        Mon, 27 May 2019 22:32:05 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58800 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727313AbfE1CcE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 22:26:54 -0400
-Received: by mail-pg1-f194.google.com with SMTP id v11so9987985pgl.5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 19:26:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=babayev.com; s=google;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=PbAlnbMG3ZQsuTiPzcj5dR2K8h+JQcEEAbcsQKzHrp8=;
-        b=VTiNwQT9ngEv4fGQldDwmwNpeLWpsu6SR50x7OfHNIq+PZbu2FxUchJjUWpV1KG9W7
-         +O09yXGsURhBHPPerTLS84kxR/Ze8kuYI75fVsmtS0eaDe9+r+frVodGkjQ/XNg27AZm
-         Q5Ojd70jtTWIhCAD1gkxDMePKzeKRwyRrUmuA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=PbAlnbMG3ZQsuTiPzcj5dR2K8h+JQcEEAbcsQKzHrp8=;
-        b=rMJQdyuIyTEpfRWT++DO0qbW3B9mqKLBBWWAh83yg6ndcOn0Hxz4hjaqGcJz4lxxz5
-         kztH34d/NobrzS9g/Ru+0S6O7YOWDNQGMY0MA06YQEybX8hU5a6gYysL5INaKy7b/z3V
-         3p95vicd6dBwHoNDK6CW0CFx0idDL+NDOGAcZYHGs5Iwjx1Oldngx5vQRcfS/6K3bCks
-         d8K6lCOAHeRsXNBCzF5Wup8jbpmpkO+zCPEkb43v8Jlg/0WHbNIsng10RU4LOiKVHw6l
-         8gYVmgzj+0zge6J4kWxJXJtxP2dPld1mcAse5Kp6FMTDWe3UqUyJ8MHcgZtf2usN0P5Y
-         SrwA==
-X-Gm-Message-State: APjAAAU0m1Qr/Osl5fyV0ylKG/1NeSe1vuVcPCohBfHuXilQM1x0bn7S
-        Pl740NaZrc19YzXjwl1Y13FG+g==
-X-Google-Smtp-Source: APXvYqx+VY3FarvHW7iBaypvG6dz7YPmC7OnZveSMATrcMjnfNcPSxPUaSYfs1JcSyOp5shSR2CCYA==
-X-Received: by 2002:a17:90a:bb8d:: with SMTP id v13mr2260630pjr.79.1559010414042;
-        Mon, 27 May 2019 19:26:54 -0700 (PDT)
-Received: from localhost ([128.107.241.177])
-        by smtp.gmail.com with ESMTPSA id l38sm720404pje.12.2019.05.27.19.26.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 27 May 2019 19:26:53 -0700 (PDT)
-References: <20190505193435.3248-1-ruslan@babayev.com> <20190525005302.27164-1-ruslan@babayev.com> <20190527083943.GX2781@lahna.fi.intel.com>
-User-agent: mu4e 1.0; emacs 26.1
-From:   Ruslan Babayev <ruslan@babayev.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Ruslan Babayev <ruslan@babayev.com>,
-        Wolfram Sang <wsa@the-dreams.de>, xe-linux-external@cisco.com,
-        linux-i2c@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2 1/2] i2c: acpi: export i2c_acpi_find_adapter_by_handle
-In-reply-to: <20190527083943.GX2781@lahna.fi.intel.com>
-Date:   Mon, 27 May 2019 19:26:53 -0700
-Message-ID: <8736kz9uvm.fsf@babayev.com>
+        Mon, 27 May 2019 22:32:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=5RRvYTM2e/gWTemJvl1KdhwwgyigP6WYDybbXx30ARA=; b=rH68e9QOC0T6i0j0JEOunQHUk
+        bSUHRoEG8nQBZVYuEdUfAQa5xwOVJBxARWlDxwTFfB9OfG7UE6fXQgSGpayk6K8qCUqEaAbiTIBxw
+        6fcRpqJ4+JtMcW4ZyfOBxSTBUlz9pguIowppJM9q/fnLBH93FNRe+5Fl0fmhfiJVLJCFk6/f6/6ll
+        pFOG8LtSDV4i+AwAoHFlLFJIec87JPrvyZccSKIyE2xadWbBtj8lXL6EgHfLmy4ErYBeD9PrBFZKz
+        HdBZZUrFWk7OrNeL2WhBHRAtV7OkTOXbOlBXWt9rT5eShGzAkcR+Dh0AzvnLFj+EdT6iBUP9snA0h
+        ZwtgpaOow==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hVRuF-0004PH-Q8; Tue, 28 May 2019 02:32:03 +0000
+Subject: Re: [PATCH] ia64: fix build errors by exporting paddr_to_nid()
+To:     LKML <linux-kernel@vger.kernel.org>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>
+Cc:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>
+References: <eaa72e00-e1ea-4a86-327e-8b8cca8ea492@infradead.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <877e524b-6b84-740e-a79b-5cec378bb22d@infradead.org>
+Date:   Mon, 27 May 2019 19:32:00 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <eaa72e00-e1ea-4a86-327e-8b8cca8ea492@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+ping...
 
-Mika Westerberg writes:
+On 5/3/19 9:42 PM, Randy Dunlap wrote:
+> From: Randy Dunlap <rdunlap@infradead.org>
+> 
+> Fix build errors on ia64 when DISCONTIGMEM=y and NUMA=y by
+> exporting paddr_to_nid().
+> 
+> Fixes these build errors:
+> 
+> ERROR: "paddr_to_nid" [sound/core/snd-pcm.ko] undefined!
+> ERROR: "paddr_to_nid" [net/sunrpc/sunrpc.ko] undefined!
+> ERROR: "paddr_to_nid" [fs/cifs/cifs.ko] undefined!
+> ERROR: "paddr_to_nid" [drivers/video/fbdev/core/fb.ko] undefined!
+> ERROR: "paddr_to_nid" [drivers/usb/mon/usbmon.ko] undefined!
+> ERROR: "paddr_to_nid" [drivers/usb/core/usbcore.ko] undefined!
+> ERROR: "paddr_to_nid" [drivers/md/raid1.ko] undefined!
+> ERROR: "paddr_to_nid" [drivers/md/dm-mod.ko] undefined!
+> ERROR: "paddr_to_nid" [drivers/md/dm-crypt.ko] undefined!
+> ERROR: "paddr_to_nid" [drivers/md/dm-bufio.ko] undefined!
+> ERROR: "paddr_to_nid" [drivers/ide/ide-core.ko] undefined!
+> ERROR: "paddr_to_nid" [drivers/ide/ide-cd_mod.ko] undefined!
+> ERROR: "paddr_to_nid" [drivers/gpu/drm/drm.ko] undefined!
+> ERROR: "paddr_to_nid" [drivers/char/agp/agpgart.ko] undefined!
+> ERROR: "paddr_to_nid" [drivers/block/nbd.ko] undefined!
+> ERROR: "paddr_to_nid" [drivers/block/loop.ko] undefined!
+> ERROR: "paddr_to_nid" [drivers/block/brd.ko] undefined!
+> ERROR: "paddr_to_nid" [crypto/ccm.ko] undefined!
+> 
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Tony Luck <tony.luck@intel.com>
+> Cc: Fenghua Yu <fenghua.yu@intel.com>
+> Cc: linux-ia64@vger.kernel.org
+> ---
+>  arch/ia64/mm/numa.c |    1 +
+>  1 file changed, 1 insertion(+)
+> 
+> --- lnx-51-rc7.orig/arch/ia64/mm/numa.c
+> +++ lnx-51-rc7/arch/ia64/mm/numa.c
+> @@ -55,6 +55,7 @@ paddr_to_nid(unsigned long paddr)
+>  
+>  	return (i < num_node_memblks) ? node_memblk[i].nid : (num_node_memblks ? -1 : 0);
+>  }
+> +EXPORT_SYMBOL(paddr_to_nid);
+>  
+>  #if defined(CONFIG_SPARSEMEM) && defined(CONFIG_NUMA)
+>  /*
+> 
+> 
 
-> On Fri, May 24, 2019 at 05:53:01PM -0700, Ruslan Babayev wrote:
->> +struct i2c_adapter *i2c_acpi_find_adapter_by_handle(acpi_handle handle);
->>  #else
->>  static inline bool i2c_acpi_get_i2c_resource(struct acpi_resource *ares,
->>  					     struct acpi_resource_i2c_serialbus **i2c)
->> @@ -996,6 +998,10 @@ static inline struct i2c_client *i2c_acpi_new_device(struct device *dev,
->>  {
->>  	return NULL;
->>  }
->> +struct i2c_adapter *i2c_acpi_find_adapter_by_handle(acpi_handle handle)
->
-> This should be static inline, I think.
->
->> +{
->> +	return NULL;
->> +}
->>  #endif /* CONFIG_ACPI */
->>  
->>  #endif /* _LINUX_I2C_H */
->> -- 
->> 2.17.1
 
-Thanks Mika, will make the change and repost the patches.
+-- 
+~Randy
