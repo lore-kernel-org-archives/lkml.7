@@ -2,156 +2,187 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C98E6C072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:57:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2819DC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4CF220B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:57:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7ED720B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:59:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="BzRo3jzt"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="WmXfvDLJ";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="mz3MGrm9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbfE1T5V (ORCPT
+        id S1727191AbfE1T71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 15:57:21 -0400
-Received: from sonic305-8.consmr.mail.bf2.yahoo.com ([74.6.133.47]:37297 "EHLO
-        sonic305-8.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726515AbfE1T5U (ORCPT
+        Tue, 28 May 2019 15:59:27 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:43886 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726452AbfE1T70 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 15:57:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1559073438; bh=e/v51RnL9xf5ubCXEIKeys53WKHwDxTPFQTT7gRApYg=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=BzRo3jztIFiFuKAwl9fRhPg3jAycn0bTKv5FWHWOtb9hV75QiKqwVOMeq1kFMNR5vDMoADKpN+TtVXNEIi+YA1iB1bZ8775nAkWShw4kBXMGR5Vb3qVCJeYFl4d2dEnAgNq7ZTaLt2wB7XFz/9kaGR/ZH7FtyE8MkYxK2zhR2XsbIQVaa/dXxM6cauaNWg5tgnEpz/v4bSTs35pQHLBsJm7E4lyM0yuEkBfOpdZau7q3h2UP+G60haqlK/NPD9wul0OyRdlcvm2XaUbxnmtTQl6ZJfAPgtnC8CfI4Gcl//ngS9W2TRovgrj2n1jPrc8hTCYkI5fJq/WJpStRaolBtg==
-X-YMail-OSG: S1fP1h4VM1mSGEkDlbxKAEe_FGEMKAtMqkbUYF8.HjO5mxKYbmZphG.xKGOOeLf
- 1Sz596GcvYe1.VqJ0sI6f5Bg.F5UUj87y5cqpCOYhvEfUM8vge75KsHHP4yK2TP3S_7j8KAFkjo.
- YUukUnMMeOrA39onJCjLTAbyojW3ZNHmWC0fZb2yibSwbIMfMlmrULY1eINTXCLQkRDAYOlneBrH
- lQugVzZFpEzdnClLyeZUYwBks1oM_xRwQQfcG82GrYRTEjfgeb.SxtgKWskbLjQ0ZsluCZTyt_yU
- ef1RWw0aObdJdJ385sj_rRuY2ydtZB6oLug5wvBNnS.tUHgqO3K1G3Hr2seu_GoI0epOK4.0OEG3
- xwnM2.y3wTfRb6YFXryEKfllq8SXxvDJXZ2O5kdYNrfIqj_bIkioVfe1OPpOeDuxvMF5xIstwnnf
- lJgAR6JIRreOJZ6rjB2KswEXCxXD7uaG5qZ5.mud3xcw8NyLWJXJLZW6mQ9CWpdIoR3yEV21VMck
- dSXsI4mnY8w2wfj1ngQhICjI0lqFFgLgTXqpYRD13NzX0iEqCh9XaBlhS59mv3lS7ozhukUoNyMx
- 2UJRCyzPyRHSPFbrs6guwf6lvQTQCzUK6mOttAz639TAZDrrR.wEF41krcm5VpgZptwfWQVgJeeR
- AvF6xVAxfQEt4oMGLKAVdvBOW.h7JQZp4wA9uluOB7eTjhgdmDR8Y9cXmc9O1lSX4EVJv31WwP9e
- tJ7_iWnwy4DvEZV9BLmuA1AqrtX1C6TE.Ub.aphzxoPzDWr72nQz38WHB1mhrMuBfrRvbnGMS0If
- J9JQ9zDKDTtTws9s1kZeZjA.hZamjV8MtIDIqFLVHzlwS4P4BZoODn6sKi8_sgfMnewm7qcldzYv
- 6y.DpfDzt6av8JDZs01IP2VZ_VkQfTMOFjL6fmzj1XhrG6EN.O2j.x9Mkhjre0UlMT.fPCJPZF6i
- _A6S6IDCPOmnhle35hB97hn9zajtFWUpgF48rPbEd70RcLOL18yVE8iMeN6eqMAb9GVtD4z7y8K3
- REnIwqWsl3IBgh20oCXZCjkslWO.F1Zmk.X32UxvmlBHqdUeDA1eGEWYkoPpm3M9iiZxFNhJcYRD
- kEsZzMXDep1wgOnTFW2c4G8l0fQYIxm9ccWCk5GR5QJgb_hw0d3EWtuIQW1adqkSSSH4oTWYbetk
- htvITi_YRH5QvOZmrLIFOhm7zPbeh6qVQpc7K2KIOY6x27xUEASKU8br7pe8VzJbTbvUOZB56P5J
- V3BXenh56F_UGW_SP05vyieUiRGKRn5d1lSCnOmyrQ32lQTmbipFAEyF4JwSSo_JeXXSgciDazWw
- -
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic305.consmr.mail.bf2.yahoo.com with HTTP; Tue, 28 May 2019 19:57:18 +0000
-Received: from c-73-223-4-185.hsd1.ca.comcast.net (EHLO [192.168.0.103]) ([73.223.4.185])
-          by smtp415.mail.bf1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 561ee678e4732a1eca71b27bfdaf5a23;
-          Tue, 28 May 2019 19:57:17 +0000 (UTC)
-Subject: Re: [PATCH] Smack: Restore the smackfsdef mount option
-To:     David Howells <dhowells@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, jose.bollo@iot.bzh,
-        Linux Security Module list 
-        <linux-security-module@vger.kernel.org>
-References: <43e3de52-13d7-8089-11cf-a384662401aa@schaufler-ca.com>
- <9191ef31-a022-cdc4-9bed-ff225e4179bb@schaufler-ca.com>
- <1ebab7e7-f7ee-b910-9cc8-5d826eee8e97@schaufler-ca.com>
- <11440.1559046181@warthog.procyon.org.uk>
- <9330.1559060541@warthog.procyon.org.uk>
- <9986.1559069658@warthog.procyon.org.uk>
-From:   Casey Schaufler <casey@schaufler-ca.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=casey@schaufler-ca.com; keydata=
- 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
- abzjfg==
-Message-ID: <26777166-5e0d-adfd-e59f-bcee7f18841a@schaufler-ca.com>
-Date:   Tue, 28 May 2019 12:57:16 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <9986.1559069658@warthog.procyon.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+        Tue, 28 May 2019 15:59:26 -0400
+Received: from pps.filterd (m0044008.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4SJwv4R008757;
+        Tue, 28 May 2019 12:59:13 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=LkSxTZxdxqWXHs6bcjODkfy5ThgF4ZzKI+BFcFNhJwc=;
+ b=WmXfvDLJbX5jj5IFNgc0Wbxcie3JyXKz9Bk3P4JXDoblWYirieoymNy8a43A8rPtyjlv
+ a+7676R4Xe6PtyLU232Wz1VTz8k7FgXegFLYnOf7eGQXu/N1kUZHgqPegNxC3nYcd3kV
+ AgXMKWUaCJDzC89vCHMFvtIL0uK1O7kHVQo= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2ss90cgn9c-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 28 May 2019 12:59:13 -0700
+Received: from prn-mbx07.TheFacebook.com (2620:10d:c081:6::21) by
+ prn-hub03.TheFacebook.com (2620:10d:c081:35::127) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Tue, 28 May 2019 12:58:21 -0700
+Received: from prn-hub01.TheFacebook.com (2620:10d:c081:35::125) by
+ prn-mbx07.TheFacebook.com (2620:10d:c081:6::21) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Tue, 28 May 2019 12:58:21 -0700
+Received: from NAM04-SN1-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Tue, 28 May 2019 12:58:21 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LkSxTZxdxqWXHs6bcjODkfy5ThgF4ZzKI+BFcFNhJwc=;
+ b=mz3MGrm9QwsvbTIAx5Q3kP7X2sKuVY/oejW6MoPS8f8Y0CrH7SlH9GlLZxfSGbpJ8Qw/lJH/ptvSFpYKxqWL6sB097D1QFMuAbwF6dIlXVGxK0gJLzzEJtPhN8LpHfPG9WwwjMrBqiYlfrMKJTNCyu05IHUz3bnYGjU6QebJxW4=
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
+ BYAPR15MB2487.namprd15.prod.outlook.com (52.135.198.160) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.20; Tue, 28 May 2019 19:58:18 +0000
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::d4f6:b485:69ee:fd9a]) by BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::d4f6:b485:69ee:fd9a%7]) with mapi id 15.20.1922.021; Tue, 28 May 2019
+ 19:58:18 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Vladimir Davydov <vdavydov.dev@gmail.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "Johannes Weiner" <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Christoph Lameter <cl@linux.com>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "Waiman Long" <longman@redhat.com>
+Subject: Re: [PATCH v5 6/7] mm: reparent slab memory on cgroup removal
+Thread-Topic: [PATCH v5 6/7] mm: reparent slab memory on cgroup removal
+Thread-Index: AQHVEBPW5GLT+zCswEKkIpLsH/n20qaA52gAgAAXzAA=
+Date:   Tue, 28 May 2019 19:58:17 +0000
+Message-ID: <20190528195808.GA27847@tower.DHCP.thefacebook.com>
+References: <20190521200735.2603003-1-guro@fb.com>
+ <20190521200735.2603003-7-guro@fb.com>
+ <20190528183302.zv75bsxxblc6v4dt@esperanza>
+In-Reply-To: <20190528183302.zv75bsxxblc6v4dt@esperanza>
+Accept-Language: en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: CO2PR04CA0105.namprd04.prod.outlook.com
+ (2603:10b6:104:6::31) To BYAPR15MB2631.namprd15.prod.outlook.com
+ (2603:10b6:a03:152::24)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::3:3dca]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d059af63-d800-4bfc-0653-08d6e3a6d30b
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR15MB2487;
+x-ms-traffictypediagnostic: BYAPR15MB2487:
+x-microsoft-antispam-prvs: <BYAPR15MB248790949526E0D694A8A4EBBE1E0@BYAPR15MB2487.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 00514A2FE6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(346002)(39860400002)(396003)(376002)(366004)(199004)(189003)(99286004)(4326008)(7736002)(71200400001)(71190400001)(66476007)(52116002)(66446008)(66946007)(64756008)(54906003)(7416002)(33656002)(386003)(8936002)(102836004)(53936002)(6916009)(305945005)(1076003)(76176011)(73956011)(6246003)(6506007)(229853002)(186003)(316002)(478600001)(6436002)(6486002)(256004)(86362001)(6116002)(5660300002)(6512007)(14444005)(9686003)(486006)(2906002)(25786009)(8676002)(66556008)(68736007)(81156014)(81166006)(14454004)(46003)(446003)(11346002)(476003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2487;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: PaCwO8r1jCJ0jLYhVjjURG5ajZfOsFcB3KOO4rrSPsg6QydzTe7hD/zEG+RZuz0b62EfU2kZgk/CdQRkz+QJcF//4y5vuQdO5r/zswk+Fx/305MkU8m8eQCh/lY7O0FWhQumn4xnGYGPo3T1IonprqGqcGA2nMeDGacbLVI1vCQ4nOksTlhwBuKhmHWPS8UWi5m9aGzXty+yfnQO9L5YAkXCPTmjQBUke1Yl8k5QQ/6kOYYL4qGCTi8C7T7GnyC3xdf1Lzhjd1OgGHxS3wMw4rTE0F7WAJ1qfX+W5SpUVMABZGCmX68Ji4c+App3XEsDZFoeyjamSabt4Ln5OOBqgGUxU+dafO1217w/WHCJ3jL8YFMtHkxZPMAwYIYU4WDJZnKBf/KwyF4uPnem9pSsRdFWqzs/Yw2tmYfZ+1eFpgc=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <0850A1DD02DABC429A7DDA28E4AFE9A8@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: d059af63-d800-4bfc-0653-08d6e3a6d30b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2019 19:58:18.4683
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: guro@fb.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2487
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-28_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905280125
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/28/2019 11:54 AM, David Howells wrote:
-> Casey Schaufler <casey@schaufler-ca.com> wrote:
->
->>> Casey Schaufler <casey@schaufler-ca.com> wrote:
->>>
->>>>> Also, should all of these be prefixed with "smack"?  So:
->>>>>
->>>>>   	fsparam_string("smackfsdef",	Opt_fsdefault),
->>>>>   	fsparam_string("smackfsfloor",	Opt_fsfloor),
->>>>>   	fsparam_string("smackfshat",	Opt_fshat),	
->>>> No. smack_fs_parameters takes care of that.
->>> It does?  *Blink*.
->> Well, something does. I can't say that I 100% understand all
->> of how the new mount code handles the mount options. Y'all made
->> sweeping changes, and the code works the way it used to except
->> for the awkward change from smackfsdef to smackfsdefault. It
->> took no small amount of head scratching and experimentation to
->> convince myself that the fix I proposed was correct.
-> Ah...  I suspect the issue is that smack_sb_eat_lsm_opts() strips the prefix
-> for an unconverted filesystem, but smack_fs_context_parse_param() doesn't
-> (which it shouldn't).
->
-> Can you try grabbing my mount-api-viro branch from:
->
-> 	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git
->
-> and testing setting smack options on a tmpfs filesystem?
+On Tue, May 28, 2019 at 09:33:02PM +0300, Vladimir Davydov wrote:
+> On Tue, May 21, 2019 at 01:07:34PM -0700, Roman Gushchin wrote:
+> > Let's reparent memcg slab memory on memcg offlining. This allows us
+> > to release the memory cgroup without waiting for the last outstanding
+> > kernel object (e.g. dentry used by another application).
+> >=20
+> > So instead of reparenting all accounted slab pages, let's do reparent
+> > a relatively small amount of kmem_caches. Reparenting is performed as
+> > a part of the deactivation process.
+> >=20
+> > Since the parent cgroup is already charged, everything we need to do
+> > is to splice the list of kmem_caches to the parent's kmem_caches list,
+> > swap the memcg pointer and drop the css refcounter for each kmem_cache
+> > and adjust the parent's css refcounter. Quite simple.
+> >=20
+> > Please, note that kmem_cache->memcg_params.memcg isn't a stable
+> > pointer anymore. It's safe to read it under rcu_read_lock() or
+> > with slab_mutex held.
+> >=20
+> > We can race with the slab allocation and deallocation paths. It's not
+> > a big problem: parent's charge and slab global stats are always
+> > correct, and we don't care anymore about the child usage and global
+> > stats. The child cgroup is already offline, so we don't use or show it
+> > anywhere.
+> >=20
+> > Local slab stats (NR_SLAB_RECLAIMABLE and NR_SLAB_UNRECLAIMABLE)
+> > aren't used anywhere except count_shadow_nodes(). But even there it
+> > won't break anything: after reparenting "nodes" will be 0 on child
+> > level (because we're already reparenting shrinker lists), and on
+> > parent level page stats always were 0, and this patch won't change
+> > anything.
+> >=20
+> > Signed-off-by: Roman Gushchin <guro@fb.com>
+> > Reviewed-by: Shakeel Butt <shakeelb@google.com>
+>=20
+> This one looks good to me. I can't see why anything could possibly go
+> wrong after this change.
 
-My fedora system won't boot because smackfsdef isn't recognized. :(
-I will put in my fix and retry.
+Hi Vladimir!
 
->
-> You might need to try modifying samples/vfs/test-fsmount.c to make it mount a
-> trmpfs filesystem through the new mount UAPI.
->
-> David
+Thank you for looking into the series. Really appreciate it!
+
+It looks like outstanding questions are:
+1) synchronization around the dying flag
+2) removing CONFIG_SLOB in 2/7
+3) early sysfs_slab_remove()
+4) mem_cgroup_from_kmem in 7/7
+
+Please, let me know if I missed anything.
+
+I'm waiting now for Johanness's review, so I'll address these issues
+in background and post the next (and hopefully) final version.
+
+Thanks!
