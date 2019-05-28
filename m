@@ -2,146 +2,140 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62412C072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFC5C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 374F221530
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:30:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="DeNEc67D"
+	by mail.kernel.org (Postfix) with ESMTP id 78B0D208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:30:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727614AbfE1HaR (ORCPT
+        id S1727636AbfE1Hah (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 03:30:17 -0400
-Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:35856 "EHLO
-        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726203AbfE1HaR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 03:30:17 -0400
-Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
-        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 9F0C32E1491;
-        Tue, 28 May 2019 10:30:13 +0300 (MSK)
-Received: from smtpcorp1o.mail.yandex.net (smtpcorp1o.mail.yandex.net [2a02:6b8:0:1a2d::30])
-        by mxbackcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id WmZsxO0Rsv-UCpWmw9d;
-        Tue, 28 May 2019 10:30:13 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1559028613; bh=b0tnBEaeSE0wx9SZBTkiemsceGG2gh/BPri5iBFlmTM=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=DeNEc67DccTvfjrv2GfpuCVW+0gZXFHC6VH0rBG93Qz6lpTLSEf0QDCDa+3WL7I+X
-         GZ8AN9RY+GikIyHi0zKEkYkJ7LcVcPAMrKYVVVMk3GQ1tgfpYnF2u0AnUQXSJ9zY2x
-         SaDK7qu1acKd2GlSFahxObLpKxDazFH1JAOnVFfc=
-Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:d877:17c:81de:6e43])
-        by smtpcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id bD1sDRHzsZ-UClmLKBl;
-        Tue, 28 May 2019 10:30:12 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH RFC] mm/madvise: implement MADV_STOCKPILE (kswapd from
- user space)
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Roman Gushchin <guro@fb.com>, linux-api@vger.kernel.org
-References: <155895155861.2824.318013775811596173.stgit@buzz>
- <20190527141223.GD1658@dhcp22.suse.cz> <20190527142156.GE1658@dhcp22.suse.cz>
- <20190527143926.GF1658@dhcp22.suse.cz>
- <9c55a343-2a91-46c6-166d-41b94bf5e9c8@yandex-team.ru>
- <20190528065153.GB1803@dhcp22.suse.cz>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <a4e5eeb8-3560-d4b4-08a0-8a22c677c0f7@yandex-team.ru>
-Date:   Tue, 28 May 2019 10:30:12 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 28 May 2019 03:30:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58298 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726203AbfE1Hah (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 03:30:37 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0A82E3087939;
+        Tue, 28 May 2019 07:30:37 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-12-83.pek2.redhat.com [10.72.12.83])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0D3855D71C;
+        Tue, 28 May 2019 07:30:25 +0000 (UTC)
+Subject: Re: [PATCH 0/3 v11] add reserved e820 ranges to the kdump kernel e820
+ table
+From:   lijiang <lijiang@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     kexec@lists.infradead.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, akpm@linux-foundation.org,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        x86@kernel.org, hpa@zytor.com, dyoung@redhat.com, bhe@redhat.com,
+        Thomas.Lendacky@amd.com
+References: <20190423013007.17838-1-lijiang@redhat.com>
+Message-ID: <12847a03-3226-0b29-97b5-04d404410147@redhat.com>
+Date:   Tue, 28 May 2019 15:30:21 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20190528065153.GB1803@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190423013007.17838-1-lijiang@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 28 May 2019 07:30:37 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28.05.2019 9:51, Michal Hocko wrote:
-> On Tue 28-05-19 09:25:13, Konstantin Khlebnikov wrote:
->> On 27.05.2019 17:39, Michal Hocko wrote:
->>> On Mon 27-05-19 16:21:56, Michal Hocko wrote:
->>>> On Mon 27-05-19 16:12:23, Michal Hocko wrote:
->>>>> [Cc linux-api. Please always cc this list when proposing a new user
->>>>>    visible api. Keeping the rest of the email intact for reference]
->>>>>
->>>>> On Mon 27-05-19 13:05:58, Konstantin Khlebnikov wrote:
->>>> [...]
->>>>>> This implements manual kswapd-style memory reclaim initiated by userspace.
->>>>>> It reclaims both physical memory and cgroup pages. It works in context of
->>>>>> task who calls syscall madvise thus cpu time is accounted correctly.
->>>>
->>>> I do not follow. Does this mean that the madvise always reclaims from
->>>> the memcg the process is member of?
->>>
->>> OK, I've had a quick look at the implementation (the semantic should be
->>> clear from the patch descrition btw.) and it goes all the way up the
->>> hierarchy and finally try to impose the same limit to the global state.
->>> This doesn't really make much sense to me. For few reasons.
->>>
->>> First of all it breaks isolation where one subgroup can influence a
->>> different hierarchy via parent reclaim.
->>
->> madvise(NULL, size, MADV_STOCKPILE) is the same as memory allocation and
->> freeing immediately, but without pinning memory and provoking oom.
->>
->> So, there is shouldn't be any isolation or security issues.
->>
->> At least probably it should be limited with portion of limit (like half)
->> instead of whole limit as it does now.
-> 
-> I do not think so. If a process is running inside a memcg then it is
-> a subject of a limit and that implies an isolation. What you are
-> proposing here is to allow escaping that restriction unless I am missing
-> something. Just consider the following setup
-> 
-> 		root (total memory = 2G)
-> 		 / \
->             (1G) A   B (1G)
->                     / \
->             (500M) C   D (500M)
-> 
-> all of them used up close to the limit and a process inside D requests
-> shrinking to 250M. Unless I am misunderstanding this implementation
-> will shrink D, B root to 250M (which means reclaiming C and A as well)
-> and then globally if that was not sufficient. So you have allowed D to
-> "allocate" 1,75G of memory effectively, right?
+Hi, Boris and Thomas
 
-It shrinks not 'size' memory - only while usage + size > limit.
-So, after reclaiming 250M in D all other levels will have 250M free.
+Could you give me any suggestions about this patch series? Other reviewers?
 
-Of course there might be race because reclaimer works with one level
-at the time. Probably it should start from inner level at each iteration.
+Thanks.
+Lianbo
 
->   
->>>
->>> I also have a problem with conflating the global and memcg states. Does
->>> it really make any sense to have the same target to the global state
->>> as per-memcg? How are you supposed to use this interface to shrink a
->>> particular memcg or for the global situation with a proportional
->>> distribution to all memcgs?
->>
->> For now this is out of my use cease. This could be done in userspace
->> with multiple daemons in different contexts and connection between them.
->> In this case each daemon should apply pressure only its own level.
+在 2019年04月23日 09:30, Lianbo Jiang 写道:
+> This patchset did three things:
 > 
-> Do you expect all daemons to agree on their shrinking target? Could you
-> elaborate? I simply do not see how this can work with memcgs lower in
-> the hierarchy having a smaller limit than their parents.
+> a). x86/e820, resource: add a new I/O resource descriptor 'IORES_DESC_
+>     RESERVED'
 > 
-
-Daemons could distribute pressure among leaves and propagate it into parents.
-Together with low-limit this gives enough control over pressure distribution.
+> b). x86/mm: change the check condition in SEV because a new descriptor is
+>     introduced
+> 
+> c). x86/kexec_file: add reserved e820 ranges to kdump kernel e820 table
+> 
+> Changes since v1:
+> 1. Modified the value of flags to "0", when walking through the whole
+> tree for e820 reserved ranges.
+> 
+> Changes since v2:
+> 1. Modified the value of flags to "0", when walking through the whole
+> tree for e820 reserved ranges.
+> 2. Modified the invalid SOB chain issue.
+> 
+> Changes since v3:
+> 1. Dropped [PATCH 1/3 v3] resource: fix an error which walks through iomem
+>    resources. Please refer to this commit <010a93bf97c7> "resource: Fix
+>    find_next_iomem_res() iteration issue"
+> 
+> Changes since v4:
+> 1. Improve the patch log, and add kernel log.
+> 
+> Changes since v5:
+> 1. Rewrite these patches log.
+> 
+> Changes since v6:
+> 1. Modify the [PATCH 1/2], and add the new I/O resource descriptor
+>    'IORES_DESC_RESERVED' for the iomem resources search interfaces,
+>    and also updates these codes relates to 'IORES_DESC_NONE'.
+> 2. Modify the [PATCH 2/2], and walk through io resource based on the
+>    new descriptor 'IORES_DESC_RESERVED'.
+> 3. Update patch log.
+> 
+> Changes since v7:
+> 1. Improve patch log.
+> 2. Improve this function __ioremap_check_desc_other().
+> 3. Modify code comment in the __ioremap_check_desc_other()
+> 
+> Changes since v8:
+> 1. Get rid of all changes about ia64.(Borislav's suggestion)
+> 2. Change the examination condition to the 'IORES_DESC_ACPI_*'.
+> 3. Modify the signature. This patch(add the new I/O resource
+>    descriptor 'IORES_DESC_RESERVED') was suggested by Boris.
+> 
+> Changes since v9:
+> 1. Improve patch log.
+> 2. No need to modify the kernel/resource.c, so correct them.
+> 3. Change the name of the __ioremap_check_desc_other() to
+>    __ioremap_check_desc_none_and_reserved(), and modify the
+>    check condition, add comment above it.
+> 
+> Changes since v10:
+> 1. Split them into three patches, the second patch is currently added.
+> 2. Change struct ioremap_mem_flags to struct ioremap_desc and redefine
+> it.
+> 3. Change the name of the __ioremap_check_desc_other() to
+> __ioremap_check_desc().
+> 4. Change the check condition in SEV and also improve them.
+> 5. Modify the return value for some functions.
+> 
+> Lianbo Jiang (3):
+>   x86/e820, resource: add a new I/O resource descriptor
+>     'IORES_DESC_RESERVED'
+>   x86/mm: change the check condition in SEV because a new descriptor is
+>     introduced
+>   x86/kexec_file: add reserved e820 ranges to kdump kernel e820 table
+> 
+>  arch/x86/kernel/crash.c |  6 +++++
+>  arch/x86/kernel/e820.c  |  2 +-
+>  arch/x86/mm/ioremap.c   | 59 ++++++++++++++++++++++++++---------------
+>  include/linux/ioport.h  | 10 +++++++
+>  4 files changed, 54 insertions(+), 23 deletions(-)
+> 
