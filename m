@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4450BC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:09:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF66C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:09:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1125A20989
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:09:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC58620989
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:09:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="DcQur5Ud"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bahkjknD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbfE1XJY (ORCPT
+        id S1727438AbfE1XJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 19:09:24 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:16489 "EHLO
+        Tue, 28 May 2019 19:09:36 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:16514 "EHLO
         hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727145AbfE1XJD (ORCPT
+        with ESMTP id S1727511AbfE1XJD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 May 2019 19:09:03 -0400
 Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cedbf8c0000>; Tue, 28 May 2019 16:09:00 -0700
+        id <B5cedbf8d0001>; Tue, 28 May 2019 16:09:01 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 28 May 2019 16:09:00 -0700
+  Tue, 28 May 2019 16:09:01 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 28 May 2019 16:09:00 -0700
-Received: from HQMAIL102.nvidia.com (172.18.146.10) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 May
- 2019 23:08:59 +0000
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL102.nvidia.com
- (172.18.146.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 May
- 2019 23:08:59 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 28 May 2019 23:08:59 +0000
+        by hqpgpgate102.nvidia.com on Tue, 28 May 2019 16:09:01 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL106.nvidia.com
+ (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 May
+ 2019 23:09:01 +0000
+Received: from HQMAIL104.nvidia.com (172.18.146.11) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 May
+ 2019 23:09:00 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL104.nvidia.com
+ (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 28 May 2019 23:09:00 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.110.103.86]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5cedbf8b0002>; Tue, 28 May 2019 16:08:59 -0700
+        id <B5cedbf8c0011>; Tue, 28 May 2019 16:09:00 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
         <tglx@linutronix.de>, <jason@lakedaemon.net>,
@@ -53,9 +53,9 @@ CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
         <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
         <devicetree@vger.kernel.org>
-Subject: [PATCH V2 03/12] clk: tegra: save and restore PLLs state for system
-Date:   Tue, 28 May 2019 16:08:47 -0700
-Message-ID: <1559084936-4610-4-git-send-email-skomatineni@nvidia.com>
+Subject: [PATCH V2 10/12] gpio: tegra: implement wake event support for Tegra210 and prior GPIO
+Date:   Tue, 28 May 2019 16:08:54 -0700
+Message-ID: <1559084936-4610-11-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
 References: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
@@ -63,272 +63,216 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559084940; bh=/Hx0pFugZ5HOyft79UPXTVIbpFB9kW0A+IwH8WA6lP0=;
+        t=1559084941; bh=FOX0xLAGw1Wrnc/eLT2E82b/wagmHj5E8aeFwV3N44g=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=DcQur5Udt76nutMjh5dSj81X8dp3BfSl7LG2+kqY7piY5/Zl5GzpueWpx7VsdmBfJ
-         0OARyhV8GXnQxCogrBaFWq/poeT6pc1MmABqJSZXxC5yFK1pDC8lFiYIySFhuUzp9j
-         sbXqkciu/rGvS5NMIZER6pnSRpkmNr1XcBoJkZVdTex5M7ECmboFJUvzMXA/JRNB9j
-         JYcUDjiJY7pY3nH5IP1mhyBHfcbfJweUxDZtY2bM0cxTP7Ve5tfj2PkyQTqFiHeZ8B
-         T3pFsEGaiQFjX/wHUB//NkZql0QQ1sNJNe/5Xw1696BhxdfPaGadLmwc4Z2dFrfQCq
-         wasM2j+8un0XQ==
+        b=bahkjknD3RwnQi+/wH9kcmEmY/fMm7bBU3Yk/FzH1ctz+HY3sQbps65M+2UJZX0Wy
+         2ild7UQOd0rUzjxNBBQtQXigyRejtFH8mnk/jg47/bFhrlkcinh4TDP7ZIRCubD83i
+         VVCsFhf+lRaGLKxHiZR7yar9Wutxvo45cZBXRkTkggEcthAG28s/RfFpI0j1dZUrXo
+         TaZm3fjlxesEPvQ8Q4jrw8KrcLyDWxLEeJ7Hc5cG0M07mXpY9jzyq227nfctI/jujW
+         h/vesu7ry+p5PsBnnsFy7c90dUqvHnCQKvNpBTz+Pge6qCDZ6ZiiLnnjRdyIxDtDWg
+         x24EQbu2OIQxQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch has implementation of saving and restoring PLL's state to
-support system suspend and resume operations.
+The GPIO controller doesn't have any controls to enable the system to
+wake up from low power states based on activity on GPIO pins. An extra
+hardware block that is part of the power management controller (PMC)
+contains these controls. In order for the GPIO controller to be able
+to cooperate with the PMC, obtain a reference to the PMC's IRQ domain
+and make it a parent to the GPIO controller's IRQ domain. This way the
+PMC gets an opportunity to program the additional registers required
+to enable wakeup sources on suspend.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/clk/tegra/clk-divider.c | 19 ++++++++
- drivers/clk/tegra/clk-pll-out.c | 25 +++++++++++
- drivers/clk/tegra/clk-pll.c     | 99 ++++++++++++++++++++++++++++++++---------
- drivers/clk/tegra/clk.h         |  9 ++++
- 4 files changed, 132 insertions(+), 20 deletions(-)
+ drivers/gpio/gpio-tegra.c | 116 +++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 110 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/clk/tegra/clk-divider.c b/drivers/clk/tegra/clk-divider.c
-index 2a1822a22740..718694727042 100644
---- a/drivers/clk/tegra/clk-divider.c
-+++ b/drivers/clk/tegra/clk-divider.c
-@@ -14,6 +14,7 @@
-  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  */
+diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
+index 6d9b6906b9d0..5190129668d3 100644
+--- a/drivers/gpio/gpio-tegra.c
++++ b/drivers/gpio/gpio-tegra.c
+@@ -32,6 +32,8 @@
+ #include <linux/pinctrl/consumer.h>
+ #include <linux/pm.h>
  
-+#include <linux/clk.h>
- #include <linux/kernel.h>
- #include <linux/io.h>
- #include <linux/err.h>
-@@ -179,3 +180,21 @@ struct clk *tegra_clk_register_mc(const char *name, const char *parent_name,
- 					  reg, 16, 1, CLK_DIVIDER_READ_ONLY,
- 					  mc_div_table, lock);
- }
++#include <dt-bindings/interrupt-controller/arm-gic.h>
 +
-+#if defined(CONFIG_PM_SLEEP)
-+void tegra_clk_divider_resume(struct clk_hw *hw, unsigned long rate)
-+{
-+	struct clk_hw *parent = clk_hw_get_parent(hw);
-+	unsigned long parent_rate;
+ #define GPIO_BANK(x)		((x) >> 5)
+ #define GPIO_PORT(x)		(((x) >> 3) & 0x3)
+ #define GPIO_BIT(x)		((x) & 0x7)
+@@ -275,8 +277,22 @@ static int tegra_gpio_set_config(struct gpio_chip *chip, unsigned int offset,
+ static int tegra_gpio_to_irq(struct gpio_chip *chip, unsigned int offset)
+ {
+ 	struct tegra_gpio_info *tgi = gpiochip_get_data(chip);
++	struct irq_domain *domain = tgi->irq_domain;
 +
-+	if (IS_ERR(parent)) {
-+		WARN_ON(1);
-+		return;
++	if (!gpiochip_irqchip_irq_valid(chip, offset))
++		return -ENXIO;
++
++	if (irq_domain_is_hierarchy(domain)) {
++		struct irq_fwspec spec;
++
++		spec.fwnode = domain->fwnode;
++		spec.param_count = 2;
++		spec.param[0] = offset;
++		spec.param[1] = IRQ_TYPE_NONE;
++		return irq_domain_alloc_irqs(domain, 1, NUMA_NO_NODE, &spec);
 +	}
-+
-+	parent_rate = clk_hw_get_rate(parent);
-+
-+	if (clk_frac_div_set_rate(hw, rate, parent_rate) < 0)
-+		WARN_ON(1);
-+}
-+#endif
-diff --git a/drivers/clk/tegra/clk-pll-out.c b/drivers/clk/tegra/clk-pll-out.c
-index 257cae0c1488..8b8c3b77d243 100644
---- a/drivers/clk/tegra/clk-pll-out.c
-+++ b/drivers/clk/tegra/clk-pll-out.c
-@@ -14,6 +14,7 @@
-  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  */
  
-+#include <linux/clk.h>
- #include <linux/kernel.h>
- #include <linux/io.h>
- #include <linux/err.h>
-@@ -120,3 +121,27 @@ struct clk *tegra_clk_register_pll_out(const char *name,
- 
- 	return clk;
+-	return irq_find_mapping(tgi->irq_domain, offset);
++	return irq_find_mapping(domain, offset);
  }
-+
-+#if defined(CONFIG_PM_SLEEP)
-+void tegra_clk_pll_out_resume(struct clk *clk, unsigned long rate)
-+{
-+	struct clk_hw *hw = __clk_get_hw(clk);
-+	struct clk_hw *parent = clk_hw_get_parent(hw);
-+
-+	if (IS_ERR(parent)) {
-+		WARN_ON(1);
-+		return;
-+	}
-+
-+	tegra_clk_divider_resume(parent, rate);
-+	clk_pll_out_enable(hw);
-+}
-+
-+void tegra_clk_sync_state_pll_out(struct clk *clk)
-+{
-+	struct clk_hw *hw = __clk_get_hw(clk);
-+
-+	if (!__clk_get_enable_count(clk))
-+		clk_pll_out_disable(hw);
-+}
-+#endif
-diff --git a/drivers/clk/tegra/clk-pll.c b/drivers/clk/tegra/clk-pll.c
-index 6b976b2514f7..b363b6c6f600 100644
---- a/drivers/clk/tegra/clk-pll.c
-+++ b/drivers/clk/tegra/clk-pll.c
-@@ -20,6 +20,7 @@
- #include <linux/err.h>
- #include <linux/clk.h>
- #include <linux/clk-provider.h>
-+#include <linux/clk/tegra.h>
  
- #include "clk.h"
+ static void tegra_gpio_irq_ack(struct irq_data *d)
+@@ -365,7 +381,10 @@ static int tegra_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+ 	else if (type & (IRQ_TYPE_EDGE_FALLING | IRQ_TYPE_EDGE_RISING))
+ 		irq_set_handler_locked(d, handle_edge_irq);
  
-@@ -1813,6 +1814,28 @@ static int clk_pllu_tegra114_enable(struct clk_hw *hw)
- 
- 	return ret;
+-	return 0;
++	if (d->parent_data)
++		return irq_chip_set_type_parent(d, type);
++	else
++		return 0;
  }
+ 
+ static void tegra_gpio_irq_shutdown(struct irq_data *d)
+@@ -503,6 +522,7 @@ static int tegra_gpio_irq_set_wake(struct irq_data *d, unsigned int enable)
+ 	struct tegra_gpio_bank *bank = irq_data_get_irq_chip_data(d);
+ 	unsigned int gpio = d->hwirq;
+ 	u32 port, bit, mask;
++	int ret;
+ 
+ 	port = GPIO_PORT(gpio);
+ 	bit = GPIO_BIT(gpio);
+@@ -513,7 +533,14 @@ static int tegra_gpio_irq_set_wake(struct irq_data *d, unsigned int enable)
+ 	else
+ 		bank->wake_enb[port] &= ~mask;
+ 
+-	return irq_set_irq_wake(bank->irq, enable);
++	ret = irq_set_irq_wake(bank->irq, enable);
++	if (ret < 0)
++		return ret;
 +
-+static void _clk_plle_tegra_init_parent(struct tegra_clk_pll *pll)
-+{
-+	u32 val, val_aux;
-+
-+	/* ensure parent is set to pll_ref */
-+
-+	val = pll_readl_base(pll);
-+	val_aux = pll_readl(pll->params->aux_reg, pll);
-+
-+	if (val & PLL_BASE_ENABLE) {
-+		if ((val_aux & PLLE_AUX_PLLRE_SEL) ||
-+		    (val_aux & PLLE_AUX_PLLP_SEL))
-+			WARN(1, "pll_e enabled with unsupported parent %s\n",
-+			     (val_aux & PLLE_AUX_PLLP_SEL) ? "pllp_out0" :
-+			     "pll_re_vco");
-+	} else {
-+		val_aux &= ~(PLLE_AUX_PLLRE_SEL | PLLE_AUX_PLLP_SEL);
-+		pll_writel(val_aux, pll->params->aux_reg, pll);
-+		fence_udelay(1, pll->clk_base);
-+	}
-+}
++	if (d->parent_data)
++		return irq_chip_set_wake_parent(d, enable);
++	else
++		return 0;
+ }
  #endif
  
- static struct tegra_clk_pll *_tegra_init_pll(void __iomem *clk_base,
-@@ -2289,6 +2312,21 @@ static const struct clk_ops tegra_clk_pllss_ops = {
- 	.set_rate = clk_pllxc_set_rate,
+@@ -566,10 +593,78 @@ static const struct dev_pm_ops tegra_gpio_pm_ops = {
+ 	SET_SYSTEM_SLEEP_PM_OPS(tegra_gpio_suspend, tegra_gpio_resume)
  };
  
-+static void _pllss_set_defaults(struct tegra_clk_pll *pll)
++static int tegra_gpio_irq_domain_translate(struct irq_domain *domain,
++					   struct irq_fwspec *fwspec,
++					   unsigned long *hwirq,
++					   unsigned int *type)
 +{
-+	u32 val;
++	if (WARN_ON(fwspec->param_count < 2))
++		return -EINVAL;
 +
-+	pll_writel_misc(PLLSS_MISC_DEFAULT, pll);
-+	pll_writel(PLLSS_CFG_DEFAULT, pll->params->ext_misc_reg[0], pll);
-+	pll_writel(PLLSS_CTRL1_DEFAULT, pll->params->ext_misc_reg[1], pll);
-+	pll_writel(PLLSS_CTRL2_DEFAULT, pll->params->ext_misc_reg[2], pll);
++	*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
++	*hwirq = fwspec->param[0];
 +
-+	val = pll_readl_base(pll);
-+	val &= ~PLLSS_LOCK_OVERRIDE;
-+	pll_writel_base(val, pll);
++	return 0;
 +}
 +
- struct clk *tegra_clk_register_pllss(const char *name, const char *parent_name,
- 				void __iomem *clk_base, unsigned long flags,
- 				struct tegra_clk_pll_params *pll_params,
-@@ -2339,10 +2377,7 @@ struct clk *tegra_clk_register_pllss(const char *name, const char *parent_name,
- 
- 	_update_pll_mnp(pll, &cfg);
- 
--	pll_writel_misc(PLLSS_MISC_DEFAULT, pll);
--	pll_writel(PLLSS_CFG_DEFAULT, pll_params->ext_misc_reg[0], pll);
--	pll_writel(PLLSS_CTRL1_DEFAULT, pll_params->ext_misc_reg[1], pll);
--	pll_writel(PLLSS_CTRL1_DEFAULT, pll_params->ext_misc_reg[2], pll);
-+	_pllss_set_defaults(pll);
- 
- 	val = pll_readl_base(pll);
- 	val_iddq = readl_relaxed(clk_base + pll_params->iddq_reg);
-@@ -2546,27 +2581,12 @@ struct clk *tegra_clk_register_plle_tegra210(const char *name,
++static int tegra_gpio_irq_domain_alloc(struct irq_domain *domain,
++				       unsigned int virq,
++				       unsigned int num_irqs, void *data)
++{
++	struct tegra_gpio_info *tgi = gpiochip_get_data(domain->host_data);
++	struct irq_fwspec *fwspec = data, spec;
++	struct tegra_gpio_bank *bank;
++	unsigned long hwirq;
++	unsigned int type;
++	int err = 0;
++
++	if (WARN_ON(num_irqs != 1))
++		return -EINVAL;
++
++	if (WARN_ON(fwspec->param_count < 2))
++		return -EINVAL;
++
++	err = tegra_gpio_irq_domain_translate(domain, fwspec, &hwirq, &type);
++	if (err)
++		return err;
++
++	bank = &tgi->bank_info[GPIO_BANK(hwirq)];
++	err = irq_domain_set_hwirq_and_chip(domain, virq, hwirq,
++					    &tgi->ic, bank);
++
++	if (err < 0)
++		return err;
++
++	spec.fwnode = domain->parent->fwnode;
++	spec.param_count = 3;
++	spec.param[0] = GIC_SPI;
++	spec.param[1] = fwspec->param[0];
++	spec.param[2] = fwspec->param[1];
++
++	return irq_domain_alloc_irqs_parent(domain, virq, 1, &spec);
++}
++
++static const struct irq_domain_ops tegra_gpio_irq_domain_ops = {
++	.translate = tegra_gpio_irq_domain_translate,
++	.alloc = tegra_gpio_irq_domain_alloc,
++};
++
++static const struct of_device_id tegra_pmc_of_match[] = {
++	{ .compatible = "nvidia,tegra210-pmc" },
++	{ .compatible = "nvidia,tegra132-pmc" },
++	{ .compatible = "nvidia,tegra124-pmc" },
++	{ .compatible = "nvidia,tegra114-pmc" },
++	{ .compatible = "nvidia,tegra30-pmc" },
++	{ .compatible = "nvidia,tegra20-pmc" },
++	{ }
++};
++
+ static int tegra_gpio_probe(struct platform_device *pdev)
  {
- 	struct tegra_clk_pll *pll;
- 	struct clk *clk;
--	u32 val, val_aux;
+ 	struct tegra_gpio_info *tgi;
+ 	struct tegra_gpio_bank *bank;
++	struct device_node *np;
++	struct irq_domain *parent_domain = NULL;
+ 	unsigned int gpio, i, j;
+ 	int ret;
  
- 	pll = _tegra_init_pll(clk_base, NULL, pll_params, lock);
- 	if (IS_ERR(pll))
- 		return ERR_CAST(pll);
- 
--	/* ensure parent is set to pll_re_vco */
--
--	val = pll_readl_base(pll);
--	val_aux = pll_readl(pll_params->aux_reg, pll);
--
--	if (val & PLLE_BASE_ENABLE) {
--		if ((val_aux & PLLE_AUX_PLLRE_SEL) ||
--			(val_aux & PLLE_AUX_PLLP_SEL))
--			WARN(1, "pll_e enabled with unsupported parent %s\n",
--			  (val_aux & PLLE_AUX_PLLP_SEL) ? "pllp_out0" :
--					"pll_re_vco");
--	} else {
--		val_aux &= ~(PLLE_AUX_PLLRE_SEL | PLLE_AUX_PLLP_SEL);
--		pll_writel(val_aux, pll_params->aux_reg, pll);
--	}
-+	_clk_plle_tegra_init_parent(pll);
- 
- 	clk = _tegra_clk_register_pll(pll, name, parent_name, flags,
- 				      &tegra_clk_plle_tegra210_ops);
-@@ -2710,3 +2730,42 @@ struct clk *tegra_clk_register_pllmb(const char *name, const char *parent_name,
- }
- 
+@@ -614,6 +709,13 @@ static int tegra_gpio_probe(struct platform_device *pdev)
+ #ifdef CONFIG_PM_SLEEP
+ 	tgi->ic.irq_set_wake		= tegra_gpio_irq_set_wake;
  #endif
-+
-+#if defined(CONFIG_PM_SLEEP) && defined(CONFIG_ARCH_TEGRA_210_SOC)
-+void tegra_clk_pll_resume(struct clk *c, unsigned long rate)
-+{
-+	struct clk_hw *hw = __clk_get_hw(c);
-+	struct tegra_clk_pll *pll = to_clk_pll(hw);
-+	struct clk_hw *parent = clk_hw_get_parent(hw);
-+
-+	if (clk_pll_is_enabled(hw))
-+		return;
-+
-+	if (IS_ERR(parent)) {
-+		WARN_ON(1);
-+		return;
++	np = of_find_matching_node(NULL, tegra_pmc_of_match);
++	if (np) {
++		parent_domain = irq_find_host(np);
++		of_node_put(np);
++		if (!parent_domain)
++			return -EPROBE_DEFER;
 +	}
-+
-+	if (pll->params->set_defaults)
-+		pll->params->set_defaults(pll);
-+
-+	clk_set_rate(c, rate);
-+	clk_pll_enable(hw);
-+}
-+
-+void tegra_clk_sync_state_pll(struct clk *c)
-+{
-+	struct clk_hw *hw = __clk_get_hw(c);
-+
-+	if (!__clk_get_enable_count(c))
-+		clk_pll_disable(hw);
-+}
-+
-+void tegra_clk_plle_tegra210_resume(struct clk *c)
-+{
-+	struct clk_hw *hw = __clk_get_hw(c);
-+	struct tegra_clk_pll *pll = to_clk_pll(hw);
-+
-+	_clk_plle_tegra_init_parent(pll);
-+}
-+#endif
-diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
-index 09bccbb9640c..e4d124cc5657 100644
---- a/drivers/clk/tegra/clk.h
-+++ b/drivers/clk/tegra/clk.h
-@@ -841,6 +841,15 @@ int tegra_pll_p_div_to_hw(struct tegra_clk_pll *pll, u8 p_div);
- int div_frac_get(unsigned long rate, unsigned parent_rate, u8 width,
- 		 u8 frac_width, u8 flags);
  
-+#ifdef CONFIG_PM_SLEEP
-+void tegra_clk_pll_resume(struct clk *c, unsigned long rate);
-+void tegra_clk_divider_resume(struct clk_hw *hw, unsigned long rate);
-+void tegra_clk_pll_out_resume(struct clk *clk, unsigned long rate);
-+void tegra_clk_plle_tegra210_resume(struct clk *c);
-+void tegra_clk_sync_state_pll(struct clk *c);
-+void tegra_clk_sync_state_pll_out(struct clk *clk);
-+#endif
-+
+ 	platform_set_drvdata(pdev, tgi);
  
- /* Combined read fence with delay */
- #define fence_udelay(delay, reg)	\
+@@ -625,9 +727,11 @@ static int tegra_gpio_probe(struct platform_device *pdev)
+ 	if (!tgi->bank_info)
+ 		return -ENOMEM;
+ 
+-	tgi->irq_domain = irq_domain_add_linear(pdev->dev.of_node,
+-						tgi->gc.ngpio,
+-						&irq_domain_simple_ops, NULL);
++	tgi->irq_domain = irq_domain_add_hierarchy(parent_domain, 0,
++						   tgi->gc.ngpio,
++						   pdev->dev.of_node,
++						   &tegra_gpio_irq_domain_ops,
++						   &tgi->gc);
+ 	if (!tgi->irq_domain)
+ 		return -ENODEV;
+ 
 -- 
 2.7.4
 
