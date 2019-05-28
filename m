@@ -2,153 +2,96 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83ABDC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4FC8C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61812208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:46:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B38FB217D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:48:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="UJtbp+GA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbfE1Vqd (ORCPT
+        id S1728022AbfE1Vs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 17:46:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49338 "EHLO mx1.redhat.com"
+        Tue, 28 May 2019 17:48:28 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:39931 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726492AbfE1Vqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 17:46:33 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726492AbfE1Vs1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 17:48:27 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 76944307D92F;
-        Tue, 28 May 2019 21:46:32 +0000 (UTC)
-Received: from x1.home (ovpn-116-22.phx2.redhat.com [10.3.116.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8EB2A600C1;
-        Tue, 28 May 2019 21:46:31 +0000 (UTC)
-Date:   Tue, 28 May 2019 15:46:31 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     sebott@linux.vnet.ibm.com, gerald.schaefer@de.ibm.com,
-        pasic@linux.vnet.ibm.com, borntraeger@de.ibm.com,
-        walling@linux.ibm.com, linux-s390@vger.kernel.org,
-        iommu@lists.linux-foundation.org, joro@8bytes.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        robin.murphy@arm.com
-Subject: Re: [PATCH v3 2/3] vfio: zpci: defining the VFIO headers
-Message-ID: <20190528154631.1553f7e9@x1.home>
-In-Reply-To: <20190528154342.7b0f3946@x1.home>
-References: <1558614326-24711-1-git-send-email-pmorel@linux.ibm.com>
-        <1558614326-24711-3-git-send-email-pmorel@linux.ibm.com>
-        <20190528154342.7b0f3946@x1.home>
-Organization: Red Hat
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45D6sb6HZBz9s5c;
+        Wed, 29 May 2019 07:48:19 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1559080105;
+        bh=f6MQvnd2Z2LMquE6A4O+dZA9a/E+daW2j8qTlCCoZyw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=UJtbp+GA8fxKXd+0GwhIDog4CB3ZR9jJrKt380DxHVm2FFOW9NJE54eTaDNGwkTDy
+         4s0wGRZdsTdWKoR11xm4EF95/Hsv9NaFVIabx4TNrUZ8Mgc/Uz21XyhgrvocvrnPyM
+         Pa3OLW4CKAsqVckfQceNcbpGQUNsEOq6CeKt13vgThUV/T16pQbHeOpggTO/EyF8Mk
+         GE6Qdgb69N1oeyakXUF+yNveb6SeyqoDmKcINoDSYx823DOkKDDLAB7PpxKGj4VOHG
+         HiuB/vtbXVkS4KczhAo8kCuzadM3exM6EA7feVbVbOLe/a0OtLUYKJcvkY7/dEfQK9
+         lfXE2owyGaQdw==
+Date:   Wed, 29 May 2019 07:48:12 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Steffen Klassert <steffen.klassert@secunet.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jeremy Sowden <jeremy@azazel.net>
+Subject: linux-next: Fixes tag needs some work in the ipsec tree
+Message-ID: <20190529074812.00c8df44@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Tue, 28 May 2019 21:46:32 +0000 (UTC)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/t68a.7rqE3KQABLBwq1dh39"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 May 2019 15:43:42 -0600
-Alex Williamson <alex.williamson@redhat.com> wrote:
+--Sig_/t68a.7rqE3KQABLBwq1dh39
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> On Thu, 23 May 2019 14:25:25 +0200
-> Pierre Morel <pmorel@linux.ibm.com> wrote:
-> 
-> > We define a new device region in vfio.h to be able to
-> > get the ZPCI CLP information by reading this region from
-> > userland.
-> > 
-> > We create a new file, vfio_zdev.h to define the structure
-> > of the new region we defined in vfio.h
-> > 
-> > Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> > ---
-> >  include/uapi/linux/vfio.h      |  4 ++++
-> >  include/uapi/linux/vfio_zdev.h | 34 ++++++++++++++++++++++++++++++++++
-> >  2 files changed, 38 insertions(+)
-> >  create mode 100644 include/uapi/linux/vfio_zdev.h
-> > 
-> > diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> > index 8f10748..56595b8 100644
-> > --- a/include/uapi/linux/vfio.h
-> > +++ b/include/uapi/linux/vfio.h
-> > @@ -306,6 +306,10 @@ struct vfio_region_info_cap_type {
-> >  #define VFIO_REGION_TYPE_GFX                    (1)
-> >  #define VFIO_REGION_SUBTYPE_GFX_EDID            (1)
-> >  
-> > +/* IBM Subtypes */
-> > +#define VFIO_REGION_TYPE_IBM_ZDEV		(1)  
-> 
-> This one defines (but never uses) a conflicting region type to GFX
-> above.
-> 
-> > +#define VFIO_REGION_SUBTYPE_ZDEV_CLP		(1)  
-> 
-> If we're using a PCI vendor type, which the next patch indicates we
-> are, this is the one you need.  But please also specify it as a PCI
-> vendor sub-type with the hex PCI vendor ID, and perhaps group it with
-> the Intel vendor sub-types.
+Hi Steffen,
 
-BTW, we've already started a set of IBM sub-types:
+In commit
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/include/uapi/linux/vfio.h?id=7f92891778dff62303c070ac81de7b7d80de331a
+  7c80eb1c7e2b ("af_key: fix leaks in key_pol_get_resp and dump_sp.")
 
-> > +
-> >  /**
-> >   * struct vfio_region_gfx_edid - EDID region layout.
-> >   *
-> > diff --git a/include/uapi/linux/vfio_zdev.h b/include/uapi/linux/vfio_zdev.h
-> > new file mode 100644
-> > index 0000000..84b1a82
-> > --- /dev/null
-> > +++ b/include/uapi/linux/vfio_zdev.h
-> > @@ -0,0 +1,34 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> > +/*
-> > + * Region definition for ZPCI devices
-> > + *
-> > + * Copyright IBM Corp. 2019
-> > + *
-> > + * Author(s): Pierre Morel <pmorel@linux.ibm.com>
-> > + */
-> > +
-> > +#ifndef _VFIO_ZDEV_H_
-> > +#define _VFIO_ZDEV_H_
-> > +
-> > +#include <linux/types.h>
-> > +
-> > +/**
-> > + * struct vfio_region_zpci_info - ZPCI information.
-> > + *
-> > + */
-> > +struct vfio_region_zpci_info {
-> > +	__u64 dasm;
-> > +	__u64 start_dma;
-> > +	__u64 end_dma;
-> > +	__u64 msi_addr;
-> > +	__u64 flags;
-> > +	__u16 pchid;
-> > +	__u16 mui;
-> > +	__u16 noi;
-> > +	__u8 gid;
-> > +	__u8 version;
-> > +#define VFIO_PCI_ZDEV_FLAGS_REFRESH 1
-> > +	__u8 util_str[CLP_UTIL_STR_LEN];  
-> 
-> I don't see where CLP_UTIL_STR_LEN is defined in a uapi consumable
-> header.  Should this simply be [] where the string length is implied by
-> the remaining region size?  QEMU hard codes it, that doesn't validate
-> the vfio uapi.
-> 
-> > +} __packed;
-> > +
-> > +#endif  
-> 
+Fixes tag
 
+  Fixes: 55569ce256ce ("Fix conversion between IPSEC_MODE_xxx and XFRM_MODE=
+_xxx.")
+
+has these problem(s):
+
+  - Subject does not match target commit subject
+    Just use
+	git log -1 --format=3D'Fixes: %h ("%s")'
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/t68a.7rqE3KQABLBwq1dh39
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlztrJwACgkQAVBC80lX
+0GxuXAf9Hh415uZ2vKeIAQ4ICsK3TgMdgl6omZ92f3gE0vTerrGpw9weux9qf18o
+JR10zdcusb1hVJ8BReB+h8j5yyQqsRIgtVvjvNDubknk4gr/LIh3fkvnIY9eX3cm
+D/1O2hfie0Z6Xk9an1RkHq8WuTLjnoGUamv21OxDBVJQ7z+LwceZp43E+kHCVqYd
+llrgDPCu/9xJ0DOEghfxGOfviDGcJnVP8Tph+BKq0ArYcEdhINmS/GV/aJpA29gH
+LkTL9cyd2g73jN6J3ncHj+PzvoRtgbDj67Rx87xNQZa2VjCF1tUGqG8QhKekY+zp
+mvC9jlcaYFtnJvo6erw5FqGcMCUV+Q==
+=2q9e
+-----END PGP SIGNATURE-----
+
+--Sig_/t68a.7rqE3KQABLBwq1dh39--
