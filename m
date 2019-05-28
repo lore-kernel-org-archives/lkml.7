@@ -2,120 +2,185 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F08C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE5C0C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F1642081C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB0D8208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:58:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ju/o2maT"
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="iBdnYWDh";
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="iBdnYWDh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbfE1M4V (ORCPT
+        id S1727057AbfE1M6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 08:56:21 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:49864 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726925AbfE1M4V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 08:56:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=DRQ/H105p5/3a63H0dgbNKZg2aY/zu92xXWVVrC1LWw=; b=ju/o2maTvwBbImtbPNLh5QpOs
-        Ud8JYiA5IV0MawILTrpNnLHBKTVUTLj+dkHvixv1BSr4gj8t3E8I8T+p5b2e4051Ov2Rg/KYWm1QJ
-        zz7QFpZVaJCPThFVl+uIQIEqbJVsJH07M3xUW6GYJC35fwaag7xgEz2niYaoSNj8Jw0bsI0Wp7ztD
-        3Ly8l+EKaOczZqqft4/KMXSFc79MrLn4U/u4HiIThMVx+se3zVPMbhZwYsA5VbgFrB6j6G4ESWe2H
-        mQUllMiNAy54MetyWYKThQnWHifRSnrZtB8lYJaelStrfoL0QxG4k23gME+0NWuq6cPkJrkhlgjee
-        3oI2GYtlQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hVbeK-0003rv-Kv; Tue, 28 May 2019 12:56:16 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6CC7520729088; Tue, 28 May 2019 14:56:15 +0200 (CEST)
-Date:   Tue, 28 May 2019 14:56:15 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     kan.liang@linux.intel.com
-Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com
-Subject: Re: [PATCH 4/9] perf/x86/intel: Support hardware TopDown metrics
-Message-ID: <20190528125615.GW2606@hirez.programming.kicks-ass.net>
-References: <20190521214055.31060-1-kan.liang@linux.intel.com>
- <20190521214055.31060-5-kan.liang@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190521214055.31060-5-kan.liang@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 28 May 2019 08:58:02 -0400
+Received: from node.akkea.ca ([192.155.83.177]:43594 "EHLO node.akkea.ca"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726870AbfE1M6B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 08:58:01 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by node.akkea.ca (Postfix) with ESMTP id 9D1D64E204E;
+        Tue, 28 May 2019 12:58:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1559048280; bh=NPw47n7CKjoHKEhwxDO6pHZ9PlEL71gPrZ8VwbmE5cY=;
+        h=From:To:Cc:Subject:Date;
+        b=iBdnYWDh7luWPmjhUg3+n+LRehgA5v21ohYdJdjwnmGbCpmgazMhihkJ5TkkALwD9
+         D7bBiL9rz6nXzHlrPZ0KjafruOieYNpFURP4AdOF5VlR0pYSu899IGQlmq+Bxda9Mj
+         38g6/hg/rgr/zH4x3EdaCEumUpabOG/5lsWUJPpg=
+X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
+Received: from node.akkea.ca ([127.0.0.1])
+        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id P-A9JZb9dDqC; Tue, 28 May 2019 12:58:00 +0000 (UTC)
+Received: from midas.localdomain (S0106788a2041785e.gv.shawcable.net [70.66.86.75])
+        by node.akkea.ca (Postfix) with ESMTPSA id 76ABB4E204B;
+        Tue, 28 May 2019 12:57:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1559048280; bh=NPw47n7CKjoHKEhwxDO6pHZ9PlEL71gPrZ8VwbmE5cY=;
+        h=From:To:Cc:Subject:Date;
+        b=iBdnYWDh7luWPmjhUg3+n+LRehgA5v21ohYdJdjwnmGbCpmgazMhihkJ5TkkALwD9
+         D7bBiL9rz6nXzHlrPZ0KjafruOieYNpFURP4AdOF5VlR0pYSu899IGQlmq+Bxda9Mj
+         38g6/hg/rgr/zH4x3EdaCEumUpabOG/5lsWUJPpg=
+From:   "Angus Ainslie (Purism)" <angus@akkea.ca>
+To:     angus.ainslie@puri.sm
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Carlo Caione <ccaione@baylibre.com>,
+        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v15 0/3] Add support for the Purism Librem5 devkit
+Date:   Tue, 28 May 2019 05:57:44 -0700
+Message-Id: <20190528125747.1047-1-angus@akkea.ca>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 02:40:50PM -0700, kan.liang@linux.intel.com wrote:
+The Librem5 devkit is based on the imx8mq from NXP. This is a default
+devicetree to boot the board to a command prompt.
 
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index e9075d57853d..07ecfe75f0e6 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -91,16 +91,20 @@ u64 x86_perf_event_update(struct perf_event *event)
->  					new_raw_count) != prev_raw_count)
->  		goto again;
->  
-> -	/*
-> -	 * Now we have the new raw value and have updated the prev
-> -	 * timestamp already. We can now calculate the elapsed delta
-> -	 * (event-)time and add that to the generic event.
-> -	 *
-> -	 * Careful, not all hw sign-extends above the physical width
-> -	 * of the count.
-> -	 */
-> -	delta = (new_raw_count << shift) - (prev_raw_count << shift);
-> -	delta >>= shift;
-> +	if (unlikely(hwc->flags & PERF_X86_EVENT_UPDATE))
-> +		delta = x86_pmu.metric_update_event(event, new_raw_count);
-> +	else {
-> +		/*
-> +		 * Now we have the new raw value and have updated the prev
-> +		 * timestamp already. We can now calculate the elapsed delta
-> +		 * (event-)time and add that to the generic event.
-> +		 *
-> +		 * Careful, not all hw sign-extends above the physical width
-> +		 * of the count.
-> +		 */
-> +		delta = (new_raw_count << shift) - (prev_raw_count << shift);
-> +		delta >>= shift;
-> +	}
->  
->  	local64_add(delta, &event->count);
->  	local64_sub(delta, &hwc->period_left);
+Changes since v14:
 
-> @@ -1186,6 +1194,9 @@ int x86_perf_event_set_period(struct perf_event *event)
->  	if (idx == INTEL_PMC_IDX_FIXED_BTS)
->  		return 0;
->  
-> +	if (x86_pmu.set_period && x86_pmu.set_period(event))
-> +		goto update_userpage;
-> +
->  	/*
->  	 * If we are way outside a reasonable range then just skip forward:
->  	 */
-> @@ -1234,6 +1245,7 @@ int x86_perf_event_set_period(struct perf_event *event)
->  			(u64)(-left) & x86_pmu.cntval_mask);
->  	}
->  
-> +update_userpage:
->  	perf_event_update_userpage(event);
->  
->  	return ret;
+Add regulator-always-on for the SNVS regulators.
+Added pgc nodes.
+Fixed charger pre-current.
 
+Changes since v13:
 
-*groan*.... that's pretty terrible.
+Moved haptic motor from pwm-led to gpio-vibrator.
+Cleaned up regulator node naming.
+Whitescpace cleanup.
+Re-indent pinmux stanzas.
+Drop pwm2 node.
+Drop MAINTAINERS patch.
+
+Changes since v12:
+
+Updated patch to vendor-prefixes.yaml.
+Dropped always on from regulators.
+
+Changes since v11:
+
+Added reviewed-by tags.
+Fixed subject typo.
+
+Changes since v10:
+
+Moved MAINTAINERS entry to "ARM/FREESCALE IMX" section
+
+Changes since v9:
+
+Added a MAINTAINERS entry for arm64 imx devicetree files.
+
+Changes since v8:
+
+Fixed license comment.
+Changed regulators to all lower case.
+Changed clock frequency for NXP errata e7805.
+Dropped blank line.
+
+Changes since v7:
+
+More regulators always on for USB.
+Add vbus regulator.
+Drop vbat regulator.
+Replace legacy "gpio-key,wakeup" with "wakeup-source".
+Add vbus-supply to get rid of warning
+imx8mq-usb-phy 382f0040.usb-phy: 382f0040.usb-phy supply vbus not found,
+using dummy regulator
+
+Changes since v6:
+
+Dropped unused regulators.
+Fix regulator phandles case.
+Dropped extra whitespace.
+
+Changes since v5:
+
+Added reviewed-by tags.
+Moved USB port links to USB controller node.
+
+Changes since v4:
+
+Compiled against linux-next next-20190415.
+Added imx8mq to the arm yaml file.
+Re-arrange regulator nodes to drop undefined supplies.
+Additional ordering for aesthetics.
+Split some long lines.
+Added lots of blank lines.
+Moved pinctl muxes to where they are used.
+Cleaned out reg defintions from regulator nodes.
+
+Changes since v3:
+
+Freshly sorted and pressed nodes.
+Change the backlight to an interpolated scale.
+Dropped i2c2.
+Dropped devkit version number to match debian MR.
+
+Changes since v2:
+
+Fixed incorrect phy-supply for the fsl-fec.
+Dropped unused regulator property.
+Fixup Makefile for linux-next.
+
+Changes since v1:
+
+Dropped config file.
+Updated the board compatible label.
+Changed node names to follow naming conventions.
+Added a more complete regulator hierachy.
+Removed unused nodes.
+Removed unknown devices.
+Fixed comment style.
+Dropped undocumented properties.
+
+Angus Ainslie (Purism) (3):
+  arm64: dts: fsl: librem5: Add a device tree for the Librem5 devkit
+  dt-bindings: Add an entry for Purism SPC
+  dt-bindings: arm: fsl: Add the imx8mq boards
+
+ .../devicetree/bindings/arm/fsl.yaml          |   7 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ arch/arm64/boot/dts/freescale/Makefile        |   1 +
+ .../dts/freescale/imx8mq-librem5-devkit.dts   | 806 ++++++++++++++++++
+ 4 files changed, 816 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+
+-- 
+2.17.1
+
